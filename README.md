@@ -36,7 +36,7 @@ The app spans the full surface of the imagined platform, including:
 
 ## Getting started
 
-Node 22 (`.nvmrc`) and pnpm 9.15 through `corepack enable`. With the backend cloned next to this repo as `../queerpulse-backend`:
+Node 24 (`.nvmrc`) and pnpm 9.15 through `corepack enable`. With the backend cloned next to this repo as `../queerpulse-backend`:
 
 ```bash
 pnpm dev:setup   # checks Node and pnpm, installs, creates .env, runs the doctor

@@ -1,4 +1,4 @@
-import { useId, useRef, useState } from "react";
+import { useCallback, useId, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { tabPanelProps } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -9,8 +9,12 @@ import { StudioArtistOwnerPanel } from "./StudioArtistOwnerPanel";
 import { StudioArtistOwnerTools } from "./StudioArtistOwnerTools";
 import { StudioArtistSidebar } from "./StudioArtistSidebar";
 import { StudioArtistSupportCard } from "./StudioArtistSupportCard";
+import { StudioArtistSupporterCard } from "./StudioArtistSupporterCard";
 import { StudioArtistUpcomingCard } from "./StudioArtistUpcomingCard";
 import { StudioDetailLoading } from "./StudioDetailLoading";
+import { StudioEditPageSheet } from "./StudioEditPageSheet";
+import { StudioEditPageOpenerProvider } from "./studioEditPageOpener";
+import type { StudioHeroChoice } from "./studioHeroChoice";
 import { StudioArtistStickyHeader } from "./StudioArtistStickyHeader";
 import { StudioLoadError, StudioNotFound } from "./StudioLoadStates";
 import { StudioShell } from "./StudioShell";
@@ -30,10 +34,19 @@ export function StudioArtistPage() {
   const tabsId = useId();
   const [tab, setTab] = useState<ArtistTabId>("music");
   const [isTipOpen, setIsTipOpen] = useState(false);
+  const [isEditPageOpen, setIsEditPageOpen] = useState(false);
+  // The top the edit sheet has highlighted; null draws the saved one.
+  const [previewHero, setPreviewHero] = useState<StudioHeroChoice | null>(null);
   const titleRef = useRef<HTMLSpanElement>(null);
   // The hero's foot, held in state so the sticky header arms once it mounts.
   const [heroSentinel, setHeroSentinel] = useState<HTMLDivElement | null>(null);
   useStudioDocumentTitle(artist?.artist.name);
+  // Stable, so the opener context does not hand the hero a new function on
+  // every render. Each opening starts from the saved top.
+  const openEditPage = useCallback(() => {
+    setPreviewHero(null);
+    setIsEditPageOpen(true);
+  }, []);
 
   // The page h1 outlives the owner panel, so it takes focus when a delete
   // empties the panel. StudioDetailHero renders the h1, so it is found from
@@ -68,21 +81,26 @@ export function StudioArtistPage() {
     );
 
   const name = artist.artist.name;
-  // Live gets a side column once there is something for it (Studio v3).
-  const hasSide =
-    isShowcase ||
-    artist.upcoming.length > 0 ||
-    artist.supportLinks.length > 0 ||
-    artist.isOwner;
+  // The sheet mounts only for an owner, so a preview counts only while it is
+  // up: if ownership drops mid-edit the hero goes back to the saved top.
+  const isEditSheetShown = artist.isOwner && isEditPageOpen;
+  const heroArtist =
+    isEditSheetShown && previewHero
+      ? { ...artist, heroLayout: previewHero }
+      : artist;
   return (
     <StudioShell>
       <StudioArtistStickyHeader artist={artist} sentinel={heroSentinel} />
-      <StudioArtistHero
-        artist={artist}
-        titleRef={titleRef}
-        sentinelRef={setHeroSentinel}
-        onTip={() => setIsTipOpen(true)}
-      />
+      <StudioEditPageOpenerProvider
+        value={artist.isOwner ? openEditPage : null}
+      >
+        <StudioArtistHero
+          artist={heroArtist}
+          titleRef={titleRef}
+          sentinelRef={setHeroSentinel}
+          onTip={() => setIsTipOpen(true)}
+        />
+      </StudioEditPageOpenerProvider>
       <StudioTablist
         tabs={artistTabsOf(artist.artist.format)}
         activeId={tab}
@@ -90,22 +108,23 @@ export function StudioArtistPage() {
         idPrefix={tabsId}
         label={t("studio:artistPage.tabsLabel", { name })}
       />
-      <section className={hasSide ? styles.detailGrid : kit.detailSingle}>
+      {/* Every viewer gets a side column: an owner has their cards, and
+          every other listener has Show me as a supporter. */}
+      <section className={styles.detailGrid}>
         <div {...tabPanelProps(tabsId, tab)} className={kit.panel}>
           <StudioArtistMain tab={tab} artist={artist} />
         </div>
-        {hasSide && (
-          <div className={styles.sideCol}>
-            {isShowcase && (
-              <StudioArtistSidebar
-                artistName={name}
-                onTip={() => setIsTipOpen(true)}
-              />
-            )}
-            <StudioArtistUpcomingCard artist={artist} />
-            <StudioArtistSupportCard artist={artist} />
-          </div>
-        )}
+        <div className={styles.sideCol}>
+          {isShowcase && (
+            <StudioArtistSidebar
+              artistName={name}
+              onTip={() => setIsTipOpen(true)}
+            />
+          )}
+          <StudioArtistUpcomingCard artist={artist} />
+          <StudioArtistSupportCard artist={artist} />
+          <StudioArtistSupporterCard artist={artist} />
+        </div>
       </section>
       {/* The owner's tools sit under the tabs, so the page opens as the
           public sees it: releases, then the press kit and updates. */}
@@ -116,6 +135,13 @@ export function StudioArtistPage() {
         />
       )}
       {artist.isOwner && <StudioArtistOwnerTools artist={artist} />}
+      {isEditSheetShown && (
+        <StudioEditPageSheet
+          artist={artist}
+          onPreviewChange={setPreviewHero}
+          onClose={() => setIsEditPageOpen(false)}
+        />
+      )}
       {isShowcase && isTipOpen && (
         <StudioTipModal recipient={name} onClose={() => setIsTipOpen(false)} />
       )}

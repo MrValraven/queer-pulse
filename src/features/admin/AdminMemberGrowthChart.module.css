@@ -1,0 +1,60 @@
+/* Member growth line chart. The frame (paper surface, hairline, title and
+   head slot) comes from the shared ChartFrame; the line, area and month
+   labels reuse the dashboard's chart classes. */
+
+/* A vertical drag still scrolls the page; a sideways one reads the weeks. */
+.plotBody {
+  touch-action: pan-y;
+  transition: opacity 0.2s var(--ease);
+}
+/* The previous range's line, dimmed while the other range loads. */
+.stale {
+  opacity: 0.55;
+}
+
+/* The transparent layer that reads the pointer across the whole plot. */
+.pointerLayer {
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Keyboard stops only: the pointer layer answers for the mouse and touch. */
+.focusMark {
+  pointer-events: none;
+}
+
+/* Guide and dot. Mounted on the first reading (fading in), then they slide
+   from week to week and fade out in place when the reading closes. */
+.crosshair {
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    transform 0.18s var(--ease),
+    opacity 0.16s var(--ease);
+  animation: crosshairFadeIn 0.16s var(--ease);
+}
+.crosshairVisible {
+  opacity: 1;
+}
+.crosshairDot {
+  transition: transform 0.18s var(--ease);
+}
+@keyframes crosshairFadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plotBody {
+    transition: none;
+  }
+  /* The marks jump straight to each week and only fade. */
+  .crosshair {
+    transition-property: opacity;
+    animation: none;
+  }
+  .crosshairDot {
+    transition: none;
+  }
+}

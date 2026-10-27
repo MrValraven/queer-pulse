@@ -41,6 +41,41 @@ function EditorName({ editor }: { editor: StudioPlaylistEditorView }) {
   );
 }
 
+/** The owner, first in the read-only list: the member the playlist is credited to. */
+function OwnerRow({ playlist }: { playlist: StudioPlaylistView }) {
+  const { t } = useTranslation();
+  const { credit } = playlist;
+  const ownerPerson: StudioPlaylistEditorView["person"] = {
+    slug: "",
+    name: credit.name,
+    avatarUrl: credit.avatarUrl,
+    initials: credit.initials,
+    tint: credit.tint,
+    href: credit.href,
+  };
+  return (
+    <li className={css.row}>
+      <span className={css.avatar} aria-hidden>
+        <StudioPlaylistPersonAvatar person={ownerPerson} size={32} />
+      </span>
+      <div className={css.identity}>
+        <span className={css.name}>
+          {credit.href ? (
+            <Link to={credit.href} className={css.nameLink}>
+              {credit.name}
+            </Link>
+          ) : (
+            credit.name
+          )}
+        </span>
+        <span className={css.badge}>
+          {t("studio:playlist.editors.ownerLabel")}
+        </span>
+      </div>
+    </li>
+  );
+}
+
 /** The name with the "Invite sent" pill under it, so the name keeps the row's width. */
 function EditorIdentity({ editor }: { editor: StudioPlaylistEditorView }) {
   const { t } = useTranslation();
@@ -52,7 +87,7 @@ function EditorIdentity({ editor }: { editor: StudioPlaylistEditorView }) {
         {editor.isPending && (
           <m.span
             key="pending"
-            className={css.pending}
+            className={css.badge}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -68,7 +103,7 @@ function EditorIdentity({ editor }: { editor: StudioPlaylistEditorView }) {
 }
 
 /**
- * The active editors, and for the owner the pending invites too. The owner
+ * The active editors (the read-only list opens with the owner), and for the owner the pending invites too. The owner
  * removes an editor after a confirm (their tracks stay) and cancels an
  * invite at once, both by the row's editor id, so a member without a
  * profile row is removable too. Rows fold in and out. Once a row leaves,
@@ -158,6 +193,9 @@ export function StudioPlaylistEditorRows({
           name: playlist.name,
         })}
       >
+        {!isOwner && playlist.credit.kind === "member" && (
+          <OwnerRow playlist={playlist} />
+        )}
         <AnimatePresence initial={false}>
           {editors.map((editor) => (
             <CollapseListItem key={editor.editorId}>

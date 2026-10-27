@@ -17,6 +17,7 @@ import { useRowDragReorder } from "../subprofiles/useRowDragReorder";
 import { loudnessNotesFor } from "./upload/studioLoudnessNotes";
 import type { StudioUploadAnalysis } from "./upload/useStudioUploadAnalysis";
 import type { StudioTrackUploads } from "./useStudioTrackUploads";
+import { useIsTrackCreditsRequested } from "./useStudioUploadHashFocus";
 import s from "./creator.module.css";
 import tracksStyles from "./StudioUploadTracks.module.css";
 
@@ -139,6 +140,10 @@ export function FileList({
     },
   );
   const readyCount = uploads.rows.filter((row) => row.stage === "ready").length;
+  // A checklist link to track credits names no track: the first track's
+  // details panel opens, and the member works down the list from there.
+  const isTrackCreditsRequested = useIsTrackCreditsRequested();
+  const firstRowWithTrackId = uploads.rows.find((row) => row.trackId);
   const [pendingRemoval, setPendingRemoval] = useState<{
     localId: string;
     title: string;
@@ -242,6 +247,9 @@ export function FileList({
               isMeasuring={analysis.statusOf(row.localId) === "measuring"}
               releaseType={releaseType}
               localFile={analysis.fileOf(row.localId)}
+              shouldOpenDetails={
+                isTrackCreditsRequested && row === firstRowWithTrackId
+              }
             />
           ))}
         </ol>

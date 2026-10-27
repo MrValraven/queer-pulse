@@ -9,9 +9,11 @@ import { queueFromRelease, queueFromTracks } from "../player/studioQueue";
 
 /** What one card shows. Teaser: the reader has no Studio grant (signed out
  *  included) and no read is made. Withdrawn: the server answered 410
- *  `studio_release_withdrawn`. Unavailable: every other refusal. */
+ *  `studio_release_withdrawn`. Unavailable: the item is gone (404, or a
+ *  withheld track), a calm view that needs no retry. Error: a transient read
+ *  failure (5xx, network, timeout), which names its reason and offers Retry. */
 export type StudioShareCardStatus =
-  "teaser" | "loading" | "withdrawn" | "unavailable" | "ready";
+  "teaser" | "loading" | "withdrawn" | "unavailable" | "error" | "ready";
 
 export const GRANTED_ACCESS = { hasAccess: true, isPending: false } as const;
 
@@ -27,13 +29,10 @@ export function studioShareCardStatus(
   if (loadState.isWithdrawn) return "withdrawn";
   // A withheld track (410 `studio_track_withheld`) reads as every other
   // refusal: the card names nothing about why.
-  if (
-    loadState.isNotFound ||
-    loadState.isError ||
-    loadState.isTrackWithheld === true
-  ) {
+  if (loadState.isNotFound || loadState.isTrackWithheld === true) {
     return "unavailable";
   }
+  if (loadState.isError) return "error";
   return "loading";
 }
 

@@ -1,0 +1,22 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+/* The pledge is the real text, so it sits in a plain figure: no sample
+   caption, and no frame furniture around it. */
+.pledge {
+  min-width: 0;
+  margin: 0;
+}
+
+/* The baseline sits flush in its figure: the listing page's top gap goes,
+   and the panel gets a solid ground in place of its faint wash. */
+.baselineStage {
+  border-radius: var(--radius-badge);
+  background: var(--cream);
+}
+.baselineStage > section {
+  margin-top: 0;
+}

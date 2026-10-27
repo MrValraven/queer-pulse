@@ -14,9 +14,11 @@ import type {
 // (`governance/governance.data`) so income/expense lines stay consistent
 // with the public transparency-report response.
 
-/** Where a finance figure came from — drives the provenance badge. `seeded`
+/** Where a finance figure came from; drives the provenance badge. `seeded`
  *  means "from the quarterly seed, never verified"; `manual` means an admin
- *  typed it; `computed` means derived (surplus), never edited directly. */
+ *  typed it; `computed` means derived from other figures (the spending total
+ *  from the switched-on spending lines, the surplus from the two totals), never
+ *  edited directly. */
 export type FinanceMetricSource = "seeded" | "manual" | "computed";
 
 /** One entry in a ledger row's breakdown ("Hosting", "€15/mo", "45"). The
@@ -50,8 +52,9 @@ export interface AdminFinanceHistoryPoint {
 
 export interface AdminFinanceLatest {
   quarter: string;
-  /** The five editable headline figures are null until someone enters them
-   *  (a freshly opened quarter), so the editor shows an empty field. */
+  /** The five headline figures are null until someone enters them (a freshly
+   *  opened quarter), so the editor shows an empty field. `expenseTotal` stays
+   *  null until a save finds at least one spending line to sum. */
   incomeTotal: number | null;
   expenseTotal: number | null;
   surplus: number;
@@ -98,14 +101,15 @@ export interface FinanceLedgerEdit {
   items?: FinanceLineItem[];
 }
 
-/** Partial update — only the fields present are written and audited. `surplus`
- *  is intentionally absent (always recomputed from the two totals). */
+/** Partial update: only the fields present are written and audited.
+ *  `expenseTotal` and `surplus` are intentionally absent: on every save the
+ *  backend sums the switched-on spending lines into `expenseTotal`, then
+ *  recomputes `surplus` as income minus spending. */
 export interface UpdateAdminFinancesBody {
   mrr?: number;
   sustainerCount?: number;
   solidarityRate?: number;
   incomeTotal?: number;
-  expenseTotal?: number;
   income?: FinanceLedgerEdit[];
   expense?: FinanceLedgerEdit[];
   /** PRD-447. Full replacements for the public report's tiles, notes and

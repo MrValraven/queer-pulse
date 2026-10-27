@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { ApiError } from "../../shared/api/client";
 import { StudioAudioUploadError } from "./api/studioAudioUpload";
+import { wavBytes } from "./upload/convert/studioPcmTestFiles";
 import {
   audioContentTypeOf,
   audioMaxBytesFor,
@@ -8,6 +9,7 @@ import {
   fileRejectionKeyOf,
   isRetryableUploadError,
   removeErrorKeyOf,
+  routeBySignature,
   titleFromFileName,
   uploadErrorKeyOf,
   validateAudioFiles,
@@ -221,5 +223,43 @@ describe("WAV and AIFF files", () => {
       isRetryable: false,
     });
     expect(conversionFailureOf({ reason: "failed" }).isRetryable).toBe(true);
+  });
+});
+
+describe("routeBySignature", () => {
+  it("sends a real WAV named .mp3 to the converter", async () => {
+    const file = new File(
+      [
+        wavBytes({
+          channels: 1,
+          sampleRate: 8000,
+          bitsPerSample: 16,
+          frames: 8,
+        }),
+      ],
+      "take.mp3",
+      { type: "audio/mpeg" },
+    );
+    const { accepted } = validateAudioFiles([file], 0);
+    expect(accepted[0]?.needsConversion).toBe(false);
+    const [first] = accepted;
+    if (!first) throw new Error("expected the file to be accepted");
+    expect(await routeBySignature(first)).toEqual({
+      file,
+      contentType: "audio/mpeg",
+      needsConversion: true,
+    });
+  });
+
+  it("keeps an MP3 on the upload route", async () => {
+    const file = new File([new Uint8Array(64)], "take.mp3", {
+      type: "audio/mpeg",
+    });
+    const accepted = {
+      file,
+      contentType: "audio/mpeg" as const,
+      needsConversion: false,
+    };
+    expect(await routeBySignature(accepted)).toBe(accepted);
   });
 });

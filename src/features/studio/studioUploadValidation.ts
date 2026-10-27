@@ -15,6 +15,7 @@ import { studioErrorMessageKeyOf } from "./studioErrors.data";
 import { studioReasonCopyKey, studioReasonOf } from "./studioReason";
 import {
   isConvertibleAudio,
+  sniffPcmContainer,
   type ConvertFailureReason,
 } from "./upload/convert/studioWavConverter";
 
@@ -110,6 +111,19 @@ export function validateAudioFiles(
     else accepted.push({ file, contentType, needsConversion });
   }
   return { accepted, rejected };
+}
+
+/** A file named .mp3 or .m4a whose first bytes say WAV or AIFF goes to the
+ *  converter like any WAV, so it never reaches the server's audio check. A
+ *  file that cannot be read keeps its name-based route. */
+export async function routeBySignature(
+  accepted: AcceptedAudioFile,
+): Promise<AcceptedAudioFile> {
+  if (accepted.needsConversion) return accepted;
+  const isPcm = await sniffPcmContainer(accepted.file).catch(() => false);
+  return isPcm
+    ? { file: accepted.file, contentType: "audio/mpeg", needsConversion: true }
+    : accepted;
 }
 
 /** One line for each way a WAV or AIFF can fail to become an MP3. */

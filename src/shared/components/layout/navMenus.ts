@@ -75,7 +75,7 @@ export interface MegaMenu {
  * Derived, not a second hand-kept list of names: these are exactly the two
  * features whose `routes.tsx` swaps its whole subtree for a coming-soon page
  * when `demoMode === false` (`cinemaRoutes` → `CinemaComingSoon`,
- * `studioRoutes` → `StudioComingSoonPage`), and the prefixes below are the same
+ * `studioRoutes` → `StudioUngrantedPage`), and the prefixes below are the same
  * `routes.*` constants those files branch on, so renaming a path moves both
  * together instead of drifting them apart.
  *

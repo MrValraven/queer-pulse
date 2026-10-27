@@ -60,11 +60,16 @@ export async function demoOwnImageUrl(
   }
 }
 
-/** Frees the store's own copy of a photo once no post shows it. */
+/** How long a replaced or deleted photo stays readable: longer than the
+ *  card's exit animation, so a fading card never flashes a broken image. */
+export const OWN_IMAGE_REVOKE_DELAY_MS = 2000;
+
+/** Frees the store's own copy of a photo once no post shows it, after the
+ *  card that showed it has finished leaving. */
 function releaseOwnImage(imageUrl: string | null): void {
   if (!imageUrl || !ownBlobUrls.has(imageUrl)) return;
   ownBlobUrls.delete(imageUrl);
-  URL.revokeObjectURL(imageUrl);
+  setTimeout(() => URL.revokeObjectURL(imageUrl), OWN_IMAGE_REVOKE_DELAY_MS);
 }
 
 function ownerOf(postId: string): string | null {

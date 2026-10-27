@@ -1,68 +1,27 @@
 import { useId, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiChevronRight } from "react-icons/fi";
-import { AnimatePresence, m } from "motion/react";
-import { useMotionPrefs } from "../../app/providers/motionPrefs";
+import { AnimatePresence } from "motion/react";
 import { IconButton } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
-  StudioArtistStatsView,
-  StudioStatsReleaseView,
-  StudioStatsTrackView,
-} from "./api/studio.adapters";
+  StudioDashboardReleaseView,
+  StudioDashboardStatsView,
+} from "./api/studioDashboard.adapters";
 import { formatStudioCount } from "./studioCount";
-import { STUDIO_EXIT, STUDIO_FADE } from "./studioMotion";
+import { StudioNumbersTrackRow } from "./StudioNumbersTrackRow";
 import css from "./StudioNumbers.module.css";
-
-/** One track row inside its release's row group. It fades in and its cells
- *  open to their height, so a table row never snaps in or out. */
-function TrackRow({ trackRow }: { trackRow: StudioStatsTrackView }) {
-  const { t } = useTranslation();
-  const fmt = useFormat();
-  const { reducedMotion } = useMotionPrefs();
-  const cellMotion = {
-    initial: { height: 0, opacity: 0 },
-    animate: {
-      height: "auto",
-      opacity: 1,
-      transition: reducedMotion ? { duration: 0 } : STUDIO_FADE,
-    },
-    exit: {
-      height: 0,
-      opacity: 0,
-      transition: reducedMotion ? { duration: 0 } : STUDIO_EXIT,
-    },
-  };
-  return (
-    <m.tr className={css.trackRow}>
-      <th scope="row" className={css.trackCell}>
-        <m.div className={css.trackCellInner} {...cellMotion}>
-          <span className={css.trackPosition}>{trackRow.track.position}</span>
-          {trackRow.track.title}
-        </m.div>
-      </th>
-      <td className={css.trackCell}>
-        <m.div className={css.trackCellInner} {...cellMotion}>
-          {formatStudioCount(trackRow.saves, t, fmt)}
-        </m.div>
-      </td>
-      <td className={css.trackCell}>
-        <m.div className={css.trackCellInner} {...cellMotion}>
-          {formatStudioCount(trackRow.playlistInclusions, t, fmt)}
-        </m.div>
-      </td>
-    </m.tr>
-  );
-}
 
 function ReleaseRows({
   row,
   isOpen,
+  hasPlays,
   onToggle,
 }: {
-  row: StudioStatsReleaseView;
+  row: StudioDashboardReleaseView;
   isOpen: boolean;
+  hasPlays: boolean;
   onToggle: () => void;
 }) {
   const { t } = useTranslation();
@@ -73,20 +32,24 @@ function ReleaseRows({
       <tr className={css.releaseRow}>
         <th scope="row" className={css.releaseCell}>
           <span className={css.releaseCellInner}>
-            <IconButton
-              className={css.expand}
-              aria-expanded={isOpen}
-              aria-controls={tracksId}
-              aria-label={t(
-                isOpen
-                  ? "studio:numbers.hideTracks"
-                  : "studio:numbers.showTracks",
-                { title: row.release.title },
-              )}
-              onClick={onToggle}
-            >
-              <FiChevronRight aria-hidden className={css.chevron} />
-            </IconButton>
+            {row.tracks.length > 0 ? (
+              <IconButton
+                className={css.expand}
+                aria-expanded={isOpen}
+                aria-controls={tracksId}
+                aria-label={t(
+                  isOpen
+                    ? "studio:numbers.hideTracks"
+                    : "studio:numbers.showTracks",
+                  { title: row.release.title },
+                )}
+                onClick={onToggle}
+              >
+                <FiChevronRight aria-hidden className={css.chevron} />
+              </IconButton>
+            ) : (
+              <span aria-hidden className={css.expandSpacer} />
+            )}
             <Link to={row.release.href} className={css.releaseLink}>
               {row.release.title}
             </Link>
@@ -102,26 +65,43 @@ function ReleaseRows({
             )}
           </span>
         </th>
+        {hasPlays && (
+          <td
+            className={
+              row.release.type === "podcast" ? css.notCounted : undefined
+            }
+          >
+            {row.release.type === "podcast"
+              ? t("studio:numbers.plays.showsNotCounted")
+              : formatStudioCount(row.plays, t, fmt)}
+          </td>
+        )}
         <td>{formatStudioCount(row.saves, t, fmt)}</td>
         <td>{formatStudioCount(row.playlistInclusions, t, fmt)}</td>
       </tr>
       <AnimatePresence initial={false}>
         {isOpen &&
-          row.tracks.map((trackRow) => (
-            <TrackRow key={trackRow.track.id} trackRow={trackRow} />
+          row.tracks.map((trackRow, index) => (
+            <StudioNumbersTrackRow
+              key={trackRow.track.id}
+              trackRow={trackRow}
+              index={index}
+              hasPlays={hasPlays}
+              isPodcast={row.release.type === "podcast"}
+            />
           ))}
       </AnimatePresence>
     </tbody>
   );
 }
 
-/** Releases (published first, then the rest) with Saves and In public
- *  playlists; each opens to its tracks. */
+/** Releases (published first, then the rest) with Plays (when the server
+ *  sends them), Saves and In public playlists; each opens to its tracks. */
 export function StudioNumbersTable({
   stats,
   personaName,
 }: {
-  stats: StudioArtistStatsView;
+  stats: StudioDashboardStatsView;
   personaName: string;
 }) {
   const { t } = useTranslation();
@@ -142,12 +122,16 @@ export function StudioNumbersTable({
       </caption>
       <colgroup>
         <col className={css.colName} />
+        {stats.hasPlays && <col className={css.colFigure} />}
         <col className={css.colFigure} />
         <col className={css.colFigure} />
       </colgroup>
       <thead>
         <tr>
           <th scope="col">{t("studio:numbers.column.releaseOrTrack")}</th>
+          {stats.hasPlays && (
+            <th scope="col">{t("studio:numbers.column.plays")}</th>
+          )}
           <th scope="col">{t("studio:numbers.column.saves")}</th>
           <th scope="col">{t("studio:numbers.column.inPublicPlaylists")}</th>
         </tr>
@@ -157,6 +141,7 @@ export function StudioNumbersTable({
           key={row.release.id}
           row={row}
           isOpen={openReleaseIds.has(row.release.id)}
+          hasPlays={stats.hasPlays}
           onToggle={() => toggle(row.release.id)}
         />
       ))}

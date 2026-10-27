@@ -13,7 +13,8 @@ import type { AdminMediaDeleteRefusal } from "./AdminMediaDeleteConfirm";
  * the check could not run), and the mutation itself.
  *
  * The route refuses by default: `409` when the key is still referenced (the
- * body lists where) and `503` when the check could not run. Neither is a
+ * body lists where; `media_live_cover` names the scenes and releases that
+ * use it as a cover) and `503` when the check could not run. Neither is a
  * generic failure, so instead of a toast the modal switches to the server's
  * own answer and an explicit "delete anyway" second click.
  */
@@ -44,6 +45,14 @@ export function useAdminMediaDrawerDelete({
         onError: (error) => {
           if (error instanceof ApiError && error.status === 409) {
             const conflict = error.data as AdminMediaDeleteConflict | null;
+            if (conflict?.code === "media_live_cover") {
+              setDeleteRefusal({
+                references: [],
+                isUnverified: false,
+                coverHolders: conflict.coverHolders ?? [],
+              });
+              return;
+            }
             setDeleteRefusal({
               references: conflict?.references ?? [],
               isUnverified: false,

@@ -673,13 +673,16 @@ export const subprofiles: Catalog = {
   "metaForm.bannerEdgeBleed": "Sangrar na página",
   "metaForm.studioHero.label": "Layout da página no Studio",
   "metaForm.studioHero.helper":
-    "Escolhe como a tua foto de capa aparece no topo da tua página no Studio.",
-  "metaForm.studioHero.full-bleed": "Foto de ponta a ponta",
-  "metaForm.studioHero.full-bleedEffect":
-    "A tua foto ocupa todo o topo da tua página no Studio, com o teu nome por cima.",
-  "metaForm.studioHero.avatar": "Avatar sobre a foto",
-  "metaForm.studioHero.avatarEffect":
-    "A tua foto fica atrás do topo da tua página no Studio e o teu avatar aparece à frente, ao lado do teu nome.",
+    "Escolhe o que aparece no topo da tua página no Studio.",
+  "metaForm.studioHero.banner": "Banner",
+  "metaForm.studioHero.bannerEffect":
+    "A tua foto de capa ocupa o topo da tua página no Studio, com o teu nome por cima.",
+  "metaForm.studioHero.portrait": "Avatar",
+  "metaForm.studioHero.portraitEffect":
+    "O teu avatar redondo aparece no topo da tua página no Studio, com o teu nome.",
+  "metaForm.studioHero.both": "Banner e avatar",
+  "metaForm.studioHero.bothEffect":
+    "A tua foto de capa ocupa o topo da tua página no Studio, com o teu avatar redondo por cima.",
   "metaForm.availabilityLabel": "Disponibilidade",
   "metaForm.availabilityUnset": "Não definida",
   "metaForm.ctaLabelLabel": "Texto do botão",

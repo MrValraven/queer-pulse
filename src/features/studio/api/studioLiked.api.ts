@@ -11,3 +11,10 @@ export const getStudioLikedTracks = (cursor: string | null) =>
   apiGet<StudioLikedTracksPageDTO>(
     `/studio/playlists/liked${cursorQuery(cursor)}`,
   );
+
+/** Which of the named tracks the member has liked, whatever page of Liked
+ *  songs holds them. */
+export const getStudioLikedStatus = (trackIds: readonly string[]) =>
+  apiGet<{ likedTrackIds: string[] }>(
+    `/studio/playlists/liked/status?ids=${trackIds.map(encodeURIComponent).join(",")}`,
+  );

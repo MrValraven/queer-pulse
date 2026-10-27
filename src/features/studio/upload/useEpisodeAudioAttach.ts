@@ -18,6 +18,7 @@ import { createProgressReporter } from "../studioUploadQueue";
 import {
   conversionFailureOf,
   isRetryableUploadError,
+  routeBySignature,
   uploadErrorKeyOf,
   validateAudioFiles,
 } from "../studioUploadValidation";
@@ -115,15 +116,26 @@ export function useEpisodeAudioAttach(
           barPercent: conversionBarOf(percent),
           isConfirming: false,
           isConverting: true,
+          isChecking: false,
         });
     };
-    showConverting(0);
+    // The header is read first: a file that is too long is refused from here.
+    if (isCurrent())
+      setProgress({
+        fileName,
+        progress: 0,
+        barPercent: 0,
+        isConfirming: false,
+        isConverting: false,
+        isChecking: true,
+      });
     const reportProgress = createProgressReporter(showConverting);
     const result = await convertToMp3(
       work.sourceFile,
       STUDIO_LIMITS.audioMaxBytesPodcast,
       {
         signal: controller.signal,
+        onChecked: () => showConverting(0),
         onProgress: (fraction) => reportProgress(fraction * 100),
       },
     );
@@ -153,6 +165,7 @@ export function useEpisodeAudioAttach(
           barPercent: uploadBarOf(percent, work.wasConverted),
           isConfirming: false,
           isConverting: false,
+          isChecking: false,
         });
     };
     showUploading(0);
@@ -196,6 +209,7 @@ export function useEpisodeAudioAttach(
         barPercent: 100,
         isConfirming: true,
         isConverting: false,
+        isChecking: false,
       });
       await confirmAudio.mutateAsync({
         trackId,
@@ -218,13 +232,15 @@ export function useEpisodeAudioAttach(
     }
   }
 
-  function attach(file: File) {
+  async function attach(file: File) {
     const { accepted, rejected } = validateAudioFiles(
       [file],
       0,
       STUDIO_LIMITS.audioMaxBytesPodcast,
     );
-    const [first] = accepted;
+    const [picked] = accepted;
+    // A WAV renamed .mp3 is caught by its first bytes and converted.
+    const first = picked ? await routeBySignature(picked) : undefined;
     if (!first) {
       run.startRun();
       setHeld(null);

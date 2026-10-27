@@ -103,6 +103,7 @@ export function StudioUploadReleaseFields({
           label={t("studio:upload.metadata.field.genre")}
         >
           <Select
+            id={RELEASE_FIELD_IDS.genre}
             options={[
               { value: "", label: t("studio:uploadFlow.release.genreNone") },
               ...STUDIO_GENRES.map((genre) => ({

@@ -1,0 +1,16 @@
+/* The businesses page's mood: shopfront warmth. The page keeps the house
+   cream; its accents lean warm, with amber daylight beside the coral. */
+.page[data-audience="businesses"] {
+  --businesses-daylight: color-mix(in srgb, var(--amber) 16%, transparent);
+}
+
+/* A whisper of daylight behind the questions, so the late sections still
+   feel lit from the street. CSS Modules would rename a bare id, so the
+   section's id stays global. */
+.page[data-audience="businesses"] section:global(#questions) {
+  background-image: radial-gradient(
+    ellipse 50% 60% at 0% 100%,
+    var(--businesses-daylight),
+    transparent 70%
+  );
+}

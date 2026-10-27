@@ -128,6 +128,7 @@ const LISTENING_KEYS = [
   "chapters.editor.pasteToggle",
   "chapters.editor.pasteLabel",
   "chapters.editor.pasteHint",
+  "chapters.editor.pasteHintEpisode",
   "chapters.editor.pasteApply",
   "chapters.editor.pasteReplaceNote",
   "chapters.editor.pasteUnparsed",

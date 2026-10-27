@@ -80,6 +80,15 @@ export const enNamespaceLoaders: Partial<
   notifications: () =>
     import("./en/notifications").then((module) => module.notifications),
   quizshow: () => import("./en/quizshow").then((module) => module.quizshow),
+  audiences: () => import("./en/audiences").then((module) => module.audiences),
+  forBusinesses: () =>
+    import("./en/forBusinesses").then((module) => module.forBusinesses),
+  forCommunities: () =>
+    import("./en/forCommunities").then((module) => module.forCommunities),
+  forPerformers: () =>
+    import("./en/forPerformers").then((module) => module.forPerformers),
+  forPractitioners: () =>
+    import("./en/forPractitioners").then((module) => module.forPractitioners),
 };
 
 /**
@@ -127,6 +136,15 @@ export const ptNamespaceLoaders: Partial<
   notifications: () =>
     import("./pt/notifications").then((module) => module.notifications),
   quizshow: () => import("./pt/quizshow").then((module) => module.quizshow),
+  audiences: () => import("./pt/audiences").then((module) => module.audiences),
+  forBusinesses: () =>
+    import("./pt/forBusinesses").then((module) => module.forBusinesses),
+  forCommunities: () =>
+    import("./pt/forCommunities").then((module) => module.forCommunities),
+  forPerformers: () =>
+    import("./pt/forPerformers").then((module) => module.forPerformers),
+  forPractitioners: () =>
+    import("./pt/forPractitioners").then((module) => module.forPractitioners),
 };
 
 /** Per-language namespace-loader table, keyed the same way `catalogs` is. */
@@ -186,6 +204,11 @@ const en: Record<Namespace, Catalog> = {
   culture: PENDING_CATALOG,
   notifications: PENDING_CATALOG,
   quizshow: PENDING_CATALOG,
+  audiences: PENDING_CATALOG,
+  forBusinesses: PENDING_CATALOG,
+  forCommunities: PENDING_CATALOG,
+  forPerformers: PENDING_CATALOG,
+  forPractitioners: PENDING_CATALOG,
 };
 
 const pt: Record<Namespace, Catalog> = {
@@ -227,6 +250,11 @@ const pt: Record<Namespace, Catalog> = {
   culture: PENDING_CATALOG,
   notifications: PENDING_CATALOG,
   quizshow: PENDING_CATALOG,
+  audiences: PENDING_CATALOG,
+  forBusinesses: PENDING_CATALOG,
+  forCommunities: PENDING_CATALOG,
+  forPerformers: PENDING_CATALOG,
+  forPractitioners: PENDING_CATALOG,
 };
 
 /**

@@ -189,4 +189,18 @@ describe("studioKindInQuoteSnippet", () => {
       studioKindInQuoteSnippet("https://example.com/a(/studio/track?id=9"),
     ).toBeNull();
   });
+
+  it("labels a milestone link cut at the tail of a quote", () => {
+    const personaId = "7e8f9a0b-1c2d-4e3f-9a4b-5c6d7e8f9a0b";
+    expect(
+      studioKindInQuoteSnippet(
+        `look https://queerpulse.com/studio/artist?id=${personaId}&milestone=3f2a`,
+      ),
+    ).toBe("milestone");
+    expect(
+      studioKindInQuoteSnippet(
+        `look https://queerpulse.com/studio/artist?id=${personaId}`,
+      ),
+    ).toBeNull();
+  });
 });

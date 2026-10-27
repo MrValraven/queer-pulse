@@ -238,7 +238,9 @@
   grid-auto-columns: auto;
   grid-template-columns: repeat(var(--shelf-columns), minmax(0, 1fr));
   row-gap: 28px;
-  padding: 0;
+  /* The viewport bleeds out through the page gutter; a wrapping grid has
+     nothing to scroll into it, so the gutter goes back on as padding. */
+  padding: 0 var(--shelf-bleed);
   margin: 0;
   overflow: visible;
   scroll-snap-type: none;

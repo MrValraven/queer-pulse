@@ -680,13 +680,16 @@ export const subprofiles: Catalog = {
   "metaForm.bannerEdgeBleed": "Bleed into page",
   "metaForm.studioHero.label": "Studio page layout",
   "metaForm.studioHero.helper":
-    "Choose how your cover photo shows at the top of your Studio page.",
-  "metaForm.studioHero.full-bleed": "Full-bleed photo",
-  "metaForm.studioHero.full-bleedEffect":
-    "Your photo fills the top of your Studio page with your name over it.",
-  "metaForm.studioHero.avatar": "Avatar over photo",
-  "metaForm.studioHero.avatarEffect":
-    "Your photo sits behind the top of your Studio page and your avatar stands in front of it, next to your name.",
+    "Choose what shows at the top of your Studio page.",
+  "metaForm.studioHero.banner": "Banner",
+  "metaForm.studioHero.bannerEffect":
+    "Your cover photo fills the top of your Studio page with your name over it.",
+  "metaForm.studioHero.portrait": "Avatar",
+  "metaForm.studioHero.portraitEffect":
+    "Your round avatar sits at the top of your Studio page with your name.",
+  "metaForm.studioHero.both": "Banner and avatar",
+  "metaForm.studioHero.bothEffect":
+    "Your cover photo fills the top of your Studio page with your round avatar on it.",
   "metaForm.availabilityLabel": "Availability",
   "metaForm.availabilityUnset": "Not set",
   "metaForm.ctaLabelLabel": "Button label",

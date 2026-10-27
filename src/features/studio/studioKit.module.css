@@ -1,16 +1,40 @@
+/* A hairline that draws in from the left on hover and slides out to the
+   right on leave. Sized in em so it stays thin at display size. */
 .titleLink {
   color: inherit;
   text-decoration: none;
+  background-image: linear-gradient(
+    color-mix(in srgb, currentColor 55%, transparent),
+    color-mix(in srgb, currentColor 55%, transparent)
+  );
+  background-repeat: no-repeat;
+  background-position: 100% 92%;
+  background-size: 0% 0.035em;
+  transition: background-size var(--dur-slow) var(--ease);
 }
 
 @media (hover: hover) {
   .titleLink:hover {
+    background-position: 0% 92%;
+    background-size: 100% 0.035em;
+  }
+}
+
+.artistLink {
+  color: var(--s-text);
+  font-weight: bolder;
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .artistLink:hover {
     text-decoration: underline;
   }
 }
 
 .pillLink:focus-visible,
 .titleLink:focus-visible,
+.artistLink:focus-visible,
 .tab:focus-visible,
 .panel:focus-visible {
   outline: var(--focus-ring);

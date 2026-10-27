@@ -24,6 +24,17 @@
   border-radius: inherit;
 }
 
+/* An option passed `isDisabled`: it stays focusable (so the focus ring above
+   still shows) and reads as unavailable. The pointer and hover overrides
+   outrank a caller's single-class hover so the card never lifts. */
+.option[data-disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.option[data-disabled]:hover {
+  transform: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .option {
     transition: none !important;

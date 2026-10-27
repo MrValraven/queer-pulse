@@ -25,6 +25,7 @@ import {
 import styles from "./SubprofilePresenceFields.module.css";
 import { TattooBooksStatusLine } from "./skins/tattoo/editor/TattooBooksStatusLine";
 import { shouldShowStudioHeroControl } from "./subprofileMetaEditor.helpers";
+import { STUDIO_HERO_CHOICES } from "../studio/studioHeroChoice";
 import { useEditorPersonaKind } from "./useEditorPersonaKind";
 
 interface SubprofilePresenceFieldsProps {
@@ -91,21 +92,19 @@ export function SubprofilePresenceFields({
     personaKind,
     coverUrl,
   );
-  const studioHeroOptions = (["full-bleed", "avatar"] as const).map(
-    (choice) => ({
-      id: choice,
-      render: (
-        <>
-          <span className={styles.heroChoiceTitle}>
-            {t(`subprofiles:metaForm.studioHero.${choice}`)}
-          </span>
-          <span className={styles.heroChoiceEffect}>
-            {t(`subprofiles:metaForm.studioHero.${choice}Effect`)}
-          </span>
-        </>
-      ),
-    }),
-  );
+  const studioHeroOptions = STUDIO_HERO_CHOICES.map((choice) => ({
+    id: choice,
+    render: (
+      <>
+        <span className={styles.heroChoiceTitle}>
+          {t(`subprofiles:metaForm.studioHero.${choice}`)}
+        </span>
+        <span className={styles.heroChoiceEffect}>
+          {t(`subprofiles:metaForm.studioHero.${choice}Effect`)}
+        </span>
+      </>
+    ),
+  }));
 
   return (
     <>

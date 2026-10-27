@@ -1,0 +1,19 @@
+/* A gradient halo behind the closing headline, painted from tokens. */
+.closing {
+  background-image: radial-gradient(
+    ellipse 60% 70% at 50% 0%,
+    color-mix(in srgb, var(--accent) 22%, transparent),
+    transparent 70%
+  );
+}
+
+/* The sample note under the CTA: centred on the band like the content above
+   it, in quiet cream ink. Scoped under the band so it outranks the note's
+   own ink whatever order the two stylesheets load in. */
+.closing .note {
+  justify-content: center;
+  max-width: 720px;
+  margin: 32px auto 0;
+  text-align: center;
+  color: rgba(var(--cream-rgb), 0.62);
+}

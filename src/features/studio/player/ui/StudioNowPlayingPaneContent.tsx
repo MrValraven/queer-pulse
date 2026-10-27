@@ -9,6 +9,7 @@ import {
   useStudioPlayerClock,
   type StudioQueueItem,
 } from "../studioPlayerContext";
+import { markExplicitStart } from "../studioEpisodePlay";
 import { studioSeekAndResume } from "../studioSeekAndResume";
 import type { StudioNowPlayingTab } from "../studioPlayerSurface";
 import { StudioChapterList } from "./StudioChapterList";
@@ -162,7 +163,12 @@ function ChaptersPane({ title }: { title: string }) {
     <StudioChapterList
       chapters={player.currentChapters ?? []}
       activeIndex={currentChapterIndex}
-      onSelect={(chapter) => player.seek(chapter.startSeconds)}
+      onSelect={(chapter) => {
+        // A chapter names where to start (0:00 included): it also wins over
+        // a saved place still waiting to resume.
+        markExplicitStart(player.currentItem?.queueEntryId ?? null);
+        player.seek(chapter.startSeconds);
+      }}
       label={t("studio:chapters.listLabel", { title })}
     />
   );

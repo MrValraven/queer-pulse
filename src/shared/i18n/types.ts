@@ -43,6 +43,11 @@ export type Namespace =
   | "culture"
   | "notifications"
   | "quizshow"
+  | "audiences"
+  | "forBusinesses"
+  | "forCommunities"
+  | "forPerformers"
+  | "forPractitioners"
   | "shared";
 
 /** Flat key → translated string. Keys are dot paths, e.g. `signIn.title`. */

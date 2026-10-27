@@ -12,6 +12,7 @@ import {
 } from "./ProfileContentSections";
 import { RelatedSection } from "./ProfileRelatedSection";
 import { NowSection } from "./now/NowSection";
+import { ProfileEventsSection } from "./ProfileEventsSection";
 import { ProfileCommunitiesSection } from "./ProfileCommunitiesSection";
 import { PlacesSection } from "./PlacesSection";
 import { ProfileStudioPlaylists } from "./ProfileStudioPlaylists";
@@ -91,6 +92,16 @@ export function MobileProfileTabPanels({
           <SectionWrap>
             <NowSection profile={profile} isSelf={selfView} />
           </SectionWrap>
+          {/* Self-wraps (no SectionWrap), so its first-load
+              `data-section-pending` placeholder is a direct child of this
+              panel, where the empty-state `:has()` rule reads it. */}
+          <ProfileEventsSection
+            memberSlug={memberSlug}
+            isSelf={selfView}
+            firstName={firstName}
+            hasOwnGutter
+          />
+
           <SectionWrap>
             <ShapingsSection profile={profile} />
           </SectionWrap>

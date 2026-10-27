@@ -6,16 +6,24 @@ import { isDemoModeRuntime } from "../../../shared/api/demoModeRuntime";
  * of this deployment's origins, or a root-relative path, whose path is
  * exactly a track, release or playlist page with an `id`. Every surface that
  * turns a link into a card (chat bubbles, the share picker, inbox rows, reply
- * quotes, posts) asks this module, so the rule lives in one place. Preview
- * links, artist pages, scenes and shelves are never Studio links here.
+ * quotes, posts) asks this module, so the rule lives in one place. An artist
+ * page is a Studio link only with a `milestone`. Preview links, scenes and
+ * shelves are never Studio links here.
  *
  * A lyric link (PRD-13) is a track link with `line`, the index of one timed
  * lyric line: `/studio/track?id=<id>&t=<s>&line=<n>`. The URL carries the
  * index only, never the words; each reader's card reads the line from its
  * own track read. The backend reader (`studio-share-link.ts`) reads the same
  * link as a track with `lineIndex` and builds the same canonical path.
+ *
+ * A milestone link is an artist link with `milestone`, the id of one reached
+ * milestone: `/studio/artist?id=<artistId>&milestone=<id>`. Both ids must
+ * read as ids; an artist link without a usable `milestone` stays a plain link
+ * with no card. The card reads the milestone by its id, and the backend
+ * reader builds the same canonical path, `id` first.
  */
-export type StudioShareKind = "track" | "release" | "playlist" | "lyric";
+export type StudioShareKind =
+  "track" | "release" | "playlist" | "lyric" | "milestone";
 
 export interface StudioLinkTarget {
   kind: StudioShareKind;
@@ -25,6 +33,8 @@ export interface StudioLinkTarget {
   startAtSeconds: number | null;
   /** Lyric links only: the timed line's index, 0 to 499. */
   lineIndex?: number;
+  /** Milestone links only: the persona's id, lowercased (the backend's `artistId`). */
+  artistId?: string;
 }
 
 export interface StudioLinkMatch {
@@ -44,6 +54,7 @@ const PATH_BY_KIND: Readonly<Record<StudioShareKind, string>> = {
   release: routes.studioAlbum,
   playlist: routes.studioCollection,
   lyric: routes.studioTrack,
+  milestone: routes.studioArtist,
 };
 
 /** Lyric links: the `line` index, up to the 500 timed lines a track holds
@@ -157,6 +168,19 @@ export function studioShareTargetKey(target: StudioLinkTarget): string {
     : `${target.kind}:${target.id}:${target.lineIndex}`;
 }
 
+/** The milestone link for one reached milestone of one persona. */
+export function studioMilestoneTarget(
+  artistId: string,
+  milestoneId: string,
+): StudioLinkTarget {
+  return {
+    kind: "milestone",
+    id: milestoneId,
+    artistId,
+    startAtSeconds: null,
+  };
+}
+
 /** The lyric link for one timed line, starting where the line starts. */
 export function studioLyricTarget(
   trackId: string,
@@ -203,6 +227,9 @@ export function parseStudioLink(url: string): StudioLinkTarget | null {
   const parsed = resolvedOwnOriginUrl(url);
   if (!parsed) return null;
   if (parsed.username !== "" || parsed.password !== "") return null;
+  if (parsed.pathname === routes.studioArtist) {
+    return milestoneTargetOf(parsed.searchParams);
+  }
   const kind = KIND_BY_PATH[parsed.pathname];
   if (!kind) return null;
   const id = normalizedId(parsed.searchParams.get("id"));
@@ -213,6 +240,21 @@ export function parseStudioLink(url: string): StudioLinkTarget | null {
   return lineIndex === null
     ? { kind, id, startAtSeconds }
     : { kind: "lyric", id, startAtSeconds, lineIndex };
+}
+
+/** An artist link is a card only with a usable `milestone`. */
+function milestoneTargetOf(
+  searchParams: URLSearchParams,
+): StudioLinkTarget | null {
+  const artistId = normalizedId(searchParams.get("id"));
+  const milestoneId = normalizedId(searchParams.get("milestone"));
+  if (artistId === null || milestoneId === null) return null;
+  return {
+    kind: "milestone",
+    id: milestoneId,
+    artistId,
+    startAtSeconds: null,
+  };
 }
 
 interface StudioLinkMatchAt {
@@ -311,8 +353,12 @@ export function textWithoutStudioLink(
 }
 
 /** The canonical root-relative form, built in the backend's order: `id`,
- *  then `t` when set, then `line` on a lyric link. */
+ *  then `t` when set, then `line` on a lyric link; a milestone link names the
+ *  persona's `id`, then `milestone`. */
 export function studioLinkPath(target: StudioLinkTarget): string {
+  if (target.kind === "milestone") {
+    return `${routes.studioArtist}?id=${encodeURIComponent(target.artistId ?? "")}&milestone=${encodeURIComponent(target.id)}`;
+  }
   const path = `${PATH_BY_KIND[target.kind]}?id=${encodeURIComponent(target.id)}`;
   if (!isTrackShareKind(target.kind)) return path;
   const timedPath =

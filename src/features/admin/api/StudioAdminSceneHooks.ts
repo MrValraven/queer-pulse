@@ -20,6 +20,12 @@ import {
   STUDIO_ADMIN_SILENT_META,
   studioAdminDemoRefusal,
 } from "../studioAdminDemoErrors";
+import {
+  removeDemoSceneRelease,
+  setDemoScenePins,
+  setDemoScenePositions,
+  upsertDemoScene,
+} from "../../studio/api/studioDemoSceneStore";
 import { ADMIN_STUDIO_KEY } from "./StudioAdminCurationHooks";
 import { useDemoAwareMutation } from "./demoAwareMutation";
 import {
@@ -108,9 +114,17 @@ function useScenesCache() {
       void queryClient.invalidateQueries({ queryKey });
     }
   };
+  // The demo has no server: the edit is written into the demo scene store
+  // the member pages read, then their cached reads are refreshed.
+  const propagateToDemoMembers = (writeStore: () => void) => {
+    if (!demoMode) return;
+    writeStore();
+    refreshMemberScenes();
+  };
   return {
     demoMode,
     queryClient,
+    propagateToDemoMembers,
     read,
     write,
     cancelRead,
@@ -140,7 +154,13 @@ export type SaveAdminStudioSceneVariables =
  *  `studio_scene_slug_taken`; a create with no slug takes the first free
  *  candidate built from the name, as the server does. */
 export function useSaveAdminStudioScene() {
-  const { demoMode, read, upsert, refreshMemberScenes } = useScenesCache();
+  const {
+    demoMode,
+    read,
+    upsert,
+    refreshMemberScenes,
+    propagateToDemoMembers,
+  } = useScenesCache();
   return useDemoAwareMutation<
     AdminStudioSceneDTO,
     Error,
@@ -196,7 +216,10 @@ export function useSaveAdminStudioScene() {
       variables.sceneId === null
         ? createAdminStudioScene(variables.body)
         : updateAdminStudioScene(variables.sceneId, variables.body),
-    onSuccess: upsert,
+    onSuccess: (scene) => {
+      upsert(scene);
+      propagateToDemoMembers(() => upsertDemoScene(scene));
+    },
     onLiveSuccess: refreshMemberScenes,
   });
 }
@@ -204,7 +227,13 @@ export function useSaveAdminStudioScene() {
 /** Archive keeps every release link and pin; restore puts the scene last
  *  among the active ones. */
 export function useSetAdminStudioSceneArchived() {
-  const { demoMode, read, upsert, refreshMemberScenes } = useScenesCache();
+  const {
+    demoMode,
+    read,
+    upsert,
+    refreshMemberScenes,
+    propagateToDemoMembers,
+  } = useScenesCache();
   return useDemoAwareMutation<
     AdminStudioSceneDTO,
     Error,
@@ -223,7 +252,10 @@ export function useSetAdminStudioSceneArchived() {
       isArchived
         ? archiveAdminStudioScene(scene.id)
         : restoreAdminStudioScene(scene.id),
-    onSuccess: upsert,
+    onSuccess: (updated) => {
+      upsert(updated);
+      propagateToDemoMembers(() => upsertDemoScene(updated));
+    },
     onLiveSuccess: refreshMemberScenes,
   });
 }
@@ -237,6 +269,7 @@ export function useReorderAdminStudioScenes() {
     cancelRead,
     refetchRead,
     refreshMemberScenes,
+    propagateToDemoMembers,
   } = useScenesCache();
   const reorderedActive = (sceneIds: string[]) => {
     const scenes = read();
@@ -277,11 +310,13 @@ export function useReorderAdminStudioScenes() {
       if (context) write(context.previous);
     },
     onLiveError: refetchRead,
-    onSuccess: (active) =>
+    onSuccess: (active) => {
       write([
         ...active,
         ...read().filter((scene) => scene.status !== "active"),
-      ]),
+      ]);
+      propagateToDemoMembers(() => setDemoScenePositions(active));
+    },
     onLiveSuccess: refreshMemberScenes,
   });
 }
@@ -326,6 +361,7 @@ export function usePinAdminStudioSceneEvent() {
     demoPinnedEventsOf,
     patch,
     refreshMemberScenes,
+    propagateToDemoMembers,
   } = useScenesCache();
   return useDemoAwareMutation<
     AdminStudioSceneEventDTO[],
@@ -358,6 +394,7 @@ export function usePinAdminStudioSceneEvent() {
     onSuccess: (events, { sceneId }) => {
       queryClient.setQueryData(sceneEventsKey(demoMode, sceneId), events);
       patch(sceneId, { pinnedEventCount: events.length });
+      propagateToDemoMembers(() => setDemoScenePins(sceneId, events));
     },
     onLiveSuccess: refreshMemberScenes,
   });
@@ -370,6 +407,7 @@ export function useUnpinAdminStudioSceneEvent() {
     demoPinnedEventsOf,
     patch,
     refreshMemberScenes,
+    propagateToDemoMembers,
   } = useScenesCache();
   return useDemoAwareMutation<
     void,
@@ -398,6 +436,7 @@ export function useUnpinAdminStudioSceneEvent() {
       const events = cached.filter((event) => event.eventId !== eventId);
       queryClient.setQueryData(sceneEventsKey(demoMode, sceneId), events);
       patch(sceneId, { pinnedEventCount: events.length });
+      propagateToDemoMembers(() => setDemoScenePins(sceneId, events));
     },
     onLiveSuccess: refreshMemberScenes,
   });
@@ -431,8 +470,14 @@ export function useAdminStudioSceneReleases(sceneId: string | null) {
 
 /** Sets the release's scene to none; the release leaves the list. */
 export function useRemoveAdminStudioSceneRelease() {
-  const { demoMode, queryClient, read, patch, refreshMemberScenes } =
-    useScenesCache();
+  const {
+    demoMode,
+    queryClient,
+    read,
+    patch,
+    refreshMemberScenes,
+    propagateToDemoMembers,
+  } = useScenesCache();
   return useDemoAwareMutation<
     void,
     Error,
@@ -461,6 +506,7 @@ export function useRemoveAdminStudioSceneRelease() {
       const scene = read().find((candidate) => candidate.id === sceneId);
       if (scene)
         patch(sceneId, { releaseCount: Math.max(0, scene.releaseCount - 1) });
+      propagateToDemoMembers(() => removeDemoSceneRelease(sceneId, releaseId));
     },
     onLiveSuccess: refreshMemberScenes,
   });

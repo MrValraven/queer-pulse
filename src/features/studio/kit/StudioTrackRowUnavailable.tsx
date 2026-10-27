@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { m } from "motion/react";
-import { FiMoreHorizontal } from "react-icons/fi";
+import { FiMoreHorizontal, FiMusic } from "react-icons/fi";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { IconButton } from "../../../shared/components/ui/IconButton";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -119,7 +119,14 @@ export function StudioTrackRowUnavailable({
       <div className={css.lead}>
         <StudioHiddenTrackNumber position={number} />
       </div>
-      {showCover && <div className={css.cover} aria-hidden="true" />}
+      {showCover && (
+        <div
+          className={`${css.cover} ${css.coverUnavailable}`}
+          aria-hidden="true"
+        >
+          <FiMusic />
+        </div>
+      )}
       <div className={css.main}>
         <Heading
           className={css.title}

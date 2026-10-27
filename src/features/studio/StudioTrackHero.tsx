@@ -23,6 +23,7 @@ import {
   StudioFoldedShareItemsContext,
   useStudioFoldedShareItems,
 } from "./useStudioFoldedShareItem";
+import { useStudioLikeBlockedReason } from "./useStudioLikeBlockedReason";
 import { useStudioShowcase } from "./useStudioShowcase";
 import { useStudioTrackPlay } from "./useStudioTrackPlay";
 import ss from "./studio.module.css";
@@ -66,6 +67,10 @@ export function StudioTrackHero({
     href: track.href,
     artistName: track.release.artist.name,
   };
+  const likeBlockedReason = useStudioLikeBlockedReason(
+    likeSubject,
+    track.isReleaseWithdrawn,
+  );
   // A heart only where the track can be played: a live release (publishedAt
   // is null for a draft or a scheduled release) and an uploaded audio file.
   // The owner reads those tracks here too, and a like would land in Liked
@@ -89,7 +94,9 @@ export function StudioTrackHero({
             ? t("studio:playlist.add.trackAria", { title: track.title })
             : undefined
         }
-        likeSubject={isLikeable ? likeSubject : undefined}
+        likeSubject={
+          isLikeable && !track.isReleaseWithdrawn ? likeSubject : undefined
+        }
       />
     </Tooltip>
   );
@@ -158,13 +165,14 @@ export function StudioTrackHero({
           )}
           {isLikeable && (
             <Tooltip
-              label={t("studio:like.cta")}
+              label={likeBlockedReason ?? t("studio:like.cta")}
               placement="top"
-              isDisabled={!isCompact}
+              isDisabled={!isCompact && !likeBlockedReason}
             >
               <StudioLikeButton
                 subject={likeSubject}
                 variant={isCompact ? "icon" : "labelled"}
+                blockedReason={likeBlockedReason}
               />
             </Tooltip>
           )}

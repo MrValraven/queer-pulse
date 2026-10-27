@@ -17,7 +17,7 @@ export interface StudioTab {
   to: string;
   /** The paths that belong to the tab's section, besides `to` itself: Home
    *  owns scenes, Search owns Browse (its genre and mood tiles open it),
-   *  Library owns playlists and Liked songs. */
+   *  Library owns playlists, Liked songs and Your listening. */
   sectionPaths: readonly string[];
   icon: IconType;
   /** The filled glyph shown while the tab is the current page. */
@@ -46,7 +46,11 @@ export const STUDIO_TABS: StudioTab[] = [
     key: "library",
     labelKey: "studio:rail.v2.library",
     to: routes.studioLibrary,
-    sectionPaths: [routes.studioCollection, routes.studioLiked],
+    sectionPaths: [
+      routes.studioCollection,
+      routes.studioLiked,
+      routes.studioListening,
+    ],
     icon: RiStackLine,
     activeIcon: RiStackFill,
   },

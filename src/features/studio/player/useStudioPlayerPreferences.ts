@@ -165,8 +165,6 @@ export interface StudioListeningPreferenceControls {
   preferences: StudioListeningPreferences;
   /** Off also removes the resume copy from this device. */
   setShouldResumeAcrossSessions: (shouldResume: boolean) => void;
-  /** Off also removes the recently played list from this device. */
-  setRecentlyPlayedOn: (isOn: boolean) => void;
   setSingleKeyShortcutsOn: (isOn: boolean) => void;
 }
 
@@ -174,18 +172,15 @@ const listeningSetters = {
   setShouldResumeAcrossSessions: (shouldResume: boolean) => {
     writeListeningPreferences({ shouldResumeAcrossSessions: shouldResume });
   },
-  setRecentlyPlayedOn: (isOn: boolean) => {
-    writeListeningPreferences({ isRecentlyPlayedOn: isOn });
-  },
   setSingleKeyShortcutsOn: (isOn: boolean) => {
     writeListeningPreferences({ areSingleKeyShortcutsOn: isOn });
   },
 };
 
-/** This device's listening switches (resume, recently played, single-key
- *  shortcuts). Works outside the player provider, so Studio Settings and the
- *  shortcut listener read it anywhere; every reader re-renders on a change,
- *  here or in another tab. Nothing here reaches the server. */
+/** This device's listening switches (resume and single-key shortcuts).
+ *  Works outside the player provider, so Studio Settings and the shortcut
+ *  listener read it anywhere; every reader re-renders on a change, here or
+ *  in another tab. Nothing here reaches the server. */
 export function useStudioListeningPreferences(): StudioListeningPreferenceControls {
   const preferences = useSyncExternalStore(
     subscribeListeningPreferences,

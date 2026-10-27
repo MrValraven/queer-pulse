@@ -11,6 +11,10 @@ import {
   computeServerMetaResync,
   sameMetaSnapshot,
 } from "./subprofileMetaEditor.helpers";
+import {
+  DEFAULT_STUDIO_HERO,
+  toStudioHeroChoice,
+} from "../studio/studioHeroChoice";
 
 /** The setters `useServerMetaResync` may call to adopt an un-edited field's
  *  server value, keyed the same as `MetaSnapshot`. */
@@ -77,7 +81,10 @@ export function useServerMetaResync(
     ctaLabel: (server) => setters.setCtaLabel(server.ctaLabel),
     ctaUrl: (server) => setters.setCtaUrl(server.ctaUrl),
     coverBleed: (server) => setters.setCoverBleed(server.coverBleed),
-    studioHero: (server) => setters.setStudioHero(server.studioHero),
+    studioHero: (server) =>
+      setters.setStudioHero(
+        toStudioHeroChoice(server.studioHero) ?? DEFAULT_STUDIO_HERO,
+      ),
   };
 
   const { changedKeys, nextBaseline } = computeServerMetaResync(

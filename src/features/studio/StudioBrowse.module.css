@@ -83,7 +83,7 @@
   align-items: center;
   min-height: var(--tap-min);
   padding: 0 16px;
-  border: 1px solid rgba(var(--studio-ink-rgb), 0.4);
+  border: 1px solid var(--studio-edge);
   border-radius: var(--radius-pill);
   color: var(--studio-text);
   font-size: var(--text-14);

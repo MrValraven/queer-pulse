@@ -1,0 +1,19 @@
+/* The CTA row. Its min-height holds the row open while the live session is
+   still being checked, so the page below does not jump when a button lands. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+}
+.actions[data-placement="closing"] {
+  justify-content: center;
+}
+
+@media (max-width: 479px) {
+  .actions > * {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+}

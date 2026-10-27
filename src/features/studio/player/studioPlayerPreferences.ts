@@ -1,10 +1,7 @@
 import { safeStorage } from "../../../shared/storage/safeStorage";
 import { STUDIO_CROSSFADE_MAX_SECONDS } from "../api/studio.types";
 import type { StudioPlayerPreferences } from "./studioPlayerContext";
-import {
-  clearStudioRecentlyPlayed,
-  clearStudioResumeRecord,
-} from "./studioListeningMemory";
+import { clearStudioResumeRecord } from "./studioListeningMemory";
 
 /** Device preferences (contract C.4, F.2): volume, mute and even loudness.
  *  The crossfade length is a server setting (Open pages'
@@ -94,15 +91,18 @@ export function readActiveCrossfadeSeconds(): number {
 // ── Listening preferences (PRD-17, PRD-18, DES-21) ────────────────────────
 
 /** This device's listening switches, kept apart from the volume record so a
- *  volume change never writes over them. Studio Settings shows them. */
+ *  volume change never writes over them. Studio Settings shows them. The
+ *  device "Recently played" switch moved to the server's "Listening history"
+ *  switch (contract 11); its stored field is read once and then dropped. */
 export const STUDIO_LISTENING_PREFERENCES_KEY = "studio.player.listening";
+
+/** The retired device switch's field in the stored record. */
+const LEGACY_RECENTLY_PLAYED_FIELD = "isRecentlyPlayedOn";
 
 export interface StudioListeningPreferences {
   /** Keep the queue and playhead on this device after the tab closes, and
    *  cue them, paused, in a fresh tab. Default false (opt-in). */
   shouldResumeAcrossSessions: boolean;
-  /** Keep a recently played list on this device. Default true. */
-  isRecentlyPlayedOn: boolean;
   /** The single-letter player shortcuts, such as L for the lyrics and Q for
    *  the queue. Default true. */
   areSingleKeyShortcutsOn: boolean;
@@ -110,13 +110,11 @@ export interface StudioListeningPreferences {
 
 export const DEFAULT_LISTENING_PREFERENCES: StudioListeningPreferences = {
   shouldResumeAcrossSessions: false,
-  isRecentlyPlayedOn: true,
   areSingleKeyShortcutsOn: true,
 };
 
 const LISTENING_PREFERENCE_FIELDS = [
   "shouldResumeAcrossSessions",
-  "isRecentlyPlayedOn",
   "areSingleKeyShortcutsOn",
 ] as const;
 
@@ -191,8 +189,24 @@ export function readListeningPreferences(): StudioListeningPreferences {
   return preferences;
 }
 
-/** Saves one or more switches. Turning resume off removes the resume copy,
- *  and turning Recently played off removes the list, at once. */
+/** The stored record as written, or null when absent, broken or blocked. */
+function readRawListeningRecord(): Record<string, unknown> | null {
+  const raw = safeStorage.get(STUDIO_LISTENING_PREFERENCES_KEY);
+  if (raw === null) return null;
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    return typeof parsed === "object" && parsed !== null
+      ? (parsed as Record<string, unknown>)
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Saves one or more switches. Turning resume off removes the resume copy at
+ *  once. The recently played list stays: the server's Listening history
+ *  switch governs it now. A stored legacy Recently played off value is kept
+ *  in the record, so the one-time read still finds it. */
 export function writeListeningPreferences(
   patch: Partial<StudioListeningPreferences>,
 ): StudioListeningPreferences {
@@ -201,11 +215,29 @@ export function writeListeningPreferences(
     ...patch,
   });
   inMemoryListeningPreferences = next;
-  safeStorage.set(STUDIO_LISTENING_PREFERENCES_KEY, JSON.stringify(next));
+  const stored = readLegacyRecentlyPlayedOff()
+    ? { ...next, [LEGACY_RECENTLY_PLAYED_FIELD]: false }
+    : next;
+  safeStorage.set(STUDIO_LISTENING_PREFERENCES_KEY, JSON.stringify(stored));
   if (!next.shouldResumeAcrossSessions) clearStudioResumeRecord();
-  if (!next.isRecentlyPlayedOn) clearStudioRecentlyPlayed();
   notifyListeningListeners();
   return next;
+}
+
+/** The retired device switch, read once: true only when this device stored it off. */
+export function readLegacyRecentlyPlayedOff(): boolean {
+  return readRawListeningRecord()?.[LEGACY_RECENTLY_PLAYED_FIELD] === false;
+}
+
+/** Rewrites the device record without the retired field. Does nothing when
+ *  the record no longer holds it. */
+export function dropLegacyRecentlyPlayedField(): void {
+  const record = readRawListeningRecord();
+  if (record === null || !(LEGACY_RECENTLY_PLAYED_FIELD in record)) return;
+  const next = normalizeListeningPreferences(record);
+  inMemoryListeningPreferences = next;
+  safeStorage.set(STUDIO_LISTENING_PREFERENCES_KEY, JSON.stringify(next));
+  notifyListeningListeners();
 }
 
 // ── Equaliser (PRD-14) ────────────────────────────────────────────────────

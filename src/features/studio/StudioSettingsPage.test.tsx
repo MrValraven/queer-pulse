@@ -155,13 +155,9 @@ describe("Studio settings switches", () => {
 });
 
 describe("Studio settings device switches", () => {
-  it("offers the three device-only switches, each described", async () => {
+  it("offers the two device-only switches, each described", async () => {
     renderSettings();
-    for (const name of [
-      "Single-key shortcuts",
-      "Resume where you left off",
-      "Recently played",
-    ]) {
+    for (const name of ["Single-key shortcuts", "Resume where you left off"]) {
       const toggle = await screen.findByRole("switch", { name });
       expect(toggle).toHaveAttribute("aria-describedby");
     }
@@ -177,5 +173,45 @@ describe("Studio settings device switches", () => {
     expect(
       screen.getByRole("switch", { name: "Single-key shortcuts" }),
     ).toHaveAttribute("aria-checked", "false");
+  });
+});
+
+describe("Studio settings listening history (demo)", () => {
+  it("offers the Listening history switch with Clear and a link to Your listening", async () => {
+    renderSettings();
+    const toggle = await screen.findByRole("switch", {
+      name: "Listening history",
+    });
+    expect(toggle).toHaveAttribute("aria-checked", "true");
+    expect(
+      screen.getAllByRole("switch", { name: "Listening history" }),
+    ).toHaveLength(1);
+    expect(
+      screen.queryByRole("switch", { name: "Recently played" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "See your listening" }),
+    ).toHaveAttribute("href", "/studio/listening");
+    fireEvent.click(
+      screen.getByRole("button", { name: "Clear listening history" }),
+    );
+    expect(
+      await screen.findByRole("dialog", { name: "Clear listening history" }),
+    ).toBeInTheDocument();
+  });
+
+  it("pauses listening history from Settings", async () => {
+    renderSettings();
+    fireEvent.click(
+      await screen.findByRole("switch", { name: "Listening history" }),
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByRole("switch", { name: "Listening history" }),
+      ).toHaveAttribute("aria-checked", "false"),
+    );
+    await waitFor(() =>
+      expect(demoGetStudioPlayback().isListeningHistoryOn).toBe(false),
+    );
   });
 });

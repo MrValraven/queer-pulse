@@ -326,3 +326,188 @@ describe("readPcmHeader on AIFF", () => {
       ).toBe(rate);
   });
 });
+
+/** A copy of `bytes` with big- or little-endian fields overwritten. */
+function patched(
+  bytes: Uint8Array<ArrayBuffer>,
+  edits: { at: number; size: 1 | 2 | 4; value: number; isLittle?: boolean }[],
+) {
+  const copy = bytes.slice();
+  const view = new DataView(copy.buffer);
+  for (const { at, size, value, isLittle = true } of edits) {
+    if (size === 1) view.setUint8(at, value);
+    else if (size === 2) view.setUint16(at, value, isLittle);
+    else view.setUint32(at, value, isLittle);
+  }
+  return copy;
+}
+
+// A canonical mono 16-bit WAV: fmt body at 20 (channels 22, rate 24), data
+// size at 40, samples from 44.
+const smallWav = () =>
+  wavBytes({ channels: 1, sampleRate: 8000, bitsPerSample: 16, frames: 100 });
+
+describe("readPcmHeader on 8-bit and 64-bit float audio", () => {
+  it("reads 8-bit WAV", async () => {
+    const header = await headerOf(
+      wavBytes({
+        channels: 1,
+        sampleRate: 8000,
+        bitsPerSample: 8,
+        frames: 8000,
+      }),
+    );
+    expect(header).toMatchObject({
+      bitsPerSample: 8,
+      isFloat: false,
+      dataBytes: 8000,
+      durationSeconds: 1,
+    });
+  });
+
+  it("reads 64-bit float WAV", async () => {
+    const header = await headerOf(
+      wavBytes({
+        channels: 2,
+        sampleRate: 44100,
+        bitsPerSample: 64,
+        frames: 4410,
+        isFloat: true,
+      }),
+    );
+    expect(header).toMatchObject({
+      bitsPerSample: 64,
+      isFloat: true,
+      dataBytes: 4410 * 16,
+    });
+    expect(header.durationSeconds).toBeCloseTo(0.1, 9);
+  });
+
+  it("refuses 64-bit integer WAV, which no converter reads", async () => {
+    expect(
+      await reasonOf(
+        wavBytes({
+          channels: 1,
+          sampleRate: 8000,
+          bitsPerSample: 64,
+          frames: 10,
+        }),
+      ),
+    ).toBe("invalid");
+  });
+
+  it("reads 8-bit AIFF", async () => {
+    const header = await headerOf(
+      aiffBytes({
+        channels: 1,
+        sampleRate: 8000,
+        bitsPerSample: 8,
+        frames: 800,
+      }),
+    );
+    expect(header).toMatchObject({
+      container: "aiff",
+      bitsPerSample: 8,
+      dataBytes: 800,
+    });
+  });
+});
+
+describe("readPcmHeader on hostile headers", () => {
+  it("refuses an empty file and one shorter than the RIFF lead", async () => {
+    expect(await reasonOf(new Uint8Array(0))).toBe("truncated");
+    expect(await reasonOf(smallWav().slice(0, 11))).toBe("truncated");
+  });
+
+  it("refuses a fmt chunk that claims 4 GB, without reading past the file", async () => {
+    const bytes = patched(smallWav(), [{ at: 16, size: 4, value: 0xffffffff }]);
+    expect(await reasonOf(bytes)).toBe("truncated");
+  });
+
+  it("refuses zero channels and a zero sample rate", async () => {
+    expect(
+      await reasonOf(patched(smallWav(), [{ at: 22, size: 2, value: 0 }])),
+    ).toBe("invalid");
+    expect(
+      await reasonOf(patched(smallWav(), [{ at: 24, size: 4, value: 0 }])),
+    ).toBe("invalid");
+  });
+
+  it("refuses a block size that disagrees with channels and bits", async () => {
+    expect(
+      await reasonOf(patched(smallWav(), [{ at: 32, size: 2, value: 7 }])),
+    ).toBe("invalid");
+  });
+
+  it("clamps a data size larger than the file to the bytes that exist", async () => {
+    const header = await headerOf(
+      patched(smallWav(), [{ at: 40, size: 4, value: 0x7fffffff }]),
+    );
+    expect(header.dataBytes).toBe(200);
+  });
+
+  it("refuses audio that comes before its format", async () => {
+    const bytes = new Uint8Array(12 + 8 + 4);
+    bytes.set(new TextEncoder().encode("RIFF"), 0);
+    bytes.set(new TextEncoder().encode("WAVE"), 8);
+    bytes.set(new TextEncoder().encode("data"), 12);
+    new DataView(bytes.buffer).setUint32(16, 4, true);
+    expect(await reasonOf(bytes)).toBe("invalid");
+  });
+
+  it("gives up on a file of endless empty chunks", async () => {
+    const chunkCount = 2000;
+    const bytes = new Uint8Array(12 + chunkCount * 8);
+    bytes.set(new TextEncoder().encode("RIFF"), 0);
+    bytes.set(new TextEncoder().encode("WAVE"), 8);
+    for (let index = 0; index < chunkCount; index += 1)
+      bytes.set(new TextEncoder().encode("JUNK"), 12 + index * 8);
+    expect(await reasonOf(bytes)).toBe("invalid");
+  });
+
+  it("refuses an AIFF whose SSND chunk is smaller than its own header", async () => {
+    const bytes = aiffBytes({
+      channels: 1,
+      sampleRate: 8000,
+      bitsPerSample: 16,
+      frames: 100,
+    });
+    // FORM lead 12, COMM 8 + 18, so SSND starts at 38 and its size at 42.
+    expect(
+      await reasonOf(
+        patched(bytes, [{ at: 42, size: 4, value: 0, isLittle: false }]),
+      ),
+    ).toBe("invalid");
+  });
+
+  it("refuses an AIFF whose SSND offset points past the file", async () => {
+    const bytes = aiffBytes({
+      channels: 1,
+      sampleRate: 8000,
+      bitsPerSample: 16,
+      frames: 100,
+    });
+    expect(
+      await reasonOf(
+        patched(bytes, [
+          { at: 46, size: 4, value: 0xffffffff, isLittle: false },
+        ]),
+      ),
+    ).toBe("invalid");
+  });
+
+  it("refuses an AIFF whose sample rate is infinite", async () => {
+    const bytes = aiffBytes({
+      channels: 1,
+      sampleRate: 8000,
+      bitsPerSample: 16,
+      frames: 100,
+    });
+    // COMM body starts at 20; the 80-bit rate sits 8 bytes in.
+    expect(
+      await reasonOf(
+        patched(bytes, [{ at: 28, size: 2, value: 0x7fff, isLittle: false }]),
+      ),
+    ).toBe("invalid");
+  });
+});

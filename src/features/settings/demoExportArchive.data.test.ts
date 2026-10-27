@@ -136,3 +136,17 @@ describe("demo data export, Pulse Live games", () => {
     expect(play?.quizTitle).toBe("Co-op quiz night");
   });
 });
+
+describe("demo data export, Studio listening", () => {
+  it("files Studio listening under the activity log as one array, listens then supporters", () => {
+    expect(CATEGORY_ARCHIVE_KEYS.activityLog).toContain("studioListening");
+    const rows = buildDemoArchiveContent(["activityLog"])
+      .studioListening as Array<{ type: string }>;
+    expect(rows.map((row) => row.type)).toEqual([
+      "listen",
+      "listen",
+      "supporter",
+      "supporter",
+    ]);
+  });
+});

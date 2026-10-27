@@ -12,6 +12,12 @@ import {
   type StudioQueuePersistenceOptions,
 } from "./useStudioQueuePersistence";
 
+// These tests cover the saved queue; the recorder (counting and the device
+// list) has its own suite in useStudioRecentlyPlayed.test.tsx.
+vi.mock("./useStudioRecentlyPlayed", () => ({
+  useStudioRecentlyPlayedRecorder: vi.fn(),
+}));
+
 const item = (trackId: string): StudioQueueItem => ({
   trackId,
   title: trackId,

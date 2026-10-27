@@ -12,6 +12,7 @@ import {
   FiEye,
   FiFileText,
   FiFlag,
+  FiHeadphones,
   FiHeart,
   FiHelpCircle,
   FiInbox,
@@ -185,6 +186,12 @@ export const STUDIO_MENU_STAFF_ITEMS: StudioAccountMenuItem[] = [
 
 /** The Studio group, above the Help and info toggle. */
 export const STUDIO_MENU_STUDIO_ITEMS: StudioAccountMenuItem[] = [
+  {
+    labelKey: "studio:shell.menu.yourListening",
+    to: routes.studioListening,
+    icon: FiHeadphones,
+    audience: "everyone",
+  },
   {
     labelKey: "studio:shell.menu.settings",
     to: routes.studioSettings,

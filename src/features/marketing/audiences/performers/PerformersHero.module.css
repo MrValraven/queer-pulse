@@ -1,0 +1,243 @@
+/* The performers hero: a lit stage on the page ground. Spotlight beams and
+   pools are gradients of tokens; the collage's marquee frame is ringed with
+   bulbs drawn as repeating radial dots. No blurred shadows. */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding: var(--section-y-96) 0 var(--section-y-112);
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 62%,
+      color-mix(in srgb, var(--accent) 7%, transparent)
+    ),
+    var(--cream);
+}
+
+/* Two beams from the rig above the collage, and warm pools where they land. */
+.spotlights {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 34% 46% at 72% 4%,
+      color-mix(in srgb, var(--accent) 20%, transparent),
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 26% 40% at 94% 0%,
+      color-mix(in srgb, var(--violet) 18%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 42% 22% at 70% 100%,
+      color-mix(in srgb, var(--rose) 14%, transparent),
+      transparent 70%
+    );
+}
+.spotlights::before,
+.spotlights::after {
+  content: "";
+  position: absolute;
+  inset: -20% -10% 0;
+  transform-origin: 72% 0;
+  background: conic-gradient(
+    from 168deg at 72% 0%,
+    transparent 0deg,
+    color-mix(in srgb, var(--accent) 11%, transparent) 10deg,
+    transparent 22deg
+  );
+  /* The motion is finite: two slow sweeps, then the beams rest where they
+     started. Under reduced motion the sweep stops entirely. */
+  animation: beam-sway 9s var(--ease) 2;
+}
+.spotlights::after {
+  transform-origin: 94% 0;
+  background: conic-gradient(
+    from 192deg at 94% 0%,
+    transparent 0deg,
+    color-mix(in srgb, var(--violet) 10%, transparent) 9deg,
+    transparent 20deg
+  );
+  animation-duration: 11s;
+  animation-direction: reverse;
+}
+
+@keyframes beam-sway {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-4deg);
+  }
+  75% {
+    transform: rotate(4deg);
+  }
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 56px;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--wrap-px);
+}
+
+.copyColumn {
+  min-width: 0;
+}
+
+.collage {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* The marquee: the stage ground, ringed by bulbs. */
+.marquee {
+  --bulb: var(--amber);
+  position: relative;
+  padding: 22px;
+  border-radius: var(--radius-24);
+  background: var(--skin-stage-ground, var(--plum-deep));
+}
+.bulbs {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, var(--bulb) 0 2.5px, transparent 3.5px) top left /
+      20px 12px repeat-x,
+    radial-gradient(circle, var(--bulb) 0 2.5px, transparent 3.5px) bottom
+      left / 20px 12px repeat-x,
+    radial-gradient(circle, var(--bulb) 0 2.5px, transparent 3.5px) top left /
+      12px 20px repeat-y,
+    radial-gradient(circle, var(--bulb) 0 2.5px, transparent 3.5px) top right /
+      12px 20px repeat-y;
+  /* A few twinkles as the page opens, then the bulbs stay fully lit. */
+  animation: bulb-twinkle 2.6s var(--ease) 3;
+}
+.bulbs::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+        circle,
+        color-mix(in srgb, var(--bulb) 32%, transparent) 0 5px,
+        transparent 8px
+      )
+      top left / 20px 12px repeat-x,
+    radial-gradient(
+        circle,
+        color-mix(in srgb, var(--bulb) 32%, transparent) 0 5px,
+        transparent 8px
+      )
+      bottom left / 20px 12px repeat-x;
+}
+
+@keyframes bulb-twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.72;
+  }
+}
+
+.personaFrame {
+  position: relative;
+}
+.personaFrame .article {
+  min-height: 0;
+  padding-bottom: 24px;
+  border-radius: var(--radius-16);
+  overflow: hidden;
+}
+/* The Sample tag reads on the dark stage, at the left, clear of the
+   lineup pinned at the right. */
+.marquee figcaption {
+  align-self: flex-start;
+  background: rgba(var(--cream-rgb), 0.1);
+  color: rgba(var(--cream-rgb), 0.78);
+}
+
+/* The lineup, pinned beside the marquee like a running order. */
+.lineup {
+  position: relative;
+  z-index: 1;
+  align-self: flex-end;
+  width: min(100%, 340px);
+  margin-top: -36px;
+  margin-right: -12px;
+  transform: rotate(1.5deg);
+}
+.lineupCard {
+  padding: 18px 18px 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-20);
+  background: var(--cream);
+}
+.lineupCard > section {
+  margin-top: 0;
+}
+.lineupCard ul {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+.lineupCard li {
+  padding: 10px 12px;
+}
+.lineupNote {
+  margin: 8px 4px 0;
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* Phones and narrow tablets: copy first, then the marquee, then the lineup
+   in the flow. */
+@media (max-width: 899px) {
+  .hero {
+    padding: var(--section-y-64) 0 var(--section-y-72);
+  }
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+  .lineup {
+    align-self: stretch;
+    width: 100%;
+    margin: 20px 0 0;
+    transform: none;
+  }
+}
+@media (max-width: 479px) {
+  .marquee {
+    padding: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotlights::before,
+  .spotlights::after,
+  .bulbs {
+    animation: none;
+  }
+}
+:global(html[data-reduce-motion="true"]) .spotlights::before,
+:global(html[data-reduce-motion="true"]) .spotlights::after,
+:global(html[data-reduce-motion="true"]) .bulbs {
+  animation: none;
+}

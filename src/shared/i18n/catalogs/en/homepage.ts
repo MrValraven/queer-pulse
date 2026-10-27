@@ -106,6 +106,28 @@ export const homepage: Catalog = {
 
   // ── TrustStrip ─────────────────────────────────────────────────────────────
 
+  // ── WhoItsFor ──────────────────────────────────────────────────────────────
+  "whoItsFor.eyebrow": "Who it's for",
+  "whoItsFor.title": "Made for the way <em>you already work</em>",
+  "whoItsFor.lede":
+    "Four short pages show what QueerPulse does for businesses, communities, performers and practitioners.",
+  "whoItsFor.businesses.title": "Small businesses",
+  "whoItsFor.businesses.body":
+    "Let queer customers find you, with a listing you run with your team.",
+  "whoItsFor.businesses.link": "See the page for businesses",
+  "whoItsFor.communities.title": "Communities and collectives",
+  "whoItsFor.communities.body":
+    "Your people, your conversations and your events in one place.",
+  "whoItsFor.communities.link": "See the page for communities",
+  "whoItsFor.performers.title": "Performers and creators",
+  "whoItsFor.performers.body":
+    "A page that works like your own website, with your next gig up front.",
+  "whoItsFor.performers.link": "See the page for performers",
+  "whoItsFor.practitioners.title": "Practitioners",
+  "whoItsFor.practitioners.body":
+    "A calm page for your practice, so the right people find you.",
+  "whoItsFor.practitioners.link": "See the page for practitioners",
+
   // ── PainPoints ("why we built this") ───────────────────────────────────────
   "painPoints.eyebrow": "Why we built this",
   "painPoints.title": "We built the community <em>we wanted to find.</em>",

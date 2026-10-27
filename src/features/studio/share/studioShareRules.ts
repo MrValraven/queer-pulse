@@ -20,6 +20,8 @@ export interface StudioShareRuleSources {
   track?: StudioTrackView;
   release?: StudioReleaseView;
   playlist?: StudioPlaylistView;
+  /** Milestone links: the persona the milestone belongs to. */
+  milestoneArtistId?: string;
 }
 
 const OPEN_RULES: StudioShareRules = {
@@ -34,6 +36,13 @@ export function studioShareRulesOf(
 ): StudioShareRules {
   const ownedPersonaName = (personaId: string) =>
     ownedPersonas.find((persona) => persona.id === personaId)?.name ?? null;
+  if (kind === "milestone") {
+    // Anyone may send a milestone; the owner hears whose it is.
+    return {
+      canSendToOthers: true,
+      ownPersonaName: ownedPersonaName(sources.milestoneArtistId ?? ""),
+    };
+  }
   if (kind === "playlist") {
     const playlist = sources.playlist;
     // Fails closed until the playlist is known.

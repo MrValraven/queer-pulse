@@ -206,7 +206,11 @@ export function StudioHomeHero({
           <div className={styles.by}>
             <Translation
               i18nKey="studio:home.hero.byLine"
-              components={{ strong: <strong /> }}
+              components={{
+                strong: (
+                  <Link to={release.artist.href} className={kit.artistLink} />
+                ),
+              }}
               values={{
                 artist: release.artist.name,
                 facts: releaseFactsLine(release, t),

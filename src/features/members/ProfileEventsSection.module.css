@@ -1,0 +1,168 @@
+/* The upcoming group, then the past fold, stacked under the section head. */
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+}
+.group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+/* The past group reads as its own block under a hairline, like the rule
+   between the profile's sections. */
+.pastGroup {
+  padding-top: var(--gap-lg);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
+}
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  margin-bottom: var(--gap-sm);
+}
+/* The heading wrapping the past toggle carries no type of its own: the
+   button inside it is the label. */
+.labelHeading {
+  margin: 0;
+  font: inherit;
+}
+/* The past toggle wears the label's type with a button's reset, and its
+   margin moves to the panel so a closed fold leaves no gap under it. The
+   padding gives the focus ring room around the words, and the matching
+   negative margin keeps the words where the label's would sit. */
+.headerToggle {
+  margin: calc(-1 * var(--icon-gap-inline)) calc(-1 * var(--gap-xs));
+  padding: var(--icon-gap-inline) var(--gap-xs);
+  border: 0;
+  background: none;
+  cursor: pointer;
+  border-radius: var(--radius-tag);
+  transition: color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .headerToggle:hover {
+    color: var(--text-strong);
+  }
+}
+.headerToggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+/* Spans the column, so the grid inside lays out at full width. */
+.pastPanel {
+  align-self: stretch;
+  width: 100%;
+}
+/* The panel's first child, inside the fold, so the space opens with it. */
+.pastPanel .grid,
+.pastPanel .rail {
+  margin-top: var(--gap-sm);
+}
+/* The phone's tab panel is a flex column, where the self-wrapped section
+   would shrink to its content; this keeps it the panel's full width. */
+.ownGutter {
+  width: 100%;
+}
+/* `HeightGlide` around the desktop grid: full column width, so the grid's
+   tracks size against the column. */
+.glide {
+  align-self: stretch;
+}
+/* Three posters a row, when the column gives each 240px (`usePosterGridFit`;
+   narrower columns get `.rail`). `featured` posters have no width of their
+   own, so the tracks carry it. */
+.grid {
+  align-self: stretch;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap-grid);
+}
+/* The narrow-column layout: one sideways row that snaps each poster to the
+   start. The block padding leaves room for a poster's focus ring and hover
+   lift, which the scroll box would otherwise clip.
+
+   The rail runs out through the page's `.wrap` gutter (`--wrap-px` plus the
+   safe-area inset), so the last poster scrolls on to the screen edge and
+   is never cut flat at the gutter. The matching padding and scroll padding
+   keep the first and last posters lined up with the section text. Its
+   trailing edge is the page gutter in every tree. Its leading edge is too
+   once the sections sidebar is gone (`--mobile`, both the phone tab panel
+   and the stacked desktop page); beside the sidebar it stays put, so the
+   rail never runs into the sidebar's column, and only reaches out by
+   `--gap-xs`, enough room for a focused poster's ring. */
+.rail {
+  --rail-bleed-start: var(--gap-xs);
+  --rail-bleed-end: calc(var(--wrap-px) + env(safe-area-inset-right));
+  align-self: stretch;
+  display: flex;
+  gap: var(--gap-sm);
+  margin-block: 0;
+  margin-inline: calc(-1 * var(--rail-bleed-start))
+    calc(-1 * var(--rail-bleed-end));
+  padding-block: var(--gap-xs);
+  padding-inline: var(--rail-bleed-start) var(--rail-bleed-end);
+  scroll-padding-inline: var(--rail-bleed-start) var(--rail-bleed-end);
+  list-style: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.rail::-webkit-scrollbar {
+  display: none;
+}
+@media (--mobile) {
+  .rail {
+    --rail-bleed-start: calc(var(--wrap-px) + env(safe-area-inset-left));
+  }
+}
+.railItem {
+  flex: none;
+  width: 240px;
+  scroll-snap-align: start;
+}
+/* The poster stretches to its track; the co-host tag sits under it at its
+   own width, flush left. */
+.cell {
+  display: grid;
+  gap: var(--gap-xs);
+}
+.cohostTag {
+  justify-self: start;
+  white-space: nowrap;
+}
+/* The scroll margins keep a button scrolled back into view after "Show
+   fewer" clear of the fixed nav and the phone tab bar. */
+.moreButton {
+  margin-top: var(--gap-sm);
+  scroll-margin-block: calc(var(--sticky-top, 0px) + var(--gap-sm))
+    calc(var(--bottom-inset, 0px) + var(--gap-sm));
+}
+.chevron {
+  transition: transform var(--dur-fast) var(--ease);
+}
+.chevronOpen {
+  transform: rotate(180deg);
+}
+.note {
+  font-size: var(--text-14);
+  color: var(--ink-60);
+  line-height: 1.6;
+  max-width: 56ch;
+}
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+}

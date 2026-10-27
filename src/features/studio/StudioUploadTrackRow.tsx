@@ -22,6 +22,7 @@ export type { UploadRowControl } from "./StudioUploadRowActions";
 
 const STAGE_KEY: Record<UploadRow["stage"], string> = {
   queued: "studio:uploadFlow.files.stage.queued",
+  checking: "studio:uploadFlow.files.stage.checking",
   converting: "studio:uploadFlow.files.stage.converting",
   creating: "studio:uploadFlow.files.stage.creating",
   uploading: "studio:uploadFlow.files.stage.uploading",
@@ -33,9 +34,10 @@ const STAGE_KEY: Record<UploadRow["stage"], string> = {
 
 /** The details panel's open state. Closing it with unsaved edits (Cancel,
  *  or Edit details pressed again) asks first, so long manual work never
- *  vanishes on a press that looks harmless. */
-function useDetailsPanel() {
-  const [isEditing, setIsEditing] = useState(false);
+ *  vanishes on a press that looks harmless. `shouldOpenDetails` starts it
+ *  open (a deep link to a track's credits). */
+function useDetailsPanel(shouldOpenDetails?: boolean) {
+  const [isEditing, setIsEditing] = useState(shouldOpenDetails ?? false);
   const [isConfirmingDiscard, setIsConfirmingDiscard] = useState(false);
   const isDirtyRef = useRef(false);
   const editButtonRef = useRef<HTMLButtonElement>(null);
@@ -118,6 +120,9 @@ export interface UploadTrackRowProps {
   gripHandlers?: { onPointerDown: (event: ReactPointerEvent) => void };
   /** This row is the one being dragged: it lifts and shows where it lands. */
   isDragging?: boolean;
+  /** Opens the details panel on mount with its credits marked as the
+   *  deep link target (`#studio-release-track-credits`). */
+  shouldOpenDetails?: boolean;
 }
 
 export function StudioUploadTrackRow({
@@ -139,9 +144,10 @@ export function StudioUploadTrackRow({
   localFile,
   gripHandlers,
   isDragging = false,
+  shouldOpenDetails,
 }: UploadTrackRowProps) {
   const { t } = useTranslation();
-  const panel = useDetailsPanel();
+  const panel = useDetailsPanel(shouldOpenDetails);
   const label = { title: row.title, position: index + 1 };
 
   return (
@@ -206,6 +212,7 @@ export function StudioUploadTrackRow({
             releaseType={releaseType}
             localFile={localFile}
             onDirtyChange={panel.onDirtyChange}
+            shouldMarkCredits={shouldOpenDetails}
             onDone={(savedTitle) => {
               if (savedTitle === undefined) {
                 panel.requestClose();

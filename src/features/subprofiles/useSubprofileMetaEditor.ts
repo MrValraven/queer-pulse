@@ -13,9 +13,9 @@ import type { MetaSnapshot } from "./subprofileEditorDiff";
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import {
   buildMetaPatchFrom,
-  DEFAULT_STUDIO_HERO,
   metaSnapshotOf,
   sameMetaSnapshot,
+  studioHeroOf,
 } from "./subprofileMetaEditor.helpers";
 import { useServerMetaResync } from "./useServerMetaResync";
 import { handleIsKindName } from "./personaHandle";
@@ -164,7 +164,7 @@ export function useSubprofileMetaEditor(
     subprofile.skinData?.coverBleed ?? false,
   );
   const [studioHero, setStudioHero] = useState<StudioHeroChoice>(
-    subprofile.skinData?.studioHero ?? DEFAULT_STUDIO_HERO,
+    studioHeroOf(subprofile.skinData),
   );
   const [accent, setAccent] = useState<AccentKey | "">(subprofile.accent ?? "");
   const [availability, setAvailability] = useState<AvailabilityKey | "">(

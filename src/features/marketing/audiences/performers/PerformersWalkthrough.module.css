@@ -1,0 +1,227 @@
+/* The walkthrough visuals. The persona blocks keep the Stage skin's own
+   dark ground, and a clipped frame fades into that ground. */
+/* `figure.` outranks the kit's own `.frame` default. */
+figure.stageFrame {
+  --showcase-fade: var(--skin-stage-ground, var(--plum-deep));
+}
+.stageFrame .article {
+  min-height: 0;
+  padding-bottom: 28px;
+  border-radius: var(--radius-20);
+  overflow: hidden;
+}
+/* On the dark page the product's dark `.pp` ground is the page colour
+   itself, so each block takes the dark card surface and a hairline edge,
+   and the clipped frame fades into that same surface. */
+:global([data-theme="dark"]) figure.stageFrame {
+  --showcase-fade: var(--paper);
+}
+:global([data-theme="dark"]) .stageFrame .article {
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
+  background: var(--paper);
+}
+
+/* Step 3: the shows at a phone's width. Below 540px the persona's own
+   container query stacks each row's date over its title; wider, the Stage
+   skin's fixed date column is too narrow for a long Portuguese date and runs
+   it into the title. */
+figure.gigsFrame {
+  width: min(100%, 33rem);
+  margin-inline: auto;
+}
+
+/* Step 1: linked or standalone. */
+.choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.choice {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+}
+.choice[data-choice="unlinked"] {
+  border-style: dashed;
+  background: color-mix(in srgb, var(--violet) 7%, var(--paper));
+}
+.choiceIcon {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 4px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent-text);
+  font-size: var(--text-18);
+}
+.choiceLabel {
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  font-weight: 500;
+  color: var(--text-strong);
+}
+.choiceBody {
+  font-size: var(--text-14-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+/* Step 2: the Stage skin's crafts on a lit board. */
+.skinBoard {
+  position: relative;
+  padding: 28px;
+  border-radius: var(--radius-card);
+  background:
+    radial-gradient(
+      ellipse 70% 60% at 50% 0%,
+      color-mix(in srgb, var(--accent) 22%, transparent),
+      transparent 72%
+    ),
+    var(--skin-stage-ground, var(--plum-deep));
+  color: rgba(var(--cream-rgb), 0.92);
+}
+.skinLabel {
+  margin: 0 0 16px;
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(var(--cream-rgb), 0.66);
+}
+.skinKinds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.skinKind {
+  padding: 7px 14px;
+  border: 1px solid rgba(var(--cream-rgb), 0.2);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-14);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(var(--cream-rgb), 0.78);
+}
+.skinKind[data-featured="true"] {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  color: rgba(var(--cream-rgb), 1);
+}
+/* "+9 more": only on phones, where the board lists the first few crafts. */
+.skinMore {
+  display: none;
+  padding: 7px 14px;
+  border: 1px dashed rgba(var(--cream-rgb), 0.3);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-14);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(var(--cream-rgb), 0.66);
+}
+
+/* Step 4: the lineup invite page inside a browser window, on the cream
+   page ground it sits on in the product. */
+.invitePage {
+  padding: 22px;
+  background: var(--cream);
+}
+.invitePage > :last-child {
+  margin-bottom: 0;
+}
+@media (max-width: 559px) {
+  .invitePage {
+    padding: 14px;
+  }
+  /* The invite page's own roomy padding, eased for a phone-wide window. */
+  .invitePage > div:not(:last-child) {
+    padding: 22px 20px;
+  }
+}
+
+/* Step 5: the address bar and the links row. */
+.address {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 18px;
+  padding: 12px 16px;
+  border: 1px solid rgba(var(--cream-rgb), 0.18);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-16);
+  color: rgba(var(--cream-rgb), 0.7);
+  overflow-wrap: anywhere;
+}
+.address b {
+  font-weight: 700;
+  color: rgba(var(--cream-rgb), 1);
+}
+
+/* The Studio aside: a soft coral wash with a note icon. */
+.studioNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 14px 18px 14px 14px;
+  border-radius: var(--radius-panel);
+  background: color-mix(in srgb, var(--accent) 9%, transparent);
+}
+.studioNote p {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+.studioIcon {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--accent-text);
+  font-size: var(--text-15);
+}
+.studioLink {
+  font-weight: 600;
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.studioLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-badge);
+}
+
+@media (max-width: 559px) {
+  .choices {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .skinBoard {
+    padding: 22px 18px;
+  }
+  .skinKind[data-beyond-phone="true"] {
+    display: none;
+  }
+  .skinMore {
+    display: block;
+  }
+}

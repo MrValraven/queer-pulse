@@ -37,8 +37,10 @@ export interface ConfirmDialogProps {
   confirmLabel?: ReactNode;
   cancelLabel?: ReactNode;
   /** `destructive` renders the confirm action in the danger variant;
-   *  `positive` in the jade one, for a confirmation that marks a success. */
-  tone?: "default" | "destructive" | "positive";
+   *  `positive` in the jade one, for a confirmation that marks a success;
+   *  `neutral` in the plum one, for a reversible action that should not
+   *  read as a warning. */
+  tone?: "default" | "destructive" | "positive" | "neutral";
   /** True while the confirmed action is in flight — disables both buttons. */
   loading?: boolean;
   reason?: ConfirmDialogReason;
@@ -72,6 +74,7 @@ const CONFIRM_VARIANT_BY_TONE = {
   default: "primary",
   destructive: "danger",
   positive: "jade",
+  neutral: "plum",
 } as const;
 
 export function ConfirmDialog({

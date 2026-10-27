@@ -3,6 +3,7 @@ import { useState } from "react";
 import { FiStar } from "react-icons/fi";
 import { Avatar, EmptyState, Modal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { studioSnippetPreviewText } from "./studioSharePreview";
 import { groupIdentity } from "./starredMessageIdentity";
 import { useStarredMessages } from "./api/useMessagePinStar";
 import { StarredMessagesError } from "./StarredMessagesError";
@@ -139,7 +140,10 @@ export function StarredMessagesModal({
                   <div className={styles.rowBody}>
                     <span className={styles.rowName}>{identity.name}</span>
                     <span className={styles.rowMeta}>
-                      {starredSnippetIn(item, language)}
+                      {studioSnippetPreviewText(
+                        starredSnippetIn(item, language),
+                        t,
+                      )}
                     </span>
                   </div>
                 </button>

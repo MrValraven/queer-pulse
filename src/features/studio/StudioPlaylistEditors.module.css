@@ -24,8 +24,25 @@
   border-bottom: 1px solid rgba(var(--studio-ink-rgb), 0.08);
 }
 
+/* A real checkbox (role on a button) whose box is the member picker's
+   green check, trailing like the picker's rows. */
 .checkRow {
+  width: 100%;
+  border-top: 0;
+  border-inline: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
   cursor: pointer;
+}
+
+.checkRow[aria-disabled="true"] {
+  cursor: default;
+}
+
+.checkRow[aria-busy="true"] {
+  opacity: 0.6;
 }
 
 .avatar {
@@ -59,6 +76,12 @@
   flex: 1;
 }
 
+/* The sheet's body keeps one height across the list and invite steps, so
+   the dialog does not jump when they swap. */
+.stage {
+  min-height: 31rem;
+}
+
 .nameLink {
   color: inherit;
   text-decoration: none;
@@ -71,13 +94,14 @@
 
 .nameLink:focus-visible,
 .back:focus-visible,
-.checkbox:focus-visible {
+.checkRow:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
 }
 
-.pending {
+/* One small label for "Invite sent" and "Owner". */
+.badge {
   flex: none;
   white-space: nowrap;
   padding: 1px 8px;
@@ -85,14 +109,6 @@
   border-radius: var(--radius-pill);
   color: var(--studio-text-muted);
   font-size: var(--text-11);
-}
-
-.checkbox {
-  flex: none;
-  width: 18px;
-  height: 18px;
-  margin: 0;
-  accent-color: var(--accent);
 }
 
 .empty {

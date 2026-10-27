@@ -8,7 +8,10 @@ import {
   type StudioTrackRowAction,
   type StudioTrackSummary,
 } from "./kit/StudioTrackRow";
+import { StudioSelectionBar } from "./kit/StudioSelectionBar";
+import { useStudioRowSelection } from "./kit/useStudioRowSelection";
 import { useStudioPlayer } from "./player/studioPlayerContext";
+import { useStudioBulkTrackActions } from "./useStudioBulkTrackActions";
 import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
 import css from "./StudioAlbumTracklist.module.css";
@@ -76,6 +79,30 @@ export function StudioAlbumTracklist({
     },
     [release.id],
   );
+  // Selection offers exactly the bulk actions the release allows: Add to
+  // playlist is hidden on a preview, draft or taken-down release, and then
+  // no row can be picked. A listener's withheld track and a track with no
+  // audio are never selectable.
+  const isSelectionAllowed = !hiddenActions.includes("addToPlaylist");
+  const selectableIds = useMemo(
+    () =>
+      isSelectionAllowed
+        ? release.tracks.flatMap((track) =>
+            track.hasAudio && !(track.isWithheld && !release.isOwner)
+              ? [track.id]
+              : [],
+          )
+        : [],
+    [isSelectionAllowed, release.tracks, release.isOwner],
+  );
+  const selectableIdSet = useMemo(
+    () => new Set(selectableIds),
+    [selectableIds],
+  );
+  const selection = useStudioRowSelection(selectableIds);
+  const bulk = useStudioBulkTrackActions(selection, (rowIds) =>
+    rowIds.filter((rowId) => selectableIdSet.has(rowId)),
+  );
   const rows = useMemo(
     () =>
       release.tracks.map((track) => ({
@@ -114,10 +141,19 @@ export function StudioAlbumTracklist({
               hiddenActions={hiddenActions}
               shouldHideExplicit={shouldHideExplicit}
               headingLevel={3}
+              selection={
+                selectableIdSet.has(summary.id) ? selection : undefined
+              }
             />
           );
         })}
       </ol>
+      {isSelectionAllowed && (
+        <>
+          <StudioSelectionBar selection={selection} actions={bulk.actions} />
+          {bulk.picker}
+        </>
+      )}
     </section>
   );
 }

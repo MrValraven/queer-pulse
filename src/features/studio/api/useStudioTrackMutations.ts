@@ -18,6 +18,7 @@ import {
   type StudioTrackView,
 } from "./studio.adapters";
 import type {
+  StudioSource,
   StudioStreamAnalysis,
   UpdateStudioTrackBody,
 } from "./studio.types";
@@ -309,6 +310,16 @@ export function useUpdateStudioTrack() {
         queryClient.setQueryData(
           studioKeys.track(demoMode, track.id),
           detailAfter(queryClient, demoMode, track, body),
+        );
+      // The publish checklist reads sources in one release read; a saved
+      // source shows there at once.
+      if (body.sources !== undefined)
+        queryClient.setQueriesData<Record<string, StudioSource[] | undefined>>(
+          { queryKey: studioKeys.releaseTrackSourcesAll(demoMode) },
+          (previous) =>
+            previous && track.id in previous
+              ? { ...previous, [track.id]: track.sources }
+              : previous,
         );
       const analysis = analysisAfter(queryClient, demoMode, track.id, body);
       if (analysis)

@@ -72,6 +72,40 @@
   }
 }
 
+/* "Who it's for": a two by two grid of links under the social icons. Heading
+   and links match `.col h2` and `.col a`. */
+.audiences {
+  margin-top: 28px;
+}
+.audiences h2 {
+  font-size: var(--text-12);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+/* Two by two, so the four links read as one block in either language and
+   no single label is left alone on a second row. */
+.audiences ul {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  gap: 8px 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.audiences a {
+  font-size: var(--text-14);
+  color: rgba(var(--cream-rgb), 0.66);
+  transition: color var(--dur-base) var(--ease);
+}
+@media (hover: hover) {
+  .audiences a:hover {
+    color: rgba(var(--cream-rgb), 1);
+  }
+}
+
 /* Content-sized so the four columns stay a cohesive block that hugs the right
    edge (the `.grid` space-between drops the free space between it and the
    brand). Even gaps keep the rhythm; `max-content` avoids the fr-collapse that

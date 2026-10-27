@@ -1,12 +1,12 @@
-/* Studio Teaser End Card — standalone 1920×1080 media asset.
-   Self-contained: literal hex mirrors the design's own :root. */
+/* Studio Teaser End Card: standalone 1920x1080 media frame. It follows the
+   app theme through the --studio-* roles; the frame ground, text, coral and
+   jade text all come from them. */
 
 .stage {
   --jade: #4a8c6f;
   --jade-rgb: 74, 140, 111;
-  --cream: var(--cream);
-  --cream-60: rgba(var(--cream-rgb), 0.62);
-  --cream-40: rgba(var(--cream-rgb), 0.4);
+  --cream-60: var(--studio-text-muted);
+  --cream-40: var(--studio-text-faint);
   --serif: "Fraunces Variable", "Fraunces", Georgia, serif;
   --sans: "DM Sans Variable", "DM Sans", system-ui, sans-serif;
   --mono: "JetBrains Mono", monospace;
@@ -14,7 +14,8 @@
 
   position: fixed;
   inset: 0;
-  background: #0a0512;
+  background: var(--studio-surface-deep);
+  transition: background-color 0.2s var(--ease);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -40,9 +41,17 @@
       rgba(74, 140, 111, 0.12),
       transparent 62%
     ),
-    linear-gradient(160deg, #1c1230 0%, #1a1028 48%, #120920 100%);
+    linear-gradient(
+      160deg,
+      var(--studio-surface) 0%,
+      var(--studio-surface) 48%,
+      var(--studio-surface-rail) 100%
+    );
   font-family: var(--sans);
-  color: rgba(var(--cream-rgb), 1);
+  color: var(--studio-text);
+  transition:
+    background-color 0.2s var(--ease),
+    color 0.2s var(--ease);
 }
 
 /* Vignette */
@@ -54,7 +63,7 @@
   background: radial-gradient(
     120% 120% at 50% 50%,
     transparent 55%,
-    rgba(10, 5, 18, 0.55) 100%
+    rgba(var(--studio-ink-rgb), 0.12) 100%
   );
 }
 
@@ -68,7 +77,7 @@
 }
 
 .chair line {
-  stroke: rgba(var(--cream-rgb), 0.07);
+  stroke: rgba(var(--studio-ink-rgb), 0.07);
   stroke-width: 1;
 }
 
@@ -101,7 +110,7 @@
   box-shadow: none;
 }
 
-/* Spine — thin bars, lower third */
+/* Spine: thin bars, lower third */
 .spine {
   position: absolute;
   left: 0;
@@ -197,12 +206,12 @@
   font-size: 128px;
   line-height: 1;
   letter-spacing: -0.02em;
-  color: rgba(var(--cream-rgb), 1);
+  color: var(--studio-text);
 }
 
 .q {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 
 .tag {
@@ -211,7 +220,7 @@
   font-weight: 700;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   align-self: center;
   padding-top: 10px;
 }
@@ -222,13 +231,13 @@
   font-size: var(--text-52);
   line-height: 1.15;
   letter-spacing: -0.01em;
-  color: rgba(var(--cream-rgb), 1);
+  color: var(--studio-text);
   margin-bottom: 52px;
 }
 
 .tagline em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 
 /* Ledger pill */
@@ -238,7 +247,7 @@
   gap: 26px;
   padding: 18px 34px;
   border-radius: var(--radius-pill);
-  border: 1px solid var(--jade);
+  border: 1px solid var(--studio-jade-text);
   background: rgba(var(--jade-rgb), 0.12);
 }
 
@@ -253,14 +262,14 @@
   font-size: var(--text-22);
   font-weight: 500;
   letter-spacing: 0.01em;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 
 .coin {
   width: 24px;
   height: 24px;
   flex: none;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 
 .div {
@@ -280,7 +289,7 @@
   font-variant-numeric: tabular-nums;
   font-style: normal;
   font-weight: 600;
-  color: var(--jade);
+  color: var(--studio-jade-text);
 }
 
 /* CTA */
@@ -294,7 +303,7 @@
 
 .cta b {
   font-weight: 700;
-  color: rgba(var(--cream-rgb), 1);
+  color: var(--studio-text);
 }
 
 @keyframes ecPulse {

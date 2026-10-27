@@ -305,6 +305,11 @@ export const routes = {
   family: "/family",
   flatmates: "/local/housing/flatmates",
   forOrganisations: "/about/for-organisations",
+  /** Unlisted audience landing pages, noIndex, reached from the homepage strip and the footer. */
+  forBusinesses: "/for/businesses",
+  forCommunities: "/for/communities",
+  forPerformers: "/for/performers",
+  forPractitioners: "/for/practitioners",
   forum: "/forum",
   /** The full-page forum composer. A member-only sibling of the forum itself,
    *  so it is gated by the `/forum/*` pattern in `authGate.ts` rather than by
@@ -457,6 +462,7 @@ export const routes = {
   studioCollection: "/studio/collection",
   studioCredits: "/studio/credits",
   studioDashboard: "/studio/dashboard",
+  studioListening: "/studio/listening",
   studioE: "/studio",
   studioLanding: "/studio",
   studioLibrary: "/studio/library",

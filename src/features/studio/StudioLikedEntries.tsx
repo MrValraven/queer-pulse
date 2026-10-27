@@ -29,6 +29,7 @@ import {
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
 import css from "./StudioPlaylistPage.module.css";
+import likedCss from "./StudioLikedPage.module.css";
 
 const LIKED_SORTS: StudioTracklistSortOption[] = [
   { id: "custom", labelKey: "studio:tracklist.sortRecentlyLiked" },
@@ -47,6 +48,7 @@ function LikedEmptyState() {
   const { t } = useTranslation();
   return (
     <EmptyState
+      className={likedCss.emptyState}
       icon={<FiHeart fill="none" />}
       headingLevel={3}
       title={t("studio:liked.page.emptyTitle")}

@@ -5,6 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import type { MessageResponse } from "../../shared/contracts/contracts";
 import { PinIcon } from "./messageIcons";
+import { studioSnippetPreviewText } from "./studioSharePreview";
 import styles from "./MessagesPage.module.css";
 import bannerStyles from "./ConversationPinnedBanner.module.css";
 
@@ -109,7 +110,9 @@ export function ConversationPinnedBanner({
   const media = pinnedMediaDescriptor(current, t);
   // Never the raw media fallback body (DES-224): the aria-label announces
   // exactly what the visible snippet says.
-  const snippetText = media ? media.label : current.body;
+  const snippetText = media
+    ? media.label
+    : studioSnippetPreviewText(current.body, t);
 
   return (
     <button
@@ -134,7 +137,7 @@ export function ConversationPinnedBanner({
             <span className={styles.pinnedBannerSnippet}>{media.label}</span>
           </span>
         ) : (
-          <span className={styles.pinnedBannerSnippet}>{current.body}</span>
+          <span className={styles.pinnedBannerSnippet}>{snippetText}</span>
         )}
       </span>
     </button>

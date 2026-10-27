@@ -10,6 +10,9 @@ export interface StudioPlayerSurfaceValue {
   /** Desktop side panel; on phones openQueue opens Now playing on "queue". */
   isQueuePanelOpen: boolean;
   isShortcutsOpen: boolean;
+  /** The bar's one open popover (settings, sleep timer), keyed by its
+   *  trigger id. Opening one closes the queue panel, and the queue closes it. */
+  openPopoverId: string | null;
   openNowPlaying: (tab?: StudioNowPlayingTab) => void;
   closeNowPlaying: () => void;
   setNowPlayingTab: (tab: StudioNowPlayingTab) => void;
@@ -18,6 +21,9 @@ export interface StudioPlayerSurfaceValue {
   toggleQueuePanel: () => void;
   openShortcuts: () => void;
   closeShortcuts: () => void;
+  openPopover: (id: string) => void;
+  /** Clears only a matching id, so a stale close leaves another popover open. */
+  closePopover: (id: string) => void;
 }
 
 export const StudioPlayerSurfaceContext =

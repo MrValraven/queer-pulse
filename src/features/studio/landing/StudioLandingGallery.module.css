@@ -1,0 +1,198 @@
+/* "A look inside": a centred header, the chip tablist, then one framed
+   screenshot at a time with its caption, and the sample note.
+
+   The stage holds one height per breakpoint, so a switch never moves the
+   page below it. The panel is a size container and the frames take their
+   width from it. From 720px a laptop of width W stands about 0.589W tall
+   and a phone 0.275W wide stands exactly as tall (a phone of width P is
+   about 2.1425P). Below 720px every tab is a phone shot. */
+.gallery {
+  padding: clamp(var(--section-y-56), 8vh, var(--section-y-96)) 0;
+  overflow: clip;
+  scroll-margin-top: var(--nav-band);
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-inline: clamp(20px, 5vw, 48px);
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 16px;
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--studio-accent-text);
+}
+
+.title {
+  max-width: 22ch;
+  margin: 0 0 clamp(24px, 3.5vw, 36px);
+  font-family: var(--serif);
+  font-size: var(--text-display);
+  font-weight: 300;
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-display);
+  color: var(--studio-text);
+  text-wrap: balance;
+  scroll-margin-top: var(--nav-band);
+}
+.title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--studio-accent-text);
+}
+/* Focus from "See inside": the house ring for keyboard presses only. */
+.title:focus {
+  outline: none;
+}
+.title:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-4);
+}
+
+/* ── Chips ── The shared pill tabs in the Studio roles: the selected chip
+   inverts in each theme. Tab buttons are reached by role, since their
+   classes belong to the Tabs module. */
+.gallery .chipRow {
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 6px 4px;
+}
+.gallery .chipRow [role="tab"] {
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.16);
+  color: var(--studio-text-muted);
+  background: transparent;
+}
+@media (hover: hover) {
+  .gallery .chipRow [role="tab"]:not([aria-selected="true"]):hover {
+    color: var(--studio-text);
+    background: var(--studio-wash-2);
+  }
+}
+.gallery .chipRow [role="tab"][aria-selected="true"] {
+  border-color: var(--studio-text);
+  background: var(--studio-text);
+  color: var(--studio-surface);
+}
+
+/* ── Panel and stage ── */
+.panel {
+  container-type: inline-size;
+  width: 100%;
+  margin-top: clamp(28px, 4vw, 48px);
+  border-radius: var(--radius-card);
+}
+.panel:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  --stage-laptop-width: min(100cqi, 920px);
+  --stage-phone-width: calc(var(--stage-laptop-width) * 0.275);
+  --stage-frame-height: calc(var(--stage-laptop-width) * 0.589);
+}
+
+.figure {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  margin: 0;
+}
+
+.frameSlot {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: var(--stage-frame-height);
+}
+.laptopFrame {
+  width: var(--stage-laptop-width);
+}
+.phoneFrame {
+  width: var(--stage-phone-width);
+}
+
+.caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  max-width: 52ch;
+  margin-top: clamp(28px, 4vw, 40px);
+}
+.captionTitle {
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  font-style: italic;
+  font-weight: 400;
+  line-height: var(--lh-title);
+  color: var(--studio-accent-text);
+}
+/* Two lines reserved, so a shorter caption does not lift the note. */
+.captionText {
+  min-height: 2lh;
+  font-family: var(--sans);
+  font-size: var(--text-body-lg);
+  line-height: var(--lh-body-lg);
+  color: var(--studio-text-muted);
+  text-wrap: pretty;
+}
+
+.sampleNote {
+  max-width: 52ch;
+  margin: 20px 0 0;
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  line-height: 1.4;
+  color: var(--studio-text-faint);
+  text-wrap: balance;
+}
+/* Inline, so on a wrapped note the icon leads the first line. */
+.sampleNoteIcon {
+  width: 14px;
+  height: 14px;
+  margin-inline-end: 8px;
+  vertical-align: -2px;
+}
+
+/* ── Phones: the chips scroll sideways inside their own row ──
+   `.gallery` lifts these rules over the Tabs module's `flex-wrap: wrap`.
+   Every tab shows a phone shot here, so the stage reserves one phone. */
+@media (max-width: 719px) {
+  .gallery .chipRow {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    min-width: 0;
+    max-width: 100%;
+    justify-self: stretch;
+    scroll-padding-inline: 4px;
+    scrollbar-width: none;
+  }
+  .gallery .chipRow [role="tab"] {
+    scroll-snap-align: start;
+    flex: none;
+  }
+  .stage {
+    --stage-phone-width: min(68cqi, 260px);
+    --stage-frame-height: calc(var(--stage-phone-width) * 2.1425);
+  }
+  .captionText {
+    min-height: 3lh;
+  }
+}

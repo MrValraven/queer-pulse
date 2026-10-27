@@ -3,6 +3,7 @@ import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminMediaReferenceList } from "./AdminMediaReferences";
 import { AdminModal } from "./ui";
+import type { AdminMediaCoverHolder } from "./api/adminMedia.api";
 import type { MediaReference } from "../../shared/media/mediaReferences";
 import styles from "./AdminMediaPage.module.css";
 
@@ -12,6 +13,9 @@ import styles from "./AdminMediaPage.module.css";
 export interface AdminMediaDeleteRefusal {
   references: MediaReference[];
   isUnverified: boolean;
+  /** Set for a `media_live_cover` refusal: the scenes and releases whose cover
+   *  this image is. */
+  coverHolders?: AdminMediaCoverHolder[];
 }
 
 /**
@@ -89,12 +93,28 @@ export function AdminMediaDeleteConfirm({
         <>
           <p className={styles.referenceWarning}>
             <FiAlertTriangle aria-hidden />
-            {refusal.isUnverified
-              ? t("admin:media.delete.refusedUnverified")
-              : t("admin:media.delete.refusedInUse", {
-                  count: refusal.references.length,
-                })}
+            {refusal.coverHolders
+              ? t("admin:errors.mediaLiveCover")
+              : refusal.isUnverified
+                ? t("admin:media.delete.refusedUnverified")
+                : t("admin:media.delete.refusedInUse", {
+                    count: refusal.references.length,
+                  })}
           </p>
+          {refusal.coverHolders && (
+            <ul className={styles.referencesList}>
+              {refusal.coverHolders.map((holder) => (
+                <li key={`${holder.kind}-${holder.entityId}`}>
+                  {t(
+                    holder.kind === "studio-scene"
+                      ? "admin:media.delete.liveCoverScene"
+                      : "admin:media.delete.liveCoverRelease",
+                    { label: holder.label },
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
           {refusal.references.length > 0 && (
             <AdminMediaReferenceList references={refusal.references} />
           )}

@@ -227,15 +227,6 @@ describe("StudioPlayer bar (desktop)", () => {
     expect(screen.queryByText("Sleep timer off")).toBeNull();
   });
 
-  it("announces a cancelled sleep timer from the bar when Now playing is closed", async () => {
-    const { rerenderWith } = renderWithPlayer(<StudioPlayer />, {
-      player: createStudioPlayerValue({ sleepTimer: { kind: "endOfTrack" } }),
-    });
-    await screen.findByRole("button", { name: "Stops after this track" });
-    rerenderWith({ player: createStudioPlayerValue({ sleepTimer: null }) });
-    expect(await screen.findByText("Sleep timer off")).toBeInTheDocument();
-  });
-
   it("shows no money line outside the demo", async () => {
     renderWithPlayer(<StudioPlayer />);
     await screen.findByRole("slider", { name: "Seek" });

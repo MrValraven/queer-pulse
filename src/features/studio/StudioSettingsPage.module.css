@@ -110,6 +110,27 @@
   gap: 12px;
   flex: none;
 }
+/* Actions beside a switch (the Listening history row) sit in .optActions.
+   On small phones the row's controls wrap and the switch stays at the end. */
+.optActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+@media (--sm) {
+  .opt:has(> .optControls > .optActions) > .optControls {
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    min-width: 0;
+  }
+  .opt:has(> .optControls > .optActions) > .optControls > :not(.optActions) {
+    margin-inline-start: auto;
+  }
+  .optActions {
+    flex-wrap: wrap;
+  }
+}
 .srOnly {
   position: absolute;
   width: 1px;

@@ -8,7 +8,11 @@ import {
   BreakdownRows,
   BreakdownToggle,
 } from "./AdminGovernanceFinancesBreakdown";
-import { lossClass, rowClass } from "./adminGovernanceFinancesEditRow";
+import {
+  lossClass,
+  rowClass,
+  toSpendingFigure,
+} from "./adminGovernanceFinancesEditRow";
 import {
   breakdownPatch,
   isLineChanged,
@@ -142,7 +146,7 @@ export function LedgerRow({
             <div className={styles.breakdownSum}>
               <span className={lossClass(styles.breakdownSumValue, isSpending)}>
                 {format.currency(
-                  sum,
+                  isSpending ? toSpendingFigure(sum) : sum,
                   "EUR",
                   Number.isInteger(sum)
                     ? { maximumFractionDigits: 0 }

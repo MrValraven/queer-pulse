@@ -1,0 +1,86 @@
+/* The "Try it" stage: the frame with the chosen moment, and a line on what
+   happens there beside it on wide screens, under it on phones. The frame's
+   column takes the moment's own width, so a lone poster or meter sits with
+   its caption right beside it; each moment sets that width below. */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) minmax(0, 18rem);
+  justify-content: start;
+  align-items: center;
+  gap: 40px;
+  min-width: 0;
+}
+
+.frame {
+  min-width: 0;
+}
+
+.caption {
+  display: grid;
+  gap: 10px;
+}
+
+/* The moment's name over the line, in coral with its switch icon. */
+.captionEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+.captionText {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-21);
+  line-height: 1.4;
+  color: var(--text-strong);
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+  width: 46rem;
+  max-width: 100%;
+}
+
+.poster {
+  width: 20rem;
+  max-width: 100%;
+}
+
+/* The lineup sits on its own paper sheet; its top margin belongs to the
+   event page column. */
+.lineup {
+  padding: 4px 18px 18px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-18);
+  background: var(--paper);
+}
+
+.narrow {
+  width: 34rem;
+  max-width: 100%;
+}
+
+@media (max-width: 959px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 719px) {
+  .pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .poster {
+    margin-inline: auto;
+  }
+}

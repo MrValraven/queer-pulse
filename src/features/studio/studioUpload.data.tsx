@@ -31,10 +31,13 @@ export const UPLOAD_STEPS: {
 export const RELEASE_FIELD_IDS = {
   title: "studio-release-title",
   description: "studio-release-description",
+  genre: "studio-release-genre",
   buyUrl: "studio-release-buy-url",
   cover: "studio-release-cover",
   rights: "studio-release-rights",
   tracks: "studio-release-tracks",
+  trackCredits: "studio-release-track-credits",
+  versionNote: "studio-release-version-note",
 } as const;
 
 /** The order the error summary lists the release fields in, top to bottom. */

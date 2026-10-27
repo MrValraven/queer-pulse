@@ -1,0 +1,86 @@
+/* The marquee band: a locked-dark strip (dark in both themes, like the
+   closing band) with lit words running sideways. The glow is a gradient
+   behind the type; no blurred shadow. */
+.band {
+  position: relative;
+  overflow: hidden;
+  padding: 18px 0;
+  background:
+    radial-gradient(
+      ellipse 60% 140% at 50% 50%,
+      color-mix(in srgb, var(--accent) 16%, transparent),
+      transparent 70%
+    ),
+    var(--plum-deep);
+  border-block: 1px solid rgba(var(--cream-rgb), 0.12);
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  /* The motion is finite: three runs, then it stops, and it does not run at
+     all under reduced motion (see the rules at the end of this file). The
+     second run is a copy of the first, so the end frame and the resting frame
+     look the same. */
+  animation: marquee-run 38s linear 3;
+}
+
+.run {
+  display: flex;
+  flex: none;
+}
+
+.word {
+  display: inline-flex;
+  align-items: center;
+  gap: 28px;
+  padding-right: 28px;
+  font-family: var(--sans);
+  font-size: var(--text-22);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(var(--cream-rgb), 0.92);
+}
+.word:nth-child(3n + 2) {
+  color: var(--accent);
+}
+.word:nth-child(3n) {
+  color: rgba(var(--cream-rgb), 0.58);
+}
+
+.star {
+  flex: none;
+  font-size: var(--text-14);
+  color: var(--amber);
+}
+
+@keyframes marquee-run {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 719px) {
+  .band {
+    padding: 14px 0;
+  }
+  .word {
+    font-size: var(--text-17);
+    gap: 20px;
+    padding-right: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+}
+:global(html[data-reduce-motion="true"]) .track {
+  animation: none;
+}

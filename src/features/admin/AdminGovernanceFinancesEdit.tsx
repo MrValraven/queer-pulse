@@ -16,6 +16,7 @@ import {
   hasRejectedLineAmount,
   isAmountRejected,
   parseNumber,
+  sumEnabledLines,
   toLineDrafts,
   toScalarDrafts,
   type LineDraft,
@@ -31,8 +32,9 @@ import styles from "./AdminGovernanceFinancesEdit.module.css";
  * figure is a table row showing what is stored, where it came from, and the
  * new value. Submits only what actually changed (each change flips that
  * figure's provenance to "Edited" and is recorded in the audit trail).
- * Surplus is not editable: it previews live as income minus spending,
- * matching how the backend recomputes it.
+ * Total spending and surplus are not editable: spending previews live as the
+ * sum of the switched-on spending lines and surplus as income minus that sum,
+ * matching how the backend recomputes both on every save.
  */
 export function AdminGovernanceFinancesEdit({
   latest,
@@ -58,9 +60,9 @@ export function AdminGovernanceFinancesEdit({
 
   const drafts = { scalars, income, expense, note };
   const changeCount = countChanges(drafts, latest);
+  const spendingPreview = sumEnabledLines(expense);
   const surplusPreview =
-    (parseNumber(scalars.incomeTotal) ?? 0) -
-    (parseNumber(scalars.expenseTotal) ?? 0);
+    (parseNumber(scalars.incomeTotal) ?? 0) - spendingPreview;
 
   // Nothing is ever silently dropped: while any figure cannot be read as a
   // number, the cell says so and saving is held back.
@@ -143,6 +145,7 @@ export function AdminGovernanceFinancesEdit({
           scalars={scalars}
           latest={latest}
           onChange={setScalar}
+          spendingPreview={spendingPreview}
           surplusPreview={surplusPreview}
         />
         <LedgerTable

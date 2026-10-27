@@ -1,0 +1,97 @@
+/* Reach cell content. The number and its daily bars share the top line so
+   the trend reads in one glance; the comparison line sits under them, and
+   the partial-period and median notes sit quietest of all.
+   Every colour flips through tokens, so the cell reads on the light paper
+   table and on the dark admin table alike. */
+
+.cell {
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+  min-width: 0;
+}
+
+.headline {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+/* A fixed minimum keeps the bars in one column down the table whatever the
+   width of each row's number. */
+.value {
+  min-width: 6ch;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.bars {
+  display: block;
+  flex: none;
+  width: 120px;
+  height: 28px;
+}
+
+/* Strong enough to read beside the accent bars and on the browsed-but-empty
+   row's faint danger tint, in both themes. */
+.previousBars {
+  fill: rgba(var(--line-rgb), 0.3);
+}
+
+.currentBars {
+  fill: var(--accent);
+}
+
+.comparison {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 2px 0 0;
+  font-size: var(--text-12);
+  line-height: 1.4;
+  color: var(--ink-60);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.comparison_up {
+  color: var(--jade-ink);
+}
+
+.comparison_down {
+  color: var(--danger-ink);
+}
+
+.comparisonIcon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+
+.median {
+  margin: 0;
+  font-size: var(--text-12);
+  line-height: 1.4;
+  color: var(--ink-60);
+  white-space: nowrap;
+}
+
+/* Muted like the median note; it wraps at about the headline's width so a
+   long sentence never stretches the Reach column. */
+.partialNote {
+  max-width: 30ch;
+  margin: 0;
+  font-size: var(--text-12);
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+
+/* Narrow tables (phones): a slimmer bar strip keeps the whole Reach cell
+   inside the visible table box. The SVG stretches, so the bars scale. */
+@container (max-width: 640px) {
+  .bars {
+    width: 96px;
+  }
+}

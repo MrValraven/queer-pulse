@@ -2,18 +2,21 @@
  * The logo concepts the admin compares on /admin/logo-concepts. Each one
  * turns the Q of the sign-in network art into a flat mark for social
  * avatars, drawn in three colourways. The ripple variants come first: the P
- * drops in like a pulse and its ripples spread out to form the Q. In the
- * outside family the P is big and the Q sits inside its bowl. In the fused
- * family the P's bowl is the Q's first ripple. The original three concepts
- * follow, then the thread variants, which explore the thread concept
- * further. Every ripple and thread variant ships a small cut, a simplified
- * drawing for 32px and below.
+ * drops in like a pulse and its ripples spread out to form the Q. The
+ * letter family keeps the Q of Drop and Serif and redraws the P as a real
+ * letter from Fraunces or DM Sans. In the outside family the P is big and
+ * the Q sits inside its bowl. In the fused family the P's bowl is the Q's
+ * first ripple. The original three concepts follow, then the thread
+ * variants, which explore the thread concept further. Every ripple, letter
+ * and thread variant ships a small cut, a simplified drawing for 32px and
+ * below.
  *
  * Static on purpose, in demo and live mode alike: the marks ship with the
  * site as SVG files in public/brand/logo-concepts/, written by
  * `node scripts/brand/logo-concepts.mjs` for the original three,
  * `node scripts/brand/thread-variants.mjs` for the thread variants,
  * `node scripts/brand/ripple-variants.mjs` for the ripple variants,
+ * `node scripts/brand/ripple-letter.mjs` for the letter family,
  * `node scripts/brand/ripple-outside.mjs` for the outside family and
  * `node scripts/brand/ripple-fused.mjs` for the fused family, small cuts
  * included. The scripts are the source of truth for their geometry; this
@@ -32,6 +35,12 @@ export type LogoConceptId =
   | "ripple-rings"
   | "ripple-splash"
   | "ripple-serif"
+  | "ripple-letter-drop-fraunces"
+  | "ripple-letter-drop-sans"
+  | "ripple-letter-drop-upright"
+  | "ripple-letter-serif-fraunces"
+  | "ripple-letter-serif-soft"
+  | "ripple-letter-serif-italic"
   | "ripple-outside-nest"
   | "ripple-outside-rings"
   | "ripple-outside-tail"
@@ -139,6 +148,48 @@ export const RIPPLE_VARIANTS: readonly LogoConcept[] = [
     id: "ripple-serif",
     titleKey: "admin:logoConcepts.concepts.rippleSerif.title",
     summaryKey: "admin:logoConcepts.concepts.rippleSerif.summary",
+    hasSmallCut: true,
+  },
+];
+
+/** The letter family: Drop and Serif keep their Q and the P becomes a real
+ *  letter from Fraunces or DM Sans. Shown right below the ripple family.
+ *  Literal keys, so catalog checks can find every one. */
+export const RIPPLE_LETTER_VARIANTS: readonly LogoConcept[] = [
+  {
+    id: "ripple-letter-drop-fraunces",
+    titleKey: "admin:logoConcepts.concepts.rippleLetterDropFraunces.title",
+    summaryKey: "admin:logoConcepts.concepts.rippleLetterDropFraunces.summary",
+    hasSmallCut: true,
+  },
+  {
+    id: "ripple-letter-drop-sans",
+    titleKey: "admin:logoConcepts.concepts.rippleLetterDropSans.title",
+    summaryKey: "admin:logoConcepts.concepts.rippleLetterDropSans.summary",
+    hasSmallCut: true,
+  },
+  {
+    id: "ripple-letter-drop-upright",
+    titleKey: "admin:logoConcepts.concepts.rippleLetterDropUpright.title",
+    summaryKey: "admin:logoConcepts.concepts.rippleLetterDropUpright.summary",
+    hasSmallCut: true,
+  },
+  {
+    id: "ripple-letter-serif-fraunces",
+    titleKey: "admin:logoConcepts.concepts.rippleLetterSerifFraunces.title",
+    summaryKey: "admin:logoConcepts.concepts.rippleLetterSerifFraunces.summary",
+    hasSmallCut: true,
+  },
+  {
+    id: "ripple-letter-serif-soft",
+    titleKey: "admin:logoConcepts.concepts.rippleLetterSerifSoft.title",
+    summaryKey: "admin:logoConcepts.concepts.rippleLetterSerifSoft.summary",
+    hasSmallCut: true,
+  },
+  {
+    id: "ripple-letter-serif-italic",
+    titleKey: "admin:logoConcepts.concepts.rippleLetterSerifItalic.title",
+    summaryKey: "admin:logoConcepts.concepts.rippleLetterSerifItalic.summary",
     hasSmallCut: true,
   },
 ];

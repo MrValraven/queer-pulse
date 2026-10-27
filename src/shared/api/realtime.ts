@@ -33,6 +33,7 @@ import {
   isFromViewerSide,
   MAILBOXES_QUERY_KEY_PREFIX,
   ownMemberKeysOf,
+  ownOfficialConversationIdsOf,
   readStaffedIdentityIds,
   type MessageViewer,
 } from "./mailboxViewer";
@@ -48,6 +49,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { logInfo, logWarn } from "../observability/logger";
 import type { Conversation } from "../../features/messages/data";
 import { editedTextOfResponse } from "../../features/messages/messageEditKinds";
+import type { AuthorSummary } from "../contracts/contracts";
 import type {
   ChatWsErrorCode,
   ClientToServerAcks,
@@ -601,6 +603,12 @@ class RealtimeClient {
   /** Who is reading, for the "is this from our side" test: the member's
    *  handle plus every mailbox identity they staff, read from whatever
    *  mailbox lists are cached. */
+  private isFromOwnSideOf(
+    message: { sender: AuthorSummary },
+    conversationId: string,
+  ): boolean {
+    return isFromViewerSide(message.sender, this.viewer(), conversationId);
+  }
   private viewer(): MessageViewer {
     return {
       myHandle: this.myHandle,
@@ -608,6 +616,8 @@ class RealtimeClient {
       // PRD-423: the member's own keys in matched Go together chats, from
       // the shared memo one filtered cache subscription keeps current.
       ownMemberKeys: ownMemberKeysOf(this.qc),
+      // The member's own official threads, where the team is the other side.
+      ownOfficialConversationIds: ownOfficialConversationIdsOf(this.qc),
     };
   }
   onPresence(handler: (online: ReadonlySet<string>) => void): () => void {
@@ -1168,7 +1178,7 @@ class RealtimeClient {
       // or as a business they answer for, so a colleague's business reply
       // skips the unread bump and the delivered ack exactly as the member's
       // own echo does.
-      const isOwnMessage = isFromViewerSide(message.sender, this.viewer());
+      const isOwnMessage = this.isFromOwnSideOf(message, conversationId);
       upsertMessage(this.qc, conversationId, message);
       // The frame carries the full new message, so patch the inbox row's
       // preview/time in place (and move it to the top) instead of refetching
@@ -1312,7 +1322,7 @@ class RealtimeClient {
     socket.on("conversation:message", ({ conversationId, message }) => {
       // Same late-create guard as `message:new` above.
       if (this.tombstones.has(message.id)) return;
-      const isFromOwnSide = isFromViewerSide(message.sender, this.viewer());
+      const isFromOwnSide = this.isFromOwnSideOf(message, conversationId);
       upsertMessage(this.qc, conversationId, message);
       // Peer-requested fan-out (additive to the cache patching in this handler,
       // exactly like `onRead`/`onDelivered` above) - for a consumer that wants

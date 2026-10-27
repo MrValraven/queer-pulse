@@ -9,7 +9,9 @@
  * varies). Any shape may carry `knockouts` (thin rings cut out of every
  * knocked-out shape by one shared clip, as the first concepts do), `cutouts`
  * (regions cut out of this shape alone, each with its own clip, so a gap
- * stays a gap in mono too) and `colorways` (the colourways it is drawn in).
+ * stays a gap in mono too), `halos` (filled contours grown by a gap that
+ * mask this shape, so a filled letter lying over it keeps clear ground all
+ * round its outline) and `colorways` (the colourways it is drawn in).
  */
 export const OUTPUT_DIRECTORY = new URL(
   "../../public/brand/logo-concepts/",
@@ -636,10 +638,17 @@ export function markSvg(conceptId, shapes, placed, colorway) {
     placed,
     colorway,
   );
+  const { maskIds: haloMaskIds, lines: haloDefinitions } = haloMasks(
+    conceptId,
+    shapes,
+    placed,
+    colorway,
+  );
   const lines = [
     `<svg xmlns="http://www.w3.org/2000/svg" width="${CANVAS_SIZE}" height="${CANVAS_SIZE}" viewBox="0 0 ${CANVAS_SIZE} ${CANVAS_SIZE}" role="img" aria-label="QueerPulse">`,
     ...knockoutClip(clipId, shapes, placed),
     ...cutoutDefinitions,
+    ...haloDefinitions,
     ...(background
       ? [
           `<rect width="${CANVAS_SIZE}" height="${CANVAS_SIZE}" fill="${background}"/>`,
@@ -653,10 +662,12 @@ export function markSvg(conceptId, shapes, placed, colorway) {
           ? element.replace(/\/>$/, ` clip-path="url(#${clipId})"/>`)
           : element;
         const layerIds = cutoutClipIds.get(shape) ?? [];
-        return layerIds.reduceRight(
+        const clipped = layerIds.reduceRight(
           (inner, layerId) => `<g clip-path="url(#${layerId})">${inner}</g>`,
           knockedOut,
         );
+        const maskId = haloMaskIds.get(shape);
+        return maskId ? `<g mask="url(#${maskId})">${clipped}</g>` : clipped;
       }),
   ];
   return `${lines.join("\n  ")}\n</svg>\n`;
@@ -685,6 +696,47 @@ function cutoutClips(conceptId, shapes, placed, colorway) {
   });
   return {
     clipIds,
+    lines: definitions.length ? [`<defs>${definitions.join("")}</defs>`] : [],
+  };
+}
+
+/**
+ * The masks for every shape that carries halos, with ids unique in the
+ * file. A mask is white canvas with each halo's contours painted black,
+ * filled (nonzero, as one path) and stroked `gap` out on every side with
+ * round joins, so the shape keeps away from the whole halo by `gap`. Shapes
+ * whose halos draw the same mask share one. Shapes without halos add
+ * nothing.
+ */
+function haloMasks(conceptId, shapes, placed, colorway) {
+  const maskIds = new Map();
+  const maskIdByContent = new Map();
+  const definitions = [];
+  shapes.forEach((shape) => {
+    if (!isDrawnIn(shape, colorway)) return;
+    const halos = (shape.halos ?? []).filter((halo) =>
+      isDrawnIn(halo, colorway),
+    );
+    if (halos.length === 0) return;
+    const content = halos
+      .map((halo) => {
+        const path = halo.contours
+          .map((contour) => contourPath(contour, placed.toCanvas))
+          .join("");
+        return `<path d="${path}" fill="#000" stroke="#000" stroke-width="${round(halo.gap * 2 * placed.scale)}" stroke-linejoin="round"/>`;
+      })
+      .join("");
+    if (!maskIdByContent.has(content)) {
+      const maskId = `${conceptId}-${colorway}-halo-${maskIdByContent.size}`;
+      maskIdByContent.set(content, maskId);
+      definitions.push(
+        `<mask id="${maskId}" maskUnits="userSpaceOnUse" x="0" y="0" width="${CANVAS_SIZE}" height="${CANVAS_SIZE}"><rect width="${CANVAS_SIZE}" height="${CANVAS_SIZE}" fill="#fff"/>${content}</mask>`,
+      );
+    }
+    maskIds.set(shape, maskIdByContent.get(content));
+  });
+  return {
+    maskIds,
     lines: definitions.length ? [`<defs>${definitions.join("")}</defs>`] : [],
   };
 }

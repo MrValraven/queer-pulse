@@ -35,7 +35,7 @@ export function StudioAccountMenuGroup({
       >
         {items.map((item) => (
           <StudioAccountMenuLink
-            key={item.to}
+            key={`${item.labelKey}-${item.to}`}
             item={item}
             onNavigate={onNavigate}
           />

@@ -1,0 +1,80 @@
+/* A sample business-inbox thread. Bubbles follow the house chat shapes:
+   the reader's own on the right in coral, the other side on paper. */
+.thread {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-18);
+  background: var(--cream);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
+  background: var(--paper);
+}
+.headerText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.name {
+  font-size: var(--text-14);
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.kind {
+  font-size: var(--text-11-5);
+  color: var(--ink-60);
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 14px;
+  list-style: none;
+}
+
+.run {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 84%;
+}
+.run[data-side="me"] {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.bubble {
+  margin: 0;
+  padding: 9px 13px;
+  border: 1px solid rgba(var(--line-rgb), 0.08);
+  border-radius: var(--radius-18) var(--radius-18) var(--radius-18)
+    var(--radius-6);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+}
+.run[data-side="me"] .bubble {
+  border-color: transparent;
+  border-radius: var(--radius-18) var(--radius-18) var(--radius-6)
+    var(--radius-18);
+  background: var(--accent-fill-strong);
+  color: rgba(var(--cream-rgb), 1);
+}
+
+.footer {
+  padding: 10px 14px 12px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+  background: var(--paper);
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}

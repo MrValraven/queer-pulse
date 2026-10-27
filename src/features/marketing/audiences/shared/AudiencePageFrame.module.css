@@ -1,0 +1,8 @@
+/* The ground under every audience page. `overflow-x: clip` keeps a hero
+   collage that bleeds past the gutter from scrolling the page sideways on a
+   phone, without making this box a scroll container. */
+.frame {
+  background: var(--cream);
+  color: var(--text-strong);
+  overflow-x: clip;
+}

@@ -1,0 +1,38 @@
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+  max-width: 600px;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-hero);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+}
+.title em {
+  font-style: italic;
+  color: var(--accent-text);
+}
+
+.lede {
+  margin: 0;
+  max-width: 52ch;
+  font-size: var(--text-body-lg);
+  line-height: 1.6;
+  color: var(--ink-60);
+}

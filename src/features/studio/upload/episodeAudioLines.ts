@@ -46,4 +46,7 @@ export interface EpisodeAudioProgress {
   isConfirming: boolean;
   /** The browser is turning a WAV or AIFF into MP3 before the upload. */
   isConverting: boolean;
+  /** The browser is reading the file's header, before it says anything
+   *  about converting or uploading. */
+  isChecking: boolean;
 }

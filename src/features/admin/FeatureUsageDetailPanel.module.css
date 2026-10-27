@@ -1,0 +1,264 @@
+/* Feature usage detail panel: the open state of one table row. A summary
+   strip, then reach per day against the previous period, then what members
+   created per day, then the drill-down counts. The row's <td> carries no
+   padding (it folds to nothing while closed), so the panel owns its own. */
+
+/* Sticky to the left edge of the scrolling table, and never wider than the
+   table's visible box once that box is a size container, so a phone reads
+   the charts without scrolling the table sideways. The one track may shrink
+   below its content's minimum, so a chart measures the width on screen. */
+.panel {
+  position: sticky;
+  left: 0;
+  box-sizing: border-box;
+  width: min(100%, 100cqi);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  padding: 18px 24px 22px;
+}
+
+.panel > * {
+  min-width: 0;
+}
+
+@media (--sm) {
+  .panel {
+    gap: 12px;
+    padding: 14px 16px 18px;
+  }
+}
+
+/* Both periods had no requests: one quiet line stands for the summary and
+   the charts. */
+.emptyBoth {
+  margin: 0;
+  padding: 14px 16px;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+}
+
+/* Summary strip: three readings in a row, stacked into label and value
+   lines on a small phone. */
+.summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.summaryItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding: 12px 14px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+}
+
+.summaryLabel {
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+.summaryValue {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  color: var(--text-strong);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.summaryValueMuted {
+  color: var(--ink-60);
+}
+
+@media (--xs) {
+  .summary {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .summaryItem {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 14px;
+  }
+  .summaryValue {
+    font-size: var(--text-17);
+    text-align: right;
+  }
+}
+
+/* A vertical drag still scrolls the page; a sideways one reads the days. */
+.plotBody {
+  touch-action: pan-y;
+}
+
+/* The measured chart box. Its height comes from CSS (a fixed height, or an
+   aspect ratio with a floor) before visx measures the width, so the open
+   panel has its final height from the first paint. A floor height carried
+   through the aspect ratio would otherwise set a minimum width wider than a
+   phone, so the box may shrink to its column. */
+.plotBody > * {
+  min-width: 0;
+}
+
+/* The transparent layer that reads the pointer across the whole plot. */
+.pointerLayer {
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Keyboard stops only: the pointer layer answers for the mouse and touch. */
+.focusMark {
+  pointer-events: none;
+}
+
+/* The faint column behind the day being read. It slides between days and
+   fades out in place when the reading closes. */
+.columnGuide {
+  pointer-events: none;
+  opacity: 0;
+  transition-property: transform, opacity;
+  transition-duration: 0.14s;
+  transition-timing-function: var(--ease);
+  animation: columnGuideIn 0.14s var(--ease);
+}
+
+@keyframes columnGuideIn {
+  from {
+    opacity: 0;
+  }
+}
+
+.columnGuideVisible {
+  opacity: 1;
+}
+
+/* The previous period's dashed line fades in once the bars have started to
+   rise, so the two series read as one chart arriving. */
+.previousLine {
+  pointer-events: none;
+  animation: previousLineIn 0.45s var(--ease) 0.25s both;
+}
+
+@keyframes previousLineIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.tipLine {
+  color: rgba(var(--cream-rgb), 0.72);
+}
+
+/* The created chart's failure line, as tall as the chart and its skeleton,
+   so the panel holds still when it lands. Those two carry an 8px top margin
+   that collapses into the 6px under the chart head; this line sits under
+   those 6px with 40px of frame padding above and below, so 90px here adds
+   up to the same 176px. */
+.createdEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 90px;
+  font-style: italic;
+  text-align: center;
+}
+
+.partialNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--text-12);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.partialNote svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+  color: var(--accent-ink);
+}
+
+.drillDown {
+  display: grid;
+  gap: 10px;
+  padding: 14px 16px 16px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+}
+
+.drillDownTitle {
+  margin: 0;
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+/* Drill-down counts, copied from AdminFeatureUsagePage.module.css. */
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px;
+}
+
+.detailItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detailValue {
+  font-size: var(--text-20);
+  font-weight: 600;
+  color: var(--text-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.detailLabel {
+  font-size: var(--text-12);
+  color: var(--ink-40);
+}
+
+.detailNote {
+  grid-column: 1 / -1;
+  margin: 2px 0 0;
+  font-size: var(--text-12);
+  color: var(--ink-40);
+  line-height: 1.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .columnGuide {
+    transition: none;
+    animation: none;
+  }
+  .previousLine {
+    animation: none;
+  }
+}
+
+:global(html[data-reduce-motion="true"]) .columnGuide {
+  transition: none;
+  animation: none;
+}
+
+:global(html[data-reduce-motion="true"]) .previousLine {
+  animation: none;
+}

@@ -22,6 +22,7 @@ import type {
   TattooWhatToSend,
 } from "../skins/tattoo/tattooVocab.data";
 import type { CropRect } from "../../../shared/components/ui/cropGeometry";
+import type { StudioHeroChoice } from "../../studio/studioHeroChoice";
 import type { ListingWorksAtDTO } from "../../marketing/listBusiness/api/listingTeam.types";
 
 // ── Wire DTOs (contract C3) ──────────────────────────────────────────────────
@@ -692,17 +693,22 @@ export interface TattooLineage {
   teaches?: string[];
 }
 
-/** The two stored Studio page layouts a member can pick. */
-export type StudioHeroChoice = "full-bleed" | "avatar";
+export type { StudioHeroChoice };
+
+/** Studio page layouts stored before the three current choices. Saved blobs
+ *  can still hold them; `toStudioHeroChoice` reads "full-bleed" as banner and
+ *  "avatar" as both. */
+export type LegacyStudioHeroChoice = "full-bleed" | "avatar";
 
 export interface SkinData {
   /** Owner display preference: fade the cover banner into the page background
    *  at its bottom edge (see `.pp[data-cover-bleed]` in persona-skins.css). */
   coverBleed?: boolean;
-  /** Studio artist page layout: "full-bleed" fills the top of the Studio page
-   *  with the cover photo and the name over it; "avatar" shows the avatar over
-   *  the cover photo. Absent means "full-bleed". */
-  studioHero?: StudioHeroChoice;
+  /** What the top of a Studio artist page shows: "banner" (the wide cover
+   *  alone), "portrait" (the round avatar alone) or "both" (the banner with
+   *  the round avatar on it). Read it through `toStudioHeroChoice`, which
+   *  also maps the legacy values; absent means `DEFAULT_STUDIO_HERO`. */
+  studioHero?: StudioHeroChoice | LegacyStudioHeroChoice;
   /** Where the banner sits vertically, as an `object-position` percentage:
    *  0 pins the image's top edge to the band's, 100 its bottom. Set by the
    *  owner's in-page reposition control (`PersonaCoverReposition`); absent

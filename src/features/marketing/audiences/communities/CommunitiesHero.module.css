@@ -1,0 +1,206 @@
+/* The communities hero: a poster wall. Product pieces are pasted up at
+   slight angles, each held by a strip of tape painted from tokens. The
+   ground carries soft gradient halos; nothing here uses a blurred shadow. */
+.hero {
+  position: relative;
+  padding: var(--section-y-80) 0 var(--section-y-96);
+  background-color: var(--cream);
+  background-image:
+    radial-gradient(
+      ellipse 50% 60% at 88% 18%,
+      color-mix(in srgb, var(--violet) 16%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 45% 50% at 8% 92%,
+      color-mix(in srgb, var(--amber) 18%, transparent),
+      transparent 70%
+    ),
+    repeating-linear-gradient(
+      -8deg,
+      transparent 0 46px,
+      rgba(var(--line-rgb), 0.025) 46px 48px
+    );
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 56px;
+  align-items: center;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--wrap-px);
+}
+
+/* The copy centres on the wall beside it, so neither column leaves a band
+   of empty ground under it; the wall is short enough that the CTA stays
+   above the fold at 1440 by 900. */
+.copy {
+  align-self: center;
+}
+
+/* Bold poster type: a heavier headline, its emphasis marked with a band of
+   highlighter tape. Beside the wall the column is narrow, so the headline
+   steps down to a fixed size and keeps the CTA above the fold. */
+.copy h1 {
+  font-size: var(--text-56);
+  font-weight: 600;
+}
+.copy h1 em {
+  background-image: linear-gradient(
+    transparent 62%,
+    color-mix(in srgb, var(--amber) 42%, transparent) 62%,
+    color-mix(in srgb, var(--amber) 42%, transparent) 92%,
+    transparent 92%
+  );
+}
+
+.wall {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+  grid-template-areas:
+    "card poster"
+    "post poster";
+  align-items: start;
+  column-gap: 8px;
+  row-gap: 28px;
+  min-width: 0;
+}
+
+.piece {
+  --tilt: 0deg;
+  position: relative;
+  min-width: 0;
+  transform: rotate(var(--tilt));
+  animation: pasteUp var(--dur-slow) var(--ease) both;
+}
+
+/* The tape strip across each piece's top edge. */
+.piece::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  z-index: 3;
+  width: 96px;
+  height: 26px;
+  border-radius: var(--radius-2);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 6px,
+      rgba(var(--line-rgb), 0.05) 6px 7px
+    ),
+    linear-gradient(
+      color-mix(in srgb, var(--amber) 58%, transparent),
+      color-mix(in srgb, var(--amber) 46%, transparent)
+    );
+  transform: translateX(-50%) rotate(-4deg);
+  pointer-events: none;
+}
+
+.poster {
+  --tilt: 1.4deg;
+  grid-area: poster;
+  align-self: center;
+  z-index: 1;
+  animation-delay: 60ms;
+}
+.poster::before {
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 6px,
+      rgba(var(--line-rgb), 0.05) 6px 7px
+    ),
+    linear-gradient(
+      color-mix(in srgb, var(--accent) 48%, transparent),
+      color-mix(in srgb, var(--accent) 36%, transparent)
+    );
+  transform: translateX(-50%) rotate(3deg);
+}
+
+.card {
+  --tilt: -2.4deg;
+  grid-area: card;
+  z-index: 2;
+  margin-inline-end: -24px;
+  animation-delay: 140ms;
+}
+
+/* The pieces in the left column tuck under the poster's edge, so their
+   "Sample" caption sits at their outer edge, clear of the poster. */
+.card figcaption,
+.post figcaption {
+  align-self: flex-start;
+}
+
+.post {
+  --tilt: 1.8deg;
+  grid-area: post;
+  z-index: 2;
+  margin-inline-end: -24px;
+  animation-delay: 220ms;
+}
+.post::before {
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 6px,
+      rgba(var(--line-rgb), 0.05) 6px 7px
+    ),
+    linear-gradient(
+      color-mix(in srgb, var(--jade) 42%, transparent),
+      color-mix(in srgb, var(--jade) 32%, transparent)
+    );
+}
+
+@keyframes pasteUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px) rotate(calc(var(--tilt) + 3deg));
+  }
+  to {
+    opacity: 1;
+    transform: rotate(var(--tilt));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .piece {
+    animation: none;
+  }
+}
+:global(html[data-reduce-motion="true"]) .piece {
+  animation: none;
+}
+
+/* Tablet: the copy sits above the wall. */
+@media (max-width: 1079px) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 48px;
+  }
+  .copy h1 {
+    font-size: var(--text-hero);
+  }
+}
+
+/* Phones: the wall folds to the event poster alone, at a gentler angle. */
+@media (max-width: 719px) {
+  .hero {
+    padding: var(--section-y-56) 0 var(--section-y-64);
+  }
+  .wall {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "poster";
+  }
+  .poster {
+    --tilt: 0.8deg;
+  }
+  .card,
+  .post {
+    display: none;
+  }
+}

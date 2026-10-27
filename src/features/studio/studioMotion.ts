@@ -24,6 +24,19 @@ export const STUDIO_EXIT = {
   ease: [0.4, 0, 1, 1],
 } as const;
 
+/** Disclosure rows opening to their height: longer than a fade and on the
+ *  app's standard ease, so the open reads across its whole run. */
+export const STUDIO_DISCLOSURE = {
+  duration: 0.34,
+  ease: [0.22, 0.68, 0.16, 1],
+} as const;
+
+/** Disclosure rows folding away, on a gentle ease-in-out. */
+export const STUDIO_DISCLOSURE_EXIT = {
+  duration: 0.24,
+  ease: [0.4, 0, 0.2, 1],
+} as const;
+
 /** Seconds between neighbouring items in a staggered first reveal. */
 export const STUDIO_STAGGER = 0.03;
 

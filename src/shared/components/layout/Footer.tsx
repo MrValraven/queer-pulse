@@ -12,6 +12,7 @@ import {
   COLUMNS,
   BASE_LINKS,
   SOCIAL_LINKS,
+  WHO_ITS_FOR_LINKS,
   type FooterLink,
 } from "./footer.data";
 import styles from "./Footer.module.css";
@@ -98,6 +99,19 @@ export function Footer() {
                 );
               })}
             </div>
+            <nav
+              className={styles.audiences}
+              aria-label={t("shared:footerData.col.whoItsFor.head")}
+            >
+              <h2>{t("shared:footerData.col.whoItsFor.head")}</h2>
+              <ul>
+                {WHO_ITS_FOR_LINKS.filter(isLinkShown).map((link) => (
+                  <li key={link.href}>
+                    <Link to={linkToPath(link.href)}>{t(link.labelKey)}</Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
 
           <nav className={styles.cols} aria-label={t("footer:aria.footerNav")}>

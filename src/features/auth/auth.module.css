@@ -740,6 +740,11 @@
 
 :global([data-theme="dark"]) .card {
   border-color: rgba(var(--cream-rgb), 0.1);
+  /* The light-theme 0.9 white top highlight reads as a harsh bright edge on
+     the dark card; a faint cream one keeps the lit-edge feel. */
+  box-shadow:
+    var(--shadow-e4),
+    inset 0 1px 0 rgba(var(--cream-rgb), 0.07);
 }
 :global([data-theme="dark"]) .google {
   background: var(--paper);

@@ -18,23 +18,17 @@ import { AdminGovernanceFinancesEdit } from "./AdminGovernanceFinancesEdit";
 import { AdminGovernanceFinancesOpenQuarter } from "./AdminGovernanceFinancesOpenQuarter";
 import { AdminGovernanceFinancesReportEdit } from "./AdminGovernanceFinancesReportEdit";
 import { FinanceSourceBadge } from "./FinanceSourceBadge";
+import { LedgerCard } from "./AdminGovernanceLedgerCard";
+import { NotVerifiedPlaceholder } from "./AdminGovernanceLedgerParts";
+import { enabledLines, isVerified } from "./adminGovernanceLedger";
 import { useAdminGovernanceFinances } from "./api/useAdminGovernanceFinances";
 import type {
   AdminFinanceLatest,
-  AdminFinLine,
   FinanceMetricSource,
 } from "./api/adminGovernanceFinances.api";
 import { financeAmountOrZero } from "./adminFinanceAmount";
 import { parseQuarter } from "../governance/governanceQuarter";
 import styles from "./AdminGovernancePage.module.css";
-
-/** Fixed colour cycle for ledger meter bars — `FinLine` carries no colour, so
- *  rows are tinted by position instead. */
-const LEDGER_COLOR_CYCLE = ["coral", "plum", "jade", "violet", "amber"];
-
-function ledgerColorAt(index: number) {
-  return LEDGER_COLOR_CYCLE[index % LEDGER_COLOR_CYCLE.length]!;
-}
 
 /**
  * One headline figure on the Finances tab. `value` is the figure the tile rolls
@@ -146,8 +140,28 @@ export function AdminGovernanceFinances() {
 
       <FadeIn delay={160}>
         <div className={styles.ledgerGrid}>
-          <IncomeLedgerCard latest={latest} onEdit={openFigures} />
-          <SpendLedgerCard latest={latest} onEdit={openFigures} />
+          <LedgerCard
+            titleKey="governance.income.title"
+            subKey="governance.income.sub"
+            total={latest.incomeTotal}
+            lines={latest.income}
+            kind="income"
+            onEdit={openFigures}
+            note={
+              <Translation
+                i18nKey="admin:governance.income.note"
+                components={{ strong: <strong /> }}
+              />
+            }
+          />
+          <LedgerCard
+            titleKey="governance.spend.title"
+            subKey="governance.spend.sub"
+            total={latest.expenseTotal}
+            lines={latest.expense}
+            kind="expense"
+            onEdit={openFigures}
+          />
         </div>
       </FadeIn>
 
@@ -266,30 +280,6 @@ function FinancesEmpty({ onOpenQuarter }: { onOpenQuarter: () => void }) {
   );
 }
 
-/** True once a figure has been human-verified (edited or derived) rather than
- *  left as an unreviewed seed placeholder. */
-function isVerified(source: string | undefined): boolean {
-  return source !== undefined && source !== "seeded";
-}
-
-/** In live mode, a still-seeded figure never renders as if it were real data —
- *  it shows this empty state with a direct path to correct it instead. Demo
- *  mode is exempt: every demo figure starts `seeded` on purpose, to
- *  demonstrate the provenance badge, so it keeps showing its number. */
-function NotVerifiedPlaceholder({ onEdit }: { onEdit: () => void }) {
-  const { t } = useTranslation();
-  return (
-    <span className={styles.notVerified}>
-      <span className={styles.notVerifiedDash} aria-hidden>
-        –
-      </span>
-      <button type="button" className={styles.notVerifiedCta} onClick={onEdit}>
-        {t("admin:governance.finances.provenance.notVerifiedCta")}
-      </button>
-    </span>
-  );
-}
-
 function FinanceStatCard({
   stat,
   onEdit,
@@ -345,132 +335,6 @@ function FinanceStatCard({
   );
 }
 
-/** Rows an admin has turned off don't clutter the dashboard — they stay
- *  editable (and re-enableable) from the Edit dialog only. */
-function enabledLines(lines: AdminFinLine[]): AdminFinLine[] {
-  return lines.filter((line) => line.enabled !== false);
-}
-
-function IncomeLedgerCard({
-  latest,
-  onEdit,
-}: {
-  latest: AdminFinanceLatest;
-  onEdit: () => void;
-}) {
-  const { t } = useTranslation();
-  const fmt = useFormat();
-  return (
-    <div className={styles.ledgerCard}>
-      <div className={styles.cardHead}>
-        <h2 className={styles.cardTitle}>
-          <Translation
-            i18nKey="admin:governance.income.title"
-            components={{ em: <em /> }}
-          />
-        </h2>
-        <p className={styles.cardSub}>
-          {t("admin:governance.income.sub", {
-            amount: fmt.currency(latest.incomeTotal ?? 0, "EUR"),
-          })}
-        </p>
-      </div>
-      <div className={styles.meters}>
-        {enabledLines(latest.income).map((line, i) => (
-          <Meter
-            key={`${i}-${line.label}`}
-            line={line}
-            colorIndex={i}
-            onEdit={onEdit}
-          />
-        ))}
-      </div>
-      <p className={styles.ledgerNote}>
-        <Translation
-          i18nKey="admin:governance.income.note"
-          components={{ strong: <strong /> }}
-        />
-      </p>
-    </div>
-  );
-}
-
-function SpendLedgerCard({
-  latest,
-  onEdit,
-}: {
-  latest: AdminFinanceLatest;
-  onEdit: () => void;
-}) {
-  const { t } = useTranslation();
-  const fmt = useFormat();
-  return (
-    <div className={styles.ledgerCard}>
-      <div className={styles.cardHead}>
-        <h2 className={styles.cardTitle}>
-          <Translation
-            i18nKey="admin:governance.spend.title"
-            components={{ em: <em /> }}
-          />
-        </h2>
-        <p className={styles.cardSub}>
-          {t("admin:governance.spend.sub", {
-            amount: fmt.currency(latest.expenseTotal ?? 0, "EUR"),
-          })}
-        </p>
-      </div>
-      <div className={styles.meters}>
-        {enabledLines(latest.expense).map((line, i) => (
-          <Meter
-            key={`${i}-${line.label}`}
-            line={line}
-            colorIndex={i}
-            onEdit={onEdit}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function Meter({
-  line,
-  colorIndex,
-  onEdit,
-}: {
-  line: AdminFinLine;
-  colorIndex: number;
-  onEdit: () => void;
-}) {
-  const fmt = useFormat();
-  const { demoMode } = useDemoMode();
-  const color = ledgerColorAt(colorIndex);
-  const showPlaceholder = !demoMode && !isVerified(line.source);
-  return (
-    <div className={styles.meter}>
-      <div className={styles.meterTop}>
-        <span className={styles.meterLabel}>
-          {line.label}
-          {line.source === "manual" && <FinanceSourceBadge source="manual" />}
-        </span>
-        {showPlaceholder ? (
-          <NotVerifiedPlaceholder onEdit={onEdit} />
-        ) : (
-          <span className={styles.meterAmount}>
-            {fmt.currency(financeAmountOrZero(line.amount), "EUR")}
-          </span>
-        )}
-      </div>
-      <div className={styles.meterTrack}>
-        <div
-          className={[styles.meterFill, styles[`meter_${color}`]].join(" ")}
-          style={{ width: `${showPlaceholder ? 0 : line.width}%` }}
-        />
-      </div>
-    </div>
-  );
-}
-
 function LiveMrrPanel({
   latest,
   onEdit,
@@ -482,7 +346,7 @@ function LiveMrrPanel({
   const fmt = useFormat();
   const { demoMode } = useDemoMode();
   const mrr = Math.round(latest.mrr ?? 0);
-  // Only verified, enabled expense lines appear here — this panel reads as
+  // Only verified, enabled expense lines appear here. This panel reads as
   // authoritative ("live"), so it never surfaces an unreviewed placeholder.
   const breakdown = enabledLines(latest.expense)
     .filter((line) => demoMode || isVerified(line.source))

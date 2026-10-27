@@ -155,3 +155,26 @@ export const SOCIAL_LINKS: SocialLink[] = [
   },
   { label: "Email", href: "mailto:hello@queerpulse.com", icon: "email" },
 ];
+
+/**
+ * The audience pages, linked from the brand column. Unlisted elsewhere, so the
+ * footer and the homepage strip are their only entry points.
+ */
+export const WHO_ITS_FOR_LINKS: FooterLink[] = [
+  {
+    labelKey: "shared:footerData.col.whoItsFor.businesses",
+    href: routes.forBusinesses,
+  },
+  {
+    labelKey: "shared:footerData.col.whoItsFor.communities",
+    href: routes.forCommunities,
+  },
+  {
+    labelKey: "shared:footerData.col.whoItsFor.performers",
+    href: routes.forPerformers,
+  },
+  {
+    labelKey: "shared:footerData.col.whoItsFor.practitioners",
+    href: routes.forPractitioners,
+  },
+];

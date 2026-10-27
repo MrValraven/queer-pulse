@@ -60,6 +60,10 @@ function EpisodeAudioActions({
 function progressLinesOf(t: Translate, progress: EpisodeAudioProgress | null) {
   if (!progress) return { visibleLine: "", progressLabel: "" };
   const { fileName } = progress;
+  if (progress.isChecking) {
+    const checkingLine = t("studio:uploadFlow.files.stage.checking");
+    return { visibleLine: checkingLine, progressLabel: checkingLine };
+  }
   if (progress.isConverting)
     return {
       visibleLine: t("studio:episodeUpload.converting", {
@@ -181,6 +185,7 @@ export function StudioEpisodeAudioStep({
   const isCancellable =
     row !== null &&
     (row.stage === "queued" ||
+      row.stage === "checking" ||
       row.stage === "converting" ||
       row.stage === "uploading");
   useReportUploadActivity("uploads", uploads.hasActiveUploads);
@@ -203,6 +208,7 @@ export function StudioEpisodeAudioStep({
               barPercent: row.progress,
               isConfirming: row.stage === "confirming",
               isConverting: row.stage === "converting",
+              isChecking: row.stage === "checking",
             }
       }
       onFile={(file) => {

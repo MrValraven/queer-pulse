@@ -9,6 +9,13 @@ export interface RadioCardOption<OptionId extends string> {
    *  a leading tag/badge, a price symbol + label, …). The caller owns the
    *  look; the primitive only owns radiogroup semantics + keyboard nav. */
   render: ReactNode;
+  /** Optional: the option shows but cannot be picked. It renders
+   *  `aria-disabled="true"` and `data-disabled`, ignores clicks and is
+   *  skipped by arrow, Home and End movement. It stays a focusable button
+   *  without the native `disabled` attribute, so a screen reader can still
+   *  reach it and read why (put the reason in `render`). A disabled option
+   *  that is the current `value` still shows as checked. */
+  isDisabled?: boolean;
 }
 
 export interface RadioCardGroupProps<OptionId extends string> {
@@ -50,6 +57,8 @@ export interface RadioCardGroupProps<OptionId extends string> {
  *     selected) is in the tab order; the rest are `tabIndex={-1}`
  *   - Arrow Up/Down/Left/Right move focus AND select the next/previous option,
  *     wrapping at both ends; Home/End jump to first/last; Space/Enter select
+ *   - an option with `isDisabled` keeps its place and stays focusable, but
+ *     clicks, Space/Enter and arrow movement all pass over it
  *
  * The visual is entirely caller-supplied (via `option.render` plus the
  * pass-through `className` / `optionClassName` / `checkedClassName`), so one
@@ -81,6 +90,7 @@ export function RadioCardGroup<OptionId extends string>({
       const nextOption = options[index];
       if (nextOption) onChange(nextOption.id);
     },
+    isOptionDisabled: (index) => options[index]?.isDisabled === true,
   });
 
   return (
@@ -97,6 +107,7 @@ export function RadioCardGroup<OptionId extends string>({
     >
       {options.map((option, index) => {
         const checked = option.id === value;
+        const isOptionDisabled = option.isDisabled === true;
         return (
           <button
             key={option.id}
@@ -105,6 +116,8 @@ export function RadioCardGroup<OptionId extends string>({
             role="radio"
             aria-checked={checked}
             data-checked={checked || undefined}
+            aria-disabled={isOptionDisabled || undefined}
+            data-disabled={isOptionDisabled || undefined}
             className={[
               styles.option,
               optionClassName,
@@ -112,7 +125,9 @@ export function RadioCardGroup<OptionId extends string>({
             ]
               .filter(Boolean)
               .join(" ")}
-            onClick={() => onChange(option.id)}
+            onClick={() => {
+              if (!isOptionDisabled) onChange(option.id);
+            }}
           >
             {option.render}
           </button>

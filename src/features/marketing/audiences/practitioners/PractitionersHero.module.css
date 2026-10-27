@@ -1,0 +1,143 @@
+/* The practitioners hero: a quiet desk. Soft practice ground, a faint ruled
+   paper texture, and three cards from three practices laid at slight,
+   settled angles. Halos are token gradients, never blurred shadows. */
+.hero {
+  position: relative;
+  padding: var(--section-y-104) 0 var(--section-y-96);
+  background:
+    radial-gradient(
+      ellipse 42% 46% at 82% 30%,
+      color-mix(in srgb, var(--jade) 12%, transparent),
+      transparent 70%
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0 31px,
+      rgba(var(--line-rgb), 0.035) 31px 32px
+    ),
+    var(--practice-ground);
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+  align-items: center;
+  gap: 64px;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--wrap-px);
+}
+
+.copy {
+  position: relative;
+  z-index: 1;
+}
+
+/* Three cards on a twelve-column grid: the flash sheet leads top left, the
+   therapist's topics tuck into its right margin, the chair band rests under
+   the flash. The topics card only covers the flash sheet's blank edge, so
+   every flash caption and the "Sample" label stay in view. */
+.collage {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: auto auto;
+  gap: 18px;
+  align-items: start;
+}
+
+.flash,
+.topics,
+.chair {
+  --showcase-fade: var(--practice-ground);
+  animation: settle 0.9s var(--ease) both;
+}
+
+.flash {
+  grid-column: 1 / span 7;
+  grid-row: 1;
+  transform: rotate(-1.2deg);
+}
+.flash > figcaption {
+  align-self: flex-start;
+}
+
+.topics {
+  grid-column: 8 / span 5;
+  grid-row: 1 / span 2;
+  margin-top: 132px;
+  margin-left: -48px;
+  transform: rotate(0.8deg);
+  animation-delay: 0.12s;
+}
+
+.chair {
+  grid-column: 1 / span 6;
+  grid-row: 2;
+  transform: rotate(-0.4deg);
+  animation-delay: 0.24s;
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    translate: 0 14px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flash,
+  .topics,
+  .chair {
+    animation: none;
+  }
+}
+:global(html[data-reduce-motion="true"]) .flash,
+:global(html[data-reduce-motion="true"]) .topics,
+:global(html[data-reduce-motion="true"]) .chair {
+  animation: none;
+}
+
+@media (max-width: 1099px) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 48px;
+  }
+  .collage {
+    justify-self: center;
+    width: min(100%, 680px);
+  }
+}
+
+/* Phones: one column, the therapist's topics first, the flash after it,
+   the chair band set aside. Nothing tilts, so nothing reaches past the
+   gutter. */
+@media (max-width: 719px) {
+  .hero {
+    padding: var(--section-y-64) 0 var(--section-y-56);
+  }
+  .collage {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+  }
+  .flash,
+  .topics {
+    grid-column: 1;
+    grid-row: auto;
+    margin-top: 0;
+    margin-left: 0;
+    transform: none;
+  }
+  .topics {
+    order: -1;
+  }
+  .flash > figcaption {
+    align-self: flex-end;
+  }
+  .chair {
+    display: none;
+  }
+}

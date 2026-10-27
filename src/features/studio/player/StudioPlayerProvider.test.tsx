@@ -59,6 +59,7 @@ const savePreferences = vi.fn((patch: Partial<typeof playbackSettings>) => {
 });
 vi.mock("../api/useStudioPlaybackPreferences", () => ({
   useStudioPlaybackSettings: () => playbackSettings,
+  useStudioPlaybackRow: () => playbackSettings,
   useStudioPlaybackPreferences: () => ({
     preferences: playbackSettings,
     isLoading: false,

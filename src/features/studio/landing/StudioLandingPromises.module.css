@@ -1,0 +1,129 @@
+.section {
+  padding: clamp(var(--section-y-56), 8vh, var(--section-y-96)) 0;
+}
+
+.inner {
+  max-width: var(--maxw-nav);
+  margin: 0 auto;
+  padding-inline: clamp(20px, 5vw, 48px);
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition:
+    opacity 0.6s var(--ease),
+    transform 0.6s var(--ease);
+}
+
+.inner[data-revealed="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+.eyebrow {
+  margin: 0 0 16px;
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--studio-accent-text);
+}
+
+.title {
+  max-width: 20ch;
+  margin: 0 0 clamp(28px, 4vw, 48px);
+  font-family: var(--serif);
+  font-size: var(--text-display);
+  font-weight: 300;
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-display);
+  color: var(--studio-text);
+  text-wrap: balance;
+}
+
+.title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--studio-accent-text);
+}
+
+/* Editorial list: a hairline above each promise with a short coral tick at
+   its start, the same marks the manifesto uses on its text column. */
+.list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 16px;
+  align-items: start;
+  padding: clamp(20px, 2.4vw, 28px) 0;
+  border-top: 1px solid rgba(var(--line-rgb), 0.16);
+}
+
+.item::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 32px;
+  height: 2px;
+  background: var(--accent);
+}
+
+.icon {
+  grid-row: 1 / span 2;
+  display: inline-flex;
+  margin-top: 6px;
+  color: var(--studio-text-muted);
+}
+
+.icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.itemTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-24);
+  font-weight: 400;
+  line-height: var(--lh-title);
+  color: var(--studio-text);
+}
+
+.itemBody {
+  max-width: 52ch;
+  margin: 8px 0 0;
+  font-family: var(--sans);
+  font-size: var(--text-body-lg);
+  line-height: var(--lh-body-lg);
+  color: var(--studio-text-muted);
+  text-wrap: pretty;
+}
+
+@media (min-width: 1024px) {
+  .list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(40px, 5vw, 72px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inner {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+:global(html[data-reduce-motion="true"]) .inner {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}

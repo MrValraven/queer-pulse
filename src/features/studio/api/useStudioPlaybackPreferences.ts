@@ -9,13 +9,16 @@ import {
 import {
   DEFAULT_STUDIO_PLAYBACK,
   type StudioPlaybackPreferencesDTO,
+  type StudioPlaybackUpdateDTO,
 } from "./studio.types";
 import { getStudioPlayback, putStudioPlayback } from "./studioPlayback.api";
+import { applyPlaybackPatch } from "./studioPlaybackPatch";
 import { studioLoadStateOf, type StudioLoadState } from "./studioLoadState";
 import { readStudio, studioKeys } from "./studioQueryKeys";
 import { useStudioAccess } from "./useStudioAccess";
 
-export type StudioPlaybackPatch = Partial<StudioPlaybackPreferencesDTO>;
+/** What a save sends: any subset of the row, plus the one-time notice flag. */
+export type StudioPlaybackPatch = StudioPlaybackUpdateDTO;
 
 export interface StudioPlaybackPreferencesResult {
   preferences: StudioPlaybackPreferencesDTO;
@@ -61,6 +64,13 @@ export function useStudioPlaybackSettings(): StudioPlaybackPreferencesDTO {
   return usePlaybackQuery().data ?? DEFAULT_STUDIO_PLAYBACK;
 }
 
+/** The cached row, undefined until the first read lands (no defaults). Reads
+ *  the same cache entry as every other playback reader. */
+export function useStudioPlaybackRow():
+  StudioPlaybackPreferencesDTO | undefined {
+  return usePlaybackQuery().data;
+}
+
 /** Whether rows grey out explicit tracks and the queue skips them. */
 export function useStudioHideExplicit(): boolean {
   return useStudioPlaybackSettings().hideExplicit;
@@ -84,7 +94,7 @@ export function useStudioPlaybackPreferences(): StudioPlaybackPreferencesResult 
     StudioPlaybackPreferencesDTO,
     Error,
     StudioPlaybackPatch,
-    { previous: StudioPlaybackPreferencesDTO }
+    { previous: StudioPlaybackPreferencesDTO | undefined }
   >({
     meta: SILENT,
     mutationFn: async (patch) =>
@@ -94,16 +104,24 @@ export function useStudioPlaybackPreferences(): StudioPlaybackPreferencesResult 
     onMutate: async (patch) => {
       await queryClient.cancelQueries({ queryKey });
       const previous =
-        queryClient.getQueryData<StudioPlaybackPreferencesDTO>(queryKey) ??
-        DEFAULT_STUDIO_PLAYBACK;
-      queryClient.setQueryData<StudioPlaybackPreferencesDTO>(queryKey, {
-        ...previous,
-        ...patch,
-      });
+        queryClient.getQueryData<StudioPlaybackPreferencesDTO>(queryKey);
+      // No row has loaded (pending or failed read): write nothing, so the
+      // cache never holds a made-up row (history on, no stamp) that the
+      // recorder and the notice would trust. The save still goes out.
+      if (previous === undefined) return { previous };
+      // The flag stamps the notice in the cache at once; it never lands on
+      // the row itself.
+      queryClient.setQueryData<StudioPlaybackPreferencesDTO>(
+        queryKey,
+        applyPlaybackPatch(previous, patch, new Date()),
+      );
       return { previous };
     },
     onError: (error, _patch, context) => {
-      if (context) queryClient.setQueryData(queryKey, context.previous);
+      // Only a loaded row goes back; with none, the re-read below fills it.
+      if (context?.previous !== undefined) {
+        queryClient.setQueryData(queryKey, context.previous);
+      }
       void queryClient.invalidateQueries({ queryKey });
       // Name the reason (offline, restricted, rate limit, server). Only a
       // failure with no nameable reason keeps the setting-specific line.

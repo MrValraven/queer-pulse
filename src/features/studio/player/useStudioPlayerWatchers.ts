@@ -10,6 +10,7 @@ import {
 import { useStudioPlayer, type StudioPlayerValue } from "./studioPlayerContext";
 import { useStudioPlayerSurface } from "./studioPlayerSurface";
 import { announceStudioPlayer } from "./studioPlayerAnnouncer";
+import { useStudioSleepAnnouncement } from "./useStudioSleepAnnouncement";
 
 const TITLE_PREFIX_KEY = "studio:player.documentTitlePrefix";
 
@@ -111,4 +112,8 @@ export function useStudioPlayerWatchers(): void {
   useNowPlayingAnnouncement(player);
   usePlayingDocumentTitle(player.status === "playing");
   useOfflinePlayback(player);
+  useStudioSleepAnnouncement(
+    player.sleepTimer,
+    player.currentItem?.isEpisode === true,
+  );
 }

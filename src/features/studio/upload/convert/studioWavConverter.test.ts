@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { PcmHeader, PcmHeaderResult } from "./studioPcmHeader";
-import { wavBytes } from "./studioPcmTestFiles";
+import { aiffBytes, wavBytes } from "./studioPcmTestFiles";
 import type {
   WavConversionRequest,
   WavConversionResponse,
@@ -9,6 +9,7 @@ import {
   conversionTimeoutMs,
   createWavConverter,
   isConvertibleAudio,
+  sniffPcmContainer,
   type ConvertOptions,
   type ConvertResult,
   type WavConversionWorkerPort,
@@ -327,5 +328,97 @@ describe("convert, stopping", () => {
     expect(workers[1]?.posted[0]?.file).toBe(third);
     await tick();
     expect(queued.result).toBeNull();
+  });
+});
+
+describe("onChecked", () => {
+  it("fires once the header passed and never for a refusal", async () => {
+    const accepted = converterWith();
+    const onChecked = vi.fn();
+    void accepted.converter.convert(fileNamed("a.wav"), MUSIC_CAP, {
+      ...optionsWith(),
+      onChecked,
+    });
+    await vi.waitFor(() => expect(onChecked).toHaveBeenCalledTimes(1));
+
+    const refused = converterWith({ ...HEADER, durationSeconds: 3600 });
+    const onCheckedForRefusal = vi.fn();
+    await refused.converter.convert(fileNamed("set.wav"), MUSIC_CAP, {
+      ...optionsWith(),
+      onChecked: onCheckedForRefusal,
+    });
+    expect(onCheckedForRefusal).not.toHaveBeenCalled();
+  });
+});
+
+describe("whenIdle", () => {
+  it("resolves at once with nothing to convert", async () => {
+    const { converter } = converterWith();
+    await converter.whenIdle(new AbortController().signal);
+  });
+
+  it("waits for a running conversion to finish", async () => {
+    const { converter, workers } = converterWith();
+    void converter.convert(fileNamed("a.wav"), MUSIC_CAP, optionsWith());
+    await vi.waitFor(() => expect(workers).toHaveLength(1));
+    const idle = vi.fn();
+    void converter.whenIdle(new AbortController().signal).then(idle);
+    await tick();
+    expect(idle).not.toHaveBeenCalled();
+    workers[0]?.reply({ type: "done", buffer: new ArrayBuffer(10) });
+    await vi.waitFor(() => expect(idle).toHaveBeenCalledTimes(1));
+  });
+
+  it("stays waiting while a queued conversion follows", async () => {
+    const { converter, workers } = converterWith();
+    void converter.convert(fileNamed("a.wav"), MUSIC_CAP, optionsWith());
+    void converter.convert(fileNamed("b.wav"), MUSIC_CAP, optionsWith());
+    await vi.waitFor(() => expect(workers).toHaveLength(1));
+    const idle = vi.fn();
+    void converter.whenIdle(new AbortController().signal).then(idle);
+    workers[0]?.reply({ type: "done", buffer: new ArrayBuffer(10) });
+    await vi.waitFor(() => expect(workers).toHaveLength(2));
+    await tick();
+    expect(idle).not.toHaveBeenCalled();
+    workers[1]?.reply({ type: "done", buffer: new ArrayBuffer(10) });
+    await vi.waitFor(() => expect(idle).toHaveBeenCalledTimes(1));
+  });
+
+  it("stops waiting when its own signal aborts", async () => {
+    const { converter, workers } = converterWith();
+    void converter.convert(fileNamed("a.wav"), MUSIC_CAP, optionsWith());
+    await vi.waitFor(() => expect(workers).toHaveLength(1));
+    const controller = new AbortController();
+    const idle = vi.fn();
+    void converter.whenIdle(controller.signal).then(idle);
+    controller.abort();
+    await vi.waitFor(() => expect(idle).toHaveBeenCalledTimes(1));
+  });
+});
+
+describe("sniffPcmContainer", () => {
+  const spec = {
+    channels: 1,
+    sampleRate: 8000,
+    bitsPerSample: 16,
+    frames: 10,
+  };
+
+  it("recognises WAV and AIFF by their first bytes, whatever the name", async () => {
+    expect(
+      await sniffPcmContainer(new File([wavBytes(spec)], "take.mp3")),
+    ).toBe(true);
+    expect(
+      await sniffPcmContainer(new File([aiffBytes(spec)], "take.m4a")),
+    ).toBe(true);
+  });
+
+  it("leaves MP3-like and short files alone", async () => {
+    const mp3Like = new Uint8Array(64);
+    mp3Like.set([0x49, 0x44, 0x33, 0x04], 0);
+    expect(await sniffPcmContainer(new File([mp3Like], "a.mp3"))).toBe(false);
+    expect(
+      await sniffPcmContainer(new File([new Uint8Array(5)], "a.mp3")),
+    ).toBe(false);
   });
 });

@@ -11,7 +11,7 @@ export interface StudioReviewDialogRequest {
   textLabelKey: string | null;
   textMaxLength: number;
   releaseTitle: string;
-  tone: "default" | "destructive" | "positive";
+  tone: "default" | "destructive" | "positive" | "neutral";
 }
 
 /**

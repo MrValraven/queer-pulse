@@ -1,0 +1,160 @@
+/* The next release countdown and the release checklist, inside the
+   dashboard's "Next steps" card. */
+
+.countdown,
+.checklist {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--studio-line);
+}
+
+/* First block under the card title: no rule to separate it from. */
+.isFirst {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.heading {
+  margin: 0 0 8px;
+  font-family: var(--serif);
+  font-size: var(--text-15);
+  font-weight: 500;
+  color: var(--studio-text);
+}
+
+.countdownSentence {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--studio-text);
+}
+
+.countdownFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-top: 8px;
+}
+
+.countdownReminders {
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rowBody {
+  padding-block: 8px;
+}
+
+/* The folded rows continue the list, so their first row keeps its rule. */
+.row + .row,
+.restRows > .row:first-child {
+  border-top: 1px solid var(--studio-line);
+}
+
+.rowHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  font-size: var(--text-14);
+}
+
+.rowTitle {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 500;
+  color: var(--studio-text);
+  overflow-wrap: anywhere;
+}
+
+.rowProgress {
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 8px 4px 4px;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  font-size: var(--text-14);
+}
+
+.itemDone,
+.itemLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-block: 2px;
+}
+
+.itemDone {
+  color: var(--studio-text-muted);
+}
+
+.itemLink {
+  border-radius: var(--radius-4);
+  color: var(--studio-accent-text);
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--studio-ink-rgb), 0.24);
+  text-underline-offset: 3px;
+  transition-property: text-decoration-color;
+  transition-duration: 0.15s;
+  transition-timing-function: var(--ease);
+}
+
+.itemLink:hover {
+  text-decoration-color: currentColor;
+}
+
+.itemLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.doneIcon,
+.openIcon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+
+.doneIcon {
+  color: var(--jade);
+}
+
+.openIcon {
+  color: var(--studio-text-muted);
+}
+
+.optionalTag {
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--studio-ink-rgb), 0.08);
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}
+
+.moreToggle {
+  margin-top: 8px;
+}

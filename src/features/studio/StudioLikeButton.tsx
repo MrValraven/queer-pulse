@@ -18,6 +18,7 @@ export function StudioLikeButton({
   className,
   isQuiet,
   hasTooltip = false,
+  blockedReason,
   onToggled,
 }: {
   subject: StudioLikeSubject;
@@ -26,16 +27,22 @@ export function StudioLikeButton({
   isQuiet?: boolean;
   /** Icon variant only: a tooltip from the heart's own state. */
   hasTooltip?: boolean;
+  /** Why the track cannot be liked right now (a taken-down release). The
+   *  heart stays in place, reads as disabled and names the reason. */
+  blockedReason?: string;
   onToggled?: (isNowLiked: boolean) => void;
 }) {
   const { t } = useTranslation();
   const { isLiked, toggle } = useStudioLike(subject, { isQuiet });
   const isLabelled = variant === "labelled";
   const onClick = () => {
+    if (blockedReason) return;
     const isNowLiked = toggle();
     onToggled?.(isNowLiked);
   };
-  const label = t("studio:like.trackAria", { title: subject.title });
+  const label = blockedReason
+    ? `${t("studio:like.trackAria", { title: subject.title })}. ${blockedReason}`
+    : t("studio:like.trackAria", { title: subject.title });
   const heart = (
     <FiHeart fill={isLiked ? "currentColor" : "none"} aria-hidden />
   );
@@ -44,6 +51,7 @@ export function StudioLikeButton({
       <IconButton
         className={[css.button, css.icon, className].filter(Boolean).join(" ")}
         aria-pressed={isLiked}
+        aria-disabled={blockedReason ? true : undefined}
         aria-label={label}
         tooltip={
           hasTooltip
@@ -61,6 +69,7 @@ export function StudioLikeButton({
       variant="quiet"
       className={[css.button, className].filter(Boolean).join(" ")}
       aria-pressed={isLiked}
+      aria-disabled={blockedReason ? true : undefined}
       aria-label={label}
       onClick={onClick}
     >

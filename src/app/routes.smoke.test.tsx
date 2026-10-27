@@ -64,6 +64,10 @@ const SMOKE_PATHS: ReadonlyArray<readonly [string, string]> = [
   ["pulse live 18+ join", "/play/QG4MW8"],
   ["pulse live player", "/play/QZ7KP4"],
   ["pulse live screen", `${gatheringPath("pride-brunch-jun")}/quizshow/screen`],
+  ["for businesses", routes.forBusinesses],
+  ["for communities", routes.forCommunities],
+  ["for performers", routes.forPerformers],
+  ["for practitioners", routes.forPractitioners],
 ];
 
 /** The route ErrorBoundary's branded fallback heading — its presence = a crash. */

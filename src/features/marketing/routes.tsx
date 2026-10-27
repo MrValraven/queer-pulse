@@ -121,6 +121,23 @@ const VisasPage = lazyNamed(() => import("./VisasPage"), "VisasPage");
 const ArrivingPage = lazyNamed(() => import("./ArrivingPage"), "ArrivingPage");
 const CookiesPage = lazyNamed(() => import("./CookiesPage"), "CookiesPage");
 const ImprintPage = lazyNamed(() => import("./ImprintPage"), "ImprintPage");
+// The four unlisted audience landing pages (`/for/*`), noIndex.
+const BusinessesLandingPage = lazyNamed(
+  () => import("./audiences/businesses/BusinessesLandingPage"),
+  "BusinessesLandingPage",
+);
+const CommunitiesLandingPage = lazyNamed(
+  () => import("./audiences/communities/CommunitiesLandingPage"),
+  "CommunitiesLandingPage",
+);
+const PerformersLandingPage = lazyNamed(
+  () => import("./audiences/performers/PerformersLandingPage"),
+  "PerformersLandingPage",
+);
+const PractitionersLandingPage = lazyNamed(
+  () => import("./audiences/practitioners/PractitionersLandingPage"),
+  "PractitionersLandingPage",
+);
 
 /** Marketing, policy, roadmap/press, about/help/volunteer, partners, activism,
  *  and the public "local" surfaces (visas/arriving/directory/business listing). */
@@ -152,6 +169,16 @@ export function marketingRoutes() {
 
       {/* Marketing / content */}
       <Route path={routes.about} element={<AboutPage />} />
+      <Route path={routes.forBusinesses} element={<BusinessesLandingPage />} />
+      <Route
+        path={routes.forCommunities}
+        element={<CommunitiesLandingPage />}
+      />
+      <Route path={routes.forPerformers} element={<PerformersLandingPage />} />
+      <Route
+        path={routes.forPractitioners}
+        element={<PractitionersLandingPage />}
+      />
       <Route path={routes.contact} element={<ContactPage />} />
       <Route path={routes.help} element={<HelpPage />} />
       <Route path={routes.volunteer} element={<VolunteerPage />} />

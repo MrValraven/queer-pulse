@@ -8,9 +8,35 @@ import type {
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import type { MetaSnapshot } from "./subprofileEditorDiff";
 import { isStudioArtistPersonaKind } from "../studio/api/studio.types";
+import {
+  DEFAULT_STUDIO_HERO,
+  toStudioHeroChoice,
+} from "../studio/studioHeroChoice";
 
-/** The layout a Studio artist page uses when none is stored. */
-export const DEFAULT_STUDIO_HERO: StudioHeroChoice = "full-bleed";
+/** The Studio page layout the editor starts from: the stored value read
+ *  through `toStudioHeroChoice` (so legacy values map onto the current
+ *  choices), or the default when nothing valid is stored. */
+export function studioHeroOf(
+  skinData: SkinData | null | undefined,
+): StudioHeroChoice {
+  return toStudioHeroChoice(skinData?.studioHero) ?? DEFAULT_STUDIO_HERO;
+}
+
+/** The `studioHero` the skinData merge writes: the member's pick when it
+ *  changed; otherwise the stored value normalized when it is a legacy or
+ *  unknown one, so a saved blob never carries an old value forward; nothing
+ *  when the stored value is already current or absent. */
+function studioHeroToWrite(
+  current: StudioHeroChoice,
+  hasStudioHeroChanged: boolean,
+  existingSkinData: SkinData | null,
+): Pick<SkinData, "studioHero"> {
+  if (hasStudioHeroChanged) return { studioHero: current };
+  const storedStudioHero = existingSkinData?.studioHero;
+  if (storedStudioHero === undefined) return {};
+  if (toStudioHeroChoice(storedStudioHero) === storedStudioHero) return {};
+  return { studioHero: studioHeroOf(existingSkinData) };
+}
 
 /**
  * Whether the "Studio page layout" control shows: only for an artist kind
@@ -43,7 +69,7 @@ export function metaSnapshotOf(subprofile: SubprofileView): MetaSnapshot {
     ctaLabel: subprofile.ctaLabel,
     ctaUrl: subprofile.ctaUrl,
     coverBleed: subprofile.skinData?.coverBleed ?? false,
-    studioHero: subprofile.skinData?.studioHero ?? DEFAULT_STUDIO_HERO,
+    studioHero: studioHeroOf(subprofile.skinData),
   };
 }
 
@@ -113,7 +139,11 @@ export function buildMetaPatchFrom(
           skinData: {
             ...(existingSkinData ?? {}),
             ...(coverBleedChanged ? { coverBleed: current.coverBleed } : {}),
-            ...(studioHeroChanged ? { studioHero: current.studioHero } : {}),
+            ...studioHeroToWrite(
+              current.studioHero,
+              studioHeroChanged,
+              existingSkinData,
+            ),
           },
         }
       : {}),

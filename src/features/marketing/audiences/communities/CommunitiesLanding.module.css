@@ -1,0 +1,26 @@
+/* The communities page root. The poster-wall mood lives in the hero and the
+   noticeboard; this file holds the page-level pieces between them. */
+.page {
+  background: var(--cream);
+}
+
+/* The code of conduct line under the safety points. */
+.conduct {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin-top: 40px;
+  padding: 22px 24px;
+  border: 1px dashed rgba(var(--line-rgb), 0.2);
+  border-radius: var(--radius-16);
+}
+
+.conductText {
+  flex: 1 1 22rem;
+  margin: 0;
+  font-size: var(--text-15);
+  line-height: 1.55;
+  color: var(--ink-60);
+}

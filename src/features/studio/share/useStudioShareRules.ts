@@ -48,6 +48,8 @@ export function useStudioShareRules(
       track: isTrackKind ? trackQuery.data : undefined,
       release: kind === "release" ? releaseQuery.data : undefined,
       playlist: kind === "playlist" ? playlistQuery.data : undefined,
+      // No read: the owned personas are already in the access answer.
+      milestoneArtistId: kind === "milestone" ? target?.artistId : undefined,
     },
     access.uploadablePersonas,
   );

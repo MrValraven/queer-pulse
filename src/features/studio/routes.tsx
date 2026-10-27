@@ -69,6 +69,10 @@ const StudioLikedPage = lazyNamed(
   () => import("./StudioLikedPage"),
   "StudioLikedPage",
 );
+const StudioListeningPage = lazyNamed(
+  () => import("./StudioListeningPage"),
+  "StudioListeningPage",
+);
 const StudioCheckoutPage = lazyNamed(
   () => import("./StudioCheckoutPage"),
   "StudioCheckoutPage",
@@ -220,6 +224,7 @@ function demoStudioRoutes() {
       <Route path={routes.studioCredits} element={<StudioCreditsPage />} />
       <Route path={routes.studioLibrary} element={<StudioLibraryPage />} />
       <Route path={routes.studioLiked} element={<StudioLikedPage />} />
+      <Route path={routes.studioListening} element={<StudioListeningPage />} />
       <Route path={routes.studioCheckout} element={<StudioCheckoutPage />} />
       <Route path="/studio/sheet-store" element={<StudioSheetStorePage />} />
       <Route
@@ -273,7 +278,7 @@ function demoStudioRoutes() {
 
 /** Studio for a granted member: listen, search, browse by genre and mood,
  *  scenes, upload with persona credits, the credits inbox, playlists and
- *  the library, Your numbers, open calls, the solidarity page, Help, About,
+ *  the library, Your listening, Your numbers, open calls, the solidarity page, Help, About,
  *  Terms, Accessibility, Rights, the withdrawn view, Settings and (for
  *  staff) Flag review. Studio v3 adds the press kit, its editor and
  *  one-sheet, and private preview links. Deferred pages bounce to Studio
@@ -296,6 +301,7 @@ function grantedStudioRoutes() {
       />
       <Route path={routes.studioLibrary} element={<StudioLibraryPage />} />
       <Route path={routes.studioLiked} element={<StudioLikedPage />} />
+      <Route path={routes.studioListening} element={<StudioListeningPage />} />
       <Route path={routes.studioDashboard} element={<StudioDashboardPage />} />
       <Route path={routes.studioCalls} element={<StudioOpenCallsPage />} />
       <Route

@@ -3,6 +3,7 @@ import { AnimatePresence, m } from "motion/react";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { Modal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import css from "./StudioPlaylistEditors.module.css";
 import type { StudioPlaylistView } from "./api/studio.adapters";
 import { useStudioPlaylistEditors } from "./api/useStudioPlaylistEditors";
 import { StudioPlaylistCoOwnerChecklist } from "./StudioPlaylistCoOwnerChecklist";
@@ -70,12 +71,13 @@ export function StudioPlaylistEditorsSheet({
           ? "studio:playlist.editors.invite.title"
           : "studio:playlist.editors.title",
       )}
-      sub={isInviting ? undefined : subtitle}
+      sub={subtitle}
       onClose={onClose}
     >
       <AnimatePresence mode="wait" initial={false}>
         <m.div
           key={isPersonaPick ? "pick" : step}
+          className={isPersonaPick ? undefined : css.stage}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

@@ -204,6 +204,35 @@ function StudioChapterRow({
   );
 }
 
+/** Visible column labels over the rows. Each input keeps its own
+ *  accessible name ("Time of chapter 2"), so these are hidden from assistive
+ *  tech to avoid a double read. */
+function StudioChapterColumnLabels({
+  isArtistShown,
+}: {
+  isArtistShown: boolean;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div
+      className={
+        isArtistShown
+          ? styles.columnLabels
+          : `${styles.columnLabels} ${styles.rowNoArtist}`
+      }
+      aria-hidden="true"
+    >
+      <span>{t("studio:chapters.editor.columnTime")}</span>
+      <span>{t("studio:chapters.editor.columnTitle")}</span>
+      {isArtistShown && (
+        <span className={styles.columnArtist}>
+          {t("studio:chapters.editor.columnArtist")}
+        </span>
+      )}
+    </div>
+  );
+}
+
 /** The editable rows. Focus follows a moved row's button, and a removed
  *  row hands it to its neighbour (or to the Add button the parent owns). */
 export function StudioChapterRows({
@@ -246,26 +275,29 @@ export function StudioChapterRows({
     };
 
   return (
-    <ol className={styles.rows}>
-      <AnimatePresence initial={false}>
-        {rows.map((row, index) => (
-          <StudioChapterRow
-            key={row.id}
-            row={row}
-            index={index}
-            rowCount={rows.length}
-            errors={validation.rowErrors[index] ?? []}
-            isArtistShown={isArtistShown}
-            durationLabel={durationLabel}
-            isFieldErrorShown={isFieldErrorShown}
-            register={register}
-            onTouch={onTouch}
-            onEdit={onEdit}
-            onMove={onMove}
-            onRemove={onRemove}
-          />
-        ))}
-      </AnimatePresence>
-    </ol>
+    <>
+      <StudioChapterColumnLabels isArtistShown={isArtistShown} />
+      <ol className={styles.rows}>
+        <AnimatePresence initial={false}>
+          {rows.map((row, index) => (
+            <StudioChapterRow
+              key={row.id}
+              row={row}
+              index={index}
+              rowCount={rows.length}
+              errors={validation.rowErrors[index] ?? []}
+              isArtistShown={isArtistShown}
+              durationLabel={durationLabel}
+              isFieldErrorShown={isFieldErrorShown}
+              register={register}
+              onTouch={onTouch}
+              onEdit={onEdit}
+              onMove={onMove}
+              onRemove={onRemove}
+            />
+          ))}
+        </AnimatePresence>
+      </ol>
+    </>
   );
 }

@@ -3,26 +3,13 @@ import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
-import type { StudioArtistView, StudioHeroLayout } from "./api/studio.adapters";
+import type { StudioArtistView } from "./api/studio.adapters";
 import { ARTIST_SHOWCASE } from "./studioArtist.data";
 import { StudioArtistHeroActions } from "./StudioArtistHeroActions";
-import {
-  StudioDetailHero,
-  type StudioDetailHeroVariant,
-} from "./StudioDetailHero";
+import { StudioDetailHero } from "./StudioDetailHero";
 import { useIsHeroCompact } from "./studioHeroLayout";
 import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
-
-/** The detail hero variant each resolved artist layout draws with. */
-const HERO_VARIANT_BY_LAYOUT: Record<
-  StudioHeroLayout,
-  StudioDetailHeroVariant
-> = {
-  classic: "default",
-  "full-bleed": "full-bleed",
-  avatar: "avatar-backdrop",
-};
 
 /** The persona's wide cover, decorative (the name is the h1 beside it). It
  *  fades in once loaded; one that fails to load removes itself, so the
@@ -33,7 +20,7 @@ function ArtistCoverPhoto({
   isPriority,
 }: {
   src: string;
-  /** The cover is the hero's largest image (full-bleed), so it loads first. */
+  /** The cover is the hero's largest image (the banner), so it loads first. */
   isPriority: boolean;
 }) {
   const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
@@ -54,11 +41,19 @@ function ArtistCoverPhoto({
   );
 }
 
-/** The artist hero: the round portrait over its tint, kind and city, the
- *  name, release and follower counts (grouped for the language), and the
- *  action row. With a wide cover the artist's chosen layout either fills a
- *  photo band with it, the name over its lower part, or lays it dimmed
- *  behind the portrait. */
+/** The art frame drawn as a circle, matching the band's round portrait. */
+const ROUND_ART_STYLE = { borderRadius: "var(--radius-avatar)" } as const;
+
+/** The artist hero: kind and city, the name, release and follower counts
+ *  (grouped for the language), and the action row, under the artist's
+ *  chosen layout (`heroLayout`):
+ *  - "banner" fills a photo band with the wide cover and lays the name over
+ *    its lower part, with no portrait;
+ *  - "both" draws the same band and adds a small round portrait above the
+ *    name;
+ *  - "portrait" (the persona editor's "Avatar" choice) draws a large round
+ *    portrait beside the copy over the artist's tint, with no photo band.
+ *  An artist with no cover photo always gets "portrait". */
 export function StudioArtistHero({
   artist,
   onTip,
@@ -79,24 +74,21 @@ export function StudioArtistHero({
   const isCompact = useIsHeroCompact();
   const person = artist.artist;
   const releaseCount = artist.allReleases.length;
-  // The adapter resolves a missing cover to classic; the guard keeps a
+  // The adapter resolves a missing cover to portrait; the guard keeps a
   // stray layout from drawing an empty photo band.
-  const variant = artist.coverUrl
-    ? HERO_VARIANT_BY_LAYOUT[artist.heroLayout]
-    : "default";
+  const isBanner = !!artist.coverUrl && artist.heroLayout !== "portrait";
 
   return (
     <StudioDetailHero
       tint={person.tint}
-      variant={variant}
+      variant={isBanner ? "full-bleed" : "default"}
       backdrop={
-        artist.coverUrl && variant !== "default" ? (
-          <ArtistCoverPhoto
-            src={artist.coverUrl}
-            isPriority={variant === "full-bleed"}
-          />
+        isBanner && artist.coverUrl ? (
+          <ArtistCoverPhoto src={artist.coverUrl} isPriority />
         ) : undefined
       }
+      isBandAvatarShown={artist.heroLayout === "both"}
+      artStyle={isBanner ? undefined : ROUND_ART_STYLE}
       sentinelRef={sentinelRef}
       isActionsCompact={isCompact}
       art={

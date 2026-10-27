@@ -13,6 +13,7 @@ import {
 } from "./ProfileContentSections";
 import { RelatedSection } from "./ProfileRelatedSection";
 import { NowSection } from "./now/NowSection";
+import { ProfileEventsSection } from "./ProfileEventsSection";
 import { LookingForEditor } from "./LookingForEditor";
 import { WorkEditor } from "./WorkEditor";
 import { BoardEditor } from "./BoardEditor";
@@ -165,6 +166,13 @@ export function ProfileContent({
       {/* While editing, the Now editor lives in the hero — showing the committed
           card here too would just be a stale second copy of the same field. */}
       {!edit && <NowSection profile={profile} isSelf={isSelf} />}
+      {!edit && (
+        <ProfileEventsSection
+          memberSlug={profile.slug}
+          isSelf={isSelf ?? false}
+          firstName={profile.first}
+        />
+      )}
       {edit && <LookingForEditor />}
       {edit ? (
         <WorkEditor

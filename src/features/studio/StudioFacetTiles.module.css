@@ -17,7 +17,8 @@
    matches the 160px floor and 12px gap): tiles at least 160px wide that
    share the row, capped at 280px each so three genres never balloon. The
    selector reaches the shelf's grid list by its place under the nav and
-   outranks the shelf's own grid rule. */
+   outranks the shelf's own grid rule. The cap adds back the shelf's gutter
+   padding on both sides. */
 .fitGrid {
   --facet-tile-min: 160px;
   --facet-tile-max: 280px;
@@ -32,7 +33,7 @@
   gap: var(--facet-grid-gap);
   max-inline-size: calc(
     var(--facet-count) * var(--facet-tile-max) + (var(--facet-count) - 1) *
-      var(--facet-grid-gap)
+      var(--facet-grid-gap) + 2 * var(--shelf-bleed, 0px)
   );
 }
 

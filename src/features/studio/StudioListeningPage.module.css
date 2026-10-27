@@ -1,0 +1,91 @@
+/* StudioListeningPage: "Your listening", themed through the Studio tokens */
+.wrap {
+  max-width: var(--maxw-page);
+  padding: 8px var(--wrap-px) var(--section-y-64);
+}
+
+/* Page header, in the Studio Settings page's shape */
+.pageHeader {
+  max-width: var(--maxw-page);
+  padding: 32px var(--wrap-px) 0;
+}
+.eyebrow {
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--studio-accent-text);
+  margin-bottom: 6px;
+}
+.pageHeader h1 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: var(--text-title);
+  color: var(--studio-text);
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+  margin-bottom: 10px;
+}
+.pageHeader h1 em {
+  font-style: italic;
+  color: var(--studio-accent-text);
+}
+.dek {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--text-14);
+  color: var(--studio-text-muted);
+  line-height: 1.6;
+  max-width: 58ch;
+  margin-bottom: 0;
+}
+
+/* The history switch and Clear */
+.controls {
+  padding: var(--gap-sm) 0;
+  border-bottom: 1px solid rgba(var(--studio-ink-rgb), 0.08);
+}
+
+/* Paused banner. The top padding lives inside the Collapse, so the fold
+   carries the gap with it. */
+.pausedBanner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs) var(--gap-sm);
+  margin-top: var(--gap-grid);
+  padding: var(--gap-sm) var(--card-pad);
+  border-radius: var(--radius-badge);
+  background: rgba(var(--studio-ink-rgb), 0.06);
+  color: var(--studio-text);
+}
+.pausedBody {
+  flex: 1 1 240px;
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+}
+
+/* Welcome state and the sections below the controls */
+.empty {
+  margin-top: var(--gap-lg);
+}
+/* A changed welcome line fades in (opacity only; the reduced-motion rule in
+   base.css shortens it to nothing). */
+.emptyBody {
+  animation: listeningEmptyBodyIn var(--dur-base) var(--ease) both;
+}
+@keyframes listeningEmptyBodyIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--section-y-48);
+  padding-top: var(--gap-lg);
+}

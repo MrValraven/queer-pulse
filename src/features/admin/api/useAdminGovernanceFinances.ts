@@ -99,15 +99,17 @@ async function buildDemoAdminFinances(): Promise<AdminFinanceResponseDTO> {
     // the public page, exactly as a freshly opened live quarter does.
     isPublic: false,
     publishedAt: "",
-    // Every demo figure starts as an unverified placeholder, so the tab
-    // demonstrates the provenance badges out of the box; editing flips a
-    // figure to `manual` (see `applyFinanceEdits`).
+    // Every typed demo figure starts as an unverified placeholder, so the
+    // tab demonstrates the provenance badges out of the box; editing flips a
+    // figure to `manual` (see `applyFinanceEdits`). Total spending is the sum
+    // of the spending lines (the mock's lines add up to `lastQuarter.spend`),
+    // so it reads as computed, as it does live.
     sources: {
       mrr: "seeded",
       sustainerCount: "seeded",
       solidarityRate: "seeded",
       incomeTotal: "seeded",
-      expenseTotal: "seeded",
+      expenseTotal: LEDGER.length > 0 ? "computed" : "seeded",
       surplus: "computed",
     },
     editor: null,
@@ -131,13 +133,30 @@ const DEMO_EDITOR: MemberRefDTO = {
   avatarUrl: null,
 };
 
-const SCALAR_KEYS = [
+/** The headline figures an admin types, as the update body carries them. */
+const EDITABLE_SCALAR_KEYS = [
   "mrr",
   "sustainerCount",
   "solidarityRate",
   "incomeTotal",
-  "expenseTotal",
 ] as const;
+
+/** Every headline figure the public page needs entered by people: the typed
+ *  ones plus total spending, which a save computes from the spending lines. */
+const HEADLINE_KEYS = [...EDITABLE_SCALAR_KEYS, "expenseTotal"] as const;
+
+/** Mirrors the backend's `sumEnabledLineAmounts`: the amounts of every line
+ *  still switched on (`enabled` missing reads as on), summed in whole cents. */
+function sumEnabledLineAmounts(lines: AdminFinLine[]): number {
+  const cents = lines
+    .filter((line) => line.enabled !== false)
+    .reduce(
+      (total, line) =>
+        total + Math.round(financeAmountOrZero(line.amount) * 100),
+      0,
+    );
+  return Math.round(cents) / 100;
+}
 
 /** The amount an edit leaves a line with, as the backend decides it: a
  *  non-empty breakdown's sum wins over any `amount` sent beside it. */
@@ -199,7 +218,7 @@ function applyLedgerEdits(
 /** Mirrors the backend's `isEnteredByPeople`: public once no headline figure
  *  is still unverified. */
 function isEnteredByPeople(sources: AdminFinanceLatest["sources"]): boolean {
-  return SCALAR_KEYS.every((key) => sources[key] !== "seeded");
+  return HEADLINE_KEYS.every((key) => sources[key] !== "seeded");
 }
 
 /** Mirrors the backend's ledger `isFigureChanged`: an amount that moved
@@ -219,11 +238,13 @@ function hasLedgerFigureEdit(
 }
 
 /**
- * Applies an edit body to a cached response — the demo mode's source of truth
+ * Applies an edit body to a cached response, the demo mode's source of truth
  * (live mode replaces the whole payload from the server). Flips each changed
- * scalar's provenance to `manual`, recomputes `surplus` when a total moves, and
- * stamps the editor only when a figure moved, as the backend does: a save that
- * only touches words leaves the "figures entered on" date alone.
+ * scalar's provenance to `manual`, and on every save sums the switched-on
+ * spending lines into `expenseTotal` (marked `computed`) whenever the spending
+ * ledger has a line, then recomputes `surplus`. It stamps the editor only when
+ * a figure moved, as the backend does: a save that only touches words leaves
+ * the "figures entered on" date alone.
  */
 export function applyFinanceEdits(
   current: AdminFinanceResponseDTO,
@@ -242,7 +263,7 @@ export function applyFinanceEdits(
     hasLedgerFigureEdit(latest.income, body.income) ||
     hasLedgerFigureEdit(latest.expense, body.expense);
 
-  for (const key of SCALAR_KEYS) {
+  for (const key of EDITABLE_SCALAR_KEYS) {
     const value = body[key];
     if (
       value !== undefined &&
@@ -258,9 +279,13 @@ export function applyFinanceEdits(
   if (body.expense) {
     next.expense = applyLedgerEdits(latest.expense, body.expense);
   }
-  if (body.incomeTotal !== undefined || body.expenseTotal !== undefined) {
-    next.surplus = (next.incomeTotal ?? 0) - (next.expenseTotal ?? 0);
+  // A ledger with no line yet (a freshly opened quarter) leaves the spending
+  // total unentered, so the report stays off the public page.
+  if (next.expense.length > 0) {
+    next.expenseTotal = sumEnabledLineAmounts(next.expense);
+    next.sources.expenseTotal = "computed";
   }
+  next.surplus = (next.incomeTotal ?? 0) - (next.expenseTotal ?? 0);
   if (body.stats) next.stats = body.stats;
   if (body.eventNotes) next.eventNotes = body.eventNotes;
   if (body.partners) next.partners = body.partners;

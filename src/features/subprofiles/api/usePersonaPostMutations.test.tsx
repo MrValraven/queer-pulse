@@ -9,6 +9,7 @@ import {
   demoOwnImageUrl,
   demoPersonaPostsPage,
   demoRemovePersonaPostByStaff,
+  OWN_IMAGE_REVOKE_DELAY_MS,
   demoUpdatePersonaPost,
 } from "../data/personaPostsDemo";
 import { usePersonaPosts } from "./usePersonaPosts";
@@ -140,6 +141,7 @@ describe("demo persona post store", () => {
   });
 
   it("revokes its own copy when an edit replaces or clears the photo and when the post leaves", async () => {
+    vi.useFakeTimers();
     const { revokeObjectURL } = stubBlobCopy();
     const created = await demoCreatePersonaPost(PERSONA, {
       body: "Flyer one",
@@ -148,10 +150,13 @@ describe("demo persona post store", () => {
     await demoUpdatePersonaPost(created.id, {
       imageKey: "blob:http://localhost/picked-b",
     });
+    expect(revokeObjectURL).not.toHaveBeenCalled();
+    vi.advanceTimersByTime(OWN_IMAGE_REVOKE_DELAY_MS);
     expect(revokeObjectURL).toHaveBeenLastCalledWith(
       "blob:http://localhost/store-copy-1",
     );
     await demoUpdatePersonaPost(created.id, { imageKey: null });
+    vi.advanceTimersByTime(OWN_IMAGE_REVOKE_DELAY_MS);
     expect(revokeObjectURL).toHaveBeenLastCalledWith(
       "blob:http://localhost/store-copy-2",
     );
@@ -160,6 +165,7 @@ describe("demo persona post store", () => {
       imageKey: "blob:http://localhost/picked-c",
     });
     demoDeletePersonaPost(deleted.id);
+    vi.advanceTimersByTime(OWN_IMAGE_REVOKE_DELAY_MS);
     expect(revokeObjectURL).toHaveBeenLastCalledWith(
       "blob:http://localhost/store-copy-3",
     );
@@ -168,10 +174,12 @@ describe("demo persona post store", () => {
       imageKey: "blob:http://localhost/picked-d",
     });
     demoRemovePersonaPostByStaff(removed.id);
+    vi.advanceTimersByTime(OWN_IMAGE_REVOKE_DELAY_MS);
     expect(revokeObjectURL).toHaveBeenLastCalledWith(
       "blob:http://localhost/store-copy-4",
     );
     expect(revokeObjectURL).toHaveBeenCalledTimes(4);
+    vi.useRealTimers();
   });
 
   it("revokes no URL it did not make", async () => {

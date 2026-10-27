@@ -1,0 +1,94 @@
+/* The dashboard block under the follower total: the plays trend and the
+   follower growth chart across the full width, then a grid with Top
+   supporters spanning both columns above the placements and milestones
+   cards as a pair. Tokens only. */
+.extras {
+  margin-bottom: var(--gap-lg);
+}
+
+/* The growth chart wears the same surface, hairline, radius and padding as
+   the two cards under it. Element plus class keeps this ahead of the shared
+   chart frame's own card rule. The spacing below the chart is a margin
+   inside the Collapse, so it folds away with the chart. */
+.growth {
+  margin-bottom: var(--gap-grid);
+}
+.growth > figure {
+  margin: 0;
+  background: var(--surface);
+  border: 1px solid var(--s-line);
+  border-radius: var(--radius-14);
+  padding: 24px 26px;
+  color: var(--studio-text);
+}
+@media (--md) {
+  .growth > figure {
+    padding: 20px 16px;
+  }
+}
+
+/* One column on phones and tablets, two side by side from 900px. */
+.pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap-grid);
+  align-items: start;
+}
+@media (--wide-up) {
+  .pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Top supporters spans both columns of the pair grid. */
+.supporters {
+  grid-column: 1 / -1;
+}
+
+/* The plays trend: the spacing below it is a margin inside its Collapse, so
+   it folds away with the chart. */
+.plays {
+  margin-bottom: var(--gap-grid);
+}
+
+/* The plays trend card wears the growth chart's surface, and holds the
+   chart frame, the totals under it and the load states. The frame's own
+   card chrome steps back, so the surface reads as one card. */
+.trendCard {
+  background: var(--surface);
+  border: 1px solid var(--s-line);
+  border-radius: var(--radius-14);
+  padding: 24px 26px;
+  color: var(--studio-text);
+}
+@media (--md) {
+  .trendCard {
+    padding: 20px 16px;
+  }
+}
+.trendCard figure {
+  margin: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+}
+
+.trendFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 12px;
+}
+.trendTotals {
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--studio-text);
+}
+.trendNote {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}

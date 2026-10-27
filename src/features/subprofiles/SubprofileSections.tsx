@@ -16,7 +16,7 @@ import type { SkinFamily } from "./subprofile-skins";
 
 /** A `.pp-sec`'s items in `.pp-list`/`.pp-tiles`/`.pp-gallery`/upcoming+`.pp-past`
  *  shape, per `sectionShape()`. Shared by the content-section loop below. */
-function SectionBody({
+export function SectionBody({
   shape,
   items,
   skin,

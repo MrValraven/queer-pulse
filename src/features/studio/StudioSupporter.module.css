@@ -1,0 +1,192 @@
+/* Show me as a supporter: the switch card on an artist page and the
+   identity picker that previews how the artist sees the member. */
+
+.card {
+  display: flex;
+  flex-direction: column;
+}
+
+.heading {
+  margin: 0 0 8px;
+  font-family: var(--serif);
+  font-size: var(--text-19);
+  color: var(--studio-text);
+  border-radius: var(--radius-4);
+}
+
+/* The heading takes focus when a failed save folds the picker away. */
+.heading:focus {
+  outline: none;
+}
+.heading:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.switchRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.body,
+.status,
+.pausedNote,
+.confirmationLine {
+  margin: 0;
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+  color: var(--studio-text-muted);
+}
+
+.status {
+  padding-top: 10px;
+}
+
+.pausedNote {
+  padding-top: 8px;
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-block: 4px;
+}
+
+.supporting {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding-top: 14px;
+}
+
+.confirmation {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.confirmationLine {
+  color: var(--studio-text);
+}
+
+/* The identity: avatar and name, as the artist sees them. */
+.identity {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.identityName,
+.identityLink {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-weight: 600;
+  color: var(--studio-text);
+}
+
+.identityLink {
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--studio-ink-rgb), 0.3);
+  text-underline-offset: 3px;
+  border-radius: var(--radius-4);
+}
+
+.identityLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 14px;
+}
+
+.legend {
+  margin: 0;
+  font-weight: 600;
+  font-size: var(--text-14);
+  color: var(--studio-text);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.option {
+  /* A <button> takes the UA font; the card reads in the page's own type. */
+  font: inherit;
+  display: flex;
+  min-height: var(--tap-min);
+  padding: 10px 12px;
+  text-align: start;
+  color: var(--studio-text);
+  background: transparent;
+  border: 1.5px solid var(--studio-line);
+  border-radius: var(--radius-12);
+  cursor: pointer;
+  transition-property: border-color, background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.option:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* RadioCardGroup's `.option:focus-visible` sets `border-radius: inherit`;
+   two classes keep the card's corners while it has focus. */
+.options .option:focus-visible {
+  border-radius: var(--radius-12);
+}
+
+@media (hover: hover) {
+  .option:hover {
+    background: rgba(var(--studio-ink-rgb), 0.04);
+  }
+}
+
+.optionChecked {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+
+.optionBody {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  min-width: 0;
+}
+
+.accountTag {
+  padding: 2px 8px;
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+  background: rgba(var(--studio-ink-rgb), 0.06);
+  border-radius: var(--radius-pill);
+}
+
+.error {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--studio-accent-text);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

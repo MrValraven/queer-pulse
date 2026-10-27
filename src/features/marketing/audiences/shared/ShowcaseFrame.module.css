@@ -1,0 +1,132 @@
+/* A frame around sample product components. The halo is a gradient painted
+   from tokens on a pseudo-element; no blurred shadow. */
+.frame {
+  --showcase-fade: var(--cream);
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+}
+.frame::before {
+  content: "";
+  position: absolute;
+  inset: -12% -8%;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse 55% 50% at 50% 50%,
+    color-mix(in srgb, var(--accent) 14%, transparent),
+    transparent 72%
+  );
+  pointer-events: none;
+}
+
+.stage {
+  position: relative;
+  min-width: 0;
+}
+/* Preview mode draws live controls as disabled look-alikes. The stage is
+   inert already, so they keep full ink and read the way a visitor sees them
+   on a real page. `.frame` outranks the Button's own disabled rule. */
+.frame .stage :disabled,
+.frame .stage [aria-disabled="true"] {
+  opacity: 1;
+  cursor: default;
+}
+
+/* Clipped stages fade out softly at the bottom edge, so a tall component
+   trails off gently. */
+.short,
+.tall {
+  overflow: hidden;
+}
+.short {
+  max-height: 360px;
+}
+.tall {
+  max-height: 640px;
+}
+.short::after,
+.tall::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 96px;
+  background: linear-gradient(to bottom, transparent, var(--showcase-fade));
+  pointer-events: none;
+}
+
+/* Browser: a quiet window with a token-only title bar. */
+.frame[data-device="browser"] {
+  --showcase-fade: var(--paper);
+  overflow: hidden;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-16);
+  background: var(--paper);
+}
+.frame[data-device="browser"]::before {
+  display: none;
+}
+.browserBar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--wash);
+}
+.browserDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(var(--line-rgb), 0.18);
+}
+.browserAddress {
+  flex: 1;
+  max-width: 260px;
+  height: 18px;
+  margin-left: 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.08);
+}
+
+/* Phone: a rounded body about one phone wide. */
+.frame[data-device="phone"] {
+  --showcase-fade: var(--paper);
+  width: min(100%, 390px);
+  margin-inline: auto;
+  padding: 14px 10px 10px;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-30);
+  background: var(--paper);
+}
+.frame[data-device="phone"] .stage {
+  overflow: hidden;
+  border-radius: var(--radius-22);
+}
+.phoneNotch {
+  width: 88px;
+  height: 6px;
+  margin: 0 auto 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.16);
+}
+
+.sample {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-end;
+  margin-top: 10px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.06);
+  color: var(--ink-60);
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.frame[data-device="browser"] .sample {
+  margin: 10px 12px 12px;
+}

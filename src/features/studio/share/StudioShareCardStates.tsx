@@ -1,9 +1,11 @@
 import type { ReactNode } from "react";
 import { m, useIsPresent } from "motion/react";
-import { FiMusic } from "react-icons/fi";
+import { FiMusic, FiRefreshCw } from "react-icons/fi";
+import { Button } from "../../../shared/components/ui";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { StudioShareCardPlaceholder } from "./StudioShareCardFrame";
+import type { StudioLoadState } from "../api/studioLoadState";
 import type { StudioShareCardStatus } from "./studioShareCardModel";
 import styles from "./StudioShareCard.module.css";
 
@@ -58,6 +60,36 @@ function StudioShareCardNotice({
   );
 }
 
+/** A transient read failure: the reason in the card's own words and a Retry.
+ *  The status stays "error" while a retry runs, so the layer (and focus on
+ *  the button) holds still. */
+function StudioShareCardError({ loadState }: { loadState: StudioLoadState }) {
+  const { t } = useTranslation();
+  const reason = loadState.reason ?? "unknown";
+  return (
+    <div className={styles.body} role="alert">
+      <span className={styles.mark} aria-hidden="true">
+        <FiMusic />
+      </span>
+      <span className={styles.notice}>
+        {t(`studio:share.card.error.${reason}`)}
+      </span>
+      <Button
+        variant="quiet"
+        size="sm"
+        className={styles.retry}
+        aria-busy={loadState.isRetrying || undefined}
+        aria-disabled={loadState.isRetrying || undefined}
+        onClick={() => {
+          if (!loadState.isRetrying) loadState.retry();
+        }}
+      >
+        <FiRefreshCw aria-hidden /> {t("studio:share.card.retryCta")}
+      </Button>
+    </div>
+  );
+}
+
 function StudioShareCardLoading() {
   const { t } = useTranslation();
   return (
@@ -70,12 +102,19 @@ function StudioShareCardLoading() {
 /** Every state except the loaded card. */
 export function StudioShareCardStatusBody({
   status,
+  loadState,
 }: {
   status: Exclude<StudioShareCardStatus, "ready">;
+  /** The read's state; the error body needs it for its reason and Retry. */
+  loadState?: StudioLoadState | null;
 }) {
-  return status === "loading" ? (
-    <StudioShareCardLoading />
-  ) : (
-    <StudioShareCardNotice status={status} />
+  if (status === "loading") return <StudioShareCardLoading />;
+  if (status === "error" && loadState) {
+    return <StudioShareCardError loadState={loadState} />;
+  }
+  return (
+    <StudioShareCardNotice
+      status={status === "error" ? "unavailable" : status}
+    />
   );
 }

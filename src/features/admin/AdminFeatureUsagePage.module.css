@@ -4,20 +4,6 @@
    visual weight; an accent left edge and tinted background provide emphasis
    beyond the badge colour alone. */
 
-.rangeRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  margin: 14px 0 20px;
-}
-
-.rangeLabel {
-  font-size: var(--text-caption);
-  font-weight: 600;
-  color: var(--ink-60);
-}
-
 .legend {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -87,18 +73,33 @@
 }
 
 /* Wide tables scroll inside their own box; the page body never scrolls
-   sideways on a phone. */
+   sideways on a phone. The wrapper is an inline-size container so an open
+   detail panel can size itself to the visible box (`100cqi`) and stay put
+   while the table scrolls under it. While a new range loads, the previous
+   range stays on screen dimmed. */
 .tableWrap {
+  container-type: inline-size;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-12);
   overflow-x: auto;
+  transition-property: opacity;
+  transition-duration: 0.2s;
+  transition-timing-function: var(--ease);
 }
 
+.tableWrapStale {
+  opacity: 0.6;
+}
+
+/* The body's `overflow-wrap: anywhere` lets a table squeeze a column down
+   to single letters on a phone, so the table turns it back to `normal`: the
+   wrapper scrolls sideways and every word stays whole. */
 .table {
   width: 100%;
   border-collapse: collapse;
   font-size: var(--text-14);
+  overflow-wrap: normal;
 }
 
 .table th,
@@ -116,77 +117,225 @@
   white-space: nowrap;
 }
 
-.table tbody tr:last-child > td,
-.table tbody tr:last-child > th {
+/* Body rows draw their hairline on top, so a row and its open detail row
+   below share one band, and the last row never doubles the wrapper's own
+   border. */
+.table tbody td,
+.table tbody th {
   border-bottom: none;
+}
+
+.row {
+  cursor: pointer;
+}
+
+.row > td,
+.row > th {
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
+  transition-property: background-color;
+  transition-duration: 0.2s;
+  transition-timing-function: var(--ease);
+}
+
+.rowOpen > td,
+.rowOpen > th {
+  background-color: rgba(var(--line-rgb), 0.03);
+}
+
+/* The hover wash is a gradient layer, so it sits over a row's own tint
+   (open, or browsed but empty) and leaves that tint in place. It only
+   applies to a pointer that hovers, so a tap on a phone leaves no wash
+   stuck on the row. */
+@media (hover: hover) {
+  .row:hover > td,
+  .row:hover > th {
+    background-image: linear-gradient(var(--wash), var(--wash));
+  }
 }
 
 .rowBrowsedButEmpty > td,
 .rowBrowsedButEmpty > th {
-  background: rgba(var(--danger-rgb), 0.05);
+  background-color: rgba(var(--danger-rgb), 0.05);
 }
 
 .rowBrowsedButEmpty {
   box-shadow: inset 3px 0 0 var(--danger);
 }
 
-.rowNotLaunched {
-  opacity: 0.55;
+/* Column widths. The feature, state and number columns shrink to their
+   content (`width: 1%` on an auto table), so the spare width goes to Reach,
+   whose bars and comparison need it most. */
+.table .fitColumn {
+  width: 1%;
+}
+
+.table .reachColumn {
+  width: auto;
 }
 
 .featureCell {
   font-weight: 600;
   color: var(--text-strong);
+  white-space: nowrap;
 }
 
 .numberCell {
-  text-align: right;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
   color: var(--text-strong);
   font-weight: 600;
+}
+
+/* Alignment and width are qualified with `.table` so they outrank the
+   `.table th, .table td` left alignment above; the colour stays on the bare
+   class, so the header keeps its muted header ink. */
+.table .numberCell {
+  width: 1%;
+  text-align: right;
 }
 
 .reachCell {
   white-space: nowrap;
 }
 
-.reachValue {
-  display: block;
-  font-weight: 600;
-  color: var(--text-strong);
-  font-variant-numeric: tabular-nums;
+/* The state chip under the feature name only shows on a narrow table (see
+   the container query below). */
+.featureStateInline {
+  display: none;
 }
 
-.reachTrend {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-  font-size: var(--text-12);
+/* A phone-sized table puts Feature and Reach side by side in the visible
+   box. The State column folds to zero width with its content visually
+   hidden, so screen readers still read it as a column, and the chip shows
+   under the name. A long name wraps between words at about 16 characters;
+   a short one stays on one line. Cells pad 8px each side to give Reach
+   the room; the first column keeps 12px on its left, clear of the
+   browsed-but-empty red edge. */
+@container (max-width: 640px) {
+  .table th,
+  .table td {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .table .featureCell,
+  .table thead th:first-child {
+    padding-left: 12px;
+  }
+
+  .featureCell {
+    white-space: normal;
+  }
+
+  .featureName {
+    display: block;
+    max-width: 16ch;
+  }
+
+  .featureStateInline {
+    display: block;
+    margin-top: 6px;
+    white-space: nowrap;
+  }
+
+  .table .stateCell {
+    width: 0;
+    padding: 0;
+  }
+
+  .stateCellContent {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* A not-launched row reads quieter through muted ink on its own text, which
+   stays above 4.5:1 on the paper in both themes (an opacity fade took it
+   under). Its state chip is the ghost tone, already muted ink. */
+.rowNotLaunched > .featureCell,
+.rowNotLaunched > .numberCell,
+.rowNotLaunched > .reachCell,
+.rowNotLaunched > .reachCell * {
   color: var(--ink-60);
 }
 
-.reachTrend_up {
-  color: var(--jade-ink);
+.reachHeaderStack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
 }
 
-.reachTrend_down {
-  color: var(--danger-ink);
+.reachHeader {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.sparkline {
-  display: block;
+/* Names the earlier days every row's comparison is measured against, once
+   for the whole column. */
+.reachHeaderVs {
+  font-size: var(--text-12);
+  font-weight: 400;
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+.reachInfoBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-40);
+  cursor: help;
+  transition-property: color;
+  transition-duration: 0.15s;
+  transition-timing-function: var(--ease);
+}
+
+.reachInfoBtn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.reachInfoBtn:hover {
+  color: var(--text-strong);
+}
+
+.reachInfoBtn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 .depthReason {
   font-style: italic;
   color: var(--ink-60);
-  max-width: 42ch;
   line-height: 1.5;
 }
 
-.expandCell {
+/* A table cell ignores its own min and max widths, so the reason text sets
+   them on a block inside: wide enough to wrap into a few readable lines,
+   narrow enough to leave the room to Reach. */
+.depthReasonText {
+  display: block;
+  min-width: 24ch;
+  max-width: 40ch;
+}
+
+.table .expandCell {
   text-align: center;
   width: 40px;
 }
@@ -202,7 +351,9 @@
   background: transparent;
   color: var(--ink-60);
   cursor: pointer;
-  transition: transform 0.15s var(--ease);
+  transition-property: transform, color, border-color;
+  transition-duration: 0.15s;
+  transition-timing-function: var(--ease);
 }
 
 .expandBtn:hover {
@@ -220,41 +371,41 @@
   transform: rotate(90deg);
 }
 
-.detailRow > td {
-  background: rgba(var(--plum-rgb), 0.03);
-  padding: 14px 16px 18px 40px;
+/* The detail row is always in the table. Its cell has no padding (the
+   panel brings its own) and no border, so a closed row folds to nothing;
+   once open it takes the same faint tint as its row so the panel reads as
+   part of it, and keeps the tint until the fold has finished closing. The
+   panel keeps the page's `overflow-wrap: anywhere`, so a long label inside
+   it wraps and never widens the table. */
+.table .detailCell {
+  padding: 0;
+  border: none;
+  overflow-wrap: anywhere;
+  transition-property: background-color;
+  transition-duration: 0.2s;
+  transition-timing-function: var(--ease);
 }
 
-.detailGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 14px;
+.table .detailCellOpen {
+  background-color: rgba(var(--line-rgb), 0.03);
 }
 
-.detailItem {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+/* An open browsed-but-empty row hands its own tint and red left edge on
+   to its panel, so the two read as one attached block. */
+.table .detailCellBrowsedButEmpty {
+  background-color: rgba(var(--danger-rgb), 0.05);
+  box-shadow: inset 3px 0 0 var(--danger);
 }
 
-.detailValue {
-  font-size: var(--text-20);
-  font-weight: 600;
-  color: var(--text-strong);
-  font-variant-numeric: tabular-nums;
-}
-
-.detailLabel {
-  font-size: var(--text-12);
-  color: var(--ink-40);
-}
-
-.detailNote {
-  grid-column: 1 / -1;
-  margin: 2px 0 0;
-  font-size: var(--text-12);
-  color: var(--ink-40);
-  line-height: 1.5;
+/* The fold itself, pinned to the visible box of the scrolling table, so
+   the panel stays in view at any scroll position, folding animation
+   included (the fold clips while it moves, which would otherwise hold the
+   panel's own sticky offset still). */
+.detailSticky {
+  position: sticky;
+  left: 0;
+  box-sizing: border-box;
+  width: min(100%, 100cqi);
 }
 
 .emptyCell {
@@ -273,4 +424,24 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tableWrap,
+  .row > td,
+  .row > th,
+  .reachInfoBtn,
+  .expandBtn,
+  .table .detailCell {
+    transition: none;
+  }
+}
+
+:global(html[data-reduce-motion="true"]) .tableWrap,
+:global(html[data-reduce-motion="true"]) .row > td,
+:global(html[data-reduce-motion="true"]) .row > th,
+:global(html[data-reduce-motion="true"]) .reachInfoBtn,
+:global(html[data-reduce-motion="true"]) .expandBtn,
+:global(html[data-reduce-motion="true"]) .table .detailCell {
+  transition: none;
 }

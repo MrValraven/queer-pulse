@@ -1,0 +1,81 @@
+/* A band of an audience page. Tones set the ground; type follows the ground
+   (cream type on the locked-dark plum band, theme ink everywhere else). */
+.section {
+  padding: var(--section-y-96) 0;
+  background-color: var(--cream);
+  color: var(--text-strong);
+}
+/* The "paper" tone is a warm cream band: it reads apart from the plain cream
+   bands, and the --paper cards on it (AudiencePointGrid) keep their edge. */
+.section[data-tone="paper"] {
+  background-color: var(--cream-warm);
+}
+.section[data-tone="wash"] {
+  background-color: var(--wash);
+}
+.section[data-tone="plum"] {
+  background-color: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+}
+
+.inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--wrap-px);
+}
+
+.head {
+  max-width: 720px;
+  margin-bottom: 40px;
+}
+.centered {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+.section[data-tone="plum"] .eyebrow {
+  color: rgba(var(--cream-rgb), 0.72);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-display);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent-text);
+}
+.section[data-tone="plum"] .title em {
+  color: var(--accent);
+}
+
+.lede {
+  margin: 16px 0 0;
+  font-size: var(--text-body-lg);
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+.section[data-tone="plum"] .lede {
+  color: rgba(var(--cream-rgb), 0.78);
+}
+
+@media (max-width: 719px) {
+  .section {
+    padding: var(--section-y-64) 0;
+  }
+  .head {
+    margin-bottom: 28px;
+  }
+}

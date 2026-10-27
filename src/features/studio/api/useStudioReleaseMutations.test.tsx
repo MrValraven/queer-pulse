@@ -31,7 +31,7 @@ function artistViewOf(published: StudioReleaseView[]): StudioArtistView {
   return {
     artist: { id: DEMO_ARTIST_MARIANA.id } as StudioArtistView["artist"],
     coverUrl: null,
-    heroLayout: "classic",
+    heroLayout: "portrait",
     allReleases: published,
     releases: published,
     singles: [],

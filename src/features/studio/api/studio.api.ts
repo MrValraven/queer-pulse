@@ -23,6 +23,7 @@ import {
   type StudioPageDTO,
   type StudioReleaseCardDTO,
   type StudioReleaseDTO,
+  type StudioReleaseTrackSourcesDTO,
   type StudioSearchResultDTO,
   type StudioSearchType,
   type StudioStreamDTO,
@@ -81,6 +82,11 @@ export function searchStudio(
 
 export const getStudioRelease = (releaseId: string) =>
   apiGet<StudioReleaseDTO>(`/studio/releases/${segment(releaseId)}`);
+
+export const getStudioReleaseTrackSources = (releaseId: string) =>
+  apiGet<StudioReleaseTrackSourcesDTO>(
+    `/studio/releases/${segment(releaseId)}/track-sources`,
+  );
 
 export const getStudioArtist = (subprofileId: string) =>
   apiGet<StudioArtistDTO>(`/studio/artists/${segment(subprofileId)}`);

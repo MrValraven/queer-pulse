@@ -29,7 +29,7 @@ import { fileURLToPath } from "node:url";
 const scriptDirectory = dirname(fileURLToPath(import.meta.url));
 export const PROJECT_ROOT = resolve(scriptDirectory, "..");
 export const BACKEND_ROOT = resolve(PROJECT_ROOT, "../queerpulse-backend");
-export const MINIMUM_NODE_VERSION = "22.11.0";
+export const MINIMUM_NODE_VERSION = "24.0.0";
 export const DEV_SERVER_PORT = 5173;
 export const DEV_SERVER_ORIGIN = `http://localhost:${DEV_SERVER_PORT}`;
 export const BACKEND_CLONE_COMMAND =
@@ -281,7 +281,7 @@ function checkNode() {
   report(
     "fail",
     `Node ${nodeVersion} found; this repo needs >= ${MINIMUM_NODE_VERSION}`,
-    "nvm install (reads .nvmrc), or install Node 22 LTS from nodejs.org",
+    "nvm install (reads .nvmrc), or install Node 24 LTS from nodejs.org",
   );
 }
 

@@ -958,7 +958,7 @@ export const settings: Catalog = {
     "Your connections, vouches, blocks, mutes, hidden members, dismissed suggestions and invites",
   "dataExport.type.activityLog.label": "Activity log",
   "dataExport.type.activityLog.sub":
-    "Your activity feed, sign-ins, badges, XP, watch history and account and data requests",
+    "Your activity feed, sign-ins, badges, XP, watch history, Studio listening history and account and data requests",
   "dataExport.type.subprofiles.label": "Personas",
   "dataExport.type.subprofiles.sub":
     "Every persona you have, plus endorsements, follows and invites",

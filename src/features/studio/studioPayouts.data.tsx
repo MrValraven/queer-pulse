@@ -13,7 +13,8 @@ export interface PayoutSummaryRow {
  * One monthly payout. `monthKey`, `periodKey` and `noteKey` are
  * `studioShowcase` catalog keys (Pattern A). The tallies are data: the counts
  * drive plural keys through `payoutMetaParts` / `payoutSplitNote`. Studio
- * never counts plays, so a payout row carries none.
+ * counts plays only as anonymous daily totals and payouts do not use them,
+ * so a payout row carries none.
  */
 export interface PayoutRow {
   d: string;

@@ -52,7 +52,7 @@ function tiltThrough(target, letterOptions) {
 /** How far below its top the stem must run to end `outerReach` past the
  *  bowl's centre line (the bowl's outline grown to that reach; 215 is the
  *  traced bowl's mean radius). */
-function footDepthPast(bowlScale, outerReach) {
+export function footDepthPast(bowlScale, outerReach) {
   return ({ toWorld }) => {
     const grow = bowlScale + outerReach / 215;
     const isPast = (depth) => {
@@ -65,14 +65,19 @@ function footDepthPast(bowlScale, outerReach) {
   };
 }
 
-export function buildSerif(options = SERIF_DEFAULTS) {
-  const bowlHalfWidthAt = stressedBowlWidth(options.bowl);
-  const waters = [
-    bowlRipple(options.bowlScale, { halfWidthAt: bowlHalfWidthAt }),
-    ...options.ripples.map((ripple) =>
+/** The stressed bowl and its even ripples, as water lines the P can lie
+ *  across. */
+export function serifWaters({ bowl, bowlScale, ripples }) {
+  return [
+    bowlRipple(bowlScale, { halfWidthAt: stressedBowlWidth(bowl) }),
+    ...ripples.map((ripple) =>
       bowlRipple(ripple.scale, { strokeWidth: ripple.strokeWidth }),
     ),
   ];
+}
+
+export function buildSerif(options = SERIF_DEFAULTS) {
+  const waters = serifWaters(options);
   // The stem leaves the bowl close to where the traced tail crosses it.
   const exitOnTrace = pointAtDistance(
     bowlLine,

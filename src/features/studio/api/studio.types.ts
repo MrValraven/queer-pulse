@@ -3,6 +3,11 @@ import {
   type StudioContentWarningId,
   type StudioOwnerClaimDTO,
 } from "./studioSafety.types";
+import type {
+  StudioFollowerGrowthWeekDTO,
+  StudioNextReleaseDTO,
+  StudioReleaseHealthItemDTO,
+} from "./studioDashboard.types";
 
 // Studio v1 wire contract (QUEERPULSE-STUDIO-V1-CONTRACT-2026-10-08.md).
 // The vocabularies are the same strings the backend uses; keep them in step.
@@ -347,6 +352,7 @@ export const STUDIO_ERROR_CODES = [
   "studio_credit_limit",
   "studio_credit_not_pending",
   "studio_credit_not_accepted",
+  "studio_scene_cover_changed",
   "studio_scene_not_available",
   "studio_curation_release_not_published",
   "studio_scene_event_not_pinnable",
@@ -371,6 +377,10 @@ export const STUDIO_ERROR_CODES = [
   "studio_playlist_credit_change_removes_editors",
   "studio_playlist_entry_not_found",
   "studio_playlist_editor_not_found",
+  "studio_milestone_not_found",
+  "studio_supporter_artist_not_found",
+  "studio_supporter_own_persona",
+  "studio_supporter_identity_not_yours",
   // Studio safety and moderation (contract "Error codes").
   ...STUDIO_SAFETY_ERROR_CODES,
 ] as const;
@@ -519,7 +529,9 @@ export interface StudioTrackDTO extends StudioTrackSummaryDTO {
   /** Listening (contract A.3): the same for viewers and owners. */
   syncedLyrics: StudioSyncedLyricLine[] | null;
   chapters: StudioChapter[] | null;
-  release: StudioReleaseCardDTO;
+  /** `status` is sent on the track detail's card: a taken-down release
+   *  reaches its owner there. A missing status reads as published. */
+  release: StudioReleaseCardDTO & { status?: StudioReleaseStatus };
   /** Discovery: accepted credits to public personas only, in
    *  STUDIO_CREDIT_ROLES order then created_at. */
   personaCredits: StudioPersonaCreditPublicDTO[];
@@ -532,7 +544,7 @@ export interface StudioArtistDTO {
     /** The persona's wide cover photo; null without one. */
     coverUrl: string | null;
     /** skinData.studioHero; null when the owner never chose a layout. */
-    studioHero: "full-bleed" | "avatar" | null;
+    studioHero: "banner" | "portrait" | "both" | null;
   };
   /** Published, newest first. */
   releases: StudioReleaseCardDTO[];
@@ -769,6 +781,10 @@ export interface StudioStatsTrackDTO {
   track: StudioTrackSummaryDTO;
   saves: StudioCountDTO;
   playlistInclusions: StudioCountDTO;
+  /** Dashboard Part 2: all-time plays, floored; optional so an older server reads as no plays. */
+  plays?: StudioCountDTO;
+  /** The 28 UTC days ending today, floored. */
+  plays28d?: StudioCountDTO;
 }
 
 export interface StudioStatsReleaseDTO {
@@ -779,6 +795,12 @@ export interface StudioStatsReleaseDTO {
   tracks: StudioStatsTrackDTO[];
   /** v3: Notify me holders; scheduled releases only, null otherwise. */
   reminders?: StudioCountDTO | null;
+  /** Dashboard Part 1: the release checklist, contract order; [] when taken down. Optional so a server that predates it reads as no checklist. */
+  health?: StudioReleaseHealthItemDTO[];
+  /** Dashboard Part 2: all-time plays, floored; optional so an older server reads as no plays. */
+  plays?: StudioCountDTO;
+  /** The 28 UTC days ending today, floored. */
+  plays28d?: StudioCountDTO;
 }
 
 export interface StudioArtistStatsDTO {
@@ -786,6 +808,10 @@ export interface StudioArtistStatsDTO {
   followerCount: number;
   /** Published first (published_at desc), then the others. */
   releases: StudioStatsReleaseDTO[];
+  /** Dashboard Part 1: new followers who still follow, per week. */
+  followerGrowth?: StudioFollowerGrowthWeekDTO[];
+  /** Dashboard Part 1: the earliest scheduled release, or null. */
+  nextRelease?: StudioNextReleaseDTO | null;
 }
 
 export interface CreateStudioPlaylistBody {
@@ -954,6 +980,10 @@ export interface StudioPlaybackPreferencesDTO {
   hideExplicit: boolean;
   /** Whole seconds, 0 (off) to STUDIO_CROSSFADE_MAX_SECONDS. */
   crossfadeSeconds: number;
+  /** The single "Listening history" switch; missing reads as on. */
+  isListeningHistoryOn?: boolean;
+  /** When the first-play notice was shown (ISO, milliseconds); null until then, missing on an older server. */
+  listeningNoticeSeenAt?: string | null;
 }
 
 export const STUDIO_CROSSFADE_MAX_SECONDS = 12;
@@ -965,7 +995,16 @@ export const DEFAULT_STUDIO_PLAYBACK: StudioPlaybackPreferencesDTO = {
   hideExplicit: false,
   crossfadeSeconds: 0,
   askBeforeWarnings: true,
+  isListeningHistoryOn: true,
+  listeningNoticeSeenAt: null,
 };
+
+/** PUT /me/studio-playback: a partial update. `hasSeenListeningNotice` is
+ *  sent only as true (anything else is a 400) and stamps
+ *  listeningNoticeSeenAt once; a later call keeps the first stamp. */
+export type StudioPlaybackUpdateDTO = Partial<
+  Omit<StudioPlaybackPreferencesDTO, "listeningNoticeSeenAt">
+> & { hasSeenListeningNotice?: true };
 
 /** A release as the flag-review cards show it: the release card plus the
  *  takedown facts. */
@@ -1308,6 +1347,12 @@ export type StudioOwnerTrackFields = Required<
 export interface StudioSource {
   title: string;
   artist: string;
+}
+
+/** GET /studio/releases/:id/track-sources: the sources of every track with
+ *  audio, in track order (owner only). */
+export interface StudioReleaseTrackSourcesDTO {
+  tracks: { trackId: string; sources: StudioSource[] }[];
 }
 
 /** GET /studio/formats: formats with published content, in map order. */

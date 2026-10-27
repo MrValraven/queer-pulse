@@ -1,11 +1,15 @@
 /**
  * Where a gathering sits on a map, and the link that takes somebody there.
  *
- * PRIVACY. The street address is never pinned and never geocoded. A pin is
- * drawn at a linked directory listing, which is a public place with public
- * coordinates; every other gathering gets a soft blob over its neighbourhood,
- * the same fact the page already prints in words. The address only reaches
- * Google Maps as a directions destination for a viewer who already holds it.
+ * PRIVACY. A pin only ever marks a point the viewer may already know. A linked
+ * directory listing is a public place with public coordinates, so its pin
+ * shows to every reader. The street address reaches this page only for
+ * organisers and people holding a confirmed "going" RSVP; for that viewer it
+ * is geocoded server-side, through our own `/geocode/address` endpoint, and
+ * pinned exactly. Every other gathering gets a soft blob over its
+ * neighbourhood, the same fact the page already prints in words. The address
+ * also goes to Google Maps as a directions destination, again only for a
+ * viewer who already holds it.
  */
 import { neighbourhoodCentroid } from "../economy/housingNeighbourhoods";
 import type { GatheringDetail } from "./data";
@@ -130,17 +134,52 @@ function isOnlineGathering(gathering: GatheringDetail): boolean {
   return gathering.isOnline === true || foldName(gathering.hood) === "online";
 }
 
-/** Where to draw the gathering: the listing's exact point when the venue is a
- *  linked directory listing with coordinates, otherwise the neighbourhood's
- *  centre as an area. Null for an online gathering or an unknown area. */
+/** A point the caller resolved from the gathering's street address. */
+export interface ResolvedAddressPoint {
+  latitude: number;
+  longitude: number;
+}
+
+/**
+ * The street address worth geocoding for the map, or null when it would
+ * change nothing: an online gathering draws no map, a linked listing with
+ * coordinates already gives the exact point, and a viewer without the
+ * address (the server sends `null`) keeps the area blob.
+ */
+export function gatheringAddressToPin(
+  gathering: GatheringDetail,
+): string | null {
+  if (isOnlineGathering(gathering)) return null;
+  const latitude = gathering.venueListing?.latitude;
+  const longitude = gathering.venueListing?.longitude;
+  if (typeof latitude === "number" && typeof longitude === "number") {
+    return null;
+  }
+  const address = gathering.address?.trim() ?? "";
+  return address === "" ? null : address;
+}
+
+/** Where to draw the gathering, first that applies: the listing's exact point
+ *  when the venue is a linked directory listing with coordinates, the exact
+ *  point the caller resolved from the address the viewer holds, then the
+ *  neighbourhood's centre as an area. Null for an online gathering or an
+ *  unknown area. Pure: geocoding lives in `useGatheringMapPoint`. */
 export function gatheringMapPoint(
   gathering: GatheringDetail,
+  addressPoint: ResolvedAddressPoint | null = null,
 ): GatheringMapPoint | null {
   if (isOnlineGathering(gathering)) return null;
   const latitude = gathering.venueListing?.latitude;
   const longitude = gathering.venueListing?.longitude;
   if (typeof latitude === "number" && typeof longitude === "number") {
     return { latitude, longitude, precision: "exact" };
+  }
+  if (addressPoint) {
+    return {
+      latitude: addressPoint.latitude,
+      longitude: addressPoint.longitude,
+      precision: "exact",
+    };
   }
   const { neighbourhood } = gatheringPlaceParts(gathering);
   const centre = neighbourhoodCentre(neighbourhood);

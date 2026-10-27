@@ -8,9 +8,11 @@ import styles from "./StudioChaptersEditor.module.css";
 export function StudioTracklistPaste({
   onApply,
   toggleKey = "studio:chapters.editor.pasteToggle",
+  hintKey = "studio:chapters.editor.pasteHint",
 }: {
   onApply: (rows: ChapterDraft[]) => void;
   toggleKey?: string;
+  hintKey?: string;
 }) {
   const { t } = useTranslation();
   const textId = useId();
@@ -68,7 +70,7 @@ export function StudioTracklistPaste({
             value={text}
             onChange={(event) => setText(event.target.value)}
           />
-          <p className={styles.hint}>{t("studio:chapters.editor.pasteHint")}</p>
+          <p className={styles.hint}>{t(hintKey)}</p>
           <p className={styles.hint}>
             {t("studio:chapters.editor.pasteReplaceNote")}
           </p>

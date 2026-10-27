@@ -74,7 +74,26 @@ export type NotifItem = {
   action?: NotifAction;
 };
 
+// Newest first: "now", then minutes, hours, then the weekdays.
 export const NOTIFICATIONS: NotifItem[] = [
+  {
+    id: "wednesday-set",
+    type: "live",
+    to: routes.studioLive,
+    unread: true,
+    day: "today",
+    time: { key: "studioShowcase:notifications.time.now" },
+    icon: { kind: "live", node: <FiMonitor /> },
+    title: {
+      key: "studioShowcase:notifications.items.wednesdaySetLive.title",
+      values: { curator: "Sara Marques" },
+    },
+    meta: {
+      key: "studioShowcase:notifications.items.wednesdaySetLive.meta",
+      values: { listeners: 312, count: 3 },
+    },
+    action: { labelKey: "studio:notifications.action.joinRoom" },
+  },
   {
     id: "mariana-reply",
     type: "reply",
@@ -96,24 +115,6 @@ export const NOTIFICATIONS: NotifItem[] = [
       key: "studioShowcase:notifications.items.onTrack",
       values: { track: "Carta para a santa" },
     },
-  },
-  {
-    id: "wednesday-set",
-    type: "live",
-    to: routes.studioLive,
-    unread: true,
-    day: "today",
-    time: { key: "studioShowcase:notifications.time.now" },
-    icon: { kind: "live", node: <FiMonitor /> },
-    title: {
-      key: "studioShowcase:notifications.items.wednesdaySetLive.title",
-      values: { curator: "Sara Marques" },
-    },
-    meta: {
-      key: "studioShowcase:notifications.items.wednesdaySetLive.meta",
-      values: { listeners: 312, count: 3 },
-    },
-    action: { labelKey: "studio:notifications.action.joinRoom" },
   },
   {
     id: "akin-single",

@@ -8,6 +8,7 @@ import { MessageActionMenu, TombstoneReportMenu } from "./MessageActionMenu";
 import { ReactionPicker } from "./ReactionPicker";
 import { MentionText } from "../../shared/mentions/MentionText";
 import { renderWithLinks } from "./linkify";
+import { studioSharePreviewText } from "./studioSharePreview";
 import { useActionOverlayFocusTrap } from "./useActionOverlayFocusTrap";
 import { MessageActionOverlayMedia } from "./MessageActionOverlayMedia";
 import { isMediaMessage } from "./messageCopy";
@@ -221,7 +222,10 @@ export function MessageActionOverlay({
                 isSent ? styles.sent : styles.received,
               ].join(" ")}
             >
-              <MentionText text={message.text} renderText={renderWithLinks} />
+              <MentionText
+                text={studioSharePreviewText(message.text, t)}
+                renderText={renderWithLinks}
+              />
             </div>
           )}
         </div>

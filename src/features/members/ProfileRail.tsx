@@ -6,6 +6,7 @@ import { useProfileSubprofiles } from "../subprofiles/api/usePublicSubprofile";
 import { useSubprofiles } from "../subprofiles/api/useSubprofiles";
 import type { Member } from "./data/members";
 import { useMemberListings } from "./api/useMemberListings";
+import { useProfileEventsVisible } from "./api/useProfileEvents";
 import { ProfileHeroRecognition } from "./ProfileHeroRecognition";
 import { ProfileNetworkStats } from "./ProfileNetworkStats";
 import { ProfilePhotoViewer } from "./ProfilePhotoViewer";
@@ -175,7 +176,7 @@ function ProfileSectionNav({
 }) {
   const { t } = useTranslation();
 
-  // "also-working-as" and "places" aren't fields on `Member`, so their
+  // "also-working-as", "events" and "places" aren't fields on `Member`, so their
   // visibility can't come from a static predicate over `profile` like every
   // other nav item — resolve them here via the same hooks/logic their
   // section bodies use (ProfileSubprofilesSection, PlacesSection), so the
@@ -200,9 +201,13 @@ function ProfileSectionNav({
   // the nav link has to point at a section that really is on the page.
   const showPlaces =
     isSelf || visitorListings.places.length > 0 || visitorListings.isError;
+  // Mirrors ProfileEventsSection through the same query: the owner always
+  // gets the section, a visitor when there is a row or a retryable failure.
+  const isEventsSectionVisible = useProfileEventsVisible(profile.slug, isSelf);
 
   const dynamicVisibility: Record<string, boolean> = {
     "also-working-as": showAlsoWorkingAs,
+    events: isEventsSectionVisible,
     places: showPlaces,
   };
 

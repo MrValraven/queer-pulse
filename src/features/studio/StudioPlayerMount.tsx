@@ -5,6 +5,7 @@ import { useStudioAccess } from "./api/useStudioAccess";
 import { useStudioPlayerInset } from "./useStudioPlayerInset";
 import { StudioEpisodeTracker } from "./player/StudioEpisodeTracker";
 import { useStudioPlayer } from "./player/studioPlayerContext";
+import { StudioListeningNotice } from "./player/ui/StudioListeningNotice";
 
 // Lazy: the bar's chunk loads the first time a member presses play.
 const StudioPlayer = lazyNamed(() => import("./StudioPlayer"), "StudioPlayer");
@@ -27,6 +28,9 @@ export function StudioPlayerMount() {
           </Suspense>
         )}
       </AnimatePresence>
+      {/* Outside the bar's gate: it plays its own exit and keeps its live
+          region mounted in both modes. */}
+      <StudioListeningNotice />
     </>
   );
 }

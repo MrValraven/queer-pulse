@@ -59,6 +59,14 @@ export const eventKeys = {
       ...(browse && Object.values(browse).some(Boolean) ? [browse] : []),
       ...(includeHidden ? ["includeHidden"] : []),
     ] as const,
+  /**
+   * The events a member hosts or co-hosts, for their profile's Events section
+   * (`useProfileEvents`). It sits under `["events"]` so every mutation that
+   * refreshes the event lists refreshes it too. `"byMember"` holds the filter
+   * position, so the `["events", "upcoming"]` patches never reach it.
+   */
+  byMember: (slug: string, demoMode: boolean) =>
+    ["events", "byMember", slug, demoMode] as const,
 
   /**
    * The member's hidden event communities. These keys sit outside

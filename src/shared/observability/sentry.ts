@@ -141,7 +141,10 @@ export function setMonitoringConsent(granted: boolean): void {
  * track, release or playlist to a saved list
  * (`/me/saved/lists/<id>/items/studio_<kind>:<id>`). The giving entries cover
  * a community's support section read and save and the page with its Support
- * tab open, so who opens or saves a support section is never recorded.
+ * tab open, so who opens or saves a support section is never recorded. The
+ * dashboard and milestone entries cover a persona's stats, placements and
+ * milestones reads, the milestone card read, the dashboard page and the
+ * artist page a milestone link opens.
  */
 const PRIVATE_BREADCRUMB_PATHS = [
   "/studio/tracks/",
@@ -162,6 +165,19 @@ const PRIVATE_BREADCRUMB_PATHS = [
   "/studio/press?id=",
   "/studio/press/print?id=",
   "/studio/press/edit",
+  // Studio dashboard Part 1: the owner's numbers, placements and milestones
+  // (API and page) and the milestone card read, and the artist page a
+  // milestone link opens.
+  "/studio/dashboard",
+  "/studio/artists/",
+  "/studio/milestones/",
+  "/studio/artist?id=",
+  // Studio dashboard Part 2: the play count, the listener's own history,
+  // summary, supporting list and Clear (API and page). The artist's plays,
+  // supporter and supporters reads ride on "/studio/artists/".
+  "/studio/plays",
+  "/me/studio-listening",
+  "/studio/listening",
   "/me/saved/studio_",
   "/items/studio_",
   // Community support section: who opens or saves a community's support
@@ -202,6 +218,9 @@ const PRIVATE_BREADCRUMB_PATHS = [
  * event whose target sits inside a `data-studio-player` surface (the bar,
  * the mini player, Now playing, the queue panel and the dialogs they open):
  * a Like, a Play it or a track row there names what the member listens to.
+ * The same holds for a click on a toast's dismiss button (`data-toast-dismiss`
+ * in the global toast region): the toast can come from a player action and
+ * outlive the page that raised it, and a dismiss click has no diagnostic value.
  * A missing hint, a missing event or a target that is no Element (a text
  * node, the window, the document) leaves the breadcrumb to the rules above.
  * Every other breadcrumb passes through unchanged.
@@ -214,7 +233,8 @@ export function dropStudioPlayBreadcrumb(
     breadcrumb.category?.startsWith("ui.") &&
     (isOnStudioPage() ||
       isOnCommunityGivingTab() ||
-      isFromStudioPlayerSurface(hint))
+      isFromStudioPlayerSurface(hint) ||
+      isFromToastDismiss(hint))
   ) {
     return null;
   }
@@ -246,6 +266,22 @@ function isOnCommunityGivingTab(): boolean {
 /** The marker on the outermost element of every player surface, portalled
  *  ones included (a portal escapes the bar's own marker). */
 const STUDIO_PLAYER_SELECTOR = "[data-studio-player]";
+
+/** The marker on every toast's dismiss button. */
+const TOAST_DISMISS_SELECTOR = "[data-toast-dismiss]";
+
+/** True when the breadcrumb's DOM event was aimed at a toast dismiss button
+ *  (or the icon inside it). */
+function isFromToastDismiss(hint?: Sentry.BreadcrumbHint): boolean {
+  const domEvent: unknown = hint?.event;
+  if (typeof domEvent !== "object" || domEvent === null) return false;
+  if (!("target" in domEvent)) return false;
+  const target = domEvent.target;
+  if (typeof Element === "undefined" || !(target instanceof Element)) {
+    return false;
+  }
+  return target.closest(TOAST_DISMISS_SELECTOR) !== null;
+}
 
 /** True when the breadcrumb's DOM event (the SDK passes it as `hint.event`)
  *  was aimed at an element inside a player surface. False for a missing hint

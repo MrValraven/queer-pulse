@@ -1,0 +1,179 @@
+/* Calm practice: a soft, faintly green-washed ground, quiet serif type and
+   generous space. Each practice keeps a hint of its own world through one
+   tint: plum for the tattoo studio, jade for the therapist's practice,
+   amber for the chair, violet for the photographer's studio. Every tint is a
+   colour-mix of theme tokens, so it follows the app into dark mode. */
+.page {
+  --practice-ground: color-mix(in srgb, var(--jade) 5%, var(--cream));
+  --practice-hint: var(--plum);
+}
+/* Dark mode: five percent of jade vanishes into the dark cream, so the
+   ground takes a little more of it to keep a faint sage paper. */
+:global([data-theme="dark"]) .page {
+  --practice-ground: color-mix(in srgb, var(--jade) 11%, var(--cream));
+}
+
+/* ── Try it ── */
+.tryItPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+.tryItCaption {
+  max-width: 60ch;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* ── Walkthrough step 1: four page shapes ── */
+.shapes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.shape {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 22px 20px 24px;
+  border: 1px solid
+    color-mix(in srgb, var(--practice-hint) 22%, transparent);
+  border-radius: var(--radius-16);
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--practice-hint) 10%, var(--paper)),
+    var(--paper) 70%
+  );
+}
+.shape[data-kind="tattoo_artist"] {
+  --practice-hint: var(--plum);
+}
+.shape[data-kind="therapist"] {
+  --practice-hint: var(--jade);
+}
+.shape[data-kind="hair_stylist"] {
+  --practice-hint: var(--amber);
+}
+.shape[data-kind="photographer"] {
+  --practice-hint: var(--violet);
+}
+.shapeIcon {
+  width: 20px;
+  height: 20px;
+  color: color-mix(in srgb, var(--practice-hint) 70%, var(--text-strong));
+}
+.shapeKind {
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 500;
+  color: var(--text-strong);
+}
+.shapeLine {
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* ── Walkthrough step 5: found by members ── */
+.found {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 28px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  background: var(--paper);
+}
+.foundSearch {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 12px 18px;
+  border-radius: var(--radius-pill);
+  background: var(--wash);
+  font-size: var(--text-15);
+  color: var(--ink-60);
+}
+.foundSearch svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+.foundKinds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.foundKinds li {
+  padding: 6px 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+/* ── Where it all lives today: four loose notes ── */
+.scatter {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.scatterNote {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: 24px 22px 28px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+  background: var(--practice-ground);
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  line-height: 1.45;
+  color: var(--text-strong);
+}
+.scatterNote:nth-child(odd) {
+  rotate: -0.6deg;
+}
+.scatterNote:nth-child(even) {
+  rotate: 0.5deg;
+}
+.scatterIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--ink-60);
+}
+
+@media (max-width: 899px) {
+  .scatter {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 519px) {
+  .shapes,
+  .scatter {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .scatterNote:nth-child(odd),
+  .scatterNote:nth-child(even) {
+    rotate: none;
+  }
+}

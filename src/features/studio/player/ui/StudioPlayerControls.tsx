@@ -33,15 +33,21 @@ export function StudioShuffleButton() {
   const label = t("studio:player.shuffle");
   const hint = hintFor(label, "shuffle");
   const isOn = player.queue.isShuffled;
+  const isEpisode = player.currentItem?.isEpisode === true;
   return (
     <IconButton
       className={styles.iconButton}
       aria-pressed={isOn}
       aria-label={label}
-      aria-keyshortcuts={hint.ariaKeyShortcuts}
-      tooltip={hint.tooltip}
+      aria-keyshortcuts={isEpisode ? undefined : hint.ariaKeyShortcuts}
+      aria-disabled={isEpisode || undefined}
+      tooltip={
+        isEpisode ? t("studio:player.shuffleEpisodeDisabled") : hint.tooltip
+      }
       data-active={isOn || undefined}
-      onClick={player.toggleShuffle}
+      onClick={() => {
+        if (!isEpisode) player.toggleShuffle();
+      }}
     >
       <FiShuffle aria-hidden />
       <StudioControlOnDot />
@@ -57,15 +63,21 @@ export function StudioRepeatButton() {
   const hintFor = useStudioShortcutHint();
   const label = t(REPEAT_KEY[mode]);
   const hint = hintFor(label, "repeat");
+  const isEpisode = player.currentItem?.isEpisode === true;
   return (
     <IconButton
       className={styles.iconButton}
       data-mode={mode}
       data-active={mode !== "off" || undefined}
       aria-label={label}
-      aria-keyshortcuts={hint.ariaKeyShortcuts}
-      tooltip={hint.tooltip}
-      onClick={player.cycleRepeat}
+      aria-keyshortcuts={isEpisode ? undefined : hint.ariaKeyShortcuts}
+      aria-disabled={isEpisode || undefined}
+      tooltip={
+        isEpisode ? t("studio:player.repeatEpisodeDisabled") : hint.tooltip
+      }
+      onClick={() => {
+        if (!isEpisode) player.cycleRepeat();
+      }}
     >
       <FiRepeat aria-hidden />
       <StudioControlOnDot />

@@ -24,6 +24,10 @@ export interface StudioCursorPagesResult<View> {
   hasMore: boolean;
   isFetchingNextPage: boolean;
   isFetchNextPageError: boolean;
+  /** Why the latest next-page fetch failed, so its footer can name the
+   *  reason. Null unless `isFetchNextPageError`. Optional so pagers built by
+   *  hand in tests stay valid. */
+  fetchNextPageError?: unknown;
   fetchNextPage: () => void;
 }
 
@@ -61,6 +65,7 @@ export function useStudioCursorPages<Dto, View>({
     hasMore: query.hasNextPage,
     isFetchingNextPage: query.isFetchingNextPage,
     isFetchNextPageError: query.isFetchNextPageError,
+    fetchNextPageError: query.isFetchNextPageError ? query.error : null,
     fetchNextPage: () => {
       if (query.isFetchingNextPage) return;
       void query.fetchNextPage();

@@ -188,7 +188,7 @@
   z-index: 2;
   font-size: var(--text-12);
   line-height: 1.35;
-  color: var(--studio-text-muted);
+  color: var(--studio-card-meta);
   max-width: 100%;
   min-width: 0;
 }

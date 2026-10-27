@@ -84,7 +84,6 @@ export function AudioSection() {
 
 export function PrivacySection() {
   const { t } = useTranslation();
-  const [history, setHistory] = useState(false);
   const [cloudSync, setCloudSync] = useState(true);
   const [tipPrivacy, setTipPrivacy] = useState("private");
   const [receipts, setReceipts] = useState(true);
@@ -99,17 +98,6 @@ export function PrivacySection() {
         />
       </h2>
       <p className={s.secDek}>{t("studio:settings.privacy.dek")}</p>
-      <div className={s.opt}>
-        <div className={s.ot}>
-          <h3>{t("studio:settings.privacy.history.heading")}</h3>
-          <p>{t("studio:settings.privacy.history.body")}</p>
-        </div>
-        <Toggle
-          checked={history}
-          onChange={() => setHistory((v) => !v)}
-          label={t("studio:settings.privacy.history.heading")}
-        />
-      </div>
       <div className={s.opt}>
         <div className={s.ot}>
           <h3>{t("studio:settings.privacy.cloudSync.heading")}</h3>
@@ -316,26 +304,6 @@ export function EraseSection() {
       </h2>
       <p className={s.secDek}>{t("studio:settings.erase.dek")}</p>
       <div className={s.danger}>
-        <div className={s.opt}>
-          <div className={s.ot}>
-            <h3>{t("studio:settings.erase.history.heading")}</h3>
-            <p className={s.eraseNote}>
-              <Translation
-                i18nKey="studio:settings.erase.history.note"
-                components={{ em: <em /> }}
-              />
-            </p>
-          </div>
-          <Button
-            variant="danger"
-            size="sm"
-            onClick={() =>
-              showToast(t("studio:settings.erase.history.toast"), "success")
-            }
-          >
-            {t("studio:settings.erase.history.cta")}
-          </Button>
-        </div>
         <div className={s.opt}>
           <div className={s.ot}>
             <h3>{t("studio:settings.erase.export.heading")}</h3>

@@ -26,7 +26,7 @@ import styles from "./CinemaComingSoon.module.css";
  * Deliberately uses the marketing `PageShell` rather than `CinemaShell`: the
  * cinema frame carries a "Sustain from EUR 7/mo" button and a footer full of
  * membership links, so rendering it would keep making the same offer this page
- * exists to withdraw. Same reasoning as `StudioComingSoonPage`.
+ * exists to withdraw. Same reasoning as the Studio landing (`StudioUngrantedPage`).
  *
  * When cinema launches, flip the backend flag AND drop the `!demoMode` branch
  * in `src/features/cinema/routes.tsx`.

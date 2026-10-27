@@ -46,6 +46,10 @@ export const JOIN_REQUEST_SOURCES = [
   "gathering_explainer",
   "roadmap_explainer",
   "rating_explainer",
+  "for_businesses",
+  "for_communities",
+  "for_performers",
+  "for_practitioners",
 ] as const;
 
 export type JoinRequestSource = (typeof JOIN_REQUEST_SOURCES)[number];

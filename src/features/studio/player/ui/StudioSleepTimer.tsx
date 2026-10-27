@@ -1,4 +1,4 @@
-import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { useId, useLayoutEffect, useState } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { FiCheck, FiMoon } from "react-icons/fi";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
@@ -30,45 +30,6 @@ function useNow(endsAt: number | null): number {
   return now;
 }
 
-const timerKey = (timer: StudioSleepTimerState) =>
-  !timer
-    ? "off"
-    : timer.kind === "minutes"
-      ? `minutes:${timer.endsAt}`
-      : "endOfTrack";
-
-/** One sentence per timer change, compared by content, so clock ticks and
- *  re-renders with an equal value stay silent. */
-function useSleepAnnouncement(
-  timer: StudioSleepTimerState,
-  isEpisode: boolean,
-): string {
-  const { t } = useTranslation();
-  const [announcement, setAnnouncement] = useState("");
-  const previousKeyRef = useRef(timerKey(timer));
-  useEffect(() => {
-    const key = timerKey(timer);
-    if (key === previousKeyRef.current) return;
-    previousKeyRef.current = key;
-    if (!timer) setAnnouncement(t("studio:player.sleep.cancelledStatus"));
-    else if (timer.kind === "endOfTrack")
-      setAnnouncement(
-        t(
-          isEpisode
-            ? "studio:player.sleep.endOfEpisodeStatus"
-            : "studio:player.sleep.endOfTrackStatus",
-        ),
-      );
-    else
-      setAnnouncement(
-        t("studio:player.sleep.setStatus", {
-          minutes: Math.max(1, Math.round((timer.endsAt - Date.now()) / 60000)),
-        }),
-      );
-  }, [timer, isEpisode, t]);
-  return announcement;
-}
-
 /** The control that takes focus when the chip it replaces turns the timer
  *  off: the next button or link beside the chip, else the one before it. */
 function neighbourOf(chip: HTMLElement): HTMLElement | null {
@@ -87,14 +48,10 @@ function neighbourOf(chip: HTMLElement): HTMLElement | null {
 }
 
 /** The chip in the bar and in Now playing; pressing it turns the timer off
- *  and moves focus to its neighbour, since the chip leaves. One chip
- *  announces at a time (`announces`), so a screen reader hears each change
- *  once while both are mounted. */
-export function StudioSleepTimerChip({
-  announces = true,
-}: {
-  announces?: boolean;
-}) {
+ *  and moves focus to its neighbour, since the chip leaves. Timer changes
+ *  are spoken by the player's one live region (useStudioSleepAnnouncement),
+ *  which stays mounted when either chip is not. */
+export function StudioSleepTimerChip() {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
   const { sleepTimer, cancelSleepTimer, currentItem } = useStudioPlayer();
@@ -102,7 +59,6 @@ export function StudioSleepTimerChip({
   const isEpisode = currentItem?.isEpisode === true;
   const descriptionId = useId();
   const now = useNow(sleepTimer?.kind === "minutes" ? sleepTimer.endsAt : null);
-  const announcement = useSleepAnnouncement(sleepTimer, isEpisode);
   const seconds = sleepTimer ? remainingSeconds(sleepTimer, now) : null;
   const remaining = formatTrackTime(seconds) ?? "0:00";
   return (
@@ -156,11 +112,6 @@ export function StudioSleepTimerChip({
             : "studio:player.sleep.cancelAriaEndOfTrack",
         )}
       </span>
-      {announces && (
-        <span className="visuallyHidden" role="status">
-          {announcement}
-        </span>
-      )}
     </>
   );
 }

@@ -95,6 +95,7 @@
 }
 
 .table {
+  --studio-figure-column: 120px;
   width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
@@ -106,7 +107,12 @@
 }
 
 .colFigure {
-  width: 140px;
+  width: var(--studio-figure-column);
+}
+
+/* The "not counted for shows" note wraps inside its column. */
+.table td.notCounted:not(:first-child) {
+  white-space: normal;
 }
 
 .caption {
@@ -191,9 +197,16 @@
   flex: none;
 }
 
+/* Stands where the chevron would, so titles of rows without tracks line up. */
+.expandSpacer {
+  flex: none;
+  width: var(--tap-min);
+  height: var(--tap-min);
+}
+
 .chevron {
   transition-property: transform;
-  transition-duration: var(--dur-fast);
+  transition-duration: var(--dur-base);
   transition-timing-function: var(--ease);
 }
 
@@ -239,16 +252,38 @@
      status pill and reminders drop below instead of pushing it down. */
   .releaseLink {
     flex: 1 1 0;
-    overflow-wrap: anywhere;
+    min-width: 8ch;
+    overflow-wrap: break-word;
+    word-break: normal;
   }
 
-  .colFigure {
-    width: 96px;
+  /* Up to three figure columns plus the name fit 360px: the figures wrap
+     inside their narrow column ("Fewer than 5" on two lines) and stay
+     right-aligned in tabular numerals. The name column keeps room for whole
+     words; a single overlong word is the only thing that breaks. */
+  .table {
+    --studio-figure-column: 64px;
   }
 
-  .table th,
+  .table thead th {
+    font-size: var(--text-11);
+  }
+
   .table td:not(:first-child) {
+    font-size: var(--text-13);
+    white-space: normal;
+  }
+
+  .table th {
     padding: 10px 4px;
+  }
+
+  .table td:not(:first-child) {
+    padding: 10px 2px;
+  }
+
+  .table td.notCounted:not(:first-child) {
+    font-size: var(--text-12);
   }
 
   .trackCellInner {

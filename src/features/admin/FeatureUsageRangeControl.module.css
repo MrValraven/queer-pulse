@@ -1,0 +1,81 @@
+/* Sits where the page's old range row did, so it keeps that row's margins. */
+.control {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 14px 0 20px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.label {
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+/* Collapse clips while it moves, so the padding keeps the date fields'
+   focus rings inside the panel's bounds. */
+.customPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 4px;
+  margin: 0 -4px;
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+
+.issue {
+  margin: 0;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--danger-ink);
+}
+
+.summary {
+  margin: 0;
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+
+/* Sits under the summary, one step quieter, when retention has already
+   dropped part of the comparison period. */
+.partialNote {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* Every range label stays on one line. On a phone the four options fold to
+   a two by two grid, so a long label (Portuguese "Personalizado") keeps its
+   whole word and the group never runs past the gutter. */
+.rangeSeg > button {
+  white-space: nowrap;
+}
+
+@container (max-width: 480px) {
+  .rangeSeg {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: var(--radius-12);
+  }
+
+  .rangeSeg > button {
+    border-radius: var(--radius-8);
+  }
+}

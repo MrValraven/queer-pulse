@@ -8,7 +8,7 @@ import type { Member } from "./data/members";
  *
  * Order matches the actual render order of these sections below the hero
  * (`ProfilePage.tsx`'s `belowHero`: subprofiles, then `ProfileContent`'s
- * now/selected-work/board/skills/groups/shapings/activity/related, then communities,
+ * now/events/selected-work/board/skills/groups/shapings/activity/related, then communities,
  * then places) — not the order they were designed in.
  */
 export interface ProfileSectionNavItem {
@@ -40,6 +40,14 @@ export const PROFILE_SECTION_NAV_ITEMS: readonly ProfileSectionNavItem[] = [
       Boolean(profile.now?.trim()) ||
       profile.openTo.length > 0 ||
       Boolean(profile.notHereFor?.trim()),
+  },
+  {
+    id: "events",
+    labelKey: "members:profile.nav.events",
+    // Events come from their own hook (useProfileEvents), outside `Member`.
+    // `ProfileSectionNav` overrides this fallback with the real value, the
+    // same way it does for "places".
+    isVisible: () => false,
   },
   {
     id: "selected-work",

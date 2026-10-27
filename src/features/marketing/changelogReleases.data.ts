@@ -15,13 +15,17 @@ export const CHANGELOG_RELEASE_NOTES: Record<
   string,
   { highlights: string[]; pushes?: number }
 > = {
+  "27 Oct 2026": {
+    highlights: [],
+    pushes: 3,
+  },
   "26 Oct 2026": {
     highlights: [
       "bulk-refresh-and-revoke-invites",
       "studio-resume-where-you-left-off",
-      "studio-playlist-folders",
+      "studio-landing-page",
     ],
-    pushes: 2,
+    pushes: 3,
   },
   "21 Oct 2026": {
     highlights: [

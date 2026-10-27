@@ -27,6 +27,7 @@ import {
 import heroStyles from "./StudioTrackHero.module.css";
 import styles from "./studio.module.css";
 import { StudioReleaseCoverArt } from "./StudioReleaseCoverArt";
+import { useStudioLikeBlockedReason } from "./useStudioLikeBlockedReason";
 import {
   StudioFoldedShareItemsContext,
   useStudioFoldedShareItems,
@@ -140,6 +141,10 @@ function EpisodeHeroActions({
     href: track.href,
     artistName: track.release.artist.name,
   };
+  const likeBlockedReason = useStudioLikeBlockedReason(
+    likeSubject,
+    track.isReleaseWithdrawn,
+  );
   const isCurrent = player.isCurrentTrack(track.id);
   const isPlaying = isCurrent && player.status === "playing";
   const isPlayable = track.hasAudio && track.isDraft !== true;
@@ -223,13 +228,14 @@ function EpisodeHeroActions({
           {isPlayable && (
             <>
               <Tooltip
-                label={t("studio:like.cta")}
+                label={likeBlockedReason ?? t("studio:like.cta")}
                 placement="top"
-                isDisabled={!isCompact}
+                isDisabled={!isCompact && !likeBlockedReason}
               >
                 <StudioLikeButton
                   subject={likeSubject}
                   variant={isCompact ? "icon" : "labelled"}
+                  blockedReason={likeBlockedReason}
                 />
               </Tooltip>
               <Tooltip label={addLabel} placement="top" isDisabled={!isCompact}>
@@ -244,7 +250,9 @@ function EpisodeHeroActions({
                         })
                       : undefined
                   }
-                  likeSubject={likeSubject}
+                  likeSubject={
+                    track.isReleaseWithdrawn ? undefined : likeSubject
+                  }
                 />
               </Tooltip>
             </>

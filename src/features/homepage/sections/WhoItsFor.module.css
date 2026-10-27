@@ -1,0 +1,406 @@
+/* Hard-cut section on a warm cream ground, so it keeps a seam against the
+   plum Personas band above and the cream PainPoints band below. The tiles
+   are --paper cards on it. */
+.strip {
+  padding: var(--section-y-64) 0;
+  background: var(--cream-warm);
+}
+.head {
+  max-width: 56ch;
+  margin: 0 auto clamp(28px, 4vw, 44px);
+  text-align: center;
+}
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 18px;
+  font-size: var(--text-13);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.title {
+  margin: 0 auto;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-title);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--text-strong);
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.lede {
+  margin: 16px auto 0;
+  font-size: var(--text-17);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+.cell {
+  display: flex;
+}
+
+/* On phones each tile lies on its side: the art is a 64px square on the
+   left and the words run beside it, so the four tiles stay short. From
+   720px up the tile stands as a card with the art as a band on top. */
+.tile {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  grid-template-areas:
+    "art title"
+    "art body"
+    "art link";
+  grid-template-rows: auto auto 1fr;
+  column-gap: 16px;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  color: var(--text-strong);
+  text-decoration: none;
+  transition:
+    transform var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
+}
+@media (hover: hover) {
+  .tile:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lift);
+  }
+}
+.tile:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ── The art: a miniature of each page's motif, all gradients of tokens ──
+   The sizes live in custom properties so the same drawing reads at 64px on
+   a phone and as a full band on the card. */
+.art {
+  --motif-stripe: 10px;
+  --motif-hem: 5px;
+  --motif-bulb: 2px;
+  --motif-bulb-gap: 12px;
+  --motif-rule: 7px;
+  grid-area: art;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-16);
+}
+.art::before,
+.art::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Businesses: a striped awning with a scalloped hem over a warm shopfront
+   wash. The hem is a row of half ellipses cut with a mask, one under each
+   stripe (any opaque token works as a mask colour). */
+.tile[data-tile="businesses"] .art {
+  background:
+    radial-gradient(
+      ellipse 80% 70% at 70% 100%,
+      color-mix(in srgb, var(--amber) 30%, transparent),
+      transparent 70%
+    ),
+    color-mix(in srgb, var(--accent) 10%, var(--paper));
+}
+.tile[data-tile="businesses"] .art::before {
+  inset: 0 0 auto;
+  height: 54%;
+  background:
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--ink) 14%, transparent),
+      transparent 30%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      var(--accent) 0 var(--motif-stripe),
+      color-mix(in srgb, var(--accent) 14%, var(--paper)) var(--motif-stripe)
+        calc(var(--motif-stripe) * 2)
+    );
+  -webkit-mask:
+    linear-gradient(var(--ink), var(--ink)) left top / 100%
+      calc(100% - var(--motif-hem)) no-repeat,
+    radial-gradient(50% 100% at 50% 0, var(--ink) 97%, transparent 100%) left
+      bottom / var(--motif-stripe) var(--motif-hem) repeat-x;
+  mask:
+    linear-gradient(var(--ink), var(--ink)) left top / 100%
+      calc(100% - var(--motif-hem)) no-repeat,
+    radial-gradient(50% 100% at 50% 0, var(--ink) 97%, transparent 100%) left
+      bottom / var(--motif-stripe) var(--motif-hem) repeat-x;
+}
+
+/* Communities: the corner of a poster pasted up on a wall, held by a strip
+   of tape. The poster carries a jade header block and two lines of type. */
+.tile[data-tile="communities"] .art {
+  background:
+    radial-gradient(
+      ellipse 70% 80% at 90% 10%,
+      color-mix(in srgb, var(--violet) 18%, transparent),
+      transparent 70%
+    ),
+    color-mix(in srgb, var(--jade) 14%, var(--paper));
+}
+.tile[data-tile="communities"] .art::before {
+  top: 24%;
+  left: 22%;
+  width: 90%;
+  height: 100%;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-3);
+  background:
+    linear-gradient(
+        color-mix(in srgb, var(--text-strong) 22%, transparent),
+        color-mix(in srgb, var(--text-strong) 22%, transparent)
+      )
+      14% 58% / 46% 6% no-repeat,
+    linear-gradient(
+        color-mix(in srgb, var(--text-strong) 14%, transparent),
+        color-mix(in srgb, var(--text-strong) 14%, transparent)
+      )
+      14% 72% / 32% 6% no-repeat,
+    linear-gradient(var(--jade), var(--jade)) 0 0 / 100% 36% no-repeat,
+    var(--paper);
+  transform: rotate(-4deg);
+}
+.tile[data-tile="communities"] .art::after {
+  top: 16%;
+  left: 8%;
+  width: 40%;
+  height: 18%;
+  border-radius: var(--radius-2);
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 4px,
+      rgba(var(--line-rgb), 0.06) 4px 5px
+    ),
+    color-mix(in srgb, var(--amber) 62%, transparent);
+  transform: rotate(-38deg);
+}
+
+/* Performers: the stage ground ringed above and below by a row of lit
+   marquee bulbs, each with a soft gradient glow, and a spotlight between.
+   --plum-deep stays dark in both themes, so on the dark card the stage is
+   lifted with violet to keep its edge. */
+.tile[data-tile="performers"] {
+  --stage-ground: var(--plum-deep);
+}
+:global([data-theme="dark"]) .tile[data-tile="performers"] {
+  --stage-ground: color-mix(in srgb, var(--violet) 30%, var(--plum-deep));
+}
+.tile[data-tile="performers"] .art {
+  --bulb: var(--amber);
+  background:
+    radial-gradient(
+      ellipse 46% 60% at 50% 50%,
+      color-mix(in srgb, var(--accent) 34%, transparent),
+      transparent 72%
+    ),
+    var(--stage-ground);
+}
+.tile[data-tile="performers"] .art::before,
+.tile[data-tile="performers"] .art::after {
+  inset: calc(var(--motif-bulb) * 3) calc(var(--motif-bulb) * 2);
+  background-position: top, bottom;
+  background-size: var(--motif-bulb-gap) calc(var(--motif-bulb) * 4);
+  /* `space` fits whole bulbs only, so none is cut at the band's edge. */
+  background-repeat: space no-repeat;
+}
+.tile[data-tile="performers"] .art::before {
+  background-image:
+    radial-gradient(
+      circle,
+      var(--bulb) 0 var(--motif-bulb),
+      transparent calc(var(--motif-bulb) + 1px)
+    ),
+    radial-gradient(
+      circle,
+      var(--bulb) 0 var(--motif-bulb),
+      transparent calc(var(--motif-bulb) + 1px)
+    );
+}
+.tile[data-tile="performers"] .art::after {
+  background-image:
+    radial-gradient(
+      circle,
+      color-mix(in srgb, var(--bulb) 36%, transparent) 0
+        calc(var(--motif-bulb) * 1.5),
+      transparent calc(var(--motif-bulb) * 2)
+    ),
+    radial-gradient(
+      circle,
+      color-mix(in srgb, var(--bulb) 36%, transparent) 0
+        calc(var(--motif-bulb) * 1.5),
+      transparent calc(var(--motif-bulb) * 2)
+    );
+}
+
+/* Practitioners: a sheet of ruled paper laid at a settled angle on the sage
+   practice ground (the practitioners page washes its ground in jade too).
+   The ground and sheet are restated for dark, where an 18% mix into the
+   dark cream would read as black and a --paper sheet as a dark slab; there
+   the sheet is a lighter sage than the ground, ruled in cream hairlines. */
+.tile[data-tile="practitioners"] {
+  --sage-ground: color-mix(in srgb, var(--jade) 18%, var(--cream));
+  --sage-sheet: color-mix(in srgb, var(--jade) 4%, var(--paper));
+  --sage-rule: color-mix(in srgb, var(--jade) 34%, transparent);
+}
+:global([data-theme="dark"]) .tile[data-tile="practitioners"] {
+  --sage-ground: color-mix(in srgb, var(--jade) 26%, var(--cream));
+  --sage-sheet: color-mix(in srgb, var(--jade) 44%, var(--cream));
+  --sage-rule: rgba(var(--line-rgb), 0.2);
+}
+.tile[data-tile="practitioners"] .art {
+  background:
+    radial-gradient(
+      ellipse 70% 70% at 15% 90%,
+      color-mix(in srgb, var(--jade) 22%, transparent),
+      transparent 70%
+    ),
+    var(--sage-ground);
+}
+.tile[data-tile="practitioners"] .art::before {
+  top: 18%;
+  left: 20%;
+  width: 66%;
+  height: 110%;
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-2);
+  background:
+    repeating-linear-gradient(
+        to bottom,
+        transparent 0 calc(var(--motif-rule) - 1px),
+        var(--sage-rule) calc(var(--motif-rule) - 1px) var(--motif-rule)
+      )
+      0 calc(var(--motif-rule) * 1.5) / 100% 100% no-repeat,
+    var(--sage-sheet);
+  transform: rotate(3deg);
+}
+
+.tileTitle {
+  grid-area: title;
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-19);
+  line-height: 1.2;
+  color: var(--text-strong);
+}
+.tileBody {
+  grid-area: body;
+  margin: 6px 0 10px;
+  font-size: var(--text-15);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.tileLink {
+  grid-area: link;
+  display: inline-flex;
+  align-items: center;
+  align-self: end;
+  gap: 8px;
+  margin-top: auto;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--accent-text);
+}
+.tileLink svg {
+  transition: transform var(--dur-base) var(--ease);
+}
+@media (hover: hover) {
+  .tile:hover .tileLink svg {
+    transform: translateX(4px);
+  }
+}
+
+@media (min-width: 720px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+  .tile {
+    display: flex;
+    flex-direction: column;
+    padding: 22px;
+  }
+  .art {
+    --motif-stripe: 18px;
+    --motif-hem: 9px;
+    --motif-bulb: 3px;
+    --motif-bulb-gap: 20px;
+    --motif-rule: 9px;
+    width: auto;
+    height: 96px;
+    margin-bottom: 20px;
+    border-radius: var(--radius-card);
+  }
+  .tile[data-tile="communities"] .art::before {
+    left: 28%;
+    width: 44%;
+    top: 26%;
+  }
+  .tile[data-tile="communities"] .art::after {
+    top: 18%;
+    left: 22%;
+    width: 22%;
+    height: 22%;
+  }
+  .tile[data-tile="practitioners"] .art::before {
+    left: 30%;
+    width: 40%;
+    top: 16%;
+  }
+  .tileTitle {
+    font-size: var(--text-22);
+  }
+  .tileBody {
+    margin: 10px 0 18px;
+    line-height: 1.55;
+  }
+  /* In the stacked card the cross axis is horizontal: keep the link on the
+     left edge under the words. */
+  .tileLink {
+    align-self: flex-start;
+  }
+}
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile,
+  .tileLink svg {
+    transition: none;
+  }
+  .tile:hover,
+  .tile:hover .tileLink svg {
+    transform: none;
+  }
+}
+html[data-reduce-motion="true"] .tile,
+html[data-reduce-motion="true"] .tileLink svg {
+  transition: none;
+}
+html[data-reduce-motion="true"] .tile:hover,
+html[data-reduce-motion="true"] .tile:hover .tileLink svg {
+  transform: none;
+}

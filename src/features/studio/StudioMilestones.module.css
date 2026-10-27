@@ -1,0 +1,114 @@
+/* "Milestones" on the dashboard: a heading, a dek, then one row per reached
+   milestone with its Share button. Studio roles only, so both themes read. */
+/* Same surface, heading and dek as the placements card, so the two cards sit
+   side by side as a pair. */
+.card {
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--s-line);
+  border-radius: var(--radius-14);
+  padding: 24px 26px;
+  color: var(--studio-text);
+}
+@media (--md) {
+  .card {
+    padding: 20px 16px;
+  }
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 500;
+  color: var(--studio-text);
+}
+
+.dek {
+  margin: 4px 0 16px;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}
+
+.empty {
+  margin: 0;
+  color: var(--studio-text-muted);
+  font-size: var(--text-14);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Rows open and close by height. The row clips only while it moves (the
+   motion sets overflow), so the Share button's focus ring stays whole. */
+.row {
+  border-top: 1px solid var(--s-line);
+}
+.row:first-child {
+  border-top: 0;
+}
+/* The folded rows continue the list above them, so their first row keeps
+   its rule. */
+.restList .row:first-child {
+  border-top: 1px solid var(--s-line);
+}
+
+.moreToggle {
+  margin-top: 8px;
+}
+
+.rowInner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding-block: 12px;
+}
+
+.rowText {
+  display: grid;
+  flex: 1 1 16rem;
+  gap: 4px;
+  min-width: 0;
+}
+
+.sentence {
+  margin: 0;
+  color: var(--studio-text);
+  font-size: var(--text-15);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--studio-text-muted);
+  font-size: var(--text-13);
+}
+
+.newTag {
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--studio-ink-rgb), 0.06);
+  color: var(--studio-accent-text);
+  font-size: var(--text-12);
+  font-weight: 700;
+}
+
+.shareButton.shareButton {
+  flex: none;
+  gap: 6px;
+}
+
+.skeleton {
+  display: grid;
+  gap: 12px;
+}

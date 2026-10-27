@@ -2,7 +2,7 @@
 /**
  * `pnpm dev:setup`: one-command onboarding for a fresh frontend checkout.
  *
- *   1. Node >= 22.11 and pnpm major 9 (the version pinned in packageManager)
+ *   1. Node >= 24 and pnpm major 9 (the version pinned in packageManager)
  *   2. pnpm install
  *   3. .env from .env.example when missing (an existing .env is never touched)
  *   4. Playwright Chromium, only with --browsers
@@ -101,7 +101,7 @@ function checkToolVersions() {
   const nodeVersion = process.versions.node;
   if (compareVersions(nodeVersion, MINIMUM_NODE_VERSION) < 0) {
     console.error(
-      `[dev-setup] Node ${nodeVersion} found; this repo needs >= ${MINIMUM_NODE_VERSION}. Run nvm install (reads .nvmrc) or install Node 22 LTS, then corepack enable.`,
+      `[dev-setup] Node ${nodeVersion} found; this repo needs >= ${MINIMUM_NODE_VERSION}. Run nvm install (reads .nvmrc) or install Node 24 LTS, then corepack enable.`,
     );
     process.exit(1);
   }

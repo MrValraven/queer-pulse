@@ -21,7 +21,9 @@
   list-style: none;
   background-color: transparent;
   -webkit-tap-highlight-color: transparent;
-  transition-property: background-color, opacity;
+  /* Background only: motion owns the row's own opacity (its enter and exit
+     fades), and a CSS opacity transition here would fight it. */
+  transition-property: background-color;
   transition-duration: var(--dur-fast);
   transition-timing-function: var(--ease-out);
 }
@@ -94,7 +96,16 @@
   }
 }
 
-.row[data-dragging] {
+/* A dragged row dims through its cells: motion writes the row's own opacity
+   inline, which would override a dim on the row. Zero specificity on the
+   transition, so a cell's own transition still wins. */
+:where(.row) > * {
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+.row[data-dragging] > * {
   opacity: 0.5;
 }
 
@@ -136,8 +147,16 @@
   display: grid;
   place-items: center;
   transition-property: opacity, transform;
-  transition-duration: var(--dur-fast);
+  transition-duration: var(--dur-base);
   transition-timing-function: var(--ease-out);
+}
+
+/* The incoming glyph waits a beat so the pair hands over instead of both
+   sitting half-faded at once. The hover and focus rules below clear the
+   delay on whatever is leaving. */
+.leadNumber,
+.equalizer {
+  transition-delay: 60ms;
 }
 
 .leadNumber {
@@ -176,11 +195,13 @@
   .row:hover .playButton:not([aria-disabled="true"]) .equalizer {
     opacity: 0;
     transform: scale(0.7);
+    transition-delay: 0ms;
   }
 
   .row:hover .playButton:not([aria-disabled="true"]) .leadIcon {
     opacity: 1;
     transform: none;
+    transition-delay: 60ms;
   }
 }
 
@@ -188,11 +209,13 @@
 .row:has(:focus-visible) .playButton:not([aria-disabled="true"]) .equalizer {
   opacity: 0;
   transform: scale(0.7);
+  transition-delay: 0ms;
 }
 
 .row:has(:focus-visible) .playButton:not([aria-disabled="true"]) .leadIcon {
   opacity: 1;
   transform: none;
+  transition-delay: 60ms;
 }
 
 .equalizer {
@@ -666,6 +689,15 @@
   .hasCover:not(.rowUnavailable):not([data-hidden]):hover .cover::after {
     opacity: 1;
   }
+}
+
+/* An unavailable row's cover has no art to show: a quiet note on the wash
+   keeps the slot from reading as a missing image. */
+.coverUnavailable {
+  display: grid;
+  place-items: center;
+  color: var(--studio-text-muted);
+  font-size: var(--text-18);
 }
 
 /* An unavailable row reads quiet and takes no hover. */

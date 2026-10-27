@@ -1,4 +1,4 @@
-import type { ReactElement } from "react";
+import { cloneElement, useSyncExternalStore, type ReactElement } from "react";
 import { render } from "@testing-library/react";
 import { vi } from "vitest";
 import { TestProviders } from "../../../../test/TestProviders";
@@ -107,6 +107,23 @@ export function createStudioPlayerValue(
   };
 }
 
+/** The open popover's id, kept for real so a clicked popover opens. Tests
+ *  hand the surface to a mocked hook, so renderWithPlayer re-renders on it. */
+let openPopoverIdInStore: string | null = null;
+const popoverStoreListeners = new Set<() => void>();
+
+function setOpenPopoverIdInStore(id: string | null) {
+  openPopoverIdInStore = id;
+  popoverStoreListeners.forEach((listener) => listener());
+}
+
+function subscribeToPopoverStore(listener: () => void) {
+  popoverStoreListeners.add(listener);
+  return () => {
+    popoverStoreListeners.delete(listener);
+  };
+}
+
 export function createSurfaceValue(
   overrides: Partial<StudioPlayerSurfaceValue> = {},
 ): StudioPlayerSurfaceValue {
@@ -115,6 +132,9 @@ export function createSurfaceValue(
     nowPlayingTab: "lyrics",
     isQueuePanelOpen: false,
     isShortcutsOpen: false,
+    get openPopoverId() {
+      return openPopoverIdInStore;
+    },
     openNowPlaying: vi.fn(),
     closeNowPlaying: vi.fn(),
     setNowPlayingTab: vi.fn(),
@@ -123,8 +143,20 @@ export function createSurfaceValue(
     toggleQueuePanel: vi.fn(),
     openShortcuts: vi.fn(),
     closeShortcuts: vi.fn(),
+    openPopover: vi.fn((id: string) => setOpenPopoverIdInStore(id)),
+    closePopover: vi.fn((id: string) => {
+      if (openPopoverIdInStore === id) setOpenPopoverIdInStore(null);
+    }),
     ...overrides,
   };
+}
+
+/** Re-renders the tree under test whenever the popover store changes. A
+ *  test-only file, so fast refresh never reaches it. */
+// eslint-disable-next-line react-refresh/only-export-components
+function PopoverStoreSync({ children }: { children: ReactElement }) {
+  useSyncExternalStore(subscribeToPopoverStore, () => openPopoverIdInStore);
+  return cloneElement(children);
 }
 
 /** Plan 2's `testPlayerClock`, 20 s into a 200 s track unless patched. */
@@ -145,6 +177,7 @@ export function renderWithPlayer(
 ) {
   const player = options.player ?? createStudioPlayerValue();
   const clock = options.clock ?? createClock();
+  setOpenPopoverIdInStore(null);
   const wrap = (
     node: ReactElement,
     value: StudioPlayerValue,
@@ -153,7 +186,7 @@ export function renderWithPlayer(
     <TestProviders initialEntries={options.initialEntries}>
       <StudioPlayerContext.Provider value={value}>
         <StudioPlayerClockContext.Provider value={clockValue}>
-          {node}
+          <PopoverStoreSync>{node}</PopoverStoreSync>
         </StudioPlayerClockContext.Provider>
       </StudioPlayerContext.Provider>
     </TestProviders>

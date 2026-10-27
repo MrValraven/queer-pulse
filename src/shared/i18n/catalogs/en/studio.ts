@@ -188,99 +188,144 @@ export const studio: Catalog = {
   "error500.backCta": "Go to Studio home",
   "error500.reloadCta": "Reload Studio",
 
-  // ── Marketing landing shell (StudioLandingShell) ──────────────────────────
-  "landing.nav.aboutCoop": "About the co-op",
-  "landing.nav.publicLedger": "Public ledger",
-  "landing.nav.howItWorks": "How it works",
-  "landing.nav.forArtists": "For artists",
-  "landing.footer.tagline":
-    "A queer professional network rooted in Lisbon. Studio sits alongside Cinema, Magazine, and Events.",
-  "landing.footer.col.studio": "Studio",
-  "landing.footer.col.studio.thisWeek": "This week",
-  "landing.footer.col.studio.djSets": "DJ sets",
-  "landing.footer.col.studio.liveBroadcast": "Live broadcast",
-  "landing.footer.col.artists": "Artists",
-  "landing.footer.col.artists.submitMusic": "Submit music",
-  "landing.footer.col.artists.dashboard": "Artist dashboard",
-  "landing.footer.col.artists.revenueSplit": "Revenue split",
-  "landing.footer.col.council": "Council",
-  "landing.footer.col.council.programming": "Programming",
-  "landing.footer.col.council.submissions": "Submissions",
-  "landing.footer.col.council.curatorCouncil": "Curator council",
-  "landing.footer.col.coop.strategyPlan": "The strategy plan",
-  "landing.footer.copyright": "© {year} QueerPulse Studio Co-op CRL, Lisbon",
-  "landing.footer.languages": "EN · PT",
-
-  // ── Marketing hero (StudioLandingHero) ────────────────────────────────────
-  "landing.hero.onAirNow": "On the air now",
-  "landing.hero.clock": "{weekday} · {time} Lisbon",
-  "landing.hero.title": "Music, <em>programmed</em> by queer ears.",
-  "landing.hero.dek":
-    "A co-op streaming platform. <em>{sharePercent}</em> of every listen to the artist. <em>{tipPercent}</em> of every tip. The ledger is public. The curators have names. <em>Every pick here is made by a person.</em>",
-  "landing.hero.demoCta": "Listen to a demo set · free",
-
-  "landing.demo.eyebrow": "The Wednesday set · free preview",
-  "landing.demo.meta":
-    "programmed by {curator} · {duration} · {trackCount} tracks · {listening} listening",
-  "landing.demo.pauseAria": "Pause preview",
-  "landing.demo.playAria": "Play preview",
-  "landing.demo.trackPrefix": "Track {n} ·",
-  "landing.demo.byLine": "{artist} · from {album}",
-  "landing.demo.payNote":
-    "This listen pays {artist} <em>{amount}</em> when you're a sustainer. Right now, Studio is open as a demo.",
-  "landing.demo.quote":
-    "“Stay through the second verse of track six. <em>The piano leaves you there on purpose.</em>” {attribution}, programming lead",
-
-  // ── Four promises (StudioLandingPromises) ─────────────────────────────────
-  "landing.promises.eyebrow": "The contract · in writing",
-  "landing.promises.title":
-    "Four <em>promises</em> we make, to artists and listeners.",
-  "landing.promises.share.title": "A fair, <em>visible</em> share.",
-  "landing.promises.share.body":
-    "80% of every listen to the artist. 100% of every tip. The other 20% covers payments, hosting, captions, sheet-music typesetting, and council stipends. The split is on every artist page, every receipt, every album.",
-  "landing.promises.humans.title": "Music <em>programmed</em> by people.",
-  "landing.promises.humans.body":
-    'Every track on the homepage has a curator\'s name and a one-paragraph note. No "popular near you", no "made for you", no infinite scroll. The week is small, hand-built, and dated.',
-  "landing.promises.coOwned.title": "Co-owned by the <em>listeners</em>.",
-  "landing.promises.coOwned.body":
-    "Sustainers ({price}/mo) become voting co-op members after twelve months. They elect the council, approve the rate card, and see every euro on the ledger. The platform answers to the people who sustain it.",
-  "landing.promises.privacy.title": "Privacy as a <em>default</em>.",
-  "landing.promises.privacy.body":
-    "No listening data sold, syndicated, or used to recommend. Personal play history is private and deletable in one click. Aggregate plays exist for the ledger; nothing else leaves the building.",
-
-  // ── Public ledger counter (StudioLandingCounter) ──────────────────────────
-  "landing.counter.liveEyebrow": "Live, updated as it happens",
-  "landing.counter.title":
-    "Since the open beta opened, <em>QueerPulse Studio</em> has paid out:",
-  "landing.counter.sub": "to {count} artists, in {cycles} monthly cycles.",
-  "landing.counter.seeLedgerCta": "See the ledger",
-  "landing.counter.stat.perPlay": "per qualifying play · 15× Spotify",
-  "landing.counter.stat.artistShare": "share to artists, aggregate",
-  "landing.counter.stat.sustainers": "sustainers in the co-op",
-  "landing.counter.stat.councilAnswerTime": "median council answer time",
-  "landing.counter.unit.days": "days",
-
-  // ── Per-listen comparison band (StudioLandingComparison) ──────────────────
-  "landing.compare.title": "The <em>per-listen rate</em>, by comparison.",
-  "landing.compare.spotify.label": "Spotify · avg",
-  "landing.compare.spotify.ctx":
-    "Pro-rata · ad-blended · about 3 cents per 10 plays",
-  "landing.compare.apple.label": "Apple Music",
-  "landing.compare.apple.ctx": "Slightly better, still mostly nominal",
-  "landing.compare.tidal.label": "Tidal HiFi",
-  "landing.compare.tidal.ctx": "User-centric · hi-fi tier only",
-  "landing.compare.us.label": "QP Studio · committed floor",
-  "landing.compare.us.ctx":
-    "No ads · no shareholders · sustainer-pooled. Set annually by vote.",
-
-  // ── Closing CTA band (StudioLandingCta) ───────────────────────────────────
-  "landing.cta.title": "Pull up a <em>chair</em>.",
-  "landing.cta.body":
-    "{price} a month. Cancel any time. <em>The first listen</em> tells you whether Studio is for you.",
-  "landing.cta.readPlanCta": "Read the plan first",
-  "landing.cta.secondary":
-    "Already a QueerPulse member? Studio is <em>{addOnPrice}/mo on top</em>.",
-  "landing.cta.secondaryLink": "Sign in to add it",
+  // ── Studio landing page (landing/StudioLandingPage and its sections) ─────
+  // Every claim here is true in live today, except the "plan.*" strip, which
+  // is labelled as the plan and carries no figures.
+  "landing.metaTitle": "QueerPulse Studio: queer music from close by",
+  "landing.description":
+    "Artists from our community with pages of their own, their releases and sets, and the events where you can hear them live. Free for members, opened by our team in waves.",
+  "landing.ogImageAlt":
+    "Studio home on a laptop, showing this week's releases and scenes",
+  "landing.hero.eyebrow": "QueerPulse Studio",
+  "landing.hero.title": "Queer music from close by, <em>all in one place</em>.",
+  "landing.hero.lede":
+    "Artists from our community with pages of their own, their releases and sets, and the events where you can hear them live. Picked by people who know the scene.",
+  "landing.hero.status": "Free for members. Our team opens access in waves.",
+  "landing.hero.seeInside": "See inside",
+  "landing.cta.requestInvite": "Request an invite",
+  "landing.cta.memberNote":
+    "Our team adds members to Studio in waves. Once you're in, this page opens straight into Studio.",
+  "landing.gallery.eyebrow": "A look inside",
+  "landing.gallery.title": "What members see <em>when they open Studio</em>",
+  "landing.gallery.tabsLabel": "Studio screens",
+  "landing.gallery.sampleNote":
+    "These screens show sample artists and sample members.",
+  "landing.gallery.home.tab": "Home",
+  "landing.gallery.home.caption":
+    "This week's releases, scenes and shelves, all picked by people.",
+  "landing.gallery.home.alt":
+    "Studio home, with format filters, the Staff picks shelf, the start of New this week and the player at the bottom",
+  "landing.gallery.home.phoneAlt":
+    "Studio home on a phone, opening on the featured release with its cover and a button to play it",
+  "landing.gallery.artist.tab": "Artist page",
+  "landing.gallery.artist.caption":
+    "Every artist gets a page for their releases and their story, with a button to follow them.",
+  "landing.gallery.artist.alt":
+    "An artist page, with the artist's photo, releases, follower count and a button to follow them",
+  "landing.gallery.artist.phoneAlt":
+    "An artist page on a phone, with the artist's photo, release and follower counts and a button to follow them",
+  "landing.gallery.release.tab": "Release",
+  "landing.gallery.release.caption":
+    "Tracklist, credits and content warnings. Records made to run together play without gaps.",
+  "landing.gallery.release.alt":
+    "A release page, with the cover, a note on what changed in the new version, the tracklist and a link to buy the album from the artist",
+  "landing.gallery.release.phoneAlt":
+    "A release page on a phone, with the cover and a note on what changed in the new version",
+  "landing.gallery.playlists.tab": "Playlists together",
+  "landing.gallery.playlists.caption":
+    "Build playlists with your connections and see who added each track.",
+  "landing.gallery.playlists.alt":
+    "A shared playlist, with its editors and who added each track",
+  "landing.gallery.playlists.phoneAlt":
+    "A shared playlist on a phone, marked collaborative, with who added each of its three tracks",
+  "landing.gallery.player.tab": "Player",
+  "landing.gallery.player.caption":
+    "The player stays with you around QueerPulse, with a queue and crossfade.",
+  "landing.gallery.player.alt":
+    "The Now playing screen on a phone, with the cover and a track paused part way through",
+  "landing.gallery.share.tab": "Share",
+  "landing.gallery.share.caption":
+    "Drop a track into a chat and it arrives as a card, with your note underneath.",
+  "landing.gallery.share.alt":
+    "A chat on a phone, with a shared Studio track shown as a card",
+  "landing.promises.eyebrow": "What Studio is for",
+  "landing.promises.title": "Made for the artists <em>around you</em>",
+  "landing.promises.artistPage.title": "A real page for every artist",
+  "landing.promises.artistPage.body":
+    "Bio, releases, upcoming events and a press kit, together in one place.",
+  "landing.promises.picks.title": "People pick what's featured",
+  "landing.promises.picks.body":
+    "Our team picks the shelves and scenes by hand. Nobody pays for a spot.",
+  "landing.promises.scene.title": "Music meets the scene",
+  "landing.promises.scene.body":
+    "Artist pages link to their events on QueerPulse, so a song can lead you to a night out.",
+  "landing.promises.safety.title": "Safe by design",
+  "landing.promises.safety.body":
+    "Content warnings before a track plays, reporting on every track, and rights claims handled by our team.",
+  "landing.compare.eyebrow": "Side by side",
+  "landing.compare.title": "Studio and the <em>big streaming apps</em>",
+  "landing.compare.topicHeading": "Topic",
+  "landing.compare.bigAppsHeading": "Big streaming apps (Spotify and others)",
+  "landing.compare.studioHeading": "QueerPulse Studio",
+  "landing.compare.bigAppsShort": "Big apps",
+  "landing.compare.studioShort": "Studio",
+  "landing.compare.featured.topic": "What gets featured",
+  "landing.compare.featured.bigApps":
+    "Picked by algorithms, and labels can pay for extra promotion",
+  "landing.compare.featured.studio":
+    "Picked by hand by our team. Nobody pays to be featured",
+  "landing.compare.ads.topic": "Ads",
+  "landing.compare.ads.bigApps": "Ads on the free plan",
+  "landing.compare.ads.studio": "Free for members, with no ads",
+  "landing.compare.listening.topic": "Your listening",
+  "landing.compare.listening.bigApps":
+    "Used to build a profile for recommendations and advertising",
+  "landing.compare.listening.studio":
+    "Your listening history is private to you, with Pause and Clear, and we build no profile from it",
+  "landing.compare.artists.topic": "Who you hear",
+  "landing.compare.artists.bigApps":
+    "Millions of tracks, where local artists get buried",
+  "landing.compare.artists.studio": "Artists from our community, easy to find",
+  "landing.compare.scene.topic": "The scene",
+  "landing.compare.scene.bigApps":
+    "Concert listings pulled in from ticketing partners",
+  "landing.compare.scene.studio":
+    "Nights run by our community, listed on QueerPulse and linked from the artist's page",
+  "landing.compare.playlists.topic": "Playlists together",
+  "landing.compare.playlists.bigApps":
+    "Collaborators join through an invite link",
+  "landing.compare.playlists.studio":
+    "Made with your connections, and can stay visible to them only",
+  "landing.compare.owner.topic": "Who runs it",
+  "landing.compare.owner.bigApps": "Large listed companies",
+  "landing.compare.owner.studio": "Built in Lisbon, by and for the community",
+  "landing.plan.eyebrow": "The plan",
+  "landing.plan.chip": "Coming later",
+  "landing.plan.title": "Where we want Studio <em>to go</em>",
+  "landing.plan.intro":
+    "Nothing in this strip is live yet. It's the direction we're building towards, and this page will say so when it changes.",
+  "landing.plan.coop.title": "A co-op",
+  "landing.plan.coop.body":
+    "Run by artists and listeners together, deciding what gets played and where the money goes.",
+  "landing.plan.money.title": "Most of the money to artists",
+  "landing.plan.money.body":
+    "When money comes in, most of it goes to the people who made the music, with open books on where the rest goes.",
+  "landing.plan.masters.title": "Your music stays yours",
+  "landing.plan.masters.body":
+    "Artists keep their masters and can release anywhere else too.",
+  "landing.why.eyebrow": "Why it matters",
+  "landing.why.quote":
+    "A scene sounds like itself when <em>we press record</em>.",
+  "landing.why.p1":
+    "Queer music made by queer people carries what an outside ear misses: the club nights, the choirs, the bedroom demos, the songs that got a lot of us through. For many of us it was the first place we heard ourselves.",
+  "landing.why.p2":
+    "Most small artists play a handful of gigs, upload to a platform built for someone else and get lost in the algorithm. Very little of what they make comes back to them.",
+  "landing.why.p3":
+    "Listening to local artists, sharing their tracks and turning up to their shows is how they get to make the next record. That's what this Studio is for.",
+  "landing.closing.title": "Hear the scene <em>you're part of</em>",
+  "landing.closing.body":
+    "Studio is part of QueerPulse, the community network. Join with an invite, and our team opens Studio to members in waves.",
+  "landing.closing.magazineLink": "Read the magazine",
 
   // ── Sign in / Join (StudioSignInPage) ─────────────────────────────────────
   "signin.tabs.signIn": "Sign in",
@@ -824,10 +869,7 @@ export const studio: Catalog = {
   "settings.privacy.label": "Privacy",
   "settings.privacy.title": "What Studio <em>remembers</em>",
   "settings.privacy.dek":
-    "The short version: almost nothing, by default. We never sell, share, or train on what you play. Aggregate plays feed the public ledger, nothing that identifies you.",
-  "settings.privacy.history.heading": "Listening history",
-  "settings.privacy.history.body":
-    "Off by default: nothing about what you played leaves your browser. Turn on for a private, deletable record only you can see.",
+    "The short version: a listening history only you can see, which you can pause or clear. We never sell, share, or train on what you play. Plays count anonymously toward artists' totals either way.",
   "settings.privacy.cloudSync.heading": "Cloud-sync my library",
   "settings.privacy.cloudSync.body":
     "Saves and follows move between devices. Without this they live on this device only.",
@@ -885,12 +927,6 @@ export const studio: Catalog = {
   "settings.erase.title": "One tap, <em>no questions</em>",
   "settings.erase.dek":
     "These don't ask twice and don't show a modal. We mean it: leaving should be as easy as arriving.",
-  "settings.erase.history.heading": "Erase my listening history",
-  "settings.erase.history.note":
-    "Wipes the private record from this device and the cloud. <em>Done instantly. No undo.</em>",
-  "settings.erase.history.cta": "Erase history",
-  "settings.erase.history.toast":
-    "History erased. Gone from this device and the cloud.",
   "settings.erase.export.heading": "Download everything we hold on you",
   "settings.erase.export.note":
     "A JSON of your saves, tips, receipts and settings, emailed within the hour.",
@@ -1704,48 +1740,6 @@ export const studio: Catalog = {
   "offAir.hero.replayingToast": "Replaying {title}",
   "offAir.hero.paidOutSuffix": "{amount} paid out · replay any time",
 
-  // ── Live-mode teaser (StudioComingSoonPage and its four scenes) ───────────
-  // Shown for every /studio/* route when demo mode is off, since Studio has no
-  // backend yet and must not present invented payouts/figures as real. None of
-  // these lines names a price, a split or a plan.
-  "comingSoon.metaTitle": "QueerPulse Studio: opening soon",
-  "comingSoon.description":
-    "Our co-op music platform for queer artists close by is still being built. Nothing is playing and nothing is on sale yet. We'll announce it here when we go live.",
-  "comingSoon.hero.eyebrow": "QueerPulse Studio",
-  "comingSoon.hero.onAir": "On air",
-  "comingSoon.hero.title": "The mics are <em>warming up</em>.",
-  "comingSoon.hero.lede":
-    "We're building a home for queer music made close by: artists with pages of their own, live sets from local stages, and a platform run together by the people who use it.",
-  "comingSoon.hero.status":
-    "Not open yet. Nothing is playing and nothing is on sale.",
-  "comingSoon.preview.eyebrow": "A first listen",
-  "comingSoon.preview.title": "What it will <em>sound like</em>",
-  "comingSoon.preview.sideLabel": "Side A",
-  "comingSoon.preview.trackLabel": "Track A{number}",
-  "comingSoon.preview.artists.title": "Artists up front",
-  "comingSoon.preview.artists.body":
-    "Every artist gets a page of their own for their records, their story and their shows. The plan is for artists to keep their masters and release anywhere else too.",
-  "comingSoon.preview.live.title": "Live from close by",
-  "comingSoon.preview.live.body":
-    "Sets recorded at local nights, open mics and small stages, so you can hear the scene around you, including the nights you missed.",
-  "comingSoon.preview.together.title": "Run by who plays and who listens",
-  "comingSoon.preview.together.body":
-    "The plan is a co-op, with artists and listeners deciding together what gets played and where the money goes. Captions and transcripts for live sets are part of it from the start.",
-  "comingSoon.why.eyebrow": "Why it matters",
-  "comingSoon.why.quote":
-    "A scene sounds like itself when <em>we press record</em>.",
-  "comingSoon.why.p1":
-    "Queer music made by queer people carries what an outside ear misses: the club nights, the choirs, the bedroom demos, the songs that got a lot of us through. For many of us it was the first place we heard ourselves.",
-  "comingSoon.why.p2":
-    "Most small artists play a handful of gigs, upload to a platform built for someone else and get lost in the algorithm. Very little of what they make comes back to them.",
-  "comingSoon.why.p3":
-    "Listening to local artists, sharing their tracks and turning up to their shows is how they get to make the next record. That's what this Studio is for.",
-  "comingSoon.closing.title": "We go live <em>when it's ready</em>.",
-  "comingSoon.closing.body":
-    "We'll announce the first broadcast right here. Until then, the magazine is the best place to follow what we're making.",
-  "comingSoon.magazineCta": "Read the magazine",
-  "comingSoon.backHome": "Back to home",
-
   // ── no-literal-string sweep: reusable ImageSlot placeholder captions ─────
   // Short fixed descriptor words shown while a cover/score/set/portrait
   // image loads. Chrome — decided by the component, not fetched per item.
@@ -1822,6 +1816,8 @@ export const studio: Catalog = {
   "like.trackAria": "Like {title}",
   "like.addedToast": "Added to Liked songs",
   "like.removedToast": "Removed from Liked songs",
+  "like.blockedWithdrawn":
+    "This release was taken down, so its tracks can't be liked",
   "liked.title": "Liked songs",
   "liked.page.privateNote": "Only you can see the songs you like here",
   "liked.page.emptyTitle": "Songs you like will show up here",
@@ -2038,6 +2034,7 @@ export const studio: Catalog = {
   "uploadFlow.files.stage.noAudio": "No audio yet",
   "uploadFlow.files.progressLabel":
     "Upload progress for track {position}, {title}",
+  "uploadFlow.files.stage.checking": "Checking file",
   "uploadFlow.files.stage.converting": "Converting to MP3",
   "uploadFlow.files.convertingHint": "Keep this tab open while it converts",
   "uploadFlow.files.convertProgressLabel":
@@ -2323,11 +2320,11 @@ export const studio: Catalog = {
   "numbers.eyebrow": "Your numbers",
   "numbers.title": "How <em>{name}</em> is reaching people",
   "numbers.dek":
-    "Totals as they stand today. Studio never counts plays, and any count from 1 to 4 shows as Fewer than 5 so nobody can be singled out",
+    "Totals as they stand today. A play counts after 30 seconds of listening, and any count from 1 to 4 shows as Fewer than 5 so nobody can be singled out",
   "numbers.personaLabel": "Persona",
   "numbers.followers": "Followers",
   "numbers.tableCaption":
-    "Saves and public playlist inclusions for each of {name}'s releases",
+    "Plays, saves and public playlist inclusions for each release by {name}",
   "numbers.column.release": "Release",
   "numbers.column.saves": "Saves",
   "numbers.column.inPublicPlaylists": "In public playlists",
@@ -2403,9 +2400,8 @@ export const studio: Catalog = {
   "demo.dashboard.peakSummary":
     "Peak: <em>{day}</em> · {total} saves and playlist adds · Sara picked you on Monday",
   "demo.dashboard.activity.title": "Saves and playlist adds",
-  "demo.dashboard.activity.sub_one": "Last day · Studio never counts plays",
-  "demo.dashboard.activity.sub_other":
-    "Last {count} days · Studio never counts plays",
+  "demo.dashboard.activity.sub_one": "Last day",
+  "demo.dashboard.activity.sub_other": "Last {count} days",
   "demo.dashboard.activity.rangeLabel": "Time range",
   "demo.dashboard.activity.rangeAria_one": "Show the last day",
   "demo.dashboard.activity.rangeAria_other": "Show the last {count} days",
@@ -2554,7 +2550,7 @@ export const studio: Catalog = {
     "Studio is the place on QueerPulse where queer artists share their music with members. It's free and listen-only, and it's open to members our team has given Studio access.",
   "helpLive.faq.tracking.q": "Does Studio keep track of what I listen to?",
   "helpLive.faq.tracking.a":
-    "No. Studio keeps no play counts, no listening history and no recommendations built from what you play. What's playing and your queue live in this browser tab only, and they're gone when you close it.",
+    "Yes, privately. Studio keeps a listening history only you can see, on <a>Your listening</a>, where you can pause or clear it. Artists see total plays, with any count from 1 to 4 shown as Fewer than 5, and your name only if you turn on Show me as a supporter on their page.",
   "helpLive.faq.saving.q": "How do saving, playlists and following work?",
   "helpLive.faq.saving.a":
     "Save any release and it waits for you in your <a>library</a>. Tap the heart on a track and it goes into Liked songs, which only you can see. A playlist can be Public, Connections only or Private, and you can change that any time. Follow an artist from their page to hear when they put out something new.",
@@ -2569,7 +2565,7 @@ export const studio: Catalog = {
     "Ticking it confirms that you own or control the rights to every recording and composition in the release, and that its credits are accurate. If that changes, unpublish the release from your artist page.",
   "helpLive.faq.stats.q": "What do my stats show?",
   "helpLive.faq.stats.a":
-    "<a>Your numbers</a> shows followers, saves and how many public playlists include your music. Any count from 1 to 4 reads Fewer than 5, so nobody can work out who saved what. Studio keeps no play counts.",
+    "<a>Your numbers</a> shows plays, followers, saves, the public playlists that include your music and your top supporters. Any count from 1 to 4 reads Fewer than 5, so nobody can work out who did what.",
   "helpLive.faq.reporting.q": "How do I report a release?",
   "helpLive.faq.reporting.a":
     "Open the release, then More actions, then Report release. Our team reviews every report, and if a release breaks the rules, they take it down and the artist sees why.",
@@ -2604,12 +2600,12 @@ export const studio: Catalog = {
     "Artists upload releases under a musician or DJ persona and publish them for members with Studio access. Listeners play, save, make playlists and follow the artists they love.",
   "aboutLive.sec.today.p2":
     "There's no money in Studio today: listening is free, and uploading is free too.",
-  "aboutLive.sec.privacy.num": "02: what it doesn't record",
+  "aboutLive.sec.privacy.num": "02: what you control",
   "aboutLive.sec.privacy.heading": "Listening stays <em>yours</em>",
   "aboutLive.sec.privacy.p1":
-    "Studio keeps no play counts, no listening history and no recommendations built from what you play. Your queue lives in your browser tab and leaves with it.",
+    "Your listening history is yours: only you can see it, and you can pause or clear it any time. Artists see total plays, and your name only if you choose to show it.",
   "aboutLive.sec.privacy.p2":
-    "Artists see followers, saves and public playlist inclusions, and any count from 1 to 4 shows as Fewer than 5.",
+    "Artists see plays, followers, saves and public playlist inclusions, and any count from 1 to 4 shows as Fewer than 5.",
   "aboutLive.sec.control.num": "03: how artists keep control",
   "aboutLive.sec.control.heading": "Your music, <em>your call</em>",
   "aboutLive.sec.control.p1":
@@ -2630,6 +2626,9 @@ export const studio: Catalog = {
     "Start on Studio home, or read the short Studio terms first.",
   "aboutLive.cta.open": "Open Studio",
   "aboutLive.cta.terms": "Read the Studio terms",
+  "aboutLive.credits.heading": "Open source",
+  "aboutLive.credits.lame":
+    "Audio is encoded to MP3 with the <a>LAME MP3 encoder</a> (licensed under the GNU Lesser General Public License, LGPL), used through @mediabunny/mp3-encoder (Mozilla Public License 2.0).",
 
   "termsLive.eyebrow": "Studio terms",
   "termsLive.title": "The short <em>Studio addendum</em>",
@@ -2646,7 +2645,7 @@ export const studio: Catalog = {
   "termsLive.sec.stored.num": "03: what Studio stores",
   "termsLive.sec.stored.heading": "What we <em>keep</em>",
   "termsLive.sec.stored.p1":
-    "Studio stores your releases with their audio and artwork, your saves, playlists and follows, your player settings, any dispute you send along with our team's reply, and any copyright claim or counter-notice you send along with our team's decision. It keeps no record of what you play: no play counts and no listening history.",
+    "Studio stores your releases with their audio and artwork, your saves, playlists and follows, your player settings, your listening history while it is on (kept for 13 months, and you can clear it), the artist pages where you chose to show yourself as a supporter, any dispute you send along with our team's reply, and any copyright claim or counter-notice you send along with our team's decision. Play totals for each track carry no name.",
   "termsLive.sec.stored.p2":
     "Everything Studio stores about you is covered by the QueerPulse <a>privacy policy</a>.",
   "termsLive.sec.takedown.num": "04: takedowns and disputes",
@@ -2962,10 +2961,6 @@ export const studio: Catalog = {
   "settingsLive.resume.heading": "Resume where you left off",
   "settingsLive.resume.body":
     "Next time you open Studio on this device, your queue and position are ready, paused. Stays on this device only, and clears on Quick Exit, sign-out or loss of access.",
-  "settingsLive.recent.heading": "Recently played",
-  "settingsLive.recent.body":
-    "Keeps a list of what you played last, so you can find it again. Stays on this device only and is never sent to us.",
-  "settingsLive.recent.clear": "Clear recently played",
 
   "hiddenTrack.label": "Hidden by your settings",
   "contentWarnings.pickerLabel": "Content warnings",
@@ -3310,6 +3305,8 @@ export const studio: Catalog = {
   "errors.creditAlreadyRequested":
     "This persona already has that credit on this track",
   "errors.creditNotAccepted": "Only an accepted credit can be removed here",
+  "errors.sceneCoverChanged":
+    "Someone else changed this scene cover first. Reload the scene and choose the cover again.",
   "errors.sceneNotAvailable": "That scene can't be picked right now",
   "errors.curationReleaseNotPublished":
     "Only a published release can go on a shelf",
@@ -3503,6 +3500,192 @@ export const studio: Catalog = {
     "People who saved it will see it as no longer available, and it comes off every playlist it's on",
   "uploadFlow.v3.removePublishedConfirm": "Remove track",
   "numbers.reminders": "Waiting for it: {value}",
+  // Dashboard Part 1 (2026-10-26)
+  "numbers.growth.title": "New followers who still follow",
+  "numbers.growth.sub": "Per week, last 12 weeks",
+  "numbers.growth.ariaLabel":
+    "New followers who still follow, per week over the last 12 weeks",
+  "numbers.growth.thisWeek": "This week",
+  "numbers.growth.weekOf": "Week of {date}",
+  "numbers.growth.tableCaption": "New followers who still follow, per week",
+  "numbers.growth.weekColumn": "Week",
+  "numbers.growth.countColumn": "New followers",
+  "numbers.growth.empty": "Nobody new followed in the last 12 weeks",
+  "numbers.chart.showTable": "Show data table",
+  "numbers.chart.hideTable": "Hide data table",
+  "numbers.health.heading": "Release checklist",
+  "numbers.health.progress": "{done} of {total} done",
+  "numbers.health.showChecklist": "Show checklist for {title}",
+  "numbers.health.hideChecklist": "Hide checklist for {title}",
+  "numbers.health.optional": "Optional",
+  "numbers.health.showMore_one": "Show {count} more release",
+  "numbers.health.showMore_other": "Show {count} more releases",
+  "numbers.health.showFewer": "Show fewer releases",
+  "numbers.health.todo.cover": "Add a cover",
+  "numbers.health.todo.description": "Write a description",
+  "numbers.health.todo.genreAndMood": "Pick a genre and a mood",
+  "numbers.health.todo.creditsOnEveryTrack": "Credit someone on every track",
+  "numbers.health.todo.lyrics": "Add lyrics to every track",
+  "numbers.health.todo.buyLink": "Add a buy link",
+  "numbers.health.todo.versionNote":
+    "Write a version note for your track changes",
+  "numbers.health.done.cover": "Cover added",
+  "numbers.health.done.description": "Description written",
+  "numbers.health.done.genreAndMood": "Genre and mood picked",
+  "numbers.health.done.creditsOnEveryTrack": "Every track has credits",
+  "numbers.health.done.lyrics": "Every track has lyrics",
+  "numbers.health.done.buyLink": "Buy link added",
+  "numbers.health.done.versionNote": "Version note written",
+  "numbers.nextRelease.heading": "Next release",
+  "numbers.nextRelease.in": "{title} goes live in {time}",
+  "numbers.nextRelease.daysAndHours": "{days} and {hours}",
+  "numbers.nextRelease.underAnHour": "{title} goes live in less than an hour",
+  "numbers.nextRelease.now": "{title} is going live now",
+  "numbers.nextRelease.openCta": "Open release page",
+  "numbers.placements.heading": "Where your music lives",
+  "numbers.placements.dek":
+    "Public playlists that hold your tracks, newest first",
+  "numbers.placements.yourTracks": "Your tracks here: {titles}",
+  "numbers.placements.moreTracks_one": "{count} more track",
+  "numbers.placements.moreTracks_other": "{count} more tracks",
+  "numbers.placements.lastAdded": "Last added {date}",
+  "numbers.placements.empty":
+    "When a member adds one of your tracks to a public playlist, it shows up here",
+  "numbers.placements.showMore": "Show more playlists",
+  "numbers.milestones.heading": "Milestones",
+  "numbers.milestones.dek":
+    "Moments worth sharing. A milestone stays once reached",
+  "numbers.milestones.new": "New",
+  "numbers.milestones.reachedOn": "Reached {date}",
+  "numbers.milestones.shareCta": "Share milestone",
+  "numbers.milestones.empty": "Your first milestone comes at 10 followers",
+  "numbers.milestones.showAll": "Show all milestones",
+  "numbers.milestones.showFewer": "Show fewer milestones",
+  "share.milestone.followers": "{persona} passed {value} followers",
+  "share.milestone.firstPlacement":
+    "{persona} landed on a public playlist for the first time",
+  "share.milestone.trackPlays": "{track} passed {value} plays",
+  "share.milestone.artistPlays": "{persona} passed {value} plays",
+  "share.milestone.dialogTitle": "Share milestone",
+  "share.milestone.dialogSub":
+    "The card shows this milestone to members with Studio access",
+  "share.milestone.optionsLabel": "Ways to share this milestone",
+  "errors.reason.studio_milestone_not_found":
+    "This milestone is not available to you",
+  "errors.what.placements": "where your music lives",
+  "errors.what.milestones": "your milestones",
+  // Dashboard Part 2: listening (2026-10-27)
+  "shell.menu.yourListening": "Your listening",
+  "listening.pageTitle": "Your listening",
+  "listening.eyebrow": "Only you can see this page",
+  "listening.title": "Your <em>listening</em>",
+  "listening.dek":
+    "Your top artists and tracks, what you played lately and the artists you support. Pause or clear it any time",
+  "listening.controls.heading": "Your history settings",
+  "listening.history.heading": "Listening history",
+  "listening.history.body":
+    "Keeps a private list of what you play, so you can see your top artists and tracks. While it is paused, plays still count toward artists' totals without your name",
+  "listening.clearCta": "Clear listening history",
+  "listening.clear.title": "Clear listening history",
+  "listening.clear.body":
+    "This removes every play from your history and the recently played list on this device. Artists' totals stay as they are",
+  "listening.clear.confirm": "Clear listening history",
+  "listening.clear.done": "Your listening history is cleared",
+  "listening.clear.failed": "We couldn't clear your listening history",
+  "listening.paused.body":
+    "History is paused. New plays stay out of your history until you turn it back on",
+  "listening.paused.resumeCta": "Turn history back on",
+  "listening.range.label": "Time range",
+  "listening.range.4w": "4 weeks",
+  "listening.range.6m": "6 months",
+  "listening.range.12m": "12 months",
+  "listening.listens_one": "{count} listen",
+  "listening.listens_other": "{count} listens",
+  "listening.days_one": "{count} day with music",
+  "listening.days_other": "{count} days with music",
+  "listening.topArtists.heading": "Top artists",
+  "listening.topTracks.heading": "Top tracks",
+  "listening.top.empty":
+    "Nothing in this range yet. Play something and it shows up here",
+  "listening.top.pausedEmpty":
+    "Your history is paused, so new plays stay out of this list",
+  "listening.recent.heading": "Played lately",
+  "listening.recent.playedOn": "Played {date}",
+  "listening.recent.unavailable": "This track is no longer available",
+  "listening.recent.showMore": "Show more of your history",
+  "listening.recent.empty": "Play a track for 30 seconds and it lands here",
+  "listening.recent.pausedEmpty":
+    "Your history is paused, so new plays stay out of this list",
+  "listening.empty.title": "Your listening starts here",
+  "listening.empty.body":
+    "Play a track for 30 seconds and your top artists and tracks start to fill in. Only you can see this page",
+  "listening.empty.cta": "Open Studio home",
+  "listening.empty.pausedBody":
+    "Your listening history is paused. Turn it back on and your top artists and tracks start to fill in",
+  "listening.supporting.heading": "Artists you support",
+  "listening.supporting.dek":
+    "They see you among their top supporters, under the name you chose",
+  "listening.supporting.since": "Supporting since {date}",
+  "listening.supporting.shownAs": "Shown as {name}",
+  "listening.supporting.linksLabel": "Ways to support {name}",
+  "listening.supporting.empty":
+    "Turn on Show me as a supporter on an artist's page to add them here",
+  "listening.supporting.stop": "Stop supporting",
+  "listening.supporting.stopAria": "Stop supporting {artist}",
+  "listening.supporting.pausedNote":
+    "While your history is paused, you don't appear in their top supporters",
+  "listening.notice.body": "Your listening history is on. Only you can see it",
+  "listening.notice.cta": "See your listening",
+  "listening.notice.close": "Close notice",
+  "settingsLive.history.label": "Your listening",
+  "settingsLive.history.title": "What Studio <em>keeps</em> for you",
+  "supporter.heading": "Show me as a supporter",
+  "supporter.body":
+    "{persona} sees the name and photo you pick among their top supporters, ranked by how much you played them in the last 28 days",
+  "supporter.pausedNote":
+    "While your history is paused, you don't appear in their top supporters",
+  "supporter.pickerLegend": "How {persona} sees you",
+  "supporter.account": "Your account",
+  "supporter.saveCta": "Save how you appear",
+  "supporter.closeCta": "Close without saving",
+  "supporter.changeCta": "Change how you appear",
+  "supporter.confirmation": "{persona} sees you as {name}",
+  "supporter.confirmationLead": "This is how {persona} sees you",
+  "supporter.removed": "{persona} no longer sees you as a supporter",
+  "supporter.saveFailed": "We couldn't save how you appear",
+  "supporter.removeFailed": "We couldn't turn off Show me as a supporter",
+  "numbers.column.plays": "Plays",
+  "numbers.plays.showsNotCounted": "Not counted for shows",
+  "numbers.plays.title": "Plays",
+  "numbers.plays.sub": "Per day, last 28 days",
+  "numbers.plays.ariaLabel": "Plays per day over the last 28 days",
+  "numbers.plays.today": "Today",
+  "numbers.plays.tableCaption": "Plays per day",
+  "numbers.plays.dayColumn": "Day",
+  "numbers.plays.countColumn": "Plays",
+  "numbers.plays.totals": "All time: {total} · Last 28 days: {recent}",
+  "numbers.plays.note":
+    "A play counts after 30 seconds of listening. Plays by you and your co-owners never count",
+  "numbers.plays.empty": "No plays in the last 28 days yet",
+  "numbers.supporters.heading": "Top supporters",
+  "numbers.supporters.dek":
+    "Listeners who chose to show themselves, ranked by their plays in the last 28 days",
+  "numbers.supporters.optedIn": "Showing themselves as supporters: {value}",
+  "numbers.supporters.empty":
+    "When a listener turns on Show me as a supporter, they show up here",
+  "numbers.supporters.listLabel": "Top supporters of {name}",
+  "errors.reason.studio_supporter_artist_not_found":
+    "This artist is not available to support",
+  "errors.reason.studio_supporter_own_persona":
+    "You are a member of this artist, so you cannot be its supporter",
+  "errors.reason.studio_supporter_identity_not_yours":
+    "You can show yourself only as your account or a persona you are a member of",
+  "errors.what.listening": "your listening",
+  "errors.what.listeningHistory": "your listening history",
+  "errors.what.supporting": "the artists you support",
+  "errors.what.supporter": "your supporter setting",
+  "errors.what.plays": "your plays",
+  "errors.what.topSupporters": "your top supporters",
   "rail.v3.pressKit": "Press kit",
   "creator.nav.pressKit": "Press kit",
   "artistPage.v3.moreAria": "More about {name}",
@@ -3510,6 +3693,47 @@ export const studio: Catalog = {
   "artistPage.followerCountGrouped_one": "{number} follower",
   "artistPage.followerCountGrouped_other": "{number} followers",
   "artistPage.pauseAll": "Pause the music by {name}",
+  "artistPage.editPage.button": "Edit Studio page",
+  "artistPage.editPage.title": "Edit your Studio page",
+  "artistPage.editPage.intro":
+    "Choose what shows at the top of your page. The page behind this sheet shows each choice as you pick it",
+  "artistPage.editPage.choicesLabel": "What shows at the top of your page",
+  "artistPage.editPage.choice.banner.title": "Banner",
+  "artistPage.editPage.choice.banner.effect":
+    "Your cover photo fills the top with your name over it",
+  "artistPage.editPage.choice.portrait.title": "Avatar",
+  "artistPage.editPage.choice.portrait.effect":
+    "Your round avatar sits at the top beside your name",
+  "artistPage.editPage.choice.both.title": "Banner and avatar",
+  "artistPage.editPage.choice.both.effect":
+    "Your cover photo fills the top with your round avatar on it",
+  "artistPage.editPage.needsCover": "Needs a cover photo",
+  "artistPage.editPage.noCover":
+    "A banner needs a cover photo. <a>Add one in the persona editor</a>",
+  "artistPage.editPage.save": "Save",
+  "artistPage.editPage.saving": "Saving",
+  "artistPage.editPage.cancel": "Cancel",
+  "artistPage.editPage.close": "Close",
+  "artistPage.editPage.error.invalidChoice":
+    "The server didn't accept this choice. Reload the page and pick again",
+  "artistPage.editPage.error.signedOut":
+    "Your session ended. Sign in again to save your choice",
+  "artistPage.editPage.error.notAllowed":
+    "You can't edit this persona. Only the people who own it can change its Studio page",
+  "artistPage.editPage.error.personaMissing":
+    "This persona was deleted or you no longer co-own it",
+  "artistPage.editPage.error.editConflict":
+    "Someone else saved this persona at the same time. Save again to apply your choice",
+  "artistPage.editPage.error.tooMany":
+    "Too many saves in a short time. Wait a minute and save again",
+  "artistPage.editPage.error.serverDown":
+    "Our server is having trouble right now and your choice wasn't saved. Try again in a moment",
+  "artistPage.editPage.error.network":
+    "Your connection dropped before the choice reached us. Check you're online and save again",
+  "artistPage.editPage.error.unexpected":
+    "The server refused the save with error {status}. Try again or reload the page",
+  "artistPage.editPage.error.unexpectedNoStatus":
+    "This page hit an error of its own before your choice reached us. Try again or reload the page",
   // ── Studio Listening (2026-10-13): player, Now playing, queue, track
   // menu, chapters, lyric timing and the upload loudness check. Plan 3
   // Task 0 writes every key; Plan 2's code reads only the shortcuts and
@@ -3551,6 +3775,9 @@ export const studio: Catalog = {
   "player.repeat.off": "Repeat: off",
   "player.repeat.all": "Repeat: all",
   "player.repeat.one": "Repeat: this track",
+  "player.shuffleEpisodeDisabled":
+    "Shuffle is off for episodes, which play in order",
+  "player.repeatEpisodeDisabled": "Repeat is off for episodes, which play once",
   "player.cast": "Play on another device",
   "player.castConnected": "Playing on another device",
   "player.volume": "Volume",
@@ -3691,6 +3918,16 @@ export const studio: Catalog = {
   "share.card.teaser": "From QueerPulse Studio, open to members with access",
   "share.card.withdrawn": "This release was withdrawn",
   "share.card.unavailable": "Not available",
+  "share.card.retryCta": "Retry",
+  "share.card.error.offline": "You're offline",
+  "share.card.error.timeout": "Studio took too long to answer",
+  "share.card.error.rateLimited": "Too many requests, wait a minute",
+  "share.card.error.server": "Our server didn't answer",
+  "share.card.error.unreachable": "We couldn't reach Studio",
+  "share.card.error.forbidden": "Your account can't open this",
+  "share.card.error.restricted": "A moderation restriction blocks this",
+  "share.card.error.unknown": "The request didn't go through",
+  "share.card.error.notFound": "This isn't available anymore",
   "share.card.loading": "Loading from Studio",
   "share.card.byline": "By {name}",
   "share.card.openAria": "Open {title} in Studio",
@@ -3738,6 +3975,11 @@ export const studio: Catalog = {
   "chapters.editor.pasteLabel": "Tracklist, one line per chapter",
   "chapters.editor.pasteHint":
     "For example 00:00 Artist - Title or 1:02:30 Title",
+  "chapters.editor.pasteHintEpisode":
+    "For example 00:00 Intro or 1:02:30 Interview",
+  "chapters.editor.columnTime": "Time",
+  "chapters.editor.columnTitle": "Title",
+  "chapters.editor.columnArtist": "Artist",
   "chapters.editor.pasteApply": "Use this tracklist",
   "chapters.editor.pasteReplaceNote": "This replaces the chapters above",
   "chapters.editor.pasteUnparsed": "We couldn't read these lines:",
@@ -4196,6 +4438,7 @@ export const studio: Catalog = {
   "playlist.editors.listLabel": "Editors of {name}",
   "playlist.editors.loadingLabel": "Loading editors",
   "playlist.editors.pendingLabel": "Invite sent",
+  "playlist.editors.ownerLabel": "Owner",
   "playlist.editors.removeCta": "Remove editor",
   "playlist.editors.removeAria": "Remove {name} as an editor",
   "playlist.editors.cancelInviteCta": "Cancel invite",

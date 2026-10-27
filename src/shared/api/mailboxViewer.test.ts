@@ -75,6 +75,48 @@ describe("isFromViewerSide", () => {
       ),
     ).toBe(false);
   });
+
+  describe("a staff member's own official thread", () => {
+    const officialSender = {
+      handle: "queerpulse",
+      identityId: "identity-team",
+    };
+    const staffViewer: MessageViewer = {
+      myHandle: "tiago",
+      staffedIdentityIds: new Set(["identity-team"]),
+      ownOfficialConversationIds: new Set(["conversation-own-official"]),
+    };
+
+    it("reads a team message in their own official thread as the other side", () => {
+      expect(
+        isFromViewerSide(
+          officialSender,
+          staffViewer,
+          "conversation-own-official",
+        ),
+      ).toBe(false);
+    });
+
+    it("keeps their own reply in that thread on their side", () => {
+      expect(
+        isFromViewerSide(
+          { handle: "tiago" },
+          staffViewer,
+          "conversation-own-official",
+        ),
+      ).toBe(true);
+    });
+
+    it("still reads the same identity in a team-inbox thread as the viewer side", () => {
+      expect(
+        isFromViewerSide(
+          officialSender,
+          staffViewer,
+          "conversation-team-inbox",
+        ),
+      ).toBe(true);
+    });
+  });
 });
 
 describe("staffedIdentityIdsOf", () => {

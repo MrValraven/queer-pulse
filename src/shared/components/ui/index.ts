@@ -123,6 +123,7 @@ export {
   type MemberIdentityProps,
   type MemberIdentityPerson,
 } from "./MemberIdentity";
+export { SelectCheckMark } from "./SelectCheckMark";
 export {
   MemberSelectList,
   type MemberSelectListProps,

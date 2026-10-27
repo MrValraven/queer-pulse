@@ -86,6 +86,7 @@ import {
   type StudioOwnerClaimView,
 } from "./studioSafetyFields";
 import type { StudioContentWarningId } from "./studioSafety.types";
+import { resolveStudioHero, type StudioHeroChoice } from "../studioHeroChoice";
 
 // View models every Studio page renders. Live and demo both reach the pages
 // through these functions (demo builds wire-shaped DTOs from the mock files
@@ -307,6 +308,9 @@ export interface StudioTrackView extends StudioTrackRowView {
   /** Chapters in time order; null when the track has none. */
   chapters: StudioChapterView[] | null;
   release: StudioReleaseCardView;
+  /** True when the owner reads a track of a taken-down release: a like
+   *  would land in Liked songs as Withdrawn, so the hearts say why not. */
+  isReleaseWithdrawn?: boolean;
   /** Accepted credits to public personas, shown before the free-text rows. */
   personaCredits: StudioPersonaCreditView[];
 }
@@ -319,26 +323,13 @@ export interface StudioOwnerReleaseView extends StudioReleaseCardView {
   publishAt: string | null;
 }
 
-/** How the artist page hero is laid out. "classic" is only ever the
- *  resolved fallback for a persona without a cover; it is never stored. */
-export type StudioHeroLayout = "full-bleed" | "avatar" | "classic";
-
-/** No cover resolves to the classic hero; a cover with no stored choice
- *  resolves to full-bleed; a stored choice wins. */
-export function resolveHeroLayout(
-  coverUrl: string | null,
-  studioHero: "full-bleed" | "avatar" | null,
-): StudioHeroLayout {
-  if (!coverUrl) return "classic";
-  return studioHero ?? "full-bleed";
-}
-
 export interface StudioArtistView {
   artist: StudioArtistDetailView;
   /** The persona's wide cover photo; null without one. */
   coverUrl: string | null;
-  /** Already resolved from the cover and the owner's stored choice. */
-  heroLayout: StudioHeroLayout;
+  /** Already resolved from the cover and the owner's stored choice: no
+   *  cover always resolves to "portrait". */
+  heroLayout: StudioHeroChoice;
   /** Every published release in the server's order (published_at desc,
    *  id desc). Play all queues from this list as it stands. */
   allReleases: StudioReleaseCardView[];
@@ -988,6 +979,7 @@ export function toTrackView(dto: StudioTrackDTO): StudioTrackView {
     syncedLyrics: toSyncedLyricViews(dto.syncedLyrics),
     chapters: toChapterViews(dto.chapters),
     release: toReleaseCardView(dto.release),
+    isReleaseWithdrawn: dto.release.status === "taken_down",
     personaCredits: toPersonaCreditViews(dto.personaCredits ?? []),
   };
 }
@@ -1005,7 +997,7 @@ export function toArtistView(dto: StudioArtistDTO): StudioArtistView {
       city: dto.artist.city,
     },
     coverUrl: dto.artist.coverUrl ?? null,
-    heroLayout: resolveHeroLayout(
+    heroLayout: resolveStudioHero(
       dto.artist.coverUrl ?? null,
       dto.artist.studioHero ?? null,
     ),

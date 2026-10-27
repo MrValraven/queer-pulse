@@ -1,0 +1,134 @@
+/* Price tags hung in a shop window: four card tags, each tilted its own
+   way, with clipped top corners, a punched hole ringed in amber and a loop
+   of string rising out of it. Every part is drawn from tokens. */
+.notes {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.note {
+  --tag-cut: 18px;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 44px 22px 24px;
+  transform-origin: 50% 0;
+}
+
+/* The tag's outline and its face: two clipped layers, the face inset by a
+   hairline so the outline shows along every edge, diagonals included. */
+.note::before,
+.note::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  clip-path: polygon(
+    var(--tag-cut) 0,
+    calc(100% - var(--tag-cut)) 0,
+    100% var(--tag-cut),
+    100% 100%,
+    0 100%,
+    0 var(--tag-cut)
+  );
+}
+.note::before {
+  inset: 0;
+  background: rgba(var(--line-rgb), 0.16);
+}
+.note::after {
+  inset: 1px;
+  background: var(--cream);
+}
+.note:nth-child(1) {
+  rotate: -1.6deg;
+}
+.note:nth-child(2) {
+  rotate: 1.2deg;
+  margin-top: 18px;
+}
+.note:nth-child(3) {
+  rotate: -0.8deg;
+}
+.note:nth-child(4) {
+  rotate: 1.8deg;
+  margin-top: 12px;
+}
+
+/* The punched hole shows the band behind the tag; an amber ring
+   reinforces it, as on a card price tag. */
+.hole {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  translate: -50% 0;
+  border: 3px solid color-mix(in srgb, var(--amber) 55%, transparent);
+  border-radius: 50%;
+  background: var(--cream-warm);
+}
+
+/* The string: a thin loop threaded through the hole, rising above the tag
+   as the loop it hangs from. */
+.hole::before {
+  content: "";
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  width: 14px;
+  height: 40px;
+  translate: -50% 0;
+  rotate: -8deg;
+  transform-origin: 50% 100%;
+  border: 1.5px solid var(--ink-40);
+  border-radius: 50%;
+}
+
+.icon {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent-text);
+  font-size: var(--text-16);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-19);
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--text-strong);
+}
+
+.body {
+  margin: 0;
+  font-size: var(--text-14-5);
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+
+@media (max-width: 1023px) {
+  .notes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 32px;
+  }
+}
+
+@media (max-width: 599px) {
+  .notes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .note:nth-child(n) {
+    margin-top: 0;
+  }
+}

@@ -8,24 +8,31 @@
    nest their own <main> elements (e.g. a results column) and self-contained
    frames like Studio/Cinema render their own <main> with their own nav; a bare
    selector leaked the rail offset into all of them, shoving inner content right
-   and up. The attribute pins these rules to the one main that sits by the rail. */
+   and up. The attribute pins these rules to the one main that sits by the rail.
+
+   Every rule also skips `data-landing-visitor`. The landing page shows its own
+   focused bar to visitors, so the rail is off screen there. A real visitor is
+   signed out and already in mega mode, so this matters for a staffer's
+   visitor preview (`?preview=visitor`): their stored sidebar choice stays on
+   <html> while the page draws no rail. `:where()` keeps each selector's
+   specificity as it was. */
 @media (min-width: 861px) {
-  html[data-nav-mode="sidebar"] {
+  html[data-nav-mode="sidebar"]:where(:not([data-landing-visitor="true"])) {
     --rail-w: 264px;
   }
-  html[data-nav-mode="sidebar"][data-nav-collapsed="true"] {
+  html[data-nav-mode="sidebar"]:where(:not([data-landing-visitor="true"]))[data-nav-collapsed="true"] {
     --rail-w: 68px;
   }
   /* No top bar in this mode — the nav is the left rail — so a sticky in-page
      bar has nothing to clear and pins flush to the viewport top. */
-  html[data-nav-mode="sidebar"] {
+  html[data-nav-mode="sidebar"]:where(:not([data-landing-visitor="true"])) {
     --sticky-top: 0px;
     /* The band-cancelling `margin-top` below leaves none of the reserved band
        on screen, so a page that fills it has nothing to fill. */
     --nav-band-visible: 0px;
   }
-  html[data-nav-mode="sidebar"] main[data-page-main],
-  html[data-nav-mode="sidebar"] .site-footer {
+  html[data-nav-mode="sidebar"]:where(:not([data-landing-visitor="true"])) main[data-page-main],
+  html[data-nav-mode="sidebar"]:where(:not([data-landing-visitor="true"])) .site-footer {
     padding-left: var(--rail-w);
     transition: padding-left 220ms var(--ease, ease);
   }
@@ -36,7 +43,7 @@
      height (`--nav-top` + `--nav-height`), cancelling the padding so the hero
      keeps only its intended breathing room. The clipped strip is empty padding,
      never content. */
-  html[data-nav-mode="sidebar"] main[data-page-main] {
+  html[data-nav-mode="sidebar"]:where(:not([data-landing-visitor="true"])) main[data-page-main] {
     margin-top: calc(-1 * (var(--nav-top) + var(--nav-height)));
   }
   /* A `rail` shell (MagazineDeskShell) renders its own left rail and registers
@@ -48,7 +55,7 @@
      band-cancelling `margin-top` clipped 80px off the top of the page now that
      the band itself is gone (base.css, `data-shell="rail"`). Both offsets exist
      only to reconcile against chrome this shell doesn't have. */
-  html[data-nav-mode="sidebar"] main[data-page-main][data-shell="rail"],
+  html[data-nav-mode="sidebar"]:where(:not([data-landing-visitor="true"])) main[data-page-main][data-shell="rail"],
   /* A chromeless shell (Messages, AppShell `chromeless`) is the other case
      where the rail is not on screen: AppChrome mounts no Navbar above the
      mobile breakpoint, and the Navbar is what returns the rail in this mode.
@@ -57,14 +64,14 @@
      nothing, and the band-cancelling margin fought the route's own
      `--messages-top-offset`, leaving `.app` short of the viewport by the band
      height. This route sizes its own top offset and fills the width itself. */
-  html[data-nav-mode="sidebar"] main[data-page-main][data-chromeless="true"] {
+  html[data-nav-mode="sidebar"]:where(:not([data-landing-visitor="true"])) main[data-page-main][data-chromeless="true"] {
     padding-left: 0;
     margin-top: 0;
   }
   /* MegaNav mode centres the `.wrap` container (margin: 0 auto). Beside the
      rail, hug it to the left instead so content sits next to the sidebar
      rather than floating centred in the remaining space. */
-  html[data-nav-mode="sidebar"] .wrap {
+  html[data-nav-mode="sidebar"]:where(:not([data-landing-visitor="true"])) .wrap {
     margin-inline: 0;
   }
   /* Some pages centre a bespoke outer container (`margin: 0 auto` on a scoped
@@ -74,7 +81,7 @@
      treatment, so every layout — shared wrap or bespoke — sits next to the
      sidebar. Full-bleed sections already have zero inline margin, so this is a
      no-op for them; the plum footer lives outside `main`, so it stays untouched. */
-  html[data-nav-mode="sidebar"] main[data-page-main] > * {
+  html[data-nav-mode="sidebar"]:where(:not([data-landing-visitor="true"])) main[data-page-main] > * {
     margin-inline: 0;
   }
   /* Exception: the footer. Its plum background is full-bleed, so left-hugging
@@ -83,14 +90,14 @@
      gutters match. Below ~1560px the wrap still fills the region and hugs the
      rail (max-width ≥ available), so this only kicks in once there's slack —
      exactly where the imbalance appeared. Content pages keep hugging left. */
-  html[data-nav-mode="sidebar"] .site-footer .wrap {
+  html[data-nav-mode="sidebar"]:where(:not([data-landing-visitor="true"])) .site-footer .wrap {
     margin-inline: auto;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html[data-nav-mode="sidebar"] main[data-page-main],
-  html[data-nav-mode="sidebar"] .site-footer {
+  html[data-nav-mode="sidebar"]:where(:not([data-landing-visitor="true"])) main[data-page-main],
+  html[data-nav-mode="sidebar"]:where(:not([data-landing-visitor="true"])) .site-footer {
     transition: none;
   }
 }

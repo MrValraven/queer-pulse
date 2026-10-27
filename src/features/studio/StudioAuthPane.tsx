@@ -101,7 +101,7 @@ export function StudioAuthPane({
       <div className={styles.foot}>
         {t(copy.footPromptKey)}{" "}
         <Button
-          variant="ghost-dark"
+          variant="ghost"
           size="sm"
           className={styles.footSwitch}
           onClick={onSwitch}

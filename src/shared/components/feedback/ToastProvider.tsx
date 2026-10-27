@@ -103,6 +103,7 @@ function ToastRegion({
             <button
               type="button"
               className={styles.close}
+              data-toast-dismiss=""
               onClick={() => onDismiss(toast.id)}
               aria-label={dismissLabel}
             >

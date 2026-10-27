@@ -1,7 +1,9 @@
 import { FiFile } from "react-icons/fi";
 import { isDocumentAttachment } from "../../shared/api/documentAttachment";
 import { isStickerAttachment } from "../../shared/api/stickerAttachment";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { ChatMessage } from "./data";
+import { studioSharePreviewText } from "./studioSharePreview";
 import styles from "./ForwardPickerModal.module.css";
 
 /** Text excerpts longer than this are clamped with an ellipsis. Long enough
@@ -18,6 +20,7 @@ const EXCERPT_LIMIT = 140;
  * "Sticker" placeholder). Purely presentational; owns no state.
  */
 export function ForwardMessagePreview({ message }: { message: ChatMessage }) {
+  const { t } = useTranslation();
   if (message.kind === "sticker" && message.attachment) {
     const stickerAttachment = isStickerAttachment(message.attachment)
       ? message.attachment
@@ -75,10 +78,11 @@ export function ForwardMessagePreview({ message }: { message: ChatMessage }) {
       </div>
     );
   }
+  const readableText = studioSharePreviewText(message.text, t);
   const excerpt =
-    message.text.length > EXCERPT_LIMIT
-      ? `${message.text.slice(0, EXCERPT_LIMIT).trimEnd()}…`
-      : message.text;
+    readableText.length > EXCERPT_LIMIT
+      ? `${readableText.slice(0, EXCERPT_LIMIT).trimEnd()}…`
+      : readableText;
   return (
     <div className={styles.preview}>
       <span className={styles.previewText}>{excerpt}</span>

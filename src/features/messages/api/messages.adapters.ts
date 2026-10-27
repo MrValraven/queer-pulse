@@ -594,7 +594,7 @@ export function messageToChat(
   dto: MessageResponse,
   viewer: MessageViewer,
 ): ChatMessage {
-  const isMe = isFromViewerSide(dto.sender, viewer);
+  const isMe = isFromViewerSide(dto.sender, viewer, dto.conversationId);
   const isSystem = dto.kind === "system";
   return {
     id: dto.id,
@@ -754,7 +754,12 @@ export function groupMessages(
   // PRD-423: so is a matched chat's own member key arriving, which moves the
   // viewer's own bubbles there to their side.
   const ownMemberKeysKey = [...(viewer.ownMemberKeys ?? [])].sort().join(",");
-  const contextKey = `${activeLocale()}|${viewer.myHandle ?? ""}|${staffedIdentitiesKey}|${ownMemberKeysKey}`;
+  // So is the set of the viewer's own official threads, where staffed team
+  // identities read as the other side.
+  const ownOfficialKey = [...(viewer.ownOfficialConversationIds ?? [])]
+    .sort()
+    .join(",");
+  const contextKey = `${activeLocale()}|${viewer.myHandle ?? ""}|${staffedIdentitiesKey}|${ownMemberKeysKey}|${ownOfficialKey}`;
   for (const message of messages) {
     const parsed = new Date(message.createdAt);
     const dayKey = Number.isNaN(parsed.getTime())

@@ -48,6 +48,11 @@
   gap: 10px;
   min-width: 0;
 }
+/* Both chart cards fill their column so the pair share one height. */
+.chartCol > figure {
+  flex: 1;
+  margin: 0;
+}
 @media (max-width: 900px) {
   .chartRow {
     grid-template-columns: 1fr;

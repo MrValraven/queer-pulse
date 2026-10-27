@@ -52,19 +52,19 @@ describe("studioRoutes", () => {
     expect(screen.getByText("StudioPayoutsPage")).toBeInTheDocument();
   });
 
-  it("shows the teaser to a live member without a grant", () => {
+  it("shows the landing to a live member without a grant", () => {
     renderAt("/studio/album?id=r1", { ...live, hasStudioAccess: false });
-    expect(screen.getByText("StudioComingSoonPage")).toBeInTheDocument();
+    expect(screen.getByText("StudioLandingPage")).toBeInTheDocument();
   });
 
-  it("shows the access error, never the teaser, when the access read failed", () => {
+  it("shows the access error with the landing kept out when the access read failed", () => {
     access.isReadFailed = true;
     renderAt("/studio/album?id=r1", { ...live, hasStudioAccess: false });
     expect(screen.getByText("StudioAccessErrorPage")).toBeInTheDocument();
-    expect(screen.queryByText("StudioComingSoonPage")).not.toBeInTheDocument();
+    expect(screen.queryByText("StudioLandingPage")).not.toBeInTheDocument();
   });
 
-  it("shows the Studio skeleton while access is pending, with the teaser kept out", async () => {
+  it("shows the Studio skeleton while access is pending, with the landing kept out", async () => {
     renderAt("/studio", {
       demoMode: false,
       hasStudioAccess: false,
@@ -75,7 +75,7 @@ describe("studioRoutes", () => {
     expect(
       await screen.findByRole("status", { name: /loading studio/i }),
     ).toBeInTheDocument();
-    expect(screen.queryByText("StudioComingSoonPage")).not.toBeInTheDocument();
+    expect(screen.queryByText("StudioLandingPage")).not.toBeInTheDocument();
   });
 
   it("opens the v1 pages for a granted member", () => {
@@ -147,7 +147,7 @@ describe("studioRoutes", () => {
       ...live,
       hasStudioAccess: false,
     });
-    expect(screen.getByText("StudioComingSoonPage")).toBeInTheDocument();
+    expect(screen.getByText("StudioLandingPage")).toBeInTheDocument();
   });
 
   it("keeps Studio's own notifications page redirecting to Studio home", () => {
@@ -176,7 +176,27 @@ describe("studioRoutes", () => {
 
   it("keeps Liked songs behind the grant", () => {
     renderAt("/studio/liked", { ...live, hasStudioAccess: false });
-    expect(screen.getByText("StudioComingSoonPage")).toBeInTheDocument();
+    expect(screen.getByText("StudioLandingPage")).toBeInTheDocument();
+  });
+
+  it("opens Your listening for a granted member and in the demo", () => {
+    const granted = renderAt("/studio/listening", {
+      ...live,
+      hasStudioAccess: true,
+    });
+    expect(screen.getByText("StudioListeningPage")).toBeInTheDocument();
+    granted.unmount();
+    renderAt("/studio/listening", {
+      demoMode: true,
+      hasStudioAccess: true,
+      isStudioAccessPending: false,
+    });
+    expect(screen.getByText("StudioListeningPage")).toBeInTheDocument();
+  });
+
+  it("keeps Your listening behind the grant", () => {
+    renderAt("/studio/listening", { ...live, hasStudioAccess: false });
+    expect(screen.queryByText("StudioListeningPage")).toBeNull();
   });
 
   it("opens browse in the demo too", () => {
@@ -197,13 +217,13 @@ describe("studioRoutes", () => {
     expect(screen.getByText("StudioCreditsPage")).toBeInTheDocument();
   });
 
-  it("keeps both behind the teaser for a member without a grant", () => {
+  it("keeps both behind the landing for a member without a grant", () => {
     const ungranted = { ...live, hasStudioAccess: false };
     const scene = renderAt("/studio/scene?slug=mouraria-fado", ungranted);
-    expect(screen.getByText("StudioComingSoonPage")).toBeInTheDocument();
+    expect(screen.getByText("StudioLandingPage")).toBeInTheDocument();
     scene.unmount();
     renderAt("/studio/credits", ungranted);
-    expect(screen.getByText("StudioComingSoonPage")).toBeInTheDocument();
+    expect(screen.getByText("StudioLandingPage")).toBeInTheDocument();
   });
 
   it("serves both pages in demo mode", () => {

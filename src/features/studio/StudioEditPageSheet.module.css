@@ -1,0 +1,150 @@
+/* The owner's "Edit Studio page" sheet. The hero behind it previews each
+   choice, so the shared sheet's scrim drops to the soft one with no blur
+   while this sheet is up: the owner has to see the top of the page. The
+   scrim is portalled straight into body; `body >` outranks its own rule. */
+body > :has(> .sheet) {
+  background: var(--scrim-soft);
+  backdrop-filter: none;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.intro {
+  margin: 0;
+  font-size: var(--text-body);
+  color: var(--ink-60);
+}
+
+.choices {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.choice {
+  /* A <button> takes the UA font (Arial 13.33px); the card reads in the
+     page's own type. */
+  font: inherit;
+  position: relative;
+  display: flex;
+  min-height: 44px;
+  padding: 12px 14px;
+  text-align: start;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1.5px solid rgba(var(--line-rgb), 0.18);
+  border-radius: var(--radius-12);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background-color var(--dur-fast) var(--ease),
+    opacity var(--dur-fast) var(--ease);
+}
+.choice:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+/* RadioCardGroup's `.option:focus-visible` sets `border-radius: inherit`,
+   which drops the card's corners while it has focus. Two classes outrank it. */
+.choices .choice:focus-visible {
+  border-radius: var(--radius-12);
+}
+/* The border alone reads faintly on the dark surface, so the picked card
+   also takes a soft coral fill. */
+.choiceChecked {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+.choiceBody {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.choiceTitle {
+  font-weight: 600;
+}
+.choiceEffect {
+  font-size: var(--text-body-sm);
+  color: var(--ink-60);
+}
+
+.noCover {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--text-body-sm);
+  color: var(--ink-60);
+}
+.noCoverIcon {
+  flex: none;
+  margin-top: 3px;
+}
+.editorLink {
+  color: var(--accent-ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.editorLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.error {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  color: var(--danger-ink);
+}
+
+/* Phone: the sheet holds to about 40% of the screen, so the hero preview
+   above it stays in sight. The cards turn into a 3-up row of titles (the
+   effect lines stay for screen readers) and the shared sheet's head, body
+   and footer, reached by position since they carry the shared module's
+   classes, tighten their padding. */
+@media (--compact) {
+  .sheet > :first-child {
+    padding: 12px 16px;
+  }
+  .sheet > :nth-child(2) {
+    padding: 14px 16px;
+  }
+  .sheet > :nth-child(3) {
+    padding: 10px 16px max(10px, env(safe-area-inset-bottom));
+  }
+  .body {
+    gap: 12px;
+  }
+  .intro {
+    font-size: var(--text-body-sm);
+  }
+  .choices {
+    gap: 8px;
+  }
+  .choice {
+    justify-content: center;
+    align-items: center;
+    padding: 8px 6px;
+    text-align: center;
+  }
+  .choiceEffect {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .choice {
+    transition: none;
+  }
+}

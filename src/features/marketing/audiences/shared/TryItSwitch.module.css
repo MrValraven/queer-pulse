@@ -1,0 +1,92 @@
+.tryIt {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+
+.chipRow {
+  align-self: flex-start;
+  max-width: 100%;
+}
+
+/* One grid cell: the outgoing and incoming choices overlap while they
+   crossfade, so the panel never doubles in height mid-switch. */
+.panel {
+  display: grid;
+  min-width: 0;
+  border-radius: var(--radius-card);
+}
+.cell {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+
+/* How far the start edge of the phone chip row has faded. Scrolling the row
+   grows it (below); registered so the keyframes can interpolate a length. */
+@property --chip-fade-start {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+/* Phones: the chip row scrolls inside itself, one chip at a time, and never
+   pushes the page sideways. The extra class outranks Tabs.module.css. */
+@media (max-width: 719px) {
+  .tryIt .chipRow {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    min-width: 0;
+    max-width: 100%;
+    align-self: stretch;
+    /* Room for a focused chip's ring inside the scrolling row, and a
+       fade-wide end gutter: a chip cut by the edge fades out to say the row
+       goes on, and the last chip scrolls clear of the fade. */
+    padding: 6px 32px 6px 4px;
+    scroll-padding-inline: 32px;
+    scrollbar-width: none;
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      rgba(0, 0, 0, 1) var(--chip-fade-start),
+      rgba(0, 0, 0, 1) calc(100% - 32px),
+      transparent 100%
+    );
+  }
+  .tryIt .chipRow > [role="tab"] {
+    flex: none;
+    scroll-snap-align: start;
+  }
+}
+
+/* Once the row is scrolled, its start edge fades too, so the chips passed
+   over read as still there. A row that fits has no scroll range, so its
+   timeline stays inactive and the start never fades. */
+@supports (animation-timeline: scroll()) {
+  @media (max-width: 719px) {
+    .tryIt .chipRow {
+      animation: chip-row-fade-start linear both;
+      animation-timeline: scroll(self inline);
+    }
+  }
+}
+/* Reduced motion keeps the start edge sharp while the row scrolls. */
+@media (prefers-reduced-motion: reduce) {
+  .tryIt .chipRow {
+    animation: none;
+  }
+}
+:global(html[data-reduce-motion="true"]) .tryIt .chipRow {
+  animation: none;
+}
+@keyframes chip-row-fade-start {
+  0% {
+    --chip-fade-start: 0px;
+  }
+  12%,
+  100% {
+    --chip-fade-start: 32px;
+  }
+}

@@ -325,6 +325,34 @@
   margin-top: 28px;
 }
 
+/* ── Open source credits ── */
+.credits {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--s-line);
+}
+.creditsHeading {
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--s-text-40);
+  margin-bottom: 8px;
+}
+.credits p {
+  font-size: var(--text-13);
+  color: var(--s-text-60);
+  line-height: 1.6;
+  max-width: 64ch;
+  overflow-wrap: anywhere;
+}
+.credits a {
+  color: var(--studio-accent-text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 @media (--lg) {
   .rateBand,
   .tiers,

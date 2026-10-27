@@ -1,0 +1,109 @@
+/* The walkthrough's visuals: small panels in the product's own surfaces. */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-18);
+  background: var(--paper);
+}
+
+.question {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 500;
+  color: var(--text-strong);
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-14);
+  background: var(--paper);
+}
+.choice[data-picked="true"] {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 7%, var(--paper));
+}
+
+.choiceIcon {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-10);
+  background: rgba(var(--line-rgb), 0.06);
+  color: var(--ink-60);
+}
+.choice[data-picked="true"] .choiceIcon {
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent-text);
+}
+
+.choiceText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.choiceText b {
+  font-size: var(--text-15);
+  color: var(--text-strong);
+}
+
+.choiceCheck {
+  flex: none;
+  margin-top: 4px;
+  color: var(--accent-text);
+}
+
+/* The tags card hangs like a shop sign: no photo, just what it says. */
+.tagsCard {
+  max-width: 440px;
+  margin-inline: auto;
+  rotate: -1deg;
+}
+
+.replyingAs {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.claimDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--jade);
+}
+
+@media (max-width: 719px) {
+  .tagsCard {
+    rotate: none;
+  }
+}
+
+/* The roster's own top gap is for the editor's intro above it. The extra
+   class outranks CoManagers.module.css whichever loads first. */
+.panel .roster {
+  margin-top: 0;
+}

@@ -239,6 +239,25 @@ export const members: Catalog = {
   "profile.nav.shapings": "O que me formou",
   "profile.nav.activity": "Atividade recente",
   "profile.nav.related": "Pessoas por perto",
+  "profile.nav.events": "Eventos",
+  "profileEvents.selfTitle": "Eventos que <em>organizas</em>",
+  "profileEvents.visitorTitle": "Eventos que {firstName} <em>organiza</em>",
+  "profileEvents.upcomingLabel": "Próximos eventos",
+  "profileEvents.cohostTag": "Coorganização",
+  "profileEvents.showMore_one": "Ver mais {count}",
+  "profileEvents.showMore_other": "Ver mais {count}",
+  "profileEvents.showFewer": "Ver menos",
+  "profileEvents.pastToggle": "Eventos passados",
+  "profileEvents.noUpcoming": "{firstName} não tem nada marcado.",
+  "profileEvents.selfNoUpcoming": "Não tens nada marcado.",
+  "profileEvents.selfEmpty":
+    "Quando organizares ou coorganizares um evento, ele aparece aqui.",
+  "profileEvents.hostCta": "Organiza um evento",
+  "profileEvents.loadError.title":
+    "Não conseguimos carregar <em>estes eventos</em>",
+  "profileEvents.loadError.body": "Verifica a ligação e tenta de novo.",
+  "profileEvents.loadError.serverBody":
+    "O nosso servidor teve um problema ao carregar estes eventos. Tenta de novo daqui a pouco.",
 
   // ── Sinais de confiança + explicação (ProfileTrustSignals, ProfileTrustModal — Task 4) ──
   "profile.trust.verified": "Verificado",

@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { createStudioPlayerTestValue } from "../../test/studioPlayerTestValue";
 import { toArtistView, type StudioArtistView } from "./api/studio.adapters";
+import type { StudioArtistDTO } from "./api/studio.types";
 import { StudioPlayerContext } from "./player/studioPlayerContext";
 import { StudioArtistHero } from "./StudioArtistHero";
 
@@ -13,9 +14,14 @@ vi.mock("./useStudioShowcase", () => ({ useStudioShowcase: () => false }));
 const AVATAR_SRC = "/files/persona-avatar.jpg";
 const COVER_SRC = "/files/persona-cover.jpg";
 
+/** A stored studioHero as the server or old demo data may hold it: the
+ *  current choices, the first two layouts' values, or nothing. */
+type StoredStudioHero =
+  StudioArtistDTO["artist"]["studioHero"] | "full-bleed" | "avatar";
+
 function artistWith(
   coverUrl: string | null,
-  studioHero: "full-bleed" | "avatar" | null,
+  studioHero: StoredStudioHero,
 ): StudioArtistView {
   return toArtistView({
     artist: {
@@ -27,7 +33,8 @@ function artistWith(
       bio: null,
       city: null,
       coverUrl,
-      studioHero,
+      // Legacy values reach the adapter untyped, as old stored data would.
+      studioHero: studioHero as StudioArtistDTO["artist"]["studioHero"],
     },
     releases: [],
     ownerReleases: null,
@@ -62,53 +69,77 @@ function expectSingleHeadingWithTitleRef(
   expect(titleRef.current?.closest("h1")).toBe(headings[0]);
 }
 
+/** The hero draws the photo band (full-bleed) or the portrait beside the
+ *  copy (no data-variant). */
+function heroVariantOf(container: HTMLElement) {
+  return container.querySelector("section")?.getAttribute("data-variant");
+}
+
 describe("StudioArtistHero layouts", () => {
-  it("classic: shows the avatar art and no cover backdrop", () => {
-    const view = artistWith(null, null);
-    expect(view.heroLayout).toBe("classic");
-    const { container, titleRef, imageSources } = renderHero(view);
-    expect(imageSources).toContain(AVATAR_SRC);
-    expect(imageSources).not.toContain(COVER_SRC);
-    expect(container.querySelector("section")).not.toHaveAttribute(
-      "data-variant",
-    );
-    expectSingleHeadingWithTitleRef(titleRef);
-  });
-
-  it("classic: a stored full-bleed choice without a cover draws no photo", () => {
-    const { container, imageSources } = renderHero(
-      artistWith(null, "full-bleed"),
-    );
-    expect(imageSources).not.toContain(COVER_SRC);
-    expect(container.querySelector("section")).not.toHaveAttribute(
-      "data-variant",
-    );
-  });
-
-  it("full-bleed: shows the cover and the name, with no avatar art", () => {
-    const view = artistWith(COVER_SRC, null);
-    expect(view.heroLayout).toBe("full-bleed");
+  it("banner: shows the cover and the name, with no avatar", () => {
+    const view = artistWith(COVER_SRC, "banner");
+    expect(view.heroLayout).toBe("banner");
     const { container, titleRef, imageSources } = renderHero(view);
     expect(imageSources).toContain(COVER_SRC);
     expect(imageSources).not.toContain(AVATAR_SRC);
-    expect(container.querySelector("section")).toHaveAttribute(
-      "data-variant",
-      "full-bleed",
-    );
+    expect(heroVariantOf(container)).toBe("full-bleed");
     expectSingleHeadingWithTitleRef(titleRef);
   });
 
-  it("avatar: shows both the avatar art and the cover backdrop", () => {
-    const view = artistWith(COVER_SRC, "avatar");
-    expect(view.heroLayout).toBe("avatar");
+  it("both: shows the cover and the avatar on it", () => {
+    const view = artistWith(COVER_SRC, "both");
+    expect(view.heroLayout).toBe("both");
+    const { container, titleRef, imageSources } = renderHero(view);
+    expect(imageSources).toContain(COVER_SRC);
+    expect(imageSources).toContain(AVATAR_SRC);
+    expect(heroVariantOf(container)).toBe("full-bleed");
+    expectSingleHeadingWithTitleRef(titleRef);
+  });
+
+  it("a cover with no stored choice shows both", () => {
+    const view = artistWith(COVER_SRC, null);
+    expect(view.heroLayout).toBe("both");
+    const { imageSources } = renderHero(view);
+    expect(imageSources).toContain(COVER_SRC);
+    expect(imageSources).toContain(AVATAR_SRC);
+  });
+
+  it("portrait: shows the avatar and no cover photo", () => {
+    const view = artistWith(COVER_SRC, "portrait");
+    expect(view.heroLayout).toBe("portrait");
     const { container, titleRef, imageSources } = renderHero(view);
     expect(imageSources).toContain(AVATAR_SRC);
-    expect(imageSources).toContain(COVER_SRC);
-    expect(container.querySelector("section")).toHaveAttribute(
-      "data-variant",
-      "avatar-backdrop",
-    );
+    expect(imageSources).not.toContain(COVER_SRC);
+    expect(heroVariantOf(container)).toBeNull();
     expectSingleHeadingWithTitleRef(titleRef);
+  });
+
+  it("no cover with a stored banner resolves to portrait and draws no photo band", () => {
+    const view = artistWith(null, "banner");
+    expect(view.heroLayout).toBe("portrait");
+    const { container, titleRef, imageSources } = renderHero(view);
+    expect(imageSources).toContain(AVATAR_SRC);
+    expect(imageSources).not.toContain(COVER_SRC);
+    expect(heroVariantOf(container)).toBeNull();
+    expectSingleHeadingWithTitleRef(titleRef);
+  });
+
+  it("a legacy full-bleed choice reads as banner", () => {
+    const view = artistWith(COVER_SRC, "full-bleed");
+    expect(view.heroLayout).toBe("banner");
+    const { container, imageSources } = renderHero(view);
+    expect(imageSources).toContain(COVER_SRC);
+    expect(imageSources).not.toContain(AVATAR_SRC);
+    expect(heroVariantOf(container)).toBe("full-bleed");
+  });
+
+  it("a legacy avatar choice reads as both", () => {
+    const view = artistWith(COVER_SRC, "avatar");
+    expect(view.heroLayout).toBe("both");
+    const { container, imageSources } = renderHero(view);
+    expect(imageSources).toContain(COVER_SRC);
+    expect(imageSources).toContain(AVATAR_SRC);
+    expect(heroVariantOf(container)).toBe("full-bleed");
   });
 
   it("the cover is decorative and fades in once loaded", () => {

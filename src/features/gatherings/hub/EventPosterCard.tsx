@@ -43,26 +43,36 @@ interface EventPosterCardProps {
   now?: Date;
   /** Above-the-fold poster (the hero lead) — eager-loads at high priority. */
   priority?: boolean;
+  /** The event has already happened (a profile's past events). Drops the
+   *  "when" ribbon, whose buckets only describe what is ahead, and puts the
+   *  year on the date chip. Off by default, so the hub is unchanged. */
+  isPast?: boolean;
+  /** Whether a poster naming its hosting community offers the community
+   *  menu. On by default, as on the hub; a member's profile turns it off. */
+  showCommunityMenu?: boolean;
 }
 
 /** Day + month pill, e.g. "6 Jun", or the span across several days, e.g.
  *  "17 to 19 Oct". Rendered in the event's own zone, so a late-night gathering
  *  abroad doesn't slide onto the reader's next day. `gatheringWhen` is the one
  *  place that decides how a span reads, so this pill agrees with the detail
- *  page. */
+ *  page. `hasYear` adds the year, for an event in the past. */
 function DateChip({
   event,
   fmt,
   t,
+  hasYear = false,
 }: {
   event: CalendarEvent;
   fmt: Formatters;
   t: TFunction;
+  hasYear?: boolean;
 }) {
   const zone = eventZoneFormat(event.timezone, event.date);
   const when = gatheringWhen(event.date, event.endAt, fmt, t, {
     day: "numeric",
     month: "short",
+    ...(hasYear ? { year: "numeric" as const } : {}),
     ...zone.dateOptions,
   });
   return <span className={styles.dateChip}>{when.dateText}</span>;
@@ -84,6 +94,8 @@ export function EventPosterCard({
   variant,
   now,
   priority = false,
+  isPast = false,
+  showCommunityMenu = true,
 }: EventPosterCardProps) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -99,7 +111,11 @@ export function EventPosterCard({
         : sizedCover(event.coverImageUrl, targetWidth),
     alt: "",
     tint,
-    placeholder: event.title,
+    // A cover-less poster shows the slot's tint alone. Every variant but
+    // `list` already sets the title over or beside the frame, so a caption
+    // printed the title twice (and, in the 40px compact thumb, as clipped
+    // letters). An empty caption keeps the slot from its generic fallback.
+    placeholder: variant === "list" ? event.title : "",
     width: "100%",
     height: "100%",
     radius: 0,
@@ -157,7 +173,7 @@ export function EventPosterCard({
     );
   }
 
-  const showRibbon = variant === "lead" || variant === "featured";
+  const showRibbon = !isPast && (variant === "lead" || variant === "featured");
 
   const link = (
     <Link
@@ -173,7 +189,7 @@ export function EventPosterCard({
         {variant === "featured" && <CtaPill className={`${styles.cta}`} />}
         <span className={styles.overlay}>
           <span className={styles.badgeRow}>
-            <DateChip event={event} fmt={fmt} t={t} />
+            <DateChip event={event} fmt={fmt} t={t} hasYear={isPast} />
             <KindTag kind={event.kind} onScrim />
           </span>
           <FormatLine event={event} className={`${styles.formatLineScrim}`} />
@@ -192,7 +208,7 @@ export function EventPosterCard({
       </span>
     </Link>
   );
-  if (!event.hostingCommunity) return link;
+  if (!event.hostingCommunity || !showCommunityMenu) return link;
   // The menu trigger is a sibling of the link: a button cannot sit inside one.
   return (
     <div className={styles.shell}>

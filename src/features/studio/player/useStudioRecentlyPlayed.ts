@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useRef, useSyncExternalStore } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../../../app/providers/authContext";
+import type { StudioPlaybackPreferencesDTO } from "../api/studio.types";
+import { postStudioPlay } from "../api/studioListening.api";
+import { isListeningHistoryOnIn } from "../api/studioPlaybackPatch";
+import { studioKeys } from "../api/studioQueryKeys";
+import { useStudioPlaybackRow } from "../api/useStudioPlaybackPreferences";
 import type { StudioQueueItem } from "./studioPlayerContext";
 import {
   clearStudioRecentlyPlayed,
@@ -8,14 +14,12 @@ import {
   subscribeStudioListeningMemory,
   type StudioRecentlyPlayedEntry,
 } from "./studioListeningMemory";
-import {
-  readActiveCrossfadeSeconds,
-  readListeningPreferences,
-} from "./studioPlayerPreferences";
-import { useStudioListeningPreferences } from "./useStudioPlayerPreferences";
+import { maybeShowStudioListeningNotice } from "./studioListeningNoticeStore";
+import { readActiveCrossfadeSeconds } from "./studioPlayerPreferences";
+import { useStudioListeningSwitchMigration } from "./useStudioListeningSwitchMigration";
 
 /** A play counts after 30 seconds of listening, or when a shorter track
- *  plays to its end (PRD-18). */
+ *  plays to its end (PRD-18, contract 11). */
 export const RECENTLY_PLAYED_AFTER_SECONDS = 30;
 /** The last playhead read can fall up to a poll short of the end; a
  *  crossfade adds its own length on top. */
@@ -28,7 +32,7 @@ const EMPTY_ENTRIES: readonly StudioRecentlyPlayedEntry[] = [];
 
 export interface StudioRecentlyPlayedControls {
   /** Newest first, one row per track, at most 50. Empty when signed out or
-   *  with Recently played off. */
+   *  while listening history is paused. */
   entries: readonly StudioRecentlyPlayedEntry[];
   /** Removes the whole list from this device. */
   clear: () => void;
@@ -36,16 +40,17 @@ export interface StudioRecentlyPlayedControls {
 
 /** The signed-in member's recently played tracks on this device. Rows only
  *  carry the track id and when it played, so a surface resolves each track
- *  through its usual query. Nothing here is ever sent to the server. */
+ *  through its usual query. The list stays on this device; the server keeps
+ *  its own history from the counted plays. */
 export function useStudioRecentlyPlayed(): StudioRecentlyPlayedControls {
   const { user } = useAuth();
   const memberId = user?.id ?? null;
-  const { isRecentlyPlayedOn } = useStudioListeningPreferences().preferences;
+  const isHistoryOn = isListeningHistoryOnIn(useStudioPlaybackRow());
   const storedEntries = useSyncExternalStore(
     subscribeStudioListeningMemory,
     () => readStudioRecentlyPlayed(memberId),
   );
-  const entries = isRecentlyPlayedOn ? storedEntries : EMPTY_ENTRIES;
+  const entries = isHistoryOn ? storedEntries : EMPTY_ENTRIES;
   return useMemo(
     () => ({ entries, clear: clearStudioRecentlyPlayed }),
     [entries],
@@ -56,6 +61,8 @@ export interface StudioRecentlyPlayedRecorderOptions {
   memberId: string | null;
   /** Signed in with Studio access, the session settled. */
   canRecord: boolean;
+  /** Demo never counts, and remembers from the demo playback row. */
+  demoMode: boolean;
   current: StudioQueueItem | null;
   isPlaying: boolean;
   readPositionSeconds: () => number;
@@ -66,8 +73,11 @@ interface TrackedPlay {
   memberId: string | null;
   trackId: string;
   durationSeconds: number | null;
-  /** A preview link's track is unreleased, so it stays off the list. */
+  /** A preview link's track is unreleased, so it is never counted and stays
+   *  off the list. */
   isRecordable: boolean;
+  /** A podcast episode is remembered and never counted. */
+  isEpisode: boolean;
   isRecorded: boolean;
   listenedSeconds: number;
   furthestSeconds: number;
@@ -99,6 +109,7 @@ function trackedPlayOf(
     trackId: item.trackId,
     durationSeconds: item.durationSeconds,
     isRecordable: item.previewToken === undefined,
+    isEpisode: item.isEpisode === true,
     isRecorded: false,
     listenedSeconds: 0,
     furthestSeconds: 0,
@@ -107,18 +118,26 @@ function trackedPlayOf(
 }
 
 /** Mounted by the queue persistence: while a track plays it reads the
- *  playhead once a second and adds the track to this device's recently
- *  played list after 30 seconds of listening or at its end. Off, signed out,
- *  without access, or after Quick Exit, it records nothing. */
+ *  playhead once a second, and after 30 seconds of listening or at the
+ *  track's end it does two things apart (contract 11). It counts the play on
+ *  the server: live only, and only for a released music track (a preview
+ *  link's track and an episode stay uncounted). The count also feeds the
+ *  member's listening history there while it is on. And it
+ *  remembers the track in this device's recently played list, only while the
+ *  loaded playback row says history is on. Signed out, without access, or
+ *  after Quick Exit, it does neither. */
 export function useStudioRecentlyPlayedRecorder(
   options: StudioRecentlyPlayedRecorderOptions,
 ): void {
-  const { memberId, canRecord, current, isPlaying } = options;
-  const { isRecentlyPlayedOn } = useStudioListeningPreferences().preferences;
-  const shouldRecord = canRecord && memberId !== null && isRecentlyPlayedOn;
+  const { memberId, canRecord, demoMode, current, isPlaying } = options;
+  const shouldRecord = canRecord && memberId !== null;
+  useStudioListeningSwitchMigration({ demoMode, isEnabled: shouldRecord });
+  const queryClient = useQueryClient();
+  const queryClientRef = useRef(queryClient);
   const optionsRef = useRef(options);
   useEffect(() => {
     optionsRef.current = options;
+    queryClientRef.current = queryClient;
   });
   const trackedRef = useRef<TrackedPlay | null>(null);
   const currentEntryId = current?.queueEntryId ?? null;
@@ -155,10 +174,26 @@ export function useStudioRecentlyPlayedRecorder(
         hasReachedTrackEnd(play);
       const writerId = optionsRef.current.memberId;
       if (!hasCounted || !writerId || writerId !== play.memberId) return;
-      // Read again at the moment of writing: a switch flipped in another tab.
-      if (!readListeningPreferences().isRecentlyPlayedOn) return;
       play.isRecorded = true;
+      const isDemo = optionsRef.current.demoMode;
+      const client = queryClientRef.current;
+      if (!isDemo && play.isRecordable && !play.isEpisode) {
+        // Fire and forget: any failure, a 400 or a throttler 429 included,
+        // stays silent and is never sent again (backend delta 1).
+        void postStudioPlay(play.trackId).then(
+          () => maybeShowStudioListeningNotice(client, false),
+          () => undefined,
+        );
+      }
+      // Read at this moment: a pending or failed read remembers nothing, and
+      // a switch flipped since then is the one that counts.
+      const row = client.getQueryData<StudioPlaybackPreferencesDTO>(
+        studioKeys.playback(isDemo),
+      );
+      if (row === undefined || !isListeningHistoryOnIn(row)) return;
       recordStudioRecentlyPlayed(writerId, play.trackId);
+      // Demo never counts, so the notice follows the remember there.
+      if (isDemo) maybeShowStudioListeningNotice(client, true);
     };
     const intervalId = window.setInterval(
       readPlayhead,

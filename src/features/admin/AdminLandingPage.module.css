@@ -2,6 +2,61 @@
    AdminLandingPage, AdminLandingEligiblePicker, AdminLandingFeatureList and
    AdminLandingFeatureEditor so the picker/list/editor read as one system. */
 
+/* ── Quick links (AdminLandingQuickLinks) ─────────────────────────────── */
+.quickLinks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  margin-top: 20px;
+  padding: 14px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card, 22px);
+}
+
+.quickLinksText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.quickLinksHeading {
+  margin: 0;
+  font-size: var(--text-11);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.quickLinksHelper {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.quickLinksList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* A long label (Portuguese runs longer) wraps inside the pill on a narrow
+   phone, so the row never scrolls sideways. */
+.quickLinksList .quickLinkButton {
+  max-width: 100%;
+  white-space: normal;
+  text-align: start;
+}
+
 .tabs {
   margin-top: 20px;
 }

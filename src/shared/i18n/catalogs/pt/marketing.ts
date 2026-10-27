@@ -3499,8 +3499,10 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-27.headline":
+    "O que ouves, audições e apoiantes no Studio, marcos no painel e páginas para cada público.",
   "changelog.releases.2026-10-26.headline":
-    "Renovar e revogar convites em lote, retomar no Studio, pastas de playlists e barra nítida no iPhone.",
+    "Renovar e revogar convites em lote, retomar no Studio, nova página do Studio e barra nítida no iPhone.",
   "changelog.releases.2026-10-21.headline":
     "Convida conexões para eventos onde vais, mosaicos de géneros no Studio e barra de progresso mais suave.",
   "changelog.releases.2026-10-20.headline":
@@ -3693,6 +3695,38 @@ export const marketing: Catalog = {
     "Diz a quem vem como pagar o teu evento",
   "changelog.entries.event-payment-details.body":
     "Eventos pagos podem ter um link de pagamento e instruções, como MB WAY ou dinheiro à porta.",
+  "changelog.entries.finance-ledger-breakdown-bar.title":
+    "Cartões de receita e despesa mais claros",
+  "changelog.entries.finance-ledger-breakdown-bar.body":
+    "Uma barra mostra a fatia de cada linha no total, e o valor ainda sem linha aparece numa linha própria.",
+  "changelog.entries.landing-visitor-preview-links.title":
+    "Vê as páginas de entrada como visitante",
+  "changelog.entries.landing-visitor-preview-links.body":
+    "Atalhos no admin abrem a página inicial e o Studio tal como os visitantes não autenticados os veem, sem saíres.",
+  "changelog.entries.spending-total-from-lines.title":
+    "O total de despesas soma-se sozinho",
+  "changelog.entries.spending-total-from-lines.body":
+    "O editor de finanças soma as linhas de despesa visíveis no total, e cada despesa aparece como valor negativo.",
+  "changelog.entries.studio-leftovers-sweep.title":
+    "Pontas soltas do Studio resolvidas",
+  "changelog.entries.studio-leftovers-sweep.body":
+    "O Studio segue o tema claro na entrada e no início de sessão, mostra cartões partilhados com opção de tentar de novo e envia um aviso de lançamento por artista por dia.",
+  "changelog.entries.profile-hosted-events.title":
+    "Vê os eventos que um membro organiza",
+  "changelog.entries.profile-hosted-events.body":
+    "Os perfis mostram os eventos que cada membro organiza ou coorganiza, primeiro os próximos e os passados à parte.",
+  "changelog.entries.choose-your-studio-page-header.title":
+    "Escolhe o que aparece no topo da tua página no Studio",
+  "changelog.entries.choose-your-studio-page-header.body":
+    "Artistas escolhem um banner, o avatar redondo ou os dois, e veem cada opção ao vivo em Editar página no Studio.",
+  "changelog.entries.more-ambassador-focus-areas.title":
+    "A equipa pode dar mais áreas de foco às pessoas embaixadoras",
+  "changelog.entries.more-ambassador-focus-areas.body":
+    "As novas incluem deficiência, redução de riscos, fé e segurança online, e podes filtrar o diretório por cada uma.",
+  "changelog.entries.one-player-menu-at-a-time.title":
+    "O leitor abre um menu de cada vez",
+  "changelog.entries.one-player-menu-at-a-time.body":
+    "Abrir a fila fecha as opções do leitor, e abrir as opções fecha a fila.",
   "changelog.entries.genesis-closes-after-use.title":
     "O Genesis fecha de vez depois de usado",
   "changelog.entries.genesis-closes-after-use.body":
@@ -3737,6 +3771,18 @@ export const marketing: Catalog = {
     "O crescimento mostra o total real de pessoas",
   "changelog.entries.member-growth-shows-real-total.body":
     "O gráfico de admin mostra agora o total de pessoas semana a semana e a etiqueta do Orgulho que sobrou desapareceu.",
+  "changelog.entries.event-map-pins-your-address.title":
+    "O mapa do evento marca a morada quando confirmas",
+  "changelog.entries.event-map-pins-your-address.body":
+    "Quando confirmas presença, o Como chegar marca a morada exata no mapa, para veres a porta antes de saíres.",
+  "changelog.entries.feature-usage-reach-over-time.title":
+    "Vê o alcance dia a dia na utilização de funcionalidades",
+  "changelog.entries.feature-usage-reach-over-time.body":
+    "Cada funcionalidade mostra barras diárias face ao período anterior, com as datas, e abre num gráfico completo.",
+  "changelog.entries.member-growth-range-and-hover.title":
+    "Escolhe o período no gráfico de crescimento",
+  "changelog.entries.member-growth-range-and-hover.body":
+    "Muda entre 4 semanas e um ano inteiro e passa o rato em qualquer ponto da linha para ler essa semana.",
   "changelog.entries.crisp-app-bar-on-iphone.title":
     "Os ícones da barra de cima ficam nítidos no iPhone",
   "changelog.entries.crisp-app-bar-on-iphone.body":
@@ -3753,6 +3799,22 @@ export const marketing: Catalog = {
     "Retoma o Studio onde ficaste",
   "changelog.entries.studio-resume-where-you-left-off.body":
     "Liga Retomar e a tua fila volta depois de fechares o separador, com Tocado recentemente neste dispositivo.",
+  "changelog.entries.studio-your-listening.title":
+    "O que ouves, contagem de audições e apoiantes no Studio",
+  "changelog.entries.studio-your-listening.body":
+    "Audições anónimas para quem faz a música, os teus artistas de topo, um histórico para pausar ou limpar e apoio opcional.",
+  "changelog.entries.audience-landing-pages.title":
+    "Páginas para negócios, comunidades, artistas e profissionais",
+  "changelog.entries.audience-landing-pages.body":
+    "Quatro páginas novas mostram a cada grupo o que o QueerPulse lhes oferece, com listagens, eventos e páginas de persona de exemplo.",
+  "changelog.entries.studio-dashboard-extras.title":
+    "Crescimento, playlists e marcos no teu painel do Studio",
+  "changelog.entries.studio-dashboard-extras.body":
+    "Vê as pessoas novas por semana, as playlists públicas com as tuas faixas, uma lista por lançamento e marcos para partilhar.",
+  "changelog.entries.studio-landing-page.title":
+    "Nova página de entrada do Studio com ecrãs reais",
+  "changelog.entries.studio-landing-page.body":
+    "Quem visita vê o Studio em capturas, como se compara às grandes apps de streaming e como pedir um convite.",
   "changelog.entries.studio-playlist-folders.title":
     "Arruma as tuas playlists em pastas",
   "changelog.entries.studio-playlist-folders.body":

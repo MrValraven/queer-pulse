@@ -77,10 +77,17 @@
   grid-template-columns: 1fr 1fr;
   gap: 22px;
   margin-top: 22px;
-  align-items: start;
+  align-items: stretch;
+}
+/* The note sits at the foot of the card, so both cards in the grid end on
+   the same line whatever their row count. The wrapper keeps a minimum gap
+   above the divider. */
+.ledgerFoot {
+  margin-top: auto;
+  padding-top: 22px;
 }
 .ledgerNote {
-  margin: 22px 0 0;
+  margin: 0;
   padding-top: 18px;
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
   font-size: var(--text-13);
@@ -121,40 +128,144 @@
   margin: 6px 0 0;
 }
 
-/* ── Ledger card (meters) ────────────────────────────────────────────────── */
+/* ── Ledger card (composition bar + rows) ────────────────────────────────── */
 .ledgerCard {
+  display: flex;
+  flex-direction: column;
   padding: 24px 26px;
 }
-.meters {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+/* The track reads on both themes because --line-rgb flips to cream in dark. */
+.ledgerBar {
+  height: 10px;
   margin-top: 20px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.08);
+  overflow: hidden;
 }
-.meter {
+.ledgerBarFill {
   display: flex;
-  flex-direction: column;
+  gap: 2px;
+  height: 100%;
+  transform-origin: left center;
+  animation: meterGrow 0.7s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1)) both;
+}
+.ledgerSegment {
+  flex-basis: 0;
+  min-width: 0;
+  height: 100%;
+}
+/* The share of the total no line explains yet. */
+.ledgerHatch {
+  background-color: rgba(var(--line-rgb), 0.06);
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(var(--line-rgb), 0.28) 0 2px,
+    transparent 2px 5px
+  );
+}
+/* Rows share one column grid through subgrid, so every percent and amount
+   lines up down the card. */
+.ledgerRows {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  column-gap: 12px;
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+.ledgerRow {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: center;
+  padding: 12px 0;
+}
+.ledgerRow + .ledgerRow {
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
+}
+.ledgerDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+/* A hatched dot is too small to read as stripes alone, so it gets a rim. */
+.ledgerDot.ledgerHatch {
+  box-sizing: border-box;
+  border: 1px solid rgba(var(--line-rgb), 0.4);
+}
+.ledgerRowLabel {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
-}
-.meterTop {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-}
-.meterLabel {
+  min-width: 0;
   font-size: var(--text-14);
   font-weight: 600;
   color: var(--ink);
 }
-.meterAmount {
+.ledgerRemainderLabel {
+  font-weight: 500;
+  color: var(--ink-60);
+}
+.ledgerTextCta {
+  border: 0;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.ledgerTextCta:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-4);
+}
+.ledgerPercent {
+  font-size: var(--text-12-5);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+  text-align: right;
+}
+.ledgerAmount {
   font-family: var(--serif);
   font-size: var(--text-17);
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
   color: var(--text-strong);
+  text-align: right;
 }
-[data-theme="dark"] .meterAmount {
+[data-theme="dark"] .ledgerAmount {
   color: var(--ink);
+}
+.ledgerAmountMuted,
+[data-theme="dark"] .ledgerAmountMuted {
+  color: var(--ink-60);
+}
+/* An unverified line has no amount or share yet, so the placeholder takes
+   both columns. */
+.ledgerPlaceholder {
+  grid-column: 3 / -1;
+  justify-self: end;
+}
+.ledgerEmpty {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 16px 18px;
+  border: 1px dashed rgba(var(--line-rgb), 0.22);
+  border-radius: var(--radius-14);
+}
+.ledgerEmptyLine {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
 }
 .notVerified {
   display: inline-flex;
@@ -176,18 +287,7 @@
   text-decoration: underline;
   cursor: pointer;
 }
-.meterTrack {
-  height: 10px;
-  border-radius: var(--radius-pill);
-  background: rgba(var(--plum-rgb), 0.07);
-  overflow: hidden;
-}
-.meterFill {
-  height: 100%;
-  border-radius: var(--radius-pill);
-  transform-origin: left center;
-  animation: meterGrow 0.7s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1)) both;
-}
+/* Segment and dot fills, cycled by row position. */
 .meter_coral {
   background: var(--accent);
 }
@@ -202,6 +302,10 @@
 }
 .meter_plum {
   background: var(--plum);
+}
+/* Plum is the dark paper colour, so its segment would vanish there. */
+[data-theme="dark"] .meter_plum {
+  background: var(--plum-tint);
 }
 
 @keyframes meterGrow {
@@ -1081,7 +1185,7 @@
       transform: none;
     }
   }
-  .meterFill {
+  .ledgerBarFill {
     animation: none;
   }
   .chartBar {

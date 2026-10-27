@@ -1,0 +1,107 @@
+/* The noticeboard of scattered tools: paper scraps at small angles, each
+   pinned with a strip of tape painted from tokens. */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px 24px;
+  margin: 0;
+  padding: 8px 0 0;
+  list-style: none;
+}
+
+.slot {
+  min-width: 0;
+}
+
+.scrap {
+  --tilt: -1.6deg;
+  position: relative;
+  height: 100%;
+  padding: 26px 22px 22px;
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-4);
+  background: var(--cream);
+  transform: rotate(var(--tilt));
+}
+.slot:nth-child(2n) .scrap {
+  --tilt: 1.4deg;
+}
+.slot:nth-child(3n) .scrap {
+  --tilt: -0.6deg;
+}
+
+.scrap::before {
+  content: "";
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  width: 78px;
+  height: 22px;
+  border-radius: var(--radius-2);
+  background: color-mix(in srgb, var(--amber) 50%, transparent);
+  transform: translateX(-50%) rotate(-3deg);
+}
+.slot:nth-child(2n) .scrap::before {
+  background: color-mix(in srgb, var(--accent) 40%, transparent);
+  transform: translateX(-50%) rotate(4deg);
+}
+.slot:nth-child(3n) .scrap::before {
+  background: color-mix(in srgb, var(--jade) 36%, transparent);
+}
+
+.icon {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-10);
+  background: rgba(var(--line-rgb), 0.06);
+  color: var(--accent-text);
+  font-size: var(--text-18);
+}
+
+.label {
+  margin: 14px 0 6px;
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.quote {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-19);
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--text-strong);
+}
+
+/* The line under the board, set like a poster headline. */
+.punchline {
+  max-width: 22ch;
+  margin: 56px auto 0;
+  font-family: var(--serif);
+  font-size: var(--text-title);
+  font-weight: 600;
+  line-height: 1.1;
+  text-align: center;
+  color: var(--text-strong);
+}
+
+@media (max-width: 959px) {
+  .board {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 559px) {
+  .board {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
+  }
+  .punchline {
+    margin-top: 40px;
+  }
+}

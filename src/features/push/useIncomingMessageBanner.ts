@@ -7,6 +7,7 @@ import { canMirrorHidePushPreviews } from "../../pushPrivacy";
 import {
   isFromViewerSide,
   ownMemberKeysOf,
+  ownOfficialConversationIdsOf,
   readStaffedIdentityIds,
   type MessageViewer,
 } from "../../shared/api/mailboxViewer";
@@ -55,7 +56,7 @@ type ConversationMessageFrame = ServerToClientEvents["conversation:message"];
 type ConversationRowWithMailboxState = CachedConversationRow &
   Pick<
     Conversation,
-    "mailboxIdentityId" | "claimedByUserId" | "viewerMemberKey"
+    "mailboxIdentityId" | "claimedByUserId" | "viewerMemberKey" | "official"
   >;
 
 /** PRD-423: `text` with a matched chat's `@<member key>` mentions named,
@@ -89,11 +90,13 @@ function readableMatchedChatMentions(
 export function isOwnSideOrClaimedByColleagueMessage(input: {
   sender: Pick<AuthorSummary, "handle" | "identityId"> | null | undefined;
   viewer: MessageViewer;
+  conversationId?: string;
   mailboxIdentityId: string | undefined;
   claimedByUserId: string | null | undefined;
   myUserId: string | null;
 }): boolean {
-  if (isFromViewerSide(input.sender, input.viewer)) return true;
+  if (isFromViewerSide(input.sender, input.viewer, input.conversationId))
+    return true;
   const isStaffedMailboxThread =
     !!input.mailboxIdentityId &&
     input.viewer.staffedIdentityIds.has(input.mailboxIdentityId);
@@ -280,7 +283,16 @@ export function useIncomingMessageBanner(): void {
                 ? [mailboxRow.viewerMemberKey]
                 : []),
             ]),
+            // Own official threads, this row's own included (an official row
+            // without `mailboxIdentityId` is the member's own view).
+            ownOfficialConversationIds: new Set([
+              ...ownOfficialConversationIdsOf(queryClient),
+              ...(mailboxRow.official === true && !mailboxRow.mailboxIdentityId
+                ? [conversationId]
+                : []),
+            ]),
           },
+          conversationId,
           mailboxIdentityId: mailboxRow.mailboxIdentityId,
           claimedByUserId: mailboxRow.claimedByUserId,
           myUserId: latest.myUserId,

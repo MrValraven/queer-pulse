@@ -12,7 +12,7 @@ import type { ActivityLabel } from "./adminCommunities.api";
  * from `adminDashboard.data.ts`.
  */
 
-export const REPORT_WEEK_RANGES = [4, 8, 12, 26] as const;
+export const REPORT_WEEK_RANGES = [4, 8, 12, 26, 52] as const;
 export type ReportWeekRange = (typeof REPORT_WEEK_RANGES)[number];
 
 /** One weekly bucket, oldest first. `total` is the running member count at

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { studioSnippetPreviewText } from "../messages/studioSharePreview";
 import { isMentionExcerptEmpty } from "./mentionExcerptIsEmpty";
 import styles from "./MentionsPanel.module.css";
 
@@ -19,5 +20,12 @@ export function MentionExcerpt({ content }: { content: ReactNode }) {
       </div>
     );
   }
-  return <div className={styles.content}>{content}</div>;
+  // Older rows still hold the raw Studio URL; read it as its kind label.
+  return (
+    <div className={styles.content}>
+      {typeof content === "string"
+        ? studioSnippetPreviewText(content, t)
+        : content}
+    </div>
+  );
 }

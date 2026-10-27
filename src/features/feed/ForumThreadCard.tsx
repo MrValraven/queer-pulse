@@ -6,6 +6,7 @@ import type { TFunction } from "../../shared/i18n/types";
 import { Avatar, Button } from "../../shared/components/ui";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { tintForSlug } from "../../shared/api/refs";
+import { studioSnippetPreviewText } from "../messages/studioSharePreview";
 import { initials, relativeTime } from "./api/feed.adapters";
 import type { FeedItem } from "./api/feed.api";
 import { MoreMenu } from "./FeedModeration";
@@ -276,7 +277,7 @@ function ThreadExcerpt({ item }: { item: FeedItem }) {
           .filter(Boolean)
           .join(" ")}
       >
-        {item.excerpt}
+        {studioSnippetPreviewText(item.excerpt, t)}
       </p>
       {hasWarnings && (
         <WarningRevealButton

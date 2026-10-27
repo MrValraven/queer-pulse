@@ -102,7 +102,7 @@ export function StudioSignInPage() {
 
           <div className={styles.segTabs}>
             <Button
-              variant={activeMode === "in" ? "primary" : "ghost-dark"}
+              variant={activeMode === "in" ? "primary" : "ghost"}
               className={styles.seg}
               aria-pressed={activeMode === "in"}
               onClick={() => setActiveMode("in")}
@@ -110,7 +110,7 @@ export function StudioSignInPage() {
               {t("studio:signin.tabs.signIn")}
             </Button>
             <Button
-              variant={activeMode === "join" ? "primary" : "ghost-dark"}
+              variant={activeMode === "join" ? "primary" : "ghost"}
               className={styles.seg}
               aria-pressed={activeMode === "join"}
               onClick={() => setActiveMode("join")}

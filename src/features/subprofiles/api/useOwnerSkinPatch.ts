@@ -17,6 +17,16 @@ export type OwnerSkinPatchFields = Omit<
   "skinData" | "expectedEditVersion"
 >;
 
+/** The fresh read at save time found no persona: it was deleted, or the
+ *  viewer no longer owns it. Keeps the plain Error's message, so a caller
+ *  that reads only `message` sees the same text as before. */
+export class SubprofileNotFoundError extends Error {
+  constructor() {
+    super("Subprofile not found");
+    this.name = "SubprofileNotFoundError";
+  }
+}
+
 /** Builds the whole `skinData` to save from the persona's freshly read one. */
 export type SkinDataTransform = (freshSkinData: SkinData | null) => SkinData;
 
@@ -46,7 +56,7 @@ export function useOwnerSkinPatch(subprofileId: string) {
     fields: OwnerSkinPatchFields,
   ): Promise<SubprofileDTO> {
     const fresh = await fetchOwnerSubprofile(demoMode, subprofileId);
-    if (!fresh) throw new Error("Subprofile not found");
+    if (!fresh) throw new SubprofileNotFoundError();
     return update.mutateAsync({
       id: subprofileId,
       dto: {

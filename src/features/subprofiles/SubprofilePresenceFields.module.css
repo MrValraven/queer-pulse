@@ -46,10 +46,10 @@
   }
 }
 
-/* Studio page layout: two radio cards beside the cover field. */
+/* Studio page layout: three radio cards in one row beside the cover field. */
 .heroChoices {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -59,21 +59,33 @@
   gap: 4px;
   min-height: 44px;
   padding: 12px 14px;
+  /* The cards are buttons, which drop the page font for the system one. */
+  font: inherit;
   text-align: left;
   color: var(--ink);
   background: var(--paper);
   border: 1.5px solid rgba(var(--line-rgb), 0.18);
   border-radius: var(--radius-12);
   cursor: pointer;
-  transition: border-color 0.15s var(--ease);
+  transition:
+    border-color 0.15s var(--ease),
+    background-color 0.15s var(--ease);
 }
 .heroChoice:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
 }
+/* The shared group sets `border-radius: inherit` on a focused option, which
+   squares the card's corners; this keeps the card's own radius. */
+.heroChoices .heroChoice:focus-visible {
+  border-radius: var(--radius-12);
+}
+/* The accent border the Studio sheet uses, with a soft accent fill so the
+   choice reads on a dark card too. */
 .heroChoiceChecked {
-  border-color: var(--ink);
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.1);
 }
 .heroChoiceTitle {
   font-weight: 600;

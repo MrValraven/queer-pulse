@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   StudioSleepTimerChip,
@@ -11,15 +11,6 @@ import {
 } from "./studioPlayerTestHarness";
 
 afterEach(() => vi.useRealTimers());
-
-/** The chip's own live region; the app's toast region is a status too. */
-function sleepStatus(): HTMLElement {
-  const region = screen
-    .getAllByRole("status")
-    .find((element) => !element.closest("[data-toast-region]"));
-  if (!region) throw new Error("The sleep timer status region is missing");
-  return region;
-}
 
 describe("remainingSeconds", () => {
   it("rounds up and never goes below zero", () => {
@@ -83,68 +74,6 @@ describe("StudioSleepTimerChip", () => {
     expect(chip).toHaveAccessibleDescription(
       "Turn off the sleep timer set for the end of this track",
     );
-  });
-
-  it("announces each change once and stays quiet between changes", async () => {
-    const { rerenderWith } = renderWithPlayer(<StudioSleepTimerChip />);
-    const region = sleepStatus();
-    expect(region).toBeEmptyDOMElement();
-    // Collected in the callback: jsdom delivers records at the microtask
-    // checkpoint, so takeRecords() after an await would come back empty.
-    const records: MutationRecord[] = [];
-    const observer = new MutationObserver((list) => {
-      records.push(...list);
-    });
-    observer.observe(region, {
-      childList: true,
-      characterData: true,
-      subtree: true,
-    });
-    rerenderWith({
-      player: createStudioPlayerValue({ sleepTimer: { kind: "endOfTrack" } }),
-    });
-    await waitFor(() =>
-      expect(region).toHaveTextContent(
-        "Playback stops at the end of this track",
-      ),
-    );
-    await waitFor(() => expect(records).toHaveLength(1));
-    records.length = 0;
-    // Equal timers in fresh objects are no change.
-    rerenderWith({
-      player: createStudioPlayerValue({ sleepTimer: { kind: "endOfTrack" } }),
-    });
-    rerenderWith({
-      player: createStudioPlayerValue({ sleepTimer: { kind: "endOfTrack" } }),
-    });
-    // Let any pending records reach the callback before counting.
-    await Promise.resolve();
-    records.push(...observer.takeRecords());
-    expect(records).toHaveLength(0);
-    rerenderWith({ player: createStudioPlayerValue({ sleepTimer: null }) });
-    await waitFor(() => expect(region).toHaveTextContent("Sleep timer off"));
-    await waitFor(() => expect(records).toHaveLength(1));
-    observer.disconnect();
-  });
-
-  it("stays silent when another chip announces", async () => {
-    const { rerenderWith } = renderWithPlayer(
-      <StudioSleepTimerChip announces={false} />,
-    );
-    rerenderWith({
-      player: createStudioPlayerValue({ sleepTimer: { kind: "endOfTrack" } }),
-    });
-    expect(
-      await screen.findByRole("button", { name: "Stops after this track" }),
-    ).toBeInTheDocument();
-    expect(
-      screen
-        .getAllByRole("status")
-        .every((element) => element.closest("[data-toast-region]")),
-    ).toBe(true);
-    expect(
-      screen.queryByText("Playback stops at the end of this track"),
-    ).toBeNull();
   });
 });
 

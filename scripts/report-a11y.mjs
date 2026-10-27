@@ -44,8 +44,9 @@ function runEslintJson() {
   mkdirSync(CACHE_DIRECTORY, { recursive: true });
   try {
     return execFileSync(
-      "npx",
+      "pnpm",
       [
+        "exec",
         "eslint",
         ".",
         "--config",

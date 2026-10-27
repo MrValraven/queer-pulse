@@ -226,6 +226,67 @@ describe("formatPushCopy: section 4 keys", () => {
   }
 });
 
+describe("formatPushCopy: Studio milestone shares (dashboard Part 1)", () => {
+  const cases = [
+    [
+      "push:messages.studio.milestone",
+      {},
+      "Shared a milestone from Studio",
+      "Partilhou um marco do Studio",
+    ],
+    [
+      "push:messages.studio.milestoneWithNote",
+      { note: "yes" },
+      "Shared a milestone from Studio: yes",
+      "Partilhou um marco do Studio: yes",
+    ],
+    [
+      "push:messages.group.studio.milestone",
+      { name: "Ana" },
+      "Ana shared a milestone from Studio",
+      "Ana partilhou um marco do Studio",
+    ],
+    [
+      "push:messages.group.studio.milestoneWithNote",
+      { name: "Ana", note: "yes" },
+      "Ana shared a milestone from Studio: yes",
+      "Ana partilhou um marco do Studio: yes",
+    ],
+    [
+      "push:messages.group.mention.studio.milestone",
+      { name: "Ana" },
+      "Ana mentioned you and shared a milestone from Studio",
+      "Ana mencionou-te e partilhou um marco do Studio",
+    ],
+    [
+      "push:messages.group.mention.studio.milestoneWithNote",
+      { name: "Ana", note: "yes" },
+      "Ana mentioned you and shared a milestone from Studio: yes",
+      "Ana mencionou-te e partilhou um marco do Studio: yes",
+    ],
+  ] as const;
+
+  function resolved(
+    key: string,
+    params: Record<string, string>,
+    language: "en" | "pt",
+  ): string {
+    const source = {
+      title: "fallback title",
+      body: "fallback body",
+      l10n: { bodyKey: key, params },
+    };
+    return formatPushCopy(source, language).body;
+  }
+
+  for (const [key, params, english, portuguese] of cases) {
+    it(`resolves ${key} in EN and PT`, () => {
+      expect(resolved(key, params, "en")).toBe(english);
+      expect(resolved(key, params, "pt")).toBe(portuguese);
+    });
+  }
+});
+
 describe("formatPushCopy: forum thread verdicts (ENG-413)", () => {
   const expectedCopy: Record<string, { en: string; pt: string }> = {
     "push:forumThreadReviewed.approved.title": {

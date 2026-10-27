@@ -58,12 +58,10 @@ export const DROP_DEFAULTS = {
   stub: { length: 60, halfWidth: 26 },
 };
 
-/** The concentric family: the Q ring, ripples round its centre (whole, or
- *  broken where a ripple lists breaks), the P landing in the middle. */
-export function buildConcentric(options) {
-  const { ring, ripples, letterP: letterOptions } = options;
-  const ringOuter = ring.radius + ring.strokeWidth / 2;
-  const waters = [
+/** The Q ring and the ripples round its centre (whole, or broken where a
+ *  ripple lists breaks), as water lines the P can lie across. */
+export function concentricWaters({ ring, ripples }) {
+  return [
     wholeRipple(CENTRE, ring.radius, ring.strokeWidth),
     ...ripples.map((ripple) =>
       ripple.breaks
@@ -80,6 +78,14 @@ export function buildConcentric(options) {
           ),
     ),
   ];
+}
+
+/** The concentric family: the Q ring, ripples round its centre (whole, or
+ *  broken where a ripple lists breaks), the P landing in the middle. */
+export function buildConcentric(options) {
+  const { ring, letterP: letterOptions } = options;
+  const ringOuter = ring.radius + ring.strokeWidth / 2;
+  const waters = concentricWaters(options);
   const letterP = tiltedP({
     ...letterOptions,
     exitCentre: CENTRE,

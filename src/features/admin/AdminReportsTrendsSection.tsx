@@ -6,7 +6,9 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminSeg, type AdminSegOption } from "./ui";
 import { REPORT_SERIES } from "./adminDashboard.data";
-import { MemberGrowthChart, ReportsByTypeChart } from "./AdminDashboardCharts";
+import { ReportsByTypeChart } from "./AdminDashboardCharts";
+import { MemberGrowthChart } from "./AdminMemberGrowthChart";
+import { reportRangeLabel } from "./adminMemberGrowth.helpers";
 import {
   DEFAULT_REPORT_RANGE_WEEKS,
   RANGE_OPTIONS,
@@ -33,7 +35,7 @@ export function AdminReportsTrendsSection() {
 
   const rangeOptions: AdminSegOption[] = RANGE_OPTIONS.map((option) => ({
     value: option.value,
-    label: t("admin:reports.trends.rangeWeeks", { count: option.weeks }),
+    label: reportRangeLabel(option.weeks, t),
   }));
 
   // Export the current range as CSV (ADM-19). Demo keeps a confirmation
@@ -88,6 +90,7 @@ export function AdminReportsTrendsSection() {
           <ReportsByTypeChart
             weeks={data?.reportWeeks ?? []}
             series={REPORT_SERIES}
+            aspect={360 / 220}
             loading={isLoading}
           />
           <Button

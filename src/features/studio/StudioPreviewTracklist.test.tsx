@@ -24,6 +24,7 @@ vi.mock("./player/studioPlayerContext", () => ({
 
 vi.mock("./api/useStudioPlaybackPreferences", () => ({
   useStudioHideExplicit: () => false,
+  useStudioPlaybackRow: () => undefined,
 }));
 
 function episodeRow(id: string, position: number): StudioTrackRowView {

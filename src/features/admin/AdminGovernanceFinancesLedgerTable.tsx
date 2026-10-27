@@ -6,7 +6,7 @@ import {
   LedgerRow,
   type LedgerColumns,
 } from "./AdminGovernanceFinancesLedgerRow";
-import { lossClass } from "./adminGovernanceFinancesEditRow";
+import { lossClass, toSpendingFigure } from "./adminGovernanceFinancesEditRow";
 import {
   parseNumber,
   sumEnabledLines,
@@ -34,7 +34,7 @@ export function LedgerTable({
   original: AdminFinLine[];
   onChange: (index: number, patch: Partial<LineDraft>) => void;
   onAdd: () => void;
-  /** The spending ledger: every amount reads in red. */
+  /** The spending ledger: every amount reads in red, as a negative figure. */
   isSpending?: boolean;
   /** Each line gets a "Breakdown" item editor. */
   hasBreakdown?: boolean;
@@ -43,9 +43,10 @@ export function LedgerTable({
   const fmt = useFormat();
   const shownCount = lines.filter((line) => line.enabled).length;
   // Whole euros read without decimals, the same as a line's breakdown sum.
+  // Spending amounts are stored positive and read as negative figures.
   const formatEuros = (value: number): string =>
     fmt.currency(
-      value,
+      isSpending ? toSpendingFigure(value) : value,
       "EUR",
       Number.isInteger(value) ? { maximumFractionDigits: 0 } : undefined,
     );

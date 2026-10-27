@@ -259,7 +259,7 @@ button {
 /* Reserve the floating pill Navbar's band once, on the single <main> that
    PageShell/AppShell render (`data-page-main`). This is the single source of
    truth for clearing the fixed nav — individual pages no longer hardcode it.
-   Self-contained frames (Cinema's CinemaShell, Studio's StudioLandingShell)
+   Self-contained frames (Cinema's CinemaShell)
    render their own <main> WITHOUT this attribute, so they keep owning their own
    nav clearance and are untouched.
 

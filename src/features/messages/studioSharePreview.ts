@@ -1,8 +1,10 @@
 import type { TFunction } from "../../shared/i18n/types";
 import {
   findStudioLink,
+  type StudioShareKind,
   textWithoutStudioLink,
 } from "../studio/share/studioLinkTarget";
+import { studioKindInQuoteSnippet } from "./internalLinkTargets";
 import {
   studioShareLabelKey,
   studioShareLabelText,
@@ -21,12 +23,37 @@ export function studioSharePreviewText(
 ): string {
   const match = findStudioLink(text);
   if (!match) return text;
-  const key = studioShareLabelKey(match.target.kind);
+  const note = textWithoutStudioLink(text, match);
+  return joinedWithLabel(note, match.target.kind, translate);
+}
+
+/**
+ * The same reading for a text the server cut (a search hit, a starred row, a
+ * pinned banner snippet): a whole link reads as in
+ * {@link studioSharePreviewText}, and a link cut at the tail still reads as
+ * its kind label, so no half-cut Studio URL shows.
+ */
+export function studioSnippetPreviewText(
+  text: string,
+  translate?: TFunction,
+): string {
+  if (findStudioLink(text)) return studioSharePreviewText(text, translate);
+  const kind = studioKindInQuoteSnippet(text);
+  if (!kind) return text;
+  const trimmed = text.trimEnd();
+  const lastRunStart = trimmed.search(/\S+$/);
+  const note = trimmed.slice(0, Math.max(lastRunStart, 0)).trim();
+  return joinedWithLabel(note, kind, translate);
+}
+
+function joinedWithLabel(
+  note: string,
+  kind: StudioShareKind,
+  translate?: TFunction,
+): string {
+  const key = studioShareLabelKey(kind);
   const translated = translate?.(key);
   const label =
-    translated && translated !== key
-      ? translated
-      : studioShareLabelText(match.target.kind);
-  const note = textWithoutStudioLink(text, match);
+    translated && translated !== key ? translated : studioShareLabelText(kind);
   return note ? `${note} · ${label}` : label;
 }

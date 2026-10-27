@@ -3414,8 +3414,10 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-27.headline":
+    "Your listening, play counts and supporters in Studio, plus milestones and audience pages.",
   "changelog.releases.2026-10-26.headline":
-    "Bulk invite refresh and revoke, Studio resume and playlist folders, a crisp iPhone bar.",
+    "Bulk invite refresh and revoke, Studio resume and landing page, a crisp iPhone bar.",
   "changelog.releases.2026-10-21.headline":
     "Invite connections to events you're going to, Studio genre tiles and a smoother seek bar.",
   "changelog.releases.2026-10-20.headline":
@@ -3608,6 +3610,37 @@ export const marketing: Catalog = {
     "Tell guests how to pay for your event",
   "changelog.entries.event-payment-details.body":
     "Paid events can carry a payment link and instructions, like MB WAY or cash at the door.",
+  "changelog.entries.finance-ledger-breakdown-bar.title":
+    "Clearer income and spending cards",
+  "changelog.entries.finance-ledger-breakdown-bar.body":
+    "One bar shows each line's share of the total, and any amount still missing a line shows up as its own row.",
+  "changelog.entries.landing-visitor-preview-links.title":
+    "Preview the landing pages as a visitor",
+  "changelog.entries.landing-visitor-preview-links.body":
+    "Quick links in admin open the homepage and Studio the way signed-out visitors see them, with no sign-out.",
+  "changelog.entries.spending-total-from-lines.title":
+    "Spending total adds itself up",
+  "changelog.entries.spending-total-from-lines.body":
+    "The finance editor sums the shown spending lines into the total, and every expense reads as a negative.",
+  "changelog.entries.studio-leftovers-sweep.title": "Studio loose ends tied up",
+  "changelog.entries.studio-leftovers-sweep.body":
+    "Studio now follows the light theme on its landing and sign-in pages, shows share cards with a retry, and sends one new-release push per artist a day.",
+  "changelog.entries.profile-hosted-events.title":
+    "See the events a member hosts",
+  "changelog.entries.profile-hosted-events.body":
+    "Member profiles list the events they host or co-host, upcoming dates first, with past ones in a fold.",
+  "changelog.entries.choose-your-studio-page-header.title":
+    "Choose what tops your Studio page",
+  "changelog.entries.choose-your-studio-page-header.body":
+    "Artists pick a banner, their round avatar or both, and see each one live from Edit Studio page.",
+  "changelog.entries.more-ambassador-focus-areas.title":
+    "Staff can give ambassadors more focus areas",
+  "changelog.entries.more-ambassador-focus-areas.body":
+    "New ones cover disability, harm reduction, faith and online safety, and you can filter the directory by each.",
+  "changelog.entries.one-player-menu-at-a-time.title":
+    "The player opens one menu at a time",
+  "changelog.entries.one-player-menu-at-a-time.body":
+    "Opening the queue closes the player options, and opening the options closes the queue.",
   "changelog.entries.genesis-closes-after-use.title":
     "Genesis closes for good once it has been used",
   "changelog.entries.genesis-closes-after-use.body":
@@ -3652,6 +3685,18 @@ export const marketing: Catalog = {
     "Member growth shows your real total",
   "changelog.entries.member-growth-shows-real-total.body":
     "The admin chart now tracks total members week by week, and the leftover Pride label is gone.",
+  "changelog.entries.event-map-pins-your-address.title":
+    "Event maps pin the address once you RSVP",
+  "changelog.entries.event-map-pins-your-address.body":
+    "Once you are going, Getting there pins the exact address on the map so you can find the door.",
+  "changelog.entries.feature-usage-reach-over-time.title":
+    "See reach day by day on feature usage",
+  "changelog.entries.feature-usage-reach-over-time.body":
+    "Each feature shows daily bars against the previous period with its dates, and opens into a full chart.",
+  "changelog.entries.member-growth-range-and-hover.title":
+    "Pick the range on the member growth chart",
+  "changelog.entries.member-growth-range-and-hover.body":
+    "Switch between 4 weeks and a full year, and hover anywhere on the line to read that week.",
   "changelog.entries.crisp-app-bar-on-iphone.title":
     "Top bar icons stay sharp on iPhone",
   "changelog.entries.crisp-app-bar-on-iphone.body":
@@ -3668,6 +3713,22 @@ export const marketing: Catalog = {
     "Pick up Studio where you left off",
   "changelog.entries.studio-resume-where-you-left-off.body":
     "Switch on Resume and your queue comes back after you close the tab, with Recently played on this device.",
+  "changelog.entries.studio-your-listening.title":
+    "Your listening page, play counts and supporters in Studio",
+  "changelog.entries.studio-your-listening.body":
+    "Anonymous play counts for artists, your top artists, a history you can pause or clear, and opt-in supporters.",
+  "changelog.entries.audience-landing-pages.title":
+    "Pages for businesses, communities, performers and practitioners",
+  "changelog.entries.audience-landing-pages.body":
+    "Four new pages show each group what QueerPulse does for them, with sample listings, events and persona pages.",
+  "changelog.entries.studio-dashboard-extras.title":
+    "Follower growth, playlists and milestones on your Studio dashboard",
+  "changelog.entries.studio-dashboard-extras.body":
+    "See weekly new followers, the public playlists with your tracks, a release checklist and milestones to share.",
+  "changelog.entries.studio-landing-page.title":
+    "New Studio landing page with real screens",
+  "changelog.entries.studio-landing-page.body":
+    "Visitors see Studio in screenshots, how it compares with big streaming apps, and how to request an invite.",
   "changelog.entries.studio-playlist-folders.title":
     "File your playlists into folders",
   "changelog.entries.studio-playlist-folders.body":

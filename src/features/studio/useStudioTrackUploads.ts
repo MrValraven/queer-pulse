@@ -39,6 +39,7 @@ import {
 
 export type UploadRowStage =
   | "queued"
+  | "checking"
   | "converting"
   | "creating"
   | "uploading"
@@ -67,6 +68,7 @@ export interface UploadRow {
  *  being created or confirmed waits for the server, so it has no Cancel. */
 const CANCELLABLE_STAGES: ReadonlySet<UploadRowStage> = new Set([
   "queued",
+  "checking",
   "converting",
   "uploading",
 ]);
@@ -77,6 +79,7 @@ export const isCancellableStage = (stage: UploadRowStage) =>
 /** Stages where work is still moving: leaving the page would stop it. */
 const ACTIVE_STAGES: ReadonlySet<UploadRowStage> = new Set([
   "queued",
+  "checking",
   "converting",
   "creating",
   "uploading",
@@ -552,9 +555,13 @@ export function useStudioTrackUploads(
     const isCancelled = () => work.runToken !== runToken;
     const isStopped = (id: string) => isGone(id) || isCancelled();
     work.isRunning = true;
+    // A converted file keeps its place on the one bar (50 and up) when Retry
+    // picks it up, so the bar neither vanishes nor restarts.
     patchRow(localId, {
       stage: "queued",
-      progress: work.uploadedKey ? uploadBarOf(100, work.wasConverted) : 0,
+      progress: work.uploadedKey
+        ? uploadBarOf(100, work.wasConverted)
+        : uploadBarOf(0, work.wasConverted),
       errorKey: null,
       errorValues: null,
     });

@@ -19,10 +19,15 @@ export function AdminSeg({
   value,
   onChange,
   ariaLabelledby,
+  className,
 }: {
   options: AdminSegOption[];
   value: string;
   onChange: (value: string) => void;
+  /** Extra class on the group wrapper, for a call site that lays the
+   *  buttons out its own way (the feature usage range control keeps every
+   *  label on one line and folds to a grid on a phone). */
+  className?: string;
   /** Associates the `role="group"` wrapper with a visible label elsewhere on
    *  the page, so the group itself is not an anonymous landmark to a screen
    *  reader even though each button already names itself. Optional: a call
@@ -30,7 +35,11 @@ export function AdminSeg({
   ariaLabelledby?: string;
 }) {
   return (
-    <div className={styles.seg} role="group" aria-labelledby={ariaLabelledby}>
+    <div
+      className={[styles.seg, className].filter(Boolean).join(" ")}
+      role="group"
+      aria-labelledby={ariaLabelledby}
+    >
       {options.map((o) => (
         <button
           key={o.value}

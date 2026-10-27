@@ -7,6 +7,9 @@ import styles from "./AdminGovernanceFinancesEdit.module.css";
 
 export type AmountUnit = "currency" | "count" | "percent";
 
+/** A leading minus, typed or pasted ("-" or "−", spaces around it allowed). */
+const LEADING_MINUS = /^\s*[-\u2212]\s*/;
+
 /**
  * A money/number cell that accepts whatever notation the admin actually
  * types. `type="text"` is deliberate: a native number input throws away
@@ -30,7 +33,9 @@ export function AmountInput({
   isBlankAllowed: boolean;
   disabled?: boolean;
   unit: AmountUnit;
-  /** Spending or a negative figure: the typed value reads in red. */
+  /** Spending or a negative figure: the typed value reads in red. A money
+   *  cell then shows "−€" before the digits and drops any minus typed or
+   *  pasted in, so the field always holds the positive magnitude. */
   isLoss?: boolean;
   /** A caller with its own rules (a breakdown item) decides the error: a
    *  catalog key shows that message, null shows none. Left out, the cell
@@ -49,7 +54,12 @@ export function AmountInput({
     (status === "blank"
       ? "admin:governance.finances.edit.field.amountRequired"
       : "admin:governance.finances.edit.field.amountInvalid");
-  const adornment = unit === "currency" ? "€" : unit === "percent" ? "%" : "";
+  const isSignedCurrency = isLoss && unit === "currency";
+  // The prefix uses U+2212, the typographic minus, so a spending cell reads
+  // as a negative figure; the stored value stays the positive magnitude.
+  const currencyAdornment = isSignedCurrency ? "\u2212€" : "€";
+  const adornment =
+    unit === "currency" ? currencyAdornment : unit === "percent" ? "%" : "";
 
   return (
     <div className={styles.amountCell}>
@@ -57,6 +67,7 @@ export function AmountInput({
         className={[
           styles.amountWrap,
           unit === "currency" && styles.amountWrapPrefix,
+          isSignedCurrency && styles.amountWrapPrefixSigned,
           unit === "percent" && styles.amountWrapSuffix,
         ]
           .filter(Boolean)
@@ -79,7 +90,13 @@ export function AmountInput({
           aria-describedby={isRejected ? errorId : undefined}
           value={value}
           disabled={disabled}
-          onChange={(event) => onChange(event.target.value)}
+          onChange={(event) =>
+            onChange(
+              isSignedCurrency
+                ? event.target.value.replace(LEADING_MINUS, "")
+                : event.target.value,
+            )
+          }
         />
       </div>
       {isRejected && (

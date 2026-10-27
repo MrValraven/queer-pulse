@@ -1,11 +1,23 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { safeStorage } from "../../../shared/storage/safeStorage";
+import {
+  clearStudioRecentlyPlayed,
+  readStudioRecentlyPlayed,
+  recordStudioRecentlyPlayed,
+  resumeStudioListeningMemoryForTests,
+} from "./studioListeningMemory";
 import {
   clampCrossfadeSeconds,
   clampVolume,
   DEFAULT_PLAYER_PREFERENCES,
+  dropLegacyRecentlyPlayedField,
   normalizePlayerPreferences,
+  readLegacyRecentlyPlayedOff,
+  readListeningPreferences,
   readPlayerPreferences,
+  STUDIO_LISTENING_PREFERENCES_KEY,
   STUDIO_PLAYER_PREFERENCES_KEY,
+  writeListeningPreferences,
   writePlayerPreferences,
 } from "./studioPlayerPreferences";
 
@@ -71,5 +83,43 @@ describe("player preferences", () => {
     expect(() =>
       writePlayerPreferences(DEFAULT_PLAYER_PREFERENCES),
     ).not.toThrow();
+  });
+});
+
+function storeDevice(record: Record<string, boolean>) {
+  safeStorage.set(STUDIO_LISTENING_PREFERENCES_KEY, JSON.stringify(record));
+}
+
+describe("listening preferences", () => {
+  afterEach(() => {
+    safeStorage.remove(STUDIO_LISTENING_PREFERENCES_KEY);
+    clearStudioRecentlyPlayed();
+  });
+
+  it("reads the listening switches without the retired Recently played field", () => {
+    storeDevice({ isRecentlyPlayedOn: false, areSingleKeyShortcutsOn: false });
+    expect(readListeningPreferences()).toEqual({
+      shouldResumeAcrossSessions: false,
+      areSingleKeyShortcutsOn: false,
+    });
+  });
+
+  it("keeps a stored legacy off value through a later write until the read drops it", () => {
+    storeDevice({ isRecentlyPlayedOn: false });
+    writeListeningPreferences({ shouldResumeAcrossSessions: true });
+    expect(readLegacyRecentlyPlayedOff()).toBe(true);
+    dropLegacyRecentlyPlayedField();
+    expect(readLegacyRecentlyPlayedOff()).toBe(false);
+    expect(readListeningPreferences().shouldResumeAcrossSessions).toBe(true);
+    expect(safeStorage.get(STUDIO_LISTENING_PREFERENCES_KEY)).not.toContain(
+      "isRecentlyPlayedOn",
+    );
+  });
+
+  it("leaves the recently played list in place when a device switch changes", () => {
+    resumeStudioListeningMemoryForTests();
+    recordStudioRecentlyPlayed("member-1", "t1");
+    writeListeningPreferences({ areSingleKeyShortcutsOn: false });
+    expect(readStudioRecentlyPlayed("member-1")).toHaveLength(1);
   });
 });

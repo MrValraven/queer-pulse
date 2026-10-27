@@ -14,21 +14,28 @@ const SUMMARY_BREATHING_ROOM = 16;
  *  frame, so a summary Collapse that has just mounted is in the layout.
  *  With `summary`, the summary goes to the top of the screen when the field
  *  still fits under it, so the member sees what went wrong and where;
- *  otherwise the field is centred. */
+ *  otherwise the field is centred.
+ *
+ *  `options.behavior` sets how that scroll moves. Left out, the page's own
+ *  `scroll-behavior` decides (smooth, outside reduced motion). */
 export function focusFieldById(
   fieldId: string,
   summary?: { wrap: HTMLElement | null; content: HTMLElement | null },
+  options?: { behavior?: ScrollBehavior },
 ): boolean {
   const field = document.getElementById(fieldId);
   if (!field) return false;
   field.focus({ preventScroll: true });
+  const behaviorOption = options?.behavior
+    ? { behavior: options.behavior }
+    : {};
   requestAnimationFrame(() => {
     const wrap = summary?.wrap;
     if (wrap && fitsUnderSummary(field, wrap, summary.content)) {
-      wrap.scrollIntoView?.({ block: "start" });
+      wrap.scrollIntoView?.({ block: "start", ...behaviorOption });
       return;
     }
-    field.scrollIntoView?.({ block: "center" });
+    field.scrollIntoView?.({ block: "center", ...behaviorOption });
   });
   return true;
 }

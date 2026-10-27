@@ -15,6 +15,17 @@ const NIGHTFORM = toArtistRefView({
   avatarUrl: null,
 });
 
+/** An owned persona as the access answer lists it. */
+function personaRef(id: string, name: string) {
+  return toArtistRefView({
+    id,
+    handle: name.toLowerCase().replace(/ /g, "-"),
+    name,
+    kind: "musician",
+    avatarUrl: null,
+  });
+}
+
 function personaPlaylist(
   overrides: Partial<StudioPlaylistDTO>,
 ): ReturnType<typeof toPlaylistView> {
@@ -90,6 +101,19 @@ describe("studioShareRulesOf", () => {
   it("names nobody for someone else's release", () => {
     expect(
       studioShareRulesOf("release", { release: releaseViewFixture() }, []),
+    ).toEqual({ canSendToOthers: true, ownPersonaName: null });
+  });
+
+  it("names the owned persona behind a milestone and lets it be sent", () => {
+    expect(
+      studioShareRulesOf("milestone", { milestoneArtistId: "p1" }, [
+        personaRef("p1", "Mariana Sol"),
+      ]),
+    ).toEqual({ canSendToOthers: true, ownPersonaName: "Mariana Sol" });
+    expect(
+      studioShareRulesOf("milestone", { milestoneArtistId: "p9" }, [
+        personaRef("p1", "Mariana Sol"),
+      ]),
     ).toEqual({ canSendToOthers: true, ownPersonaName: null });
   });
 });

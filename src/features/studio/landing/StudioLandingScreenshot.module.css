@@ -1,0 +1,49 @@
+/* Both theme variants sit in one grid cell. The dark one is hidden by
+   default and the dark theme swaps which one shows. The hidden state is
+   `display: none` plus opacity 0, and `display` transitions with
+   `allow-discrete`, so the outgoing image keeps painting while it fades and
+   the incoming one fades up from `@starting-style`: a crossfade in place.
+   The starting style sits under `.themeFade`, which the component adds only
+   after a theme flip, so a fresh mount paints at full opacity at once. */
+.shot {
+  display: grid;
+}
+
+.image {
+  grid-area: 1 / 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  opacity: 1;
+  transition:
+    opacity var(--dur-base) var(--ease-std),
+    display var(--dur-base) allow-discrete;
+}
+@starting-style {
+  .themeFade .image {
+    opacity: 0;
+  }
+}
+
+.image[data-shot-theme="dark"] {
+  display: none;
+  opacity: 0;
+}
+
+:global(html[data-theme="dark"]) .image[data-shot-theme="light"] {
+  display: none;
+  opacity: 0;
+}
+:global(html[data-theme="dark"]) .image[data-shot-theme="dark"] {
+  display: block;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .image {
+    transition: none;
+  }
+}
+:global(html[data-reduce-motion="true"]) .image {
+  transition: none;
+}

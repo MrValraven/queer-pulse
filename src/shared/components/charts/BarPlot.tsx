@@ -100,6 +100,9 @@ export interface BarPlotProps<Item, Datum> {
   axisLabel: (value: number, y: number) => ReactNode;
   /** Optional overlay drawn above the bars, e.g. an SLA threshold marker. */
   children?: ReactNode;
+  /** Optional layer drawn over the grid and behind the bars, e.g. a guide
+   *  column marking the day being read. Omitted, nothing renders there. */
+  underlay?: ReactNode;
 }
 
 /**
@@ -184,6 +187,7 @@ export function BarPlot<Item, Datum>({
   column,
   axisLabel,
   children,
+  underlay,
 }: BarPlotProps<Item, Datum>) {
   const barWidth = columnScale.bandwidth();
 
@@ -210,6 +214,7 @@ export function BarPlot<Item, Datum>({
           </g>
         );
       })}
+      {underlay}
       {data.map((item, index) => {
         const x = columnScale(index) ?? 0;
         const columnSpec = column(item, index, { x, barWidth });

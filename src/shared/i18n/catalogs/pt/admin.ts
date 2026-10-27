@@ -295,6 +295,12 @@ export const admin: Catalog = {
     "Gráfico de linhas do crescimento de pessoas",
   "dashboard.charts.memberGrowth.totalMembers": "Total de pessoas",
   "dashboard.charts.memberGrowth.joinedThatWeek": "Entraram nessa semana",
+  "dashboard.charts.memberGrowth.subRange":
+    "Total de pessoas · últimas {count} semanas",
+  "dashboard.charts.memberGrowth.rangeLabel": "Período",
+  "dashboard.charts.memberGrowth.loadError":
+    "Não foi possível carregar o crescimento de pessoas",
+  "dashboard.charts.memberGrowth.retry": "Tentar de novo",
   "dashboard.charts.legend.churned": "Saídas",
   "dashboard.charts.responseTime.title": "Tempo de resposta",
   "dashboard.charts.responseTime.sub": "Distribuição · este mês",
@@ -305,6 +311,21 @@ export const admin: Catalog = {
   "dashboard.charts.legend.overSla": "Acima de {hours}",
   "dashboard.charts.week.last": "passada",
   "dashboard.charts.week.this": "esta",
+  "dashboard.charts.week.shortAgo": "-{count}sem",
+  "dashboard.charts.week.longThis": "Esta semana",
+  "dashboard.charts.week.longLast": "Semana passada",
+  "dashboard.charts.week.longAgo": "Há {count} semanas",
+  "dashboard.charts.reportsByType.legendLabel": "Tipos de denúncia exibidos",
+  "dashboard.charts.reportsByType.keepOne": "Pelo menos um tipo fica visível",
+  "dashboard.charts.reportsByType.total": "Total",
+  "dashboard.charts.reportsByType.columnAria":
+    "{week}: {breakdown}. Total {total}",
+  "dashboard.charts.responseTime.summary":
+    "{within} de {total} respostas dentro do SLA de {hours}",
+  "dashboard.charts.responseTime.noResponses":
+    "Nenhuma resposta registrada este mês",
+  "dashboard.charts.responseTime.tipCount":
+    "{count} respostas · {percent}% do total",
 
   "dashboard.notMeasuredYet": "Ainda não medido",
 
@@ -766,6 +787,10 @@ export const admin: Catalog = {
   "members.verify.source.gathering_explainer": "Explicação dos eventos",
   "members.verify.source.roadmap_explainer": "Explicação do roteiro",
   "members.verify.source.rating_explainer": "Explicação da avaliação de guias",
+  "members.verify.source.for_businesses": "Página para negócios",
+  "members.verify.source.for_communities": "Página para comunidades",
+  "members.verify.source.for_performers": "Página para artistas",
+  "members.verify.source.for_practitioners": "Página para profissionais",
   "members.verify.ageAttested": "18+ confirmado a {date} · Termos v{version}",
   "members.verify.ageAttestedUnknown": "18+ confirmado · Termos v{version}",
   // Aprovado: a QueerPulse não envia emails sobre candidaturas (o único email é
@@ -3243,7 +3268,7 @@ export const admin: Catalog = {
   "governance.finances.provenance.manual.hintPlain":
     "Introduzido por um administrador.",
   "governance.finances.provenance.computed.hint":
-    "Calculado a partir da receita menos a despesa. Não é editado diretamente.",
+    "Calculado a partir de outros valores. Não é editado diretamente.",
   "governance.finances.provenance.notVerifiedCta": "Por verificar · Editar",
   "governance.finances.edit.cta": "Editar valores",
   "governance.finances.edit.lastEdited": "Última correção por {name} em {date}",
@@ -3252,7 +3277,7 @@ export const admin: Catalog = {
   "governance.finances.edit.eyebrow": "Finanças",
   "governance.finances.edit.title": "Corrigir os <em>valores</em>",
   "governance.finances.edit.sub":
-    "Estes valores são reportados pela QueerPulse a cada trimestre e revistos pela equipa financeira, sem cálculo automático. Corrige qualquer número errado; cada alteração é registada e marcada como introduzida por um administrador.",
+    "Estes valores são reportados pela QueerPulse a cada trimestre, revistos pela equipa financeira e introduzidos à mão. A despesa total e o excedente são calculados automaticamente. Corrige qualquer número errado; cada alteração é registada e marcada como introduzida por um administrador.",
   "governance.finances.edit.section.headline": "Valores principais",
   "governance.finances.edit.section.income": "Linhas de receita",
   "governance.finances.edit.section.spend": "Linhas de despesa",
@@ -3262,6 +3287,8 @@ export const admin: Catalog = {
   "governance.finances.edit.field.solidarityRate": "Acesso solidário (%)",
   "governance.finances.edit.field.incomeTotal": "Receita mensal total (€)",
   "governance.finances.edit.field.expenseTotal": "Despesa mensal total (€)",
+  "governance.finances.edit.field.expenseTotalHint":
+    "Calculado automaticamente: a soma das linhas de despesa visíveis.",
   "governance.finances.edit.field.surplus": "Excedente mensal (€)",
   "governance.finances.edit.field.surplusHint":
     "Calculado automaticamente: receita menos despesa.",
@@ -3312,6 +3339,12 @@ export const admin: Catalog = {
   "governance.spend.title": "Para onde <em>vai</em>",
   "governance.spend.sub":
     "{amount} / mês: cada euro justificado, linha a linha.",
+  "governance.ledgerCard.empty.income": "Ainda não há linhas de receita",
+  "governance.ledgerCard.empty.expense": "Ainda não há linhas de despesa",
+  "governance.ledgerCard.empty.addIncome": "Adicionar linhas de receita",
+  "governance.ledgerCard.empty.addExpense": "Adicionar linhas de despesa",
+  "governance.ledgerCard.remainder.label": "Ainda por detalhar",
+  "governance.ledgerCard.remainder.cta": "Adicionar linhas",
 
   "governance.chart.title": "Receita vs. despesa <em>por trimestre</em>",
   "governance.chart.sub":
@@ -4954,6 +4987,12 @@ export const admin: Catalog = {
   "landing.header.eyebrow": "Site público",
   "landing.header.sub":
     "Cura as secções que os visitantes não autenticados veem na página inicial.",
+  "landing.quickLinks.heading": "Atalhos",
+  "landing.quickLinks.helper":
+    "Cada atalho abre num novo separador, tal como um visitante não autenticado vê a página.",
+  "landing.quickLinks.homepage": "Abrir a página inicial como visitante",
+  "landing.quickLinks.studio": "Abrir a página do Studio como visitante",
+  "landing.quickLinks.opensInNewTab": "(abre num novo separador)",
 
   "landing.tabs.member": "Pessoas",
   "landing.tabs.community": "Comunidades",
@@ -5189,6 +5228,7 @@ export const admin: Catalog = {
   "reports.trends.sub":
     "Ajusta o período para veres uma janela mais longa ou mais curta.",
   "reports.trends.rangeWeeks": "{count}sem",
+  "reports.trends.rangeYear": "1 ano",
   "reports.trends.growthSub": "Total de pessoas · últimas {count} semanas",
   "reports.trends.exportGrowth": "Exportar CSV de crescimento",
   "reports.trends.exportReportsByType": "Exportar CSV de denúncias",
@@ -5728,7 +5768,11 @@ export const admin: Catalog = {
     "O servidor voltou a verificar e este ficheiro ainda é usado em {count} locais, listados abaixo. Eliminá-lo agora quebra essas imagens de vez, e a decisão fica registada.",
   "media.delete.refusedUnverified":
     "O servidor não conseguiu verificar onde este ficheiro é usado, por isso recusou eliminá-lo. Tenta outra vez daqui a pouco, ou elimina mesmo assim se for uma remoção urgente. A decisão fica registada.",
+  "media.delete.liveCoverScene": "Cena: {label}",
+  "media.delete.liveCoverRelease": "Lançamento: {label}",
   "errors.deleteMediaObject": "Não foi possível eliminar esse ficheiro",
+  "errors.mediaLiveCover":
+    "Esta imagem é a capa de uma cena ou lançamento ativo. Se a apagares, essa capa fica partida até alguém a substituir.",
   "roadmap.modals.digest.movedLine": "mudou de {from} para {to}",
 
   // ── 2026-08-21 code-review 4.6: dynamic-key siblings ──
@@ -7558,6 +7602,9 @@ export const admin: Catalog = {
   "featureUsage.column.feature": "Funcionalidade",
   "featureUsage.column.state": "Estado",
   "featureUsage.column.reach": "Alcance",
+  "featureUsage.column.reachInfoLabel": "Sobre o alcance",
+  "featureUsage.column.reachInfo":
+    "O alcance conta pedidos à funcionalidade, por isso mede tráfego. Nada aqui conta pessoas. Cada linha compara este período com o imediatamente anterior, que as barras claras mostram, e a nota por baixo situa a funcionalidade face à funcionalidade lançada mediana.",
   "featureUsage.column.created": "Criados",
   "featureUsage.column.total": "Total",
   "featureUsage.column.details": "Detalhes",
@@ -7576,9 +7623,80 @@ export const admin: Catalog = {
   "featureUsage.stat.browsedButEmpty.trend": "Prioridade máxima",
   "featureUsage.stat.quiet.trend": "Sinal fraco",
   "featureUsage.stat.notLaunched.trend": "Desligada de propósito",
-  "featureUsage.reachTrend.none": "Sem alcance registado",
-  "featureUsage.reachTrend.new": "Nova atividade neste período",
-  "featureUsage.reachTrend.change": "{percent} face ao período anterior",
+  "featureUsage.dateRange": "{start} a {end}",
+  "featureUsage.error.forbidden":
+    "A utilização de funcionalidades precisa do papel de admin ou da permissão de gestor de produto.",
+  "featureUsage.error.rangeConflictingParams":
+    "O pedido misturou um período predefinido com datas personalizadas. Escolhe um período e tenta outra vez.",
+  "featureUsage.error.rangeIncomplete":
+    "Um período personalizado precisa de uma data de início e de uma data de fim.",
+  "featureUsage.error.rangeInvalidDate":
+    "Uma das datas não é um dia válido do calendário.",
+  "featureUsage.error.rangeInvalidDays":
+    "A duração do período tem de ser um número inteiro de dias.",
+  "featureUsage.error.rangeReversed":
+    "A data de início é depois da data de fim.",
+  "featureUsage.error.rangeTooLong":
+    "Um período personalizado pode ter no máximo 365 dias.",
+  "featureUsage.error.rangeBeforeRetention":
+    "O alcance é guardado durante 24 meses, por isso a data de início tem de ficar dentro desse prazo.",
+  "featureUsage.error.rangeIncludesToday":
+    "Hoje ainda está a ser contado, por isso o período tem de acabar ontem ou antes.",
+  "featureUsage.error.unknownFeature":
+    "Esta funcionalidade não está na lista de utilização.",
+  "featureUsage.error.featureNotTracked":
+    "Esta funcionalidade nunca é medida, de propósito.",
+  "featureUsage.error.network":
+    "Não foi possível contactar o servidor ou demorou demasiado. Verifica a ligação e tenta outra vez.",
+  "featureUsage.error.server":
+    "O servidor teve um erro ao contar a utilização. Tenta outra vez daqui a pouco.",
+  "featureUsage.reachCompare.withPercent":
+    "{difference} ({percent}) face a {previous}",
+  "featureUsage.reachCompare.absolute": "{difference} face a {previous}",
+  "featureUsage.reachCompare.same": "Igual ao anterior, {previous}",
+  "featureUsage.reachCompare.new": "Novo neste período",
+  "featureUsage.reachCompare.none": "Sem alcance em nenhum dos períodos",
+  "featureUsage.reachCompare.partial":
+    "Só parte do período anterior ainda está guardada",
+  "featureUsage.column.reachVs": "face a {dates}",
+  "featureUsage.range.previousPartial":
+    "Parte do período anterior tem mais de 24 meses, o tempo que o alcance é guardado, por isso a comparação fica abaixo do real.",
+  "featureUsage.detail.emptyBoth": "Sem pedidos neste período nem no anterior.",
+  "featureUsage.median.above": "{multiple} vezes a funcionalidade mediana",
+  "featureUsage.median.about": "Perto da funcionalidade mediana",
+  "featureUsage.median.below": "{percent} da funcionalidade mediana",
+  "featureUsage.detail.regionLabel": "Detalhes de {feature}",
+  "featureUsage.detail.summary.peak": "Dia com mais movimento",
+  "featureUsage.detail.summary.peakValue": "{countLabel} a {day}",
+  "featureUsage.detail.summary.peakNone": "Sem pedidos neste período",
+  "featureUsage.detail.summary.average": "Média por dia",
+  "featureUsage.detail.summary.zeroDays": "Dias sem atividade",
+  "featureUsage.detail.summary.zeroDaysValue": "{zeroDays} de {totalDays}",
+  "featureUsage.detail.reach.title": "Alcance por dia",
+  "featureUsage.detail.reach.subtitle": "{current}, com {previous} a tracejado",
+  "featureUsage.detail.reach.ariaLabel": "Alcance por dia de {feature}",
+  "featureUsage.detail.legend.current": "Este período",
+  "featureUsage.detail.legend.previous": "Período anterior",
+  "featureUsage.detail.tip.requests_one": "{countLabel} pedido",
+  "featureUsage.detail.tip.requests_other": "{countLabel} pedidos",
+  "featureUsage.detail.tip.previous": "Anterior, {day}: {countLabel}",
+  "featureUsage.detail.bar.ariaLabel":
+    "{day}: {currentLabel} neste período, {previousLabel} no período anterior",
+  "featureUsage.detail.created.title": "Criados por dia",
+  "featureUsage.detail.created.subtitle": "O que os membros criaram, {current}",
+  "featureUsage.detail.created.ariaLabel": "Criados por dia de {feature}",
+  "featureUsage.detail.created.tip_one": "{countLabel} criado",
+  "featureUsage.detail.created.tip_other": "{countLabel} criados",
+  "featureUsage.detail.created.pointAriaLabel": "{day}: {createdLabel}",
+  "featureUsage.detail.created.loadError":
+    "Não foi possível carregar os criados por dia: {reason}",
+  "featureUsage.detail.previousPartial":
+    "Parte do período anterior tem mais de 24 meses, o tempo que o alcance é guardado, por isso esses dias aparecem a zero.",
+  "featureUsage.detail.drillDownTitle": "Detalhe",
+  "featureUsage.range.custom": "Personalizado",
+  "featureUsage.range.customLabel": "Período personalizado",
+  "featureUsage.range.customHint": "Até 365 dias, a acabar ontem no máximo.",
+  "featureUsage.range.summary": "{current}, comparado com {previous}",
   "featureUsage.drillDown.expandLabel": "Mostrar detalhes de {feature}",
   "featureUsage.drillDown.collapseLabel": "Esconder detalhes de {feature}",
   "featureUsage.drillDown.housingListings.listings": "Anúncios criados",
@@ -8788,6 +8906,27 @@ export const admin: Catalog = {
   "logoConcepts.concepts.rippleSerif.title": "Serifa",
   "logoConcepts.concepts.rippleSerif.summary":
     "Cada onda é o oval inclinado da Fraunces, grosso e fino como o Traço, por isso a marca entra na família do Fio.",
+  "logoConcepts.rippleLetter.title": "Um novo P",
+  "logoConcepts.rippleLetter.sub":
+    "A Gota e a Serifa ficam com o Q delas e o P passa a ser uma letra a sério da Fraunces ou da DM Sans, com o bojo mais cheio e o miolo aberto. A 32px ou menos, cada uma passa para um corte pequeno mais simples.",
+  "logoConcepts.concepts.rippleLetterDropFraunces.title": "Gota, Fraunces",
+  "logoConcepts.concepts.rippleLetterDropFraunces.summary":
+    "As ondas da Gota com um P em Fraunces Black, a haste a sair pelo Q como cauda e a gota coral na ponta.",
+  "logoConcepts.concepts.rippleLetterDropSans.title": "Gota, DM Sans",
+  "logoConcepts.concepts.rippleLetterDropSans.summary":
+    "A mesma Gota com um P pesado em DM Sans, a letra da nossa interface, tão regular como as ondas à volta dele.",
+  "logoConcepts.concepts.rippleLetterDropUpright.title": "Gota, direita",
+  "logoConcepts.concepts.rippleLetterDropUpright.summary":
+    "Um P suave da Fraunces fica de pé no meio das ondas e o Q desenha a própria cauda, como um monograma.",
+  "logoConcepts.concepts.rippleLetterSerifFraunces.title": "Serifa, Fraunces",
+  "logoConcepts.concepts.rippleLetterSerifFraunces.summary":
+    "O Q da Fraunces com um P da Fraunces do mesmo peso, a haste a sair do bojo onde estaria a cauda do próprio Q.",
+  "logoConcepts.concepts.rippleLetterSerifSoft.title": "Serifa, suave",
+  "logoConcepts.concepts.rippleLetterSerifSoft.summary":
+    "Um P suave da Fraunces fica de pé dentro do bojo e o Q mantém a cauda da Fraunces, um gémeo mais quente do Itálico.",
+  "logoConcepts.concepts.rippleLetterSerifItalic.title": "Serifa, itálico",
+  "logoConcepts.concepts.rippleLetterSerifItalic.summary":
+    "Um P em itálico da Fraunces fica dentro do bojo e o Q mantém a cauda da Fraunces, por isso as duas letras são do mesmo tipo.",
   "logoConcepts.rippleOutside.title": "P por fora",
   "logoConcepts.rippleOutside.sub":
     "O P cresce e o Q fica dentro do bojo dele, como o pulso no centro. A 32px ou menos, o Q passa a ser um ponto coral com cauda.",

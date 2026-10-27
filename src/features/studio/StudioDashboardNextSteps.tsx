@@ -1,10 +1,14 @@
-import { useId, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { routes } from "../../app/routeMap";
 import { Button, Collapse } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioArtistRefView } from "./api/studio.adapters";
 import { useStudioArtist } from "./api/useStudioArtist";
+import { useStudioArtistStats } from "./api/useStudioArtistStats";
 import { useStudioPressKit } from "./api/useStudioPressKit";
+import { StudioNextReleaseCountdown } from "./StudioNextReleaseCountdown";
+import { StudioReleaseHealthList } from "./StudioReleaseHealthList";
+import { releasesNeedingWorkOf } from "./studioReleaseHealth";
 import {
   studioArtistPath,
   studioPressEditPath,
@@ -20,9 +24,21 @@ interface NextStep {
   to: string;
 }
 
+/** The last value seen while `isPresent` held, so a panel folding out keeps
+ *  its content until the fold ends. `value` must keep its identity between
+ *  renders (a query result or a memo). */
+function useHeldValue<T>(value: T, isPresent: boolean): T {
+  const [heldValue, setHeldValue] = useState(value);
+  if (isPresent && value !== heldValue) setHeldValue(value);
+  return isPresent ? value : heldValue;
+}
+
 /** "Next steps" above the numbers: what the persona has left undone (draft
- *  and scheduled releases, support links, a press kit). Shows nothing until
- *  the persona's page has loaded, and nothing once every step is done. */
+ *  and scheduled releases, support links, a press kit), then the countdown
+ *  to the next scheduled release and the release checklist (each release
+ *  with an item left to add). The steps wait for the persona's page to
+ *  load; the card shows nothing once every step is done, no release is
+ *  scheduled and every checklist is complete. */
 export function StudioDashboardNextSteps({
   persona,
 }: {
@@ -32,6 +48,19 @@ export function StudioDashboardNextSteps({
   const headingId = useId();
   const { artist } = useStudioArtist(persona.id, { isSilent: true });
   const { pressKit, loadState: pressLoadState } = useStudioPressKit(persona.id);
+  const { stats } = useStudioArtistStats(persona.id);
+  const nextRelease = stats?.nextRelease ?? null;
+  const needingWork = useMemo(
+    () => (stats ? releasesNeedingWorkOf(stats.releases) : []),
+    [stats],
+  );
+  // Every block waits for the persona's page, so the card opens once with
+  // the steps in place and nothing shifts in above the countdown.
+  const isArtistLoaded = artist !== null;
+  const hasNextRelease = isArtistLoaded && nextRelease !== null;
+  const hasChecklist = isArtistLoaded && needingWork.length > 0;
+  const heldNextRelease = useHeldValue(nextRelease, hasNextRelease);
+  const heldNeedingWork = useHeldValue(needingWork, hasChecklist);
   const steps: NextStep[] = [];
   if (artist) {
     const ownerReleases = artist.ownerReleases ?? [];
@@ -84,22 +113,39 @@ export function StudioDashboardNextSteps({
   if (steps.length > 0 && JSON.stringify(steps) !== JSON.stringify(heldSteps))
     setHeldSteps(steps);
   const shownSteps = steps.length > 0 ? steps : heldSteps;
+  const hasSteps = isArtistLoaded && steps.length > 0;
   return (
-    <Collapse isOpen={artist !== null && steps.length > 0}>
+    <Collapse isOpen={hasSteps || hasNextRelease || hasChecklist}>
       <section className={css.nextSteps} aria-labelledby={headingId}>
         <h2 id={headingId} className={css.nextStepsTitle}>
           {t("studio:nextSteps.heading")}
         </h2>
-        <ul className={css.nextStepsList}>
-          {shownSteps.map((step) => (
-            <li key={step.id} className={css.nextStep}>
-              <span>{t(step.textKey, { count: step.count ?? 0 })}</span>
-              <Button variant="quiet" size="sm" to={step.to}>
-                {t(step.actionKey)}
-              </Button>
-            </li>
-          ))}
-        </ul>
+        <Collapse isOpen={hasSteps}>
+          <ul className={css.nextStepsList}>
+            {shownSteps.map((step) => (
+              <li key={step.id} className={css.nextStep}>
+                <span>{t(step.textKey, { count: step.count ?? 0 })}</span>
+                <Button variant="quiet" size="sm" to={step.to}>
+                  {t(step.actionKey)}
+                </Button>
+              </li>
+            ))}
+          </ul>
+        </Collapse>
+        <Collapse isOpen={hasNextRelease}>
+          {heldNextRelease && (
+            <StudioNextReleaseCountdown
+              nextRelease={heldNextRelease}
+              isFirst={!hasSteps}
+            />
+          )}
+        </Collapse>
+        <Collapse isOpen={hasChecklist}>
+          <StudioReleaseHealthList
+            releases={heldNeedingWork}
+            isFirst={!hasSteps && !hasNextRelease}
+          />
+        </Collapse>
       </section>
     </Collapse>
   );

@@ -1,0 +1,84 @@
+.closing {
+  position: relative;
+  padding: clamp(var(--section-y-56), 9vh, var(--section-y-112))
+    clamp(20px, 5vw, 48px);
+  overflow: clip;
+}
+/* One hue per theme: coral over the light ground, jade over the dark one.
+   Mixing the two over cream reads as a grey smudge. */
+.glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 48% 64% at 50% 52%,
+    rgba(var(--accent-rgb), 0.1) 0%,
+    rgba(var(--accent-rgb), 0.04) 42%,
+    transparent 72%
+  );
+}
+:global(html[data-theme="dark"]) .glow {
+  background: radial-gradient(
+    ellipse 48% 64% at 50% 52%,
+    rgba(var(--jade-rgb), 0.1) 0%,
+    rgba(var(--jade-rgb), 0.04) 42%,
+    transparent 72%
+  );
+}
+.inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+}
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+  color: var(--studio-text);
+  text-wrap: balance;
+}
+.title em {
+  font-style: italic;
+  color: var(--studio-accent-text);
+}
+.body {
+  margin: 0;
+  max-width: 520px;
+  font-family: var(--sans);
+  font-size: var(--text-body-lg);
+  line-height: var(--lh-body-lg);
+  color: var(--studio-text-muted);
+  text-wrap: pretty;
+}
+.magazineLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sans);
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--studio-text-muted);
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--studio-ink-rgb), 0.3);
+  text-underline-offset: 4px;
+  transition: color var(--dur-fast) var(--ease);
+}
+.magazineLink:hover {
+  color: var(--studio-accent-text);
+  text-decoration-color: currentColor;
+}
+.magazineLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}

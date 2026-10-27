@@ -5,6 +5,7 @@ import {
   CollapseListItem,
   LoadErrorState,
   SearchInput,
+  SelectCheckMark,
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -44,20 +45,23 @@ function CoOwnerRow({
   onToggle: () => void;
 }) {
   return (
-    <label className={css.checkRow}>
-      <input
-        type="checkbox"
-        className={css.checkbox}
-        checked={isChecked}
-        aria-disabled={isLocked || undefined}
-        aria-busy={isBusy || undefined}
-        onChange={onToggle}
-      />
+    <button
+      type="button"
+      role="checkbox"
+      aria-checked={isChecked}
+      aria-disabled={isLocked || undefined}
+      aria-busy={isBusy || undefined}
+      className={css.checkRow}
+      onClick={() => {
+        if (!isLocked) onToggle();
+      }}
+    >
       <span className={css.avatar} aria-hidden>
         <StudioPlaylistPersonAvatar person={person} size={32} />
       </span>
       <span className={css.name}>{person.name}</span>
-    </label>
+      <SelectCheckMark isSelected={isChecked} />
+    </button>
   );
 }
 

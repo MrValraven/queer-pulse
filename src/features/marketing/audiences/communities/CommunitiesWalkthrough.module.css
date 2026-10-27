@@ -1,0 +1,116 @@
+/* The small paper sheets the walkthrough visuals sit on. */
+.sheet {
+  margin: 0;
+  padding: 18px 20px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-18);
+  background: var(--paper);
+  list-style: none;
+}
+
+/* The first step: the ways in, then the team's queue under them. */
+.stack {
+  display: grid;
+  gap: 18px;
+}
+
+.queueLabel {
+  margin: 0 0 10px;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+/* The queue row brings its own gap for the next row in the list. */
+.queue > :last-child {
+  margin-bottom: 0;
+}
+
+/* The event's "Hosted with" card under the "Who's going" row, its last row
+   without the gap the sidebar keeps before the next block. */
+.hostedWith {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+}
+.hostedWith > :last-child {
+  margin-bottom: 0;
+}
+
+/* The guest rows carry their own padding, so the sheet's is trimmed. */
+.doorList {
+  padding: 8px;
+}
+
+.sheetTitle {
+  margin: 0 0 12px;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  color: var(--text-strong);
+}
+
+/* The pill column takes the widest pill, which never wraps: the Portuguese
+   "Aberta a todas as pessoas" is longer than any English tier. */
+.tierList {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: 14px;
+}
+
+.tierRow {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+}
+.tierRow > :first-child {
+  justify-self: start;
+  white-space: nowrap;
+}
+.tierRow + .tierRow {
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+}
+
+.rowNote {
+  font-size: var(--text-14);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.teamList {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.teamRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-12);
+  background: rgba(var(--line-rgb), 0.04);
+}
+
+.teamName {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--text-14-5);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+@media (max-width: 479px) {
+  .tierList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tierRow {
+    gap: 6px;
+  }
+}

@@ -25,6 +25,7 @@ import { useStudioTrack } from "./api/useStudioTrack";
 import { useUpdateStudioTrack } from "./api/useStudioTrackMutations";
 import { StudioPersonaCreditsEditor } from "./StudioPersonaCreditsEditor";
 import { StudioUploadCreditsFieldset } from "./StudioUploadCreditsFieldset";
+import { RELEASE_FIELD_IDS } from "./studioUpload.data";
 import { missingCreditFieldOf, type CreditRow } from "./studioUploadCredits";
 import {
   cleanSources,
@@ -288,6 +289,7 @@ function DetailsTitleAndCredits({
   isShowingCreditErrors,
   trackId,
   releaseId,
+  shouldMarkCredits,
 }: {
   titleRef: RefObject<HTMLInputElement | null>;
   creditsRef: RefObject<HTMLDivElement | null>;
@@ -299,6 +301,7 @@ function DetailsTitleAndCredits({
   isShowingCreditErrors: boolean;
   trackId: string;
   releaseId: string;
+  shouldMarkCredits?: boolean;
 }) {
   const { t } = useTranslation();
   return (
@@ -321,7 +324,18 @@ function DetailsTitleAndCredits({
           onChange={(event) => onTitleChange(event.target.value)}
         />
       </FormField>
-      <div ref={creditsRef}>
+      {/* One marked panel per page, so the deep link's id stays unique. */}
+      <div
+        ref={creditsRef}
+        id={shouldMarkCredits ? RELEASE_FIELD_IDS.trackCredits : undefined}
+        tabIndex={shouldMarkCredits ? -1 : undefined}
+        role={shouldMarkCredits ? "group" : undefined}
+        aria-label={
+          shouldMarkCredits
+            ? t("studio:uploadFlow.files.creditsLabel")
+            : undefined
+        }
+      >
         <StudioUploadCreditsFieldset
           credits={creditRows}
           onChange={onCreditsChange}
@@ -368,6 +382,8 @@ interface TrackDetailsProps {
   /** Reports edits the server does not have yet, so the row can ask
    *  before Cancel or Edit details throws them away. */
   onDirtyChange?: (isDirty: boolean) => void;
+  /** Puts the track credits deep link id on the credits, focusable. */
+  shouldMarkCredits?: boolean;
 }
 
 /** Title, credits (free text and persona credits), lyrics with their
@@ -382,6 +398,7 @@ export function StudioUploadTrackDetails({
   localFile,
   onDone,
   onDirtyChange,
+  shouldMarkCredits,
 }: TrackDetailsProps) {
   const { t } = useTranslation();
   const { track } = useStudioTrack(trackId);
@@ -513,6 +530,7 @@ export function StudioUploadTrackDetails({
         isShowingCreditErrors={checks.isShowingCreditErrors}
         trackId={trackId}
         releaseId={releaseId}
+        shouldMarkCredits={shouldMarkCredits}
       />
       <Collapse isOpen={artistKind.isSourcedTrack}>
         <StudioTrackSourcesField

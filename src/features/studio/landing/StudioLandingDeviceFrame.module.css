@@ -1,0 +1,165 @@
+/* CSS-drawn devices for the Studio landing screenshots. The bodies are
+   objects and stay dark in both themes (the Studio constants). The edge
+   light, gloss, hinge, deck and shade are the `--studio-device-*` tokens,
+   which brighten under the dark theme so the bodies hold their edge on the
+   plum ground. Every size is a percentage of the frame's width,
+   so the caller only sets a width and the bezels, radii and camera scale
+   with it.
+
+   Laptop, as fractions of the frame width W: the lid is inset 7% each side
+   with a 1.8% side bezel and a 2.6% top bezel, so the 16:10 screen is 0.824W
+   wide; the lid is about 0.56W tall and the base 0.028W, about 0.59W in all.
+   Phone, as fractions of its width P: 3.5% side bezels, 8% top (where the
+   camera pill sits, clear of the screenshot) and 5% bottom, about 2.14P
+   tall for a 640 by 1385 shot.
+
+   The halo is a gradient on `::before`, never a blurred shadow. A caller can
+   dim it with `--frame-halo-opacity` (the hero's phone sets 0, so its halo
+   does not wash over the laptop screen it overlaps). */
+.frame {
+  position: relative;
+  isolation: isolate;
+  box-sizing: border-box;
+}
+
+.frame::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse closest-side at 50% 52%,
+    color-mix(in srgb, var(--accent) var(--frame-halo-coral), transparent) 0%,
+    color-mix(
+        in srgb,
+        var(--studio-jade-text) var(--frame-halo-jade),
+        transparent
+      )
+      var(--frame-halo-jade-stop),
+    transparent 100%
+  );
+  opacity: var(--frame-halo-opacity, 1);
+}
+/* Dark jade ink reads as a grey smudge on cream, so light keeps the halo
+   coral with only a trace of jade; on plum the jade glow carries, strong
+   enough to lift the dark devices off the ground. */
+.frame {
+  --frame-halo-coral: 26%;
+  --frame-halo-jade: 4%;
+  --frame-halo-jade-stop: 58%;
+}
+:global(html[data-theme="dark"]) .frame {
+  --frame-halo-coral: 42%;
+  --frame-halo-jade: 20%;
+  --frame-halo-jade-stop: 68%;
+}
+.laptop::before {
+  inset: -16% -9% -20%;
+}
+.phone::before {
+  inset: -9% -55%;
+}
+
+/* ── Shared screen ── */
+.screen {
+  position: relative;
+  overflow: hidden;
+  background: var(--studio-deep);
+}
+
+/* ── Laptop ── */
+.lid {
+  position: relative;
+  box-sizing: border-box;
+  margin-inline: 7%;
+  padding: 2.6% 1.8% 2%;
+  border: 1px solid var(--studio-device-rim);
+  border-bottom: 0;
+  border-radius: 2.6% 2.6% 0.6% 0.6% / 4% 4% 1% 1%;
+  background:
+    linear-gradient(165deg, var(--studio-device-sheen) 0%, transparent 38%),
+    var(--studio-deep);
+}
+.lid .screen {
+  border-radius: 0.6% / 1%;
+}
+
+.camera {
+  position: absolute;
+  top: 1.6%;
+  left: 50%;
+  width: 0.93%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background: var(--studio-rail);
+  border: 1px solid var(--studio-device-rim);
+}
+
+/* The hinge and keyboard deck, seen edge on: a lit hinge strip along the
+   top, a thumb notch in the middle and a tapered underside. */
+.base {
+  position: relative;
+  aspect-ratio: 100 / 2.8;
+  border-radius: 0 0 8% 8% / 0 0 100% 100%;
+  background:
+    linear-gradient(
+      to bottom,
+      var(--studio-device-hinge) 0 16%,
+      color-mix(in srgb, var(--studio-device-hinge) 27%, transparent) 16% 40%,
+      transparent 100%
+    ),
+    var(--studio-device-deck);
+}
+.base::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 13%;
+  height: 34%;
+  transform: translateX(-50%);
+  border-radius: 0 0 30% 30% / 0 0 100% 100%;
+  background: var(--studio-device-shade);
+}
+/* A soft contact shadow on the ground under the base. A gradient, so it
+   stays an ellipse in every renderer. */
+.base::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 30% 3% -260%;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse closest-side,
+    color-mix(in srgb, var(--studio-device-shade) 65%, transparent) 0%,
+    transparent 100%
+  );
+}
+
+/* ── Phone ── */
+.phoneBody {
+  position: relative;
+  box-sizing: border-box;
+  padding: 8% 3.5% 5%;
+  border: 1px solid var(--studio-device-rim);
+  border-radius: 15% / 7%;
+  background:
+    linear-gradient(160deg, var(--studio-device-sheen) 0%, transparent 34%),
+    var(--studio-deep);
+}
+.phoneBody .screen {
+  border-radius: 12.4% / 5.7%;
+}
+
+.cameraPill {
+  position: absolute;
+  top: 1.3%;
+  left: 50%;
+  width: 24%;
+  aspect-ratio: 8.5;
+  border-radius: var(--radius-pill);
+  transform: translateX(-50%);
+  background: var(--studio-rail);
+  border: 1px solid var(--studio-device-rim);
+}

@@ -1,0 +1,86 @@
+/* "Top supporters" on the dashboard: the same surface, hairline, radius and
+   padding as the placements and milestones cards beside it. Tokens only. */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--s-line);
+  border-radius: var(--radius-14);
+  padding: 24px 26px;
+  color: var(--studio-text);
+}
+@media (--md) {
+  .card {
+    padding: 20px 16px;
+  }
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 500;
+  color: var(--studio-text);
+}
+
+.dek {
+  margin: 4px 0 16px;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}
+
+/* Two columns of ranked rows from 900px, where the card spans the grid. */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: var(--gap-grid);
+}
+@media (--wide-up) {
+  .list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.row {
+  border-top: 1px solid var(--s-line);
+}
+
+.rowInner {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 10px 0;
+  min-width: 0;
+}
+
+.rank {
+  flex: none;
+  min-width: 1.5em;
+  font-size: var(--text-13);
+  font-variant-numeric: tabular-nums;
+  color: var(--studio-text-muted);
+}
+
+.empty {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--studio-text-muted);
+}
+
+.optedIn {
+  margin: 12px 0 0;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.skeletonRow {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}

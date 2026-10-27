@@ -83,6 +83,7 @@ export const STUDIO_ERROR_MESSAGE_KEY: Record<StudioErrorCode, string> = {
   studio_credit_limit: "studio:credits.editor.limit",
   studio_credit_not_pending: "studio:credits.inbox.gone",
   studio_credit_not_accepted: "studio:errors.creditNotAccepted",
+  studio_scene_cover_changed: "studio:errors.sceneCoverChanged",
   studio_scene_not_available: "studio:errors.sceneNotAvailable",
   studio_curation_release_not_published:
     "studio:errors.curationReleaseNotPublished",
@@ -111,6 +112,13 @@ export const STUDIO_ERROR_MESSAGE_KEY: Record<StudioErrorCode, string> = {
     "studio:errors.playlistCreditChangeRemovesEditors",
   studio_playlist_entry_not_found: "studio:errors.playlistEntryNotFound",
   studio_playlist_editor_not_found: "studio:errors.playlistEditorNotFound",
+  studio_milestone_not_found: "studio:errors.reason.studio_milestone_not_found",
+  studio_supporter_artist_not_found:
+    "studio:errors.reason.studio_supporter_artist_not_found",
+  studio_supporter_own_persona:
+    "studio:errors.reason.studio_supporter_own_persona",
+  studio_supporter_identity_not_yours:
+    "studio:errors.reason.studio_supporter_identity_not_yours",
   ...STUDIO_SAFETY_ERROR_MESSAGE_KEY,
 };
 

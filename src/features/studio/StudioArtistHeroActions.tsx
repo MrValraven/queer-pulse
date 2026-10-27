@@ -1,5 +1,11 @@
 import { Link } from "react-router-dom";
-import { FiCheck, FiExternalLink, FiHeart, FiPlus } from "react-icons/fi";
+import {
+  FiCheck,
+  FiEdit2,
+  FiExternalLink,
+  FiHeart,
+  FiPlus,
+} from "react-icons/fi";
 import { Button, IconButton, Tooltip } from "../../shared/components/ui";
 import { useSocial } from "../../app/providers/useSocial";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -11,6 +17,7 @@ import { StudioPlayButton } from "./kit/StudioPlayButton";
 import { StudioArtistOverflow } from "./StudioArtistOverflow";
 import { studioShareTrigger } from "./share/StudioShareMenu";
 import { studioIdentityNote } from "./share/studioShareContent";
+import { useStudioEditPageOpener } from "./studioEditPageOpener";
 import { studioArtistPath } from "./studioPaths";
 import { useStudioArtistPlay } from "./useStudioArtistPlay";
 import { useStudioShowcase } from "./useStudioShowcase";
@@ -48,8 +55,11 @@ function ShowcaseFollow({ artist }: { artist: StudioArtistView }) {
 }
 
 /** The artist hero's row: Play all (a toggle once one of these releases is
- *  playing), Follow, View profile, Share and the More menu. On a phone,
- *  Follow keeps its label and the rest after Play turn to icons. */
+ *  playing), Follow, View profile, Tip (showcase), Share, and the More menu.
+ *  The owner gets Play all, View profile, Share and Edit Studio page:
+ *  following or tipping their own persona does nothing, and the shorter row
+ *  keeps Edit Studio page on the same line. On a phone, Follow keeps its
+ *  label and the rest after Play turn to icons. */
 export function StudioArtistHeroActions({
   artist,
   onTip,
@@ -65,6 +75,9 @@ export function StudioArtistHeroActions({
   const person = artist.artist;
   const profileLabel = t("studio:artistPage.viewProfile");
   const tipLabel = t("studio:detail.tipArtistCta", { artist: person.name });
+  const editPageLabel = t("studio:artistPage.editPage.button");
+  // The page provides the opener to an owner only.
+  const openEditPage = useStudioEditPageOpener();
   return (
     <>
       <StudioPlayButton
@@ -74,20 +87,22 @@ export function StudioArtistHeroActions({
         blockedReason={play.blockedReason}
       />
       {/* Follow keeps its words on a phone: it is the artist's main ask. */}
-      <span className={styles.heroLabelled}>
-        {isShowcase ? (
-          <ShowcaseFollow artist={artist} />
-        ) : (
-          // useFollow patches the artist view and refreshes the library's
-          // Artists tab itself.
-          <SubprofileFollow
-            subprofileId={person.id}
-            followerCount={artist.followerCount}
-            viewerFollowing={artist.isFollowing}
-            isOwnerViewing={artist.isOwner}
-          />
-        )}
-      </span>
+      {!artist.isOwner && (
+        <span className={styles.heroLabelled}>
+          {isShowcase ? (
+            <ShowcaseFollow artist={artist} />
+          ) : (
+            // useFollow patches the artist view and refreshes the library's
+            // Artists tab itself.
+            <SubprofileFollow
+              subprofileId={person.id}
+              followerCount={artist.followerCount}
+              viewerFollowing={artist.isFollowing}
+              isOwnerViewing={artist.isOwner}
+            />
+          )}
+        </span>
+      )}
       {person.personaHref &&
         (isCompact ? (
           <Tooltip label={profileLabel} placement="top">
@@ -105,6 +120,7 @@ export function StudioArtistHeroActions({
           </Link>
         ))}
       {isShowcase &&
+        !artist.isOwner &&
         (isCompact ? (
           <IconButton aria-label={tipLabel} tooltip onClick={onTip}>
             <FiHeart aria-hidden />
@@ -141,6 +157,18 @@ export function StudioArtistHeroActions({
       {!artist.isOwner && (
         <StudioArtistOverflow subprofileId={person.id} name={person.name} />
       )}
+      {artist.isOwner &&
+        openEditPage &&
+        (isCompact ? (
+          <IconButton aria-label={editPageLabel} tooltip onClick={openEditPage}>
+            <FiEdit2 aria-hidden />
+          </IconButton>
+        ) : (
+          <Button variant="quiet" onClick={openEditPage}>
+            <FiEdit2 aria-hidden />
+            {editPageLabel}
+          </Button>
+        ))}
     </>
   );
 }

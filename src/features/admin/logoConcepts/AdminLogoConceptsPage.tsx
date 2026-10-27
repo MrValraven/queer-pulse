@@ -8,6 +8,7 @@ import { LogoConceptCard } from "./LogoConceptCard";
 import {
   LOGO_CONCEPTS,
   RIPPLE_FUSED_VARIANTS,
+  RIPPLE_LETTER_VARIANTS,
   RIPPLE_OUTSIDE_VARIANTS,
   RIPPLE_VARIANTS,
   THREAD_VARIANTS,
@@ -21,9 +22,11 @@ import styles from "./LogoConcepts.module.css";
  * the team can compare them in each colourway and at avatar sizes, then
  * download the SVG or a 1080px PNG. The ripple family leads in its own
  * section, where the P drops in like a pulse and its ripples form the Q.
- * Two more ripple families follow in sections of their own: the outside
- * family, a big P with the Q inside its bowl, and the fused family, where
- * the P's bowl is the Q's first ripple. The original three concepts come
+ * Right after it, the letter family keeps the Q of Drop and Serif and
+ * redraws the P as a real letter from Fraunces or DM Sans. Two more ripple
+ * families follow in sections of their own: the outside family, a big P
+ * with the Q inside its bowl, and the fused family, where the P's bowl is
+ * the Q's first ripple. The original three concepts come
  * next, then the thread variants in a section of their own.
  */
 export function AdminLogoConceptsPage() {
@@ -58,13 +61,21 @@ export function AdminLogoConceptsPage() {
 
       <FadeIn delay={160}>
         <LogoVariantsSection
+          title={t("admin:logoConcepts.rippleLetter.title")}
+          sub={t("admin:logoConcepts.rippleLetter.sub")}
+          concepts={RIPPLE_LETTER_VARIANTS}
+        />
+      </FadeIn>
+
+      <FadeIn delay={200}>
+        <LogoVariantsSection
           title={t("admin:logoConcepts.rippleOutside.title")}
           sub={t("admin:logoConcepts.rippleOutside.sub")}
           concepts={RIPPLE_OUTSIDE_VARIANTS}
         />
       </FadeIn>
 
-      <FadeIn delay={200}>
+      <FadeIn delay={240}>
         <LogoVariantsSection
           title={t("admin:logoConcepts.rippleFused.title")}
           sub={t("admin:logoConcepts.rippleFused.sub")}
@@ -72,7 +83,7 @@ export function AdminLogoConceptsPage() {
         />
       </FadeIn>
 
-      <FadeIn delay={240}>
+      <FadeIn delay={280}>
         <div className={styles.grid}>
           {LOGO_CONCEPTS.map((concept) => (
             <LogoConceptCard key={concept.id} concept={concept} />
@@ -80,7 +91,7 @@ export function AdminLogoConceptsPage() {
         </div>
       </FadeIn>
 
-      <FadeIn delay={280}>
+      <FadeIn delay={320}>
         <LogoVariantsSection
           title={t("admin:logoConcepts.variants.title")}
           sub={t("admin:logoConcepts.variants.sub")}

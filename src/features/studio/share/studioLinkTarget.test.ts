@@ -6,12 +6,16 @@ import {
   parseStudioLink,
   studioLinkPath,
   studioLinkUrl,
+  studioMilestoneTarget,
+  studioShareTargetKey,
   textWithoutStudioLink,
 } from "./studioLinkTarget";
 
 const TRACK_ID = "3f2b8c1e-4d5a-4b6c-8e9f-0a1b2c3d4e5f";
 const RELEASE_ID = "9a8b7c6d-5e4f-4a3b-9c2d-1e0f9a8b7c6d";
 const PLAYLIST_ID = "1b2c3d4e-5f6a-4b7c-8d9e-0f1a2b3c4d5e";
+const MILESTONE_ID = "5c6d7e8f-9a0b-4c1d-8e2f-3a4b5c6d7e8f";
+const PERSONA_ID = "7e8f9a0b-1c2d-4e3f-9a4b-5c6d7e8f9a0b";
 const TRACK_URL = `https://queerpulse.com/studio/track?id=${TRACK_ID}`;
 
 beforeEach(() => setDemoModeRuntime(false));
@@ -170,6 +174,20 @@ describe("demo ids", () => {
   it("still reads a uuid while demo mode is on", () => {
     setDemoModeRuntime(true);
     expect(parseStudioLink(TRACK_URL)?.id).toBe(TRACK_ID);
+  });
+
+  it("reads a demo milestone link while demo mode is on", () => {
+    setDemoModeRuntime(true);
+    expect(
+      parseStudioLink(
+        "/studio/artist?id=demo-persona-mariana-sol&milestone=demo-milestone-mariana-followers-1000",
+      ),
+    ).toEqual({
+      kind: "milestone",
+      id: "demo-milestone-mariana-followers-1000",
+      artistId: "demo-persona-mariana-sol",
+      startAtSeconds: null,
+    });
   });
 });
 
@@ -340,5 +358,59 @@ describe("studioLinkPath and studioLinkUrl", () => {
       `${window.location.origin}/studio/track?id=${TRACK_ID}&t=9`,
     );
     expect(parseStudioLink(studioLinkUrl(target))).toEqual(target);
+  });
+});
+
+describe("milestone links", () => {
+  it("reads an artist link with a milestone as a milestone", () => {
+    expect(
+      parseStudioLink(
+        `https://queerpulse.com/studio/artist?id=${PERSONA_ID}&milestone=${MILESTONE_ID}`,
+      ),
+    ).toEqual({
+      kind: "milestone",
+      id: MILESTONE_ID,
+      artistId: PERSONA_ID,
+      startAtSeconds: null,
+    });
+  });
+
+  it("lowercases both ids", () => {
+    expect(
+      parseStudioLink(
+        `/studio/artist?id=${PERSONA_ID.toUpperCase()}&milestone=${MILESTONE_ID.toUpperCase()}`,
+      ),
+    ).toEqual({
+      kind: "milestone",
+      id: MILESTONE_ID,
+      artistId: PERSONA_ID,
+      startAtSeconds: null,
+    });
+  });
+
+  it("reads a malformed milestone or persona id as a plain artist link", () => {
+    for (const path of [
+      `/studio/artist?id=${PERSONA_ID}&milestone=not-a-uuid`,
+      `/studio/artist?id=nope&milestone=${MILESTONE_ID}`,
+      `/studio/artist?milestone=${MILESTONE_ID}`,
+    ])
+      expect(parseStudioLink(path)).toBeNull();
+  });
+
+  it("builds the canonical path, id first", () => {
+    expect(
+      studioLinkPath(studioMilestoneTarget(PERSONA_ID, MILESTONE_ID)),
+    ).toBe(`/studio/artist?id=${PERSONA_ID}&milestone=${MILESTONE_ID}`);
+  });
+
+  it("keys one card per milestone", () => {
+    expect(
+      studioShareTargetKey(studioMilestoneTarget(PERSONA_ID, MILESTONE_ID)),
+    ).toBe(`milestone:${MILESTONE_ID}`);
+  });
+
+  it("finds a milestone link in a note", () => {
+    const text = `we did it /studio/artist?id=${PERSONA_ID}&milestone=${MILESTONE_ID}!`;
+    expect(findStudioLink(text)?.target.kind).toBe("milestone");
   });
 });

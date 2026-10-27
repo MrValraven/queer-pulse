@@ -3,6 +3,7 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { useShareToCommunity } from "../economy/api/useShareToCommunity";
+import { useCommunityDiscussions } from "./api/useCommunityDiscussions";
 import { useCommunityPosts } from "./api/useCommunityPosts";
 import type { Post } from "./community.model";
 import {
@@ -47,6 +48,20 @@ describe("demo shared posts", () => {
     expect(
       result.current.pulse.some((post) => post.id === "demo-shared-test"),
     ).toBe(false);
+  });
+
+  it("lands a demo share on a non-flagship community's discussion board", () => {
+    const { result } = renderHook(
+      () => useCommunityDiscussions("queer-runners"),
+      {
+        wrapper,
+      },
+    );
+    act(() =>
+      addDemoSharedPost({ ...sharedPost, communitySlug: "queer-runners" }),
+    );
+    expect(result.current.threads[0]?.id).toBe("demo-shared-test");
+    expect(result.current.threads[0]?.post).toBe(sharedPost.body);
   });
 
   it("puts a demo share from the community modal on that board", async () => {

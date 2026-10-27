@@ -7,6 +7,7 @@ import { AdminPageHeader, AdminTabs, type AdminTab } from "./ui";
 import { AdminLandingEligiblePicker } from "./AdminLandingEligiblePicker";
 import { AdminLandingFeatureList } from "./AdminLandingFeatureList";
 import { AdminLandingPreview } from "./AdminLandingPreview";
+import { AdminLandingQuickLinks } from "./AdminLandingQuickLinks";
 import type { LandingSection } from "./api/landingFeatures.api";
 import styles from "./AdminLandingPage.module.css";
 
@@ -24,6 +25,8 @@ const SECTIONS: LandingSection[] = [
  * signed-out visitors see on the homepage. Five tabs, one per section; each
  * tab pairs a search picker (add someone not yet featured) with the ordered,
  * currently-featured list (reorder, toggle active, edit copy, remove).
+ * Above the tabs, quick links open the homepage and the Studio landing in a
+ * new tab as a signed-out visitor sees them.
  */
 export function AdminLandingPage() {
   const { t } = useTranslation();
@@ -47,6 +50,10 @@ export function AdminLandingPage() {
           title={t("shared:adminNav.items.landing")}
           sub={t("admin:landing.header.sub")}
         />
+      </FadeIn>
+
+      <FadeIn delay={40}>
+        <AdminLandingQuickLinks />
       </FadeIn>
 
       <FadeIn delay={80}>

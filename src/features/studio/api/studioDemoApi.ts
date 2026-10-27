@@ -349,7 +349,7 @@ export function demoStudioTrack(trackId: string): StudioTrackDTO {
       credits: details?.credits ?? formatDetails?.credits ?? [],
       lyrics: details?.lyrics ?? formatDetails?.lyrics ?? null,
       ...listeningDetailsOf(trackId),
-      release: demoReleaseCard(candidate),
+      release: { ...demoReleaseCard(candidate), status: candidate.status },
       personaCredits: demoPublicCreditsOfTrack(trackId),
       claims: candidate.isOwner ? demoOwnerClaimsOfTrack(trackId) : [],
     };

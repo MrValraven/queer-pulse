@@ -62,6 +62,17 @@ describe("player controls", () => {
     expect(player.toggleShuffle).toHaveBeenCalled();
   });
 
+  it("disables shuffle during an episode and does nothing on press", async () => {
+    const player = createStudioPlayerValue({
+      currentItem: queueItem({ trackId: "e1", isEpisode: true }),
+    });
+    renderWithPlayer(<StudioShuffleButton />, { player });
+    const shuffle = await screen.findByRole("button", { name: "Shuffle" });
+    expect(shuffle).toHaveAttribute("aria-disabled", "true");
+    fireEvent.click(shuffle);
+    expect(player.toggleShuffle).not.toHaveBeenCalled();
+  });
+
   it("names the repeat mode and cycles it", async () => {
     const player = createStudioPlayerValue({
       queue: queueView({ repeat: "one" }),

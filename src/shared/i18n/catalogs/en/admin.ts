@@ -292,6 +292,11 @@ export const admin: Catalog = {
   "dashboard.charts.memberGrowth.ariaLabel": "Member growth line chart",
   "dashboard.charts.memberGrowth.totalMembers": "Total members",
   "dashboard.charts.memberGrowth.joinedThatWeek": "Joined that week",
+  "dashboard.charts.memberGrowth.subRange":
+    "Total members · last {count} weeks",
+  "dashboard.charts.memberGrowth.rangeLabel": "Range",
+  "dashboard.charts.memberGrowth.loadError": "Couldn't load member growth",
+  "dashboard.charts.memberGrowth.retry": "Retry",
   "dashboard.charts.legend.churned": "Churned",
   "dashboard.charts.responseTime.title": "Response time",
   "dashboard.charts.responseTime.sub": "Distribution · this month",
@@ -301,6 +306,21 @@ export const admin: Catalog = {
   "dashboard.charts.legend.overSla": "Over {hours}",
   "dashboard.charts.week.last": "last",
   "dashboard.charts.week.this": "this",
+  "dashboard.charts.week.shortAgo": "-{count}w",
+  "dashboard.charts.week.longThis": "This week",
+  "dashboard.charts.week.longLast": "Last week",
+  "dashboard.charts.week.longAgo": "{count} weeks ago",
+  "dashboard.charts.reportsByType.legendLabel": "Report types shown",
+  "dashboard.charts.reportsByType.keepOne": "At least one type stays visible",
+  "dashboard.charts.reportsByType.total": "Total",
+  "dashboard.charts.reportsByType.columnAria":
+    "{week}: {breakdown}. Total {total}",
+  "dashboard.charts.responseTime.summary":
+    "{within} of {total} responses within the {hours} SLA",
+  "dashboard.charts.responseTime.noResponses":
+    "No responses recorded this month",
+  "dashboard.charts.responseTime.tipCount":
+    "{count} responses · {percent}% of all",
 
   // Shared across any stat tile / chart whose backing metric has no data
   // recorded yet (MRR, median response, response-time distribution, churn).
@@ -733,6 +753,10 @@ export const admin: Catalog = {
   "members.verify.source.gathering_explainer": "Event explainer",
   "members.verify.source.roadmap_explainer": "Roadmap explainer",
   "members.verify.source.rating_explainer": "Guide rating explainer",
+  "members.verify.source.for_businesses": "Page for businesses",
+  "members.verify.source.for_communities": "Page for communities",
+  "members.verify.source.for_performers": "Page for performers",
+  "members.verify.source.for_practitioners": "Page for practitioners",
   "members.verify.ageAttested": "18+ confirmed {date} · Terms v{version}",
   "members.verify.ageAttestedUnknown": "18+ confirmed · Terms v{version}",
   // Approved: QueerPulse emails nothing about applications (its only email is
@@ -3227,7 +3251,7 @@ export const admin: Catalog = {
     "Seeded placeholder. Not yet checked against real figures.",
   "governance.finances.provenance.manual.hintPlain": "Entered by an admin.",
   "governance.finances.provenance.computed.hint":
-    "Calculated from income minus spending. Not edited directly.",
+    "Calculated from other figures. Not edited directly.",
   "governance.finances.provenance.notVerifiedCta": "Not verified · Edit",
   "governance.finances.edit.cta": "Edit figures",
   "governance.finances.edit.lastEdited": "Last corrected by {name} on {date}",
@@ -3236,7 +3260,7 @@ export const admin: Catalog = {
   "governance.finances.edit.eyebrow": "Finances",
   "governance.finances.edit.title": "Correct the <em>figures</em>",
   "governance.finances.edit.sub":
-    "These figures are reported by QueerPulse each quarter and reviewed by the finance team, and entered by hand. Fix any number that's wrong; every change is recorded and marked as admin-entered.",
+    "These figures are reported by QueerPulse each quarter and reviewed by the finance team, and entered by hand. Total spending and the surplus are calculated for you. Fix any number that's wrong; every change is recorded and marked as admin-entered.",
   "governance.finances.edit.section.headline": "Headline figures",
   "governance.finances.edit.section.income": "Income lines",
   "governance.finances.edit.section.spend": "Spending lines",
@@ -3246,6 +3270,8 @@ export const admin: Catalog = {
   "governance.finances.edit.field.solidarityRate": "Solidarity access (%)",
   "governance.finances.edit.field.incomeTotal": "Total monthly income (€)",
   "governance.finances.edit.field.expenseTotal": "Total monthly spending (€)",
+  "governance.finances.edit.field.expenseTotalHint":
+    "Calculated automatically: the sum of the shown spending lines.",
   "governance.finances.edit.field.surplus": "Monthly surplus (€)",
   "governance.finances.edit.field.surplusHint":
     "Calculated automatically: income minus spending.",
@@ -3295,6 +3321,12 @@ export const admin: Catalog = {
   "governance.spend.title": "Where it <em>goes</em>",
   "governance.spend.sub":
     "{amount} / month: every euro accounted for, line by line.",
+  "governance.ledgerCard.empty.income": "No income lines yet",
+  "governance.ledgerCard.empty.expense": "No spending lines yet",
+  "governance.ledgerCard.empty.addIncome": "Add income lines",
+  "governance.ledgerCard.empty.addExpense": "Add spending lines",
+  "governance.ledgerCard.remainder.label": "Not broken down yet",
+  "governance.ledgerCard.remainder.cta": "Add lines",
 
   "governance.chart.title": "Income vs spending <em>by quarter</em>",
   "governance.chart.sub":
@@ -4906,6 +4938,12 @@ export const admin: Catalog = {
   "landing.header.eyebrow": "Live site",
   "landing.header.sub":
     "Curate the sections signed-out visitors see on the homepage.",
+  "landing.quickLinks.heading": "Quick links",
+  "landing.quickLinks.helper":
+    "Each one opens in a new tab, the way a signed-out visitor sees it.",
+  "landing.quickLinks.homepage": "Open homepage as a visitor",
+  "landing.quickLinks.studio": "Open Studio landing as a visitor",
+  "landing.quickLinks.opensInNewTab": "(opens in a new tab)",
 
   "landing.tabs.member": "Members",
   "landing.tabs.community": "Communities",
@@ -5139,6 +5177,7 @@ export const admin: Catalog = {
   "reports.trends.title": "Growth & reports by type",
   "reports.trends.sub": "Adjust the range to see a longer or shorter window.",
   "reports.trends.rangeWeeks": "{count}w",
+  "reports.trends.rangeYear": "1y",
   "reports.trends.growthSub": "Total members · last {count} weeks",
   "reports.trends.exportGrowth": "Export growth CSV",
   "reports.trends.exportReportsByType": "Export reports CSV",
@@ -5682,7 +5721,11 @@ export const admin: Catalog = {
     "The server checked again and this file is still used in {count} places, listed below. Deleting it now breaks those images for good, and the override is logged.",
   "media.delete.refusedUnverified":
     "The server couldn't check where this file is used, so it refused to delete it. Try again in a moment, or delete anyway if this is a takedown that can't wait. The override is logged.",
+  "media.delete.liveCoverScene": "Scene: {label}",
+  "media.delete.liveCoverRelease": "Release: {label}",
   "errors.deleteMediaObject": "Couldn't delete that file",
+  "errors.mediaLiveCover":
+    "This image is the cover of a live scene or release. Deleting it leaves that cover broken until someone replaces it.",
   "roadmap.modals.digest.movedLine": "moved from {from} to {to}",
 
   // ── 2026-08-21 code-review 4.6: dynamic-key siblings ──
@@ -7485,6 +7528,9 @@ export const admin: Catalog = {
   "featureUsage.column.feature": "Feature",
   "featureUsage.column.state": "State",
   "featureUsage.column.reach": "Reach",
+  "featureUsage.column.reachInfoLabel": "About reach",
+  "featureUsage.column.reachInfo":
+    "Reach counts requests to the feature, so it measures traffic. Nothing here counts people. Each row compares this period with the one just before it, which the faint bars show, and the note under it places the feature against the median launched feature.",
   "featureUsage.column.created": "Created",
   "featureUsage.column.total": "Total",
   "featureUsage.column.details": "Details",
@@ -7504,9 +7550,82 @@ export const admin: Catalog = {
   "featureUsage.stat.browsedButEmpty.trend": "Top priority",
   "featureUsage.stat.quiet.trend": "Low signal",
   "featureUsage.stat.notLaunched.trend": "Off by design",
-  "featureUsage.reachTrend.none": "No reach recorded",
-  "featureUsage.reachTrend.new": "New activity this range",
-  "featureUsage.reachTrend.change": "{percent} vs the previous range",
+  "featureUsage.dateRange": "{start} to {end}",
+  "featureUsage.error.forbidden":
+    "Feature usage needs the admin role or the product manager grant.",
+  "featureUsage.error.rangeConflictingParams":
+    "The request mixed a preset range with custom dates. Pick one range and try again.",
+  "featureUsage.error.rangeIncomplete":
+    "A custom range needs a start date and an end date.",
+  "featureUsage.error.rangeInvalidDate":
+    "One of the dates is not a real calendar day.",
+  "featureUsage.error.rangeInvalidDays":
+    "The range length has to be a whole number of days.",
+  "featureUsage.error.rangeReversed":
+    "The start date comes after the end date.",
+  "featureUsage.error.rangeTooLong":
+    "A custom range can cover at most 365 days.",
+  "featureUsage.error.rangeBeforeRetention":
+    "Reach is kept for 24 months, so the start date has to fall inside that window.",
+  "featureUsage.error.rangeIncludesToday":
+    "Today is still being counted, so the range has to end yesterday or earlier.",
+  "featureUsage.error.unknownFeature":
+    "This feature is missing from the usage list.",
+  "featureUsage.error.featureNotTracked":
+    "This feature is never measured, by design.",
+  "featureUsage.error.network":
+    "The server could not be reached or took too long. Check your connection and try again.",
+  "featureUsage.error.server":
+    "The server hit an error while counting usage. Try again in a moment.",
+  "featureUsage.reachCompare.withPercent":
+    "{difference} ({percent}) vs {previous}",
+  "featureUsage.reachCompare.absolute": "{difference} vs {previous}",
+  "featureUsage.reachCompare.same": "Same as before, {previous}",
+  "featureUsage.reachCompare.new": "New this period",
+  "featureUsage.reachCompare.none": "No reach in either period",
+  "featureUsage.reachCompare.partial":
+    "Only part of the previous period is still kept",
+  "featureUsage.column.reachVs": "vs {dates}",
+  "featureUsage.range.previousPartial":
+    "Part of the previous period is older than the 24 months reach is kept for, so its comparison runs low.",
+  "featureUsage.detail.emptyBoth":
+    "No requests in this period or the one before it.",
+  "featureUsage.median.above": "{multiple} times the median feature",
+  "featureUsage.median.about": "About the median feature",
+  "featureUsage.median.below": "{percent} of the median feature",
+  "featureUsage.detail.regionLabel": "Details for {feature}",
+  "featureUsage.detail.summary.peak": "Busiest day",
+  "featureUsage.detail.summary.peakValue": "{countLabel} on {day}",
+  "featureUsage.detail.summary.peakNone": "No requests in this period",
+  "featureUsage.detail.summary.average": "Average per day",
+  "featureUsage.detail.summary.zeroDays": "Days with no activity",
+  "featureUsage.detail.summary.zeroDaysValue": "{zeroDays} of {totalDays}",
+  "featureUsage.detail.reach.title": "Reach per day",
+  "featureUsage.detail.reach.subtitle": "{current}, with {previous} dashed",
+  "featureUsage.detail.reach.ariaLabel": "Reach per day for {feature}",
+  "featureUsage.detail.legend.current": "This period",
+  "featureUsage.detail.legend.previous": "Previous period",
+  "featureUsage.detail.tip.requests_one": "{countLabel} request",
+  "featureUsage.detail.tip.requests_other": "{countLabel} requests",
+  "featureUsage.detail.tip.previous": "Previous, {day}: {countLabel}",
+  "featureUsage.detail.bar.ariaLabel":
+    "{day}: {currentLabel} this period, {previousLabel} in the period before",
+  "featureUsage.detail.created.title": "Created per day",
+  "featureUsage.detail.created.subtitle": "What members created, {current}",
+  "featureUsage.detail.created.ariaLabel": "Created per day for {feature}",
+  "featureUsage.detail.created.tip_one": "{countLabel} created",
+  "featureUsage.detail.created.tip_other": "{countLabel} created",
+  "featureUsage.detail.created.pointAriaLabel": "{day}: {createdLabel}",
+  "featureUsage.detail.created.loadError":
+    "Could not load created per day: {reason}",
+  "featureUsage.detail.previousPartial":
+    "Part of the previous period is older than the 24 months reach is kept for, so those days read as zero.",
+  "featureUsage.detail.drillDownTitle": "Breakdown",
+  "featureUsage.range.custom": "Custom",
+  "featureUsage.range.customLabel": "Custom range",
+  "featureUsage.range.customHint":
+    "Up to 365 days, ending yesterday at the latest.",
+  "featureUsage.range.summary": "{current}, compared with {previous}",
   "featureUsage.drillDown.expandLabel": "Show details for {feature}",
   "featureUsage.drillDown.collapseLabel": "Hide details for {feature}",
   "featureUsage.drillDown.housingListings.listings": "Listings created",
@@ -8682,6 +8801,27 @@ export const admin: Catalog = {
   "logoConcepts.concepts.rippleSerif.title": "Serif",
   "logoConcepts.concepts.rippleSerif.summary":
     "Every ripple is the tilted Fraunces bowl, thick and thin like Swell, so the mark joins the Thread family.",
+  "logoConcepts.rippleLetter.title": "A new P",
+  "logoConcepts.rippleLetter.sub":
+    "Drop and Serif keep their Q and the P becomes a real letter from Fraunces or DM Sans, with a fuller bowl and an open counter. At 32px and below each one switches to a simpler small cut.",
+  "logoConcepts.concepts.rippleLetterDropFraunces.title": "Drop, Fraunces",
+  "logoConcepts.concepts.rippleLetterDropFraunces.summary":
+    "Drop's ripples with a Fraunces Black P, its stem running out through the Q as the tail with the coral drop at the tip.",
+  "logoConcepts.concepts.rippleLetterDropSans.title": "Drop, DM Sans",
+  "logoConcepts.concepts.rippleLetterDropSans.summary":
+    "The same Drop with a heavy DM Sans P, the letter of our interface, as even as the ripples round it.",
+  "logoConcepts.concepts.rippleLetterDropUpright.title": "Drop, upright",
+  "logoConcepts.concepts.rippleLetterDropUpright.summary":
+    "A soft Fraunces P stands upright in the ripples and the Q draws its own tail, like a monogram.",
+  "logoConcepts.concepts.rippleLetterSerifFraunces.title": "Serif, Fraunces",
+  "logoConcepts.concepts.rippleLetterSerifFraunces.summary":
+    "The Fraunces Q with a Fraunces P of matching weight, its stem leaving the bowl where the Q's own tail would.",
+  "logoConcepts.concepts.rippleLetterSerifSoft.title": "Serif, soft",
+  "logoConcepts.concepts.rippleLetterSerifSoft.summary":
+    "A soft Fraunces P stands upright in the bowl and the Q keeps its own Fraunces tail, a warmer twin of Italic.",
+  "logoConcepts.concepts.rippleLetterSerifItalic.title": "Serif, italic",
+  "logoConcepts.concepts.rippleLetterSerifItalic.summary":
+    "A Fraunces italic P sits in the bowl and the Q keeps its own Fraunces tail, so both letters share one typeface.",
   "logoConcepts.rippleOutside.title": "P on the outside",
   "logoConcepts.rippleOutside.sub":
     "The P grows big and the Q sits inside its bowl, like the pulse at its heart. At 32px and below the Q becomes a coral dot with a tail.",

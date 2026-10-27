@@ -350,7 +350,7 @@ export function StudioReviewDisputesPanel({
                   confirmKey: "studio:flagReviewLive.action.keepDown",
                   ...REPLY_FIELD,
                   releaseTitle: releaseTitleOf(dispute),
-                  tone: "default",
+                  tone: "neutral",
                 },
                 toAction: (reply) => ({
                   kind: "reject",

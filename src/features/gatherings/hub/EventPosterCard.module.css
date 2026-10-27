@@ -82,6 +82,19 @@
   pointer-events: none;
 }
 
+/* A cover-less poster (or one whose image failed, which the slot swaps for
+   its pale tint) has no dark photo behind the overlay, so the cream text
+   sitting above the scrim's 45% stop read faintly on the tint. With no
+   image in the frame the scrim starts higher and stays deeper. */
+.frame:not(:has(img)) .scrim {
+  background: linear-gradient(
+    to top,
+    rgba(var(--plum-rgb), 0.92) 0%,
+    rgba(var(--plum-rgb), 0.7) 50%,
+    rgba(var(--plum-rgb), 0.35) 100%
+  );
+}
+
 /* Second, deeper gradient — cross-faded in on hover/focus so the overlay text
    pops without animating `background` (opacity-only stays compositor-cheap). */
 .scrimHover {
@@ -197,10 +210,13 @@
   flex-wrap: wrap;
 }
 
+/* A plum fill under the cream date, so the chip reads on a pale cover or a
+   cover-less tint as well as on a dark photo. `--plum-rgb` stays plum in
+   dark mode, so the pairing holds in both themes. */
 .dateChip {
   padding: 3px 10px;
   border-radius: var(--radius-pill);
-  background: rgba(var(--cream-rgb), 0.16);
+  background: rgba(var(--plum-rgb), 0.62);
   border: 1px solid rgba(var(--cream-rgb), 0.3);
   font-family: var(--sans);
   font-size: var(--text-label);

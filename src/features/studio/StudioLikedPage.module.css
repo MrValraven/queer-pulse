@@ -30,3 +30,11 @@
   color: var(--studio-text-muted);
   font-size: var(--text-13);
 }
+
+/* Liked songs' empty state: the heart takes the Studio accent instead of
+   the jade the shared empty state paints its disc with. The disc reads its
+   colours from these two tokens, so the override stays on the wrapper. */
+.emptyState {
+  --jade: var(--studio-accent-text);
+  --jade-rgb: var(--accent-rgb);
+}

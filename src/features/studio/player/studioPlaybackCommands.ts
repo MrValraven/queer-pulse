@@ -553,6 +553,7 @@ export function createPlaybackCommands(
       // It waits for Play it, which starts it at 0:00. No track begins.
       refs.resumeAtRef.current = 0;
       effects.tick({ currentTime: 0, duration: current.durationSeconds });
+      void prefetchRestoredAnalysis(current);
       return;
     }
     loader.beginTrack(current, snapshot.positionSeconds);

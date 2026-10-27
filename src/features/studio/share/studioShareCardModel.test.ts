@@ -129,7 +129,7 @@ describe("studioShareCardStatus", () => {
     ).toBe("ready");
   });
 
-  it("maps a 410 to withdrawn and every other refusal to unavailable", () => {
+  it("maps a 410 to withdrawn, a gone item to unavailable and a failed read to error", () => {
     expect(
       studioShareCardStatus(GRANTED, loadState({ isWithdrawn: true }), false),
     ).toBe("withdrawn");
@@ -138,7 +138,7 @@ describe("studioShareCardStatus", () => {
     ).toBe("unavailable");
     expect(
       studioShareCardStatus(GRANTED, loadState({ isError: true }), false),
-    ).toBe("unavailable");
+    ).toBe("error");
   });
 
   it("reads a withheld track as unavailable", () => {

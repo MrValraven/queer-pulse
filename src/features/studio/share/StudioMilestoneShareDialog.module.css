@@ -1,0 +1,17 @@
+/* "Share milestone": the card as it will arrive, then each way to send it.
+   The option buttons keep the lyric dialog's classes through
+   StudioLyricShareOption. */
+.preview {
+  display: flex;
+  justify-content: center;
+  margin-block-end: 20px;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

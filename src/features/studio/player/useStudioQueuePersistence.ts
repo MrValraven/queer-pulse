@@ -49,9 +49,11 @@ export interface StudioQueuePersistenceOptions {
  * session is checked, so nothing here clears during that window.
  *
  * Listening memory (PRD-17, PRD-18): with resume on, the same writes reach
- * the device's resume copy, and a fresh tab cues it paused. The recently
- * played recorder runs here too. A settled session without access, in this
- * tab or a fresh one, removes both (clearStudioListeningMemory).
+ * the device's resume copy, and a fresh tab cues it paused. The recorder runs
+ * here too: it counts a play on the server (live only) and remembers it on
+ * this device's recently played list while listening history is on
+ * (contract 11). A settled session without access, in this tab or a fresh
+ * one, removes the resume copy and the list (clearStudioListeningMemory).
  */
 export function useStudioQueuePersistence(
   options: StudioQueuePersistenceOptions,
@@ -76,6 +78,7 @@ export function useStudioQueuePersistence(
   useStudioRecentlyPlayedRecorder({
     memberId,
     canRecord: canSave,
+    demoMode,
     current: queueState.current,
     isPlaying,
     readPositionSeconds: options.readPositionSeconds,

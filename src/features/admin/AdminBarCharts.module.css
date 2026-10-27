@@ -1,0 +1,267 @@
+/* Reports by type and Response time. The frame (paper card, title, tooltip
+   bubble) comes from the shared chart kit; this file holds what is specific to
+   these two bar charts. */
+
+/* ── Axes ────────────────────────────────────────────────────────────────── */
+.axisValue {
+  font-family: var(--serif);
+  font-size: var(--text-12-5);
+  fill: var(--ink-60);
+}
+.axisWeek,
+.axisWeekStrong {
+  font-family: var(--sans, "DM Sans", sans-serif);
+  font-size: var(--text-12);
+  fill: var(--ink-60);
+  transition-property: fill;
+  transition-duration: 0.18s;
+  transition-timing-function: var(--ease);
+}
+.axisWeekStrong {
+  font-weight: 700;
+  fill: var(--text-strong);
+}
+
+/* ── Columns ─────────────────────────────────────────────────────────────── */
+.barSegEnter {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: barGrowIn 0.6s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1)) both;
+}
+@keyframes barGrowIn {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+.stack {
+  opacity: 1;
+  transition-property: opacity;
+  transition-duration: 0.2s;
+  transition-timing-function: var(--ease);
+}
+.dimmed {
+  opacity: 0.38;
+}
+
+/* Segments and the stack clip glide to their new size when a series is
+   switched off (browsers without geometry transitions jump instead). */
+.geometry {
+  transition-property: y, height;
+  transition-duration: 0.4s;
+  transition-timing-function: var(--ease);
+}
+
+.hoverBand {
+  fill: rgba(var(--line-rgb), 0.06);
+  opacity: 0;
+  pointer-events: none;
+  transition-property: opacity;
+  transition-duration: 0.18s;
+  transition-timing-function: var(--ease);
+}
+.hoverBandOn {
+  opacity: 1;
+}
+
+/* A quiet baseline mark: a zero week reads as a real zero. */
+.zeroStub {
+  fill: rgba(var(--line-rgb), 0.22);
+  transition-property: opacity;
+  transition-duration: 0.2s;
+  transition-timing-function: var(--ease);
+}
+
+.totalLabel,
+.valueLabel {
+  font-family: var(--serif);
+  font-size: var(--text-12);
+  font-weight: 600;
+  fill: var(--ink-60);
+  pointer-events: none;
+  transition-property: opacity, fill, transform;
+  transition-duration: 0.3s;
+  transition-timing-function: var(--ease);
+}
+.totalLabel {
+  opacity: 0;
+}
+.totalLabelShown {
+  opacity: 1;
+}
+.totalLabelActive {
+  fill: var(--text-strong);
+}
+
+.hitArea {
+  cursor: default;
+  -webkit-tap-highlight-color: transparent;
+}
+.hitFocus {
+  outline: none;
+}
+.hitFocus:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ── Toggle legend ───────────────────────────────────────────────────────── */
+.legendToggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.legendToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 28px;
+  padding: 3px 11px 3px 9px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  color: var(--text-strong);
+  font: inherit;
+  font-size: var(--text-label);
+  cursor: pointer;
+  transition-property: background-color, border-color, color, opacity;
+  transition-duration: 0.18s;
+  transition-timing-function: var(--ease);
+}
+.legendSwatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--series-color);
+  box-shadow: inset 0 0 0 2px var(--series-color);
+  transition-property: background-color;
+  transition-duration: 0.18s;
+  transition-timing-function: var(--ease);
+}
+.legendToggleOff {
+  color: var(--ink-60);
+  background: transparent;
+  border-style: dashed;
+}
+.legendToggleOff .legendSwatch {
+  background: transparent;
+}
+.legendToggle[aria-disabled="true"] {
+  cursor: default;
+}
+.legendToggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+@media (hover: hover) {
+  .legendToggle:not([aria-disabled="true"]):hover {
+    background: var(--wash);
+    border-color: rgba(var(--line-rgb), 0.24);
+  }
+}
+@media (pointer: coarse) {
+  .legendToggle {
+    min-height: 36px;
+  }
+}
+
+/* ── Tooltip body ────────────────────────────────────────────────────────── */
+.tipRow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 128px;
+  margin-top: 3px;
+}
+.tipDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+.tipRowLabel {
+  flex: 1;
+}
+.tipRowValue {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.tipTotal {
+  margin-top: 6px;
+  padding-top: 5px;
+  border-top: 1px solid rgba(var(--cream-rgb), 0.22);
+}
+
+/* ── SLA headline and marker ─────────────────────────────────────────────── */
+.slaSummary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  margin: 10px 0 0;
+}
+.slaPercent {
+  font-family: var(--serif);
+  font-size: var(--text-23);
+  line-height: 1;
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: var(--ease);
+}
+.slaHealthy {
+  color: var(--jade);
+}
+.slaWarning {
+  color: var(--danger);
+}
+.slaSentence {
+  font-size: var(--text-label);
+  color: var(--ink-60);
+}
+.slaLine {
+  stroke: var(--danger);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+  stroke-linecap: round;
+  opacity: 0.7;
+}
+.slaPill {
+  fill: color-mix(in srgb, var(--danger) 12%, var(--paper));
+  stroke: color-mix(in srgb, var(--danger) 45%, transparent);
+  stroke-width: 1;
+}
+.slaPillText {
+  font-family: var(--sans, "DM Sans", sans-serif);
+  font-size: var(--text-11);
+  font-weight: 700;
+  fill: var(--danger);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .barSegEnter {
+    animation: none;
+  }
+  .geometry {
+    transition-property: none;
+  }
+  .totalLabel,
+  .valueLabel {
+    transition-property: opacity;
+    transition-duration: 0.01ms;
+  }
+  .stack,
+  .hoverBand,
+  .zeroStub,
+  .axisWeek,
+  .axisWeekStrong,
+  .legendToggle,
+  .legendSwatch,
+  .slaPercent {
+    transition-duration: 0.01ms;
+  }
+}

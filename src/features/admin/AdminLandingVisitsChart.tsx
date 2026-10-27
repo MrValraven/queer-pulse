@@ -9,6 +9,7 @@ import {
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { ChartTooltip } from "./AdminDashboardChartParts";
+import { niceAxis, nextBarIndex } from "./adminChartAxis.helpers";
 import type {
   LandingVisitsDay,
   LandingVisitsRangeDays,
@@ -19,51 +20,6 @@ import chartStyles from "../../shared/components/charts/charts.module.css";
 interface DayTip {
   dayLabel: string;
   visitsLabel: string;
-}
-
-/** How many gridline intervals the value axis aims for. */
-const AXIS_INTERVALS = 4;
-/** Step sizes the axis may use within each power of ten. */
-const NICE_STEP_FACTORS = [1, 2, 2.5, 5, 10] as const;
-
-/**
- * A value axis that ends on the first whole step at or above the busiest
- * day, so the bars use the plot height and the top gridline marks the max.
- * Steps are 1, 2, 2.5 or 5 times a power of ten, kept to whole visits.
- */
-function niceAxis(peak: number): { max: number; ticks: number[] } {
-  if (peak <= 0) return { max: 1, ticks: [0, 1] };
-  const rawStep = peak / AXIS_INTERVALS;
-  let step = 1;
-  if (rawStep > 1) {
-    const magnitude = 10 ** Math.floor(Math.log10(rawStep));
-    const factor =
-      NICE_STEP_FACTORS.find(
-        (candidate) =>
-          candidate * magnitude >= rawStep &&
-          Number.isInteger(candidate * magnitude),
-      ) ?? 10;
-    step = factor * magnitude;
-  }
-  const max = Math.ceil(peak / step) * step;
-  const ticks = Array.from(
-    { length: max / step + 1 },
-    (_, index) => index * step,
-  );
-  return { max, ticks };
-}
-
-/** The bar a roving-focus key moves to, or null for any other key. */
-function nextBarIndex(
-  key: string,
-  index: number,
-  lastIndex: number,
-): number | null {
-  if (key === "ArrowLeft") return Math.max(0, index - 1);
-  if (key === "ArrowRight") return Math.min(lastIndex, index + 1);
-  if (key === "Home") return 0;
-  if (key === "End") return lastIndex;
-  return null;
 }
 
 /** How many columns apart the day labels under the bars sit, so a 90-day

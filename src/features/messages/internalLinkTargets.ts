@@ -110,6 +110,10 @@ const STUDIO_KIND_BY_SEGMENT: Readonly<Record<string, StudioShareKind>> = {
 const LINK_CANDIDATE_START = /https?:\/\/|\/studio\//gi;
 const CUT_STUDIO_LINK_HEAD =
   /^(?:https?:\/\/[^\s/]+)?\/studio\/(track|album|collection)\?id=/i;
+// A cut milestone link: an artist link that reached `milestone=`, so its
+// persona id is whole and only the milestone id may be cut.
+const CUT_MILESTONE_LINK_HEAD =
+  /^(?:https?:\/\/[^\s/]+)?\/studio\/artist\?id=[^\s&]+&milestone=/i;
 const WHITESPACE_CHARACTER = /\s/;
 
 /** Where the first link candidate in `run` starts, or -1. The run has no
@@ -154,8 +158,10 @@ export function studioKindInQuoteSnippet(
   if (startIndex === -1) return null;
   const cutLink = lastRun.slice(startIndex);
   const head = CUT_STUDIO_LINK_HEAD.exec(cutLink);
-  if (!head) return null;
+  const isMilestoneHead = !head && CUT_MILESTONE_LINK_HEAD.test(cutLink);
+  if (!head && !isMilestoneHead) return null;
   const cutUrl = resolvedOwnOriginUrl(cutLink);
   if (!cutUrl || cutUrl.username !== "" || cutUrl.password !== "") return null;
+  if (!head) return "milestone";
   return STUDIO_KIND_BY_SEGMENT[(head[1] ?? "").toLowerCase()] ?? null;
 }

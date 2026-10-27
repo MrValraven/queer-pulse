@@ -1,5 +1,6 @@
 import type { QueryClient } from "@tanstack/react-query";
 import { studioErrorCodeOf } from "./studio.api";
+import type { StudioListeningRange } from "./studioListening.types";
 import type {
   StudioFormat,
   StudioGenre,
@@ -18,6 +19,16 @@ export const studioKeys = {
   releases: (demoMode: boolean) => ["studio", "releases", demoMode] as const,
   release: (demoMode: boolean, releaseId: string) =>
     ["studio", "release", demoMode, releaseId] as const,
+  /** The publish checklist's sources, read once per release. The ids of the
+   *  tracks with audio ride in the key, so a new track reads again. */
+  releaseTrackSourcesAll: (demoMode: boolean) =>
+    ["studio", "releaseTrackSources", demoMode] as const,
+  releaseTrackSources: (
+    demoMode: boolean,
+    releaseId: string,
+    trackIds: readonly string[],
+  ) =>
+    ["studio", "releaseTrackSources", demoMode, releaseId, trackIds] as const,
   track: (demoMode: boolean, trackId: string) =>
     ["studio", "track", demoMode, trackId] as const,
   /** A track's stream analysis (peaks, loudness, peak) as the player last
@@ -95,8 +106,44 @@ export const studioKeys = {
    *  saved ids, so a like or an unlike reads the list again. */
   likedTracks: (demoMode: boolean) =>
     ["studio", "likedTracks", demoMode] as const,
+  /** One track's liked state, read from the server by a heart whose track
+   *  the Saved store does not hold. The member's scope keeps one member's
+   *  answer from another's on a shared device. */
+  likedStatus: (scopeId: string | null, trackId: string) =>
+    ["studio", "likedStatus", scopeId, trackId] as const,
   stats: (demoMode: boolean, subprofileId: string) =>
     ["studio", "stats", demoMode, subprofileId] as const,
+  /** The public playlists holding a persona's tracks, one cursor list. */
+  placements: (demoMode: boolean, subprofileId: string) =>
+    ["studio", "placements", demoMode, subprofileId] as const,
+  /** A persona's reached milestones, newest first. */
+  milestones: (demoMode: boolean, subprofileId: string) =>
+    ["studio", "milestones", demoMode, subprofileId] as const,
+  /** The card a shared milestone link reads, keyed by the milestone alone. */
+  milestoneCard: (demoMode: boolean, milestoneId: string) =>
+    ["studio", "milestoneCard", demoMode, milestoneId] as const,
+  // Dashboard Part 2: listening.
+  /** One range of the listener's summary. */
+  listeningSummary: (demoMode: boolean, range: StudioListeningRange) =>
+    ["studio", "listeningSummary", demoMode, range] as const,
+  /** Every range at once, for Clear. */
+  listeningSummaries: (demoMode: boolean) =>
+    ["studio", "listeningSummary", demoMode] as const,
+  /** The listener's recent history pages. */
+  listeningRecent: (demoMode: boolean) =>
+    ["studio", "listeningRecent", demoMode] as const,
+  /** The artists the listener supports. */
+  listeningSupporting: (demoMode: boolean) =>
+    ["studio", "listeningSupporting", demoMode] as const,
+  /** The caller's supporter state for one artist persona. */
+  supporter: (demoMode: boolean, subprofileId: string) =>
+    ["studio", "supporter", demoMode, subprofileId] as const,
+  /** An artist persona's plays per day. */
+  artistPlays: (demoMode: boolean, subprofileId: string) =>
+    ["studio", "artistPlays", demoMode, subprofileId] as const,
+  /** An artist persona's top supporters. */
+  topSupporters: (demoMode: boolean, subprofileId: string) =>
+    ["studio", "topSupporters", demoMode, subprofileId] as const,
   followedArtists: (demoMode: boolean) =>
     ["studio", "followedArtists", demoMode] as const,
   // Studio open pages. Player settings are one row per member; the three

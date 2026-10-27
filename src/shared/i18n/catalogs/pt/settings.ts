@@ -928,7 +928,7 @@ export const settings: Catalog = {
     "As tuas conexões, votos de confiança, bloqueios, silenciamentos, pessoas ocultadas, sugestões afastadas e convites",
   "dataExport.type.activityLog.label": "Registo de atividade",
   "dataExport.type.activityLog.sub":
-    "O teu feed de atividade, sessões iniciadas, distintivos, XP, histórico de visualização e pedidos sobre a conta e os dados",
+    "O teu feed de atividade, sessões iniciadas, distintivos, XP, histórico de visualização, histórico de audição do Studio e pedidos sobre a conta e os dados",
   "dataExport.type.subprofiles.label": "Personas",
   "dataExport.type.subprofiles.sub":
     "Todas as personas que tens, e recomendações, personas seguidas e convites",

@@ -72,7 +72,7 @@ describe("scheduling", () => {
     queryClient.setQueryData<StudioArtistView>(artistKey, {
       artist: { id: DEMO_ARTIST_MARIANA.id } as StudioArtistView["artist"],
       coverUrl: null,
-      heroLayout: "classic",
+      heroLayout: "portrait",
       allReleases: [],
       releases: [],
       singles: [],
@@ -124,7 +124,7 @@ describe("scheduling", () => {
     queryClient.setQueryData<StudioArtistView>(artistKey, {
       artist: { id: DEMO_ARTIST_MARIANA.id } as StudioArtistView["artist"],
       coverUrl: null,
-      heroLayout: "classic",
+      heroLayout: "portrait",
       allReleases: [],
       releases: [],
       singles: [],
@@ -177,7 +177,7 @@ describe("Notify me", () => {
     queryClient.setQueryData<StudioArtistView>(artistKey, {
       artist: { id: "sp-other" } as StudioArtistView["artist"],
       coverUrl: null,
-      heroLayout: "classic",
+      heroLayout: "portrait",
       allReleases: [],
       releases: [],
       singles: [],

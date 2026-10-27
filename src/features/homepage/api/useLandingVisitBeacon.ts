@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useAuth } from "../../../app/providers/authContext";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useIsLandingVisitor } from "../../../shared/components/layout/useIsLandingVisitor";
+import { useIsVisitorPreviewRequested } from "../../../shared/components/layout/visitorPreviewContext";
 import { computeLandingSource } from "../lib/landingVisitSource";
 import { sendLandingVisit } from "./landingVisitBeacon";
 
@@ -24,14 +25,24 @@ export function resetLandingVisitBeaconForTests(): void {
  * is signed in once the check settles never counts for this page load, so a
  * member who signs out and lands on `/` stays uncounted. The request carries
  * only a source label (see `computeLandingSource`).
+ *
+ * A staffer's visitor preview (`?preview=visitor`, see
+ * `visitorPreviewContext.ts`) reads a signed-out session here, yet the person
+ * looking is signed in, so it is handled like a signed-in visit: it never
+ * counts, and it closes counting for the rest of this page load.
  */
 export function useLandingVisitBeacon(): void {
   const { demoMode } = useDemoMode();
   const { checking, loggedIn } = useAuth();
   const isLandingVisitor = useIsLandingVisitor();
+  const isVisitorPreview = useIsVisitorPreviewRequested();
 
   useEffect(() => {
     if (hasSentLandingVisit) return;
+    if (isVisitorPreview) {
+      hasSentLandingVisit = true;
+      return;
+    }
     if (checking) return;
     if (loggedIn) {
       hasSentLandingVisit = true;
@@ -46,5 +57,5 @@ export function useLandingVisitBeacon(): void {
       window.location.host,
     );
     void sendLandingVisit(source);
-  }, [demoMode, checking, loggedIn, isLandingVisitor]);
+  }, [demoMode, checking, loggedIn, isLandingVisitor, isVisitorPreview]);
 }

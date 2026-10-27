@@ -116,6 +116,7 @@ export function StudioShareReleaseCard({
         {readyBody ?? (
           <StudioShareCardStatusBody
             status={status === "ready" ? "loading" : status}
+            loadState={loadState}
           />
         )}
       </StudioShareCardLayer>

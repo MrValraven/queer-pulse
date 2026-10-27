@@ -1,0 +1,51 @@
+/* Single blocks of a persona page, each on its own skin's ground. The
+   doubled selector outranks the persona article's page padding, and the
+   thin cover rule the chair and practice skins draw stays off a fragment. */
+:global(.pp).article {
+  min-height: 0;
+  padding: 6px 22px 18px;
+  border-radius: var(--radius-16);
+}
+.article :global(.wrap) {
+  max-width: none;
+  padding-inline: 0;
+}
+.article :global(.pp-cover) {
+  display: none;
+}
+
+.series {
+  padding-top: 16px;
+}
+/* The studio skin drops to one column in a narrow container; a fragment
+   keeps three series side by side, with the skin's own stagger. */
+:global(.pp).article .series :global(.pp-tiles) {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px 18px;
+}
+:global(.pp).article .series :global(.pp-tile:nth-child(n + 4)) {
+  display: none;
+}
+
+.availability {
+  display: grid;
+  gap: 14px;
+}
+
+.statusRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 18px 0 4px;
+  list-style: none;
+}
+
+@media (max-width: 519px) {
+  :global(.pp).article .series :global(.pp-tiles) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  :global(.pp).article .series :global(.pp-tile:nth-child(n + 3)) {
+    display: none;
+  }
+}

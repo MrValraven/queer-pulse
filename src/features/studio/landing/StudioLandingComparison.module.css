@@ -1,0 +1,205 @@
+.section {
+  padding: clamp(var(--section-y-56), 8vh, var(--section-y-96)) 0;
+}
+
+.inner {
+  max-width: var(--maxw-nav);
+  margin: 0 auto;
+  padding-inline: clamp(20px, 5vw, 48px);
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition:
+    opacity 0.6s var(--ease),
+    transform 0.6s var(--ease);
+}
+
+.inner[data-revealed="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+.eyebrow {
+  margin: 0 0 16px;
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--studio-accent-text);
+}
+
+.title {
+  max-width: 22ch;
+  margin: 0 0 clamp(28px, 4vw, 48px);
+  font-family: var(--serif);
+  font-size: var(--text-display);
+  font-weight: 300;
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-display);
+  color: var(--studio-text);
+  text-wrap: balance;
+}
+
+.title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--studio-accent-text);
+}
+
+.headerRow {
+  display: none;
+}
+
+.list {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Phones: each row is a stacked card, Studio's answer highlighted. */
+.row {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-badge);
+  background: var(--studio-surface);
+}
+
+.topic {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 400;
+  color: var(--studio-text);
+}
+
+.bigApps,
+.studio {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-15);
+  line-height: var(--lh-body-lg);
+}
+
+.bigApps {
+  color: var(--studio-text-muted);
+}
+
+.studio {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: var(--radius-tag);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--studio-accent-text);
+}
+
+.check {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+}
+
+/* Phones show the short label as a small line above the answer. The full
+   column name and its colon stay in the accessibility tree on every width,
+   so a screen reader hears "column name: answer". */
+.label {
+  display: block;
+  margin-bottom: 2px;
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.labelFull {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+@media (min-width: 720px) {
+  .headerRow,
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr) minmax(0, 3fr);
+    gap: 24px;
+    align-items: start;
+  }
+
+  .headerRow {
+    padding: 0 0 12px;
+    font-family: var(--sans);
+    font-size: var(--text-11);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--studio-text-muted);
+  }
+
+  .studioHeading {
+    color: var(--studio-accent-text);
+  }
+
+  /* Wide screens read as one table: hairlines between rows, no boxes. */
+  .list {
+    gap: 0;
+  }
+
+  .row {
+    padding: 20px 0;
+    border: 0;
+    border-top: 1px solid var(--studio-line);
+    border-radius: 0;
+    background: none;
+  }
+
+  .row:last-child {
+    border-bottom: 1px solid var(--studio-line);
+  }
+
+  /* The header row names the columns, so the short labels step aside. */
+  .label {
+    display: inline;
+    margin: 0;
+  }
+
+  .labelShort {
+    display: none;
+  }
+
+  .studio {
+    padding: 0;
+    background: none;
+    color: var(--studio-text);
+  }
+
+  .check {
+    color: var(--studio-accent-text);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inner {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+:global(html[data-reduce-motion="true"]) .inner {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}

@@ -22,6 +22,7 @@ import { type PostMenuAction } from "./usePostAuthorSafety";
 import { ForumPostPhotos } from "./ForumPostPhotos";
 import { useInViewOnce } from "./api/useForumLinkPreview";
 import { forumPostLink } from "./forumPostLink";
+import { studioSnippetPreviewText } from "../messages/studioSharePreview";
 import { ForumPostLinkCard } from "./ForumPostLinkCard";
 import { ModeratorByline } from "./ThreadReplies";
 import {
@@ -183,7 +184,7 @@ export function ThreadReplyItem({
                   {/* `cite` is absent when the quoted post is not in the
                       loaded page; the passage still stands on its own. */}
                   {reply.quote.cite && <cite>{reply.quote.cite}</cite>}
-                  {reply.quote.text}
+                  {studioSnippetPreviewText(reply.quote.text, t)}
                 </div>
               )}
               {/* Same reassembly as the opening post: `forumPostLink` joins

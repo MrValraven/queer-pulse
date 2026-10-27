@@ -1,0 +1,57 @@
+/* The event album as a small mosaic on a paper card. */
+.album {
+  padding: 18px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-18);
+  background: var(--paper);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 500;
+  color: var(--text-strong);
+}
+
+.count {
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 110px;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lead,
+.tile {
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--radius-10);
+}
+
+.lead {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+@media (--sm) {
+  .grid {
+    grid-auto-rows: 84px;
+  }
+}

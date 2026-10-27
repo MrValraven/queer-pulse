@@ -1,0 +1,48 @@
+/* The performers page: neon marquee and stage. The mood is a row of
+   marquee bulbs, spotlight pools and the Stage skin's dark ground, all
+   painted from tokens. */
+
+/* The closing band gets a bulb row along its top edge, like the marquee
+   over a stage door. Attribute selectors stay unscoped, so this reaches the
+   kit's section by its id. */
+.page section[id="closing"] {
+  position: relative;
+}
+.page section[id="closing"]::before {
+  content: "";
+  position: absolute;
+  inset: 14px 0 auto;
+  height: 12px;
+  pointer-events: none;
+  background:
+    radial-gradient(
+        circle,
+        color-mix(in srgb, var(--amber) 34%, transparent) 0 5px,
+        transparent 8px
+      )
+      center / 24px 12px repeat-x,
+    radial-gradient(circle, var(--amber) 0 2.5px, transparent 3.5px) center /
+      24px 12px repeat-x;
+  /* A few twinkles, then the bulbs stay fully lit; reduced motion stops
+     them. */
+  animation: closing-bulbs 2.6s var(--ease) 3;
+}
+
+@keyframes closing-bulbs {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page section[id="closing"]::before {
+    animation: none;
+  }
+}
+:global(html[data-reduce-motion="true"]) .page section[id="closing"]::before {
+  animation: none;
+}

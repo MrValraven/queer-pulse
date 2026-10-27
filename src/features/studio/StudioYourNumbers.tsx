@@ -1,6 +1,6 @@
 import { useId } from "react";
 import { FiMusic } from "react-icons/fi";
-import { EmptyState, Select } from "../../shared/components/ui";
+import { Collapse, EmptyState, Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -11,15 +11,19 @@ import {
   StudioLoadError,
   StudioNotFound,
 } from "./StudioLoadStates";
+import { StudioDashboardExtras } from "./StudioDashboardExtras";
 import { StudioDashboardNextSteps } from "./StudioDashboardNextSteps";
 import { StudioNoPersonaState } from "./StudioNoPersonaState";
 import { StudioNumbersTable } from "./StudioNumbersTable";
 import { studioUploadPath } from "./studioPaths";
 import css from "./StudioNumbers.module.css";
 
-/** "Your numbers": the persona's follower total and, per release and
- *  track, saves and public playlist inclusions as they stand today. No
- *  plays, no history, no charts (spec 7). */
+/** "Your numbers": the persona's follower total, its new followers per week
+ *  who still follow, the public playlists where its music lives, its
+ *  milestones, the plays trend and Top supporters (when the server counts
+ *  plays) and, per release and track, plays, saves and public playlist
+ *  inclusions as they stand today. Next steps above it hold the release
+ *  checklist and the next release countdown. */
 export function StudioYourNumbers({
   personas,
   persona,
@@ -83,41 +87,49 @@ export function StudioYourNumbers({
         )}
       </div>
       <StudioDashboardNextSteps persona={persona} />
-      {loadState.isNotFound ? (
+      <Collapse isOpen={loadState.isNotFound}>
         <StudioNotFound />
-      ) : loadState.isError ? (
+      </Collapse>
+      <Collapse isOpen={!loadState.isNotFound && loadState.isError}>
         <StudioLoadError
           loadState={loadState}
           what="studio:errors.what.yourNumbers"
         />
-      ) : !stats ? (
+      </Collapse>
+      <Collapse isOpen={!loadState.isNotFound && !loadState.isError && !stats}>
         <StudioDetailSkeleton />
-      ) : (
-        <>
-          <div className={css.followers}>
-            <span className={css.followersLabel}>
-              {t("studio:numbers.followers")}
-            </span>
-            <span className={css.followersValue}>
-              {fmt.number(stats.followerCount)}
-            </span>
-          </div>
-          {stats.releases.length === 0 ? (
-            <EmptyState
-              icon={<FiMusic />}
-              title={t("studio:numbers.empty.title")}
-              description={t("studio:numbers.empty.body")}
-              headingLevel={2}
-              action={{
-                label: t("studio:shell.uploadCta"),
-                to: studioUploadPath(),
-              }}
-            />
-          ) : (
-            <StudioNumbersTable stats={stats} personaName={persona.name} />
-          )}
-        </>
-      )}
+      </Collapse>
+      <Collapse
+        isOpen={!loadState.isNotFound && !loadState.isError && Boolean(stats)}
+      >
+        {stats && (
+          <>
+            <div className={css.followers}>
+              <span className={css.followersLabel}>
+                {t("studio:numbers.followers")}
+              </span>
+              <span className={css.followersValue}>
+                {fmt.number(stats.followerCount)}
+              </span>
+            </div>
+            <StudioDashboardExtras persona={persona} stats={stats} />
+            {stats.releases.length === 0 ? (
+              <EmptyState
+                icon={<FiMusic />}
+                title={t("studio:numbers.empty.title")}
+                description={t("studio:numbers.empty.body")}
+                headingLevel={2}
+                action={{
+                  label: t("studio:shell.uploadCta"),
+                  to: studioUploadPath(),
+                }}
+              />
+            ) : (
+              <StudioNumbersTable stats={stats} personaName={persona.name} />
+            )}
+          </>
+        )}
+      </Collapse>
     </section>
   );
 }

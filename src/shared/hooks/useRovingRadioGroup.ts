@@ -7,6 +7,10 @@ export interface UseRovingRadioGroupOptions {
   checkedIndex: number;
   /** Called with the index the keyboard moved the selection to. */
   onSelect: (index: number) => void;
+  /** Optional: true for an index the keyboard must pass over. Arrow, Home
+   *  and End movement skip it (still wrapping) and Space/Enter on it does
+   *  nothing. Left out, every option is reachable. */
+  isOptionDisabled?: (index: number) => boolean;
 }
 
 export interface RovingRadioProps<RadioElement extends HTMLElement> {
@@ -34,6 +38,10 @@ export interface RovingRadioGroup<RadioElement extends HTMLElement> {
  *   - Arrow Down/Right and Arrow Up/Left move focus AND selection, wrapping at
  *     both ends; Home/End jump to first/last; Space/Enter select the focused
  *     radio
+ *   - DISABLED OPTIONS (only when `isOptionDisabled` is passed): movement
+ *     skips them and Space/Enter on one is ignored. They stay focusable, so
+ *     the caller keeps them in the DOM with `aria-disabled` and a reason a
+ *     screen reader can still reach
  *
  * `RadioCardGroup` is built on this hook, so both paths stay one behaviour.
  */
@@ -43,15 +51,36 @@ export function useRovingRadioGroup<
   optionCount,
   checkedIndex,
   onSelect,
+  isOptionDisabled,
 }: UseRovingRadioGroupOptions): RovingRadioGroup<RadioElement> {
   const radioRefs = useRef<(RadioElement | null)[]>([]);
 
-  // Roving-tabindex home: the checked radio, or the first one while nothing is
-  // checked, so there is always exactly one tabbable element in the group.
-  const tabStopIndex = checkedIndex >= 0 ? checkedIndex : 0;
+  const isDisabledAt = (index: number) => isOptionDisabled?.(index) ?? false;
+
+  // From `startIndex`, steps by `step` (wrapping) until it lands on an enabled
+  // index. Returns -1 when every option is disabled. With no
+  // `isOptionDisabled` the first step always lands, so this is the plain
+  // wrap-around move.
+  const findEnabledIndex = (startIndex: number, step: 1 | -1) => {
+    for (let attempt = 0; attempt < optionCount; attempt += 1) {
+      const candidateIndex =
+        (((startIndex + step * attempt) % optionCount) + optionCount) %
+        optionCount;
+      if (!isDisabledAt(candidateIndex)) return candidateIndex;
+    }
+    return -1;
+  };
+
+  // Roving-tabindex home: the checked radio (even a disabled one, so it reads
+  // as checked), or the first enabled one while nothing is checked, so there
+  // is always exactly one tabbable element in the group.
+  const firstEnabledIndex = optionCount > 0 ? findEnabledIndex(0, 1) : -1;
+  const tabStopIndex =
+    checkedIndex >= 0 ? checkedIndex : Math.max(firstEnabledIndex, 0);
 
   const focusAndSelect = (nextIndex: number) => {
     if (nextIndex < 0 || nextIndex >= optionCount) return;
+    if (isDisabledAt(nextIndex)) return;
     onSelect(nextIndex);
     radioRefs.current[nextIndex]?.focus();
   };
@@ -66,20 +95,30 @@ export function useRovingRadioGroup<
       case "ArrowDown":
       case "ArrowRight":
         event.preventDefault();
-        focusAndSelect(currentIndex === lastIndex ? 0 : currentIndex + 1);
+        focusAndSelect(
+          findEnabledIndex(
+            currentIndex === lastIndex ? 0 : currentIndex + 1,
+            1,
+          ),
+        );
         break;
       case "ArrowUp":
       case "ArrowLeft":
         event.preventDefault();
-        focusAndSelect(currentIndex === 0 ? lastIndex : currentIndex - 1);
+        focusAndSelect(
+          findEnabledIndex(
+            currentIndex === 0 ? lastIndex : currentIndex - 1,
+            -1,
+          ),
+        );
         break;
       case "Home":
         event.preventDefault();
-        focusAndSelect(0);
+        focusAndSelect(findEnabledIndex(0, 1));
         break;
       case "End":
         event.preventDefault();
-        focusAndSelect(lastIndex);
+        focusAndSelect(findEnabledIndex(lastIndex, -1));
         break;
       case " ":
       case "Enter":

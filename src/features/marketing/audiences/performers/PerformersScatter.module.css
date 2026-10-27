@@ -1,0 +1,132 @@
+/* The scatter: ticket stubs tucked at slight angles around a mirror lit by
+   a ring of bulbs. Each stub's perforation and notches are drawn from
+   gradients and a mask; no shadows. */
+.mirror {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px 26px;
+  margin: 0;
+  padding: 40px;
+  list-style: none;
+  border-radius: var(--radius-30);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  background:
+    radial-gradient(
+      ellipse 70% 60% at 50% 40%,
+      color-mix(in srgb, var(--paper) 70%, transparent),
+      transparent 80%
+    ),
+    var(--cream);
+}
+.mirror::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border-radius: var(--radius-24);
+  pointer-events: none;
+  background:
+    radial-gradient(
+        circle,
+        color-mix(in srgb, var(--amber) 70%, transparent) 0 2px,
+        transparent 3px
+      )
+      top left / 24px 10px repeat-x,
+    radial-gradient(
+        circle,
+        color-mix(in srgb, var(--amber) 70%, transparent) 0 2px,
+        transparent 3px
+      )
+      bottom left / 24px 10px repeat-x;
+}
+
+/* A ticket: the stub on the left, torn along a dashed perforation with a
+   half-circle notch at each end, and the line of text beside it. */
+.scrap {
+  --ticket-stub-width: 58px;
+  --ticket-notch: 10px;
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--ticket-stub-width) minmax(0, 1fr);
+  min-width: 0;
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-8);
+  background: var(--paper);
+  color: var(--text-strong);
+  rotate: -1.6deg;
+  /* The mask keeps only its alpha, so any opaque token paints it. */
+  mask:
+    radial-gradient(
+        circle at var(--ticket-stub-width) 0,
+        transparent var(--ticket-notch),
+        var(--plum) calc(var(--ticket-notch) + 0.5px)
+      )
+      top / 100% 51% no-repeat,
+    radial-gradient(
+        circle at var(--ticket-stub-width) 100%,
+        transparent var(--ticket-notch),
+        var(--plum) calc(var(--ticket-notch) + 0.5px)
+      )
+      bottom / 100% 51% no-repeat;
+}
+.scrap:nth-child(2n) {
+  rotate: 1.4deg;
+}
+.scrap:nth-child(3n) {
+  rotate: -0.6deg;
+  background: color-mix(in srgb, var(--amber) 9%, var(--paper));
+}
+.scrap:nth-child(4n) {
+  background: color-mix(in srgb, var(--rose) 8%, var(--paper));
+}
+
+.stub {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 18px 0;
+  background:
+    linear-gradient(
+        to bottom,
+        rgba(var(--line-rgb), 0.3) 50%,
+        transparent 0
+      )
+      right top / 1.5px 7px repeat-y,
+    color-mix(in srgb, var(--accent) 9%, transparent);
+}
+
+.icon {
+  font-size: var(--text-18);
+  color: var(--accent-text);
+}
+
+.serial {
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-40);
+}
+
+.label {
+  align-self: center;
+  padding: 18px 18px 18px 16px;
+  font-size: var(--text-15-5);
+  line-height: 1.5;
+}
+
+@media (max-width: 899px) {
+  .mirror {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 32px 24px;
+  }
+}
+@media (max-width: 559px) {
+  .mirror {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    padding: 28px 18px;
+  }
+}

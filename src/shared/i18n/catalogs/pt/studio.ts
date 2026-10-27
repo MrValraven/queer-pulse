@@ -187,101 +187,149 @@ export const studio: Catalog = {
   "error500.backCta": "Ir para o início do Studio",
   "error500.reloadCta": "Recarregar o Studio",
 
-  // ── Shell da página de marketing (StudioLandingShell) ─────────────────────
-  "landing.nav.aboutCoop": "Sobre a cooperativa",
-  "landing.nav.publicLedger": "Livro-razão público",
-  "landing.nav.howItWorks": "Como funciona",
-  "landing.nav.forArtists": "Para artistas",
-  "landing.footer.tagline":
-    "Uma rede profissional queer com raízes em Lisboa. O Studio vive ao lado do Cinema, da Magazine e dos Eventos.",
-  "landing.footer.col.studio": "Studio",
-  "landing.footer.col.studio.thisWeek": "Esta semana",
-  "landing.footer.col.studio.djSets": "Sets de DJ",
-  "landing.footer.col.studio.liveBroadcast": "Transmissão ao vivo",
-  "landing.footer.col.artists": "Artistas",
-  "landing.footer.col.artists.submitMusic": "Submeter música",
-  "landing.footer.col.artists.dashboard": "Painel de artista",
-  "landing.footer.col.artists.revenueSplit": "Divisão de receita",
-  "landing.footer.col.council": "Conselho",
-  "landing.footer.col.council.programming": "Programação",
-  "landing.footer.col.council.submissions": "Submissões",
-  "landing.footer.col.council.curatorCouncil": "Conselho de curadoria",
-  "landing.footer.col.coop.strategyPlan": "O plano estratégico",
-  "landing.footer.copyright": "© {year} QueerPulse Studio Co-op CRL, Lisboa",
-  "landing.footer.languages": "EN · PT",
-
-  // ── Hero de marketing (StudioLandingHero) ─────────────────────────────────
-  "landing.hero.onAirNow": "No ar agora",
-  "landing.hero.clock": "{weekday} · {time} Lisboa",
-  "landing.hero.title": "Música, <em>programada</em> por ouvidos queer.",
-  "landing.hero.dek":
-    "Uma plataforma de streaming cooperativa. <em>{sharePercent}</em> de cada audição vai para quem fez a música. <em>{tipPercent}</em> de cada gorjeta. O livro-razão é público. Quem cura tem nome. <em>Cada escolha aqui é feita por uma pessoa.</em>",
-  "landing.hero.demoCta": "Ouvir um set de demonstração · grátis",
-
-  "landing.demo.eyebrow": "O set de quarta-feira · pré-visualização grátis",
-  "landing.demo.meta":
-    "programado por {curator} · {duration} · {trackCount} faixas · {listening} a ouvir",
-  "landing.demo.pauseAria": "Pausar pré-visualização",
-  "landing.demo.playAria": "Reproduzir pré-visualização",
-  "landing.demo.trackPrefix": "Faixa {n} ·",
-  "landing.demo.byLine": "{artist} · de {album}",
-  "landing.demo.payNote":
-    "Esta audição paga a {artist} <em>{amount}</em> quando és apoiante. Neste momento, o Studio está aberto como demonstração.",
-  "landing.demo.quote":
-    "«Fica até ao segundo verso da faixa seis. <em>O piano deixa-te ali de propósito.</em>» {attribution}, responsável pela programação",
-
-  // ── As quatro promessas (StudioLandingPromises) ───────────────────────────
-  "landing.promises.eyebrow": "O contrato · por escrito",
-  "landing.promises.title":
-    "Quatro <em>promessas</em> que fazemos, a artistas e a quem ouve.",
-  "landing.promises.share.title": "Uma parte justa e <em>visível</em>.",
-  "landing.promises.share.body":
-    "80% de cada audição vai para quem fez a música. 100% de cada gorjeta. Os outros 20% cobrem pagamentos, alojamento, legendas, edição de partituras e ajudas de custo do conselho. A divisão está em cada página de artista, cada recibo, cada álbum.",
-  "landing.promises.humans.title": "Música <em>programada</em> por pessoas.",
-  "landing.promises.humans.body":
-    'Cada faixa na página principal tem o nome de quem a curou e uma nota de um parágrafo. Sem "popular perto de ti", sem "feito para ti", sem scroll infinito. A semana é pequena, feita à mão e datada.',
-  "landing.promises.coOwned.title": "Co-propriedade de quem <em>ouve</em>.",
-  "landing.promises.coOwned.body":
-    "As pessoas apoiantes ({price}/mês) passam a ter voto na cooperativa ao fim de doze meses. Elegem o conselho, aprovam a tabela de valores e veem cada euro no livro-razão. A plataforma presta contas a quem a apoia.",
-  "landing.promises.privacy.title": "Privacidade como <em>padrão</em>.",
-  "landing.promises.privacy.body":
-    "Nenhum dado de audição é vendido, distribuído ou usado para recomendar. O histórico pessoal de reprodução é privado e apagável num clique. Existem reproduções agregadas para o livro-razão; mais nada sai daqui.",
-
-  // ── Contador do livro-razão público (StudioLandingCounter) ────────────────
-  "landing.counter.liveEyebrow": "Ao vivo, atualizado em tempo real",
-  "landing.counter.title":
-    "Desde que a beta abriu, o <em>QueerPulse Studio</em> já pagou:",
-  "landing.counter.sub": "a {count} artistas, em {cycles} ciclos mensais.",
-  "landing.counter.seeLedgerCta": "Ver o livro-razão",
-  "landing.counter.stat.perPlay": "por reprodução válida · 15× o Spotify",
-  "landing.counter.stat.artistShare": "parte para artistas, no agregado",
-  "landing.counter.stat.sustainers": "apoiantes na cooperativa",
-  "landing.counter.stat.councilAnswerTime":
-    "tempo mediano de resposta do conselho",
-  "landing.counter.unit.days": "dias",
-
-  // ── Faixa de comparação por audição (StudioLandingComparison) ─────────────
-  "landing.compare.title": "A <em>taxa por audição</em>, em comparação.",
-  "landing.compare.spotify.label": "Spotify · média",
-  "landing.compare.spotify.ctx":
-    "Pro-rata · misturado com anúncios · cerca de 3 cêntimos por 10 reproduções",
-  "landing.compare.apple.label": "Apple Music",
-  "landing.compare.apple.ctx":
-    "Ligeiramente melhor, ainda maioritariamente nominal",
-  "landing.compare.tidal.label": "Tidal HiFi",
-  "landing.compare.tidal.ctx": "Centrado na pessoa · só no plano hi-fi",
-  "landing.compare.us.label": "QP Studio · piso mínimo garantido",
-  "landing.compare.us.ctx":
-    "Sem anúncios · sem acionistas · financiado por apoiantes. Definido anualmente por votação.",
-
-  // ── Faixa final de chamada à ação (StudioLandingCta) ──────────────────────
-  "landing.cta.title": "Puxa uma <em>cadeira</em>.",
-  "landing.cta.body":
-    "{price} por mês. Cancela quando quiseres. <em>A primeira audição</em> diz-te se o Studio é para ti.",
-  "landing.cta.readPlanCta": "Ler o plano primeiro",
-  "landing.cta.secondary":
-    "Já és pessoa da QueerPulse? O Studio custa <em>mais {addOnPrice}/mês</em>.",
-  "landing.cta.secondaryLink": "Entra para a adicionar",
+  // ── Página de apresentação do Studio (landing/StudioLandingPage e secções) ─
+  // Tudo o que aqui se afirma é verdade hoje em live, exceto a secção
+  // "plan.*", que está identificada como o plano e não tem números.
+  "landing.metaTitle": "Studio QueerPulse: música queer aqui perto",
+  "landing.description":
+    "Artistas da nossa comunidade com páginas próprias, os seus lançamentos e sets, e os eventos onde os podes ouvir ao vivo. Grátis para quem faz parte do QueerPulse, com acesso aberto pela nossa equipa por fases.",
+  "landing.ogImageAlt":
+    "A página inicial do Studio num portátil, com os lançamentos e as cenas desta semana",
+  "landing.hero.eyebrow": "Studio QueerPulse",
+  "landing.hero.title":
+    "Música queer feita aqui perto, <em>toda num só sítio</em>.",
+  "landing.hero.lede":
+    "Artistas da nossa comunidade com páginas próprias, os seus lançamentos e sets, e os eventos onde os podes ouvir ao vivo. Escolhidos por quem conhece a cena.",
+  "landing.hero.status":
+    "Grátis para quem faz parte do QueerPulse. A nossa equipa abre o acesso por fases.",
+  "landing.hero.seeInside": "Ver por dentro",
+  "landing.cta.requestInvite": "Pedir um convite",
+  "landing.cta.memberNote":
+    "A nossa equipa dá acesso ao Studio por fases. Quando entrares, esta página abre diretamente no Studio.",
+  "landing.gallery.eyebrow": "Um olhar lá dentro",
+  "landing.gallery.title": "O que vês <em>quando abres o Studio</em>",
+  "landing.gallery.tabsLabel": "Ecrãs do Studio",
+  "landing.gallery.sampleNote":
+    "Estes ecrãs mostram artistas e pessoas de exemplo.",
+  "landing.gallery.home.tab": "Início",
+  "landing.gallery.home.caption":
+    "Os lançamentos, as cenas e as prateleiras desta semana, todos escolhidos por pessoas.",
+  "landing.gallery.home.alt":
+    "A página inicial do Studio, com filtros por formato, a prateleira Escolhas da equipa, o início de Novidades da semana e o leitor em baixo",
+  "landing.gallery.home.phoneAlt":
+    "A página inicial do Studio num telemóvel, a abrir no lançamento em destaque, com a capa e um botão para o ouvir",
+  "landing.gallery.artist.tab": "Página de artista",
+  "landing.gallery.artist.caption":
+    "Cada artista tem uma página para os seus lançamentos e a sua história, com um botão para seguir.",
+  "landing.gallery.artist.alt":
+    "Uma página de artista, com a foto, os lançamentos, o número de seguidores e um botão para seguir",
+  "landing.gallery.artist.phoneAlt":
+    "Uma página de artista num telemóvel, com a foto, o número de lançamentos e de seguidores e um botão para seguir",
+  "landing.gallery.release.tab": "Lançamento",
+  "landing.gallery.release.caption":
+    "Alinhamento, créditos e avisos de conteúdo. Os discos feitos para tocar de seguida tocam sem pausas.",
+  "landing.gallery.release.alt":
+    "Uma página de lançamento, com a capa, uma nota sobre o que mudou na nova versão, o alinhamento e uma ligação para comprar o álbum a quem o fez",
+  "landing.gallery.release.phoneAlt":
+    "Uma página de lançamento num telemóvel, com a capa e uma nota sobre o que mudou na nova versão",
+  "landing.gallery.playlists.tab": "Playlists em conjunto",
+  "landing.gallery.playlists.caption":
+    "Cria playlists com as tuas ligações e vê quem adicionou cada faixa.",
+  "landing.gallery.playlists.alt":
+    "Uma playlist partilhada, com quem a edita e quem adicionou cada faixa",
+  "landing.gallery.playlists.phoneAlt":
+    "Uma playlist partilhada num telemóvel, marcada como colaborativa, com quem adicionou cada uma das três faixas",
+  "landing.gallery.player.tab": "Leitor",
+  "landing.gallery.player.caption":
+    "O leitor acompanha-te por todo o QueerPulse, com fila e transição entre faixas.",
+  "landing.gallery.player.alt":
+    "O ecrã A tocar agora num telemóvel, com a capa e uma faixa em pausa a meio",
+  "landing.gallery.share.tab": "Partilhar",
+  "landing.gallery.share.caption":
+    "Envia uma faixa para uma conversa e ela chega como um cartão, com a tua nota por baixo.",
+  "landing.gallery.share.alt":
+    "Uma conversa num telemóvel, com uma faixa do Studio partilhada como cartão",
+  "landing.promises.eyebrow": "Para que serve o Studio",
+  "landing.promises.title": "Feito para quem faz música <em>à tua volta</em>",
+  "landing.promises.artistPage.title": "Uma página a sério para cada artista",
+  "landing.promises.artistPage.body":
+    "Biografia, lançamentos, próximos eventos e kit de imprensa, tudo junto.",
+  "landing.promises.picks.title": "Pessoas escolhem o que fica em destaque",
+  "landing.promises.picks.body":
+    "A nossa equipa escolhe à mão as prateleiras e as cenas. Ninguém paga por um lugar.",
+  "landing.promises.scene.title": "A música encontra a cena",
+  "landing.promises.scene.body":
+    "As páginas de artista ligam aos seus eventos no QueerPulse, para que uma canção te leve a uma noite fora.",
+  "landing.promises.safety.title": "Seguro desde o início",
+  "landing.promises.safety.body":
+    "Avisos de conteúdo antes de uma faixa tocar, denúncia em todas as faixas e reclamações de direitos tratadas pela nossa equipa.",
+  "landing.compare.eyebrow": "Lado a lado",
+  "landing.compare.title": "O Studio e as <em>grandes apps de streaming</em>",
+  "landing.compare.topicHeading": "Tema",
+  "landing.compare.bigAppsHeading":
+    "Grandes apps de streaming (Spotify e outras)",
+  "landing.compare.studioHeading": "Studio QueerPulse",
+  "landing.compare.bigAppsShort": "Grandes apps",
+  "landing.compare.studioShort": "Studio",
+  "landing.compare.featured.topic": "O que fica em destaque",
+  "landing.compare.featured.bigApps":
+    "Escolhido por algoritmos, e as editoras podem pagar por mais promoção",
+  "landing.compare.featured.studio":
+    "Escolhido à mão pela nossa equipa. Ninguém paga para ficar em destaque",
+  "landing.compare.ads.topic": "Anúncios",
+  "landing.compare.ads.bigApps": "Anúncios no plano gratuito",
+  "landing.compare.ads.studio": "Grátis para quem faz parte, sem anúncios",
+  "landing.compare.listening.topic": "O que ouves",
+  "landing.compare.listening.bigApps":
+    "Usado para criar um perfil para recomendações e publicidade",
+  "landing.compare.listening.studio":
+    "O teu histórico de audição é só teu, com Pausar e Limpar, e não criamos nenhum perfil a partir dele",
+  "landing.compare.artists.topic": "Quem ouves",
+  "landing.compare.artists.bigApps":
+    "Milhões de faixas, onde artistas locais ficam escondidos",
+  "landing.compare.artists.studio":
+    "Artistas da nossa comunidade, fáceis de encontrar",
+  "landing.compare.scene.topic": "A cena",
+  "landing.compare.scene.bigApps":
+    "Listas de concertos de parceiros de bilheteira",
+  "landing.compare.scene.studio":
+    "Noites organizadas pela nossa comunidade, no QueerPulse e com ligação na página de cada artista",
+  "landing.compare.playlists.topic": "Playlists em conjunto",
+  "landing.compare.playlists.bigApps":
+    "Quem colabora entra com um link de convite",
+  "landing.compare.playlists.studio":
+    "Feitas com as tuas ligações, e podem ficar visíveis só para elas",
+  "landing.compare.owner.topic": "Quem gere",
+  "landing.compare.owner.bigApps": "Grandes empresas cotadas em bolsa",
+  "landing.compare.owner.studio":
+    "Feito em Lisboa, pela comunidade e para a comunidade",
+  "landing.plan.eyebrow": "O plano",
+  "landing.plan.chip": "Mais tarde",
+  "landing.plan.title": "Para onde queremos levar o <em>Studio</em>",
+  "landing.plan.intro":
+    "Nada nesta secção está ativo ainda. É a direção em que estamos a trabalhar, e esta página vai dizê-lo quando mudar.",
+  "landing.plan.coop.title": "Uma cooperativa",
+  "landing.plan.coop.body":
+    "Gerida em conjunto por artistas e ouvintes, que decidem o que toca e para onde vai o dinheiro.",
+  "landing.plan.money.title": "A maior parte do dinheiro para artistas",
+  "landing.plan.money.body":
+    "Quando entrar dinheiro, a maior parte vai para quem fez a música, com contas abertas sobre para onde vai o resto.",
+  "landing.plan.masters.title": "A tua música continua tua",
+  "landing.plan.masters.body":
+    "Quem faz a música mantém os seus masters e pode lançar noutros sítios também.",
+  "landing.why.eyebrow": "Porque importa",
+  "landing.why.quote":
+    "Uma cena soa a si própria quando <em>somos nós a gravar</em>.",
+  "landing.why.p1":
+    "A música queer feita por pessoas queer traz o que um ouvido de fora não apanha: as noites de clube, os coros, as demos gravadas no quarto, as canções que ajudaram tanta gente a aguentar. Para muita gente, foi o primeiro sítio onde se ouviu.",
+  "landing.why.p2":
+    "A maioria de quem faz música em pequena escala toca meia dúzia de concertos, publica numa plataforma feita para outra gente e perde-se no algoritmo. Muito pouco do que faz lhe volta às mãos.",
+  "landing.why.p3":
+    "Ouvir artistas locais, partilhar as suas faixas e aparecer nos seus concertos é o que lhes permite fazer o próximo disco. É para isso que este Studio existe.",
+  "landing.closing.title": "Ouve a cena <em>de que fazes parte</em>",
+  "landing.closing.body":
+    "O Studio faz parte do QueerPulse, a rede da comunidade. Entras com um convite, e a nossa equipa abre o Studio às pessoas por fases.",
+  "landing.closing.magazineLink": "Ler a revista",
 
   // ── Entrar / Junta-te (StudioSignInPage) ─────────────────────────────────
   "signin.tabs.signIn": "Entrar",
@@ -834,10 +882,7 @@ export const studio: Catalog = {
   "settings.privacy.label": "Privacidade",
   "settings.privacy.title": "O que o Studio <em>guarda</em>",
   "settings.privacy.dek":
-    "Em resumo: quase nada, por defeito. Nunca vendemos, partilhamos ou treinamos com o que ouves. As reproduções agregadas alimentam o livro-razão público, nada que te identifique.",
-  "settings.privacy.history.heading": "Histórico de audição",
-  "settings.privacy.history.body":
-    "Desligado por defeito: nada do que ouves sai do teu navegador. Liga para um registo privado e apagável que só tu vês.",
+    "Em resumo: um histórico de audição que só tu vês e que podes pausar ou limpar. Nunca vendemos, partilhamos ou treinamos com o que ouves. As audições contam de forma anónima para os totais de quem faz a música, com o histórico ligado ou não.",
   "settings.privacy.cloudSync.heading": "Sincronizar a biblioteca na nuvem",
   "settings.privacy.cloudSync.body":
     "As gravações e os seguimentos passam entre dispositivos. Sem isto, ficam só neste dispositivo.",
@@ -897,12 +942,6 @@ export const studio: Catalog = {
   "settings.erase.title": "Um toque, <em>sem perguntas</em>",
   "settings.erase.dek":
     "Isto não pergunta duas vezes nem mostra um modal. Falamos a sério: sair devia ser tão fácil como entrar.",
-  "settings.erase.history.heading": "Apagar o meu histórico de audição",
-  "settings.erase.history.note":
-    "Apaga o registo privado deste dispositivo e da nuvem. <em>Feito na hora. Sem desfazer.</em>",
-  "settings.erase.history.cta": "Apagar histórico",
-  "settings.erase.history.toast":
-    "Histórico apagado. Já não está neste dispositivo nem na nuvem.",
   "settings.erase.export.heading": "Transferir tudo o que guardamos sobre ti",
   "settings.erase.export.note":
     "Um ficheiro JSON com as tuas gravações, gorjetas, recibos e definições, enviado por email dentro de uma hora.",
@@ -1726,48 +1765,6 @@ export const studio: Catalog = {
   "offAir.hero.replayingToast": "A repetir {title}",
   "offAir.hero.paidOutSuffix": "{amount} pagos · repete quando quiseres",
 
-  // ── Teaser em modo live (StudioComingSoonPage e as suas quatro cenas) ─────
-  // Aparece em todas as rotas /studio/* quando o modo demo está desligado. O
-  // Studio ainda não tem backend e não pode mostrar valores inventados. Nenhuma
-  // destas linhas fala de preços, divisões ou planos de subscrição.
-  "comingSoon.metaTitle": "Studio QueerPulse: em breve",
-  "comingSoon.description":
-    "A nossa plataforma de música em cooperativa para artistas queer perto de ti ainda está a ser construída. Nada está a tocar e nada está à venda. Anunciamos aqui quando entrarmos no ar.",
-  "comingSoon.hero.eyebrow": "Studio QueerPulse",
-  "comingSoon.hero.onAir": "No ar",
-  "comingSoon.hero.title": "Os microfones estão <em>a aquecer</em>.",
-  "comingSoon.hero.lede":
-    "Estamos a construir uma casa para a música queer feita perto de nós: artistas com páginas próprias, sets ao vivo de palcos locais e uma plataforma gerida em conjunto por quem a usa.",
-  "comingSoon.hero.status":
-    "Ainda não abriu. Nada está a tocar e nada está à venda.",
-  "comingSoon.preview.eyebrow": "Uma primeira audição",
-  "comingSoon.preview.title": "Como <em>vai soar</em>",
-  "comingSoon.preview.sideLabel": "Lado A",
-  "comingSoon.preview.trackLabel": "Faixa A{number}",
-  "comingSoon.preview.artists.title": "Artistas à frente",
-  "comingSoon.preview.artists.body":
-    "Cada artista tem uma página própria para os seus discos, a sua história e os seus concertos. O plano é que quem faz a música mantenha os seus masters e possa lançar noutros sítios também.",
-  "comingSoon.preview.live.title": "Ao vivo, aqui perto",
-  "comingSoon.preview.live.body":
-    "Sets gravados em noites locais, open mics e palcos pequenos, para ouvires a cena à tua volta, incluindo as noites que perdeste.",
-  "comingSoon.preview.together.title": "De quem toca e de quem ouve",
-  "comingSoon.preview.together.body":
-    "O plano é uma cooperativa, com artistas e ouvintes a decidir em conjunto o que toca e para onde vai o dinheiro. Legendas e transcrições dos sets ao vivo fazem parte disto desde o início.",
-  "comingSoon.why.eyebrow": "Porque importa",
-  "comingSoon.why.quote":
-    "Uma cena soa a si própria quando <em>somos nós a gravar</em>.",
-  "comingSoon.why.p1":
-    "A música queer feita por pessoas queer traz o que um ouvido de fora não apanha: as noites de clube, os coros, as demos gravadas no quarto, as canções que ajudaram tanta gente a aguentar. Para muita gente, foi o primeiro sítio onde se ouviu.",
-  "comingSoon.why.p2":
-    "A maioria de quem faz música em pequena escala toca meia dúzia de concertos, publica numa plataforma feita para outra gente e perde-se no algoritmo. Muito pouco do que faz lhe volta às mãos.",
-  "comingSoon.why.p3":
-    "Ouvir artistas locais, partilhar as suas faixas e aparecer nos seus concertos é o que lhes permite fazer o próximo disco. É para isso que este Studio existe.",
-  "comingSoon.closing.title": "Entramos no ar <em>quando estiver pronto</em>.",
-  "comingSoon.closing.body":
-    "Vamos anunciar a primeira emissão aqui mesmo. Até lá, a revista é o melhor sítio para acompanhar o que andamos a fazer.",
-  "comingSoon.magazineCta": "Ler a revista",
-  "comingSoon.backHome": "Voltar ao início",
-
   // ── sweep no-literal-string: legendas reutilizáveis do ImageSlot ─────────
   "media.coverLabel": "capa",
   "media.scoreLabel": "partitura",
@@ -1841,6 +1838,8 @@ export const studio: Catalog = {
   "like.trackAria": "Gosto de {title}",
   "like.addedToast": "Adicionada a Músicas de que gostas",
   "like.removedToast": "Removida de Músicas de que gostas",
+  "like.blockedWithdrawn":
+    "Este lançamento foi retirado, por isso as suas faixas não podem ser marcadas com gosto",
   "liked.title": "Músicas de que gostas",
   "liked.page.privateNote": "Só tu vês aqui as músicas de que gostas",
   "liked.page.emptyTitle": "As músicas de que gostas vão aparecer aqui",
@@ -2072,6 +2071,7 @@ export const studio: Catalog = {
   "uploadFlow.files.stage.noAudio": "Ainda sem áudio",
   "uploadFlow.files.progressLabel":
     "Progresso do carregamento da faixa {position}, {title}",
+  "uploadFlow.files.stage.checking": "A verificar o ficheiro",
   "uploadFlow.files.stage.converting": "A converter para MP3",
   "uploadFlow.files.convertingHint":
     "Mantém este separador aberto enquanto converte",
@@ -2369,11 +2369,11 @@ export const studio: Catalog = {
   "numbers.eyebrow": "Os teus números",
   "numbers.title": "Como <em>{name}</em> chega às pessoas",
   "numbers.dek":
-    "Totais de hoje. O Studio nunca conta audições, e qualquer número de 1 a 4 aparece como Menos de 5, para ninguém ficar identificável",
+    "Totais de hoje. Uma audição conta depois de 30 segundos, e qualquer número de 1 a 4 aparece como Menos de 5, para ninguém ficar identificável",
   "numbers.personaLabel": "Persona",
   "numbers.followers": "Pessoas que seguem",
   "numbers.tableCaption":
-    "Guardados e presenças em playlists públicas de cada lançamento de {name}",
+    "Audições, guardados e presenças em playlists públicas de cada lançamento de {name}",
   "numbers.column.release": "Lançamento",
   "numbers.column.saves": "Guardados",
   "numbers.column.inPublicPlaylists": "Em playlists públicas",
@@ -2448,10 +2448,8 @@ export const studio: Catalog = {
   "demo.dashboard.peakSummary":
     "Pico: <em>{day}</em> · {total} guardados e adições a playlists · a Sara escolheu-te na segunda",
   "demo.dashboard.activity.title": "Guardados e adições a playlists",
-  "demo.dashboard.activity.sub_one":
-    "Último dia · o Studio nunca conta reproduções",
-  "demo.dashboard.activity.sub_other":
-    "Últimos {count} dias · o Studio nunca conta reproduções",
+  "demo.dashboard.activity.sub_one": "Último dia",
+  "demo.dashboard.activity.sub_other": "Últimos {count} dias",
   "demo.dashboard.activity.rangeLabel": "Período",
   "demo.dashboard.activity.rangeAria_one": "Mostrar o último dia",
   "demo.dashboard.activity.rangeAria_other": "Mostrar os últimos {count} dias",
@@ -2604,7 +2602,7 @@ export const studio: Catalog = {
     "O Studio é o sítio do QueerPulse onde artistas queer partilham a sua música com as pessoas da comunidade. É gratuito, só para ouvir, e está aberto a quem a nossa equipa deu acesso ao Studio.",
   "helpLive.faq.tracking.q": "O Studio guarda o que eu oiço?",
   "helpLive.faq.tracking.a":
-    "Não. O Studio não guarda contagens de audições, histórico nem recomendações feitas a partir do que ouves. O que está a tocar e a tua fila ficam só neste separador do navegador e desaparecem quando o fechas.",
+    "Sim, em privado. O Studio guarda um histórico de audição que só tu vês, em <a>O que ouves</a>, onde o podes pausar ou limpar. Quem faz a música vê o total de audições, com qualquer número de 1 a 4 como Menos de 5, e o teu nome só se ligares Mostrar-me como apoiante na página de artista.",
   "helpLive.faq.saving.q":
     "Como funcionam os guardados, as playlists e seguir artistas?",
   "helpLive.faq.saving.a":
@@ -2621,7 +2619,7 @@ export const studio: Catalog = {
     "Ao marcá-la confirmas que és titular ou controlas os direitos de todas as gravações e composições do lançamento, e que os créditos estão certos. Se isso mudar, despublica o lançamento na tua página de artista.",
   "helpLive.faq.stats.q": "O que mostram as minhas estatísticas?",
   "helpLive.faq.stats.a":
-    "<a>Os teus números</a> mostram seguidores, guardados e quantas playlists públicas incluem a tua música. Qualquer número de 1 a 4 aparece como Menos de 5, para ninguém conseguir perceber quem guardou o quê. O Studio não conta audições.",
+    "<a>Os teus números</a> mostram audições, pessoas que te seguem, guardados, as playlists públicas com a tua música e quem mais te apoia. Qualquer número de 1 a 4 aparece como Menos de 5, para ninguém conseguir perceber quem fez o quê.",
   "helpLive.faq.reporting.q": "Como denuncio um lançamento?",
   "helpLive.faq.reporting.a":
     "Abre o lançamento, depois Mais ações e Denunciar lançamento. A nossa equipa analisa todas as denúncias e, se um lançamento violar as regras, retira-o e quem o publicou vê porquê.",
@@ -2657,12 +2655,12 @@ export const studio: Catalog = {
     "Artistas carregam lançamentos com uma persona de música ou DJ e publicam-nos para as pessoas com acesso ao Studio. Quem ouve pode tocar, guardar, fazer playlists e seguir artistas de que gosta.",
   "aboutLive.sec.today.p2":
     "Hoje não há dinheiro no Studio: ouvir é gratuito e carregar música também.",
-  "aboutLive.sec.privacy.num": "02: o que não regista",
+  "aboutLive.sec.privacy.num": "02: o que controlas",
   "aboutLive.sec.privacy.heading": "O que ouves fica <em>contigo</em>",
   "aboutLive.sec.privacy.p1":
-    "O Studio não guarda contagens de audições, histórico nem recomendações feitas a partir do que ouves. A tua fila vive no separador do navegador e vai-se embora com ele.",
+    "O teu histórico de audição é teu: só tu o vês, e podes pausá-lo ou limpá-lo quando quiseres. Quem faz a música vê o total de audições, e o teu nome só se escolheres mostrá-lo.",
   "aboutLive.sec.privacy.p2":
-    "Artistas veem seguidores, guardados e inclusões em playlists públicas, e qualquer número de 1 a 4 aparece como Menos de 5.",
+    "Artistas veem audições, pessoas que seguem, guardados e inclusões em playlists públicas, e qualquer número de 1 a 4 aparece como Menos de 5.",
   "aboutLive.sec.control.num": "03: como artistas mantêm o controlo",
   "aboutLive.sec.control.heading": "A tua música, <em>a tua decisão</em>",
   "aboutLive.sec.control.p1":
@@ -2683,6 +2681,9 @@ export const studio: Catalog = {
     "Começa no início do Studio ou lê primeiro os termos curtos do Studio.",
   "aboutLive.cta.open": "Abrir o Studio",
   "aboutLive.cta.terms": "Ler os termos do Studio",
+  "aboutLive.credits.heading": "Código aberto",
+  "aboutLive.credits.lame":
+    "O áudio é codificado em MP3 com o <a>codificador LAME MP3</a> (licenciado sob a GNU Lesser General Public License, LGPL), usado através de @mediabunny/mp3-encoder (Mozilla Public License 2.0).",
 
   "termsLive.eyebrow": "Termos do Studio",
   "termsLive.title": "O <em>aditamento</em> curto do Studio",
@@ -2699,7 +2700,7 @@ export const studio: Catalog = {
   "termsLive.sec.stored.num": "03: o que o Studio guarda",
   "termsLive.sec.stored.heading": "O que <em>guardamos</em>",
   "termsLive.sec.stored.p1":
-    "O Studio guarda os teus lançamentos com o áudio e as capas, os teus guardados, playlists e artistas que segues, as definições do leitor, as contestações que envias com a resposta da nossa equipa, e as reivindicações de direitos de autor e contranotificações que envias com a decisão da nossa equipa. Não guarda nenhum registo do que ouves: nem contagens de audições, nem histórico.",
+    "O Studio guarda os teus lançamentos com o áudio e as capas, os teus guardados, playlists e artistas que segues, as definições do leitor, o teu histórico de audição enquanto está ligado (guardado durante 13 meses, e podes limpá-lo), as páginas de artista onde escolheste aparecer como apoiante, as contestações que envias com a resposta da nossa equipa, e as reivindicações de direitos de autor e contranotificações que envias com a decisão da nossa equipa. Os totais de audições de cada faixa não levam nenhum nome.",
   "termsLive.sec.stored.p2":
     "Tudo o que o Studio guarda sobre ti está coberto pela <a>política de privacidade</a> do QueerPulse.",
   "termsLive.sec.takedown.num": "04: retiradas e contestações",
@@ -3026,10 +3027,6 @@ export const studio: Catalog = {
   "settingsLive.resume.heading": "Retomar onde ficaste",
   "settingsLive.resume.body":
     "Da próxima vez que abrires o Studio neste dispositivo, a tua fila e a posição estão prontas, em pausa. Fica só neste dispositivo e apaga-se com a Saída rápida, ao terminares sessão ou se perderes o acesso.",
-  "settingsLive.recent.heading": "Tocado recentemente",
-  "settingsLive.recent.body":
-    "Guarda uma lista do que tocaste por último, para o encontrares outra vez. Fica só neste dispositivo e nunca é enviada para nós.",
-  "settingsLive.recent.clear": "Limpar tocado recentemente",
 
   "hiddenTrack.label": "Escondida pelas tuas definições",
   "contentWarnings.pickerLabel": "Avisos de conteúdo",
@@ -3390,6 +3387,8 @@ export const studio: Catalog = {
   "errors.creditAlreadyRequested":
     "Esta persona já tem esse crédito nesta faixa",
   "errors.creditNotAccepted": "Aqui só podes remover um crédito aceite",
+  "errors.sceneCoverChanged":
+    "Alguém mudou a capa desta cena antes de ti. Recarrega a cena e escolhe a capa outra vez.",
   "errors.sceneNotAvailable": "Essa cena não pode ser escolhida agora",
   "errors.curationReleaseNotPublished":
     "Só um lançamento publicado pode ir para uma prateleira",
@@ -3585,6 +3584,197 @@ export const studio: Catalog = {
     "Quem a guardou vai vê-la como já não disponível e ela sai de todas as playlists onde está",
   "uploadFlow.v3.removePublishedConfirm": "Tirar faixa",
   "numbers.reminders": "À espera: {value}",
+  // Dashboard Part 1 (2026-10-26)
+  "numbers.growth.title": "Pessoas novas que continuam a seguir",
+  "numbers.growth.sub": "Por semana, nas últimas 12 semanas",
+  "numbers.growth.ariaLabel":
+    "Pessoas novas que continuam a seguir, por semana nas últimas 12 semanas",
+  "numbers.growth.thisWeek": "Esta semana",
+  "numbers.growth.weekOf": "Semana de {date}",
+  "numbers.growth.tableCaption":
+    "Pessoas novas que continuam a seguir, por semana",
+  "numbers.growth.weekColumn": "Semana",
+  "numbers.growth.countColumn": "Pessoas novas",
+  "numbers.growth.empty":
+    "Ninguém novo começou a seguir nas últimas 12 semanas",
+  "numbers.chart.showTable": "Mostrar tabela de dados",
+  "numbers.chart.hideTable": "Esconder tabela de dados",
+  "numbers.health.heading": "Lista de verificação dos lançamentos",
+  "numbers.health.progress": "{done} de {total} feitos",
+  "numbers.health.showChecklist": "Mostrar a lista de {title}",
+  "numbers.health.hideChecklist": "Esconder a lista de {title}",
+  "numbers.health.optional": "Opcional",
+  "numbers.health.showMore_one": "Mostrar mais {count} lançamento",
+  "numbers.health.showMore_other": "Mostrar mais {count} lançamentos",
+  "numbers.health.showFewer": "Mostrar menos lançamentos",
+  "numbers.health.todo.cover": "Adiciona uma capa",
+  "numbers.health.todo.description": "Escreve uma descrição",
+  "numbers.health.todo.genreAndMood": "Escolhe um género e um ambiente",
+  "numbers.health.todo.creditsOnEveryTrack": "Junta créditos a todas as faixas",
+  "numbers.health.todo.lyrics": "Junta letra a todas as faixas",
+  "numbers.health.todo.buyLink": "Adiciona um link de compra",
+  "numbers.health.todo.versionNote":
+    "Escreve uma nota de versão para as mudanças nas faixas",
+  "numbers.health.done.cover": "Capa adicionada",
+  "numbers.health.done.description": "Descrição escrita",
+  "numbers.health.done.genreAndMood": "Género e ambiente escolhidos",
+  "numbers.health.done.creditsOnEveryTrack": "Todas as faixas têm créditos",
+  "numbers.health.done.lyrics": "Todas as faixas têm letra",
+  "numbers.health.done.buyLink": "Link de compra adicionado",
+  "numbers.health.done.versionNote": "Nota de versão escrita",
+  "numbers.nextRelease.heading": "Próximo lançamento",
+  "numbers.nextRelease.in": "{title} sai daqui a {time}",
+  "numbers.nextRelease.daysAndHours": "{days} e {hours}",
+  "numbers.nextRelease.underAnHour": "{title} sai daqui a menos de uma hora",
+  "numbers.nextRelease.now": "{title} está a sair agora",
+  "numbers.nextRelease.openCta": "Abrir a página do lançamento",
+  "numbers.placements.heading": "Onde a tua música vive",
+  "numbers.placements.dek":
+    "Playlists públicas com as tuas faixas, as mais recentes primeiro",
+  "numbers.placements.yourTracks": "As tuas faixas aqui: {titles}",
+  "numbers.placements.moreTracks_one": "mais {count} faixa",
+  "numbers.placements.moreTracks_other": "mais {count} faixas",
+  "numbers.placements.lastAdded": "Última adição a {date}",
+  "numbers.placements.empty":
+    "Quando alguém junta uma faixa tua a uma playlist pública, ela aparece aqui",
+  "numbers.placements.showMore": "Mostrar mais playlists",
+  "numbers.milestones.heading": "Marcos",
+  "numbers.milestones.dek":
+    "Momentos para partilhar. Um marco fica depois de alcançado",
+  "numbers.milestones.new": "Novo",
+  "numbers.milestones.reachedOn": "Alcançado a {date}",
+  "numbers.milestones.shareCta": "Partilhar marco",
+  "numbers.milestones.empty":
+    "O teu primeiro marco chega com 10 pessoas a seguir",
+  "numbers.milestones.showAll": "Mostrar todos os marcos",
+  "numbers.milestones.showFewer": "Mostrar menos marcos",
+  "share.milestone.followers": "{persona} passou das {value} pessoas a seguir",
+  "share.milestone.firstPlacement":
+    "{persona} entrou numa playlist pública pela primeira vez",
+  "share.milestone.trackPlays": "{track} passou das {value} audições",
+  "share.milestone.artistPlays": "{persona} passou das {value} audições",
+  "share.milestone.dialogTitle": "Partilhar marco",
+  "share.milestone.dialogSub":
+    "O cartão mostra este marco a quem tem acesso ao Studio",
+  "share.milestone.optionsLabel": "Formas de partilhar este marco",
+  "errors.reason.studio_milestone_not_found":
+    "Este marco não está disponível para ti",
+  "errors.what.placements": "onde a tua música vive",
+  "errors.what.milestones": "os teus marcos",
+  // Dashboard Part 2: listening (2026-10-27)
+  "shell.menu.yourListening": "O que ouves",
+  "listening.pageTitle": "O que ouves",
+  "listening.eyebrow": "Só tu vês esta página",
+  "listening.title": "O que <em>ouves</em>",
+  "listening.dek":
+    "Os teus artistas e faixas de topo, o que ouviste ultimamente e quem apoias. Pausa ou limpa quando quiseres",
+  "listening.controls.heading": "Definições do teu histórico",
+  "listening.history.heading": "Histórico de audição",
+  "listening.history.body":
+    "Guarda uma lista privada do que ouves, para veres os teus artistas e faixas de topo. Em pausa, as audições continuam a contar para os totais de quem fez a música, sem o teu nome",
+  "listening.clearCta": "Limpar histórico de audição",
+  "listening.clear.title": "Limpar histórico de audição",
+  "listening.clear.body":
+    "Isto apaga todas as audições do teu histórico e a lista do que ouviste recentemente neste dispositivo. Os totais de quem fez a música ficam como estão",
+  "listening.clear.confirm": "Limpar histórico de audição",
+  "listening.clear.done": "O teu histórico de audição foi limpo",
+  "listening.clear.failed": "Não conseguimos limpar o teu histórico de audição",
+  "listening.paused.body":
+    "O histórico está em pausa. As novas audições ficam fora do teu histórico até o voltares a ligar",
+  "listening.paused.resumeCta": "Voltar a ligar o histórico",
+  "listening.range.label": "Período",
+  "listening.range.4w": "4 semanas",
+  "listening.range.6m": "6 meses",
+  "listening.range.12m": "12 meses",
+  "listening.listens_one": "{count} audição",
+  "listening.listens_other": "{count} audições",
+  "listening.days_one": "{count} dia com música",
+  "listening.days_other": "{count} dias com música",
+  "listening.topArtists.heading": "Artistas de topo",
+  "listening.topTracks.heading": "Faixas de topo",
+  "listening.top.empty":
+    "Ainda nada neste período. Ouve alguma coisa e aparece aqui",
+  "listening.top.pausedEmpty":
+    "O teu histórico está em pausa, por isso as novas audições ficam fora desta lista",
+  "listening.recent.heading": "Ouvido ultimamente",
+  "listening.recent.playedOn": "Ouvida a {date}",
+  "listening.recent.unavailable": "Esta faixa já não está disponível",
+  "listening.recent.showMore": "Mostrar mais do teu histórico",
+  "listening.recent.empty":
+    "Ouve uma faixa durante 30 segundos e ela aparece aqui",
+  "listening.recent.pausedEmpty":
+    "O teu histórico está em pausa, por isso as novas audições ficam fora desta lista",
+  "listening.empty.title": "O que ouves começa aqui",
+  "listening.empty.body":
+    "Ouve uma faixa durante 30 segundos e os teus artistas e faixas de topo começam a aparecer. Só tu vês esta página",
+  "listening.empty.cta": "Abrir o início do Studio",
+  "listening.empty.pausedBody":
+    "O teu histórico de audição está em pausa. Volta a ligá-lo e os teus artistas e faixas de topo começam a aparecer",
+  "listening.supporting.heading": "Artistas que apoias",
+  "listening.supporting.dek":
+    "Veem-te entre as pessoas que dão mais apoio, com o nome que escolheste",
+  "listening.supporting.since": "Apoias desde {date}",
+  "listening.supporting.shownAs": "Apareces como {name}",
+  "listening.supporting.linksLabel": "Formas de apoiar {name}",
+  "listening.supporting.empty":
+    "Liga Mostrar-me como apoiante numa página de artista para a juntares aqui",
+  "listening.supporting.stop": "Deixar de apoiar",
+  "listening.supporting.stopAria": "Deixar de apoiar {artist}",
+  "listening.supporting.pausedNote":
+    "Enquanto o teu histórico estiver em pausa, não apareces entre quem dá mais apoio",
+  "listening.notice.body":
+    "O teu histórico de audição está ligado. Só tu o vês",
+  "listening.notice.cta": "Ver o que ouves",
+  "listening.notice.close": "Fechar aviso",
+  "settingsLive.history.label": "O que ouves",
+  "settingsLive.history.title": "O que o Studio <em>guarda</em> para ti",
+  "supporter.heading": "Mostrar-me como apoiante",
+  "supporter.body":
+    "{persona} vê o nome e a foto que escolheres entre quem dá mais apoio, pelo quanto ouviste a sua música nos últimos 28 dias",
+  "supporter.pausedNote":
+    "Enquanto o teu histórico estiver em pausa, não apareces entre quem dá mais apoio",
+  "supporter.pickerLegend": "Como {persona} te vê",
+  "supporter.account": "A tua conta",
+  "supporter.saveCta": "Guardar como apareces",
+  "supporter.closeCta": "Fechar sem guardar",
+  "supporter.changeCta": "Mudar como apareces",
+  "supporter.confirmation": "{persona} vê-te como {name}",
+  "supporter.confirmationLead": "É assim que {persona} te vê",
+  "supporter.removed": "{persona} deixou de te ver como apoiante",
+  "supporter.saveFailed": "Não conseguimos guardar como apareces",
+  "supporter.removeFailed": "Não conseguimos desligar Mostrar-me como apoiante",
+  "numbers.column.plays": "Audições",
+  "numbers.plays.showsNotCounted": "Não contam nos programas",
+  "numbers.plays.title": "Audições",
+  "numbers.plays.sub": "Por dia, nos últimos 28 dias",
+  "numbers.plays.ariaLabel": "Audições por dia nos últimos 28 dias",
+  "numbers.plays.today": "Hoje",
+  "numbers.plays.tableCaption": "Audições por dia",
+  "numbers.plays.dayColumn": "Dia",
+  "numbers.plays.countColumn": "Audições",
+  "numbers.plays.totals": "Desde sempre: {total} · Últimos 28 dias: {recent}",
+  "numbers.plays.note":
+    "Uma audição conta depois de 30 segundos. As audições tuas e de quem gere a persona contigo nunca contam",
+  "numbers.plays.empty": "Ainda sem audições nos últimos 28 dias",
+  "numbers.supporters.heading": "Quem mais te apoia",
+  "numbers.supporters.dek":
+    "Pessoas que escolheram aparecer, por ordem das audições nos últimos 28 dias",
+  "numbers.supporters.optedIn": "A aparecer como apoiantes: {value}",
+  "numbers.supporters.empty":
+    "Quando alguém liga Mostrar-me como apoiante, aparece aqui",
+  "numbers.supporters.listLabel": "Quem mais apoia {name}",
+  "errors.reason.studio_supporter_artist_not_found":
+    "Esta página de artista não está disponível para apoio",
+  "errors.reason.studio_supporter_own_persona":
+    "Fazes parte desta persona de artista, por isso não a podes apoiar",
+  "errors.reason.studio_supporter_identity_not_yours":
+    "Só podes aparecer com a tua conta ou com uma persona de que fazes parte",
+  "errors.what.listening": "o que ouves",
+  "errors.what.listeningHistory": "o teu histórico de audição",
+  "errors.what.supporting": "quem apoias",
+  "errors.what.supporter": "a tua definição de apoio",
+  "errors.what.plays": "as tuas audições",
+  "errors.what.topSupporters": "quem mais te apoia",
   "rail.v3.pressKit": "Kit de imprensa",
   "creator.nav.pressKit": "Kit de imprensa",
   "artistPage.v3.moreAria": "Mais sobre {name}",
@@ -3592,6 +3782,47 @@ export const studio: Catalog = {
   "artistPage.followerCountGrouped_one": "{number} pessoa segue",
   "artistPage.followerCountGrouped_other": "{number} pessoas seguem",
   "artistPage.pauseAll": "Pausar a música de {name}",
+  "artistPage.editPage.button": "Editar página no Studio",
+  "artistPage.editPage.title": "Edita a tua página no Studio",
+  "artistPage.editPage.intro":
+    "Escolhe o que aparece no topo da tua página. A página por trás deste painel mostra cada opção à medida que escolhes",
+  "artistPage.editPage.choicesLabel": "O que aparece no topo da tua página",
+  "artistPage.editPage.choice.banner.title": "Banner",
+  "artistPage.editPage.choice.banner.effect":
+    "A tua foto de capa ocupa o topo, com o teu nome por cima",
+  "artistPage.editPage.choice.portrait.title": "Avatar",
+  "artistPage.editPage.choice.portrait.effect":
+    "O teu avatar redondo fica no topo, ao lado do teu nome",
+  "artistPage.editPage.choice.both.title": "Banner e avatar",
+  "artistPage.editPage.choice.both.effect":
+    "A tua foto de capa ocupa o topo, com o teu avatar redondo por cima",
+  "artistPage.editPage.needsCover": "Precisa de uma foto de capa",
+  "artistPage.editPage.noCover":
+    "Um banner precisa de uma foto de capa. <a>Adiciona uma no editor da persona</a>",
+  "artistPage.editPage.save": "Guardar",
+  "artistPage.editPage.saving": "A guardar",
+  "artistPage.editPage.cancel": "Cancelar",
+  "artistPage.editPage.close": "Fechar",
+  "artistPage.editPage.error.invalidChoice":
+    "O servidor não aceitou esta opção. Recarrega a página e escolhe de novo",
+  "artistPage.editPage.error.signedOut":
+    "A tua sessão terminou. Entra de novo para guardares a tua escolha",
+  "artistPage.editPage.error.notAllowed":
+    "Não podes editar esta persona. Só quem a gere pode mudar a página dela no Studio",
+  "artistPage.editPage.error.personaMissing":
+    "Esta persona foi apagada ou já não a geres",
+  "artistPage.editPage.error.editConflict":
+    "Outra pessoa guardou esta persona ao mesmo tempo. Guarda de novo para aplicares a tua escolha",
+  "artistPage.editPage.error.tooMany":
+    "Demasiadas gravações em pouco tempo. Espera um minuto e guarda de novo",
+  "artistPage.editPage.error.serverDown":
+    "O nosso servidor está com problemas agora e a tua escolha não foi guardada. Tenta de novo daqui a pouco",
+  "artistPage.editPage.error.network":
+    "A ligação caiu antes de a tua escolha nos chegar. Confirma que estás online e guarda de novo",
+  "artistPage.editPage.error.unexpected":
+    "O servidor recusou a gravação com o erro {status}. Tenta de novo ou recarrega a página",
+  "artistPage.editPage.error.unexpectedNoStatus":
+    "Esta página teve um erro dela antes de a tua escolha nos chegar. Tenta de novo ou recarrega a página",
   // ── Studio Listening (2026-10-13): player, Now playing, queue, track
   // menu, chapters, lyric timing and the upload loudness check. Plan 3
   // Task 0 writes every key; Plan 2's code reads only the shortcuts and
@@ -3633,6 +3864,10 @@ export const studio: Catalog = {
   "player.repeat.off": "Repetir: desligado",
   "player.repeat.all": "Repetir: tudo",
   "player.repeat.one": "Repetir: esta faixa",
+  "player.shuffleEpisodeDisabled":
+    "O aleatório está desligado nos episódios, que tocam por ordem",
+  "player.repeatEpisodeDisabled":
+    "A repetição está desligada nos episódios, que tocam uma vez",
   "player.cast": "Ouvir noutro dispositivo",
   "player.castConnected": "A tocar noutro dispositivo",
   "player.volume": "Volume",
@@ -3773,6 +4008,16 @@ export const studio: Catalog = {
   "share.card.teaser": "Do QueerPulse Studio, aberto a quem tem acesso",
   "share.card.withdrawn": "Este lançamento foi retirado",
   "share.card.unavailable": "Indisponível",
+  "share.card.retryCta": "Tentar de novo",
+  "share.card.error.offline": "Estás sem ligação",
+  "share.card.error.timeout": "O Studio demorou demasiado a responder",
+  "share.card.error.rateLimited": "Pedidos a mais, espera um minuto",
+  "share.card.error.server": "O nosso servidor não respondeu",
+  "share.card.error.unreachable": "Não conseguimos chegar ao Studio",
+  "share.card.error.forbidden": "A tua conta não pode abrir isto",
+  "share.card.error.restricted": "Uma restrição de moderação bloqueia isto",
+  "share.card.error.unknown": "O pedido não chegou a ser feito",
+  "share.card.error.notFound": "Isto já não está disponível",
   "share.card.loading": "A carregar do Studio",
   "share.card.byline": "De {name}",
   "share.card.openAria": "Abrir {title} no Studio",
@@ -3823,6 +4068,11 @@ export const studio: Catalog = {
   "chapters.editor.pasteLabel": "Alinhamento, uma linha por capítulo",
   "chapters.editor.pasteHint":
     "Por exemplo 00:00 Artista - Título ou 1:02:30 Título",
+  "chapters.editor.pasteHintEpisode":
+    "Por exemplo 00:00 Introdução ou 1:02:30 Entrevista",
+  "chapters.editor.columnTime": "Tempo",
+  "chapters.editor.columnTitle": "Título",
+  "chapters.editor.columnArtist": "Artista",
   "chapters.editor.pasteApply": "Usar este alinhamento",
   "chapters.editor.pasteReplaceNote": "Isto substitui os capítulos acima",
   "chapters.editor.pasteUnparsed": "Não conseguimos ler estas linhas:",
@@ -3897,15 +4147,15 @@ export const studio: Catalog = {
   "format.all": "Tudo",
   "format.music": "Música",
   "format.podcast": "Podcasts",
-  "format.spoken_word": "Spoken word",
+  "format.spoken_word": "Palavra falada",
   "format.performance": "Performance",
   "format.listLabel": "Mostrar um formato",
   "releaseType.podcast": "Podcast",
   "releaseType.edit": "Edit de performance",
   "releaseType.lip_sync": "Lip-sync mix",
-  "genre.spokenWord": "Spoken word",
+  "genre.spokenWord": "Palavra falada",
   "home.newEpisodes.title": "Episódios <em>novos</em>",
-  "home.spokenWord.title": "Spoken <em>word</em>",
+  "home.spokenWord.title": "Palavra <em>falada</em>",
   "home.onStage.title": "Em <em>palco</em>",
   "home.continue.title": "Continua a <em>ouvir</em>",
   "home.continue.eyebrow": "Guardado só neste dispositivo",
@@ -4111,7 +4361,7 @@ export const studio: Catalog = {
   "artist.showCount_one": "{count} podcast",
   "artist.showCount_other": "{count} podcasts",
   "artist.tabs.podcast": "Podcasts",
-  "artist.tabs.spokenWord": "Spoken word",
+  "artist.tabs.spokenWord": "Palavra falada",
   "artist.tabs.performance": "Performance",
   // ── Playlists colaborativas (2026-10-14) ────────────────────────────────────
   "errors.playlistNotFound": "Esta playlist já não está disponível",
@@ -4290,6 +4540,7 @@ export const studio: Catalog = {
   "playlist.editors.listLabel": "Quem edita {name}",
   "playlist.editors.loadingLabel": "A carregar quem edita",
   "playlist.editors.pendingLabel": "Convite enviado",
+  "playlist.editors.ownerLabel": "Dono",
   "playlist.editors.removeCta": "Remover acesso de edição",
   "playlist.editors.removeAria": "Remover o acesso de edição de {name}",
   "playlist.editors.cancelInviteCta": "Cancelar convite",

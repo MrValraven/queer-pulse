@@ -8,6 +8,12 @@ const savePreferences = vi.fn();
 let askBeforeWarnings: boolean | undefined = undefined;
 
 vi.mock("./api/useStudioPlaybackPreferences", () => ({
+  useStudioPlaybackRow: () => ({
+    autoplayNext: true,
+    hideExplicit: false,
+    crossfadeSeconds: 0,
+    askBeforeWarnings,
+  }),
   useStudioPlaybackPreferences: () => ({
     preferences: {
       autoplayNext: true,

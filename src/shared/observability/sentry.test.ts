@@ -183,6 +183,33 @@ describe("dropStudioPlayBreadcrumb", () => {
       window.history.pushState(null, "", startPath);
     }
   });
+
+  it("drops the dashboard reads, the milestone card and the pages that name a persona", () => {
+    for (const url of [
+      "/v1/studio/artists/p1/stats",
+      "/v1/studio/artists/p1/placements?cursor=c2",
+      "/v1/studio/artists/p1/milestones",
+      "/v1/studio/milestones/m1",
+    ])
+      expect(
+        dropStudioPlayBreadcrumb({
+          category: "fetch",
+          data: { url, method: "GET" },
+        }),
+      ).toBeNull();
+    expect(
+      dropStudioPlayBreadcrumb({
+        category: "navigation",
+        data: { from: "/feed", to: "/studio/dashboard?persona=p1" },
+      }),
+    ).toBeNull();
+    expect(
+      dropStudioPlayBreadcrumb({
+        category: "navigation",
+        data: { from: "/feed", to: "/studio/artist?id=p1&milestone=m1" },
+      }),
+    ).toBeNull();
+  });
 });
 
 describe("dropStudioPlayBreadcrumb on a player surface", () => {
@@ -436,5 +463,64 @@ describe("Studio v3 private paths", () => {
     expect(
       isPrivateObservabilityUrl("http://api.test/v1/landing/features"),
     ).toBe(false);
+  });
+});
+
+describe("dropStudioPlayBreadcrumb on a toast dismiss button", () => {
+  it("drops a ui breadcrumb aimed at a dismiss button or its icon on any page", () => {
+    const startPath = window.location.pathname + window.location.search;
+    try {
+      window.history.pushState(null, "", "/feed");
+      const dismissButton = document.createElement("button");
+      dismissButton.setAttribute("data-toast-dismiss", "");
+      const icon = document.createElement("span");
+      dismissButton.append(icon);
+      for (const target of [dismissButton, icon]) {
+        expect(
+          dropStudioPlayBreadcrumb(
+            { category: "ui.click", message: "button.close" },
+            { event: { target } },
+          ),
+        ).toBeNull();
+      }
+    } finally {
+      window.history.pushState(null, "", startPath);
+    }
+  });
+
+  it("keeps a ui breadcrumb aimed at an unmarked toast button", () => {
+    const startPath = window.location.pathname + window.location.search;
+    try {
+      window.history.pushState(null, "", "/feed");
+      const undoButton = document.createElement("button");
+      const clickCrumb = { category: "ui.click", message: "button.action" };
+      expect(
+        dropStudioPlayBreadcrumb(clickCrumb, { event: { target: undoButton } }),
+      ).toBe(clickCrumb);
+    } finally {
+      window.history.pushState(null, "", startPath);
+    }
+  });
+
+  it("drops the play count, the listener's reads and the listening page", () => {
+    for (const [url, method] of [
+      ["/v1/studio/plays", "POST"],
+      ["/v1/me/studio-listening?range=6m", "GET"],
+      ["/v1/me/studio-listening/recent?cursor=c2", "GET"],
+      ["/v1/me/studio-listening/supporting", "GET"],
+      ["/v1/me/studio-listening", "DELETE"],
+      ["/v1/studio/artists/p1/plays?days=28", "GET"],
+      ["/v1/studio/artists/p1/supporter", "PUT"],
+      ["/v1/studio/artists/p1/supporters", "GET"],
+    ] as const)
+      expect(
+        dropStudioPlayBreadcrumb({ category: "fetch", data: { url, method } }),
+      ).toBeNull();
+    expect(
+      dropStudioPlayBreadcrumb({
+        category: "navigation",
+        data: { from: "/feed", to: "/studio/listening?range=12m" },
+      }),
+    ).toBeNull();
   });
 });

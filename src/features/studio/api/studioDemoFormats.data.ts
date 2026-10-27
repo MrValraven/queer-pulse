@@ -6,6 +6,7 @@ import type {
   StudioSource,
   StudioTrackSummaryDTO,
 } from "./studio.types";
+import type { StudioHeroChoice } from "../studioHeroChoice";
 import { notesExcerpt } from "./studioEpisodes";
 import {
   DEMO_ARTISTS,
@@ -19,6 +20,15 @@ import { DEMO_ARTIST_LATE_BLOOMERS, DEMO_STUDIO_ME } from "./studioDemoMe.data";
 // same adapters as live answers. studioDemoApi.ts merges them with the music
 // catalogue. Release dates sit in 2022, behind the first page of the music
 // grid; the episodes went live in 2026.
+
+// Cover art reuses the demo photo set the music catalogue already uses
+// (studioArtist.data.ts), at 800px like the other release covers.
+const COVER_LATE_BLOOMERS =
+  "https://images.unsplash.com/photo-1754403754631-75ccec6ca1ed?q=80&w=800&auto=format&fit=crop";
+const COVER_LUA_EP =
+  "https://images.unsplash.com/photo-1755276706451-7258309ed76a?q=80&w=800&auto=format&fit=crop";
+const COVER_PERFORMANCE_EDIT =
+  "https://images.unsplash.com/photo-1755593574938-6d66d28f8e57?q=80&w=800&auto=format&fit=crop";
 
 export const DEMO_ARTIST_LUA_CARDOSO: StudioArtistRefDTO = {
   id: "demo-persona-lua-cardoso",
@@ -150,6 +160,7 @@ const LATE_BLOOMERS_SHOW = formatRelease(
       "A podcast for people who found themselves later than expected, with new episodes every other Monday",
     genre: null,
     isOwner: true,
+    coverUrl: COVER_LATE_BLOOMERS,
   },
   tracksOf([
     {
@@ -195,6 +206,7 @@ const SPOKEN_WORD_EP = formatRelease(
     releasedOn: "2022-10-21",
     description: "Three poems recorded in one take on a Sunday night",
     genre: "spoken-word",
+    coverUrl: COVER_LUA_EP,
   },
   tracksOf([
     { id: "demo-track-lua-01", title: "Paragem", durationSeconds: 184 },
@@ -212,7 +224,7 @@ const LIP_SYNC_MIX = formatRelease(
     releasedOn: "2022-09-30",
     description: "The mix from my Sunday Mass number, cut for the stage",
     genre: null,
-    coverUrl: DEMO_ARTIST_VANDA_DIESEL.avatarUrl,
+    coverUrl: DEMO_ARTIST_VANDA_DIESEL.avatarUrl ?? COVER_PERFORMANCE_EDIT,
   },
   tracksOf([
     {
@@ -238,6 +250,7 @@ const PERFORMANCE_EDIT = formatRelease(
     releasedOn: "2022-08-12",
     description: "The edit I ride in on",
     genre: null,
+    coverUrl: COVER_PERFORMANCE_EDIT,
   },
   tracksOf([
     {
@@ -322,13 +335,13 @@ export function demoArtistDetailsOf(artistId: string): {
   bio: string | null;
   city: string | null;
   coverUrl: string | null;
-  studioHero: "full-bleed" | "avatar" | null;
+  studioHero: StudioHeroChoice | null;
 } {
   const details: {
     bio: string | null;
     city: string | null;
     coverUrl?: string | null;
-    studioHero?: "full-bleed" | "avatar" | null;
+    studioHero?: StudioHeroChoice | null;
   } = DEMO_ARTIST_DETAILS[artistId] ??
     DEMO_FORMAT_ARTIST_DETAILS[artistId] ?? { bio: null, city: null };
   return {

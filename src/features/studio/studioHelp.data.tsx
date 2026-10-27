@@ -63,7 +63,9 @@ export const LIVE_HELP_SECTIONS: HelpSectionData[] = [
     headingKey: "studio:helpLive.cat.listening.heading",
     items: [
       faq("what-is-studio", "studio:helpLive.faq.whatIsStudio"),
-      faq("tracking", "studio:helpLive.faq.tracking"),
+      faq("tracking", "studio:helpLive.faq.tracking", {
+        a: <Link to={routes.studioListening} />,
+      }),
       faq("saving", "studio:helpLive.faq.saving", {
         a: <Link to={routes.studioLibrary} />,
       }),

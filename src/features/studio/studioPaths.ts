@@ -3,6 +3,7 @@ import {
   FUNDING_CATEGORY_ID,
   FUNDING_MUSIC_TAG,
 } from "../forum/funding/funding.data";
+import type { StudioListeningRange } from "./api/studioListening.types";
 import type {
   StudioFormat,
   StudioGenre,
@@ -43,6 +44,17 @@ export const studioUploadPath = (releaseId?: string) =>
   releaseId
     ? `${routes.studioUpload}?release=${encodeURIComponent(releaseId)}`
     : routes.studioUpload;
+
+/** A field of the release editor: the step that holds it and the field's id
+ *  as the hash, which the upload flow focuses once the step renders. */
+export function studioReleaseFieldPath(
+  releaseId: string,
+  step: "release" | "tracks",
+  fieldId: string,
+): string {
+  const stepQuery = step === "release" ? "" : `&step=${step}`;
+  return `${studioUploadPath(releaseId)}${stepQuery}#${encodeURIComponent(fieldId)}`;
+}
 
 /** A private preview link's page (Studio v3). */
 export const studioPreviewPath = (token: string) =>
@@ -123,6 +135,12 @@ export function studioDashboardPath(subprofileId: string | null = null) {
     ? `${routes.studioDashboard}?persona=${encodeURIComponent(subprofileId)}`
     : routes.studioDashboard;
 }
+
+/** "Your listening"; the 4-week range is the page's default and carries no query. */
+export const studioListeningPath = (range: StudioListeningRange = "4w") =>
+  range === "4w"
+    ? routes.studioListening
+    : `${routes.studioListening}?range=${range}`;
 
 /** Funding & Grants filtered to music. The forum reads `category`,
  *  `fundingView` and `tag` from its URL (useForumUrlParams). */

@@ -4,6 +4,8 @@ import type {
   MessageSearchGroupView,
   MessageSearchHitView,
 } from "./api/useMessageSearch";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { studioSnippetPreviewText } from "./studioSharePreview";
 import styles from "./MessagesPage.module.css";
 
 /** Wraps every case-insensitive occurrence of `query` in `text` with a <mark>,
@@ -39,6 +41,7 @@ export function MessageHitRow({
   query: string;
   onSelect: (conversationId: string, messageId?: string) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <button
       type="button"
@@ -49,7 +52,9 @@ export function MessageHitRow({
         <span className={styles.hitSender}>{hit.senderName}</span>
         {hit.time && <span className={styles.hitTime}>{hit.time}</span>}
       </div>
-      <div className={styles.hitSnippet}>{highlight(hit.snippet, query)}</div>
+      <div className={styles.hitSnippet}>
+        {highlight(studioSnippetPreviewText(hit.snippet, t), query)}
+      </div>
     </button>
   );
 }

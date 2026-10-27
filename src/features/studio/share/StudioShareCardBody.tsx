@@ -28,16 +28,25 @@ export function StudioShareCardBody({
   meta,
   art,
   play,
+  titleLines = 1,
 }: {
   kind: StudioShareKind;
   href: string;
   title: string;
-  subtitle: string;
-  meta: ReactNode;
+  /** Left out by a sentence card (`titleLines` 3), which shows none. */
+  subtitle?: string;
+  /** Left out by a sentence card (`titleLines` 3), which shows none. */
+  meta?: ReactNode;
   art: ReactNode;
   play: StudioShareCardPlay | null;
+  /** 3 for a title that is the card's whole content (a milestone's
+   *  sentence, which already names the persona): it wraps to three lines
+   *  and the card drops the subtitle and meta, so the column fits the
+   *  frame. */
+  titleLines?: 1 | 3;
 }) {
   const { t } = useTranslation();
+  const isSentenceCard = titleLines === 3;
   return (
     <div className={styles.body}>
       <div className={styles.art}>
@@ -67,11 +76,16 @@ export function StudioShareCardBody({
           to={href}
           className={styles.title}
           aria-label={t("studio:share.card.openAria", { title })}
+          data-title-lines={isSentenceCard ? 3 : undefined}
         >
           {title}
         </Link>
-        <span className={styles.subtitle}>{subtitle}</span>
-        <span className={styles.meta}>{meta}</span>
+        {!isSentenceCard && (
+          <>
+            <span className={styles.subtitle}>{subtitle}</span>
+            <span className={styles.meta}>{meta}</span>
+          </>
+        )}
       </div>
     </div>
   );

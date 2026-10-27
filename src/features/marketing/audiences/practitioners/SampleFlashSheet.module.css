@@ -1,0 +1,11 @@
+/* The hero's flash sheet: a compact cut of the tattoo page, two designs
+   side by side on the tattoo skin's own ground. The doubled selector
+   outranks the persona article's own page padding. */
+:global(.pp).article {
+  min-height: 0;
+  padding: 4px 22px 6px;
+}
+
+.article .grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}

@@ -60,6 +60,11 @@
      under them. Built on --cream (never --cream-rgb, which stays light), and
      re-declared in the dark block so it follows the dark --cream there. */
   --cream-translucent: color-mix(in srgb, var(--cream) 90%, transparent);
+  /* A warm cream band ground: the page cream with a touch of coral, for a
+     full-width section that must read apart from the plain cream bands
+     beside it while --paper cards keep their edge on it. Re-declared in the
+     dark block, where it mixes a little less coral into the dark --cream. */
+  --cream-warm: color-mix(in srgb, var(--accent) 6%, var(--cream));
   --map-tint: #e8ecdf; /* map illustration placeholder */
 
   /* ── Jade (success / live / verified) ── */
@@ -307,6 +312,18 @@
   /* The soft glow behind the creator back-office heroes. Jade reads as a
      grey-green smudge on cream, so light warms it to a faint coral. */
   --studio-hero-glow: rgba(var(--accent-rgb), 0.08);
+  /* Control edges (chips, inputs): plum at 0.5 is 3.10:1 on cream, where the
+     0.4 the chips used was 2.38:1. Card meta line: same ink as muted text. */
+  --studio-edge: rgba(var(--studio-ink-rgb), 0.5);
+  --studio-card-meta: var(--studio-text-muted);
+  /* Studio landing device frames, dark objects in both themes: the edge
+     light on the rim, the gloss across the lid or phone body, the lit hinge
+     strip, the keyboard deck seen edge on, and the shade under it. */
+  --studio-device-rim: rgba(255, 255, 255, 0.12);
+  --studio-device-sheen: rgba(255, 255, 255, 0.13);
+  --studio-device-hinge: rgba(255, 255, 255, 0.22);
+  --studio-device-deck: var(--studio-rail);
+  --studio-device-shade: rgba(0, 0, 0, 0.4);
 
   /* Studio browse tiles: one ground per genre and mood on the home page.
      Fixed in both themes, like Spotify's browse tiles, and each one carries
@@ -374,6 +391,7 @@
 [data-theme="dark"] {
   --cream: #0e0820;
   --cream-translucent: color-mix(in srgb, var(--cream) 90%, transparent);
+  --cream-warm: color-mix(in srgb, var(--accent) 4%, var(--cream));
   --paper: #1a1030;
   --ink: rgba(247, 243, 238, 0.92);
   --ink-rgb: 247, 243, 238; /* light channels so rgba() faint text flips too */
@@ -470,6 +488,20 @@
   --studio-accent-chip-text: var(--accent-soft);
   --studio-jade-chip-text: var(--jade-light);
   --studio-hero-glow: rgba(var(--jade-rgb), 0.14);
+  /* Cream at 0.4 is 3.55:1 on the Studio page. The card meta line sits on
+     cover-adjacent washes at 12px, so it takes 0.7 (8.0:1 on the 4% wash). */
+  --studio-edge: rgba(var(--studio-ink-rgb), 0.4);
+  --studio-card-meta: rgba(247, 243, 238, 0.7);
+  /* Landing devices on the plum ground: a brighter rim and gloss, and a
+     deck lifted toward grey, so the dark bodies keep their edge. */
+  --studio-device-rim: rgba(255, 255, 255, 0.2);
+  --studio-device-sheen: rgba(255, 255, 255, 0.16);
+  --studio-device-hinge: rgba(255, 255, 255, 0.34);
+  --studio-device-deck: color-mix(
+    in srgb,
+    var(--studio-rail) 74%,
+    rgb(255, 255, 255)
+  );
 
   /* Pulse Live (quizshow): lighter fills on one dark ink. */
   --quizshow-circle: #f0b33c;

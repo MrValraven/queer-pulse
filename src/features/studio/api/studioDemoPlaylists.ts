@@ -24,6 +24,10 @@ import {
   type UpdateStudioPlaylistBody,
   type UpdateStudioProfilePlaylistsBody,
 } from "./studio.types";
+import {
+  STUDIO_PLACEMENT_TRACKS_SHOWN,
+  type StudioPlacementDTO,
+} from "./studioDashboard.types";
 import { demoReleaseCard } from "./studioDemoCards";
 import { demoTrackWithSafety } from "./studioDemoSafety";
 import { DEMO_RELEASES, DEMO_WITHDRAWN_TRACK_IDS } from "./studioDemo.data";
@@ -648,4 +652,49 @@ export function demoReorderPlaylist(
     return entry ? [entry] : [];
   });
   return touch(playlist);
+}
+
+/** Public playlists holding a published track of this persona, newest
+ *  addition first (GET /studio/artists/:id/placements before paging). Tracks
+ *  are distinct, at most five are listed, and trackCount counts them all. */
+export function demoArtistPlacements(
+  subprofileId: string,
+): StudioPlacementDTO[] {
+  const tracksById = demoPublishedTracks();
+  return publicPlaylists()
+    .flatMap((playlist) => {
+      const ownEntries = playlist.entries.filter(
+        (entry) =>
+          tracksById.get(entry.trackId)?.release.artist.id === subprofileId,
+      );
+      const distinctTracks = new Map<string, StudioPlaylistTrackDTO>();
+      for (const entry of ownEntries) {
+        const track = tracksById.get(entry.trackId);
+        if (track && !distinctTracks.has(track.id))
+          distinctTracks.set(track.id, track);
+      }
+      if (distinctTracks.size === 0) return [];
+      const latestAddedAt = new Date(
+        Math.max(...ownEntries.map((entry) => Date.parse(entry.addedAt))),
+      ).toISOString();
+      return [
+        {
+          playlist: toCardDto(playlist),
+          tracks: [...distinctTracks.values()]
+            .slice(0, STUDIO_PLACEMENT_TRACKS_SHOWN)
+            .map((track) => ({
+              id: track.id,
+              title: track.title,
+              releaseId: track.release.id,
+            })),
+          trackCount: distinctTracks.size,
+          latestAddedAt,
+        },
+      ];
+    })
+    .sort(
+      (left, right) =>
+        right.latestAddedAt.localeCompare(left.latestAddedAt) ||
+        right.playlist.id.localeCompare(left.playlist.id),
+    );
 }

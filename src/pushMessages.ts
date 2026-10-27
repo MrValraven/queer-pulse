@@ -76,6 +76,9 @@ const en: Record<string, string> = {
   "push:messages.studio.playlist": "Shared a playlist from Studio",
   "push:messages.studio.playlistWithNote":
     "Shared a playlist from Studio: {note}",
+  "push:messages.studio.milestone": "Shared a milestone from Studio",
+  "push:messages.studio.milestoneWithNote":
+    "Shared a milestone from Studio: {note}",
   "push:messages.group.studio.track": "{name} shared a track from Studio",
   "push:messages.group.studio.trackWithNote":
     "{name} shared a track from Studio: {note}",
@@ -85,6 +88,10 @@ const en: Record<string, string> = {
   "push:messages.group.studio.playlist": "{name} shared a playlist from Studio",
   "push:messages.group.studio.playlistWithNote":
     "{name} shared a playlist from Studio: {note}",
+  "push:messages.group.studio.milestone":
+    "{name} shared a milestone from Studio",
+  "push:messages.group.studio.milestoneWithNote":
+    "{name} shared a milestone from Studio: {note}",
   "push:messages.group.mention.studio.track":
     "{name} mentioned you and shared a track from Studio",
   "push:messages.group.mention.studio.trackWithNote":
@@ -97,6 +104,10 @@ const en: Record<string, string> = {
     "{name} mentioned you and shared a playlist from Studio",
   "push:messages.group.mention.studio.playlistWithNote":
     "{name} mentioned you and shared a playlist from Studio: {note}",
+  "push:messages.group.mention.studio.milestone":
+    "{name} mentioned you and shared a milestone from Studio",
+  "push:messages.group.mention.studio.milestoneWithNote":
+    "{name} mentioned you and shared a milestone from Studio: {note}",
   "push:test.title": "Test notification",
   "push:test.body": "This is a test. Your notifications are working.",
   "push:connection.request.title": "New connection request",
@@ -353,6 +364,9 @@ const pt: Record<string, string> = {
   "push:messages.studio.playlist": "Partilhou uma playlist do Studio",
   "push:messages.studio.playlistWithNote":
     "Partilhou uma playlist do Studio: {note}",
+  "push:messages.studio.milestone": "Partilhou um marco do Studio",
+  "push:messages.studio.milestoneWithNote":
+    "Partilhou um marco do Studio: {note}",
   "push:messages.group.studio.track": "{name} partilhou uma faixa do Studio",
   "push:messages.group.studio.trackWithNote":
     "{name} partilhou uma faixa do Studio: {note}",
@@ -364,6 +378,9 @@ const pt: Record<string, string> = {
     "{name} partilhou uma playlist do Studio",
   "push:messages.group.studio.playlistWithNote":
     "{name} partilhou uma playlist do Studio: {note}",
+  "push:messages.group.studio.milestone": "{name} partilhou um marco do Studio",
+  "push:messages.group.studio.milestoneWithNote":
+    "{name} partilhou um marco do Studio: {note}",
   "push:messages.group.mention.studio.track":
     "{name} mencionou-te e partilhou uma faixa do Studio",
   "push:messages.group.mention.studio.trackWithNote":
@@ -376,6 +393,10 @@ const pt: Record<string, string> = {
     "{name} mencionou-te e partilhou uma playlist do Studio",
   "push:messages.group.mention.studio.playlistWithNote":
     "{name} mencionou-te e partilhou uma playlist do Studio: {note}",
+  "push:messages.group.mention.studio.milestone":
+    "{name} mencionou-te e partilhou um marco do Studio",
+  "push:messages.group.mention.studio.milestoneWithNote":
+    "{name} mencionou-te e partilhou um marco do Studio: {note}",
   "push:test.title": "Notificação de teste",
   "push:test.body": "Isto é um teste. As tuas notificações estão a funcionar.",
   "push:connection.request.title": "Novo pedido de conexão",

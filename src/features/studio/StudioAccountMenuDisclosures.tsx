@@ -175,7 +175,7 @@ export function StudioAccountMenuHelp({
         <Collapse isOpen={isOpen}>
           {items.map((item) => (
             <StudioAccountMenuLink
-              key={item.to}
+              key={`${item.labelKey}-${item.to}`}
               item={item}
               onNavigate={onNavigate}
               isNested

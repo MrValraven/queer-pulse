@@ -13,7 +13,9 @@ import {
 import {
   buildMetaPatchFrom,
   shouldShowStudioHeroControl,
+  studioHeroOf,
 } from "./subprofileMetaEditor.helpers";
+import { DEFAULT_STUDIO_HERO } from "../studio/studioHeroChoice";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
 
 /**
@@ -40,7 +42,7 @@ function makeMeta(overrides: Partial<MetaSnapshot> = {}): MetaSnapshot {
     ctaLabel: "Book a set",
     ctaUrl: "https://x.test/book",
     coverBleed: false,
-    studioHero: "full-bleed",
+    studioHero: "banner",
     ...overrides,
   };
 }
@@ -156,8 +158,8 @@ describe("diffMeta", () => {
 
   it("itemizes a changed Studio page layout as a plain metaEdited change", () => {
     const changes = diffMeta(
-      makeMeta({ studioHero: "avatar" }),
-      makeMeta({ studioHero: "full-bleed" }),
+      makeMeta({ studioHero: "both" }),
+      makeMeta({ studioHero: "banner" }),
     );
     expect(changes).toEqual([
       {
@@ -329,23 +331,26 @@ describe("buildMetaPatchFrom studioHero", () => {
 
   it("includes studioHero merged onto existing skinData when changed", () => {
     const patch = buildMetaPatchFrom(
-      makeMeta({ studioHero: "avatar" }),
-      makeMeta({ studioHero: "full-bleed" }),
+      makeMeta({ studioHero: "both" }),
+      makeMeta({ studioHero: "banner" }),
       { coverOffsetY: 40 },
     );
     expect(patch?.skinData).toEqual({
       coverOffsetY: 40,
-      studioHero: "avatar",
+      studioHero: "both",
     });
   });
 
   it("sends both keys when bleed and layout change together", () => {
     const patch = buildMetaPatchFrom(
-      makeMeta({ studioHero: "avatar", coverBleed: true }),
+      makeMeta({ studioHero: "portrait", coverBleed: true }),
       makeMeta(),
       null,
     );
-    expect(patch?.skinData).toEqual({ coverBleed: true, studioHero: "avatar" });
+    expect(patch?.skinData).toEqual({
+      coverBleed: true,
+      studioHero: "portrait",
+    });
   });
 
   it("does not send studioHero when only the bleed changed", () => {
@@ -355,6 +360,65 @@ describe("buildMetaPatchFrom studioHero", () => {
       null,
     );
     expect(patch?.skinData).toEqual({ coverBleed: true });
+  });
+
+  it("keeps a current stored studioHero untouched when only the bleed changed", () => {
+    const patch = buildMetaPatchFrom(
+      makeMeta({ coverBleed: true, studioHero: "portrait" }),
+      makeMeta({ studioHero: "portrait" }),
+      { studioHero: "portrait" },
+    );
+    expect(patch?.skinData).toEqual({
+      coverBleed: true,
+      studioHero: "portrait",
+    });
+  });
+
+  it("normalizes a legacy stored studioHero when the layout is unchanged", () => {
+    const fullBleedPatch = buildMetaPatchFrom(
+      makeMeta({ coverBleed: true }),
+      makeMeta(),
+      { studioHero: "full-bleed", coverOffsetY: 40 },
+    );
+    expect(fullBleedPatch?.skinData).toEqual({
+      coverBleed: true,
+      coverOffsetY: 40,
+      studioHero: "banner",
+    });
+    const avatarPatch = buildMetaPatchFrom(
+      makeMeta({ coverBleed: true, studioHero: "both" }),
+      makeMeta({ studioHero: "both" }),
+      { studioHero: "avatar" },
+    );
+    expect(avatarPatch?.skinData).toEqual({
+      coverBleed: true,
+      studioHero: "both",
+    });
+  });
+
+  it("writes the new pick over a legacy stored studioHero", () => {
+    const patch = buildMetaPatchFrom(
+      makeMeta({ studioHero: "portrait" }),
+      makeMeta({ studioHero: "both" }),
+      { studioHero: "avatar" },
+    );
+    expect(patch?.skinData).toEqual({ studioHero: "portrait" });
+  });
+});
+
+describe("studioHeroOf", () => {
+  it("maps legacy stored layouts onto the current choices", () => {
+    expect(studioHeroOf({ studioHero: "full-bleed" })).toBe("banner");
+    expect(studioHeroOf({ studioHero: "avatar" })).toBe("both");
+  });
+
+  it("keeps a current stored choice", () => {
+    expect(studioHeroOf({ studioHero: "portrait" })).toBe("portrait");
+  });
+
+  it("falls back to the default when nothing is stored", () => {
+    expect(studioHeroOf(null)).toBe(DEFAULT_STUDIO_HERO);
+    expect(studioHeroOf({})).toBe(DEFAULT_STUDIO_HERO);
   });
 });
 

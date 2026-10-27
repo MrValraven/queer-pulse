@@ -1,6 +1,9 @@
 import type { StudioAudioContentType } from "./api/studio.types";
 import { createProgressReporter } from "./studioUploadQueue";
-import { conversionFailureOf } from "./studioUploadValidation";
+import {
+  conversionFailureOf,
+  routeBySignature,
+} from "./studioUploadValidation";
 import { convertToMp3 } from "./upload/convert/studioWavConverter";
 import type { AcceptedUpload, UploadRow } from "./useStudioTrackUploads";
 
@@ -54,10 +57,27 @@ export async function convertRowAudio(
   work: ConvertibleWork,
   context: RowConversionContext,
 ): Promise<boolean> {
+  if (!work.needsConversion && !work.wasConverted) {
+    // A WAV renamed .mp3 is caught here, by its first bytes.
+    const routed = await routeBySignature({
+      file: work.file,
+      contentType: work.contentType,
+      needsConversion: false,
+    });
+    if (context.isGone(localId)) return false;
+    if (routed.needsConversion) {
+      work.contentType = routed.contentType;
+      work.sourceFile = routed.file;
+      work.needsConversion = true;
+    }
+  }
   const sourceFile = work.sourceFile;
   if (!work.needsConversion || !sourceFile) return true;
   const controller = new AbortController();
   work.conversion = controller;
+  // The header is read before the row says anything about converting, so a
+  // file that is too long is refused straight from "Checking file".
+  context.patchRow(localId, { stage: "checking", progress: 0 });
   const reportProgress = createProgressReporter((progress) => {
     if (!context.isGone(localId))
       context.patchRow(localId, {
@@ -67,6 +87,10 @@ export async function convertRowAudio(
   });
   const result = await convertToMp3(sourceFile, context.maxBytes, {
     signal: controller.signal,
+    onChecked: () => {
+      if (!context.isGone(localId))
+        context.patchRow(localId, { stage: "converting", progress: 0 });
+    },
     onProgress: (fraction) => reportProgress(fraction * 100),
   });
   work.conversion = null;

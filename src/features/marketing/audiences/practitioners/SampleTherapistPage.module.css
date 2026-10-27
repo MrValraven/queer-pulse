@@ -1,0 +1,6 @@
+/* The sample therapist page has no sidebar, so its reading column takes the
+   whole width the layout's two-column grid would split. The doubled class
+   outranks the layout's own grid rule. */
+.cols.cols {
+  grid-template-columns: minmax(0, 1fr);
+}

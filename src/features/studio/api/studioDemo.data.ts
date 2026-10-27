@@ -7,6 +7,7 @@ import {
   RELEASES as ARTIST_RELEASES,
   SINGLES as ARTIST_SINGLES,
 } from "../studioArtist.data";
+import type { StudioHeroChoice } from "../studioHeroChoice";
 import { TRACKS as HOME_CARDS } from "../studioPage.data";
 import { CREDITS as TRACK_CREDITS } from "../studioTrack.data";
 import type {
@@ -97,7 +98,7 @@ export interface DemoArtistDetails {
   bio: string | null;
   city: string | null;
   coverUrl?: string | null;
-  studioHero?: "full-bleed" | "avatar" | null;
+  studioHero?: StudioHeroChoice | null;
 }
 
 /** Mariana's wide demo photo: her portrait photo at banner size. */
@@ -109,7 +110,7 @@ export const DEMO_ARTIST_DETAILS: Record<string, DemoArtistDetails> = {
     bio: "Mariana Sol writes letters set to a piano so patient it sometimes forgets to play. Born in Beja, based in Sintra. Her work moves between fado's grammar and something quieter, the song you hum doing the dishes.",
     city: null,
     coverUrl: DEMO_ARTIST_COVER_URL,
-    studioHero: "full-bleed",
+    studioHero: "both",
   },
   [DEMO_ARTIST_NIGHTFORM.id]: {
     bio: "Synths, a drum machine and one long night bus home",

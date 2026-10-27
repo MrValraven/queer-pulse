@@ -73,3 +73,12 @@
   padding-inline: 16px;
   font-size: var(--text-14);
 }
+
+/* Focus handed to the page heading when Skip ended the session and took the
+   player (and its play button) away. The move follows a pointer press, so the
+   ring is drawn here whatever :focus-visible decides. */
+:global([data-session-end-focus]):focus {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}

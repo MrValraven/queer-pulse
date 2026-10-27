@@ -3,7 +3,11 @@ import { useFormat } from "../../shared/i18n/format";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { FinanceSourceBadge } from "./FinanceSourceBadge";
 import { AmountInput } from "./AdminGovernanceFinancesEditCells";
-import { lossClass, rowClass } from "./adminGovernanceFinancesEditRow";
+import {
+  lossClass,
+  rowClass,
+  toSpendingFigure,
+} from "./adminGovernanceFinancesEditRow";
 import {
   SCALAR_KEYS,
   SCALAR_UNIT,
@@ -14,21 +18,27 @@ import {
 import type { AdminFinanceLatest } from "./api/adminGovernanceFinances.api";
 import styles from "./AdminGovernanceFinancesEdit.module.css";
 
-/** The five editable headline figures plus the surplus derived from two of
- *  them, one row each: what is stored, where it came from, and the new value. */
+/** The four editable headline figures, then the two computed ones: total
+ *  spending (the sum of the switched-on spending lines, read as a negative
+ *  figure) and the surplus. One row each: what is stored, where it came from,
+ *  and the new value. */
 export function HeadlineTable({
   scalars,
   latest,
   onChange,
+  spendingPreview,
   surplusPreview,
 }: {
   scalars: ScalarDrafts;
   latest: AdminFinanceLatest;
   onChange: (key: ScalarKey, value: string) => void;
+  /** The live sum of the switched-on spending lines, as a positive magnitude. */
+  spendingPreview: number;
   surplusPreview: number;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const spendingFigure = toSpendingFigure(spendingPreview);
   const formatCurrent = (key: ScalarKey): string => {
     const value = latest[key];
     // A figure nobody entered yet has no current value to show.
@@ -67,7 +77,6 @@ export function HeadlineTable({
           <tbody>
             {SCALAR_KEYS.map((key) => {
               const label = t(`admin:governance.finances.edit.field.${key}`);
-              const isSpending = key === "expenseTotal";
               return (
                 <tr
                   key={key}
@@ -79,10 +88,7 @@ export function HeadlineTable({
                   <td data-label={columns.source}>
                     <FinanceSourceBadge source={latest.sources[key]} />
                   </td>
-                  <td
-                    data-label={columns.current}
-                    className={lossClass(styles.colNumber, isSpending)}
-                  >
+                  <td data-label={columns.current} className={styles.colNumber}>
                     {formatCurrent(key)}
                   </td>
                   <td data-label={columns.newValue}>
@@ -94,13 +100,41 @@ export function HeadlineTable({
                       value={scalars[key]}
                       isBlankAllowed
                       unit={SCALAR_UNIT[key]}
-                      isLoss={isSpending}
                       onChange={(value) => onChange(key, value)}
                     />
                   </td>
                 </tr>
               );
             })}
+            <tr className={`${styles.row} ${styles.rowComputed}`}>
+              <th scope="row" data-label={columns.figure}>
+                <span className={styles.rowLabel}>
+                  {t("admin:governance.finances.edit.field.expenseTotal")}
+                </span>
+                <span className={styles.rowHint}>
+                  {t("admin:governance.finances.edit.field.expenseTotalHint")}
+                </span>
+              </th>
+              <td data-label={columns.source}>
+                <FinanceSourceBadge source="computed" />
+              </td>
+              <td
+                data-label={columns.current}
+                className={lossClass(styles.colNumber, true)}
+              >
+                {latest.expenseTotal === null
+                  ? ""
+                  : fmt.currency(toSpendingFigure(latest.expenseTotal), "EUR")}
+              </td>
+              <td data-label={columns.newValue}>
+                <output className={lossClass(styles.surplusPreview, true)}>
+                  <RollingNumber
+                    value={fmt.currency(spendingFigure, "EUR")}
+                    numericValue={spendingFigure}
+                  />
+                </output>
+              </td>
+            </tr>
             <tr className={`${styles.row} ${styles.rowComputed}`}>
               <th scope="row" data-label={columns.figure}>
                 <span className={styles.rowLabel}>

@@ -6,6 +6,7 @@ import { intlLocale } from "../../../../shared/i18n/locale";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { contentWarningLabels } from "../../../forum/forumWarnings.helpers";
 import { useStudioPlayer, type StudioQueueItem } from "../studioPlayerContext";
+import { restoreFocusAfterSessionEnd } from "./studioSessionEndFocus";
 import css from "./StudioWarningGate.module.css";
 
 /** A player surface (the bar's section, the mini card, Now playing's stage)
@@ -137,6 +138,7 @@ export function StudioWarningGate({
               onClick={() => {
                 moveFocusAfterAnswer();
                 player.skipWarnedTrack();
+                restoreFocusAfterSessionEnd();
               }}
             >
               <FiSkipForward aria-hidden />

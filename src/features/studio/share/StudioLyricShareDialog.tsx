@@ -11,7 +11,11 @@ import { studioIdentityNote, studioShareContent } from "./studioShareContent";
 import { useStudioShareRules } from "./useStudioShareRules";
 import styles from "./StudioLyricShareDialog.module.css";
 
-function StudioLyricShareOption({ option }: { option: ShareMenuOption }) {
+export function StudioLyricShareOption({
+  option,
+}: {
+  option: ShareMenuOption;
+}) {
   const { t } = useTranslation();
   const icon = (
     <span className={styles.optionIcon} aria-hidden="true">

@@ -10,6 +10,7 @@ import { STUDIO_VERSION_NOTE_MAX } from "./api/studio.types";
 import { studioKeys } from "./api/studioQueryKeys";
 import { useAddStudioReleaseVersion } from "./api/useStudioArtistToolsMutations";
 import { studioErrorMessageKeyOf } from "./studioErrors.data";
+import { RELEASE_FIELD_IDS } from "./studioUpload.data";
 import styles from "./StudioVersionNote.module.css";
 
 /** Shown above the tracks while a published release has track changes with
@@ -25,7 +26,6 @@ export function StudioVersionNotePanel({
 }) {
   const { t } = useTranslation();
   const headingId = useId();
-  const noteId = useId();
   const countId = useId();
   const errorId = useId();
   const addVersion = useAddStudioReleaseVersion();
@@ -71,11 +71,11 @@ export function StudioVersionNotePanel({
       <p className={styles.body}>
         {t("studio:versions.panel.body", { version: release.version + 1 })}
       </p>
-      <label htmlFor={noteId} className={styles.label}>
+      <label htmlFor={RELEASE_FIELD_IDS.versionNote} className={styles.label}>
         {t("studio:versions.panel.noteLabel")}
       </label>
       <textarea
-        id={noteId}
+        id={RELEASE_FIELD_IDS.versionNote}
         className={styles.note}
         rows={3}
         value={note}

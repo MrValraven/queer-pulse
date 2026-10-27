@@ -11,6 +11,7 @@ import type { StudioShareCardProps } from "./studioShareCard.types";
 import { studioShareCardStatus } from "./studioShareCardModel";
 import { studioShareLabelKey } from "./studioShareLabel";
 import { StudioShareLyricCard } from "./StudioShareLyricCard";
+import { StudioShareMilestoneCard } from "./StudioShareMilestoneCard";
 import { StudioSharePlaylistCard } from "./StudioSharePlaylistCard";
 import { StudioShareReleaseCard } from "./StudioShareReleaseCard";
 import { StudioShareTrackCard } from "./StudioShareTrackCard";
@@ -20,6 +21,7 @@ const VARIANT_BY_KIND: Record<StudioShareKind, typeof StudioShareTrackCard> = {
   release: StudioShareReleaseCard,
   playlist: StudioSharePlaylistCard,
   lyric: StudioShareLyricCard,
+  milestone: StudioShareMilestoneCard,
 };
 
 /**

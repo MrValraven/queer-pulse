@@ -9,4 +9,8 @@ export const CHART_INK = {
   grid: "rgba(var(--line-rgb),.08)",
   /** Jade area fill under the member-growth line. */
   area: "rgba(var(--jade-rgb),.10)",
+  /** The hover/focus guide a line chart drops from the plot top to the
+   *  baseline under the active point. Stronger than the grid so it reads as
+   *  the reading's own mark, on the same flipping hairline channels. */
+  guide: "rgba(var(--line-rgb),.32)",
 } as const;

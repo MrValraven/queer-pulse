@@ -122,8 +122,7 @@ function StudioPlayerNow({ item }: { item: StudioQueueItem }) {
 }
 
 /** Sleep chip, Cast, Go to track, the queue toggle, volume, the More panel
- *  and Close player. While Now playing is open its own chip announces, so
- *  this one stays silent. */
+ *  and Close player. */
 function StudioPlayerTools({ item }: { item: StudioQueueItem }) {
   const { t } = useTranslation();
   const surface = useStudioPlayerSurface();
@@ -134,7 +133,7 @@ function StudioPlayerTools({ item }: { item: StudioQueueItem }) {
   const queueHint = hintFor(queueLabel, "queue");
   return (
     <div className={styles.tools}>
-      <StudioSleepTimerChip announces={!surface.isNowPlayingOpen} />
+      <StudioSleepTimerChip />
       <StudioCastButton />
       <StudioGoToTrackButton item={item} />
       <IconButton

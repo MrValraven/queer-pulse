@@ -4,6 +4,7 @@ import { Button, IconButton } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { AmountInput } from "./AdminGovernanceFinancesEditCells";
+import { toSpendingFigure } from "./adminGovernanceFinancesEditRow";
 import {
   ITEM_NAME_MAX_LENGTH,
   ITEM_PERIOD_MAX_LENGTH,
@@ -192,7 +193,7 @@ function BreakdownItemRow({
           <span className={`${styles.rowHint} ${styles.breakdownReadsAs}`}>
             {t("admin:governance.finances.edit.breakdown.readsAs", {
               amount: format.currency(
-                groupedAmount,
+                isLoss ? toSpendingFigure(groupedAmount) : groupedAmount,
                 "EUR",
                 Number.isInteger(groupedAmount)
                   ? { maximumFractionDigits: 0 }

@@ -1,0 +1,124 @@
+/* "Where your music lives": the placements card. Tokens only. */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--s-line);
+  border-radius: var(--radius-14);
+  padding: 24px 26px;
+  color: var(--studio-text);
+}
+@media (--md) {
+  .card {
+    padding: 20px 16px;
+  }
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 500;
+  color: var(--studio-text);
+}
+
+.dek {
+  margin: 4px 0 16px;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  border-top: 1px solid var(--s-line);
+}
+.row:first-child {
+  border-top: 0;
+}
+
+.rowInner {
+  position: relative;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px 0;
+}
+
+.cover {
+  position: relative;
+  flex: none;
+  width: 48px;
+  height: 48px;
+}
+
+.text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.name {
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--studio-text);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+/* The name stretches over the whole row, so the row is one target. */
+.name::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.name:hover {
+  color: var(--studio-accent-text);
+}
+.name:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.byline {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}
+
+.tracks {
+  margin: 4px 0 0;
+  font-size: var(--text-14);
+  color: var(--studio-text);
+  overflow-wrap: anywhere;
+}
+
+.empty {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--studio-text-muted);
+}
+
+.footer {
+  margin-top: 12px;
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.skeletonRow {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.skeletonText {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

@@ -246,6 +246,24 @@ export const members: Catalog = {
   "profile.nav.shapings": "What shaped me",
   "profile.nav.activity": "Recent activity",
   "profile.nav.related": "People close by",
+  "profile.nav.events": "Events",
+  "profileEvents.selfTitle": "Events <em>you host</em>",
+  "profileEvents.visitorTitle": "Events {firstName} <em>hosts</em>",
+  "profileEvents.upcomingLabel": "Upcoming events",
+  "profileEvents.cohostTag": "Co-host",
+  "profileEvents.showMore_one": "Show {count} more",
+  "profileEvents.showMore_other": "Show {count} more",
+  "profileEvents.showFewer": "Show fewer",
+  "profileEvents.pastToggle": "Past events",
+  "profileEvents.noUpcoming": "{firstName} has nothing coming up.",
+  "profileEvents.selfNoUpcoming": "You have nothing coming up.",
+  "profileEvents.selfEmpty":
+    "When you host or co-host an event, it shows up here.",
+  "profileEvents.hostCta": "Host an event",
+  "profileEvents.loadError.title": "We couldn't load <em>these events</em>",
+  "profileEvents.loadError.body": "Check your connection and try again.",
+  "profileEvents.loadError.serverBody":
+    "Our server had trouble loading these events. Try again in a moment.",
 
   // ── Trust signals row + explainer (ProfileTrustSignals, ProfileTrustModal — Task 4) ──
   "profile.trust.verified": "Verified",

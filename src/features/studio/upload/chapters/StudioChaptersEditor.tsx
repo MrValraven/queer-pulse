@@ -174,6 +174,11 @@ export function StudioChaptersEditor({
                 toggleKey={
                   isEpisode ? "studio:chapters.editor.pasteEpisode" : undefined
                 }
+                hintKey={
+                  isEpisode
+                    ? "studio:chapters.editor.pasteHintEpisode"
+                    : undefined
+                }
                 onApply={(pasted) => {
                   setTouchedFields(
                     new Set(

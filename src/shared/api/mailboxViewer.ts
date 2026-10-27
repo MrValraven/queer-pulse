@@ -59,6 +59,11 @@ export interface MessageViewer {
    *  frame carrying one of these is the member themself. Absent reads as
    *  none. */
   ownMemberKeys?: ReadonlySet<string>;
+  /** The conversation ids of the viewer's OWN official threads: their
+   *  QueerPulse Team thread as its member, read from the personal inbox. A
+   *  staff member (admin, moderator) staffs the `official` identity, yet in
+   *  their own thread the team is the other side. Absent reads as none. */
+  ownOfficialConversationIds?: ReadonlySet<string>;
 }
 
 export function staffedIdentityIdsOf(
@@ -78,6 +83,14 @@ export function staffedIdentityIdsOf(
  * the old handle comparison holds, since a personal sender carries no
  * identity id and handles share one namespace with identities.
  *
+ * One exception to the staffed-identity rule: the viewer's own official
+ * thread. Admins and moderators staff the QueerPulse Team identity AND are
+ * the member of their own official thread, so there a team message is the
+ * other side. The thread is named by `viewer.ownOfficialConversationIds`
+ * (an official row without `mailboxIdentityId`, the member's own view), and
+ * the handle comparison still applies, so the member's own replies stay on
+ * their side.
+ *
  * The spec phrases this as a comparison with the ACTIVE identity. A thread
  * belongs to exactly one mailbox and a member cannot be the customer of a
  * mailbox they answer for (`IDENTITY_IS_YOUR_OWN`), so "an identity I staff"
@@ -91,9 +104,19 @@ export function staffedIdentityIdsOf(
 export function isFromViewerSide(
   sender: Pick<AuthorSummary, "handle" | "identityId"> | null | undefined,
   viewer: MessageViewer,
+  conversationId?: string | null,
 ): boolean {
   const identityId = sender?.identityId;
-  if (identityId && viewer.staffedIdentityIds.has(identityId)) return true;
+  const isInOwnOfficialThread =
+    !!conversationId &&
+    (viewer.ownOfficialConversationIds?.has(conversationId) ?? false);
+  if (
+    identityId &&
+    !isInOwnOfficialThread &&
+    viewer.staffedIdentityIds.has(identityId)
+  ) {
+    return true;
+  }
   return isViewerHandle(sender?.handle, viewer);
 }
 
@@ -139,6 +162,42 @@ export function readOwnMemberKeys(queryClient: QueryClient): string[] {
   return [...memberKeys].sort();
 }
 
+/** The viewer's own official thread ids, read from whatever conversation rows
+ *  are cached: an official row without `mailboxIdentityId` is the member's own
+ *  view of their QueerPulse Team thread (the staff view carries it). Sorted,
+ *  so equal sets compare equal as strings. */
+export function readOwnOfficialConversationIds(
+  queryClient: QueryClient,
+): string[] {
+  const conversationIds = new Set<string>();
+  const collect = (row: unknown) => {
+    if (!row || typeof row !== "object") return;
+    // The cache holds adapted rows (`official`) and may hold raw DTOs
+    // (`isOfficial`); either names the QueerPulse Team thread.
+    const { id, official, isOfficial, mailboxIdentityId } = row as {
+      id?: unknown;
+      official?: unknown;
+      isOfficial?: unknown;
+      mailboxIdentityId?: unknown;
+    };
+    if (
+      (official === true || isOfficial === true) &&
+      !mailboxIdentityId &&
+      typeof id === "string" &&
+      id
+    ) {
+      conversationIds.add(id);
+    }
+  };
+  for (const queryKey of MEMBER_KEY_CONVERSATION_QUERY_PREFIXES) {
+    for (const [, data] of queryClient.getQueriesData<unknown>({ queryKey })) {
+      if (Array.isArray(data)) data.forEach(collect);
+      else collect(data);
+    }
+  }
+  return [...conversationIds].sort();
+}
+
 /** Staffed identity ids from whatever mailbox lists are cached, for code that
  *  runs outside React (the realtime client). Empty before the first load,
  *  which only means a colleague's reply may briefly count as unread locally
@@ -157,16 +216,23 @@ export function readStaffedIdentityIds(
   return identityIds;
 }
 
-/** One QueryClient's live set of the member's own matched-chat keys. */
+/** One QueryClient's live sets of the member's own matched-chat keys and own
+ *  official thread ids, both read in one scan of the cached conversation rows. */
 interface OwnMemberKeysMemo {
   snapshot: string;
   keys: ReadonlySet<string>;
+  officialConversationIds: ReadonlySet<string>;
   listeners: Set<() => void>;
 }
 
 const ownMemberKeysMemoByClient = new WeakMap<QueryClient, OwnMemberKeysMemo>();
 
 const MEMBER_KEY_SNAPSHOT_SEPARATOR = ",";
+const OFFICIAL_SNAPSHOT_SEPARATOR = "|";
+
+function snapshotOf(keys: string[], officialConversationIds: string[]): string {
+  return `${keys.join(MEMBER_KEY_SNAPSHOT_SEPARATOR)}${OFFICIAL_SNAPSHOT_SEPARATOR}${officialConversationIds.join(MEMBER_KEY_SNAPSHOT_SEPARATOR)}`;
+}
 
 /** Whether a cache event can change the member's own keys: a conversation
  *  list or detail entry added, removed or updated. */
@@ -188,9 +254,11 @@ function ownMemberKeysMemoFor(queryClient: QueryClient): OwnMemberKeysMemo {
   const existing = ownMemberKeysMemoByClient.get(queryClient);
   if (existing) return existing;
   const keys = readOwnMemberKeys(queryClient);
+  const officialIds = readOwnOfficialConversationIds(queryClient);
   const memo: OwnMemberKeysMemo = {
-    snapshot: keys.join(MEMBER_KEY_SNAPSHOT_SEPARATOR),
+    snapshot: snapshotOf(keys, officialIds),
     keys: new Set(keys),
+    officialConversationIds: new Set(officialIds),
     listeners: new Set(),
   };
   ownMemberKeysMemoByClient.set(queryClient, memo);
@@ -205,10 +273,12 @@ function ownMemberKeysMemoFor(queryClient: QueryClient): OwnMemberKeysMemo {
     const { queryKey } = event.query as { queryKey: readonly unknown[] };
     if (!isConversationQueryKey(queryKey)) return;
     const nextKeys = readOwnMemberKeys(queryClient);
-    const nextSnapshot = nextKeys.join(MEMBER_KEY_SNAPSHOT_SEPARATOR);
+    const nextOfficialIds = readOwnOfficialConversationIds(queryClient);
+    const nextSnapshot = snapshotOf(nextKeys, nextOfficialIds);
     if (nextSnapshot === memo.snapshot) return;
     memo.snapshot = nextSnapshot;
     memo.keys = new Set(nextKeys);
+    memo.officialConversationIds = new Set(nextOfficialIds);
     for (const listener of memo.listeners) listener();
   });
   return memo;
@@ -219,7 +289,14 @@ export function ownMemberKeysOf(queryClient: QueryClient): ReadonlySet<string> {
   return ownMemberKeysMemoFor(queryClient).keys;
 }
 
-/** The memo's sorted, joined snapshot, stable until the set changes, for
+/** The viewer's own official thread ids, from the same shared memo. */
+export function ownOfficialConversationIdsOf(
+  queryClient: QueryClient,
+): ReadonlySet<string> {
+  return ownMemberKeysMemoFor(queryClient).officialConversationIds;
+}
+
+/** The memo's sorted, joined snapshot (keys and official thread ids), stable until the set changes, for
  *  `useSyncExternalStore`. */
 export function ownMemberKeysSnapshotOf(queryClient: QueryClient): string {
   return ownMemberKeysMemoFor(queryClient).snapshot;

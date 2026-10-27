@@ -171,7 +171,8 @@ function toGroups(
     // PRD-423: a matched chat hit says so itself (`isSentByViewer`), since
     // its sender handle is a per-chat key no cached row may name yet.
     const isViewerSide =
-      isFromViewerSide(hit.sender, viewer) || hit.isSentByViewer === true;
+      isFromViewerSide(hit.sender, viewer, hit.conversationId) ||
+      hit.isSentByViewer === true;
     const matchedChatNames = matchedChatNamesFor(hit.conversationId);
     group.hits.push({
       id: hit.id,

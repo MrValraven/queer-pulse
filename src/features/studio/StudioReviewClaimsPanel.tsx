@@ -180,9 +180,9 @@ export function StudioReviewClaimsPanel({
         renderCard={renderCard}
       />
       <section aria-labelledby={acceptedHeadingId}>
-        <h3 id={acceptedHeadingId} className={css.sectionHeading}>
+        <h2 id={acceptedHeadingId} className={css.sectionHeading}>
           {t("studio:flagReviewLive.claims.acceptedHeading")}
-        </h3>
+        </h2>
         <StudioReviewList
           list={acceptedList}
           getKey={claimKey}

@@ -2,7 +2,7 @@ import type { GrowthPoint, WeekBar } from "./adminDashboard.data";
 
 /** The same weekly-range presets the backend allowlists
  *  (`admin-reports-response.ts`'s `REPORT_WEEK_RANGES`). */
-export const REPORT_RANGE_WEEKS = [4, 8, 12, 26] as const;
+export const REPORT_RANGE_WEEKS = [4, 8, 12, 26, 52] as const;
 export type ReportRangeWeeks = (typeof REPORT_RANGE_WEEKS)[number];
 
 export const DEFAULT_REPORT_RANGE_WEEKS: ReportRangeWeeks = 8;
@@ -16,6 +16,19 @@ export const RANGE_OPTIONS: RangeOption[] = REPORT_RANGE_WEEKS.map((weeks) => ({
   value: String(weeks),
   weeks,
 }));
+
+/** The preset a range toggle labels as a year ("1y"). */
+export const YEAR_RANGE_WEEKS: ReportRangeWeeks = 52;
+
+/** The Overview dashboard's member-growth card offers a shorter set of the
+ *  same presets: a month, a quarter, half a year and a year. */
+export const DASHBOARD_GROWTH_RANGE_WEEKS = [
+  4, 12, 26, 52,
+] as const satisfies readonly ReportRangeWeeks[];
+export type DashboardGrowthRangeWeeks =
+  (typeof DASHBOARD_GROWTH_RANGE_WEEKS)[number];
+
+export const DEFAULT_DASHBOARD_GROWTH_WEEKS: DashboardGrowthRangeWeeks = 12;
 
 /** The running member total the demo series lands on, matching the Overview
  *  dashboard's `MEMBER_GROWTH` fixture and active-members tile. */

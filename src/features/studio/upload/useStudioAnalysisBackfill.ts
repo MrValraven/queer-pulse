@@ -15,6 +15,7 @@ import {
   StudioRangeUnsupportedError,
   rangeByteSource,
 } from "./analysis/studioByteSource";
+import { whenConversionIdle } from "./convert/studioWavConverter";
 import {
   runWithAnalysisTimeout,
   wholeDecodeLimitSeconds,
@@ -100,6 +101,9 @@ export function useStudioAnalysisBackfill({
     if (!isActive || releaseId === null || nextTrackId === null) return;
     const controller = new AbortController();
     void (async () => {
+      // A phone converts one WAV at a time; the backfill starts after it.
+      await whenConversionIdle(controller.signal);
+      if (controller.signal.aborted) return;
       const blockState = { isBlocked: false };
       const outcome = await runWithAnalysisTimeout(
         (signal) =>

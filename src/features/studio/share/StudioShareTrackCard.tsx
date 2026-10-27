@@ -112,6 +112,7 @@ export function StudioShareTrackCard({ target }: { target: StudioLinkTarget }) {
         {readyBody ?? (
           <StudioShareCardStatusBody
             status={status === "ready" ? "loading" : status}
+            loadState={loadState}
           />
         )}
       </StudioShareCardLayer>

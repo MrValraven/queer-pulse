@@ -1,0 +1,181 @@
+/* Opening section of the Studio landing. The page shell paints the ground;
+   the hero adds the nav band back as top padding. Copy sits left and the
+   visual right from 1024px up; below that the copy comes first. The inner
+   box uses the same width and gutter as every other landing section, so the
+   copy lines up with the section headings below. */
+.hero {
+  position: relative;
+  padding: calc(
+      var(--nav-band-visible) +
+        clamp(var(--section-y-48), 6vh, var(--section-y-64))
+    )
+    0 clamp(var(--section-y-48), 8vh, var(--section-y-80));
+  overflow: clip;
+}
+/* One hue per theme: coral over the light ground, jade over the dark one.
+   Mixing the two over cream reads as a grey smudge. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 60% 70% at 78% 40%,
+    rgba(var(--accent-rgb), 0.1) 0%,
+    rgba(var(--accent-rgb), 0.04) 45%,
+    transparent 75%
+  );
+}
+:global(html[data-theme="dark"]) .hero::before {
+  background: radial-gradient(
+    ellipse 60% 70% at 78% 40%,
+    rgba(var(--jade-rgb), 0.1) 0%,
+    rgba(var(--jade-rgb), 0.04) 45%,
+    transparent 75%
+  );
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(36px, 6vw, 56px);
+  align-items: center;
+  width: 100%;
+  max-width: var(--maxw-nav);
+  margin: 0 auto;
+  padding-inline: clamp(20px, 5vw, 48px);
+}
+@media (min-width: 1024px) {
+  .inner {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: 56px;
+  }
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+.visual {
+  min-width: 0;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--studio-text-muted);
+}
+.eyebrowIcon {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  color: var(--studio-accent-text);
+}
+
+.title {
+  margin: 20px 0 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+  color: var(--studio-text);
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+.title em {
+  font-style: italic;
+  color: var(--studio-accent-text);
+}
+
+.lede {
+  margin: 22px 0 0;
+  max-width: 540px;
+  font-family: var(--sans);
+  font-size: var(--text-body-lg);
+  line-height: var(--lh-body-lg);
+  color: var(--studio-text-muted);
+  text-wrap: pretty;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 100%;
+  margin: 26px 0 0;
+  padding: 9px 18px 9px 14px;
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.14);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--studio-surface) 62%, transparent);
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--studio-text);
+  text-align: left;
+}
+/* On a phone the line wraps to two rows, and a pill radius turns that into a
+   stadium. The card radius keeps it a calm rounded box. */
+@media (max-width: 479.98px) {
+  .status {
+    border-radius: var(--radius-card);
+  }
+}
+.statusDot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: var(--radius-avatar);
+  background: var(--jade);
+  box-shadow: var(--ring-jade);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+  margin: 30px 0 0;
+}
+/* Member variant: the note and "See inside" share one row across the copy
+   column, and "See inside" drops below the note once the row runs out. */
+.actionsMember {
+  align-self: stretch;
+}
+
+.seeInside {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sans);
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--studio-text);
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--studio-ink-rgb), 0.3);
+  text-underline-offset: 4px;
+  transition: color var(--dur-fast) var(--ease);
+}
+.seeInside:hover {
+  color: var(--studio-accent-text);
+  text-decoration-color: currentColor;
+}
+.seeInside:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}

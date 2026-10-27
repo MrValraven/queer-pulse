@@ -1,0 +1,30 @@
+/* Member growth card on the Overview dashboard. The frame and chart come
+   from MemberGrowthChart; this file only holds the card's own pieces. */
+
+/* Takes the frame head's last slot (a full row on small phones) so the
+   segmented pill inside keeps its natural width. */
+.range {
+  display: flex;
+}
+
+/* A failed read: the reason, then Retry under it, centred in the space the
+   plot would take. Upright type, since the frame's empty slot is italic. */
+.loadError {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-style: normal;
+  animation: loadErrorFadeIn 0.2s var(--ease);
+}
+@keyframes loadErrorFadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loadError {
+    animation: none;
+  }
+}

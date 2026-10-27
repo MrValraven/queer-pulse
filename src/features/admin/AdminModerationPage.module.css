@@ -436,6 +436,31 @@ button.reportMain:focus-visible {
   height: 12px;
 }
 
+/* On a phone the triage rail drops under the card text as a wrapping row, so
+   the title keeps the full card width instead of squeezing to about 80px. */
+@media (--sm) {
+  .report {
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+  .report .reportMain {
+    flex: 1 1 140px;
+  }
+  .reportSide {
+    flex: 1 1 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px 10px;
+    padding-top: 0;
+  }
+  .priorFlagRail {
+    white-space: normal;
+    text-align: left;
+  }
+}
+
 /* ── Multi-select + bulk actions ────────────────────────────────────────── */
 .reportSelected {
   border-color: var(--line-strong);

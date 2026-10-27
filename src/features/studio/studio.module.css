@@ -38,6 +38,10 @@
   /* The rail's two widths; the shell's grid animates between them. */
   --studio-rail-w: 248px;
   --studio-rail-w-collapsed: 72px;
+  /* The detail hero's cover column and the gap beside it (.detailHero). The
+     track and episode safety row reads both to line up under the title. */
+  --studio-detail-art-w: 280px;
+  --studio-detail-hero-gap: 40px;
   background: var(--bg);
   color: var(--s-text);
   min-height: 100svh;
@@ -1050,8 +1054,11 @@
   position: relative;
   isolation: isolate;
   display: grid;
-  grid-template-columns: minmax(0, 280px) minmax(22rem, 1fr);
-  gap: 40px;
+  grid-template-columns: minmax(0, var(--studio-detail-art-w)) minmax(
+      22rem,
+      1fr
+    );
+  gap: var(--studio-detail-hero-gap);
   align-items: flex-end;
   padding: 44px 0 32px;
 }
@@ -1267,9 +1274,10 @@
   opacity: 1;
 }
 
-/* Full-bleed artist hero: no cover frame. The photo fills a band that runs
-   out through the page gutter, with the kind, the name and the counts over
-   its lower part; the action row sits under the band on the page. */
+/* Full-bleed artist hero: the photo fills a band that runs out through the
+   page gutter, with the kind, the name and the counts over its lower part
+   (and a small round portrait above them when the artist shows both); the
+   action row sits under the band on the page. */
 .detailHero[data-variant="full-bleed"] {
   display: block;
   padding-top: 0;
@@ -1326,6 +1334,19 @@
     rgba(var(--scrim-rgb), 0.82)
   );
 }
+/* The persona's portrait above the eyebrow, ringed in cream so it lifts off
+   any photo behind it. */
+.detailBandAvatar {
+  position: relative;
+  width: 112px;
+  aspect-ratio: 1;
+  margin-bottom: 16px;
+  overflow: hidden;
+  border-radius: var(--radius-avatar);
+  box-shadow:
+    0 0 0 2px rgba(var(--cream-rgb), 0.9),
+    0 18px 40px -18px rgba(var(--scrim-rgb), 0.7);
+}
 .detailHero .detailBand .kind {
   color: rgba(var(--cream-rgb), 0.92);
 }
@@ -1346,39 +1367,6 @@
   color: rgba(var(--cream-rgb), 0.86);
 }
 
-/* Avatar over photo: the usual cover and copy, with the photo dimmed and
-   softened behind the whole hero on the wash's footprint. It fades out
-   toward the copy and the page, so the type reads on the surface; a soft
-   halo of the surface under the small lines covers a dark photo. */
-.detailBackdrop {
-  position: absolute;
-  inset-block: -96px -24px;
-  inset-inline-start: calc(-1 * var(--studio-gutter-left));
-  inset-inline-end: calc(-1 * var(--studio-gutter-right));
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-}
-.detailBackdrop .heroPhoto {
-  filter: var(--blur-md);
-  transform: scale(1.06);
-  mask-image: linear-gradient(
-    180deg,
-    rgba(var(--scrim-rgb), 1),
-    rgba(var(--scrim-rgb), 0.62) 32%,
-    rgba(var(--scrim-rgb), 0.28) 56%,
-    transparent 88%
-  );
-}
-.detailBackdrop .heroPhoto[data-loaded] {
-  opacity: 0.42;
-}
-.detailHero[data-variant="avatar-backdrop"] :is(.kind, .by) {
-  text-shadow:
-    0 0 0.5em var(--studio-surface),
-    0 0 1em var(--studio-surface);
-}
-
 /* Phones and tablets: a shorter band, so the name and Play stay above the
    fold. */
 @media (--compact) {
@@ -1386,11 +1374,19 @@
     --band-pad-end: 22px;
     min-height: clamp(14rem, 36vh, 18rem);
   }
+  .detailBandAvatar {
+    width: 72px;
+    margin-bottom: 12px;
+  }
 }
-/* A phone on its side: the band gives the short screen back to Play. */
+/* A phone on its side: the band gives the short screen back to Play, so
+   the portrait steps aside and the name carries the band. */
 @media (--compact) and (max-height: 500px) {
   .detailBand {
     min-height: 11rem;
+  }
+  .detailBandAvatar {
+    display: none;
   }
 }
 

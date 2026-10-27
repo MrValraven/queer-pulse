@@ -47,9 +47,9 @@ describe("studioRoutes, the claim pages", () => {
     expect(screen.getByText("StudioMyClaimsPage")).toBeInTheDocument();
   });
 
-  it("shows the teaser on the claim form to a member without a grant", () => {
+  it("shows the landing on the claim form to a member without a grant", () => {
     cleanup();
     renderAt("/studio/claims/new", { ...granted, hasStudioAccess: false });
-    expect(screen.getByText("StudioComingSoonPage")).toBeInTheDocument();
+    expect(screen.getByText("StudioLandingPage")).toBeInTheDocument();
   });
 });

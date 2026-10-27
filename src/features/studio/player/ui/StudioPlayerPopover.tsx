@@ -3,7 +3,6 @@ import {
   useId,
   useLayoutEffect,
   useRef,
-  useState,
   type ReactNode,
   type RefObject,
 } from "react";
@@ -15,6 +14,7 @@ import { Tooltip } from "../../../../shared/components/ui/Tooltip";
 import { useMediaQuery } from "../../../../shared/hooks/useMediaQuery";
 import { useOutsideDismiss } from "../../../../shared/hooks/useOutsideDismiss";
 import { mediaMax } from "../../../../shared/theme/breakpoints";
+import { useStudioPlayerSurface } from "../studioPlayerSurface";
 import { STUDIO_EXIT, STUDIO_FADE, STUDIO_SPRING } from "../../studioMotion";
 import { fitStudioPopover } from "./studioPopoverFit";
 import { useStudioSheetDrag } from "./useStudioSheetDrag";
@@ -111,16 +111,19 @@ export function StudioPlayerPopover({
   const isSheet = useMediaQuery(mediaMax(880));
   const panelId = useId();
   const triggerId = useId();
-  const [isOpen, setIsOpen] = useState(false);
+  // Open state lives on the player surface, so only one player menu (this,
+  // a sibling popover, or the queue panel) is open at a time.
+  const { openPopoverId, openPopover, closePopover } = useStudioPlayerSurface();
+  const isOpen = openPopoverId === triggerId;
   const wrapRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   // Found by id: `close` reaches the panel's render function, which may not
   // read a ref. Focus moves in the same press, before any sheet opens.
   const close = () => {
-    setIsOpen(false);
+    closePopover(triggerId);
     document.getElementById(triggerId)?.focus();
   };
-  useOutsideDismiss(isOpen, wrapRef, () => setIsOpen(false));
+  useOutsideDismiss(isOpen, wrapRef, () => closePopover(triggerId));
   const sheetDrag = useStudioSheetDrag(panelRef, isOpen, close);
   // While open, Escape is caught on the document in the capture phase and
   // stops there, wherever focus sits (a press on the panel's padding leaves
@@ -137,12 +140,12 @@ export function StudioPlayerPopover({
         !focused ||
         focused === document.body ||
         Boolean(wrapRef.current?.contains(focused));
-      setIsOpen(false);
+      closePopover(triggerId);
       if (shouldReturnFocus) document.getElementById(triggerId)?.focus();
     };
     document.addEventListener("keydown", onKeyDown, true);
     return () => document.removeEventListener("keydown", onKeyDown, true);
-  }, [isOpen, triggerId]);
+  }, [isOpen, triggerId, closePopover]);
   useStudioPopoverFit(isOpen, panelRef, triggerId, placement);
   useEffect(() => {
     if (isOpen)
@@ -155,7 +158,7 @@ export function StudioPlayerPopover({
       onBlur={(event) => {
         const nextFocus = event.relatedTarget;
         if (nextFocus && !event.currentTarget.contains(nextFocus))
-          setIsOpen(false);
+          closePopover(triggerId);
       }}
     >
       {/* The label shows on hover and keyboard focus while closed; it is
@@ -172,7 +175,9 @@ export function StudioPlayerPopover({
           aria-expanded={isOpen}
           aria-controls={panelId}
           aria-label={label}
-          onClick={() => setIsOpen((wasOpen) => !wasOpen)}
+          onClick={() =>
+            isOpen ? closePopover(triggerId) : openPopover(triggerId)
+          }
         >
           <Icon aria-hidden />
         </IconButton>

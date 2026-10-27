@@ -15,13 +15,14 @@ import type {
 
 /** The editable headline figures, in the order they appear in the dialog.
  *  Every one of them is also a key on `AdminFinanceLatest` and on the update
- *  payload, which is what lets the diff loop below stay generic. */
+ *  payload, which is what lets the diff loop below stay generic. Spending is
+ *  left out: the backend sums it from the switched-on spending lines on every
+ *  save, so the dialog shows it as a computed row (`sumEnabledLines`). */
 export const SCALAR_KEYS = [
   "mrr",
   "sustainerCount",
   "solidarityRate",
   "incomeTotal",
-  "expenseTotal",
 ] as const;
 
 export type ScalarKey = (typeof SCALAR_KEYS)[number];
@@ -34,7 +35,6 @@ export const SCALAR_UNIT: Record<ScalarKey, "currency" | "count" | "percent"> =
     sustainerCount: "count",
     solidarityRate: "percent",
     incomeTotal: "currency",
-    expenseTotal: "currency",
   };
 
 /** Headline figures while they are being edited: raw strings, exactly as
@@ -83,7 +83,6 @@ export function toScalarDrafts(latest: AdminFinanceLatest): ScalarDrafts {
     sustainerCount: toDraft("sustainerCount"),
     solidarityRate: toDraft("solidarityRate"),
     incomeTotal: toDraft("incomeTotal"),
-    expenseTotal: toDraft("expenseTotal"),
   };
 }
 
@@ -374,8 +373,9 @@ export function ledgerDiff(
   return edits;
 }
 
-/** Sum of the amounts on the lines that are switched on, for the table foot.
- *  Unreadable amounts are skipped; they block the save anyway. */
+/** Sum of the amounts on the lines that are switched on, for the table foot
+ *  and the computed spending total. Unreadable amounts are skipped; they block
+ *  the save anyway. */
 export function sumEnabledLines(lines: LineDraft[]): number {
   return lines.reduce((total, line) => {
     if (!line.enabled) return total;

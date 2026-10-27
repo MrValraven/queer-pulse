@@ -253,6 +253,11 @@
 .amountWrapPrefix .amountInput {
   padding-inline-start: 26px;
 }
+/* A spending amount's prefix carries the minus sign too ("−€"), so the
+   digits start further in. */
+.amountWrapPrefixSigned .amountInput {
+  padding-inline-start: 34px;
+}
 .amountWrapSuffix .amountInput {
   padding-inline-end: 30px;
 }
@@ -287,8 +292,8 @@
   line-height: 1.4;
   color: var(--accent-text);
 }
-/* The live surplus preview sits where an input would, right-aligned to the
-   same text edge as the amount inputs above it. */
+/* The live spending and surplus previews sit where an input would,
+   right-aligned to the same text edge as the amount inputs above them. */
 .surplusPreview {
   display: block;
   padding-inline-end: 13.5px;

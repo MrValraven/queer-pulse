@@ -5,6 +5,7 @@ import { useAuth } from "../../app/providers/authContext";
 import {
   ownMemberKeysOf,
   ownMemberKeysSnapshotOf,
+  ownOfficialConversationIdsOf,
   staffedIdentityIdsOf,
   subscribeOwnMemberKeys,
   type MessageViewer,
@@ -14,7 +15,8 @@ import { useMailboxes } from "./api/useMailboxes";
 
 /** The signed-in member as `isFromViewerSide` reads them: their own handle
  *  plus every persona, listing and company identity they answer for, and
- *  their per-chat key in every matched Go together chat (PRD-423). */
+ *  their per-chat key in every matched Go together chat (PRD-423), plus
+ *  their own official thread ids, where the team reads as the other side. */
 export function useMessageViewer(): MessageViewer {
   const { demoMode } = useDemoMode();
   const { user } = useAuth();
@@ -27,16 +29,18 @@ export function useMessageViewer(): MessageViewer {
       myHandle,
       staffedIdentityIds: staffedIdentityIdsOf(mailboxes),
       // Read from the shared memo, which the snapshot below tracks.
-      ownMemberKeys: ownMemberKeysSnapshot
-        ? ownMemberKeysOf(queryClient)
-        : new Set<string>(),
+      ownMemberKeys: ownMemberKeysOf(queryClient),
+      ownOfficialConversationIds: ownOfficialConversationIdsOf(queryClient),
     }),
+    // The snapshot is the memo's change signal; the sets are read from it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [myHandle, mailboxes, ownMemberKeysSnapshot, queryClient],
   );
 }
 
 /**
- * PRD-423: the member's own matched-chat keys, kept live as conversation
+ * PRD-423: the member's own matched-chat keys (and own official thread ids,
+ * from the same scan), kept live as conversation
  * rows load, so a bubble rendered before its conversation arrived moves to
  * the viewer's side once it does. Reads the one memo per QueryClient
  * (`ownMemberKeysOf`), which a single filtered cache subscription keeps

@@ -19,3 +19,9 @@ export function lossClass(
 ): string | undefined {
   return isLoss ? `${baseClass} ${styles.amountLoss}` : baseClass;
 }
+
+/** Spending is stored as a positive magnitude and read as a negative figure.
+ *  Zero stays zero, so it never formats as "-€0". */
+export function toSpendingFigure(magnitude: number): number {
+  return magnitude === 0 ? 0 : -magnitude;
+}

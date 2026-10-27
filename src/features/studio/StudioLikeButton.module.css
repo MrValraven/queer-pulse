@@ -44,3 +44,10 @@
     background: rgba(var(--studio-ink-rgb), 0.08);
   }
 }
+
+/* Blocked (a taken-down release): the heart stays and dims, and the hero's
+   tooltip names the cause. aria-disabled keeps it focusable for that. */
+.button[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

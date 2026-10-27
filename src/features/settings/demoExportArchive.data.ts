@@ -81,6 +81,7 @@ export const CATEGORY_ARCHIVE_KEYS: Record<string, readonly string[]> = {
     "accountRequests",
     "recognition",
     "watchHistory",
+    "studioListening",
   ],
   saved: [
     "saved",
@@ -195,6 +196,37 @@ function demoContentFor(archiveKey: string): unknown {
           invitedAt: "2026-10-14T08:00:00.000Z",
           acceptedAt: null,
           endedAt: null,
+        },
+      ];
+    case "studioListening":
+      // One array: listen rows (oldest first), then supporter rows. The
+      // second listen is a release that is no longer published.
+      return [
+        {
+          type: "listen",
+          trackTitle: "Salt water, slowly",
+          artist: "NIGHTFORM",
+          playedAt: "2026-10-20T21:14:00.000Z",
+        },
+        {
+          type: "listen",
+          trackTitle: null,
+          artist: "Vanda Diesel",
+          playedAt: "2026-10-22T19:02:00.000Z",
+        },
+        {
+          type: "supporter",
+          artist: "NIGHTFORM",
+          shownAs: "account",
+          createdAt: "2026-09-17T10:00:00.000Z",
+          updatedAt: "2026-09-17T10:00:00.000Z",
+        },
+        {
+          type: "supporter",
+          artist: "Vanda Diesel",
+          shownAs: "Mariana Sol",
+          createdAt: "2026-10-15T10:00:00.000Z",
+          updatedAt: "2026-10-15T10:00:00.000Z",
         },
       ];
     case "studioPlaylistAdditions":

@@ -208,13 +208,16 @@
   display: none;
 }
 
-/* Beside the cover (studio.module.css .heroInner: a 300px art column and a
-   40px gap until --compact stacks them), the row lines up under the title
+/* Beside the cover (studio.module.css .detailHero: an art column and a gap,
+   read from --studio-detail-art-w and --studio-detail-hero-gap, until
+   --compact stacks them), the row lines up under the title
    and details column and tucks into the hero's bottom padding, so the
    warning reads with the track's details. Stacked, it simply follows. */
 @media (min-width: 881px) {
   .safetyRow {
     margin-block-start: -16px;
-    padding-inline-start: calc(300px + 40px);
+    padding-inline-start: calc(
+      var(--studio-detail-art-w) + var(--studio-detail-hero-gap)
+    );
   }
 }

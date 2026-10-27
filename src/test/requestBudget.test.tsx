@@ -537,6 +537,13 @@ describe("request budget (live mode)", () => {
           history: [],
         }),
       ),
+      // ProfileContent → ProfileEventsSection → useProfileEvents(slug) →
+      // GET /profiles/{slug}/events, the events this member hosts or
+      // co-hosts. One request: the rail's ProfileSectionNav →
+      // useProfileEventsVisible reads the same query key.
+      http.get(`${API_V1}/profiles/${SLUG}/events`, () =>
+        HttpResponse.json({ upcoming: [], past: [] }),
+      ),
       http.get(`${API_V1}/me/recognition`, () =>
         HttpResponse.json({
           level: {
@@ -672,6 +679,10 @@ describe("request budget (live mode)", () => {
         // /profiles/me/now-insights. Owner-only and eager: the figures it
         // answers render on load, above the fold, not deferred.
         "/v1/profiles/me/now-insights",
+        // ProfileContent → ProfileEventsSection → useProfileEvents(slug) →
+        // GET /profiles/{slug}/events, deduped with ProfileSectionNav →
+        // useProfileEventsVisible (same query key, one request).
+        `/v1/profiles/${SLUG}/events`,
         `/v1/profiles/${SLUG}/subprofiles`,
         "/v1/subprofiles/mine",
         "/v1/subprofiles/sp-tiago-draft/endorsements",

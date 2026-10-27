@@ -1,14 +1,13 @@
-/* Studio dark design tokens scoped locally */
+/* Studio role tokens scoped locally: the page follows the app theme. */
 .root {
-  --bg: var(--studio-bg);
-  --rail: var(--studio-rail);
-  --s-line: rgba(var(--cream-rgb), 0.08);
-  --s-text: rgba(var(--cream-rgb), 0.92);
-  --s-text-60: rgba(var(--cream-rgb), 0.62);
-  /* Cream at 0.52 clears the AA 4.5:1 floor on every studio ground (4.96:1 on
-     --surface, 4.87:1 on --studio-bg). It carries 11px and 12px meta text, so it
-     never qualifies as large text. The old 0.40 measured 3.55:1 and failed. */
-  --s-text-40: rgba(var(--cream-rgb), 0.52);
+  --bg: var(--studio-surface);
+  --rail: var(--studio-surface-rail);
+  --s-line: rgba(var(--studio-ink-rgb), 0.1);
+  /* Control edges (inputs, tiers, Google button) need 3:1 against the page. */
+  --s-edge: var(--studio-edge);
+  --s-text: var(--studio-text);
+  --s-text-60: var(--studio-text-muted);
+  --s-text-40: var(--studio-text-faint);
 
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
@@ -16,6 +15,9 @@
   background: var(--bg);
   color: var(--s-text);
   font-family: var(--sans);
+  transition:
+    background-color 0.2s var(--ease),
+    color 0.2s var(--ease);
 }
 @media (max-width: 920px) {
   .root {
@@ -29,6 +31,7 @@
 /* ── Aside ── */
 .aside {
   background: var(--rail);
+  transition: background-color 0.2s var(--ease);
   padding: 46px 54px;
   position: relative;
   overflow: hidden;
@@ -100,7 +103,7 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   margin-left: 4px;
   align-self: center;
 }
@@ -115,7 +118,7 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   margin-bottom: 18px;
   display: flex;
   align-items: center;
@@ -141,7 +144,7 @@
 }
 .asideBody h2 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   font-weight: 400;
 }
 .asideSub {
@@ -154,7 +157,7 @@
   font-style: italic;
 }
 .asideSub em {
-  color: var(--accent);
+  color: var(--studio-accent-text);
   font-style: italic;
 }
 
@@ -164,7 +167,7 @@
   gap: 14px;
   margin-top: 30px;
   padding: 16px 18px;
-  background: rgba(var(--cream-rgb), 0.05);
+  background: rgba(var(--studio-ink-rgb), 0.05);
   border: 1px solid var(--s-line);
   border-radius: var(--radius-14);
   max-width: 420px;
@@ -173,7 +176,7 @@
   width: 52px;
   height: 52px;
   border-radius: var(--radius-8);
-  background: rgba(var(--cream-rgb), 0.08);
+  background: rgba(var(--studio-ink-rgb), 0.08);
   flex: none;
 }
 .nowInfo {
@@ -189,7 +192,7 @@
 }
 .nowTitle em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .nowArtist {
   font-family: var(--serif);
@@ -250,7 +253,7 @@
   z-index: 1;
 }
 .asideFoot em {
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   font-style: italic;
   font-weight: 600;
 }
@@ -281,13 +284,13 @@
 
 .segTabs {
   display: flex;
-  background: rgba(var(--cream-rgb), 0.05);
+  background: rgba(var(--studio-ink-rgb), 0.05);
   border: 1px solid var(--s-line);
   border-radius: var(--radius-pill);
   padding: 4px;
   margin-bottom: 28px;
 }
-/* The two mode pills are kit Buttons: primary when chosen, ghost-dark when
+/* The two mode pills are kit Buttons: primary when chosen, ghost when
    not. The doubled class lets each fill half the track, and the resting
    pill drops its outline so the track reads as one control. */
 .seg.seg {
@@ -328,7 +331,7 @@
 }
 .authCard h1 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   font-weight: 400;
 }
 .lede {
@@ -340,7 +343,7 @@
   font-style: italic;
 }
 .lede em {
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 
 .field {
@@ -360,8 +363,8 @@
   font-family: var(--sans);
   font-size: var(--text-15);
   color: var(--s-text);
-  background: rgba(var(--cream-rgb), 0.05);
-  border: 1.5px solid var(--s-line);
+  background: rgba(var(--studio-ink-rgb), 0.05);
+  border: 1.5px solid var(--s-edge);
   border-radius: var(--radius-12);
   padding: 13px 15px;
   width: 100%;
@@ -370,7 +373,7 @@
     box-shadow 0.22s;
 }
 .field input:focus {
-  border-color: var(--accent);
+  border-color: var(--studio-accent-text);
   box-shadow: var(--ring-accent-soft);
 }
 
@@ -408,8 +411,8 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: rgba(var(--cream-rgb), 0.05);
-  border: 1.5px solid var(--s-line);
+  background: rgba(var(--studio-ink-rgb), 0.05);
+  border: 1.5px solid var(--s-edge);
   border-radius: var(--radius-12);
   padding: 13px;
   font-family: var(--sans);
@@ -423,8 +426,8 @@
 }
 @media (hover: hover) {
   .btnGoogle:hover {
-    background: rgba(var(--cream-rgb), 0.09);
-    border-color: rgba(var(--cream-rgb), 0.22);
+    background: rgba(var(--studio-ink-rgb), 0.09);
+    border-color: rgba(var(--studio-ink-rgb), 0.7);
   }
 }
 .btnGoogle:disabled {
@@ -435,7 +438,7 @@
 .gSpinner {
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(var(--cream-rgb), 0.3);
+  border: 2px solid rgba(var(--studio-ink-rgb), 0.3);
   border-top-color: var(--s-text);
   border-radius: 50%;
   animation: gspin 0.7s linear infinite;
@@ -471,7 +474,7 @@
   background: none;
   border-color: transparent;
   box-shadow: none;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   font-family: var(--sans);
   font-size: var(--text-12-5);
   font-weight: 600;
@@ -493,7 +496,7 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   font-weight: 600;
   font-style: normal;
   font-family: var(--sans);
@@ -509,7 +512,7 @@
 .free a {
   display: inline-block;
   font-size: var(--text-12-5);
-  color: var(--accent);
+  color: var(--studio-accent-text);
   /* A 44px tall hit area around the line, pulled back by the negative
      margin so the line keeps its place. */
   padding-block: calc((var(--tap-min) - 1lh) / 2);
@@ -530,8 +533,8 @@
   gap: 14px;
   align-items: flex-start;
   padding: 18px;
-  background: rgba(var(--cream-rgb), 0.04);
-  border: 1.5px solid var(--s-line);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  border: 1.5px solid var(--s-edge);
   border-radius: var(--radius-14);
   cursor: pointer;
   transition:
@@ -541,25 +544,25 @@
 }
 @media (hover: hover) {
   .tier:hover {
-    background: rgba(var(--cream-rgb), 0.06);
+    background: rgba(var(--studio-ink-rgb), 0.06);
   }
 }
 /* .tier.tierOn (0,0,2,0) outranks .tier:hover, so no !important needed. */
 .tier.tierOn {
-  border-color: var(--accent);
+  border-color: var(--studio-accent-text);
   background: rgba(var(--accent-rgb), 0.08);
 }
 .tierDot {
   width: 18px;
   height: 18px;
-  border: 1.5px solid var(--s-text-40);
+  border: 1.5px solid var(--s-text-60);
   border-radius: 50%;
   flex: none;
   margin-top: 3px;
   position: relative;
 }
 .tierOn .tierDot {
-  border-color: var(--accent);
+  border-color: var(--studio-accent-text);
 }
 .tierOn .tierDot::after {
   content: "";
@@ -586,7 +589,7 @@
 }
 .tier h4 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .tierPrice {
   font-family: var(--serif);
@@ -597,7 +600,7 @@
 }
 .tierPrice em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .tierPrice b {
   font-size: var(--text-12);
@@ -614,7 +617,7 @@
   font-style: italic;
 }
 .tier p em {
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .tierRec {
   position: absolute;
@@ -632,7 +635,7 @@
 }
 .tierIncl {
   font-size: var(--text-11-5);
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   font-family: var(--serif);
   font-style: italic;
   margin-top: 8px;
@@ -644,5 +647,5 @@
   width: 12px;
   height: 12px;
   flex: none;
-  stroke: var(--jade-light);
+  stroke: var(--studio-jade-text);
 }

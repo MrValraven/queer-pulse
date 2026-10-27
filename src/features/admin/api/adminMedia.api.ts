@@ -156,5 +156,17 @@ export function deleteAdminMediaObject(
  *  exactly what a forced delete would break. */
 export interface AdminMediaDeleteConflict {
   message?: string;
+  /** Reason code; `media_live_cover` means the image is a live cover. */
+  code?: string;
   references?: MediaReference[];
+  /** Present with `media_live_cover`: the scenes and Studio releases that name
+   *  the image as their cover. */
+  coverHolders?: AdminMediaCoverHolder[];
+}
+
+/** One scene or Studio release whose cover is the image being deleted. */
+export interface AdminMediaCoverHolder {
+  kind: "studio-scene" | "studio-release";
+  entityId: string;
+  label: string;
 }

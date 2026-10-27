@@ -17,6 +17,7 @@ import { useStudioAnalysisBackfill } from "./upload/useStudioAnalysisBackfill";
 import { useStudioUploadAnalysis } from "./upload/useStudioUploadAnalysis";
 import type { StudioUploadDraft } from "./useStudioUploadDraft";
 import { useStudioShowcase } from "./useStudioShowcase";
+import { useStudioUploadHashFocus } from "./useStudioUploadHashFocus";
 import { StudioVersionNotePanel } from "./StudioVersionNotePanel";
 import s from "./creator.module.css";
 import publishStyles from "./StudioUploadPublish.module.css";
@@ -126,6 +127,7 @@ export function UploadMainCol({ draft }: { draft: StudioUploadDraft }) {
   useReportUploadActivity("uploads", uploads.hasActiveUploads);
   useReportUploadActivity("heldFiles", uploads.hasHeldFiles);
   const fixFocus = useFocusAfterStepChange();
+  useStudioUploadHashFocus();
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
   const dropZoneRef = useRef<HTMLDivElement>(null);
   const shouldFocusDropZoneRef = useRef(false);

@@ -101,7 +101,7 @@ function PlayedRow({
 /** "Played": the tracks this device played lately (PRD-18), folded until
  *  opened. Kept on this device only, never sent anywhere; Clear played
  *  wipes it here, as Studio settings does. Hidden while the list is empty
- *  or Recently played is off. */
+ *  or listening history is paused. */
 export function StudioQueuePlayed({
   headingLevel,
   onBeforeClear,

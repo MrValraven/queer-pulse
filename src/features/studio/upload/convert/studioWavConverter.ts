@@ -22,6 +22,9 @@ export interface ConvertOptions {
   onProgress: (progress: number) => void;
   /** Aborting drops a queued job or stops a running one; nothing settles. */
   signal: AbortSignal;
+  /** Called once the header passed (not for a refusal), before the job waits
+   *  its turn: the file is then known to be convertible. */
+  onChecked?: () => void;
 }
 
 export interface WavConversionWorkerPort {
@@ -56,6 +59,7 @@ export function conversionTimeoutMs(durationSeconds: number): number {
   );
 }
 
+const PCM_SNIFF_BYTES = 12;
 const CONVERTIBLE_EXTENSIONS: ReadonlySet<string> = new Set([
   "wav",
   "wave",
@@ -87,6 +91,24 @@ export function createWavConversionWorker(): WavConversionWorkerPort {
     {
       type: "module",
     },
+  );
+}
+
+/** Whether the first bytes say WAV, RF64 or AIFF, whatever the file is
+ *  called. Lets a renamed WAV reach the converter instead of the server's
+ *  audio check. */
+export async function sniffPcmContainer(file: Blob): Promise<boolean> {
+  const head = new Uint8Array(
+    await file.slice(0, PCM_SNIFF_BYTES).arrayBuffer(),
+  );
+  if (head.length < PCM_SNIFF_BYTES) return false;
+  const codeAt = (offset: number) =>
+    String.fromCharCode(...head.subarray(offset, offset + 4));
+  const outerId = codeAt(0);
+  const formType = codeAt(8);
+  return (
+    ((outerId === "RIFF" || outerId === "RF64") && formType === "WAVE") ||
+    (outerId === "FORM" && (formType === "AIFF" || formType === "AIFC"))
   );
 }
 
@@ -186,11 +208,26 @@ export function createWavConverter(
   const readHeader = dependencies.readHeader ?? readHeaderOf;
   const queue: ConversionJob[] = [];
   let isBusy = false;
+  /** Files whose header is still being read: a job is about to be queued. */
+  let checkingCount = 0;
+  const idleWaiters = new Set<() => void>();
+
+  const isIdle = () => !isBusy && queue.length === 0 && checkingCount === 0;
+
+  function notifyIfIdle() {
+    if (!isIdle()) return;
+    const waiters = [...idleWaiters];
+    idleWaiters.clear();
+    waiters.forEach((resolveWaiter) => resolveWaiter());
+  }
 
   function pump() {
     if (isBusy) return;
     const next = queue.shift();
-    if (!next) return;
+    if (!next) {
+      notifyIfIdle();
+      return;
+    }
     isBusy = true;
     runJob(next, createWorker, () => {
       isBusy = false;
@@ -203,16 +240,30 @@ export function createWavConverter(
     maxBytes: number,
     options: ConvertOptions,
   ): Promise<ConvertResult> {
-    const parsed = await readHeader(file).catch(() => null);
-    if (options.signal.aborted) return neverSettles();
-    if (!parsed?.ok) return { ok: false, reason: "unsupported" };
+    checkingCount += 1;
+    const parsed = await readHeader(file)
+      .catch(() => null)
+      .finally(() => {
+        checkingCount -= 1;
+      });
+    // A refusal or an abort leaves nothing queued, so waiters may go on.
+    const refuse = (result: ConvertResult) => {
+      notifyIfIdle();
+      return result;
+    };
+    if (options.signal.aborted) {
+      notifyIfIdle();
+      return neverSettles();
+    }
+    if (!parsed?.ok) return refuse({ ok: false, reason: "unsupported" });
     const bitrateKbps = mp3BitrateFor(parsed.header.durationSeconds, maxBytes);
     if (bitrateKbps === null)
-      return {
+      return refuse({
         ok: false,
         reason: "tooLong",
         maxMinutes: maxMinutesAt128(maxBytes),
-      };
+      });
+    options.onChecked?.();
     return new Promise<ConvertResult>((settle) => {
       const job: ConversionJob = {
         file,
@@ -235,7 +286,22 @@ export function createWavConverter(
     });
   }
 
-  return { convert };
+  /** Resolves once no conversion runs, waits or reads its header. An abort
+   *  resolves it too; the caller then checks the signal. */
+  function whenIdle(signal: AbortSignal): Promise<void> {
+    if (isIdle() || signal.aborted) return Promise.resolve();
+    return new Promise<void>((resolveIdle) => {
+      const resolveWaiter = () => {
+        signal.removeEventListener("abort", resolveWaiter);
+        idleWaiters.delete(resolveWaiter);
+        resolveIdle();
+      };
+      idleWaiters.add(resolveWaiter);
+      signal.addEventListener("abort", resolveWaiter, { once: true });
+    });
+  }
+
+  return { convert, whenIdle };
 }
 
 const tabConverter = createWavConverter();
@@ -247,4 +313,10 @@ export function convertToMp3(
   options: ConvertOptions,
 ): Promise<ConvertResult> {
   return tabConverter.convert(file, maxBytes, options);
+}
+
+/** Waits for the tab's conversion to finish, so background work (the
+ *  stored-track analysis) never runs beside it on a phone. */
+export function whenConversionIdle(signal: AbortSignal): Promise<void> {
+  return tabConverter.whenIdle(signal);
 }

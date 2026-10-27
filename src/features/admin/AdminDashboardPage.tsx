@@ -9,11 +9,8 @@ import { routes } from "../../app/routeMap";
 import { AdminDashboardHeader } from "./AdminDashboardHeader";
 import { AdminStatGrid } from "./AdminStatGrid";
 import { AdminTriageQueue } from "./AdminTriageQueue";
-import {
-  ReportsByTypeChart,
-  MemberGrowthChart,
-  ResponseTimeChart,
-} from "./AdminDashboardCharts";
+import { ReportsByTypeChart, ResponseTimeChart } from "./AdminDashboardCharts";
+import { AdminMemberGrowthCard } from "./AdminMemberGrowthCard";
 import { AdminDashboardFeed } from "./AdminDashboardFeed";
 import { AdminLandingVisitsCard } from "./AdminLandingVisitsCard";
 import { useAdminOverview } from "./api/useAdminOverview";
@@ -87,10 +84,9 @@ export function AdminDashboardPage() {
                 loading={isLoading}
               />
               <div className={styles.chart2up}>
-                <MemberGrowthChart
-                  points={data?.memberGrowth ?? []}
-                  loading={isLoading}
-                />
+                {/* Owns its range toggle and reads the range-aware growth
+                    series; the overview's fixed 10-week one goes unused here. */}
+                <AdminMemberGrowthCard />
                 <ResponseTimeChart
                   buckets={data?.responseDist ?? null}
                   loading={isLoading}

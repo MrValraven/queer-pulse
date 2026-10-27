@@ -77,6 +77,27 @@ export function StudioAboutPage() {
             )}
           </div>
         </FadeIn>
+
+        <FadeIn className={s.credits} delay={80} as="footer">
+          <h2 className={s.creditsHeading}>
+            {t("studio:aboutLive.credits.heading")}
+          </h2>
+          <p>
+            <Translation
+              i18nKey="studio:aboutLive.credits.lame"
+              components={{
+                a: (
+                  // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- element template; <Translation> clones it with the translated link text at render.
+                  <a
+                    href="https://lame.sourceforge.io/"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  />
+                ),
+              }}
+            />
+          </p>
+        </FadeIn>
       </div>
     </StudioShell>
   );

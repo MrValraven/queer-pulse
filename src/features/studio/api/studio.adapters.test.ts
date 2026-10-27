@@ -22,7 +22,6 @@ import {
   isStudioGenre,
   isTranscriptFormat,
   lyricStanzasOf,
-  resolveHeroLayout,
   tintForId,
   toArtistStatsView,
   toArtistView,
@@ -178,31 +177,20 @@ describe("toArtistView", () => {
   });
 });
 
-describe("resolveHeroLayout and the artist hero fields", () => {
+describe("the artist hero fields", () => {
   const coverUrl = "https://example.test/wide.jpg";
 
-  it("resolves to classic without a cover", () => {
-    expect(resolveHeroLayout(null, null)).toBe("classic");
-    expect(resolveHeroLayout(null, "avatar")).toBe("classic");
-  });
-
-  it("resolves to full-bleed for a cover with no stored choice", () => {
-    expect(resolveHeroLayout(coverUrl, null)).toBe("full-bleed");
-  });
-
-  it("resolves to the stored choice when a cover is set", () => {
-    expect(resolveHeroLayout(coverUrl, "avatar")).toBe("avatar");
-    expect(resolveHeroLayout(coverUrl, "full-bleed")).toBe("full-bleed");
-  });
-
-  it("maps coverUrl and the resolved layout onto the artist view", () => {
-    const view = toArtistView({
+  function viewWith(
+    artistCoverUrl: string | null,
+    studioHero: StudioArtistDTO["artist"]["studioHero"],
+  ) {
+    return toArtistView({
       artist: {
         ...artist,
         bio: null,
         city: null,
-        coverUrl,
-        studioHero: "avatar",
+        coverUrl: artistCoverUrl,
+        studioHero,
       },
       releases: [],
       ownerReleases: null,
@@ -210,8 +198,21 @@ describe("resolveHeroLayout and the artist hero fields", () => {
       isFollowing: false,
       playlists: [],
     });
+  }
+
+  it("resolves to portrait without a cover", () => {
+    expect(viewWith(null, null).heroLayout).toBe("portrait");
+    expect(viewWith(null, "banner").heroLayout).toBe("portrait");
+  });
+
+  it("resolves to both for a cover with no stored choice", () => {
+    expect(viewWith(coverUrl, null).heroLayout).toBe("both");
+  });
+
+  it("maps coverUrl and the stored choice onto the artist view", () => {
+    const view = viewWith(coverUrl, "banner");
     expect(view.coverUrl).toBe(coverUrl);
-    expect(view.heroLayout).toBe("avatar");
+    expect(view.heroLayout).toBe("banner");
   });
 });
 
