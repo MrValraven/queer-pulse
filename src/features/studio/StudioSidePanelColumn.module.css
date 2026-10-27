@@ -5,23 +5,38 @@
 .column {
   grid-column: 3;
   min-width: 0;
+  padding-block-start: var(--studio-topbar-h);
   overflow: clip;
 }
 
-/* Runs the full height like the rail and holds still while the page
-   scrolls. It ends above the player bar, which itself sits above the tab
-   bar or the consent banner (whichever is taller). Its body scrolls on its
-   own inside the card. */
+/* Starts under the topbar and holds still there while the page scrolls.
+   It ends above the player bar, which itself sits above the tab bar or the
+   consent banner (whichever is taller). Its body scrolls on its own inside
+   the card. */
 .aside {
   position: sticky;
-  top: 0;
+  top: var(--studio-topbar-h);
   display: flex;
   flex-direction: column;
   inline-size: var(--studio-side-panel-w);
   block-size: calc(
-    100dvh - var(--studio-player-inset, 0px) -
+    100dvh - var(--studio-topbar-h) - var(--studio-player-inset, 0px) -
       max(var(--bottom-inset, 0px), var(--consent-inset, 0px))
   );
+}
+
+/* Carries the topbar's glass and hairline over the column, so the bar
+   reads as running the full width with the panel tucked under it. The
+   topbar sits in the middle track (studio.module.css .topbar), and its
+   height token includes the hairline, so the two lines meet. */
+.aside::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 100%;
+  block-size: var(--studio-topbar-h);
+  background: color-mix(in srgb, var(--studio-surface) 82%, transparent);
+  border-bottom: 1px solid var(--s-line);
 }
 
 /* A flex column with a bounded height, so StudioSidePanelBody's own body
@@ -31,7 +46,7 @@
   flex: 1 1 auto;
   flex-direction: column;
   min-height: 0;
-  margin: max(8px, env(safe-area-inset-top, 0px)) 8px 8px 0;
+  margin: 8px 8px 8px 0;
   border-radius: var(--radius-14);
   background: var(--studio-surface-rail);
   color: var(--studio-text);

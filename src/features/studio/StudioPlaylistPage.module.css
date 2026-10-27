@@ -48,8 +48,9 @@ ol.list {
 }
 
 /* With a mouse the drag handle and Move up, Move down and Remove rest
-   unseen and fade in while the row is hovered or holds focus, so a Tab onto
-   a control shows it. Touch keeps them in view. */
+   unseen and fade in while the row is hovered or holds keyboard focus, so a
+   Tab onto a control shows it and a mouse click leaves them to fade with the
+   pointer. Touch keeps them in view. */
 @media (hover: hover) and (pointer: fine) {
   .handle,
   .controls {
@@ -61,8 +62,8 @@ ol.list {
 
   li:hover .handle,
   li:hover .controls,
-  li:focus-within .handle,
-  li:focus-within .controls {
+  li:has(:focus-visible) .handle,
+  li:has(:focus-visible) .controls {
     opacity: 1;
   }
 }
