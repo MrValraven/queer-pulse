@@ -63,6 +63,13 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "studio-link-previews",
+        category: "improvement",
+        date: "27 Oct 2026",
+        ...entryKeys("studio-link-previews"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
         id: "staff-pdf-page-tool",
         category: "feature",
         date: "27 Oct 2026",

@@ -256,6 +256,49 @@ export const QUIET_PUBLIC_PATHS = [
 export const PRERENDER_PATHS = ["/"];
 
 /**
+ * Pages that get a baked SHARE CARD: their `<head>` alone, written to static
+ * HTML so a link pasted into WhatsApp, Instagram, iMessage, X or Slack unfurls
+ * with the page's own title, description and image. Link-preview crawlers run
+ * no JavaScript, so without this they read spa.html's brand-level defaults.
+ *
+ * These pages are deliberately de-indexed (word of mouth), so they are absent
+ * from the sitemap and from QUIET_PUBLIC_PATHS. They are still shared by hand,
+ * which is the one job this list does. scripts/prerender.mjs copies only the
+ * page-specific head tags (title, description, canonical, robots, og:*,
+ * twitter:*) into the untouched shell and leaves #root EMPTY, so the page boots
+ * exactly as it would from spa.html and no rendered body ever reaches a
+ * crawler. The baked robots meta carries the page's own `noindex, nofollow`,
+ * which is what keeps it out of search results once robots.txt lets the
+ * preview crawlers fetch it.
+ *
+ * Two rules, held by assertShareCardPaths:
+ *   1. No entry may be gated. `/studio` sits inside the gated `/studio/*`
+ *      prefix and passes only because it is a PUBLIC_EXCEPTION (the studio
+ *      shopfront).
+ *   2. No entry may also be in PRERENDER_PATHS. Both passes write the same
+ *      dist/<path>/index.html, so a path in both would be baked twice and the
+ *      second write would silently win.
+ */
+export const SHARE_CARD_PATHS = ["/studio"];
+
+/**
+ * Throw if SHARE_CARD_PATHS breaks either rule above. Lists every offender, so
+ * a bad edit is fixed in one pass.
+ */
+export function assertShareCardPaths() {
+  assertNoGatedPaths(SHARE_CARD_PATHS);
+  const prerendered = new Set(PRERENDER_PATHS);
+  const bakedTwice = SHARE_CARD_PATHS.filter((candidatePath) =>
+    prerendered.has(candidatePath),
+  );
+  if (bakedTwice.length > 0) {
+    throw new Error(
+      `SHARE_CARD_PATHS contains paths that PRERENDER_PATHS already bakes in full. Both passes write the same index.html, so keep each path in one list only:\n  ${bakedTwice.join("\n  ")}`,
+    );
+  }
+}
+
+/**
  * Throw if PRERENDER_PATHS contains anything not in QUIET_PUBLIC_PATHS. Keeps
  * the prerendered set honest: it can only ever be a subset of the vetted public
  * surface, never a path that is gated or otherwise unlisted.

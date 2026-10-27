@@ -3803,6 +3803,10 @@ export const marketing: Catalog = {
     "Uma ferramenta de páginas de PDF para a equipa",
   "changelog.entries.staff-pdf-page-tool.body":
     "A equipa pode remover, rodar, reordenar, juntar e dividir páginas de PDF no navegador, e os ficheiros ficam no dispositivo.",
+  "changelog.entries.studio-link-previews.title":
+    "Os links do Studio mostram pré-visualização quando os partilhas",
+  "changelog.entries.studio-link-previews.body":
+    "Um link do Studio enviado no WhatsApp, Instagram ou iMessage mostra o título, a descrição e uma imagem do Studio.",
   "changelog.entries.studio-now-playing-panel.title":
     "Painel A tocar agora no Studio",
   "changelog.entries.studio-now-playing-panel.body":

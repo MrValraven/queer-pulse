@@ -131,6 +131,14 @@ Disallow: /spa.html
 Disallow: /magazine
 Disallow: /cinema
 Disallow: /studio
+# The Studio landing itself and its share image may be fetched, so link
+# previews (WhatsApp, Instagram, iMessage, X, Slack) can read the head that
+# scripts/prerender.mjs bakes for /studio. The page stays out of search results
+# through that head's `noindex, nofollow` robots meta: a crawler has to be able
+# to fetch a page to see its noindex. `$` anchors the end, so every other
+# /studio/* route stays blocked by the line above.
+Allow: /studio$
+Allow: /studio-landing/og-studio.jpg
 Disallow: /activism
 Disallow: /archive
 Disallow: /sustainer

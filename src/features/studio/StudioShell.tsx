@@ -34,7 +34,9 @@ import styles from "./studio.module.css";
 
 /**
  * The listener shell: the rail (folding to an icon strip on desktop), the
- * sticky topbar, the page's `<main>` and the phone tab bar. The topbar sits
+ * sticky topbar, the page's `<main>` and the phone tab bar. The topbar is a
+ * grid child of its own, running across the page column and the docked
+ * panel column, so the bell and avatar keep the top end corner. It sits
  * outside `<main>`, so the skip link and the focus that RouteAnnouncer moves
  * to `#main-content` after every navigation land on the page itself. Every
  * Studio page names the tab "Studio · QueerPulse" through this shell until
@@ -95,44 +97,46 @@ export function StudioShell({ children }: { children: ReactNode }) {
           </StudioShellRailCollapsedContext.Provider>
         )}
 
-        <div className={styles.main}>
-          <header className={styles.topbar}>
-            {isCompact && accountMenu}
-            <StudioShellHistoryNav />
-            {/* Search is a tab on phones and /studio/search has its own
-                field, so the bar shows the brand there. */}
-            {isCompact ? (
-              // No pulse dot here: the avatar's attention dot sits beside
-              // the brand, and one dot on the bar reads clearly.
-              <Link to={routes.studio} className={styles.topBrand}>
-                <span className={styles.topBrandWord}>
-                  <Translation
-                    i18nKey="studio:brand.lockup"
-                    components={{ em: <em /> }}
-                  />
-                </span>
-                <span className={styles.visuallyHidden}>
-                  {` ${t("studio:brand.studioLabel")}`}
-                </span>
+        {/* The topbar spans the page and panel tracks (studio.module.css
+            .topbar), so the docked panel opens under it. */}
+        <header className={styles.topbar}>
+          {isCompact && accountMenu}
+          <StudioShellHistoryNav />
+          {/* Search is a tab on phones and /studio/search has its own
+              field, so the bar shows the brand there. */}
+          {isCompact ? (
+            // No pulse dot here: the avatar's attention dot sits beside
+            // the brand, and one dot on the bar reads clearly.
+            <Link to={routes.studio} className={styles.topBrand}>
+              <span className={styles.topBrandWord}>
+                <Translation
+                  i18nKey="studio:brand.lockup"
+                  components={{ em: <em /> }}
+                />
+              </span>
+              <span className={styles.visuallyHidden}>
+                {` ${t("studio:brand.studioLabel")}`}
+              </span>
+            </Link>
+          ) : (
+            <StudioShellSearch />
+          )}
+          <div className={styles.topRight}>
+            {isShowcase && (
+              <Link
+                to={routes.cinemaMembership}
+                className={styles.sustainPill}
+                aria-label={isCompact ? sustainLabel : undefined}
+              >
+                {isCompact ? t("studio:shell.sustainShort") : sustainLabel}
               </Link>
-            ) : (
-              <StudioShellSearch />
             )}
-            <div className={styles.topRight}>
-              {isShowcase && (
-                <Link
-                  to={routes.cinemaMembership}
-                  className={styles.sustainPill}
-                  aria-label={isCompact ? sustainLabel : undefined}
-                >
-                  {isCompact ? t("studio:shell.sustainShort") : sustainLabel}
-                </Link>
-              )}
-              <StudioNotificationsBell />
-              {!isCompact && accountMenu}
-            </div>
-          </header>
+            <StudioNotificationsBell />
+            {!isCompact && accountMenu}
+          </div>
+        </header>
 
+        <div className={styles.main}>
           <main id={MAIN_CONTENT_ID} tabIndex={-1} className={styles.content}>
             {children}
           </main>

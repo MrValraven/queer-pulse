@@ -3716,6 +3716,10 @@ export const marketing: Catalog = {
   "changelog.entries.staff-pdf-page-tool.title": "A PDF page tool for staff",
   "changelog.entries.staff-pdf-page-tool.body":
     "Staff can remove, rotate, reorder, merge and split PDF pages in the browser, and files stay on the device.",
+  "changelog.entries.studio-link-previews.title":
+    "Studio links preview when you share them",
+  "changelog.entries.studio-link-previews.body":
+    "A Studio link sent on WhatsApp, Instagram or iMessage shows its title, blurb and a picture of Studio.",
   "changelog.entries.studio-now-playing-panel.title":
     "A Now playing panel in Studio",
   "changelog.entries.studio-now-playing-panel.body":

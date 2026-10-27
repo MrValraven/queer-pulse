@@ -12,6 +12,18 @@
  * stays in the sitemap and is served as a normal SPA route — see
  * ./publicPaths.mjs and ./generate-sitemap.mjs for that deliberate split.
  *
+ * SHARE CARDS: SHARE_CARD_PATHS (currently /studio) get a second, head-only
+ * pass. Those pages are de-indexed and stay out of the sitemap, but people
+ * paste their links into WhatsApp, Instagram, iMessage, X and Slack, whose
+ * preview crawlers run no JavaScript and would otherwise unfurl spa.html's
+ * brand defaults. The pass renders the page, lifts its title, description,
+ * robots, canonical, og:* and twitter:* tags, swaps them into the clean shell
+ * and writes dist/<path>/index.html with #root still EMPTY, so the page boots
+ * exactly like spa.html and crawlers see no body. Vercel resolves that file for
+ * /studio before the catch-all rewrite; every other /studio/* route still falls
+ * through to spa.html. assertShareCard() fails the build if the render set a
+ * different page's head (for example the shell's og-default.png survived).
+ *
  * HOW: serve dist/ on an ephemeral port, visit each prerendered path in a
  * headless Chromium, and write the settled DOM to dist/<path>/index.html.
  * The browser binary is NOT a dependency of `pnpm install` — it is a separate
@@ -57,8 +69,10 @@ import { extname, join } from "node:path";
 import { chromium } from "@playwright/test";
 import {
   PRERENDER_PATHS,
+  SHARE_CARD_PATHS,
   assertNoGatedPaths,
   assertPrerenderSubset,
+  assertShareCardPaths,
 } from "./publicPaths.mjs";
 
 const DIST_DIRECTORY = "dist";
@@ -175,8 +189,10 @@ async function assertFallbackRewrite() {
   }
 
   // Every URL a baked page is reachable at, in the shapes a rewrite could name.
+  // Share cards count too: their index.html carries a page-specific head, so a
+  // catch-all pointing at one would hand every route that page's title and image.
   const bakedDestinations = new Set(
-    PRERENDER_PATHS.flatMap((publicPath) =>
+    [...PRERENDER_PATHS, ...SHARE_CARD_PATHS].flatMap((publicPath) =>
       publicPath === "/"
         ? ["/", "/index.html"]
         : [publicPath, `${publicPath}/`, `${publicPath}/index.html`],
@@ -200,10 +216,135 @@ async function assertFallbackRewrite() {
   }
 }
 
+// --- Share cards (head-only bake) -------------------------------------------
+
+/**
+ * The page-specific head tags a share card carries, as one selector for the
+ * live document. Everything else in the head (fonts, icons, the boot script,
+ * JSON-LD) stays exactly as the shell has it.
+ */
+const SHARE_CARD_HEAD_SELECTOR = [
+  "title",
+  'meta[name="description"]',
+  'meta[name="robots"]',
+  'link[rel="canonical"]',
+  'meta[property^="og:"]',
+  'meta[name^="twitter:"]',
+].join(", ");
+
+/**
+ * The shell's own copies of those same tags, as written in the built HTML. The
+ * shell writes most of them across several lines, which `[^>]` spans. Leading
+ * indentation and the trailing newline go with each tag so no blank gaps pile up.
+ */
+const SHELL_SHARE_TAG_PATTERN =
+  /[ \t]*(?:<title>[\s\S]*?<\/title>|<meta\b[^>]*\b(?:name|property)="(?:description|robots|og:[^"]*|twitter:[^"]*)"[^>]*>|<link\b[^>]*\brel="canonical"[^>]*>)[ \t]*\n?/g;
+
+/** The shell's default share image. A share card still pointing at it is wrong. */
+const SHELL_DEFAULT_SHARE_IMAGE = "og-default.png";
+
+/**
+ * Collect the share-card tags from the live document. Each entry keeps its key
+ * (the meta name/property, or "title" / "canonical"), its value and its
+ * serialised markup, so the guard can read values and the bake can copy markup.
+ */
+async function collectShareCardTags(page) {
+  return page.evaluate(
+    (selector) =>
+      Array.from(document.head.querySelectorAll(selector)).map((element) => {
+        if (element.tagName === "TITLE") {
+          return {
+            key: "title",
+            value: element.textContent ?? "",
+            markup: element.outerHTML,
+          };
+        }
+        if (element.tagName === "LINK") {
+          return {
+            key: "canonical",
+            value: element.getAttribute("href") ?? "",
+            markup: element.outerHTML,
+          };
+        }
+        return {
+          key:
+            element.getAttribute("property") ??
+            element.getAttribute("name") ??
+            "",
+          value: element.getAttribute("content") ?? "",
+          markup: element.outerHTML,
+        };
+      }),
+    SHARE_CARD_HEAD_SELECTOR,
+  );
+}
+
+/**
+ * Fail a share card that did not come from the page it is named for. A
+ * signed-in or demo session, a redirect or a crash boundary would render some
+ * other route, and its head would be baked under the wrong URL. Two signals
+ * name the cause: the page's own share image never replaced the shell default,
+ * or the page's own `noindex` robots tag is missing (every share-card page is
+ * de-indexed, so a missing tag would also let search engines index it once
+ * robots.txt lets the preview crawlers in).
+ */
+function assertShareCard(publicPath, collectedTags) {
+  const valueOf = (key) =>
+    collectedTags.find((tag) => tag.key === key)?.value ?? null;
+  const titleSeen = valueOf("title") ?? "(no title)";
+  const shareImage = valueOf("og:image");
+  if (shareImage === null) {
+    throw new Error(
+      `[prerender] ${publicPath} share card: the rendered head has no og:image at all, so a link preview would show no picture. Title seen: "${titleSeen}".`,
+    );
+  }
+  if (shareImage.endsWith(`/${SHELL_DEFAULT_SHARE_IMAGE}`)) {
+    throw new Error(
+      `[prerender] ${publicPath} share card: the page never set its own share image (og:image is still ${SHELL_DEFAULT_SHARE_IMAGE}), so it rendered something other than the page this card is for. Title seen: "${titleSeen}".`,
+    );
+  }
+  const robots = valueOf("robots");
+  if (robots === null || !robots.includes("noindex")) {
+    throw new Error(
+      `[prerender] ${publicPath} share card: the page's robots meta is ${robots === null ? "missing" : `"${robots}" without noindex`}. Share-card pages are de-indexed, and robots.txt lets preview crawlers fetch them, so without noindex they would land in search results. Title seen: "${titleSeen}".`,
+    );
+  }
+}
+
+/**
+ * Swap the collected tags into the clean shell. Only the head changes: the
+ * shell's own title, description, robots, canonical, og:* and twitter:* tags
+ * come out, the page's go in just before </head>, and the body (with its empty
+ * #root) is left byte for byte as spa.html has it.
+ *
+ * `og:image:type` is always dropped. assertShareCard has already proved the
+ * page swapped in its own image, while the live document still carries the
+ * shell's "image/png", which describes og-default.png and would misdescribe the
+ * page's image (the Studio card is a JPEG). useDocumentMeta drops the width and
+ * height for the same reason.
+ */
+function bakeShareCardHead(shellText, collectedTags) {
+  const headEnd = shellText.indexOf("</head>");
+  if (headEnd === -1) {
+    throw new Error(
+      "[prerender] share card: the built shell has no </head>, so there is nowhere to put the page's head tags.",
+    );
+  }
+  const tagsToBake = collectedTags.filter((tag) => tag.key !== "og:image:type");
+  const shellHead = shellText
+    .slice(0, headEnd)
+    .replace(SHELL_SHARE_TAG_PATTERN, "")
+    .trimEnd();
+  const bakedTags = tagsToBake.map((tag) => `    ${tag.markup}`).join("\n");
+  return `${shellHead}\n${bakedTags}\n  ${shellText.slice(headEnd)}`;
+}
+
 // --- Guard before any I/O ---------------------------------------------------
 // PRERENDER_PATHS must be a subset of the vetted public surface AND ungated.
 assertPrerenderSubset();
 assertNoGatedPaths(PRERENDER_PATHS);
+// SHARE_CARD_PATHS must be ungated and must not overlap PRERENDER_PATHS.
+assertShareCardPaths();
 // ...and the production fallback must not be one of the pages we overwrite.
 await assertFallbackRewrite();
 
@@ -346,6 +487,41 @@ try {
       console.error(`[prerender] FAILED ${publicPath}: ${error.message}`);
     }
   }
+
+  // Head-only share cards (see SHARE CARDS in the header). Same page, same
+  // readiness wait; only the output differs: the page's head tags go into the
+  // CLEAN shell string, never page.content(), so #root stays empty and no
+  // rendered body, JSON-LD or runtime <html> attribute is ever written.
+  const shellText = shellHtml.toString("utf8");
+  for (const publicPath of SHARE_CARD_PATHS) {
+    const url = `http://127.0.0.1:${port}${publicPath}?__prerender=1`;
+    try {
+      await page.goto(url, {
+        waitUntil: "networkidle",
+        timeout: NAVIGATION_TIMEOUT_MS,
+      });
+      await page.waitForFunction(
+        () => document.documentElement.dataset.prerenderReady === "true",
+        undefined,
+        { timeout: READY_TIMEOUT_MS },
+      );
+      await page.waitForTimeout(SETTLE_AFTER_READY_MS);
+      const collectedTags = await collectShareCardTags(page);
+      assertShareCard(publicPath, collectedTags);
+      const html = bakeShareCardHead(shellText, collectedTags);
+      const outputPath = outputPathFor(publicPath);
+      await mkdir(join(outputPath, ".."), { recursive: true });
+      await writeFile(outputPath, html, "utf8");
+      console.log(
+        `[prerender] ${publicPath} share card (head only) -> ${outputPath}`,
+      );
+    } catch (error) {
+      failures.push({ publicPath, message: error.message });
+      console.error(
+        `[prerender] FAILED ${publicPath} share card: ${error.message}`,
+      );
+    }
+  }
 } finally {
   await browser?.close();
   server.close();
@@ -353,7 +529,7 @@ try {
 
 if (failures.length > 0) {
   console.error(
-    `[prerender] ${failures.length} of ${allPublicPaths.length} paths failed. Failing the build rather than shipping an empty shell for them.`,
+    `[prerender] ${failures.length} of ${allPublicPaths.length + SHARE_CARD_PATHS.length} paths failed. Failing the build rather than shipping an empty shell or a wrong share card for them.`,
   );
   process.exit(1);
 }
@@ -361,3 +537,8 @@ if (failures.length > 0) {
 console.log(
   `[prerender] Wrote ${allPublicPaths.length} essential page(s): ${allPublicPaths.join(", ")}.`,
 );
+if (SHARE_CARD_PATHS.length > 0) {
+  console.log(
+    `[prerender] Wrote ${SHARE_CARD_PATHS.length} share card(s): ${SHARE_CARD_PATHS.join(", ")}.`,
+  );
+}

@@ -78,7 +78,9 @@
 /* Three tracks: the rail, the page column and the docked side panel. The
    panel track sits at 0px until the panel opens, and both outer tracks are
    variables, so the rail folding and the panel opening share one
-   transition. */
+   transition. Two rows: the topbar runs across the page and panel tracks,
+   and the page and the panel share the row under it. The rail spans both,
+   so it starts at the very top. */
 .app {
   --studio-app-rail-col: var(--studio-rail-w);
   --studio-app-panel-col: 0px;
@@ -86,6 +88,7 @@
   grid-template-columns: var(--studio-app-rail-col) minmax(0, 1fr) var(
       --studio-app-panel-col
     );
+  grid-template-rows: auto 1fr;
   min-height: 100svh;
   transition: grid-template-columns var(--dur-base) var(--ease);
 }
@@ -108,6 +111,8 @@
    the playlist list below them scrolls (StudioRailPlaylists.module.css), and
    it pads its own foot. */
 .rail {
+  grid-column: 1;
+  grid-row: 1 / -1;
   background: var(--rail);
   padding: 24px 0 0;
   position: sticky;
@@ -339,11 +344,17 @@
   }
 }
 
-/* Main + topbar */
+/* Main + topbar. The topbar is a child of .app and spans the page and panel
+   tracks, so its end edge stays on the viewport's edge while the panel
+   track opens and closes. It sticks against the page scroll as before. */
 .main {
+  grid-column: 2;
+  grid-row: 2;
   min-width: 0;
 }
 .topbar {
+  grid-column: 2 / -1;
+  grid-row: 1;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -1549,6 +1560,12 @@
 @media (--compact) {
   .app {
     grid-template-columns: 1fr;
+  }
+  /* One track: the topbar and the page stack in it, with no rail or panel
+     column mounted. */
+  .topbar,
+  .main {
+    grid-column: 1;
   }
   .rail {
     display: none;
