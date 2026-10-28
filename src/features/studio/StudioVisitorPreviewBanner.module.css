@@ -1,0 +1,70 @@
+/* The owner-viewing-as-a-visitor pill on a Studio artist page. Shaped like
+   the persona page's SubprofilePreviewBanner, on the inverted surface every
+   floating Studio pill uses (plum on cream, cream on the dark Studio), and
+   fixed 12px above the player bar, the phone tab bar and the consent banner.
+   Portaled to the body, so it reads the global Studio roles only. The motion
+   runs through motion/react (StudioVisitorPreviewBanner.tsx), which honours
+   the app's reduced-motion flag. */
+
+.bar {
+  position: fixed;
+  /* Anchored to both edges, then sized to content and centred with auto
+     margins, so the label never squeezes into a narrow column on phones. */
+  inset-inline: 16px;
+  bottom: calc(
+    var(--studio-player-inset, 0px) +
+      max(var(--bottom-inset, 0px), var(--consent-inset, 0px)) + 12px
+  );
+  z-index: var(--z-popover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  margin-inline: auto;
+  padding: 6px 6px 6px 20px;
+  border-radius: var(--radius-pill);
+  /* The dark theme's text role is slightly translucent: the surface under
+     it keeps the pill opaque over the page. */
+  background:
+    linear-gradient(var(--studio-text), var(--studio-text)),
+    var(--studio-surface);
+  color: var(--studio-surface);
+  box-shadow: var(--shadow-e3);
+  /* motion/react writes the opacity and translate on every frame; no CSS
+     transition joins in, under the reduced-motion rule included. */
+  transition-property: none;
+}
+
+.text {
+  min-width: 0;
+  font-size: var(--text-13-5);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.text strong {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Two classes beat the shared quiet button, whose ink colours vanish on the
+   inverted pill; the hover and press washes go through the button's own
+   custom properties, which its state rules read. */
+.bar .exit {
+  flex: none;
+  color: var(--studio-surface);
+  background: color-mix(in srgb, var(--studio-surface) 12%, transparent);
+  --button-quiet-hover: color-mix(
+    in srgb,
+    var(--studio-surface) 22%,
+    transparent
+  );
+  --button-quiet-active: color-mix(
+    in srgb,
+    var(--studio-surface) 28%,
+    transparent
+  );
+}

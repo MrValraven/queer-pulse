@@ -3803,6 +3803,18 @@ export const marketing: Catalog = {
     "Uma ferramenta de páginas de PDF para a equipa",
   "changelog.entries.staff-pdf-page-tool.body":
     "A equipa pode remover, rodar, reordenar, juntar e dividir páginas de PDF no navegador, e os ficheiros ficam no dispositivo.",
+  "changelog.entries.badge-drawer-layout.title":
+    "Uma folha de detalhe do emblema mais arrumada",
+  "changelog.entries.badge-drawer-layout.body":
+    "Espaço uniforme entre secções, uma faixa de dados mais limpa e um interruptor de perfil legível no telemóvel.",
+  "changelog.entries.persona-open-studio-page.title":
+    "Da persona para a sua página no Studio",
+  "changelog.entries.persona-open-studio-page.body":
+    "As personas de artista têm agora um botão Abrir página no Studio para quem tem acesso ao Studio.",
+  "changelog.entries.studio-view-as-visitor.title":
+    "Vê a tua página do Studio como um visitante",
+  "changelog.entries.studio-view-as-visitor.body":
+    "Os artistas podem pré-visualizar a sua página do Studio sem as ferramentas de dono e voltar à edição.",
   "changelog.entries.studio-link-previews.title":
     "Os links do Studio mostram pré-visualização quando os partilhas",
   "changelog.entries.studio-link-previews.body":

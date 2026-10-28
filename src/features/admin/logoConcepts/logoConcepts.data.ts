@@ -36,6 +36,7 @@ export type LogoConceptId =
   | "ripple-splash"
   | "ripple-serif"
   | "ripple-letter-drop-fraunces"
+  | "ripple-letter-drop-fraunces-tail"
   | "ripple-letter-drop-sans"
   | "ripple-letter-drop-upright"
   | "ripple-letter-serif-fraunces"
@@ -160,6 +161,13 @@ export const RIPPLE_LETTER_VARIANTS: readonly LogoConcept[] = [
     id: "ripple-letter-drop-fraunces",
     titleKey: "admin:logoConcepts.concepts.rippleLetterDropFraunces.title",
     summaryKey: "admin:logoConcepts.concepts.rippleLetterDropFraunces.summary",
+    hasSmallCut: true,
+  },
+  {
+    id: "ripple-letter-drop-fraunces-tail",
+    titleKey: "admin:logoConcepts.concepts.rippleLetterDropFrauncesTail.title",
+    summaryKey:
+      "admin:logoConcepts.concepts.rippleLetterDropFrauncesTail.summary",
     hasSmallCut: true,
   },
   {

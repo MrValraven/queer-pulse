@@ -1552,6 +1552,10 @@
 /* ===========================================================
    DRAWER (badge detail)
    =========================================================== */
+.drBody {
+  display: flex;
+  flex-direction: column;
+}
 .drNav {
   display: flex;
   align-items: center;
@@ -1609,7 +1613,7 @@
   margin-top: 10px;
 }
 .drSec {
-  padding: 22px 0;
+  padding: 24px 0;
   border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .drSec h5 {
@@ -1645,19 +1649,22 @@
 }
 .drStrip {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* Rarity always shows, worth and checked-by are optional: share the row
+     between however many cells there are. */
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-16);
   overflow: hidden;
   background: var(--paper);
   margin-top: 16px;
 }
-.drStrip div {
+.drStrip > div {
   padding: 14px 12px;
   text-align: center;
   border-left: 1px solid rgba(var(--line-rgb), 0.09);
 }
-.drStrip div:first-child {
+.drStrip > div:first-child {
   border-left: none;
 }
 .drStripKey {
@@ -1685,7 +1692,7 @@
 .noteHelp {
   font-size: var(--text-12);
   color: var(--ink-40);
-  margin-top: 9px;
+  margin-top: 10px;
 }
 .drVerify {
   font-size: var(--text-13-5);
@@ -1725,22 +1732,34 @@
 .drFoot {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .drPriv {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
-  font-size: var(--text-13-5);
+  gap: 20px;
+  font-size: var(--text-14-5);
   color: var(--ink);
   font-weight: 500;
 }
+.drPrivText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
 .drPrivNote {
-  font-size: var(--text-11-5);
+  font-size: var(--text-12-5);
+  line-height: 1.5;
   color: var(--ink-40);
-  margin-top: 3px;
   font-weight: 400;
+  text-wrap: pretty;
+}
+.drPriv .swSwitch {
+  flex: none;
 }
 /* ===========================================================
    EARN MOMENT + CASE CARD
@@ -1991,6 +2010,31 @@
   .lgRowHead,
   .lgTotal {
     display: none;
+  }
+  .drHero {
+    padding-bottom: 22px;
+  }
+  .drHero h3 {
+    font-size: var(--text-26);
+  }
+  .drSec {
+    padding: 20px 0;
+  }
+  .drStrip > div {
+    padding: 12px 6px;
+  }
+  .drStripVal {
+    font-size: var(--text-18);
+  }
+  .drStripValSm {
+    font-size: var(--text-14);
+  }
+  .drVerify {
+    padding: 14px 15px;
+  }
+  .drFoot {
+    padding-top: 20px;
+    gap: 20px;
   }
 }
 @media (--md) {

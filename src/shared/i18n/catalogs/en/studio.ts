@@ -3694,6 +3694,10 @@ export const studio: Catalog = {
   "artistPage.followerCountGrouped_other": "{number} followers",
   "artistPage.pauseAll": "Pause the music by {name}",
   "artistPage.editPage.button": "Edit Studio page",
+  "artistPage.viewAsVisitor": "View as visitor",
+  "artistPage.visitorPreview.banner":
+    "You're seeing your Studio page as a <strong>visitor</strong> does.",
+  "artistPage.visitorPreview.exit": "Exit preview",
   "artistPage.editPage.title": "Edit your Studio page",
   "artistPage.editPage.intro":
     "Choose what shows at the top of your page. The page behind this sheet shows each choice as you pick it",

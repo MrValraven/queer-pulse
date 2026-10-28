@@ -8912,6 +8912,10 @@ export const admin: Catalog = {
   "logoConcepts.concepts.rippleLetterDropFraunces.title": "Gota, Fraunces",
   "logoConcepts.concepts.rippleLetterDropFraunces.summary":
     "As ondas da Gota com um P em Fraunces Black, a haste a sair pelo Q como cauda e a gota coral na ponta.",
+  "logoConcepts.concepts.rippleLetterDropFrauncesTail.title":
+    "Gota, Fraunces cauda",
+  "logoConcepts.concepts.rippleLetterDropFrauncesTail.summary":
+    "A mesma Gota sem a gota coral, a haste do P e o traço do Q a sair juntos como uma cauda comprida de Q.",
   "logoConcepts.concepts.rippleLetterDropSans.title": "Gota, DM Sans",
   "logoConcepts.concepts.rippleLetterDropSans.summary":
     "A mesma Gota com um P pesado em DM Sans, a letra da nossa interface, tão regular como as ondas à volta dele.",

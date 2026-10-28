@@ -4,13 +4,20 @@
   padding: 0;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 14px;
+  gap: 28px 20px;
+}
+
+/* Whichever block opens the section clears the header (and its rule, on
+   skins that draw one) instead of sitting flush against it. */
+header + .grid,
+header + .playlists {
+  margin-top: 24px;
 }
 
 .card {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0;
   color: inherit;
   text-decoration: none;
 }
@@ -27,13 +34,16 @@
   aspect-ratio: 1;
   border-radius: var(--radius-8);
   overflow: hidden;
+  margin-bottom: 12px;
 }
 
 .title {
   font-weight: 600;
+  line-height: 1.3;
 }
 
 .meta {
+  margin-top: 4px;
   font-size: var(--text-12);
   opacity: 0.7;
 }

@@ -3716,6 +3716,17 @@ export const marketing: Catalog = {
   "changelog.entries.staff-pdf-page-tool.title": "A PDF page tool for staff",
   "changelog.entries.staff-pdf-page-tool.body":
     "Staff can remove, rotate, reorder, merge and split PDF pages in the browser, and files stay on the device.",
+  "changelog.entries.badge-drawer-layout.title": "A tidier badge detail sheet",
+  "changelog.entries.badge-drawer-layout.body":
+    "Even spacing between sections, a cleaner stats strip, and a profile toggle that reads well on phones.",
+  "changelog.entries.persona-open-studio-page.title":
+    "Jump from a persona to its Studio page",
+  "changelog.entries.persona-open-studio-page.body":
+    "Artist personas now carry an Open Studio page button for anyone with Studio access.",
+  "changelog.entries.studio-view-as-visitor.title":
+    "See your Studio page as a visitor",
+  "changelog.entries.studio-view-as-visitor.body":
+    "Artists can preview their own Studio page with the owner tools hidden, then exit back to editing.",
   "changelog.entries.studio-link-previews.title":
     "Studio links preview when you share them",
   "changelog.entries.studio-link-previews.body":

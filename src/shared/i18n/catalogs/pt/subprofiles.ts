@@ -1078,6 +1078,7 @@ export const subprofiles: Catalog = {
   "hero.message": "Mensagem",
   "hero.edit": "Editar persona",
   "hero.viewAsVisitor": "Ver como visitante",
+  "hero.openStudioPage": "Abrir página no Studio",
   // Reposicionamento do banner (PersonaCoverReposition).
   "cover.reposition.cta": "Reposicionar",
   "cover.reposition.hint": "Arrasta o banner para cima ou para baixo",

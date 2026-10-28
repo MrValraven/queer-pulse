@@ -1095,6 +1095,7 @@ export const subprofiles: Catalog = {
   "hero.message": "Message",
   "hero.edit": "Edit persona",
   "hero.viewAsVisitor": "View as visitor",
+  "hero.openStudioPage": "Open Studio page",
   "hero.report.cta": "Report this persona",
   "hero.more.ariaLabel": "More actions for {name}",
   "hero.viewPhotoAria": "View photo of {name}",

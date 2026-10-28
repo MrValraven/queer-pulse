@@ -8,6 +8,7 @@ import {
   isStudioArtistPersonaKind,
   type StudioArtistPersonaKind,
 } from "../studio/api/studio.types";
+import { studioArtistPath } from "../studio/studioPaths";
 import type { SubprofileKind, SubprofileSection } from "./api/subprofiles.api";
 
 /** The persona section a Studio release shows in, for every Studio artist
@@ -64,4 +65,21 @@ export function usePersonaStudio(persona: {
   });
   if (!isEnabled || !artist) return NO_STUDIO_CONTENT;
   return { releases: artist.allReleases, playlists: artist.playlists };
+}
+
+/** The persona's Studio page link once its artist read has loaded, sharing
+ *  the cached read of usePersonaStudio, for a viewer with a Studio grant;
+ *  null otherwise. */
+export function usePersonaStudioPagePath(persona: {
+  id: string;
+  kind: SubprofileKind;
+}): string | null {
+  const { hasAccess } = useStudioAccess();
+  const isEnabled = hasAccess && studioSectionFor(persona.kind) !== null;
+  const { artist } = useStudioArtist(persona.id, {
+    isEnabled,
+    isSilent: true,
+  });
+  if (!isEnabled || !artist) return null;
+  return studioArtistPath(persona.id);
 }

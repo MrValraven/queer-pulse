@@ -29,6 +29,7 @@ export function StudioNotifyMeButton({
   isSet,
   className,
   isStatusReserved = false,
+  isInert = false,
 }: {
   releaseId: string;
   releaseTitle: string;
@@ -37,6 +38,9 @@ export function StudioNotifyMeButton({
   /** Keeps the status line's height at all times and fades its text, for
    *  a bottom-aligned hero that must not move when the line appears. */
   isStatusReserved?: boolean;
+  /** Draws the button disabled, for the owner viewing their own artist page
+   *  as a visitor: the shape a visitor gets, with no reminder saved. */
+  isInert?: boolean;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -56,6 +60,7 @@ export function StudioNotifyMeButton({
         size="sm"
         className={[styles.notify, className].filter(Boolean).join(" ")}
         aria-pressed={isSet}
+        disabled={isInert || undefined}
         aria-disabled={reminder.isPending || undefined}
         aria-label={t("studio:upcoming.notifyMeAria", { title: releaseTitle })}
         onClick={() => {

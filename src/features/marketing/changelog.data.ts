@@ -63,6 +63,27 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "badge-drawer-layout",
+        category: "fix",
+        date: "27 Oct 2026",
+        ...entryKeys("badge-drawer-layout"),
+        tag: { labelKey: "marketing:changelog.tag.badges", to: routes.badges },
+      },
+      {
+        id: "persona-open-studio-page",
+        category: "improvement",
+        date: "27 Oct 2026",
+        ...entryKeys("persona-open-studio-page"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "studio-view-as-visitor",
+        category: "improvement",
+        date: "27 Oct 2026",
+        ...entryKeys("studio-view-as-visitor"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
         id: "studio-link-previews",
         category: "improvement",
         date: "27 Oct 2026",

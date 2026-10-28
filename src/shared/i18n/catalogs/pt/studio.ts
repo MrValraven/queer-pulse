@@ -3783,6 +3783,10 @@ export const studio: Catalog = {
   "artistPage.followerCountGrouped_other": "{number} pessoas seguem",
   "artistPage.pauseAll": "Pausar a música de {name}",
   "artistPage.editPage.button": "Editar página no Studio",
+  "artistPage.viewAsVisitor": "Ver como visitante",
+  "artistPage.visitorPreview.banner":
+    "Estás a ver a tua página do Studio como um <strong>visitante</strong> a vê.",
+  "artistPage.visitorPreview.exit": "Sair da pré-visualização",
   "artistPage.editPage.title": "Edita a tua página no Studio",
   "artistPage.editPage.intro":
     "Escolhe o que aparece no topo da tua página. A página por trás deste painel mostra cada opção à medida que escolhes",

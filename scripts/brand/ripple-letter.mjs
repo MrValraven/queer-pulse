@@ -14,6 +14,8 @@
  * - ripple-letter-drop-fraunces: the ripple-drop water round a heavy
  *   Fraunces P, tilted gently, its stem stretched out through the ring as
  *   the Q's tail, the coral bead after its tip and the ink stub beside it.
+ * - ripple-letter-drop-fraunces-tail: the same without the bead, the stem
+ *   and the ink stub running on much further as the Q's long tail.
  * - ripple-letter-drop-sans: the same construction with the DM Sans P, the
  *   geometric letter of the site's interface, matching the even ripples.
  * - ripple-letter-drop-upright: a soft Fraunces P standing upright in the
@@ -36,7 +38,7 @@
  * its P stays heavy enough to read at 24px.
  *
  * Output: public/brand/logo-concepts/<variant>-<colorway>.svg and
- * <variant>-<colorway>-small.svg, thirty-six files, drawn with the shared
+ * <variant>-<colorway>-small.svg, forty-two files, drawn with the shared
  * kit in logo-geometry.mjs. The script stops with an error if any shape
  * would leave the circle-crop safe zone.
  *
@@ -52,6 +54,7 @@ import {
 } from "./logo-geometry.mjs";
 import {
   dropFraunces,
+  dropFrauncesTail,
   dropSans,
   dropUpright,
 } from "./ripple-letter/concentric.mjs";
@@ -63,6 +66,7 @@ import {
 
 const VARIANTS = [
   dropFraunces,
+  dropFrauncesTail,
   dropSans,
   dropUpright,
   serifFraunces,

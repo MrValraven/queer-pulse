@@ -340,6 +340,10 @@ div.backBar {
 }
 .vouchFaces {
   display: flex;
+  /* Each face's ring is a box-shadow drawn outside its box. The first face
+     sits flush with `.phero`'s left edge, where `overflow-x: clip` sliced its
+     ring flat, so inset the stack by the ring's 3px width. */
+  padding-left: 3px;
 }
 .vouchFace {
   position: relative;

@@ -12,6 +12,7 @@ import { StudioPlaylistCard } from "./StudioPlaylistCard";
 import { StudioReleaseCard } from "./StudioReleaseCard";
 import { releaseFactsLine } from "./studioFacts";
 import type { ArtistTabId } from "./studioArtist.data";
+import { useStudioVisitorPreview } from "./studioVisitorPreview";
 import styles from "./studio.module.css";
 import ownerStyles from "./StudioArtistOwner.module.css";
 
@@ -32,6 +33,8 @@ export function StudioArtistMain({
 }) {
   const { t } = useTranslation();
   const shelfId = useId();
+  // The owner viewing as a visitor gets the updates without post actions.
+  const { isVisitorPreview } = useStudioVisitorPreview();
 
   if (tab === "about") {
     // The persona bio is the artist's own text, shown as written.
@@ -55,7 +58,9 @@ export function StudioArtistMain({
             kind: artist.artist.kind,
             displayName: artist.artist.name,
           }}
-          mode={artist.isOwner ? "owner" : "public"}
+          mode={
+            artist.isOwner ? "owner" : isVisitorPreview ? "visitor" : "public"
+          }
           surface="studio"
         />
       </>

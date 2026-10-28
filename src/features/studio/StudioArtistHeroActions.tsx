@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiEdit2, FiExternalLink, FiHeart } from "react-icons/fi";
+import { FiEdit2, FiExternalLink, FiEye, FiHeart } from "react-icons/fi";
 import { Button, IconButton, Tooltip } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ShareMenu } from "../messages/share/ShareMenu";
@@ -14,6 +14,8 @@ import { studioArtistPath } from "./studioPaths";
 import { useIsOwnStudioPersona } from "./useIsOwnStudioPersona";
 import { useStudioArtistPlay } from "./useStudioArtistPlay";
 import { useStudioShowcase } from "./useStudioShowcase";
+import { StudioInertFollow } from "./StudioArtistVisitorPreviewControls";
+import { useStudioVisitorPreview } from "./studioVisitorPreview";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
 
@@ -22,7 +24,9 @@ import kit from "./studioKit.module.css";
  *  The owner gets Play all, View profile, Share and Edit Studio page:
  *  following or tipping their own persona does nothing, and the shorter row
  *  keeps Edit Studio page on the same line. On a phone, Follow keeps its
- *  label and the rest after Play turn to icons. */
+ *  label and the rest after Play turn to icons. While the owner views the
+ *  page as a visitor, Follow and Tip show as disabled look-alikes, so the
+ *  row has the visitor's shape and nothing fires for the own persona. */
 export function StudioArtistHeroActions({
   artist,
   onTip,
@@ -44,6 +48,9 @@ export function StudioArtistHeroActions({
   const editPageLabel = t("studio:artistPage.editPage.button");
   // The page provides the opener to an owner only.
   const openEditPage = useStudioEditPageOpener();
+  const visitorLabel = t("studio:artistPage.viewAsVisitor");
+  const { isVisitorPreview, enterVisitorPreview, visitorControlRef } =
+    useStudioVisitorPreview();
   return (
     <>
       <StudioPlayButton
@@ -53,10 +60,17 @@ export function StudioArtistHeroActions({
         blockedReason={play.blockedReason}
       />
       {/* Follow keeps its words on a phone: it is the artist's main ask. */}
-      {!artist.isOwner && !isOwnPersona && (
+      {isVisitorPreview ? (
         <span className={styles.heroLabelled}>
-          <StudioArtistFollowControl artist={artist} />
+          <StudioInertFollow />
         </span>
+      ) : (
+        !artist.isOwner &&
+        !isOwnPersona && (
+          <span className={styles.heroLabelled}>
+            <StudioArtistFollowControl artist={artist} />
+          </span>
+        )
       )}
       {person.personaHref &&
         (isCompact ? (
@@ -77,11 +91,21 @@ export function StudioArtistHeroActions({
       {isShowcase &&
         !artist.isOwner &&
         (isCompact ? (
-          <IconButton aria-label={tipLabel} tooltip onClick={onTip}>
+          <IconButton
+            aria-label={tipLabel}
+            tooltip
+            disabled={isVisitorPreview}
+            onClick={onTip}
+          >
             <FiHeart aria-hidden />
           </IconButton>
         ) : (
-          <Button variant="quiet" className={styles.tip} onClick={onTip}>
+          <Button
+            variant="quiet"
+            className={styles.tip}
+            disabled={isVisitorPreview}
+            onClick={onTip}
+          >
             <FiHeart aria-hidden />
             {tipLabel}
           </Button>
@@ -122,6 +146,29 @@ export function StudioArtistHeroActions({
           <Button variant="quiet" onClick={openEditPage}>
             <FiEdit2 aria-hidden />
             {editPageLabel}
+          </Button>
+        ))}
+      {/* The artist view carries no persona or page status, so the owner
+          always gets the preview. */}
+      {artist.isOwner &&
+        enterVisitorPreview &&
+        (isCompact ? (
+          <IconButton
+            ref={visitorControlRef}
+            aria-label={visitorLabel}
+            tooltip
+            onClick={enterVisitorPreview}
+          >
+            <FiEye aria-hidden />
+          </IconButton>
+        ) : (
+          <Button
+            ref={visitorControlRef}
+            variant="quiet"
+            onClick={enterVisitorPreview}
+          >
+            <FiEye aria-hidden />
+            {visitorLabel}
           </Button>
         ))}
     </>

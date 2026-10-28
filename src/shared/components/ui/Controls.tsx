@@ -94,6 +94,7 @@ export function Toggle({
   tone = "jade",
   id,
   "aria-describedby": ariaDescribedBy,
+  disabled,
 }: {
   checked: boolean;
   onChange: (checked: boolean) => void;
@@ -107,12 +108,16 @@ export function Toggle({
   id?: string;
   /** Optional id of a help line that describes the switch. */
   "aria-describedby"?: string;
+  /** Draws the switch dimmed and takes it out of use, for a look-alike
+   *  that shows a control's shape without acting. */
+  disabled?: boolean;
 }) {
   return (
     <button
       type="button"
       id={id}
       aria-describedby={ariaDescribedBy}
+      disabled={disabled}
       role="switch"
       aria-checked={checked}
       aria-label={label}

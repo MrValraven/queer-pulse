@@ -169,6 +169,15 @@ export const DROP_FRAUNCES = {
   stub: { ...DROP_DEFAULTS.stub, length: 36 },
 };
 
+/** Drop, Fraunces without the bead: the stem and the stub run on much
+ *  further, so together they read as the Q's own long tail. */
+export const DROP_FRAUNCES_TAIL = {
+  ...DROP_FRAUNCES,
+  tailLength: 170,
+  bead: null,
+  stub: { ...DROP_FRAUNCES.stub, length: 120 },
+};
+
 export const DROP_FRAUNCES_SMALL = {
   ...SMALL_WATER,
   letterP: {
@@ -244,8 +253,15 @@ export const DROP_UPRIGHT_SMALL = {
 
 export const dropFraunces = {
   id: "ripple-letter-drop-fraunces",
-  centring: "enclosing",
+  centring: "balanced",
   build: () => buildDropLetter(DROP_FRAUNCES),
+  buildSmall: () => buildDropLetter(DROP_FRAUNCES_SMALL),
+};
+
+export const dropFrauncesTail = {
+  id: "ripple-letter-drop-fraunces-tail",
+  centring: "balanced",
+  build: () => buildDropLetter(DROP_FRAUNCES_TAIL),
   buildSmall: () => buildDropLetter(DROP_FRAUNCES_SMALL),
 };
 

@@ -429,12 +429,28 @@ export function boundsCentre(reach) {
   };
 }
 
+/** How far a balanced centre sits from the box's centre toward the ring's
+ *  centre (the origin): the heavy ring carries the eye, so a mark with a
+ *  long tail centred on its box reads as riding high. */
+export const RING_PULL = 0.5;
+
+/** The box's centre, pulled toward the ring's centre by RING_PULL. */
+export function balancedCentre(reach) {
+  const box = boundsCentre(reach);
+  return { x: box.x * (1 - RING_PULL), y: box.y * (1 - RING_PULL) };
+}
+
+const CENTRES = {
+  bounds: boundsCentre,
+  balanced: balancedCentre,
+  enclosing: pulledCentre,
+};
+
 /** Scale and offset that put the mark's optical centre on the canvas centre
  *  with its furthest paint at MARK_RADIUS. */
 export function placement(shapes, centring) {
   const reach = shapes.flatMap(shapeReach);
-  const anchor =
-    centring === "bounds" ? boundsCentre(reach) : pulledCentre(reach);
+  const anchor = (CENTRES[centring] ?? pulledCentre)(reach);
   const scale = MARK_RADIUS / furthestReach(reach, anchor);
   const toCanvas = (point) => ({
     x: CANVAS_CENTRE + (point.x - anchor.x) * scale,

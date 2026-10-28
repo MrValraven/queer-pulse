@@ -3,6 +3,7 @@ import {
   FiCheck,
   FiEdit2,
   FiEye,
+  FiHeadphones,
   FiUserCheck,
   FiUserPlus,
 } from "react-icons/fi";
@@ -19,6 +20,7 @@ import { SubprofileShare } from "./SubprofileShare";
 import { DEFAULT_ACCENT } from "./subprofilePresence.data";
 import { personaAddressName } from "./subprofile-kinds";
 import { isPersonaOpenToEngagement } from "./personaEngagement";
+import { usePersonaStudioPagePath } from "./personaStudio";
 import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
 
@@ -77,6 +79,14 @@ export function SubprofileHeroActions({
   // Follow and endorse accept an open persona only, so a members-only one
   // shows neither, live or inert (PRD-428).
   const isOpenToEngagement = isPersonaOpenToEngagement(view);
+  // An artist persona links to its Studio page for a viewer with a Studio
+  // grant, once the artist read the persona sections share has loaded.
+  const studioPagePath = usePersonaStudioPagePath(view);
+  const studioPageLink = studioPagePath && (
+    <Button variant="ghost" size="md" to={studioPagePath}>
+      <FiHeadphones aria-hidden /> {t("subprofiles:hero.openStudioPage")}
+    </Button>
+  );
 
   if (mode === "owner") {
     return (
@@ -103,6 +113,8 @@ export function SubprofileHeroActions({
             <FiEye aria-hidden /> {t("subprofiles:hero.viewAsVisitor")}
           </Button>
         )}
+        {/* The owner's own Studio page, one step from the persona. */}
+        {studioPageLink}
         {/* Disabled on a draft, stored handle or not: that address 404s for
             everyone else until publish (PRD-429), which the banner says. */}
         <SubprofileShare view={view} />
@@ -155,6 +167,10 @@ export function SubprofileHeroActions({
             />
           </>
         )}
+        {/* Live in visitor mode, since navigating changes nothing. The
+            editor's docked pane leaves it out so a click never walks away
+            from unsaved edits. */}
+        {mode === "visitor" && studioPageLink}
         {/* A stranger gets the overflow menu, so the owner previewing as one
             gets it too — with Share live (sharing your own persona is exactly
             what a visitor would do) and Report inert, since there is nobody to
@@ -222,6 +238,8 @@ export function SubprofileHeroActions({
           />
         </>
       )}
+      {/* The persona's Studio page, for a viewer with a Studio grant. */}
+      {studioPageLink}
       <SubprofileMoreMenu view={view} onAction={onAction} />
       {!isAvailabilityHidden && (
         <SubprofileAvailability

@@ -8807,6 +8807,10 @@ export const admin: Catalog = {
   "logoConcepts.concepts.rippleLetterDropFraunces.title": "Drop, Fraunces",
   "logoConcepts.concepts.rippleLetterDropFraunces.summary":
     "Drop's ripples with a Fraunces Black P, its stem running out through the Q as the tail with the coral drop at the tip.",
+  "logoConcepts.concepts.rippleLetterDropFrauncesTail.title":
+    "Drop, Fraunces tail",
+  "logoConcepts.concepts.rippleLetterDropFrauncesTail.summary":
+    "The same Drop with no bead, the P's stem and the Q's ink stroke running out together as one long Q tail.",
   "logoConcepts.concepts.rippleLetterDropSans.title": "Drop, DM Sans",
   "logoConcepts.concepts.rippleLetterDropSans.summary":
     "The same Drop with a heavy DM Sans P, the letter of our interface, as even as the ripples round it.",

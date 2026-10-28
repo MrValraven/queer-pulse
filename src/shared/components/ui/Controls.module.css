@@ -116,6 +116,11 @@
 .toggleOn {
   background: var(--jade);
 }
+/* The same dimmed treatment a disabled Button gets. */
+.toggle:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 .toggleOn.toggle_coral {
   background: var(--accent);
 }

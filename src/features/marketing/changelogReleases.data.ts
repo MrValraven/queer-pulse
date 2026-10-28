@@ -16,8 +16,12 @@ export const CHANGELOG_RELEASE_NOTES: Record<
   { highlights: string[]; pushes?: number }
 > = {
   "27 Oct 2026": {
-    highlights: ["studio-now-playing-panel", "studio-your-listening"],
-    pushes: 5,
+    highlights: [
+      "studio-now-playing-panel",
+      "studio-your-listening",
+      "audience-landing-pages",
+    ],
+    pushes: 7,
   },
   "26 Oct 2026": {
     highlights: [

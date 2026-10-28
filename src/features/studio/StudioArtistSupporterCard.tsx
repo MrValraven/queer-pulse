@@ -15,13 +15,17 @@ import {
   type StudioSupporterStatus,
 } from "./StudioArtistSupporterStates";
 import { StudioSupporterPickerRegion } from "./StudioSupporterIdentityPicker";
+import { StudioInertSupporterCard } from "./StudioArtistVisitorPreviewControls";
+import { useStudioVisitorPreview } from "./studioVisitorPreview";
 import studioStyles from "./studio.module.css";
 import styles from "./StudioSupporter.module.css";
 
 /** "Show me as a supporter" on an artist page, for anyone who is not one of
  *  its owners. Turning it on opens the identity picker, which previews the
  *  exact name and photo the artist will see among their top supporters;
- *  nothing is shared until the member saves. */
+ *  nothing is shared until the member saves. While the owner views the page
+ *  as a visitor, the card keeps its shape with the switch disabled and reads
+ *  nothing. */
 export function StudioArtistSupporterCard({
   artist,
 }: {
@@ -30,9 +34,10 @@ export function StudioArtistSupporterCard({
   const { t } = useTranslation();
   const subprofileId = artist.artist.id;
   const personaName = artist.artist.name;
+  const { isVisitorPreview } = useStudioVisitorPreview();
   const { state, loadState } = useStudioSupporterState(
     subprofileId,
-    !artist.isOwner,
+    !artist.isOwner && !isVisitorPreview,
   );
   const historySwitch = useStudioListeningHistorySwitch();
   const isHistoryPaused = !historySwitch.isOn && !historySwitch.isAwaitingRow;
@@ -62,6 +67,8 @@ export function StudioArtistSupporterCard({
     if (isStateResetAfterFailedSave) headingRef.current?.focus();
   }, [isStateResetAfterFailedSave]);
   if (artist.isOwner) return null;
+  if (isVisitorPreview)
+    return <StudioInertSupporterCard personaName={personaName} />;
 
   // A member of this artist (403 `studio_supporter_own_persona`) cannot
   // support it, so the card folds away.

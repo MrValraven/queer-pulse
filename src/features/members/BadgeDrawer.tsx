@@ -170,135 +170,141 @@ export function BadgeDrawer({
 
   return (
     <SideSheet title={badgeName} onClose={onClose}>
-      <div className={styles.drNav}>
-        <button
-          type="button"
-          className={styles.drIb}
-          onClick={() =>
-            onNavigate((index - 1 + entries.length) % entries.length)
-          }
-          aria-label={t("members:badges.drawer.previous")}
-        >
-          <FiChevronLeft aria-hidden />
-        </button>
-        <button
-          type="button"
-          className={styles.drIb}
-          onClick={() => onNavigate((index + 1) % entries.length)}
-          aria-label={t("members:badges.drawer.next")}
-        >
-          <FiChevronRight aria-hidden />
-        </button>
-        <span className={styles.drCount}>
-          {t("members:badges.drawer.count", {
-            index: index + 1,
-            total: entries.length,
-          })}
-        </span>
-      </div>
-
-      <BadgeDrawerHero
-        badge={badge}
-        earned={earned}
-        percentComplete={percent}
-        badgeName={badgeName}
-        categoryLabel={categoryLabel}
-        criteriaText={criteriaText}
-      />
-
-      <div className={styles.drSec}>
-        <h5>{t("members:badges.drawer.whatItTakes")}</h5>
-        <div className={`${styles.critRow} ${earned ? styles.critRowOn : ""}`}>
-          <span className={styles.critIcon}>
-            {earned && <FiCheck aria-hidden />}
+      {/* One child, so the sheet body's flex gap doesn't stack on top of the
+          sections' own divider rhythm. */}
+      <div className={styles.drBody}>
+        <div className={styles.drNav}>
+          <button
+            type="button"
+            className={styles.drIb}
+            onClick={() =>
+              onNavigate((index - 1 + entries.length) % entries.length)
+            }
+            aria-label={t("members:badges.drawer.previous")}
+          >
+            <FiChevronLeft aria-hidden />
+          </button>
+          <button
+            type="button"
+            className={styles.drIb}
+            onClick={() => onNavigate((index + 1) % entries.length)}
+            aria-label={t("members:badges.drawer.next")}
+          >
+            <FiChevronRight aria-hidden />
+          </button>
+          <span className={styles.drCount}>
+            {t("members:badges.drawer.count", {
+              index: index + 1,
+              total: entries.length,
+            })}
           </span>
-          <span>{criteriaText}</span>
         </div>
-        <div className={styles.drStrip}>
-          <div>
-            <div className={styles.drStripKey}>
-              {t("members:badges.drawer.rarity")}
-            </div>
-            <div
-              className={`${styles.drStripVal} ${badge.rarity === "legendary" ? styles.drStripValRare : ""}`}
-            >
-              {t(RARITY_LABEL_KEY[badge.rarity])}
-            </div>
-          </div>
-          {badge.xpReward !== undefined && (
-            <div>
-              <div className={styles.drStripKey}>
-                {t("members:badges.drawer.worth")}
-              </div>
-              <div className={styles.drStripVal}>{badge.xpReward}</div>
-            </div>
-          )}
-          {badge.verifiedBy && (
-            <div>
-              <div className={styles.drStripKey}>
-                {t("members:badges.drawer.checkedBy")}
-              </div>
-              <div className={`${styles.drStripVal} ${styles.drStripValSm}`}>
-                {t(CHECKED_BY_LABEL_KEY[badge.verifiedBy])}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
 
-      {badge.verifiedBy && (
+        <BadgeDrawerHero
+          badge={badge}
+          earned={earned}
+          percentComplete={percent}
+          badgeName={badgeName}
+          categoryLabel={categoryLabel}
+          criteriaText={criteriaText}
+        />
+
         <div className={styles.drSec}>
-          <h5>{t("members:badges.drawer.howCheckedHeading")}</h5>
-          <p className={styles.drVerify}>
-            <b>{t(VERIFY_COPY[badge.verifiedBy].titleKey)}</b>
-            {t(VERIFY_COPY[badge.verifiedBy].bodyKey)}
-          </p>
-        </div>
-      )}
-
-      {earned && (
-        <div className={styles.drSec}>
-          <h5>{t("members:badges.drawer.noteHeading")}</h5>
-          <textarea
-            className={styles.storyBox}
-            value={getStoryNote(badge.key)}
-            onChange={(event) => setStoryNote(badge.key, event.target.value)}
-            placeholder={t("members:badges.drawer.notePlaceholder")}
-          />
-          <p className={styles.noteHelp}>
-            {t("members:badges.drawer.noteHelp")}
-          </p>
-        </div>
-      )}
-
-      {earned && (
-        <div className={styles.drFoot}>
-          <div className={styles.drPriv}>
-            <span>
-              {isVisibleOnProfile
-                ? t("members:badges.drawer.visibleOnProfile")
-                : t("members:badges.drawer.privateToYou")}
-              <span className={styles.drPrivNote}>
-                {t("members:badges.drawer.visibilityNote")}
-              </span>
+          <h5>{t("members:badges.drawer.whatItTakes")}</h5>
+          <div
+            className={`${styles.critRow} ${earned ? styles.critRowOn : ""}`}
+          >
+            <span className={styles.critIcon}>
+              {earned && <FiCheck aria-hidden />}
             </span>
-            <button
-              type="button"
-              className={styles.swSwitch}
-              role="switch"
-              aria-checked={isVisibleOnProfile}
-              aria-label={t("members:badges.drawer.visibleOnProfile")}
-              disabled={setVisibility.isPending}
-              onClick={toggleVisibility}
-            >
-              <span className={styles.swTrack} />
-            </button>
+            <span>{criteriaText}</span>
           </div>
-          <Button variant="ghost" onClick={onClose}>
-            {t("members:badges.drawer.close")}
-          </Button>
+          <div className={styles.drStrip}>
+            <div>
+              <div className={styles.drStripKey}>
+                {t("members:badges.drawer.rarity")}
+              </div>
+              <div
+                className={`${styles.drStripVal} ${badge.rarity === "legendary" ? styles.drStripValRare : ""}`}
+              >
+                {t(RARITY_LABEL_KEY[badge.rarity])}
+              </div>
+            </div>
+            {badge.xpReward !== undefined && (
+              <div>
+                <div className={styles.drStripKey}>
+                  {t("members:badges.drawer.worth")}
+                </div>
+                <div className={styles.drStripVal}>{badge.xpReward}</div>
+              </div>
+            )}
+            {badge.verifiedBy && (
+              <div>
+                <div className={styles.drStripKey}>
+                  {t("members:badges.drawer.checkedBy")}
+                </div>
+                <div className={`${styles.drStripVal} ${styles.drStripValSm}`}>
+                  {t(CHECKED_BY_LABEL_KEY[badge.verifiedBy])}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      )}
+
+        {badge.verifiedBy && (
+          <div className={styles.drSec}>
+            <h5>{t("members:badges.drawer.howCheckedHeading")}</h5>
+            <p className={styles.drVerify}>
+              <b>{t(VERIFY_COPY[badge.verifiedBy].titleKey)}</b>
+              {t(VERIFY_COPY[badge.verifiedBy].bodyKey)}
+            </p>
+          </div>
+        )}
+
+        {earned && (
+          <div className={styles.drSec}>
+            <h5>{t("members:badges.drawer.noteHeading")}</h5>
+            <textarea
+              className={styles.storyBox}
+              value={getStoryNote(badge.key)}
+              onChange={(event) => setStoryNote(badge.key, event.target.value)}
+              placeholder={t("members:badges.drawer.notePlaceholder")}
+            />
+            <p className={styles.noteHelp}>
+              {t("members:badges.drawer.noteHelp")}
+            </p>
+          </div>
+        )}
+
+        {earned && (
+          <div className={styles.drFoot}>
+            <div className={styles.drPriv}>
+              <span className={styles.drPrivText}>
+                {isVisibleOnProfile
+                  ? t("members:badges.drawer.visibleOnProfile")
+                  : t("members:badges.drawer.privateToYou")}
+                <span className={styles.drPrivNote}>
+                  {t("members:badges.drawer.visibilityNote")}
+                </span>
+              </span>
+              <button
+                type="button"
+                className={styles.swSwitch}
+                role="switch"
+                aria-checked={isVisibleOnProfile}
+                aria-label={t("members:badges.drawer.visibleOnProfile")}
+                disabled={setVisibility.isPending}
+                onClick={toggleVisibility}
+              >
+                <span className={styles.swTrack} />
+              </button>
+            </div>
+            <Button variant="ghost" onClick={onClose}>
+              {t("members:badges.drawer.close")}
+            </Button>
+          </div>
+        )}
+      </div>
     </SideSheet>
   );
 }

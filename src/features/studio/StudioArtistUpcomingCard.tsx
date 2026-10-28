@@ -7,6 +7,7 @@ import type { StudioArtistView } from "./api/studio.adapters";
 import { studioUploadPath } from "./studioPaths";
 import { outDateOf } from "./studioUpcoming";
 import { StudioNotifyMeButton } from "./StudioNotifyMeButton";
+import { useStudioVisitorPreview } from "./studioVisitorPreview";
 import studioStyles from "./studio.module.css";
 import styles from "./StudioUpcoming.module.css";
 
@@ -21,6 +22,7 @@ export function StudioArtistUpcomingCard({
   const { t } = useTranslation();
   const formatters = useFormat();
   const headingId = useId();
+  const { isVisitorPreview } = useStudioVisitorPreview();
   if (artist.upcoming.length === 0) return null;
   return (
     <section className={studioStyles.sideCard} aria-labelledby={headingId}>
@@ -66,6 +68,7 @@ export function StudioArtistUpcomingCard({
                   releaseTitle={release.title}
                   isSet={release.isReminderSet}
                   className={styles.rowNotify}
+                  isInert={isVisitorPreview}
                 />
               )}
             </li>
