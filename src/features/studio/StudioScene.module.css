@@ -80,25 +80,3 @@
 .sceneHero {
   --wash-boost: 1.5;
 }
-
-.heroPlay {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.heroPlayLabel {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: var(--text-14);
-  font-weight: 600;
-  color: var(--studio-text);
-}
-
-.heroPlayLabel svg {
-  flex: none;
-  width: 16px;
-  height: 16px;
-  color: var(--studio-accent-text);
-}

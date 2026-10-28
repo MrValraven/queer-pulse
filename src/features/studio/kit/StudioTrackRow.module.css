@@ -1,6 +1,7 @@
 /* The one Studio track row. Painted on the global Studio roles only, so it
-   reads the same inside any Studio module and in a portal. No hairlines
-   between rows: the hover wash and the now-playing tint separate them. */
+   reads the same inside any Studio module and in a portal. A hairline
+   over the title column separates consecutive rows, and it steps aside
+   around a filled row so the fill reads as one clean rounded shape. */
 
 /* The optional columns (a leading drag handle, the cover, the trailing
    slot) come in through custom properties that default to nothing, so a
@@ -79,7 +80,7 @@
 }
 
 .row[data-current] {
-  background-color: rgba(var(--accent-rgb), 0.07);
+  background-color: var(--studio-row-playing);
 }
 
 .row[data-selecting] {
@@ -87,12 +88,75 @@
 }
 
 .row[data-selected] {
-  background-color: rgba(var(--accent-rgb), 0.12);
+  background-color: var(--studio-selected);
+}
+
+/* Hovering a selected row lifts its fill one step: the same colour at a
+   third more alpha, so light stays neutral grey and dark stays coral.
+   The test carries a calc() because Safari 16.4 to 17 read relative
+   colour yet drop calc() on its channels. Without it, light steps up to
+   the next grey wash and dark keeps its old coral lift. */
+@media (hover: hover) {
+  .row[data-selected]:hover {
+    background-color: var(--studio-wash-3);
+  }
+
+  :global([data-theme="dark"]) .row[data-selected]:hover {
+    background-color: rgba(var(--accent-rgb), 0.16);
+  }
+
+  @supports (color: rgb(from red r g b / calc(alpha * 1))) {
+    .row[data-selected]:hover {
+      background-color: rgb(
+        from var(--studio-selected) r g b / calc(alpha * 1.33)
+      );
+    }
+  }
+}
+
+/* ── Hairlines between consecutive rows ─────────────────────────────── */
+
+/* Each row after the first draws one at its top edge. The pseudo-element
+   is a grid item placed from the `main` line to the row's padding edge
+   (an `auto` end on a positioned grid item), so it starts at the title
+   (past the number, the cover or a drag handle) and ends flush with the
+   hover fill's right side. The lines next to a filled row hide, so a line
+   never runs into a fill's rounded corner. Positioned out of flow, it
+   leaves the row's height alone. */
+.row + .row::before {
+  content: "";
+  position: absolute;
+  grid-column: main / auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: var(--studio-line);
+  pointer-events: none;
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+/* A filled row (focused, menu open or selected) hides the hairline above
+   it and the one under it, the next row's own. */
+.row:is(:has(:focus-visible), [data-menu-open], [data-selected])::before,
+.row:is(:has(:focus-visible), [data-menu-open], [data-selected])
+  + .row::before {
+  opacity: 0;
+}
+
+/* The playing row has a fill in dark only. Light paints it clear, so its
+   hairlines stay and the row sits in the list like any other. */
+:global([data-theme="dark"]) .row[data-current]::before,
+:global([data-theme="dark"]) .row[data-current] + .row::before {
+  opacity: 0;
 }
 
 @media (hover: hover) {
-  .row[data-selected]:hover {
-    background-color: rgba(var(--accent-rgb), 0.16);
+  .row:not(.rowUnavailable):hover::before,
+  .row:not(.rowUnavailable):hover + .row::before {
+    opacity: 0;
   }
 }
 
@@ -230,7 +294,7 @@
   width: 3px;
   height: 100%;
   border-radius: var(--radius-1);
-  background: var(--studio-accent-text);
+  background: var(--studio-accent);
   transform-origin: bottom;
   transform: scaleY(0.45);
 }
@@ -503,12 +567,18 @@
   box-shadow: var(--ring-cream);
 }
 
+/* The heart fills with currentColor, so one colour paints line and fill. */
 .actions .likeAction[aria-pressed="true"] {
-  color: var(--studio-accent-text);
+  color: var(--studio-accent);
 }
 
+/* Wide enough for "0:00:00" in tabular figures plus its padding, so an
+   hour-long track keeps the same cell as a short one and every row's
+   heart sits in one column. The empty cell on an unavailable row shares
+   it too. */
 .duration {
-  min-width: 48px;
+  flex: none;
+  min-width: calc(7ch + 12px);
   padding-inline: 6px;
   text-align: end;
   font-size: var(--text-13);
@@ -698,6 +768,12 @@
   place-items: center;
   color: var(--studio-text-muted);
   font-size: var(--text-18);
+}
+
+/* An unavailable row without a "..." keeps the trigger's width, so its
+   actions sit in the same columns as a playable row's. */
+.menuSlotEmpty {
+  width: var(--tap-min);
 }
 
 /* An unavailable row reads quiet and takes no hover. */

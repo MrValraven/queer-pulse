@@ -85,13 +85,14 @@ describe("Studio demo page contrast", () => {
     expect(body).toContain("color: var(--studio-bg);");
   });
 
-  it("keeps the hero play button on the coral fill with dark ink", () => {
-    // The hero and card sizes share one rule in the kit play button.
+  it("draws the card play button from the Studio accent pair", () => {
+    // In dark the pair resolves to the same coral fill and plum label as
+    // before; in light it is the deeper coral with a white label.
     const body = ruleBody(
       cssOf("kit/StudioPlayButton.module.css"),
       ".play.card",
     );
-    expect(body).toContain("background: var(--accent);");
-    expect(body).toContain("color: var(--studio-bg);");
+    expect(body).toContain("background: var(--studio-accent);");
+    expect(body).toContain("color: var(--studio-on-accent);");
   });
 });

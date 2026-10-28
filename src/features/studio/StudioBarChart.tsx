@@ -154,7 +154,7 @@ export function StudioBarChart({
                         rx: 4,
                         fill: bucket.isCurrent
                           ? "var(--jade)"
-                          : "var(--accent)",
+                          : "var(--studio-accent)",
                         className: `${chartStyles.mark} ${styles.bar}`,
                         datum,
                         ariaLabel: `${datum.bucketLabel}: ${datum.countLabel}`,

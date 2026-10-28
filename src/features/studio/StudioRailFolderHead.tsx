@@ -30,9 +30,19 @@ interface StudioRailFolderHeadProps {
   onRenameStart: () => void;
 }
 
+/** A folder's neutral tile, the size of a playlist cover beside it. */
+function FolderTile() {
+  return (
+    <span className={css.tile} aria-hidden>
+      <FiFolder />
+    </span>
+  );
+}
+
 /**
- * A folder's disclosure button: chevron, folder icon, name and how many
- * playlists it holds. Enter or Space opens and closes it, Right and Left
+ * A folder's disclosure button: its folder tile on the covers' column, the
+ * name over how many playlists it holds, then a chevron that turns down
+ * while it is open. Enter or Space opens and closes it, Right and Left
  * arrows open and close it, F2 renames it, and right-click, a long-press,
  * the Menu key or Shift+F10 opens its menu. A dragged rail playlist lights
  * it up and lands in it. Folded, it is a folder tile with the name in a
@@ -80,23 +90,18 @@ export function StudioRailFolderHead({
         {...contextMenu}
         {...dropHandlers}
       >
+        <FolderTile />
         {isCompact ? (
-          <>
-            <span className={css.compactTile} aria-hidden>
-              <FiFolder />
-            </span>
-            <span className="visuallyHidden">
-              {name}, {countLabel}
-            </span>
-          </>
+          <span className="visuallyHidden">
+            {name}, {countLabel}
+          </span>
         ) : (
           <>
-            <FiChevronRight className={css.chevron} aria-hidden />
-            <FiFolder className={css.folderIcon} aria-hidden />
             <span className={css.headText}>
               <span className={css.name}>{name}</span>
               <span className={css.meta}>{countLabel}</span>
             </span>
+            <FiChevronRight className={css.chevron} aria-hidden />
           </>
         )}
       </Button>
@@ -139,7 +144,7 @@ export function StudioRailFolderRenameField({
   };
   return (
     <div className={css.rename}>
-      <FiFolder className={css.folderIcon} aria-hidden />
+      <FolderTile />
       <input
         ref={inputRef}
         className={css.renameInput}

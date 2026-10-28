@@ -1,4 +1,5 @@
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { formatItemDate } from "../../../shared/lib/date";
 import { isUpcoming } from "../personaSkinRender";
 import { SkinDefList } from "./SkinDefList";
 import type {
@@ -26,10 +27,12 @@ function findNextUp(
 /** Stage `top` slot: a marquee bar for the next upcoming gig, when there is
  *  one. `null` when nothing on the persona's gigs/shows is upcoming. */
 export function StageNextUp({ persona }: { persona: SkinExtrasPersona }) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const next = findNextUp(persona.sections);
   if (!next) return null;
-  const when = [next.date, next.venue].filter(Boolean).join(" · ");
+  const when = [formatItemDate(next.date, language), next.venue]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
     <div className="nextup">

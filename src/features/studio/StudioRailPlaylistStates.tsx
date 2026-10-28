@@ -22,15 +22,20 @@ const SKELETON_ROW_INDEXES = Array.from(
   (_, rowIndex) => rowIndex,
 );
 
-/** Placeholder rows while the member's own playlists load: a name line and
- *  a shorter owner line each, on the Studio shimmer. */
+/** Placeholder rows while the member's own playlists load: a cover block,
+ *  then a name line over a shorter owner line, on the Studio shimmer. */
 export function StudioRailPlaylistsSkeleton() {
   return (
     <div className={css.skeleton} aria-hidden>
       {SKELETON_ROW_INDEXES.map((rowIndex) => (
         <div key={rowIndex} className={css.skeletonRow}>
-          <StudioLine width="70%" height={12} />
-          <StudioLine width="45%" height={10} />
+          <div className={css.skeletonCover}>
+            <StudioLine width="100%" height="100%" />
+          </div>
+          <div className={css.skeletonLines}>
+            <StudioLine width="70%" height={12} />
+            <StudioLine width="45%" height={10} />
+          </div>
         </div>
       ))}
     </div>

@@ -58,6 +58,7 @@ export function StudioEpisodeHero({ track }: { track: StudioTrackView }) {
     >
       <StudioDetailHero
         tint={track.release.tint}
+        coverUrl={track.release.coverUrl}
         isActionsCompact={isCompact}
         art={
           <StudioReleaseCoverArt
@@ -115,11 +116,11 @@ export function StudioEpisodeHero({ track }: { track: StudioTrackView }) {
   );
 }
 
-/** The hero's action row in two groups that wrap whole: Play with its start
- *  time and Mark as played, then Like, Add to playlist, Share and the menu,
- *  which stays last. Below 1440px Share folds into the menu with every way
- *  to share, and below 1280px every action after Play is a round icon with
- *  a tooltip ("Play from {time}" keeps its words). A published episode
+/** The hero's action row in two groups that wrap whole: Play (saying "Play
+ *  from {time}" on a shared timestamp link) and Mark as played, then Like,
+ *  Add to playlist, Share and the menu, which stays last. Below 1440px Share
+ *  folds into the menu with every way to share, and below 1280px every
+ *  action after Play is a round icon with a tooltip. A published episode
  *  without audio offers Share beside an inert Play; a draft shows the inert
  *  Play alone. */
 function EpisodeHeroActions({
@@ -165,6 +166,11 @@ function EpisodeHeroActions({
       : parseStartSeconds(searchParams, track.durationSeconds);
   const startLabel =
     startAtSeconds === null ? null : (formatTrackTime(startAtSeconds) ?? null);
+  // "Play from 1:23" shows on the pill itself, and the name opens with
+  // those words, so the visible label stays in it.
+  const playFromLabel = startLabel
+    ? t("studio:player.playFrom", { time: startLabel })
+    : undefined;
   const addLabel = t("studio:playlist.add.trackCta");
   return (
     <>
@@ -181,11 +187,12 @@ function EpisodeHeroActions({
                       : "studio:episode.noAudioReason",
                   )
             }
+            visibleLabel={playFromLabel}
             label={
               startLabel
-                ? t("studio:player.playFromAria", {
-                    title: track.title,
+                ? t("studio:player.playFromNamedAria", {
                     time: startLabel,
+                    title: track.title,
                   })
                 : t(
                     isPlaying
@@ -205,15 +212,6 @@ function EpisodeHeroActions({
                 );
             }}
           />
-        )}
-        {startLabel && (
-          <span
-            className={heroStyles.playFromLabel}
-            data-hero-play-from=""
-            aria-hidden="true"
-          >
-            {t("studio:player.playFrom", { time: startLabel })}
-          </span>
         )}
         {isPlayable && (
           <StudioMarkPlayedButton

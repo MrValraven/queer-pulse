@@ -6,8 +6,7 @@ import {
   useStudioContextMenu,
   type StudioContextMenuPoint,
 } from "./kit/useStudioContextMenu";
-import { StudioPlaylistCover } from "./StudioPlaylistCover";
-import { CompactRowBody } from "./StudioRailPlaylistRow";
+import { StudioRailCoverArt, StudioRailRowBody } from "./StudioRailRowCover";
 import type { StudioRailReleaseRowModel } from "./studioRailPlaylistRows";
 import css from "./StudioRailPlaylists.module.css";
 
@@ -22,11 +21,12 @@ function useReleaseRowLine(artistLine: string | null): string {
   return t("studio:railPlaylists.releaseMeta", { artist: artistLine });
 }
 
-/** One liked album or show in the rail: its name, then "Album · {artist}"
- *  (a show keeps its podcast line); folded, its cover with the name in a
- *  tooltip. It opens the release page and takes no dropped tracks. Its
- *  menu (right-click, a long-press, the Menu key or Shift+F10) offers Copy
- *  link and Remove from your library. */
+/** One liked album or show in the rail: its cover (a disc tile without
+ *  one), then its name over "Album · {artist}" (a show keeps its podcast
+ *  line); folded, the cover alone with the name in a tooltip. It opens the
+ *  release page and takes no dropped tracks. Its menu (right-click, a
+ *  long-press, the Menu key or Shift+F10) offers Copy link and Remove from
+ *  your library. */
 export function StudioRailReleaseRow({
   row,
   isActive,
@@ -51,35 +51,19 @@ export function StudioRailReleaseRow({
         title={isCompact ? undefined : row.name}
         {...contextMenu}
       >
-        {isCompact ? (
-          <CompactRowBody
-            name={row.name}
-            meta={line}
-            cover={
-              row.coverUrl ? (
-                <StudioPlaylistCover
-                  coverUrls={[row.coverUrl]}
-                  tint={row.tint}
-                  label=""
-                  radius={8}
-                />
-              ) : (
-                // No cover on the saved snapshot: a disc tile, so the
-                // folded rail never shows a blank square.
-                <span className={css.fallbackCover}>
-                  <FiDisc />
-                </span>
-              )
-            }
-          />
-        ) : (
-          <>
-            <span className={css.name}>{row.name}</span>
-            <span className={css.meta}>
-              <span className={css.metaText}>{line}</span>
-            </span>
-          </>
-        )}
+        <StudioRailRowBody
+          isCompact={isCompact}
+          name={row.name}
+          spokenMeta={line}
+          cover={
+            <StudioRailCoverArt
+              coverUrls={row.coverUrl ? [row.coverUrl] : []}
+              tint={row.tint}
+              fallbackIcon={<FiDisc />}
+            />
+          }
+          meta={<span className={css.metaText}>{line}</span>}
+        />
       </Link>
     </Tooltip>
   );

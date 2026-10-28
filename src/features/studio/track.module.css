@@ -31,11 +31,17 @@
   font-size: var(--text-13-5);
   color: var(--text60);
 }
+/* Daylight: a neutral grey banner on a hairline edge; coral stays on the
+   live dot and the join link. Dark keeps the coral wash. */
+:global(:root:not([data-theme="dark"])) .inSet {
+  background: var(--studio-wash-1);
+  border-color: var(--studio-line);
+}
 .inSet .live {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--studio-accent);
   flex: none;
 }
 .inSet b {
@@ -187,6 +193,12 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: var(--text-14);
+}
+/* Daylight: the curator's initials on a neutral grey disc. Dark keeps the
+   coral tint. */
+:global(:root:not([data-theme="dark"])) .noteAv {
+  background: var(--studio-wash-2);
+  color: var(--studio-text);
 }
 .noteName {
   font-size: var(--text-14);

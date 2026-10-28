@@ -127,6 +127,7 @@ describe("Studio v2 read hooks (demo)", () => {
     window.localStorage.setItem("qp-demo-studio-library-seeded", "1");
     window.localStorage.setItem("qp.demo.studioLibrarySeeded.v1", "1");
     window.localStorage.setItem("qp.demo.studioLibrarySeeded.v2", "1");
+    window.localStorage.setItem("qp.demo.studioLibrarySeeded.v3", "1");
     const { result } = renderHook(
       () => useStudioLibrarySaves("studio_release"),
       { wrapper },
@@ -143,7 +144,10 @@ describe("Studio v2 read hooks (demo)", () => {
     expect(
       window.localStorage.getItem("qp.demo.studioLibrarySeeded.v2"),
     ).toBeNull();
-    expect(window.localStorage.getItem("qp.demo.studioLibrarySeeded.v3")).toBe(
+    expect(
+      window.localStorage.getItem("qp.demo.studioLibrarySeeded.v3"),
+    ).toBeNull();
+    expect(window.localStorage.getItem("qp.demo.studioLibrarySeeded.v4")).toBe(
       "1",
     );
   });

@@ -17,7 +17,7 @@
   /* Over the tab's 2px bottom border, outside its padding box. */
   bottom: -2px;
   height: 2px;
-  background: var(--accent);
+  background: var(--studio-accent);
   pointer-events: none;
   /* Motion drives the slide; no CSS transition on any property. */
   transition-property: none;

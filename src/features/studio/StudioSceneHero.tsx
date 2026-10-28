@@ -47,8 +47,8 @@ export function StudioScenePlayButton({
   );
 }
 
-/** The hero's Play: the coral round play with its words beside it, which
- *  say it shuffles. With nothing loaded it says why it waits. */
+/** The hero's Play: the coral pill, which says "Play scene" as its one
+ *  visible label. With nothing loaded it says why it waits. */
 function StudioSceneHeroPlay({
   releasesResult,
 }: {
@@ -58,19 +58,13 @@ function StudioSceneHeroPlay({
   const { hasReleases, play } = useStudioScenePlay(releasesResult);
   const label = t("studio:scene.playCta");
   return (
-    <span className={css.heroPlay}>
-      <StudioPlayButton
-        state={hasReleases ? "idle" : "blocked"}
-        label={label}
-        blockedReason={hasReleases ? undefined : t("studio:scene.empty.title")}
-        onToggle={play}
-      />
-      {hasReleases && (
-        <span className={css.heroPlayLabel} aria-hidden="true">
-          <FiShuffle /> {label}
-        </span>
-      )}
-    </span>
+    <StudioPlayButton
+      state={hasReleases ? "idle" : "blocked"}
+      label={label}
+      visibleLabel={label}
+      blockedReason={hasReleases ? undefined : t("studio:scene.empty.title")}
+      onToggle={play}
+    />
   );
 }
 
@@ -91,6 +85,7 @@ export function StudioSceneHero({
     <StudioDetailHero
       className={css.sceneHero}
       tint={scene.tint}
+      coverUrl={scene.coverUrl}
       sentinelRef={sentinelRef}
       art={
         <ImageSlot

@@ -20,6 +20,7 @@ export function StudioTrackStickyHeader({
       sentinel={sentinel}
       title={track.title}
       tint={track.release.tint}
+      coverUrl={track.release.coverUrl}
       cover={
         <StudioStickyCover
           src={track.release.coverUrl}

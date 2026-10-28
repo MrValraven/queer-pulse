@@ -14,9 +14,7 @@
   /* The bubble is plum, so on a plum ground (the community hero's action row)
      it would otherwise dissolve into the page. A cream hairline plus the
      floating elevation gives it an edge on any ground, dark or cream. */
-  box-shadow:
-    var(--ring-cream-hairline),
-    var(--shadow-e3);
+  box-shadow: var(--ring-cream-hairline), var(--shadow-e3);
   font-size: var(--text-11);
   font-weight: 600;
   line-height: 1.3;
@@ -42,6 +40,16 @@
    takes a hairline edge on the ink channel. Light keeps its look. */
 :global([data-theme="dark"]) .bubble {
   border: 1px solid var(--studio-line);
+}
+
+/* Light Studio (the shell stamps `data-studio-shell` on <html>, which reaches
+   the portalled bubbles too): Daylight's near-black ink with white text, so
+   the bubble matches the white Studio page. The :where() keeps this at the
+   bubble's own weight, so the placement rules above still apply. */
+:global(:where(html[data-studio-shell="true"]:not([data-theme="dark"])))
+  .bubble {
+  background: var(--studio-text);
+  color: rgba(255, 255, 255, 1);
 }
 
 .bottom {

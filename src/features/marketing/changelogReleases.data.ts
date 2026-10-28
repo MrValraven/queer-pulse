@@ -16,8 +16,8 @@ export const CHANGELOG_RELEASE_NOTES: Record<
   { highlights: string[]; pushes?: number }
 > = {
   "28 Oct 2026": {
-    highlights: ["studio-like-albums", "toasts-paper-slip"],
-    pushes: 2,
+    highlights: ["studio-daylight-light-mode", "studio-like-albums"],
+    pushes: 3,
   },
   "27 Oct 2026": {
     highlights: [

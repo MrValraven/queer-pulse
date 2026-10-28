@@ -65,13 +65,46 @@
 }
 
 /* Play it and Skip are the shared Button (DES-90): primary and quiet own
-   the colours, hover, press and focus ring. Only the size is tuned to the
-   gate's compact row, keeping the 44px floor. */
+   the press and focus ring, and the colours apart from light's Play it
+   below. The size is tuned to the gate's compact row, keeping the 44px
+   floor. */
 .play,
 .skip {
   gap: 6px;
   padding-inline: 16px;
   font-size: var(--text-14);
+}
+
+/* Both answers take the Studio control corners in both themes (the
+   `.actions` prefix outranks the kit's pill radius). */
+.actions .play,
+.actions .skip {
+  border-radius: var(--studio-control-radius);
+}
+
+/* Daylight: Play it sits on the Studio accent pair without the kit's glow,
+   a touch darker on hover like the hero Play pill. Focus keeps the cream
+   halo alone. Dark keeps the kit primary's colours and glow. */
+:global(:root:not([data-theme="dark"])) .actions .play {
+  background: var(--studio-accent);
+  color: var(--studio-on-accent);
+  box-shadow: none;
+}
+:global(:root:not([data-theme="dark"])) .actions .play:focus-visible {
+  box-shadow: var(--ring-cream);
+}
+@media (hover: hover) {
+  :global(:root:not([data-theme="dark"]))
+    .actions
+    .play:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: color-mix(in srgb, var(--studio-accent) 88%, black);
+    box-shadow: none;
+  }
+  :global(:root:not([data-theme="dark"]))
+    .actions
+    .play:focus-visible:hover:not(:disabled):not([aria-disabled="true"]) {
+    box-shadow: var(--ring-cream);
+  }
 }
 
 /* Focus handed to the page heading when Skip ended the session and took the

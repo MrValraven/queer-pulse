@@ -30,7 +30,11 @@ export const members: Catalog = {
   "upload.error.unsupportedType":
     "Esse tipo de imagem não é suportado. Usa um ficheiro JPEG, PNG, WebP ou GIF.",
   "upload.error.tooLarge":
-    "Essa imagem é demasiado grande. Mantém-na abaixo de {maxLabel}.",
+    "Mesmo depois de a reduzirmos, essa imagem continua acima de {maxLabel}. Experimenta outra foto.",
+  "upload.error.sourceTooLarge":
+    "Essa foto tem mais de {maxLabel}, mais do que o teu navegador consegue abrir. Experimenta exportar uma cópia mais pequena.",
+  "upload.error.gifTooLarge":
+    "Esse GIF tem mais de {maxLabel}. Os GIFs animados são carregados tal como estão, por isso escolhe um mais curto ou mais pequeno.",
   "upload.error.decodeFailed":
     "Não conseguimos ler essa imagem. Tenta um ficheiro diferente.",
   "upload.error.tooSmall":

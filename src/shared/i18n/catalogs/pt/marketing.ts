@@ -125,7 +125,7 @@ export const marketing: Catalog = {
   "about.stand.commitment.speech.title":
     "A defesa da Palestina é bem-vinda aqui.",
   "about.stand.commitment.speech.body":
-    "Criticar um Estado, o seu exército ou a sua ideologia é discurso político, e é assim que o moderamos. O antissemitismo e o racismo antipalestiniano são ambos violações do Código de Conduta, aplicadas da mesma forma.",
+    "Criticar Israel, o seu governo, o seu exército ou a sua ideologia é discurso político e fica publicado. Removemos os ataques a pessoas: antissemitismo, racismo antipalestiniano e assédio por nacionalidade, etnia ou religião.",
   "about.stand.commitment.speech.link": "Lê as diretrizes",
   "about.stand.commitment.money.title": "Não aceitamos dinheiro cúmplice.",
   "about.stand.commitment.money.body":
@@ -168,11 +168,11 @@ export const marketing: Catalog = {
   "about.linkModal.guidelinesExclusion.title":
     "O discurso político <em>continua político.</em>",
   "about.linkModal.guidelinesExclusion.lead":
-    "A cláusula das diretrizes em que este compromisso assenta, e as linhas vermelhas ao lado dela.",
+    "A regra das diretrizes em que este compromisso assenta e as linhas vermelhas ao lado dela.",
   "about.linkModal.guidelinesExclusion.p1":
-    "Criticar um Estado, o seu governo, o seu exército ou a sua ideologia é discurso político, e a moderação trata-o como discurso político. Passa a ser uma violação do Código de Conduta quando aterra numa pessoa.",
+    "Criticar Israel, o seu governo, o seu exército ou a sua ideologia é discurso político e fica publicado. Passa a ser uma violação do Código de Conduta quando se dirige a uma pessoa.",
   "about.linkModal.guidelinesExclusion.p2":
-    "A defesa dirigida a uma classe inteira de pessoas membras fica do outro lado dessa linha. Fazer campanha pela exclusão de pessoas trans desta comunidade é uma violação do Código de Conduta, seja qual for o vocabulário que pede emprestado.",
+    "Fazer campanha para retirar pessoas trans desta comunidade é uma violação do Código de Conduta, com o vocabulário que for.",
   "about.linkModal.guidelinesExclusion.point.hardLines.title":
     "Sempre uma violação do Código de Conduta.",
   "about.linkModal.guidelinesExclusion.point.hardLines.body":
@@ -180,7 +180,7 @@ export const marketing: Catalog = {
   "about.linkModal.guidelinesExclusion.point.bothDirections.title":
     "Um teste, aplicado pela moderação.",
   "about.linkModal.guidelinesExclusion.point.bothDirections.body":
-    "Isto é sobre um Estado e a sua conduta, ou sobre uma pessoa e quem ela é. É essa pergunta que decide cada denúncia deste tipo.",
+    "A publicação dirige-se a um Estado e à sua conduta, ou a uma pessoa e a quem ela é? Esta pergunta decide todas as denúncias deste tipo.",
   "about.linkModal.guidelinesExclusion.point.reporting.title":
     "Quem denuncia tem apoio.",
   "about.linkModal.guidelinesExclusion.point.reporting.body":
@@ -214,25 +214,24 @@ export const marketing: Catalog = {
   "about.linkModal.guidelinesSpeech.eyebrow": "Diretrizes da comunidade",
   "about.linkModal.guidelinesSpeech.label":
     "Como é moderada a defesa da Palestina",
-  "about.linkModal.guidelinesSpeech.title":
-    "Um teste, <em>nos dois sentidos.</em>",
+  "about.linkModal.guidelinesSpeech.title": "O que fica, <em>e o que sai.</em>",
   "about.linkModal.guidelinesSpeech.lead":
-    "A cláusula das diretrizes que rege o discurso político, e as linhas vermelhas ao lado dela.",
+    "A regra do discurso político e as linhas vermelhas ao lado dela.",
   "about.linkModal.guidelinesSpeech.p1":
-    "A defesa da libertação da Palestina é bem-vinda aqui e não será removida por incomodar. Criticar um Estado, o seu governo, o seu exército ou a sua ideologia é discurso político, e a moderação trata-o como discurso político.",
+    "A QueerPulse está ao lado do povo palestiniano. A defesa da libertação da Palestina é bem-vinda aqui e não a removemos por incomodar. Criticar Israel, o seu governo, o seu exército ou a sua ideologia é discurso político e fica publicado.",
   "about.linkModal.guidelinesSpeech.p2":
-    "Passa a ser uma violação do Código de Conduta quando aterra numa pessoa. Responsabilizar uma pessoa membra pelos atos de um Estado por causa da sua etnia, religião ou nacionalidade é discriminação ao abrigo das linhas vermelhas.",
+    "O que removemos é o ataque a uma pessoa. Culpar alguém pelos atos de um Estado por causa da sua etnia, religião ou nacionalidade é discriminação.",
   "about.linkModal.guidelinesSpeech.point.antisemitism.title":
-    "O antissemitismo é uma violação.",
+    "Removemos o antissemitismo.",
   "about.linkModal.guidelinesSpeech.point.antisemitism.body":
-    "Incluindo enquadramentos conspirativos, e responsabilizar pessoas membras judias pelos atos de um Estado.",
+    "Inclui teorias da conspiração sobre pessoas judias e culpar pessoas membras judias pelo que Israel faz.",
   "about.linkModal.guidelinesSpeech.point.antiPalestinian.title":
-    "O racismo antipalestiniano é uma violação.",
+    "Removemos o racismo antipalestiniano.",
   "about.linkModal.guidelinesSpeech.point.antiPalestinian.body":
-    "Incluindo tratar pessoas membras palestinianas ou árabes como suspeitas à partida, e o assédio a qualquer pessoa membra pela sua nacionalidade, etnia ou religião.",
+    "Inclui tratar pessoas membras palestinianas ou árabes como suspeitas e assediar qualquer pessoa pela sua nacionalidade, etnia ou religião.",
   "about.linkModal.guidelinesSpeech.point.test.title": "Uma pergunta decide.",
   "about.linkModal.guidelinesSpeech.point.test.body":
-    "A moderação pergunta se uma publicação é sobre um Estado e a sua conduta, ou sobre uma pessoa e quem ela é. A posição da própria QueerPulse sobre a Palestina deixa essa pergunta intacta.",
+    "A moderação pergunta a quem a publicação se dirige. Um Estado, um governo ou um exército pode ser criticado. Uma pessoa não pode ser atacada por quem é.",
   "about.linkModal.guidelinesSpeech.cta": "Lê as diretrizes completas",
 
   "about.linkModal.governanceAllocations.eyebrow": "Governação e transparência",
@@ -803,23 +802,21 @@ export const marketing: Catalog = {
   "guidelines.clause08.titlePre": "O discurso pol\u00edtico ",
   "guidelines.clause08.titleEm": "continua pol\u00edtico",
   "guidelines.clause08.p1":
-    "Criticar um Estado, o seu governo, o seu ex\u00e9rcito ou a sua ideologia \u00e9 discurso pol\u00edtico, e \u00e9 assim que o moderamos. Isso inclui a defesa da liberta\u00e7\u00e3o da Palestina, que \u00e9 bem-vinda aqui e n\u00e3o ser\u00e1 removida por incomodar.",
+    "A QueerPulse está ao lado do povo palestiniano, e a defesa da libertação da Palestina é bem-vinda aqui. Não a removemos por incomodar.",
   "guidelines.clause08.p2":
-    "Passa a ser uma violação do C\u00f3digo de Conduta quando recai sobre uma pessoa. Responsabilizar algu\u00e9m pelos atos de um Estado por causa da sua etnia, religi\u00e3o ou nacionalidade \u00e9 discrimina\u00e7\u00e3o, e cai nas linhas vermelhas acima. O mesmo vale para a defesa dirigida a uma classe de pessoas membras em vez de a um Estado: criticar um governo \u00e9 discurso pol\u00edtico, fazer campanha para retirar pessoas trans n\u00e3o \u00e9, seja qual for o r\u00f3tulo.",
+    "Criticar Israel, o seu governo, o seu exército ou a sua ideologia é discurso político e fica publicado.",
   "guidelines.clause08.li4":
-    "Fazer campanha pela exclus\u00e3o de pessoas trans desta comunidade, seja qual for o vocabul\u00e1rio que use",
-  "guidelines.clause08.hardLinesHead":
-    "Continua a ser uma violação do C\u00f3digo de Conduta",
+    "Fazer campanha para retirar pessoas trans desta comunidade",
+  "guidelines.clause08.hardLinesHead": "O que removemos",
   "guidelines.clause08.li1":
-    "Antissemitismo, incluindo enquadramentos conspirativos e responsabilizar pessoas judias pelos atos de um Estado",
+    "Culpar pessoas judias pelo que Israel faz, ou espalhar teorias da conspiração sobre pessoas judias",
   "guidelines.clause08.li2":
-    "Racismo antipalestiniano, incluindo tratar pessoas palestinianas ou \u00e1rabes como suspeitas \u00e0 partida",
+    "Tratar pessoas membras palestinianas ou árabes como suspeitas",
   "guidelines.clause08.li3":
-    "Ass\u00e9dio a qualquer pessoa por causa da sua nacionalidade, etnia ou religi\u00e3o",
-  "guidelines.clause08.p3Lead":
-    "Os dois lados s\u00e3o aplicados da mesma forma.",
+    "Assediar alguém pela sua nacionalidade, etnia ou religião",
+  "guidelines.clause08.p3Lead": "O critério é a quem a publicação se dirige.",
   "guidelines.clause08.p3Rest":
-    "A modera\u00e7\u00e3o aplica um \u00fanico teste: isto \u00e9 sobre um Estado e a sua conduta, ou sobre uma pessoa e quem ela \u00e9? A posi\u00e7\u00e3o da pr\u00f3pria QueerPulse sobre a Palestina est\u00e1 na p\u00e1gina Sobre, e n\u00e3o altera a forma como uma den\u00fancia \u00e9 tratada.",
+    "A crítica a um Estado, a um governo ou a um exército fica publicada. O ataque a uma pessoa por causa de quem ela é sai.",
   "guidelines.final.p2": "Obrigade por construíres isto connosco.",
   "guidelines.modalDone": "Li tudo, concluir",
   "guidelines.modalScrollHint": "Desliza até ao fim para continuar.",
@@ -2108,13 +2105,13 @@ export const marketing: Catalog = {
   "listBusiness.step4.photosLabel": "Algumas fotos (opcional)",
   "listBusiness.step4.coverLabel": "Foto de capa (opcional)",
   "listBusiness.step4.coverHelper":
-    "Aparece no teu cartão no diretório. Sem ela, o cartão usa o teu plano geral. Horizontal · pelo menos 400px de largura · até 2 MB.",
+    "Aparece no teu cartão no diretório. Sem ela, o cartão usa o teu plano geral. Horizontal · pelo menos 400px de largura.",
   "listBusiness.step4.coverHelperFirstPhoto":
-    "Aparece no teu cartão no diretório. Sem ela, o cartão usa a tua primeira foto. Horizontal · pelo menos 400px de largura · até 2 MB.",
+    "Aparece no teu cartão no diretório. Sem ela, o cartão usa a tua primeira foto. Horizontal · pelo menos 400px de largura.",
   "listBusiness.step4.cover.placeholder": "Aparece no teu cartão do diretório",
   "listBusiness.step4.alt.cover": "Capa · texto alternativo",
   "listBusiness.step4.photosHelper":
-    "Mostra o espaço, alguns detalhes e as pessoas que lhe dão vida. Horizontal funciona melhor · idealmente ≥1200px de largura · menos de 5MB cada · sem gráficos carregados de texto.",
+    "Mostra o espaço, alguns detalhes e as pessoas que lhe dão vida. Horizontal funciona melhor · idealmente ≥1200px de largura · sem gráficos carregados de texto.",
   "listBusiness.step4.gallery.wide": "Plano geral do espaço",
   "listBusiness.step4.gallery.detail": "Um detalhe",
   "listBusiness.step4.gallery.vibe": "Pessoas / ambiente",
@@ -2123,9 +2120,9 @@ export const marketing: Catalog = {
   "listBusiness.step4.subMobile":
     "As fotos ajudam as pessoas a imaginar o que fazes e quem vão conhecer. E gostamos de saber quem está por trás.",
   "listBusiness.step4.photosHelperOnline":
-    "Os teus produtos, o teu espaço de trabalho ou o teu logótipo, tudo serve. O formato horizontal resulta melhor, até 5MB cada.",
+    "Os teus produtos, o teu espaço de trabalho ou o teu logótipo, tudo serve. O formato horizontal resulta melhor.",
   "listBusiness.step4.photosHelperMobile":
-    "Tu a trabalhar ou o ponto de encontro, qualquer um serve. O formato horizontal resulta melhor, até 5MB cada.",
+    "Tu a trabalhar ou o ponto de encontro, qualquer um serve. O formato horizontal resulta melhor.",
   "listBusiness.step4.gallery.wideOnline":
     "Os teus produtos, o teu espaço de trabalho ou o teu logótipo",
   "listBusiness.step4.gallery.wideMobile":
@@ -3500,7 +3497,7 @@ export const marketing: Catalog = {
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-10-28.headline":
-    "Dá gosto a um álbum, podcast ou playlist no Studio e fica na barra lateral com as tuas playlists.",
+    "O Studio ganha um novo modo claro, e um álbum de que gostas fica na barra lateral com as tuas playlists.",
   "changelog.releases.2026-10-27.headline":
     "Painel A tocar agora e o que ouves no Studio, mais páginas para cada público.",
   "changelog.releases.2026-10-26.headline":
@@ -3805,6 +3802,26 @@ export const marketing: Catalog = {
     "Uma ferramenta de páginas de PDF para a equipa",
   "changelog.entries.staff-pdf-page-tool.body":
     "A equipa pode remover, rodar, reordenar, juntar e dividir páginas de PDF no navegador, e os ficheiros ficam no dispositivo.",
+  "changelog.entries.studio-daylight-light-mode.title":
+    "O Studio ganha um novo modo claro",
+  "changelog.entries.studio-daylight-light-mode.body":
+    "Páginas brancas, cinzentos suaves e um só coral para ouvir e gostar, com o topo de cada lançamento tingido pela capa.",
+  "changelog.entries.large-photos-upload.title":
+    "Carrega fotos grandes do telemóvel sem erro",
+  "changelog.entries.large-photos-upload.body":
+    "As fotos grandes do telemóvel são reduzidas antes do envio e ficam tão nítidas como antes na plataforma.",
+  "changelog.entries.library-folders-open-smoothly.title":
+    "Abre e fecha pastas da Biblioteca com suavidade",
+  "changelog.entries.library-folders-open-smoothly.body":
+    "Os cartões de uma pasta entram e recolhem com calma, e tudo o que está por baixo desliza sem saltos.",
+  "changelog.entries.studio-sidebar-covers.title":
+    "Capas na barra lateral aberta do Studio",
+  "changelog.entries.studio-sidebar-covers.body":
+    "Com a barra lateral aberta, cada playlist, álbum e programa aparece ao lado da sua capa e reconheces cada uma num relance.",
+  "changelog.entries.studio-menus-stay-below-header.title":
+    "Os menus do Studio já não tapam a barra de cima",
+  "changelog.entries.studio-menus-stay-below-header.body":
+    'Um menu "..." fecha quando o botão dele passa por baixo da barra de cima, e a pesquisa fica sempre à vista.',
   "changelog.entries.studio-folded-sidebar.title":
     "Uma barra lateral recolhida mais limpa no Studio",
   "changelog.entries.studio-folded-sidebar.body":

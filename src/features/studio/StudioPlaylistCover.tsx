@@ -10,8 +10,14 @@ const CELLS = ["topLeft", "topRight", "bottomLeft", "bottomRight"] as const;
 const MOSAIC_COVER_COUNT = CELLS.length;
 
 /** A mosaic cover that fades in once loaded; one already loaded on mount
- *  (from the cache) shows at once. */
-function StudioMosaicImage({ src }: { src: string }) {
+ *  (from the cache) shows at once. `onLoadError` hears a cover that fails. */
+function StudioMosaicImage({
+  src,
+  onLoadError,
+}: {
+  src: string;
+  onLoadError?: (failedUrl: string) => void;
+}) {
   const [isLoaded, setIsLoaded] = useState(false);
   return (
     <img
@@ -24,6 +30,7 @@ function StudioMosaicImage({ src }: { src: string }) {
       decoding="async"
       data-loaded={isLoaded}
       onLoad={() => setIsLoaded(true)}
+      onError={onLoadError && (() => onLoadError(src))}
     />
   );
 }
@@ -32,17 +39,20 @@ function StudioMosaicImage({ src }: { src: string }) {
  *  full-bleed, and with four or more a 2x2 mosaic of the first four in
  *  playlist order. With none, the wordless kit fallback in the playlist's
  *  hue with a note. Fills a positioned parent, like ImageSlot does.
- *  Decorative: the name sits beside. */
+ *  Decorative: the name sits beside. `onLoadError` is optional and hears
+ *  each cover URL that fails to load, so a caller can drop it. */
 export function StudioPlaylistCover({
   coverUrls,
   tint,
   label,
   radius = 10,
+  onLoadError,
 }: {
   coverUrls: string[];
   tint: ImageSlotTint;
   label: string;
   radius?: number;
+  onLoadError?: (failedUrl: string) => void;
 }) {
   if (coverUrls.length === 0) {
     return (
@@ -59,16 +69,18 @@ export function StudioPlaylistCover({
       </span>
     );
   }
+  const [firstUrl = ""] = coverUrls;
   if (coverUrls.length < MOSAIC_COVER_COUNT) {
     return (
       <ImageSlot
-        src={coverUrls[0]}
+        src={firstUrl}
         tint={tint}
         width="100%"
         height="100%"
         radius={radius}
         placeholder={label}
         style={{ position: "absolute", inset: 0 }}
+        onLoadError={onLoadError && (() => onLoadError(firstUrl))}
       />
     );
   }
@@ -76,7 +88,7 @@ export function StudioPlaylistCover({
     <div className={css.mosaic} data-tint={tint} aria-hidden>
       {coverUrls.slice(0, MOSAIC_COVER_COUNT).map((url, index) => (
         <span key={CELLS[index]} className={css.mosaicCell}>
-          <StudioMosaicImage key={url} src={url} />
+          <StudioMosaicImage key={url} src={url} onLoadError={onLoadError} />
         </span>
       ))}
     </div>

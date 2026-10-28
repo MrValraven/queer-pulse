@@ -63,6 +63,39 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "studio-daylight-light-mode",
+        category: "feature",
+        date: "28 Oct 2026",
+        ...entryKeys("studio-daylight-light-mode"),
+      },
+      {
+        id: "large-photos-upload",
+        category: "improvement",
+        date: "28 Oct 2026",
+        ...entryKeys("large-photos-upload"),
+      },
+      {
+        id: "library-folders-open-smoothly",
+        category: "fix",
+        date: "28 Oct 2026",
+        ...entryKeys("library-folders-open-smoothly"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "studio-sidebar-covers",
+        category: "improvement",
+        date: "28 Oct 2026",
+        ...entryKeys("studio-sidebar-covers"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "studio-menus-stay-below-header",
+        category: "fix",
+        date: "28 Oct 2026",
+        ...entryKeys("studio-menus-stay-below-header"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
         id: "studio-folded-sidebar",
         category: "improvement",
         date: "28 Oct 2026",

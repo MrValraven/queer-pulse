@@ -6,6 +6,28 @@
   flex-wrap: wrap;
 }
 
+/* Light: the chosen range is a grey selected fill with ink words and no
+   glow, as every selected item in Daylight is. (0,4,1) outranks the primary
+   Button's hover fill and glow, and the hover rule drops its lift while a
+   press keeps the Button's own sink. Dark keeps the accent pill. */
+:global(:root:not([data-theme="dark"])) .range button[aria-pressed="true"] {
+  background: var(--studio-selected);
+  color: var(--studio-text);
+  box-shadow: none;
+}
+@media (hover: hover) {
+  :global(:root:not([data-theme="dark"]))
+    .range
+    button[aria-pressed="true"]:hover:not(:active) {
+    transform: none;
+  }
+}
+:global(:root:not([data-theme="dark"]))
+  .range
+  button[aria-pressed="true"]:focus-visible {
+  box-shadow: var(--ring-cream);
+}
+
 /* The chart card wears the creator card's surface, hairline, radius and
    padding, like the curator and city cards under it. Element plus class
    keeps this ahead of the shared frame's own card rule. */
@@ -104,6 +126,9 @@
 /* The stat row sits under the hero copy: a little air above it. */
 .stats {
   margin-top: 30px;
+  /* The tiles' numerals read --text-strong (plum on the app's cream); in
+     Studio they take the Studio ink, which holds the same cream in dark. */
+  --text-strong: var(--studio-text);
 }
 
 /* The "since last month" delta inside a stat tile's hint. */

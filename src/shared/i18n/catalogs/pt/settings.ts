@@ -680,7 +680,7 @@ export const settings: Catalog = {
   "editProfile.identity.removePhoto": "Remover foto",
   "editProfile.identity.useGooglePhoto": "Usar a tua foto da Google",
   "editProfile.identity.photoHint.default":
-    "JPG ou PNG · máx. 5 MB · funciona melhor em formato quadrado",
+    "JPG ou PNG · funciona melhor em formato quadrado",
   "editProfile.identity.photoHint.google":
     "Podemos recuperar a foto da conta com que iniciaste sessão.",
   "editProfile.identity.firstNameLabel": "Nome próprio",

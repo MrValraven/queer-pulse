@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { FiHeart, FiMusic, FiUsers } from "react-icons/fi";
 import { RiPushpin2Fill } from "react-icons/ri";
@@ -11,36 +10,12 @@ import {
   useStudioContextMenu,
   type StudioContextMenuPoint,
 } from "./kit/useStudioContextMenu";
-import { StudioPlaylistCover } from "./StudioPlaylistCover";
 import type { StudioPlaylistDragSource } from "./StudioRailFolder.drag";
+import { StudioRailCoverArt, StudioRailRowBody } from "./StudioRailRowCover";
 import type { StudioRailPlaylistRowModel } from "./studioRailPlaylistRows";
 import { STUDIO_EXIT, STUDIO_FADE } from "./studioMotion";
 import { useStudioRailDrop } from "./useStudioRailDrop";
 import css from "./StudioRailPlaylists.module.css";
-
-/** The folded rail's row body: the cover alone, the name and owner kept
- *  for screen readers, and the name in a tooltip on hover and focus. The
- *  release row (StudioRailReleaseRow) shares it. */
-export function CompactRowBody({
-  cover,
-  name,
-  meta,
-}: {
-  cover: ReactNode;
-  name: string;
-  meta: ReactNode;
-}) {
-  return (
-    <>
-      <span className={css.compactCover} aria-hidden>
-        {cover}
-      </span>
-      <span className="visuallyHidden">
-        {name}, {meta}
-      </span>
-    </>
-  );
-}
 
 /** A small spinner while the row is busy (a dropped track being added, or
  *  Edit details reading the playlist). */
@@ -69,8 +44,8 @@ function RowBusy({ isBusy }: { isBusy: boolean }) {
   );
 }
 
-/** Liked songs, pinned above every playlist in the rail. Folded, it is a
- *  heart tile with the name in a tooltip. */
+/** Liked songs, pinned above every playlist in the rail, on its coral
+ *  heart tile. Folded, the tile alone with the name in a tooltip. */
 export function StudioRailLikedRow({
   isActive,
   isCompact = false,
@@ -90,36 +65,33 @@ export function StudioRailLikedRow({
         title={isCompact ? undefined : name}
         aria-current={isActive ? "page" : undefined}
       >
-        {isCompact ? (
-          <CompactRowBody
-            name={name}
-            meta={meta}
-            cover={
-              <span className={css.likedCover}>
-                <FiHeart fill="currentColor" />
-              </span>
-            }
-          />
-        ) : (
-          <>
-            <span className={css.name}>{name}</span>
-            <span className={css.meta}>
+        <StudioRailRowBody
+          isCompact={isCompact}
+          name={name}
+          spokenMeta={meta}
+          cover={
+            <span className={css.likedCover}>
+              <FiHeart fill="currentColor" />
+            </span>
+          }
+          meta={
+            <>
               <RiPushpin2Fill aria-hidden />
               <span className={css.metaText}>{meta}</span>
-            </span>
-          </>
-        )}
+            </>
+          }
+        />
       </Link>
     </Tooltip>
   );
 }
 
-/** One playlist in the rail: its name, then who it belongs to; folded, its
- *  cover with the name in a tooltip. The link has no `aria-label`, so its
- *  accessible name reads both lines. Right-click, a long-press, the Menu
- *  key or Shift+F10 opens its menu. A playlist the member may add to lights
- *  up under a dragged track and takes it. With `dragSource`, the row itself
- *  can be dragged onto a rail folder. */
+/** One playlist in the rail: its cover, then its name over who it belongs
+ *  to; folded, the cover alone with the name in a tooltip. The link has no
+ *  `aria-label`, so its accessible name reads both lines. Right-click, a
+ *  long-press, the Menu key or Shift+F10 opens its menu. A playlist the
+ *  member may add to lights up under a dragged track and takes it. With
+ *  `dragSource`, the row itself can be dragged onto a rail folder. */
 export function StudioRailPlaylistRow({
   row,
   isActive,
@@ -160,31 +132,19 @@ export function StudioRailPlaylistRow({
         {...(drop.handlers ?? {})}
         {...(dragSource ?? {})}
       >
-        {isCompact ? (
-          <CompactRowBody
-            name={row.name}
-            meta={`${collabNote}${owner}`}
-            cover={
-              row.coverUrls.length > 0 ? (
-                <StudioPlaylistCover
-                  coverUrls={row.coverUrls}
-                  tint={row.tint}
-                  label=""
-                  radius={8}
-                />
-              ) : (
-                // No release cover yet: a music tile, so the folded rail
-                // never shows a blank square.
-                <span className={css.fallbackCover}>
-                  <FiMusic />
-                </span>
-              )
-            }
-          />
-        ) : (
-          <>
-            <span className={css.name}>{row.name}</span>
-            <span className={css.meta}>
+        <StudioRailRowBody
+          isCompact={isCompact}
+          name={row.name}
+          spokenMeta={`${collabNote}${owner}`}
+          cover={
+            <StudioRailCoverArt
+              coverUrls={row.coverUrls}
+              tint={row.tint}
+              fallbackIcon={<FiMusic />}
+            />
+          }
+          meta={
+            <>
               {row.isCollaborative && (
                 <>
                   <FiUsers aria-hidden />
@@ -192,9 +152,9 @@ export function StudioRailPlaylistRow({
                 </>
               )}
               <span className={css.metaText}>{owner}</span>
-            </span>
-          </>
-        )}
+            </>
+          }
+        />
         <RowBusy isBusy={isRowBusy} />
       </Link>
     </Tooltip>

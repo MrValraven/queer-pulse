@@ -81,7 +81,7 @@ function StudioTrackSplit() {
         />
       </div>
       <div className={trackStyles.splitBar}>
-        <span style={{ width: "80%", background: "var(--accent)" }} />
+        <span style={{ width: "80%", background: "var(--studio-accent)" }} />
         <span style={{ width: "8%", background: "var(--jade)" }} />
         <span style={{ width: "8%", background: "var(--plum)" }} />
         <span

@@ -20,6 +20,7 @@ import { StudioLibraryGrid } from "./StudioLibraryGrid";
 import { StudioLibrarySavedList } from "./StudioLibrarySavedList";
 import { StudioPlaylistCard } from "./StudioPlaylistCard";
 import { StudioPlaylistFolderDialog } from "./StudioPlaylistFolderDialog";
+import { STUDIO_DISCLOSURE_EXIT, STUDIO_PANEL_OPEN } from "./studioMotion";
 import { useStudioFolderMenuItems } from "./StudioRailFolder.menuItems";
 import { StudioFolderDeleteConfirm } from "./StudioRailFolderMenu";
 import { savedPlaylistIdOf } from "./useStudioLibrarySavedCard";
@@ -88,7 +89,11 @@ function LibraryFolder({
           }
         />
       </div>
-      <Collapse isOpen={isExpanded}>
+      <Collapse
+        isOpen={isExpanded}
+        transition={STUDIO_PANEL_OPEN}
+        exitTransition={STUDIO_DISCLOSURE_EXIT}
+      >
         <div id={panelId} className={css.panel}>
           <StudioLibraryGrid>
             {ownPlaylists.map((playlist) => (

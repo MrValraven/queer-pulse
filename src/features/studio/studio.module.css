@@ -140,9 +140,14 @@
   gap: 9px;
   height: var(--studio-topbar-h);
   padding: max(18px, env(safe-area-inset-top, 0px)) 22px 18px;
-  border-bottom: 1px solid var(--s-line);
+  /* Clear in light like the topbar's edge, so the 1px keeps the row on
+     --studio-topbar-h. Dark draws the hairline (below). */
+  border-bottom: 1px solid transparent;
   margin-bottom: 18px;
   transition: padding-inline-start var(--dur-base) var(--ease);
+}
+:global([data-theme="dark"]) .brandRow {
+  border-bottom-color: var(--s-line);
 }
 .rail[data-collapsed] .brandRow {
   padding-inline-start: 31.5px;
@@ -152,7 +157,7 @@
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--studio-accent);
   flex: none;
 }
 /* Folded, the dot is the strip's only mark, so a soft coral halo fades in
@@ -162,7 +167,7 @@
   position: absolute;
   inset: -5px;
   border-radius: 50%;
-  background: rgba(var(--accent-rgb), 0.16);
+  background: color-mix(in srgb, var(--studio-accent) 16%, transparent);
   opacity: 0;
   transition: opacity var(--dur-base) var(--ease);
 }
@@ -214,28 +219,30 @@
   min-width: 0;
 }
 /* Main nav rows: full-ink labels at 500 so they lead the playlist names
-   below, each after a muted icon that turns full ink on hover and on the
-   open page. */
+   below, each after an icon in the rail's icon colour. The open page is a
+   filled rounded row. The 8px inset matches the library rows below, and the
+   21px start padding centres the 18px icon at x 38 on the library cover
+   column (8 + 21 + 9), so the label starts at x 59. */
 .railItem {
   display: flex;
   align-items: center;
   gap: 12px;
   min-height: 0;
-  padding: 10px 22px;
+  margin: 1px 8px;
+  padding: 9px 16px 9px 21px;
   font-size: var(--text-14);
   font-weight: 500;
   color: var(--s-text);
   cursor: pointer;
-  border-left: 2px solid transparent;
+  border-radius: var(--radius-8);
   white-space: nowrap;
   /* The colours follow the pointer quickly; the tile shape follows the
      rail's fold, on the grid's own timing. */
   transition-property:
-    color, background-color, border-left-color, margin, padding, border-radius,
-    min-height;
+    color, background-color, margin, padding, border-radius, min-height;
   transition-duration:
-    var(--dur-fast), var(--dur-fast), var(--dur-fast), var(--dur-base),
-    var(--dur-base), var(--dur-base), var(--dur-base);
+    var(--dur-fast), var(--dur-fast), var(--dur-base), var(--dur-base),
+    var(--dur-base), var(--dur-base);
   transition-timing-function: var(--ease);
 }
 /* Drawn inset: the rail's own overflow clip would cut an outward ring (the
@@ -256,28 +263,37 @@
 .railIcon {
   flex: none;
   font-size: var(--text-18);
-  color: var(--s-text-60);
+  color: var(--studio-rail-icon);
   transition: color 0.2s var(--ease);
 }
 @media (hover: hover) {
   .railItem:hover {
-    background: rgba(var(--studio-ink-rgb), 0.03);
-  }
-  .railItem:hover .railIcon {
-    color: var(--s-text);
+    background: var(--studio-wash-1);
   }
 }
 .railItemOn {
   font-weight: 600;
-  border-left-color: var(--accent);
-  background: linear-gradient(
-    90deg,
-    rgba(var(--accent-rgb), 0.12),
-    transparent 60%
-  );
+  color: var(--s-text);
+  background: var(--studio-selected);
 }
-.railItemOn .railIcon,
-.railItemOn:hover .railIcon {
+@media (hover: hover) {
+  .railItemOn:hover {
+    background: var(--studio-selected);
+  }
+}
+/* Dark keeps its quieter rows: a fainter hover wash, a muted icon that
+   turns full ink on hover and the accent text colour on the open page,
+   folded or open. Light keeps every icon in the rail's icon colour. */
+@media (hover: hover) {
+  :global([data-theme="dark"]) .railItem:hover:not(.railItemOn) {
+    background: rgba(var(--studio-ink-rgb), 0.03);
+  }
+  :global([data-theme="dark"]) .railItem:hover .railIcon {
+    color: var(--s-text);
+  }
+}
+:global([data-theme="dark"]) .railItemOn .railIcon,
+:global([data-theme="dark"]) .railItemOn:hover .railIcon {
   color: var(--studio-accent-text);
 }
 .railItem .nm {
@@ -285,19 +301,18 @@
 }
 /* Folded, every row is a 44px tile on the strip's centre column (x 14 to
    58). The end margin is 1px shorter for the rail's right border, and the
-   11px start padding centres the icon past the 2px edge. The label stays in
-   place at its full width, clipped by the tile. */
+   13px start padding centres the 18px icon. The label stays in place at its
+   full width, clipped by the tile. */
 .rail[data-collapsed] .railItem {
   min-height: 44px;
   margin: 2px 13px 2px 14px;
-  padding-inline: 11px 0;
+  padding-inline: 13px 0;
   border-radius: var(--radius-12);
   overflow: hidden;
 }
-/* The open page on the strip: a soft coral fill under the coral icon. */
+/* The open page on the strip: the same selected fill as the open rail. */
 .rail[data-collapsed] .railItemOn {
-  border-left-color: transparent;
-  background: rgba(var(--accent-rgb), 0.14);
+  background: var(--studio-selected);
 }
 /* The pill and the playlist list under the main nav: it takes the rail's
    remaining height so the list can scroll inside it. */
@@ -324,27 +339,48 @@
 .rail[data-collapsed] .railBody::before {
   opacity: 1;
 }
-/* The Create playlist pill. Chained through .rail so it wins over the shared
-   ghost Button in both themes. Its fill is the boundary, so the ghost border
-   goes transparent (keeping its width, so nothing shifts on hover). The
-   12px margin, the 1.5px border and the 10.5px start padding put the plus
-   on the 24px column where the nav icons and the playlist names start. */
+/* The Create playlist row, drawn like the nav rows above it. Chained
+   through .rail so it wins over the shared ghost Button in both themes. The
+   ghost border goes transparent (keeping its width, so nothing shifts on
+   hover). The 8px margin, the 1.5px border and the 19.5px start padding
+   centre the 18px plus at x 38 like the nav icons, and the 12px gap starts
+   the label at x 59 with theirs. */
 .rail .railBody .railCreate {
   align-self: stretch;
-  margin: 8px 12px 12px;
-  padding-inline-start: 10.5px;
+  margin: 8px 8px 12px;
+  padding-inline-start: 19.5px;
   justify-content: flex-start;
-  gap: 10px;
-  border-radius: var(--radius-pill);
+  gap: 12px;
+  border-radius: var(--radius-8);
   border-color: transparent;
-  background: var(--wash);
+  background: transparent;
   color: var(--s-text);
+}
+.rail .railBody .railCreate svg {
+  flex: none;
+  font-size: var(--text-18);
+  color: var(--studio-rail-icon);
 }
 @media (hover: hover) {
   .rail .railBody .railCreate:hover:not(:disabled):not([aria-disabled="true"]) {
     border-color: transparent;
-    background: rgba(var(--studio-ink-rgb), 0.09);
+    background: var(--studio-wash-2);
     transform: none;
+  }
+}
+/* Dark keeps the soft wash at rest, its deeper hover and a full-ink plus. */
+:global([data-theme="dark"]) .rail .railBody .railCreate {
+  background: var(--wash);
+}
+:global([data-theme="dark"]) .rail .railBody .railCreate svg {
+  color: inherit;
+}
+@media (hover: hover) {
+  :global([data-theme="dark"])
+    .rail
+    .railBody
+    .railCreate:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: rgba(var(--studio-ink-rgb), 0.09);
   }
 }
 /* Press feedback, matching the shared Button's sink. Placed after the hover
@@ -389,6 +425,20 @@
 }
 .railExit {
   color: var(--s-text-60);
+}
+/* The exit row's wrapper shrinks before the toggle does, so a long label
+   (PT "Voltar ao QueerPulse") ends in an ellipsis and the toggle stays
+   whole. Open rail only: folded, the label keeps its full width under the
+   tile's clip. */
+.railFoot > span:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.rail:not([data-collapsed]) .railExit .nm {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 @media (hover: hover) {
   .railExit:hover {
@@ -459,7 +509,31 @@
   z-index: var(--z-sticky);
   background: color-mix(in srgb, var(--studio-surface) 82%, transparent);
   backdrop-filter: var(--blur-lg);
-  border-bottom: 1px solid var(--s-line);
+  /* In light the frosted fill alone parts the bar from the page; the clear
+     1px edge keeps the bar on --studio-topbar-h. Dark draws the hairline. */
+  border-bottom: 1px solid transparent;
+}
+:global([data-theme="dark"]) .topbar {
+  border-bottom-color: var(--s-line);
+}
+/* Light: while a hero tinted from its cover is mounted, it sets
+   --studio-page-tint on <html>, and the frosted bar takes that colour, so
+   the bar reads as part of the tinted header above the hero's wash. */
+:global(:root:not([data-theme="dark"])) .topbar {
+  background: color-mix(
+    in srgb,
+    var(--studio-page-tint, var(--studio-surface)) 82%,
+    transparent
+  );
+  transition: background-color 320ms var(--ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  :global(:root:not([data-theme="dark"])) .topbar {
+    transition: none;
+  }
+}
+:global(html[data-reduce-motion="true"]:not([data-theme="dark"])) .topbar {
+  transition: none;
 }
 
 /* Named only while a Studio page morph runs (studioPageMorph.ts), so the
@@ -491,7 +565,7 @@
   gap: 10px;
   background: rgba(var(--studio-ink-rgb), 0.06);
   border: 1px solid var(--s-line);
-  border-radius: var(--radius-pill);
+  border-radius: var(--studio-control-radius);
   padding: 9px 16px;
   color: var(--s-text-40);
 }
@@ -526,6 +600,22 @@
   background: var(--accent);
   border-radius: var(--radius-pill);
   padding: 8px 16px;
+}
+/* Light: a neutral control on the grey wash with the search field's
+   corners beside it. Dark keeps the accent pill above. */
+:global(:root:not([data-theme="dark"])) .sustainPill {
+  color: var(--studio-text);
+  background: var(--studio-wash-2);
+  border-radius: var(--studio-control-radius);
+  transition: background-color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  :global(:root:not([data-theme="dark"])) .sustainPill:hover {
+    background: var(--studio-wash-3);
+  }
+}
+:global(:root:not([data-theme="dark"])) .sustainPill svg {
+  color: var(--studio-icon);
 }
 /* The page column is a named container, so a detail page stacks its sidebar
    when the column narrows beside the docked side panel. Phones keep their
@@ -717,7 +807,7 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--studio-accent-text);
+  color: var(--studio-eyebrow);
 }
 .eb .live {
   width: 7px;
@@ -748,6 +838,39 @@
 .by em {
   font-style: italic;
 }
+/* The album hero's credit (StudioAlbumHero): the artist on a line of its
+   own, then the year and genre under it in muted text. Chained through
+   .by so the shared credit rules above stay as they are for other heroes. */
+.by .artistLine {
+  display: block;
+  font-size: var(--text-19);
+  font-weight: 600;
+  color: var(--studio-accent-text);
+}
+.by .artistLine strong {
+  color: inherit;
+  font-weight: inherit;
+}
+.by .artistLine a {
+  color: inherit;
+  text-decoration: none;
+  text-underline-offset: 3px;
+  border-radius: var(--radius-4);
+}
+@media (hover: hover) {
+  .by .artistLine a:hover {
+    text-decoration: underline;
+  }
+}
+.by .artistLine a:focus-visible {
+  text-decoration: underline;
+}
+.by .factsLine {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--text-14);
+  color: var(--s-text-60);
+}
 .stats {
   display: flex;
   align-items: center;
@@ -773,6 +896,31 @@
   margin-top: 26px;
   flex-wrap: wrap;
 }
+/* The pill colours per theme, read by the pills and the phone row's icon
+   link. Light: grey washes with a clear edge, and a pressed toggle keeps the
+   rest wash with only its icon in the accent. Dark: the softer ink washes
+   with a visible hairline, and a pressed toggle holds the deeper wash with
+   an accent hairline and accent text icon. */
+.heroActions,
+.heroIconLink {
+  --hero-pill-fill: var(--studio-wash-2);
+  --hero-pill-hover: var(--studio-wash-3);
+  --hero-pill-edge: transparent;
+  --hero-pressed-fill: var(--studio-wash-2);
+  --hero-pressed-hover: var(--studio-wash-3);
+  --hero-pressed-edge: transparent;
+  --hero-pressed-icon: var(--studio-accent);
+}
+:global([data-theme="dark"]) .heroActions,
+:global([data-theme="dark"]) .heroIconLink {
+  --hero-pill-fill: rgba(var(--studio-ink-rgb), 0.08);
+  --hero-pill-hover: rgba(var(--studio-ink-rgb), 0.14);
+  --hero-pill-edge: var(--s-line);
+  --hero-pressed-fill: rgba(var(--studio-ink-rgb), 0.14);
+  --hero-pressed-hover: rgba(var(--studio-ink-rgb), 0.14);
+  --hero-pressed-edge: rgba(var(--accent-rgb), 0.45);
+  --hero-pressed-icon: var(--studio-accent-text);
+}
 /* The hero's pill buttons. The :where() guard adds no weight, so the rule
    stays (0,1,1), and it keeps the pill look off the items of a menu that
    opens inside the row (the playlist, release and artist overflow menus).
@@ -788,12 +936,14 @@
   font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--s-text);
-  background: rgba(var(--studio-ink-rgb), 0.08);
-  --button-quiet-hover: rgba(var(--studio-ink-rgb), 0.14);
-  --button-quiet-active: rgba(var(--studio-ink-rgb), 0.14);
-  --button-icon-hover: rgba(var(--studio-ink-rgb), 0.14);
-  border: 1px solid var(--s-line);
-  border-radius: var(--radius-pill);
+  background: var(--hero-pill-fill);
+  --button-quiet-hover: var(--hero-pill-hover);
+  --button-quiet-active: var(--hero-pill-hover);
+  --button-icon-hover: var(--hero-pill-hover);
+  /* Light's clear border keeps its width, so a pill that draws one never
+     shifts. */
+  border: 1px solid var(--hero-pill-edge);
+  border-radius: var(--studio-control-radius);
   /* Every pill is a full 44px tap target, Share and Like included. */
   min-height: var(--tap-min);
   padding: 10px 18px;
@@ -807,27 +957,43 @@
   width: 16px;
   height: 16px;
 }
+/* Icons in the pills take the Studio icon colour. Play keeps its glyph on
+   the accent pair, so its wrap (data-size="hero") stays out. */
+.heroActions button:where(:not([role="menuitem"], [data-size="hero"] *)) svg {
+  color: var(--studio-icon);
+}
 @media (hover: hover) {
   .heroActions button:where(:not([role="menuitem"])):hover {
-    background: rgba(var(--studio-ink-rgb), 0.14);
+    background: var(--hero-pill-hover);
   }
 }
 .heroActions
   button:where(:not([role="menuitem"])):active:not([aria-disabled="true"]) {
   transform: scale(0.97);
 }
-/* A pressed toggle (Save) holds a deeper wash and the accent hairline, so
-   its state shows beside its words while its accessible name stays put.
-   Hovered, it keeps that deeper wash. */
+/* A pressed toggle (the heart, Save) shows its state through the pressed
+   colours above, beside its words, while its accessible name stays put. */
 .heroActions button:where(:not([role="menuitem"]))[aria-pressed="true"] {
-  background: rgba(var(--studio-ink-rgb), 0.14);
-  border-color: rgba(var(--accent-rgb), 0.45);
-  --button-quiet-hover: rgba(var(--studio-ink-rgb), 0.14);
+  background: var(--hero-pressed-fill);
+  border-color: var(--hero-pressed-edge);
+  --button-quiet-hover: var(--hero-pressed-hover);
+  --button-quiet-active: var(--hero-pressed-hover);
+}
+@media (hover: hover) {
+  .heroActions
+    button:where(:not([role="menuitem"]))[aria-pressed="true"]:hover {
+    background: var(--hero-pressed-hover);
+  }
 }
 .heroActions button:where(:not([role="menuitem"]))[aria-pressed="true"] svg {
-  color: var(--studio-accent-text);
+  color: var(--hero-pressed-icon);
 }
+/* Tip keeps the clear border of the pills beside it in light, over the kit
+   Button's own edge. Dark draws it in the accent with accent text. */
 .heroActions .tip {
+  border-color: transparent;
+}
+:global([data-theme="dark"]) .heroActions .tip {
   color: var(--studio-accent-text);
   border-color: rgba(var(--accent-rgb), 0.3);
 }
@@ -995,8 +1161,11 @@
   }
 }
 .setRowNow {
-  background: rgba(var(--accent-rgb), 0.08);
+  background: var(--studio-row-playing);
   border-radius: var(--radius-8);
+}
+:global([data-theme="dark"]) .setRowNow {
+  background: rgba(var(--accent-rgb), 0.08);
 }
 .setRowNow h5 {
   color: var(--studio-accent-text);
@@ -1170,7 +1339,7 @@
 }
 .tabOn {
   color: var(--s-text);
-  border-bottom-color: var(--accent);
+  border-bottom-color: var(--studio-accent);
 }
 
 /* Album / artist hero variant. The rail stays until the 880px compact cut,
@@ -1214,8 +1383,9 @@
    a layer the page column's width, so it stays under the cover. */
 .detailWash {
   --wash-reach-end: 0px;
+  --wash-run-up: 96px;
   position: absolute;
-  inset-block: -96px -24px;
+  inset-block: calc(-1 * var(--wash-run-up)) -24px;
   inset-inline-start: calc(-1 * var(--studio-gutter-left));
   inset-inline-end: calc(
     -1 * (var(--studio-gutter-right) + var(--wash-reach-end))
@@ -1237,6 +1407,61 @@
       ),
       transparent 82%
     );
+}
+/* Light: the coral, jade and plum data-tint washes are for dark only, so
+   the light wash is a barely-there neutral on the Studio ink. The dark
+   theme keeps the tinted wash above. The neutral stays clear through the
+   run-up and fades in from the hero's top: the untinted bar is near white,
+   so grey under it would end in an edge at the bar's foot. A cover tint
+   paints its solid band over that run-up. */
+:global(:root:not([data-theme="dark"])) .detailWash {
+  background:
+    radial-gradient(
+        ellipse 46% 58% at 16% 62%,
+        rgba(var(--studio-ink-rgb), calc(0.04 * var(--wash-boost, 1))),
+        transparent 72%
+      )
+      0 0 / calc(100% - var(--wash-reach-end)) 100% no-repeat,
+    linear-gradient(
+      180deg,
+      transparent var(--wash-run-up),
+      rgba(var(--studio-ink-rgb), calc(0.04 * 0.9 * var(--wash-boost, 1)))
+        calc(var(--wash-run-up) + 64px),
+      transparent 82%
+    );
+}
+/* Light, once the cover's colour is known (StudioDetailHero sets
+   data-cover-tint and --hero-cover-tint): a layer over the neutral wash
+   fades in with that colour, solid at the top and fading to the page. The
+   wash runs up under the frosted topbar, and the hero sets the same colour
+   as --studio-page-tint on <html>, which the bar paints its fill from
+   (.topbar), so the bar and the wash read as one header. */
+:global(:root:not([data-theme="dark"])) .detailWash::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    var(--hero-cover-tint) 0%,
+    var(--hero-cover-tint) 28%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 320ms var(--ease);
+}
+:global(:root:not([data-theme="dark"]))
+  .detailHero[data-cover-tint]
+  .detailWash::after {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  :global(:root:not([data-theme="dark"])) .detailWash::after {
+    transition: none;
+  }
+}
+:global(html[data-reduce-motion="true"]:not([data-theme="dark"]))
+  .detailWash::after {
+  transition: none;
 }
 .detailCopy {
   min-width: 0;
@@ -1287,10 +1512,25 @@
 /* A hero under a breadcrumb (the track page) starts its wash at its own top
    and fades it in, so the crumb keeps the plain page behind its text. */
 .detailHeroUnderCrumb .detailWash {
-  inset-block-start: 0;
+  --wash-run-up: 0px;
   mask-image: linear-gradient(180deg, transparent, var(--studio-surface) 72px);
 }
-/* The phone action row: Play, then round 44px icon buttons. It fits one
+/* Light with the cover's colour: the wash runs up under the crumb and the
+   topbar like the other heroes, reaching 40px further for the crumb's row.
+   The crumb (the nav just before the hero) lifts above the wash, so its
+   links stay on top of the colour. */
+:global(:root:not([data-theme="dark"]))
+  .detailHeroUnderCrumb[data-cover-tint]
+  .detailWash {
+  --wash-run-up: 136px;
+  mask-image: none;
+}
+:global(:root:not([data-theme="dark"]))
+  nav:has(+ .detailHeroUnderCrumb[data-cover-tint]) {
+  position: relative;
+  z-index: 1;
+}
+/* The phone action row: Play, then square 44px icon buttons. It fits one
    line at 360px for a release or a track; a longer row (an artist's Follow
    in PT) wraps onto a second line inside the screen. */
 .heroActions[data-compact] {
@@ -1308,12 +1548,12 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
-/* On a phone Play holds the start and the icons the end of the row. A
-   "Play from {time}" beside Play can wrap the row, so then every action
-   lines up from the start. Wider icon-only rows keep their icons beside
-   Play. */
+/* On a phone Play holds the start and the icons the end of the row. When a
+   wider Play ("Play from 1:23") leaves no room for the icons beside it, they
+   wrap onto the next line and line up from its start, since the auto margin
+   only spends the space left on Play's own line. */
 @media (--md), (max-height: 500px) {
-  .heroActions[data-compact] > :first-child:not(:has(+ [data-hero-play-from])) {
+  .heroActions[data-compact] > :first-child {
     margin-inline-end: auto;
   }
 }
@@ -1325,14 +1565,15 @@
   gap: inherit;
 }
 /* (0,1,1) like the pill rule above and later in the file, so it wins over
-   the pill and loses to the play button's own (0,2,0) size. */
+   the pill and loses to the hero play button's own (0,3,0) size
+   (kit/StudioPlayButton.module.css). */
 .heroActions:where([data-compact])
   button:where(:not([role="menuitem"], .heroLabelled *)) {
   width: var(--tap-min);
   min-width: var(--tap-min);
   height: var(--tap-min);
   padding: 0;
-  border-radius: var(--radius-avatar);
+  border-radius: var(--studio-control-radius);
 }
 .heroActions:where([data-compact]) button:where(:not([role="menuitem"])) svg {
   width: 18px;
@@ -1343,25 +1584,28 @@
   display: inline-flex;
   flex: none;
 }
-/* An icon-only link in the phone row (View profile), drawn like the round
+/* An icon-only link in the phone row (View profile), drawn like the square
    icon buttons beside it. */
 .heroIconLink {
   display: inline-grid;
   place-items: center;
   width: var(--tap-min);
   height: var(--tap-min);
-  border: 1px solid var(--s-line);
-  border-radius: var(--radius-avatar);
-  background: rgba(var(--studio-ink-rgb), 0.08);
-  color: var(--s-text);
+  border: 1px solid var(--hero-pill-edge);
+  border-radius: var(--studio-control-radius);
+  background: var(--hero-pill-fill);
+  color: var(--studio-icon);
   font-size: var(--text-18);
   transition-property: background-color, transform;
   transition-duration: var(--dur-fast);
   transition-timing-function: var(--ease);
 }
+:global([data-theme="dark"]) .heroIconLink {
+  color: var(--s-text);
+}
 @media (hover: hover) {
   .heroIconLink:hover {
-    background: rgba(var(--studio-ink-rgb), 0.14);
+    background: var(--hero-pill-hover);
   }
 }
 .heroIconLink:active {
@@ -1384,7 +1628,7 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--studio-accent-text);
+  color: var(--studio-eyebrow);
 }
 .detailHero h1 {
   font-family: var(--serif);

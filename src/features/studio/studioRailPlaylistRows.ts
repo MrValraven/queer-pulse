@@ -31,8 +31,8 @@ export interface StudioRailPlaylistRowModel {
   /** Tracks the member can play, for the add toast's count; null for a
    *  save, which carries none. */
   trackCount: number | null;
-  /** The folded rail's cover: up to four release covers (none for a save)
-   *  over the playlist's tint. */
+  /** The folded rail's cover over the playlist's tint: up to four release
+   *  covers, or for a save the one cover the server last read for it. */
   coverUrls: string[];
   tint: ImageSlotTint;
 }
@@ -82,7 +82,7 @@ export function toRailPlaylistRows(
       isOwner: false,
       hasEditRights: false,
       trackCount: null,
-      coverUrls: [],
+      coverUrls: item.coverUrl ? [item.coverUrl] : [],
       tint: savedCoverTintOf(item.id),
     });
   }

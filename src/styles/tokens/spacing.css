@@ -80,6 +80,8 @@
   --tab-bar-h: 58px;
   /* Studio's own phone tab bar. Read by StudioTabBar.module.css and standalone.css. */
   --studio-tab-bar-h: 56px;
+  /* Studio buttons, search and hero pills: Daylight's 10px corners, same in both themes. */
+  --studio-control-radius: var(--radius-10);
   /* How much bottom-anchored floating UI (the consent banner) must
      clear. Zero in a browser tab; standalone.css raises it to the tab bar's
      total occupied height on mobile — the bar itself PLUS

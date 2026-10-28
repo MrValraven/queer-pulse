@@ -15,6 +15,7 @@ import {
 import { StudioDetailHeroBand } from "./StudioDetailHeroBand";
 import { artEntrance, copyEntrance } from "./studioDetailHeroMotion";
 import { HeroActionsRow, HeroHeading } from "./studioDetailHeroParts";
+import { useStudioCoverTint, useStudioPageTint } from "./useStudioCoverTint";
 import styles from "./studio.module.css";
 
 /** "default" is the cover beside the copy. "full-bleed" fills a band with
@@ -46,6 +47,9 @@ interface StudioDetailHeroProps {
   isActionsCompact?: boolean;
   /** The cover's tint, washed softly behind the hero. */
   tint?: ImageSlotTint;
+  /** The cover image. In light, the hero washes in a colour read from it
+   *  (useStudioCoverTint.ts) once the browser can sample its pixels. */
+  coverUrl?: string | null;
   /** An empty marker at the foot of the hero, for the page's
    *  `StudioStickyHeader` to watch. */
   sentinelRef?: Ref<HTMLDivElement>;
@@ -87,6 +91,7 @@ export function StudioDetailHero({
   actionsClassName,
   isActionsCompact = false,
   tint = "default",
+  coverUrl,
   sentinelRef,
   className,
   children,
@@ -95,6 +100,9 @@ export function StudioDetailHero({
   isBandAvatarShown = true,
 }: StudioDetailHeroProps) {
   const { reducedMotion } = useMotionPrefs();
+  const coverTint = useStudioCoverTint(coverUrl);
+  // The light topbar washes in the same colour while this hero is up.
+  useStudioPageTint(coverTint);
   // Read once at mount: the morph is done long before any later render.
   const [isLandingInMorph] = useState(isStudioMorphRunning);
   // Tells a waiting morph the destination page is up, so it captures it.
@@ -119,6 +127,12 @@ export function StudioDetailHero({
       className={[styles.detailHero, className].filter(Boolean).join(" ")}
       data-tint={tint}
       data-variant={variant === "default" ? undefined : variant}
+      data-cover-tint={coverTint ? "" : undefined}
+      style={
+        coverTint
+          ? ({ "--hero-cover-tint": coverTint } as CSSProperties)
+          : undefined
+      }
     >
       <span className={styles.detailWash} aria-hidden="true" />
       {isFullBleed ? (

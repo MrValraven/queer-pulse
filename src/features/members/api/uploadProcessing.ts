@@ -41,9 +41,11 @@ export const ALLOWED = new Set<UploadContentType>([
 const MB = 1024 * 1024;
 
 export interface UploadLimit {
-  /** Hard byte cap — mirrors the server's per-kind cap. */
+  /** Hard byte cap, mirroring the server's per-kind cap. Checked against the
+   *  processed upload blob (see `processImage`); only a GIF or a
+   *  `PASSTHROUGH_KINDS` file has its original checked against it. */
   maxBytes: number;
-  /** Human label for the cap, used in the error message ("5 MB"). */
+  /** Human label for the cap, used in the error message ("7 MB"). */
   maxLabel: string;
   /** Minimum pixel dimensions, when the surface needs them. */
   minWidth?: number;
@@ -56,17 +58,17 @@ export interface UploadLimit {
  * authoritative, this just gives the member instant, friendly feedback.
  */
 export const UPLOAD_LIMITS: Record<UploadKind, UploadLimit> = {
-  avatar: { maxBytes: 5 * MB, maxLabel: "5 MB", minWidth: 200, minHeight: 200 },
+  avatar: { maxBytes: 7 * MB, maxLabel: "7 MB", minWidth: 200, minHeight: 200 },
   // A group chat's photo — same constraints as a member avatar.
   "group-avatar": {
-    maxBytes: 5 * MB,
-    maxLabel: "5 MB",
+    maxBytes: 7 * MB,
+    maxLabel: "7 MB",
     minWidth: 200,
     minHeight: 200,
   },
   "gathering-photo": {
-    maxBytes: 5 * MB,
-    maxLabel: "5 MB",
+    maxBytes: 7 * MB,
+    maxLabel: "7 MB",
     minWidth: 200,
     minHeight: 200,
   },
@@ -94,10 +96,10 @@ export const UPLOAD_LIMITS: Record<UploadKind, UploadLimit> = {
     minWidth: 1500,
     minHeight: 500,
   },
-  // Listing gallery photo — landscape, matches the "≥1200px wide · under 5MB" hint.
+  // Listing gallery photo — landscape, matches the "≥1200px wide · under 7MB" hint.
   "listing-photo": {
-    maxBytes: 5 * MB,
-    maxLabel: "5 MB",
+    maxBytes: 7 * MB,
+    maxLabel: "7 MB",
     minWidth: 1200,
     minHeight: 600,
   },
@@ -135,11 +137,11 @@ export const UPLOAD_LIMITS: Record<UploadKind, UploadLimit> = {
   },
   // A community's square identity mark, shown beside its name next to the wide
   // `community-cover` banner. Same constraints as a member/group avatar (min
-  // 200 × 200px, under 5 MB), which is also the backend's own cap for the
+  // 200 × 200px, under 7 MB), which is also the backend's own cap for the
   // `community-avatar` upload kind.
   "community-avatar": {
-    maxBytes: 5 * MB,
-    maxLabel: "5 MB",
+    maxBytes: 7 * MB,
+    maxLabel: "7 MB",
     minWidth: 200,
     minHeight: 200,
   },
@@ -171,15 +173,61 @@ export const UPLOAD_LIMITS: Record<UploadKind, UploadLimit> = {
   studio_audio: { maxBytes: 50 * MB, maxLabel: "50 MB" },
 };
 
-/** Type + size guards. Throws a human-readable `Error` the UI shows in role="alert". */
+/**
+ * Size ceiling for an ORIGINAL photo that is about to be re-encoded. The
+ * per-kind `maxBytes` cap is checked on the processed blob inside
+ * `processImage`, because a 7 MB phone photo comes out of `stripMetadata` at
+ * a few hundred KB. This ceiling exists so a phone browser does not run out
+ * of memory decoding a huge original before the shrink can happen.
+ */
+export const MAX_SOURCE_BYTES = 40 * MB;
+const MAX_SOURCE_LABEL = "40 MB";
+
+/**
+ * Upload kinds whose file passes through `stripMetadata` byte for byte (see
+ * the `kind === "sticker"` branch there). Nothing shrinks them, so their
+ * ORIGINAL size is what uploads and has to fit the kind's cap up front.
+ */
+const PASSTHROUGH_KINDS: ReadonlySet<UploadKind> = new Set<UploadKind>([
+  "sticker",
+]);
+
+/**
+ * Type + size guards on the picked file, run before any decode. Throws an
+ * `ImageProcessingError` the UI shows in role="alert".
+ *   - A GIF is sanitized in place and never re-encoded (that keeps its
+ *     animation), so its original size is what uploads: it has to fit the
+ *     kind's `maxBytes` here, reported as `gifTooLarge`.
+ *   - A `PASSTHROUGH_KINDS` file uploads as picked, so it has to fit the
+ *     kind's `maxBytes` here too, reported as `tooLarge`.
+ *   - Every other image is re-encoded and shrunk first, so the original only
+ *     has to clear `MAX_SOURCE_BYTES` (`sourceTooLarge`). `processImage`
+ *     enforces the kind's `maxBytes` on the blob it produces.
+ */
 export function validateTypeAndSize(file: File, kind: UploadKind): void {
   if (!ALLOWED.has(file.type as UploadContentType)) {
     throw new ImageProcessingError("members:upload.error.unsupportedType");
   }
   const limit = UPLOAD_LIMITS[kind];
-  if (file.size > limit.maxBytes) {
-    throw new ImageProcessingError("members:upload.error.tooLarge", {
-      maxLabel: limit.maxLabel,
+  if (file.type === "image/gif") {
+    if (file.size > limit.maxBytes) {
+      throw new ImageProcessingError("members:upload.error.gifTooLarge", {
+        maxLabel: limit.maxLabel,
+      });
+    }
+    return;
+  }
+  if (PASSTHROUGH_KINDS.has(kind)) {
+    if (file.size > limit.maxBytes) {
+      throw new ImageProcessingError("members:upload.error.tooLarge", {
+        maxLabel: limit.maxLabel,
+      });
+    }
+    return;
+  }
+  if (file.size > MAX_SOURCE_BYTES) {
+    throw new ImageProcessingError("members:upload.error.sourceTooLarge", {
+      maxLabel: MAX_SOURCE_LABEL,
     });
   }
 }
@@ -299,6 +347,16 @@ const WEBP_PASSTHROUGH_QUALITY = 0.9;
 const WEBP_LOSSLESS_QUALITY = 1;
 
 /**
+ * Qualities tried in order when the first encode still comes out over the
+ * kind's `maxBytes` (a detailed photo at a wide-hero cap, or a lossless WebP
+ * screenshot). Two steps below `DOWNSCALE_QUALITY`, applied to WebP and JPEG
+ * output alike: each costs a little visible softness for a real byte saving,
+ * which beats refusing the photo outright. Past the last step the upload is
+ * refused as `tooLarge`.
+ */
+const OVER_CAP_FALLBACK_QUALITIES = [0.72, 0.62] as const;
+
+/**
  * Steepest reduction we allow a single `drawImage` to perform. Canvas
  * downscaling samples a fixed, small neighbourhood of source pixels, so a
  * one-shot 4032px → 1600px draw (2.5×) simply throws most of the source away:
@@ -394,6 +452,53 @@ async function encodeCanvas(
   );
   if (!blob) throw new Error("encode-failed");
   return blob;
+}
+
+/** A copy of `canvas` painted over an opaque white backdrop, for an encode
+ *  into JPEG, which has no alpha channel and would otherwise turn every
+ *  transparent pixel black. */
+function flattenOntoWhite(canvas: HTMLCanvasElement): HTMLCanvasElement {
+  const flattened = makeSmoothCanvas(canvas.width, canvas.height);
+  flattened.ctx.fillStyle = "white";
+  flattened.ctx.fillRect(0, 0, canvas.width, canvas.height);
+  flattened.ctx.drawImage(canvas, 0, 0);
+  return flattened.canvas;
+}
+
+/**
+ * Return `firstBlob` when it already fits the kind's `maxBytes`; otherwise
+ * re-encode `canvas` at each `OVER_CAP_FALLBACK_QUALITIES` step and return the
+ * first result that fits. The fallback stays WebP when the first encode was
+ * WebP. Any other output falls back to JPEG, since `toBlob` ignores quality
+ * for PNG: a PNG source on a browser without WebP encoding is flattened onto
+ * white first (see `flattenOntoWhite`), which is the one case where a
+ * transparent image gives up its alpha, and only once it is over the cap.
+ * Throws `tooLarge` when the last step still does not fit. Every blob here
+ * comes from the canvas, so the fail-closed strip in `stripMetadata` holds.
+ */
+async function encodeWithinCap(
+  canvas: HTMLCanvasElement,
+  firstBlob: Blob,
+  kind: UploadKind,
+): Promise<Blob> {
+  const limit = UPLOAD_LIMITS[kind];
+  if (firstBlob.size <= limit.maxBytes) return firstBlob;
+  const isWebpOutput = firstBlob.type === "image/webp";
+  const isJpegOutput = firstBlob.type === "image/jpeg";
+  const fallbackType = isWebpOutput ? "image/webp" : "image/jpeg";
+  const fallbackCanvas =
+    isWebpOutput || isJpegOutput ? canvas : flattenOntoWhite(canvas);
+  for (const fallbackQuality of OVER_CAP_FALLBACK_QUALITIES) {
+    const fallbackBlob = await encodeCanvas(
+      fallbackCanvas,
+      fallbackType,
+      fallbackQuality,
+    );
+    if (fallbackBlob.size <= limit.maxBytes) return fallbackBlob;
+  }
+  throw new ImageProcessingError("members:upload.error.tooLarge", {
+    maxLabel: limit.maxLabel,
+  });
 }
 
 /**
@@ -563,6 +668,37 @@ function sanitizeGif(bytes: Uint8Array): Uint8Array<ArrayBuffer> {
 }
 
 /**
+ * The first encode of a resampled canvas, at the regular qualities: WebP
+ * wherever the browser can encode it, else the source's own format. The
+ * byte cap is applied afterwards by `encodeWithinCap`.
+ */
+async function encodeFirstPass(
+  canvas: HTMLCanvasElement,
+  sourceType: string,
+  isScaled: boolean,
+): Promise<Blob> {
+  const legacyQuality = isScaled ? DOWNSCALE_QUALITY : PASSTHROUGH_QUALITY;
+  if (!canEncodeWebp()) {
+    // Legacy path: re-encode in the source's own format, exactly as before.
+    return await encodeCanvas(canvas, sourceType, legacyQuality);
+  }
+  const webpQuality = isScaled
+    ? WEBP_DOWNSCALE_QUALITY
+    : sourceType === "image/png"
+      ? WEBP_LOSSLESS_QUALITY
+      : WEBP_PASSTHROUGH_QUALITY;
+  const blob = await encodeCanvas(canvas, "image/webp", webpQuality);
+  // `toBlob` answers PNG for a type it cannot encode rather than failing, and
+  // `canEncodeWebp` is only a probe. So confirm what we actually got and fall
+  // back to the source format, which keeps a multi-MB lossless PNG from
+  // standing in for the WebP we asked for.
+  if (blob.type !== "image/webp") {
+    return await encodeCanvas(canvas, sourceType, legacyQuality);
+  }
+  return blob;
+}
+
+/**
  * Produce an EXIF/GPS-free upload blob — the CLIENT is the authoritative strip
  * (the presigned-upload backend never sees the bytes), so this MUST fail closed:
  * every path either returns metadata-free bytes or throws
@@ -577,7 +713,9 @@ function sanitizeGif(bytes: Uint8Array): Uint8Array<ArrayBuffer> {
  *     output is WebP wherever the browser can encode it — see
  *     `WEBP_DOWNSCALE_QUALITY` and `MAX_RESAMPLE_STEP_RATIO`. A browser that
  *     cannot encode WebP falls back to the source format at the original
- *     quality 0.92 unscaled / 0.8 downscaled.
+ *     quality 0.92 unscaled / 0.8 downscaled. A result over the kind's
+ *     `maxBytes` is re-encoded at `OVER_CAP_FALLBACK_QUALITIES` before it is
+ *     refused (see `encodeWithinCap`).
  */
 async function stripMetadata(
   file: File,
@@ -613,32 +751,9 @@ async function stripMetadata(
       target.width,
       target.height,
     );
-    if (!canEncodeWebp()) {
-      // Legacy path: re-encode in the source's own format, exactly as before.
-      return await encodeCanvas(
-        canvas,
-        file.type,
-        target.scaled ? DOWNSCALE_QUALITY : PASSTHROUGH_QUALITY,
-      );
-    }
-    const webpQuality = target.scaled
-      ? WEBP_DOWNSCALE_QUALITY
-      : file.type === "image/png"
-        ? WEBP_LOSSLESS_QUALITY
-        : WEBP_PASSTHROUGH_QUALITY;
-    const blob = await encodeCanvas(canvas, "image/webp", webpQuality);
-    // `toBlob` answers PNG for a type it cannot encode rather than failing, and
-    // `canEncodeWebp` is a probe, not a promise — so confirm what we actually
-    // got and fall back to the source format rather than uploading a multi-MB
-    // lossless PNG that could exceed the kind's byte cap.
-    if (blob.type !== "image/webp") {
-      return await encodeCanvas(
-        canvas,
-        file.type,
-        target.scaled ? DOWNSCALE_QUALITY : PASSTHROUGH_QUALITY,
-      );
-    }
-    return blob;
+    const firstBlob = await encodeFirstPass(canvas, file.type, target.scaled);
+    // Over the kind's byte cap: step the quality down before refusing.
+    return await encodeWithinCap(canvas, firstBlob, kind);
   } catch (err) {
     if (err instanceof ImageProcessingError) throw err;
     // Fail CLOSED: never ship the un-stripped original.
@@ -754,6 +869,10 @@ function cropDecoded(decoded: Decoded, crop: CropRect): Decoded {
  * story cover, work image, group avatar) since they all funnel through here.
  * Throws a human message on a too-small image, an undecodable file, or an
  * image whose metadata can't be stripped (fail closed — see `stripMetadata`).
+ * The kind's `maxBytes` is enforced here on the processed blob, so a large
+ * phone photo that shrinks under the cap uploads fine; `validateTypeAndSize`
+ * only holds the original to `MAX_SOURCE_BYTES` (GIFs and passthrough kinds
+ * excepted).
  *
  * When `crop` is passed for a `BAKED_CROP_KINDS` kind and is a real reframe
  * (anything `isIdentityCrop` rejects), the crop is cut out of the decoded source first
@@ -794,7 +913,21 @@ export async function processImage(
     ) {
       prepared = cropDecoded(decoded, crop);
     }
-    return await stripMetadata(file, prepared, kind);
+    const processedBlob = await stripMetadata(file, prepared, kind);
+    // The kind's byte cap applies to what actually uploads. A re-encoded
+    // image has already been stepped down in quality to fit it (see
+    // `encodeWithinCap`); this final check also covers a GIF or a
+    // passthrough kind when a caller skipped `validateTypeAndSize`.
+    if (processedBlob.size > limit.maxBytes) {
+      const tooLargeKey =
+        file.type === "image/gif"
+          ? "members:upload.error.gifTooLarge"
+          : "members:upload.error.tooLarge";
+      throw new ImageProcessingError(tooLargeKey, {
+        maxLabel: limit.maxLabel,
+      });
+    }
+    return processedBlob;
   } finally {
     prepared.cleanup();
   }

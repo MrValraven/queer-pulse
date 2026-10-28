@@ -38,7 +38,7 @@ export const TRACK = {
 
 export const SPLIT: SplitRow[] = [
   {
-    c: "var(--accent)",
+    c: "var(--studio-accent)",
     labelKey: "studio:track.sidebar.split.artist.label",
     name: "Mariana Sol",
     subKey: "studio:track.sidebar.split.artist.sub",

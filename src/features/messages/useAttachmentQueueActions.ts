@@ -96,6 +96,10 @@ export function useAttachmentQueueActions({
     (conversationId: string, files: File[]) => {
       for (const file of files) {
         try {
+          // Type, decode-safety ceiling and the GIF cap up front, so a bad
+          // pick toasts before it stages. The 8 MB `message-image` cap is
+          // enforced on the processed blob inside `useUploadImage`
+          // (`startImageUpload` below), so a large phone photo still sends.
           validateTypeAndSize(file, "message-image");
         } catch (err) {
           showToast(resolveUploadErrorMessage("image", err, t), "error");

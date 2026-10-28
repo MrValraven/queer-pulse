@@ -170,22 +170,52 @@
 
 /* Desktop bar row: the search field and the "Refine" pill share one line, so
    the bar is a single compact strip until the drawer is opened. */
-/* Search field, "use my location", "Refine", List/Map on one line, every control
-   the same height, so everything that shapes the results sits together and the
-   results header below is left to report what they found. A grid, because
-   the location control brings a note with it: that note is
-   placed on a second line (see `nearMeInline` in DirectoryPage.module.css),
-   where it can't stretch the field above it. */
+/* Search field, "use my location", "Refine", the results count and List/Map on
+   one line, every control the same height, so everything that shapes the
+   results sits together with what they found. A grid, because the location
+   control brings a note with it: that note is placed on a second line (see
+   `nearMeInline` in DirectoryPage.module.css), where it can't stretch the
+   field above it. The search field takes the flexible column; each control
+   after it gets one sized to fit, `--bar-controls` of them, set by
+   `LocalFilterFields` from the controls this row carries (the full screen
+   map's card has two). */
 .barRow {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  grid-template-columns: minmax(0, 1fr) repeat(var(--bar-controls, 3), auto);
   align-items: stretch;
   gap: 6px 12px;
 }
-/* The same row inside the full screen map's card, which drops the view
-   switcher and so needs one column fewer. */
-.barRowOverlay {
-  grid-template-columns: minmax(0, 1fr) auto auto;
+/* The page's row with the results count on it: one more column. */
+.barRowWithCount {
+  grid-template-columns:
+    minmax(0, 1fr) repeat(var(--bar-controls, 3), auto)
+    auto;
+}
+/* The count reads as a status line beside the controls: one line, centred on
+   the 40px controls. The cell is as tall as the row's first line only (the
+   near-me note sits on the second), so centring in it centres on the buttons. */
+.countSlot {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+/* A narrow desktop can't spare the count's width without squeezing the search
+   field, so the count drops to the second line, under the field and beside
+   the near-me note, and the row gives its column back. */
+@media (max-width: 1180px) {
+  .barRowWithCount {
+    grid-template-columns: minmax(0, 1fr) repeat(var(--bar-controls, 3), auto);
+  }
+  .countSlot {
+    grid-row: 2;
+    grid-column: 1;
+    /* The field's column can be narrower than the longest sentence, so the
+       count wraps inside it and stays clear of the near-me note. */
+    white-space: normal;
+    /* Off the controls' line, so it drops the 40px box `.count` keeps to
+       centre itself against them. */
+    --results-control-h: auto;
+  }
 }
 /* The view switcher closes the row. A little extra air and a hairline set it
    apart from the three controls that narrow the results: this one chooses how

@@ -78,6 +78,7 @@ export function StudioShowHero({
   return (
     <>
       <StudioDetailHero
+        coverUrl={release.coverUrl}
         isActionsCompact={isCompact}
         art={
           <StudioReleaseCoverArt

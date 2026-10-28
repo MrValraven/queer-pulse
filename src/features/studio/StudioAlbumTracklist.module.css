@@ -1,5 +1,5 @@
-/* The album tracklist: the shared track rows carry their own spacing and
-   hover wash, so the list adds none. */
+/* The album tracklist: the shared track rows carry their own spacing,
+   hairlines and hover wash, so the list adds none. */
 .list {
   margin: 0;
   padding: 0;

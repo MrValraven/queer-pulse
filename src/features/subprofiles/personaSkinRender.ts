@@ -48,6 +48,9 @@ export type PersonaAction =
   | "people:endorsers"
   | "people:followers";
 
+/** A bare `yyyy-mm-dd`, what the gig day picker stores. */
+const DAY_ONLY_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
 /**
  * Is a freeform item date ("14 Mar 2026", "2026", "Feb 2026") in the future?
  * Not stored — derived at render. `Date.parse` handles every format the
@@ -55,6 +58,13 @@ export type PersonaAction =
  */
 export function isUpcoming(date: string | null | undefined): boolean {
   if (!date) return false;
+  if (DAY_ONLY_DATE_PATTERN.test(date)) {
+    // A bare `yyyy-mm-dd` parses to UTC midnight, which would drop tonight's
+    // gig into "Played" at the start of its own day. It stays upcoming until
+    // the local day ends.
+    const endOfDay = new Date(`${date}T23:59:59.999`).getTime();
+    return !Number.isNaN(endOfDay) && endOfDay > Date.now();
+  }
   const parsed = Date.parse(date);
   if (Number.isNaN(parsed)) return false;
   return parsed > Date.now();

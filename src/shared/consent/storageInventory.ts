@@ -375,7 +375,7 @@ export const STORAGE_INVENTORY: StorageEntry[] = [
       "qp:demo:roadmap:v2",
       "qp-employer-affiliation",
       "qp-posted-jobs",
-      "qp.demo.studioLibrarySeeded.v3",
+      "qp.demo.studioLibrarySeeded.v4",
     ],
     kind: "localStorage",
     category: "functional",

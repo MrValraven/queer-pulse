@@ -150,14 +150,133 @@
   padding-block: 0;
 }
 
-/* Studio home hero: Play, Save and Tip in one row, each styled by its own
-   control (StudioPlayButton, Button). */
+/* Studio home hero: Play, the heart and Tip in one row. Play keeps its own
+   accent pill (StudioPlayButton); the heart and Tip take the release hero's
+   button shape: 10px corners, a 44px tap target, 16px icons. The :where()
+   guard keeps Play out at (0,1,1), under its own (0,3,0) rules. */
 .homeHeroActions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   margin-top: 26px;
+}
+.homeHeroActions button:where(:not([data-size="hero"] *)) {
+  gap: 8px;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  border-radius: var(--studio-control-radius);
+  min-height: var(--tap-min);
+  padding: 10px 18px;
+}
+.homeHeroActions button:where(:not([data-size="hero"] *)) svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+.homeHeroActions
+  button:where(:not([data-size="hero"] *)):active:not([aria-disabled="true"]) {
+  transform: scale(0.97);
+}
+/* Where the release heroes go icon-only, the heart and Tip turn into square
+   44px icon buttons, so the row keeps one line beside the cover. */
+.homeHeroActions[data-compact] {
+  gap: 10px 6px;
+}
+.homeHeroActions:where([data-compact])
+  button:where(:not([data-size="hero"] *)) {
+  width: var(--tap-min);
+  min-width: var(--tap-min);
+  height: var(--tap-min);
+  padding: 0;
+}
+.homeHeroActions:where([data-compact])
+  button:where(:not([data-size="hero"] *))
+  svg {
+  width: 18px;
+  height: 18px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .homeHeroActions
+    button:where(:not([data-size="hero"] *)):active:not(
+      [aria-disabled="true"]
+    ) {
+    transform: none;
+  }
+}
+:global(html[data-reduce-motion="true"])
+  .homeHeroActions
+  button:where(:not([data-size="hero"] *)):active:not([aria-disabled="true"]) {
+  transform: none;
+}
+/* Light: the release hero's neutral fills. A grey wash at rest, a deeper
+   one on hover and press (through the kit Button's hooks, which its own
+   (0,4,0) state rules read), a clear border and the Studio icon colour, so
+   Tip's gift is the row's coral. A liked heart keeps the same grey fills
+   and shows its state through the coral icon. */
+:global(:root:not([data-theme="dark"]))
+  .homeHeroActions
+  button:where(:not([data-size="hero"] *)) {
+  color: var(--studio-text);
+  background: var(--studio-wash-2);
+  --button-quiet-hover: var(--studio-wash-3);
+  --button-quiet-active: var(--studio-wash-3);
+  --button-icon-hover: var(--studio-wash-3);
+  border: 1px solid transparent;
+}
+:global(:root:not([data-theme="dark"]))
+  .homeHeroActions
+  button:where(:not([data-size="hero"] *))
+  svg {
+  color: var(--studio-icon);
+}
+:global(:root:not([data-theme="dark"]))
+  .homeHeroActions
+  button:where(:not([data-size="hero"] *))[aria-pressed="true"] {
+  background: var(--studio-wash-2);
+  --button-quiet-hover: var(--studio-wash-3);
+  --button-quiet-active: var(--studio-wash-3);
+  --button-icon-hover: var(--studio-wash-3);
+}
+:global(:root:not([data-theme="dark"]))
+  .homeHeroActions
+  button:where(:not([data-size="hero"] *))[aria-pressed="true"]
+  svg {
+  color: var(--studio-accent);
+}
+/* Dark keeps the colours the row had before: the heart on the kit's quiet
+   wash (the icon-only heart wears it too) and Tip on the soft accent tint
+   with accent words. */
+:global([data-theme="dark"])
+  .homeHeroActions:where([data-compact])
+  button:where(:not([data-size="hero"] *)) {
+  background: rgba(var(--ink-rgb), 0.06);
+  color: var(--ink);
+  --button-icon-hover: rgba(var(--ink-rgb), 0.1);
+}
+:global([data-theme="dark"]) .homeHeroActions .homeHeroTip {
+  background: rgba(var(--accent-rgb), 0.16);
+  color: var(--accent-text);
+  --button-quiet-hover: rgba(var(--accent-rgb), 0.2);
+  --button-quiet-active: rgba(var(--accent-rgb), 0.16);
+  --button-icon-hover: rgba(var(--accent-rgb), 0.2);
+}
+@media (hover: hover) {
+  :global(:root:not([data-theme="dark"]))
+    .homeHeroActions
+    button:where(:not([data-size="hero"] *)):hover {
+    background: var(--studio-wash-3);
+  }
+  :global(:root:not([data-theme="dark"]))
+    .homeHeroActions
+    button:where(:not([data-size="hero"] *))[aria-pressed="true"]:hover {
+    background: var(--studio-wash-3);
+  }
+  :global([data-theme="dark"])
+    .homeHeroActions
+    .homeHeroTip:hover:not(:disabled):not([aria-disabled="true"]) {
+    color: var(--accent-text);
+  }
 }
 
 /* Studio home: shelves run out through the page gutter (the shell's
