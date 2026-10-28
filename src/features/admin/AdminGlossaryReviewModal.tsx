@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { todayIso } from "../../shared/lib/date";
 import { AdminModal } from "./ui";
 import { useReviewGlossaryTerm } from "./api/useAdminResourceGuideMutations";
@@ -54,11 +54,7 @@ export function AdminGlossaryReviewModal({
         },
         onError: (error) =>
           showToast(
-            describeError(
-              t("admin:adminGlossary.error.review"),
-              error,
-              t("shared:apiError.tryAgainTail"),
-            ),
+            describeErrorToast(t("admin:adminGlossary.error.review"), error),
             "error",
           ),
       },

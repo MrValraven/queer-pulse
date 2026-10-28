@@ -1,7 +1,7 @@
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { ApiError } from "../../../shared/api/client";
-import { describeError } from "../../../shared/api/errorMessage";
+import { describeErrorToast } from "../../../shared/api/errorMessage";
 import type {
   AdminStickerPackResponse,
   AdminStickerResponse,
@@ -58,10 +58,7 @@ export function useStickerPackActions({
   const updateSticker = useUpdateSticker();
 
   function toastError(messageKey: string, cause: unknown) {
-    showToast(
-      describeError(t(messageKey), cause, t("shared:apiError.tryAgainTail")),
-      "error",
-    );
+    showToast(describeErrorToast(t(messageKey), cause), "error");
   }
 
   /** Resolves once the pack list has refetched (the mutation's own

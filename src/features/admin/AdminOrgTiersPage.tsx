@@ -4,7 +4,7 @@ import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { AdminPageHeader, AdminModal } from "./ui";
 import { routes } from "../../app/routeMap";
 import { ApiError } from "../../shared/api/client";
@@ -48,11 +48,7 @@ export function AdminOrgTiersPage() {
       {
         onError: (error) =>
           showToast(
-            describeError(
-              t("admin:errors.updateTier"),
-              error,
-              t("shared:apiError.tryAgainTail"),
-            ),
+            describeErrorToast(t("admin:errors.updateTier"), error),
             "error",
           ),
       },
@@ -67,11 +63,7 @@ export function AdminOrgTiersPage() {
         showToast(t("admin:orgTier.toast.removed", { name }), "info"),
       onError: (error) =>
         showToast(
-          describeError(
-            t("admin:errors.removeTier"),
-            error,
-            t("shared:apiError.tryAgainTail"),
-          ),
+          describeErrorToast(t("admin:errors.removeTier"), error),
           "error",
         ),
     });

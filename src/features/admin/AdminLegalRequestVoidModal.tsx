@@ -3,7 +3,7 @@ import { FiAlertTriangle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { AdminModal } from "./ui";
 import { useVoidLegalRequest } from "./api/useAdminLegalRequests";
 import {
@@ -55,12 +55,11 @@ export function AdminLegalRequestVoidModal({
         },
         onError: (error) =>
           showToast(
-            describeError(
+            describeErrorToast(
               isLegalRequestConflict(error)
                 ? t("admin:legalRequests.error.alreadyVoided")
                 : t("admin:legalRequests.error.void"),
               error,
-              t("shared:apiError.tryAgainTail"),
             ),
             "error",
           ),

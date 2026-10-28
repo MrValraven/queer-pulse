@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { AdminModal } from "./ui";
 import { useCreateCoop, useUpdateCoop } from "./api/useAdminHousingMutations";
 import {
@@ -61,11 +61,7 @@ export function AdminHousingCoopForm({
           },
           onError: (error) =>
             showToast(
-              describeError(
-                t("admin:errors.saveChanges"),
-                error,
-                t("shared:apiError.tryAgainTail"),
-              ),
+              describeErrorToast(t("admin:errors.saveChanges"), error),
               "error",
             ),
         },
@@ -81,11 +77,7 @@ export function AdminHousingCoopForm({
         },
         onError: (error) =>
           showToast(
-            describeError(
-              t("admin:errors.createCoop"),
-              error,
-              t("shared:apiError.tryAgainTail"),
-            ),
+            describeErrorToast(t("admin:errors.createCoop"), error),
             "error",
           ),
       });

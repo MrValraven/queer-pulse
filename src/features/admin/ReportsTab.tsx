@@ -6,7 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { REASON_LABEL_KEYS } from "../safety/reportReasons";
 import type { ModReport } from "../communities/community.model";
 import { useCommunityReports } from "../communities/api/useCommunityReports";
@@ -84,7 +84,10 @@ export function ReportsTab({ slug }: { slug: string }) {
         onError: (error) => {
           restoreRow(report.id);
           showToast(
-            describeError(t("admin:modPanel.reports.removeErrorToast"), error),
+            describeErrorToast(
+              t("admin:modPanel.reports.removeErrorToast"),
+              error,
+            ),
             "error",
           );
         },

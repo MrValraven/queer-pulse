@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { AdminModal } from "./ui";
 import { ApiError } from "../../shared/api/client";
 import { useUpdatePartnerAdmin } from "./api/useUpdatePartnerAdmin";
@@ -112,11 +112,7 @@ export function AdminPartnerTestimonialModal({
           showToast(
             error instanceof ApiError && error.status === 409
               ? t("admin:partnerTestimonial.quoteNeedsAuthor")
-              : describeError(
-                  t("admin:errors.saveTestimonial"),
-                  error,
-                  t("shared:apiError.tryAgainTail"),
-                ),
+              : describeErrorToast(t("admin:errors.saveTestimonial"), error),
             "error",
           ),
       },

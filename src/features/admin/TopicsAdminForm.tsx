@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { AdminModal } from "./ui";
 import { useCreateTopic, useUpdateTopic } from "./api/TopicsAdminHooks";
 import type { AdminTopicDTO } from "./api/topicsAdmin.api";
@@ -66,11 +66,7 @@ export function TopicsAdminForm({
     const description = draft.description.trim();
     const onError = (cause: unknown) =>
       showToast(
-        describeError(
-          t("admin:topics.form.saveError"),
-          cause,
-          t("shared:apiError.tryAgainTail"),
-        ),
+        describeErrorToast(t("admin:topics.form.saveError"), cause),
         "error",
       );
 

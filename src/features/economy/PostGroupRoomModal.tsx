@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FiClock, FiUser } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSubmitGroupListing } from "./api/useGroupListingOwnerActions";
@@ -65,11 +65,7 @@ export function PostGroupRoomModal({
           return;
         }
         showToast(
-          describeError(
-            t("economy:groupListing.post.failed"),
-            error,
-            t("shared:apiError.tryAgainTail"),
-          ),
+          describeErrorToast(t("economy:groupListing.post.failed"), error),
           "error",
         );
       },

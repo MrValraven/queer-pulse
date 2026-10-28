@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
-import { describeError } from "../../../../shared/api/errorMessage";
+import { describeErrorToast } from "../../../../shared/api/errorMessage";
 import { useAdminRoadmapMutations } from "../../api/useAdminRoadmapMutations";
 import type {
   AdminRoadmapItemDTO,
@@ -156,7 +156,7 @@ export function useBoardDnd(
           onSuccess: onMoved,
           onError: (error) =>
             showToast(
-              describeError(
+              describeErrorToast(
                 t("admin:roadmap.board.menu.moveTo", {
                   column: t(`admin:roadmap.board.column.${column}`),
                 }),

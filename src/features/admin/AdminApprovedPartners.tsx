@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { AdminToggle } from "./ui";
 import { ApiError } from "../../shared/api/client";
 import { useAdminPartners } from "./api/useAdminPartners";
@@ -39,11 +39,7 @@ export function AdminApprovedPartners() {
       {
         onError: (error) =>
           showToast(
-            describeError(
-              t("admin:errors.updatePartner"),
-              error,
-              t("shared:apiError.tryAgainTail"),
-            ),
+            describeErrorToast(t("admin:errors.updatePartner"), error),
             "error",
           ),
       },

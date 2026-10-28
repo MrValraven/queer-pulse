@@ -4,7 +4,7 @@ import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { ApiError } from "../../shared/api/client";
 import { routes } from "../../app/routeMap";
 import { AdminModal, AdminPageHeader } from "./ui";
@@ -53,10 +53,7 @@ export function TopicsAdminPage() {
   });
 
   function toastError(messageKey: string, cause: unknown) {
-    showToast(
-      describeError(t(messageKey), cause, t("shared:apiError.tryAgainTail")),
-      "error",
-    );
+    showToast(describeErrorToast(t(messageKey), cause), "error");
   }
 
   function setArchived(topic: AdminTopicDTO, isArchived: boolean) {

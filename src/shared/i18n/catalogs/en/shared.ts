@@ -362,6 +362,18 @@ export const shared: Catalog = {
   "apiError.generic": "Something went wrong.",
   "apiError.genericRetry": "Something went wrong. Please try again.",
   "apiError.tryAgainTail": " Please try again.",
+  // Two-line error toasts: a short title plus the reason or the next step.
+  "apiError.toast.serverTitle": "Something went wrong on our end",
+  "apiError.toast.serverDetail": "Please try again in a moment.",
+  "apiError.toast.failedTitle": "That didn't go through",
+  "apiError.toast.genericTitle": "Something went wrong",
+  "apiError.toast.retryDetail": "Please try again.",
+  "apiError.toast.offlineTitle": "You're offline",
+  "apiError.toast.offlineDetail": "Check your connection and try again.",
+  "apiError.toast.forbiddenTitle": "You don't have access to that",
+  "apiError.toast.restrictedTitle": "A moderation restriction is in effect",
+  "apiError.toast.restrictedDetail":
+    "You can appeal it from Safety, under Appeal a decision.",
   "apiError.reasonInvalid":
     "Some details weren't accepted. Check them and try again.",
   "apiError.reasonConflict":

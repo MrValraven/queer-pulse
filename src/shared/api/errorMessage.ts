@@ -96,6 +96,11 @@ const DEFAULT_RETRY_TAIL: ReasonCopy = {
   fallback: " Please try again.",
 };
 
+const DEFAULT_RETRY_DETAIL: ReasonCopy = {
+  key: "shared:apiError.toast.retryDetail",
+  fallback: "Please try again.",
+};
+
 /** The registered locale when the member reads a language other than English. */
 function nonEnglishLocale(): ErrorReasonLocale | null {
   if (!reasonLocale) return null;
@@ -238,4 +243,61 @@ function defaultRetryTail(): string {
         DEFAULT_RETRY_TAIL.fallback,
       )
     : DEFAULT_RETRY_TAIL.fallback;
+}
+
+/**
+ * The two lines of an error toast: a short title, plus the line beneath it.
+ * Structural on purpose, so it fits the toast's `{ title; detail? }` message
+ * without this module reaching into the component tree.
+ */
+export interface ErrorToastCopy {
+  title: string;
+  detail: string;
+}
+
+/**
+ * A toast detail line as a full sentence: adds a closing period unless the
+ * text already ends in one, or in "!" or "?".
+ *   asDetailSentence("That name is taken")  → "That name is taken."
+ *   asDetailSentence("Bio is too long.")    → "Bio is too long."
+ */
+export function asDetailSentence(text: string): string {
+  const hasClosingPunctuation = /[.!?]$/.test(text);
+  return hasClosingPunctuation ? text : `${text}.`;
+}
+
+/**
+ * The toast form of `describeError`: the action frame as the title, and the
+ * specific reason (or the next step) as the detail line beneath it.
+ *   describeErrorToast("Couldn't save that co-op", err)
+ *     → { title: "Couldn't save that co-op", detail: "That name is taken." }
+ *       (reason present)
+ *     → { title: "Couldn't save that co-op", detail: "Please try again." }
+ *       (no reason)
+ * `action` is a capitalized phrase; a trailing period is dropped from it.
+ */
+export function describeErrorToast(
+  action: string,
+  error: unknown,
+  /**
+   * The detail line shown when there is no specific reason, so a caller can
+   * name its own next step. Defaults to `shared:apiError.toast.retryDetail`
+   * once `setErrorReasonLocale` has wired a translator, and to the English
+   * "Please try again." before that (early boot, unit tests).
+   */
+  retryDetail?: string,
+): ErrorToastCopy {
+  const title = action.replace(/\.$/, "");
+  const reason = reasonFor(error);
+  if (reason) return { title, detail: asDetailSentence(reason) };
+  return { title, detail: retryDetail ?? defaultRetryDetail() };
+}
+
+function defaultRetryDetail(): string {
+  return reasonLocale
+    ? reasonLocale.translate(
+        DEFAULT_RETRY_DETAIL.key,
+        DEFAULT_RETRY_DETAIL.fallback,
+      )
+    : DEFAULT_RETRY_DETAIL.fallback;
 }

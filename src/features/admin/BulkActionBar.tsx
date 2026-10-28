@@ -5,7 +5,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { useBulkListingAction } from "./api/useBulkListingAction";
 import { BulkPublishConfirmModal } from "./BulkPublishConfirmModal";
 import { BulkRemoveConfirmModal } from "./BulkRemoveConfirmModal";
@@ -75,7 +75,10 @@ export function BulkActionBar({
       onClear();
     } catch (caught) {
       showToast(
-        describeError(t("admin:adminListings.bulk.action.publish"), caught),
+        describeErrorToast(
+          t("admin:adminListings.bulk.action.publish"),
+          caught,
+        ),
         "error",
       );
     }
@@ -87,7 +90,10 @@ export function BulkActionBar({
       onClear();
     } catch (caught) {
       showToast(
-        describeError(t("admin:adminListings.bulk.action.sendBack"), caught),
+        describeErrorToast(
+          t("admin:adminListings.bulk.action.sendBack"),
+          caught,
+        ),
         "error",
       );
     }
@@ -100,7 +106,7 @@ export function BulkActionBar({
       onClear();
     } catch (caught) {
       showToast(
-        describeError(t("admin:adminListings.bulk.action.remove"), caught),
+        describeErrorToast(t("admin:adminListings.bulk.action.remove"), caught),
         "error",
       );
     }

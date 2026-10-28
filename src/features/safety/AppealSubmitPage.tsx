@@ -5,7 +5,7 @@ import { Button, FormField } from "../../shared/components/ui";
 import { SystemStateShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { ApiError } from "../../shared/api/client";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -223,15 +223,11 @@ function AppealForm({
             showToast(t("safety:appealSubmit.awaitingReview"), "error", 6000);
             return;
           }
-          // Everything else stays a toast carrying the reason `describeError`
-          // resolves for the member's language, so a failure never fakes
-          // success.
+          // Everything else stays a toast carrying the reason
+          // `describeErrorToast` resolves for the member's language, so a
+          // failure never fakes success.
           showToast(
-            describeError(
-              t("safety:appealSubmit.errorFrame"),
-              error,
-              t("shared:apiError.tryAgainTail"),
-            ),
+            describeErrorToast(t("safety:appealSubmit.errorFrame"), error),
             "error",
             6000,
           );

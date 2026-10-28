@@ -337,6 +337,18 @@ export const shared: Catalog = {
   "apiError.generic": "Algo correu mal.",
   "apiError.genericRetry": "Algo correu mal. Tenta outra vez.",
   "apiError.tryAgainTail": " Tenta outra vez.",
+  // Avisos de erro em duas linhas: um título curto mais o motivo ou o passo seguinte.
+  "apiError.toast.serverTitle": "Algo correu mal do nosso lado",
+  "apiError.toast.serverDetail": "Tenta outra vez daqui a pouco.",
+  "apiError.toast.failedTitle": "Não foi possível concluir",
+  "apiError.toast.genericTitle": "Algo correu mal",
+  "apiError.toast.retryDetail": "Tenta outra vez.",
+  "apiError.toast.offlineTitle": "Estás offline",
+  "apiError.toast.offlineDetail": "Verifica a tua ligação e tenta outra vez.",
+  "apiError.toast.forbiddenTitle": "Não tens acesso a isso",
+  "apiError.toast.restrictedTitle": "Está em vigor uma restrição de moderação",
+  "apiError.toast.restrictedDetail":
+    "Podes recorrer em Segurança, em Contestar uma decisão.",
   "apiError.reasonInvalid":
     "Alguns dados não foram aceites. Verifica-os e tenta outra vez.",
   "apiError.reasonConflict":

@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { AdminDrawer } from "./ui";
 import { AdminLegalRequestFields } from "./AdminLegalRequestFields";
 import { AdminLegalRequestNotifyFields } from "./AdminLegalRequestNotifyFields";
@@ -66,12 +66,11 @@ export function AdminLegalRequestForm({
 
   function reportFailure(error: unknown) {
     showToast(
-      describeError(
+      describeErrorToast(
         isLegalRequestConflict(error)
           ? t("admin:legalRequests.error.voidedConflict")
           : t("admin:legalRequests.error.save"),
         error,
-        t("shared:apiError.tryAgainTail"),
       ),
       "error",
     );

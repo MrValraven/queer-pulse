@@ -5,7 +5,7 @@ import { AdminPageHeader, AdminTabs } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { routes } from "../../app/routeMap";
 import { useAuth } from "../../app/providers/authContext";
 import { AdminVerificationRows } from "./AdminVerificationRows";
@@ -230,7 +230,7 @@ function ReviewQueueSegment() {
     bulkDecide,
     onApproveError: (caught) => {
       showToast(
-        describeError(
+        describeErrorToast(
           t("admin:verifications.requests.bulk.action.approve"),
           caught,
         ),
@@ -248,7 +248,7 @@ function ReviewQueueSegment() {
       setRejectModalIds(null);
     } catch (caught) {
       showToast(
-        describeError(
+        describeErrorToast(
           t("admin:verifications.requests.bulk.action.reject"),
           caught,
         ),

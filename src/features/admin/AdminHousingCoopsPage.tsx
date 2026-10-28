@@ -4,7 +4,7 @@ import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { AdminPageHeader, AdminModal } from "./ui";
 import { routes } from "../../app/routeMap";
 import { ApiError } from "../../shared/api/client";
@@ -45,11 +45,7 @@ export function AdminHousingCoopsPage() {
       {
         onError: (error) =>
           showToast(
-            describeError(
-              t("admin:errors.updateCoop"),
-              error,
-              t("shared:apiError.tryAgainTail"),
-            ),
+            describeErrorToast(t("admin:errors.updateCoop"), error),
             "error",
           ),
       },
@@ -64,11 +60,7 @@ export function AdminHousingCoopsPage() {
         showToast(t("admin:housingCoop.toast.removed", { name }), "info"),
       onError: (error) =>
         showToast(
-          describeError(
-            t("admin:errors.removeCoop"),
-            error,
-            t("shared:apiError.tryAgainTail"),
-          ),
+          describeErrorToast(t("admin:errors.removeCoop"), error),
           "error",
         ),
     });

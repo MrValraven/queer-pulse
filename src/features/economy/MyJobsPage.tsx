@@ -7,7 +7,7 @@ import {
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCloseJob, useMyJobs } from "./api/jobOwner.hooks";
@@ -53,11 +53,7 @@ export function MyJobsPage() {
       },
       onError: (error) => {
         showToast(
-          describeError(
-            t("economy:myJobs.toast.closeError"),
-            error,
-            t("shared:apiError.tryAgainTail"),
-          ),
+          describeErrorToast(t("economy:myJobs.toast.closeError"), error),
           "error",
         );
         setClosingSlug(null);

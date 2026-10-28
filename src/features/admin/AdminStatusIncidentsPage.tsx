@@ -5,7 +5,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { ApiError } from "../../shared/api/client";
 import { routes } from "../../app/routeMap";
 import { AdminPageHeader } from "./ui";
@@ -47,10 +47,9 @@ export function AdminStatusIncidentsPage() {
         showToast(t("system:statusAdmin.toast.resolved"), "success"),
       onError: (mutationError) =>
         showToast(
-          describeError(
+          describeErrorToast(
             t("system:statusAdmin.error.resolve"),
             mutationError,
-            t("shared:apiError.tryAgainTail"),
           ),
           "error",
         ),

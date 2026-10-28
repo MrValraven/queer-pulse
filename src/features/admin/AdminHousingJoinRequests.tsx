@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { AdminChip } from "./ui";
 import { useAdminJoinRequests } from "./api/useAdminHousingCoops";
 import { useTriageJoinRequest } from "./api/useAdminHousingMutations";
@@ -57,11 +57,7 @@ export function AdminHousingJoinRequests() {
           setResolved((current) => new Set(current).add(request.id)),
         onError: (error) =>
           showToast(
-            describeError(
-              t("admin:errors.saveDecision"),
-              error,
-              t("shared:apiError.tryAgainTail"),
-            ),
+            describeErrorToast(t("admin:errors.saveDecision"), error),
             "error",
           ),
       },

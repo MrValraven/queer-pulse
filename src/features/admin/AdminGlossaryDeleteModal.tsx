@@ -1,7 +1,7 @@
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { AdminModal } from "./ui";
 import { useDeleteGlossaryTerm } from "./api/useAdminResourceGuideMutations";
 import type { AdminGlossaryTermDTO } from "./api/adminResourceGuides.api";
@@ -35,11 +35,7 @@ export function AdminGlossaryDeleteModal({
       },
       onError: (error) =>
         showToast(
-          describeError(
-            t("admin:adminGlossary.error.delete"),
-            error,
-            t("shared:apiError.tryAgainTail"),
-          ),
+          describeErrorToast(t("admin:adminGlossary.error.delete"), error),
           "error",
         ),
     });

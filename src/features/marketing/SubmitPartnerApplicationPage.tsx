@@ -9,7 +9,7 @@ import {
 } from "../../shared/components/ui";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { routes } from "../../app/routeMap";
 import { useAuth } from "../../app/providers/authContext";
 import { useSubmitPartnerForm } from "./useSubmitPartnerForm";
@@ -51,11 +51,7 @@ export function SubmitPartnerApplicationPage() {
       onSuccess: () => window.scrollTo({ top: 0, behavior: "smooth" }),
       onError: (error) =>
         showToast(
-          describeError(
-            t("marketing:submitPartner.errorFrame"),
-            error,
-            t("shared:apiError.tryAgainTail"),
-          ),
+          describeErrorToast(t("marketing:submitPartner.errorFrame"), error),
           "error",
         ),
     });

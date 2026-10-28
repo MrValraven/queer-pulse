@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { ConfirmDialog } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useHousingGroup } from "./api/useHousingGroup";
 import {
@@ -139,10 +139,9 @@ export function HousingGroupDetailPage() {
       onError: (error) => {
         setWithdrawingListing(null);
         showToast(
-          describeError(
+          describeErrorToast(
             t("economy:groupListing.toast.withdrawFailed"),
             error,
-            t("shared:apiError.tryAgainTail"),
           ),
           "error",
         );

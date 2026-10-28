@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { useBulkReviewJoinRequests } from "./api/useBulkReviewJoinRequests";
 
 export type BulkDecisionStatus = "approved" | "declined" | "waitlisted";
@@ -106,14 +106,7 @@ export function useJoinRequestBulkDecision({
       }
       onOutcome(result.succeeded, failedIds);
     } catch (caught) {
-      showToast(
-        describeError(
-          t(FAILURE_FRAME[status]),
-          caught,
-          t("shared:apiError.tryAgainTail"),
-        ),
-        "error",
-      );
+      showToast(describeErrorToast(t(FAILURE_FRAME[status]), caught), "error");
     }
   }
 

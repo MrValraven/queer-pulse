@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FiArchive } from "react-icons/fi";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { useToast } from "../../../../shared/components/feedback/useToast";
-import { describeError } from "../../../../shared/api/errorMessage";
+import { describeErrorToast } from "../../../../shared/api/errorMessage";
 import { Button, EmptyState } from "../../../../shared/components/ui";
 import type { AdminRoadmapItemDTO } from "../../api/roadmapAdmin.types";
 import { useAdminRoadmapMutations } from "../../api/useAdminRoadmapMutations";
@@ -62,11 +62,7 @@ function ArchiveRow({ item }: { item: AdminRoadmapItemDTO }) {
           ),
         onError: (error) =>
           showToast(
-            describeError(
-              t("admin:errors.restoreItem"),
-              error,
-              t("shared:apiError.tryAgainTail"),
-            ),
+            describeErrorToast(t("admin:errors.restoreItem"), error),
             "error",
           ),
       },
@@ -85,11 +81,7 @@ function ArchiveRow({ item }: { item: AdminRoadmapItemDTO }) {
       onError: (error) => {
         setConfirmingDelete(false);
         showToast(
-          describeError(
-            t("admin:errors.deleteItem"),
-            error,
-            t("shared:apiError.tryAgainTail"),
-          ),
+          describeErrorToast(t("admin:errors.deleteItem"), error),
           "error",
         );
       },

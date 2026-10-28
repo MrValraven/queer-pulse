@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { AdminModal } from "./ui";
 import {
   AdminResourceListingContactFields,
@@ -69,11 +69,7 @@ export function AdminResourceListingForm({
           },
           onError: (error) =>
             showToast(
-              describeError(
-                t("admin:errors.saveChanges"),
-                error,
-                t("shared:apiError.tryAgainTail"),
-              ),
+              describeErrorToast(t("admin:errors.saveChanges"), error),
               "error",
             ),
         },
@@ -91,11 +87,7 @@ export function AdminResourceListingForm({
         },
         onError: (error) =>
           showToast(
-            describeError(
-              t("admin:errors.createListing"),
-              error,
-              t("shared:apiError.tryAgainTail"),
-            ),
+            describeErrorToast(t("admin:errors.createListing"), error),
             "error",
           ),
       });

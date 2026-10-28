@@ -5,7 +5,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { useBulkDecideVerificationRequests } from "./api/useAdminVerifications";
 import { VerificationBulkRejectModal } from "./VerificationBulkRejectModal";
 import { VERIFICATION_BULK_ACTION_CAP } from "./api/adminVerifications.api";
@@ -49,7 +49,7 @@ export function VerificationBulkActionBar({
       onClear();
     } catch (caught) {
       showToast(
-        describeError(
+        describeErrorToast(
           t("admin:verifications.requests.bulk.action.approve"),
           caught,
         ),
@@ -64,7 +64,7 @@ export function VerificationBulkActionBar({
       onClear();
     } catch (caught) {
       showToast(
-        describeError(
+        describeErrorToast(
           t("admin:verifications.requests.bulk.action.inReview"),
           caught,
         ),
@@ -80,7 +80,7 @@ export function VerificationBulkActionBar({
       onClear();
     } catch (caught) {
       showToast(
-        describeError(
+        describeErrorToast(
           t("admin:verifications.requests.bulk.action.reject"),
           caught,
         ),

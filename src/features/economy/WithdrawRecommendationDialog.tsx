@@ -1,6 +1,6 @@
 import { ConfirmDialog } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useWithdrawRecommendation } from "./api/useWithdrawRecommendation";
 
@@ -42,10 +42,9 @@ export function WithdrawRecommendationDialog({
       onError: (error) => {
         onClose();
         showToast(
-          describeError(
+          describeErrorToast(
             t("economy:landlordPage.toast.withdrawFailed"),
             error,
-            t("shared:apiError.tryAgainTail"),
           ),
           "error",
         );

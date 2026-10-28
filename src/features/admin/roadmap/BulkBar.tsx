@@ -5,7 +5,7 @@ import { useToast } from "../../../shared/components/feedback/useToast";
 import { useFormat } from "../../../shared/i18n/format";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { describeError } from "../../../shared/api/errorMessage";
+import { describeErrorToast } from "../../../shared/api/errorMessage";
 import { useAdminRoadmapMutations } from "../api/useAdminRoadmapMutations";
 import type {
   RoadmapBulkAction,
@@ -73,7 +73,7 @@ export function BulkBar() {
         },
         onError: (error) =>
           showToast(
-            describeError(
+            describeErrorToast(
               t("admin:roadmap.bulkBar.selectedLabel", { count }),
               error,
             ),

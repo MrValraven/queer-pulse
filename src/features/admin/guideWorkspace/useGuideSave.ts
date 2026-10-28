@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { ApiError } from "../../../shared/api/client";
-import { describeError } from "../../../shared/api/errorMessage";
+import { describeErrorToast } from "../../../shared/api/errorMessage";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
@@ -72,11 +72,7 @@ export function useGuideSave({
 
   function reportError(error: unknown) {
     showToast(
-      describeError(
-        t("admin:adminResourceGuides.error.save"),
-        error,
-        t("shared:apiError.tryAgainTail"),
-      ),
+      describeErrorToast(t("admin:adminResourceGuides.error.save"), error),
       "error",
     );
   }

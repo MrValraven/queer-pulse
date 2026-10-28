@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../../app/routeMap";
 import { ApiError } from "../../../shared/api/client";
-import { describeError } from "../../../shared/api/errorMessage";
+import { describeErrorToast } from "../../../shared/api/errorMessage";
 import { Button, FadeIn, SkeletonLine } from "../../../shared/components/ui";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { AdminShell } from "../../../shared/components/layout/AdminShell";
@@ -45,10 +45,7 @@ export function AdminEmailTemplatesPage() {
   );
 
   function toastError(messageKey: string, cause: unknown) {
-    showToast(
-      describeError(t(messageKey), cause, t("shared:apiError.tryAgainTail")),
-      "error",
-    );
+    showToast(describeErrorToast(t(messageKey), cause), "error");
   }
 
   function toggleActive(template: EmailTemplateAdminDTO) {

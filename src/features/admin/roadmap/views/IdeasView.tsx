@@ -3,7 +3,7 @@ import { Button, EmptyState, Tag } from "../../../../shared/components/ui";
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../../../shared/i18n/format";
-import { describeError } from "../../../../shared/api/errorMessage";
+import { describeErrorToast } from "../../../../shared/api/errorMessage";
 import { useAdminRoadmap } from "../../api/useAdminRoadmap";
 import { useAdminRoadmapMutations } from "../../api/useAdminRoadmapMutations";
 import { useRoadmapModals } from "../state/roadmapModalsHook";
@@ -171,7 +171,7 @@ export function IdeasView({ ideas }: { ideas: AdminRoadmapIdeaDTO[] }) {
         ),
       onError: (error) =>
         showToast(
-          describeError(t("admin:roadmap.toasts.promoteError"), error),
+          describeErrorToast(t("admin:roadmap.toasts.promoteError"), error),
           "error",
         ),
     });

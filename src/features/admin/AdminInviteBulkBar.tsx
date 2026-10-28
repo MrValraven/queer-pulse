@@ -4,7 +4,7 @@ import { FiRefreshCw, FiSlash } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -211,7 +211,7 @@ export function AdminInviteBulkBar({
     } catch (error) {
       setIsConfirmOpen(false);
       onRowLeavingChange(false);
-      showToast(describeError(actionLabel, error), "error");
+      showToast(describeErrorToast(actionLabel, error), "error");
     }
   };
 

@@ -46,7 +46,10 @@ describe("handleQueryError", () => {
   it("toasts an unexpected 5xx", () => {
     handleQueryError(new ApiError(503, "down"), query);
     expect(emit).toHaveBeenCalledWith(
-      "Something went wrong on our end. Please try again.",
+      {
+        title: "Something went wrong on our end",
+        detail: "Please try again in a moment.",
+      },
       "error",
       6000,
     );
@@ -115,7 +118,10 @@ describe("handleQueryError", () => {
       query,
     );
     expect(emit).toHaveBeenCalledWith(
-      "Something went wrong on our end. Please try again.",
+      {
+        title: "Something went wrong on our end",
+        detail: "Please try again in a moment.",
+      },
       "error",
       6000,
     );
@@ -133,10 +139,26 @@ describe("handleQueryError", () => {
   it("toasts a generic message for a non-Api (network) error", () => {
     handleQueryError(new TypeError("Failed to fetch"), query);
     expect(emit).toHaveBeenCalledWith(
-      "Something went wrong. Please try again.",
+      { title: "Something went wrong", detail: "Please try again." },
       "error",
       6000,
     );
+  });
+
+  it("names the lost connection for a network error while offline", () => {
+    const onLineSpy = vi
+      .spyOn(navigator, "onLine", "get")
+      .mockReturnValue(false);
+    handleQueryError(new TypeError("Failed to fetch"), query);
+    expect(emit).toHaveBeenCalledWith(
+      {
+        title: "You're offline",
+        detail: "Check your connection and try again.",
+      },
+      "error",
+      6000,
+    );
+    onLineSpy.mockRestore();
   });
 
   it("is silent in demo mode even for a 5xx", () => {
@@ -176,7 +198,7 @@ describe("handleMutationError", () => {
       mutation,
     );
     expect(emit).toHaveBeenCalledWith(
-      "You don't have access to that.",
+      { title: "You don't have access to that" },
       "error",
       6000,
     );
@@ -220,7 +242,11 @@ describe("handleMutationError", () => {
       undefined,
       { options: {} },
     );
-    expect(emit).toHaveBeenCalledWith("That name is taken", "error", 6000);
+    expect(emit).toHaveBeenCalledWith(
+      { title: "That didn't go through", detail: "That name is taken." },
+      "error",
+      6000,
+    );
   });
 
   it("falls back to the generic 4xx string for a bare status word", () => {
@@ -230,7 +256,11 @@ describe("handleMutationError", () => {
       undefined,
       { options: {} },
     );
-    expect(emit).toHaveBeenCalledWith("Something went wrong.", "error", 6000);
+    expect(emit).toHaveBeenCalledWith(
+      { title: "Something went wrong" },
+      "error",
+      6000,
+    );
   });
 
   it("surfaces a specific 403 reason instead of the access generic", () => {
@@ -241,7 +271,29 @@ describe("handleMutationError", () => {
       { options: {} },
     );
     expect(emit).toHaveBeenCalledWith(
-      "You are blocked from this community",
+      {
+        title: "That didn't go through",
+        detail: "You are blocked from this community.",
+      },
+      "error",
+      6000,
+    );
+  });
+
+  it("names the appeal for a moderation restriction", () => {
+    handleMutationError(
+      new ApiError(403, "Your account is restricted.", {
+        code: "ACCOUNT_RESTRICTED",
+      }),
+      undefined,
+      undefined,
+      { options: {} },
+    );
+    expect(emit).toHaveBeenCalledWith(
+      {
+        title: "A moderation restriction is in effect",
+        detail: "You can appeal it from Safety, under Appeal a decision.",
+      },
       "error",
       6000,
     );
@@ -293,7 +345,11 @@ describe("handleMutationError with a coded refusal", () => {
       { options: {} },
     );
     expect(emit).toHaveBeenCalledWith(
-      "This event's live game has adults rounds. Change their label in the Live game tab first, then turn off 18+",
+      {
+        title: "That didn't go through",
+        detail:
+          "This event's live game has adults rounds. Change their label in the Live game tab first, then turn off 18+.",
+      },
       "error",
       6000,
     );
@@ -317,7 +373,10 @@ describe("handleMutationError with a non-English locale", () => {
       { options: {} },
     );
     expect(emit).toHaveBeenCalledWith(
-      "[shared:apiError.reasonConflict]",
+      {
+        title: "That didn't go through",
+        detail: "[shared:apiError.reasonConflict].",
+      },
       "error",
       6000,
     );

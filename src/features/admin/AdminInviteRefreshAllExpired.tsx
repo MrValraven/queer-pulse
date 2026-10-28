@@ -3,7 +3,7 @@ import { AnimatePresence, m } from "motion/react";
 import { FiRefreshCw } from "react-icons/fi";
 import { Button, ConfirmDialog } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { useRefreshAllExpiredAdminInvites } from "./api/useAdminInvites";
@@ -82,7 +82,10 @@ export function AdminInviteRefreshAllExpired({
       setIsConfirmOpen(false);
       onRowLeavingChange(false);
       showToast(
-        describeError(t("admin:adminInvites.refreshAll.failedAction"), error),
+        describeErrorToast(
+          t("admin:adminInvites.refreshAll.failedAction"),
+          error,
+        ),
         "error",
       );
     }

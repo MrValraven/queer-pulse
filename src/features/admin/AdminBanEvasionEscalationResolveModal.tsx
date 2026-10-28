@@ -2,7 +2,7 @@ import { useId, useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { AdminModal } from "./ui";
 import { useResolveBanEvasionEscalation } from "./api/useAdminBanEvasionEscalations";
 import {
@@ -47,12 +47,11 @@ export function AdminBanEvasionEscalationResolveModal({
         },
         onError: (error) =>
           showToast(
-            describeError(
+            describeErrorToast(
               isEscalationConflict(error)
                 ? t("admin:banEvasionEscalations.error.alreadyResolved")
                 : t("admin:banEvasionEscalations.error.resolve"),
               error,
-              t("shared:apiError.tryAgainTail"),
             ),
             "error",
           ),

@@ -4,7 +4,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { ApiError } from "../../shared/api/client";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import {
   MAX_SUPPORT_OFFER_NOTE_LENGTH,
   type CommunitySupportOption,
@@ -99,11 +99,7 @@ export function AdminSupportModal({
               ? t("community:supportOffer.admin.conflictToast", {
                   name: firstWord ?? "",
                 })
-              : describeError(
-                  t("admin:errors.saveChanges"),
-                  error,
-                  t("shared:apiError.tryAgainTail"),
-                ),
+              : describeErrorToast(t("admin:errors.saveChanges"), error),
             "error",
           );
         },

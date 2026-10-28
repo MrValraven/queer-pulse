@@ -1,7 +1,7 @@
 import { FiAlertTriangle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useUpdateGroupListing } from "./api/useGroupListingOwnerActions";
@@ -29,8 +29,8 @@ import styles from "./ApplicationModals.module.css";
  * is why the decision note on the card points here.
  *
  * A 403 means the signed-in member did not post this room. The API's own
- * message is surfaced through `describeError` rather than being flattened into
- * a generic failure.
+ * message is surfaced through `describeErrorToast` as the toast's detail line,
+ * so the member reads the actual reason.
  */
 export function EditGroupListingModal({
   groupSlug,
@@ -58,10 +58,9 @@ export function EditGroupListingModal({
         },
         onError: (error) => {
           showToast(
-            describeError(
+            describeErrorToast(
               t("economy:groupListing.toast.editFailed"),
               error,
-              t("shared:apiError.tryAgainTail"),
             ),
             "error",
           );

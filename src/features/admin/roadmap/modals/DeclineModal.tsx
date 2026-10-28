@@ -7,7 +7,7 @@ import {
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { Translation } from "../../../../shared/i18n/Translation";
-import { describeError } from "../../../../shared/api/errorMessage";
+import { describeErrorToast } from "../../../../shared/api/errorMessage";
 import { useAdminRoadmap } from "../../api/useAdminRoadmap";
 import { useAdminRoadmapMutations } from "../../api/useAdminRoadmapMutations";
 import type { RoadmapDeclineReason } from "../../api/roadmapAdmin.types";
@@ -59,7 +59,10 @@ export function DeclineModal() {
         },
         onError: (error) =>
           showToast(
-            describeError(t("admin:roadmap.modals.decline.confirmCta"), error),
+            describeErrorToast(
+              t("admin:roadmap.modals.decline.confirmCta"),
+              error,
+            ),
             "error",
           ),
       },

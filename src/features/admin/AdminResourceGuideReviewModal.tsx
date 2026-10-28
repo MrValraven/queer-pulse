@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { todayIso } from "../../shared/lib/date";
 import { AdminModal } from "./ui";
 import { useReviewResourceGuide } from "./api/useAdminResourceGuideMutations";
@@ -70,10 +70,9 @@ export function AdminResourceGuideReviewModal({
         },
         onError: (error) =>
           showToast(
-            describeError(
+            describeErrorToast(
               t("admin:adminResourceGuides.error.review"),
               error,
-              t("shared:apiError.tryAgainTail"),
             ),
             "error",
           ),

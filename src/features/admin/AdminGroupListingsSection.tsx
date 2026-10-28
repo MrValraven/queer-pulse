@@ -5,7 +5,7 @@ import { Button, FadeIn } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { AdminChip } from "./ui";
 import {
   useAdminGroupListings,
@@ -44,7 +44,7 @@ export function AdminGroupListingsSection() {
 
   function showUpdateError(error: Error) {
     showToast(
-      describeError(t("admin:housingGroups.listings.error"), error),
+      describeErrorToast(t("admin:housingGroups.listings.error"), error),
       "error",
     );
   }

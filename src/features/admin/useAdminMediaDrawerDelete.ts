@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ApiError } from "../../shared/api/client";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { type AdminMediaDeleteConflict } from "./api/adminMedia.api";
 import { useDeleteAdminMedia } from "./api/useAdminMedia";
 import type { AdminMediaDeleteRefusal } from "./AdminMediaDeleteConfirm";
@@ -64,11 +64,7 @@ export function useAdminMediaDrawerDelete({
             return;
           }
           showToast(
-            describeError(
-              t("admin:errors.deleteMediaObject"),
-              error,
-              t("shared:apiError.tryAgainTail"),
-            ),
+            describeErrorToast(t("admin:errors.deleteMediaObject"), error),
             "error",
           );
         },

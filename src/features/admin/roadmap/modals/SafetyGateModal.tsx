@@ -2,7 +2,7 @@ import { Button } from "../../../../shared/components/ui";
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { Translation } from "../../../../shared/i18n/Translation";
-import { describeError } from "../../../../shared/api/errorMessage";
+import { describeErrorToast } from "../../../../shared/api/errorMessage";
 import { useAdminRoadmap } from "../../api/useAdminRoadmap";
 import { useAdminRoadmapMutations } from "../../api/useAdminRoadmapMutations";
 import { AdminModal } from "../../ui";
@@ -37,7 +37,7 @@ export function SafetyGateModal() {
         },
         onError: (error) =>
           showToast(
-            describeError(
+            describeErrorToast(
               t("admin:roadmap.modals.safetyGate.confirmCta"),
               error,
             ),

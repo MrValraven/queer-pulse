@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { OwnedPartnerDTO } from "./api/partners.api";
@@ -67,10 +67,9 @@ export function PartnerProfileEditForm({
           showToast(t("marketing:partnerProfileEdit.savedToast"), "success"),
         onError: (error) =>
           showToast(
-            describeError(
+            describeErrorToast(
               t("marketing:partnerProfileEdit.errorToast"),
               error,
-              t("shared:apiError.tryAgainTail"),
             ),
             "error",
           ),

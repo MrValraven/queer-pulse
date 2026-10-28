@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
-import { describeError } from "../../../../shared/api/errorMessage";
+import { describeErrorToast } from "../../../../shared/api/errorMessage";
 import { useAdminRoadmapMutations } from "../../api/useAdminRoadmapMutations";
 import type {
   AdminRoadmapItemDTO,
@@ -44,7 +44,7 @@ export function useRoadmapCardActions(
           ),
         onError: (error) =>
           showToast(
-            describeError(
+            describeErrorToast(
               t("admin:roadmap.board.menu.moveTo", {
                 column: t(`admin:roadmap.board.column.${column}`),
               }),
@@ -72,7 +72,7 @@ export function useRoadmapCardActions(
           ),
         onError: (error) =>
           showToast(
-            describeError(
+            describeErrorToast(
               t(
                 nextPublic
                   ? "admin:roadmap.board.menu.showPublic"
@@ -91,7 +91,7 @@ export function useRoadmapCardActions(
       onSuccess: () => showToast(t("admin:roadmap.toasts.duplicated"), "info"),
       onError: (error) =>
         showToast(
-          describeError(t("admin:roadmap.board.menu.duplicate"), error),
+          describeErrorToast(t("admin:roadmap.board.menu.duplicate"), error),
           "error",
         ),
     });
@@ -108,7 +108,7 @@ export function useRoadmapCardActions(
           ),
         onError: (error) =>
           showToast(
-            describeError(t("admin:roadmap.board.menu.archive"), error),
+            describeErrorToast(t("admin:roadmap.board.menu.archive"), error),
             "error",
           ),
       },
@@ -124,7 +124,7 @@ export function useRoadmapCardActions(
           "info",
         ),
       onError: (error) =>
-        showToast(describeError(t("admin:common.delete"), error), "error"),
+        showToast(describeErrorToast(t("admin:common.delete"), error), "error"),
     });
   }
 

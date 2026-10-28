@@ -1,5 +1,5 @@
 import { ApiError } from "./client";
-import { ACCOUNT_RESTRICTED_COPY, reasonFor } from "./errorMessage";
+import { asDetailSentence, reasonFor } from "./errorMessage";
 import { logError } from "../observability/logger";
 import {
   EMAIL_CODE_REASONS,
@@ -7,8 +7,14 @@ import {
 } from "../../features/auth/api/emailCodeFailure";
 
 type ToastType = "success" | "error" | "info";
+/** A toast's text: a title line, plus an optional detail line beneath it.
+ *  Kept structural so this module stays clear of the component tree. */
+interface ToastMessage {
+  title: string;
+  detail?: string;
+}
 type ToastEmitter = (
-  message: string,
+  message: string | ToastMessage,
   type?: ToastType,
   durationMs?: number,
 ) => void;
@@ -53,23 +59,48 @@ interface ErrorCopy {
   fallback: string;
 }
 
-const COPY = {
-  server: {
-    key: "shared:apiError.server",
-    fallback: "Something went wrong on our end. Please try again.",
+/** The two-line toast copy: a short title, plus the reason or the next step
+ *  on the detail line beneath it. */
+const TOAST_COPY = {
+  serverTitle: {
+    key: "shared:apiError.toast.serverTitle",
+    fallback: "Something went wrong on our end",
   },
-  forbidden: {
-    key: "shared:apiError.forbidden",
-    fallback: "You don't have access to that.",
+  serverDetail: {
+    key: "shared:apiError.toast.serverDetail",
+    fallback: "Please try again in a moment.",
   },
-  accountRestricted: ACCOUNT_RESTRICTED_COPY,
-  generic: {
-    key: "shared:apiError.generic",
-    fallback: "Something went wrong.",
+  failedTitle: {
+    key: "shared:apiError.toast.failedTitle",
+    fallback: "That didn't go through",
   },
-  genericRetry: {
-    key: "shared:apiError.genericRetry",
-    fallback: "Something went wrong. Please try again.",
+  genericTitle: {
+    key: "shared:apiError.toast.genericTitle",
+    fallback: "Something went wrong",
+  },
+  retryDetail: {
+    key: "shared:apiError.toast.retryDetail",
+    fallback: "Please try again.",
+  },
+  offlineTitle: {
+    key: "shared:apiError.toast.offlineTitle",
+    fallback: "You're offline",
+  },
+  offlineDetail: {
+    key: "shared:apiError.toast.offlineDetail",
+    fallback: "Check your connection and try again.",
+  },
+  forbiddenTitle: {
+    key: "shared:apiError.toast.forbiddenTitle",
+    fallback: "You don't have access to that",
+  },
+  restrictedTitle: {
+    key: "shared:apiError.toast.restrictedTitle",
+    fallback: "A moderation restriction is in effect",
+  },
+  restrictedDetail: {
+    key: "shared:apiError.toast.restrictedDetail",
+    fallback: "You can appeal it from Safety, under Appeal a decision.",
   },
 } satisfies Record<string, ErrorCopy>;
 
@@ -93,8 +124,13 @@ function resolve(copy: ErrorCopy | string): string {
   return translate ? translate(copy.key, copy.fallback) : copy.fallback;
 }
 
-/** Human message for an error, or null when it should be handled elsewhere. */
-function messageFor(error: unknown): string | null {
+/** The browser reports no network at all, so the toast can name that cause. */
+function isOffline(): boolean {
+  return typeof navigator !== "undefined" && navigator.onLine === false;
+}
+
+/** Human toast copy for an error, or null when it should be handled elsewhere. */
+function messageFor(error: unknown): ToastMessage | null {
   if (error instanceof ApiError) {
     if (error.status === 401) return null; // auth refresh / onAuthLost owns this
     const errorCode = (error.data as { code?: unknown } | null)?.code;
@@ -102,14 +138,24 @@ function messageFor(error: unknown): string | null {
       typeof errorCode === "string" && Object.hasOwn(CODED_COPY, errorCode)
         ? CODED_COPY[errorCode]
         : undefined;
-    if (codedCopy) return resolve(codedCopy);
+    if (codedCopy) {
+      return {
+        title: resolve(TOAST_COPY.failedTitle),
+        detail: asDetailSentence(resolve(codedCopy)),
+      };
+    }
     if (
       error.status === 503 &&
       (error.data as { code?: string } | null)?.code === "PLATFORM_LOCKED"
     )
       return null; // PlatformLockProvider owns this (maintenance screen)
     if (error.status === 404) return null; // pages own their empty state
-    if (error.status >= 500) return resolve(COPY.server);
+    if (error.status >= 500) {
+      return {
+        title: resolve(TOAST_COPY.serverTitle),
+        detail: resolve(TOAST_COPY.serverDetail),
+      };
+    }
     if (error.status === 403) {
       // A moderation restriction gets its own translated copy naming the
       // appeal, because the appeal is the only route out of a restriction.
@@ -118,13 +164,48 @@ function messageFor(error: unknown): string | null {
       if (
         (error.data as { code?: string } | null)?.code === "ACCOUNT_RESTRICTED"
       ) {
-        return resolve(COPY.accountRestricted);
+        return {
+          title: resolve(TOAST_COPY.restrictedTitle),
+          detail: resolve(TOAST_COPY.restrictedDetail),
+        };
       }
-      return resolve(reasonFor(error) ?? COPY.forbidden);
+      const forbiddenReason = reasonFor(error);
+      if (forbiddenReason) {
+        return {
+          title: resolve(TOAST_COPY.failedTitle),
+          detail: asDetailSentence(resolve(forbiddenReason)),
+        };
+      }
+      return { title: resolve(TOAST_COPY.forbiddenTitle) };
     }
-    return resolve(reasonFor(error) ?? COPY.generic);
+    const reason = reasonFor(error);
+    if (reason) {
+      return {
+        title: resolve(TOAST_COPY.failedTitle),
+        detail: asDetailSentence(resolve(reason)),
+      };
+    }
+    return { title: resolve(TOAST_COPY.genericTitle) };
   }
-  return resolve(reasonFor(error) ?? COPY.genericRetry);
+  // A raw network failure while the browser is offline names that cause and
+  // the way out of it.
+  if (isOffline()) {
+    return {
+      title: resolve(TOAST_COPY.offlineTitle),
+      detail: resolve(TOAST_COPY.offlineDetail),
+    };
+  }
+  const reason = reasonFor(error);
+  if (reason) {
+    return {
+      title: resolve(TOAST_COPY.failedTitle),
+      detail: asDetailSentence(resolve(reason)),
+    };
+  }
+  return {
+    title: resolve(TOAST_COPY.genericTitle),
+    detail: resolve(TOAST_COPY.retryDetail),
+  };
 }
 
 /**
@@ -225,8 +306,8 @@ export function handleQueryError(
   // the failure was unexpected.
   if (query.state?.data !== undefined) return;
   if (error instanceof ApiError && error.status < 500) return;
-  const msg = messageFor(error);
-  if (msg) emit?.(msg, "error", 6000);
+  const message = messageFor(error);
+  if (message) emit?.(message, "error", 6000);
 }
 
 /**
@@ -254,6 +335,6 @@ export function handleMutationError(
   }
   if (demo.current) return;
   if (mutation.options.meta?.silentError) return; // a component owns this write's error UI
-  const msg = messageFor(error);
-  if (msg) emit?.(msg, "error", 6000);
+  const message = messageFor(error);
+  if (message) emit?.(message, "error", 6000);
 }

@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from "react";
 import { useToast } from "../../../../shared/components/feedback/useToast";
-import { describeError } from "../../../../shared/api/errorMessage";
+import { describeErrorToast } from "../../../../shared/api/errorMessage";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type {
   AdminRoadmapItemDTO,
@@ -59,11 +59,7 @@ export function useItemDrawerHandlers({
       {
         onError: (error) =>
           showToast(
-            describeError(
-              t("admin:errors.saveChange"),
-              error,
-              t("shared:apiError.tryAgainTail"),
-            ),
+            describeErrorToast(t("admin:errors.saveChange"), error),
             "error",
           ),
       },
@@ -88,11 +84,7 @@ export function useItemDrawerHandlers({
         {
           onError: (error) =>
             showToast(
-              describeError(
-                t("admin:errors.updateTargetDate"),
-                error,
-                t("shared:apiError.tryAgainTail"),
-              ),
+              describeErrorToast(t("admin:errors.updateTargetDate"), error),
               "error",
             ),
         },
@@ -130,11 +122,7 @@ export function useItemDrawerHandlers({
           ),
         onError: (error) =>
           showToast(
-            describeError(
-              t("admin:errors.updateVisibility"),
-              error,
-              t("shared:apiError.tryAgainTail"),
-            ),
+            describeErrorToast(t("admin:errors.updateVisibility"), error),
             "error",
           ),
       },
@@ -150,11 +138,7 @@ export function useItemDrawerHandlers({
         },
         onError: (error) =>
           showToast(
-            describeError(
-              t("admin:errors.createItem"),
-              error,
-              t("shared:apiError.tryAgainTail"),
-            ),
+            describeErrorToast(t("admin:errors.createItem"), error),
             "error",
           ),
       });
@@ -185,11 +169,7 @@ export function useItemDrawerHandlers({
         },
         onError: (error) =>
           showToast(
-            describeError(
-              t("admin:errors.archiveItem"),
-              error,
-              t("shared:apiError.tryAgainTail"),
-            ),
+            describeErrorToast(t("admin:errors.archiveItem"), error),
             "error",
           ),
       },
@@ -206,11 +186,7 @@ export function useItemDrawerHandlers({
       },
       onError: (error) =>
         showToast(
-          describeError(
-            t("admin:errors.deleteItem"),
-            error,
-            t("shared:apiError.tryAgainTail"),
-          ),
+          describeErrorToast(t("admin:errors.deleteItem"), error),
           "error",
         ),
     });

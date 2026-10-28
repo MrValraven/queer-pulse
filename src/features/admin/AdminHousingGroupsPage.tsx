@@ -4,7 +4,7 @@ import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { ApiError } from "../../shared/api/client";
 import { routes } from "../../app/routeMap";
 import { AdminPageHeader, AdminChip } from "./ui";
@@ -75,7 +75,7 @@ export function AdminHousingGroupsPage() {
           setResolved((current) => new Set(current).add(request.id)),
         onError: (mutationError) =>
           showToast(
-            describeError(
+            describeErrorToast(
               t("admin:housingGroups.requests.error"),
               mutationError,
             ),

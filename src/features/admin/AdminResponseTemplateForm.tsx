@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { AdminModal } from "./ui";
 import {
   useCreateModResponseTemplate,
@@ -95,10 +95,9 @@ export function AdminResponseTemplateForm({
     };
     const onError = (error: unknown) =>
       showToast(
-        describeError(
+        describeErrorToast(
           t("admin:moderation.templates.form.saveError"),
           error,
-          t("shared:apiError.tryAgainTail"),
         ),
         "error",
       );

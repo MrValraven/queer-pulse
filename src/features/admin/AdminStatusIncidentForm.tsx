@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { describeError } from "../../shared/api/errorMessage";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { AdminDrawer } from "./ui";
 import {
   useCreateStatusIncident,
@@ -64,11 +64,7 @@ export function AdminStatusIncidentForm({
           },
           onError: (error) =>
             showToast(
-              describeError(
-                t("system:statusAdmin.error.save"),
-                error,
-                t("shared:apiError.tryAgainTail"),
-              ),
+              describeErrorToast(t("system:statusAdmin.error.save"), error),
               "error",
             ),
         },
@@ -83,11 +79,7 @@ export function AdminStatusIncidentForm({
       },
       onError: (error) =>
         showToast(
-          describeError(
-            t("system:statusAdmin.error.create"),
-            error,
-            t("shared:apiError.tryAgainTail"),
-          ),
+          describeErrorToast(t("system:statusAdmin.error.create"), error),
           "error",
         ),
     });

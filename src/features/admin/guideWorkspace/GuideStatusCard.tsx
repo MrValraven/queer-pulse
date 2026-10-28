@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useAuth } from "../../../app/providers/authContext";
-import { describeError } from "../../../shared/api/errorMessage";
+import { describeErrorToast } from "../../../shared/api/errorMessage";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -85,11 +85,7 @@ export function GuideStatusCard({
         },
         onError: (error) =>
           showToast(
-            describeError(
-              t("admin:guideWorkspace.error.publish"),
-              error,
-              t("shared:apiError.tryAgainTail"),
-            ),
+            describeErrorToast(t("admin:guideWorkspace.error.publish"), error),
             "error",
           ),
       },

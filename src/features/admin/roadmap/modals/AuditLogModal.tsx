@@ -3,7 +3,7 @@ import { Button } from "../../../../shared/components/ui";
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { Translation } from "../../../../shared/i18n/Translation";
-import { describeError } from "../../../../shared/api/errorMessage";
+import { describeErrorToast } from "../../../../shared/api/errorMessage";
 import { formatDate } from "../../../../shared/lib/date";
 import { useDemoMode } from "../../../../app/providers/DemoModeProvider";
 import { useAdminRoadmap } from "../../api/useAdminRoadmap";
@@ -45,7 +45,7 @@ export function AuditLogModal() {
       showToast(t("admin:roadmap.toasts.auditExported"), "success");
     } catch (error) {
       showToast(
-        describeError(t("admin:roadmap.modals.auditLog.exportCta"), error),
+        describeErrorToast(t("admin:roadmap.modals.auditLog.exportCta"), error),
         "error",
       );
     } finally {

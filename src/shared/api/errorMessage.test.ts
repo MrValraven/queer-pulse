@@ -1,7 +1,9 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { ApiError } from "./client";
 import {
+  asDetailSentence,
   describeError,
+  describeErrorToast,
   isAccountRestricted,
   isInviteBlocked,
   reasonFor,
@@ -115,6 +117,75 @@ describe("describeError", () => {
     expect(
       describeError("Couldn't save that co-op", new ApiError(500, "boom")),
     ).toBe("Couldn't save that co-op. Please try again.");
+  });
+});
+
+describe("asDetailSentence", () => {
+  it("adds a full stop unless the text already ends its sentence", () => {
+    expect(asDetailSentence("That name is taken")).toBe("That name is taken.");
+    expect(asDetailSentence("Bio is too long.")).toBe("Bio is too long.");
+    expect(asDetailSentence("Are you sure?")).toBe("Are you sure?");
+    expect(asDetailSentence("Done!")).toBe("Done!");
+  });
+});
+
+describe("describeErrorToast", () => {
+  it("puts the action in the title and the reason on the detail line", () => {
+    expect(
+      describeErrorToast(
+        "Couldn't save that co-op",
+        new ApiError(409, "That name is taken"),
+      ),
+    ).toEqual({
+      title: "Couldn't save that co-op",
+      detail: "That name is taken.",
+    });
+  });
+
+  it("keeps a reason that already ends its sentence as it is", () => {
+    expect(
+      describeErrorToast(
+        "Couldn't save",
+        new ApiError(422, "Bio is too long."),
+      ),
+    ).toEqual({ title: "Couldn't save", detail: "Bio is too long." });
+  });
+
+  it("drops a trailing period from the action", () => {
+    expect(
+      describeErrorToast("Couldn't save.", new ApiError(409, "Taken")).title,
+    ).toBe("Couldn't save");
+  });
+
+  it("falls back to please-try-again with no reason", () => {
+    expect(
+      describeErrorToast(
+        "Couldn't save that co-op",
+        new TypeError("Failed to fetch"),
+      ),
+    ).toEqual({
+      title: "Couldn't save that co-op",
+      detail: "Please try again.",
+    });
+    expect(
+      describeErrorToast("Couldn't save that co-op", new ApiError(500, "boom")),
+    ).toEqual({
+      title: "Couldn't save that co-op",
+      detail: "Please try again.",
+    });
+  });
+
+  it("uses the caller's own next step when there is no reason", () => {
+    expect(
+      describeErrorToast(
+        "Couldn't send",
+        new ApiError(500, "boom"),
+        "Refresh the page and try again.",
+      ),
+    ).toEqual({
+      title: "Couldn't send",
+      detail: "Refresh the page and try again.",
+    });
   });
 });
 
@@ -278,5 +349,29 @@ describe("reasonFor and describeError with a registered locale", () => {
     expect(describeError("Frame", new ApiError(409, "Conflict"))).toBe(
       "Frame. Please try again.",
     );
+  });
+
+  it("translates the default toast detail once a translator is registered", () => {
+    registerLanguage("pt");
+    expect(
+      describeErrorToast("Frame", new TypeError("Failed to fetch")),
+    ).toEqual({
+      title: "Frame",
+      detail: "[shared:apiError.toast.retryDetail]",
+    });
+    expect(
+      describeErrorToast(
+        "Frame",
+        new TypeError("Failed to fetch"),
+        "Own step.",
+      ),
+    ).toEqual({ title: "Frame", detail: "Own step." });
+  });
+
+  it("puts the translated status reason on the toast detail line", () => {
+    registerLanguage("pt");
+    expect(
+      describeErrorToast("Frame", new ApiError(409, "That name is taken")),
+    ).toEqual({ title: "Frame", detail: "[shared:apiError.reasonConflict]." });
   });
 });
