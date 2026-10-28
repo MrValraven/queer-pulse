@@ -21,6 +21,15 @@ const GLYPHS: Record<ToastType, ComponentType> = {
   info: FiInfo,
 };
 
+/**
+ * The action joins the title's row only when the title and the action label
+ * fit there on one line. With the action beside it, the full-width card
+ * leaves the title about 180px for an action like "Desfazer", roughly 24
+ * characters at the title's size, and a shorter label hands its width
+ * back to the title, so the budget counts both.
+ */
+const INLINE_ACTION_CHARACTER_BUDGET = 32;
+
 export function ToastCard({
   toast,
   placement,
@@ -28,6 +37,7 @@ export function ToastCard({
   dismissLabel,
   onAction,
   onDismiss,
+  onEscapeDismiss,
   onFocusEnter,
   onFocusExit,
   onMeasure,
@@ -38,6 +48,7 @@ export function ToastCard({
   dismissLabel: string;
   onAction: (toast: ToastItem) => void;
   onDismiss: (id: number) => void;
+  onEscapeDismiss: (id: number) => void;
   onFocusEnter: (id: number) => void;
   onFocusExit: (id: number) => void;
   onMeasure: (id: number, heightPx: number) => void;
@@ -45,7 +56,11 @@ export function ToastCard({
   const cardRef = useRef<HTMLDivElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const Glyph = GLYPHS[toast.type];
-  const hasInlineAction = Boolean(toast.action) && !toast.detail;
+  const hasInlineAction =
+    toast.action !== undefined &&
+    !toast.detail &&
+    toast.title.length + toast.action.label.length <=
+      INLINE_ACTION_CHARACTER_BUDGET;
 
   // The spread deck stacks each card under the measured heights of the cards
   // in front of it, and the folded deck sizes the cards behind to the front
@@ -70,11 +85,11 @@ export function ToastCard({
   }, [toast.id, onMeasure]);
 
   // Escape from either button takes this toast down and stops there, so a
-  // dialog underneath stays open.
+  // dialog underneath stays open. The provider hands focus on first.
   const dismissOnEscape = (event: KeyboardEvent<HTMLButtonElement>) => {
     if (event.key !== "Escape") return;
     event.stopPropagation();
-    onDismiss(toast.id);
+    onEscapeDismiss(toast.id);
   };
 
   const style: ToastStyle = {
@@ -98,6 +113,8 @@ export function ToastCard({
         .filter(Boolean)
         .join(" ")}
       style={style}
+      // Lets the provider find this card's buttons to hand focus to.
+      data-toast-id={toast.id}
       // A leaving card takes no more clicks or focus.
       inert={toast.isLeaving}
       // The hairline drains with the countdown and holds whenever it holds.

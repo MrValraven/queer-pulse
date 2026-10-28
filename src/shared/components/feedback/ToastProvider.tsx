@@ -16,6 +16,7 @@ import {
 import { ToastCard, type ToastStyle } from "./ToastCard";
 import { useCountdownHolds, useToastTimerStore } from "./toastTimers";
 import { useToastDeckHold } from "./useToastDeckHold";
+import { useToastFocusReturn } from "./useToastFocusReturn";
 import styles from "./Toast.module.css";
 
 /** A card leaves the DOM once its exit animation (280ms) has played out. */
@@ -64,6 +65,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     pointerHandlers,
     release: releasePointerHold,
   } = useToastDeckHold();
+  const { focusHandlers, handFocusOn } = useToastFocusReturn(containerRef);
   const [focusedToastId, setFocusedToastId] = useState<number | null>(null);
   const nextId = useRef(0);
   const { timersRef, removalTimeoutIdsRef } = useToastTimerStore();
@@ -157,6 +159,15 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     [timersRef, dismiss],
   );
 
+  // Escape hands focus on before the card goes inert (see useToastFocusReturn).
+  const dismissFromEscape = useCallback(
+    (id: number) => {
+      handFocusOn(id, toasts);
+      dismiss(id);
+    },
+    [handFocusOn, toasts, dismiss],
+  );
+
   const handleFocusEnter = useCallback((id: number) => {
     setFocusedToastId(id);
   }, []);
@@ -201,6 +212,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       dismissLabel={dismissLabel}
       onAction={runAction}
       onDismiss={dismiss}
+      onEscapeDismiss={dismissFromEscape}
       onFocusEnter={handleFocusEnter}
       onFocusExit={handleFocusExit}
       onMeasure={handleMeasure}
@@ -222,6 +234,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         data-has-toasts={hasShowingToasts || undefined}
         data-reduced-motion={isMotionReduced || undefined}
         {...pointerHandlers}
+        {...focusHandlers}
       >
         <ToastRegion politeness="polite">
           {newestFirst
