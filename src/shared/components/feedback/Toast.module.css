@@ -457,7 +457,7 @@
 
 /* Local copies: global keyframes can't be referenced from a CSS module (the
    animation-name gets scoped to a dangling hash), so each module keeps its
-   own. The card keyframes name one end each, and the other end is the card at
+   own. The card keyframes name their moving end, and the other end is the card at
    rest, so a card folded out of view stays out of view once it has arrived. */
 @keyframes qpToastIn {
   from {
