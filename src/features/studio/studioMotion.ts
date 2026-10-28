@@ -37,6 +37,13 @@ export const STUDIO_DISCLOSURE_EXIT = {
   ease: [0.4, 0, 0.2, 1],
 } as const;
 
+/** A tall panel opening, like a Library folder's cards: it ramps in and out
+ *  so the content below never leaps. */
+export const STUDIO_PANEL_OPEN = {
+  duration: 0.32,
+  ease: [0.25, 0.1, 0.25, 1],
+} as const;
+
 /** Seconds between neighbouring items in a staggered first reveal. */
 export const STUDIO_STAGGER = 0.03;
 

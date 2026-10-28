@@ -221,7 +221,10 @@ export function useUploadImage(kind: UploadKind) {
 
   return useCallback(
     async (file: File, options?: UploadOptions): Promise<UploadResult> => {
-      // Guards run above the demo short-circuit so demo validates too.
+      // Guards run above the demo short-circuit so demo validates too. The
+      // original only has to clear the decode-safety ceiling here (a GIF or
+      // sticker still meets the kind's cap); `processImage` enforces the
+      // kind's byte cap on the shrunk blob that actually uploads.
       validateTypeAndSize(file, kind);
       // A baked kind carries its framing in the pixels, so the crop is spent
       // here. It skips `saveCrop` and resolves with no crop (see

@@ -32,12 +32,20 @@ export class MenuFileUploadError extends Error {
   }
 }
 
-/** Throws a `MenuFileUploadError` for a file the backend would refuse. */
+/**
+ * Throws a `MenuFileUploadError` for a file the backend would refuse. Only a
+ * PDF is held to `MENU_FILE_MAX_BYTES` here, because it uploads as picked. A
+ * photo is shrunk and re-encoded by `useUploadImage("listing-menu")` first,
+ * and that pipeline checks the cap on the processed blob (see
+ * `validateTypeAndSize` and `processImage` in `uploadProcessing.ts`).
+ */
 export function validateMenuFile(file: File): void {
-  const isAcceptedType =
-    file.type === PDF_TYPE || MENU_IMAGE_TYPES.has(file.type);
+  const isPdf = file.type === PDF_TYPE;
+  const isAcceptedType = isPdf || MENU_IMAGE_TYPES.has(file.type);
   if (!isAcceptedType) throw new MenuFileUploadError("type");
-  if (file.size > MENU_FILE_MAX_BYTES) throw new MenuFileUploadError("size");
+  if (isPdf && file.size > MENU_FILE_MAX_BYTES) {
+    throw new MenuFileUploadError("size");
+  }
 }
 
 /**

@@ -3,7 +3,7 @@ import { useId, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiGift, FiMusic } from "react-icons/fi";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
-import { Button, EmptyState } from "../../shared/components/ui";
+import { Button, EmptyState, IconButton } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioReleaseCardView } from "./api/studio.adapters";
@@ -19,6 +19,7 @@ import { StudioHeroSkeleton } from "./StudioSkeletons";
 import { StudioTipModal } from "./StudioTipModal";
 import { releaseFactsLine } from "./studioFacts";
 import type { StudioHomeHeroChoice } from "./studioHome.data";
+import { useIsHeroActionsCompact } from "./studioHeroLayout";
 import { STUDIO_FADE } from "./studioMotion";
 import { studioUploadPath } from "./studioPaths";
 import { useStudioShowcase } from "./useStudioShowcase";
@@ -37,7 +38,9 @@ function StudioHomePageHeading() {
 }
 
 /** Play, the heart and (demo) Tip under the hero title. The heart likes
- *  the release into the library; Tip carries a gift icon. */
+ *  the release into the library; Tip carries a gift icon. Where the
+ *  release heroes go icon-only (useIsHeroActionsCompact), the heart and Tip
+ *  turn into square icon buttons with tooltips, so the row keeps one line. */
 function StudioHomeHeroActions({
   release,
 }: {
@@ -50,8 +53,12 @@ function StudioHomeHeroActions({
   const isCurrent = player.isCurrentRelease(release.id);
   const isPlaying = isCurrent && player.status === "playing";
   const isLoading = isCurrent && player.status === "loading";
+  const isCompact = useIsHeroActionsCompact();
+  const tipLabel = t("studio:detail.tipArtistCta", {
+    artist: release.artist.name,
+  });
   return (
-    <div className={kit.homeHeroActions}>
+    <div className={kit.homeHeroActions} data-compact={isCompact || undefined}>
       <StudioPlayButton
         size="hero"
         state={isLoading ? "loading" : isPlaying ? "playing" : "idle"}
@@ -64,13 +71,27 @@ function StudioHomeHeroActions({
           isCurrent ? player.togglePlay() : void player.playRelease(release.id)
         }
       />
-      <StudioReleaseLikeButton release={release} isIconOnly={false} />
-      {isShowcase && (
-        <Button variant="soft" onClick={() => setIsTipOpen(true)}>
-          <FiGift aria-hidden />
-          {t("studio:detail.tipArtistCta", { artist: release.artist.name })}
-        </Button>
-      )}
+      <StudioReleaseLikeButton release={release} isIconOnly={isCompact} />
+      {isShowcase &&
+        (isCompact ? (
+          <IconButton
+            aria-label={tipLabel}
+            tooltip
+            className={kit.homeHeroTip}
+            onClick={() => setIsTipOpen(true)}
+          >
+            <FiGift aria-hidden />
+          </IconButton>
+        ) : (
+          <Button
+            variant="quiet"
+            className={kit.homeHeroTip}
+            onClick={() => setIsTipOpen(true)}
+          >
+            <FiGift aria-hidden />
+            {tipLabel}
+          </Button>
+        ))}
       {isTipOpen && (
         <StudioTipModal
           recipient={release.artist.name}

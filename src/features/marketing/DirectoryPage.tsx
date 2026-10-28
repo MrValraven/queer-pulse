@@ -3,6 +3,10 @@ import { PageMeta } from "../../shared/seo/PageMeta";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { LocalFilterBar } from "./LocalFilterBar";
 import { DirectoryResultsHeader } from "./DirectoryResultsHeader";
+import {
+  DirectoryResultsCount,
+  type DirectoryResultsCountProps,
+} from "./DirectoryResultsCount";
 import { DirectoryVerificationSection } from "./DirectoryVerificationSection";
 import { DirectoryHero } from "./DirectoryHero";
 import { DirectoryResultsView } from "./DirectoryResultsView";
@@ -42,6 +46,21 @@ export function DirectoryPage() {
     mapFallback,
   } = useDirectoryPageState();
 
+  // One count, two homes. On desktop it rides the filter bar's search row,
+  // beside the controls that shape the results, and the results header is
+  // skipped: everything else in it (near-me, the chips) is phone-only. On
+  // phones the header keeps it, with the near-me control beside it.
+  const countProps: DirectoryResultsCountProps = {
+    shown: filtered.length,
+    total: view === "online" ? onlineTotal : serverTotal,
+    loadedCount: places.length,
+    hasMoreFromServer: hasNextPage,
+    mappableCount,
+    loading: loading || isAdultLoading,
+    isError: hasPlacesError,
+    view,
+  };
+
   return (
     <PageShell>
       <PageMeta
@@ -58,20 +77,18 @@ export function DirectoryPage() {
         resultCount={filtered.length}
         nearMeSlot={isMobile ? undefined : nearMe}
         activeFiltersSlot={isMobile ? undefined : activeFilterChips}
+        countSlot={
+          isMobile ? undefined : <DirectoryResultsCount {...countProps} />
+        }
       />
 
-      <DirectoryResultsHeader
-        shown={filtered.length}
-        total={view === "online" ? onlineTotal : serverTotal}
-        loadedCount={places.length}
-        hasMoreFromServer={hasNextPage}
-        mappableCount={mappableCount}
-        loading={loading || isAdultLoading}
-        isError={hasPlacesError}
-        view={view}
-        nearMeSlot={isMobile ? nearMe : undefined}
-        activeFiltersSlot={isMobile ? activeFilterChips : undefined}
-      />
+      {isMobile && (
+        <DirectoryResultsHeader
+          {...countProps}
+          nearMeSlot={nearMe}
+          activeFiltersSlot={activeFilterChips}
+        />
+      )}
 
       <DirectoryResultsView
         view={view}

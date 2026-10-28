@@ -110,6 +110,7 @@ export function StudioPlaylistHero({
 
   return (
     <StudioDetailHero
+      coverUrl={playlist.coverUrls[0]}
       art={
         <StudioPlaylistCover
           coverUrls={playlist.coverUrls}

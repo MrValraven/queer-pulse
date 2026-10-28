@@ -137,6 +137,7 @@ function StudioPlaylistBody({ playlist }: { playlist: StudioPlaylistView }) {
         sentinel={sentinel}
         title={playlist.name}
         tint={playlist.tint}
+        coverUrl={playlist.coverUrls[0]}
         actions={<StudioPlaylistPlayButton playlist={playlist} size="row" />}
         cover={
           <StudioPlaylistCover

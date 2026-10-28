@@ -1,17 +1,8 @@
-/* "Play from 1:23" beside the hero play button when a shared link
-   carries a start time. */
-.playFromLabel {
-  align-self: center;
-  font-size: var(--text-14);
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  color: var(--studio-accent-text);
-}
-
-/* The track "..." in a hero row (track and episode heroes): a round icon
-   button with the fill and border of the hero pills beside it. The doubled
-   class beats the menu's own `.wrap` margin and `.wrap .trigger` (0,2,0),
-   and the attribute picks the trigger alone. */
+/* The track "..." in a hero row (track and episode heroes): a square icon
+   button with the fill and corners of the hero pills beside it, as on the
+   release hero. The doubled class beats the menu's own `.wrap` margin and
+   `.wrap .trigger` (0,2,0), and the attribute picks the trigger alone. The
+   hover adds `:not()` to pass the menu's (0,5,0) hover. */
 .heroMenu.heroMenu {
   margin-block: 0;
 }
@@ -19,17 +10,42 @@
 .heroMenu.heroMenu > button[aria-haspopup] {
   width: var(--tap-min);
   height: var(--tap-min);
-  background: rgba(var(--studio-ink-rgb), 0.08);
-  border: 1px solid var(--studio-line);
-  border-radius: var(--radius-avatar);
+  background: var(--studio-wash-2);
+  border: 1px solid transparent;
+  border-radius: var(--studio-control-radius);
+}
+
+.heroMenu.heroMenu > button[aria-haspopup] svg {
+  color: var(--studio-icon);
 }
 
 .heroMenu.heroMenu > button[aria-haspopup][aria-expanded="true"] {
+  background: var(--studio-wash-3);
+}
+
+@media (hover: hover) {
+  .heroMenu.heroMenu > button[aria-haspopup]:hover:not([aria-disabled="true"]) {
+    background: var(--studio-wash-3);
+  }
+}
+
+/* Dark keeps the trigger's own washes and its visible edge. Its hover
+   shows the menu's lighter wash, as it did before. */
+:global([data-theme="dark"]) .heroMenu.heroMenu > button[aria-haspopup] {
+  background: rgba(var(--studio-ink-rgb), 0.08);
+  border-color: var(--studio-line);
+}
+
+:global([data-theme="dark"])
+  .heroMenu.heroMenu
+  > button[aria-haspopup][aria-expanded="true"] {
   background: rgba(var(--studio-ink-rgb), 0.14);
 }
 
 @media (hover: hover) {
-  .heroMenu.heroMenu > button[aria-haspopup]:hover {
-    background: rgba(var(--studio-ink-rgb), 0.14);
+  :global([data-theme="dark"])
+    .heroMenu.heroMenu
+    > button[aria-haspopup]:hover:not([aria-disabled="true"]) {
+    background: var(--studio-wash-2);
   }
 }

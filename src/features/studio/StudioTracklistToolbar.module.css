@@ -14,6 +14,22 @@
   max-inline-size: 360px;
 }
 
+/* The shared SearchInput's field, squared to the Studio control corners.
+   The element selector outranks its own `.input`, while `.input:focus`
+   still paints the focus edge. */
+.search input {
+  border-radius: var(--studio-control-radius);
+}
+
+/* Daylight: a grey wash with no edge, like the top search; a white field on
+   the white page had no visible boundary. Dark keeps the shared colours. */
+:global(:root:not([data-theme="dark"])) .search input {
+  background: var(--studio-wash-2);
+}
+:global(:root:not([data-theme="dark"])) .search input:not(:focus) {
+  border-color: transparent;
+}
+
 .controls {
   display: flex;
   flex-wrap: wrap;
@@ -24,6 +40,12 @@
 
 .label {
   white-space: nowrap;
+}
+
+/* The order and Select tracks take the Studio control corners. Doubled to
+   outrank the shared Button's pill radius in any load order. */
+.control.control {
+  border-radius: var(--studio-control-radius);
 }
 
 /* Touch: the order and Select tracks grow to the 44px tap floor (the quiet

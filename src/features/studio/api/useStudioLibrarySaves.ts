@@ -13,13 +13,14 @@ export type StudioLibrarySaveKind =
   "studio_release" | "studio_track" | "studio_playlist";
 
 /** Listed in `shared/consent/storageInventory.ts` (the `previewMode` row);
- *  rename both together. v3 reseeds browsers that hold an older library
- *  fixture (v2, v1 and the pre-v1 key), so they see the Withdrawn and "Demo
- *  tape" rows and the liked songs, the withdrawn one among them. */
-const SEEDED_FLAG_KEY = "qp.demo.studioLibrarySeeded.v3";
+ *  rename both together. v4 reseeds browsers that hold an older library
+ *  fixture (v3, v2, v1 and the pre-v1 key), so the saved albums and
+ *  playlist carry their covers into the rail and the Library. */
+const SEEDED_FLAG_KEY = "qp.demo.studioLibrarySeeded.v4";
 /** Older flags: a browser that holds one has the old fixture, so it is
  *  dropped and the new fixture seeds. */
 const OLDER_SEEDED_FLAG_KEYS = [
+  "qp.demo.studioLibrarySeeded.v3",
   "qp.demo.studioLibrarySeeded.v2",
   "qp.demo.studioLibrarySeeded.v1",
   "qp-demo-studio-library-seeded",

@@ -10,7 +10,7 @@
   width: 10px;
   height: 10px;
   border-radius: var(--radius-pill);
-  background: var(--accent);
+  background: var(--studio-accent);
   border: 2px solid var(--studio-surface);
   pointer-events: none;
 }

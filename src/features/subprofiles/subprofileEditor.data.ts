@@ -34,6 +34,11 @@ export const CREDENTIAL_PHOTO_SECTIONS = new Set<SubprofileSection>([
   "trainings",
 ]);
 
+/** Sections whose `imageUrl` is often a poster: a gig image is usually the
+ *  event poster. The item drawer shows a portrait file whole over a blurred
+ *  backdrop instead of cropping it into the fixed slot. */
+export const POSTER_IMAGE_SECTIONS = new Set<SubprofileSection>(["gigs"]);
+
 // ── Meta-form options + copy ─────────────────────────────────────────────────
 // i18n label-key indirection throughout this section: `value`/the Record key
 // is the PERSISTED canonical id (visibility / linkVisibility are stored
@@ -146,7 +151,8 @@ const architectField = (section: string, field: string) =>
  * Where a kind words a section's item fields its own way, over `FIELD_META`.
  * A game master's campaign keeps its seats in `subtitle` and its schedule in
  * `date`, where a month picker would hide "Sundays, fortnightly"; a session
- * is one evening, so its date is a day.
+ * is one evening, so its date is a day. A gig is one night at a venue, so a
+ * musician's, DJ's or vocalist's gig date is a day as well.
  */
 export const KIND_ITEM_FIELD_META: Partial<
   Record<
@@ -190,6 +196,9 @@ export const KIND_ITEM_FIELD_META: Partial<
       },
     },
   },
+  musician: { gigs: { date: { inputType: "date" } } },
+  dj: { gigs: { date: { inputType: "date" } } },
+  vocalist: { gigs: { date: { inputType: "date" } } },
   // A guest spot names its studio or convention and runs from a first day;
   // a flash day is one day at a place; a shop item links out to buy.
   tattoo_artist: {

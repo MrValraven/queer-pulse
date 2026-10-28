@@ -276,18 +276,24 @@
      the dark sub-brand, and coral fills carry --studio-bg as label ink). The
      signed-in Studio shells paint with the roles below, which follow the app
      theme: light here, dark in the block further down.
-     --studio-ink-rgb is the channel for washes, hairlines and decorative
-     marks (any alpha). Text uses the three text roles, whose alphas are set
-     per theme. Light: muted 7.0:1 and faint 6.0:1 on the cream page. Dark
-     faint is raised to 5.5:1 on the Studio page, so metadata clears AA. */
-  --studio-surface: var(--cream);
-  --studio-surface-rail: color-mix(in srgb, var(--plum) 4%, var(--cream));
-  --studio-surface-deep: color-mix(in srgb, var(--plum) 8%, var(--cream));
-  --studio-ink-rgb: var(--plum-rgb);
-  --studio-text: var(--plum);
-  --studio-text-muted: rgba(var(--plum-rgb), 0.78);
-  /* Faint 0.72: 6.00:1 on the cream page and 5.77:1 on the 4% card tint. */
-  --studio-text-faint: rgba(var(--plum-rgb), 0.72);
+     Light is "Daylight": a white page, a cool grey sidebar and a deeper
+     grey for sunk panels, with near-black ink (#1b1720) that keeps a hint
+     of plum. --studio-ink-rgb is the channel for washes, hairlines and
+     decorative marks (any alpha). Text uses the three text roles, whose
+     alphas are set per theme. Light: text 17.65:1 on white and 16.21:1 on
+     the sidebar. Dark faint is raised to 5.5:1 on the Studio page, so
+     metadata clears AA. */
+  --studio-surface: var(--paper);
+  --studio-surface-rail: #f5f5f7;
+  --studio-surface-deep: #ececf0;
+  --studio-ink-rgb: 27, 23, 32;
+  --studio-text: #1b1720;
+  /* Muted 0.74: 7.52:1 on white and 7.19:1 on the sidebar. */
+  --studio-text-muted: rgba(var(--studio-ink-rgb), 0.74);
+  /* Faint 0.64: 5.29:1 on white, 5.12:1 on the sidebar, 4.96:1 on the deep
+     grey, 4.84:1 on the pressed 11% wash over white and on the hover 7%
+     wash over the sidebar, 4.68:1 on the pressed wash over the sidebar. */
+  --studio-text-faint: rgba(var(--studio-ink-rgb), 0.64);
   /* Hairline and wash roles on the ink channel: rest, hover and pressed
      surfaces step 0.04, 0.07, 0.11. */
   --studio-line: rgba(var(--studio-ink-rgb), 0.1);
@@ -295,23 +301,47 @@
   --studio-wash-2: rgba(var(--studio-ink-rgb), 0.07);
   --studio-wash-3: rgba(var(--studio-ink-rgb), 0.11);
   /* Coral and jade as small TEXT. Plain --accent is 2.63:1 on cream, and
-     --jade-light is an on-dark mark colour. */
-  --studio-accent-text: var(--accent-text);
-  --studio-accent-soft-text: var(--accent-text);
+     --jade-light is an on-dark mark colour. Light coral text is the hue of
+     --accent-fill (#d5431e) taken down just far enough for AA on every
+     grey: 5.74:1 on white, 5.27:1 on the sidebar, 4.87:1 on the deep grey,
+     4.58:1 on the pressed wash over white and 4.59:1 on the hover wash over
+     the sidebar. Jade ink holds as is: 5.68:1 on white, 5.22:1 on the
+     sidebar, 4.54:1 on those two washes. */
+  --studio-accent-text: #b83a1a;
+  --studio-accent-soft-text: #b83a1a;
   --studio-jade-text: var(--jade-ink);
   /* Coral and jade ink for chips, initials and buttons sitting ON their own
      coral or jade wash (up to 0.18 over a card). --accent-text and
-     --jade-ink dip under 4.5:1 there, so light mixes them toward plum:
-     about 5:1 on the strongest wash. */
+     --jade-ink dip under 4.5:1 there, so light mixes them toward the Studio
+     ink: coral 6.73:1 and jade 6.26:1 on the strongest wash over white,
+     6.25:1 and 5.80:1 over the sidebar. */
   --studio-accent-chip-text: color-mix(
     in srgb,
     var(--accent-text) 75%,
-    var(--plum)
+    var(--studio-text)
   );
-  --studio-jade-chip-text: color-mix(in srgb, var(--jade-ink) 75%, var(--plum));
-  /* The soft glow behind the creator back-office heroes. Jade reads as a
-     grey-green smudge on cream, so light warms it to a faint coral. */
-  --studio-hero-glow: rgba(var(--accent-rgb), 0.08);
+  --studio-jade-chip-text: color-mix(
+    in srgb,
+    var(--jade-ink) 75%,
+    var(--studio-text)
+  );
+  /* The soft glow behind the creator back-office heroes. The white page
+     shows none: any tint there reads as a grey smudge behind the hero. */
+  --studio-hero-glow: transparent;
+  /* Daylight's coral and selection roles. Coral is the one accent and
+     stays sparing: --studio-accent paints fills and coral icons,
+     --studio-on-accent is the label ink on a coral fill, --studio-icon tints
+     button icons and --studio-rail-icon the sidebar icons. --studio-selected
+     grounds the selected sidebar or list item in a neutral grey,
+     --studio-row-playing tints the playing track row (transparent in light)
+     and --studio-eyebrow colours the small label over a hero title. */
+  --studio-accent: var(--accent-fill);
+  --studio-on-accent: #ffffff;
+  --studio-icon: var(--studio-accent);
+  --studio-rail-icon: var(--studio-accent);
+  --studio-selected: rgba(var(--studio-ink-rgb), 0.09);
+  --studio-row-playing: transparent;
+  --studio-eyebrow: var(--studio-text-muted);
   /* Control edges (chips, inputs): plum at 0.5 is 3.10:1 on cream, where the
      0.4 the chips used was 2.38:1. Card meta line: same ink as muted text. */
   --studio-edge: rgba(var(--studio-ink-rgb), 0.5);
@@ -488,6 +518,18 @@
   --studio-accent-chip-text: var(--accent-soft);
   --studio-jade-chip-text: var(--jade-light);
   --studio-hero-glow: rgba(var(--jade-rgb), 0.14);
+  /* Coral and selection roles in dark, each the value the shells painted
+     before the roles existed: coral fills and marks in --accent with
+     --studio-bg as their label ink, icons in their own text colour, muted
+     sidebar icons, a coral-tinted selected item and playing row, and the
+     hero eyebrow in coral text. */
+  --studio-accent: var(--accent);
+  --studio-on-accent: var(--studio-bg);
+  --studio-icon: currentColor;
+  --studio-rail-icon: var(--studio-text-muted);
+  --studio-selected: rgba(var(--accent-rgb), 0.12);
+  --studio-row-playing: rgba(var(--accent-rgb), 0.07);
+  --studio-eyebrow: var(--studio-accent-text);
   /* Cream at 0.4 is 3.55:1 on the Studio page. The card meta line sits on
      cover-adjacent washes at 12px, so it takes 0.7 (8.0:1 on the 4% wash). */
   --studio-edge: rgba(var(--studio-ink-rgb), 0.4);

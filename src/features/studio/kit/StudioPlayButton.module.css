@@ -1,7 +1,8 @@
-/* StudioPlayButton: one play control in three sizes. It rides on the shared
-   IconButton, so each rule below chains two of this module's classes to
-   outrank the Button's own `.button` / `.icon` rules whatever order the two
-   modules load in. */
+/* StudioPlayButton: one play control in three sizes. The card and row ride on
+   the shared IconButton, so each rule below chains two of this module's
+   classes to outrank the Button's own `.button` / `.icon` rules whatever order
+   the two modules load in. The hero rides on the quiet Button and adds the
+   wrap, (0,3,0), to stay above the hero row's pill rules in studio.module.css. */
 /* No min-width override: the wrap never shrinks below the button. */
 .wrap {
   display: inline-flex;
@@ -22,24 +23,58 @@
   transition-timing-function: var(--ease);
 }
 
-/* The coral fill, carrying dark ink: 6.28:1 on --accent. */
-.play.hero,
-.play.card {
-  background: var(--accent);
-  color: var(--studio-bg);
+/* The hero: a labelled pill on the Studio accent pair, glyph then word. The
+   auto width outranks the phone hero row's square 44px icon buttons. The
+   quiet Button's hover and press read the two hooks, so in light the pill
+   deepens its fill there (white on it reads 5.6:1, up from 4.5:1 at rest)
+   and the row's own wash hooks never reach it. */
+.wrap .play.hero {
+  width: auto;
+  min-width: 44px;
+  gap: 8px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0 22px 0 18px;
+  border: none;
+  border-radius: var(--studio-control-radius);
+  background: var(--studio-accent);
+  color: var(--studio-on-accent);
+  font-size: var(--text-15);
+  font-weight: 600;
+  --button-quiet-hover: color-mix(in srgb, var(--studio-accent) 88%, black);
+  --button-quiet-active: color-mix(in srgb, var(--studio-accent) 88%, black);
 }
 
-.play.hero {
-  width: 56px;
-  min-width: 56px;
-  height: 56px;
-  font-size: var(--text-22);
+.wrap .play.hero svg {
+  font-size: var(--text-18);
 }
 
+/* Every word the pill can show shares one grid cell, so the pill keeps the
+   widest word's width and a switch crossfades the label without a jump. */
+.heroLabel {
+  display: inline-grid;
+  justify-items: start;
+}
+
+.heroLabel > span {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.heroLabel > [data-active] {
+  opacity: 1;
+}
+
+/* The card: a round coral button on the Studio accent pair. */
 .play.card {
   width: 44px;
   min-width: 44px;
   height: 44px;
+  background: var(--studio-accent);
+  color: var(--studio-on-accent);
   font-size: var(--text-16);
   box-shadow: var(--shadow-e2);
 }
@@ -61,12 +96,11 @@
 }
 
 @media (hover: hover) {
-  .play.hero:hover:not(:disabled):not([aria-disabled="true"]),
   .play.card:hover:not(:disabled):not([aria-disabled="true"]) {
-    /* The fill stays --accent so the dark ink keeps its 6.28:1; the hover
-       reads through the lift and the coral glow. */
-    background: var(--accent);
-    color: var(--studio-bg);
+    /* The fill holds the accent pair so the label keeps its contrast; the
+       hover reads through the lift and the coral glow. */
+    background: var(--studio-accent);
+    color: var(--studio-on-accent);
     box-shadow: var(--shadow-accent);
     transform: scale(1.05);
   }
@@ -76,7 +110,40 @@
   }
 }
 
-.play.hero:active:not([aria-disabled="true"]),
+/* The pill stays put on hover and gives a little on press. */
+.wrap .play.hero:active:not([aria-disabled="true"]) {
+  transform: scale(0.98);
+}
+
+/* Dark keeps its fill steady on hover and press, and the hover reads
+   through the coral glow and a small lift, as the round hero play did. */
+:global([data-theme="dark"]) .wrap .play.hero {
+  --button-quiet-hover: var(--studio-accent);
+  --button-quiet-active: var(--studio-accent);
+}
+
+@media (hover: hover) {
+  :global([data-theme="dark"])
+    .wrap
+    .play.hero:hover:not(:disabled):not([aria-disabled="true"]) {
+    box-shadow: var(--shadow-accent);
+  }
+}
+
+/* The lift only moves with motion allowed, and a press still gives. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  :global(html[data-theme="dark"]:not([data-reduce-motion="true"]))
+    .wrap
+    .play.hero:hover:not(:disabled):not([aria-disabled="true"]) {
+    transform: scale(1.05);
+  }
+  :global(html[data-theme="dark"]:not([data-reduce-motion="true"]))
+    .wrap
+    .play.hero:active:not(:disabled):not([aria-disabled="true"]) {
+    transform: scale(0.98);
+  }
+}
+
 .play.card:active:not([aria-disabled="true"]),
 .play.row:active:not([aria-disabled="true"]) {
   transform: scale(0.97);
@@ -108,14 +175,34 @@
   inset: 4px;
 }
 
+/* Around the pill the ring follows its corners, one step out. A turning
+   rounded rectangle would wobble, so the pill's ring breathes instead. */
+.hero .ring {
+  border-radius: calc(var(--studio-control-radius) + var(--radius-4));
+  border-color: var(--studio-accent);
+}
+
 .play[data-state="loading"] .ring {
   opacity: 1;
   animation: studioPlayRingSpin 0.9s linear infinite;
 }
 
+.play.hero[data-state="loading"] .ring {
+  animation: studioPlayRingPulse 1.2s var(--ease) infinite alternate;
+}
+
 @keyframes studioPlayRingSpin {
   to {
     transform: rotate(1turn);
+  }
+}
+
+@keyframes studioPlayRingPulse {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.3;
   }
 }
 
@@ -136,6 +223,13 @@
     animation: none;
     border-color: rgba(var(--accent-rgb), 0.55);
   }
+  .play.hero[data-state="loading"] .ring {
+    animation: none;
+    border-color: var(--studio-accent);
+  }
+  .heroLabel > span {
+    transition-duration: 0.01ms;
+  }
   .play.hero:is(:hover, :active):not(:disabled):not([aria-disabled="true"]),
   .play.card:is(:hover, :active):not(:disabled):not([aria-disabled="true"]),
   .play.row:is(:hover, :active):not(:disabled):not([aria-disabled="true"]) {
@@ -152,6 +246,17 @@
 :global(html[data-reduce-motion="true"]) .play[data-state="loading"] .ring {
   animation: none;
   border-color: rgba(var(--accent-rgb), 0.55);
+}
+
+:global(html[data-reduce-motion="true"])
+  .play.hero[data-state="loading"]
+  .ring {
+  animation: none;
+  border-color: var(--studio-accent);
+}
+
+:global(html[data-reduce-motion="true"]) .heroLabel > span {
+  transition-duration: 0.01ms;
 }
 
 :global(html[data-reduce-motion="true"])

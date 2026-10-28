@@ -25,6 +25,15 @@ describe("isUpcoming", () => {
     expect(isUpcoming("14 Mar 2000")).toBe(false);
   });
 
+  it("keeps a yyyy-mm-dd day upcoming through that day and past after it", () => {
+    const today = new Date();
+    const padTwoDigits = (value: number) => String(value).padStart(2, "0");
+    const todayValue = `${today.getFullYear()}-${padTwoDigits(today.getMonth() + 1)}-${padTwoDigits(today.getDate())}`;
+    expect(isUpcoming(todayValue)).toBe(true);
+    expect(isUpcoming("2000-01-17")).toBe(false);
+    expect(isUpcoming(`${today.getFullYear() + 1}-01-17`)).toBe(true);
+  });
+
   it("is false for an unparseable/garbage date", () => {
     expect(isUpcoming("not a date")).toBe(false);
   });

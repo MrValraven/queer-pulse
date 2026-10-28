@@ -680,8 +680,7 @@ export const settings: Catalog = {
   "editProfile.identity.uploadPhoto": "Upload new photo",
   "editProfile.identity.removePhoto": "Remove photo",
   "editProfile.identity.useGooglePhoto": "Use your Google photo",
-  "editProfile.identity.photoHint.default":
-    "JPG or PNG · max 5 MB · square works best",
+  "editProfile.identity.photoHint.default": "JPG or PNG · square works best",
   "editProfile.identity.photoHint.google":
     "We can bring back the photo from the account you signed in with.",
   "editProfile.identity.firstNameLabel": "First name",

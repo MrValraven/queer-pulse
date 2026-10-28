@@ -33,7 +33,7 @@ beforeEach(() => {
   // viewer meets the playlist unsaved.
   window.localStorage.removeItem("qp.saved.v1");
   resetStudioLibrarySeedForTests();
-  window.localStorage.setItem("qp.demo.studioLibrarySeeded.v3", "1");
+  window.localStorage.setItem("qp.demo.studioLibrarySeeded.v4", "1");
 });
 
 function renderPage(playlistId: string) {

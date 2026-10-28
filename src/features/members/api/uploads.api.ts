@@ -97,7 +97,7 @@ export type StudioAudioUploadContentType = "audio/mpeg" | "audio/mp4";
  *   5. Private-by-default bucket; presign grants write to a single key only.
  *
  *   NOTE: `listing-photo` is a new kind (added 2026-07-30) — same presign flow,
- *   EXIF strip, virus scan, and private bucket as the others; cap 5 MB, min
+ *   EXIF strip, virus scan, and private bucket as the others; cap 7 MB, min
  *   1200×600. Resize target: ~2560px wide WebP/AVIF (full-bleed hero — match
  *   the client cover/listing cap so the banner stays crisp).
  */

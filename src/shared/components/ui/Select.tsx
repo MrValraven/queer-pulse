@@ -75,6 +75,10 @@ interface MultiSelectProps extends SelectBaseProps {
   multiple: true;
   value: readonly string[];
   onChange: (value: string[]) => void;
+  /** Text the trigger shows once something is picked, replacing the tags,
+   *  for a field that lists its picks elsewhere (chips under the control).
+   *  The trigger's accessible name reads the label followed by this text. */
+  valueSummary?: string;
 }
 
 export type SelectProps = SingleSelectProps | MultiSelectProps;
@@ -149,9 +153,12 @@ export function Select(props: SelectProps) {
   const canClear =
     !props.multiple && props.clearable && props.value != null && !disabled;
 
+  const valueSummary = props.multiple ? props.valueSummary : undefined;
   const triggerLabel =
     props.multiple && selectedValues.size > 0
-      ? t("shared:select.multiSummary", { count: selectedValues.size })
+      ? valueSummary
+        ? [label, valueSummary].filter(Boolean).join(", ")
+        : t("shared:select.multiSummary", { count: selectedValues.size })
       : undefined;
 
   return (
@@ -189,6 +196,7 @@ export function Select(props: SelectProps) {
           options={options}
           selectedValues={selectedValues}
           multiple={props.multiple === true}
+          valueSummary={valueSummary}
           placeholder={placeholder ?? t("shared:select.placeholder")}
         />
         <FiChevronDown
@@ -247,11 +255,13 @@ function SelectValue({
   options,
   selectedValues,
   multiple,
+  valueSummary,
   placeholder,
 }: {
   options: readonly SelectOption[];
   selectedValues: ReadonlySet<string>;
   multiple: boolean;
+  valueSummary?: string;
   placeholder: string;
 }) {
   if (selectedValues.size === 0) {
@@ -263,6 +273,10 @@ function SelectValue({
     return (
       <span className={styles.value}>{current?.label ?? placeholder}</span>
     );
+  }
+
+  if (valueSummary) {
+    return <span className={styles.value}>{valueSummary}</span>;
   }
 
   const chosen = options.filter((option) => selectedValues.has(option.value));

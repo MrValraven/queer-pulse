@@ -8,6 +8,7 @@ import { Button } from "../../shared/components/ui";
 import { ALBUM_BUY, ALBUM_LEDGER } from "./studioAlbum.data";
 import { formatStudioCount } from "./studioCount";
 import styles from "./studio.module.css";
+import sidebarStyles from "./StudioAlbumSidebar.module.css";
 import { StudioEuroAmount } from "./StudioEuroAmount";
 
 const ARTIST_SHARE = 6.4;
@@ -36,18 +37,25 @@ export function StudioAlbumSidebar({
         <div className={styles.buyActions}>
           <Link
             to={routes.studioCheckout}
-            className={`${styles.bt} ${styles.btP}`}
+            className={`${styles.bt} ${styles.btP} ${sidebarStyles.action} ${sidebarStyles.buy}`}
           >
             {t("studio:album.sidebar.buyCta", {
               amount: fmt.currency(ALBUM_BUY.price),
             })}
           </Link>
-          <Button variant="quiet" className={styles.bt} onClick={onTip}>
+          <Button
+            variant="quiet"
+            className={`${styles.bt} ${sidebarStyles.action}`}
+            onClick={onTip}
+          >
             {t("studio:album.sidebar.payWhatYouCanCta", {
               amount: fmt.currency(ALBUM_BUY.payWhatYouCanMin),
             })}
           </Button>
-          <Link to={routes.cinemaMembership} className={styles.bt}>
+          <Link
+            to={routes.cinemaMembership}
+            className={`${styles.bt} ${sidebarStyles.action}`}
+          >
             {t("studio:album.sidebar.streamingIncludedCta")}
           </Link>
         </div>

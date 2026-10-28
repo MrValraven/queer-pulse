@@ -93,6 +93,37 @@ a.link:focus-visible,
   justify-content: center;
 }
 
+/* The Studio control corners. Doubled to outrank the shared Button's pill
+   radius in any load order. */
+.buy.buy {
+  border-radius: var(--studio-control-radius);
+}
+
+/* Daylight keeps coral for Play, so the buy link turns into a neutral grey
+   button with an ink label and coral icons. Dark keeps the shared primary. */
+:global(:root:not([data-theme="dark"])) .buy {
+  background: var(--studio-wash-2);
+  color: var(--studio-text);
+  box-shadow: none;
+}
+:global(:root:not([data-theme="dark"])) .buy svg {
+  color: var(--studio-icon);
+}
+/* The rule above drops the shared primary's focus halo with its glow. */
+:global(:root:not([data-theme="dark"])) .buy:focus-visible {
+  box-shadow: var(--ring-cream);
+}
+/* The :not() guards match the shared `.primary:hover`, which would
+   otherwise outrank this hover. */
+@media (hover: hover) {
+  :global(:root:not([data-theme="dark"]))
+    .buy:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--studio-wash-3);
+    box-shadow: none;
+    transform: none;
+  }
+}
+
 .buy + .list {
   margin-top: 12px;
 }

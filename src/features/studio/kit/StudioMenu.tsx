@@ -193,9 +193,25 @@ function isScrollOfAnchor(target: EventTarget | null, anchor: Element | null) {
   );
 }
 
+/** Whether the trigger still shows at its centre: a top bar sliding over it
+ *  or a scroll out of the viewport hides it. The panel itself counts as
+ *  showing it, since a clamped panel on a small screen may sit over its
+ *  trigger. Without elementFromPoint (jsdom) it always shows. */
+function isTriggerVisible(trigger: HTMLElement, panel: HTMLElement) {
+  if (typeof document.elementFromPoint !== "function") return true;
+  const triggerBounds = trigger.getBoundingClientRect();
+  const hitNode = document.elementFromPoint(
+    triggerBounds.left + triggerBounds.width / 2,
+    triggerBounds.top + triggerBounds.height / 2,
+  );
+  if (!hitNode) return false;
+  return trigger.contains(hitNode) || panel.contains(hitNode);
+}
+
 /** Places the panel against its trigger or point, then follows a resize and
- *  a change in its own size. A trigger menu follows a scroll; a context
- *  menu closes on a scroll that carries its row away. */
+ *  a change in its own size. A trigger menu follows a scroll until its
+ *  trigger is covered or scrolled away, then closes; a context menu closes
+ *  on a scroll that carries its row away. */
 function useMenuPosition(
   panelRef: RefObject<HTMLDivElement | null>,
   triggerRef: RefObject<HTMLElement | null>,
@@ -259,8 +275,12 @@ function useMenuPosition(
     // scroll (a long menu on a short screen) is neither.
     const onScroll = (event: Event) => {
       if (event.target instanceof Node && panel.contains(event.target)) return;
-      if (!isPoint) place();
-      else if (isScrollOfAnchor(event.target, pointAnchor))
+      if (!isPoint) {
+        const trigger = triggerRef.current;
+        if (trigger && !isTriggerVisible(trigger, panel))
+          onScrollAwayRef.current();
+        else place();
+      } else if (isScrollOfAnchor(event.target, pointAnchor))
         onScrollAwayRef.current();
     };
     place();

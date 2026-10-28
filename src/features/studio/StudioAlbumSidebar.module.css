@@ -1,0 +1,19 @@
+/* The buy card's three actions take the Studio control corners. Doubled to
+   outrank `.bt` (studio.module.css) and the shared Button in any load
+   order. */
+.action.action {
+  border-radius: var(--studio-control-radius);
+}
+
+/* Daylight keeps coral for Play, so Buy turns into a neutral grey button
+   with an ink label. Dark keeps the coral `.btP` fill. */
+:global(:root:not([data-theme="dark"])) .buy {
+  background: var(--studio-wash-2);
+  color: var(--studio-text);
+  border-color: transparent;
+}
+@media (hover: hover) {
+  :global(:root:not([data-theme="dark"])) .buy:hover {
+    background: var(--studio-wash-3);
+  }
+}

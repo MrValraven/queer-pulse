@@ -1960,6 +1960,11 @@ export const studio: Catalog = {
   "playerBar.regionLabel": "Studio player",
   "playerBar.play": "Play",
   "playerBar.pause": "Pause",
+  // The word on the hero Play pill. It opens every hero play aria-label in
+  // both languages, so voice control can say the word it sees.
+  "playButton.play": "Play",
+  "playButton.pause": "Pause",
+  "playButton.cancel": "Cancel",
   "playerBar.previous": "Previous track",
   "playerBar.next": "Next track",
   "playerBar.seekLabel": "Seek",
@@ -3773,6 +3778,9 @@ export const studio: Catalog = {
   // Player bar, controls and Now playing extras (player/ui)
   "player.playFrom": "Play from {time}",
   "player.playFromAria": "Play {title} from {time}",
+  // The hero pill's name when it shows "Play from {time}": it opens with the
+  // visible words, so voice control can say what it sees.
+  "player.playFromNamedAria": "Play from {time}, {title}",
   "player.openNowPlaying": "Open Now playing, {title} by {artist}",
   "player.chapterAria": "Chapter {number}: {title}",
   "player.queueShow": "Show the queue",

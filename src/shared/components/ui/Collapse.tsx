@@ -2,6 +2,18 @@ import { type ReactNode } from "react";
 import { AnimatePresence, m, useIsPresent } from "motion/react";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 
+/** A height timing for one direction of the fold. Readonly so a Studio motion
+ *  token declared `as const` can be passed straight in. */
+export interface CollapseTransition {
+  duration: number;
+  ease: readonly [number, number, number, number];
+}
+
+const DEFAULT_TRANSITION: CollapseTransition = {
+  duration: 0.28,
+  ease: [0.22, 0.68, 0.16, 1],
+};
+
 interface CollapseProps {
   /** Whether the content is shown. Flipping it animates height and opacity. */
   isOpen: boolean;
@@ -14,6 +26,13 @@ interface CollapseProps {
   /** Called once the content has finished folding away after `isOpen` turns
    *  false, for a caller whose own layout should follow the fold's end. */
   onExitComplete?: () => void;
+  /** Timing for the open. Defaults to 0.28s on the app's front-loaded ease;
+   *  a tall panel can pass a curve that ramps in so the content below never
+   *  leaps on the first frame. */
+  transition?: CollapseTransition;
+  /** Timing for the fold. Defaults to the open's timing; a tall panel can
+   *  pass a gentle ease-in-out so it starts and lands softly. */
+  exitTransition?: CollapseTransition;
 }
 
 /**
@@ -32,6 +51,8 @@ export function Collapse({
   className,
   isInitialSkipped = true,
   onExitComplete,
+  transition,
+  exitTransition,
 }: CollapseProps) {
   return (
     <AnimatePresence
@@ -39,7 +60,12 @@ export function Collapse({
       onExitComplete={onExitComplete}
     >
       {isOpen && (
-        <CollapsePanel key="collapse" className={className}>
+        <CollapsePanel
+          key="collapse"
+          className={className}
+          transition={transition}
+          exitTransition={exitTransition}
+        >
           {children}
         </CollapsePanel>
       )}
@@ -52,14 +78,18 @@ export function Collapse({
 function CollapsePanel({
   children,
   className,
+  transition = DEFAULT_TRANSITION,
+  exitTransition = transition,
 }: {
   children: ReactNode;
   className?: string;
+  transition?: CollapseTransition;
+  exitTransition?: CollapseTransition;
 }) {
   const { reducedMotion } = useMotionPrefs();
   const isPresent = useIsPresent();
-  const duration = reducedMotion ? 0 : 0.28;
-  const ease = [0.22, 0.68, 0.16, 1] as const;
+  const duration = reducedMotion ? 0 : transition.duration;
+  const exitDuration = reducedMotion ? 0 : exitTransition.duration;
   return (
     <m.div
       className={className}
@@ -75,11 +105,15 @@ function CollapsePanel({
         height: 0,
         opacity: 0,
         overflow: "hidden",
-        transition: { duration, ease, overflow: { duration: 0 } },
+        transition: {
+          duration: exitDuration,
+          ease: exitTransition.ease,
+          overflow: { duration: 0 },
+        },
       }}
       transition={{
         duration,
-        ease,
+        ease: transition.ease,
         overflow: { duration: 0, delay: duration },
       }}
     >

@@ -3200,7 +3200,10 @@ button.pp-row {
    that moves. And wrapping is allowed inside it, so an unusually long localized
    date takes a second line and still leaves the title its space. Measured in
    Fraunces at 13px: "September 2025" is 95px and "novembro de 2023" is 108px,
-   so the 116px column clears both with a 20px gutter left over. */
+   so the 116px column clears both with a 20px gutter left over. A day-bearing
+   date from `formatItemDate` ("17 Oct 2026") is shorter than either; PT's
+   "17 de out. de 2026" is about as wide as the month form and wraps to a second
+   line at worst. */
 .pp[data-skin="page"] .pp-row {
   padding: 12px 0 12px 8.5rem;
   text-indent: 0;

@@ -628,3 +628,50 @@
     background: rgba(var(--cream-rgb), 0.18);
   }
 }
+
+/* ── Light Studio ──────────────────────────────────────────────────────────
+   Dialogs portal to <body>, outside the Studio root, so they read the app's
+   --cream. While a Studio shell is mounted it stamps `data-studio-shell` on
+   <html>, and in light mode the surfaces take Daylight's white Studio surface
+   and ink. Each keeps its edge and shadow, so it still lifts off the white
+   page. The plum tints on the grabber and the close chips move to the Studio
+   ink washes, and the plum titles to the Studio ink. The :where() keeps each
+   rule at its target's own weight, so a caller that restyles a dialog by
+   class still wins as it did. A success sheet keeps its plum panel. */
+:global(:where(html[data-studio-shell="true"]:not([data-theme="dark"]))) .modal,
+:global(:where(html[data-studio-shell="true"]:not([data-theme="dark"])))
+  .sheet:where(:not(.sheetSuccess)),
+:global(:where(html[data-studio-shell="true"]:not([data-theme="dark"])))
+  .sideSheet {
+  background: var(--studio-surface);
+  color: var(--studio-text);
+}
+:global(:where(html[data-studio-shell="true"]:not([data-theme="dark"])))
+  .modalTitle,
+:global(:where(html[data-studio-shell="true"]:not([data-theme="dark"])))
+  .sideSheetTitle {
+  color: var(--studio-text);
+}
+:global(:where(html[data-studio-shell="true"]:not([data-theme="dark"])))
+  .modal::before,
+:global(:where(html[data-studio-shell="true"]:not([data-theme="dark"])))
+  .grabber {
+  background: rgba(var(--studio-ink-rgb), 0.18);
+}
+:global(:where(html[data-studio-shell="true"]:not([data-theme="dark"])))
+  .close {
+  background-color: inherit;
+  background-image: linear-gradient(var(--studio-wash-2) 0 0);
+}
+@media (hover: hover) {
+  :global(:where(html[data-studio-shell="true"]:not([data-theme="dark"])))
+    .modalX:hover {
+    background: var(--studio-wash-2);
+    color: var(--studio-text);
+  }
+  :global(:where(html[data-studio-shell="true"]:not([data-theme="dark"])))
+    .close:hover {
+    background: var(--studio-wash-3);
+    color: var(--studio-text);
+  }
+}

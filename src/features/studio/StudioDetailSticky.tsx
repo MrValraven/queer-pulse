@@ -45,6 +45,7 @@ export function StudioReleaseStickyHeader({
       sentinel={sentinel}
       title={release.title}
       tint={release.tint}
+      coverUrl={release.coverUrl}
       cover={<StudioStickyCover src={release.coverUrl} tint={release.tint} />}
       actions={
         isUpcomingForViewer ? undefined : (

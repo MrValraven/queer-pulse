@@ -10,8 +10,8 @@ import type { StudioLikedPlayAll } from "./useStudioLikedPlayAll";
 
 /** Play Liked songs, in the hero and in the sticky header, both driven by
  *  the page's one `playAll`: while the waiting pages are read it shows the
- *  loading ring and a press cancels ("Cancel loading"); on the current set
- *  it pauses and resumes. */
+ *  loading ring and a press cancels ("Cancel loading", and the hero pill
+ *  says Cancel); on the current set it pauses and resumes. */
 export function StudioLikedPlayButton({
   liked,
   playAll,
@@ -31,10 +31,13 @@ export function StudioLikedPlayButton({
   );
   const isPlaying = isCurrent && player.status === "playing";
   const isLoading = playAll.pendingMode === "play";
+  const cancelWord = t("studio:playButton.cancel");
   return (
     <StudioPlayButton
       size={size}
       state={isLoading ? "loading" : isPlaying ? "playing" : "idle"}
+      visibleLabel={isLoading ? cancelWord : undefined}
+      alternateLabels={[cancelWord]}
       label={
         isLoading
           ? t("studio:liked.page.cancelLoadingAria")

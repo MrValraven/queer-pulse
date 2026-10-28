@@ -1,6 +1,7 @@
 /* The dialog and the picker portal to <body>, so they paint with the app
-   theme's tokens; the card, chip and mosaic sit inside the Studio shell and
-   paint with the Studio roles. */
+   theme's tokens (in light Studio the shared Modal and the picker rows below
+   switch to the white Studio surface and washes); the card, chip and mosaic
+   sit inside the Studio shell and paint with the Studio roles. */
 
 /* Cover mosaic (fills a positioned parent, like ImageSlot). Two or three
    covers repeat to fill all four cells; the tint shows behind each cover
@@ -256,6 +257,31 @@
   .newRow:hover,
   .pickerRow:hover {
     background: rgba(var(--ink-rgb), 0.05);
+  }
+}
+
+/* Light Studio: the picker sits on the white Studio surface (see Modal's
+   light Studio rules), so the rows take Daylight's grey washes. The Create
+   row rests on --studio-wash-2 and every row hovers to --studio-wash-3; the
+   quiet Button's own hover outranks a class, so the wash goes through its
+   --button-quiet-hover hook. */
+:global(html[data-studio-shell="true"]:not([data-theme="dark"])) .newRow.newRow,
+:global(html[data-studio-shell="true"]:not([data-theme="dark"]))
+  .pickerRow.pickerRow {
+  --button-quiet-hover: var(--studio-wash-3);
+}
+
+:global(html[data-studio-shell="true"]:not([data-theme="dark"]))
+  .newRow.newRow {
+  background: var(--studio-wash-2);
+}
+
+@media (hover: hover) {
+  :global(html[data-studio-shell="true"]:not([data-theme="dark"]))
+    .newRow:hover,
+  :global(html[data-studio-shell="true"]:not([data-theme="dark"]))
+    .pickerRow:hover {
+    background: var(--studio-wash-3);
   }
 }
 

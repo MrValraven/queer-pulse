@@ -21,7 +21,7 @@ describe("StudioTrackHero with a timestamp", () => {
       },
     );
     const play = await screen.findByRole("button", {
-      name: "Play Tide from 1:23",
+      name: "Play from 1:23, Tide",
     });
     expect(screen.getByText("Play from 1:23")).toBeInTheDocument();
     expect(player.playRelease).not.toHaveBeenCalled();
@@ -38,7 +38,7 @@ describe("StudioTrackHero with a timestamp", () => {
       },
     );
     expect(
-      await screen.findByRole("button", { name: "Play Tide from 3:19" }),
+      await screen.findByRole("button", { name: "Play from 3:19, Tide" }),
     ).toBeInTheDocument();
   });
 

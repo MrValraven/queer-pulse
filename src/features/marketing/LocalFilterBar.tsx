@@ -20,9 +20,9 @@ import s from "./LocalFilterBar.module.css";
 /**
  * Shared filter bar for the Local page (both list + map views). On desktop it's
  * an inline bar that scrolls away with the page: one row of search, "use my
- * location", a "Refine" toggle and the List/Map switcher, with every filter
- * group (place type, sort, safe spaces, access, owned-by, the listing facts)
- * in the drawer below. On phones that row collapses behind a single "Filters"
+ * location", a "Refine" toggle, the results count and the List/Map switcher,
+ * with every filter group (place type, sort, safe spaces, access, owned-by,
+ * the listing facts) in the drawer below. On phones that row collapses behind a single "Filters"
  * sheet, and the List/Map switcher rides in a compact sticky bar so it stays
  * reachable while scrolled.
  */
@@ -32,6 +32,7 @@ export function LocalFilterBar({
   activeFilterCount,
   resultCount,
   activeFiltersSlot,
+  countSlot,
   ...fields
 }: LocalFilterFieldsProps & {
   /** Current List/Map/Online view. The switcher rides in the mobile sticky bar. */
@@ -162,7 +163,11 @@ export function LocalFilterBar({
   return (
     <div className={s.bar}>
       <div className="wrap">
-        <LocalFilterFields {...fields} viewSlot={viewSwitcher} />
+        <LocalFilterFields
+          {...fields}
+          viewSlot={viewSwitcher}
+          countSlot={countSlot}
+        />
         {activeFiltersSlot}
       </div>
     </div>
