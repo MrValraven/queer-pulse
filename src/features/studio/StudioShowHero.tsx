@@ -12,10 +12,10 @@ import { playEpisode } from "./player/studioEpisodePlay";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import { queueItemFromEpisode, showQueueSource } from "./player/studioQueue";
 import { StudioReleaseClaimPanels } from "./StudioClaimPanels";
+import { StudioReleaseLikeButton } from "./StudioCollectionLikeButton";
 import { StudioDetailHero } from "./StudioDetailHero";
 import { StudioNotifyMeButton } from "./StudioNotifyMeButton";
 import { StudioReleaseDisputePanel } from "./StudioReleaseDisputePanel";
-import { StudioReleaseSaveButton } from "./StudioSaveButton";
 import { StudioHeroShare } from "./StudioHeroShare";
 import { StudioReleaseOverflow } from "./StudioReleaseOverflow";
 import {
@@ -29,10 +29,11 @@ import ss from "./studio.module.css";
 import { StudioReleaseCoverArt } from "./StudioReleaseCoverArt";
 
 /** The show's hero (spec 5.2): Play latest episode, Follow (the persona),
- *  Save, Share, and Report for a listener on a live show. A scheduled show
- *  gives its visitors Notify me in place of Play and names no episode count
- *  (its episodes go live at the drop). Save keeps one name ("Save {title}")
- *  and aria-pressed carries its state, as the heart does. The overflow
+ *  the heart, Share, and Report for a listener on a live show. A scheduled
+ *  show gives its visitors Notify me in place of Play and names no episode
+ *  count (its episodes go live at the drop). The heart likes the show into
+ *  the library; it keeps one name ("Like {title}") and aria-pressed
+ *  carries its state, as the track heart does. The overflow
  *  queues every published episode, oldest first. On a phone every action
  *  after Play is a round icon with a tooltip, as on the other heroes, and
  *  below 1440px a listener's Share folds into the overflow. */
@@ -180,7 +181,7 @@ export function StudioShowHero({
               )}
             </AnimatePresence>
             {isPublished && (
-              <StudioReleaseSaveButton
+              <StudioReleaseLikeButton
                 release={release}
                 isIconOnly={isCompact}
                 meta={t("studio:show.savedMeta", {

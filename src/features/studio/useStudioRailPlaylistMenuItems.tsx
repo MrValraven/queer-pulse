@@ -9,13 +9,17 @@ import {
   studioRailFolderMenuItems,
   useStudioRailFolderFilingContext,
 } from "./StudioRailFolder.filing";
-import type { StudioRailPlaylistRowModel } from "./studioRailPlaylistRows";
+import type {
+  StudioRailPlaylistRowModel,
+  StudioRailRowModel,
+} from "./studioRailPlaylistRows";
 
 export interface StudioRailPlaylistMenuActions {
   onEdit: (row: StudioRailPlaylistRowModel) => void;
   onSend: (row: StudioRailPlaylistRowModel) => void;
   onDelete: (row: StudioRailPlaylistRowModel) => void;
-  onUnsave: (row: StudioRailPlaylistRowModel) => void;
+  /** Takes a liked release's row too. */
+  onUnsave: (row: StudioRailRowModel) => void;
 }
 
 export const railPlaylistTargetOf = (
@@ -26,26 +30,54 @@ export const railPlaylistTargetOf = (
   startAtSeconds: null,
 });
 
+/** The link a rail row shares: its playlist, or a liked release. */
+const railRowTargetOf = (row: StudioRailRowModel): StudioLinkTarget =>
+  row.kind === "release"
+    ? { kind: "release", id: row.releaseId, startAtSeconds: null }
+    : railPlaylistTargetOf(row);
+
 /**
  * One rail playlist's menu, in three groups: Edit details (the owner
  * and editors), sharing (Send in a message where the picker rules allow it,
  * Copy link), then the folder group inside the rail list (Move to folder,
  * Move to new folder, Remove from {folder}), then Delete playlist for the
  * owner or Remove from Library for a save, each set apart by a hairline.
+ * A liked release's row offers Copy link and Remove from your library.
  */
 export function useStudioRailPlaylistMenuItems(
-  row: StudioRailPlaylistRowModel | null,
+  row: StudioRailRowModel | null,
   actions: StudioRailPlaylistMenuActions,
 ): StudioMenuItem[] {
   const { t } = useTranslation();
   const { user } = useAuth();
   const filing = useStudioRailFolderFilingContext();
-  const rules = useStudioShareRules(row ? railPlaylistTargetOf(row) : null);
+  // A release row's menu has no Send in a message, so it reads no rules.
+  const rules = useStudioShareRules(
+    row?.kind === "playlist" ? railPlaylistTargetOf(row) : null,
+  );
   const { share } = useShareLink({
     copied: t("studio:trackMenu.linkCopiedToast"),
     failed: t("studio:detail.copyFailedToast"),
   });
   if (!row) return [];
+  const copyLink: StudioMenuItem = {
+    id: "copyLink",
+    label: t("studio:trackMenu.copyLink"),
+    icon: <FiLink />,
+    onSelect: () => void share(studioLinkUrl(railRowTargetOf(row))),
+  };
+  const unsave: StudioMenuItem = {
+    id: "unsave",
+    label: t("studio:railPlaylists.menu.removeSaved"),
+    icon: <FiBookmark />,
+    onSelect: () => actions.onUnsave(row),
+  };
+  if (row.kind === "release")
+    return [
+      copyLink,
+      { id: "separator-1", type: "separator" as const },
+      unsave,
+    ];
 
   const editing: StudioMenuItem[] = row.hasEditRights
     ? [
@@ -65,12 +97,7 @@ export function useStudioRailPlaylistMenuItems(
       icon: <FiSend />,
       onSelect: () => actions.onSend(row),
     });
-  sharing.push({
-    id: "copyLink",
-    label: t("studio:trackMenu.copyLink"),
-    icon: <FiLink />,
-    onSelect: () => void share(studioLinkUrl(railPlaylistTargetOf(row))),
-  });
+  sharing.push(copyLink);
   const leaving: StudioMenuItem[] = [];
   if (row.isOwner)
     leaving.push({
@@ -80,13 +107,7 @@ export function useStudioRailPlaylistMenuItems(
       tone: "danger",
       onSelect: () => actions.onDelete(row),
     });
-  else if (row.isSaved)
-    leaving.push({
-      id: "unsave",
-      label: t("studio:railPlaylists.menu.removeSaved"),
-      icon: <FiBookmark />,
-      onSelect: () => actions.onUnsave(row),
-    });
+  else if (row.isSaved) leaving.push(unsave);
 
   const filingItems = filing
     ? studioRailFolderMenuItems(

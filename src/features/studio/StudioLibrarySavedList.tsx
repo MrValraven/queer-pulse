@@ -91,6 +91,7 @@ function SavedPlaylistCard({
   const play = useSavedPlaylistPlay(savedPlaylistIdOf(item));
   const cardMenu = useStudioPlaylistCardMenu(
     {
+      kind: "playlist",
       key: item.id,
       playlistId: savedPlaylistIdOf(item),
       name: item.title,

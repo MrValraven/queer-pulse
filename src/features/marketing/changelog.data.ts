@@ -63,6 +63,33 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "studio-folded-sidebar",
+        category: "improvement",
+        date: "28 Oct 2026",
+        ...entryKeys("studio-folded-sidebar"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "toasts-paper-slip",
+        category: "improvement",
+        date: "28 Oct 2026",
+        ...entryKeys("toasts-paper-slip"),
+      },
+      {
+        id: "studio-hero-fits-now-playing",
+        category: "fix",
+        date: "28 Oct 2026",
+        ...entryKeys("studio-hero-fits-now-playing"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "studio-like-albums",
+        category: "improvement",
+        date: "28 Oct 2026",
+        ...entryKeys("studio-like-albums"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
         id: "badge-drawer-layout",
         category: "fix",
         date: "27 Oct 2026",

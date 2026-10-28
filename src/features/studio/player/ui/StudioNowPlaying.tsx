@@ -95,7 +95,16 @@ function StudioNowPlayingOverlay({ onNavigate }: { onNavigate: () => void }) {
   const dialogRef = useDismiss<HTMLDivElement>(surface.closeNowPlaying);
   useInertWhileCovered(layerRef, !isPresent);
   // Toasts land below the head, off the close button and the source line.
-  useStudioToastShift(headRef, "top", isPresent);
+  // Wide screens put the Lyrics, Queue, Credits and Artist tabs at the top
+  // of the right column, so the stack clears that row too; on phones the
+  // switcher sits under the cover. The sheet covers the side panel, so the
+  // panel's shift stops counting while the sheet is open.
+  useStudioToastShift(headRef, "top", isPresent, {
+    isCovering: true,
+    lowerEdgeSelector: isPhone
+      ? null
+      : '[data-now-playing-panes] > [role="tablist"]',
+  });
   const sourceLine = useSourceLine();
   const { frameRef, swipeHandlers } = useSheetSwipe(
     isPhone,

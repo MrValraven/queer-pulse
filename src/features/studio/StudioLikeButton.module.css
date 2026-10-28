@@ -1,6 +1,8 @@
 /* The heart that likes a track (Liked songs). The icon variant sits in a
    track row beside Add to playlist and matches its 44px round target; the
-   labelled variant takes the hero's button look from `.heroActions button`. */
+   labelled variant takes the hero's button look from `.heroActions button`.
+   The heroes' collection heart (StudioCollectionLikeButton) shares `.button`,
+   so a liked album, show or playlist fills the same way. */
 
 .button svg {
   transition-property: color, fill;

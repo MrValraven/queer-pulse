@@ -74,6 +74,7 @@ export function StudioRailCreatePlaylist() {
             trigger={
               <IconButton
                 aria-label={triggerLabel}
+                className={railCss.createTile}
                 tooltip={label}
                 tooltipPlacement="right"
               >

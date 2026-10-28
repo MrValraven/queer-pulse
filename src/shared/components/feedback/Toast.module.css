@@ -11,21 +11,25 @@
   --toast-shift-sign: -1;
   translate: calc(var(--toast-shift-end, 0px) * var(--toast-shift-sign))
     var(--toast-shift-top, 0px);
-  transition-property: translate;
-  transition-duration: var(--dur-base);
+  transition-property: translate, height;
+  transition-duration: var(--dur-base), 500ms;
   transition-timing-function: var(--ease);
   z-index: var(--z-toast);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  /* Gap lives on .region, not here: an empty live region is still a flex item,
-     so a container gap would leave a permanent hole in the stack. */
-  gap: 0;
+  /* Every card is absolutely placed against this box (see .toast), so the
+     deck needs one shared width: every toast is this wide, and long text
+     wraps inside it. On a phone the 40px leaves an even 20px gutter on
+     either side. */
+  width: min(372px, calc(100vw - 40px));
+  /* The provider sets the deck's current height here: the folded front card
+     plus the peeking strips, or the whole spread column. Taking the pointer
+     across that full height keeps a hover alive in the gaps between spread
+     cards, so the deck never flickers shut on the way down. With no toasts
+     showing the box lets every click through to the page. */
+  height: var(--toast-stack-height, 0px);
   pointer-events: none;
-  /* width:max-content lets a short toast shrink to its content while inset-inline-end
-     keeps it pinned to the corner; long messages wrap within max-width. */
-  width: max-content;
-  max-width: min(400px, calc(100vw - 32px));
+}
+.container[data-has-toasts] {
+  pointer-events: auto;
 }
 
 /* Right to left, the inline end is on the left, so the shift runs right. */
@@ -33,155 +37,296 @@
   --toast-shift-sign: 1;
 }
 
-/* One per politeness level. Both are always in the DOM — a live region created
-   at announce time is not reliably announced — so each collapses to zero height
-   while empty and only then earns separating space. */
+/* One per politeness level. Both are always in the DOM, because a live region
+   created at announce time is not reliably announced. Each is a plain
+   unpositioned wrapper: its cards place themselves against the container, so
+   toasts from both regions fold into one deck. */
 .region {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 10px;
-  width: 100%;
-}
-.region:not(:empty) + .region:not(:empty) {
-  margin-block-start: 10px;
+  display: block;
 }
 
 .toast {
   /* --toast-accent is the per-type semantic colour, set by the variant classes
-     below and reused for the edge bar, icon and action button. */
-  width: 100%;
-  /* The container is pointer-events:none so the page behind stays clickable
-     around the stack; the toast itself must opt back in so hovering can pause
-     the countdown and the close button is reachable. */
-  pointer-events: auto;
+     below and reused for the action text and the timer hairline. The seal
+     reads --toast-seal and --toast-seal-ink, set beside it. */
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  /* Deck placement from the provider. The newest card sits highest; folded,
+     each card behind it drops and shrinks from its top edge, and spread, each
+     sits below the cards in front of it. These are the individual translate
+     and scale properties, so the entry and exit keyframes can move
+     `transform` on top of them. Pointer events come from the container. */
+  z-index: var(--toast-layer, 1);
+  translate: 0 var(--toast-offset, 0px);
+  scale: var(--toast-scale, 1);
+  transform-origin: top center;
+  /* The provider draws each card at its measured height, and folded, every
+     card behind the front one at the front card's height, so the strip each
+     one shows under the card in front is the same at every depth. */
+  height: var(--toast-height, auto);
+  transition-property: translate, scale, opacity, height;
+  transition-duration: 500ms, 500ms, 350ms, 500ms;
+  transition-timing-function: var(--ease);
+  /* Clips the timer hairline to the rounded corners, and a card behind to
+     the front card's height. */
+  overflow: hidden;
   font-family: var(--sans);
   font-size: var(--text-14);
   line-height: 1.4;
-  font-weight: 500;
   color: var(--ink);
   background: var(--paper);
-  padding: 13px 16px;
-  border-radius: var(--radius-badge);
-  border: 1px solid rgba(var(--line-rgb), 0.1);
-  /* Coloured leading edge — the type signal that pairs with the icon so meaning
-     never rides on colour alone. */
-  border-inline-start: 3px solid var(--toast-accent);
-  box-shadow: var(--shadow-toast);
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  animation: qpToastIn 0.34s var(--ease-out) both;
+  border: 1px solid rgba(var(--line-rgb), 0.08);
+  border-radius: var(--radius-18);
+  box-shadow: var(--shadow-toast-slip);
+  /* The surface lands opaque from its first frame, so the card behind never
+     reads through it; the card moves and sharpens while its content fades in. */
+  animation: qpToastIn 450ms var(--ease) backwards;
 }
 
+/* The card's content: seal | title and detail | close, with the action under
+   the text. Top-aligned, so long text takes the full column and the seal and
+   close stay with the first line. */
+.body {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "seal text close"
+    ". action .";
+  align-items: start;
+  column-gap: 12px;
+  padding-block: 13px;
+  padding-inline: 13px 12px;
+  transition-property: opacity;
+  transition-duration: 150ms;
+  transition-timing-function: var(--ease);
+  animation: qpToastContentIn 280ms var(--ease) backwards;
+}
+/* A short message with an action keeps it on the title's row, between the
+   text and the close button, wherever the card has the width for it. */
+@media (min-width: 480px) {
+  .body[data-inline-action] {
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    grid-template-areas: "seal text action close";
+  }
+}
+
+/* Folded behind the front card: a blank slip whose bottom strip peeks out.
+   Its content and hairline fade away and come back as it reaches the front
+   or the deck spreads. A press on the strip lands on the card itself, which
+   spreads the deck on touch. */
+.toast[data-behind] .body,
+.toast[data-behind] .timer {
+  opacity: 0;
+}
+.toast[data-behind] .body {
+  pointer-events: none;
+}
+
+/* Folded four or more deep: faded out of view, still in the DOM and in its
+   live region. Keyboard focus reaching one spreads the deck and shows it. */
+.toast[data-tucked] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* The cards behind slide up into the space while this one lifts away. Its
+   content goes first, so its title is gone before the next card's shows. */
 .leaving {
-  animation: qpToastOut 0.26s var(--ease-in) forwards;
+  pointer-events: none;
+  animation: qpToastOut 280ms var(--ease-in) forwards;
+}
+.leaving .body {
+  animation: qpToastContentOut 140ms var(--ease-in) forwards;
+}
+.leaving .timer {
+  opacity: 0;
 }
 
-.icon {
-  flex-shrink: 0;
+/* The type seal: a solid disc holding the glyph, so the type reads from shape
+   and colour together. Its `color` is the fill, so the token's glow takes the
+   seal's own colour through currentColor; the glyph sets its own ink. */
+.seal {
+  grid-area: seal;
   display: grid;
   place-items: center;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--toast-accent) 15%, transparent);
-  color: var(--toast-accent);
-  font-size: var(--text-14);
+  background: var(--toast-seal);
+  color: var(--toast-seal);
+  box-shadow: var(--shadow-toast-seal);
 }
-.icon svg {
+.seal svg {
   display: block;
+  width: 16px;
+  height: 16px;
+  color: var(--toast-seal-ink);
+  /* react-icons draws at 2; the seal's glyph reads a touch heavier. */
+  stroke-width: 2.5;
 }
 
-.message {
-  flex: 1 1 auto;
-  /* Let a long message wrap instead of forcing the toast past its max-width. */
+/* Success and error draw their strokes once the card has landed. Each dash
+   runs a little past its stroke (the check is about 23 units long, each line
+   of the cross about 17), so the stroke starts fully hidden. */
+.success .seal svg {
+  --toast-glyph-length: 24;
+}
+.error .seal svg {
+  --toast-glyph-length: 18;
+}
+.success .seal polyline,
+.error .seal line {
+  stroke-dasharray: var(--toast-glyph-length);
+  stroke-dashoffset: 0;
+  animation: qpToastDraw 420ms var(--ease-out) 200ms backwards;
+}
+/* Warning and info carry dots and curves that read best whole, so they pop. */
+.warning .seal svg,
+.info .seal svg {
+  animation: qpToastPop 420ms var(--ease-out) 200ms backwards;
+}
+
+.text {
+  grid-area: text;
+  /* Lets long text wrap inside the fixed card width. */
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  /* Centres the title's first line (about 20px tall) on the 32px seal, so a
+     one-line toast reads as one tidy row. */
+  padding-block-start: 6px;
+}
+.title,
+.detail {
+  margin: 0;
+  overflow-wrap: break-word;
+}
+.title {
+  font-size: var(--text-14-5);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  line-height: 1.35;
+  color: var(--ink);
+}
+.detail {
+  font-size: var(--text-13);
+  line-height: 1.4;
+  color: var(--ink-60);
 }
 
+/* Under the text, a compact text button whose label lines up with the
+   title. */
 .action {
-  pointer-events: auto;
-  flex-shrink: 0;
+  grid-area: action;
+  justify-self: start;
+  margin-block-start: 4px;
+  margin-inline-start: -8px;
   /* Anchors the coarse-pointer hit-area overlay below. */
   position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  margin-inline-start: 2px;
-  padding: 5px 12px;
-  border: 1px solid color-mix(in srgb, var(--toast-accent) 42%, transparent);
-  border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--toast-accent) 10%, transparent);
+  padding-block: 4px;
+  padding-inline: 8px;
+  border: none;
+  border-radius: var(--radius-10);
+  background: transparent;
   color: var(--toast-accent);
   font: inherit;
-  font-size: var(--text-12-5);
+  font-size: var(--text-13-5);
   font-weight: 600;
+  line-height: 1.4;
   cursor: pointer;
-  transition: background var(--dur-fast) var(--ease);
+  transition-property: background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+/* On the title's row it sits centred on the seal, a touch roomier. */
+@media (min-width: 480px) {
+  .body[data-inline-action] .action {
+    margin-block-start: 0;
+    margin-inline-start: 0;
+    padding-block: 6px;
+    padding-inline: 10px;
+  }
 }
 @media (hover: hover) {
   .action:hover {
-    background: color-mix(in srgb, var(--toast-accent) 18%, transparent);
+    background: color-mix(in srgb, var(--toast-accent) 10%, transparent);
   }
 }
-.action:focus-visible {
-  outline: 2px solid var(--toast-accent);
-  outline-offset: 2px;
+.action:focus-visible,
+.close:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
-/* On touch, keep the pill's ~30px visual but extend the hit area vertically to
-   >=44px so Undo clears the WCAG/Apple/Material touch-target minimum. Only the
-   block axis grows: the pill's label plus its 12px side padding already puts
-   it well past 44px wide. */
+/* On touch, keep the text button (about 27px under the text, 31px on the
+   title's row) and grow the hit area vertically to 44px so Undo clears the
+   WCAG/Apple/Material touch-target minimum: each edge reaches out by half
+   the shortfall, since a percentage inset here reads the button's own
+   height. The inline axis holds at least 44px through the minimum width, and
+   the overlay stays clear of the close button's own overlay beside it. */
 @media (pointer: coarse) {
+  .action {
+    min-inline-size: 44px;
+  }
   .action::before {
     content: "";
     position: absolute;
-    inset-block: -8px;
+    inset-block: calc((100% - 44px) / 2);
     inset-inline: 0;
   }
 }
-.action svg {
-  width: 13px;
-  height: 13px;
-}
 
-/* Dismiss (close) affordance — quiet icon button so it never competes with the
-   message or the action, but is always there to close the toast by hand. */
+/* Dismiss (close): a quiet circle that appears while the toast is hovered or
+   holds focus, so the message and the action lead. On a device that cannot
+   hover it shows all the time. */
 .close {
-  pointer-events: auto;
-  flex-shrink: 0;
+  grid-area: close;
+  /* Centres the circle on the 32px seal. */
+  margin-block-start: 3px;
   /* Anchors the coarse-pointer hit-area overlay below. */
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  /* A 16px glyph centred in a 28px chip. The chip is the visual only: on touch
-     the ::before overlay below is what carries the 44px target. */
-  width: 28px;
-  height: 28px;
-  margin-inline-start: 1px;
-  margin-inline-end: -4px;
+  /* A 16px glyph centred in a 26px circle. The circle is the visual only: on
+     touch the ::before overlay below carries the 44px target. */
+  width: 26px;
+  height: 26px;
+  margin-inline-start: -4px;
   padding: 0;
   border: none;
   border-radius: 50%;
   background: transparent;
-  color: var(--ink-40);
+  color: var(--ink-60);
   cursor: pointer;
-  transition:
-    color var(--dur-fast) var(--ease),
-    background var(--dur-fast) var(--ease);
+  opacity: 0;
+  transition-property: opacity, color, background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
 }
-/* On touch, keep the 28px chip but extend the hit area to 44px square. The
-   growth is deliberately asymmetric: 4px into the 12px gap on the inline
-   start, 12px into the toast's own 16px end padding. That reaches the full
-   44px while staying clear of the Undo button beside it, and both edges stay
-   inside the toast, so nothing spills onto the page behind. */
+.toast:hover .close,
+.toast:focus-within .close {
+  opacity: 1;
+}
+@media (hover: none) {
+  .close {
+    opacity: 1;
+  }
+}
+/* On touch, keep the 26px circle but extend the hit area to 44px square. The
+   growth is deliberately asymmetric: 6px into the 8px gap on the inline start,
+   12px into the card's own 12px inline-end padding, and 9px up into the 16px
+   above the circle. That reaches the full 44px while staying clear of the
+   Undo button beside it, and every edge stays inside the toast, so nothing
+   spills onto the page behind. */
 @media (pointer: coarse) {
   .close::before {
     content: "";
     position: absolute;
-    inset-block: -8px;
-    inset-inline-start: -4px;
+    inset-block: -9px;
+    inset-inline-start: -6px;
     inset-inline-end: -12px;
   }
 }
@@ -193,53 +338,148 @@
 @media (hover: hover) {
   .close:hover {
     color: var(--ink);
-    background: rgba(var(--line-rgb), 0.1);
+    background: rgba(var(--line-rgb), 0.08);
   }
 }
-.close:focus-visible {
-  outline: 2px solid var(--toast-accent);
-  outline-offset: 2px;
+
+/* The countdown: a hairline along the bottom edge that drains toward the
+   inline start over the toast's lifetime (--toast-lifetime, from the
+   provider), and holds whenever the provider holds the timer. */
+.timer {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  height: 2px;
+  background: color-mix(in srgb, var(--toast-accent) 55%, transparent);
+  transform-origin: left center;
+  transition-property: opacity;
+  transition-duration: 150ms;
+  transition-timing-function: var(--ease);
+  animation: qpToastDrain var(--toast-lifetime) linear forwards;
+}
+:global([dir="rtl"]) .timer {
+  transform-origin: right center;
+}
+.toast[data-paused] .timer {
+  animation-play-state: paused;
 }
 
-/* Per-type accent. Each uses an "-ink" token engineered to stay legible on
-   --paper in both light and dark themes. */
+/* Per-type colours. The accent is a text token that clears 4.5:1 on --paper
+   in both themes. Each seal fill keeps its value in both themes or lifts with
+   them, and its glyph ink clears 3:1 on it in both: the light cream channel
+   on the jade, red and violet fills, and plum on the amber fill, which is
+   light in both themes. Info takes the violet family, so it reads apart from
+   the red error seal: violet text is 5.64:1 on light paper and 4.53:1 on
+   dark, and the cream glyph is 5.10:1 on the light fill and 3.62:1 on the
+   dark one. */
 .success {
   --toast-accent: var(--jade-ink);
+  --toast-seal: var(--jade-fill);
+  --toast-seal-ink: rgb(var(--cream-rgb));
 }
 .error {
   --toast-accent: var(--danger);
+  --toast-seal: var(--danger);
+  --toast-seal-ink: rgb(var(--cream-rgb));
 }
 .warning {
   --toast-accent: var(--amber-ink);
+  --toast-seal: var(--amber);
+  --toast-seal-ink: var(--plum);
 }
 .info {
-  --toast-accent: var(--accent-ink);
+  --toast-accent: var(--violet);
+  --toast-seal: var(--violet);
+  --toast-seal-ink: rgb(var(--cream-rgb));
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .toast,
-  .leaving {
-    animation: none;
-  }
+/* Reduced motion, from the OS setting or the in-app toggle (the provider reads
+   both into data-reduced-motion). The glyph rests drawn, a card's surface
+   lands where it stands with its content fading in, a leaving card fades out
+   with its content going first, and the deck moves by opacity alone while
+   cards jump to their places and heights. The global net in base.css
+   near-zeroes every duration with !important; the fades and the hairline keep
+   their own timing here through !important at a higher specificity, because
+   a fade is gentle and the hairline is information. */
+.container[data-reduced-motion] {
+  transition-property: translate;
+}
+.container[data-reduced-motion] .toast {
+  transition-property: opacity;
+  transition-duration: 350ms !important;
+  animation-name: none;
+}
+.container[data-reduced-motion] .leaving {
+  animation-name: qpToastFadeOut;
+  animation-duration: 280ms !important;
+}
+.container[data-reduced-motion] .body,
+.container[data-reduced-motion] .timer {
+  transition-property: opacity;
+  transition-duration: 150ms !important;
+}
+.container[data-reduced-motion] .body {
+  animation-duration: 280ms !important;
+}
+.container[data-reduced-motion] .leaving .body {
+  animation-duration: 140ms !important;
+}
+.container[data-reduced-motion] .seal svg,
+.container[data-reduced-motion] .seal svg * {
+  animation: none;
+}
+.container[data-reduced-motion] .timer {
+  animation-duration: var(--toast-lifetime) !important;
 }
 
-/* Local copies of shared keyframes — see src/styles/tokens/effects.css.
-   Global keyframes can't be referenced from a CSS module (the animation-name
-   gets scoped to a dangling hash), so each module needs its own copy. Toasts now
-   dock top-right, so they slide in from the edge rather than up from the floor. */
+/* Local copies: global keyframes can't be referenced from a CSS module (the
+   animation-name gets scoped to a dangling hash), so each module keeps its
+   own. The card keyframes name one end each, and the other end is the card at
+   rest, so a card folded out of view stays out of view once it has arrived. */
 @keyframes qpToastIn {
   from {
-    opacity: 0;
-    transform: translateX(20px) scale(0.97);
+    transform: translateY(-20px) scale(0.96);
+    filter: blur(6px);
   }
+}
+@keyframes qpToastContentIn {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes qpToastContentOut {
   to {
-    opacity: 1;
-    transform: none;
+    opacity: 0;
   }
 }
 @keyframes qpToastOut {
   to {
     opacity: 0;
-    transform: translateX(20px) scale(0.97);
+    transform: translateY(-10px) scale(0.95);
+    filter: blur(4px);
+  }
+}
+@keyframes qpToastFadeOut {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes qpToastDraw {
+  from {
+    stroke-dashoffset: var(--toast-glyph-length);
+  }
+}
+@keyframes qpToastPop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+@keyframes qpToastDrain {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
   }
 }

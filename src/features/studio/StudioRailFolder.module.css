@@ -138,10 +138,36 @@
   color: var(--studio-text-muted);
 }
 
-/* The folded rail: a folder tile centred in the strip, rows unindented. */
+/* The folded rail: a 44px folder tile on the strip's centre column (x 14
+   to 58), hung from the start edge like the covers, rows unindented. The
+   tile carries every state, so the head keeps no edge bar or wash. */
 .folder .head[data-compact] {
-  justify-content: center;
-  padding: 6px 0;
+  justify-content: flex-start;
+  padding: 4px 0 4px 14px;
+  border-left-width: 0;
+}
+@media (hover: hover) {
+  .folder .head[data-compact]:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: transparent;
+  }
+  .folder
+    .head[data-compact]:hover:not(:disabled):not([aria-disabled="true"])
+    .compactTile {
+    background: var(--studio-wash-3);
+  }
+}
+.folder .head[data-compact]:active:not(:disabled):not([aria-disabled="true"]) {
+  background: transparent;
+}
+/* A dragged playlist over the folded folder: a coral ring 2px clear of the
+   tile and a faint coral fill, as on a folded playlist. */
+.folder .head[data-compact][data-drop-over] {
+  background: transparent;
+  outline: none;
+}
+.folder .head[data-compact][data-drop-over] .compactTile {
+  outline-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.14);
 }
 .folder[data-compact] .list {
   padding: 0;
@@ -149,11 +175,16 @@
 .compactTile {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-8);
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-12);
   background: var(--studio-wash-2);
   color: var(--studio-text);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition-property: background-color, outline-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
 }
 .compactTile svg {
   width: 18px;
@@ -181,14 +212,15 @@
   width: 14px;
   height: 14px;
 }
-/* Folded: a square drop tile centred in the strip, the words kept for
-   screen readers. */
+/* Folded: a 44px drop tile on the strip's centre column, the words kept
+   for screen readers. */
 .moveOut[data-compact] {
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  margin: 4px auto;
+  width: 44px;
+  height: 44px;
+  margin: 4px 0 4px 14px;
   padding: 0;
+  border-radius: var(--radius-12);
 }
 .moveOut[data-drop-over] {
   border-color: var(--accent);
@@ -199,12 +231,14 @@
 @media (prefers-reduced-motion: reduce) {
   .folder .head,
   .chevron,
+  .compactTile,
   .moveOut {
     transition-property: none;
   }
 }
 :global(html[data-reduce-motion="true"]) .folder .head,
 :global(html[data-reduce-motion="true"]) .chevron,
+:global(html[data-reduce-motion="true"]) .compactTile,
 :global(html[data-reduce-motion="true"]) .moveOut {
   transition-property: none;
 }

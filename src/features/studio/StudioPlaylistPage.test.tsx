@@ -85,7 +85,7 @@ describe("playlist page (demo)", () => {
       screen.getByRole("button", { name: "Playlist actions" }),
     ).toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: /^save kitchen tapes/i }),
+      screen.queryByRole("button", { name: "Like Kitchen tapes" }),
     ).not.toBeInTheDocument();
   });
 
@@ -152,7 +152,7 @@ describe("playlist page (demo)", () => {
     await waitFor(() => expect(previousRemove).toHaveFocus());
   });
 
-  it("gives a viewer Save and no owner controls or visibility", async () => {
+  it("gives a viewer the heart and no owner controls or visibility", async () => {
     renderPage("demo-playlist-dyke-bar-standards");
     await screen.findByRole("heading", {
       level: 1,
@@ -163,7 +163,7 @@ describe("playlist page (demo)", () => {
       "/members/sara-marques",
     );
     expect(
-      screen.getByRole("button", { name: "Save Lisbon dyke-bar standards" }),
+      screen.getByRole("button", { name: "Like Lisbon dyke-bar standards" }),
     ).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "Playlist actions" }),
@@ -259,7 +259,7 @@ describe("collaborative playlists (demo)", () => {
     );
     await waitFor(() =>
       expect(
-        screen.queryByRole("button", { name: "Save Pride warm-up" }),
+        screen.queryByRole("button", { name: "Like Pride warm-up" }),
       ).not.toBeInTheDocument(),
     );
   });

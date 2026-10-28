@@ -30,6 +30,10 @@ import { useStudioSearchShortcutFallback } from "./useStudioSearchShortcutFallba
 import { useStudioShowcase } from "./useStudioShowcase";
 import { useStudioShellSidePanel } from "./useStudioShellSidePanel";
 import { useStudioShellSignal } from "./useStudioShellSignal";
+import {
+  StudioPageWidthBucketContext,
+  useStudioPageWidthBucket,
+} from "./studioHeroLayout";
 import styles from "./studio.module.css";
 
 /**
@@ -52,6 +56,10 @@ export function StudioShell({ children }: { children: ReactNode }) {
     useStudioShellSidePanel(isCompact);
   const appRef = useRef<HTMLDivElement>(null);
   useStudioRailTransitionFlag(appRef);
+  // The page column's width, so a detail hero's action row folds to icons
+  // when the rail or the docked panel leaves it too little room.
+  const pageRef = useRef<HTMLElement>(null);
+  const pageWidthBucket = useStudioPageWidthBucket(pageRef);
   useStudioShellSignal();
   useStudioDocumentTitle();
   // "/" and Cmd/Ctrl+K at every width: the hook focuses a field on screen,
@@ -137,8 +145,15 @@ export function StudioShell({ children }: { children: ReactNode }) {
         </header>
 
         <div className={styles.main}>
-          <main id={MAIN_CONTENT_ID} tabIndex={-1} className={styles.content}>
-            {children}
+          <main
+            ref={pageRef}
+            id={MAIN_CONTENT_ID}
+            tabIndex={-1}
+            className={styles.content}
+          >
+            <StudioPageWidthBucketContext.Provider value={pageWidthBucket}>
+              {children}
+            </StudioPageWidthBucketContext.Provider>
           </main>
           <StudioTabBar />
         </div>

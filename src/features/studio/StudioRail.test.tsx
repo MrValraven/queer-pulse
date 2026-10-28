@@ -51,7 +51,7 @@ describe("StudioRail", () => {
       screen.getByRole("button", { name: /^create playlist or folder$/i }),
     ).toHaveAttribute("aria-haspopup", "menu");
     const playlists = screen.getByRole("navigation", {
-      name: "Your playlists",
+      name: "Your library",
     });
     expect(
       within(playlists).getByRole("link", { name: /liked songs/i }),
@@ -118,7 +118,7 @@ describe("StudioRail", () => {
       }),
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByRole("navigation", { name: "Your playlists" }),
+      screen.queryByRole("navigation", { name: "Your library" }),
     ).not.toBeInTheDocument();
     expect(screen.getAllByRole("navigation")).toHaveLength(1);
     expect(

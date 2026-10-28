@@ -114,7 +114,7 @@
   grid-column: 1;
   grid-row: 1 / -1;
   background: var(--rail);
-  padding: 24px 0 0;
+  padding: 0;
   position: sticky;
   top: 0;
   /* Ends above the player bar and whichever is taller of the tab bar and
@@ -129,20 +129,45 @@
   flex-direction: column;
   gap: 6px;
 }
+/* The topbar's own box (its padding, the 44px row and the hairline), so the
+   two hairlines meet on one pixel row and the wordmark sits centred on the
+   topbar's row. Folded, the start padding glides the pulse dot to the
+   strip's centre (x 36) with the grid. */
 .brandRow {
   display: flex;
+  flex: none;
   align-items: center;
   gap: 9px;
-  padding: 0 22px 28px;
+  height: var(--studio-topbar-h);
+  padding: max(18px, env(safe-area-inset-top, 0px)) 22px 18px;
   border-bottom: 1px solid var(--s-line);
   margin-bottom: 18px;
+  transition: padding-inline-start var(--dur-base) var(--ease);
+}
+.rail[data-collapsed] .brandRow {
+  padding-inline-start: 31.5px;
 }
 .pulseDot {
+  position: relative;
   width: 9px;
   height: 9px;
   border-radius: 50%;
   background: var(--accent);
   flex: none;
+}
+/* Folded, the dot is the strip's only mark, so a soft coral halo fades in
+   around it. */
+.pulseDot::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.16);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease);
+}
+.rail[data-collapsed] .pulseDot::after {
+  opacity: 1;
 }
 .brandRow .brand {
   display: flex;
@@ -195,6 +220,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  min-height: 0;
   padding: 10px 22px;
   font-size: var(--text-14);
   font-weight: 500;
@@ -202,8 +228,14 @@
   cursor: pointer;
   border-left: 2px solid transparent;
   white-space: nowrap;
-  transition-property: color, background-color, border-left-color;
-  transition-duration: var(--dur-fast);
+  /* The colours follow the pointer quickly; the tile shape follows the
+     rail's fold, on the grid's own timing. */
+  transition-property:
+    color, background-color, border-left-color, margin, padding, border-radius,
+    min-height;
+  transition-duration:
+    var(--dur-fast), var(--dur-fast), var(--dur-fast), var(--dur-base),
+    var(--dur-base), var(--dur-base), var(--dur-base);
   transition-timing-function: var(--ease);
 }
 /* Drawn inset: the rail's own overflow clip would cut an outward ring (the
@@ -251,13 +283,46 @@
 .railItem .nm {
   flex: 1;
 }
+/* Folded, every row is a 44px tile on the strip's centre column (x 14 to
+   58). The end margin is 1px shorter for the rail's right border, and the
+   11px start padding centres the icon past the 2px edge. The label stays in
+   place at its full width, clipped by the tile. */
+.rail[data-collapsed] .railItem {
+  min-height: 44px;
+  margin: 2px 13px 2px 14px;
+  padding-inline: 11px 0;
+  border-radius: var(--radius-12);
+  overflow: hidden;
+}
+/* The open page on the strip: a soft coral fill under the coral icon. */
+.rail[data-collapsed] .railItemOn {
+  border-left-color: transparent;
+  background: rgba(var(--accent-rgb), 0.14);
+}
 /* The pill and the playlist list under the main nav: it takes the rail's
    remaining height so the list can scroll inside it. */
 .railBody {
+  position: relative;
   flex: 1;
   min-height: 0;
   display: flex;
   flex-direction: column;
+}
+/* Folded, a short centred hairline parts the main nav from the library
+   tiles below it. */
+.railBody::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 24px;
+  width: 24px;
+  height: 1px;
+  background: var(--s-line);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease);
+}
+.rail[data-collapsed] .railBody::before {
+  opacity: 1;
 }
 /* The Create playlist pill. Chained through .rail so it wins over the shared
    ghost Button in both themes. Its fill is the boundary, so the ghost border
@@ -312,8 +377,15 @@
   align-items: stretch;
   padding-right: 0;
 }
+/* Folded, the toggle's Tooltip wrapper is the stretched flex child, so the
+   wrapper insets the button onto the tile column (the exit row above it is
+   a nav tile already) and the button takes the tile corners. */
+.rail[data-collapsed] .railFoot > span:last-child {
+  margin-block: 2px;
+  padding-inline-start: 14px;
+}
 .rail[data-collapsed] .railToggle {
-  align-self: center;
+  border-radius: var(--radius-12);
 }
 .railExit {
   color: var(--s-text-60);
@@ -323,18 +395,40 @@
     color: var(--s-text);
   }
 }
+/* Reduced motion: the brand, the tiles and the divider change shape at
+   once. */
+@media (prefers-reduced-motion: reduce) {
+  .brandRow,
+  .railItem,
+  .pulseDot::after,
+  .railBody::before {
+    transition-property: none;
+  }
+}
+:global(html[data-reduce-motion="true"]) .brandRow,
+:global(html[data-reduce-motion="true"]) .railItem,
+:global(html[data-reduce-motion="true"]) .pulseDot::after,
+:global(html[data-reduce-motion="true"]) .railBody::before {
+  transition-property: none;
+}
 /* Short windows (a landscape phone, a zoomed laptop): the whole rail scrolls
    so the main nav and the playlists stay reachable. */
 @media (max-height: 600px) {
   .rail {
     overflow-y: auto;
   }
+  /* The brand row keeps the topbar's box, so only the space under it
+     tightens. */
   .brandRow {
-    padding-bottom: 14px;
     margin-bottom: 8px;
   }
   .railItem {
     padding-block: 8px;
+  }
+  /* Folded, a scrollbar would eat into the 72px strip and push the tiles
+     off their column; the strip still scrolls by wheel, touch and focus. */
+  .rail[data-collapsed] {
+    scrollbar-width: none;
   }
   /* Chained through .rail so it outranks the list's own flex: 1 whatever
      order the two modules load in. */
@@ -1115,20 +1209,26 @@
 /* Runs out through the page gutter (--studio-gutter, with the notch inset)
    and up under the topbar's frosted glass, then fades to the page before the
    body starts.
-   The second glow pools under the cover, so the art sits in its own light. */
+   The second glow pools under the cover, so the art sits in its own light.
+   --wash-reach-end runs the wash further past the end gutter. The glow keeps
+   a layer the page column's width, so it stays under the cover. */
 .detailWash {
+  --wash-reach-end: 0px;
   position: absolute;
   inset-block: -96px -24px;
   inset-inline-start: calc(-1 * var(--studio-gutter-left));
-  inset-inline-end: calc(-1 * var(--studio-gutter-right));
+  inset-inline-end: calc(
+    -1 * (var(--studio-gutter-right) + var(--wash-reach-end))
+  );
   z-index: -1;
   pointer-events: none;
   background:
     radial-gradient(
-      ellipse 46% 58% at 16% 62%,
-      rgba(var(--wash-rgb), calc(var(--wash-alpha) * var(--wash-boost, 1))),
-      transparent 72%
-    ),
+        ellipse 46% 58% at 16% 62%,
+        rgba(var(--wash-rgb), calc(var(--wash-alpha) * var(--wash-boost, 1))),
+        transparent 72%
+      )
+      0 0 / calc(100% - var(--wash-reach-end)) 100% no-repeat,
     linear-gradient(
       180deg,
       rgba(
@@ -1176,6 +1276,13 @@
   .detailArt {
     width: min(180px, 44vh);
   }
+}
+/* The docked side panel's column has no fill of its own, so the wash runs
+   on behind it to the screen's end and only the panel's card sits on top.
+   It reaches that far with the panel shut as well (the root clips the
+   overflow), so the wash holds while the column slides closed. */
+.app .detailWash {
+  --wash-reach-end: var(--studio-side-panel-w);
 }
 /* A hero under a breadcrumb (the track page) starts its wash at its own top
    and fades it in, so the crumb keeps the plain page behind its text. */

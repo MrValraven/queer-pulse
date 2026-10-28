@@ -59,17 +59,20 @@ export const studio: Catalog = {
   "rail.foot.paid_other":
     "You've paid <b>{amount}</b> to {count} artists this year.",
 
-  "railPlaylists.label": "Your playlists",
+  "railPlaylists.label": "Your library",
   "railPlaylists.autoPlaylist": "Auto playlist",
   "railPlaylists.savedFallback": "Saved playlist",
-  "railPlaylists.empty": "Create a playlist and it shows up here",
-  "railPlaylists.loadError": "We couldn't load your playlists",
+  "railPlaylists.empty":
+    "Create a playlist or like an album and it shows up here",
+  "railPlaylists.loadError": "We couldn't load your library",
+  "railPlaylists.releaseMeta": "Album · {artist}",
+  "railPlaylists.releaseFallback": "Album",
   "railPlaylists.menu.label": "{name} actions",
   "railPlaylists.menu.removeSaved": "Remove from your library",
   "railPlaylists.sortLabel": "Sort",
-  "railPlaylists.filterLabel": "Filter your playlists",
-  "railPlaylists.filterPlaceholder": "Filter playlists",
-  "railPlaylists.noMatches": 'No playlist matches "{query}"',
+  "railPlaylists.filterLabel": "Filter your library",
+  "railPlaylists.filterPlaceholder": "Filter your library",
+  "railPlaylists.noMatches": 'Nothing in your library matches "{query}"',
   "railPlaylists.create.label": "Create",
   "railPlaylists.create.triggerLabel": "Create playlist or folder",
   "railPlaylists.create.menuLabel": "Create a playlist or a folder",
@@ -384,9 +387,9 @@ export const studio: Catalog = {
   "firstRun.about.listen.title": "Listen",
   "firstRun.about.listen.body":
     "Albums, EPs, sets and episodes, ready whenever you are.",
-  "firstRun.about.save.title": "Save",
+  "firstRun.about.save.title": "Like",
   "firstRun.about.save.body":
-    "Like a track or save a release and it waits for you in your library.",
+    "Like a track and it goes into Liked songs. Like an album, a show or a playlist and it waits for you in your library.",
   "firstRun.about.follow.title": "Follow",
   "firstRun.about.follow.body":
     "Follow artists from local scenes. Your library keeps everyone you follow.",
@@ -1804,18 +1807,17 @@ export const studio: Catalog = {
   "states.notFoundBody":
     "It may have been removed, or the link may be out of date",
   "states.backHomeCta": "Back to Studio home",
-  "save.saveCta": "Save",
-  "save.saveReleaseCta": "Save {title}",
-  "save.removeSavedCta": "Remove {title} from saved",
-  "save.savedLabel": "Saved",
-  "save.savedToast": "Saved",
-  "save.removedToast": "Removed from Saved",
 
   // ── Liked songs (StudioLikeButton, StudioLikedPage) ─────────────────────
   "like.cta": "Like",
   "like.trackAria": "Like {title}",
   "like.addedToast": "Added to Liked songs",
   "like.removedToast": "Removed from Liked songs",
+  // A hero's heart on an album, a show or a playlist (StudioCollectionLikeButton)
+  "like.collectionAria": "Like {title}",
+  "like.collectionUnlike": "Remove from your library",
+  "like.collectionAddedToast": "Added to your library",
+  "like.collectionRemovedToast": "Removed from your library",
   "like.blockedWithdrawn":
     "This release was taken down, so its tracks can't be liked",
   "liked.title": "Liked songs",
@@ -2289,7 +2291,7 @@ export const studio: Catalog = {
     "Make one for a mood, a night or a person, then add tracks from anywhere in Studio",
   "libraryLive.empty.releasesTitle": "No saved releases yet",
   "libraryLive.empty.releasesBody":
-    "Save a release from its page and it waits for you here",
+    "Tap the heart on a release's page and it waits for you here",
   "libraryLive.empty.artistsTitle": "You don't follow any artists yet",
   "libraryLive.empty.artistsBody":
     "Follow an artist from their Studio page to keep them close",
@@ -2551,9 +2553,9 @@ export const studio: Catalog = {
   "helpLive.faq.tracking.q": "Does Studio keep track of what I listen to?",
   "helpLive.faq.tracking.a":
     "Yes, privately. Studio keeps a listening history only you can see, on <a>Your listening</a>, where you can pause or clear it. Artists see total plays, with any count from 1 to 4 shown as Fewer than 5, and your name only if you turn on Show me as a supporter on their page.",
-  "helpLive.faq.saving.q": "How do saving, playlists and following work?",
+  "helpLive.faq.saving.q": "How do likes, playlists and following work?",
   "helpLive.faq.saving.a":
-    "Save any release and it waits for you in your <a>library</a>. Tap the heart on a track and it goes into Liked songs, which only you can see. A playlist can be Public, Connections only or Private, and you can change that any time. Follow an artist from their page to hear when they put out something new.",
+    "Tap the heart on an album, a show or a playlist and it waits for you in your <a>library</a> and in the list beside your playlists. Tap the heart on a track and it goes into Liked songs, which only you can see. A playlist can be Public, Connections only or Private, and you can change that any time. Follow an artist from their page to hear when they put out something new.",
   "helpLive.faq.playerSettings.q": "Can I change how the player behaves?",
   "helpLive.faq.playerSettings.a":
     "Yes. In <a>Settings</a> you can turn off Autoplay next, hide tracks marked explicit and, on most browsers, set a crossfade between tracks. Your choices follow you to every device.",

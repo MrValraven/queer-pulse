@@ -1,4 +1,4 @@
-import { FiHeart } from "react-icons/fi";
+import { FiGift } from "react-icons/fi";
 import {
   Button,
   Collapse,
@@ -9,11 +9,11 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioReleaseView } from "./api/studio.adapters";
 import { StudioPlayButton } from "./kit/StudioPlayButton";
 import { StudioAddToPlaylistButton } from "./StudioAddToPlaylistButton";
+import { StudioReleaseLikeButton } from "./StudioCollectionLikeButton";
 import { StudioHeroShare } from "./StudioHeroShare";
 import { StudioHiddenTrackNote } from "./StudioHiddenTrack";
 import { StudioNotifyMeButton } from "./StudioNotifyMeButton";
 import { StudioReleaseOverflow } from "./StudioReleaseOverflow";
-import { StudioReleaseSaveButton } from "./StudioSaveButton";
 import {
   useIsHeroActionsCompact,
   useIsHeroShareFolded,
@@ -24,7 +24,8 @@ import styles from "./studio.module.css";
 
 /** The hero's actions. Who sees what: an upcoming release's visitor gets
  *  Notify me and Share; a preview gets Play alone; a published release
- *  gets Save, Add to playlist, Tip (showcase only), Share and the More
+ *  gets the heart (it likes the release into the library), Add to
+ *  playlist, Tip (showcase only, a gift icon), Share and the More
  *  menu (Play next and Add to queue for the whole release, Go to artist,
  *  Copy link and, for a visitor, Report). Below 1280px every action after
  *  Play is a round icon with a tooltip, so the row stays on one line, and
@@ -97,7 +98,7 @@ export function StudioAlbumHeroActions({
         />
       )}
       {isPublicExtra && (
-        <StudioReleaseSaveButton release={release} isIconOnly={isCompact} />
+        <StudioReleaseLikeButton release={release} isIconOnly={isCompact} />
       )}
       {isPublicExtra && (
         <Tooltip label={addLabel} placement="top" isDisabled={!isCompact}>
@@ -120,7 +121,7 @@ export function StudioAlbumHeroActions({
             className={styles.tip}
             onClick={onTip}
           >
-            <FiHeart aria-hidden />
+            <FiGift aria-hidden />
           </IconButton>
         ) : (
           <Button
@@ -129,7 +130,7 @@ export function StudioAlbumHeroActions({
             aria-label={tipAria}
             onClick={onTip}
           >
-            <FiHeart aria-hidden />
+            <FiGift aria-hidden />
             {t("studio:detail.tipCta")}
           </Button>
         ))}

@@ -89,7 +89,7 @@ describe("StudioAlbumPage (demo fixture)", () => {
     for (const playButton of playButtons)
       expect(playButton).toHaveAttribute("aria-disabled", "true");
     expect(
-      screen.queryByRole("button", { name: /^save bairro antigo$/i }),
+      screen.queryByRole("button", { name: "Like Bairro antigo" }),
     ).not.toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: /^more actions$/i }),

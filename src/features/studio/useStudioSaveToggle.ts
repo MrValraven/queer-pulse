@@ -10,8 +10,9 @@ export interface StudioSaveSubject {
   meta?: string;
 }
 
-/** Save a release, a track or a playlist with the existing Saved feature (new kinds,
- *  no separate Studio library). */
+/** Keeps a release, a track or a playlist in the existing Saved feature
+ *  (its Studio kinds). A hero's heart likes a release, a show or a playlist
+ *  through it, so a like is a save: the Library and the rail read it back. */
 export function useStudioSaveToggle(subject: StudioSaveSubject | null) {
   const { isSaved, toggleSave } = useSaved();
   const { showToast } = useToast();
@@ -29,8 +30,8 @@ export function useStudioSaveToggle(subject: StudioSaveSubject | null) {
       });
       showToast(
         isNowSaved
-          ? t("studio:save.savedToast")
-          : t("studio:save.removedToast"),
+          ? t("studio:like.collectionAddedToast")
+          : t("studio:like.collectionRemovedToast"),
         isNowSaved ? "success" : "info",
       );
     },

@@ -9,6 +9,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioPlaylistView } from "./api/studio.adapters";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import { queueFromTracks, shuffledQueue } from "./player/studioQueue";
+import { StudioCollectionLikeButton } from "./StudioCollectionLikeButton";
 import { StudioDetailHero } from "./StudioDetailHero";
 import {
   StudioPlaylistOwnerMenu,
@@ -18,7 +19,6 @@ import { StudioPlaylistCollabChip } from "./StudioPlaylistCollabChip";
 import { StudioPlaylistCover } from "./StudioPlaylistCover";
 import { StudioPlaylistPlayButton } from "./StudioPlaylistPlayButton";
 import { StudioHeroShare } from "./StudioHeroShare";
-import { StudioSaveToggleButton } from "./StudioSaveButton";
 import {
   useIsHeroActionsCompact,
   useIsHeroShareFolded,
@@ -30,7 +30,8 @@ import pageCss from "./StudioPlaylistPage.module.css";
 
 /** Cover mosaic, name, credit, the owner's visibility chip, the Collaborative
  *  chip for the owner and editors of a playlist with editors, the facts, and
- *  Play playlist, Shuffle, Save (a playlist you neither own nor edit), Share
+ *  Play playlist, Shuffle, the heart (it likes a playlist you neither own
+ *  nor edit into the library), Share
  *  and the owner's or the editor's menu.
  *  Below 1280px every action after Play is a round icon with a tooltip,
  *  and the menu stays last; below 1440px the owner's and the editor's
@@ -38,7 +39,7 @@ import pageCss from "./StudioPlaylistPage.module.css";
  *  in the browser and sent nowhere. The saved snapshot
  *  holds the name and link only: a credit can change after the save, so the
  *  snapshot carries no credit and can never pair a member with a persona.
- *  Save and the menu fade as they swap when an invitee accepts. The page
+ *  The heart and the menu fade as they swap when an invitee accepts. The page
  *  finds the menu trigger through `actionsMenuRef` and the h1 through
  *  `titleRef` to move focus after Accept.
  *  `sentinelRef` marks the hero's foot for the sticky header. */
@@ -71,7 +72,7 @@ export function StudioPlaylistHero({
     transition: reducedMotion ? { duration: 0.12 } : STUDIO_FADE,
   } as const;
   const player = useStudioPlayer();
-  const save = useStudioSaveToggle(
+  const like = useStudioSaveToggle(
     playlist.hasEditRights
       ? null
       : {
@@ -177,10 +178,10 @@ export function StudioPlaylistHero({
           )}
           <AnimatePresence initial={false}>
             {!playlist.hasEditRights && (
-              <m.span key="save" className={pageCss.swap} {...swapFade}>
-                <StudioSaveToggleButton
-                  save={save}
-                  label={t("studio:save.saveReleaseCta", {
+              <m.span key="like" className={pageCss.swap} {...swapFade}>
+                <StudioCollectionLikeButton
+                  like={like}
+                  label={t("studio:like.collectionAria", {
                     title: playlist.name,
                   })}
                   isIconOnly={isCompact}

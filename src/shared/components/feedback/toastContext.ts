@@ -8,11 +8,19 @@ export interface ToastAction {
   onClick: () => void;
 }
 
+/** A toast's text: a title line, plus an optional quieter detail line under it. */
+export interface ToastMessage {
+  title: string;
+  detail?: string;
+}
+
 export interface ToastContextValue {
   /** Shows a toast and returns its id, for a caller that may need to take it
-   *  down early through `dismissToast`. Callers that ignore the id are fine. */
+   *  down early through `dismissToast`. Callers that ignore the id are fine.
+   *  `message` is either a plain string, which renders as the title alone, or
+   *  `{ title, detail }` for a title with a detail line beneath it. */
   showToast: (
-    message: string,
+    message: string | ToastMessage,
     type?: ToastType,
     durationMs?: number,
     action?: ToastAction,

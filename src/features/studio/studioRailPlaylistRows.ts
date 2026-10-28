@@ -5,11 +5,15 @@ import {
 } from "../../app/providers/useSaved";
 import type { ImageSlotTint } from "../../shared/components/ui";
 import type { StudioPlaylistCardView } from "./api/studio.adapters";
-import { SAVED_ID_PREFIX } from "./studioRailPlaylists.data";
+import {
+  RELEASE_SAVED_ID_PREFIX,
+  SAVED_ID_PREFIX,
+} from "./studioRailPlaylists.data";
 import { savedCoverTintOf } from "./studioLibrarySort.data";
 
 /** One playlist row in the Studio rail. */
 export interface StudioRailPlaylistRowModel {
+  kind: "playlist";
   /** The saved id: "studio_playlist:<id>". */
   key: string;
   playlistId: string;
@@ -47,6 +51,7 @@ export function toRailPlaylistRows(
   const ownRows = ownPlaylists
     .filter((playlist) => playlist.role !== "invitee")
     .map((playlist): StudioRailPlaylistRowModel => ({
+      kind: "playlist",
       key: playlist.savedId,
       playlistId: playlist.id,
       name: playlist.name,
@@ -66,6 +71,7 @@ export function toRailPlaylistRows(
     if (isSavedItemUnavailable(item) || !item.href) continue;
     if (ownSavedIds.has(item.id)) continue;
     savedRows.push({
+      kind: "playlist",
       key: item.id,
       playlistId: item.id.slice(SAVED_ID_PREFIX.length),
       name: item.title,
@@ -83,12 +89,69 @@ export function toRailPlaylistRows(
   return [...ownRows, ...savedRows];
 }
 
-/** What the rail's filter box matches: the name and who it belongs to. */
-export const railPlaylistFilterText = (row: StudioRailPlaylistRowModel) =>
-  `${row.name} ${row.ownerName ?? ""}`;
+/** One liked release in the Studio rail: an album, or a show, which the
+ *  saved store keeps as a release too. It opens its page and takes no
+ *  dropped tracks. */
+export interface StudioRailReleaseRowModel {
+  kind: "release";
+  /** The saved id: "studio_release:<id>". */
+  key: string;
+  releaseId: string;
+  name: string;
+  /** Router path, via linkToPath. */
+  href: string;
+  /** `SavedItem.meta`: the artist, or a show's "Podcast · {artist}" line. */
+  artistLine: string | null;
+  /** The cover as the server last read it, or null for none. */
+  coverUrl: string | null;
+  tint: ImageSlotTint;
+}
 
-/** The rail's Creator sort reads the owner line. */
+/** Any row in the rail's list under Liked songs. */
+export type StudioRailRowModel =
+  StudioRailPlaylistRowModel | StudioRailReleaseRowModel;
+
+export const isRailPlaylistRow = (
+  row: StudioRailRowModel,
+): row is StudioRailPlaylistRowModel => row.kind === "playlist";
+
+/**
+ * The rail's release rows: the albums and shows the member liked, in
+ * saved-store order. As with saved playlists, a like that can no longer be
+ * opened or that has no link is left out.
+ */
+export function toRailReleaseRows(
+  savedReleases: SavedItem[],
+): StudioRailReleaseRowModel[] {
+  const rows: StudioRailReleaseRowModel[] = [];
+  for (const item of savedReleases) {
+    if (isSavedItemUnavailable(item) || !item.href) continue;
+    if (!item.id.startsWith(RELEASE_SAVED_ID_PREFIX)) continue;
+    rows.push({
+      kind: "release",
+      key: item.id,
+      releaseId: item.id.slice(RELEASE_SAVED_ID_PREFIX.length),
+      name: item.title,
+      href: linkToPath(item.href),
+      artistLine: item.meta ?? null,
+      coverUrl: item.coverUrl ?? null,
+      tint: savedCoverTintOf(item.id),
+    });
+  }
+  return rows;
+}
+
+/** A row's second line as data: who made it or who it belongs to. */
+const railRowCreditOf = (row: StudioRailRowModel) =>
+  row.kind === "release" ? row.artistLine : row.ownerName;
+
+/** What the rail's filter box matches: the name and who made it or who it
+ *  belongs to. */
+export const railPlaylistFilterText = (row: StudioRailRowModel) =>
+  `${row.name} ${railRowCreditOf(row) ?? ""}`;
+
+/** The rail's Creator sort reads the owner line, or a release's artist. */
 export const RAIL_PLAYLIST_SORT_ACCESSORS = {
-  title: (row: StudioRailPlaylistRowModel) => row.name,
-  artist: (row: StudioRailPlaylistRowModel) => row.ownerName,
+  title: (row: StudioRailRowModel) => row.name,
+  artist: (row: StudioRailRowModel) => railRowCreditOf(row),
 };

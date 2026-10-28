@@ -1,7 +1,7 @@
 import { m } from "motion/react";
 import { useId, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiCheck, FiHeart, FiMusic, FiPlus } from "react-icons/fi";
+import { FiGift, FiMusic } from "react-icons/fi";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { Button, EmptyState } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -10,6 +10,7 @@ import type { StudioReleaseCardView } from "./api/studio.adapters";
 import type { StudioReleasesResult } from "./api/useStudioReleases";
 import { useStudioAccess } from "./api/useStudioAccess";
 import { StudioPlayButton } from "./kit/StudioPlayButton";
+import { StudioReleaseLikeButton } from "./StudioCollectionLikeButton";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import { StudioHomeHeroShowcase } from "./StudioHomeHeroShowcase";
 import { StudioLoadError } from "./StudioLoadStates";
@@ -20,7 +21,6 @@ import { releaseFactsLine } from "./studioFacts";
 import type { StudioHomeHeroChoice } from "./studioHome.data";
 import { STUDIO_FADE } from "./studioMotion";
 import { studioUploadPath } from "./studioPaths";
-import { useStudioSaveToggle } from "./useStudioSaveToggle";
 import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
@@ -36,7 +36,8 @@ function StudioHomePageHeading() {
   return <h1 className="visuallyHidden">{t("studio:home.pageHeading")}</h1>;
 }
 
-/** Play, Save and (demo) Tip under the hero title. */
+/** Play, the heart and (demo) Tip under the hero title. The heart likes
+ *  the release into the library; Tip carries a gift icon. */
 function StudioHomeHeroActions({
   release,
 }: {
@@ -46,13 +47,6 @@ function StudioHomeHeroActions({
   const player = useStudioPlayer();
   const isShowcase = useStudioShowcase();
   const [isTipOpen, setIsTipOpen] = useState(false);
-  const save = useStudioSaveToggle({
-    savedId: release.savedId,
-    kind: "studio_release",
-    title: release.title,
-    href: release.href,
-    meta: release.artist.name,
-  });
   const isCurrent = player.isCurrentRelease(release.id);
   const isPlaying = isCurrent && player.status === "playing";
   const isLoading = isCurrent && player.status === "loading";
@@ -70,23 +64,10 @@ function StudioHomeHeroActions({
           isCurrent ? player.togglePlay() : void player.playRelease(release.id)
         }
       />
-      <Button
-        variant="quiet"
-        aria-pressed={save.isSaved}
-        aria-label={t(
-          save.isSaved
-            ? "studio:save.removeSavedCta"
-            : "studio:save.saveReleaseCta",
-          { title: release.title },
-        )}
-        onClick={save.toggle}
-      >
-        {save.isSaved ? <FiCheck aria-hidden /> : <FiPlus aria-hidden />}
-        {save.isSaved ? t("studio:save.savedLabel") : t("studio:save.saveCta")}
-      </Button>
+      <StudioReleaseLikeButton release={release} isIconOnly={false} />
       {isShowcase && (
         <Button variant="soft" onClick={() => setIsTipOpen(true)}>
-          <FiHeart aria-hidden />
+          <FiGift aria-hidden />
           {t("studio:detail.tipArtistCta", { artist: release.artist.name })}
         </Button>
       )}
@@ -101,7 +82,7 @@ function StudioHomeHeroActions({
 }
 
 /** The featured release with its staff note, else the newest release, with
- *  Play, Save and (demo) Tip. Owns the page's loading, empty and error
+ *  Play, the heart and (demo) Tip. Owns the page's loading, empty and error
  *  states so the rows below never double them. The skeleton holds the
  *  hero's shape and the real hero fades in over it. */
 export function StudioHomeHero({

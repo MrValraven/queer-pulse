@@ -11,11 +11,11 @@ beforeEach(() => {
   resetStudioLibrarySeedForTests();
 });
 
-function renderRail() {
+function renderRail(
+  initialEntry = "/studio/collection?id=demo-playlist-kitchen-tapes",
+) {
   render(
-    <TestProviders
-      initialEntries={["/studio/collection?id=demo-playlist-kitchen-tapes"]}
-    >
+    <TestProviders initialEntries={[initialEntry]}>
       <StudioRailPlaylists />
     </TestProviders>,
   );
@@ -49,6 +49,30 @@ describe("rail playlists (demo)", () => {
     renderRail();
     expect(await findRowLink("Lisbon dyke-bar standards")).toHaveTextContent(
       "Sara Marques",
+    );
+  });
+
+  it("lists a liked album under the playlists, marked as an album", async () => {
+    renderRail();
+    const albumLink = await findRowLink("Cidade dos santos");
+    expect(albumLink).toHaveAttribute(
+      "href",
+      "/studio/album?id=demo-release-cidade-dos-santos",
+    );
+    expect(albumLink).toHaveTextContent("Album · Mariana Sol");
+    expect(albumLink).not.toHaveAttribute("aria-current");
+    // A taken-down release stays in the Library alone.
+    expect(screen.queryByText("Bairro antigo")).not.toBeInTheDocument();
+  });
+
+  it("marks the open album's row as the current page", async () => {
+    renderRail("/studio/album?id=demo-release-cidade-dos-santos");
+    expect(await findRowLink("Cidade dos santos")).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(await findRowLink("Kitchen tapes")).not.toHaveAttribute(
+      "aria-current",
     );
   });
 

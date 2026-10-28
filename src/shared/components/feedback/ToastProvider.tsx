@@ -1,63 +1,43 @@
-import {
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-  type ComponentType,
-  type ReactNode,
-} from "react";
-import {
-  FiCheckCircle,
-  FiXCircle,
-  FiAlertTriangle,
-  FiInfo,
-  FiRotateCcw,
-  FiX,
-} from "react-icons/fi";
+import { useCallback, useMemo, useRef, useState, type ReactNode } from "react";
+import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
 import { useTranslation } from "../../i18n/useTranslation";
-import { ToastContext, type ToastType, type ToastAction } from "./toastContext";
+import {
+  ToastContext,
+  type ToastAction,
+  type ToastMessage,
+  type ToastType,
+} from "./toastContext";
+import {
+  RESTING_PLACEMENT,
+  defaultLifetimeMs,
+  layoutDeck,
+  type ToastItem,
+} from "./toastDeck";
+import { ToastCard, type ToastStyle } from "./ToastCard";
+import { useCountdownHolds, useToastTimerStore } from "./toastTimers";
+import { useToastDeckHold } from "./useToastDeckHold";
 import styles from "./Toast.module.css";
 
-interface ToastItem {
-  id: number;
-  message: string;
-  type: ToastType;
-  leaving: boolean;
-  action?: ToastAction;
-}
-
-const ICONS: Record<ToastType, ComponentType> = {
-  success: FiCheckCircle,
-  error: FiXCircle,
-  warning: FiAlertTriangle,
-  info: FiInfo,
-};
+/** A card leaves the DOM once its exit animation (280ms) has played out. */
+const EXIT_MS = 300;
 
 /**
  * One live region per politeness level.
  *
- * `polite` waits for a pause; `assertive` interrupts. Errors have to interrupt —
+ * `polite` waits for a pause; `assertive` interrupts. Errors have to interrupt:
  * a failure announced after everything else the user is reading arrives too late
  * to act on (WCAG 4.1.3 Status Messages). Both regions render from the first
- * paint and stay mounted: a live region inserted at announce time is routinely
- * missed, because assistive tech only watches regions it already knows about.
+ * paint and stay mounted, because assistive tech only watches regions it
+ * already knows about and routinely misses one inserted at announce time.
+ * Each region is a plain wrapper: the cards inside are placed against the
+ * container, so the deck spans both regions as one stack.
  */
 function ToastRegion({
   politeness,
-  toasts,
-  onAction,
-  onDismiss,
-  onPause,
-  onResume,
-  dismissLabel,
+  children,
 }: {
   politeness: "polite" | "assertive";
-  toasts: ToastItem[];
-  onAction: (toast: ToastItem) => void;
-  onDismiss: (id: number) => void;
-  onPause: (id: number) => void;
-  onResume: (id: number) => void;
-  dismissLabel: string;
+  children: ReactNode;
 }) {
   return (
     <div
@@ -66,152 +46,130 @@ function ToastRegion({
       aria-atomic="true"
       role={politeness === "assertive" ? "alert" : "status"}
     >
-      {toasts.map((toast) => {
-        const Icon = ICONS[toast.type];
-        return (
-          <div
-            key={toast.id}
-            className={[
-              styles.toast,
-              styles[toast.type],
-              toast.leaving && styles.leaving,
-            ]
-              .filter(Boolean)
-              .join(" ")}
-            // Pause the auto-dismiss countdown while the pointer rests on the
-            // toast so it can be read/acted on; resume on leave. Focus within
-            // (keyboard reaching the action/close) pauses too, for parity.
-            onPointerEnter={() => onPause(toast.id)}
-            onPointerLeave={() => onResume(toast.id)}
-            onFocusCapture={() => onPause(toast.id)}
-            onBlurCapture={() => onResume(toast.id)}
-          >
-            <span className={styles.icon} aria-hidden>
-              <Icon />
-            </span>
-            <span className={styles.message}>{toast.message}</span>
-            {toast.action && (
-              <button
-                type="button"
-                className={styles.action}
-                onClick={() => onAction(toast)}
-              >
-                <FiRotateCcw aria-hidden />
-                {toast.action.label}
-              </button>
-            )}
-            <button
-              type="button"
-              className={styles.close}
-              data-toast-dismiss=""
-              onClick={() => onDismiss(toast.id)}
-              aria-label={dismissLabel}
-            >
-              <FiX aria-hidden />
-            </button>
-          </div>
-        );
-      })}
+      {children}
     </div>
   );
 }
 
-/** The live auto-dismiss timer for one toast, tracked so hovering can pause it.
- *  `remaining` is refreshed on pause; `endAt` lets us compute what's left. */
-interface ToastTimer {
-  timeoutId: number;
-  endAt: number;
-  remaining: number;
-}
-
 export function ToastProvider({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
+  const isMotionReduced = usePrefersReducedMotion();
   const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const [heights, setHeights] = useState<ReadonlyMap<number, number>>(
+    () => new Map(),
+  );
+  const {
+    containerRef,
+    isHeld: isPointerHolding,
+    pointerHandlers,
+    release: releasePointerHold,
+  } = useToastDeckHold();
+  const [focusedToastId, setFocusedToastId] = useState<number | null>(null);
   const nextId = useRef(0);
-  const timers = useRef<Map<number, ToastTimer>>(new Map());
+  const { timersRef, removalTimeoutIdsRef } = useToastTimerStore();
 
   const remove = useCallback((id: number) => {
-    timers.current.delete(id);
     setToasts((current) => current.filter((toast) => toast.id !== id));
+    setHeights((current) => {
+      if (!current.has(id)) return current;
+      const next = new Map(current);
+      next.delete(id);
+      return next;
+    });
   }, []);
 
   const dismiss = useCallback(
     (id: number) => {
-      // Clear any pending auto-dismiss timer so it can't fire twice (e.g. after
-      // a manual close). The 300ms below is the leave animation, not paused.
-      const timer = timers.current.get(id);
-      if (timer) {
-        window.clearTimeout(timer.timeoutId);
-        timers.current.delete(id);
-      }
+      // Every toast showing holds a timer, so a toast without one is already
+      // leaving or gone, and a second close, Escape or action does nothing.
+      // Clearing the pending auto-dismiss keeps it from firing after a manual
+      // close. The wait below is the leave animation, which never pauses.
+      const timer = timersRef.current.get(id);
+      if (!timer) return;
+      if (timer.timeoutId !== null) window.clearTimeout(timer.timeoutId);
+      timersRef.current.delete(id);
+      // With the last toast gone the stack stops taking the pointer, and no
+      // leave event may follow, so the hover or press hold ends here and the
+      // next toast arrives folded and counting down.
+      if (timersRef.current.size === 0) releasePointerHold();
       setToasts((current) =>
         current.map((toast) =>
-          toast.id === id ? { ...toast, leaving: true } : toast,
+          toast.id === id ? { ...toast, isLeaving: true } : toast,
         ),
       );
-      window.setTimeout(() => remove(id), 300);
+      const removalTimeoutId = window.setTimeout(() => {
+        removalTimeoutIdsRef.current.delete(removalTimeoutId);
+        remove(id);
+      }, EXIT_MS);
+      removalTimeoutIdsRef.current.add(removalTimeoutId);
     },
-    [remove],
+    [timersRef, removalTimeoutIdsRef, remove, releasePointerHold],
   );
 
-  const schedule = useCallback(
-    (id: number, ms: number) => {
-      const timeoutId = window.setTimeout(() => dismiss(id), ms);
-      timers.current.set(id, {
-        timeoutId,
-        endAt: Date.now() + ms,
-        remaining: ms,
+  const startTimer = useCallback(
+    (id: number, durationMs: number) => {
+      timersRef.current.set(id, {
+        timeoutId: window.setTimeout(() => dismiss(id), durationMs),
+        endAt: Date.now() + durationMs,
+        remaining: durationMs,
+        isPaused: false,
       });
     },
-    [dismiss],
+    [timersRef, dismiss],
   );
-
-  // Hover/focus pause: freeze the countdown, banking what's left; resume rearms
-  // it from that remainder. A toast already leaving has no timer entry, so these
-  // are safe no-ops on it.
-  const pause = useCallback((id: number) => {
-    const timer = timers.current.get(id);
-    if (!timer) return;
-    window.clearTimeout(timer.timeoutId);
-    timer.remaining = Math.max(0, timer.endAt - Date.now());
-  }, []);
-
-  const resume = useCallback(
-    (id: number) => {
-      const timer = timers.current.get(id);
-      if (!timer) return;
-      schedule(id, timer.remaining);
-    },
-    [schedule],
+  useCountdownHolds(
+    timersRef,
+    isPointerHolding,
+    focusedToastId,
+    toasts,
+    startTimer,
   );
 
   const showToast = useCallback(
     (
-      message: string,
+      message: string | ToastMessage,
       type: ToastType = "success",
       durationMs?: number,
       action?: ToastAction,
     ) => {
       const id = nextId.current++;
-      // Action toasts (e.g. Undo) linger a little longer so they're reachable.
-      const ms = durationMs ?? (action ? 5200 : 3400);
+      const lifetimeMs = durationMs ?? defaultLifetimeMs(type, Boolean(action));
+      const text: ToastMessage =
+        typeof message === "string" ? { title: message } : message;
+      const { title, detail } = text;
       setToasts((current) => [
         ...current,
-        { id, message, type, leaving: false, action },
+        { id, title, detail, type, isLeaving: false, action, lifetimeMs },
       ]);
-      schedule(id, ms);
+      startTimer(id, lifetimeMs);
       return id;
     },
-    [schedule],
+    [startTimer],
   );
 
   const runAction = useCallback(
     (toast: ToastItem) => {
+      // A leaving toast has no timer left, and its action stays spent.
+      if (!timersRef.current.has(toast.id)) return;
       toast.action?.onClick();
       dismiss(toast.id);
     },
-    [dismiss],
+    [timersRef, dismiss],
   );
+
+  const handleFocusEnter = useCallback((id: number) => {
+    setFocusedToastId(id);
+  }, []);
+  const handleFocusExit = useCallback((id: number) => {
+    setFocusedToastId((current) => (current === id ? null : current));
+  }, []);
+  const handleMeasure = useCallback((id: number, heightPx: number) => {
+    setHeights((current) =>
+      current.get(id) === heightPx
+        ? current
+        : new Map(current).set(id, heightPx),
+    );
+  }, []);
 
   // `dismissToast` is the same exit a manual close takes; an id already gone
   // finds no toast and changes nothing.
@@ -221,28 +179,60 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   );
   const dismissLabel = t("shared:toast.dismiss");
 
+  const hasShowingToasts = toasts.some((toast) => !toast.isLeaving);
+  const isSpread =
+    isPointerHolding ||
+    toasts.some((toast) => toast.id === focusedToastId && !toast.isLeaving);
+  const { placements, stackHeightPx } = useMemo(
+    () => layoutDeck(toasts, heights, isSpread),
+    [toasts, heights, isSpread],
+  );
+  const newestFirst = [...toasts].reverse();
+  const containerStyle: ToastStyle = {
+    "--toast-stack-height": `${stackHeightPx}px`,
+  };
+
+  const renderCard = (toast: ToastItem) => (
+    <ToastCard
+      key={toast.id}
+      toast={toast}
+      placement={placements.get(toast.id) ?? RESTING_PLACEMENT}
+      isPaused={isPointerHolding || focusedToastId === toast.id}
+      dismissLabel={dismissLabel}
+      onAction={runAction}
+      onDismiss={dismiss}
+      onFocusEnter={handleFocusEnter}
+      onFocusExit={handleFocusExit}
+      onMeasure={handleMeasure}
+    />
+  );
+
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <div className={styles.container} data-toast-region="">
-        <ToastRegion
-          politeness="polite"
-          toasts={toasts.filter((toast) => toast.type !== "error")}
-          onAction={runAction}
-          onDismiss={dismiss}
-          onPause={pause}
-          onResume={resume}
-          dismissLabel={dismissLabel}
-        />
-        <ToastRegion
-          politeness="assertive"
-          toasts={toasts.filter((toast) => toast.type === "error")}
-          onAction={runAction}
-          onDismiss={dismiss}
-          onPause={pause}
-          onResume={resume}
-          dismissLabel={dismissLabel}
-        />
+      {/* A mouse resting on the stack, or a press on the folded deck, spreads
+          it and holds every countdown; leaving it, or a press elsewhere, folds
+          the deck and lets them all run again. Each region lists its cards
+          newest first, so Tab walks them in the order they show. */}
+      <div
+        ref={containerRef}
+        className={styles.container}
+        style={containerStyle}
+        data-toast-region=""
+        data-has-toasts={hasShowingToasts || undefined}
+        data-reduced-motion={isMotionReduced || undefined}
+        {...pointerHandlers}
+      >
+        <ToastRegion politeness="polite">
+          {newestFirst
+            .filter((toast) => toast.type !== "error")
+            .map(renderCard)}
+        </ToastRegion>
+        <ToastRegion politeness="assertive">
+          {newestFirst
+            .filter((toast) => toast.type === "error")
+            .map(renderCard)}
+        </ToastRegion>
       </div>
     </ToastContext.Provider>
   );

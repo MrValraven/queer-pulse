@@ -29,15 +29,19 @@ import {
   StudioRailFolderMenu,
   type StudioRailFolderMenuTarget,
 } from "./StudioRailFolderMenu";
-import type { StudioRailPlaylistRowModel } from "./studioRailPlaylistRows";
+import {
+  isRailPlaylistRow,
+  type StudioRailPlaylistRowModel,
+  type StudioRailRowModel,
+} from "./studioRailPlaylistRows";
 
 type FolderGroupProps = Omit<StudioRailFolderProps, "renderRow" | "isCompact">;
 
 export interface StudioRailFolders {
   /** One entry per folder to show, in the member's order. */
   groups: FolderGroupProps[];
-  /** The shown rows that sit in no folder. */
-  looseRows: StudioRailPlaylistRowModel[];
+  /** The shown rows that sit in no folder, liked releases among them. */
+  looseRows: StudioRailRowModel[];
   /** Some filed playlist is on a page the rail has not read yet. */
   hasUnreadFiledPlaylists: boolean;
   filing: StudioRailFolderFiling;
@@ -61,7 +65,8 @@ export interface StudioRailFolders {
  * its playlists matches, and it stands open. Otherwise a folder is open
  * when the member opened it, or, until they close it, when it holds the
  * open playlist. Folded, the rail is too narrow to rename in place, so
- * Rename folder opens a dialog instead.
+ * Rename folder opens a dialog instead. Folders hold playlists alone (the
+ * folder store keys by playlist id), so a liked release always sits loose.
  */
 export function useStudioRailFolders({
   rows,
@@ -70,8 +75,8 @@ export function useStudioRailFolders({
   openPlaylistId,
   isCompact,
 }: {
-  rows: StudioRailPlaylistRowModel[];
-  shownRows: StudioRailPlaylistRowModel[];
+  rows: StudioRailRowModel[];
+  shownRows: StudioRailRowModel[];
   isFiltering: boolean;
   openPlaylistId: string | null;
   isCompact: boolean;
@@ -93,8 +98,10 @@ export function useStudioRailFolders({
   );
   const [renameDialogFolder, setRenameDialogFolder] =
     useState<StudioPlaylistFolderView | null>(null);
+  const playlistRows = rows.filter(isRailPlaylistRow);
+  const shownPlaylistRows = shownRows.filter(isRailPlaylistRow);
   const rowOf = (playlistId: string) =>
-    rows.find((row) => row.playlistId === playlistId);
+    playlistRows.find((row) => row.playlistId === playlistId);
   const fileRow = (playlistId: string, folderId: string | null) => {
     const row = rowOf(playlistId);
     if (row) filing.moveToFolder({ playlistId, name: row.name }, folderId);
@@ -106,7 +113,7 @@ export function useStudioRailFolders({
 
   const groups: FolderGroupProps[] = [];
   for (const folder of folders) {
-    const folderRows = shownRows.filter(
+    const folderRows = shownPlaylistRows.filter(
       (row) => folderIdByPlaylistId.get(row.playlistId) === folder.id,
     );
     if (isFiltering && folderRows.length === 0) continue;
@@ -130,11 +137,12 @@ export function useStudioRailFolders({
       onDropPlaylist: (playlistId) => fileRow(playlistId, folder.id),
     });
   }
-  const readIds = new Set(rows.map((row) => row.playlistId));
+  const readIds = new Set(playlistRows.map((row) => row.playlistId));
   return {
     groups,
     looseRows: shownRows.filter(
-      (row) => !folderIdByPlaylistId.has(row.playlistId),
+      (row) =>
+        !isRailPlaylistRow(row) || !folderIdByPlaylistId.has(row.playlistId),
     ),
     hasUnreadFiledPlaylists: [...folderIdByPlaylistId.keys()].some(
       (playlistId) => !readIds.has(playlistId),

@@ -57,7 +57,7 @@ describe("StudioPlaylistHero, collaborative playlists", () => {
     expect(onOwnerAction).toHaveBeenCalledWith("manageEditors");
   });
 
-  it("gives an editor Edit details and Leave playlist, and no Save", async () => {
+  it("gives an editor Edit details and Leave playlist, and no heart", async () => {
     const { onOwnerAction } = renderHero("demo-playlist-tour-diary");
     expect(
       screen.getByRole("button", {
@@ -65,7 +65,7 @@ describe("StudioPlaylistHero, collaborative playlists", () => {
       }),
     ).toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: /^save tour diary/i }),
+      screen.queryByRole("button", { name: "Like Tour diary" }),
     ).not.toBeInTheDocument();
     expect(screen.queryByText("Private")).not.toBeInTheDocument();
     const menu = await openMenu();

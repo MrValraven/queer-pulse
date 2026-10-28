@@ -129,31 +129,92 @@
   color: var(--studio-text-muted);
 }
 
-/* The folded rail: covers only, centred in the strip. */
+/* The folded rail: covers only, each a 44px tile on the strip's centre
+   column (x 14 to 58). The tiles hang from the start edge, so the list's
+   own scrollbar never pulls them off it, and the scrollbar stays hidden on
+   the strip; the list still scrolls by wheel, touch and focus. */
 .root[data-compact] {
   padding: 4px 0 16px;
+  scrollbar-width: none;
 }
+/* No edge bar and no full-width wash on the strip: the cover carries every
+   state. The 4px block padding leaves room for the cover's ring and keeps
+   8px between tiles. */
 .row[data-compact] {
-  align-items: center;
-  padding: 6px 0;
+  align-items: flex-start;
+  padding: 4px 0 4px 14px;
+  border-left-width: 0;
 }
 .compactCover {
   position: relative;
   display: block;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   overflow: hidden;
-  border-radius: var(--radius-8);
+  border-radius: var(--radius-12);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition-property: outline-color, filter;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
 }
+@media (hover: hover) {
+  .row[data-compact]:hover {
+    background-color: transparent;
+  }
+  .row[data-compact]:hover .compactCover {
+    outline-color: var(--line-2);
+    filter: brightness(1.08);
+  }
+}
+/* The open playlist: a coral ring around its cover, 2px clear of it. */
+.row[data-compact][aria-current="page"] {
+  background: none;
+}
+.row[data-compact][aria-current="page"] .compactCover {
+  outline-color: var(--accent);
+}
+/* A dragged track over a folded playlist: the same ring and a faint coral
+   fill over the cover. */
+.row[data-compact][data-drop-over] {
+  background-color: transparent;
+  outline: none;
+}
+.row[data-compact][data-drop-over] .compactCover {
+  outline-color: var(--accent);
+}
+.row[data-compact][data-drop-over] .compactCover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(var(--accent-rgb), 0.18);
+}
+/* Liked songs, the rail's signature tile: a coral gradient under a light
+   heart, the same in both themes. */
 .likedCover {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-  background: rgba(var(--accent-rgb), 0.16);
-  color: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  /* On the coral fill, light in both themes. */
+  color: rgba(var(--cream-rgb), 0.96);
 }
 .likedCover svg {
+  width: 18px;
+  height: 18px;
+}
+/* A playlist or release with no cover yet: a quiet neutral tile, like the
+   folder tile, so the folded rail never shows a blank square. */
+.fallbackCover {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--studio-wash-2);
+  color: var(--studio-text-muted);
+}
+.fallbackCover svg {
   width: 18px;
   height: 18px;
 }
@@ -167,17 +228,29 @@
   translate: 0 -50%;
   pointer-events: none;
 }
+/* Folded: on the cover's top end corner. */
 .row[data-compact] .busy {
-  inset-inline-end: 6px;
-  inset-block-start: 6px;
+  inset-inline: 40px auto;
+  inset-block-start: 8px;
   translate: none;
 }
 
-/* The folded rail's Create playlist: an icon button centred in the strip. */
+/* The folded rail's Create playlist: a 44px tile on the strip's centre
+   column, filled like the expanded pill, a short gap under the nav's
+   hairline. */
 .createCompact {
   display: flex;
-  justify-content: center;
-  padding: 0 0 6px;
+  justify-content: flex-start;
+  padding: 9px 0 0 14px;
+}
+.createCompact .createTile {
+  border-radius: var(--radius-12);
+  border-color: transparent;
+  background: var(--wash);
+  color: var(--studio-text);
+  /* The shared icon Button's hover reads this, so the tile's hover is a
+     darker wash of its own fill. */
+  --button-icon-hover: rgba(var(--studio-ink-rgb), 0.09);
 }
 
 /* Sort and filter above the rows, on the rows' inset. */
@@ -211,10 +284,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .row {
+  .row,
+  .compactCover {
     transition-property: none;
   }
 }
-:global(html[data-reduce-motion="true"]) .row {
+:global(html[data-reduce-motion="true"]) .row,
+:global(html[data-reduce-motion="true"]) .compactCover {
   transition-property: none;
 }

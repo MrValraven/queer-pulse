@@ -4,8 +4,6 @@ import { useLocation } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { Collapse, CollapseListItem } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useStudioLibrarySavedPage } from "./api/useStudioLibrarySaves";
-import { useStudioMyPlaylists } from "./api/useStudioMyPlaylists";
 import { studioListSortOf } from "./studioLibrarySort.data";
 import { StudioRailFolder, StudioRailFolderMoveOut } from "./StudioRailFolder";
 import { StudioRailFolderFilingProvider } from "./StudioRailFolder.filing";
@@ -18,6 +16,7 @@ import {
   StudioRailLikedRow,
   StudioRailPlaylistRow,
 } from "./StudioRailPlaylistRow";
+import { StudioRailReleaseRow } from "./StudioRailReleaseRow";
 import {
   StudioRailPlaylistsEmpty,
   StudioRailPlaylistsError,
@@ -29,25 +28,34 @@ import {
 import {
   RAIL_PLAYLIST_SORT_ACCESSORS,
   railPlaylistFilterText,
-  toRailPlaylistRows,
-  type StudioRailPlaylistRowModel,
+  type StudioRailRowModel,
 } from "./studioRailPlaylistRows";
 import { RAIL_PLAYLIST_FILTER_THRESHOLD } from "./studioRailPlaylists.data";
 import { useStudioListFilter } from "./useStudioListFilter";
-import {
-  chainStudioPagers,
-  distinctIdCount,
-  useStudioLoadAllPages,
-} from "./useStudioLoadAllPages";
+import { useStudioLoadAllPages } from "./useStudioLoadAllPages";
 import { useStudioRailCollapsed } from "./useStudioRailCollapsed";
 import { useStudioRailMemory } from "./useStudioRailMemory";
+import { useStudioRailRows } from "./useStudioRailRows";
 import css from "./StudioRailPlaylists.module.css";
 
 const LIKED_ROW_KEY = "studio-liked-songs";
 
+/** The open playlist's or the open release's id, from the route: playlists
+ *  share one route and releases (albums and shows) another. */
+function useOpenCollectionIds() {
+  const { pathname, search } = useLocation();
+  const openId = new URLSearchParams(search).get("id");
+  return {
+    pathname,
+    openPlaylistId: pathname === routes.studioCollection ? openId : null,
+    openReleaseId: pathname === routes.studioAlbum ? openId : null,
+  };
+}
+
 /**
  * The rail's listening home: Liked songs pinned first, then the member's own
- * and collaborative playlists, then the ones they saved. It scrolls on its
+ * and collaborative playlists, then the ones they saved, then the albums
+ * and shows they liked (useStudioRailRows). It scrolls on its
  * own and keeps its place, sort and filter across pages (DES-52). Folded
  * (the rail's icon strip), it is a column of covers with tooltips. Past
  * eight playlists a filter box appears; the sort (Recent, Title, Creator) is remembered for
@@ -55,37 +63,34 @@ const LIKED_ROW_KEY = "studio-liked-songs";
  * takes a dragged track when the member may add to it. Saved rows show
  * even while the member's own playlists load or fail; those states sit
  * under the list. Playlists share one route, so a row is active when the
- * open collection's id is its own. The member's folders sit between Liked
- * songs and the loose rows (StudioRailFolder.rail); a row drags onto a
- * folder, and its menu files it from the keyboard.
+ * open collection's id is its own; a release row likewise on the album
+ * route. The member's folders sit between Liked songs and the loose rows
+ * (StudioRailFolder.rail); a playlist row drags onto a folder, and its menu
+ * files it from the keyboard. Release rows stay loose and take no drops.
  */
 export function StudioRailPlaylists() {
   const { t } = useTranslation();
-  const mine = useStudioMyPlaylists({ silentError: true });
-  const saved = useStudioLibrarySavedPage("studio_playlist");
-  const rows = toRailPlaylistRows(mine.playlists, saved.items);
-  const { pathname, search } = useLocation();
-  const openPlaylistId =
-    pathname === routes.studioCollection
-      ? new URLSearchParams(search).get("id")
-      : null;
+  const railRows = useStudioRailRows();
+  const { rows, pager, loadError } = railRows;
+  const { pathname, openPlaylistId, openReleaseId } = useOpenCollectionIds();
   const listRef = useRef<HTMLElement>(null);
   const { isRailCollapsed } = useStudioRailCollapsed();
   const [menuTarget, setMenuTarget] = useState<StudioRailMenuTarget | null>(
     null,
   );
   const [editPendingId, setEditPendingId] = useState<string | null>(null);
-  const isLoading = mine.loadState.isLoading;
+  const isLoading = railRows.isLoading;
   const memory = useStudioRailMemory(listRef, {
     isReady: !isLoading,
-    activeKey: pathname === routes.studioLiked ? LIKED_ROW_KEY : openPlaylistId,
+    activeKey:
+      pathname === routes.studioLiked
+        ? LIKED_ROW_KEY
+        : (openPlaylistId ?? openReleaseId),
   });
   const { query, setQuery } = memory;
   // The folded strip shows every playlist: its filter waits for the rail.
   const activeQuery = isRailCollapsed ? "" : query;
   const listSort = studioListSortOf(memory.sort);
-  const pager = chainStudioPagers(mine, saved);
-  const loadError = mine.loadState.isError ? mine.loadState : saved.loadState;
   const shownRows = useStudioListFilter(
     rows,
     activeQuery,
@@ -107,26 +112,35 @@ export function StudioRailPlaylists() {
     activeQuery.trim() !== "" ||
       listSort !== "custom" ||
       folders.hasUnreadFiledPlaylists,
-    distinctIdCount(mine.playlists) + saved.pagedCount,
+    railRows.distinctCount,
   );
   const isFilterOffered = rows.length > RAIL_PLAYLIST_FILTER_THRESHOLD;
   // A filter that the list outgrows (a delete) clears with it, once the
   // member's own playlists are in (a remount restores it before they are).
   if (!isLoading && !isFilterOffered && query !== "") setQuery("");
-  const isEmpty = !isLoading && !mine.loadState.isError && rows.length === 0;
+  const isEmpty =
+    !isLoading && !railRows.isOwnPlaylistsError && rows.length === 0;
   const hasNoMatches =
     activeQuery.trim() !== "" && !pager.hasMore && shownRows.length === 0;
   const isExpanded = !isRailCollapsed;
-  const renderRow = (row: StudioRailPlaylistRowModel) => (
-    <StudioRailPlaylistRow
-      row={row}
-      isActive={openPlaylistId === row.playlistId}
-      isCompact={isRailCollapsed}
-      isBusy={editPendingId === row.playlistId}
-      onOpenMenu={(point) => setMenuTarget({ row, point })}
-      dragSource={folders.dragSourceOf(row)}
-    />
-  );
+  const renderRow = (row: StudioRailRowModel) =>
+    row.kind === "release" ? (
+      <StudioRailReleaseRow
+        row={row}
+        isActive={openReleaseId === row.releaseId}
+        isCompact={isRailCollapsed}
+        onOpenMenu={(point) => setMenuTarget({ row, point })}
+      />
+    ) : (
+      <StudioRailPlaylistRow
+        row={row}
+        isActive={openPlaylistId === row.playlistId}
+        isCompact={isRailCollapsed}
+        isBusy={editPendingId === row.playlistId}
+        onOpenMenu={(point) => setMenuTarget({ row, point })}
+        dragSource={folders.dragSourceOf(row)}
+      />
+    );
   return (
     <nav
       ref={listRef}
@@ -196,7 +210,7 @@ export function StudioRailPlaylists() {
         <StudioRailPlaylistMenu
           target={menuTarget}
           openPlaylistId={openPlaylistId}
-          savedItems={saved.items}
+          savedItems={railRows.savedItems}
           onEditPendingChange={setEditPendingId}
           onClose={() => setMenuTarget(null)}
         />

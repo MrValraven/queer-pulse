@@ -29,6 +29,7 @@ export function StudioPlaylistCard({
   const cardPlay = useStudioPlaylistCardPlay(playlist);
   const { isSaved } = useSaved();
   const cardMenu = useStudioPlaylistCardMenu({
+    kind: "playlist",
     key: playlist.savedId,
     playlistId: playlist.id,
     name: playlist.name,

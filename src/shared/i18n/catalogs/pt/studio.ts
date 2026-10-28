@@ -55,17 +55,20 @@ export const studio: Catalog = {
   "rail.foot.paid_other":
     "Já pagaste <b>{amount}</b> a {count} artistas este ano.",
 
-  "railPlaylists.label": "As tuas playlists",
+  "railPlaylists.label": "A tua biblioteca",
   "railPlaylists.autoPlaylist": "Playlist automática",
   "railPlaylists.savedFallback": "Playlist guardada",
-  "railPlaylists.empty": "Cria uma playlist e ela aparece aqui",
-  "railPlaylists.loadError": "Não conseguimos carregar as tuas playlists",
+  "railPlaylists.empty":
+    "Cria uma playlist ou dá gosto a um álbum e aparece aqui",
+  "railPlaylists.loadError": "Não conseguimos carregar a tua biblioteca",
+  "railPlaylists.releaseMeta": "Álbum · {artist}",
+  "railPlaylists.releaseFallback": "Álbum",
   "railPlaylists.menu.label": "Ações de {name}",
   "railPlaylists.menu.removeSaved": "Remover da tua biblioteca",
   "railPlaylists.sortLabel": "Ordenar",
-  "railPlaylists.filterLabel": "Filtrar as tuas playlists",
-  "railPlaylists.filterPlaceholder": "Filtrar playlists",
-  "railPlaylists.noMatches": 'Nenhuma playlist corresponde a "{query}"',
+  "railPlaylists.filterLabel": "Filtrar a tua biblioteca",
+  "railPlaylists.filterPlaceholder": "Filtrar a biblioteca",
+  "railPlaylists.noMatches": 'Nada na tua biblioteca corresponde a "{query}"',
   "railPlaylists.create.label": "Criar",
   "railPlaylists.create.triggerLabel": "Criar playlist ou pasta",
   "railPlaylists.create.menuLabel": "Criar uma playlist ou uma pasta",
@@ -389,9 +392,9 @@ export const studio: Catalog = {
   "firstRun.about.listen.title": "Ouve",
   "firstRun.about.listen.body":
     "Álbuns, EPs, sets e episódios, prontos quando te apetecer.",
-  "firstRun.about.save.title": "Guarda",
+  "firstRun.about.save.title": "Dá gosto",
   "firstRun.about.save.body":
-    "Gosta de uma faixa ou guarda um lançamento e fica à tua espera na biblioteca.",
+    "Dá gosto a uma faixa e ela vai para Músicas de que gostas. Dá gosto a um álbum, podcast ou playlist e fica à tua espera na biblioteca.",
   "firstRun.about.follow.title": "Segue",
   "firstRun.about.follow.body":
     "Segue artistas das cenas locais. A tua biblioteca guarda quem segues.",
@@ -1826,18 +1829,17 @@ export const studio: Catalog = {
   "states.notFoundBody":
     "Pode ter sido removido, ou o link pode estar desatualizado",
   "states.backHomeCta": "Voltar ao início do Studio",
-  "save.saveCta": "Guardar",
-  "save.saveReleaseCta": "Guardar {title}",
-  "save.removeSavedCta": "Tirar {title} dos guardados",
-  "save.savedLabel": "Guardado",
-  "save.savedToast": "Guardado",
-  "save.removedToast": "Removido dos guardados",
 
   // ── Liked songs (StudioLikeButton, StudioLikedPage) ─────────────────────
   "like.cta": "Gosto",
   "like.trackAria": "Gosto de {title}",
   "like.addedToast": "Adicionada a Músicas de que gostas",
   "like.removedToast": "Removida de Músicas de que gostas",
+  // O coração de um álbum, podcast ou playlist (StudioCollectionLikeButton)
+  "like.collectionAria": "Gosto de {title}",
+  "like.collectionUnlike": "Remover da tua biblioteca",
+  "like.collectionAddedToast": "Adicionado à tua biblioteca",
+  "like.collectionRemovedToast": "Removido da tua biblioteca",
   "like.blockedWithdrawn":
     "Este lançamento foi retirado, por isso as suas faixas não podem ser marcadas com gosto",
   "liked.title": "Músicas de que gostas",
@@ -2335,7 +2337,7 @@ export const studio: Catalog = {
     "Cria uma para um estado de espírito, uma noite ou uma pessoa, e junta faixas de qualquer parte do Studio",
   "libraryLive.empty.releasesTitle": "Ainda não guardaste lançamentos",
   "libraryLive.empty.releasesBody":
-    "Guarda um lançamento na página dele e fica aqui à tua espera",
+    "Toca no coração na página de um lançamento e fica aqui à tua espera",
   "libraryLive.empty.artistsTitle": "Ainda não segues artistas",
   "libraryLive.empty.artistsBody":
     "Segue artistas a partir da página Studio de cada persona para as teres por perto",
@@ -2604,9 +2606,9 @@ export const studio: Catalog = {
   "helpLive.faq.tracking.a":
     "Sim, em privado. O Studio guarda um histórico de audição que só tu vês, em <a>O que ouves</a>, onde o podes pausar ou limpar. Quem faz a música vê o total de audições, com qualquer número de 1 a 4 como Menos de 5, e o teu nome só se ligares Mostrar-me como apoiante na página de artista.",
   "helpLive.faq.saving.q":
-    "Como funcionam os guardados, as playlists e seguir artistas?",
+    "Como funcionam os gostos, as playlists e seguir artistas?",
   "helpLive.faq.saving.a":
-    "Guarda qualquer lançamento e fica à tua espera na tua <a>biblioteca</a>. Toca no coração de uma faixa e ela vai para as Músicas de que gostas, que só tu vês. Uma playlist pode ser Pública, Só ligações ou Privada, e podes mudar isso quando quiseres. Segue artistas a partir da página de cada artista para saberes quando lançam algo novo.",
+    "Toca no coração de um álbum, podcast ou playlist e fica à tua espera na tua <a>biblioteca</a> e na lista ao lado das tuas playlists. Toca no coração de uma faixa e ela vai para as Músicas de que gostas, que só tu vês. Uma playlist pode ser Pública, Só ligações ou Privada, e podes mudar isso quando quiseres. Segue artistas a partir da página de cada artista para saberes quando lançam algo novo.",
   "helpLive.faq.playerSettings.q":
     "Posso mudar a forma como o leitor funciona?",
   "helpLive.faq.playerSettings.a":

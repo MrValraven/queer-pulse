@@ -3414,6 +3414,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-28.headline":
+    "Like an album, show or playlist in Studio and it sits in the sidebar with your playlists.",
   "changelog.releases.2026-10-27.headline":
     "A Now playing panel and your listening page in Studio, plus pages for each audience.",
   "changelog.releases.2026-10-26.headline":
@@ -3716,6 +3718,22 @@ export const marketing: Catalog = {
   "changelog.entries.staff-pdf-page-tool.title": "A PDF page tool for staff",
   "changelog.entries.staff-pdf-page-tool.body":
     "Staff can remove, rotate, reorder, merge and split PDF pages in the browser, and files stay on the device.",
+  "changelog.entries.studio-folded-sidebar.title":
+    "A cleaner folded sidebar in Studio",
+  "changelog.entries.studio-folded-sidebar.body":
+    "Every icon and cover lines up on one centred column, and the page you're on lights up as a soft tile.",
+  "changelog.entries.toasts-paper-slip.title":
+    "A new look for confirmation messages",
+  "changelog.entries.toasts-paper-slip.body":
+    "A status mark that draws itself, room for a line of context, and several at once fold into a stack.",
+  "changelog.entries.studio-hero-fits-now-playing.title":
+    "Studio pages fit beside Now playing",
+  "changelog.entries.studio-hero-fits-now-playing.body":
+    "With Now playing open, buttons fold to icons to stay on one line and the cover tint runs under the panel.",
+  "changelog.entries.studio-like-albums.title":
+    "Like albums, shows and playlists",
+  "changelog.entries.studio-like-albums.body":
+    "Albums, shows and playlists get a heart in place of Save, and what you like sits beside your playlists.",
   "changelog.entries.badge-drawer-layout.title": "A tidier badge detail sheet",
   "changelog.entries.badge-drawer-layout.body":
     "Even spacing between sections, a cleaner stats strip, and a profile toggle that reads well on phones.",

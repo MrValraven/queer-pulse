@@ -15,7 +15,10 @@ import { StudioShareToChatModal } from "./share/StudioShareToChatModal";
 import { studioErrorMessageKeyOf } from "./studioErrors.data";
 import { studioLibraryPath } from "./studioPaths";
 import { StudioPlaylistDialog } from "./StudioPlaylistDialog";
-import type { StudioRailPlaylistRowModel } from "./studioRailPlaylistRows";
+import type {
+  StudioRailPlaylistRowModel,
+  StudioRailRowModel,
+} from "./studioRailPlaylistRows";
 import { studioReasonCopyKey, studioReasonOf } from "./studioReason";
 import {
   railPlaylistTargetOf,
@@ -24,7 +27,7 @@ import {
 
 /** Where a rail row's context menu opened, and for which row. */
 export interface StudioRailMenuTarget {
-  row: StudioRailPlaylistRowModel;
+  row: StudioRailRowModel;
   point: { x: number; y: number };
 }
 
@@ -84,7 +87,8 @@ function RailDeleteConfirm({
  * Shift+F10 on a row) and the dialogs it opens. The dialogs outlive the
  * menu. Edit details reads the playlist first (a cached read is used as
  * is): the row shows it is busy meanwhile, and a read that fails says why.
- * Undo after Remove from Library puts back the save as it was.
+ * Undo after Remove from Library puts back the save as it was, a liked
+ * release's as well as a saved playlist's.
  */
 export function StudioRailPlaylistMenu({
   target,
@@ -95,7 +99,8 @@ export function StudioRailPlaylistMenu({
 }: {
   target: StudioRailMenuTarget | null;
   openPlaylistId: string | null;
-  /** The saves the rail shows, for an Undo that restores the original. */
+  /** The saves the rail shows (playlists and liked releases), for an Undo
+   *  that restores the original. */
   savedItems: SavedItem[];
   /** The playlist whose read for Edit details is under way, or null. */
   onEditPendingChange: (playlistId: string | null) => void;

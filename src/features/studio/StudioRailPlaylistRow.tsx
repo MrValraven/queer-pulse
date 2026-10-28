@@ -19,8 +19,9 @@ import { useStudioRailDrop } from "./useStudioRailDrop";
 import css from "./StudioRailPlaylists.module.css";
 
 /** The folded rail's row body: the cover alone, the name and owner kept
- *  for screen readers, and the name in a tooltip on hover and focus. */
-function CompactRowBody({
+ *  for screen readers, and the name in a tooltip on hover and focus. The
+ *  release row (StudioRailReleaseRow) shares it. */
+export function CompactRowBody({
   cover,
   name,
   meta,
@@ -174,7 +175,7 @@ export function StudioRailPlaylistRow({
               ) : (
                 // No release cover yet: a music tile, so the folded rail
                 // never shows a blank square.
-                <span className={css.likedCover}>
+                <span className={css.fallbackCover}>
                   <FiMusic />
                 </span>
               )

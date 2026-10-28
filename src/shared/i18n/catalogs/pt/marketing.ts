@@ -3499,6 +3499,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-28.headline":
+    "Dá gosto a um álbum, podcast ou playlist no Studio e fica na barra lateral com as tuas playlists.",
   "changelog.releases.2026-10-27.headline":
     "Painel A tocar agora e o que ouves no Studio, mais páginas para cada público.",
   "changelog.releases.2026-10-26.headline":
@@ -3803,6 +3805,22 @@ export const marketing: Catalog = {
     "Uma ferramenta de páginas de PDF para a equipa",
   "changelog.entries.staff-pdf-page-tool.body":
     "A equipa pode remover, rodar, reordenar, juntar e dividir páginas de PDF no navegador, e os ficheiros ficam no dispositivo.",
+  "changelog.entries.studio-folded-sidebar.title":
+    "Uma barra lateral recolhida mais limpa no Studio",
+  "changelog.entries.studio-folded-sidebar.body":
+    "Cada ícone e capa alinha numa só coluna ao centro, e a página onde estás acende num quadrado suave.",
+  "changelog.entries.toasts-paper-slip.title":
+    "Um novo visual para as mensagens de confirmação",
+  "changelog.entries.toasts-paper-slip.body":
+    "Um sinal de estado que se desenha sozinho, espaço para uma linha de contexto e várias juntam-se numa pilha.",
+  "changelog.entries.studio-hero-fits-now-playing.title":
+    "As páginas do Studio cabem ao lado de A tocar agora",
+  "changelog.entries.studio-hero-fits-now-playing.body":
+    "Com A tocar agora aberto, os botões passam a ícones para caberem numa linha e a cor da capa estende-se por baixo do painel.",
+  "changelog.entries.studio-like-albums.title":
+    "Dá gosto a álbuns, podcasts e playlists",
+  "changelog.entries.studio-like-albums.body":
+    "Álbuns, podcasts e playlists ganham um coração no lugar de Guardar, e o que gostas fica junto às tuas playlists.",
   "changelog.entries.badge-drawer-layout.title":
     "Uma folha de detalhe do emblema mais arrumada",
   "changelog.entries.badge-drawer-layout.body":

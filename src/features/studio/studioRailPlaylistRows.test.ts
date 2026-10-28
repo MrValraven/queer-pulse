@@ -5,7 +5,12 @@ import {
   demoMyPlaylistsPage,
   resetDemoPlaylists,
 } from "./api/studioDemoPlaylists";
-import { toRailPlaylistRows } from "./studioRailPlaylistRows";
+import {
+  RAIL_PLAYLIST_SORT_ACCESSORS,
+  railPlaylistFilterText,
+  toRailPlaylistRows,
+  toRailReleaseRows,
+} from "./studioRailPlaylistRows";
 
 function demoOwnPlaylists() {
   return demoMyPlaylistsPage(null).items.map(toPlaylistCardView);
@@ -21,6 +26,16 @@ function savedPlaylist(overrides: Partial<SavedItem> & { id: string }) {
     kind: "studio_playlist",
     title: "Saved one",
     href: `/studio/collection?id=${overrides.id.split(":")[1]}`,
+    availability: "available",
+    ...overrides,
+  } as SavedItem;
+}
+
+function savedRelease(overrides: Partial<SavedItem> & { id: string }) {
+  return {
+    kind: "studio_release",
+    title: "Liked one",
+    href: `/studio/album?id=${overrides.id.split(":")[1]}`,
     availability: "available",
     ...overrides,
   } as SavedItem;
@@ -122,5 +137,72 @@ describe("toRailPlaylistRows", () => {
       href: "/studio/collection?id=demo-playlist-dyke-bar-standards",
       ownerName: "Sara Marques",
     });
+  });
+});
+
+describe("toRailReleaseRows", () => {
+  it("turns a liked release into a release row with its own id", () => {
+    const [row] = toRailReleaseRows([
+      savedRelease({
+        id: "studio_release:demo-release-cidade-dos-santos",
+        title: "Cidade dos santos",
+        meta: "Mariana Sol",
+        coverUrl: "https://example.test/cover.jpg",
+      }),
+    ]);
+    expect(row).toMatchObject({
+      kind: "release",
+      key: "studio_release:demo-release-cidade-dos-santos",
+      releaseId: "demo-release-cidade-dos-santos",
+      name: "Cidade dos santos",
+      href: "/studio/album?id=demo-release-cidade-dos-santos",
+      artistLine: "Mariana Sol",
+      coverUrl: "https://example.test/cover.jpg",
+    });
+    expect(row).not.toHaveProperty("playlistId");
+  });
+
+  it("keeps saved-store order and leaves out withdrawn and linkless likes", () => {
+    const rows = toRailReleaseRows([
+      savedRelease({ id: "studio_release:first" }),
+      savedRelease({
+        id: "studio_release:withdrawn",
+        availability: "unavailable",
+        unavailableReason: "withdrawn",
+      }),
+      savedRelease({ id: "studio_release:linkless", href: null }),
+      savedRelease({ id: "studio_release:second" }),
+    ]);
+    expect(rows.map((row) => row.releaseId)).toEqual(["first", "second"]);
+  });
+
+  it("gives a like without meta or cover a null artist line and cover", () => {
+    const [row] = toRailReleaseRows([
+      savedRelease({ id: "studio_release:bare" }),
+    ]);
+    expect(row).toMatchObject({ artistLine: null, coverUrl: null });
+  });
+
+  it("filters and sorts a release row by its name and artist", () => {
+    const [row] = toRailReleaseRows([
+      savedRelease({
+        id: "studio_release:demo-release-home-2",
+        title: "Bicha, with love",
+        meta: "LeChatDashinko",
+      }),
+    ]);
+    expect(railPlaylistFilterText(row!)).toBe(
+      "Bicha, with love LeChatDashinko",
+    );
+    expect(RAIL_PLAYLIST_SORT_ACCESSORS.title(row!)).toBe("Bicha, with love");
+    expect(RAIL_PLAYLIST_SORT_ACCESSORS.artist(row!)).toBe("LeChatDashinko");
+  });
+
+  it("marks playlist rows with the playlist kind", () => {
+    const [row] = toRailPlaylistRows(
+      [],
+      [savedPlaylist({ id: "studio_playlist:kept" })],
+    );
+    expect(row?.kind).toBe("playlist");
   });
 });

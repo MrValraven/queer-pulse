@@ -18,7 +18,7 @@ function renderRelease(id: string) {
 }
 
 describe("StudioAlbumPage, Studio v3", () => {
-  it("shows a visitor an upcoming release with Notify me and no Play or Save", async () => {
+  it("shows a visitor an upcoming release with Notify me and no Play or heart", async () => {
     renderRelease("demo-release-scheduled-night-bus");
     expect(
       await screen.findByRole("heading", {
@@ -33,7 +33,7 @@ describe("StudioAlbumPage, Studio v3", () => {
       screen.queryByRole("button", { name: /play night bus/i }),
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: /^save/i }),
+      screen.queryByRole("button", { name: "Like Night bus (extended)" }),
     ).not.toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "Add release to playlist" }),
