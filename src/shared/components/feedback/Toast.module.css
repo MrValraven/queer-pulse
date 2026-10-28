@@ -71,6 +71,8 @@
   /* Clips the timer hairline to the rounded corners, and a card behind to
      the front card's height. */
   overflow: hidden;
+  /* The content picks its layout from the card's own width (see .body). */
+  container: toast-card / inline-size;
   font-family: var(--sans);
   font-size: var(--text-14);
   line-height: 1.4;
@@ -97,14 +99,18 @@
   column-gap: 12px;
   padding-block: 13px;
   padding-inline: 13px 12px;
+  /* Coming back to the front, the content waits out the leaving card's own
+     140ms content fade, so the two titles never overlap. */
   transition-property: opacity;
   transition-duration: 150ms;
+  transition-delay: 140ms;
   transition-timing-function: var(--ease);
   animation: qpToastContentIn 280ms var(--ease) backwards;
 }
 /* A short message with an action keeps it on the title's row, between the
-   text and the close button, wherever the card has the width for it. */
-@media (min-width: 480px) {
+   text and the close button, while the card is at its full width (the
+   provider decides what counts as short). */
+@container toast-card (min-width: 360px) {
   .body[data-inline-action] {
     grid-template-columns: auto minmax(0, 1fr) auto auto;
     grid-template-areas: "seal text action close";
@@ -112,12 +118,19 @@
 }
 
 /* Folded behind the front card: a blank slip whose bottom strip peeks out.
-   Its content and hairline fade away and come back as it reaches the front
-   or the deck spreads. A press on the strip lands on the card itself, which
-   spreads the deck on touch. */
+   Its content and hairline hide at once as it goes behind, so nothing of it
+   shows past a shorter card landing in front, and fade back in as it
+   reaches the front or the deck spreads. It settles to the front card's
+   height quickly for the same reason. A press on the strip lands on the
+   card itself, which spreads the deck on touch. */
+.toast[data-behind] {
+  transition-duration: 500ms, 500ms, 350ms, 200ms;
+}
 .toast[data-behind] .body,
 .toast[data-behind] .timer {
   opacity: 0;
+  transition-duration: 0s;
+  transition-delay: 0s;
 }
 .toast[data-behind] .body {
   pointer-events: none;
@@ -131,7 +144,8 @@
 }
 
 /* The cards behind slide up into the space while this one lifts away. Its
-   content goes first, so its title is gone before the next card's shows. */
+   content goes first, while its surface stays opaque, so its title is gone
+   before the next card's shows; the surface fades over the second half. */
 .leaving {
   pointer-events: none;
   animation: qpToastOut 280ms var(--ease-in) forwards;
@@ -141,6 +155,7 @@
 }
 .leaving .timer {
   opacity: 0;
+  transition-delay: 0s;
 }
 
 /* The type seal: a solid disc holding the glyph, so the type reads from shape
@@ -241,7 +256,7 @@
   transition-timing-function: var(--ease);
 }
 /* On the title's row it sits centred on the seal, a touch roomier. */
-@media (min-width: 480px) {
+@container toast-card (min-width: 360px) {
   .body[data-inline-action] .action {
     margin-block-start: 0;
     margin-inline-start: 0;
@@ -354,6 +369,7 @@
   transform-origin: left center;
   transition-property: opacity;
   transition-duration: 150ms;
+  transition-delay: 140ms;
   transition-timing-function: var(--ease);
   animation: qpToastDrain var(--toast-lifetime) linear forwards;
 }
@@ -395,9 +411,11 @@
 
 /* Reduced motion, from the OS setting or the in-app toggle (the provider reads
    both into data-reduced-motion). The glyph rests drawn, a card's surface
-   lands where it stands with its content fading in, a leaving card fades out
-   with its content going first, and the deck moves by opacity alone while
-   cards jump to their places and heights. The global net in base.css
+   fades in quickly where it stands with its content fading in, a leaving card
+   fades out with its content going first, and the deck moves by opacity
+   alone while cards jump to their places and heights. A card going behind
+   hides its content at once, and one coming to the front waits for the
+   leaving card's content, as with motion. The global net in base.css
    near-zeroes every duration with !important; the fades and the hairline keep
    their own timing here through !important at a higher specificity, because
    a fade is gentle and the hairline is information. */
@@ -407,7 +425,8 @@
 .container[data-reduced-motion] .toast {
   transition-property: opacity;
   transition-duration: 350ms !important;
-  animation-name: none;
+  animation-name: qpToastSurfaceIn;
+  animation-duration: 120ms !important;
 }
 .container[data-reduced-motion] .leaving {
   animation-name: qpToastFadeOut;
@@ -423,6 +442,10 @@
 }
 .container[data-reduced-motion] .leaving .body {
   animation-duration: 140ms !important;
+}
+.container[data-reduced-motion] .toast[data-behind] .body,
+.container[data-reduced-motion] .toast[data-behind] .timer {
+  transition-duration: 0s !important;
 }
 .container[data-reduced-motion] .seal svg,
 .container[data-reduced-motion] .seal svg * {
@@ -453,13 +476,24 @@
   }
 }
 @keyframes qpToastOut {
+  50% {
+    opacity: 1;
+  }
   to {
     opacity: 0;
     transform: translateY(-10px) scale(0.95);
     filter: blur(4px);
   }
 }
+@keyframes qpToastSurfaceIn {
+  from {
+    opacity: 0;
+  }
+}
 @keyframes qpToastFadeOut {
+  50% {
+    opacity: 1;
+  }
   to {
     opacity: 0;
   }
