@@ -1,8 +1,8 @@
-/* Admin › Marketing: the section headings, the flyer and merch grids and
-   the preview frame their cards share (MarketingDownloadCard). The cards
-   reuse the film card classes in MarketingVideos.module.css, so every kind
-   matches; this file holds what only the flyers, the merch and the sections
-   need. */
+/* Admin › Marketing: the section headings, the flyer, event banner and merch
+   grids and the preview frame their cards share (MarketingDownloadCard). The
+   cards reuse the film card classes in MarketingVideos.module.css, so every
+   kind matches; this file holds what only the flyers, the event banners, the
+   merch and the sections need. */
 
 /* ── Sections ──────────────────────────────────────────────────────────────── */
 /* Each section sits in its own FadeIn wrapper, so the gap goes on the later
@@ -48,6 +48,22 @@
 
 @media (max-width: 640px) {
   .merchGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Grid of event banners ─────────────────────────────────────────────────── */
+/* An event banner is a 2:1 landscape cover, so it takes the merch's wider
+   column that stops growing at 520px. */
+.bannerGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 520px));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+@media (max-width: 640px) {
+  .bannerGrid {
     grid-template-columns: 1fr;
   }
 }

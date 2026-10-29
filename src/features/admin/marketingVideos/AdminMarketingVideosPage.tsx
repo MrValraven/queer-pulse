@@ -4,7 +4,10 @@ import { FadeIn } from "../../../shared/components/ui";
 import { AdminShell } from "../../../shared/components/layout/AdminShell";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { AdminPageHeader } from "../ui";
-import { MARKETING_FLYERS } from "./marketingFlyers.data";
+import {
+  MARKETING_EVENT_BANNERS,
+  MARKETING_FLYERS,
+} from "./marketingFlyers.data";
 import { MarketingFlyerCard } from "./MarketingFlyerCard";
 import flyerStyles from "./MarketingFlyers.module.css";
 import { MARKETING_MERCH } from "./marketingMerch.data";
@@ -21,15 +24,16 @@ import styles from "./MarketingVideos.module.css";
 
 const FILMS_HEADING_ID = "marketing-films-heading";
 const FLYERS_HEADING_ID = "marketing-flyers-heading";
+const EVENT_BANNERS_HEADING_ID = "marketing-event-banners-heading";
 const MERCH_HEADING_ID = "marketing-merch-heading";
 
 /**
  * Admin › Marketing (`/admin/marketing-videos`). The launch films live in the
  * repo as HTML compositions; this page previews each one and renders it to a
  * video file in the admin's own browser (see render/renderFilm.ts). Below
- * them, the printable flyers and the team tee's print files ship as static
- * files to view and download (see marketingFlyers.data.ts and
- * marketingMerch.data.ts).
+ * them, the printable flyers, the event banners and the team tee's print
+ * files ship as static files to view and download (see
+ * marketingFlyers.data.ts and marketingMerch.data.ts).
  */
 export function AdminMarketingVideosPage() {
   const { t } = useTranslation();
@@ -89,6 +93,25 @@ export function AdminMarketingVideosPage() {
       </FadeIn>
 
       <FadeIn delay={240}>
+        <section
+          aria-labelledby={EVENT_BANNERS_HEADING_ID}
+          className={flyerStyles.sectionSpaced}
+        >
+          <h2
+            id={EVENT_BANNERS_HEADING_ID}
+            className={flyerStyles.sectionTitle}
+          >
+            {t("admin:marketingVideos.sections.eventBanners")}
+          </h2>
+          <div className={flyerStyles.bannerGrid}>
+            {MARKETING_EVENT_BANNERS.map((banner) => (
+              <MarketingFlyerCard key={banner.id} flyer={banner} />
+            ))}
+          </div>
+        </section>
+      </FadeIn>
+
+      <FadeIn delay={320}>
         <section
           aria-labelledby={MERCH_HEADING_ID}
           className={flyerStyles.sectionSpaced}

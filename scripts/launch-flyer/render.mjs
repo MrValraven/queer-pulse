@@ -6,6 +6,7 @@
     pnpm flyers                                      every piece
     node scripts/launch-flyer/render.mjs first-event       the event flyer only
     node scripts/launch-flyer/render.mjs studio-open-call  the Studio story only
+    node scripts/launch-flyer/render.mjs queer-history-quiz-night  the quiz banner only
 
   first-event (flyer.html): writes qr.svg (queerpulse.com, plum on white)
   next to flyer.html, then <id>.png (2480 x 3520, A5 at about 425 dpi),
@@ -19,6 +20,13 @@
   Instagram re-compresses anything bigger. Writes <id>.png (English),
   <id>-pt.png (Portuguese, from ?lang=pt) and <id>-preview.jpg (540 x 960,
   from the English) for the dashboard card. No PDF and no QR.
+
+  queer-history-quiz-night (queer-history-quiz-night.html): the Pulse Live
+  queer history quiz night as an event cover banner, sized for the events
+  page's 2:1 cover. One 1200 x 600 canvas rendered at 2x. Writes <id>.png
+  (English, 2400 x 1200), <id>-pt.png (Portuguese, from ?lang=pt) and
+  <id>-preview.jpg (1200 x 600, from the English) for the dashboard card.
+  No PDF and no QR.
 */
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -152,9 +160,46 @@ async function renderStudioOpenCall(browser) {
   console.log(`Wrote ${STORY_ID} PNGs (EN, PT) and preview to ${OUT}`);
 }
 
+async function renderQueerHistoryQuizNight(browser) {
+  const BANNER_ID = "queer-history-quiz-night";
+  const CANVAS = { width: 1200, height: 600 };
+  const bannerHref = pathToFileURL(
+    join(HERE, "queer-history-quiz-night.html"),
+  ).href;
+
+  // Each language opens a fresh page, because the banner's script measures
+  // the layout on load to place its cards.
+  for (const [lang, suffix] of [
+    ["en", ""],
+    ["pt", "-pt"],
+  ]) {
+    const page = await openPage(
+      browser,
+      { viewport: CANVAS, deviceScaleFactor: 2 },
+      `${bannerHref}?lang=${lang}`,
+    );
+    await page.screenshot({ path: join(OUT, `${BANNER_ID}${suffix}.png`) });
+  }
+
+  // The dashboard card's still, at 1x, from the English banner.
+  const preview = await openPage(
+    browser,
+    { viewport: CANVAS, deviceScaleFactor: 1 },
+    `${bannerHref}?lang=en`,
+  );
+  await preview.screenshot({
+    path: join(OUT, `${BANNER_ID}-preview.jpg`),
+    type: "jpeg",
+    quality: 82,
+  });
+
+  console.log(`Wrote ${BANNER_ID} PNGs (EN, PT) and preview to ${OUT}`);
+}
+
 const PIECES = {
   "first-event": renderFirstEvent,
   "studio-open-call": renderStudioOpenCall,
+  "queer-history-quiz-night": renderQueerHistoryQuizNight,
 };
 
 const requested = process.argv[2];

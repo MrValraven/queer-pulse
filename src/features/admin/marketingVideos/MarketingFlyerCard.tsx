@@ -30,9 +30,10 @@ export function MarketingFlyerCard({ flyer }: { flyer: MarketingFlyer }) {
         src: flyerPreviewUrl(flyer.id),
         width: previewSize.width,
         height: previewSize.height,
-        // Every card frames its still in the A5 box, so a tall story lines up
-        // with a print flyer in the same row.
-        frame: flyerPreviewSize("a5"),
+        // A flyer or story frames its still in the A5 box, so a tall story
+        // lines up with a print flyer in the same row. A banner keeps its own
+        // 2:1 shape in its own grid.
+        frame: flyer.format === "banner" ? undefined : flyerPreviewSize("a5"),
         alt: t(`admin:marketingVideos.flyerCard.previewAlt.${flyer.format}`, {
           title,
         }),

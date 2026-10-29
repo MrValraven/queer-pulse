@@ -8814,9 +8814,10 @@ export const admin: Catalog = {
     "The circle opens when the first ambassador is granted.",
   "marketingVideos.header.eyebrow": "Films, flyers and merch",
   "marketingVideos.header.sub":
-    "Our launch films, event flyers, stories and team merch, kept as code. Watch a film and turn it into a video file, or download print and story files, whenever you need them.",
+    "Our launch films, event flyers, stories, event banners and team merch, kept as code. Watch a film and turn it into a video file, or download print, story and banner files, whenever you need them.",
   "marketingVideos.sections.films": "Films",
   "marketingVideos.sections.flyers": "Flyers",
+  "marketingVideos.sections.eventBanners": "Event banners",
   "marketingVideos.sections.merch": "Merch",
   "marketingVideos.merch.team-tee.title": "Team tee",
   "marketingVideos.merch.team-tee.summary":
@@ -8836,18 +8837,26 @@ export const admin: Catalog = {
   "marketingVideos.flyers.first-event.title": "First event",
   "marketingVideos.flyers.first-event.summary":
     "Made for our first event: a queer network rooted in Lisbon, and a QR code that opens queerpulse.com.",
+  "marketingVideos.flyers.queer-history-quiz-night.title":
+    "Queer history quiz night",
+  "marketingVideos.flyers.queer-history-quiz-night.summary":
+    "Cover for a Pulse Live quiz on queer history: moments from Stonewall to 2018, and a live question on Lisbon's first Pride march.",
   "marketingVideos.flyerCard.meta.a5": "A5 portrait · PDF and PNG",
   "marketingVideos.flyerCard.meta.story": "Instagram story · 1080 × 1920",
+  "marketingVideos.flyerCard.meta.banner": "Event cover · 2400 × 1200",
   "marketingVideos.flyerCard.previewAlt.a5": "The {title} flyer",
   "marketingVideos.flyerCard.previewAlt.story": "The {title} story",
+  "marketingVideos.flyerCard.previewAlt.banner": "The {title} banner",
   "marketingVideos.flyerCard.view.a5": "View flyer",
   "marketingVideos.flyerCard.view.story": "View story",
+  "marketingVideos.flyerCard.view.banner": "View banner",
   "marketingVideos.flyerCard.download.pdfA5": "Download PDF (A5)",
   "marketingVideos.flyerCard.download.pdfA5Print":
     "Download PDF with bleed (A5)",
   "marketingVideos.flyerCard.download.pdfA4": "Download PDF (A4)",
   "marketingVideos.flyerCard.download.png": "Download PNG",
   "marketingVideos.flyerCard.download.png.story": "Download PNG (English)",
+  "marketingVideos.flyerCard.download.png.banner": "Download PNG (English)",
   "marketingVideos.flyerCard.download.pngPt": "Download PNG (Portuguese)",
   "marketingVideos.films.cinematic.title": "Cinematic",
   "marketingVideos.films.cinematic.summary":

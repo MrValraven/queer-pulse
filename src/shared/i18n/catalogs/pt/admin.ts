@@ -8926,9 +8926,10 @@ export const admin: Catalog = {
     "O círculo abre quando for atribuído o estatuto à primeira pessoa embaixadora.",
   "marketingVideos.header.eyebrow": "Filmes, flyers e merch",
   "marketingVideos.header.sub":
-    "Os nossos filmes de lançamento, flyers de eventos, stories e merch da equipa, guardados como código. Vê um filme e transforma-o num ficheiro de vídeo, ou descarrega ficheiros para imprimir e stories, sempre que precisares.",
+    "Os nossos filmes de lançamento, flyers de eventos, stories, banners de eventos e merch da equipa, guardados como código. Vê um filme e transforma-o num ficheiro de vídeo, ou descarrega ficheiros para imprimir, stories e banners, sempre que precisares.",
   "marketingVideos.sections.films": "Filmes",
   "marketingVideos.sections.flyers": "Flyers",
+  "marketingVideos.sections.eventBanners": "Banners de eventos",
   "marketingVideos.sections.merch": "Merch",
   "marketingVideos.merch.team-tee.title": "T-shirt da equipa",
   "marketingVideos.merch.team-tee.summary":
@@ -8948,18 +8949,26 @@ export const admin: Catalog = {
   "marketingVideos.flyers.first-event.title": "Primeiro evento",
   "marketingVideos.flyers.first-event.summary":
     "Feito para o nosso primeiro evento: uma rede queer com raízes em Lisboa e um código QR que abre queerpulse.com.",
+  "marketingVideos.flyers.queer-history-quiz-night.title":
+    "Quiz de história queer",
+  "marketingVideos.flyers.queer-history-quiz-night.summary":
+    "Capa para um quiz Pulse Live de história queer: momentos de Stonewall a 2018 e uma pergunta ao vivo sobre a primeira Marcha do Orgulho de Lisboa.",
   "marketingVideos.flyerCard.meta.a5": "A5 vertical · PDF e PNG",
   "marketingVideos.flyerCard.meta.story": "Story de Instagram · 1080 × 1920",
+  "marketingVideos.flyerCard.meta.banner": "Capa de evento · 2400 × 1200",
   "marketingVideos.flyerCard.previewAlt.a5": "O flyer {title}",
   "marketingVideos.flyerCard.previewAlt.story": "A story {title}",
+  "marketingVideos.flyerCard.previewAlt.banner": "O banner {title}",
   "marketingVideos.flyerCard.view.a5": "Ver flyer",
   "marketingVideos.flyerCard.view.story": "Ver story",
+  "marketingVideos.flyerCard.view.banner": "Ver banner",
   "marketingVideos.flyerCard.download.pdfA5": "Descarregar PDF (A5)",
   "marketingVideos.flyerCard.download.pdfA5Print":
     "Descarregar PDF com sangria (A5)",
   "marketingVideos.flyerCard.download.pdfA4": "Descarregar PDF (A4)",
   "marketingVideos.flyerCard.download.png": "Descarregar PNG",
   "marketingVideos.flyerCard.download.png.story": "Descarregar PNG (inglês)",
+  "marketingVideos.flyerCard.download.png.banner": "Descarregar PNG (inglês)",
   "marketingVideos.flyerCard.download.pngPt": "Descarregar PNG (português)",
   "marketingVideos.films.cinematic.title": "Cinematográfico",
   "marketingVideos.films.cinematic.summary":

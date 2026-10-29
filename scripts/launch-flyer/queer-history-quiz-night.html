@@ -1,0 +1,521 @@
+<!doctype html>
+<!--
+  Pulse Live queer history quiz night: event cover banner, in the pro film's
+  language.
+
+  The film's dark stage, its sentence-case grotesk with a Fraunces italic turn,
+  and its board of paper cards seen by a tilted camera: here, an archive of
+  queer history (one card per year), with a live question card lifted off the
+  board in front. 1200 x 600 canvas rendered at 2x (2400 x 1200, the event
+  page's 2:1 cover). Copy stays inside x 200 to 1000, the 4:3 crop.
+  ?lang=pt renders the Portuguese.
+  `node scripts/launch-flyer/render.mjs queer-history-quiz-night` writes the
+  PNGs and the dashboard preview into public/marketing-flyers/.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Queer history quiz night banner</title>
+    <style>
+      @font-face {
+        font-family: "Fraunces";
+        font-style: normal;
+        font-weight: 100 900;
+        src: url("../../public/marketing-videos/fonts/fraunces.woff2")
+          format("woff2");
+      }
+      @font-face {
+        font-family: "Fraunces";
+        font-style: italic;
+        font-weight: 100 900;
+        src: url("../../public/marketing-videos/fonts/fraunces-italic.woff2")
+          format("woff2");
+      }
+      @font-face {
+        font-family: "DM Sans";
+        font-style: normal;
+        font-weight: 100 1000;
+        src: url("../../public/marketing-videos/fonts/dm-sans.woff2")
+          format("woff2");
+      }
+      :root {
+        --plum: #2d1b3d;
+        --night: #150b1d;
+        --coral: #e8775a;
+        --coral-fill: #d5431e;
+        --cream: #f7f3ee;
+        --paper: #ffffff;
+        --ink-60: rgba(45, 27, 61, 0.62);
+        --line: rgba(45, 27, 61, 0.1);
+        --muted: rgba(247, 243, 238, 0.6);
+        --triangle: #b34700;
+        --diamond: #005c91;
+        --circle: #e69f00;
+        --square: #00785a;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        width: 1200px;
+        height: 600px;
+        overflow: hidden;
+        background: var(--night);
+      }
+      body {
+        position: relative;
+        font-family: "DM Sans", sans-serif;
+        color: var(--cream);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ── The stage ── */
+      .glow {
+        position: absolute;
+        border-radius: 50%;
+      }
+      #glow-violet {
+        left: -440px;
+        top: 140px;
+        width: 1100px;
+        height: 900px;
+        background: radial-gradient(closest-side, rgba(98, 62, 140, 0.55), rgba(98, 62, 140, 0));
+      }
+      #glow-coral {
+        left: 620px;
+        top: -380px;
+        width: 960px;
+        height: 760px;
+        background: radial-gradient(closest-side, rgba(232, 119, 90, 0.24), rgba(232, 119, 90, 0));
+      }
+      #grain {
+        position: absolute;
+        inset: 0;
+        opacity: 0.03;
+        pointer-events: none;
+      }
+
+      /* ── The archive board, seen by the film's tilted camera ── */
+      .board-camera {
+        position: absolute;
+        left: 580px;
+        top: -60px;
+        width: 860px;
+        height: 760px;
+        perspective: 1100px;
+        perspective-origin: 40% 30%;
+      }
+      .board {
+        position: absolute;
+        left: 20px;
+        top: 40px;
+        display: grid;
+        grid-template-columns: repeat(4, 178px);
+        grid-auto-rows: 146px;
+        gap: 18px;
+        transform: translateZ(-140px) rotateX(30deg) rotateZ(-12deg);
+        transform-origin: 50% 50%;
+      }
+      .archive {
+        position: relative;
+        padding: 15px 17px;
+        border-radius: 16px;
+        background: var(--cream);
+        color: var(--plum);
+        box-shadow: 0 30px 50px -26px rgba(0, 0, 0, 0.8);
+        overflow: hidden;
+      }
+      .archive .place {
+        font-size: 9px;
+        font-weight: 650;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ink-60);
+      }
+      .archive .year {
+        margin-top: 6px;
+        font-family: "Fraunces", serif;
+        font-size: 44px;
+        font-weight: 360;
+        letter-spacing: -0.03em;
+        line-height: 1;
+        font-variation-settings: "opsz" 144, "SOFT" 30;
+      }
+      .archive .what {
+        margin-top: 8px;
+        font-size: 12px;
+        font-weight: 550;
+        line-height: 1.3;
+        color: rgba(45, 27, 61, 0.82);
+      }
+      /* Gilbert Baker's first flag: eight stripes, pink and turquoise included */
+      .archive .flag {
+        position: absolute;
+        right: 18px;
+        top: 18px;
+        width: 34px;
+        height: 24px;
+        border-radius: 3px;
+        overflow: hidden;
+        background: linear-gradient(180deg,
+          #ff69b4 0 12.5%, #e40303 12.5% 25%, #ff8c00 25% 37.5%, #ffed00 37.5% 50%,
+          #008026 50% 62.5%, #40e0d0 62.5% 75%, #2b3a9b 75% 87.5%, #732982 87.5% 100%);
+      }
+      .archive.blank {
+        background: rgba(247, 243, 238, 0.07);
+        box-shadow: inset 0 0 0 1px rgba(247, 243, 238, 0.1);
+      }
+      /* The film darkens the board towards its far edge; the copy side stays clear */
+      .board-shade {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(90deg, var(--night) 0%, var(--night) 44%, rgba(21, 11, 29, 0.82) 52%, rgba(21, 11, 29, 0.3) 64%, rgba(21, 11, 29, 0.22) 100%),
+          linear-gradient(180deg, rgba(21, 11, 29, 0.55) 0%, rgba(21, 11, 29, 0) 30%, rgba(21, 11, 29, 0) 70%, rgba(21, 11, 29, 0.6) 100%);
+      }
+
+      /* ── The live question, lifted off the board ── */
+      .question-glow {
+        position: absolute;
+        left: 600px;
+        top: 90px;
+        width: 460px;
+        height: 460px;
+        border-radius: 50%;
+        background: radial-gradient(closest-side, rgba(232, 119, 90, 0.3), rgba(232, 119, 90, 0));
+      }
+      .question-camera {
+        position: absolute;
+        left: 682px;
+        top: 128px;
+        width: 300px;
+        perspective: 1300px;
+      }
+      .card {
+        width: 300px;
+        padding: 22px 22px 20px;
+        border-radius: 22px;
+        background: var(--paper);
+        color: var(--plum);
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.6),
+          0 50px 80px -30px rgba(0, 0, 0, 0.85),
+          0 18px 30px -16px rgba(0, 0, 0, 0.6);
+        transform: rotateY(-14deg) rotateX(5deg) rotateZ(-2deg);
+      }
+      .card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 10px;
+        font-weight: 650;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--ink-60);
+      }
+      .timer {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        height: 22px;
+        padding: 0 9px;
+        border-radius: 999px;
+        background: rgba(213, 67, 30, 0.1);
+        color: var(--coral-fill);
+        letter-spacing: 0.02em;
+        font-size: 11px;
+      }
+      .timer svg {
+        width: 12px;
+        height: 12px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2.4;
+        stroke-linecap: round;
+      }
+      .question {
+        margin-top: 14px;
+        font-family: "Fraunces", serif;
+        font-size: 22px;
+        font-weight: 420;
+        line-height: 1.18;
+        letter-spacing: -0.01em;
+        font-variation-settings: "opsz" 72, "SOFT" 30;
+      }
+      .answers {
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        list-style: none;
+      }
+      .answer {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        height: 46px;
+        padding: 0 10px 0 8px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        font-family: "Fraunces", serif;
+        font-size: 21px;
+        font-weight: 420;
+        letter-spacing: -0.01em;
+        font-variation-settings: "opsz" 72;
+      }
+      .answer .shape {
+        display: grid;
+        place-items: center;
+        width: 26px;
+        height: 26px;
+        flex: none;
+        border-radius: 7px;
+        color: #ffffff;
+      }
+      .answer .shape svg {
+        width: 14px;
+        height: 14px;
+        fill: currentColor;
+      }
+      .triangle { background: var(--triangle); }
+      .diamond { background: var(--diamond); }
+      .circle { background: var(--circle); color: #1a1030 !important; }
+      .square { background: var(--square); }
+      .card-foot {
+        margin-top: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        font-weight: 550;
+        color: var(--ink-60);
+      }
+      .card-foot .bar {
+        flex: 1;
+        height: 4px;
+        border-radius: 999px;
+        background: var(--line);
+        overflow: hidden;
+      }
+      .card-foot .bar i {
+        display: block;
+        width: 40%;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--coral-fill);
+      }
+
+      /* ── Type ── */
+      .copy {
+        position: absolute;
+        left: 244px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      .eyebrow {
+        font-size: 12px;
+        font-weight: 650;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .eyebrow b {
+        color: var(--coral);
+        font-weight: 650;
+      }
+      .hl {
+        margin-top: 18px;
+        font-size: 62px;
+        font-weight: 600;
+        letter-spacing: -0.045em;
+        line-height: 1.02;
+        white-space: nowrap;
+      }
+      .hl span {
+        display: block;
+      }
+      .hl em {
+        display: block;
+        margin-top: 2px;
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 360;
+        font-size: 1.2em;
+        letter-spacing: -0.025em;
+        color: var(--coral);
+        font-variation-settings: "opsz" 144, "SOFT" 50;
+      }
+      .lede {
+        margin-top: 20px;
+        width: 330px;
+        font-size: 16px;
+        line-height: 1.5;
+        color: rgba(247, 243, 238, 0.72);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="glow" id="glow-violet"></div>
+    <div class="glow" id="glow-coral"></div>
+
+    <div class="board-camera" aria-hidden="true">
+      <div class="board" id="board"></div>
+    </div>
+    <div class="board-shade"></div>
+
+    <div class="question-glow"></div>
+    <div class="question-camera" aria-hidden="true">
+      <div class="card">
+        <div class="card-top">
+          <span data-copy="round"></span>
+          <span class="timer">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8" /><path d="M12 9v4l2 2M10 2h4" /></svg>
+            0:14
+          </span>
+        </div>
+        <p class="question" data-copy="question"></p>
+        <ul class="answers">
+          <li class="answer">
+            <span class="shape triangle"><svg viewBox="0 0 24 24"><path d="M13.73 4a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /></svg></span>
+            1994
+          </li>
+          <li class="answer">
+            <span class="shape diamond"><svg viewBox="0 0 24 24"><path d="M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0-3.41 0Z" /></svg></span>
+            2000
+          </li>
+          <li class="answer">
+            <span class="shape circle"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /></svg></span>
+            2004
+          </li>
+          <li class="answer">
+            <span class="shape square"><svg viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" /></svg></span>
+            2010
+          </li>
+        </ul>
+        <div class="card-foot">
+          <span data-copy="answered"></span>
+          <span class="bar"><i></i></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="copy">
+      <p class="eyebrow" id="eyebrow"></p>
+      <h1 class="hl" id="headline"></h1>
+      <p class="lede" id="lede"></p>
+    </div>
+
+    <svg id="grain" width="1200" height="600">
+      <filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" /></filter>
+      <rect width="100%" height="100%" filter="url(#noise)" />
+    </svg>
+
+    <script>
+      const COPY = {
+        en: {
+          eyebrow: "<b>Pulse Live</b> · Quiz night",
+          headline: "<span>How well</span><span>do you know</span><em>our history?</em>",
+          lede: "A queer history quiz night, from Stonewall to Lisbon’s first Pride march, played in teams on the big screen",
+          round: "Round 4 · Lisboa",
+          question: "When did Lisbon hold its first Pride march?",
+          answered: "7 of 18 teams answered",
+          archive: [
+            ["San Francisco", "1966", "Riot at Compton’s Cafeteria"],
+            ["New York", "1969", "The Stonewall Inn fights back"],
+            ["San Francisco", "1978", "Gilbert Baker’s rainbow flag flies", "flag"],
+            ["Portugal", "1982", "Homosexuality stops being a crime"],
+            ["New York", "1987", "ACT UP is founded"],
+            ["Geneva", "1990", "The WHO stops calling us an illness"],
+            ["Amsterdam", "2001", "The first same-sex weddings"],
+            ["Portugal", "2010", "Same-sex marriage becomes law"],
+            ["Portugal", "2018", "Gender self-determination becomes law"],
+          ],
+        },
+        pt: {
+          eyebrow: "<b>Pulse Live</b> · Noite de quiz",
+          headline: "<span>Quanto sabes</span><span>da nossa</span><em>história?</em>",
+          lede: "Uma noite de quiz de história queer, de Stonewall à primeira Marcha do Orgulho de Lisboa, em equipa e no ecrã grande",
+          round: "Ronda 4 · Lisboa",
+          question: "Em que ano foi a primeira Marcha do Orgulho de Lisboa?",
+          answered: "7 de 18 equipas responderam",
+          archive: [
+            ["São Francisco", "1966", "A revolta da Compton’s Cafeteria"],
+            ["Nova Iorque", "1969", "O Stonewall Inn resiste"],
+            ["São Francisco", "1978", "A bandeira arco-íris de Gilbert Baker", "flag"],
+            ["Portugal", "1982", "A homossexualidade deixa de ser crime"],
+            ["Nova Iorque", "1987", "Nasce o ACT UP"],
+            ["Genebra", "1990", "A OMS deixa de nos chamar doença"],
+            ["Amesterdão", "2001", "Os primeiros casamentos igualitários"],
+            ["Portugal", "2010", "O casamento igualitário é lei"],
+            ["Portugal", "2018", "Lei da autodeterminação de género"],
+          ],
+        },
+      };
+      const lang = new URLSearchParams(location.search).get("lang") === "pt" ? "pt" : "en";
+      const copy = COPY[lang];
+      document.documentElement.lang = lang;
+      document.getElementById("eyebrow").innerHTML = copy.eyebrow;
+      document.getElementById("headline").innerHTML = copy.headline;
+      document.getElementById("lede").textContent = copy.lede;
+      for (const node of document.querySelectorAll("[data-copy]")) {
+        node.textContent = copy[node.dataset.copy];
+      }
+      // The board: 16 cards; the years go to the ones that stay in view around
+      // the question card, in reading order, and the covered ones stay blank
+      const board = document.getElementById("board");
+      const cards = Array.from({ length: 16 }, () => {
+        const card = document.createElement("div");
+        card.className = "archive blank";
+        board.append(card);
+        return card;
+      });
+      const questionRect = document.querySelector(".card").getBoundingClientRect();
+      const probe = document.createElement("span");
+      probe.style.cssText = "position:absolute;width:0;height:0";
+      function pointOnCard(card, u, v) {
+        probe.style.left = `${u * 100}%`;
+        probe.style.top = `${v * 100}%`;
+        card.append(probe);
+        const rect = probe.getBoundingClientRect();
+        probe.remove();
+        return { x: rect.left, y: rect.top };
+      }
+      function visibleShare(card) {
+        // Sample the place and year (the card's top-left), measured through the
+        // board's 3D transform by probing points on the card itself
+        const step = 0.08;
+        let inside = 0;
+        let total = 0;
+        for (let u = 0.04; u < 0.7; u += step) {
+          for (let v = 0.06; v < 0.6; v += step) {
+            const { x, y } = pointOnCard(card, u, v);
+            total += 1;
+            const isOnCanvas = x > 650 && x < 1190 && y > 8 && y < 592;
+            const isUnderQuestion =
+              x > questionRect.left - 14 && x < questionRect.right + 14 &&
+              y > questionRect.top - 14 && y < questionRect.bottom + 14;
+            if (isOnCanvas && !isUnderQuestion) inside += 1;
+          }
+        }
+        return inside / total;
+      }
+      const shown = cards
+        .map((card, index) => ({ card, index, share: visibleShare(card) }))
+        .sort((first, second) => second.share - first.share)
+        .slice(0, copy.archive.length)
+        .sort((first, second) => first.index - second.index);
+      shown.forEach(({ card }, order) => {
+        const [place, year, what, extra] = copy.archive[order];
+        card.classList.remove("blank");
+        card.innerHTML =
+          `<p class="place">${place}</p><p class="year">${year}</p><p class="what">${what}</p>` +
+          (extra === "flag" ? '<span class="flag"></span>' : "");
+      });
+    </script>
+  </body>
+</html>
