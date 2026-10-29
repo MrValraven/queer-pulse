@@ -5,7 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { JoinRequestView } from "./api/useJoinRequests";
 import { joinRequestInviteState } from "./joinRequestInviteState";
 import { inviteFullUrlFor, inviteUrlFor } from "../../shared/lib/inviteUrl";
-import { WelcomeEmailCopyGroup } from "./emailTemplates/WelcomeEmailCopyGroup";
+import { WelcomeEmailSendGroup } from "./emailTemplates/WelcomeEmailSendGroup";
 import styles from "./AdminMembersPage.module.css";
 import decidedStyles from "./AdminVerifyDecided.module.css";
 
@@ -13,11 +13,11 @@ import decidedStyles from "./AdminVerifyDecided.module.css";
  * What the reviewer sees straight after welcoming someone in: the invite link
  * built from their code, ready to copy.
  *
- * Handing that link over is the reviewer's job. QueerPulse has no email
- * delivery and never will, so approval puts nothing in the applicant's inbox,
- * which is why their email address is repeated right next to the link they
- * need to send it to. The welcome email template below copies that link
- * inside a ready-made email.
+ * Handing that link over has two routes. The reviewer sends the welcome email
+ * from the group below the link (QueerPulse sends it through Resend to the
+ * address on the request), or copies the link and sends it by hand. Approval
+ * itself puts nothing in the applicant's inbox, which is why their email
+ * address is repeated right next to the link.
  *
  * The link is not open-ended: an approval invite lapses seven days after it is
  * minted, so the card says how long is left. This card is also transient (it
@@ -86,7 +86,7 @@ export function JoinRequestApprovedCard({ item }: { item: JoinRequestView }) {
         </p>
       )}
 
-      <WelcomeEmailCopyGroup item={item} />
+      <WelcomeEmailSendGroup item={item} />
     </div>
   );
 }

@@ -10,7 +10,7 @@ import { useReissueJoinRequestInvite } from "./api/useReissueJoinRequestInvite";
 import type { JoinRequestView } from "./api/useJoinRequests";
 import type { JoinRequestInviteState } from "./joinRequestInviteState";
 import { JoinRequestRevokeInviteAction } from "./JoinRequestRevokeInviteAction";
-import { WelcomeEmailCopyGroup } from "./emailTemplates/WelcomeEmailCopyGroup";
+import { WelcomeEmailSendGroup } from "./emailTemplates/WelcomeEmailSendGroup";
 import styles from "./AdminVerifyDecided.module.css";
 
 /** Turn a reissue failure into an honest, no-blame line. The backend 403s a
@@ -33,14 +33,14 @@ function reissueErrorMessage(error: unknown, t: TFunction): string {
 
 /**
  * The invite an approval minted, as the expanded decided row shows it: what
- * the link can still do, the link itself, the welcome email to paste it into,
- * and the one action its state allows.
+ * the link can still do, the link itself, the one-click welcome email, and the
+ * one action its state allows.
  *
- * QueerPulse delivers no email, so handing this link over is the reviewer's
- * job. A lapsed link gets a reissue, and a live one can be revoked if it went
- * astray. The two never apply at once, so the action row holds at most one
- * button, set apart from the copy tools so a destructive press is never one
- * slip away from a copy.
+ * The reviewer can send the welcome email from here or copy the link and send
+ * it by hand. A lapsed link gets a reissue, and a live one can be revoked if it
+ * went astray. The two never apply at once, so the action row holds at most one
+ * button, set apart from the send tools so a destructive press is never one
+ * slip away from a send.
  */
 export function JoinRequestDecidedInvitePanel({
   item,
@@ -96,7 +96,7 @@ export function JoinRequestDecidedInvitePanel({
           errorToast={t("admin:members.verify.copyFailed")}
         />
       )}
-      <WelcomeEmailCopyGroup item={item} />
+      <WelcomeEmailSendGroup item={item} />
       {hasInviteAction && (
         <div className={styles.inviteActions}>
           {inviteState.isReissuable && (

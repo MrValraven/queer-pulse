@@ -63,6 +63,12 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "send-welcome-email-from-approvals",
+        category: "feature",
+        date: "29 Oct 2026",
+        ...entryKeys("send-welcome-email-from-approvals"),
+      },
+      {
         id: "listing-menu-subsections",
         category: "feature",
         date: "29 Oct 2026",

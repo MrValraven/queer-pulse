@@ -855,13 +855,13 @@ export const admin: Catalog = {
   "members.verify.source.studio_artist": "Página do Studio, como artista",
   "members.verify.ageAttested": "18+ confirmado a {date} · Termos v{version}",
   "members.verify.ageAttestedUnknown": "18+ confirmado · Termos v{version}",
-  // Aprovado: a QueerPulse não envia emails sobre candidaturas (o único email é
-  // um código de entrada pedido no ecrã), por isso a aprovação só chega a
-  // quem se candidatou quando quem revê leva a ligação até lá. Dizê-lo com
-  // clareza aqui; prometer um email deixaria as pessoas à espera.
+  // Aprovado: aprovar não põe nada na caixa de entrada de quem se candidatou.
+  // Quem revê envia depois o email de boas-vindas a partir do cartão com um
+  // clique, ou copia a ligação e envia-a à mão. Dizer as duas coisas com
+  // clareza aqui.
   "members.verify.approvedLabel": "Recebide na comunidade",
   "members.verify.sendYourself":
-    "Os convites seguem à mão. Copia a ligação abaixo e envia-a tu mesme a {email}.",
+    "Aprovar não envia nada por si. Envia o email de boas-vindas a {email} a partir daqui, ou copia a ligação abaixo e envia-a à mão.",
   "members.verify.linkFieldLabel": "Ligação de convite",
   "members.verify.copyLink": "Copiar ligação",
   "members.verify.copiedLink": "Copiada",
@@ -926,7 +926,7 @@ export const admin: Catalog = {
   "members.verify.approveModal.eyebrow": "Pedido de adesão",
   "members.verify.approveModal.title": "Acolher {name}?",
   "members.verify.approveModal.body":
-    "Escolhe o motivo mais próximo. Só a equipa o vê. Aprovar cria uma ligação de convite que copias e envias tu a essa pessoa.",
+    "Escolhe o motivo mais próximo. Só a equipa o vê. Aprovar cria uma ligação de convite. Depois envias o email de boas-vindas a partir do pedido, ou copias a ligação e envias tu.",
   "members.verify.approveModal.reasonLabel": "Motivo",
   "members.verify.approveModal.confirmCta": "Acolher",
   "members.verify.approveModal.noteLabel": "Diz qual foi o motivo",
@@ -1022,7 +1022,7 @@ export const admin: Catalog = {
   // Confirmação. Nada chega ao servidor antes de uma destas ser confirmada.
   "members.verify.bulk.confirmApprove.title": "Aprovar {count} pedidos?",
   "members.verify.bulk.confirmApprove.body":
-    "Cada aprovação cria uma ligação de convite. Não é enviado nada a ninguém: copias cada ligação no separador Decididos e entrega-la tu.",
+    "Cada aprovação cria uma ligação de convite. Aprovar não envia nada por si: no separador Decididos envias cada email de boas-vindas, ou copias a ligação e entregas tu.",
   "members.verify.bulk.confirmApprove.confirmCta": "Aprovar todos",
   "members.verify.bulk.confirmApprove.reasonBody":
     "Escolhe o motivo mais próximo. Aplica-se a todos os {count} pedidos selecionados, e só a equipa o vê.",
@@ -1081,9 +1081,9 @@ export const admin: Catalog = {
 
   // Separador Decididos. Lê do servidor, por isso a decisão e a ligação de
   // convite que ela criou continuam aqui depois de atualizar a página, de sair
-  // ou de uma aprovação em lote. Nada segue por email, por isso essa ligação
-  // cabe a quem revê levar à mão, e um convite de aprovação caduca ao fim de
-  // sete dias.
+  // ou de uma aprovação em lote. Aprovar não envia email por si, por isso
+  // quem revê envia o email de boas-vindas a partir da linha ou leva a ligação
+  // à mão, e um convite de aprovação caduca ao fim de sete dias.
   "members.verify.decided.intro":
     "Pedidos que já ficaram resolvidos. Uma aprovação guarda aqui a sua ligação de convite, para que a possas entregar.",
   "members.verify.decided.searchLabel": "Procurar pedidos decididos",
@@ -8728,20 +8728,32 @@ export const admin: Catalog = {
     "Põe-no em primeiro lugar para abrir o email com ele.",
   "emailTemplates.blocks.field.signatureLetterHint":
     "No design Carta, uma assinatura com foto aparece também no topo, como remetente.",
-  "emailTemplates.copy.welcomeCta": "Copiar email de boas-vindas",
-  "emailTemplates.copy.subjectCta": "Copiar assunto",
-  "emailTemplates.copy.previewCta": "Pré-visualizar email",
-  "emailTemplates.copy.previewTitle": "Email de boas-vindas para {name}",
-  "emailTemplates.copy.previewNote":
-    "Este é o email que vais colar, já com os dados de {name}.",
-  "emailTemplates.copy.copyEmailCta": "Copiar email",
   "emailTemplates.copy.languageLabel": "Idioma do email",
-  "emailTemplates.copy.templateLabel": "Modelo",
-  "emailTemplates.copy.copiedToast":
-    "Email de boas-vindas copiado. Cola-o num email para {email}.",
-  "emailTemplates.copy.copiedPlainToast":
-    "Copiado como texto simples, porque este navegador não conseguiu manter a formatação. Cola-o num email para {email}.",
-  "emailTemplates.copy.subjectCopiedToast": "Assunto copiado.",
+  // "Enviar email de boas-vindas" com um clique nos pedidos aprovados. O email
+  // é o modelo publicado no Resend, por isso estas linhas só enquadram o envio.
+  "emailTemplates.send.cta": "Enviar email de boas-vindas",
+  "emailTemplates.send.sending": "A enviar…",
+  "emailTemplates.send.sentToast": "Email de boas-vindas enviado para {email}",
+  "emailTemplates.send.sentTo": "Enviado para {email}",
+  "emailTemplates.send.sendAgainCta": "Enviar outra vez",
+  "emailTemplates.send.error.join_request_not_found":
+    "Este pedido de adesão já não existe, por isso não foi enviado nenhum email. Atualiza a página e procura outra vez.",
+  "emailTemplates.send.error.invite_not_usable":
+    "O convite foi revogado, já foi usado ou caducou, por isso não foi enviado nenhum email. Se a ligação caducou, reemite-a primeiro.",
+  "emailTemplates.send.error.welcome_email_not_configured":
+    "O Resend ainda não tem modelo de boas-vindas nem chave de envio configurados para este idioma, por isso não foi enviado nenhum email. Escolhe o outro idioma ou pede a um administrador que conclua a configuração.",
+  "emailTemplates.send.error.welcome_email_rejected":
+    "O Resend recusou enviar este email, por isso não seguiu. Confirma que o endereço do pedido é válido.",
+  "emailTemplates.send.error.welcome_email_unavailable":
+    "O Resend não respondeu a tempo, por isso o email pode não ter seguido. Tenta outra vez daqui a pouco.",
+  "emailTemplates.send.error.unrecognised":
+    'O email não foi enviado, e o código de motivo "{reason}" não é um que esta página reconheça.',
+  "emailTemplates.send.error.forbidden":
+    "Enviar emails de boas-vindas é para moderação e administração. Pede a alguém dessas funções que o envie.",
+  "emailTemplates.send.error.noReason":
+    "O servidor recusou enviar o email (estado {status}) sem dar um motivo.",
+  "emailTemplates.send.error.unreachable":
+    "A QueerPulse não conseguiu chegar ao servidor, por isso não foi enviado nenhum email. Verifica a ligação e tenta outra vez.",
   "emailTemplates.copy.htmlCopiedToast": "HTML copiado.",
   "emailTemplates.copy.sampleCopiedToast": "Copiado com valores de exemplo.",
   "emailTemplates.copy.failedToast":

@@ -3788,6 +3788,10 @@ export const marketing: Catalog = {
     "Pesquisa membros ao definir limites de convites",
   "changelog.entries.invite-quotas-search.body":
     "Quem administra vê os convites de cada membro este mês face ao limite, e muda-o ali mesmo.",
+  "changelog.entries.send-welcome-email-from-approvals.title":
+    "Envia o email de boas-vindas a partir da fila de aprovações",
+  "changelog.entries.send-welcome-email-from-approvals.body":
+    "Quem revê envia o email do convite num clique a partir do pedido aprovado, em inglês ou português.",
   "changelog.entries.bulk-refresh-and-revoke-invites.title":
     "Renova ou revoga vários convites de uma vez",
   "changelog.entries.bulk-refresh-and-revoke-invites.body":

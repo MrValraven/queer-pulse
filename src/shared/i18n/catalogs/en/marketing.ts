@@ -3704,6 +3704,10 @@ export const marketing: Catalog = {
     "Search members when setting invite limits",
   "changelog.entries.invite-quotas-search.body":
     "Admins see each member's invites this month against their limit, and can change it inline.",
+  "changelog.entries.send-welcome-email-from-approvals.title":
+    "Send the welcome email from the approvals queue",
+  "changelog.entries.send-welcome-email-from-approvals.body":
+    "Reviewers send the invite email in one click from an approved request, in English or Portuguese.",
   "changelog.entries.bulk-refresh-and-revoke-invites.title":
     "Refresh or revoke many invites at once",
   "changelog.entries.bulk-refresh-and-revoke-invites.body":

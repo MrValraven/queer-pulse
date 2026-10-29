@@ -817,13 +817,12 @@ export const admin: Catalog = {
   "members.verify.source.studio_artist": "Studio page, as an artist",
   "members.verify.ageAttested": "18+ confirmed {date} · Terms v{version}",
   "members.verify.ageAttestedUnknown": "18+ confirmed · Terms v{version}",
-  // Approved: QueerPulse emails nothing about applications (its only email is
-  // a sign-in code a person asks for on screen), so approval reaches the applicant
-  // only when the reviewer carries the link over themselves. Say that
-  // plainly here; promising an inbox delivery would strand people.
+  // Approved: approving puts nothing in the applicant's inbox by itself. The
+  // reviewer then sends the welcome email from the card with one click, or
+  // copies the link and sends it by hand. Say both plainly here.
   "members.verify.approvedLabel": "Welcomed in",
   "members.verify.sendYourself":
-    "Invites go out by hand. Copy the link below and send it to {email} yourself.",
+    "Approving sends nothing by itself. Send the welcome email to {email} from here, or copy the link below and send it by hand.",
   "members.verify.linkFieldLabel": "Invite link",
   "members.verify.copyLink": "Copy link",
   "members.verify.copiedLink": "Copied",
@@ -888,7 +887,7 @@ export const admin: Catalog = {
   "members.verify.approveModal.eyebrow": "Membership request",
   "members.verify.approveModal.title": "Welcome {name} in?",
   "members.verify.approveModal.body":
-    "Pick the closest reason. Only staff see it. Approving mints an invite link that you copy and send to them yourself.",
+    "Pick the closest reason. Only staff see it. Approving mints an invite link. Afterwards you send the welcome email from the request, or copy the link and send it yourself.",
   "members.verify.approveModal.reasonLabel": "Reason",
   "members.verify.approveModal.confirmCta": "Welcome in",
   "members.verify.approveModal.noteLabel": "Say what the reason was",
@@ -980,7 +979,7 @@ export const admin: Catalog = {
   // Confirmation. Nothing reaches the server until one of these is confirmed.
   "members.verify.bulk.confirmApprove.title": "Approve {count} requests?",
   "members.verify.bulk.confirmApprove.body":
-    "Each approval mints an invite link. Nothing is sent to anyone: you copy each link from the Decided tab and pass it on yourself.",
+    "Each approval mints an invite link. Approving sends nothing by itself: from the Decided tab you send each welcome email, or copy the link and pass it on yourself.",
   "members.verify.bulk.confirmApprove.confirmCta": "Approve all",
   "members.verify.bulk.confirmApprove.reasonBody":
     "Pick the closest reason. It applies to all {count} selected requests, and only staff see it.",
@@ -1039,8 +1038,9 @@ export const admin: Catalog = {
 
   // Decided tab. It reads from the server, so a decision and the invite link it
   // minted are still here after a refresh, a navigation away, or a bulk
-  // approval. Nothing is ever emailed, so that link is the reviewer's to carry
-  // over by hand, and an approval invite lapses after seven days.
+  // approval. Approving emails nothing by itself, so the reviewer sends the
+  // welcome email from the row or carries the link over by hand, and an
+  // approval invite lapses after seven days.
   "members.verify.decided.intro":
     "Requests that have already been settled. An approval keeps its invite link here, so you can still hand it over.",
   "members.verify.decided.searchLabel": "Search decided requests",
@@ -8623,20 +8623,32 @@ export const admin: Catalog = {
     "Put it first to open the email with it.",
   "emailTemplates.blocks.field.signatureLetterHint":
     "In the Letter design, a signature with a photo also shows at the top as the sender.",
-  "emailTemplates.copy.welcomeCta": "Copy welcome email",
-  "emailTemplates.copy.subjectCta": "Copy subject",
-  "emailTemplates.copy.previewCta": "Preview email",
-  "emailTemplates.copy.previewTitle": "Welcome email for {name}",
-  "emailTemplates.copy.previewNote":
-    "This is the email you will paste, with {name}'s details filled in.",
-  "emailTemplates.copy.copyEmailCta": "Copy email",
   "emailTemplates.copy.languageLabel": "Email language",
-  "emailTemplates.copy.templateLabel": "Template",
-  "emailTemplates.copy.copiedToast":
-    "Welcome email copied. Paste it into an email to {email}.",
-  "emailTemplates.copy.copiedPlainToast":
-    "Copied as plain text, because this browser could not keep the formatting. Paste it into an email to {email}.",
-  "emailTemplates.copy.subjectCopiedToast": "Subject copied.",
+  // One-click "Send welcome email" on approved join requests. The email itself
+  // is the published Resend template, so these lines only frame the send.
+  "emailTemplates.send.cta": "Send welcome email",
+  "emailTemplates.send.sending": "Sending…",
+  "emailTemplates.send.sentToast": "Welcome email sent to {email}",
+  "emailTemplates.send.sentTo": "Sent to {email}",
+  "emailTemplates.send.sendAgainCta": "Send again",
+  "emailTemplates.send.error.join_request_not_found":
+    "This join request no longer exists, so no email was sent. Refresh the page and look again.",
+  "emailTemplates.send.error.invite_not_usable":
+    "The invite was revoked, used or has expired, so no email was sent. Reissue the link first if it lapsed.",
+  "emailTemplates.send.error.welcome_email_not_configured":
+    "Resend has no welcome template or sending key set up for this language yet, so no email was sent. Choose the other language or ask an admin to finish the setup.",
+  "emailTemplates.send.error.welcome_email_rejected":
+    "Resend refused to send this email, so it did not go out. Check that the address on the request is valid.",
+  "emailTemplates.send.error.welcome_email_unavailable":
+    "Resend did not answer in time, so the email may not have gone out. Try again in a moment.",
+  "emailTemplates.send.error.unrecognised":
+    'The email was not sent, and the reason code "{reason}" is not one this page recognises.',
+  "emailTemplates.send.error.forbidden":
+    "Sending welcome emails is for moderators and admins. Ask one of them to send it.",
+  "emailTemplates.send.error.noReason":
+    "The server refused to send the email (status {status}) without giving a reason.",
+  "emailTemplates.send.error.unreachable":
+    "QueerPulse could not reach the server, so no email was sent. Check your connection and try again.",
   "emailTemplates.copy.htmlCopiedToast": "HTML copied.",
   "emailTemplates.copy.sampleCopiedToast": "Copied with sample values.",
   "emailTemplates.copy.failedToast":

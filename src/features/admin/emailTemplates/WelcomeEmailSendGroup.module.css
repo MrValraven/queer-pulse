@@ -1,0 +1,76 @@
+/* "Send welcome email" group on approved join-request cards and rows. */
+.group {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  /* The send button sizes to this group: a ~300px queue card and the wide
+     Decided row share the component. */
+  container-type: inline-size;
+}
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px 14px;
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.controlLabel {
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.sent {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+}
+
+.sentLine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--text-13);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.sentLine svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  color: var(--jade);
+}
+
+/* The padding keeps the line clear of the Collapse wrapper, which clips
+   while it animates. */
+.failure {
+  margin: 0;
+  padding-top: 8px;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--accent-text);
+}
+
+/* In a narrow queue card the send button takes a full line of its own and
+   wraps its label if it has to; the wide Decided row keeps it beside the
+   language choice. */
+@container (max-width: 520px) {
+  .form .sendAction {
+    flex: 1 0 100%;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.25;
+  }
+}
