@@ -27,7 +27,12 @@ import {
   normalizeListingAccessibilityAnswers,
   type AccessibilityAnswerMap,
 } from "../listBusiness/listingAccessibility.data";
-import { emptyMenu, menuForDisplay } from "../listBusiness/listingMenu.data";
+import {
+  emptyMenu,
+  menuForDisplay,
+  withMenuSubsections,
+} from "../listBusiness/listingMenu.data";
+import { menuCurrencyOf } from "../listBusiness/listingMenuPrice.data";
 import {
   isSellingOnline,
   normalizeOnlineSummary,
@@ -351,7 +356,12 @@ export function detailDtoToPlace(
     accessibility: dto.accessibility,
     services: dto.services ?? [],
     pricingMode: dto.pricingMode ?? "services",
-    menu: dto.menu ?? emptyMenu(),
+    menu: dto.menu
+      ? withMenuSubsections({
+          ...dto.menu,
+          currency: menuCurrencyOf(dto.menu.currency),
+        })
+      : emptyMenu(),
     affirmingBaseline: dto.affirmingBaseline,
     queerOwnedVerification: dto.queerOwnedVerification,
     ...cardFacts(dto),

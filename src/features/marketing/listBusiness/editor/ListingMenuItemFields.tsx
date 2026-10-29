@@ -1,22 +1,18 @@
-import { useId } from "react";
-import { FiArrowDown, FiArrowUp, FiTrash2 } from "react-icons/fi";
-import {
-  ChipSelect,
-  FormField,
-  IconButton,
-} from "../../../../shared/components/ui";
+import { FormField } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
-import { DietaryIcon } from "../../DirectoryMenuDietaryIcon";
 import {
-  LISTING_MENU_DIETARY,
   menuItemProblem,
-  MENU_ITEM_DESCRIPTION_MAX,
   MENU_ITEM_NAME_MAX,
-  MENU_ITEM_PRICE_MAX,
-  type ListingMenuDietary,
   type ListingMenuItemRow,
 } from "../listingMenu.data";
+import {
+  isLegacyMenuPrice,
+  type ListingMenuCurrency,
+} from "../listingMenuPrice.data";
 import type { ListingForm } from "../useListingForm";
+import { ListingMenuItemControls } from "./ListingMenuItemControls";
+import { ListingMenuItemExtras } from "./ListingMenuItemExtras";
+import { ListingMenuPriceInput } from "./ListingMenuPriceInput";
 import styles from "./ListingMenu.module.css";
 
 /**
@@ -29,18 +25,20 @@ export function ListingMenuItemFields({
   form,
   sectionId,
   item,
+  currency,
   position,
   total,
 }: {
   form: ListingForm;
   sectionId: string;
   item: ListingMenuItemRow;
+  /** The whole menu's currency, shown beside the price. */
+  currency: ListingMenuCurrency;
   /** 1-based position, for the buttons' accessible names. */
   position: number;
   total: number;
 }) {
   const { t } = useTranslation();
-  const dietaryLabelId = useId();
   const problem = menuItemProblem(item);
   const itemName =
     item.name.trim() ||
@@ -73,102 +71,51 @@ export function ListingMenuItemFields({
       <FormField
         className={styles.field}
         label={t("marketing:listBusiness.menu.itemPriceLabel")}
+        labelAside={currency}
+        helper={
+          isLegacyMenuPrice(item.price)
+            ? t("marketing:listBusiness.menu.itemPriceLegacyHint", {
+                price: item.price,
+              })
+            : undefined
+        }
         error={
           problem === "price"
             ? t("marketing:listBusiness.menu.itemPriceError")
-            : undefined
+            : problem === "priceFormat"
+              ? t("marketing:listBusiness.menu.itemPriceFormatError")
+              : undefined
         }
       >
-        <input
-          type="text"
-          maxLength={MENU_ITEM_PRICE_MAX}
-          placeholder={t("marketing:listBusiness.menu.itemPricePlaceholder")}
+        <ListingMenuPriceInput
           value={item.price}
-          onChange={(event) =>
-            form.setMenuItemField(sectionId, item.id, {
-              price: event.target.value,
-            })
+          onValueChange={(price) =>
+            form.setMenuItemField(sectionId, item.id, { price })
           }
+          currency={currency}
+          placeholder={t("marketing:listBusiness.menu.itemPricePlaceholder")}
         />
       </FormField>
 
-      <div className={styles.controls}>
-        <IconButton
-          size="sm"
-          aria-label={t("marketing:listBusiness.menu.moveItemUp", {
-            name: itemName,
-          })}
-          disabled={position === 1}
-          onClick={() => form.moveMenuItem(sectionId, item.id, -1)}
-        >
-          <FiArrowUp aria-hidden />
-        </IconButton>
-        <IconButton
-          size="sm"
-          aria-label={t("marketing:listBusiness.menu.moveItemDown", {
-            name: itemName,
-          })}
-          disabled={position === total}
-          onClick={() => form.moveMenuItem(sectionId, item.id, 1)}
-        >
-          <FiArrowDown aria-hidden />
-        </IconButton>
-        <IconButton
-          size="sm"
-          aria-label={t("marketing:listBusiness.menu.removeItem", {
-            name: itemName,
-          })}
-          onClick={() => form.removeMenuItem(sectionId, item.id)}
-        >
-          <FiTrash2 aria-hidden />
-        </IconButton>
-      </div>
+      <ListingMenuItemControls
+        itemName={itemName}
+        position={position}
+        total={total}
+        onMoveUp={() => form.moveMenuItem(sectionId, item.id, -1)}
+        onMoveDown={() => form.moveMenuItem(sectionId, item.id, 1)}
+        onRemove={() => form.removeMenuItem(sectionId, item.id)}
+      />
 
-      <FormField
-        className={[styles.field, styles.fullCell].join(" ")}
-        label={t("marketing:listBusiness.menu.itemDescriptionLabel")}
-        helper={t("marketing:listBusiness.menu.itemDescriptionHint")}
-      >
-        <input
-          type="text"
-          maxLength={MENU_ITEM_DESCRIPTION_MAX}
-          placeholder={t(
-            "marketing:listBusiness.menu.itemDescriptionPlaceholder",
-          )}
-          value={item.description}
-          onChange={(event) =>
-            form.setMenuItemField(sectionId, item.id, {
-              description: event.target.value,
-            })
-          }
-        />
-      </FormField>
-
-      <div className={styles.dietaryCell}>
-        <span className={styles.dietaryLabel} id={dietaryLabelId}>
-          {t("marketing:listBusiness.menu.dietaryLabel")}
-        </span>
-        <ChipSelect
-          labelledBy={dietaryLabelId}
-          options={LISTING_MENU_DIETARY.map((label) => ({
-            value: label,
-            label: (
-              <>
-                <DietaryIcon label={label} />{" "}
-                {t(`marketing:listBusiness.menu.dietary.${label}`)}
-              </>
-            ),
-          }))}
-          selected={new Set(item.dietary)}
-          onToggle={(value) =>
-            form.toggleMenuItemDietary(
-              sectionId,
-              item.id,
-              value as ListingMenuDietary,
-            )
-          }
-        />
-      </div>
+      <ListingMenuItemExtras
+        description={item.description}
+        dietary={item.dietary}
+        onDescriptionChange={(description) =>
+          form.setMenuItemField(sectionId, item.id, { description })
+        }
+        onToggleDietary={(label) =>
+          form.toggleMenuItemDietary(sectionId, item.id, label)
+        }
+      />
     </div>
   );
 }

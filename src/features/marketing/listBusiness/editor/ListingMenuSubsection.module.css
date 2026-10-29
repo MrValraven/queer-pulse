@@ -1,0 +1,141 @@
+/* ── Sub-sections inside a menu section ──────────────────────────────────────
+   A nested card, quieter than the section card around it: a faint tint over the
+   section's paper and a heavier start edge. `--line-rgb` flips in dark mode, so
+   the tint and the edge read in both themes. Spacing between rows sits on the
+   rows' own margins, since an animated row folds its margin away with it. */
+
+.subsections {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* With no rows left, the section's grid gap would still leave a blank band. */
+.subsections:empty {
+  display: none;
+}
+
+.subsection {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-12);
+  background: rgba(var(--line-rgb), 0.04);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-inline-start: 3px solid rgba(var(--line-rgb), 0.28);
+}
+/* The section's grid gap already spaces the first card from what is above. */
+.subsections > li:first-child .subsection {
+  margin-top: 0;
+}
+.addRow {
+  display: flex;
+  align-items: center;
+  gap: 6px 14px;
+  flex-wrap: wrap;
+}
+.subsectionHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px 12px;
+  align-items: start;
+}
+
+.subItems {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.subItems:empty {
+  display: none;
+}
+.subItem {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) auto;
+  gap: 10px 12px;
+  align-items: start;
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.subItems > li:first-child .subItem {
+  margin-top: 0;
+}
+
+/* The move and remove buttons line up with the input line, so an error under
+   the field cannot pull them down. The offset is
+   the label's line plus the field's gap, plus the 5px the 44px buttons sit
+   below the top of a 49px input. */
+.subsectionHead .alignedControls,
+.subItem .alignedControls {
+  align-self: start;
+  margin-top: calc(var(--text-11-5) * 1.55 + 12px);
+}
+
+/* Glass, divider and bottle stay on one line at every width: the two price
+   columns share what is left and the divider takes only its own width. It is
+   the size container that decides when the in-field currency symbol steps
+   aside for the digits (see ListingMenu.module.css). */
+.subPrices {
+  container-type: inline-size;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 6px;
+  align-items: end;
+  min-width: 0;
+}
+/* Matches an input's border and padding, so the slash sits on the text line
+   of the inputs beside it. */
+.priceDivider {
+  padding-block: calc(13px + 1.5px);
+  font-size: var(--text-16);
+  color: var(--ink-60);
+  line-height: normal;
+  user-select: none;
+}
+.priceErrorRow {
+  grid-column: 1 / -1;
+}
+/* The currency in text, once the symbol has stepped aside. */
+.priceCurrencyNote {
+  display: none;
+  grid-column: 1 / -1;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+@container (max-width: 215px) {
+  .priceCurrencyNote {
+    display: block;
+  }
+}
+.priceError {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--accent-text);
+}
+
+/* On narrow widths the name takes its own row and the prices keep theirs, and
+   the buttons sit on a row of their own, so they drop the field alignment. */
+@media (--lg) {
+  .subsectionHead {
+    grid-template-columns: 1fr;
+  }
+  .subItem {
+    grid-template-columns: 1fr;
+  }
+  .subsectionHead .alignedControls,
+  .subItem .alignedControls {
+    align-self: auto;
+    margin-top: 0;
+  }
+}
+
+/* Small phones give the price boxes the room a sub-section card spends on its
+   own side padding. */
+@media (--xs) {
+  .subsection {
+    padding-inline: 10px;
+  }
+}

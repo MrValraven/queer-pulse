@@ -241,7 +241,7 @@ Full detail and the story behind each: `docs/i18n/sweep-agent-brief.md` §5.
 ## Persistence & detection
 
 - localStorage key **`qp.lang`** (reads legacy `qp-lang` once for migration).
-- Detection order: `qp.lang` → `navigator.language` (`pt*` → `pt`) → `en`.
+- Detection order: `qp.lang` → `en`. `navigator.language` is ignored on purpose: everyone starts in English and only switches to Portuguese manually.
 - `<html lang>` is synced on every change (`I18nProvider`).
 
 ## Lint vs. gates

@@ -458,6 +458,29 @@ describe("buildRestoreDiff shows every change the merge would apply", () => {
     expect(field.rows.map((row) => row.key)).toEqual(["menu.section.1.item.1"]);
   });
 
+  it("gives a currency-only menu change its own row", () => {
+    const menuIn = (currency: string) =>
+      toMenuDraft({
+        sections: [
+          {
+            title: "Drinks",
+            items: [
+              { name: "Tea", price: "2.50", description: "", dietary: [] },
+            ],
+          },
+        ],
+        file: null,
+        link: "",
+        currency,
+      });
+    const current = listingDraft({ menu: menuIn("EUR") });
+    const saved = listingDraft({ menu: menuIn("GBP") });
+    const [services] = diff(current, saved);
+    const field = fieldOfKind(services?.fields[0], "rows");
+    expect(field.key).toBe("menu");
+    expect(field.rows.map((row) => row.key)).toEqual(["menu.currency"]);
+  });
+
   it("gives a photo whose alt text alone changed a changed row", () => {
     const photos = { ...blankDraft().photos, wide: "https://img.test/w.jpg" };
     const current = listingDraft({

@@ -2368,7 +2368,7 @@ export const marketing: Catalog = {
   "listBusiness.missing.consent": "as duas confirmações",
   "listBusiness.missing.services": "um nome e um preço em cada serviço",
   "listBusiness.missing.menu":
-    "um nome e um preço em cada item do menu, e um nome em cada secção",
+    "um nome em cada item do menu, um preço (um número) em cada item fora de uma subsecção, e um nome em cada secção e subsecção",
   "listBusiness.missing.menuLink":
     "um endereço web que funcione no link do teu menu",
   "listBusiness.missing.affirmingBaseline": "o compromisso afirmativo",
@@ -3079,7 +3079,9 @@ export const marketing: Catalog = {
 
   // ── O menu, do lado de quem gere.
   "listBusiness.menu.intro":
-    "O que serves e quanto custa. Agrupa como o teu menu se lê: bebidas, petiscos, brunch. Os preços são nas tuas palavras, por isso '4 EUR / 7 EUR' e 'preço do dia' funcionam os dois.",
+    "O que serves e quanto custa. Agrupa como o teu menu se lê: bebidas, petiscos, brunch. Escolhe uma moeda para o menu todo e escreve cada preço como número.",
+  "listBusiness.menu.currencyLabel": "Moeda do menu todo",
+  "listBusiness.menu.currencyHint": "Todos os preços abaixo usam esta moeda.",
   "listBusiness.menu.empty":
     "Ainda sem secções. Junta uma para cada parte do teu menu, como bebidas ou brunch.",
   "listBusiness.menu.addSectionCta": "Adicionar secção",
@@ -3100,15 +3102,48 @@ export const marketing: Catalog = {
   "listBusiness.menu.removeSectionConfirmBody":
     "Isto remove a secção e tudo o que está nela.",
   "listBusiness.menu.removeSectionConfirmCta": "Remover secção",
+  "listBusiness.menu.addSubsectionCta": "Adicionar subsecção",
+  "listBusiness.menu.subsectionsHint":
+    "Opcional. Divide uma secção em partes, como Tinto, Branco e Rosé dentro de Vinhos.",
+  "listBusiness.menu.subsectionCeilingHint":
+    "Chegaste ao limite de {count} subsecções nesta secção.",
+  "listBusiness.menu.subsectionTitleLabel": "Nome da subsecção",
+  "listBusiness.menu.subsectionTitlePlaceholder": "Tinto",
+  "listBusiness.menu.subsectionTitleError": "Dá um nome a esta subsecção.",
+  "listBusiness.menu.unnamedSubsection": "subsecção {position}",
+  "listBusiness.menu.moveSubsectionUp": "Subir {name}",
+  "listBusiness.menu.moveSubsectionDown": "Descer {name}",
+  "listBusiness.menu.removeSubsection": "Remover {name}",
+  "listBusiness.menu.removeSubsectionConfirmTitle": "Remover {name}?",
+  "listBusiness.menu.removeSubsectionConfirmBody":
+    "Isto remove a subsecção e tudo o que está nela.",
+  "listBusiness.menu.removeSubsectionConfirmCta": "Remover subsecção",
+  "listBusiness.menu.itemPriceGlassLabel": "Ao copo",
+  "listBusiness.menu.itemPriceBottleLabel": "À garrafa",
+  "listBusiness.menu.itemPriceGlassPlaceholder": "4,50",
+  "listBusiness.menu.itemPriceBottlePlaceholder": "22,00",
+  "listBusiness.menu.priceGlassBottleGroup":
+    "Preço ao copo e à garrafa, ambos opcionais",
+  "listBusiness.menu.itemPriceGlassFormatError":
+    "Escreve os algarismos do preço ao copo, como 4,50.",
+  "listBusiness.menu.itemPriceBottleFormatError":
+    "Escreve os algarismos do preço à garrafa, como 22,00.",
   "listBusiness.menu.addItemCta": "Adicionar item",
   "listBusiness.menu.itemNameLabel": "O que é",
   "listBusiness.menu.itemNamePlaceholder": "Galão",
+  "listBusiness.menu.subsectionItemNamePlaceholder": "Douro Reserva",
+  "listBusiness.menu.subsectionItemDetailPlaceholder":
+    "Fruta escura, final longo",
   "listBusiness.menu.itemNameError":
     "Dá um nome a este item, ou apaga o preço para o remover.",
   "listBusiness.menu.itemPriceLabel": "Quanto custa",
-  "listBusiness.menu.itemPricePlaceholder": "1,80 EUR, bebida vegetal +0,40",
+  "listBusiness.menu.itemPricePlaceholder": "1,80",
   "listBusiness.menu.itemPriceError":
-    "Diz quanto custa. Vale tudo o que for verdade: um número, dois tamanhos ou preço do dia.",
+    "Escreve quanto custa, em número, como 2,50.",
+  "listBusiness.menu.itemPriceFormatError":
+    "Um preço precisa de pelo menos um dígito, como 2,50.",
+  "listBusiness.menu.itemPriceLegacyHint":
+    "Guardado como texto: '{price}'. Aparece na tua página tal como está até escreveres aqui um número.",
   "listBusiness.menu.itemDescriptionLabel": "Uma linha de detalhe",
   "listBusiness.menu.itemDescriptionHint": "Opcional.",
   "listBusiness.menu.itemDescriptionPlaceholder":
@@ -3347,6 +3382,10 @@ export const marketing: Catalog = {
   "listBusiness.editor.restore.diff.row.untitled": "Sem nome",
   "listBusiness.editor.restore.diff.row.exceptionWithNote": "{date} · {note}",
   "listBusiness.editor.restore.diff.row.menuItem": "{section}: {item}",
+  "listBusiness.editor.restore.diff.row.menuSubsection":
+    "{section} / {subsection}",
+  "listBusiness.editor.restore.diff.row.menuSubsectionItem":
+    "{section} / {subsection}: {item}",
   "listBusiness.editor.restore.diff.row.otherChange":
     "Alguns detalhes são diferentes",
   "listBusiness.editor.restore.diff.photo.wide": "Plano geral",
@@ -3805,6 +3844,14 @@ export const marketing: Catalog = {
     "Uma ferramenta de páginas de PDF para a equipa",
   "changelog.entries.staff-pdf-page-tool.body":
     "A equipa pode remover, rodar, reordenar, juntar e dividir páginas de PDF no navegador, e os ficheiros ficam no dispositivo.",
+  "changelog.entries.listing-menu-subsections.title":
+    "Os menus ganham subsecções, com preços ao copo e à garrafa",
+  "changelog.entries.listing-menu-subsections.body":
+    "Põe Tinto, Branco e Rosé dentro de Vinhos, e cada vinho pode ter um preço ao copo e outro à garrafa.",
+  "changelog.entries.directory-menu-peek.title":
+    "O menu de um anúncio mostra só um avanço e abre a pedido",
+  "changelog.entries.directory-menu-peek.body":
+    "A secção do menu começa recolhida nos primeiros itens e abre com um clique; os atalhos já não cortam ao passar o rato.",
   "changelog.entries.listing-view-as-visitor.title":
     "Vê um anúncio como um visitante o vê",
   "changelog.entries.listing-view-as-visitor.body":
@@ -3849,6 +3896,9 @@ export const marketing: Catalog = {
     "Compra música diretamente a artistas do Studio",
   "changelog.entries.studio-buy-music.body":
     "Pagas diretamente à pessoa artista, que confirma, e depois descarregas e podes aparecer no mural Com o apoio de.",
+  "changelog.entries.menu-currency.title": "Moeda para o teu menu todo",
+  "changelog.entries.menu-currency.body":
+    "Escolhe uma moeda para o teu menu todo, no topo do editor. Cada campo de preço aceita um número e mostra a tua moeda ao lado, e a tua página mostra os valores nessa moeda.",
   "changelog.entries.studio-gapless-badge.title":
     "Vê quando um lançamento toca sem pausas",
   "changelog.entries.studio-gapless-badge.body":
@@ -10859,9 +10909,16 @@ export const marketing: Catalog = {
   "directory.detail.menu.subNamed": "O que {name} serve e quanto custa.",
   "directory.detail.menu.dietarySummary": "Etiquetas neste menu: {labels}",
   "directory.detail.menu.jumpLabel": "Saltar para uma secção",
+  "directory.detail.menu.open": "Abrir o menu",
+  "directory.detail.menu.close": "Fechar o menu",
   "directory.detail.menu.fileCta.pdf": "Ver o menu completo (PDF)",
   "directory.detail.menu.fileCta.image": "Ver o menu completo (foto)",
   "directory.detail.menu.linkCta": "Menu no site do espaço",
+  "directory.detail.menu.priceGlassOnly": "{price} ao copo",
+  "directory.detail.menu.priceBottleOnly": "{price} à garrafa",
+  "directory.detail.menu.priceGlassAndBottleAria":
+    "{glass} ao copo, {bottle} à garrafa",
+  "directory.detail.menu.glassBottleLegend": "Copo / garrafa",
 
   // ── A prova por trás do selo de negócio queer verificado, escrita como
   //    irmã da linha de verificação do espaço seguro ao lado.

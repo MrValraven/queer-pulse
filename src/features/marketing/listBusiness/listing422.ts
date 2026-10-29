@@ -98,6 +98,7 @@ const FIELD_TO_STEP: Record<string, FieldLocation> = {
   // missing-field chips sit too.
   pricingMode: { step: 1, anchor: ANCHOR.pricingMode },
   shopItems: { step: 1, anchor: ANCHOR.services },
+  menu: { step: 1, anchor: ANCHOR.services },
   // Step 3: selling online.
   hasOnlineShop: { step: 3, anchor: ANCHOR.hasOnlineShop },
 };

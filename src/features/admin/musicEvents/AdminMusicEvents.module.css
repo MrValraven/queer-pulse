@@ -77,6 +77,12 @@
   margin-block-start: var(--gap-sm);
 }
 
+/* The positioned parent a leaving view is lifted out against while the
+   next view fades in (ViewFade, AnimatePresence mode="popLayout"). */
+.viewStage {
+  position: relative;
+}
+
 /* Rows carry their own spacing (the row's block-end margin) so a row that
    leaves folds its gap away with it inside CollapseListItem. */
 .rows {

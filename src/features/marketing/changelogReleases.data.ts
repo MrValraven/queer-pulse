@@ -21,7 +21,7 @@ export const CHANGELOG_RELEASE_NOTES: Record<
       "studio-artist-spotlight",
       "studio-buy-music",
     ],
-    pushes: 7,
+    pushes: 9,
   },
   "28 Oct 2026": {
     highlights: [

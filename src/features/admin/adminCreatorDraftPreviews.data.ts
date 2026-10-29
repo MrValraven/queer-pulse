@@ -89,6 +89,7 @@ function casaLilasPreview(): ListingDraftPreview {
     coverPhoto: { image: null, alt: "The front of Casa Lilás Café" },
     pricingMode: "menu",
     menu: {
+      currency: "EUR",
       sections: [
         {
           id: "casa-lilas-menu-cakes",
@@ -97,16 +98,39 @@ function casaLilasPreview(): ListingDraftPreview {
             {
               id: "casa-lilas-menu-orange-cake",
               name: "Orange and olive oil cake",
-              price: "3,50 €",
+              price: "3.50",
               description: "Baked every morning",
               dietary: ["vegan"],
             },
             {
               id: "casa-lilas-menu-pastel",
               name: "Pastel de nata",
-              price: "1,40 €",
+              price: "1.40",
               description: "",
               dietary: ["vegetarian"],
+            },
+          ],
+          subsections: [],
+        },
+        {
+          id: "casa-lilas-menu-wines",
+          title: "Wines",
+          items: [],
+          subsections: [
+            {
+              id: "casa-lilas-menu-wines-red",
+              title: "Red",
+              items: [
+                {
+                  id: "casa-lilas-menu-douro-red",
+                  name: "Douro tinto",
+                  price: "",
+                  priceGlass: "4.50",
+                  priceBottle: "18.00",
+                  description: "",
+                  dietary: [],
+                },
+              ],
             },
           ],
         },

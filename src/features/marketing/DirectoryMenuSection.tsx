@@ -1,9 +1,10 @@
-import { useId } from "react";
+import { useId, useRef, useState } from "react";
 import { FiExternalLink, FiFileText, FiImage } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { DirectoryMenuCourse } from "./DirectoryMenuCourse";
+import { DirectoryMenuPeek } from "./DirectoryMenuPeek";
 import { type DirectoryPlace, websiteHref } from "./directoryPlaces";
 import {
   emptyMenu,
@@ -25,18 +26,26 @@ const JUMP_CHIPS_FROM = 3;
 export function DirectoryMenuSection({ place }: { place: DirectoryPlace }) {
   const { t } = useTranslation();
   const idPrefix = useId();
+  const [isOpen, setIsOpen] = useState(false);
+  // Assume the menu needs folding until it is measured (and in jsdom, which
+  // cannot measure).
+  const [isFoldable, setIsFoldable] = useState(true);
+  const pendingJumpIndex = useRef<number | null>(null);
   const menu = place.menu ?? emptyMenu();
   const hasFooter = menu.file !== null || menu.link !== "";
   if (menu.sections.length === 0 && !hasFooter) return null;
 
   const usedLabels = LISTING_MENU_DIETARY.filter((label) =>
     menu.sections.some((section) =>
-      section.items.some((item) => item.dietary.includes(label)),
+      [
+        ...section.items,
+        ...section.subsections.flatMap((subsection) => subsection.items),
+      ].some((item) => item.dietary.includes(label)),
     ),
   );
   const headingIdFor = (index: number) => `${idPrefix}-course-${index}`;
 
-  function jumpTo(index: number) {
+  function scrollToCourse(index: number) {
     const heading = document.getElementById(headingIdFor(index));
     if (!heading) return;
     const isReducedMotion = window.matchMedia(
@@ -47,6 +56,24 @@ export function DirectoryMenuSection({ place }: { place: DirectoryPlace }) {
       block: "start",
     });
     heading.focus({ preventScroll: true });
+  }
+
+  // A folded menu opens first and scrolls once it has its full height, so the
+  // target is not moving while the page travels to it.
+  function jumpTo(index: number) {
+    if (isFoldable && !isOpen) {
+      pendingJumpIndex.current = index;
+      setIsOpen(true);
+      return;
+    }
+    scrollToCourse(index);
+  }
+
+  function handleOpenComplete() {
+    const index = pendingJumpIndex.current;
+    if (index === null) return;
+    pendingJumpIndex.current = null;
+    scrollToCourse(index);
   }
 
   return (
@@ -75,32 +102,42 @@ export function DirectoryMenuSection({ place }: { place: DirectoryPlace }) {
         </p>
       )}
 
-      {menu.sections.length >= JUMP_CHIPS_FROM && (
-        <nav
-          className={styles.jump}
-          aria-label={t("marketing:directory.detail.menu.jumpLabel")}
-        >
-          {menu.sections.map((section, index) => (
-            <Button
-              key={index}
-              variant="ghost"
-              size="sm"
-              className={styles.jumpChip}
-              onClick={() => jumpTo(index)}
-            >
-              {section.title}
-            </Button>
-          ))}
-        </nav>
-      )}
+      <DirectoryMenuPeek
+        isOpen={isOpen}
+        isFoldable={isFoldable}
+        onToggle={() => setIsOpen((current) => !current)}
+        onFoldableChange={setIsFoldable}
+        onOpenComplete={handleOpenComplete}
+        regionId={`${idPrefix}-body`}
+      >
+        {menu.sections.length >= JUMP_CHIPS_FROM && (
+          <nav
+            className={styles.jump}
+            aria-label={t("marketing:directory.detail.menu.jumpLabel")}
+          >
+            {menu.sections.map((section, index) => (
+              <Button
+                key={index}
+                variant="ghost"
+                size="sm"
+                className={styles.jumpChip}
+                onClick={() => jumpTo(index)}
+              >
+                {section.title}
+              </Button>
+            ))}
+          </nav>
+        )}
 
-      {menu.sections.map((section, index) => (
-        <DirectoryMenuCourse
-          key={index}
-          section={section}
-          headingId={headingIdFor(index)}
-        />
-      ))}
+        {menu.sections.map((section, index) => (
+          <DirectoryMenuCourse
+            key={index}
+            section={section}
+            currency={menu.currency}
+            headingId={headingIdFor(index)}
+          />
+        ))}
+      </DirectoryMenuPeek>
 
       {hasFooter && (
         <div className={styles.footer}>

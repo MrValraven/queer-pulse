@@ -1,8 +1,8 @@
 /* ── The menu ────────────────────────────────────────────────────────────
    Sections of priced items, each row shaped like a service row so the two
-   lists read as the same family. Prices are the owner's own free text, so
-   "0.90 EUR" and "market price" both have to sit in the same column without
-   one of them looking broken. */
+   lists read as the same family. Prices are amounts with the menu's currency
+   symbol, and a price saved earlier as text ("market price") sits in the same
+   column without looking broken. */
 .list {
   list-style: none;
   margin: 0;
@@ -52,6 +52,16 @@
      than shove the name out of the row. */
   max-width: 15ch;
 }
+/* A glass / bottle pair is two short amounts on one line, so it drops the
+   column cap and stays unbroken while the row is wide enough. */
+.priceSplit {
+  max-width: none;
+  white-space: nowrap;
+}
+.priceDivider {
+  color: var(--ink-60);
+  font-weight: 400;
+}
 @media (--sm) {
   .row {
     flex-direction: column;
@@ -61,6 +71,9 @@
   .price {
     max-width: none;
     text-align: start;
+  }
+  .priceSplit {
+    white-space: normal;
   }
 }
 /* Same container-driven collapse the rest of the detail page uses, so the
@@ -75,19 +88,31 @@
     max-width: none;
     text-align: start;
   }
+  .priceSplit {
+    white-space: normal;
+  }
 }
 
-.summary {
+/* Doubled class: this is a <p> inside `.sec`, whose `.sec p` rule (0,1,1)
+   outranks a single class and was setting it in 16px body ink. */
+.summary.summary {
   font-size: var(--text-13);
   color: var(--ink-60);
   margin-bottom: 14px;
 }
+/* `overflow-x: auto` makes the row clip vertically too, so the chip's hover
+   lift and focus ring need padding to live in. The negative margins give the
+   same room back, so the row sits exactly where it did. */
+/* Size containment on the inline axis keeps the chip row's min-content (every
+   chip side by side) out of the grid column's minimum width, so a narrow phone
+   scrolls the chips and the page keeps its width. */
 .jump {
+  contain: inline-size;
   display: flex;
   gap: 8px;
   overflow-x: auto;
-  padding-bottom: 4px;
-  margin-bottom: 18px;
+  padding: 4px;
+  margin: -4px -4px 18px;
   scrollbar-width: thin;
 }
 /* Layout only: the pill shape, border, background, type and focus ring all
@@ -107,6 +132,35 @@
 }
 .courseTitle:focus {
   outline: none;
+}
+/* A sub-section ("Red" under "Wines") sits one step below its course title:
+   a smaller, lighter serif line, with the list directly beneath. The first
+   one gets more air under the course title than its own title has above its
+   list, so the two levels read as nested. */
+.course > .list + .subcourse,
+.subcourse + .subcourse {
+  margin-top: 18px;
+}
+.courseTitle + .subcourse {
+  margin-top: 16px;
+}
+.subcourseTitle {
+  font-family: var(--serif);
+  font-size: var(--text-15);
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.subcourseTitle + .list {
+  margin-top: 8px;
+}
+.course .legend {
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  margin: -2px 0 8px;
+}
+.course .legend + .list {
+  margin-top: 0;
 }
 .chips {
   display: inline-flex;

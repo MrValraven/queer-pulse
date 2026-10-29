@@ -198,10 +198,12 @@ describe("useListingFormMissing priced lists", () => {
             id: "section",
             title: "Coffee",
             items: [{ ...newMenuItemRow(), name: "Bica", price: "" }],
+            subsections: [],
           },
         ],
         file: null,
         link: "",
+        currency: "EUR",
       },
     });
     const { result } = renderHook(() => useListingFormMissing(draft));

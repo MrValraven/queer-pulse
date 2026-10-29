@@ -91,11 +91,19 @@
   padding: 12px 14px;
   border-bottom: 1px solid rgba(var(--studio-ink-rgb), 0.1);
 }
+/* The profile link and the theme icon button share one line; the giving note
+   sits below it. */
+.headerTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 /* The avatar, name and persona line as one link to the member's profile. The
    negative margin lets its hover wash reach past the text while the avatar
    keeps its place. */
 .headerIdentity {
   display: flex;
+  flex: 1;
   align-items: center;
   gap: 10px;
   min-width: 0;
@@ -112,6 +120,47 @@
   }
 }
 .headerIdentity:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  background: rgba(var(--studio-ink-rgb), 0.08);
+}
+/* The theme switch and Settings link beside the identity link: 2em boxes
+   scaled to their glyph, muted at rest like the row icons and full ink on
+   hover. */
+.headerActions {
+  flex: none;
+  display: flex;
+  gap: 4px;
+}
+.headerIcon {
+  width: 2em;
+  height: 2em;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-9);
+  color: var(--studio-text-muted);
+  font-size: var(--text-16);
+  text-decoration: none;
+  transition:
+    background var(--dur, 0.18s) var(--ease, ease),
+    color var(--dur, 0.18s) var(--ease, ease);
+}
+@media (hover: hover) {
+  .headerIcon:hover {
+    background: rgba(var(--studio-ink-rgb), 0.08);
+    color: var(--studio-text);
+  }
+}
+/* A <button> wearing .headerIcon; strip the UA button chrome. */
+.headerIconButton {
+  border: 0;
+  padding: 0;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+.headerIcon:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);

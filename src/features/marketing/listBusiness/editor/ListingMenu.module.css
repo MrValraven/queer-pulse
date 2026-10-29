@@ -8,6 +8,13 @@
   text-wrap: pretty;
 }
 
+/* The currency select sits above the sections, narrow enough to read as a
+   picker and not a text field. */
+.currencyRow {
+  max-width: 320px;
+  margin-bottom: 18px;
+}
+
 .empty {
   padding: 20px 18px;
   border-radius: var(--radius-14);
@@ -36,6 +43,67 @@
 .field {
   margin: 0;
   min-width: 0;
+}
+
+/* The price input draws its currency symbol inside its own box: the symbol is
+   absolutely placed and the input's padding makes room, sized by the symbol's
+   character count so "CHF" gets more than "€". */
+.priceControl {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.priceSymbol {
+  position: absolute;
+  z-index: 1;
+  font-size: var(--text-16);
+  color: var(--ink-60);
+  pointer-events: none;
+}
+.priceSymbolBefore {
+  inset-inline-start: 15px;
+}
+.priceSymbolAfter {
+  inset-inline-end: 15px;
+}
+/* Two classes (0,2,0) beat FormField's `.field input` (0,1,1), which would
+   otherwise reset the padding. */
+.priceControl .priceInput {
+  font-variant-numeric: tabular-nums;
+}
+.priceControl .priceInputBefore {
+  padding-inline-start: calc(15px + var(--price-symbol-chars, 1) * 1ch + 6px);
+}
+.priceControl .priceInputAfter {
+  padding-inline-end: calc(15px + var(--price-symbol-chars, 1) * 1ch + 6px);
+}
+
+/* A tighter price box for rows that hold two prices side by side (glass and
+   bottle). The symbol sits closer to the edge and the digits get the room. Once
+   the row's container is too narrow for the symbol, it gives way to the
+   digits and the row names the currency in text. Ranked above the base rules
+   (0,3,0 against 0,2,0), and the container rule comes last so it wins. */
+.priceControl.priceControlCompact .priceInputBefore {
+  padding-inline-start: calc(10px + var(--price-symbol-chars, 1) * 1ch + 4px);
+  padding-inline-end: 8px;
+}
+.priceControl.priceControlCompact .priceInputAfter {
+  padding-inline-start: 8px;
+  padding-inline-end: calc(10px + var(--price-symbol-chars, 1) * 1ch + 4px);
+}
+.priceControlCompact .priceSymbolBefore {
+  inset-inline-start: 10px;
+}
+.priceControlCompact .priceSymbolAfter {
+  inset-inline-end: 10px;
+}
+@container (max-width: 215px) {
+  .priceControlCompact .priceSymbol {
+    display: none;
+  }
+  .priceControl.priceControlCompact .priceInput {
+    padding-inline: 8px;
+  }
 }
 
 .controls {

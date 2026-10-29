@@ -1,0 +1,45 @@
+/* The menu body folds to a peek: a short window onto the first section that
+   fades out at the bottom, so a long menu never pushes the rest of the page
+   away until the visitor opens it. The fade is a registered length, so it
+   eases away with the height instead of popping. */
+@property --menu-peek-fade {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+.peek {
+  /* Cancels the chip row's own 4px gutter above it. */
+  margin-top: -4px;
+  --menu-peek-fade: 0px;
+  mask-image: linear-gradient(
+    to bottom,
+    black calc(100% - var(--menu-peek-fade)),
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    black calc(100% - var(--menu-peek-fade)),
+    transparent
+  );
+  transition: --menu-peek-fade var(--menu-peek-duration, 0.28s)
+    cubic-bezier(0.22, 0.68, 0.16, 1);
+}
+.peekCollapsed {
+  --menu-peek-fade: 72px;
+}
+.inner {
+  display: flow-root;
+}
+.toggle {
+  margin-top: 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .peek {
+    transition: none;
+  }
+}
+:global(html[data-reduce-motion="true"]) .peek {
+  transition: none;
+}

@@ -63,6 +63,26 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "listing-menu-subsections",
+        category: "feature",
+        date: "29 Oct 2026",
+        ...entryKeys("listing-menu-subsections"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "directory-menu-peek",
+        category: "improvement",
+        date: "29 Oct 2026",
+        ...entryKeys("directory-menu-peek"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
         id: "listing-view-as-visitor",
         category: "feature",
         date: "29 Oct 2026",
@@ -166,6 +186,12 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "fix",
         date: "29 Oct 2026",
         ...entryKeys("bandcamp-artist-links"),
+      },
+      {
+        id: "menu-currency",
+        category: "feature",
+        date: "29 Oct 2026",
+        ...entryKeys("menu-currency"),
       },
       {
         id: "studio-buy-music",

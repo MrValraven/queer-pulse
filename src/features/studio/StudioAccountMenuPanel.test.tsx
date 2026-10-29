@@ -75,6 +75,7 @@ describe("account menu panel (showcase off)", () => {
     expect(
       screen.getByRole("link", { name: "Open calls" }),
     ).toBeInTheDocument();
+    // Desktop: Settings is the header icon link, a single link by that name.
     expect(screen.getByRole("link", { name: "Settings" })).toHaveAttribute(
       "href",
       "/studio/settings",
@@ -207,6 +208,21 @@ describe("account menu panel (showcase)", () => {
     expect(
       screen.getByRole("link", { name: "Live broadcasts" }),
     ).toHaveAttribute("href", "/studio/live");
+  });
+
+  it("keeps Settings as a row in the phone sheet, with no header icon", async () => {
+    renderPanel({ isSheet: true });
+    expect(
+      await screen.findByRole("link", { name: "Settings" }),
+    ).toHaveAttribute("href", "/studio/settings");
+    expect(screen.getAllByRole("link", { name: "Settings" })).toHaveLength(1);
+  });
+
+  it("moves Settings out of the desktop Studio group into the header", async () => {
+    renderPanel();
+    const settingsLink = await screen.findByRole("link", { name: "Settings" });
+    expect(settingsLink).toHaveAttribute("aria-label", "Settings");
+    expect(screen.getAllByRole("link", { name: "Settings" })).toHaveLength(1);
   });
 
   it("keeps the listening pages out of the dropdown", async () => {

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { blankDraft } from "./listingFormDraft";
 import { draftToDto, draftToUpdateDto } from "./draftToDto";
+import { toMenuDraft } from "./listingMenu.data";
 import { normalizeOnlineDetails } from "./listingOnline.data";
 
 describe("draftToDto", () => {
@@ -261,5 +262,110 @@ describe("draftToDto coverPhoto", () => {
       coverPhoto: cover,
     });
     expect(suggestion.coverPhoto).toEqual(cover);
+  });
+});
+
+describe("draftToDto menu sub-sections", () => {
+  const menuDraftWith = (sections: unknown[]) => ({
+    ...blankDraft(),
+    path: "claim" as const,
+    cats: ["food"],
+    pricingMode: "menu" as const,
+    menu: toMenuDraft({ sections, file: null, link: "" }),
+  });
+
+  it("sends a sub-section with its glass and bottle prices", () => {
+    const dto = draftToDto(
+      menuDraftWith([
+        {
+          title: "Wines",
+          items: [],
+          subsections: [
+            {
+              title: " Red ",
+              items: [
+                {
+                  name: "Douro",
+                  priceGlass: "4.5",
+                  priceBottle: "18",
+                  description: "",
+                  dietary: [],
+                },
+                {
+                  name: "Dão",
+                  priceBottle: "22.00",
+                  description: "",
+                  dietary: [],
+                },
+              ],
+            },
+          ],
+        },
+      ]),
+    );
+    expect(dto.menu?.sections).toEqual([
+      {
+        title: "Wines",
+        items: [],
+        subsections: [
+          {
+            title: "Red",
+            items: [
+              {
+                name: "Douro",
+                price: "",
+                priceGlass: "4.50",
+                priceBottle: "18.00",
+                description: "",
+                dietary: [],
+              },
+              {
+                name: "Dão",
+                price: "",
+                priceBottle: "22.00",
+                description: "",
+                dietary: [],
+              },
+            ],
+          },
+        ],
+      },
+    ]);
+  });
+
+  it("sends no glass or bottle price on a direct item", () => {
+    const draft = menuDraftWith([
+      {
+        title: "Coffee",
+        items: [{ name: "Bica", price: "0.90", description: "", dietary: [] }],
+      },
+    ]);
+    const directItem = draft.menu.sections[0]!.items[0]!;
+    directItem.priceGlass = "4.00";
+    directItem.priceBottle = "9.00";
+    const sentItem = draftToDto(draft).menu?.sections[0]?.items[0];
+    expect(sentItem).toEqual({
+      name: "Bica",
+      price: "0.90",
+      description: "",
+      dietary: [],
+    });
+    expect(sentItem).not.toHaveProperty("priceGlass");
+    expect(sentItem).not.toHaveProperty("priceBottle");
+  });
+
+  it("drops a sub-section with no typed item", () => {
+    const dto = draftToDto(
+      menuDraftWith([
+        {
+          title: "Wines",
+          items: [
+            { name: "House red", price: "3.00", description: "", dietary: [] },
+          ],
+          subsections: [{ title: "Rosé", items: [{ name: "" }] }],
+        },
+      ]),
+    );
+    expect(dto.menu?.sections[0]?.subsections).toEqual([]);
   });
 });

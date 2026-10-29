@@ -1,46 +1,79 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { DietaryIcon } from "./DirectoryMenuDietaryIcon";
-import type { ListingMenuSection } from "./listBusiness/listingMenu.data";
+import { DirectoryMenuItemRow } from "./DirectoryMenuItemRow";
+import type {
+  ListingMenuItem,
+  ListingMenuSection,
+  ListingMenuSubsection,
+} from "./listBusiness/listingMenu.data";
+import type { ListingMenuCurrency } from "./listBusiness/listingMenuPrice.data";
 import styles from "./DirectoryMenu.module.css";
 
-/** One titled part of the menu and its priced items. */
+/** Whether any item of the sub-section shows both a glass and a bottle price,
+ *  which is when the "Glass / bottle" legend helps. */
+function hasGlassAndBottle(items: ListingMenuItem[]): boolean {
+  return items.some(
+    (item) =>
+      (item.priceGlass ?? "").trim() !== "" &&
+      (item.priceBottle ?? "").trim() !== "",
+  );
+}
+
+function DirectoryMenuSubcourse({
+  subsection,
+  currency,
+}: {
+  subsection: ListingMenuSubsection;
+  currency: ListingMenuCurrency;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.subcourse}>
+      <h4 className={styles.subcourseTitle}>{subsection.title}</h4>
+      {hasGlassAndBottle(subsection.items) && (
+        <p className={styles.legend}>
+          {t("marketing:directory.detail.menu.glassBottleLegend")}
+        </p>
+      )}
+      <ul className={styles.list}>
+        {subsection.items.map((item, index) => (
+          // Index-keyed: read-only and never reordered on screen.
+          <DirectoryMenuItemRow key={index} item={item} currency={currency} />
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/** One titled part of the menu: its direct items, then its sub-sections. */
 export function DirectoryMenuCourse({
   section,
+  currency,
   headingId,
 }: {
   section: ListingMenuSection;
+  currency: ListingMenuCurrency;
   headingId: string;
 }) {
-  const { t } = useTranslation();
   return (
     <div className={styles.course}>
       <h3 id={headingId} className={styles.courseTitle} tabIndex={-1}>
         {section.title}
       </h3>
-      <ul className={styles.list}>
-        {section.items.map((item, index) => (
-          // Index-keyed: read-only and never reordered on screen.
-          <li key={index} className={styles.row}>
-            <span className={styles.body}>
-              <span className={styles.name}>{item.name}</span>
-              {item.dietary.length > 0 && (
-                <span className={styles.chips}>
-                  {item.dietary.map((label) => (
-                    <span key={label} className={styles.chip}>
-                      <DietaryIcon label={label} />
-                      {t(`marketing:listBusiness.menu.dietary.${label}`)}
-                    </span>
-                  ))}
-                </span>
-              )}
-              {item.description !== "" && (
-                <span className={styles.description}>{item.description}</span>
-              )}
-            </span>
-            <span className={styles.price}>{item.price}</span>
-          </li>
-        ))}
-      </ul>
+      {section.items.length > 0 && (
+        <ul className={styles.list}>
+          {section.items.map((item, index) => (
+            // Index-keyed: read-only and never reordered on screen.
+            <DirectoryMenuItemRow key={index} item={item} currency={currency} />
+          ))}
+        </ul>
+      )}
+      {section.subsections.map((subsection, index) => (
+        <DirectoryMenuSubcourse
+          key={index}
+          subsection={subsection}
+          currency={currency}
+        />
+      ))}
     </div>
   );
 }

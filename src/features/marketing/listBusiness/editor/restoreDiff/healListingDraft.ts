@@ -14,6 +14,7 @@ import {
 } from "../../listingFacts.data";
 import { healLegacyListingDraft } from "../../listingLegacyAttributes";
 import { toMenuDraft } from "../../listingMenu.data";
+import { menuCurrencyOf } from "../../listingMenuPrice.data";
 import { normalizeMobileDetails } from "../../listingMobile.data";
 import { normalizeOnlineDetails } from "../../listingOnline.data";
 import { normalizeOwnedBy } from "../../listingOwnedBy.data";
@@ -119,6 +120,11 @@ function healedExceptions(raw: unknown): HoursException[] | undefined {
     .filter((entry): entry is HoursException => entry !== null);
 }
 
+/** A list whose every entry is a record. */
+function isRecordList(value: unknown): boolean {
+  return Array.isArray(value) && value.every(isRecord);
+}
+
 function healedMenu(raw: unknown): ListingDraft["menu"] {
   if (raw === undefined || raw === null) return undefined;
   const menu = raw as ListingDraft["menu"];
@@ -128,10 +134,17 @@ function healedMenu(raw: unknown): ListingDraft["menu"] {
     raw.sections.every(
       (section) =>
         isRecord(section) &&
-        Array.isArray(section.items) &&
-        section.items.every(isRecord),
+        isRecordList(section.items) &&
+        // A copy from before sub-sections has none, so it is rebuilt.
+        Array.isArray(section.subsections) &&
+        section.subsections.every(
+          (subsection) =>
+            isRecord(subsection) && isRecordList(subsection.items),
+        ),
     );
-  return isWellFormed ? menu : toMenuDraft(raw);
+  return isWellFormed
+    ? { ...menu!, currency: menuCurrencyOf(menu!.currency) }
+    : toMenuDraft(raw);
 }
 
 export function healListingDraft(draft: ListingDraft): ListingDraft {

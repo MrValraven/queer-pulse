@@ -25,15 +25,21 @@ function placeWith(menu: ListingMenu): DirectoryPlace {
 const section = (title: string) => ({
   title,
   items: [
-    { name: `${title} item`, price: "2 EUR", description: "", dietary: [] },
+    { name: `${title} item`, price: "2.50", description: "", dietary: [] },
   ],
+  subsections: [],
 });
 
 describe("DirectoryMenuSection", () => {
   it("renders nothing for an empty menu", () => {
     const { container } = renderSection(
       <DirectoryMenuSection
-        place={placeWith({ sections: [], file: null, link: "" })}
+        place={placeWith({
+          currency: "EUR",
+          sections: [],
+          file: null,
+          link: "",
+        })}
       />,
     );
     expect(container).toBeEmptyDOMElement();
@@ -43,6 +49,7 @@ describe("DirectoryMenuSection", () => {
     renderSection(
       <DirectoryMenuSection
         place={placeWith({
+          currency: "EUR",
           sections: [],
           file: null,
           link: "https://example.pt/menu",
@@ -59,6 +66,7 @@ describe("DirectoryMenuSection", () => {
     renderSection(
       <DirectoryMenuSection
         place={placeWith({
+          currency: "EUR",
           sections: [],
           file: null,
           link: "cafe.pt/menu",
@@ -74,6 +82,7 @@ describe("DirectoryMenuSection", () => {
     renderSection(
       <DirectoryMenuSection
         place={placeWith({
+          currency: "EUR",
           sections: [],
           file: {
             url: "https://api.test/files/x.pdf",
@@ -93,6 +102,7 @@ describe("DirectoryMenuSection", () => {
     const { unmount } = renderSection(
       <DirectoryMenuSection
         place={placeWith({
+          currency: "EUR",
           sections: [section("Coffee"), section("Cakes")],
           file: null,
           link: "",
@@ -104,6 +114,7 @@ describe("DirectoryMenuSection", () => {
     renderSection(
       <DirectoryMenuSection
         place={placeWith({
+          currency: "EUR",
           sections: [section("Coffee"), section("Cakes"), section("Drinks")],
           file: null,
           link: "",
@@ -117,17 +128,19 @@ describe("DirectoryMenuSection", () => {
     renderSection(
       <DirectoryMenuSection
         place={placeWith({
+          currency: "EUR",
           sections: [
             {
               title: "Cakes",
               items: [
                 {
                   name: "Orange cake",
-                  price: "2.20 EUR",
+                  price: "2.20",
                   description: "",
                   dietary: ["vegan", "glutenFree"],
                 },
               ],
+              subsections: [],
             },
           ],
           file: null,
@@ -137,5 +150,60 @@ describe("DirectoryMenuSection", () => {
     );
     expect(screen.getAllByText("Vegan").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Gluten-free").length).toBeGreaterThan(0);
+  });
+
+  it("renders a numeric price with the menu currency symbol", () => {
+    renderSection(
+      <DirectoryMenuSection
+        place={placeWith({
+          currency: "EUR",
+          sections: [section("Coffee")],
+          file: null,
+          link: "",
+        })}
+      />,
+    );
+    expect(screen.getByText("€2.50")).toBeInTheDocument();
+  });
+
+  it("uses the symbol of the menu currency when it is not euro", () => {
+    renderSection(
+      <DirectoryMenuSection
+        place={placeWith({
+          currency: "GBP",
+          sections: [section("Coffee")],
+          file: null,
+          link: "",
+        })}
+      />,
+    );
+    expect(screen.getByText("£2.50")).toBeInTheDocument();
+  });
+
+  it("shows legacy free-text prices as written", () => {
+    renderSection(
+      <DirectoryMenuSection
+        place={placeWith({
+          currency: "EUR",
+          sections: [
+            {
+              title: "Specials",
+              items: [
+                {
+                  name: "Catch of the day",
+                  price: "market price",
+                  description: "",
+                  dietary: [],
+                },
+              ],
+              subsections: [],
+            },
+          ],
+          file: null,
+          link: "",
+        })}
+      />,
+    );
+    expect(screen.getByText("market price")).toBeInTheDocument();
   });
 });

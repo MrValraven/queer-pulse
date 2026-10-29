@@ -15,6 +15,7 @@ import {
   emptyMenuDraft,
   pricingModeOf,
   type ListingMenuDraft,
+  type ListingMenuItemRow,
 } from "../../listingMenu.data";
 import {
   normalizeOnlineDetails,
@@ -41,13 +42,28 @@ function withoutId<Row extends { id: string }>(row: Row): Omit<Row, "id"> {
   return content;
 }
 
+/** A menu item without its id. A copy from before glass and bottle prices
+ *  has neither key, which reads exactly like the empty price. */
+function comparableMenuItem(item: ListingMenuItemRow): unknown {
+  return {
+    ...withoutId(item),
+    priceGlass: item.priceGlass ?? "",
+    priceBottle: item.priceBottle ?? "",
+  };
+}
+
+/** A copy from before sub-sections has none, which reads like an empty list. */
 function comparableMenu(menu: ListingMenuDraft | undefined): unknown {
   const source = menu ?? emptyMenuDraft();
   return {
     ...source,
     sections: source.sections.map((section) => ({
       ...withoutId(section),
-      items: section.items.map(withoutId),
+      items: section.items.map(comparableMenuItem),
+      subsections: (section.subsections ?? []).map((subsection) => ({
+        ...withoutId(subsection),
+        items: subsection.items.map(comparableMenuItem),
+      })),
     })),
   };
 }

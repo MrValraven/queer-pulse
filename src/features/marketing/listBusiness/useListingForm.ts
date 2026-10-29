@@ -18,6 +18,7 @@ import { applyCategoryPricingDefault } from "./listingMenu.data";
 import { useAccessibilitySetters } from "./useAccessibilitySetters";
 import { useListingFactSetters } from "./useListingFactSetters";
 import { useMenuSetters } from "./useMenuSetters";
+import { useMenuSubsectionSetters } from "./useMenuSubsectionSetters";
 import { useMobileSetters } from "./useMobileSetters";
 import { useOnlineSetters } from "./useOnlineSetters";
 import { useServiceSetters } from "./useServiceSetters";
@@ -67,6 +68,7 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
   const accessibilitySetters = useAccessibilitySetters(setDraft);
   const serviceSetters = useServiceSetters(setDraft);
   const menuSetters = useMenuSetters(setDraft);
+  const menuSubsectionSetters = useMenuSubsectionSetters(setDraft);
   const hoursSetters = useListingHoursSetters(setDraft);
   const onlineSetters = useOnlineSetters(setDraft);
   const mobileSetters = useMobileSetters(setDraft);
@@ -182,6 +184,7 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
     ...accessibilitySetters,
     ...serviceSetters,
     ...menuSetters,
+    ...menuSubsectionSetters,
     ...hoursExceptionSetters,
     ...onlineSetters,
     ...mobileSetters,

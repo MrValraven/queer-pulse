@@ -2306,7 +2306,7 @@ export const marketing: Catalog = {
   "listBusiness.missing.consent": "both confirmations",
   "listBusiness.missing.services": "a name and a price on every service",
   "listBusiness.missing.menu":
-    "a name and a price on every menu item, and a name on every section",
+    "a name on every menu item, a price (a number) on every item outside a sub-section, and a name on every section and sub-section",
   "listBusiness.missing.menuLink":
     "a web address for your menu link that works",
   "listBusiness.missing.affirmingBaseline": "the affirming baseline",
@@ -3003,7 +3003,9 @@ export const marketing: Catalog = {
 
   // ── The menu, owner side.
   "listBusiness.menu.intro":
-    "What you serve and what it costs. Group it the way your menu reads: drinks, small plates, brunch. Prices are your own words, so '4 EUR / 7 EUR' and 'market price' both work.",
+    "What you serve and what it costs. Group it the way your menu reads: drinks, small plates, brunch. Pick one currency for the whole menu, then type each price as a number.",
+  "listBusiness.menu.currencyLabel": "Currency for the whole menu",
+  "listBusiness.menu.currencyHint": "Every price below uses this currency.",
   "listBusiness.menu.empty":
     "No sections yet. Add one for each part of your menu, like drinks or brunch.",
   "listBusiness.menu.addSectionCta": "Add a section",
@@ -3024,15 +3026,48 @@ export const marketing: Catalog = {
   "listBusiness.menu.removeSectionConfirmBody":
     "This removes the section and everything listed in it.",
   "listBusiness.menu.removeSectionConfirmCta": "Remove section",
+  "listBusiness.menu.addSubsectionCta": "Add a sub-section",
+  "listBusiness.menu.subsectionsHint":
+    "Optional. Split a section further, like Red, White and Rosé under Wines.",
+  "listBusiness.menu.subsectionCeilingHint":
+    "That is the limit of {count} sub-sections in this section.",
+  "listBusiness.menu.subsectionTitleLabel": "Sub-section name",
+  "listBusiness.menu.subsectionTitlePlaceholder": "Red",
+  "listBusiness.menu.subsectionTitleError": "Give this sub-section a name.",
+  "listBusiness.menu.unnamedSubsection": "sub-section {position}",
+  "listBusiness.menu.moveSubsectionUp": "Move {name} up",
+  "listBusiness.menu.moveSubsectionDown": "Move {name} down",
+  "listBusiness.menu.removeSubsection": "Remove {name}",
+  "listBusiness.menu.removeSubsectionConfirmTitle": "Remove {name}?",
+  "listBusiness.menu.removeSubsectionConfirmBody":
+    "This removes the sub-section and everything listed in it.",
+  "listBusiness.menu.removeSubsectionConfirmCta": "Remove sub-section",
+  "listBusiness.menu.itemPriceGlassLabel": "Per glass",
+  "listBusiness.menu.itemPriceBottleLabel": "Per bottle",
+  "listBusiness.menu.itemPriceGlassPlaceholder": "4.50",
+  "listBusiness.menu.itemPriceBottlePlaceholder": "22.00",
+  "listBusiness.menu.priceGlassBottleGroup":
+    "Price per glass and per bottle, both optional",
+  "listBusiness.menu.itemPriceGlassFormatError":
+    "Add digits to the per glass price, like 4.50.",
+  "listBusiness.menu.itemPriceBottleFormatError":
+    "Add digits to the per bottle price, like 22.00.",
   "listBusiness.menu.addItemCta": "Add an item",
   "listBusiness.menu.itemNameLabel": "What it is",
   "listBusiness.menu.itemNamePlaceholder": "Flat white",
+  "listBusiness.menu.subsectionItemNamePlaceholder": "Douro Reserva",
+  "listBusiness.menu.subsectionItemDetailPlaceholder":
+    "Dark fruit, long finish",
   "listBusiness.menu.itemNameError":
     "Give this item a name, or clear the price to remove it.",
   "listBusiness.menu.itemPriceLabel": "What it costs",
-  "listBusiness.menu.itemPricePlaceholder": "2.50 EUR, oat milk +0.40",
+  "listBusiness.menu.itemPricePlaceholder": "2.50",
   "listBusiness.menu.itemPriceError":
-    "Say what it costs. Anything true works: a number, two sizes, or market price.",
+    "Type what it costs as a number, like 2.50.",
+  "listBusiness.menu.itemPriceFormatError":
+    "A price needs at least one digit, like 2.50.",
+  "listBusiness.menu.itemPriceLegacyHint":
+    "Saved as text: '{price}'. It shows on your page as written until you type a number here.",
   "listBusiness.menu.itemDescriptionLabel": "One line of detail",
   "listBusiness.menu.itemDescriptionHint": "Optional.",
   "listBusiness.menu.itemDescriptionPlaceholder":
@@ -3272,6 +3307,10 @@ export const marketing: Catalog = {
   "listBusiness.editor.restore.diff.row.untitled": "Untitled",
   "listBusiness.editor.restore.diff.row.exceptionWithNote": "{date} · {note}",
   "listBusiness.editor.restore.diff.row.menuItem": "{section}: {item}",
+  "listBusiness.editor.restore.diff.row.menuSubsection":
+    "{section} / {subsection}",
+  "listBusiness.editor.restore.diff.row.menuSubsectionItem":
+    "{section} / {subsection}: {item}",
   "listBusiness.editor.restore.diff.row.otherChange": "Some details differ",
   "listBusiness.editor.restore.diff.photo.wide": "Wide shot",
   "listBusiness.editor.restore.diff.photo.cover": "Cover photo",
@@ -3720,6 +3759,14 @@ export const marketing: Catalog = {
   "changelog.entries.staff-pdf-page-tool.title": "A PDF page tool for staff",
   "changelog.entries.staff-pdf-page-tool.body":
     "Staff can remove, rotate, reorder, merge and split PDF pages in the browser, and files stay on the device.",
+  "changelog.entries.listing-menu-subsections.title":
+    "Menus get sub-sections, with prices per glass and per bottle",
+  "changelog.entries.listing-menu-subsections.body":
+    "List Red, White and Rosé under Wines, each wine with an optional glass price and bottle price.",
+  "changelog.entries.directory-menu-peek.title":
+    "A listing's menu shows a short peek and opens on request",
+  "changelog.entries.directory-menu-peek.body":
+    "The menu section starts folded to its first dishes and opens with one click; jump chips no longer clip on hover.",
   "changelog.entries.listing-view-as-visitor.title":
     "View a listing as a visitor",
   "changelog.entries.listing-view-as-visitor.body":
@@ -3764,6 +3811,9 @@ export const marketing: Catalog = {
     "Buy music straight from Studio artists",
   "changelog.entries.studio-buy-music.body":
     "You pay the artist directly, they confirm, then you download and can join the Supported by wall.",
+  "changelog.entries.menu-currency.title": "Currency for your whole menu",
+  "changelog.entries.menu-currency.body":
+    "Pick one currency for your whole menu at the top of the editor. Each price field now takes a number and shows your currency next to it, and your page shows the amounts in that currency.",
   "changelog.entries.studio-gapless-badge.title":
     "See when a release plays without gaps",
   "changelog.entries.studio-gapless-badge.body":
@@ -10715,9 +10765,16 @@ export const marketing: Catalog = {
   "directory.detail.menu.subNamed": "What {name} serves and what it costs.",
   "directory.detail.menu.dietarySummary": "Labels on this menu: {labels}",
   "directory.detail.menu.jumpLabel": "Jump to a section",
+  "directory.detail.menu.open": "Open the menu",
+  "directory.detail.menu.close": "Close the menu",
   "directory.detail.menu.fileCta.pdf": "See the full menu (PDF)",
   "directory.detail.menu.fileCta.image": "See the full menu (photo)",
   "directory.detail.menu.linkCta": "Menu on their site",
+  "directory.detail.menu.priceGlassOnly": "{price} per glass",
+  "directory.detail.menu.priceBottleOnly": "{price} per bottle",
+  "directory.detail.menu.priceGlassAndBottleAria":
+    "{glass} per glass, {bottle} per bottle",
+  "directory.detail.menu.glassBottleLegend": "Glass / bottle",
 
   // ── Evidence behind the verified queer-owned badge, phrased as the sibling
   //    of the safe-space block's own verifier + re-checked date line.

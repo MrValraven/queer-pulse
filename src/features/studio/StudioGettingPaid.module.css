@@ -124,6 +124,22 @@
   color: var(--studio-accent-text);
 }
 
+/* The old persona's editor waits dimmed while the next one loads. */
+.swapFrame {
+  display: flow-root;
+}
+
+.swapPending {
+  opacity: 0.45;
+  transition: opacity var(--dur-base) var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swapPending {
+    transition: none;
+  }
+}
+
 .skeleton {
   display: flex;
   flex-direction: column;

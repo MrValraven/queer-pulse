@@ -196,10 +196,12 @@ describe("menu round trip", () => {
                   dietary: ["vegan"],
                 },
               ],
+              subsections: [],
             },
           ],
           file: null,
           link: "",
+          currency: "GBP",
         },
       }),
     );
@@ -218,11 +220,79 @@ describe("menu round trip", () => {
               dietary: ["vegan"],
             },
           ],
+          subsections: [],
         },
       ],
       file: null,
       link: "",
+      currency: "GBP",
     });
+  });
+
+  it("round-trips a sub-section with glass and bottle prices", () => {
+    const subsections = [
+      {
+        title: "Red",
+        items: [
+          {
+            name: "Douro",
+            price: "",
+            priceGlass: "4.50",
+            priceBottle: "18.00",
+            description: "",
+            dietary: [],
+          },
+          {
+            name: "Dão",
+            price: "",
+            priceBottle: "22.00",
+            description: "",
+            dietary: [],
+          },
+        ],
+      },
+    ];
+    const draft = dtoToDraft(
+      makeDto({
+        cats: ["food"],
+        pricingMode: "menu",
+        menu: {
+          sections: [{ title: "Wines", items: [], subsections }],
+          file: null,
+          link: "",
+          currency: "EUR",
+        },
+      }),
+    );
+    expect(draft.menu?.sections[0]?.subsections[0]?.id).toBeTruthy();
+    expect(draft.menu?.sections[0]?.subsections[0]?.items[0]?.id).toBeTruthy();
+    expect(draftToDto(draft).menu?.sections).toEqual([
+      { title: "Wines", items: [], subsections },
+    ]);
+  });
+
+  it("adopts a stored menu with no sub-sections key as an empty list", () => {
+    const draft = dtoToDraft(
+      makeDto({
+        cats: ["food"],
+        pricingMode: "menu",
+        menu: {
+          sections: [
+            {
+              title: "Coffee",
+              items: [
+                { name: "Bica", price: "0.90", description: "", dietary: [] },
+              ],
+            },
+          ],
+          file: null,
+          link: "",
+          currency: "EUR",
+        } as unknown as NonNullable<ListingDTO["menu"]>,
+      }),
+    );
+    expect(draft.menu?.sections[0]?.subsections).toEqual([]);
+    expect(draftToDto(draft).menu?.sections[0]?.subsections).toEqual([]);
   });
 
   it("sends a file's url and fileName back without its contentType", () => {
@@ -238,6 +308,7 @@ describe("menu round trip", () => {
             fileName: "Menu.pdf",
           },
           link: "",
+          currency: "EUR",
         },
       }),
     );
@@ -265,7 +336,12 @@ describe("menu round trip", () => {
 
     const payload = draftToDto(draft);
     expect(payload.pricingMode).toBe("menu");
-    expect(payload.menu).toEqual({ sections: [], file: null, link: "" });
+    expect(payload.menu).toEqual({
+      sections: [],
+      file: null,
+      link: "",
+      currency: "EUR",
+    });
   });
 
   it("drops half-filled rows from the hidden list only", () => {

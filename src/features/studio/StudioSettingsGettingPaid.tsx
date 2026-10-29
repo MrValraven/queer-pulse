@@ -7,6 +7,7 @@ import type { StudioArtistRefView } from "./api/studio.adapters";
 import type { StudioPaymentMethodsView } from "./api/studioPurchases.adapters";
 import { useStudioPaymentMethods } from "./api/useStudioPaymentMethods";
 import { StudioPaymentMethodsEditor } from "./StudioPaymentMethodsEditor";
+import { StudioPersonaSwapFrame } from "./StudioPersonaSwapFrame";
 import { StudioLoadError } from "./StudioLoadStates";
 import { StudioLine } from "./StudioSkeletons";
 import { SettingsSection } from "./StudioSettingsOption";
@@ -41,7 +42,7 @@ export function StudioSettingsGettingPaid() {
     persona?.id ?? null,
   );
   // The last loaded editor view stays mounted while a persona switch loads,
-  // so the Collapse folds it out and back in.
+  // so the swap frame can morph straight from it to the next persona's.
   const [lastView, setLastView] = useState<EditorView | null>(null);
   if (
     persona &&
@@ -79,7 +80,11 @@ export function StudioSettingsGettingPaid() {
 
   if (!persona) return null;
   const isFailed = loadState.isError && !loadState.isNotFound;
-  const isLoading = !paymentMethods && !loadState.isError;
+  // A switch keeps the old editor in place, dimmed, until the next persona's
+  // answer lands; the skeleton is only for the very first load.
+  const isSwitching =
+    !paymentMethods && !loadState.isError && lastView !== null;
+  const isLoading = !paymentMethods && !loadState.isError && lastView === null;
   return (
     <div
       id={STUDIO_GETTING_PAID_ANCHOR}
@@ -145,13 +150,18 @@ export function StudioSettingsGettingPaid() {
             <StudioLine width="100%" height={150} />
           </div>
         </Collapse>
-        <Collapse isOpen={paymentMethods !== null}>
+        <Collapse isOpen={paymentMethods !== null || isSwitching}>
           {editorView && (
-            <StudioPaymentMethodsEditor
-              key={editorView.persona.id}
-              persona={editorView.persona}
-              paymentMethods={editorView.paymentMethods}
-            />
+            <StudioPersonaSwapFrame
+              swapKey={editorView.persona.id}
+              isPending={isSwitching}
+            >
+              <StudioPaymentMethodsEditor
+                key={editorView.persona.id}
+                persona={editorView.persona}
+                paymentMethods={editorView.paymentMethods}
+              />
+            </StudioPersonaSwapFrame>
           )}
         </Collapse>
       </SettingsSection>

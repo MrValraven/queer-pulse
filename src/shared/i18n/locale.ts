@@ -19,8 +19,10 @@ export function isLanguage(value: unknown): value is Language {
 }
 
 /**
- * Detection order (spec 13): persisted choice → `navigator.language` (pt* → pt)
- * → English default. SSR-safe (returns `en` without a `window`).
+ * Detection order: persisted choice → English default. The browser's language
+ * is deliberately ignored, so everyone starts in English and only reaches
+ * Portuguese by switching it themselves. SSR-safe (returns `en` without a
+ * `window`).
  */
 export function detectLanguage(): Language {
   if (typeof window === "undefined") return "en";
@@ -31,10 +33,7 @@ export function detectLanguage(): Language {
   // throw white-screens the whole app before anything can catch it.
   const stored =
     safeStorage.get(STORAGE_KEY) ?? safeStorage.get(LEGACY_STORAGE_KEY);
-  if (isLanguage(stored)) return stored;
-  const navLang = window.navigator?.language?.toLowerCase() ?? "";
-  if (navLang.startsWith("pt")) return "pt";
-  return "en";
+  return isLanguage(stored) ? stored : "en";
 }
 
 /** Map our short language id onto the BCP-47 locale used by `Intl.*`. */

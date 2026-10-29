@@ -162,7 +162,7 @@ describe("StudioSidePanelColumn.module.css", () => {
     expect(asideRule).toMatch(/position:\s*sticky/);
     expect(asideRule).toMatch(/top:\s*0;/);
     expect(asideRule).not.toMatch(/--studio-topbar-h/);
-    expect(css).toMatch(/\.card\s*\{[^}]*margin:\s*8px 8px 8px 0/);
+    expect(css).toMatch(/\.card\s*\{[^}]*margin:\s*8px;/);
   });
 
   it("ends above the player bar, the tab bar and the consent banner", () => {

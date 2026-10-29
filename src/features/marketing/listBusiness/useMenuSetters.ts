@@ -1,40 +1,19 @@
 import { useCallback, type Dispatch, type SetStateAction } from "react";
 import type { ListingDraft } from "./listBusiness.data";
 import {
-  emptyMenuDraft,
   MAX_LISTING_MENU_ITEMS,
   MAX_LISTING_MENU_SECTIONS,
   menuItemCount,
   moveRowById,
   newMenuItemRow,
   newMenuSectionRow,
+  type ListingMenuCurrency,
   type ListingMenuDietary,
-  type ListingMenuDraft,
   type ListingMenuFile,
   type ListingMenuItemRow,
-  type ListingMenuSectionRow,
   type ListingPricingMode,
 } from "./listingMenu.data";
-
-function patchMenu(
-  draft: ListingDraft,
-  next: (menu: ListingMenuDraft) => ListingMenuDraft,
-): ListingDraft {
-  return { ...draft, menu: next(draft.menu ?? emptyMenuDraft()) };
-}
-
-function patchSection(
-  menu: ListingMenuDraft,
-  sectionId: string,
-  next: (section: ListingMenuSectionRow) => ListingMenuSectionRow,
-): ListingMenuDraft {
-  return {
-    ...menu,
-    sections: menu.sections.map((section) =>
-      section.id === sectionId ? next(section) : section,
-    ),
-  };
-}
+import { patchMenu, patchSection } from "./menuSetterPatches";
 
 /**
  * The menu's setters, beside each other like `useServiceSetters`. Sections
@@ -198,6 +177,13 @@ export function useMenuSetters(
     [setDraft],
   );
 
+  const setMenuCurrency = useCallback(
+    (currency: ListingMenuCurrency) => {
+      setDraft((draft) => patchMenu(draft, (menu) => ({ ...menu, currency })));
+    },
+    [setDraft],
+  );
+
   return {
     setPricingMode,
     addMenuSection,
@@ -211,5 +197,6 @@ export function useMenuSetters(
     moveMenuItem,
     setMenuFile,
     setMenuLink,
+    setMenuCurrency,
   };
 }

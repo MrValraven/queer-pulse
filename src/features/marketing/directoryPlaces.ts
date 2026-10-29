@@ -1,6 +1,7 @@
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import type { ListingPhotoFraming } from "./api/directory.api";
 import { MEMBERS, memberName } from "../members/data/members";
+import { DEMO_WINE_BAR_MENU } from "./directoryMenuDemo.data";
 import {
   formatDayHours,
   normalizeDayHours,
@@ -1043,57 +1044,61 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     address: "R. do Capelão 18 · Mouraria",
     pricingMode: "menu",
     menu: {
+      currency: "EUR",
       sections: [
         {
           title: "Coffee",
           items: [
             {
               name: "Bica",
-              price: "0.90 EUR",
+              price: "0.90",
               description: "",
               dietary: ["vegan", "alcoholFree"],
             },
             {
               name: "Galão",
-              price: "1.60 EUR",
+              price: "1.60",
               description: "Whole or oat milk",
               dietary: ["vegetarian"],
             },
           ],
+          subsections: [],
         },
         {
           title: "Pastries",
           items: [
             {
               name: "Pastel de nata",
-              price: "1.30 EUR",
+              price: "1.30",
               description: "Warm from the oven until noon",
               dietary: ["vegetarian"],
             },
             {
               name: "Orange cake",
-              price: "2.20 EUR",
+              price: "2.20",
               description: "",
               dietary: ["vegan", "glutenFree"],
             },
           ],
+          subsections: [],
         },
         {
           title: "Something stronger",
           items: [
             {
               name: "Ginjinha",
-              price: "1.50 EUR",
+              price: "ask at the bar",
               description: "Sour cherry liqueur, in a chocolate cup on Fridays",
               dietary: [],
             },
             {
               name: "Fresh orange juice",
-              price: "2.50 EUR",
+              price: "2.50",
               description: "",
               dietary: ["vegan", "alcoholFree"],
             },
           ],
+          subsections: [],
         },
       ],
       file: null,
@@ -1357,6 +1362,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       phone: "+351 21 099 8877",
     },
     address: "R. de Arroios 142 · Arroios",
+    pricingMode: "menu",
+    menu: DEMO_WINE_BAR_MENU,
     photos: {
       wide: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?q=80&w=1600&auto=format&fit=crop",
       d1: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop",

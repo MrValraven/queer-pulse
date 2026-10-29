@@ -9,6 +9,7 @@ import {
   menuItemCount,
 } from "../listingMenu.data";
 import type { ListingForm } from "../useListingForm";
+import { ListingMenuCurrencyField } from "./ListingMenuCurrencyField";
 import { ListingMenuFileField } from "./ListingMenuFileField";
 import { ListingMenuSectionFields } from "./ListingMenuSectionFields";
 import styles from "./ListingMenu.module.css";
@@ -41,6 +42,8 @@ export function ListingMenuFields({ form }: { form: ListingForm }) {
     <div id={ANCHOR.services}>
       <p className={styles.intro}>{t("marketing:listBusiness.menu.intro")}</p>
 
+      <ListingMenuCurrencyField form={form} currency={menu.currency} />
+
       {menu.sections.length === 0 ? (
         <p className={styles.empty}>{t("marketing:listBusiness.menu.empty")}</p>
       ) : (
@@ -50,6 +53,7 @@ export function ListingMenuFields({ form }: { form: ListingForm }) {
               key={section.id}
               form={form}
               section={section}
+              currency={menu.currency}
               position={index + 1}
               total={menu.sections.length}
               isAtItemCeiling={isAtItemCeiling}

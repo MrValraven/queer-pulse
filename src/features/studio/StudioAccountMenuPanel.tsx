@@ -59,6 +59,12 @@ export function StudioAccountMenuPanel({
   const isShowcase = useStudioShowcase();
   const { isItemVisible } = useStudioMenuItemFilter();
   const shouldReplace = useStudioMenuShouldReplace();
+  // On desktop Settings is the header's icon link; the phone sheet keeps its row.
+  const studioItems = isSheet
+    ? STUDIO_MENU_STUDIO_ITEMS
+    : STUDIO_MENU_STUDIO_ITEMS.filter(
+        (item) => item.to !== routes.studioSettings,
+      );
 
   return (
     <div
@@ -71,7 +77,11 @@ export function StudioAccountMenuPanel({
               .join(" ")
       }
     >
-      <StudioAccountMenuHeader persona={persona} onNavigate={onNavigate} />
+      <StudioAccountMenuHeader
+        persona={persona}
+        onNavigate={onNavigate}
+        shouldShowHeaderActions={!isSheet}
+      />
 
       <div className={styles.scroll}>
         {isSheet && (
@@ -119,7 +129,7 @@ export function StudioAccountMenuPanel({
         />
         <StudioAccountMenuGroup
           headingKey="studio:brand.studioLabel"
-          items={STUDIO_MENU_STUDIO_ITEMS.filter(isItemVisible)}
+          items={studioItems.filter(isItemVisible)}
           onNavigate={onNavigate}
         >
           <StudioAccountMenuHelp
@@ -131,8 +141,12 @@ export function StudioAccountMenuPanel({
             onNavigate={onNavigate}
           />
         </StudioAccountMenuGroup>
-        <div className={styles.divider} />
-        <StudioThemeRow />
+        {isSheet && (
+          <>
+            <div className={styles.divider} />
+            <StudioThemeRow />
+          </>
+        )}
       </div>
 
       <div className={styles.footer}>
