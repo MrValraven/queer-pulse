@@ -1,12 +1,4 @@
-import {
-  FiCheckCircle,
-  FiClock,
-  FiEdit2,
-  FiHash,
-  FiPauseCircle,
-  FiShield,
-  FiXCircle,
-} from "react-icons/fi";
+import { FiEdit2, FiShield } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -15,19 +7,12 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useHasStaffRole } from "../auth/api/useMyStaffRoles";
 import { adminListingEditPath } from "../admin/api/adminListingEdit.api";
 import type { DirectoryPlace } from "./directoryPlaces";
+import {
+  StaffBandChips,
+  type ReportableSafeSpaceStatus,
+} from "./DirectoryStaffBandChips";
+import { DirectoryVisitorViewToggle } from "./DirectoryVisitorViewToggle";
 import styles from "./DirectoryStaffBand.module.css";
-
-/** The safe-space states that are worth a chip. `"none"` (and an absent value)
- *  means the listing has no safe-space history at all, so the band stays quiet
- *  about it. */
-type ReportableSafeSpaceStatus = "verified" | "suspended" | "removed";
-
-const SAFE_SPACE_ICON: Record<ReportableSafeSpaceStatus, typeof FiCheckCircle> =
-  {
-    verified: FiCheckCircle,
-    suspended: FiPauseCircle,
-    removed: FiXCircle,
-  };
 
 /** One band per page, so a fixed id is safe. The landmark is named by its own
  *  visible label, which keeps the accessible name and the copy in sync. */
@@ -58,15 +43,29 @@ function reportableSafeSpaceStatus(
 export function DirectoryStaffBand({
   place,
   preview,
+  onEnterVisitorView,
 }: {
   place: DirectoryPlace;
   preview?: boolean;
+  /** Switches the page to the visitor's view. The first action in the band. */
+  onEnterVisitorView: () => void;
 }) {
   if (preview) return null;
-  return <StaffBandForModerators place={place} />;
+  return (
+    <StaffBandForModerators
+      place={place}
+      onEnterVisitorView={onEnterVisitorView}
+    />
+  );
 }
 
-function StaffBandForModerators({ place }: { place: DirectoryPlace }) {
+function StaffBandForModerators({
+  place,
+  onEnterVisitorView,
+}: {
+  place: DirectoryPlace;
+  onEnterVisitorView: () => void;
+}) {
   const { t } = useTranslation();
   const isDirectoryModerator = useHasStaffRole("directory_moderator");
   const { role } = useAuth();
@@ -100,6 +99,10 @@ function StaffBandForModerators({ place }: { place: DirectoryPlace }) {
         </div>
 
         <div className={styles.actions}>
+          <DirectoryVisitorViewToggle
+            tone="dark"
+            onEnterVisitorView={onEnterVisitorView}
+          />
           {isEditableByAdmin && listingReference && (
             <Button
               variant="ghost-dark"
@@ -127,60 +130,5 @@ function StaffBandForModerators({ place }: { place: DirectoryPlace }) {
         </div>
       </div>
     </section>
-  );
-}
-
-/** The fact chips. Each one renders only when the listing actually carries the
- *  data behind it, so the band states only what the payload can back. */
-function StaffBandChips({
-  listingReference,
-  safeSpaceStatus,
-  safeSpaceTier,
-  isBadgeDueForReReview,
-}: {
-  listingReference: string | null | undefined;
-  safeSpaceStatus: ReportableSafeSpaceStatus | null;
-  safeSpaceTier: number | null;
-  isBadgeDueForReReview: boolean;
-}) {
-  const { t } = useTranslation();
-  const SafeSpaceIcon = safeSpaceStatus
-    ? SAFE_SPACE_ICON[safeSpaceStatus]
-    : null;
-  const hasTier = safeSpaceStatus === "verified" && safeSpaceTier !== null;
-
-  if (!listingReference && !safeSpaceStatus && !isBadgeDueForReReview) {
-    return null;
-  }
-
-  return (
-    <ul className={styles.chips}>
-      {listingReference && (
-        <li className={styles.chip}>
-          <FiHash aria-hidden />
-          {t("marketing:directory.detail.staffBand.reference", {
-            reference: listingReference,
-          })}
-        </li>
-      )}
-      {safeSpaceStatus && SafeSpaceIcon && (
-        <li className={styles.chip}>
-          <SafeSpaceIcon aria-hidden />
-          {hasTier
-            ? t("marketing:directory.detail.staffBand.safeSpace.verifiedTier", {
-                tier: String(safeSpaceTier),
-              })
-            : t(
-                `marketing:directory.detail.staffBand.safeSpace.${safeSpaceStatus}`,
-              )}
-        </li>
-      )}
-      {isBadgeDueForReReview && (
-        <li className={`${styles.chip} ${styles.chipDue}`}>
-          <FiClock aria-hidden />
-          {t("marketing:directory.detail.staffBand.dueForReReview")}
-        </li>
-      )}
-    </ul>
   );
 }

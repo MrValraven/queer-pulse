@@ -42,7 +42,8 @@ export function WhereRow({
  *
  * COST is free text the host wrote, rendered and nothing more (LOC-18). When
  * "How to pay" shows beneath it, that block's own note says where the money
- * goes, so this row drops its matching note.
+ * goes, so this row drops its matching note. A free event has no money to
+ * explain, so the note is dropped there too.
  */
 export function GatheringCostRow({
   gathering,
@@ -65,7 +66,7 @@ export function GatheringCostRow({
           {t("gatherings:gathering.where.costFree")}
         </span>
       )}
-      {!isPaymentShown && (
+      {cost && !isPaymentShown && (
         <span className={styles.costNote}>
           {t("gatherings:gathering.where.costNote")}
         </span>

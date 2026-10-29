@@ -63,6 +63,16 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "listing-view-as-visitor",
+        category: "feature",
+        date: "29 Oct 2026",
+        ...entryKeys("listing-view-as-visitor"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
         id: "listing-photo-reposition",
         category: "feature",
         date: "29 Oct 2026",

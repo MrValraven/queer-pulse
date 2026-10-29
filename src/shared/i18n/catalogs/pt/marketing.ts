@@ -3805,6 +3805,10 @@ export const marketing: Catalog = {
     "Uma ferramenta de páginas de PDF para a equipa",
   "changelog.entries.staff-pdf-page-tool.body":
     "A equipa pode remover, rodar, reordenar, juntar e dividir páginas de PDF no navegador, e os ficheiros ficam no dispositivo.",
+  "changelog.entries.listing-view-as-visitor.title":
+    "Vê um anúncio como um visitante o vê",
+  "changelog.entries.listing-view-as-visitor.body":
+    "Moderadores e proprietários pré-visualizam a página do anúncio sem os controlos de moderação, de admin ou de proprietário.",
   "changelog.entries.listing-photo-reposition.title":
     "Reposiciona as fotos na página do teu anúncio",
   "changelog.entries.listing-photo-reposition.body":
@@ -11202,6 +11206,12 @@ export const marketing: Catalog = {
     "Obrigado. O teu anúncio passa a constar como confirmado hoje.",
   "directory.detail.ownerBand.confirmError":
     "Não foi possível guardar. Tenta novamente.",
+
+  // ── Vista de visitante (`DirectoryVisitorViewToggle`,
+  //    `DirectoryVisitorViewBar`).
+  "directory.detail.visitorView.enter": "Ver como visitante",
+  "directory.detail.visitorView.label": "A ver como visitante",
+  "directory.detail.visitorView.exit": "Sair da vista de visitante",
   "directory.relative.yesterday": "Ontem",
   "directory.relative.twoDaysAgo": "há 2 dias",
   "directory.relative.threeDaysAgo": "há 3 dias",

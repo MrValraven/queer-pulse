@@ -1,0 +1,36 @@
+/* The strip shown while a listing is previewed as a visitor. It shares the
+   moderator band's plum ground and cream type, at a slimmer height, and the
+   nav-band stripe above it is painted by `DirectoryTopBands`. */
+.bar {
+  background: var(--plum);
+  /* Locked plum in both themes, so its type is written against the cream
+     channels. */
+  color: rgba(var(--cream-rgb), 1);
+}
+
+.inner {
+  max-width: var(--maxw-nav);
+  margin: 0 auto;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(var(--cream-rgb), 0.82);
+}
+
+.labelIcon {
+  flex: none;
+  font-size: var(--text-15);
+}

@@ -59,6 +59,10 @@
   gap: 10px;
 }
 
+.toggleSlot {
+  display: inline-flex;
+}
+
 @media (max-width: 640px) {
   .card {
     flex-direction: column;
@@ -67,5 +71,10 @@
 
   .actions > * {
     flex: 1 1 auto;
+  }
+
+  /* The icon-only control keeps its own size instead of stretching. */
+  .actions > .toggleSlot {
+    flex: none;
   }
 }

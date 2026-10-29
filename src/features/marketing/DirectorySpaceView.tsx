@@ -18,6 +18,9 @@ import s from "./DirectorySpacePage.module.css";
  * previews (`ListingPreviewDrawer`, `ListingEditorPreviewModal`), so all of
  * them show the identical live view. `preview` makes it read-only: it hides
  * the review form, messaging and the manager's photo repositioning.
+ * `isVisitorView` is a different thing: the real page shown the way a visitor
+ * sees it. The page passes no `ownerRef` then, and this view also withholds
+ * photo repositioning, which an admin would otherwise keep without one.
  *
  * The two columns carry different readers. The main column answers the
  * member's questions in the order they ask them (see `DirectorySpaceMain`);
@@ -39,9 +42,15 @@ export function DirectorySpaceView({
   place,
   preview = false,
   ownerRef,
+  isVisitorView = false,
 }: {
   place: DirectoryPlace;
   preview?: boolean;
+  /** A moderator or owner previewing the page as a visitor. Withholds the
+   * photo repositioning that an admin or the demo member keeps even without an
+   * `ownerRef`. Every other preview rule (review form, messaging) is left
+   * alone, since a visitor does see those. */
+  isVisitorView?: boolean;
   /** The viewer's own ref for this listing, present only when they own it.
    * Threaded to `DirectorySpaceMain` to show owner-reply compose controls;
    * never passed by the moderation preview, so that path stays read-only. */
@@ -52,7 +61,7 @@ export function DirectorySpaceView({
   const repositionAccess = useListingPhotoRepositionAccess({
     place,
     ownerRef,
-    isPreview: preview,
+    isPreview: preview || isVisitorView,
   });
 
   return (

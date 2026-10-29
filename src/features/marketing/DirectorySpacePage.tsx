@@ -105,7 +105,13 @@ export function DirectorySpacePage() {
       </PageShell>
     );
   } else {
-    body = <DirectorySpaceDetail place={place} ownerRef={owned?.ref} />;
+    body = (
+      <DirectorySpaceDetail
+        key={place.slug}
+        place={place}
+        ownerRef={owned?.ref}
+      />
+    );
   }
 
   // The overlay gets ONE stable position in the tree, outside the branching

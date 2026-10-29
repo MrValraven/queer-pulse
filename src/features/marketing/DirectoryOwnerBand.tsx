@@ -5,6 +5,7 @@ import { Button } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { parseListingDate, type DirectoryPlace } from "./directoryPlaces";
+import { DirectoryVisitorViewToggle } from "./DirectoryVisitorViewToggle";
 import { useConfirmListingDetails } from "./listBusiness/api/useListingOwnerState";
 import { listingFreshnessOf, type ListingFreshness } from "./listingFreshness";
 import styles from "./DirectoryOwnerBand.module.css";
@@ -51,16 +52,28 @@ function OwnerBandFreshnessLine({
  * `ownerRef` is the listing's owner-side reference, present only when the
  * viewer owns this entry, so its absence is the whole permission check: no
  * ref, no band.
+ *
+ * `onEnterVisitorView` adds the icon-only "View as visitor" control. The page
+ * passes it only when the viewer is not also a moderator, whose band already
+ * carries the same control.
  */
 export function DirectoryOwnerBand({
   place,
   ownerRef,
+  onEnterVisitorView,
 }: {
   place: DirectoryPlace;
   ownerRef?: string;
+  onEnterVisitorView?: () => void;
 }) {
   if (!ownerRef) return null;
-  return <OwnedListingBand place={place} ownerRef={ownerRef} />;
+  return (
+    <OwnedListingBand
+      place={place}
+      ownerRef={ownerRef}
+      onEnterVisitorView={onEnterVisitorView}
+    />
+  );
 }
 
 /**
@@ -76,9 +89,11 @@ export function DirectoryOwnerBand({
 function OwnedListingBand({
   place,
   ownerRef,
+  onEnterVisitorView,
 }: {
   place: DirectoryPlace;
   ownerRef: string;
+  onEnterVisitorView?: () => void;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -137,6 +152,14 @@ function OwnedListingBand({
             >
               {t("marketing:directory.detail.ownerBand.confirm")}
             </Button>
+          )}
+          {onEnterVisitorView && (
+            <span className={styles.toggleSlot}>
+              <DirectoryVisitorViewToggle
+                tone="light"
+                onEnterVisitorView={onEnterVisitorView}
+              />
+            </span>
           )}
         </div>
       </div>

@@ -1,12 +1,15 @@
+import { useState } from "react";
 import { FiChevronRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { PageMeta } from "../../shared/seo/PageMeta";
+import { Collapse } from "../../shared/components/ui/Collapse";
+import { useHasStaffRole } from "../auth/api/useMyStaffRoles";
 import { type DirectoryPlace } from "./directoryPlaces";
 import { DirectorySpaceView } from "./DirectorySpaceView";
-import { DirectoryStaffBand } from "./DirectoryStaffBand";
+import { DirectoryTopBands } from "./DirectoryTopBands";
 import { DirectoryOwnerBand } from "./DirectoryOwnerBand";
 import { DirectoryNearbyPlaces } from "./DirectoryNearbyPlaces";
 import { DirectoryRelatedPlaces } from "./DirectoryRelatedPlaces";
@@ -39,6 +42,17 @@ export function DirectorySpaceDetail({ place, ownerRef }: Props) {
   const categoryText = categoryLabel(t, place.cat);
   const categoryPath = directoryCategoryPath(place);
   const isAdultsOnly = place.isAdultsOnly === true;
+  // "View as visitor" is local UI state: it is not saved and starts off for
+  // each listing, because the page is remounted per listing (see
+  // `DirectorySpacePage`). It is offered only to someone with controls to hide
+  // (a directory moderator or the listing's owner), so it can never be on for
+  // anyone else.
+  const isDirectoryModerator = useHasStaffRole("directory_moderator");
+  const [isVisitorViewRequested, setIsVisitorViewRequested] = useState(false);
+  const isVisitorView =
+    isVisitorViewRequested && (isDirectoryModerator || Boolean(ownerRef));
+  const handleEnterVisitorView = () => setIsVisitorViewRequested(true);
+  const handleExitVisitorView = () => setIsVisitorViewRequested(false);
 
   return (
     <PageShell>
@@ -58,8 +72,14 @@ export function DirectorySpaceDetail({ place, ownerRef }: Props) {
       {/* The moderator band sits above everything the listing says about
           itself, full bleed and in plum, so it reads as platform chrome that
           only some people are shown. It gates itself on the directory
-          moderator role. */}
-      <DirectoryStaffBand place={place} />
+          moderator role. In visitor view a slim plum strip takes its place. */}
+      <DirectoryTopBands
+        place={place}
+        isDirectoryModerator={isDirectoryModerator}
+        isVisitorView={isVisitorView}
+        onEnterVisitorView={handleEnterVisitorView}
+        onExitVisitorView={handleExitVisitorView}
+      />
       <div className={s.coverHead}>
         <div className={s.coverInner}>
           <div className={s.coverTop}>
@@ -88,9 +108,23 @@ export function DirectorySpaceDetail({ place, ownerRef }: Props) {
           pill floating opposite the breadcrumb. As a jade-edged card under the
           trail it reads as a tier of its own, and it has room to say where the
           listing stands and to offer the confirm-details prompt when that is
-          worth asking for. Renders nothing for everybody else. */}
-      <DirectoryOwnerBand place={place} ownerRef={ownerRef} />
-      <DirectorySpaceView place={place} ownerRef={ownerRef} />
+          worth asking for. Renders nothing for everybody else, and folds away
+          in visitor view. An owner who is also a moderator already has the
+          toggle in the moderator band, so only the others get it here. */}
+      <Collapse isOpen={Boolean(ownerRef) && !isVisitorView}>
+        <DirectoryOwnerBand
+          place={place}
+          ownerRef={ownerRef}
+          onEnterVisitorView={
+            isDirectoryModerator ? undefined : handleEnterVisitorView
+          }
+        />
+      </Collapse>
+      <DirectorySpaceView
+        place={place}
+        ownerRef={isVisitorView ? undefined : ownerRef}
+        isVisitorView={isVisitorView}
+      />
       {/* Walk-able first, then the wider "more like this" row: an evening is
           usually planned by geography before category. Both sit outside
           `DirectorySpaceView`, so the moderation preview keeps showing only

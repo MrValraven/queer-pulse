@@ -1,0 +1,34 @@
+/* The wrapper around the moderator band and the visitor-view strip. The band
+   is the first thing in <main>, so the nav band `main[data-page-main]`
+   reserves above it (base.css) would otherwise show a cream stripe behind the
+   floating pill. This paints that strip plum, so the pill sits on the same
+   ground as the band. `--nav-band-visible` is zero in the sidebar rail and
+   mobile app bar layouts, so the strip collapses there on its own. It lives
+   here, outside the folding panels, because those clip their overflow while
+   they move. */
+.ground {
+  position: relative;
+}
+
+.ground::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: var(--nav-band-visible);
+  background: var(--plum);
+  opacity: 0;
+  transition: opacity 0.28s ease;
+  pointer-events: none;
+}
+
+.groundPlum::before {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ground::before {
+    transition: none;
+  }
+}

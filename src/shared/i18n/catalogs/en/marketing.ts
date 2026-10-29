@@ -3720,6 +3720,10 @@ export const marketing: Catalog = {
   "changelog.entries.staff-pdf-page-tool.title": "A PDF page tool for staff",
   "changelog.entries.staff-pdf-page-tool.body":
     "Staff can remove, rotate, reorder, merge and split PDF pages in the browser, and files stay on the device.",
+  "changelog.entries.listing-view-as-visitor.title":
+    "View a listing as a visitor",
+  "changelog.entries.listing-view-as-visitor.body":
+    "Moderators and owners can preview their listing page without any moderator, admin or owner controls.",
   "changelog.entries.listing-photo-reposition.title":
     "Reposition the photos on your listing page",
   "changelog.entries.listing-photo-reposition.body":
@@ -11064,6 +11068,14 @@ export const marketing: Catalog = {
     "Thank you. Your listing now shows as confirmed today.",
   "directory.detail.ownerBand.confirmError":
     "That did not save. Please try again.",
+
+  // ── Visitor view (`DirectoryVisitorViewToggle`, `DirectoryVisitorViewBar`).
+  //    A moderator or owner can preview the listing as any visitor sees it. The
+  //    toggle sits in the moderator and owner bands; the strip replaces them
+  //    while the preview lasts.
+  "directory.detail.visitorView.enter": "View as visitor",
+  "directory.detail.visitorView.label": "Viewing as a visitor",
+  "directory.detail.visitorView.exit": "Exit visitor view",
   "directory.relative.yesterday": "Yesterday",
   "directory.relative.twoDaysAgo": "2 days ago",
   "directory.relative.threeDaysAgo": "3 days ago",
