@@ -3790,6 +3790,10 @@ export const marketing: Catalog = {
     "Pesquisa membros ao definir limites de convites",
   "changelog.entries.invite-quotas-search.body":
     "Quem administra vê os convites de cada membro este mês face ao limite, e muda-o ali mesmo.",
+  "changelog.entries.studio-tiled-layout.title":
+    "As páginas do Studio ficam em blocos separados no computador",
+  "changelog.entries.studio-tiled-layout.body":
+    "A barra lateral, a página e o painel A tocar agora são blocos arredondados com um espaço entre eles.",
   "changelog.entries.studio-your-profile.title":
     "Abre o teu perfil do Studio a partir do menu da conta",
   "changelog.entries.studio-your-profile.body":

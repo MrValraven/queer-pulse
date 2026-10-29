@@ -27,13 +27,16 @@
 }
 
 /* A flex column with a bounded height, so StudioSidePanelBody's own body
-   takes the height left under its head and scrolls. */
+   takes the height left under its head and scrolls. Its margins are the
+   shell's tile gap (--studio-tile-gap): from the page tile, the viewport's
+   end edge and the player bar. Its top meets the topbar's bottom edge, level
+   with the page tile's top. */
 .card {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
   min-height: 0;
-  margin: 8px;
+  margin: 0 8px 8px;
   border-radius: var(--radius-14);
   background: var(--studio-surface-rail);
   color: var(--studio-text);

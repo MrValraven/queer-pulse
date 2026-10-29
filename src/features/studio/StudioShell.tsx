@@ -38,13 +38,16 @@ import styles from "./studio.module.css";
 
 /**
  * The listener shell: the rail (folding to an icon strip on desktop), the
- * sticky topbar, the page's `<main>` and the phone tab bar. The topbar is a
- * grid child of its own, running across the page column and the docked
- * panel column, so the bell and avatar keep the top end corner. It sits
- * outside `<main>`, so the skip link and the focus that RouteAnnouncer moves
- * to `#main-content` after every navigation land on the page itself. Every
- * Studio page names the tab "Studio · QueerPulse" through this shell until
- * the page sets its own title.
+ * sticky topbar, the page tile holding the page's `<main>`, the docked side
+ * panel and the phone tab bar. The topbar is a grid child of its own,
+ * running across the page column and the docked panel column, so the bell
+ * and avatar keep the top end corner. Above 880px the rail, the page and
+ * the panel are separate rounded tiles on the Studio backdrop, and the
+ * topbar sits on that backdrop above the page and panel tiles. It stays
+ * outside `<main>`, so the skip link and the focus that RouteAnnouncer
+ * moves to `#main-content` after every navigation land on the page itself.
+ * Every Studio page names the tab "Studio · QueerPulse" through this shell
+ * until the page sets its own title.
  */
 export function StudioShell({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
@@ -144,18 +147,25 @@ export function StudioShell({ children }: { children: ReactNode }) {
           </div>
         </header>
 
-        <div className={styles.main}>
-          <main
-            ref={pageRef}
-            id={MAIN_CONTENT_ID}
-            tabIndex={-1}
-            className={styles.content}
-          >
-            <StudioPageWidthBucketContext.Provider value={pageWidthBucket}>
-              {children}
-            </StudioPageWidthBucketContext.Provider>
-          </main>
-          <StudioTabBar />
+        {/* The page tile. Its head and foot marks hold the tile's rounded
+            corners on screen while the document scrolls the page under the
+            topbar and above the player bar (studio.module.css). */}
+        <div className={styles.pageTile}>
+          <div className={styles.pageTileHead} aria-hidden />
+          <div className={styles.main}>
+            <main
+              ref={pageRef}
+              id={MAIN_CONTENT_ID}
+              tabIndex={-1}
+              className={styles.content}
+            >
+              <StudioPageWidthBucketContext.Provider value={pageWidthBucket}>
+                {children}
+              </StudioPageWidthBucketContext.Provider>
+            </main>
+            <StudioTabBar />
+          </div>
+          <div className={styles.pageTileFoot} aria-hidden />
         </div>
         {/* Phones keep one grid track, so the column mounts from 1280px
             only. The floating card covers the widths in between. */}

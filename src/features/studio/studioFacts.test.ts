@@ -8,7 +8,9 @@ const t = (key: string, options?: { count?: number }) =>
       ? `${options?.count} episodes`
       : key === "studio:facts.minutes"
         ? `${options?.count} min`
-        : key;
+        : key === "studio:facts.seconds"
+          ? `${options?.count} s`
+          : key;
 
 describe("releaseFactsLine", () => {
   it("leaves the count out for a scheduled show with no episodes", () => {
@@ -31,6 +33,14 @@ describe("releaseFactsLine", () => {
       t,
     );
     expect(line).toBe("EP · 5 tracks · 22 min");
+  });
+
+  it("adds the leftover seconds after the minutes", () => {
+    const line = releaseFactsLine(
+      { typeLabelKey: "EP", trackCount: 4, totalDurationSeconds: 972 },
+      t,
+    );
+    expect(line).toBe("EP · 4 tracks · 16 min 12 s");
   });
 
   it("counts episodes for a show with episodes", () => {

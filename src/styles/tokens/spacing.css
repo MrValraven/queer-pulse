@@ -82,6 +82,11 @@
   --studio-tab-bar-h: 56px;
   /* Studio buttons, search and hero pills: Daylight's 10px corners, same in both themes. */
   --studio-control-radius: var(--radius-10);
+  /* The listener shell's tile layout above 880px (studio.module.css): the
+     space between the rail, page and side panel tiles and around their
+     outer edges, on --studio-backdrop. */
+  --studio-tile-gap: 8px;
+  --studio-tile-radius: var(--radius-14);
   /* How much bottom-anchored floating UI (the consent banner) must
      clear. Zero in a browser tab; standalone.css raises it to the tab bar's
      total occupied height on mobile — the bar itself PLUS

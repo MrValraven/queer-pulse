@@ -30,6 +30,24 @@
   box-shadow: var(--shadow-panel);
 }
 
+/* Above 880px the listener shell's topbar sits one tile gap lower (the tile
+   layout in studio.module.css), so the fallback adds that gap. Pages with
+   the site nav keep their own top below. */
+@media (min-width: 881px) {
+  .panel:not(.panelBelowNav) {
+    top: calc(
+      var(
+          --studio-topbar-h,
+          calc(
+            var(--studio-tile-gap) + max(18px, env(safe-area-inset-top, 0px)) +
+              63px
+          )
+        ) +
+        8px
+    );
+  }
+}
+
 /* On a page with the site nav, the panel starts below it. `--sticky-top` is
    the nav chrome at the viewport top: the floating pill's band, or zero in
    sidebar mode. */

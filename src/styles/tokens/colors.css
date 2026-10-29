@@ -286,6 +286,11 @@
   --studio-surface: var(--paper);
   --studio-surface-rail: #f5f5f7;
   --studio-surface-deep: #ececf0;
+  /* The listener shell's tile layout above 880px: the backdrop shows in the
+     gaps around the rail, page and side panel tiles, and the rail tile takes
+     its own fill. Light sets white tiles on a soft grey. */
+  --studio-backdrop: #ececf0;
+  --studio-tile-rail: var(--studio-surface);
   --studio-ink-rgb: 27, 23, 32;
   --studio-text: #1b1720;
   /* Muted 0.74: 7.52:1 on white and 7.19:1 on the sidebar. */
@@ -500,6 +505,10 @@
   --studio-surface: var(--studio-bg);
   --studio-surface-rail: var(--studio-rail);
   --studio-surface-deep: var(--studio-deep);
+  /* Dark tiles sit on the deepest Studio plum, so the contrast alone parts
+     them and no edge hairline is needed. */
+  --studio-backdrop: var(--studio-deep);
+  --studio-tile-rail: var(--studio-surface-rail);
   --studio-ink-rgb: 247, 243, 238;
   --studio-line: rgba(var(--studio-ink-rgb), 0.1);
   --studio-wash-1: rgba(var(--studio-ink-rgb), 0.04);

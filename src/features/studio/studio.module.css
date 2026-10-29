@@ -32,9 +32,13 @@
   --studio-gutter-right: calc(
     var(--studio-gutter) + env(safe-area-inset-right, 0px)
   );
-  /* The sticky topbar's height (its padding, the 44px row, the hairline),
-     read by StudioStickyHeader and the error pages to sit under it. */
-  --studio-topbar-h: calc(max(18px, env(safe-area-inset-top, 0px)) + 63px);
+  /* The topbar's own box (its padding, the 44px row, the hairline), which
+     the rail's brand row matches. */
+  --studio-topbar-box-h: calc(max(18px, env(safe-area-inset-top, 0px)) + 63px);
+  /* How far the topbar's bottom edge sits from the viewport top, read by
+     StudioStickyHeader, the side panels and the error pages to sit under
+     it. The tile layout adds its top gap (below). */
+  --studio-topbar-h: var(--studio-topbar-box-h);
   /* The rail's two widths; the shell's grid animates between them. */
   --studio-rail-w: 248px;
   --studio-rail-w-collapsed: 72px;
@@ -76,11 +80,11 @@
   background: transparent;
 }
 /* Three tracks: the rail, the page column and the docked side panel. The
-   panel track sits at 0px until the panel opens, and both outer tracks are
-   variables, so the rail folding and the panel opening share one
-   transition. Two rows: the topbar runs across the page and panel tracks,
-   and the page and the panel share the row under it. The rail spans both,
-   so it starts at the very top. */
+   panel track sits at its closed width until the panel opens, and both
+   outer tracks are variables, so the rail folding and the panel opening
+   share one transition. Two rows: the topbar runs across the page and panel
+   tracks, and the page tile and the panel share the row under it. The rail
+   spans both, so it starts at the very top. */
 .app {
   --studio-app-rail-col: var(--studio-rail-w);
   --studio-app-panel-col: 0px;
@@ -138,10 +142,10 @@
   flex: none;
   align-items: center;
   gap: 9px;
-  height: var(--studio-topbar-h);
+  height: var(--studio-topbar-box-h);
   padding: max(18px, env(safe-area-inset-top, 0px)) 22px 18px;
   /* Clear in light like the topbar's edge, so the 1px keeps the row on
-     --studio-topbar-h. Dark draws the hairline (below). */
+     --studio-topbar-box-h. Dark draws the hairline (below). */
   border-bottom: 1px solid transparent;
   margin-bottom: 18px;
   transition: padding-inline-start var(--dur-base) var(--ease);
@@ -501,12 +505,21 @@
   }
 }
 
-/* Main + topbar. The topbar is a child of .app and spans the page and panel
-   tracks, so its end edge stays on the viewport's edge while the panel
-   track opens and closes. It sticks against the page scroll as before. */
-.main {
+/* The page tile under the topbar: the page between the tile's head and foot
+   marks. A flex column, so the page fills the tile's height. The tile only
+   clips (tile layout, below), so the document keeps the scroll. The topbar
+   is a child of .app and spans the page and panel tracks, so its end edge
+   stays on the viewport's edge while the panel track opens and closes. It
+   sticks against the page scroll. */
+.pageTile {
   grid-column: 2;
   grid-row: 2;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.main {
+  flex: 1 0 auto;
   min-width: 0;
 }
 .topbar {
@@ -523,7 +536,8 @@
   background: color-mix(in srgb, var(--studio-surface) 82%, transparent);
   backdrop-filter: var(--blur-lg);
   /* In light the frosted fill alone parts the bar from the page; the clear
-     1px edge keeps the bar on --studio-topbar-h. Dark draws the hairline. */
+     1px edge keeps the bar on --studio-topbar-box-h. Dark draws the
+     hairline. */
   border-bottom: 1px solid transparent;
 }
 :global([data-theme="dark"]) .topbar {
@@ -705,7 +719,9 @@
   }
   .root {
     --studio-gutter: 24px;
-    --studio-topbar-h: calc(max(10px, env(safe-area-inset-top, 0px)) + 55px);
+    --studio-topbar-box-h: calc(
+      max(10px, env(safe-area-inset-top, 0px)) + 55px
+    );
   }
   .topbar {
     flex-wrap: nowrap;
@@ -768,6 +784,138 @@
   .app,
   .railFade {
     transition: none;
+  }
+}
+
+/* The tile layout above 880px: the rail, the page and the docked side
+   panel are rounded tiles parted by --studio-tile-gap on the Studio
+   backdrop, and the topbar sits on that backdrop above the page and panel
+   tiles. The document still scrolls the page, so the opaque topbar hides
+   what runs under it, and the tile's head and foot marks hold its rounded
+   corners on screen, painting the backdrop over whatever scrolls past.
+   Phones and tablets keep the flat shell. */
+@media (min-width: 881px) {
+  .root {
+    --studio-topbar-h: calc(
+      var(--studio-tile-gap) + var(--studio-topbar-box-h)
+    );
+  }
+  /* The closed panel track keeps one gap of backdrop at the page tile's
+     end; open, the panel card's own margins make the gaps on both sides. */
+  .app {
+    --studio-app-panel-col: var(--studio-tile-gap);
+    padding-inline-start: var(--studio-tile-gap);
+    background: var(--studio-backdrop);
+  }
+  /* The clear end border keeps the folded strip's tiles on their column. */
+  .rail {
+    top: var(--studio-tile-gap);
+    margin-block-start: var(--studio-tile-gap);
+    height: calc(
+      100dvh - var(--studio-player-inset, 0px) -
+        max(var(--bottom-inset, 0px), var(--consent-inset, 0px)) - 2 *
+        var(--studio-tile-gap)
+    );
+    border-right-color: transparent;
+    border-radius: var(--studio-tile-radius);
+    background: var(--studio-tile-rail);
+  }
+  /* The bar takes the top gap into its own padding, so its row lines up
+     with the rail's brand row and its opaque backdrop fill covers the page
+     from the viewport's top to the page tile. Chained through :root so it
+     outranks the light bar's tinted fill above. The start margin lines its
+     search up with the page tile; the end padding adds the outer gap, so
+     the bell and avatar end on the page's end gutter. */
+  :global(:root) .app .topbar {
+    margin-inline-start: var(--studio-tile-gap);
+    padding-block-start: calc(
+      var(--studio-tile-gap) + max(18px, env(safe-area-inset-top, 0px))
+    );
+    padding-inline-end: calc(
+      var(--studio-gutter-right) + var(--studio-tile-gap)
+    );
+    background: var(--studio-backdrop);
+    backdrop-filter: none;
+    border-bottom-color: transparent;
+  }
+  /* Clips the hero washes to the rounded corners; a clip keeps the detail
+     headers sticky against the document. */
+  .pageTile {
+    margin-block-end: var(--studio-tile-gap);
+    margin-inline-start: var(--studio-tile-gap);
+    border-radius: var(--studio-tile-radius);
+    background: var(--bg);
+    overflow: clip;
+  }
+  /* Zero-height marks at the tile's two ends. The head sticks at the
+     topbar's bottom edge and carries the tile's two top corners; the foot
+     sticks one gap above the player bar (and the tab bar or consent banner)
+     and carries the two bottom corners and the gap under them. At either
+     end of the page each rests on the tile's own rounded edge. */
+  .pageTileHead,
+  .pageTileFoot {
+    position: sticky;
+    z-index: var(--z-studio-tile-edge);
+    flex: none;
+    height: 0;
+    pointer-events: none;
+  }
+  .pageTileHead {
+    top: var(--studio-topbar-h);
+  }
+  .pageTileFoot {
+    bottom: calc(
+      var(--studio-player-inset, 0px) +
+        max(var(--bottom-inset, 0px), var(--consent-inset, 0px)) +
+        var(--studio-tile-gap)
+    );
+  }
+  .pageTileHead::before,
+  .pageTileFoot::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+  }
+  .pageTileHead::before {
+    top: 0;
+    height: var(--studio-tile-radius);
+    background:
+      radial-gradient(
+          circle at 100% 100%,
+          transparent calc(var(--studio-tile-radius) - 0.5px),
+          var(--studio-backdrop) var(--studio-tile-radius)
+        )
+        0 0 / var(--studio-tile-radius) var(--studio-tile-radius) no-repeat,
+      radial-gradient(
+          circle at 0 100%,
+          transparent calc(var(--studio-tile-radius) - 0.5px),
+          var(--studio-backdrop) var(--studio-tile-radius)
+        )
+        100% 0 / var(--studio-tile-radius) var(--studio-tile-radius) no-repeat;
+  }
+  .pageTileFoot::before {
+    top: calc(-1 * var(--studio-tile-radius));
+    height: calc(var(--studio-tile-radius) + var(--studio-tile-gap));
+    background:
+      radial-gradient(
+          circle at 100% 0,
+          transparent calc(var(--studio-tile-radius) - 0.5px),
+          var(--studio-backdrop) var(--studio-tile-radius)
+        )
+        0 0 / var(--studio-tile-radius) var(--studio-tile-radius) no-repeat,
+      radial-gradient(
+          circle at 0 0,
+          transparent calc(var(--studio-tile-radius) - 0.5px),
+          var(--studio-backdrop) var(--studio-tile-radius)
+        )
+        100% 0 / var(--studio-tile-radius) var(--studio-tile-radius) no-repeat,
+      linear-gradient(var(--studio-backdrop), var(--studio-backdrop)) 0 100% /
+        100% var(--studio-tile-gap) no-repeat;
+  }
+  /* The listener topbar now ends one gap lower, so focus and in-page jumps
+     stop the same distance below it. */
+  :global(html[data-studio-shell="true"]):has(.app) {
+    scroll-padding-top: calc(var(--studio-tile-gap) + 96px);
   }
 }
 
@@ -1515,13 +1663,6 @@
     width: min(180px, 44vh);
   }
 }
-/* The docked side panel's column has no fill of its own, so the wash runs
-   on behind it to the screen's end and only the panel's card sits on top.
-   It reaches that far with the panel shut as well (the root clips the
-   overflow), so the wash holds while the column slides closed. */
-.app .detailWash {
-  --wash-reach-end: var(--studio-side-panel-w);
-}
 /* A hero under a breadcrumb (the track page) starts its wash at its own top
    and fades it in, so the crumb keeps the plain page behind its text. */
 .detailHeroUnderCrumb .detailWash {
@@ -1874,10 +2015,10 @@
   .app {
     grid-template-columns: 1fr;
   }
-  /* One track: the topbar and the page stack in it, with no rail or panel
-     column mounted. */
+  /* One track: the topbar and the page tile stack in it, with no rail or
+     panel column mounted. */
   .topbar,
-  .main {
+  .pageTile {
     grid-column: 1;
   }
   .rail {

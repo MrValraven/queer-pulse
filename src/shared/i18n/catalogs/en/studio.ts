@@ -1829,6 +1829,8 @@ export const studio: Catalog = {
   "facts.trackCount_other": "{count} tracks",
   "facts.minutes_one": "{count} min",
   "facts.minutes_other": "{count} min",
+  "facts.seconds_one": "{count} s",
+  "facts.seconds_other": "{count} s",
   "card.playRelease": "Play {title}",
   "card.pauseRelease": "Pause {title}",
   "states.notFoundTitle": "We can't find that in Studio",

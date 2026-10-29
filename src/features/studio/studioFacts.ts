@@ -1,6 +1,6 @@
 import type { TFunction } from "../../shared/i18n/types";
 
-/** "EP · 5 tracks · 22 min", from data. The length part is left out until
+/** "EP · 5 tracks · 22 min 10 s", from data. The length part is left out until
  *  at least one track has a confirmed duration. */
 export function releaseFactsLine(
   release: {
@@ -25,7 +25,16 @@ export function releaseFactsLine(
       ),
     );
   }
-  const minutes = Math.round(release.totalDurationSeconds / 60);
-  if (minutes > 0) parts.push(t("studio:facts.minutes", { count: minutes }));
+  const totalSeconds = Math.round(release.totalDurationSeconds);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  const lengthParts: string[] = [];
+  if (minutes > 0) {
+    lengthParts.push(t("studio:facts.minutes", { count: minutes }));
+  }
+  if (seconds > 0) {
+    lengthParts.push(t("studio:facts.seconds", { count: seconds }));
+  }
+  if (lengthParts.length > 0) parts.push(lengthParts.join(" "));
   return parts.join(" · ");
 }

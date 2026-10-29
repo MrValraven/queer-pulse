@@ -24,6 +24,9 @@
   /* Lifted within a normal flow: sticky table headers, a hovered card, a
      FadeIn row whose dropdown must clear the row below it. */
   --z-raised: 3;
+  /* The Studio page tile's corner marks (studio.module.css): over the page
+     and its sticky detail headers, under the topbar and its popovers. */
+  --z-studio-tile-edge: 10;
   /* Page furniture that scrolls with content but sits over it. */
   --z-sticky: 20;
   /* The admin guide preview bar: over the previewed page's own sticky bars. */

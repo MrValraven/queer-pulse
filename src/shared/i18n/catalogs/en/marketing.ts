@@ -3706,6 +3706,10 @@ export const marketing: Catalog = {
     "Search members when setting invite limits",
   "changelog.entries.invite-quotas-search.body":
     "Admins see each member's invites this month against their limit, and can change it inline.",
+  "changelog.entries.studio-tiled-layout.title":
+    "Studio pages sit in separate tiles on desktop",
+  "changelog.entries.studio-tiled-layout.body":
+    "The rail, the page and the Now playing panel are rounded tiles with a gap between them.",
   "changelog.entries.studio-your-profile.title":
     "Open your own Studio profile from the account menu",
   "changelog.entries.studio-your-profile.body":
