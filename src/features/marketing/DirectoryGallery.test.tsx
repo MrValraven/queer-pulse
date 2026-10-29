@@ -49,4 +49,36 @@ describe("DirectoryGallery", () => {
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
     expect(screen.getByText(place.gallery[0]!)).toBeInTheDocument();
   });
+
+  it("hides the reposition control without access", () => {
+    const place = {
+      ...DIRECTORY_PLACES[0]!,
+      galleryPhotos: [{ url: "https://img/a.jpg", alt: "Front room" }],
+    };
+
+    renderGallery(<DirectoryGallery place={place} />);
+
+    expect(
+      screen.queryByRole("button", { name: "Reposition photos" }),
+    ).toBeNull();
+  });
+
+  it("renders photos from galleryPhotos with their framing", () => {
+    const place = {
+      ...DIRECTORY_PLACES[0]!,
+      galleryPhotos: [
+        {
+          url: "https://img/a.jpg",
+          alt: "Front room",
+          framing: { focusX: 0.2, focusY: 0.4, zoom: 2 },
+        },
+      ],
+    };
+
+    renderGallery(<DirectoryGallery place={place} />);
+
+    expect(
+      screen.getByAltText("Front room").style.getPropertyValue("--frame-zoom"),
+    ).toBe("2");
+  });
 });

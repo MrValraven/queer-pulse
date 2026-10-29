@@ -129,11 +129,11 @@ const warnedSubjectTypes = new Set<string>();
  *
  * `ModReportDTO.subjectType` is DECLARED as `ReportSubjectType`, but a DTO
  * type is a claim about JSON rather than a check on it. So when the backend
- * enum grew `listing_public_question` and this union did not, the value
- * travelled all the way to the drawer while the compiler was satisfied: a
- * missing union member became a silent runtime lie instead of a type error,
- * and any code switching exhaustively on it would have been reasoning about a
- * value set that does not match reality.
+ * enum grows a subject type and this union does not, the value travels all
+ * the way to the drawer while the compiler is satisfied: a missing union
+ * member becomes a silent runtime lie instead of a type error, and any code
+ * switching exhaustively on it would be reasoning about a value set that does
+ * not match reality.
  *
  * The value is passed through UNCHANGED even when unknown. Coercing a
  * moderation report's subject to some other type would be a worse lie than

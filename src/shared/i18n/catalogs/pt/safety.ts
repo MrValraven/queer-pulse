@@ -79,7 +79,6 @@ export const safety: Catalog = {
   "myReports.subject.subprofile": "Sobre uma persona",
   "myReports.subject.review": "Sobre uma avaliação",
   "myReports.subject.magazine_comment": "Sobre um comentário na revista",
-  "myReports.subject.listing_public_question": "Sobre uma pergunta num anúncio",
   "myReports.subject.event_photo": "Sobre uma fotografia de um evento",
   "myReports.subject.landlord_recommendation":
     "Sobre uma recomendação de senhorio",

@@ -36,6 +36,7 @@ export function ListingLivePreviewBody({
   onAddPhoto,
   header,
   isHeaderSticky = false,
+  isUnclaimed = false,
 }: {
   draft: ListingDraft;
   photoPreviews: Record<PhotoKey, string>;
@@ -52,6 +53,9 @@ export function ListingLivePreviewBody({
   header?: ReactNode;
   /** The editor column scrolls on its own: pin the header + caption to its top. */
   isHeaderSticky?: boolean;
+  /** Nobody owns the listing (the admin console's editor), so the excerpt
+   *  shows no "who runs it" block, as the real page shows no byline. */
+  isUnclaimed?: boolean;
 }) {
   const { profile } = useProfileData();
   // The member's photo as the directory serves it: withheld when they turned
@@ -91,6 +95,7 @@ export function ListingLivePreviewBody({
         draft={draft}
         ownerPhotoUrl={ownerPhotoUrl}
         highlightedRegions={highlightedRegions}
+        isUnclaimed={isUnclaimed}
       />
     </div>
   );

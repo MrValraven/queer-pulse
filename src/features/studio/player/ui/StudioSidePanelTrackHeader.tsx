@@ -4,6 +4,7 @@ import { useStudioTrack } from "../../api/useStudioTrack";
 import { StudioLikeButton } from "../../StudioLikeButton";
 import type { StudioLikeSubject } from "../../useStudioLike";
 import type { StudioQueueItem } from "../studioPlayerContext";
+import { StudioGaplessTitleLine } from "./StudioGaplessBadge";
 import { StudioPlayerArt } from "./StudioPlayerArt";
 import {
   StudioNowCoverSwap,
@@ -54,9 +55,9 @@ function TrackHeaderActions({ item }: { item: StudioQueueItem }) {
 }
 
 /** The side panel's track header: a square cover (the tint fallback when
- *  the item has no art), the title linking to the track and the artist
- *  linking to the artist, then Like and the track menu. It shows a warned
- *  track the way the player bar does. A private preview shows plain text
+ *  the item has no art), the title linking to the track (with the gapless
+ *  badge after it) and the artist linking to the artist, then Like and the
+ *  track menu. It shows a warned track the way the player bar does. A private preview shows plain text
  *  and offers neither Like nor the menu, since its pages are closed to
  *  visitors. Cover and titles crossfade on a track change, keyed like the
  *  bar. */
@@ -83,14 +84,18 @@ export function StudioSidePanelTrackHeader({
           <StudioNowTextSwap swapKey={swapKey}>
             {isPreview ? (
               <>
-                <span className={styles.headerTitle}>{item.title}</span>
+                <StudioGaplessTitleLine item={item} size="panel">
+                  <span className={styles.headerTitle}>{item.title}</span>
+                </StudioGaplessTitleLine>
                 <span className={styles.headerArtist}>{item.artistName}</span>
               </>
             ) : (
               <>
-                <Link to={item.trackHref} className={styles.headerTitle}>
-                  {item.title}
-                </Link>
+                <StudioGaplessTitleLine item={item} size="panel">
+                  <Link to={item.trackHref} className={styles.headerTitle}>
+                    {item.title}
+                  </Link>
+                </StudioGaplessTitleLine>
                 <Link to={item.artistHref} className={styles.headerArtist}>
                   {item.artistName}
                 </Link>

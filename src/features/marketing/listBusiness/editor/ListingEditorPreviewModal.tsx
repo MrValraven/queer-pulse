@@ -31,6 +31,10 @@ import styles from "./ListingEditor.module.css";
  * The footer saves from here with the save bar's own rules (blocked while a
  * required field is empty), so an owner who likes what they see can publish
  * it without closing the preview and finding the bar again.
+ *
+ * `isUnclaimed` is for the admin console, which edits listings nobody owns:
+ * the directory page drops its "Run by" byline for those
+ * (`DirectoryOwnerByline`), so the preview drops it too.
  */
 export function ListingEditorPreviewModal({
   draft,
@@ -38,11 +42,14 @@ export function ListingEditorPreviewModal({
   shopPhotoPreviews,
   slug,
   isCoManagerView,
+  isUnclaimed = false,
   missing,
   isDirty,
   isSaving,
   onSave,
   onClose,
+  sub,
+  saveLabel,
 }: {
   draft: ListingDraft;
   photoPreviews: Record<PhotoKey, string>;
@@ -52,41 +59,51 @@ export function ListingEditorPreviewModal({
   slug: string;
   /** The viewer only co-manages this listing, so the owner block is blank. */
   isCoManagerView: boolean;
+  /** Nobody owns the listing, so the page shows no "Run by" byline. */
+  isUnclaimed?: boolean;
   missing: MissingField[];
   isDirty: boolean;
   isSaving: boolean;
   onSave: () => void;
   onClose: () => void;
+  /** The line under the title. Defaults to the owner's or the co-manager's
+   *  note; the admin console says what its save does to the listing. */
+  sub?: string;
+  /** The footer save button's words. Defaults to the owner's "Save changes". */
+  saveLabel?: string;
 }) {
   const { t } = useTranslation();
-  const place = useMemo(
-    () =>
-      listingDtoToPreviewPlace(
-        listingDraftToPreviewSource(
-          draft,
-          slug,
-          photoPreviews,
-          shopPhotoPreviews,
-        ),
+  const place = useMemo(() => {
+    const draftPlace = listingDtoToPreviewPlace(
+      listingDraftToPreviewSource(
+        draft,
+        slug,
+        photoPreviews,
+        shopPhotoPreviews,
       ),
-    [draft, slug, photoPreviews, shopPhotoPreviews],
-  );
+    );
+    return isUnclaimed ? { ...draftPlace, isUnclaimed: true } : draftPlace;
+  }, [draft, slug, photoPreviews, shopPhotoPreviews, isUnclaimed]);
 
   return (
     <Modal
       full
       eyebrow={t("marketing:listBusiness.editor.preview.eyebrow")}
       title={draft.name || t("marketing:listBusiness.preview.placeholderName")}
-      sub={t(
-        isCoManagerView
-          ? "marketing:listBusiness.editor.preview.subCoManager"
-          : "marketing:listBusiness.editor.preview.sub",
-      )}
+      sub={
+        sub ??
+        t(
+          isCoManagerView
+            ? "marketing:listBusiness.editor.preview.subCoManager"
+            : "marketing:listBusiness.editor.preview.sub",
+        )
+      }
       footer={
         <ListingEditorPreviewFooter
           missing={missing}
           isDirty={isDirty}
           isSaving={isSaving}
+          saveLabel={saveLabel}
           onSave={onSave}
           onClose={onClose}
         />
@@ -105,12 +122,14 @@ function ListingEditorPreviewFooter({
   missing,
   isDirty,
   isSaving,
+  saveLabel,
   onSave,
   onClose,
 }: {
   missing: MissingField[];
   isDirty: boolean;
   isSaving: boolean;
+  saveLabel?: string;
   onSave: () => void;
   onClose: () => void;
 }) {
@@ -135,7 +154,7 @@ function ListingEditorPreviewFooter({
         onClick={onSave}
         disabled={!isDirty || isBlocked || isSaving}
       >
-        {t("marketing:listBusiness.edit.saveCta")}
+        {saveLabel ?? t("marketing:listBusiness.edit.saveCta")}
       </Button>
     </>
   );

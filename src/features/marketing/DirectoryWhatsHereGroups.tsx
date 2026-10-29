@@ -1,6 +1,11 @@
-import { FiCheck, FiExternalLink } from "react-icons/fi";
+import type { IconType } from "react-icons";
+import { FiExternalLink } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { policyHref } from "./directoryGettingIn.data";
+import {
+  attributeGroupIcon,
+  INCLUSION_PRACTICES_ICON,
+} from "./listBusiness/listingAttributeGroupIcons.data";
 import {
   attributeGroupLabel,
   attributeLabel,
@@ -12,8 +17,32 @@ import {
 } from "./listBusiness/listingFacts.data";
 import s from "./DirectorySpacePage.module.css";
 
+/** One item as a soft pill sized to its label. */
+function WhatsHereItem({ label }: { label: string }) {
+  return <li className={s.whatsHerePill}>{label}</li>;
+}
+
+/** A group's heading in the row's narrow left column, its icon before the
+ *  label as a scanning landmark. */
+function WhatsHereHeading({
+  label,
+  icon: Icon,
+}: {
+  label: string;
+  icon: IconType;
+}) {
+  return (
+    <h3 className={s.whatsHereRowLabel}>
+      <Icon aria-hidden className={s.whatsHereRowIcon} />
+      {label}
+    </h3>
+  );
+}
+
 /** Every attribute under its group heading, as `groupAttributesForDisplay`
- *  ordered them. Sensitive attributes read like any other here. */
+ *  ordered them, one tag row per group: the group name in a narrow column and
+ *  its items as soft pills beside it. Sensitive attributes read like any
+ *  other here. */
 export function DirectoryWhatsHereGroups({
   groups,
 }: {
@@ -23,18 +52,14 @@ export function DirectoryWhatsHereGroups({
   return (
     <>
       {groups.map((group) => (
-        <div key={group.groupId} className={s.whatsHereGroup}>
-          <h3 className={s.whatsHereHeading}>
-            {attributeGroupLabel(t, group.groupId)}
-          </h3>
-          <ul className={s.features}>
+        <div key={group.groupId} className={s.whatsHereRow}>
+          <WhatsHereHeading
+            label={attributeGroupLabel(t, group.groupId)}
+            icon={attributeGroupIcon(group.groupId)}
+          />
+          <ul className={s.whatsHerePills}>
             {group.attributes.map((slug) => (
-              <li key={slug} className={s.feature}>
-                <span className={s.featureIc}>
-                  <FiCheck aria-hidden />
-                </span>
-                {attributeLabel(t, slug)}
-              </li>
+              <WhatsHereItem key={slug} label={attributeLabel(t, slug)} />
             ))}
           </ul>
         </div>
@@ -59,18 +84,17 @@ export function DirectoryInclusionPractices({
     ? (policyUrl ?? "").trim()
     : "";
   return (
-    <div className={s.whatsHereGroup}>
-      <h3 className={s.whatsHereHeading}>
-        {t("marketing:directory.detail.whatsHere.practicesTitle")}
-      </h3>
-      <ul className={s.features}>
+    <div className={s.whatsHereRow}>
+      <WhatsHereHeading
+        label={t("marketing:directory.detail.whatsHere.practicesTitle")}
+        icon={INCLUSION_PRACTICES_ICON}
+      />
+      <ul className={s.whatsHerePills}>
         {practices.map((practice) => (
-          <li key={practice} className={s.feature}>
-            <span className={s.featureIc}>
-              <FiCheck aria-hidden />
-            </span>
-            {inclusionPracticeLabel(t, practice)}
-          </li>
+          <WhatsHereItem
+            key={practice}
+            label={inclusionPracticeLabel(t, practice)}
+          />
         ))}
       </ul>
       {trimmedPolicyUrl !== "" && (

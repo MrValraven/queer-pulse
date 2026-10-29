@@ -1,0 +1,88 @@
+/* Zoom strip along the bottom edge of a frame in reposition mode. Its insets
+   and padding stay small so the strip fits the narrowest phone thumbnail, and
+   its width caps at 220px, centred, so a wide hero keeps a short slider.
+   The strip ground is --cream-rgb, which stays light in both themes, so the
+   icons and the track below read fixed dark channels (--ink-surface and
+   --plum-rgb) that hold their contrast on it in dark mode too. */
+.zoomStrip {
+  position: absolute;
+  inset-inline: 6px;
+  bottom: 6px;
+  z-index: 1;
+  max-width: 220px;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--cream-rgb), 0.88);
+  backdrop-filter: var(--blur-sm);
+  cursor: default;
+}
+.zoomIcon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: var(--ink-surface);
+  opacity: 0.75;
+}
+/* Styled by hand in both engines: WebKit ignores accent-color on a range and
+   Chromium draws a heavy full-width default track. The 4px track at half
+   plum clears 3:1 on the cream strip. The 20px thumb takes the primary
+   Button's deep coral, --accent-fill-strong, at 4.56:1 on cream in both
+   themes (the brand --accent there is 2.6:1), and its cream ring sets it
+   apart from the track. */
+.zoomSlider {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  height: 20px;
+  margin: 0;
+  background: transparent;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+.zoomSlider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--plum-rgb), 0.5);
+}
+.zoomSlider::-moz-range-track {
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--plum-rgb), 0.5);
+}
+/* 20px on a 4px track: the -8px margin centres it in WebKit. */
+.zoomSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  margin-top: -8px;
+  border: 2px solid rgba(var(--cream-rgb), 1);
+  border-radius: 50%;
+  background: var(--accent-fill-strong);
+  box-shadow: var(--shadow-e2);
+}
+.zoomSlider::-moz-range-thumb {
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(var(--cream-rgb), 1);
+  border-radius: 50%;
+  background: var(--accent-fill-strong);
+  box-shadow: var(--shadow-e2);
+}
+.zoomSlider:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.zoomSlider:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}

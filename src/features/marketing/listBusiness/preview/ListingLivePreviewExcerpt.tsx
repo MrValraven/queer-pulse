@@ -25,12 +25,16 @@ export function ListingLivePreviewExcerpt({
   draft,
   ownerPhotoUrl,
   highlightedRegions,
+  isUnclaimed = false,
 }: {
   draft: ListingDraft;
   /** The signed-in member's photo, already filtered by their photo setting. */
   ownerPhotoUrl: string | null;
   /** The regions being outlined (from `highlightedRegionsFor`). */
   highlightedRegions: readonly ListingPreviewRegion[];
+  /** Nobody owns the listing. The page then prints no "who runs it" byline
+   *  (`DirectoryOwnerByline`), so the excerpt leaves its block out too. */
+  isUnclaimed?: boolean;
 }) {
   const { t, language } = useTranslation();
   const isHighlighted = (region: ListingPreviewRegion) =>
@@ -127,11 +131,13 @@ export function ListingLivePreviewExcerpt({
         isHighlighted={isHighlighted("ordering")}
       />
 
-      <ListingLivePreviewOwner
-        draft={draft}
-        ownerPhotoUrl={ownerPhotoUrl}
-        isHighlighted={isHighlighted("owner")}
-      />
+      {!isUnclaimed && (
+        <ListingLivePreviewOwner
+          draft={draft}
+          ownerPhotoUrl={ownerPhotoUrl}
+          isHighlighted={isHighlighted("owner")}
+        />
+      )}
     </div>
   );
 }

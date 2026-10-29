@@ -81,9 +81,9 @@
 }
 
 .optionInput:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  border-color: var(--line-strong);
+  border-color: var(--focus-field-border);
+  outline: none;
+  box-shadow: var(--focus-field-glow);
 }
 
 .removeOption {

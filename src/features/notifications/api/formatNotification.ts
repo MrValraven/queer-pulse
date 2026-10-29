@@ -105,40 +105,6 @@ export type NotificationKind =
   // somewhere real to lead.
   | "community_invite_received"
   | "listing_review"
-  // Sent to the MEMBER WHO ASKED a public question on a business page when
-  // that question is answered (mirrors the backend `notifications_type_enum`
-  // value added in
-  // `AddListingPublicQuestionNotificationTypes1794300000000`). It has been
-  // written since that migration shipped and had no entry here, so it rendered
-  // the `unknown` fallback: a member got "Something happened on QueerPulse" as
-  // the answer to a question they personally typed.
-  //
-  // THE COPY IS WRITTEN FOR NO ACTOR, which is the common case rather than the
-  // edge one. The public Q&A names nobody: an answer is attributed by ROLE
-  // (`answeredByRole: 'owner' | 'moderator'`), a co-manager is invisible on the
-  // page by design, and an owner who is anonymous or who withheld
-  // `linkToProfile` has told the platform not to tie their name to the
-  // business. The backend spreads `payload.actorId` only where the page already
-  // links that owner's profile, so most rows resolve no actor at all. The asker
-  // is owed the ANSWER, and the sentence says exactly that without depending on
-  // a name that usually is not there.
-  //
-  // Payload carries `listingName` for the sentence, plus `source: 'listing'`
-  // and `listingSlug`, which `sourceHrefFromPayload` resolves to the business
-  // page the answer is published on. The answer text itself never rides along:
-  // it is on the page one click away, the same rule that keeps a review reply's
-  // text off `review_replied`.
-  // The other half of the public Q&A on a business listing, going to the
-  // listing's OWNER when a member asks something on their page. It was missing
-  // here for the same reason its sibling was: both were added to the backend
-  // enum and neither reached the frontend, so an owner's "somebody asked you a
-  // question" row rendered the unknown-kind fallback, "You have a new
-  // notification." Carries `payload.actorId` (the asker, who IS named on the
-  // page they asked from, so nothing is withheld) plus `listingName` for the
-  // sentence and a slug for the deep link. The question text stays off the
-  // bell, the same rule that keeps the ANSWER off the answered row.
-  | "listing_public_question"
-  | "listing_public_question_answered"
   | "roadmap_status"
   // Sent to the member a moderation action lands on (mirrors the backend
   // `notifications_type_enum` value added in
@@ -584,13 +550,12 @@ export type NotificationKind =
   //
   // Member-driven, and the one difference from `submission_decided` above: it
   // carries `payload.actorId` (the replying owner, employer or lister) so the
-  // same block/mute gate `listing_public_question_answered` sits behind applies
-  // here too. A moderator-written reply omits the actor and reads as the
+  // same block/mute gate every member-driven row sits behind applies here
+  // too. A moderator-written reply omits the actor and reads as the
   // platform speaking. Payload also carries `subjectLabel` (the reviewed
   // thing's own public name) plus `source` and a slug for the deep link. The
   // REPLY TEXT never rides along: it is already published on the page this row
-  // opens, which is the same rule that keeps
-  // `listing_public_question_answered`'s answer body off the bell.
+  // opens, so the bell holds no copy of it.
   | "review_replied"
   // PRD-334. Sent to a member a group owner or admin added to a group
   // conversation, at creation or through "Add members" (mirrors the backend
@@ -769,14 +734,6 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   invite_accepted: "community",
   community_invite_received: "community",
   listing_review: "community",
-  // The answer to a question you asked on a business page is a public exchange
-  // about a place, same tab as listing_review and review_replied rather than
-  // the platform tab: this is not the platform's word on something you
-  // submitted, it is a business answering you where other members can read it.
-  // Both halves of a listing's public Q&A sit under "community": they are a
-  // public exchange about a place, not the platform's word on a submission.
-  listing_public_question: "community",
-  listing_public_question_answered: "community",
   job_application: "platform",
   listing_approved: "platform",
   report_resolved: "platform",
@@ -1342,31 +1299,11 @@ function groupTitleToken(payload: unknown, t: TFunction): string {
 }
 
 /**
- * Resolves the `{listingName}` token both halves of a listing's public Q&A
- * interpolate: the public name of the business, which the asker's row uses to
- * say what they asked about and the owner's row uses to say which of their
- * listings was asked about.
- *
- * Same defensive read as `reviewSubjectToken`. The backend has always written
- * `listingName`, so the fallback is for a malformed or truncated payload rather
- * than an older row shape, and it exists because leaving `{listingName}` on
- * screen would be the worst possible version of a row whose whole job is to
- * hand somebody an answer they asked for. The business is one click away
- * through `sourceHref` in either case.
- */
-function listingQuestionSubjectToken(payload: unknown, t: TFunction): string {
-  const listingName = (payload as { listingName?: string } | null)?.listingName;
-  return typeof listingName === "string" && listingName.trim() !== ""
-    ? listingName
-    : t("notifications:type.listing_public_question_answered.subjectFallback");
-}
-
-/**
  * Resolves the `{listingName}` token the three co-manager rows and
  * `listing_owner_offer` interpolate: the business the invite, decision, or
  * offer is about.
  *
- * Same defensive read as `listingQuestionSubjectToken` above. The backend
+ * Same defensive read as `reviewSubjectToken`. The backend
  * always writes `listingName` on all four payloads, but a row from a
  * malformed or older shape must not leave `{listingName}` sitting in a row
  * that is asking somebody to act. All four share ONE fallback key
@@ -1459,9 +1396,8 @@ function pieceStageToken(payload: unknown, t: TFunction): string {
  * rows is to name the piece: leaving `{title}` on screen would be the worst
  * version of that. The fallback reads as a title, because the copy quotes it.
  *
- * One key serves all three kinds, the same way `listingQuestionSubjectToken`
- * above shares one fallback across both halves of a listing's public Q&A: the
- * phrase is identical in every sentence it lands in.
+ * One key serves all three kinds: the phrase is identical in every sentence
+ * it lands in.
  */
 function pieceTitleToken(payload: unknown, t: TFunction): string {
   const title = (payload as { title?: string } | null)?.title;
@@ -2203,16 +2139,6 @@ export function formatNotification(
     // Same reason: the reviewed thing's name is the copy's only interpolation
     // slot, so a row missing it must still name something readable.
     tokens.subjectLabel = reviewSubjectToken(payload, t);
-  }
-  if (
-    type === "listing_public_question" ||
-    type === "listing_public_question_answered"
-  ) {
-    // Same reason again: the business name is the sentence's only slot. On the
-    // answered row it usually names no PERSON at all, so the place is the whole
-    // of what tells the asker which question was answered; on the question row
-    // it is what tells an owner which of their listings was asked about.
-    tokens.listingName = listingQuestionSubjectToken(payload, t);
   }
   if (
     type === "magazine_piece_commissioned" ||

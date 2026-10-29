@@ -1,7 +1,6 @@
 import type { IconType } from "react-icons";
 import {
   FiEdit3,
-  FiHelpCircle,
   FiImage,
   FiLink,
   FiMail,
@@ -41,11 +40,6 @@ export const LISTING_DELETE_LOSS_ITEMS: readonly ListingDeleteLossItem[] = [
     id: "reviews",
     labelKey: `${KEY_PREFIX}.losses.reviews`,
     icon: FiMessageSquare,
-  },
-  {
-    id: "questions",
-    labelKey: `${KEY_PREFIX}.losses.questions`,
-    icon: FiHelpCircle,
   },
   { id: "enquiries", labelKey: `${KEY_PREFIX}.losses.enquiries`, icon: FiMail },
   {

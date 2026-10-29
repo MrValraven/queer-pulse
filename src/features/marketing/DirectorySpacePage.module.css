@@ -167,27 +167,53 @@
 .photoGalleryFull {
   grid-template-columns: 1fr;
 }
+/* Each photo is a positioned wrapper with its clipping on .frameClip inside,
+   so the focus ring on the edit frame and on .frameOpen draws unclipped. The
+   frame rests on a clear accent ring and eases its box-shadow, so the
+   reposition ring fades in on entry and fades back out on exit. */
 .photoHero {
+  position: relative;
   display: block;
   width: 100%;
-  padding: 0;
-  border: none;
   border-radius: var(--radius-card);
-  overflow: hidden;
-  cursor: zoom-in;
-  background: none;
+  box-shadow: var(--ring-accent-clear);
+  transition: box-shadow var(--dur-base) var(--ease);
 }
 .photoHero img {
   display: block;
   width: 100%;
   height: clamp(300px, 42vh, 460px);
   object-fit: cover;
+  object-position: var(--frame-x, 50%) var(--frame-y, 50%);
+  transform-origin: var(--frame-x, 50%) var(--frame-y, 50%);
+  transform: scale(var(--frame-zoom, 1));
   transition: transform 0.3s var(--ease);
 }
 @media (hover: hover) {
   .photoHero:hover img {
-    transform: scale(1.02);
+    transform: scale(calc(var(--frame-zoom, 1) * 1.02));
   }
+}
+.frameClip {
+  display: block;
+  overflow: hidden;
+  border-radius: inherit;
+  height: 100%;
+}
+/* View mode: a transparent button over the photo opens the lightbox. */
+.frameOpen {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: none;
+  border-radius: inherit;
+  cursor: zoom-in;
+}
+.frameOpen:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .thumbCol {
   display: flex;
@@ -202,35 +228,64 @@
   min-height: 0;
 }
 .thumb {
+  position: relative;
   display: block;
   width: 100%;
-  padding: 0;
-  border: none;
   border-radius: var(--radius-14);
-  overflow: hidden;
-  cursor: zoom-in;
-  background: none;
+  box-shadow: var(--ring-accent-clear);
+  transition: box-shadow var(--dur-base) var(--ease);
 }
 .thumb img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: var(--frame-x, 50%) var(--frame-y, 50%);
+  transform-origin: var(--frame-x, 50%) var(--frame-y, 50%);
+  transform: scale(var(--frame-zoom, 1));
   transition: transform 0.3s var(--ease);
 }
 @media (hover: hover) {
   .thumb:hover img {
-    transform: scale(1.04);
+    transform: scale(calc(var(--frame-zoom, 1) * 1.04));
   }
 }
+/* Reposition mode: an accent ring fades in around every frame, and the hover
+   lift stays off so the photo shows exactly the framing being saved. A
+   focused frame trades the accent ring for the cream halo while the focus
+   outline draws outside both, so focus stays visible in edit mode. */
+.frameEditing {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  box-shadow: var(--ring-accent-edit);
+}
+.frameEditing:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.frameEditing:hover img {
+  transform: scale(var(--frame-zoom, 1));
+}
+.frameDragging {
+  cursor: grabbing;
+}
+.frameDragging img {
+  transition: none;
+}
+/* Reduced motion drops the hover lift, the ring fade and the ease, and keeps
+   the saved zoom. */
 @media (prefers-reduced-motion: reduce) {
+  .photoHero,
+  .thumb,
   .photoHero img,
   .thumb img {
     transition: none;
   }
   .photoHero:hover img,
   .thumb:hover img {
-    transform: none;
+    transform: scale(var(--frame-zoom, 1));
   }
 }
 /* Narrow screens: stack the hero on top and lay the thumbnails out in a row
@@ -252,6 +307,45 @@
     height: auto;
     aspect-ratio: 4 / 3;
   }
+}
+/* Phone preview while repositioning. DirectoryPhotoGrid crossfades the
+   viewport between widths: .galleryViewportFading takes it to opacity 0, the
+   layout classes swap on that transitionend, and it fades back. Only opacity
+   transitions, so the width and height change in one frame while hidden,
+   also under the global reduced-motion duration override. The narrow-screen
+   rules above repeat under .galleryViewportPhone, because --md reads the
+   browser window and the preview is narrower than it. The hero height uses
+   container units for the same reason. On a real 390px phone
+   .coverInner keeps 16px of padding each side, so the gallery is 358px wide
+   and the narrow rule's 56vw reads the full 390px window: the preview caps at
+   358px and adds the 32px of gutters back before taking 56%. */
+.galleryViewport {
+  max-width: 100%;
+  margin-inline: auto;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+.galleryViewportFading {
+  opacity: 0;
+}
+.galleryViewportPhone {
+  max-width: 358px;
+  container-type: inline-size;
+}
+.galleryViewportPhone .photoGallery {
+  grid-template-columns: 1fr;
+}
+.galleryViewportPhone .photoHero img {
+  height: clamp(220px, calc((100cqw + 32px) * 0.56), 340px);
+}
+.galleryViewportPhone .thumbCol {
+  flex-direction: row;
+}
+.galleryViewportPhone .thumbCol .thumb {
+  flex: 1 1 0;
+}
+.galleryViewportPhone .thumbCol .thumb img {
+  height: auto;
+  aspect-ratio: 4 / 3;
 }
 
 /* Lightbox */
@@ -698,33 +792,6 @@
   text-wrap: pretty;
 }
 
-.features {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-@media (--sm) {
-  .features {
-    grid-template-columns: 1fr;
-  }
-}
-/* Same container-driven collapse for the narrow-container case (see `.page`). */
-@container directorySpace (max-width: 460px) {
-  .features {
-    grid-template-columns: 1fr;
-  }
-}
-.feature {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 14px 16px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-12);
-  font-size: var(--text-14);
-  color: var(--ink);
-}
 .featureIc {
   width: 28px;
   height: 28px;
@@ -745,23 +812,6 @@
   stroke-linejoin: round;
 }
 
-/* What's here: one block per attribute group, headed. The groups sit further
-   apart than the items inside them, so proximity alone groups them. */
-.whatsHereGroup + .whatsHereGroup {
-  margin-top: 18px;
-}
-.whatsHereGroup > .features {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.whatsHereHeading {
-  margin: 0 0 10px;
-  font-family: var(--sans);
-  font-size: var(--text-13);
-  font-weight: 700;
-  color: var(--text-strong);
-}
 .policyLink {
   display: inline-flex;
   align-items: center;
@@ -778,6 +828,101 @@
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
   border-radius: var(--radius-4);
+}
+
+/* What's here, tag rows: one row per group, its name in a narrow column and
+   its items as soft pills that wrap beside it. A listing can carry 40
+   attributes, and pills sized to their label keep that to a few lines. A
+   hairline between rows separates the groups.
+   The label's top padding centres its first line on the first pill line
+   (pill line box 32px, label line 18px), so a two-line label still starts
+   level with the pills. */
+.whatsHereRow {
+  display: grid;
+  grid-template-columns: 10.5rem minmax(0, 1fr);
+  gap: 10px 24px;
+  padding-block: 14px;
+}
+.whatsHereRow + .whatsHereRow {
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+/* The first row carries no rule, so the sub-line's own 18px is its air. */
+.subLine + .whatsHereRow {
+  padding-top: 0;
+}
+/* The group icon sits before the label as a scanning landmark. Flex keeps a
+   two-line label wrapping beside the icon, and flex-start holds the icon
+   level with the first line: the 16px icon in the 18px line box takes 1px
+   of top margin to centre on it. Feather draws with stroke in currentColor,
+   so the muted colour is all it needs. */
+.whatsHereRowLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding-top: 7px;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-strong);
+}
+.whatsHereRowIcon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 1px;
+  color: var(--ink-60);
+}
+.whatsHerePills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.whatsHerePill {
+  padding: 6px 14px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-14);
+  line-height: 1.3;
+  color: var(--ink);
+}
+/* The policy link belongs to the practices it backs, so it sits under their
+   pills in the right column, on their left edge. */
+.whatsHereRow > .policyLink {
+  grid-column: 2;
+  justify-self: start;
+  margin-top: 0;
+}
+/* Phone and narrow container (the moderation drawer): the label goes above
+   its pills and the link back under them in the single column. */
+@media (--sm) {
+  .whatsHereRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .whatsHereRowLabel {
+    padding-top: 0;
+  }
+  .whatsHereRow > .policyLink {
+    grid-column: 1;
+  }
+}
+@container directorySpace (max-width: 460px) {
+  .whatsHereRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .whatsHereRowLabel {
+    padding-top: 0;
+  }
+  .whatsHereRow > .policyLink {
+    grid-column: 1;
+  }
 }
 /* "Suggest an edit to these details" under the policy link: the shared
    trigger's side padding goes so its text starts on the link's left edge, and
@@ -1879,8 +2024,8 @@
 }
 /* The live page renders the toggle right after this card, so its bottom
    margin is trimmed to the toggle's own 16px top margin here, letting the
-   two collapse to that value. A preview renders the questions and reviews
-   read-only with no toggle, so the card keeps its own margin there. */
+   two collapse to that value. A preview renders the reviews read-only with
+   no toggle, so the card keeps its own margin there. */
 .ratingDist:has(+ .reviewToggle) {
   margin-bottom: 16px;
 }

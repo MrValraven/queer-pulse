@@ -61,12 +61,15 @@ export function useShareKitCalendar(
     : undefined;
 
   return useMemo(() => {
+    const placeLabel = gatheringPlaceLabel(form, t);
     const events = buildGatheringCalendarEvents({
       form,
       slug,
       occurrenceSlugs,
       urlForSlug: gatheringShareUrl,
-      location: gatheringPlaceLabel(form, t),
+      // The host's own publish screen: their typed street address is theirs
+      // to have, and it lets the calendar map the door.
+      location: form.address.trim() || placeLabel,
       hostedByLine: calendarHostedByLine({
         host: hostName,
         communityNames: leadCommunityName ? [leadCommunityName] : [],
@@ -84,7 +87,7 @@ export function useShareKitCalendar(
         day: "numeric",
       }),
       formatters.time(start),
-      firstEvent.location,
+      placeLabel,
     ]
       .filter(Boolean)
       .join(" · ");

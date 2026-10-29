@@ -47,8 +47,8 @@
 }
 
 .searchField:focus-within {
-  outline: 2px solid var(--line-strong);
-  outline-offset: 1px;
+  border-color: var(--focus-field-border);
+  box-shadow: var(--focus-field-glow);
 }
 
 .select {

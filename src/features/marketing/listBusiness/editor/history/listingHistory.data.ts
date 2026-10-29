@@ -61,6 +61,7 @@ export const HISTORY_FIELD_LABEL_KEYS: Readonly<Record<string, string>> = {
   hoursExceptions: `${KEY_PREFIX}.field.hoursExceptions`,
   social: `${KEY_PREFIX}.field.social`,
   photoGallery: `${KEY_PREFIX}.field.photoGallery`,
+  photoFraming: `${KEY_PREFIX}.field.photoFraming`,
   coverPhoto: `${KEY_PREFIX}.field.coverPhoto`,
   rel: `${KEY_PREFIX}.field.rel`,
   ownerName: `${KEY_PREFIX}.field.ownerName`,

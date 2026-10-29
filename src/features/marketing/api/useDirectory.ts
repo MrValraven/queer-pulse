@@ -11,6 +11,7 @@ import {
   type DirectoryPlace,
 } from "../directoryPlaces";
 import { ADULT_ONLINE_DIRECTORY_PLACES } from "../directoryOnlinePlaces.data";
+import { applyDemoPhotoFraming } from "../listingPhotoFramingDemoOverlay";
 import { demoPublicListingTeam } from "../listBusiness/api/listingTeam.demo";
 import { toListingTeamMemberViews } from "../listBusiness/api/listingTeam.adapters";
 import type { AccessibilitySlug } from "../listBusiness/listingAccessibility.data";
@@ -319,17 +320,20 @@ export function useDirectoryPlace(slug: string | undefined): {
       (loggedIn
         ? ADULT_ONLINE_DIRECTORY_PLACES.find((place) => place.slug === slug)
         : undefined);
+    // Both returns pass through the photo-framing overlay so a demo refetch or remount keeps the repositioned photos.
     if (fixture) {
-      return {
+      return applyDemoPhotoFraming({
         ...fixture,
         team: toListingTeamMemberViews(demoPublicListingTeam(fixture.slug)),
-      };
+      });
     }
     const submitted = submittedListings.find(
       (listing) => listing.slug === slug,
     );
     return submitted
-      ? submittedToPlace(submitted, user?.profile.avatarUrl)
+      ? applyDemoPhotoFraming(
+          submittedToPlace(submitted, user?.profile.avatarUrl),
+        )
       : null;
   };
 

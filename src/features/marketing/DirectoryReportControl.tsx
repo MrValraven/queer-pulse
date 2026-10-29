@@ -12,17 +12,15 @@ interface Props {
   /** The subject's own uuid, sent as the report's `subjectId`. */
   subjectId: string;
   subjectKind: DirectoryReportSubject;
-  /** The author's display name, for the modal heading. Reviews only. See
-   *  `DirectoryReportModal`'s own note on why a question names nobody. */
+  /** The author's display name, for the modal heading. */
   authorName?: string;
 }
 
 /**
- * "Report this" under a review or a public question. Visible to any viewer,
- * not only the listing owner (unlike the owner-only reply/answer composers
- * beside it). Self-contained: owns its own open/close state, so neither the
- * review list nor the question list needs per-row state to track which
- * report modal is open.
+ * "Report this" under a review. Visible to any viewer, not only the listing
+ * owner (unlike the owner-only reply composer beside it). Self-contained: owns
+ * its own open/close state, so the review list needs no per-row state to track
+ * which report modal is open.
  */
 export function DirectoryReportControl({
   subjectId,

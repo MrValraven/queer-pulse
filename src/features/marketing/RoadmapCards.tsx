@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   FiArrowUp,
   FiClock,
@@ -7,7 +6,6 @@ import {
   FiStar,
   FiZap,
 } from "react-icons/fi";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -19,7 +17,7 @@ import type {
   RoadmapSlip,
   ShippedItem,
 } from "./roadmap.data";
-import { useMyRoadmapVotes, useRoadmapVote } from "./api/useRoadmapMutations";
+import { useRoadmapVoteToggle } from "./useRoadmapVoteToggle";
 import styles from "./RoadmapPage.module.css";
 
 /** The "this is a promise" pill — shared across shipped/building/planned
@@ -137,38 +135,12 @@ export interface PlannedCardProps {
 export function PlannedCard({ item, column = "planned" }: PlannedCardProps) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const { showToast } = useToast();
-  const myVotes = useMyRoadmapVotes();
-  const { demoMode, isSignInRequired, vote: castVote } = useRoadmapVote();
-  const [justVoted, setJustVoted] = useState(false);
-  const [isSignInOpen, setIsSignInOpen] = useState(false);
-
-  const voted = justVoted || myVotes.has(item.id);
-  const count = item.votes + (demoMode && justVoted ? 1 : 0);
-
-  function toggleVote() {
-    if (voted) return;
-    if (isSignInRequired) {
-      setIsSignInOpen(true);
-      return;
-    }
-    setJustVoted(true);
-    if (demoMode) {
-      showToast(t("marketing:roadmap.topIdeas.toast.voted"), "success");
-      return;
-    }
-    castVote(
-      { targetType: "item", targetId: item.id },
-      {
-        onSuccess: () =>
-          showToast(t("marketing:roadmap.topIdeas.toast.voted"), "success"),
-        // Roll back the optimistic "voted" state on failure so the button
-        // re-enables and the member can retry (the global error toast
-        // already fires since this mutation doesn't set meta.silentError).
-        onError: () => setJustVoted(false),
-      },
-    );
-  }
+  const { isVoted, count, toggleVote, isSignInOpen, setIsSignInOpen } =
+    useRoadmapVoteToggle({
+      targetType: "item",
+      targetId: item.id,
+      serverVotes: item.votes,
+    });
 
   return (
     <article
@@ -193,10 +165,9 @@ export function PlannedCard({ item, column = "planned" }: PlannedCardProps) {
         )}
         <button
           type="button"
-          className={`${styles.voteBtn} ${voted ? styles.voted : ""}`}
+          className={`${styles.voteBtn} ${isVoted ? styles.voted : ""}`}
           onClick={toggleVote}
-          aria-pressed={voted}
-          disabled={voted}
+          aria-pressed={isVoted}
         >
           <FiArrowUp aria-hidden />{" "}
           <span>

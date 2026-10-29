@@ -121,11 +121,16 @@
 }
 
 .dragHandle:focus-visible,
-.result:focus-visible,
-.textInput:focus-visible {
+.result:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
+}
+
+.textInput:focus-visible {
+  border-color: var(--focus-field-border);
+  outline: none;
+  box-shadow: var(--focus-field-glow);
 }
 
 /* The position sits inline before the avatar. */

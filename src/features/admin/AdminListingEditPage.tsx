@@ -1,13 +1,11 @@
 import {
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
   type ReactNode,
 } from "react";
-import { flushSync } from "react-dom";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { AdminPageHeader } from "./ui";
 import {
@@ -18,26 +16,13 @@ import {
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { ApiError } from "../../shared/api/client";
-import { ListingWizard } from "../marketing/listBusiness/ListingWizard";
-import { dtoToDraft } from "../marketing/listBusiness/dtoToDraft";
-import { BLANK_OWNER_PERSONAL_FIELDS } from "../marketing/listBusiness/ownerPersonalFields";
-import type { ListingDraft } from "../marketing/listBusiness/listBusiness.data";
-import type { ManagedListingDTO } from "../marketing/listBusiness/api/listings.api";
-import { isListingHasOwnerError } from "./api/adminListingEdit.api";
-import {
-  useAdminEditableListing,
-  useAdminUpdateListing,
-} from "./api/useAdminListingEdit";
+import { useAdminEditableListing } from "./api/useAdminListingEdit";
+import { AdminListingEditor } from "./AdminListingEditor";
 import {
   AdminListingEditHasOwner,
   AdminListingEditNotFound,
-  AdminListingEditSuccess,
 } from "./AdminListingEditStates";
 import { AdminListingEditStatusLine } from "./AdminListingEditStatusLine";
-
-/** The wizard's basics step, where an admin editing a listing starts. Step 0
- *  only picks the path, which the staff draft already fixes. */
-const BASICS_STEP = 1;
 
 /** A load refused as missing (404) or out of this admin's reach (403) reads
  *  as "not found"; anything else is an outage worth retrying. */
@@ -48,114 +33,17 @@ function isListingNotFoundError(error: unknown): boolean {
 }
 
 /**
- * The member wizard over a listing the platform holds.
- *
- * `path` is forced to "suggest" for the reason `staffAuthoredDraft` in
- * `AdminListingNewPage` documents: step 0 offers staff only that card, and a
- * draft carrying any other path would leave step 0 with nothing selected. A
- * listing stored as `claim` therefore still shows the staff path here. The
- * value never reaches the server, because `adminDraftToUpdateDto` drops it.
- *
- * `editRef` makes it an edit of this listing: the wizard skips its path step
- * and offers the save on every step. The save never moves `status`, so on a
- * live listing it publishes the changes at once and is labelled that way; a
- * listing in review stays in the queue.
- *
- * `onSaved` fires once the save has landed, so the page can drop the status
- * line that the wizard's success panel now supersedes.
- */
-function AdminListingEditWizard({
-  listingRef,
-  listing,
-  onHasOwner,
-  onSaved,
-}: {
-  listingRef: string;
-  listing: ManagedListingDTO;
-  onHasOwner: () => void;
-  onSaved: () => void;
-}) {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { mutateAsync: updateListing } = useAdminUpdateListing();
-  const initialDraft = useMemo(
-    () => ({
-      ...dtoToDraft(listing),
-      isStaffAuthored: true,
-      path: "suggest" as const,
-    }),
-    [listing],
-  );
-
-  const handleSubmit = useCallback(
-    async (draft: ListingDraft) => {
-      try {
-        const savedListing = await updateListing({ ref: listingRef, draft });
-        onSaved();
-        return savedListing;
-      } catch (error) {
-        // Committed synchronously: the has-owner notice replaces the wizard
-        // before the rethrow reaches its catch, which then sees itself
-        // unmounted and returns early without its "couldn't send" toast.
-        if (isListingHasOwnerError(error)) flushSync(onHasOwner);
-        // Rethrown so the wizard's own error path runs on every other failure.
-        throw error;
-      }
-    },
-    [updateListing, listingRef, onHasOwner, onSaved],
-  );
-
-  const goToQueue = useCallback(
-    () => void navigate(routes.adminListings),
-    [navigate],
-  );
-
-  const isLive = listing.status === "live";
-  const saveLabel = t(
-    isLive ? "admin:listingEdit.publishCta" : "admin:listingEdit.submitCta",
-  );
-
-  return (
-    <ListingWizard
-      initialDraft={initialDraft}
-      initialStep={BASICS_STEP}
-      editRef={listingRef}
-      submitLabel={saveLabel}
-      saveNowLabel={saveLabel}
-      previewFootnote={t(
-        isLive
-          ? "admin:listingEdit.previewFoot.live"
-          : "admin:listingEdit.previewFoot.unpublished",
-      )}
-      isEditSave
-      isJumpAheadEnabled
-      seed={BLANK_OWNER_PERSONAL_FIELDS}
-      userName=""
-      userInitials=""
-      // Autosave writes member-scoped draft rows; an admin console has no
-      // business minting one against the admin's own member account.
-      isDraftAutosaveEnabled={false}
-      submit={handleSubmit}
-      onCancel={goToQueue}
-      onDone={goToQueue}
-      // The default toast is member copy about the community team; the plum
-      // success panel below already confirms the admin's save on its own.
-      successToast={null}
-      renderSuccess={(saved) => <AdminListingEditSuccess saved={saved} />}
-    />
-  );
-}
-
-/**
  * `/admin/listings/:ref/edit`: an admin editing a listing the platform holds,
  * a suggestion or a staff-authored listing nobody has taken over yet.
  *
- * Built like `AdminListingNewPage`: the form IS the member wizard, fed a
- * staff-authored draft, and the save goes to `PATCH /admin/listings/:ref`.
- * A status line under the header names the listing's ref and status, so the
- * page reads as an edit of an existing listing. Once the listing has an owner
- * (the loaded listing names a submitter, or the save is refused with
- * `LISTING_HAS_OWNER`), the page shows that in place of the wizard.
+ * The form IS the owner's single-screen editor (`AdminListingEditor`), fed
+ * a staff-authored draft, so an admin edits every business field an owner
+ * can, the priced lists, accessibility and dated hours included. The save
+ * goes to `PATCH /admin/listings/:ref`. A status line under the header names
+ * the listing's ref and status, so the page reads as an edit of an existing
+ * listing. Once the listing has an owner (the loaded listing names a
+ * submitter, or the save is refused with `LISTING_HAS_OWNER`), the page
+ * shows that in place of the editor.
  */
 export function AdminListingEditPage() {
   const { t } = useTranslation();
@@ -168,8 +56,8 @@ export function AdminListingEditPage() {
   } = useAdminEditableListing(ref);
   const [hasOwnerNow, setHasOwnerNow] = useState(false);
   const markHasOwner = useCallback(() => setHasOwnerNow(true), []);
-  // Once the save lands, the wizard's success panel names the outcome, and
-  // the "Editing" status line above it would read stale.
+  // Once the save lands, the editor's success panel names the outcome, and
+  // the "Editing" status line and the header's sub above it would read stale.
   const [isSaved, setIsSaved] = useState(false);
   const markSaved = useCallback(() => setIsSaved(true), []);
   const hasOwnerNoticeRef = useRef<HTMLElement>(null);
@@ -201,8 +89,7 @@ export function AdminListingEditPage() {
             status={listing.status}
           />
         )}
-        <AdminListingEditWizard
-          listingRef={ref}
+        <AdminListingEditor
           listing={listing}
           onHasOwner={markHasOwner}
           onSaved={markSaved}
@@ -238,7 +125,10 @@ export function AdminListingEditPage() {
         <AdminPageHeader
           eyebrow={t("admin:listingEdit.eyebrow")}
           title={t("admin:listingEdit.title")}
-          sub={t("admin:listingEdit.sub")}
+          // The sub says what a save will do; once it has, the success panel
+          // says what it did. `sub` renders as a paragraph, which cannot hold
+          // the block-level Collapse, so it goes with the status line.
+          sub={isSaved ? undefined : t("admin:listingEdit.sub")}
         />
       </FadeIn>
       {body}

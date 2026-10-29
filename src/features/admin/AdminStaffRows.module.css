@@ -53,11 +53,9 @@
 }
 
 .search:focus-within {
-  border-color: var(--line-strong);
+  border-color: var(--focus-field-border);
   color: var(--ink-60);
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
+  box-shadow: var(--focus-field-glow);
 }
 
 .searchIcon {
@@ -75,8 +73,8 @@
   color: var(--ink);
 }
 
-/* The pill around it carries the focus ring, through `:focus-within`, so the
-   input itself drops both halves of the global ring. */
+/* The pill around it carries the soft focus border and glow, through
+   `:focus-within`, so the input itself drops the global ring. */
 .searchInput:focus-visible {
   outline: none;
   box-shadow: none;

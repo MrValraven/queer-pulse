@@ -1,0 +1,137 @@
+/* The gapless badge: a quiet icon right after the playing track's title,
+   about the title's cap height, and the one-line bubble it opens. Each
+   place sets the icon to its title and the line box to its title's first
+   line, so the icon sits level with the first line of a clamped title. */
+
+.titleLine {
+  --gapless-icon-size: var(--text-12);
+  --gapless-line-size: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+}
+
+/* The title shrinks and truncates (or clamps) as its own class says. */
+.titleLine > :first-child {
+  min-width: 0;
+}
+
+.titleLine[data-size="bar"] {
+  align-items: center;
+}
+
+.titleLine[data-size="panel"] {
+  --gapless-icon-size: var(--text-16);
+  --gapless-line-size: calc(var(--text-20) * 1.25);
+}
+
+.titleLine[data-size="stage"] {
+  --gapless-icon-size: var(--text-20);
+  --gapless-line-size: calc(var(--text-28) * 1.15);
+}
+
+.badge {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  block-size: var(--gapless-line-size);
+}
+
+.toggletip {
+  position: relative;
+  display: inline-flex;
+}
+
+/* Doubled so it outranks the kit's 44px icon square: the glyph stays small
+   beside the title, and the hit area below keeps the target floors. */
+.trigger.trigger {
+  position: relative;
+  width: auto;
+  min-width: 0;
+  min-height: 0;
+  padding: 2px;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--studio-text-muted);
+  font-size: var(--gapless-icon-size);
+  transition-property: color, background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+@media (hover: hover) {
+  .trigger.trigger:hover {
+    background: rgba(var(--studio-ink-rgb), 0.08);
+    color: var(--studio-text);
+  }
+}
+
+.trigger.trigger[aria-expanded="true"] {
+  color: var(--studio-text);
+}
+
+.trigger.trigger:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* A mouse gets the 24px floor (WCAG 2.5.8) around the small glyph, touch
+   the full --tap-min. */
+@media (pointer: fine) {
+  .trigger.trigger::before {
+    content: "";
+    position: absolute;
+    inset: min(0px, calc((100% - 24px) / 2));
+  }
+}
+
+@media (pointer: coarse) {
+  .trigger.trigger::before {
+    content: "";
+    position: absolute;
+    inset: min(0px, calc((100% - var(--tap-min)) / 2));
+  }
+}
+
+.bubble {
+  position: absolute;
+  inset-inline-start: 0;
+  z-index: var(--z-popover);
+  display: block;
+  inline-size: max-content;
+  max-inline-size: min(280px, calc(100vw - 32px));
+  padding: 10px 12px;
+  border-radius: var(--radius-12);
+  background: var(--studio-surface-rail);
+  color: var(--studio-text);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.12);
+  box-shadow: var(--shadow-panel);
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 400;
+  line-height: 1.4;
+  text-align: start;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  /* Set from the trigger's rect on open (useStudioGaplessBubbleFit). */
+  translate: var(--gapless-shift-x, 0px) 0;
+}
+
+.bubble[data-placement="up"] {
+  bottom: calc(100% + 8px);
+}
+
+.bubble[data-placement="down"] {
+  top: calc(100% + 8px);
+}
+
+/* Dark: the bubble lifts off the page as the player's popovers do. */
+:global([data-theme="dark"]) .bubble {
+  background:
+    linear-gradient(var(--studio-wash-2), var(--studio-wash-2)),
+    var(--studio-surface-rail);
+  border-color: var(--studio-line);
+  box-shadow: var(--shadow-e3);
+}

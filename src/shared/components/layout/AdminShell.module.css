@@ -1,5 +1,7 @@
 /* `--admin-rail-w` publishes the rail's width so fixed page chrome (the
-   listings bulk bar) can centre itself on the content column. */
+   listings bulk bar) can centre itself on the content column.
+   `--admin-topbar-h` is the sticky top bar's height, written on this element
+   by useAdminTopbarHeight, so sticky page chrome can stop right under it. */
 .shell {
   --admin-rail-w: 248px;
   display: grid;

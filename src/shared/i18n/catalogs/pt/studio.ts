@@ -3947,6 +3947,11 @@ export const studio: Catalog = {
     "A transição não está disponível nesta sessão",
   "player.crossfade.castHint":
     "O teu dispositivo de transmissão toca uma faixa de cada vez, por isso a transição fica em pausa enquanto transmites",
+  "player.crossfade.gaplessHint":
+    "{release} toca sem pausas, por isso a transição fica em pausa entre as faixas e volta a seguir",
+  "player.gapless.label": "Toca sem pausas",
+  "player.gapless.body":
+    "{artist} fez {release} para tocar de seguida, por isso as faixas passam umas para as outras sem transição",
   "player.loudness.label": "Equilibrar o volume",
   "player.loudness.hint": "Aproxima todas as faixas do mesmo nível",
   "player.loudness.plainHint":

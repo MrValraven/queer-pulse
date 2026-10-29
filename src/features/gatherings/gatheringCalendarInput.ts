@@ -67,7 +67,8 @@ export function calendarDescription({
  * The gathering as one calendar event. The description carries the host's
  * own words, who hosts it and for which communities, and the gathering's
  * QueerPulse link, so the calendar entry leads back to the page with its
- * address, RSVP and updates.
+ * address, RSVP and updates. The location is the street address when the
+ * viewer holds one, so the calendar can map it, else the venue.
  */
 export function toCalendarInput(
   gathering: GatheringDetail,
@@ -76,11 +77,13 @@ export function toCalendarInput(
   const start = gathering.date;
   const end =
     gathering.endAt ?? new Date(start.getTime() + DEFAULT_DURATION_MS);
+  const streetAddress =
+    gathering.address?.trim() || gathering.venueListing?.address?.trim();
   return {
     title: gathering.title,
     start,
     end,
-    location: gathering.venue ?? gathering.hood,
+    location: streetAddress || (gathering.venue ?? gathering.hood),
     description: calendarDescription({
       body: gathering.body,
       hostedByLine,

@@ -53,6 +53,8 @@ export function ListingEditorSaveBar({
   draftStatus,
   onPreview,
   onSave,
+  saveLabel,
+  isDraftNoteShown = true,
 }: {
   missing: MissingField[];
   isDirty: boolean;
@@ -61,6 +63,13 @@ export function ListingEditorSaveBar({
   draftStatus: CreatorDraftSaveStatus;
   onPreview: () => void;
   onSave: () => void;
+  /** The save button's words. Defaults to the owner's "Save changes"; the
+   *  admin console names whether the save publishes. */
+  saveLabel?: string;
+  /** Whether the "our team can see this draft" line shows. Defaults to true.
+   *  An editor that keeps no draft (the admin console) passes false, since
+   *  the line would describe a draft that does not exist. */
+  isDraftNoteShown?: boolean;
 }) {
   const { t } = useTranslation();
   const nowMs = useSavedClock(draftStatus);
@@ -72,7 +81,7 @@ export function ListingEditorSaveBar({
     <>
       <CreatorDraftNotice
         messageKey="marketing:creatorDraftNote.body"
-        isShown={isNarrow}
+        isShown={isDraftNoteShown && isNarrow}
         className={styles.saveBarNoteFlow}
       />
       <div className={styles.saveBar}>
@@ -101,13 +110,13 @@ export function ListingEditorSaveBar({
                   : undefined
               }
             >
-              {t("marketing:listBusiness.edit.saveCta")}
+              {saveLabel ?? t("marketing:listBusiness.edit.saveCta")}
             </Button>
           </div>
         </div>
         <CreatorDraftNotice
           messageKey="marketing:creatorDraftNote.body"
-          isShown={!isNarrow}
+          isShown={isDraftNoteShown && !isNarrow}
           className={styles.saveBarNote}
         />
       </div>

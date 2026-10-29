@@ -14,6 +14,7 @@ import { useStudioPlayer, type StudioQueueItem } from "../studioPlayerContext";
 import { useStudioPlayerSurface } from "../studioPlayerSurface";
 import { StudioCastButton } from "./StudioCastButton";
 import { StudioChapterLine } from "./StudioChapterLine";
+import { StudioGaplessTitleLine } from "./StudioGaplessBadge";
 import { StudioGoToTrackButton } from "./StudioGoToTrackButton";
 import { StudioPlayerArt } from "./StudioPlayerArt";
 import { StudioPlayerCloseButton } from "./StudioPlayerCloseButton";
@@ -45,8 +46,9 @@ function studioLikeSubjectFor(item: StudioQueueItem): StudioLikeSubject {
   };
 }
 
-/** Cover, title, artist, chapter and radio lines, the Like heart and Add to
- *  playlist. A private preview (`previewToken`) shows plain text and offers
+/** Cover, title (with the gapless badge after it), artist, chapter and
+ *  radio lines, the Like heart and Add to playlist. A private preview
+ *  (`previewToken`) shows plain text and offers
  *  no save or like. Cover and titles crossfade when the track changes; the
  *  key is the track, so the same track queued twice in a row stays still. */
 function StudioPlayerNow({ item }: { item: StudioQueueItem }) {
@@ -75,14 +77,18 @@ function StudioPlayerNow({ item }: { item: StudioQueueItem }) {
         <StudioNowTextSwap swapKey={swapKey}>
           {isPreview ? (
             <>
-              <span className={styles.title}>{item.title}</span>
+              <StudioGaplessTitleLine item={item} size="bar">
+                <span className={styles.title}>{item.title}</span>
+              </StudioGaplessTitleLine>
               <span className={styles.artist}>{item.artistName}</span>
             </>
           ) : (
             <>
-              <Link to={item.trackHref} className={styles.title}>
-                {item.title}
-              </Link>
+              <StudioGaplessTitleLine item={item} size="bar">
+                <Link to={item.trackHref} className={styles.title}>
+                  {item.title}
+                </Link>
+              </StudioGaplessTitleLine>
               <Link to={item.artistHref} className={styles.artist}>
                 {item.artistName}
               </Link>

@@ -134,7 +134,7 @@ export function DirectoryMessageBusiness({
 
   if (preview || ownerRef) return null;
 
-  // Member-gated route, same as asking a public question or leaving a review: a
+  // Member-gated route, same as leaving a review: a
   // logged-out visitor gets the sign-in path rather than a button that 401s.
   if (!user) {
     return (

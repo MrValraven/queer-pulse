@@ -8,10 +8,10 @@ import type { ReportSubjectType } from "../../safety/reportReasons";
 
 /**
  * `ModReportDTO.subjectType` is DECLARED as `ReportSubjectType`, but a DTO type
- * is a claim about JSON rather than a check on it. When the backend enum grew
- * `listing_public_question` and the frontend union did not, the value travelled
- * to the drawer with the compiler perfectly satisfied. A missing union member
- * became a silent runtime lie instead of a type error.
+ * is a claim about JSON rather than a check on it. When the backend enum grows
+ * a subject type and the frontend union does not, the value travels to the
+ * drawer with the compiler perfectly satisfied. A missing union member becomes
+ * a silent runtime lie instead of a type error.
  *
  * `toSubjectType` is the guard that now sits in front of that. It passes the
  * value through unchanged (coercing a moderation report's subject would be a
@@ -51,12 +51,11 @@ describe("modReportClusterDtoToView subject types", () => {
     expect(warn).not.toHaveBeenCalled();
   });
 
-  // The subject type this whole thread started from. It must now be ordinary.
-  it("passes a public listing question through in silence", () => {
-    expect(
-      modReportClusterDtoToView(clusterDto("listing_public_question"))
-        .subjectType,
-    ).toBe("listing_public_question");
+  // A subject type added to the union after the guard existed must be ordinary.
+  it("passes a review through in silence", () => {
+    expect(modReportClusterDtoToView(clusterDto("review")).subjectType).toBe(
+      "review",
+    );
     expect(warn).not.toHaveBeenCalled();
   });
 

@@ -73,22 +73,15 @@
   line-height: 1.6;
 }
 
+/* Focus: the border turns accent with a faint glow (5.4:1 or better, so the
+   border alone is the indicator). `outline: none` above drops the global ring;
+   the select shares the field look, so it takes the same treatment. */
 .field input:focus,
 .field textarea:focus,
 .field select:focus {
-  border-color: var(--line-strong);
-  box-shadow: var(--ring-plum-soft);
+  border-color: var(--focus-field-border);
+  box-shadow: var(--focus-field-glow);
   background: var(--paper);
-}
-
-/* Keyboard focus. These selectors are class-scoped, so they out-specify the
-   global `:focus-visible` in base.css and would drop its light halo — leaving
-   only the decorative 8%-plum glow above, which is nowhere near 3:1. Restate
-   the halo here so the two-tone ring survives. */
-.field input:focus-visible,
-.field textarea:focus-visible,
-.field select:focus-visible {
-  box-shadow: var(--ring-cream);
 }
 
 .field input:disabled,

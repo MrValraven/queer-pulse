@@ -15,21 +15,18 @@ import { asReasonCode, useReportReasons } from "../safety/api/useReportReasons";
 import { useReportSubmissionError } from "../safety/api/reportSubmissionError";
 import styles from "./DirectoryReportModal.module.css";
 
-/** Which kind of member-authored content is being reported. Both file through
- *  the same `POST /reports` pipeline and offer the same reasons; only the
- *  subject type and the heading copy differ. */
-export type DirectoryReportSubject = "review" | "question";
+/** Which kind of member-authored content is being reported. Reviews are the
+ *  only kind a directory page offers a report on today; the type stays a union
+ *  so a second kind can join without reshaping the props. */
+export type DirectoryReportSubject = "review";
 
 interface Props {
   /** The subject's own uuid — the report's `subjectId`. */
   subjectId: string;
   subjectKind: DirectoryReportSubject;
   /**
-   * The author's display name, for the heading. Reviews only: a review has one
-   * author, so naming them is accurate and grounding. A public question and
-   * the answer under it are one reportable thing written by up to two people,
-   * so that surface names nobody rather than telling somebody reporting the
-   * answer that they are reporting the asker's question.
+   * The author's display name, for the heading. A review has one author, so
+   * naming them is accurate and grounding.
    */
   authorName?: string;
   onClose: () => void;
@@ -37,36 +34,23 @@ interface Props {
 
 const TITLE_KEYS: Record<DirectoryReportSubject, string> = {
   review: "marketing:directory.detail.reportReview.title",
-  question: "marketing:directory.detail.reportQuestion.title",
 };
 const SUB_KEYS: Record<DirectoryReportSubject, string> = {
   review: "marketing:directory.detail.reportReview.sub",
-  question: "marketing:directory.detail.reportQuestion.sub",
 };
 
 /**
- * Which shared subject type each of this modal's two kinds files as, so the
+ * Which shared subject type each of this modal's kinds files as, so the
  * reasons come from the one taxonomy every other report surface reads.
- *
- * Both kinds used to render `REVIEW_REPORT_REASONS`, a local copy of the
- * REVIEW list. That was wrong for a question: the backend catalogue offers a
- * question `outing`, `doxxing` and `off_topic`, and the review list has none
- * of the three. `outing` and `doxxing` are the only codes that derive
- * emergency severity server-side, so somebody outed in a public question on a
- * venue's page could file it only as "Something else".
  */
 const SUBJECT_TYPES: Record<DirectoryReportSubject, ReportSubjectType> = {
   review: "review",
-  question: "listing_public_question",
 };
 
 /**
- * "Report this" for a directory review or a public question: pick a reason →
- * real submit → the plum-panel confirmation (or an honest retry panel on
- * failure). Mirrors `forum/ReportReplyModal`'s pick-reason/submit/confirm shape
- * exactly. Both subjects share one modal because a question is abusive in the
- * same ways a review is; only the subject type sent to `POST /reports` and the
- * heading copy differ.
+ * "Report this" for a directory review: pick a reason → real submit → the
+ * plum-panel confirmation (or an honest retry panel on failure). Mirrors
+ * `forum/ReportReplyModal`'s pick-reason/submit/confirm shape exactly.
  */
 export function DirectoryReportModal({
   subjectId,
@@ -79,11 +63,8 @@ export function DirectoryReportModal({
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">(
     "idle",
   );
-  // One mutation for both kinds. They used to be two hand-rolled `apiPost`
-  // hooks, kept out of the shared wrapper because `ReportSubjectType` listed
-  // neither `review` nor `listing_public_question`. It lists both now.
-  // `useCreateReport` carries the same `meta: { silentError: true }` those two
-  // did, so this modal's own error panel below is still the only thing shown.
+  // `useCreateReport` carries `meta: { silentError: true }`, so this modal's
+  // own error panel below is the only thing shown on failure.
   const createReport = useCreateReport();
   const subjectType = SUBJECT_TYPES[subjectKind];
   // Server-owned taxonomy, falling back to the local one instantly and
@@ -95,7 +76,7 @@ export function DirectoryReportModal({
   // of the generic body copy; every other failure keeps the generic line.
   const [failureMessage, setFailureMessage] = useState<string | null>(null);
 
-  // Only the review copy interpolates it; the question copy names nobody.
+  // The review copy interpolates the author's first name.
   const firstName = authorName ? (authorName.split(" ")[0] ?? authorName) : "";
   const title = t(TITLE_KEYS[subjectKind]);
 

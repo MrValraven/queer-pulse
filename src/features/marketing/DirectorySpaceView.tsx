@@ -9,14 +9,15 @@ import { DirectorySpaceTrust } from "./DirectorySpaceTrust";
 import { DirectoryAffirmingBaseline } from "./DirectoryAffirmingBaseline";
 import { DirectoryVisitCardProvider } from "./DirectoryVisitCardProvider";
 import { useDirectoryVisitPlacement } from "./useDirectoryVisitPlacement";
+import { useListingPhotoRepositionAccess } from "./useListingPhotoRepositionAccess";
 import s from "./DirectorySpacePage.module.css";
 
 /**
  * The public directory detail body: identity, operating state, gallery, then a
  * two-column grid. Shared by the real page (`DirectorySpacePage`) and the admin
  * previews (`ListingPreviewDrawer`, `ListingEditorPreviewModal`), so all of
- * them show the identical live view. `preview` makes it read-only: no review
- * form, no messaging.
+ * them show the identical live view. `preview` makes it read-only: it hides
+ * the review form, messaging and the manager's photo repositioning.
  *
  * The two columns carry different readers. The main column answers the
  * member's questions in the order they ask them (see `DirectorySpaceMain`);
@@ -48,6 +49,11 @@ export function DirectorySpaceView({
 }) {
   const pageRef = useRef<HTMLDivElement>(null);
   const visitPlacement = useDirectoryVisitPlacement(pageRef);
+  const repositionAccess = useListingPhotoRepositionAccess({
+    place,
+    ownerRef,
+    isPreview: preview,
+  });
 
   return (
     <>
@@ -59,7 +65,7 @@ export function DirectorySpaceView({
           page owes them. Renders nothing for an open listing. Shown in the
           moderation preview too, since a moderator needs to see it as well. */}
       <DirectoryOperatingBanner place={place} />
-      <DirectoryGallery place={place} />
+      <DirectoryGallery place={place} repositionAccess={repositionAccess} />
       <div ref={pageRef} className={s.page}>
         <DirectoryVisitCardProvider place={place}>
           <div className={s.grid}>

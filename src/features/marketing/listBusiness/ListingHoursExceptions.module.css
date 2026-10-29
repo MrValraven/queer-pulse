@@ -225,12 +225,17 @@
 
 /* ---------- Focus ---------- */
 .remove:focus-visible,
-.note:focus-visible,
 .add:focus-visible,
 .clearPast:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
+}
+
+.note:focus-visible {
+  border-color: var(--focus-field-border);
+  outline: none;
+  box-shadow: var(--focus-field-glow);
 }
 
 /* ---------- Touch: 44px hit areas ---------- */

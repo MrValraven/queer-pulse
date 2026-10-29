@@ -49,7 +49,6 @@ export const REPORT_SUBJECT_LABEL_KEY: Record<ReportSubjectType, string> = {
   subprofile: "safety:myReports.subject.subprofile",
   review: "safety:myReports.subject.review",
   magazine_comment: "safety:myReports.subject.magazine_comment",
-  listing_public_question: "safety:myReports.subject.listing_public_question",
   event_photo: "safety:myReports.subject.event_photo",
   landlord_recommendation: "safety:myReports.subject.landlord_recommendation",
   volunteering: "safety:myReports.subject.volunteering",

@@ -1,4 +1,5 @@
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
+import type { ListingPhotoFraming } from "./api/directory.api";
 import { MEMBERS, memberName } from "../members/data/members";
 import {
   formatDayHours,
@@ -150,33 +151,6 @@ export interface Review {
 }
 
 /**
- * Who wrote the public answer under a question. `"owner"` is the business
- * itself; `"moderator"` is a QueerPulse moderator stepping in. The two are
- * never presented the same way: a moderator's words must never read as the
- * business speaking (see `DirectoryQuestionAnswer`). `null` alongside a `null`
- * `answer` simply means nobody has answered yet, which is a normal state.
- */
-export type ListingQuestionAnswerRole = "owner" | "moderator";
-
-/**
- * One public question a member asked on a listing, plus its answer when one
- * exists. Mirrors the backend's `ListingPublicQuestionDTO` exactly. Reads come
- * from the detail payload (newest first, capped at 10) and from
- * `GET /directory/:slug/questions` for everything beyond that cap.
- */
-export interface ListingPublicQuestion {
-  id: string;
-  body: string;
-  askerName: string;
-  askerSlug: string | null;
-  askerAvatarUrl: string | null;
-  createdAt: string;
-  answer: string | null;
-  answeredAt: string | null;
-  answeredByRole: ListingQuestionAnswerRole | null;
-}
-
-/**
  * Whether a business is still trading. Mirrors the backend's
  * `OperatingStateView.state`. Everything other than `"open"` means the page
  * must stop presenting the listing as a place you can go to today. A
@@ -216,6 +190,16 @@ export interface ListingHoursException {
   open: boolean;
   intervals: HoursInterval[];
   note: string;
+}
+
+/** One photo of the detail page's gallery, in the owner's order. */
+export interface DirectoryGalleryPhoto {
+  url: string;
+  alt: string;
+  /** Per-listing position; wins on render. */
+  framing?: ListingPhotoFraming;
+  /** The uploader's media crop, the fallback when `framing` is absent. */
+  crop?: CropRect;
 }
 
 export interface DirectoryPlace {
@@ -364,6 +348,10 @@ export interface DirectoryPlace {
    * places, which fall back to the `gallery` caption blocks. */
   photos?: Record<PhotoKey, string | null>;
   alt?: Record<PhotoKey, string>;
+  /** The ordered gallery with per-photo framing. Absent for demo places and
+   * older payloads, which fall back to the `photos`/`alt` slots above; an
+   * empty list means the listing has no photos. */
+  galleryPhotos?: DirectoryGalleryPhoto[];
   /** The crop the owner framed for the cover photo, read as a FOCAL REGION
    * (not an exact frame) because the card's photo strip is a fixed 168px band
    * whose aspect won't match the saved rect. Absent ⇒ the image is centred. */
@@ -405,13 +393,6 @@ export interface DirectoryPlace {
     role?: "venue" | "runBy";
   }[];
   reviews: Review[];
-  /**
-   * The most recent public questions on this listing (newest first, capped at
-   * 10 by the detail endpoint). Absent on demo fixtures and on submitted
-   * drafts, which the Q&A section reads as "no questions yet": a normal,
-   * unremarkable state, never an error.
-   */
-  questions?: ListingPublicQuestion[];
   /**
    * The accepted, viewer-visible team members in page order. Absent on
    * fixtures: `useDirectoryPlace` overlays it from the demo store.

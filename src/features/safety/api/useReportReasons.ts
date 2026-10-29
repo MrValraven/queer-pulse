@@ -17,13 +17,12 @@ import { fetchReportReasons } from "./reports.api";
  * ## Why this exists
  *
  * `SUBJECT_REASONS` is a hand-maintained mirror of the backend's
- * `reason-catalogue.ts`. When the two drifted, `listing_public_question` was
- * rendered with the REVIEW list, which carries neither `outing` nor `doxxing`,
- * the only two codes that derive emergency severity. A member outed in a
- * public question could file it only as "Something else", at a seven-day SLA
- * instead of a one-hour one. Nothing failed, nothing logged, and the compiler
- * was satisfied throughout. Asking the server is what stops a catalogue edit
- * becoming that again.
+ * `reason-catalogue.ts`. When the two drifted, a subject could render with the
+ * wrong list, one that carries neither `outing` nor `doxxing`, the only two
+ * codes that derive emergency severity. A member outed there could file it
+ * only as "Something else", at a seven-day SLA instead of a one-hour one.
+ * Nothing failed, nothing logged, and the compiler was satisfied throughout.
+ * Asking the server is what stops a catalogue edit becoming that again.
  *
  * ## Why it fails safe
  *

@@ -4,6 +4,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   castRoadmapVote,
   getMyRoadmapVotes,
+  removeRoadmapVote,
   submitRoadmapIdea,
 } from "./roadmap.api";
 
@@ -55,31 +56,41 @@ export function useMyRoadmapVotesQuery(): MyRoadmapVotesResult {
   };
 }
 
+type RoadmapVoteVariables = {
+  targetType: "item" | "idea";
+  targetId: string;
+};
+
 export function useRoadmapVote() {
   const { demoMode } = useDemoMode();
   const { loggedIn, checking } = useAuth();
   const queryClient = useQueryClient();
-  const mutation = useMutation({
-    mutationFn: ({
-      targetType,
-      targetId,
-    }: {
-      targetType: "item" | "idea";
-      targetId: string;
-    }) => castRoadmapVote(targetType, targetId),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["roadmap", false] });
-      void queryClient.invalidateQueries({
-        queryKey: ["roadmap-my-votes", false],
-      });
-    },
+  // Returned promise is awaited by react-query before the per-call
+  // onSuccess runs, so a caller clearing its optimistic state there sees the
+  // refetched server data already in place.
+  const refreshRoadmapVotes = () =>
+    Promise.all([
+      queryClient.invalidateQueries({ queryKey: ["roadmap", false] }),
+      queryClient.invalidateQueries({ queryKey: ["roadmap-my-votes", false] }),
+    ]);
+  const castMutation = useMutation({
+    mutationFn: ({ targetType, targetId }: RoadmapVoteVariables) =>
+      castRoadmapVote(targetType, targetId),
+    onSuccess: refreshRoadmapVotes,
+  });
+  const unvoteMutation = useMutation({
+    mutationFn: ({ targetType, targetId }: RoadmapVoteVariables) =>
+      removeRoadmapVote(targetType, targetId),
+    onSuccess: refreshRoadmapVotes,
   });
   return {
     demoMode,
     /** A signed-out visitor's vote opens a sign-in prompt and sends no request. */
     isSignInRequired: !demoMode && !checking && !loggedIn,
-    vote: mutation.mutate,
-    pending: mutation.isPending,
+    vote: castMutation.mutate,
+    /** Takes the member's vote back (DELETE /roadmap/vote/:type/:id). */
+    unvote: unvoteMutation.mutate,
+    pending: castMutation.isPending || unvoteMutation.isPending,
   };
 }
 

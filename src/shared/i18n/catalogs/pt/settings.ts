@@ -287,7 +287,7 @@ export const settings: Catalog = {
     "Convites para co-gerir uma persona, e quem se juntou a uma",
   "notifications.volume.listings.title": "Anúncios que geres",
   "notifications.volume.listings.desc":
-    "Perguntas públicas, edições aceites e convites para co-gerir",
+    "Edições aceites e convites para co-gerir",
   "notifications.volume.opportunities.title": "Oportunidades",
   "notifications.volume.opportunities.desc":
     "Candidaturas ao que publicaste, propostas de troca e casas que correspondem a uma pesquisa que guardaste",
@@ -1082,7 +1082,7 @@ export const settings: Catalog = {
   "dataExport.accordion.listings.title":
     "Anúncios do diretório, espaços seguros e trabalho",
   "dataExport.accordion.listings.body":
-    "Os anúncios do diretório que são teus ou que ajudas a gerir, com as tuas reivindicações de propriedade, sugestões de edição, lugares de cogestão, ofertas de propriedade com a nota da equipa, pedidos e perguntas públicas que enviaste ou respondeste, os votos de utilidade que deste, e os teus rascunhos de anúncios por terminar. As nomeações de espaços seguros que fizeste, com a resposta da equipa, os sinalizadores que levantaste, e os votos de confiança que deste. Os teus anúncios de troca e as propostas que fizeste, e as empresas, ofertas de emprego, candidaturas e ligações a parceiros de que fazes parte.",
+    "Os anúncios do diretório que são teus ou que ajudas a gerir, com as tuas reivindicações de propriedade, sugestões de edição, lugares de cogestão, ofertas de propriedade com a nota da equipa, pedidos, os votos de utilidade que deste, e os teus rascunhos de anúncios por terminar. As nomeações de espaços seguros que fizeste, com a resposta da equipa, os sinalizadores que levantaste, e os votos de confiança que deste. Os teus anúncios de troca e as propostas que fizeste, e as empresas, ofertas de emprego, candidaturas e ligações a parceiros de que fazes parte.",
   "dataExport.tag.profileSections": "secções de perfil",
   "dataExport.tag.handles": "histórico de @nomes",
   "dataExport.tag.board": "publicações no quadro",

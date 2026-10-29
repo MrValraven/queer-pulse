@@ -5,6 +5,7 @@ import { StudioPlayerSeek } from "../../StudioPlayerSeek";
 import { useStudioPlayer, type StudioQueueItem } from "../studioPlayerContext";
 import { StudioCastButton } from "./StudioCastButton";
 import { StudioFormatLine } from "./StudioFormatLine";
+import { StudioGaplessTitleLine } from "./StudioGaplessBadge";
 import { StudioNowPlayingActions } from "./StudioNowPlayingActions";
 import { StudioNowPlayingCover } from "./StudioNowPlayingCover";
 import { StudioPlayerStatus } from "./StudioPlayerBar";
@@ -22,8 +23,9 @@ import { StudioVolumeControl } from "./StudioVolumeControl";
 import { StudioWarningGate } from "./StudioWarningGate";
 import styles from "./StudioNowPlaying.module.css";
 
-/** Title and artist. A private preview names them as plain text: its pages
- *  are not public, so there is nothing to link to. */
+/** Title (with the gapless badge after it) and artist. A private preview
+ *  names them as plain text: its pages are not public, so there is
+ *  nothing to link to. */
 function StageMeta({
   item,
   onNavigate,
@@ -45,20 +47,22 @@ function StageMeta({
   };
   return (
     <div className={styles.meta}>
-      <h2 className={styles.title}>
-        {isPreview ? (
-          item.title
-        ) : (
-          <Link
-            to={item.trackHref}
-            replace
-            onClick={handleLinkClick}
-            className={styles.titleLink}
-          >
-            {item.title}
-          </Link>
-        )}
-      </h2>
+      <StudioGaplessTitleLine item={item} size="stage">
+        <h2 className={styles.title}>
+          {isPreview ? (
+            item.title
+          ) : (
+            <Link
+              to={item.trackHref}
+              replace
+              onClick={handleLinkClick}
+              className={styles.titleLink}
+            >
+              {item.title}
+            </Link>
+          )}
+        </h2>
+      </StudioGaplessTitleLine>
       {isPreview ? (
         <p className={styles.artist}>{item.artistName}</p>
       ) : (

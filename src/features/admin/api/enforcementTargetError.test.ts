@@ -36,7 +36,7 @@ describe("classifyEnforcementError", () => {
   const cases: [string, number, string, EnforcementTarget][] = [
     ["nobody behind the reported content", 400, UNRESOLVED, "no_account"],
     [
-      "a question and an answer by two people",
+      "a review and a reply by two people",
       400,
       UNRESOLVED,
       "ambiguous_authors",

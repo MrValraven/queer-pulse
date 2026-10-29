@@ -40,11 +40,6 @@ export type ReportSubjectType =
   // nothing on the wire says which half was reported.
   | "review"
   | "magazine_comment"
-  // A member's PUBLIC question on a business listing, OR the answer posted
-  // under it (`listing_public_questions`). One subject covers the pair, so a
-  // report of it can name two different authors, which is why account-level
-  // enforcement refuses it (`admin/api/enforcementTargetError.ts`).
-  | "listing_public_question"
   // ONE photograph in a gathering's album (`event_photos`). `event` already
   // existed and is the wrong grain: acting on it takes down the whole gathering
   // over one image. Until this existed, a photo of an identifiable person at a
@@ -416,38 +411,15 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "off_topic",
     "other",
   ],
-  // A public question on a business listing, or the answer under it. Mirrors
-  // the backend's `ReportSubjectType.ListingPublicQuestion` set exactly, which
-  // is shaped like `magazine_comment` rather than like `review`: a question
-  // box on a venue's page is where someone gets asked, in public, whether they
-  // were at a place or who they went with, so `outing` and `doxxing` belong
-  // here in a way they do not on a star review. `off_topic` covers the
-  // question that is really an advertisement for somewhere else.
-  //
-  // This surface used to render the REVIEW list, which offered neither
-  // `outing` nor `doxxing` (the only two codes `deriveSeverity` maps to
-  // emergency), so somebody outed in a public question could file it only as
-  // "Something else" and it reached the ordinary queue.
-  listing_public_question: [
-    "outing",
-    "doxxing",
-    "harassment",
-    "hate_speech",
-    "discrimination",
-    "spam",
-    "off_topic",
-    "other",
-  ],
   // One photograph in a gathering's album. Mirrors the backend's
   // `ReportSubjectType.EventPhoto` set exactly. `outing` and `doxxing` lead
   // deliberately, and not only for ordering: they are the only two codes
   // `deriveSeverity` maps to the emergency band, and a photograph of a face at
   // a queer event outs somebody in a way a paragraph of text cannot. A list
   // without them would route exactly the report this control exists for into
-  // the ordinary queue, which is the failure the public-question list above
-  // records having already shipped once. `venue_safety` is absent because a
-  // photo is not an incident at a place, and `off_topic` because an album has
-  // no topic to be off.
+  // the ordinary queue, which is the failure this catalogue exists to prevent.
+  // `venue_safety` is absent because a photo is not an incident at a place,
+  // and `off_topic` because an album has no topic to be off.
   event_photo: [
     "outing",
     "doxxing",

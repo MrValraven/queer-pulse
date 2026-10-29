@@ -3,17 +3,25 @@ import { Button } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { StudioCrossfadeSetting } from "../../StudioCrossfadeSetting";
 import { useStudioPlayer } from "../studioPlayerContext";
+import { useStudioIsPlayingGapless } from "../useStudioIsPlayingGapless";
 import { StudioEqualizer } from "./StudioEqualizer";
 import { useStudioSliderKeyGuard } from "./StudioEqualizer.hooks";
 import equalizerStyles from "./StudioEqualizer.module.css";
 import styles from "./StudioPlayerControls.module.css";
 
 /** Why the browser's audio settings rest: a cast device plays the stream
- *  itself, and plain mode has no graph for crossfade. */
-function crossfadeHintKey(isCasting: boolean, isPlainMode: boolean): string {
+ *  itself, and plain mode has no graph for crossfade. A release that plays
+ *  without gaps rests crossfade only between its own tracks, so the hint
+ *  names it while the slider stays live for every other join. */
+function crossfadeHintKey(
+  isCasting: boolean,
+  isPlainMode: boolean,
+  isPlayingGapless: boolean,
+): string {
   if (isCasting) return "studio:player.crossfade.castHint";
-  return isPlainMode
-    ? "studio:player.crossfade.unavailable"
+  if (isPlainMode) return "studio:player.crossfade.unavailable";
+  return isPlayingGapless
+    ? "studio:player.crossfade.gaplessHint"
     : "studio:player.crossfade.hint";
 }
 
@@ -26,13 +34,15 @@ function loudnessHintKey(isCasting: boolean, isPlainMode: boolean): string {
 
 /** The More panel's Audio group opens here: its heading, then the shared
  *  crossfade slider (the one Studio Settings shows). Plain mode shows it at
- *  0 and at rest, and casting at rest, each with the reason. */
+ *  0 and at rest, and casting at rest, each with the reason; a release
+ *  that plays without gaps names itself in the hint. */
 export function CrossfadeSetting() {
   const { t } = useTranslation();
-  const { preferences, isPlainMode, remote, setCrossfadeSeconds } =
+  const { currentItem, preferences, isPlainMode, remote, setCrossfadeSeconds } =
     useStudioPlayer();
   const isCasting = remote.isConnected;
   const isResting = isPlainMode || isCasting;
+  const isPlayingGapless = useStudioIsPlayingGapless(currentItem);
   const labelId = useId();
   const hintId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -63,7 +73,9 @@ export function CrossfadeSetting() {
           />
         </div>
         <p id={hintId} className={styles.settingHint}>
-          {t(crossfadeHintKey(isCasting, isPlainMode))}
+          {t(crossfadeHintKey(isCasting, isPlainMode, isPlayingGapless), {
+            release: currentItem?.releaseTitle ?? "",
+          })}
         </p>
       </div>
     </>

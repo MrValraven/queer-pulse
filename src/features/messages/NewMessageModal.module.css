@@ -258,10 +258,11 @@
   padding: 11px 14px;
   margin-bottom: 10px;
 }
+
 .groupNameField:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
+  border-color: var(--focus-field-border);
+  outline: none;
+  box-shadow: var(--focus-field-glow);
 }
 
 /* DES-229: the "N of max selected" hint above a capped MemberSelectList, and

@@ -40,20 +40,17 @@ import styles from "./AdminModerationPage.module.css";
 /**
  * The subject types whose report can name two different authors.
  *
- * Each covers a statement AND the answer posted under it, under one subject and
+ * Each covers a statement AND the reply posted under it, under one subject and
  * one "Report this" control, and records neither which half was reported nor
  * who wrote the second one:
  *
- *  - `listing_public_question`: a member's public question on a business
- *    listing and the owner's answer beneath it. The answerer is nullable, it
- *    survives the listing changing hands, and it can be a moderator.
  *  - `review`: a review and the reviewed party's single public reply under it,
  *    on all three surfaces that carry one (a directory listing, an employer,
  *    a home). Added by PRD-47 when housing and employer reviews gained the
  *    reply the business directory already had.
  *
- * A SET, so the day a third one arrives there is an obvious place to declare
- * it. This list mirrors the backend resolver: exactly the two statements in
+ * A SET, so the day another one arrives there is an obvious place to declare
+ * it. This list mirrors the backend resolver: exactly the statements in
  * `queerpulse-backend/src/moderation/report-subject-resolver.service.ts` that
  * select `is_author_ambiguous` belong here, and nothing else does. It is a
  * hardcoded mirror only because the flag never reaches the wire:
@@ -67,19 +64,19 @@ import styles from "./AdminModerationPage.module.css";
  * promising they will be.
  */
 const AMBIGUOUS_AUTHOR_SUBJECTS: ReadonlySet<ModReport["subjectType"]> =
-  new Set(["listing_public_question", "review"]);
+  new Set(["review"]);
 
 /**
  * Says out loud that the author named just above may not be the person who
  * wrote the reported half.
  *
  * The drawer has to name somebody, and it names whoever posted first, because
- * they opened the exchange: the member who asked the question, or the member
- * who wrote the review. Without this line a moderator reads one handle, decides
- * about that person, and only learns two people are involved from the refusal
- * toast after they have already tried to ban one of them. Rendered at the
- * moment the naming happens, so the refusal confirms what they already knew
- * rather than contradicting what they just read.
+ * they opened the exchange: the member who wrote the review. Without this
+ * line a moderator reads one handle, decides about that person, and only
+ * learns two people are involved from the refusal toast after they have
+ * already tried to ban one of them. Rendered at the moment the naming happens,
+ * so the refusal confirms what they already knew rather than contradicting
+ * what they just read.
  */
 function AmbiguousAuthorsNote({
   subjectType,

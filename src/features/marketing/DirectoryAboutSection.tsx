@@ -22,6 +22,9 @@ import s from "./DirectorySpacePage.module.css";
  * First in the main column, directly under the gallery: the description in
  * the header ends right above the photos, and this list continues it.
  * Owner-attributed: the owner set these, so the sub-line names them.
+ *
+ * Each group is a tag row: its name on the left, its items as pills on the
+ * right, a hairline between groups.
  */
 export function DirectoryAboutSection({
   place,

@@ -222,8 +222,8 @@
   color: var(--ink-40);
 }
 .container .search:focus {
-  border-color: var(--line-strong);
-  box-shadow: var(--ring-plum);
+  border-color: var(--focus-field-border);
+  box-shadow: var(--focus-field-glow);
 }
 
 /* ── Options ── */

@@ -1,0 +1,12 @@
+/* The owner's listing editor inside the admin console. Every sticky piece of
+   the editor (the jump nav, the live preview column, the sections' scroll
+   margin) is offset by `--nav-band`, the member nav's 80px band. The admin
+   shell has its own sticky top bar instead, so the band takes that bar's
+   measured height (`--admin-topbar-h`, published by AdminShell), which on a
+   phone grows to two rows when the breadcrumb wraps. The fallback is the
+   bar's one-row desktop height. */
+.editor {
+  --nav-band: var(--admin-topbar-h, 67px);
+  /* Top air only: the shell's content box already pads the page's end. */
+  padding-top: 18px;
+}

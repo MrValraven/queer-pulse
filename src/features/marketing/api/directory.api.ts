@@ -17,7 +17,6 @@ import type {
   ListingHoursException,
   MovedToListingView,
   OperatingStateView,
-  ListingPublicQuestion,
   Owner,
   QueerOwnedVerificationView,
   Review,
@@ -65,6 +64,51 @@ export interface CoverPhotoView {
   alt: string;
   caption: string;
   crop?: CropRect;
+}
+
+/**
+ * Where a gallery photo sits in its frame, set per listing by the owner or
+ * staff. `focusX`/`focusY` (0..1) are the fraction of the image width and
+ * height kept in view; `zoom` runs 1..`LISTING_PHOTO_ZOOM_MAX`, with 1 as the
+ * plain cover fit. Mirrors the backend's `ListingPhotoFraming`.
+ */
+export interface ListingPhotoFraming {
+  focusX: number;
+  focusY: number;
+  zoom: number;
+}
+
+/** Highest zoom the server accepts for a photo's framing. */
+export const LISTING_PHOTO_ZOOM_MAX = 3;
+
+/**
+ * One entry of the listing's ordered gallery as the detail and owner
+ * endpoints return it. `framing` is the position set through the reposition
+ * routes and wins on render; `crop` is the uploader's media crop, the
+ * fallback when no framing exists.
+ */
+export interface ListingGalleryPhotoView {
+  image: string | null;
+  alt: string;
+  caption: string;
+  crop?: CropRect;
+  framing?: ListingPhotoFraming;
+}
+
+/** One photo's new position in a reposition save; `image` is the URL the read side sent. */
+export interface ListingPhotoFramingEntry {
+  image: string;
+  framing: ListingPhotoFraming;
+}
+
+/** Body of `PATCH /listings/:ref/photo-framing` and its admin twin. */
+export interface UpdateListingPhotoFramingDto {
+  photos: ListingPhotoFramingEntry[];
+}
+
+/** Both reposition routes answer with the full updated gallery. */
+export interface ListingPhotoFramingResponse {
+  photoGallery: ListingGalleryPhotoView[];
 }
 
 /**
@@ -429,10 +473,6 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
   address: string;
   rating: { score: string; count: number };
   reviews: Review[];
-  /** The listing's most recent public questions, newest first, capped at 10 by
-   * the backend. Optional on the wire: a payload predating the public-questions
-   * work carries none, and the Q&A section then reads as "no questions yet". */
-  questions?: ListingPublicQuestionDTO[];
   /** Accepted, viewer-visible team personas in page order, at most 40. The
    *  backend always sends it; optional here for deploy order. */
   team?: ListingTeamMemberPublicDTO[];
@@ -449,6 +489,10 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
   }[];
   photos: PhotoSetView;
   alt: Record<PhotoKey, string>;
+  /** The ordered gallery with each photo's framing. Optional so a payload
+   * from before the reposition work still parses; the page then reads the
+   * `photos`/`alt` slots above. */
+  photoGallery?: ListingGalleryPhotoView[];
   hours: Record<string, DayHours>;
   langs: string[];
   /** Every stored attribute, sensitive ones included. Inherited from the card
@@ -558,41 +602,4 @@ export const voteReviewHelpful = (slug: string, reviewId: string) =>
 export const clearReviewHelpful = (slug: string, reviewId: string) =>
   apiDelete<ReviewHelpfulResponse>(
     `/directory/${slug}/reviews/${reviewId}/helpful`,
-  );
-
-/** The wire shape of one public question. Structurally identical to the
- *  frontend's own `ListingPublicQuestion`, aliased here so call sites read as
- *  DTOs at the API seam. */
-export type ListingPublicQuestionDTO = ListingPublicQuestion;
-
-/**
- * GET /directory/:slug/questions: the full, paged question list, for
- * everything beyond the ten the detail payload carries. Newest first.
- */
-export const getListingQuestions = (slug: string, page: number) =>
-  apiGet<ItemsPage<ListingPublicQuestionDTO>>(
-    `/directory/${slug}/questions?page=${page}`,
-  );
-
-/**
- * POST /directory/:slug/questions: ask the business something in public.
- * Member-gated and throttled: 400 when you own the listing yourself, 429 once
- * you are over quota (that body carries a plain reason worth showing).
- */
-export const askListingQuestion = (slug: string, body: string) =>
-  apiPost<ListingPublicQuestionDTO>(`/directory/${slug}/questions`, { body });
-
-/**
- * POST /listings/:ref/public-questions/:id/answer: the owner answering, keyed
- * by the listing's `ref` (its owner-facing id, distinct from the public
- * `slug`; see `DirectorySpacePage`'s `owned.ref`).
- */
-export const answerListingQuestion = (
-  ref: string,
-  questionId: string,
-  answer: string,
-) =>
-  apiPost<ListingPublicQuestionDTO>(
-    `/listings/${ref}/public-questions/${questionId}/answer`,
-    { answer },
   );

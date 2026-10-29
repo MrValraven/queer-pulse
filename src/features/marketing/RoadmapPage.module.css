@@ -312,10 +312,25 @@
   color: var(--paper);
   border-color: var(--line-strong);
 }
+/* A voted button stays clickable (a second click takes the vote back), so on
+   hover or focus it flips to the outlined look to say "this will undo". */
+@media (hover: hover) {
+  .voteBtn.voted:hover {
+    background: transparent;
+    color: var(--text-strong);
+    border-color: var(--line-strong);
+  }
+}
+.voteBtn.voted:focus-visible,
+.ideaVoteBtn.voted:focus-visible {
+  background: transparent;
+  color: var(--text-strong);
+}
 .voteBtn:focus-visible,
 .ideaVoteBtn:focus-visible {
-  outline: 2px solid var(--line-strong);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .hotTag {
   display: inline-flex;
@@ -445,7 +460,7 @@
   height: 11px;
 }
 @media (hover: hover) {
-  .ideaVoteBtn:hover:not(:disabled) {
+  .ideaVoteBtn:hover {
     background: var(--plum);
     color: var(--paper);
     border-color: var(--line-strong);
@@ -455,7 +470,13 @@
   background: var(--plum);
   color: var(--paper);
   border-color: var(--line-strong);
-  cursor: default;
+}
+@media (hover: hover) {
+  .ideaVoteBtn.voted:hover {
+    background: transparent;
+    color: var(--text-strong);
+    border-color: var(--line-strong);
+  }
 }
 
 /* ── How we decide ──────────────────────────────────────── */

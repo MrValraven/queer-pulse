@@ -6,7 +6,7 @@ import styles from "./AdminListingEditStatusLine.module.css";
 
 /**
  * The line under the edit page's header that names the listing being edited
- * and where it stands, so the wizard below reads as an edit of an existing
+ * and where it stands, so the editor below reads as an edit of an existing
  * listing. The status chip is the one the listings queue row and preview
  * drawer show, with the same tone.
  */

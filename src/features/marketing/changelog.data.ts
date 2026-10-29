@@ -63,6 +63,59 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "listing-photo-reposition",
+        category: "feature",
+        date: "29 Oct 2026",
+        ...entryKeys("listing-photo-reposition"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "listing-public-questions-removed",
+        category: "improvement",
+        date: "29 Oct 2026",
+        ...entryKeys("listing-public-questions-removed"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "calendar-location-is-the-street-address",
+        category: "fix",
+        date: "29 Oct 2026",
+        ...entryKeys("calendar-location-is-the-street-address"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "listing-whats-here-rows",
+        category: "improvement",
+        date: "29 Oct 2026",
+        ...entryKeys("listing-whats-here-rows"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "admin-listing-full-editor",
+        category: "improvement",
+        date: "29 Oct 2026",
+        ...entryKeys("admin-listing-full-editor"),
+      },
+      {
+        id: "studio-gapless-badge",
+        category: "improvement",
+        date: "29 Oct 2026",
+        ...entryKeys("studio-gapless-badge"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
         id: "studio-artist-spotlight",
         category: "feature",
         date: "29 Oct 2026",

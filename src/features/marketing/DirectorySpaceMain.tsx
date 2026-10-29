@@ -10,7 +10,6 @@ import { DirectoryMenuSection } from "./DirectoryMenuSection";
 import { DirectoryShopSection } from "./DirectoryShopSection";
 import { DirectoryOrderingSection } from "./DirectoryOrderingSection";
 import { DirectoryAccessSection } from "./DirectoryAccessSection";
-import { DirectoryQuestionsSection } from "./DirectoryQuestionsSection";
 import { DirectoryReviewsSection } from "./DirectoryReviewsSection";
 
 interface Props {
@@ -56,11 +55,7 @@ interface Props {
  *    header's price band.
  * 6. Can I get in? Accessibility, promoted out of two grey rows at the
  *    bottom of a sidebar card into a section of its own.
- * 7. What is still unclear? The public questions members put to the business,
- *    and the answers that came back. Sits between the listing's own words and
- *    other members' verdicts, because that is where an unanswered detail
- *    surfaces.
- * 8. What do people say? The reviews, the longest block and the last one,
+ * 7. What do people say? The reviews, the longest block and the last one,
  *    because nobody scrolls past it to find the address any more.
  *
  * On a phone this order IS the page: one column, top to bottom, exactly as
@@ -107,11 +102,6 @@ export function DirectorySpaceMain({
         <DirectoryServicesSection place={place} />
       )}
       <DirectoryAccessSection place={place} />
-      <DirectoryQuestionsSection
-        place={place}
-        preview={preview}
-        ownerRef={ownerRef}
-      />
       <DirectoryReviewsSection
         place={place}
         preview={preview}

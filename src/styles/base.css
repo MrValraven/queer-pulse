@@ -104,6 +104,9 @@ a {
    `:focus-visible` rule (FormField, CopyLinkRow). See
    docs/production-readiness/contrast-audit.md §8.
 
+   Text fields are the exception: they use a soft border indicator, see the
+   rule right after this one.
+
    The three values live in tokens/effects.css, so a component that has to
    out-specify this rule can restate the ring without copying its numbers. Tune
    --focus-ring, --focus-ring-offset and --ring-cream there and every override
@@ -113,6 +116,28 @@ a {
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
   border-radius: var(--radius-4);
+}
+
+/* Text fields take the soft indicator instead: the field's own border turns
+   accent (--focus-field-border in tokens/effects.css), which is 5.4:1 or better
+   on cream and paper and so carries the indicator alone. The ring's outline and
+   cream halo are both dropped. The glow (--focus-field-glow) is not set here,
+   because many fields are borderless inputs inside a wrapper that draws the
+   focus, and a glow on the bare input would show as a rectangle inside the
+   wrapper. A field with its own border adds the glow in its component rule
+   (SearchInput, FormField). `:where()` adds no specificity, so any component
+   rule still wins. */
+:where(
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not(
+      [type="file"]
+    ):not([type="button"]):not([type="submit"]):not([type="reset"]):not(
+      [type="color"]
+    ),
+  textarea
+):focus-visible {
+  outline: none;
+  border-color: var(--focus-field-border);
+  box-shadow: none;
 }
 
 /* The one exception to the rule above. RouteAnnouncer (and the skip link)

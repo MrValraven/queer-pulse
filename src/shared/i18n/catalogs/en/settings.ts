@@ -290,7 +290,7 @@ export const settings: Catalog = {
     "Invitations to co-own a persona, and who joined one",
   "notifications.volume.listings.title": "Listings you manage",
   "notifications.volume.listings.desc":
-    "Public questions, accepted edits, and co-manager invitations",
+    "Accepted edits and co-manager invitations",
   "notifications.volume.opportunities.title": "Opportunities",
   "notifications.volume.opportunities.desc":
     "Applications to what you posted, swap proposals, and homes matching a search you saved",
@@ -1109,7 +1109,7 @@ export const settings: Catalog = {
   "dataExport.accordion.listings.title":
     "Directory listings, safe spaces and work",
   "dataExport.accordion.listings.body":
-    "Directory listings you own or help manage, with your ownership claims, edit suggestions, co-manager seats, ownership offers with the team's note, enquiries and public questions you asked or answered, helpful votes you gave, and your unfinished listing drafts. Safe-space nominations you made, with the team's reply, flags you raised, and vouches you gave. Your barter listings and proposals, and the companies, jobs, job applications and partner ties you're part of.",
+    "Directory listings you own or help manage, with your ownership claims, edit suggestions, co-manager seats, ownership offers with the team's note, enquiries, helpful votes you gave, and your unfinished listing drafts. Safe-space nominations you made, with the team's reply, flags you raised, and vouches you gave. Your barter listings and proposals, and the companies, jobs, job applications and partner ties you're part of.",
   "dataExport.tag.profileSections": "profile sections",
   "dataExport.tag.handles": "@handle history",
   "dataExport.tag.board": "board posts",

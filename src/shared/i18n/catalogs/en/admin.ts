@@ -7537,7 +7537,7 @@ export const admin: Catalog = {
 
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
   // PHOTO-EVIDENCE — PHOTO-EVIDENCE. The reported gathering photo inside the moderation report drawer (AdminReportPhotoEvidence.tsx). Rendered only for an event_photo report. imageAlt is the image's accessible name and deliberately says what the image IS rather than what is in it: a moderator's screen reader is often audible to whoever is nearby, and describing the person in a photo that may be outing them is the exact harm being judged. unavailable is the honest state for a photo the uploader deleted after filing; the report stays actionable, so the wording never implies the case is over.
-  // PRD-47d — PRD-47d - OVERWRITES two existing keys; adds none. `ambiguous_authors` now answers two subject types: `listing_public_question` (a question and the answer under it) and `review` (a review and the reviewed party's public reply under it, on a directory listing, an employer or a home). Today's copy names a question and a listing, so a moderator refused on an employer-review or housing-review report reads a sentence about a surface they are not looking at. Two further corrections on top of the generalisation. (1) The drawer note said restrict and ban "won't go through here"; the backend only sets `is_author_ambiguous` when a second half actually EXISTS, and nothing on the wire tells the drawer whether it does, so the old sentence was already false on an unanswered question and would be false on most reviews. It now says they CAN be refused. The refusal string keeps its absolute phrasing, because it only ever renders when the flag really fired. (2) It names "whoever posted first" rather than "whoever asked", which is true of a reviewer as well as an asker, and points at "the page it was posted on" rather than "the listing", which is true of a home and an employer as well. This block supersedes the identical pair in PRD-47c.json (see the note in PRD-47D-LANDLORD-TAKEDOWN.md): that manifest is missing `overwrite`, so the merge would have skipped it, and its Portuguese is unaccented where the live catalogue is accented.
+  // PRD-47d — PRD-47d - OVERWRITES two existing keys; adds none. `ambiguous_authors` answers the `review` subject type (a review and the reviewed party's public reply under it, on a directory listing, an employer or a home). Today's copy names a question and a listing, so a moderator refused on an employer-review or housing-review report reads a sentence about a surface they are not looking at. Two further corrections on top of the generalisation. (1) The drawer note said restrict and ban "won't go through here"; the backend only sets `is_author_ambiguous` when a second half actually EXISTS, and nothing on the wire tells the drawer whether it does, so the old sentence was already false on a review with no reply yet and would be false on most reviews. It now says they CAN be refused. The refusal string keeps its absolute phrasing, because it only ever renders when the flag really fired. (2) It names "whoever posted first" rather than "whoever asked", which is true of a reviewer as well as an asker, and points at "the page it was posted on" rather than "the listing", which is true of a home and an employer as well. This block supersedes the identical pair in PRD-47c.json (see the note in PRD-47D-LANDLORD-TAKEDOWN.md): that manifest is missing `overwrite`, so the merge would have skipped it, and its Portuguese is unaccented where the live catalogue is accented.
   "moderation.reportDrawer.photoEvidence.title": "Reported photo",
   "moderation.reportDrawer.photoEvidence.imageAlt":
     "The photo this report is about, as it was when the report was filed.",
@@ -8319,7 +8319,7 @@ export const admin: Catalog = {
   // ── Admin edit of a platform-held listing (`/admin/listings/:ref/edit`) ───
   // A listing nobody owns yet, edited by staff on QueerPulse's behalf. If the
   // listing has since gained an owner, the page shows the hasOwner state
-  // instead of the wizard.
+  // instead of the editor.
   "listingEdit.title": "Edit listing",
   "listingEdit.eyebrow": "Directory",
   "listingEdit.sub":
@@ -8348,6 +8348,18 @@ export const admin: Catalog = {
   "listingEdit.success.publishedBody":
     "Your changes to {ref} are live in the directory.",
   "listingEdit.success.closeCta": "Back to the listings queue",
+  // The toast for a save that failed without naming a field, when the server
+  // gave no reason of its own. Each names what the failure itself tells us.
+  "listingEdit.saveError.network":
+    "Your changes didn't reach the server. Check your connection, then save again.",
+  "listingEdit.saveError.notFound":
+    "This listing was removed while you were editing it, so there is nothing left to save to.",
+  "listingEdit.saveError.forbidden":
+    "Only admins can edit listings QueerPulse holds, and your account doesn't have that role.",
+  "listingEdit.saveError.server":
+    "The server ran into a problem saving this listing. Your changes are still on the page, so you can save again in a moment.",
+  "listingEdit.saveError.refused":
+    "The server turned this save down without saying why. Your changes are still on the page.",
 
   // ── Admin member picker (AdminMemberPickerField) ─────────────────────────
   // The member search an admin form uses to pick one person by name; a pick

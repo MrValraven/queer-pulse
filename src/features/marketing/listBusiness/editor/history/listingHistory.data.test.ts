@@ -123,6 +123,12 @@ describe("changedFieldLabelKeys", () => {
     );
   });
 
+  it("names the photo positions for a reposition save", () => {
+    expect(changedFieldLabelKeys(["photoFraming"])).toEqual([
+      `${PREFIX}.field.photoFraming`,
+    ]);
+  });
+
   it("still names the retired tags on an old history row", () => {
     expect(changedFieldLabelKeys(["tags", "goodFor"])).toEqual([
       `${PREFIX}.field.tags`,

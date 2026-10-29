@@ -8,6 +8,7 @@ import { useLocalStorage, useMediaQuery, useScrollLock } from "../../hooks";
 import { mediaMax } from "../../theme/breakpoints";
 import { AdminSidebar } from "./AdminSidebar";
 import { MAIN_CONTENT_ID, SkipToContentLink } from "./SkipToContentLink";
+import { useAdminTopbarHeight } from "./useAdminTopbarHeight";
 import { useNavDrawerFocus } from "./useNavDrawerFocus";
 import styles from "./AdminShell.module.css";
 
@@ -66,6 +67,8 @@ export function AdminShell({
   const drawerPanelRef = useRef<HTMLDivElement>(null);
   const isDrawerActive = isMobile && isDrawerOpen;
   const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);
+  // Sticky page chrome reads `--admin-topbar-h` to stop under the bar.
+  const { shellRef, topbarRef } = useAdminTopbarHeight();
 
   // Growing past the breakpoint reveals the static rail, so drop any open state
   // rather than leave a stale off-canvas panel behind the desktop layout.
@@ -102,6 +105,7 @@ export function AdminShell({
 
   return (
     <div
+      ref={shellRef}
       className={[styles.shell, isCollapsed && styles.shellCollapsed]
         .filter(Boolean)
         .join(" ")}
@@ -138,7 +142,7 @@ export function AdminShell({
       </div>
 
       <div className={styles.main}>
-        <header className={styles.topbar}>
+        <header ref={topbarRef} className={styles.topbar}>
           <button
             type="button"
             className={styles.menuBtn}

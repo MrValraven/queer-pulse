@@ -87,6 +87,16 @@
     --bottom-inset: 0px;
   }
 
+  /* A `rail` shell (AdminShell, MagazineDeskShell) registers no app frame, so
+     AppChrome renders no bottom tab bar under it, and a sticky save bar
+     resting a tab bar's height above the screen's edge floats over nothing.
+     The token is the home indicator alone, as on the landing page below.
+     Keyed on the shell's own <main> with `:has()`, so chrome portaled to the
+     body (the consent banner, the quiz template save bar) follows it too. */
+  html:has(main[data-page-main][data-shell="rail"]) {
+    --bottom-inset: env(safe-area-inset-bottom, 0px);
+  }
+
   /* A signed-out visitor on the landing page gets no bottom tab bar
      (BottomTabBar returns nothing there; AppChrome stamps this attribute), so
      nothing may reserve its height: floating UI clears only the home indicator

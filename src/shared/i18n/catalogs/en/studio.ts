@@ -3853,6 +3853,11 @@ export const studio: Catalog = {
   "player.crossfade.unavailable": "Crossfade isn't available in this session",
   "player.crossfade.castHint":
     "Your cast device plays one track at a time, so crossfade rests while you cast",
+  "player.crossfade.gaplessHint":
+    "{release} plays without gaps, so crossfade rests between its tracks and comes back after it",
+  "player.gapless.label": "Plays without gaps",
+  "player.gapless.body":
+    "{artist} made {release} to play straight through, so its tracks run into each other with no crossfade",
   "player.loudness.label": "Even out loudness",
   "player.loudness.hint": "Brings every track close to the same level",
   "player.loudness.plainHint":

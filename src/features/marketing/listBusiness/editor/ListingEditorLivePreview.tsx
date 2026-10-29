@@ -98,6 +98,7 @@ export function ListingEditorLivePreview({
   fieldsRef,
   prefersReducedMotion,
   onOpenFullPreview,
+  isUnclaimed = false,
 }: {
   draft: ListingDraft;
   photoPreviews: Record<PhotoKey, string>;
@@ -109,6 +110,8 @@ export function ListingEditorLivePreview({
   prefersReducedMotion: boolean;
   /** Opens the editor's existing full-page preview modal. */
   onOpenFullPreview: () => void;
+  /** Nobody owns the listing, so the excerpt leaves out "who runs it". */
+  isUnclaimed?: boolean;
 }) {
   const { t } = useTranslation();
   // The head line doubles as the column's heading, so the aside is reachable
@@ -156,6 +159,7 @@ export function ListingEditorLivePreview({
           </h2>
         }
         isHeaderSticky
+        isUnclaimed={isUnclaimed}
         onAddPhoto={() =>
           jumpToListingField(ANCHOR.cover, prefersReducedMotion)
         }

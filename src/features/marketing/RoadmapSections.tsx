@@ -7,11 +7,8 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { BacklogItem, IdeaItem, NotBuildingItem } from "./roadmap.data";
-import {
-  useMyRoadmapVotes,
-  useRoadmapVote,
-  useSubmitRoadmapIdea,
-} from "./api/useRoadmapMutations";
+import { useSubmitRoadmapIdea } from "./api/useRoadmapMutations";
+import { useRoadmapVoteToggle } from "./useRoadmapVoteToggle";
 import { MembersExplainerModal } from "../homepage/sections/MembersExplainerModal";
 import { NotBuildingCard, PlannedCard } from "./RoadmapCards";
 import styles from "./RoadmapPage.module.css";
@@ -88,54 +85,27 @@ export interface TopIdeasProps {
 function IdeaRow({ idea }: { idea: IdeaItem }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const { showToast } = useToast();
-  const myVotes = useMyRoadmapVotes();
-  const { demoMode, isSignInRequired, vote: castVote } = useRoadmapVote();
-  const [justVoted, setJustVoted] = useState(false);
-  const [isSignInOpen, setIsSignInOpen] = useState(false);
-
-  const voted = justVoted || myVotes.has(idea.id);
-  const voteCount = idea.votes + (demoMode && justVoted ? 1 : 0);
-
-  function vote() {
-    if (voted) return;
-    if (isSignInRequired) {
-      setIsSignInOpen(true);
-      return;
-    }
-    setJustVoted(true);
-    if (demoMode) {
-      showToast(t("marketing:roadmap.topIdeas.toast.voted"), "success");
-      return;
-    }
-    castVote(
-      { targetType: "idea", targetId: idea.id },
-      // Roll back the optimistic "voted" state on failure so the button
-      // re-enables and the member can retry (the global error toast already
-      // fires since this mutation doesn't set meta.silentError).
-      {
-        onSuccess: () =>
-          showToast(t("marketing:roadmap.topIdeas.toast.voted"), "success"),
-        onError: () => setJustVoted(false),
-      },
-    );
-  }
+  const { isVoted, count, toggleVote, isSignInOpen, setIsSignInOpen } =
+    useRoadmapVoteToggle({
+      targetType: "idea",
+      targetId: idea.id,
+      serverVotes: idea.votes,
+    });
 
   return (
     <div className={styles.ideaRow}>
       <div className={styles.ideaText}>{idea.text}</div>
       <div className={styles.ideaVotes}>
-        <RollingNumber value={fmt.number(voteCount)} numericValue={voteCount} />
+        <RollingNumber value={fmt.number(count)} numericValue={count} />
       </div>
       <button
         type="button"
-        className={`${styles.ideaVoteBtn} ${voted ? styles.voted : ""}`}
-        onClick={vote}
-        aria-pressed={voted}
-        disabled={voted}
+        className={`${styles.ideaVoteBtn} ${isVoted ? styles.voted : ""}`}
+        onClick={toggleVote}
+        aria-pressed={isVoted}
       >
         <FiArrowUp aria-hidden />{" "}
-        {voted
+        {isVoted
           ? t("marketing:roadmap.topIdeas.voted")
           : t("marketing:roadmap.topIdeas.vote")}
       </button>

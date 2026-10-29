@@ -12,23 +12,10 @@ import {
  * this file mirrors rather than a source it fetches, and a drift between them
  * is invisible until somebody cannot report what happened to them.
  *
- * That is not hypothetical. `listing_public_question` was missing from
- * `ReportSubjectType` entirely, so its form rendered the REVIEW list, which
- * carries neither `outing` nor `doxxing`, the only two codes the backend's
- * `deriveSeverity` maps to emergency.
+ * Losing `outing` or `doxxing` from a subject's list is the failure to guard
+ * against: they are the only two codes the backend's `deriveSeverity` maps to
+ * emergency.
  */
-
-/** Mirrors `SUBJECT_REASONS[ReportSubjectType.ListingPublicQuestion]`. */
-const BACKEND_QUESTION_REASONS = [
-  "outing",
-  "doxxing",
-  "harassment",
-  "hate_speech",
-  "discrimination",
-  "spam",
-  "off_topic",
-  "other",
-];
 
 /** Mirrors `SUBJECT_REASONS[ReportSubjectType.Community]`. */
 const BACKEND_COMMUNITY_REASONS = [
@@ -53,12 +40,6 @@ const BACKEND_REVIEW_REASONS = [
 ];
 
 describe("SUBJECT_REASONS", () => {
-  it("mirrors the backend catalogue for a public listing question", () => {
-    expect(SUBJECT_REASONS.listing_public_question).toEqual(
-      BACKEND_QUESTION_REASONS,
-    );
-  });
-
   it("mirrors the backend catalogue for a whole community", () => {
     expect(SUBJECT_REASONS.community).toEqual(BACKEND_COMMUNITY_REASONS);
   });
@@ -108,25 +89,12 @@ describe("SUBJECT_REASONS", () => {
     expect(SUBJECT_REASONS.review).toEqual(BACKEND_REVIEW_REASONS);
   });
 
-  // The safety-critical half. A question box on a venue's page is where
-  // somebody gets asked, in public, whether they were at a place or who they
-  // went with. Losing these two sends an outing report to the ordinary queue
-  // as "Something else".
-  it.each(["outing", "doxxing"])(
-    "lets somebody report %s in a public question, so it derives emergency severity",
-    (code) => {
-      expect(SUBJECT_REASONS.listing_public_question).toContain(code);
-    },
-  );
-
-  // A star review is not that surface, and the backend deliberately shapes it
-  // differently. Guards against the two sets being "unified" back together.
-  it("keeps a review's reason set distinct from a question's", () => {
+  // A star review is a different surface from a community or a magazine
+  // comment, and the backend deliberately shapes it differently. Guards
+  // against the sets being "unified" back together.
+  it("keeps a review's reason set free of outing and doxxing", () => {
     expect(SUBJECT_REASONS.review).not.toContain("outing");
     expect(SUBJECT_REASONS.review).not.toContain("doxxing");
-    expect(SUBJECT_REASONS.listing_public_question).not.toContain(
-      "housing_scam",
-    );
   });
 
   // `listing_dispute` and `listing_owner_notify` exist in `ReasonCode` only so
@@ -192,7 +160,6 @@ describe("SUBJECT_REASONS", () => {
       "subprofile",
       "review",
       "magazine_comment",
-      "listing_public_question",
       "event_photo",
       "landlord_recommendation",
       "volunteering",

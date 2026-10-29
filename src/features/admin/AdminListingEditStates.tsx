@@ -1,7 +1,7 @@
 import type { ReactNode, Ref } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiMapPin, FiUserCheck } from "react-icons/fi";
-import { EmptyState, SuccessPanel } from "../../shared/components/ui";
+import { Button, EmptyState, SuccessPanel } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { businessPath, routes } from "../../app/routeMap";
 import type { PendingListing } from "../marketing/listBusiness/listBusiness.data";
@@ -18,7 +18,7 @@ interface NoticeAction {
  *
  * The wrapper carries no visual styling of its own; it exists so
  * `tabIndex={-1}` makes the notice a focus target the page can move focus to
- * when it replaces the wizard, with an accessible name a screen reader
+ * when it replaces the editor, with an accessible name a screen reader
  * announces on that move. The global `:focus-visible` ring applies to it.
  */
 function AdminListingEditNotice({
@@ -70,6 +70,15 @@ export function AdminListingEditSuccess({ saved }: { saved: PendingListing }) {
       steps={steps}
       onClose={() => void navigate(routes.adminListings)}
       closeLabel={t("admin:listingEdit.success.closeCta")}
+      extraActions={
+        // A listing still in review has no public page yet, so the link only
+        // appears once the saved listing is live in the directory.
+        isLive ? (
+          <Button variant="primary" size="lg" to={businessPath(saved.slug)}>
+            {t("admin:listingNew.success.viewLiveCta")}
+          </Button>
+        ) : undefined
+      }
     >
       {t(
         isLive
@@ -82,7 +91,7 @@ export function AdminListingEditSuccess({ saved }: { saved: PendingListing }) {
 }
 
 /**
- * Shown in place of the wizard once somebody owns the listing: from then on
+ * Shown in place of the editor once somebody owns the listing: from then on
  * its owner edits it, and the admin route answers 409. A live listing also
  * offers its public directory page, where an admin can suggest an edit.
  */

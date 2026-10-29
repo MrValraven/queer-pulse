@@ -2675,6 +2675,7 @@ export const marketing: Catalog = {
     "the holiday and special-date hours",
   "listBusiness.editor.history.field.social": "the contact and social links",
   "listBusiness.editor.history.field.photoGallery": "the photos",
+  "listBusiness.editor.history.field.photoFraming": "the photo positions",
   "listBusiness.editor.history.field.coverPhoto": "the cover photo",
   "listBusiness.editor.history.field.rel": "the connection to the business",
   "listBusiness.editor.history.field.ownerName": "the owner's name",
@@ -2721,8 +2722,6 @@ export const marketing: Catalog = {
     "Deleting the owner's listing removes it for good, along with everything attached to it:",
   "listBusiness.deleteFlow.losses.reviews":
     "Its reviews and the replies to them",
-  "listBusiness.deleteFlow.losses.questions":
-    "Its public questions and answers",
   "listBusiness.deleteFlow.losses.enquiries":
     "The business inbox: enquiries and every conversation in it",
   "listBusiness.deleteFlow.losses.coManagers": "Co-managers' access",
@@ -2849,7 +2848,7 @@ export const marketing: Catalog = {
   "listBusiness.coManagers.banner.title": "You help run this listing",
   "listBusiness.coManagers.banner.titleNamed": "You help {name} run {listing}",
   "listBusiness.coManagers.banner.body":
-    "You can change everything about the business: what it says, its hours, photos, services, access answers, and the replies to reviews and questions. The owner's own contact details and profile choices stay private to them, and deleting the listing or changing who can edit it stays with them too.",
+    "You can change everything about the business: what it says, its hours, photos, services, access answers, and the replies to reviews. The owner's own contact details and profile choices stay private to them, and deleting the listing or changing who can edit it stays with them too.",
   "listBusiness.coManagers.roleFieldLabel": "Role shown on the listing",
   "listBusiness.coManagers.roleFieldHelper":
     "The job title printed beside the business on its public page.",
@@ -3721,6 +3720,22 @@ export const marketing: Catalog = {
   "changelog.entries.staff-pdf-page-tool.title": "A PDF page tool for staff",
   "changelog.entries.staff-pdf-page-tool.body":
     "Staff can remove, rotate, reorder, merge and split PDF pages in the browser, and files stay on the device.",
+  "changelog.entries.listing-photo-reposition.title":
+    "Reposition the photos on your listing page",
+  "changelog.entries.listing-photo-reposition.body":
+    "Owners, co-managers and admins can drag and zoom each gallery photo in place, and check it at phone size.",
+  "changelog.entries.listing-public-questions-removed.title":
+    "Public questions on listings are gone",
+  "changelog.entries.listing-public-questions-removed.body":
+    "Listing pages no longer have a public questions section. Use Message this business to write to them directly.",
+  "changelog.entries.calendar-location-is-the-street-address.title":
+    "Calendar entries now use the street address",
+  "changelog.entries.calendar-location-is-the-street-address.body":
+    "People going and hosts get the exact address, so Google, Apple and Outlook can map the event.",
+  "changelog.entries.listing-whats-here-rows.title":
+    "Listing pages group “What's here” into rows",
+  "changelog.entries.listing-whats-here-rows.body":
+    "Each group shows an icon and its name beside its pills, so even a long list stays compact.",
   "changelog.entries.studio-artist-spotlight.title":
     "Meet the Artist of the month and New stars in Studio",
   "changelog.entries.studio-artist-spotlight.body":
@@ -3745,6 +3760,10 @@ export const marketing: Catalog = {
     "Buy music straight from Studio artists",
   "changelog.entries.studio-buy-music.body":
     "You pay the artist directly, they confirm, then you download and can join the Supported by wall.",
+  "changelog.entries.studio-gapless-badge.title":
+    "See when a release plays without gaps",
+  "changelog.entries.studio-gapless-badge.body":
+    "A small icon by the track title explains why crossfade rests between that release's tracks",
   "changelog.entries.studio-shelves-console.title":
     "Curate Studio shelves with the covers up front",
   "changelog.entries.studio-shelves-console.body":
@@ -4134,6 +4153,10 @@ export const marketing: Catalog = {
     "Edit a listing straight from the review queue",
   "changelog.entries.listing-queue-row-edit.body":
     "Admins get an Edit button on every listing nobody owns yet, beside View live.",
+  "changelog.entries.admin-listing-full-editor.title":
+    "Staff edit listings with every field owners have",
+  "changelog.entries.admin-listing-full-editor.body":
+    "The admin listing editor now has the menu, services and shop lists, accessibility answers and dated hours.",
   "changelog.entries.admin-listing-edit-jump-ahead.title":
     "Staff can skip straight to any step when editing a listing",
   "changelog.entries.admin-listing-edit-jump-ahead.body":
@@ -9663,6 +9686,7 @@ export const marketing: Catalog = {
   "roadmap.topIdeas.voted": "Voted",
   "roadmap.topIdeas.vote": "Vote",
   "roadmap.topIdeas.toast.voted": "Vote recorded",
+  "roadmap.topIdeas.toast.unvoted": "Vote removed",
   "roadmap.howWeDecide.title": "How we <em>decide</em>",
   "roadmap.howWeDecide.memberVotes.title": "Member votes",
   "roadmap.howWeDecide.memberVotes.desc":
@@ -10746,64 +10770,6 @@ export const marketing: Catalog = {
   "directory.detail.reportReview.errorBody":
     "Something went wrong on our end. Please try again.",
   "directory.detail.reportReview.retryCta": "Try again",
-  "directory.detail.reportQuestion.title": "Report this question",
-  // A public question and the answer under it are one reportable thing, and
-  // they are often written by two different people. Naming the asker told
-  // somebody reporting the ANSWER that they were reporting the asker's
-  // question, which is both wrong and unsettling to read while deciding to
-  // report something. This names neither of them and covers both halves.
-  "directory.detail.reportQuestion.sub":
-    "Tell us what's wrong with this question or the answer under it. A moderator reviews every report, and they won't be told who filed it.",
-  "directory.detail.questions.title": "Ask the owner, <em>in public</em>",
-  "directory.detail.questions.sub_one": "{count} question, newest first.",
-  "directory.detail.questions.sub_other": "{count} questions, newest first.",
-  "directory.detail.questions.emptySub": "Nobody has asked anything here yet.",
-  "directory.detail.questions.emptyBodyOnline":
-    "Ask the first question. Anything you would want to know before you buy or book: how it reaches you, how long it takes, which ways you can pay.",
-  "directory.detail.questions.emptyBody":
-    "Ask the first question. Anything you would want to know before you go: how to get in, what the room is like, whether the kitchen is still open at ten.",
-  "directory.detail.questions.emptyBodyMobile":
-    "Ask the first question. Anything you would want to know before you join: where you meet, what pace it keeps, what to bring.",
-  "directory.detail.questions.askLabel": "Ask something in public",
-  "directory.detail.questions.askPlaceholder":
-    "What would you want to know before you go?",
-  "directory.detail.questions.askHint":
-    "Everyone reading this listing can see your question and the answer.",
-  "directory.detail.questions.askCta": "Ask",
-  "directory.detail.questions.askToggle": "Ask a question",
-  "directory.detail.questions.askCancel": "Cancel",
-  "directory.detail.questions.asking": "Sending…",
-  "directory.detail.questions.successToast": "Your question is up.",
-  "directory.detail.questions.errorGeneric":
-    "Couldn't send your question. Please try again.",
-  "directory.detail.questions.errorRateLimited":
-    "You've asked as many questions as you can for now. Give the business a chance to answer, then try again later.",
-  "directory.detail.questions.signInPrompt":
-    "Sign in to ask this space a question.",
-  "directory.detail.questions.signInCta": "Sign in",
-  "directory.detail.questions.ownerNote":
-    "This is your listing. Answer any question below and your reply shows up here for everyone.",
-  "directory.detail.questions.awaitingAnswer": "No answer yet.",
-  "directory.detail.questions.answeredByOwner": "{name} answered",
-  "directory.detail.questions.answeredByModerator": "QueerPulse moderator",
-  "directory.detail.questions.moderatorNote":
-    "A QueerPulse moderator wrote this answer. The business has stayed quiet here so far.",
-  "directory.detail.questions.answerCta": "Answer",
-  "directory.detail.questions.editAnswerCta": "Edit answer",
-  "directory.detail.questions.answerPlaceholder":
-    "Answer this question in public…",
-  "directory.detail.questions.answerSave": "Post answer",
-  "directory.detail.questions.answerSaving": "Posting…",
-  "directory.detail.questions.answerCancel": "Cancel",
-  "directory.detail.questions.answerSuccessToast": "Your answer is up.",
-  "directory.detail.questions.answerErrorToast":
-    "Couldn't post your answer. Please try again.",
-  "directory.detail.questions.cardAria": "Question from {name}",
-  "directory.detail.questions.seeAll": "See all questions",
-  "directory.detail.questions.loadMore": "Load more questions",
-  "directory.detail.questions.loadingMore": "Loading…",
-  "directory.detail.questions.loadError":
-    "Couldn't load the rest of the questions. Please try again.",
   "directory.detail.suggestEdit.title": "Suggest an edit",
   "directory.detail.suggestEdit.sub":
     "Spot something off? Tell us what to fix. Only our team and the owner, if the listing has one, see it.",
@@ -11002,6 +10968,57 @@ export const marketing: Catalog = {
   "directory.detail.upcoming.runBy": "Run by {name}",
   "directory.detail.galleryAria": "Photos of {name}",
   "directory.detail.viewPhoto": "View photo",
+  "directory.detail.reposition.open": "Reposition photos",
+  "directory.detail.reposition.toolbarAria": "Photo positions",
+  "directory.detail.reposition.hint":
+    "Drag each photo to move it inside its frame and use its slider to zoom. Visitors see exactly what you see here.",
+  "directory.detail.reposition.viewAria": "Preview at",
+  "directory.detail.reposition.viewDesktop": "Desktop",
+  "directory.detail.reposition.viewPhone": "Phone",
+  "directory.detail.reposition.save": "Save positions",
+  "directory.detail.reposition.saving": "Saving positions",
+  "directory.detail.reposition.cancel": "Cancel",
+  "directory.detail.reposition.saved": "Photo positions saved",
+  "directory.detail.reposition.frameAria": "Photo {index} of {count}: {alt}",
+  "directory.detail.reposition.frameAriaNoAlt": "Photo {index} of {count}",
+  "directory.detail.reposition.frameHint":
+    "Drag to move the photo. Arrow keys move it too, and plus or minus zooms.",
+  "directory.detail.reposition.zoomAria": "Zoom photo {index}",
+  "directory.detail.reposition.zoomValue": "{zoom}x",
+  "directory.detail.reposition.discard.title":
+    "Discard your photo position changes?",
+  "directory.detail.reposition.discard.body":
+    "The photos go back to their last saved positions.",
+  "directory.detail.reposition.discard.confirm": "Discard changes",
+  "directory.detail.reposition.discard.keep": "Keep editing",
+  "directory.detail.reposition.leaveConfirm":
+    "Your new photo positions are unsaved. Leave this page and lose them?",
+  "directory.detail.reposition.error.notFound":
+    "This listing was removed or hidden, so the photo positions were not saved.",
+  "directory.detail.reposition.error.notManager":
+    "You no longer manage this listing, so the photo positions were not saved.",
+  "directory.detail.reposition.error.notAdmin":
+    "Your account no longer has admin access, so the photo positions were not saved.",
+  "directory.detail.reposition.error.notLive":
+    "This listing is paused or off the directory right now, so the photo positions were not saved.",
+  "directory.detail.reposition.error.photoNotInGallery":
+    "One of these photos was removed from the listing in the meantime, so nothing was saved. Reload the page to see the current photos.",
+  "directory.detail.reposition.error.invalid":
+    "The server could not accept a photo reference or the request itself, so the photo positions were not saved. Reload the page and try again.",
+  "directory.detail.reposition.error.restricted":
+    "A moderation restriction is in effect on your account, so the photo positions were not saved. Listings cannot be changed while the restriction lasts.",
+  "directory.detail.reposition.error.signedOut":
+    "Your session ended. Sign in again, then save the positions.",
+  "directory.detail.reposition.error.rateLimited":
+    "Too many saves in a short time. Wait a minute, then save again.",
+  "directory.detail.reposition.error.offline":
+    "You're offline. Your changes are still here, save again once you're connected.",
+  "directory.detail.reposition.error.unreachable":
+    "QueerPulse could not be reached. Your changes are still here, try saving again.",
+  "directory.detail.reposition.error.server":
+    "Our server had a problem saving the positions. Your changes are still here, try again.",
+  "directory.detail.reposition.error.refused":
+    "The server refused this save (error {status}). Your changes are still here.",
   "directory.detail.lightboxClose": "Close",
   "directory.detail.prevPhoto": "Previous photo",
   "directory.detail.nextPhoto": "Next photo",

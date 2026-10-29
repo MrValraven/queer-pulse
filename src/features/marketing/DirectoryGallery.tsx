@@ -1,14 +1,11 @@
 import { useState } from "react";
-import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
-import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type DirectoryPlace, type Tint } from "./directoryPlaces";
-import {
-  GALLERY_HERO_PX,
-  GALLERY_THUMB_PX,
-  galleryShotsOf,
-  type GalleryShot,
-} from "./directoryGalleryShots";
+import { galleryShotsOf, type GalleryShot } from "./directoryGalleryShots";
+import { DirectoryGalleryRepositionable } from "./DirectoryGalleryRepositionable";
 import { DirectoryLightbox } from "./DirectoryLightbox";
+import { DirectoryPhotoGrid } from "./DirectoryPhotoGrid";
+import { resolveShotFraming } from "./photoFramingGeometry";
+import type { ListingPhotoRepositionAccess } from "./useListingPhotoRepositionAccess";
 import styles from "./DirectorySpacePage.module.css";
 
 export type { GalleryShot };
@@ -19,15 +16,25 @@ const GCELL: Record<Tint, string> = {
   plum: styles.gCellPlum!,
 };
 
+/** The published grid is read-only, so a framing change has nowhere to go. */
+const ignoreFramingChange = () => undefined;
+
 /**
  * Directory detail cover. Places with real uploaded photos get a photo hero
- * + thumbnail grid that opens a lightbox on click; places without photos
- * (demo places, or listings the owner hasn't uploaded images for yet) fall
- * back to the original tinted caption blocks. A listing with neither renders
- * no cover at all.
+ * + thumbnail grid, each photo drawn with its saved framing, that opens a
+ * lightbox on click; places without photos (demo places, or listings the
+ * owner hasn't uploaded images for yet) fall back to the original tinted
+ * caption blocks. A listing with neither renders no cover at all. When
+ * `repositionAccess` is set (the listing's owner, co-manager or an admin),
+ * the grid carries the "Reposition photos" control above it.
  */
-export function DirectoryGallery({ place }: { place: DirectoryPlace }) {
-  const { t } = useTranslation();
+export function DirectoryGallery({
+  place,
+  repositionAccess = null,
+}: {
+  place: DirectoryPlace;
+  repositionAccess?: ListingPhotoRepositionAccess | null;
+}) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const shots: GalleryShot[] = galleryShotsOf(place);
@@ -59,61 +66,28 @@ export function DirectoryGallery({ place }: { place: DirectoryPlace }) {
     );
   }
 
-  const [hero, ...rest] = shots;
-  const viewPhotoLabel = t("marketing:directory.detail.viewPhoto");
-
   return (
     <div className={styles.cover}>
       <div className={styles.coverInner}>
-        <div
-          className={[
-            styles.photoGallery,
-            rest.length === 0 && styles.photoGalleryFull,
-          ]
-            .filter(Boolean)
-            .join(" ")}
-          role="group"
-          aria-label={t("marketing:directory.detail.galleryAria", {
-            name: place.name,
-          })}
-        >
-          <button
-            type="button"
-            className={styles.photoHero}
-            onClick={() => setLightboxIndex(0)}
-            aria-label={hero!.alt || viewPhotoLabel}
-          >
-            <img
-              src={resolveAvatarSrc(hero!.url, GALLERY_HERO_PX)}
-              alt={hero!.alt}
-              loading="eager"
-              fetchPriority="high"
-              decoding="async"
-              referrerPolicy="no-referrer"
-            />
-          </button>
-          {rest.length > 0 && (
-            <div className={styles.thumbCol}>
-              {rest.map((shot, index) => (
-                <button
-                  key={shot.url}
-                  type="button"
-                  className={styles.thumb}
-                  onClick={() => setLightboxIndex(index + 1)}
-                  aria-label={shot.alt || viewPhotoLabel}
-                >
-                  <img
-                    src={resolveAvatarSrc(shot.url, GALLERY_THUMB_PX)}
-                    alt={shot.alt}
-                    loading="lazy"
-                    decoding="async"
-                    referrerPolicy="no-referrer"
-                  />
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+        {repositionAccess ? (
+          <DirectoryGalleryRepositionable
+            placeName={place.name}
+            shots={shots}
+            access={repositionAccess}
+            onOpenShot={setLightboxIndex}
+          />
+        ) : (
+          <DirectoryPhotoGrid
+            placeName={place.name}
+            shots={shots}
+            framingFor={resolveShotFraming}
+            isEditing={false}
+            isLocked={false}
+            viewport="desktop"
+            onOpenShot={setLightboxIndex}
+            onFramingChange={ignoreFramingChange}
+          />
+        )}
       </div>
 
       {lightboxIndex !== null && (

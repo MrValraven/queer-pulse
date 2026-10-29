@@ -1,0 +1,106 @@
+.controls {
+  margin-bottom: var(--gap-sm);
+}
+
+.entry {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding: var(--gap-sm);
+  background: var(--wash);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+
+.viewGroup,
+.saveGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+
+/* Save stays on the right even when the preview toggle is hidden. */
+.saveGroup {
+  margin-inline-start: auto;
+}
+
+/* The preview toggle: two ghost buttons of one size joined into a segmented
+   control, so both segments share a height. The pressed segment takes the
+   coral tint; the :not() chain matches the ghost hover rule so the tint
+   survives a hover. */
+.viewGroup {
+  gap: 0;
+}
+
+.segment:first-child {
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+
+.segment:last-child {
+  border-inline-start-width: 0;
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+}
+
+.viewGroup
+  .segment[aria-pressed="true"]:not(:disabled):not([aria-disabled="true"]) {
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
+
+/* A wide screen has room for the hint and every control on one row, so the
+   toolbar keeps the height of the button it replaces. */
+@media (min-width: 1024px) {
+  .toolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: var(--gap-sm);
+  }
+
+  .actions {
+    flex-wrap: nowrap;
+  }
+
+  .errorRow {
+    grid-column: 1 / -1;
+  }
+}
+
+/* A phone screen already shows the phone layout, so the preview toggle has
+   nothing to switch. */
+@media (--md) {
+  .viewGroup {
+    display: none;
+  }
+}
+
+.error {
+  margin: 0;
+  padding-top: var(--gap-xs);
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  font-weight: 600;
+  color: var(--danger-ink);
+}

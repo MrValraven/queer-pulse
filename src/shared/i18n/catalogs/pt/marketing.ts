@@ -2744,6 +2744,7 @@ export const marketing: Catalog = {
     "o horário de feriados e datas especiais",
   "listBusiness.editor.history.field.social": "os contactos e as redes sociais",
   "listBusiness.editor.history.field.photoGallery": "as fotos",
+  "listBusiness.editor.history.field.photoFraming": "as posições das fotos",
   "listBusiness.editor.history.field.coverPhoto": "a foto de capa",
   "listBusiness.editor.history.field.rel": "a ligação ao negócio",
   "listBusiness.editor.history.field.ownerName":
@@ -2791,8 +2792,6 @@ export const marketing: Catalog = {
     "Eliminar o anúncio de outra pessoa remove-o de vez, com tudo o que lhe está associado:",
   "listBusiness.deleteFlow.losses.reviews":
     "As avaliações e as respostas a elas",
-  "listBusiness.deleteFlow.losses.questions":
-    "As perguntas e respostas públicas",
   "listBusiness.deleteFlow.losses.enquiries":
     "A caixa de entrada do negócio: pedidos de contacto e todas as conversas lá dentro",
   "listBusiness.deleteFlow.losses.coManagers": "O acesso dos cogestores",
@@ -2924,7 +2923,7 @@ export const marketing: Catalog = {
   "listBusiness.coManagers.banner.titleNamed":
     "Ajudas {name} a gerir {listing}",
   "listBusiness.coManagers.banner.body":
-    "Podes alterar tudo sobre o negócio: o que diz, os horários, as fotografias, os serviços, as respostas de acessibilidade, e as respostas a avaliações e perguntas. Os dados de contacto e as escolhas de perfil de quem é proprietário ficam privados, e apagar a página ou mudar quem pode editar também fica com essa pessoa.",
+    "Podes alterar tudo sobre o negócio: o que diz, os horários, as fotografias, os serviços, as respostas de acessibilidade, e as respostas a avaliações. Os dados de contacto e as escolhas de perfil de quem é proprietário ficam privados, e apagar a página ou mudar quem pode editar também fica com essa pessoa.",
   "listBusiness.coManagers.roleFieldLabel": "Função mostrada na página",
   "listBusiness.coManagers.roleFieldHelper":
     "O cargo apresentado ao lado do negócio na página pública.",
@@ -3806,6 +3805,22 @@ export const marketing: Catalog = {
     "Uma ferramenta de páginas de PDF para a equipa",
   "changelog.entries.staff-pdf-page-tool.body":
     "A equipa pode remover, rodar, reordenar, juntar e dividir páginas de PDF no navegador, e os ficheiros ficam no dispositivo.",
+  "changelog.entries.listing-photo-reposition.title":
+    "Reposiciona as fotos na página do teu anúncio",
+  "changelog.entries.listing-photo-reposition.body":
+    "Se geres um anúncio, podes arrastar e aproximar cada foto da galeria na própria página e ver como fica no telemóvel.",
+  "changelog.entries.listing-public-questions-removed.title":
+    "As perguntas públicas nos anúncios deixaram de existir",
+  "changelog.entries.listing-public-questions-removed.body":
+    "As páginas dos anúncios já não têm uma secção de perguntas públicas. Usa Enviar mensagem a este negócio para falares diretamente com quem gere.",
+  "changelog.entries.calendar-location-is-the-street-address.title":
+    "As entradas de calendário usam agora a morada",
+  "changelog.entries.calendar-location-is-the-street-address.body":
+    "Quem vai e quem organiza recebe a morada exata, e o Google, a Apple e o Outlook mostram o evento no mapa.",
+  "changelog.entries.listing-whats-here-rows.title":
+    "As páginas dos anúncios agrupam “O que há aqui” em linhas",
+  "changelog.entries.listing-whats-here-rows.body":
+    "Cada grupo mostra um ícone e o nome ao lado das suas etiquetas, e até uma lista longa fica compacta.",
   "changelog.entries.studio-artist-spotlight.title":
     "Conhece as novas secções Artista do mês e Novas estrelas no Studio",
   "changelog.entries.studio-artist-spotlight.body":
@@ -3830,6 +3845,10 @@ export const marketing: Catalog = {
     "Compra música diretamente a artistas do Studio",
   "changelog.entries.studio-buy-music.body":
     "Pagas diretamente à pessoa artista, que confirma, e depois descarregas e podes aparecer no mural Com o apoio de.",
+  "changelog.entries.studio-gapless-badge.title":
+    "Vê quando um lançamento toca sem pausas",
+  "changelog.entries.studio-gapless-badge.body":
+    "Um pequeno ícone junto ao título explica porque é que a transição fica em pausa entre as faixas desse lançamento",
   "changelog.entries.studio-shelves-console.title":
     "Cura as prateleiras do Studio com as capas à frente",
   "changelog.entries.studio-shelves-console.body":
@@ -4222,6 +4241,10 @@ export const marketing: Catalog = {
     "Edita um espaço diretamente na fila de revisão",
   "changelog.entries.listing-queue-row-edit.body":
     "Quem é admin tem um botão Editar em cada espaço que ainda não tem dono, ao lado de Ver página.",
+  "changelog.entries.admin-listing-full-editor.title":
+    "A equipa edita espaços com todos os campos de quem os gere",
+  "changelog.entries.admin-listing-full-editor.body":
+    "A edição de espaços da equipa passa a ter menu, serviços e loja, acessibilidade e horários de dias especiais.",
   "changelog.entries.admin-listing-edit-jump-ahead.title":
     "A equipa salta direto para qualquer passo ao editar um espaço",
   "changelog.entries.admin-listing-edit-jump-ahead.body":
@@ -9790,6 +9813,7 @@ export const marketing: Catalog = {
   "roadmap.topIdeas.voted": "Votado",
   "roadmap.topIdeas.vote": "Votar",
   "roadmap.topIdeas.toast.voted": "Voto registado",
+  "roadmap.topIdeas.toast.unvoted": "Voto removido",
   "roadmap.howWeDecide.title": "Como <em>decidimos</em>",
   "roadmap.howWeDecide.memberVotes.title": "Votos da comunidade",
   "roadmap.howWeDecide.memberVotes.desc":
@@ -10893,64 +10917,6 @@ export const marketing: Catalog = {
   "directory.detail.reportReview.errorBody":
     "Algo correu mal do nosso lado. Por favor, tenta novamente.",
   "directory.detail.reportReview.retryCta": "Tentar novamente",
-  "directory.detail.reportQuestion.title": "Denunciar esta pergunta",
-  "directory.detail.reportQuestion.sub":
-    "Diz-nos o que está errado nesta pergunta ou na resposta por baixo. Um moderador analisa todas as denúncias, e não será dito quem a fez.",
-  "directory.detail.questions.title":
-    "Pergunta a quem gere, <em>em público</em>",
-  "directory.detail.questions.sub_one":
-    "{count} pergunta, da mais recente para a mais antiga.",
-  "directory.detail.questions.sub_other":
-    "{count} perguntas, da mais recente para a mais antiga.",
-  "directory.detail.questions.emptySub":
-    "Ainda ninguém perguntou nada por aqui.",
-  "directory.detail.questions.emptyBodyOnline":
-    "Faz a primeira pergunta. Tudo o que quiseres saber antes de comprar ou marcar: como te chega, quanto tempo demora, como podes pagar.",
-  "directory.detail.questions.emptyBody":
-    "Faz a primeira pergunta. Tudo o que quiseres saber antes de ir: como se entra, como é o espaço, se a cozinha ainda serve às dez.",
-  "directory.detail.questions.emptyBodyMobile":
-    "Faz a primeira pergunta. Tudo o que quiseres saber antes de ires: o ponto de encontro, o ritmo, o que levar.",
-  "directory.detail.questions.askLabel": "Pergunta em público",
-  "directory.detail.questions.askPlaceholder":
-    "O que gostarias de saber antes de ir?",
-  "directory.detail.questions.askHint":
-    "Toda a gente que lê esta ficha vê a tua pergunta e a resposta.",
-  "directory.detail.questions.askCta": "Perguntar",
-  "directory.detail.questions.askToggle": "Faz uma pergunta",
-  "directory.detail.questions.askCancel": "Cancelar",
-  "directory.detail.questions.asking": "A enviar…",
-  "directory.detail.questions.successToast": "A tua pergunta está publicada.",
-  "directory.detail.questions.errorGeneric":
-    "Não foi possível enviar a tua pergunta. Tenta novamente.",
-  "directory.detail.questions.errorRateLimited":
-    "Já fizeste todas as perguntas que podes por agora. Dá tempo a quem gere este espaço para responder e tenta mais tarde.",
-  "directory.detail.questions.signInPrompt":
-    "Inicia sessão para fazer uma pergunta a este espaço.",
-  "directory.detail.questions.signInCta": "Iniciar sessão",
-  "directory.detail.questions.ownerNote":
-    "Esta ficha é tua. Responde a qualquer pergunta aqui em baixo e a tua resposta fica visível para toda a gente.",
-  "directory.detail.questions.awaitingAnswer": "Ainda sem resposta.",
-  "directory.detail.questions.answeredByOwner": "{name} respondeu",
-  "directory.detail.questions.answeredByModerator": "Moderação da QueerPulse",
-  "directory.detail.questions.moderatorNote":
-    "Esta resposta foi escrita por um moderador da QueerPulse. O negócio ainda não respondeu aqui.",
-  "directory.detail.questions.answerCta": "Responder",
-  "directory.detail.questions.editAnswerCta": "Editar resposta",
-  "directory.detail.questions.answerPlaceholder":
-    "Responde a esta pergunta em público…",
-  "directory.detail.questions.answerSave": "Publicar resposta",
-  "directory.detail.questions.answerSaving": "A publicar…",
-  "directory.detail.questions.answerCancel": "Cancelar",
-  "directory.detail.questions.answerSuccessToast":
-    "A tua resposta está publicada.",
-  "directory.detail.questions.answerErrorToast":
-    "Não foi possível publicar a tua resposta. Tenta novamente.",
-  "directory.detail.questions.cardAria": "Pergunta de {name}",
-  "directory.detail.questions.seeAll": "Ver todas as perguntas",
-  "directory.detail.questions.loadMore": "Carregar mais perguntas",
-  "directory.detail.questions.loadingMore": "A carregar…",
-  "directory.detail.questions.loadError":
-    "Não foi possível carregar as restantes perguntas. Tenta novamente.",
   "directory.detail.suggestEdit.title": "Sugerir uma correção",
   "directory.detail.suggestEdit.sub":
     "Reparaste em algo que não bate certo? Diz-nos o que corrigir. Só a nossa equipa e quem gere o anúncio, se houver, o veem.",
@@ -11145,6 +11111,57 @@ export const marketing: Catalog = {
   "directory.detail.upcoming.runBy": "Dinamizado por {name}",
   "directory.detail.galleryAria": "Fotos de {name}",
   "directory.detail.viewPhoto": "Ver foto",
+  "directory.detail.reposition.open": "Reposicionar fotos",
+  "directory.detail.reposition.toolbarAria": "Posições das fotos",
+  "directory.detail.reposition.hint":
+    "Arrasta cada foto para a mover dentro da moldura e usa o controlo para aproximar. Quem visita vê exatamente o que vês aqui.",
+  "directory.detail.reposition.viewAria": "Pré-visualizar em",
+  "directory.detail.reposition.viewDesktop": "Computador",
+  "directory.detail.reposition.viewPhone": "Telemóvel",
+  "directory.detail.reposition.save": "Guardar posições",
+  "directory.detail.reposition.saving": "A guardar posições",
+  "directory.detail.reposition.cancel": "Cancelar",
+  "directory.detail.reposition.saved": "Posições das fotos guardadas",
+  "directory.detail.reposition.frameAria": "Foto {index} de {count}: {alt}",
+  "directory.detail.reposition.frameAriaNoAlt": "Foto {index} de {count}",
+  "directory.detail.reposition.frameHint":
+    "Arrasta para mover a foto. As setas também a movem, e mais ou menos aproxima.",
+  "directory.detail.reposition.zoomAria": "Aproximar a foto {index}",
+  "directory.detail.reposition.zoomValue": "{zoom}x",
+  "directory.detail.reposition.discard.title":
+    "Descartar as alterações às posições das fotos?",
+  "directory.detail.reposition.discard.body":
+    "As fotos voltam às últimas posições guardadas.",
+  "directory.detail.reposition.discard.confirm": "Descartar alterações",
+  "directory.detail.reposition.discard.keep": "Continuar a editar",
+  "directory.detail.reposition.leaveConfirm":
+    "As novas posições das fotos ainda não foram guardadas. Sair desta página e perdê-las?",
+  "directory.detail.reposition.error.notFound":
+    "Este anúncio foi removido ou ocultado, por isso as posições das fotos não foram guardadas.",
+  "directory.detail.reposition.error.notManager":
+    "Já não geres este anúncio, por isso as posições das fotos não foram guardadas.",
+  "directory.detail.reposition.error.notAdmin":
+    "A tua conta já não tem acesso de administração, por isso as posições das fotos não foram guardadas.",
+  "directory.detail.reposition.error.notLive":
+    "Este anúncio está em pausa ou fora do diretório neste momento, por isso as posições das fotos não foram guardadas.",
+  "directory.detail.reposition.error.photoNotInGallery":
+    "Uma destas fotos foi entretanto removida do anúncio, por isso nada foi guardado. Recarrega a página para veres as fotos atuais.",
+  "directory.detail.reposition.error.invalid":
+    "O servidor não conseguiu aceitar uma referência de foto ou o próprio pedido, por isso as posições das fotos não foram guardadas. Recarrega a página e tenta outra vez.",
+  "directory.detail.reposition.error.restricted":
+    "Está em vigor uma restrição de moderação na tua conta, por isso as posições das fotos não foram guardadas. Não podes alterar anúncios enquanto a restrição durar.",
+  "directory.detail.reposition.error.signedOut":
+    "A tua sessão terminou. Inicia sessão outra vez e depois guarda as posições.",
+  "directory.detail.reposition.error.rateLimited":
+    "Demasiadas gravações em pouco tempo. Espera um minuto e guarda outra vez.",
+  "directory.detail.reposition.error.offline":
+    "Estás sem ligação. As tuas alterações continuam aqui, guarda outra vez quando a ligação voltar.",
+  "directory.detail.reposition.error.unreachable":
+    "Não foi possível chegar ao QueerPulse. As tuas alterações continuam aqui, tenta guardar outra vez.",
+  "directory.detail.reposition.error.server":
+    "O nosso servidor teve um problema ao guardar as posições. As tuas alterações continuam aqui, tenta outra vez.",
+  "directory.detail.reposition.error.refused":
+    "O servidor recusou esta gravação (erro {status}). As tuas alterações continuam aqui.",
   "directory.detail.lightboxClose": "Fechar",
   "directory.detail.prevPhoto": "Foto anterior",
   "directory.detail.nextPhoto": "Foto seguinte",

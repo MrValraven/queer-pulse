@@ -1,5 +1,9 @@
 import type { Formatters } from "../../../shared/i18n/format";
-import type { DirectoryPlace, Tint } from "../directoryPlaces";
+import type {
+  DirectoryGalleryPhoto,
+  DirectoryPlace,
+  Tint,
+} from "../directoryPlaces";
 import { toListingTeamMemberViews } from "../listBusiness/api/listingTeam.adapters";
 import {
   initials,
@@ -49,7 +53,30 @@ import type {
   CoverPhotoView,
   DirectoryCardDTO,
   DirectoryDetailDTO,
+  ListingGalleryPhotoView,
 } from "./directory.api";
+
+/**
+ * The detail page's gallery photos from the wire view: entries without an
+ * image are dropped, and `framing`/`crop` are carried only when present so
+ * a plain photo has no `undefined` keys.
+ */
+export function galleryPhotosFromView(
+  views: ListingGalleryPhotoView[],
+): DirectoryGalleryPhoto[] {
+  return views.flatMap((view) =>
+    view.image
+      ? [
+          {
+            url: view.image,
+            alt: view.alt,
+            ...(view.framing ? { framing: view.framing } : {}),
+            ...(view.crop ? { crop: view.crop } : {}),
+          },
+        ]
+      : [],
+  );
+}
 
 /**
  * Spread the card DTO's `coverPhoto` into the `photos`/`alt`/`photoFocus`
@@ -347,6 +374,11 @@ export function detailDtoToPlace(
     address: hasNoPublicLocation(dto) ? "" : dto.address,
     photos: dto.photos,
     alt: dto.alt,
+    // Absent on a payload from before the reposition work, so the key stays
+    // out and the gallery reads the legacy slots above.
+    ...(dto.photoGallery
+      ? { galleryPhotos: galleryPhotosFromView(dto.photoGallery) }
+      : {}),
     hours: dto.hours ? normalizeHours(dto.hours) : dto.hours,
     // Every field below is optional on the wire: a payload predating the
     // operating-state work simply has none of them, and the page then reads
@@ -357,9 +389,6 @@ export function detailDtoToPlace(
     detailsConfirmedAt: dto.detailsConfirmedAt ?? null,
     savedCount: dto.savedCount,
     reviews: dto.reviews,
-    // Optional on the wire (a payload predating the public-questions work has
-    // none): an absent block reads as "nobody has asked anything yet".
-    questions: dto.questions ?? [],
     team: toListingTeamMemberViews(dto.team),
     upcoming: dto.upcoming.map((event) => {
       const startAt = new Date(event.startAt);

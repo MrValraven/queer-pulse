@@ -26,10 +26,11 @@
   min-height: 64px;
   resize: vertical;
 }
+
 .descriptionField:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
+  border-color: var(--focus-field-border);
+  outline: none;
+  box-shadow: var(--focus-field-glow);
 }
 .descriptionCounter {
   display: block;
@@ -153,4 +154,3 @@
   color: var(--ink-60);
   font-size: var(--text-14);
 }
-

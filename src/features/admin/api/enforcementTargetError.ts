@@ -13,7 +13,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
  *  - `no_account`: nobody is behind the reported thing at all. An unclaimed
  *    directory listing, an author who has erased their account, or content
  *    that is already gone.
- *  - `ambiguous_authors`: the report covers a question and the answer posted
+ *  - `ambiguous_authors`: the report covers a review and the reply posted
  *    under it, written by two different members, and it does not record which
  *    of the two was reported. Acting could sanction the wrong person.
  *  - `house_account`: it traces back to the house account, which is never a

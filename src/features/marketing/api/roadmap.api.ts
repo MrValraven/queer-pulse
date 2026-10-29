@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "../../../shared/api/client";
+import { apiDelete, apiGet, apiPost } from "../../../shared/api/client";
 
 // ── Backend DTOs ────────────────────────────────────────────────────────────
 // Shapes the NestJS `roadmap` domain returns (GET /roadmap). Admin-controlled
@@ -102,6 +102,16 @@ export const castRoadmapVote = (
     targetType,
     targetId,
   });
+
+/** Takes a member's vote back. Idempotent on the server: removing a vote that
+ *  is already gone still answers 200 with the current count. */
+export const removeRoadmapVote = (
+  targetType: "item" | "idea",
+  targetId: string,
+) =>
+  apiDelete<{ targetId: string; votes: number; voted: false }>(
+    `/roadmap/vote/${targetType}/${encodeURIComponent(targetId)}`,
+  );
 
 export const submitRoadmapIdea = (text: string) =>
   apiPost<{ status: "pending" }>("/roadmap/ideas", { text });

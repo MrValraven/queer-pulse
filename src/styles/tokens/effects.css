@@ -335,15 +335,18 @@
   --ring-accent: 0 0 0 3px rgba(var(--accent-rgb), 0.18);
   --ring-accent-strong: 0 0 0 3px rgba(var(--accent-rgb), 0.35);
   --ring-accent-soft: 0 0 0 4px rgba(var(--accent-rgb), 0.12);
-  /* The same ring at zero alpha: the END of a flash, so a "look here" ring can
-     fade out instead of being switched off between two frames. Only ever the
-     100% stop of a keyframe whose earlier stop is --ring-accent-strong. */
+  /* The same ring at zero alpha, so an accent ring can fade out smoothly at
+     the end of its animation. Two uses: the 100% stop of a ring-flash
+     keyframe whose earlier stop is --ring-accent-strong, and the resting
+     box-shadow of a gallery photo frame (DirectorySpacePage.module.css), which
+     transitions to --ring-accent-edit in reposition mode and back. */
   --ring-accent-clear: 0 0 0 3px rgba(var(--accent-rgb), 0);
   --ring-jade: 0 0 0 3px rgba(var(--jade-rgb), 0.2);
   --ring-danger: 0 0 0 3px rgba(var(--danger-rgb), 0.2);
   --ring-plum: 0 0 0 3px rgba(var(--plum-rgb), 0.16);
   --ring-plum-soft: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
   --ring-paper: 0 0 0 2px var(--paper); /* punch-out ring: avatar over a card */
+  --ring-accent-edit: 0 0 0 2px var(--accent); /* a gallery photo open for repositioning */
   --ring-cream: 0 0 0 3px rgba(var(--cream-rgb), 0.95);
   /* The same cream halo drawn inside the box, for a control whose ring must
      stay within its own bounds (pair with a negative outline offset). */
@@ -370,6 +373,17 @@
      rationale and docs/production-readiness/contrast-audit.md §8. */
   --focus-ring: 3px solid var(--accent-deep);
   --focus-ring-offset: 3px;
+
+  /* Text fields (text-type inputs, textarea) mark focus with their own border
+     instead of the ring above: the 1px border turns --accent-text and a faint
+     coral glow sits outside it. The border alone carries the indicator, since
+     --accent-text is 5.94:1 on paper and 5.38:1 on cream in light, and 6.22:1 on
+     dark paper (lifted to plain --accent there; --accent-deep would be a
+     marginal 3.05:1). The glow is decoration. The theme blocks near the end of
+     this file restate --focus-field-border so a theme set on a subtree still
+     flips it. See styles/base.css and contrast-audit.md §8. */
+  --focus-field-border: var(--accent-text);
+  --focus-field-glow: 0 0 0 3px rgba(var(--accent-rgb), 0.16);
 
   /* ── Scrim ──
      There was no scrim token, so 41 stylesheets hand-rolled a modal overlay
@@ -411,6 +425,7 @@
    Plum barely registers on the dark ground, so dark mode layers black. */
 :root,
 [data-theme="light"] {
+  --focus-field-border: var(--accent-text);
   --shadow-soft:
     0 1px 2px rgba(var(--plum-rgb), 0.02),
     0 4px 14px rgba(var(--plum-rgb), 0.035),
@@ -422,6 +437,7 @@
 }
 
 [data-theme="dark"] {
+  --focus-field-border: var(--accent-text);
   --shadow-soft:
     0 1px 2px rgba(0, 0, 0, 0.18), 0 4px 14px rgba(0, 0, 0, 0.24),
     0 12px 40px -4px rgba(0, 0, 0, 0.34);
