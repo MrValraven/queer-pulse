@@ -17,6 +17,9 @@ type ToastShiftOptions = {
    *  shift also clears, looked up inside the measured element's offset
    *  parent (Now playing's tab row on wide screens). */
   lowerEdgeSelector?: string | null;
+  /** An "end" shift also lowers the stack until its top lines up with the
+   *  element's top edge (the notifications popover under the top bar). */
+  isTopAligned?: boolean;
 };
 
 /** Every open surface's shift; the stack moves by the largest on each axis,
@@ -82,7 +85,8 @@ function findLowerEdgeElement(
 /** How far the stack has to move to clear `element`. "top" pushes it below
  *  the element's bottom edge (Now playing's head), or below `lowerEdge`
  *  when that ends lower (the tab row on wide screens); "end" pushes it past
- *  the element's start edge (the queue side panel, at the inline end).
+ *  the element's start edge (the queue side panel, at the inline end), and
+ *  with `isTopAligned` also lowers it to the element's top edge.
  *  Offsets measure where each surface comes to rest: both slide in with a
  *  transform, which the offsets leave out. Now playing's head sits at the
  *  top of its frame, and the panel is fixed to the viewport. */
@@ -90,6 +94,7 @@ function measureShift(
   element: HTMLElement,
   edge: "top" | "end",
   lowerEdge: HTMLElement | null,
+  isTopAligned: boolean,
 ): ToastShift {
   const isRightToLeft = window.getComputedStyle(element).direction === "rtl";
   const resting = readRestingEdges(isRightToLeft);
@@ -111,7 +116,7 @@ function measureShift(
     ? element.offsetLeft + element.offsetWidth
     : window.innerWidth - element.offsetLeft;
   return {
-    top: 0,
+    top: isTopAligned ? Math.max(0, element.offsetTop - resting.top) : 0,
     end: Math.max(0, distanceFromEnd + TOAST_CLEARANCE_PX - resting.end),
   };
 }
@@ -128,7 +133,11 @@ export function useStudioToastShift(
   isActive: boolean,
   options: ToastShiftOptions = {},
 ) {
-  const { isCovering = false, lowerEdgeSelector = null } = options;
+  const {
+    isCovering = false,
+    lowerEdgeSelector = null,
+    isTopAligned = false,
+  } = options;
   useLayoutEffect(() => {
     const element = elementRef.current;
     if (!isActive || !element) return;
@@ -136,7 +145,7 @@ export function useStudioToastShift(
     const lowerEdge = findLowerEdgeElement(element, lowerEdgeSelector);
     const update = () => {
       activeShifts.set(shiftId, {
-        shift: measureShift(element, edge, lowerEdge),
+        shift: measureShift(element, edge, lowerEdge, isTopAligned),
         isCovering,
       });
       applyShifts();
@@ -153,5 +162,5 @@ export function useStudioToastShift(
       activeShifts.delete(shiftId);
       applyShifts();
     };
-  }, [elementRef, edge, isActive, isCovering, lowerEdgeSelector]);
+  }, [elementRef, edge, isActive, isCovering, lowerEdgeSelector, isTopAligned]);
 }

@@ -3729,6 +3729,10 @@ export const marketing: Catalog = {
     "Now playing stays still sideways",
   "changelog.entries.now-playing-no-side-scroll.body":
     "The More actions label in the Studio side panel no longer lets the column slide left and right.",
+  "changelog.entries.notifications-show-their-text.title":
+    "Notifications always show their text",
+  "changelog.entries.notifications-show-their-text.body":
+    "Rows in the bell and on the notifications page no longer open blank while your language is still loading.",
   "changelog.entries.bandcamp-artist-links.title":
     "Bandcamp links open the artist page",
   "changelog.entries.bandcamp-artist-links.body":

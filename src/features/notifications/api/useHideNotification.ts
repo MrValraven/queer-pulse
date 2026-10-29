@@ -20,21 +20,38 @@ interface HideNotificationSnapshot {
   wasUnread: boolean;
 }
 
-/** The cached feed with one row flagged hidden from the bell and read. */
+/** Whether the cached page holds the row and it is still unread. A demo page
+ *  holds no rows (it builds them at render), so it reads the unread ids of the
+ *  mock minus the rows already hidden this session. */
+function pageHasUnreadRow(
+  page: NotificationsPageVM,
+  id: NotificationId,
+): boolean {
+  if (page.source === "demo") {
+    return page.unreadIds.includes(id) && !demoHiddenFromBellIds.has(id);
+  }
+  return page.items.some((dto) => dto.id === id && !dto.read);
+}
+
+/** The cached feed with one row flagged hidden from the bell and read. A live
+ *  page flags the raw DTO (`isHiddenFromBell`, `read`). A demo page gets a new
+ *  identity, so the render-time rebuild runs again and applies the id that
+ *  `onMutate` adds to `demoHiddenFromBellIds`. */
 function withRowHiddenFromBell(
   feed: CachedNotificationsFeed,
   id: NotificationId,
 ): CachedNotificationsFeed {
   return {
     ...feed,
-    pages: feed.pages.map((page) => ({
-      ...page,
-      items: page.items.map((notification) =>
-        notification.id === id
-          ? { ...notification, isHiddenFromBell: true, unread: false }
-          : notification,
-      ),
-    })),
+    pages: feed.pages.map((page): NotificationsPageVM => {
+      if (page.source === "demo") return { ...page };
+      return {
+        ...page,
+        items: page.items.map((dto) =>
+          dto.id === id ? { ...dto, isHiddenFromBell: true, read: true } : dto,
+        ),
+      };
+    }),
   };
 }
 
@@ -44,11 +61,12 @@ function withRowHiddenFromBell(
  * demo mode makes no call.
  *
  * The bell's panel unmounts every time it closes, so the hide lives in the
- * react-query cache, where reopening the bell finds it. `onMutate` patches the
- * row in every cached feed (`["notifications", demoMode]`, any `unreadOnly`
- * and language) and takes one off the bell badge when the row was unread, so
- * the row leaves the bell and the count drops at once. A failed write restores
- * both from the snapshot.
+ * react-query cache, where reopening the bell finds it. The cache holds raw
+ * `NotificationDTO` pages (translated at render by `useNotifications`), so
+ * `onMutate` flags the DTO `isHiddenFromBell` and `read` in every cached feed
+ * (`["notifications", demoMode]`, any `unreadOnly` and language) and takes one
+ * off the bell badge when the row was unread, so the row leaves the bell and
+ * the count drops at once. A failed write restores both from the snapshot.
  *
  * Live mode then invalidates `["notifications"]` on settle, like the read and
  * delete mutations beside it: a FAILED write must refetch too, so the server's
@@ -86,11 +104,7 @@ export function useHideNotification() {
       const previousUnreadCount =
         queryClient.getQueryData<number>(unreadCountQueryKey);
       const wasUnread = previousFeeds.some(([, feed]) =>
-        feed?.pages.some((page) =>
-          page.items.some(
-            (notification) => notification.id === id && notification.unread,
-          ),
-        ),
+        feed?.pages.some((page) => pageHasUnreadRow(page, id)),
       );
 
       queryClient.setQueriesData<CachedNotificationsFeed>(

@@ -14,6 +14,7 @@ import { useOutsideDismiss } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { useStudioToastShift } from "../studio/player/ui/useStudioToastShift";
 import { useUnreadCount } from "./api/useUnreadCount";
 import { NotificationsListSkeleton } from "./NotificationsSkeleton";
 import {
@@ -33,6 +34,39 @@ const NotificationsPopoverPanel = lazy(() =>
 /** An open panel remembers the history entry it was opened on. */
 interface OpenPanelState extends AnchoredPanelPosition {
   locationKey: string;
+}
+
+// The panel's and the toast stack's widths and gutters, as
+// NotificationsPopover.module.css and Toast.module.css set them.
+const PANEL_WIDTH_PX = 400;
+const PANEL_VIEWPORT_INSET_PX = 24;
+const TOAST_STACK_WIDTH_PX = 372;
+const TOAST_STACK_VIEWPORT_INSET_PX = 40;
+const TOAST_EDGE_PX = 20;
+/** Air useStudioToastShift keeps between a shifted stack and the panel. */
+const TOAST_CLEARANCE_PX = 8;
+
+/** Whether the toast stack steps around the open panel: the panel hangs
+ *  from the stack's own side of the screen (the top bar's bell), and the
+ *  room beside it holds the whole stack with its gutter, so the stack stays
+ *  on screen. A panel grown from the far side (the rail's bell) leaves the
+ *  stack where it rests. */
+function isToastStackStepping(panel: AnchoredPanelPosition) {
+  const isRightToLeft =
+    window.getComputedStyle(document.body).direction === "rtl";
+  const endOffset = isRightToLeft ? panel.left : panel.right;
+  if (endOffset === undefined) return false;
+  const viewportWidth = window.innerWidth;
+  const panelWidth = Math.min(
+    PANEL_WIDTH_PX,
+    viewportWidth - PANEL_VIEWPORT_INSET_PX,
+  );
+  const stackWidth = Math.min(
+    TOAST_STACK_WIDTH_PX,
+    viewportWidth - TOAST_STACK_VIEWPORT_INSET_PX,
+  );
+  const roomBesidePanel = viewportWidth - endOffset - panelWidth;
+  return roomBesidePanel >= stackWidth + TOAST_CLEARANCE_PX + TOAST_EDGE_PX;
 }
 
 /**
@@ -90,6 +124,17 @@ export function NotificationsBellMenu({
     },
     additionalInsideRef: panelRef,
   });
+
+  // A toast that lands while the panel is open moves off its header, its top
+  // level with the panel's top when the panel hangs down from the bell. The
+  // panel mounts in the same commit that opens it, so the shift measures it
+  // on that first render; every reposition renders again and re-checks room.
+  useStudioToastShift(
+    panelRef,
+    "end",
+    isOpen && panel !== null && isToastStackStepping(panel),
+    { isTopAligned: panel?.top !== undefined },
+  );
 
   useEffect(() => {
     if (!isOpen) return;

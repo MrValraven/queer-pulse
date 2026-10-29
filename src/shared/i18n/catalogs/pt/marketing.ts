@@ -3814,6 +3814,10 @@ export const marketing: Catalog = {
     "A coluna A tocar agora já não desliza para o lado",
   "changelog.entries.now-playing-no-side-scroll.body":
     "A etiqueta Mais ações no painel lateral do Studio deixou de fazer a coluna deslizar para os lados.",
+  "changelog.entries.notifications-show-their-text.title":
+    "As notificações mostram sempre o texto",
+  "changelog.entries.notifications-show-their-text.body":
+    "As linhas do sino e da página de notificações já não aparecem em branco enquanto o teu idioma ainda está a carregar.",
   "changelog.entries.bandcamp-artist-links.title":
     "Os links do Bandcamp abrem a página da pessoa artista",
   "changelog.entries.bandcamp-artist-links.body":

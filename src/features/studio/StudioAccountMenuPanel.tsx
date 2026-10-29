@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiArrowLeft, FiUser, FiLogOut } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
-import { Avatar } from "../../shared/components/ui";
-import { useAccountIdentity } from "../../shared/components/layout/useAccountIdentity";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioArtistRefView } from "./api/studio.adapters";
 import { useStudioMenuShouldReplace } from "./studioAccountMenuNavigation";
@@ -23,10 +21,8 @@ import {
   StudioAccountMenuHelp,
 } from "./StudioAccountMenuDisclosures";
 import { StudioAccountMenuGroup } from "./StudioAccountMenuGroups";
-import {
-  StudioAccountMenuGiving,
-  StudioThemeRow,
-} from "./StudioAccountMenuRows";
+import { StudioAccountMenuHeader } from "./StudioAccountMenuHeader";
+import { StudioThemeRow } from "./StudioAccountMenuRows";
 import { useStudioMenuItemFilter } from "./useStudioMenuItemFilter";
 import styles from "./StudioAccountMenu.module.css";
 
@@ -60,7 +56,6 @@ export function StudioAccountMenuPanel({
   publicPageHref?: string;
 }) {
   const { t } = useTranslation();
-  const identity = useAccountIdentity();
   const isShowcase = useStudioShowcase();
   const { isItemVisible } = useStudioMenuItemFilter();
   const shouldReplace = useStudioMenuShouldReplace();
@@ -76,23 +71,7 @@ export function StudioAccountMenuPanel({
               .join(" ")
       }
     >
-      <div className={styles.header}>
-        <Avatar
-          initials={identity.initials}
-          src={identity.photo}
-          size={36}
-          alt=""
-        />
-        <div className={styles.headerText}>
-          <div className={styles.headerName}>{identity.name}</div>
-          {persona && (
-            <div className={styles.headerMeta}>
-              {t("studio:creator.avatarLabel", { name: persona.name })}
-            </div>
-          )}
-          {isShowcase && <StudioAccountMenuGiving />}
-        </div>
-      </div>
+      <StudioAccountMenuHeader persona={persona} onNavigate={onNavigate} />
 
       <div className={styles.scroll}>
         {isSheet && (

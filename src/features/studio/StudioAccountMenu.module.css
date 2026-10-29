@@ -86,15 +86,36 @@
   pointer-events: none;
 }
 
-/* Top aligned: the avatar stays level with the name while the giving note
-   runs on below it. */
 .header {
   flex-shrink: 0;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
   padding: 12px 14px;
   border-bottom: 1px solid rgba(var(--studio-ink-rgb), 0.1);
+}
+/* The avatar, name and persona line as one link to the member's profile. The
+   negative margin lets its hover wash reach past the text while the avatar
+   keeps its place. */
+.headerIdentity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  margin: -6px;
+  padding: 6px;
+  border-radius: var(--radius-10);
+  color: inherit;
+  text-decoration: none;
+  transition: background var(--dur, 0.18s) var(--ease, ease);
+}
+@media (hover: hover) {
+  .headerIdentity:hover {
+    background: rgba(var(--studio-ink-rgb), 0.08);
+  }
+}
+.headerIdentity:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  background: rgba(var(--studio-ink-rgb), 0.08);
 }
 .headerText {
   flex: 1;
@@ -117,9 +138,10 @@
   color: var(--studio-text-muted);
 }
 
-/* The showcase member's giving line under their name, small and muted. */
+/* The showcase member's giving line under their name, small and muted,
+   level with the name's left edge (36px avatar plus the 10px gap). */
 .headerGiving {
-  margin: 4px 0 0;
+  margin: 4px 0 0 46px;
   font-family: var(--serif);
   font-style: italic;
   font-size: var(--text-12);

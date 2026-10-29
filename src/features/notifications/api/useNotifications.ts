@@ -1,8 +1,13 @@
+import { useMemo } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { useFormat } from "../../../shared/i18n/format";
-import { getNotificationsPage } from "./notifications.api";
+import { useFormat, type Formatters } from "../../../shared/i18n/format";
+import type { TFunction } from "../../../shared/i18n/types";
+import {
+  getNotificationsPage,
+  type NotificationDTO,
+} from "./notifications.api";
 import { notificationDtoToView } from "./notifications.adapters";
 import { demoHiddenFromBellIds } from "./demoHiddenFromBellIds";
 import type { Notification } from "../notifications.types";
@@ -23,13 +28,60 @@ export interface NotificationsResult {
   refetch: () => void;
 }
 
-/** One page of the feed as cached under `["notifications", demoMode,
- *  unreadOnly, language]`. Exported so `useHideNotification` can patch a row
- *  inside the cached pages. */
-export interface NotificationsPageVM {
-  items: Notification[];
+/** One live page of the feed as cached under `["notifications", demoMode,
+ *  unreadOnly, language]`: the rows exactly as the API served them, so the
+ *  cache holds no translated text. Exported so `useHideNotification` can patch
+ *  a row inside the cached pages. */
+export interface LiveNotificationsPage {
+  source: "live";
+  items: NotificationDTO[];
   total: number;
   page: number;
+}
+
+/** The demo feed as cached: the mock's builder, run at render against the
+ *  current `t`. `unreadIds` lets `useHideNotification` tell whether a hidden
+ *  row was unread without building the rows. */
+export interface DemoNotificationsPage {
+  source: "demo";
+  buildNotifications: (t: TFunction, fmt: Formatters) => Notification[];
+  unreadIds: readonly Notification["id"][];
+  total: number;
+  page: number;
+}
+
+export type NotificationsPageVM = LiveNotificationsPage | DemoNotificationsPage;
+
+/** One cached page as view rows, translated with the `t` and `fmt` current at
+ *  render. */
+function notificationsPageToViews(
+  page: NotificationsPageVM,
+  t: TFunction,
+  fmt: Formatters,
+  unreadOnly: boolean,
+): Notification[] {
+  if (page.source === "demo") {
+    // A row hidden from the bell this session stays hidden (and read) across
+    // every rebuild of the mock. See `demoHiddenFromBellIds`.
+    const rows = page
+      .buildNotifications(t, fmt)
+      .map((notification) =>
+        demoHiddenFromBellIds.has(notification.id)
+          ? { ...notification, isHiddenFromBell: true, unread: false }
+          : notification,
+      );
+    return unreadOnly
+      ? rows.filter((notification) => notification.unread)
+      : rows;
+  }
+  // `otherActorCount` is carried across here. `notificationDtoToView` owns the
+  // text/actor/icon mapping and is deliberately left alone: a bundled row
+  // differs from an ordinary one only by this count, and the row component is
+  // what renders it.
+  return page.items.map((dto) => ({
+    ...notificationDtoToView(dto, t, fmt),
+    otherActorCount: dto.otherActorCount ?? 0,
+  }));
 }
 
 /**
@@ -40,9 +92,12 @@ export interface NotificationsPageVM {
  * server `total`, adapting each row's text from `type` + `payload` via i18n.
  * `unreadOnly` filters to unread notifications on both paths.
  *
- * `language` is part of the queryKey because the adapted rows carry translated
- * text — switching language must re-render the feed in the new language rather
- * than serve a stale English cache entry.
+ * The cache holds language-neutral data (the raw DTO pages, or the demo
+ * builder) and the rows are translated at render. A lazy catalog namespace
+ * that arrives after the first fetch gives `t` a new identity, which
+ * re-translates the cached rows without a refetch. Calling `t` inside the
+ * `queryFn` would bake the empty string of a pending namespace into the cache.
+ * `language` stays in the queryKey so each language keeps its own cache entry.
  */
 export function useNotifications(unreadOnly = false): NotificationsResult {
   const { demoMode } = useDemoMode();
@@ -52,47 +107,51 @@ export function useNotifications(unreadOnly = false): NotificationsResult {
   const query = useInfiniteQuery<NotificationsPageVM>({
     queryKey: ["notifications", demoMode, unreadOnly, language],
     initialPageParam: 1,
-    queryFn: async ({ pageParam }) => {
+    queryFn: async ({ pageParam }): Promise<NotificationsPageVM> => {
       if (demoMode) {
         // Code-split: the demo mock is only pulled into the bundle in demo mode.
-        const { buildNotifications } =
+        const { buildNotifications, DEMO_UNREAD_IDS } =
           await import("../notificationsList.data");
-        // A row hidden from the bell this session stays hidden (and read)
-        // across this rebuild of the mock. See `demoHiddenFromBellIds`.
-        const list = buildNotifications(t, fmt).map((notification) =>
-          demoHiddenFromBellIds.has(notification.id)
-            ? { ...notification, isHiddenFromBell: true, unread: false }
-            : notification,
-        );
-        const items = unreadOnly ? list.filter((n) => n.unread) : list;
-        return { items, total: items.length, page: 1 };
+        return {
+          source: "demo",
+          buildNotifications,
+          unreadIds: DEMO_UNREAD_IDS,
+          total: DEMO_UNREAD_IDS.length,
+          page: 1,
+        };
       }
       const res = await getNotificationsPage(unreadOnly, pageParam as number);
-      // New-DM alerts are deliberately excluded from the notifications centre —
-      // they surface only via the message-icon unread badge and push. The live
+      // New-DM alerts are deliberately excluded from the notifications centre.
+      // They surface only via the message-icon unread badge and push. The live
       // backend already never writes a `new_message` row, so this is a
       // belt-and-braces guard against a future regression re-introducing one.
-      const items = res.items
-        .filter((dto) => dto.type !== "new_message")
-        // `otherActorCount` is carried across here rather than inside
-        // `notificationDtoToView`, which owns the text/actor/icon mapping and
-        // is deliberately left alone: a bundled row differs from an ordinary
-        // one only by this count, and the row component is what renders it.
-        .map((dto) => ({
-          ...notificationDtoToView(dto, t, fmt),
-          otherActorCount: dto.otherActorCount ?? 0,
-        }));
-      return { items, total: res.total, page: res.page };
+      // Filtering here keeps `getNextPageParam`'s loaded count in step with
+      // the rows shown.
+      const items = res.items.filter((dto) => dto.type !== "new_message");
+      return { source: "live", items, total: res.total, page: res.page };
     },
     getNextPageParam: (last, all) => {
-      const loaded = all.reduce((count, page) => count + page.items.length, 0);
+      // The demo serves one synthetic page.
+      if (last.source === "demo") return undefined;
+      const loaded = all.reduce(
+        (count, page) =>
+          count + (page.source === "live" ? page.items.length : 0),
+        0,
+      );
       return loaded < last.total ? last.page + 1 : undefined;
     },
   });
 
-  const pages = query.data?.pages ?? [];
+  const pages = query.data?.pages;
+  const items = useMemo(
+    () =>
+      (pages ?? []).flatMap((page) =>
+        notificationsPageToViews(page, t, fmt, unreadOnly),
+      ),
+    [pages, t, fmt, unreadOnly],
+  );
   return {
-    items: pages.flatMap((page) => page.items),
+    items,
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,

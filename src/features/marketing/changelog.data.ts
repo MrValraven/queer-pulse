@@ -69,6 +69,16 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("music-manager-producer"),
       },
       {
+        id: "notifications-show-their-text",
+        category: "fix",
+        date: "29 Oct 2026",
+        ...entryKeys("notifications-show-their-text"),
+        tag: {
+          labelKey: "marketing:changelog.tag.notifications",
+          to: routes.notifications,
+        },
+      },
+      {
         id: "now-playing-no-side-scroll",
         category: "fix",
         date: "29 Oct 2026",
