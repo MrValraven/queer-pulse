@@ -14,6 +14,7 @@ import {
   DEMO_RELEASES,
 } from "./studioDemo.data";
 import { DEMO_ARTIST_LATE_BLOOMERS, DEMO_STUDIO_ME } from "./studioDemoMe.data";
+import { DEMO_FOUNDING_ARTIST_IDS } from "./studioDemoFounding.data";
 
 // Studio artist kinds in the demo (spec 7): a podcast, a spoken word EP and
 // two performance releases, wire-shaped so they reach the pages through the
@@ -117,7 +118,7 @@ function tracksOf(seeds: DemoTrackSeed[]): StudioTrackSummaryDTO[] {
 function formatRelease(
   base: Pick<
     StudioReleaseDTO,
-    "id" | "title" | "type" | "artist" | "releasedOn" | "description" | "genre"
+    "id" | "title" | "type" | "artist" | "releasedOn" | "description" | "genres"
   > & { isOwner?: boolean; coverUrl?: string | null },
   tracks: StudioTrackSummaryDTO[],
 ): StudioReleaseDTO {
@@ -135,7 +136,8 @@ function formatRelease(
     ),
     artist: base.artist,
     publishedAt: base.releasedOn ? `${base.releasedOn}T10:00:00.000Z` : null,
-    genre: base.genre,
+    genre: base.genres[0] ?? null,
+    genres: base.genres,
     mood: null,
     scene: null,
     description: base.description,
@@ -158,7 +160,7 @@ const LATE_BLOOMERS_SHOW = formatRelease(
     releasedOn: "2022-11-07",
     description:
       "A podcast for people who found themselves later than expected, with new episodes every other Monday",
-    genre: null,
+    genres: [],
     isOwner: true,
     coverUrl: COVER_LATE_BLOOMERS,
   },
@@ -205,7 +207,7 @@ const SPOKEN_WORD_EP = formatRelease(
     artist: DEMO_ARTIST_LUA_CARDOSO,
     releasedOn: "2022-10-21",
     description: "Three poems recorded in one take on a Sunday night",
-    genre: "spoken-word",
+    genres: ["spoken-word"],
     coverUrl: COVER_LUA_EP,
   },
   tracksOf([
@@ -223,7 +225,7 @@ const LIP_SYNC_MIX = formatRelease(
     artist: DEMO_ARTIST_VANDA_DIESEL,
     releasedOn: "2022-09-30",
     description: "The mix from my Sunday Mass number, cut for the stage",
-    genre: null,
+    genres: [],
     coverUrl: DEMO_ARTIST_VANDA_DIESEL.avatarUrl ?? COVER_PERFORMANCE_EDIT,
   },
   tracksOf([
@@ -249,7 +251,7 @@ const PERFORMANCE_EDIT = formatRelease(
     artist: DEMO_ARTIST_VANDA_DIESEL,
     releasedOn: "2022-08-12",
     description: "The edit I ride in on",
-    genre: null,
+    genres: [],
     coverUrl: COVER_PERFORMANCE_EDIT,
   },
   tracksOf([
@@ -336,6 +338,7 @@ export function demoArtistDetailsOf(artistId: string): {
   city: string | null;
   coverUrl: string | null;
   studioHero: StudioHeroChoice | null;
+  isFoundingArtist: boolean;
 } {
   const details: {
     bio: string | null;
@@ -349,6 +352,7 @@ export function demoArtistDetailsOf(artistId: string): {
     city: details.city,
     coverUrl: details.coverUrl ?? null,
     studioHero: details.studioHero ?? null,
+    isFoundingArtist: DEMO_FOUNDING_ARTIST_IDS.includes(artistId),
   };
 }
 

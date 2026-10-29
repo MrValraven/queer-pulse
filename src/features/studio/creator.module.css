@@ -259,26 +259,6 @@
   position: relative;
   z-index: 1;
 }
-/* The payouts hero lays its copy beside the breakdown card; one column on a phone. */
-.heroSplit {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 40px;
-  align-items: end;
-}
-/* Tablets: the breakdown card grows taller than the copy, so the copy
-   starts at the top beside it instead of sinking to its foot. */
-@media (--wide) {
-  .heroSplit {
-    align-items: start;
-  }
-}
-@media (--md) {
-  .heroSplit {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-}
 .eb {
   display: inline-flex;
   align-items: center;
@@ -324,74 +304,6 @@
   font-weight: 600;
 }
 
-.bigstats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  margin-top: 30px;
-}
-.bigstat {
-  background: var(--surface);
-  border: 1px solid var(--s-line);
-  border-radius: var(--radius-14);
-  padding: 22px 24px;
-}
-.bigstatPayout {
-  background: linear-gradient(
-    135deg,
-    rgba(var(--jade-rgb), 0.14),
-    rgba(var(--jade-rgb), 0.02)
-  );
-  border-color: rgba(var(--jade-rgb), 0.32);
-}
-.bsLbl {
-  font-size: var(--text-11);
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--s-text-40);
-  margin-bottom: 6px;
-}
-.bsV {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: var(--text-42);
-  color: var(--s-text);
-  letter-spacing: -0.022em;
-  line-height: 1;
-  margin-bottom: 6px;
-  /* A figure stays on one line; the global overflow-wrap would split it. */
-  overflow-wrap: normal;
-  white-space: nowrap;
-}
-/* Small phones: two stat cards share the row, so the figure steps down to fit. */
-@media (--xs) {
-  .bsV {
-    font-size: var(--text-26);
-  }
-}
-.bsV em {
-  font-style: italic;
-  color: var(--studio-accent-text);
-}
-.bigstatPayout .bsV em {
-  color: var(--studio-jade-text);
-}
-.bsTrend {
-  font-size: var(--text-12);
-  color: var(--s-text-60);
-  font-family: var(--serif);
-  font-style: italic;
-  line-height: 1.4;
-}
-.bsTrend em {
-  color: var(--studio-accent-text);
-  font-weight: 600;
-}
-.bsTrend em.up {
-  color: var(--studio-jade-text);
-}
-
 /* Body layout */
 .body {
   padding: 30px;
@@ -401,9 +313,6 @@
   align-items: start;
   max-width: 1280px;
   margin: 0 auto;
-}
-.bodyNarrow {
-  grid-template-columns: 1.4fr 1fr;
 }
 .col {
   display: flex;
@@ -453,39 +362,11 @@
   color: var(--s-text-40);
   width: 100%;
 }
-.allLink {
-  font-size: var(--text-12-5);
-  font-weight: 600;
-  color: var(--s-text-60);
-}
 
 /* Chart */
 .range {
   display: flex;
   gap: 4px;
-}
-.rangeBtn {
-  font-family: var(--sans);
-  font-size: var(--text-11-5);
-  font-weight: 600;
-  color: var(--s-text-40);
-  background: transparent;
-  border: 1px solid var(--s-line);
-  border-radius: var(--radius-6);
-  padding: 5px 10px;
-  cursor: pointer;
-}
-.rangeBtnOn {
-  background: var(--accent);
-  /* Dark ink on the coral fill: 6.28:1. */
-  color: var(--studio-bg);
-  border-color: var(--studio-accent-text);
-}
-.chart {
-  height: 200px;
-  display: flex;
-  align-items: flex-end;
-  gap: 6px;
 }
 .bar {
   flex: 1;
@@ -503,15 +384,6 @@
   .bar:hover {
     transform: scaleY(1.05);
   }
-}
-.barToday {
-  /* The jade-text token tops the bar: pale jade on the dark page, deep
-     jade on cream, where pale jade would wash out. */
-  background: linear-gradient(
-    180deg,
-    var(--studio-jade-text) 0%,
-    rgba(var(--jade-rgb), 0.4) 100%
-  );
 }
 .chartFoot {
   margin-top: 24px;
@@ -898,62 +770,10 @@
   font-size: inherit;
   color: inherit;
 }
-.fileRow {
-  display: grid;
-  grid-template-columns: 38px 1fr auto;
-  gap: 12px;
-  align-items: center;
-  background: var(--surface);
-  border: 1px solid var(--s-line);
-  border-radius: var(--radius-12);
-  padding: 12px 16px;
-  margin-bottom: 8px;
-}
-.fileIc {
-  width: 34px;
-  height: 34px;
-  border-radius: var(--radius-9);
-  background: rgba(var(--studio-ink-rgb), 0.06);
-  color: var(--s-text-60);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-}
-.fileIc svg {
-  width: 16px;
-  height: 16px;
-}
-.fileIcWarn {
-  background: rgba(var(--accent-rgb), 0.14);
-  color: var(--studio-accent-text);
-}
-.fileRow h5 {
-  font-size: var(--text-13-5);
-  font-weight: 600;
-  color: var(--s-text);
-  font-family: var(--sans);
-}
 .fileMeta {
   font-size: var(--text-11-5);
   color: var(--s-text-40);
   margin-top: 2px;
-}
-.fileCheck {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: var(--text-11-5);
-  font-weight: 600;
-  color: var(--studio-jade-text);
-  white-space: nowrap;
-}
-.fileCheck svg {
-  width: 13px;
-  height: 13px;
-}
-.fileCheckWarn {
-  color: var(--studio-accent-text);
 }
 .warnCard {
   display: flex;
@@ -1078,306 +898,6 @@
   color: var(--studio-jade-text);
   font-weight: 600;
 }
-.addBtn {
-  font-family: var(--sans);
-  font-size: var(--text-13);
-  font-weight: 600;
-  color: var(--studio-accent-text);
-  background: rgba(var(--accent-rgb), 0.12);
-  border: none;
-  border-radius: var(--radius-pill);
-  padding: 8px 16px;
-  cursor: pointer;
-}
-
-/* Payout rows */
-.payRow {
-  display: grid;
-  grid-template-columns: 52px 1fr auto auto;
-  gap: 16px;
-  align-items: center;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--s-line);
-}
-.payRow:last-child {
-  border-bottom: none;
-}
-.payCopy {
-  min-width: 0;
-}
-/* Phones: the title takes the whole width beside the date, with the amount
-   and status sharing a second line under it */
-@media (--md) {
-  .payRow {
-    grid-template-columns: 36px minmax(0, 1fr) auto;
-    column-gap: 12px;
-    row-gap: 6px;
-  }
-  .payRow .payDate {
-    grid-column: 1;
-    grid-row: 1 / span 2;
-  }
-  .payRow .payCopy {
-    grid-column: 2 / -1;
-    grid-row: 1;
-  }
-  .payRow .payAmt {
-    grid-column: 2;
-    grid-row: 2;
-    justify-self: start;
-  }
-  .payRow .payStatus {
-    grid-column: 3;
-    grid-row: 2;
-    justify-self: end;
-  }
-}
-.payDate {
-  text-align: center;
-}
-.payDate .d {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: var(--text-26);
-  color: var(--s-text);
-  line-height: 1;
-}
-.payDate .m {
-  font-size: var(--text-10);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--studio-accent-text);
-}
-.payRow h5 {
-  font-family: var(--serif);
-  font-weight: 500;
-  font-size: var(--text-15);
-  color: var(--s-text);
-}
-.payRow h5 em {
-  font-style: italic;
-  color: var(--studio-jade-text);
-  font-size: var(--text-13);
-}
-.payMeta {
-  font-size: var(--text-12);
-  color: var(--s-text-40);
-  margin-top: 3px;
-}
-.payMeta em {
-  color: var(--s-text-60);
-  font-style: italic;
-}
-.payAmt {
-  font-family: var(--serif);
-  font-size: var(--text-18);
-  color: var(--s-text);
-  white-space: nowrap;
-}
-.payAmt em {
-  font-style: normal;
-  color: var(--studio-accent-text);
-}
-.payStatus {
-  font-size: var(--text-10-5);
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding: 4px 9px;
-  border-radius: var(--radius-6);
-  white-space: nowrap;
-}
-.statusPending {
-  background: rgba(var(--accent-rgb), 0.16);
-  color: var(--studio-accent-chip-text);
-}
-.statusPaid {
-  background: rgba(var(--jade-rgb), 0.18);
-  color: var(--studio-jade-chip-text);
-}
-
-/* Breakdown rows */
-.bdRow {
-  display: grid;
-  grid-template-columns: 32px 1fr auto auto auto;
-  gap: 12px;
-  align-items: center;
-  padding: 11px 0;
-  border-bottom: 1px solid var(--s-line);
-  font-size: var(--text-13);
-}
-.bdRow .n {
-  font-family: var(--sans);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.06em;
-  color: var(--s-text-40);
-  font-size: var(--text-12);
-}
-.bdRow .nm {
-  color: var(--s-text);
-  font-family: var(--serif);
-  font-size: var(--text-14);
-}
-.bdRow .nm em {
-  font-style: italic;
-}
-.bdRow .saves {
-  color: var(--s-text-60);
-  white-space: nowrap;
-}
-.bdRow .rate {
-  color: var(--s-text-40);
-  font-size: var(--text-12);
-}
-/* Every row is its own grid, so a shared minimum on the total keeps the
-   plays and rate columns lined up from row to row */
-.bdRow .bdTotal {
-  font-family: var(--serif);
-  color: var(--s-text);
-  white-space: nowrap;
-  min-width: 6.5em;
-  text-align: end;
-}
-.bdRow .bdTotal em {
-  font-style: normal;
-  color: var(--studio-accent-text);
-}
-/* Plays and rate share one wrapper: on desktop it dissolves so both stay
-   their own grid columns; on phones it becomes one cell under the name */
-.bdRow .bdMeta {
-  display: contents;
-}
-@media (--md) {
-  .bdRow {
-    grid-template-columns: 32px minmax(0, 1fr) auto;
-    row-gap: 4px;
-  }
-  .bdRow .n {
-    grid-column: 1;
-    grid-row: 1;
-  }
-  .bdRow .nm {
-    grid-column: 2;
-    grid-row: 1;
-    min-width: 0;
-  }
-  .bdRow .bdTotal {
-    grid-column: 3;
-    grid-row: 1;
-    min-width: 0;
-  }
-  .bdRow .bdMeta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    column-gap: 8px;
-    row-gap: 2px;
-    grid-column: 2;
-    grid-row: 2;
-    min-width: 0;
-  }
-}
-.bdFoot {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 2px solid rgba(var(--studio-ink-rgb), 0.16);
-  font-size: var(--text-13);
-  color: var(--s-text-60);
-}
-.bdFoot .v {
-  font-family: var(--serif);
-  font-size: var(--text-18);
-  color: var(--s-text);
-  white-space: nowrap;
-}
-.bdFoot .v em {
-  font-style: normal;
-  color: var(--studio-jade-text);
-}
-
-/* Payout summary lines (hero) */
-.ln {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--s-line);
-  font-size: var(--text-13-5);
-  color: var(--s-text-60);
-}
-.ln:last-child {
-  border-bottom: none;
-}
-.ln .v2 {
-  font-family: var(--serif);
-  color: var(--s-text);
-  white-space: nowrap;
-}
-.ln .v2 em {
-  font-style: normal;
-  color: var(--studio-accent-text);
-}
-
-/* Bank methods */
-.method {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--s-line);
-}
-.method:last-child {
-  border-bottom: none;
-}
-.methodIc {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-10);
-  background: rgba(var(--jade-rgb), 0.16);
-  color: var(--studio-jade-chip-text);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  flex: none;
-}
-.methodIcAlt {
-  background: rgba(var(--studio-ink-rgb), 0.06);
-  color: var(--s-text-60);
-}
-.methodNm {
-  flex: 1;
-  font-size: var(--text-14);
-  font-weight: 600;
-  color: var(--s-text);
-}
-.methodNm small {
-  display: block;
-  font-size: var(--text-11-5);
-  font-weight: 400;
-  color: var(--s-text-40);
-  margin-top: 2px;
-}
-.methodBadge {
-  font-size: var(--text-10);
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--studio-jade-chip-text);
-  background: rgba(var(--jade-rgb), 0.16);
-  border-radius: var(--radius-6);
-  padding: 3px 8px;
-}
-.methodSwitch {
-  font-size: var(--text-11);
-  color: var(--s-text-40);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
 
 /* Fields */
 .field {
@@ -1410,9 +930,6 @@
 }
 
 @media (max-width: 1100px) {
-  .bigstats {
-    grid-template-columns: repeat(2, 1fr);
-  }
   .body {
     grid-template-columns: 1fr;
   }

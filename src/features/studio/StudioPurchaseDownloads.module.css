@@ -1,0 +1,100 @@
+/* Downloads of one purchase. Rendered inside StudioShell and on the account
+   page, so every colour here is an app-wide token. */
+
+.downloads {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-16);
+  font-weight: 500;
+  color: var(--text-strong);
+}
+
+/* Inside StudioShell the heading reads in the shell's own text role. */
+.headingStudio {
+  color: var(--studio-text);
+}
+
+.formatNote,
+.empty {
+  margin: 0;
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  padding-block: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.row:first-child {
+  border-top: 0;
+}
+
+.rowMain {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: var(--tap-min);
+}
+
+.position {
+  flex: none;
+  min-width: 22px;
+  font-size: var(--text-13);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-40);
+}
+
+.trackText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.title {
+  font-size: var(--text-14-5);
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  display: flex;
+  gap: 10px;
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
+}
+
+.action {
+  flex: none;
+}
+
+.refusal,
+.failure {
+  margin: 0;
+  padding: 6px 0 0 34px;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.failure {
+  color: var(--accent-text);
+}

@@ -19,7 +19,6 @@ export interface OffAirCard {
   artist?: string;
   trackCount?: number;
   duration?: string;
-  pay?: boolean;
   image?: string;
 }
 
@@ -37,7 +36,6 @@ export const OFF_AIR_LIBRARY: OffAirCard[] = [
     kindKey: "studioShowcase:offAir.meta.kind.album",
     artist: "Mariana Sol",
     trackCount: 11,
-    pay: true,
     image:
       "https://images.unsplash.com/photo-1636207608470-dfedb46c2380?q=80&w=400&auto=format&fit=crop",
   },
@@ -74,7 +72,6 @@ export const OFF_AIR_LIBRARY: OffAirCard[] = [
     titleEm: "April",
     artist: "Rita Ferreira",
     duration: "3:42",
-    pay: true,
     image:
       "https://images.unsplash.com/photo-1771790547223-a8be4b8dc1d2?q=80&w=800&auto=format&fit=crop",
   },
@@ -87,7 +84,6 @@ export const OFF_AIR_LIBRARY: OffAirCard[] = [
     titleEm: "weather",
     kindKey: "studioShowcase:offAir.meta.kind.soundtrack",
     artist: "Yuki Tanaka",
-    pay: true,
     image:
       "https://images.unsplash.com/photo-1773695223075-5ca8b60c433d?q=80&w=800&auto=format&fit=crop",
   },

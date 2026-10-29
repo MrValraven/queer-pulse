@@ -17,6 +17,7 @@ import type {
   HostSummaryDTO,
 } from "./goTogether.types";
 import { goTogetherKeys } from "./goTogetherKeys";
+import { useEventHostScope } from "../../gatherings/eventHostScope";
 
 function useIsActiveSession(): boolean {
   const { loggedIn, checking, status } = useAuth();
@@ -26,15 +27,16 @@ function useIsActiveSession(): boolean {
 /** The host's Go together settings, `GET /events/:slug/go-together/config`. */
 export function useGoTogetherHostConfig(slug: string | undefined) {
   const { demoMode } = useDemoMode();
+  const { apiTarget } = useEventHostScope();
   const isActiveSession = useIsActiveSession();
   return useQuery<HostConfigDTO>({
-    queryKey: goTogetherKeys.hostConfig(slug, demoMode),
+    queryKey: goTogetherKeys.hostConfig(slug, demoMode, apiTarget),
     enabled: Boolean(slug) && (demoMode || isActiveSession),
     retry: false,
     queryFn: async () =>
       demoMode || !slug
         ? demoHostConfig(slug ?? "")
-        : getGoTogetherHostConfig(slug),
+        : getGoTogetherHostConfig(slug, apiTarget),
   });
 }
 
@@ -42,16 +44,17 @@ export function useGoTogetherHostConfig(slug: string | undefined) {
  *  and the cutoff, so every card refreshes. */
 export function useSaveGoTogetherHostConfig(slug: string) {
   const { demoMode } = useDemoMode();
+  const { apiTarget } = useEventHostScope();
   const queryClient = useQueryClient();
   return useMutation<HostConfigDTO, Error, HostConfigBody>({
     meta: { silentError: true },
     mutationFn: async (body) =>
       demoMode
         ? demoSaveHostConfig(slug, body)
-        : saveGoTogetherHostConfig(slug, body),
+        : saveGoTogetherHostConfig(slug, body, apiTarget),
     onSuccess: (config) => {
       queryClient.setQueryData(
-        goTogetherKeys.hostConfig(slug, demoMode),
+        goTogetherKeys.hostConfig(slug, demoMode, apiTarget),
         config,
       );
       void queryClient.invalidateQueries({ queryKey: goTogetherKeys.cardRoot });
@@ -62,12 +65,15 @@ export function useSaveGoTogetherHostConfig(slug: string) {
 /** The host sees counts only, with no member ids: `GET /events/:slug/go-together/summary`. */
 export function useGoTogetherHostSummary(slug: string | undefined) {
   const { demoMode } = useDemoMode();
+  const { apiTarget } = useEventHostScope();
   const isActiveSession = useIsActiveSession();
   return useQuery<HostSummaryDTO>({
-    queryKey: goTogetherKeys.hostSummary(slug, demoMode),
+    queryKey: goTogetherKeys.hostSummary(slug, demoMode, apiTarget),
     enabled: Boolean(slug) && (demoMode || isActiveSession),
     retry: false,
     queryFn: async () =>
-      demoMode || !slug ? demoHostSummary() : getGoTogetherHostSummary(slug),
+      demoMode || !slug
+        ? demoHostSummary()
+        : getGoTogetherHostSummary(slug, apiTarget),
   });
 }

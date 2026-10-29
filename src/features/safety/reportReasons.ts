@@ -147,6 +147,9 @@ export type ReasonCode =
   | "untagged_explicit"
   // Someone else's music or artwork used without permission (Studio v1).
   | "copyright"
+  // Studio purchases: an artist persona that took a buyer's payment and did
+  // not confirm it. Offered on a persona (subprofile) report only.
+  | "payment_never_confirmed"
   | "other";
 
 /** Stable code → human label. Labels are the only thing that gets localized. */
@@ -175,6 +178,7 @@ export const REASON_LABELS: Record<ReasonCode, string> = {
   copyright: "Uses someone else's music or artwork without permission",
   hateful_lyrics: "Hateful lyrics",
   untagged_explicit: "Explicit but not marked",
+  payment_never_confirmed: "Took my payment and did not confirm it",
   other: "Something else, explained in detail",
 };
 
@@ -209,6 +213,7 @@ export const REASON_LABEL_KEYS: Record<ReasonCode, string> = {
   copyright: "safety:reason.copyright",
   hateful_lyrics: "safety:reason.hatefulLyrics",
   untagged_explicit: "safety:reason.untaggedExplicit",
+  payment_never_confirmed: "safety:reason.paymentNeverConfirmed",
   other: "safety:reason.other",
 };
 
@@ -381,6 +386,7 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "impersonation",
     "discrimination",
     "spam",
+    "payment_never_confirmed",
     "other",
   ],
   // A directory-listing review. Mirrors the backend's

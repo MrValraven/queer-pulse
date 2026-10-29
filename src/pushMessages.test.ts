@@ -459,6 +459,62 @@ describe("studio credit push copy", () => {
   });
 });
 
+describe("studio purchase push copy", () => {
+  const params = { artist: "Mariana Sol", item: "Cidade dos santos" };
+  const cases = [
+    {
+      key: "studioPurchaseClaimed",
+      en: {
+        title: "New payment to confirm",
+        body: "Cidade dos santos: a buyer says they paid Mariana Sol. Confirm it in Studio.",
+      },
+      pt: {
+        title: "Novo pagamento para confirmar",
+        body: "Cidade dos santos: alguém diz que pagou a Mariana Sol. Confirma no Studio.",
+      },
+    },
+    {
+      key: "studioPurchaseConfirmed",
+      en: {
+        title: "Payment confirmed",
+        body: "Mariana Sol confirmed your payment for Cidade dos santos. Your download is ready.",
+      },
+      pt: {
+        title: "Pagamento confirmado",
+        body: "Mariana Sol confirmou o teu pagamento de Cidade dos santos. O teu download está pronto.",
+      },
+    },
+    {
+      key: "studioPurchaseDeclined",
+      en: {
+        title: "Payment not confirmed",
+        body: "Mariana Sol could not confirm your payment for Cidade dos santos. Open Studio to see why.",
+      },
+      pt: {
+        title: "Pagamento não confirmado",
+        body: "Mariana Sol não conseguiu confirmar o teu pagamento de Cidade dos santos. Abre o Studio para ver porquê.",
+      },
+    },
+  ];
+
+  it.each(cases)(
+    "resolves $key in both languages with both params",
+    (entry) => {
+      const source = {
+        title: "x",
+        body: "y",
+        l10n: {
+          titleKey: `push:${entry.key}.title`,
+          bodyKey: `push:${entry.key}.body`,
+          params,
+        },
+      };
+      expect(formatPushCopy(source, "en")).toEqual(entry.en);
+      expect(formatPushCopy(source, "pt")).toEqual(entry.pt);
+    },
+  );
+});
+
 describe("persona post push copy", () => {
   it("titles the push with the persona and shows the excerpt in both languages", () => {
     const source = {

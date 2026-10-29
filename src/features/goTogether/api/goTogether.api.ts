@@ -6,6 +6,10 @@ import {
   apiPut,
 } from "../../../shared/api/client";
 import {
+  eventApiPath,
+  type EventApiTarget,
+} from "../../gatherings/api/eventApiTarget";
+import {
   GO_TOGETHER_ERROR_CODES,
   type FeedbackBody,
   type FriendMatchAnswers,
@@ -66,12 +70,23 @@ export const saveGoTogetherFeedback = (groupId: string, body: FeedbackBody) =>
     body,
   );
 
-export const getGoTogetherHostConfig = (slug: string) =>
-  apiGet<HostConfigDTO>(`/events/${slug}/go-together/config`);
-export const saveGoTogetherHostConfig = (slug: string, body: HostConfigBody) =>
-  apiPut<HostConfigDTO>(`/events/${slug}/go-together/config`, body);
-export const getGoTogetherHostSummary = (slug: string) =>
-  apiGet<HostSummaryDTO>(`/events/${slug}/go-together/summary`);
+export const getGoTogetherHostConfig = (
+  slug: string,
+  target: EventApiTarget = "member",
+) => apiGet<HostConfigDTO>(eventApiPath(target, slug, "/go-together/config"));
+export const saveGoTogetherHostConfig = (
+  slug: string,
+  body: HostConfigBody,
+  target: EventApiTarget = "member",
+) =>
+  apiPut<HostConfigDTO>(
+    eventApiPath(target, slug, "/go-together/config"),
+    body,
+  );
+export const getGoTogetherHostSummary = (
+  slug: string,
+  target: EventApiTarget = "member",
+) => apiGet<HostSummaryDTO>(eventApiPath(target, slug, "/go-together/summary"));
 
 const KNOWN_ERROR_CODES: ReadonlySet<string> = new Set(GO_TOGETHER_ERROR_CODES);
 

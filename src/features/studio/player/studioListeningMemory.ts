@@ -228,7 +228,7 @@ export function clearStudioListeningMemory(): void {
   // DES-40: the recent searches go with them. Removed before the notify
   // below, so a mounted list reads empty at once.
   safeStorage.remove(STUDIO_RECENT_SEARCHES_STORAGE_KEY);
-  safeStorage.remove(STUDIO_TASTE_STORAGE_KEY); // PRD-12 welcome picks
+  safeStorage.remove(STUDIO_TASTE_STORAGE_KEY); // PRD-12 welcome picks (device copy)
   clearStudioRecentlyPlayed();
   // The rail's scroll offset and sort in this tab (qp.studio.railPlaylists.v1.*).
   clearStudioRailMemory();
@@ -243,7 +243,9 @@ export function clearStudioListeningMemory(): void {
 /** Quick Exit, after the wipe: nothing is written again on this page. */
 export function endStudioListeningMemory(): void {
   isListeningMemoryEnded = true;
-  // Quick Exit only: the welcome-seen bit outlives sign-out (PRD-12).
+  // Quick Exit only: the welcome-seen bit outlives sign-out (PRD-12). This is
+  // the device copy alone; the account's welcome flag stays, so the welcome
+  // never replays after Quick Exit.
   safeStorage.remove(STUDIO_WELCOME_SEEN_STORAGE_KEY);
 }
 

@@ -22,6 +22,7 @@ export function demoReleaseCard(dto: StudioReleaseDTO): StudioReleaseCardDTO {
     artist: dto.artist,
     publishedAt: dto.publishedAt,
     genre: dto.genre,
+    genres: dto.genres,
     mood: dto.mood,
     scene: dto.scene,
     format: STUDIO_FORMAT_BY_KIND[dto.artist.kind],

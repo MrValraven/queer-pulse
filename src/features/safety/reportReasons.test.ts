@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { SUBJECT_REASONS, type ReportSubjectType } from "./reportReasons";
+import {
+  REASON_LABEL_KEYS,
+  REASON_LABELS,
+  SUBJECT_REASONS,
+  type ReportSubjectType,
+} from "./reportReasons";
 
 /**
  * This map is what members actually see. Nothing reads `GET /reports/reasons`
@@ -250,5 +255,29 @@ describe("SUBJECT_REASONS for Pulse Live games", () => {
       "spam",
       "other",
     ]);
+  });
+});
+
+describe("SUBJECT_REASONS for Studio purchases", () => {
+  it("offers payment_never_confirmed on a persona, just before other", () => {
+    const options = SUBJECT_REASONS.subprofile;
+    expect(options).toContain("payment_never_confirmed");
+    expect(options.indexOf("payment_never_confirmed")).toBe(
+      options.indexOf("other") - 1,
+    );
+  });
+
+  it("names the code in the catalog and the plain label", () => {
+    expect(REASON_LABEL_KEYS.payment_never_confirmed).toBe(
+      "safety:reason.paymentNeverConfirmed",
+    );
+    expect(REASON_LABELS.payment_never_confirmed).toBe(
+      "Took my payment and did not confirm it",
+    );
+  });
+
+  it("keeps the code off post and reply reports", () => {
+    expect(SUBJECT_REASONS.post).not.toContain("payment_never_confirmed");
+    expect(SUBJECT_REASONS.reply).not.toContain("payment_never_confirmed");
   });
 });

@@ -4,8 +4,6 @@ import { TestProviders } from "../../../test/TestProviders";
 import type { CommunityGivingMethodDTO } from "../api/communityGiving.api";
 import { GivingCopyRow } from "./GivingCopyRow";
 
-// Unrun per repo policy (`do-not-run-tests-unless-asked`): verified statically.
-
 const COMPACT_IBAN = "PT50000201231234567890154";
 const GROUPED_IBAN = "PT50 0002 0123 1234 5678 9015 4";
 
@@ -66,5 +64,21 @@ describe("GivingCopyRow", () => {
       ),
     ).toBeInTheDocument();
     expect(screen.getByText(GROUPED_IBAN)).toBeInTheDocument();
+  });
+
+  it("renders a method that carries only kind, label and value", () => {
+    mockClipboard(vi.fn().mockResolvedValue(undefined));
+    render(
+      <TestProviders>
+        <GivingCopyRow
+          method={{ kind: "iban", label: null, value: COMPACT_IBAN }}
+        />
+      </TestProviders>,
+    );
+
+    expect(screen.getByText(GROUPED_IBAN)).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Copy IBAN for IBAN" }),
+    ).toBeInTheDocument();
   });
 });

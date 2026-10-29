@@ -10,6 +10,7 @@ import {
   useCreateStudioRelease,
   useDeleteStudioRelease,
   useUnpublishStudioRelease,
+  useUpdateStudioRelease,
 } from "./useStudioReleaseMutations";
 
 const demoState = { demoMode: true };
@@ -185,5 +186,45 @@ describe("release mutations keep the lists in step", () => {
     const { result } = renderHook(() => useDeleteStudioRelease(), { wrapper });
     await act(() => result.current.mutateAsync({ releaseId: "r1" }));
     expect(invalidate).not.toHaveBeenCalled();
+  });
+});
+
+describe("release price PATCH refreshes the offers", () => {
+  function setupDraft() {
+    const { queryClient, wrapper } = setup();
+    const draft = demoCreateRelease({
+      subprofileId: DEMO_ARTIST_MARIANA.id,
+      type: "ep",
+      title: "Cartas",
+    });
+    queryClient.setQueryData(studioKeys.release(true, draft.id), draft);
+    return { queryClient, wrapper, releaseId: draft.id };
+  }
+
+  it("invalidates the offers when the body carries a price", async () => {
+    const { queryClient, wrapper, releaseId } = setupDraft();
+    const invalidate = vi.spyOn(queryClient, "invalidateQueries");
+    const { result } = renderHook(() => useUpdateStudioRelease(), { wrapper });
+    await act(() =>
+      result.current.mutateAsync({
+        releaseId,
+        body: { price: { mode: "fixed", amountCents: 500 } },
+      }),
+    );
+    const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
+    expect(keys).toContainEqual(studioKeys.offersAll(true));
+    expect(keys).toContainEqual(["studio", "paymentMethods", true]);
+  });
+
+  it("leaves the offers alone when the body has no price", async () => {
+    const { queryClient, wrapper, releaseId } = setupDraft();
+    const invalidate = vi.spyOn(queryClient, "invalidateQueries");
+    const { result } = renderHook(() => useUpdateStudioRelease(), { wrapper });
+    await act(() =>
+      result.current.mutateAsync({ releaseId, body: { title: "Cartas II" } }),
+    );
+    const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
+    expect(keys).not.toContainEqual(studioKeys.offersAll(true));
+    expect(keys).not.toContainEqual(["studio", "paymentMethods", true]);
   });
 });

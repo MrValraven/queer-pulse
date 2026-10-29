@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
@@ -10,6 +10,10 @@ import {
   type StudioMeView,
 } from "./studio.adapters";
 import { DEMO_STUDIO_ME } from "./studioDemoMe.data";
+import {
+  readDemoStudioAccessRequest,
+  subscribeDemoStudioAccessRequest,
+} from "./studioDemoAccessRequest";
 import { isDemoStudioAccessOff } from "./studioDemoAccessSwitch";
 import { studioLoadStateOf, type StudioLoadState } from "./studioLoadState";
 import { studioKeys } from "./studioQueryKeys";
@@ -90,6 +94,10 @@ type StudioMeRead = StudioMeView & {
   /** DES-84: claims on the member's tracks they can still counter. null
    *  until the server sends `counterWindowsOpen` (a backend follow-up). */
   counterWindowsOpen: number | null;
+  /** Landing v2: a Studio access request is waiting. */
+  hasPendingRequest: boolean;
+  /** Landing v2: the waiting request asked to release music. */
+  wantsToRelease: boolean;
 };
 
 function counterWindowsOpenOf(dto: unknown): number | null {
@@ -98,6 +106,17 @@ function counterWindowsOpenOf(dto: unknown): number | null {
       ? dto.counterWindowsOpen
       : null;
   return typeof value === "number" && value >= 0 ? value : null;
+}
+
+/** Anything but `true` reads false, the way a server that predates the field
+ *  reads. */
+function flagOf(dto: unknown, field: string): boolean {
+  return (
+    typeof dto === "object" &&
+    dto !== null &&
+    field in dto &&
+    (dto as Record<string, unknown>)[field] === true
+  );
 }
 
 /** The one GET /studio/me read every caller shares (same key, one fetch). */
@@ -110,9 +129,12 @@ function useStudioMeQuery() {
     enabled: !demoMode && loggedIn && !checking,
     queryFn: async (): Promise<StudioMeRead> => {
       const dto = await getStudioMe();
+      const hasPendingRequest = flagOf(dto, "hasPendingRequest");
       return {
         ...toMeView(dto),
         counterWindowsOpen: counterWindowsOpenOf(dto),
+        hasPendingRequest,
+        wantsToRelease: hasPendingRequest && flagOf(dto, "wantsToRelease"),
       };
     },
     staleTime: 60_000,
@@ -166,4 +188,47 @@ export function useStudioCounterWindowsOpenLive(): number | null {
 export function useStudioAccessLoadState(): StudioLoadState {
   const { query } = useStudioMeQuery();
   return studioLoadStateOf(query, query.data !== undefined);
+}
+
+/** Landing v2: where the member stands on the "waiting for Studio" list. */
+export interface StudioAccessRequestState {
+  /** False until GET /studio/me answered (and in demo with access on). */
+  isKnown: boolean;
+  hasPendingRequest: boolean;
+  wantsToRelease: boolean;
+}
+
+const REQUEST_UNKNOWN: StudioAccessRequestState = {
+  isKnown: false,
+  hasPendingRequest: false,
+  wantsToRelease: false,
+};
+const REQUEST_NONE: StudioAccessRequestState = {
+  ...REQUEST_UNKNOWN,
+  isKnown: true,
+};
+
+/**
+ * Whether the member is on the Studio access list, read from the same
+ * GET /studio/me query as `useStudioAccess` (no second fetch). Demo with
+ * access off reads the in-memory request (`studioDemoAccessRequest.ts`); demo
+ * with access on reads no request.
+ */
+export function useStudioAccessRequestState(): StudioAccessRequestState {
+  const { query, demoMode } = useStudioMeQuery();
+  const demoRequest = useSyncExternalStore(
+    subscribeDemoStudioAccessRequest,
+    readDemoStudioAccessRequest,
+  );
+  if (demoMode) {
+    return isDemoStudioAccessOff()
+      ? { isKnown: true, ...demoRequest }
+      : REQUEST_NONE;
+  }
+  if (!query.data) return REQUEST_UNKNOWN;
+  return {
+    isKnown: true,
+    hasPendingRequest: query.data.hasPendingRequest,
+    wantsToRelease: query.data.wantsToRelease,
+  };
 }

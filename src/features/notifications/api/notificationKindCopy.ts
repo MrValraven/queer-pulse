@@ -3,6 +3,7 @@ import type { TFunction, TranslateOptions } from "../../../shared/i18n/types";
 import { OPEN_CALLS_TOPIC_TAG } from "../../forum/funding/funding.data";
 import { formatLisbonDeadline } from "../../forum/funding/fundingDates";
 import { STUDIO_CREDIT_ROLES } from "../../studio/api/studio.types";
+import { STUDIO_PURCHASE_DECLINE_REASONS } from "../../studio/api/studioPurchases.types";
 import type { NotifType } from "../notifications.types";
 
 /**
@@ -117,6 +118,20 @@ export type LifecycleNotificationKind =
   | "studio_playlist_editor_invite_accepted"
   | "studio_playlist_editor_invite_declined"
   | "studio_playlist_editor_added"
+  // Studio purchases. Payment records: a payment waiting for the persona's
+  // members (bundled on the persona), and the buyer's answer. They name
+  // personas and item titles only and leave the buyer out.
+  | "studio_purchase_claimed"
+  | "studio_purchase_confirmed"
+  | "studio_purchase_declined"
+  | "studio_purchase_expired"
+  // Studio landing v2. Our team opened Studio for the member (empty payload),
+  // asked to play a track by a persona the member runs on the Studio page
+  // (bundled on the persona), or the track went live there (bundled on the
+  // persona too). Persona and track names only; no actor.
+  | "studio_access_granted"
+  | "studio_landing_preview_requested"
+  | "studio_landing_preview_live"
   // Meet the team: the payload names a persona and a listing only.
   | "listing_team_invite"
   | "listing_team_request"
@@ -210,6 +225,17 @@ export const LIFECYCLE_KIND_CATEGORY: Record<
   studio_playlist_editor_invite_accepted: "community",
   studio_playlist_editor_invite_declined: "community",
   studio_playlist_editor_added: "community",
+  // Payment records for the persona's members and for the buyer, the same
+  // tab as the persona rows above.
+  studio_purchase_claimed: "community",
+  studio_purchase_confirmed: "community",
+  studio_purchase_declined: "community",
+  studio_purchase_expired: "community",
+  // Our team's word on the member's Studio access, the platform tab; requests
+  // about a persona the member runs, the same tab as the credit rows.
+  studio_access_granted: "platform",
+  studio_landing_preview_requested: "community",
+  studio_landing_preview_live: "community",
   // Meet the team: the payload names a persona and a listing only.
   listing_team_invite: "community",
   listing_team_request: "community",
@@ -434,6 +460,16 @@ const TOKEN_FIELDS: Partial<Record<LifecycleNotificationKind, string[]>> = {
   studio_playlist_editor_invite_accepted: ["playlistName"],
   studio_playlist_editor_invite_declined: ["playlistName"],
   studio_playlist_editor_added: ["playlistName", "personaName"],
+  // Studio purchases: every sentence names the artist and the item; a row
+  // missing either reads the kind's fallback phrase.
+  studio_purchase_claimed: ["artistName", "itemTitle"],
+  studio_purchase_confirmed: ["artistName", "itemTitle"],
+  studio_purchase_declined: ["artistName", "itemTitle"],
+  studio_purchase_expired: ["artistName", "itemTitle"],
+  // Studio landing v2: a row missing either name reads the kind's fallback
+  // phrase. `studio_access_granted` has an empty payload and no tokens.
+  studio_landing_preview_requested: ["personaName", "trackTitle"],
+  studio_landing_preview_live: ["mainPersonaName", "trackTitle"],
   // Meet the team: the payload names a persona and a listing only.
   listing_team_invite: ["listingName", "personaName"],
   listing_team_request: ["listingName", "personaName"],
@@ -495,6 +531,18 @@ export function applyLifecycleTokens(
             `notifications:studioCreditRole.${STUDIO_CREDIT_ROLE_CATALOG_KEY[role]}`,
           )
         : t(`notifications:type.${type}.roleFallback`);
+  }
+  if (type === "studio_purchase_declined") {
+    // The decline reason arrives as a code and reads in the buyer's language
+    // through the notifications catalog; a code this client cannot name (or
+    // a row without one) reads the kind's fallback phrase. The artist's
+    // written note never reaches the bell.
+    const reason = payloadString(payload, "declineReason");
+    tokens.reason =
+      reason &&
+      (STUDIO_PURCHASE_DECLINE_REASONS as readonly string[]).includes(reason)
+        ? t(`notifications:purchaseDeclineReason.${reason}`)
+        : t("notifications:type.studio_purchase_declined.reasonFallback");
   }
   if (type === "listing_edit_suggestion_accepted") {
     // `field` arrives as a machine value (`hours`); the copy needs the

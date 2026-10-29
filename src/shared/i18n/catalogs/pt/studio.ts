@@ -51,9 +51,9 @@ export const studio: Catalog = {
 
   "rail.foot.sustainedSince": "<em>Sustentas</em> o Studio desde {date}.",
   "rail.foot.paid_one":
-    "Já pagaste <b>{amount}</b> a {count} artista este ano.",
+    "Já compraste <b>{amount}</b> em música a {count} artista este ano.",
   "rail.foot.paid_other":
-    "Já pagaste <b>{amount}</b> a {count} artistas este ano.",
+    "Já compraste <b>{amount}</b> em música a {count} artistas este ano.",
 
   "railPlaylists.label": "A tua biblioteca",
   "railPlaylists.autoPlaylist": "Playlist automática",
@@ -127,7 +127,7 @@ export const studio: Catalog = {
   "player.play": "Reproduzir",
   "player.next": "Seguinte",
   "player.tipCta": "Dar {amount}",
-  "player.payingLine": "<b>a pagar</b> {amount} a {artist}",
+  "player.buyLine": "<b>100%</b> de uma compra vai para {artist}",
 
   // ── Hero da sala "Esta semana" (StudioPageSections → StudioHero) ─────────
   "room.hero.listening_one": "{count} pessoa a ouvir",
@@ -136,7 +136,7 @@ export const studio: Catalog = {
   "room.hero.removedToast": "Removida da tua biblioteca",
   "room.hero.inLibrary": "Na biblioteca",
   "room.hero.addLibrary": "Biblioteca",
-  "room.hero.payNote": "Esta audição paga a {artist} <em>{amount}</em>.",
+  "room.hero.payNote": "Gostas? <em>Compra</em> diretamente a {artist}.",
   "room.hero.tipOnTop": "Queres dar mais? 100% para quem faz.",
 
   // ── Secção do set "Esta semana" ────────────────────────────────────────────
@@ -147,10 +147,12 @@ export const studio: Catalog = {
   "room.set.sideHeading": "A ouvir contigo",
   "room.set.sideSub":
     "{sustainers} apoiantes · {casual} ocasionais · {cities} cidades",
-  "room.set.ledgerHead": "Livro-razão · este mês",
-  "room.set.ledgerPaidArtists": "Pago a artistas",
-  "room.set.ledgerArtistShare": "Parte da pessoa artista",
-  "room.set.ledgerPerPlay": "Por reprodução",
+  "room.set.fee.heading": "A tua quota de apoiante paga",
+  "room.set.fee.hosting": "O alojamento",
+  "room.set.fee.curators": "As ajudas de custo da curadoria",
+  "room.set.fee.fund": "O fundo de solidariedade",
+  "room.set.fee.artistShare": "Uma parte para artistas",
+  "room.set.fee.artistShareStatus": "Prevista",
 
   // ── Páginas de erro (Studio404Page, Studio500Page) ────────────────────────
   "error404.kind.release.eyebrow": "Lançamento não encontrado",
@@ -193,44 +195,43 @@ export const studio: Catalog = {
   // ── Página de apresentação do Studio (landing/StudioLandingPage e secções) ─
   // Tudo o que aqui se afirma é verdade hoje em live, exceto a secção
   // "plan.*", que está identificada como o plano e não tem números.
-  "landing.metaTitle": "Studio QueerPulse: música queer aqui perto",
+  "landing.metaTitle": "Studio QueerPulse: a cena de música queer de Lisboa",
   "landing.description":
-    "Artistas da nossa comunidade com páginas próprias, os seus lançamentos e sets, e os eventos onde os podes ouvir ao vivo. Grátis para quem faz parte do QueerPulse, com acesso aberto pela nossa equipa por fases.",
+    "Ouve artistas queer de Lisboa, lança a tua música de graça, com nome artístico se quiseres, e encontra os eventos onde tudo isto toca ao vivo. Grátis para quem faz parte, aberto pela nossa equipa por fases.",
   "landing.ogImageAlt":
     "A página inicial do Studio num portátil, com os lançamentos e as cenas desta semana",
   "landing.hero.eyebrow": "Studio QueerPulse",
   "landing.hero.title":
-    "Música queer feita aqui perto, <em>toda num só sítio</em>.",
+    "A cena de música queer de Lisboa, <em>num só leitor</em>.",
   "landing.hero.lede":
-    "Artistas da nossa comunidade com páginas próprias, os seus lançamentos e sets, e os eventos onde os podes ouvir ao vivo. Escolhidos por quem conhece a cena.",
+    "Ouve hoje quem vais ver na sexta, numa seleção feita por pessoas que vão às mesmas noites que tu.",
   "landing.hero.status":
     "Grátis para quem faz parte do QueerPulse. A nossa equipa abre o acesso por fases.",
   "landing.hero.seeInside": "Ver por dentro",
   "landing.cta.requestInvite": "Pedir um convite",
   "landing.cta.memberNote":
-    "A nossa equipa dá acesso ao Studio por fases. Quando entrares, esta página abre diretamente no Studio.",
-  "landing.gallery.eyebrow": "Um olhar lá dentro",
-  "landing.gallery.title": "O que vês <em>quando abres o Studio</em>",
-  "landing.gallery.tabsLabel": "Ecrãs do Studio",
+    "A nossa equipa abre o Studio por fases, primeiro para quem faz música. Pede agora e recebes uma notificação quando abrir para ti.",
+  "landing.gallery.eyebrow": "Como funciona",
+  "landing.gallery.title": "O Studio, <em>ecrã a ecrã</em>",
   "landing.gallery.sampleNote":
     "Estes ecrãs mostram artistas e pessoas de exemplo.",
   "landing.gallery.home.tab": "Início",
   "landing.gallery.home.caption":
-    "Os lançamentos, as cenas e as prateleiras desta semana, todos escolhidos por pessoas.",
+    "Os lançamentos da semana, as cenas e as prateleiras, escolhidos à mão pela nossa equipa. Ninguém paga por um lugar.",
   "landing.gallery.home.alt":
     "A página inicial do Studio, com filtros por formato, a prateleira Escolhas da equipa, o início de Novidades da semana e o leitor em baixo",
   "landing.gallery.home.phoneAlt":
     "A página inicial do Studio num telemóvel, a abrir no lançamento em destaque, com a capa e um botão para o ouvir",
   "landing.gallery.artist.tab": "Página de artista",
   "landing.gallery.artist.caption":
-    "Cada artista tem uma página para os seus lançamentos e a sua história, com um botão para seguir.",
+    "Cada artista tem uma página com os seus lançamentos, a sua história, um kit de imprensa e os próximos eventos no QueerPulse.",
   "landing.gallery.artist.alt":
     "Uma página de artista, com a foto, os lançamentos, o número de seguidores e um botão para seguir",
   "landing.gallery.artist.phoneAlt":
     "Uma página de artista num telemóvel, com a foto, o número de lançamentos e de seguidores e um botão para seguir",
   "landing.gallery.release.tab": "Lançamento",
   "landing.gallery.release.caption":
-    "Alinhamento, créditos e avisos de conteúdo. Os discos feitos para tocar de seguida tocam sem pausas.",
+    "Alinhamento, créditos e avisos de conteúdo antes de a faixa tocar. Discos feitos para correr seguidos tocam sem pausas.",
   "landing.gallery.release.alt":
     "Uma página de lançamento, com a capa, uma nota sobre o que mudou na nova versão, o alinhamento e uma ligação para comprar o álbum a quem o fez",
   "landing.gallery.release.phoneAlt":
@@ -252,58 +253,24 @@ export const studio: Catalog = {
     "Envia uma faixa para uma conversa e ela chega como um cartão, com a tua nota por baixo.",
   "landing.gallery.share.alt":
     "Uma conversa num telemóvel, com uma faixa do Studio partilhada como cartão",
-  "landing.promises.eyebrow": "Para que serve o Studio",
-  "landing.promises.title": "Feito para quem faz música <em>à tua volta</em>",
-  "landing.promises.artistPage.title": "Uma página a sério para cada artista",
-  "landing.promises.artistPage.body":
-    "Biografia, lançamentos, próximos eventos e kit de imprensa, tudo junto.",
-  "landing.promises.picks.title": "Pessoas escolhem o que fica em destaque",
-  "landing.promises.picks.body":
-    "A nossa equipa escolhe à mão as prateleiras e as cenas. Ninguém paga por um lugar.",
-  "landing.promises.scene.title": "A música encontra a cena",
-  "landing.promises.scene.body":
-    "As páginas de artista ligam aos seus eventos no QueerPulse, para que uma canção te leve a uma noite fora.",
-  "landing.promises.safety.title": "Seguro desde o início",
-  "landing.promises.safety.body":
-    "Avisos de conteúdo antes de uma faixa tocar, denúncia em todas as faixas e reclamações de direitos tratadas pela nossa equipa.",
   "landing.compare.eyebrow": "Lado a lado",
-  "landing.compare.title": "O Studio e as <em>grandes apps de streaming</em>",
+  "landing.compare.title":
+    "Fica com o Spotify para o resto. <em>O Studio é para a música feita à tua volta</em>.",
   "landing.compare.topicHeading": "Tema",
-  "landing.compare.bigAppsHeading":
-    "Grandes apps de streaming (Spotify e outras)",
   "landing.compare.studioHeading": "Studio QueerPulse",
-  "landing.compare.bigAppsShort": "Grandes apps",
   "landing.compare.studioShort": "Studio",
   "landing.compare.featured.topic": "O que fica em destaque",
-  "landing.compare.featured.bigApps":
-    "Escolhido por algoritmos, e as editoras podem pagar por mais promoção",
   "landing.compare.featured.studio":
-    "Escolhido à mão pela nossa equipa. Ninguém paga para ficar em destaque",
+    "Escolhido à mão pela nossa equipa. Ninguém paga por um lugar",
   "landing.compare.ads.topic": "Anúncios",
-  "landing.compare.ads.bigApps": "Anúncios no plano gratuito",
-  "landing.compare.ads.studio": "Grátis para quem faz parte, sem anúncios",
+  "landing.compare.ads.studio": "Sem anúncios, para quem faz parte",
   "landing.compare.listening.topic": "O que ouves",
-  "landing.compare.listening.bigApps":
-    "Usado para criar um perfil para recomendações e publicidade",
   "landing.compare.listening.studio":
-    "O teu histórico de audição é só teu, com Pausar e Limpar, e não criamos nenhum perfil a partir dele",
-  "landing.compare.artists.topic": "Quem ouves",
-  "landing.compare.artists.bigApps":
-    "Milhões de faixas, onde artistas locais ficam escondidos",
-  "landing.compare.artists.studio":
-    "Artistas da nossa comunidade, fáceis de encontrar",
+    "Um histórico privado com Pausar e Limpar, e nenhum perfil feito a partir dele",
   "landing.compare.scene.topic": "A cena",
-  "landing.compare.scene.bigApps":
-    "Listas de concertos de parceiros de bilheteira",
   "landing.compare.scene.studio":
-    "Noites organizadas pela nossa comunidade, no QueerPulse e com ligação na página de cada artista",
-  "landing.compare.playlists.topic": "Playlists em conjunto",
-  "landing.compare.playlists.bigApps":
-    "Quem colabora entra com um link de convite",
-  "landing.compare.playlists.studio":
-    "Feitas com as tuas ligações, e podem ficar visíveis só para elas",
+    "Eventos da comunidade ligados a partir da página de artista",
   "landing.compare.owner.topic": "Quem gere",
-  "landing.compare.owner.bigApps": "Grandes empresas cotadas em bolsa",
   "landing.compare.owner.studio":
     "Feito em Lisboa, pela comunidade e para a comunidade",
   "landing.plan.eyebrow": "O plano",
@@ -333,6 +300,199 @@ export const studio: Catalog = {
   "landing.closing.body":
     "O Studio faz parte do QueerPulse, a rede da comunidade. Entras com um convite, e a nossa equipa abre o Studio às pessoas por fases.",
   "landing.closing.magazineLink": "Ler a revista",
+  // Studio landing v2 (2026-10-28)
+  "landing.hero.audienceLabel": "O que te traz ao Studio",
+  "landing.hero.audience.listener": "Ouço música",
+  "landing.hero.audience.artist": "Faço música",
+  "landing.hero.artistTitle":
+    "Lança a tua música <em>onde a tua comunidade já está</em>.",
+  "landing.hero.artistLede":
+    "Publica de graça, lança com um nome artístico que nenhum outro membro liga a ti e chega a quem já vai aos teus concertos.",
+  "landing.hero.hearItFirst": "Ouve primeiro",
+  "landing.photoCredit": "Fotografia: {credit}",
+  "landing.demoSampleNote":
+    "Demonstração: artistas, faixas, citações e fotografias aqui são exemplos",
+  "landing.cta.applyAsArtist": "Candidatar-me como artista",
+  "landing.cta.requestAccess": "Pedir acesso ao Studio",
+  "landing.cta.makesMusic": "Faço música e quero lançá-la no Studio",
+  "landing.cta.checking": "A verificar o teu acesso ao Studio",
+  "landing.cta.onList.title": "Estás na lista",
+  "landing.cta.onList.body":
+    "Recebes uma notificação quando o Studio abrir para ti.",
+  "landing.cta.onList.artistBody":
+    "Pediste como artista, por isso a nossa equipa vê o teu pedido primeiro. Recebes uma notificação quando o Studio abrir para ti.",
+  "landing.cta.cancelRequest": "Cancelar pedido",
+  "landing.cta.requestSent": "Pedido enviado. Estás na lista",
+  "landing.cta.requestCancelled": "Pedido cancelado",
+  "landing.cta.requestFailed": "Não conseguimos enviar o teu pedido",
+  "landing.cta.cancelFailed": "Não conseguimos cancelar o teu pedido",
+  "landing.proof.label": "O Studio em números",
+  "landing.proof.artists_one": "{count} artista",
+  "landing.proof.artists_other": "{count} artistas",
+  "landing.proof.releases_one": "{count} lançamento",
+  "landing.proof.releases_other": "{count} lançamentos",
+  "landing.proof.events_one": "{count} evento com artistas do Studio este mês",
+  "landing.proof.events_other":
+    "{count} eventos com artistas do Studio este mês",
+  "landing.nextEvent.eyebrow": "A seguir em palco",
+  "landing.nextEvent.with": "Com {artist}",
+  "landing.nextEvent.online": "Online",
+  "landing.nextEvent.visitorCta": "Pedir convite para ver este evento",
+  "landing.nextEvent.memberCta": "Abrir o evento",
+  "landing.listen.eyebrow": "Ouve primeiro",
+  "landing.listen.title": "Faixas de <em>artistas do Studio</em>",
+  "landing.listen.note":
+    "Quem fez estas faixas partilhou-as para esta página. O que ouves aqui fica anónimo e não deixa registo.",
+  "landing.listen.listLabel": "Faixas para ouvir",
+  "landing.listen.play": "Tocar {track} de {artist}",
+  "landing.listen.pause": "Pausar {track} de {artist}",
+  "landing.listen.progress": "{elapsed} de {total}",
+  "landing.listen.playing": "A tocar {track} de {artist}",
+  "landing.listen.paused": "{track} está em pausa",
+  "landing.listen.retry": "Tentar {track} outra vez",
+  "landing.listen.reason.unavailable": "Esta faixa saiu desta página",
+  "landing.listen.reason.offline":
+    "Estás sem ligação, por isso esta faixa não carrega",
+  "landing.listen.reason.rateLimited":
+    "Demasiadas audições em pouco tempo. Tenta outra vez daqui a um minuto",
+  "landing.listen.reason.server":
+    "O Studio não respondeu, por isso esta faixa não carrega",
+  "landing.listen.reason.playback":
+    "O teu navegador não conseguiu tocar esta faixa",
+  "landing.artists.eyebrow": "Conhece quem faz a música",
+  "landing.artists.title": "Algumas das pessoas <em>no Studio</em>",
+  "landing.artists.listLabel": "Artistas do Studio",
+  "landing.forArtists.eyebrow": "Para artistas",
+  "landing.forArtists.title": "Lança <em>no Studio</em>",
+  "landing.forArtists.intro":
+    "Tudo isto já funciona hoje para cada artista que a nossa equipa traz.",
+  "landing.forArtists.upload.title": "Publica diretamente, de graça",
+  "landing.forArtists.upload.body":
+    "WAV e AIFF incluídos, diretamente do teu computador, sem distribuidora pelo meio.",
+  "landing.forArtists.persona.title": "Lança com um nome artístico",
+  "landing.forArtists.persona.body":
+    "A tua persona vive dentro da tua conta, e nenhum outro membro consegue ver a ligação entre as duas.",
+  "landing.forArtists.numbers.title": "Vê quem te ouve",
+  "landing.forArtists.numbers.body":
+    "Totais e tendências de audições, e quem escolhe mostrar o nome como apoiante.",
+  "landing.forArtists.tools.title": "Ferramentas para cada lançamento",
+  "landing.forArtists.tools.body":
+    "Lançamentos agendados, notas de versão, links privados de pré-escuta, um kit de imprensa e álbuns que tocam sem pausas.",
+  "landing.forArtists.events.title": "Os teus eventos na tua página",
+  "landing.forArtists.events.body":
+    "A tua página liga aos teus eventos no QueerPulse, para quem te ouve encontrar o próximo concerto.",
+  "landing.forArtists.spotify.label": "Vale a pena saber",
+  "landing.forArtists.spotify.fact":
+    "Desde 2024, uma faixa no Spotify não gera royalties de gravação até chegar às 1000 reproduções nos 12 meses anteriores.",
+  "landing.forArtists.spotify.source":
+    "Fonte: anúncio do Spotify, novembro de 2023",
+  "landing.forArtists.spotify.opensNewTab": "(abre num novo separador)",
+  "landing.forArtists.spotify.studio":
+    "No Studio, uma faixa nova tem página própria e quem a ouça desde o primeiro dia. O próprio Studio não guarda nem movimenta dinheiro, e o plano mais abaixo diz para onde o queremos levar.",
+  "landing.forArtists.founding.title": "Sê artista da fundação",
+  "landing.forArtists.founding.body":
+    "Quem entra primeiro fica em destaque no lançamento, numa prateleira do Studio, e guarda o distintivo Artista da fundação na sua página.",
+  "landing.forArtists.founding.memberBody":
+    "Pede como artista e a nossa equipa vê o teu pedido primeiro.",
+  "landing.forArtists.founding.priority":
+    "Candidata-te como artista e a nossa equipa vê o teu pedido primeiro.",
+  "landing.forArtists.shot.alt":
+    "Os números de artista no Studio, com audições por dia e quem mostra o nome como apoiante",
+  "landing.forArtists.shot.phoneAlt":
+    "Os números de artista no Studio num telemóvel",
+  "landing.compare.streamingHeading":
+    "Apps de streaming (Spotify, Apple Music)",
+  "landing.compare.platformsHeading":
+    "Plataformas de artistas (Bandcamp, SoundCloud)",
+  "landing.compare.streamingShort": "Apps de streaming",
+  "landing.compare.platformsShort": "Plataformas",
+  "landing.compare.featured.streaming":
+    "Algoritmos, e editoras podem pagar por mais promoção",
+  "landing.compare.featured.platforms": "Tabelas globais e escolhas editoriais",
+  "landing.compare.releasing.topic": "Lançar a tua música",
+  "landing.compare.releasing.streaming":
+    "Através de uma distribuidora, muitas vezes paga",
+  "landing.compare.releasing.platforms": "Publicas diretamente",
+  "landing.compare.releasing.studio": "Publicas diretamente, de graça",
+  "landing.compare.stageName.topic": "O teu nome artístico",
+  "landing.compare.stageName.streaming":
+    "Um perfil público de artista que geres com a tua própria conta",
+  "landing.compare.stageName.platforms":
+    "Uma página de perfil pública que geres com a tua própria conta",
+  "landing.compare.stageName.studio":
+    "Uma persona dentro da tua conta, e nenhum outro membro vê a ligação",
+  "landing.compare.ads.streaming": "No plano grátis",
+  "landing.compare.ads.platforms": "No plano grátis do SoundCloud",
+  "landing.compare.listening.streaming":
+    "Constrói um perfil para recomendações e anúncios",
+  "landing.compare.listening.platforms":
+    "Recomendações a partir do que segues e compras",
+  "landing.compare.fans.topic": "Quem são os teus fãs",
+  "landing.compare.fans.streaming": "Números anónimos",
+  "landing.compare.fans.platforms": "Quem compra e quem segue",
+  "landing.compare.fans.studio": "Apoiantes que escolhem mostrar o nome",
+  "landing.compare.safety.topic": "Segurança",
+  "landing.compare.safety.streaming": "Uma etiqueta de conteúdo explícito",
+  "landing.compare.safety.platforms":
+    "No máximo, uma etiqueta de conteúdo explícito",
+  "landing.compare.safety.studio":
+    "Avisos de conteúdo antes de a faixa tocar, denúncias e moderação pela nossa equipa",
+  "landing.compare.scene.streaming":
+    "Concertos listados por parceiros de bilhética",
+  "landing.compare.scene.platforms":
+    "Os teus concertos estão listados noutro sítio",
+  "landing.compare.owner.streaming": "Grandes empresas cotadas em bolsa",
+  "landing.compare.owner.platforms": "Grandes empresas e investidores",
+  "landing.faq.eyebrow": "Perguntas",
+  "landing.faq.title": "O que nos <em>perguntam</em>",
+  "landing.faq.free.question": "O Studio é grátis?",
+  "landing.faq.free.answer":
+    "Sim. O Studio é grátis para quem faz parte, sem anúncios. A música que compras a uma pessoa artista é paga, e o dinheiro vai para essa pessoa.",
+  "landing.faq.later.question": "Vai custar dinheiro mais tarde?",
+  "landing.faq.later.answer":
+    "Queremos que o Studio se torne uma cooperativa gerida por artistas e por quem ouve. Fazer parte e usar o Studio é grátis, e a música que compras a uma pessoa artista é paga, com o dinheiro a ir para essa pessoa. Se alguma outra coisa vier a custar dinheiro, esta página diz primeiro.",
+  "landing.faq.spotify.question": "Posso continuar a usar o Spotify?",
+  "landing.faq.spotify.answer":
+    "Claro. Fica com ele para o resto e vem ao Studio pela música feita à tua volta.",
+  "landing.faq.ownership.question": "De quem é a minha música?",
+  "landing.faq.ownership.answer":
+    "É tua. Ficas com os teus masters e os teus direitos, e podes retirar um lançamento quando quiseres.",
+  "landing.faq.elsewhere.question":
+    "Posso lançar a minha música noutros sítios?",
+  "landing.faq.elsewhere.answer":
+    "Sim. O Studio não pede exclusividade, por isso a tua música pode estar em qualquer outra plataforma ao mesmo tempo.",
+  "landing.faq.stageName.question": "Posso usar um nome artístico?",
+  "landing.faq.stageName.answer":
+    "Sim. Cria uma persona na tua conta e lança com ela. Nenhum outro membro consegue ver que a persona está ligada a ti.",
+  "landing.faq.listening.question": "O que guardam sobre o que ouço?",
+  "landing.faq.listening.answer":
+    "Um histórico privado que só tu vês, para o Studio te mostrar os teus artistas e faixas de topo. Pausa-o ou limpa-o quando quiseres. As audições continuam a contar para os totais de quem fez a música, sem o teu nome.",
+  "landing.faq.cut.question": "Ficam com uma parte?",
+  "landing.faq.cut.answer":
+    "Não. O próprio Studio não guarda nem movimenta dinheiro, por isso não há nada de que ficar com uma parte.",
+  "landing.faq.upload.question": "O que posso publicar?",
+  "landing.faq.upload.answer":
+    "Música, mixes de DJ, podcasts, palavra dita e performance gravada, em ficheiros MP3, M4A, WAV ou AIFF.",
+  "landing.faq.getIn.question": "Como entro?",
+  "landing.faq.getIn.answer":
+    "Pede um convite para o QueerPulse. Quando fizeres parte, a nossa equipa abre o Studio por fases, primeiro para quem faz música, e recebes uma notificação quando abrir para ti.",
+  "landing.next.eyebrow": "O que acontece a seguir",
+  "landing.next.title": "Três passos <em>até ao Studio</em>",
+  "landing.next.invite.title": "Pede um convite",
+  "landing.next.invite.body":
+    "Conta-nos um pouco sobre ti. Demora poucos minutos.",
+  "landing.next.review.title": "A nossa equipa lê o pedido",
+  "landing.next.review.body":
+    "Alguém da nossa equipa lê cada pedido. Chegar agora à nossa comunidade não é problema.",
+  "landing.next.list.title": "Ficas na lista do Studio",
+  "landing.next.list.body":
+    "Quando entrares, ficas automaticamente na lista do Studio, primeiro artistas, e recebes uma notificação quando o Studio abrir para ti.",
+  "landing.team.eyebrow": "Quem gere",
+  "landing.team.title": "As pessoas que <em>cuidam do QueerPulse</em>",
+  "landing.team.body":
+    "Pessoas da nossa comunidade fazem parte do conselho consultivo e ajudam a decidir o caminho do QueerPulse, incluindo o Studio.",
+  "landing.team.listLabel": "Conselho consultivo",
+  "landing.team.link": "Ler como o QueerPulse é gerido",
 
   // ── Entrar / Junta-te (StudioSignInPage) ─────────────────────────────────
   "signin.tabs.signIn": "Entrar",
@@ -341,9 +501,9 @@ export const studio: Catalog = {
   "signin.aside.title":
     "Uma cooperativa de streaming que <em>paga</em> a quem fez a música.",
   "signin.aside.body":
-    "Oitenta cêntimos de cada euro chegam a quem fez a música. As gorjetas passam a <em>{tipPercent}</em>. O livro-razão é público, atualizado toda a segunda-feira ao meio-dia.",
-  "signin.aside.paidThisMonth":
-    "Pago a artistas este mês: <em>{amount}</em> · e a subir.",
+    "Compra um lançamento e pagas diretamente a quem fez a música. As gorjetas passam a <em>{tipPercent}</em>. A tua quota de apoiante paga o alojamento, a curadoria e o fundo de solidariedade.",
+  "signin.aside.noCut":
+    "O QueerPulse não fica com <em>nada</em> de uma compra.",
 
   "signin.in.title": "Bem-vinde de <em>volta.</em>",
   "signin.in.lede":
@@ -370,7 +530,7 @@ export const studio: Catalog = {
   "signin.join.tier.studio.body":
     "Tudo no Studio: o set semanal do conselho, salas ao vivo, o catálogo completo, áudio sem perdas, subscrições diretas a artistas.",
   "signin.join.tier.studio.incl":
-    "{sharePercent} da tua quota chega a artistas por reprodução",
+    "A tua quota paga o alojamento, a curadoria e o fundo de solidariedade",
   "signin.join.tier.coop.badge": "Melhor valor",
   "signin.join.tier.coop.title": "Toda a <em>cooperativa</em>",
   "signin.join.tier.coop.body":
@@ -402,12 +562,11 @@ export const studio: Catalog = {
     "Salta os passos que quiseres. Podes voltar a abrir isto na Ajuda do Studio.",
   "firstRun.taste.title": "O que gostas de <em>ouvir</em>?",
   "firstRun.taste.dek":
-    "Escolhe quantos quiseres. Passam para a frente na tua página inicial do Studio e ficam só neste dispositivo.",
+    "Escolhe quantos quiseres. Passam para a frente na tua página inicial do Studio e ficam guardados na tua conta.",
   "firstRun.taste.noneYet": "Ainda nada escolhido. Também está tudo bem.",
-  "firstRun.taste.pickedCount_one":
-    "{count} escolhido, guardado neste dispositivo",
+  "firstRun.taste.pickedCount_one": "{count} escolhido, guardado na tua conta",
   "firstRun.taste.pickedCount_other":
-    "{count} escolhidos, guardados neste dispositivo",
+    "{count} escolhidos, guardados na tua conta",
   "firstRun.follow.title": "Encontra a tua <em>cena</em>",
   "firstRun.follow.dek":
     "Segue artistas das cenas do Studio. Quem está mais perto das tuas escolhas aparece primeiro.",
@@ -419,7 +578,9 @@ export const studio: Catalog = {
   "firstRun.backCta": "Voltar",
   "firstRun.nextCta": "Seguinte",
   "firstRun.finishCta": "Começar a ouvir",
-  "firstRun.savedToast": "As tuas escolhas ficaram guardadas neste dispositivo",
+  "firstRun.savedToast": "As tuas escolhas ficaram guardadas na tua conta",
+  "firstRun.saveError":
+    "Não conseguimos guardar na tua conta as escolhas das boas-vindas. Abre a Ajuda e escolhe Mostrar as boas-vindas outra vez para repetir",
   "firstRun.help.heading": "Volta a escolher o teu <em>som</em>",
   "firstRun.help.body":
     "As boas-vindas em três passos: o que é o Studio, os géneros e ambientes de que gostas e artistas para seguir.",
@@ -427,19 +588,19 @@ export const studio: Catalog = {
 
   // ── Sobre a cooperativa (StudioAboutPage + StudioAboutSections) ──────────
 
-  "about.sec.rate.num": "02: a taxa",
+  "about.sec.rate.num": "02: como as pessoas artistas recebem",
   "about.sec.rate.heading":
-    "0,05 € por reprodução. Um <em>piso</em> a que estamos mesmo obrigados.",
+    "Os fãs compram a música e <em>pagam diretamente</em> a quem a fez.",
   "about.sec.rate.p1":
-    "Comprometemo-nos a <strong>0,05 € por reprodução válida</strong>: cerca de quinze vezes o que o Spotify paga. Uma reprodução válida tem pelo menos 30 segundos, com um limite de um pagamento por pessoa a ouvir, por dia, para que ninguém possa fazer batota. O piso pode subir por maioria simples na assembleia; só pode <em>descer</em> com maioria de dois terços. Na prática, isso significa que não desce.",
+    "Artistas põem preço em álbuns, EPs, singles e nas suas faixas, com um preço fixo ou com o preço à escolha de quem compra. Pagas à pessoa artista <strong>diretamente da tua conta</strong>, pela ligação de pagamento, MB WAY ou IBAN dela, e tocas em Já paguei. Quando ela confirmar, a transferência abre e o teu nome entra no mural <em>Com o apoio de</em> do lançamento.",
   "about.sec.rate.footnote":
-    "Para comparação: a 0,003 € por reprodução, uma música precisa de cerca de 330 000 reproduções para ganhar o que aqui ganha em 20 000. Não estamos a fingir que é uma diferença pequena.",
+    "O QueerPulse não fica com nada de uma compra e nunca guarda o dinheiro. A tua quota de apoiante paga o alojamento, as ajudas de custo da curadoria e o fundo de solidariedade, e está prevista uma parte dela para artistas.",
 
-  "about.rate.cell.floor.value": "<em>0,05 €</em>",
-  "about.rate.cell.floor.label": "por reprodução válida · o piso",
-  "about.rate.cell.share.value": "<em>80</em>%",
+  "about.rate.cell.floor.value": "<em>0 €</em>",
+  "about.rate.cell.floor.label": "que o QueerPulse fica de uma compra",
+  "about.rate.cell.share.value": "<em>100</em>%",
   "about.rate.cell.share.label":
-    "da receita de subscrições para artistas, por reprodução",
+    "de cada compra vai diretamente para a pessoa artista",
   "about.rate.cell.tip.value": "<em>100</em>%",
   "about.rate.cell.tip.label":
     "de cada gorjeta, sem corte da plataforma, nunca",
@@ -447,25 +608,25 @@ export const studio: Catalog = {
   "about.sec.ceiling.num": "03: o que uma pessoa artista pode realmente ganhar",
   "about.sec.ceiling.heading": "Honestos quanto ao <em>teto</em>.",
   "about.sec.ceiling.p1":
-    "A maioria das páginas sobre a «economia de quem cria» mostra-te o top 0,1% e deixa-te presumir que és tu. Aqui está o que a taxa realmente produz em quatro níveis reais de audição, e onde para.",
+    "A maioria das páginas sobre a «economia de quem cria» mostra-te o top 0,1% e deixa-te presumir que és tu. Aqui está o que as compras e as gorjetas realmente somam em quatro níveis reais de apoio, e onde param.",
 
   "about.tier.casual.label": "Ocasional",
   "about.tier.casual.value": "74",
   "about.tier.casual.body":
-    "1480 reproduções válidas: cerca de <em>75 pessoas a ouvir</em> uma faixa três vezes por semana. Dinheiro para um café, pago todos os meses.",
+    "Cerca de <em>quinze fãs</em> por mês a comprar um single de 5 €. Dinheiro para um café, pago diretamente a ti.",
   "about.tier.building.label": "Em crescimento",
   "about.tier.building.value": "340",
   "about.tier.building.body":
-    "6800 reproduções, duas gorjetas, uma compra de álbum. Um rendimento extra a sério, <em>quase dá para a renda</em> em Lisboa.",
+    "Cerca de trinta compras de álbum por mês, alguns singles, duas gorjetas. Um rendimento extra a sério, <em>quase dá para a renda</em> em Lisboa.",
   "about.tier.sustaining.label": "Consolidado",
   "about.tier.sustaining.value": "1820",
   "about.tier.sustaining.body":
-    "36 000 reproduções, uma bolsa de gorjetas regular, uma sala ao vivo por mês. Abaixo do salário mediano português, e <em>12× o que o Spotify paga</em> pela mesma audição.",
+    "Um público que compra cada lançamento, uma bolsa de gorjetas regular, uma sala de audição ao vivo por mês. Abaixo do salário mediano português, e <em>cada euro</em> pago diretamente a ti pelos fãs.",
   "about.tier.touring.label": "Artista em digressão",
   "about.tier.touring.body":
     "O Studio <em>não</em> vai substituir um rendimento de digressão, e não vamos fingir que consegue. Pode, plausivelmente, pagar a renda enquanto fazes a próxima coisa.",
   "about.tierFoot":
-    "Estas são a taxa real por reprodução do livro-razão ao vivo, multiplicada por contagens de reproduções honestas, sem nada emprestado de um pitch deck. <em>Os números reais são públicos, todas as segundas-feiras ao meio-dia.</em>",
+    "Estas contas somam preços reais do Studio e números honestos de quem compra, sem nada emprestado de um pitch deck. <em>Cada euro aqui vai de quem é fã para quem cria, e o QueerPulse nunca lhe toca.</em>",
 
   "about.sec.governance.num": "04: quem decide",
   "about.sec.governance.heading":
@@ -473,7 +634,7 @@ export const studio: Catalog = {
   "about.sec.governance.p1":
     "Seis pessoas programam o set semanal, tratam da triagem de submissões e escrevem um parágrafo a justificar cada escolha. São eleitas por toda a cooperativa na assembleia anual, recebem uma ajuda de custo fixa de 400 €/mês que aparece no livro-razão público, e têm mandatos limitados a dois anos com rotação obrigatória. <strong>Uma pessoa decide quem é ouvido</strong> e assina o nome por baixo.",
   "about.sec.governance.p2":
-    "O piso por audição e as percentagens da divisão são definidos anualmente por votação conjunta de apoiantes e artistas, com quórum de 20%. Se achas que a taxa está errada, <em>votas, ou candidatas-te.</em>",
+    "A quota de apoiante, e a forma como se reparte entre alojamento, ajudas de custo da curadoria e fundo de solidariedade, é definida anualmente por votação conjunta de apoiantes e artistas, com um quórum de uma pessoa em cada cinco. Se achas que a quota está errada, <em>votas, ou candidatas-te.</em>",
 
   "about.sec.hardQuestions.num": "05: as perguntas difíceis",
   "about.sec.hardQuestions.heading": "As que estás <em>mesmo</em> a fazer.",
@@ -481,20 +642,20 @@ export const studio: Catalog = {
   "about.skeptic.broke.q":
     "Isto soa lindo e condenado ao fracasso. Como é que isto não vai à falência?",
   "about.skeptic.broke.a":
-    "Sendo honestos, em baixa escala, o piso por audição é caro e uma faixa que rebente pode custar mais em largura de banda do que aquilo que gera. A nossa mitigação é aborrecida e pública: quem ouve de forma ocasional fica por defeito em AAC, fazemos cache de forma agressiva, e o livro-razão é reconciliado <em>diariamente</em>, para vermos o vermelho antes de ser uma crise.",
+    "Sendo honestos, em baixa escala, o alojamento é a parte cara, e uma faixa que rebente pode custar mais em largura de banda do que aquilo que as quotas de apoiante trazem. A nossa mitigação é aborrecida e pública: quem ouve de forma ocasional fica por defeito em AAC, fazemos cache de forma agressiva, e o livro-razão das subscrições é reconciliado <em>diariamente</em>, para vermos o vermelho antes de ser uma crise.",
   "about.skeptic.clique.q": "Curadoria feita por seis pessoas soa a panelinha.",
   "about.skeptic.clique.a":
     "Pode tornar-se numa. Esse é o risco real. As salvaguardas são mandatos de dois anos, rotação obrigatória, e o facto de cada escolha ser publicada com um nome e uma razão. <em>Uma panelinha que tem de se justificar por escrito todas as semanas é uma panelinha mais fraca.</em>",
   "about.skeptic.clone.q":
     "Isto não é só um clone do Spotify com copy mais bonita?",
   "about.skeptic.clone.a":
-    "Se a página principal fosse filas de capas de álbum quadradas, seria. O produto é editorial de propósito: um set semanal programado, salas de audição ao vivo, pagamentos visíveis em cada faixa. <em>Se algum dia parecermos um Spotify mais pequeno, cobra-nos este parágrafo.</em>",
+    "Se a página principal fosse filas de capas de álbum quadradas, seria. O produto é editorial de propósito: um set semanal programado, salas de audição ao vivo, um mural de apoio em cada lançamento. <em>Se algum dia parecermos um Spotify mais pequeno, cobra-nos este parágrafo.</em>",
   "about.skeptic.leave.q": "O que acontece à minha música se eu sair?",
   "about.skeptic.leave.a":
-    "Ficas com os teus masters e com tudo o que ganhaste. A remoção é um processo de uma página, com 14 dias, sem ciclo de retenção. As reproduções passadas continuam pagas. Sair é tão fácil como entrar. Achamos que é a única forma honesta de te pedir para ficares.",
+    "Ficas com os teus masters e com cada euro que os fãs te pagaram, porque foi diretamente para ti. A remoção é um processo de uma página, com 14 dias, sem ciclo de retenção. Sair é tão fácil como entrar. Achamos que é a única forma honesta de te pedir para ficares.",
 
   "about.cta.join": "Junta-te ao Studio",
-  "about.cta.ledger": "Ler o livro-razão público",
+  "about.cta.ledger": "Ler como o QueerPulse é gerido",
 
   // ── Acessibilidade (StudioAccessibilityPage) ──────────────────────────────
   "accessibility.statement.p1":
@@ -543,7 +704,7 @@ export const studio: Catalog = {
 
   "help.faq.moneyGo.q": "Para onde vai realmente o meu dinheiro?",
   "help.faq.moneyGo.a":
-    "Da tua assinatura, <strong>80% chega a artistas</strong> por reprodução, com um piso de 0,05 € cada. <em>Cada cêntimo de cada gorjeta</em> vai para a pessoa artista sem corte da plataforma. O resto financia ajudas de custo de curadoria, infraestrutura e o fundo de solidariedade. Podes ver a divisão exata no <a>livro-razão público</a>, atualizado toda a segunda-feira ao meio-dia.",
+    "Quando compras um lançamento, <strong>pagas diretamente à pessoa artista</strong> e o QueerPulse não fica com nada. <em>Cada cêntimo de cada gorjeta</em> vai para a pessoa artista sem corte da plataforma. A tua quota de apoiante paga o alojamento, as ajudas de custo da curadoria e o fundo de solidariedade, e está prevista uma parte dela para artistas. Lê <a>como o QueerPulse é gerido</a>.",
   "help.faq.tipNoAccount.q": "Posso dar gorjeta sem ter conta?",
   "help.faq.tipNoAccount.a":
     "Podes <em>ouvir</em> um set de demonstração grátis, mas dar gorjeta exige uma conta, para que o dinheiro possa chegar à pessoa artista e te seja emitido um recibo. O registo demora menos de um minuto e o primeiro mês é por nossa conta.",
@@ -560,7 +721,7 @@ export const studio: Catalog = {
 
   "help.faq.getPaid.q": "Quando e como sou pago?",
   "help.faq.getPaid.a":
-    'Mensalmente, no dia 5, com um piso de 5 €. SEPA ou Stripe Connect. Vês a taxa por reprodução desse mês, os números de cada entrada no livro-razão e a divisão por lançamento. Quem colabora é pago <em>diretamente</em>. Não há uma carteira de "artista principal". Consulta <a>Pagamentos</a>.',
+    "Os fãs pagam-te diretamente, pelas ligações de pagamento, número MB WAY ou IBAN que juntas nas definições do Studio. Tocam em Já paguei, tu verificas a tua conta e confirmas, e a transferência deles abre. O QueerPulse <em>nunca guarda</em> o dinheiro. Revê o que quem compra diz ter pago em <a>Pagamentos</a>.",
   "help.faq.realisticEarn.q": "O que posso realisticamente ganhar?",
   "help.faq.realisticEarn.a":
     "Somos honestos quanto ao teto: cerca de 74 €/mês ocasional, 340 €/mês em crescimento, 1820 €/mês consolidado. O Studio não vai substituir um rendimento de digressão, mas pode substituir a renda. A explicação completa está em <a>Sobre o Studio</a>.",
@@ -611,26 +772,12 @@ export const studio: Catalog = {
 
   // ── Confiança e termos (StudioTermsPage) ──────────────────────────────────
 
-  "terms.deal.artists.title":
-    "As pessoas artistas ficam com <em>80%</em> e com os seus masters",
-  "terms.deal.artists.body":
-    "A divisão vive no estatuto da cooperativa, vinculada por lei. <em>O piso sobe livremente e só pode descer com uma votação de dois terços.</em>",
-  "terms.deal.tips.title": "As gorjetas são <em>100%</em>, sempre",
-  "terms.deal.tips.body":
-    "Sem corte da plataforma nas gorjetas, nunca. Esta é uma cláusula fundadora, fora de qualquer votação.",
-  "terms.deal.data.title": "Os teus dados <em>nunca</em> são vendidos",
-  "terms.deal.data.body":
-    "Ficam dentro da cooperativa e servem exatamente uma coisa: pagar a quem faz música. O histórico está desligado por defeito e é apagável num toque.",
-  "terms.deal.leaving.title": "Sair é <em>uma página</em>",
-  "terms.deal.leaving.body":
-    "A remoção do teu trabalho demora 14 dias, e fechas a conta com um clique. As reproduções passadas continuam pagas de qualquer forma.",
-
   "terms.sec.deed.num": "01: o estatuto da cooperativa",
   "terms.sec.deed.heading": "O que significa isto ser <em>teu</em>.",
   "terms.sec.deed.p1":
     "O QueerPulse Studio é uma cooperativa registada. As pessoas, quem ouve e quem faz música, são as suas proprietárias. Isto é uma estrutura legal, com um estatuto que podes ler, e que vincula quem a gere.",
   "terms.sec.deed.p2":
-    "O estatuto fixa três coisas que quem está no comando <strong>não pode mudar em segredo</strong>: o piso de 80% para artistas, a passagem de 100% das gorjetas, e o livro-razão público. Baixar o piso exige uma maioria de dois terços de toda a cooperativa. O conselho é <em>eleito, com mandato limitado, e pago no livro-razão</em>. Não há ações de fundador nem veto de investidores.",
+    "O estatuto fixa uma promessa que quem está no comando <strong>não pode mudar em segredo</strong>: artistas recebem diretamente e o QueerPulse nunca fica com nenhuma parte. Mudar essa promessa exige uma maioria de dois terços de toda a cooperativa. O conselho é <em>eleito, com mandato limitado, e pago no livro-razão</em>. Não há ações de fundador nem veto de investidores.",
   "terms.sec.deed.pull":
     "Se alguma vez começarmos a agir como uma empresa que por acaso tem bons valores, o estatuto é aquilo a que nos podes obrigar.",
   "terms.sec.deed.footnote":
@@ -641,7 +788,7 @@ export const studio: Catalog = {
   "terms.sec.licences.p1":
     "Cada lançamento indica a sua licença, escolhida pela pessoa artista. Aqui está o que cada uma significa para ti como ouvinte, e para quem quiser reutilizar o trabalho num set, num filme, ou numa remistura.",
   "terms.sec.licences.footnote":
-    "Os sets de DJ são especiais: um set pode incluir faixas com licenças diferentes, e o nosso sistema encaminha o pagamento de cada faixa para quem a fez. <em>Covers são permitidos</em>; os direitos mecânicos são geridos através de um parceiro de cobrança português, e não pagamos sincronização, por isso autorizar um cover para uso em filme é contigo.",
+    "Os sets de DJ são especiais: um set pode incluir faixas com licenças diferentes, e o nosso sistema credita cada faixa a quem a fez. <em>Covers são permitidos</em>; os direitos mecânicos são geridos através de um parceiro de cobrança português, e não pagamos sincronização, por isso autorizar um cover para uso em filme é contigo.",
 
   "terms.licence.arr.title": "Todos os direitos <em>reservados</em>",
   "terms.licence.arr.row1": "Reproduzir e guardar",
@@ -663,7 +810,7 @@ export const studio: Catalog = {
   "terms.sec.privacy.p1":
     "Guardamos a tua conta, as tuas gravações, os teus recibos, e o que ativares explicitamente. <strong>Não</strong> guardamos um perfil do teu gosto para vender, um histórico que não pediste que guardássemos, nem nada que déssemos a um anunciante, porque não temos anunciantes.",
   "terms.sec.privacy.footnote":
-    "Contagens de reproduções agregadas e anónimas alimentam o livro-razão público, para que as pessoas artistas sejam pagas e os números sejam auditáveis. Podes exportar tudo o que guardamos, ou apagá-lo, em <a>Definições, depois Apagar e sair</a>: instantaneamente, sem modal, sem necessidade de desfazer porque falamos a sério.",
+    "Contagens de reproduções agregadas e anónimas mostram às pessoas artistas como a sua música é ouvida, sem nomes associados. Podes exportar tudo o que guardamos, ou apagá-lo, em <a>Definições, depois Apagar e sair</a>: instantaneamente, sem modal, sem necessidade de desfazer porque falamos a sério.",
 
   "terms.longVersions.meta":
     "termos v3.2 · privacidade v2.1 · estatuto da cooperativa 2024 · última atualização a 2 jun. 2026",
@@ -676,12 +823,12 @@ export const studio: Catalog = {
   "rights.promise.window.title": "Remoção em 14 dias",
   "rights.promise.window.body":
     "Confirma uma remoção e o lançamento deixa de estar disponível dentro de 14 dias, normalmente na mesma noite. As caches limpam-se, os links dão erro 404 para uma página cuidada.",
-  "rights.promise.paid.title": "As reproduções passadas continuam pagas",
+  "rights.promise.paid.title": "O que os fãs pagaram continua teu",
   "rights.promise.paid.body":
-    "Cada audição até à remoção é paga no ciclo seguinte. Remover um trabalho nunca recupera dinheiro já ganho.",
-  "rights.promise.banking.title": "A parte bancária não é afetada",
+    "Os fãs pagaram-te diretamente, por isso esse dinheiro nunca passou pelo QueerPulse. Remover um trabalho deixa cada pagamento onde está.",
+  "rights.promise.banking.title": "As formas de receber não são afetadas",
   "rights.promise.banking.body":
-    "Uma remoção deixa a tua conta aberta. Os teus dados SEPA, o teu calendário de pagamentos, as divisões com colaboradores: tudo continua ativo.",
+    "Uma remoção deixa a tua conta aberta. As tuas formas de receber, os preços dos teus outros lançamentos, as divisões com colaboradores: tudo continua ativo.",
 
   "rights.releases.heading": "Os teus <em>lançamentos</em>",
   "rights.releases.liveCount_one": "{count} ativo",
@@ -696,7 +843,7 @@ export const studio: Catalog = {
 
   "rights.leavingCoop.title": "A sair da cooperativa <em>por completo</em>?",
   "rights.leavingCoop.body":
-    "Esta página só remove lançamentos individuais. Para encerrar a tua conta de artista, terminar a tua contribuição de apoiante e pedir uma exportação completa dos teus dados, isso está em <a>Definições, depois Apagar e sair</a>. <em>Mesmo assim, os pagamentos passados ficam contigo</em> e vamos continuar a pagar quaisquer reproduções que já tenham acontecido.",
+    "Esta página só remove lançamentos individuais. Para encerrar a tua conta de artista, terminar a tua contribuição de apoiante e pedir uma exportação completa dos teus dados, isso está em <a>Definições, depois Apagar e sair</a>. <em>Mesmo assim, cada euro que os fãs te pagaram continua teu</em>, porque foi diretamente para ti.",
 
   "rights.takedownStartedToast":
     "«{title}» entra na janela de remoção de 14 dias",
@@ -710,7 +857,7 @@ export const studio: Catalog = {
   "rights.modal.body":
     "Vai deixar de estar disponível dentro de 14 dias. Os links existentes vão passar a mostrar uma pequena página «este trabalho foi retirado pela pessoa artista». <em>Podes republicá-lo quando quiseres</em>. Os teus masters nunca saem das tuas mãos.",
   "rights.modal.keepEarned":
-    "<em>Ficas com tudo o que já ganhaste.</em> Este lançamento continua pago por cada reprodução até à remoção, no ciclo seguinte.",
+    "<em>Ficas com tudo o que os fãs já te pagaram.</em> Esse dinheiro foi diretamente para ti, por isso uma remoção não lhe toca.",
   "rights.modal.confirmCta": "Remover",
   "rights.modal.cancelCta": "Manter disponível",
 
@@ -718,7 +865,7 @@ export const studio: Catalog = {
   "album.more.heading": "Mais de <em>{artist}</em>",
   "album.more.artistPageCta": "Página de artista",
 
-  // ── Chrome partilhado de hero/livro-razão (Álbum/Set — nomes masculinos em
+  // ── Chrome partilhado de hero (Álbum/Set — nomes masculinos em
   //    pt-PT; Faixa/Coleção reutilizam o room.hero.addedToast / removedToast
   //    feminino acima, por concordância de género) ───────────────────────────
   "detail.shareCta": "Partilhar",
@@ -726,33 +873,20 @@ export const studio: Catalog = {
   "detail.copyFailedToast": "Não foi possível copiar o link",
   "detail.tipArtistCta": "Dar gorjeta a {artist}",
   "detail.tipCta": "Dar gorjeta",
-  "detail.fullLedgerCta": "Livro-razão completo",
   "detail.addedToast": "Adicionado à tua biblioteca",
   "detail.removedToast": "Removido da tua biblioteca",
 
   // ── Página da faixa (StudioTrackPage + Hero + Sidebar + Lyrics) ───────────
   "track.hero.eyebrow": "Faixa {current} de {total}",
-  "track.hero.payMonth": "<em>{amount}</em> para {artist} este mês",
   "track.inSet.status":
     "Estás a ouvir com <b>{count}</b> pessoas no <em>set de quarta-feira</em>, programado por {curator}. A faixa {next} começa dentro de <b>{countdown}</b>.",
   "track.inSet.joinCta": "Entrar no set",
   "track.more.fullAlbumCta": "Álbum completo",
   "track.sidebar.curatorNoteLabel": "Nota de curadoria",
-  "track.sidebar.splitHeading": "Para onde vai 1 € quando ouves isto",
   "track.sidebar.creditsHeading": "Créditos",
   "track.sidebar.leadSheetLabel": "Partitura",
   "track.sidebar.downloadCta": "Transferir",
   "track.sidebar.curatorRole": "responsável pela programação · o set de quarta",
-  "track.sidebar.splitLead":
-    "{artistShare} para {artist}. {platformShare} mantêm o Studio aberto.",
-  "track.sidebar.split.artist.label": "Artista",
-  "track.sidebar.split.artist.sub": "Direto, todos os meses",
-  "track.sidebar.split.fund.label": "Fundo solidário",
-  "track.sidebar.split.fund.sub": "Apoios e vales de masterização",
-  "track.sidebar.split.platform.label": "Plataforma e equipa",
-  "track.sidebar.split.platform.sub": "Alojamento, legendas, conselho",
-  "track.sidebar.split.fees.label": "Taxas de pagamento",
-  "track.sidebar.split.fees.sub": "Apenas Stripe / SEPA",
   "track.sidebar.sheetSpec": "6 páginas · piano + voz · {licence} · {artist}",
   "track.lyrics.heading": "Letra & <em>tradução</em>",
   "track.lyrics.leadSheetChordsCta": "Partitura & acordes",
@@ -760,17 +894,6 @@ export const studio: Catalog = {
   // ── Página do álbum (StudioAlbumPage + Hero + Main + Sidebar) ─────────────
   "album.tabs.tracklist": "Faixas",
   "album.tabs.linerNotes": "Notas de encarte",
-  "album.main.perPlaySuffix": "{amount} / reprodução",
-  "album.main.perPlayNote": "Cada reprodução paga {amount}",
-  "album.sidebar.buyEyebrow": "O Studio está aberto para ti",
-  "album.sidebar.buySub": "Compra o álbum · guarda-o offline · FLAC + AAC.",
-  "album.sidebar.buyCta": "Comprar · {amount}",
-  "album.sidebar.payWhatYouCanCta": "Paga o que puderes · mínimo {amount}",
-  "album.sidebar.streamingIncludedCta": "Streaming incluído se contribuíres",
-  "album.sidebar.ledgerHeading":
-    "Livro-razão público para <em>este lançamento</em>",
-  "album.sidebar.paidToArtistLifetime": "Pago a {artist}, no total",
-  "album.sidebar.paidToCollaborators": "Pago a colaboradores",
 
   // ── Perfil do artista (StudioArtistPage + Hero + Main + Sidebar) ──────────
   "artist.tabs.music": "Música",
@@ -778,18 +901,9 @@ export const studio: Catalog = {
   "artist.hero.followCta": "Seguir",
   "artist.hero.followedToast": "A seguir {artist}",
   "artist.hero.unfollowedToast": "Deixaste de seguir {artist}",
-  "artist.hero.subscribeNote":
-    "Subscreve por <em>{amount}/mês</em>, diretamente a {artist}, sem corte da plataforma.",
-  "artist.hero.tipOnTopNote": "Ou dá uma gorjeta além do streaming.",
   "artist.main.releasesHeading": "Lançamentos",
   "artist.main.singlesHeading": "Singles & <em>avulsos</em>",
-  "artist.sidebar.sustainEyebrow": "Contribui diretamente para {artist}",
-  "artist.sidebar.sustainSub":
-    "Diretamente para {artist}. Sem corte da plataforma. Quem subscreve tem acesso antecipado a faixas, a nota semanal e lugar em todas as transmissões ao vivo.",
-  "artist.sidebar.subscribeCta": "Subscrever · {amount}/mês",
-  "artist.sidebar.oneOffTipCta": "Gorjeta pontual",
   "artist.sidebar.thisMonthHeading": "{artist} · este mês",
-  "artist.sidebar.earningsStreaming": "Receita (streaming)",
   "artist.sidebar.tipsReceived": "Gorjetas recebidas",
   "artist.sidebar.directSubscribers": "Subscrições diretas",
 
@@ -797,15 +911,14 @@ export const studio: Catalog = {
   "set.page.playAria": "Reproduzir o set",
   "set.page.joinLiveRoomCta": "Entrar na sala ao vivo",
   "set.page.tracklistHeading": "A <em>lista de faixas</em>",
-  "set.page.everyPlayPaysNote": "Cada reprodução paga à pessoa artista",
-  "set.page.payingNowLabel": "a pagar agora",
+  "set.page.creditedNote": "Cada faixa creditada a quem a fez",
+  "set.page.playingNowLabel": "a tocar agora",
 
   // ── Prateleiras fora de antena (StudioOffAirShelves) ──────────────────────
   "offAir.carryOn.heading": "Continua onde <em>paraste</em>",
   "offAir.carryOn.sub":
     "Da tua biblioteca · continua a tocar, em transmissão ou não",
   "offAir.libraryCta": "Biblioteca",
-  "offAir.perPlay": "por reprodução",
   "offAir.quietHours.heading": "Para as <em>horas mais calmas</em>",
   "offAir.quietHours.sub":
     "Coleções do conselho que não precisam de luzes acesas",
@@ -830,8 +943,8 @@ export const studio: Catalog = {
   // ── Cartão final para partilha social (StudioEndCardPage) ─────────────────
   "endCard.eyebrow": "Uma cooperativa de streaming",
   "endCard.tagline": "a música, <em>paga em frente.</em>",
-  "endCard.paidThisMonth": "11 940 € pagos a artistas este mês",
-  "endCard.perPlayLabel": "por reprodução",
+  "endCard.directLine": "os fãs pagam diretamente a quem cria",
+  "endCard.perBuyLabel": "de cada compra",
   "endCard.perTipLabel": "de cada gorjeta",
   "endCard.listenCta": "ouve com orgulho",
 
@@ -844,7 +957,7 @@ export const studio: Catalog = {
   "council.hero.dek":
     "Eleitas todos os anos pela assembleia, recebem uma ajuda de custo fixa registada no livro-razão público, com mandatos limitados a dois anos. Programam o set semanal, tratam da triagem e escrevem as notas. <em>Tudo o que escolhem leva o nome delas.</em>",
   "council.intro.lede":
-    "O conselho trabalha às claras. Ouvem em público, <em>justificam cada escolha num parágrafo</em>, e respondem pela taxa. Podes ler os cadernos, ver as seleções, e votar para as substituir.",
+    "O conselho trabalha às claras. Ouvem em público, <em>justificam cada escolha num parágrafo</em>, e respondem perante a cooperativa. Podes ler os cadernos, ver as seleções, e votar para as substituir.",
 
   "council.fact.seats.value": "<em>6</em> lugares",
   "council.fact.seats.label": "mandatos de 2 anos · escalonados",
@@ -953,7 +1066,7 @@ export const studio: Catalog = {
     "Vamos enviar-te a exportação dos teus dados dentro de uma hora.",
   "settings.erase.closeAccount.heading": "Encerrar a minha conta Studio",
   "settings.erase.closeAccount.note":
-    "Termina a tua contribuição de apoiante, remove a tua biblioteca. As gorjetas passadas continuam pagas a artistas. <em>A parte bancária, se também és artista, não é afetada.</em>",
+    "Termina a tua contribuição de apoiante, remove a tua biblioteca. As gorjetas passadas continuam pagas a artistas. <em>As tuas formas de receber, se também és artista, ficam como estão.</em>",
   "settings.erase.closeAccount.cta": "Encerrar conta",
   "settings.erase.closeAccount.toast":
     "O encerramento da conta abre num fluxo à parte.",
@@ -1004,7 +1117,6 @@ export const studio: Catalog = {
   // ── Navegação do back-office de criação (StudioCreatorShell) ──────────────
   "creator.nav.dashboard": "Painel",
   "creator.nav.newRelease": "Novo lançamento",
-  "creator.nav.payouts": "Pagamentos",
   "creator.product": "Criação",
   "creator.viewPublicPageCta": "Ver página pública",
 
@@ -1015,7 +1127,7 @@ export const studio: Catalog = {
   "library.eyebrow": "A tua biblioteca",
   "library.title": "Tudo o que <em>guardaste.</em>",
   "library.dek":
-    "Álbuns, sets e faixas guardados, além dos <em>{amount}</em> que já pagaste a {artistCount} artistas este ano só por ouvires aqui.",
+    "Álbuns, sets e faixas guardados, além dos <em>{amount}</em> em música que já compraste diretamente a {artistCount} artistas este ano.",
   "library.tabs.albums": "Álbuns",
   "library.tabs.sets": "Sets",
   "library.tabs.collections": "Coleções",
@@ -1054,16 +1166,15 @@ export const studio: Catalog = {
   // ── Painel de criação (StudioDashboardPage + Charts + Side) ───────────────
   // Só chrome — o nome do artista, títulos de faixas, números por artista
   // (STATS/CURATORS/CITIES/BARS em studioDashboard.data) e os planos
-  // concretos de sala ao vivo/pagamento abaixo são dados deste artista,
+  // concretos de sala ao vivo abaixo são dados deste artista,
   // vindos da API em modo real, e ficam em inglês nos dois modos (§1).
   "dashboard.hero.eyebrow": "Studio · este mês",
   "dashboard.hero.title": "Boa semana, <em>{name}</em>.",
   "dashboard.hero.sub":
     "<em>{trackTitle}</em> já tem dois meses e continua a subir. Os curadores mantiveram-na na rotação.",
 
-  "dashboard.stats.streamingEarnings": "Receita de reprodução",
+  "dashboard.stats.streamingEarnings": "Compras de lançamentos",
   "dashboard.stats.tipsReceived": "Gorjetas recebidas",
-  "dashboard.stats.nextPayout": "Próximo pagamento · {date}",
 
   "nextSteps.heading": "Próximos passos",
   "nextSteps.drafts_one": "Tens {count} rascunho à espera de ser terminado",
@@ -1091,14 +1202,18 @@ export const studio: Catalog = {
     "WAV / FLAC · 3 passos · 8 minutos",
   "dashboard.side.quickActions.goLive.label":
     "Ficar ao vivo: abrir uma sala ao vivo",
-  "dashboard.side.quickActions.payouts.label":
-    "Ver pagamentos e dados bancários",
+  "dashboard.side.quickActions.payments.label":
+    "Rever pagamentos de quem compra",
+  "dashboard.side.quickActions.payments.hint":
+    "Vê o que quem compra diz ter pago e confirma",
   "dashboard.side.deal.eyebrow": "O acordo, sempre",
-  "dashboard.side.deal.heading": "80% para <em>ti.</em>",
+  "dashboard.side.deal.heading": "Cada compra vai <em>para ti.</em>",
   "dashboard.side.deal.body":
-    "Cada reprodução, cada gorjeta, cada compra. A divisão é igual para um primeiro lançamento ou para quem vence um festival, e está impressa no livro-razão público.",
-  "dashboard.side.deal.perPlay.label": "Por reprodução",
-  "dashboard.side.deal.yourShare.label": "A tua parte",
+    "Os fãs pagam-te diretamente pelos teus álbuns, EPs, singles e faixas, e o QueerPulse nunca guarda o dinheiro. O acordo é igual para um primeiro lançamento ou para quem vence um festival.",
+  "dashboard.side.deal.buys.label": "Compras",
+  "dashboard.side.deal.buys.value": "Pagas diretamente a ti",
+  "dashboard.side.deal.platform.label": "Fica para o QueerPulse",
+  "dashboard.side.deal.platform.value": "Nada",
   "dashboard.side.deal.tips.label": "Gorjetas",
   "dashboard.side.deal.tips.value": "100% para ti",
 
@@ -1191,7 +1306,7 @@ export const studio: Catalog = {
     "Mais alguns detalhes e o teu lançamento segue para a fila de revisão do conselho.",
   "upload.metadata.field.title": "Título do lançamento",
   "upload.metadata.field.year": "Ano de lançamento",
-  "upload.metadata.field.genre": "Género principal",
+  "upload.metadata.field.genre": "Géneros",
   "upload.metadata.genre.fado": "Fado / contemporâneo",
   "upload.metadata.genre.electronic": "Eletrónica",
   "upload.metadata.genre.folk": "Folk",
@@ -1202,73 +1317,9 @@ export const studio: Catalog = {
   "upload.submitted.title": "Submetido para <em>revisão.</em>",
   "upload.submitted.body":
     "O teu lançamento está na fila do conselho. Uma pessoa curadora vai verificar os ficheiros, divisões e créditos, normalmente dentro de um ou dois dias, e vais receber um aviso assim que estiver disponível. Nada é publicado sem a tua confirmação final.",
-  "upload.submitted.viewPayoutsCta": "Ver os teus pagamentos",
   "upload.submitted.toast": "Lançamento submetido para revisão",
 
   "upload.continueToMetadataCta": "Continuar para metadados",
-
-  // ── Pagamentos (StudioPayoutsPage + Sections + Skeletons) ─────────────────
-  // Só chrome. O conteúdo fictício da demonstração desta página vive em
-  // studioShowcase (traduzido); nomes próprios e números ficam nos ficheiros de dados.
-  "payouts.hero.eyebrow": "Pagamentos e dados bancários",
-  "payouts.hero.title": "<em>{amount}</em> chegam no dia {day}.",
-  "payouts.hero.sub":
-    "Pago mensalmente por transferência SEPA, com o teu recibo verde emitido automaticamente. Sem mínimos que não escolheste.",
-  "payouts.hero.breakdownEyebrow": "Pagamento de {month} · discriminação",
-
-  "payouts.summary.fromStreaming": "De reproduções",
-  "payouts.summary.fromTips": "De gorjetas",
-  "payouts.summary.fromAlbumBuys": "De compras de álbuns",
-  "payouts.summary.directSubs": "Subscrições diretas de 3 €/mês",
-  "payouts.summary.splitsRouted": "Divisões encaminhadas para outros",
-  "payouts.summary.toYourIban": "Para o teu IBAN",
-
-  "payouts.list.heading": "Pagamentos <em>recentes</em>",
-  "payouts.list.exportCsv": "Exportar CSV",
-  "payouts.list.status.pending": "Pendente",
-  "payouts.list.status.paid": "Pago",
-
-  "payouts.breakdown.heading": "Este mês, <em>faixa a faixa</em>",
-  "payouts.breakdown.rateNote":
-    "Os ganhos de streaming atualizam todas as noites às 02:00 de Lisboa. Cada faixa mostra os guardados e as adições a playlists, e tudo abaixo de 5 aparece como Menos de 5.",
-  "payouts.breakdown.subtotalLabel":
-    "Subtotal de reproduções · antes de divisões, gorjetas e compras",
-  "payouts.breakdown.savesLine": "{total} guardados e adições a playlists",
-
-  "payouts.sidebar.methodEyebrow": "Método de pagamento · ativo",
-  "payouts.sidebar.methodHeading": "A enviar para <em>SEPA</em>",
-  "payouts.sidebar.method.sepa.label": "SEPA: IBAN",
-  "payouts.sidebar.method.sepa.badge": "Ativo",
-  "payouts.sidebar.method.stripe.label": "Stripe Connect",
-  "payouts.sidebar.method.stripe.hint": "ligado · via de reserva",
-  "payouts.sidebar.method.stripe.switchCta": "Mudar",
-  "payouts.sidebar.method.stripe.demoToast":
-    "Mudar para o Stripe Connect está desligado na demonstração, por isso os teus pagamentos ficam no SEPA",
-  "payouts.sidebar.method.coopCredit.label": "Crédito da cooperativa",
-  "payouts.sidebar.method.coopCredit.hint":
-    "gasta na Casa do Comum, salas de ensaio · sem taxas",
-  "payouts.sidebar.method.coopCredit.addCta": "Adicionar",
-  "payouts.sidebar.method.coopCredit.demoToast":
-    "Adicionar crédito da cooperativa está desligado na demonstração, por isso os teus pagamentos ficam no SEPA",
-
-  "payouts.preferences.heading": "Preferências de <em>pagamento</em>",
-  "payouts.preferences.threshold.label": "Limiar mínimo",
-  "payouts.preferences.threshold.opt5":
-    "5 € (por defeito · sai todos os meses)",
-  "payouts.preferences.threshold.opt20": "20 € (trimestral · poupa nas taxas)",
-  "payouts.preferences.threshold.opt100": "100 € (retido, libertado a pedido)",
-  "payouts.preferences.threshold.hint":
-    "Abaixo do limiar, transita para o mês seguinte.",
-  "payouts.preferences.taxResidency.label": "Residência fiscal",
-  "payouts.preferences.taxResidency.hint":
-    "Emitimos automaticamente o teu recibo verde de IRS para cada pagamento.",
-
-  "payouts.export.headers.period": "Período",
-  "payouts.export.headers.date": "Data",
-  "payouts.export.headers.detail": "Detalhe",
-  "payouts.export.headers.amount": "Valor (EUR)",
-  "payouts.export.headers.status": "Estado",
-  "payouts.export.toast": "Histórico de pagamentos exportado como CSV",
 
   // ── Programar a semana (StudioProgramPage + Inbox + Slate) ────────────────
   // Só chrome. O conteúdo fictício da demonstração desta página vive em
@@ -1410,7 +1461,7 @@ export const studio: Catalog = {
   "liveNow.listenersLabel":
     "a ouvir contigo · {sustainers} apoiantes, {casual} ocasionais",
   "liveNow.tippedLabel": "em gorjetas durante este set · 100% para artistas",
-  "liveNow.perPlayLabel": "por reprodução válida · paga a {artist} agora mesmo",
+  "liveNow.buyCutLabel": "fica para o QueerPulse quando compras a {artist}",
   "liveNow.setBuilding.heading": "O set · <em>a construir-se ao vivo</em>",
   "liveNow.trackPosition": "Faixa {current} de {total} · saltou da fila",
   "liveNow.tipArtistCta": "Dar {amount} a {artist}",
@@ -1456,10 +1507,10 @@ export const studio: Catalog = {
   "broadcast.nowPlaying.justAdded": "Acabado de adicionar",
   "broadcast.nowPlaying.liveYourOwn": "ao vivo, teu",
   "broadcast.nowPlaying.badge.onAir": "No ar",
-  "broadcast.nowPlaying.badge.matched": "€ correspondido",
+  "broadcast.nowPlaying.badge.matched": "Correspondido",
   "broadcast.nowPlaying.badge.hold": "Em espera",
   "broadcast.nowPlaying.footer":
-    "Faixas correspondidas pagam a artistas automaticamente a partir do pagamento deste set. <em>Faixas retidas esperam</em> até o sistema de correspondência do conselho as validar. Ninguém perde um cêntimo entretanto.",
+    "Faixas correspondidas ficam creditadas a quem as fez automaticamente. <em>Faixas retidas esperam</em> até o sistema de correspondência do conselho as validar.",
 
   "broadcast.aside.tipsTab": "Gorjetas ao vivo <em>{amount}</em>",
   "broadcast.aside.talkbackTab": "Apoio <em>{count}</em>",
@@ -1502,7 +1553,7 @@ export const studio: Catalog = {
   "sheet.checkout.role.composer": "composição",
   "sheet.checkout.role.coop": "A cooperativa · alojamento & infraestrutura",
   "sheet.checkout.splitFoot":
-    "As partituras pagam <em>90%</em> a quem as fez, mais generoso do que os 80% do streaming, porque o trabalho é único e alojar um PDF custa quase nada. <em>Aprovado na assembleia de 9 de junho.</em>",
+    "As partituras pagam <em>90%</em> a quem as fez, porque o trabalho é único e alojar um PDF custa quase nada. <em>Aprovado na assembleia de 9 de junho.</em>",
   "sheet.checkout.payMethod.card.label": "Cartão guardado",
   "sheet.checkout.payMethod.card.sub": "um toque, sem reintroduzir dados",
   "sheet.checkout.payMethod.sepa.label": "SEPA direto",
@@ -1530,20 +1581,10 @@ export const studio: Catalog = {
   "receipt.thanksTitle": "{artist} recebeu <em>{amount}</em>.",
   "receipt.thanksSub":
     "Cada cêntimo. Sem corte da plataforma. <em>Foste tu que fizeste isso.</em>",
-  "receipt.splitHeading": "Para onde foi o <em>dinheiro</em>",
-  "receipt.splitNote": "100% direto, sem exceções, nas gorjetas.",
-  "receipt.split.artistSub_one": "Direto, SEPA · liquida em {count} dia",
-  "receipt.split.artistSub_other": "Direto, SEPA · liquida em {count} dias",
-  "receipt.split.platformName": "Plataforma · Studio",
-  "receipt.split.platformSub":
-    "Taxa de processamento da Stripe absorvida pela cooperativa nas gorjetas.",
-  "receipt.split.artistPct": "100%",
-  "receipt.split.platformPct": "0%",
   "receipt.detail.receiptNo": "N.º do recibo",
   "receipt.detail.dateTime": "Data & hora",
   "receipt.detail.from": "De",
   "receipt.detail.method": "Método",
-  "receipt.detail.postedToLedger": "Registado no livro-razão",
   "receipt.detail.visibility": "Visibilidade",
   "receipt.detail.sustainerSince": "a apoiar desde {date}",
   "receipt.detail.chosenByDefault": "<em>escolhido por predefinição</em>",
@@ -1553,9 +1594,7 @@ export const studio: Catalog = {
   "receipt.note.label": "A tua nota para {artist}",
   "receipt.note.repliedSuffix": "<em>respondeu</em>",
   "receipt.note.replyWhen": "{relativeTime} · ainda no ar, duas faixas depois",
-  "receipt.footer.auditablePrefix": "Auditável no",
-  "receipt.footer.publicLedgerLink": "livro-razão público",
-  "receipt.footer.rowLabel": "linha {code}",
+  "receipt.footer.keepNote": "Guarda este recibo para os teus registos",
   "receipt.footer.exportCta": "Exportar PDF",
   "receipt.actions.share": "Partilhar cartão pago",
   "receipt.actions.tipAgain": "Dar gorjeta outra vez",
@@ -1575,7 +1614,7 @@ export const studio: Catalog = {
   "checkout.eyebrow": "Checkout",
   "checkout.title": "Contribui para o <em>studio.</em>",
   "checkout.dek":
-    "Sete euros por mês mantêm viva uma plataforma de música com pagamento justo, e pagam às pessoas artistas que realmente ouves, em cada reprodução.",
+    "Sete euros por mês mantêm viva uma plataforma de música com pagamento justo: o alojamento, as ajudas de custo da curadoria e o fundo de solidariedade. Quando compras música, pagas diretamente à pessoa artista.",
   "checkout.nameLabel": "Nome no cartão",
   "checkout.namePlaceholder": "O teu nome",
   "checkout.cardLabel": "Número do cartão",
@@ -1612,7 +1651,7 @@ export const studio: Catalog = {
   "fund.hero.liveLabel": "Público · atualizado às segundas ao meio-dia",
   "fund.hero.title": "O fundo de <em>solidariedade</em>.",
   "fund.hero.dek":
-    "Uma pequena reserva partilhada que paga a quem a taxa por reprodução não consegue alcançar: <em>quem transcreve, quem traduz, quem está a começar, e artistas num mês difícil</em>. De onde vem e para onde vai, por inteiro.",
+    "Uma pequena reserva partilhada para quem as compras e as gorjetas não conseguem alcançar: <em>quem transcreve, quem traduz, quem está a começar, e artistas num mês difícil</em>. De onde vem e para onde vai, por inteiro.",
 
   "fund.balance.label": "Saldo do fundo · hoje",
   "fund.balance.paidThisQuarterLabel": "pago este trimestre",
@@ -1625,13 +1664,10 @@ export const studio: Catalog = {
 
   "fund.flows.in.surplus.label": "Excedente de <em>subscrições</em>",
   "fund.flows.in.surplus.desc":
-    "Quando a receita de quem sustenta supera o livro-razão de pagamentos, a diferença acumula-se aqui.",
+    "Quando as quotas de apoiante cobrem mais do que o alojamento e as ajudas de custo da curadoria, a diferença acumula-se aqui.",
   "fund.flows.in.roundups.label": "Arredondamentos de <em>gorjetas</em>",
   "fund.flows.in.roundups.desc":
     "Os 5% opcionais que algumas pessoas acrescentam a uma gorjeta.",
-  "fund.flows.in.holds.label": "<em>Retenções</em> resolvidas",
-  "fund.flows.in.holds.desc":
-    "Pagamentos de sets não correspondidos que ficam por reclamar após um ano.",
   "fund.flows.in.gifts.label": "<em>Doações</em> diretas",
   "fund.flows.in.gifts.desc":
     "Doações pontuais de pessoas da comunidade e de uma fundação de Lisboa.",
@@ -1709,7 +1745,7 @@ export const studio: Catalog = {
   "setSubmission.hero.eyebrow": "Nova submissão · set ou mix de DJ",
   "setSubmission.hero.title": "Submete um <em>set</em>.",
   "setSubmission.hero.dek":
-    "Carrega o ficheiro completo, cola a tua tracklist com marcas de tempo, e o nosso comparador encontra as fontes originais para que <em>cada faixa do set pague a quem a fez</em>. As faixas não correspondidas retêm o pagamento em segurança até serem confirmadas. Ninguém perde um cêntimo.",
+    "Carrega o ficheiro completo, cola a tua tracklist com marcas de tempo, e o nosso comparador encontra as fontes originais para que <em>cada faixa do set fique creditada a quem a fez</em>. As faixas não correspondidas ficam em espera até a fonte ser confirmada.",
 
   "setSubmission.steps.file": "Ficheiro",
   "setSubmission.steps.tracklist": "Tracklist & comparador",
@@ -1724,10 +1760,10 @@ export const studio: Catalog = {
   "setSubmission.matcher.matchingCta": "A comparar…",
   "setSubmission.matcher.resultsLabel":
     "Resultados do comparador · <em>resolvidos face ao catálogo + base de dados PRO</em>",
-  "setSubmission.matcher.payLine":
-    "{who} · <em>{amount}/reprodução para {firstName}</em>",
+  "setSubmission.matcher.creditLine":
+    "{who} · <em>creditada a {firstName}</em>",
   "setSubmission.matcher.noSourceFound":
-    "fonte não encontrada · pagamento retido",
+    "fonte não encontrada · crédito retido",
   "setSubmission.matcher.matchedBadge": "Correspondida",
   "setSubmission.matcher.identifyCta": "Identificar",
   "setSubmission.matcher.identifyToast":
@@ -1741,19 +1777,18 @@ export const studio: Catalog = {
   "setSubmission.sidebar.type.liveDjSet": "Set de DJ ao vivo",
   "setSubmission.sidebar.type.studioMix": "Mix de estúdio",
   "setSubmission.sidebar.type.recordedBroadcast": "Transmissão gravada",
-  "setSubmission.sidebar.payoutPreviewHeading":
-    "Pré-visualização do <em>pagamento</em>",
+  "setSubmission.sidebar.creditsPreviewHeading":
+    "Pré-visualização dos <em>créditos</em>",
   "setSubmission.sidebar.tracksInSet": "Faixas no set",
-  "setSubmission.sidebar.matchedPaying": "Correspondidas & a pagar",
+  "setSubmission.sidebar.matchedCredited": "Correspondidas & creditadas",
   "setSubmission.sidebar.tracksCount_one": "{count} faixa",
   "setSubmission.sidebar.tracksCount_other": "{count} faixas",
   "setSubmission.sidebar.onHold": "Em espera (não correspondidas)",
-  "setSubmission.sidebar.payoutPool": "Bolsa de pagamento do set",
   "setSubmission.sidebar.holdNote":
-    "As faixas não correspondidas <em>retêm a sua parte</em> até o comparador do conselho as confirmar. O set fica disponível já; o dinheiro retido é libertado assim que a fonte for confirmada.",
+    "As faixas não correspondidas <em>ficam em espera</em> até o comparador do conselho as confirmar. O set fica disponível já, e cada faixa retida fica creditada assim que a fonte for confirmada.",
   "setSubmission.sidebar.submitCta": "Submeter set",
   "setSubmission.sidebar.submittedToast":
-    "Set submetido. Disponível já, partes retidas pendentes de confirmação",
+    "Set submetido. Disponível já, faixas retidas à espera de uma fonte",
 
   // ── Fora do ar (StudioOffAirPage + Hero) ───────────────────────────────────
   "offAir.page.browseNote":
@@ -1766,7 +1801,7 @@ export const studio: Catalog = {
   "offAir.hero.nightcapEyebrow": "O acalanto de ontem à noite",
   "offAir.hero.replayAria": "Repetir o acalanto",
   "offAir.hero.replayingToast": "A repetir {title}",
-  "offAir.hero.paidOutSuffix": "{amount} pagos · repete quando quiseres",
+  "offAir.hero.replaySuffix": "repete quando quiseres",
 
   // ── sweep no-literal-string: legendas reutilizáveis do ImageSlot ─────────
   "media.coverLabel": "capa",
@@ -1777,7 +1812,6 @@ export const studio: Catalog = {
 
   // ── sweep no-literal-string: linhas "de <artista> · <factos>" ────────────
   "albumHero.byLine": "de <strong>{artist}</strong> · {year} · {location}",
-  "artist.sidebar.perMonthSuffix": "/mês",
   "artist.sidebar.newFollowers": "Pessoas novas a seguir",
   "liveNow.onAirTag": "no ar",
   "liveNow.byFromLine":
@@ -1790,8 +1824,6 @@ export const studio: Catalog = {
   "track.page.crumbLabel": "faixa {number}",
 
   // ── sweep no-literal-string: eyebrows/etiquetas diversas ──────────────────
-  "album.sidebar.splitHint":
-    "Se comprares por {price}: <em>{artistShare} para {artist}</em>, {solidarityShare} para o fundo de solidariedade, {platformShare} para a plataforma, processamento absorvido.",
   "album.sidebar.savesThisMonth": "Guardados este mês",
   "set.page.programmedByEyebrow": "Set · com curadoria de {curator}",
   "sheet.checkout.leadSheetLabel": "Partitura principal: {title}",
@@ -1865,6 +1897,9 @@ export const studio: Catalog = {
     "Nenhuma das músicas de que gostas pode tocar agora",
   "liked.page.cancelLoadingAria":
     "Cancelar o carregamento das músicas de que gostas",
+  "liked.page.genreFilterLabel": "Filtrar por género",
+  "liked.page.noMatchInGenre": 'Nada em {genre} corresponde a "{query}"',
+  "liked.page.showAllGenres": "Mostrar todos os géneros",
   "errors.generic":
     "Isso não correu bem. Verifica a tua ligação e tenta de novo daqui a pouco",
   "errors.accessRequired": "O teu acesso ao Studio terminou",
@@ -1995,6 +2030,9 @@ export const studio: Catalog = {
   "playerBar.regionLabel": "Leitor do Studio",
   "playerBar.play": "Reproduzir",
   "playerBar.pause": "Pausar",
+  "playButton.play": "Ouvir",
+  "playButton.pause": "Pausar",
+  "playButton.cancel": "Cancelar",
   "playerBar.previous": "Faixa anterior",
   "playerBar.next": "Faixa seguinte",
   "playerBar.seekLabel": "Posição na faixa",
@@ -2023,7 +2061,11 @@ export const studio: Catalog = {
     "Fica guardado como rascunho enquanto escreves. Nada fica público até publicares",
   "uploadFlow.release.personaLabel": "Lançar como",
   "uploadFlow.release.typeLabel": "Tipo",
-  "uploadFlow.release.genreNone": "Sem género",
+  "uploadFlow.release.genresNonePicked": "Nenhum género escolhido",
+  "uploadFlow.release.genresCounter": "{count} de {max}",
+  "uploadFlow.release.genresMain": "Principal",
+  "uploadFlow.release.genresFullReason": "Podes escolher até {max} géneros",
+  "uploadFlow.release.genresRemove": "Remover {genre}",
   "uploadFlow.release.dateLabel": "Data de lançamento",
   "uploadFlow.release.dateHint": "Deixa vazio para usar o dia em que publicas",
   "uploadFlow.release.descriptionLabel": "Notas do lançamento",
@@ -2427,8 +2469,6 @@ export const studio: Catalog = {
   "demo.dashboard.trend.earnings": "<up>{delta}</up> face ao mês passado",
   "demo.dashboard.trend.tips":
     "{tippers} gorjetas, {notes} com mensagem · <up>{recent} desde que abriste esta página</up>",
-  "demo.dashboard.trend.payout":
-    "SEPA · IBAN LU · fica disponível na manhã do dia 5",
   "demo.dashboard.curator.what.wednesdaySet":
     "<em>{title}</em> entrou na faixa 6 do set de quarta",
   "demo.dashboard.curator.what.collection":
@@ -2470,7 +2510,6 @@ export const studio: Catalog = {
   "demo.dashboard.activity.countColumn": "Guardados e adições a playlists",
   "demo.dashboard.topTrackShare": "<em>{title}</em> é {percent}% disto",
   "demo.dashboard.goLivePlan": "Plano: {date} · estreia de {title}",
-  "demo.dashboard.nextPayout": "Próximo: {amount} a {date} · SEPA",
   "demo.calls.seat": "Conselho · lugar {seat}",
   "demo.calls.tag.commission": "Encomenda",
   "demo.calls.tag.grant": "Bolsa",
@@ -2513,7 +2552,7 @@ export const studio: Catalog = {
   "demo.fund.balanceNote":
     "Saudável: cerca de quatro meses dos pagamentos atuais. O que passar de seis meses de margem vai para a ronda trimestral de bolsas seguinte, por votação do conselho",
   "demo.fund.flowsDek":
-    "Nenhuma taxa nova paga isto. É o excedente de um sistema feito para transbordar para as pessoas, e deixa intactos <em>os 80% de quem cria e as tuas gorjetas</em>",
+    "O excedente das quotas de apoiante, os arredondamentos das gorjetas e os donativos enchem-no, e <em>o que pagas a artistas pela música, e as tuas gorjetas,</em> ficam com as pessoas artistas",
   "demo.fund.applyBody":
     "Se és do QueerPulse e estás num mês difícil, a linha de emergência é um formulário curto e um sim rápido: <em>sem portefólio, sem prova de rendimentos, sem vergonha</em>. Quem transcreve e traduz recebe por peça aceite, e as bolsas abrem a cada trimestre",
   "demo.fund.name.withheld": "Omitido a <em>pedido</em>",
@@ -2601,10 +2640,10 @@ export const studio: Catalog = {
   "helpLive.cat.money.heading": "Dinheiro e <em>gorjetas</em>",
   "helpLive.faq.whatIsStudio.q": "O que é o Studio e quem o pode usar?",
   "helpLive.faq.whatIsStudio.a":
-    "O Studio é o sítio do QueerPulse onde artistas queer partilham a sua música com as pessoas da comunidade. É gratuito, só para ouvir, e está aberto a quem a nossa equipa deu acesso ao Studio.",
+    "O Studio é o sítio do QueerPulse onde artistas queer partilham a sua música com as pessoas da comunidade. Ouvir é gratuito, artistas podem vender a sua música diretamente, e está aberto a quem a nossa equipa deu acesso ao Studio.",
   "helpLive.faq.tracking.q": "O Studio guarda o que eu oiço?",
   "helpLive.faq.tracking.a":
-    "Sim, em privado. O Studio guarda um histórico de audição que só tu vês, em <a>O que ouves</a>, onde o podes pausar ou limpar. Quem faz a música vê o total de audições, com qualquer número de 1 a 4 como Menos de 5, e o teu nome só se ligares Mostrar-me como apoiante na página de artista.",
+    "Sim, em privado. O Studio guarda um histórico de audição que só tu vês, em <a>O que ouves</a>, onde o podes pausar ou limpar. Quem faz a música vê o total de audições, com qualquer número de 1 a 4 como Menos de 5, e o teu nome só se ligares Mostrar-me entre quem mais ouve na página de artista.",
   "helpLive.faq.saving.q":
     "Como funcionam os gostos, as playlists e seguir artistas?",
   "helpLive.faq.saving.a":
@@ -2621,7 +2660,7 @@ export const studio: Catalog = {
     "Ao marcá-la confirmas que és titular ou controlas os direitos de todas as gravações e composições do lançamento, e que os créditos estão certos. Se isso mudar, despublica o lançamento na tua página de artista.",
   "helpLive.faq.stats.q": "O que mostram as minhas estatísticas?",
   "helpLive.faq.stats.a":
-    "<a>Os teus números</a> mostram audições, pessoas que te seguem, guardados, as playlists públicas com a tua música e quem mais te apoia. Qualquer número de 1 a 4 aparece como Menos de 5, para ninguém conseguir perceber quem fez o quê.",
+    "<a>Os teus números</a> mostram audições, pessoas que te seguem, guardados, as playlists públicas com a tua música e quem mais te ouve. Qualquer número de 1 a 4 aparece como Menos de 5, para ninguém conseguir perceber quem fez o quê.",
   "helpLive.faq.reporting.q": "Como denuncio um lançamento?",
   "helpLive.faq.reporting.a":
     "Abre o lançamento, depois Mais ações e Denunciar lançamento. A nossa equipa analisa todas as denúncias e, se um lançamento violar as regras, retira-o e quem o publicou vê porquê.",
@@ -2650,13 +2689,13 @@ export const studio: Catalog = {
   "aboutLive.hero.title":
     "Música de artistas queer, para <em>quem faz parte da comunidade</em>.",
   "aboutLive.hero.lede":
-    "O Studio é um sítio do QueerPulse onde artistas queer partilham a sua música com as pessoas da comunidade. É gratuito, só para ouvir, e o que ouves fica em privado.",
+    "O Studio é um sítio do QueerPulse onde artistas queer partilham a sua música com as pessoas da comunidade. Ouvir é gratuito, artistas podem vender-te a sua música diretamente, e o que ouves fica em privado.",
   "aboutLive.sec.today.num": "01: o que é hoje",
   "aboutLive.sec.today.heading": "O que o Studio <em>faz</em>",
   "aboutLive.sec.today.p1":
     "Artistas carregam lançamentos com uma persona de música ou DJ e publicam-nos para as pessoas com acesso ao Studio. Quem ouve pode tocar, guardar, fazer playlists e seguir artistas de que gosta.",
   "aboutLive.sec.today.p2":
-    "Hoje não há dinheiro no Studio: ouvir é gratuito e carregar música também.",
+    "Ouvir e carregar música é gratuito. Artistas podem pôr preço em álbuns, EPs, singles e faixas, e quem compra paga-lhes diretamente, por isso o dinheiro vai direto para a pessoa artista e o QueerPulse não fica com nenhuma parte.",
   "aboutLive.sec.privacy.num": "02: o que controlas",
   "aboutLive.sec.privacy.heading": "O que ouves fica <em>contigo</em>",
   "aboutLive.sec.privacy.p1":
@@ -2674,7 +2713,7 @@ export const studio: Catalog = {
   "aboutLive.sec.next.num": "05: para onde vai",
   "aboutLive.sec.next.heading": "Crescer com <em>quem o usa</em>",
   "aboutLive.sec.next.p1":
-    "Queremos que um dia o Studio pague a artistas e dê voz às pessoas sobre o seu funcionamento. Vamos construir isso às claras com a nossa comunidade e diremos aqui quando algo for real.",
+    "As pessoas da comunidade já podem comprar música diretamente a artistas, e o dinheiro vai para a pessoa artista fora do QueerPulse; a seguir, queremos dar-lhes voz sobre o funcionamento do Studio. Vamos construir isso às claras com a nossa comunidade e diremos aqui quando algo for real.",
   "aboutLive.showcase.heading": "A visão <em>cooperativa</em>",
   "aboutLive.showcase.dek":
     "Como poderia ser um Studio cooperativo, mostrado nesta demonstração.",
@@ -2702,7 +2741,7 @@ export const studio: Catalog = {
   "termsLive.sec.stored.num": "03: o que o Studio guarda",
   "termsLive.sec.stored.heading": "O que <em>guardamos</em>",
   "termsLive.sec.stored.p1":
-    "O Studio guarda os teus lançamentos com o áudio e as capas, os teus guardados, playlists e artistas que segues, as definições do leitor, o teu histórico de audição enquanto está ligado (guardado durante 13 meses, e podes limpá-lo), as páginas de artista onde escolheste aparecer como apoiante, as contestações que envias com a resposta da nossa equipa, e as reivindicações de direitos de autor e contranotificações que envias com a decisão da nossa equipa. Os totais de audições de cada faixa não levam nenhum nome.",
+    "O Studio guarda os teus lançamentos com o áudio e as capas, os teus guardados, playlists e artistas que segues, as definições do leitor, o teu histórico de audição enquanto está ligado (guardado durante 13 meses, e podes limpá-lo), as páginas de artista onde escolheste aparecer entre quem mais ouve, as tuas compras (o que compraste, o valor, o código de referência, o nome no pagamento que deste, o estado e a tua escolha no mural de apoio), as formas de receber que cada artista indica, as contestações que envias com a resposta da nossa equipa, e as reivindicações de direitos de autor e contranotificações que envias com a decisão da nossa equipa. Os totais de audições de cada faixa não levam nenhum nome.",
   "termsLive.sec.stored.p2":
     "Tudo o que o Studio guarda sobre ti está coberto pela <a>política de privacidade</a> do QueerPulse.",
   "termsLive.sec.takedown.num": "04: retiradas e contestações",
@@ -3263,9 +3302,7 @@ export const studio: Catalog = {
   "mood.defiant": "Desafio",
   "mood.dreamy": "Sonho",
   "mood.slowBurn": "Lume brando",
-  "mood.sweaty": "Suor",
   "mood.calm": "Calma",
-  "mood.playful": "Brincadeira",
   "home.moods.heading": "Explorar por <em>ambiente</em>",
   "home.moods.listLabel": "Ambientes",
   "home.hero.featuredEyebrow": "Em destaque",
@@ -3669,7 +3706,7 @@ export const studio: Catalog = {
   "listening.eyebrow": "Só tu vês esta página",
   "listening.title": "O que <em>ouves</em>",
   "listening.dek":
-    "Os teus artistas e faixas de topo, o que ouviste ultimamente e quem apoias. Pausa ou limpa quando quiseres",
+    "Os teus artistas e faixas de topo, o que ouviste ultimamente e quem vê o teu nome. Pausa ou limpa quando quiseres",
   "listening.controls.heading": "Definições do teu histórico",
   "listening.history.heading": "Histórico de audição",
   "listening.history.body":
@@ -3712,29 +3749,29 @@ export const studio: Catalog = {
   "listening.empty.cta": "Abrir o início do Studio",
   "listening.empty.pausedBody":
     "O teu histórico de audição está em pausa. Volta a ligá-lo e os teus artistas e faixas de topo começam a aparecer",
-  "listening.supporting.heading": "Artistas que apoias",
+  "listening.supporting.heading": "Artistas que veem o teu nome",
   "listening.supporting.dek":
-    "Veem-te entre as pessoas que dão mais apoio, com o nome que escolheste",
-  "listening.supporting.since": "Apoias desde {date}",
+    "Veem-te entre quem mais os ouve, com o nome que escolheste",
+  "listening.supporting.since": "Apareces desde {date}",
   "listening.supporting.shownAs": "Apareces como {name}",
   "listening.supporting.linksLabel": "Formas de apoiar {name}",
   "listening.supporting.empty":
-    "Liga Mostrar-me como apoiante numa página de artista para a juntares aqui",
-  "listening.supporting.stop": "Deixar de apoiar",
-  "listening.supporting.stopAria": "Deixar de apoiar {artist}",
+    "Liga Mostrar-me entre quem mais ouve numa página de artista para a juntares aqui",
+  "listening.supporting.stop": "Deixar de mostrar o meu nome",
+  "listening.supporting.stopAria": "Deixar de mostrar o teu nome a {artist}",
   "listening.supporting.pausedNote":
-    "Enquanto o teu histórico estiver em pausa, não apareces entre quem dá mais apoio",
+    "Enquanto o teu histórico estiver em pausa, não apareces entre quem mais os ouve",
   "listening.notice.body":
     "O teu histórico de audição está ligado. Só tu o vês",
   "listening.notice.cta": "Ver o que ouves",
   "listening.notice.close": "Fechar aviso",
   "settingsLive.history.label": "O que ouves",
   "settingsLive.history.title": "O que o Studio <em>guarda</em> para ti",
-  "supporter.heading": "Mostrar-me como apoiante",
+  "supporter.heading": "Mostrar-me entre quem mais ouve {persona}",
   "supporter.body":
-    "{persona} vê o nome e a foto que escolheres entre quem dá mais apoio, pelo quanto ouviste a sua música nos últimos 28 dias",
+    "{persona} vê o nome e a foto que escolheres entre quem mais ouve a sua música, pelo quanto a ouviste nos últimos 28 dias",
   "supporter.pausedNote":
-    "Enquanto o teu histórico estiver em pausa, não apareces entre quem dá mais apoio",
+    "Enquanto o teu histórico estiver em pausa, não apareces entre quem mais ouve a sua música",
   "supporter.pickerLegend": "Como {persona} te vê",
   "supporter.account": "A tua conta",
   "supporter.saveCta": "Guardar como apareces",
@@ -3742,9 +3779,11 @@ export const studio: Catalog = {
   "supporter.changeCta": "Mudar como apareces",
   "supporter.confirmation": "{persona} vê-te como {name}",
   "supporter.confirmationLead": "É assim que {persona} te vê",
-  "supporter.removed": "{persona} deixou de te ver como apoiante",
+  "supporter.removed":
+    "{persona} deixou de te ver entre quem mais ouve a sua música",
   "supporter.saveFailed": "Não conseguimos guardar como apareces",
-  "supporter.removeFailed": "Não conseguimos desligar Mostrar-me como apoiante",
+  "supporter.removeFailed":
+    "Não conseguimos desligar Mostrar-me entre quem mais ouve",
   "numbers.column.plays": "Audições",
   "numbers.plays.showsNotCounted": "Não contam nos programas",
   "numbers.plays.title": "Audições",
@@ -3758,25 +3797,25 @@ export const studio: Catalog = {
   "numbers.plays.note":
     "Uma audição conta depois de 30 segundos. As audições tuas e de quem gere a persona contigo nunca contam",
   "numbers.plays.empty": "Ainda sem audições nos últimos 28 dias",
-  "numbers.supporters.heading": "Quem mais te apoia",
+  "numbers.supporters.heading": "Quem mais te ouve",
   "numbers.supporters.dek":
     "Pessoas que escolheram aparecer, por ordem das audições nos últimos 28 dias",
-  "numbers.supporters.optedIn": "A aparecer como apoiantes: {value}",
+  "numbers.supporters.optedIn": "A aparecer entre quem mais te ouve: {value}",
   "numbers.supporters.empty":
-    "Quando alguém liga Mostrar-me como apoiante, aparece aqui",
-  "numbers.supporters.listLabel": "Quem mais apoia {name}",
+    "Quando alguém liga Mostrar-me entre quem mais ouve, aparece aqui",
+  "numbers.supporters.listLabel": "Quem mais ouve {name}",
   "errors.reason.studio_supporter_artist_not_found":
-    "Esta página de artista não está disponível para apoio",
+    "Esta página de artista não está disponível para mostrares o teu nome",
   "errors.reason.studio_supporter_own_persona":
-    "Fazes parte desta persona de artista, por isso não a podes apoiar",
+    "Fazes parte desta persona de artista, por isso não podes aparecer entre quem mais a ouve",
   "errors.reason.studio_supporter_identity_not_yours":
     "Só podes aparecer com a tua conta ou com uma persona de que fazes parte",
   "errors.what.listening": "o que ouves",
   "errors.what.listeningHistory": "o teu histórico de audição",
-  "errors.what.supporting": "quem apoias",
-  "errors.what.supporter": "a tua definição de apoio",
+  "errors.what.supporting": "quem vê o teu nome",
+  "errors.what.supporter": "a tua definição de quem mais ouve",
   "errors.what.plays": "as tuas audições",
-  "errors.what.topSupporters": "quem mais te apoia",
+  "errors.what.topSupporters": "quem mais te ouve",
   "rail.v3.pressKit": "Kit de imprensa",
   "creator.nav.pressKit": "Kit de imprensa",
   "artistPage.v3.moreAria": "Mais sobre {name}",
@@ -3860,8 +3899,9 @@ export const studio: Catalog = {
   "shortcuts.focusSearch": "Ir para a pesquisa",
   "shortcuts.key.commandOrControl": "Cmd ou Ctrl",
   // Player bar, controls and Now playing extras (player/ui)
-  "player.playFrom": "Ouvir a partir de {time}",
+  "player.playFrom": "Ouvir desde {time}",
   "player.playFromAria": "Ouvir {title} a partir de {time}",
+  "player.playFromNamedAria": "Ouvir desde {time}, {title}",
   "player.openNowPlaying": "Abrir A tocar agora, {title} de {artist}",
   "player.chapterAria": "Capítulo {number}: {title}",
   "player.queueShow": "Mostrar a fila",
@@ -4724,4 +4764,402 @@ export const studio: Catalog = {
   "preview.goneBody":
     "A pessoa artista desligou esta ligação ou criou uma nova. Pede-lhe a ligação atual.",
   "preview.documentTitle": "Pré-visualização de {title}",
+
+  // Studio purchases and the supporter wall (2026-10-28)
+  "libraryLive.tabs.purchases": "Compras",
+  "purchase.format.album": "Álbum digital",
+  "purchase.format.ep": "EP digital",
+  "purchase.format.single": "Single digital",
+  "purchase.format.track": "Faixa digital",
+  "purchase.format.release": "Lançamento digital",
+  "purchase.price.nameYourPrice": "Escolhe o preço, a partir de {amount}",
+  "purchase.panel.label": "Comprar {title}",
+  "purchase.panel.buy.album": "Comprar álbum",
+  "purchase.panel.buy.ep": "Comprar EP",
+  "purchase.panel.buy.single": "Comprar single",
+  "purchase.panel.buy.track": "Comprar faixa",
+  "purchase.panel.buy.release": "Comprar lançamento",
+  "purchase.panel.buyAria": "{action}: {title} de {artist}",
+  "purchase.panel.tracksOnly":
+    "Este lançamento vende-se faixa a faixa. Escolhe uma faixa abaixo para a comprar",
+  "purchase.panel.directNote": "Pagas diretamente a {artist}",
+  "purchase.panel.ownPersonaLink": "Abrir pagamentos por confirmar",
+  "purchase.panel.owned": "Na tua coleção",
+  "purchase.panel.downloadCta": "Transferir faixas",
+  "purchase.panel.hideDownloadsCta": "Esconder transferências",
+  "purchase.panel.pending": "À espera que {artist} confirme o teu pagamento",
+  "purchase.panel.pendingAmount": "Disseste que pagaste {amount}",
+  "purchase.panel.showWaysToPay": "Mostrar formas de pagar a {artist}",
+  "purchase.panel.hideWaysToPay": "Esconder formas de pagar",
+  "purchase.panel.cancelCta": "Cancelar esta compra",
+  "purchase.panel.openPurchases": "Abrir as tuas compras",
+  "purchase.panel.loading": "A carregar o preço",
+  "purchase.cancel.title": "Cancelar esta compra?",
+  "purchase.cancel.body":
+    "{artist} deixa de ver o teu pedido. Se já pagaste, fala diretamente com {artist}",
+  "purchase.cancel.confirm": "Cancelar compra",
+  "purchase.cancel.keep": "Continuar à espera",
+  "purchase.cancel.done": "Compra cancelada",
+  "purchase.cancel.failed": "Não conseguimos cancelar esta compra",
+  "purchase.sheet.title": "Comprar {title}",
+  "purchase.sheet.sub": "De {artist}",
+  "purchase.sheet.amountHeading": "Valor",
+  "purchase.sheet.amountLabel": "O teu valor em euros",
+  "purchase.sheet.amountHint": "A partir de {minimum}, até {cap}",
+  "purchase.sheet.quickPicksLabel": "Valores sugeridos",
+  "purchase.sheet.amountRequired": "Escreve um valor em euros, como 5 ou 5,50",
+  "purchase.sheet.payHeading": "Paga a {artist}",
+  "purchase.sheet.payIntro": "Paga {amount} com uma destas formas",
+  "purchase.sheet.methodsLabel": "Formas de pagar a {artist}",
+  "purchase.sheet.payerLabel": "Nome no pagamento (opcional)",
+  "purchase.sheet.payerHint":
+    "O nome que o teu banco ou o MB WAY mostra a {artist}. Só tu e {artist} o veem",
+  "purchase.sheet.wallLegend": "Como apareces no mural",
+  "purchase.sheet.notice":
+    "Pagas diretamente a {artist}. O QueerPulse nunca toca neste dinheiro, e qualquer reembolso fica entre ti e {artist}",
+  "purchase.sheet.paidCta": "Já paguei",
+  "purchase.sheet.createFailed": "Não conseguimos registar o teu pagamento",
+  "purchase.sheet.doneStatus":
+    "{artist} vai confirmar o teu pagamento. Acompanha nas tuas compras",
+  "purchase.sheet.loading": "A carregar as formas de pagar",
+  "purchase.reference.label": "Código de referência",
+  "purchase.reference.line":
+    "Junta este código à nota do pagamento para {artist} o encontrar",
+  "purchase.reference.loading": "A obter o teu código de pagamento",
+  "purchase.reference.loadFailed":
+    "Não conseguimos obter o teu código de pagamento",
+  "purchase.reference.retryCta": "Obter um código de pagamento novo",
+  "purchase.reference.neededReason":
+    "O teu código de pagamento ainda está a carregar, por isso o Já paguei espera por ele",
+  "purchase.reference.neededReasonFailed":
+    "Obtém primeiro um código de pagamento novo",
+  "purchase.reference.copyCta": "Copiar código",
+  "purchase.reference.copyAria": "Copiar código para a nota do pagamento",
+  "purchase.reference.copied": "Código de referência copiado",
+  "purchase.reference.copyFailed":
+    "Não conseguimos copiar o código. Seleciona-o e copia-o à mão",
+  "purchase.status.pending": "À espera da pessoa artista",
+  "purchase.status.confirmed": "Confirmada",
+  "purchase.status.declined": "Recusada",
+  "purchase.status.cancelled": "Cancelada",
+  "purchase.status.expired": "Expirada",
+  "purchase.statusLine.pending": "À espera que {artist} confirme",
+  "purchase.statusLine.expired":
+    "{artist} não respondeu em 30 dias, por isso este pedido expirou. Podes voltar a comprar",
+  "purchase.statusLine.cancelled": "Cancelaste esta compra",
+  "purchase.statusLine.declinedAgain":
+    "Podes começar uma nova compra na página do lançamento",
+  "purchase.declineReason.payment_not_found":
+    "{artist} não encontrou o teu pagamento",
+  "purchase.declineReason.amount_different":
+    "{artist} recebeu um valor diferente",
+  "purchase.declineReason.other": "{artist} recusou esta compra",
+  "purchase.declineNoteLine": "{artist} acrescentou: {note}",
+  "purchase.list.heading": "As tuas <em>compras</em>",
+  "purchase.list.dek":
+    "Música que compraste diretamente a artistas. As transferências abrem quando a pessoa artista confirma o teu pagamento",
+  "purchase.list.label": "As tuas compras",
+  "purchase.list.empty":
+    "Ainda não compraste nada. Um lançamento ou uma faixa com preço tem um botão Comprar na página",
+  "purchase.list.showMore": "Mostrar mais compras",
+  "purchase.row.amount": "Pagaste {amount}",
+  "purchase.row.date": "Comprado a {date}",
+  "purchase.row.byArtist": "de {artist}",
+  "purchase.row.itemGone":
+    "Esta música já não está no Studio. As tuas transferências ficam",
+  "purchase.downloads.heading": "Transferências",
+  "purchase.downloads.listLabel": "Faixas de {title} para transferir",
+  "purchase.downloads.formatNote":
+    "MP3 ou M4A, tal como a pessoa artista carregou",
+  "purchase.downloads.cta": "Transferir",
+  "purchase.downloads.ctaAria": "Transferir {title}",
+  "purchase.downloads.failed": "Não conseguimos começar esta transferência",
+  "purchase.downloads.demoToast":
+    "A demonstração não tem ficheiros de áudio. No Studio, a faixa fica guardada no teu dispositivo",
+  "purchase.downloads.none": "Ainda não há nada para transferir",
+  "purchase.downloads.mp3": "MP3",
+  "purchase.downloads.m4a": "M4A",
+  "purchase.wall.toggle": "Mostrar-me no mural de apoio",
+  "purchase.wall.body":
+    "Quem tem acesso ao Studio vê o nome e a foto que escolheres na página do lançamento, sem qualquer valor",
+  "purchase.wall.shownAs": "Apareces como {name}",
+  "purchase.wall.pickAgain":
+    "A persona que escolheste já não existe. Escolhe como apareces",
+  "purchase.wall.pendingNote":
+    "Apareces quando {artist} confirmar o teu pagamento",
+  "purchase.wall.saved": "Estás no mural de apoio como {name}",
+  "purchase.wall.removed": "Saíste do mural de apoio",
+  "purchase.wall.saveFailed":
+    "Não conseguimos mudar o teu lugar no mural de apoio",
+  "purchase.inbox.nav": "Pagamentos por confirmar",
+  "purchase.inbox.badge_one": "{count} pagamento por confirmar",
+  "purchase.inbox.badge_other": "{count} pagamentos por confirmar",
+  "purchase.inbox.pageTitle": "Pagamentos por confirmar",
+  "purchase.inbox.eyebrow": "Pagamentos",
+  "purchase.inbox.title": "Pagamentos por <em>confirmar</em>",
+  "purchase.inbox.dek":
+    "Aqui sabes quando alguém te pagou. Vê o teu banco, o MB WAY ou a página de pagamento, e depois confirma ou recusa. O QueerPulse nunca vê o dinheiro",
+  "purchase.inbox.personaLabel": "Página de artista",
+  "purchase.inbox.tabsLabel": "Pagamentos de {name}",
+  "purchase.inbox.unknownPersona":
+    "Essa página de artista não é tua, por isso mostramos {name}",
+  "purchase.inbox.tab.confirm": "Por confirmar",
+  "purchase.inbox.tab.sales": "Vendas",
+  "purchase.inbox.listLabel": "Pagamentos de {name} por confirmar",
+  "purchase.inbox.empty":
+    "Não há pagamentos à espera. Quando alguém disser que te pagou, aparece aqui",
+  "purchase.inbox.reference": "Referência {code}",
+  "purchase.inbox.payerName": "Nome no pagamento: {name}",
+  "purchase.inbox.deletedAccount": "Conta apagada",
+  "purchase.inbox.claimedOn": "Disse que pagou a {date}",
+  "purchase.inbox.confirmCta": "Confirmar pagamento",
+  "purchase.inbox.confirmAria": "Confirmar pagamento de {name} por {title}",
+  "purchase.inbox.declineCta": "Recusar pagamento",
+  "purchase.inbox.declineAria": "Recusar pagamento de {name} por {title}",
+  "purchase.inbox.confirmed":
+    "Pagamento confirmado. {name} já pode transferir {title}",
+  "purchase.inbox.declined": "Pagamento recusado. {name} vê o teu motivo",
+  "purchase.inbox.confirmFailed": "Não conseguimos confirmar este pagamento",
+  "purchase.inbox.declineFailed": "Não conseguimos recusar este pagamento",
+  "purchase.inbox.showMore": "Mostrar mais pagamentos",
+  "purchase.inbox.loadingMore": "A carregar mais pagamentos",
+  "purchase.decline.title": "Recusar este pagamento?",
+  "purchase.decline.body":
+    "{name} recebe uma notificação com o motivo que escolheres",
+  "purchase.decline.reasonLegend": "Porque estás a recusar?",
+  "purchase.decline.reason.payment_not_found": "Não encontro o pagamento",
+  "purchase.decline.reason.amount_different": "O valor é diferente",
+  "purchase.decline.reason.other": "Outro motivo",
+  "purchase.decline.noteLabel": "Nota para {name} (opcional)",
+  "purchase.decline.notePlaceholder": "Uma frase curta, até 200 caracteres",
+  "purchase.decline.confirm": "Recusar pagamento",
+  "purchase.decline.keep": "Deixar à espera",
+  "purchase.sales.totalsLabel": "Os totais das tuas vendas",
+  "purchase.sales.last28": "Últimos 28 dias",
+  "purchase.sales.allTime": "Desde sempre",
+  "purchase.sales.count_one": "{count} venda",
+  "purchase.sales.count_other": "{count} vendas",
+  "purchase.sales.note":
+    "Os pagamentos que confirmaste. O QueerPulse guarda o registo e o dinheiro fica entre ti e quem te comprou",
+  "purchase.sales.listLabel": "Vendas de {name}",
+  "purchase.sales.empty":
+    "Ainda sem vendas. Os pagamentos confirmados aparecem aqui",
+  "purchase.sales.confirmedOn": "Confirmado a {date}",
+  "purchase.sales.showMore": "Mostrar mais vendas",
+  "purchase.sales.loadingMore": "A carregar mais vendas",
+  "purchase.account.pageTitle": "As tuas compras de música",
+  "purchase.account.eyebrow": "Conta",
+  "purchase.account.title": "As tuas compras de <em>música</em>",
+  "purchase.account.dek":
+    "Tudo o que compraste a artistas do Studio, com as transferências. Ficam contigo com ou sem acesso ao Studio",
+  "purchase.account.empty": "Ainda não há compras confirmadas",
+  "purchase.account.cardTitle": "As tuas compras de música",
+  "purchase.account.cardDesc":
+    "Transfere a música que compraste a artistas do Studio",
+  "purchase.account.cardCta": "Abrir as tuas compras de música",
+  "purchase.price.legend": "Preço",
+  "purchase.price.trackLegend": "Preço desta faixa",
+  "purchase.price.mode.not_for_sale": "Não está à venda",
+  "purchase.price.mode.fixed": "Preço fixo",
+  "purchase.price.mode.name_your_price": "Quem compra escolhe o preço",
+  "purchase.price.amountLabel.fixed": "Preço em euros",
+  "purchase.price.amountLabel.name_your_price": "Mínimo em euros",
+  "purchase.price.hint.fixed": "De {minimum} a {cap}",
+  "purchase.price.hint.name_your_price":
+    "De {minimum} a {cap}. Quem compra pode pagar mais, até {cap}",
+  "purchase.price.amountRequired": "Escreve o preço em euros, como 5 ou 5,50",
+  "purchase.price.directNote":
+    "Quem compra paga-te diretamente pelas tuas formas de receber, e tu confirmas cada pagamento",
+  "purchase.price.needsMethods":
+    "Junta uma forma de receber antes de definir um preço",
+  "purchase.price.needsMethodsCta": "Adicionar forma de receber",
+  "purchase.price.notOutNote": "A compra abre quando o lançamento sair",
+  "paymentMethods.label": "Receber",
+  "paymentMethods.title": "Como te <em>pagam</em>",
+  "paymentMethods.dek":
+    "Quem compra paga-te diretamente por aqui. O QueerPulse nunca guarda o dinheiro",
+  "paymentMethods.personaLabel": "Página de artista",
+  "paymentMethods.listLabel": "Formas de receber de {name}",
+  "paymentMethods.privacyNote":
+    "Quem compra só vê isto enquanto compra ou espera a tua confirmação",
+  "paymentMethods.empty":
+    "Ainda não há formas de receber. Junta uma antes de pôr música à venda",
+  "paymentMethods.addCta": "Adicionar forma de receber",
+  "paymentMethods.saveCta": "Guardar formas de receber",
+  "paymentMethods.saved":
+    "Guardado. Quem compra vê estas formas de pagar a {name}",
+  "paymentMethods.saveFailed":
+    "Não conseguimos guardar as tuas formas de receber",
+  "paymentMethods.rowError": "Forma {number}: {reason}",
+  "paymentMethods.rowLegend": "Forma de receber {count}",
+  "paymentMethods.lastMethodWarning":
+    "Há música de {name} à venda, por isso mantém pelo menos uma forma de receber",
+  "paymentMethods.noPersona":
+    "Receber fica disponível quando tiveres uma página de artista",
+  "wall.heading": "Com o apoio de",
+  "wall.listLabel": "Pessoas que compraram {title}",
+  "wall.showAll": "Mostrar todo o apoio",
+  "wall.loadMoreFailed": "Não conseguimos carregar mais apoio",
+  "owner.v3.paymentsLink": "Pagamentos por confirmar",
+  "owner.v3.gettingPaidLink": "Receber",
+  "errors.what.purchases": "as tuas compras",
+  "errors.what.paymentMethods": "as tuas formas de receber",
+  "errors.what.sales": "as tuas vendas",
+  "errors.what.wall": "o mural de apoio",
+  "errors.what.offer": "o preço desta música",
+  "errors.what.paymentsInbox": "os teus pagamentos por confirmar",
+  "errors.reason.studio_persona_not_found":
+    "Esta página de artista não é uma das que geres",
+  "errors.reason.studio_release_type_not_for_sale":
+    "Só se podem vender álbuns, EPs e singles e as suas faixas",
+  "errors.reason.studio_price_out_of_range":
+    "Um preço fixo vai de 1 € a 500 €, e um mínimo de 0 € a 500 €",
+  "errors.reason.studio_payment_methods_needed_for_sale":
+    "Junta uma forma de receber antes de pôr música à venda, e mantém uma enquanto houver algo à venda",
+  "errors.reason.studio_payment_methods_limit":
+    "Cada artista pode ter até 8 formas de receber",
+  "errors.reason.studio_payment_link_invalid":
+    "Uma ligação de pagamento tem de ser um endereço https:// completo",
+  "errors.reason.studio_payment_mbway_invalid":
+    "O MB WAY precisa de um número de telemóvel português",
+  "errors.reason.studio_payment_iban_invalid":
+    "Verifica o IBAN: o código do país, o tamanho ou os dígitos de controlo não batem certo",
+  "errors.reason.studio_purchase_item_required":
+    "Escolhe um lançamento ou uma faixa para comprar",
+  "errors.reason.studio_purchase_item_not_found":
+    "Esta música não está disponível para ti",
+  "errors.reason.studio_purchase_own_persona":
+    "Fazes parte desta persona de artista, por isso não podes comprar a sua música",
+  "errors.reason.studio_purchase_not_for_sale": "Isto não está à venda",
+  "errors.reason.studio_purchase_release_not_published":
+    "Este lançamento ainda não saiu, por isso não se pode comprar",
+  "errors.reason.studio_purchase_track_unavailable":
+    "Esta faixa não se pode comprar agora",
+  "errors.reason.studio_purchase_unavailable":
+    "Não podes comprar música desta persona de artista",
+  "errors.reason.studio_purchase_no_payment_methods":
+    "Esta persona de artista ainda não juntou uma forma de receber",
+  "errors.reason.studio_purchase_pending_exists":
+    "Já disseste a esta persona de artista que pagaste isto; está à espera da resposta",
+  "errors.reason.studio_purchase_already_owned": "Isto já está na tua coleção",
+  "errors.reason.studio_purchase_amount_below_minimum":
+    "O valor está abaixo do mínimo definido",
+  "errors.reason.studio_purchase_amount_above_cap":
+    "Uma compra pode ir até 500 €",
+  "errors.reason.studio_purchase_price_changed":
+    "O preço mudou. Vê o novo preço e tenta outra vez",
+  "errors.reason.studio_purchase_reference_invalid":
+    "Este código de pagamento é demasiado antigo. Obtém um código novo abaixo e, se já pagaste com o antigo, escreve o código antigo no campo do nome para a pessoa artista o encontrar",
+  "errors.reason.studio_purchase_reference_taken":
+    "Este código de pagamento acabou de ser usado noutra compra. Obtém um código novo abaixo",
+  "errors.reason.studio_purchase_not_found":
+    "Esta compra não está disponível para ti",
+  "errors.reason.studio_purchase_not_pending": "Esta compra já teve resposta",
+  "errors.reason.studio_purchase_wall_not_available":
+    "O mural de apoio está aberto a compras pendentes e confirmadas de artistas que continuam no Studio",
+  "errors.reason.studio_purchase_not_confirmed":
+    "As transferências abrem quando a pessoa artista confirmar o teu pagamento",
+  "errors.reason.studio_download_item_deleted":
+    "A pessoa artista apagou esta música, por isso já não se pode transferir",
+  "errors.reason.studio_download_track_removed":
+    "Esta faixa já não está no lançamento",
+  "errors.reason.studio_download_release_taken_down":
+    "A nossa equipa retirou este lançamento, por isso não se pode transferir",
+  "errors.reason.studio_download_artist_unavailable":
+    "Esta página de artista foi removida, por isso a sua música não se pode transferir",
+  "errors.reason.studio_download_track_withheld":
+    "Uma reclamação de direitos de autor mantém esta faixa offline, por isso não se pode transferir",
+  "errors.reason.studio_download_track_not_ready":
+    "Esta faixa ainda não tem áudio",
+  "errors.reason.studio_download_track_preparing":
+    "Estamos a preparar este ficheiro para ti. Tenta outra vez daqui a uns minutos",
+  // Studio landing v2 (2026-10-28)
+  "founding.badge": "Artista da fundação",
+  "home.founding.title": "Artistas <em>da fundação</em>",
+  "landingPreviews.title": "A tua música na página do Studio",
+  "landingPreviews.sub":
+    "A nossa equipa escolhe algumas faixas para tocar a quem visita a página do Studio. Ouve-se a faixa inteira, e só com o teu sim",
+  "landingPreviews.listLabel": "Pedidos da página do Studio",
+  "landingPreviews.status.pending": "À espera da tua resposta",
+  "landingPreviews.status.approved": "Aprovada para a página do Studio",
+  "landingPreviews.status.approvedOff":
+    "Aprovada. Fora da página enquanto não puder tocar lá",
+  "landingPreviews.credited": "Tens crédito nesta faixa de {artist}",
+  "landingPreviews.requestedOn": "Pedida a {date}",
+  "landingPreviews.approveCta": "Aprovar pré-escuta",
+  "landingPreviews.declineCta": "Recusar pré-escuta",
+  "landingPreviews.withdrawCta": "Retirar pré-escuta",
+  "landingPreviews.approveLabel": "Aprovar pré-escuta de {track}",
+  "landingPreviews.declineLabel": "Recusar pré-escuta de {track}",
+  "landingPreviews.withdrawLabel": "Retirar pré-escuta de {track}",
+  "landingPreviews.approveConfirm.title": "Tocar {track} na página do Studio?",
+  "landingPreviews.approveConfirm.body":
+    "Quem abrir a página do Studio pode ouvir a faixa inteira. Podes retirá-la a qualquer momento, tal como quem tiver crédito nela.",
+  "landingPreviews.withdrawConfirm.title": "Tirar {track} da página do Studio?",
+  "landingPreviews.withdrawConfirm.body":
+    "Deixa de tocar para quem visita dentro de um minuto. Para voltar, a nossa equipa tem de pedir outra vez.",
+  "landingPreviews.approved": "{track} está aprovada para a página do Studio",
+  "landingPreviews.declined": "Recusaste a pré-escuta de {track}",
+  "landingPreviews.withdrawn":
+    "{track} sai da página do Studio dentro de um minuto",
+  "landingPreviews.approveFailed": "Não conseguimos aprovar a pré-escuta",
+  "landingPreviews.declineFailed": "Não conseguimos recusar a pré-escuta",
+  "landingPreviews.withdrawFailed": "Não conseguimos retirar a pré-escuta",
+  "errors.what.landingPreviews": "os pedidos da página do Studio",
+  "errors.reason.studio_landing_preview_unavailable":
+    "Esta faixa já não está na página do Studio",
+  "errors.reason.studio_landing_preview_not_found":
+    "Esta pré-escuta já não existe",
+  "errors.reason.studio_landing_preview_track_not_eligible":
+    "Esta faixa não pode tocar na página do Studio",
+  "errors.reason.studio_landing_preview_exists":
+    "Esta faixa já tem um pedido em aberto ou uma pré-escuta ativa",
+  "errors.reason.studio_landing_previews_full":
+    "Já há 10 pré-escutas em aberto. Remove uma primeiro",
+  "errors.reason.studio_landing_preview_no_reachable_owner":
+    "Ninguém que gere esta persona tem acesso ao Studio, por isso ninguém poderia responder",
+  "errors.reason.studio_landing_preview_not_pending":
+    "Alguém já respondeu a este pedido",
+  "errors.reason.studio_landing_preview_not_approved":
+    "Esta pré-escuta já não está na página do Studio",
+  "errors.reason.studio_landing_preview_main_persona_only":
+    "Só quem lançou esta faixa pode responder",
+  "errors.reason.studio_landing_consent_required":
+    "Marca a caixa de consentimento antes de guardar",
+  "errors.reason.studio_landing_persona_not_eligible":
+    "Esta persona não pode aparecer na página do Studio: a página tem de estar publicada e pública",
+  "errors.reason.studio_landing_card_exists": "Esta persona já tem um cartão",
+  "errors.reason.studio_landing_cards_full":
+    "Já há 6 cartões de artista. Remove um primeiro",
+  "errors.reason.studio_landing_card_not_found": "Este cartão já não existe",
+  "errors.reason.studio_landing_photo_not_yours":
+    "Usa uma fotografia que tu carregaste, ou mantém a que este espaço já tem",
+  "errors.reason.studio_landing_order_mismatch":
+    "A lista mudou enquanto a ordenavas. Recarrega-a e tenta outra vez",
+  "errors.reason.studio_founding_persona_not_eligible":
+    "Esta persona não pode ser artista da fundação: a página tem de estar publicada e pública",
+  "errors.reason.studio_founding_artist_exists":
+    "Esta persona já é artista da fundação",
+  "errors.reason.studio_founding_artists_full": "Já há 50 artistas da fundação",
+  "errors.reason.studio_founding_artist_not_found":
+    "Esta persona já não está na lista da fundação",
+  "errors.reason.studio_access_request_exists": "Já pediste acesso ao Studio",
+  "errors.reason.studio_access_already_granted": "Já tens acesso ao Studio",
+  "errors.reason.studio_access_request_not_found":
+    "Este pedido já não está à espera",
+  // Studio purchases: Help and terms on buying and selling
+  "helpLive.cat.buying.heading": "Comprar e <em>vender</em>",
+  "helpLive.cat.buying.blurb": "Preços, pagar a artistas e transferências",
+  "helpLive.faq.buying.q": "Como compro música no Studio?",
+  "helpLive.faq.buying.a":
+    "Abre um lançamento ou uma faixa com preço e toca em Comprar. Pagas diretamente à pessoa artista com uma das suas ligações de pagamento, MB WAY ou IBAN, juntas à nota do pagamento o código que a janela de compra mostra, para a pessoa artista o encontrar, e depois tocas em Já paguei. Quando ela confirmar, transfere os ficheiros em <a>As tuas compras</a>. O QueerPulse nunca toca no dinheiro, por isso um reembolso fica entre ti e a pessoa artista.",
+  "helpLive.faq.selling.q": "Como vendo a minha música?",
+  "helpLive.faq.selling.a":
+    "Nas <a>definições do Studio</a>, junta uma forma de receber em Receber: uma ligação de pagamento, um número MB WAY ou um IBAN. Depois define um preço fixo ou um mínimo num álbum, EP, single ou faixa no editor do lançamento. Quem compra paga-te diretamente, e tu confirmas cada pagamento em Pagamentos por confirmar. Mixes, edits, mixes de lip-sync e podcasts ficam só para ouvir.",
+  "termsLive.sec.selling.num": "05: comprar e vender música",
+  "termsLive.sec.selling.heading": "Vender <em>música</em>",
+  "termsLive.sec.selling.p1":
+    "Artistas podem pôr preço em álbuns, EPs, singles e nas suas faixas. Quem compra paga diretamente à pessoa artista, pela sua ligação de pagamento, número MB WAY ou IBAN. O QueerPulse não é parte da venda. Não guarda nem movimenta o dinheiro, e não pode reembolsar um pagamento.",
+  "termsLive.sec.selling.p2":
+    "Uma compra abre as transferências e o mural de apoio quando a pessoa artista confirma o pagamento. Um reembolso ou um desacordo sobre dinheiro fica entre quem compra e a pessoa artista. Se uma pessoa artista recebeu o teu pagamento e não o confirmou, denuncia a página de artista à nossa equipa.",
 };

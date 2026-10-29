@@ -6,18 +6,21 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { openModalCount } from "../../shared/components/ui/modalStack";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useStudioAccess } from "./api/useStudioAccess";
+import { useSaveStudioWelcome } from "./api/useStudioWelcome";
 import { areStudioListeningMemoryWritesStopped } from "./player/studioListeningMemory";
 import { isStudioWelcomeRequest } from "./studioFirstRunConstants";
 import type { StudioFirstRunSheetProps } from "./StudioFirstRunSheet";
 import {
   hasStudioWelcomeClosedThisPageLoad,
   markStudioWelcomeClosed,
+  readLegacyStudioWelcome,
   useStudioTaste,
   writeStudioTaste,
   writeStudioWelcomeSeen,
   type StudioTaste,
 } from "./studioFirstRunTaste";
 import { useStudioShowcase } from "./useStudioShowcase";
+import { useStudioWelcomeMigration } from "./useStudioWelcomeMigration";
 
 /** A chunk that fails to load leaves Studio home as it is: the welcome is
  *  optional, so it never takes the page down with it. */
@@ -35,21 +38,36 @@ const StudioFirstRunSheet = lazy<ComponentType<StudioFirstRunSheetProps>>(() =>
 
 type FirstVisitDecision = "pending" | "open" | "skip";
 
-/** Whether Studio home opens the welcome by itself, decided once. */
+/** Whether Studio home opens the welcome by itself, decided once. A live
+ *  member's answer comes from the account: the decision waits for it, and a
+ *  failed read skips (the welcome never opens on a guess, and Studio home
+ *  never waits on it). */
 function useFirstVisitDecision(): FirstVisitDecision {
   const isShowcase = useStudioShowcase();
   const { hasAccess } = useStudioAccess();
   const { status: consentStatus } = useConsent();
-  const { memberId, hasSeenWelcome } = useStudioTaste();
+  const { memberId, hasSeenWelcome, welcomeReadState, isAccountBacked } =
+    useStudioTaste();
   const [decision, setDecision] = useState<FirstVisitDecision>("pending");
-  // Latched the first time the member and the consent answer are both in
-  // (adjusted during render). A seen bit or picks that vanish later, a wipe
-  // in another tab say, never open it.
-  if (decision === "pending" && memberId !== null && consentStatus === "set") {
+  // Latched the first time the member, the consent answer and the account's
+  // answer are all in (adjusted during render). A seen bit or picks that
+  // vanish later, a wipe in another tab say, never open it.
+  if (
+    decision === "pending" &&
+    memberId !== null &&
+    consentStatus === "set" &&
+    welcomeReadState !== "pending"
+  ) {
+    // A welcome finished on this device before it moved to the account is
+    // uploaded by useStudioWelcomeMigration instead of replayed.
+    const hasDeviceCopyToMigrate =
+      isAccountBacked && readLegacyStudioWelcome(memberId) !== null;
     const shouldOpen =
       !isShowcase &&
       hasAccess &&
+      welcomeReadState === "ready" &&
       !hasSeenWelcome &&
+      !hasDeviceCopyToMigrate &&
       !hasStudioWelcomeClosedThisPageLoad(memberId) &&
       !areStudioListeningMemoryWritesStopped() &&
       openModalCount() === 0;
@@ -65,7 +83,7 @@ function useFirstVisitDecision(): FirstVisitDecision {
  * /studio/welcome link) reopen it through router state, in both modes, for a
  * member with Studio access. Any way out (Start listening, Skip, the close
  * button, Escape, the scrim) keeps the picks made so far and marks the
- * welcome seen on this device.
+ * welcome seen on the member's account (on this device in the demo).
  */
 export function StudioFirstRun() {
   const { t } = useTranslation();
@@ -73,7 +91,9 @@ export function StudioFirstRun() {
   const location = useLocation();
   const navigate = useNavigate();
   const { hasAccess } = useStudioAccess();
-  const { memberId, taste } = useStudioTaste();
+  const { memberId, taste, isAccountBacked } = useStudioTaste();
+  const { mutate: saveWelcome } = useSaveStudioWelcome();
+  useStudioWelcomeMigration();
   const firstVisitDecision = useFirstVisitDecision();
 
   const requestKey = isStudioWelcomeRequest(location.state)
@@ -108,9 +128,19 @@ export function StudioFirstRun() {
 
   const close = (picks: StudioTaste, isFinished: boolean) => {
     if (memberId !== null) {
+      // The latch holds even when the save is refused, so a failed write
+      // never reopens the sheet in this page load.
       markStudioWelcomeClosed(memberId);
-      writeStudioWelcomeSeen(memberId);
-      writeStudioTaste(memberId, picks);
+      if (isAccountBacked) {
+        saveWelcome({
+          hasSeenWelcome: true,
+          genres: [...picks.genres],
+          moods: [...picks.moods],
+        });
+      } else {
+        writeStudioWelcomeSeen(memberId);
+        writeStudioTaste(memberId, picks);
+      }
     }
     setIsRequested(false);
     setCloseCount((count) => count + 1);

@@ -18,6 +18,11 @@ import {
   withdrawEventInvite,
 } from "./memberInvites.api";
 import { DEMO_RSVP_INVITES } from "./rsvpInvites.data";
+import { useEventHostScope } from "../eventHostScope";
+import {
+  MUSIC_ADMIN_LIST_KEY_ROOT,
+  type EventApiTarget,
+} from "./eventApiTarget";
 
 /** What one send did, for the confirmation the RSVP panel shows. */
 export interface SendRsvpInvitesOutcome {
@@ -128,9 +133,10 @@ function removeDemoRequest(
   queryClient: QueryClient,
   slug: string,
   requestId: string,
+  apiTarget: EventApiTarget,
 ) {
   queryClient.setQueryData<InviteRequestView[]>(
-    eventKeys.inviteRequests(slug, true),
+    eventKeys.inviteRequests(slug, true, apiTarget),
     (current) =>
       (current ?? DEMO_INVITE_REQUESTS).filter(
         (request) => request.id !== requestId,
@@ -142,32 +148,44 @@ function removeDemoRequest(
  *  the queue, the inviter's own list and the guest list all change. The
  *  refresh runs on failure too: a 409 means the request was already
  *  answered or withdrawn elsewhere, so refetching drops the stale row
- *  and removes a button that would fail on every retry. */
+ *  and removes a button that would fail on every retry. The music admin
+ *  target answers on the event's own route, so the answer carries the slug. */
 function useAnswerInviteRequest(
   slug: string,
-  answer: (requestId: string) => Promise<unknown>,
+  answer: (
+    requestId: string,
+    apiTarget: EventApiTarget,
+    eventSlug: string,
+  ) => Promise<unknown>,
 ) {
   const { demoMode } = useDemoMode();
+  const { apiTarget, isHouseEvent } = useEventHostScope();
   const queryClient = useQueryClient();
   return useMutation<void, Error, string>({
     mutationFn: async (requestId) => {
       if (demoMode) {
-        removeDemoRequest(queryClient, slug, requestId);
+        removeDemoRequest(queryClient, slug, requestId, apiTarget);
         return;
       }
-      await answer(requestId);
+      await answer(requestId, apiTarget, slug);
     },
     onSettled: () => {
       if (demoMode) return;
       void queryClient.invalidateQueries({
-        queryKey: eventKeys.inviteRequests(slug, demoMode),
+        queryKey: eventKeys.inviteRequests(slug, demoMode, apiTarget),
       });
       void queryClient.invalidateQueries({
         queryKey: eventKeys.rsvpInvites(slug, demoMode),
       });
       void queryClient.invalidateQueries({
-        queryKey: eventKeys.attendees(slug, demoMode),
+        queryKey: eventKeys.attendees(slug, demoMode, apiTarget),
       });
+      // The admin list counts each house event's waiting requests.
+      if (isHouseEvent) {
+        void queryClient.invalidateQueries({
+          queryKey: MUSIC_ADMIN_LIST_KEY_ROOT,
+        });
+      }
     },
   });
 }

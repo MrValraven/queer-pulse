@@ -84,8 +84,44 @@
   color: var(--studio-accent-text);
 }
 
+/* The audience switch: the shared segmented control, repainted with the
+   theme-following Studio roles so it holds on both grounds. */
+.audienceSwitch[role="group"] {
+  margin: 18px 0 0;
+  background: rgba(var(--studio-ink-rgb), 0.06);
+  border-color: var(--studio-line);
+}
+.audienceSwitch button {
+  color: var(--studio-text-muted);
+}
+.audienceSwitch button[aria-pressed="true"] {
+  background: var(--studio-surface);
+  color: var(--studio-text);
+  box-shadow: 0 0 0 1px var(--studio-line);
+}
+@media (hover: hover) {
+  .audienceSwitch button:hover {
+    color: var(--studio-text);
+  }
+}
+.audienceSwitch button:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* Crossfades: the outgoing text pops out of the flow and sits absolutely
+   over the incoming one, so its holder is the positioning box. */
+.swapBlock {
+  display: block;
+}
+.swapInline {
+  display: inline-block;
+}
+
 .title {
-  margin: 20px 0 0;
+  position: relative;
+  margin: 22px 0 0;
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-display);
@@ -101,6 +137,7 @@
 }
 
 .lede {
+  position: relative;
   margin: 22px 0 0;
   max-width: 540px;
   font-family: var(--sans);
@@ -150,14 +187,16 @@
   gap: 16px 24px;
   margin: 30px 0 0;
 }
-/* Member variant: the note and "See inside" share one row across the copy
-   column, and "See inside" drops below the note once the row runs out. */
+/* Member variant: the access request takes the first row across the copy
+   column and the secondary link sits on the row below it. */
 .actionsMember {
   align-self: stretch;
 }
 
-.seeInside {
+.secondaryLink {
+  position: relative;
   display: inline-flex;
+  min-height: 44px;
   align-items: center;
   gap: 8px;
   font-family: var(--sans);
@@ -169,11 +208,11 @@
   text-underline-offset: 4px;
   transition: color var(--dur-fast) var(--ease);
 }
-.seeInside:hover {
+.secondaryLink:hover {
   color: var(--studio-accent-text);
   text-decoration-color: currentColor;
 }
-.seeInside:focus-visible {
+.secondaryLink:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);

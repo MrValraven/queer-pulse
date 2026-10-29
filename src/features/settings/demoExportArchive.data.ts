@@ -23,12 +23,14 @@ export const CATEGORY_ARCHIVE_KEYS: Record<string, readonly string[]> = {
     "verification",
     "joinApplication",
     "staffRoles",
+    "studioAccessRequest",
   ],
   subprofiles: [
     "subprofiles",
     "personaActivity",
     "personaContent",
     "personaPosts",
+    "studioSales",
   ],
   nowHistory: ["nowHistory"],
   messages: ["messages", "reportedConversations", "messageActivity"],
@@ -82,6 +84,7 @@ export const CATEGORY_ARCHIVE_KEYS: Record<string, readonly string[]> = {
     "recognition",
     "watchHistory",
     "studioListening",
+    "studioPurchases",
   ],
   saved: [
     "saved",
@@ -101,6 +104,128 @@ export const CATEGORY_ARCHIVE_KEYS: Record<string, readonly string[]> = {
   consent: ["consent", "policyAcceptances", "policyStatus"],
   media: ["media"],
 };
+
+/**
+ * One array: listen rows (oldest first), then supporter rows. The
+ * second listen is a release that is no longer published.
+ */
+function demoStudioListeningRows() {
+  return [
+    {
+      type: "listen",
+      trackTitle: "Salt water, slowly",
+      artist: "NIGHTFORM",
+      playedAt: "2026-10-20T21:14:00.000Z",
+    },
+    {
+      type: "listen",
+      trackTitle: null,
+      artist: "Vanda Diesel",
+      playedAt: "2026-10-22T19:02:00.000Z",
+    },
+    {
+      type: "supporter",
+      artist: "NIGHTFORM",
+      shownAs: "account",
+      createdAt: "2026-09-17T10:00:00.000Z",
+      updatedAt: "2026-09-17T10:00:00.000Z",
+    },
+    {
+      type: "supporter",
+      artist: "Vanda Diesel",
+      shownAs: "Mariana Sol",
+      createdAt: "2026-10-15T10:00:00.000Z",
+      updatedAt: "2026-10-15T10:00:00.000Z",
+    },
+  ];
+}
+
+/**
+ * The member's purchases as buyer, oldest first. `shownAs` is the
+ * chosen persona's name, or null when the supporter wall is off.
+ */
+function demoStudioPurchaseRows() {
+  return [
+    {
+      itemKind: "release",
+      itemTitle: "Salt water, slowly",
+      artist: "NIGHTFORM",
+      amountCents: 900,
+      referenceCode: "K7M2XQ",
+      payerName: "Jordan Lee",
+      status: "confirmed",
+      declineReason: null,
+      declineNote: null,
+      isOnWall: true,
+      shownAs: "Late Bloomers",
+      createdAt: "2026-10-15T10:00:00.000Z",
+      decidedAt: "2026-10-16T09:30:00.000Z",
+    },
+    {
+      itemKind: "track",
+      itemTitle: "Devoção",
+      artist: "Vanda Diesel",
+      amountCents: 300,
+      referenceCode: "9R3TXV",
+      payerName: "Jordan Lee",
+      status: "pending",
+      declineReason: null,
+      declineNote: null,
+      isOnWall: false,
+      shownAs: null,
+      createdAt: "2026-10-27T18:20:00.000Z",
+      decidedAt: null,
+    },
+  ];
+}
+
+/**
+ * Rows tagged with `type`: the persona's ways to get paid, then the
+ * sales, every status, with the buyer's account name or "Deleted account".
+ */
+function demoStudioSaleRows() {
+  return [
+    {
+      type: "paymentMethod",
+      persona: "Mariana Sol",
+      kind: "link",
+      label: "Bank transfer",
+      value: "https://pay.example.com/mariana-sol",
+      note: null,
+      position: 0,
+    },
+    {
+      type: "sale",
+      persona: "Mariana Sol",
+      itemKind: "release",
+      itemTitle: "Maré alta",
+      amountCents: 900,
+      referenceCode: "H8WDK4",
+      payerName: "Jordan Lee",
+      buyer: "Jordan Lee",
+      status: "confirmed",
+      declineReason: null,
+      declineNote: null,
+      createdAt: "2026-10-18T12:00:00.000Z",
+      decidedAt: "2026-10-18T15:45:00.000Z",
+    },
+    {
+      type: "sale",
+      persona: "Mariana Sol",
+      itemKind: "track",
+      itemTitle: "Rio de lua",
+      amountCents: 300,
+      referenceCode: "B5NV2R",
+      payerName: null,
+      buyer: "Deleted account",
+      status: "confirmed",
+      declineReason: null,
+      declineNote: null,
+      createdAt: "2026-10-21T08:10:00.000Z",
+      decidedAt: "2026-10-21T20:00:00.000Z",
+    },
+  ];
+}
 
 /**
  * Small, plausible demo content for one archive key, built from the existing
@@ -199,36 +324,11 @@ function demoContentFor(archiveKey: string): unknown {
         },
       ];
     case "studioListening":
-      // One array: listen rows (oldest first), then supporter rows. The
-      // second listen is a release that is no longer published.
-      return [
-        {
-          type: "listen",
-          trackTitle: "Salt water, slowly",
-          artist: "NIGHTFORM",
-          playedAt: "2026-10-20T21:14:00.000Z",
-        },
-        {
-          type: "listen",
-          trackTitle: null,
-          artist: "Vanda Diesel",
-          playedAt: "2026-10-22T19:02:00.000Z",
-        },
-        {
-          type: "supporter",
-          artist: "NIGHTFORM",
-          shownAs: "account",
-          createdAt: "2026-09-17T10:00:00.000Z",
-          updatedAt: "2026-09-17T10:00:00.000Z",
-        },
-        {
-          type: "supporter",
-          artist: "Vanda Diesel",
-          shownAs: "Mariana Sol",
-          createdAt: "2026-10-15T10:00:00.000Z",
-          updatedAt: "2026-10-15T10:00:00.000Z",
-        },
-      ];
+      return demoStudioListeningRows();
+    case "studioPurchases":
+      return demoStudioPurchaseRows();
+    case "studioSales":
+      return demoStudioSaleRows();
     case "studioPlaylistAdditions":
       return [
         {
@@ -307,6 +407,9 @@ function demoContentFor(archiveKey: string): unknown {
     case "preferences":
     case "eventPreferences":
     case "joinApplication":
+      return null;
+    // The demo member has Studio access, so no access request row exists.
+    case "studioAccessRequest":
       return null;
     default:
       return [];

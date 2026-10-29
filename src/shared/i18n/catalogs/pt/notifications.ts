@@ -1546,6 +1546,62 @@ export const notifications: Catalog = {
   "type.studio_credit_accepted.creditedPersonaNameFallback": "Uma persona",
   "type.studio_credit_accepted.trackTitleFallback": "a tua faixa",
   "type.studio_credit_accepted.roleFallback": "colaboração",
+  // Studio landing v2 (2026-10-28)
+  "type.studio_access_granted.text":
+    "O Studio já está aberto para ti. Vem ouvir.",
+  "type.studio_access_granted.meta": "Acesso ao Studio",
+  "type.studio_landing_preview_requested.text":
+    "A nossa equipa gostava de tocar {trackTitle} de {personaName} na página do Studio.",
+  "type.studio_landing_preview_requested.text_one":
+    "A nossa equipa gostava de tocar {trackTitle} de {personaName} na página do Studio.",
+  "type.studio_landing_preview_requested.text_other":
+    "A nossa equipa gostava de tocar {count} faixas de {personaName} na página do Studio.",
+  "type.studio_landing_preview_requested.meta": "Pedido da página do Studio",
+  "type.studio_landing_preview_requested.personaNameFallback":
+    "uma persona tua",
+  "type.studio_landing_preview_requested.trackTitleFallback": "uma faixa",
+  "type.studio_landing_preview_live.text":
+    "{trackTitle} de {mainPersonaName} está aprovada para a página do Studio.",
+  "type.studio_landing_preview_live.text_one":
+    "{trackTitle} de {mainPersonaName} está aprovada para a página do Studio.",
+  "type.studio_landing_preview_live.text_other":
+    "{count} faixas tuas estão aprovadas para a página do Studio.",
+  "type.studio_landing_preview_live.meta": "Aprovação para a página do Studio",
+  "type.studio_landing_preview_live.mainPersonaNameFallback": "uma persona",
+  "type.studio_landing_preview_live.trackTitleFallback": "Uma faixa",
+  // Studio purchases
+  "type.studio_purchase_claimed.text":
+    "Alguém diz que pagou {itemTitle} a {artistName}. Verifica e confirma.",
+  "type.studio_purchase_claimed.text_one":
+    "Alguém diz que pagou {itemTitle} a {artistName}. Verifica e confirma.",
+  "type.studio_purchase_claimed.text_other":
+    "Tens {count} pagamentos por confirmar de {artistName}.",
+  "type.studio_purchase_claimed.meta": "Pagamento por confirmar",
+  "type.studio_purchase_claimed.artistNameFallback":
+    "uma das tuas páginas de artista",
+  "type.studio_purchase_claimed.itemTitleFallback": "a tua música",
+  "type.studio_purchase_confirmed.text":
+    "{artistName} confirmou o teu pagamento por {itemTitle}. Já podes transferir.",
+  "type.studio_purchase_confirmed.meta": "Compra confirmada",
+  "type.studio_purchase_confirmed.artistNameFallback": "Uma pessoa artista",
+  "type.studio_purchase_confirmed.itemTitleFallback": "esta música",
+  "type.studio_purchase_declined.text":
+    "{artistName} recusou o teu pagamento por {itemTitle}: {reason}.",
+  "type.studio_purchase_declined.meta": "Compra recusada",
+  "type.studio_purchase_declined.artistNameFallback": "Uma pessoa artista",
+  "type.studio_purchase_declined.itemTitleFallback": "esta música",
+  "type.studio_purchase_declined.reasonFallback":
+    "vê o motivo nas tuas compras",
+  "type.studio_purchase_expired.text":
+    "O teu pedido por {itemTitle} de {artistName} expirou ao fim de 30 dias sem resposta.",
+  "type.studio_purchase_expired.meta": "Compra expirada",
+  "type.studio_purchase_expired.artistNameFallback": "uma pessoa artista",
+  "type.studio_purchase_expired.itemTitleFallback": "esta música",
+  "purchaseDeclineReason.payment_not_found": "o pagamento não foi encontrado",
+  "purchaseDeclineReason.amount_different": "o valor era diferente",
+  "purchaseDeclineReason.other": "outro motivo",
+  "actions.openPurchases": "Abrir as tuas compras",
+  "actions.reviewPayments": "Ver pagamentos",
   "studioCreditRole.featured": "Participação",
   "studioCreditRole.producer": "Produção",
   "studioCreditRole.coWriter": "Coautoria",
@@ -1555,6 +1611,8 @@ export const notifications: Catalog = {
   "studioCreditRole.coverArt": "Capa",
   "studioCreditRole.other": "Outro papel",
   "actions.reviewCredit": "Ver crédito",
+  "actions.answerLandingPreview": "Responder ao pedido",
+  "actions.openStudio": "Abrir o Studio",
   // Playlists colaborativas do Studio. A pessoa que age é a outra parte: quem
   // criou a playlist num convite ou numa escolha, quem foi convidade numa
   // resposta. `{name}` vem dessa pessoa; `{playlistName}` e `{personaName}` do

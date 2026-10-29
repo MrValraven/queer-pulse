@@ -342,3 +342,34 @@ describe("artist discovery (demo)", () => {
     expect(screen.queryByRole("region", { name: "Appears on" })).toBeNull();
   });
 });
+
+describe("StudioArtistPage: no demo subscribe or tip entry points", () => {
+  const artists = [
+    { id: DEMO_ARTIST_MARIANA.id, name: "Mariana Sol" },
+    { id: "sp-diogo-nightform", name: "NIGHTFORM" },
+  ];
+
+  it.each(artists)(
+    "shows $name with no ledger card, subscribe card, pay pill or Tip",
+    async ({ id, name }) => {
+      render(
+        <TestProviders initialEntries={[`/studio/artist?id=${id}`]}>
+          <StudioArtistPage />
+        </TestProviders>,
+      );
+      expect(
+        await screen.findByRole("heading", { level: 1, name }),
+      ).toBeInTheDocument();
+      const checkoutLinks = screen
+        .queryAllByRole("link")
+        .filter((link) => link.getAttribute("href") === "/studio/checkout");
+      expect(checkoutLinks).toHaveLength(0);
+      expect(screen.queryByRole("button", { name: "One-off tip" })).toBeNull();
+      expect(screen.queryByRole("button", { name: /^Tip/ })).toBeNull();
+      expect(screen.queryByRole("dialog")).toBeNull();
+      expect(screen.queryByText(/no platform cut/)).toBeNull();
+      expect(screen.queryByText("Or tip on top of streaming.")).toBeNull();
+      expect(screen.queryByText(`${name} · this month`)).toBeNull();
+    },
+  );
+});

@@ -64,7 +64,7 @@ vi.mock("./api/useStudioListening", async (importOriginal) => {
   };
 });
 
-const LIST_NAME = "Artists you support";
+const LIST_NAME = "Artists who see your name";
 
 function loadStateOf(
   overrides: Partial<StudioLoadState> = {},
@@ -134,9 +134,7 @@ describe("StudioListeningSupporting", () => {
     expect(
       within(rows[1]!).getByRole("list", { name: "Ways to support NIGHTFORM" }),
     ).toBeInTheDocument();
-    expect(
-      within(rows[1]!).getByText(/^Supporting since /),
-    ).toBeInTheDocument();
+    expect(within(rows[1]!).getByText(/^Showing since /)).toBeInTheDocument();
     expect(
       within(rows[1]!).getByRole("link", { name: "NIGHTFORM" }),
     ).toHaveAttribute("href", expect.stringMatching(/^\/studio\//));
@@ -155,7 +153,7 @@ describe("StudioListeningSupporting", () => {
     const { unmount } = renderMocked();
     expect(
       screen.getByText(
-        "Turn on Show me as a supporter on an artist's page to add them here",
+        "Turn on Show me among the top listeners on an artist's page to add them here",
       ),
     ).toBeInTheDocument();
     expect(screen.queryByRole("list", { name: LIST_NAME })).toBeNull();
@@ -165,20 +163,22 @@ describe("StudioListeningSupporting", () => {
       loadState: errorLoadState({ reason: "server" }),
     };
     renderMocked();
-    expect(screen.getByText(/the artists you support/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/the artists who see your name/),
+    ).toBeInTheDocument();
     expect(
       screen.queryByText(
-        "Turn on Show me as a supporter on an artist's page to add them here",
+        "Turn on Show me among the top listeners on an artist's page to add them here",
       ),
     ).toBeNull();
   });
 
-  it("takes the row out on Stop supporting and moves focus to the next row", async () => {
+  it("takes the row out on Stop showing my name and moves focus to the next row", async () => {
     render(supportingTree());
     const rows = await findSupportingRows();
     fireEvent.click(
       within(rows[0]!).getByRole("button", {
-        name: "Stop supporting Vanda Diesel",
+        name: "Stop showing your name to Vanda Diesel",
       }),
     );
     await waitFor(() =>
@@ -186,32 +186,32 @@ describe("StudioListeningSupporting", () => {
     );
     expect(screen.getByRole("link", { name: "NIGHTFORM" })).toHaveFocus();
     expect(screen.getByRole("status")).toHaveTextContent(
-      "Vanda Diesel no longer sees you as a supporter",
+      "Vanda Diesel no longer sees you among their top listeners",
     );
   });
 
-  it("says paused history keeps the listener out of top supporters", () => {
+  it("says paused history keeps the listener out of top listeners", () => {
     mocks.supporting = { items: [], loadState: loadStateOf() };
     mocks.isHistoryOn = false;
     renderMocked();
     expect(
       screen.getByText(
-        "While your history is paused, you don't appear in their top supporters",
+        "While your history is paused, you don't appear among their top listeners",
       ),
     ).toBeInTheDocument();
   });
 
-  it("keeps the row and names the reason when Stop supporting fails", async () => {
+  it("keeps the row and names the reason when Stop showing my name fails", async () => {
     mocks.shouldFailRemoval = true;
     render(supportingTree());
     const rows = await findSupportingRows();
     fireEvent.click(
       within(rows[0]!).getByRole("button", {
-        name: "Stop supporting Vanda Diesel",
+        name: "Stop showing your name to Vanda Diesel",
       }),
     );
     expect(await within(rows[0]!).findByRole("alert")).toHaveTextContent(
-      "We couldn't turn off Show me as a supporter. We couldn't reach Studio, so this wasn't saved. Check your connection, or try again in a moment",
+      "We couldn't turn off Show me among the top listeners. We couldn't reach Studio, so this wasn't saved. Check your connection, or try again in a moment",
     );
     expect(screen.getByRole("link", { name: "Vanda Diesel" })).toBeVisible();
   });

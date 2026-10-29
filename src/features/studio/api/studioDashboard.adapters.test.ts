@@ -42,6 +42,7 @@ const cardDto = {
   artist: artistRefDto,
   publishedAt: "2026-03-01T10:00:00.000Z",
   genre: "fado",
+  genres: ["fado"],
   mood: null,
   scene: null,
 };

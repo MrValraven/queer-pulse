@@ -34,7 +34,7 @@ const COPY_KEYS = {
 export function GivingCopyRow({
   method,
 }: {
-  method: CommunityGivingMethodDTO;
+  method: Pick<CommunityGivingMethodDTO, "kind" | "label" | "value">;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();

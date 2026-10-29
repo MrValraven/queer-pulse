@@ -164,9 +164,10 @@ export interface AdminMediaDeleteConflict {
   coverHolders?: AdminMediaCoverHolder[];
 }
 
-/** One scene or Studio release whose cover is the image being deleted. */
+/** One scene, Studio release or Studio page photo slot (`entityId` `hero` or
+ *  `manifesto`) whose live cover is the image being deleted. */
 export interface AdminMediaCoverHolder {
-  kind: "studio-scene" | "studio-release";
+  kind: "studio-scene" | "studio-release" | "studio-landing-photo";
   entityId: string;
   label: string;
 }

@@ -1,4 +1,5 @@
 import { apiGet, apiPost } from "../../../shared/api/client";
+import { eventApiPath, type EventApiTarget } from "./eventApiTarget";
 import type { EventHostDTO, EventInviteStatus } from "./events.api";
 
 /**
@@ -71,13 +72,59 @@ export const withdrawEventInvite = (id: string) =>
 
 /** GET /events/:slug/invite-requests, member invites waiting for an
  *  organiser on an invite-only event. */
-export const getInviteRequests = (slug: string) =>
-  apiGet<InviteRequestDTO[]>(`/events/${slug}/invite-requests`);
+export const getInviteRequests = (
+  slug: string,
+  target: EventApiTarget = "member",
+) => apiGet<InviteRequestDTO[]>(eventApiPath(target, slug, "/invite-requests"));
 
-/** POST /event-invites/:id/approve, an organiser lets the request through. */
-export const approveInviteRequest = (id: string) =>
-  apiPost<EventInviteStatusResultDTO>(`/event-invites/${id}/approve`);
+/** The path an organiser answers an invite request on. The member target uses
+ *  the global `/event-invites/:id/...` route; the music admin target answers
+ *  on the event's own route, which cannot be built without the event slug. */
+function inviteRequestAnswerPath(
+  id: string,
+  target: EventApiTarget,
+  eventSlug: string | undefined,
+  memberAction: "approve" | "decline-request",
+  adminAction: "approve" | "decline",
+): string {
+  if (target === "member") return `/event-invites/${id}/${memberAction}`;
+  if (!eventSlug) {
+    throw new Error(
+      "Answering an invite request on the music admin route needs the event slug, and none was given",
+    );
+  }
+  return eventApiPath(
+    target,
+    eventSlug,
+    `/invite-requests/${id}/${adminAction}`,
+  );
+}
 
-/** POST /event-invites/:id/decline-request, an organiser refuses it. */
-export const declineInviteRequest = (id: string) =>
-  apiPost<EventInviteStatusResultDTO>(`/event-invites/${id}/decline-request`);
+/** POST /event-invites/:id/approve, an organiser lets the request through.
+ *  The music admin target posts to the event's own invite-requests route, so
+ *  it requires the event slug. */
+export const approveInviteRequest = (
+  id: string,
+  target: EventApiTarget = "member",
+  eventSlug?: string,
+) =>
+  apiPost<EventInviteStatusResultDTO>(
+    inviteRequestAnswerPath(id, target, eventSlug, "approve", "approve"),
+  );
+
+/** POST /event-invites/:id/decline-request, an organiser refuses it. The
+ *  music admin target requires the event slug, as approve does. */
+export const declineInviteRequest = (
+  id: string,
+  target: EventApiTarget = "member",
+  eventSlug?: string,
+) =>
+  apiPost<EventInviteStatusResultDTO>(
+    inviteRequestAnswerPath(
+      id,
+      target,
+      eventSlug,
+      "decline-request",
+      "decline",
+    ),
+  );

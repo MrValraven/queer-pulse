@@ -1,0 +1,165 @@
+/* The buyer's purchase list. It renders inside StudioShell (the library) and
+   on the account page outside it, so every colour here is an app-wide token. */
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  max-width: 720px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px 0;
+  border-top: 1px solid var(--line);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.cover {
+  flex: none;
+  width: 64px;
+  height: 64px;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.format {
+  margin: 0;
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-19);
+  font-weight: 400;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+.title:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.artist,
+.meta,
+.note {
+  margin: 0;
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+}
+
+.amount {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 2px;
+  transition-property: color, text-decoration-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.link:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) {
+  .link:hover {
+    color: var(--accent-text);
+    text-decoration-color: currentColor;
+  }
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.block > * {
+  max-width: 100%;
+}
+
+.alert {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--accent-text);
+}
+
+.downloadsBlock {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.downloadsRegion {
+  align-self: stretch;
+}
+
+.downloadsPanel {
+  padding-top: 16px;
+}
+
+.empty {
+  margin: 0;
+  padding: 8px 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 12px 0;
+}
+
+.skeletonRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer {
+  margin-top: 12px;
+}

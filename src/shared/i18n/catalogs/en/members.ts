@@ -34,7 +34,12 @@ export const members: Catalog = {
   // ── Upload pipeline error messages (api/uploadProcessing.ts, api/useUploadImage.ts) ──
   "upload.error.unsupportedType":
     "That image type isn't supported. Use a JPEG, PNG, WebP or GIF.",
-  "upload.error.tooLarge": "That image is too large. Keep it under {maxLabel}.",
+  "upload.error.tooLarge":
+    "That image is still over {maxLabel} after we shrank it. Try a different photo.",
+  "upload.error.sourceTooLarge":
+    "That photo is over {maxLabel}, more than your browser can open. Try exporting a smaller copy.",
+  "upload.error.gifTooLarge":
+    "That GIF is over {maxLabel}. Animated GIFs upload exactly as they are, so pick a shorter or smaller one.",
   "upload.error.decodeFailed":
     "We couldn't read that image. Try a different file.",
   "upload.error.tooSmall":

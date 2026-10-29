@@ -414,6 +414,7 @@ export const gatherings: Catalog = {
   "catalog.family.meet.name": "Conhecer e jogar",
   "catalog.family.eat.name": "Comer e beber",
   "catalog.family.party.name": "Festa e noite",
+  "catalog.family.music.name": "Música",
   "catalog.family.make.name": "Fazer e criar",
   "catalog.family.learn.name": "Aprender e conversar",
   "catalog.family.watch.name": "Ver e ouvir",

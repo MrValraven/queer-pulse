@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { FiX } from "react-icons/fi";
 import { FadeIn, IconButton } from "../../shared/components/ui";
@@ -5,6 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { linkToPath } from "../../app/routeMap";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { studioKeys } from "../studio/api/studioQueryKeys";
 import { NotificationItemActions } from "./NotificationItemActions";
 import { NotificationItemLead } from "./NotificationItemLead";
 import type { Notification } from "./data";
@@ -50,6 +52,14 @@ export function NotificationItem({
   isCompact?: boolean;
 }) {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
+
+  // The Studio page the grant opens must read the access again, so a stale
+  // "not on the list yet" answer never greets a member who was just let in.
+  function refreshStudioAccess() {
+    if (notification.shouldRefreshStudioAccess)
+      void queryClient.invalidateQueries({ queryKey: studioKeys.meAll });
+  }
 
   // Where the whole row navigates on click/keypress. A specific source
   // deep-link (thread/post/event) wins; otherwise an actor-driven row
@@ -121,7 +131,10 @@ export function NotificationItem({
       // content inside a role="button". Row-level navigation lives on the
       // overlay link below instead; clicking or keyboard-activating anything
       // in the row bubbles here and marks it read.
-      onClick={() => onMarkRead(notification.id)}
+      onClick={() => {
+        refreshStudioAccess();
+        onMarkRead(notification.id);
+      }}
     >
       {rowHref && (
         <Link to={linkToPath(rowHref)} className={styles.rowLink}>
@@ -186,6 +199,7 @@ export function NotificationItem({
             notificationId={notification.id}
             actions={notification.actions}
             onResolve={onResolve}
+            onBeforeNavigate={refreshStudioAccess}
           />
         )}
       </div>

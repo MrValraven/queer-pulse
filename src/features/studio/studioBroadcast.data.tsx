@@ -101,7 +101,7 @@ export const INITIAL_CUES: Cue[] = [
     time: "00:31:10",
     titleKey: "studioShowcase:broadcast.cues.unknownTitle",
     whoKey: "studioShowcase:broadcast.cues.unmatched",
-    metaKey: "studioShowcase:broadcast.cues.meta.payoutHeld",
+    metaKey: "studioShowcase:broadcast.cues.meta.creditHeld",
     badge: "hold",
   },
   {

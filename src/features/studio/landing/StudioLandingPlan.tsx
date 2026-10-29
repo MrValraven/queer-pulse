@@ -6,8 +6,10 @@ import { STUDIO_LANDING_PLAN_POINTS } from "./studioLanding.data";
 import styles from "./StudioLandingPlan.module.css";
 
 /**
- * The plan: what Studio wants to become. Dashed border, quieter fill and a
- * "Coming later" chip mark it as something that is not available today.
+ * The plan: what Studio wants to become, the co-op, the money and the
+ * masters. A full card on the raised Studio tint with a solid border and
+ * larger icons gives it weight, the three points sit in a row from 900px,
+ * and the dashed "Coming later" chip marks it as the direction ahead.
  */
 export function StudioLandingPlan() {
   const { t } = useTranslation();

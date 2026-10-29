@@ -164,8 +164,10 @@ export function isGatedPath(pathname) {
  * save build time and data.
  *
  * Scope decision (see docs/superpowers/specs/2026-07-20-seo-and-ai-discoverability-design.md):
- * QueerPulse deliberately does NOT index the magazine, cinema, studio, activism,
+ * QueerPulse deliberately does NOT index the magazine, cinema, activism,
  * archive or sustainer surfaces — they rely on word-of-mouth and direct sharing.
+ * The Studio landing (/studio) is the one indexed exception since 2026-10-28;
+ * every /studio/* sub-route stays gated and disallowed.
  * The resources surface is likewise excluded from prerender + sitemap: it is
  * served as normal SPA routes. The safety pages and the safe-spaces guide are the front door.
  *
@@ -183,6 +185,11 @@ export function isGatedPath(pathname) {
  *      /safety, /safety/legal. They are kept because their content is
  *      genuinely worth indexing, but the build machine MUST be able to reach
  *      the API. Audit any new path against this before adding it.
+ *      /studio is listed here for the sitemap and baked HEAD-ONLY (see
+ *      SHARE_CARD_PATHS): /studio is also Studio home for a member with a
+ *      Studio grant, so a baked visitor body would flash on every member's
+ *      cold load. Its share card holds the title, description and share image
+ *      with an empty #root.
  *
  * Dynamic `:slug` routes are excluded: there is no canonical content source to
  * enumerate, and profiles are gated regardless.
@@ -231,6 +238,9 @@ export const QUIET_PUBLIC_PATHS = [
   "/safety/legal",
   "/safety/report",
   "/coming-out",
+
+  // Studio landing (indexed since 2026-10-28; sub-routes stay gated)
+  "/studio",
 ];
 
 /**
@@ -245,8 +255,9 @@ export const QUIET_PUBLIC_PATHS = [
  * Claude-SearchBot, PerplexityBot); JS-executing crawlers (Googlebot) are
  * unaffected.
  *
- * Kept deliberately minimal (homepage only): it is the single most valuable
- * page to serve as static HTML to a JS-less crawler. Dynamic persona pages
+ * Kept deliberately minimal (the homepage alone): it is the most valuable
+ * page to serve as static HTML to a JS-less crawler. The Studio landing is
+ * baked head-only (SHARE_CARD_PATHS). Dynamic persona pages
  * (/p/:handle) are intentionally NOT prerendered — their count is unbounded.
  *
  * Every entry MUST also appear in QUIET_PUBLIC_PATHS (assertPrerenderSubset
@@ -261,25 +272,36 @@ export const PRERENDER_PATHS = ["/"];
  * with the page's own title, description and image. Link-preview crawlers run
  * no JavaScript, so without this they read spa.html's brand-level defaults.
  *
- * These pages are deliberately de-indexed (word of mouth), so they are absent
- * from the sitemap and from QUIET_PUBLIC_PATHS. They are still shared by hand,
- * which is the one job this list does. scripts/prerender.mjs copies only the
- * page-specific head tags (title, description, canonical, robots, og:*,
- * twitter:*) into the untouched shell and leaves #root EMPTY, so the page boots
- * exactly as it would from spa.html and no rendered body ever reaches a
- * crawler. The baked robots meta carries the page's own `noindex, nofollow`,
- * which is what keeps it out of search results once robots.txt lets the
- * preview crawlers fetch it.
+ * The Studio landing is the one entry. It is indexed (in QUIET_PUBLIC_PATHS
+ * since 2026-10-28) and still baked head-only: /studio is Studio home for a
+ * member with a Studio grant, so a full bake would flash the visitor landing
+ * on every signed-in cold load, and a VITE_DEMO build would bake Studio home
+ * itself. scripts/prerender.mjs copies only the page-specific head tags (title,
+ * description, canonical, robots, og:*, twitter:*) into the untouched shell and
+ * leaves #root EMPTY, so the page boots exactly as it would from spa.html and
+ * no rendered body ever reaches a crawler.
+ *
+ * A share card is either indexed (also in QUIET_PUBLIC_PATHS, so its robots
+ * meta must allow indexing) or de-indexed (absent there, so its robots meta
+ * must carry noindex). isIndexedShareCard tells prerender.mjs which to check.
  *
  * Two rules, held by assertShareCardPaths:
- *   1. No entry may be gated. `/studio` sits inside the gated `/studio/*`
- *      prefix and passes only because it is a PUBLIC_EXCEPTION (the studio
- *      shopfront).
+ *   1. No entry may be gated. A path inside a gated prefix passes only when it
+ *      is a PUBLIC_EXCEPTION (the way `/studio` is the studio shopfront).
  *   2. No entry may also be in PRERENDER_PATHS. Both passes write the same
  *      dist/<path>/index.html, so a path in both would be baked twice and the
  *      second write would silently win.
  */
 export const SHARE_CARD_PATHS = ["/studio"];
+
+/**
+ * True when a share-card path is also an indexed public page (listed in
+ * QUIET_PUBLIC_PATHS). prerender.mjs then requires a robots meta that allows
+ * indexing, and requires noindex for every other share card.
+ */
+export function isIndexedShareCard(publicPath) {
+  return QUIET_PUBLIC_PATHS.includes(publicPath);
+}
 
 /**
  * Throw if SHARE_CARD_PATHS breaks either rule above. Lists every offender, so

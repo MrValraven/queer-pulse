@@ -1,0 +1,89 @@
+/* "Supported by" on the release page: a quiet grid of avatars with names,
+   3 across at 360px, 4 from 560px, up to 8 on wide screens. Tokens only. */
+.wall {
+  margin-top: 40px;
+  color: var(--studio-text);
+}
+
+.heading {
+  margin: 0 0 16px;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 500;
+  color: var(--studio-text);
+}
+
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px 8px;
+}
+@media (--sm-up) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (--md-up) {
+  .grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+@media (--wide-up) {
+  .grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+}
+
+/* Avatar over name. The shared identity lays them side by side, so the
+   wall stacks them and truncates the name to its cell. */
+.entry {
+  min-width: 0;
+  padding: 6px 2px;
+  border-radius: var(--radius-8);
+}
+.entry:focus {
+  outline: none;
+}
+.entry:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.entry > span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+.entry > span > :last-child {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  overflow-wrap: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  font-size: var(--text-13);
+  line-height: 1.3;
+  /* Linked or not, the name takes the same 44px box, so both sit level. */
+  padding-block: 14px;
+  margin-block: -8px;
+}
+.entry > span > a:last-child {
+  text-decoration: none;
+}
+
+.failure {
+  margin: 12px 0 0;
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+  color: var(--studio-text-muted);
+}
+
+.footer {
+  padding-top: 16px;
+}

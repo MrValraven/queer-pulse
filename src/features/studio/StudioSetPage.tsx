@@ -47,8 +47,6 @@ const SET_ITEM_BASE = {
   href: "/studio/set",
 };
 
-const PER_PLAY_AMOUNT = 0.05;
-
 export function StudioSetPage() {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -152,7 +150,7 @@ export function StudioSetPage() {
               components={{ em: <em /> }}
             />
           </h2>
-          <span className={s.eb}>{t("studio:set.page.everyPlayPaysNote")}</span>
+          <span className={s.eb}>{t("studio:set.page.creditedNote")}</span>
         </div>
         <div className={ss.setCard}>
           {loading
@@ -186,16 +184,7 @@ export function StudioSetPage() {
                       <div className={ss.who}>{row.who}</div>
                     </div>
                     <div className={ss.pay}>
-                      {row.now ? (
-                        <>
-                          <b>{t("studio:set.page.payingNowLabel")}</b>
-                          {fmt.currency(PER_PLAY_AMOUNT)}
-                        </>
-                      ) : (
-                        t("studio:album.main.perPlaySuffix", {
-                          amount: fmt.currency(PER_PLAY_AMOUNT),
-                        })
-                      )}
+                      {row.now && <b>{t("studio:set.page.playingNowLabel")}</b>}
                     </div>
                     <div className={ss.tm}>{row.tm}</div>
                   </div>

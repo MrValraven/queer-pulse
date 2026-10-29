@@ -24,6 +24,9 @@ import styles from "./StudioDashboardActivityChart.module.css";
 // the first bar.
 const CHART_PAD = { left: 28, right: 8, top: 14, bottom: 28 };
 const MINIMUM_BAR_HEIGHT = 3;
+/** Under this plot width the last column's label ends at its bar's centre,
+ *  so a label like "Oct 29" is not cut off by the frame's right edge. */
+const END_ANCHOR_BELOW_WIDTH = 480;
 const DEFAULT_ASPECT = 360 / 200;
 
 /** Every line of copy a Studio bar chart shows, already translated. */
@@ -143,6 +146,11 @@ export function StudioBarChart({
                   return {
                     key: bucket.key,
                     label: axisLabelOf(bucket, index),
+                    labelAnchor:
+                      index === buckets.length - 1 &&
+                      width < END_ANCHOR_BELOW_WIDTH
+                        ? "end"
+                        : "middle",
                     labelClassName: bucket.isCurrent
                       ? styles.columnLabelToday
                       : styles.columnLabel,
@@ -154,7 +162,7 @@ export function StudioBarChart({
                         rx: 4,
                         fill: bucket.isCurrent
                           ? "var(--jade)"
-                          : "var(--accent)",
+                          : "var(--studio-accent)",
                         className: `${chartStyles.mark} ${styles.bar}`,
                         datum,
                         ariaLabel: `${datum.bucketLabel}: ${datum.countLabel}`,

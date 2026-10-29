@@ -13,9 +13,10 @@
  * optional [pngDir] receives the full-size PNG of every shot for review;
  * keep it outside the repo.
  *
- * Writes public/studio-landing/<fileBase>-<theme>.webp for the ten shots in
- * both themes (each gallery screen on a laptop and on a phone, plus the
- * phone-only player and share shots), plus public/studio-landing/og-studio.jpg
+ * Writes public/studio-landing/<fileBase>-<theme>.webp for the twelve shots
+ * in both themes (each of the five gallery screens, the artist dashboard
+ * included, on a laptop and on a phone, plus the phone-only player and
+ * share shots), plus public/studio-landing/og-studio.jpg
  * cut from the dark home shot. Nothing is written there unless every shot
  * passes.
  *
@@ -38,7 +39,7 @@ const THEMES = ["light", "dark"];
 const RESERVED_PORTS = new Set([5173, 3000]);
 
 /**
- * The four gallery screens shown on both devices. Each becomes a laptop
+ * The five gallery screens shown on both devices. Each becomes a laptop
  * shot (`<screen>-desktop`) and a phone shot (`<screen>-phone`) with the
  * same route, hiding, name swap and guards.
  */
@@ -82,10 +83,63 @@ const GALLERY_SCREENS = [
     // collaborative badge and the "Added by" rows share the frame.
     phoneScroll: "heading-to-top",
   },
+  {
+    shotName: "dashboard",
+    // Mariana Sol is the demo member's own persona, so the dashboard opens
+    // on her numbers. The demo dashboard renders a showcase hero and body
+    // (money cards, listening charts) above "Your numbers"; they are hidden
+    // for this shot, which leaves the live view of the page. If the honesty
+    // guard still refuses this page (money or a listening count inside
+    // Your numbers), capture /studio/artist?id=demo-persona-mariana-sol
+    // scrolled to the owner tools instead, and give the landing's dashboard
+    // alt keys a copy pass.
+    paths: ["/studio/dashboard?persona=demo-persona-mariana-sol"],
+    // The "Your numbers" heading: "How <em>{name}</em> is reaching people".
+    readyHeading: "How Mariana Sol is reaching people",
+    // The frame opens on the Plays card title, with the Top listeners card
+    // under it (the cards between them and after them are hidden below).
+    laptopScroll: "plays-heading-top",
+    phoneScroll: "plays-heading-top",
+    // The showcase hero (StudioDashboardShowcase, with the heroColumn
+    // class) and the body that follows it (charts, side cards).
+    hiddenSelectors: [
+      'section[class*="_hero_"]:has([class*="_heroColumn_"])',
+      'section[class*="_body_"]:has([class*="_cardH_"])',
+      // The Next steps card (drafts, scheduled release, release checklist)
+      // above the numbers: it would push the plays trend and the supporters
+      // below the fold, and the landing says the shot shows those.
+      'section[class*="_nextSteps_"]',
+      // The "Payments to confirm" creator nav item: a purchases-feature
+      // hint, not for the public landing.
+      'a[href^="/studio/payments"]',
+      // The followers-per-week chart and the cards of the pair grid other
+      // than Top listeners ("Your music on the Studio page", placements,
+      // milestones) sit around the plays trend and Top listeners; hidden so
+      // the two fit one frame.
+      '[class*="_extras_"] [class*="_growth_"]',
+      '[class*="_pair_"] > :not([class*="_supporters_"])',
+      // The plays totals and note under the chart, and the "Showing
+      // themselves" line under Top listeners: the chart and the listeners
+      // then fit one laptop frame.
+      '[class*="_trendFooter_"]',
+      '[class*="_optedIn_"]',
+      // The "Show data table" button under the chart, the fifth listener
+      // row and the per-release numbers table that follows the cards (its
+      // first rows would peek under the player bar).
+      '[class*="_trendCard_"] button[aria-controls]',
+      '[class*="_supporters_"] ol > li:nth-child(5)',
+      '[class*="_extras_"] ~ *',
+    ],
+    // Capture-only spacing: pull Top listeners 14px up so its bottom edge
+    // clears the player bar on a laptop.
+    extraStyle: '[class*="_supporters_"] { margin-top: -14px; }',
+    // The creator shell has no player bar.
+    hasNoPlayerBar: true,
+  },
 ];
 
 /**
- * The ten shots. Mirrors STUDIO_LANDING_SCREENS and
+ * The twelve shots. Mirrors STUDIO_LANDING_SCREENS, STUDIO_LANDING_ARTIST_SHOTS and
  * STUDIO_LANDING_SHOT_SIZES in src/features/studio/landing/studioLanding.data.ts
  * (this script cannot import TypeScript). Keep the file bases and sizes in
  * step with that file.
@@ -98,6 +152,9 @@ const SHOTS = [
     paths: screen.paths,
     readyHeading: screen.readyHeading,
     scroll: screen.laptopScroll,
+    hiddenSelectors: screen.hiddenSelectors,
+    extraStyle: screen.extraStyle,
+    hasNoPlayerBar: screen.hasNoPlayerBar,
   })),
   ...GALLERY_SCREENS.map((screen) => ({
     shotName: `${screen.shotName}-phone`,
@@ -106,6 +163,9 @@ const SHOTS = [
     paths: screen.paths,
     readyHeading: screen.readyHeading,
     scroll: screen.phoneScroll,
+    hiddenSelectors: screen.hiddenSelectors,
+    extraStyle: screen.extraStyle,
+    hasNoPlayerBar: screen.hasNoPlayerBar,
   })),
   {
     shotName: "player",
@@ -193,7 +253,7 @@ const HONESTY_PATTERNS = [
 const UNAVAILABLE_PATTERNS = [/No longer available/i, /withdrawn/i];
 
 /**
- * Demo-only surfaces on the six captured screens, each a
+ * Demo-only surfaces on the seven captured screens, each a
  * useStudioShowcase() caller. Vite dev keeps the local CSS module name in
  * the generated class (`_sustainPill_<hash>_<line>`), so the class
  * substring selectors are stable across runs.
@@ -220,6 +280,9 @@ const SHOWCASE_ONLY_SELECTORS = [
   // ledger in the side column.
   '[class*="_buyCard_"]',
   '[class*="_ledgerCard_"]',
+  // StudioOfferPanel (the purchases buy panel, a section labelled "Buy
+  // <release>" with the price): live Studio shows no money on the landing.
+  'section[aria-label^="Buy "]',
   // StudioAlbumTracklist: the per-play money note above the track list.
   '[class*="_perPlay_"]',
   // StudioPlayerShowcase: the per-play line and tip button in the player.
@@ -531,16 +594,48 @@ async function settleBeforeShot(page, theme, shot) {
  */
 async function hideShowcaseOnly(page, shot) {
   await page.evaluate(
-    (selectors) => {
+    ({ selectors, extraStyle }) => {
       const styleId = "studio-landing-hide-showcase";
       document.getElementById(styleId)?.remove();
       const style = document.createElement("style");
       style.id = styleId;
-      style.textContent = `${selectors.join(",\n")} { display: none !important; }`;
+      style.textContent = `${selectors.join(",\n")} { display: none !important; }\n${extraStyle ?? ""}`;
       document.head.append(style);
     },
-    [...SHOWCASE_ONLY_SELECTORS, ...(shot.hiddenSelectors ?? [])],
+    {
+      selectors: [...SHOWCASE_ONLY_SELECTORS, ...(shot.hiddenSelectors ?? [])],
+      extraStyle: shot.extraStyle,
+    },
   );
+}
+
+/**
+ * "plays-heading-top": the Plays card's title sits a fixed gap under the
+ * sticky or fixed top bar (the same gap in every theme and on both devices),
+ * so the plays per day chart opens the frame and the Top listeners card
+ * follows it.
+ */
+async function scrollToPlaysHeading(page) {
+  await page.evaluate(() => {
+    const title = document.querySelector('[class*="_trendCard_"] figcaption');
+    if (!title) throw new Error("The Plays card is not on the page.");
+    let topBarBottom = 0;
+    for (
+      let element = document.elementFromPoint(innerWidth / 2, 2);
+      element && element !== document.body;
+      element = element.parentElement
+    ) {
+      if (["fixed", "sticky"].includes(getComputedStyle(element).position)) {
+        topBarBottom = element.getBoundingClientRect().bottom;
+        break;
+      }
+    }
+    const gapUnderTopBar = 28;
+    window.scrollBy({
+      top: title.getBoundingClientRect().top - topBarBottom - gapUnderTopBar,
+      behavior: "instant",
+    });
+  });
 }
 
 /**
@@ -552,6 +647,11 @@ async function hideShowcaseOnly(page, shot) {
  * - "heading-to-top": the heading sits a small gap under the top bar.
  */
 async function scrollToReadyHeading(page, shot) {
+  if (shot.scroll === "plays-heading-top") {
+    await scrollToPlaysHeading(page);
+    await waitForViewportImages(page);
+    return;
+  }
   const heading = page
     .getByRole("heading", { name: shot.readyHeading, exact: true })
     .first();
@@ -903,7 +1003,7 @@ async function captureShot(page, baseUrl, shot, theme) {
     await replaceDemoMemberName(page);
     await replaceDemoSearchHint(page);
     await settleBeforeShot(page, theme, shot);
-    if (shot.device === "laptop") {
+    if (shot.device === "laptop" && !shot.hasNoPlayerBar) {
       const hasSeekSlider =
         (await page.getByRole("slider", { name: "Seek" }).count()) > 0;
       if (!hasSeekSlider) {

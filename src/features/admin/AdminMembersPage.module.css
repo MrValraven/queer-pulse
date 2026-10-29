@@ -412,6 +412,21 @@
   color: var(--ink-40);
 }
 
+/* Quiet pill beside the applied line: coral ink on its own tint. It is not
+   interactive, so the focus ring is untouched. */
+.queueStudioArtist {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  font-size: var(--text-12);
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.12);
+}
+
 .queueStatusRow {
   display: flex;
   flex-wrap: wrap;

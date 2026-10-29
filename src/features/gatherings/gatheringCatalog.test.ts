@@ -50,9 +50,9 @@ describe("gatheringCatalog", () => {
     expect(new Set(icons).size).toBe(icons.length);
   });
 
-  it("files every format under one of the nine families", () => {
+  it("files every format under one of the ten families", () => {
     const familyKeys = new Set(GATHERING_FAMILIES.map((family) => family.key));
-    expect(familyKeys.size).toBe(9);
+    expect(familyKeys.size).toBe(10);
     for (const format of GATHERING_FORMATS) {
       expect(familyKeys.has(format.family)).toBe(true);
     }
@@ -155,6 +155,7 @@ describe("gatheringCatalog", () => {
         meet: [],
         eat: ["bring"],
         party: ["isAdultsOnly", "isSoberFriendly"],
+        music: ["isAdultsOnly", "isSoberFriendly", "runtimeMinutes"],
         make: ["bring"],
         learn: [],
         watch: ["runtimeMinutes"],
@@ -229,6 +230,7 @@ describe("gatheringCatalog", () => {
         meet: 30,
         watch: 30,
         party: 40,
+        music: 50,
       };
       for (const family of GATHERING_FAMILIES) {
         expect(family.capacityDefault).toBe(capacityByFamily[family.key]);
@@ -271,5 +273,57 @@ describe("18+ on the quiz format", () => {
     expect(
       stripDisallowedDetails("meet", { isAdultsOnly: true }, "mixer"),
     ).toBeNull();
+  });
+});
+
+describe("the music family", () => {
+  it("orders the ten families as the backend does", () => {
+    expect(GATHERING_FAMILIES.map((family) => family.key)).toEqual([
+      "meet",
+      "eat",
+      "party",
+      "music",
+      "make",
+      "learn",
+      "watch",
+      "move",
+      "care",
+      "organise",
+    ]);
+  });
+
+  it("files the five moved formats under music", () => {
+    for (const formatKey of [
+      "club-night",
+      "listening-party",
+      "karaoke",
+      "jam-session",
+      "live-performance",
+    ]) {
+      expect(findFormat(formatKey)?.family).toBe("music");
+    }
+  });
+
+  it("keeps bring on a jam session in Music", () => {
+    expect(allowedDetailKeys("music", "jam-session")).toEqual([
+      "isAdultsOnly",
+      "isSoberFriendly",
+      "runtimeMinutes",
+      "bring",
+    ]);
+    expect(
+      stripDisallowedDetails("music", { bring: " A cable " }, "jam-session"),
+    ).toEqual({ bring: "A cable" });
+  });
+
+  it("loses no detail a moved event could store before the move", () => {
+    const musicClubNightKeys = allowedDetailKeys("music", "club-night");
+    for (const partyKey of allowedDetailKeys("party")) {
+      expect(musicClubNightKeys).toContain(partyKey);
+    }
+    expect(allowedDetailKeys("music", "jam-session")).toContain("bring");
+    expect(allowedDetailKeys("music", "live-performance")).toContain(
+      "runtimeMinutes",
+    );
   });
 });

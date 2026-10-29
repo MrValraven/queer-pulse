@@ -1,6 +1,5 @@
 import { IconButton, ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { nightcapImage } from "./studioOffAir.data";
@@ -9,7 +8,6 @@ import styles from "./StudioOffAirPage.module.css";
 const NIGHTCAP_TITLE = "Vespertina, vol. iv";
 const NIGHTCAP_TITLE_PRE = "Vespertina, ";
 const NIGHTCAP_TITLE_EM = "vol. iv";
-const NIGHTCAP_PAID_OUT = 8.2;
 
 const NIGHTCAP_CURATOR = "Sara Marques";
 const NIGHTCAP_DURATION = "1h 42m";
@@ -27,7 +25,6 @@ const NEXT_SHOW_HOST = "D. Okoye";
 
 export function StudioOffAirHero() {
   const { t } = useTranslation();
-  const fmt = useFormat();
   const { showToast } = useToast();
   return (
     <section className={styles.offairHero}>
@@ -116,9 +113,7 @@ export function StudioOffAirHero() {
                 t("studioShowcase:offAir.meta.trackCount", {
                   count: NIGHTCAP_TRACK_COUNT,
                 }),
-                t("studio:offAir.hero.paidOutSuffix", {
-                  amount: fmt.currency(NIGHTCAP_PAID_OUT),
-                }),
+                t("studio:offAir.hero.replaySuffix"),
               ].join(" · ")}
             </p>
           </div>

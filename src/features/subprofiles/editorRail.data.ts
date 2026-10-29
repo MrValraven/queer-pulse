@@ -1,5 +1,6 @@
 import type { IconType } from "react-icons";
 import {
+  FiAlertTriangle,
   FiAtSign,
   FiBriefcase,
   FiCheckCircle,
@@ -40,7 +41,8 @@ export type EditorPaneKey =
   | "affiliations"
   | "works-at"
   | "owners"
-  | "publish";
+  | "publish"
+  | "danger";
 
 export const sectionPaneKey = (section: SubprofileSection): EditorPaneKey =>
   `section:${section}`;
@@ -135,7 +137,8 @@ export interface EditorRailGroup {
  * / People (affiliations/owners) / Publish (badge = the same
  * client-only `estimateDraftReadiness` count the dashboard's
  * `SideReadinessRing` uses, shown as a plain "x/y ready" label here to suit
- * the rail row's tight vertical space). A group with no entries is dropped:
+ * the rail row's tight vertical space) / Danger zone (delete or leave the
+ * persona, a pane of its own so nothing destructive sits beside Publish). A group with no entries is dropped:
  * every kind now edits its sections inside Page blocks chapters, so the
  * Content group only appears while some section keeps a pane of its own.
  */
@@ -237,6 +240,16 @@ export function buildEditorRailGroups(
             readyCount: readiness.readyCount,
             totalCount: readiness.totalCount,
           },
+        },
+      ],
+    },
+    {
+      headingKey: "subprofiles:editorRail.dangerGroup",
+      entries: [
+        {
+          key: "danger",
+          labelKey: "subprofiles:editorRail.deletePersona",
+          icon: FiAlertTriangle,
         },
       ],
     },

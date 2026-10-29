@@ -96,7 +96,7 @@ function uploadDraftStub(release: StudioReleaseView | null): StudioUploadDraft {
     hasUnsavedChanges: false,
     isSaving: false,
     saveErrorKey: null,
-    form: { coverKey: null },
+    form: { coverKey: null, genres: [] },
     setField: vi.fn(),
     saveChanges: vi.fn(),
     continueToTracks: vi.fn(),

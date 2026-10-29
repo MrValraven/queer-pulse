@@ -76,7 +76,7 @@ describe("StudioTopSupportersCard", () => {
       </TestProviders>,
     );
     const list = await screen.findByRole("list", {
-      name: "Top supporters of Mariana Sol",
+      name: "Top listeners of Mariana Sol",
     });
     const items = within(list).getAllByRole("listitem");
     expect(items[0]).toHaveTextContent("Vanda Diesel");
@@ -95,7 +95,7 @@ describe("StudioTopSupportersCard", () => {
     expect(within(list).getByText("Pátio Coletivo").closest("a")).toBeNull();
     expect(list.textContent).not.toMatch(/\d+ (plays|listens)/);
     expect(
-      screen.getByText("Showing themselves as supporters: 7"),
+      screen.getByText("Showing themselves as top listeners: 7"),
     ).toBeInTheDocument();
   });
 
@@ -136,11 +136,11 @@ describe("StudioTopSupportersCard", () => {
     renderMocked();
     expect(
       screen.getByText(
-        "When a listener turns on Show me as a supporter, they show up here",
+        "When a listener turns on Show me among the top listeners, they show up here",
       ),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Showing themselves as supporters: Fewer than 5"),
+      screen.getByText("Showing themselves as top listeners: Fewer than 5"),
     ).toBeInTheDocument();
     expect(screen.queryByRole("list")).toBeNull();
   });

@@ -69,6 +69,9 @@ interface GivingMethodEditorRowProps {
   errors: GivingRowErrors;
   isErrorVisible: boolean;
   isBusy: boolean;
+  /** Catalog key of the fieldset legend ("... {count}"); defaults to the
+   *  community support copy. */
+  legendKey?: string;
   valueInputRef?: Ref<HTMLInputElement>;
   onChange: (patch: GivingDraftRowPatch) => void;
   onBlurField: () => void;
@@ -86,6 +89,7 @@ export function GivingMethodEditorRow({
   errors,
   isErrorVisible,
   isBusy,
+  legendKey = "communities:detail.giving.editor.rowLegend",
   valueInputRef,
   onChange,
   onBlurField,
@@ -117,7 +121,7 @@ export function GivingMethodEditorRow({
       data-giving-row={row.draftId}
     >
       <legend className="visuallyHidden">
-        {t("communities:detail.giving.editor.rowLegend", { count: position })}
+        {t(legendKey, { count: position })}
       </legend>
       {/* The "Kind" label shares its line with the move and remove actions,
        *  so the kind picker below takes the card's full width at any size. */}

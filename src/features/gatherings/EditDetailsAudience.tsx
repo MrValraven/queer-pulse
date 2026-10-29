@@ -7,6 +7,7 @@ import type { GatheringDetailsDraft } from "./editDetailsDraft";
 import { editFieldDomId, isSameDraftValue } from "./editDetailsChanges";
 import { EditDetailsGuestCommunities } from "./EditDetailsGuestCommunities";
 import { EditDetailsSection } from "./EditDetailsSection";
+import { useEventHostScope } from "./eventHostScope";
 import { useEditDetailsSections } from "./editDetailsSectionsContext";
 import { CapacityStepper } from "./fields/CapacityStepper";
 import { guestsForLead } from "./guestCommunities";
@@ -34,6 +35,9 @@ import styles from "./EditDetailsModal.module.css";
  * The community and the capacity share a row, the audience cards run across
  * the full width under them. The capacity input carries the field id the
  * footer's "Show the field" looks up, so an out-of-range number gets focus.
+ *
+ * A house event (QueerPulse hosts it) has no community and no guest
+ * communities, so both fields stay out for the life of the modal.
  */
 export function EditDetailsAudience({
   draft,
@@ -54,6 +58,7 @@ export function EditDetailsAudience({
   const { t } = useTranslation();
   const fieldId = useId();
   const sections = useEditDetailsSections();
+  const { isHouseEvent } = useEventHostScope();
   const { options: hostableOptions } = useHostableCommunities();
   const myCommunityOptions = useMyCommunityOptions();
   // A draft with no guest list opened before the saved list answered. The
@@ -136,7 +141,7 @@ export function EditDetailsAudience({
   return (
     <EditDetailsSection sectionKey="audience">
       <div className={fieldStyles.fieldGrid}>
-        {communityOptions.length > 0 && (
+        {!isHouseEvent && communityOptions.length > 0 && (
           <FormField
             label={t("gatherings:create.step3.communityLabel")}
             helper={t("gatherings:create.step3.communityHint")}
@@ -182,20 +187,22 @@ export function EditDetailsAudience({
         />
         {/* Shown to an editor who can pick a lead, and to anyone while the
             gathering already holds guests, so a saved row can be removed. */}
-        <Collapse
-          isOpen={communityOptions.length > 0 || guests.length > 0}
-          className={fieldStyles.fullRow}
-        >
-          <EditDetailsGuestCommunities
-            leadSlug={draft.communitySlug}
-            guests={guests}
-            status={guestListStatus}
-            onRetry={savedGuestList.onRetry}
-            onChange={(nextGuests) =>
-              onChange({ guestCommunities: guestDraftValue(nextGuests) })
-            }
-          />
-        </Collapse>
+        {!isHouseEvent && (
+          <Collapse
+            isOpen={communityOptions.length > 0 || guests.length > 0}
+            className={fieldStyles.fullRow}
+          >
+            <EditDetailsGuestCommunities
+              leadSlug={draft.communitySlug}
+              guests={guests}
+              status={guestListStatus}
+              onRetry={savedGuestList.onRetry}
+              onChange={(nextGuests) =>
+                onChange({ guestCommunities: guestDraftValue(nextGuests) })
+              }
+            />
+          </Collapse>
+        )}
         {/* Reads the IN-PROGRESS draft, so picking or clearing a community in
           this same edit shows or hides the "Community members" tier straight
           away, exactly like the create wizard's `form.communitySlug !== ""`. */}

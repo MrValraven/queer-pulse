@@ -696,6 +696,13 @@ const CAPABILITY_ELEVATED_PATTERNS: {
       "product_manager",
     ],
   },
+  {
+    // `AdminMusicEventsController` (`RolesOrStaffGuard`, `@Roles(Admin)`): the
+    // account tier Admin OR the `music_manager_producer` grant. It stays out of
+    // `MOD_ACCESSIBLE_ADMIN_PATTERNS` because the backend tier is Admin alone.
+    patterns: [routes.adminMusicEvents, `${routes.adminMusicEvents}/*`],
+    capabilities: ["music_manager_producer"],
+  },
 ];
 
 /**

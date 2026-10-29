@@ -7,7 +7,6 @@ import { StudioArtistHero } from "./StudioArtistHero";
 import { StudioArtistMain } from "./StudioArtistMain";
 import { StudioArtistOwnerPanel } from "./StudioArtistOwnerPanel";
 import { StudioArtistOwnerTools } from "./StudioArtistOwnerTools";
-import { StudioArtistSidebar } from "./StudioArtistSidebar";
 import { StudioArtistSupportCard } from "./StudioArtistSupportCard";
 import { StudioArtistSupporterCard } from "./StudioArtistSupporterCard";
 import { StudioArtistUpcomingCard } from "./StudioArtistUpcomingCard";
@@ -19,13 +18,11 @@ import { StudioArtistStickyHeader } from "./StudioArtistStickyHeader";
 import { StudioLoadError, StudioNotFound } from "./StudioLoadStates";
 import { StudioShell } from "./StudioShell";
 import { StudioTablist } from "./StudioTablist";
-import { StudioTipModal } from "./StudioTipModal";
 import { StudioVisitorPreviewBanner } from "./StudioVisitorPreviewBanner";
 import { StudioVisitorPreviewProvider } from "./studioVisitorPreview";
 import { artistTabsOf, type ArtistTabId } from "./studioArtist.data";
 import { useStudioArtistVisitorPreview } from "./useStudioArtistVisitorPreview";
 import { useStudioDocumentTitle } from "./useStudioDocumentTitle";
-import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
 
@@ -34,10 +31,8 @@ export function StudioArtistPage() {
   const [searchParams] = useSearchParams();
   const artistAddressId = searchParams.get("id");
   const { artist, loadState } = useStudioArtist(artistAddressId);
-  const isShowcase = useStudioShowcase();
   const tabsId = useId();
   const [tab, setTab] = useState<ArtistTabId>("music");
-  const [isTipOpen, setIsTipOpen] = useState(false);
   const [isEditPageOpen, setIsEditPageOpen] = useState(false);
   // The top the edit sheet has highlighted; null draws the saved one.
   const [previewHero, setPreviewHero] = useState<StudioHeroChoice | null>(null);
@@ -113,7 +108,6 @@ export function StudioArtistPage() {
             artist={heroArtist}
             titleRef={titleRef}
             sentinelRef={setHeroSentinel}
-            onTip={() => setIsTipOpen(true)}
           />
         </StudioEditPageOpenerProvider>
         <StudioTablist
@@ -124,18 +118,12 @@ export function StudioArtistPage() {
           label={t("studio:artistPage.tabsLabel", { name })}
         />
         {/* Every viewer gets a side column: an owner has their cards, and
-            every other listener has Show me as a supporter. */}
+            every other listener has Show me among the top listeners. */}
         <section className={styles.detailGrid}>
           <div {...tabPanelProps(tabsId, tab)} className={kit.panel}>
             <StudioArtistMain tab={tab} artist={viewArtist} />
           </div>
           <div className={styles.sideCol}>
-            {isShowcase && (
-              <StudioArtistSidebar
-                artistName={name}
-                onTip={() => setIsTipOpen(true)}
-              />
-            )}
             <StudioArtistUpcomingCard artist={viewArtist} />
             <StudioArtistSupportCard artist={viewArtist} />
             <StudioArtistSupporterCard artist={viewArtist} />
@@ -155,12 +143,6 @@ export function StudioArtistPage() {
             artist={artist}
             onPreviewChange={setPreviewHero}
             onClose={() => setIsEditPageOpen(false)}
-          />
-        )}
-        {isShowcase && isTipOpen && (
-          <StudioTipModal
-            recipient={name}
-            onClose={() => setIsTipOpen(false)}
           />
         )}
         <StudioVisitorPreviewBanner

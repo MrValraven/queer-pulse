@@ -199,10 +199,15 @@ export interface GatheringDraftSnapshot {
  *
  *  `seed` is the duplicate flow (PRD-190) and arrives ASYNCHRONOUSLY — the
  *  source gathering has to be fetched first — so unlike `communitySlug` it is
- *  applied whenever a new one lands rather than only on mount. */
+ *  applied whenever a new one lands, on mount or any time after.
+ *
+ *  `fixedFamily` is a host scope that decides the family up front (Music, for
+ *  the events QueerPulse hosts). The form starts on it, takes its defaults on
+ *  mount, and never moves to another family. */
 export interface GatheringFormInitial {
   communitySlug?: string;
   seed?: GatheringFormSeed;
+  fixedFamily?: GatheringFamily | undefined;
 }
 
 /** A member the host picked as a would-be co-host, with what the picker and
@@ -535,12 +540,18 @@ function useGatheringSchedule() {
  */
 function useGatheringFormatState(
   onFamilySelected?: (family: GatheringFamily, formatKey: string) => void,
+  fixedFamily: GatheringFamily | null = null,
 ) {
-  // A gathering is described by a FAMILY (a closed nine-value set that drives
+  // A gathering is described by a FAMILY (a closed ten-value set that drives
   // behaviour) and a FORMAT inside it (a curated key, or `"other"` plus the
   // host's own words). This pair is the whole vocabulary: the single `type`
   // string that preceded it is gone.
-  const [family, setFamily] = useState<GatheringFamily | "">("");
+  const [family, setFamilyValue] = useState<GatheringFamily | "">(
+    fixedFamily ?? "",
+  );
+  // A fixed family holds through every seed, restore and pick.
+  const setFamily = (nextFamily: GatheringFamily | "") =>
+    setFamilyValue(fixedFamily ?? nextFamily);
   const [format, setFormat] = useState("");
   const [otherText, setOtherTextValue] = useState("");
   const [formatDetails, setFormatDetails] = useState<FormatDetails>({});
@@ -593,6 +604,7 @@ function useGatheringFormatState(
    * potluck never travels to a screening.
    */
   const selectFormat = (nextFamily: GatheringFamily, nextFormat: string) => {
+    if (fixedFamily !== null && nextFamily !== fixedFamily) return;
     setFamily(nextFamily);
     setFormat(nextFormat);
     const familyEntry = findFamily(nextFamily);
@@ -1342,6 +1354,7 @@ function pickDraftSnapshot(
 /** All wizard form state + helpers, shared by the page and its step
  *  components. */
 export function useGatheringForm(initial: GatheringFormInitial = {}) {
+  const fixedFamily = initial.fixedFamily ?? null;
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   // The schedule. `startAt` feeds the repeats check and sits outside the
@@ -1369,7 +1382,15 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
     applyCapacitySeed,
     restoreFormatState,
     ...formatState
-  } = useGatheringFormatState(applyFamilyToCare);
+  } = useGatheringFormatState(applyFamilyToCare, fixedFamily);
+  // A fixed family takes its defaults (capacity, headcount, RSVP cutoff) once,
+  // on mount, the way picking it in the family row would. Adjusted during
+  // render, like the seed below.
+  const [hasAppliedFixedFamily, setHasAppliedFixedFamily] = useState(false);
+  if (fixedFamily !== null && !hasAppliedFixedFamily) {
+    setHasAppliedFixedFamily(true);
+    formatState.selectFormat(fixedFamily, "");
+  }
   const { restoreRecurrence, ...recurrenceState } =
     useGatheringRecurrenceState(startAt);
   const {
@@ -1444,7 +1465,10 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
   // capacity, language, the family's cutoff) stay silent, so an untouched
   // wizard closes without a prompt.
   const dirty =
-    Boolean(formatState.family) ||
+    // A fixed family was never the host's pick, so only a format counts.
+    (fixedFamily !== null
+      ? formatState.format.length > 0
+      : Boolean(formatState.family)) ||
     formatState.otherText.trim().length > 0 ||
     title.trim().length > 0 ||
     description.trim().length > 0 ||

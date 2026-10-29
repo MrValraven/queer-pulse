@@ -114,6 +114,22 @@ const ACCEPTED_EXTRA_DISALLOWS = new Map([
   ],
 ]);
 
+/**
+ * Public sitemap paths that one agent's group blocks on purpose, each with the
+ * reason. The PUBLIC check skips a path when the group's agents include the
+ * entry's agent; every other group and every other path is still checked.
+ */
+const ACCEPTED_PUBLIC_BLOCKS = new Map([
+  [
+    "/studio",
+    {
+      agent: "OAI-SearchBot",
+      reason:
+        "The Studio landing is indexed for search, and the AI-retrieval group keeps it blocked by design (QUEERPULSE-STUDIO-LANDING-V2-DESIGN 8).",
+    },
+  ],
+]);
+
 /** One `User-agent:` block: the agents it names and the rules they obey. */
 function parseGroups(robotsText) {
   const groups = [];
@@ -215,6 +231,10 @@ for (const group of groups) {
   }
 
   for (const publicPath of QUIET_PUBLIC_PATHS) {
+    const acceptedBlock = ACCEPTED_PUBLIC_BLOCKS.get(publicPath);
+    if (acceptedBlock && group.userAgents.includes(acceptedBlock.agent)) {
+      continue;
+    }
     if (!isPathCrawlable(group, publicPath)) {
       problems.push(
         `[${agentLabel}] blocks ${publicPath}, which the sitemap advertises as public. Remove or narrow the Disallow that covers it.`,

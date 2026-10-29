@@ -45,7 +45,7 @@ describe("StudioNotificationsPage in Portuguese", () => {
     ).not.toBeInTheDocument();
     expect(
       screen.queryByText(
-        "€7 sustainer · €24 direct subscriptions · view the breakdown",
+        "Paid straight to the artists · your €7 sustainer fee kept Studio running",
       ),
     ).not.toBeInTheDocument();
   });

@@ -53,6 +53,7 @@ function releaseCard(id: string, type: "album" | "single" = "album") {
     artist: artistRef,
     publishedAt: "2025-03-01T10:00:00.000Z",
     genre: null,
+    genres: [],
     mood: null,
     scene: null,
   };

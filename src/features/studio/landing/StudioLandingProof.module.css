@@ -1,0 +1,131 @@
+.section {
+  max-width: var(--maxw-nav);
+  margin: 0 auto;
+  padding: var(--section-y-48) clamp(20px, 5vw, 48px);
+}
+
+/* The strip and the card share one row on wide screens and stack on phones.
+   Either slot may be the only one open, so each grows into the free width. */
+.layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 48px;
+  align-items: center;
+}
+.stripSlot {
+  flex: 1 1 360px;
+  min-width: 0;
+}
+.eventSlot {
+  flex: 1 1 320px;
+  min-width: 0;
+  max-width: 520px;
+}
+
+/* Figures */
+.figures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.figure {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 clamp(20px, 3vw, 36px);
+  border-left: 1px solid var(--studio-line);
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  line-height: 1.4;
+  color: var(--studio-text-muted);
+}
+.figure:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+.numeral {
+  font-family: var(--serif);
+  font-size: var(--text-title);
+  font-weight: 300;
+  line-height: 1;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--studio-text);
+}
+@media (max-width: 559px) {
+  .figures {
+    flex-direction: column;
+    gap: 0;
+  }
+  .figure {
+    flex-direction: row;
+    gap: 12px;
+    align-items: baseline;
+    padding: 14px 0;
+    border-left: 0;
+    border-top: 1px solid var(--studio-line);
+  }
+  .figure:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+}
+
+/* Next on stage */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: clamp(20px, 3vw, 28px);
+  border: 1px solid var(--studio-line);
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--studio-surface) 70%, transparent);
+}
+.eyebrow {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--studio-accent-text);
+}
+.eventTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-heading);
+  font-weight: 300;
+  line-height: var(--lh-title);
+  color: var(--studio-text);
+  text-wrap: balance;
+}
+.when {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-15);
+  line-height: 1.5;
+  color: var(--studio-text);
+}
+.where {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  color: var(--studio-text-muted);
+}
+.artist {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 4px 0 0;
+}
+.artistName {
+  font-family: var(--sans);
+  font-size: var(--text-15);
+  color: var(--studio-text);
+}
+.action {
+  align-self: flex-start;
+  margin-top: 6px;
+}

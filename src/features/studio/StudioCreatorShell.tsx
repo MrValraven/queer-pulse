@@ -1,6 +1,7 @@
-import type { ReactNode } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { useEffect, useRef, type ReactNode } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import {
@@ -17,6 +18,7 @@ import { useStudioShowcase } from "./useStudioShowcase";
 import { useStudioShellSignal } from "./useStudioShellSignal";
 import { NAV } from "./StudioCreatorShell.data";
 import { StudioCreditsBadge } from "./StudioCreditsBadge";
+import { StudioSalesPendingBadge } from "./StudioSalesPendingBadge";
 import { useStudioDocumentTitle } from "./useStudioDocumentTitle";
 import s from "./creator.module.css";
 import layoutStyles from "./StudioCreatorShell.module.css";
@@ -48,6 +50,20 @@ export function StudioCreatorShell({
     persona || isShowcase ? (persona?.href ?? routes.studioArtist) : undefined;
   useStudioShellSignal();
   useStudioDocumentTitle();
+  const { pathname } = useLocation();
+  const { reducedMotion } = useMotionPrefs();
+  const navRef = useRef<HTMLElement>(null);
+  // On a phone the tabs scroll sideways: the current one is brought into
+  // view on each page, along the row only ("nearest" keeps the page still).
+  useEffect(() => {
+    navRef.current
+      ?.querySelector<HTMLElement>('[aria-current="page"]')
+      ?.scrollIntoView({
+        inline: "nearest",
+        block: "nearest",
+        behavior: reducedMotion ? "instant" : "smooth",
+      });
+  }, [pathname, reducedMotion]);
   // Studio follows the app theme: its colours come from the theme-following
   // --studio-* tokens, so the shell and the shared components inside it
   // switch with the rest of the app.
@@ -68,6 +84,7 @@ export function StudioCreatorShell({
         </Link>
         <span className={s.product}>{t("studio:creator.product")}</span>
         <nav
+          ref={navRef}
           className={`${s.subnav} ${layoutStyles.subnav}`}
           aria-label={t("studio:creator.navLabel")}
         >
@@ -92,6 +109,7 @@ export function StudioCreatorShell({
                       : (item.liveLabelKey ?? item.labelKey),
                   )}
                   {item.badge === "creditRequests" && <StudioCreditsBadge />}
+                  {item.badge === "salesPending" && <StudioSalesPendingBadge />}
                 </NavLink>
               );
             },

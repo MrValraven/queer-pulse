@@ -63,15 +63,17 @@ export function StudioNavSheet({
         tabIndex={-1}
       >
         <div className={styles.brandRow}>
-          <span className={styles.pulseDot} aria-hidden />
-          <span className={styles.brand}>
-            <Translation
-              i18nKey="studio:brand.lockup"
-              components={{ em: <em /> }}
-            />
-          </span>
-          <span className={styles.product}>
-            {t("studio:brand.studioLabel")}
+          <span className={styles.brandLockup}>
+            <span className={styles.pulseDot} aria-hidden />
+            <span className={styles.brand}>
+              <Translation
+                i18nKey="studio:brand.lockup"
+                components={{ em: <em /> }}
+              />
+            </span>
+            <span className={styles.product}>
+              {t("studio:brand.studioLabel")}
+            </span>
           </span>
           <IconButton
             className={styles.close}

@@ -180,6 +180,12 @@ function coreSections(t: TFunction): LegalSection[] {
                 components={{ strong: <strong /> }}
               />
             </li>
+            <li>
+              <Translation
+                i18nKey="marketing:privacy.whatWeCollect.activity.item6"
+                components={{ strong: <strong /> }}
+              />
+            </li>
           </ul>
           <h4>{t("marketing:privacy.whatWeCollect.notCollectedHeading")}</h4>
           <div className={s.highlight}>

@@ -1,12 +1,10 @@
 import { StatGrid, StatTile } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
-import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { StudioDashboardCharts } from "./StudioDashboardCharts";
 import { StudioDashboardSide } from "./StudioDashboardSide";
 import { STATS } from "./studioDashboard.data";
-import { DAY_MONTH, fixtureDate } from "./studioFixtureDate";
 import s from "./creator.module.css";
 import css from "./StudioNumbers.module.css";
 import chartStyles from "./StudioDashboardActivityChart.module.css";
@@ -20,7 +18,6 @@ const CURRENT_TRACK_TITLE = "Cidade dos santos";
  *  Showcase only (useStudioShowcase); a live artist sees Your numbers. */
 export function StudioDashboardShowcase() {
   const { t } = useTranslation();
-  const fmt = useFormat();
   const loading = useSimulatedLoad();
   return (
     <>
@@ -44,21 +41,11 @@ export function StudioDashboardShowcase() {
               values={{ trackTitle: CURRENT_TRACK_TITLE }}
             />
           </div>
-          <StatGrid columns={5} className={chartStyles.stats}>
+          <StatGrid columns={4} className={chartStyles.stats}>
             {STATS.map((stat) => (
               <StatTile
                 key={stat.labelKey}
-                label={t(
-                  stat.labelKey,
-                  stat.labelDateIso
-                    ? {
-                        date: fmt.date(
-                          fixtureDate(stat.labelDateIso),
-                          DAY_MONTH,
-                        ),
-                      }
-                    : undefined,
-                )}
+                label={t(stat.labelKey)}
                 value={stat.v}
                 hint={
                   <Translation

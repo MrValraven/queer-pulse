@@ -310,6 +310,7 @@ export const safety: Catalog = {
     "Alojamento inseguro, discriminatório, ou com informação enganosa",
   "reason.housingScam": "Burla ou anúncio falso",
   "reason.fundingScam": "Burla, angariação falsa ou apoio falso",
+  "reason.paymentNeverConfirmed": "Recebeu o meu pagamento e não o confirmou",
   "reason.notAffirming":
     "Não é afirmativo LGBTQ+: quebrou o compromisso da comunidade",
   "reason.offPlatform": "Pediram para pagar ou sair da plataforma",
@@ -1164,7 +1165,7 @@ export const safety: Catalog = {
   "governance.badge.reasonLabel": "Motivo",
   "moderationStance.head": "Como lemos estes casos",
   "moderationStance.rule.politicalSpeech":
-    "Criticar um Estado, o seu governo, o seu ex\u00e9rcito ou as suas pol\u00edticas \u00e9 discurso pol\u00edtico, e a defesa da Palestina \u00e9 bem-vinda aqui. A defesa dirigida a uma classe de pessoas membras n\u00e3o \u00e9 discurso pol\u00edtico, seja qual for o vocabul\u00e1rio que use.",
+    "A QueerPulse está ao lado do povo palestiniano. Criticar Israel, o seu governo, o seu exército ou as suas políticas é discurso político e fica publicado. Fazer campanha para retirar uma classe de pessoas membras, como as pessoas trans, é uma violação do Código de Conduta, com o vocabulário que for.",
   "moderationStance.rule.noBothSides":
     "Se uma pessoa membra merece direitos n\u00e3o \u00e9 um debate que acolhemos. N\u00e3o arquives uma den\u00fancia com o argumento de que o outro lado merece ser ouvido.",
   "moderationStance.rule.neverProveGender":
@@ -1187,15 +1188,15 @@ export const safety: Catalog = {
   "moderationStance.digest.guidelines.p1":
     "As diretrizes descrevem a cultura. As linhas vermelhas são a parte delas que se aplica: assédio ou ataques pessoais dirigidos, divulgar dados identificativos de alguém, expor a identidade de alguém sem consentimento, ameaças ou intimidação, partilhar conversas ou fotografias privadas sem consentimento, e discriminação com base em qualquer característica protegida.",
   "moderationStance.digest.guidelines.p2":
-    "A cláusula do discurso político fica ao lado delas. Criticar um Estado, o seu governo, o seu exército ou a sua ideologia é discurso político e é moderado como discurso político, incluindo a defesa da libertação da Palestina. Passa a ser uma violação do Código de Conduta quando recai sobre uma pessoa: responsabilizar uma pessoa membra pelos atos de um Estado por causa da sua etnia, religião ou nacionalidade, ou fazer campanha pela exclusão de uma classe de pessoas membras, seja qual for o vocabulário que use.",
+    "A cláusula do discurso político fica ao lado delas. Criticar Israel, o seu governo, o seu exército ou a sua ideologia é discurso político e fica publicado, incluindo a defesa da libertação da Palestina. Passa a ser uma violação quando se dirige a uma pessoa: culpar uma pessoa membra pelos atos de um Estado por causa da sua etnia, religião ou nacionalidade, ou fazer campanha para retirar uma classe de pessoas membras, com o vocabulário que for.",
   "moderationStance.digest.guidelines.point.oneTest.title":
     "Um único teste decide.",
   "moderationStance.digest.guidelines.point.oneTest.body":
-    "Isto é sobre um Estado e a sua conduta, ou sobre uma pessoa e quem ela é. É essa a pergunta toda.",
+    "A publicação dirige-se a um Estado e à sua conduta, ou a uma pessoa e a quem ela é? É essa a pergunta toda.",
   "moderationStance.digest.guidelines.point.bothDirections.title":
-    "Os dois sentidos são aplicados da mesma forma.",
+    "As mesmas regras protegem toda a gente.",
   "moderationStance.digest.guidelines.point.bothDirections.body":
-    "O antissemitismo e o racismo antipalestiniano são ambos violações, e a posição da própria plataforma sobre a Palestina não altera o tratamento de um caso.",
+    "O antissemitismo e o racismo antipalestiniano são ambos removidos. A posição da plataforma sobre a Palestina não altera o tratamento de um caso.",
   "moderationStance.digest.guidelines.point.outcomes.title":
     "Uma violação confirmada tem consequências.",
   "moderationStance.digest.guidelines.point.outcomes.body":

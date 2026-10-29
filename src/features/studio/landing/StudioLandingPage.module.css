@@ -36,3 +36,11 @@
   background-size: 160px;
   opacity: 0.05;
 }
+
+/* One wrapper per section after the hero, in the order the audience switch
+   picks. When the order changes the wrappers glide to their new places with
+   a transform (motion's layout animation), so each section moves as one box
+   and the grain above stays put. */
+.slot {
+  position: relative;
+}

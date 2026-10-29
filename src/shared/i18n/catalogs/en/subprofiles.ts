@@ -1730,6 +1730,8 @@ export const subprofiles: Catalog = {
   "editorRail.people": "People",
   "editorRail.publishGroup": "Publish",
   "editorRail.getItLive": "Get it live",
+  "editorRail.dangerGroup": "Danger zone",
+  "editorRail.deletePersona": "Delete persona",
 
   // Mobile pane switcher (EditorPaneSwitcher, EditorPaneSheet) — the sticky bar
   // that replaces the rail on phones, and the sheet listing every pane.
@@ -1753,6 +1755,9 @@ export const subprofiles: Catalog = {
     "Add the pieces of work that make up this section.",
   "editorPane.publish.title": "Publish",
   "editorPane.publish.lede": "Check what's left, then take this persona live.",
+  "editorPane.danger.title": "Delete persona",
+  "editorPane.danger.lede":
+    "The actions here cannot be undone. Nothing on this page changes until you confirm.",
 
   // Docked live preview (EditorPreview) — mirrors the persona's public page
   // inside the editor shell.
@@ -3738,4 +3743,6 @@ export const subprofiles: Catalog = {
   "tattooItem.sessions.removeNumbered": "Remove session {number}",
   "tattoo.project.previousSessions": "Previous sessions",
   "tattoo.project.nextSessions": "Next sessions",
+  // Studio landing v2 (2026-10-28)
+  "foundingArtist.badge": "Founding artist",
 };

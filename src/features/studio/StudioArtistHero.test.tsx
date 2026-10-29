@@ -36,6 +36,7 @@ const card = (
   artist: artistRef,
   publishedAt,
   genre: null,
+  genres: [],
   mood: null,
   scene: null,
 });

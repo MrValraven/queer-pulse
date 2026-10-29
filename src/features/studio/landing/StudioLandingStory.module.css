@@ -1,0 +1,224 @@
+/* "How it works". From 720px the steps (each at least 60vh, so one at a
+   time crosses the middle of the viewport) run down the left column beside
+   a sticky frame. The stage is a size container: a laptop of width W stands
+   about 0.589W tall and a phone 0.275W wide as tall, so a switch never
+   moves the frame. Below 720px each step stacks with its own phone shot. */
+.story {
+  padding: clamp(var(--section-y-56), 8vh, var(--section-y-96)) 0;
+  overflow: clip;
+  scroll-margin-top: var(--nav-band);
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: var(--maxw-nav);
+  margin: 0 auto;
+  padding-inline: clamp(20px, 5vw, 48px);
+}
+
+.eyebrow {
+  margin: 0 0 16px;
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--studio-accent-text);
+}
+
+.title {
+  max-width: 22ch;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-display);
+  font-weight: 300;
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-display);
+  color: var(--studio-text);
+  text-wrap: balance;
+  scroll-margin-top: var(--nav-band);
+}
+.title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--studio-accent-text);
+}
+/* Focus from "See inside": the house ring for keyboard presses only. */
+.title:focus {
+  outline: none;
+}
+.title:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+
+/* ── Story layout ── */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(32px, 5vw, 72px);
+}
+
+.steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+.stepText {
+  display: grid;
+  gap: 10px;
+  max-width: 34rem;
+}
+
+.stepNumber {
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--studio-text-faint);
+}
+
+.stepTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-28);
+  font-weight: 400;
+  line-height: var(--lh-title);
+  color: var(--studio-text-muted);
+  text-wrap: balance;
+}
+
+.stepCaption {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-body-lg);
+  line-height: var(--lh-body-lg);
+  color: var(--studio-text-muted);
+  text-wrap: pretty;
+}
+
+.stepNumber,
+.stepTitle {
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: var(--ease);
+}
+
+.step[data-active="true"] .stepNumber {
+  color: var(--studio-accent-text);
+}
+.step[data-active="true"] .stepTitle {
+  color: var(--studio-text);
+}
+
+/* ── The sticky frame ── */
+.stageColumn {
+  min-width: 0;
+}
+.stage {
+  position: sticky;
+  top: calc(var(--nav-band-visible) + 10vh);
+  container-type: inline-size;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  --stage-laptop-width: 100cqi;
+  --stage-phone-width: calc(var(--stage-laptop-width) * 0.275);
+  --stage-frame-height: calc(var(--stage-laptop-width) * 0.589);
+}
+
+.stageShot {
+  grid-area: 1 / 1;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: var(--stage-frame-height);
+}
+.stageLaptopFrame {
+  width: var(--stage-laptop-width);
+}
+.stagePhoneFrame {
+  width: var(--stage-phone-width);
+}
+
+.sampleNote {
+  max-width: 52ch;
+  margin: 20px 0 0;
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  line-height: 1.4;
+  color: var(--studio-text-faint);
+  text-wrap: balance;
+}
+/* Inline, so on a wrapped note the icon leads the first line. */
+.sampleNoteIcon {
+  width: 14px;
+  height: 14px;
+  margin-inline-end: 8px;
+  vertical-align: -2px;
+}
+
+/* Reduced motion: colour changes at once, nothing rises. */
+@media (prefers-reduced-motion: reduce) {
+  .stepNumber,
+  .stepTitle {
+    transition: none;
+  }
+}
+:global(html[data-reduce-motion="true"]) .stepNumber,
+:global(html[data-reduce-motion="true"]) .stepTitle {
+  transition: none;
+}
+
+/* ── Phones: the steps stack, each with its own phone shot ── */
+@media (max-width: 719px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .step {
+    min-height: 0;
+    padding-block: clamp(28px, 4vw, 40px);
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+    transition-property: opacity, transform;
+    transition-duration: 0.6s;
+    transition-timing-function: var(--ease);
+  }
+  .step[data-revealed="true"] {
+    opacity: 1;
+    transform: none;
+  }
+  .stepShot {
+    display: grid;
+    place-items: center;
+    margin-top: clamp(28px, 4vw, 40px);
+  }
+  .stepPhoneFrame {
+    width: min(68%, 260px);
+  }
+}
+
+@media (max-width: 719px) and (prefers-reduced-motion: reduce) {
+  .step {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+:global(html[data-reduce-motion="true"]) .step {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}

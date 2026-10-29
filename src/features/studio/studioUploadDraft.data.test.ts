@@ -9,6 +9,7 @@ import {
   formFromRelease,
   patchFromForm,
   personaSwitchPatch,
+  priceFieldsForType,
   releaseFieldCopyOf,
   releaseFormErrors,
 } from "./studioUploadDraft.data";
@@ -31,6 +32,7 @@ const release = toReleaseView({
   artist: persona,
   description: null,
   genre: null,
+  genres: [],
   mood: null,
   scene: null,
   status: "draft",
@@ -75,7 +77,7 @@ describe("release form", () => {
       subprofileId: "p1",
       type: "mix" as const,
       title: "  Night bus  ",
-      genre: "electronic" as const,
+      genres: ["electronic" as const, "ambient" as const],
       mood: "" as const,
       sceneId: "",
       releasedOn: "",
@@ -83,9 +85,11 @@ describe("release form", () => {
       coverKey: "persona-cover/p1/abc.webp",
       buyUrl: "",
       isGapless: false,
+      priceMode: "not_for_sale" as const,
+      priceText: "",
     };
     expect(patchFromForm(form, release)).toEqual({
-      genre: "electronic",
+      genres: ["electronic", "ambient"],
       description: "Recorded live",
       coverKey: "persona-cover/p1/abc.webp",
     });
@@ -247,11 +251,13 @@ describe("artist kinds in the release form", () => {
   });
 
   it("presets Spoken word for poets and spoken word artists", () => {
-    expect(defaultReleaseForm(personaOfKind("poet")).genre).toBe("spoken-word");
-    expect(defaultReleaseForm(personaOfKind("spoken_word")).genre).toBe(
+    expect(defaultReleaseForm(personaOfKind("poet")).genres).toEqual([
       "spoken-word",
-    );
-    expect(defaultReleaseForm(personaOfKind("musician")).genre).toBe("");
+    ]);
+    expect(defaultReleaseForm(personaOfKind("spoken_word")).genres).toEqual([
+      "spoken-word",
+    ]);
+    expect(defaultReleaseForm(personaOfKind("musician")).genres).toEqual([]);
   });
 
   it("names a show's fields and hides its genre", () => {
@@ -266,16 +272,18 @@ describe("artist kinds in the release form", () => {
   it("clears genre, mood and scene when switching to a show", () => {
     const filled = {
       ...defaultReleaseForm(personaOfKind("musician")),
-      genre: "jazz" as const,
+      genres: ["jazz" as const, "fado" as const],
       mood: "calm" as const,
       sceneId: "scene-1",
     };
     expect(personaSwitchPatch("podcaster", filled)).toEqual({
       type: "podcast",
-      genre: "",
+      genres: [],
       mood: "",
       sceneId: "",
       isGapless: false,
+      priceMode: "not_for_sale",
+      priceText: "",
     });
     expect(personaSwitchPatch("musician", filled).mood).toBe("calm");
   });
@@ -291,7 +299,173 @@ describe("artist kinds in the release form", () => {
 
   it("drops the Spoken word preset when leaving a spoken word persona", () => {
     const preset = defaultReleaseForm(personaOfKind("poet"));
-    expect(personaSwitchPatch("musician", preset).genre).toBe("");
-    expect(personaSwitchPatch("spoken_word", preset).genre).toBe("spoken-word");
+    expect(personaSwitchPatch("musician", preset).genres).toEqual([]);
+    expect(personaSwitchPatch("spoken_word", preset).genres).toEqual([
+      "spoken-word",
+    ]);
+  });
+
+  it("keeps the other picks when leaving a spoken word persona", () => {
+    const picks = {
+      ...defaultReleaseForm(personaOfKind("poet")),
+      genres: ["spoken-word" as const, "jazz" as const],
+    };
+    expect(personaSwitchPatch("musician", picks).genres).toEqual(["jazz"]);
+    const jazzOnly = { ...picks, genres: ["jazz" as const] };
+    expect(personaSwitchPatch("musician", jazzOnly).genres).toEqual(["jazz"]);
+  });
+});
+
+describe("release genres", () => {
+  const withGenres = (genres: string[]) => ({ ...release, genres });
+
+  it("fills the form with the known genres in order", () => {
+    expect(
+      formFromRelease(withGenres(["pop", "polka", "jazz"])).genres,
+    ).toEqual(["pop", "jazz"]);
+  });
+
+  it("sends the list only when it differs from the known genres", () => {
+    const saved = withGenres(["pop", "jazz"]);
+    const form = formFromRelease(saved);
+    expect(patchFromForm(form, saved)).toEqual({});
+    expect(patchFromForm({ ...form, genres: ["jazz", "pop"] }, saved)).toEqual({
+      genres: ["jazz", "pop"],
+    });
+    expect(patchFromForm({ ...form, genres: ["pop"] }, saved)).toEqual({
+      genres: ["pop"],
+    });
+    expect(patchFromForm({ ...form, genres: [] }, saved)).toEqual({
+      genres: [],
+    });
+  });
+
+  it("sends nothing for a release whose genres are all unlisted", () => {
+    const saved = withGenres(["polka"]);
+    expect(patchFromForm(formFromRelease(saved), saved)).toEqual({});
+  });
+
+  it("drops unlisted legacy values once the list is edited", () => {
+    const saved = withGenres(["polka", "pop"]);
+    const form = formFromRelease(saved);
+    expect(patchFromForm({ ...form, genres: ["pop", "jazz"] }, saved)).toEqual({
+      genres: ["pop", "jazz"],
+    });
+  });
+});
+
+describe("price on the release form", () => {
+  const releaseView = { ...release, type: "album" as const };
+  const baseForm = formFromRelease(releaseView);
+
+  it("reads a stored price into the form and back unchanged", () => {
+    const priced = {
+      ...releaseView,
+      price: { mode: "fixed" as const, amountCents: 350 },
+    };
+    const form = formFromRelease(priced);
+    expect([form.priceMode, form.priceText]).toEqual(["fixed", "3.50"]);
+    expect(patchFromForm(form, priced).price).toBeUndefined();
+  });
+
+  it("sends a new price, and null when the artist takes it off sale", () => {
+    expect(
+      patchFromForm(
+        { ...baseForm, priceMode: "name_your_price", priceText: "0" },
+        releaseView,
+      ).price,
+    ).toEqual({ mode: "name_your_price", amountCents: 0 });
+    expect(
+      patchFromForm(
+        { ...baseForm, priceMode: "not_for_sale", priceText: "" },
+        {
+          ...releaseView,
+          price: { mode: "fixed" as const, amountCents: 300 },
+        },
+      ).price,
+    ).toBeNull();
+  });
+
+  it("names an out-of-range or unreadable price, and a price on an unsellable type", () => {
+    expect(
+      releaseFormErrors({ ...baseForm, priceMode: "fixed", priceText: "0.50" })
+        .price,
+    ).toBe("studio:errors.reason.studio_price_out_of_range");
+    expect(
+      releaseFormErrors({ ...baseForm, priceMode: "fixed", priceText: "abc" })
+        .price,
+    ).toBe("studio:purchase.price.amountRequired");
+    expect(
+      releaseFormErrors({
+        ...baseForm,
+        type: "mix",
+        priceMode: "fixed",
+        priceText: "3",
+      }).price,
+    ).toBe("studio:errors.reason.studio_release_type_not_for_sale");
+  });
+
+  it("starts a new release not for sale", () => {
+    expect(defaultReleaseForm(undefined)).toMatchObject({
+      priceMode: "not_for_sale",
+      priceText: "",
+    });
+  });
+});
+
+describe("price follows the release type", () => {
+  const priced = {
+    ...defaultReleaseForm({
+      id: "p-musician",
+      handle: "",
+      name: "musician",
+      kind: "musician",
+      kindLabelKey: "",
+      format: STUDIO_FORMAT_BY_KIND.musician,
+      avatarUrl: null,
+      initials: "P",
+      tint: "coral",
+      href: "",
+      personaHref: null,
+    }),
+    priceMode: "fixed" as const,
+    priceText: "3",
+  };
+
+  it("resets the price when a persona switch lands on an unsellable type", () => {
+    expect(personaSwitchPatch("podcaster", priced)).toMatchObject({
+      type: "podcast",
+      priceMode: "not_for_sale",
+      priceText: "",
+    });
+  });
+
+  it("keeps the price when a persona switch lands on a sellable type", () => {
+    expect(personaSwitchPatch("musician", priced)).toMatchObject({
+      type: "album",
+      priceMode: "fixed",
+      priceText: "3",
+    });
+  });
+
+  it("clears the price fields for a mix and keeps them for an ep", () => {
+    expect(priceFieldsForType("mix", priced)).toEqual({
+      priceMode: "not_for_sale",
+      priceText: "",
+    });
+    expect(priceFieldsForType("ep", priced)).toEqual({
+      priceMode: "fixed",
+      priceText: "3",
+    });
+  });
+
+  it("names an unreadable name-your-price amount", () => {
+    expect(
+      releaseFormErrors({
+        ...priced,
+        priceMode: "name_your_price",
+        priceText: "",
+      }).price,
+    ).toBe("studio:purchase.price.amountRequired");
   });
 });

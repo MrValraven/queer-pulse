@@ -150,3 +150,54 @@ describe("demo data export, Studio listening", () => {
     ]);
   });
 });
+
+describe("demo data export, Studio purchases and sales", () => {
+  it("files studioPurchases after studioListening in the activity log", () => {
+    const keys = CATEGORY_ARCHIVE_KEYS.activityLog ?? [];
+    expect(keys.indexOf("studioPurchases")).toBe(
+      keys.indexOf("studioListening") + 1,
+    );
+  });
+
+  it("writes the Studio access request as null, since the demo member has access", () => {
+    expect(CATEGORY_ARCHIVE_KEYS.profile).toContain("studioAccessRequest");
+    const content = buildDemoArchiveContent(["profile"]);
+    expect("studioAccessRequest" in content).toBe(true);
+    // A pending request would be one row { wantsToRelease, requestedAt }.
+    expect(content.studioAccessRequest).toBeNull();
+  });
+
+  it("files studioSales under subprofiles", () => {
+    expect(CATEGORY_ARCHIVE_KEYS.subprofiles).toContain("studioSales");
+  });
+
+  it("writes one confirmed and one pending purchase with the wall choice", () => {
+    const rows = buildDemoArchiveContent(["activityLog"])
+      .studioPurchases as Array<{
+      status: string;
+      shownAs: string | null;
+    }>;
+    expect(rows.map((row) => [row.status, row.shownAs])).toEqual([
+      ["confirmed", "Late Bloomers"],
+      ["pending", null],
+    ]);
+  });
+
+  it("writes a payment method row and a sale whose buyer account is gone", () => {
+    const rows = buildDemoArchiveContent(["subprofiles"]).studioSales as Array<{
+      type: string;
+      buyer?: string;
+      payerName?: string | null;
+    }>;
+    expect(rows.some((row) => row.type === "paymentMethod")).toBe(true);
+    expect(
+      rows.some(
+        (row) => row.type === "sale" && row.buyer === "Deleted account",
+      ),
+    ).toBe(true);
+    const deletedAccountSale = rows.find(
+      (row) => row.buyer === "Deleted account",
+    );
+    expect(deletedAccountSale?.payerName).toBeNull();
+  });
+});

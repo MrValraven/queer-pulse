@@ -1,0 +1,248 @@
+/* The buy sheet's body: amount, the ways to pay with the payment code, the
+   name on the payment, the supporter wall and the notice. The shared Modal
+   owns the scrim, the phone sheet, focus and the exit; its scrim stacks
+   above the consent banner (--z-modal over --z-consent-banner), so the
+   sheet's footer stays in reach on a first visit. This file styles what
+   sits inside it. Modal portals to
+   document.body, so the colours read the global Studio roles, which follow
+   the app theme on <html>. State blocks fold through the shared Collapse,
+   so spacing that must fold with a block sits inside it. */
+
+.body {
+  color: var(--studio-text);
+}
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+}
+
+.section {
+  min-width: 0;
+}
+
+.sectionHeading {
+  margin: 0 0 10px;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 500;
+  color: var(--studio-text);
+}
+
+/* ── Amount ─────────────────────────────────────────────────────────── */
+.fixedAmount {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-28);
+  color: var(--studio-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.quickPicks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+  margin-bottom: 12px;
+}
+
+.quickPick {
+  flex: 1 1 0;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+}
+
+.amountRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--tap-min);
+  padding: 0 12px;
+  border: 1px solid var(--studio-line);
+  border-radius: var(--radius-12);
+  transition-property: border-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+.amountRow:focus-within {
+  border-color: var(--accent);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.amountRow span {
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  color: var(--studio-text-faint);
+}
+.amountRow input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 12px 0;
+  /* 16px keeps iOS from zooming the page when the field takes focus. */
+  font-size: var(--text-16);
+  color: var(--studio-text);
+  font-variant-numeric: tabular-nums;
+}
+.amountRow input[aria-invalid="true"] {
+  color: var(--studio-accent-text);
+}
+
+.hint,
+.payIntro,
+.referenceLine,
+.wallBody {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--studio-text-muted);
+}
+
+.hint {
+  padding-top: 6px;
+}
+
+.fieldError {
+  margin: 0;
+  padding-top: 6px;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--studio-accent-text);
+}
+
+/* ── Pay the artist ─────────────────────────────────────────────────── */
+.payIntro {
+  margin-bottom: 10px;
+}
+
+/* The giving rows read these from their own list in community giving. */
+.methods {
+  --giving-row-pad-inline: 10px;
+  --giving-icon-size: 18px;
+  --giving-row-gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.method {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Lines up with the row's text, past the icon. */
+.methodNote {
+  margin: 2px 0 0;
+  padding-inline: calc(
+      var(--giving-row-pad-inline) + var(--giving-icon-size) +
+        var(--giving-row-gap)
+    )
+    var(--giving-row-pad-inline);
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--studio-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.referenceSlot {
+  min-width: 0;
+}
+
+.referenceReady,
+.referenceFailed {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 12px;
+}
+
+.referenceSlot > * > .referenceLine {
+  padding-top: 12px;
+}
+
+.referenceFailed {
+  align-items: flex-start;
+}
+
+.referenceError,
+.errorLine {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(var(--accent-rgb), 0.45);
+  border-radius: var(--radius-12);
+  background: rgba(var(--accent-rgb), 0.08);
+  color: var(--studio-text);
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+}
+
+.retryButton {
+  min-height: var(--tap-min);
+}
+
+/* ── Supporter wall ─────────────────────────────────────────────────── */
+.wallRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+}
+
+.wallText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.wallLabel {
+  font-weight: 600;
+  font-size: var(--text-14-5);
+  color: var(--studio-text);
+  cursor: pointer;
+}
+
+/* ── Notice and the footer with the refused "I've paid" ────────────── */
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--icon-gap-inline);
+  margin: var(--gap-grid) 0 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--studio-text-muted);
+}
+
+.noticeIcon {
+  flex: none;
+  margin-top: 3px;
+  color: var(--studio-text-faint);
+}
+
+/* The Modal pins its footer below the scrolling body, so the refused line
+   sits here above the button and stays in view at every width. The space
+   under it lives inside the Collapse, so it folds with the line. */
+.footer {
+  flex: 1 1 100%;
+  min-width: 0;
+}
+
+.footerFailure {
+  padding-bottom: 12px;
+}
+
+.footerRetry {
+  margin-top: 8px;
+  min-height: var(--tap-min);
+}
+
+.paidButton {
+  width: 100%;
+  min-height: var(--tap-min);
+}

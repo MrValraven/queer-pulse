@@ -25,6 +25,7 @@ const base = {
   },
   description: null,
   genre: null,
+  genres: [],
   status: "published" as const,
   publishedAt: null,
   tracks: [],

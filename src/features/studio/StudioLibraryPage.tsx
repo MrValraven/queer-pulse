@@ -3,7 +3,7 @@ import { m } from "motion/react";
 import { Navigate } from "react-router-dom";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { routes } from "../../app/routeMap";
-import { tabPanelProps } from "../../shared/components/ui";
+import { Collapse, tabPanelProps } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -77,15 +77,20 @@ export function StudioLibraryPage() {
         label={t("studio:libraryLive.tablistLabel")}
         onChange={params.setTab}
       />
-      <StudioLibraryToolbar
-        query={params.query}
-        onQueryChange={params.setQuery}
-        sort={params.sort}
-        onSortChange={params.setSort}
-        options={
-          tab === "artists" ? STUDIO_LIBRARY_ARTIST_SORTS : STUDIO_LIBRARY_SORTS
-        }
-      />
+      {/* Purchases keep their own order, so the filter and sort fold away. */}
+      <Collapse isOpen={tab !== "purchases"}>
+        <StudioLibraryToolbar
+          query={params.query}
+          onQueryChange={params.setQuery}
+          sort={params.sort}
+          onSortChange={params.setSort}
+          options={
+            tab === "artists"
+              ? STUDIO_LIBRARY_ARTIST_SORTS
+              : STUDIO_LIBRARY_SORTS
+          }
+        />
+      </Collapse>
       <div {...tabPanelProps(idPrefix, tab)} className={css.panel}>
         {/* The tab's content fades in on arrival and on every tab change,
             on the Studio fade (a lift with full motion). */}

@@ -105,7 +105,7 @@ describe("StudioListeningPage (demo)", () => {
     );
   });
 
-  it("clears the history after the confirm dialog and keeps the artists you support", async () => {
+  it("clears the history after the confirm dialog and keeps the artists who see your name", async () => {
     renderPage();
     fireEvent.click(
       await screen.findByRole("button", { name: "Clear listening history" }),
@@ -119,7 +119,7 @@ describe("StudioListeningPage (demo)", () => {
       await screen.findByText("Play a track for 30 seconds and it lands here"),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Artists you support" }),
+      screen.getByRole("heading", { name: "Artists who see your name" }),
     ).toBeInTheDocument();
   });
 

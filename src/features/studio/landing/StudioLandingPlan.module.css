@@ -5,16 +5,16 @@
     clamp(20px, 5vw, 48px);
 }
 
-/* No reveal float: this card stays put and reads as "not today". A fine
-   dashed line in the studio ink keeps the "not built yet" signal without
-   reading as a wireframe. */
+/* No reveal float: this card stays put. A full card on the raised Studio
+   tint with a solid hairline gives the plan its weight; the dashed chip
+   alone carries the "coming later" signal. */
 .card {
   --plan-line: rgba(var(--studio-ink-rgb), 0.28);
 
   padding: clamp(24px, 4vw, 48px);
-  border: 1px dashed var(--plan-line);
+  border: 1px solid var(--studio-line);
   border-radius: var(--radius-card);
-  background: color-mix(in srgb, var(--studio-surface) 45%, transparent);
+  background: var(--studio-wash-2);
 }
 
 .headerTop {
@@ -49,10 +49,10 @@
 }
 
 .title {
-  max-width: 24ch;
-  margin: 0 0 12px;
+  max-width: 22ch;
+  margin: 0 0 14px;
   font-family: var(--serif);
-  font-size: var(--text-heading);
+  font-size: var(--text-display);
   font-weight: 300;
   line-height: var(--lh-title);
   color: var(--studio-text);
@@ -77,28 +77,43 @@
 .points {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 20px;
+  gap: 24px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+/* Each point opens on a hairline, so the three read as one row of columns
+   from 900px and as a quiet stack on phones. */
+.point {
+  padding-top: 24px;
+  border-top: 1px solid var(--studio-line);
+}
+
 .icon {
   display: inline-flex;
-  margin-bottom: 10px;
-  color: var(--studio-text-muted);
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 16px;
+  border: 1px solid var(--studio-line);
+  border-radius: var(--radius-pill);
+  background: var(--studio-surface);
+  color: var(--studio-accent-text);
 }
 
 .icon svg {
-  width: 20px;
-  height: 20px;
+  width: 26px;
+  height: 26px;
 }
 
 .pointTitle {
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   font-family: var(--serif);
-  font-size: var(--text-20);
+  font-size: var(--text-24);
   font-weight: 400;
+  line-height: var(--lh-title);
   color: var(--studio-text);
 }
 
@@ -110,9 +125,9 @@
   color: var(--studio-text-muted);
 }
 
-@media (min-width: 720px) {
+@media (min-width: 900px) {
   .points {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 28px;
+    gap: 32px;
   }
 }

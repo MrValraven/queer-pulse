@@ -1,0 +1,31 @@
+/* Music event pickers: the cohost add confirmation. Tokens only. */
+
+/* The person being added, set in a quiet card above the explanation. */
+.pickedRow {
+  padding: var(--gap-xs) var(--gap-sm);
+  margin-bottom: var(--gap-sm);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+}
+
+.confirmBody {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+
+/* The refusal from the server, named in full. */
+.refusal {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--icon-gap-inline);
+  margin: var(--gap-sm) 0 0;
+  font-size: var(--text-13);
+  color: var(--accent-text);
+}
+.refusal svg {
+  flex: none;
+  /* Drops the icon onto the first line's x-height. */
+  margin-top: 2px;
+}

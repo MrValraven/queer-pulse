@@ -17,6 +17,7 @@ export function makeJoinRequestRow(
     mutualMemberEmail: null,
     ageLine: "18+ confirmed",
     sourceLabel: "Homepage hero",
+    isStudioArtist: false,
     heardFrom: "A friend",
     socialProfile: null,
     socialProfileHref: null,

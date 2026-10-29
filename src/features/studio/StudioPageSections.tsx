@@ -5,7 +5,6 @@ import { FiArrowRight } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat } from "../../shared/i18n/format";
 import { SET, WEDNESDAY_SET, RECAP_AVATARS } from "./studioPage.data";
 import { routes } from "../../app/routeMap";
 import styles from "./studio.module.css";
@@ -61,8 +60,7 @@ export function StudioSetSection() {
                 <div className={styles.who}>{row.who}</div>
               </div>
               <div className={styles.pay}>
-                {row.payNoteKey && <b>{t(row.payNoteKey)}</b>}
-                {row.pay && t(row.pay.key, row.pay.values)}
+                {row.statusKey && <b>{t(row.statusKey)}</b>}
                 {row.isUpNext && (
                   <>
                     {t("studioShowcase:room.set.upNext")}{" "}
@@ -83,7 +81,6 @@ export function StudioSetSection() {
 
 function StudioSideCol() {
   const { t } = useTranslation();
-  const fmt = useFormat();
   return (
     <div className={styles.sideCol}>
       <div className={styles.sideCard}>
@@ -120,30 +117,22 @@ function StudioSideCol() {
       </div>
 
       <div className={styles.ledgerCard}>
-        <div className={styles.head}>{t("studio:room.set.ledgerHead")}</div>
+        <div className={styles.head}>{t("studio:room.set.fee.heading")}</div>
         <div className={styles.lrow}>
-          <span className={styles.k}>
-            {t("studio:room.set.ledgerPaidArtists")}
-          </span>
-          <span className={styles.v}>
-            {fmt.currency(WEDNESDAY_SET.ledgerPaidArtists)}
-          </span>
+          <span className={styles.k}>{t("studio:room.set.fee.hosting")}</span>
+        </div>
+        <div className={styles.lrow}>
+          <span className={styles.k}>{t("studio:room.set.fee.curators")}</span>
+        </div>
+        <div className={styles.lrow}>
+          <span className={styles.k}>{t("studio:room.set.fee.fund")}</span>
         </div>
         <div className={styles.lrow}>
           <span className={styles.k}>
-            {t("studio:room.set.ledgerArtistShare")}
+            {t("studio:room.set.fee.artistShare")}
           </span>
           <span className={styles.v}>
-            {fmt.number(WEDNESDAY_SET.ledgerArtistShare, {
-              style: "percent",
-              maximumFractionDigits: 1,
-            })}
-          </span>
-        </div>
-        <div className={styles.lrow}>
-          <span className={styles.k}>{t("studio:room.set.ledgerPerPlay")}</span>
-          <span className={styles.v}>
-            {fmt.currency(WEDNESDAY_SET.ledgerPerPlay)}
+            {t("studio:room.set.fee.artistShareStatus")}
           </span>
         </div>
         <Link to={routes.governance} className={styles.cta}>

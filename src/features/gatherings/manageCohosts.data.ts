@@ -28,8 +28,9 @@ function toCandidate(member: Member): CohostCandidate {
 
 /** Cycles through the same three avatar tints the attendee rows use
  *  (`AV_TINTS` in `api/events.adapters.ts`). Cohosts carry no tint of their
- *  own on the wire, so a stable per-row tint just needs to vary visually. */
-const COHOST_TINTS: Member["tint"][] = ["coral", "jade", "plum"];
+ *  own on the wire, so a stable per-row tint just needs to vary visually.
+ *  CohostManager rotates through it for a cohost added in the house scope. */
+export const COHOST_TINTS: Member["tint"][] = ["coral", "jade", "plum"];
 
 /** `GET /events/:slug`'s real `cohosts` (`EventOrganizerView[]`, no per-person
  *  role/bio text) -> the light shape `CohostManager` renders. `roleLabel` is

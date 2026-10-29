@@ -152,6 +152,9 @@ const PRIVATE_BREADCRUMB_PATHS = [
   "/studio/playlists/",
   "/studio/previews/",
   "/studio/radio",
+  // The public Studio landing reads (the page itself and a preview's stream
+  // fetch), which name no member but are still kept out of breadcrumbs.
+  "/studio/landing",
   // Studio artist kinds: the format list a member browses and the episode
   // shelf (POST /studio/tracks/:id/publish is covered by "/studio/tracks/").
   "/studio/formats",
@@ -178,6 +181,13 @@ const PRIVATE_BREADCRUMB_PATHS = [
   "/studio/plays",
   "/me/studio-listening",
   "/studio/listening",
+  // Studio purchases: claims, sales, the buyer list (API and pages) and the library tab.
+  "/studio/purchases",
+  "/studio/sales",
+  "/me/studio-purchases",
+  "/studio/payments",
+  "/account/music-purchases",
+  "tab=purchases",
   "/me/saved/studio_",
   "/items/studio_",
   // Community support section: who opens or saves a community's support

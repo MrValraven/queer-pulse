@@ -55,56 +55,6 @@
   font-style: italic;
 }
 
-/* ── The four deal cards ── */
-.deal {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  margin-bottom: 40px;
-}
-.dealCard {
-  background: var(--surface);
-  border: 1px solid var(--s-line);
-  border-radius: var(--radius-16);
-  padding: 22px 24px;
-}
-.ic {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-11);
-  background: rgba(var(--jade-rgb), 0.14);
-  color: var(--studio-jade-text);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 14px;
-}
-.ic svg {
-  width: 22px;
-  height: 22px;
-}
-.dealCard h3 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: var(--text-19);
-  color: rgba(var(--studio-ink-rgb), 1);
-  letter-spacing: -0.01em;
-  margin-bottom: 8px;
-}
-.dealCard h3 em {
-  font-style: italic;
-  color: var(--studio-accent-text);
-}
-.dealCard p {
-  font-size: var(--text-13-5);
-  color: var(--s-text-60);
-  line-height: 1.6;
-}
-.dealCard p em {
-  font-style: italic;
-  color: var(--studio-jade-text);
-}
-
 /* ── Sections ── */
 .sec {
   padding: 34px 0;
@@ -283,7 +233,6 @@
 }
 
 @media (max-width: 720px) {
-  .deal,
   .licGrid {
     grid-template-columns: 1fr;
   }

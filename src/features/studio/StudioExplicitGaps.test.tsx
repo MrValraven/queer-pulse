@@ -35,6 +35,7 @@ const show: StudioReleaseDTO = {
   },
   description: null,
   genre: null,
+  genres: [],
   mood: null,
   scene: null,
   status: "published",

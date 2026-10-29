@@ -12,18 +12,28 @@ import { AdminLandingVisitsChart } from "./AdminLandingVisitsChart";
 import { AdminLandingVisitsSources } from "./AdminLandingVisitsSources";
 import { useAdminLandingVisits } from "./api/useAdminLandingVisits";
 import type { LandingVisitsRangeDays } from "./api/adminLandingVisits.api";
+import {
+  LANDING_VISIT_PAGES,
+  type LandingVisitPage,
+} from "../homepage/api/landingVisitBeacon";
 import { hasFailedWithoutData, isRetryingFailedRead } from "./queryLoadFailure";
 import styles from "./AdminLandingVisitsCard.module.css";
 
 const RANGE_OPTIONS: readonly LandingVisitsRangeDays[] = [30, 90];
+
+const PAGE_LABEL_KEY: Record<LandingVisitPage, string> = {
+  home: "admin:dashboard.landingVisits.pageHome",
+  studio: "admin:dashboard.landingVisits.pageStudio",
+};
 
 /**
  * Anonymous landing-page visits per day, with the busiest sources beside
  * them. The counter stores only (day, source, visits), so this card is the
  * whole of what there is to see: no visitor, session or path behind a bar.
  *
- * The range toggle sits in the frame's head and stays mounted through
- * loading and errors, so a reader can always switch back. A failed read with
+ * The page switch (Homepage, Studio page) and the range toggle sit in the
+ * frame's head and stay mounted through loading and errors, so a reader can
+ * always switch back. A failed read with
  * nothing loaded keeps its error line through a retry, so focus stays on the
  * Retry button.
  */
@@ -31,14 +41,33 @@ export function AdminLandingVisitsCard() {
   const { t } = useTranslation();
   const fmt = useFormat();
   const [rangeDays, setRangeDays] = useState<LandingVisitsRangeDays>(30);
-  const visitsQuery = useAdminLandingVisits(rangeDays);
+  const [page, setPage] = useState<LandingVisitPage>("home");
+  const visitsQuery = useAdminLandingVisits(rangeDays, page);
   const { data, error, isLoading, isPlaceholderData, refetch } = visitsQuery;
   const hasLoadError = hasFailedWithoutData(visitsQuery);
   const isRetrying = isRetryingFailedRead(visitsQuery);
   const hasContent = !hasLoadError && data !== undefined;
   const isEmpty = hasContent && data.total === 0;
   const rangeLabelId = useId();
+  const pageLabelId = useId();
   const staleClassName = isPlaceholderData ? styles.stale : undefined;
+
+  const pageSwitch = (
+    <div className={styles.range}>
+      <span id={pageLabelId} className="visuallyHidden">
+        {t("admin:dashboard.landingVisits.pageLabel")}
+      </span>
+      <AdminSeg
+        options={LANDING_VISIT_PAGES.map((option) => ({
+          value: option,
+          label: t(PAGE_LABEL_KEY[option]),
+        }))}
+        value={page}
+        onChange={(next) => setPage(next as LandingVisitPage)}
+        ariaLabelledby={pageLabelId}
+      />
+    </div>
+  );
 
   const rangeToggle = (
     <div className={styles.range}>
@@ -62,8 +91,17 @@ export function AdminLandingVisitsCard() {
   return (
     <ChartFrame
       title={t("admin:dashboard.landingVisits.title")}
-      subtitle={t("admin:dashboard.landingVisits.sub")}
-      legend={rangeToggle}
+      subtitle={t(
+        page === "studio"
+          ? "admin:dashboard.landingVisits.subStudio"
+          : "admin:dashboard.landingVisits.sub",
+      )}
+      legend={
+        <div className={styles.controls}>
+          {pageSwitch}
+          {rangeToggle}
+        </div>
+      }
       loading={isLoading && !hasLoadError}
       skeletonHeight={220}
       empty={isEmpty ? t("admin:dashboard.landingVisits.empty") : false}
@@ -125,7 +163,7 @@ export function AdminLandingVisitsCard() {
               aria-busy={isPlaceholderData || undefined}
             >
               <AdminLandingVisitsChart
-                key={data.rangeDays}
+                key={`${data.page}-${data.rangeDays}`}
                 days={data.days}
                 rangeDays={data.rangeDays}
               />

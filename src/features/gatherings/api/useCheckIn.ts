@@ -22,6 +22,7 @@ import {
 } from "./useAttendeePages";
 import type { AttendeeArrival } from "./events.api";
 import type { AttendeeRow } from "./events.adapters";
+import { useEventHostScope } from "../eventHostScope";
 
 /** What the door is asking for: a name the host tapped, or a card they read. */
 export type CheckInInput = { memberSlug: string } | { cardToken: string };
@@ -45,8 +46,10 @@ export type CheckInInput = { memberSlug: string } | { cardToken: string };
  */
 export function useCheckIn(slug: string) {
   const { demoMode } = useDemoMode();
+  const { apiTarget } = useEventHostScope();
   const queryClient = useQueryClient();
-  const key = eventKeys.attendees(slug, demoMode);
+  const key = eventKeys.attendees(slug, demoMode, apiTarget);
+  const pagesRoot = attendeePagesRoot(slug, demoMode, apiTarget);
 
   return useMutation<
     CheckInResultDTO | void,
@@ -60,10 +63,10 @@ export function useCheckIn(slug: string) {
     mutationKey: checkInMutationKey(slug),
     mutationFn: async (input) => {
       if (demoMode) return;
-      return checkInAttendee(slug, input);
+      return checkInAttendee(slug, input, apiTarget);
     },
     onMutate: async (input) => {
-      await cancelDoorQueries(queryClient, key, slug, demoMode);
+      await cancelDoorQueries(queryClient, key, pagesRoot);
       const previous = queryClient.getQueryData<AttendeesResult>(key);
       if (previous && "memberSlug" in input) {
         queryClient.setQueryData<AttendeesResult>(
@@ -75,16 +78,10 @@ export function useCheckIn(slug: string) {
       // yet, so its groups wait for the server's row in onSuccess.
       const rosterRow =
         "memberSlug" in input
-          ? findRosterRow(
-              queryClient,
-              slug,
-              demoMode,
-              previous,
-              input.memberSlug,
-            )
+          ? findRosterRow(queryClient, pagesRoot, previous, input.memberSlug)
           : undefined;
       const previousPages = rosterRow
-        ? patchDoorGroups(queryClient, slug, demoMode, rosterRow, new Date())
+        ? patchDoorGroups(queryClient, pagesRoot, rosterRow, new Date())
         : undefined;
       return { previous, previousPages };
     },
@@ -112,8 +109,7 @@ export function useCheckIn(slug: string) {
         );
         patchDoorGroups(
           queryClient,
-          slug,
-          demoMode,
+          pagesRoot,
           serverRow,
           serverRow.checkedInAt ?? new Date(),
         );
@@ -127,8 +123,10 @@ export function useCheckIn(slug: string) {
  *  on the wrong name. */
 export function useUndoCheckIn(slug: string) {
   const { demoMode } = useDemoMode();
+  const { apiTarget } = useEventHostScope();
   const queryClient = useQueryClient();
-  const key = eventKeys.attendees(slug, demoMode);
+  const key = eventKeys.attendees(slug, demoMode, apiTarget);
+  const pagesRoot = attendeePagesRoot(slug, demoMode, apiTarget);
 
   return useMutation<
     CheckInResultDTO | void,
@@ -140,10 +138,10 @@ export function useUndoCheckIn(slug: string) {
     mutationKey: checkInMutationKey(slug),
     mutationFn: async (memberSlug) => {
       if (demoMode) return;
-      return undoCheckIn(slug, memberSlug);
+      return undoCheckIn(slug, memberSlug, apiTarget);
     },
     onMutate: async (memberSlug) => {
-      await cancelDoorQueries(queryClient, key, slug, demoMode);
+      await cancelDoorQueries(queryClient, key, pagesRoot);
       const previous = queryClient.getQueryData<AttendeesResult>(key);
       if (previous) {
         queryClient.setQueryData<AttendeesResult>(
@@ -153,13 +151,12 @@ export function useUndoCheckIn(slug: string) {
       }
       const rosterRow = findRosterRow(
         queryClient,
-        slug,
-        demoMode,
+        pagesRoot,
         previous,
         memberSlug,
       );
       const previousPages = rosterRow
-        ? patchDoorGroups(queryClient, slug, demoMode, rosterRow, null)
+        ? patchDoorGroups(queryClient, pagesRoot, rosterRow, null)
         : undefined;
       return { previous, previousPages };
     },
@@ -249,19 +246,24 @@ type PagesSnapshot = [
 /** Restamp one guest across every cached door group of this gathering. */
 function patchDoorGroups(
   queryClient: ReturnType<typeof useQueryClient>,
-  slug: string,
-  demoMode: boolean,
+  pagesRoot: readonly unknown[],
   attendee: AttendeeRow,
   checkedInAt: Date | null,
 ): PagesSnapshot {
-  const root = attendeePagesRoot(slug, demoMode);
   const snapshot = queryClient.getQueriesData<InfiniteData<AttendeePage>>({
-    queryKey: root,
+    queryKey: pagesRoot,
   });
+  // See attendeePagesKey: two past the root is the arrival filter, four past
+  // it the search term (indexes 5 and 7 on a member key).
+  const arrivalIndex = pagesRoot.length + 1;
+  const searchIndex = pagesRoot.length + 3;
   for (const [queryKey, data] of snapshot) {
-    // See attendeePagesKey: index 5 is the arrival filter, 7 the search term.
+    const arrivalSegment = queryKey[arrivalIndex];
+    const searchSegment = queryKey[searchIndex];
     const arrival =
-      queryKey[5] === "any" ? undefined : (queryKey[5] as AttendeeArrival);
+      arrivalSegment === "any"
+        ? undefined
+        : (arrivalSegment as AttendeeArrival);
     queryClient.setQueryData(
       queryKey,
       patchPagesArrival(
@@ -269,7 +271,7 @@ function patchDoorGroups(
         arrival,
         attendee,
         checkedInAt,
-        typeof queryKey[7] === "string" ? queryKey[7] : "",
+        typeof searchSegment === "string" ? searchSegment : "",
       ),
     );
   }
@@ -294,13 +296,12 @@ function restoreDoorGroups(
 async function cancelDoorQueries(
   queryClient: ReturnType<typeof useQueryClient>,
   rosterKey: readonly unknown[],
-  slug: string,
-  demoMode: boolean,
+  pagesRoot: readonly unknown[],
 ): Promise<void> {
   await Promise.all([
     queryClient.cancelQueries({ queryKey: rosterKey, exact: true }),
     queryClient.cancelQueries({
-      queryKey: attendeePagesRoot(slug, demoMode),
+      queryKey: pagesRoot,
       predicate: (query) => query.state.data !== undefined,
     }),
   ]);
@@ -327,13 +328,12 @@ function refreshDoorGroupsSoon(
  */
 function findRosterRow(
   queryClient: ReturnType<typeof useQueryClient>,
-  slug: string,
-  demoMode: boolean,
+  pagesRoot: readonly unknown[],
   roster: AttendeesResult | undefined,
   memberSlug: string,
 ): AttendeeRow | undefined {
   const cachedGroups = queryClient.getQueriesData<InfiniteData<AttendeePage>>({
-    queryKey: attendeePagesRoot(slug, demoMode),
+    queryKey: pagesRoot,
   });
   for (const [, data] of cachedGroups) {
     for (const page of data?.pages ?? []) {

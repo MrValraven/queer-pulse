@@ -75,11 +75,8 @@ export function StudioSignInPage() {
           </div>
           <div className={styles.asideFoot}>
             <Translation
-              i18nKey="studio:signin.aside.paidThisMonth"
+              i18nKey="studio:signin.aside.noCut"
               components={{ em: <em /> }}
-              values={{
-                amount: format.currency(ASIDE_NOW_PLAYING.paidThisMonth),
-              }}
             />
           </div>
         </div>

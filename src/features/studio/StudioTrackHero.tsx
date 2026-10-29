@@ -33,16 +33,18 @@ const QUICK_TIP_AMOUNT = 2;
 
 /** The track hero on the shared detail scaffold: the release cover, "Track
  *  3 of 11", the title and credit, then Play, Like, Add to playlist, Tip
- *  (showcase), Share and the track menu, which stays last. Below 1280px the
- *  actions after Play are icons ("Play from {time}" keeps its words), and
- *  below 1440px Share folds into the track menu with every way to share. */
+ *  (showcase, when a caller passes `onTip`), Share and the track menu,
+ *  which stays last. Below 1280px the actions after Play are icons (the
+ *  Play pill keeps its words), and below 1440px Share folds into the track
+ *  menu with every way to share. */
 export function StudioTrackHero({
   track,
   onTip,
   sentinelRef,
 }: {
   track: StudioTrackView;
-  onTip: () => void;
+  /** The showcase Tip pill renders only when passed. */
+  onTip?: () => void;
   /** The marker the page's sticky header watches. */
   sentinelRef?: Ref<HTMLDivElement>;
 }) {
@@ -61,6 +63,17 @@ export function StudioTrackHero({
       : undefined,
   );
   const play = useStudioTrackPlay(track);
+  // A shared timestamp link puts "Play from 1:23" on the pill itself. The
+  // name opens with those words, so the visible label stays in it.
+  const playFromLabel = play.startLabel
+    ? t("studio:player.playFrom", { time: play.startLabel })
+    : undefined;
+  const playLabel = play.startLabel
+    ? t("studio:player.playFromNamedAria", {
+        time: play.startLabel,
+        title: track.title,
+      })
+    : play.label;
   const likeSubject = {
     trackId: track.id,
     title: track.title,
@@ -81,8 +94,9 @@ export function StudioTrackHero({
     amount: formatters.currency(QUICK_TIP_AMOUNT),
   });
   const isShareInRow = isPublished && !isShareFolded;
+  const isTipShown = isShowcase && onTip !== undefined;
   // Add to playlist joins the menu's group when nothing else would.
-  const isAddGrouped = !isShowcase && !isShareInRow;
+  const isAddGrouped = !isTipShown && !isShareInRow;
   const addButton = (
     <Tooltip label={addLabel} placement="top" isDisabled={!isCompact}>
       <StudioAddToPlaylistButton
@@ -107,6 +121,7 @@ export function StudioTrackHero({
         .filter(Boolean)
         .join(" ")}
       tint={track.release.tint}
+      coverUrl={track.release.coverUrl}
       sentinelRef={sentinelRef}
       isActionsCompact={isCompact}
       art={
@@ -142,26 +157,18 @@ export function StudioTrackHero({
             // On a phone the blocked reason leaves the row (still read
             // through aria-describedby) and shows as the tooltip instead.
             <Tooltip
-              label={play.blockedReason ?? play.label}
+              label={play.blockedReason ?? playLabel}
               placement="top"
               isDisabled={!isCompact || play.blockedReason === undefined}
             >
               <StudioPlayButton
                 state={play.state}
                 onToggle={play.toggle}
-                label={play.label}
+                label={playLabel}
+                visibleLabel={playFromLabel}
                 blockedReason={play.blockedReason}
               />
             </Tooltip>
-          )}
-          {play.startLabel && (
-            <span
-              className={heroStyles.playFromLabel}
-              data-hero-play-from=""
-              aria-hidden="true"
-            >
-              {t("studio:player.playFrom", { time: play.startLabel })}
-            </span>
           )}
           {isLikeable && (
             <Tooltip
@@ -180,7 +187,7 @@ export function StudioTrackHero({
           {/* The menu wraps with the action before it, never alone. */}
           <div className={ss.heroActionGroup}>
             {isAddGrouped && addButton}
-            {isShowcase &&
+            {isTipShown &&
               (isCompact ? (
                 <IconButton
                   aria-label={tipLabel}

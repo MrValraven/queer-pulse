@@ -1,4 +1,6 @@
 import type { SavedItem } from "../../app/providers/useSaved";
+import { ALBUM_COVER } from "./studioAlbum.data";
+import { TRACKS as HOME_CARDS } from "./studioPage.data";
 import type { StudioLibraryTab } from "./studioPaths";
 
 // ── Studio v2 live library ─────────────────────────────────────────────────
@@ -7,14 +9,17 @@ export const LIVE_LIBRARY_TABS: { id: StudioLibraryTab; labelKey: string }[] = [
   { id: "playlists", labelKey: "studio:libraryLive.tabs.playlists" },
   { id: "releases", labelKey: "studio:libraryLive.tabs.releases" },
   { id: "artists", labelKey: "studio:libraryLive.tabs.artists" },
+  { id: "purchases", labelKey: "studio:libraryLive.tabs.purchases" },
 ];
 
 /** Demo only: saves the library shows beside whatever the demo member saved
  *  this session, so every tab and Liked songs have something in them. The
  *  `studio_track` saves are the demo member's liked songs. One release and
  *  one track are withdrawn by our team and one release is gone for another
- *  reason, to show each state. Titles and names are content and stay as
- *  written. */
+ *  reason, to show each state. An available release or playlist carries
+ *  the cover the server would send: the release's own, and for a playlist
+ *  the release of its first playable track. Titles and names are content
+ *  and stay as written. */
 export const DEMO_LIBRARY_SAVES: SavedItem[] = [
   {
     id: "studio_release:demo-release-cidade-dos-santos",
@@ -23,6 +28,7 @@ export const DEMO_LIBRARY_SAVES: SavedItem[] = [
     href: "/studio/album?id=demo-release-cidade-dos-santos",
     meta: "Mariana Sol",
     availability: "available",
+    coverUrl: ALBUM_COVER,
   },
   {
     id: "studio_release:demo-release-home-2",
@@ -31,6 +37,8 @@ export const DEMO_LIBRARY_SAVES: SavedItem[] = [
     href: "/studio/album?id=demo-release-home-2",
     meta: "LeChatDashinko",
     availability: "available",
+    // demo-release-home-2 is built from the second home card.
+    coverUrl: HOME_CARDS[1]?.image ?? null,
   },
   {
     id: "studio_release:demo-release-withdrawn",
@@ -113,5 +121,7 @@ export const DEMO_LIBRARY_SAVES: SavedItem[] = [
     href: "/studio/collection?id=demo-playlist-dyke-bar-standards",
     meta: "Sara Marques",
     availability: "available",
+    // Its first track is from Cidade dos santos.
+    coverUrl: ALBUM_COVER,
   },
 ];

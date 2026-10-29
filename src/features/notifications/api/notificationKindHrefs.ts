@@ -10,6 +10,8 @@ import { gatheringPath } from "../../gatherings/data";
 import { listingCorrectionContactPath } from "../../marketing/contactPrefill";
 import { studioClaimsPath } from "../../studio/studioClaimPaths";
 import {
+  studioDashboardPath,
+  studioPaymentsPath,
   studioPlaylistPath,
   studioReleasePath,
   studioTrackPath,
@@ -197,6 +199,32 @@ export function lifecycleSourceHref(
           ? studioPlaylistPath(playlistId)
           : routes.studioLibrary,
       };
+    }
+    // Studio purchases: a payment waiting opens the persona's payments to
+    // confirm (without a persona the page picks one); the buyer's three
+    // answers open their purchases, which works with or without Studio
+    // access.
+    case "studio_purchase_claimed": {
+      const subprofileId = slugOf(payload, "subprofileId");
+      return {
+        href: subprofileId
+          ? studioPaymentsPath(subprofileId)
+          : routes.studioPayments,
+      };
+    }
+    case "studio_purchase_confirmed":
+    case "studio_purchase_declined":
+    case "studio_purchase_expired":
+      return { href: routes.musicPurchases };
+    // Studio landing v2: access granted opens Studio; both landing rows open
+    // the persona's dashboard on its previews card (without a persona the
+    // dashboard picks one).
+    case "studio_access_granted":
+      return { href: routes.studio };
+    case "studio_landing_preview_requested":
+    case "studio_landing_preview_live": {
+      const subprofileId = slugOf(payload, "subprofileId");
+      return { href: `${studioDashboardPath(subprofileId)}#landing-previews` };
     }
     // Meet the team: an invite opens the persona's Works at pane, a request
     // opens the listing's Team section (a missing listing ref leaves the row

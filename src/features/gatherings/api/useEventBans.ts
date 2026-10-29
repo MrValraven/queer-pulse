@@ -7,6 +7,7 @@ import {
   type EventBanDTO,
 } from "./events.api";
 import { eventKeys } from "./eventKeys";
+import { useEventHostScope } from "../eventHostScope";
 
 /**
  * The host's own door (LOC-08).
@@ -25,10 +26,11 @@ import { eventKeys } from "./eventKeys";
  */
 export function useEventBans(slug: string | undefined, enabled = true) {
   const { demoMode } = useDemoMode();
+  const { apiTarget } = useEventHostScope();
   return useQuery<EventBanDTO[]>({
-    queryKey: eventKeys.bans(slug, demoMode),
+    queryKey: eventKeys.bans(slug, demoMode, apiTarget),
     enabled: Boolean(slug) && !demoMode && enabled,
-    queryFn: () => getEventBans(slug!),
+    queryFn: () => getEventBans(slug!, apiTarget),
   });
 }
 
@@ -36,6 +38,7 @@ export function useEventBans(slug: string | undefined, enabled = true) {
  *  same call, so the guest list and the door agree. */
 export function useBanFromEvent(slug: string) {
   const { demoMode } = useDemoMode();
+  const { apiTarget } = useEventHostScope();
   const queryClient = useQueryClient();
   return useMutation<
     EventBanDTO | void,
@@ -45,17 +48,17 @@ export function useBanFromEvent(slug: string) {
     meta: { silentError: true },
     mutationFn: async ({ memberSlug, reason }) => {
       if (demoMode) return;
-      return banFromEvent(slug, memberSlug, reason);
+      return banFromEvent(slug, memberSlug, reason, apiTarget);
     },
     onSuccess: () => {
       if (demoMode) return;
       void queryClient.invalidateQueries({
-        queryKey: eventKeys.bans(slug, demoMode),
+        queryKey: eventKeys.bans(slug, demoMode, apiTarget),
       });
       // Barring removes their RSVP too, so the roster is stale the moment
       // this resolves.
       void queryClient.invalidateQueries({
-        queryKey: eventKeys.attendees(slug, demoMode),
+        queryKey: eventKeys.attendees(slug, demoMode, apiTarget),
       });
       void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
     },
@@ -66,17 +69,18 @@ export function useBanFromEvent(slug: string) {
  *  them back on the guest list: they choose whether to come back. */
 export function useLiftEventBan(slug: string) {
   const { demoMode } = useDemoMode();
+  const { apiTarget } = useEventHostScope();
   const queryClient = useQueryClient();
   return useMutation<void, Error, string>({
     meta: { silentError: true },
     mutationFn: async (memberSlug) => {
       if (demoMode) return;
-      await liftEventBan(slug, memberSlug);
+      await liftEventBan(slug, memberSlug, apiTarget);
     },
     onSuccess: () => {
       if (demoMode) return;
       void queryClient.invalidateQueries({
-        queryKey: eventKeys.bans(slug, demoMode),
+        queryKey: eventKeys.bans(slug, demoMode, apiTarget),
       });
     },
   });

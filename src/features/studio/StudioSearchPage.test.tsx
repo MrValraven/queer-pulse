@@ -167,6 +167,7 @@ describe("StudioSearchTrackRow", () => {
             },
             publishedAt: "2026-04-12T10:00:00.000Z",
             genre: null,
+            genres: [],
             mood: null,
             scene: null,
           },
@@ -298,13 +299,13 @@ describe("StudioSearchPage (v2)", () => {
   it("narrows releases by the mood in the URL", async () => {
     render(
       <TestProviders
-        initialEntries={["/studio/search?q=a&type=releases&mood=sweaty"]}
+        initialEntries={["/studio/search?q=a&type=releases&mood=euphoric"]}
       >
         <StudioSearchPage />
       </TestProviders>,
     );
     expect(screen.getByRole("button", { name: "Mood" })).toHaveTextContent(
-      "Sweaty",
+      "Euphoric",
     );
     const releases = await screen.findByRole("region", { name: /releases/i });
     expect(
@@ -367,6 +368,7 @@ describe("StudioSearchPage (v2)", () => {
             },
             publishedAt: "2026-04-12T10:00:00.000Z",
             genre: null,
+            genres: [],
             mood: null,
             scene: null,
           },

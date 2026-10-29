@@ -170,7 +170,7 @@ describe("demo radio", () => {
 
   it("keeps a one-track mood for the end-of-radio case", () => {
     expect(
-      demoStudioRadio({ kind: "mood", value: "sweaty" }).items.map(
+      demoStudioRadio({ kind: "mood", value: "euphoric" }).items.map(
         (item) => item.trackId,
       ),
     ).toEqual(["demo-track-home-2-01"]);

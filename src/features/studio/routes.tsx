@@ -5,7 +5,7 @@ import { StudioErrorBoundary } from "./StudioErrorBoundary";
 import { STUDIO_DEFERRED_PATHS } from "./studioGate.data";
 import { StudioFirstRunRedirect } from "./StudioFirstRunRedirect";
 import { StudioGateSkeleton } from "./StudioGateSkeleton";
-import { STUDIO_PREVIEW_ROUTE } from "./studioPaths";
+import { STUDIO_PREVIEW_ROUTE, studioPaymentsPath } from "./studioPaths";
 import { StudioUngrantedPage } from "./StudioUngrantedPage";
 
 const StudioPage = lazyNamed(() => import("./StudioPage"), "StudioPage");
@@ -24,10 +24,6 @@ const StudioDashboardPage = lazyNamed(
 const StudioUploadPage = lazyNamed(
   () => import("./StudioUploadPage"),
   "StudioUploadPage",
-);
-const StudioPayoutsPage = lazyNamed(
-  () => import("./StudioPayoutsPage"),
-  "StudioPayoutsPage",
 );
 const StudioTrackPage = lazyNamed(
   () => import("./StudioTrackPage"),
@@ -72,6 +68,10 @@ const StudioLikedPage = lazyNamed(
 const StudioListeningPage = lazyNamed(
   () => import("./StudioListeningPage"),
   "StudioListeningPage",
+);
+const StudioPaymentsPage = lazyNamed(
+  () => import("./StudioPaymentsPage"),
+  "StudioPaymentsPage",
 );
 const StudioCheckoutPage = lazyNamed(
   () => import("./StudioCheckoutPage"),
@@ -210,7 +210,11 @@ function demoStudioRoutes() {
       <Route path={routes.studioArtist} element={<StudioArtistPage />} />
       <Route path={routes.studioDashboard} element={<StudioDashboardPage />} />
       <Route path={routes.studioUpload} element={<StudioUploadPage />} />
-      <Route path={routes.studioPayouts} element={<StudioPayoutsPage />} />
+      {/* The retired payouts page: old links land on Payments. */}
+      <Route
+        path={routes.studioPayouts}
+        element={<Navigate to={studioPaymentsPath()} replace />}
+      />
       <Route path={routes.studioTrack} element={<StudioTrackPage />} />
       <Route path={routes.studioLive} element={<StudioLivePage />} />
       <Route
@@ -225,6 +229,7 @@ function demoStudioRoutes() {
       <Route path={routes.studioLibrary} element={<StudioLibraryPage />} />
       <Route path={routes.studioLiked} element={<StudioLikedPage />} />
       <Route path={routes.studioListening} element={<StudioListeningPage />} />
+      <Route path={routes.studioPayments} element={<StudioPaymentsPage />} />
       <Route path={routes.studioCheckout} element={<StudioCheckoutPage />} />
       <Route path="/studio/sheet-store" element={<StudioSheetStorePage />} />
       <Route
@@ -302,6 +307,12 @@ function grantedStudioRoutes() {
       <Route path={routes.studioLibrary} element={<StudioLibraryPage />} />
       <Route path={routes.studioLiked} element={<StudioLikedPage />} />
       <Route path={routes.studioListening} element={<StudioListeningPage />} />
+      <Route path={routes.studioPayments} element={<StudioPaymentsPage />} />
+      {/* The retired payouts page: old links land on Payments. */}
+      <Route
+        path={routes.studioPayouts}
+        element={<Navigate to={studioPaymentsPath()} replace />}
+      />
       <Route path={routes.studioDashboard} element={<StudioDashboardPage />} />
       <Route path={routes.studioCalls} element={<StudioOpenCallsPage />} />
       <Route

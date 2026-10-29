@@ -15,15 +15,21 @@ import type { GuestListStatus } from "./savedGuestListContext";
  * `guestListStatus` and `retryGuestList` feed the edit modal's guest field
  * while the list is on its way or has failed (see `SavedGuestListContext`).
  * Only organiser surfaces call this.
+ *
+ * `isEnabled: false` (a house event, which has no guest communities) fetches
+ * nothing and reports the list as ready, so the edit modal never waits on it.
  */
 export function useSeedGuestCommunities({
   slug,
   setGatheringState,
+  isEnabled = true,
 }: {
   slug: string;
   setGatheringState: Dispatch<SetStateAction<GatheringState>>;
+  /** False skips the request; the list then reads as ready. */
+  isEnabled?: boolean;
 }): { guestListStatus: GuestListStatus; retryGuestList: () => void } {
-  const guestQuery = useEventGuestCommunities(slug);
+  const guestQuery = useEventGuestCommunities(slug, { enabled: isEnabled });
   const guestViews = guestQuery.data;
   const [seededViews, setSeededViews] = useState<
     EventGuestCommunityView[] | undefined
@@ -39,7 +45,7 @@ export function useSeedGuestCommunities({
   // the error flag. A retry after a failure reads as loading again while it
   // runs (the error flag stays up until it answers).
   const guestListStatus: GuestListStatus =
-    guestViews !== undefined
+    !isEnabled || guestViews !== undefined
       ? "ready"
       : guestQuery.isError && !guestQuery.isFetching
         ? "failed"

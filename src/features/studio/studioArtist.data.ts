@@ -32,19 +32,6 @@ export function artistTabsOf(
   );
 }
 
-/** Demo-only sidebar and hero figures, moved here from the components. */
-export const ARTIST_SHOWCASE = {
-  subscribeAmount: 3,
-  sidebarStats: {
-    /** A count, so it reads "Fewer than 5" under the floor. */
-    newFollowers: { value: 184, isBelowThreshold: false },
-    earningsStreaming: 1820,
-    tipsReceived: 448,
-    directSubscribers: 612,
-  },
-  sustainersCount: 4200,
-};
-
 export interface ArtistRelease {
   pre: string;
   em?: string;

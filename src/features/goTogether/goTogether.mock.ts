@@ -1,5 +1,6 @@
 import { ApiError } from "../../shared/api/client";
 import { gatheringDetails, resolveGathering } from "../gatherings/data";
+import { HOUSE_MUSIC_DEMO_SLUGS } from "../gatherings/houseMusicEvents.data";
 import {
   currentUserSlug,
   getMember,
@@ -517,10 +518,18 @@ export function demoFeedback(groupId: string): GoTogetherFeedbackDTO {
   };
 }
 
+/** Go together is on by default for the house music events that are still
+ *  ahead of us (the music spec). The finished listening party and the
+ *  cancelled jam session have nothing left to match for. */
+const DEMO_GO_TOGETHER_ON_BY_DEFAULT: ReadonlySet<string> = new Set([
+  HOUSE_MUSIC_DEMO_SLUGS.clubNight,
+  HOUSE_MUSIC_DEMO_SLUGS.liveSession,
+]);
+
 export function demoHostConfig(slug: string): HostConfigDTO {
   return (
     demoState.hostConfigBySlug.get(slug) ?? {
-      enabled: false,
+      enabled: DEMO_GO_TOGETHER_ON_BY_DEFAULT.has(slug),
       cutoffAt: isoAt(demoDefaultCutoffMs(slug)),
       earliestCutoffAt: isoAt(demoEarliestCutoffMs(slug)),
       latestCutoffAt: isoAt(demoOptInClosesMs(slug)),

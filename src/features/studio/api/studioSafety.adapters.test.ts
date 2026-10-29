@@ -57,6 +57,7 @@ function releaseDto(
     artist,
     description: null,
     genre: "folk",
+    genres: ["folk"],
     mood: null,
     scene: null,
     status: "published",

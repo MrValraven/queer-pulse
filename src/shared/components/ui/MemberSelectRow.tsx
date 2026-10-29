@@ -34,7 +34,11 @@ export function MemberSelectRow({
         .join(" ")}
       onClick={() => onToggle(person.slug)}
     >
-      <MemberIdentity person={person} secondary={person.pronouns} size={38} />
+      <MemberIdentity
+        person={person}
+        secondary={person.detail || person.pronouns}
+        size={38}
+      />
       {(multiSelect || showsRadioIndicator) && (
         <span
           className={[

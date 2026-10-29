@@ -11,7 +11,8 @@ import css from "./StudioDashboardExtras.module.css";
 /** Under the follower total on /studio/dashboard, in this order: the plays
  *  trend across the full width, the follower growth chart across the full
  *  width, then a grid with Top supporters spanning both columns above "Where
- *  your music lives" and the milestones side by side from 900px. The plays
+ *  your music lives" and the milestones side by side from 900px. The Studio
+ *  page preview requests card mounts above all of this, in "Your numbers". The plays
  *  trend and Top supporters mount only when the server sent plays, and
  *  never for a podcast persona: episodes never count, so a show's plays
  *  read nothing. The growth chart shows only when the server sent its

@@ -11,7 +11,6 @@ import { routes } from "../../app/routeMap";
  * and /studio/welcome opens it.
  */
 export const STUDIO_DEFERRED_PATHS: readonly string[] = [
-  routes.studioPayouts,
   routes.studioLive,
   routes.studioSet,
   routes.studioCheckout,

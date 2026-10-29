@@ -19,7 +19,7 @@ afterEach(() => {
 });
 
 describe("StudioLandingPage in Portuguese", () => {
-  it("renders the call to action, the plan and the gallery in pt-PT", async () => {
+  it("renders the call to action, the plan and the story heading in pt-PT", async () => {
     render(
       <TestProviders>
         <StudioLandingPage />
@@ -32,7 +32,13 @@ describe("StudioLandingPage in Portuguese", () => {
     expect(await screen.findByText("O plano")).toBeInTheDocument();
     expect(await screen.findByText("Mais tarde")).toBeInTheDocument();
     expect(
-      await screen.findByRole("tablist", { name: "Ecrãs do Studio" }),
+      await screen.findByRole("heading", {
+        level: 2,
+        name: "O Studio, ecrã a ecrã",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByRole("group", { name: "O que te traz ao Studio" }),
     ).toBeInTheDocument();
     expect(screen.queryByText("Request an invite")).toBeNull();
   });

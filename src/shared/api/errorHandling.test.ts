@@ -11,6 +11,7 @@ vi.mock("../observability/logger", () => ({
 import { ApiError } from "./client";
 import { logError } from "../observability/logger";
 import {
+  codedReasonFor,
   handleMutationError,
   handleQueryError,
   setQueryErrorDemoMode,
@@ -380,5 +381,69 @@ describe("handleMutationError with a non-English locale", () => {
       "error",
       6000,
     );
+  });
+});
+
+describe("music event coded refusals", () => {
+  it("names an unbookable performer in the write toast", () => {
+    handleMutationError(
+      new ApiError(403, "x", {
+        code: "music_event_performer_not_studio_artist",
+      }),
+      undefined,
+      undefined,
+      { options: {} },
+    );
+    expect(emit).toHaveBeenCalledWith(
+      {
+        title: "That didn't go through",
+        detail: "Only Studio artists can be booked.",
+      },
+      "error",
+      6000,
+    );
+  });
+
+  it("resolves each music event code through codedReasonFor", () => {
+    const expectedLineByCode: Array<[string, string]> = [
+      ["music_event_not_found", "This event isn't hosted by QueerPulse"],
+      ["house_event_family_locked", "A QueerPulse music event stays in Music"],
+      [
+        "music_event_community_unavailable",
+        "A QueerPulse music event can't be for one community only",
+      ],
+      [
+        "music_event_performer_not_studio_artist",
+        "Only Studio artists can be booked",
+      ],
+      [
+        "music_event_cohost_is_you",
+        "You run this event for QueerPulse, so you can't cohost it too",
+      ],
+      [
+        "music_event_cohost_holds_grant",
+        "Staff can't cohost a QueerPulse music event. This member is a music manager and producer",
+      ],
+      [
+        "music_event_cohost_is_staff_tier",
+        "Staff can't cohost a QueerPulse music event. Moderators and admins stay off the cohost list",
+      ],
+      [
+        "music_event_cohost_not_active",
+        "Cohosts must be active members, and this account isn't active",
+      ],
+      ["music_event_member_not_found", "No member has this profile address"],
+      [
+        "music_event_invite_request_not_found",
+        "This invite request isn't on this event",
+      ],
+    ];
+    for (const [code, line] of expectedLineByCode) {
+      expect(codedReasonFor(new ApiError(404, "x", { code }))).toBe(line);
+    }
+  });
+
+  it("returns null for an uncoded error", () => {
+    expect(codedReasonFor(new ApiError(403, "Forbidden"))).toBeNull();
   });
 });

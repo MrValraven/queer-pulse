@@ -11,6 +11,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileKind } from "../subprofiles/api/subprofiles.api";
 import { KIND_LABEL_KEYS } from "../subprofiles/subprofile-kinds";
 import { LINEUP_ROLES } from "./eventLineup.data";
+import { useEventHostScope } from "./eventHostScope";
 import { LineupInvitePickStep } from "./LineupInvitePickStep";
 import styles from "./GatheringLineupEditor.module.css";
 
@@ -34,13 +35,15 @@ export function LineupInviteComposerModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const scope = useEventHostScope();
+  const PickStep = scope.LineupPickStep ?? LineupInvitePickStep;
   const [searchQuery, setSearchQuery] = useState("");
   const [person, setPerson] = useState<MemberSelectPerson | null>(null);
   const [role, setRole] = useState<SubprofileKind>(LINEUP_ROLES[0]!);
 
   if (!person) {
     return (
-      <LineupInvitePickStep
+      <PickStep
         slug={slug}
         excludeSlugs={excludeSlugs}
         searchQuery={searchQuery}

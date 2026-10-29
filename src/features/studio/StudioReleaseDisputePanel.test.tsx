@@ -46,6 +46,7 @@ function ownerRelease(overrides: Partial<StudioReleaseDTO> = {}) {
     },
     description: null,
     genre: null,
+    genres: [],
     mood: null,
     scene: null,
     status: "taken_down",

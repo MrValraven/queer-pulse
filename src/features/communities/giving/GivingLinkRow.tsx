@@ -26,7 +26,7 @@ function givingLinkHref(value: string): string | null {
 export function GivingLinkRow({
   method,
 }: {
-  method: CommunityGivingMethodDTO;
+  method: Pick<CommunityGivingMethodDTO, "kind" | "label" | "value">;
 }) {
   const { t } = useTranslation();
   const title = givingMethodTitle(method);

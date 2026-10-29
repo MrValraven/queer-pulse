@@ -3,6 +3,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getAttendees } from "./events.api";
 import { eventKeys } from "./eventKeys";
 import { attendeeToRow, type AttendeeRow } from "./events.adapters";
+import { useEventHostScope } from "../eventHostScope";
 
 /**
  * NOTE on shape: `going`/`waitlist`/`goingCount`/`waitlistCount`/`capacity`
@@ -85,21 +86,28 @@ async function mockRows(): Promise<AttendeesResult> {
  * mutations' optimistic head-count already targets (`eventKeys.attendees`) —
  * see the shape note on `AttendeesResult`.
  */
-export function useAttendees(slug: string | undefined) {
+export function useAttendees(
+  slug: string | undefined,
+  options: { refetchIntervalMs?: number | null } = {},
+) {
   const { demoMode } = useDemoMode();
+  const { apiTarget } = useEventHostScope();
   const queryClient = useQueryClient();
-  const key = eventKeys.attendees(slug, demoMode);
+  const key = eventKeys.attendees(slug, demoMode, apiTarget);
 
   const query = useQuery<AttendeesResult>({
     queryKey: key,
     enabled: Boolean(slug),
+    // A scope's door polls on its own interval; live only, since the demo
+    // roster never changes on the server.
+    refetchInterval: demoMode ? false : (options.refetchIntervalMs ?? false),
     queryFn: async () => {
       if (demoMode || !slug) return await mockRows();
       // The live endpoint is paginated per status, so fetch the "going" and
       // "waitlisted" first pages in parallel and assemble the dashboard shape.
       const [goingPage, waitlistPage] = await Promise.all([
-        getAttendees(slug, "going", 1),
-        getAttendees(slug, "waitlisted", 1),
+        getAttendees(slug, "going", 1, {}, apiTarget),
+        getAttendees(slug, "waitlisted", 1, {}, apiTarget),
       ]);
       return {
         going: goingPage.items.map(attendeeToRow),
@@ -129,7 +137,7 @@ export function useAttendees(slug: string | undefined) {
     if (!prev) return;
     const nextPage =
       (status === "going" ? prev.goingPage : prev.waitlistPage) + 1;
-    const page = await getAttendees(slug, status, nextPage);
+    const page = await getAttendees(slug, status, nextPage, {}, apiTarget);
     const rows = page.items.map(attendeeToRow);
     queryClient.setQueryData<AttendeesResult>(key, (current) => {
       if (!current) return current;

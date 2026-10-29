@@ -8,6 +8,7 @@ import { StudioCuratedShelf } from "./StudioCuratedShelf";
 import { StudioFirstRun } from "./StudioFirstRun";
 import { StudioFormatChips } from "./StudioFormatChips";
 import { StudioFormatShelves } from "./StudioFormatShelves";
+import { StudioFoundingShelf } from "./StudioFoundingShelf";
 import { StudioHomeGenres } from "./StudioGenreChips";
 import { StudioHomeContinue } from "./StudioHomeContinue";
 import { StudioHomeHero } from "./StudioHomeHero";
@@ -24,7 +25,8 @@ import kit from "./studioKit.module.css";
 
 /** Studio home for a signed-in member, top to bottom: the featured release
  *  (else the newest), the format chips, Continue listening (this device's
- *  unfinished episodes), Staff picks, New this week, under All the New
+ *  unfinished episodes), Staff picks, New this week, the Founding artists
+ *  launch shelf (while staff keep it on), under All the New
  *  episodes, Spoken word and On stage shelves, Local scenes, (demo) the
  *  Wednesday set, the New releases grid and the artists behind it, both
  *  narrowed by the chosen format, and last the genre and mood tiles (hidden
@@ -64,6 +66,7 @@ export function StudioRoom() {
           titleKey="studio:home.newThisWeek.title"
           shelfKey="new-this-week"
         />
+        <StudioFoundingShelf />
         <Collapse isOpen={format === null}>
           <StudioFormatShelves />
         </Collapse>

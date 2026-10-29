@@ -6,6 +6,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { gatheringPath, gatheringShareDisplayUrl } from "./data";
+import { useEventHostScope } from "./eventHostScope";
 import styles from "./ManageGatheringPage.module.css";
 
 interface ManageGatheringSidebarProps {
@@ -39,6 +40,7 @@ export function ManageGatheringSidebar({
 }: ManageGatheringSidebarProps) {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const { isHouseEvent } = useEventHostScope();
   const CONTACT = routes.contact;
   const coverAlt = t("gatherings:manage.sidebar.coverAlt", { title });
   return (
@@ -91,14 +93,18 @@ export function ManageGatheringSidebar({
           </Link>
         </div>
       </div>
-      <div className={styles.supportCard}>
-        <div className={styles.supText}>
-          <Translation
-            i18nKey="gatherings:manage.sidebar.supportText"
-            components={{ a: <Link to={CONTACT} /> }}
-          />
+      {/* The QueerPulse team runs a house event, so the "message the team"
+          line has no one to point at there. The scope is fixed per page. */}
+      {!isHouseEvent && (
+        <div className={styles.supportCard}>
+          <div className={styles.supText}>
+            <Translation
+              i18nKey="gatherings:manage.sidebar.supportText"
+              components={{ a: <Link to={CONTACT} /> }}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

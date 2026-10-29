@@ -19,6 +19,11 @@ import type {
 } from "../gatheringExtras";
 import type { RunByListingView } from "../runByListing";
 import type { EventGuestCommunityDTO } from "./eventCommunities.api";
+import {
+  eventApiPath,
+  toHouseEventBody,
+  type EventApiTarget,
+} from "./eventApiTarget";
 
 // ── Backend DTOs ───────────────────────────────────────────────────────────
 // Shapes the NestJS events domain returns. Only the fields the prototype pages
@@ -715,15 +720,29 @@ export async function getEvents(
   return toItemsPage(res);
 }
 
-export const getEvent = (slug: string, viewAs?: GuestPreviewRole) =>
-  apiGet<EventDetailDTO>(`/events/${slug}${viewAs ? `?viewAs=${viewAs}` : ""}`);
+export const getEvent = (
+  slug: string,
+  viewAs?: GuestPreviewRole,
+  target: EventApiTarget = "member",
+) =>
+  apiGet<EventDetailDTO>(
+    eventApiPath(target, slug, viewAs ? `?viewAs=${viewAs}` : ""),
+  );
 
 /** The create answers with the first occurrence's detail plus
  *  `occurrenceSlugs`: every saved occurrence's slug in series order, and
  *  `[slug]` for a single gathering. Optional, so a response from an older
  *  backend still reads. */
-export const createEvent = (dto: CreateEventDto) =>
-  apiPost<EventDetailDTO & { occurrenceSlugs?: string[] }>("/events", dto);
+export const createEvent = (
+  dto: CreateEventDto,
+  target: EventApiTarget = "member",
+) =>
+  apiPost<EventDetailDTO & { occurrenceSlugs?: string[] }>(
+    target === "member" ? "/events" : "/admin/music-events",
+    target === "member"
+      ? dto
+      : { ...toHouseEventBody(dto), gatheringFamily: "music" },
+  );
 
 /** The edit answers with the detail plus `notifiedCount`: how many distinct
  *  people this edit notified. Optional, so an older backend still reads. */
@@ -736,18 +755,23 @@ export const updateEvent = (
   slug: string,
   dto: UpdateEventDto,
   scope?: SeriesScope,
+  target: EventApiTarget = "member",
 ) =>
   apiPatch<UpdatedEventDetailDTO>(
-    `/events/${slug}${scope ? `?scope=${scope}` : ""}`,
-    dto,
+    eventApiPath(target, slug, scope ? `?scope=${scope}` : ""),
+    target === "member" ? dto : toHouseEventBody(dto),
   );
 
 /** `scope` (MSG-10) — `"future"` also cancels every later, not-yet-cancelled
  *  occurrence in this event's series; omitted (or `"this"`) cancels only
  *  this occurrence. See `SeriesScope`'s doc. */
-export const cancelEvent = (slug: string, scope?: SeriesScope) =>
+export const cancelEvent = (
+  slug: string,
+  scope?: SeriesScope,
+  target: EventApiTarget = "member",
+) =>
   apiPost<{ ok: true }>(
-    `/events/${slug}/cancel${scope ? `?scope=${scope}` : ""}`,
+    eventApiPath(target, slug, `/cancel${scope ? `?scope=${scope}` : ""}`),
   );
 
 /**
@@ -774,12 +798,15 @@ export const getAttendees = (
   status: "going" | "waitlisted",
   page?: number,
   filters: { arrival?: AttendeeArrival; q?: string } = {},
+  target: EventApiTarget = "member",
 ) => {
   const q = new URLSearchParams({ status });
   if (page) q.set("page", String(page));
   if (filters.arrival) q.set("arrival", filters.arrival);
   if (filters.q) q.set("q", filters.q);
-  return apiGet<AttendeesPageDTO>(`/events/${slug}/attendees?${q.toString()}`);
+  return apiGet<AttendeesPageDTO>(
+    eventApiPath(target, slug, `/attendees?${q.toString()}`),
+  );
 };
 
 /**
@@ -793,8 +820,10 @@ export const getAttendees = (
  * `apiGetText`, not `apiGet` — the body is `text/csv`, and the JSON client
  * would reject it as a malformed response.
  */
-export const getAttendeesCsv = (slug: string) =>
-  apiGetText(`/events/${slug}/attendees.csv`);
+export const getAttendeesCsv = (
+  slug: string,
+  target: EventApiTarget = "member",
+) => apiGetText(eventApiPath(target, slug, "/attendees.csv"));
 
 export const rsvpEvent = (slug: string, status: "going" | "maybe") =>
   apiPost<{ status: RsvpStatus }>(`/events/${slug}/rsvp`, { status });
@@ -820,24 +849,44 @@ export const bookmarkEvent = (slug: string) =>
 export const unbookmarkEvent = (slug: string) =>
   apiDelete<{ bookmarked: false }>(`/events/${slug}/bookmark`);
 
-export const removeCohost = (slug: string, cohostSlug: string) =>
-  apiDelete<{ ok: true }>(`/events/${slug}/cohosts/${cohostSlug}`);
+export const removeCohost = (
+  slug: string,
+  cohostSlug: string,
+  target: EventApiTarget = "member",
+) =>
+  apiDelete<{ ok: true }>(eventApiPath(target, slug, `/cohosts/${cohostSlug}`));
 
 /** DELETE /events/:slug/attendees/:memberSlug — host/co-host removes a
  *  going/maybe/waitlisted attendee. Idempotent. */
-export const removeAttendee = (slug: string, memberSlug: string) =>
-  apiDelete<{ ok: true }>(`/events/${slug}/attendees/${memberSlug}`);
+export const removeAttendee = (
+  slug: string,
+  memberSlug: string,
+  target: EventApiTarget = "member",
+) =>
+  apiDelete<{ ok: true }>(
+    eventApiPath(target, slug, `/attendees/${memberSlug}`),
+  );
 
 /** POST /events/:slug/waitlist/:memberSlug/promote — host/co-host manually
  *  promotes one waitlisted member to going, out of FIFO order. */
-export const promoteAttendee = (slug: string, memberSlug: string) =>
-  apiPost<{ ok: true }>(`/events/${slug}/waitlist/${memberSlug}/promote`);
+export const promoteAttendee = (
+  slug: string,
+  memberSlug: string,
+  target: EventApiTarget = "member",
+) =>
+  apiPost<{ ok: true }>(
+    eventApiPath(target, slug, `/waitlist/${memberSlug}/promote`),
+  );
 
 /** Host invites members to an event. `slugs` is capped at 100 by the backend.
  *  `alreadyInvited` lists the slugs that already held an invite. */
-export const inviteToEvent = (slug: string, slugs: string[]) =>
+export const inviteToEvent = (
+  slug: string,
+  slugs: string[],
+  target: EventApiTarget = "member",
+) =>
   apiPost<{ created: number; alreadyInvited: string[] }>(
-    `/events/${slug}/invites`,
+    eventApiPath(target, slug, "/invites"),
     { slugs: slugs.slice(0, 100) },
   );
 
@@ -984,29 +1033,39 @@ export interface LineupInviteDTO {
   inviter: CohostInviteInviterDTO | null;
 }
 
-export const getEventLineup = (slug: string, viewAs?: GuestPreviewRole) =>
+export const getEventLineup = (
+  slug: string,
+  viewAs?: GuestPreviewRole,
+  target: EventApiTarget = "member",
+) =>
   apiGet<EventLineupDTO>(
-    `/events/${slug}/lineup${viewAs ? `?viewAs=${viewAs}` : ""}`,
+    eventApiPath(target, slug, `/lineup${viewAs ? `?viewAs=${viewAs}` : ""}`),
   );
 
 export const inviteToLineup = (
   slug: string,
   body: { memberSlug: string; role: string },
-) => apiPost<EventLineupDTO>(`/events/${slug}/lineup`, body);
+  target: EventApiTarget = "member",
+) => apiPost<EventLineupDTO>(eventApiPath(target, slug, "/lineup"), body);
 
 export const changeLineupRole = (
   slug: string,
   memberSlug: string,
   role: string,
+  target: EventApiTarget = "member",
 ) =>
   apiPatch<EventLineupDTO>(
-    `/events/${slug}/lineup/${encodeURIComponent(memberSlug)}`,
+    eventApiPath(target, slug, `/lineup/${encodeURIComponent(memberSlug)}`),
     { role },
   );
 
-export const removeFromLineup = (slug: string, memberSlug: string) =>
+export const removeFromLineup = (
+  slug: string,
+  memberSlug: string,
+  target: EventApiTarget = "member",
+) =>
   apiDelete<EventLineupDTO>(
-    `/events/${slug}/lineup/${encodeURIComponent(memberSlug)}`,
+    eventApiPath(target, slug, `/lineup/${encodeURIComponent(memberSlug)}`),
   );
 
 export const leaveLineup = (slug: string) =>
@@ -1104,13 +1163,22 @@ export const MAX_EVENT_ANNOUNCEMENT_LENGTH = 1000;
 
 /** GET /events/:slug/announcements — organisers, plus anyone holding a live
  *  RSVP or a standing invite. Everyone else gets 403. */
-export const getEventAnnouncements = (slug: string) =>
-  apiGet<EventAnnouncementDTO[]>(`/events/${slug}/announcements`);
+export const getEventAnnouncements = (
+  slug: string,
+  target: EventApiTarget = "member",
+) =>
+  apiGet<EventAnnouncementDTO[]>(eventApiPath(target, slug, "/announcements"));
 
 /** POST /events/:slug/announcements — host and co-host only, rate-limited
  *  server-side at ten a minute. */
-export const createEventAnnouncement = (slug: string, body: string) =>
-  apiPost<EventAnnouncementDTO>(`/events/${slug}/announcements`, { body });
+export const createEventAnnouncement = (
+  slug: string,
+  body: string,
+  target: EventApiTarget = "member",
+) =>
+  apiPost<EventAnnouncementDTO>(eventApiPath(target, slug, "/announcements"), {
+    body,
+  });
 
 // ── The host's own door (LOC-08) ───────────────────────────────────────────
 
@@ -1127,8 +1195,8 @@ export interface EventBanDTO {
 }
 
 /** GET /events/:slug/bans — host and co-host only. */
-export const getEventBans = (slug: string) =>
-  apiGet<EventBanDTO[]>(`/events/${slug}/bans`);
+export const getEventBans = (slug: string, target: EventApiTarget = "member") =>
+  apiGet<EventBanDTO[]>(eventApiPath(target, slug, "/bans"));
 
 /** POST /events/:slug/bans — bar a member. Cancels any RSVP they hold and
  *  stops them RSVPing again. They are not notified. */
@@ -1136,16 +1204,20 @@ export const banFromEvent = (
   slug: string,
   memberSlug: string,
   reason?: string,
+  target: EventApiTarget = "member",
 ) =>
-  apiPost<EventBanDTO>(`/events/${slug}/bans`, {
+  apiPost<EventBanDTO>(eventApiPath(target, slug, "/bans"), {
     memberSlug,
     ...(reason?.trim() ? { reason: reason.trim() } : {}),
   });
 
 /** DELETE /events/:slug/bans/:memberSlug — lift a bar. Idempotent. Lifting
  *  does not re-add them: they choose whether to come back. */
-export const liftEventBan = (slug: string, memberSlug: string) =>
-  apiDelete<{ ok: true }>(`/events/${slug}/bans/${memberSlug}`);
+export const liftEventBan = (
+  slug: string,
+  memberSlug: string,
+  target: EventApiTarget = "member",
+) => apiDelete<{ ok: true }>(eventApiPath(target, slug, `/bans/${memberSlug}`));
 
 // ── Day-of check-in (LOC-03) ───────────────────────────────────────────────
 
@@ -1173,9 +1245,16 @@ export interface CheckInResultDTO {
 export const checkInAttendee = (
   slug: string,
   input: { memberSlug: string } | { cardToken: string },
-) => apiPost<CheckInResultDTO>(`/events/${slug}/check-ins`, input);
+  target: EventApiTarget = "member",
+) => apiPost<CheckInResultDTO>(eventApiPath(target, slug, "/check-ins"), input);
 
 /** DELETE /events/:slug/check-ins/:memberSlug — undo, for the tap that landed
  *  on the wrong name. Idempotent. */
-export const undoCheckIn = (slug: string, memberSlug: string) =>
-  apiDelete<CheckInResultDTO>(`/events/${slug}/check-ins/${memberSlug}`);
+export const undoCheckIn = (
+  slug: string,
+  memberSlug: string,
+  target: EventApiTarget = "member",
+) =>
+  apiDelete<CheckInResultDTO>(
+    eventApiPath(target, slug, `/check-ins/${memberSlug}`),
+  );

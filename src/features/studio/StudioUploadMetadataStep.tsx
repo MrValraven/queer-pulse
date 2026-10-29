@@ -1,11 +1,16 @@
 import { useId } from "react";
 import { FiArrowRight } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, Collapse } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { CreatorDraftNotice } from "../creatorDrafts/CreatorDraftNotice";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatOfKind } from "./api/studio.adapters";
 import { RELEASE_ERROR_FIELDS, RELEASE_FIELD_IDS } from "./studioUpload.data";
+import {
+  STUDIO_RELEASE_PRICE_FIELD_ID,
+  StudioPriceFields,
+} from "./StudioPriceFields";
+import { isSellableReleaseType } from "./studioPurchaseRules";
 import { StudioUploadAutosaveLine } from "./StudioUploadAutosaveLine";
 import { CoverArt } from "./StudioUploadCoverArt";
 import {
@@ -30,12 +35,18 @@ function errorSummaryItemsOf(
 ): UploadErrorSummaryItem[] {
   if (!draft.shouldShowErrors) return [];
   const errors = releaseFormErrors(draft.form);
-  return RELEASE_ERROR_FIELDS.flatMap((field) => {
+  const fieldItems = RELEASE_ERROR_FIELDS.flatMap((field) => {
     const messageKey = errors[field];
     return messageKey
       ? [{ fieldId: RELEASE_FIELD_IDS[field], messageKey }]
       : [];
   });
+  return errors.price
+    ? [
+        ...fieldItems,
+        { fieldId: STUDIO_RELEASE_PRICE_FIELD_ID, messageKey: errors.price },
+      ]
+    : fieldItems;
 }
 
 export function MetadataStep({ draft }: { draft: StudioUploadDraft }) {
@@ -76,13 +87,39 @@ export function MetadataStep({ draft }: { draft: StudioUploadDraft }) {
           // and scene all follow the persona.
           const patch = personaSwitchPatch(persona.kind, draft.form);
           draft.setField("type", patch.type);
-          draft.setField("genre", patch.genre);
+          draft.setField("genres", patch.genres);
           draft.setField("mood", patch.mood);
           draft.setField("sceneId", patch.sceneId);
           draft.setField("isGapless", patch.isGapless);
+          // A kind with nothing to sell leaves no price behind.
+          if (!isSellableReleaseType(patch.type)) {
+            draft.setField("priceMode", "not_for_sale");
+            draft.setField("priceText", "");
+          }
         }}
       />
       <StudioUploadReleaseFields draft={draft} />
+      <Collapse
+        isOpen={
+          draft.persona !== null && isSellableReleaseType(draft.form.type)
+        }
+      >
+        <StudioPriceFields
+          amountInputId={STUDIO_RELEASE_PRICE_FIELD_ID}
+          legendKey="studio:purchase.price.legend"
+          priceMode={draft.form.priceMode}
+          priceText={draft.form.priceText}
+          onPriceModeChange={(mode) => draft.setField("priceMode", mode)}
+          onPriceTextChange={(text) => draft.setField("priceText", text)}
+          errorKey={
+            draft.shouldShowErrors
+              ? (releaseFormErrors(draft.form).price ?? null)
+              : null
+          }
+          subprofileId={draft.form.subprofileId}
+          isReleaseOut={draft.release?.status === "published"}
+        />
+      </Collapse>
       <CoverArt
         value={draft.form.coverKey ?? draft.release?.coverUrl ?? ""}
         onChange={(key) => draft.setField("coverKey", key)}

@@ -2129,12 +2129,18 @@ export function formatNotification(
   // discovery: a credit request row bundles on the credited persona the
   // same way. `persona_post` (Studio v3) bundles on the persona the same way.
   // `studio_episode_published` (Studio artist kinds) bundles on the persona
-  // the same way.
+  // the same way. `studio_purchase_claimed` bundles on the persona, so a
+  // persona with several payments waiting reads one counted row. The two
+  // `studio_landing_preview_*` kinds bundle on the persona the same way, so
+  // one row can read "3 tracks by Mariana Sol".
   if (
     type === "studio_release_published" ||
     type === "studio_credit_requested" ||
     type === "persona_post" ||
-    type === "studio_episode_published"
+    type === "studio_episode_published" ||
+    type === "studio_purchase_claimed" ||
+    type === "studio_landing_preview_requested" ||
+    type === "studio_landing_preview_live"
   )
     tokens.count = (otherActorCount ?? 0) + 1;
   // ENG-409: the defensive tokens of the kinds in `notificationKindCopy.ts`.

@@ -103,7 +103,7 @@ function buildTrackFixture(
 function renderDetails(
   credits: readonly CreditFixture[] = THREE_CREDITS,
   overrides: Partial<TrackFixture> = {},
-  releaseType: "ep" | "mix" | "lip_sync" | "podcast" = "ep",
+  releaseType: "ep" | "single" | "mix" | "lip_sync" | "podcast" = "ep",
 ) {
   trackHolder.current = buildTrackFixture(credits, overrides);
   return render(
@@ -452,5 +452,72 @@ describe("StudioUploadTrackDetails for artist kinds", () => {
       "true",
     );
     expect(mutations.mutateAsync).not.toHaveBeenCalled();
+  });
+});
+
+describe("StudioUploadTrackDetails price", () => {
+  it("shows the price group on a single's track", async () => {
+    renderDetails(THREE_CREDITS, {}, "single");
+    expect(
+      await screen.findByRole("group", { name: "Price of this track" }),
+    ).toBeInTheDocument();
+  });
+
+  it("leaves the price group off a mix track", () => {
+    renderDetails(
+      THREE_CREDITS,
+      { release: { format: "music", type: "mix" } },
+      "mix",
+    );
+    expect(
+      screen.queryByRole("group", { name: "Price of this track" }),
+    ).toBeNull();
+  });
+
+  it("saves a fixed price in cents", async () => {
+    renderDetails(THREE_CREDITS, {}, "single");
+    fireEvent.click(await screen.findByRole("radio", { name: "Fixed price" }));
+    fireEvent.change(
+      await screen.findByRole("textbox", { name: "Price in euros" }),
+      { target: { value: "2" } },
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Save track details" }));
+    await waitFor(() => expect(mutations.mutateAsync).toHaveBeenCalled());
+    expect(mutations.mutateAsync.mock.lastCall?.[0].body.price).toEqual({
+      mode: "fixed",
+      amountCents: 200,
+    });
+  });
+
+  it("holds the save and focuses the amount when the price is under €1", async () => {
+    renderDetails(THREE_CREDITS, {}, "single");
+    fireEvent.click(await screen.findByRole("radio", { name: "Fixed price" }));
+    fireEvent.change(
+      await screen.findByRole("textbox", { name: "Price in euros" }),
+      { target: { value: "0.50" } },
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Save track details" }));
+    await waitFor(() =>
+      expect(
+        screen.getByRole("textbox", { name: "Price in euros" }),
+      ).toHaveFocus(),
+    );
+    expect(
+      screen.getByText(
+        "A fixed price runs from €1 to €500, and a minimum from €0 to €500",
+      ),
+    ).toBeInTheDocument();
+    expect(mutations.mutateAsync).not.toHaveBeenCalled();
+  });
+
+  it("sends no price when it was never touched", async () => {
+    renderDetails(THREE_CREDITS, {}, "single");
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Save track details" }),
+    );
+    await waitFor(() => expect(mutations.mutateAsync).toHaveBeenCalled());
+    expect(mutations.mutateAsync.mock.lastCall?.[0].body).not.toHaveProperty(
+      "price",
+    );
   });
 });

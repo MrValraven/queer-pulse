@@ -20,7 +20,8 @@ import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
 
 /** The artist hero's row: Play all (a toggle once one of these releases is
- *  playing), Follow, View profile, Tip (showcase), Share, and the More menu.
+ *  playing), Follow, View profile, Tip (showcase, when a caller passes
+ *  `onTip`), Share, and the More menu.
  *  The owner gets Play all, View profile, Share and Edit Studio page:
  *  following or tipping their own persona does nothing, and the shorter row
  *  keeps Edit Studio page on the same line. On a phone, Follow keeps its
@@ -33,7 +34,8 @@ export function StudioArtistHeroActions({
   isCompact,
 }: {
   artist: StudioArtistView;
-  onTip: () => void;
+  /** The showcase Tip pill renders only when passed. */
+  onTip?: () => void;
   isCompact: boolean;
 }) {
   const { t } = useTranslation();
@@ -89,6 +91,7 @@ export function StudioArtistHeroActions({
           </Link>
         ))}
       {isShowcase &&
+        onTip &&
         !artist.isOwner &&
         (isCompact ? (
           <IconButton

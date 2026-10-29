@@ -36,6 +36,12 @@ const MySubmissionsPage = lazyNamed(
   () => import("./MySubmissionsPage"),
   "MySubmissionsPage",
 );
+// Studio purchases, outside the Studio gate: a member whose Studio access was
+// removed still reaches the music they bought.
+const MusicPurchasesPage = lazyNamed(
+  () => import("./MusicPurchasesPage"),
+  "MusicPurchasesPage",
+);
 
 /** Account settings & the account-hub landing redirect. */
 export function settingsRoutes() {
@@ -52,6 +58,7 @@ export function settingsRoutes() {
       <Route path={routes.pushDevices} element={<PushDevicesPage />} />
       <Route path={routes.dataExport} element={<DataExportPage />} />
       <Route path={routes.mySubmissions} element={<MySubmissionsPage />} />
+      <Route path={routes.musicPurchases} element={<MusicPurchasesPage />} />
       <Route path={routes.deleteAccount} element={<DeleteAccountPage />} />
     </>
   );

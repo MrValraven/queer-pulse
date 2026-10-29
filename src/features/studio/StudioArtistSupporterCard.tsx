@@ -20,9 +20,9 @@ import { useStudioVisitorPreview } from "./studioVisitorPreview";
 import studioStyles from "./studio.module.css";
 import styles from "./StudioSupporter.module.css";
 
-/** "Show me as a supporter" on an artist page, for anyone who is not one of
+/** "Show me among the top listeners" on an artist page, for anyone who is not one of
  *  its owners. Turning it on opens the identity picker, which previews the
- *  exact name and photo the artist will see among their top supporters;
+ *  exact name and photo the artist will see among their top listeners;
  *  nothing is shared until the member saves. While the owner views the page
  *  as a visitor, the card keeps its shape with the switch disabled and reads
  *  nothing. */
@@ -132,7 +132,7 @@ export function StudioArtistSupporterCard({
           tabIndex={-1}
           className={styles.heading}
         >
-          {t("studio:supporter.heading")}
+          {t("studio:supporter.heading", { persona: personaName })}
         </h2>
         <StudioArtistSupporterStates
           loadState={
@@ -147,7 +147,7 @@ export function StudioArtistSupporterCard({
             </p>
             <Toggle
               id={switchId}
-              label={t("studio:supporter.heading")}
+              label={t("studio:supporter.heading", { persona: personaName })}
               aria-describedby={bodyId}
               checked={isSupporting || isPickerShown}
               onChange={changeSwitch}

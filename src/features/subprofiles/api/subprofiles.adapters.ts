@@ -183,6 +183,9 @@ export interface PublicSubprofileView {
    *  co-owner's profile (in addition to the owner's own `isSelf` view). */
   viewerIsMember: boolean;
   skinData: SkinData | null;
+  /** A Studio founding artist: the badge on the persona page. Missing on
+   *  older servers. */
+  isFoundingArtist?: boolean;
 }
 
 /** Per-persona owner-only metadata (status/visibility/position/id), threaded
@@ -331,6 +334,7 @@ export function publicSubprofileToView(
     viewerFollowing: dto.viewerFollowing,
     viewerIsMember: dto.viewerIsMember,
     skinData: dto.skinData ?? null,
+    isFoundingArtist: dto.isFoundingArtist === true,
   };
 }
 

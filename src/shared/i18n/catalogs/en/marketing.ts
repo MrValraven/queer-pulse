@@ -113,7 +113,7 @@ export const marketing: Catalog = {
     "We also refuse to let our lives be used as cover for it. Pinkwashing points to LGBTQ+ rights as proof that a state is civilised while the same state bombs, starves, and displaces people. Queer safety is no excuse for destroying anyone else, and we won't let it be used as one.",
   "about.stand.commitment.speech.title": "Palestine advocacy is welcome here.",
   "about.stand.commitment.speech.body":
-    "Criticising a state, its military, or its ideology is political speech, and we moderate it as such. Antisemitism and anti-Palestinian racism are both Code of Conduct breaches, enforced the same way.",
+    "Criticising Israel, its government, its army or its ideology is political speech and stays up. We remove attacks on people: antisemitism, anti-Palestinian racism, and harassment over nationality, ethnicity or religion.",
   "about.stand.commitment.speech.link": "Read the guidelines",
   "about.stand.commitment.money.title": "We take no complicit money.",
   "about.stand.commitment.money.body":
@@ -154,11 +154,11 @@ export const marketing: Catalog = {
   "about.linkModal.guidelinesExclusion.title":
     "Political speech <em>stays political.</em>",
   "about.linkModal.guidelinesExclusion.lead":
-    "The guidelines clause this commitment rests on, and the hard lines it sits next to.",
+    "The guidelines rule this commitment rests on, and the hard lines next to it.",
   "about.linkModal.guidelinesExclusion.p1":
-    "Criticising a state, its government, its military, or its ideology is political speech, and moderators handle it as political speech. It becomes a Code of Conduct violation when it lands on a person.",
+    "Criticising Israel, its government, its army or its ideology is political speech and stays up. It becomes a Code of Conduct violation when it targets a person.",
   "about.linkModal.guidelinesExclusion.p2":
-    "Advocacy aimed at a class of member sits on the far side of that line. Campaigning for the exclusion of trans members from this community is a Code of Conduct breach, whatever vocabulary it borrows.",
+    "Campaigning to remove trans members from this community is a Code of Conduct breach, however it is worded.",
   "about.linkModal.guidelinesExclusion.point.hardLines.title":
     "Always a Code of Conduct violation.",
   "about.linkModal.guidelinesExclusion.point.hardLines.body":
@@ -166,7 +166,7 @@ export const marketing: Catalog = {
   "about.linkModal.guidelinesExclusion.point.bothDirections.title":
     "One test, applied by moderators.",
   "about.linkModal.guidelinesExclusion.point.bothDirections.body":
-    "Is this about a state and its conduct, or about a person and who they are. That question decides every report of this kind.",
+    "Does the post target a state and its conduct, or a person and who they are? That question decides every report of this kind.",
   "about.linkModal.guidelinesExclusion.point.reporting.title":
     "Reporting is supported.",
   "about.linkModal.guidelinesExclusion.point.reporting.body":
@@ -201,25 +201,25 @@ export const marketing: Catalog = {
   "about.linkModal.guidelinesSpeech.label":
     "How Palestine advocacy is moderated",
   "about.linkModal.guidelinesSpeech.title":
-    "One test, <em>both directions.</em>",
+    "What stays up, <em>and what comes down.</em>",
   "about.linkModal.guidelinesSpeech.lead":
-    "The guidelines clause that governs political speech, and the hard lines it sits next to.",
+    "The rule for political speech and the hard lines next to it.",
   "about.linkModal.guidelinesSpeech.p1":
-    "Advocacy for Palestinian liberation is welcome here and will not be removed for making people uncomfortable. Criticising a state, its government, its military, or its ideology is political speech, and moderators handle it as political speech.",
+    "QueerPulse stands with Palestinians. Support for Palestinian liberation is welcome here and we do not remove it for making people uncomfortable. Criticising Israel, its government, its army or its ideology is political speech and stays up.",
   "about.linkModal.guidelinesSpeech.p2":
-    "It becomes a Code of Conduct violation when it lands on a person. Holding a member answerable for a state's actions because of their ethnicity, religion, or nationality is discrimination under the hard lines.",
+    "What we remove is an attack on a person. Blaming someone for a state's actions because of their ethnicity, religion or nationality is discrimination.",
   "about.linkModal.guidelinesSpeech.point.antisemitism.title":
-    "Antisemitism is a breach.",
+    "We remove antisemitism.",
   "about.linkModal.guidelinesSpeech.point.antisemitism.body":
-    "Including conspiracy framing, and holding Jewish members answerable for a state's actions.",
+    "That includes conspiracy theories about Jewish people and blaming Jewish members for what Israel does.",
   "about.linkModal.guidelinesSpeech.point.antiPalestinian.title":
-    "Anti-Palestinian racism is a breach.",
+    "We remove anti-Palestinian racism.",
   "about.linkModal.guidelinesSpeech.point.antiPalestinian.body":
-    "Including treating Palestinian or Arab members as suspect by default, and harassment of any member over their nationality, ethnicity, or religion.",
+    "That includes treating Palestinian or Arab members as suspects, and harassing anyone over their nationality, ethnicity or religion.",
   "about.linkModal.guidelinesSpeech.point.test.title":
     "One question decides it.",
   "about.linkModal.guidelinesSpeech.point.test.body":
-    "Moderators ask whether a post is about a state and its conduct, or about a person and who they are. QueerPulse's own position on Palestine leaves that question untouched.",
+    "Moderators ask who the post targets. A state, a government or an army can be criticised. A person cannot be attacked for who they are.",
   "about.linkModal.guidelinesSpeech.cta": "Read the full guidelines",
 
   "about.linkModal.governanceAllocations.eyebrow": "Governance & transparency",
@@ -777,21 +777,20 @@ export const marketing: Catalog = {
   "guidelines.clause08.titlePre": "Political speech ",
   "guidelines.clause08.titleEm": "stays political",
   "guidelines.clause08.p1":
-    "Criticising a state, its government, its military, or its ideology is political speech, and we moderate it as political speech. That includes advocacy for Palestinian liberation, which is welcome here and will not be removed for making people uncomfortable.",
+    "QueerPulse stands with Palestinians, and support for Palestinian liberation is welcome here. We do not remove it for making people uncomfortable.",
   "guidelines.clause08.p2":
-    "It becomes a Code of Conduct violation when it lands on a person. Holding a member answerable for a state's actions because of their ethnicity, religion, or nationality is discrimination under the hard lines above. The same goes for advocacy aimed at a class of member rather than at a state: criticism of a government is political speech, and campaigning to remove trans members is not, however it is labelled.",
+    "Criticising Israel, its government, its army or its ideology is political speech and stays up.",
   "guidelines.clause08.li4":
-    "Campaigning for the exclusion of trans members from this community, whatever vocabulary it borrows",
-  "guidelines.clause08.hardLinesHead": "Still a Code of Conduct violation",
+    "Campaigning to remove trans members from this community",
+  "guidelines.clause08.hardLinesHead": "What we remove",
   "guidelines.clause08.li1":
-    "Antisemitism, including conspiracy framing and holding Jewish members answerable for a state's actions",
-  "guidelines.clause08.li2":
-    "Anti-Palestinian racism, including treating Palestinian or Arab members as suspect by default",
+    "Blaming Jewish people for what Israel does, or spreading conspiracy theories about Jewish people",
+  "guidelines.clause08.li2": "Treating Palestinian or Arab members as suspects",
   "guidelines.clause08.li3":
-    "Harassment of any member over their nationality, ethnicity, or religion",
-  "guidelines.clause08.p3Lead": "Both directions are enforced the same way.",
+    "Harassing anyone over their nationality, ethnicity or religion",
+  "guidelines.clause08.p3Lead": "The test is who the post targets.",
   "guidelines.clause08.p3Rest":
-    "Moderators apply one test: is this about a state and its conduct, or about a person and who they are. QueerPulse's own position on Palestine is set out on the About page, and it does not change how a report is handled.",
+    "Criticism of a state, a government or an army stays up. An attack on a person for who they are comes down.",
   "guidelines.final.p2": "Thanks for building this with us.",
   "guidelines.modalDone": "I've read it, done",
   "guidelines.modalScrollHint": "Scroll to the end to continue.",
@@ -1086,6 +1085,8 @@ export const marketing: Catalog = {
     "<strong>A general location</strong> you choose to add, a city or area, and the map area you browse in the directory. We never read your device's precise location.",
   "privacy.whatWeCollect.activity.item5":
     "<strong>Daily totals of how often each part of the platform is used</strong>, so we know where to put our effort. These are counts with nobody's name attached, and nothing in them points back to you.",
+  "privacy.whatWeCollect.activity.item6":
+    "<strong>Music you buy or sell on Studio</strong>: each purchase's item, amount, reference code and status, the optional name on the payment and your supporter wall choice, and the payment links, MB WAY numbers or IBANs an artist lists to get paid. The money itself moves outside QueerPulse, so we hold no card or bank details of buyers.",
   "privacy.whatWeCollect.notCollectedHeading": "What we don't collect",
   "privacy.whatWeCollect.notCollectedBody":
     "We don't follow you across other websites, we don't sell data to advertisers, and we don't build an advertising profile of you. There's no ad network on this platform to feed.",
@@ -2047,13 +2048,13 @@ export const marketing: Catalog = {
   "listBusiness.step4.photosLabel": "A few photos (optional)",
   "listBusiness.step4.coverLabel": "Cover photo (optional)",
   "listBusiness.step4.coverHelper":
-    "Shown on your card in the directory. Without one, your card uses your wide shot. Landscape · at least 400px wide · under 2 MB.",
+    "Shown on your card in the directory. Without one, your card uses your wide shot. Landscape · at least 400px wide.",
   "listBusiness.step4.coverHelperFirstPhoto":
-    "Shown on your card in the directory. Without one, your card uses your first photo. Landscape · at least 400px wide · under 2 MB.",
+    "Shown on your card in the directory. Without one, your card uses your first photo. Landscape · at least 400px wide.",
   "listBusiness.step4.cover.placeholder": "Shown on your directory card",
   "listBusiness.step4.alt.cover": "Cover · alt text",
   "listBusiness.step4.photosHelper":
-    "Show the space, a few details and the people who make it. Landscape works best · aim for ≥1200px wide · under 5MB each · no text-heavy graphics.",
+    "Show the space, a few details and the people who make it. Landscape works best · aim for ≥1200px wide · no text-heavy graphics.",
   "listBusiness.step4.gallery.wide": "Wide shot of the space",
   "listBusiness.step4.gallery.detail": "A detail",
   "listBusiness.step4.gallery.vibe": "People / vibe",
@@ -2062,9 +2063,9 @@ export const marketing: Catalog = {
   "listBusiness.step4.subMobile":
     "Photos help people picture what you do and who they'll meet. And we like to know who's behind it.",
   "listBusiness.step4.photosHelperOnline":
-    "Your products, your workspace or your logo all work. Landscape works best, under 5MB each.",
+    "Your products, your workspace or your logo all work. Landscape works best.",
   "listBusiness.step4.photosHelperMobile":
-    "You at work or the spot where you meet both work. Landscape works best, under 5MB each.",
+    "You at work or the spot where you meet both work. Landscape works best.",
   "listBusiness.step4.gallery.wideOnline":
     "Your products, your workspace or your logo",
   "listBusiness.step4.gallery.wideMobile": "You at work, or where you meet",
@@ -3414,8 +3415,10 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-29.headline":
+    "Run music events with a new staff role, and buy music straight from Studio artists.",
   "changelog.releases.2026-10-28.headline":
-    "Like an album, show or playlist in Studio and it sits in the sidebar with your playlists.",
+    "Studio gets a new light mode, liked albums join the sidebar, and its page plays artists.",
   "changelog.releases.2026-10-27.headline":
     "A Now playing panel and your listening page in Studio, plus pages for each audience.",
   "changelog.releases.2026-10-26.headline":
@@ -3718,6 +3721,58 @@ export const marketing: Catalog = {
   "changelog.entries.staff-pdf-page-tool.title": "A PDF page tool for staff",
   "changelog.entries.staff-pdf-page-tool.body":
     "Staff can remove, rotate, reorder, merge and split PDF pages in the browser, and files stay on the device.",
+  "changelog.entries.music-manager-producer.title":
+    "Run QueerPulse music events with a new staff role",
+  "changelog.entries.music-manager-producer.body":
+    "Music managers book Studio artists, run the guest list and the door, and Music is now its own event family.",
+  "changelog.entries.now-playing-no-side-scroll.title":
+    "Now playing stays still sideways",
+  "changelog.entries.now-playing-no-side-scroll.body":
+    "The More actions label in the Studio side panel no longer lets the column slide left and right.",
+  "changelog.entries.bandcamp-artist-links.title":
+    "Bandcamp links open the artist page",
+  "changelog.entries.bandcamp-artist-links.body":
+    "A Bandcamp name on a profile now links to name.bandcamp.com, where the music actually lives.",
+  "changelog.entries.studio-buy-music.title":
+    "Buy music straight from Studio artists",
+  "changelog.entries.studio-buy-music.body":
+    "You pay the artist directly, they confirm, then you download and can join the Supported by wall.",
+  "changelog.entries.studio-landing-v2.title":
+    "Hear Studio artists before you join",
+  "changelog.entries.studio-landing-v2.body":
+    "The Studio page plays tracks from its artists, makes the case to artists, and lets members ask for access.",
+  "changelog.entries.studio-several-genres.title":
+    "Pick several genres for a release",
+  "changelog.entries.studio-several-genres.body":
+    "Albums, EPs and singles can carry up to five genres, and the first one leads.",
+  "changelog.entries.studio-daylight-light-mode.title":
+    "Studio gets a new light mode",
+  "changelog.entries.studio-daylight-light-mode.body":
+    "White pages, quiet greys and one coral for play and likes, with each release header tinted by its cover.",
+  "changelog.entries.large-photos-upload.title":
+    "Upload big phone photos without an error",
+  "changelog.entries.large-photos-upload.body":
+    "Big phone photos now shrink to size before they upload and look just as sharp on the platform.",
+  "changelog.entries.library-folders-open-smoothly.title":
+    "Open and close Library folders smoothly",
+  "changelog.entries.library-folders-open-smoothly.body":
+    "A folder's cards now ease in and fold away gently, and everything below glides along without a jump.",
+  "changelog.entries.studio-liked-genre-filter.title":
+    "Filter your Liked songs by genre",
+  "changelog.entries.studio-liked-genre-filter.body":
+    "Genre chips sit above your Liked songs, each with how many of your likes it holds, and a tap shows just that genre.",
+  "changelog.entries.studio-welcome-once-per-account.title":
+    "Studio welcome shows once per account",
+  "changelog.entries.studio-welcome-once-per-account.body":
+    "Finish the welcome once and every device you sign in on skips it and keeps your genre and mood picks.",
+  "changelog.entries.studio-sidebar-covers.title":
+    "Covers in the open Studio sidebar",
+  "changelog.entries.studio-sidebar-covers.body":
+    "With the sidebar open, every playlist, album and show sits beside its cover so you can spot it at a glance.",
+  "changelog.entries.studio-menus-stay-below-header.title":
+    "Studio menus stay out of the top bar",
+  "changelog.entries.studio-menus-stay-below-header.body":
+    'A "..." menu now closes once you scroll its button under the top bar, so it never covers the search.',
   "changelog.entries.studio-folded-sidebar.title":
     "A cleaner folded sidebar in Studio",
   "changelog.entries.studio-folded-sidebar.body":

@@ -45,6 +45,7 @@ const draft = toReleaseView({
   },
   description: null,
   genre: null,
+  genres: [],
   mood: null,
   scene: null,
   status: "draft",
@@ -137,5 +138,63 @@ describe("useStudioUploadDraft release date", () => {
     shownRelease = scheduled;
     rerender();
     expect(result.current.form.releasedOn).toBe("2026-11-01");
+  });
+});
+
+describe("useStudioUploadDraft price", () => {
+  const albumDraft: StudioReleaseView = { ...draft, type: "album" };
+
+  it("reads an unreadable price as an unsaved edit with the price reason", () => {
+    shownRelease = albumDraft;
+    const { result } = renderHook(() => useStudioUploadDraft(), { wrapper });
+    act(() => result.current.setField("priceMode", "fixed"));
+    act(() => result.current.setField("priceText", "abc"));
+    expect(result.current.autosave).toMatchObject({
+      state: "notSaved",
+      reasonKey: "studio:purchase.price.amountRequired",
+    });
+    expect(result.current.hasUnsavedChanges).toBe(true);
+    expect(result.current.hasUnsavedDetails).toBe(true);
+    expect(updateMutate).not.toHaveBeenCalled();
+  });
+
+  it("refuses Save changes on a live release with the price error", async () => {
+    shownRelease = { ...albumDraft, status: "published" };
+    const { result } = renderHook(() => useStudioUploadDraft(), { wrapper });
+    act(() => result.current.setField("priceMode", "fixed"));
+    act(() => result.current.setField("priceText", "3."));
+    const focusRequestBefore = result.current.errorFocusRequest;
+    await act(() => result.current.saveChanges());
+    expect(updateMutateAsync).not.toHaveBeenCalled();
+    expect(result.current.errorFocusRequest).toBeGreaterThan(
+      focusRequestBefore,
+    );
+    expect(result.current.shouldShowErrors).toBe(true);
+  });
+
+  it("clears the price when the type becomes unsellable", () => {
+    shownRelease = albumDraft;
+    const { result } = renderHook(() => useStudioUploadDraft(), { wrapper });
+    act(() => result.current.setField("priceMode", "fixed"));
+    act(() => result.current.setField("priceText", "3"));
+    act(() => result.current.setField("type", "mix"));
+    expect(result.current.form).toMatchObject({
+      type: "mix",
+      priceMode: "not_for_sale",
+      priceText: "",
+    });
+  });
+
+  it("keeps the price when the type stays sellable", () => {
+    shownRelease = albumDraft;
+    const { result } = renderHook(() => useStudioUploadDraft(), { wrapper });
+    act(() => result.current.setField("priceMode", "fixed"));
+    act(() => result.current.setField("priceText", "3"));
+    act(() => result.current.setField("type", "ep"));
+    expect(result.current.form).toMatchObject({
+      type: "ep",
+      priceMode: "fixed",
+      priceText: "3",
+    });
   });
 });

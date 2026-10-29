@@ -12,17 +12,23 @@
  * stays in the sitemap and is served as a normal SPA route — see
  * ./publicPaths.mjs and ./generate-sitemap.mjs for that deliberate split.
  *
- * SHARE CARDS: SHARE_CARD_PATHS (currently /studio) get a second, head-only
- * pass. Those pages are de-indexed and stay out of the sitemap, but people
- * paste their links into WhatsApp, Instagram, iMessage, X and Slack, whose
- * preview crawlers run no JavaScript and would otherwise unfurl spa.html's
- * brand defaults. The pass renders the page, lifts its title, description,
+ * SHARE CARDS: SHARE_CARD_PATHS get a second, head-only pass. The Studio
+ * landing (/studio) is the one entry: it is indexed and in the sitemap, and
+ * it is baked head-only because /studio is also Studio home for a member with
+ * a Studio grant. A full bake would flash the visitor landing on every
+ * signed-in cold load, and a VITE_DEMO build would bake Studio home itself.
+ * People paste its link into WhatsApp, Instagram, iMessage, X and Slack,
+ * whose preview crawlers run no JavaScript and would otherwise unfurl
+ * spa.html's brand defaults. The pass renders the page, lifts its title, description,
  * robots, canonical, og:* and twitter:* tags, swaps them into the clean shell
  * and writes dist/<path>/index.html with #root still EMPTY, so the page boots
  * exactly like spa.html and crawlers see no body. Vercel resolves that file for
  * /studio before the catch-all rewrite; every other /studio/* route still falls
  * through to spa.html. assertShareCard() fails the build if the render set a
- * different page's head (for example the shell's og-default.png survived).
+ * different page's head (for example the shell's og-default.png or the shell's
+ * title survived) or a robots value that disagrees with the page's indexing
+ * (isIndexedShareCard), and assertEmptyShareCardRoot() fails it if the baked
+ * file's #root holds anything.
  *
  * HOW: serve dist/ on an ephemeral port, visit each prerendered path in a
  * headless Chromium, and write the settled DOM to dist/<path>/index.html.
@@ -70,6 +76,7 @@ import { chromium } from "@playwright/test";
 import {
   PRERENDER_PATHS,
   SHARE_CARD_PATHS,
+  isIndexedShareCard,
   assertNoGatedPaths,
   assertPrerenderSubset,
   assertShareCardPaths,
@@ -284,14 +291,27 @@ async function collectShareCardTags(page) {
  * signed-in or demo session, a redirect or a crash boundary would render some
  * other route, and its head would be baked under the wrong URL. Two signals
  * name the cause: the page's own share image never replaced the shell default,
- * or the page's own `noindex` robots tag is missing (every share-card page is
- * de-indexed, so a missing tag would also let search engines index it once
- * robots.txt lets the preview crawlers in).
+ * or the page's own title never replaced the shell's. The robots value must
+ * then agree with the page's indexing: an indexed share card (isIndexedShareCard,
+ * the Studio landing) carries no noindex, so search engines keep it; a
+ * de-indexed one carries noindex, so robots.txt letting the preview crawlers
+ * in never lands it in search results.
  */
-function assertShareCard(publicPath, collectedTags) {
+function assertShareCard(publicPath, collectedTags, shellTitle) {
   const valueOf = (key) =>
     collectedTags.find((tag) => tag.key === key)?.value ?? null;
-  const titleSeen = valueOf("title") ?? "(no title)";
+  const title = valueOf("title");
+  const titleSeen = title ?? "(no title)";
+  if (title === null || title.trim() === "") {
+    throw new Error(
+      `[prerender] ${publicPath} share card: the rendered head has no title, so a link preview would show no headline.`,
+    );
+  }
+  if (shellTitle !== null && title.trim() === shellTitle.trim()) {
+    throw new Error(
+      `[prerender] ${publicPath} share card: the title is still the shell's own "${shellTitle}", so the page never set its title and rendered something other than the page this card is for.`,
+    );
+  }
   const shareImage = valueOf("og:image");
   if (shareImage === null) {
     throw new Error(
@@ -304,9 +324,36 @@ function assertShareCard(publicPath, collectedTags) {
     );
   }
   const robots = valueOf("robots");
-  if (robots === null || !robots.includes("noindex")) {
+  const hasNoindex = robots !== null && robots.includes("noindex");
+  if (isIndexedShareCard(publicPath)) {
+    if (hasNoindex) {
+      throw new Error(
+        `[prerender] ${publicPath} share card: the page's robots meta is "${robots}", but ${publicPath} is an indexed page listed in the sitemap (QUIET_PUBLIC_PATHS), so noindex would drop it from search results. Title seen: "${titleSeen}".`,
+      );
+    }
+    return;
+  }
+  if (!hasNoindex) {
     throw new Error(
-      `[prerender] ${publicPath} share card: the page's robots meta is ${robots === null ? "missing" : `"${robots}" without noindex`}. Share-card pages are de-indexed, and robots.txt lets preview crawlers fetch them, so without noindex they would land in search results. Title seen: "${titleSeen}".`,
+      `[prerender] ${publicPath} share card: the page's robots meta is ${robots === null ? "missing" : `"${robots}" without noindex`}. ${publicPath} is outside the sitemap, and robots.txt lets preview crawlers fetch it, so without noindex it would land in search results. Title seen: "${titleSeen}".`,
+    );
+  }
+}
+
+/** The shell's own <title> text, or null when the shell has none. */
+function readShellTitle(shellText) {
+  return shellText.match(/<title>([\s\S]*?)<\/title>/)?.[1] ?? null;
+}
+
+/**
+ * Fail a baked share card whose #root holds anything. The head-only bake
+ * writes the clean shell's body, so a non-empty #root means some rendered body
+ * reached the file and would flash for every visitor and member on a cold load.
+ */
+function assertEmptyShareCardRoot(publicPath, html) {
+  if (!/<div id="root">\s*<\/div>/.test(html)) {
+    throw new Error(
+      `[prerender] ${publicPath} share card: the baked file's #root is not empty, so a rendered body would ship with the share card and flash on every cold load of ${publicPath}.`,
     );
   }
 }
@@ -377,8 +424,8 @@ if (isDemoBuild) {
   );
 }
 
-// Only the essential subset is prerendered (PRERENDER_PATHS — currently the
-// homepage alone). Dynamic persona pages (/p/:handle) are intentionally NOT
+// Only the essential subset is prerendered (PRERENDER_PATHS, currently the
+// homepage alone; the Studio landing is a head-only share card). Dynamic persona pages (/p/:handle) are intentionally NOT
 // prerendered: their count is unbounded, so baking one HTML file per published
 // persona is the main data cost this trim removes. They remain in the sitemap
 // (see generate-sitemap.mjs) and are served as SPA routes.
@@ -507,8 +554,9 @@ try {
       );
       await page.waitForTimeout(SETTLE_AFTER_READY_MS);
       const collectedTags = await collectShareCardTags(page);
-      assertShareCard(publicPath, collectedTags);
+      assertShareCard(publicPath, collectedTags, readShellTitle(shellText));
       const html = bakeShareCardHead(shellText, collectedTags);
+      assertEmptyShareCardRoot(publicPath, html);
       const outputPath = outputPathFor(publicPath);
       await mkdir(join(outputPath, ".."), { recursive: true });
       await writeFile(outputPath, html, "utf8");

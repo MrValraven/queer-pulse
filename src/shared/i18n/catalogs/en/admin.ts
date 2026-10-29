@@ -499,6 +499,61 @@ export const admin: Catalog = {
     "took down a housing listing",
   "platformLog.kind.mod.housing_listing_taken_down.target":
     "took down a housing listing by",
+  "platformLog.kind.mod.music_event_created":
+    "created a QueerPulse music event",
+  "platformLog.kind.mod.music_event_created.target": "created the music event",
+  "platformLog.kind.mod.music_event_updated": "edited a QueerPulse music event",
+  "platformLog.kind.mod.music_event_updated.target": "edited the music event",
+  "platformLog.kind.mod.music_event_cancelled":
+    "cancelled a QueerPulse music event",
+  "platformLog.kind.mod.music_event_cancelled.target":
+    "cancelled the music event",
+  "platformLog.kind.mod.music_event_lineup_changed":
+    "changed a music event lineup",
+  "platformLog.kind.mod.music_event_lineup_changed.target":
+    "changed a music event booking for",
+  "platformLog.kind.mod.music_event_announcement_posted":
+    "posted a music event announcement",
+  "platformLog.kind.mod.music_event_announcement_posted.target":
+    "posted an announcement on",
+  "platformLog.kind.mod.music_event_guest_removed":
+    "removed a music event guest",
+  "platformLog.kind.mod.music_event_guest_removed.target":
+    "removed from a music event",
+  "platformLog.kind.mod.music_event_guest_barred":
+    "banned a guest from a music event",
+  "platformLog.kind.mod.music_event_guest_barred.target":
+    "banned from a music event",
+  "platformLog.kind.mod.music_event_guest_bar_lifted":
+    "lifted a music event ban",
+  "platformLog.kind.mod.music_event_guest_bar_lifted.target":
+    "lifted a music event ban on",
+  "platformLog.kind.mod.music_event_waitlist_promoted":
+    "moved a guest off a music event waitlist",
+  "platformLog.kind.mod.music_event_waitlist_promoted.target":
+    "moved off a music event waitlist",
+  "platformLog.kind.mod.music_event_invites_sent": "sent music event invites",
+  "platformLog.kind.mod.music_event_invites_sent.target":
+    "sent music event invites for",
+  "platformLog.kind.mod.music_event_invite_decided":
+    "answered a music event invite request",
+  "platformLog.kind.mod.music_event_invite_decided.target":
+    "answered a music event invite request from",
+  "platformLog.kind.mod.music_event_cohost_added": "added a music event cohost",
+  "platformLog.kind.mod.music_event_cohost_added.target":
+    "added as a music event cohost",
+  "platformLog.kind.mod.music_event_cohost_removed":
+    "removed a music event cohost",
+  "platformLog.kind.mod.music_event_cohost_removed.target":
+    "removed as a music event cohost",
+  "platformLog.kind.mod.music_event_go_together_changed":
+    "changed Go Together on a music event",
+  "platformLog.kind.mod.music_event_go_together_changed.target":
+    "changed Go Together on",
+  "platformLog.kind.mod.music_event_guests_exported":
+    "exported a music event guest list",
+  "platformLog.kind.mod.music_event_guests_exported.target":
+    "exported the guest list of",
   "platformLog.kind.mod.role_changed": "changed a member's role",
   "platformLog.kind.mod.role_changed.target": "changed the role of",
   "platformLog.kind.mod.staff_role_granted": "granted a staff role",
@@ -713,6 +768,7 @@ export const admin: Catalog = {
   "members.verify.noCity": "Not given",
   // Which page the applicant came through on their way to the request form.
   "members.verify.sourceLabel": "Came from",
+  "members.verify.studioArtistChip": "Studio artist",
   "members.verify.heardFromLabel": "Heard about us",
   "members.verify.socialProfileLabel": "Social profile",
   "members.verify.opensInNewTab": "(opens in a new tab)",
@@ -757,6 +813,8 @@ export const admin: Catalog = {
   "members.verify.source.for_communities": "Page for communities",
   "members.verify.source.for_performers": "Page for performers",
   "members.verify.source.for_practitioners": "Page for practitioners",
+  "members.verify.source.studio_landing": "Studio page",
+  "members.verify.source.studio_artist": "Studio page, as an artist",
   "members.verify.ageAttested": "18+ confirmed {date} · Terms v{version}",
   "members.verify.ageAttestedUnknown": "18+ confirmed · Terms v{version}",
   // Approved: QueerPulse emails nothing about applications (its only email is
@@ -1297,6 +1355,9 @@ export const admin: Catalog = {
   "staffRoles.culturalProducer.label": "Cultural Producer",
   "staffRoles.culturalProducer.desc":
     "Keeps the landing page, press kit and marketing videos current. Story submissions and writer applications stay with Editorial.",
+  "staffRoles.musicManagerProducer.label": "Music manager & producer",
+  "staffRoles.musicManagerProducer.desc":
+    "Creates and runs the music events QueerPulse hosts, from the lineup to the door. Studio curation stays with moderators and admins.",
   "staffRoles.adminSuperset": "Admins already have every staff capability.",
   "staffRoles.systemLocked": "System accounts can't hold staff roles.",
 
@@ -1316,6 +1377,80 @@ export const admin: Catalog = {
     "At least {min} characters. Say what changed.",
   "staffRoles.confirm.grantedToast": "{role} granted.",
   "staffRoles.confirm.revokedToast": "{role} removed.",
+
+  // ── Music events: the QueerPulse-hosted music events a music manager and
+  // producer creates and runs (`features/admin/musicEvents`) ─────────────────
+  "musicEvents.eyebrow": "Programming",
+  "musicEvents.title": "Music events",
+  "musicEvents.sub":
+    "The music events QueerPulse hosts. Create one, book its lineup and run the door.",
+  "musicEvents.createCta": "Create music event",
+  "musicEvents.tabs.upcoming": "Upcoming",
+  "musicEvents.tabs.past": "Past",
+  "musicEvents.tabs.cancelled": "Cancelled",
+  "musicEvents.attention.requests_one": "{count} invite request to review",
+  "musicEvents.attention.requests_other": "{count} invite requests to review",
+  "musicEvents.attention.lineup_one":
+    "{count} lineup invite waiting for a reply",
+  "musicEvents.attention.lineup_other":
+    "{count} lineup invites waiting for a reply",
+  "musicEvents.row.manageCta": "Manage event",
+  "musicEvents.row.manageAria": "Manage {title}",
+  "musicEvents.row.lineupLabel": "Lineup",
+  "musicEvents.row.lineupConfirmed_one": "{count} confirmed",
+  "musicEvents.row.lineupConfirmed_other": "{count} confirmed",
+  "musicEvents.row.lineupInvited_one": "{count} invited",
+  "musicEvents.row.lineupInvited_other": "{count} invited",
+  "musicEvents.row.lineupDeclined_one": "{count} declined",
+  "musicEvents.row.lineupDeclined_other": "{count} declined",
+  "musicEvents.row.requests_one": "{count} request",
+  "musicEvents.row.requests_other": "{count} requests",
+  "musicEvents.row.cancelled": "Cancelled",
+  "musicEvents.empty.upcoming.title": "No upcoming music events",
+  "musicEvents.empty.upcoming.body": "Create one and it shows here.",
+  "musicEvents.empty.past.title": "No past music events",
+  "musicEvents.empty.past.body": "Events move here once they end.",
+  "musicEvents.empty.cancelled.title": "No cancelled music events",
+  "musicEvents.empty.cancelled.body":
+    "A cancelled event moves here and keeps its guest list.",
+  "musicEvents.loadError": "Couldn't load the music events",
+  "musicEvents.loadMore": "Show more events",
+  "musicEvents.new.title": "Create a music event",
+  "musicEvents.new.lead":
+    "QueerPulse hosts it and you run it: lineup, guests and the door.",
+  "musicEvents.backCta": "Back to music events",
+  "musicEvents.notFound.title": "This event isn't hosted by QueerPulse",
+  "musicEvents.notFound.body":
+    "Only music events QueerPulse hosts open here. Check the link or pick one from the list.",
+  "musicEvents.manageLoadError": "Couldn't load this music event",
+  "musicEvents.lineupPicker.title": "Book a Studio artist",
+  "musicEvents.lineupPicker.sub":
+    "Only Studio artists can be booked. Search by name or artist handle.",
+  "musicEvents.lineupPicker.searchPlaceholder": "Search Studio artists",
+  "musicEvents.lineupPicker.empty": "No Studio artist matches {query}",
+  "musicEvents.lineupPicker.emptyAll":
+    "There are no Studio artists to book yet",
+  "musicEvents.lineupPicker.allListed": "Every match is already on the lineup",
+  "musicEvents.lineupPicker.loadError": "Couldn't load Studio artists",
+  "musicEvents.lineupPicker.personas": "As {names}",
+  "musicEvents.cohostAdd.confirmTitle": "Add {name} as a cohost?",
+  "musicEvents.cohostAdd.confirmBody":
+    "They can edit this event and manage its guests straight away. No invite is sent.",
+  "musicEvents.cohostAdd.confirmCta": "Add cohost",
+  "musicEvents.cohostAdd.pickOther": "Pick someone else",
+  "musicEvents.cohostAdd.addedToast": "{name} is now a cohost",
+  "musicEvents.cohostAdd.errorFrame": "Couldn't add {name} as a cohost",
+  "musicEvents.cohostAdd.pickTitle": "Choose a member",
+  "musicEvents.cohostAdd.pickSub":
+    "Pick a member to run this event with QueerPulse. They join the cohost list straight away.",
+  "musicEvents.house.successLead":
+    "The music event is live. Run the lineup, the guest list and the door from its page.",
+  "musicEvents.house.cohostsNote":
+    "QueerPulse is the lead host. Cohosts help run the event, and cancelling stays with the music team.",
+  "musicEvents.house.formatSearchPlaceholder":
+    "Club night, karaoke, jam session",
+  "musicEvents.house.capacityHint": "How many guests can come",
+  "musicEvents.house.titleExample": "Friday club night in Marvila",
 
   "members.timeline.title": "Moderation history: for & against",
   "members.timeline.auditLinkCta": "Every entry in the audit log",
@@ -3446,6 +3581,34 @@ export const admin: Catalog = {
     "Housing listing rejected",
   "governance.audit.actionType.housing_listing_taken_down":
     "Housing listing taken down",
+  // QueerPulse-hosted music events (`features/admin/musicEvents`).
+  "governance.audit.actionType.music_event_created": "Music event created",
+  "governance.audit.actionType.music_event_updated": "Music event edited",
+  "governance.audit.actionType.music_event_cancelled": "Music event cancelled",
+  "governance.audit.actionType.music_event_lineup_changed":
+    "Music event lineup changed",
+  "governance.audit.actionType.music_event_announcement_posted":
+    "Music event announcement posted",
+  "governance.audit.actionType.music_event_guest_removed":
+    "Music event guest removed",
+  "governance.audit.actionType.music_event_guest_barred":
+    "Music event guest banned",
+  "governance.audit.actionType.music_event_guest_bar_lifted":
+    "Music event ban lifted",
+  "governance.audit.actionType.music_event_waitlist_promoted":
+    "Music event waitlist promotion",
+  "governance.audit.actionType.music_event_invites_sent":
+    "Music event invites sent",
+  "governance.audit.actionType.music_event_invite_decided":
+    "Music event invite request answered",
+  "governance.audit.actionType.music_event_cohost_added":
+    "Music event cohost added",
+  "governance.audit.actionType.music_event_cohost_removed":
+    "Music event cohost removed",
+  "governance.audit.actionType.music_event_go_together_changed":
+    "Music event Go Together changed",
+  "governance.audit.actionType.music_event_guests_exported":
+    "Music event guests exported",
   // Community sanctions (`CommunityGovernanceLogService` callers).
   "governance.audit.actionType.community_ban_applied": "Community ban applied",
   "governance.audit.actionType.community_ban_lifted": "Community ban lifted",
@@ -5223,6 +5386,11 @@ export const admin: Catalog = {
   "dashboard.landingVisits.tipCount_one": "{countLabel} visit",
   "dashboard.landingVisits.tipCount_other": "{countLabel} visits",
   "dashboard.landingVisits.rangeLabel": "Range",
+  "dashboard.landingVisits.pageLabel": "Page",
+  "dashboard.landingVisits.pageHome": "Homepage",
+  "dashboard.landingVisits.pageStudio": "Studio page",
+  "dashboard.landingVisits.subStudio":
+    "Anonymous visits to the Studio page by signed-out visitors, per day",
 
   // ── CNT-14: admin resource-listings CRUD ────────────────────────────────
   "adminResourceListings.title": "Resource <em>listings</em>",
@@ -5723,9 +5891,12 @@ export const admin: Catalog = {
     "The server couldn't check where this file is used, so it refused to delete it. Try again in a moment, or delete anyway if this is a takedown that can't wait. The override is logged.",
   "media.delete.liveCoverScene": "Scene: {label}",
   "media.delete.liveCoverRelease": "Release: {label}",
+  "media.delete.liveCoverLandingPhoto.hero": "Studio page: hero photo",
+  "media.delete.liveCoverLandingPhoto.manifesto":
+    "Studio page: manifesto photo",
   "errors.deleteMediaObject": "Couldn't delete that file",
   "errors.mediaLiveCover":
-    "This image is the cover of a live scene or release. Deleting it leaves that cover broken until someone replaces it.",
+    "This image is in use as the cover of a live scene or release, or as a Studio page photo. Deleting it leaves that image broken until someone replaces it.",
   "roadmap.modals.digest.movedLine": "moved from {from} to {to}",
 
   // ── 2026-08-21 code-review 4.6: dynamic-key siblings ──
@@ -9068,7 +9239,7 @@ export const admin: Catalog = {
   "studioAdmin.eyebrow": "Studio",
   "studioAdmin.title": "Studio <em>discovery</em>",
   "studioAdmin.sub":
-    "Set the featured release, keep the two shelves in order and run the scenes on Studio home",
+    "Set the featured release, keep the two shelves in order, run the scenes on Studio home, curate the Studio page, choose the founding artists and open Studio to the people waiting for it",
   "studioAdmin.tabs.shelves": "Shelves",
   "studioAdmin.tabs.scenes": "Scenes",
   "studioAdmin.loadError": "Studio discovery couldn't load. Try again",
@@ -9182,6 +9353,163 @@ export const admin: Catalog = {
   "studioAdmin.toast.eventPinned": "Event pinned",
   "studioAdmin.toast.eventUnpinned": "Event unpinned",
   "studioAdmin.toast.releaseRemoved": "{title} left the scene",
+  // Studio landing v2 (2026-10-28)
+  "studioAdmin.tabs.landing": "Studio page",
+  "studioAdmin.tabs.founding": "Founding artists",
+  "studioAdmin.tabs.waiting": "Waiting for Studio",
+  "studioAdmin.landing.loadError": "We couldn't load the Studio page content",
+  "studioAdmin.landing.saveFailed": "We couldn't save that change",
+  "studioAdmin.landing.previews.heading": "Hear it first",
+  "studioAdmin.landing.previews.sub":
+    "Tracks our team asks to play on the Studio page. Everyone who runs the artist gets the request, and the first answer decides. Up to 5 play, in this order",
+  "studioAdmin.landing.previews.addCta": "Ask to play a track",
+  "studioAdmin.landing.previews.empty": "No tracks asked for yet",
+  "studioAdmin.landing.previews.full":
+    "10 open requests. Remove one to ask for another",
+  "studioAdmin.landing.previews.status.pending": "Waiting for the artist",
+  "studioAdmin.landing.previews.status.approved": "Approved",
+  "studioAdmin.landing.previews.status.declined": "Declined",
+  "studioAdmin.landing.previews.status.withdrawn": "Withdrawn",
+  "studioAdmin.landing.previews.onLanding": "On the page now",
+  "studioAdmin.landing.previews.askedBy": "Asked by {name} on {date}",
+  "studioAdmin.landing.previews.answeredBy": "Answered by {name} on {date}",
+  "studioAdmin.landing.previews.showHistory": "Show answered requests",
+  "studioAdmin.landing.previews.hideHistory": "Hide answered requests",
+  "studioAdmin.landing.previews.removeCta": "Remove preview",
+  "studioAdmin.landing.previews.removeLabel": "Remove the preview of {track}",
+  "studioAdmin.landing.previews.removeConfirm.title":
+    "Remove {track} from the Studio page?",
+  "studioAdmin.landing.previews.removeConfirm.body":
+    "It stops playing within a minute. The artist gets no message.",
+  "studioAdmin.landing.previews.removed": "{track} is off the Studio page",
+  "studioAdmin.landing.previews.requested":
+    "{track} was sent to the artist for approval",
+  "studioAdmin.landing.previews.ineligible.not_playable":
+    "Can't play right now",
+  "studioAdmin.landing.previews.ineligible.persona_not_eligible":
+    "The artist can't appear",
+  "studioAdmin.landing.previews.ineligible.podcast": "Podcast episode",
+  "studioAdmin.landing.previews.ineligible.content_warnings":
+    "Has content warnings",
+  "studioAdmin.landing.previews.ineligible.explicit": "Marked explicit",
+  "studioAdmin.landing.previews.ineligible.open_claim": "Under a rights claim",
+  "studioAdmin.landing.previews.ineligible.unknown": "Can't play on the page",
+  "studioAdmin.landing.previews.notEligibleBecause":
+    "This track can't play on the Studio page: {reason}",
+  "studioAdmin.landing.trackDialog.title": "Ask to play a track",
+  "studioAdmin.landing.trackDialog.searchLabel": "Find a track",
+  "studioAdmin.landing.trackDialog.placeholder": "Track, release or artist",
+  "studioAdmin.landing.trackDialog.hasOpen": "Already asked",
+  "studioAdmin.landing.trackDialog.noResults": "No tracks match",
+  "studioAdmin.landing.trackDialog.askCta": "Ask the artist",
+  "studioAdmin.landing.trackDialog.askLabel": "Ask to play {track}",
+  "studioAdmin.landing.cards.heading": "Artist cards",
+  "studioAdmin.landing.cards.sub":
+    "Up to 6 on the Studio page, founding artists first. Add a card only once the artist has agreed, with the exact quote they agreed to",
+  "studioAdmin.landing.cards.addCta": "Add an artist card",
+  "studioAdmin.landing.cards.empty":
+    "No artist cards yet. The section stays hidden until there are 2",
+  "studioAdmin.landing.cards.editCta": "Edit card",
+  "studioAdmin.landing.cards.editLabel": "Edit the card of {name}",
+  "studioAdmin.landing.cards.removeCta": "Remove card",
+  "studioAdmin.landing.cards.removeLabel": "Remove the card of {name}",
+  "studioAdmin.landing.cards.removeConfirm.title": "Remove the card of {name}?",
+  "studioAdmin.landing.cards.removeConfirm.body":
+    "It leaves the Studio page within a minute.",
+  "studioAdmin.landing.cards.notShown":
+    "Not shown: this artist can't appear right now",
+  "studioAdmin.landing.cards.consentedOn": "Agreed on {date}",
+  "studioAdmin.landing.cards.saved": "The card of {name} is saved",
+  "studioAdmin.landing.cards.removed": "The card of {name} is removed",
+  "studioAdmin.landing.cards.full":
+    "The Studio page holds up to 6 artist cards",
+  "studioAdmin.landing.cardDialog.addTitle": "Add an artist card",
+  "studioAdmin.landing.cardDialog.editTitle": "Edit the card of {name}",
+  "studioAdmin.landing.cardDialog.artistLabel": "Artist",
+  "studioAdmin.landing.cardDialog.quoteLabel": "Quote (optional)",
+  "studioAdmin.landing.cardDialog.quoteHelp":
+    "In the artist's own words, up to 240 characters",
+  "studioAdmin.landing.cardDialog.consent":
+    "The artist agreed to appear on the Studio page, with this quote",
+  "studioAdmin.landing.cardDialog.saveCta": "Save card",
+  "studioAdmin.landing.personaSearch.label": "Find an artist",
+  "studioAdmin.landing.personaSearch.placeholder": "Name or handle",
+  "studioAdmin.landing.personaSearch.hasCard": "Has a card",
+  "studioAdmin.landing.personaSearch.isFounding": "Founding artist",
+  "studioAdmin.landing.personaSearch.notEligible": "Can't appear",
+  "studioAdmin.landing.personaSearch.noResults": "No artists match",
+  "studioAdmin.landing.personaSearch.pickLabel": "Pick {name}",
+  "studioAdmin.landing.photos.heading": "Photos",
+  "studioAdmin.landing.photos.sub":
+    "A real photo from a QueerPulse event in the hero and beside the manifesto. Without one, the page shows its usual picture",
+  "studioAdmin.landing.photos.slot.hero": "Hero photo",
+  "studioAdmin.landing.photos.slot.manifesto": "Manifesto photo",
+  "studioAdmin.landing.photos.empty": "No photo",
+  "studioAdmin.landing.photos.addCta": "Add photo",
+  "studioAdmin.landing.photos.replaceCta": "Replace photo",
+  "studioAdmin.landing.photos.removeCta": "Remove photo",
+  "studioAdmin.landing.photos.removeConfirm.title": "Remove this photo?",
+  "studioAdmin.landing.photos.removeConfirm.body":
+    "The page goes back to its usual picture within a minute.",
+  "studioAdmin.landing.photos.saved": "Photo saved",
+  "studioAdmin.landing.photos.removed": "Photo removed",
+  "studioAdmin.landing.photoDialog.imageLabel": "Photo",
+  "studioAdmin.landing.photoDialog.altEnLabel": "Description in English",
+  "studioAdmin.landing.photoDialog.altPtLabel": "Description in Portuguese",
+  "studioAdmin.landing.photoDialog.altHelp":
+    "What the photo shows, for people who can't see it, up to 200 characters",
+  "studioAdmin.landing.photoDialog.creditLabel": "Credit (optional)",
+  "studioAdmin.landing.photoDialog.consent":
+    "Everyone recognisable in this photo agreed to appear on the Studio page",
+  "studioAdmin.landing.photoDialog.saveCta": "Save photo",
+  "studioAdmin.founding.heading": "Founding artists",
+  "studioAdmin.founding.sub":
+    "They keep a Founding artist badge on their page until they leave this list, and fill the launch shelf on Studio home while it is on",
+  "studioAdmin.founding.shelfLabel":
+    "Show the Founding artists shelf on Studio home",
+  "studioAdmin.founding.shelfHelp":
+    "The badge stays on artist pages either way",
+  "studioAdmin.founding.shelfOn": "The Founding artists shelf is on",
+  "studioAdmin.founding.shelfOff": "The Founding artists shelf is off",
+  "studioAdmin.founding.addCta": "Add a founding artist",
+  "studioAdmin.founding.addTitle": "Add a founding artist",
+  "studioAdmin.founding.empty": "No founding artists yet",
+  "studioAdmin.founding.notListed":
+    "Not shown: this artist can't appear right now",
+  "studioAdmin.founding.removeCta": "Remove founding artist",
+  "studioAdmin.founding.removeLabel": "Remove {name} from the founding artists",
+  "studioAdmin.founding.removeConfirm.title":
+    "Remove {name} from the founding artists?",
+  "studioAdmin.founding.removeConfirm.body":
+    "The badge leaves their page and they leave the launch shelf.",
+  "studioAdmin.founding.added": "{name} is a founding artist",
+  "studioAdmin.founding.removed": "{name} is no longer a founding artist",
+  "studioAdmin.founding.addedOn": "Added on {date}",
+  "studioAdmin.founding.loadError": "Founding artists didn't load",
+  "studioAdmin.waiting.heading": "Waiting for Studio",
+  "studioAdmin.waiting.sub":
+    "Members who asked for Studio access. Artists come first, then whoever has waited longest",
+  "studioAdmin.waiting.counts_one": "{count} waiting, artists: {artistCount}",
+  "studioAdmin.waiting.counts_other": "{count} waiting, artists: {artistCount}",
+  "studioAdmin.waiting.artistChip": "Artist",
+  "studioAdmin.waiting.fromInviteChip": "Joined from the Studio page",
+  "studioAdmin.waiting.askedOn": "Asked on {date}",
+  "studioAdmin.waiting.grantCta": "Grant Studio access",
+  "studioAdmin.waiting.grantLabel": "Grant Studio access to {name}",
+  "studioAdmin.waiting.dismissCta": "Dismiss request",
+  "studioAdmin.waiting.dismissLabel": "Dismiss the request from {name}",
+  "studioAdmin.waiting.dismissConfirm.title":
+    "Dismiss the request from {name}?",
+  "studioAdmin.waiting.dismissConfirm.body":
+    "It leaves this list quietly. {name} gets no message and can ask again.",
+  "studioAdmin.waiting.granted":
+    "{name} can use Studio now and gets a notification",
+  "studioAdmin.waiting.dismissed": "The request from {name} is dismissed",
+  "studioAdmin.waiting.grantFailed": "We couldn't grant Studio access",
+  "studioAdmin.waiting.dismissFailed": "We couldn't dismiss the request",
+  "studioAdmin.waiting.empty": "Nobody is waiting for Studio",
+  "studioAdmin.waiting.showMore": "Show more requests",
+  "studioAdmin.waiting.loadError": "We couldn't load who is waiting for Studio",
   // ── Early access (2026-10-20) ──────────────────────────────────────────────
   // Per-member access to an unlaunched feature. The admin member drawer
   // section (`earlyAccess.drawer.*`, `earlyAccess.row.*`) and the

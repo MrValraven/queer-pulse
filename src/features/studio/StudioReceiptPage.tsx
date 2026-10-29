@@ -15,11 +15,8 @@ import {
   RECEIPT_ALBUM,
   RECEIPT_TIPPER,
   TIP_AMOUNT,
-  ARTIST_SETTLE_DAYS,
   RECEIPT_NUMBER,
-  RECEIPT_LEDGER_ROW,
   RECEIPT_TIP_DATE,
-  RECEIPT_LEDGER_DATE,
   RECEIPT_SUSTAINER_SINCE,
   NOTE,
 } from "./studioReceipt.data";
@@ -32,7 +29,7 @@ const RECEIPT_CARD_LAST4 = "4242";
 /** The receipt names Lisbon time, so it formats in that zone. */
 const LISBON_TIME_ZONE = "Europe/Lisbon";
 
-/** The near-black receipt card: head, split, detail grid, note, footer. */
+/** The near-black receipt card: head, detail grid, note, footer. */
 function ReceiptCard() {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -48,15 +45,6 @@ function ReceiptCard() {
       timeZone: LISBON_TIME_ZONE,
     }),
     time: fmt.time(RECEIPT_TIP_DATE, { timeZone: LISBON_TIME_ZONE }),
-  });
-  const ledgerDateLabel = t("studio:receipt.detail.lisbonTime", {
-    date: fmt.date(RECEIPT_LEDGER_DATE, {
-      weekday: "short",
-      day: "numeric",
-      month: "short",
-      timeZone: LISBON_TIME_ZONE,
-    }),
-    time: fmt.time(RECEIPT_LEDGER_DATE, { timeZone: LISBON_TIME_ZONE }),
   });
 
   return (
@@ -95,51 +83,6 @@ function ReceiptCard() {
         </div>
       </div>
 
-      <div className={s.split}>
-        <div className={s.splitH}>
-          <h3>
-            <Translation
-              i18nKey="studio:receipt.splitHeading"
-              components={{ em: <em /> }}
-            />
-          </h3>
-          <span className={s.small}>{t("studio:receipt.splitNote")}</span>
-        </div>
-        <div className={s.bar}>
-          <span style={{ width: "100%", background: "var(--jade)" }} />
-        </div>
-        <div className={s.rows}>
-          <div className={s.rcr}>
-            <span className={`${s.dot} ${s.jade}`} />
-            <span className={s.k}>
-              {RECEIPT_ARTIST}
-              <small>
-                {t("studio:receipt.split.artistSub", {
-                  count: ARTIST_SETTLE_DAYS,
-                })}
-              </small>
-            </span>
-            <span className={`${s.v} ${s.tip}`}>
-              <StudioEuroAmount value={TIP_AMOUNT} />
-            </span>
-            <span className={s.pct}>{t("studio:receipt.split.artistPct")}</span>
-          </div>
-          <div className={s.rcr}>
-            <span className={`${s.dot} ${s.muted}`} />
-            <span className={`${s.k} ${s.muted}`}>
-              {t("studio:receipt.split.platformName")}
-              <small>{t("studio:receipt.split.platformSub")}</small>
-            </span>
-            <span className={`${s.v} ${s.muted}`}>
-              <StudioEuroAmount value={0} />
-            </span>
-            <span className={s.pct}>
-              {t("studio:receipt.split.platformPct")}
-            </span>
-          </div>
-        </div>
-      </div>
-
       <div className={s.detail}>
         <div className={s.rcd}>
           <div className={s.eb}>{t("studio:receipt.detail.receiptNo")}</div>
@@ -175,13 +118,7 @@ function ReceiptCard() {
             />
           </div>
         </div>
-        <div className={s.rcd}>
-          <div className={s.eb}>
-            {t("studio:receipt.detail.postedToLedger")}
-          </div>
-          <div className={s.v}>{ledgerDateLabel}</div>
-        </div>
-        <div className={s.rcd}>
+        <div className={`${s.rcd} ${s.rcdWide}`}>
           <div className={s.eb}>{t("studio:receipt.detail.visibility")}</div>
           <div className={s.v}>
             <Translation
@@ -221,13 +158,7 @@ function ReceiptCard() {
       </div>
 
       <div className={s.foot}>
-        <span>
-          {t("studio:receipt.footer.auditablePrefix")}{" "}
-          <Link to={routes.governance}>
-            {t("studio:receipt.footer.publicLedgerLink")}
-          </Link>{" "}
-          · {t("studio:receipt.footer.rowLabel", { code: RECEIPT_LEDGER_ROW })}
-        </span>
+        <span>{t("studio:receipt.footer.keepNote")}</span>
         <Button variant="ghost" size="sm" onClick={() => window.print()}>
           {t("studio:receipt.footer.exportCta")}
         </Button>

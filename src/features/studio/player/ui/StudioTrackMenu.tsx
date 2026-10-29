@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { useDemoMode } from "../../../../app/providers/DemoModeProvider";
 import { IconButton } from "../../../../shared/components/ui/IconButton";
+import type { TooltipProps } from "../../../../shared/components/ui/Tooltip";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { studioTrackQueryOptions } from "../../api/studioTrackQuery";
 import { useStudioAccess } from "../../api/useStudioAccess";
@@ -49,6 +50,7 @@ export function StudioTrackMenu({
   onRequestAddToPlaylist,
   onLinkNavigate,
   tooltip,
+  tooltipPlacement,
   extraItems,
 }: {
   track: StudioTrackMenuTrack;
@@ -56,6 +58,8 @@ export function StudioTrackMenu({
   extraItems?: StudioMenuItem[];
   /** The trigger's tooltip, for a surface whose other icons show one. */
   tooltip?: string;
+  /** Where the trigger's tooltip opens; left out, IconButton's default. */
+  tooltipPlacement?: TooltipProps["placement"];
   onRequestAddToPlaylist?: () => void;
   /** For a menu inside a surface with its own history entry (Now playing):
    *  Go to artist and Go to release replace that entry and call this, so
@@ -92,6 +96,7 @@ export function StudioTrackMenu({
             className={styles.trigger}
             aria-label={t("studio:trackMenu.trigger", { title: track.title })}
             tooltip={tooltip}
+            tooltipPlacement={tooltipPlacement}
             isTooltipDisabled={isOpen}
           >
             <FiMoreHorizontal aria-hidden />

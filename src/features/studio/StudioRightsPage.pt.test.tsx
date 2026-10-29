@@ -21,7 +21,7 @@ describe("StudioRightsPage in Portuguese", () => {
 
     expect(
       await screen.findByText(
-        "Álbum · 11 faixas · 2026 · 142 mil reproduções · 7100 € pagos",
+        "Álbum · 11 faixas · 2026 · 142 mil reproduções · 7100 € de quem comprou",
       ),
     ).toBeInTheDocument();
     expect(

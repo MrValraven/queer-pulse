@@ -6,10 +6,9 @@ import { useFormat } from "../../shared/i18n/format";
 import { StudioTipModal } from "./StudioTipModal";
 import styles from "./StudioPlayer.module.css";
 
-const PER_PLAY_AMOUNT = 0.05;
 const TIP_AMOUNT = 2;
 
-/** Demo only (useStudioShowcase): the per-play line and the tip button. */
+/** Demo only (useStudioShowcase): the buy line and the tip button. */
 export function StudioPlayerShowcase({ artistName }: { artistName: string }) {
   const { t } = useTranslation();
   const formatters = useFormat();
@@ -18,12 +17,9 @@ export function StudioPlayerShowcase({ artistName }: { artistName: string }) {
     <div className={styles.showcase}>
       <span className={styles.payLine}>
         <Translation
-          i18nKey="studio:player.payingLine"
+          i18nKey="studio:player.buyLine"
           components={{ b: <b /> }}
-          values={{
-            amount: formatters.currency(PER_PLAY_AMOUNT),
-            artist: artistName,
-          }}
+          values={{ artist: artistName }}
         />
       </span>
       <Button

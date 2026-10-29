@@ -8,6 +8,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useStaffMap } from "../../shared/staff/useStaffRole";
 import { useConnectionsSearch } from "../connect/api/useConnectionsSearch";
 import { useAttendees } from "./api/useAttendees";
+import type { LineupPickStepProps } from "./eventHostScope";
 import { InviteMembersListFooter } from "./InviteMembersListFooter";
 import { buildLineupCandidates } from "./lineupCandidates";
 import styles from "./GatheringLineupEditor.module.css";
@@ -25,15 +26,7 @@ export function LineupInvitePickStep({
   onSearchChange,
   onPick,
   onClose,
-}: {
-  slug: string;
-  /** Slugs already on the lineup in any status. */
-  excludeSlugs: string[];
-  searchQuery: string;
-  onSearchChange: (query: string) => void;
-  onPick: (person: MemberSelectPerson) => void;
-  onClose: () => void;
-}) {
+}: LineupPickStepProps) {
   const { t } = useTranslation();
   const staffMap = useStaffMap();
   const connectionsSearch = useConnectionsSearch(searchQuery);

@@ -1,0 +1,80 @@
+/* Purchase status chip and the wall switch. The status renders in the Studio
+   library and on the account page, so every colour here is an app-wide token. */
+
+.status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.statusLine {
+  margin: 0;
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.wall {
+  display: flex;
+  flex-direction: column;
+}
+
+.wallRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.wallText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.wallLabel {
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.wallBody,
+.wallNote,
+.wallStatus {
+  margin: 0;
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.wallNote,
+.wallStatus,
+.wallError {
+  padding-top: 10px;
+}
+
+.wallError {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--accent-text);
+}
+
+.wallShown {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding-top: 14px;
+}
+
+.wallSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 14px;
+}

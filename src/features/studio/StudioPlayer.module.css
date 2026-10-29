@@ -438,6 +438,20 @@
   font-size: var(--text-11);
 }
 
+/* Daylight: the tip sits on the neutral grey wash with ink words, a deeper
+   grey on hover. Dark keeps the kit's soft coral tint. */
+:global(:root:not([data-theme="dark"])) .showcase .tip {
+  background: var(--studio-wash-2);
+  color: var(--studio-text);
+}
+@media (hover: hover) {
+  :global(:root:not([data-theme="dark"]))
+    .showcase
+    .tip:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--studio-wash-3);
+  }
+}
+
 @media (pointer: coarse) {
   .titles .tip::before {
     content: "";

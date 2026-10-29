@@ -86,6 +86,7 @@ function artistView(): StudioArtistView {
           artist: ARTIST_REF,
           publishedAt: "2025-03-01T10:00:00.000Z",
           genre: null,
+          genres: [],
           mood: null,
           scene: null,
         },

@@ -227,6 +227,7 @@ const RELEASE_CARD_DTO = {
   totalDurationSeconds: 600,
   artist: ARTIST_DTO,
   genre: null,
+  genres: [],
   publishedAt: "2026-04-12T10:00:00.000Z",
   mood: null,
   scene: null,

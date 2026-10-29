@@ -24,8 +24,9 @@
 }
 
 /* Flush against the topbar's hairline, so nothing scrolls past in a gap
-   above it, and opaque: the surface sits under the tint wash, so rows
-   never show through. The blur only softens the bottom-corner edge. */
+   above it. In dark it is an opaque card: the surface sits under the tint
+   wash, so rows never show through, and the blur only softens the
+   bottom-corner edge. Light reshapes it below. */
 .bar {
   --wash-rgb: var(--studio-ink-rgb);
   --wash-alpha: 0.08;
@@ -65,6 +66,68 @@
 .bar[data-tint="plum"] {
   --wash-rgb: var(--studio-ink-rgb);
   --wash-alpha: 0.14;
+}
+
+/* Daylight: the bar carries on from the topbar as one header. It runs
+   full bleed through the page gutters, so a tab underline cannot peek out
+   beside it on a phone, keeps only its bottom hairline, and wears the
+   topbar's frosted 82% mix and blur. The fill sits on two layers: the plain
+   frosted surface, which also stands while a cover loads, has no colour to
+   give or cannot be read, and the cover's tint (useStudioCoverTint.ts),
+   which fades in over it once read. The token washes above stay dark's. */
+:global(:root:not([data-theme="dark"])) .bar {
+  inset-inline: calc(-1 * var(--studio-gutter-left, 0px))
+    calc(-1 * var(--studio-gutter-right, 0px));
+  padding-inline: var(--studio-gutter-left, 8px)
+    var(--studio-gutter-right, 10px);
+  border-inline: 0;
+  border-radius: 0;
+  isolation: isolate;
+  background: none;
+  backdrop-filter: var(--blur-lg);
+  box-shadow: none;
+}
+
+:global(:root:not([data-theme="dark"])) .bar::before,
+:global(:root:not([data-theme="dark"])) .bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  transition: opacity 320ms var(--ease);
+}
+
+:global(:root:not([data-theme="dark"])) .bar::before {
+  background: color-mix(in srgb, var(--studio-surface) 82%, transparent);
+}
+
+:global(:root:not([data-theme="dark"])) .bar::after {
+  background: color-mix(
+    in srgb,
+    var(--hero-cover-tint, var(--studio-surface)) 82%,
+    transparent
+  );
+  opacity: 0;
+}
+
+:global(:root:not([data-theme="dark"])) .anchor[data-cover-tint] .bar::before {
+  opacity: 0;
+}
+
+:global(:root:not([data-theme="dark"])) .anchor[data-cover-tint] .bar::after {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar::before,
+  .bar::after {
+    transition-property: none;
+  }
+}
+:global(html[data-reduce-motion="true"]) .bar::before,
+:global(html[data-reduce-motion="true"]) .bar::after {
+  transition-property: none;
 }
 
 .cover {

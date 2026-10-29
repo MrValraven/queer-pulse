@@ -6,6 +6,7 @@ import {
   type EventAnnouncementDTO,
 } from "./events.api";
 import { eventKeys } from "./eventKeys";
+import { useEventHostScope } from "../eventHostScope";
 
 /**
  * A gathering's host announcements (LOC-06).
@@ -23,10 +24,11 @@ import { eventKeys } from "./eventKeys";
  */
 export function useEventAnnouncements(slug: string | undefined) {
   const { demoMode } = useDemoMode();
+  const { apiTarget } = useEventHostScope();
   return useQuery<EventAnnouncementDTO[]>({
-    queryKey: eventKeys.announcements(slug, demoMode),
+    queryKey: eventKeys.announcements(slug, demoMode, apiTarget),
     enabled: Boolean(slug) && !demoMode,
-    queryFn: () => getEventAnnouncements(slug!),
+    queryFn: () => getEventAnnouncements(slug!, apiTarget),
   });
 }
 
@@ -35,6 +37,7 @@ export function useEventAnnouncements(slug: string | undefined) {
  *  act and should stay one. */
 export function useSendEventAnnouncement(slug: string) {
   const { demoMode } = useDemoMode();
+  const { apiTarget } = useEventHostScope();
   const queryClient = useQueryClient();
   return useMutation<EventAnnouncementDTO | void, Error, string>({
     // The composer surfaces its own failure, so the global duplicate toast
@@ -42,12 +45,12 @@ export function useSendEventAnnouncement(slug: string) {
     meta: { silentError: true },
     mutationFn: async (body) => {
       if (demoMode) return;
-      return createEventAnnouncement(slug, body);
+      return createEventAnnouncement(slug, body, apiTarget);
     },
     onSuccess: () => {
       if (demoMode) return;
       void queryClient.invalidateQueries({
-        queryKey: eventKeys.announcements(slug, demoMode),
+        queryKey: eventKeys.announcements(slug, demoMode, apiTarget),
       });
       // The gathering detail carries the same list, so an attendee reading the
       // page sees what was just sent without a reload.

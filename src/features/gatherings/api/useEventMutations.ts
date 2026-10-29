@@ -28,6 +28,8 @@ import { ATTENDEE_COUNT } from "../manageGathering.data";
 import { eventKeys } from "./eventKeys";
 import type { AttendeesResult } from "./useAttendees";
 import type { EventResult } from "./useEvent";
+import { useEventHostScope } from "../eventHostScope";
+import { MUSIC_ADMIN_LIST_KEY_ROOT } from "./eventApiTarget";
 
 /** Rollback context carried from onMutate → onError for the attendee-count optimism. */
 interface RsvpContext {
@@ -40,11 +42,17 @@ interface RsvpContext {
  * component keeps the optimistic change in local state, exactly as the
  * prototype already does), and in live mode it calls the API then invalidates
  * the affected query keys. Demo mode must never hit the network.
+ *
+ * Organizer hooks read the event host scope: its `apiTarget` picks the route
+ * and the key segment, and a house event also refreshes the music admin list
+ * after a create, an edit or a cancel. Outside a scope every path and key is
+ * the member one.
  */
 
 /** POST /events — create-gathering wizard submit. */
 export function useCreateEvent() {
   const { demoMode } = useDemoMode();
+  const { apiTarget, isHouseEvent } = useEventHostScope();
   const queryClient = useQueryClient();
   return useMutation<
     { slug?: string; occurrenceSlugs?: string[] },
@@ -55,7 +63,7 @@ export function useCreateEvent() {
     meta: { silentError: true },
     mutationFn: async (dto) => {
       if (demoMode) return {};
-      const res = await createEvent(dto);
+      const res = await createEvent(dto, apiTarget);
       // Every saved occurrence's slug in series order, when the server sends
       // them. `slug` stays the first occurrence's own.
       return {
@@ -67,6 +75,11 @@ export function useCreateEvent() {
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: eventKeys.listRoot });
+      if (isHouseEvent) {
+        void queryClient.invalidateQueries({
+          queryKey: MUSIC_ADMIN_LIST_KEY_ROOT,
+        });
+      }
     },
   });
 }
@@ -84,6 +97,7 @@ export interface UpdateEventResult {
  *  manage dashboard's "this vs. this and future" prompt needs to set it. */
 export function useUpdateEvent(slug: string) {
   const { demoMode } = useDemoMode();
+  const { apiTarget, isHouseEvent } = useEventHostScope();
   const queryClient = useQueryClient();
   return useMutation<
     UpdateEventResult,
@@ -93,7 +107,7 @@ export function useUpdateEvent(slug: string) {
     mutationFn: async ({ seriesScope, ...dto }) => {
       // Demo keeps the dashboard's sample attendee count.
       if (demoMode) return { notifiedCount: ATTENDEE_COUNT };
-      const response = await updateEvent(slug, dto, seriesScope);
+      const response = await updateEvent(slug, dto, seriesScope, apiTarget);
       return { notifiedCount: response.notifiedCount ?? null };
     },
     // The detail query is keyed on the raw route param (`<slug>-<shortId>`),
@@ -109,7 +123,12 @@ export function useUpdateEvent(slug: string) {
       // `loadMore` paging alone.
       if (variables.capacity !== undefined) {
         void queryClient.invalidateQueries({
-          queryKey: eventKeys.attendees(slug, demoMode),
+          queryKey: eventKeys.attendees(slug, demoMode, apiTarget),
+        });
+      }
+      if (isHouseEvent) {
+        void queryClient.invalidateQueries({
+          queryKey: MUSIC_ADMIN_LIST_KEY_ROOT,
         });
       }
     },
@@ -121,15 +140,21 @@ export function useUpdateEvent(slug: string) {
  *  only" case) mirrors `cancelEvent`'s own optional `scope`. */
 export function useCancelEvent(slug: string) {
   const { demoMode } = useDemoMode();
+  const { apiTarget, isHouseEvent } = useEventHostScope();
   const queryClient = useQueryClient();
   return useMutation<void, Error, SeriesScope | undefined>({
     mutationFn: async (scope) => {
       if (demoMode) return;
-      await cancelEvent(slug, scope);
+      await cancelEvent(slug, scope, apiTarget);
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
       void queryClient.invalidateQueries({ queryKey: eventKeys.listRoot });
+      if (isHouseEvent) {
+        void queryClient.invalidateQueries({
+          queryKey: MUSIC_ADMIN_LIST_KEY_ROOT,
+        });
+      }
     },
   });
 }
@@ -330,11 +355,12 @@ export function useToggleEventBookmark(
 /** DELETE /events/:slug/cohosts/:cohostSlug — remove a cohost. */
 export function useRemoveCohost(slug: string) {
   const { demoMode } = useDemoMode();
+  const { apiTarget } = useEventHostScope();
   const queryClient = useQueryClient();
   return useMutation<void, Error, string>({
     mutationFn: async (cohostSlug) => {
       if (demoMode) return;
-      await removeCohost(slug, cohostSlug);
+      await removeCohost(slug, cohostSlug, apiTarget);
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
@@ -388,13 +414,14 @@ export interface InviteMembersOutcome {
  *  nothing and reports every pick as a fresh invite. */
 export function useInviteMembers(slug: string) {
   const { demoMode } = useDemoMode();
+  const { apiTarget } = useEventHostScope();
   const queryClient = useQueryClient();
   return useMutation<InviteMembersOutcome, Error, string[]>({
     mutationFn: async (slugs) => {
       if (demoMode) {
         return { createdCount: slugs.length, alreadyInvitedCount: 0 };
       }
-      const result = await inviteToEvent(slug, slugs);
+      const result = await inviteToEvent(slug, slugs, apiTarget);
       return {
         createdCount: result.created,
         alreadyInvitedCount: result.alreadyInvited.length,
@@ -403,7 +430,7 @@ export function useInviteMembers(slug: string) {
     onSuccess: () => {
       // Scope to THIS event's attendees only (see useRsvp).
       void queryClient.invalidateQueries({
-        queryKey: eventKeys.attendees(slug, demoMode),
+        queryKey: eventKeys.attendees(slug, demoMode, apiTarget),
       });
     },
   });
@@ -412,16 +439,17 @@ export function useInviteMembers(slug: string) {
 /** DELETE /events/:slug/attendees/:memberSlug — manage-attendees "Remove". */
 export function useRemoveAttendee(slug: string) {
   const { demoMode } = useDemoMode();
+  const { apiTarget } = useEventHostScope();
   const queryClient = useQueryClient();
   return useMutation<void, Error, string>({
     mutationFn: async (memberSlug) => {
       if (demoMode) return;
-      await removeAttendee(slug, memberSlug);
+      await removeAttendee(slug, memberSlug, apiTarget);
     },
     onSuccess: () => {
       if (demoMode) return;
       void queryClient.invalidateQueries({
-        queryKey: eventKeys.attendees(slug, demoMode),
+        queryKey: eventKeys.attendees(slug, demoMode, apiTarget),
       });
       void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
     },
@@ -432,16 +460,17 @@ export function useRemoveAttendee(slug: string) {
  *  guest-list "Promote". */
 export function usePromoteAttendee(slug: string) {
   const { demoMode } = useDemoMode();
+  const { apiTarget } = useEventHostScope();
   const queryClient = useQueryClient();
   return useMutation<void, Error, string>({
     mutationFn: async (memberSlug) => {
       if (demoMode) return;
-      await promoteAttendee(slug, memberSlug);
+      await promoteAttendee(slug, memberSlug, apiTarget);
     },
     onSuccess: () => {
       if (demoMode) return;
       void queryClient.invalidateQueries({
-        queryKey: eventKeys.attendees(slug, demoMode),
+        queryKey: eventKeys.attendees(slug, demoMode, apiTarget),
       });
       void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
     },

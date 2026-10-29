@@ -87,11 +87,21 @@ describe("demo studio fixture (v2)", () => {
   it("filters the home feed and search by genre", () => {
     const fado = demoStudioReleasesPage(null, "fado");
     expect(fado.items.length).toBeGreaterThan(0);
-    expect(fado.items.every((item) => item.genre === "fado")).toBe(true);
+    expect(fado.items.every((item) => item.genres.includes("fado"))).toBe(true);
     const search = demoStudioSearch("a", "releases", "electronic");
     expect(
-      search.releases.every((release) => release.genre === "electronic"),
+      search.releases.every((release) => release.genres.includes("electronic")),
     ).toBe(true);
+  });
+
+  it("matches a release on every genre it carries", () => {
+    const experimental = demoStudioReleasesPage(null, "experimental");
+    expect(experimental.items.length).toBeGreaterThan(0);
+    expect(
+      experimental.items.every((item) => item.genre !== "experimental"),
+    ).toBe(true);
+    expect(demoStudioGenres().genres).toContain("experimental");
+    expect(demoStudioGenres().covers?.experimental).toBeTruthy();
   });
 
   it("lists genres with releases in STUDIO_GENRES order", () => {
@@ -99,6 +109,9 @@ describe("demo studio fixture (v2)", () => {
       "fado",
       "electronic",
       "folk",
+      "experimental",
+      "pop",
+      "ambient",
       "spoken-word",
     ]);
   });
@@ -111,10 +124,11 @@ describe("demo studio fixture (v2)", () => {
     );
   });
 
-  it("puts publishedAt and genre on every card", () => {
+  it("puts publishedAt, the lead genre and every genre on every card", () => {
     const first = demoStudioReleasesPage(null).items[0];
     expect(first?.publishedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
     expect(first?.genre).toBe("folk");
+    expect(first?.genres).toEqual(["folk", "pop", "experimental"]);
   });
 });
 
@@ -154,11 +168,11 @@ describe("demo moods", () => {
   it("lists the moods that have releases, in list order", () => {
     expect(demoStudioMoods().moods).toEqual([
       "late-night",
+      "euphoric",
       "tender",
       "melancholy",
+      "dreamy",
       "slow-burn",
-      "sweaty",
-      "playful",
     ]);
   });
 
@@ -181,7 +195,7 @@ describe("demo moods", () => {
       ),
     ).toEqual(["demo-release-home-1"]);
     expect(
-      demoStudioSearch("kitchen", "releases", null, "sweaty").releases,
+      demoStudioSearch("kitchen", "releases", null, "euphoric").releases,
     ).toEqual([]);
   });
 

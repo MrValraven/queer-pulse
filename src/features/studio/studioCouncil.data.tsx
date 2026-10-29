@@ -6,11 +6,11 @@ import { StudioEuroAmount } from "./StudioEuroAmount";
 /**
  * Council fact strip is platform-authored chrome (Pattern B, `buildFacts(t)`).
  * `MEMBERS` is a demo-only roster: Studio has no live council endpoint, so its
- * seats, roles, bios, notebook lines and payout labels ship in the bundle and
+ * seats, roles, bios, notebook lines and slate labels ship in the bundle and
  * resolve through `studioShowcase:council.member.*` keys (Pattern A). Proper
  * nouns stay literal here: curator names, cities and set titles. Dates are
  * `yyyy-mm-dd` fixtures the page formats in the active locale, and euro
- * figures are numbers, rendered as `payoutSlots` for the same reason.
+ * figures are numbers, rendered as `lineSlots` for the same reason.
  */
 export interface CouncilFact {
   v: ReactNode;
@@ -66,11 +66,11 @@ export interface CouncilSlate {
   /** `yyyy-mm-dd`, formatted in the active locale through the slate meta key. */
   dateIso: string;
   trackCount: number;
-  /** `<Translation>` key for the payout line, plus its `{token}` values. */
-  payoutKey: string;
-  payoutValues?: TranslateOptions;
+  /** `<Translation>` key for the slate's result line, plus its `{token}` values. */
+  lineKey: string;
+  lineValues?: TranslateOptions;
   /** `{token}`s rendered as nodes: the euro figure in the active locale. */
-  payoutSlots?: Record<string, ReactNode>;
+  lineSlots?: Record<string, ReactNode>;
 }
 
 export interface Member {
@@ -91,15 +91,14 @@ export interface Member {
   slatesThisYear: number;
   slates: CouncilSlate[];
   tracksProgrammed: number;
-  artistsPaid: number;
+  artistsFeatured: number;
   image?: string;
 }
 
-const PAYOUT_OUT = "studioShowcase:council.member.slate.payout.out";
-const PAYOUT_PAID = "studioShowcase:council.member.slate.payout.paid";
-const PAYOUT_GRANT = "studioShowcase:council.member.slate.payout.grant";
+const SLATE_LISTENERS = "studioShowcase:council.member.slate.listeners";
+const SLATE_GRANT = "studioShowcase:council.member.slate.grant";
 
-/** The `{amount}` slot of a payout line, formatted for the active locale. */
+/** The `{amount}` slot of a grant line, formatted for the active locale. */
 function euroAmountSlot(value: number, isCompact = false) {
   return { amount: <StudioEuroAmount value={value} isCompact={isCompact} /> };
 }
@@ -124,20 +123,20 @@ export const MEMBERS: Member[] = [
         em: "vol. iv",
         dateIso: "2026-06-09",
         trackCount: 12,
-        payoutKey: PAYOUT_OUT,
-        payoutSlots: euroAmountSlot(8.2),
+        lineKey: SLATE_LISTENERS,
+        lineValues: { count: 312 },
       },
       {
         pre: "Songs to play your ",
         em: "mother",
         dateIso: "2026-06-02",
         trackCount: 14,
-        payoutKey: PAYOUT_OUT,
-        payoutSlots: euroAmountSlot(11400, true),
+        lineKey: SLATE_LISTENERS,
+        lineValues: { count: 486 },
       },
     ],
     tracksProgrammed: 312,
-    artistsPaid: 89,
+    artistsFeatured: 89,
     image:
       "https://images.unsplash.com/photo-1779497056298-7a23ec268963?q=80&w=600&auto=format&fit=crop",
   },
@@ -161,20 +160,20 @@ export const MEMBERS: Member[] = [
         post: ", 1972 to now",
         dateIso: "2026-05-28",
         trackCount: 12,
-        payoutKey: PAYOUT_PAID,
-        payoutValues: { count: 12 },
+        lineKey: SLATE_LISTENERS,
+        lineValues: { count: 204 },
       },
       {
         pre: "Songs for ",
         em: "insomnia",
         dateIso: "2026-05-14",
         trackCount: 22,
-        payoutKey: PAYOUT_OUT,
-        payoutSlots: euroAmountSlot(4.1),
+        lineKey: SLATE_LISTENERS,
+        lineValues: { count: 156 },
       },
     ],
     tracksProgrammed: 148,
-    artistsPaid: 61,
+    artistsFeatured: 61,
     image:
       "https://images.unsplash.com/flagged/photo-1555604858-34f65cfdc1db?q=80&w=800&auto=format&fit=crop",
   },
@@ -197,20 +196,20 @@ export const MEMBERS: Member[] = [
         em: "standards",
         dateIso: "2026-05-21",
         trackCount: 28,
-        payoutKey: PAYOUT_OUT,
-        payoutSlots: euroAmountSlot(9.3),
+        lineKey: SLATE_LISTENERS,
+        lineValues: { count: 353 },
       },
       {
         pre: "Almost ",
         em: "asleep",
         dateIso: "2026-05-09",
         trackCount: 31,
-        payoutKey: PAYOUT_OUT,
-        payoutSlots: euroAmountSlot(5.8),
+        lineKey: SLATE_LISTENERS,
+        lineValues: { count: 220 },
       },
     ],
     tracksProgrammed: 204,
-    artistsPaid: 73,
+    artistsFeatured: 73,
     image:
       "https://images.unsplash.com/photo-1506863530036-1efeddceb993?q=80&w=800&auto=format&fit=crop",
   },
@@ -233,8 +232,8 @@ export const MEMBERS: Member[] = [
         em: "warm-up",
         dateIso: "2026-05-23",
         trackCount: 9,
-        payoutKey: PAYOUT_OUT,
-        payoutSlots: euroAmountSlot(3.2),
+        lineKey: SLATE_LISTENERS,
+        lineValues: { count: 122 },
       },
       {
         pre: "Made ",
@@ -242,12 +241,12 @@ export const MEMBERS: Member[] = [
         post: ", spring",
         dateIso: "2026-05-16",
         trackCount: 5,
-        payoutKey: PAYOUT_GRANT,
-        payoutSlots: euroAmountSlot(5500, true),
+        lineKey: SLATE_GRANT,
+        lineSlots: euroAmountSlot(5500, true),
       },
     ],
     tracksProgrammed: 96,
-    artistsPaid: 44,
+    artistsFeatured: 44,
     image:
       "https://images.unsplash.com/photo-1513517178-1aca306e52a9?q=80&w=800&auto=format&fit=crop",
   },
@@ -270,20 +269,20 @@ export const MEMBERS: Member[] = [
         em: "slowly",
         dateIso: "2026-05-19",
         trackCount: 10,
-        payoutKey: PAYOUT_OUT,
-        payoutSlots: euroAmountSlot(4.6),
+        lineKey: SLATE_LISTENERS,
+        lineValues: { count: 175 },
       },
       {
         pre: "The long way ",
         em: "home",
         dateIso: "2026-05-05",
         trackCount: 14,
-        payoutKey: PAYOUT_OUT,
-        payoutSlots: euroAmountSlot(6.1),
+        lineKey: SLATE_LISTENERS,
+        lineValues: { count: 232 },
       },
     ],
     tracksProgrammed: 84,
-    artistsPaid: 52,
+    artistsFeatured: 52,
     image:
       "https://images.unsplash.com/photo-1514960919797-5ff58c52e5ba?q=80&w=800&auto=format&fit=crop",
   },
@@ -306,20 +305,20 @@ export const MEMBERS: Member[] = [
         em: "recorded",
         dateIso: "2026-05-17",
         trackCount: 12,
-        payoutKey: PAYOUT_OUT,
-        payoutSlots: euroAmountSlot(3.4),
+        lineKey: SLATE_LISTENERS,
+        lineValues: { count: 129 },
       },
       {
         pre: "Fifteen voices, one ",
         em: "stairwell",
         dateIso: "2026-05-10",
         trackCount: 8,
-        payoutKey: PAYOUT_OUT,
-        payoutSlots: euroAmountSlot(2.8),
+        lineKey: SLATE_LISTENERS,
+        lineValues: { count: 106 },
       },
     ],
     tracksProgrammed: 28,
-    artistsPaid: 19,
+    artistsFeatured: 19,
     image:
       "https://images.unsplash.com/photo-1517462964-21fdcec3f25b?q=80&w=800&auto=format&fit=crop",
   },

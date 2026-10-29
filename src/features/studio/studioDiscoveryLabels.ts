@@ -16,9 +16,7 @@ export const STUDIO_MOOD_LABEL_KEY: Record<StudioMood, string> = {
   defiant: "studio:mood.defiant",
   dreamy: "studio:mood.dreamy",
   "slow-burn": "studio:mood.slowBurn",
-  sweaty: "studio:mood.sweaty",
   calm: "studio:mood.calm",
-  playful: "studio:mood.playful",
 };
 
 export const STUDIO_CREDIT_ROLE_LABEL_KEY: Record<StudioCreditRole, string> = {

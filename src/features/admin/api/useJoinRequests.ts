@@ -46,6 +46,9 @@ export interface JoinRequestView {
    * or "Opened the invite page directly" when no source was recorded. Always set.
    */
   sourceLabel: string;
+  /** True when the applicant came through the Studio page's artist call to
+   *  action (`source === "studio_artist"`). Drives the "Studio artist" chip. */
+  isStudioArtist: boolean;
   /** The applicant's own answer to "Where did you hear about QueerPulse?",
    *  as plain text. Null on legacy rows that predate the question. */
   heardFrom: string | null;
@@ -243,6 +246,7 @@ export function dtoToView(
     mutualMemberEmail: dto.mutualMemberEmail,
     ageLine: ageLine(dto, t, locale),
     sourceLabel: t(sourceLabelKey(dto.source)),
+    isStudioArtist: dto.source === "studio_artist",
     heardFrom: dto.heardFrom ?? null,
     socialProfile: dto.socialProfile ?? null,
     socialProfileHref: socialProfileHref(dto.socialProfile ?? null),

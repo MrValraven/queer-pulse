@@ -20,7 +20,10 @@ import {
   type StudioReleaseType,
   type StudioSource,
 } from "./api/studio.types";
-import { useStudioOwnerTrackSafety } from "./api/useStudioOwnerTrackSafety";
+import {
+  useStudioOwnerTrackSafety,
+  type StudioOwnerTrackSafety,
+} from "./api/useStudioOwnerTrackSafety";
 import { useStudioTrack } from "./api/useStudioTrack";
 import { useUpdateStudioTrack } from "./api/useStudioTrackMutations";
 import { StudioPersonaCreditsEditor } from "./StudioPersonaCreditsEditor";
@@ -32,7 +35,9 @@ import {
   focusFirstIncompleteSource,
   isIncompleteSource,
 } from "./studioSources";
+import { StudioPriceFields } from "./StudioPriceFields";
 import { StudioTrackSafetyFields } from "./StudioTrackSafetyFields";
+import { useTrackPriceDraft } from "./useTrackPriceDraft";
 import { useTrackSafetyDraft } from "./useTrackSafetyDraft";
 import { StudioTrackSourcesField } from "./StudioTrackSourcesField";
 import {
@@ -350,6 +355,69 @@ function DetailsTitleAndCredits({
   );
 }
 
+/** The explicit flag and warnings, the track's price and its chapters. */
+function DetailsSafetyPriceAndChapters({
+  safety,
+  safetyDraft,
+  priceDraft,
+  priceInputId,
+  chapterRows,
+  onChaptersChange,
+  durationSeconds,
+  hasAudio,
+  isChaptersInitiallyOpen,
+  isShowingAllChapterErrors,
+}: {
+  safety: StudioOwnerTrackSafety;
+  safetyDraft: ReturnType<typeof useTrackSafetyDraft>;
+  priceDraft: ReturnType<typeof useTrackPriceDraft>;
+  priceInputId: string;
+  chapterRows: ChapterDraft[];
+  onChaptersChange: (rows: ChapterDraft[]) => void;
+  durationSeconds: number | null;
+  hasAudio: boolean;
+  isChaptersInitiallyOpen: boolean;
+  isShowingAllChapterErrors: boolean;
+}) {
+  const { t } = useTranslation();
+  return (
+    <>
+      <StudioTrackSafetyFields
+        explicitLabel={t("studio:uploadFlow.files.explicitLabel")}
+        isExplicit={safetyDraft.explicitValue}
+        isExplicitLocked={safety.isExplicitLocked}
+        onExplicitChange={safetyDraft.setIsExplicit}
+        contentWarnings={safetyDraft.warningsValue}
+        staffContentWarnings={safety.staffContentWarnings}
+        onContentWarningsChange={safetyDraft.setContentWarnings}
+        checkboxClassName={tracksStyles.checkbox}
+      />
+      <Collapse isOpen={priceDraft.isShown}>
+        <StudioPriceFields
+          amountInputId={priceInputId}
+          amountInputRef={priceDraft.amountInputRef}
+          legendKey="studio:purchase.price.trackLegend"
+          priceMode={priceDraft.priceMode}
+          priceText={priceDraft.priceText}
+          onPriceModeChange={priceDraft.setPriceMode}
+          onPriceTextChange={priceDraft.setPriceText}
+          errorKey={priceDraft.errorKey}
+          subprofileId={priceDraft.subprofileId ?? ""}
+          isReleaseOut={priceDraft.isReleaseOut}
+        />
+      </Collapse>
+      <StudioChaptersEditor
+        rows={chapterRows}
+        onChange={onChaptersChange}
+        durationSeconds={durationSeconds}
+        hasAudio={hasAudio}
+        isInitiallyOpen={isChaptersInitiallyOpen}
+        isShowingAllErrors={isShowingAllChapterErrors}
+      />
+    </>
+  );
+}
+
 /** The failed save's line. The chapter summary also takes focus, so the
  *  artist lands above the rows marked in the editor. */
 function SaveErrorLine({ saveError }: { saveError: SaveError | null }) {
@@ -422,12 +490,14 @@ export function StudioUploadTrackDetails({
   const [isShowingChapterErrors, setIsShowingChapterErrors] = useState(false);
   const storedChapterRows = useStoredChapterRows(track?.chapters);
   const artistKind = useArtistKindFields(track, releaseType);
+  const priceDraft = useTrackPriceDraft({ releaseId, trackId, releaseType });
   useReportDetailsDirty(
     (title !== null && title !== track?.title) ||
       [lyrics, credits, chapterRows].some((value) => value !== null) ||
       syncedLyrics !== undefined ||
       safetyDraft.isDirty ||
-      artistKind.isDirty,
+      artistKind.isDirty ||
+      priceDraft.isDirty,
     onDirtyChange,
   );
   if (!track)
@@ -471,6 +541,7 @@ export function StudioUploadTrackDetails({
     clearSaveError();
     if (!checks.check(titleValue, creditRows)) return;
     if (!artistKind.checkSources()) return;
+    if (!priceDraft.check()) return;
     const cleanCredits = completeCreditsOf(creditRows);
     const savedTitle = titleValue.trim();
     const chapterValidation = validateChapters(
@@ -500,6 +571,7 @@ export function StudioUploadTrackDetails({
           ...safetyDraft.warningsPatch,
           credits: cleanCredits,
           ...artistKind.saveFields(),
+          ...priceDraft.saveFields(),
           ...timingAndChapterFields(
             syncedLyrics !== undefined || isTimingStale,
             timingsToSave,
@@ -564,23 +636,19 @@ export function StudioUploadTrackDetails({
         }
         onChange={changeTimings}
       />
-      <StudioTrackSafetyFields
-        explicitLabel={t("studio:uploadFlow.files.explicitLabel")}
-        isExplicit={safetyDraft.explicitValue}
-        isExplicitLocked={safety.isExplicitLocked}
-        onExplicitChange={safetyDraft.setIsExplicit}
-        contentWarnings={safetyDraft.warningsValue}
-        staffContentWarnings={safety.staffContentWarnings}
-        onContentWarningsChange={safetyDraft.setContentWarnings}
-        checkboxClassName={tracksStyles.checkbox}
-      />
-      <StudioChaptersEditor
-        rows={chapterRowsValue}
-        onChange={changeChapters}
+      <DetailsSafetyPriceAndChapters
+        safety={safety}
+        safetyDraft={safetyDraft}
+        priceDraft={priceDraft}
+        priceInputId={`${lyricsId}-price`}
+        chapterRows={chapterRowsValue}
+        onChaptersChange={changeChapters}
         durationSeconds={durationSeconds}
         hasAudio={track.hasAudio}
-        isInitiallyOpen={releaseType === "mix" || releaseType === "podcast"}
-        isShowingAllErrors={isShowingChapterErrors}
+        isChaptersInitiallyOpen={
+          releaseType === "mix" || releaseType === "podcast"
+        }
+        isShowingAllChapterErrors={isShowingChapterErrors}
       />
       <SaveErrorLine saveError={saveError} />
       <DetailsActions

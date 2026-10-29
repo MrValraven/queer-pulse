@@ -3,10 +3,14 @@ import { Avatar, Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { initialsFromName } from "../../shared/lib/initials";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import type { MemberSelectPerson } from "../../shared/components/ui";
+import { useEventHostScope } from "./eventHostScope";
 import type { EventHostDTO } from "./api/events.api";
 import { CohostInviteComposerModal } from "./CohostInviteComposerModal";
 import {
+  COHOST_TINTS,
   INITIAL_COHOSTS,
   hostDtoToCandidate,
   type CohostCandidate,
@@ -34,6 +38,8 @@ export function CohostManager({
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
+  const scope = useEventHostScope();
+  const AddDialog = scope.CohostAddDialog;
   const removeCohost = useRemoveCohost(slug);
   const [cohosts, setCohosts] = useState<CohostCandidate[]>(() =>
     demoMode
@@ -50,10 +56,36 @@ export function CohostManager({
     showToast(t("gatherings:cohost.inviteSentToast", { name }), "success");
   };
 
+  // House scope: the add is immediate, so the person joins the list at once.
+  const handleAdded = (person: MemberSelectPerson) => {
+    setAddOpen(false);
+    setCohosts((previous) =>
+      previous.some((cohost) => cohost.slug === person.slug)
+        ? previous
+        : [
+            ...previous,
+            {
+              slug: person.slug,
+              name: person.name,
+              role: t("gatherings:cohost.roleCohost"),
+              initials: initialsFromName(person.name),
+              tint: COHOST_TINTS[previous.length % COHOST_TINTS.length]!,
+              photo: person.avatarUrl,
+            },
+          ],
+    );
+    showToast(
+      t("admin:musicEvents.cohostAdd.addedToast", { name: person.name }),
+      "success",
+    );
+  };
+
   const remove = (candidate: CohostCandidate) => {
     setConfirming(null);
     removeCohost.mutate(candidate.slug);
-    setCohosts((prev) => prev.filter((c) => c.slug !== candidate.slug));
+    setCohosts((previous) =>
+      previous.filter((cohost) => cohost.slug !== candidate.slug),
+    );
     showToast(
       t("gatherings:cohost.removedToast", { name: candidate.name }),
       "info",
@@ -70,35 +102,39 @@ export function CohostManager({
           {t("gatherings:cohost.addCta")}
         </Button>
       </div>
-      <p className={styles.panelDesc}>{t("gatherings:cohost.panelDesc")}</p>
+      <p className={styles.panelDesc}>
+        {scope.isHouseEvent
+          ? t("admin:musicEvents.house.cohostsNote")
+          : t("gatherings:cohost.panelDesc")}
+      </p>
 
       {cohosts.length === 0 ? (
         <div className={styles.empty}>{t("gatherings:cohost.emptyState")}</div>
       ) : (
         <div className={styles.cohostList}>
-          {cohosts.map((c) => (
-            <div className={styles.cohostRow} key={c.slug}>
+          {cohosts.map((cohost) => (
+            <div className={styles.cohostRow} key={cohost.slug}>
               <Avatar
-                initials={c.initials}
-                tint={c.tint}
-                src={c.photo}
+                initials={cohost.initials}
+                tint={cohost.tint}
+                src={cohost.photo}
                 size={40}
               />
               <div className={styles.cohostInfo}>
                 <div className={styles.cohostName}>
                   <span className={styles.nameRow}>
-                    {c.name}
-                    <MemberStaffBadge slug={c.slug} />
+                    {cohost.name}
+                    <MemberStaffBadge slug={cohost.slug} />
                   </span>
                 </div>
-                <div className={styles.cohostRole}>{c.role}</div>
+                <div className={styles.cohostRole}>{cohost.role}</div>
               </div>
-              {confirming === c.slug ? (
+              {confirming === cohost.slug ? (
                 <div className={styles.confirmRow}>
                   <span className={styles.confirmText}>
                     {t("gatherings:cohost.confirmPrompt")}
                   </span>
-                  <Button variant="ghost" onClick={() => remove(c)}>
+                  <Button variant="ghost" onClick={() => remove(cohost)}>
                     {t("gatherings:cohost.confirmYes")}
                   </Button>
                   <Button variant="ghost" onClick={() => setConfirming(null)}>
@@ -108,9 +144,9 @@ export function CohostManager({
               ) : (
                 <Button
                   variant="ghost"
-                  onClick={() => setConfirming(c.slug)}
+                  onClick={() => setConfirming(cohost.slug)}
                   aria-label={t("gatherings:cohost.removeAria", {
-                    name: c.name,
+                    name: cohost.name,
                   })}
                 >
                   {t("gatherings:cohost.removeCta")}
@@ -121,10 +157,18 @@ export function CohostManager({
         </div>
       )}
 
-      {addOpen && (
+      {addOpen && AddDialog && (
+        <AddDialog
+          slug={slug}
+          excludeSlugs={cohosts.map((cohost) => cohost.slug)}
+          onAdded={handleAdded}
+          onClose={() => setAddOpen(false)}
+        />
+      )}
+      {addOpen && !AddDialog && (
         <CohostInviteComposerModal
           slug={slug}
-          excludeSlugs={cohosts.map((c) => c.slug)}
+          excludeSlugs={cohosts.map((cohost) => cohost.slug)}
           onSent={handleInviteSent}
           onClose={() => setAddOpen(false)}
         />

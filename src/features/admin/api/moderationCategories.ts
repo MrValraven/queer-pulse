@@ -31,6 +31,10 @@ export const REASON_CATEGORY_KEY: Partial<Record<ReasonCode, string>> = {
   // "Other".
   hateful_lyrics: "admin:moderation.category.hateSpeech",
   untagged_explicit: "admin:moderation.category.other",
+  // Studio purchases: a persona that took a payment and never confirmed it.
+  // `funding_scam` has no entry either; the closest existing triage category
+  // for a money complaint is Spam.
+  payment_never_confirmed: "admin:moderation.category.spam",
   other: "admin:moderation.category.other",
 };
 

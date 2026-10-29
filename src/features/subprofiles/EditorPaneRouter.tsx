@@ -23,6 +23,7 @@ import { SubprofileAffiliationsEditor } from "./SubprofileAffiliationsEditor";
 import { SubprofileWorksAtEditor } from "./worksAt/SubprofileWorksAtEditor";
 import { SubprofileOwnersPanel } from "./SubprofileOwnersPanel";
 import { SubprofilePublishPanel } from "./SubprofilePublishPanel";
+import { PersonaDangerZone } from "./PersonaDangerZone";
 import { FeedImportPane } from "./feedImport/FeedImportPane";
 import {
   FEED_IMPORT_PANE,
@@ -233,6 +234,10 @@ export function EditorPaneRouter({
 
       <div hidden={pane !== "publish"}>
         <SubprofilePublishPanel subprofile={subprofile} />
+      </div>
+
+      <div hidden={pane !== "danger"} className="ed-grid">
+        <PersonaDangerZone subprofile={subprofile} />
       </div>
     </>
   );

@@ -25,6 +25,16 @@ interface StudioSupporterIdentityPickerProps {
   shouldFocusOnOpen: boolean;
   onSave: (shownAsSubprofileId: string | null) => void;
   onClose: () => void;
+  /** Replaces the "How {persona} sees you" legend. */
+  legend?: string;
+  /** False hides Save and Close (a picker that reports each change through
+   *  `onSelect` instead). Defaults to true. */
+  shouldShowActions?: boolean;
+  /** Every change of the pick; the account arrives as null. */
+  onSelect?: (shownAsSubprofileId: string | null) => void;
+  /** True starts with no card checked and keeps Save disabled until the
+   *  member picks (an identity that is gone has nothing to preselect). */
+  isPickUnset?: boolean;
 }
 
 /** A refused save as a catalog key: a Studio code names its own line (the
@@ -84,14 +94,24 @@ export function StudioSupporterIdentityPicker({
   shouldFocusOnOpen,
   onSave,
   onClose,
+  legend: legendOverride,
+  shouldShowActions,
+  onSelect,
+  isPickUnset,
 }: StudioSupporterIdentityPickerProps) {
   const { t } = useTranslation();
   const legendId = useId();
-  const legend = t("studio:supporter.pickerLegend", { persona: personaName });
+  const legend =
+    legendOverride ??
+    t("studio:supporter.pickerLegend", { persona: personaName });
   const groupWrapRef = useRef<HTMLDivElement>(null);
-  const [selectedKey, setSelectedKey] = useState(() =>
-    initialKeyOf(options, initialShownAsSubprofileId),
+  const [selectedKey, setSelectedKeyState] = useState(() =>
+    isPickUnset ? "" : initialKeyOf(options, initialShownAsSubprofileId),
   );
+  const setSelectedKey = (key: string) => {
+    setSelectedKeyState(key);
+    onSelect?.(key === SUPPORTER_ACCOUNT_KEY ? null : key);
+  };
   // The line keeps its last words while it folds away.
   const [shownErrorKey, setShownErrorKey] = useState(errorKey);
   if (errorKey !== null && errorKey !== shownErrorKey)
@@ -106,7 +126,7 @@ export function StudioSupporterIdentityPicker({
   }, [shouldFocusOnOpen]);
 
   const save = () => {
-    if (isSaving) return;
+    if (isSaving || selectedKey === "") return;
     onSave(selectedKey === SUPPORTER_ACCOUNT_KEY ? null : selectedKey);
   };
 
@@ -146,20 +166,22 @@ export function StudioSupporterIdentityPicker({
             `${t("studio:supporter.saveFailed")}. ${t(shownErrorKey)}`}
         </p>
       </Collapse>
-      <div className={styles.actions}>
-        <Button
-          variant="primary"
-          size="sm"
-          aria-disabled={isSaving || undefined}
-          aria-busy={isSaving || undefined}
-          onClick={save}
-        >
-          {t("studio:supporter.saveCta")}
-        </Button>
-        <Button variant="quiet" size="sm" onClick={onClose}>
-          {t("studio:supporter.closeCta")}
-        </Button>
-      </div>
+      <Collapse isOpen={shouldShowActions !== false}>
+        <div className={styles.actions}>
+          <Button
+            variant="primary"
+            size="sm"
+            aria-disabled={isSaving || selectedKey === "" || undefined}
+            aria-busy={isSaving || undefined}
+            onClick={save}
+          >
+            {t("studio:supporter.saveCta")}
+          </Button>
+          <Button variant="quiet" size="sm" onClick={onClose}>
+            {t("studio:supporter.closeCta")}
+          </Button>
+        </div>
+      </Collapse>
     </div>
   );
 }

@@ -2,19 +2,17 @@ import { useId } from "react";
 import { Collapse, FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
-  STUDIO_GENRE_LABEL_KEY,
   STUDIO_RELEASE_TYPE_LABEL_KEY,
   formatOfKind,
 } from "./api/studio.adapters";
 import {
   STUDIO_BUY_URL_MAX,
-  STUDIO_GENRES,
   STUDIO_LIMITS,
   STUDIO_MOODS,
   STUDIO_RELEASE_TYPES_BY_KIND,
-  type StudioGenre,
   type StudioMood,
 } from "./api/studio.types";
+import { StudioGenrePicker } from "./StudioGenrePicker";
 import { StudioUploadGaplessField } from "./StudioUploadGaplessField";
 import { StudioUploadRadioCards } from "./StudioUploadRadioCards";
 import { StudioUploadSceneField } from "./StudioUploadSceneField";
@@ -102,19 +100,10 @@ export function StudioUploadReleaseFields({
           className={fieldClass}
           label={t("studio:upload.metadata.field.genre")}
         >
-          <Select
+          <StudioGenrePicker
             id={RELEASE_FIELD_IDS.genre}
-            options={[
-              { value: "", label: t("studio:uploadFlow.release.genreNone") },
-              ...STUDIO_GENRES.map((genre) => ({
-                value: genre,
-                label: t(STUDIO_GENRE_LABEL_KEY[genre]),
-              })),
-            ]}
-            value={form.genre}
-            onChange={(value) =>
-              setField("genre", (value ?? "") as StudioGenre | "")
-            }
+            value={form.genres}
+            onChange={(genres) => setField("genres", genres)}
           />
         </FormField>
         <FormField

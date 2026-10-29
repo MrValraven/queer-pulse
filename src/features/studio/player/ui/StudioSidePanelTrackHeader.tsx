@@ -41,10 +41,13 @@ function TrackHeaderActions({ item }: { item: StudioQueueItem }) {
         className={styles.headerAction}
         hasTooltip
       />
+      {/* The trigger sits against the scrolling body's right edge, so its
+          bubble floats outside the body instead of widening it. */}
       <StudioTrackMenu
         track={menuTrack}
         className={styles.headerMenu}
         tooltip={t("studio:release.moreActions")}
+        tooltipPlacement="floating-top"
       />
     </>
   );

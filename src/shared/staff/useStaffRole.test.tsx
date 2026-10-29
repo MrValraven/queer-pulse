@@ -61,7 +61,12 @@ describe("useStaffRole", () => {
     const { result } = renderHook(() => useStaffBadgedRoles("ines"), {
       wrapper,
     });
-    await waitFor(() => expect(result.current).toEqual(["housing_moderator"]));
+    await waitFor(() =>
+      expect(result.current).toEqual([
+        "housing_moderator",
+        "music_manager_producer",
+      ]),
+    );
   });
 
   it("leaves an unbadged grant out of the badged grants", async () => {

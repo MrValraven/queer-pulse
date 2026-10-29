@@ -19,7 +19,6 @@ import {
 } from "./publishChecklist.data";
 import { PublishChecklist, SubprofilePolishList } from "./PublishChecklist";
 import type { PublishAttempt } from "./PublishChecklist";
-import { PersonaDangerZone } from "./PersonaDangerZone";
 import { usePersonaCreatorSlug } from "./usePersonaCreatorSlug";
 import { personaOwnerAddress } from "./personaLinks.data";
 import sharedStyles from "./SubprofileEditor.module.css";
@@ -78,12 +77,6 @@ function screenedFieldsOf(meta: {
  * 422 fills in what the browser couldn't judge. Live mode may not surface the
  * `{unmet}` body, so a non-`PublishUnmetError` rejection leaves those rows in
  * their "still to check" state.
- *
- * Below all of that, the `PersonaDangerZone` band: this pane's
- * Publish/Unpublish mutations and the delete/leave actions are siblings on the
- * same persona, so pairing "make it live" with "get rid of it entirely" here
- * (rather than only on the dashboard) keeps every persona-lifecycle action in
- * one place.
  */
 export function SubprofilePublishPanel({
   subprofile,
@@ -311,8 +304,6 @@ export function SubprofilePublishPanel({
       </div>
 
       <SubprofilePolishList subprofile={subprofile} />
-
-      <PersonaDangerZone subprofile={subprofile} />
     </div>
   );
 }

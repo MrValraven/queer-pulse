@@ -7,6 +7,7 @@ import { resolveGathering, type GatheringDetail } from "../data";
 import { gatheringSlugFromParam } from "../gatheringPaths";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { GuestPreviewRole } from "../guestPreview/guestPreview";
+import { useEventHostScope } from "../eventHostScope";
 
 export interface EventResult {
   gathering: GatheringDetail;
@@ -26,9 +27,10 @@ export interface EventResult {
 export function useEvent(param: string | undefined) {
   const { demoMode } = useDemoMode();
   const { t } = useTranslation();
+  const { apiTarget } = useEventHostScope();
   const slug = gatheringSlugFromParam(param ?? "");
   return useQuery<EventResult>({
-    queryKey: eventKeys.detail(param, demoMode),
+    queryKey: eventKeys.detail(param, demoMode, apiTarget),
     // Never fetch without a slug: `GET /events/` is matched by the *list*
     // handler (Express routing ignores the trailing slash), which answers 200
     // with an events page. The adapter would read that as a detail DTO and
@@ -38,7 +40,7 @@ export function useEvent(param: string | undefined) {
     enabled: demoMode || slug !== "",
     queryFn: async () => {
       if (demoMode) return { gathering: resolveGathering(param) };
-      const dto = await getEvent(slug);
+      const dto = await getEvent(slug, undefined, apiTarget);
       return { gathering: detailToGathering(dto, t) };
     },
   });

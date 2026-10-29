@@ -135,7 +135,7 @@ export function suggestedArtistsOf(
     const artistId = release.artist.id;
     if (ownArtistIds.has(artistId) || matching.has(artistId)) continue;
     const isMatch =
-      (release.genre !== null && pickedGenres.has(release.genre)) ||
+      release.genres.some((genre) => pickedGenres.has(genre)) ||
       (release.mood !== null && pickedMoods.has(release.mood));
     const suggestion = {
       artist: release.artist,

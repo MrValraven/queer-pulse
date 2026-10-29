@@ -1,16 +1,21 @@
 import type { ReactElement } from "react";
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
-import { studioUploadPath } from "./studioPaths";
+import {
+  studioLibraryPath,
+  studioPaymentsPath,
+  studioUploadPath,
+} from "./studioPaths";
 
 /**
  * Content for Studio Help. Platform chrome: every string is a catalog key,
  * and `answerComponents` fills the tags an answer carries. The live sections
- * say only what Studio does today (spec section 3.2); the money section is
- * the demo's showcase.
+ * say only what Studio does today (spec section 3.2); the showcase money
+ * section stays demo-only.
  */
 
-export type HelpSectionId = "listening" | "sharing" | "safety" | "money";
+export type HelpSectionId =
+  "listening" | "sharing" | "safety" | "buying" | "money";
 
 export interface HelpFaqEntry {
   /** Stable: the accordion's open id and the React key. */
@@ -98,6 +103,18 @@ export const LIVE_HELP_SECTIONS: HelpSectionData[] = [
       }),
     ],
   },
+  {
+    id: "buying",
+    headingKey: "studio:helpLive.cat.buying.heading",
+    items: [
+      faq("buying", "studio:helpLive.faq.buying", {
+        a: <Link to={studioLibraryPath("purchases")} />,
+      }),
+      faq("selling", "studio:helpLive.faq.selling", {
+        a: <Link to={routes.studioSettings} />,
+      }),
+    ],
+  },
 ];
 
 /** Demo only: the co-op's money answers, under their original keys. */
@@ -121,7 +138,7 @@ export const SHOWCASE_HELP_SECTION: HelpSectionData = {
     }),
     faq("get-paid", "studio:help.faq.getPaid", {
       em: <em />,
-      a: <Link to={routes.studioPayouts} />,
+      a: <Link to={studioPaymentsPath()} />,
     }),
     faq("realistic-earn", "studio:help.faq.realisticEarn", {
       a: <Link to={routes.studioAbout} />,
@@ -144,6 +161,11 @@ export const HELP_CATEGORY_CARDS: HelpCategoryCard[] = [
     target: "safety",
     headingKey: "studio:helpLive.cat.safety.heading",
     blurbKey: "studio:helpLive.cat.safety.blurb",
+  },
+  {
+    target: "buying",
+    headingKey: "studio:helpLive.cat.buying.heading",
+    blurbKey: "studio:helpLive.cat.buying.blurb",
   },
 ];
 

@@ -153,11 +153,12 @@
   color: var(--studio-text-muted);
 }
 
-/* Category cards: minmax(0, 1fr) lets a long blurb wrap inside its card
+/* Category cards, two across so four topics lay out 2x2 with none left
+   alone on a row: minmax(0, 1fr) lets a long blurb wrap inside its card
    instead of widening the track past the column. */
 .cats {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
   margin-bottom: 44px;
 }

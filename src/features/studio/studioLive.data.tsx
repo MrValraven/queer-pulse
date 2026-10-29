@@ -2,7 +2,7 @@ import { type ReactNode } from "react";
 import { FiHeart, FiSmile, FiArrowDown } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import type { TranslateOptions } from "../../shared/i18n/types";
-import { MEMBERS, memberName } from "../members/data/members";
+import { memberName } from "../members/data/members";
 import { StudioEuroAmount } from "./StudioEuroAmount";
 
 export const WF = [
@@ -34,21 +34,13 @@ function playedLine(artist: string, start: string, end: string): LiveCopy {
   };
 }
 
-function payToArtist(artist: string): LiveCopy {
-  return {
-    key: "studioShowcase:live.set.pay.toArtist",
-    values: { artist },
-  };
-}
-
 export interface LiveSetRow {
   n: string;
   pre: string;
   em?: string;
   post?: string;
   whoLabel: LiveCopy;
-  payLabel?: LiveCopy;
-  payNoteKey?: string;
+  /** The curator note beside a queued track ("queued by Sara"). */
   payEmLabel?: LiveCopy;
   tm: string;
   state: string;
@@ -62,7 +54,6 @@ export const SET: LiveSetRow[] = [
     pre: "A summer in ",
     em: "Cascais",
     whoLabel: playedLine(memberName("ines"), "21:00", "21:04"),
-    payLabel: payToArtist(MEMBERS.ines!.first),
     tm: "4:12",
     state: "played",
     tint: "coral",
@@ -75,7 +66,6 @@ export const SET: LiveSetRow[] = [
     em: "still",
     post: " burning",
     whoLabel: playedLine("Akin Diallo", "21:04", "21:09"),
-    payLabel: payToArtist("Akin"),
     tm: "5:08",
     state: "played",
     tint: "plum",
@@ -87,7 +77,6 @@ export const SET: LiveSetRow[] = [
     pre: "If you have to ",
     em: "ask",
     whoLabel: playedLine("Yara Reis", "21:09", "21:10"),
-    payLabel: payToArtist("Yara"),
     tm: "1:22",
     state: "played",
     tint: "jade",
@@ -99,7 +88,6 @@ export const SET: LiveSetRow[] = [
     pre: "Salt water, ",
     em: "slowly",
     whoLabel: playedLine("Akin Diallo", "21:10", "21:16"),
-    payLabel: payToArtist("Akin"),
     tm: "5:31",
     state: "played",
     tint: "coral",
@@ -111,7 +99,6 @@ export const SET: LiveSetRow[] = [
     pre: "Cantiga para a ",
     em: "vizinha",
     whoLabel: playedLine("Coro de Outubro", "21:16", "21:22"),
-    payLabel: payToArtist("Coro"),
     tm: "6:08",
     state: "played",
     tint: "plum",
@@ -126,8 +113,6 @@ export const SET: LiveSetRow[] = [
       key: "studioShowcase:live.set.who.playingNow",
       values: { artist: "Mariana Sol", elapsed: "1:42", length: "4:18" },
     },
-    payNoteKey: "studioShowcase:live.set.pay.payingNow",
-    payLabel: payToArtist("Mariana"),
     tm: "4:18",
     state: "now",
     tint: "coral",
@@ -160,7 +145,6 @@ export const SET: LiveSetRow[] = [
       key: "studioShowcase:live.set.who.planned",
       values: { artist: "Yuki Tanaka" },
     },
-    payLabel: { key: "studioShowcase:live.set.pay.perPlay" },
     tm: "7:14",
     state: "queued",
     tint: "plum",

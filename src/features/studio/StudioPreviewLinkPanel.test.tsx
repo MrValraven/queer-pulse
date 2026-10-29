@@ -49,6 +49,7 @@ const base = toReleaseView({
   },
   description: null,
   genre: null,
+  genres: [],
   mood: null,
   scene: null,
   sceneId: null,

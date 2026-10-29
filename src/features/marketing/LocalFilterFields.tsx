@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useState, type CSSProperties, type ReactNode } from "react";
 import {
   RefinePanel,
   RefineSplit,
@@ -89,6 +89,12 @@ export interface LocalFilterFieldsProps {
    *  variant only: on phones the switcher lives in the sticky toolbar, where it
    *  stays reachable while scrolled deep into the list. */
   viewSlot?: ReactNode;
+  /** The "showing X of Y places" count, which sits on the search row after
+   *  "Refine" and before the List/Map switcher, so the row that shapes the
+   *  results also says what they found and the page spends no extra line on
+   *  it. Rendered by the `"bar"` variant only: on phones the count opens the
+   *  results header, beside the near-me control. */
+  countSlot?: ReactNode;
   /** True on the Online tab, which lists every business that sells online.
    *  Its category chips are what they sell; the questions about a visit (is
    *  it open right now, is the entrance step-free, how to get in, ways to
@@ -221,6 +227,7 @@ export function LocalFilterFields({
   isLocationOn,
   nearMeSlot,
   viewSlot,
+  countSlot,
   isOnlineScope = false,
   isAdultShown,
   canShowAdult,
@@ -360,13 +367,26 @@ export function LocalFilterFields({
     );
   }
 
+  // The row's grid gives the search field the flexible column and each control
+  // after it a column of its own, so the template follows how many controls
+  // this row carries: near-me is missing on the Online tab, and the map's card
+  // drops the count and the switcher. The count keeps a separate class because
+  // a narrow desktop moves it under the search field, out of the row's line.
+  const isCountShown = Boolean(countSlot) && !isOverlay;
+  const isViewShown = Boolean(viewSlot) && !isOverlay;
+  const controlColumnCount = (nearMeSlot ? 1 : 0) + 1 + (isViewShown ? 1 : 0);
+
   return (
     <>
-      <div className={isOverlay ? `${s.barRow} ${s.barRowOverlay}` : s.barRow}>
+      <div
+        className={isCountShown ? `${s.barRow} ${s.barRowWithCount}` : s.barRow}
+        style={{ "--bar-controls": controlColumnCount } as CSSProperties}
+      >
         {search}
         {nearMeSlot}
         <RefineToggle {...refine.toggleProps} activeCount={activeRefineCount} />
-        {viewSlot && !isOverlay && <div className={s.viewSlot}>{viewSlot}</div>}
+        {isCountShown && <div className={s.countSlot}>{countSlot}</div>}
+        {isViewShown && <div className={s.viewSlot}>{viewSlot}</div>}
       </div>
       {activeFiltersSlot}
       {/* Inside the map's card the drawer sheds its own card, which would

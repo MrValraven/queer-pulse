@@ -1,0 +1,207 @@
+/* ── Studio page console: tab shell and the previews section ───────────── */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section {
+  padding: 18px 20px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card, 22px);
+  background: var(--paper);
+}
+
+.sectionHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+}
+
+.sectionTitle {
+  flex: 1 1 auto;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.sectionSub {
+  max-width: 64ch;
+  margin: 8px 0 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.hint {
+  margin: 10px 0 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+.notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.noticeText {
+  max-width: 60ch;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.skeletons {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rowItem {
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  padding: 12px 0;
+}
+
+.dragHandle {
+  display: inline-flex;
+  color: var(--ink-40);
+  cursor: grab;
+}
+
+.position {
+  min-width: 2ch;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+}
+
+.thumb {
+  flex: none;
+  width: 44px;
+  height: 44px;
+}
+
+.main {
+  display: flex;
+  flex: 1 1 240px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+}
+
+.rowTitle {
+  font-family: var(--serif);
+  font-size: var(--text-16);
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.rowMeta {
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.historyToggle {
+  margin-top: 12px;
+}
+
+/* ── Ask to play a track dialog ─────────────────────────────────────────── */
+.dialogForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.fieldLabel {
+  display: block;
+  margin: 4px 0 8px;
+  font-size: var(--text-11);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.textInput {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-14);
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--text-14);
+}
+
+.textInput:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.result {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 10px 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-12);
+  background: var(--paper);
+}
+
+.resultDimmed .main {
+  opacity: 0.7;
+}
+
+.error {
+  margin: 12px 0 0;
+  font-size: var(--text-13);
+  color: var(--accent-text);
+}

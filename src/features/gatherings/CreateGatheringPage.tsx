@@ -50,6 +50,7 @@ import {
   DUPLICATE_GATHERING_PARAM,
 } from "./data";
 import { DraftResumeStrip, SavedIndicator } from "./DraftResumeStrip";
+import { useEventHostScope } from "./eventHostScope";
 import { gatheringToFormSeed } from "./gatheringSeed";
 import { GatheringPreviewPanel } from "./preview/GatheringPreviewPanel";
 import { AccessChapter } from "./steps/AccessChapter";
@@ -96,6 +97,7 @@ function CreateGatheringHead({
   isNoteShown: boolean;
 }) {
   const { t } = useTranslation();
+  const { homePath } = useEventHostScope();
   return (
     <header className={styles.head}>
       <div>
@@ -117,7 +119,7 @@ function CreateGatheringHead({
         />
       </div>
       <div className={styles.headActions}>
-        <Button variant="ghost" to={routes.host}>
+        <Button variant="ghost" to={homePath ?? routes.host}>
           {t("gatherings:create.nav.cancel")}
         </Button>
       </div>
@@ -245,19 +247,42 @@ export function CreateGatheringPage() {
   return <CreateGatheringWizard key={demoMode ? "demo" : "live"} />;
 }
 
-function CreateGatheringWizard() {
+export interface CreateGatheringWizardProps {
+  /** The frame around the wizard and its success screen. The member route
+   *  uses the site's `PageShell`. */
+  Frame?: ComponentType<{ children: ReactNode }>;
+  /** Replaces the default head (eyebrow, title, saved line, Cancel). */
+  head?: ReactNode;
+}
+
+/**
+ * The whole create flow, inside whatever host scope wraps it. In the member
+ * scope it behaves as the route always has. An event QueerPulse hosts
+ * (`scope.isHouseEvent`) ignores `?community=` and `?duplicate=`, starts on
+ * the scope's fixed family, and never offers, saves or forgets the signed-in
+ * staff member's own event draft.
+ */
+export function CreateGatheringWizard({
+  Frame = PageShell,
+  head,
+}: CreateGatheringWizardProps = {}) {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const scope = useEventHostScope();
+  const { isHouseEvent } = scope;
   // A community's Events tab links here as `?community=<slug>` so the host
   // lands with that community already picked (see `createGatheringPath`). Read
   // once, on mount, by the form hook.
   const [searchParams] = useSearchParams();
-  const communitySlugParam =
-    searchParams.get(CREATE_GATHERING_COMMUNITY_PARAM) ?? "";
+  const communitySlugParam = isHouseEvent
+    ? ""
+    : (searchParams.get(CREATE_GATHERING_COMMUNITY_PARAM) ?? "");
   // "Duplicate gathering" (PRD-190): `?duplicate=<slug>` fetches that gathering and
   // seeds the wizard from it whenever the fetch lands. `useMemo` keeps the
   // seed's identity stable so it is applied exactly once.
-  const duplicateSlug = searchParams.get(DUPLICATE_GATHERING_PARAM);
+  const duplicateSlug = isHouseEvent
+    ? null
+    : searchParams.get(DUPLICATE_GATHERING_PARAM);
   const { data: duplicateSource } = useEvent(duplicateSlug ?? undefined);
   const isQuizshowVisible = useIsQuizshowVisible();
   const seed = useMemo(
@@ -270,6 +295,7 @@ function CreateGatheringWizard() {
   const form = useGatheringForm({
     communitySlug: communitySlugParam,
     ...(seed ? { seed } : {}),
+    fixedFamily: scope.fixedFamily ?? undefined,
   });
   useDropUnhostableCommunity(form);
   const chapterFlow = useCreateGatheringChapterFlow(form);
@@ -279,7 +305,10 @@ function CreateGatheringWizard() {
   const forgetDraftRef = useRef<() => void>(() => undefined);
   const publishing = usePublishGathering({
     form,
-    onPublished: () => forgetDraftRef.current(),
+    // A house event never touched the staff member's own draft.
+    onPublished: () => {
+      if (!isHouseEvent) forgetDraftRef.current();
+    },
     onVenueRefused: () =>
       chapterFlow.openChapterAtField(
         chapterIndexOf("whenWhere"),
@@ -298,18 +327,24 @@ function CreateGatheringWizard() {
   const draft = useCreateGatheringDraft({
     form,
     legacyStorageKey: draftKey,
-    // A duplicate's seed lands after any resume and would overwrite it.
-    shouldOfferResume: !duplicateSlug,
+    // A duplicate's seed lands after any resume and would overwrite it. The
+    // draft slot is the signed-in member's own, so a house event leaves it
+    // alone.
+    shouldOfferResume: !duplicateSlug && !isHouseEvent,
     communitySlugParam,
-    isSavingEnabled: !publishing.isPublished && !publishing.isPending,
+    isSavingEnabled:
+      !isHouseEvent && !publishing.isPublished && !publishing.isPending,
   });
   useEffect(() => {
     forgetDraftRef.current = draft.forget;
   });
   const isCompact = useMediaQuery(COMPACT_LAYOUT_QUERY);
+  const pageClassName = isHouseEvent
+    ? `${styles.page} ${styles.pageHouse}`
+    : styles.page;
 
-  // Warn before an in-progress gathering is abandoned. Off once it is
-  // published, so the success CTAs navigate without a false prompt.
+  // Warn before an in-progress event is abandoned. Off once it is published,
+  // so the success CTAs navigate without a false prompt.
   useUnsavedChangesGuard({
     active: form.dirty && !publishing.isPublished && !publishing.isPending,
     confirmMessage: t("gatherings:create.nav.leaveConfirm"),
@@ -348,8 +383,8 @@ function CreateGatheringWizard() {
 
   if (publishing.isPublished) {
     return (
-      <PageShell>
-        <section className={styles.page}>
+      <Frame>
+        <section className={pageClassName}>
           <div className="wrap">
             <CreateGatheringSuccess
               form={form}
@@ -358,7 +393,7 @@ function CreateGatheringWizard() {
             />
           </div>
         </section>
-      </PageShell>
+      </Frame>
     );
   }
 
@@ -376,14 +411,23 @@ function CreateGatheringWizard() {
   );
 
   return (
-    <PageShell>
-      <section className={styles.page}>
+    <Frame>
+      <section className={pageClassName}>
         <div className="wrap">
-          <CreateGatheringHead
-            saveStatus={draft.saveStatus}
-            isNoteShown={draft.isNoteShown}
-          />
-          <CreateGatheringDraftStrips draft={draft} chapterFlow={chapterFlow} />
+          {head ?? (
+            <CreateGatheringHead
+              saveStatus={draft.saveStatus}
+              isNoteShown={draft.isNoteShown}
+            />
+          )}
+          {/* A house event never offers the member's draft, so it has no
+              draft strips at all. */}
+          {!isHouseEvent && (
+            <CreateGatheringDraftStrips
+              draft={draft}
+              chapterFlow={chapterFlow}
+            />
+          )}
           <div className={styles.grid}>
             <div className={styles.formColumn}>
               <ChapterList
@@ -414,6 +458,6 @@ function CreateGatheringWizard() {
           onReview={() => chapterFlow.openChapter(REVIEW_CHAPTER_INDEX)}
         />
       )}
-    </PageShell>
+    </Frame>
   );
 }

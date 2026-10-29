@@ -1,7 +1,11 @@
+import { useId } from "react";
+import { FiLock } from "react-icons/fi";
 import { FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { GatheringDetailsDraft } from "./EditDetailsModal";
+import { useEventHostScope } from "./eventHostScope";
 import {
+  findFamily,
   findFormat,
   formatsForFamily,
   GATHERING_FAMILIES,
@@ -15,6 +19,35 @@ import {
 } from "./gatheringCatalog";
 import { FormatDetailsFields } from "./steps/FormatDetailsFields";
 import fieldStyles from "./EditDetailsFields.module.css";
+
+/**
+ * A field value the host scope fixes, shown as quiet static text with a lock.
+ * A group named after the field and described by the field's hint, because a
+ * plain paragraph takes neither a label's `for` nor `aria-describedby`.
+ * `FormField` leaves a custom component unwired, so the name and the hint are
+ * attached here.
+ */
+function LockedFieldValue({
+  fieldName,
+  describedById,
+  children,
+}: {
+  fieldName: string;
+  describedById: string;
+  children: string;
+}) {
+  return (
+    <div
+      role="group"
+      aria-label={fieldName}
+      aria-describedby={describedById}
+      className={fieldStyles.lockedValue}
+    >
+      <FiLock aria-hidden />
+      {children}
+    </div>
+  );
+}
 
 /**
  * The family, format and format-details fields of the edit-details modal, so
@@ -38,6 +71,10 @@ import fieldStyles from "./EditDetailsFields.module.css";
  *
  * "Something else" with no words of its own holds Save (`canSaveEditDraft`),
  * so the words field is required and says so under itself while empty.
+ *
+ * A host scope with a `fixedFamily` (QueerPulse music events) shows that
+ * family as locked static text with a hint, and the format list holds its formats plus "Something
+ * else".
  */
 export function EditDetailsFormat({
   draft,
@@ -52,6 +89,11 @@ export function EditDetailsFormat({
   otherTextFieldId?: string;
 }) {
   const { t } = useTranslation();
+  const lockedHelperId = useId();
+  const { fixedFamily } = useEventHostScope();
+  const fixedFamilyEntry = findFamily(fixedFamily);
+  // The family the format list and the questions follow.
+  const familyKey = fixedFamily ?? draft.gatheringFamily;
 
   const chooseFamily = (value: string | null) => {
     const nextFamily = (value ?? "") as GatheringFamily | "";
@@ -61,7 +103,7 @@ export function EditDetailsFormat({
       // answer only belongs to the question its family asks. Both go with the
       // family rather than being left pointing at a question nobody is asking
       // any more. "Something else" is the one format that survives every
-      // family, because it is offered inside all nine.
+      // family, because it is offered inside all ten.
       format:
         findFormat(draft.format)?.family === nextFamily
           ? draft.format
@@ -94,27 +136,42 @@ export function EditDetailsFormat({
 
   return (
     <>
-      <FormField label={t("gatherings:manage.editModal.fieldFamily")}>
-        <Select
+      {fixedFamilyEntry ? (
+        <FormField
           label={t("gatherings:manage.editModal.fieldFamily")}
-          options={[
-            { value: "", label: t("gatherings:manage.editModal.familyNone") },
-            ...GATHERING_FAMILIES.map((family) => ({
-              value: family.key,
-              label: t(family.nameKey),
-            })),
-          ]}
-          value={draft.gatheringFamily}
-          onChange={chooseFamily}
-        />
-      </FormField>
-      {draft.gatheringFamily !== "" && (
+          helper={t("shared:apiError.musicEvent.familyLocked")}
+          helperId={lockedHelperId}
+        >
+          <LockedFieldValue
+            fieldName={t("gatherings:manage.editModal.fieldFamily")}
+            describedById={lockedHelperId}
+          >
+            {t(fixedFamilyEntry.nameKey)}
+          </LockedFieldValue>
+        </FormField>
+      ) : (
+        <FormField label={t("gatherings:manage.editModal.fieldFamily")}>
+          <Select
+            label={t("gatherings:manage.editModal.fieldFamily")}
+            options={[
+              { value: "", label: t("gatherings:manage.editModal.familyNone") },
+              ...GATHERING_FAMILIES.map((family) => ({
+                value: family.key,
+                label: t(family.nameKey),
+              })),
+            ]}
+            value={draft.gatheringFamily}
+            onChange={chooseFamily}
+          />
+        </FormField>
+      )}
+      {familyKey !== "" && (
         <FormField label={t("gatherings:manage.editModal.fieldFormat")}>
           <Select
             label={t("gatherings:manage.editModal.fieldFormat")}
             options={[
               { value: "", label: t("gatherings:manage.editModal.formatNone") },
-              ...formatsForFamily(draft.gatheringFamily).map((format) => ({
+              ...formatsForFamily(familyKey).map((format) => ({
                 value: format.key,
                 label: t(format.nameKey),
               })),
@@ -126,7 +183,7 @@ export function EditDetailsFormat({
                 format: value ?? "",
                 formatDetails:
                   stripDisallowedDetails(
-                    draft.gatheringFamily || null,
+                    familyKey || null,
                     draft.formatDetails,
                     value,
                   ) ?? {},
@@ -155,9 +212,9 @@ export function EditDetailsFormat({
           />
         </FormField>
       )}
-      {draft.gatheringFamily !== "" && (
+      {familyKey !== "" && (
         <FormatDetailsFields
-          family={draft.gatheringFamily}
+          family={familyKey}
           formatKey={draft.format}
           details={draft.formatDetails}
           onChange={changeDetail}

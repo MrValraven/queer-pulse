@@ -178,9 +178,9 @@ export function StudioCouncilPage() {
                         </div>
                         <div className={s.sp}>
                           <Translation
-                            i18nKey={sl.payoutKey}
-                            values={sl.payoutValues}
-                            slots={sl.payoutSlots}
+                            i18nKey={sl.lineKey}
+                            values={sl.lineValues}
+                            slots={sl.lineSlots}
                             components={{ em: <em /> }}
                           />
                         </div>
@@ -193,7 +193,7 @@ export function StudioCouncilPage() {
                         i18nKey="studioShowcase:council.member.stat"
                         values={{
                           tracks: mem.tracksProgrammed,
-                          artists: mem.artistsPaid,
+                          artists: mem.artistsFeatured,
                         }}
                         components={{ em: <em /> }}
                       />

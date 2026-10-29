@@ -8,14 +8,21 @@ import {
   FiMessageSquare,
   FiMic,
   FiMusic,
+  FiRadio,
   FiShield,
+  FiShoppingBag,
   FiStar,
   FiTag,
   FiUserX,
 } from "react-icons/fi";
 import { communityPath, routes } from "../../app/routeMap";
 import { memberName } from "../members/data/members";
-import { studioPlaylistPath } from "../studio/studioPaths";
+import { DEMO_ARTIST_MARIANA } from "../studio/api/studioDemoMe.data";
+import {
+  studioDashboardPath,
+  studioPaymentsPath,
+  studioPlaylistPath,
+} from "../studio/studioPaths";
 import { Translation } from "../../shared/i18n/Translation";
 import type { Formatters } from "../../shared/i18n/format";
 import type { TFunction } from "../../shared/i18n/types";
@@ -298,7 +305,7 @@ function buildUnreadNotifications(
     buildStudioReleaseNotification(t, fmt),
     buildStudioEpisodeNotification(t, fmt),
     buildPersonaPostNotification(t, fmt),
-    ...buildStudioCreditNotifications(t, fmt),
+    ...buildStudioMemberNotifications(t, fmt),
     ...buildUnreadActivityNotifications(t, fmt),
   ];
 }
@@ -389,6 +396,118 @@ function buildPersonaPostNotification(
       },
     ],
   };
+}
+
+/** The Studio rows a persona member sees: credits, then purchases. */
+function buildStudioMemberNotifications(
+  t: TFunction,
+  fmt: Formatters,
+): DemoNotificationRow[] {
+  return [
+    ...buildStudioCreditNotifications(t, fmt),
+    ...buildStudioLandingNotifications(t, fmt),
+    ...buildStudioPurchaseNotifications(t, fmt),
+  ];
+}
+
+function buildStudioLandingNotifications(
+  t: TFunction,
+  fmt: Formatters,
+): DemoNotificationRow[] {
+  // The demo counterparts of the live landing rows. They reuse the live keys
+  // and name personas and tracks only.
+  return [
+    {
+      id: 36,
+      type: "community",
+      unread: true,
+      icon: { Glyph: FiRadio, background: "rgba(var(--plum-rgb), .07)" },
+      text: t("notifications:type.studio_landing_preview_requested.text", {
+        personaName: DEMO_ARTIST_MARIANA.name,
+        trackTitle: "Planície",
+        count: 1,
+      }),
+      meta: t("notifications:type.studio_landing_preview_requested.meta"),
+      time: fmt.relativeTime(-3, "hour"),
+      createdAtIso: agoIso(3, "hour"),
+      actions: [
+        {
+          label: t("notifications:actions.answerLandingPreview"),
+          variant: "ghost",
+          href: `${studioDashboardPath(DEMO_ARTIST_MARIANA.id)}#landing-previews`,
+        },
+      ],
+    },
+    {
+      id: 37,
+      type: "platform",
+      unread: false,
+      icon: { Glyph: FiMusic, background: "rgba(var(--plum-rgb), .07)" },
+      text: t("notifications:type.studio_access_granted.text"),
+      meta: t("notifications:type.studio_access_granted.meta"),
+      time: fmt.relativeTime(-5, "day"),
+      createdAtIso: agoIso(5, "day"),
+      shouldRefreshStudioAccess: true,
+      actions: [
+        {
+          label: t("notifications:actions.openStudio"),
+          variant: "ghost",
+          href: routes.studio,
+        },
+      ],
+    },
+  ];
+}
+
+function buildStudioPurchaseNotifications(
+  t: TFunction,
+  fmt: Formatters,
+): DemoNotificationRow[] {
+  // The demo counterparts of the live purchase rows. They reuse the live
+  // keys and name artists and items only; no buyer and no amount.
+  return [
+    {
+      id: 34,
+      type: "community",
+      unread: true,
+      icon: { Glyph: FiShoppingBag, background: "rgba(var(--plum-rgb), .07)" },
+      text: t("notifications:type.studio_purchase_claimed.text", {
+        artistName: "Mariana Sol",
+        itemTitle: "Cidade dos santos",
+        count: 1,
+      }),
+      meta: t("notifications:type.studio_purchase_claimed.meta"),
+      time: fmt.relativeTime(-2, "hour"),
+      createdAtIso: agoIso(2, "hour"),
+      actions: [
+        {
+          label: t("notifications:actions.reviewPayments"),
+          variant: "ghost",
+          href: studioPaymentsPath(DEMO_ARTIST_MARIANA.id),
+        },
+      ],
+    },
+    {
+      id: 35,
+      type: "community",
+      unread: false,
+      icon: { Glyph: FiShoppingBag, background: "rgba(var(--plum-rgb), .07)" },
+      text: t("notifications:type.studio_purchase_confirmed.text", {
+        artistName: "Coro de Outubro",
+        itemTitle: "Salmos de rua",
+      }),
+      meta: t("notifications:type.studio_purchase_confirmed.meta"),
+      time: fmt.relativeTime(-4, "day"),
+      createdAtIso: agoIso(4, "day"),
+      actions: [
+        {
+          label: t("notifications:actions.openPurchases"),
+          variant: "ghost",
+          href: routes.musicPurchases,
+        },
+      ],
+    },
+  ];
 }
 
 function buildStudioCreditNotifications(

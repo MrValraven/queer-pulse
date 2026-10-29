@@ -78,9 +78,12 @@ export function GatheringRsvpControl({
   );
   const goingCount = attendees?.goingCount ?? gathering.goingCount ?? 0;
 
-  const messageHost = isViewerHost
-    ? undefined
-    : () => contact({ slug: gathering.hostSlug, name: gathering.host });
+  // A house-hosted event has no member host (empty `hostSlug`), so there is
+  // nobody to connect with or message: the control is left out.
+  const messageHost =
+    isViewerHost || gathering.hostSlug === ""
+      ? undefined
+      : () => contact({ slug: gathering.hostSlug, name: gathering.host });
   const messageLabel = connected
     ? t("connect:contact.message")
     : t("gatherings:common.connectCta");

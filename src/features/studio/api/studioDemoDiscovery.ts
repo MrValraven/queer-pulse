@@ -174,11 +174,7 @@ function sceneScore(artistId: string, candidateId: string): number {
 
 function genreScore(artistId: string, candidateId: string): number {
   const genresOf = (id: string) =>
-    new Set(
-      releasesOf(id).flatMap((release) =>
-        release.genre ? [release.genre] : [],
-      ),
-    );
+    new Set(releasesOf(id).flatMap((release) => release.genres));
   const ownGenres = genresOf(artistId);
   const sharedCount = [...genresOf(candidateId)].filter((genre) =>
     ownGenres.has(genre),
@@ -225,7 +221,7 @@ export function demoStudioRadio(filter: StudioRadioFilter): StudioRadioDTO {
     (release) => release.type !== "podcast",
   ).filter((release) =>
     filter.kind === "genre"
-      ? release.genre === filter.value
+      ? release.genres.includes(filter.value)
       : release.mood === filter.value,
   );
   const items = releases.flatMap((release) =>

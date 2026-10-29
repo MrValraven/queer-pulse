@@ -1,17 +1,7 @@
-/* The album tracklist: the shared track rows carry their own spacing and
-   hover wash, so the list adds none. */
+/* The album tracklist: the shared track rows carry their own spacing,
+   hairlines and hover wash, so the list adds none. */
 .list {
   margin: 0;
   padding: 0;
   list-style: none;
-}
-
-/* Showcase money, once above the rows: quiet, on the duration's side. */
-.perPlay {
-  margin: 0 0 4px;
-  padding-inline: 12px;
-  text-align: end;
-  font-size: var(--text-12);
-  font-variant-numeric: tabular-nums;
-  color: var(--studio-text-faint);
 }

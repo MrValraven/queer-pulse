@@ -26,6 +26,7 @@ export const COVER_TINT_BY_FAMILY: Record<GatheringFamily, PreviewTint> = {
   meet: "coral",
   eat: "coral",
   party: "coral",
+  music: "plum",
   make: "jade",
   learn: "plum",
   watch: "plum",

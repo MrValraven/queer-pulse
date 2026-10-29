@@ -1,4 +1,4 @@
-import { FiCheckCircle, FiClock, FiFlag } from "react-icons/fi";
+import { FiCheckCircle, FiClock, FiFlag, FiMusic } from "react-icons/fi";
 import { AdminBanEvasionFlag } from "./AdminBanEvasionFlag";
 import { JoinRequestDecisionActions } from "./JoinRequestDecisionActions";
 import { JoinRequestFacts } from "./JoinRequestFacts";
@@ -87,6 +87,12 @@ export function JoinRequestCard({
         <div className={styles.queueHeadText}>
           <div className={styles.queueName}>{item.name}</div>
           <div className={styles.queueApplied}>{item.appliedLine}</div>
+          {item.isStudioArtist && (
+            <span className={styles.queueStudioArtist}>
+              <FiMusic aria-hidden />
+              {t("admin:members.verify.studioArtistChip")}
+            </span>
+          )}
           {/* OPS-04. The stored due date speaks only once it matters: a row
               past due shows the red chip alone, since it already says how
               late; a row in its last day shows the amber wait; any other row

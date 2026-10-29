@@ -118,7 +118,10 @@ const DEMO_GRANTED_AT: Record<string, Partial<Record<StaffRoleId, string>>> = {
     resource_curator: "2026-06-24T14:00:00.000Z",
   },
   ana: { partnerships: "2026-03-08T11:20:00.000Z" },
-  ines: { housing_moderator: "2026-08-27T16:45:00.000Z" },
+  ines: {
+    housing_moderator: "2026-08-27T16:45:00.000Z",
+    music_manager_producer: "2026-10-12T13:30:00.000Z",
+  },
 };
 
 /**

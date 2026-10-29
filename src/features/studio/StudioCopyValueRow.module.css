@@ -1,0 +1,55 @@
+/* A labelled value with a copy button: the payment reference on the buy
+   sheet and the pending-purchase panel. */
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  min-width: 0;
+  min-height: var(--tap-min);
+  padding: 8px 12px;
+  border-radius: var(--radius-10);
+  background: var(--studio-wash-1);
+  color: var(--studio-text);
+}
+
+.text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.label {
+  font-size: var(--text-12-5);
+  color: var(--studio-text-muted);
+}
+
+.value {
+  font-size: var(--text-16);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--ls-eyebrow);
+  overflow-wrap: anywhere;
+  /* One tap selects the whole value, the way out when copying fails. */
+  -webkit-user-select: all;
+  user-select: all;
+}
+
+.copyButton {
+  flex: none;
+  min-height: var(--tap-min);
+}
+
+.copyButton[data-copied] {
+  color: var(--studio-jade-text);
+}
+
+.copyButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}

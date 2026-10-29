@@ -9,6 +9,12 @@ export interface MemberSelectPerson {
   name: string;
   avatarUrl?: string;
   pronouns?: string;
+  /**
+   * A quiet second line under the name, such as the artist personas a Studio
+   * member performs as. Shown only when set, and in place of the pronouns
+   * line; rows without it render exactly as before.
+   */
+  detail?: string;
   staffRole?: string;
   /** Which of the person's staff roles wear a badge; `MemberIdentity` reads it. */
   staffBadgedRoles?: readonly string[];

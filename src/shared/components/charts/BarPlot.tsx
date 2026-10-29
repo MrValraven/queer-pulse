@@ -61,6 +61,9 @@ export interface BarPlotColumn<Datum> {
   label?: ReactNode;
   /** Class for the column label (e.g. `styles.chLabel` or `styles.chLabelStrong`). */
   labelClassName?: string;
+  /** Where the label sits against the column's centre; `middle` by default.
+   *  `end` keeps the last label of a narrow chart inside the frame. */
+  labelAnchor?: "middle" | "end";
 }
 
 export interface BarPlotProps<Item, Datum> {
@@ -265,7 +268,7 @@ export function BarPlot<Item, Datum>({
               <text
                 x={x + barWidth / 2}
                 y={labelY}
-                textAnchor="middle"
+                textAnchor={columnSpec.labelAnchor ?? "middle"}
                 className={columnSpec.labelClassName}
               >
                 {columnSpec.label}

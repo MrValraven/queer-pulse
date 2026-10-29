@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { IconType } from "react-icons";
 import {
   FiGlobe,
@@ -11,6 +12,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { cx } from "../../shared/lib/cx";
 import type { EventVisibility } from "./api/events.api";
 import { AUDIENCE_SCOPE_OPTIONS } from "./audienceScope.data";
+import { useEventHostScope } from "./eventHostScope";
 import styles from "./AudienceScopeField.module.css";
 
 // Icon-component lookup per scope tier. It stays colocated with the component
@@ -71,11 +73,23 @@ export function AudienceScopeField({
   hintPlacement = "above",
 }: AudienceScopeFieldProps) {
   const { t } = useTranslation();
+  // A host scope can narrow the tiers (an event QueerPulse hosts offers
+  // Public and Invite only); the member scope offers every tier. An event
+  // already saved with a tier outside the narrowed set keeps that tier on
+  // offer, so its current audience stays the chosen card. The tier it opened
+  // with stays too, so moving off it and back never drops a card.
+  const { allowedVisibilities } = useEventHostScope();
+  const [savedValue] = useState(value);
   const label = t("gatherings:audienceScope.label");
   const labelId = `${fieldId}-label`;
   const hintId = `${fieldId}-hint`;
   const options = AUDIENCE_SCOPE_OPTIONS.filter(
-    (option) => option.id !== "community" || communityAvailable,
+    (option) =>
+      (option.id !== "community" || communityAvailable) &&
+      (allowedVisibilities === null ||
+        allowedVisibilities.includes(option.id) ||
+        option.id === value ||
+        option.id === savedValue),
   );
   const hint = (
     <p className={cx(styles.hint, hintClassName)} id={hintId}>

@@ -6,6 +6,7 @@ import { ApiError } from "../../../shared/api/client";
 import type { AttendeeRow } from "../api/events.adapters";
 import type { AttendeesResult } from "../api/useAttendees";
 import type { ScanOutcome } from "./scanOutcome";
+import { EventHostScopeContext, MEMBER_HOST_SCOPE } from "../eventHostScope";
 import { CheckinTab } from "./CheckinTab";
 
 /**
@@ -15,15 +16,16 @@ import { CheckinTab } from "./CheckinTab";
  * prints the outcome kind, since its camera needs no exercising here.
  */
 
-const { rosterState, checkInState, undoCalls, checkInCalls } = vi.hoisted(
-  () => ({
+const { rosterState, checkInState, undoCalls, checkInCalls, intervalCalls } =
+  vi.hoisted(() => ({
     rosterState: { roster: undefined as AttendeesResult | undefined },
+    // The `refetchIntervalMs` each roster and page hook call received.
+    intervalCalls: [] as (number | null | undefined)[],
     // What the next check-in does. `null` = resolve; an Error = reject.
     checkInState: { rejectWith: null as Error | null },
     undoCalls: [] as string[],
     checkInCalls: [] as unknown[],
-  }),
-);
+  }));
 
 const guest = (slug: string, name: string, checkedInAt: Date | null = null) =>
   ({
@@ -37,14 +39,22 @@ const guest = (slug: string, name: string, checkedInAt: Date | null = null) =>
   }) as AttendeeRow;
 
 vi.mock("../api/useAttendees", () => ({
-  useAttendees: () => ({ data: rosterState.roster, isLoading: false }),
+  useAttendees: (
+    _slug: string,
+    options?: { refetchIntervalMs?: number | null },
+  ) => {
+    intervalCalls.push(options?.refetchIntervalMs);
+    return { data: rosterState.roster, isLoading: false };
+  },
 }));
 
 vi.mock("../api/useAttendeePages", () => ({
   useAttendeePages: (
     _slug: string,
     filter: { arrival?: string; q?: string },
+    options?: { refetchIntervalMs?: number | null },
   ) => {
+    intervalCalls.push(options?.refetchIntervalMs);
     const going = rosterState.roster?.going ?? [];
     const searchTerm = (filter.q ?? "").toLowerCase();
     const rows = going.filter(
@@ -151,6 +161,7 @@ describe("CheckinTab", () => {
     checkInState.rejectWith = null;
     undoCalls.length = 0;
     checkInCalls.length = 0;
+    intervalCalls.length = 0;
   });
 
   it("checks a guest in from the list, announces it and undoes it from the row", async () => {
@@ -270,5 +281,20 @@ describe("CheckinTab", () => {
     );
     expect(await screen.findByText("Outcome: refused")).toBeInTheDocument();
     expect(checkInCalls).toEqual([{ cardToken: "card-token" }]);
+  });
+
+  it("refetches the door on the scope interval", async () => {
+    rosterState.roster = roster([guest("nuno", "Nuno Menezes")], 0);
+    render(
+      <EventHostScopeContext.Provider
+        value={{ ...MEMBER_HOST_SCOPE, doorRefetchIntervalMs: 15_000 }}
+      >
+        <CheckinTab slug="supper-club" startAt={startAt} endAt={null} />
+      </EventHostScopeContext.Provider>,
+      { wrapper: ({ children }) => <TestProviders>{children}</TestProviders> },
+    );
+    await screen.findByRole("progressbar");
+    expect(intervalCalls.length).toBeGreaterThanOrEqual(3);
+    expect(new Set(intervalCalls)).toEqual(new Set([15_000]));
   });
 });

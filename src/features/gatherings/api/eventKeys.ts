@@ -1,16 +1,22 @@
 import type { GuestPreviewRole } from "../guestPreview/guestPreview";
+import { eventKeySegment, type EventApiTarget } from "./eventApiTarget";
 import type { EventBrowseFilters, EventFilter } from "./events.api";
 
 /**
  * Per-domain react-query key factory for the events domain.
  *
- * `demoMode` sits **LAST** in every key (audit P1-10 recommendation), so a bare
- * root prefix — `["event"]` / `["events"]` / `["attendees"]` — invalidates every
+ * `demoMode` sits **LAST** among the identifying parts of every key (audit
+ * P1-10 recommendation), so a bare root prefix (`["event"]`, `["events"]` or `["attendees"]`) invalidates every
  * variant regardless of demo/live, and the read site (where the query is
  * defined) and the write site (where a mutation invalidates) can never drift out
  * of position. The previous bug was invalidating `["event", slug]`, which put an
  * identifier where the query held `demoMode`, so it matched nothing and edits /
  * cancels / RSVPs / cohost changes never refreshed the UI.
+ *
+ * The one thing that may follow `demoMode` is the `"musicAdmin"` segment a
+ * music admin read adds (`eventKeySegment`), so it never shares a cache entry
+ * with the member read of the same slug. A member key has no such segment and
+ * ends at `demoMode`.
  *
  * Use `.detail` / `.list` / `.attendees` where a query is DEFINED; use the
  * `*Root` prefixes to INVALIDATE every matching query after a mutation.
@@ -18,8 +24,11 @@ import type { EventBrowseFilters, EventFilter } from "./events.api";
 export const eventKeys = {
   /** Prefix matching every single-event detail query (any slug, any mode). */
   detailRoot: ["event"] as const,
-  detail: (param: string | undefined, demoMode: boolean) =>
-    ["event", param, demoMode] as const,
+  detail: (
+    param: string | undefined,
+    demoMode: boolean,
+    apiTarget?: EventApiTarget,
+  ) => ["event", param, demoMode, ...eventKeySegment(apiTarget)] as const,
   /**
    * A host's guest preview (`?viewAs=`). Its own root on purpose: an RSVP
    * patch or invalidation aimed at the host's real detail (`detailRoot`)
@@ -86,23 +95,41 @@ export const eventKeys = {
 
   /** Prefix matching every announcements query (any slug, any mode). */
   announcementsRoot: ["event-announcements"] as const,
-  announcements: (slug: string | undefined, demoMode: boolean) =>
-    ["event-announcements", slug, demoMode] as const,
+  announcements: (
+    slug: string | undefined,
+    demoMode: boolean,
+    apiTarget?: EventApiTarget,
+  ) =>
+    [
+      "event-announcements",
+      slug,
+      demoMode,
+      ...eventKeySegment(apiTarget),
+    ] as const,
 
   /** Prefix matching every event-bans query (any slug, any mode). */
   bansRoot: ["event-bans"] as const,
-  bans: (slug: string | undefined, demoMode: boolean) =>
-    ["event-bans", slug, demoMode] as const,
+  bans: (
+    slug: string | undefined,
+    demoMode: boolean,
+    apiTarget?: EventApiTarget,
+  ) => ["event-bans", slug, demoMode, ...eventKeySegment(apiTarget)] as const,
 
   /** Prefix matching every attendees query (any slug, any mode). */
   attendeesRoot: ["attendees"] as const,
-  attendees: (slug: string | undefined, demoMode: boolean) =>
-    ["attendees", slug, demoMode] as const,
+  attendees: (
+    slug: string | undefined,
+    demoMode: boolean,
+    apiTarget?: EventApiTarget,
+  ) => ["attendees", slug, demoMode, ...eventKeySegment(apiTarget)] as const,
 
   /** Prefix matching every event-lineup query (any slug, any mode). */
   lineupRoot: ["event-lineup"] as const,
-  lineup: (slug: string | undefined, demoMode: boolean) =>
-    ["event-lineup", slug, demoMode] as const,
+  lineup: (
+    slug: string | undefined,
+    demoMode: boolean,
+    apiTarget?: EventApiTarget,
+  ) => ["event-lineup", slug, demoMode, ...eventKeySegment(apiTarget)] as const,
   /** The lineup as a guest preview reads it. Its own root, as above. */
   lineupPreviewRoot: ["event-lineup-preview"] as const,
   lineupPreview: (
@@ -132,6 +159,15 @@ export const eventKeys = {
 
   /** Prefix matching every organiser "invite requests" query. */
   inviteRequestsRoot: ["event-invite-requests"] as const,
-  inviteRequests: (slug: string | undefined, demoMode: boolean) =>
-    ["event-invite-requests", slug, demoMode] as const,
+  inviteRequests: (
+    slug: string | undefined,
+    demoMode: boolean,
+    apiTarget?: EventApiTarget,
+  ) =>
+    [
+      "event-invite-requests",
+      slug,
+      demoMode,
+      ...eventKeySegment(apiTarget),
+    ] as const,
 };

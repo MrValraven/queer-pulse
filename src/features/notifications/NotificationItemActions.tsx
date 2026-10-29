@@ -20,10 +20,13 @@ export function NotificationItemActions({
   notificationId,
   actions,
   onResolve,
+  onBeforeNavigate,
 }: {
   notificationId: NotificationId;
   actions: NotifAction[];
   onResolve: (id: NotificationId, toast: string) => void;
+  /** Runs just before an action navigates, for a row that must refresh data. */
+  onBeforeNavigate?: () => void;
 }) {
   const navigate = useNavigate();
   // PRD-15. A "wants to connect" row answers the request from here, so the
@@ -86,6 +89,7 @@ export function NotificationItemActions({
               } else if (action.resolve) {
                 onResolve(notificationId, action.resolve.toast);
               } else {
+                onBeforeNavigate?.();
                 void navigate(linkToPath(action.href));
               }
             }}

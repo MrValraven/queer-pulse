@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useId, useRef } from "react";
 import { FiMusic } from "react-icons/fi";
 import { Collapse, EmptyState, Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -13,6 +13,7 @@ import {
 } from "./StudioLoadStates";
 import { StudioDashboardExtras } from "./StudioDashboardExtras";
 import { StudioDashboardNextSteps } from "./StudioDashboardNextSteps";
+import { StudioLandingPreviewsCard } from "./StudioLandingPreviewsCard";
 import { StudioNoPersonaState } from "./StudioNoPersonaState";
 import { StudioNumbersTable } from "./StudioNumbersTable";
 import { studioUploadPath } from "./studioPaths";
@@ -41,6 +42,7 @@ export function StudioYourNumbers({
   const headingId = useId();
   const selectId = useId();
   const { stats, loadState } = useStudioArtistStats(persona?.id ?? null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
   const Heading = isPageTitle ? "h1" : "h2";
 
   if (!persona)
@@ -57,7 +59,12 @@ export function StudioYourNumbers({
     <section className={css.section} aria-labelledby={headingId}>
       <div className={css.head}>
         <div className={css.eyebrow}>{t("studio:numbers.eyebrow")}</div>
-        <Heading id={headingId} className={css.title}>
+        <Heading
+          id={headingId}
+          ref={titleRef}
+          tabIndex={-1}
+          className={css.title}
+        >
           <Translation
             i18nKey="studio:numbers.title"
             components={{ em: <em /> }}
@@ -87,6 +94,10 @@ export function StudioYourNumbers({
         )}
       </div>
       <StudioDashboardNextSteps persona={persona} />
+      <StudioLandingPreviewsCard
+        subprofileId={persona.id}
+        outsideFocusRef={titleRef}
+      />
       <Collapse isOpen={loadState.isNotFound}>
         <StudioNotFound />
       </Collapse>

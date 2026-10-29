@@ -1036,6 +1036,8 @@ export interface SubprofilePublicDTO {
   // owner/co-owner viewing their own removed persona (a non-owner gets the
   // 403 `{restrictedState:"removed"}` instead of a DTO at all).
   removedAt?: string | null;
+  /** Studio landing v2: a Studio founding artist; missing reads false. */
+  isFoundingArtist?: boolean;
 }
 
 /** Directory / list card. */

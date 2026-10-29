@@ -48,18 +48,20 @@ export function StudioRail() {
       data-collapsed={isRailCollapsed || undefined}
     >
       <div className={styles.brandRow}>
-        <Link to={routes.studio} className={styles.brand}>
-          <span className={styles.pulseDot} aria-hidden />
-          <span className={styles.railFade}>
-            <Translation
-              i18nKey="studio:brand.lockup"
-              components={{ em: <em /> }}
-            />
+        <div className={styles.brandLockup}>
+          <Link to={routes.studio} className={styles.brand}>
+            <span className={styles.pulseDot} aria-hidden />
+            <span className={styles.railFade}>
+              <Translation
+                i18nKey="studio:brand.lockup"
+                components={{ em: <em /> }}
+              />
+            </span>
+          </Link>
+          <span className={`${styles.product} ${styles.railFade}`}>
+            {t("studio:brand.studioLabel")}
           </span>
-        </Link>
-        <span className={`${styles.product} ${styles.railFade}`}>
-          {t("studio:brand.studioLabel")}
-        </span>
+        </div>
       </div>
 
       <nav className={styles.railGrp} aria-label={t("studio:rail.v1.navLabel")}>

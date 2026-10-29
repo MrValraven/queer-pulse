@@ -6,7 +6,7 @@ import { AboutSection, RateBand, Skeptics, Tiers } from "./StudioAboutSections";
 import { buildAboutData } from "./studioAbout.data";
 import s from "./StudioAboutPage.module.css";
 
-/** Demo only: the co-op vision (the rate, the earnings ceiling, the
+/** Demo only: the co-op vision (how artists get paid, the earnings ceiling, the
  *  council and the hard questions) under its original keys. */
 export function StudioAboutShowcase() {
   const { t } = useTranslation();

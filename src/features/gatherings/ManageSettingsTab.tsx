@@ -13,8 +13,9 @@ type SettingId = (typeof GATHERING_SETTINGS)[number]["id"];
 interface SettingsTabProps {
   slug: string;
   onCancel: () => void;
-  /** Opens the delete confirm (`useDeleteGatheringFlow`, owned by the page). */
-  onDelete: () => void;
+  /** Opens the delete confirm (`useDeleteGatheringFlow`, owned by the page).
+   *  Left out (a house event), the delete block does not render. */
+  onDelete?: () => void;
   /** A delete is in flight, so the button holds still. */
   isDeletePending?: boolean;
   /** The event's real accepted co-hosts — see `CohostManager`. */
@@ -103,18 +104,25 @@ export function SettingsTab({
         </Button>
       </div>
       {/* Erasing is its own block below cancel: cancel tells people, delete
-          tells nobody, so the text says which one to reach for. */}
-      <div className={`${styles.dangerZone} ${styles.dangerZoneFollow}`}>
-        <div className={styles.dzLabel}>
-          {t("gatherings:manage.settings.deleteLabel")}
+          tells nobody, so the text says which one to reach for. A house event
+          passes no `onDelete`, so the block is absent for its whole life. */}
+      {onDelete && (
+        <div className={`${styles.dangerZone} ${styles.dangerZoneFollow}`}>
+          <div className={styles.dzLabel}>
+            {t("gatherings:manage.settings.deleteLabel")}
+          </div>
+          <div className={styles.dzText}>
+            {t("gatherings:manage.settings.deleteText")}
+          </div>
+          <Button
+            variant="danger"
+            onClick={onDelete}
+            disabled={isDeletePending}
+          >
+            <FiTrash2 aria-hidden /> {t("gatherings:manage.settings.deleteCta")}
+          </Button>
         </div>
-        <div className={styles.dzText}>
-          {t("gatherings:manage.settings.deleteText")}
-        </div>
-        <Button variant="danger" onClick={onDelete} disabled={isDeletePending}>
-          <FiTrash2 aria-hidden /> {t("gatherings:manage.settings.deleteCta")}
-        </Button>
-      </div>
+      )}
     </div>
   );
 }

@@ -3,6 +3,7 @@ import {
   memberAvatar,
   memberName,
 } from "../../members/data/members";
+import { HOUSE_DEMO_LINEUPS } from "../houseMusicEvents.data";
 import type {
   EventLineupDTO,
   EventLineupEntryDTO,
@@ -82,11 +83,24 @@ function demoViewerEntry(slug: string | undefined): EventLineupEntryDTO | null {
  * Demo-mode lineup. On `DEMO_INVITED_GATHERING_SLUG` the signed-in member
  * holds the DJ invite `demoLineupInvite` describes, in whatever status they
  * answered; on `DEMO_ACCEPTED_GATHERING_SLUGS` they are an accepted DJ; on
- * every other gathering they are off the lineup. Every lineup carries one
+ * every other gathering they are off the lineup. The four house music events
+ * carry their own lineups (`HOUSE_DEMO_LINEUPS`). Every other lineup carries one
  * confirmed performer, one open invite and one decline, so the host editor
  * shows every status. Network-free and imported only by the lineup hooks.
  */
 export function demoEventLineup(slug: string | undefined): EventLineupDTO {
+  // A house music event has its own lineup, matching its admin list row. The
+  // demo viewer is on none of them.
+  const houseLineup = slug ? HOUSE_DEMO_LINEUPS[slug] : undefined;
+  if (houseLineup) {
+    return {
+      entries: houseLineup.map((entry) => ({
+        ...demoEntry(entry.slug, entry.role, entry.status),
+        name: entry.name ?? memberName(entry.slug),
+      })),
+      viewerEntry: null,
+    };
+  }
   const viewerEntry = demoViewerEntry(slug);
   return {
     entries: [

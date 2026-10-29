@@ -88,7 +88,7 @@ describe("useStudioRadio (demo)", () => {
   it("ends a one-track mood radio with that track", async () => {
     const { result } = renderRadio();
     await act(() =>
-      result.current.radio.startRadio({ kind: "mood", value: "sweaty" }),
+      result.current.radio.startRadio({ kind: "mood", value: "euphoric" }),
     );
     await waitFor(() =>
       expect(playOrder(result.current.player)).toEqual([

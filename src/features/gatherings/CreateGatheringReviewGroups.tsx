@@ -20,6 +20,7 @@ import {
   reviewSpotsText,
   reviewVisibilityText,
 } from "./reviewRecapReadings";
+import { useEventHostScope } from "./eventHostScope";
 import { isPaidCostKind } from "./paymentDetails";
 import type { GatheringForm } from "./useGatheringForm";
 import { useHostableCommunities } from "./useHostableCommunities";
@@ -40,10 +41,12 @@ export interface ReviewGroupProps {
  * guests pay, who can see it, the waitlist, when RSVPs close, the community
  * (only for a host who runs or moderates one, as the chapter itself shows the
  * field), the guest communities with when their invites go out, and the
- * co-hosts picked.
+ * co-hosts picked. An event QueerPulse hosts asks none of the last three, so
+ * its recap leaves them out.
  */
 export function WhoReviewGroup({ form, onEditChapter }: ReviewGroupProps) {
   const { t } = useTranslation();
+  const { isHouseEvent } = useEventHostScope();
   const { options: myCommunityOptions } = useHostableCommunities();
   const communityName = form.communitySlug
     ? (myCommunityOptions.find(
@@ -92,22 +95,24 @@ export function WhoReviewGroup({ form, onEditChapter }: ReviewGroupProps) {
           label={t("gatherings:create.v2.who.rsvpCutoffLabel")}
           value={reviewRsvpCutoffText(form, t)}
         />
-        {myCommunityOptions.length > 0 && (
+        {!isHouseEvent && myCommunityOptions.length > 0 && (
           <ReviewRow
             label={t("gatherings:create.v2.review.row.community")}
             value={communityName}
           />
         )}
-        {myCommunityOptions.length > 0 && (
+        {!isHouseEvent && myCommunityOptions.length > 0 && (
           <ReviewRow
             label={t("gatherings:guestCommunities.label")}
             value={reviewGuestCommunitiesText(form, t)}
           />
         )}
-        <ReviewRow
-          label={t("gatherings:create.v2.review.row.cohosts")}
-          value={reviewCohostsText(form)}
-        />
+        {!isHouseEvent && (
+          <ReviewRow
+            label={t("gatherings:create.v2.review.row.cohosts")}
+            value={reviewCohostsText(form)}
+          />
+        )}
       </ReviewRows>
     </ReviewGroup>
   );

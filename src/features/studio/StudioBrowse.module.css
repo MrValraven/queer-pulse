@@ -105,9 +105,20 @@
   transform: scale(0.97);
 }
 
+/* Dark: the chosen chip wears the accent tint and edge. */
 .chip[aria-current="page"] {
   border-color: var(--accent);
   background: rgba(var(--accent-rgb), 0.16);
+}
+
+/* Light: the chosen chip (All, a format, a genre or a mood) is a grey
+   selected fill with ink words, as every selected item in Daylight is. The
+   border clears and keeps its width, so the chip never shifts, and (0,4,0)
+   holds the fill over the hover wash. */
+:global(:root:not([data-theme="dark"])) .chip[aria-current="page"] {
+  border-color: transparent;
+  background: var(--studio-selected);
+  color: var(--studio-text);
 }
 
 .chip:focus-visible {

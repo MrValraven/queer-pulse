@@ -1755,6 +1755,8 @@ export const subprofiles: Catalog = {
   "editorRail.people": "Pessoas",
   "editorRail.publishGroup": "Publicar",
   "editorRail.getItLive": "Pôr no ar",
+  "editorRail.dangerGroup": "Zona de perigo",
+  "editorRail.deletePersona": "Eliminar persona",
 
   // Mobile pane switcher (EditorPaneSwitcher, EditorPaneSheet) — a barra fixa
   // que substitui o menu lateral no telemóvel, e a folha com todas as secções.
@@ -1778,6 +1780,9 @@ export const subprofiles: Catalog = {
     "Acrescenta as peças de trabalho que compõem esta secção.",
   "editorPane.publish.title": "Publicar",
   "editorPane.publish.lede": "Vê o que falta e depois publica esta persona.",
+  "editorPane.danger.title": "Eliminar persona",
+  "editorPane.danger.lede":
+    "As ações aqui não se podem desfazer. Nada muda nesta página até confirmares.",
 
   // Pré-visualização ao vivo (EditorPreview) — mostra a página pública da
   // persona dentro do próprio editor.
@@ -3828,4 +3833,6 @@ export const subprofiles: Catalog = {
   "tattooItem.sessions.removeNumbered": "Remover sessão {number}",
   "tattoo.project.previousSessions": "Sessões anteriores",
   "tattoo.project.nextSessions": "Sessões seguintes",
+  // Studio landing v2 (2026-10-28)
+  "foundingArtist.badge": "Artista da fundação",
 };

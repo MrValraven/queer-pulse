@@ -6,6 +6,7 @@ import {
   type StudioCurationShelf,
 } from "../studio/api/studio.types";
 import {
+  STUDIO_ERROR_MESSAGE_KEY,
   studioErrorMessageKey,
   studioErrorMessageKeyOf,
 } from "../studio/studioErrors.data";
@@ -14,11 +15,22 @@ import type {
   AdminStudioPickDTO,
   AdminStudioSceneDTO,
 } from "./api/studioDiscoveryAdmin.api";
+import type {
+  AdminStudioFoundingArtistDTO,
+  AdminStudioLandingDTO,
+  StudioLandingIneligibleReason,
+} from "./api/studioLandingAdmin.api";
 
 // Labels and pure rules the Studio discovery console shares. No demo data
 // lives here, so the console's chunk carries none.
 
-export const STUDIO_ADMIN_TABS = ["shelves", "scenes"] as const;
+export const STUDIO_ADMIN_TABS = [
+  "shelves",
+  "scenes",
+  "landing",
+  "founding",
+  "waiting",
+] as const;
 export type StudioAdminTabId = (typeof STUDIO_ADMIN_TABS)[number];
 
 export function isStudioAdminTab(value: string): value is StudioAdminTabId {
@@ -208,4 +220,89 @@ export function studioAdminSaveErrorKeyOf(cause: unknown): string {
  *  names no role. */
 export function isStudioAdminForbidden(error: unknown): boolean {
   return error instanceof ApiError && error.status === 403;
+}
+
+/** The console's line for each reason a track cannot play on the Studio
+ *  page. */
+export const STUDIO_LANDING_INELIGIBLE_LABEL_KEY: Record<
+  StudioLandingIneligibleReason,
+  string
+> = {
+  not_playable: "admin:studioAdmin.landing.previews.ineligible.not_playable",
+  persona_not_eligible:
+    "admin:studioAdmin.landing.previews.ineligible.persona_not_eligible",
+  podcast: "admin:studioAdmin.landing.previews.ineligible.podcast",
+  content_warnings:
+    "admin:studioAdmin.landing.previews.ineligible.content_warnings",
+  explicit: "admin:studioAdmin.landing.previews.ineligible.explicit",
+  open_claim: "admin:studioAdmin.landing.previews.ineligible.open_claim",
+};
+
+const STUDIO_LANDING_INELIGIBLE_UNKNOWN_KEY =
+  "admin:studioAdmin.landing.previews.ineligible.unknown";
+
+/** The label of an ineligible reason; a reason from a newer server reads the
+ *  unknown line, and null (an eligible track) reads null. */
+export function ineligibleLabelKeyOf(reason: string | null): string | null {
+  if (reason === null) return null;
+  return Object.keys(STUDIO_LANDING_INELIGIBLE_LABEL_KEY).includes(reason)
+    ? STUDIO_LANDING_INELIGIBLE_LABEL_KEY[
+        reason as StudioLandingIneligibleReason
+      ]
+    : STUDIO_LANDING_INELIGIBLE_UNKNOWN_KEY;
+}
+
+/** The `ineligibleReason` a 422 `studio_landing_preview_track_not_eligible`
+ *  carries; null for any other error or a body without one. */
+export function ineligibleReasonOfError(error: unknown): string | null {
+  if (!(error instanceof ApiError) || error.status !== 422) return null;
+  const body = error.data;
+  if (!body || typeof body !== "object") return null;
+  const { code, ineligibleReason } = body as {
+    code?: unknown;
+    ineligibleReason?: unknown;
+  };
+  return code === "studio_landing_preview_track_not_eligible" &&
+    typeof ineligibleReason === "string"
+    ? ineligibleReason
+    : null;
+}
+
+/** The message the global upload ownership check answers a foreign storage
+ *  key with. */
+const FOREIGN_UPLOAD_MESSAGE = "Referenced upload does not belong to you";
+
+/** The catalog key a refused landing photo save shows. A 403 with no `code`
+ *  and the upload ownership check's message names someone else's upload, so
+ *  it reads the photo-not-yours line; every other refusal (a codeless 403
+ *  with another message included) reads the console's usual line. */
+export function landingPhotoErrorKeyOf(error: unknown): string {
+  if (error instanceof ApiError && error.status === 403) {
+    const body = error.data;
+    const hasCode =
+      !!body &&
+      typeof body === "object" &&
+      typeof (body as { code?: unknown }).code === "string";
+    const message = (body as { message?: unknown } | null | undefined)?.message;
+    if (!hasCode && message === FOREIGN_UPLOAD_MESSAGE)
+      return STUDIO_ERROR_MESSAGE_KEY.studio_landing_photo_not_yours;
+  }
+  return studioAdminSaveErrorKeyOf(error);
+}
+
+/** The Studio page content with a new founding list; each artist card shows
+ *  the founding badge when its persona is listed. */
+export function withLandingFoundingArtists(
+  landing: AdminStudioLandingDTO,
+  foundingArtists: AdminStudioFoundingArtistDTO[],
+): AdminStudioLandingDTO {
+  const listedIds = new Set(foundingArtists.map((listed) => listed.artist.id));
+  return {
+    ...landing,
+    foundingArtists,
+    artistCards: landing.artistCards.map((card) => ({
+      ...card,
+      isFoundingArtist: listedIds.has(card.artist.id),
+    })),
+  };
 }

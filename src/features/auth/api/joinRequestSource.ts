@@ -50,6 +50,8 @@ export const JOIN_REQUEST_SOURCES = [
   "for_communities",
   "for_performers",
   "for_practitioners",
+  "studio_landing",
+  "studio_artist",
 ] as const;
 
 export type JoinRequestSource = (typeof JOIN_REQUEST_SOURCES)[number];

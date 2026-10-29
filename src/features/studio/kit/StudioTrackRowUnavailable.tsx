@@ -146,13 +146,22 @@ export function StudioTrackRowUnavailable({
         </Heading>
         {details !== undefined && <div className={css.subline}>{details}</div>}
       </div>
+      {/* An empty duration cell and, without a menu, a trigger-wide slot
+          keep the heart and the caller's actions in a playable row's
+          columns. */}
       <div className={css.actions}>
         {actions}
-        {menuExtraItems && menuExtraItems.length > 0 && (
+        <span className={css.duration} aria-hidden="true" />
+        {menuExtraItems && menuExtraItems.length > 0 ? (
           <UnavailableRowMenu
             title={text}
             number={number}
             items={menuExtraItems}
+          />
+        ) : (
+          <span
+            className={`${css.menuSlot} ${css.menuSlotEmpty}`}
+            aria-hidden="true"
           />
         )}
       </div>

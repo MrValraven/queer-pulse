@@ -413,6 +413,7 @@ export const gatherings: Catalog = {
   "catalog.family.meet.name": "Meet and play",
   "catalog.family.eat.name": "Eat and drink",
   "catalog.family.party.name": "Party and nightlife",
+  "catalog.family.music.name": "Music",
   "catalog.family.make.name": "Make and create",
   "catalog.family.learn.name": "Learn and talk",
   "catalog.family.watch.name": "Watch and listen",

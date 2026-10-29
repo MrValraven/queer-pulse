@@ -24,7 +24,7 @@ export function StudioInertFollow() {
   );
 }
 
-/** "Show me as a supporter" with its switch off. The live card reads the
+/** "Show me among the top listeners" with its switch off. The live card reads the
  *  supporter state on mount, which the owner's own persona refuses, so the
  *  preview draws this one in its place. */
 export function StudioInertSupporterCard({
@@ -41,14 +41,14 @@ export function StudioInertSupporterCard({
       aria-labelledby={headingId}
     >
       <h2 id={headingId} className={styles.heading}>
-        {t("studio:supporter.heading")}
+        {t("studio:supporter.heading", { persona: personaName })}
       </h2>
       <div className={styles.switchRow}>
         <p id={bodyId} className={styles.body}>
           {t("studio:supporter.body", { persona: personaName })}
         </p>
         <Toggle
-          label={t("studio:supporter.heading")}
+          label={t("studio:supporter.heading", { persona: personaName })}
           aria-describedby={bodyId}
           checked={false}
           disabled

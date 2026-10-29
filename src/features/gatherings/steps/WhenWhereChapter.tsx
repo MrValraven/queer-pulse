@@ -1,3 +1,4 @@
+import { useEventHostScope } from "../eventHostScope";
 import type { GatheringForm } from "../useGatheringForm";
 import { DateNotes } from "./DateNotes";
 import { PlaceFields } from "./PlaceFields";
@@ -14,11 +15,15 @@ import { ScheduleFields } from "./ScheduleFields";
  * Anchors: `GATE_ANCHOR.date` on the start pair, `GATE_ANCHOR.hood` on the
  * neighbourhood, `GATE_ANCHOR.joinLink` on the join link and
  * `GATE_ANCHOR.recurrence` on the series end field.
+ *
+ * An event QueerPulse hosts leaves out "same as last time": it reads the
+ * signed-in staff member's own hosting, which says nothing about the house's.
  */
 export function WhenWhereChapter({ form }: { form: GatheringForm }) {
+  const { isHouseEvent } = useEventHostScope();
   return (
     <>
-      <SameAsLastTimeStrip form={form} />
+      {!isHouseEvent && <SameAsLastTimeStrip form={form} />}
       <ScheduleFields form={form} />
       <DateNotes form={form} />
       <PlaceFields form={form} />

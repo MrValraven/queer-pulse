@@ -1578,6 +1578,59 @@ export const notifications: Catalog = {
   "type.studio_credit_accepted.creditedPersonaNameFallback": "A persona",
   "type.studio_credit_accepted.trackTitleFallback": "your track",
   "type.studio_credit_accepted.roleFallback": "a collaborator",
+  // Studio landing v2 (2026-10-28)
+  "type.studio_access_granted.text": "Studio is open for you. Come and listen.",
+  "type.studio_access_granted.meta": "Studio access",
+  "type.studio_landing_preview_requested.text":
+    "Our team would like to play {trackTitle} by {personaName} on the Studio page.",
+  "type.studio_landing_preview_requested.text_one":
+    "Our team would like to play {trackTitle} by {personaName} on the Studio page.",
+  "type.studio_landing_preview_requested.text_other":
+    "Our team would like to play {count} tracks by {personaName} on the Studio page.",
+  "type.studio_landing_preview_requested.meta": "Studio page request",
+  "type.studio_landing_preview_requested.personaNameFallback": "your persona",
+  "type.studio_landing_preview_requested.trackTitleFallback": "a track",
+  "type.studio_landing_preview_live.text":
+    "{trackTitle} by {mainPersonaName} is approved for the Studio page.",
+  "type.studio_landing_preview_live.text_one":
+    "{trackTitle} by {mainPersonaName} is approved for the Studio page.",
+  "type.studio_landing_preview_live.text_other":
+    "{count} of your tracks are approved for the Studio page.",
+  "type.studio_landing_preview_live.meta": "Approved for the Studio page",
+  "type.studio_landing_preview_live.mainPersonaNameFallback": "an artist",
+  "type.studio_landing_preview_live.trackTitleFallback": "A track",
+  // Studio purchases
+  "type.studio_purchase_claimed.text":
+    "Someone says they paid {artistName} for {itemTitle}. Check it and confirm.",
+  "type.studio_purchase_claimed.text_one":
+    "Someone says they paid {artistName} for {itemTitle}. Check it and confirm.",
+  "type.studio_purchase_claimed.text_other":
+    "You have {count} payments to confirm for {artistName}.",
+  "type.studio_purchase_claimed.meta": "Payment to confirm",
+  "type.studio_purchase_claimed.artistNameFallback": "your artist page",
+  "type.studio_purchase_claimed.itemTitleFallback": "your music",
+  "type.studio_purchase_confirmed.text":
+    "{artistName} confirmed your payment for {itemTitle}. It's ready to download.",
+  "type.studio_purchase_confirmed.meta": "Purchase confirmed",
+  "type.studio_purchase_confirmed.artistNameFallback": "An artist",
+  "type.studio_purchase_confirmed.itemTitleFallback": "this music",
+  "type.studio_purchase_declined.text":
+    "{artistName} declined your payment for {itemTitle}: {reason}.",
+  "type.studio_purchase_declined.meta": "Purchase declined",
+  "type.studio_purchase_declined.artistNameFallback": "An artist",
+  "type.studio_purchase_declined.itemTitleFallback": "this music",
+  "type.studio_purchase_declined.reasonFallback":
+    "see your purchases for the reason",
+  "type.studio_purchase_expired.text":
+    "Your claim for {itemTitle} by {artistName} expired after 30 days without an answer.",
+  "type.studio_purchase_expired.meta": "Purchase expired",
+  "type.studio_purchase_expired.artistNameFallback": "an artist",
+  "type.studio_purchase_expired.itemTitleFallback": "this music",
+  "purchaseDeclineReason.payment_not_found": "the payment was not found",
+  "purchaseDeclineReason.amount_different": "the amount was different",
+  "purchaseDeclineReason.other": "another reason",
+  "actions.openPurchases": "Open your purchases",
+  "actions.reviewPayments": "Review payments",
   "studioCreditRole.featured": "Featured",
   "studioCreditRole.producer": "Producer",
   "studioCreditRole.coWriter": "Co-writer",
@@ -1587,6 +1640,8 @@ export const notifications: Catalog = {
   "studioCreditRole.coverArt": "Cover art",
   "studioCreditRole.other": "Other",
   "actions.reviewCredit": "Review credit",
+  "actions.answerLandingPreview": "Answer the request",
+  "actions.openStudio": "Open Studio",
   // Studio collaborative playlists. The actor is the counterpart member: the
   // owner on an invite or a pick, the invitee on an answer. `{name}` comes
   // from the actor; `{playlistName}` and `{personaName}` from the payload.

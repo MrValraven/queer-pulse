@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat } from "../../shared/i18n/format";
 import {
   COOP_TIER_PRICE,
-  STUDIO_SHARE_PERCENT,
   STUDIO_TIER_PRICE,
   type StudioTier,
 } from "./studioSignIn.data";
@@ -18,7 +16,6 @@ import { StudioEuroAmount } from "./StudioEuroAmount";
  */
 export function StudioTierPicker() {
   const { t } = useTranslation();
-  const format = useFormat();
   const [selectedTier, setSelectedTier] = useState<StudioTier>("studio");
 
   return (
@@ -68,11 +65,7 @@ export function StudioTierPicker() {
             >
               <path d="M20 6L9 17l-5-5" />
             </svg>
-            {t("studio:signin.join.tier.studio.incl", {
-              sharePercent: format.number(STUDIO_SHARE_PERCENT, {
-                style: "percent",
-              }),
-            })}
+            {t("studio:signin.join.tier.studio.incl")}
           </div>
         </div>
       </div>

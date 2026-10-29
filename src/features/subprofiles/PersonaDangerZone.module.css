@@ -1,0 +1,29 @@
+/* PersonaDangerZone — the Danger zone pane's own rows. Each irreversible
+   action is a card of its own (copy on the left, button on the right, wrapping
+   under it on a narrow pane) so Delete and Leave read as separate choices. */
+.zone {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-grid);
+  padding: var(--card-pad);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-10);
+}
+
+/* Delete: the one row drawn in the danger tint, the same border and wash the
+   delete confirmation modal uses. */
+.zoneDelete {
+  border-color: rgba(var(--danger-rgb), 0.28);
+  background: rgba(var(--danger-rgb), 0.06);
+}
+
+.copy {
+  flex: 1 1 260px;
+  min-width: 0;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+  line-height: 1.55;
+  margin: 0;
+}

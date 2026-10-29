@@ -1,6 +1,7 @@
 import { FiAlertTriangle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { TFunction } from "../../shared/i18n/types";
 import { AdminMediaReferenceList } from "./AdminMediaReferences";
 import { AdminModal } from "./ui";
 import type { AdminMediaCoverHolder } from "./api/adminMedia.api";
@@ -17,6 +18,31 @@ export interface AdminMediaDeleteRefusal {
    *  this image is. */
   coverHolders?: AdminMediaCoverHolder[];
 }
+
+/** The two Studio page photo slots that have their own translated line. */
+const LANDING_PHOTO_SLOT_KEY: Record<string, string> = {
+  hero: "admin:media.delete.liveCoverLandingPhoto.hero",
+  manifesto: "admin:media.delete.liveCoverLandingPhoto.manifesto",
+};
+
+/** The line for each kind of live-cover holder. A scene and a release take the
+ *  server's label; a landing photo has one translated line per slot, and an
+ *  unknown slot id renders the server label as it came. */
+const COVER_HOLDER_LINE: Record<
+  AdminMediaCoverHolder["kind"],
+  (holder: AdminMediaCoverHolder, t: TFunction) => string
+> = {
+  "studio-scene": (holder, t) =>
+    t("admin:media.delete.liveCoverScene", { label: holder.label }),
+  "studio-release": (holder, t) =>
+    t("admin:media.delete.liveCoverRelease", { label: holder.label }),
+  "studio-landing-photo": (holder, t) => {
+    const slotKey = Object.hasOwn(LANDING_PHOTO_SLOT_KEY, holder.entityId)
+      ? LANDING_PHOTO_SLOT_KEY[holder.entityId]
+      : undefined;
+    return slotKey ? t(slotKey) : holder.label;
+  },
+};
 
 /**
  * Pre-delete confirmation for one stored object. Deletion stays available
@@ -105,12 +131,7 @@ export function AdminMediaDeleteConfirm({
             <ul className={styles.referencesList}>
               {refusal.coverHolders.map((holder) => (
                 <li key={`${holder.kind}-${holder.entityId}`}>
-                  {t(
-                    holder.kind === "studio-scene"
-                      ? "admin:media.delete.liveCoverScene"
-                      : "admin:media.delete.liveCoverRelease",
-                    { label: holder.label },
-                  )}
+                  {COVER_HOLDER_LINE[holder.kind]?.(holder, t) ?? holder.label}
                 </li>
               ))}
             </ul>

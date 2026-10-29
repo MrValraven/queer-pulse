@@ -61,6 +61,14 @@ export const routes = {
   /** Studio discovery: the featured hero, the two shelves and the scenes
    *  (`StudioAdminPage`). Moderator and Admin. */
   adminStudio: "/admin/studio",
+  /** Music events console (`AdminMusicEventsPage`): QueerPulse-hosted music
+   *  events, their invite requests and lineup replies. Admin and the
+   *  `music_manager_producer` grant. */
+  adminMusicEvents: "/admin/music-events",
+  /** The create page for a QueerPulse-hosted music event. */
+  adminMusicEventNew: "/admin/music-events/new",
+  /** One music event's host console. */
+  adminMusicEvent: "/admin/music-events/:slug",
   /** Pulse Live quiz templates: the staff list. Moderator and Admin. */
   adminQuizshowTemplates: "/admin/quizshow/templates",
   /** One template's builder (`adminQuizshowTemplatePath`). */
@@ -471,6 +479,7 @@ export const routes = {
   studioCredits: "/studio/credits",
   studioDashboard: "/studio/dashboard",
   studioListening: "/studio/listening",
+  studioPayments: "/studio/payments",
   studioE: "/studio",
   studioLanding: "/studio",
   studioLibrary: "/studio/library",
@@ -493,6 +502,8 @@ export const routes = {
    *  suggestions. Each vertical grew its own intake with its own status
    *  vocabulary and no shared place to read the outcome; this is that place. */
   mySubmissions: "/account/submissions",
+  /** Studio purchases: the buyer's own list and downloads, outside the Studio gate (contract 3.6). */
+  musicPurchases: "/account/music-purchases",
   topic: "/topic",
   /** DISC-4 — the topics directory (`TopicsDirectoryPage`), distinct from
    *  `topic` above (the singular per-tag feed, `/topic/:tag`). */

@@ -31,11 +31,17 @@
   font-size: var(--text-13-5);
   color: var(--text60);
 }
+/* Daylight: a neutral grey banner on a hairline edge; coral stays on the
+   live dot and the join link. Dark keeps the coral wash. */
+:global(:root:not([data-theme="dark"])) .inSet {
+  background: var(--studio-wash-1);
+  border-color: var(--studio-line);
+}
 .inSet .live {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--studio-accent);
   flex: none;
 }
 .inSet b {
@@ -188,6 +194,12 @@
   font-weight: 500;
   font-size: var(--text-14);
 }
+/* Daylight: the curator's initials on a neutral grey disc. Dark keeps the
+   coral tint. */
+:global(:root:not([data-theme="dark"])) .noteAv {
+  background: var(--studio-wash-2);
+  color: var(--studio-text);
+}
 .noteName {
   font-size: var(--text-14);
   font-weight: 600;
@@ -205,60 +217,6 @@
 }
 .sCard p em {
   font-style: italic;
-  color: var(--studio-accent-text);
-}
-.splitLead {
-  font-family: var(--serif);
-  font-size: var(--text-18);
-  color: rgba(var(--studio-ink-rgb), 1);
-  margin-bottom: 14px;
-}
-.splitLead em {
-  font-style: normal;
-  color: var(--studio-accent-text);
-}
-.splitBar {
-  height: 10px;
-  border-radius: var(--radius-pill);
-  overflow: hidden;
-  display: flex;
-  margin-bottom: 16px;
-}
-.splitBar span {
-  height: 100%;
-}
-.splRow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(var(--studio-ink-rgb), 0.08);
-  font-size: var(--text-13);
-}
-.splRow:last-child {
-  border-bottom: none;
-}
-.splDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex: none;
-}
-.splK {
-  flex: 1;
-  color: var(--studio-text-muted);
-}
-.splK b {
-  display: block;
-  color: rgba(var(--studio-ink-rgb), 1);
-  font-size: var(--text-13);
-}
-.splV {
-  font-family: var(--serif);
-  color: rgba(var(--studio-ink-rgb), 1);
-}
-.splV em {
-  font-style: normal;
   color: var(--studio-accent-text);
 }
 .credRow {

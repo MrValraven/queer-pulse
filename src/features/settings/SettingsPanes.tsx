@@ -27,6 +27,7 @@ import { useActivityVisibility } from "./api/useActivityVisibility";
 import { useSuggestionVisibility } from "./api/useSuggestionVisibility";
 import { GroupAddPolicySection } from "./GroupAddPolicySection";
 import { MessagingPrivacySection } from "./MessagingPrivacySection";
+import { MusicPurchasesCard } from "./MusicPurchasesCard";
 import { GoTogetherDataSection } from "../goTogether/settings/GoTogetherDataSection";
 import {
   DataCard,
@@ -498,6 +499,7 @@ export function AccountPane() {
             button={t("settings:account.submissions.cta")}
             to={routes.mySubmissions}
           />
+          <MusicPurchasesCard />
         </div>
       </Section>
       <Section label={t("settings:account.section.security")}>

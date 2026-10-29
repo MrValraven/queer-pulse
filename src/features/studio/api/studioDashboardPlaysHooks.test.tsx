@@ -44,7 +44,7 @@ describe("Studio dashboard plays hooks in demo", () => {
     ).toBe(true);
   });
 
-  it("reads Mariana's top supporters in order and none for Late Bloomers", async () => {
+  it("reads Mariana's top listeners in order and none for Late Bloomers", async () => {
     const mariana = renderHook(
       () => useStudioTopSupporters(DEMO_ARTIST_MARIANA.id, true),
       { wrapper },

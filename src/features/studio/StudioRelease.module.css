@@ -169,19 +169,24 @@ li[aria-current] > .rowPlay .rowNumber {
   position: relative;
 }
 
-/* The hero's "..." trigger: a round icon button the size of a tap target,
-   with the fill and border of the hero pills beside it. The two classes
+/* The hero's "..." trigger: a square icon button the size of a tap target,
+   with the fill and corners of the hero pills beside it. The two classes
    (0,2,0) beat the pill rule `.heroActions button` (0,1,1). */
 .overflow .overflowTrigger {
   width: var(--tap-min);
   height: var(--tap-min);
   padding: 0;
-  border-radius: var(--radius-avatar);
+  border-radius: var(--studio-control-radius);
+  background: var(--studio-wash-2);
+}
+
+.overflow .overflowTrigger svg {
+  color: var(--studio-icon);
 }
 
 /* Open, the trigger holds the pills' hover tint. */
 .overflow .overflowTrigger[aria-expanded="true"] {
-  background: rgba(var(--studio-ink-rgb), 0.14);
+  background: var(--studio-wash-3);
 }
 
 /* Studio v2: the duration cell holds the row's Add to playlist button. */

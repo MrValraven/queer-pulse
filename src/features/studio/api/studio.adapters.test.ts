@@ -72,6 +72,7 @@ const releaseDto: StudioReleaseDTO = {
   artist,
   description: "Two songs from one night",
   genre: "folk",
+  genres: ["folk", "polka", "pop"],
   mood: null,
   scene: null,
   status: "published",
@@ -123,6 +124,26 @@ describe("toReleaseView", () => {
     expect(view.artist.href).toBe("/studio/artist?id=persona-1");
     expect(view.artist.personaHref).toBe("/p/nightform");
     expect(view.releaseYear).toBe("2026");
+  });
+
+  it("keeps every stored genre and labels the known ones, lead first", () => {
+    const view = toReleaseView(releaseDto);
+    expect(view.genres).toEqual(["folk", "polka", "pop"]);
+    expect(view.genreLabelKeys).toEqual([
+      "studio:upload.metadata.genre.folk",
+      "studio:genre.pop",
+    ]);
+  });
+
+  it("reads a server without genres as its single genre", () => {
+    const legacyDto = {
+      ...releaseDto,
+      genres: undefined,
+    } as unknown as StudioReleaseDTO;
+    expect(toReleaseView(legacyDto).genres).toEqual(["folk"]);
+    expect(toReleaseView({ ...legacyDto, genre: null }).genreLabelKeys).toEqual(
+      [],
+    );
   });
 
   it("counts only tracks with confirmed audio as playable", () => {
@@ -311,6 +332,7 @@ const cardDto = {
   artist: mariana,
   publishedAt: "2026-03-01T10:00:00.000Z",
   genre: "fado",
+  genres: ["fado"],
   mood: null,
   scene: null,
 };
@@ -1198,6 +1220,7 @@ const showBase: StudioReleaseDTO = {
   artist: podcaster,
   publishedAt: "2026-08-01T10:00:00.000Z",
   genre: null,
+  genres: [],
   mood: null,
   scene: null,
   description: null,
@@ -1545,5 +1568,37 @@ describe("collaborative playlists", () => {
         addedBy: sara,
       }).addedBy,
     ).toBeNull();
+  });
+});
+
+describe("Studio purchases: prices on releases and owner track rows", () => {
+  it("reads a release price for every viewer and a missing price as not for sale", () => {
+    expect(
+      toReleaseView({
+        ...releaseDto,
+        price: { mode: "name_your_price", amountCents: 0 },
+      }).price,
+    ).toEqual({ mode: "name_your_price", amountCents: 0 });
+    expect(toReleaseView(releaseDto).price).toBeNull();
+  });
+
+  it("reads an owner row's own price and leaves a listener without owner rows", () => {
+    const ownerView = toReleaseView({
+      ...releaseDto,
+      isOwner: true,
+      tracks: [
+        {
+          ...releaseDto.tracks[0]!,
+          price: { mode: "fixed", amountCents: 200 },
+        },
+        releaseDto.tracks[1]!,
+      ],
+    });
+    expect(ownerView.ownerTracks?.[0]?.price).toEqual({
+      mode: "fixed",
+      amountCents: 200,
+    });
+    expect(ownerView.ownerTracks?.[1]?.price).toBeNull();
+    expect(toReleaseView(releaseDto).ownerTracks).toBeNull();
   });
 });

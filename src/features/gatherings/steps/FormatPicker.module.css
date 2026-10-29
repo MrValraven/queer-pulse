@@ -10,7 +10,7 @@
 }
 
 /* ── Family row ── */
-/* Nine families. The row wraps on a wide screen; on a narrow one it scrolls
+/* Ten families. The row wraps on a wide screen; on a narrow one it scrolls
    sideways so the format grid stays near the top. */
 .familyRow {
   display: flex;
@@ -144,12 +144,14 @@
   color: var(--ink-60);
 }
 
-@media (max-width: 1040px) {
+/* Measured against the wizard page (`create-wizard`, CreateGatheringShell),
+   so inside the admin console the rail's width is already taken off. */
+@container create-wizard (max-width: 1040px) {
   .types {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-@media (max-width: 620px) {
+@container create-wizard (max-width: 620px) {
   .familyRow {
     flex-wrap: nowrap;
     overflow-x: auto;

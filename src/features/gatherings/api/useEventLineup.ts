@@ -13,6 +13,12 @@ import {
 import { eventKeys } from "./eventKeys";
 import { demoEventLineup } from "./eventLineup.mock";
 import { useGatheringPreview } from "../guestPreview/gatheringPreviewContext";
+import { useEventHostScope } from "../eventHostScope";
+import {
+  eventKeySegment,
+  MUSIC_ADMIN_LIST_KEY_ROOT,
+  type EventApiTarget,
+} from "./eventApiTarget";
 
 /** Who the host is inviting, as the picker knows them. */
 export interface LineupPerson {
@@ -32,13 +38,14 @@ export interface LineupPerson {
 export function useEventLineup(slug: string | undefined) {
   const { demoMode } = useDemoMode();
   const { viewAs } = useGatheringPreview();
+  const { apiTarget } = useEventHostScope();
   const { loggedIn, checking, status } = useAuth();
   const isActiveSession = !checking && loggedIn && status === "active";
 
   return useQuery<EventLineupDTO>({
     queryKey: viewAs
       ? eventKeys.lineupPreview(slug, viewAs, demoMode)
-      : eventKeys.lineup(slug, demoMode),
+      : eventKeys.lineup(slug, demoMode, apiTarget),
     enabled: Boolean(slug) && (demoMode || isActiveSession),
     retry: false,
     // A guest preview always refetches: lineup edits invalidate only the
@@ -46,7 +53,7 @@ export function useEventLineup(slug: string | undefined) {
     ...(demoMode ? { staleTime: Infinity } : viewAs ? { staleTime: 0 } : {}),
     queryFn: async () => {
       if (demoMode || !slug) return demoEventLineup(slug);
-      return getEventLineup(slug, viewAs ?? undefined);
+      return getEventLineup(slug, viewAs ?? undefined, apiTarget);
     },
   });
 }
@@ -61,6 +68,7 @@ function useLineupWrite<TVariables>(
   slug: string,
   liveRequest: (
     variables: TVariables,
+    apiTarget: EventApiTarget,
   ) => Promise<EventLineupDTO | { ok: true }>,
   optimisticUpdate: (
     lineup: EventLineupDTO,
@@ -68,9 +76,14 @@ function useLineupWrite<TVariables>(
   ) => EventLineupDTO,
 ) {
   const { demoMode } = useDemoMode();
+  const { apiTarget, isHouseEvent } = useEventHostScope();
   const queryClient = useQueryClient();
-  const lineupKey = eventKeys.lineup(slug, demoMode);
-  const writeMutationKey = ["event-lineup-write", slug];
+  const lineupKey = eventKeys.lineup(slug, demoMode, apiTarget);
+  const writeMutationKey = [
+    "event-lineup-write",
+    slug,
+    ...eventKeySegment(apiTarget),
+  ];
   // Inside a mutation's own callbacks it still counts as pending, so a count
   // of one means no other lineup write is in flight.
   const isLastWriteInFlight = () =>
@@ -86,7 +99,7 @@ function useLineupWrite<TVariables>(
     // Callers toast their own errors, so silence the global duplicate.
     meta: { silentError: true },
     mutationFn: async (variables) =>
-      demoMode ? undefined : liveRequest(variables),
+      demoMode ? undefined : liveRequest(variables, apiTarget),
     onMutate: async (variables) => {
       await queryClient.cancelQueries({ queryKey: lineupKey });
       const previous = queryClient.getQueryData<EventLineupDTO>(lineupKey);
@@ -113,6 +126,12 @@ function useLineupWrite<TVariables>(
     onSettled: () => {
       if (!demoMode && isLastWriteInFlight()) {
         void queryClient.invalidateQueries({ queryKey: eventKeys.lineupRoot });
+        // The admin list shows each house event's lineup counts.
+        if (isHouseEvent) {
+          void queryClient.invalidateQueries({
+            queryKey: MUSIC_ADMIN_LIST_KEY_ROOT,
+          });
+        }
       }
     },
   });
@@ -138,8 +157,8 @@ function withEntry(
 export function useInviteToLineup(slug: string) {
   return useLineupWrite<{ person: LineupPerson; role: string }>(
     slug,
-    ({ person, role }) =>
-      inviteToLineup(slug, { memberSlug: person.slug, role }),
+    ({ person, role }, apiTarget) =>
+      inviteToLineup(slug, { memberSlug: person.slug, role }, apiTarget),
     (lineup, { person, role }) => {
       const isAlreadyListed = lineup.entries.some(
         (entry) => entry.slug === person.slug,
@@ -173,7 +192,8 @@ export function useInviteToLineup(slug: string) {
 export function useChangeLineupRole(slug: string) {
   return useLineupWrite<{ memberSlug: string; role: string }>(
     slug,
-    ({ memberSlug, role }) => changeLineupRole(slug, memberSlug, role),
+    ({ memberSlug, role }, apiTarget) =>
+      changeLineupRole(slug, memberSlug, role, apiTarget),
     (lineup, { memberSlug, role }) =>
       withEntry(lineup, memberSlug, (entry) => ({ ...entry, role })),
   );
@@ -185,7 +205,8 @@ export function useChangeLineupRole(slug: string) {
 export function useRemoveFromLineup(slug: string) {
   return useLineupWrite<{ memberSlug: string }>(
     slug,
-    ({ memberSlug }) => removeFromLineup(slug, memberSlug),
+    ({ memberSlug }, apiTarget) =>
+      removeFromLineup(slug, memberSlug, apiTarget),
     (lineup, { memberSlug }) => ({
       entries: lineup.entries.filter((entry) => entry.slug !== memberSlug),
       viewerEntry:

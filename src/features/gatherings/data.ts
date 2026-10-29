@@ -23,6 +23,7 @@ import type {
 } from "./gatheringExtras";
 import type { RunByListingView } from "./runByListing";
 import { demoCommunityId } from "./hiddenEventCommunities.data";
+import { HOUSE_MUSIC_DEMO_DETAILS } from "./houseMusicEvents.data";
 
 /**
  * The "spots" line on an event card — "8 seats left", "32 going", "Open to all".
@@ -243,8 +244,9 @@ export interface GatheringDetail {
    * answered 400. This carries the fact through to every surface that renders
    * a gathering the member still has a stake in.
    *
-   * Absent in the demo registry: no demo gathering is cancelled, and the
-   * cancelled prototype page is its own route.
+   * Set in the demo registry only on the house jam session; every other
+   * demo gathering is live, and the cancelled prototype page is its own
+   * route.
    */
   cancelled?: boolean;
   /** Live mode only: the gathering happens online rather than at a door.
@@ -877,7 +879,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
   "trans-djs-warehouse": {
     slug: "trans-djs-warehouse",
     type: "club-night",
-    gatheringFamily: "party",
+    gatheringFamily: "music",
     formatDetails: { isAdultsOnly: true, isSoberFriendly: true },
     date: new Date(2026, 5, 26),
     title: "Warehouse Party: Trans DJs Only",
@@ -990,7 +992,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
   "queer-karaoke-night": {
     slug: "queer-karaoke-night",
     type: "karaoke",
-    gatheringFamily: "party",
+    gatheringFamily: "music",
     date: demoStartOf("queer-karaoke-night"),
     title: "Queer Karaoke Night",
     hood: "Bairro Alto",
@@ -1087,6 +1089,8 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     ctaKey: "gatherings:cta.rsvp",
     body: "New to the city, new to the network, or just ready to meet some people. This one's for you. A low-key evening at A Tasca in Mouraria with a host who'll actually introduce you around. Step-free and sober-friendly. Arrive whenever; we'll be the warm table in the corner.",
   },
+  // Last, so the house music events never lead the registry or its rails.
+  ...HOUSE_MUSIC_DEMO_DETAILS,
 };
 
 export const defaultGatheringSlug = "supper-club-12";
@@ -1582,7 +1586,7 @@ export const calendarEvents: CalendarEvent[] = [
     },
     kind: "gathering",
     eventType: "karaoke",
-    gatheringFamily: "party",
+    gatheringFamily: "music",
     coverImageUrl:
       "https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=1200&auto=format&fit=crop",
     attendeeCount: 28,

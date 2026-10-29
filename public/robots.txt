@@ -2,8 +2,9 @@
 #
 # Posture: DELIBERATELY QUIET. Only the public-service surface is indexed:
 # resources, safety, about/governance, policies and the local safe-spaces guide.
-# The magazine, cinema, studio, activism, archive and sustainer surfaces are
+# The magazine, cinema, activism, archive and sustainer surfaces are
 # intentionally NOT indexed; they rely on word-of-mouth and direct sharing.
+# The Studio landing (/studio) is the one exception and is indexed.
 # The gated member surface is disallowed outright.
 #
 # Sources of truth:
@@ -110,6 +111,7 @@ Disallow: /studio/library
 Disallow: /studio/liked
 Disallow: /studio/upload
 Disallow: /studio/payouts
+Disallow: /studio/payments
 Disallow: /studio/live
 Disallow: /studio/set
 Disallow: /studio/checkout
@@ -131,12 +133,12 @@ Disallow: /spa.html
 Disallow: /magazine
 Disallow: /cinema
 Disallow: /studio
-# The Studio landing itself and its share image may be fetched, so link
-# previews (WhatsApp, Instagram, iMessage, X, Slack) can read the head that
-# scripts/prerender.mjs bakes for /studio. The page stays out of search results
-# through that head's `noindex, nofollow` robots meta: a crawler has to be able
-# to fetch a page to see its noindex. `$` anchors the end, so every other
-# /studio/* route stays blocked by the line above.
+# The Studio landing is indexed: `Allow: /studio$` lets crawlers fetch it (and
+# link previews in WhatsApp, Instagram, iMessage, X and Slack read the page
+# scripts/prerender.mjs bakes for /studio), and the sitemap lists it. `$`
+# anchors the end, so every other /studio/* route stays blocked by the
+# `Disallow: /studio` line above. The AI-retrieval group below keeps /studio
+# blocked on purpose.
 Allow: /studio$
 Allow: /studio-landing/og-studio.jpg
 Disallow: /activism

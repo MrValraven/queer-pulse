@@ -2,6 +2,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { StudioListeningSettings } from "./StudioSettingsListening";
 import { StudioSettingsClaimsLink } from "./StudioSettingsClaimsLink";
+import { StudioSettingsGettingPaid } from "./StudioSettingsGettingPaid";
 import { StudioPlaybackSettings } from "./StudioSettingsPlayback";
 import {
   AudioSection,
@@ -38,6 +39,7 @@ export function StudioSettingsPage() {
       <div className={s.wrap}>
         <StudioPlaybackSettings />
         <StudioListeningSettings />
+        <StudioSettingsGettingPaid />
         <StudioSettingsClaimsLink />
         {isShowcase && (
           <>

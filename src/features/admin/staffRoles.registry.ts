@@ -20,7 +20,8 @@ export type StaffRoleId =
   | "communities"
   | "partnerships"
   | "product_manager"
-  | "cultural_producer";
+  | "cultural_producer"
+  | "music_manager_producer";
 
 export interface StaffRoleMeta {
   id: StaffRoleId;
@@ -78,6 +79,11 @@ export const STAFF_ROLES: StaffRoleMeta[] = [
     id: "cultural_producer",
     labelKey: "admin:staffRoles.culturalProducer.label",
     descriptionKey: "admin:staffRoles.culturalProducer.desc",
+  },
+  {
+    id: "music_manager_producer",
+    labelKey: "admin:staffRoles.musicManagerProducer.label",
+    descriptionKey: "admin:staffRoles.musicManagerProducer.desc",
   },
 ];
 

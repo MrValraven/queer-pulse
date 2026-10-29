@@ -47,6 +47,39 @@ describe("demo artist mutations", () => {
     expect(edited.coverUrl).toBe("blob:cover");
   });
 
+  it("starts a musician's draft with no genres", () => {
+    const draft = demoCreateRelease({
+      subprofileId: DEMO_ARTIST_MARIANA.id,
+      type: "ep",
+      title: "Cartas",
+    });
+    expect(draft.genres).toEqual([]);
+    expect(draft.genre).toBeNull();
+    expect(draft.genreLabelKeys).toEqual([]);
+  });
+
+  it("replaces the genres, leads with the first and clears with an empty list", () => {
+    const draft = demoCreateRelease({
+      subprofileId: DEMO_ARTIST_MARIANA.id,
+      type: "ep",
+      title: "Cartas",
+    });
+    const picked = demoUpdateRelease(draft, { genres: ["jazz", "fado"] });
+    expect(picked.genres).toEqual(["jazz", "fado"]);
+    expect(picked.genre).toBe("jazz");
+    expect(picked.genreLabelKey).toBe("studio:genre.jazz");
+    expect(picked.genreLabelKeys).toEqual([
+      "studio:genre.jazz",
+      "studio:upload.metadata.genre.fado",
+    ]);
+    const untouched = demoUpdateRelease(picked, { title: "Cartas II" });
+    expect(untouched.genres).toEqual(["jazz", "fado"]);
+    const cleared = demoUpdateRelease(picked, { genres: [] });
+    expect(cleared.genres).toEqual([]);
+    expect(cleared.genre).toBeNull();
+    expect(cleared.genreLabelKey).toBeNull();
+  });
+
   it("reads a demo duration from the key the demo upload wrote", () => {
     const track = demoCreateTrack("release-1", "Tide", 1);
     const confirmed = demoConfirmAudio(track, "demo-audio:3200000:tide.mp3");
@@ -354,6 +387,7 @@ describe("demo listening writes", () => {
           peakDb: null,
           syncedLyrics: null,
           chapters: null,
+          price: null,
         },
         {
           ...two,
@@ -362,6 +396,7 @@ describe("demo listening writes", () => {
           peakDb: null,
           syncedLyrics: null,
           chapters: null,
+          price: null,
         },
       ],
     };

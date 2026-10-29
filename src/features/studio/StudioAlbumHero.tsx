@@ -11,6 +11,7 @@ import { releaseFactsLine } from "./studioFacts";
 import { useIsHeroActionsCompact } from "./studioHeroLayout";
 import { outDateOf } from "./studioUpcoming";
 import releaseStyles from "./StudioRelease.module.css";
+import styles from "./studio.module.css";
 import { StudioReleaseCoverArt } from "./StudioReleaseCoverArt";
 
 export function StudioAlbumHero({
@@ -21,7 +22,7 @@ export function StudioAlbumHero({
   sentinelRef,
 }: {
   release: StudioReleaseView;
-  onTip: () => void;
+  onTip?: () => void;
   onReport: () => void;
   /** The marker the page's sticky header watches. */
   sentinelRef?: Ref<HTMLDivElement>;
@@ -35,11 +36,20 @@ export function StudioAlbumHero({
   const outLine = release.isUpcoming
     ? outDateOf(release.publishAt, formatters)
     : null;
+  // The year and then every known genre under the artist, lead first,
+  // skipping whichever is missing.
+  const factsLine = [
+    release.releaseYear,
+    ...release.genreLabelKeys.map((labelKey) => t(labelKey)),
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
     <>
       <StudioDetailHero
         tint={release.tint}
+        coverUrl={release.coverUrl ?? undefined}
         sentinelRef={sentinelRef}
         isActionsCompact={isCompact}
         art={
@@ -56,18 +66,18 @@ export function StudioAlbumHero({
         title={release.title}
         by={
           <>
-            {t("studio:release.by")}{" "}
-            {/* A preview link works while the persona is private or a
-              draft, so the preview names the artist without a link. */}
-            {previewToken ? (
-              <strong>{release.artist.name}</strong>
-            ) : (
-              <Link to={release.artist.href}>
+            <span className={styles.artistLine}>
+              {/* A preview link works while the persona is private or a
+                draft, so the preview names the artist without a link. */}
+              {previewToken ? (
                 <strong>{release.artist.name}</strong>
-              </Link>
-            )}
-            {release.releaseYear && ` · ${release.releaseYear}`}
-            {release.genreLabelKey && ` · ${t(release.genreLabelKey)}`}
+              ) : (
+                <Link to={release.artist.href}>
+                  <strong>{release.artist.name}</strong>
+                </Link>
+              )}
+            </span>
+            {factsLine && <span className={styles.factsLine}>{factsLine}</span>}
             {!isPublished && (
               <span className={releaseStyles.statusLine}>
                 <strong className={releaseStyles.statusLabel}>

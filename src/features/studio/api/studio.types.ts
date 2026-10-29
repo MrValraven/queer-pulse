@@ -143,6 +143,20 @@ export const STUDIO_SCHEDULE_MAX_LEAD_DAYS = 365;
 export const STUDIO_SCHEDULE_TIME_ZONE = "Europe/Lisbon";
 export const STUDIO_VERSION_NOTE_MAX = 280;
 export const STUDIO_BUY_URL_MAX = 1000;
+/** Studio purchases (contract 2.1): a price is a fixed price or a minimum. */
+export const STUDIO_PRICE_MODES = ["fixed", "name_your_price"] as const;
+export type StudioPriceMode = (typeof STUDIO_PRICE_MODES)[number];
+/** On the wire; `mode` is a string so a newer server's mode reads as no price. */
+export interface StudioPriceDTO {
+  mode: string;
+  /** Fixed: the price. Name your price: the minimum. Integer euro cents. */
+  amountCents: number;
+}
+/** The PATCH body's price; null takes the item off sale. */
+export interface StudioPriceInput {
+  mode: StudioPriceMode;
+  amountCents: number;
+}
 export const STUDIO_PRESS = {
   pitchMax: 140,
   bioMax: 1500,
@@ -175,6 +189,10 @@ export const STUDIO_GENRES = [
 ] as const;
 export type StudioGenre = (typeof STUDIO_GENRES)[number];
 
+/** Most genres one release can carry (the first leads). Mirrors the
+ *  backend's STUDIO_LIMITS.releaseGenresMax. */
+export const STUDIO_RELEASE_GENRES_MAX = 5;
+
 // Studio discovery vocabularies (QUEERPULSE-STUDIO-DISCOVERY-CONTRACT-2026-10-13.md).
 // Same strings and order as the backend's studio.constants.ts.
 export const STUDIO_MOODS = [
@@ -185,9 +203,7 @@ export const STUDIO_MOODS = [
   "defiant",
   "dreamy",
   "slow-burn",
-  "sweaty",
   "calm",
-  "playful",
 ] as const;
 export type StudioMood = (typeof STUDIO_MOODS)[number];
 
@@ -300,6 +316,20 @@ export const STUDIO_LIMITS = {
   sourceFieldMax: 120,
 } as const;
 
+/** Studio landing v2 limits (contract 1.4). The count floor reuses
+ *  STUDIO_STATS_THRESHOLD. */
+export const STUDIO_LANDING_LIMITS = {
+  previewsShown: 5,
+  openPreviewsMax: 10,
+  artistCardsMax: 6,
+  artistCardsShownMin: 2,
+  quoteMaxLength: 240,
+  photoAltMaxLength: 200,
+  photoCreditMaxLength: 120,
+  foundingArtistsMax: 50,
+  accessRequestsPageSize: 30,
+} as const;
+
 export const STUDIO_ERROR_CODES = [
   "studio_access_required",
   "studio_not_persona_owner",
@@ -381,6 +411,65 @@ export const STUDIO_ERROR_CODES = [
   "studio_supporter_artist_not_found",
   "studio_supporter_own_persona",
   "studio_supporter_identity_not_yours",
+  // Studio purchases (contract section 7).
+  "studio_persona_not_found",
+  "studio_release_type_not_for_sale",
+  "studio_price_out_of_range",
+  "studio_payment_methods_needed_for_sale",
+  "studio_payment_methods_limit",
+  "studio_payment_link_invalid",
+  "studio_payment_mbway_invalid",
+  "studio_payment_iban_invalid",
+  "studio_purchase_item_required",
+  "studio_purchase_item_not_found",
+  "studio_purchase_own_persona",
+  "studio_purchase_not_for_sale",
+  "studio_purchase_release_not_published",
+  "studio_purchase_track_unavailable",
+  "studio_purchase_unavailable",
+  "studio_purchase_no_payment_methods",
+  "studio_purchase_pending_exists",
+  "studio_purchase_already_owned",
+  "studio_purchase_amount_below_minimum",
+  "studio_purchase_amount_above_cap",
+  "studio_purchase_price_changed",
+  "studio_purchase_reference_invalid",
+  "studio_purchase_reference_taken",
+  "studio_purchase_not_found",
+  "studio_purchase_not_pending",
+  "studio_purchase_wall_not_available",
+  "studio_purchase_not_confirmed",
+  "studio_download_item_deleted",
+  "studio_download_track_removed",
+  "studio_download_release_taken_down",
+  "studio_download_artist_unavailable",
+  "studio_download_track_withheld",
+  "studio_download_track_not_ready",
+  "studio_download_track_preparing",
+  // Studio landing v2 (QUEERPULSE-STUDIO-LANDING-V2-CONTRACT-2026-10-28.md, 17).
+  "studio_landing_preview_unavailable",
+  "studio_landing_preview_not_found",
+  "studio_landing_preview_track_not_eligible",
+  "studio_landing_preview_exists",
+  "studio_landing_previews_full",
+  "studio_landing_preview_no_reachable_owner",
+  "studio_landing_preview_not_pending",
+  "studio_landing_preview_not_approved",
+  "studio_landing_preview_main_persona_only",
+  "studio_landing_consent_required",
+  "studio_landing_persona_not_eligible",
+  "studio_landing_card_exists",
+  "studio_landing_cards_full",
+  "studio_landing_card_not_found",
+  "studio_landing_photo_not_yours",
+  "studio_landing_order_mismatch",
+  "studio_founding_persona_not_eligible",
+  "studio_founding_artist_exists",
+  "studio_founding_artists_full",
+  "studio_founding_artist_not_found",
+  "studio_access_request_exists",
+  "studio_access_already_granted",
+  "studio_access_request_not_found",
   // Studio safety and moderation (contract "Error codes").
   ...STUDIO_SAFETY_ERROR_CODES,
 ] as const;
@@ -415,6 +504,9 @@ export interface StudioTrackSummaryDTO {
   staffContentWarnings?: StudioContentWarningId[];
   /** Owner rows only: our team marked the track explicit. */
   isExplicitLocked?: boolean;
+  /** Owner rows only (Studio purchases): the track's own price; null or
+   *  missing reads as not for sale. */
+  price?: StudioPriceDTO | null;
   id: string;
   /** 1-based and contiguous. */
   position: number;
@@ -454,8 +546,11 @@ export interface StudioReleaseCardDTO {
   /** v2: when the release went live; null for a draft. Lists arrive ordered
    *  by it (published_at desc, id desc). */
   publishedAt: string | null;
-  /** v2: on every card (was release-only). */
+  /** v2: on every card (was release-only). The lead of `genres`. */
   genre: string | null;
+  /** Every genre the release carries, lead first. Unlisted legacy values
+   *  arrive as stored. */
+  genres: string[];
   /** Discovery: one of STUDIO_MOODS or null. Typed as a string so a value
    *  from a newer server reads as null in the adapter. */
   mood: string | null;
@@ -484,6 +579,8 @@ export interface StudioReleaseDTO extends StudioReleaseCardDTO {
   buyUrl?: string | null;
   /** The artist marked the release to play without gaps between tracks. */
   isGapless?: boolean;
+  /** Studio purchases: null or missing reads as not for sale. */
+  price?: StudioPriceDTO | null;
   /** The persona's Bandcamp, Ko-fi and Patreon links, in persona order. */
   supportLinks?: StudioSupportLinkDTO[];
   /** 1 when no version rows exist. */
@@ -545,6 +642,9 @@ export interface StudioArtistDTO {
     coverUrl: string | null;
     /** skinData.studioHero; null when the owner never chose a layout. */
     studioHero: "banner" | "portrait" | "both" | null;
+    /** Landing v2: a studio_founding_artists row names this persona.
+     *  Optional so older fixtures stay valid; missing reads false. */
+    isFoundingArtist?: boolean;
   };
   /** Published, newest first. */
   releases: StudioReleaseCardDTO[];
@@ -571,6 +671,12 @@ export interface StudioMeDTO {
   /** DES-84: accepted claims on the member's releases they can still
    *  counter, 0 without a grant. Optional: an older server leaves it out. */
   counterWindowsOpen?: number;
+  /** Landing v2: a Studio access request is waiting. Always false when
+   *  hasAccess is true; missing reads false. */
+  hasPendingRequest?: boolean;
+  /** Landing v2: the waiting request asked to release music; missing reads
+   *  false. */
+  wantsToRelease?: boolean;
 }
 
 export interface StudioPageDTO<Item> {
@@ -633,13 +739,14 @@ export interface CreateStudioReleaseBody {
   title: string;
 }
 
-/** null clears description, genre and release date (contract delta, see
+/** null clears description and release date (contract delta, see
  *  "Decisions"); a cover can be replaced and never cleared in v1. */
 export interface UpdateStudioReleaseBody {
   title?: string;
   type?: StudioReleaseType;
   description?: string | null;
-  genre?: string | null;
+  /** At most STUDIO_RELEASE_GENRES_MAX, unique; [] clears. */
+  genres?: string[];
   releasedOn?: string | null;
   coverKey?: string;
   rightsConfirmed?: true;
@@ -651,6 +758,8 @@ export interface UpdateStudioReleaseBody {
   buyUrl?: string | null;
   /** Play without gaps between consecutive tracks. */
   isGapless?: boolean;
+  /** Studio purchases: absent keeps the price, null takes the release off sale. */
+  price?: StudioPriceInput | null;
 }
 
 export interface CreateStudioTrackBody {
@@ -676,6 +785,8 @@ export interface UpdateStudioTrackBody {
   peakDb?: number | null;
   syncedLyrics?: StudioSyncedLyricLine[] | null;
   chapters?: StudioChapterInput[] | null;
+  /** Studio purchases: absent keeps the price, null takes the track off sale. */
+  price?: StudioPriceInput | null;
 }
 
 // ── Studio v2: playlists, genres, stats ───────────────────────────────────
@@ -1005,6 +1116,26 @@ export const DEFAULT_STUDIO_PLAYBACK: StudioPlaybackPreferencesDTO = {
 export type StudioPlaybackUpdateDTO = Partial<
   Omit<StudioPlaybackPreferencesDTO, "listeningNoticeSeenAt">
 > & { hasSeenListeningNotice?: true };
+
+/** GET and PUT /me/studio-welcome: whether this account has closed the Studio
+ *  welcome, and the genres and moods picked in it. GET answers the defaults
+ *  (not seen, no picks) without creating a row. */
+export interface StudioWelcomeDTO {
+  hasSeenWelcome: boolean;
+  /** ISO 8601; null until the welcome is closed for the first time. */
+  welcomeSeenAt: string | null;
+  genres: StudioGenre[];
+  moods: StudioMood[];
+}
+
+/** PUT /me/studio-welcome: a partial replace. `hasSeenWelcome` is sent only
+ *  as true and stamps welcomeSeenAt once; `genres` and `moods` each replace
+ *  the stored list when present. */
+export interface StudioWelcomeUpdateDTO {
+  hasSeenWelcome?: true;
+  genres?: StudioGenre[];
+  moods?: StudioMood[];
+}
 
 /** A release as the flag-review cards show it: the release card plus the
  *  takedown facts. */

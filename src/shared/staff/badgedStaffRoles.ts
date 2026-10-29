@@ -16,7 +16,8 @@ import type { StaffBadgeRole, StaffRole } from "../components/ui/StaffBadge";
  * about changemaker nominations rather than about a member's own content or
  * their place here. `product_manager` reads aggregates and keeps the roadmap,
  * and `cultural_producer` keeps the platform's own public-face pages; neither
- * decides anything about another member.
+ * decides anything about another member. `music_manager_producer` does badge,
+ * because it holds the full host controls over other members' music events.
  *
  * `Extract` rather than a fresh union: this list can only ever narrow the ids
  * the admin registry already defines, so a typo or a renamed grant fails to
@@ -30,6 +31,7 @@ export type BadgedStaffRoleId = Extract<
   | "resource_curator"
   | "editorial"
   | "communities"
+  | "music_manager_producer"
 >;
 
 /** Registry order, matching the backend's `BADGED_STAFF_ROLE_IDS`. */
@@ -40,6 +42,7 @@ export const BADGED_STAFF_ROLE_IDS: BadgedStaffRoleId[] = [
   "resource_curator",
   "editorial",
   "communities",
+  "music_manager_producer",
 ];
 
 /**
@@ -59,6 +62,7 @@ export const BADGED_STAFF_ROLE_LABEL_KEY: Record<BadgedStaffRoleId, string> = {
   resource_curator: "shared:staffBadge.grant.resourceCurator",
   editorial: "shared:staffBadge.grant.editorial",
   communities: "shared:staffBadge.grant.communities",
+  music_manager_producer: "shared:staffBadge.grant.musicManagerProducer",
 };
 
 /**

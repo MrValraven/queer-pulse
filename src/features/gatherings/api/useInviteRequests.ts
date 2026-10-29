@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { eventKeys } from "./eventKeys";
+import { useEventHostScope } from "../eventHostScope";
 import { DEMO_INVITE_REQUESTS } from "./inviteRequests.data";
 import {
   toInviteRequestView,
@@ -19,13 +20,14 @@ const NO_REQUESTS: InviteRequestView[] = [];
  */
 export function useInviteRequests(slug: string | undefined) {
   const { demoMode } = useDemoMode();
+  const { apiTarget } = useEventHostScope();
   const query = useQuery<InviteRequestView[]>({
-    queryKey: eventKeys.inviteRequests(slug, demoMode),
+    queryKey: eventKeys.inviteRequests(slug, demoMode, apiTarget),
     enabled: Boolean(slug),
     ...(demoMode ? { staleTime: Infinity } : {}),
     queryFn: async () => {
       if (demoMode || !slug) return DEMO_INVITE_REQUESTS;
-      const dtos = await getInviteRequests(slug);
+      const dtos = await getInviteRequests(slug, apiTarget);
       return dtos.map(toInviteRequestView);
     },
   });

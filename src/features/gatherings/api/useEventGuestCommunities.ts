@@ -44,13 +44,16 @@ export function useEventGuestCommunities(
 export interface GuestCommunityChangesResult {
   /** How many invites and removals the server refused. */
   failedCount: number;
+  /** The first refusal's error, so a coded one can name its reason; null
+   *  when nothing was refused. */
+  firstRejection: unknown;
 }
 
 /**
  * Sends one save's guest changes: removals first (each frees a place under
  * the cap of five), then invites. Every call settles on its own, so one
  * refusal never blocks the rest, and the promise always resolves with how
- * many failed. The hosting readers refetch afterwards. Demo patches the
+ * many failed and the first refusal's error. The hosting readers refetch afterwards. Demo patches the
  * cached list and makes no request.
  */
 export function useApplyGuestCommunityChanges(
@@ -61,7 +64,7 @@ export function useApplyGuestCommunityChanges(
   const { roleIn } = useCommunityMembership();
   return async (changes) => {
     if (changes.invites.length === 0 && changes.removeSlugs.length === 0) {
-      return { failedCount: 0 };
+      return { failedCount: 0, firstRejection: null };
     }
     if (demoMode) {
       queryClient.setQueryData<EventGuestCommunityView[]>(
@@ -74,7 +77,7 @@ export function useApplyGuestCommunityChanges(
               COMMUNITY_STAFF_ROLES.has(roleIn(communitySlug) ?? ""),
           ),
       );
-      return { failedCount: 0 };
+      return { failedCount: 0, firstRejection: null };
     }
     const removals = await Promise.allSettled(
       changes.removeSlugs.map((communitySlug) =>
@@ -85,10 +88,12 @@ export function useApplyGuestCommunityChanges(
       changes.invites.map((entry) => inviteGuestCommunity(slug, entry.slug)),
     );
     invalidateHostingReaders(queryClient);
+    const rejections = [...removals, ...invites].filter(
+      (result): result is PromiseRejectedResult => result.status === "rejected",
+    );
     return {
-      failedCount: [...removals, ...invites].filter(
-        (result) => result.status === "rejected",
-      ).length,
+      failedCount: rejections.length,
+      firstRejection: rejections[0]?.reason ?? null,
     };
   };
 }

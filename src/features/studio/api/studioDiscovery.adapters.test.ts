@@ -64,6 +64,7 @@ const card: StudioReleaseCardDTO = {
   },
   publishedAt: "2026-04-12T10:00:00.000Z",
   genre: "fado",
+  genres: ["fado"],
   mood: "melancholy",
   scene: { slug: "mouraria-fado", name: "Mouraria fado" },
 };

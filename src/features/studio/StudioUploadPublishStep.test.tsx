@@ -65,6 +65,7 @@ const releaseDto: StudioReleaseDTO = {
   },
   description: null,
   genre: null,
+  genres: [],
   mood: null,
   scene: null,
   status: "draft",

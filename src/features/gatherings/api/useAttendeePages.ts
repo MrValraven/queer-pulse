@@ -6,6 +6,8 @@ import { getAttendees, type AttendeeArrival } from "./events.api";
 import { attendeeToRow, type AttendeeRow } from "./events.adapters";
 import { eventKeys } from "./eventKeys";
 import { useAttendees } from "./useAttendees";
+import type { EventApiTarget } from "./eventApiTarget";
+import { useEventHostScope } from "../eventHostScope";
 
 export interface AttendeePagesFilter {
   status: "going" | "waitlisted";
@@ -36,21 +38,25 @@ export interface AttendeePagesResult {
 }
 
 /** Under the roster's own key, so every existing invalidation of a
- *  gathering's attendees also refreshes the door's groups. */
+ *  gathering's attendees also refreshes the door's groups. The music admin
+ *  target adds its segment before `"pages"`, under the admin roster's key. */
 export const attendeePagesRoot = (
   slug: string | undefined,
   demoMode: boolean,
-) => [...eventKeys.attendees(slug, demoMode), "pages"] as const;
+  apiTarget?: EventApiTarget,
+) => [...eventKeys.attendees(slug, demoMode, apiTarget), "pages"] as const;
 
-/** Index 5 is the arrival filter and index 7 the search term; the check-in
+/** One past the root is the status, two past it the arrival filter and four
+ *  past it the search term (indexes 5 and 7 for a member key); the check-in
  *  cache patch reads them back off each cached key. */
 export const attendeePagesKey = (
   slug: string | undefined,
   demoMode: boolean,
   filter: AttendeePagesFilter,
+  apiTarget?: EventApiTarget,
 ) =>
   [
-    ...attendeePagesRoot(slug, demoMode),
+    ...attendeePagesRoot(slug, demoMode, apiTarget),
     filter.status,
     filter.arrival ?? "any",
     "q",
@@ -100,16 +106,19 @@ function demoRows(
 export function useAttendeePages(
   slug: string | undefined,
   filter: AttendeePagesFilter,
-  options: { isEnabled?: boolean } = {},
+  options: { isEnabled?: boolean; refetchIntervalMs?: number | null } = {},
 ): AttendeePagesResult {
   const { demoMode } = useDemoMode();
+  const { apiTarget } = useEventHostScope();
   const isEnabled = options.isEnabled ?? true;
   // Only demo derives its groups from the roster; live leaves it alone.
   const { data: roster } = useAttendees(demoMode ? slug : undefined);
 
   const query = useInfiniteQuery<AttendeePage>({
-    queryKey: attendeePagesKey(slug, demoMode, filter),
+    queryKey: attendeePagesKey(slug, demoMode, filter, apiTarget),
     enabled: Boolean(slug) && !demoMode && isEnabled,
+    // A scope's door polls on its own interval; live only.
+    refetchInterval: demoMode ? false : (options.refetchIntervalMs ?? false),
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       const pageNumber = pageParam as number;
@@ -121,6 +130,7 @@ export function useAttendeePages(
           arrival: filter.arrival,
           q: filter.q || undefined,
         },
+        apiTarget,
       );
       return {
         rows: response.items.map((item) =>

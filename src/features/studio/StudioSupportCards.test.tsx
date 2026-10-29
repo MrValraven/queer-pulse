@@ -56,6 +56,7 @@ function releaseWith(
     artist: artistRef,
     description: null,
     genre: null,
+    genres: [],
     mood: null,
     scene: null,
     status: "published",

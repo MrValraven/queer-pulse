@@ -1,8 +1,8 @@
 /* SubprofilePublishPanel — the pane no longer wraps itself in a `.card` (Task
    4's pane router already supplies the `.ed-main` header); these are the
-   pane's own local bits: the blocked-publish hint line and the delete
-   "danger zone". Everything else reuses `SubprofileEditor.module.css`'s
-   `.publishBar`/`.publishActions`/`.checklistWrap` or the global `.ed-grid`. */
+   pane's own local bits: the blocked-publish hint line. Everything else
+   reuses `SubprofileEditor.module.css`'s `.publishBar`/`.publishActions`/
+   `.checklistWrap` or the global `.ed-grid`. */
 
 /* Sits on the `.publishBar` flex row but forced to its own full-width line
    below the Publish action — the reason the disabled Publish button won't
@@ -12,24 +12,5 @@
   font-size: var(--text-13);
   color: var(--accent-ink);
   line-height: 1.5;
-  margin: 0;
-}
-
-.dangerZone {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--gap-sm);
-  margin-top: var(--card-pad);
-  padding-top: var(--gap-sm);
-  border-top: 1px dashed rgba(var(--line-rgb), 0.16);
-}
-
-.dangerCopy {
-  font-size: var(--text-13);
-  color: var(--ink-60);
-  line-height: 1.5;
-  max-width: 42ch;
   margin: 0;
 }

@@ -6,6 +6,10 @@ import { eventKeys } from "./eventKeys";
  *  group query (see `attendeePagesRoot`). */
 export const DOOR_PAGES_SEGMENT = "pages";
 
+/** The key segment the music admin target adds after `demoMode` (see
+ *  `eventKeySegment`). */
+const MUSIC_ADMIN_KEY_SEGMENT = "musicAdmin";
+
 /** First element of every check-in and undo mutation key. */
 export const CHECK_IN_MUTATION_ROOT = "check-in";
 
@@ -57,7 +61,8 @@ export function scheduleDoorRefresh(
  * After a socket gap a door device may have missed frames. Refreshes every
  * gathering that has a cached door group query (the host's check-in tab
  * created it), each through the scheduler so a slug with a tap in flight
- * waits for it. Member-facing guest-list queries have no `"pages"` entry and
+ * waits for it. The music admin door (`"musicAdmin"` before `"pages"`) counts
+ * as a door too. Member-facing guest-list queries have no `"pages"` entry and
  * are left alone.
  */
 export function refreshDoorsAfterReconnect(queryClient: QueryClient): void {
@@ -65,8 +70,15 @@ export function refreshDoorsAfterReconnect(queryClient: QueryClient): void {
   for (const query of queryClient.getQueryCache().findAll({
     queryKey: eventKeys.attendeesRoot,
   })) {
-    const [, slug, isDemo, segment] = query.queryKey;
-    if (isDemo === false && segment === DOOR_PAGES_SEGMENT) {
+    // Member key: ["attendees", slug, false, "pages", ...]. The music admin
+    // target puts its segment first: ["attendees", slug, false, "musicAdmin",
+    // "pages", ...].
+    const [, slug, isDemo, segment, adminSegment] = query.queryKey;
+    const isDoorGroup =
+      segment === DOOR_PAGES_SEGMENT ||
+      (segment === MUSIC_ADMIN_KEY_SEGMENT &&
+        adminSegment === DOOR_PAGES_SEGMENT);
+    if (isDemo === false && isDoorGroup) {
       if (typeof slug === "string") doorSlugs.add(slug);
     }
   }

@@ -1,5 +1,12 @@
 import { useMemo, useRef, useState } from "react";
-import { FiFileText, FiMusic, FiSearch, FiShield, FiX } from "react-icons/fi";
+import {
+  FiFileText,
+  FiMusic,
+  FiSearch,
+  FiShield,
+  FiShoppingBag,
+  FiX,
+} from "react-icons/fi";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { Button, Collapse, EmptyState } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -25,6 +32,7 @@ const CATEGORY_ICON = {
   listening: FiMusic,
   sharing: FiFileText,
   safety: FiShield,
+  buying: FiShoppingBag,
 } as const;
 
 function CategoryCard({ card }: { card: HelpCategoryCard }) {

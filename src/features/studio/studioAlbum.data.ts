@@ -136,20 +136,6 @@ export const TABS = [
 ] as const;
 export type AlbumTabId = (typeof TABS)[number]["id"];
 
-// Mock ledger + buy figures: per-instance analytics, run through
-// useFormat() at the call site rather than hardcoded as display strings.
-export const ALBUM_BUY = {
-  price: 8,
-  payWhatYouCanMin: 1,
-};
-
-export const ALBUM_LEDGER = {
-  paidToArtistLifetime: 8940,
-  paidToCollaborators: 1420,
-  /** A count, so it reads "Fewer than 5" under the floor. */
-  savesThisMonth: { value: 312, isBelowThreshold: false },
-};
-
 export const MORE: {
   pre: string;
   em?: string;

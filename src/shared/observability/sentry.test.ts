@@ -445,6 +445,29 @@ describe("Studio v3 private paths", () => {
     ).toBe(true);
   });
 
+  it("treats Studio purchase, sales and payment paths as private", () => {
+    for (const path of [
+      "/studio/purchases/p1/wall",
+      "/studio/sales/pending-count",
+      "/me/studio-purchases?status=confirmed",
+      "/studio/payments?persona=sp1",
+      "/account/music-purchases",
+      "/studio/library?tab=purchases",
+    ])
+      expect(isPrivateObservabilityUrl(`http://api.test/v1${path}`)).toBe(true);
+    expect(isPrivateObservabilityUrl("http://api.test/v1/studio/browse")).toBe(
+      false,
+    );
+  });
+
+  it("treats the public Studio landing reads as private", () => {
+    for (const url of [
+      "https://api.example/v1/studio/landing",
+      "https://api.example/v1/studio/landing/previews/abc/stream",
+    ])
+      expect(isPrivateObservabilityUrl(url)).toBe(true);
+  });
+
   it("treats a mention name lookup as private", () => {
     expect(
       isPrivateObservabilityUrl(

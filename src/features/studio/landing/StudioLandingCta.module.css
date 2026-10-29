@@ -7,13 +7,144 @@
 .closing {
   justify-content: center;
 }
-/* In the hero the member note shares its row with "See inside": it grows to
-   the note's own cap, so the link sits right after it, and lets the link drop
-   below it once the row is narrower than 260px plus the link. */
+.artists {
+  justify-content: flex-start;
+}
+/* A member's access request takes the hero's whole first row, so the
+   secondary link sits on the row below it. */
 .hero.member {
-  flex: 1 1 260px;
+  flex: 1 1 100%;
   min-width: 0;
   max-width: 460px;
+}
+.member {
+  width: 100%;
+}
+
+/* ── Member access request ── */
+.access {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 460px;
+}
+.accessStart {
+  align-items: stretch;
+}
+.accessCentred {
+  margin-inline: auto;
+}
+
+/* Compact member variant (For artists and the closing): the button alone,
+   then one on-list line. Centred in the closing. */
+.compactBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+.accessCentred .compactBlock,
+.accessCentred .checking {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.compact.accessCentred .onListLine {
+  justify-content: center;
+}
+.onListLine {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 12px 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  line-height: 1.3;
+  color: var(--studio-text);
+}
+
+/* The on-list title and line take focus after a request is sent, since the
+   pressed button folded away; the ring shows for keyboard users. */
+.onListTitle:focus,
+.onListLine:focus {
+  outline: none;
+}
+.onListTitle:focus-visible,
+.onListLine:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+
+.checking {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  font-family: var(--sans);
+  font-size: var(--text-15);
+  color: var(--studio-text-muted);
+}
+
+.requestBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  text-align: left;
+}
+.makesMusic {
+  align-self: stretch;
+}
+
+.failure {
+  margin: 0;
+  padding-top: 2px;
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: var(--studio-accent-text);
+}
+
+.onList {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 18px;
+  border: 1px solid var(--studio-line);
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--studio-surface) 70%, transparent);
+  text-align: left;
+}
+.onListIcon {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  flex: none;
+  color: var(--studio-jade-text);
+}
+.onListCopy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+.onListTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  line-height: 1.25;
+  color: var(--studio-text);
+}
+.onListBody {
+  margin: 0 0 6px;
+  font-family: var(--sans);
+  font-size: var(--text-15);
+  line-height: 1.5;
+  color: var(--studio-text-muted);
 }
 
 .memberNote {

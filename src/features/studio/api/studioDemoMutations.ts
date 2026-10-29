@@ -12,10 +12,10 @@ import {
 import { ApiError } from "../../../shared/api/client";
 import { studioTrackPath } from "../studioPaths";
 import {
-  STUDIO_GENRE_LABEL_KEY,
   STUDIO_RELEASE_STATUS_LABEL_KEY,
   STUDIO_RELEASE_TYPE_LABEL_KEY,
   formatTrackTime,
+  genreLabelKeyOf,
   lyricStanzasOf,
   studioSavedId,
   toBuyLinkView,
@@ -41,7 +41,13 @@ import {
   demoSetArtistWarnings,
 } from "./studioDemoSafety";
 import { demoSceneRefById } from "./studioDemoScenes.data";
-import type { StudioGenre } from "./studio.types";
+import { defaultGenresForKind } from "../studioUploadGenres.data";
+import { isSellableReleaseType } from "../studioPurchaseRules";
+import { demoTrackPriceOf } from "./studioDemoPurchaseStore";
+import {
+  demoSetReleasePrice,
+  demoSetTrackPrice,
+} from "./studioDemoPurchasePrices";
 
 /** A rough 128 kbps estimate, read back from the demo key's byte count. */
 const DEMO_BYTES_PER_SECOND = 16_000;
@@ -56,6 +62,8 @@ export function demoCreateRelease(
     DEMO_STUDIO_ME.uploadablePersonas.find(
       (candidate) => candidate.id === body.subprofileId,
     ) ?? DEMO_STUDIO_ME.uploadablePersonas[0]!;
+  // Spoken word personas start on Spoken word, as the server does.
+  const spokenWordGenres: string[] = defaultGenresForKind(persona.kind);
   const card = toReleaseCardView({
     id: nextDemoId("demo-draft"),
     title: body.title,
@@ -66,7 +74,8 @@ export function demoCreateRelease(
     totalDurationSeconds: 0,
     artist: persona,
     publishedAt: null,
-    genre: null,
+    genre: spokenWordGenres[0] ?? null,
+    genres: spokenWordGenres,
     mood: null,
     scene: null,
   });
@@ -90,6 +99,7 @@ export function demoCreateRelease(
     buyUrl: null,
     buyLink: null,
     isGapless: false,
+    price: null,
     supportLinks: [],
     version: 1,
     versions: [],
@@ -107,20 +117,46 @@ export function demoUpdateRelease(
   body: UpdateStudioReleaseBody,
 ): StudioReleaseView {
   const type: StudioReleaseType = body.type ?? release.type;
-  const genre = body.genre === undefined ? release.genre : body.genre;
+  const genres = body.genres === undefined ? release.genres : body.genres;
   const mood = body.mood === undefined ? release.mood : body.mood;
   const sceneId = body.sceneId === undefined ? release.sceneId : body.sceneId;
+  // Studio purchases: the refusals throw before anything changes. A type
+  // change out of the sellable types needs every price on the release off
+  // first (its tracks included).
+  const priceAfter = body.price === undefined ? release.price : body.price;
+  const isPricedInside =
+    priceAfter !== null ||
+    release.tracks.some((track) => demoTrackPriceOf(track.id) !== null);
+  if (
+    body.type !== undefined &&
+    !isSellableReleaseType(type) &&
+    isPricedInside
+  ) {
+    throw studioRefusal(409, "studio_release_type_not_for_sale");
+  }
+  if (body.price !== undefined) {
+    demoSetReleasePrice(release.id, body.price, {
+      releaseType: type,
+      artistId: release.artist.id,
+    });
+  }
   return {
     ...release,
+    ...(body.price === undefined
+      ? {}
+      : { price: body.price === null ? null : body.price }),
     title: body.title ?? release.title,
     type,
     typeLabelKey: STUDIO_RELEASE_TYPE_LABEL_KEY[type],
     description:
       body.description === undefined ? release.description : body.description,
-    genre,
-    genreLabelKey: genre
-      ? (STUDIO_GENRE_LABEL_KEY[genre as StudioGenre] ?? null)
-      : null,
+    genre: genres[0] ?? null,
+    genreLabelKey: genreLabelKeyOf(genres[0] ?? null),
+    genres,
+    genreLabelKeys: genres.flatMap((genre) => {
+      const labelKey = genreLabelKeyOf(genre);
+      return labelKey === null ? [] : [labelKey];
+    }),
     mood,
     sceneId,
     scene:
@@ -163,6 +199,7 @@ export function demoCreateTrack(
       artist: DEMO_STUDIO_ME.uploadablePersonas[0]!,
       publishedAt: null,
       genre: null,
+      genres: [],
       mood: null,
       scene: null,
     });
@@ -201,6 +238,12 @@ export function demoUpdateTrack(
   // Studio safety: our team's explicit mark holds, as the server's 409.
   if (body.isExplicit === false && demoIsExplicitLocked(track.id))
     throw studioRefusal(409, "studio_track_explicit_locked");
+  if (body.price !== undefined) {
+    demoSetTrackPrice(track.id, body.price, {
+      releaseType: track.release.type,
+      artistId: track.release.artist.id,
+    });
+  }
   const stored = demoApplyListeningPatch(track, body);
   if (body.contentWarnings !== undefined)
     demoSetArtistWarnings(track.id, body.contentWarnings);

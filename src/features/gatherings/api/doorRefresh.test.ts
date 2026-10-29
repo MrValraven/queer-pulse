@@ -116,6 +116,24 @@ describe("refreshDoorsAfterReconnect", () => {
     });
   });
 
+  it("treats a music admin door group query as a door", () => {
+    queryClient.setQueryData(
+      ["attendees", "club-night-x1", false, "musicAdmin", "pages", "going"],
+      {},
+    );
+    // The admin roster alone has no door group under it.
+    queryClient.setQueryData(
+      ["attendees", "roster-only", false, "musicAdmin"],
+      {},
+    );
+    refreshDoorsAfterReconnect(queryClient);
+    vi.advanceTimersByTime(DOOR_LINGER_MS);
+    expect(invalidateSpy).toHaveBeenCalledTimes(1);
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: ["attendees", "club-night-x1", false],
+    });
+  });
+
   it("refreshes a slug once however many group queries it has", () => {
     queryClient.setQueryData(["attendees", SLUG, false, "pages", "going"], {});
     queryClient.setQueryData(

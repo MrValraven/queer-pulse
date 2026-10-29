@@ -3,7 +3,7 @@ import type { Catalog } from "../../types";
 /**
  * Studio — the co-op music platform: the logged-in "This week" room, the
  * marketing landing, artist/album/track/set pages, live broadcasts, sheet
- * music store, the creator dashboard (upload, payouts, solidarity fund),
+ * music store, the creator dashboard (upload, payments, solidarity fund),
  * governance (programme, council, triage, flag review), and the trust/help
  * static pages.
  *
@@ -55,9 +55,9 @@ export const studio: Catalog = {
 
   "rail.foot.sustainedSince": "<em>Sustained</em> by you since {date}.",
   "rail.foot.paid_one":
-    "You've paid <b>{amount}</b> to {count} artist this year.",
+    "You've bought <b>{amount}</b> of music from {count} artist this year.",
   "rail.foot.paid_other":
-    "You've paid <b>{amount}</b> to {count} artists this year.",
+    "You've bought <b>{amount}</b> of music from {count} artists this year.",
 
   "railPlaylists.label": "Your library",
   "railPlaylists.autoPlaylist": "Auto playlist",
@@ -131,7 +131,7 @@ export const studio: Catalog = {
   "player.play": "Play",
   "player.next": "Next",
   "player.tipCta": "Tip {amount}",
-  "player.payingLine": "<b>paying</b> {amount} to {artist}",
+  "player.buyLine": "<b>100%</b> of a buy goes to {artist}",
 
   // ── Logged-in "This week" room hero (StudioPageSections → StudioHero) ────
   "room.hero.listening_one": "{count} listening",
@@ -140,7 +140,7 @@ export const studio: Catalog = {
   "room.hero.removedToast": "Removed from your library",
   "room.hero.inLibrary": "In library",
   "room.hero.addLibrary": "Library",
-  "room.hero.payNote": "This listen pays {artist} <em>{amount}</em>.",
+  "room.hero.payNote": "Like it? <em>Buy it</em> from {artist} directly.",
   "room.hero.tipOnTop": "Tip on top? 100% to the artist.",
 
   // ── "This week" set section ───────────────────────────────────────────────
@@ -151,10 +151,12 @@ export const studio: Catalog = {
   "room.set.sideHeading": "Listening with you",
   "room.set.sideSub":
     "{sustainers} sustainers · {casual} casual · {cities} cities",
-  "room.set.ledgerHead": "Ledger · this month",
-  "room.set.ledgerPaidArtists": "Paid to artists",
-  "room.set.ledgerArtistShare": "Artist share",
-  "room.set.ledgerPerPlay": "Per play",
+  "room.set.fee.heading": "Your sustainer fee pays for",
+  "room.set.fee.hosting": "Hosting",
+  "room.set.fee.curators": "Curator stipends",
+  "room.set.fee.fund": "The solidarity fund",
+  "room.set.fee.artistShare": "A share for artists",
+  "room.set.fee.artistShareStatus": "Planned",
 
   // ── Error pages (Studio404Page, Studio500Page) ────────────────────────────
   "error404.kind.release.eyebrow": "Release not found",
@@ -194,42 +196,42 @@ export const studio: Catalog = {
   // ── Studio landing page (landing/StudioLandingPage and its sections) ─────
   // Every claim here is true in live today, except the "plan.*" strip, which
   // is labelled as the plan and carries no figures.
-  "landing.metaTitle": "QueerPulse Studio: queer music from close by",
+  "landing.metaTitle": "QueerPulse Studio: the queer music scene of Lisbon",
   "landing.description":
-    "Artists from our community with pages of their own, their releases and sets, and the events where you can hear them live. Free for members, opened by our team in waves.",
+    "Hear the queer artists of Lisbon, release your own music for free under a stage name if you like, and find the events where it all plays live. Free for members, opened by our team in waves.",
   "landing.ogImageAlt":
     "Studio home on a laptop, showing this week's releases and scenes",
   "landing.hero.eyebrow": "QueerPulse Studio",
-  "landing.hero.title": "Queer music from close by, <em>all in one place</em>.",
+  "landing.hero.title":
+    "The queer music scene of Lisbon, <em>in one player</em>.",
   "landing.hero.lede":
-    "Artists from our community with pages of their own, their releases and sets, and the events where you can hear them live. Picked by people who know the scene.",
+    "Hear the artists you'll see on Friday, picked by people who go to the same nights you do.",
   "landing.hero.status": "Free for members. Our team opens access in waves.",
   "landing.hero.seeInside": "See inside",
   "landing.cta.requestInvite": "Request an invite",
   "landing.cta.memberNote":
-    "Our team adds members to Studio in waves. Once you're in, this page opens straight into Studio.",
-  "landing.gallery.eyebrow": "A look inside",
-  "landing.gallery.title": "What members see <em>when they open Studio</em>",
-  "landing.gallery.tabsLabel": "Studio screens",
+    "Our team opens Studio to members in waves, artists first. Ask now and you get a notification when it opens for you.",
+  "landing.gallery.eyebrow": "How it works",
+  "landing.gallery.title": "Studio, <em>screen by screen</em>",
   "landing.gallery.sampleNote":
     "These screens show sample artists and sample members.",
   "landing.gallery.home.tab": "Home",
   "landing.gallery.home.caption":
-    "This week's releases, scenes and shelves, all picked by people.",
+    "This week's releases, scenes and shelves, picked by hand by our team. Nobody pays for a spot.",
   "landing.gallery.home.alt":
     "Studio home, with format filters, the Staff picks shelf, the start of New this week and the player at the bottom",
   "landing.gallery.home.phoneAlt":
     "Studio home on a phone, opening on the featured release with its cover and a button to play it",
   "landing.gallery.artist.tab": "Artist page",
   "landing.gallery.artist.caption":
-    "Every artist gets a page for their releases and their story, with a button to follow them.",
+    "Every artist gets a page with their releases, their story, a press kit and their next events on QueerPulse.",
   "landing.gallery.artist.alt":
     "An artist page, with the artist's photo, releases, follower count and a button to follow them",
   "landing.gallery.artist.phoneAlt":
     "An artist page on a phone, with the artist's photo, release and follower counts and a button to follow them",
   "landing.gallery.release.tab": "Release",
   "landing.gallery.release.caption":
-    "Tracklist, credits and content warnings. Records made to run together play without gaps.",
+    "Tracklist, credits and content warnings before a track plays. Records made to run together play without gaps.",
   "landing.gallery.release.alt":
     "A release page, with the cover, a note on what changed in the new version, the tracklist and a link to buy the album from the artist",
   "landing.gallery.release.phoneAlt":
@@ -251,62 +253,30 @@ export const studio: Catalog = {
     "Drop a track into a chat and it arrives as a card, with your note underneath.",
   "landing.gallery.share.alt":
     "A chat on a phone, with a shared Studio track shown as a card",
-  "landing.promises.eyebrow": "What Studio is for",
-  "landing.promises.title": "Made for the artists <em>around you</em>",
-  "landing.promises.artistPage.title": "A real page for every artist",
-  "landing.promises.artistPage.body":
-    "Bio, releases, upcoming events and a press kit, together in one place.",
-  "landing.promises.picks.title": "People pick what's featured",
-  "landing.promises.picks.body":
-    "Our team picks the shelves and scenes by hand. Nobody pays for a spot.",
-  "landing.promises.scene.title": "Music meets the scene",
-  "landing.promises.scene.body":
-    "Artist pages link to their events on QueerPulse, so a song can lead you to a night out.",
-  "landing.promises.safety.title": "Safe by design",
-  "landing.promises.safety.body":
-    "Content warnings before a track plays, reporting on every track, and rights claims handled by our team.",
   "landing.compare.eyebrow": "Side by side",
-  "landing.compare.title": "Studio and the <em>big streaming apps</em>",
+  "landing.compare.title":
+    "Keep Spotify for everything else. <em>Studio is for the music made around you</em>.",
   "landing.compare.topicHeading": "Topic",
-  "landing.compare.bigAppsHeading": "Big streaming apps (Spotify and others)",
   "landing.compare.studioHeading": "QueerPulse Studio",
-  "landing.compare.bigAppsShort": "Big apps",
   "landing.compare.studioShort": "Studio",
   "landing.compare.featured.topic": "What gets featured",
-  "landing.compare.featured.bigApps":
-    "Picked by algorithms, and labels can pay for extra promotion",
   "landing.compare.featured.studio":
-    "Picked by hand by our team. Nobody pays to be featured",
+    "Picked by hand by our team. Nobody pays for a spot",
   "landing.compare.ads.topic": "Ads",
-  "landing.compare.ads.bigApps": "Ads on the free plan",
-  "landing.compare.ads.studio": "Free for members, with no ads",
+  "landing.compare.ads.studio": "No ads, for every member",
   "landing.compare.listening.topic": "Your listening",
-  "landing.compare.listening.bigApps":
-    "Used to build a profile for recommendations and advertising",
   "landing.compare.listening.studio":
-    "Your listening history is private to you, with Pause and Clear, and we build no profile from it",
-  "landing.compare.artists.topic": "Who you hear",
-  "landing.compare.artists.bigApps":
-    "Millions of tracks, where local artists get buried",
-  "landing.compare.artists.studio": "Artists from our community, easy to find",
+    "A private history with Pause and Clear, and no profile built from it",
   "landing.compare.scene.topic": "The scene",
-  "landing.compare.scene.bigApps":
-    "Concert listings pulled in from ticketing partners",
   "landing.compare.scene.studio":
-    "Nights run by our community, listed on QueerPulse and linked from the artist's page",
-  "landing.compare.playlists.topic": "Playlists together",
-  "landing.compare.playlists.bigApps":
-    "Collaborators join through an invite link",
-  "landing.compare.playlists.studio":
-    "Made with your connections, and can stay visible to them only",
+    "Community events linked from the artist's page",
   "landing.compare.owner.topic": "Who runs it",
-  "landing.compare.owner.bigApps": "Large listed companies",
   "landing.compare.owner.studio": "Built in Lisbon, by and for the community",
   "landing.plan.eyebrow": "The plan",
   "landing.plan.chip": "Coming later",
   "landing.plan.title": "Where we want Studio <em>to go</em>",
   "landing.plan.intro":
-    "Nothing in this strip is live yet. It's the direction we're building towards, and this page will say so when it changes.",
+    "Nothing here is live yet. It's the direction we're building towards, and this page will say so when it changes.",
   "landing.plan.coop.title": "A co-op",
   "landing.plan.coop.body":
     "Run by artists and listeners together, deciding what gets played and where the money goes.",
@@ -329,6 +299,189 @@ export const studio: Catalog = {
   "landing.closing.body":
     "Studio is part of QueerPulse, the community network. Join with an invite, and our team opens Studio to members in waves.",
   "landing.closing.magazineLink": "Read the magazine",
+  // Studio landing v2 (2026-10-28)
+  "landing.hero.audienceLabel": "What brings you to Studio",
+  "landing.hero.audience.listener": "I listen",
+  "landing.hero.audience.artist": "I make music",
+  "landing.hero.artistTitle":
+    "Release your music <em>where your community already is</em>.",
+  "landing.hero.artistLede":
+    "Upload for free, release under a stage name no other member can tie to you, and reach the people who already come to your shows.",
+  "landing.hero.hearItFirst": "Hear it first",
+  "landing.photoCredit": "Photo: {credit}",
+  "landing.demoSampleNote":
+    "Demo: the artists, tracks, quotes and photos here are samples",
+  "landing.cta.applyAsArtist": "Apply as an artist",
+  "landing.cta.requestAccess": "Request Studio access",
+  "landing.cta.makesMusic": "I make music and want to release it on Studio",
+  "landing.cta.checking": "Checking your Studio access",
+  "landing.cta.onList.title": "You're on the list",
+  "landing.cta.onList.body":
+    "You get a notification when Studio opens for you.",
+  "landing.cta.onList.artistBody":
+    "You asked as an artist, so our team looks at your request first. You get a notification when Studio opens for you.",
+  "landing.cta.cancelRequest": "Cancel request",
+  "landing.cta.requestSent": "Request sent. You're on the list",
+  "landing.cta.requestCancelled": "Request cancelled",
+  "landing.cta.requestFailed": "We couldn't send your request",
+  "landing.cta.cancelFailed": "We couldn't cancel your request",
+  "landing.proof.label": "Studio in numbers",
+  "landing.proof.artists_one": "{count} artist",
+  "landing.proof.artists_other": "{count} artists",
+  "landing.proof.releases_one": "{count} release",
+  "landing.proof.releases_other": "{count} releases",
+  "landing.proof.events_one": "{count} event with Studio artists this month",
+  "landing.proof.events_other": "{count} events with Studio artists this month",
+  "landing.nextEvent.eyebrow": "Next on stage",
+  "landing.nextEvent.with": "With {artist}",
+  "landing.nextEvent.online": "Online",
+  "landing.nextEvent.visitorCta": "Request an invite to see this event",
+  "landing.nextEvent.memberCta": "Open the event",
+  "landing.listen.eyebrow": "Hear it first",
+  "landing.listen.title": "Tracks from <em>Studio artists</em>",
+  "landing.listen.note":
+    "The artists shared these tracks for this page. What you play here stays anonymous and leaves no record.",
+  "landing.listen.listLabel": "Tracks to play",
+  "landing.listen.play": "Play {track} by {artist}",
+  "landing.listen.pause": "Pause {track} by {artist}",
+  "landing.listen.progress": "{elapsed} of {total}",
+  "landing.listen.playing": "Playing {track} by {artist}",
+  "landing.listen.paused": "{track} is paused",
+  "landing.listen.retry": "Try {track} again",
+  "landing.listen.reason.unavailable": "This track was taken off this page",
+  "landing.listen.reason.offline": "You're offline, so this track can't load",
+  "landing.listen.reason.rateLimited":
+    "Too many plays in a short time. Try again in a minute",
+  "landing.listen.reason.server":
+    "Studio didn't answer, so this track can't load",
+  "landing.listen.reason.playback": "Your browser couldn't play this track",
+  "landing.artists.eyebrow": "Meet the artists",
+  "landing.artists.title": "Some of the people <em>on Studio</em>",
+  "landing.artists.listLabel": "Studio artists",
+  "landing.forArtists.eyebrow": "For artists",
+  "landing.forArtists.title": "Release <em>on Studio</em>",
+  "landing.forArtists.intro":
+    "Everything here works today for every artist our team brings in.",
+  "landing.forArtists.upload.title": "Upload directly, for free",
+  "landing.forArtists.upload.body":
+    "WAV and AIFF included, straight from your computer, with no distributor in between.",
+  "landing.forArtists.persona.title": "Release under a stage name",
+  "landing.forArtists.persona.body":
+    "Your persona lives inside your account, and no other member can see the two are linked.",
+  "landing.forArtists.numbers.title": "See who listens",
+  "landing.forArtists.numbers.body":
+    "Play totals and trends, and the listeners who choose to show their name as supporters.",
+  "landing.forArtists.tools.title": "Tools for every release",
+  "landing.forArtists.tools.body":
+    "Scheduled releases, version notes, private preview links, a press kit and albums that play without gaps.",
+  "landing.forArtists.events.title": "Your events on your page",
+  "landing.forArtists.events.body":
+    "Your page links to your events on QueerPulse, so a listener can find your next show.",
+  "landing.forArtists.spotify.label": "Worth knowing",
+  "landing.forArtists.spotify.fact":
+    "Since 2024, a track on Spotify earns no recorded royalties until it reaches 1,000 streams in the previous 12 months.",
+  "landing.forArtists.spotify.source":
+    "Source: Spotify's announcement, November 2023",
+  "landing.forArtists.spotify.opensNewTab": "(opens in a new tab)",
+  "landing.forArtists.spotify.studio":
+    "On Studio a new track has its own page and its listeners from day one. Studio itself holds and moves no money, and the plan below says where we want to take it.",
+  "landing.forArtists.founding.title": "Be a founding artist",
+  "landing.forArtists.founding.body":
+    "The first artists in are featured at launch on a shelf in Studio and keep a Founding artist badge on their page.",
+  "landing.forArtists.founding.memberBody":
+    "Ask as an artist and our team looks at your request first.",
+  "landing.forArtists.founding.priority":
+    "Apply as an artist and our team looks at your request first.",
+  "landing.forArtists.shot.alt":
+    "An artist's numbers in Studio, with plays per day and the listeners who show their name as supporters",
+  "landing.forArtists.shot.phoneAlt":
+    "An artist's numbers in Studio on a phone",
+  "landing.compare.streamingHeading": "Streaming apps (Spotify, Apple Music)",
+  "landing.compare.platformsHeading": "Artist platforms (Bandcamp, SoundCloud)",
+  "landing.compare.streamingShort": "Streaming apps",
+  "landing.compare.platformsShort": "Artist platforms",
+  "landing.compare.featured.streaming":
+    "Algorithms, and labels can pay for extra promotion",
+  "landing.compare.featured.platforms": "Global charts and editors' picks",
+  "landing.compare.releasing.topic": "Releasing your music",
+  "landing.compare.releasing.streaming": "Through a distributor, often paid",
+  "landing.compare.releasing.platforms": "Upload directly",
+  "landing.compare.releasing.studio": "Upload directly, for free",
+  "landing.compare.stageName.topic": "Your stage name",
+  "landing.compare.stageName.streaming":
+    "A public artist profile you manage from your own login",
+  "landing.compare.stageName.platforms":
+    "A public profile page you manage from your own login",
+  "landing.compare.stageName.studio":
+    "A persona inside your account, and no other member can see the link",
+  "landing.compare.ads.streaming": "On the free plan",
+  "landing.compare.ads.platforms": "On SoundCloud's free plan",
+  "landing.compare.listening.streaming":
+    "Builds a profile for recommendations and ads",
+  "landing.compare.listening.platforms":
+    "Recommendations from what you follow and buy",
+  "landing.compare.fans.topic": "Who your fans are",
+  "landing.compare.fans.streaming": "Anonymous numbers",
+  "landing.compare.fans.platforms": "Buyers and followers",
+  "landing.compare.fans.studio": "Supporters who choose to show their name",
+  "landing.compare.safety.topic": "Safety",
+  "landing.compare.safety.streaming": "An explicit tag",
+  "landing.compare.safety.platforms": "An explicit tag at most",
+  "landing.compare.safety.studio":
+    "Content warnings before a track plays, reporting, and moderation by our team",
+  "landing.compare.scene.streaming": "Concert listings from ticketing partners",
+  "landing.compare.scene.platforms": "Your shows are listed somewhere else",
+  "landing.compare.owner.streaming": "Large listed companies",
+  "landing.compare.owner.platforms": "Large companies and investors",
+  "landing.faq.eyebrow": "Questions",
+  "landing.faq.title": "What people <em>ask us</em>",
+  "landing.faq.free.question": "Is Studio free?",
+  "landing.faq.free.answer":
+    "Yes. Studio is free for every member, with no ads. Music you buy from an artist is paid for, and the money goes to that artist.",
+  "landing.faq.later.question": "Will it cost money later?",
+  "landing.faq.later.answer":
+    "We want Studio to become a co-op run by artists and listeners. Joining and using Studio is free, and music you buy from an artist is paid for, with the money going to that artist. Anything else that ever costs money will be said on this page first.",
+  "landing.faq.spotify.question": "Can I keep using Spotify?",
+  "landing.faq.spotify.answer":
+    "Of course. Keep it for everything else, and come to Studio for the music made around you.",
+  "landing.faq.ownership.question": "Who owns my music?",
+  "landing.faq.ownership.answer":
+    "You do. You keep your masters and your rights, and you can take a release down whenever you like.",
+  "landing.faq.elsewhere.question": "Can I release my music elsewhere too?",
+  "landing.faq.elsewhere.answer":
+    "Yes. Studio asks for no exclusivity, so your music can be on any other platform at the same time.",
+  "landing.faq.stageName.question": "Can I use a stage name?",
+  "landing.faq.stageName.answer":
+    "Yes. Make a persona in your account and release under it. No other member can see that the persona is linked to you.",
+  "landing.faq.listening.question": "What do you keep about my listening?",
+  "landing.faq.listening.answer":
+    "A private history only you can see, so Studio can show your top artists and tracks. Pause it or clear it whenever you like. Plays still count toward artists' totals without your name.",
+  "landing.faq.cut.question": "Do you take a cut?",
+  "landing.faq.cut.answer":
+    "No. Studio itself holds and moves no money, so there is nothing to take a cut of.",
+  "landing.faq.upload.question": "What can I upload?",
+  "landing.faq.upload.answer":
+    "Music, DJ mixes, podcasts, spoken word and recorded performance, as MP3, M4A, WAV or AIFF files.",
+  "landing.faq.getIn.question": "How do I get in?",
+  "landing.faq.getIn.answer":
+    "Ask for an invite to QueerPulse. Once you're a member, our team opens Studio in waves, artists first, and you get a notification when it opens for you.",
+  "landing.next.eyebrow": "What happens next",
+  "landing.next.title": "Three steps <em>to Studio</em>",
+  "landing.next.invite.title": "Request an invite",
+  "landing.next.invite.body":
+    "Tell us a little about yourself. It takes a few minutes.",
+  "landing.next.review.title": "Our team reads it",
+  "landing.next.review.body":
+    "Someone from our team reads every request. Being new to our community is fine.",
+  "landing.next.list.title": "You're on the Studio list",
+  "landing.next.list.body":
+    "Once you've joined, you're on the Studio list automatically, artists first, and you get a notification when Studio opens for you.",
+  "landing.team.eyebrow": "Who runs it",
+  "landing.team.title": "The people who <em>look after QueerPulse</em>",
+  "landing.team.body":
+    "Members of our community sit on the advisory council and help decide where QueerPulse goes, Studio included.",
+  "landing.team.listLabel": "Advisory council",
+  "landing.team.link": "Read how QueerPulse is run",
 
   // ── Sign in / Join (StudioSignInPage) ─────────────────────────────────────
   "signin.tabs.signIn": "Sign in",
@@ -337,9 +490,8 @@ export const studio: Catalog = {
   "signin.aside.title":
     "A streaming co-op that <em>pays</em> the people who made the song.",
   "signin.aside.body":
-    "Eighty cents of every euro reaches the artist. Tips pass through at <em>{tipPercent}</em>. The ledger is public, updated every Monday at noon.",
-  "signin.aside.paidThisMonth":
-    "Paid to artists this month: <em>{amount}</em> · and counting.",
+    "Buy a release and you pay the artist directly. Tips pass through at <em>{tipPercent}</em>. Your sustainer fee pays for hosting, curation and the solidarity fund.",
+  "signin.aside.noCut": "QueerPulse takes <em>nothing</em> from a buy.",
 
   "signin.in.title": "Welcome <em>back.</em>",
   "signin.in.lede":
@@ -365,7 +517,7 @@ export const studio: Catalog = {
   "signin.join.tier.studio.body":
     "Everything in Studio: the council's weekly set, live rooms, the full catalogue, lossless audio, direct artist subscriptions.",
   "signin.join.tier.studio.incl":
-    "{sharePercent} of your fee reaches artists by play",
+    "Your fee pays for hosting, curation and the solidarity fund",
   "signin.join.tier.coop.badge": "Best value",
   "signin.join.tier.coop.title": "The whole <em>co-op</em>",
   "signin.join.tier.coop.body":
@@ -397,10 +549,10 @@ export const studio: Catalog = {
     "Skip any step you like. You can open this again from Studio Help.",
   "firstRun.taste.title": "What do you love to <em>hear</em>?",
   "firstRun.taste.dek":
-    "Pick as many as you like. They move to the front of your Studio home and stay on this device.",
+    "Pick as many as you like. They move to the front of your Studio home and stay saved to your account.",
   "firstRun.taste.noneYet": "Nothing picked yet. That's fine too.",
-  "firstRun.taste.pickedCount_one": "{count} picked, kept on this device",
-  "firstRun.taste.pickedCount_other": "{count} picked, kept on this device",
+  "firstRun.taste.pickedCount_one": "{count} picked, saved to your account",
+  "firstRun.taste.pickedCount_other": "{count} picked, saved to your account",
   "firstRun.follow.title": "Find your <em>scene</em>",
   "firstRun.follow.dek":
     "Follow a few artists from the scenes on Studio. The ones closest to your picks come first.",
@@ -412,7 +564,9 @@ export const studio: Catalog = {
   "firstRun.backCta": "Back",
   "firstRun.nextCta": "Next",
   "firstRun.finishCta": "Start listening",
-  "firstRun.savedToast": "Your picks are saved on this device",
+  "firstRun.savedToast": "Your picks are saved to your account",
+  "firstRun.saveError":
+    "We couldn't save your welcome picks to your account. Open Help and choose Show the welcome again to retry",
   "firstRun.help.heading": "Pick your <em>sound</em> again",
   "firstRun.help.body":
     "The three-step welcome: what Studio is, the genres and moods you love, and artists to follow.",
@@ -420,43 +574,43 @@ export const studio: Catalog = {
 
   // ── About the co-op (StudioAboutPage + StudioAboutSections) ──────────────
 
-  "about.sec.rate.num": "02: the rate",
+  "about.sec.rate.num": "02: how artists get paid",
   "about.sec.rate.heading":
-    "€0.05 a play. A <em>floor</em> we're actually held to.",
+    "Fans buy the music and <em>pay the artist</em> directly.",
   "about.sec.rate.p1":
-    "We commit to <strong>€0.05 per qualifying play</strong>: roughly fifteen times what Spotify pays. A qualifying play is at least 30 seconds, capped at one payout per listener per day so nobody can farm it. The floor can rise by simple majority at the assembly; it can only <em>fall</em> with a two-thirds supermajority. In practice, that means it doesn't fall.",
+    "Artists put a price on albums, EPs, singles and their tracks, either a fixed price or name-your-price. You pay the artist <strong>straight from your own account</strong>, with their payment link, MB WAY or IBAN, and tap I've paid. Once the artist confirms, the download opens and your name joins the release's <em>Supported by</em> wall.",
   "about.sec.rate.footnote":
-    "For comparison: at €0.003 a stream, a song needs about 330,000 plays to earn what one here earns in 20,000. We are not pretending that's a small difference.",
+    "QueerPulse takes nothing from a buy and never holds the money. Your sustainer fee pays for hosting, curator stipends and the solidarity fund, and a share of it for artists is planned.",
 
-  "about.rate.cell.floor.value": "€<em>0.05</em>",
-  "about.rate.cell.floor.label": "per qualifying play · the floor",
-  "about.rate.cell.share.value": "<em>80</em>%",
-  "about.rate.cell.share.label": "of subscription revenue to artists, by play",
+  "about.rate.cell.floor.value": "€<em>0</em>",
+  "about.rate.cell.floor.label": "taken by QueerPulse from any buy",
+  "about.rate.cell.share.value": "<em>100</em>%",
+  "about.rate.cell.share.label": "of every buy goes straight to the artist",
   "about.rate.cell.tip.value": "<em>100</em>%",
   "about.rate.cell.tip.label": "of every tip, no platform cut, ever",
 
   "about.sec.ceiling.num": "03: what an artist can actually earn",
   "about.sec.ceiling.heading": "Honest about the <em>ceiling</em>.",
   "about.sec.ceiling.p1":
-    "Most \"creator economy\" pages show you the top 0.1% and let you assume you're them. Here's what the rate actually produces at four real levels of listening, and where it stops.",
+    "Most \"creator economy\" pages show you the top 0.1% and let you assume you're them. Here's what buys and tips actually add up to at four real levels of support, and where it stops.",
 
   "about.tier.casual.label": "Casual",
   "about.tier.casual.value": "74",
   "about.tier.casual.body":
-    "1,480 qualifying plays: about <em>75 listeners</em> playing one track three times a week. Coffee money, paid monthly.",
+    "About <em>fifteen fans</em> a month buying a €5 single. Coffee money, paid to you directly.",
   "about.tier.building.label": "Building",
   "about.tier.building.value": "340",
   "about.tier.building.body":
-    "6,800 plays, two tips, one album buy. A working sideline, <em>rent-adjacent</em> in Lisbon.",
+    "Around thirty album buys a month, some singles, two tips. A working sideline, <em>rent-adjacent</em> in Lisbon.",
   "about.tier.sustaining.label": "Sustaining",
   "about.tier.sustaining.value": "1,820",
   "about.tier.sustaining.body":
-    "36,000 plays, a regular tipping pool, one live room a month. Below the median Portuguese wage, and <em>12× what Spotify pays</em> for the same listening.",
+    "A crowd that buys every release, a regular tipping pool, one live listening room a month. Below the median Portuguese wage, and <em>every euro of it</em> paid straight to you by fans.",
   "about.tier.touring.label": "Touring artist",
   "about.tier.touring.body":
     "Studio will <em>not</em> replace a touring income, and we won't pretend it can. It can, plausibly, replace the rent while you make the next thing.",
   "about.tierFoot":
-    "These are the live ledger's actual per-stream rate times honest play counts, with nothing borrowed from a pitch deck. <em>The real numbers are public, every Monday at noon.</em>",
+    "These add up real Studio prices and honest numbers of buyers, with nothing borrowed from a pitch deck. <em>Every euro here goes from fan to artist, and QueerPulse never holds it.</em>",
 
   "about.sec.governance.num": "04: who decides",
   "about.sec.governance.heading":
@@ -464,7 +618,7 @@ export const studio: Catalog = {
   "about.sec.governance.p1":
     "Six curators program the weekly set, run submission triage, and write a paragraph justifying every pick. They're elected by the whole co-op at the annual assembly, paid a flat €400/mo stipend that appears on the public ledger, and limited to two-year terms with mandatory rotation. <strong>A person decides who gets heard,</strong> and signs their name to it.",
   "about.sec.governance.p2":
-    "The per-listen floor and the split percentages are set yearly by a joint vote of sustainers and artists, with a 20% quorum. If you think the rate is wrong, <em>you vote, or you stand.</em>",
+    "The sustainer fee, and how it's shared between hosting, curator stipends and the solidarity fund, is set yearly by a joint vote of sustainers and artists, with a quorum of one member in five. If you think the fee is wrong, <em>you vote, or you stand.</em>",
 
   "about.sec.hardQuestions.num": "05: the hard questions",
   "about.sec.hardQuestions.heading":
@@ -473,19 +627,19 @@ export const studio: Catalog = {
   "about.skeptic.broke.q":
     "This sounds lovely and doomed. How does it not go broke?",
   "about.skeptic.broke.a":
-    "Honestly, at low scale, the per-listen floor is expensive and a breakout track can cost more in bandwidth than it earns. Our mitigation is boring and public: casual listeners default to AAC, we cache aggressively, and the ledger is reconciled <em>daily</em> so we see red before it's a crisis.",
+    "Honestly, at low scale, hosting is the expensive part, and a breakout track can cost more in bandwidth than sustainer fees bring in. Our mitigation is boring and public: casual listeners default to AAC, we cache aggressively, and the subscription ledger is reconciled <em>daily</em> so we see red before it's a crisis.",
   "about.skeptic.clique.q": "Curated by six people sounds like a clique.",
   "about.skeptic.clique.a":
     "It can become one. That's the real risk. The guardrails are two-year term limits, forced rotation, and the fact that every pick is published with a name and a reason. <em>A clique that has to explain itself in writing every week is a weaker clique.</em>",
   "about.skeptic.clone.q": "Is this just a Spotify clone with nicer copy?",
   "about.skeptic.clone.a":
-    "If the home page were rows of square cover art, yes. The product is editorial on purpose: a programmed weekly set, live listening rooms, payouts visible on every track. <em>If we ever look like a smaller Spotify, hold us to this paragraph.</em>",
+    "If the home page were rows of square cover art, yes. The product is editorial on purpose: a programmed weekly set, live listening rooms, a wall of supporters on every release. <em>If we ever look like a smaller Spotify, hold us to this paragraph.</em>",
   "about.skeptic.leave.q": "What happens to my music if I leave?",
   "about.skeptic.leave.a":
-    "You keep your masters and everything you've earned. Takedown is a one-page, 14-day process with no retention loop. Past plays stay paid. Leaving is as easy as arriving. We think that's the only honest way to ask you to stay.",
+    "You keep your masters and every euro fans paid you, because it went straight to you. Takedown is a one-page, 14-day process with no retention loop. Leaving is as easy as arriving. We think that's the only honest way to ask you to stay.",
 
   "about.cta.join": "Join Studio",
-  "about.cta.ledger": "Read the public ledger",
+  "about.cta.ledger": "Read how QueerPulse is run",
 
   // ── Accessibility (StudioAccessibilityPage) ───────────────────────────────
   "accessibility.statement.p1":
@@ -534,7 +688,7 @@ export const studio: Catalog = {
 
   "help.faq.moneyGo.q": "Where does my money actually go?",
   "help.faq.moneyGo.a":
-    "Of your subscription, <strong>80% reaches artists</strong> by play, at a floor of €0.05 each. <em>Every cent of every tip</em> goes to the artist with no platform cut. The rest funds curation stipends, infrastructure, and the solidarity fund. You can see the exact split on the <a>public ledger</a>, updated Mondays at noon.",
+    "When you buy a release, <strong>you pay the artist directly</strong> and QueerPulse takes nothing. <em>Every cent of every tip</em> goes to the artist with no platform cut. Your sustainer fee pays for hosting, curator stipends and the solidarity fund, and a share of it for artists is planned. Read <a>how QueerPulse is run</a>.",
   "help.faq.tipNoAccount.q": "Can I tip without an account?",
   "help.faq.tipNoAccount.a":
     "You can <em>listen</em> to one demo set free, but tipping needs an account so the money can route to the artist and mint you a receipt. Sign-up takes under a minute and the first month is on us.",
@@ -551,7 +705,7 @@ export const studio: Catalog = {
 
   "help.faq.getPaid.q": "When and how do I get paid?",
   "help.faq.getPaid.a":
-    'Monthly, on the 5th, with a €5 floor. SEPA or Stripe Connect. You see the per-stream rate that month, ledger entry numbers, and per-release breakdowns. Collaborators are paid <em>directly</em>. There\'s no "main artist" wallet. See <a>Payouts</a>.',
+    "Fans pay you directly, through the payment links, MB WAY number or IBAN you add in Studio settings. They tap I've paid, you check your account and confirm, and their download opens. QueerPulse <em>never holds</em> the money. Review what buyers say they paid in <a>Payments</a>.",
   "help.faq.realisticEarn.q": "What can I realistically earn?",
   "help.faq.realisticEarn.a":
     "We're honest about the ceiling: roughly €74/mo casual, €340/mo building, €1,820/mo sustaining. Studio won't replace a touring income, but it can replace the rent. The full breakdown is on <a>About Studio</a>.",
@@ -600,25 +754,12 @@ export const studio: Catalog = {
 
   // ── Trust & terms (StudioTermsPage) ───────────────────────────────────────
 
-  "terms.deal.artists.title": "Artists keep <em>80%</em> & their masters",
-  "terms.deal.artists.body":
-    "The split lives in the co-op's deed, binding by law. <em>The floor rises freely and can only fall by a two-thirds vote.</em>",
-  "terms.deal.tips.title": "Tips are <em>100%</em>, always",
-  "terms.deal.tips.body":
-    "No platform cut on tips, ever. This one is a founding term, fixed outside any vote.",
-  "terms.deal.data.title": "Your data is <em>never</em> sold",
-  "terms.deal.data.body":
-    "It stays inside the co-op and does exactly one job: paying artists. History is off by default and erasable in one tap.",
-  "terms.deal.leaving.title": "Leaving is <em>one page</em>",
-  "terms.deal.leaving.body":
-    "Take down work in 14 days, close your account in one click. Past plays stay paid either way.",
-
   "terms.sec.deed.num": "01: the co-op deed",
   "terms.sec.deed.heading": "What it means that you <em>own</em> this.",
   "terms.sec.deed.p1":
     "QueerPulse Studio is a registered co-operative. Members, listeners and artists alike, own it. That makes it a legal structure, with a deed you can read, that binds the people running it.",
   "terms.sec.deed.p2":
-    "The deed fixes three things the people in charge <strong>cannot quietly change</strong>: the 80% artist floor, the 100% tip pass-through, and the public ledger. Altering the floor downward needs a two-thirds supermajority of the whole membership. The council is <em>elected, term-limited, and paid on the ledger</em>. There are no founder shares and no investor veto.",
+    "The deed fixes one promise the people in charge <strong>cannot quietly change</strong>: artists are paid directly and QueerPulse never takes a cut. Changing that promise needs a two-thirds supermajority of the whole membership. The council is <em>elected, term-limited, and paid on the ledger</em>. There are no founder shares and no investor veto.",
   "terms.sec.deed.pull":
     "If we ever start acting like a company that happens to have nice values, the deed is what you hold us to.",
   "terms.sec.deed.footnote":
@@ -629,7 +770,7 @@ export const studio: Catalog = {
   "terms.sec.licences.p1":
     "Every release names its licence, picked by the artist. Here's what each one means for you as a listener, and for anyone who wants to reuse the work in a set, a film, or a remix.",
   "terms.sec.licences.footnote":
-    "DJ sets are special: a set can include tracks under different licences, and our matcher routes each track's payout to its own artist. <em>Covers are allowed</em>; mechanical royalties are handled through a Portuguese collecting partner, and we don't pay synchronisation, so clearing a cover for film use is on you.",
+    "DJ sets are special: a set can include tracks under different licences, and our matcher credits each track to its own artist. <em>Covers are allowed</em>; mechanical royalties are handled through a Portuguese collecting partner, and we don't pay synchronisation, so clearing a cover for film use is on you.",
 
   "terms.licence.arr.title": "All rights <em>reserved</em>",
   "terms.licence.arr.row1": "Stream & save it",
@@ -649,7 +790,7 @@ export const studio: Catalog = {
   "terms.sec.privacy.p1":
     "We hold your account, your saves, your receipts, and whatever you explicitly turn on. We do <strong>not</strong> hold a profile of your taste to sell, a history you didn't ask us to keep, or anything we'd hand to an advertiser, because we don't have advertisers.",
   "terms.sec.privacy.footnote":
-    "Aggregate, de-identified play counts feed the public ledger so artists get paid and the numbers are auditable. You can export everything we hold, or erase it, from <a>Settings, then Erase & exit</a>: instantly, no modal, no undo needed because we mean it.",
+    "Aggregate, de-identified play counts show artists how their music is heard, with no names attached. You can export everything we hold, or erase it, from <a>Settings, then Erase & exit</a>: instantly, no modal, no undo needed because we mean it.",
 
   "terms.longVersions.meta":
     "terms v3.2 · privacy v2.1 · co-op deed 2024 · last updated 2 Jun 2026",
@@ -662,12 +803,12 @@ export const studio: Catalog = {
   "rights.promise.window.title": "14-day removal",
   "rights.promise.window.body":
     "Confirm a takedown and the release stops being served within 14 days, usually the same night. Caches clear, links 404 to a tasteful page.",
-  "rights.promise.paid.title": "Past plays stay paid",
+  "rights.promise.paid.title": "What fans paid stays yours",
   "rights.promise.paid.body":
-    "Every listen up to removal is paid in the next cycle. Taking work down never claws back money already earned.",
-  "rights.promise.banking.title": "Banking untouched",
+    "Fans paid you directly, so that money never passed through QueerPulse. Taking work down leaves every payment where it is.",
+  "rights.promise.banking.title": "Getting paid untouched",
   "rights.promise.banking.body":
-    "A takedown leaves your account open. Your SEPA details, your payout schedule, your collaborator splits: all stay live.",
+    "A takedown leaves your account open. Your ways to get paid, the prices on your other releases, your collaborator splits: all stay live.",
 
   "rights.releases.heading": "Your <em>releases</em>",
   "rights.releases.liveCount_one": "{count} live",
@@ -682,7 +823,7 @@ export const studio: Catalog = {
 
   "rights.leavingCoop.title": "Leaving the co-op <em>entirely</em>?",
   "rights.leavingCoop.body":
-    "This page only removes individual releases. To close your artist account, end your sustainer membership, and request a full data export, that lives in <a>Settings, then Erase & exit</a>. <em>Even then, past payouts are yours to keep</em> and we'll keep paying out any plays that already happened.",
+    "This page only removes individual releases. To close your artist account, end your sustainer membership, and request a full data export, that lives in <a>Settings, then Erase & exit</a>. <em>Even then, every euro fans paid you stays yours</em>, because it went straight to you.",
 
   "rights.takedownStartedToast": '"{title}" enters its 14-day removal window',
   "rights.removalCancelledToast": "Removal cancelled. Release stays up",
@@ -694,7 +835,7 @@ export const studio: Catalog = {
   "rights.modal.body":
     'It\'ll stop being served within 14 days. Existing links will resolve to a short "this work has been withdrawn by the artist" page. <em>You can re-publish it any time</em>. Your masters never leave your hands.',
   "rights.modal.keepEarned":
-    "<em>You keep everything already earned.</em> This release stays paid for every play up to removal, in the next cycle.",
+    "<em>You keep everything fans already paid you.</em> That money went straight to you, so a takedown leaves it untouched.",
   "rights.modal.confirmCta": "Take it down",
   "rights.modal.cancelCta": "Keep it up",
 
@@ -702,7 +843,7 @@ export const studio: Catalog = {
   "album.more.heading": "More from <em>{artist}</em>",
   "album.more.artistPageCta": "Artist page",
 
-  // ── Shared detail-page hero/ledger chrome (Album/Set — masculine nouns in
+  // ── Shared detail-page hero chrome (Album/Set — masculine nouns in
   //    pt-PT; Track/Collection reuse the feminine room.hero.addedToast /
   //    removedToast above instead, per grammatical gender agreement) ────────
   "detail.shareCta": "Share",
@@ -710,7 +851,6 @@ export const studio: Catalog = {
   "detail.copyFailedToast": "Could not copy link",
   "detail.tipArtistCta": "Tip {artist}",
   "detail.tipCta": "Tip",
-  "detail.fullLedgerCta": "Full ledger",
   "detail.addedToast": "Added to your library",
   "detail.removedToast": "Removed from your library",
 
@@ -718,27 +858,15 @@ export const studio: Catalog = {
   // Scope note: track title, artist name, curator quote, lyrics, and the
   // per-track split/credits breakdown are content — left English (§1).
   "track.hero.eyebrow": "Track {current} of {total}",
-  "track.hero.payMonth": "<em>{amount}</em> to {artist} this month",
   "track.inSet.status":
     "You're listening with <b>{count}</b> people in the <em>Wednesday set</em>, programmed by {curator}. Track {next} starts in <b>{countdown}</b>.",
   "track.inSet.joinCta": "Join the set",
   "track.more.fullAlbumCta": "Full album",
   "track.sidebar.curatorNoteLabel": "Curator's note",
-  "track.sidebar.splitHeading": "Where €1 goes when you play this",
   "track.sidebar.creditsHeading": "Credits",
   "track.sidebar.leadSheetLabel": "Lead sheet",
   "track.sidebar.downloadCta": "Download",
   "track.sidebar.curatorRole": "programming lead · the Wednesday set",
-  "track.sidebar.splitLead":
-    "{artistShare} to {artist}. {platformShare} keeps Studio open.",
-  "track.sidebar.split.artist.label": "Artist",
-  "track.sidebar.split.artist.sub": "Direct, monthly",
-  "track.sidebar.split.fund.label": "Solidarity fund",
-  "track.sidebar.split.fund.sub": "Grants & mastering vouchers",
-  "track.sidebar.split.platform.label": "Platform & staff",
-  "track.sidebar.split.platform.sub": "Hosting, captions, council",
-  "track.sidebar.split.fees.label": "Payment fees",
-  "track.sidebar.split.fees.sub": "Stripe / SEPA only",
   "track.sidebar.sheetSpec": "6 pages · piano + voice · {licence} · {artist}",
   "track.lyrics.heading": "Lyrics & <em>translation</em>",
   "track.lyrics.leadSheetChordsCta": "Lead sheet & chords",
@@ -748,16 +876,6 @@ export const studio: Catalog = {
   // content — left English (§1).
   "album.tabs.tracklist": "Tracklist",
   "album.tabs.linerNotes": "Liner notes",
-  "album.main.perPlaySuffix": "{amount} / play",
-  "album.main.perPlayNote": "Every play pays {amount}",
-  "album.sidebar.buyEyebrow": "Studio is open to you",
-  "album.sidebar.buySub": "Buy the album · keep it offline · FLAC + AAC.",
-  "album.sidebar.buyCta": "Buy · {amount}",
-  "album.sidebar.payWhatYouCanCta": "Pay what you can · {amount} min",
-  "album.sidebar.streamingIncludedCta": "Streaming included with Sustain",
-  "album.sidebar.ledgerHeading": "Public ledger for <em>this release</em>",
-  "album.sidebar.paidToArtistLifetime": "Paid to {artist}, lifetime",
-  "album.sidebar.paidToCollaborators": "Paid to collaborators",
 
   // ── Artist profile page (StudioArtistPage + Hero + Main + Sidebar) ────────
   // Scope note: artist bio prose is content — left English (§1).
@@ -766,18 +884,9 @@ export const studio: Catalog = {
   "artist.hero.followCta": "Follow",
   "artist.hero.followedToast": "Following {artist}",
   "artist.hero.unfollowedToast": "Unfollowed {artist}",
-  "artist.hero.subscribeNote":
-    "Subscribe at <em>{amount}/mo</em>, direct to {artist}, no platform cut.",
-  "artist.hero.tipOnTopNote": "Or tip on top of streaming.",
   "artist.main.releasesHeading": "Releases",
   "artist.main.singlesHeading": "Singles & <em>standalones</em>",
-  "artist.sidebar.sustainEyebrow": "Sustain {artist} directly",
-  "artist.sidebar.sustainSub":
-    "Direct to {artist}. No platform cut. Subscribers get early-access tracks, the weekly note, and seats at every live broadcast.",
-  "artist.sidebar.subscribeCta": "Subscribe · {amount}/mo",
-  "artist.sidebar.oneOffTipCta": "One-off tip",
   "artist.sidebar.thisMonthHeading": "{artist} · this month",
-  "artist.sidebar.earningsStreaming": "Earnings (streaming)",
   "artist.sidebar.tipsReceived": "Tips received",
   "artist.sidebar.directSubscribers": "Direct subscribers",
 
@@ -787,14 +896,13 @@ export const studio: Catalog = {
   "set.page.playAria": "Play set",
   "set.page.joinLiveRoomCta": "Join the live room",
   "set.page.tracklistHeading": "The <em>tracklist</em>",
-  "set.page.everyPlayPaysNote": "Every play pays the artist",
-  "set.page.payingNowLabel": "paying now",
+  "set.page.creditedNote": "Every track credited to its artist",
+  "set.page.playingNowLabel": "playing now",
 
   // ── Off-air shelves (StudioOffAirShelves) ─────────────────────────────────
   "offAir.carryOn.heading": "Carry on where you <em>left off</em>",
   "offAir.carryOn.sub": "From your library · plays on, broadcast or not",
   "offAir.libraryCta": "Library",
-  "offAir.perPlay": "per play",
   "offAir.quietHours.heading": "For the <em>small hours</em>",
   "offAir.quietHours.sub": "Council collections that don't need the lights on",
   "offAir.allCta": "All",
@@ -818,8 +926,8 @@ export const studio: Catalog = {
   // ── Social-share end card (StudioEndCardPage) ─────────────────────────────
   "endCard.eyebrow": "A streaming co-op",
   "endCard.tagline": "the music, <em>paid forward.</em>",
-  "endCard.paidThisMonth": "€11,940 paid to artists this month",
-  "endCard.perPlayLabel": "a play",
+  "endCard.directLine": "fans pay artists directly",
+  "endCard.perBuyLabel": "of every buy",
   "endCard.perTipLabel": "of every tip",
   "endCard.listenCta": "listen with pride",
 
@@ -831,7 +939,7 @@ export const studio: Catalog = {
   "council.hero.dek":
     "Elected yearly by the assembly, paid a flat stipend on the public ledger, term-limited to two years. They program the weekly set, run triage, and write the notes. <em>Everything they pick has their name on it.</em>",
   "council.intro.lede":
-    "The council works in the open. They listen publicly, <em>justify every pick in a paragraph</em>, and answer for the rate. You can read their notebooks, see their slates, and vote them out.",
+    "The council works in the open. They listen publicly, <em>justify every pick in a paragraph</em>, and answer to the members. You can read their notebooks, see their slates, and vote them out.",
 
   "council.fact.seats.value": "<em>6</em> seats",
   "council.fact.seats.label": "2-year terms · staggered",
@@ -938,7 +1046,7 @@ export const studio: Catalog = {
     "We'll email your data export within the hour.",
   "settings.erase.closeAccount.heading": "Close my Studio account",
   "settings.erase.closeAccount.note":
-    "Stops your sustainer fee, removes your library. Past tips stay paid to artists. <em>Banking, if you're also an artist, is untouched.</em>",
+    "Stops your sustainer fee, removes your library. Past tips stay paid to artists. <em>Your ways to get paid, if you're also an artist, stay as they are.</em>",
   "settings.erase.closeAccount.cta": "Close account",
   "settings.erase.closeAccount.toast":
     "Account closure opens in a separate flow.",
@@ -988,7 +1096,6 @@ export const studio: Catalog = {
   // ── Creator back-office nav (StudioCreatorShell) ───────────────────────────
   "creator.nav.dashboard": "Dashboard",
   "creator.nav.newRelease": "New release",
-  "creator.nav.payouts": "Payouts",
   "creator.product": "Creator",
   "creator.viewPublicPageCta": "View public page",
 
@@ -998,7 +1105,7 @@ export const studio: Catalog = {
   "library.eyebrow": "Your library",
   "library.title": "Everything you've <em>kept.</em>",
   "library.dek":
-    "Saved albums, sets, and tracks, plus the <em>{amount}</em> you've paid {artistCount} artists this year by listening here.",
+    "Saved albums, sets, and tracks, plus the <em>{amount}</em> of music you've bought straight from {artistCount} artists this year.",
   "library.tabs.albums": "Albums",
   "library.tabs.sets": "Sets",
   "library.tabs.collections": "Collections",
@@ -1036,16 +1143,15 @@ export const studio: Catalog = {
   // ── Creator dashboard (StudioDashboardPage + Charts + Side) ────────────────
   // Chrome only — the artist's name, track titles, per-artist figures
   // (STATS/CURATORS/CITIES/BARS in studioDashboard.data), and the specific
-  // live-room/payout plans below are this artist's own data, API-sourced in
+  // live-room plans below are this artist's own data, API-sourced in
   // live mode, and stay English in both modes (§1).
   "dashboard.hero.eyebrow": "Studio · this month",
   "dashboard.hero.title": "Good week, <em>{name}</em>.",
   "dashboard.hero.sub":
     "<em>{trackTitle}</em> is two months old and still climbing. The curators kept it in rotation.",
 
-  "dashboard.stats.streamingEarnings": "Streaming earnings",
+  "dashboard.stats.streamingEarnings": "Release buys",
   "dashboard.stats.tipsReceived": "Tips received",
-  "dashboard.stats.nextPayout": "Next payout · {date}",
 
   "nextSteps.heading": "Next steps",
   "nextSteps.drafts_one": "You have {count} draft waiting to be finished",
@@ -1070,13 +1176,17 @@ export const studio: Catalog = {
   "dashboard.side.quickActions.upload.label": "Upload a new release",
   "dashboard.side.quickActions.upload.hint": "WAV / FLAC · 3 steps · 8 minutes",
   "dashboard.side.quickActions.goLive.label": "Go live: host a live room",
-  "dashboard.side.quickActions.payouts.label": "Review payouts & banking",
+  "dashboard.side.quickActions.payments.label": "Review payments from buyers",
+  "dashboard.side.quickActions.payments.hint":
+    "Check what buyers say they paid, then confirm",
   "dashboard.side.deal.eyebrow": "The deal, always",
-  "dashboard.side.deal.heading": "80% to <em>you.</em>",
+  "dashboard.side.deal.heading": "Every buy goes <em>to you.</em>",
   "dashboard.side.deal.body":
-    "Every play, every tip, every buy. The split is the same for a first release as for a festival winner, and it's printed on the public ledger.",
-  "dashboard.side.deal.perPlay.label": "Per play",
-  "dashboard.side.deal.yourShare.label": "Your share",
+    "Fans pay you directly for your albums, EPs, singles and tracks, and QueerPulse never holds the money. The deal is the same for a first release as for a festival winner.",
+  "dashboard.side.deal.buys.label": "Buys",
+  "dashboard.side.deal.buys.value": "Paid to you directly",
+  "dashboard.side.deal.platform.label": "Taken by QueerPulse",
+  "dashboard.side.deal.platform.value": "Nothing",
   "dashboard.side.deal.tips.label": "Tips",
   "dashboard.side.deal.tips.value": "100% to you",
 
@@ -1165,7 +1275,7 @@ export const studio: Catalog = {
     "A few last details and your release goes to the council queue for review.",
   "upload.metadata.field.title": "Release title",
   "upload.metadata.field.year": "Release year",
-  "upload.metadata.field.genre": "Primary genre",
+  "upload.metadata.field.genre": "Genres",
   "upload.metadata.genre.fado": "Fado / contemporary",
   "upload.metadata.genre.electronic": "Electronic",
   "upload.metadata.genre.folk": "Folk",
@@ -1176,72 +1286,9 @@ export const studio: Catalog = {
   "upload.submitted.title": "Submitted for <em>review.</em>",
   "upload.submitted.body":
     "Your release is in the council queue. A curator will check the files, splits and credits, usually within a day or two, and you'll get a note the moment it's live. Nothing publishes without your final yes.",
-  "upload.submitted.viewPayoutsCta": "View your payouts",
   "upload.submitted.toast": "Release submitted for review",
 
   "upload.continueToMetadataCta": "Continue to metadata",
-
-  // ── Payouts (StudioPayoutsPage + Sections + Skeletons) ─────────────────────
-  // Chrome only. The demo's mock content for this page lives in studioShowcase
-  // (translated); proper nouns and figures stay in the data files.
-  "payouts.hero.eyebrow": "Payouts & banking",
-  "payouts.hero.title": "<em>{amount}</em> lands on day {day}.",
-  "payouts.hero.sub":
-    "Paid monthly by SEPA transfer, with your recibo verde issued automatically. No minimums you didn't choose.",
-  "payouts.hero.breakdownEyebrow": "{month} payout · breakdown",
-
-  "payouts.summary.fromStreaming": "From streaming",
-  "payouts.summary.fromTips": "From tips",
-  "payouts.summary.fromAlbumBuys": "From album buys",
-  "payouts.summary.directSubs": "Direct €3/mo subs",
-  "payouts.summary.splitsRouted": "Splits routed to others",
-  "payouts.summary.toYourIban": "To your IBAN",
-
-  "payouts.list.heading": "Recent <em>payouts</em>",
-  "payouts.list.exportCsv": "Export CSV",
-  "payouts.list.status.pending": "Pending",
-  "payouts.list.status.paid": "Paid",
-
-  "payouts.breakdown.heading": "This month, <em>track-by-track</em>",
-  "payouts.breakdown.rateNote":
-    "Streaming earnings update nightly at 02:00 Lisbon. Each track shows its saves and playlist adds, and anything under 5 reads Fewer than 5.",
-  "payouts.breakdown.subtotalLabel":
-    "Streaming subtotal · before splits + tips + buys",
-  "payouts.breakdown.savesLine": "{total} saves and playlist adds",
-
-  "payouts.sidebar.methodEyebrow": "Payout method · active",
-  "payouts.sidebar.methodHeading": "Sending to <em>SEPA</em>",
-  "payouts.sidebar.method.sepa.label": "SEPA: IBAN",
-  "payouts.sidebar.method.sepa.badge": "Active",
-  "payouts.sidebar.method.stripe.label": "Stripe Connect",
-  "payouts.sidebar.method.stripe.hint": "connected · backup route",
-  "payouts.sidebar.method.stripe.switchCta": "Switch",
-  "payouts.sidebar.method.stripe.demoToast":
-    "Switching to Stripe Connect is switched off in the demo, so your payouts stay on SEPA",
-  "payouts.sidebar.method.coopCredit.label": "Co-op credit",
-  "payouts.sidebar.method.coopCredit.hint":
-    "spend at Casa do Comum, rehearsal rooms · €0 fees",
-  "payouts.sidebar.method.coopCredit.addCta": "Add",
-  "payouts.sidebar.method.coopCredit.demoToast":
-    "Adding co-op credit is switched off in the demo, so your payouts stay on SEPA",
-
-  "payouts.preferences.heading": "Payout <em>preferences</em>",
-  "payouts.preferences.threshold.label": "Minimum threshold",
-  "payouts.preferences.threshold.opt5": "€5 (default · ships every month)",
-  "payouts.preferences.threshold.opt20": "€20 (quarterly · save on fees)",
-  "payouts.preferences.threshold.opt100": "€100 (hold & release on request)",
-  "payouts.preferences.threshold.hint":
-    "Below threshold rolls over to next month.",
-  "payouts.preferences.taxResidency.label": "Tax residency",
-  "payouts.preferences.taxResidency.hint":
-    "We auto-issue your IRS recibo verde for each payout.",
-
-  "payouts.export.headers.period": "Period",
-  "payouts.export.headers.date": "Date",
-  "payouts.export.headers.detail": "Detail",
-  "payouts.export.headers.amount": "Amount (EUR)",
-  "payouts.export.headers.status": "Status",
-  "payouts.export.toast": "Payout history exported as CSV",
 
   // ── Programme the week (StudioProgramPage + Inbox + Slate) ────────────────
   // Chrome only. The demo's mock content for this page lives in studioShowcase
@@ -1379,7 +1426,7 @@ export const studio: Catalog = {
   "liveNow.listenersLabel":
     "listening with you · {sustainers} sustainers, {casual} casual",
   "liveNow.tippedLabel": "tipped during this set · 100% to artists",
-  "liveNow.perPlayLabel": "per qualifying play · pays {artist} right now",
+  "liveNow.buyCutLabel": "taken by QueerPulse when you buy from {artist}",
   "liveNow.setBuilding.heading": "The set · <em>building live</em>",
   "liveNow.trackPosition": "Track {current} of {total} · jumped from queue",
   "liveNow.tipArtistCta": "Tip {artist} · {amount}",
@@ -1422,10 +1469,10 @@ export const studio: Catalog = {
   "broadcast.nowPlaying.justAdded": "Just added",
   "broadcast.nowPlaying.liveYourOwn": "live, your own",
   "broadcast.nowPlaying.badge.onAir": "On air",
-  "broadcast.nowPlaying.badge.matched": "€ matched",
+  "broadcast.nowPlaying.badge.matched": "Matched",
   "broadcast.nowPlaying.badge.hold": "Hold",
   "broadcast.nowPlaying.footer":
-    "Matched tracks pay their artists automatically from this set's payout. <em>Held tracks wait</em> until the council's matcher clears them. Nobody loses a cent in the meantime.",
+    "Matched tracks are credited to their artists automatically. <em>Held tracks wait</em> until the council's matcher clears them.",
 
   "broadcast.aside.tipsTab": "Live tips <em>{amount}</em>",
   "broadcast.aside.talkbackTab": "Talkback <em>{count}</em>",
@@ -1466,7 +1513,7 @@ export const studio: Catalog = {
   "sheet.checkout.role.composer": "composer",
   "sheet.checkout.role.coop": "The co-op · hosting & infra",
   "sheet.checkout.splitFoot":
-    "Sheets pay <em>90%</em> to the makers, more generous than the 80% streaming split, because the work is one-off and hosting a PDF costs near zero. <em>Voted in at the 9 June assembly.</em>",
+    "Sheets pay <em>90%</em> to the makers, because the work is one-off and hosting a PDF costs near zero. <em>Voted in at the 9 June assembly.</em>",
   "sheet.checkout.payMethod.card.label": "Saved card",
   "sheet.checkout.payMethod.card.sub": "one-tap, no re-entry",
   "sheet.checkout.payMethod.sepa.label": "SEPA direct",
@@ -1494,20 +1541,10 @@ export const studio: Catalog = {
   "receipt.fromAlbum": "from <em>{album}</em>",
   "receipt.thanksTitle": "{artist} got <em>{amount}</em>.",
   "receipt.thanksSub": "Every cent. No platform cut. <em>You did that.</em>",
-  "receipt.splitHeading": "Where the <em>money</em> went",
-  "receipt.splitNote": "100% pass-through on tips, no exceptions.",
-  "receipt.split.artistSub_one": "Direct, SEPA · settles in {count} day",
-  "receipt.split.artistSub_other": "Direct, SEPA · settles in {count} days",
-  "receipt.split.platformName": "Platform · Studio",
-  "receipt.split.platformSub":
-    "Stripe processing fee absorbed by the co-op on tips.",
-  "receipt.split.artistPct": "100%",
-  "receipt.split.platformPct": "0%",
   "receipt.detail.receiptNo": "Receipt no.",
   "receipt.detail.dateTime": "Date & time",
   "receipt.detail.from": "From",
   "receipt.detail.method": "Method",
-  "receipt.detail.postedToLedger": "Posted to ledger",
   "receipt.detail.visibility": "Visibility",
   "receipt.detail.sustainerSince": "sustainer since {date}",
   "receipt.detail.chosenByDefault": "<em>chosen by default</em>",
@@ -1517,9 +1554,7 @@ export const studio: Catalog = {
   "receipt.note.label": "Your note to {artist}",
   "receipt.note.repliedSuffix": "<em>replied</em>",
   "receipt.note.replyWhen": "{relativeTime} · still on air, two tracks later",
-  "receipt.footer.auditablePrefix": "Auditable on the",
-  "receipt.footer.publicLedgerLink": "public ledger",
-  "receipt.footer.rowLabel": "row {code}",
+  "receipt.footer.keepNote": "Keep this receipt for your records",
   "receipt.footer.exportCta": "Export PDF",
   "receipt.actions.share": "Share paid card",
   "receipt.actions.tipAgain": "Tip again",
@@ -1539,7 +1574,7 @@ export const studio: Catalog = {
   "checkout.eyebrow": "Checkout",
   "checkout.title": "Sustain the <em>studio.</em>",
   "checkout.dek":
-    "Seven euros a month keeps a fair-pay music platform alive, and pays the artists you actually listen to, on every play.",
+    "Seven euros a month keeps a fair-pay music platform alive: hosting, curator stipends and the solidarity fund. When you buy music, you pay the artist directly.",
   "checkout.nameLabel": "Name on card",
   "checkout.namePlaceholder": "Your name",
   "checkout.cardLabel": "Card number",
@@ -1575,14 +1610,14 @@ export const studio: Catalog = {
   // Chrome only. Two paragraphs deliberately NOT swept — flagged in the sweep
   // report as eligibility/commitment copy (§6): the "apply" section's
   // no-means-test promise, and the fund-balance runway/rollover rule, and the
-  // flows dek's "never the artist's 80%, never your tips" guarantee. They
+  // flows dek's guarantee about artists' money and tips. They
   // render in English via the fallback chain until reviewed. Disbursement
   // log recipient names/notes are content — API-sourced ledger rows in live
   // mode — and stay English in both modes (§1).
   "fund.hero.liveLabel": "Public · updated Mondays at noon",
   "fund.hero.title": "The <em>solidarity</em> fund.",
   "fund.hero.dek":
-    "A small pooled reserve that pays the people the per-stream rate can't reach: <em>transcribers, translators, first-timers, and artists in a hard month</em>. Where it comes from and where it goes, in full.",
+    "A small pooled reserve for the people that buys and tips can't reach: <em>transcribers, translators, first-timers, and artists in a hard month</em>. Where it comes from and where it goes, in full.",
 
   "fund.balance.label": "Fund balance · today",
   "fund.balance.paidThisQuarterLabel": "paid out this quarter",
@@ -1595,13 +1630,10 @@ export const studio: Catalog = {
 
   "fund.flows.in.surplus.label": "Subscription <em>surplus</em>",
   "fund.flows.in.surplus.desc":
-    "When sustainer revenue beats the payout ledger, the difference pools here.",
+    "When sustainer fees cover more than hosting and curator stipends, the difference pools here.",
   "fund.flows.in.roundups.label": "Tip <em>round-ups</em>",
   "fund.flows.in.roundups.desc":
     "The optional 5% some listeners add on top of a tip.",
-  "fund.flows.in.holds.label": "Cleared <em>holds</em>",
-  "fund.flows.in.holds.desc":
-    "Unmatched DJ-set payouts that stay unclaimed after a year.",
   "fund.flows.in.gifts.label": "Direct <em>gifts</em>",
   "fund.flows.in.gifts.desc":
     "One-off donations from members and a Lisbon foundation.",
@@ -1685,7 +1717,7 @@ export const studio: Catalog = {
   "setSubmission.hero.eyebrow": "New submission · DJ set or mix",
   "setSubmission.hero.title": "Submit a <em>set</em>.",
   "setSubmission.hero.dek":
-    "Upload the long-form file, paste your tracklist with timecodes, and our matcher finds the source artists so <em>every track in the set pays its maker</em>. Unmatched tracks hold their payout safely until cleared. Nobody loses a cent.",
+    "Upload the long-form file, paste your tracklist with timecodes, and our matcher finds the source artists so <em>every track in the set is credited to its maker</em>. Unmatched tracks stay on hold until a source is confirmed.",
 
   "setSubmission.steps.file": "File",
   "setSubmission.steps.tracklist": "Tracklist & matcher",
@@ -1700,9 +1732,9 @@ export const studio: Catalog = {
   "setSubmission.matcher.matchingCta": "Matching…",
   "setSubmission.matcher.resultsLabel":
     "Matcher results · <em>resolved against the catalogue + PRO database</em>",
-  "setSubmission.matcher.payLine":
-    "{who} · <em>{amount}/play to {firstName}</em>",
-  "setSubmission.matcher.noSourceFound": "no source found · payout held",
+  "setSubmission.matcher.creditLine":
+    "{who} · <em>credited to {firstName}</em>",
+  "setSubmission.matcher.noSourceFound": "no source found · credit held",
   "setSubmission.matcher.matchedBadge": "Matched",
   "setSubmission.matcher.identifyCta": "Identify",
   "setSubmission.matcher.identifyToast": "Search opened to identify this track",
@@ -1715,18 +1747,17 @@ export const studio: Catalog = {
   "setSubmission.sidebar.type.liveDjSet": "Live DJ set",
   "setSubmission.sidebar.type.studioMix": "Studio mix",
   "setSubmission.sidebar.type.recordedBroadcast": "Recorded broadcast",
-  "setSubmission.sidebar.payoutPreviewHeading": "Payout <em>preview</em>",
+  "setSubmission.sidebar.creditsPreviewHeading": "Credits <em>preview</em>",
   "setSubmission.sidebar.tracksInSet": "Tracks in set",
-  "setSubmission.sidebar.matchedPaying": "Matched & paying",
+  "setSubmission.sidebar.matchedCredited": "Matched & credited",
   "setSubmission.sidebar.tracksCount_one": "{count} track",
   "setSubmission.sidebar.tracksCount_other": "{count} tracks",
   "setSubmission.sidebar.onHold": "On hold (unmatched)",
-  "setSubmission.sidebar.payoutPool": "Set payout pool",
   "setSubmission.sidebar.holdNote":
-    "Unmatched tracks <em>hold their share</em> until the council's matcher clears them. The set goes live now; held money releases the moment a source is confirmed.",
+    "Unmatched tracks <em>stay on hold</em> until the council's matcher clears them. The set goes live now, and each held track is credited the moment a source is confirmed.",
   "setSubmission.sidebar.submitCta": "Submit set",
   "setSubmission.sidebar.submittedToast":
-    "Set submitted. Live now, held shares pending clearance",
+    "Set submitted. Live now, held tracks waiting for a source",
 
   // ── Off-air landing (StudioOffAirPage + Hero) ─────────────────────────────
   // Chrome only. The demo's mock content for this page lives in studioShowcase
@@ -1741,7 +1772,7 @@ export const studio: Catalog = {
   "offAir.hero.nightcapEyebrow": "Last night's night-cap",
   "offAir.hero.replayAria": "Replay the night-cap",
   "offAir.hero.replayingToast": "Replaying {title}",
-  "offAir.hero.paidOutSuffix": "{amount} paid out · replay any time",
+  "offAir.hero.replaySuffix": "replay any time",
 
   // ── no-literal-string sweep: reusable ImageSlot placeholder captions ─────
   // Short fixed descriptor words shown while a cover/score/set/portrait
@@ -1756,7 +1787,6 @@ export const studio: Catalog = {
   // The connector words ("by", "from", "·") are chrome; artist/album/year/
   // location values are content, passed in via `values`.
   "albumHero.byLine": "by <strong>{artist}</strong> · {year} · {location}",
-  "artist.sidebar.perMonthSuffix": "/month",
   "artist.sidebar.newFollowers": "New followers",
   "liveNow.onAirTag": "on air",
   "liveNow.byFromLine": "by <strong>{artist}</strong> · from <em>{album}</em>",
@@ -1768,8 +1798,6 @@ export const studio: Catalog = {
   "track.page.crumbLabel": "track {number}",
 
   // ── no-literal-string sweep: misc chrome eyebrows/labels ──────────────────
-  "album.sidebar.splitHint":
-    "If you buy at {price}: <em>{artistShare} to {artist}</em>, {solidarityShare} to the solidarity fund, {platformShare} to the platform, processing absorbed.",
   "album.sidebar.savesThisMonth": "Saves this month",
   "set.page.programmedByEyebrow": "Set · programmed by {curator}",
   "sheet.checkout.leadSheetLabel": "Lead sheet: {title}",
@@ -1839,6 +1867,9 @@ export const studio: Catalog = {
   "liked.page.nothingToPlayToast":
     "None of your liked songs can play right now",
   "liked.page.cancelLoadingAria": "Cancel loading your liked songs",
+  "liked.page.genreFilterLabel": "Filter by genre",
+  "liked.page.noMatchInGenre": 'Nothing in {genre} matches "{query}"',
+  "liked.page.showAllGenres": "Show all genres",
   "errors.generic":
     "That didn't work. Check your connection and try again in a moment",
   "errors.accessRequired": "Your Studio access has ended",
@@ -1960,6 +1991,11 @@ export const studio: Catalog = {
   "playerBar.regionLabel": "Studio player",
   "playerBar.play": "Play",
   "playerBar.pause": "Pause",
+  // The word on the hero Play pill. It opens every hero play aria-label in
+  // both languages, so voice control can say the word it sees.
+  "playButton.play": "Play",
+  "playButton.pause": "Pause",
+  "playButton.cancel": "Cancel",
   "playerBar.previous": "Previous track",
   "playerBar.next": "Next track",
   "playerBar.seekLabel": "Seek",
@@ -1988,7 +2024,11 @@ export const studio: Catalog = {
     "Saved as a draft as you go. Nothing is public until you publish",
   "uploadFlow.release.personaLabel": "Release as",
   "uploadFlow.release.typeLabel": "Type",
-  "uploadFlow.release.genreNone": "No genre",
+  "uploadFlow.release.genresNonePicked": "No genre picked",
+  "uploadFlow.release.genresCounter": "{count} of {max}",
+  "uploadFlow.release.genresMain": "Main",
+  "uploadFlow.release.genresFullReason": "You can pick up to {max} genres",
+  "uploadFlow.release.genresRemove": "Remove {genre}",
   "uploadFlow.release.dateLabel": "Release date",
   "uploadFlow.release.dateHint": "Leave it empty to use the day you publish",
   "uploadFlow.release.descriptionLabel": "Liner notes",
@@ -2379,8 +2419,6 @@ export const studio: Catalog = {
   "demo.dashboard.trend.earnings": "<up>{delta}</up> vs. last month",
   "demo.dashboard.trend.tips":
     "{tippers} tippers, {notes} with notes · <up>{recent} since you opened this page</up>",
-  "demo.dashboard.trend.payout":
-    "SEPA · LU IBAN · settles the morning of the 5th",
   "demo.dashboard.curator.what.wednesdaySet":
     "<em>{title}</em> placed at track 6 of the Wednesday set",
   "demo.dashboard.curator.what.collection":
@@ -2422,7 +2460,6 @@ export const studio: Catalog = {
   "demo.dashboard.activity.countColumn": "Saves and playlist adds",
   "demo.dashboard.topTrackShare": "<em>{title}</em> is {percent}% of this",
   "demo.dashboard.goLivePlan": "Plan: {date} · premiere of {title}",
-  "demo.dashboard.nextPayout": "Next: {amount} on {date} · SEPA",
   "demo.calls.seat": "Council · seat {seat}",
   "demo.calls.tag.commission": "Commission",
   "demo.calls.tag.grant": "Grant",
@@ -2463,7 +2500,7 @@ export const studio: Catalog = {
   "demo.fund.balanceNote":
     "Healthy: roughly four months of current disbursement. Anything above six months' runway rolls into the next quarterly grant round by council vote",
   "demo.fund.flowsDek":
-    "No new fee funds this. It's the overflow of a system designed to overflow toward people, and it leaves <em>the artist's 80% and your tips</em> untouched",
+    "Surplus sustainer fees, tip round-ups and gifts fill it, and <em>what you pay artists for their music, and your tips,</em> stay with the artists",
   "demo.fund.applyBody":
     "If you're a member having a hard month, the emergency strand is a short form and a fast yes: <em>no portfolio, no means test, no shame</em>. Transcribers and translators are paid per accepted piece, and grants open each quarter",
   "demo.fund.name.withheld": "Withheld by <em>request</em>",
@@ -2549,10 +2586,10 @@ export const studio: Catalog = {
   "helpLive.cat.money.heading": "Money and <em>tips</em>",
   "helpLive.faq.whatIsStudio.q": "What is Studio, and who can use it?",
   "helpLive.faq.whatIsStudio.a":
-    "Studio is the place on QueerPulse where queer artists share their music with members. It's free and listen-only, and it's open to members our team has given Studio access.",
+    "Studio is the place on QueerPulse where queer artists share their music with members. Listening is free, artists can sell their music directly, and it's open to members our team has given Studio access.",
   "helpLive.faq.tracking.q": "Does Studio keep track of what I listen to?",
   "helpLive.faq.tracking.a":
-    "Yes, privately. Studio keeps a listening history only you can see, on <a>Your listening</a>, where you can pause or clear it. Artists see total plays, with any count from 1 to 4 shown as Fewer than 5, and your name only if you turn on Show me as a supporter on their page.",
+    "Yes, privately. Studio keeps a listening history only you can see, on <a>Your listening</a>, where you can pause or clear it. Artists see total plays, with any count from 1 to 4 shown as Fewer than 5, and your name only if you turn on Show me among their top listeners on their page.",
   "helpLive.faq.saving.q": "How do likes, playlists and following work?",
   "helpLive.faq.saving.a":
     "Tap the heart on an album, a show or a playlist and it waits for you in your <a>library</a> and in the list beside your playlists. Tap the heart on a track and it goes into Liked songs, which only you can see. A playlist can be Public, Connections only or Private, and you can change that any time. Follow an artist from their page to hear when they put out something new.",
@@ -2567,7 +2604,7 @@ export const studio: Catalog = {
     "Ticking it confirms that you own or control the rights to every recording and composition in the release, and that its credits are accurate. If that changes, unpublish the release from your artist page.",
   "helpLive.faq.stats.q": "What do my stats show?",
   "helpLive.faq.stats.a":
-    "<a>Your numbers</a> shows plays, followers, saves, the public playlists that include your music and your top supporters. Any count from 1 to 4 reads Fewer than 5, so nobody can work out who did what.",
+    "<a>Your numbers</a> shows plays, followers, saves, the public playlists that include your music and your top listeners. Any count from 1 to 4 reads Fewer than 5, so nobody can work out who did what.",
   "helpLive.faq.reporting.q": "How do I report a release?",
   "helpLive.faq.reporting.a":
     "Open the release, then More actions, then Report release. Our team reviews every report, and if a release breaks the rules, they take it down and the artist sees why.",
@@ -2595,13 +2632,13 @@ export const studio: Catalog = {
   "aboutLive.hero.eyebrow": "About Studio",
   "aboutLive.hero.title": "Music by queer artists, for <em>our members</em>.",
   "aboutLive.hero.lede":
-    "Studio is a place on QueerPulse where queer artists share their music with members. It's free and listen-only, and what you play stays private.",
+    "Studio is a place on QueerPulse where queer artists share their music with members. Listening is free, artists can sell their music to you directly, and what you play stays private.",
   "aboutLive.sec.today.num": "01: what it is today",
   "aboutLive.sec.today.heading": "What Studio <em>does</em>",
   "aboutLive.sec.today.p1":
     "Artists upload releases under a musician or DJ persona and publish them for members with Studio access. Listeners play, save, make playlists and follow the artists they love.",
   "aboutLive.sec.today.p2":
-    "There's no money in Studio today: listening is free, and uploading is free too.",
+    "Listening and uploading are free. Artists can put a price on albums, EPs, singles and tracks, and buyers pay them directly, so the money goes straight to the artist and QueerPulse takes no cut.",
   "aboutLive.sec.privacy.num": "02: what you control",
   "aboutLive.sec.privacy.heading": "Listening stays <em>yours</em>",
   "aboutLive.sec.privacy.p1":
@@ -2619,7 +2656,7 @@ export const studio: Catalog = {
   "aboutLive.sec.next.num": "05: where it's going",
   "aboutLive.sec.next.heading": "Growing with <em>the people who use it</em>",
   "aboutLive.sec.next.p1":
-    "We'd like Studio to pay artists one day and to give members a say in how it runs. We'll build that in the open with our community, and we'll say so here when something is real.",
+    "Members can now buy music straight from artists, and the money goes to the artist outside QueerPulse; next, we'd like to give members a say in how Studio runs. We'll build that in the open with our community, and we'll say so here when something is real.",
   "aboutLive.showcase.heading": "The <em>co-op vision</em>",
   "aboutLive.showcase.dek":
     "What a co-op Studio could look like, shown in this demo.",
@@ -2647,7 +2684,7 @@ export const studio: Catalog = {
   "termsLive.sec.stored.num": "03: what Studio stores",
   "termsLive.sec.stored.heading": "What we <em>keep</em>",
   "termsLive.sec.stored.p1":
-    "Studio stores your releases with their audio and artwork, your saves, playlists and follows, your player settings, your listening history while it is on (kept for 13 months, and you can clear it), the artist pages where you chose to show yourself as a supporter, any dispute you send along with our team's reply, and any copyright claim or counter-notice you send along with our team's decision. Play totals for each track carry no name.",
+    "Studio stores your releases with their audio and artwork, your saves, playlists and follows, your player settings, your listening history while it is on (kept for 13 months, and you can clear it), the artist pages where you chose to show yourself among the top listeners, your purchases (the item, the amount, the reference code, the name on the payment you gave, the status and your supporter wall choice), the ways to get paid an artist lists, any dispute you send along with our team's reply, and any copyright claim or counter-notice you send along with our team's decision. Play totals for each track carry no name.",
   "termsLive.sec.stored.p2":
     "Everything Studio stores about you is covered by the QueerPulse <a>privacy policy</a>.",
   "termsLive.sec.takedown.num": "04: takedowns and disputes",
@@ -3185,9 +3222,7 @@ export const studio: Catalog = {
   "mood.defiant": "Defiant",
   "mood.dreamy": "Dreamy",
   "mood.slowBurn": "Slow burn",
-  "mood.sweaty": "Sweaty",
   "mood.calm": "Calm",
-  "mood.playful": "Playful",
   "home.moods.heading": "Browse by <em>mood</em>",
   "home.moods.listLabel": "Moods",
   "home.hero.featuredEyebrow": "Featured",
@@ -3582,7 +3617,7 @@ export const studio: Catalog = {
   "listening.eyebrow": "Only you can see this page",
   "listening.title": "Your <em>listening</em>",
   "listening.dek":
-    "Your top artists and tracks, what you played lately and the artists you support. Pause or clear it any time",
+    "Your top artists and tracks, what you played lately and the artists who see your name. Pause or clear it any time",
   "listening.controls.heading": "Your history settings",
   "listening.history.heading": "Listening history",
   "listening.history.body":
@@ -3624,28 +3659,28 @@ export const studio: Catalog = {
   "listening.empty.cta": "Open Studio home",
   "listening.empty.pausedBody":
     "Your listening history is paused. Turn it back on and your top artists and tracks start to fill in",
-  "listening.supporting.heading": "Artists you support",
+  "listening.supporting.heading": "Artists who see your name",
   "listening.supporting.dek":
-    "They see you among their top supporters, under the name you chose",
-  "listening.supporting.since": "Supporting since {date}",
+    "They see you among their top listeners, under the name you chose",
+  "listening.supporting.since": "Showing since {date}",
   "listening.supporting.shownAs": "Shown as {name}",
   "listening.supporting.linksLabel": "Ways to support {name}",
   "listening.supporting.empty":
-    "Turn on Show me as a supporter on an artist's page to add them here",
-  "listening.supporting.stop": "Stop supporting",
-  "listening.supporting.stopAria": "Stop supporting {artist}",
+    "Turn on Show me among the top listeners on an artist's page to add them here",
+  "listening.supporting.stop": "Stop showing my name",
+  "listening.supporting.stopAria": "Stop showing your name to {artist}",
   "listening.supporting.pausedNote":
-    "While your history is paused, you don't appear in their top supporters",
+    "While your history is paused, you don't appear among their top listeners",
   "listening.notice.body": "Your listening history is on. Only you can see it",
   "listening.notice.cta": "See your listening",
   "listening.notice.close": "Close notice",
   "settingsLive.history.label": "Your listening",
   "settingsLive.history.title": "What Studio <em>keeps</em> for you",
-  "supporter.heading": "Show me as a supporter",
+  "supporter.heading": "Show me among {persona}'s top listeners",
   "supporter.body":
-    "{persona} sees the name and photo you pick among their top supporters, ranked by how much you played them in the last 28 days",
+    "{persona} sees the name and photo you pick among their top listeners, ranked by how much you played them in the last 28 days",
   "supporter.pausedNote":
-    "While your history is paused, you don't appear in their top supporters",
+    "While your history is paused, you don't appear among their top listeners",
   "supporter.pickerLegend": "How {persona} sees you",
   "supporter.account": "Your account",
   "supporter.saveCta": "Save how you appear",
@@ -3653,9 +3688,10 @@ export const studio: Catalog = {
   "supporter.changeCta": "Change how you appear",
   "supporter.confirmation": "{persona} sees you as {name}",
   "supporter.confirmationLead": "This is how {persona} sees you",
-  "supporter.removed": "{persona} no longer sees you as a supporter",
+  "supporter.removed": "{persona} no longer sees you among their top listeners",
   "supporter.saveFailed": "We couldn't save how you appear",
-  "supporter.removeFailed": "We couldn't turn off Show me as a supporter",
+  "supporter.removeFailed":
+    "We couldn't turn off Show me among the top listeners",
   "numbers.column.plays": "Plays",
   "numbers.plays.showsNotCounted": "Not counted for shows",
   "numbers.plays.title": "Plays",
@@ -3669,25 +3705,25 @@ export const studio: Catalog = {
   "numbers.plays.note":
     "A play counts after 30 seconds of listening. Plays by you and your co-owners never count",
   "numbers.plays.empty": "No plays in the last 28 days yet",
-  "numbers.supporters.heading": "Top supporters",
+  "numbers.supporters.heading": "Top listeners",
   "numbers.supporters.dek":
     "Listeners who chose to show themselves, ranked by their plays in the last 28 days",
-  "numbers.supporters.optedIn": "Showing themselves as supporters: {value}",
+  "numbers.supporters.optedIn": "Showing themselves as top listeners: {value}",
   "numbers.supporters.empty":
-    "When a listener turns on Show me as a supporter, they show up here",
-  "numbers.supporters.listLabel": "Top supporters of {name}",
+    "When a listener turns on Show me among the top listeners, they show up here",
+  "numbers.supporters.listLabel": "Top listeners of {name}",
   "errors.reason.studio_supporter_artist_not_found":
-    "This artist is not available to support",
+    "This artist is not available to show your name to",
   "errors.reason.studio_supporter_own_persona":
-    "You are a member of this artist, so you cannot be its supporter",
+    "You are a member of this artist, so you cannot be among its top listeners",
   "errors.reason.studio_supporter_identity_not_yours":
     "You can show yourself only as your account or a persona you are a member of",
   "errors.what.listening": "your listening",
   "errors.what.listeningHistory": "your listening history",
-  "errors.what.supporting": "the artists you support",
-  "errors.what.supporter": "your supporter setting",
+  "errors.what.supporting": "the artists who see your name",
+  "errors.what.supporter": "your top listener setting",
   "errors.what.plays": "your plays",
-  "errors.what.topSupporters": "your top supporters",
+  "errors.what.topSupporters": "your top listeners",
   "rail.v3.pressKit": "Press kit",
   "creator.nav.pressKit": "Press kit",
   "artistPage.v3.moreAria": "More about {name}",
@@ -3773,6 +3809,9 @@ export const studio: Catalog = {
   // Player bar, controls and Now playing extras (player/ui)
   "player.playFrom": "Play from {time}",
   "player.playFromAria": "Play {title} from {time}",
+  // The hero pill's name when it shows "Play from {time}": it opens with the
+  // visible words, so voice control can say what it sees.
+  "player.playFromNamedAria": "Play from {time}, {title}",
   "player.openNowPlaying": "Open Now playing, {title} by {artist}",
   "player.chapterAria": "Chapter {number}: {title}",
   "player.queueShow": "Show the queue",
@@ -4616,4 +4655,397 @@ export const studio: Catalog = {
   "preview.goneBody":
     "The artist turned this link off or made a new one. Ask them for the current link.",
   "preview.documentTitle": "Preview of {title}",
+
+  // Studio purchases and the supporter wall (2026-10-28)
+  "libraryLive.tabs.purchases": "Purchases",
+  "purchase.format.album": "Digital album",
+  "purchase.format.ep": "Digital EP",
+  "purchase.format.single": "Digital single",
+  "purchase.format.track": "Digital track",
+  "purchase.format.release": "Digital release",
+  "purchase.price.nameYourPrice": "Name your price, {amount} or more",
+  "purchase.panel.label": "Buy {title}",
+  "purchase.panel.buy.album": "Buy album",
+  "purchase.panel.buy.ep": "Buy EP",
+  "purchase.panel.buy.single": "Buy single",
+  "purchase.panel.buy.track": "Buy track",
+  "purchase.panel.buy.release": "Buy release",
+  "purchase.panel.buyAria": "{action}: {title} by {artist}",
+  "purchase.panel.tracksOnly":
+    "This release is sold track by track. Pick a track below to buy it",
+  "purchase.panel.directNote": "You pay {artist} directly",
+  "purchase.panel.ownPersonaLink": "Open payments to confirm",
+  "purchase.panel.owned": "In your collection",
+  "purchase.panel.downloadCta": "Download tracks",
+  "purchase.panel.hideDownloadsCta": "Hide downloads",
+  "purchase.panel.pending": "Waiting for {artist} to confirm your payment",
+  "purchase.panel.pendingAmount": "You said you paid {amount}",
+  "purchase.panel.showWaysToPay": "Show ways to pay {artist}",
+  "purchase.panel.hideWaysToPay": "Hide ways to pay",
+  "purchase.panel.cancelCta": "Cancel this purchase",
+  "purchase.panel.openPurchases": "Open your purchases",
+  "purchase.panel.loading": "Loading the price",
+  "purchase.cancel.title": "Cancel this purchase?",
+  "purchase.cancel.body":
+    "{artist} stops seeing your claim. If you already paid, talk to {artist} about it directly",
+  "purchase.cancel.confirm": "Cancel purchase",
+  "purchase.cancel.keep": "Keep waiting",
+  "purchase.cancel.done": "Purchase cancelled",
+  "purchase.cancel.failed": "We couldn't cancel this purchase",
+  "purchase.sheet.title": "Buy {title}",
+  "purchase.sheet.sub": "From {artist}",
+  "purchase.sheet.amountHeading": "Amount",
+  "purchase.sheet.amountLabel": "Your amount in euros",
+  "purchase.sheet.amountHint": "{minimum} or more, up to {cap}",
+  "purchase.sheet.quickPicksLabel": "Suggested amounts",
+  "purchase.sheet.amountRequired": "Enter an amount in euros, like 5 or 5.50",
+  "purchase.sheet.payHeading": "Pay {artist}",
+  "purchase.sheet.payIntro": "Pay {amount} with one of these",
+  "purchase.sheet.methodsLabel": "Ways to pay {artist}",
+  "purchase.sheet.payerLabel": "Name on the payment (optional)",
+  "purchase.sheet.payerHint":
+    "The name your bank or MB WAY shows to {artist}. Only you and {artist} see it",
+  "purchase.sheet.wallLegend": "How you appear on the wall",
+  "purchase.sheet.notice":
+    "You pay {artist} directly. QueerPulse never handles this money, and any refund is between you and {artist}",
+  "purchase.sheet.paidCta": "I've paid",
+  "purchase.sheet.createFailed": "We couldn't record your payment",
+  "purchase.sheet.doneStatus":
+    "{artist} will confirm your payment. Follow it in your purchases",
+  "purchase.sheet.loading": "Loading the ways to pay",
+  "purchase.reference.label": "Reference code",
+  "purchase.reference.line":
+    "Add this code to your payment note so {artist} can find it",
+  "purchase.reference.loading": "Getting your payment code",
+  "purchase.reference.loadFailed": "We couldn't get your payment code",
+  "purchase.reference.retryCta": "Get a new payment code",
+  "purchase.reference.neededReason":
+    "Your payment code is still loading, so I've paid waits for it",
+  "purchase.reference.neededReasonFailed": "Get a new payment code first",
+  "purchase.reference.copyCta": "Copy code",
+  "purchase.reference.copyAria": "Copy code for the payment note",
+  "purchase.reference.copied": "Reference code copied",
+  "purchase.reference.copyFailed":
+    "We couldn't copy the code. Select it and copy it by hand",
+  "purchase.status.pending": "Waiting for the artist",
+  "purchase.status.confirmed": "Confirmed",
+  "purchase.status.declined": "Declined",
+  "purchase.status.cancelled": "Cancelled",
+  "purchase.status.expired": "Expired",
+  "purchase.statusLine.pending": "Waiting for {artist} to confirm",
+  "purchase.statusLine.expired":
+    "{artist} did not answer within 30 days, so this claim expired. You can buy it again",
+  "purchase.statusLine.cancelled": "You cancelled this purchase",
+  "purchase.statusLine.declinedAgain":
+    "You can start a new purchase from the release page",
+  "purchase.declineReason.payment_not_found":
+    "{artist} could not find your payment",
+  "purchase.declineReason.amount_different":
+    "{artist} received a different amount",
+  "purchase.declineReason.other": "{artist} declined this purchase",
+  "purchase.declineNoteLine": "{artist} added: {note}",
+  "purchase.list.heading": "Your <em>purchases</em>",
+  "purchase.list.dek":
+    "Music you bought straight from artists. Downloads open once the artist confirms your payment",
+  "purchase.list.label": "Your purchases",
+  "purchase.list.empty":
+    "Nothing bought yet. A release or track with a price has a Buy button on its page",
+  "purchase.list.showMore": "Show more purchases",
+  "purchase.row.amount": "Paid {amount}",
+  "purchase.row.date": "Bought {date}",
+  "purchase.row.byArtist": "by {artist}",
+  "purchase.row.itemGone":
+    "This music is no longer on Studio. Your downloads stay",
+  "purchase.downloads.heading": "Downloads",
+  "purchase.downloads.listLabel": "Tracks of {title} to download",
+  "purchase.downloads.formatNote": "MP3 or M4A, as the artist uploaded it",
+  "purchase.downloads.cta": "Download",
+  "purchase.downloads.ctaAria": "Download {title}",
+  "purchase.downloads.failed": "We couldn't start this download",
+  "purchase.downloads.demoToast":
+    "The demo holds no audio files. On Studio the track saves to your device",
+  "purchase.downloads.none": "Nothing to download yet",
+  "purchase.downloads.mp3": "MP3",
+  "purchase.downloads.m4a": "M4A",
+  "purchase.wall.toggle": "Show me on the supporter wall",
+  "purchase.wall.body":
+    "Members with Studio access see the name and photo you pick on the release page, without any amount",
+  "purchase.wall.shownAs": "Shown as {name}",
+  "purchase.wall.pickAgain":
+    "The persona you picked is gone. Pick how you appear",
+  "purchase.wall.pendingNote": "You appear once {artist} confirms your payment",
+  "purchase.wall.saved": "You are on the supporter wall as {name}",
+  "purchase.wall.removed": "You are off the supporter wall",
+  "purchase.wall.saveFailed":
+    "We couldn't change your spot on the supporter wall",
+  "purchase.inbox.nav": "Payments to confirm",
+  "purchase.inbox.badge_one": "{count} payment to confirm",
+  "purchase.inbox.badge_other": "{count} payments to confirm",
+  "purchase.inbox.pageTitle": "Payments to confirm",
+  "purchase.inbox.eyebrow": "Payments",
+  "purchase.inbox.title": "Payments to <em>confirm</em>",
+  "purchase.inbox.dek":
+    "Members tell you here when they paid you. Check your bank, MB WAY or payment page, then confirm or decline. QueerPulse never sees the money",
+  "purchase.inbox.personaLabel": "Artist page",
+  "purchase.inbox.tabsLabel": "Payments of {name}",
+  "purchase.inbox.unknownPersona":
+    "That artist page is not one of yours, so this shows {name}",
+  "purchase.inbox.tab.confirm": "To confirm",
+  "purchase.inbox.tab.sales": "Sales",
+  "purchase.inbox.listLabel": "Payments of {name} to confirm",
+  "purchase.inbox.empty":
+    "No payments waiting. When a member says they paid you, it shows up here",
+  "purchase.inbox.reference": "Reference {code}",
+  "purchase.inbox.payerName": "Name on the payment: {name}",
+  "purchase.inbox.deletedAccount": "Deleted account",
+  "purchase.inbox.claimedOn": "Said they paid on {date}",
+  "purchase.inbox.confirmCta": "Confirm payment",
+  "purchase.inbox.confirmAria": "Confirm payment from {name} for {title}",
+  "purchase.inbox.declineCta": "Decline payment",
+  "purchase.inbox.declineAria": "Decline payment from {name} for {title}",
+  "purchase.inbox.confirmed":
+    "Payment confirmed. {name} can download {title} now",
+  "purchase.inbox.declined": "Payment declined. {name} sees your reason",
+  "purchase.inbox.confirmFailed": "We couldn't confirm this payment",
+  "purchase.inbox.declineFailed": "We couldn't decline this payment",
+  "purchase.inbox.showMore": "Show more payments",
+  "purchase.inbox.loadingMore": "Loading more payments",
+  "purchase.decline.title": "Decline this payment?",
+  "purchase.decline.body":
+    "{name} gets a notification with the reason you pick",
+  "purchase.decline.reasonLegend": "Why are you declining?",
+  "purchase.decline.reason.payment_not_found": "I can't find the payment",
+  "purchase.decline.reason.amount_different": "The amount is different",
+  "purchase.decline.reason.other": "Something else",
+  "purchase.decline.noteLabel": "Note for {name} (optional)",
+  "purchase.decline.notePlaceholder": "A short line, up to 200 characters",
+  "purchase.decline.confirm": "Decline payment",
+  "purchase.decline.keep": "Keep it waiting",
+  "purchase.sales.totalsLabel": "Your sales totals",
+  "purchase.sales.last28": "Last 28 days",
+  "purchase.sales.allTime": "All time",
+  "purchase.sales.count_one": "{count} sale",
+  "purchase.sales.count_other": "{count} sales",
+  "purchase.sales.note":
+    "The payments you confirmed. QueerPulse keeps the record and the money stays between you and your buyers",
+  "purchase.sales.listLabel": "Sales of {name}",
+  "purchase.sales.empty": "No sales yet. Confirmed payments show up here",
+  "purchase.sales.confirmedOn": "Confirmed {date}",
+  "purchase.sales.showMore": "Show more sales",
+  "purchase.sales.loadingMore": "Loading more sales",
+  "purchase.account.pageTitle": "Your music purchases",
+  "purchase.account.eyebrow": "Account",
+  "purchase.account.title": "Your music <em>purchases</em>",
+  "purchase.account.dek":
+    "Everything you bought from Studio artists, with its downloads. You keep these with or without Studio access",
+  "purchase.account.empty": "No confirmed purchases yet",
+  "purchase.account.cardTitle": "Your music purchases",
+  "purchase.account.cardDesc":
+    "Download the music you bought from Studio artists",
+  "purchase.account.cardCta": "Open your music purchases",
+  "purchase.price.legend": "Price",
+  "purchase.price.trackLegend": "Price of this track",
+  "purchase.price.mode.not_for_sale": "Not for sale",
+  "purchase.price.mode.fixed": "Fixed price",
+  "purchase.price.mode.name_your_price": "Buyers name the price",
+  "purchase.price.amountLabel.fixed": "Price in euros",
+  "purchase.price.amountLabel.name_your_price": "Minimum in euros",
+  "purchase.price.hint.fixed": "From {minimum} to {cap}",
+  "purchase.price.hint.name_your_price":
+    "From {minimum} to {cap}. Buyers can pay more, up to {cap}",
+  "purchase.price.amountRequired": "Enter the price in euros, like 5 or 5.50",
+  "purchase.price.directNote":
+    "Buyers pay you directly with your ways to get paid, and you confirm each payment",
+  "purchase.price.needsMethods": "Add a way to get paid before you set a price",
+  "purchase.price.needsMethodsCta": "Add a way to get paid",
+  "purchase.price.notOutNote": "Buying opens once the release is out",
+  "paymentMethods.label": "Getting paid",
+  "paymentMethods.title": "How buyers <em>pay you</em>",
+  "paymentMethods.dek":
+    "Buyers pay you directly through these. QueerPulse never holds the money",
+  "paymentMethods.personaLabel": "Artist page",
+  "paymentMethods.listLabel": "Ways to get paid for {name}",
+  "paymentMethods.privacyNote":
+    "Buyers see these only while they buy or wait for you to confirm",
+  "paymentMethods.empty":
+    "No ways to get paid yet. Add one before you put music up for sale",
+  "paymentMethods.addCta": "Add a way to get paid",
+  "paymentMethods.saveCta": "Save ways to get paid",
+  "paymentMethods.saved": "Saved. Buyers see these ways to pay {name}",
+  "paymentMethods.saveFailed": "We couldn't save your ways to get paid",
+  "paymentMethods.rowError": "Way {number}: {reason}",
+  "paymentMethods.rowLegend": "Way to get paid {count}",
+  "paymentMethods.lastMethodWarning":
+    "Music of {name} is for sale, so keep at least one way to get paid",
+  "paymentMethods.noPersona": "Getting paid opens once you have an artist page",
+  "wall.heading": "Supported by",
+  "wall.listLabel": "Members who bought {title}",
+  "wall.showAll": "Show all supporters",
+  "wall.loadMoreFailed": "We couldn't load more supporters",
+  "owner.v3.paymentsLink": "Payments to confirm",
+  "owner.v3.gettingPaidLink": "Getting paid",
+  "errors.what.purchases": "your purchases",
+  "errors.what.paymentMethods": "your ways to get paid",
+  "errors.what.sales": "your sales",
+  "errors.what.wall": "the supporter wall",
+  "errors.what.offer": "the price of this music",
+  "errors.what.paymentsInbox": "your payments to confirm",
+  "errors.reason.studio_persona_not_found":
+    "This artist page is not one you run",
+  "errors.reason.studio_release_type_not_for_sale":
+    "Only albums, EPs and singles and their tracks can be sold",
+  "errors.reason.studio_price_out_of_range":
+    "A fixed price runs from €1 to €500, and a minimum from €0 to €500",
+  "errors.reason.studio_payment_methods_needed_for_sale":
+    "Add a way to get paid before putting music up for sale, and keep one while anything is for sale",
+  "errors.reason.studio_payment_methods_limit":
+    "An artist can list up to 8 ways to get paid",
+  "errors.reason.studio_payment_link_invalid":
+    "A payment link must be a full https:// address",
+  "errors.reason.studio_payment_mbway_invalid":
+    "MB WAY needs a Portuguese mobile number",
+  "errors.reason.studio_payment_iban_invalid":
+    "Check the IBAN: the country code, length or check digits do not match",
+  "errors.reason.studio_purchase_item_required":
+    "Choose one release or one track to buy",
+  "errors.reason.studio_purchase_item_not_found":
+    "This music is not available to you",
+  "errors.reason.studio_purchase_own_persona":
+    "You are a member of this artist, so you cannot buy its music",
+  "errors.reason.studio_purchase_not_for_sale": "This is not for sale",
+  "errors.reason.studio_purchase_release_not_published":
+    "This release is not out yet, so it cannot be bought",
+  "errors.reason.studio_purchase_track_unavailable":
+    "This track cannot be bought right now",
+  "errors.reason.studio_purchase_unavailable":
+    "You cannot buy music from this artist",
+  "errors.reason.studio_purchase_no_payment_methods":
+    "This artist has not added a way to get paid",
+  "errors.reason.studio_purchase_pending_exists":
+    "You already told this artist you paid for this; it is waiting for them",
+  "errors.reason.studio_purchase_already_owned":
+    "This is already in your collection",
+  "errors.reason.studio_purchase_amount_below_minimum":
+    "The amount is below the artist's minimum",
+  "errors.reason.studio_purchase_amount_above_cap":
+    "A purchase can be up to €500",
+  "errors.reason.studio_purchase_price_changed":
+    "The price changed. Check the new price and try again",
+  "errors.reason.studio_purchase_reference_invalid":
+    "This payment code is too old. Get a new code below, and if you already paid with the old one, put the old code in the name field so the artist can match it",
+  "errors.reason.studio_purchase_reference_taken":
+    "This payment code was just taken by another purchase. Get a new code below",
+  "errors.reason.studio_purchase_not_found":
+    "This purchase is not available to you",
+  "errors.reason.studio_purchase_not_pending":
+    "This purchase was already answered",
+  "errors.reason.studio_purchase_wall_not_available":
+    "The supporter wall is open to pending and confirmed purchases of an artist still on Studio",
+  "errors.reason.studio_purchase_not_confirmed":
+    "Downloads open once the artist confirms your payment",
+  "errors.reason.studio_download_item_deleted":
+    "The artist deleted this music, so it can no longer be downloaded",
+  "errors.reason.studio_download_track_removed":
+    "This track is no longer on the release",
+  "errors.reason.studio_download_release_taken_down":
+    "Our team took this release down, so it cannot be downloaded",
+  "errors.reason.studio_download_artist_unavailable":
+    "This artist page was removed, so its music cannot be downloaded",
+  "errors.reason.studio_download_track_withheld":
+    "A copyright claim holds this track offline, so it cannot be downloaded",
+  "errors.reason.studio_download_track_not_ready":
+    "This track has no audio yet",
+  "errors.reason.studio_download_track_preparing":
+    "We are preparing this file for you. Try again in a few minutes",
+  // Studio landing v2 (2026-10-28)
+  "founding.badge": "Founding artist",
+  "home.founding.title": "Founding <em>artists</em>",
+  "landingPreviews.title": "Your music on the Studio page",
+  "landingPreviews.sub":
+    "Our team picks a few tracks to play to visitors on the Studio page. Visitors hear the whole track, and only with your yes",
+  "landingPreviews.listLabel": "Studio page requests",
+  "landingPreviews.status.pending": "Waiting for your answer",
+  "landingPreviews.status.approved": "Approved for the Studio page",
+  "landingPreviews.status.approvedOff":
+    "Approved. Off the page while it can't play there",
+  "landingPreviews.credited": "You're credited on this track by {artist}",
+  "landingPreviews.requestedOn": "Asked on {date}",
+  "landingPreviews.approveCta": "Approve preview",
+  "landingPreviews.declineCta": "Decline preview",
+  "landingPreviews.withdrawCta": "Withdraw preview",
+  "landingPreviews.approveLabel": "Approve preview of {track}",
+  "landingPreviews.declineLabel": "Decline preview of {track}",
+  "landingPreviews.withdrawLabel": "Withdraw preview of {track}",
+  "landingPreviews.approveConfirm.title": "Play {track} on the Studio page?",
+  "landingPreviews.approveConfirm.body":
+    "Anyone who opens the Studio page can play the whole track. You, or anyone credited on it, can withdraw it at any time.",
+  "landingPreviews.withdrawConfirm.title": "Take {track} off the Studio page?",
+  "landingPreviews.withdrawConfirm.body":
+    "It stops playing to visitors within a minute. To bring it back, our team asks again.",
+  "landingPreviews.approved": "{track} is approved for the Studio page",
+  "landingPreviews.declined": "You declined the preview of {track}",
+  "landingPreviews.withdrawn": "{track} leaves the Studio page within a minute",
+  "landingPreviews.approveFailed": "We couldn't approve the preview",
+  "landingPreviews.declineFailed": "We couldn't decline the preview",
+  "landingPreviews.withdrawFailed": "We couldn't withdraw the preview",
+  "errors.what.landingPreviews": "the Studio page requests",
+  "errors.reason.studio_landing_preview_unavailable":
+    "This track is no longer on the Studio page",
+  "errors.reason.studio_landing_preview_not_found":
+    "This preview is no longer there",
+  "errors.reason.studio_landing_preview_track_not_eligible":
+    "This track can't play on the Studio page",
+  "errors.reason.studio_landing_preview_exists":
+    "This track already has an open request or a live preview",
+  "errors.reason.studio_landing_previews_full":
+    "There are already 10 open previews. Remove one first",
+  "errors.reason.studio_landing_preview_no_reachable_owner":
+    "Nobody who runs this artist has Studio access, so nobody could answer",
+  "errors.reason.studio_landing_preview_not_pending":
+    "Someone already answered this request",
+  "errors.reason.studio_landing_preview_not_approved":
+    "This preview is no longer on the Studio page",
+  "errors.reason.studio_landing_preview_main_persona_only":
+    "Only the artist who released this track can answer",
+  "errors.reason.studio_landing_consent_required":
+    "Tick the consent box before you save",
+  "errors.reason.studio_landing_persona_not_eligible":
+    "This artist can't appear on the Studio page: their page must be published and public",
+  "errors.reason.studio_landing_card_exists": "This artist already has a card",
+  "errors.reason.studio_landing_cards_full":
+    "There are already 6 artist cards. Remove one first",
+  "errors.reason.studio_landing_card_not_found": "This card is no longer there",
+  "errors.reason.studio_landing_photo_not_yours":
+    "Use a photo you uploaded, or keep the one this slot holds",
+  "errors.reason.studio_landing_order_mismatch":
+    "The list changed while you were moving it. Reload it and try again",
+  "errors.reason.studio_founding_persona_not_eligible":
+    "This artist can't be a founding artist: their page must be published and public",
+  "errors.reason.studio_founding_artist_exists":
+    "This artist is already a founding artist",
+  "errors.reason.studio_founding_artists_full":
+    "There are already 50 founding artists",
+  "errors.reason.studio_founding_artist_not_found":
+    "This founding artist is no longer on the list",
+  "errors.reason.studio_access_request_exists":
+    "You already asked for Studio access",
+  "errors.reason.studio_access_already_granted":
+    "You already have Studio access",
+  "errors.reason.studio_access_request_not_found":
+    "This request is no longer waiting",
+  // Studio purchases: Help and terms on buying and selling
+  "helpLive.cat.buying.heading": "Buying and <em>selling</em>",
+  "helpLive.cat.buying.blurb": "Prices, paying artists and downloads",
+  "helpLive.faq.buying.q": "How do I buy music on Studio?",
+  "helpLive.faq.buying.a":
+    "Open a release or track with a price and tap Buy. You pay the artist directly with one of their payment links, MB WAY or IBAN, add the payment code the sheet shows to your payment note so the artist can match it, then tap I've paid. Once the artist confirms, download the files in <a>Your purchases</a>. QueerPulse never handles the money, so a refund is between you and the artist.",
+  "helpLive.faq.selling.q": "How do I sell my music?",
+  "helpLive.faq.selling.a":
+    "In <a>Studio settings</a>, add a way to get paid under Getting paid: a payment link, an MB WAY number or an IBAN. Then set a fixed price or a minimum on an album, EP, single or track in the release editor. Buyers pay you directly, and you confirm each payment in Payments to confirm. Mixes, edits, lip-sync mixes and podcasts stay free to play.",
+  "termsLive.sec.selling.num": "05: buying and selling music",
+  "termsLive.sec.selling.heading": "Selling <em>music</em>",
+  "termsLive.sec.selling.p1":
+    "Artists can set a price on albums, EPs, singles and their tracks. Buyers pay the artist directly through the artist's own payment link, MB WAY number or IBAN. QueerPulse is not a party to the sale. It does not hold or move the money, and it cannot refund a payment.",
+  "termsLive.sec.selling.p2":
+    "A purchase unlocks its downloads and the supporter wall once the artist confirms the payment. A refund or a disagreement about money is between the buyer and the artist. If an artist took your payment and did not confirm it, report their artist page to our team.",
 };

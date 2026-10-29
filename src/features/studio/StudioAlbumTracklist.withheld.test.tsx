@@ -32,6 +32,7 @@ function releaseFor(isOwner: boolean) {
     },
     description: null,
     genre: null,
+    genres: [],
     mood: null,
     scene: null,
     status: "published",

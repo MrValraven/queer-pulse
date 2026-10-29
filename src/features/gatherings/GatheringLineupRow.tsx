@@ -7,6 +7,7 @@ import {
   type BadgeTone,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useStaffMap } from "../../shared/staff/useStaffRole";
 import type { SubprofileKind } from "../subprofiles/api/subprofiles.api";
 import { KIND_LABEL_KEYS } from "../subprofiles/subprofile-kinds";
 import type { EventLineupEntryDTO, LineupEntryStatus } from "./api/events.api";
@@ -45,6 +46,7 @@ export function GatheringLineupRow({
   onInviteAgain: () => void;
 }) {
   const { t } = useTranslation();
+  const staffMap = useStaffMap();
   const roleKind = lineupRoleToKind(entry.role) ?? LINEUP_ROLES[0]!;
 
   return (
@@ -55,6 +57,8 @@ export function GatheringLineupRow({
             slug: entry.slug,
             name: entry.name,
             avatarUrl: entry.avatarUrl ?? undefined,
+            staffRole: staffMap[entry.slug]?.tier ?? undefined,
+            staffBadgedRoles: staffMap[entry.slug]?.badgedStaffRoles,
           }}
           size={38}
         />

@@ -115,7 +115,7 @@ describe("Studio listening hooks in demo", () => {
     );
   });
 
-  it("saves the account as the identity and reflects it in Artists you support", async () => {
+  it("saves the account as the identity and reflects it in Artists who see your name", async () => {
     const state = renderHook(
       () => useStudioSupporterState(DEMO_ARTIST_LUA_CARDOSO.id, true),
       { wrapper },

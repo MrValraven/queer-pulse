@@ -3,7 +3,6 @@ import { FiCheck, FiPlay } from "react-icons/fi";
 import { Button, ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
-import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   TRACKS,
@@ -11,8 +10,6 @@ import {
   resolveTrackTitle,
 } from "./studioSetSubmission.data";
 import s from "./funding.module.css";
-
-const PER_PLAY_RATE = 0.05;
 
 // Content: the uploaded mock master file's name and technical figures, from
 // the uploaded file in live mode.
@@ -32,7 +29,6 @@ export function StudioSetMatcher({
   onRun,
 }: StudioSetMatcherProps) {
   const { t } = useTranslation();
-  const fmt = useFormat();
   const { showToast } = useToast();
   const paste = useMemo(() => buildPaste(t), [t]);
   return (
@@ -132,11 +128,10 @@ export function StudioSetMatcher({
                   <p>
                     {track.m ? (
                       <Translation
-                        i18nKey="studio:setSubmission.matcher.payLine"
+                        i18nKey="studio:setSubmission.matcher.creditLine"
                         components={{ em: <em /> }}
                         values={{
                           who: track.who,
-                          amount: fmt.currency(PER_PLAY_RATE),
                           firstName: track.who.split(" ")[0] ?? track.who,
                         }}
                       />

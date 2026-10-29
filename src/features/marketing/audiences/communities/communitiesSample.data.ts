@@ -100,7 +100,7 @@ export function buildSampleEvent(t: TFunction, today: Date): CalendarEvent {
     to: routes.forCommunities,
     kind: "gathering",
     eventType: "club-night",
-    gatheringFamily: "party",
+    gatheringFamily: "music",
     isFree: true,
     coverImageUrl: unsplash("photo-1516450360452-9312f5e86fc7", 1200),
     themes: ["greeter-at-the-door", "good-to-come-solo", "drag"],

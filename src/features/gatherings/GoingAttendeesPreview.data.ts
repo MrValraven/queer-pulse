@@ -35,6 +35,11 @@ function hashSlug(slug: string): number {
  *  remaining capacity rather than attendees, so treating it as a going total
  *  would overstate (or misrepresent) who's actually in the event. */
 function demoGoingTotal(gathering: GatheringDetail): number | undefined {
+  // A house event shows "N spots left" and carries its going count apart, so
+  // the row reads that count instead of dropping out.
+  if (typeof gathering.goingCount === "number" && gathering.goingCount > 0) {
+    return gathering.goingCount;
+  }
   const isGoingCount = gathering.spots.key.startsWith("gatherings:spots.going");
   const total = isGoingCount ? gathering.spots.values?.count : undefined;
   return typeof total === "number" && total > 0 ? total : undefined;

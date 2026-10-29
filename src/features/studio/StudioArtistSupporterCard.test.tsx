@@ -169,7 +169,7 @@ function renderCard(options: { isOwner?: boolean } = {}) {
   );
 }
 
-const SWITCH = { name: "Show me as a supporter" };
+const SWITCH = { name: "Show me among NIGHTFORM's top listeners" };
 
 beforeEach(() => {
   mocks.isHistoryOn = true;
@@ -192,7 +192,7 @@ describe("StudioArtistSupporterCard", () => {
     );
     expect(
       screen.getByText(
-        "NIGHTFORM sees the name you choose among their top supporters",
+        "NIGHTFORM sees the name and photo you pick among their top listeners, ranked by how much you played them in the last 28 days",
       ),
     ).toBeInTheDocument();
   });
@@ -245,7 +245,7 @@ describe("StudioArtistSupporterCard", () => {
     renderCard();
     expect(
       screen.getByText(
-        "While your history is paused, you don't appear in their top supporters",
+        "While your history is paused, you don't appear among their top listeners",
       ),
     ).toBeInTheDocument();
   });
@@ -275,7 +275,9 @@ describe("StudioArtistSupporterCard", () => {
     fireEvent.click(screen.getByRole("switch", SWITCH));
     await waitFor(() => expect(mocks.remove?.remove).toHaveBeenCalledTimes(1));
     expect(
-      await screen.findByText("NIGHTFORM no longer sees you as a supporter"),
+      await screen.findByText(
+        "NIGHTFORM no longer sees you among their top listeners",
+      ),
     ).toBeInTheDocument();
   });
 
@@ -299,7 +301,7 @@ describe("StudioArtistSupporterCard", () => {
     mocks.state = { state: null, loadState: notFoundLoadState() };
     const { unmount } = renderCard();
     expect(
-      screen.getByText("This artist is not available to support"),
+      screen.getByText("This artist is not available to show your name to"),
     ).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /retry/i })).toBeNull();
     unmount();
@@ -397,11 +399,13 @@ describe("StudioArtistSupporterCard at its edges", () => {
     );
     await waitFor(() =>
       expect(
-        screen.getByRole("heading", { name: "Show me as a supporter" }),
+        screen.getByRole("heading", {
+          name: "Show me among NIGHTFORM's top listeners",
+        }),
       ).toHaveFocus(),
     );
     expect(
-      screen.getByText("This artist is not available to support"),
+      screen.getByText("This artist is not available to show your name to"),
     ).toBeInTheDocument();
   });
 
@@ -428,7 +432,9 @@ describe("StudioArtistSupporterCard at its edges", () => {
     await waitFor(() => expect(mocks.remove?.remove).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(screen.queryByRole("alert")).toBeNull());
     expect(
-      await screen.findByText("NIGHTFORM no longer sees you as a supporter"),
+      await screen.findByText(
+        "NIGHTFORM no longer sees you among their top listeners",
+      ),
     ).toBeInTheDocument();
   });
 });

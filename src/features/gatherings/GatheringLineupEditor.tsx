@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type RefObject } from "react";
 import { FiPlus } from "react-icons/fi";
 import { useAuth } from "../../app/providers/authContext";
 import { Button, ConfirmDialog } from "../../shared/components/ui";
+import { codedReasonFor } from "../../shared/api/errorHandling";
 import { reasonFor } from "../../shared/api/errorMessage";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -71,7 +72,12 @@ export function GatheringLineupEditor({ slug }: { slug: string }) {
   // Each write settles through its own promise: overlapping `mutate` calls
   // keep only the latest call's callbacks, which would swallow earlier errors.
   const toastError = (error: unknown) =>
-    showToast(reasonFor(error) ?? t("gatherings:lineup.errorToast"), "error");
+    showToast(
+      codedReasonFor(error) ??
+        reasonFor(error) ??
+        t("gatherings:lineup.errorToast"),
+      "error",
+    );
   const toastSent = (name: string) =>
     showToast(t("gatherings:lineup.sentToast", { name }), "success");
 

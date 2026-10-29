@@ -3,12 +3,14 @@ import {
   useEffect,
   useRef,
   useState,
+  type CSSProperties,
   type ReactNode,
   type RefObject,
 } from "react";
 import type { ImageSlotTint } from "../../../shared/components/ui";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { STUDIO_EXIT, STUDIO_FADE } from "../studioMotion";
+import { useStudioCoverTint } from "../useStudioCoverTint";
 import styles from "./StudioStickyHeader.module.css";
 
 export interface StudioStickyHeaderProps {
@@ -26,6 +28,9 @@ export interface StudioStickyHeaderProps {
   actions?: ReactNode;
   /** The hero's cover tint, so the bar picks up the same wash. */
   tint?: ImageSlotTint;
+  /** The hero's cover image. In light, the bar washes in the same colour
+   *  the hero reads from it (useStudioCoverTint.ts). */
+  coverUrl?: string | null;
 }
 
 const REDUCED_FADE = { duration: 0.12 } as const;
@@ -117,10 +122,12 @@ function useIsSentinelPassed(
 }
 
 /**
- * The compact header of a detail page: cover, title and Play, on an opaque
- * bar tinted like the hero and pinned flush to the shell topbar's bottom
- * edge. It fades and slides down from under the topbar
- * once the hero has scrolled away, and leaves the same way. Place it as the
+ * The compact header of a detail page: cover, title and Play, on a bar
+ * tinted like the hero and pinned flush to the shell topbar's bottom edge.
+ * In light it continues the frosted topbar edge to edge, and the cover's
+ * tint fades in once read; dark keeps an opaque inset card. It fades and
+ * slides down from under the topbar once the hero has scrolled away, and
+ * leaves the same way. Place it as the
  * page's first child, so its sticky anchor spans the whole page; the anchor
  * takes no height. Its title is plain text, since the page's h1 already
  * names the page.
@@ -132,13 +139,24 @@ export function StudioStickyHeader({
   cover,
   actions,
   tint,
+  coverUrl,
 }: StudioStickyHeaderProps) {
   const { reducedMotion } = useMotionPrefs();
   const anchorRef = useRef<HTMLDivElement>(null);
   const isShown = useIsSentinelPassed(sentinelRef, sentinel, anchorRef);
+  const coverTint = useStudioCoverTint(coverUrl);
 
   return (
-    <div ref={anchorRef} className={styles.anchor}>
+    <div
+      ref={anchorRef}
+      className={styles.anchor}
+      data-cover-tint={coverTint ? "" : undefined}
+      style={
+        coverTint
+          ? ({ "--hero-cover-tint": coverTint } as CSSProperties)
+          : undefined
+      }
+    >
       <AnimatePresence initial={false}>
         {isShown && (
           <m.div

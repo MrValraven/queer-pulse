@@ -25,6 +25,7 @@ describe("queue builders carry content warnings", () => {
       artist,
       description: null,
       genre: null,
+      genres: [],
       mood: null,
       scene: null,
       status: "published",

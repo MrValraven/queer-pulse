@@ -28,6 +28,8 @@
   color: var(--studio-accent-text);
 }
 
+/* The opener: keep Spotify for everything else, Studio is for the music
+   made around you. */
 .title {
   max-width: 22ch;
   margin: 0 0 clamp(28px, 4vw, 48px);
@@ -58,12 +60,13 @@
   list-style: none;
 }
 
-/* Phones: each row is a stacked card, Studio's answer highlighted. */
+/* Phones: each row is a stacked card, the topic as its heading and Studio's
+   answer on the raised tint. */
 .row {
   display: grid;
-  gap: 10px;
+  gap: 12px;
   padding: 18px;
-  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border: 1px solid var(--studio-line);
   border-radius: var(--radius-badge);
   background: var(--studio-surface);
 }
@@ -73,10 +76,11 @@
   font-family: var(--serif);
   font-size: var(--text-20);
   font-weight: 400;
+  line-height: var(--lh-title);
   color: var(--studio-text);
 }
 
-.bigApps,
+.answer,
 .studio {
   margin: 0;
   font-family: var(--sans);
@@ -84,7 +88,7 @@
   line-height: var(--lh-body-lg);
 }
 
-.bigApps {
+.answer {
   color: var(--studio-text-muted);
 }
 
@@ -94,8 +98,13 @@
   align-items: flex-start;
   padding: 12px 14px;
   border-radius: var(--radius-tag);
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
-  color: var(--studio-accent-text);
+  background: var(--studio-wash-2);
+  color: var(--studio-text);
+  font-weight: 500;
+}
+
+.answerText {
+  min-width: 0;
 }
 
 .check {
@@ -103,6 +112,7 @@
   width: 18px;
   height: 18px;
   margin-top: 2px;
+  color: var(--studio-accent-text);
 }
 
 /* Phones show the short label as a small line above the answer. The full
@@ -115,6 +125,11 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  color: var(--studio-text-muted);
+}
+
+.studio .label {
+  color: var(--studio-accent-text);
 }
 
 .labelFull {
@@ -129,17 +144,21 @@
   white-space: nowrap;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 900px) {
+  /* Wide screens read as one table: a header row, hairlines between rows
+     and the Studio column on a raised tint from the header to the last
+     row. */
   .headerRow,
   .row {
     display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr) minmax(0, 3fr);
-    gap: 24px;
-    align-items: start;
+    grid-template-columns:
+      minmax(0, 1.4fr) minmax(0, 2fr) minmax(0, 2fr)
+      minmax(0, 2.2fr);
+    column-gap: 24px;
+    align-items: stretch;
   }
 
   .headerRow {
-    padding: 0 0 12px;
     font-family: var(--sans);
     font-size: var(--text-11);
     font-weight: 700;
@@ -148,17 +167,24 @@
     color: var(--studio-text-muted);
   }
 
+  .headerCell {
+    padding: 14px 0 12px;
+  }
+
   .studioHeading {
+    padding: 14px 18px 12px;
+    border-radius: var(--radius-tag) var(--radius-tag) 0 0;
+    background: var(--studio-wash-2);
     color: var(--studio-accent-text);
   }
 
-  /* Wide screens read as one table: hairlines between rows, no boxes. */
   .list {
     gap: 0;
   }
 
   .row {
-    padding: 20px 0;
+    gap: 0 24px;
+    padding: 0;
     border: 0;
     border-top: 1px solid var(--studio-line);
     border-radius: 0;
@@ -169,6 +195,20 @@
     border-bottom: 1px solid var(--studio-line);
   }
 
+  .topic,
+  .answer {
+    padding: 20px 0;
+  }
+
+  .studio {
+    padding: 20px 18px;
+    border-radius: 0;
+  }
+
+  .row:last-child .studio {
+    border-radius: 0 0 var(--radius-tag) var(--radius-tag);
+  }
+
   /* The header row names the columns, so the short labels step aside. */
   .label {
     display: inline;
@@ -177,16 +217,6 @@
 
   .labelShort {
     display: none;
-  }
-
-  .studio {
-    padding: 0;
-    background: none;
-    color: var(--studio-text);
-  }
-
-  .check {
-    color: var(--studio-accent-text);
   }
 }
 

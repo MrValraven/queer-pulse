@@ -30,6 +30,7 @@ import { GatheringTakingCare } from "./GatheringTakingCare";
 import { formatLabel } from "./gatheringCatalog";
 import {
   gatheringDetails,
+  gatheringHasEnded,
   gatheringKind,
   resolveGathering,
   type GatheringDetail,
@@ -204,10 +205,14 @@ function GatheringDetailBody({
   );
 
   // The "more gatherings" rail is mock-only; live has no list endpoint here, so
-  // it stays empty rather than leaking demo gatherings into production.
+  // it stays empty rather than leaking demo gatherings into production. A
+  // cancelled or finished event is no suggestion, so the rail leaves it out.
   const others = demoMode
     ? Object.values(gatheringDetails).filter(
-        (other) => other.slug !== gathering.slug,
+        (other) =>
+          other.slug !== gathering.slug &&
+          other.cancelled !== true &&
+          !gatheringHasEnded(other),
       )
     : [];
 

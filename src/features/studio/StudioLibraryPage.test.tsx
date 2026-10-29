@@ -1,8 +1,15 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { resetDemoPlaylists } from "./api/studioDemoPlaylists";
+import { resetDemoPurchases } from "./api/studioDemoPurchaseStore";
 import { StudioLibraryPage } from "./StudioLibraryPage";
 
 const showcase = vi.hoisted(() => ({ isOn: true, hasNoPlaylists: false }));
@@ -27,6 +34,7 @@ beforeEach(() => {
   showcase.isOn = true;
   showcase.hasNoPlaylists = false;
   resetDemoPlaylists();
+  resetDemoPurchases();
 });
 
 function renderAt(path: string) {
@@ -89,13 +97,14 @@ describe("library (demo)", () => {
     ).toHaveAttribute("href", "/studio/liked");
   });
 
-  it("offers Playlists, Releases and Artists as the library tabs", () => {
+  it("offers Playlists, Releases, Artists and Purchases as the library tabs", () => {
     renderAt("/studio/library");
     expect(screen.queryByRole("tab", { name: "Tracks" })).toBeNull();
     expect(screen.getAllByRole("tab").map((tab) => tab.textContent)).toEqual([
       "Playlists",
       "Releases",
       "Artists",
+      "Purchases",
     ]);
   });
 
@@ -154,5 +163,40 @@ describe("library (demo)", () => {
     const createButton = createButtons[0]!;
     fireEvent.click(createButton);
     expect(await screen.findByRole("dialog")).toBeInTheDocument();
+  });
+
+  it("opens Purchases from ?tab=purchases with its heading and no filter or sort", async () => {
+    renderAt("/studio/library?tab=purchases");
+    expect(screen.getByRole("tab", { name: "Purchases" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    const panel = screen.getByRole("tabpanel");
+    expect(
+      within(panel).getByRole("heading", { name: "Your purchases" }),
+    ).toBeInTheDocument();
+    expect(
+      await within(panel).findByRole("list", { name: "Your purchases" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("searchbox", { name: "Filter your library" }),
+    ).toBeNull();
+  });
+
+  it("folds the filter away on the Purchases tab and brings it back on Releases", async () => {
+    renderAt("/studio/library");
+    expect(
+      screen.getByRole("searchbox", { name: "Filter your library" }),
+    ).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("tab", { name: "Purchases" }));
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("searchbox", { name: "Filter your library" }),
+      ).toBeNull(),
+    );
+    fireEvent.click(screen.getByRole("tab", { name: "Releases" }));
+    expect(
+      await screen.findByRole("searchbox", { name: "Filter your library" }),
+    ).toBeInTheDocument();
   });
 });

@@ -244,6 +244,17 @@ function bandcampSubdomainHost(value: string): string | undefined {
   return host && host.toLowerCase() !== "bandcamp.com" ? host : undefined;
 }
 
+/** A bare Bandcamp handle ("you" or "@you"). Artist pages live on their own
+ *  subdomain, so it resolves to "you.bandcamp.com"; "bandcamp.com/you" is a
+ *  fan profile and 404s for an artist. */
+const BANDCAMP_HANDLE = /^@?[a-z0-9-]+$/i;
+
+function bandcampHandleHost(value: string): string | undefined {
+  return BANDCAMP_HANDLE.test(value)
+    ? `${value.replace(/^@/, "").toLowerCase()}.bandcamp.com`
+    : undefined;
+}
+
 /** A short, human-friendly label for a stored link, for read-mode chips: the
  *  bare handle for handle platforms ("https://github.com/you" → "you"), the
  *  bare domain for a website or other link ("https://you.com/#/" → "you.com"),
@@ -255,7 +266,8 @@ export function socialDisplayLabel(platform: string, value: string): string {
   if (platform === "email") return trimmed.replace(/^mailto:/i, "");
   if (platform === "mastodon") return trimmed;
   if (platform === "bandcamp") {
-    const bandcampHost = bandcampSubdomainHost(trimmed);
+    const bandcampHost =
+      bandcampSubdomainHost(trimmed) ?? bandcampHandleHost(trimmed);
     if (bandcampHost) return bandcampHost;
   }
 
@@ -293,6 +305,11 @@ export function socialHref(
   // An artist subdomain carries its own host: "you.bandcamp.com" links there.
   if (platform === "bandcamp" && bandcampSubdomainHost(trimmed))
     return `https://${trimmed}`;
+  // A bare handle is an artist name too: "you" links to "you.bandcamp.com".
+  if (platform === "bandcamp") {
+    const handleHost = bandcampHandleHost(trimmed);
+    if (handleHost) return `https://${handleHost}`;
+  }
   const meta = socialPlatform(platform);
   if (meta.hrefPrefix) {
     // Members routinely paste the whole path ("github.com/you") into a field

@@ -3,12 +3,9 @@ import { FiArrowRight } from "react-icons/fi";
 import { Button, Select } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
-import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { TRACKS } from "./studioSetSubmission.data";
 import s from "./funding.module.css";
-
-const SET_PAYOUT_POOL = 11.4;
 
 /** Stable ids, kept apart from the translated label (§5.1 trap: this `<select>` had
  * no `value=`, so the option label WAS the stored value). */
@@ -28,7 +25,6 @@ interface StudioSetSidebarProps {
 
 export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
   const { t } = useTranslation();
-  const fmt = useFormat();
   const { showToast } = useToast();
   const fieldId = useId();
   const [setType, setSetType] = useState(SET_TYPES[0]!.id);
@@ -71,7 +67,7 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
       <div className={s.djCard}>
         <h3>
           <Translation
-            i18nKey="studio:setSubmission.sidebar.payoutPreviewHeading"
+            i18nKey="studio:setSubmission.sidebar.creditsPreviewHeading"
             components={{ em: <em /> }}
           />
         </h3>
@@ -88,7 +84,7 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
           </span>
         </div>
         <div className={s.djRow}>
-          <span>{t("studio:setSubmission.sidebar.matchedPaying")}</span>
+          <span>{t("studio:setSubmission.sidebar.matchedCredited")}</span>
           <span
             className={`${s.v} ${s.jade}`}
             style={{
@@ -109,25 +105,6 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
             }}
           >
             {t("studio:setSubmission.sidebar.tracksCount", { count: held })}
-          </span>
-        </div>
-        <div className={s.djRow}>
-          <span>{t("studio:setSubmission.sidebar.payoutPool")}</span>
-          <span
-            className={s.v}
-            style={{
-              fontFamily: "var(--serif)",
-              color: "rgba(var(--studio-ink-rgb), 1)",
-            }}
-          >
-            <em
-              style={{
-                fontStyle: "normal",
-                color: "var(--studio-accent-text)",
-              }}
-            >
-              {fmt.currency(SET_PAYOUT_POOL)}
-            </em>
           </span>
         </div>
         <div className={s.holdNote}>

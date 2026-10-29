@@ -512,6 +512,65 @@ export const admin: Catalog = {
     "retirou um anúncio de habitação",
   "platformLog.kind.mod.housing_listing_taken_down.target":
     "retirou um anúncio de habitação de",
+  "platformLog.kind.mod.music_event_created":
+    "criou um evento de música do QueerPulse",
+  "platformLog.kind.mod.music_event_created.target": "criou o evento de música",
+  "platformLog.kind.mod.music_event_updated":
+    "editou um evento de música do QueerPulse",
+  "platformLog.kind.mod.music_event_updated.target":
+    "editou o evento de música",
+  "platformLog.kind.mod.music_event_cancelled":
+    "cancelou um evento de música do QueerPulse",
+  "platformLog.kind.mod.music_event_cancelled.target":
+    "cancelou o evento de música",
+  "platformLog.kind.mod.music_event_lineup_changed":
+    "alterou o lineup de um evento de música",
+  "platformLog.kind.mod.music_event_lineup_changed.target":
+    "alterou uma marcação no lineup de",
+  "platformLog.kind.mod.music_event_announcement_posted":
+    "publicou um aviso num evento de música",
+  "platformLog.kind.mod.music_event_announcement_posted.target":
+    "publicou um aviso em",
+  "platformLog.kind.mod.music_event_guest_removed":
+    "retirou uma pessoa de um evento de música",
+  "platformLog.kind.mod.music_event_guest_removed.target":
+    "retirou de um evento de música",
+  "platformLog.kind.mod.music_event_guest_barred":
+    "impediu uma pessoa de ir a um evento de música",
+  "platformLog.kind.mod.music_event_guest_barred.target":
+    "impediu de ir a um evento de música",
+  "platformLog.kind.mod.music_event_guest_bar_lifted":
+    "levantou um impedimento num evento de música",
+  "platformLog.kind.mod.music_event_guest_bar_lifted.target":
+    "levantou o impedimento de",
+  "platformLog.kind.mod.music_event_waitlist_promoted":
+    "tirou uma pessoa da lista de espera de um evento de música",
+  "platformLog.kind.mod.music_event_waitlist_promoted.target":
+    "tirou da lista de espera de um evento de música",
+  "platformLog.kind.mod.music_event_invites_sent":
+    "enviou convites para um evento de música",
+  "platformLog.kind.mod.music_event_invites_sent.target":
+    "enviou convites para",
+  "platformLog.kind.mod.music_event_invite_decided":
+    "respondeu a um pedido de convite de um evento de música",
+  "platformLog.kind.mod.music_event_invite_decided.target":
+    "respondeu a um pedido de convite de",
+  "platformLog.kind.mod.music_event_cohost_added":
+    "adicionou uma pessoa coanfitriã a um evento de música",
+  "platformLog.kind.mod.music_event_cohost_added.target":
+    "adicionou como pessoa coanfitriã",
+  "platformLog.kind.mod.music_event_cohost_removed":
+    "retirou uma pessoa coanfitriã de um evento de música",
+  "platformLog.kind.mod.music_event_cohost_removed.target":
+    "retirou como pessoa coanfitriã",
+  "platformLog.kind.mod.music_event_go_together_changed":
+    "alterou o Go Together num evento de música",
+  "platformLog.kind.mod.music_event_go_together_changed.target":
+    "alterou o Go Together em",
+  "platformLog.kind.mod.music_event_guests_exported":
+    "exportou a lista de pessoas de um evento de música",
+  "platformLog.kind.mod.music_event_guests_exported.target":
+    "exportou a lista de pessoas de",
   "platformLog.kind.mod.role_changed": "alterou o papel de um membro",
   "platformLog.kind.mod.role_changed.target": "alterou o papel de",
   "platformLog.kind.mod.staff_role_granted": "concedeu um papel de equipa",
@@ -745,6 +804,7 @@ export const admin: Catalog = {
   "members.verify.noCity": "Não indicada",
   // Por que página a pessoa passou até ao formulário de pedido.
   "members.verify.sourceLabel": "Veio de",
+  "members.verify.studioArtistChip": "Artista do Studio",
   "members.verify.heardFromLabel": "Ouviu falar de nós",
   "members.verify.socialProfileLabel": "Rede social",
   "members.verify.opensInNewTab": "(abre num novo separador)",
@@ -791,6 +851,8 @@ export const admin: Catalog = {
   "members.verify.source.for_communities": "Página para comunidades",
   "members.verify.source.for_performers": "Página para artistas",
   "members.verify.source.for_practitioners": "Página para profissionais",
+  "members.verify.source.studio_landing": "Página do Studio",
+  "members.verify.source.studio_artist": "Página do Studio, como artista",
   "members.verify.ageAttested": "18+ confirmado a {date} · Termos v{version}",
   "members.verify.ageAttestedUnknown": "18+ confirmado · Termos v{version}",
   // Aprovado: a QueerPulse não envia emails sobre candidaturas (o único email é
@@ -1326,6 +1388,9 @@ export const admin: Catalog = {
   "staffRoles.culturalProducer.label": "Produção cultural",
   "staffRoles.culturalProducer.desc":
     "Mantém a página inicial, o kit de imprensa e os vídeos de marketing atualizados. As histórias submetidas e as candidaturas a redator continuam com a equipa Editorial.",
+  "staffRoles.musicManagerProducer.label": "Gestão e produção musical",
+  "staffRoles.musicManagerProducer.desc":
+    "Cria e gere os eventos de música que o QueerPulse organiza, do lineup à entrada. A curadoria do Studio continua com a moderação e a administração.",
   "staffRoles.adminSuperset":
     "A administração já tem todas as capacidades de equipa.",
   "staffRoles.systemLocked":
@@ -1347,6 +1412,87 @@ export const admin: Catalog = {
     "Pelo menos {min} caracteres. Diz o que mudou.",
   "staffRoles.confirm.grantedToast": "Papel {role} atribuído.",
   "staffRoles.confirm.revokedToast": "Papel {role} retirado.",
+
+  // ── Eventos de música: os eventos de música organizados pelo QueerPulse que
+  // a gestão e produção musical cria e gere (`features/admin/musicEvents`) ───
+  "musicEvents.eyebrow": "Programação",
+  "musicEvents.title": "Eventos de música",
+  "musicEvents.sub":
+    "Os eventos de música que o QueerPulse organiza. Cria um, marca o lineup e gere a entrada.",
+  "musicEvents.createCta": "Criar evento de música",
+  "musicEvents.tabs.upcoming": "Próximos",
+  "musicEvents.tabs.past": "Passados",
+  "musicEvents.tabs.cancelled": "Cancelados",
+  "musicEvents.attention.requests_one": "{count} pedido de convite por rever",
+  "musicEvents.attention.requests_other":
+    "{count} pedidos de convite por rever",
+  "musicEvents.attention.lineup_one":
+    "{count} convite para o lineup à espera de resposta",
+  "musicEvents.attention.lineup_other":
+    "{count} convites para o lineup à espera de resposta",
+  "musicEvents.row.manageCta": "Gerir evento",
+  "musicEvents.row.manageAria": "Gerir {title}",
+  "musicEvents.row.lineupLabel": "Lineup",
+  "musicEvents.row.lineupConfirmed_one": "{count} confirmou",
+  "musicEvents.row.lineupConfirmed_other": "{count} confirmaram",
+  "musicEvents.row.lineupInvited_one": "{count} por responder",
+  "musicEvents.row.lineupInvited_other": "{count} por responder",
+  "musicEvents.row.lineupDeclined_one": "{count} recusou",
+  "musicEvents.row.lineupDeclined_other": "{count} recusaram",
+  "musicEvents.row.requests_one": "{count} pedido",
+  "musicEvents.row.requests_other": "{count} pedidos",
+  "musicEvents.row.cancelled": "Cancelado",
+  "musicEvents.empty.upcoming.title": "Sem eventos de música marcados",
+  "musicEvents.empty.upcoming.body": "Cria um e aparece aqui.",
+  "musicEvents.empty.past.title": "Sem eventos de música passados",
+  "musicEvents.empty.past.body": "Os eventos passam para aqui quando terminam.",
+  "musicEvents.empty.cancelled.title": "Sem eventos de música cancelados",
+  "musicEvents.empty.cancelled.body":
+    "Um evento cancelado passa para aqui e mantém a lista de pessoas.",
+  "musicEvents.loadError": "Não foi possível carregar os eventos de música",
+  "musicEvents.loadMore": "Mostrar mais eventos",
+  "musicEvents.new.title": "Criar um evento de música",
+  "musicEvents.new.lead":
+    "O QueerPulse organiza e tu geres: lineup, pessoas e entrada.",
+  "musicEvents.backCta": "Voltar aos eventos de música",
+  "musicEvents.notFound.title": "Este evento não é organizado pelo QueerPulse",
+  "musicEvents.notFound.body":
+    "Aqui só abrem eventos de música organizados pelo QueerPulse. Confirma a ligação ou escolhe um da lista.",
+  "musicEvents.manageLoadError":
+    "Não foi possível carregar este evento de música",
+  "musicEvents.lineupPicker.title": "Marcar artista do Studio",
+  "musicEvents.lineupPicker.sub":
+    "Só podes marcar artistas do Studio. Pesquisa pelo nome ou pelo @ artístico.",
+  "musicEvents.lineupPicker.searchPlaceholder": "Pesquisar artistas do Studio",
+  "musicEvents.lineupPicker.empty":
+    "Nenhum artista do Studio corresponde a {query}",
+  "musicEvents.lineupPicker.emptyAll":
+    "Ainda não há artistas do Studio para marcar",
+  "musicEvents.lineupPicker.allListed":
+    "Todas as correspondências já estão no lineup",
+  "musicEvents.lineupPicker.loadError":
+    "Não foi possível carregar artistas do Studio",
+  "musicEvents.lineupPicker.personas": "Como {names}",
+  "musicEvents.cohostAdd.confirmTitle":
+    "Adicionar {name} como pessoa coanfitriã?",
+  "musicEvents.cohostAdd.confirmBody":
+    "Passa a poder editar este evento e gerir as pessoas de imediato. Não é enviado convite.",
+  "musicEvents.cohostAdd.confirmCta": "Adicionar pessoa coanfitriã",
+  "musicEvents.cohostAdd.pickOther": "Escolher outra pessoa",
+  "musicEvents.cohostAdd.addedToast": "{name} é agora pessoa coanfitriã",
+  "musicEvents.cohostAdd.errorFrame":
+    "Não foi possível adicionar {name} como pessoa coanfitriã",
+  "musicEvents.cohostAdd.pickTitle": "Escolhe uma pessoa",
+  "musicEvents.cohostAdd.pickSub":
+    "Escolhe uma pessoa para organizar este evento com o QueerPulse. Entra logo na lista de pessoas coanfitriãs.",
+  "musicEvents.house.successLead":
+    "O evento de música já está publicado. Gere o lineup, a lista de pessoas e a entrada na página do evento.",
+  "musicEvents.house.cohostsNote":
+    "O QueerPulse é quem organiza. As pessoas coanfitriãs ajudam a gerir o evento, e o cancelamento fica com a equipa de música.",
+  "musicEvents.house.formatSearchPlaceholder":
+    "Noite de clube, karaoke, jam session",
+  "musicEvents.house.capacityHint": "Quantas pessoas podem vir",
+  "musicEvents.house.titleExample": "Noite de clube de sexta em Marvila",
 
   "members.timeline.title": "Histórico de moderação: a favor e contra",
   "members.timeline.auditLinkCta": "Todas as entradas no registo de auditoria",
@@ -3451,6 +3597,34 @@ export const admin: Catalog = {
     "Anúncio de habitação rejeitado",
   "governance.audit.actionType.housing_listing_taken_down":
     "Anúncio de habitação retirado",
+  "governance.audit.actionType.music_event_created": "Evento de música criado",
+  "governance.audit.actionType.music_event_updated": "Evento de música editado",
+  "governance.audit.actionType.music_event_cancelled":
+    "Evento de música cancelado",
+  "governance.audit.actionType.music_event_lineup_changed":
+    "Lineup de evento de música alterado",
+  "governance.audit.actionType.music_event_announcement_posted":
+    "Aviso de evento de música publicado",
+  "governance.audit.actionType.music_event_guest_removed":
+    "Pessoa retirada de evento de música",
+  "governance.audit.actionType.music_event_guest_barred":
+    "Pessoa impedida num evento de música",
+  "governance.audit.actionType.music_event_guest_bar_lifted":
+    "Impedimento levantado num evento de música",
+  "governance.audit.actionType.music_event_waitlist_promoted":
+    "Saída da lista de espera de evento de música",
+  "governance.audit.actionType.music_event_invites_sent":
+    "Convites de evento de música enviados",
+  "governance.audit.actionType.music_event_invite_decided":
+    "Pedido de convite de evento de música respondido",
+  "governance.audit.actionType.music_event_cohost_added":
+    "Pessoa coanfitriã adicionada",
+  "governance.audit.actionType.music_event_cohost_removed":
+    "Pessoa coanfitriã retirada",
+  "governance.audit.actionType.music_event_go_together_changed":
+    "Go Together de evento de música alterado",
+  "governance.audit.actionType.music_event_guests_exported":
+    "Lista de evento de música exportada",
   "governance.audit.actionType.community_ban_applied":
     "Banimento da comunidade aplicado",
   "governance.audit.actionType.community_ban_lifted":
@@ -5277,6 +5451,11 @@ export const admin: Catalog = {
   "dashboard.landingVisits.tipCount_one": "{countLabel} visita",
   "dashboard.landingVisits.tipCount_other": "{countLabel} visitas",
   "dashboard.landingVisits.rangeLabel": "Período",
+  "dashboard.landingVisits.pageLabel": "Página",
+  "dashboard.landingVisits.pageHome": "Página inicial",
+  "dashboard.landingVisits.pageStudio": "Página do Studio",
+  "dashboard.landingVisits.subStudio":
+    "Visitas anónimas à página do Studio por quem não tem sessão iniciada, por dia",
 
   // ── CNT-14: CRUD de diretório de recursos (admin) ───────────────────────
   "adminResourceListings.title": "Diretório de <em>recursos</em>",
@@ -5770,9 +5949,13 @@ export const admin: Catalog = {
     "O servidor não conseguiu verificar onde este ficheiro é usado, por isso recusou eliminá-lo. Tenta outra vez daqui a pouco, ou elimina mesmo assim se for uma remoção urgente. A decisão fica registada.",
   "media.delete.liveCoverScene": "Cena: {label}",
   "media.delete.liveCoverRelease": "Lançamento: {label}",
+  "media.delete.liveCoverLandingPhoto.hero":
+    "Página do Studio: fotografia do topo",
+  "media.delete.liveCoverLandingPhoto.manifesto":
+    "Página do Studio: fotografia do manifesto",
   "errors.deleteMediaObject": "Não foi possível eliminar esse ficheiro",
   "errors.mediaLiveCover":
-    "Esta imagem é a capa de uma cena ou lançamento ativo. Se a apagares, essa capa fica partida até alguém a substituir.",
+    "Esta imagem está em uso como capa de uma cena ou lançamento ativo, ou como fotografia da página do Studio. Se a apagares, essa imagem fica partida até alguém a substituir.",
   "roadmap.modals.digest.movedLine": "mudou de {from} para {to}",
 
   // ── 2026-08-21 code-review 4.6: dynamic-key siblings ──
@@ -9176,7 +9359,7 @@ export const admin: Catalog = {
   "studioAdmin.eyebrow": "Studio",
   "studioAdmin.title": "Descoberta no <em>Studio</em>",
   "studioAdmin.sub":
-    "Define o lançamento em destaque, arruma as duas prateleiras e gere as cenas da página inicial do Studio",
+    "Define o lançamento em destaque, arruma as duas prateleiras, gere as cenas da página inicial do Studio, cuida da página do Studio, escolhe artistas da fundação e abre o Studio a quem está à espera",
   "studioAdmin.tabs.shelves": "Prateleiras",
   "studioAdmin.tabs.scenes": "Cenas",
   "studioAdmin.loadError":
@@ -9291,6 +9474,169 @@ export const admin: Catalog = {
   "studioAdmin.toast.eventPinned": "Evento fixado",
   "studioAdmin.toast.eventUnpinned": "Evento desafixado",
   "studioAdmin.toast.releaseRemoved": "{title} saiu da cena",
+  // Studio landing v2 (2026-10-28)
+  "studioAdmin.tabs.landing": "Página do Studio",
+  "studioAdmin.tabs.founding": "Artistas da fundação",
+  "studioAdmin.tabs.waiting": "À espera do Studio",
+  "studioAdmin.landing.loadError":
+    "Não conseguimos carregar o conteúdo da página do Studio",
+  "studioAdmin.landing.saveFailed": "Não conseguimos guardar essa alteração",
+  "studioAdmin.landing.previews.heading": "Ouve primeiro",
+  "studioAdmin.landing.previews.sub":
+    "Faixas que a nossa equipa pede para tocar na página do Studio. Quem gere a persona recebe o pedido, e a primeira resposta decide. Tocam até 5, por esta ordem",
+  "studioAdmin.landing.previews.addCta": "Pedir para tocar uma faixa",
+  "studioAdmin.landing.previews.empty": "Ainda não foi pedida nenhuma faixa",
+  "studioAdmin.landing.previews.full":
+    "10 pedidos em aberto. Remove um para pedir outro",
+  "studioAdmin.landing.previews.status.pending": "À espera da persona",
+  "studioAdmin.landing.previews.status.approved": "Aprovada",
+  "studioAdmin.landing.previews.status.declined": "Recusada",
+  "studioAdmin.landing.previews.status.withdrawn": "Retirada",
+  "studioAdmin.landing.previews.onLanding": "Na página agora",
+  "studioAdmin.landing.previews.askedBy": "Pedida por {name} a {date}",
+  "studioAdmin.landing.previews.answeredBy": "Respondida por {name} a {date}",
+  "studioAdmin.landing.previews.showHistory": "Mostrar pedidos respondidos",
+  "studioAdmin.landing.previews.hideHistory": "Esconder pedidos respondidos",
+  "studioAdmin.landing.previews.removeCta": "Remover pré-escuta",
+  "studioAdmin.landing.previews.removeLabel": "Remover a pré-escuta de {track}",
+  "studioAdmin.landing.previews.removeConfirm.title":
+    "Remover {track} da página do Studio?",
+  "studioAdmin.landing.previews.removeConfirm.body":
+    "Deixa de tocar dentro de um minuto. A persona não recebe mensagem.",
+  "studioAdmin.landing.previews.removed": "{track} saiu da página do Studio",
+  "studioAdmin.landing.previews.requested":
+    "{track} foi enviada à persona para aprovação",
+  "studioAdmin.landing.previews.ineligible.not_playable":
+    "Não pode tocar agora",
+  "studioAdmin.landing.previews.ineligible.persona_not_eligible":
+    "A persona não pode aparecer",
+  "studioAdmin.landing.previews.ineligible.podcast": "Episódio de podcast",
+  "studioAdmin.landing.previews.ineligible.content_warnings":
+    "Tem avisos de conteúdo",
+  "studioAdmin.landing.previews.ineligible.explicit": "Marcada como explícita",
+  "studioAdmin.landing.previews.ineligible.open_claim":
+    "Com uma reclamação de direitos",
+  "studioAdmin.landing.previews.ineligible.unknown": "Não pode tocar na página",
+  "studioAdmin.landing.previews.notEligibleBecause":
+    "Esta faixa não pode tocar na página do Studio: {reason}",
+  "studioAdmin.landing.trackDialog.title": "Pedir para tocar uma faixa",
+  "studioAdmin.landing.trackDialog.searchLabel": "Procurar uma faixa",
+  "studioAdmin.landing.trackDialog.placeholder": "Faixa, lançamento ou persona",
+  "studioAdmin.landing.trackDialog.hasOpen": "Já pedida",
+  "studioAdmin.landing.trackDialog.noResults": "Nenhuma faixa corresponde",
+  "studioAdmin.landing.trackDialog.askCta": "Pedir à persona",
+  "studioAdmin.landing.trackDialog.askLabel": "Pedir para tocar {track}",
+  "studioAdmin.landing.cards.heading": "Cartões de artista",
+  "studioAdmin.landing.cards.sub":
+    "Até 6 na página do Studio, primeiro artistas da fundação. Junta um cartão só depois de a pessoa concordar, com a citação exata que aceitou",
+  "studioAdmin.landing.cards.addCta": "Juntar um cartão de artista",
+  "studioAdmin.landing.cards.empty":
+    "Ainda não há cartões. A secção fica escondida até haver 2",
+  "studioAdmin.landing.cards.editCta": "Editar cartão",
+  "studioAdmin.landing.cards.editLabel": "Editar o cartão de {name}",
+  "studioAdmin.landing.cards.removeCta": "Remover cartão",
+  "studioAdmin.landing.cards.removeLabel": "Remover o cartão de {name}",
+  "studioAdmin.landing.cards.removeConfirm.title":
+    "Remover o cartão de {name}?",
+  "studioAdmin.landing.cards.removeConfirm.body":
+    "Sai da página do Studio dentro de um minuto.",
+  "studioAdmin.landing.cards.notShown":
+    "Não aparece: esta persona não pode aparecer agora",
+  "studioAdmin.landing.cards.consentedOn": "Consentimento a {date}",
+  "studioAdmin.landing.cards.saved": "O cartão de {name} está guardado",
+  "studioAdmin.landing.cards.removed": "O cartão de {name} foi removido",
+  "studioAdmin.landing.cards.full":
+    "A página do Studio tem no máximo 6 cartões de artista",
+  "studioAdmin.landing.cardDialog.addTitle": "Juntar um cartão de artista",
+  "studioAdmin.landing.cardDialog.editTitle": "Editar o cartão de {name}",
+  "studioAdmin.landing.cardDialog.artistLabel": "Persona",
+  "studioAdmin.landing.cardDialog.quoteLabel": "Citação (opcional)",
+  "studioAdmin.landing.cardDialog.quoteHelp":
+    "Nas palavras da própria pessoa, até 240 caracteres",
+  "studioAdmin.landing.cardDialog.consent":
+    "A pessoa artista concordou em aparecer na página do Studio, com esta citação",
+  "studioAdmin.landing.cardDialog.saveCta": "Guardar cartão",
+  "studioAdmin.landing.personaSearch.label": "Procurar uma persona",
+  "studioAdmin.landing.personaSearch.placeholder": "Nome ou identificador",
+  "studioAdmin.landing.personaSearch.hasCard": "Já tem cartão",
+  "studioAdmin.landing.personaSearch.isFounding": "Artista da fundação",
+  "studioAdmin.landing.personaSearch.notEligible": "Não pode aparecer",
+  "studioAdmin.landing.personaSearch.noResults": "Nenhuma persona corresponde",
+  "studioAdmin.landing.personaSearch.pickLabel": "Escolher {name}",
+  "studioAdmin.landing.photos.heading": "Fotografias",
+  "studioAdmin.landing.photos.sub":
+    "Uma fotografia real de um evento do QueerPulse no topo e ao lado do manifesto. Sem ela, a página mostra a imagem habitual",
+  "studioAdmin.landing.photos.slot.hero": "Fotografia do topo",
+  "studioAdmin.landing.photos.slot.manifesto": "Fotografia do manifesto",
+  "studioAdmin.landing.photos.empty": "Sem fotografia",
+  "studioAdmin.landing.photos.addCta": "Juntar fotografia",
+  "studioAdmin.landing.photos.replaceCta": "Substituir fotografia",
+  "studioAdmin.landing.photos.removeCta": "Remover fotografia",
+  "studioAdmin.landing.photos.removeConfirm.title": "Remover esta fotografia?",
+  "studioAdmin.landing.photos.removeConfirm.body":
+    "A página volta à imagem habitual dentro de um minuto.",
+  "studioAdmin.landing.photos.saved": "Fotografia guardada",
+  "studioAdmin.landing.photos.removed": "Fotografia removida",
+  "studioAdmin.landing.photoDialog.imageLabel": "Fotografia",
+  "studioAdmin.landing.photoDialog.altEnLabel": "Descrição em inglês",
+  "studioAdmin.landing.photoDialog.altPtLabel": "Descrição em português",
+  "studioAdmin.landing.photoDialog.altHelp":
+    "O que a fotografia mostra, para quem não a vê, até 200 caracteres",
+  "studioAdmin.landing.photoDialog.creditLabel": "Crédito (opcional)",
+  "studioAdmin.landing.photoDialog.consent":
+    "Todas as pessoas reconhecíveis nesta fotografia concordaram em aparecer na página do Studio",
+  "studioAdmin.landing.photoDialog.saveCta": "Guardar fotografia",
+  "studioAdmin.founding.heading": "Artistas da fundação",
+  "studioAdmin.founding.sub":
+    "Guardam o distintivo Artista da fundação na página até saírem desta lista, e enchem a prateleira de lançamento no início do Studio enquanto estiver ligada",
+  "studioAdmin.founding.shelfLabel":
+    "Mostrar a prateleira Artistas da fundação no início do Studio",
+  "studioAdmin.founding.shelfHelp":
+    "O distintivo fica nas páginas de artista em qualquer caso",
+  "studioAdmin.founding.shelfOn":
+    "A prateleira Artistas da fundação está ligada",
+  "studioAdmin.founding.shelfOff":
+    "A prateleira Artistas da fundação está desligada",
+  "studioAdmin.founding.addCta": "Juntar artista da fundação",
+  "studioAdmin.founding.addTitle": "Juntar artista da fundação",
+  "studioAdmin.founding.empty": "Ainda não há artistas da fundação",
+  "studioAdmin.founding.notListed":
+    "Não aparece: esta persona não pode aparecer agora",
+  "studioAdmin.founding.removeCta": "Remover artista da fundação",
+  "studioAdmin.founding.removeLabel": "Remover {name} da fundação",
+  "studioAdmin.founding.removeConfirm.title": "Remover {name} da fundação?",
+  "studioAdmin.founding.removeConfirm.body":
+    "O distintivo sai da página e a persona sai da prateleira de lançamento.",
+  "studioAdmin.founding.added": "{name} é artista da fundação",
+  "studioAdmin.founding.removed": "{name} deixou de ser artista da fundação",
+  "studioAdmin.founding.addedOn": "Adicionada a {date}",
+  "studioAdmin.founding.loadError":
+    "A lista de artistas da fundação não carregou",
+  "studioAdmin.waiting.heading": "À espera do Studio",
+  "studioAdmin.waiting.sub":
+    "Pessoas que pediram acesso ao Studio. Primeiro artistas, depois quem espera há mais tempo",
+  "studioAdmin.waiting.counts_one": "{count} à espera, artistas: {artistCount}",
+  "studioAdmin.waiting.counts_other":
+    "{count} à espera, artistas: {artistCount}",
+  "studioAdmin.waiting.artistChip": "Artista",
+  "studioAdmin.waiting.fromInviteChip": "Entrou pela página do Studio",
+  "studioAdmin.waiting.askedOn": "Pediu a {date}",
+  "studioAdmin.waiting.grantCta": "Dar acesso ao Studio",
+  "studioAdmin.waiting.grantLabel": "Dar acesso ao Studio a {name}",
+  "studioAdmin.waiting.dismissCta": "Dispensar pedido",
+  "studioAdmin.waiting.dismissLabel": "Dispensar o pedido de {name}",
+  "studioAdmin.waiting.dismissConfirm.title": "Dispensar o pedido de {name}?",
+  "studioAdmin.waiting.dismissConfirm.body":
+    "Sai desta lista sem aviso. {name} não recebe mensagem e pode pedir outra vez.",
+  "studioAdmin.waiting.granted":
+    "{name} já pode usar o Studio e recebe uma notificação",
+  "studioAdmin.waiting.dismissed": "O pedido de {name} foi dispensado",
+  "studioAdmin.waiting.grantFailed": "Não conseguimos dar acesso ao Studio",
+  "studioAdmin.waiting.dismissFailed": "Não conseguimos dispensar o pedido",
+  "studioAdmin.waiting.empty": "Ninguém está à espera do Studio",
+  "studioAdmin.waiting.showMore": "Mostrar mais pedidos",
+  "studioAdmin.waiting.loadError":
+    "Não conseguimos carregar quem está à espera do Studio",
   // ── Acesso antecipado (2026-10-20) ─────────────────────────────────────────
   // Acesso por pessoa a uma funcionalidade ainda por lançar. A secção da
   // gaveta de membro (`earlyAccess.drawer.*`, `earlyAccess.row.*`) e a lista

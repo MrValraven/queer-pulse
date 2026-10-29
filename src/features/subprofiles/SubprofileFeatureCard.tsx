@@ -11,6 +11,7 @@ import { SubprofileAvailability } from "./SubprofileAvailability";
 import { SubprofileSocialRow } from "./SubprofileSocialRow";
 import { SubprofileOwnerBadges } from "./SubprofileOwnerBadges";
 import { SubprofileCardFooter } from "./SubprofileCardFooter";
+import { PersonaFoundingBadge } from "./PersonaFoundingBadge";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
 import type { SubprofileStatus, Visibility } from "./api/subprofiles.api";
 import styles from "./SubprofileShowcase.module.css";
@@ -183,6 +184,10 @@ export function SubprofileFeatureCard({
                 <span className={styles.featureKind}>
                   {t(KIND_LABEL_KEYS[persona.kind])}
                 </span>
+                <PersonaFoundingBadge
+                  subprofileId={persona.id}
+                  isFoundingArtist={persona.isFoundingArtist}
+                />
                 {persona.tagline && (
                   <>
                     {" \u00b7 "}

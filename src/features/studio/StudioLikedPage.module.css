@@ -38,3 +38,100 @@
   --jade: var(--studio-accent-text);
   --jade-rgb: var(--accent-rgb);
 }
+
+/* The genre chips under the search and the order. The row itself is
+   StudioBrowse's `.chips` (one line that scrolls sideways on a phone, edge
+   fades, wrapped on a wider screen with a mouse); its foot margin closes up
+   here so the list starts the toolbar's distance below. */
+.genres > ul {
+  margin-block-end: 12px;
+}
+
+/* Each chip is a ghost sm Button in Studio's colours. The doubled class and
+   the attribute outrank the Button's own ghost rules, the dark theme's
+   `[data-theme="dark"] .ghost` among them, whatever order the modules load
+   in; the hover rules carry the Button's :not() tail for the same reason. */
+.genreChip.genreChip[aria-pressed] {
+  gap: 0;
+  border: 1px solid var(--studio-edge);
+  background: transparent;
+  color: var(--studio-text);
+  touch-action: manipulation;
+}
+
+/* The picked genre inverts in each theme, the Studio's selected-chip look,
+   so it reads at a glance on light and dark. */
+.genreChip.genreChip[aria-pressed="true"] {
+  border-color: var(--studio-text);
+  background: var(--studio-text);
+  color: var(--studio-surface);
+}
+
+@media (hover: hover) {
+  .genreChip.genreChip[aria-pressed]:hover:not(:disabled):not(
+      [aria-disabled="true"]
+    ) {
+    border-color: var(--studio-text);
+    background: var(--studio-wash-2);
+    color: var(--studio-text);
+  }
+
+  .genreChip.genreChip[aria-pressed="true"]:hover:not(:disabled):not(
+      [aria-disabled="true"]
+    ) {
+    background: var(--studio-text);
+    color: var(--studio-surface);
+  }
+}
+
+/* The X on the picked chip grows in from no width; the clip keeps it from
+   spilling while it moves, and its gap travels with it. */
+.genreChipIcon {
+  display: inline-flex;
+  flex: none;
+  overflow: hidden;
+}
+
+.genreChipIcon > svg {
+  flex: none;
+  margin-inline-end: 6px;
+}
+
+/* Each chip's count, read from every like, so a search never moves it. */
+.genreCount {
+  margin-inline-start: 7px;
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  background: var(--studio-wash-2);
+  color: var(--studio-text-muted);
+  font-size: var(--text-11);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.genreChip[aria-pressed="true"] .genreCount {
+  background: color-mix(in srgb, var(--studio-surface) 22%, transparent);
+  color: inherit;
+}
+
+/* While a genre is picked, the tracklist holds at least a screen's height:
+   a short filtered list then never makes the page shorter than where the
+   member has scrolled, so the chips stay under the finger. */
+.tracklist[data-genre-held] {
+  min-height: 100svh;
+}
+
+/* "Nothing in Folk matches" with "Show all genres" beside it, wrapping
+   under it on a phone. The line keeps the playlist's muted no-match look;
+   the row carries its spacing. */
+.noMatchInGenre {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 8px 0 24px;
+}
+
+.noMatchInGenre > p {
+  margin: 0;
+}

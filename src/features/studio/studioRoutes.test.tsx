@@ -44,12 +44,12 @@ const live = { demoMode: false, isStudioAccessPending: false };
 
 describe("studioRoutes", () => {
   it("keeps the demo showcase pages in demo mode", () => {
-    renderAt("/studio/payouts", {
+    renderAt("/studio/live", {
       demoMode: true,
       hasStudioAccess: true,
       isStudioAccessPending: false,
     });
-    expect(screen.getByText("StudioPayoutsPage")).toBeInTheDocument();
+    expect(screen.getByText("StudioLivePage")).toBeInTheDocument();
   });
 
   it("shows the landing to a live member without a grant", () => {
@@ -84,7 +84,7 @@ describe("studioRoutes", () => {
   });
 
   it("redirects a deferred page to Studio home", () => {
-    renderAt("/studio/payouts", { ...live, hasStudioAccess: true });
+    renderAt("/studio/live", { ...live, hasStudioAccess: true });
     expect(screen.getByText("StudioPage")).toBeInTheDocument();
   });
 
@@ -237,5 +237,44 @@ describe("studioRoutes", () => {
     scene.unmount();
     renderAt("/studio/credits", demo);
     expect(screen.getByText("StudioCreditsPage")).toBeInTheDocument();
+  });
+
+  it("opens Payments to confirm for a granted member and in the demo", () => {
+    const granted = renderAt("/studio/payments", {
+      ...live,
+      hasStudioAccess: true,
+    });
+    expect(screen.getByText("StudioPaymentsPage")).toBeInTheDocument();
+    granted.unmount();
+    renderAt("/studio/payments?tab=sales", {
+      demoMode: true,
+      hasStudioAccess: true,
+      isStudioAccessPending: false,
+    });
+    expect(screen.getByText("StudioPaymentsPage")).toBeInTheDocument();
+  });
+
+  it("keeps Payments to confirm behind the grant", () => {
+    renderAt("/studio/payments", { ...live, hasStudioAccess: false });
+    expect(screen.queryByText("StudioPaymentsPage")).toBeNull();
+    expect(screen.getByText("StudioLandingPage")).toBeInTheDocument();
+  });
+});
+
+// Payouts were retired for direct payments: the old address lands on
+// Payments in both modes.
+describe("studioRoutes for the retired payouts address", () => {
+  it("sends it to Payments in demo mode", () => {
+    renderAt("/studio/payouts", {
+      demoMode: true,
+      hasStudioAccess: true,
+      isStudioAccessPending: false,
+    });
+    expect(screen.getByText("StudioPaymentsPage")).toBeInTheDocument();
+  });
+
+  it("sends it to Payments for a granted member", () => {
+    renderAt("/studio/payouts", { ...live, hasStudioAccess: true });
+    expect(screen.getByText("StudioPaymentsPage")).toBeInTheDocument();
   });
 });

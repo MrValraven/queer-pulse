@@ -103,20 +103,25 @@ describe("Bandcamp artist subdomains", () => {
     );
   });
 
-  it("keeps every other Bandcamp value as before", () => {
-    expect(socialHref("bandcamp", "marianasol")).toBe(
-      "https://bandcamp.com/marianasol",
+  it("links a bare handle to the artist subdomain", () => {
+    expect(socialHref("bandcamp", "almenaramusic")).toBe(
+      "https://almenaramusic.bandcamp.com",
     );
     expect(socialHref("bandcamp", "@marianasol")).toBe(
-      "https://bandcamp.com/marianasol",
+      "https://marianasol.bandcamp.com",
     );
+    expect(socialDisplayLabel("bandcamp", "marianasol")).toBe(
+      "marianasol.bandcamp.com",
+    );
+  });
+
+  it("keeps a pasted bandcamp.com path as written", () => {
     expect(socialHref("bandcamp", "bandcamp.com/marianasol")).toBe(
       "https://bandcamp.com/marianasol",
     );
     expect(socialHref("bandcamp", "www.bandcamp.com/marianasol")).toBe(
       "https://bandcamp.com/marianasol",
     );
-    expect(socialDisplayLabel("bandcamp", "marianasol")).toBe("marianasol");
     expect(
       socialDisplayLabel("bandcamp", "https://bandcamp.com/marianasol"),
     ).toBe("marianasol");

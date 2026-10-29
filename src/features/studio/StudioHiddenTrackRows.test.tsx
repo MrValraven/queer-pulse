@@ -35,6 +35,7 @@ const releaseCard: StudioReleaseCardDTO = {
   },
   publishedAt: "2026-04-12T10:00:00.000Z",
   genre: null,
+  genres: [],
   mood: null,
   scene: null,
 };

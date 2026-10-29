@@ -12,6 +12,7 @@ import {
   CREDENTIAL_PHOTO_SECTIONS,
   FIELD_META,
   ITEM_LINKS_SECTIONS,
+  POSTER_IMAGE_SECTIONS,
   SECTION_IMAGE_PLACEHOLDER_KEYS,
   itemFieldMeta,
 } from "./subprofileEditor.data";
@@ -252,6 +253,7 @@ export function SubprofileItemDrawerFields({
           <ImageUploadField
             value={draft.imageUrl}
             kind="work-image"
+            isPosterAware={POSTER_IMAGE_SECTIONS.has(draft.section)}
             onChange={(imageUrl) =>
               onPatch(
                 isBodyPhoto

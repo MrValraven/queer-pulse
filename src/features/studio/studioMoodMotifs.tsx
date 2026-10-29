@@ -44,7 +44,6 @@ const RAIN_DROPS = Array.from({ length: 24 }, (_cell, index) => {
 });
 const DEFIANT_CHEVRONS = [52, 64, 76, 88];
 const FLAME_SCALES = [1, 0.7, 0.42];
-const HEAT_LINES = [72, 90, 108, 126, 144];
 const RIPPLE_RADII = [12, 24, 36, 50];
 
 export const STUDIO_MOOD_MOTIF: Record<StudioMood, ReactElement> = {
@@ -213,29 +212,6 @@ export const STUDIO_MOOD_MOTIF: Record<StudioMood, ReactElement> = {
       <circle cx={92} cy={74} r={1.4} fill="currentColor" stroke="none" />
     </>
   ),
-  sweaty: (
-    <>
-      {HEAT_LINES.map((lineX) => (
-        <path
-          key={lineX}
-          d={`M${lineX} 104 C${lineX - 8} 90 ${lineX + 8} 80 ${lineX} 70 S${lineX - 8} 54 ${lineX} 48`}
-          strokeWidth={2}
-          opacity={0.7}
-        />
-      ))}
-      <path
-        d="M58 64 C64 74 68 80 68 86 a10 10 0 0 1 -20 0 C48 80 52 74 58 64 Z"
-        fill="currentColor"
-        stroke="none"
-      />
-      <path
-        className={art.shade}
-        d="M100 60 C104 66 106 70 106 74 a6 6 0 0 1 -12 0 C94 70 96 66 100 60 Z"
-        fill="currentColor"
-        stroke="none"
-      />
-    </>
-  ),
   calm: (
     <>
       <line x1={-4} y1={58} x2={164} y2={58} strokeWidth={1} opacity={0.6} />
@@ -251,32 +227,6 @@ export const STUDIO_MOOD_MOTIF: Record<StudioMood, ReactElement> = {
           opacity={1 - radius / 70}
         />
       ))}
-    </>
-  ),
-  playful: (
-    <>
-      <path
-        d="M54 88 C62 66 80 66 76 80 C72 94 92 94 96 76 C100 58 120 62 116 76 C112 92 138 94 146 70"
-        strokeWidth={3.4}
-      />
-      <rect
-        x={128}
-        y={50}
-        width={10}
-        height={10}
-        rx={2}
-        transform="rotate(24 133 55)"
-        fill="currentColor"
-        stroke="none"
-      />
-      <path
-        className={art.shade}
-        d="M100 50 L112 68 L90 68 Z"
-        fill="currentColor"
-        stroke="none"
-      />
-      <circle cx={150} cy={92} r={5} fill="currentColor" stroke="none" />
-      <circle cx={34} cy={78} r={3} fill="currentColor" stroke="none" />
     </>
   ),
 };

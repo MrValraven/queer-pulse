@@ -48,7 +48,7 @@ describe("useRemoveStudioSupporter cache", () => {
     );
   });
 
-  it("removes the artist from the cached Artists you support list", async () => {
+  it("removes the artist from the cached Artists who see your name list", async () => {
     const rows = toSupportingViews(demoStudioListeningSupporting());
     const [removedRow, ...keptRows] = rows;
     expect(removedRow).toBeDefined();

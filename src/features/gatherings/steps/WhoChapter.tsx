@@ -6,6 +6,7 @@ import {
 } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { AudienceScopeField } from "../AudienceScopeField";
+import { useEventHostScope } from "../eventHostScope";
 import { Field, FieldRow, SwitchRow } from "../CreateGatheringFields";
 import { LANGS } from "../createGathering.data";
 import {
@@ -26,9 +27,14 @@ import styles from "./WhoChapter.module.css";
  * Chapter 3, "Who is it for?": capacity, language, cost, co-hosts, the business that runs it, the
  * waitlist, attendee-count and Go together switches, when RSVPs close, the
  * community it is posted to, the guest communities and who can see it. Nothing here is required.
+ *
+ * An event QueerPulse hosts has no community, business, guest communities or
+ * wizard co-hosts, and gets Go together by default, so those fields are left
+ * out for the whole visit.
  */
 export function WhoChapter({ form }: { form: GatheringForm }) {
   const { t } = useTranslation();
+  const { isHouseEvent } = useEventHostScope();
   const fieldId = useId();
   const languageLabelId = `${fieldId}-language`;
   const rsvpCutoffId = `${fieldId}-rsvp-cutoff`;
@@ -54,8 +60,8 @@ export function WhoChapter({ form }: { form: GatheringForm }) {
         />
       </Field>
       <CostKindField form={form} />
-      <CohostPickerField form={form} />
-      <RunByField form={form} />
+      {!isHouseEvent && <CohostPickerField form={form} />}
+      {!isHouseEvent && <RunByField form={form} />}
       <SwitchRow
         variant="compact"
         title={t("gatherings:create.v2.who.waitlistTitle")}
@@ -75,13 +81,15 @@ export function WhoChapter({ form }: { form: GatheringForm }) {
       />
       {/* Switched on right after publish; the cutoff, questions and meeting
           point live on the manage page. */}
-      <SwitchRow
-        variant="compact"
-        title={t("goTogether:host.create.title")}
-        description={t("goTogether:host.create.description")}
-        isChecked={form.goTogetherEnabled}
-        onChange={form.setGoTogetherEnabled}
-      />
+      {!isHouseEvent && (
+        <SwitchRow
+          variant="compact"
+          title={t("goTogether:host.create.title")}
+          description={t("goTogether:host.create.description")}
+          isChecked={form.goTogetherEnabled}
+          onChange={form.setGoTogetherEnabled}
+        />
+      )}
       <FieldRow>
         <Field
           label={t("gatherings:create.v2.who.rsvpCutoffLabel")}
@@ -100,7 +108,7 @@ export function WhoChapter({ form }: { form: GatheringForm }) {
             }}
           />
         </Field>
-        {myCommunityOptions.length > 0 && (
+        {!isHouseEvent && myCommunityOptions.length > 0 && (
           <Field
             label={t("gatherings:create.v2.who.communityLabel")}
             htmlFor={communityId}
@@ -131,9 +139,11 @@ export function WhoChapter({ form }: { form: GatheringForm }) {
       </FieldRow>
       {/* Under the community picker, for the hosts who see that picker: a
           guest needs a lead to join. */}
-      <Collapse isOpen={myCommunityOptions.length > 0}>
-        <GuestCommunitiesWizardField form={form} />
-      </Collapse>
+      {!isHouseEvent && (
+        <Collapse isOpen={myCommunityOptions.length > 0}>
+          <GuestCommunitiesWizardField form={form} />
+        </Collapse>
+      )}
       <AudienceScopeField
         fieldId={`${fieldId}-audience`}
         value={form.audienceScope}

@@ -39,6 +39,7 @@ const card = {
   artist,
   publishedAt: null,
   genre: null,
+  genres: [],
   mood: null,
   scene: null,
 };
@@ -368,5 +369,60 @@ describe("track writes and the listening caches", () => {
       loudnessLufs: null,
       peakDb: null,
     });
+  });
+});
+
+describe("price on a track PATCH", () => {
+  it("patches the owner row's price and invalidates the offers", async () => {
+    const { queryClient, wrapper } = setup(true);
+    const invalidate = vi.spyOn(queryClient, "invalidateQueries");
+    expect(ownerRow(queryClient, true)?.price).toBeNull();
+    const { result } = renderHook(() => useUpdateStudioTrack(), { wrapper });
+    await act(() =>
+      result.current.mutateAsync({
+        trackId: "t1",
+        releaseId: "r1",
+        body: { price: { mode: "fixed", amountCents: 150 } },
+      }),
+    );
+    expect(ownerRow(queryClient, true)?.price).toEqual({
+      mode: "fixed",
+      amountCents: 150,
+    });
+    const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
+    expect(keys).toContainEqual(studioKeys.offersAll(true));
+    expect(keys).toContainEqual(["studio", "paymentMethods", true]);
+  });
+
+  it("takes the owner row off sale on null and leaves the offers alone without a price", async () => {
+    const { queryClient, wrapper } = setup(true);
+    const { result } = renderHook(() => useUpdateStudioTrack(), { wrapper });
+    await act(() =>
+      result.current.mutateAsync({
+        trackId: "t1",
+        releaseId: "r1",
+        body: { price: { mode: "fixed", amountCents: 150 } },
+      }),
+    );
+    const invalidate = vi.spyOn(queryClient, "invalidateQueries");
+    await act(() =>
+      result.current.mutateAsync({
+        trackId: "t1",
+        releaseId: "r1",
+        body: { price: null },
+      }),
+    );
+    expect(ownerRow(queryClient, true)?.price).toBeNull();
+    invalidate.mockClear();
+    await act(() =>
+      result.current.mutateAsync({
+        trackId: "t1",
+        releaseId: "r1",
+        body: { title: "Tide" },
+      }),
+    );
+    const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
+    expect(keys).not.toContainEqual(studioKeys.offersAll(true));
+    expect(keys).not.toContainEqual(["studio", "paymentMethods", true]);
   });
 });

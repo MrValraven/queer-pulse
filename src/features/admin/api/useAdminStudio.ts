@@ -1,6 +1,7 @@
 import {
   useQuery,
   useQueryClient,
+  type InfiniteData,
   type QueryClient,
 } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
@@ -15,6 +16,7 @@ import type {
 import { demoWithdrawalStatus } from "../../studio/api/studioDemoMutations";
 import { studioKeys } from "../../studio/api/studioQueryKeys";
 import { DEMO_STUDIO_GRANTS } from "../adminStudio.data";
+import { ADMIN_STUDIO_KEY } from "./StudioAdminCurationHooks";
 import {
   getMemberStudioAccess,
   getStaffStudioRelease,
@@ -24,9 +26,14 @@ import {
   takeDownStudioRelease,
 } from "./adminStudio.api";
 import { useDemoAwareMutation } from "./demoAwareMutation";
+import {
+  accessRequestPagesWithout,
+  type AdminStudioAccessRequestPageDTO,
+} from "./studioAccessRequestsAdmin.api";
 
-const accessKey = (demoMode: boolean, memberId: string) =>
+export const memberStudioAccessKey = (demoMode: boolean, memberId: string) =>
   ["admin-members", "studio-access", demoMode, memberId] as const;
+const accessKey = memberStudioAccessKey;
 
 export function useMemberStudioAccess(memberId: string) {
   const { demoMode } = useDemoMode();
@@ -59,8 +66,26 @@ export function useGrantStudioAccess() {
       grantedBy: null,
     }),
     live: ({ memberId }) => grantMemberStudioAccess(memberId),
-    onSuccess: (grant, { memberId }) =>
-      queryClient.setQueryData(accessKey(demoMode, memberId), grant),
+    onSuccess: (grant, { memberId }) => {
+      queryClient.setQueryData(accessKey(demoMode, memberId), grant);
+      // A grant files away the member's Waiting for Studio request (the
+      // server deletes it in the same transaction), so the list loses the
+      // row. Live reads the list again; the demo drops the member's rows
+      // from the cache, since a re-read would answer the fixture.
+      if (demoMode)
+        queryClient.setQueriesData<
+          InfiniteData<AdminStudioAccessRequestPageDTO>
+        >({ queryKey: [ADMIN_STUDIO_KEY, "access-requests"] }, (data) =>
+          accessRequestPagesWithout(
+            data,
+            (request) => request.member.id === memberId,
+          ),
+        );
+      else
+        void queryClient.invalidateQueries({
+          queryKey: [ADMIN_STUDIO_KEY, "access-requests"],
+        });
+    },
   });
 }
 
@@ -102,6 +127,7 @@ function demoReleaseIn(
     },
     description: null,
     genre: null,
+    genres: [],
     mood: null,
     scene: null,
     status,

@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
+import { QueryClient } from "@tanstack/react-query";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { createStudioPlayerTestValue } from "../../test/studioPlayerTestValue";
@@ -8,6 +9,12 @@ import {
   type StudioPlayerValue,
 } from "./player/studioPlayerContext";
 import { StudioAlbumTracklist } from "./StudioAlbumTracklist";
+import type { StudioLoadState } from "./api/studioLoadState";
+import {
+  toOfferView,
+  type StudioOfferView,
+} from "./api/studioPurchases.adapters";
+import type { StudioTrackOfferDTO } from "./api/studioPurchases.types";
 
 const playback = vi.hoisted(() => ({ hideExplicit: false }));
 vi.mock("./api/useStudioPlaybackPreferences", async (importOriginal) => ({
@@ -15,6 +22,40 @@ vi.mock("./api/useStudioPlaybackPreferences", async (importOriginal) => ({
     typeof import("./api/useStudioPlaybackPreferences")
   >()),
   useStudioHideExplicit: () => playback.hideExplicit,
+}));
+
+// The release offer feeds the row menus; the track offer feeds the sheet
+// host. Both stay empty unless a test fills them.
+const offerMocks: {
+  releaseOffer: StudioOfferView | null;
+  trackOffer: StudioOfferView | null;
+  trackLoadState: StudioLoadState;
+} = vi.hoisted(() => ({
+  releaseOffer: null,
+  trackOffer: null,
+  trackLoadState: {
+    isLoading: true,
+    isError: false,
+    isRetrying: false,
+    isNotFound: false,
+    isWithdrawn: false,
+    isTrackWithheld: false,
+    reason: "unknown",
+    retry: () => undefined,
+  },
+}));
+vi.mock("./api/useStudioOffer", () => ({
+  useStudioOffer: (
+    kind: "release" | "track",
+    _itemId: string | null,
+    options: { isEnabled: boolean },
+  ) => {
+    if (!options.isEnabled)
+      return { offer: null, loadState: offerMocks.trackLoadState };
+    return kind === "release"
+      ? { offer: offerMocks.releaseOffer, loadState: offerMocks.trackLoadState }
+      : { offer: offerMocks.trackOffer, loadState: offerMocks.trackLoadState };
+  },
 }));
 
 const release = toReleaseView({
@@ -34,6 +75,7 @@ const release = toReleaseView({
   },
   description: null,
   genre: null,
+  genres: [],
   mood: null,
   scene: null,
   status: "published",
@@ -196,5 +238,200 @@ describe("StudioAlbumTracklist: hidden explicit tracks", () => {
     expect(
       screen.queryByText("Hidden by your settings"),
     ).not.toBeInTheDocument();
+  });
+});
+
+const LUA_ARTIST = {
+  id: "demo-persona-lua-cardoso",
+  handle: "lua-cardoso",
+  name: "Lua Cardoso",
+  kind: "musician",
+  avatarUrl: null,
+} as const;
+
+const luaRelease = toReleaseView({
+  id: "demo-release-lua-ultimo-eletrico",
+  title: "Último elétrico",
+  type: "ep",
+  coverUrl: null,
+  releasedOn: "2026-04-12",
+  trackCount: 3,
+  totalDurationSeconds: 668,
+  artist: LUA_ARTIST,
+  description: null,
+  genre: null,
+  genres: [],
+  mood: null,
+  scene: null,
+  status: "published",
+  publishedAt: null,
+  isOwner: false,
+  rightsConfirmedAt: null,
+  takedownReason: null,
+  sceneId: null,
+  personaCredits: [],
+  tracks: [
+    {
+      id: "demo-track-lua-01",
+      position: 1,
+      title: "Paragem",
+      durationSeconds: 184,
+      isExplicit: false,
+      hasAudio: true,
+    },
+    {
+      id: "demo-track-lua-02",
+      position: 2,
+      title: "Bilhete",
+      durationSeconds: 221,
+      isExplicit: false,
+      hasAudio: true,
+    },
+    {
+      id: "demo-track-lua-03",
+      position: 3,
+      title: "Fim da linha",
+      durationSeconds: 263,
+      isExplicit: false,
+      hasAudio: true,
+    },
+  ],
+});
+
+function luaTrackOffer(
+  trackId: string,
+  position: number,
+  title: string,
+  state: string,
+): StudioTrackOfferDTO {
+  return {
+    trackId,
+    position,
+    title,
+    price: { mode: "fixed", amountCents: 100 },
+    state,
+    refusalCode: null,
+    pendingPurchaseId: state === "pending" ? "demo-purchase-pending" : null,
+    ownedPurchaseId: null,
+  };
+}
+
+function luaOffer(
+  kind: "release" | "track",
+  trackOffers: StudioTrackOfferDTO[],
+): StudioOfferView {
+  const offer = toOfferView({
+    item: {
+      kind,
+      title: kind === "release" ? "Último elétrico" : "Paragem",
+      releaseId: "demo-release-lua-ultimo-eletrico",
+      trackId: kind === "release" ? null : "demo-track-lua-01",
+      releaseType: "ep",
+      coverUrl: null,
+      isAvailable: true,
+    },
+    artist: LUA_ARTIST,
+    price: { mode: "fixed", amountCents: kind === "release" ? 500 : 100 },
+    viewer: {
+      state: "can_buy",
+      refusalCode: null,
+      pendingPurchase: null,
+      ownedPurchase: null,
+    },
+    paymentMethods: [],
+    identityOptions: [],
+    trackOffers,
+  });
+  if (offer === null) throw new Error("test offer must resolve");
+  return offer;
+}
+
+/** Renders Lua's EP and returns a rerender that builds fresh elements on
+ *  the same query client, so the sheet host reads the offer holder again. */
+function renderLuaTracklist() {
+  const value: StudioPlayerValue = createStudioPlayerTestValue();
+  const queryClient = new QueryClient();
+  const buildTree = () => (
+    <TestProviders queryClient={queryClient}>
+      <StudioPlayerContext.Provider value={value}>
+        <StudioAlbumTracklist release={luaRelease} />
+      </StudioPlayerContext.Provider>
+    </TestProviders>
+  );
+  const { rerender } = render(buildTree());
+  return () => rerender(buildTree());
+}
+
+async function openRowMenu(title: string) {
+  fireEvent.click(
+    await screen.findByRole("button", { name: `More actions for ${title}` }),
+  );
+  return screen.findByRole("menu");
+}
+
+describe("StudioAlbumTracklist: buying a track from the row menu", () => {
+  afterEach(() => {
+    offerMocks.releaseOffer = null;
+    offerMocks.trackOffer = null;
+    offerMocks.trackLoadState = {
+      ...offerMocks.trackLoadState,
+      isLoading: true,
+    };
+  });
+
+  it("offers Buy track on a track for sale and opens its sheet after the wait", async () => {
+    offerMocks.releaseOffer = luaOffer("release", [
+      luaTrackOffer("demo-track-lua-01", 1, "Paragem", "can_buy"),
+    ]);
+    const rerenderTracklist = renderLuaTracklist();
+    const menu = await openRowMenu("Paragem");
+    fireEvent.click(
+      await within(menu).findByRole("menuitem", { name: "Buy track" }),
+    );
+    expect(
+      await screen.findByText("Loading the ways to pay"),
+    ).toBeInTheDocument();
+    offerMocks.trackOffer = luaOffer("track", []);
+    offerMocks.trackLoadState = {
+      ...offerMocks.trackLoadState,
+      isLoading: false,
+    };
+    rerenderTracklist();
+    expect(
+      await screen.findByRole("dialog", { name: "Buy Paragem" }),
+    ).toBeInTheDocument();
+  });
+
+  it("points a pending track to the buyer's purchases", async () => {
+    offerMocks.releaseOffer = luaOffer("release", [
+      luaTrackOffer("demo-track-lua-01", 1, "Paragem", "pending"),
+    ]);
+    renderLuaTracklist();
+    const menu = await openRowMenu("Paragem");
+    expect(
+      await within(menu).findByRole("menuitem", {
+        name: "Open your purchases",
+      }),
+    ).toHaveAttribute("href", "/studio/library?tab=purchases");
+    expect(
+      within(menu).queryByRole("menuitem", { name: "Buy track" }),
+    ).toBeNull();
+  });
+
+  it("leaves the buy item off a row with no track offer", async () => {
+    offerMocks.releaseOffer = luaOffer("release", [
+      luaTrackOffer("demo-track-lua-01", 1, "Paragem", "can_buy"),
+    ]);
+    renderLuaTracklist();
+    const menu = await openRowMenu("Bilhete");
+    expect(
+      await within(menu).findByRole("menuitem", { name: "Play next" }),
+    ).toBeInTheDocument();
+    expect(
+      within(menu).queryByRole("menuitem", { name: "Buy track" }),
+    ).toBeNull();
+    expect(
+      within(menu).queryByRole("menuitem", { name: "Open your purchases" }),
+    ).toBeNull();
   });
 });

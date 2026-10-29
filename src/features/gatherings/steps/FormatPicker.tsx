@@ -2,6 +2,7 @@ import { useId, useMemo, useState } from "react";
 import { normalizeSearchText } from "../../../shared/components/layout/adminNavMatching";
 import { RadioCardGroup, SearchInput } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useEventHostScope } from "../eventHostScope";
 import {
   formatsForFamily,
   findFamily,
@@ -56,9 +57,13 @@ function OtherFormatField({ form }: { form: GatheringForm }) {
  * The old step offered eight cards, of which one was "Other". A picnic, a
  * collage night and a run club had nowhere to go, so the hosts who would run
  * the warmest gatherings picked "Other" or left. Fifty-six cards would be a
- * wall, so they arrive behind nine families, with search across all of them
+ * wall, so they arrive behind ten families, with search across all of them
  * for the host who already knows the word (ruling R11 keeps this catalog and
  * dresses it in the v2 design's tile grid).
+ *
+ * A host scope with a fixed family (Music, for the events QueerPulse hosts)
+ * has no family row: its tiles show straight away and search stays inside
+ * that family.
  *
  * BOTH GROUPS ARE RADIOGROUPS. `RadioCardGroup` supplies `role="radiogroup"`,
  * `aria-checked`, roving tabindex and arrow-key movement; the visual is
@@ -69,6 +74,12 @@ export function FormatPicker({ form }: { form: GatheringForm }) {
   const { t } = useTranslation();
   const fieldId = useId();
   const [searchTerm, setSearchTerm] = useState("");
+  const { fixedFamily, isHouseEvent } = useEventHostScope();
+  const pickedFamily: GatheringFamily | "" = fixedFamily ?? form.family;
+  const searchableFormats = useMemo(
+    () => (fixedFamily ? formatsForFamily(fixedFamily) : GATHERING_FORMATS),
+    [fixedFamily],
+  );
 
   // Diacritics come off BOTH sides through the same helper the admin rail
   // searches with, so a host typing "convivio" in a hurry still finds
@@ -84,15 +95,15 @@ export function FormatPicker({ form }: { form: GatheringForm }) {
   // term or the language moves.
   const searchMatches = useMemo(() => {
     if (!isSearching) return [];
-    return GATHERING_FORMATS.filter((format) =>
+    return searchableFormats.filter((format) =>
       normalizeSearchText(t(format.nameKey)).includes(normalizedSearchTerm),
     );
-  }, [isSearching, normalizedSearchTerm, t]);
+  }, [isSearching, normalizedSearchTerm, searchableFormats, t]);
 
   const visibleFormats: readonly GatheringFormatEntry[] = isSearching
     ? searchMatches
-    : form.family
-      ? formatsForFamily(form.family)
+    : pickedFamily
+      ? formatsForFamily(pickedFamily)
       : [];
 
   const familyOptions = GATHERING_FAMILIES.map((family) => ({
@@ -130,7 +141,7 @@ export function FormatPicker({ form }: { form: GatheringForm }) {
     // has already said which kind of evening it is, and only the word for it
     // is missing. Hidden while searching, where there is no family to attach
     // it to.
-    ...(isSearching || !form.family
+    ...(isSearching || !pickedFamily
       ? []
       : [
           {
@@ -158,7 +169,9 @@ export function FormatPicker({ form }: { form: GatheringForm }) {
    *  the search results it comes from the format's own row. */
   const chooseFormat = (formatKey: string) => {
     const match = GATHERING_FORMATS.find((format) => format.key === formatKey);
-    const nextFamily: GatheringFamily | "" = match ? match.family : form.family;
+    const nextFamily: GatheringFamily | "" = match
+      ? match.family
+      : pickedFamily;
     if (!nextFamily) return;
     form.selectFormat(nextFamily, formatKey);
     setSearchTerm("");
@@ -177,7 +190,7 @@ export function FormatPicker({ form }: { form: GatheringForm }) {
     ? formatOptions.length === 0
       ? "gatherings:create.step1.searchEmpty"
       : null
-    : !form.family
+    : !pickedFamily
       ? "gatherings:create.step1.familyRequired"
       : !form.format
         ? "gatherings:create.step1.typeRequired"
@@ -192,7 +205,11 @@ export function FormatPicker({ form }: { form: GatheringForm }) {
         className={styles.search}
         value={searchTerm}
         onChange={setSearchTerm}
-        placeholder={t("gatherings:create.step1.searchPlaceholder")}
+        placeholder={t(
+          isHouseEvent
+            ? "admin:musicEvents.house.formatSearchPlaceholder"
+            : "gatherings:create.step1.searchPlaceholder",
+        )}
         ariaLabel={t("gatherings:create.step1.searchLabel")}
       />
 
@@ -200,7 +217,7 @@ export function FormatPicker({ form }: { form: GatheringForm }) {
           out, so the "Pick a format" row lands focus on a family chip, where
           the host can pick straight away. */}
       <div id={GATE_ANCHOR.type}>
-        {!isSearching && (
+        {!fixedFamily && !isSearching && (
           <Field
             label={t("gatherings:create.step1.familyLabel")}
             labelId={familyLabelId}

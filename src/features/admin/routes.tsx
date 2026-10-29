@@ -287,6 +287,18 @@ const AdminStatusIncidentsPage = lazyNamed(
   () => import("./AdminStatusIncidentsPage"),
   "AdminStatusIncidentsPage",
 );
+const AdminMusicEventsPage = lazyNamed(
+  () => import("./musicEvents/AdminMusicEventsPage"),
+  "AdminMusicEventsPage",
+);
+const AdminMusicEventNewPage = lazyNamed(
+  () => import("./musicEvents/AdminMusicEventNewPage"),
+  "AdminMusicEventNewPage",
+);
+const AdminMusicEventPage = lazyNamed(
+  () => import("./musicEvents/AdminMusicEventPage"),
+  "AdminMusicEventPage",
+);
 
 /**
  * What the public sees of QueerPulse, curated from admin: the landing page,
@@ -324,6 +336,29 @@ function quizshowTemplateRoutes() {
         path={routes.adminQuizshowTemplate}
         element={<AdminQuizshowTemplatePage />}
       />
+    </>
+  );
+}
+
+/** The music events QueerPulse hosts: the list, the create wizard and one
+ *  event's dashboard. `AdminMusicEventsController` guards them with
+ *  `RolesOrStaffGuard` and `@Roles(Admin)`, so an Admin or a holder of the
+ *  `music_manager_producer` grant gets in; authGate admits that grant through
+ *  its `CAPABILITY_ELEVATED_PATTERNS` entry for `routes.adminMusicEvents` and
+ *  everything under it. The "new" route sits before `:slug` for readability;
+ *  the router ranks the static segment first either way. */
+function musicEventRoutes() {
+  return (
+    <>
+      <Route
+        path={routes.adminMusicEvents}
+        element={<AdminMusicEventsPage />}
+      />
+      <Route
+        path={routes.adminMusicEventNew}
+        element={<AdminMusicEventNewPage />}
+      />
+      <Route path={routes.adminMusicEvent} element={<AdminMusicEventPage />} />
     </>
   );
 }
@@ -479,6 +514,7 @@ export function adminRoutes() {
       <Route path={routes.adminTopics} element={<TopicsAdminPage />} />
       <Route path={routes.adminStudio} element={<StudioAdminPage />} />
       {quizshowTemplateRoutes()}
+      {musicEventRoutes()}
       <Route
         path={routes.adminCommunityTagRequests}
         element={<AdminCommunityTagRequestsPage />}

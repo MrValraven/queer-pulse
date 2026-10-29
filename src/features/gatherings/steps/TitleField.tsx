@@ -3,6 +3,7 @@ import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { Field, TextInput } from "../CreateGatheringFields";
 import { GATE_ANCHOR } from "../createGathering.data";
+import { useEventHostScope } from "../eventHostScope";
 import type { GatheringForm } from "../useGatheringForm";
 import { titleSuggestions } from "./titleSuggestions";
 import { MAX_TITLE_LENGTH } from "./whatChapter.data";
@@ -25,13 +26,17 @@ export function TitleField({ form }: { form: GatheringForm }) {
   const suggestions = form.title.trim()
     ? []
     : titleSuggestions(form, { t, fmt });
+  // The member hint coaches with a supper club example. An event QueerPulse
+  // hosts shows a music title of its own in the field instead, and needs no
+  // coaching line under it.
+  const { isHouseEvent } = useEventHostScope();
 
   return (
     <Field
       label={t("gatherings:create.step1.titleLabel")}
       htmlFor={inputId}
       count={`${form.title.length}/${MAX_TITLE_LENGTH}`}
-      hint={t("gatherings:create.v2.what.titleHint")}
+      hint={isHouseEvent ? undefined : t("gatherings:create.v2.what.titleHint")}
       anchorId={GATE_ANCHOR.title}
     >
       <TextInput
@@ -40,9 +45,13 @@ export function TitleField({ form }: { form: GatheringForm }) {
         type="text"
         maxLength={MAX_TITLE_LENGTH}
         autoComplete="off"
-        placeholder={t("gatherings:create.step1.titlePlaceholder")}
+        placeholder={t(
+          isHouseEvent
+            ? "admin:musicEvents.house.titleExample"
+            : "gatherings:create.step1.titlePlaceholder",
+        )}
         aria-required={true}
-        aria-describedby={`${inputId}-hint`}
+        aria-describedby={isHouseEvent ? undefined : `${inputId}-hint`}
         value={form.title}
         onChange={(event) => form.setTitle(event.target.value)}
       />

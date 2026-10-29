@@ -7,7 +7,6 @@ import {
   FiBookOpen,
   FiCalendar,
   FiClipboard,
-  FiCreditCard,
   FiDisc,
   FiEye,
   FiFileText,
@@ -22,6 +21,7 @@ import {
   FiRadio,
   FiSettings,
   FiShield,
+  FiShoppingBag,
   FiUpload,
   FiUploadCloud,
   FiUsers,
@@ -40,9 +40,10 @@ export type StudioAccountMenuAudience =
 
 /** A live count beside a row's label. "review" is the staff queue's pair:
  *  claims and takedown disputes waiting for our team. "counterWindows" is
- *  the artist's claims they can still answer with a counter-notice. */
+ *  the artist's claims they can still answer with a counter-notice.
+ *  "salesPending" is the payments waiting for the artist to confirm. */
 export type StudioAccountMenuBadge =
-  "creditRequests" | "myClaims" | "review" | "counterWindows";
+  "creditRequests" | "myClaims" | "review" | "counterWindows" | "salesPending";
 
 export interface StudioAccountMenuItem {
   labelKey: string;
@@ -106,6 +107,13 @@ export const STUDIO_MENU_CREATOR_ITEMS: StudioAccountMenuItem[] = [
     badge: "creditRequests",
   },
   {
+    labelKey: "studio:purchase.inbox.nav",
+    to: routes.studioPayments,
+    icon: FiShoppingBag,
+    audience: "artist",
+    badge: "salesPending",
+  },
+  {
     labelKey: "studio:shell.menu.myClaims",
     to: studioClaimsPath(),
     icon: FiClipboard,
@@ -126,12 +134,6 @@ export const STUDIO_MENU_CREATOR_ITEMS: StudioAccountMenuItem[] = [
     to: routes.studioCalls,
     icon: FiVolume2,
     audience: "everyone",
-  },
-  {
-    labelKey: "studio:creator.nav.payouts",
-    to: routes.studioPayouts,
-    icon: FiCreditCard,
-    audience: "showcase",
   },
 ];
 

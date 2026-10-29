@@ -5,7 +5,7 @@ import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { buildDeals, buildLicences } from "./studioTerms.data";
+import { buildLicences } from "./studioTerms.data";
 import s from "./studioTerms.module.css";
 
 const checkIcon = (
@@ -35,24 +35,13 @@ const xIcon = (
   </svg>
 );
 
-/** Demo only: the co-op deal cards, the deed, the licences, the privacy
+/** Demo only: the deed, the licences, the privacy
  *  promise and the version line, under their original keys. */
 export function StudioTermsShowcase() {
   const { t } = useTranslation();
-  const deals = useMemo(() => buildDeals(), []);
   const licences = useMemo(() => buildLicences(t), [t]);
   return (
     <>
-      <div className={s.deal}>
-        {deals.map((deal, dealIndex) => (
-          <div key={dealIndex} className={s.dealCard}>
-            <div className={s.ic}>{deal.icon}</div>
-            <h3>{deal.title}</h3>
-            <p>{deal.body}</p>
-          </div>
-        ))}
-      </div>
-
       <section className={s.sec}>
         <div className={s.num}>{t("studio:terms.sec.deed.num")}</div>
         <h2>

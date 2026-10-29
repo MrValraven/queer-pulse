@@ -2,6 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { resetDemoCreditLedger } from "./api/studioDemoCreditLedger";
+import { resetDemoPurchases } from "./api/studioDemoPurchaseStore";
 import { StudioTrackPage } from "./StudioTrackPage";
 
 const TRACK_URL = "/studio/track?id=demo-track-cidade-dos-santos-06";
@@ -107,5 +108,55 @@ describe("StudioTrackPage: the Like heart", () => {
     expect(
       screen.queryByRole("button", { name: "Like Bairro antigo" }),
     ).not.toBeInTheDocument();
+  });
+});
+
+describe("StudioTrackPage: the buy card (demo)", () => {
+  beforeEach(() => resetDemoPurchases());
+
+  function renderTrack(trackId: string) {
+    render(
+      <TestProviders initialEntries={[`/studio/track?id=${trackId}`]}>
+        <StudioTrackPage />
+      </TestProviders>,
+    );
+  }
+
+  it("tells the owner of Mariana Sol why they cannot buy track six", async () => {
+    renderTrack("demo-track-cidade-dos-santos-06");
+    expect(
+      await screen.findByText(
+        "You are a member of this artist, so you cannot buy its music",
+      ),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /^Buy track/ })).toBeNull();
+  });
+
+  it("offers Buy track on a priced track of an EP the viewer has pending", async () => {
+    renderTrack("demo-track-lua-01");
+    expect(
+      await screen.findByRole("button", { name: /^Buy track/ }),
+    ).toBeInTheDocument();
+  });
+
+  it("shows no Tip pill and no checkout link on a demo track page", async () => {
+    renderTrack("demo-track-cidade-dos-santos-06");
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Carta para a santa",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /^Tip/ })).toBeNull();
+    const checkoutLinks = screen
+      .queryAllByRole("link")
+      .filter((link) => link.getAttribute("href") === "/studio/checkout");
+    expect(checkoutLinks).toHaveLength(0);
+  });
+
+  it("keeps the curator note and leaves the split card out", async () => {
+    renderTrack("demo-track-cidade-dos-santos-06");
+    expect(await screen.findByText("Curator's note")).toBeInTheDocument();
+    expect(screen.queryByText("Where €1 goes when you play this")).toBeNull();
   });
 });

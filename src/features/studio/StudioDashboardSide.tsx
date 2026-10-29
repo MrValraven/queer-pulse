@@ -5,9 +5,9 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ALBUM } from "./studioAlbum.data";
-import { DAY_MONTH, fixtureDate, WEEKDAY_DAY_MONTH } from "./studioFixtureDate";
+import { fixtureDate, WEEKDAY_DAY_MONTH } from "./studioFixtureDate";
 import s from "./creator.module.css";
-import { StudioEuroAmount } from "./StudioEuroAmount";
+import { studioPaymentsPath } from "./studioPaths";
 
 export function StudioDashboardSide() {
   const { t } = useTranslation();
@@ -70,7 +70,7 @@ export function StudioDashboardSide() {
               <FiArrowRight />
             </span>
           </Link>
-          <Link to={routes.studioPayouts} className={s.quickItem}>
+          <Link to={studioPaymentsPath()} className={s.quickItem}>
             <span className={s.quickIc}>
               <svg
                 viewBox="0 0 24 24"
@@ -82,12 +82,9 @@ export function StudioDashboardSide() {
               </svg>
             </span>
             <span className={s.quickNm}>
-              {t("studio:dashboard.side.quickActions.payouts.label")}
+              {t("studio:dashboard.side.quickActions.payments.label")}
               <small>
-                {t("studio:demo.dashboard.nextPayout", {
-                  amount: fmt.currency(2140),
-                  date: fmt.date(fixtureDate("2026-07-05"), DAY_MONTH),
-                })}
+                {t("studio:dashboard.side.quickActions.payments.hint")}
               </small>
             </span>
             <span className={s.quickArr} aria-hidden>
@@ -110,14 +107,12 @@ export function StudioDashboardSide() {
         <p>{t("studio:dashboard.side.deal.body")}</p>
         <ul className={s.sideList}>
           <li>
-            <span>{t("studio:dashboard.side.deal.perPlay.label")}</span>
-            <em>
-              <StudioEuroAmount value={0.05} />
-            </em>
+            <span>{t("studio:dashboard.side.deal.buys.label")}</span>
+            <em>{t("studio:dashboard.side.deal.buys.value")}</em>
           </li>
           <li>
-            <span>{t("studio:dashboard.side.deal.yourShare.label")}</span>
-            <em>80%+</em>
+            <span>{t("studio:dashboard.side.deal.platform.label")}</span>
+            <em>{t("studio:dashboard.side.deal.platform.value")}</em>
           </li>
           <li>
             <span>{t("studio:dashboard.side.deal.tips.label")}</span>

@@ -447,8 +447,9 @@ span.navIcon svg {
 /* Save bar */
 .saveBar {
   position: fixed;
-  /* Rests on the consent banner's top edge while it shows (0 otherwise). */
-  bottom: var(--consent-inset, 0px);
+  /* Rests on the consent banner's top edge while it shows, and above the
+     Studio player bar while one is mounted (0 otherwise). */
+  bottom: calc(var(--consent-inset, 0px) + var(--studio-player-inset, 0px));
   left: 260px;
   right: 0;
   background: var(--paper);
@@ -496,7 +497,7 @@ span.navIcon svg {
 /* Saved confirmation banner */
 .savedBar {
   position: fixed;
-  bottom: var(--consent-inset, 0px);
+  bottom: calc(var(--consent-inset, 0px) + var(--studio-player-inset, 0px));
   left: 260px;
   right: 0;
   background: var(--plum);

@@ -7,6 +7,8 @@ export interface UploadRadioCardOption<OptionId extends string> {
   label: ReactNode;
   /** A quiet second line, such as a persona's kind. */
   meta?: ReactNode;
+  /** The card shows but cannot be picked (aria-disabled on the shared group). */
+  isDisabled?: boolean;
 }
 
 /** The release step's single choices (persona, type) as Studio radio
@@ -38,6 +40,7 @@ export function StudioUploadRadioCards<OptionId extends string>({
       checkedClassName={s.radioCardOn}
       options={options.map((option) => ({
         id: option.id,
+        isDisabled: option.isDisabled,
         render: (
           <>
             <span className={s.radioDot} aria-hidden />

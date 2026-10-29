@@ -51,6 +51,9 @@
   min-height: 0;
   padding: 0 10px 14px;
   overflow-y: auto;
+  /* The body only scrolls up and down, so nothing laid out past its edge
+     can make it scroll sideways. */
+  overflow-x: hidden;
   overscroll-behavior: contain;
 }
 

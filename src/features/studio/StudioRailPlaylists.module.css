@@ -27,54 +27,86 @@
   min-width: 0;
 }
 
-/* Mirrors studio.module.css .railItem: a transparent left edge that turns
-   coral on the open playlist. */
+/* A rounded row inset 8px from the rail's edges, filled grey on the open
+   playlist. Open, a row is its cover then the name over its second line,
+   the cover on x 14 (8px inset plus 6px padding), where the folded strip
+   keeps it. */
 .row {
   position: relative;
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  align-items: center;
+  gap: 12px;
   min-width: 0;
-  padding: 8px 22px;
-  border-left: 2px solid transparent;
+  margin-inline: 8px;
+  padding: 6px;
+  border-radius: var(--radius-8);
   color: var(--studio-text);
   text-decoration: none;
   /* Long-press opens Studio's menu, so the browser's callout and a text
      selection stay away. */
   -webkit-touch-callout: none;
   user-select: none;
-  transition-property: background-color, border-left-color;
+  transition-property: background-color;
   transition-duration: var(--dur-base);
   transition-timing-function: var(--ease);
+  /* A drop target's fills: Daylight's neutral selected grey, and the faint
+     coral dark mode has always used. */
+  --rail-drop-fill: var(--studio-selected);
+  --rail-drop-cover-fill: var(--studio-selected);
+}
+:global([data-theme="dark"]) .row {
+  --rail-drop-fill: rgba(var(--accent-rgb), 0.14);
+  --rail-drop-cover-fill: rgba(var(--accent-rgb), 0.18);
 }
 @media (hover: hover) {
   .row:hover {
     background-color: var(--studio-wash-1);
   }
 }
-/* A dragged track hovers a playlist it can land in. */
+/* A dragged track hovers a playlist it can land in: the drop fill under a
+   thin coral outline. */
 .row[data-drop-over] {
-  border-left-color: var(--accent);
-  background-color: rgba(var(--accent-rgb), 0.14);
-  outline: 1px solid rgba(var(--accent-rgb), 0.5);
+  background-color: var(--rail-drop-fill);
+  outline: 1px solid color-mix(in srgb, var(--studio-accent) 50%, transparent);
   outline-offset: -1px;
 }
 .row[aria-busy="true"] {
   cursor: progress;
 }
 .row[aria-current="page"] {
-  border-left-color: var(--accent);
-  background: linear-gradient(
-    90deg,
-    rgba(var(--accent-rgb), 0.12),
-    transparent 60%
-  );
+  background: var(--studio-selected);
 }
 /* Drawn inset: the list's own scroll clip would cut an outward ring. */
 .row:focus-visible {
   outline: var(--focus-ring);
   outline-offset: calc(-2 * var(--focus-ring-offset));
   box-shadow: var(--ring-cream-inset);
+}
+
+/* The cover beside each open row: 48px with rounded corners. The folded
+   rail shrinks it to the strip's 44px tile below. */
+.cover {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+  border-radius: var(--radius-8);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition-property: outline-color, filter;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+/* The name over the second line, beside the cover. */
+.rowText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
 .name,
@@ -106,15 +138,29 @@
 }
 
 /* Loading, error, empty and Show more sit under the list, on the rows'
-   left inset. */
+   left inset. A placeholder row keeps a real row's shape: a cover block,
+   then two lines. */
 .skeleton {
   display: grid;
-  gap: 4px;
 }
 .skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 14px;
+}
+.skeletonCover {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+  border-radius: var(--radius-8);
+}
+.skeletonLines {
   display: grid;
+  flex: 1;
   gap: 6px;
-  padding: 8px 22px 8px 24px;
+  min-width: 0;
 }
 
 .state {
@@ -130,74 +176,79 @@
 }
 
 /* The folded rail: covers only, each a 44px tile on the strip's centre
-   column (x 14 to 58). The tiles hang from the start edge, so the list's
+   column (x 14 to 58), the same start edge as the open rail's covers. The tiles hang from the start edge, so the list's
    own scrollbar never pulls them off it, and the scrollbar stays hidden on
    the strip; the list still scrolls by wheel, touch and focus. */
 .root[data-compact] {
   padding: 4px 0 16px;
   scrollbar-width: none;
 }
-/* No edge bar and no full-width wash on the strip: the cover carries every
-   state. The 4px block padding leaves room for the cover's ring and keeps
+/* The strip's rows sit flush and keep their fill clear: the cover carries
+   every state. The 4px block padding leaves room for the cover's ring and keeps
    8px between tiles. */
 .row[data-compact] {
   align-items: flex-start;
+  margin-inline: 0;
   padding: 4px 0 4px 14px;
-  border-left-width: 0;
 }
-.compactCover {
-  position: relative;
-  display: block;
+.row[data-compact] .cover {
   width: 44px;
   height: 44px;
-  overflow: hidden;
   border-radius: var(--radius-12);
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  transition-property: outline-color, filter;
-  transition-duration: var(--dur-fast);
-  transition-timing-function: var(--ease);
 }
 @media (hover: hover) {
   .row[data-compact]:hover {
     background-color: transparent;
   }
-  .row[data-compact]:hover .compactCover {
+  .row[data-compact]:hover .cover {
     outline-color: var(--line-2);
     filter: brightness(1.08);
   }
 }
-/* The open playlist: a coral ring around its cover, 2px clear of it. */
+/* The open playlist: in dark, a coral ring around its cover, 2px clear of
+   it. In Daylight the cover sits on a grey rounded tile 4px wider each way,
+   the selected fill the nav tiles above use, and a drag over it brings the
+   coral ring back. */
 .row[data-compact][aria-current="page"] {
   background: none;
 }
-.row[data-compact][aria-current="page"] .compactCover {
-  outline-color: var(--accent);
+.row[data-compact][aria-current="page"] .cover {
+  outline-color: var(--studio-accent);
 }
-/* A dragged track over a folded playlist: the same ring and a faint coral
-   fill over the cover. */
+:global(:root:not([data-theme="dark"]))
+  .row[data-compact][aria-current="page"]:not([data-drop-over])
+  .cover {
+  outline: 4px solid var(--studio-selected);
+  outline-offset: 0;
+}
+/* A dragged track over a folded playlist: a coral ring around the cover
+   and the drop fill over it. */
 .row[data-compact][data-drop-over] {
   background-color: transparent;
   outline: none;
 }
-.row[data-compact][data-drop-over] .compactCover {
-  outline-color: var(--accent);
+.row[data-compact][data-drop-over] .cover {
+  outline-color: var(--studio-accent);
 }
-.row[data-compact][data-drop-over] .compactCover::after {
+.row[data-compact][data-drop-over] .cover::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(var(--accent-rgb), 0.18);
+  background: var(--rail-drop-cover-fill);
 }
-/* Liked songs, the rail's signature tile: a coral gradient under a light
-   heart, the same in both themes. */
+/* Liked songs, the rail's signature tile and its one coral cover: a coral
+   gradient under a light heart. The gradient starts on the theme's coral
+   (Daylight's fill coral, the brand coral in dark); the heart is white in
+   Daylight and cream in dark. */
 .likedCover {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
-  /* On the coral fill, light in both themes. */
+  background: linear-gradient(135deg, var(--studio-accent), var(--accent-deep));
+  color: rgba(255, 255, 255, 0.96);
+}
+:global([data-theme="dark"]) .likedCover {
   color: rgba(var(--cream-rgb), 0.96);
 }
 .likedCover svg {
@@ -205,14 +256,14 @@
   height: 18px;
 }
 /* A playlist or release with no cover yet: a quiet neutral tile, like the
-   folder tile, so the folded rail never shows a blank square. */
+   folder tile, so the rail never shows a blank square. */
 .fallbackCover {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
   background: var(--studio-wash-2);
-  color: var(--studio-text-muted);
+  color: var(--studio-rail-icon);
 }
 .fallbackCover svg {
   width: 18px;
@@ -222,7 +273,7 @@
 /* Busy: a dropped track being added, or Edit details reading the list. */
 .busy {
   position: absolute;
-  inset-inline-end: 12px;
+  inset-inline-end: 6px;
   inset-block-start: 50%;
   display: inline-flex;
   translate: 0 -50%;
@@ -285,11 +336,11 @@
 
 @media (prefers-reduced-motion: reduce) {
   .row,
-  .compactCover {
+  .cover {
     transition-property: none;
   }
 }
 :global(html[data-reduce-motion="true"]) .row,
-:global(html[data-reduce-motion="true"]) .compactCover {
+:global(html[data-reduce-motion="true"]) .cover {
   transition-property: none;
 }

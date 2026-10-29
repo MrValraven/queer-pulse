@@ -6,13 +6,12 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioTrackView } from "./api/studio.adapters";
 import { useStudioShowcase } from "./useStudioShowcase";
-import { SPLIT } from "./studioTrack.data";
-import { StudioEuroAmount } from "./StudioEuroAmount";
+import { StudioTrackBuyPanel } from "./StudioTrackBuyPanel";
 import { StudioPersonaCreditChips } from "./StudioPersonaCreditChips";
 import trackStyles from "./track.module.css";
 
-// Content: the curator's quote, the per-track split/credits breakdown and
-// the track/artist names are content, left English in both locales (§1).
+// Content: the curator's quote and the track/artist names are content,
+// left English in both locales (§1).
 const CURATOR_INITIALS = "SM";
 const CURATOR_NAME = "Sara Marques";
 const CURATOR_QUOTE_PRE =
@@ -21,9 +20,6 @@ const CURATOR_QUOTE_PRE =
   "arrangement that knows when to step out of the room. ";
 const CURATOR_QUOTE_EM = "Stay through the second verse.";
 const CURATOR_QUOTE_POST = '"';
-const TRACK_ARTIST_SHARE = 0.8;
-const TRACK_PLATFORM_SHARE = 0.2;
-const TRACK_ARTIST_NAME = "Mariana";
 const SHEET_ARTIST_NAME = "Mariana Sol";
 /** A standard licence code, the same in every locale. */
 const SHEET_LICENCE = "CC-BY-NC";
@@ -49,65 +45,6 @@ function StudioTrackCuratorNote() {
         <em>{CURATOR_QUOTE_EM}</em>
         {CURATOR_QUOTE_POST}
       </p>
-    </div>
-  );
-}
-
-function StudioTrackSplit() {
-  const { t } = useTranslation();
-  return (
-    <div className={trackStyles.sCard}>
-      <div className={trackStyles.sEb}>
-        {t("studio:track.sidebar.splitHeading")}
-      </div>
-      <div className={trackStyles.splitLead}>
-        <Translation
-          i18nKey="studio:track.sidebar.splitLead"
-          values={{ artist: TRACK_ARTIST_NAME }}
-          slots={{
-            artistShare: (
-              <StudioEuroAmount
-                value={TRACK_ARTIST_SHARE}
-                shouldEmphasizeNumber
-              />
-            ),
-            platformShare: (
-              <StudioEuroAmount
-                value={TRACK_PLATFORM_SHARE}
-                shouldEmphasizeNumber
-              />
-            ),
-          }}
-        />
-      </div>
-      <div className={trackStyles.splitBar}>
-        <span style={{ width: "80%", background: "var(--accent)" }} />
-        <span style={{ width: "8%", background: "var(--jade)" }} />
-        <span style={{ width: "8%", background: "var(--plum)" }} />
-        <span
-          style={{
-            width: "4%",
-            background: "rgba(var(--studio-ink-rgb), 0.2)",
-          }}
-        />
-      </div>
-      <div>
-        {SPLIT.map((r) => (
-          <div key={r.labelKey} className={trackStyles.splRow}>
-            <span className={trackStyles.splDot} style={{ background: r.c }} />
-            <span className={trackStyles.splK}>
-              <b>{r.name ?? t(r.labelKey)}</b>
-              {t(r.subKey)}
-            </span>
-            <span className={trackStyles.splV}>
-              <StudioEuroAmount
-                value={r.amount}
-                shouldEmphasizeNumber={r.isEmphasized}
-              />
-            </span>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
@@ -145,14 +82,14 @@ function StudioTrackSheetMini({ title }: { title: string }) {
 
 export function StudioTrackSidebar({ track }: { track: StudioTrackView }) {
   const { t } = useTranslation();
-  // The demo's curator note, split and lead sheet speak of a song, so they
-  // show on music tracks alone.
+  // The demo's curator note and lead sheet speak of a song, so they show
+  // on music tracks alone. The buy card comes first in both modes.
   const isMusicShowcase =
     useStudioShowcase() && track.release.format === "music";
   return (
     <div className={trackStyles.rSide}>
+      <StudioTrackBuyPanel track={track} />
       {isMusicShowcase && <StudioTrackCuratorNote />}
-      {isMusicShowcase && <StudioTrackSplit />}
       <div className={trackStyles.sCard}>
         <div className={trackStyles.sEb}>
           {t("studio:track.sidebar.creditsHeading")}

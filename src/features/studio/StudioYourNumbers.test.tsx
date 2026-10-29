@@ -43,6 +43,7 @@ const releaseCard = {
   },
   publishedAt: null,
   genre: null,
+  genres: [],
   mood: null,
   scene: null,
 };
@@ -200,13 +201,13 @@ describe("Your numbers (demo stats, live layout)", () => {
     expect(trackCells).toHaveLength(3);
     expect(trackCells[0]).toMatch(/^(\d[\d,]*|Fewer than 5)$/);
   });
-  it("shows the plays trend and Top supporters for Mariana", async () => {
+  it("shows the plays trend and Top listeners for Mariana", async () => {
     renderPage();
     expect(
       await screen.findByText("Per day, last 28 days"),
     ).toBeInTheDocument();
     expect(
-      await screen.findByRole("heading", { name: "Top supporters" }),
+      await screen.findByRole("heading", { name: "Top listeners" }),
     ).toBeInTheDocument();
   });
   it("leaves the Plays column out for a server that predates plays", () => {

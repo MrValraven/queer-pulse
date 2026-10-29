@@ -3,7 +3,7 @@ import type { Catalog } from "../../types";
 /**
  * Studio showcase: the mock content of Studio's demo-only pages (council,
  * live and broadcast, triage and flag review, programme and notifications,
- * press, payouts and receipt, off air, sheet store, sets, rights, withdrawn).
+ * press, receipt, off air, sheet store, sets, rights, withdrawn).
  * Studio has no live API for these pages, so their rosters, chat, notes and
  * labels ship in the bundle and are translated here. Proper nouns (artist,
  * people, venue, city, track, album and set names) and figures stay in the
@@ -18,12 +18,11 @@ export const studioShowcase: Catalog = {
   "council.member.slatesThisYear": "{total} this year",
   "council.member.slate.meta_one": "{date} · {count} track",
   "council.member.slate.meta_other": "{date} · {count} tracks",
-  "council.member.slate.payout.out": "<em>{amount}</em> out",
-  "council.member.slate.payout.paid_one": "<em>{count}</em> paid",
-  "council.member.slate.payout.paid_other": "<em>{count}</em> paid",
-  "council.member.slate.payout.grant": "<em>{amount}</em> grant",
+  "council.member.slate.listeners_one": "<em>{count}</em> listening",
+  "council.member.slate.listeners_other": "<em>{count}</em> listening",
+  "council.member.slate.grant": "<em>{amount}</em> grant",
   "council.member.stat":
-    "<em>{tracks}</em> tracks programmed · <em>{artists}</em> artists paid",
+    "<em>{tracks}</em> tracks programmed · <em>{artists}</em> artists featured",
 
   // ── Council: member roles (StudioCouncilPage) ──
   "council.member.role.djProgrammer": "DJ & programmer",
@@ -45,7 +44,7 @@ export const studioShowcase: Catalog = {
   "council.member.yaraReis.bio":
     "Keeper of the <em>Lisbon dyke-bar standards</em> archive: field recordings, bootlegs, the songs that only existed in one room on one night.",
   "council.member.yaraReis.note":
-    '"A recording held for clearance is a recording <em>waiting to pay the right person</em>, and it comes back to you the moment it does"',
+    '"A recording held for clearance is a recording <em>waiting to credit the right person</em>, and it comes back to you the moment it does"',
   "council.member.joaoRibeiro.bio":
     "The one who programs the warm-ups and the come-downs. Runs the <em>made here</em> strand for first releases by members.",
   "council.member.joaoRibeiro.note":
@@ -57,7 +56,7 @@ export const studioShowcase: Catalog = {
   "council.member.helenaPinto.bio":
     "Came up through community choirs and brought all of them with her. Programs the choral and the congregational. Elected at the last assembly.",
   "council.member.helenaPinto.note":
-    '"My first month on the council. I keep wanting to apologise for picking so much choir music. Then I remember: <em>nobody else will</em>, and the choirs need paying too"',
+    '"My first month on the council. I keep wanting to apologise for picking so much choir music. Then I remember: <em>nobody else will</em>, and the choirs need hearing too"',
 
   // ── Live: ribbon (StudioLivePage) ──
   "live.ribbon.duration": "{length} show, {elapsed} in",
@@ -71,14 +70,11 @@ export const studioShowcase: Catalog = {
   "live.set.who.playingNow": "{artist} · playing now · {elapsed} / {length}",
   "live.set.who.upNext": "{artist} · up next · starts in {countdown}",
   "live.set.who.planned": "{artist} · planned, may rotate",
-  "live.set.pay.toArtist": "€0.05 to {artist}",
-  "live.set.pay.perPlay": "€0.05 / play",
-  "live.set.pay.payingNow": "paying now",
   "live.set.pay.queuedBy": "queued by {curator}",
 
   // ── Home: Wednesday set rows (StudioPageSections) ──
-  "room.set.payNote.paid": "paid",
-  "room.set.payNote.paying": "paying",
+  "room.set.status.played": "played",
+  "room.set.status.playing": "playing now",
   "room.set.upNext": "up next",
 
   // ── Live: chat (StudioLiveChat) ──
@@ -123,7 +119,7 @@ export const studioShowcase: Catalog = {
   "broadcast.cues.unknownTitle": "A bootleg edit <em>(unknown)</em>",
   "broadcast.cues.unmatched": "Unmatched",
   "broadcast.cues.meta.matchedInCatalogue": "matched in catalogue",
-  "broadcast.cues.meta.payoutHeld": "payout held until cleared",
+  "broadcast.cues.meta.creditHeld": "credit held until cleared",
   "broadcast.cues.meta.matched": "matched",
 
   // ── Broadcast: live tips (StudioBroadcastConsole) ──
@@ -309,11 +305,11 @@ export const studioShowcase: Catalog = {
   "notifications.items.collectionAdd.meta_other":
     "“{track}” now appears in {count} council collections",
   "notifications.items.monthlyRecap.title_one":
-    "Your monthly recap is in: you paid <strong>{amount}</strong> to <em>{count} artist</em> in May",
+    "Your monthly recap is in: you bought <strong>{amount}</strong> of music from <em>{count} artist</em> in May",
   "notifications.items.monthlyRecap.title_other":
-    "Your monthly recap is in: you paid <strong>{amount}</strong> to <em>{count} artists</em> in May",
+    "Your monthly recap is in: you bought <strong>{amount}</strong> of music from <em>{count} artists</em> in May",
   "notifications.items.monthlyRecap.meta":
-    "{sustainer} sustainer · {direct} direct subscriptions · view the breakdown",
+    "Paid straight to the artists · your {sustainer} sustainer fee kept Studio running",
   "notifications.items.premiereSet.title_one":
     "<strong>{name}</strong> set a premiere: <em>{album}</em>, {count} track",
   "notifications.items.premiereSet.title_other":
@@ -345,42 +341,6 @@ export const studioShowcase: Catalog = {
   "press.contact.body":
     "Mariana handles her own press. No gatekeepers. <em>{email}</em> · usually replies within a day.",
 
-  // ── Payouts: hero (StudioPayoutsSections) ──
-  "payouts.hero.breakdownMonth": "July",
-
-  // ── Payouts: months and periods (StudioPayoutsSections, StudioPayoutsPage) ──
-  "payouts.month.jul": "Jul",
-  "payouts.month.jun": "Jun",
-  "payouts.month.may": "May",
-  "payouts.month.apr": "Apr",
-  "payouts.month.mar": "Mar",
-  "payouts.period.july2026": "July 2026",
-  "payouts.period.june2026": "June 2026",
-  "payouts.period.may2026": "May 2026",
-  "payouts.period.april2026": "April 2026",
-  "payouts.period.march2026": "March 2026",
-
-  // ── Payouts: recent payout rows (StudioPayoutsSections, StudioPayoutsPage) ──
-  "payouts.row.title": "{period} payout",
-  "payouts.row.titleWithNote": "{period} payout · <em>{note}</em>",
-  "payouts.row.note.pending": "pending",
-  "payouts.row.note.firstMonthOfCds": "first month of CDS",
-  "payouts.row.note.firstOnStudio": "first on Studio",
-  "payouts.meta.tips_one": "{count} tip",
-  "payouts.meta.tips_other": "{count} tips",
-  "payouts.meta.albumBuys_one": "{count} album buy",
-  "payouts.meta.albumBuys_other": "{count} album buys",
-  "payouts.meta.directSubs_one": "{count} direct sub",
-  "payouts.meta.directSubs_other": "{count} direct subs",
-  "payouts.meta.splits_one": "splits to {count} collaborator",
-  "payouts.meta.splits_other": "splits to {count} collaborators",
-
-  // ── Payouts: track breakdown (StudioPayoutsSections) ──
-  "payouts.breakdown.otherTracks": "Seven other tracks <em>· combined</em>",
-
-  // ── Payouts: preferences (StudioPayoutsSections) ──
-  "payouts.preferences.taxResidencyValue": "Portugal · NIF on file",
-
   // ── Receipt: card and note (StudioReceiptPage) ──
   "receipt.coverAlt": "{title} cover",
   "receipt.detail.cardSummary": "Saved card · ending {last4} ·",
@@ -389,7 +349,7 @@ export const studioShowcase: Catalog = {
 
   // ── Off air: hero (StudioOffAirHero) ──
   "offAir.hero.signoff.quote":
-    "\"We played fourteen songs and paid fourteen people so go to sleep, the catalogue stays open and we'll be back when the kettle's on\"",
+    "\"We played fourteen songs by fourteen people so go to sleep, the catalogue stays open and we'll be back when the kettle's on\"",
   "offAir.hero.signoff.attribution":
     "{name}, closing the Wednesday set at {time}",
   "offAir.hero.nextShow.title": "{show} with <em>{host}</em>",
@@ -431,7 +391,7 @@ export const studioShowcase: Catalog = {
   "set.hero.length_one": "{count} track · {minutes} min",
   "set.hero.length_other": "{count} tracks · {minutes} min",
   "set.hero.blurb":
-    "The hour between sunset and the second bottle. {name}'s fourth Vespertina set, recorded in one take in front of forty people, and now paying every artist in it on each listen.",
+    "The hour between sunset and the second bottle. {name}'s fourth Vespertina set, recorded in one take in front of forty people, with every artist in it credited by name.",
 
   // ── Set: saved item (StudioSetPage) ──
   "set.saved.title": "Studio set",
@@ -453,7 +413,7 @@ export const studioShowcase: Catalog = {
   "rights.release.format.liveRecording": "Live recording",
   "rights.release.trackCount_one": "{count} track",
   "rights.release.trackCount_other": "{count} tracks",
-  "rights.release.paid": "{amount} paid",
+  "rights.release.paid": "{amount} from buyers",
   "rights.release.clearanceDispute_one": "clearance dispute on {count} track",
   "rights.release.clearanceDispute_other":
     "clearance dispute on {count} tracks",
@@ -472,4 +432,10 @@ export const studioShowcase: Catalog = {
   "withdrawn.still.meta.collectionTracks_one": "Collection · {count} track",
   "withdrawn.still.meta.collectionTracks_other": "Collection · {count} tracks",
   "withdrawn.still.meta.artistCity": "Artist · {city}",
+  // ── Studio purchases: demo decline note and payment notes (studioDemoPurchases.data.ts) ──
+  "purchases.declineNote.rita":
+    "I received €2 and the single is €3. Send the rest and tap I've paid again",
+  "purchases.methodNote.mbway": "Add the reference code in the MB WAY message",
+  "purchases.methodNote.iban": "Transfers can take a working day to show up",
+  "purchases.methodLabel.bandcamp": "Pay on Bandcamp",
 };

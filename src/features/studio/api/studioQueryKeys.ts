@@ -37,6 +37,14 @@ export const studioKeys = {
     ["studio", "streamAnalysis", demoMode, trackId] as const,
   artist: (demoMode: boolean, subprofileId: string) =>
     ["studio", "artist", demoMode, subprofileId] as const,
+  /** Landing v2: the public landing read. */
+  landing: (demoMode: boolean) => ["studio", "landing", demoMode] as const,
+  /** Landing v2: the founding artists read (shelf and badge id set). */
+  foundingArtists: (demoMode: boolean) =>
+    ["studio", "foundingArtists", demoMode] as const,
+  /** Landing v2: a persona's Studio page requests on the dashboard. */
+  landingPreviews: (demoMode: boolean, subprofileId: string) =>
+    ["studio", "landingPreviews", demoMode, subprofileId] as const,
   search: (
     demoMode: boolean,
     query: string,
@@ -150,6 +158,11 @@ export const studioKeys = {
   // staff review queues are separate lists so a decision patches one of them
   // and re-reads the others.
   playback: (demoMode: boolean) => ["studio", "playback", demoMode] as const,
+  /** The account's Studio welcome (seen bit and picks). Live only: the demo
+   *  keeps its welcome in this device's storage. Carries the member id, so
+   *  one member's answer is never read for the next on a shared browser. */
+  welcome: (memberId: string | null) =>
+    ["studio", "welcome", memberId] as const,
   reviewReports: (demoMode: boolean) =>
     ["studio", "review", "reports", demoMode] as const,
   reviewDisputes: (demoMode: boolean) =>
@@ -195,6 +208,38 @@ export const studioKeys = {
   // `/about/press-kit`) that exists elsewhere in the app.
   studioPressKit: (demoMode: boolean, subprofileId: string) =>
     ["studio", "studioPressKit", demoMode, subprofileId] as const,
+  // Studio purchases (contract 10.2).
+  /** The buy panel's offer for one release or track. */
+  offer: (demoMode: boolean, kind: "release" | "track", itemId: string) =>
+    ["studio", "offer", demoMode, kind, itemId] as const,
+  /** Every offer in one mode, for a purchase write or a price change. */
+  offersAll: (demoMode: boolean) => ["studio", "offer", demoMode] as const,
+  /** The supporter wall of one release, cursor pages. */
+  releaseWall: (demoMode: boolean, releaseId: string) =>
+    ["studio", "releaseWall", demoMode, releaseId] as const,
+  /** Both lists in both modes, for a create, cancel or decision. */
+  myPurchasesAll: ["studio", "myPurchases"] as const,
+  /** The buyer's own purchases: every status, or confirmed for the account page. */
+  myPurchases: (demoMode: boolean, status: "all" | "confirmed") =>
+    ["studio", "myPurchases", demoMode, status] as const,
+  /** The buyer's wall choice for one purchase. */
+  purchaseWall: (demoMode: boolean, purchaseId: string) =>
+    ["studio", "purchaseWall", demoMode, purchaseId] as const,
+  /** One persona's ways to get paid. */
+  paymentMethods: (demoMode: boolean, subprofileId: string) =>
+    ["studio", "paymentMethods", demoMode, subprofileId] as const,
+  /** One persona's payments to confirm, oldest first. */
+  purchaseInbox: (demoMode: boolean, subprofileId: string) =>
+    ["studio", "purchaseInbox", demoMode, subprofileId] as const,
+  /** One persona's confirmed sales, newest first. */
+  sales: (demoMode: boolean, subprofileId: string) =>
+    ["studio", "sales", demoMode, subprofileId] as const,
+  /** One persona's sales totals, last 28 days and all time. */
+  salesTotals: (demoMode: boolean, subprofileId: string) =>
+    ["studio", "salesTotals", demoMode, subprofileId] as const,
+  /** Payments to confirm across every persona of the caller (the menu dot). */
+  salesPendingCount: (demoMode: boolean) =>
+    ["studio", "salesPendingCount", demoMode] as const,
 };
 
 /** A Studio request refused with `studio_access_required` means the grant was

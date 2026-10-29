@@ -1,0 +1,220 @@
+/* The music events console (AdminMusicEventsPage and its rows) and the
+   frame around the wizard and the dashboard (AdminMusicEventFrame). */
+
+/* The shell title doubles as the way back to the list. */
+.crumbLink {
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--radius-tag);
+}
+
+.crumbLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .crumbLink:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 3px;
+  }
+}
+
+/* The not-found, load error and loading states of one event. */
+.statePage {
+  display: grid;
+  gap: var(--gap-sm);
+  /* A reading column; no spacing token is this wide. */
+  max-width: 720px;
+  margin-inline: auto;
+  padding-block: var(--gap-lg);
+}
+
+/* ── What waits on the team ── */
+.attention {
+  display: grid;
+  margin-block-start: var(--gap-sm);
+  margin-block-end: var(--gap-sm);
+  padding: var(--gap-xs) var(--gap-sm);
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.24);
+  border-radius: var(--radius-card);
+}
+
+.attentionLine {
+  display: flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  margin: 0;
+  padding-block: var(--icon-gap-inline);
+  font-size: var(--text-14);
+  color: var(--ink);
+}
+
+/* The lineup line only informs the team, so it reads quieter. */
+.attentionLineQuiet {
+  color: var(--ink-60);
+}
+
+.attentionIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--accent-text);
+}
+
+.attentionLineQuiet .attentionIcon {
+  color: var(--ink-60);
+}
+
+.attentionCount {
+  font-weight: 600;
+}
+
+/* ── The list ── */
+.panel {
+  margin-block-start: var(--gap-sm);
+}
+
+/* Rows carry their own spacing (the row's block-end margin) so a row that
+   leaves folds its gap away with it inside CollapseListItem. */
+.rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.listState {
+  margin-block-end: var(--gap-xs);
+}
+
+.skeletonRows {
+  display: grid;
+  gap: var(--gap-xs);
+  margin-block-end: var(--gap-xs);
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  padding-block: var(--gap-xs) var(--gap-grid);
+}
+
+/* ── One row ── */
+.row {
+  display: grid;
+  /* The cover thumb's width; it matches COVER_THUMB_WIDTH's fetch size. */
+  grid-template-columns: 104px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--gap-sm);
+  margin-block-end: var(--gap-xs);
+  padding: var(--gap-xs);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+}
+
+.cover {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius-panel);
+}
+
+.coverImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rowBody {
+  display: grid;
+  gap: var(--icon-gap-inline);
+  min-width: 0;
+}
+
+.rowTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+.rowTitle {
+  min-width: 0;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.requestPill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  /* A hairline of block padding keeps the pill compact. */
+  padding: 2px var(--gap-xs);
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--accent-text);
+  background: rgba(var(--accent-rgb), 0.12);
+  border-radius: var(--radius-pill);
+}
+
+.rowMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--icon-gap-inline) var(--gap-sm);
+  margin: 0;
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
+}
+
+.rowMeta > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.rowLineup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--icon-gap-inline) var(--gap-xs);
+  margin: 0;
+  font-size: var(--text-13-5);
+  color: var(--ink);
+}
+
+.lineupLabel {
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.lineupDeclined {
+  font-weight: 600;
+  color: var(--danger);
+}
+
+.rowAction {
+  min-height: var(--tap-min);
+}
+
+/* A phone keeps the cover and the text side by side, and drops the button
+   to its own full-width line under them. */
+@media (max-width: 640px) {
+  .row {
+    /* A smaller cover thumb on a phone. */
+    grid-template-columns: 72px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .rowAction {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+}

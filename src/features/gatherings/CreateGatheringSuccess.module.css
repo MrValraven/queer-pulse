@@ -385,6 +385,20 @@
   }
 }
 
+/* The house screen writes its primary first, so a stacked column keeps the
+   source order (the primary on top) where the member screen reverses it. */
+@container (min-width: 52rem) and (max-width: 60rem) {
+  .actionsPrimaryFirst {
+    flex-direction: column;
+  }
+}
+
+@container (max-width: 30rem) {
+  .actionsPrimaryFirst {
+    flex-direction: column;
+  }
+}
+
 @media (--mobile) {
   .success {
     padding: var(--section-y-48) 20px;

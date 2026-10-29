@@ -14,13 +14,15 @@ import type { StaffIdentity } from "./staff.api";
  * case ENG-28 was about: someone handed the housing queue, deciding on other
  * members' listings, who carried no badge anywhere until grants joined the
  * roster. `ana` is the other side of it: `partnerships` is not a badged grant,
- * so she wears her moderator tier and nothing else.
+ * so she wears her moderator tier and nothing else. `ines` also holds
+ * `music_manager_producer`, so demo shows that grant's badge (she is on the
+ * demo music event lineup).
  */
 export const DEMO_STAFF_GRANTS: Record<string, StaffRoleId[]> = {
   mariana: ["directory_moderator", "communities"],
   rui: ["editorial", "resource_curator"],
   ana: ["partnerships"],
-  ines: ["housing_moderator"],
+  ines: ["housing_moderator", "music_manager_producer"],
 };
 
 /**

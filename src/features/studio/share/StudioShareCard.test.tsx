@@ -87,6 +87,7 @@ const PLAYLIST_RELEASE = {
     avatarUrl: null,
   },
   genre: null,
+  genres: [],
   publishedAt: "2026-04-12T10:00:00.000Z",
   mood: null,
   scene: null,

@@ -10,7 +10,6 @@ import { StudioEpisodeHero } from "./StudioEpisodeHero";
 import { StudioShell } from "./StudioShell";
 import { StudioShowNotes } from "./StudioShowNotes";
 import { StudioWithdrawnView } from "./StudioWithdrawnView";
-import { StudioTipModal } from "./StudioTipModal";
 import { StudioTrackChapters } from "./player/ui/StudioTrackChapters";
 import { StudioTrackClaimPanels } from "./StudioClaimPanels";
 import { StudioTrackHero } from "./StudioTrackHero";
@@ -34,7 +33,6 @@ export function StudioTrackPage() {
   const [searchParams] = useSearchParams();
   const { track, loadState } = useStudioTrack(searchParams.get("id"));
   const isShowcase = useStudioShowcase();
-  const [isTipOpen, setIsTipOpen] = useState(false);
   // The hero's foot, held in state so the sticky header arms once it mounts.
   const [heroSentinel, setHeroSentinel] = useState<HTMLDivElement | null>(null);
   useStudioDocumentTitle(track?.title);
@@ -119,11 +117,7 @@ export function StudioTrackPage() {
       {track.release.isShow ? (
         <StudioEpisodeHero track={track} />
       ) : (
-        <StudioTrackHero
-          track={track}
-          sentinelRef={setHeroSentinel}
-          onTip={() => setIsTipOpen(true)}
-        />
+        <StudioTrackHero track={track} sentinelRef={setHeroSentinel} />
       )}
       {/* Straight after the hero, so the warning pill lines up under the
           title and details (StudioClaimPanel.module.css .safetyRow). */}
@@ -154,12 +148,6 @@ export function StudioTrackPage() {
       )}
       <StudioTrackMore track={track} />
       <StudioTrackPlaylists trackId={track.id} />
-      {isShowcase && isTipOpen && (
-        <StudioTipModal
-          recipient={track.release.artist.name}
-          onClose={() => setIsTipOpen(false)}
-        />
-      )}
     </StudioShell>
   );
 }

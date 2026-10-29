@@ -11,7 +11,6 @@ export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const STUDIO_TIER_PRICE = 7;
 export const COOP_TIER_PRICE = 11;
-export const STUDIO_SHARE_PERCENT = 0.8;
 
 /**
  * Per-mode i18n keys for the two auth flows that share {@link StudioAuthPane}.
@@ -59,6 +58,5 @@ export const ASIDE_NOW_PLAYING = {
   titleEm: "santa",
   artist: "Mariana Sol",
   album: "Cidade dos santos",
-  paidThisMonth: 11940,
 };
 export const ASIDE_TIP_PERCENT = 1;

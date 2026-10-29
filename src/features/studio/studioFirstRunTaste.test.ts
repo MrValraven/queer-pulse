@@ -1,7 +1,9 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { STUDIO_TASTE_STORAGE_KEY } from "./studioFirstRunConstants";
 import {
+  clearStudioWelcomeDeviceCopy,
   orderByTaste,
+  readLegacyStudioWelcome,
   readStudioTaste,
   readStudioWelcomeSeen,
   writeStudioTaste,
@@ -64,5 +66,31 @@ describe("the welcome-seen bit", () => {
     expect(
       JSON.parse(window.localStorage.getItem("qp.studio.welcomeSeen.v1")!),
     ).toEqual({ version: 1, memberId: "member-1" });
+  });
+});
+
+describe("the device copy of a welcome finished before it moved to the account", () => {
+  it("reads the picks, or empty picks when only the seen bit is left", () => {
+    expect(readLegacyStudioWelcome("member-1")).toBeNull();
+    writeStudioWelcomeSeen("member-1");
+    expect(readLegacyStudioWelcome("member-1")).toEqual({
+      genres: [],
+      moods: [],
+    });
+    writeStudioTaste("member-1", { genres: ["fado"], moods: ["tender"] });
+    expect(readLegacyStudioWelcome("member-1")).toEqual({
+      genres: ["fado"],
+      moods: ["tender"],
+    });
+  });
+
+  it("belongs to one member and is gone once cleared", () => {
+    writeStudioWelcomeSeen("member-1");
+    writeStudioTaste("member-1", { genres: ["fado"], moods: [] });
+    expect(readLegacyStudioWelcome("member-2")).toBeNull();
+    expect(readLegacyStudioWelcome(null)).toBeNull();
+    clearStudioWelcomeDeviceCopy();
+    expect(readLegacyStudioWelcome("member-1")).toBeNull();
+    expect(readStudioWelcomeSeen("member-1")).toBe(false);
   });
 });

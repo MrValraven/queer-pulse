@@ -18,6 +18,8 @@ import {
   defaultReleaseForm,
   formFromRelease,
   patchFromForm,
+  priceFieldsForType,
+  priceInputOf,
   releaseFormErrors,
   type ReleaseFormValues,
   type UploadStepId,
@@ -102,8 +104,11 @@ function saveErrorKeyOf(error: unknown): string {
   return studioErrorMessageKeyOf(error);
 }
 
+/** An unreadable price counts as an edit: patchFromForm cannot send it, but
+ *  the member typed it, so the error shows and the leave guard holds. */
 const hasChanges = (form: ReleaseFormValues, release: StudioReleaseView) =>
-  Object.keys(patchFromForm(form, release)).length > 0;
+  Object.keys(patchFromForm(form, release)).length > 0 ||
+  priceInputOf(form.priceMode, form.priceText) === "invalid";
 
 /**
  * Saves a draft's details after a short pause. Published releases save on
@@ -124,10 +129,10 @@ function useDraftAutosave(
   useEffect(() => {
     if (!release || release.status !== "draft" || debouncedForm !== form)
       return;
-    // A half-typed title or buy link waits for the member: the server
-    // refuses both (400), so they never autosave.
+    // A half-typed title, buy link or price waits for the member: the server
+    // refuses each, so they never autosave.
     const errors = releaseFormErrors(debouncedForm);
-    if (errors.title || errors.buyUrl) return;
+    if (errors.title || errors.buyUrl || errors.price) return;
     const body = patchFromForm(debouncedForm, release);
     if (Object.keys(body).length === 0) return;
     update.mutate(
@@ -165,11 +170,11 @@ function autosaveStatusOf(input: {
     return { state: "waitingForTitle", savedAt, reasonKey: null };
   const errors = releaseFormErrors(form);
   const isDirty = hasChanges(form, release);
-  if (isDirty && (errors.title || errors.buyUrl))
+  if (isDirty && (errors.title || errors.buyUrl || errors.price))
     return {
       state: "notSaved",
       savedAt,
-      reasonKey: errors.title ?? errors.buyUrl ?? null,
+      reasonKey: errors.title ?? errors.buyUrl ?? errors.price ?? null,
     };
   if (input.saveErrorKey)
     return { state: "notSaved", savedAt, reasonKey: input.saveErrorKey };
@@ -241,7 +246,7 @@ async function saveLiveDetails(input: {
   const { release, form } = input;
   if (!release || input.isSaving || !hasChanges(form, release)) return;
   const errors = releaseFormErrors(form);
-  if (errors.title || errors.description || errors.buyUrl) {
+  if (errors.title || errors.description || errors.buyUrl || errors.price) {
     input.onRefused();
     return;
   }
@@ -410,7 +415,7 @@ export function useStudioUploadDraft(): StudioUploadDraft {
     // press lands here: one create per draft.
     if (isCreatingRef.current) return;
     const errors = releaseFormErrors(form);
-    if (errors.title || errors.description || errors.buyUrl) {
+    if (errors.title || errors.description || errors.buyUrl || errors.price) {
       refuseWithErrors();
       return;
     }
@@ -481,7 +486,13 @@ export function useStudioUploadDraft(): StudioUploadDraft {
     form,
     setField: (key, value) => {
       setHasSavedChanges(false);
-      setForm((previous) => ({ ...previous, [key]: value }));
+      setForm((previous) => {
+        const next = { ...previous, [key]: value };
+        // A type with nothing to sell clears the price with it.
+        return key === "type"
+          ? { ...next, ...priceFieldsForType(next.type, next) }
+          : next;
+      });
     },
     release,
     isEditingExisting: releaseId !== null,

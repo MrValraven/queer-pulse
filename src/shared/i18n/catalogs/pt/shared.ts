@@ -108,9 +108,9 @@ export const shared: Catalog = {
   "consent.storage.studioRail.purpose":
     "Onde deslizaste as tuas playlists do Studio e como as ordenaste, só para este separador.",
   "consent.storage.studioTaste.purpose":
-    "Os géneros e ambientes que escolheste nas boas-vindas do Studio, que põem esses mosaicos primeiro na página inicial do Studio. Fica só neste dispositivo e apaga-se quando terminas sessão ou usas a Saída rápida. Nunca nos chega.",
+    "Uma cópia temporária dos géneros e ambientes que escolheste nas boas-vindas do Studio. A demonstração usa-a, e passa uma escolha antiga feita neste dispositivo para a tua conta uma só vez, depois é removida. Apaga-se também quando terminas sessão ou usas a Saída rápida.",
   "consent.storage.studioWelcomeSeen.purpose":
-    "Que já viste as boas-vindas do Studio, para não voltarem a abrir quando inicias sessão outra vez. Guarda só o identificador da tua conta, fica neste dispositivo e apaga-se quando usas a Saída rápida. Nunca nos chega.",
+    "Uma nota temporária de que já viste as boas-vindas do Studio. A demonstração usa-a, e passa uma nota antiga feita neste dispositivo para a tua conta uma só vez, depois é removida. Guarda só o identificador da tua conta e apaga-se quando usas a Saída rápida.",
 
   // Feedback: PageLoader / RouteFallback / ErrorFallback / RoomLoader
   "feedback.errorFallback.title": "Algo correu mal do nosso <em>lado</em>",
@@ -289,6 +289,7 @@ export const shared: Catalog = {
   "adminNav.items.logoConcepts": "Conceitos de logótipo",
   "adminNav.items.queues": "Todas as filas",
   "adminNav.items.moderation": "Moderação",
+  "adminNav.items.musicEvents": "Eventos de música",
   "adminNav.items.forumReview": "Revisão do fórum",
   "adminNav.items.staff": "Equipa e papéis",
   "adminNav.items.concerns": "Preocupações",
@@ -463,6 +464,7 @@ export const shared: Catalog = {
   "staffBadge.grant.resourceCurator": "Curadoria de recursos",
   "staffBadge.grant.editorial": "Equipa editorial",
   "staffBadge.grant.communities": "Equipa de comunidades",
+  "staffBadge.grant.musicManagerProducer": "Gestão e produção musical",
   "ambassador.tag.short": "Pessoa embaixadora",
   "ambassador.tag.long": "Pessoa embaixadora QueerPulse",
   "ambassador.tag.meta": "Desde {since} · {focus}",
@@ -830,6 +832,26 @@ export const shared: Catalog = {
   "studioShare.unavailable": "Indisponível",
   "apiError.quizshowAdultsRounds":
     "O jogo ao vivo deste evento tem rondas para adultos. Muda a etiqueta delas no separador Jogo ao vivo e depois desliga o 18+",
+  "apiError.musicEvent.notFound":
+    "Este evento não é organizado pelo QueerPulse",
+  "apiError.musicEvent.familyLocked":
+    "Um evento de música do QueerPulse fica em Música",
+  "apiError.musicEvent.communityUnavailable":
+    "Um evento de música do QueerPulse não pode ser só para uma comunidade",
+  "apiError.musicEvent.performerNotStudioArtist":
+    "Só podes marcar artistas do Studio",
+  "apiError.musicEvent.cohostIsYou":
+    "Geres este evento pelo QueerPulse, por isso não podes ser também pessoa coanfitriã",
+  "apiError.musicEvent.cohostHoldsGrant":
+    "A equipa não pode coorganizar um evento de música do QueerPulse",
+  "apiError.musicEvent.cohostIsStaffTier":
+    "A equipa não pode coorganizar um evento de música do QueerPulse. Moderação e administração ficam fora da lista de pessoas coanfitriãs",
+  "apiError.musicEvent.cohostNotActive":
+    "As pessoas coanfitriãs têm de ter conta ativa, e esta conta não está ativa",
+  "apiError.musicEvent.memberNotFound":
+    "Nenhuma pessoa tem este endereço de perfil",
+  "apiError.musicEvent.inviteRequestNotFound":
+    "Este pedido de convite não é deste evento",
 
   // ── CodeInput (shared/components/ui) ──
   "codeInput.digit": "Dígito {index} de {total}",

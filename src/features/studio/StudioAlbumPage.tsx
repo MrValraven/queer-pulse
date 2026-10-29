@@ -1,27 +1,31 @@
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { tabPanelProps } from "../../shared/components/ui";
+import { Collapse, tabPanelProps } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ReportListingModal } from "../economy/ReportListingModal";
+import { isBuyPanelShown } from "./api/studioPurchases.adapters";
+import { useStudioOffer } from "./api/useStudioOffer";
 import { useStudioRelease } from "./api/useStudioRelease";
+import { StudioAlbumBuyShortcut } from "./StudioAlbumBuyShortcut";
 import { StudioAlbumHero } from "./StudioAlbumHero";
 import { StudioAlbumMain } from "./StudioAlbumMain";
 import { StudioAlbumMore } from "./StudioAlbumMore";
-import { StudioAlbumSidebar } from "./StudioAlbumSidebar";
 import { StudioDetailLoading } from "./StudioDetailLoading";
 import { StudioReleaseStickyHeader } from "./StudioDetailSticky";
 import { StudioLoadError, StudioNotFound } from "./StudioLoadStates";
+import { useLastPresent } from "./StudioOfferState";
+import { StudioReleaseBuyPanel } from "./StudioReleaseBuyPanel";
 import { StudioReleaseSupportCard } from "./StudioReleaseSupportCard";
 import { StudioReleaseVersions } from "./StudioReleaseVersions";
+import { StudioReleaseWall } from "./StudioReleaseWall";
 import { StudioShell } from "./StudioShell";
 import { StudioShowPage } from "./StudioShowPage";
 import { StudioWithdrawnView } from "./StudioWithdrawnView";
 import { StudioTablist } from "./StudioTablist";
-import { StudioTipModal } from "./StudioTipModal";
 import { StudioUpcomingNote } from "./StudioUpcomingNote";
 import { TABS, type AlbumTabId } from "./studioAlbum.data";
+import { isSellableReleaseType } from "./studioPurchaseRules";
 import { useStudioDocumentTitle } from "./useStudioDocumentTitle";
-import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
 
@@ -31,18 +35,28 @@ export function StudioAlbumPage() {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const { release, loadState } = useStudioRelease(searchParams.get("id"));
-  const isShowcase = useStudioShowcase();
   const tabsId = useId();
   // The chosen tab belongs to one release: another release opens on its first tab.
   const [tabChoice, setTabChoice] = useState<{
     releaseId: string;
     tab: AlbumTabId;
   } | null>(null);
-  const [isTipOpen, setIsTipOpen] = useState(false);
   const [isReporting, setIsReporting] = useState(false);
   // The hero's foot, held in state so the sticky header arms once it mounts.
   const [heroSentinel, setHeroSentinel] = useState<HTMLDivElement | null>(null);
   useStudioDocumentTitle(release?.title);
+  const shouldReadOffer =
+    release !== null &&
+    release.status === "published" &&
+    !release.isPreview &&
+    isSellableReleaseType(release.type);
+  const { offer } = useStudioOffer("release", release?.id ?? null, {
+    isEnabled: shouldReadOffer,
+  });
+  const buyPanelOffer = offer !== null && isBuyPanelShown(offer) ? offer : null;
+  // Keeps the panel's words while it folds away.
+  const shownBuyPanelOffer = useLastPresent(buyPanelOffer);
+  const buyPanelRef = useRef<HTMLDivElement>(null);
 
   if (loadState.isWithdrawn)
     return (
@@ -104,11 +118,16 @@ export function StudioAlbumPage() {
   const activeTab = visibleTabs.some((tabItem) => tabItem.id === chosenTab)
     ? (chosenTab ?? "tracklist")
     : (visibleTabs[0]?.id ?? "tracklist");
-  // Live: the side column carries the buy link and the support links (Studio
-  // v3); the demo keeps its money cards above them.
+  // The side column holds the Buy panel, then the buy link and the support
+  // links. It is decided from the release itself, so the grid holds still
+  // when the offer arrives: a priced release keeps its column while the
+  // offer loads, and the panel folds in.
   const hasSupport =
     release.buyLink !== null || release.supportLinks.length > 0;
-  const hasSidebar = isPublished && (isShowcase || hasSupport);
+  const hasBuyPanel = buyPanelOffer !== null;
+  const isPricedForViewer = shouldReadOffer && release.price !== null;
+  const hasSidebar =
+    isPublished && (hasSupport || isPricedForViewer || hasBuyPanel);
   const isUpcomingForViewer = release.isUpcoming && !release.isOwner;
   return (
     <StudioShell>
@@ -116,9 +135,11 @@ export function StudioAlbumPage() {
       <StudioAlbumHero
         release={release}
         sentinelRef={setHeroSentinel}
-        onTip={() => setIsTipOpen(true)}
         onReport={() => setIsReporting(true)}
       />
+      {hasSidebar && (
+        <StudioAlbumBuyShortcut offer={buyPanelOffer} panelRef={buyPanelRef} />
+      )}
       <StudioReleaseVersions release={release} />
       {isUpcomingForViewer && <StudioUpcomingNote release={release} />}
       {visibleTabs.length > 0 && (
@@ -141,16 +162,25 @@ export function StudioAlbumPage() {
           )}
           {hasSidebar && (
             <div className={styles.sideCol}>
-              {isShowcase && (
-                <StudioAlbumSidebar
-                  artistName={release.artist.name}
-                  onTip={() => setIsTipOpen(true)}
-                />
-              )}
+              <div ref={buyPanelRef} className={styles.buyPanelAnchor}>
+                <Collapse isOpen={hasBuyPanel}>
+                  <div className={styles.buyPanelFold}>
+                    {shownBuyPanelOffer !== null && (
+                      <StudioReleaseBuyPanel offer={shownBuyPanelOffer} />
+                    )}
+                  </div>
+                </Collapse>
+              </div>
               <StudioReleaseSupportCard release={release} />
             </div>
           )}
         </section>
+      )}
+      {isPublished && isSellableReleaseType(release.type) && (
+        <StudioReleaseWall
+          releaseId={release.id}
+          releaseTitle={release.title}
+        />
       )}
       <StudioAlbumMore release={release} />
       {isReporting && (
@@ -159,12 +189,6 @@ export function StudioAlbumPage() {
           subjectId={release.id}
           subjectName={release.title}
           onClose={() => setIsReporting(false)}
-        />
-      )}
-      {isShowcase && isTipOpen && (
-        <StudioTipModal
-          recipient={release.artist.name}
-          onClose={() => setIsTipOpen(false)}
         />
       )}
     </StudioShell>

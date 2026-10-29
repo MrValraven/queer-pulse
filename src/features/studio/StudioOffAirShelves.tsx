@@ -12,7 +12,6 @@ import {
   type OffAirCard,
 } from "./studioOffAir.data";
 import studioStyles from "./studio.module.css";
-import { StudioEuroAmount } from "./StudioEuroAmount";
 
 const cardTitle: React.CSSProperties = {
   fontFamily: "var(--serif)",
@@ -106,14 +105,6 @@ export function StudioOffAirShelves({ loading }: { loading: boolean }) {
                   {item.title} <em>{item.titleEm}</em>
                 </h4>
                 <div style={meta}>{offAirMetaLine(item, t)}</div>
-                {item.pay && (
-                  <div style={meta}>
-                    {t("studio:offAir.perPlay")}{" "}
-                    <em style={{ color: "var(--studio-accent-text)" }}>
-                      <StudioEuroAmount value={0.05} />
-                    </em>
-                  </div>
-                )}
               </FadeIn>
             ))}
           </div>

@@ -35,7 +35,7 @@ describe("StudioLandingHeroVisual.module.css", () => {
       "StudioLandingDeviceFrame.module.css",
       "StudioLandingScreenshot.module.css",
       "StudioLandingHeroVisual.module.css",
-      "StudioLandingGallery.module.css",
+      "StudioLandingStory.module.css",
     ]) {
       expect(readLandingCss(fileName)).not.toMatch(/box-shadow:[^;]*\d+px/);
     }

@@ -1,0 +1,185 @@
+.section {
+  max-width: var(--maxw-nav);
+  margin: 0 auto;
+  padding: clamp(var(--section-y-48), 6vh, var(--section-y-80))
+    clamp(20px, 5vw, 48px);
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--studio-text-muted);
+}
+
+.title {
+  max-width: 22ch;
+  margin: 0 0 clamp(24px, 3vw, 36px);
+  font-family: var(--serif);
+  font-size: var(--text-display);
+  font-weight: 300;
+  line-height: var(--lh-title);
+  color: var(--studio-text);
+  text-wrap: balance;
+}
+.title:focus {
+  outline: none;
+}
+.title:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--studio-accent-text);
+}
+
+/* The tracks: one hairline-ruled column, like a record's back sleeve. */
+.list {
+  max-width: 760px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--studio-line);
+}
+.item {
+  border-bottom: 1px solid var(--studio-line);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 0;
+}
+
+.cover {
+  flex: none;
+}
+
+.text {
+  min-width: 0;
+}
+.trackTitle {
+  overflow: hidden;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--studio-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.row[data-active] .trackTitle {
+  color: var(--studio-accent-text);
+}
+.artistName {
+  overflow: hidden;
+  margin: 2px 0 0;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  line-height: 1.4;
+  color: var(--studio-text-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The slim progress bar of the active track. The fill scales from the left
+   on each clock tick, so it glides between the four updates a second. */
+.progress {
+  overflow: hidden;
+  height: 3px;
+  margin-top: 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--studio-ink-rgb), 0.1);
+}
+.progressFill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--studio-accent);
+  transform-origin: left center;
+  transition-property: transform;
+  transition-duration: 250ms;
+  transition-timing-function: linear;
+}
+/* Reduced motion: base.css cuts every transition, so the fill steps. */
+
+.reason {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+  padding-top: 8px;
+}
+.reasonLine {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  line-height: 1.4;
+  color: var(--studio-text-muted);
+}
+.retry {
+  gap: 6px;
+  min-height: var(--tap-min);
+}
+
+.play {
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  min-width: var(--tap-min);
+  height: 48px;
+  min-height: var(--tap-min);
+  padding: 0;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-20);
+}
+.play:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.play[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: default;
+}
+.playIcon {
+  display: inline-flex;
+  grid-area: 1 / 1;
+}
+
+.note {
+  max-width: 62ch;
+  margin: 20px 0 0;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  line-height: 1.55;
+  color: var(--studio-text-muted);
+}
+
+.sampleNote {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 12px 0 0;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  color: var(--studio-text-faint);
+}
+
+@media (max-width: 559px) {
+  .row {
+    gap: 12px;
+  }
+  .trackTitle {
+    font-size: var(--text-17);
+  }
+}

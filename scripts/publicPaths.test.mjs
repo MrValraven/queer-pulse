@@ -4,8 +4,12 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
   QUIET_PUBLIC_PATHS,
+  PRERENDER_PATHS,
+  SHARE_CARD_PATHS,
   isGatedPath,
+  isIndexedShareCard,
   assertNoGatedPaths,
+  assertShareCardPaths,
 } from "./publicPaths.mjs";
 
 // Resolved through `node:path` rather than `new URL(..., import.meta.url)`:
@@ -114,7 +118,23 @@ describe("publicPaths", () => {
           publicPath === prefix || publicPath.startsWith(`${prefix}/`),
       ),
     );
-    expect(leaked).toEqual([]);
+    // The Studio landing is indexed since 2026-10-28; every /studio/* route
+    // stays excluded.
+    expect(leaked).toEqual(["/studio"]);
+  });
+
+  it("bakes the Studio landing head-only as an indexed share card", () => {
+    // /studio is Studio home for a granted member, so its body is never baked.
+    expect(PRERENDER_PATHS).not.toContain("/studio");
+    expect(SHARE_CARD_PATHS).toEqual(["/studio"]);
+    expect(QUIET_PUBLIC_PATHS).toContain("/studio");
+    expect(isIndexedShareCard("/studio")).toBe(true);
+    expect(() => assertShareCardPaths()).not.toThrow();
+    expect(isGatedPath("/studio/dashboard")).toBe(true);
+  });
+
+  it("treats a share card outside the sitemap as de-indexed", () => {
+    expect(isIndexedShareCard("/studio/about")).toBe(false);
   });
 
   it("has no duplicates", () => {

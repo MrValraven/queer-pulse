@@ -8,7 +8,6 @@ import {
   JADE_BARS,
 } from "./StudioEndCardPage.data";
 import styles from "./StudioEndCardPage.module.css";
-import { StudioEuroAmount } from "./StudioEuroAmount";
 
 // Brand domain — never translated, not routed through the catalog.
 const STUDIO_DOMAIN = "studio.queerpulse.com";
@@ -144,14 +143,11 @@ export function StudioEndCardPage() {
                   strokeLinecap="round"
                 />
               </svg>
-              {t("studio:endCard.paidThisMonth")}
+              {t("studio:endCard.directLine")}
             </span>
             <span className={styles.div} aria-hidden />
             <span className={styles.per}>
-              <b>
-                <StudioEuroAmount value={0.05} />
-              </b>{" "}
-              {t("studio:endCard.perPlayLabel")} · <b>100%</b>{" "}
+              <b>100%</b> {t("studio:endCard.perBuyLabel")} · <b>100%</b>{" "}
               {t("studio:endCard.perTipLabel")}
             </span>
           </div>

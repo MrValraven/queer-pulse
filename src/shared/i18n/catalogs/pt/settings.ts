@@ -680,7 +680,7 @@ export const settings: Catalog = {
   "editProfile.identity.removePhoto": "Remover foto",
   "editProfile.identity.useGooglePhoto": "Usar a tua foto da Google",
   "editProfile.identity.photoHint.default":
-    "JPG ou PNG · máx. 5 MB · funciona melhor em formato quadrado",
+    "JPG ou PNG · funciona melhor em formato quadrado",
   "editProfile.identity.photoHint.google":
     "Podemos recuperar a foto da conta com que iniciaste sessão.",
   "editProfile.identity.firstNameLabel": "Nome próprio",
@@ -928,10 +928,10 @@ export const settings: Catalog = {
     "As tuas conexões, votos de confiança, bloqueios, silenciamentos, pessoas ocultadas, sugestões afastadas e convites",
   "dataExport.type.activityLog.label": "Registo de atividade",
   "dataExport.type.activityLog.sub":
-    "O teu feed de atividade, sessões iniciadas, distintivos, XP, histórico de visualização, histórico de audição do Studio e pedidos sobre a conta e os dados",
+    "O teu feed de atividade, sessões iniciadas, distintivos, XP, histórico de visualização, histórico de audição do Studio, compras no Studio e pedidos sobre a conta e os dados",
   "dataExport.type.subprofiles.label": "Personas",
   "dataExport.type.subprofiles.sub":
-    "Todas as personas que tens, e recomendações, personas seguidas e convites",
+    "Todas as personas que tens, e recomendações, personas seguidas e convites, e vendas e formas de receber do Studio",
   "dataExport.type.listings.label": "Anúncios no diretório local",
   "dataExport.type.listings.sub":
     "Anúncios que és dono ou geres, nomeações de espaços seguros, anúncios de troca e as tuas ofertas de emprego",

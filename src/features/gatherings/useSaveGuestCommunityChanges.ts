@@ -1,5 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { codedReasonFor } from "../../shared/api/errorHandling";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
@@ -14,7 +15,8 @@ import { hasGuestCommunityChanges } from "./guestCommunities";
  * Sends one save's guest invites and removals, and says how many did not
  * go through. The gathering's own edit has already saved by then, so a
  * refusal (cap reached, a community frozen meanwhile) warns once and the
- * host can try again from Edit details.
+ * host can try again from Edit details. A coded refusal names its reason
+ * in place of the count.
  */
 export function useSaveGuestCommunityChanges(
   slug: string,
@@ -24,13 +26,15 @@ export function useSaveGuestCommunityChanges(
   const applyChanges = useApplyGuestCommunityChanges(slug);
   return (changes) => {
     if (!hasGuestCommunityChanges(changes)) return;
-    void applyChanges(changes).then(({ failedCount }) => {
-      if (failedCount > 0) {
-        showToast(
+    void applyChanges(changes).then(({ failedCount, firstRejection }) => {
+      if (failedCount === 0) return;
+      // A coded refusal (a house Music event takes no guest communities,
+      // say) names its reason; a retry would meet the same answer.
+      showToast(
+        codedReasonFor(firstRejection) ??
           t("gatherings:guestCommunities.saveFailed", { count: failedCount }),
-          "warning",
-        );
-      }
+        "warning",
+      );
     });
   };
 }

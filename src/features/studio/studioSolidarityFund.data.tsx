@@ -29,11 +29,6 @@ export const IN: FundFlowRow[] = [
     amount: 1860,
   },
   {
-    labelKey: "studio:fund.flows.in.holds.label",
-    descKey: "studio:fund.flows.in.holds.desc",
-    amount: 720,
-  },
-  {
     labelKey: "studio:fund.flows.in.gifts.label",
     descKey: "studio:fund.flows.in.gifts.desc",
     amount: 2400,

@@ -680,8 +680,7 @@ export const settings: Catalog = {
   "editProfile.identity.uploadPhoto": "Upload new photo",
   "editProfile.identity.removePhoto": "Remove photo",
   "editProfile.identity.useGooglePhoto": "Use your Google photo",
-  "editProfile.identity.photoHint.default":
-    "JPG or PNG · max 5 MB · square works best",
+  "editProfile.identity.photoHint.default": "JPG or PNG · square works best",
   "editProfile.identity.photoHint.google":
     "We can bring back the photo from the account you signed in with.",
   "editProfile.identity.firstNameLabel": "First name",
@@ -958,10 +957,10 @@ export const settings: Catalog = {
     "Your connections, vouches, blocks, mutes, hidden members, dismissed suggestions and invites",
   "dataExport.type.activityLog.label": "Activity log",
   "dataExport.type.activityLog.sub":
-    "Your activity feed, sign-ins, badges, XP, watch history, Studio listening history and account and data requests",
+    "Your activity feed, sign-ins, badges, XP, watch history, Studio listening history, Studio purchases and account and data requests",
   "dataExport.type.subprofiles.label": "Personas",
   "dataExport.type.subprofiles.sub":
-    "Every persona you have, plus endorsements, follows and invites",
+    "Every persona you have, plus endorsements, follows and invites, and Studio sales and payment methods",
   "dataExport.type.listings.label": "Local directory listings",
   "dataExport.type.listings.sub":
     "Listings you own or manage, safe-space nominations, barter posts and your jobs",

@@ -66,6 +66,8 @@ function cardOf(release: StudioReleaseView): StudioReleaseCardView {
     publishedAt: release.publishedAt,
     genre: release.genre,
     genreLabelKey: release.genreLabelKey,
+    genres: release.genres,
+    genreLabelKeys: release.genreLabelKeys,
     mood: release.mood,
     scene: release.scene,
     format: release.format,
@@ -169,6 +171,21 @@ export function syncDemoReleaseLists(
   );
 }
 
+/** After a price change: every open buy panel reloads its offer, and Getting
+ *  paid reloads its payment methods so the "keep at least one" warning
+ *  matches what is now for sale. */
+export function invalidatePriceReaders(
+  queryClient: QueryClient,
+  demoMode: boolean,
+) {
+  void queryClient.invalidateQueries({
+    queryKey: studioKeys.offersAll(demoMode),
+  });
+  void queryClient.invalidateQueries({
+    queryKey: ["studio", "paymentMethods", demoMode],
+  });
+}
+
 /** After a write that can change a release card (status, counts): demo
  *  patches the lists, live invalidates them. */
 export function refreshReleaseLists(
@@ -262,7 +279,12 @@ export function useUpdateStudioRelease() {
             body,
           )
         : toReleaseView(await updateStudioRelease(releaseId, body)),
-    onSuccess: (release) => storeRelease(queryClient, demoMode, release),
+    onSuccess: (release, { body }) => {
+      storeRelease(queryClient, demoMode, release);
+      // A price change reaches every open buy panel and Getting paid.
+      if (body.price !== undefined)
+        invalidatePriceReaders(queryClient, demoMode);
+    },
   });
 }
 

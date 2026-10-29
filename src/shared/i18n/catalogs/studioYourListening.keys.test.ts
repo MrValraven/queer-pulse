@@ -133,10 +133,10 @@ describe("Studio dashboard Part 2 catalog keys", () => {
   });
   it("names each supporter refusal the way the server does", () => {
     expect(en["errors.reason.studio_supporter_artist_not_found"]).toBe(
-      "This artist is not available to support",
+      "This artist is not available to show your name to",
     );
     expect(en["errors.reason.studio_supporter_own_persona"]).toBe(
-      "You are a member of this artist, so you cannot be its supporter",
+      "You are a member of this artist, so you cannot be among its top listeners",
     );
     expect(en["errors.reason.studio_supporter_identity_not_yours"]).toBe(
       "You can show yourself only as your account or a persona you are a member of",

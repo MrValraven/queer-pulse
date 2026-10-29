@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ConfirmDialog } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { gatheringCancelledPath } from "./data";
+import { useEventHostScope } from "./eventHostScope";
 import type { useCancelEvent } from "./api/useEventMutations";
 
 /**
@@ -15,6 +16,9 @@ import type { useCancelEvent } from "./api/useEventMutations";
  * (`SeriesEditScopeModal`) also fires, so the dialog's pending state tracks
  * the one request either path sends. The caller renders `cancelDialog` once
  * and calls `requestCancel` for a gathering outside a series.
+ *
+ * A host scope with a `homePath` (the admin console's music events) lands
+ * there after the cancel; the member scope keeps `gatheringCancelledPath`.
  */
 export function useCancelGatheringFlow({
   slug,
@@ -31,12 +35,13 @@ export function useCancelGatheringFlow({
 }): { requestCancel: () => void; cancelDialog: ReactNode } {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { homePath } = useEventHostScope();
   const [isCancelConfirmOpen, setCancelConfirmOpen] = useState(false);
 
   const confirmCancel = () => {
     setCancelConfirmOpen(false);
     cancelEvent.mutate(undefined);
-    void navigate(gatheringCancelledPath(slug));
+    void navigate(homePath ?? gatheringCancelledPath(slug));
   };
 
   const cancelDialog = (

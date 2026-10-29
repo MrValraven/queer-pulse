@@ -65,6 +65,13 @@ describe("Studio terms (demo)", () => {
     expect(
       screen.getByRole("heading", { name: /do with the music/i }),
     ).toBeInTheDocument();
+    // The co-op deal cards contradict the money section, so they stay out.
+    expect(
+      screen.queryByRole("heading", { name: /keep 80%/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { name: /tips are 100%/i }),
+    ).not.toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: "Read full terms" }),
     ).toHaveAttribute("href", "/policies/terms");

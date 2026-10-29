@@ -48,8 +48,8 @@ const DEMO_RELEASE_MOODS: Record<string, StudioMood> = {
   "demo-release-mariana-3": "slow-burn",
   "demo-release-mariana-single-1": "melancholy",
   "demo-release-home-1": "tender",
-  "demo-release-home-2": "sweaty",
-  "demo-release-home-3": "playful",
+  "demo-release-home-2": "euphoric",
+  "demo-release-home-3": "dreamy",
   "demo-release-home-4": "late-night",
 };
 
@@ -167,7 +167,8 @@ function release(
     "id" | "title" | "type" | "coverUrl" | "releasedOn" | "artist"
   > & {
     description?: string | null;
-    genre?: string | null;
+    /** Every genre, lead first; the lead doubles as `genre`. */
+    genres?: string[];
     status?: StudioReleaseDTO["status"];
     takedownReason?: string | null;
     // Studio v3
@@ -193,7 +194,8 @@ function release(
       0,
     ),
     description: base.description ?? null,
-    genre: base.genre ?? null,
+    genre: base.genres?.[0] ?? null,
+    genres: base.genres ?? [],
     mood: DEMO_RELEASE_MOODS[base.id] ?? null,
     scene: demoSceneRefOfRelease(base.id),
     status,
@@ -240,7 +242,7 @@ const CIDADE = release(
     releasedOn: "2026-04-12",
     artist: DEMO_ARTIST_MARIANA,
     description: CIDADE_LINER_NOTES,
-    genre: "fado",
+    genres: ["fado", "ambient"],
     buyUrl: "https://marianasol.bandcamp.com/album/cidade-dos-santos",
     version: 2,
     versions: [
@@ -296,7 +298,7 @@ const MARIANA_OTHER_RELEASES = ARTIST_RELEASES.slice(1).map((mock, index) => {
       coverUrl: mock.image,
       releasedOn: `${metaYear(mock.meta)}-03-01`,
       artist: DEMO_ARTIST_MARIANA,
-      genre: "fado",
+      genres: ["fado"],
       // Devoção's songs run into each other, so it plays without gaps.
       isGapless: title === "Devoção",
     },
@@ -327,6 +329,14 @@ const HOME_ARTISTS = [
   CORO,
   DEMO_ARTIST_NIGHTFORM,
 ];
+/** Genres of the home cards, lead first. The first card carries three so the
+ *  multi-genre display shows. */
+const HOME_CARD_GENRES: readonly (readonly string[])[] = [
+  ["folk", "pop", "experimental"],
+  ["electronic"],
+  ["folk"],
+  ["folk"],
+];
 const OTHER_ARTIST_RELEASES = HOME_CARDS.map((mock, index) => {
   const artist = HOME_ARTISTS[index] ?? RITA;
   const title = joinTitle(mock.titlePre, mock.titleEm);
@@ -339,7 +349,7 @@ const OTHER_ARTIST_RELEASES = HOME_CARDS.map((mock, index) => {
       coverUrl: mock.image ?? null,
       releasedOn: `2026-0${9 - index}-2${index}`,
       artist,
-      genre: artist.kind === "dj" ? "electronic" : "folk",
+      genres: [...(HOME_CARD_GENRES[index] ?? ["folk"])],
     },
     trackRows(id, [
       { title, clock: id === DEMO_MIX_RELEASE_ID ? DEMO_MIX_CLOCK : mock.time },
@@ -409,7 +419,7 @@ export const DEMO_OWNER_RELEASES: StudioReleaseDTO[] = [
       artist: DEMO_ARTIST_MARIANA,
       status: "scheduled",
       publishAt: isoAhead(4, 17),
-      genre: "fado",
+      genres: ["fado"],
       description: "A single for the high tide recorded live in one take",
     },
     trackRows(DEMO_SCHEDULED_RELEASE_ID, [
@@ -431,7 +441,7 @@ export const DEMO_OTHER_UPCOMING_RELEASES: StudioReleaseDTO[] = [
       artist: DEMO_ARTIST_NIGHTFORM,
       status: "scheduled",
       publishAt: isoAhead(9, 21),
-      genre: "electronic",
+      genres: ["electronic"],
     },
     trackRows(DEMO_VISITOR_UPCOMING_RELEASE_ID, [
       { title: "Night bus (extended)", clock: "7:12" },

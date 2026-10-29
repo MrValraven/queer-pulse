@@ -232,15 +232,15 @@ describe("useGatheringForm family and format", () => {
     act(() => result.current.selectFormat("care", "support-circle"));
     expect(result.current.cap).toBe("10");
 
-    act(() => result.current.selectFormat("party", "club-night"));
-    expect(result.current.cap).toBe("40");
+    act(() => result.current.selectFormat("music", "club-night"));
+    expect(result.current.cap).toBe("50");
   });
 
   it("keeps the capacity the host typed through a format change", () => {
     const { result } = renderHook(() => useGatheringForm());
 
     act(() => result.current.setCapTouched("6"));
-    act(() => result.current.selectFormat("party", "club-night"));
+    act(() => result.current.selectFormat("music", "club-night"));
 
     expect(result.current.cap).toBe("6");
     expect(result.current.capacityDefault).toBeNull();
@@ -347,7 +347,7 @@ describe("useGatheringForm care and access", () => {
     act(() => result.current.toggleTheme("sapphic"));
     expect(result.current.hiddenThemeKeys).toEqual([]);
 
-    act(() => result.current.selectFormat("party", "club-night"));
+    act(() => result.current.selectFormat("music", "club-night"));
     expect(result.current.hiddenThemeKeys).toEqual(["adults-only", "sober"]);
     expect(result.current.themes).toEqual(["sapphic"]);
 
@@ -362,7 +362,7 @@ describe("useGatheringForm care and access", () => {
     act(() => result.current.selectFormat("eat", "potluck"));
     expect(result.current.rsvpCutoff).toBe("day-before");
 
-    act(() => result.current.selectFormat("party", "club-night"));
+    act(() => result.current.selectFormat("music", "club-night"));
     expect(result.current.rsvpCutoff).toBe("one-hour-before");
   });
 
@@ -534,7 +534,7 @@ describe("useGatheringForm applyLastGatheringSeed", () => {
     const { result } = renderHook(() => useGatheringForm());
 
     act(() => result.current.applyLastGatheringSeed(lastGatheringSeed()));
-    act(() => result.current.selectFormat("party", "club-night"));
+    act(() => result.current.selectFormat("music", "club-night"));
 
     expect(result.current.cap).toBe("18");
   });
@@ -551,7 +551,7 @@ describe("useGatheringForm duplicate seed RSVP cutoff", () => {
     expect(result.current.rsvpCutoff).toBeNull();
     expect(result.current.isRsvpCutoffTouched).toBe(true);
 
-    act(() => result.current.selectFormat("party", "club-night"));
+    act(() => result.current.selectFormat("music", "club-night"));
     expect(result.current.rsvpCutoff).toBeNull();
   });
 
@@ -566,7 +566,7 @@ describe("useGatheringForm duplicate seed RSVP cutoff", () => {
     expect(result.current.rsvpCutoff).toBe("day-before");
     expect(result.current.isRsvpCutoffTouched).toBe(false);
 
-    act(() => result.current.selectFormat("party", "club-night"));
+    act(() => result.current.selectFormat("music", "club-night"));
     expect(result.current.rsvpCutoff).toBe("one-hour-before");
   });
 });
@@ -626,7 +626,7 @@ describe("useGatheringForm draft snapshot", () => {
     expect(restored.result.current.rsvpCutoff).toBeNull();
     expect(restored.result.current.isRsvpCutoffTouched).toBe(true);
 
-    act(() => restored.result.current.selectFormat("party", "club-night"));
+    act(() => restored.result.current.selectFormat("music", "club-night"));
     expect(restored.result.current.rsvpCutoff).toBeNull();
   });
 
@@ -676,7 +676,7 @@ describe("useGatheringForm draft snapshot", () => {
     act(() =>
       result.current.restoreDraft({
         ...blank.result.current.draftSnapshot,
-        family: "party",
+        family: "music",
         format: "club-night",
         themes: ["sober", "sapphic"],
       }),

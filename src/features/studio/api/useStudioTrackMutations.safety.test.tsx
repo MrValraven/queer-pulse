@@ -34,6 +34,7 @@ function ownerRelease(trackId: string): StudioReleaseView {
     },
     description: null,
     genre: null,
+    genres: [],
     mood: null,
     scene: null,
     status: "published",

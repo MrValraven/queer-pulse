@@ -338,7 +338,9 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
 /**
  * Kinds whose own copy already counts their bundled rows, so the row adds no
  * "and 3 others" suffix: `admin_queue_item`, `studio_release_published`,
- * `studio_credit_requested`, `persona_post` and `studio_episode_published`.
+ * `studio_credit_requested`, `persona_post`, `studio_episode_published` and
+ * `studio_purchase_claimed`, `studio_landing_preview_requested` and
+ * `studio_landing_preview_live`.
  */
 const OWN_BUNDLE_COUNT_KINDS: ReadonlySet<string> = new Set([
   "admin_queue_item",
@@ -346,7 +348,86 @@ const OWN_BUNDLE_COUNT_KINDS: ReadonlySet<string> = new Set([
   "studio_credit_requested",
   "persona_post",
   "studio_episode_published",
+  "studio_purchase_claimed",
+  "studio_landing_preview_requested",
+  "studio_landing_preview_live",
 ]);
+
+/** Studio kinds: their actions, and the access refresh a grant asks for when
+ *  the row is opened (the page it lands on must not read an answer cached from
+ *  before the grant). */
+function applyStudioKindExtras(
+  view: Notification,
+  dto: NotificationDTO,
+  t: TFunction,
+): void {
+  const kindActions = studioKindActions(dto, t);
+  if (kindActions) view.actions = kindActions;
+  if (dto.type === "studio_access_granted")
+    view.shouldRefreshStudioAccess = true;
+}
+
+/**
+ * Studio discovery: a credit request offers one action, straight to the
+ * credits inbox, where the member accepts or declines. Studio purchases: a
+ * payment waiting offers Review payments on the persona's list; the buyer's
+ * three answers offer their purchases. Any other kind has none of these.
+ */
+function studioKindActions(
+  dto: NotificationDTO,
+  t: TFunction,
+): Notification["actions"] | undefined {
+  if (dto.type === "studio_credit_requested") {
+    return [
+      {
+        label: t("notifications:actions.reviewCredit"),
+        variant: "primary",
+        href: routes.studioCredits,
+      },
+    ];
+  }
+  if (dto.type === "studio_access_granted") {
+    return [
+      {
+        label: t("notifications:actions.openStudio"),
+        variant: "primary",
+        href: routes.studio,
+      },
+    ];
+  }
+  if (dto.type === "studio_landing_preview_requested") {
+    return [
+      {
+        label: t("notifications:actions.answerLandingPreview"),
+        variant: "primary",
+        href: lifecycleSourceHref(dto.type, dto.payload)?.href ?? "",
+      },
+    ];
+  }
+  if (dto.type === "studio_purchase_claimed") {
+    return [
+      {
+        label: t("notifications:actions.reviewPayments"),
+        variant: "primary",
+        href: lifecycleSourceHref(dto.type, dto.payload)?.href ?? "",
+      },
+    ];
+  }
+  if (
+    dto.type === "studio_purchase_confirmed" ||
+    dto.type === "studio_purchase_declined" ||
+    dto.type === "studio_purchase_expired"
+  ) {
+    return [
+      {
+        label: t("notifications:actions.openPurchases"),
+        variant: "primary",
+        href: routes.musicPurchases,
+      },
+    ];
+  }
+  return undefined;
+}
 
 /**
  * Studio artist kinds: the one action of a `studio_episode_published` row,
@@ -409,7 +490,8 @@ export function notificationDtoToView(
     // waiting for a look"), so `NotificationItem` must not also append the
     // generic "and 3 others" bundle suffix on top of it: that would both
     // double-count and speak about people where none are named.
-    // `studio_release_published`, `studio_credit_requested` and
+    // `studio_release_published`, `studio_credit_requested`,
+    // `studio_purchase_claimed`, both `studio_landing_preview_*` kinds and
     // `studio_episode_published` count their
     // bundled rows in their own copy too.
     hasOwnBundleCount: kind !== null && OWN_BUNDLE_COUNT_KINDS.has(kind),
@@ -652,17 +734,7 @@ export function notificationDtoToView(
     }
   }
 
-  // Studio discovery: one action, straight to the credits inbox, where the
-  // member accepts or declines.
-  if (dto.type === "studio_credit_requested") {
-    view.actions = [
-      {
-        label: t("notifications:actions.reviewCredit"),
-        variant: "primary",
-        href: routes.studioCredits,
-      },
-    ];
-  }
+  applyStudioKindExtras(view, dto, t);
 
   // Meet the team: one action on an invite or a request, straight to the
   // pane that answers it. A row without a destination keeps no action.

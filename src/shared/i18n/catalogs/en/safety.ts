@@ -325,6 +325,7 @@ export const safety: Catalog = {
   "reason.housingUnsafe": "Unsafe, discriminatory, or misrepresented housing",
   "reason.housingScam": "Scam or fake listing",
   "reason.fundingScam": "Scam, fake fundraiser or fake grant",
+  "reason.paymentNeverConfirmed": "Took my payment and did not confirm it",
   "reason.notAffirming": "Not LGBTQ+ affirming: broke the community pledge",
   "reason.offPlatform": "Asked to pay or move off-platform",
   // System-filed by the listings pipeline, never offered to a member. Read
@@ -1184,7 +1185,7 @@ export const safety: Catalog = {
   "governance.badge.reasonLabel": "Reason",
   "moderationStance.head": "How we read these",
   "moderationStance.rule.politicalSpeech":
-    "Criticism of a state, its government, its military, or its policies is political speech, and Palestine advocacy is welcome here. Advocacy aimed at a class of member is not political speech, whatever vocabulary it borrows.",
+    "QueerPulse stands with Palestinians. Criticism of Israel, its government, its army or its policies is political speech and stays up. Campaigning to remove a class of member, such as trans members, is a Code of Conduct violation however it is worded.",
   "moderationStance.rule.noBothSides":
     "Whether a member deserves rights is not a debate we host. Do not dismiss a report on the grounds that the other side deserves a hearing.",
   "moderationStance.rule.neverProveGender":
@@ -1206,15 +1207,15 @@ export const safety: Catalog = {
   "moderationStance.digest.guidelines.p1":
     "The guidelines describe the culture. The hard lines are the enforceable part of them: harassment or targeted personal attacks, doxxing, outing someone without their consent, threats or intimidation, sharing private conversations or photos without consent, and discrimination on any protected basis.",
   "moderationStance.digest.guidelines.p2":
-    "The political-speech clause sits beside them. Criticising a state, its government, its military, or its ideology is political speech and is moderated as political speech, advocacy for Palestinian liberation included. It becomes a Code of Conduct violation when it lands on a person: holding a member answerable for a state's actions because of their ethnicity, religion, or nationality, or campaigning for the exclusion of a class of member, whatever vocabulary it borrows.",
+    "The political-speech clause sits beside them. Criticising Israel, its government, its army or its ideology is political speech and stays up, advocacy for Palestinian liberation included. It becomes a violation when it targets a person: blaming a member for a state's actions because of their ethnicity, religion or nationality, or campaigning to remove a class of member, however it is worded.",
   "moderationStance.digest.guidelines.point.oneTest.title":
     "One test decides it.",
   "moderationStance.digest.guidelines.point.oneTest.body":
-    "Is this about a state and its conduct, or about a person and who they are. That is the whole question.",
+    "Does the post target a state and its conduct, or a person and who they are? That is the whole question.",
   "moderationStance.digest.guidelines.point.bothDirections.title":
-    "Both directions are enforced the same way.",
+    "The same rules protect everyone.",
   "moderationStance.digest.guidelines.point.bothDirections.body":
-    "Antisemitism and anti-Palestinian racism are both breaches, and the platform's own position on Palestine does not change how a case is handled.",
+    "Antisemitism and anti-Palestinian racism are both removed. The platform's position on Palestine does not change how a case is handled.",
   "moderationStance.digest.guidelines.point.outcomes.title":
     "A confirmed breach carries a consequence.",
   "moderationStance.digest.guidelines.point.outcomes.body":

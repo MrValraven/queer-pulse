@@ -9,6 +9,8 @@ import { useLocation } from "react-router-dom";
 import { beforeEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { resetDemoCreditLedger } from "./api/studioDemoCreditLedger";
+import { DEMO_DEFAULT_RELEASE_ID } from "./api/studioDemoMe.data";
+import { resetDemoPurchases } from "./api/studioDemoPurchaseStore";
 import { StudioAlbumPage } from "./StudioAlbumPage";
 
 beforeEach(() => resetDemoCreditLedger());
@@ -151,5 +153,74 @@ describe("StudioAlbumPage: a release our team took down", () => {
     expect(
       screen.queryByText("This release was withdrawn"),
     ).not.toBeInTheDocument();
+  });
+});
+
+function renderAt(path: string) {
+  return render(
+    <TestProviders initialEntries={[path]}>
+      <StudioAlbumPage />
+    </TestProviders>,
+  );
+}
+
+describe("StudioAlbumPage: buying and the supporter wall (demo)", () => {
+  beforeEach(() => resetDemoPurchases());
+
+  it("puts the Buy panel above the support card and drops the old demo buy card", async () => {
+    renderAt("/studio/album?id=demo-release-home-1");
+    const side = await screen.findByRole("region", { name: /^Buy / });
+    expect(
+      within(side).getByRole("button", { name: /^Buy .+ by Rita Ferreira$/ }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /Buy .* €/ })).toBeNull();
+    expect(document.querySelector('a[href="/studio/checkout"]')).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: /Pay what you can/ }),
+    ).toBeNull();
+    expect(screen.queryByRole("button", { name: /^Tip/ })).toBeNull();
+  });
+
+  it("shows the supporter wall under the tracklist on Mariana's album", async () => {
+    renderAt(`/studio/album?id=${DEMO_DEFAULT_RELEASE_ID}`);
+    expect(
+      await screen.findByRole("heading", { name: "Supported by" }),
+    ).toBeInTheDocument();
+  });
+
+  it("shows no Buy panel and no wall on a lip-sync mix", async () => {
+    renderAt("/studio/album?id=demo-release-vanda-sunday-mass");
+    await screen.findByRole("heading", { level: 1 });
+    expect(screen.queryByRole("region", { name: /^Buy / })).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Supported by" })).toBeNull();
+  });
+
+  it("shows no ledger card and no per-play line in demo", async () => {
+    renderAt(`/studio/album?id=${DEMO_DEFAULT_RELEASE_ID}`);
+    await screen.findByRole("heading", { level: 1 });
+    expect(screen.queryByText(/Public ledger for/)).toBeNull();
+    expect(screen.queryByText(/^Every play pays/)).toBeNull();
+  });
+
+  it("moves focus to the Buy panel heading from the Buy shortcut", async () => {
+    renderAt("/studio/album?id=demo-release-home-1");
+    const side = await screen.findByRole("region", { name: /^Buy / });
+    const shortcut = await screen.findByRole("button", {
+      name: /^Buy (album|EP|single|release)$/,
+    });
+    fireEvent.click(shortcut);
+    await waitFor(() =>
+      expect(within(side).getByRole("heading", { level: 2 })).toHaveFocus(),
+    );
+  });
+
+  it("shows no Buy shortcut where the panel offers no Buy button", async () => {
+    renderAt("/studio/album?id=demo-release-vanda-sunday-mass");
+    await screen.findByRole("heading", { level: 1 });
+    expect(
+      screen.queryByRole("button", {
+        name: /^Buy (album|EP|single|release)$/,
+      }),
+    ).toBeNull();
   });
 });

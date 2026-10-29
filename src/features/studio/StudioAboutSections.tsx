@@ -30,7 +30,7 @@ export function AboutSection({
   );
 }
 
-/** The €0.05 rate band — three cells (02). */
+/** How artists get paid: three cells (02). */
 export function RateBand() {
   const { t } = useTranslation();
   const rateCells = useMemo(() => buildRateCells(t), [t]);

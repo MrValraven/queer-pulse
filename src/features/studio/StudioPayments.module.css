@@ -1,0 +1,404 @@
+/* Payments to confirm: the page head, the To confirm and Sales panels, the
+   inbox rows, the sales totals and the decline dialog's reason cards. Studio
+   surfaces read the theme-following --studio-* roles. */
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 30px;
+}
+
+@media (--md) {
+  .body {
+    padding: 20px 16px;
+  }
+}
+
+.head {
+  display: grid;
+  gap: 10px;
+}
+
+.eyebrow {
+  color: var(--studio-accent-text);
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-34);
+  font-weight: 400;
+  color: var(--studio-text);
+}
+
+.title em {
+  color: var(--studio-accent-text);
+}
+
+.dek {
+  max-width: 62ch;
+  margin: 0;
+  color: var(--studio-text-muted);
+  font-size: var(--text-14);
+  line-height: 1.5;
+}
+
+.personaField {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--text-13);
+  color: var(--studio-text);
+}
+
+.select {
+  min-width: 200px;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 4px;
+}
+
+.panel:focus-visible,
+.panelTitle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.section {
+  padding: 20px 22px;
+  border: 1px solid var(--studio-line);
+  border-radius: var(--radius-14);
+  background: var(--surface);
+}
+
+@media (--md) {
+  .section {
+    padding: 16px;
+  }
+}
+
+.panelTitle {
+  margin: 0 0 4px;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 400;
+  color: var(--studio-text);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 0;
+  border-top: 1px solid var(--studio-line);
+}
+
+.thumb {
+  flex: none;
+  width: 56px;
+  height: 56px;
+}
+
+.rowMain {
+  display: grid;
+  flex: 1 1 260px;
+  gap: 4px;
+  min-width: 0;
+}
+
+.format {
+  margin: 0;
+  color: var(--studio-text-muted);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+}
+
+.titleLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
+
+.itemTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  color: var(--studio-text);
+  overflow-wrap: anywhere;
+}
+
+.amount {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  color: var(--studio-text);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.amount em {
+  font-style: normal;
+}
+
+.meta {
+  margin: 0;
+  color: var(--studio-text-muted);
+  font-size: var(--text-13);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.code {
+  color: var(--studio-text);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.buyer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  margin: 4px 0 0;
+  color: var(--studio-text-muted);
+  font-size: var(--text-13);
+}
+
+.buyerName {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--studio-text);
+  font-weight: 600;
+}
+
+.link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--studio-ink-rgb), 0.3);
+  text-underline-offset: 2px;
+  transition-property: color, text-decoration-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.link:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) {
+  .link:hover {
+    color: var(--studio-accent-text);
+    text-decoration-color: currentColor;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-self: center;
+}
+
+@media (--md) {
+  .actions {
+    flex: 1 1 100%;
+  }
+}
+
+.alert,
+.empty {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+}
+
+.alert {
+  color: var(--studio-accent-text);
+}
+
+.empty {
+  color: var(--studio-text-muted);
+}
+
+/* The line above the tabs when `?persona=` names none of the member's
+   artist pages. */
+.personaNote {
+  margin: 0;
+  color: var(--studio-text-muted);
+  font-size: var(--text-14);
+  line-height: 1.5;
+}
+
+.footer {
+  margin-top: 8px;
+}
+
+.skeleton {
+  display: grid;
+  gap: 18px;
+  padding: 8px 0;
+}
+
+/* Sales: the two totals side by side, then the note. The note keeps a gap
+   from the tiles, which wrap to one column on a phone. */
+.salesNote {
+  margin-top: var(--gap-sm);
+}
+
+.totals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.total {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: var(--radius-12);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+}
+
+.totalLabel {
+  color: var(--studio-text-muted);
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+}
+
+.totalValue {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-28);
+  color: var(--studio-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.totalValue em {
+  font-style: normal;
+}
+
+.totalCount {
+  margin: 0;
+  color: var(--studio-text-muted);
+  font-size: var(--text-13);
+}
+
+.saleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--studio-line);
+}
+
+.saleText {
+  display: grid;
+  flex: 1 1 220px;
+  gap: 2px;
+  min-width: 0;
+}
+
+/* The decline dialog's reason cards. */
+.reasonLegend {
+  margin: 12px 0 8px;
+  color: var(--studio-text);
+  font-size: var(--text-14);
+  font-weight: 600;
+}
+
+.reasons {
+  display: grid;
+  gap: 8px;
+}
+
+.reasonCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.1);
+  border-radius: var(--radius-12);
+  background: rgba(var(--studio-ink-rgb), 0.03);
+  color: var(--studio-text);
+  font: inherit;
+  font-size: var(--text-14);
+  text-align: left;
+  cursor: pointer;
+  transition-property: background-color, border-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.reasonCard:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) {
+  .reasonCard:hover {
+    background: rgba(var(--studio-ink-rgb), 0.06);
+  }
+}
+
+.reasonCardOn {
+  border-color: rgba(var(--accent-rgb), 0.5);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+
+.reasonDot {
+  position: relative;
+  flex: none;
+  width: 17px;
+  height: 17px;
+  border: 1.5px solid rgba(var(--studio-ink-rgb), 0.35);
+  border-radius: 50%;
+}
+
+.reasonCardOn .reasonDot {
+  border-color: var(--accent);
+}
+
+.reasonCardOn .reasonDot::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--accent);
+}

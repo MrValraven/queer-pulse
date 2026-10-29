@@ -4,6 +4,7 @@ import { reasonFor } from "../../shared/api/errorMessage";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { MemberIdentity } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useStaffMap } from "../../shared/staff/useStaffRole";
 import { KIND_LABEL_KEYS } from "../subprofiles/subprofile-kinds";
 import { useEventLineup, useLeaveLineup } from "./api/useEventLineup";
 import { useRespondLineupInvite } from "./api/useLineupInvite";
@@ -142,6 +143,7 @@ function useLineupViewer(slug: string, targets: FocusTargets): LineupViewer {
 export function GatheringLineup({ slug }: { slug: string }) {
   const { t } = useTranslation();
   const { data: lineup } = useEventLineup(slug);
+  const staffMap = useStaffMap();
   const anchorRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
@@ -168,6 +170,8 @@ export function GatheringLineup({ slug }: { slug: string }) {
                       slug: entry.slug,
                       name: entry.name,
                       avatarUrl: entry.avatarUrl ?? undefined,
+                      staffRole: staffMap[entry.slug]?.tier ?? undefined,
+                      staffBadgedRoles: staffMap[entry.slug]?.badgedStaffRoles,
                     }}
                     secondary={
                       roleKind ? t(KIND_LABEL_KEYS[roleKind]) : undefined

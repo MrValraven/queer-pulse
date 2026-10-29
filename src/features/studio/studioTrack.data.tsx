@@ -1,16 +1,3 @@
-/** One share of a play, in euros; the sidebar formats it in the active
- *  locale. `isEmphasized` marks the artist's share in coral. */
-export interface SplitRow {
-  c: string;
-  /** Catalog key of the row's label, or the literal name when `name` is set. */
-  labelKey: string;
-  /** A person's name, shown as written in both languages. */
-  name?: string;
-  subKey: string;
-  amount: number;
-  isEmphasized?: boolean;
-}
-
 /** "Name · role", split into a credit by the demo API. */
 export interface CreditRow {
   who: string;
@@ -35,35 +22,6 @@ export const TRACK = {
   href: "/studio/track",
   meta: "Mariana Sol · Track 6",
 };
-
-export const SPLIT: SplitRow[] = [
-  {
-    c: "var(--accent)",
-    labelKey: "studio:track.sidebar.split.artist.label",
-    name: "Mariana Sol",
-    subKey: "studio:track.sidebar.split.artist.sub",
-    amount: 0.8,
-    isEmphasized: true,
-  },
-  {
-    c: "var(--jade)",
-    labelKey: "studio:track.sidebar.split.fund.label",
-    subKey: "studio:track.sidebar.split.fund.sub",
-    amount: 0.08,
-  },
-  {
-    c: "var(--plum)",
-    labelKey: "studio:track.sidebar.split.platform.label",
-    subKey: "studio:track.sidebar.split.platform.sub",
-    amount: 0.08,
-  },
-  {
-    c: "rgba(var(--studio-ink-rgb), 0.2)",
-    labelKey: "studio:track.sidebar.split.fees.label",
-    subKey: "studio:track.sidebar.split.fees.sub",
-    amount: 0.04,
-  },
-];
 
 export const CREDITS: CreditRow[] = [
   { who: "Mariana Sol · voice, piano, words" },

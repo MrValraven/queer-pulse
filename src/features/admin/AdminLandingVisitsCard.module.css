@@ -7,6 +7,17 @@
   display: flex;
 }
 
+/* The page switch and the range toggle take their own row under the title in
+   both pages, so a longer subtitle never moves them. They sit side by side
+   and wrap on a narrow card. */
+.controls {
+  flex: 1 0 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
 .total {
   margin: 2px 0 0;
   font-size: var(--text-13);

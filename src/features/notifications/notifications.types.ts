@@ -135,4 +135,10 @@ export interface Notification {
    */
   createdAtIso?: string;
   actions?: NotifAction[];
+  /**
+   * Opening this row or using its action reads the member's Studio access
+   * again (`studio_access_granted`), so the page it lands on never trusts an
+   * answer cached from before the grant.
+   */
+  shouldRefreshStudioAccess?: boolean;
 }

@@ -59,6 +59,10 @@ export const PANE_HEADER: Partial<Record<EditorPaneKey, PaneHeaderCopy>> = {
     titleKey: "subprofiles:editorPane.publish.title",
     ledeKey: "subprofiles:editorPane.publish.lede",
   },
+  danger: {
+    titleKey: "subprofiles:editorPane.danger.title",
+    ledeKey: "subprofiles:editorPane.danger.lede",
+  },
 };
 
 /** Shared lede shown above every per-section Content pane. */

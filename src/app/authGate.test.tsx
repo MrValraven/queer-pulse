@@ -4,6 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { MemberRole } from "../features/auth/api/auth.api";
 import {
+  elevatingCapabilities,
   isComingSoonPath,
   isGatedPath,
   isQuizshowHostingPath,
@@ -492,5 +493,21 @@ describe("Pulse Live gates", () => {
   it("leaves /play and /play/:code out of the hosting gate", () => {
     expect(isQuizshowHostingPath("/play")).toBe(false);
     expect(isQuizshowHostingPath("/play/QZ7KP4")).toBe(false);
+  });
+});
+
+describe("the music events console grant", () => {
+  it("elevates a music manager and producer into the music events console", () => {
+    expect(elevatingCapabilities("/admin/music-events")).toEqual([
+      "music_manager_producer",
+    ]);
+    expect(
+      elevatingCapabilities("/admin/music-events/queerpulse-club-night"),
+    ).toEqual(["music_manager_producer"]);
+  });
+  it("keeps every other admin path closed to the grant", () => {
+    expect(elevatingCapabilities("/admin/studio")).not.toContain(
+      "music_manager_producer",
+    );
   });
 });

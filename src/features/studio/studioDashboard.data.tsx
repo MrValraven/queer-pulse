@@ -4,8 +4,6 @@ import { StudioNumber } from "./StudioNumber";
 
 export interface DashStat {
   labelKey: string;
-  /** A date the label names (the next payout), formatted where it renders. */
-  labelDateIso?: string;
   v: ReactNode;
   /** The trend line under the figure: a catalog key and its values. */
   trendKey: string;
@@ -75,12 +73,6 @@ export const STATS: DashStat[] = [
     v: <StudioEuroAmount value={448} />,
     trendKey: "studio:demo.dashboard.trend.tips",
     trendValues: { tippers: 87, notes: 64, recent: 5 },
-  },
-  {
-    labelKey: "studio:dashboard.stats.nextPayout",
-    labelDateIso: "2026-07-05",
-    v: <StudioEuroAmount value={2140} />,
-    trendKey: "studio:demo.dashboard.trend.payout",
   },
 ];
 

@@ -1,0 +1,109 @@
+/* "Your music on the Studio page": the preview approvals card on the artist
+   dashboard. Same surface as the placements card. Tokens only. */
+.card {
+  /* The spacing below sits inside the Collapse, so it folds away with the card. */
+  margin-bottom: var(--gap-grid);
+  scroll-margin-top: var(--gap-lg);
+  background: var(--surface);
+  border: 1px solid var(--s-line);
+  border-radius: var(--radius-14);
+  padding: 24px 26px;
+  color: var(--studio-text);
+}
+@media (--md) {
+  .card {
+    padding: 20px 16px;
+  }
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 500;
+  color: var(--studio-text);
+}
+.heading:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.dek {
+  margin: 4px 0 16px;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  border-top: 1px solid var(--s-line);
+}
+.row:first-child {
+  border-top: 0;
+}
+
+.rowInner {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px 0;
+}
+
+.cover {
+  position: relative;
+  flex: none;
+  width: 48px;
+  height: 48px;
+}
+
+.text {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.trackTitle {
+  margin: 0;
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--studio-text);
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.chip {
+  margin: 2px 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.actions:empty {
+  display: none;
+}
+
+.failure {
+  margin: 8px 0 0;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--danger);
+  overflow-wrap: anywhere;
+}

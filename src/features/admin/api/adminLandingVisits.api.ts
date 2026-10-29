@@ -1,4 +1,5 @@
 import { apiGet } from "../../../shared/api/client";
+import type { LandingVisitPage } from "../../homepage/api/landingVisitBeacon";
 
 /**
  * Anonymous landing-page visit counts (`/admin/landing/visits`, admin-only).
@@ -7,7 +8,8 @@ import { apiGet } from "../../../shared/api/client";
  * per-visit row, so a day count is the finest grain this card can show.
  *
  * The backend accepts exactly 30 or 90 for `rangeDays`; any other value is a
- * 400 with `reason: 'invalid_range'`.
+ * 400 with `reason: 'invalid_range'`. The `page` query parameter picks which
+ * page's counts come back (`home` or `studio`), and the answer names it.
  */
 export type LandingVisitsRangeDays = 30 | 90;
 
@@ -26,6 +28,7 @@ export interface LandingVisitsSource {
 
 export interface AdminLandingVisitsDTO {
   rangeDays: LandingVisitsRangeDays;
+  page: LandingVisitPage;
   total: number;
   /** Zero-filled, oldest first, one row per UTC day in the range. */
   days: LandingVisitsDay[];
@@ -33,6 +36,11 @@ export interface AdminLandingVisitsDTO {
   topSources: LandingVisitsSource[];
 }
 
-/** Daily landing visits over `rangeDays`. Admin-only; returns 403 for other users. */
-export const getAdminLandingVisits = (rangeDays: LandingVisitsRangeDays) =>
-  apiGet<AdminLandingVisitsDTO>(`/admin/landing/visits?rangeDays=${rangeDays}`);
+/** Daily visits to one page over `rangeDays`. Admin-only; returns 403 for other users. */
+export const getAdminLandingVisits = (
+  rangeDays: LandingVisitsRangeDays,
+  page: LandingVisitPage,
+) =>
+  apiGet<AdminLandingVisitsDTO>(
+    `/admin/landing/visits?rangeDays=${rangeDays}&page=${page}`,
+  );

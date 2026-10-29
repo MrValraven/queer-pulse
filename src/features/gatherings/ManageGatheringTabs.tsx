@@ -37,8 +37,9 @@ interface ManageGatheringTabsProps {
   /** Event slug the attendee list is fetched for. */
   slug: string;
   onCancel: () => void;
-  /** Opens the delete confirm; see `SettingsTab`. */
-  onDelete: () => void;
+  /** Opens the delete confirm; see `SettingsTab`. Left out (a house
+   *  event), Settings shows no delete block. */
+  onDelete?: () => void;
   isDeletePending?: boolean;
   details: GatheringDetail[];
   description: string;

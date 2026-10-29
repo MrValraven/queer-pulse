@@ -114,6 +114,48 @@ const CODED_COPY: Readonly<Record<string, ErrorCopy>> = {
     fallback:
       "This event's live game has adults rounds. Change their label in the Live game tab first, then turn off 18+",
   },
+  // QueerPulse-hosted music events (music manager and producer contract).
+  music_event_not_found: {
+    key: "shared:apiError.musicEvent.notFound",
+    fallback: "This event isn't hosted by QueerPulse",
+  },
+  house_event_family_locked: {
+    key: "shared:apiError.musicEvent.familyLocked",
+    fallback: "A QueerPulse music event stays in Music",
+  },
+  music_event_community_unavailable: {
+    key: "shared:apiError.musicEvent.communityUnavailable",
+    fallback: "A QueerPulse music event can't be for one community only",
+  },
+  music_event_performer_not_studio_artist: {
+    key: "shared:apiError.musicEvent.performerNotStudioArtist",
+    fallback: "Only Studio artists can be booked",
+  },
+  music_event_cohost_is_you: {
+    key: "shared:apiError.musicEvent.cohostIsYou",
+    fallback: "You run this event for QueerPulse, so you can't cohost it too",
+  },
+  music_event_cohost_holds_grant: {
+    key: "shared:apiError.musicEvent.cohostHoldsGrant",
+    fallback: "Staff can't cohost a QueerPulse music event",
+  },
+  music_event_cohost_is_staff_tier: {
+    key: "shared:apiError.musicEvent.cohostIsStaffTier",
+    fallback:
+      "Staff can't cohost a QueerPulse music event. Moderators and admins stay off the cohost list",
+  },
+  music_event_cohost_not_active: {
+    key: "shared:apiError.musicEvent.cohostNotActive",
+    fallback: "Cohosts must be active members, and this account isn't active",
+  },
+  music_event_member_not_found: {
+    key: "shared:apiError.musicEvent.memberNotFound",
+    fallback: "No member has this profile address",
+  },
+  music_event_invite_request_not_found: {
+    key: "shared:apiError.musicEvent.inviteRequestNotFound",
+    fallback: "This invite request isn't on this event",
+  },
 };
 
 /** A `reasonFor` string is final as it stands: the backend's own sentence in
@@ -127,6 +169,17 @@ function resolve(copy: ErrorCopy | string): string {
 /** The browser reports no network at all, so the toast can name that cause. */
 function isOffline(): boolean {
   return typeof navigator !== "undefined" && navigator.onLine === false;
+}
+
+/** The resolved `CODED_COPY` line for an `ApiError` whose `data.code` is in the
+ *  table, or null. Lets a page show the same reason a toast would. */
+export function codedReasonFor(error: unknown): string | null {
+  if (!(error instanceof ApiError)) return null;
+  const errorCode = (error.data as { code?: unknown } | null)?.code;
+  if (typeof errorCode !== "string" || !Object.hasOwn(CODED_COPY, errorCode))
+    return null;
+  const codedCopy: ErrorCopy | undefined = CODED_COPY[errorCode];
+  return codedCopy ? resolve(codedCopy) : null;
 }
 
 /** Human toast copy for an error, or null when it should be handled elsewhere. */

@@ -67,7 +67,7 @@ function terrainOptions(t: TFunction) {
  *
  * A picnic asks what to bring, a club night asks about the door and about
  * sober options, a walk asks about the ground, a screening asks how long the
- * film runs, and four of the nine families (meet, learn, care, organise) ask
+ * film runs, and four of the ten families (meet, learn, care, organise) ask
  * nothing at all and render no block.
  *
  * Takes a family and a bag rather than the wizard's whole form object, because

@@ -2,6 +2,14 @@
   /* nav band reserved by shell (base.css); this is only breathing room */
   padding: 20px 0 var(--section-y-104);
 }
+/* A house event renders inside the admin shell, whose content box already
+   carries the page gutter, so the shared `.wrap` drops its own inset and
+   its centring to line up with the admin list's edge. Two classes outrank
+   the global `.wrap`. */
+.page .houseWrap {
+  padding-inline: 0;
+  margin-inline: 0;
+}
 .header {
   padding-bottom: 32px;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.09);

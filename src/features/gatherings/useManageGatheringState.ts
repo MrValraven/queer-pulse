@@ -10,22 +10,19 @@ import type { GatheringDetail } from "./data";
 
 /**
  * The management dashboard's local gathering state: seeded once from the
- * static prototype (demo, or no detail yet) or from the live detail, and kept
+ * static prototype (no detail, which is the member demo) or from the detail
+ * it is given (live, or a house event's own demo entry), and kept
  * in step with the detail's cover read URL as refetches bring it in.
  */
 export function useManageGatheringState({
-  demoMode,
   gathering,
 }: {
-  demoMode: boolean;
   gathering: GatheringDetail | null;
 }): [GatheringState, Dispatch<SetStateAction<GatheringState>>] {
   const { t } = useTranslation();
   const fmt = useFormat();
   const [gatheringState, setGatheringState] = useState<GatheringState>(() =>
-    demoMode || !gathering
-      ? demoInitialState(fmt, t)
-      : liveInitialState(gathering, fmt, t),
+    !gathering ? demoInitialState(fmt, t) : liveInitialState(gathering, fmt, t),
   );
 
   // A saved cover folds into state as the storage key the upload returned,

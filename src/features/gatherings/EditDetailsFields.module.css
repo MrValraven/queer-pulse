@@ -193,3 +193,22 @@
     border-top: 0;
   }
 }
+
+/* A field the host scope fixes (a QueerPulse music event's kind, Music):
+   quiet static text with a lock, no input chrome, so it never reads as
+   editable. The block padding matches an input's, so it sits level with the
+   Format select beside it. */
+.lockedValue {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin: 0;
+  /* 13px is the input's own block padding; no spacing token has that value. */
+  padding-block: 13px;
+  font-size: var(--text-16);
+  color: var(--ink-60);
+}
+.lockedValue > svg {
+  flex: none;
+  color: var(--ink-40);
+}

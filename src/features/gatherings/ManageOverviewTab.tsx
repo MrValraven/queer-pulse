@@ -26,6 +26,7 @@ import {
 } from "./runByListing";
 import type { RunBySaveOutcome } from "./useGatheringEditSave";
 import { GatheringDescriptionText } from "./GatheringDescriptionText";
+import { useEventHostScope } from "./eventHostScope";
 import styles from "./ManageGatheringPage.module.css";
 
 export type { GatheringDetail } from "./OverviewDetailRows";
@@ -117,6 +118,9 @@ export function OverviewTab({
   const { t } = useTranslation();
   const fmt = useFormat();
   const [editing, setEditing] = useState<OverviewEditing>(null);
+  // A house event is run by QueerPulse and is never copied, so it has no
+  // "Run by" row and no Duplicate.
+  const { isHouseEvent } = useEventHostScope();
   const { items: managedListings, isResolving } = useManagedListings();
   const { checking: isAuthChecking, user } = useAuth();
   const isViewerHost = Boolean(hostSlug) && user?.profile.slug === hostSlug;
@@ -126,6 +130,7 @@ export function OverviewTab({
   // The "Run by" row shows for an organiser who runs a business, or while
   // the gathering already names one (read-only when it is not theirs).
   const hasRunByRow =
+    !isHouseEvent &&
     onUpdateRunBy !== undefined &&
     (runByListing !== null || managedListings.length > 0);
   const detailRows = hasRunByRow
@@ -227,7 +232,7 @@ export function OverviewTab({
         </div>
         {/* "Duplicate gathering" (PRD-190). A host with a monthly one-off used to
             retype the entire wizard every time. */}
-        <DuplicateGatheringButton slug={slug} />
+        {!isHouseEvent && <DuplicateGatheringButton slug={slug} />}
       </div>
 
       {editing?.kind === "field" && (
@@ -245,7 +250,7 @@ export function OverviewTab({
           onSave={onUpdateVenue}
         />
       )}
-      {editing?.kind === "runBy" && onUpdateRunBy && (
+      {editing?.kind === "runBy" && !isHouseEvent && onUpdateRunBy && (
         <EditRunByModal
           initial={runByListing}
           items={managedListings}

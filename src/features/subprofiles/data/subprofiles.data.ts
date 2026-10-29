@@ -127,12 +127,16 @@ export interface DemoSubprofile extends SubprofileDTO {
    *  carried onto the public and card DTOs. Optional so personas that never
    *  stated a status need not declare it. */
   availabilityUpdatedAt?: string | null;
+  /** Demo-only: a Studio founding artist, carried onto the public DTO.
+   *  Must agree with DEMO_FOUNDING_ARTIST_IDS in studioDemoFounding.data.ts. */
+  isFoundingArtist?: boolean;
 }
 
 const NIGHTFORM: DemoSubprofile = {
   ownerSlug: "diogo",
   ownerName: "Diogo Vasques",
   id: "sp-diogo-nightform",
+  isFoundingArtist: true,
   kind: "musician",
   slug: "nightform",
   handle: "nightform",
@@ -1483,6 +1487,7 @@ const LECHATDASHINKO: DemoSubprofile = {
   ownerSlug: "jordan",
   ownerName: "Jordan Park",
   id: "sp-jordan-lechatdashinko",
+  isFoundingArtist: true,
   kind: "dj",
   slug: "lechatdashinko",
   // linkedPersonaHandleCandidate("jordan", "lechatdashinko")
@@ -1604,6 +1609,7 @@ const VANDA_DIESEL: DemoSubprofile = {
   ownerSlug: "ines-fonseca",
   ownerName: "Inês Fonseca",
   id: "sp-ines-fonseca-vanda-diesel",
+  isFoundingArtist: true,
   kind: "drag",
   slug: "vanda-diesel",
   handle: "vanda-diesel",
@@ -3051,6 +3057,7 @@ export function toPublicDto(
     removedAt: sp.removedAt ?? null,
     viewerIsMember,
     worksAt: demoListingWorksAt(sp.id),
+    ...(sp.isFoundingArtist === true ? { isFoundingArtist: true } : {}),
   };
   if (sp.linkVisibility === "linked") {
     base.ownerSlug = sp.ownerSlug;

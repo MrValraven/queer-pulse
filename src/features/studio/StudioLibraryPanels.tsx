@@ -15,6 +15,7 @@ import { StudioLibraryGrid } from "./StudioLibraryGrid";
 import { StudioLibraryPlaylists } from "./StudioLibraryPlaylists";
 import { StudioLibrarySavedList } from "./StudioLibrarySavedList";
 import { StudioLoadError } from "./StudioLoadStates";
+import { StudioPurchaseList } from "./StudioPurchaseList";
 import {
   artistFilterText,
   savedItemFilterText,
@@ -31,9 +32,8 @@ import {
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
 
-/** Saved releases, every page of them (ENG-04), as cards. A filter or a
- *  sort reads the remaining pages first, so it covers the whole set. Liked
- *  tracks have their own page (routes.studioLiked). */
+/** Saved releases as cards, every page (ENG-04): a filter or sort reads the
+ *  rest first. Liked tracks have their own page (routes.studioLiked). */
 function LibraryReleases({
   query,
   sort,
@@ -166,6 +166,26 @@ function LibraryArtists({ query, sort, onClearQuery }: StudioLibraryListProps) {
   );
 }
 
+/** Purchases from artists, every status, newest first; no filter or sort. */
+function StudioLibraryPurchases() {
+  const { t } = useTranslation();
+  const headingId = useId();
+  return (
+    <section className={styles.row} aria-labelledby={headingId}>
+      <div className={styles.rowH}>
+        <h2 id={headingId}>
+          <Translation
+            i18nKey="studio:purchase.list.heading"
+            components={{ em: <em /> }}
+          />
+        </h2>
+        <p className={styles.sub}>{t("studio:purchase.list.dek")}</p>
+      </div>
+      <StudioPurchaseList status="all" isStudioContext headingLevel={3} />
+    </section>
+  );
+}
+
 /** One library tab's content. */
 export function StudioLibraryPanel({
   tab,
@@ -173,5 +193,6 @@ export function StudioLibraryPanel({
 }: StudioLibraryListProps & { tab: StudioLibraryTab }) {
   if (tab === "playlists") return <StudioLibraryPlaylists {...listProps} />;
   if (tab === "artists") return <LibraryArtists {...listProps} />;
+  if (tab === "purchases") return <StudioLibraryPurchases />;
   return <LibraryReleases {...listProps} />;
 }

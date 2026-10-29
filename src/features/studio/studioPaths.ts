@@ -79,11 +79,13 @@ export const studioPressPrintPath = (
 ) =>
   `${routes.studioPressPrint}?id=${encodeURIComponent(subprofileId)}${shouldPrint ? "&print=1" : ""}`;
 
-/** Liked tracks live on their own page (routes.studioLiked). */
+/** Liked tracks live on their own page (routes.studioLiked). "purchases"
+ *  lists the music the member bought from artists, last. */
 export const STUDIO_LIBRARY_TABS = [
   "playlists",
   "releases",
   "artists",
+  "purchases",
 ] as const;
 export type StudioLibraryTab = (typeof STUDIO_LIBRARY_TABS)[number];
 
@@ -141,6 +143,28 @@ export const studioListeningPath = (range: StudioListeningRange = "4w") =>
   range === "4w"
     ? routes.studioListening
     : `${routes.studioListening}?range=${range}`;
+
+/** Payments to confirm (contract 10.4): `confirm` is the default tab and
+ *  carries no query; without a persona the page picks one. */
+export const STUDIO_PAYMENTS_TABS = ["confirm", "sales"] as const;
+export type StudioPaymentsTab = (typeof STUDIO_PAYMENTS_TABS)[number];
+export function studioPaymentsPath(
+  subprofileId: string | null = null,
+  tab: StudioPaymentsTab = "confirm",
+): string {
+  const params = new URLSearchParams();
+  if (subprofileId) params.set("persona", subprofileId);
+  if (tab === "sales") params.set("tab", tab);
+  const queryString = params.toString();
+  return queryString
+    ? `${routes.studioPayments}?${queryString}`
+    : routes.studioPayments;
+}
+
+/** The Getting paid section of Studio settings for one persona. */
+export const STUDIO_GETTING_PAID_ANCHOR = "getting-paid";
+export const studioGettingPaidPath = (subprofileId: string) =>
+  `${routes.studioSettings}?persona=${encodeURIComponent(subprofileId)}#${STUDIO_GETTING_PAID_ANCHOR}`;
 
 /** Funding & Grants filtered to music. The forum reads `category`,
  *  `fundingView` and `tag` from its URL (useForumUrlParams). */

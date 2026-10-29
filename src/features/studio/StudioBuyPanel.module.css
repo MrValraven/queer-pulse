@@ -1,0 +1,188 @@
+/* The buy panels: the release page's side card and the track page's compact
+   card, with the offer's state blocks (can buy, pending, owned, refused).
+   State blocks fold through the shared Collapse, so spacing that must fold
+   with a block sits inside it. Colours read the theme-following Studio
+   roles; the downloads list inside keeps its own app-wide tokens. */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: var(--studio-text);
+}
+
+/* The track sidebar's card look (track.module.css .sCard). */
+.trackCard {
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  border: 1px solid var(--studio-line);
+  border-radius: var(--radius-16);
+  padding: 22px 24px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--studio-eyebrow);
+}
+.eyebrow:focus {
+  outline: none;
+}
+.eyebrow:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.states {
+  min-width: 0;
+}
+
+/* A state block with its price line on top: the price folds with its own
+   spacing, so the block below carries the gap. */
+.stack {
+  min-width: 0;
+}
+
+.priceSlot {
+  padding-bottom: 10px;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* ── Price ──────────────────────────────────────────────────────────── */
+.price {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-28);
+  color: var(--studio-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.priceNamed {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  line-height: 1.4;
+  color: var(--studio-text);
+}
+
+/* ── Buy ────────────────────────────────────────────────────────────── */
+.buyButton {
+  width: 100%;
+  min-height: var(--tap-min);
+  justify-content: center;
+}
+
+/* The Studio control corners. Doubled to outrank the shared Button's pill
+   radius in any load order. */
+.buyButton.buyButton {
+  border-radius: var(--studio-control-radius);
+}
+
+/* ── Lines ──────────────────────────────────────────────────────────── */
+.stateLine {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  line-height: 1.4;
+  color: var(--studio-text);
+}
+
+.note {
+  margin: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.45;
+  color: var(--studio-text-muted);
+}
+
+.refusal {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.45;
+  color: var(--studio-text-muted);
+}
+
+.failure {
+  margin: 0;
+  padding-top: 6px;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--studio-accent-text);
+}
+
+.code {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ── Disclosures and actions ────────────────────────────────────────── */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+}
+
+.toggleButton {
+  min-height: var(--tap-min);
+}
+
+.disclosed {
+  padding-top: 6px;
+}
+
+.wall {
+  padding-top: 12px;
+  border-top: 1px solid var(--studio-line);
+}
+
+.quietLink {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 6px;
+  min-height: var(--tap-min);
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--studio-accent-text);
+  text-decoration: none;
+}
+.quietLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+@media (hover: hover) {
+  .quietLink:hover {
+    text-decoration: underline;
+  }
+}
+
+/* ── Status ─────────────────────────────────────────────────────────── */
+.status {
+  min-width: 0;
+}
+
+.statusLine {
+  margin: 0;
+  padding-top: 12px;
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+  color: var(--studio-text-muted);
+}
+
+/* ── Track sheet host ───────────────────────────────────────────────── */
+.loadingLine {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--studio-text-muted);
+}

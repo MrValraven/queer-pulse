@@ -7,6 +7,7 @@ import {
   FiClock,
   FiCheckSquare,
   FiCpu,
+  FiDisc,
   FiEdit3,
   FiFeather,
   FiFileText,
@@ -58,7 +59,8 @@ export type AdminNavBadge =
   | "partnerships"
   | "verifications"
   | "housingCoops"
-  | "listingClaims";
+  | "listingClaims"
+  | "musicEvents";
 
 /** An unlaunched feature whose console pages only some staff can see yet. */
 export type AdminNavFeature = "quizshow";
@@ -368,6 +370,16 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         to: routes.adminCreatorDrafts,
         icon: FiEdit3,
         isAdminOnly: true,
+      },
+      {
+        // `AdminMusicEventsController`: Admin or the `music_manager_producer`
+        // grant, mirrored in the authGate elevated pattern list.
+        labelKey: "shared:adminNav.items.musicEvents",
+        to: routes.adminMusicEvents,
+        icon: FiDisc,
+        capabilities: ["music_manager_producer"],
+        badge: "musicEvents",
+        tone: "warn",
       },
     ],
   },

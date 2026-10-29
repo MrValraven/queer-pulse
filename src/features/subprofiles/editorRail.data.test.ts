@@ -89,3 +89,29 @@ describe("buildEditorRailGroups Works at entry", () => {
     expect(findWorksAt()).not.toHaveProperty("attentionCount");
   });
 });
+
+describe("buildEditorRailGroups Danger zone entry", () => {
+  it("ends the rail with a Danger zone group after Publish", () => {
+    const groups = buildEditorRailGroups({
+      kind: "dj",
+      sections: [],
+      affiliations: [],
+      bio: "",
+      handle: null,
+      avatarUrl: null,
+      coverUrl: null,
+      availability: null,
+      socialLinks: [],
+      linkVisibility: "linked",
+      skinData: null,
+      featured: null,
+    } as unknown as SubprofileView);
+    expect(groups.at(-2)?.entries.map((entry) => entry.key)).toEqual([
+      "publish",
+    ]);
+    expect(groups.at(-1)).toMatchObject({
+      headingKey: "subprofiles:editorRail.dangerGroup",
+      entries: [{ key: "danger" }],
+    });
+  });
+});

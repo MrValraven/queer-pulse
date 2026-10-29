@@ -1,0 +1,52 @@
+.page {
+  max-width: 860px;
+  margin-inline: auto;
+  padding-block: clamp(20px, 5vw, 40px);
+  padding-inline: clamp(16px, 4vw, 24px);
+}
+
+.head {
+  margin-bottom: 26px;
+}
+
+.eyebrow {
+  display: inline-block;
+  min-height: 44px;
+  line-height: 44px;
+  font-size: var(--text-13);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  text-decoration: none;
+}
+
+.eyebrow:hover {
+  text-decoration: underline;
+}
+
+.eyebrow:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: var(--text-title);
+  line-height: 1.08;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.title em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+
+.dek {
+  font-size: var(--text-15);
+  line-height: 1.6;
+  color: var(--ink-60);
+  max-width: 58ch;
+}

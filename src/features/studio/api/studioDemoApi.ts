@@ -61,6 +61,10 @@ import {
 } from "./studioDemoListening";
 import { studioRefusal } from "./studioDemoMutations";
 import {
+  demoReleasePriceOf,
+  demoTrackPriceOf,
+} from "./studioDemoPurchaseStore";
+import {
   demoOwnerClaimsOfRelease,
   demoOwnerClaimsOfTrack,
   demoTrackWithSafety,
@@ -180,6 +184,8 @@ function withOwnerTrackFields(
     loudnessLufs,
     peakDb,
     ...listeningDetailsOf(track.id),
+    // Studio purchases: an owner row carries the track's own price.
+    price: demoTrackPriceOf(track.id),
   };
 }
 
@@ -218,7 +224,7 @@ export function demoStudioReleasesPage(
 ): StudioPageDTO<StudioReleaseCardDTO> {
   const source = DEMO_LISTED_RELEASES.filter(
     (release) =>
-      (genre === null || release.genre === genre) &&
+      (genre === null || release.genres.includes(genre)) &&
       (mood === null || release.mood === mood) &&
       isInFormat(release, format),
   );
@@ -230,12 +236,12 @@ export function demoStudioReleasesPage(
  *  first covered match wins. */
 function demoFacetCovers<FacetValue extends string>(
   values: readonly FacetValue[],
-  facetOf: (release: StudioReleaseDTO) => string | null,
+  hasValue: (release: StudioReleaseDTO, value: FacetValue) => boolean,
 ): Record<string, string> {
   const covers: Record<string, string> = {};
   for (const value of values) {
     const newestCovered = DEMO_LISTED_RELEASES.find(
-      (release) => facetOf(release) === value && Boolean(release.coverUrl),
+      (release) => hasValue(release, value) && Boolean(release.coverUrl),
     );
     if (newestCovered?.coverUrl) covers[value] = newestCovered.coverUrl;
   }
@@ -246,11 +252,13 @@ function demoFacetCovers<FacetValue extends string>(
  *  the newest cover in each. */
 export function demoStudioGenres(): StudioGenresDTO {
   const genres = STUDIO_GENRES.filter((genre) =>
-    DEMO_LISTED_RELEASES.some((release) => release.genre === genre),
+    DEMO_LISTED_RELEASES.some((release) => release.genres.includes(genre)),
   );
   return {
     genres,
-    covers: demoFacetCovers(genres, (release) => release.genre),
+    covers: demoFacetCovers(genres, (release, genre) =>
+      release.genres.includes(genre),
+    ),
   };
 }
 
@@ -262,7 +270,7 @@ export function demoStudioMoods(): StudioMoodsDTO {
   );
   return {
     moods,
-    covers: demoFacetCovers(moods, (release) => release.mood),
+    covers: demoFacetCovers(moods, (release, mood) => release.mood === mood),
   };
 }
 
@@ -321,6 +329,7 @@ export function demoStudioRelease(releaseId: string): StudioReleaseDTO {
   // read, so every accept and removal shows.
   return {
     ...forViewer(match),
+    price: demoReleasePriceOf(match.id),
     personaCredits: demoCreditSummariesOfRelease(match.id),
   };
 }
@@ -425,11 +434,11 @@ export function demoStudioSearch(
   const matches = (text: string) =>
     needle.length > 0 && foldForSearch(text).includes(needle);
   const isInFilters = (release: {
-    genre: string | null;
+    genres: string[];
     mood: string | null;
     artist: StudioArtistRefDTO;
   }) =>
-    (genre === null || release.genre === genre) &&
+    (genre === null || release.genres.includes(genre)) &&
     (mood === null || release.mood === mood) &&
     isInFormat(release, format);
   const wants = (kind: StudioSearchType) => type === "all" || type === kind;

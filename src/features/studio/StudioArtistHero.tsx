@@ -1,14 +1,12 @@
 import { useState, type Ref } from "react";
 import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import type { StudioArtistView } from "./api/studio.adapters";
-import { ARTIST_SHOWCASE } from "./studioArtist.data";
 import { StudioArtistHeroActions } from "./StudioArtistHeroActions";
 import { StudioDetailHero } from "./StudioDetailHero";
+import { StudioFoundingBadge } from "./StudioFoundingBadge";
 import { useIsHeroCompact } from "./studioHeroLayout";
-import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
 
 /** The persona's wide cover, decorative (the name is the h1 beside it). It
@@ -61,7 +59,8 @@ export function StudioArtistHero({
   sentinelRef,
 }: {
   artist: StudioArtistView;
-  onTip: () => void;
+  /** The showcase Tip pill renders only when passed. */
+  onTip?: () => void;
   /** The marker the page's sticky header watches. */
   sentinelRef?: Ref<HTMLDivElement>;
   /** Marks the name inside the page's h1, so the page can find that heading
@@ -70,7 +69,6 @@ export function StudioArtistHero({
 }) {
   const { t } = useTranslation();
   const formatters = useFormat();
-  const isShowcase = useStudioShowcase();
   const isCompact = useIsHeroCompact();
   const person = artist.artist;
   const releaseCount = artist.allReleases.length;
@@ -104,7 +102,12 @@ export function StudioArtistHero({
           fetchPriority="high"
         />
       }
-      kind={[t(person.kindLabelKey), person.city].filter(Boolean).join(" · ")}
+      kind={
+        <>
+          {[t(person.kindLabelKey), person.city].filter(Boolean).join(" · ")}
+          {artist.isFoundingArtist ? <StudioFoundingBadge size="md" /> : null}
+        </>
+      }
       title={<span ref={titleRef}>{person.name}</span>}
       by={[
         person.format === "podcast"
@@ -122,24 +125,6 @@ export function StudioArtistHero({
           isCompact={isCompact}
         />
       }
-    >
-      {isShowcase && (
-        <div className={styles.payPill}>
-          <span>
-            <Translation
-              i18nKey="studio:artist.hero.subscribeNote"
-              components={{ em: <em /> }}
-              values={{
-                amount: formatters.currency(ARTIST_SHOWCASE.subscribeAmount),
-                artist: person.name,
-              }}
-            />{" "}
-            <span className={styles.small}>
-              {t("studio:artist.hero.tipOnTopNote")}
-            </span>
-          </span>
-        </div>
-      )}
-    </StudioDetailHero>
+    />
   );
 }

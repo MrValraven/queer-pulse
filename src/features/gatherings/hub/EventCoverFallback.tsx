@@ -14,6 +14,7 @@ const FAMILY_TONE: Record<GatheringFamily, FallbackTone> = {
   meet: "coral",
   eat: "amber",
   party: "violet",
+  music: "violet",
   make: "rose",
   learn: "plum",
   watch: "violet",

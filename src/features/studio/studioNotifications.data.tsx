@@ -186,11 +186,11 @@ export const NOTIFICATIONS: NotifItem[] = [
     title: {
       key: "studioShowcase:notifications.items.monthlyRecap.title",
       values: { count: 9 },
-      euroValues: { amount: 31 },
+      euroValues: { amount: 24 },
     },
     meta: {
       key: "studioShowcase:notifications.items.monthlyRecap.meta",
-      euroValues: { sustainer: 7, direct: 24 },
+      euroValues: { sustainer: 7 },
     },
   },
   {

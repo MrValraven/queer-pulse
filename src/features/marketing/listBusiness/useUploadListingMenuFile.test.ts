@@ -44,4 +44,12 @@ describe("validateMenuFile", () => {
       expect((error as MenuFileUploadError).code).toBe("size");
     }
   });
+
+  it("lets a photo over 10 MB through, since the image pipeline shrinks it first", () => {
+    expect(() =>
+      validateMenuFile(
+        fakeFile("image/jpeg", MENU_FILE_MAX_BYTES + 1, "board.jpg"),
+      ),
+    ).not.toThrow();
+  });
 });

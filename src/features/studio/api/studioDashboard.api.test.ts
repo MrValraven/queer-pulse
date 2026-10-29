@@ -30,7 +30,7 @@ describe("Studio dashboard raw calls", () => {
     expect(apiGet).toHaveBeenLastCalledWith("/studio/milestones/m%201");
   });
 
-  it("reads 28 days of plays and the top supporters", async () => {
+  it("reads 28 days of plays and the top listeners", async () => {
     await getStudioArtistPlays("p 1");
     expect(apiGet).toHaveBeenLastCalledWith(
       "/studio/artists/p%201/plays?days=28",

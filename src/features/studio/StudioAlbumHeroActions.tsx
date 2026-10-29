@@ -25,7 +25,8 @@ import styles from "./studio.module.css";
 /** The hero's actions. Who sees what: an upcoming release's visitor gets
  *  Notify me and Share; a preview gets Play alone; a published release
  *  gets the heart (it likes the release into the library), Add to
- *  playlist, Tip (showcase only, a gift icon), Share and the More
+ *  playlist, Tip (showcase only, when the page passes `onTip`; a gift
+ *  icon), Share and the More
  *  menu (Play next and Add to queue for the whole release, Go to artist,
  *  Copy link and, for a visitor, Report). Below 1280px every action after
  *  Play is a round icon with a tooltip, so the row stays on one line, and
@@ -38,7 +39,7 @@ export function StudioAlbumHeroActions({
 }: {
   release: StudioReleaseView;
   previewToken?: string;
-  onTip: () => void;
+  onTip?: () => void;
   onReport: () => void;
 }) {
   const { t } = useTranslation();
@@ -113,6 +114,7 @@ export function StudioAlbumHeroActions({
         </Tooltip>
       )}
       {isShowcase &&
+        onTip !== undefined &&
         isPublicExtra &&
         (isCompact ? (
           <IconButton

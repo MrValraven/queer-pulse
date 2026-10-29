@@ -56,7 +56,7 @@ function catalogueArtistOf(subprofileId: string): StudioArtistRefDTO | null {
   );
 }
 
-function personaIdentityOf(
+export function personaIdentityOf(
   persona: StudioArtistRefDTO,
 ): StudioSupporterIdentityDTO {
   const identityPersona: StudioSupporterPersonaDTO = {
@@ -74,7 +74,7 @@ const accountIdentity = (
   member: StudioPlaylistPersonDTO,
 ): StudioSupporterIdentityDTO => ({ kind: "account", member });
 
-function identityOf(
+export function identityOf(
   shownAsSubprofileId: string | null,
 ): StudioSupporterIdentityDTO {
   const persona = DEMO_STUDIO_ME.uploadablePersonas.find(
@@ -107,7 +107,7 @@ function artistToSupport(subprofileId: string): StudioArtistRefDTO {
   return artist;
 }
 
-function optionsOfViewer(): StudioSupporterOptionDTO[] {
+export function optionsOfViewer(): StudioSupporterOptionDTO[] {
   const personas = [...DEMO_STUDIO_ME.uploadablePersonas].sort(
     (left, right) =>
       left.name.localeCompare(right.name) || left.id.localeCompare(right.id),

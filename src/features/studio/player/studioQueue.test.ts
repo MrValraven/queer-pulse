@@ -30,6 +30,7 @@ const release = {
   },
   publishedAt: null,
   genre: null,
+  genres: [],
   mood: null,
   scene: null,
 };

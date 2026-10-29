@@ -1,0 +1,175 @@
+/* ── Studio console: founding artists and Waiting for Studio ───────────── */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.sub {
+  max-width: 62ch;
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.counts {
+  margin: 0;
+  font-size: var(--text-14);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.notice {
+  max-width: 60ch;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.empty {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+
+.shelfSwitch {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  padding: 14px 16px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card, 22px);
+  background: var(--paper);
+}
+
+.shelfText {
+  display: flex;
+  flex: 1 1 240px;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.shelfLabel {
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.list {
+  display: block;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-bottom: 8px;
+  padding: 14px 16px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card, 22px);
+  background: var(--paper);
+}
+
+/* The waiting item animates its height, so the card sits inside it. */
+.waitingItem {
+  display: block;
+}
+
+.dragHandle {
+  display: inline-flex;
+  width: 16px;
+  color: var(--ink-40);
+  cursor: grab;
+}
+
+.position {
+  min-width: 2ch;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+}
+
+.identity {
+  display: flex;
+  flex: 1 1 240px;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.identityText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+}
+
+.name {
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+a.name:hover {
+  text-decoration: underline;
+}
+
+a.name:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.meta {
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+}

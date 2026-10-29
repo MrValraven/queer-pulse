@@ -5,6 +5,8 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useEventHostScope } from "./eventHostScope";
+import { houseDemoMessages } from "./houseMusicEvents.data";
 import { PREVIOUS_MESSAGES, ATTENDEE_COUNT } from "./manageGathering.data";
 import { ManageAnnouncements } from "./ManageAnnouncements";
 import { messageRelativeTime } from "./manageGatheringDates";
@@ -36,10 +38,15 @@ export function MessagesTab({ slug }: { slug: string }) {
   const composerLabelId = useId();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
+  const { isHouseEvent } = useEventHostScope();
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState<SentMessage[]>([]);
 
-  const messages = [...sent, ...PREVIOUS_MESSAGES];
+  // A house event's history names its own venue, never the member demo's brunch.
+  const previousMessages = isHouseEvent
+    ? houseDemoMessages(slug)
+    : PREVIOUS_MESSAGES;
+  const messages = [...sent, ...previousMessages];
 
   // Live mode drives the real announcements endpoint (LOC-06). This used to
   // be an honest "not available yet" panel, because the only alternative was

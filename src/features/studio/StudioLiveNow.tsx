@@ -214,11 +214,11 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
           <div>
             <div className={s.lsV}>
               <em>
-                <StudioEuroAmount value={0.05} />
+                <StudioEuroAmount value={0} />
               </em>
             </div>
             <div className={s.lsL}>
-              {t("studio:liveNow.perPlayLabel", { artist: "Mariana" })}
+              {t("studio:liveNow.buyCutLabel", { artist: "Mariana" })}
             </div>
           </div>
         </div>
@@ -256,12 +256,7 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
                   <div className={s.srWho}>{copyText(t, setRow.whoLabel)}</div>
                 </div>
                 <div className={s.srPay}>
-                  {setRow.payNoteKey && (
-                    <b style={{ color: "var(--studio-accent-text)" }}>
-                      {t(setRow.payNoteKey)}
-                    </b>
-                  )}
-                  {setRow.payEmLabel ? (
+                  {setRow.payEmLabel && (
                     <em
                       style={{
                         color: "var(--studio-accent-text)",
@@ -270,8 +265,6 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
                     >
                       {copyText(t, setRow.payEmLabel)}
                     </em>
-                  ) : (
-                    copyText(t, setRow.payLabel)
                   )}
                 </div>
                 <span className={s.srTm}>{setRow.tm}</span>

@@ -42,7 +42,7 @@ beforeEach(() => {
   // fixture and likes Pedro on the 25. Marking the seed done keeps the
   // store empty, so the track starts unliked.
   resetStudioLibrarySeedForTests();
-  window.localStorage.setItem("qp.demo.studioLibrarySeeded.v3", "1");
+  window.localStorage.setItem("qp.demo.studioLibrarySeeded.v4", "1");
 });
 
 const pedroLike: StudioLikeSubject = {

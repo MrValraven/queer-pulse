@@ -7,6 +7,7 @@ import { usePartnerApplications } from "../../../features/marketing/api/usePartn
 import { useVerificationRequests } from "../../../features/admin/api/useAdminVerifications";
 import { useAdminJoinRequests } from "../../../features/admin/api/useAdminHousingCoops";
 import { useListingClaims } from "../../../features/admin/api/useListingClaims";
+import { useMusicEventAttention } from "../../../features/admin/musicEvents/api/useMusicEvents";
 import { useMyStaffRoles } from "../../../features/auth/api/useMyStaffRoles";
 import type { AdminNavBadgeCounts } from "./adminNavMatching";
 
@@ -64,6 +65,10 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
   const hasPartnerApplicationsAccess = staffRoles.includes("partnerships");
   const hasListingClaimsAccess =
     hasModeratorQueueAccess || staffRoles.includes("directory_moderator");
+  // `AdminMusicEventsController` admits an admin or the
+  // `music_manager_producer` grant; `useMyStaffRoles` already lists every grant
+  // for an admin and in demo mode.
+  const hasMusicEventsAccess = staffRoles.includes("music_manager_producer");
   const overview = useAdminOverview({ isEnabled: hasAdminOverviewAccess });
   const modReports = useModReports(
     undefined,
@@ -100,6 +105,14 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
     isEnabled: hasListingClaimsAccess,
   });
 
+  // The music events pill counts pending invite requests because they are the
+  // queue a holder answers; lineup replies show per event on the page (Spec
+  // correction 8). The page reads the same first "upcoming" page, so this is
+  // served from its cache.
+  const musicEventAttention = useMusicEventAttention({
+    isEnabled: hasMusicEventsAccess,
+  });
+
   // Phase 2's review queue is live, so the badge counts the actual review-queue
   // backlog: every request still waiting on a moderator, at any stage of that
   // wait (freshly submitted, actively being reviewed, or back for a second look
@@ -131,5 +144,8 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
     verifications: hasModeratorQueueAccess ? pendingRequestCount : 0,
     housingCoops: hasAdminOverviewAccess ? housingCoopJoinRequests.total : 0,
     listingClaims: hasListingClaimsAccess ? listingClaims.total : 0,
+    musicEvents: hasMusicEventsAccess
+      ? musicEventAttention.pendingInviteRequestCount
+      : 0,
   };
 }

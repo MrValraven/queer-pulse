@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, type ReactNode } from "react";
 import {
   MemberSelectList,
   Modal,
@@ -24,6 +24,8 @@ export function CohostInvitePickStep({
   onSearchChange,
   onPick,
   onClose,
+  title,
+  sub,
 }: {
   /** Slugs already cohosting, hidden from the pool. */
   excludeSlugs: string[];
@@ -31,6 +33,11 @@ export function CohostInvitePickStep({
   onSearchChange: (query: string) => void;
   onPick: (person: MemberSelectPerson) => void;
   onClose: () => void;
+  /** Replaces the member invite heading, for a host that adds cohosts without
+   *  an invite. Unset, the heading is the one members have always seen. */
+  title?: ReactNode;
+  /** Replaces the member invite sub line. Unset, the usual line shows. */
+  sub?: ReactNode;
 }) {
   const { t } = useTranslation();
   const staffMap = useStaffMap();
@@ -59,12 +66,14 @@ export function CohostInvitePickStep({
     <Modal
       eyebrow={t("gatherings:cohost.addModal.eyebrow")}
       title={
-        <Translation
-          i18nKey="gatherings:cohost.addModal.title"
-          components={{ em: <em /> }}
-        />
+        title ?? (
+          <Translation
+            i18nKey="gatherings:cohost.addModal.title"
+            components={{ em: <em /> }}
+          />
+        )
       }
-      sub={t("gatherings:cohost.addModal.sub")}
+      sub={sub ?? t("gatherings:cohost.addModal.sub")}
       onClose={onClose}
     >
       <MemberSelectList

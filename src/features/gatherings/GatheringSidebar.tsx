@@ -184,9 +184,11 @@ export function GatheringSidebar({
           </div>
         </div>
       ) : (
+        // A house-hosted event has no member host: the label above already
+        // says "Hosted by", so the row carries only the name.
         <div className={styles.hostRow}>
           <div className={styles.hostName}>
-            {t("gatherings:common.hostedBy")} {gathering.host || "QueerPulse"}
+            {gathering.host || "QueerPulse"}
           </div>
         </div>
       )}

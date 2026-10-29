@@ -5,6 +5,7 @@ import { Button } from "../../../shared/components/ui/Button";
 import { SkeletonLine } from "../../../shared/components/ui";
 import { useDebouncedValue } from "../../../shared/hooks/useDebouncedValue";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useEventHostScope } from "../eventHostScope";
 import { useAttendeePages } from "../api/useAttendeePages";
 import { useAttendees } from "../api/useAttendees";
 import { CheckinFocusLayer } from "./CheckinFocusLayer";
@@ -42,7 +43,9 @@ export function CheckinTab({
   customRsvpQuestion,
 }: CheckinTabProps) {
   const { t } = useTranslation();
-  const { data: roster, isLoading } = useAttendees(slug);
+  // The house scope polls the door; the member scope relies on realtime.
+  const { doorRefetchIntervalMs: refetchIntervalMs } = useEventHostScope();
+  const { data: roster, isLoading } = useAttendees(slug, { refetchIntervalMs });
   const now = useNow(NOW_REFRESH_MS);
   const { isFocusMode, enterFocusMode, exitFocusMode } = useFocusMode();
   const [query, setQuery] = useState("");
@@ -60,15 +63,19 @@ export function CheckinTab({
     undoByName,
     checkInByCard,
   } = useCheckinActions(slug);
-  const expected = useAttendeePages(slug, {
-    status: "going",
-    arrival: "expected",
-    q: searchTerm,
-  });
+  const expected = useAttendeePages(
+    slug,
+    {
+      status: "going",
+      arrival: "expected",
+      q: searchTerm,
+    },
+    { refetchIntervalMs },
+  );
   const arrived = useAttendeePages(
     slug,
     { status: "going", arrival: "arrived", q: searchTerm },
-    { isEnabled: isArrivedOpen || searchTerm !== "" },
+    { isEnabled: isArrivedOpen || searchTerm !== "", refetchIntervalMs },
   );
 
   // A number is a number, zero included. `null` means the platform no longer

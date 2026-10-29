@@ -8,7 +8,22 @@
 /* The nav band above is reserved by the shell (base.css). The page sits on
    the app's own cream ground, so nothing here paints a full-bleed surface. */
 .page {
+  /* The grid breakpoints below measure this box, so the wizard lays out by
+     the room it actually has. On the member page it spans the viewport (the
+     same thresholds as before); inside the admin frame the console rail is
+     already taken off. */
+  container: create-wizard / inline-size;
   padding: 40px 0 var(--section-y-112);
+}
+/* A QueerPulse house event sits inside the admin console, whose content box
+   already carries the gutter and top inset. Dropping the wrap's own gutter
+   and centring keeps the heading on the admin list's edge. */
+.pageHouse {
+  padding-top: 0;
+}
+.pageHouse > :global(.wrap) {
+  margin-inline: 0;
+  padding-inline: 0;
 }
 
 /* ── Head ── */
@@ -560,16 +575,23 @@ button.readyRow:focus-visible .readyGo {
   }
 }
 
-@media (max-width: 1040px) {
+/* Grid, rail and chapter layout follow the wizard's own width (`.page` is the
+   container). 900px is the `--wide` token: custom media cannot name a
+   container query, so the value is written out. */
+@container create-wizard (max-width: 1040px) {
   .grid {
     grid-template-columns: minmax(0, 1fr) 330px;
     gap: 24px;
   }
 }
+/* The page's bottom room clears the mobile review bar, which follows the
+   viewport (COMPACT_LAYOUT_QUERY), so it stays a media query. */
 @media (--wide) {
   .page {
     padding-bottom: var(--section-y-128);
   }
+}
+@container create-wizard (max-width: 900px) {
   .grid {
     grid-template-columns: minmax(0, 1fr);
   }

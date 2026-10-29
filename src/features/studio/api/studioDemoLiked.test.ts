@@ -31,6 +31,15 @@ describe("demo Liked songs", () => {
     expect(page.items[0]?.track?.id).toBe(firstId);
   });
 
+  it("carries every genre of the track's release on a liked entry", () => {
+    const page = demoLikedTracksPage(
+      [like("demo-track-cidade-dos-santos-06")],
+      null,
+    );
+    expect(page.items[0]?.track?.release.genres).toEqual(["fado", "ambient"]);
+    expect(page.items[0]?.track?.release.genre).toBe("fado");
+  });
+
   it("keeps the saved title on an unavailable like and names a withdrawal only", () => {
     const page = demoLikedTracksPage(
       [

@@ -11,6 +11,7 @@ import {
   publishStudioTrack,
   updateStudioTrack,
 } from "./studio.api";
+import { toPriceView } from "./studioPurchases.adapters";
 import {
   toTrackView,
   type StudioOwnerTrackRowView,
@@ -31,7 +32,10 @@ import {
 } from "./studioDemoMutations";
 import { notesExcerpt } from "./studioEpisodes";
 import { contentWarningsOf } from "./studioSafetyFields";
-import { refreshReleaseLists } from "./useStudioReleaseMutations";
+import {
+  invalidatePriceReaders,
+  refreshReleaseLists,
+} from "./useStudioReleaseMutations";
 import { studioKeys } from "./studioQueryKeys";
 import { forgetStreamAnalysis, rememberStreamAnalysis } from "./studioStream";
 
@@ -47,6 +51,7 @@ type OwnerRowPatch = Partial<
     | "syncedLyrics"
     | "chapters"
     | "artistContentWarnings"
+    | "price"
   >
 >;
 
@@ -75,6 +80,7 @@ function syncOwnerTracks(
       peakDb: previous?.peakDb ?? null,
       syncedLyrics: previous?.syncedLyrics ?? null,
       chapters: previous?.chapters ?? null,
+      price: previous?.price ?? null,
     };
     return ownerPatch?.trackId === row.id
       ? { ...base, ...ownerPatch.patch }
@@ -334,6 +340,11 @@ export function useUpdateStudioTrack() {
       // comes from what was sent (stored in D7 order).
       if (body.contentWarnings !== undefined)
         patch.artistContentWarnings = contentWarningsOf(body.contentWarnings);
+      // A price change shows on the owner row at once; open buy panels reload.
+      if (body.price !== undefined) {
+        patch.price = toPriceView(body.price);
+        invalidatePriceReaders(queryClient, demoMode);
+      }
       if (analysis) {
         patch.hasAnalysis =
           analysis.waveformPeaks !== null &&

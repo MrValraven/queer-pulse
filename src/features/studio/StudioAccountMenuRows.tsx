@@ -18,6 +18,7 @@ import { StudioCreditsBadge } from "./StudioCreditsBadge";
 import { StudioMyClaimsBadge } from "./StudioMyClaimsBadge";
 import { STUDIO_EXIT, STUDIO_SPRING } from "./studioMotion";
 import { StudioReviewClaimsBadge } from "./StudioReviewClaimsBadge";
+import { StudioSalesPendingBadge } from "./StudioSalesPendingBadge";
 import { studioFlagReviewTabPath } from "./StudioReviewTabs.data";
 import styles from "./StudioAccountMenu.module.css";
 
@@ -228,6 +229,9 @@ export function StudioAccountMenuLink({
       )}
       {item.badge === "myClaims" && (
         <StudioMyClaimsBadge className={styles.itemBadge} />
+      )}
+      {item.badge === "salesPending" && (
+        <StudioSalesPendingBadge className={styles.itemBadge} />
       )}
     </StudioMenuRowLink>
   );

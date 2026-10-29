@@ -87,6 +87,7 @@ import {
 } from "./studioSafetyFields";
 import type { StudioContentWarningId } from "./studioSafety.types";
 import { resolveStudioHero, type StudioHeroChoice } from "../studioHeroChoice";
+import { toPriceView, type StudioPriceView } from "./studioPurchases.adapters";
 
 // View models every Studio page renders. Live and demo both reach the pages
 // through these functions (demo builds wire-shaped DTOs from the mock files
@@ -133,6 +134,10 @@ export interface StudioReleaseCardView {
   publishedAt: string | null;
   genre: string | null;
   genreLabelKey: string | null;
+  /** Every genre as stored, lead first. */
+  genres: string[];
+  /** Label keys of the known genres only, lead first. */
+  genreLabelKeys: string[];
   /** Discovery: one mood per release; null when unset or unknown. */
   mood: StudioMood | null;
   /** Discovery: the release's scene; null when unset or archived. */
@@ -199,6 +204,8 @@ export interface StudioOwnerTrackRowView extends StudioTrackRowView {
   peakDb: number | null;
   syncedLyrics: StudioSyncedLyricView[] | null;
   chapters: StudioChapterView[] | null;
+  /** Studio purchases: the track's own price; null is not for sale. */
+  price: StudioPriceView | null;
 }
 
 export interface StudioReleaseDisputeView {
@@ -234,6 +241,8 @@ export interface StudioReleaseVersionView {
 }
 
 export interface StudioReleaseView extends StudioReleaseCardView {
+  /** Studio purchases, every viewer: null is not for sale. */
+  price: StudioPriceView | null;
   /** Studio safety: owner only, every track's claims, newest acceptedAt
    *  first; [] for everyone else. */
   claims?: StudioOwnerClaimView[];
@@ -348,6 +357,8 @@ export interface StudioArtistView {
   supportLinks: StudioExternalLinkView[];
   /** Scheduled releases, soonest first, at most 6. */
   upcoming: StudioUpcomingReleaseView[];
+  /** A founding artist: the badge on the artist page. Missing on older servers. */
+  isFoundingArtist?: boolean;
 }
 
 export interface StudioUpcomingReleaseView extends StudioReleaseCardView {
@@ -752,6 +763,12 @@ export function toReleaseCardView(
   dto: StudioReleaseCardDTO,
 ): StudioReleaseCardView {
   const artist = toArtistRefView(dto.artist);
+  // An older backend omits `genres`; its single genre leads the list.
+  const releaseGenres: string[] = Array.isArray(dto.genres)
+    ? dto.genres
+    : dto.genre
+      ? [dto.genre]
+      : [];
   // Runtime guards: an older backend can omit the discovery fields.
   return {
     id: dto.id,
@@ -770,6 +787,11 @@ export function toReleaseCardView(
     publishedAt: dto.publishedAt,
     genre: dto.genre,
     genreLabelKey: genreLabelKeyOf(dto.genre),
+    genres: releaseGenres,
+    genreLabelKeys: releaseGenres.flatMap((genre) => {
+      const labelKey = genreLabelKeyOf(genre);
+      return labelKey === null ? [] : [labelKey];
+    }),
     mood: isStudioMood(dto.mood) ? dto.mood : null,
     scene: toSceneRefView(dto.scene ?? null),
     format: isStudioFormat(dto.format) ? dto.format : artist.format,
@@ -819,6 +841,7 @@ export function toOwnerTrackRowView(
     peakDb: dto.peakDb ?? null,
     syncedLyrics: toSyncedLyricViews(dto.syncedLyrics),
     chapters: toChapterViews(dto.chapters),
+    price: toPriceView(dto.price),
   };
 }
 
@@ -910,6 +933,7 @@ export function toReleaseView(dto: StudioReleaseDTO): StudioReleaseView {
   const versions = (dto.versions ?? []).map(toReleaseVersionView);
   return {
     ...toReleaseCardView(dto),
+    price: toPriceView(dto.price),
     description: dto.description,
     status: dto.status,
     statusLabelKey: STUDIO_RELEASE_STATUS_LABEL_KEY[dto.status],
@@ -1019,6 +1043,7 @@ export function toArtistView(dto: StudioArtistDTO): StudioArtistView {
     playlists: dto.playlists.map(toPlaylistCardView),
     supportLinks: toSupportLinkViews(dto.supportLinks),
     upcoming,
+    isFoundingArtist: dto.artist.isFoundingArtist === true,
   };
 }
 

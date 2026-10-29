@@ -1,7 +1,8 @@
 import { routes } from "../../app/routeMap";
+import { studioPaymentsPath } from "./studioPaths";
 
 /** A live count beside a nav label. */
-export type CreatorNavBadge = "creditRequests";
+export type CreatorNavBadge = "creditRequests" | "salesPending";
 
 export interface CreatorNavItem {
   labelKey: string;
@@ -36,8 +37,11 @@ export const NAV: CreatorNavItem[] = [
     isShowcaseOnly: false,
   },
   {
-    labelKey: "studio:creator.nav.payouts",
-    to: routes.studioPayouts,
-    isShowcaseOnly: true,
+    // The payments members say they made, with the waiting count. The
+    // retired payouts address (/studio/payouts) redirects here.
+    labelKey: "studio:purchase.inbox.nav",
+    to: studioPaymentsPath(),
+    isShowcaseOnly: false,
+    badge: "salesPending",
   },
 ];

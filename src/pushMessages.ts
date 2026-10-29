@@ -196,6 +196,19 @@ const en: Record<string, string> = {
     "{requester} credited {persona} on {track}",
   "push:studioCreditAccepted.title": "Credit accepted",
   "push:studioCreditAccepted.body": "{persona} accepted your credit on {track}",
+  // Studio purchases: a payment claim waiting for the persona's members, and
+  // the buyer's answer. Artist and item names only; the buyer and the amount
+  // stay out. These six MUST stay word for word the English fallbacks the
+  // backend sender sets, because iOS renders the fallback directly.
+  "push:studioPurchaseClaimed.title": "New payment to confirm",
+  "push:studioPurchaseClaimed.body":
+    "{item}: a buyer says they paid {artist}. Confirm it in Studio.",
+  "push:studioPurchaseConfirmed.title": "Payment confirmed",
+  "push:studioPurchaseConfirmed.body":
+    "{artist} confirmed your payment for {item}. Your download is ready.",
+  "push:studioPurchaseDeclined.title": "Payment not confirmed",
+  "push:studioPurchaseDeclined.body":
+    "{artist} could not confirm your payment for {item}. Open Studio to see why.",
   // Studio collaborative playlists: an invite to a member-credited playlist,
   // and a co-owner picked as an editor of a persona-credited one. These four
   // MUST stay word for word the English fallbacks the backend sender sets,
@@ -456,6 +469,16 @@ const pt: Record<string, string> = {
   "push:studioCreditAccepted.title": "Crédito aceite",
   "push:studioCreditAccepted.body":
     "{persona} aceitou o teu crédito em {track}",
+  // Compras no Studio: ver a nota no bloco EN.
+  "push:studioPurchaseClaimed.title": "Novo pagamento para confirmar",
+  "push:studioPurchaseClaimed.body":
+    "{item}: alguém diz que pagou a {artist}. Confirma no Studio.",
+  "push:studioPurchaseConfirmed.title": "Pagamento confirmado",
+  "push:studioPurchaseConfirmed.body":
+    "{artist} confirmou o teu pagamento de {item}. O teu download está pronto.",
+  "push:studioPurchaseDeclined.title": "Pagamento não confirmado",
+  "push:studioPurchaseDeclined.body":
+    "{artist} não conseguiu confirmar o teu pagamento de {item}. Abre o Studio para ver porquê.",
   "push:studioPlaylistEditorInvite.title": "Convite para playlist",
   "push:studioPlaylistEditorInvite.body":
     "{name} convidou-te para editar {playlist}",

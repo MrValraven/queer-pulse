@@ -4,9 +4,15 @@
    resolve against the cell's width, so the overlap holds at every size.
    Below 720px the component renders the phone alone, centred.
 
-   Motion: both rise once on load (opacity and a 12px `translate`), then the
+   The slot holds the laptop or, once our team fills the hero photo slot,
+   the photo in a box of the laptop's shape (about 0.59 of its width tall),
+   so the swap moves nothing. Two slots share the cell while they crossfade.
+
+   Motion: each rises once on load (opacity and a 12px `translate`), then the
    phone floats on `transform`, a separate property, so the two animations
-   never fight over one value. Both reduced-motion signals stop all of it. */
+   never fight over one value. The crossfade sits on the slot, a separate
+   element, so it never fights the rise. Both reduced-motion signals stop the
+   rise and the float. */
 .visual {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -15,15 +21,25 @@
   margin-inline: auto;
 }
 
-.laptop,
+.slot,
 .phone {
   grid-area: 1 / 1;
   align-self: start;
 }
 
-.laptop {
+.slot {
   justify-self: start;
   width: 88%;
+}
+
+.laptop {
+  width: 100%;
+  animation: heroRise var(--dur-reveal) var(--ease-out) both;
+}
+
+.photo {
+  width: 100%;
+  aspect-ratio: 100 / 59;
   animation: heroRise var(--dur-reveal) var(--ease-out) both;
 }
 
@@ -34,9 +50,17 @@
   margin-top: 18%;
   /* Its halo would wash over the laptop screen it overlaps. */
   --frame-halo-opacity: 0;
-  animation:
-    heroRise var(--dur-reveal) var(--ease-out) 0.15s both,
-    phoneFloat 7s var(--ease-in-out) calc(var(--dur-reveal) + 0.15s) infinite;
+  animation: heroRise var(--dur-reveal) var(--ease-out) 0.15s both;
+}
+
+/* The frame inside the phone's slot floats; the slot itself rises and, when
+   the photo arrives, glides to its new place on a layout transform, so the
+   float's `transform` never fights it. The halo opacity inherits from the
+   slot. */
+.phoneFloat {
+  width: 100%;
+  animation: phoneFloat 7s var(--ease-in-out) calc(var(--dur-reveal) + 0.15s)
+    infinite;
 }
 
 @keyframes heroRise {
@@ -68,16 +92,41 @@
     margin-top: 0;
     --frame-halo-opacity: 1;
     /* Alone, it rises with no wait behind a laptop. */
-    animation-delay: 0s, var(--dur-reveal);
+    animation-delay: 0s;
+  }
+  .phoneFloat {
+    animation-delay: var(--dur-reveal);
+  }
+}
+
+/* Narrow screens with a photo: the photo spans the width and a smaller
+   phone overlaps its lower right, halo off over the photo. */
+@media (max-width: 719px) {
+  .withPhoto .slot {
+    width: 100%;
+  }
+  .withPhoto .phone {
+    justify-self: end;
+    width: min(30%, 140px);
+    margin-top: 34%;
+    --frame-halo-opacity: 0;
+    animation-delay: 0.15s;
+  }
+  .withPhoto .phoneFloat {
+    animation-delay: calc(var(--dur-reveal) + 0.15s);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .photo,
+  .phoneFloat,
   .laptop,
   .phone {
     animation: none;
   }
 }
+:global(html[data-reduce-motion="true"]) .photo,
+:global(html[data-reduce-motion="true"]) .phoneFloat,
 :global(html[data-reduce-motion="true"]) .laptop,
 :global(html[data-reduce-motion="true"]) .phone {
   animation: none;

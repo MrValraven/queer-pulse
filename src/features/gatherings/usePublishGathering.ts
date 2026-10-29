@@ -1,6 +1,8 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { codedReasonFor } from "../../shared/api/errorHandling";
+import { reasonFor } from "../../shared/api/errorMessage";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { importQuizshowQuiz } from "../quizshow/api/quizshow.api";
 import { quizshowErrorCodeOf } from "../quizshow/api/quizshowErrors";
@@ -20,6 +22,7 @@ import {
   COHOST_INVITE_DEFAULT_COMMITMENT,
   COHOST_INVITE_DEFAULT_ROLE,
 } from "./createGathering.data";
+import { useEventHostScope } from "./eventHostScope";
 import type { GatheringForm } from "./useGatheringForm";
 import { isRefusedRunByListingError } from "./runByListingErrors";
 import { isRefusedVenueListingError } from "./venueListingErrors";
@@ -59,6 +62,8 @@ export function usePublishGathering({
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
+  const { isHouseEvent } = useEventHostScope();
+  // Reads the same scope, so a house event posts to admin/music-events.
   const createEvent = useCreateEvent();
   const queryClient = useQueryClient();
   // The slug the backend assigned, for the success CTA. Null in demo, where
@@ -144,13 +149,18 @@ export function usePublishGathering({
 
   const publish = () => {
     if (isPublishInFlightRef.current || createEvent.isPending) return;
-    // Read now: the form may change while the request is out.
-    const cohostSlugs = [...form.cohostSlugs];
+    // Read now: the form may change while the request is out. An event
+    // QueerPulse hosts sends none of the three follow-ups: its co-hosts are
+    // added from Manage, it has no lead community for guests, and it gets Go
+    // together by default.
+    const cohostSlugs = isHouseEvent ? [] : [...form.cohostSlugs];
     // Guests need a lead, so a form with none sends no invite.
-    const guestCommunitySlugs = form.communitySlug
-      ? form.guestCommunities.map((guest) => guest.slug)
-      : [];
-    const shouldOfferGoTogether = form.goTogetherEnabled && !demoMode;
+    const guestCommunitySlugs =
+      !isHouseEvent && form.communitySlug
+        ? form.guestCommunities.map((guest) => guest.slug)
+        : [];
+    const shouldOfferGoTogether =
+      !isHouseEvent && form.goTogetherEnabled && !demoMode;
     const payload = formToCreateEventDto(form);
     isPublishInFlightRef.current = true;
     createEvent.mutate(payload, {
@@ -229,7 +239,15 @@ export function usePublishGathering({
           onVenueRefused();
           return;
         }
-        showToast(t("gatherings:create.toast.publishError"), "error");
+        // Any other refusal names its reason: the coded line first, then the
+        // server's own sentence, and the generic line only when neither came
+        // back.
+        showToast(
+          codedReasonFor(error) ??
+            reasonFor(error) ??
+            t("gatherings:create.toast.publishError"),
+          "error",
+        );
       },
       onSettled: () => {
         isPublishInFlightRef.current = false;

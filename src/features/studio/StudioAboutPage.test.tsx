@@ -57,7 +57,7 @@ describe("About Studio (demo)", () => {
       await screen.findByRole("heading", { name: "The co-op vision" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: /floor we're actually held to/i }),
+      screen.getByRole("heading", { name: /pay the artist directly/i }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /join studio/i }),

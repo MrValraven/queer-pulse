@@ -119,6 +119,116 @@ export const STUDIO_ERROR_MESSAGE_KEY: Record<StudioErrorCode, string> = {
     "studio:errors.reason.studio_supporter_own_persona",
   studio_supporter_identity_not_yours:
     "studio:errors.reason.studio_supporter_identity_not_yours",
+  studio_persona_not_found: "studio:errors.reason.studio_persona_not_found",
+  studio_release_type_not_for_sale:
+    "studio:errors.reason.studio_release_type_not_for_sale",
+  studio_price_out_of_range: "studio:errors.reason.studio_price_out_of_range",
+  studio_payment_methods_needed_for_sale:
+    "studio:errors.reason.studio_payment_methods_needed_for_sale",
+  studio_payment_methods_limit:
+    "studio:errors.reason.studio_payment_methods_limit",
+  studio_payment_link_invalid:
+    "studio:errors.reason.studio_payment_link_invalid",
+  studio_payment_mbway_invalid:
+    "studio:errors.reason.studio_payment_mbway_invalid",
+  studio_payment_iban_invalid:
+    "studio:errors.reason.studio_payment_iban_invalid",
+  studio_purchase_item_required:
+    "studio:errors.reason.studio_purchase_item_required",
+  studio_purchase_item_not_found:
+    "studio:errors.reason.studio_purchase_item_not_found",
+  studio_purchase_own_persona:
+    "studio:errors.reason.studio_purchase_own_persona",
+  studio_purchase_not_for_sale:
+    "studio:errors.reason.studio_purchase_not_for_sale",
+  studio_purchase_release_not_published:
+    "studio:errors.reason.studio_purchase_release_not_published",
+  studio_purchase_track_unavailable:
+    "studio:errors.reason.studio_purchase_track_unavailable",
+  studio_purchase_unavailable:
+    "studio:errors.reason.studio_purchase_unavailable",
+  studio_purchase_no_payment_methods:
+    "studio:errors.reason.studio_purchase_no_payment_methods",
+  studio_purchase_pending_exists:
+    "studio:errors.reason.studio_purchase_pending_exists",
+  studio_purchase_already_owned:
+    "studio:errors.reason.studio_purchase_already_owned",
+  studio_purchase_amount_below_minimum:
+    "studio:errors.reason.studio_purchase_amount_below_minimum",
+  studio_purchase_amount_above_cap:
+    "studio:errors.reason.studio_purchase_amount_above_cap",
+  studio_purchase_price_changed:
+    "studio:errors.reason.studio_purchase_price_changed",
+  studio_purchase_reference_invalid:
+    "studio:errors.reason.studio_purchase_reference_invalid",
+  studio_purchase_reference_taken:
+    "studio:errors.reason.studio_purchase_reference_taken",
+  studio_purchase_not_found: "studio:errors.reason.studio_purchase_not_found",
+  studio_purchase_not_pending:
+    "studio:errors.reason.studio_purchase_not_pending",
+  studio_purchase_wall_not_available:
+    "studio:errors.reason.studio_purchase_wall_not_available",
+  studio_purchase_not_confirmed:
+    "studio:errors.reason.studio_purchase_not_confirmed",
+  studio_download_item_deleted:
+    "studio:errors.reason.studio_download_item_deleted",
+  studio_download_track_removed:
+    "studio:errors.reason.studio_download_track_removed",
+  studio_download_release_taken_down:
+    "studio:errors.reason.studio_download_release_taken_down",
+  studio_download_artist_unavailable:
+    "studio:errors.reason.studio_download_artist_unavailable",
+  studio_download_track_withheld:
+    "studio:errors.reason.studio_download_track_withheld",
+  studio_download_track_not_ready:
+    "studio:errors.reason.studio_download_track_not_ready",
+  studio_download_track_preparing:
+    "studio:errors.reason.studio_download_track_preparing",
+  // Studio landing v2 (2026-10-28).
+  studio_landing_preview_unavailable:
+    "studio:errors.reason.studio_landing_preview_unavailable",
+  studio_landing_preview_not_found:
+    "studio:errors.reason.studio_landing_preview_not_found",
+  studio_landing_preview_track_not_eligible:
+    "studio:errors.reason.studio_landing_preview_track_not_eligible",
+  studio_landing_preview_exists:
+    "studio:errors.reason.studio_landing_preview_exists",
+  studio_landing_previews_full:
+    "studio:errors.reason.studio_landing_previews_full",
+  studio_landing_preview_no_reachable_owner:
+    "studio:errors.reason.studio_landing_preview_no_reachable_owner",
+  studio_landing_preview_not_pending:
+    "studio:errors.reason.studio_landing_preview_not_pending",
+  studio_landing_preview_not_approved:
+    "studio:errors.reason.studio_landing_preview_not_approved",
+  studio_landing_preview_main_persona_only:
+    "studio:errors.reason.studio_landing_preview_main_persona_only",
+  studio_landing_consent_required:
+    "studio:errors.reason.studio_landing_consent_required",
+  studio_landing_persona_not_eligible:
+    "studio:errors.reason.studio_landing_persona_not_eligible",
+  studio_landing_card_exists: "studio:errors.reason.studio_landing_card_exists",
+  studio_landing_cards_full: "studio:errors.reason.studio_landing_cards_full",
+  studio_landing_card_not_found:
+    "studio:errors.reason.studio_landing_card_not_found",
+  studio_landing_photo_not_yours:
+    "studio:errors.reason.studio_landing_photo_not_yours",
+  studio_landing_order_mismatch:
+    "studio:errors.reason.studio_landing_order_mismatch",
+  studio_founding_persona_not_eligible:
+    "studio:errors.reason.studio_founding_persona_not_eligible",
+  studio_founding_artist_exists:
+    "studio:errors.reason.studio_founding_artist_exists",
+  studio_founding_artists_full:
+    "studio:errors.reason.studio_founding_artists_full",
+  studio_founding_artist_not_found:
+    "studio:errors.reason.studio_founding_artist_not_found",
+  studio_access_request_exists:
+    "studio:errors.reason.studio_access_request_exists",
+  studio_access_already_granted:
+    "studio:errors.reason.studio_access_already_granted",
+  studio_access_request_not_found:
+    "studio:errors.reason.studio_access_request_not_found",
   ...STUDIO_SAFETY_ERROR_MESSAGE_KEY,
 };
 

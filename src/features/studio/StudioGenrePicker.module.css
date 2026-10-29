@@ -1,0 +1,57 @@
+/* The genre field: the shared Select, a counter line and the picked chips. */
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* One popover row: the genre, and under it the reason when the row is
+   disabled at the cap. */
+.optionText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.reason {
+  font-size: var(--text-12);
+  font-weight: 400;
+  color: var(--ink-60);
+}
+
+.check {
+  flex-shrink: 0;
+  color: var(--text-strong);
+}
+
+.counter {
+  margin: 0;
+  font-size: var(--text-12);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+}
+
+/* The lead genre's mark, inside its chip. Overflow clips the text while the
+   width animates open and shut. */
+.mainBadge {
+  display: inline-block;
+  margin-left: 6px;
+  overflow: hidden;
+  vertical-align: bottom;
+  white-space: nowrap;
+}
+
+.mainBadgeText {
+  display: inline-block;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--accent-rgb), 0.16);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}

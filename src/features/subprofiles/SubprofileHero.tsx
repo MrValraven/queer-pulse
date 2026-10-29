@@ -21,6 +21,7 @@ import {
 import { SubprofileSocialRow } from "./SubprofileSocialRow";
 import { SubprofileHeroActions } from "./SubprofileHeroActions";
 import { SubprofileTitleBlock } from "./SubprofileTitleBlock";
+import { PersonaFoundingBadge } from "./PersonaFoundingBadge";
 import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
 
@@ -213,6 +214,10 @@ export function SubprofileHero({
               it (page), so their layouts are untouched. */}
           <div className="pp-taglineRow">
             <span className="pp-kind">{t(KIND_LABEL_KEYS[view.kind])}</span>
+            <PersonaFoundingBadge
+              subprofileId={view.id}
+              isFoundingArtist={view.isFoundingArtist}
+            />
             {view.tagline && <p className="pp-tagline">{view.tagline}</p>}
           </div>
 

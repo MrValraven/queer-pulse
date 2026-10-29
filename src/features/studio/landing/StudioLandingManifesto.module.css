@@ -123,26 +123,82 @@
   color: var(--studio-text);
 }
 
+/* The photo slot: fades in just after the section's reveal. */
+.photoColumn {
+  opacity: 0;
+  transition: opacity 0.6s var(--ease) 0.15s;
+}
+
+.inner[data-revealed="true"] .photoColumn {
+  opacity: 1;
+}
+
+.photo {
+  aspect-ratio: 4 / 3;
+}
+
+@media (min-width: 900px) {
+  /* With a photo: quote and photo side by side, the paragraphs below. */
+  .inner[data-has-photo="true"] {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  }
+
+  .inner[data-has-photo="true"] .textColumn {
+    grid-column: 1 / -1;
+    max-width: 72ch;
+    margin-top: 0;
+  }
+
+  .photo {
+    aspect-ratio: 4 / 5;
+  }
+}
+
 @media (min-width: 1024px) {
-  .inner {
+  .inner[data-has-photo="false"] {
     grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
   }
 
-  .textColumn {
+  .inner[data-has-photo="false"] .textColumn {
     margin-top: clamp(0px, 10vw, 144px);
   }
 }
 
+/* Wide screens: quote, photo, paragraphs in one row. */
+@media (min-width: 1200px) {
+  .inner[data-has-photo="true"] {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 4fr) minmax(0, 5fr);
+  }
+
+  .inner[data-has-photo="true"] .textColumn {
+    grid-column: auto;
+    max-width: 62ch;
+    margin-top: clamp(0px, 6vw, 96px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .inner {
+  .inner,
+  .photoColumn {
     opacity: 1;
     transform: none;
     transition: none;
   }
 }
 
-:global(html[data-reduce-motion="true"]) .inner {
+:global(html[data-reduce-motion="true"]) .inner,
+:global(html[data-reduce-motion="true"]) .photoColumn {
   opacity: 1;
   transform: none;
   transition: none;
+}
+
+/* A print never fires the reveal, so the section and its photo show at once. */
+@media print {
+  .inner,
+  .photoColumn {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }

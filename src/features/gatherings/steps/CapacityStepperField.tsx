@@ -1,4 +1,5 @@
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useEventHostScope } from "../eventHostScope";
 import { CapacityStepper } from "../fields/CapacityStepper";
 import type { GatheringForm } from "../useGatheringForm";
 
@@ -13,6 +14,7 @@ import type { GatheringForm } from "../useGatheringForm";
  */
 export function CapacityStepperField({ form }: { form: GatheringForm }) {
   const { t } = useTranslation();
+  const { isHouseEvent } = useEventHostScope();
   /**
    * Whether the number on screen is still the format's own suggestion, so the
    * hint under the field is true when it says so.
@@ -28,17 +30,23 @@ export function CapacityStepperField({ form }: { form: GatheringForm }) {
     form.cap === String(form.capacityDefault)
       ? form.capacityDefault
       : null;
-  // The host holds one of the spots themselves (the server saves their Going
-  // RSVP on publish), so a cap of 8 means 7 guests. Said only while there is
-  // a cap to count against.
-  const hintLines = [
+  const defaultLine =
     formatDefaultCapacity === null
       ? null
       : t("gatherings:create.step3.capDefaultHint", {
           count: formatDefaultCapacity,
-        }),
-    form.cap === "" ? null : t("gatherings:create.step3.capHostHint"),
-  ].filter(Boolean);
+        });
+  // The host holds one of the spots themselves (the server saves their Going
+  // RSVP on publish), so a cap of 8 means 7 guests. Said only while there is
+  // a cap to count against. QueerPulse takes no seat at an event it hosts, so
+  // there the field says what it counts, unless the format's default line is
+  // already saying so.
+  const hintLines = isHouseEvent
+    ? [defaultLine ?? t("admin:musicEvents.house.capacityHint")]
+    : [
+        defaultLine,
+        form.cap === "" ? null : t("gatherings:create.step3.capHostHint"),
+      ].filter(Boolean);
 
   return (
     <CapacityStepper

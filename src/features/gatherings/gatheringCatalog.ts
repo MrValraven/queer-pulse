@@ -11,6 +11,7 @@ import {
   FiClock,
   FiCoffee,
   FiCompass,
+  FiDisc,
   FiDroplet,
   FiEdit3,
   FiEye,
@@ -66,7 +67,7 @@ import type { TFunction } from "../../shared/i18n/types";
 /**
  * The ONE place a gathering's vocabulary is declared.
  *
- * A gathering carries two things. A FAMILY: a nine-value closed set, each a
+ * A gathering carries two things. A FAMILY: a ten-value closed set, each a
  * distinct energy an attendee can read at a glance, and the only half that
  * drives behaviour (the capacity default, whether the headcount shows, which
  * questions the wizard asks, the browse board's primary facet, and the
@@ -91,6 +92,7 @@ export type GatheringFamily =
   | "meet"
   | "eat"
   | "party"
+  | "music"
   | "make"
   | "learn"
   | "watch"
@@ -147,7 +149,7 @@ export const MAX_BRING_LENGTH = 200;
 export const MIN_RUNTIME_MINUTES = 1;
 export const MAX_RUNTIME_MINUTES = 600;
 
-/** The host's own format. One key for all nine families: the family is
+/** The host's own format. One key for all ten families: the family is
  *  already stored separately, so there is nothing to disambiguate. */
 export const OTHER_FORMAT_KEY = "other" as const;
 export const OTHER_FORMAT_ICON: IconType = FiMoreHorizontal;
@@ -177,7 +179,7 @@ export interface GatheringFormatEntry {
 }
 
 /**
- * The nine families, in the order the wizard's family row and the browse chip
+ * The ten families, in the order the wizard's family row and the browse chip
  * row show them. A family icon may coincide with one format's icon; format
  * icons never coincide with each other (pinned by the test).
  *
@@ -215,6 +217,14 @@ export const GATHERING_FAMILIES: readonly GatheringFamilyEntry[] = [
     capacityDefault: 40,
     isAttendeeCountShownByDefault: true,
     detailKeys: ["isAdultsOnly", "isSoberFriendly"],
+  },
+  {
+    key: "music",
+    icon: FiDisc,
+    nameKey: "gatherings:catalog.family.music.name",
+    capacityDefault: 50,
+    isAttendeeCountShownByDefault: true,
+    detailKeys: ["isAdultsOnly", "isSoberFriendly", "runtimeMinutes"],
   },
   {
     key: "make",
@@ -375,27 +385,6 @@ export const GATHERING_FORMATS: readonly GatheringFormatEntry[] = [
     subKey: "gatherings:catalog.format.house-party.sub",
   },
   {
-    key: "club-night",
-    family: "party",
-    icon: FiMoon,
-    nameKey: "gatherings:catalog.format.club-night.name",
-    subKey: "gatherings:catalog.format.club-night.sub",
-  },
-  {
-    key: "listening-party",
-    family: "party",
-    icon: FiHeadphones,
-    nameKey: "gatherings:catalog.format.listening-party.name",
-    subKey: "gatherings:catalog.format.listening-party.sub",
-  },
-  {
-    key: "karaoke",
-    family: "party",
-    icon: FiMic,
-    nameKey: "gatherings:catalog.format.karaoke.name",
-    subKey: "gatherings:catalog.format.karaoke.sub",
-  },
-  {
     key: "drag-night",
     family: "party",
     icon: FiStar,
@@ -408,6 +397,42 @@ export const GATHERING_FORMATS: readonly GatheringFormatEntry[] = [
     icon: FiMusic,
     nameKey: "gatherings:catalog.format.dance.name",
     subKey: "gatherings:catalog.format.dance.sub",
+  },
+  // ── music ───────────────────────────────────────────────────────────────
+  {
+    key: "club-night",
+    family: "music",
+    icon: FiMoon,
+    nameKey: "gatherings:catalog.format.club-night.name",
+    subKey: "gatherings:catalog.format.club-night.sub",
+  },
+  {
+    key: "listening-party",
+    family: "music",
+    icon: FiHeadphones,
+    nameKey: "gatherings:catalog.format.listening-party.name",
+    subKey: "gatherings:catalog.format.listening-party.sub",
+  },
+  {
+    key: "karaoke",
+    family: "music",
+    icon: FiMic,
+    nameKey: "gatherings:catalog.format.karaoke.name",
+    subKey: "gatherings:catalog.format.karaoke.sub",
+  },
+  {
+    key: "jam-session",
+    family: "music",
+    icon: FiRadio,
+    nameKey: "gatherings:catalog.format.jam-session.name",
+    subKey: "gatherings:catalog.format.jam-session.sub",
+  },
+  {
+    key: "live-performance",
+    family: "music",
+    icon: FiPlayCircle,
+    nameKey: "gatherings:catalog.format.live-performance.name",
+    subKey: "gatherings:catalog.format.live-performance.sub",
   },
   // ── make ────────────────────────────────────────────────────────────────
   {
@@ -444,13 +469,6 @@ export const GATHERING_FORMATS: readonly GatheringFormatEntry[] = [
     icon: FiType,
     nameKey: "gatherings:catalog.format.writing-circle.name",
     subKey: "gatherings:catalog.format.writing-circle.sub",
-  },
-  {
-    key: "jam-session",
-    family: "make",
-    icon: FiRadio,
-    nameKey: "gatherings:catalog.format.jam-session.name",
-    subKey: "gatherings:catalog.format.jam-session.sub",
   },
   {
     key: "studio-visit",
@@ -516,13 +534,6 @@ export const GATHERING_FORMATS: readonly GatheringFormatEntry[] = [
     icon: FiFilm,
     nameKey: "gatherings:catalog.format.screening.name",
     subKey: "gatherings:catalog.format.screening.sub",
-  },
-  {
-    key: "live-performance",
-    family: "watch",
-    icon: FiPlayCircle,
-    nameKey: "gatherings:catalog.format.live-performance.name",
-    subKey: "gatherings:catalog.format.live-performance.sub",
   },
   {
     key: "open-mic",
@@ -767,6 +778,7 @@ const FORMAT_EXTRA_DETAIL_KEYS: Readonly<
   Record<string, readonly FormatDetailKey[]>
 > = {
   quiz: ["isAdultsOnly"],
+  "jam-session": ["bring"],
 };
 
 /** Which of the six questions this family asks, followed by the extra keys of

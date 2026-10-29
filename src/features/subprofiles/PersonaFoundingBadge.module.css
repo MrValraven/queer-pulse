@@ -1,0 +1,21 @@
+/* The Founding artist chip: the persona skin's chip pair (the colours
+   `.pp-kind` paints with), plum on cream where no skin is set (the showcase
+   card). Placement per skin lives beside `.pp-founding` in persona-skins.css. */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: fit-content;
+  margin-inline-start: 8px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--sk-tint, var(--plum));
+  color: var(--sk-on, rgb(var(--cream-rgb)));
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  vertical-align: middle;
+  white-space: nowrap;
+}

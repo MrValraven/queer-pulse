@@ -2,27 +2,40 @@ import type {
   StudioArtistRefView,
   StudioReleaseView,
 } from "./api/studio.adapters";
+import type { StudioPriceView } from "./api/studioPurchases.adapters";
+import {
+  centsFromEuroText,
+  euroTextFromCents,
+  isSellableReleaseType,
+  priceErrorKeyOf,
+} from "./studioPurchaseRules";
+import { defaultGenresForKind, knownGenresOf } from "./studioUploadGenres.data";
 import {
   STUDIO_BUY_URL_MAX,
   STUDIO_FORMAT_BY_KIND,
-  STUDIO_GENRES,
   STUDIO_LIMITS,
   STUDIO_RELEASE_TYPES_BY_KIND,
   type StudioArtistPersonaKind,
   type StudioFormat,
   type StudioGenre,
   type StudioMood,
+  type StudioPriceInput,
+  type StudioPriceMode,
   type StudioReleaseType,
   type UpdateStudioReleaseBody,
 } from "./api/studio.types";
 
 export type UploadStepId = "release" | "tracks" | "publish";
 
+/** The price control's mode: the two sale modes, or no price. */
+export type StudioPriceFormMode = "not_for_sale" | StudioPriceMode;
+
 export interface ReleaseFormValues {
   subprofileId: string;
   type: StudioReleaseType;
   title: string;
-  genre: StudioGenre | "";
+  /** Up to STUDIO_RELEASE_GENRES_MAX, the first leads. */
+  genres: StudioGenre[];
   /** Discovery: "" for none. */
   mood: StudioMood | "";
   /** Discovery: the scene id, "" for none. */
@@ -36,19 +49,13 @@ export interface ReleaseFormValues {
   buyUrl: string;
   /** Play the tracks straight on, without a crossfade between them. */
   isGapless: boolean;
+  /** Studio purchases: how the release sells; a new release is not for sale. */
+  priceMode: StudioPriceFormMode;
+  /** The fixed price or the minimum as typed; "" while not for sale. */
+  priceText: string;
 }
 
-const KNOWN_GENRES: ReadonlySet<string> = new Set(STUDIO_GENRES);
-
-/** Artist kinds: poet and spoken word releases start on Spoken word (spec
- *  4.6); everyone else starts with no genre. */
-export function defaultGenreForKind(
-  kind: StudioArtistPersonaKind | undefined,
-): StudioGenre | "" {
-  return kind && STUDIO_FORMAT_BY_KIND[kind] === "spoken_word"
-    ? "spoken-word"
-    : "";
-}
+export { defaultGenresForKind };
 
 export interface ReleaseFieldCopy {
   titleLabelKey: string;
@@ -72,7 +79,7 @@ export function releaseFieldCopyOf(format: StudioFormat): ReleaseFieldCopy {
 }
 
 /** The fields a persona switch resets: its first type, its genre preset (a
- *  spoken word persona's, or none when leaving one), and an empty genre,
+ *  spoken word persona's, or none when leaving one), and an empty genre list,
  *  mood and scene for a show, which carries none of them. A show also
  *  plays with gaps between its episodes, so the gapless mark turns off. */
 export function personaSwitchPatch(
@@ -80,23 +87,42 @@ export function personaSwitchPatch(
   current: ReleaseFormValues,
 ): Pick<
   ReleaseFormValues,
-  "type" | "genre" | "mood" | "sceneId" | "isGapless"
+  | "type"
+  | "genres"
+  | "mood"
+  | "sceneId"
+  | "isGapless"
+  | "priceMode"
+  | "priceText"
 > {
   const isGenreShown = releaseFieldCopyOf(
     STUDIO_FORMAT_BY_KIND[kind],
   ).isGenreShown;
-  const presetGenre = defaultGenreForKind(kind);
-  let genre = current.genre;
-  if (!isGenreShown) genre = "";
-  else if (presetGenre) genre = presetGenre;
-  else if (genre === "spoken-word") genre = "";
+  const presetGenres = defaultGenresForKind(kind);
+  let genres = current.genres;
+  if (!isGenreShown) genres = [];
+  else if (presetGenres.length > 0) genres = presetGenres;
+  else genres = genres.filter((genre) => genre !== "spoken-word");
+  const type = STUDIO_RELEASE_TYPES_BY_KIND[kind][0] ?? "album";
   return {
-    type: STUDIO_RELEASE_TYPES_BY_KIND[kind][0] ?? "album",
-    genre,
+    type,
+    genres,
     mood: isGenreShown ? current.mood : "",
     sceneId: isGenreShown ? current.sceneId : "",
     isGapless: isGenreShown ? current.isGapless : false,
+    ...priceFieldsForType(type, current),
   };
+}
+
+/** A type with nothing to sell leaves no price behind: the price fields keep
+ *  their values for a sellable type and reset to not for sale otherwise. */
+export function priceFieldsForType(
+  type: StudioReleaseType,
+  current: Pick<ReleaseFormValues, "priceMode" | "priceText">,
+): Pick<ReleaseFormValues, "priceMode" | "priceText"> {
+  return isSellableReleaseType(type)
+    ? { priceMode: current.priceMode, priceText: current.priceText }
+    : { priceMode: "not_for_sale", priceText: "" };
 }
 
 export function defaultReleaseForm(
@@ -108,7 +134,7 @@ export function defaultReleaseForm(
       ? (STUDIO_RELEASE_TYPES_BY_KIND[persona.kind][0] ?? "album")
       : "album",
     title: "",
-    genre: defaultGenreForKind(persona?.kind),
+    genres: defaultGenresForKind(persona?.kind),
     mood: "",
     sceneId: "",
     releasedOn: "",
@@ -116,7 +142,33 @@ export function defaultReleaseForm(
     coverKey: null,
     buyUrl: "",
     isGapless: false,
+    priceMode: "not_for_sale",
+    priceText: "",
   };
+}
+
+/** A stored price as the form shows it: the amount reads back with the
+ *  member's own separator. */
+export function priceFormOf(
+  price: StudioPriceView | null,
+  decimalSeparator: "." | ",",
+): { priceMode: StudioPriceFormMode; priceText: string } {
+  if (!price) return { priceMode: "not_for_sale", priceText: "" };
+  return {
+    priceMode: price.mode,
+    priceText: euroTextFromCents(price.amountCents, decimalSeparator),
+  };
+}
+
+/** The form's price as the PATCH body carries it: null takes the release off
+ *  sale, "invalid" when the typed amount is unreadable. */
+export function priceInputOf(
+  priceMode: StudioPriceFormMode,
+  priceText: string,
+): StudioPriceInput | null | "invalid" {
+  if (priceMode === "not_for_sale") return null;
+  const amountCents = centsFromEuroText(priceText);
+  return amountCents === null ? "invalid" : { mode: priceMode, amountCents };
 }
 
 export function formFromRelease(release: StudioReleaseView): ReleaseFormValues {
@@ -124,10 +176,7 @@ export function formFromRelease(release: StudioReleaseView): ReleaseFormValues {
     subprofileId: release.artist.id,
     type: release.type,
     title: release.title,
-    genre:
-      release.genre && KNOWN_GENRES.has(release.genre)
-        ? (release.genre as StudioGenre)
-        : "",
+    genres: knownGenresOf(release),
     mood: release.mood ?? "",
     sceneId: release.sceneId ?? "",
     releasedOn: release.releasedOn ?? "",
@@ -135,6 +184,7 @@ export function formFromRelease(release: StudioReleaseView): ReleaseFormValues {
     coverKey: null,
     buyUrl: release.buyUrl ?? "",
     isGapless: release.isGapless,
+    ...priceFormOf(release.price, "."),
   };
 }
 
@@ -151,8 +201,14 @@ export function releaseFormErrors(form: ReleaseFormValues): {
   title?: string;
   description?: string;
   buyUrl?: string;
+  price?: string;
 } {
-  const errors: { title?: string; description?: string; buyUrl?: string } = {};
+  const errors: {
+    title?: string;
+    description?: string;
+    buyUrl?: string;
+    price?: string;
+  } = {};
   const title = form.title.trim();
   if (title.length === 0)
     errors.title = "studio:uploadFlow.release.titleRequired";
@@ -166,11 +222,22 @@ export function releaseFormErrors(form: ReleaseFormValues): {
     errors.buyUrl = "studio:uploadFlow.v3.buyUrlTooLong";
   else if (buyUrl && !isHttpsLink(buyUrl))
     errors.buyUrl = "studio:uploadFlow.v3.buyUrlHttpsOnly";
+  if (form.priceMode !== "not_for_sale") {
+    // An unreadable amount always names its reason, whatever the mode.
+    const priceErrorKey = isSellableReleaseType(form.type)
+      ? (priceErrorKeyOf(form.priceMode, centsFromEuroText(form.priceText)) ??
+        (centsFromEuroText(form.priceText) === null
+          ? "studio:purchase.price.amountRequired"
+          : null))
+      : "studio:errors.reason.studio_release_type_not_for_sale";
+    if (priceErrorKey) errors.price = priceErrorKey;
+  }
   return errors;
 }
 
-/** Only what changed since the last save, trimmed, empties as null. A saved
- *  genre outside STUDIO_GENRES reads as "" in the form and stays as it is. */
+/** Only what changed since the last save, trimmed, empties as null. Saved
+ *  genres outside STUDIO_GENRES stay out of the form and stay saved until
+ *  the list is edited; an edit sends the picked list alone. */
 export function patchFromForm(
   form: ReleaseFormValues,
   release: StudioReleaseView,
@@ -179,11 +246,11 @@ export function patchFromForm(
   const title = form.title.trim();
   if (title && title !== release.title) body.title = title;
   if (form.type !== release.type) body.type = form.type;
-  const genre = form.genre || null;
-  const hasUnlistedGenre =
-    release.genre !== null && !KNOWN_GENRES.has(release.genre);
-  if (genre !== release.genre && !(genre === null && hasUnlistedGenre))
-    body.genre = genre;
+  const savedGenres = knownGenresOf(release);
+  const hasGenresChanged =
+    form.genres.length !== savedGenres.length ||
+    form.genres.some((genre, index) => genre !== savedGenres[index]);
+  if (hasGenresChanged) body.genres = form.genres;
   const mood = form.mood || null;
   if (mood !== release.mood) body.mood = mood;
   const sceneId = form.sceneId || null;
@@ -199,6 +266,16 @@ export function patchFromForm(
     : null;
   if (buyUrl !== release.buyUrl) body.buyUrl = buyUrl;
   if (form.isGapless !== release.isGapless) body.isGapless = form.isGapless;
+  const price = priceInputOf(form.priceMode, form.priceText);
+  if (price !== "invalid") {
+    const savedPrice = release.price ?? null;
+    const isPriceChanged =
+      price === null || savedPrice === null
+        ? price !== savedPrice
+        : price.mode !== savedPrice.mode ||
+          price.amountCents !== savedPrice.amountCents;
+    if (isPriceChanged) body.price = price;
+  }
   if (form.coverKey) body.coverKey = form.coverKey;
   return body;
 }

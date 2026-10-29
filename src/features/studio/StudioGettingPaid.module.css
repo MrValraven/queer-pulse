@@ -1,0 +1,131 @@
+/* The Getting paid section in Studio settings: the persona select, the
+   privacy note, the editor's rows and its notes, status and alert lines. */
+
+/* The section heading takes focus when the address carries #getting-paid;
+   it clears the sticky bar when it scrolls into view. */
+.anchor h2 {
+  scroll-margin-top: 88px;
+}
+
+/* The section sits in its own wrapper, so it is no longer the page's last
+   child; it keeps the divider the sibling sections carry. */
+.anchor > section:last-child {
+  border-bottom: 1px solid rgba(var(--studio-ink-rgb), 0.08);
+}
+
+.anchor h2:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.personaField {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  font-size: var(--text-13);
+  color: var(--studio-text);
+}
+
+.select {
+  min-width: 200px;
+}
+
+.privacy {
+  margin: 12px 0 18px;
+  max-width: 60ch;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--studio-text-muted);
+}
+
+.editor {
+  display: flex;
+  flex-direction: column;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.note {
+  margin: 0 0 8px;
+  max-width: 65ch;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--studio-text-muted);
+}
+
+.warning {
+  margin: 0 0 12px;
+  padding: 12px 14px;
+  max-width: 65ch;
+  border: 1px solid rgba(var(--accent-rgb), 0.45);
+  border-radius: var(--radius-12);
+  background: rgba(var(--accent-rgb), 0.08);
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: var(--studio-text);
+}
+
+.addArea {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+/* Ghost sm drops the floor to 40px; Add keeps the full tap target. */
+.addArea .addButton {
+  min-height: var(--tap-min);
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.footer .saveButton {
+  min-height: var(--tap-min);
+}
+
+/* An unavailable button stays focusable and keeps its name; the look says
+   it waits. */
+.addButton[aria-disabled="true"],
+.saveButton[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.status {
+  margin: 8px 0 0;
+  font-size: var(--text-13);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--studio-jade-text);
+}
+
+.alert {
+  margin: 8px 0 0;
+  font-size: var(--text-13);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--studio-accent-text);
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

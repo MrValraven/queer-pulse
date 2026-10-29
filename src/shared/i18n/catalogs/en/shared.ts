@@ -116,9 +116,9 @@ export const shared: Catalog = {
   "consent.storage.studioRail.purpose":
     "Where you scrolled your Studio playlists and how you sorted them, for this tab only.",
   "consent.storage.studioTaste.purpose":
-    "The genres and moods you picked in the Studio welcome, which put those tiles first on Studio home. It stays on this device and clears when you sign out or use Quick exit. We never receive it.",
+    "A temporary copy of the genres and moods you picked in the Studio welcome. The demo uses it, and it moves an older choice made on this device to your account once, then it is removed. It also clears when you sign out or use Quick exit.",
   "consent.storage.studioWelcomeSeen.purpose":
-    "That you have seen the Studio welcome, so it stays closed when you sign back in. It holds only your account id, stays on this device and clears when you use Quick exit. We never receive it.",
+    "A temporary note that you have seen the Studio welcome. The demo uses it, and it moves an older note made on this device to your account once, then it is removed. It holds only your account id and clears when you use Quick exit.",
 
   // Feedback: PageLoader / RouteFallback / ErrorFallback / RoomLoader
   "feedback.errorFallback.title": "Something broke on our <em>end</em>",
@@ -312,6 +312,7 @@ export const shared: Catalog = {
   "adminNav.items.logoConcepts": "Logo concepts",
   "adminNav.items.queues": "All queues",
   "adminNav.items.moderation": "Moderation",
+  "adminNav.items.musicEvents": "Music events",
   "adminNav.items.forumReview": "Forum review",
   "adminNav.items.staff": "Staff & roles",
   "adminNav.items.concerns": "Concerns",
@@ -493,6 +494,7 @@ export const shared: Catalog = {
   "staffBadge.grant.resourceCurator": "Resource Curator",
   "staffBadge.grant.editorial": "Editorial Team",
   "staffBadge.grant.communities": "Communities Team",
+  "staffBadge.grant.musicManagerProducer": "Music manager & producer",
   "ambassador.tag.short": "Ambassador",
   "ambassador.tag.long": "QueerPulse Ambassador",
   "ambassador.tag.meta": "Since {since} · {focus}",
@@ -880,6 +882,23 @@ export const shared: Catalog = {
   "studioShare.unavailable": "Not available",
   "apiError.quizshowAdultsRounds":
     "This event's live game has adults rounds. Change their label in the Live game tab first, then turn off 18+",
+  "apiError.musicEvent.notFound": "This event isn't hosted by QueerPulse",
+  "apiError.musicEvent.familyLocked": "A QueerPulse music event stays in Music",
+  "apiError.musicEvent.communityUnavailable":
+    "A QueerPulse music event can't be for one community only",
+  "apiError.musicEvent.performerNotStudioArtist":
+    "Only Studio artists can be booked",
+  "apiError.musicEvent.cohostIsYou":
+    "You run this event for QueerPulse, so you can't cohost it too",
+  "apiError.musicEvent.cohostHoldsGrant":
+    "Staff can't cohost a QueerPulse music event",
+  "apiError.musicEvent.cohostIsStaffTier":
+    "Staff can't cohost a QueerPulse music event. Moderators and admins stay off the cohost list",
+  "apiError.musicEvent.cohostNotActive":
+    "Cohosts must be active members, and this account isn't active",
+  "apiError.musicEvent.memberNotFound": "No member has this profile address",
+  "apiError.musicEvent.inviteRequestNotFound":
+    "This invite request isn't on this event",
 
   // ── CodeInput (shared/components/ui) ──
   "codeInput.digit": "Digit {index} of {total}",
