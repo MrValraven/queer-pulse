@@ -7,6 +7,7 @@ import {
   toTrackView,
 } from "./studio.adapters";
 import type {
+  StudioArtistOfTheMonthCardDTO,
   StudioCreditInboxRowDTO,
   StudioCreditRole,
   StudioPersonaRefDTO,
@@ -195,6 +196,52 @@ describe("curation", () => {
     expect(view.featured?.note).toBe("Start with track six");
     expect(view.staffPicks[0]?.note).toBeNull();
     expect(view.featured?.href).toBe("/studio/album?id=release-1");
+  });
+
+  it("reads a server without the spotlight fields as empty", () => {
+    const view = toCurationView({
+      featured: null,
+      staffPicks: [],
+      newThisWeek: [],
+    });
+    expect(view.artistOfTheMonth).toBeNull();
+    expect(view.newStars).toEqual([]);
+  });
+
+  it("maps the artist of the month with a trimmed note and its newest release", () => {
+    const view = toCurationView({
+      featured: null,
+      staffPicks: [],
+      newThisWeek: [],
+      artistOfTheMonth: {
+        artist: card.artist,
+        note: "  Start here  ",
+        latestRelease: card,
+      },
+      newStars: [{ artist: card.artist, note: "   " }],
+    });
+    expect(view.artistOfTheMonth?.note).toBe("Start here");
+    expect(view.artistOfTheMonth?.artist.name).toBe("Mariana Sol");
+    expect(view.artistOfTheMonth?.latestRelease.href).toBe(
+      "/studio/album?id=release-1",
+    );
+    expect(view.newStars[0]?.note).toBeNull();
+  });
+
+  it("drops an artist of the month that arrives without its newest release", () => {
+    const view = toCurationView({
+      featured: null,
+      staffPicks: [],
+      newThisWeek: [],
+      artistOfTheMonth: {
+        artist: card.artist,
+        note: "Start here",
+        latestRelease: null,
+      } as unknown as StudioArtistOfTheMonthCardDTO,
+      newStars: [{ artist: card.artist, note: null }],
+    });
+    expect(view.artistOfTheMonth).toBeNull();
+    expect(view.newStars[0]?.artist.name).toBe("Mariana Sol");
   });
 });
 

@@ -45,6 +45,31 @@ describe("demo curation", () => {
       "demo-release-home-4",
     ]);
   });
+
+  it("serves the artist of the month with their newest listed release", () => {
+    const spotlight = demoStudioCuration().artistOfTheMonth;
+    expect(spotlight?.artist.name).toBe("Vanda Diesel");
+    expect(spotlight?.note).toMatch(/whole room into a choir/);
+    expect(spotlight?.latestRelease.id).toBe("demo-release-vanda-sunday-mass");
+  });
+
+  it("serves five new stars in seed order", () => {
+    const stars = demoStudioCuration().newStars ?? [];
+    expect(stars.map((star) => star.artist.id)).toEqual([
+      "demo-persona-rita-ferreira",
+      "demo-persona-coro-de-outubro",
+      "demo-persona-lua-cardoso",
+      "sp-jordan-lechatdashinko",
+      "sp-diogo-nightform",
+    ]);
+    expect(stars.map((star) => star.note)).toEqual([
+      "Start with the kitchen song",
+      null,
+      "Poems for the last tram home",
+      null,
+      "Bass that hums through the floor",
+    ]);
+  });
 });
 
 describe("demo scenes", () => {

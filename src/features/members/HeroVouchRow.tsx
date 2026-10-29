@@ -274,6 +274,22 @@ export function HeroVouchRow({
   const youFace = youAdded ? resolveSelfFace(demoMode, user) : null;
   const faces: VoucherFace[] = youFace ? [...baseFaces, youFace] : baseFaces;
 
+  // Whether the viewer is one of this member's vouchers. Read off the merged
+  // roster so it covers both the optimistic face added above and the viewer's
+  // own vouch once the live API returns it in `baseFaces`. In that second case
+  // `youFace` stays null because of the dedupe, so the caption must never key
+  // off `youFace` alone, or it prints the viewer's own name in third person.
+  const isViewerFace = (face: VoucherFace) =>
+    !face.anonymous && face.slug === selfSlug;
+  const isViewerAVoucher =
+    !realSelf && selfSlug != null && faces.some(isViewerFace);
+  // Everyone on the roster apart from the viewer. The caption names these
+  // people and then appends "you" when the viewer has vouched too.
+  const otherFaces = isViewerAVoucher
+    ? faces.filter((face) => !isViewerFace(face))
+    : faces;
+  const hasOtherVouchers = otherFaces.length > 0;
+
   // The member's true vouch tally. `Member.vouchers` looks like a roster and is
   // not one in live mode: `cardToMember` fills it with exactly `dto.vouchCount`
   // placeholder entries, so its LENGTH is the profile DTO's `vouchCount` and
@@ -329,19 +345,24 @@ export function HeroVouchRow({
     );
   }
 
-  // Base voucher names for the caption. `profile.voucherNames` is only populated
-  // in demo; live derives the names from the fetched faces (the adapter leaves it
-  // empty), which also fixes the stray leading comma the old live path showed.
-  const baseNames = demoMode
+  // Names of the vouchers other than the viewer, for the caption.
+  // `profile.voucherNames` is only populated in demo and never holds the
+  // viewer; live derives the names from the fetched faces (the adapter leaves
+  // it empty), which also fixes the stray leading comma the old live path
+  // showed.
+  const otherNames = demoMode
     ? profile.voucherNames
-    : baseFaces
-        .map((f) => (f.anonymous ? t("members:hero.vouch.anonymous") : f.name))
+    : otherFaces
+        .map((face) =>
+          face.anonymous ? t("members:hero.vouch.anonymous") : face.name,
+        )
         .join(", ");
-  const namesText = !youFace
-    ? baseNames
-    : baseFaces.length > 0
-      ? t("members:hero.vouch.namesPlusYou", { names: baseNames })
-      : t("members:hero.vouch.youOnly");
+  const namesText = isViewerAVoucher
+    ? t("members:hero.vouch.namesPlusYou", { names: otherNames })
+    : otherNames;
+  // The viewer is the only voucher: the caption speaks to them directly, and
+  // the "a familiar face vouched" line would only be describing the viewer.
+  const isViewerTheOnlyVoucher = isViewerAVoucher && !hasOtherVouchers;
 
   // "Texture" chips: the distinct ways these vouchers know the member, one
   // chip per distinct value (never per voucher, which could explode into a
@@ -354,16 +375,26 @@ export function HeroVouchRow({
     <div className={rowClassName}>
       <VoucherFaceStack faces={faces} faceSize={faceSize} />
       <div className={styles.vouchText}>
-        <Translation
-          i18nKey="members:hero.vouch.by"
-          components={{ b: <b /> }}
-          values={{ names: namesText }}
-        />
-        <br />
-        {t(
-          isSelf
-            ? "members:hero.vouch.onlyNumberMattersSelf"
-            : "members:hero.vouch.onlyNumberMatters",
+        {isViewerTheOnlyVoucher ? (
+          <Translation
+            i18nKey="members:hero.vouch.byYouOnly"
+            components={{ b: <b /> }}
+            values={{ first: profile.first }}
+          />
+        ) : (
+          <>
+            <Translation
+              i18nKey="members:hero.vouch.by"
+              components={{ b: <b /> }}
+              values={{ names: namesText }}
+            />
+            <br />
+            {t(
+              isSelf
+                ? "members:hero.vouch.onlyNumberMattersSelf"
+                : "members:hero.vouch.onlyNumberMatters",
+            )}
+          </>
         )}
         {/* The owner is looking at a roster their visitors cannot see. Say so
             here rather than leaving them to guess from the privacy sheet. */}

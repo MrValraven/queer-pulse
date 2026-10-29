@@ -245,6 +245,8 @@ export const STUDIO_DISCOVERY_LIMITS = {
   /** staff_picks and new_this_week each. */
   curationShelfMax: 12,
   curationNoteMaxLength: 140,
+  spotlightArtistOfTheMonthMax: 1,
+  spotlightNewStarsMax: 12,
   sceneNameMaxLength: 60,
   sceneCityMaxLength: 60,
   sceneBlurbMaxLength: 500,
@@ -376,6 +378,13 @@ export const STUDIO_ERROR_CODES = [
   "studio_curation_shelf_full",
   "studio_curation_already_on_shelf",
   "studio_curation_order_mismatch",
+  // Studio spotlight (contract 2026-10-29).
+  "studio_spotlight_not_an_artist",
+  "studio_spotlight_no_release",
+  "studio_spotlight_slot_full",
+  "studio_spotlight_already_in_slot",
+  "studio_spotlight_order_mismatch",
+  "studio_spotlight_not_found",
   "studio_scene_slug_taken",
   "studio_scene_order_mismatch",
   "studio_credit_already_requested",
@@ -1206,6 +1215,21 @@ export interface StudioCurationDTO {
   featured: StudioCuratedPickDTO | null;
   staffPicks: StudioCuratedPickDTO[];
   newThisWeek: StudioCuratedPickDTO[];
+  /** Null when empty or not listenable. Optional: an older server omits it. */
+  artistOfTheMonth?: StudioArtistOfTheMonthCardDTO | null;
+  /** In the order staff set. Optional: an older server omits it. */
+  newStars?: StudioSpotlightArtistCardDTO[];
+}
+
+/** One hand-picked artist on Studio home, with the staff note. */
+export interface StudioSpotlightArtistCardDTO {
+  artist: StudioArtistRefDTO;
+  note: string | null;
+}
+
+/** The artist of the month plus the newest release this viewer can hear. */
+export interface StudioArtistOfTheMonthCardDTO extends StudioSpotlightArtistCardDTO {
+  latestRelease: StudioReleaseCardDTO;
 }
 
 export interface StudioSceneCardDTO {

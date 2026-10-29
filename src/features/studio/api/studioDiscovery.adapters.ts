@@ -25,6 +25,7 @@ import {
 import {
   STUDIO_PERSONA_CREDIT_STATUSES,
   type StudioAppearsOnCardDTO,
+  type StudioArtistOfTheMonthCardDTO,
   type StudioCreditInboxDTO,
   type StudioCreditInboxRowDTO,
   type StudioCreditRole,
@@ -37,6 +38,7 @@ import {
   type StudioSceneCardDTO,
   type StudioSceneDTO,
   type StudioSceneEventDTO,
+  type StudioSpotlightArtistCardDTO,
 } from "./studio.types";
 
 // View models for the discovery surfaces that no v1 or v2 shape carries:
@@ -62,10 +64,23 @@ export interface StudioCuratedPickView extends StudioReleaseCardView {
   note: string | null;
 }
 
+/** One hand-picked artist on Studio home. The note is shown as written. */
+export interface StudioSpotlightArtistView {
+  artist: StudioArtistRefView;
+  note: string | null;
+}
+
+export interface StudioArtistOfTheMonthView extends StudioSpotlightArtistView {
+  /** The newest release this viewer can hear. */
+  latestRelease: StudioReleaseCardView;
+}
+
 export interface StudioCurationView {
   featured: StudioCuratedPickView | null;
   staffPicks: StudioCuratedPickView[];
   newThisWeek: StudioCuratedPickView[];
+  artistOfTheMonth: StudioArtistOfTheMonthView | null;
+  newStars: StudioSpotlightArtistView[];
 }
 
 export function toCuratedPickView(
@@ -74,11 +89,33 @@ export function toCuratedPickView(
   return { ...toReleaseCardView(dto), note: textOrNull(dto.note) };
 }
 
+export function toSpotlightArtistView(
+  dto: StudioSpotlightArtistCardDTO,
+): StudioSpotlightArtistView {
+  return { artist: toArtistRefView(dto.artist), note: textOrNull(dto.note) };
+}
+
+function toArtistOfTheMonthView(
+  dto: StudioArtistOfTheMonthCardDTO | null | undefined,
+): StudioArtistOfTheMonthView | null {
+  // A pick without its newest release folds the card away, so one bad
+  // field cannot fail the whole curation read.
+  if (!dto?.latestRelease) return null;
+  return {
+    ...toSpotlightArtistView(dto),
+    latestRelease: toReleaseCardView(dto.latestRelease),
+  };
+}
+
+/** An older server omits artistOfTheMonth and newStars: both read as empty
+ *  and their sections on Studio home fold away. */
 export function toCurationView(dto: StudioCurationDTO): StudioCurationView {
   return {
     featured: dto.featured ? toCuratedPickView(dto.featured) : null,
     staffPicks: dto.staffPicks.map(toCuratedPickView),
     newThisWeek: dto.newThisWeek.map(toCuratedPickView),
+    artistOfTheMonth: toArtistOfTheMonthView(dto.artistOfTheMonth),
+    newStars: (dto.newStars ?? []).map(toSpotlightArtistView),
   };
 }
 

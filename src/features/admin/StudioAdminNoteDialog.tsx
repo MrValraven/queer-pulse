@@ -1,14 +1,16 @@
-import { useId, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Button, Collapse, Modal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { STUDIO_DISCOVERY_LIMITS } from "../studio/api/studio.types";
 import { useUpdateAdminStudioPickNote } from "./api/StudioAdminCurationHooks";
 import type { AdminStudioPickDTO } from "./api/studioDiscoveryAdmin.api";
 import { studioAdminSaveErrorKeyOf } from "./studioAdmin.model";
-import css from "./StudioAdminPage.module.css";
+import { StudioAdminNoteField } from "./StudioAdminNoteField";
+import css from "./StudioAdminPickDialog.module.css";
+import { StudioAdminReleaseSummary } from "./StudioAdminReleaseSummary";
 
-/** Edit one pick's note; an empty note clears it. */
+/** Edit one pick's note under a summary of its release; an empty note
+ *  clears it. The title stays "Edit note" since the card names the release. */
 export function StudioAdminNoteDialog({
   pick,
   onClose,
@@ -18,9 +20,7 @@ export function StudioAdminNoteDialog({
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const noteFieldId = useId();
-  const noteRef = useRef<HTMLInputElement>(null);
-  const noteHintId = useId();
+  const noteRef = useRef<HTMLTextAreaElement>(null);
   const [note, setNote] = useState(pick.note ?? "");
   const [errorKey, setErrorKey] = useState<string | null>(null);
   const update = useUpdateAdminStudioPickNote();
@@ -42,9 +42,7 @@ export function StudioAdminNoteDialog({
   return (
     <Modal
       initialFocusRef={noteRef}
-      title={t("admin:studioAdmin.noteDialog.title", {
-        title: pick.release.title,
-      })}
+      title={t("admin:studioAdmin.pick.editNoteCta")}
       onClose={onClose}
       footer={
         <>
@@ -54,6 +52,7 @@ export function StudioAdminNoteDialog({
           <Button
             variant="primary"
             aria-disabled={update.isPending || undefined}
+            aria-busy={update.isPending || undefined}
             onClick={submit}
           >
             {t("admin:studioAdmin.noteDialog.saveCta")}
@@ -69,25 +68,17 @@ export function StudioAdminNoteDialog({
           submit();
         }}
       >
-        <label htmlFor={noteFieldId} className={css.fieldLabel}>
-          {t("admin:studioAdmin.pickDialog.noteLabel")}
-        </label>
-        <input
-          id={noteFieldId}
-          ref={noteRef}
-          type="text"
-          className={css.textInput}
+        <div className={css.summaryCard}>
+          <StudioAdminReleaseSummary release={pick.release} size="md" />
+        </div>
+        <StudioAdminNoteField
           value={note}
-          maxLength={STUDIO_DISCOVERY_LIMITS.curationNoteMaxLength}
-          aria-describedby={noteHintId}
-          onChange={(event) => {
-            setNote(event.target.value);
+          inputRef={noteRef}
+          onChange={(value) => {
+            setNote(value);
             setErrorKey(null);
           }}
         />
-        <p id={noteHintId} className={css.fieldHint}>
-          {t("admin:studioAdmin.pickDialog.noteHint")}
-        </p>
         <Collapse isOpen={errorKey !== null}>
           <p className={css.error} role="alert">
             {errorKey ? t(errorKey) : null}

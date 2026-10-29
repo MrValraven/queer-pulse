@@ -9,6 +9,7 @@ import {
   isGatedPath,
   isQuizshowHostingPath,
   requiredCapability,
+  requiredRole,
   useAuthGateRedirect,
   useIsStaffOnlyBounce,
 } from "./authGate";
@@ -506,8 +507,25 @@ describe("the music events console grant", () => {
     ).toEqual(["music_manager_producer"]);
   });
   it("keeps every other admin path closed to the grant", () => {
-    expect(elevatingCapabilities("/admin/studio")).not.toContain(
+    expect(elevatingCapabilities("/admin/members")).not.toContain(
       "music_manager_producer",
     );
+    expect(elevatingCapabilities("/admin/landing")).not.toContain(
+      "music_manager_producer",
+    );
+  });
+});
+
+describe("the Studio discovery console grant", () => {
+  it("elevates a music manager and producer into Studio discovery", () => {
+    expect(elevatingCapabilities("/admin/studio")).toEqual([
+      "music_manager_producer",
+    ]);
+    expect(elevatingCapabilities("/admin/studio/anything")).toEqual([
+      "music_manager_producer",
+    ]);
+  });
+  it("keeps moderators in through the moderator list", () => {
+    expect(requiredRole("/admin/studio")).toBe("mod");
   });
 });

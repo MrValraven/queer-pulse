@@ -76,7 +76,9 @@ describe("Studio discovery console: failed reads (demo)", () => {
       { target: { value: "cidade" } },
     );
     expect(
-      await within(dialog).findByText("That search didn't load"),
+      await within(dialog).findByText(
+        "The request didn't go through. Try again in a moment",
+      ),
     ).toBeInTheDocument();
     expect(within(dialog).queryByText(/No results/i)).not.toBeInTheDocument();
   });

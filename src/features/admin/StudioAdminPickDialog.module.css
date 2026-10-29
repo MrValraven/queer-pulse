@@ -1,0 +1,580 @@
+/* Studio discovery console dialogs: set or add a pick, edit its note. A
+   record-shop feel: covers lead, serif titles, quiet supporting type. The
+   Modal body is --cream, so fields, rows and cards sit on --paper. */
+
+.dialogForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.fieldLabel {
+  display: block;
+  margin: 20px 0 8px;
+  font-size: var(--text-11);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.dialogForm > .field:first-child .fieldLabel {
+  margin-top: 4px;
+}
+
+.fieldHint {
+  margin: 8px 0 0;
+  font-size: var(--text-12);
+  line-height: 1.5;
+  color: var(--ink-60);
+  text-wrap: pretty;
+}
+
+/* Chromium's pretty only lifts a lone last word, so the search hint left
+   two words ("o fez") on the phone. It is a short one-sentence hint, so
+   balancing its lines evens them out and still keeps one line on desktop. */
+.searchHint {
+  text-wrap: balance;
+}
+
+.error {
+  margin: 12px 0 0;
+  font-size: var(--text-13);
+  color: var(--accent-text);
+}
+
+/* ── Search field ───────────────────────────────────────────────────────── */
+.searchShell {
+  position: relative;
+}
+
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  left: 18px;
+  width: 18px;
+  height: 18px;
+  color: var(--ink-60);
+  pointer-events: none;
+  transform: translateY(-50%);
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.searchShell:focus-within .searchIcon {
+  color: var(--ink);
+}
+
+.searchInput {
+  width: 100%;
+  min-height: 54px;
+  padding: 0 56px 0 48px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--text-15);
+  appearance: none;
+  transition-property: border-color, box-shadow;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.searchInput::placeholder {
+  color: var(--ink-60);
+  opacity: 1;
+}
+
+.searchInput::-webkit-search-cancel-button,
+.searchInput::-webkit-search-decoration {
+  appearance: none;
+}
+
+.searchInput:hover {
+  border-color: rgba(var(--line-rgb), 0.2);
+}
+
+.searchInput[aria-invalid="true"] {
+  border-color: var(--accent-text);
+}
+
+/* The focus ring carries the state, so the border steps back under it;
+   an invalid field never reads as a doubled red box. */
+.searchInput:focus-visible,
+.noteInput:focus-visible {
+  border-color: rgba(var(--line-rgb), 0.06);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.searchClear {
+  position: absolute;
+  top: 0;
+  right: 5px;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* ── Note field ─────────────────────────────────────────────────────────── */
+/* A textarea that opens two lines tall and grows with the note up to six
+   line heights. Where field-sizing is unsupported, rows={2} sets the same
+   two-line height and a longer note scrolls inside it. */
+.noteInput {
+  display: block;
+  width: 100%;
+  min-height: calc(2lh + 26px);
+  max-height: 6lh;
+  padding: 12px 16px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-14);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--text-15);
+  line-height: 1.45;
+  resize: none;
+  overflow-y: auto;
+  field-sizing: content;
+  transition-property: border-color, box-shadow;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.noteInput:hover {
+  border-color: rgba(var(--line-rgb), 0.2);
+}
+
+.noteFoot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.noteFoot .fieldHint {
+  margin: 0;
+}
+
+.counter {
+  flex: none;
+  font-size: var(--text-12);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.counterNear {
+  font-weight: 600;
+  color: var(--accent-text);
+}
+
+/* ── Results ────────────────────────────────────────────────────────────── */
+.resultsArea {
+  margin-top: 20px;
+}
+
+/* It keeps its one line while empty (the offline and error views), so the
+   frame below never moves when the heading fades out. */
+.resultsHeading {
+  min-height: 1lh;
+  margin: 0 0 10px;
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+/* One frame height for every state (loading, empty, offline, results), so
+   the dialog never jumps between them. It is the Modal's own cap,
+   min(86svh, 760px), less the dialog's head and footer, the search field,
+   this heading and the note field (about 470px together), so the dialog
+   body never scrolls at 1024x768 or 1280x800 and the list is the one
+   thing that does. The phone sheet's cap is 92svh, with taller wrapped
+   hints and the home-indicator padding. */
+.resultsFrame {
+  height: clamp(180px, min(86svh, 760px) - 470px, 340px);
+}
+
+/* The negative margin gives the rows' focus ring room inside the scroll
+   clip while the rows still line up with the search field. */
+.resultsScroll {
+  height: calc(100% + 6px);
+  margin: -6px -7px 0;
+  padding: 6px 7px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+/* The list drops the scroll's bottom padding, so the sticky fade below
+   reaches the clip edge. The list's own 28px bottom padding still gives a
+   focused last row room for its ring once scrolled to the end. */
+.resultsScrollList {
+  padding-bottom: 0;
+}
+
+/* A soft fade over the bottom edge while rows scroll under it. The list's
+   own bottom padding is as tall as the fade, so at rest it covers no row. */
+.resultsScrollList::after {
+  content: "";
+  position: sticky;
+  bottom: 0;
+  display: block;
+  height: 28px;
+  margin-top: -28px;
+  background: linear-gradient(transparent, var(--cream));
+  pointer-events: none;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0 0 28px;
+  list-style: none;
+}
+
+.resultItem {
+  display: block;
+}
+
+.result {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 12px 8px 8px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition-property: border-color, background-color, box-shadow, opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.result:hover:not([aria-disabled="true"]) {
+  border-color: rgba(var(--line-rgb), 0.2);
+  box-shadow: var(--shadow-e1);
+}
+
+.result[aria-pressed="true"],
+.result[aria-pressed="true"]:hover {
+  border-color: var(--accent);
+  background-image: linear-gradient(
+    rgba(var(--accent-rgb), 0.07),
+    rgba(var(--accent-rgb), 0.07)
+  );
+}
+
+.result[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.result:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.resultEnd {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 28px;
+}
+
+.resultCheck {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-fill-strong);
+  color: rgba(var(--cream-rgb), 1);
+}
+
+.resultCheck svg {
+  width: 15px;
+  height: 15px;
+}
+
+.resultChip {
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.08);
+  font-size: var(--text-11-5);
+  line-height: 1.35;
+  white-space: nowrap;
+  color: var(--ink-60);
+}
+
+/* ── Results states ─────────────────────────────────────────────────────── */
+/* Clipped to the frame, so the skeleton never shows a scrollbar. */
+.skeletonList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  height: 100%;
+  overflow: hidden;
+}
+
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border: 1px solid rgba(var(--line-rgb), 0.06);
+  border-radius: var(--radius-16);
+  background: var(--paper);
+}
+
+.skeletonText {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.resultsState,
+.resultsState [role="alert"] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.resultsState {
+  justify-content: center;
+  height: 100%;
+  padding: 16px;
+  text-align: center;
+}
+
+.resultsStateIcon {
+  width: 22px;
+  height: 22px;
+  color: var(--ink-40);
+}
+
+.resultsStateLine {
+  max-width: 36ch;
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* ── Release summary (rows, chosen card, note dialog) ───────────────────── */
+.summary {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  min-width: 0;
+}
+
+.summarySm {
+  gap: 14px;
+}
+
+.summaryMd {
+  gap: 16px;
+}
+
+.summaryText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.summaryTitle,
+.summaryArtist,
+.summaryMeta,
+.summaryByline {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.summaryTitle {
+  font-family: var(--serif);
+  font-size: var(--text-16);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.summaryMd .summaryTitle {
+  font-size: var(--text-18);
+}
+
+.summaryArtist {
+  font-size: var(--text-13);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.summaryMeta {
+  font-size: var(--text-12);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+}
+
+/* The compact row's one line: the artist in ink, then the facts in the
+   quieter tone, cut with an ellipsis at the row's end. */
+.summaryByline {
+  font-size: var(--text-12-5);
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+}
+
+.summaryByline .summaryArtist {
+  font-size: inherit;
+}
+
+.cover {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  outline: 1px solid rgba(var(--line-rgb), 0.08);
+  outline-offset: -1px;
+}
+
+.coverSm {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-8);
+}
+
+.coverMd {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-10);
+  box-shadow: var(--shadow-e1);
+}
+
+.coverImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.coverFallback {
+  width: 42%;
+  height: 42%;
+  color: rgba(var(--ink-rgb), 0.35);
+}
+
+/* The placeholder tints, matching ImageSlot's. */
+.tintDefault {
+  background: rgba(var(--plum-rgb), 0.06);
+}
+.tintCoral {
+  background: rgba(var(--accent-rgb), 0.15);
+}
+.tintJade {
+  background: rgba(var(--jade-rgb), 0.15);
+}
+.tintPlum {
+  background: rgba(var(--plum-rgb), 0.1);
+}
+:global([data-theme="dark"]) .tintDefault {
+  background: rgba(var(--cream-rgb), 0.08);
+}
+:global([data-theme="dark"]) .tintPlum {
+  background: rgba(var(--cream-rgb), 0.12);
+}
+
+/* ── Chosen card and note dialog summary ────────────────────────────────── */
+.chosenCard,
+.summaryCard {
+  padding: 14px 16px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-18);
+  background: var(--paper);
+  box-shadow: var(--shadow-e1);
+}
+
+.chosenCard {
+  margin-top: 16px;
+}
+
+.summaryCard {
+  margin-top: 4px;
+}
+
+.chosenEyebrow {
+  margin: 0 0 10px;
+  font-size: var(--text-11);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+.chosenRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+}
+
+.chosenRow .summary {
+  flex-basis: 220px;
+}
+
+.chosenChange {
+  margin-left: auto;
+}
+
+/* ── Replacing the featured release ─────────────────────────────────────── */
+.replaceNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  border-radius: var(--radius-14);
+  background: rgba(var(--line-rgb), 0.05);
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.replaceNoticeIcon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  color: var(--accent-text);
+}
+
+/* The scroll's top margin collapses through the frame into the heading's,
+   so the scroll box hangs 6px below the frame. The phone budget takes
+   those 6px too, so the sheet body never scrolls. */
+@media (max-width: 719.98px) {
+  .resultsFrame {
+    height: clamp(180px, 92svh - 526px, 340px);
+  }
+}

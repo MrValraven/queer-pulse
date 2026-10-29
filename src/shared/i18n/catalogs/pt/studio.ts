@@ -3309,6 +3309,11 @@ export const studio: Catalog = {
   "home.hero.loadingLabel": "A carregar o início do Studio",
   "home.staffPicks.title": "Escolhas da <em>equipa</em>",
   "home.newThisWeek.title": "Novidades da <em>semana</em>",
+  "home.artistOfTheMonth.title": "Artista do <em>mês</em>",
+  "home.artistOfTheMonth.play": "Ouvir {release}",
+  "home.artistOfTheMonth.openArtist": "Abrir {artist}",
+  "home.artistOfTheMonth.noteLabel": "Da equipa do Studio",
+  "home.newStars.title": "Novas <em>estrelas</em>",
   "home.scenes.title": "Cenas <em>locais</em>",
   "curation.noteLabel": "Nota da equipa do Studio:",
   "browse.titleMood": "Ambiente: <em>{mood}</em>",
@@ -3420,6 +3425,16 @@ export const studio: Catalog = {
   "errors.curationAlreadyOnShelf": "Esse lançamento já está nesta prateleira",
   "errors.curationOrderMismatch":
     "A prateleira mudou enquanto mudavas a ordem. Recarrega e tenta outra vez",
+  "errors.spotlightNotAnArtist":
+    "Aqui só pode entrar uma persona artística pública do Studio",
+  "errors.spotlightNoRelease":
+    "Esta persona ainda não publicou nenhum lançamento",
+  "errors.spotlightSlotFull":
+    "As Novas estrelas levam 12 artistas. Remove alguém primeiro",
+  "errors.spotlightAlreadyInSlot": "Essa persona já está nas Novas estrelas",
+  "errors.spotlightOrderMismatch":
+    "Alguém mudou esta lista. Recarrega-a e tenta outra vez",
+  "errors.spotlightNotFound": "Essa persona já saiu do destaque",
   "errors.sceneSlugTaken": "Outra cena já usa esse endereço",
   "errors.sceneOrderMismatch":
     "As cenas mudaram enquanto mudavas a ordem. Recarrega e tenta outra vez",

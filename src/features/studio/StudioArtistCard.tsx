@@ -4,10 +4,18 @@ import type { StudioArtistRefView } from "./api/studio.adapters";
 import { useStudioFoundingArtistIds } from "./api/useStudioFoundingArtists";
 import { StudioMediaCard } from "./kit/StudioMediaCard";
 import { StudioFoundingBadge } from "./StudioFoundingBadge";
+import curationCss from "./StudioCuration.module.css";
 
 /** One artist on a shelf or grid: a square avatar, the name as the card's
- *  one link and the artist kind under it (StudioMediaCard). */
-export function StudioArtistCard({ artist }: { artist: StudioArtistRefView }) {
+ *  one link and the artist kind under it (StudioMediaCard). A staff `note`
+ *  (New stars) shows under the kind, as written. */
+export function StudioArtistCard({
+  artist,
+  note = null,
+}: {
+  artist: StudioArtistRefView;
+  note?: string | null;
+}) {
   const { t } = useTranslation();
   const foundingIds = useStudioFoundingArtistIds();
   return (
@@ -20,6 +28,14 @@ export function StudioArtistCard({ artist }: { artist: StudioArtistRefView }) {
           {t(artist.kindLabelKey)}
           {foundingIds.has(artist.id) ? (
             <StudioFoundingBadge size="sm" />
+          ) : null}
+          {note ? (
+            <span className={curationCss.pickNote}>
+              <span className="visuallyHidden">
+                {t("studio:curation.noteLabel")}{" "}
+              </span>
+              {note}
+            </span>
           ) : null}
         </>
       }

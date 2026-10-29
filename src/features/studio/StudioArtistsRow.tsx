@@ -17,6 +17,8 @@ interface StudioArtistsRowProps {
   /** Home only: the `?shelf=` value its See all sets. See all then opens
    *  every artist behind the loaded releases as a grid. */
   shelfKey?: string;
+  /** A staff note per artist id (New stars), shown on that artist's card. */
+  noteByArtistId?: ReadonlyMap<string, string>;
 }
 
 function StudioArtistsShelf({
@@ -27,6 +29,7 @@ function StudioArtistsShelf({
   seeAllHref,
   seeAllLabel,
   seeAllReplace,
+  noteByArtistId,
 }: {
   id: string;
   titleKey: string;
@@ -35,6 +38,7 @@ function StudioArtistsShelf({
   seeAllHref?: string;
   seeAllLabel?: string;
   seeAllReplace?: boolean;
+  noteByArtistId?: ReadonlyMap<string, string>;
 }) {
   return (
     <StudioShelf
@@ -46,7 +50,11 @@ function StudioArtistsShelf({
       seeAllReplace={seeAllReplace}
     >
       {artists.map((artist) => (
-        <StudioArtistCard key={artist.id} artist={artist} />
+        <StudioArtistCard
+          key={artist.id}
+          artist={artist}
+          note={noteByArtistId?.get(artist.id) ?? null}
+        />
       ))}
     </StudioShelf>
   );
@@ -100,6 +108,7 @@ export function StudioArtistsRow({
   titleKey = "studio:home.artists.title",
   className,
   shelfKey,
+  noteByArtistId,
 }: StudioArtistsRowProps) {
   const id = `studio-artists-${titleKey.replace(/[^a-zA-Z0-9]+/g, "-")}`;
   if (shelfKey && !artists)
@@ -113,7 +122,12 @@ export function StudioArtistsRow({
   const rowArtists = artists ?? uniqueArtists(releases, HOME_ARTIST_LIMIT);
   if (rowArtists.length === 0) return null;
   const shelf = (
-    <StudioArtistsShelf id={id} titleKey={titleKey} artists={rowArtists} />
+    <StudioArtistsShelf
+      id={id}
+      titleKey={titleKey}
+      artists={rowArtists}
+      noteByArtistId={noteByArtistId}
+    />
   );
   return className ? (
     <div className={`${className} ${kit.shelfFlush}`}>{shelf}</div>

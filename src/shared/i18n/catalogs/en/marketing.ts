@@ -3416,7 +3416,7 @@ export const marketing: Catalog = {
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-10-29.headline":
-    "Run music events with a new staff role, and buy music straight from Studio artists.",
+    "Studio spotlights an Artist of the month and New stars, and music managers get a new role.",
   "changelog.releases.2026-10-28.headline":
     "Studio gets a new light mode, liked albums join the sidebar, and its page plays artists.",
   "changelog.releases.2026-10-27.headline":
@@ -3721,6 +3721,10 @@ export const marketing: Catalog = {
   "changelog.entries.staff-pdf-page-tool.title": "A PDF page tool for staff",
   "changelog.entries.staff-pdf-page-tool.body":
     "Staff can remove, rotate, reorder, merge and split PDF pages in the browser, and files stay on the device.",
+  "changelog.entries.studio-artist-spotlight.title":
+    "Meet the Artist of the month and New stars in Studio",
+  "changelog.entries.studio-artist-spotlight.body":
+    "Music managers now curate all of Studio home from the admin, including both new sections.",
   "changelog.entries.music-manager-producer.title":
     "Run QueerPulse music events with a new staff role",
   "changelog.entries.music-manager-producer.body":
@@ -3741,6 +3745,10 @@ export const marketing: Catalog = {
     "Buy music straight from Studio artists",
   "changelog.entries.studio-buy-music.body":
     "You pay the artist directly, they confirm, then you download and can join the Supported by wall.",
+  "changelog.entries.studio-shelves-console.title":
+    "Curate Studio shelves with the covers up front",
+  "changelog.entries.studio-shelves-console.body":
+    "The featured slot is a hero card, shelves show cover sleeves, and the picker lists new releases first",
   "changelog.entries.studio-landing-v2.title":
     "Hear Studio artists before you join",
   "changelog.entries.studio-landing-v2.body":

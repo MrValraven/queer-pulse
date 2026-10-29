@@ -1390,7 +1390,7 @@ export const admin: Catalog = {
     "Mantém a página inicial, o kit de imprensa e os vídeos de marketing atualizados. As histórias submetidas e as candidaturas a redator continuam com a equipa Editorial.",
   "staffRoles.musicManagerProducer.label": "Gestão e produção musical",
   "staffRoles.musicManagerProducer.desc":
-    "Cria e gere os eventos de música que o QueerPulse organiza, do lineup à entrada. A curadoria do Studio continua com a moderação e a administração.",
+    "Cria e gere os eventos de música que o QueerPulse organiza, do lineup à entrada, e faz a curadoria da página inicial do Studio: o destaque, as prateleiras, as cenas e as secções Artista do mês e Novas estrelas.",
   "staffRoles.adminSuperset":
     "A administração já tem todas as capacidades de equipa.",
   "staffRoles.systemLocked":
@@ -9359,9 +9359,12 @@ export const admin: Catalog = {
   "studioAdmin.eyebrow": "Studio",
   "studioAdmin.title": "Descoberta no <em>Studio</em>",
   "studioAdmin.sub":
-    "Define o lançamento em destaque, arruma as duas prateleiras, gere as cenas da página inicial do Studio, cuida da página do Studio, escolhe artistas da fundação e abre o Studio a quem está à espera",
+    "Define o lançamento em destaque, arruma as duas prateleiras, gere as cenas, escolhe quem entra em Artista do mês e Novas estrelas na página inicial do Studio, cuida da página do Studio, escolhe artistas da fundação e abre o Studio a quem está à espera",
+  "studioAdmin.subCurator":
+    "Define o lançamento em destaque, arruma as prateleiras, gere as cenas e escolhe quem entra em Artista do mês e Novas estrelas na página inicial do Studio",
   "studioAdmin.tabs.shelves": "Prateleiras",
   "studioAdmin.tabs.scenes": "Cenas",
+  "studioAdmin.tabs.spotlight": "Artistas",
   "studioAdmin.loadError":
     "Não foi possível carregar a descoberta do Studio. Tenta outra vez",
   "studioAdmin.searchError": "Essa pesquisa não carregou",
@@ -9377,13 +9380,18 @@ export const admin: Catalog = {
   "studioAdmin.shelf.addCta.featured": "Definir lançamento em destaque",
   "studioAdmin.shelf.addCta.staff_picks": "Juntar às Escolhas da equipa",
   "studioAdmin.shelf.addCta.new_this_week": "Juntar às Novidades da semana",
+  "studioAdmin.featured.replaceCta": "Trocar lançamento",
+  "studioAdmin.featured.emptyBody":
+    "Enquanto não escolheres um, a página inicial do Studio mostra o lançamento mais recente",
+  "studioAdmin.shelf.emptyBody":
+    "A página inicial do Studio esconde esta fila até juntares um lançamento",
   "studioAdmin.pick.added": "Na prateleira {age}",
-  "studioAdmin.pick.onShelf": "Já está nesta prateleira",
   "studioAdmin.pick.notListenable":
     "Escondido de quem ouve: este lançamento não pode tocar agora",
-  "studioAdmin.pick.noNote": "Sem nota",
   "studioAdmin.pick.editNoteCta": "Editar nota",
   "studioAdmin.pick.editNoteAria": "Editar nota de {title}",
+  "studioAdmin.pick.addNoteCta": "Juntar nota",
+  "studioAdmin.pick.addNoteAria": "Juntar nota a {title}",
   "studioAdmin.pick.removeCta": "Remover escolha",
   "studioAdmin.pick.removeAria": "Remover escolha {title} de {shelf}",
   "studioAdmin.moveUpCta": "Subir",
@@ -9392,6 +9400,10 @@ export const admin: Catalog = {
   "studioAdmin.moveDownAria": "Descer: {name}",
   "studioAdmin.dragAria": "Arrasta {name} para mudar a ordem",
   "studioAdmin.moved": "{name} está agora na posição {position}",
+  "studioAdmin.moveEarlierCta": "Mover para antes",
+  "studioAdmin.moveLaterCta": "Mover para depois",
+  "studioAdmin.moveEarlierAria": "Mover para antes: {name}",
+  "studioAdmin.moveLaterAria": "Mover para depois: {name}",
   "studioAdmin.pickDialog.title": "Juntar um lançamento a {shelf}",
   "studioAdmin.pickDialog.titleFeatured": "Definir o lançamento em destaque",
   "studioAdmin.pickDialog.searchLabel": "Procurar lançamentos publicados",
@@ -9407,7 +9419,17 @@ export const admin: Catalog = {
   "studioAdmin.pickDialog.submitCta": "Juntar lançamento",
   "studioAdmin.pickDialog.submitFeaturedCta": "Pôr em destaque",
   "studioAdmin.pickDialog.chooseFirst": "Escolhe primeiro um lançamento",
-  "studioAdmin.noteDialog.title": "Editar a nota de {title}",
+  "studioAdmin.pickDialog.recentHeading": "Lançados há pouco",
+  "studioAdmin.pickDialog.noRecent": "Ainda não há lançamentos publicados",
+  "studioAdmin.pickDialog.clearSearchCta": "Limpar a pesquisa",
+  "studioAdmin.pickDialog.chosenHeading": "A tua escolha",
+  "studioAdmin.pickDialog.changeCta": "Escolher outro lançamento",
+  "studioAdmin.pickDialog.replacesFeatured":
+    "Isto substitui {title} no destaque",
+  "studioAdmin.pickDialog.takenOnShelf": "Na prateleira",
+  "studioAdmin.pickDialog.takenFeatured": "Em destaque agora",
+  "studioAdmin.pickDialog.searchPlaceholder": "Título ou artista",
+  "studioAdmin.pickDialog.noteCount": "{count} de {max}",
   "studioAdmin.noteDialog.saveCta": "Guardar nota",
   "studioAdmin.toast.pickAdded": "{title} está em {shelf}",
   "studioAdmin.toast.pickRemoved": "{title} saiu de {shelf}",
@@ -9612,6 +9634,43 @@ export const admin: Catalog = {
   "studioAdmin.founding.addedOn": "Adicionada a {date}",
   "studioAdmin.founding.loadError":
     "A lista de artistas da fundação não carregou",
+  "studioAdmin.spotlight.monthTitle": "Artista do mês",
+  "studioAdmin.spotlight.monthEmpty": "Ainda não há artista do mês",
+  "studioAdmin.spotlight.pickedOn": "Escolha feita a {date}",
+  "studioAdmin.spotlight.stale":
+    "Escolha de {month}. Escolhe quem fica em destaque este mês",
+  "studioAdmin.spotlight.newStarsTitle": "Novas estrelas",
+  "studioAdmin.spotlight.newStarsEmpty": "Ainda não há novas estrelas",
+  "studioAdmin.spotlight.count": "{count} de 12",
+  "studioAdmin.spotlight.addArtist": "Adicionar artista",
+  "studioAdmin.spotlight.pickArtist": "Escolher artista",
+  "studioAdmin.spotlight.changeArtist": "Mudar de artista",
+  "studioAdmin.spotlight.removeArtist": "Remover artista",
+  "studioAdmin.spotlight.editNote": "Editar nota",
+  "studioAdmin.spotlight.notListenable":
+    "Invisível para quem ouve: esta persona não tem lançamentos que se possam ouvir",
+  "studioAdmin.spotlight.searchLabel":
+    "Procurar artistas pelo nome ou identificador",
+  "studioAdmin.spotlight.searchEmpty":
+    'Nenhuma persona artística do Studio corresponde a "{q}"',
+  "studioAdmin.spotlight.alreadyThere": "Já está nas Novas estrelas",
+  "studioAdmin.spotlight.pickerTitleMonth": "Escolher quem é Artista do mês",
+  "studioAdmin.spotlight.pickerTitleNewStars":
+    "Adicionar artista às Novas estrelas",
+  "studioAdmin.spotlight.noteLabel": "Nota (opcional)",
+  "studioAdmin.spotlight.noteHint":
+    "Uma linha, até 140 caracteres, mostrada junto à persona",
+  "studioAdmin.spotlight.noteDialogTitle": "Editar a nota de {name}",
+  "studioAdmin.spotlight.saveNoteCta": "Guardar nota",
+  "studioAdmin.spotlight.noNote": "Sem nota",
+  "studioAdmin.spotlight.chosen": "Escolha: {name}",
+  "studioAdmin.spotlight.chooseFirst": "Escolhe primeiro uma persona",
+  "studioAdmin.spotlight.pickAria": "Escolher {name}",
+  "studioAdmin.spotlight.editNoteAria": "Editar nota de {name}",
+  "studioAdmin.spotlight.removeAria": "Remover artista: {name}",
+  "studioAdmin.spotlight.monthSet": "{name} é Artista do mês",
+  "studioAdmin.spotlight.addedToNewStars": "{name} está nas Novas estrelas",
+  "studioAdmin.spotlight.removed": "{name} saiu do destaque",
   "studioAdmin.waiting.heading": "À espera do Studio",
   "studioAdmin.waiting.sub":
     "Pessoas que pediram acesso ao Studio. Primeiro artistas, depois quem espera há mais tempo",

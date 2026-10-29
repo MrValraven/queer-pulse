@@ -698,9 +698,9 @@ export const members: Catalog = {
 
   // ── Hero vouch row (HeroVouchRow) ───────────────────────────────────────────
   "hero.vouch.namesPlusYou": "{names}, plus you",
-  "hero.vouch.youOnly": "you",
   "hero.vouch.anonymous": "Anonymous",
   "hero.vouch.by": "Vouched for by <b>{names}</b>.",
+  "hero.vouch.byYouOnly": "So far, only <b>you</b> have vouched for {first}.",
   "hero.vouch.onlyNumberMatters": "A familiar face vouched for them.",
   "hero.vouch.onlyNumberMattersSelf": "A familiar face vouched for you.",
   // The count-only branch (PRD-201). A member who hides their voucher roster is

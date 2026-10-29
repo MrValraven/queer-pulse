@@ -464,10 +464,11 @@ const MOD_ACCESSIBLE_ADMIN_PATTERNS: string[] = [
   // opening it sees the staff-action trail they already read at /mod/audit.
   // No `/*` sibling: the page has no child routes.
   routes.adminLog,
-  // Studio discovery. `AdminStudioCurationController` and
-  // `AdminStudioScenesController` are `@Roles(Moderator, Admin)` with no
-  // `@StaffRoles`, so moderators keep the Studio home shelves and scenes
-  // with admins. No grant opens it, so it stays out of
+  // Studio discovery. `AdminStudioCurationController`,
+  // `AdminStudioScenesController` and `AdminStudioSpotlightController` are
+  // `@Roles(Moderator, Admin)`, so moderators keep the Studio home shelves,
+  // scenes and spotlight picks through this list. The
+  // `music_manager_producer` grant opens the same path through
   // CAPABILITY_ELEVATED_PATTERNS.
   routes.adminStudio,
   `${routes.adminStudio}/*`,
@@ -701,6 +702,16 @@ const CAPABILITY_ELEVATED_PATTERNS: {
     // account tier Admin OR the `music_manager_producer` grant. It stays out of
     // `MOD_ACCESSIBLE_ADMIN_PATTERNS` because the backend tier is Admin alone.
     patterns: [routes.adminMusicEvents, `${routes.adminMusicEvents}/*`],
+    capabilities: ["music_manager_producer"],
+  },
+  {
+    // Studio discovery. `AdminStudioCurationController`,
+    // `AdminStudioScenesController` and `AdminStudioSpotlightController` are
+    // guarded by `RolesOrStaffGuard`: `@Roles(Moderator, Admin)` plus
+    // `@StaffRoles('music_manager_producer')`. The landing, founding and
+    // access-request controllers stay tier-only, so `StudioAdminPage` hides
+    // those tabs for a grant-only viewer.
+    patterns: [routes.adminStudio, `${routes.adminStudio}/*`],
     capabilities: ["music_manager_producer"],
   },
 ];

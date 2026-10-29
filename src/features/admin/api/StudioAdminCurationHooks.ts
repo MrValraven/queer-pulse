@@ -51,8 +51,8 @@ export function useAdminStudioCuration() {
   });
 }
 
-/** Published releases by title or artist; nothing is read for a blank
- *  query. The caller debounces. */
+/** Published releases by title or artist; a blank query reads the newest
+ *  published releases. The caller debounces. */
 export function useAdminStudioReleaseSearch(query: string) {
   const { demoMode } = useDemoMode();
   const trimmed = query
@@ -60,7 +60,6 @@ export function useAdminStudioReleaseSearch(query: string) {
     .slice(0, STUDIO_DISCOVERY_LIMITS.adminSearchQueryMaxLength);
   return useQuery<AdminStudioReleaseCardDTO[]>({
     queryKey: [ADMIN_STUDIO_KEY, "releaseSearch", demoMode, trimmed],
-    enabled: trimmed.length > 0,
     staleTime: 30_000,
     meta: STUDIO_ADMIN_SILENT_META,
     queryFn: async () =>

@@ -16,7 +16,8 @@ import type {
  * Studio discovery's staff surface, mirroring the backend's admin studio
  * curation and scenes controllers
  * (QUEERPULSE-STUDIO-DISCOVERY-CONTRACT-2026-10-13.md, "Admin"). Every route
- * is Moderator and Admin.
+ * admits Moderator and Admin; the curation and scenes routes also admit a
+ * member holding the `music_manager_producer` staff grant.
  */
 
 export type AdminStudioReleaseCardDTO = StudioReleaseCardDTO & {

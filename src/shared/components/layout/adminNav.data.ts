@@ -506,12 +506,13 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
       },
       {
         // Studio discovery (/admin/studio): the featured release, the two
-        // shelves and the scenes on Studio home. Both controllers are
-        // `@Roles(Moderator, Admin)` with no `@StaffRoles`, and the path sits
-        // in `MOD_ACCESSIBLE_ADMIN_PATTERNS`, so it carries no
-        // `capabilities` and no `isAdminOnly`.
+        // shelves, the scenes and the artist spotlight on Studio home. The
+        // three curation controllers admit the `music_manager_producer`
+        // grant, and moderators keep the item through
+        // `MODERATOR_ADMITTED_CAPABILITY_PATHS`. It carries no `isAdminOnly`.
         labelKey: "shared:adminNav.items.studio",
         to: routes.adminStudio,
+        capabilities: ["music_manager_producer"],
         icon: FiRadio,
       },
       {
@@ -736,6 +737,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
  *   queues: `AdminQueuesController`, `@Roles(Moderator, Admin)`.
  *   housing groups, housing-group listings, housing listings:
  *     `HousingModerationGuard` (Moderator, Admin or `housing_moderator`).
+ *   studio discovery: `@Roles(Moderator, Admin)` + `music_manager_producer` on curation, scenes and spotlight; the path is in `MOD_ACCESSIBLE_ADMIN_PATTERNS`.
  *
  * Held out for now. Each backend admits moderators, but authGate bounces a
  * moderator without the grant. Widening authGate is the user's decision:
@@ -754,6 +756,7 @@ const MODERATOR_ADMITTED_CAPABILITY_PATHS: ReadonlySet<string> = new Set([
   routes.adminHousingGroups,
   routes.adminHousingGroupListings,
   routes.adminHousingListings,
+  routes.adminStudio,
 ]);
 
 /** True when one of the viewer's grants opens this item. */

@@ -57,3 +57,37 @@ export const DEMO_CURATION_SEED: Record<
     },
   ],
 };
+
+export interface DemoSpotlightSeed {
+  artistId: string;
+  /** Staff content, written in one language and shown as written. */
+  note: string | null;
+}
+
+/** The demo's artist of the month and New stars, in the order staff set.
+ *  Never the demo member's own personas. */
+export const DEMO_SPOTLIGHT_SEED: {
+  artistOfTheMonth: DemoSpotlightSeed | null;
+  newStars: DemoSpotlightSeed[];
+} = {
+  artistOfTheMonth: {
+    artistId: "sp-ines-fonseca-vanda-diesel",
+    note: "Sunday Mass turned the whole room into a choir and we are still not over it",
+  },
+  newStars: [
+    {
+      artistId: "demo-persona-rita-ferreira",
+      note: "Start with the kitchen song",
+    },
+    { artistId: "demo-persona-coro-de-outubro", note: null },
+    {
+      artistId: "demo-persona-lua-cardoso",
+      note: "Poems for the last tram home",
+    },
+    { artistId: "sp-jordan-lechatdashinko", note: null },
+    {
+      artistId: "sp-diogo-nightform",
+      note: "Bass that hums through the floor",
+    },
+  ],
+};

@@ -11,6 +11,7 @@ import {
   sceneSlugFromName,
   sortedAdminScenes,
   studioAdminSaveErrorKeyOf,
+  studioAdminTabsFor,
 } from "./studioAdmin.model";
 
 describe("movedIds", () => {
@@ -135,6 +136,27 @@ describe("sortedAdminScenes", () => {
       "two",
       "alpha",
       "zeta",
+    ]);
+  });
+});
+
+describe("studioAdminTabsFor", () => {
+  it("gives the staff tier every tab with Artists after Scenes", () => {
+    expect(studioAdminTabsFor(true)).toEqual([
+      "shelves",
+      "scenes",
+      "spotlight",
+      "landing",
+      "founding",
+      "waiting",
+    ]);
+  });
+
+  it("gives a curator Shelves, Scenes and Artists only", () => {
+    expect(studioAdminTabsFor(false)).toEqual([
+      "shelves",
+      "scenes",
+      "spotlight",
     ]);
   });
 });

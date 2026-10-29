@@ -150,16 +150,24 @@ const matches = (query: string, ...texts: string[]) => {
 
 /** Published releases by title or artist name, at most 20. The owner's
  *  draft and taken down releases are searched too and left out, as the
- *  server leaves out every release that is not published. */
+ *  server leaves out every release that is not published. A blank query
+ *  answers the newest published releases, by published date, as the
+ *  server does. */
 export function demoAdminReleaseSearch(
   query: string,
 ): AdminStudioReleaseCardDTO[] {
-  return [...DEMO_RELEASES, ...DEMO_OWNER_RELEASES]
-    .filter(
-      (release) =>
-        release.status === "published" &&
+  const isBlank = query.trim().length === 0;
+  const published = [...DEMO_RELEASES, ...DEMO_OWNER_RELEASES].filter(
+    (release) => release.status === "published",
+  );
+  const found = isBlank
+    ? published.sort((left, right) =>
+        (right.publishedAt ?? "").localeCompare(left.publishedAt ?? ""),
+      )
+    : published.filter((release) =>
         matches(query, release.title, release.artist.name),
-    )
+      );
+  return found
     .slice(0, STUDIO_DISCOVERY_LIMITS.adminSearchResults)
     .map((release) => ({
       ...demoReleaseCard(release),

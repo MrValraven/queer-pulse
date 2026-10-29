@@ -135,17 +135,18 @@ beforeEach(() => {
 });
 
 describe("Studio console tabs (demo)", () => {
-  it("shows five tabs, the last with the number of members waiting", async () => {
+  it("shows six tabs, Artists after Scenes and the last with the number of members waiting", async () => {
     renderPage();
     const tabs = await screen.findAllByRole("tab");
     expect(tabs.map((tab) => tab.textContent?.replace(/\d+$/, ""))).toEqual([
       "Shelves",
       "Scenes",
+      "Artists",
       "Studio page",
       "Founding artists",
       "Waiting for Studio",
     ]);
-    await waitFor(() => expect(at(tabs, 4).textContent).toContain("34"));
+    await waitFor(() => expect(at(tabs, 5).textContent).toContain("34"));
   });
 
   it("moves between tabs with the arrow keys", async () => {

@@ -1,0 +1,192 @@
+/* The artist of the month on Studio home: one wide card under the shelf
+   header. Studio tokens only, so it reads as Daylight in light mode and as
+   the Studio night in dark mode. */
+
+.card {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--studio-line);
+  border-radius: var(--radius-20);
+  background: var(--studio-wash-1);
+  color: var(--studio-text);
+}
+
+/* Light, once the portrait's colour is known (useStudioCoverTint): a layer
+   over the neutral wash fades in with that colour from the portrait's
+   corner, the way the Daylight release hero does. Dark keeps the night. */
+:global(:root:not([data-theme="dark"])) .card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(
+    120deg,
+    var(--card-cover-tint) 0%,
+    transparent 72%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 320ms var(--ease);
+}
+
+:global(:root:not([data-theme="dark"])) .card[data-cover-tint]::before {
+  opacity: 1;
+}
+
+/* The persona's picture: a square that holds its ratio while it loads. */
+.portrait {
+  position: relative;
+  width: 160px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius-16);
+  background: var(--studio-wash-2);
+  box-shadow: var(--shadow-e1);
+}
+
+/* Capped, so the release and its actions stay beside the text. */
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  max-width: min(100%, 36rem);
+}
+
+.name {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: var(--text-32);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--studio-text);
+  overflow-wrap: anywhere;
+}
+
+.kind {
+  margin: 6px 0 0;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}
+
+.noteLabel {
+  margin: 16px 0 0;
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--studio-eyebrow);
+}
+
+/* The hero note's type (StudioCuration.module.css .heroNote). */
+.note {
+  margin: 4px 0 0;
+  max-width: 52ch;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--text-16);
+  line-height: 1.45;
+  color: var(--studio-text-muted);
+}
+
+/* The newest release: cover and title on one line, over a hairline. */
+.release {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  align-self: stretch;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--studio-line);
+}
+
+.releaseCover {
+  position: relative;
+  flex: none;
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+  border-radius: var(--radius-8);
+  background: var(--studio-wash-2);
+}
+
+.releaseText {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+/* Only the title is the link, so the empty space beside it stays quiet. */
+.releaseTitle {
+  align-self: flex-start;
+  font-size: var(--text-15);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.releaseYear {
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}
+
+/* Play and the artist's page side by side, wrapping on a narrow phone. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* The shared tap target at every width. */
+.openLink {
+  min-height: var(--tap-min);
+}
+
+.releaseTitle:focus-visible,
+.openLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (min-width: 720px) {
+  .card {
+    grid-template-columns: clamp(200px, 22vw, 280px) minmax(0, 1fr);
+    align-items: start;
+    gap: 32px;
+    padding: 24px;
+  }
+
+  .portrait {
+    width: clamp(200px, 22vw, 280px);
+  }
+
+  .name {
+    font-size: var(--text-36);
+  }
+}
+
+/* No hover transform lives here; the pill's press scale already stands
+   still under reduced motion (studioKit.module.css). */
+@media (prefers-reduced-motion: reduce) {
+  .openLink:active {
+    transform: none;
+  }
+
+  :global(:root:not([data-theme="dark"])) .card::before {
+    transition: none;
+  }
+}
+
+:global(html[data-reduce-motion="true"]:not([data-theme="dark"]))
+  .card::before {
+  transition: none;
+}

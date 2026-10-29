@@ -26,8 +26,11 @@ export const adminStudioAccessRequestsKey = (demoMode: boolean) =>
   [ADMIN_STUDIO_KEY, "access-requests", demoMode] as const;
 
 /** Waiting for Studio, 30 a page. The next page loads on "Show more" only:
- *  no effect fetches it. */
-export function useAdminStudioAccessRequests() {
+ *  no effect fetches it. The page passes `isEnabled: false` for a viewer who
+ *  cannot see the Waiting tab, so no count query fires. */
+export function useAdminStudioAccessRequests(
+  options: { isEnabled?: boolean } = {},
+) {
   const { demoMode } = useDemoMode();
   return useInfiniteQuery<
     AdminStudioAccessRequestPageDTO,
@@ -39,6 +42,7 @@ export function useAdminStudioAccessRequests() {
     queryKey: adminStudioAccessRequestsKey(demoMode),
     initialPageParam: null,
     getNextPageParam: (page) => page.nextCursor,
+    enabled: options.isEnabled ?? true,
     staleTime: demoMode ? Number.POSITIVE_INFINITY : 30_000,
     queryFn: async ({ pageParam }) =>
       demoMode

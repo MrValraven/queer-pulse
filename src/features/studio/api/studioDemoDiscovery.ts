@@ -3,6 +3,7 @@ import {
   STUDIO_CREDIT_ROLES,
   STUDIO_DISCOVERY_LIMITS,
   type StudioAppearsOnCardDTO,
+  type StudioArtistOfTheMonthCardDTO,
   type StudioArtistRefDTO,
   type StudioCuratedPickDTO,
   type StudioCurationDTO,
@@ -12,6 +13,7 @@ import {
   type StudioReleaseCardDTO,
   type StudioSceneCardDTO,
   type StudioSceneDTO,
+  type StudioSpotlightArtistCardDTO,
 } from "./studio.types";
 import { DEMO_ARTISTS, DEMO_RELEASES } from "./studioDemo.data";
 import { DEMO_LISTED_RELEASES, demoPageOf } from "./studioDemoApi";
@@ -22,8 +24,11 @@ import {
 } from "./studioDemoSafety";
 import {
   DEMO_CURATION_SEED,
+  DEMO_SPOTLIGHT_SEED,
   type DemoCuratedPickSeed,
+  type DemoSpotlightSeed,
 } from "./studioDemoCuration.data";
+import { demoAllArtists } from "./studioDemoFormats.data";
 import { demoAcceptedPublicCredits } from "./studioDemoCreditLedger";
 import {
   DEMO_STUDIO_SCENES,
@@ -51,12 +56,41 @@ function picksOf(seeds: DemoCuratedPickSeed[]): StudioCuratedPickDTO[] {
   });
 }
 
+/** A seed whose artist the demo does not know is skipped. */
+function spotlightCardOf(
+  seed: DemoSpotlightSeed,
+): StudioSpotlightArtistCardDTO | null {
+  const artist = demoAllArtists().find(
+    (candidate) => candidate.id === seed.artistId,
+  );
+  return artist ? { artist, note: seed.note } : null;
+}
+
+/** Skipped (null) when the artist has no listed release, as on the server. */
+function artistOfTheMonthOf(
+  seed: DemoSpotlightSeed | null,
+): StudioArtistOfTheMonthCardDTO | null {
+  const card = seed ? spotlightCardOf(seed) : null;
+  if (!card) return null;
+  const newestRelease = DEMO_LISTED_RELEASES.find(
+    (release) => release.artist.id === card.artist.id,
+  );
+  return newestRelease
+    ? { ...card, latestRelease: demoReleaseCard(newestRelease) }
+    : null;
+}
+
 /** GET /studio/curation. */
 export function demoStudioCuration(): StudioCurationDTO {
   return {
     featured: picksOf(DEMO_CURATION_SEED.featured)[0] ?? null,
     staffPicks: picksOf(DEMO_CURATION_SEED.staff_picks),
     newThisWeek: picksOf(DEMO_CURATION_SEED.new_this_week),
+    artistOfTheMonth: artistOfTheMonthOf(DEMO_SPOTLIGHT_SEED.artistOfTheMonth),
+    newStars: DEMO_SPOTLIGHT_SEED.newStars.flatMap((seed) => {
+      const card = spotlightCardOf(seed);
+      return card ? [card] : [];
+    }),
   };
 }
 

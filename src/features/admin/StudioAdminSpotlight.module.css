@@ -1,0 +1,377 @@
+/* ── Studio console: Artists tab (Artist of the month, New stars) ──────── */
+.tab {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.skeletons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.heading:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.count {
+  margin: 0;
+  font-size: var(--text-13);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+}
+
+/* The count and, once the list has an artist, Add artist beside it. */
+.headEnd {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.empty {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+
+.fullHint {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+  text-align: end;
+}
+
+/* ── The month card and New stars rows ─────────────────────────────────── */
+.card,
+.emptyCard,
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  padding: 16px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card, 22px);
+  background: var(--paper);
+}
+
+.emptyCard {
+  justify-content: space-between;
+}
+
+.cardBody {
+  display: flex;
+  flex: 1 1 260px;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  padding: 14px 16px;
+}
+
+.dragHandle {
+  display: inline-flex;
+  width: 16px;
+  color: var(--ink-40);
+  cursor: grab;
+}
+
+/* A touch screen reorders with Move up and Move down, so the handle goes. */
+@media (pointer: coarse) {
+  .dragHandle {
+    display: none;
+  }
+}
+
+.dragHandle:focus-visible,
+.result:focus-visible,
+.textInput:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* The position sits inline before the avatar. */
+.rowIdentity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.position {
+  flex: none;
+  min-width: 2ch;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.identityText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+}
+
+.name {
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  margin: 0;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.note {
+  max-width: 62ch;
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.noteMissing {
+  color: var(--ink-60);
+}
+
+.stale {
+  margin: 0;
+  padding-inline-start: 10px;
+  border-inline-start: 3px solid var(--amber-ink);
+  font-size: var(--text-13);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--amber-ink);
+}
+
+/* "Hidden from listeners": the stale line's amber, with an icon, wrapping
+   on a phone. */
+.warningLine {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.warningIcon {
+  flex: none;
+  margin-block-start: 0.25em;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* On a phone the actions sit under the artist, full width. */
+@media (max-width: 560px) {
+  .actions {
+    flex-basis: 100%;
+  }
+}
+
+/* ── The picker and note dialogs ───────────────────────────────────────── */
+.dialogForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.fieldLabel {
+  display: block;
+  margin: 16px 0 8px;
+  font-size: var(--text-11);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.fieldLabel:first-child {
+  margin-top: 0;
+}
+
+.fieldHint {
+  margin: 6px 0 0;
+  font-size: var(--text-12);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.textInput {
+  width: 100%;
+  min-height: var(--tap-min);
+  padding: 10px 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-14);
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--text-14);
+}
+
+/* The browser's own clear button and search icon step aside. */
+.textInput::-webkit-search-cancel-button,
+.textInput::-webkit-search-decoration {
+  appearance: none;
+}
+
+.error {
+  margin: 8px 0 0;
+  font-size: var(--text-13);
+  color: var(--accent-text);
+}
+
+.chosen {
+  margin: 10px 0 0;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.result {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  width: 100%;
+  min-height: var(--tap-min);
+  padding: 10px 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-12);
+  background: var(--paper);
+  color: var(--ink);
+  text-align: start;
+  cursor: pointer;
+  transition-property: border-color, background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.result:hover:not([aria-disabled="true"]) {
+  border-color: rgba(var(--line-rgb), 0.28);
+}
+
+.result[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+
+/* A taken artist fades its name and details; the reason chip keeps its
+   full strength. */
+.result[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+.result[aria-disabled="true"] .resultName,
+.result[aria-disabled="true"] .resultMeta {
+  opacity: 0.6;
+}
+
+.resultText {
+  display: flex;
+  flex: 1 1 160px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+}
+
+.resultName {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.resultMeta {
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chipRow:empty {
+  display: none;
+}
+
+/* The chosen artist's tick fades in. */
+.resultCheck {
+  flex: none;
+  color: var(--accent-text);
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+
+.result[aria-pressed="true"] .resultCheck {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .result,
+  .resultCheck {
+    transition: none;
+  }
+}

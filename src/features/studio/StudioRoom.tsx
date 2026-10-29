@@ -3,6 +3,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useStudioCuration } from "./api/useStudioCuration";
 import { useStudioFormatReleases } from "./api/useStudioFormatReleases";
 import { useStudioReleases } from "./api/useStudioReleases";
+import { StudioArtistOfTheMonth } from "./StudioArtistOfTheMonth";
 import { StudioArtistsRow } from "./StudioArtistsRow";
 import { StudioCuratedShelf } from "./StudioCuratedShelf";
 import { StudioFirstRun } from "./StudioFirstRun";
@@ -14,6 +15,7 @@ import { StudioHomeContinue } from "./StudioHomeContinue";
 import { StudioHomeHero } from "./StudioHomeHero";
 import { StudioHomeScenes } from "./StudioHomeScenes";
 import { StudioNewReleases } from "./StudioNewReleases";
+import { StudioNewStarsShelf } from "./StudioNewStarsShelf";
 import { StudioSetSection } from "./StudioPageSections";
 import { StudioShell } from "./StudioShell";
 import { homeHeroOf } from "./studioHome.data";
@@ -25,18 +27,21 @@ import kit from "./studioKit.module.css";
 
 /** Studio home for a signed-in member, top to bottom: the featured release
  *  (else the newest), the format chips, Continue listening (this device's
- *  unfinished episodes), Staff picks, New this week, the Founding artists
- *  launch shelf (while staff keep it on), under All the New
- *  episodes, Spoken word and On stage shelves, Local scenes, (demo) the
- *  Wednesday set, the New releases grid and the artists behind it, both
- *  narrowed by the chosen format, and last the genre and mood tiles (hidden
- *  under Podcasts). Every shelf is one swipeable row. */
+ *  unfinished episodes), Artist of the month, Staff picks, New this week,
+ *  New stars, the Founding artists launch shelf (while staff keep it on),
+ *  under All the New episodes, Spoken word and On stage shelves, Local
+ *  scenes, (demo) the Wednesday set, the New releases grid and the artists
+ *  behind it, both narrowed by the chosen format, and last the genre and
+ *  mood tiles (hidden under Podcasts). Every shelf is one swipeable row.
+ *  Artist of the month and New stars ignore the format chip, as the curated
+ *  shelves do. */
 export function StudioRoom() {
   const { t } = useTranslation();
   useStudioDocumentTitle(t("studio:home.tabTitle"));
   const releasesResult = useStudioReleases();
-  // Artist kinds: a format chip narrows New releases and Artists; the hero
-  // and the curated shelves keep reading every format (spec 5.1).
+  // Artist kinds: a format chip narrows New releases and Artists; the hero,
+  // the curated shelves, Artist of the month and New stars keep reading
+  // every format (spec 5.1).
   const format = useStudioActiveFormat();
   const formatReleasesResult = useStudioFormatReleases(format);
   const gridResult = format === null ? releasesResult : formatReleasesResult;
@@ -56,6 +61,9 @@ export function StudioRoom() {
         />
         <StudioFormatChips activeFormat={format} hrefOf={studioHomePath} />
         <StudioHomeContinue />
+        <StudioArtistOfTheMonth
+          spotlight={curation?.artistOfTheMonth ?? null}
+        />
         <StudioCuratedShelf
           picks={curation?.staffPicks ?? []}
           titleKey="studio:home.staffPicks.title"
@@ -66,6 +74,7 @@ export function StudioRoom() {
           titleKey="studio:home.newThisWeek.title"
           shelfKey="new-this-week"
         />
+        <StudioNewStarsShelf stars={curation?.newStars ?? []} />
         <StudioFoundingShelf />
         <Collapse isOpen={format === null}>
           <StudioFormatShelves />

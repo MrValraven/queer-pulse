@@ -3229,6 +3229,11 @@ export const studio: Catalog = {
   "home.hero.loadingLabel": "Loading Studio home",
   "home.staffPicks.title": "Staff <em>picks</em>",
   "home.newThisWeek.title": "New this <em>week</em>",
+  "home.artistOfTheMonth.title": "Artist of the <em>month</em>",
+  "home.artistOfTheMonth.play": "Play {release}",
+  "home.artistOfTheMonth.openArtist": "Open {artist}",
+  "home.artistOfTheMonth.noteLabel": "From the Studio team",
+  "home.newStars.title": "New <em>stars</em>",
   "home.scenes.title": "Local <em>scenes</em>",
   "curation.noteLabel": "Note from the Studio team:",
   "browse.titleMood": "<em>{mood}</em> releases",
@@ -3336,6 +3341,14 @@ export const studio: Catalog = {
   "errors.curationAlreadyOnShelf": "That release is already on this shelf",
   "errors.curationOrderMismatch":
     "The shelf changed while you were moving picks. Reload and try again",
+  "errors.spotlightNotAnArtist": "Only a public Studio artist can go here",
+  "errors.spotlightNoRelease": "This artist hasn't published a release yet",
+  "errors.spotlightSlotFull": "New stars holds 12 artists. Remove one first",
+  "errors.spotlightAlreadyInSlot": "That artist is already in New stars",
+  "errors.spotlightOrderMismatch":
+    "Someone else changed this list. Reload it and try again",
+  "errors.spotlightNotFound":
+    "That artist was already removed from the spotlight",
   "errors.sceneSlugTaken": "Another scene uses that address",
   "errors.sceneOrderMismatch":
     "The scenes changed while you were moving them. Reload and try again",

@@ -3499,7 +3499,7 @@ export const marketing: Catalog = {
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-10-29.headline":
-    "Organiza eventos de música com uma nova função e compra música diretamente a artistas do Studio.",
+    "O Studio ganha as secções Artista do mês e Novas estrelas, e a gestão musical ganha uma nova função.",
   "changelog.releases.2026-10-28.headline":
     "O Studio ganha um modo claro, os álbuns de que gostas vão para a barra lateral e a página toca artistas.",
   "changelog.releases.2026-10-27.headline":
@@ -3806,6 +3806,10 @@ export const marketing: Catalog = {
     "Uma ferramenta de páginas de PDF para a equipa",
   "changelog.entries.staff-pdf-page-tool.body":
     "A equipa pode remover, rodar, reordenar, juntar e dividir páginas de PDF no navegador, e os ficheiros ficam no dispositivo.",
+  "changelog.entries.studio-artist-spotlight.title":
+    "Conhece as novas secções Artista do mês e Novas estrelas no Studio",
+  "changelog.entries.studio-artist-spotlight.body":
+    "A gestão musical passa a organizar toda a página inicial do Studio no admin, incluindo as duas secções novas.",
   "changelog.entries.music-manager-producer.title":
     "Organiza eventos de música do QueerPulse com uma nova função",
   "changelog.entries.music-manager-producer.body":
@@ -3826,6 +3830,10 @@ export const marketing: Catalog = {
     "Compra música diretamente a artistas do Studio",
   "changelog.entries.studio-buy-music.body":
     "Pagas diretamente à pessoa artista, que confirma, e depois descarregas e podes aparecer no mural Com o apoio de.",
+  "changelog.entries.studio-shelves-console.title":
+    "Cura as prateleiras do Studio com as capas à frente",
+  "changelog.entries.studio-shelves-console.body":
+    "O destaque é agora um cartão grande, as prateleiras mostram capas e a escolha lista primeiro os lançamentos novos",
   "changelog.entries.studio-landing-v2.title":
     "Ouve artistas do Studio antes de entrares",
   "changelog.entries.studio-landing-v2.body":

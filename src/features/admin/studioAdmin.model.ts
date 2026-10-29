@@ -27,11 +27,37 @@ import type {
 export const STUDIO_ADMIN_TABS = [
   "shelves",
   "scenes",
+  "spotlight",
   "landing",
   "founding",
   "waiting",
 ] as const;
 export type StudioAdminTabId = (typeof STUDIO_ADMIN_TABS)[number];
+
+export const STUDIO_ADMIN_TAB_LABEL_KEY: Record<StudioAdminTabId, string> = {
+  shelves: "admin:studioAdmin.tabs.shelves",
+  scenes: "admin:studioAdmin.tabs.scenes",
+  spotlight: "admin:studioAdmin.tabs.spotlight",
+  landing: "admin:studioAdmin.tabs.landing",
+  founding: "admin:studioAdmin.tabs.founding",
+  waiting: "admin:studioAdmin.tabs.waiting",
+};
+
+/** Shelves, Scenes and Artists: what a music_manager_producer holder without
+ *  the staff tier can work. */
+export const STUDIO_ADMIN_CURATION_TABS: readonly StudioAdminTabId[] = [
+  "shelves",
+  "scenes",
+  "spotlight",
+];
+
+/** The tabs a viewer sees: all six for the staff tier (Moderator, Admin), the
+ *  curation three for a grant holder without it. */
+export function studioAdminTabsFor(
+  hasStaffTier: boolean,
+): readonly StudioAdminTabId[] {
+  return hasStaffTier ? STUDIO_ADMIN_TABS : STUDIO_ADMIN_CURATION_TABS;
+}
 
 export function isStudioAdminTab(value: string): value is StudioAdminTabId {
   return (STUDIO_ADMIN_TABS as readonly string[]).includes(value);
@@ -215,9 +241,9 @@ export function studioAdminSaveErrorKeyOf(cause: unknown): string {
     : key;
 }
 
-/** A console read refused with 403. Moderators and admins both open the
- *  console, so the page says so with `admin:studioAdmin.forbidden`, which
- *  names no role. */
+/** A console read refused with 403. Moderators, admins and the music manager
+ *  grant all open the console, so the page says so with
+ *  `admin:studioAdmin.forbidden`, which names no role. */
 export function isStudioAdminForbidden(error: unknown): boolean {
   return error instanceof ApiError && error.status === 403;
 }

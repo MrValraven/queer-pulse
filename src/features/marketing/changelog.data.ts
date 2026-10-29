@@ -63,6 +63,19 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "studio-artist-spotlight",
+        category: "feature",
+        date: "29 Oct 2026",
+        ...entryKeys("studio-artist-spotlight"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "studio-shelves-console",
+        category: "improvement",
+        date: "29 Oct 2026",
+        ...entryKeys("studio-shelves-console"),
+      },
+      {
         id: "music-manager-producer",
         category: "feature",
         date: "29 Oct 2026",

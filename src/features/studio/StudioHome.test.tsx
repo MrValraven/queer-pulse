@@ -244,3 +244,74 @@ describe("Studio home (demo fixture)", () => {
     expect(within(scenes).queryByText("Sintra choirs")).toBeNull();
   });
 });
+
+// Its own block: the fixture block above sits at the 200-line function cap.
+describe("Studio home spotlight (demo fixture)", () => {
+  it("shows the artist of the month with the team's note and plays their newest release", async () => {
+    render(
+      <TestProviders initialEntries={["/studio"]}>
+        <StudioRoom />
+      </TestProviders>,
+    );
+    const spotlight = await screen.findByRole("region", {
+      name: "Artist of the month",
+    });
+    expect(
+      within(spotlight).getByRole("heading", { name: "Vanda Diesel" }),
+    ).toBeInTheDocument();
+    expect(
+      within(spotlight).getByText("From the Studio team"),
+    ).toBeInTheDocument();
+    expect(
+      within(spotlight).getByText(
+        "Sunday Mass turned the whole room into a choir and we are still not over it",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(spotlight)
+        .getByRole("link", { name: "Open Vanda Diesel" })
+        .getAttribute("href"),
+    ).toContain("id=sp-ines-fonseca-vanda-diesel");
+    expect(
+      within(spotlight).getByRole("button", { name: "Play Sunday Mass" }),
+    ).toBeInTheDocument();
+  });
+
+  it("lists the new stars in the order staff set, with their notes", async () => {
+    render(
+      <TestProviders initialEntries={["/studio"]}>
+        <StudioRoom />
+      </TestProviders>,
+    );
+    const stars = await screen.findByRole("region", { name: "New stars" });
+    expect(
+      within(stars)
+        .getAllByRole("link")
+        .map((link) => link.textContent),
+    ).toEqual([
+      "Rita Ferreira",
+      "Coro de Outubro",
+      "Lua Cardoso",
+      "LeChatDashinko",
+      "NIGHTFORM",
+    ]);
+    expect(
+      within(stars).getByText("Start with the kitchen song"),
+    ).toBeInTheDocument();
+  });
+
+  it("folds both spotlight sections when the server sends none", async () => {
+    pageControl.isCurationEmpty = true;
+    render(
+      <TestProviders initialEntries={["/studio"]}>
+        <StudioRoom />
+      </TestProviders>,
+    );
+    // The hero shows only once curation has settled.
+    await screen.findByRole("region", { name: /newest release/i });
+    expect(
+      screen.queryByRole("region", { name: "Artist of the month" }),
+    ).toBeNull();
+    expect(screen.queryByRole("region", { name: "New stars" })).toBeNull();
+  });
+});

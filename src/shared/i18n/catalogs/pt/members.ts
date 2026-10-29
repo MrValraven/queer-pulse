@@ -685,12 +685,13 @@ export const members: Catalog = {
   "profileEdit.shapings.noteLabel": "Nota: {label}",
 
   // ── Linha de votos de confiança no cabeçalho (HeroVouchRow) ────────────────
-  "hero.vouch.namesPlusYou": "{names}, e tu",
-  "hero.vouch.youOnly": "tu",
+  "hero.vouch.namesPlusYou": "{names} e de ti",
   "hero.vouch.anonymous": "Anónimo",
-  "hero.vouch.by": "Quem te deu um voto de confiança: <b>{names}</b>.",
+  "hero.vouch.by": "Com voto de confiança de <b>{names}</b>.",
+  "hero.vouch.byYouOnly":
+    "Para já, só <b>tu</b> deste um voto de confiança a {first}.",
   "hero.vouch.onlyNumberMatters":
-    "Um rosto conhecido deu-lhes um voto de confiança.",
+    "Um rosto conhecido deu-lhe um voto de confiança.",
   "hero.vouch.onlyNumberMattersSelf":
     "Um rosto conhecido deu-te um voto de confiança.",
   // Ramo só-com-número (PRD-201): quem esconde a lista continua a receber o
