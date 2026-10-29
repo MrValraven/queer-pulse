@@ -129,14 +129,18 @@ export function DirectoryMenuSection({ place }: { place: DirectoryPlace }) {
           </nav>
         )}
 
-        {menu.sections.map((section, index) => (
-          <DirectoryMenuCourse
-            key={index}
-            section={section}
-            currency={menu.currency}
-            headingId={headingIdFor(index)}
-          />
-        ))}
+        <div className={styles.courses}>
+          <div className={styles.coursesGrid}>
+            {menu.sections.map((section, index) => (
+              <DirectoryMenuCourse
+                key={index}
+                section={section}
+                currency={menu.currency}
+                headingId={headingIdFor(index)}
+              />
+            ))}
+          </div>
+        </div>
       </DirectoryMenuPeek>
 
       {hasFooter && (

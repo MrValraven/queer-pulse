@@ -14,10 +14,12 @@ import {
 import styles from "./StudioAccountMenu.module.css";
 
 /** The top of {@link StudioAccountMenuPanel}: the member's avatar, name and
- *  persona line, all one link to their QueerPulse profile (the main app's
- *  account menu reads the same way), with the light/dark icon button and the
- *  Settings icon link at the far end of that line on desktop. The showcase's
- *  giving note sits under it, outside the link. */
+ *  persona line, all one link to their Studio profile (the "You" page). The
+ *  visible name and persona line already form the link's accessible name, so
+ *  it carries no aria-label. "Back to QueerPulse" stays the way to the main
+ *  app. The light/dark icon button and the Settings icon link sit at the far
+ *  end of that line on desktop. The showcase's giving note sits under it,
+ *  outside the link. */
 export function StudioAccountMenuHeader({
   persona,
   onNavigate,
@@ -40,7 +42,7 @@ export function StudioAccountMenuHeader({
     <div className={styles.header}>
       <div className={styles.headerTop}>
         <Link
-          to={routes.accountProfile}
+          to={routes.studioMe}
           replace={shouldReplace}
           className={styles.headerIdentity}
           onClick={onNavigate}

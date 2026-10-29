@@ -86,18 +86,24 @@ function StudioListeningTopArtistRow({
  *  as Top tracks does. */
 export function StudioListeningTopArtists({
   artists,
+  labelledBy,
 }: {
   artists: TopArtist[];
+  /** The id of a visible heading elsewhere on the page. When given, the list
+   *  is named by it and renders no heading of its own. */
+  labelledBy?: string;
 }) {
   const { t } = useTranslation();
   const headingId = useId();
   return (
     <div className={styles.listBlock}>
-      <h2 id={headingId} className={styles.heading}>
-        {t("studio:listening.topArtists.heading")}
-      </h2>
+      {labelledBy === undefined && (
+        <h2 id={headingId} className={styles.heading}>
+          {t("studio:listening.topArtists.heading")}
+        </h2>
+      )}
       <MeasuredHeightFrame>
-        <ol className={styles.list} aria-labelledby={headingId}>
+        <ol className={styles.list} aria-labelledby={labelledBy ?? headingId}>
           <AnimatePresence>
             {artists.map((row, index) => (
               <StudioListeningTopArtistRow

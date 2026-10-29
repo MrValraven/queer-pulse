@@ -109,6 +109,7 @@ Disallow: /cinema/membership
 Disallow: /studio/dashboard
 Disallow: /studio/library
 Disallow: /studio/liked
+Disallow: /studio/me
 Disallow: /studio/upload
 Disallow: /studio/payouts
 Disallow: /studio/payments

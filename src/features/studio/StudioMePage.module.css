@@ -1,0 +1,32 @@
+/* StudioMePage: the identity row under the title. The page header, eyebrow,
+   dek and wrap come from StudioListeningPage.module.css; the section rhythm
+   is local. */
+.identity {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  margin-top: var(--gap-sm);
+  min-width: 0;
+}
+.identityName {
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  font-weight: 400;
+  color: var(--studio-text);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+/* Each section is a StudioShelf (or a peer) that already pads itself above and
+   below, so the sections stack with no extra gap or top padding of their own.
+   The wrap's small top padding plus the first shelf's own padding sits under
+   the identity row. */
+.sections {
+  /* The pill's start padding (12px) pulled back, so a See all that wraps under
+     a title on a phone starts its text at the title's left edge. */
+  --studio-shelf-seeall-start: -12px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}

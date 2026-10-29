@@ -15,7 +15,8 @@ const HELPER_KEYS: Record<ListingKind, string> = {
 
 /**
  * The photo field body: the optional cover for the directory card, then the
- * four-slot gallery with its per-slot alt text.
+ * four-slot gallery with its per-slot alt text. The helper ends with a note
+ * that the frames here are not final: owners reposition them on the live page.
  *
  * Shared by the create wizard's step 4 pane (`StepPhotosYou`) and the owner
  * editor's Photos section. Carries `ANCHOR.cover` and `ANCHOR.photos`, so the
@@ -31,7 +32,13 @@ export function PhotosFields({ form }: { form: ListingForm }) {
         className={styles.lbField}
         id={ANCHOR.photos}
         label={t("marketing:listBusiness.step4.photosLabel")}
-        helper={t(HELPER_KEYS[listingKindOf(form.draft)])}
+        helper={
+          <>
+            {t(HELPER_KEYS[listingKindOf(form.draft)])}
+            <br />
+            {t("marketing:listBusiness.step4.photosRepositionNote")}
+          </>
+        }
       >
         <ListingPhotoGallery form={form} />
       </FormField>

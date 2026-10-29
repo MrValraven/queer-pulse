@@ -2125,6 +2125,8 @@ export const marketing: Catalog = {
     "Os teus produtos, o teu espaço de trabalho ou o teu logótipo, tudo serve. O formato horizontal resulta melhor.",
   "listBusiness.step4.photosHelperMobile":
     "Tu a trabalhar ou o ponto de encontro, qualquer um serve. O formato horizontal resulta melhor.",
+  "listBusiness.step4.photosRepositionNote":
+    "As fotos podem parecer desalinhadas neste editor. Quando o anúncio estiver publicado, usa Reposicionar fotos na página para enquadrar cada uma.",
   "listBusiness.step4.gallery.wideOnline":
     "Os teus produtos, o teu espaço de trabalho ou o teu logótipo",
   "listBusiness.step4.gallery.wideMobile":
@@ -3788,6 +3790,10 @@ export const marketing: Catalog = {
     "Pesquisa membros ao definir limites de convites",
   "changelog.entries.invite-quotas-search.body":
     "Quem administra vê os convites de cada membro este mês face ao limite, e muda-o ali mesmo.",
+  "changelog.entries.studio-your-profile.title":
+    "Abre o teu perfil do Studio a partir do menu da conta",
+  "changelog.entries.studio-your-profile.body":
+    "As tuas playlists, artistas mais ouvidos, artistas que segues e ouvidos recentes estão numa só página privada.",
   "changelog.entries.send-welcome-email-from-approvals.title":
     "Envia o email de boas-vindas a partir da fila de aprovações",
   "changelog.entries.send-welcome-email-from-approvals.body":

@@ -225,6 +225,24 @@ describe("account menu panel (showcase)", () => {
     expect(screen.getAllByRole("link", { name: "Settings" })).toHaveLength(1);
   });
 
+  it("links the identity header to the Studio profile in the dropdown", async () => {
+    renderPanel();
+    await screen.findByRole("link", { name: "Settings" });
+    const profileLinks = screen
+      .getAllByRole("link")
+      .filter((link) => link.getAttribute("href") === "/studio/me");
+    expect(profileLinks).toHaveLength(1);
+  });
+
+  it("links the identity header to the Studio profile in the phone sheet", async () => {
+    renderPanel({ isSheet: true });
+    await screen.findByRole("link", { name: "Settings" });
+    const profileLinks = screen
+      .getAllByRole("link")
+      .filter((link) => link.getAttribute("href") === "/studio/me");
+    expect(profileLinks).toHaveLength(1);
+  });
+
   it("keeps the listening pages out of the dropdown", async () => {
     state.isShowcase = true;
     renderPanel();

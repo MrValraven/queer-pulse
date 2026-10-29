@@ -1,0 +1,23 @@
+/* A head with a note under the title. The shelf head bottom-aligns its
+   children, which would drop the See all pill to the note's row. Where the
+   pill sits beside the title, the head becomes a two-column grid: title and
+   pill share row one (bottom-aligned, as on the other sections) and the note
+   takes row two under the title. On a phone the pill wraps under the title
+   and note as the shelf head does, so this only applies from 560px. */
+@media (min-width: 560px) {
+  header.headWithNote {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  header.headWithNote > div {
+    display: contents;
+  }
+  header.headWithNote h2 {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  header.headWithNote a {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}

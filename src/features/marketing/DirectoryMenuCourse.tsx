@@ -1,5 +1,6 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { DirectoryMenuItemRow } from "./DirectoryMenuItemRow";
+import { isWideMenuSection } from "./isWideMenuSection";
 import type {
   ListingMenuItem,
   ListingMenuSection,
@@ -54,8 +55,11 @@ export function DirectoryMenuCourse({
   currency: ListingMenuCurrency;
   headingId: string;
 }) {
+  const courseClassName = isWideMenuSection(section)
+    ? `${styles.course} ${styles.courseWide}`
+    : styles.course;
   return (
-    <div className={styles.course}>
+    <div className={courseClassName}>
       <h3 id={headingId} className={styles.courseTitle} tabIndex={-1}>
         {section.title}
       </h3>

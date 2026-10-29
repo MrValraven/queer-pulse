@@ -1890,6 +1890,7 @@ export const studio: Catalog = {
   "shell.accountLabel": "Your account, {name}",
   "shell.menu.artistPages": "Your artist pages",
   "shell.menu.settings": "Settings",
+  "shell.menu.viewProfile": "Open your Studio profile",
   "shell.menu.backToQueerPulse": "Back to QueerPulse",
   "shell.menu.group.creator": "Creator",
   "shell.menu.group.staff": "Staff",
@@ -3687,6 +3688,29 @@ export const studio: Catalog = {
   "listening.notice.body": "Your listening history is on. Only you can see it",
   "listening.notice.cta": "See your listening",
   "listening.notice.close": "Close notice",
+  // Your Studio profile (/studio/me)
+  "me.pageTitle": "Your profile",
+  "me.eyebrow": "Your Studio",
+  "me.title": "Your <em>profile</em>",
+  "me.dek":
+    "Only you can see this page. It gathers what you made and what you listen to.",
+  "me.playlists.heading": "Your playlists",
+  "me.playlists.seeAll": "Open your library",
+  "me.playlists.empty.title": "You have no playlists yet",
+  "me.playlists.empty.body":
+    "Create a playlist from any track and it will show up here.",
+  "me.playlists.empty.cta": "Find a track to add",
+  "me.topArtists.heading": "Your top artists",
+  "me.topArtists.seeAll": "Open your listening",
+  "me.topArtists.range": "Over the last 4 weeks",
+  "me.following.heading": "Artists you follow",
+  "me.following.seeAll": "Open your followed artists",
+  "me.following.empty":
+    "You are not following any artists yet. Follow one from their page and they will appear here.",
+  "me.recent.heading": "Recently played",
+  "me.recent.seeAll": "Open your listening history",
+  "me.recent.empty":
+    "Nothing played yet. Start a track and it will show up here.",
   "settingsLive.history.label": "Your listening",
   "settingsLive.history.title": "What Studio <em>keeps</em> for you",
   "supporter.heading": "Show me among {persona}'s top listeners",

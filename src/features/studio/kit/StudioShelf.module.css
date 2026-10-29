@@ -61,7 +61,10 @@
 }
 
 /* A 44px target whose padding keeps the label on the heading's baseline
-   edge; the negative margin lines the text up with the shelf's end. */
+   edge; the negative margin lines the text up with the shelf's end.
+   --studio-shelf-seeall-start (0 by default) lets a page pull the pill back
+   by its start padding, so a link that wraps under the title lines its text
+   up with the title's left edge. */
 .seeAll {
   display: inline-flex;
   align-items: center;
@@ -69,6 +72,7 @@
   min-height: 44px;
   padding-inline: 12px 8px;
   margin-inline-end: -8px;
+  margin-inline-start: var(--studio-shelf-seeall-start, 0px);
   border-radius: var(--radius-pill);
   font-size: var(--text-13);
   font-weight: 600;

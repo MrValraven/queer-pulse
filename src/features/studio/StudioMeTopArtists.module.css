@@ -1,0 +1,13 @@
+.section {
+  min-width: 0;
+  /* The shelf after this section pads 24px above itself, a little less than
+     the 32px a shelf pads below; this closes the gap to match the rest. */
+  padding-block-end: var(--gap-xs);
+}
+
+/* Sits under the title inside the shared head, which owns the space below. */
+.range {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}

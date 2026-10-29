@@ -69,6 +69,7 @@ const StudioListeningPage = lazyNamed(
   () => import("./StudioListeningPage"),
   "StudioListeningPage",
 );
+const StudioMePage = lazyNamed(() => import("./StudioMePage"), "StudioMePage");
 const StudioPaymentsPage = lazyNamed(
   () => import("./StudioPaymentsPage"),
   "StudioPaymentsPage",
@@ -229,6 +230,7 @@ function demoStudioRoutes() {
       <Route path={routes.studioLibrary} element={<StudioLibraryPage />} />
       <Route path={routes.studioLiked} element={<StudioLikedPage />} />
       <Route path={routes.studioListening} element={<StudioListeningPage />} />
+      <Route path={routes.studioMe} element={<StudioMePage />} />
       <Route path={routes.studioPayments} element={<StudioPaymentsPage />} />
       <Route path={routes.studioCheckout} element={<StudioCheckoutPage />} />
       <Route path="/studio/sheet-store" element={<StudioSheetStorePage />} />
@@ -307,6 +309,7 @@ function grantedStudioRoutes() {
       <Route path={routes.studioLibrary} element={<StudioLibraryPage />} />
       <Route path={routes.studioLiked} element={<StudioLikedPage />} />
       <Route path={routes.studioListening} element={<StudioListeningPage />} />
+      <Route path={routes.studioMe} element={<StudioMePage />} />
       <Route path={routes.studioPayments} element={<StudioPaymentsPage />} />
       {/* The retired payouts page: old links land on Payments. */}
       <Route

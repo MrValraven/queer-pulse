@@ -278,3 +278,22 @@ describe("studioRoutes for the retired payouts address", () => {
     expect(screen.getByText("StudioPaymentsPage")).toBeInTheDocument();
   });
 });
+
+describe("studioRoutes, Your profile", () => {
+  it("opens Your profile for a granted member and in the demo", () => {
+    const granted = renderAt("/studio/me", { ...live, hasStudioAccess: true });
+    expect(screen.getByText("StudioMePage")).toBeInTheDocument();
+    granted.unmount();
+    renderAt("/studio/me", {
+      demoMode: true,
+      hasStudioAccess: true,
+      isStudioAccessPending: false,
+    });
+    expect(screen.getByText("StudioMePage")).toBeInTheDocument();
+  });
+
+  it("keeps Your profile behind the grant", () => {
+    renderAt("/studio/me", { ...live, hasStudioAccess: false });
+    expect(screen.queryByText("StudioMePage")).toBeNull();
+  });
+});

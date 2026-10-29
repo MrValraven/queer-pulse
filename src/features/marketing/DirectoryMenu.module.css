@@ -121,8 +121,29 @@
 .jumpChip {
   flex: none;
 }
-.course + .course {
-  margin-top: 22px;
+/* The courses stack in one column and pair up in two once the menu's own
+   width (not the page's: beside the 340px aside the menu column is far
+   narrower than the container) leaves each half room for a name and a price.
+   Order stays the DOM order, so a short course waits for the next one rather
+   than being pulled up past a wide one. */
+.courses {
+  container: menuCourses / inline-size;
+}
+.coursesGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 22px 20px;
+}
+@container menuCourses (min-width: 640px) {
+  .coursesGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .courseWide {
+    grid-column: 1 / -1;
+  }
+}
+.course {
+  min-width: 0;
 }
 .courseTitle {
   font-family: var(--serif);

@@ -63,6 +63,13 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "studio-your-profile",
+        category: "feature",
+        date: "29 Oct 2026",
+        ...entryKeys("studio-your-profile"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
         id: "send-welcome-email-from-approvals",
         category: "feature",
         date: "29 Oct 2026",

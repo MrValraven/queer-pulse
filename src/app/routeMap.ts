@@ -479,6 +479,7 @@ export const routes = {
   studioCredits: "/studio/credits",
   studioDashboard: "/studio/dashboard",
   studioListening: "/studio/listening",
+  studioMe: "/studio/me",
   studioPayments: "/studio/payments",
   studioE: "/studio",
   studioLanding: "/studio",

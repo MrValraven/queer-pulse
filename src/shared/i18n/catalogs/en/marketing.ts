@@ -2066,6 +2066,8 @@ export const marketing: Catalog = {
     "Your products, your workspace or your logo all work. Landscape works best.",
   "listBusiness.step4.photosHelperMobile":
     "You at work or the spot where you meet both work. Landscape works best.",
+  "listBusiness.step4.photosRepositionNote":
+    "Photos can look misaligned in this editor. Once your listing is live, use Reposition photos on the page to frame each one.",
   "listBusiness.step4.gallery.wideOnline":
     "Your products, your workspace or your logo",
   "listBusiness.step4.gallery.wideMobile": "You at work, or where you meet",
@@ -3704,6 +3706,10 @@ export const marketing: Catalog = {
     "Search members when setting invite limits",
   "changelog.entries.invite-quotas-search.body":
     "Admins see each member's invites this month against their limit, and can change it inline.",
+  "changelog.entries.studio-your-profile.title":
+    "Open your own Studio profile from the account menu",
+  "changelog.entries.studio-your-profile.body":
+    "Your playlists, top artists, followed artists and recent plays sit together on one private page.",
   "changelog.entries.send-welcome-email-from-approvals.title":
     "Send the welcome email from the approvals queue",
   "changelog.entries.send-welcome-email-from-approvals.body":
