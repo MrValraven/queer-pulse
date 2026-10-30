@@ -86,14 +86,19 @@ function validateReauthVerifyResult(data: unknown): ReauthCodeVerifyResult {
   ]);
 }
 
-/** POST /auth/email-code/request. Public. Same answer for every address. */
+/** POST /auth/email-code/request. Public. Same answer for every address.
+ *  `isRegistration` is sent only from the invite landing, so the backend
+ *  words the email as "create your account"; sign-in leaves it out. */
 export function requestEmailCode(
   email: string,
   locale: Language,
+  isRegistration?: boolean,
 ): Promise<EmailCodeChallenge> {
   return apiPostUnversioned(
     "/auth/email-code/request",
-    { email, locale },
+    isRegistration
+      ? { email, locale, isRegistration: true }
+      : { email, locale },
     validateChallenge,
   );
 }

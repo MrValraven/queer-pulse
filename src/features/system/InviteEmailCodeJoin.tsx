@@ -84,6 +84,7 @@ export function InviteEmailCodeJoin({
 
   const flow = useEmailCodeFlow({
     redirect: INVITE_SIGNUP_REDIRECT,
+    isRegistration: true,
     validateBeforeRequest: () =>
       firstName.trim() ? null : { kind: "reason", reason: "name_required" },
     getVerifyExtras: () => ({

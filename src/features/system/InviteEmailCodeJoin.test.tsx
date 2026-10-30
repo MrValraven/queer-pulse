@@ -10,12 +10,19 @@ import {
 // Demo mode answers every call by default; a test that needs a specific
 // backend answer or a look at the body switches the verify over to its mock.
 const mockVerify = vi.hoisted(() => ({ isActive: false, verify: vi.fn() }));
+const mockRequest = vi.hoisted(() => ({ isActive: false, request: vi.fn() }));
 
 vi.mock("../auth/api/useEmailCode", async (importOriginal) => {
   const actual =
     await importOriginal<typeof import("../auth/api/useEmailCode")>();
   return {
     ...actual,
+    useRequestEmailCode: () => {
+      const real = actual.useRequestEmailCode();
+      return mockRequest.isActive
+        ? { ...real, mutateAsync: mockRequest.request }
+        : real;
+    },
     useVerifyEmailCode: () => {
       const real = actual.useVerifyEmailCode();
       return mockVerify.isActive
@@ -97,6 +104,26 @@ describe("InviteEmailCodeJoin", () => {
   beforeEach(() => {
     mockVerify.isActive = false;
     mockVerify.verify.mockReset();
+    mockRequest.isActive = false;
+    mockRequest.request.mockReset();
+  });
+
+  it("asks for the registration email when sending the code", async () => {
+    mockRequest.isActive = true;
+    mockRequest.request.mockResolvedValue({
+      challengeId: "challenge-1",
+      expiresAt: "2026-10-26T10:10:00.000Z",
+      resendAvailableAt: "2026-10-26T10:01:00.000Z",
+    });
+    renderJoin();
+    await choose();
+    await fillNames("Sam");
+    await sendCode();
+
+    await waitFor(() => expect(mockRequest.request).toHaveBeenCalledTimes(1));
+    expect(mockRequest.request).toHaveBeenCalledWith(
+      expect.objectContaining({ email: ADDRESS, isRegistration: true }),
+    );
   });
 
   it("keeps Register with an email code disabled until the 18+ box is ticked", async () => {

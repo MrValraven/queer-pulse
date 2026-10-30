@@ -27,6 +27,7 @@ import {
 interface RequestEmailCodeVariables {
   email: string;
   locale: Language;
+  isRegistration?: boolean;
 }
 
 interface VerifyReauthCodeVariables {
@@ -42,13 +43,13 @@ export function useRequestEmailCode(): UseMutationResult<
   const { demoMode } = useDemoMode();
   return useMutation<EmailCodeChallenge, Error, RequestEmailCodeVariables>({
     meta: { silentError: true },
-    mutationFn: async ({ email, locale }) => {
+    mutationFn: async ({ email, locale, isRegistration }) => {
       if (demoMode) {
         const demo = await import("../emailCode.data");
         await demo.demoLatency();
         return demo.demoEmailCodeChallenge();
       }
-      return requestEmailCode(email, locale);
+      return requestEmailCode(email, locale, isRegistration);
     },
   });
 }

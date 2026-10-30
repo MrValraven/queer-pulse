@@ -26,6 +26,9 @@ export interface UseEmailCodeFlowOptions {
   redirect: string;
   getVerifyExtras?: () => EmailCodeVerifyExtras;
   validateBeforeRequest?: () => EmailCodeFieldFailure | null;
+  /** Set by the invite landing so every code request, the resend included,
+   *  asks for the "create your account" email. */
+  isRegistration?: boolean;
   onDemoSignedIn: () => void;
 }
 
@@ -86,6 +89,7 @@ export function useEmailCodeFlow({
   redirect,
   getVerifyExtras,
   validateBeforeRequest,
+  isRegistration,
   onDemoSignedIn,
 }: UseEmailCodeFlowOptions): EmailCodeFlow {
   const navigate = useNavigate();
@@ -116,7 +120,11 @@ export function useEmailCodeFlow({
   const askForCode = async (address: string): Promise<EmailCodeChallenge> => {
     isRequestingRef.current = true;
     try {
-      return await sendCodeRequest({ email: address, locale: language });
+      return await sendCodeRequest({
+        email: address,
+        locale: language,
+        isRegistration,
+      });
     } finally {
       isRequestingRef.current = false;
     }

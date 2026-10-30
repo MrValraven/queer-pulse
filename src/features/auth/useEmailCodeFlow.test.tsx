@@ -289,3 +289,48 @@ describe("useEmailCodeFlow", () => {
     expect(result.current.flow.code).toBe("123456");
   });
 });
+
+describe("useEmailCodeFlow isRegistration", () => {
+  beforeEach(() => {
+    mockRequest.isActive = false;
+    mockRequest.request.mockReset();
+  });
+
+  it("sends isRegistration on the first request and on resend when the option is set", async () => {
+    mockRequest.isActive = true;
+    mockRequest.request.mockResolvedValue({
+      challengeId: "challenge-1",
+      expiresAt: "2026-10-26T10:10:00.000Z",
+      resendAvailableAt: "2026-10-26T10:01:00.000Z",
+    });
+    const { result } = renderFlow({ isRegistration: true });
+    await reachCodeStep(result);
+    await act(async () => {
+      await result.current.flow.resendCode();
+    });
+    expect(mockRequest.request).toHaveBeenCalledTimes(2);
+    for (const call of mockRequest.request.mock.calls) {
+      expect(call[0]).toMatchObject({ email: SENT_TO, isRegistration: true });
+    }
+  });
+
+  it("leaves isRegistration out of the request and resend by default", async () => {
+    mockRequest.isActive = true;
+    mockRequest.request.mockResolvedValue({
+      challengeId: "challenge-1",
+      expiresAt: "2026-10-26T10:10:00.000Z",
+      resendAvailableAt: "2026-10-26T10:01:00.000Z",
+    });
+    const { result } = renderFlow();
+    await reachCodeStep(result);
+    await act(async () => {
+      await result.current.flow.resendCode();
+    });
+    expect(mockRequest.request).toHaveBeenCalledTimes(2);
+    for (const call of mockRequest.request.mock.calls) {
+      expect((call[0] as { isRegistration?: boolean }).isRegistration).toBe(
+        undefined,
+      );
+    }
+  });
+});
