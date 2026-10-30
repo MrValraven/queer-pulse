@@ -114,6 +114,9 @@
 }
 
 .snavLink {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
   padding: 9px 2px;
   font-size: var(--text-14);
   font-weight: 500;

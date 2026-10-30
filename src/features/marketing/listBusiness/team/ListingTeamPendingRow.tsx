@@ -6,26 +6,15 @@ import {
 } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { ListingTeamManagerRowView } from "../api/listingTeam.types";
+import { listingTeamRowSubject } from "./listingTeamSection.data";
 import { ListingTeamPersonaAvatar } from "./ListingTeamPersonaAvatar";
 import { ListingTeamRoleLabelField } from "./ListingTeamRoleLabelField";
 import { ListingTeamRowError } from "./ListingTeamRowError";
 import styles from "./ListingTeam.module.css";
 
-const HIDDEN_PERSONA_AVATAR = { avatarUrl: null, initials: "?" } as const;
-
-/** The id of the element holding a row's persona name. */
+/** The id of the element holding a row's persona or member name. */
 function listingTeamRowNameId(row: ListingTeamManagerRowView): string {
   return `listing-team-name-${row.id}`;
-}
-
-/** The name a row's controls are labelled with, hidden personas included.
- *  Titled ("Owner Name | Poet"), since an aria-label has no craft beside it. */
-function useListingTeamRowName(row: ListingTeamManagerRowView): string {
-  const { t } = useTranslation();
-  return (
-    row.persona?.titleName ??
-    t("marketing:listBusiness.team.hiddenPersona.name")
-  );
 }
 
 /** A role shown under the name; the last label stays while it folds away. */
@@ -42,8 +31,9 @@ function ListingTeamRoleMeta({ roleLabel }: { roleLabel: string | null }) {
 }
 
 /**
- * Avatar, name and kind of the persona on a row, or the hidden-persona copy.
- * `isRoleShown` reads the row's role under the name.
+ * Avatar, name and kind of the persona on a row ("Member" and the @slug for a
+ * member), or the hidden copy for either. `isRoleShown` reads the row's role
+ * under the name.
  */
 export function ListingTeamRowIdentity({
   row,
@@ -53,26 +43,17 @@ export function ListingTeamRowIdentity({
   isRoleShown?: boolean;
 }) {
   const { t } = useTranslation();
-  const persona = row.persona;
-  const hiddenName = t("marketing:listBusiness.team.hiddenPersona.name");
   // The kind sits under the name, so a craft-named persona shows its owner.
-  const name = persona ? persona.nameBesideCraft : hiddenName;
+  const subject = listingTeamRowSubject(row, t);
   return (
     <div className={styles.identity}>
-      <ListingTeamPersonaAvatar
-        persona={persona ?? HIDDEN_PERSONA_AVATAR}
-        size={40}
-      />
+      <ListingTeamPersonaAvatar persona={subject.avatar} size={40} />
       <div className={styles.identityText}>
         <span className={styles.personaName} id={listingTeamRowNameId(row)}>
-          {name}
+          {subject.name}
         </span>
         {isRoleShown && <ListingTeamRoleMeta roleLabel={row.roleLabel} />}
-        <span className={styles.personaMeta}>
-          {persona
-            ? t(persona.kindLabelKey)
-            : t("marketing:listBusiness.team.hiddenPersona.hint")}
-        </span>
+        <span className={styles.personaMeta}>{subject.metaLine}</span>
       </div>
     </div>
   );
@@ -94,11 +75,12 @@ interface ListingTeamPendingRowProps {
 
 /**
  * A request waiting for the business to answer (Approve with a role, or
- * Decline) or an invite waiting on the persona (Cancel invite).
+ * Decline) or an invite waiting on the persona or member (Cancel invite).
+ * Only a persona can ask to join, so a member row is always an invite.
  */
 export function ListingTeamPendingRow({
   row,
-  kind,
+  kind: requestedKind,
   isBusy,
   isRowBusy = false,
   isApproveBlocked = false,
@@ -109,8 +91,12 @@ export function ListingTeamPendingRow({
 }: ListingTeamPendingRowProps) {
   const { t } = useTranslation();
   const [roleLabel, setRoleLabel] = useState(row.roleLabel ?? "");
-  const name = useListingTeamRowName(row);
-  const isApprovable = kind === "request" && row.persona !== null;
+  // Titled for a persona ("Owner Name | Poet"), since an aria-label has no
+  // craft beside it; a member is named.
+  const name = listingTeamRowSubject(row, t).labelName;
+  const kind = row.kind === "member" ? "invite" : requestedKind;
+  const isApprovable =
+    kind === "request" && row.kind === "persona" && row.persona !== null;
   return (
     <CollapseListItem>
       <div className={styles.row}>

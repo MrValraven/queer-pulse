@@ -395,8 +395,8 @@ export interface DirectoryPlace {
   }[];
   reviews: Review[];
   /**
-   * The accepted, viewer-visible team members in page order. Absent on
-   * fixtures: `useDirectoryPlace` overlays it from the demo store.
+   * The accepted, viewer-visible team (personas and members) in page order.
+   * Absent on fixtures: `useDirectoryPlace` overlays it from the demo store.
    */
   team?: ListingTeamMemberView[];
   /** Count of members who saved this listing (a backend-only field). Absent for

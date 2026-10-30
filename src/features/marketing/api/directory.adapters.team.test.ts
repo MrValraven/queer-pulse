@@ -91,11 +91,11 @@ describe("detailDtoToPlace and the team", () => {
       },
       fmt,
     );
-    expect(place.team?.map((member) => member.persona.handle)).toEqual([
+    expect(place.team?.map((member) => member.persona?.handle)).toEqual([
       "rosa-brava",
       "linha-fina",
     ]);
-    expect(place.team?.map((member) => member.persona.href)).toEqual([
+    expect(place.team?.map((member) => member.persona?.href)).toEqual([
       "/p/rosa-brava",
       "/p/linha-fina",
     ]);

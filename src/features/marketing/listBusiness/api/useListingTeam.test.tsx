@@ -9,6 +9,8 @@ import { resetListingTeamDemo } from "./listingTeam.demo";
 import { listingTeamQueryKeys } from "./listingTeamQueryKeys";
 import { useListingTeam, useListingTeamCandidates } from "./useListingTeam";
 import { useListingTeamMutations } from "./useListingTeamMutations";
+import { useMemberTeamLinkMutations } from "./useMemberTeamLinkMutations";
+import { useMemberTeamLinks } from "./useMemberTeamLinks";
 import { usePersonaTeamLinks } from "./usePersonaTeamLinks";
 import { usePersonaTeamLinkMutations } from "./usePersonaTeamLinkMutations";
 import type { ListingTeamManagerListView } from "./listingTeam.types";
@@ -51,13 +53,15 @@ describe("listing team hooks (demo store)", () => {
     const { result } = renderHook(() => useListingTeam(TINTA_VIVA_REF), {
       wrapper,
     });
-    await waitFor(() => expect(result.current.team?.accepted).toHaveLength(4));
+    await waitFor(() => expect(result.current.team?.accepted).toHaveLength(5));
     expect(result.current.team?.accepted.map((row) => row.status)).toEqual([
       "accepted",
       "accepted",
       "accepted",
       "accepted",
+      "accepted",
     ]);
+    expect(result.current.team?.accepted[2]?.kind).toBe("member");
     expect(result.current.isError).toBe(false);
   });
 
@@ -100,7 +104,7 @@ describe("listing team hooks (demo store)", () => {
       { wrapper },
     );
     await waitFor(() =>
-      expect(result.current.list.team?.accepted).toHaveLength(4),
+      expect(result.current.list.team?.accepted).toHaveLength(5),
     );
     const reversedIds = (result.current.list.team?.accepted ?? [])
       .map((row) => row.id)
@@ -232,5 +236,56 @@ describe("listing team hooks (demo store)", () => {
       ),
     );
     expect(result.current.candidates[0]?.teamStatus).toBe("pending");
+  });
+});
+
+describe("member team hooks (demo store)", () => {
+  it("shows an invited member as a pending member row", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-12-01T10:00:00.000Z"));
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(
+      () => ({
+        list: useListingTeam(NAVALHA_REF),
+        mutations: useListingTeamMutations(NAVALHA_REF),
+      }),
+      { wrapper },
+    );
+    await waitFor(() => expect(result.current.list.team).toBeDefined());
+    await act(async () => {
+      await result.current.mutations.inviteMember.mutateAsync({
+        memberSlug: "jonas",
+        roleLabel: "Barber",
+      });
+    });
+    await waitFor(() =>
+      expect(result.current.list.team?.invitesSent[0]?.member?.slug).toBe(
+        "jonas",
+      ),
+    );
+    expect(result.current.list.team?.invitesSent[0]?.kind).toBe("member");
+  });
+
+  it("clears the member badge once the invite is answered", async () => {
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(
+      () => ({
+        links: useMemberTeamLinks(),
+        mutations: useMemberTeamLinkMutations(),
+      }),
+      { wrapper },
+    );
+    await waitFor(() =>
+      expect(result.current.links.links?.awaitingYouCount).toBe(1),
+    );
+    const linkId = result.current.links.links?.invitesReceived[0]?.id ?? "";
+    expect(linkId).not.toBe("");
+    await act(async () => {
+      await result.current.mutations.accept.mutateAsync({ linkId });
+    });
+    await waitFor(() =>
+      expect(result.current.links.links?.awaitingYouCount).toBe(0),
+    );
+    expect(result.current.links.links?.accepted).toHaveLength(1);
   });
 });

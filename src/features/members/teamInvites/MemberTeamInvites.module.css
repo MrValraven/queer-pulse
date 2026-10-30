@@ -1,0 +1,146 @@
+/* Layout for MemberTeamInvitesInbox and its rows. Tokens only. */
+
+.inbox {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+  margin-block-end: var(--gap-grid);
+  padding: var(--gap-grid);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-e1);
+  min-width: 0;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* A group leaves the layout once its last row has folded away. */
+.group:not(:has(li)) {
+  display: none;
+}
+
+.groupHead {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.headingLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-21);
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+}
+
+/* Takes focus back after a row leaves its list. */
+.heading:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+
+/* The accent pill of Tabs' `countTone: "accent"`. */
+.count {
+  min-width: var(--gap-grid);
+  padding-inline: var(--gap-xs);
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--plum); /* css-scale-allow: non-flipping-text (coral pill) */
+  font-size: var(--text-11);
+  font-weight: 700;
+  text-align: center;
+}
+
+.intro {
+  margin: 0;
+  max-width: 66ch;
+  font-size: var(--text-14);
+  line-height: 1.65;
+  color: var(--ink-60);
+  text-wrap: pretty;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list:empty {
+  display: none;
+}
+
+.item {
+  padding-block: var(--gap-xs);
+  border-bottom: 1px solid var(--line);
+}
+
+/* The refusal folds in under the row; its spacing sits inside the fold. */
+.item [role="alert"] {
+  padding-top: var(--gap-xs);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs) var(--gap-sm);
+  min-width: 0;
+}
+
+.text {
+  display: flex;
+  flex: 1 1 160px;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.name {
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+a.name:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a.name:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+
+.meta {
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+}

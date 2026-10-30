@@ -4,6 +4,23 @@
   min-width: 0;
 }
 
+/* The body of the Personas tab: search box, hints and results. */
+.panelBody {
+  display: grid;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+/* Each tab panel is focusable (tabIndex 0), so it wears the focus ring. */
+.tabPanel {
+  min-width: 0;
+}
+.tabPanel:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
 .note {
   margin: 0;
   color: var(--ink-60);

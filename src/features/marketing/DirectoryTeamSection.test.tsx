@@ -3,6 +3,7 @@ import {
   render,
   screen,
   waitForElementToBeRemoved,
+  within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
@@ -11,13 +12,18 @@ import { describe, expect, it } from "vitest";
 import { I18nProvider } from "../../app/providers/I18nProvider";
 import { DirectoryTeamSection } from "./DirectoryTeamSection";
 import { DIRECTORY_PLACES } from "./directoryPlaces";
-import type { ListingTeamMemberView } from "./listBusiness/api/listingTeam.types";
+import type {
+  ListingTeamMemberEntryView,
+  ListingTeamMemberView,
+  ListingTeamPersonaEntryView,
+} from "./listBusiness/api/listingTeam.types";
 
 function makeMember(
   index: number,
-  overrides: Partial<ListingTeamMemberView> = {},
-): ListingTeamMemberView {
+  overrides: Partial<ListingTeamPersonaEntryView> = {},
+): ListingTeamPersonaEntryView {
   return {
+    kind: "persona",
     persona: {
       id: `persona-${index}`,
       handle: `persona-${index}`,
@@ -30,6 +36,25 @@ function makeMember(
       nameBesideCraft: `Persona Number ${index}`,
       initials: "PN",
       href: `/p/persona-${index}`,
+    },
+    roleLabel: null,
+    ...overrides,
+  };
+}
+
+function makeMemberEntry(
+  slug: string,
+  name: string,
+  overrides: Partial<ListingTeamMemberEntryView> = {},
+): ListingTeamMemberEntryView {
+  return {
+    kind: "member",
+    member: {
+      slug,
+      name,
+      avatarUrl: null,
+      initials: "CV",
+      href: `/members/${slug}`,
     },
     roleLabel: null,
     ...overrides,
@@ -143,5 +168,63 @@ describe("DirectoryTeamSection", () => {
     renderSection([makeMember(1, { roleLabel })]);
 
     expect(await screen.findByText(roleLabel)).toBeInTheDocument();
+  });
+
+  it("hides the shared craft label when every entry is a tattoo artist", async () => {
+    renderSection(makeMembers(3));
+
+    expect(await screen.findAllByRole("link")).toHaveLength(3);
+    expect(screen.queryByText("Tattoo artist")).not.toBeInTheDocument();
+  });
+
+  it("links a member card to the member profile with a Member chip", async () => {
+    renderSection([
+      makeMemberEntry("catarina-vaz", "Catarina Vaz", {
+        roleLabel: "Front of house",
+      }),
+    ]);
+
+    const link = await screen.findByRole("link", { name: /Catarina Vaz/ });
+    expect(link).toHaveAttribute("href", "/members/catarina-vaz");
+    expect(within(link).getByText("@catarina-vaz")).toBeInTheDocument();
+    expect(within(link).getByText("Front of house")).toBeInTheDocument();
+    expect(within(link).getByText("Member")).toBeInTheDocument();
+  });
+
+  it("keeps persona and member entries in the order they arrive", async () => {
+    renderSection([
+      makeMember(1),
+      makeMemberEntry("catarina-vaz", "Catarina Vaz"),
+      makeMember(2),
+    ]);
+
+    const links = await screen.findAllByRole("link");
+    expect(links.map((link) => link.getAttribute("href"))).toEqual([
+      "/p/persona-1",
+      "/members/catarina-vaz",
+      "/p/persona-2",
+    ]);
+  });
+
+  it("gives each persona its own craft chip once a member is on the team", async () => {
+    renderSection([
+      makeMember(1),
+      makeMember(2),
+      makeMemberEntry("catarina-vaz", "Catarina Vaz"),
+    ]);
+
+    expect(await screen.findAllByText("Tattoo artist")).toHaveLength(2);
+    expect(screen.getByText("Member")).toBeInTheDocument();
+  });
+
+  it("keeps a persona and a member with the same text apart", async () => {
+    renderSection([
+      makeMember(1, {
+        persona: { ...makeMember(1).persona, id: "catarina-vaz" },
+      }),
+      makeMemberEntry("catarina-vaz", "Catarina Vaz"),
+    ]);
+
+    expect(await screen.findAllByRole("link")).toHaveLength(2);
   });
 });

@@ -16,6 +16,13 @@ export interface ProfileSectionNavItem {
   labelKey: string;
   /** Whether this profile currently renders the section (non-empty). */
   isVisible: (profile: Member) => boolean;
+  /** The link can carry an accent count pill for something in that section
+   *  waiting on the viewer (owner view only). `ProfileSectionNav` supplies the
+   *  figure; the item only declares that it takes one. */
+  hasAwaitingCount?: boolean;
+  /** Spoken sentence for the pill ("3 invites waiting for your answer"),
+   *  with `{count}` plural variants `_one` / `_other`. */
+  awaitingCountKey?: string;
 }
 
 export const PROFILE_SECTION_NAV_ITEMS: readonly ProfileSectionNavItem[] = [
@@ -103,5 +110,8 @@ export const PROFILE_SECTION_NAV_ITEMS: readonly ProfileSectionNavItem[] = [
     // on `Member` — same as "also working as" above: `ProfileSectionNav`
     // overrides this fallback with the real value.
     isVisible: () => false,
+    // Team invitations from businesses wait in this section (self view).
+    hasAwaitingCount: true,
+    awaitingCountKey: "members:profile.nav.placesAwaiting",
   },
 ];

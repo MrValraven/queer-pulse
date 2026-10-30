@@ -672,8 +672,12 @@ describe("collaborative playlist push copy", () => {
     });
   });
 
-  it("resolves the three team pushes in EN and PT", () => {
-    const params = { persona: "Agulha Lenta", listing: "Tinta Viva" };
+  it("resolves the five team pushes in EN and PT", () => {
+    const params = {
+      persona: "Agulha Lenta",
+      member: "Rita Varela",
+      listing: "Tinta Viva",
+    };
     const copyFor = (kind: string, language: "en" | "pt") =>
       formatPushCopy(
         {
@@ -710,6 +714,22 @@ describe("collaborative playlist push copy", () => {
     expect(copyFor("listingTeamAccepted", "pt")).toEqual({
       title: "Ligação à equipa confirmada",
       body: "Agulha Lenta faz agora parte da equipa de Tinta Viva",
+    });
+    expect(copyFor("listingTeamMemberInvite", "en")).toEqual({
+      title: "Team invite",
+      body: "Tinta Viva invited you to join the team",
+    });
+    expect(copyFor("listingTeamMemberInvite", "pt")).toEqual({
+      title: "Convite para a equipa",
+      body: "Tinta Viva convidou-te para a equipa",
+    });
+    expect(copyFor("listingTeamMemberAccepted", "en")).toEqual({
+      title: "Team invite accepted",
+      body: "Rita Varela accepted the team invite for Tinta Viva",
+    });
+    expect(copyFor("listingTeamMemberAccepted", "pt")).toEqual({
+      title: "Convite aceite",
+      body: "Rita Varela aceitou o convite para a equipa de Tinta Viva",
     });
   });
 });

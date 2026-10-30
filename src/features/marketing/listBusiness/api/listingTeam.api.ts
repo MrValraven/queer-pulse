@@ -7,11 +7,15 @@ import {
 } from "../../../../shared/api/client";
 import type {
   ApproveListingTeamRequestBody,
+  InviteMemberToListingTeamBody,
   InviteToListingTeamBody,
   ListingTeamCandidatesDTO,
   ListingTeamListingCandidateDTO,
   ListingTeamManagerListDTO,
   ListingTeamManagerRowDTO,
+  ListingTeamMemberLinkListDTO,
+  ListingTeamMemberLinkRowDTO,
+  ListingTeamMemberManagerRowDTO,
   ListingTeamPersonaCandidateDTO,
   ListingTeamPersonaListDTO,
   ListingTeamPersonaRowDTO,
@@ -26,6 +30,7 @@ const listingTeamPath = (listingRef: string) =>
   `/listings/${encodeURIComponent(listingRef)}/team`;
 const personaTeamPath = (subprofileId: string) =>
   `/subprofiles/${encodeURIComponent(subprofileId)}`;
+const MEMBER_TEAM_LINKS_PATH = "/me/team-links";
 
 // Listing side
 
@@ -52,6 +57,16 @@ export const inviteToListingTeam = (
 ): Promise<ListingTeamManagerRowDTO> =>
   apiPost<ListingTeamManagerRowDTO>(
     `${listingTeamPath(listingRef)}/invites`,
+    body,
+  );
+
+/** The invitee is a member picked from the caller's accepted connections. */
+export const inviteMemberToListingTeam = (
+  listingRef: string,
+  body: InviteMemberToListingTeamBody,
+): Promise<ListingTeamMemberManagerRowDTO> =>
+  apiPost<ListingTeamMemberManagerRowDTO>(
+    `${listingTeamPath(listingRef)}/member-invites`,
     body,
   );
 
@@ -169,3 +184,23 @@ export const leaveListingTeam = (
   apiDelete<void>(
     `${personaTeamPath(subprofileId)}/team-links/${encodeURIComponent(linkId)}`,
   );
+
+// Member side (`/me/team-links`)
+
+export const getMemberTeamLinks = (): Promise<ListingTeamMemberLinkListDTO> =>
+  apiGet<ListingTeamMemberLinkListDTO>(MEMBER_TEAM_LINKS_PATH);
+
+export const acceptMemberTeamLink = (
+  linkId: string,
+): Promise<ListingTeamMemberLinkRowDTO> =>
+  apiPost<ListingTeamMemberLinkRowDTO>(
+    `${MEMBER_TEAM_LINKS_PATH}/${encodeURIComponent(linkId)}/accept`,
+  );
+
+export const declineMemberTeamLink = (linkId: string): Promise<void> =>
+  apiPost<void>(
+    `${MEMBER_TEAM_LINKS_PATH}/${encodeURIComponent(linkId)}/decline`,
+  );
+
+export const leaveMemberTeamLink = (linkId: string): Promise<void> =>
+  apiDelete<void>(`${MEMBER_TEAM_LINKS_PATH}/${encodeURIComponent(linkId)}`);

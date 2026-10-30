@@ -238,6 +238,10 @@ export const members: Catalog = {
   "profile.nav.subprofiles": "Também trabalha como",
   "profile.nav.communities": "Comunidades",
   "profile.nav.places": "Lugares",
+  "profile.nav.placesAwaiting_one":
+    "{count} convite de equipa à espera da tua resposta",
+  "profile.nav.placesAwaiting_other":
+    "{count} convites de equipa à espera da tua resposta",
   "profile.nav.skills": "Competências e ofertas",
   "profile.nav.groups": "Grupos e círculos",
   "profile.nav.shapings": "O que me formou",
@@ -690,6 +694,21 @@ export const members: Catalog = {
   "hero.vouch.by": "Com voto de confiança de <b>{names}</b>.",
   "hero.vouch.byYouOnly":
     "Para já, só <b>tu</b> deste um voto de confiança a {first}.",
+  // A legenda curta: dois nomes e o resto num botão que abre a lista completa.
+  // `{others}` é esse botão ("8 outras pessoas").
+  "hero.vouch.byAndOthers":
+    "Com voto de confiança de <b>{names}</b> e de {others}.",
+  "hero.vouch.byAndOthersPlusYou":
+    "Com voto de confiança de <b>{names}</b>, de <b>ti</b> e de {others}.",
+  "hero.vouch.others_one": "{count} outra pessoa",
+  "hero.vouch.others_other": "{count} outras pessoas",
+  // A bolha redonda "+N" no fim da pilha de rostos abre a lista.
+  "hero.vouch.showAll_one": "Mostrar a pessoa que deu voto de confiança",
+  "hero.vouch.showAll_other":
+    "Mostrar as {count} pessoas que deram voto de confiança",
+  "hero.vouch.rosterLabel": "Quem deu voto de confiança",
+  "hero.vouch.rosterPartial": "A mostrar {shown} de {total}",
+  "hero.vouch.showLess": "Mostrar menos",
   "hero.vouch.onlyNumberMatters":
     "Um rosto conhecido deu-lhe um voto de confiança.",
   "hero.vouch.onlyNumberMattersSelf":
@@ -1815,6 +1834,29 @@ export const members: Catalog = {
   "places.coManagerInvites.declinedToast": "Convite recusado.",
   "places.coManagerInvites.error":
     "Não conseguimos enviar a tua resposta. Tenta outra vez.",
+  // Convites de equipa de negócios que querem apresentar este membro na página.
+  "places.teamInvites.invites.heading": "Convites de equipa",
+  "places.teamInvites.invites.intro":
+    "Uma empresa quer apresentar-te na equipa dela. Só apareces na página dela depois de aceitares.",
+  "places.teamInvites.invites.countSpoken_one":
+    "{count} convite à espera da tua resposta",
+  "places.teamInvites.invites.countSpoken_other":
+    "{count} convites à espera da tua resposta",
+  "places.teamInvites.accepted.heading": "Equipas em que estás",
+  "places.teamInvites.roleLine": "Função: {role}",
+  "places.teamInvites.listingHidden": "Escondida do diretório neste momento",
+  "places.teamInvites.acceptCta": "Aceitar convite",
+  "places.teamInvites.acceptAria": "Aceitar convite: {listing}",
+  "places.teamInvites.declineCta": "Recusar convite",
+  "places.teamInvites.declineAria": "Recusar convite: {listing}",
+  "places.teamInvites.leaveCta": "Sair da equipa",
+  "places.teamInvites.leaveAria": "Sair da equipa: {listing}",
+  "places.teamInvites.leaveConfirm.title": "Sair da equipa de {listing}?",
+  "places.teamInvites.leaveConfirm.body":
+    "A empresa não é avisada. Podes ser convidado de novo mais tarde.",
+  "places.teamInvites.toast.accepted": "Convite aceite",
+  "places.teamInvites.toast.declined": "Convite recusado",
+  "places.teamInvites.toast.left": "Saíste da equipa",
   // Ofertas de propriedade. A equipa pode escrever sobre um espaço no
   // diretório e pô-lo em nome de um membro; é aqui que esse membro responde.
   // Aceitar é também onde a pessoa concorda com o compromisso afirmativo,

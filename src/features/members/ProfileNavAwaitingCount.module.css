@@ -1,0 +1,12 @@
+/* The accent pill of Tabs' `countTone: "accent"`, on a section-jump link. */
+.pill {
+  min-width: var(--gap-grid);
+  padding-inline: var(--gap-xs);
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--plum); /* css-scale-allow: non-flipping-text (coral pill) */
+  font-size: var(--text-11);
+  font-weight: 700;
+  line-height: 1.6;
+  text-align: center;
+}

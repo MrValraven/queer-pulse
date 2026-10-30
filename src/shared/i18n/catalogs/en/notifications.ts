@@ -1671,6 +1671,15 @@ export const notifications: Catalog = {
   "type.listing_team_accepted.meta": "Now on the team",
   "type.listing_team_accepted.personaNameFallback": "A persona",
   "type.listing_team_accepted.listingNameFallback": "a business",
+  "type.listing_team_member_invite.text":
+    "{listingName} invited you to join its team.",
+  "type.listing_team_member_invite.meta": "Team invite for you",
+  "type.listing_team_member_invite.listingNameFallback": "A business",
+  "type.listing_team_member_accepted.text":
+    "{memberName} accepted the team invite for {listingName}.",
+  "type.listing_team_member_accepted.meta": "Invite accepted",
+  "type.listing_team_member_accepted.memberNameFallback": "A member",
+  "type.listing_team_member_accepted.listingNameFallback": "your business",
   "actions.reviewTeamInvite": "Review invite",
   "actions.reviewTeamRequest": "Review request",
 };

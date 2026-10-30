@@ -25,7 +25,13 @@ const KEY_BY_CODE: Record<ListingTeamErrorCode, string> = {
   listing_team_not_pending: "linkGone",
   listing_team_not_accepted: "notAccepted",
   listing_team_order_mismatch: "orderMismatch",
+  listing_team_member_not_found: "memberNotFound",
+  listing_team_member_ineligible: "memberIneligible",
+  listing_team_member_full: "memberFull",
 };
+
+/** Who a refusal is about, for the codes whose sentence names the invitee. */
+export type ListingTeamErrorSubject = "persona" | "member";
 
 function readErrorBody(error: unknown): Record<string, unknown> | null {
   if (!(error instanceof ApiError)) return null;
@@ -49,10 +55,41 @@ export function listingTeamErrorCode(
   return isListingTeamErrorCode(code) ? code : null;
 }
 
+/**
+ * The sentence for a failure that carries no listing-team code, named by what
+ * the client can see: a throttled request, a timeout, a server fault, or a
+ * request that never got an answer (offline, DNS, CORS). Only a failure with
+ * no readable cause keeps the plain "something went wrong" line, and an
+ * unexpected HTTP status is named in it.
+ */
+function uncodedFailureKey(error: unknown): {
+  key: string;
+  values: Record<string, string>;
+} {
+  if (error instanceof ApiError) {
+    if (error.status === 429) return { key: "tooFast", values: {} };
+    if (error.status === 408) return { key: "timedOut", values: {} };
+    if (error.status >= 500) return { key: "serverProblem", values: {} };
+    if (error.status > 0) {
+      return { key: "genericStatus", values: { status: String(error.status) } };
+    }
+  }
+  // The client lets a failed fetch (no response at all) propagate as a TypeError.
+  if (error instanceof TypeError) return { key: "offline", values: {} };
+  return { key: "generic", values: {} };
+}
+
+/**
+ * `side` is the surface that was acting. `subject` is who the write was about
+ * (a persona unless the business invited a member): the pending, accepted and
+ * cooldown sentences name that kind, and `side: "member"` reads the member's
+ * own refusals in the second person.
+ */
 export function listingTeamErrorCopy(
   error: unknown,
   side: ListingTeamSide,
   formatters: Formatters,
+  subject: ListingTeamErrorSubject = "persona",
 ): { messageKey: string; values: Record<string, string> } {
   const code = listingTeamErrorCode(error);
   const body = readErrorBody(error);
@@ -60,7 +97,11 @@ export function listingTeamErrorCopy(
     messageKey: `${ERROR_KEY_PREFIX}${key}`,
     values,
   });
-  if (code === null) return withKey("generic");
+  if (code === null) {
+    const { key, values } = uncodedFailureKey(error);
+    return withKey(key, values);
+  }
+  const isMemberSubject = subject === "member";
 
   switch (code) {
     case "listing_team_cooldown": {
@@ -68,8 +109,12 @@ export function listingTeamErrorCopy(
       const retryAt = new Date(
         typeof retryAtRaw === "string" ? retryAtRaw : "",
       );
-      if (Number.isNaN(retryAt.getTime())) return withKey("cooldownLater");
-      return withKey("cooldown", {
+      if (Number.isNaN(retryAt.getTime())) {
+        return withKey(
+          isMemberSubject ? "memberCooldownLater" : "cooldownLater",
+        );
+      }
+      return withKey(isMemberSubject ? "memberCooldown" : "cooldown", {
         date: formatters.date(retryAt, {
           day: "numeric",
           month: "long",
@@ -81,7 +126,13 @@ export function listingTeamErrorCopy(
       return withKey(
         body?.initiatedBy === "persona"
           ? "alreadyPendingRequest"
-          : "alreadyPendingInvite",
+          : isMemberSubject
+            ? "memberAlreadyPendingInvite"
+            : "alreadyPendingInvite",
+      );
+    case "listing_team_already_accepted":
+      return withKey(
+        isMemberSubject ? "memberAlreadyAccepted" : "alreadyAccepted",
       );
     case "listing_team_full":
       return withKey("teamFull", {
@@ -99,6 +150,10 @@ export function listingTeamErrorCopy(
     case "listing_team_persona_requests_full":
       return withKey("personaRequestsFull", {
         max: formatters.number(LISTING_TEAM_LIMITS.pendingRequestsPerPersona),
+      });
+    case "listing_team_member_full":
+      return withKey(side === "member" ? "memberFullYou" : "memberFull", {
+        max: formatters.number(LISTING_TEAM_LIMITS.acceptedPerMember),
       });
     default:
       return withKey(KEY_BY_CODE[code]);

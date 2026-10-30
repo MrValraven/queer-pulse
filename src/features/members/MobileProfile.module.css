@@ -237,6 +237,20 @@
   font-size: var(--text-18);
 }
 
+/* Anchors the accent count pill (ProfileNavAwaitingCount) to the icon's
+   top-right corner without shifting the icon or label. */
+.tabIconWrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.tabCount {
+  position: absolute;
+  inset-block-start: calc(var(--gap-xs) * -1);
+  inset-inline-start: 55%;
+  pointer-events: none;
+}
+
 .tabLabel {
   max-width: 100%;
   white-space: nowrap;

@@ -1,0 +1,20 @@
+.panel {
+  display: grid;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+.hint {
+  margin: 0;
+  color: var(--ink-60);
+  font-size: var(--text-13);
+  overflow-wrap: anywhere;
+}
+
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gap-xs);
+}

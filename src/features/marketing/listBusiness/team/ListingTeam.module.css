@@ -1,5 +1,5 @@
 /* ── Team section of the listing editor ──────────────────────────────────────
-   Requests, invites and the accepted team, one row per persona. */
+   Requests, invites and the accepted team, one row per persona or member. */
 
 .section {
   display: flex;

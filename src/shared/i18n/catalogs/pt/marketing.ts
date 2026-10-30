@@ -3538,6 +3538,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-30.headline":
+    "Os negócios podem juntar membros à equipa, e as listas longas de votos de confiança nos perfis passam a caber numa legenda curta.",
   "changelog.releases.2026-10-29.headline":
     "O Studio ganha as secções Artista do mês e Novas estrelas, e a gestão musical ganha uma nova função.",
   "changelog.releases.2026-10-28.headline":
@@ -3790,6 +3792,14 @@ export const marketing: Catalog = {
     "Pesquisa membros ao definir limites de convites",
   "changelog.entries.invite-quotas-search.body":
     "Quem administra vê os convites de cada membro este mês face ao limite, e muda-o ali mesmo.",
+  "changelog.entries.business-team-members.title":
+    "Junta membros à equipa do teu negócio",
+  "changelog.entries.business-team-members.body":
+    "Um negócio pode convidar as suas conexões para a equipa, e elas aparecem na página dele quando aceitarem.",
+  "changelog.entries.compact-voucher-roster.title":
+    "Mantém curtas as listas longas de votos de confiança nos perfis",
+  "changelog.entries.compact-voucher-roster.body":
+    "Primeiro aparecem alguns rostos e nomes, e a lista completa abre por baixo da linha.",
   "changelog.entries.studio-tiled-layout.title":
     "As páginas do Studio ficam em blocos separados no computador",
   "changelog.entries.studio-tiled-layout.body":
@@ -13406,7 +13416,8 @@ export const marketing: Catalog = {
   // ── Meet the team on business pages (2026-10-19) ──
   "directory.detail.team.title": "Conhece a <em>equipa</em>",
   "directory.detail.team.sub":
-    "As personas que trabalham aqui. Toca numa para abrires a página dela",
+    "As pessoas que trabalham aqui. Toca numa para abrires a página dela",
+  "directory.detail.team.memberChip": "Membro",
   "directory.detail.team.showAll": "Mostrar todas ({count})",
   "directory.detail.team.showFewer": "Mostrar menos",
   "listBusiness.editor.section.team": "Equipa",
@@ -13415,7 +13426,7 @@ export const marketing: Catalog = {
   "listBusiness.editor.nav.awaitingCount_other":
     "{count} à espera da tua resposta",
   "listBusiness.team.intro":
-    "Mostra na tua página as personas que trabalham aqui. Uma persona aparece quando quem a gere aceita",
+    "Mostra na tua página as personas e os membros que trabalham aqui. Cada um aparece quando disser que sim",
   "listBusiness.team.notLiveNotice":
     "A tua listagem tem de estar publicada e visível no diretório antes de poderes convidar ou aprovar alguém",
   "listBusiness.team.search.label": "Procura uma persona pelo nome ou @handle",
@@ -13435,7 +13446,26 @@ export const marketing: Catalog = {
   "listBusiness.team.roleLabel.hint": "Uma linha, até 40 caracteres",
   "listBusiness.team.inviteCta": "Convidar para a equipa",
   "listBusiness.team.inviteAria": "Convidar para a equipa: {name}",
-  "listBusiness.team.inviteHeading": "Convidar uma persona",
+  "listBusiness.team.inviteHeading": "Convidar para a equipa",
+  "listBusiness.team.invite.tabsLabel": "Quem convidar",
+  "listBusiness.team.invite.tab.personas": "Personas",
+  "listBusiness.team.invite.tab.members": "Membros",
+  "listBusiness.team.member.hint":
+    "Convida uma das tuas conexões. Aparece na tua página quando aceitar",
+  "listBusiness.team.member.searchLabel":
+    "Procura um membro entre as tuas conexões",
+  "listBusiness.team.member.loadingConnections": "A carregar as tuas conexões",
+  "listBusiness.team.member.noConnections":
+    "Ainda não tens conexões para convidar",
+  "listBusiness.team.member.connectionsLoadError":
+    "Não conseguimos carregar as tuas conexões. Tenta outra vez",
+  "listBusiness.team.member.allListed":
+    "Todos os que aparecem aqui já foram convidados ou estão na tua equipa",
+  "listBusiness.team.member.inviteCta": "Convidar membro para a equipa",
+  "listBusiness.team.member.inviteAria":
+    "Convidar membro para a equipa: {name}",
+  "listBusiness.team.member.sendingCta": "A enviar convite",
+  "listBusiness.team.member.meta": "Membro · @{slug}",
   "listBusiness.team.requests.heading": "Pedidos para entrar",
   "listBusiness.team.approveCta": "Aprovar",
   "listBusiness.team.approveAria": "Aprovar {name}",
@@ -13447,7 +13477,7 @@ export const marketing: Catalog = {
   "listBusiness.team.accepted.heading": "Na tua página",
   "listBusiness.team.accepted.count": "{count} de {max}",
   "listBusiness.team.accepted.empty":
-    "Ainda não aparece ninguém na tua página. Convida uma persona ou aprova um pedido",
+    "Ainda ninguém aparece na tua página. Convida uma persona ou um membro, ou aprova um pedido",
   "listBusiness.team.moveUpAria": "Subir {name}",
   "listBusiness.team.moveDownAria": "Descer {name}",
   "listBusiness.team.movedStatus": "{name} está agora em {position} de {count}",
@@ -13460,12 +13490,20 @@ export const marketing: Catalog = {
   "listBusiness.team.removeConfirm.title": "Remover {name} da tua equipa?",
   "listBusiness.team.removeConfirm.titleHidden":
     "Remover esta persona da tua equipa?",
+  "listBusiness.team.removeConfirm.titleHiddenMember":
+    "Remover este membro da tua equipa?",
   "listBusiness.team.removeConfirm.body":
     "Esta persona deixa de aparecer na tua página de imediato. Podes voltar a convidá-la mais tarde",
+  "listBusiness.team.removeConfirm.bodyMember":
+    "Este membro deixa de aparecer na tua página de imediato. Podes voltar a convidar este membro mais tarde",
   "listBusiness.team.hiddenPersona.name":
     "Uma persona que não está visível de momento",
   "listBusiness.team.hiddenPersona.hint":
     "Volta a aparecer na tua página quando ficar visível",
+  "listBusiness.team.hiddenMember.name":
+    "Um membro que não está visível neste momento",
+  "listBusiness.team.hiddenMember.hint":
+    "Voltam a aparecer na tua página quando estiverem visíveis",
   "listBusiness.team.toast.invited": "Convite enviado",
   "listBusiness.team.toast.added": "Adicionada à tua equipa",
   "listBusiness.team.toast.declined": "Pedido recusado",
@@ -13490,7 +13528,23 @@ export const marketing: Catalog = {
   "listingTeam.errors.cooldownLater":
     "Isto foi recusado há pouco tempo. Podes voltar a pedir mais tarde",
   "listingTeam.errors.teamFull":
-    "Esta equipa está completa. Um negócio pode mostrar até {max} personas",
+    "Esta equipa está completa. Um negócio pode mostrar até {max} pessoas",
+  "listingTeam.errors.memberNotFound":
+    "Esse membro não é uma das tuas conexões ou não está disponível neste momento",
+  "listingTeam.errors.memberIneligible":
+    "Este membro não pode entrar numa equipa neste momento. O perfil tem de estar aberto e visível",
+  "listingTeam.errors.memberFull":
+    "Este membro já está em {max} equipas, o máximo a que pode pertencer",
+  "listingTeam.errors.memberFullYou":
+    "Já estás em {max} equipas, o máximo a que podes pertencer",
+  "listingTeam.errors.memberAlreadyPendingInvite":
+    "Já existe um convite para este membro à espera de resposta",
+  "listingTeam.errors.memberAlreadyAccepted":
+    "Este membro já faz parte da equipa",
+  "listingTeam.errors.memberCooldown":
+    "Este membro recusou há pouco tempo. Podes convidar de novo a partir de {date}",
+  "listingTeam.errors.memberCooldownLater":
+    "Este membro recusou há pouco tempo. Podes convidar de novo mais tarde",
   "listingTeam.errors.pendingFullListing":
     "Tens {max} convites e pedidos à espera. Responde ou cancela alguns antes de enviares mais",
   "listingTeam.errors.pendingFullPersona":
@@ -13502,5 +13556,15 @@ export const marketing: Catalog = {
   "listingTeam.errors.notAccepted": "Esta ligação já terminou",
   "listingTeam.errors.orderMismatch":
     "A equipa acabou de mudar. Tenta outra vez",
+  "listingTeam.errors.tooFast":
+    "Estás a fazer isto depressa demais. Espera um minuto e tenta outra vez",
+  "listingTeam.errors.offline":
+    "Não conseguimos chegar à QueerPulse. Verifica a tua ligação e tenta outra vez",
+  "listingTeam.errors.timedOut":
+    "A QueerPulse demorou demasiado a responder. Tenta outra vez dentro de instantes",
+  "listingTeam.errors.serverProblem":
+    "O nosso servidor teve um problema com isto. Tenta outra vez dentro de instantes",
+  "listingTeam.errors.genericStatus":
+    "Algo correu mal (erro {status}). Tenta outra vez",
   "listingTeam.errors.generic": "Algo correu mal. Tenta outra vez",
 };

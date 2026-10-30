@@ -473,8 +473,8 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
   address: string;
   rating: { score: string; count: number };
   reviews: Review[];
-  /** Accepted, viewer-visible team personas in page order, at most 40. The
-   *  backend always sends it; optional here for deploy order. */
+  /** Accepted, viewer-visible team (personas and members) in page order, at
+   *  most 40. The backend always sends it; optional here for deploy order. */
   team?: ListingTeamMemberPublicDTO[];
   /** Upcoming events at this venue. `startAt` is ISO; the FE composes `when`.
    * `id`/`slug` deep-link into the Events Hub (`/events/:slug`). `role` is

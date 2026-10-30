@@ -70,14 +70,22 @@
   transition: transform var(--dur-slow) var(--ease);
 }
 
+/* A poster cover often carries its own bright, large lettering. The overlay
+   grows tall when theme tags wrap onto two or three rows, which lifts the
+   title and meta rows well above the old 45% stop and onto that artwork. The
+   ramp stays dark through the whole overlay zone and fades out late, in small
+   steps so no hard band shows across a flat cover. */
 .scrim {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(var(--plum-rgb), 0.88) 0%,
-    rgba(var(--plum-rgb), 0.25) 45%,
-    transparent 70%
+    rgba(var(--plum-rgb), 0.94) 0%,
+    rgba(var(--plum-rgb), 0.88) 30%,
+    rgba(var(--plum-rgb), 0.7) 50%,
+    rgba(var(--plum-rgb), 0.4) 68%,
+    rgba(var(--plum-rgb), 0.12) 85%,
+    transparent 100%
   );
   pointer-events: none;
 }
@@ -102,9 +110,12 @@
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(var(--plum-rgb), 0.94) 0%,
-    rgba(var(--plum-rgb), 0.4) 50%,
-    transparent 75%
+    rgba(var(--plum-rgb), 0.96) 0%,
+    rgba(var(--plum-rgb), 0.92) 30%,
+    rgba(var(--plum-rgb), 0.78) 50%,
+    rgba(var(--plum-rgb), 0.5) 68%,
+    rgba(var(--plum-rgb), 0.2) 85%,
+    transparent 100%
   );
   opacity: 0;
   transition: opacity var(--dur-base) var(--ease-std);
@@ -232,6 +243,9 @@
   letter-spacing: var(--ls-heading);
   line-height: var(--lh-title);
   color: rgb(var(--cream-rgb));
+  /* A soft halo keeps the title legible where bright cover lettering still
+     shows through the scrim. */
+  text-shadow: 0 1px 2px rgba(var(--plum-rgb), 0.55);
 }
 
 .lead .title {
@@ -262,6 +276,7 @@
 .lead .meta,
 .featured .meta {
   color: rgba(var(--cream-rgb), 0.85);
+  text-shadow: 0 1px 2px rgba(var(--plum-rgb), 0.55);
 }
 
 .list .meta,
@@ -612,6 +627,7 @@
    rest of that overlay already uses. */
 .formatLineScrim {
   color: rgba(var(--cream-rgb), 0.85);
+  text-shadow: 0 1px 2px rgba(var(--plum-rgb), 0.55);
 }
 
 /* "Run by <business>": one quiet line under the title, plain text since the
@@ -630,6 +646,7 @@
 }
 .runByLineScrim {
   color: rgba(var(--cream-rgb), 0.85);
+  text-shadow: 0 1px 2px rgba(var(--plum-rgb), 0.55);
 }
 
 /* Theme tags (Create Gathering v2): up to three, in the kind badge's fills so

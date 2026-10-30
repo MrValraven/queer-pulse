@@ -1,0 +1,192 @@
+/* The capped voucher stack's overflow bubble, the "N others" caption button and
+   the expandable roster under the hero's vouch row. Face ring, tooltip and the
+   stack itself stay in ProfilePage.module.css (.vouchFaces, .vouchFace). */
+
+/* ── "+N" bubble: a face-sized round button at the end of the stack ───────── */
+.bubble {
+  position: relative;
+  z-index: 0;
+  flex: none;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: var(--vouch-bubble-size);
+  height: var(--vouch-bubble-size);
+  padding: 0;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: 50%;
+  /* Opaque, so the face it slides under does not show through. */
+  background: color-mix(in srgb, var(--ink) 9%, var(--paper));
+  box-shadow: var(--vouch-face-ring, var(--ring-cream));
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: calc(var(--vouch-bubble-size) * 0.3);
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.18s var(--ease);
+}
+.bubble:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: 50%;
+  transform: translateY(-3px);
+  z-index: var(--z-raised);
+}
+@media (hover: hover) {
+  .bubble:hover {
+    transform: translateY(-3px);
+    z-index: var(--z-raised);
+  }
+}
+
+/* ── "8 others" in the caption ─────────────────────────────────────────────── */
+.othersButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 600;
+  line-height: inherit;
+  cursor: pointer;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+@media (hover: hover) {
+  .othersButton:hover {
+    text-decoration: underline;
+  }
+}
+.othersButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+.chevron,
+.chevronOpen {
+  flex: none;
+  width: 0.9em;
+  height: 0.9em;
+  transition: transform 0.22s var(--ease);
+}
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+/* ── The roster ────────────────────────────────────────────────────────────── */
+.roster {
+  margin-top: var(--gap-sm);
+  padding-top: var(--gap-sm);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
+}
+.list,
+.listScrollable {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* A long roster scrolls inside a fixed height. The padding keeps each chip's
+   focus ring inside the scroll box, and the bottom padding lets the last row
+   scroll clear of the fade. */
+.listScrollable {
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 6px 6px 28px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--line-rgb), 0.3) transparent;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    black calc(100% - 28px),
+    transparent
+  );
+  mask-image: linear-gradient(to bottom, black calc(100% - 28px), transparent);
+}
+.chip,
+.chipLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  box-sizing: border-box;
+  max-width: 100%;
+  padding: 3px 12px 3px 3px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: var(--text-13);
+  line-height: 1.2;
+  text-decoration: none;
+}
+.chipLink {
+  transition:
+    background-color 0.18s var(--ease),
+    border-color 0.18s var(--ease);
+}
+@media (hover: hover) {
+  .chipLink:hover {
+    border-color: rgba(var(--line-rgb), 0.22);
+    background: color-mix(in srgb, var(--ink) 4%, var(--paper));
+  }
+}
+.chipName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+  margin-top: var(--gap-xs);
+  font-size: var(--text-13);
+}
+.partial {
+  color: var(--ink-60);
+}
+.lessButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  padding: 2px 0;
+  border: 0;
+  background: none;
+  color: var(--ink-60);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .lessButton:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+}
+.lessButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bubble,
+  .chevron,
+  .chevronOpen,
+  .chipLink {
+    transition: none;
+  }
+}

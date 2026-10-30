@@ -39,6 +39,7 @@ function makeRequestRow(
 ): DemoTeamRow {
   return {
     subprofileId: KAI_PERSONA_ID,
+    userId: null,
     status: "pending",
     initiatedBy: "persona",
     roleLabel: null,

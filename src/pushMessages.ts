@@ -232,6 +232,12 @@ const en: Record<string, string> = {
     "{persona} asked to join the team at {listing}",
   "push:listingTeamAccepted.title": "Team link confirmed",
   "push:listingTeamAccepted.body": "{persona} is now on the team at {listing}",
+  // Members on the business team. Same rule: word for word the backend's.
+  "push:listingTeamMemberInvite.title": "Team invite",
+  "push:listingTeamMemberInvite.body": "{listing} invited you to join the team",
+  "push:listingTeamMemberAccepted.title": "Team invite accepted",
+  "push:listingTeamMemberAccepted.body":
+    "{member} accepted the team invite for {listing}",
   // Shown INSTEAD of the real title/body when the member has turned on
   // "hide previews" (see pushPrivacy.ts). Says something arrived without
   // naming who it is from or what it said.
@@ -496,6 +502,11 @@ const pt: Record<string, string> = {
   "push:listingTeamAccepted.title": "Ligação à equipa confirmada",
   "push:listingTeamAccepted.body":
     "{persona} faz agora parte da equipa de {listing}",
+  "push:listingTeamMemberInvite.title": "Convite para a equipa",
+  "push:listingTeamMemberInvite.body": "{listing} convidou-te para a equipa",
+  "push:listingTeamMemberAccepted.title": "Convite aceite",
+  "push:listingTeamMemberAccepted.body":
+    "{member} aceitou o convite para a equipa de {listing}",
   "push:preview.hidden.title": "QueerPulse",
   "push:preview.hidden.body": "Tens uma notificação nova.",
   "push:preview.hidden.message": "Tens uma mensagem nova.",

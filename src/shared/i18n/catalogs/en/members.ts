@@ -246,6 +246,10 @@ export const members: Catalog = {
   "profile.nav.subprofiles": "Also working as",
   "profile.nav.communities": "Communities",
   "profile.nav.places": "Places",
+  "profile.nav.placesAwaiting_one":
+    "{count} team invite waiting for your answer",
+  "profile.nav.placesAwaiting_other":
+    "{count} team invites waiting for your answer",
   "profile.nav.skills": "Skills & offerings",
   "profile.nav.groups": "Groups & circles",
   "profile.nav.shapings": "What shaped me",
@@ -701,6 +705,19 @@ export const members: Catalog = {
   "hero.vouch.anonymous": "Anonymous",
   "hero.vouch.by": "Vouched for by <b>{names}</b>.",
   "hero.vouch.byYouOnly": "So far, only <b>you</b> have vouched for {first}.",
+  // The short caption: a couple of names, then the rest as a button that
+  // opens the full roster. `{others}` is that button ("8 others").
+  "hero.vouch.byAndOthers": "Vouched for by <b>{names}</b> and {others}.",
+  "hero.vouch.byAndOthersPlusYou":
+    "Vouched for by <b>{names}</b>, <b>you</b> and {others}.",
+  "hero.vouch.others_one": "{count} other",
+  "hero.vouch.others_other": "{count} others",
+  // The round "+N" bubble at the end of the face stack opens the roster.
+  "hero.vouch.showAll_one": "Show the voucher",
+  "hero.vouch.showAll_other": "Show all {count} vouchers",
+  "hero.vouch.rosterLabel": "Everyone who vouched",
+  "hero.vouch.rosterPartial": "Showing {shown} of {total}",
+  "hero.vouch.showLess": "Show less",
   "hero.vouch.onlyNumberMatters": "A familiar face vouched for them.",
   "hero.vouch.onlyNumberMattersSelf": "A familiar face vouched for you.",
   // The count-only branch (PRD-201). A member who hides their voucher roster is
@@ -1822,6 +1839,29 @@ export const members: Catalog = {
   "places.coManagerInvites.acceptedToast": "You now help run {listing}.",
   "places.coManagerInvites.declinedToast": "Invitation declined.",
   "places.coManagerInvites.error": "We couldn't send your answer. Try again.",
+  // Team invites from businesses that want to list this member on their page.
+  "places.teamInvites.invites.heading": "Team invites",
+  "places.teamInvites.invites.intro":
+    "A business wants to list you on its team. You appear on its page only after you accept.",
+  "places.teamInvites.invites.countSpoken_one":
+    "{count} invite waiting for your answer",
+  "places.teamInvites.invites.countSpoken_other":
+    "{count} invites waiting for your answer",
+  "places.teamInvites.accepted.heading": "Teams you are on",
+  "places.teamInvites.roleLine": "Role: {role}",
+  "places.teamInvites.listingHidden": "Hidden from the directory right now",
+  "places.teamInvites.acceptCta": "Accept invite",
+  "places.teamInvites.acceptAria": "Accept invite: {listing}",
+  "places.teamInvites.declineCta": "Decline invite",
+  "places.teamInvites.declineAria": "Decline invite: {listing}",
+  "places.teamInvites.leaveCta": "Leave team",
+  "places.teamInvites.leaveAria": "Leave team: {listing}",
+  "places.teamInvites.leaveConfirm.title": "Leave the team at {listing}?",
+  "places.teamInvites.leaveConfirm.body":
+    "The business is not told. You can be invited again later.",
+  "places.teamInvites.toast.accepted": "Invite accepted",
+  "places.teamInvites.toast.declined": "Invite declined",
+  "places.teamInvites.toast.left": "You left the team",
   // Ownership offers. Staff can write up a place in the directory and put it
   // in a member's name; this is where that member answers. Accepting is also
   // where they agree to the affirming pledge, so the row opens a second step

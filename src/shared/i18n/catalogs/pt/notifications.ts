@@ -1643,6 +1643,15 @@ export const notifications: Catalog = {
   "type.listing_team_accepted.meta": "Na equipa",
   "type.listing_team_accepted.personaNameFallback": "Uma persona",
   "type.listing_team_accepted.listingNameFallback": "um negócio",
+  "type.listing_team_member_invite.text":
+    "{listingName} convidou-te para a equipa.",
+  "type.listing_team_member_invite.meta": "Convite de equipa para ti",
+  "type.listing_team_member_invite.listingNameFallback": "Um negócio",
+  "type.listing_team_member_accepted.text":
+    "{memberName} aceitou o convite para a equipa de {listingName}.",
+  "type.listing_team_member_accepted.meta": "Convite aceite",
+  "type.listing_team_member_accepted.memberNameFallback": "Um membro",
+  "type.listing_team_member_accepted.listingNameFallback": "o teu negócio",
   "actions.reviewTeamInvite": "Ver convite",
   "actions.reviewTeamRequest": "Ver pedido",
 };

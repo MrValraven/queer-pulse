@@ -9,6 +9,7 @@ import {
   approveListingTeamRequest,
   cancelListingTeamInvite,
   declineListingTeamRequest,
+  inviteMemberToListingTeam,
   inviteToListingTeam,
   removeFromListingTeam,
   reorderListingTeam,
@@ -19,6 +20,7 @@ import {
   demoApproveListingTeamRequest,
   demoCancelListingTeamInvite,
   demoDeclineListingTeamRequest,
+  demoInviteMemberToListingTeam,
   demoInviteToListingTeam,
   demoRemoveFromListingTeam,
   demoReorderListingTeam,
@@ -27,6 +29,7 @@ import {
 import { listingTeamQueryKeys } from "./listingTeamQueryKeys";
 import { listingTeamErrorCode } from "../team/listingTeamErrors.data";
 import type {
+  InviteMemberToListingTeamBody,
   InviteToListingTeamBody,
   ListingTeamErrorCode,
   ListingTeamManagerListView,
@@ -99,6 +102,24 @@ export function useListingTeamMutations(listingRef: string) {
         demoMode
           ? demoInviteToListingTeam(listingRef, body)
           : await inviteToListingTeam(listingRef, body),
+      ),
+    onSuccess: refresh,
+    onError: refreshWhenStale,
+  });
+
+  // The invitee is a connection; the member sees the invite under their
+  // places and the team shows it as a pending row until they answer.
+  const inviteMember = useMutation<
+    ListingTeamManagerRowView,
+    Error,
+    InviteMemberToListingTeamBody
+  >({
+    meta: { silentError: true },
+    mutationFn: async (body) =>
+      toListingTeamManagerRowView(
+        demoMode
+          ? demoInviteMemberToListingTeam(listingRef, body)
+          : await inviteMemberToListingTeam(listingRef, body),
       ),
     onSuccess: refresh,
     onError: refreshWhenStale,
@@ -196,6 +217,7 @@ export function useListingTeamMutations(listingRef: string) {
 
   return {
     invite,
+    inviteMember,
     approve,
     decline,
     cancelInvite,

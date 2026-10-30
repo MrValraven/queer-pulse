@@ -498,6 +498,15 @@ describe("request budget (live mode)", () => {
       http.get(`${API_V1}/listings/co-manager-invites`, () =>
         HttpResponse.json([]),
       ),
+      // PlacesSection also mounts MemberTeamInvitesInbox on the self view, and
+      // the rail's Places link reads the same query for its count pill.
+      http.get(`${API_V1}/me/team-links`, () =>
+        HttpResponse.json({
+          awaitingYouCount: 0,
+          invitesReceived: [],
+          accepted: [],
+        }),
+      ),
       // PRD-434: PlacesSection also mounts SuggestedPlacesSection on the self
       // view, which reads the places this member suggested for the directory.
       http.get(`${API_V1}/listings/suggestions/mine`, () =>
@@ -634,6 +643,11 @@ describe("request budget (live mode)", () => {
     //     GET /listings/co-manager-invites (self view only: the invitations
     //     waiting on this member to help run somebody else's listing,
     //     answered where an accepted one lands)
+    //   - PlacesSection → MemberTeamInvitesInbox → useMemberTeamLinks() →
+    //     GET /me/team-links (self view only: business team invitations and
+    //     the teams this member is on). ProfileSectionNav's Places count pill
+    //     (ProfileNavAwaitingCount, self view only) reads the same query key,
+    //     so it is one request.
     //   - PlacesSection → SuggestedPlacesSection (isSelf) →
     //     useMySuggestedListings() → GET /listings/suggestions/mine (PRD-434:
     //     the places this member suggested, which the platform holds and
@@ -671,6 +685,9 @@ describe("request budget (live mode)", () => {
         `/v1/magazine/authors/by-member/${SLUG}`,
         "/v1/me/communities",
         "/v1/me/recognition",
+        // PlacesSection → MemberTeamInvitesInbox → useMemberTeamLinks()
+        // (deduped with the rail's Places count pill).
+        "/v1/me/team-links",
         "/v1/me/vouches/given",
         `/v1/members/${SLUG}/vouchers`,
         "/v1/platform/ambassadors",

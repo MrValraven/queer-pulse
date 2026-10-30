@@ -13,7 +13,10 @@ import type { ListingTeamManagerRowView } from "../api/listingTeam.types";
 import type { ManagedListingDTO } from "../api/listings.api";
 import { useListingTeam } from "../api/useListingTeam";
 import { useListingTeamMutations } from "../api/useListingTeamMutations";
-import { isListingTeamOpen } from "./listingTeamSection.data";
+import {
+  isListingTeamOpen,
+  listingTeamRowSubject,
+} from "./listingTeamSection.data";
 import { ListingTeamAcceptedList } from "./ListingTeamAcceptedList";
 import { ListingTeamInvitePicker } from "./ListingTeamInvitePicker";
 import { ListingTeamPendingRow } from "./ListingTeamPendingRow";
@@ -37,8 +40,8 @@ function isFocusLost(): boolean {
 }
 
 /**
- * "Team" inside the listing editor: personas asking to join, invites sent and
- * the people shown on the page, in page order. Every answer takes effect when
+ * "Team" inside the listing editor: personas asking to join, invites sent to
+ * personas and members, and the people shown on the page, in page order. Every answer takes effect when
  * pressed, so nothing here waits on the save bar.
  */
 export function ListingTeamSection({
@@ -120,6 +123,19 @@ export function ListingTeamSection({
       "removed",
     );
     setRemoveTarget(null);
+  };
+
+  const removeConfirmTitle = (target: ListingTeamManagerRowView): string => {
+    const subject = listingTeamRowSubject(target, t);
+    const keyPrefix = "marketing:listBusiness.team.removeConfirm";
+    if (!subject.isHidden) {
+      return t(`${keyPrefix}.title`, { name: subject.labelName });
+    }
+    return t(
+      subject.kind === "member"
+        ? `${keyPrefix}.titleHiddenMember`
+        : `${keyPrefix}.titleHidden`,
+    );
   };
 
   let body;
@@ -217,14 +233,12 @@ export function ListingTeamSection({
             open
             tone="destructive"
             loading={busyMemberId === removeTarget.id}
-            title={
-              removeTarget.persona
-                ? t("marketing:listBusiness.team.removeConfirm.title", {
-                    name: removeTarget.persona.titleName,
-                  })
-                : t("marketing:listBusiness.team.removeConfirm.titleHidden")
-            }
-            description={t("marketing:listBusiness.team.removeConfirm.body")}
+            title={removeConfirmTitle(removeTarget)}
+            description={t(
+              removeTarget.kind === "member"
+                ? "marketing:listBusiness.team.removeConfirm.bodyMember"
+                : "marketing:listBusiness.team.removeConfirm.body",
+            )}
             confirmLabel={t("marketing:listBusiness.team.removeCta")}
             onClose={() => setRemoveTarget(null)}
             onConfirm={() => void confirmRemoval()}

@@ -1,6 +1,12 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
+import {
+  demoPublicListingTeam,
+  resetListingTeamDemo,
+} from "./listBusiness/api/listingTeam.demo";
 import {
   DEMO_TEAM_LISTINGS,
+  DEMO_TEAM_MEMBERS,
+  DEMO_TEAM_ROWS,
   DEMO_TEAM_PERSONAS,
   DEMO_VIEWER_TEAM_PERSONA_ID,
 } from "./listBusiness/api/listingTeam.demo.data";
@@ -12,6 +18,8 @@ import {
 } from "../subprofiles/data/subprofiles.data";
 
 describe("demo team fixtures", () => {
+  beforeEach(resetListingTeamDemo);
+
   it("gives every demo team listing a matching directory place", () => {
     for (const listing of DEMO_TEAM_LISTINGS) {
       const place = getPlace(listing.slug);
@@ -75,5 +83,35 @@ describe("demo team fixtures", () => {
         expect(toPublicDto(subprofile).worksAt?.[0]?.slug).toBe("tinta-viva");
       }
     }
+  });
+
+  it("gives every member row a demo member and no persona", () => {
+    const memberRows = DEMO_TEAM_ROWS.filter((row) => row.userId !== null);
+    expect(memberRows.length).toBeGreaterThan(0);
+    for (const row of memberRows) {
+      expect(row.subprofileId, row.id).toBeNull();
+      expect(
+        DEMO_TEAM_MEMBERS.some((member) => member.userId === row.userId),
+        row.id,
+      ).toBe(true);
+    }
+    for (const row of DEMO_TEAM_ROWS.filter(
+      (candidate) => candidate.userId === null,
+    )) {
+      expect(row.subprofileId, row.id).not.toBeNull();
+    }
+  });
+
+  it("puts the accepted member between personas on the Tinta Viva page", () => {
+    const team = demoPublicListingTeam("tinta-viva");
+    expect(team.map((entry) => entry.kind ?? "persona").slice(0, 4)).toEqual([
+      "persona",
+      "persona",
+      "member",
+      "persona",
+    ]);
+    const memberEntry = team.find((entry) => entry.kind === "member");
+    expect(memberEntry?.member?.slug).toBe("catarina-vaz");
+    expect(memberEntry?.roleLabel).toBe("Front of house");
   });
 });

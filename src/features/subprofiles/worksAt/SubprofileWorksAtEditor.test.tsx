@@ -252,6 +252,7 @@ describe("SubprofileWorksAtEditor", () => {
       id: "demo-team-link-hidden-agulha-lenta",
       listingId: DEMO_TEAM_HIDDEN_LISTING.id,
       subprofileId: PERSONA_ID,
+      userId: null,
       status: "accepted",
       initiatedBy: "persona",
       roleLabel: null,

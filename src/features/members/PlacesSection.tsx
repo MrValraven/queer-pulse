@@ -14,6 +14,7 @@ import { useMemberListings } from "./api/useMemberListings";
 import { useMySuggestedListings } from "./api/useMySuggestedListings";
 import { PlacesGrid } from "./PlacesGrid";
 import { SuggestedPlacesSection } from "./SuggestedPlacesSection";
+import { MemberTeamInvitesInbox } from "./teamInvites/MemberTeamInvitesInbox";
 import {
   mergePlaces,
   registryPlacesForMember,
@@ -24,7 +25,7 @@ import styles from "./PlacesSection.module.css";
 /** "Places I run" (owner) / "Places {firstName} runs" (visitor). Merges the
  *  static directory registry with this member's session-submitted listings,
  *  and puts anything waiting on them above the grid: an offer of ownership
- *  first, then any co-management invitation. */
+ *  first, then any co-management invitation, then team invitations. */
 export function PlacesSection({
   memberSlug,
   isSelf,
@@ -157,6 +158,11 @@ export function PlacesSection({
           ask of the two, so it is answered first. */}
       {isSelf && <OwnerOfferInbox />}
       {isSelf && <CoManagerInvitesInbox />}
+      {/* Being listed on a business's team is the lightest ask of the three,
+          so it comes last. Like the others it keeps this section on the page
+          for a member who runs no places: the early return above only ever
+          hides the section from visitors. */}
+      {isSelf && <MemberTeamInvitesInbox />}
 
       {hasVisitorFetchFailed || hasOwnFetchFailed ? (
         <LoadErrorState

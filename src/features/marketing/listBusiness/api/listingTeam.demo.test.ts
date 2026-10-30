@@ -2,11 +2,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../../../shared/api/client";
 import {
   demoAcceptListingTeamInvite,
+  demoAcceptMemberTeamLink,
   demoCancelListingTeamInvite,
   demoDeclineListingTeamInvite,
+  demoDeclineListingTeamRequest,
+  demoDeclineMemberTeamLink,
   demoGetListingTeam,
+  demoGetMemberTeamLinks,
   demoGetPersonaTeamLinks,
+  demoInviteMemberToListingTeam,
   demoInviteToListingTeam,
+  demoLeaveMemberTeamLink,
   demoListingWorksAt,
   demoPublicListingTeam,
   demoRemoveFromListingTeam,
@@ -17,6 +23,7 @@ import {
   registerDemoTeamPersonaLookup,
   replaceListingTeamDemoRows,
   resetListingTeamDemo,
+  setDemoTeamMemberHidden,
   setDemoTeamPersonaHidden,
   type DemoTeamPersonaFacts,
 } from "./listingTeam.demo";
@@ -34,6 +41,8 @@ const STUDIO_CABELO_REF = "QPL-DEMO-0203";
 const NAVALHA_INVITE_ID = "demo-team-link-navalha-agulha-lenta";
 const STUDIO_CABELO_REQUEST_ID = "demo-team-link-studio-cabelo-agulha-lenta";
 const FUMO_AZUL_ROW_ID = "demo-team-link-tinta-viva-fumo-azul";
+const CATARINA_ROW_ID = "demo-team-link-tinta-viva-catarina-vaz";
+const VIEWER_MEMBER_INVITE_ID = "demo-team-link-studio-cabelo-viewer-member";
 
 function refusalOf(action: () => unknown): ApiError {
   try {
@@ -54,6 +63,7 @@ function makeRow(index: number, overrides: Partial<DemoTeamRow>): DemoTeamRow {
     id: `filler-row-${index}`,
     listingId: "demo-listing-tinta-viva",
     subprofileId: `sp-filler-${index}`,
+    userId: null,
     status: "accepted",
     initiatedBy: "listing",
     roleLabel: null,
@@ -83,13 +93,23 @@ afterEach(() => {
 });
 
 describe("listing team demo store: the seed", () => {
-  it("lists Tinta Viva's four members in order with nothing waiting", () => {
+  it("lists Tinta Viva's five members in order with nothing waiting", () => {
     const team = demoGetListingTeam(TINTA_VIVA_REF);
-    expect(team.accepted.map((row) => row.persona?.handle)).toEqual([
+    expect(
+      team.accepted.map((row) => row.persona?.handle ?? row.member?.slug),
+    ).toEqual([
       "rosa-brava",
       "linha-fina",
+      "catarina-vaz",
       "agulha-lenta",
       "fumo-azul",
+    ]);
+    expect(team.accepted.map((row) => row.kind)).toEqual([
+      "persona",
+      "persona",
+      "member",
+      "persona",
+      "persona",
     ]);
     expect(team.awaitingYouCount).toBe(0);
     expect(team.requestsReceived).toEqual([]);
@@ -296,7 +316,7 @@ describe("listing team demo store: caps", () => {
       memberIds: reversed,
     });
     expect(result.accepted.map((row) => row.id)).toEqual(reversed);
-    expect(result.accepted.map((row) => row.position)).toEqual([0, 1, 2, 3]);
+    expect(result.accepted.map((row) => row.position)).toEqual([0, 1, 2, 3, 4]);
     expect(
       demoGetListingTeam(TINTA_VIVA_REF).accepted.map((row) => row.id),
     ).toEqual(reversed);
@@ -307,16 +327,16 @@ describe("listing team demo store: public reads", () => {
   it("hides a hidden persona from the page and keeps its row for the business", () => {
     setDemoTeamPersonaHidden("sp-kai-linha-fina", true);
     const accepted = demoGetListingTeam(TINTA_VIVA_REF).accepted;
-    expect(accepted).toHaveLength(4);
+    expect(accepted).toHaveLength(5);
     expect(
       accepted.find((row) => row.id === "demo-team-link-tinta-viva-linha-fina")
         ?.persona,
     ).toBeNull();
     expect(
       demoPublicListingTeam("tinta-viva").map(
-        (member) => member.persona.handle,
+        (entry) => entry.persona?.handle ?? entry.member?.slug,
       ),
-    ).toEqual(["rosa-brava", "agulha-lenta", "fumo-azul"]);
+    ).toEqual(["rosa-brava", "catarina-vaz", "agulha-lenta", "fumo-azul"]);
     expect(demoSearchListingTeamCandidates(NAVALHA_REF, "linha").items).toEqual(
       [],
     );
@@ -324,9 +344,9 @@ describe("listing team demo store: public reads", () => {
 
   it("takes a removed member off the page straight away", () => {
     demoRemoveFromListingTeam(TINTA_VIVA_REF, FUMO_AZUL_ROW_ID);
-    expect(demoPublicListingTeam("tinta-viva")).toHaveLength(3);
+    expect(demoPublicListingTeam("tinta-viva")).toHaveLength(4);
     expect(demoListingWorksAt("sp-anika-fumo-azul")).toEqual([]);
-    expect(demoGetListingTeam(TINTA_VIVA_REF).accepted).toHaveLength(3);
+    expect(demoGetListingTeam(TINTA_VIVA_REF).accepted).toHaveLength(4);
   });
 
   it("marks a link to a listing hidden from the directory", () => {
@@ -450,5 +470,196 @@ describe("listing team demo store: other viewer personas", () => {
       }),
     );
     expect(refusal.status).toBe(400);
+  });
+});
+
+describe("listing team demo store: members", () => {
+  it("seeds an accepted member between two personas and a pending invite for the viewer", () => {
+    const publicTeam = demoPublicListingTeam("tinta-viva");
+    expect(publicTeam.map((entry) => entry.kind ?? "persona")).toEqual([
+      "persona",
+      "persona",
+      "member",
+      "persona",
+      "persona",
+    ]);
+    expect(publicTeam[2]?.member).toEqual({
+      slug: "catarina-vaz",
+      name: "Catarina Vaz",
+      avatarUrl: null,
+    });
+    expect(publicTeam[2]?.persona).toBeUndefined();
+    const links = demoGetMemberTeamLinks();
+    expect(links.awaitingYouCount).toBe(1);
+    expect(links.invitesReceived[0]?.id).toBe(VIEWER_MEMBER_INVITE_ID);
+    expect(links.invitesReceived[0]?.listing.slug).toBe("studio-cabelo");
+    expect(links.accepted).toEqual([]);
+  });
+
+  it("shows a sent member invite as a pending member row", () => {
+    const row = demoInviteMemberToListingTeam(NAVALHA_REF, {
+      memberSlug: "jonas",
+      roleLabel: "  Barber  ",
+    });
+    expect(row.kind).toBe("member");
+    expect(row.status).toBe("pending");
+    expect(row.initiatedBy).toBe("listing");
+    expect(row.roleLabel).toBe("Barber");
+    expect(row.member?.slug).toBe("jonas");
+    expect(row.persona).toBeUndefined();
+    expect(demoGetListingTeam(NAVALHA_REF).invitesSent[0]?.id).toBe(row.id);
+  });
+
+  it("answers a stranger and the viewer with the generic not found", () => {
+    const stranger = refusalOf(() =>
+      demoInviteMemberToListingTeam(NAVALHA_REF, { memberSlug: "nobody" }),
+    );
+    expect(stranger.status).toBe(404);
+    expect((stranger.data as ListingTeamErrorBody).code).toBe(
+      "listing_team_member_not_found",
+    );
+    expect(
+      refusalBodyOf(() =>
+        demoInviteMemberToListingTeam(NAVALHA_REF, { memberSlug: "tiago" }),
+      ).code,
+    ).toBe("listing_team_member_not_found");
+  });
+
+  it("refuses an ineligible member, a repeat invite and a member on the team", () => {
+    setDemoTeamMemberHidden("jonas", true);
+    const ineligible = refusalOf(() =>
+      demoInviteMemberToListingTeam(NAVALHA_REF, { memberSlug: "jonas" }),
+    );
+    expect(ineligible.status).toBe(422);
+    expect((ineligible.data as ListingTeamErrorBody).code).toBe(
+      "listing_team_member_ineligible",
+    );
+    setDemoTeamMemberHidden("jonas", false);
+    demoInviteMemberToListingTeam(NAVALHA_REF, { memberSlug: "jonas" });
+    expect(
+      refusalBodyOf(() =>
+        demoInviteMemberToListingTeam(NAVALHA_REF, { memberSlug: "jonas" }),
+      ).code,
+    ).toBe("listing_team_already_pending");
+    expect(
+      refusalBodyOf(() =>
+        demoInviteMemberToListingTeam(TINTA_VIVA_REF, {
+          memberSlug: "catarina-vaz",
+        }),
+      ).code,
+    ).toBe("listing_team_already_accepted");
+  });
+
+  it("refuses a member already on ten teams", () => {
+    replaceListingTeamDemoRows(
+      makeRows(10, (index) => ({
+        listingId: `demo-listing-filler-${index}`,
+        subprofileId: null,
+        userId: "demo-user-jonas",
+      })),
+    );
+    const refusal = refusalOf(() =>
+      demoInviteMemberToListingTeam(NAVALHA_REF, { memberSlug: "jonas" }),
+    );
+    expect(refusal.status).toBe(409);
+    expect((refusal.data as ListingTeamErrorBody).code).toBe(
+      "listing_team_member_full",
+    );
+  });
+
+  it("counts member rows toward the listing caps", () => {
+    replaceListingTeamDemoRows(
+      makeRows(40, (index) => ({
+        subprofileId: null,
+        userId: `demo-user-filler-${index}`,
+      })),
+    );
+    expect(
+      refusalBodyOf(() =>
+        demoInviteMemberToListingTeam(TINTA_VIVA_REF, { memberSlug: "jonas" }),
+      ).code,
+    ).toBe("listing_team_full");
+  });
+
+  it("lets the viewer accept an invite onto the end of the team", () => {
+    const row = demoAcceptMemberTeamLink(VIEWER_MEMBER_INVITE_ID);
+    expect(row.status).toBe("accepted");
+    expect(row.answeredAt).toBe(NOW);
+    const links = demoGetMemberTeamLinks();
+    expect(links.awaitingYouCount).toBe(0);
+    expect(links.accepted.map((link) => link.id)).toEqual([
+      VIEWER_MEMBER_INVITE_ID,
+    ]);
+    const team = demoGetListingTeam(STUDIO_CABELO_REF);
+    expect(team.accepted[0]?.kind).toBe("member");
+    expect(team.accepted[0]?.position).toBe(0);
+    expect(team.invitesSent).toEqual([]);
+  });
+
+  it("clears the badge when the viewer declines an invite", () => {
+    demoDeclineMemberTeamLink(VIEWER_MEMBER_INVITE_ID);
+    expect(demoGetMemberTeamLinks().awaitingYouCount).toBe(0);
+    expect(demoGetListingTeam(STUDIO_CABELO_REF).invitesSent).toEqual([]);
+  });
+
+  it("holds a 14 day cooldown after a member declined", () => {
+    replaceListingTeamDemoRows([
+      makeRow(0, {
+        listingId: "demo-listing-studio-cabelo",
+        subprofileId: null,
+        userId: "demo-user-jonas",
+        status: "declined",
+        position: null,
+        answeredAt: "2026-10-15T12:00:00.000Z",
+      }),
+    ]);
+    const cooldown = refusalBodyOf(() =>
+      demoInviteMemberToListingTeam(STUDIO_CABELO_REF, { memberSlug: "jonas" }),
+    );
+    expect(cooldown.code).toBe("listing_team_cooldown");
+    expect(cooldown.retryAt).toBe("2026-10-29T12:00:00.000Z");
+  });
+
+  it("lets the viewer leave a team and refuses another member's link", () => {
+    demoAcceptMemberTeamLink(VIEWER_MEMBER_INVITE_ID);
+    demoLeaveMemberTeamLink(VIEWER_MEMBER_INVITE_ID);
+    expect(demoGetMemberTeamLinks().accepted).toEqual([]);
+    const refusal = refusalOf(() => demoLeaveMemberTeamLink(CATARINA_ROW_ID));
+    expect(refusal.status).toBe(404);
+    expect((refusal.data as ListingTeamErrorBody).code).toBe(
+      "listing_team_link_not_found",
+    );
+    expect(
+      refusalBodyOf(() => demoDeclineMemberTeamLink(VIEWER_MEMBER_INVITE_ID))
+        .code,
+    ).toBe("listing_team_not_pending");
+  });
+
+  it("keeps the row of a hidden member and leaves them off the page", () => {
+    setDemoTeamMemberHidden("catarina-vaz", true);
+    const catarina = demoGetListingTeam(TINTA_VIVA_REF).accepted.find(
+      (row) => row.id === CATARINA_ROW_ID,
+    );
+    expect(catarina?.kind).toBe("member");
+    expect(catarina?.member).toBeNull();
+    expect(
+      demoPublicListingTeam("tinta-viva").some(
+        (entry) => entry.member?.slug === "catarina-vaz",
+      ),
+    ).toBe(false);
+  });
+
+  it("answers approve and decline on a member row with link not found", () => {
+    const row = demoInviteMemberToListingTeam(NAVALHA_REF, {
+      memberSlug: "jonas",
+    });
+    expect(
+      refusalBodyOf(() => demoDeclineListingTeamRequest(NAVALHA_REF, row.id))
+        .code,
+    ).toBe("listing_team_link_not_found");
+    demoCancelListingTeamInvite(NAVALHA_REF, row.id);
+    expect(demoGetListingTeam(NAVALHA_REF).invitesSent).toEqual([
+      expect.objectContaining({ id: NAVALHA_INVITE_ID }),
+    ]);
   });
 });

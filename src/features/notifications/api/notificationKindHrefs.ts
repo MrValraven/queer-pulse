@@ -250,6 +250,18 @@ export function lifecycleSourceHref(
       if (subprofileId) return { href: personaWorksAtHref(subprofileId) };
       return { href: personaHandle ? personaPath(personaHandle) : undefined };
     }
+    // Members on the business team: an invite opens the member's Places
+    // section; an accepted row opens the listing's Team section (a missing
+    // listing ref leaves the row without a destination). A stale row still
+    // opens the page, which shows the current state.
+    case "listing_team_member_invite":
+      return { href: `${routes.accountProfile}#places` };
+    case "listing_team_member_accepted": {
+      const listingRef = slugOf(payload, "listingRef");
+      return {
+        href: listingRef ? listingTeamEditorHref(listingRef) : undefined,
+      };
+    }
     // Studio open pages: the owner reads our team's reason, and any reply to
     // their dispute, on the release itself.
     case "studio_release_taken_down":

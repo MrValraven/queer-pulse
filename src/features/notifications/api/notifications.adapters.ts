@@ -735,30 +735,38 @@ export function notificationDtoToView(
   }
 
   applyStudioKindExtras(view, dto, t);
-
-  // Meet the team: one action on an invite or a request, straight to the
-  // pane that answers it. A row without a destination keeps no action.
-  if (
-    dto.type === "listing_team_invite" ||
-    dto.type === "listing_team_request"
-  ) {
-    const teamHref = lifecycleSourceHref(dto.type, dto.payload)?.href;
-    if (teamHref) {
-      view.actions = [
-        {
-          label: t(
-            dto.type === "listing_team_invite"
-              ? "notifications:actions.reviewTeamInvite"
-              : "notifications:actions.reviewTeamRequest",
-          ),
-          variant: "primary",
-          href: teamHref,
-        },
-      ];
-    }
-  }
+  applyListingTeamAction(view, dto, t);
 
   return view;
+}
+
+/**
+ * Meet the team and members on the business team: one action on an invite or
+ * a request, straight to the page that answers it. A row without a
+ * destination keeps no action.
+ */
+function applyListingTeamAction(
+  view: Notification,
+  dto: NotificationDTO,
+  t: TFunction,
+): void {
+  const isInvite =
+    dto.type === "listing_team_invite" ||
+    dto.type === "listing_team_member_invite";
+  if (!isInvite && dto.type !== "listing_team_request") return;
+  const teamHref = lifecycleSourceHref(dto.type, dto.payload)?.href;
+  if (!teamHref) return;
+  view.actions = [
+    {
+      label: t(
+        isInvite
+          ? "notifications:actions.reviewTeamInvite"
+          : "notifications:actions.reviewTeamRequest",
+      ),
+      variant: "primary",
+      href: teamHref,
+    },
+  ];
 }
 
 /**

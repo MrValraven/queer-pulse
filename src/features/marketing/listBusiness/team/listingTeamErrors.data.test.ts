@@ -87,7 +87,7 @@ describe("listingTeamErrorCopy", () => {
   });
 
   it("maps every contract code", () => {
-    expect(LISTING_TEAM_ERROR_CODES).toHaveLength(15);
+    expect(LISTING_TEAM_ERROR_CODES).toHaveLength(18);
     for (const code of LISTING_TEAM_ERROR_CODES) {
       const { messageKey } = listingTeamErrorCopy(
         refusal(code, { retryAt: "2026-11-02T10:00:00.000Z" }),
@@ -107,18 +107,98 @@ describe("listingTeamErrorCopy", () => {
     }
   });
 
-  it("reads anything else as the generic sentence", () => {
-    const generic = `${PREFIX}generic`;
-    const cases: unknown[] = [
-      new ApiError(400, "bad"),
-      new ApiError(500, "boom"),
-      new Error("plain"),
-      refusal("something_else"),
-    ];
-    for (const error of cases) {
+  it("names the cause of each member refusal", () => {
+    expect(
+      listingTeamErrorCopy(
+        refusal("listing_team_member_not_found"),
+        "listing",
+        formatters,
+      ).messageKey,
+    ).toBe(`${PREFIX}memberNotFound`);
+    expect(
+      listingTeamErrorCopy(
+        refusal("listing_team_member_ineligible"),
+        "listing",
+        formatters,
+      ).messageKey,
+    ).toBe(`${PREFIX}memberIneligible`);
+    const memberFull = listingTeamErrorCopy(
+      refusal("listing_team_member_full"),
+      "listing",
+      formatters,
+    );
+    expect(memberFull.messageKey).toBe(`${PREFIX}memberFull`);
+    expect(memberFull.values.max).toBe("10");
+    const memberFullForYou = listingTeamErrorCopy(
+      refusal("listing_team_member_full"),
+      "member",
+      formatters,
+    );
+    expect(memberFullForYou.messageKey).toBe(`${PREFIX}memberFullYou`);
+    expect(memberFullForYou.values.max).toBe("10");
+  });
+
+  it("words the shared refusals for a member invitee", () => {
+    const cases = [
+      ["listing_team_already_accepted", "memberAlreadyAccepted"],
+      ["listing_team_already_pending", "memberAlreadyPendingInvite"],
+      ["listing_team_cooldown", "memberCooldownLater"],
+    ] as const;
+    for (const [code, key] of cases) {
       expect(
-        listingTeamErrorCopy(error, "listing", formatters).messageKey,
-      ).toBe(generic);
+        listingTeamErrorCopy(refusal(code), "listing", formatters, "member")
+          .messageKey,
+      ).toBe(`${PREFIX}${key}`);
     }
+    const dated = listingTeamErrorCopy(
+      refusal("listing_team_cooldown", { retryAt: "2026-11-02T10:00:00.000Z" }),
+      "listing",
+      formatters,
+      "member",
+    );
+    expect(dated.messageKey).toBe(`${PREFIX}memberCooldown`);
+    expect(dated.values.date).toBeTruthy();
+    expect(
+      listingTeamErrorCopy(
+        refusal("listing_team_already_accepted"),
+        "listing",
+        formatters,
+      ).messageKey,
+    ).toBe(`${PREFIX}alreadyAccepted`);
+  });
+
+  it("names the cause of a failure that has no listing-team code", () => {
+    const keyOf = (error: unknown) =>
+      listingTeamErrorCopy(error, "listing", formatters).messageKey;
+    expect(keyOf(new ApiError(429, "Too Many Requests"))).toBe(
+      `${PREFIX}tooFast`,
+    );
+    expect(keyOf(new ApiError(408, "Request timed out"))).toBe(
+      `${PREFIX}timedOut`,
+    );
+    expect(keyOf(new ApiError(500, "boom"))).toBe(`${PREFIX}serverProblem`);
+    expect(keyOf(new ApiError(503, "down"))).toBe(`${PREFIX}serverProblem`);
+    expect(keyOf(new TypeError("Failed to fetch"))).toBe(`${PREFIX}offline`);
+  });
+
+  it("names the HTTP status when nothing more specific is known", () => {
+    const result = listingTeamErrorCopy(
+      new ApiError(400, "bad"),
+      "listing",
+      formatters,
+    );
+    expect(result.messageKey).toBe(`${PREFIX}genericStatus`);
+    expect(result.values.status).toBe("400");
+    expect(
+      listingTeamErrorCopy(refusal("something_else"), "listing", formatters)
+        .messageKey,
+    ).toBe(`${PREFIX}genericStatus`);
+  });
+
+  it("keeps the generic sentence for a failure with no readable cause", () => {
+    expect(
+      listingTeamErrorCopy(new Error("plain"), "listing", formatters)
+        .messageKey,
+    ).toBe(`${PREFIX}generic`);
   });
 });

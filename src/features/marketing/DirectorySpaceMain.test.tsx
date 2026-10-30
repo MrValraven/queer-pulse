@@ -80,6 +80,7 @@ describe("DirectorySpaceMain hours", () => {
 describe("DirectorySpaceMain team", () => {
   function makeTeam() {
     return [1, 2, 3].map((index) => ({
+      kind: "persona" as const,
       persona: {
         id: `persona-${index}`,
         handle: `persona-${index}`,

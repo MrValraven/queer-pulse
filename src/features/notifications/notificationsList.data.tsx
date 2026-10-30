@@ -850,5 +850,5 @@ export function buildNotifications(
 /** Ids of demo rows that start unread — used for the bell badge count without
  * needing `t`/`fmt` (the count only depends on the `unread` flag, not copy). */
 export const DEMO_UNREAD_IDS = [
-  2, 3, 13, 14, 15, 16, 4, 5, 6, 7, 18, 26, 29, 32,
+  2, 3, 13, 14, 15, 16, 4, 5, 6, 7, 18, 26, 29, 32, 38,
 ];

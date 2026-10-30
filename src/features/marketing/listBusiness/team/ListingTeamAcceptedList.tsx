@@ -7,7 +7,7 @@ import {
   LISTING_TEAM_LIMITS,
   type ListingTeamManagerRowView,
 } from "../api/listingTeam.types";
-import { moveMemberId } from "./listingTeamSection.data";
+import { listingTeamRowSubject, moveMemberId } from "./listingTeamSection.data";
 import {
   ListingTeamMemberRow,
   type ListingTeamMoveDirection,
@@ -64,9 +64,7 @@ export function ListingTeamAcceptedList({
     setMovedFocus({ memberId: row.id, direction });
     setMoveStatus(
       t("marketing:listBusiness.team.movedStatus", {
-        name:
-          row.persona?.titleName ??
-          t("marketing:listBusiness.team.hiddenPersona.name"),
+        name: listingTeamRowSubject(row, t).labelName,
         position: nextMemberIds.indexOf(row.id) + 1,
         count: nextMemberIds.length,
       }),

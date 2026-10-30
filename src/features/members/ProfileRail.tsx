@@ -8,6 +8,7 @@ import type { Member } from "./data/members";
 import { useMemberListings } from "./api/useMemberListings";
 import { useProfileEventsVisible } from "./api/useProfileEvents";
 import { ProfileHeroRecognition } from "./ProfileHeroRecognition";
+import { ProfileNavAwaitingCount } from "./ProfileNavAwaitingCount";
 import { ProfileNetworkStats } from "./ProfileNetworkStats";
 import { ProfilePhotoViewer } from "./ProfilePhotoViewer";
 import { ProfileTrustSignals } from "./ProfileTrustSignals";
@@ -236,6 +237,9 @@ function ProfileSectionNav({
           aria-current={item.id === activeSectionId ? "location" : undefined}
         >
           {t(item.labelKey)}
+          {isSelf && item.hasAwaitingCount && item.awaitingCountKey && (
+            <ProfileNavAwaitingCount spokenKey={item.awaitingCountKey} />
+          )}
         </a>
       ))}
     </nav>

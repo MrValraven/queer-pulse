@@ -1,4 +1,4 @@
-import { businessPath, personaPath } from "../../../../app/routeMap";
+import { businessPath, personaPath, routes } from "../../../../app/routeMap";
 import { initialsFromName } from "../../../../shared/lib/initials";
 import {
   personaNameBesideCraft,
@@ -15,6 +15,12 @@ import {
   type ListingTeamManagerListView,
   type ListingTeamManagerRowDTO,
   type ListingTeamManagerRowView,
+  type ListingTeamMemberLinkListDTO,
+  type ListingTeamMemberLinkListView,
+  type ListingTeamMemberLinkRowDTO,
+  type ListingTeamMemberLinkRowView,
+  type ListingTeamMemberProfileDTO,
+  type ListingTeamMemberProfileView,
   type ListingTeamMemberPublicDTO,
   type ListingTeamMemberView,
   type ListingTeamPersonaCandidateDTO,
@@ -72,17 +78,49 @@ export function toListingTeamListingView(
   };
 }
 
+/** A member's profile for a team slot. Initials come from the full name. */
+export function toListingTeamMemberProfileView(
+  dto: ListingTeamMemberProfileDTO,
+): ListingTeamMemberProfileView {
+  return {
+    slug: dto.slug,
+    name: dto.name,
+    avatarUrl: dto.avatarUrl,
+    ...(dto.avatarCrop ? { avatarCrop: dto.avatarCrop } : {}),
+    initials: initialsFromName(dto.name, "?"),
+    href: `${routes.members}/${dto.slug}`,
+  };
+}
+
+/**
+ * The public team, either kind, in the order the server sent. A missing
+ * `kind` is a persona. An entry with no subject to show (a persona without a
+ * handle, a member without a slug) is dropped.
+ */
 export function toListingTeamMemberViews(
   dtos: ListingTeamMemberPublicDTO[] | undefined,
 ): ListingTeamMemberView[] {
   if (!dtos) return [];
-  return dtos
-    .filter((dto) => dto.persona.handle !== "")
-    .slice(0, LISTING_TEAM_LIMITS.acceptedPerListing)
-    .map((dto) => ({
+  const views: ListingTeamMemberView[] = [];
+  for (const dto of dtos) {
+    if (views.length >= LISTING_TEAM_LIMITS.acceptedPerListing) break;
+    if (dto.kind === "member") {
+      if (dto.member.slug === "") continue;
+      views.push({
+        kind: "member",
+        member: toListingTeamMemberProfileView(dto.member),
+        roleLabel: dto.roleLabel,
+      });
+      continue;
+    }
+    if (dto.persona.handle === "") continue;
+    views.push({
+      kind: "persona",
       persona: toListingTeamPersonaView(dto.persona),
       roleLabel: dto.roleLabel,
-    }));
+    });
+  }
+  return views;
 }
 
 export function toListingWorksAtViews(
@@ -104,15 +142,26 @@ export function toListingWorksAtViews(
 export function toListingTeamManagerRowView(
   dto: ListingTeamManagerRowDTO,
 ): ListingTeamManagerRowView {
-  return {
+  const base = {
     id: dto.id,
     status: dto.status,
     initiatedBy: dto.initiatedBy,
     roleLabel: dto.roleLabel,
     position: dto.position,
-    persona: dto.persona ? toListingTeamPersonaView(dto.persona) : null,
     createdAt: dto.createdAt,
     answeredAt: dto.answeredAt,
+  };
+  if (dto.kind === "member") {
+    return {
+      ...base,
+      kind: "member",
+      member: dto.member ? toListingTeamMemberProfileView(dto.member) : null,
+    };
+  }
+  return {
+    ...base,
+    kind: "persona",
+    persona: dto.persona ? toListingTeamPersonaView(dto.persona) : null,
   };
 }
 
@@ -150,6 +199,23 @@ export function toListingTeamPersonaListView(
     invitesReceived: dto.invitesReceived.map(toListingTeamPersonaRowView),
     requestsSent: dto.requestsSent.map(toListingTeamPersonaRowView),
     accepted: dto.accepted.map(toListingTeamPersonaRowView),
+  };
+}
+
+/** Member side: the invites waiting and the teams the member is on. */
+export function toListingTeamMemberLinkRowView(
+  dto: ListingTeamMemberLinkRowDTO,
+): ListingTeamMemberLinkRowView {
+  return toListingTeamPersonaRowView(dto);
+}
+
+export function toListingTeamMemberLinkListView(
+  dto: ListingTeamMemberLinkListDTO,
+): ListingTeamMemberLinkListView {
+  return {
+    awaitingYouCount: dto.awaitingYouCount,
+    invitesReceived: dto.invitesReceived.map(toListingTeamMemberLinkRowView),
+    accepted: dto.accepted.map(toListingTeamMemberLinkRowView),
   };
 }
 

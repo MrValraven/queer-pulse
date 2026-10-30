@@ -202,7 +202,9 @@ export function EventPosterCard({
           <MetaRow event={event}>
             <EventSpan event={event} fmt={fmt} t={t} />
           </MetaRow>
-          <ThemeTags event={event} onScrim />
+          {/* Capped at two: three wrapped rows of tags on a poster overlay
+              cover the cover art. The rest fold into one "+N" tag. */}
+          <ThemeTags event={event} onScrim maxVisible={2} />
           <PricePill event={event} fmt={fmt} onScrim />
         </span>
       </span>

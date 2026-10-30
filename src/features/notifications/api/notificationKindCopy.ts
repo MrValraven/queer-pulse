@@ -135,7 +135,11 @@ export type LifecycleNotificationKind =
   // Meet the team: the payload names a persona and a listing only.
   | "listing_team_invite"
   | "listing_team_request"
-  | "listing_team_accepted";
+  | "listing_team_accepted"
+  // Members on the business team: the invited member and the business side.
+  // The payload names a listing and a member only; no actor.
+  | "listing_team_member_invite"
+  | "listing_team_member_accepted";
 
 /**
  * Which tab each of these kinds files under, following the neighbours already
@@ -240,6 +244,9 @@ export const LIFECYCLE_KIND_CATEGORY: Record<
   listing_team_invite: "community",
   listing_team_request: "community",
   listing_team_accepted: "community",
+  // Members on the business team, the same tab as the persona rows.
+  listing_team_member_invite: "community",
+  listing_team_member_accepted: "community",
 };
 
 export function isLifecycleKind(
@@ -474,6 +481,10 @@ const TOKEN_FIELDS: Partial<Record<LifecycleNotificationKind, string[]>> = {
   listing_team_invite: ["listingName", "personaName"],
   listing_team_request: ["listingName", "personaName"],
   listing_team_accepted: ["listingName", "personaName"],
+  // Members on the business team: a row missing a name reads the kind's
+  // fallback phrase.
+  listing_team_member_invite: ["listingName"],
+  listing_team_member_accepted: ["listingName", "memberName"],
 };
 
 /** Studio credit role slug to its `notifications:studioCreditRole.*` key. */

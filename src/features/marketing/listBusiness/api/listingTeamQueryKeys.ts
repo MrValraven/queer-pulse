@@ -17,6 +17,9 @@ export const listingTeamQueryKeys = {
     ["listings", "team", listingRef, "candidates", query, isDemoMode] as const,
   persona: (subprofileId: string, isDemoMode: boolean) =>
     ["subprofile", "team-links", subprofileId, isDemoMode] as const,
+  /** The signed-in member's own invites and teams (`/me/team-links`). */
+  memberLinks: (isDemoMode: boolean) =>
+    ["subprofile", "team-links", "member", isDemoMode] as const,
   personaCandidatesPrefix: (subprofileId: string) =>
     ["subprofile", "team-links", subprofileId, "candidates"] as const,
   personaCandidates: (

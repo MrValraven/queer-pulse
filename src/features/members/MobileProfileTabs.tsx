@@ -4,6 +4,7 @@ import {
   type CSSProperties,
   type KeyboardEvent,
 } from "react";
+import { useLocation } from "react-router-dom";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { MemberProfile } from "./data/memberProfiles";
 import type { Member } from "./data/members";
@@ -12,6 +13,11 @@ import {
   type MobileProfileTabKey,
 } from "./mobileProfileTabs.data";
 import { MobileProfileTabPanels } from "./MobileProfileTabPanels";
+import { ProfileNavAwaitingCount } from "./ProfileNavAwaitingCount";
+import {
+  tabKeyForHash,
+  useMobileProfileHashJump,
+} from "./useMobileProfileHashJump";
 import styles from "./MobileProfile.module.css";
 
 /** Which tab groups have visible content, computed synchronously from
@@ -47,6 +53,11 @@ function tabHasContent(
  * backing data for this profile doesn't render at all. Switching tabs swaps
  * which group of (unmodified) section components render below the bar; nothing
  * here reimplements a section's own content or empty-state logic.
+ *
+ * A URL hash that points into a tab (`#places` -> Community) opens that tab
+ * and scrolls to the section (see `useMobileProfileHashJump`). The Community
+ * tab carries an accent count of waiting team invites for the owner's own
+ * view only, so a visitor's profile never requests the owner's list.
  */
 export function MobileProfileTabs({
   profile,
@@ -67,10 +78,16 @@ export function MobileProfileTabs({
   const visibleTabs = MOBILE_PROFILE_TAB_DEFS.filter((def) =>
     tabHasContent(def.key, profile),
   );
+  const { hash } = useLocation();
+  const visibleTabKeys = visibleTabs.map((tab) => tab.key);
+  // Opens on the tab the URL hash points into, so the first paint already
+  // shows the linked section's tab instead of flashing About.
   const [activeTab, setActiveTab] = useState<MobileProfileTabKey>(
-    () => visibleTabs[0]!.key,
+    () => tabKeyForHash(hash, visibleTabKeys) ?? visibleTabs[0]!.key,
   );
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const tabListRef = useRef<HTMLDivElement | null>(null);
+  const shouldShowTabCounts = isSelf && !previewing;
 
   // Defensive fallback only — `MobileProfileView` remounts this component
   // per profile (`key={profile.slug}`), so `activeTab` should always match a
@@ -81,6 +98,12 @@ export function MobileProfileTabs({
     0,
   );
   const currentTab = visibleTabs[activeIndex]!;
+  useMobileProfileHashJump({
+    visibleTabKeys,
+    activeTab: currentTab.key,
+    selectTab: setActiveTab,
+    tabListRef,
+  });
 
   function focusAndActivate(index: number) {
     const tab = visibleTabs[index]!;
@@ -111,6 +134,7 @@ export function MobileProfileTabs({
   return (
     <div className={styles.tabsWrap}>
       <div
+        ref={tabListRef}
         className={styles.tabList}
         role="tablist"
         aria-label={t("members:profile.tabs.ariaLabel")}
@@ -141,7 +165,14 @@ export function MobileProfileTabs({
               onClick={() => setActiveTab(tab.key)}
               onKeyDown={(event) => handleTabKeyDown(event, index)}
             >
-              <Icon className={styles.tabIcon} aria-hidden />
+              <span className={styles.tabIconWrap}>
+                <Icon className={styles.tabIcon} aria-hidden />
+                {shouldShowTabCounts && tab.awaitingCountKey && (
+                  <span className={styles.tabCount}>
+                    <ProfileNavAwaitingCount spokenKey={tab.awaitingCountKey} />
+                  </span>
+                )}
+              </span>
               <span className={styles.tabLabel}>{t(tab.labelKey)}</span>
             </button>
           );

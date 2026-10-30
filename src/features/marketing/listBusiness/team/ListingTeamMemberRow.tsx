@@ -11,6 +11,7 @@ import {
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { ListingTeamManagerRowView } from "../api/listingTeam.types";
 import { ListingTeamRowIdentity } from "./ListingTeamPendingRow";
+import { listingTeamRowSubject } from "./listingTeamSection.data";
 import { ListingTeamRoleLabelField } from "./ListingTeamRoleLabelField";
 import { ListingTeamRowError } from "./ListingTeamRowError";
 import styles from "./ListingTeam.module.css";
@@ -40,7 +41,10 @@ interface ListingTeamMemberRowProps {
   onRemove: () => void;
 }
 
-/** One member on the page: order arrows, an inline role editor and Remove. */
+/**
+ * One team entry on the page, persona or member: order arrows, an inline role
+ * editor and Remove.
+ */
 export function ListingTeamMemberRow({
   row,
   isFirst,
@@ -60,9 +64,7 @@ export function ListingTeamMemberRow({
   const [isEditing, setIsEditing] = useState(false);
   const [roleDraft, setRoleDraft] = useState(row.roleLabel ?? "");
   const [isGliding, setIsGliding] = useState(false);
-  const name =
-    row.persona?.titleName ??
-    t("marketing:listBusiness.team.hiddenPersona.name");
+  const name = listingTeamRowSubject(row, t).labelName;
   const shouldRestoreFocus = useRef(false);
   const moveUpRef = useRef<HTMLButtonElement>(null);
   const moveDownRef = useRef<HTMLButtonElement>(null);

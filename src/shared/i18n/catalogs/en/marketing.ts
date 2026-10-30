@@ -3455,6 +3455,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-30.headline":
+    "Businesses can add members to their team, and long voucher lists on member profiles fold into a short caption.",
   "changelog.releases.2026-10-29.headline":
     "Studio spotlights an Artist of the month and New stars, and music managers get a new role.",
   "changelog.releases.2026-10-28.headline":
@@ -3706,6 +3708,14 @@ export const marketing: Catalog = {
     "Search members when setting invite limits",
   "changelog.entries.invite-quotas-search.body":
     "Admins see each member's invites this month against their limit, and can change it inline.",
+  "changelog.entries.business-team-members.title":
+    "Add members to your business team",
+  "changelog.entries.business-team-members.body":
+    "A business can invite its connections onto its team, and they appear on its page once they accept.",
+  "changelog.entries.compact-voucher-roster.title":
+    "Keep long voucher lists short on member profiles",
+  "changelog.entries.compact-voucher-roster.body":
+    "A few faces and names show first, and the full list opens under the row.",
   "changelog.entries.studio-tiled-layout.title":
     "Studio pages sit in separate tiles on desktop",
   "changelog.entries.studio-tiled-layout.body":
@@ -13253,7 +13263,8 @@ export const marketing: Catalog = {
   // ── Meet the team on business pages (2026-10-19) ──
   "directory.detail.team.title": "Meet the <em>team</em>",
   "directory.detail.team.sub":
-    "The personas who work here. Tap one to open their page",
+    "The people who work here. Tap one to open their page",
+  "directory.detail.team.memberChip": "Member",
   "directory.detail.team.showAll": "Show all {count}",
   "directory.detail.team.showFewer": "Show fewer",
   "listBusiness.editor.section.team": "Team",
@@ -13262,7 +13273,7 @@ export const marketing: Catalog = {
   "listBusiness.editor.nav.awaitingCount_other":
     "{count} waiting for your answer",
   "listBusiness.team.intro":
-    "Show the personas who work here on your page. A persona appears once whoever runs it says yes",
+    "Show the personas and members who work here on your page. Each one appears once they say yes",
   "listBusiness.team.notLiveNotice":
     "Your listing needs to be live and shown in the directory before you can invite or approve anyone",
   "listBusiness.team.search.label": "Find a persona by name or @handle",
@@ -13281,7 +13292,25 @@ export const marketing: Catalog = {
   "listBusiness.team.roleLabel.hint": "One line, up to 40 characters",
   "listBusiness.team.inviteCta": "Invite to team",
   "listBusiness.team.inviteAria": "Invite to team: {name}",
-  "listBusiness.team.inviteHeading": "Invite a persona",
+  "listBusiness.team.inviteHeading": "Invite to your team",
+  "listBusiness.team.invite.tabsLabel": "Who to invite",
+  "listBusiness.team.invite.tab.personas": "Personas",
+  "listBusiness.team.invite.tab.members": "Members",
+  "listBusiness.team.member.hint":
+    "Invite one of your connections. They show on your page once they accept",
+  "listBusiness.team.member.searchLabel":
+    "Find a member among your connections",
+  "listBusiness.team.member.loadingConnections": "Loading your connections",
+  "listBusiness.team.member.noConnections":
+    "You have no connections to invite yet",
+  "listBusiness.team.member.connectionsLoadError":
+    "We couldn't load your connections. Try again",
+  "listBusiness.team.member.allListed":
+    "Everyone here is already invited or on your team",
+  "listBusiness.team.member.inviteCta": "Invite member to team",
+  "listBusiness.team.member.inviteAria": "Invite member to team: {name}",
+  "listBusiness.team.member.sendingCta": "Sending invite",
+  "listBusiness.team.member.meta": "Member · @{slug}",
   "listBusiness.team.requests.heading": "Asking to join",
   "listBusiness.team.approveCta": "Approve",
   "listBusiness.team.approveAria": "Approve {name}",
@@ -13293,7 +13322,7 @@ export const marketing: Catalog = {
   "listBusiness.team.accepted.heading": "On your page",
   "listBusiness.team.accepted.count": "{count} of {max}",
   "listBusiness.team.accepted.empty":
-    "Nobody shows on your page yet. Invite a persona, or approve a request",
+    "Nobody shows on your page yet. Invite a persona or a member, or approve a request",
   "listBusiness.team.moveUpAria": "Move {name} up",
   "listBusiness.team.moveDownAria": "Move {name} down",
   "listBusiness.team.movedStatus": "{name} is now {position} of {count}",
@@ -13306,12 +13335,19 @@ export const marketing: Catalog = {
   "listBusiness.team.removeConfirm.title": "Remove {name} from your team?",
   "listBusiness.team.removeConfirm.titleHidden":
     "Remove this persona from your team?",
+  "listBusiness.team.removeConfirm.titleHiddenMember":
+    "Remove this member from your team?",
   "listBusiness.team.removeConfirm.body":
     "This persona stops showing on your page straight away. You can invite it again later",
+  "listBusiness.team.removeConfirm.bodyMember":
+    "This member stops showing on your page straight away. You can invite them again later",
   "listBusiness.team.hiddenPersona.name":
     "A persona that isn't visible right now",
   "listBusiness.team.hiddenPersona.hint":
     "It shows on your page again once it's visible",
+  "listBusiness.team.hiddenMember.name": "A member who isn't visible right now",
+  "listBusiness.team.hiddenMember.hint":
+    "They show on your page again once they're visible",
   "listBusiness.team.toast.invited": "Invite sent",
   "listBusiness.team.toast.added": "Added to your team",
   "listBusiness.team.toast.declined": "Request declined",
@@ -13336,7 +13372,23 @@ export const marketing: Catalog = {
   "listingTeam.errors.cooldownLater":
     "This was declined recently. You can ask again later",
   "listingTeam.errors.teamFull":
-    "This team is full. A business can show up to {max} personas",
+    "This team is full. A business can show up to {max} people",
+  "listingTeam.errors.memberNotFound":
+    "That member isn't one of your connections, or isn't available right now",
+  "listingTeam.errors.memberIneligible":
+    "This member can't join a team right now. Their profile needs to be open and visible",
+  "listingTeam.errors.memberFull":
+    "This member is already on {max} teams, the most they can join",
+  "listingTeam.errors.memberFullYou":
+    "You are already on {max} teams, the most you can join",
+  "listingTeam.errors.memberAlreadyPendingInvite":
+    "An invite for this member is already waiting for an answer",
+  "listingTeam.errors.memberAlreadyAccepted":
+    "This member is already on the team",
+  "listingTeam.errors.memberCooldown":
+    "This member declined recently. You can invite them again from {date}",
+  "listingTeam.errors.memberCooldownLater":
+    "This member declined recently. You can invite them again later",
   "listingTeam.errors.pendingFullListing":
     "You have {max} invites and requests waiting. Answer or cancel some before sending more",
   "listingTeam.errors.pendingFullPersona":
@@ -13347,5 +13399,15 @@ export const marketing: Catalog = {
     "This persona has {max} requests waiting. Cancel one to send another",
   "listingTeam.errors.notAccepted": "This link already ended",
   "listingTeam.errors.orderMismatch": "The team just changed. Try again",
+  "listingTeam.errors.tooFast":
+    "You are doing this too quickly. Wait a minute and try again",
+  "listingTeam.errors.offline":
+    "We couldn't reach QueerPulse. Check your connection and try again",
+  "listingTeam.errors.timedOut":
+    "QueerPulse took too long to answer. Try again in a moment",
+  "listingTeam.errors.serverProblem":
+    "Our server had a problem with this. Try again in a moment",
+  "listingTeam.errors.genericStatus":
+    "Something went wrong (error {status}). Try again",
   "listingTeam.errors.generic": "Something went wrong. Try again",
 };

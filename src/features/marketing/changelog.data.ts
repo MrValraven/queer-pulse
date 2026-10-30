@@ -63,6 +63,22 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "business-team-members",
+        category: "feature",
+        date: "30 Oct 2026",
+        ...entryKeys("business-team-members"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "compact-voucher-roster",
+        category: "improvement",
+        date: "30 Oct 2026",
+        ...entryKeys("compact-voucher-roster"),
+      },
+      {
         id: "studio-tiled-layout",
         category: "improvement",
         date: "29 Oct 2026",
