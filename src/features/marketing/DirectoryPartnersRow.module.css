@@ -1,0 +1,127 @@
+/* "Businesses we partner with": a horizontal rail of compact partner cards
+   at the top of the directory results. Every block of the row has a fixed
+   height (one-line title and subtitle, 128px cards, a fixed rail box), so
+   the row is the same height at every column width and the results below
+   never move when the filters panel opens or hides. */
+.row {
+  margin-top: 18px;
+}
+
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-22);
+  letter-spacing: -0.005em;
+  line-height: 1.25;
+  color: var(--text-strong);
+}
+
+.sub {
+  margin-top: 4px;
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* On desktop the title and subtitle keep to one line each, so the column
+   width never changes the row's height. Phones let the subtitle wrap. */
+@media (--mobile-up) {
+  .title,
+  .sub {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+/* The rail box is fixed: 8px of focus-ring room above and below the cards,
+   plus 12px kept for a classic horizontal scrollbar, so a rail that
+   overflows at one width and fits at another keeps one height. The inline
+   padding gives the first and last cards' focus rings room inside the
+   overflow box, and the negative margin cancels it so the cards line up
+   with the heading. */
+.rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max(260px, calc((100% - 2 * 12px) / 3));
+  grid-template-rows: 128px;
+  align-content: start;
+  gap: 12px;
+  box-sizing: border-box;
+  height: 156px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  padding: 8px;
+  margin: 6px -8px -8px;
+  scroll-padding-inline: 8px;
+  list-style: none;
+}
+
+/* A soft fade on each end that hides more cards, so a cut card reads as
+   scrollable. An end the rail rests at keeps a hard edge
+   (useRailFadeEdges). */
+.rail[data-fade="end"] {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    black calc(100% - 48px),
+    transparent
+  );
+  mask-image: linear-gradient(to right, black calc(100% - 48px), transparent);
+}
+.rail[data-fade="start"] {
+  -webkit-mask-image: linear-gradient(
+    to left,
+    black calc(100% - 48px),
+    transparent
+  );
+  mask-image: linear-gradient(to left, black calc(100% - 48px), transparent);
+}
+.rail[data-fade="both"] {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 48px,
+    black calc(100% - 48px),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 48px,
+    black calc(100% - 48px),
+    transparent
+  );
+}
+
+/* A card with keyboard focus shows whole, ring and all: the fade lifts while
+   focus is inside the rail. */
+.rail:has(:focus-visible) {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.item {
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+/* Phones: each card is sized so the next one peeks in from the right, which
+   is the scroll affordance with the fade, so the scrollbar is hidden. The
+   rail bleeds to the screen edges and its padding keeps the first card lined
+   up with the heading (DirectorySpacePage.module.css `.relatedGrid`). */
+@media (--sm) {
+  .rail {
+    grid-auto-columns: min(82%, 18rem);
+    height: 144px;
+    margin-inline: calc(-1 * var(--wrap-px));
+    padding-inline: var(--wrap-px);
+    scroll-padding-inline: var(--wrap-px);
+    scrollbar-width: none;
+  }
+  .rail::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -11,6 +11,7 @@ import {
 import { LAST_EDITED_AT } from "./manageGathering.data";
 import { daysSince } from "./manageGatheringDates";
 import { DuplicateGatheringButton } from "./DuplicateGatheringButton";
+import { AddEventMonthButton } from "./addMonth/AddEventMonthButton";
 import {
   OverviewDetailRows,
   OverviewEditButton,
@@ -232,7 +233,12 @@ export function OverviewTab({
         </div>
         {/* "Duplicate gathering" (PRD-190). A host with a monthly one-off used to
             retype the entire wizard every time. */}
-        {!isHouseEvent && <DuplicateGatheringButton slug={slug} />}
+        {!isHouseEvent && (
+          <div className={styles.overviewFooterActions}>
+            <DuplicateGatheringButton slug={slug} />
+            <AddEventMonthButton fromSlug={slug} variant="ghost" size="sm" />
+          </div>
+        )}
       </div>
 
       {editing?.kind === "field" && (

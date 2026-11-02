@@ -53,13 +53,15 @@ export type StudioSupporterIdentityDTO =
 
 export interface StudioSupportingItemDTO {
   artist: StudioArtistRefDTO;
-  since: string;
+  /** Null while the listener is shown by default and never changed it. */
+  since: string | null;
   shownAs: StudioSupporterIdentityDTO;
   supportLinks: StudioSupportLinkDTO[];
   isFollowing: boolean;
 }
 
-/** GET /me/studio-listening/supporting, newest first. */
+/** GET /me/studio-listening/supporting: the artists the caller listened to
+ *  in the last 28 days and did not hide from. */
 export interface StudioSupportingResponseDTO {
   items: StudioSupportingItemDTO[];
 }

@@ -1712,14 +1712,14 @@ export const marketing: Catalog = {
   "listBusiness.step2.attributes.removeAria": "Remover {attribute}",
   "listBusiness.step2.highlights.label": "Escolhe até 3 para o teu cartão",
   "listBusiness.step2.highlights.helper":
-    "Aparecem no teu cartão do diretório, a seguir ao escalão de preço.",
+    "Mostramos estes detalhes no teu cartão do diretório, a seguir ao escalão de preço.",
   "listBusiness.step2.highlights.counter": "{count} de 3",
   "listBusiness.step2.highlights.empty":
     "Marca alguns detalhes acima e depois escolhe aqui os teus três.",
   "listBusiness.step2.highlights.aria": "Destaques do teu cartão",
   "listBusiness.step2.practices.label": "Práticas de inclusão (opcional)",
   "listBusiness.step2.practices.helper":
-    "Práticas para lá do nosso compromisso afirmativo que qualquer pessoa pode confirmar quando vier.",
+    "Marca o que fazes além do nosso compromisso afirmativo. Quem visitar o teu espaço pode confirmar no local.",
   "listBusiness.step2.practices.aria": "Práticas de inclusão",
   "listBusiness.step2.practices.policyUrlLabel":
     "Link para a tua política de espaço seguro",
@@ -1864,16 +1864,17 @@ export const marketing: Catalog = {
   "listingFacts.payment.multibanco": "Multibanco",
   "listingFacts.payment.cash": "Dinheiro",
   "listingFacts.payment.cashOnly": "Só dinheiro",
-  "listingFacts.practice.chosenName": "Usa o nome que escolheste",
+  "listingFacts.practice.chosenName":
+    "Trata as pessoas pelo nome que escolheram",
   "listingFacts.practice.chosenNameHelp":
-    "A tua equipa pergunta e usa o nome que cada pessoa dá, diga o documento o que disser.",
+    "A tua equipa pergunta a cada pessoa que nome usa e trata-a por esse nome, mesmo que o documento de identificação diga outro.",
   "listingFacts.practice.saferSpacePolicy":
-    "Política de espaço seguro publicada",
+    "Tem uma política de espaço seguro pública",
   "listingFacts.practice.saferSpacePolicyHelp":
-    "Uma política escrita que qualquer pessoa pode ler antes de vir. Junta o link em baixo.",
-  "listingFacts.practice.namedContact": "Alguém com quem falar no local",
+    "Escreveste regras de convivência que qualquer pessoa pode ler antes de vir. Cola o link no campo em baixo.",
+  "listingFacts.practice.namedContact": "Tem uma pessoa de contacto no local",
   "listingFacts.practice.namedContactHelp":
-    "Uma pessoa identificada em cada turno que trata de tudo o que correr mal.",
+    "Em cada turno, uma pessoa da equipa resolve qualquer problema, e quem vem sabe a quem se dirigir.",
   "listingFacts.practice.harmReduction": "Redução de riscos disponível",
   "listingFacts.practice.harmReductionHelp":
     "Água, preservativos, testes ou naloxona à mão, e uma equipa que sabe onde estão.",
@@ -3539,7 +3540,7 @@ export const marketing: Catalog = {
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-11-02.headline":
-    "Os concertos ganham um editor novo, e as fotos no chat deslizam suavemente de uma para a outra.",
+    "Os concertos ganham um editor novo, e os admins já escolhem negócios parceiros para o diretório.",
   "changelog.releases.2026-11-01.headline":
     "A Discografia e os Mixes numa página de persona apontam para o Studio para carregar lançamentos.",
   "changelog.releases.2026-10-30.headline":
@@ -3796,10 +3797,54 @@ export const marketing: Catalog = {
     "Pesquisa membros ao definir limites de convites",
   "changelog.entries.invite-quotas-search.body":
     "Quem administra vê os convites de cada membro este mês face ao limite, e muda-o ali mesmo.",
+  "changelog.entries.more-menu-clears-studio-player.title":
+    "A Pesquisa no menu Mais já não fica escondida atrás do leitor do Studio",
+  "changelog.entries.more-menu-clears-studio-player.body":
+    "No telemóvel, o menu deixa espaço acima do leitor, por isso a última ligação fica à vista.",
+  "changelog.entries.add-a-month-of-events.title":
+    "Adiciona um mês de eventos de uma vez",
+  "changelog.entries.add-a-month-of-events.body":
+    "Quem organiza com acesso antecipado escolhe datas num calendário e publica um evento por data a partir de um evento seu.",
+  "changelog.entries.past-events-sit-at-their-date.title":
+    "Eventos passados ficam na sua data no feed",
+  "changelog.entries.past-events-sit-at-their-date.body":
+    "Um evento publicado depois de acontecer fica agora no feed na data em que aconteceu.",
+  "changelog.entries.local-directory-filters-sidebar.title":
+    "Filtros do diretório local numa barra lateral",
+  "changelog.entries.local-directory-filters-sidebar.body":
+    "Como em Membros, os filtros ficam em secções ao lado dos lugares, e a lista, o mapa e as lojas começam mais acima.",
+  "changelog.entries.chat-composer-above-iphone-keyboard.title":
+    "Caixa de mensagem acima do teclado do iPhone",
+  "changelog.entries.chat-composer-above-iphone-keyboard.body":
+    "No iOS 26 a conversa ajusta-se ao ecrã visível, vês o que escreves e já não fica uma faixa vazia em baixo.",
+  "changelog.entries.read-ticks-on-every-message.title":
+    "Vistos em todas as mensagens",
+  "changelog.entries.read-ticks-on-every-message.body":
+    "Quando alguém lê várias mensagens seguidas, cada uma que enviaste mostra agora os vistos.",
+  "changelog.entries.photo-uploads-say-to-wait.title":
+    "Os carregamentos de fotos pedem para esperar",
+  "changelog.entries.photo-uploads-say-to-wait.body":
+    "Enquanto uma foto carrega, avisamos que pode demorar até um minuto, para ninguém a adicionar duas vezes.",
+  "changelog.entries.admin-member-drawer-see-profile.title":
+    "As administradoras abrem o perfil de uma pessoa a partir do painel",
+  "changelog.entries.admin-member-drawer-see-profile.body":
+    "Um botão Ver perfil está logo no início do rodapé do painel e vai direto à página dessa pessoa.",
   "changelog.entries.persona-long-names-fit.title":
     "Os nomes longos de persona cabem no primeiro ecrã",
   "changelog.entries.persona-long-names-fit.body":
     "As páginas em estilo cartaz encolhem um nome longo para duas ou três linhas, e os botões ficam à vista.",
+  "changelog.entries.studio-playlist-save-waits-for-a-change.title":
+    "Guardar os detalhes da playlist espera por uma alteração",
+  "changelog.entries.studio-playlist-save-waits-for-a-change.body":
+    "Guardar detalhes fica desativado até mudares o nome, a descrição ou como aparece.",
+  "changelog.entries.studio-top-listeners-on-by-default.title":
+    "Quem mais ouve aparece por defeito",
+  "changelog.entries.studio-top-listeners-on-by-default.body":
+    "Quem ouves vê-te entre quem mais o ouve com a tua conta, e podes desligar isso na página de cada artista.",
+  "changelog.entries.studio-new-album-opens-at-top.title":
+    "Abrir outro álbum começa no topo",
+  "changelog.entries.studio-new-album-opens-at-top.body":
+    "Escolher um lançamento em Mais de, num álbum ou artista, leva-te agora direto à capa.",
   "changelog.entries.studio-long-titles-fit.title":
     "Os títulos longos de lançamentos cabem no Studio",
   "changelog.entries.studio-long-titles-fit.body":
@@ -3808,10 +3853,26 @@ export const marketing: Catalog = {
     "As fotos no chat deslizam suavemente quando passas o dedo",
   "changelog.entries.chat-photos-swipe-smoothly.body":
     "A foto seguinte entra ao lado da que estás a arrastar, e basta um gesto rápido para avançar.",
+  "changelog.entries.more-menu-icon-grid.title":
+    "O menu Mais no telemóvel está mais calmo e com as cores da marca",
+  "changelog.entries.more-menu-icon-grid.body":
+    "Comunidades e negócios locais abrem em cartões coral e ameixa, e as restantes páginas ficam numa lista tranquila.",
   "changelog.entries.gigs-editor-redo.title":
     "Gere os teus concertos numa secção renovada do editor de persona",
   "changelog.entries.gigs-editor-redo.body":
     "Cada concerto mostra data, local, hora de abertura e estado, e o formulário traz cartaz, link de bilhetes e pré-visualização.",
+  "changelog.entries.directory-partners.title":
+    "Vê os negócios parceiros no topo do diretório",
+  "changelog.entries.directory-partners.body":
+    "Admins escolhem até 12 negócios parceiros, com uma nota opcional, mostrados numa fila acima dos resultados do diretório.",
+  "changelog.entries.listing-editor-tabs-under-top-bar.title":
+    "Os separadores do editor de espaços ficam presos à barra de topo no telemóvel",
+  "changelog.entries.listing-editor-tabs-under-top-bar.body":
+    "Ficam logo abaixo da barra e sobem com ela quando fazes scroll, e o formulário já não aparece por cima.",
+  "changelog.entries.poster-persona-banners.title":
+    "Mostra o teu banner nas páginas de persona Cartaz",
+  "changelog.entries.poster-persona-banners.body":
+    "Agora ocupa toda a largura no topo da página, e a opção Borda do banner também funciona aí.",
   "changelog.entries.chat-reaches-screen-edge.title":
     "As conversas no iPhone chegam ao fundo do ecrã",
   "changelog.entries.chat-reaches-screen-edge.body":
@@ -10626,6 +10687,9 @@ export const marketing: Catalog = {
   "directory.online.emptyFiltered.title": "Nenhum negócio online corresponde",
   "directory.online.emptyFiltered.body":
     "Tenta outra categoria ou outra pesquisa, ou limpa os filtros para ver todos os negócios online.",
+  "directory.partners.title": "Negócios parceiros",
+  "directory.partners.sub":
+    "Negócios queer com quem trabalhamos e de quem gostamos",
   "directory.empty.title": "Nenhum lugar corresponde a esses filtros",
   "directory.empty.body":
     "Tenta uma categoria mais ampla, menos filtros ou outra pesquisa, ou limpa os filtros para ver tudo.",
@@ -10745,10 +10809,6 @@ export const marketing: Catalog = {
   "directory.detail.whatsHere.titleElsewhere": "O que <em>esperar</em>",
   "directory.detail.whatsHere.practicesTitle": "Práticas de inclusão",
   "directory.detail.whatsHere.policyLink": "Ler a política de espaço seguro",
-  "directory.detail.whatsHere.suggestEdit":
-    "Sugerir uma alteração a estes detalhes",
-  "directory.detail.whatsHere.suggestEditAria":
-    "Sugerir uma alteração a estes detalhes: {name}",
   "directory.detail.gettingIn.title": "Antes de <em>ir</em>",
   "directory.detail.gettingIn.titleOnline": "Convém <em>saber</em>",
   "directory.detail.gettingIn.entry": "Como se entra",
@@ -11836,6 +11896,7 @@ export const marketing: Catalog = {
   "local.filter.ownedByNote":
     "Nas palavras de quem é dono. Escolhe mais do que uma para ver os sítios que correspondem a qualquer uma.",
   "local.filter.filters": "Filtros",
+  "local.filter.hideFilters": "Ocultar filtros",
   "local.filter.quickFiltersLabel": "Filtros rápidos",
   "local.filter.openNow": "Aberto agora",
   "local.filter.outAndAbout": "Itinerante",

@@ -1,4 +1,11 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 import { useMediaQuery, usePrefersReducedMotion } from "../../shared/hooks";
 import { mediaMax } from "../../shared/theme/breakpoints";
 import {
@@ -81,7 +88,7 @@ export function useDirectoryMapView(
   );
   const [expandedId, setExpandedId] = useState<string | null>(null);
   // A place picked straight off the map. It takes over the sidebar (one card,
-  // its own heading) instead of being hunted for inside a parish list.
+  // its own heading), so nobody has to hunt for it inside a parish list.
   const [focusedId, setFocusedId] = useState<string | null>(null);
   // The card under the pointer or keyboard focus, mirrored onto its pin.
   const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -111,8 +118,8 @@ export function useDirectoryMapView(
     return byFreguesia;
   }, [mappable]);
 
-  // Resolved rather than stored, so a place that upstream filters drop stops
-  // holding the sidebar hostage.
+  // Resolved from the id on every render, so a place that upstream filters
+  // drop stops holding the sidebar hostage.
   const focusedPlace = useMemo(
     () => mappable.find((place) => place.id === focusedId) ?? null,
     [mappable, focusedId],
@@ -237,3 +244,52 @@ export function useDirectoryMapView(
 }
 
 export type DirectoryMapViewState = ReturnType<typeof useDirectoryMapView>;
+
+// Below this stage width the floating list leaves too little map beside it:
+// at 568px the 280px list floor leaves 276px of map, less than the list
+// itself. At 652px (a 1024px window with the filter sidebar open) it leaves
+// 360px, so the side panel stays from 640px up.
+const NARROW_MAP_STAGE_WIDTH = 640;
+
+/** Whether the map stage is narrow enough that the list docks as a drawer
+ *  along the map's bottom edge. The stage's own width decides it (the filter
+ *  sidebar beside the results column narrows it on any window), measured
+ *  here because size containment on the stage or an ancestor would trap the
+ *  full screen stage, which is `position: fixed`, inside the column. Measured
+ *  before the first paint, so the list never shows in the wrong place.
+ *  `hasSwitched` turns true once the layout has changed after that first
+ *  measurement, which lets the list fade in at its new place. While disabled
+ *  (a phone layout, or full screen) the last answer holds. */
+export function useNarrowMapStage(
+  stageRef: RefObject<HTMLElement | null>,
+  { isEnabled }: { isEnabled: boolean },
+) {
+  const [stageLayout, setStageLayout] = useState({
+    isNarrow: false,
+    hasSwitched: false,
+  });
+  const hasMeasuredRef = useRef(false);
+
+  useLayoutEffect(() => {
+    const stage = stageRef.current;
+    if (!stage || !isEnabled) return;
+    function measureStage() {
+      if (!stage) return;
+      const isNarrowNow =
+        stage.getBoundingClientRect().width < NARROW_MAP_STAGE_WIDTH;
+      const hasMeasuredBefore = hasMeasuredRef.current;
+      hasMeasuredRef.current = true;
+      setStageLayout((current) =>
+        current.isNarrow === isNarrowNow
+          ? current
+          : { isNarrow: isNarrowNow, hasSwitched: hasMeasuredBefore },
+      );
+    }
+    measureStage();
+    const observer = new ResizeObserver(measureStage);
+    observer.observe(stage);
+    return () => observer.disconnect();
+  }, [stageRef, isEnabled]);
+
+  return stageLayout;
+}

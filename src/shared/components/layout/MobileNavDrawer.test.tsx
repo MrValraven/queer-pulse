@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -144,7 +144,9 @@ describe("MobileNavDrawer Back-gesture handling", () => {
     await user.click(screen.getByRole("button", { name: "open drawer" }));
     // The drawer's links navigate with `replace`, which overwrites the pushed
     // entry — popping on top of that would undo the navigation itself.
-    await user.click(screen.getByRole("link", { name: /search/i }));
+    await user.click(
+      within(screen.getByRole("dialog")).getAllByRole("link")[0]!,
+    );
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(back).not.toHaveBeenCalled();

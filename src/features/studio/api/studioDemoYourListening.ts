@@ -3,6 +3,7 @@ import type {
   StudioListeningRange,
   StudioListeningSummaryDTO,
   StudioListensPageDTO,
+  StudioSupportingResponseDTO,
 } from "./studioListening.types";
 import { STUDIO_LISTENING_TOP_MAX } from "./studioListening.types";
 import { DEMO_ARTISTS } from "./studioDemo.data";
@@ -15,12 +16,14 @@ import {
   DEMO_LISTEN_SEEDS,
   DEMO_RECENT_PAGE_SIZE,
 } from "./studioDemoYourListening.data";
-import { resetDemoYourSupporters } from "./studioDemoYourSupporters";
+import {
+  demoSupportingOf,
+  resetDemoYourSupporters,
+} from "./studioDemoYourSupporters";
 
 export {
   demoDeleteStudioSupporter,
   demoPutStudioSupporter,
-  demoStudioListeningSupporting,
   demoStudioSupporterState,
 } from "./studioDemoYourSupporters";
 
@@ -165,4 +168,19 @@ export function demoStudioListeningRecent(
     nextCursor:
       nextOffset < newestFirst.length ? `${CURSOR_PREFIX}${nextOffset}` : null,
   };
+}
+
+/** "Artists who see your name": every artist played in the last 28 days,
+ *  the most recently played first, minus any the viewer hid from. */
+export function demoStudioListeningSupporting(): StudioSupportingResponseDTO {
+  const windowHours = RANGE_DAYS["4w"] * 24;
+  const newestFirst = history()
+    .filter((row) => row.hoursAgo < windowHours)
+    .sort((left, right) => left.hoursAgo - right.hoursAgo);
+  const recentArtistIds = new Set<string>();
+  for (const row of newestFirst) {
+    const track = row.trackId === null ? undefined : tracks().get(row.trackId);
+    if (track) recentArtistIds.add(track.release.artist.id);
+  }
+  return demoSupportingOf([...recentArtistIds]);
 }

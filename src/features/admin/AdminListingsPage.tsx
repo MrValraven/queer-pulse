@@ -1,4 +1,4 @@
-import { useRef, useState, type FocusEvent } from "react";
+import { useEffect, useRef, useState, type FocusEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
   AnimatePresence,
@@ -27,6 +27,8 @@ import { ListingPreviewDrawer } from "./ListingPreviewDrawer";
 import { EditSuggestionsSection } from "./EditSuggestionsSection";
 import { ListingClaimsSection } from "./ListingClaimsSection";
 import { ListingDraftsSection } from "./ListingDraftsSection";
+import { AdminDirectoryPartnersSection } from "./AdminDirectoryPartnersSection";
+import { listingViewsFor, type ListingViewTab } from "./adminListingViews";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import {
@@ -46,12 +48,16 @@ import {
 } from "./api/adminListings.api";
 import styles from "./AdminListingsPage.module.css";
 
-type ViewTab = "queue" | "editSuggestions" | "claims" | "drafts";
-const VIEWS: ViewTab[] = ["queue", "editSuggestions", "claims"];
+type ViewTab = ListingViewTab;
 
 /** The search param that deep-links a view, e.g. `?view=claims`. The
  *  submissions queue is the default and keeps the URL bare. */
 const VIEW_PARAM = "view";
+
+/** Room kept beside the chosen view's segment when the phone strip scrolls
+ *  to it, matching the scroller's `scroll-padding-inline` so its focus ring
+ *  shows. */
+const SEGMENT_EDGE_ROOM = 8;
 
 /** Mirrors the backend's `DEFAULT_LIST_LIMIT`: `GET
  *  /admin/listings/edit-suggestions` answers with at most this many rows, so a
@@ -65,15 +71,15 @@ function isViewTab(
   return views.some((viewOption) => viewOption === value);
 }
 
-/** The views this viewer may open. Unfinished drafts are Admin only
- *  (`GET /admin/listing-drafts` is `@Roles(Admin)`, and reaching out goes
- *  through the Admin-only official thread), so a moderator or a
+/** The views this viewer may open. Unfinished drafts and directory
+ *  partners are Admin only (their routes are `@Roles(Admin)`, and reaching
+ *  out goes through the Admin-only official thread), so a moderator or a
  *  `directory_moderator` grant holder is never offered a tab the API refuses.
  *  Gated like `ListingPreviewDrawer`'s delegation section. */
 function useListingViews(): ViewTab[] {
   const { role } = useAuth();
   const { demoMode } = useDemoMode();
-  return demoMode || role === "admin" ? [...VIEWS, "drafts"] : VIEWS;
+  return listingViewsFor({ role, isDemoMode: demoMode });
 }
 
 /**
@@ -322,6 +328,33 @@ function ListingViewSwitch({
   const scrollerRef = useRef<HTMLDivElement>(null);
   const hasHiddenViewsAtEnd = useHasHiddenEndContent(scrollerRef);
 
+  // The chosen segment slides into the strip on load and on each change, so
+  // a view past the phone's end edge (Partners) never opens out of sight.
+  // Only the strip's own scrollLeft moves: the page keeps its vertical
+  // position, back-navigation scroll restoration included.
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    const segment = scroller?.querySelector<HTMLElement>(
+      '[aria-pressed="true"]',
+    );
+    if (!scroller || !segment) return;
+    if (scroller.scrollWidth <= scroller.clientWidth) return;
+    const scrollerLeft = scroller.getBoundingClientRect().left;
+    const segmentRect = segment.getBoundingClientRect();
+    const segmentStart =
+      segmentRect.left - scrollerLeft + scroller.scrollLeft - SEGMENT_EDGE_ROOM;
+    const segmentEnd =
+      segmentRect.right -
+      scrollerLeft +
+      scroller.scrollLeft +
+      SEGMENT_EDGE_ROOM;
+    if (segmentStart < scroller.scrollLeft) {
+      scroller.scrollLeft = segmentStart;
+    } else if (segmentEnd > scroller.scrollLeft + scroller.clientWidth) {
+      scroller.scrollLeft = segmentEnd - scroller.clientWidth;
+    }
+  }, [view]);
+
   function revealFocusedSegment(event: FocusEvent<HTMLDivElement>) {
     (event.target as HTMLElement).scrollIntoView({
       block: "nearest",
@@ -488,6 +521,7 @@ function ListingViewLabel({
 function ListingSecondaryView({ view }: { view: Exclude<ViewTab, "queue"> }) {
   if (view === "editSuggestions") return <EditSuggestionsSection />;
   if (view === "claims") return <ListingClaimsSection />;
+  if (view === "partners") return <AdminDirectoryPartnersSection />;
   return <ListingDraftsSection />;
 }
 

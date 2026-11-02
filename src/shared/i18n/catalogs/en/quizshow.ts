@@ -215,8 +215,12 @@ export const quizshow: Catalog = {
   "lobby.dialogSub":
     "The big screen shows a code and a QR code for players to join",
   "lobby.playMode.label": "How people play",
-  "lobby.playMode.solo": "Everyone for themselves",
-  "lobby.playMode.teams": "In teams",
+  "lobby.playMode.soloTitle": "Solo",
+  "lobby.playMode.soloHint": "Everyone plays for themselves",
+  "lobby.playMode.teamsTitle": "Teams",
+  "lobby.playMode.teamsHint": "Players join or start a team on their phone",
+  "lobby.playMode.teamsScoring":
+    "Each team scores its members' average, so team size never decides the winner",
   "lobby.maxTeamSize.label": "Most people per team",
   "lobby.maxTeamSize.none": "No limit",
   "lobby.review.label":
@@ -332,6 +336,7 @@ export const quizshow: Catalog = {
   "errors.team_name_taken": "Another team has that name",
   "errors.team_color_taken": "Another team has that shape. Pick another",
   "errors.team_required": "Pick a team or start one",
+  "errors.team_name_blank": "Give your team a name",
   "errors.team_change_closed": "Teams lock once the game starts",
   "errors.joker_used": "Your joker is already played",
   "errors.joker_not_allowed": "Jokers can't be played on this round",
@@ -408,6 +413,10 @@ export const quizshow: Catalog = {
   "player.extraTimeHint": "Only you and the hosts see this",
   "player.teamTitle": "Pick a team",
   "player.teamJoin": "Join {team}",
+  "player.changeTeam.open": "Change team",
+  "player.changeTeam.start": "Start team",
+  "player.changeTeam.keep": "Keep my team",
+  "player.changeTeam.current": "Your team",
   "player.teamFull": "Full",
   "player.teamMembers_one": "{count} member",
   "player.teamMembers_other": "{count} members",

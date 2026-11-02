@@ -124,27 +124,30 @@ beforeEach(() => {
 });
 
 describe("StudioListeningSupporting", () => {
-  it("lists the artists the demo listener supports with how each sees them", async () => {
+  it("lists every artist the demo listener played lately with how each sees them", async () => {
     render(supportingTree());
     const rows = await findSupportingRows();
-    expect(rows).toHaveLength(2);
-    expect(rows[0]).toHaveTextContent("Vanda Diesel");
-    expect(rows[0]).toHaveTextContent("Shown as Mariana Sol");
-    expect(rows[1]).toHaveTextContent("Shown as Tiago Costa");
+    expect(rows).toHaveLength(6);
+    expect(rows[0]).toHaveTextContent("NIGHTFORM");
+    expect(rows[0]).toHaveTextContent("Shown as Tiago Costa");
     expect(
-      within(rows[1]!).getByRole("list", { name: "Ways to support NIGHTFORM" }),
+      within(rows[0]!).getByRole("list", { name: "Ways to support NIGHTFORM" }),
     ).toBeInTheDocument();
-    expect(within(rows[1]!).getByText(/^Showing since /)).toBeInTheDocument();
+    // Shown by default: no start date to name.
+    expect(within(rows[0]!).queryByText(/^Showing since /)).toBeNull();
     expect(
-      within(rows[1]!).getByRole("link", { name: "NIGHTFORM" }),
+      within(rows[0]!).getByRole("link", { name: "NIGHTFORM" }),
     ).toHaveAttribute("href", expect.stringMatching(/^\/studio\//));
+    expect(rows[1]).toHaveTextContent("Vanda Diesel");
+    expect(rows[1]).toHaveTextContent("Shown as Mariana Sol");
+    expect(within(rows[1]!).getByText(/^Showing since /)).toBeInTheDocument();
   });
 
   it("offers Follow with the row's state", async () => {
     render(supportingTree());
     const rows = await findSupportingRows();
     expect(
-      within(rows[1]!).getByRole("button", { name: /follow/i }),
+      within(rows[0]!).getByRole("button", { name: /follow/i }),
     ).toHaveAttribute("aria-pressed");
   });
 
@@ -153,7 +156,7 @@ describe("StudioListeningSupporting", () => {
     const { unmount } = renderMocked();
     expect(
       screen.getByText(
-        "Turn on Show me among the top listeners on an artist's page to add them here",
+        "Play a track for 30 seconds and its artist shows up here. You appear among their top listeners until you turn it off on their page",
       ),
     ).toBeInTheDocument();
     expect(screen.queryByRole("list", { name: LIST_NAME })).toBeNull();
@@ -168,7 +171,7 @@ describe("StudioListeningSupporting", () => {
     ).toBeInTheDocument();
     expect(
       screen.queryByText(
-        "Turn on Show me among the top listeners on an artist's page to add them here",
+        "Play a track for 30 seconds and its artist shows up here. You appear among their top listeners until you turn it off on their page",
       ),
     ).toBeNull();
   });
@@ -177,14 +180,14 @@ describe("StudioListeningSupporting", () => {
     render(supportingTree());
     const rows = await findSupportingRows();
     fireEvent.click(
-      within(rows[0]!).getByRole("button", {
+      within(rows[1]!).getByRole("button", {
         name: "Stop showing your name to Vanda Diesel",
       }),
     );
     await waitFor(() =>
       expect(screen.queryByRole("link", { name: "Vanda Diesel" })).toBeNull(),
     );
-    expect(screen.getByRole("link", { name: "NIGHTFORM" })).toHaveFocus();
+    expect(screen.getByRole("link", { name: "Lua Cardoso" })).toHaveFocus();
     expect(screen.getByRole("status")).toHaveTextContent(
       "Vanda Diesel no longer sees you among their top listeners",
     );
@@ -206,11 +209,11 @@ describe("StudioListeningSupporting", () => {
     render(supportingTree());
     const rows = await findSupportingRows();
     fireEvent.click(
-      within(rows[0]!).getByRole("button", {
+      within(rows[1]!).getByRole("button", {
         name: "Stop showing your name to Vanda Diesel",
       }),
     );
-    expect(await within(rows[0]!).findByRole("alert")).toHaveTextContent(
+    expect(await within(rows[1]!).findByRole("alert")).toHaveTextContent(
       "We couldn't turn off Show me among the top listeners. We couldn't reach Studio, so this wasn't saved. Check your connection, or try again in a moment",
     );
     expect(screen.getByRole("link", { name: "Vanda Diesel" })).toBeVisible();

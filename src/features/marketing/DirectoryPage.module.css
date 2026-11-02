@@ -1,49 +1,51 @@
-/* The listing CTA and the verification note share one row, so the compact
-   hero gains no height; on narrow screens the note wraps under the button. */
-.heroFoot {
-  position: relative;
+/* A page band: the list view's on phones, and the closing strip's
+   (DirectorySubmitStrip) at every width. Inside the desktop results column
+   (where DirectoryLayout.module.css sets `--directory-view-padding`) the
+   column already spaces the list, so the list drops this padding there. */
+.content {
+  padding: var(--directory-view-padding, 32px 0 var(--section-y-80));
+}
+/* The members directory's count: quiet sentence, with the number shown in
+   the serif italic accent. */
+.count {
+  /* The sentence on the first line, then each note on a full line of its
+     own under it (DirectoryResultsCount, `.countNote`). The lines never
+     depend on the column's width, so hiding the filters sidebar leaves the
+     count, and the results under it, at the same height. */
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px 24px;
-  margin-top: 20px;
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--ink-60);
 }
-.heroNote {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  font-size: var(--text-13);
-  color: rgba(var(--cream-rgb), 0.55);
-}
-.heroNote .live {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--jade);
-  box-shadow: var(--ring-jade);
-}
-
-.content {
-  padding: 32px 0 var(--section-y-80);
-}
-.count {
-  /* Centred inside one control-height box so the count sits on the same line as
-     the controls opposite it, whatever they stack underneath themselves. */
+/* The sentence, centred inside one control-height box so it sits on the
+   same line as the controls opposite it, whatever lines the notes add
+   under it. */
+.countLine {
   display: flex;
   align-items: center;
   min-height: var(--results-control-h, 40px);
-  margin: 0;
-  font-size: var(--text-13-5);
-  color: var(--ink-40);
 }
 .count b {
-  color: var(--text-strong);
+  font-family: var(--serif);
+  font-weight: 400;
+  font-style: italic;
+  font-size: var(--text-20);
+  letter-spacing: -0.005em;
+  color: var(--accent);
 }
 .grid {
   display: grid;
   /* `minmax(0, 1fr)` drops the track's content minimum, so a card with a wide
-     footer wraps inside its column and every column stays the same width. */
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+     footer wraps inside its column and every column stays the same width.
+     Inside the desktop results column `--directory-list-columns` takes over,
+     sizing the cards to the column's own width (see DirectoryLayout.module.css),
+     so they stay a sensible width with the sidebar open or hidden. */
+  grid-template-columns: var(
+    --directory-list-columns,
+    repeat(3, minmax(0, 1fr))
+  );
   gap: 18px;
 }
 .card {
@@ -543,12 +545,15 @@
 
 @media (--wide) {
   .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: var(
+      --directory-list-columns,
+      repeat(2, minmax(0, 1fr))
+    );
   }
 }
 @media (--sm) {
   .grid {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: var(--directory-list-columns, minmax(0, 1fr));
   }
 }
 
@@ -569,17 +574,17 @@
   background: rgba(var(--cream-rgb), 0.07);
 }
 
-/* Shared results header: "showing X of Y" on the left; on phones the near-me
+/* The phone results header: "showing X of Y" on the left, the near-me
    control on the right, and an active-filters row below. Wraps on narrow
-   screens. Sort and the List/Map switcher live up on the filter bar's search
-   row, so this header only reports what the controls found. */
+   screens. Sort lives in the Filters sheet and the List/Map switcher in the
+   sticky toolbar, so this header only reports what the controls found. */
 .resultsHeader {
   padding: 22px 0 0;
 }
 .resultsRow {
   /* One shared height for the controls on this line, so the near-me button
-     keeps the same 40px it has on the desktop search row, and so the privacy
-     note hanging below it can't shift that line off centre. */
+     keeps the same 40px it has on desktop, and so the privacy note hanging
+     below it can't shift that line off centre. */
   --results-control-h: 40px;
   display: flex;
   align-items: flex-start;
@@ -592,7 +597,12 @@
     --results-control-h: 44px;
   }
 }
+/* A note under the count's sentence ("35 on map"), on a full line of its
+   own at every width, start-aligned under the sentence. The near-me and
+   sort notes on the row set the smaller size for quiet notes. */
 .countNote {
+  flex: 0 0 100%;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 .resultsControls {
@@ -723,8 +733,9 @@
 }
 
 /* ── "Use my location" ─────────────────────────────────────────────────────
-   Rides the desktop search row with the other result-shaping controls; on
-   phones it sits in the results header. The note under it carries the
+   Sits on the row above the desktop results with the other result-shaping
+   controls, on the full screen map's search row, and in the results header
+   on phones. The note under it carries the
    privacy promise while the feature is on, so it stays part of the control
    itself. */
 .nearMe {
@@ -734,17 +745,16 @@
   gap: 4px;
   min-width: 0;
 }
-/* Inline (the desktop search row): no box of its own, so the button and the
-   note are placed straight into that row's grid: the button on the field's
-   line, the note on a second line, where its height can't stretch the field or
-   the "Refine" toggle beside it. */
+/* Inline (the full screen map's search row): no box of its own, so the
+   button and the note are placed straight into that row's grid: the button
+   on the field's line, the note on a second line, where its height can't
+   stretch the field or the "Refine" toggle beside it. */
 .nearMeInline {
   display: contents;
 }
 .nearMeInline > .nearMeNote {
   grid-row: 2;
-  /* Spans every column after the search field: near-me, "Refine" and List/Map
-     on the page's bar, near-me and "Refine" in the full screen map's card. */
+  /* Spans every column after the search field: near-me and "Refine". */
   grid-column: 2 / -1;
   /* The two columns it sits under are about as wide as the 34ch cap was for, so
      let the note use them: a refusal message is long, and capping it narrower
@@ -794,9 +804,11 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+/* The icon keeps to the first line when the note wraps: (11.5px × 1.45
+   line − 12px icon) / 2 ≈ 2px from the top. */
 .nearMeNote {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 5px;
   /* Indented to the button's own text, so the caption reads as belonging to
      it and lines up with its words. */
@@ -810,6 +822,7 @@
   inline-size: 12px;
   block-size: 12px;
   flex: none;
+  margin-top: 2px;
 }
 /* "Show me how" rides inside the note's sentence, so it takes the note's type
    and reads as a control through weight and underline alone. */
@@ -853,4 +866,85 @@
 }
 :global([data-theme="dark"]) .nearMePermission {
   color: rgba(var(--cream-rgb), 1);
+}
+
+/* ── Near-me on the desktop row above the results ──────────────────────────
+   DirectoryResultsTop wraps the control in `.topNearMe`. Both boxes drop
+   out, so the button is an item of the row (DirectoryLayout.module.css
+   `.topRow`) beside the Filters toggle, and the note takes a full line of
+   the row under the count and the controls, end-aligned. The sort note
+   (`.sortNote` there) is its twin: the same type, colour, alignment and
+   70ch measure (about 550px). The longest "on" note runs about 390px, so
+   both stay on one line on every desktop column from 1024px windows up,
+   whether the sidebar is open or hidden. The phone results header and the
+   full screen map keep the control as it is above. */
+.topNearMe,
+.topNearMe > .nearMe {
+  display: contents;
+}
+.topNearMe .nearMeNote {
+  order: 1;
+  flex: 0 0 100%;
+  justify-content: flex-end;
+  max-width: none;
+  margin: 4px 0 0;
+}
+.topNearMe .nearMeNote > span {
+  max-width: 70ch;
+}
+/* The Filters toggle's shape (DirectoryLayout.module.css `.filtersBtn`):
+   paper, its border, a 9px radius and its type, so the row reads as one set.
+   The "on" state keeps its plum fill. */
+.topNearMe .nearMeButton {
+  flex: none;
+  gap: 8px;
+  font-size: var(--text-13);
+  border-radius: var(--radius-9);
+  padding: 8px 14px;
+}
+.topNearMe .nearMeButton svg {
+  flex: none;
+  font-size: var(--text-15);
+}
+.topNearMe .nearMeButton:not(.nearMeButtonOn) {
+  color: var(--text-strong);
+  background: var(--paper);
+  border-color: rgba(var(--line-rgb), 0.14);
+}
+:global([data-theme="dark"]) .topNearMe .nearMeButton:not(.nearMeButtonOn) {
+  border-color: rgba(var(--cream-rgb), 0.14);
+}
+@media (hover: hover) and (pointer: fine) {
+  .topNearMe .nearMeButton:not(.nearMeButtonOn):hover {
+    border-color: var(--line-strong);
+  }
+}
+.topNearMe .nearMePermission {
+  border-radius: var(--radius-9);
+}
+/* The label fold: on a results column under 880px the button shows only its
+   crosshair, with the note under it still saying what it is for. The label
+   eases its width and fades, and keeps its text as the button's name. The
+   negative margin takes back the 8px icon gap as it closes. */
+.topNearMe .nearMeLabel {
+  display: inline-block;
+  max-width: 16em;
+  overflow: hidden;
+  white-space: nowrap;
+  transition:
+    max-width 0.26s var(--ease),
+    margin 0.26s var(--ease),
+    opacity 0.2s var(--ease);
+}
+@container directory-results (max-width: 879px) {
+  .topNearMe .nearMeLabel {
+    max-width: 0;
+    margin-inline-start: -8px;
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .topNearMe .nearMeLabel {
+    transition: none;
+  }
 }

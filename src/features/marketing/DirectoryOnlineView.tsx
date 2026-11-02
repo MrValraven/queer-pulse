@@ -12,6 +12,7 @@ import { type DirectoryPlace } from "./directoryPlaces";
 import { type LocalPlace } from "./localPlaces";
 import { DirectoryOnlineCard } from "./DirectoryOnlineCard";
 import { DirectoryOnlineConstellation } from "./DirectoryOnlineConstellation";
+import { DirectoryPartnersRow } from "./DirectoryPartnersRow";
 import { DirectoryServerPageFooter } from "./DirectoryServerPageFooter";
 import { DirectoryAdultLoadNote } from "./DirectoryAdultLoadNote";
 import card from "./DirectoryPage.module.css";
@@ -43,9 +44,11 @@ function DirectoryOnlineSkeleton() {
 }
 
 /**
- * The directory's Online tab: queer-owned businesses that sell online. A
- * plum constellation leads, with every business orbiting the community's
- * pulse, then the businesses themselves as storefront cards. A node and its
+ * The directory's Online tab: queer-owned businesses that sell online. On a
+ * phone a plum constellation leads, with every business orbiting the
+ * community's pulse; on desktop it folds to one line of counts (CSS only, so
+ * the markup is the same everywhere). Then the businesses themselves follow
+ * as storefront cards. A node and its
  * card light up together, the way a pin and its card do on the map.
  *
  * `places` is the server's selling-online pool plus, for a member with the
@@ -144,6 +147,13 @@ export function DirectoryOnlineView({
           places={businesses}
           activeSlug={activeSlug}
           onActivate={setActiveSlug}
+        />
+        {/* The partners that sell online, under the band, so "Sold online"
+            still introduces the tab. Already inside the view's `.wrap`. */}
+        <DirectoryPartnersRow
+          view="online"
+          hasActiveFilters={hasActiveFilters}
+          isPhone={false}
         />
         <div className={s.grid}>
           {businesses.map((place, index) => (

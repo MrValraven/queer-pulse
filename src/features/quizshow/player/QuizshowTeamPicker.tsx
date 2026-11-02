@@ -22,6 +22,10 @@ interface QuizshowTeamPickerProps {
   maxTeamSize: number | null;
   value: TeamChoice;
   onChange: (team: TeamChoice) => void;
+  /** The player's own team when changing team from the lobby; it reads as theirs and never as full. */
+  currentTeamId?: string | null;
+  /** A catalog key shown on the new team's name field, such as a blank name. */
+  nameErrorKey?: string | null;
 }
 
 function firstFreeShape(
@@ -33,24 +37,43 @@ function firstFreeShape(
   );
 }
 
+/** A shape no lobby team shows yet, else any shape free to take. */
+function preferredShape(
+  lobbyShapes: ReadonlySet<QuizshowTeamColorKey>,
+  takenShapes: ReadonlySet<QuizshowTeamColorKey>,
+): QuizshowTeamColorKey {
+  const hasUnusedShape = QUIZSHOW_TEAM_COLOR_KEYS.some(
+    (colorKey) => !lobbyShapes.has(colorKey),
+  );
+  return firstFreeShape(hasUnusedShape ? lobbyShapes : takenShapes);
+}
+
 /** Pick a team that has room, or start one with a name and a shape nobody uses. */
 export function QuizshowTeamPicker({
   lobby,
   maxTeamSize,
   value,
   onChange,
+  currentTeamId = null,
+  nameErrorKey = null,
 }: QuizshowTeamPickerProps) {
   const { t } = useTranslation();
   const groupName = useId();
-  const takenShapes = new Set(lobby.teams.map((team) => team.colorKey));
+  // A player alone in their team leaves it empty by starting another, and the
+  // empty team goes away, so its shape and its place under the limit are free.
+  const otherTeams = lobby.teams.filter(
+    (team) => !(team.teamId === currentTeamId && team.memberCount === 1),
+  );
+  const takenShapes = new Set(otherTeams.map((team) => team.colorKey));
+  const lobbyShapes = new Set(lobby.teams.map((team) => team.colorKey));
   // The draft outlives the choice, so the form keeps its content while it folds away.
   const [draft, setDraft] = useState({
     name: "",
-    colorKey: firstFreeShape(takenShapes),
+    colorKey: preferredShape(lobbyShapes, takenShapes),
   });
   const isStartingTeam = value !== null && "newTeam" in value;
   const isTeamLimitReached =
-    lobby.teams.length >= QUIZSHOW_LIMITS.teamsPerSessionMax;
+    otherTeams.length >= QUIZSHOW_LIMITS.teamsPerSessionMax;
 
   return (
     <fieldset className={styles.group}>
@@ -60,8 +83,11 @@ export function QuizshowTeamPicker({
       <ul className={styles.choiceList}>
         <AnimatePresence initial={false}>
           {lobby.teams.map((team) => {
+            const isCurrent = team.teamId === currentTeamId;
             const isFull =
-              maxTeamSize !== null && team.memberCount >= maxTeamSize;
+              !isCurrent &&
+              maxTeamSize !== null &&
+              team.memberCount >= maxTeamSize;
             const isChosen =
               value !== null &&
               "teamId" in value &&
@@ -87,11 +113,13 @@ export function QuizshowTeamPicker({
                     />
                     <span className={styles.choiceName}>{team.name}</span>
                     <span className={styles.choiceMeta}>
-                      {isFull
-                        ? t("quizshow:player.teamFull")
-                        : t("quizshow:player.teamMembers", {
-                            count: team.memberCount,
-                          })}
+                      {isCurrent
+                        ? t("quizshow:player.changeTeam.current")
+                        : isFull
+                          ? t("quizshow:player.teamFull")
+                          : t("quizshow:player.teamMembers", {
+                              count: team.memberCount,
+                            })}
                     </span>
                   </span>
                 </label>
@@ -110,7 +138,7 @@ export function QuizshowTeamPicker({
           onChange={() => {
             if (isTeamLimitReached) return;
             const colorKey = takenShapes.has(draft.colorKey)
-              ? firstFreeShape(takenShapes)
+              ? preferredShape(lobbyShapes, takenShapes)
               : draft.colorKey;
             setDraft({ ...draft, colorKey });
             onChange({ newTeam: { name: draft.name, colorKey } });
@@ -125,7 +153,10 @@ export function QuizshowTeamPicker({
       </Collapse>
       <Collapse isOpen={isStartingTeam}>
         <div className={styles.newTeam}>
-          <FormField label={t("quizshow:player.teamNameLabel")}>
+          <FormField
+            label={t("quizshow:player.teamNameLabel")}
+            error={nameErrorKey === null ? undefined : t(nameErrorKey)}
+          >
             <input
               type="text"
               value={draft.name}

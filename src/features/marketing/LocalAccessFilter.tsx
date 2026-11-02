@@ -36,6 +36,7 @@ export function LocalAccessFilter({
   onToggleAccess,
   accessCounts,
   isLoadedSetComplete,
+  sectionTitleId,
 }: {
   /** The needs currently filtered on, in canonical question order. */
   access: AccessibilitySlug[];
@@ -45,6 +46,10 @@ export function LocalAccessFilter({
   accessCounts: Record<AccessibilitySlug, number>;
   /** True once every page of places has loaded, so a zero count is final. */
   isLoadedSetComplete: boolean;
+  /** Given inside a desktop sidebar section, whose header names the group:
+   *  the legend is left out and the fieldset is labelled by the header's
+   *  title. */
+  sectionTitleId?: string;
 }) {
   const { t } = useTranslation();
   // Inside the Refine drawer a ticked chip pops its tick in and its
@@ -52,10 +57,17 @@ export function LocalAccessFilter({
   const glide = useRefineGlide();
 
   return (
-    <fieldset className={s.accessGroup}>
-      <legend className={s.groupLabel}>
-        {t("marketing:local.filter.accessLabel")}
-      </legend>
+    <fieldset
+      className={[s.accessGroup, sectionTitleId && s.flush]
+        .filter(Boolean)
+        .join(" ")}
+      aria-labelledby={sectionTitleId}
+    >
+      {!sectionTitleId && (
+        <legend className={s.groupLabel}>
+          {t("marketing:local.filter.accessLabel")}
+        </legend>
+      )}
       <p className={s.accessNote}>{t("marketing:local.filter.accessNote")}</p>
       <m.div {...glide.row} className={s.accessChips}>
         {ACCESSIBILITY_QUESTIONS.map((question) => {

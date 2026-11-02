@@ -1,0 +1,92 @@
+/* Add a month of events: the page frame. One column on the app's cream
+   ground; the side gutter comes from the shared `.wrap`. Each section styles
+   its own parts in its component's module. */
+
+.page {
+  padding: 40px 0 var(--section-y-112);
+}
+
+.column {
+  max-width: var(--maxw-text);
+}
+
+/* ── Head ── */
+.head {
+  margin-bottom: var(--gap-lg);
+}
+.eyebrow {
+  margin-bottom: 12px;
+  color: var(--accent-ink);
+}
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-display);
+  font-weight: 400;
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+  color: var(--text-strong);
+  text-wrap: balance;
+}
+.lede {
+  max-width: 52ch;
+  margin: 14px 0 0;
+  font-size: var(--text-15);
+  line-height: 1.55;
+  color: var(--ink-60);
+  text-wrap: pretty;
+}
+
+.draftOffer {
+  padding-bottom: var(--gap-lg);
+}
+
+/* ── Sections ── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--section-y-48);
+  transition: opacity var(--dur-base) var(--ease);
+}
+
+/* The form waits, dimmed and inert, while the saved-month offer is open. */
+.formWaiting {
+  opacity: 0.5;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  /* Scrolling to a section clears the fixed nav band. */
+  scroll-margin-top: var(--section-y-96);
+}
+
+.sectionHeading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-heading);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.sectionHeading:focus {
+  outline: none;
+}
+.sectionHeading:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.sectionLede {
+  margin: 0;
+  max-width: 62ch;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.failure {
+  padding-top: var(--gap-sm);
+}

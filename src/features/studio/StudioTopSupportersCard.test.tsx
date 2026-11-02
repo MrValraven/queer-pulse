@@ -66,7 +66,7 @@ beforeEach(() => {
 });
 
 describe("StudioTopSupportersCard", () => {
-  it("ranks Mariana's supporters with the identity each chose, linked where it may be", async () => {
+  it("ranks Mariana's top listeners with the identity each picked, linked where it may be", async () => {
     render(
       <TestProviders>
         <StudioTopSupportersCard
@@ -94,9 +94,7 @@ describe("StudioTopSupportersCard", () => {
     ).toHaveAttribute("href", "/members/anika");
     expect(within(list).getByText("Pátio Coletivo").closest("a")).toBeNull();
     expect(list.textContent).not.toMatch(/\d+ (plays|listens)/);
-    expect(
-      screen.getByText("Showing themselves as top listeners: 7"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Listeners shown: 5")).toBeInTheDocument();
   });
 
   it("renders two account supporters with the same name and no link without a duplicate key", () => {
@@ -128,7 +126,7 @@ describe("StudioTopSupportersCard", () => {
     expect(screen.getAllByText("Sam")).toHaveLength(2);
   });
 
-  it("floors the opted-in count and shows the empty line", () => {
+  it("floors the count of listeners shown and shows the empty line", () => {
     mocks.supporters = {
       supporters: { identities: [], optedInCount: withheld },
       loadState: loadedState(),
@@ -136,11 +134,11 @@ describe("StudioTopSupportersCard", () => {
     renderMocked();
     expect(
       screen.getByText(
-        "When a listener turns on Show me among the top listeners, they show up here",
+        "When someone plays your music for 30 seconds, they show up here unless they turned off Show me among the top listeners",
       ),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Showing themselves as top listeners: Fewer than 5"),
+      screen.getByText("Listeners shown: Fewer than 5"),
     ).toBeInTheDocument();
     expect(screen.queryByRole("list")).toBeNull();
   });

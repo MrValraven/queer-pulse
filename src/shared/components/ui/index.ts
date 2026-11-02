@@ -160,4 +160,5 @@ export {
 export { Calendar, type CalendarProps } from "./Calendar";
 export { RangeCalendar, type RangeCalendarProps } from "./RangeCalendar";
 export { default as PhotoReframeModal } from "./PhotoReframeModal";
+export { UploadWaitNote } from "./UploadWaitNote";
 export { useTablistKeys } from "./useTablistKeys";

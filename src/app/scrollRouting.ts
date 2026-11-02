@@ -32,11 +32,20 @@ export function scrollKeyForPath(pathname: string, historyKey: string): string {
  * Same pathname + a different query string means the visitor is re-filtering the
  * page they are already on, so their scroll offset must survive it. A changed
  * pathname is a real navigation and still resets to the top.
+ *
+ * The `id` param is the one exception: it names WHICH thing the page shows (an
+ * album, artist, track or article, as on `/studio/album?id=` and
+ * `/studio/artist?id=`), so a changed `id` is a different page and starts at
+ * the top, while every other param change stays a re-filter.
  */
 export function isSameRouteQueryChange(
   previous: ScrollRouteLocation | null,
   next: ScrollRouteLocation,
 ): boolean {
   if (!previous) return false;
-  return previous.pathname === next.pathname && previous.search !== next.search;
+  if (previous.pathname !== next.pathname) return false;
+  if (previous.search === next.search) return false;
+  const previousEntityId = new URLSearchParams(previous.search).get("id");
+  const nextEntityId = new URLSearchParams(next.search).get("id");
+  return previousEntityId === nextEntityId;
 }

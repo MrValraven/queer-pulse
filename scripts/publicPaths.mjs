@@ -60,6 +60,8 @@ export const GATED_PATTERNS = [
   "/rsvp",
   "/host",
   "/create-gathering",
+  // Mirrors authGate.ts
+  "/create-gathering/*",
   // Pulse Live's player screen (quizshow), members only. The presenter and the remote sit under /gatherings/* above.
   "/play",
   "/play/*",

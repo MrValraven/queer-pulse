@@ -230,6 +230,31 @@
   font-weight: 600;
 }
 
+.changeTeam {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.changeTeamButton {
+  align-self: flex-start;
+}
+
+/* The button's chevron turns over while the picker is open. */
+.changeTeamChevron {
+  flex-shrink: 0;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.changeTeamChevronOpen {
+  transform: rotate(180deg);
+}
+
+/* Keeping the current team is a quiet, own-width button under the team rows. */
+.keepTeamButton {
+  align-self: flex-start;
+}
+
 .statusLine {
   display: flex;
   align-items: center;

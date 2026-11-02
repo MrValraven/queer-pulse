@@ -1236,6 +1236,7 @@ export const admin: Catalog = {
     "Não foi possível tirar uma amostra agora. Tenta daqui a pouco.",
 
   "members.drawer.verifiedChip": "Pessoa verificada",
+  "members.drawer.seeProfileCta": "Ver perfil",
   "members.drawer.verifyCta": "Verificar",
   "members.drawer.verifiedToast": "Verificámos {name}.",
   "members.drawer.messageCta": "Mensagem",
@@ -2381,6 +2382,7 @@ export const admin: Catalog = {
   "adminListings.view.editSuggestions": "Sugestões de edição",
   "adminListings.view.claims": "Reivindicações",
   "adminListings.view.drafts": "Rascunhos por acabar",
+  "adminListings.view.partners": "Parceiros",
   "adminListings.remove.cta": "Eliminar",
   "adminListings.actions.moreAriaLabel": "Mais ações para {name}",
   "adminListings.remove.toast.removed": "Anúncio eliminado: {name}.",
@@ -9748,6 +9750,9 @@ export const admin: Catalog = {
   "earlyAccess.feature.quizshow.name": "Pulse Live",
   "earlyAccess.feature.quizshow.description":
     "Organizar jogos de quiz ao vivo em eventos e em qualquer outro lado. Para jogar basta um código",
+  "earlyAccess.feature.eventBatch.name": "Adicionar um mês de eventos",
+  "earlyAccess.feature.eventBatch.description":
+    "Quem organiza adiciona várias datas de uma vez a partir de um dos seus eventos",
   "earlyAccess.page.title": "Acesso <em>antecipado</em>",
   "earlyAccess.page.subtitle":
     "Pessoas a testar funcionalidades antes do lançamento. A administração ativa o acesso na gaveta de cada membro, em Membros.",
@@ -9913,4 +9918,96 @@ export const admin: Catalog = {
   "utilities.pdf.announce.cutRemoved": "Divisão removida",
   "utilities.pdf.announce.undone": "Edição desfeita",
   "utilities.pdf.announce.redone": "Edição refeita",
+  // ── Parceiros do diretório (só Admin) ─────────────────────────────────────
+  "directoryPartners.heading": "Negócios parceiros",
+  "directoryPartners.intro":
+    "Escolhe os negócios com quem temos parceria. Aparecem numa fila no topo do diretório, por esta ordem.",
+  "directoryPartners.count": "{count} de {max}",
+  "directoryPartners.addCta": "Adicionar parceiro",
+  "directoryPartners.full":
+    "A fila leva {max} parceiros. Remove um para adicionares outro",
+  "directoryPartners.empty.title": "Ainda não há parceiros",
+  "directoryPartners.empty.body":
+    "Adiciona um negócio e ele aparece no topo do diretório para toda a gente",
+  "directoryPartners.loadError.title": "Não conseguimos carregar os parceiros",
+  "directoryPartners.loadError.retryCta": "Carregar os parceiros de novo",
+  "directoryPartners.row.moveUpCta": "Subir",
+  "directoryPartners.row.moveUpAria": "Subir {name}",
+  "directoryPartners.row.moveDownCta": "Descer",
+  "directoryPartners.row.moveDownAria": "Descer {name}",
+  "directoryPartners.row.editNoteCta": "Editar nota",
+  "directoryPartners.row.editNoteAria": "Editar a nota de {name}",
+  "directoryPartners.row.addNoteCta": "Adicionar uma nota",
+  "directoryPartners.row.addNoteAria": "Adicionar uma nota a {name}",
+  "directoryPartners.row.removeCta": "Remover dos parceiros",
+  "directoryPartners.row.removeAria": "Remover {name} dos parceiros",
+  "directoryPartners.row.dragTitle": "Arrasta {name} para outra posição",
+  "directoryPartners.publicState.not_live":
+    "Não aparece: o anúncio não está publicado",
+  "directoryPartners.publicState.closed_for_good":
+    "Não aparece: o negócio fechou de vez",
+  "directoryPartners.publicState.hidden_by_owner":
+    "Não aparece: quem o gere escondeu-o do diretório",
+  "directoryPartners.publicState.moderated":
+    "Não aparece: a moderação tirou-o do diretório",
+  "directoryPartners.publicState.adult_only":
+    "Não aparece: está na categoria 18+, que a fila pública deixa de fora",
+  "directoryPartners.moved": "{name} está agora na posição {position}",
+  "directoryPartners.toast.added": "{name} é agora parceiro",
+  "directoryPartners.toast.removed": "{name} deixou de ser parceiro",
+  "directoryPartners.toast.noteSaved": "Nota guardada",
+  "directoryPartners.addDialog.title": "Adicionar parceiro",
+  "directoryPartners.addDialog.searchLabel": "Pesquisar anúncios publicados",
+  "directoryPartners.addDialog.searchPlaceholder": "Nome do negócio",
+  "directoryPartners.addDialog.searchHint":
+    "Só aparecem aqui anúncios que estão no diretório público",
+  "directoryPartners.addDialog.idle":
+    "Escreve o nome de um negócio para o encontrares",
+  "directoryPartners.addDialog.searching": "A pesquisar",
+  "directoryPartners.addDialog.noResults":
+    "Nenhum anúncio publicado corresponde a {query}",
+  "directoryPartners.addDialog.resultsLabel": "Anúncios encontrados",
+  "directoryPartners.addDialog.alreadyPartner": "Já é parceiro",
+  "directoryPartners.addDialog.searchErrorTitle": "A pesquisa não terminou",
+  "directoryPartners.addDialog.searchRetryCta": "Pesquisar de novo",
+  "directoryPartners.addDialog.chooseFirst": "Escolhe primeiro um negócio",
+  "directoryPartners.addDialog.chosenHeading": "A tua escolha",
+  "directoryPartners.addDialog.changeCta": "Escolher outro negócio",
+  "directoryPartners.addDialog.submitCta": "Adicionar parceiro",
+  "directoryPartners.noteHint":
+    "Aparece no cartão do negócio na fila de parceiros. Deixa vazio para não mostrar nada",
+  "directoryPartners.noteDialog.saveCta": "Guardar nota",
+  "directoryPartners.error.listing_not_found":
+    "Esse anúncio já não existe, por isso não pode ser adicionado",
+  "directoryPartners.error.partner_not_found":
+    "Esse parceiro já foi removido, talvez noutro separador. Recarrega para veres a lista atual",
+  "directoryPartners.error.listing_not_live":
+    "Este anúncio não está agora no diretório público, por isso não pode ser parceiro",
+  "directoryPartners.error.listing_adult_only":
+    "Anúncios 18+ não podem ser parceiros, porque a fila de parceiros é pública para toda a gente",
+  "directoryPartners.error.already_partner": "Este negócio já é parceiro",
+  "directoryPartners.error.partner_limit_reached":
+    "A fila já tem {max} parceiros. Remove um para adicionares outro",
+  "directoryPartners.error.note_too_long":
+    "A nota tem mais de {noteMax} caracteres. Encurta-a e guarda de novo",
+  "directoryPartners.error.order_mismatch":
+    "A lista de parceiros mudou noutro separador, por isso voltou a ordem atual. Move de novo",
+  "directoryPartners.failure.offline":
+    "Estás offline, por isso isto não chegou ao QueerPulse. Verifica a ligação e tenta de novo",
+  "directoryPartners.failure.timeout":
+    "O QueerPulse demorou demasiado a responder. Tenta de novo",
+  "directoryPartners.failure.rateLimited":
+    "Fizeste muitas alterações em pouco tempo. Espera um minuto e tenta de novo",
+  "directoryPartners.failure.server":
+    "O nosso servidor teve um problema. A falha é nossa, tenta de novo daqui a pouco",
+  "directoryPartners.failure.unreachable":
+    "Não conseguimos chegar ao QueerPulse. Verifica a ligação ou tenta de novo daqui a pouco",
+  "directoryPartners.failure.forbidden":
+    "Só admins podem mudar os parceiros do diretório, e esta conta não é admin",
+  "directoryPartners.failure.notFound":
+    "Este servidor ainda não tem parceiros do diretório. Recarrega a página e avisa a equipa técnica se continuar",
+  "directoryPartners.failure.restricted":
+    "Não podes fazer alterações enquanto houver uma restrição de moderação na tua conta",
+  "directoryPartners.failure.unknown":
+    "Isto não seguiu e o servidor não indicou o motivo. Tenta de novo",
 };

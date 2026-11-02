@@ -370,7 +370,7 @@ export const studio: Catalog = {
     "Your persona lives inside your account, and no other member can see the two are linked.",
   "landing.forArtists.numbers.title": "See who listens",
   "landing.forArtists.numbers.body":
-    "Play totals and trends, and the listeners who choose to show their name as supporters.",
+    "Play totals and trends, and your top listeners from the last 28 days, by the name each one picked.",
   "landing.forArtists.tools.title": "Tools for every release",
   "landing.forArtists.tools.body":
     "Scheduled releases, version notes, private preview links, a press kit and albums that play without gaps.",
@@ -423,7 +423,7 @@ export const studio: Catalog = {
   "landing.compare.fans.topic": "Who your fans are",
   "landing.compare.fans.streaming": "Anonymous numbers",
   "landing.compare.fans.platforms": "Buyers and followers",
-  "landing.compare.fans.studio": "Supporters who choose to show their name",
+  "landing.compare.fans.studio": "Top listeners, by the name each one picked",
   "landing.compare.safety.topic": "Safety",
   "landing.compare.safety.streaming": "An explicit tag",
   "landing.compare.safety.platforms": "An explicit tag at most",
@@ -2592,7 +2592,7 @@ export const studio: Catalog = {
     "Studio is the place on QueerPulse where queer artists share their music with members. Listening is free, artists can sell their music directly, and it's open to members our team has given Studio access.",
   "helpLive.faq.tracking.q": "Does Studio keep track of what I listen to?",
   "helpLive.faq.tracking.a":
-    "Yes, privately. Studio keeps a listening history only you can see, on <a>Your listening</a>, where you can pause or clear it. Artists see total plays, with any count from 1 to 4 shown as Fewer than 5, and your name only if you turn on Show me among their top listeners on their page.",
+    "Yes, privately. Studio keeps a listening history only you can see, on <a>Your listening</a>, where you can pause or clear it. Artists see total plays, with any count from 1 to 4 shown as Fewer than 5, and an artist you played in the last 28 days also sees your name among their top listeners. You can turn that off with Show me among the top listeners on their page.",
   "helpLive.faq.saving.q": "How do likes, playlists and following work?",
   "helpLive.faq.saving.a":
     "Tap the heart on an album, a show or a playlist and it waits for you in your <a>library</a> and in the list beside your playlists. Tap the heart on a track and it goes into Liked songs, which only you can see. A playlist can be Public, Connections only or Private, and you can change that any time. Follow an artist from their page to hear when they put out something new.",
@@ -2645,7 +2645,7 @@ export const studio: Catalog = {
   "aboutLive.sec.privacy.num": "02: what you control",
   "aboutLive.sec.privacy.heading": "Listening stays <em>yours</em>",
   "aboutLive.sec.privacy.p1":
-    "Your listening history is yours: only you can see it, and you can pause or clear it any time. Artists see total plays, and your name only if you choose to show it.",
+    "Your listening history is yours: only you can see it, and you can pause or clear it any time. Artists see total plays, and an artist you played in the last 28 days sees your name among their top listeners until you turn that off on their page.",
   "aboutLive.sec.privacy.p2":
     "Artists see plays, followers, saves and public playlist inclusions, and any count from 1 to 4 shows as Fewer than 5.",
   "aboutLive.sec.control.num": "03: how artists keep control",
@@ -2687,7 +2687,7 @@ export const studio: Catalog = {
   "termsLive.sec.stored.num": "03: what Studio stores",
   "termsLive.sec.stored.heading": "What we <em>keep</em>",
   "termsLive.sec.stored.p1":
-    "Studio stores your releases with their audio and artwork, your saves, playlists and follows, your player settings, your listening history while it is on (kept for 13 months, and you can clear it), the artist pages where you chose to show yourself among the top listeners, your purchases (the item, the amount, the reference code, the name on the payment you gave, the status and your supporter wall choice), the ways to get paid an artist lists, any dispute you send along with our team's reply, and any copyright claim or counter-notice you send along with our team's decision. Play totals for each track carry no name.",
+    "Studio stores your releases with their audio and artwork, your saves, playlists and follows, your player settings, your listening history while it is on (kept for 13 months, and you can clear it), the artist pages where you turned off Show me among the top listeners or picked how you appear there, your purchases (the item, the amount, the reference code, the name on the payment you gave, the status and your supporter wall choice), the ways to get paid an artist lists, any dispute you send along with our team's reply, and any copyright claim or counter-notice you send along with our team's decision. Play totals for each track carry no name.",
   "termsLive.sec.stored.p2":
     "Everything Studio stores about you is covered by the QueerPulse <a>privacy policy</a>.",
   "termsLive.sec.takedown.num": "04: takedowns and disputes",
@@ -3675,12 +3675,12 @@ export const studio: Catalog = {
     "Your listening history is paused. Turn it back on and your top artists and tracks start to fill in",
   "listening.supporting.heading": "Artists who see your name",
   "listening.supporting.dek":
-    "They see you among their top listeners, under the name you chose",
+    "Artists you played in the last 28 days see you among their top listeners, as your account or the name you picked on their page",
   "listening.supporting.since": "Showing since {date}",
   "listening.supporting.shownAs": "Shown as {name}",
   "listening.supporting.linksLabel": "Ways to support {name}",
   "listening.supporting.empty":
-    "Turn on Show me among the top listeners on an artist's page to add them here",
+    "Play a track for 30 seconds and its artist shows up here. You appear among their top listeners until you turn it off on their page",
   "listening.supporting.stop": "Stop showing my name",
   "listening.supporting.stopAria": "Stop showing your name to {artist}",
   "listening.supporting.pausedNote":
@@ -3715,7 +3715,7 @@ export const studio: Catalog = {
   "settingsLive.history.title": "What Studio <em>keeps</em> for you",
   "supporter.heading": "Show me among {persona}'s top listeners",
   "supporter.body":
-    "{persona} sees the name and photo you pick among their top listeners, ranked by how much you played them in the last 28 days",
+    "{persona} sees the name and photo you pick among their top listeners, ranked by how much you played them in the last 28 days. It starts on as your account, and you can turn it off any time",
   "supporter.pausedNote":
     "While your history is paused, you don't appear among their top listeners",
   "supporter.pickerLegend": "How {persona} sees you",
@@ -3729,6 +3729,8 @@ export const studio: Catalog = {
   "supporter.saveFailed": "We couldn't save how you appear",
   "supporter.removeFailed":
     "We couldn't turn off Show me among the top listeners",
+  "supporter.turnOnFailed":
+    "We couldn't turn on Show me among the top listeners",
   "numbers.column.plays": "Plays",
   "numbers.plays.showsNotCounted": "Not counted for shows",
   "numbers.plays.title": "Plays",
@@ -3744,10 +3746,10 @@ export const studio: Catalog = {
   "numbers.plays.empty": "No plays in the last 28 days yet",
   "numbers.supporters.heading": "Top listeners",
   "numbers.supporters.dek":
-    "Listeners who chose to show themselves, ranked by their plays in the last 28 days",
-  "numbers.supporters.optedIn": "Showing themselves as top listeners: {value}",
+    "Your listeners from the last 28 days, ranked by their plays, minus anyone who turned off Show me among the top listeners",
+  "numbers.supporters.optedIn": "Listeners shown: {value}",
   "numbers.supporters.empty":
-    "When a listener turns on Show me among the top listeners, they show up here",
+    "When someone plays your music for 30 seconds, they show up here unless they turned off Show me among the top listeners",
   "numbers.supporters.listLabel": "Top listeners of {name}",
   "errors.reason.studio_supporter_artist_not_found":
     "This artist is not available to show your name to",

@@ -1,31 +1,18 @@
 import { useId } from "react";
-import { RefineGroup, RefineNote, Select } from "../../shared/components/ui";
+import {
+  Collapse,
+  RefineGroup,
+  RefineNote,
+  Select,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { LocalSort } from "./localPlaces";
-
-const SORT_OPTIONS: LocalSort[] = ["default", "name", "hood"];
-
-/** What each sort does differently once a position is known, said in one line
- *  under the control. "default" needs none: its own label becomes "Nearest
- *  first", which is already the whole story. */
-const LOCATION_NOTE_KEYS: Partial<Record<LocalSort, string>> = {
-  name: "marketing:local.filter.sortNoteName",
-  hood: "marketing:local.filter.sortNoteHood",
-};
+import { useLocalSortOptions } from "./useLocalSortOptions";
 
 /**
- * How the results are ordered.
- *
- * Sorting is a refinement, so the control lives inside the "Refine" drawer with
- * the filters rather than out on the results header — that header is then free
- * to do one thing, which is say what was found.
- *
- * The sort and "use my location" both stay in force together (see
- * `useDirectoryFilterResults`); this control's job is to say so. With a
- * position known, the curated default IS the distance order, so it renames
- * itself "Nearest first" instead of claiming an order the list no longer has,
- * and the two sorts that survive alongside distance carry a line explaining
- * what the position is doing for them.
+ * How the results are ordered, as a band of the mobile Filters sheet and of
+ * the full screen map's "Refine" drawer. On the desktop page the same control
+ * sits above the results (`DirectorySortControl`).
  */
 export function LocalSortFilter({
   sort,
@@ -39,12 +26,7 @@ export function LocalSortFilter({
 }) {
   const { t } = useTranslation();
   const sortLabelId = useId();
-  const noteKey = isLocationOn ? LOCATION_NOTE_KEYS[sort] : undefined;
-
-  const optionLabel = (option: LocalSort) =>
-    option === "default" && isLocationOn
-      ? t("marketing:directory.sort.nearest")
-      : t(`marketing:directory.sort.${option}`);
+  const { options, note } = useLocalSortOptions(sort, isLocationOn);
 
   return (
     <RefineGroup
@@ -54,14 +36,13 @@ export function LocalSortFilter({
       <Select
         size="sm"
         labelledBy={sortLabelId}
-        options={SORT_OPTIONS.map((option) => ({
-          value: option,
-          label: optionLabel(option),
-        }))}
+        options={options}
         value={sort}
         onChange={(value) => onSortChange(value ?? "default")}
       />
-      {noteKey && <RefineNote>{t(noteKey)}</RefineNote>}
+      <Collapse isOpen={note !== undefined}>
+        <RefineNote>{note}</RefineNote>
+      </Collapse>
     </RefineGroup>
   );
 }

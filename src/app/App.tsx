@@ -63,6 +63,7 @@ import { RouteAnnouncer } from "./RouteAnnouncer";
 import { AppRoutes } from "./routes";
 import { RoutePrefetcher } from "./routePrefetch";
 import { useVisualViewportKeyboard } from "../shared/hooks";
+import { ViewportDebugGate } from "../shared/components/dev/ViewportDebugGate";
 
 // Lazy so the demo mock corpus its search data hook pulls in (members +
 // gatherings mock data, thousands of lines) leaves the entry chunk; it
@@ -316,6 +317,8 @@ export function App() {
           <AuthErrorToast />
           <StaffOnlyBounceToast />
           <QueryErrorToastBridge />
+          {/* Hidden viewport readout, on only after a visit with ?viewport-debug=1. */}
+          <ViewportDebugGate />
         </BrowserRouter>
       </ErrorBoundary>
     </RootProviders>

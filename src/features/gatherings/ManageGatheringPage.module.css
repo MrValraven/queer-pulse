@@ -399,6 +399,12 @@
   margin-top: var(--gap-sm);
 }
 
+.overviewFooterActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+}
+
 .lastEdit {
   font-size: var(--text-12);
   color: var(--ink-40);

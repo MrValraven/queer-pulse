@@ -1,0 +1,236 @@
+/* ── Add a month of events: one card per date ── */
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-heading);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.empty {
+  margin: 0;
+  max-width: 62ch;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The space between cards lives in padding on this child of the animated
+   `li`, so it folds away with the card. */
+.listItem {
+  padding-block-end: var(--gap-sm);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  padding: var(--gap-sm);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+}
+
+.cardHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-xs);
+}
+
+.cardHeading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 500;
+  color: var(--text-strong);
+}
+
+.serverMessage {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.45;
+  color: var(--accent-text);
+}
+
+.serverIcon {
+  flex: none;
+  margin-top: 2px;
+}
+
+/* One column on a phone with the photo first, photo beside the fields once
+   there is room. */
+.cardBody {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap-sm);
+}
+
+@media (--md-up) {
+  .cardBody {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    align-items: start;
+  }
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+.copyTemplate {
+  padding-block-start: var(--gap-xs);
+}
+
+/* Photo */
+
+.photo {
+  min-width: 0;
+}
+
+.photoSummary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.thumbnailFrame {
+  display: grid;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+  background: var(--cream);
+}
+
+.sharedFigure {
+  position: relative;
+  display: grid;
+  margin: 0;
+}
+
+.thumbnail {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.thumbnailTile {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 6px;
+  width: 100%;
+  height: 100%;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+.thumbnailTile svg {
+  width: 22px;
+  height: 22px;
+}
+
+.photoCaption {
+  position: absolute;
+  inset-inline-start: 8px;
+  inset-block-end: 8px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.photoActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+
+.picker {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+}
+
+.picker > :first-child {
+  align-self: stretch;
+}
+
+/* Time */
+
+.time {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.timeLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px var(--gap-xs);
+}
+
+.timeIcon {
+  flex: none;
+  color: var(--ink-60);
+}
+
+.timeRead {
+  flex: 1 1 10rem;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+/* The toggle keeps its own line, so the label swap never moves it and only
+   the folding pair below changes the card's height. */
+.timeToggle {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* Start above end in one column: a row card is too narrow for two time
+   fields side by side once the clear button takes its share. */
+.timePair {
+  display: flex;
+  flex-direction: column;
+  padding-block-start: var(--gap-xs);
+}
+
+.issue {
+  margin: 0;
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+  color: var(--accent-text);
+}

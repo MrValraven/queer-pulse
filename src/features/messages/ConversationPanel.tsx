@@ -175,16 +175,11 @@ export function ConversationPanel({
     jumpToMessageVirtualized,
     counterpart,
     groupSeenBy,
-    lastOutbound,
-    seenActive,
-    deliveredActive,
   } = useMessageLogState(
     active,
     messageGroups,
     myUserId,
     user?.profile?.slug,
-    counterpartLastReadAt,
-    counterpartDeliveredAt,
     history,
     jumpToMessageId,
     onJumpHandled,
@@ -252,9 +247,8 @@ export function ConversationPanel({
               groupSeenBy={groupSeenBy}
               onOpenSeenBy={seenBy.open}
               onRetry={onRetry}
-              seenActive={seenActive}
-              deliveredActive={deliveredActive}
-              lastOutbound={lastOutbound}
+              counterpartLastReadAt={counterpartLastReadAt}
+              counterpartDeliveredAt={counterpartDeliveredAt}
               onReactionToggle={actionMenu.handleReactionToggle}
               onReply={onSetReply}
               onOpenActions={actionMenu.openActions}

@@ -117,7 +117,7 @@ export function ComposerDockContent({
     [onSendSticker, markDemoReplyClaim],
   );
   return (
-    <div className={styles.composerDock}>
+    <div className={styles.composerDock} data-composer-dock>
       {showJumpPill && (
         <button
           type="button"

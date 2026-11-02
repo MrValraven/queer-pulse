@@ -72,6 +72,19 @@ export function editBodyOf(
   };
 }
 
+/** The body an edit or a visibility change sends. Who can open it belongs to
+ *  the owner, so an editor's visibility submit carries nothing. */
+export function updateBodyOf(
+  mode: Exclude<StudioPlaylistDialogMode, "create">,
+  playlist: StudioPlaylistView,
+  draft: StudioPlaylistDialogDraft,
+): UpdateStudioPlaylistBody {
+  if (mode === "edit") return editBodyOf(playlist, draft);
+  return playlist.isOwner && draft.visibility !== playlist.visibility
+    ? { visibility: draft.visibility }
+    : {};
+}
+
 /** Create, edit or change visibility, with the credit-change confirm: a 409
  *  `studio_playlist_credit_change_removes_editors` holds the edit and names
  *  the editors; confirming sends the same body with `confirmEditorRemoval`. */
@@ -150,14 +163,7 @@ export function useStudioPlaylistDialogSubmit({
       return;
     }
     if (!playlist) return;
-    // Who can open it belongs to the owner, so an editor's submit carries
-    // the name and the description only.
-    const body: UpdateStudioPlaylistBody =
-      mode === "edit"
-        ? editBodyOf(playlist, draft)
-        : playlist.isOwner
-          ? { visibility: draft.visibility }
-          : {};
+    const body = updateBodyOf(mode, playlist, draft);
     // Nothing changed: the playlist on screen is already what was saved.
     if (Object.keys(body).length === 0) {
       finish(playlist);
@@ -172,6 +178,11 @@ export function useStudioPlaylistDialogSubmit({
     isErrorShown,
     pendingCreditChange,
     submit,
+    /** Whether saving this draft would send anything (never true for create). */
+    hasChangesFor: (draft: StudioPlaylistDialogDraft) =>
+      mode !== "create" &&
+      playlist !== null &&
+      Object.keys(updateBodyOf(mode, playlist, draft)).length > 0,
     confirmCreditChange: () => {
       if (!pendingCreditChange || !playlist || isBusy) return;
       void sendEdit(playlist, {

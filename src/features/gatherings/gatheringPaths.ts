@@ -82,6 +82,19 @@ export function duplicateGatheringPath(slug: string): string {
   return `${routes.createGathering}?${query.toString()}`;
 }
 
+/** Query param naming the event a month of events starts from. */
+export const ADD_EVENT_MONTH_FROM_PARAM = "from";
+
+/**
+ * "Add a month of events": the batch page, optionally with the starting event
+ * already chosen. The slug travels in the URL so a refresh keeps the choice.
+ */
+export function addEventMonthPath(fromSlug?: string): string {
+  if (!fromSlug) return routes.addEventMonth;
+  const query = new URLSearchParams({ [ADD_EVENT_MONTH_FROM_PARAM]: fromSlug });
+  return `${routes.addEventMonth}?${query.toString()}`;
+}
+
 /** Lifecycle sub-pages of one gathering (all under `/gatherings/:slug/...`). */
 export const gatheringRecapPath = (slug: string): string =>
   `${gatheringPath(slug)}/recap`;

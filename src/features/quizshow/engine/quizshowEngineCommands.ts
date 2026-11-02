@@ -109,24 +109,46 @@ function isTeamFull(state: QuizshowEngineState, teamId: string): boolean {
   );
 }
 
-/** A team a player wants to found: a name, the session's team limit, a free name and a free colour. */
+/**
+ * A team a player wants to found: a name, the session's team limit, a free
+ * name and a free colour. `ignoredTeamId` is a team about to be deleted as its
+ * founder leaves, so the checks skip it.
+ */
 function newTeamRefusal(
   state: QuizshowEngineState,
   trimmedName: string,
   colorKey: QuizshowTeamColorKey,
+  ignoredTeamId: string | null = null,
 ): QuizshowErrorCode | null {
   if (trimmedName === "") return "quizshow_text_blank";
-  if (state.teams.length >= QUIZSHOW_LIMITS.teamsPerSessionMax) {
+  const countedTeams = state.teams.filter(
+    (team) => team.teamId !== ignoredTeamId,
+  );
+  if (countedTeams.length >= QUIZSHOW_LIMITS.teamsPerSessionMax) {
     return "quizshow_team_limit";
   }
   const nameKey = teamNameKey(trimmedName);
-  if (state.teams.some((team) => teamNameKey(team.name) === nameKey)) {
+  if (countedTeams.some((team) => teamNameKey(team.name) === nameKey)) {
     return "quizshow_team_name_taken";
   }
-  if (state.teams.some((team) => team.colorKey === colorKey)) {
+  if (countedTeams.some((team) => team.colorKey === colorKey)) {
     return "quizshow_team_color_taken";
   }
   return null;
+}
+
+/** The player's team when they are its only active player in the lobby, so leaving it deletes it; otherwise null. */
+function teamLeftEmptyBy(
+  state: QuizshowEngineState,
+  player: QuizshowEnginePlayer,
+): string | null {
+  if (player.teamId === null || state.cursor.status !== "lobby") return null;
+  const hasOtherActiveMember = activePlayers(state).some(
+    (otherPlayer) =>
+      otherPlayer.playerId !== player.playerId &&
+      otherPlayer.teamId === player.teamId,
+  );
+  return hasOtherActiveMember ? null : player.teamId;
 }
 
 function addTeam(
@@ -144,6 +166,24 @@ function addTeam(
     jokerRoundIndex: null,
   });
   return teamId;
+}
+
+/**
+ * In the lobby, deletes a team a player just left once it has no active
+ * player, so its name and colour are free again and it stops counting toward
+ * the team limit. Once the game runs, teams stay. The caller's result already
+ * carries `lobby_changed`.
+ */
+function deleteTeamIfEmptyInLobby(
+  state: QuizshowEngineState,
+  leftTeamId: string | null,
+): void {
+  if (leftTeamId === null || state.cursor.status !== "lobby") return;
+  const hasActiveMember = activePlayers(state).some(
+    (player) => player.teamId === leftTeamId,
+  );
+  if (hasActiveMember) return;
+  state.teams = state.teams.filter((team) => team.teamId !== leftTeamId);
 }
 
 /** The team a joiner lands in, or the refusal; teams play only. */
@@ -296,7 +336,9 @@ function pickTeam(
   if (player.teamId === team.teamId) return unchanged(state, player.playerId);
   if (isTeamFull(state, team.teamId))
     return refuse("quizshow_team_full", state);
+  const leftTeamId = player.teamId;
   player.teamId = team.teamId;
+  deleteTeamIfEmptyInLobby(state, leftTeamId);
   return playerChanged(state, player.playerId);
 }
 
@@ -327,10 +369,17 @@ function createTeam(
       [],
     );
   }
-  const refusal = newTeamRefusal(state, teamName, colorKey);
+  const refusal = newTeamRefusal(
+    state,
+    teamName,
+    colorKey,
+    teamLeftEmptyBy(state, player),
+  );
   if (refusal !== null) return refuse(refusal, state);
   const teamId = addTeam(state, teamName, colorKey);
+  const leftTeamId = player.teamId;
   player.teamId = teamId;
+  deleteTeamIfEmptyInLobby(state, leftTeamId);
   return succeed({ me: toMe(state, player.playerId), teamId }, [
     { kind: "lobby_changed" },
     { kind: "me_changed", playerIds: [player.playerId] },
@@ -1154,6 +1203,7 @@ function hostRemovePlayer(
   }
   if (player.isRemoved) return hostActed(state, now, [], true);
   player.isRemoved = true;
+  deleteTeamIfEmptyInLobby(state, player.teamId);
   const effects: QuizshowEngineEffect[] = [];
   const play = state.current;
   const answer = play === null ? undefined : answerOf(play, playerId);

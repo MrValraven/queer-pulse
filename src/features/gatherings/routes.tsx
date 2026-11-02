@@ -43,6 +43,10 @@ const CreateGatheringPage = lazyNamed(
   () => import("./CreateGatheringPage"),
   "CreateGatheringPage",
 );
+const AddEventMonthPage = lazyNamed(
+  () => import("./addMonth/AddEventMonthPage"),
+  "AddEventMonthPage",
+);
 
 /** The gatherings surface: calendar, events, a gathering's detail + management
  *  sub-pages, RSVP, hosting, and the gatherings index.
@@ -125,6 +129,8 @@ export function gatheringRoutes(demoMode: boolean) {
         element={demoMode ? <RsvpPage /> : <RsvpRedirect />}
       />
       <Route path={routes.host} element={<HostPage />} />
+      {/* Add a month of events: early access, the page names the reason to anyone without it. */}
+      <Route path={routes.addEventMonth} element={<AddEventMonthPage />} />
       <Route path={routes.createGathering} element={<CreateGatheringPage />} />
       <Route
         path={routes.gatherings}

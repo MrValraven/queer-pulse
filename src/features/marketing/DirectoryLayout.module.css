@@ -1,0 +1,475 @@
+/* The Local directory's page frame, matching the members directory
+   (MemberDirectoryFilterPage.module.css): a compact header, then a sticky
+   filter sidebar beside the results column on desktop. */
+
+.page {
+  /* Wide enough for the 280px sidebar beside a results column that holds
+     three place cards on large screens. */
+  max-width: 1440px;
+  margin: 0 auto;
+  /* nav band reserved by shell (base.css); this is only breathing room. The
+     closing strip below the results carries the page's bottom space. */
+  padding-block: 28px 0;
+  /* The side gutter clears a notch or rounded corner in landscape, the way
+     `.wrap`'s own padding does on other pages. */
+  padding-inline: calc(28px + env(safe-area-inset-left))
+    calc(28px + env(safe-area-inset-right));
+}
+/* Desktop: the page is the container, so the shared `.wrap` inside it (the
+   results views, the verification band and the closing strip) adds neither
+   the site's max-width nor its side padding: the page's own gutter above
+   carries the safe-area insets. Phones keep `.wrap` as it is, so the mobile
+   toolbar and results header stay as they were. */
+.pageDesktop :global(.wrap) {
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+@media (--mobile) {
+  .page {
+    padding: 12px 0 0;
+  }
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+.head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
+  margin-bottom: 24px;
+}
+.headCopy {
+  min-width: 0;
+}
+.eyebrow {
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-display);
+  color: var(--text-strong);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin-bottom: 14px;
+  text-wrap: pretty;
+}
+.h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+/* The members lead's measure, with its last line kept from standing alone. */
+.lead {
+  font-size: var(--text-14-5);
+  color: var(--ink-60);
+  line-height: 1.6;
+  max-width: 54ch;
+  text-wrap: pretty;
+}
+/* Who keeps the directory honest, under the lead, led by a live jade dot.
+   One line on desktop, where the copy column has room for it. Should it wrap,
+   the dot stays level with the first line. */
+.note {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: 10px;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink-40);
+}
+/* (13px × 1.45 line − 7px dot) / 2 ≈ 6px centres the dot on the first line. */
+.live {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: var(--jade);
+  box-shadow: var(--ring-jade);
+}
+.headAction {
+  flex: none;
+}
+/* "List your business" on phones: a compact text link under the lead, so
+   the header gives the places the screen. The hit area reaches 44px tall
+   through the pseudo-element while the line itself stays one text line. */
+.headLink {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--text-strong);
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--line-rgb), 0.3);
+  text-underline-offset: 3px;
+}
+.headLink::after {
+  content: "";
+  position: absolute;
+  inset: -12px 0;
+}
+.headLink svg {
+  flex: none;
+  font-size: var(--text-15);
+  color: var(--accent);
+}
+.headLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+@media (--mobile) {
+  /* The sticky toolbar's own hairline follows straight after, so the header
+     drops its rule and keeps only its air: enough of it that the toolbar's
+     tinted band (in dark mode) starts clear of the link above it. The note
+     steps aside on phones, where the toolbar and the cards carry the
+     community-verified story. */
+  .head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding-bottom: 22px;
+    border-bottom: 0;
+    margin-bottom: 0;
+  }
+  .note {
+    display: none;
+  }
+}
+
+/* ── Two columns: sticky filters + results ───────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 36px;
+  align-items: flex-start;
+  /* The space the results used to keep below themselves, before the
+     verification band. */
+  margin-bottom: var(--section-y-80);
+  /* The sidebar track and gutter ease to 0, so the results reclaim the width
+     smoothly when the filters are hidden. */
+  transition:
+    grid-template-columns 0.34s var(--ease),
+    gap 0.34s var(--ease);
+}
+/* Filters hidden: the sidebar track collapses to 0 (the .filtersCol wrapper
+   clips its 280px content) and the results span the full width. */
+.gridFull {
+  grid-template-columns: 0 minmax(0, 1fr);
+  gap: 0;
+}
+
+/* The grid item AND the sticky, clipping container. Sticky lives here so
+   overflow:hidden can clip the collapsing panel without breaking
+   stick-to-viewport. Its width follows the grid track (280px to 0). It pins
+   10px under whatever nav chrome the layout has (`--sticky-top`: the floating
+   pill's band, or 0 beside the sidebar rail). */
+.filtersCol {
+  position: sticky;
+  top: calc(var(--sticky-top) + 10px);
+  min-width: 0;
+  overflow: hidden;
+}
+/* One paper panel of collapsible sections, as on the members page (Place
+   type and Quick filters start open). With several sections open the panel
+   can outgrow the window, so it scrolls inside itself past that height and
+   its last sections stay reachable beside a long list. The 34px is the 10px
+   above it plus 24px of air below. Rigid width, so the chips keep their
+   layout while the column clips them during the collapse. */
+.filters {
+  width: 280px;
+  max-height: calc(100svh - var(--sticky-top) - 34px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  padding: 6px;
+  transition:
+    opacity 0.26s var(--ease),
+    transform 0.34s var(--ease);
+}
+:global([data-theme="dark"]) .filters {
+  border-color: rgba(var(--cream-rgb), 0.1);
+}
+.filtersColHidden .filters {
+  opacity: 0;
+  transform: translateX(-12px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .grid,
+  .filters {
+    transition: none;
+  }
+}
+
+/* `.bands` stays a plain block: the sections (LocalFilterSection.module.css)
+   bring their own spacing and hairlines, and a flex or grid gap here would
+   land between them. A chip never runs past the panel's 280px. */
+.bands button {
+  max-width: 100%;
+}
+
+/* ── Results column ──────────────────────────────────────────────────────── */
+.results {
+  min-width: 0;
+  /* Read by the list, map and Online views: inside the column they drop the
+     section padding they carry as page bands on phones. */
+  --directory-view-padding: 0;
+  /* The list's columns follow the column's own width: each card at least
+     300px and at least a third of the row, so a wide column holds three and
+     a narrower one two (or one) wider cards. With the sidebar open that is
+     three from about 1366px wide, two at 1280 and 1024; hidden, three down
+     to 1024. The 37px is the list grid's two 18px gaps plus 1px of slack,
+     so rounding never drops the third card. */
+  --directory-list-columns: repeat(
+    auto-fill,
+    minmax(max(min(100%, 300px), calc((100% - 37px) / 3)), 1fr)
+  );
+}
+
+/* The search field on its own row, with the List/Map/Online switcher at the
+   row's far end. Stretched, so the switcher takes the field's 45px height. */
+.searchRow {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+/* Never narrower than 300px: on a narrow column the switcher folds the views
+   the visitor is off down to their icons (below) to leave the field room.
+   Under a 480px column (a phone in landscape, inside its safe-area insets)
+   the field settles for 240px, so it still shares its line with the folded
+   switcher (about 171px plus the 14px gap). */
+.search {
+  flex: 1 1 300px;
+  min-width: 300px;
+  max-width: 480px;
+}
+@container directory-results (max-width: 479px) {
+  .search {
+    flex-basis: 240px;
+    min-width: 240px;
+  }
+}
+.viewSwitcher {
+  flex: none;
+}
+/* The label fold. Each label eases its width and fades, so the switcher
+   settles smoothly as the column crosses the threshold. The negative margin
+   takes back the segment's 7px icon gap as the label closes. */
+.viewSwitcher .switcherLabel {
+  display: inline-block;
+  max-width: 6em;
+  overflow: hidden;
+  transition:
+    max-width 0.26s var(--ease),
+    margin 0.26s var(--ease),
+    opacity 0.2s var(--ease);
+}
+@container directory-results (max-width: 599px) {
+  .viewSwitcher [aria-pressed="false"] .switcherLabel {
+    max-width: 0;
+    margin-inline-start: -7px;
+    opacity: 0;
+  }
+}
+
+/* The count on the left; near-me, the Filters toggle and the sort on the
+   right, every control one shared height. `.topControls` and the near-me
+   wrappers are boxless, so every control and both notes are items of this
+   one row. The first line holds the count and the controls: the count's
+   basis is 0, so the controls always fit beside it, and it then takes the
+   space they leave, wrapping its own text there. Each note has a 100% basis
+   and an `order` after the controls, so it takes a full line of its own
+   under them, near-me's first (DirectoryPage.module.css `.topNearMe`), then
+   the sort's (`.sortNoteSlot`). The wrap only ever starts those note lines. */
+.topRow {
+  --results-control-h: 40px;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  /* Columns only: each note brings its own space above it, inside its own
+     animated height where it has one. */
+  gap: 0 12px;
+}
+.topCount {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.topControls {
+  display: contents;
+}
+.sortRow {
+  flex: none;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  min-height: var(--results-control-h);
+}
+.sortLabel {
+  display: inline-block;
+  max-width: 8em;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: var(--text-12);
+  color: var(--ink-40);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition:
+    max-width 0.26s var(--ease),
+    margin 0.26s var(--ease),
+    opacity 0.2s var(--ease);
+}
+/* The sort note's Collapse wrapper: a full line of the row, after near-me's
+   note. */
+.sortNoteSlot {
+  order: 2;
+  flex: 0 0 100%;
+}
+/* What the sort does with a known position, in one quiet line at the row's
+   end. The near-me note's twin (DirectoryPage.module.css `.topNearMe
+   .nearMeNote`): the same type, colour and end alignment, with the text held
+   to a 70ch measure (about 550px). The longest sort note runs about 460px,
+   so it keeps to one line on every desktop column from 1024px windows up. */
+.sortNote {
+  display: flex;
+  justify-content: flex-end;
+  margin: 4px 0 0;
+  font-size: var(--text-11-5);
+  line-height: 1.45;
+  color: var(--ink-40);
+}
+.sortNote > span {
+  max-width: 70ch;
+}
+
+/* The controls fold to fit the column. Below 880px the near-me control
+   shows only its crosshair (DirectoryPage.module.css) and the sort's
+   "Sort" label folds away; below 600px (440px on the Online tab) the
+   Filters toggle shows only its icon (after `.filtersBtnLabel` below). Under
+   480px the search field narrows to 240px (`.search` above). The count
+   wraps its own text whatever the width. Each label keeps its text in the
+   DOM, so the buttons keep their names and the select keeps its label. */
+@container directory-results (max-width: 879px) {
+  .sortLabel {
+    max-width: 0;
+    margin-inline-end: -6px;
+    opacity: 0;
+  }
+}
+
+/* The results under the rows above. The chip row (ActiveFilters) brings its
+   own top margin and collapses with it, so this gap stays the same whether
+   chips are showing or not. */
+/* The rows above the results fold their control labels by the column's own
+   width, which the sidebar's open state changes as much as the window does.
+   The container sits on these rows alone: size containment makes an element
+   the containing block of its fixed descendants, and the full screen map
+   below must stay fixed to the viewport. */
+.resultsTop {
+  container: directory-results / inline-size;
+}
+.resultsBody {
+  padding-top: 18px;
+}
+
+/* Shows and hides the sidebar, carrying the count of active filters. */
+.filtersBtn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--results-control-h);
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--text-strong);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-9);
+  padding: 8px 14px;
+  cursor: pointer;
+}
+.filtersBtn svg {
+  font-size: var(--text-15);
+}
+.filtersBtn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+:global([data-theme="dark"]) .filtersBtn {
+  border-color: rgba(var(--cream-rgb), 0.14);
+}
+/* The label, folded on a narrow column (the container query below). The
+   negative margin takes back the button's 8px icon gap as it closes. */
+.filtersBtnLabel {
+  display: inline-block;
+  max-width: 10em;
+  overflow: hidden;
+  white-space: nowrap;
+  transition:
+    max-width 0.26s var(--ease),
+    margin 0.26s var(--ease),
+    opacity 0.2s var(--ease);
+}
+/* The List and Map tabs fold it under 600px, where near-me's button shares
+   the row. The Online tab has no near-me, so its Filters label keeps its
+   text down to 440px (`data-view` on `.resultsTop`, DirectoryResultsTop). */
+@container directory-results (max-width: 599px) {
+  .resultsTop:not([data-view="online"]) .filtersBtnLabel {
+    max-width: 0;
+    margin-inline-start: -8px;
+    opacity: 0;
+  }
+}
+@container directory-results (max-width: 439px) {
+  .resultsTop[data-view="online"] .filtersBtnLabel {
+    max-width: 0;
+    margin-inline-start: -8px;
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .viewSwitcher .switcherLabel,
+  .sortLabel,
+  .filtersBtnLabel {
+    transition: none;
+  }
+}
+/* Animated width wrapper for the count badge; see DirectoryFiltersToggle. */
+.filtersBtnCountSlot {
+  display: inline-flex;
+  overflow: hidden;
+}
+.filtersBtnCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.636em;
+  height: 1.636em;
+  padding: 0 5px;
+  border-radius: var(--radius-pill);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-11);
+  font-weight: 700;
+  line-height: 1;
+}

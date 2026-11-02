@@ -162,7 +162,12 @@
    ever scrolling sideways. */
 @media (max-width: 900px) {
   .nav {
-    top: var(--nav-band);
+    /* The real top chrome at this width: the mobile app bar plus the notch,
+       and only the notch once the bar scrolls away. The 80px desktop band
+       left the strip hanging below the bar with the form showing above it.
+       `top` eases over the bar's own slide so the strip rises with it. */
+    top: var(--sticky-top);
+    transition: top var(--dur-base) var(--ease);
     /* Stays inside the content box: a full-bleed negative margin would have to
        reconcile with `.wrap`'s safe-area padding, and getting that wrong is
        how a page starts scrolling sideways on a phone. */

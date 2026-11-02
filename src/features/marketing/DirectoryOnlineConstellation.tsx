@@ -60,7 +60,9 @@ function useIsNarrowPanel(panelRef: RefObject<HTMLElement | null>): boolean {
  * constellation and every online-only business orbits it, wired back by a
  * faint signal line. It is the counterpart of the Lisbon map, and deliberately
  * not a second hero: the page already has one, so this stays one short line of
- * copy beside the picture and lets the cards start high on the page.
+ * copy beside the picture and lets the cards start high on the page. On
+ * desktop the stylesheet folds the band further, to the eyebrow and the
+ * counts on one line, with the title kept as a visually hidden heading.
  *
  * Nodes stay still on purpose. Only decoration moves (the pulse rings and the
  * outer orbit's slow turn), so nothing clickable ever drifts from under a

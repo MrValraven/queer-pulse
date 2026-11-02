@@ -15,6 +15,7 @@ import { QuizshowShape } from "../QuizshowShape";
 import { isPlayerState } from "../realtime/quizshowClientStore";
 import { QuizshowPausedNote } from "../stage/QuizshowPausedNote";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
+import { QuizshowChangeTeam } from "./QuizshowChangeTeam";
 import { QuizshowJokerButton } from "./QuizshowJokerButton";
 import { QuizshowErrorLine, QuizshowToggleRow } from "./QuizshowJoinForm";
 import { sendFailureKeyOf } from "./usePlayJoin";
@@ -217,12 +218,23 @@ function LobbyBody({
             )}
           </m.div>
         </AnimatePresence>
-        {team !== undefined && (
-          <p className={styles.teamLine}>
-            <QuizshowShape colorKey={team.colorKey} size="small" label={null} />
-            {t("quizshow:player.yourTeam", { team: team.name })}
+        {/* The play mode is fixed for the game, and the line stays mounted
+            so a change of team is announced. */}
+        {session.playMode === "teams" && (
+          <p className={styles.teamLine} role="status">
+            {team !== undefined && (
+              <>
+                <QuizshowShape
+                  colorKey={team.colorKey}
+                  size="small"
+                  label={null}
+                />
+                {t("quizshow:player.yourTeam", { team: team.name })}
+              </>
+            )}
           </p>
         )}
+        <QuizshowChangeTeam controller={controller} session={session} me={me} />
       </section>
       <LobbySettings controller={controller} me={me} />
       {firstRound?.isJokerAllowed === true && (

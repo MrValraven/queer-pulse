@@ -23,12 +23,14 @@ export interface DirectoryResultsCountProps {
   /** Read for the map view's "N of these are on the map" note, and to give
    *  the Online tab its own sentence. */
   view: string;
+  /** Added to the sentence's box, for its sizing on the desktop row. */
+  className?: string;
 }
 
 /**
  * The "showing X of Y places" sentence for both Local views and the Online
- * tab. On desktop it rides the filter bar's search row (`countSlot` on
- * `LocalFilterFields`); on phones it opens the results header. A live region,
+ * tab. On desktop it opens the row above the results (`DirectoryResultsTop`);
+ * on phones it opens the results header. A live region,
  * so a filter change is announced as the new count.
  */
 export function DirectoryResultsCount({
@@ -40,6 +42,7 @@ export function DirectoryResultsCount({
   loading,
   isError = false,
   view,
+  className,
 }: DirectoryResultsCountProps) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -60,17 +63,26 @@ export function DirectoryResultsCount({
   const isOnlineView = view === "online";
   const isCountingLoadedOnly =
     !isOnlineView && hasMoreFromServer && shown < loadedCount;
+  const hasSentence = !loading && !isError;
   return (
-    <p className={s.count} aria-live="polite" aria-atomic="true">
-      {/* One inline child, so the count keeps its own spacing: the box
-          around it is a flex line (it centres the sentence against the
-          controls beside it), and a flex container would drop the spaces
-          between "Showing", the bold number and "of". */}
-      <span>
-        {loading ? (
-          <>{t("marketing:directory.loading")}</>
-        ) : isError ? null : (
-          <>
+    <p
+      className={[s.count, className].filter(Boolean).join(" ")}
+      aria-live="polite"
+      aria-atomic="true"
+    >
+      {/* The sentence sits in one control-height line, centred against the
+          controls beside it. Its inner span is one inline child, so the
+          spaces between "Showing", the accent number and "of" survive the
+          flex line around it. Each note after it ("35 on map") always takes
+          a line of its own under the sentence, at every column width, so
+          the count keeps one height whether the filters sidebar is open or
+          hidden. Its comma is for screen readers only: they hear one
+          sentence, "Showing 40 of 40 places, 35 on map". */}
+      <span className={s.countLine}>
+        <span>
+          {loading ? (
+            <>{t("marketing:directory.loading")}</>
+          ) : isError ? null : (
             <Translation
               i18nKey={
                 isOnlineView
@@ -83,7 +95,7 @@ export function DirectoryResultsCount({
               // `count` is what drives CLDR selection in `resolveEntry`,
               // and it has to be the number the plural NOUN agrees with.
               // In both sentences that noun ("places") sits beside the
-              // size of the pool, never beside `shown`: a filtered
+              // size of the pool, and `shown` stands apart: a filtered
               // "Showing 1 of 24 places" is correct English. So `count`
               // follows whichever pool this branch is counting against.
               // Without this the plain sentence read "Showing 1 of 1
@@ -100,29 +112,29 @@ export function DirectoryResultsCount({
                 loaded: rollingCount(loadedCount),
               }}
             />
-            {isCountingLoadedOnly && (
-              <span className={s.countNote}>
-                {" · "}
-                <Translation
-                  i18nKey="marketing:directory.countLoadedTotal"
-                  values={{ total }}
-                  slots={{ total: rollingCount(total) }}
-                />
-              </span>
-            )}
-            {view === "map" && shown !== mappableCount && (
-              <span className={s.countNote}>
-                {" · "}
-                <Translation
-                  i18nKey="marketing:directory.onMap"
-                  values={{ count: mappableCount }}
-                  slots={{ count: rollingCount(mappableCount) }}
-                />
-              </span>
-            )}
-          </>
-        )}
+          )}
+        </span>
       </span>
+      {hasSentence && isCountingLoadedOnly && (
+        <span className={s.countNote}>
+          <span className={s.srOnly}>{", "}</span>
+          <Translation
+            i18nKey="marketing:directory.countLoadedTotal"
+            values={{ total }}
+            slots={{ total: rollingCount(total) }}
+          />
+        </span>
+      )}
+      {hasSentence && view === "map" && shown !== mappableCount && (
+        <span className={s.countNote}>
+          <span className={s.srOnly}>{", "}</span>
+          <Translation
+            i18nKey="marketing:directory.onMap"
+            values={{ count: mappableCount }}
+            slots={{ count: rollingCount(mappableCount) }}
+          />
+        </span>
+      )}
     </p>
   );
 }

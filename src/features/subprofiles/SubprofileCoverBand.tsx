@@ -56,10 +56,11 @@ export function SubprofileCoverBand({
         width="100%"
         height="100%"
         className="ph"
-        // The band mounts without an image only on the practice, chair and
-        // collective skins, which hide this slot and paint the band as a thin
-        // rule; every banner skin skips the band until a cover is uploaded
-        // (see `shouldMountCoverBand` in SubprofilePageBody). The empty
+        // The band mounts without an image only on the practice and chair
+        // skins, which hide this slot and paint the band as a thin rule;
+        // every banner skin, the poster included, skips the band until a
+        // cover is uploaded (see `shouldMountCoverBand` in
+        // SubprofilePageBody). The empty
         // caption keeps the literal "Image" placeholder text out of the band
         // in every case.
         placeholder=""

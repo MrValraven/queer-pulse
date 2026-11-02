@@ -80,6 +80,10 @@ const ONLINE_HOOD =
  * WHAT IS NOT COPIED: the date and the two publish confirmations, see
  * `GatheringFormSeed`. The start and end clock ride along as `startTime` and
  * `endTime` for "same as last time"; the duplicate flow leaves them unread.
+ *
+ * The backend's batch copy list (queerpulse-backend `src/events/event-batch.ts`,
+ * `templateCreateInput`) mirrors the fields this seed copies, so a field added
+ * here must be added there too.
  */
 export function gatheringToFormSeed(
   gathering: GatheringDetail,

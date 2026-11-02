@@ -213,8 +213,13 @@ export const quizshow: Catalog = {
   "lobby.dialogSub":
     "O ecrã grande mostra um código e um código QR para quem joga entrar",
   "lobby.playMode.label": "Como se joga",
-  "lobby.playMode.solo": "Cada pessoa por si",
-  "lobby.playMode.teams": "Em equipas",
+  "lobby.playMode.soloTitle": "Individual",
+  "lobby.playMode.soloHint": "Cada pessoa joga por si",
+  "lobby.playMode.teamsTitle": "Equipas",
+  "lobby.playMode.teamsHint":
+    "Quem joga entra numa equipa ou cria uma no telemóvel",
+  "lobby.playMode.teamsScoring":
+    "Cada equipa pontua com a média de quem lá está, por isso o tamanho da equipa nunca decide quem ganha",
   "lobby.maxTeamSize.label": "Máximo de pessoas por equipa",
   "lobby.maxTeamSize.none": "Sem limite",
   "lobby.review.label":
@@ -336,6 +341,7 @@ export const quizshow: Catalog = {
   "errors.team_name_taken": "Outra equipa já tem esse nome",
   "errors.team_color_taken": "Outra equipa já tem essa forma. Escolhe outra",
   "errors.team_required": "Escolhe uma equipa ou cria uma",
+  "errors.team_name_blank": "Dá um nome à tua equipa",
   "errors.team_change_closed": "As equipas fecham quando o jogo começa",
   "errors.joker_used": "O teu joker já foi jogado",
   "errors.joker_not_allowed": "Nesta ronda não se pode jogar joker",
@@ -409,6 +415,10 @@ export const quizshow: Catalog = {
   "player.extraTimeHint": "Só tu e quem organiza veem isto",
   "player.teamTitle": "Escolhe uma equipa",
   "player.teamJoin": "Entrar na equipa {team}",
+  "player.changeTeam.open": "Mudar de equipa",
+  "player.changeTeam.start": "Criar equipa",
+  "player.changeTeam.keep": "Manter a minha equipa",
+  "player.changeTeam.current": "A tua equipa",
   "player.teamFull": "Cheia",
   "player.teamMembers_one": "{count} pessoa",
   "player.teamMembers_other": "{count} pessoas",

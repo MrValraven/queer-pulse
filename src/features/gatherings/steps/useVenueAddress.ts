@@ -1,6 +1,12 @@
 import { useEffect, useRef } from "react";
 import { useDirectoryPlace } from "../../marketing/api/useDirectory";
 import type { GatheringForm } from "../useGatheringForm";
+import type { PlainSetters } from "./plainSetters";
+
+/** The members this field reads, so the month page can pass its own small object. */
+export type VenueAddressForm = PlainSetters<
+  Pick<GatheringForm, "venueListing" | "address" | "setAddress">
+>;
 
 export interface VenueAddress {
   /** The linked listing's trimmed street address, or "" when there is none. */
@@ -31,7 +37,7 @@ export function useListingAddress(slug: string | undefined): VenueAddress {
  * the host unlinks the venue (or links a different one) an address that still
  * matches the old listing is cleared and never sticks to the new venue.
  */
-export function useVenueAddress(form: GatheringForm): VenueAddress {
+export function useVenueAddress(form: VenueAddressForm): VenueAddress {
   const linkedSlug = form.venueListing?.slug;
   const { venueAddress, isLoading } = useListingAddress(linkedSlug);
   const autoFilledRef = useRef<{ slug: string; address: string } | null>(null);

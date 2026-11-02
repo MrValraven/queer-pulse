@@ -545,6 +545,11 @@ export const routes = {
   verificationNeeded: "/system/verification-needed",
   rsvp: "/rsvp",
   createGathering: "/create-gathering",
+  /** Add a month of events from one of your own (`/create-gathering/month`,
+   *  optional `?from=<slug>`). Gated through `/create-gathering/*` in
+   *  authGate and Disallowed in robots.txt through the `/create-gathering`
+   *  prefix. */
+  addEventMonth: "/create-gathering/month",
   /** A guest community's invite to host a gathering together
    *  (`/collab-invites/:inviteId`), answered by its owners, co-owners and
    *  mods. Gated, and Disallowed in robots.txt. */

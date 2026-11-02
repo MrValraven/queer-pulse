@@ -134,3 +134,8 @@
   margin: 0 0 12px;
   font-size: var(--text-14-5);
 }
+
+/* Inside the fold, so a closed note leaves no gap under the sources row. */
+.waitNote {
+  margin: -4px 0 14px;
+}

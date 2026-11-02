@@ -101,6 +101,8 @@ function notFoundLoadState(): StudioLoadState {
   return loadStateOf({ isNotFound: true, reason: "notFound" });
 }
 
+/** The server keeps the identity while the member is hidden, so `shownAs`
+ *  reads the same whether the switch is on or off. */
 function stateWith({
   isSupporting,
   shownAsSubprofileId = null,
@@ -108,15 +110,13 @@ function stateWith({
   isSupporting: boolean;
   shownAsSubprofileId?: string | null;
 }): { state: StudioSupporterStateView; loadState: StudioLoadState } {
-  const shownAs = isSupporting
-    ? (OPTIONS.find(
-        (option) => option.shownAsSubprofileId === shownAsSubprofileId,
-      )?.identity ?? null)
-    : null;
+  const shownAs =
+    OPTIONS.find((option) => option.shownAsSubprofileId === shownAsSubprofileId)
+      ?.identity ?? null;
   return {
     state: toSupporterStateView({
       isSupporting,
-      shownAsSubprofileId: isSupporting ? shownAsSubprofileId : null,
+      shownAsSubprofileId,
       shownAs,
       since: isSupporting ? "2026-10-01T10:00:00.000Z" : null,
       options: OPTIONS,
@@ -173,7 +173,7 @@ const SWITCH = { name: "Show me among NIGHTFORM's top listeners" };
 
 beforeEach(() => {
   mocks.isHistoryOn = true;
-  mocks.state = stateWith({ isSupporting: false });
+  mocks.state = stateWith({ isSupporting: true });
   mocks.save = saveResolving(true);
   mocks.remove = {
     remove: vi.fn(() => Promise.resolve(true)),
@@ -183,24 +183,46 @@ beforeEach(() => {
 });
 
 describe("StudioArtistSupporterCard", () => {
-  it("offers the switch off with the line naming the artist", () => {
-    mocks.state = stateWith({ isSupporting: false });
+  it("starts with the switch on and the line naming the artist", () => {
+    mocks.state = stateWith({ isSupporting: true });
     renderCard();
     expect(screen.getByRole("switch", SWITCH)).toHaveAttribute(
       "aria-checked",
-      "false",
+      "true",
     );
     expect(
       screen.getByText(
-        "NIGHTFORM sees the name and photo you pick among their top listeners, ranked by how much you played them in the last 28 days",
+        "NIGHTFORM sees the name and photo you pick among their top listeners, ranked by how much you played them in the last 28 days. It starts on as your account, and you can turn it off any time",
       ),
+    ).toBeInTheDocument();
+    const lead = screen.getByText("This is how NIGHTFORM sees you");
+    expect(
+      within(lead.parentElement as HTMLElement).getByText("Tiago Costa"),
     ).toBeInTheDocument();
   });
 
-  it("opens the picker with a preview per identity and saves the account", async () => {
-    mocks.state = stateWith({ isSupporting: false });
+  it("turns it back on as the kept identity without opening the picker", async () => {
+    mocks.state = stateWith({
+      isSupporting: false,
+      shownAsSubprofileId: "sp-mariana",
+    });
     renderCard();
-    fireEvent.click(screen.getByRole("switch", SWITCH));
+    const toggle = screen.getByRole("switch", SWITCH);
+    expect(toggle).toHaveAttribute("aria-checked", "false");
+    fireEvent.click(toggle);
+    await waitFor(() =>
+      expect(mocks.save?.save).toHaveBeenCalledWith("sp-mariana"),
+    );
+    expect(screen.queryByRole("radiogroup")).toBeNull();
+    expect(mocks.remove?.remove).not.toHaveBeenCalled();
+  });
+
+  it("opens the picker from Change how you appear with a preview per identity and saves the account", async () => {
+    mocks.state = stateWith({ isSupporting: true });
+    renderCard();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Change how you appear" }),
+    );
     const group = await screen.findByRole("radiogroup", {
       name: "How NIGHTFORM sees you",
     });
@@ -225,23 +247,26 @@ describe("StudioArtistSupporterCard", () => {
     expect(mocks.save?.save).toHaveBeenCalledWith(null);
   });
 
-  it("closes the picker without saving and leaves the switch off", async () => {
-    mocks.state = stateWith({ isSupporting: false });
+  it("closes the picker without saving and leaves the switch on", async () => {
+    mocks.state = stateWith({ isSupporting: true });
     renderCard();
-    fireEvent.click(screen.getByRole("switch", SWITCH));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Change how you appear" }),
+    );
     fireEvent.click(
       await screen.findByRole("button", { name: "Close without saving" }),
     );
     expect(screen.getByRole("switch", SWITCH)).toHaveAttribute(
       "aria-checked",
-      "false",
+      "true",
     );
+    expect(screen.getByRole("switch", SWITCH)).toHaveFocus();
     expect(mocks.save?.save).not.toHaveBeenCalled();
   });
 
   it("tells a member with paused history that they will not appear", () => {
     mocks.isHistoryOn = false;
-    mocks.state = stateWith({ isSupporting: false });
+    mocks.state = stateWith({ isSupporting: true });
     renderCard();
     expect(
       screen.getByText(
@@ -269,7 +294,7 @@ describe("StudioArtistSupporterCard", () => {
     expect(radios[2]).toHaveAttribute("aria-checked", "true");
   });
 
-  it("turns the opt-in off and says so", async () => {
+  it("turns it off and says so", async () => {
     mocks.state = stateWith({ isSupporting: true, shownAsSubprofileId: null });
     renderCard();
     fireEvent.click(screen.getByRole("switch", SWITCH));
@@ -282,6 +307,24 @@ describe("StudioArtistSupporterCard", () => {
   });
 
   it("names a refused identity under the picker", async () => {
+    mocks.state = stateWith({ isSupporting: true });
+    mocks.save = saveResolving(
+      false,
+      apiError(403, "studio_supporter_identity_not_yours"),
+    );
+    renderCard();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Change how you appear" }),
+    );
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Save how you appear" }),
+    );
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "You can show yourself only as your account or a persona you are a member of",
+    );
+  });
+
+  it("names why turning it back on failed and leaves the switch off", async () => {
     mocks.state = stateWith({ isSupporting: false });
     mocks.save = saveResolving(
       false,
@@ -289,11 +332,14 @@ describe("StudioArtistSupporterCard", () => {
     );
     renderCard();
     fireEvent.click(screen.getByRole("switch", SWITCH));
-    fireEvent.click(
-      await screen.findByRole("button", { name: "Save how you appear" }),
-    );
-    expect(await screen.findByRole("alert")).toHaveTextContent(
-      "You can show yourself only as your account or a persona you are a member of",
+    expect(
+      await screen.findByText(
+        "We couldn't turn on Show me among the top listeners. You can show yourself only as your account or a persona you are a member of",
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("switch", SWITCH)).toHaveAttribute(
+      "aria-checked",
+      "false",
     );
   });
 
@@ -382,7 +428,30 @@ describe("StudioArtistSupporterCard at its edges", () => {
     }
   });
 
-  it("moves focus to the card heading when a save finds the artist gone", async () => {
+  it("opens the picker when the kept identity is no longer the member's", async () => {
+    const hidden = stateWith({ isSupporting: false });
+    mocks.state = {
+      ...hidden,
+      state: hidden.state && {
+        ...hidden.state,
+        shownAsSubprofileId: "sp-gone",
+        shownAs: null,
+      },
+    };
+    renderCard();
+    fireEvent.click(screen.getByRole("switch", SWITCH));
+    const group = await screen.findByRole("radiogroup", {
+      name: "How NIGHTFORM sees you",
+    });
+    expect(within(group).getAllByRole("radio")).toHaveLength(3);
+    expect(screen.getByRole("switch", SWITCH)).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+    expect(mocks.save?.save).not.toHaveBeenCalled();
+  });
+
+  it("moves focus to the card heading when turning it on finds the artist gone", async () => {
     mocks.state = stateWith({ isSupporting: false });
     mocks.save = {
       save: vi.fn(() => {
@@ -394,9 +463,6 @@ describe("StudioArtistSupporterCard at its edges", () => {
     };
     renderCard();
     fireEvent.click(screen.getByRole("switch", SWITCH));
-    fireEvent.click(
-      await screen.findByRole("button", { name: "Save how you appear" }),
-    );
     await waitFor(() =>
       expect(
         screen.getByRole("heading", {

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
@@ -48,6 +48,14 @@ function renderSection(memberId: string) {
 const pulseLiveSwitch = () =>
   screen.findByRole("switch", { name: "Pulse Live early access" });
 
+// Every feature renders its own row with its own status line and live region,
+// so a query about the Pulse Live row reads inside that row's list item.
+function pulseLiveRowOf(toggle: HTMLElement) {
+  const row = toggle.closest("li");
+  if (!row) throw new Error("The Pulse Live switch is not inside a list row");
+  return within(row);
+}
+
 describe("AdminMemberEarlyAccessSection (demo)", () => {
   it("starts off for a member without a grant, and turns on in one click", async () => {
     renderSection("ines");
@@ -56,9 +64,12 @@ describe("AdminMemberEarlyAccessSection (demo)", () => {
       screen.getByRole("heading", { name: "Early access" }),
     ).toBeInTheDocument();
     expect(toggle).toHaveAttribute("aria-checked", "false");
-    expect(screen.getByText("Off")).toBeInTheDocument();
+    const pulseLiveRow = pulseLiveRowOf(toggle);
+    expect(pulseLiveRow.getByText("Off")).toBeInTheDocument();
     expect(
-      screen.getByText("Live quiz games on events, for hosts and players"),
+      pulseLiveRow.getByText(
+        "Hosting live quiz games at events and anywhere else. Playing needs only a code",
+      ),
     ).toBeInTheDocument();
     fireEvent.click(toggle);
     // A new demo grant credits the signed-in demo staff member.
@@ -66,7 +77,16 @@ describe("AdminMemberEarlyAccessSection (demo)", () => {
       await screen.findByText(/turned on by Tiago Costa/i),
     ).toBeInTheDocument();
     expect(toggle).toHaveAttribute("aria-checked", "true");
-    expect(screen.queryByText("Off")).not.toBeInTheDocument();
+    expect(pulseLiveRow.queryByText("Off")).not.toBeInTheDocument();
+  });
+
+  it("lists Add a month of events as its own early access switch", async () => {
+    renderSection("ines");
+    expect(
+      await screen.findByRole("switch", {
+        name: "Add a month of events early access",
+      }),
+    ).toBeInTheDocument();
   });
 
   it("names who turned a grant on, and turns it off with no confirm", async () => {
@@ -74,9 +94,12 @@ describe("AdminMemberEarlyAccessSection (demo)", () => {
     const toggle = await pulseLiveSwitch();
     expect(toggle).toHaveAttribute("aria-checked", "true");
     // Seeded grants keep their historical grantor.
-    expect(screen.getByText(/turned on by Inês Martins/i)).toBeInTheDocument();
+    const pulseLiveRow = pulseLiveRowOf(toggle);
+    expect(
+      pulseLiveRow.getByText(/turned on by Inês Martins/i),
+    ).toBeInTheDocument();
     fireEvent.click(toggle);
-    expect(await screen.findByText("Off")).toBeInTheDocument();
+    expect(await pulseLiveRow.findByText("Off")).toBeInTheDocument();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(toggle).toHaveAttribute("aria-checked", "false");
   });
@@ -133,8 +156,8 @@ describe("AdminMemberEarlyAccessSection (demo)", () => {
       mutate: vi.fn(),
     };
     renderSection("ines");
-    await pulseLiveSwitch();
-    expect(screen.getByRole("status")).toHaveTextContent(
+    const toggle = await pulseLiveSwitch();
+    expect(pulseLiveRowOf(toggle).getByRole("status")).toHaveTextContent(
       "Couldn't save early access. Try again.",
     );
   });

@@ -55,12 +55,11 @@ export interface MessageAreaProps {
   /** Opens the "Seen by" sheet (the full read list with times). */
   onOpenSeenBy?: () => void;
   onRetry: (message: ChatMessage) => void;
-  /** True when the counterpart's read watermark has caught the last outbound message. */
-  seenActive: boolean;
-  /** True when the counterpart's DELIVERED watermark has caught the last outbound
-   *  message (one rung below `seenActive`). */
-  deliveredActive: boolean;
-  lastOutbound: ChatMessage | undefined;
+  /** The counterpart's READ watermark (ISO), forwarded to every run so each own
+   *  message at or before it shows "Seen". */
+  counterpartLastReadAt: string | null;
+  /** The counterpart's DELIVERED watermark (ISO), one rung below read. */
+  counterpartDeliveredAt: string | null;
   onReactionToggle: (
     message: ChatMessage,
     key: MessageReactionKey,

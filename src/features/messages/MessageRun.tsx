@@ -9,7 +9,6 @@ import { MailboxAttributionLabel } from "./mailboxes/MailboxAttributionLabel";
 import { MessageRunFailedRow } from "./MessageRunFailedRow";
 import type { MessageRun } from "./messageRuns";
 import { groupIntoAlbums } from "./messageAlbums";
-import { lastUndeletedIndex } from "./messageRows";
 import { MessageAlbum } from "./MessageAlbum";
 import { colleagueSenderLabel, isTypedByViewer } from "./viewerSideSender";
 import { MessageBubble } from "./MessageBubble";
@@ -28,30 +27,27 @@ export interface RunParticipant {
 }
 
 /**
- * The tick for the own message at run position `index`. EVERY own bubble (and
- * album) carries its own time + tick, WhatsApp-style, resolved through the
- * same honest ladder (failed > seen > delivered > sent > sending). The
- * thread-level watermark flags describe the FINAL outbound message only, so
- * they reach the `receiptIndex` message alone; earlier ones read their own
- * `deliveredAt` / `status` / `id`, which is exactly what `deliveredAt` is on
- * the DTO for. Keeping the meta on the last bubble alone meant that bubble's
- * time and tick jumped down into each new message, snapping the one above
- * 62px narrower mid-send (measured). Received messages carry no tick.
+ * The tick for an own message. EVERY own bubble (and album) carries its own
+ * time + tick, WhatsApp-style, resolved through the same honest ladder (failed
+ * > sending > seen > delivered > sent). Each message is compared against the
+ * counterpart's read and delivered watermarks by its own `at`, so a burst of
+ * messages the counterpart has read all show "seen" together, including the final one.
+ * Earlier bubbles also read their own `deliveredAt` / `status` / `id`. Keeping
+ * the meta on the last bubble alone meant that bubble's time and tick jumped
+ * down into each new message, snapping the one above 62px narrower mid-send
+ * (measured). Received messages carry no tick.
  */
 function runMetaStatus(
   message: ChatMessage,
-  index: number,
   isSent: boolean,
-  receiptIndex: number,
-  showSeen: boolean | undefined,
-  showDelivered: boolean | undefined,
+  counterpartLastReadAt: string | null | undefined,
+  counterpartDeliveredAt: string | null | undefined,
 ): MetaStatus {
   if (!isSent) return null;
-  const isReceiptMessage = index === receiptIndex;
   return resolveSendStatus(
     message,
-    isReceiptMessage && !!showSeen,
-    isReceiptMessage && !!showDelivered,
+    counterpartLastReadAt,
+    counterpartDeliveredAt,
   );
 }
 
@@ -68,14 +64,14 @@ export interface MessageRunViewProps {
   isGroup?: boolean;
   /** Retries a failed optimistic send. Only relevant for the "me" side. */
   onRetry?: (message: ChatMessage) => void;
-  /** True only for the run containing the thread's last outbound message,
-   *  once the counterpart's read watermark has caught up to it — renders
-   *  "Seen" below that run instead of nothing. Ignored while the last item is
-   *  still sending/failed (those take precedence). */
-  showSeen?: boolean;
-  /** Like `showSeen`, one rung down: the counterpart's DELIVERED watermark has
-   *  caught the thread's final outbound message (double check, pre-read). */
-  showDelivered?: boolean;
+  /** ISO time the counterpart's READ watermark has reached. Every own,
+   *  server-acked message in this run at or before it renders "Seen". Null/absent
+   *  (demo, nothing read yet) leaves the ladder to each message's own `status`.
+   *  A string, so the run's `memo` holds while the watermark stands still. */
+  counterpartLastReadAt?: string | null;
+  /** Like `counterpartLastReadAt`, one rung down: own messages at or before the
+   *  counterpart's DELIVERED watermark render the double check (pre-read). */
+  counterpartDeliveredAt?: string | null;
   /** Adds/removes a reaction on `message`; `mine` is whether the signed-in
    *  member already had that reaction (decides add vs. remove upstream). */
   onReactionToggle?: (
@@ -116,8 +112,8 @@ function MessageRunViewImpl({
   counterpartName,
   isGroup,
   onRetry,
-  showSeen,
-  showDelivered,
+  counterpartLastReadAt,
+  counterpartDeliveredAt,
   onReactionToggle,
   onReply,
   onOpenActions,
@@ -171,9 +167,6 @@ function MessageRunViewImpl({
   const senderName = runSenderName;
   const lastIndex = run.items.length - 1;
   const lastMessage = run.items[lastIndex];
-  // The bubble the thread-level seen/delivered flags ride: the newest one that
-  // is not a tombstone, which renders no meta to carry them.
-  const receiptIndex = lastUndeletedIndex(run.items);
   // Photo bursts collapse into albums (DES-219); everything else stays a
   // bubble, and so does a photo while its caption is being edited (ENG-405).
   const segments = useMemo(
@@ -183,11 +176,9 @@ function MessageRunViewImpl({
   const metaStatusAt = (index: number) =>
     runMetaStatus(
       run.items[index]!,
-      index,
       isSent,
-      receiptIndex,
-      showSeen,
-      showDelivered,
+      counterpartLastReadAt,
+      counterpartDeliveredAt,
     );
 
   return (

@@ -143,13 +143,11 @@ describe("QuizshowOpenLobbyDialog", () => {
     expect(await screen.findByText("How people play")).toBeTruthy();
     expect(screen.queryByText("Most people per team")).toBeNull();
 
-    await user.click(screen.getByRole("radio", { name: "In teams" }));
+    await user.click(screen.getByRole("radio", { name: /^Teams/ }));
     expect(await screen.findByText("Most people per team")).toBeTruthy();
     expect(screen.getByText("No limit")).toBeTruthy();
 
-    await user.click(
-      screen.getByRole("radio", { name: "Everyone for themselves" }),
-    );
+    await user.click(screen.getByRole("radio", { name: /^Solo/ }));
     await user.click(screen.getByRole("button", { name: "Open lobby" }));
 
     await waitFor(() => expect(demoOpenSession).toHaveBeenCalledTimes(1));

@@ -571,6 +571,27 @@ export const shared: Catalog = {
   "megaNav.community.col.discover.partners": "Partners",
   "megaNav.community.col.gatheringsPlaces.head": "Events & places",
 
+  // mobileNav.data.ts: sheet-only labels and subtitles.
+  "mobileNav.label.studio": "Studio",
+  "mobileNav.label.cinema": "Cinema",
+  "mobileNav.subtitle.about": "Who we are and how to reach us",
+  // mobileNav.data.ts: one-line description under each "More" sheet tile.
+  "mobileNav.desc.members": "Find people near you",
+  "mobileNav.desc.professionals": "Queer pros and services",
+  "mobileNav.desc.forum": "Ask, share and talk",
+  "mobileNav.desc.events": "What's on this week",
+  "mobileNav.desc.communities": "Groups you can join",
+  "mobileNav.desc.activism": "Causes that need hands",
+  "mobileNav.desc.businesses": "Queer-friendly places",
+  "mobileNav.desc.housing": "Rooms and flatmates",
+  "mobileNav.desc.resources": "Guides for health and rights",
+  "mobileNav.desc.magazine": "Essays, interviews, reviews",
+  "mobileNav.desc.studio": "Music by queer artists",
+  "mobileNav.desc.cinema": "Queer film to watch",
+  "mobileNav.desc.about": "Our mission and how we run",
+  "mobileNav.desc.help": "Answers to common questions",
+  "mobileNav.desc.contact": "Get in touch with our team",
+
   // MegaNav — Resources
   "megaNav.resources.title": "Resources",
   "megaNav.resources.subtitle": "Health, safety, library",
@@ -794,6 +815,15 @@ export const shared: Catalog = {
   "reframe.preview.group": "How it will look",
   "reframe.hintTouch": "Drag to move. Pinch to zoom.",
   "reframe.hintPointer": "Drag to move. Scroll to zoom.",
+
+  // upload.*: shown while a photo uploads (UploadWaitNote.tsx, the reframe
+  // modal's Save button, the gallery and photo picker source buttons). The
+  // prep step decodes and shrinks the photo on the device before any bytes
+  // move, so the percent sits at 0 for a while; `upload.preparing` covers it.
+  "upload.preparing": "Getting your photo ready…",
+  "upload.inProgress": "Uploading…",
+  "upload.waitNote":
+    "Photos can take up to a minute to upload. Please wait here, there's no need to add them again: each one shows up on its own once it's done.",
 
   // announcement.*: sitewide admin-authored banner (AnnouncementBanner.tsx),
   // mounted in both AppShell and PageShell — shown to every visitor, signed

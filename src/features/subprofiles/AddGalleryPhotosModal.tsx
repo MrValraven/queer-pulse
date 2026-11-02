@@ -1,6 +1,11 @@
 import { useRef } from "react";
 import { FiCamera } from "react-icons/fi";
-import { Modal, Button, PhotoReframeModal } from "../../shared/components/ui";
+import {
+  Modal,
+  Button,
+  PhotoReframeModal,
+  UploadWaitNote,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { GalleryPastUploadsGrid } from "./GalleryPastUploadsGrid";
 import { useGalleryUploadQueue } from "./useGalleryUploadQueue";
@@ -43,6 +48,14 @@ export function AddGalleryPhotosModal({
     resolveQueueHead,
   } = useGalleryUploadQueue(remaining);
 
+  // The prep step (decode, strip metadata, shrink) runs before any bytes move,
+  // so a 0% reads as "getting ready" until the first progress tick.
+  const sourceLabel = !uploading
+    ? t("subprofiles:gallery.fromDevice")
+    : progress === 0
+      ? t("shared:upload.preparing")
+      : t("subprofiles:gallery.uploading", { percent: progress });
+
   const footer = (
     <Button
       variant="primary"
@@ -72,11 +85,14 @@ export function AddGalleryPhotosModal({
           disabled={uploading || atCapacity}
         >
           <FiCamera size={16} aria-hidden />
-          {uploading
-            ? t("subprofiles:gallery.uploading", { percent: progress })
-            : t("subprofiles:gallery.fromDevice")}
+          {sourceLabel}
         </button>
       </div>
+      {/* While the reframe modal is open it shows this note itself. */}
+      <UploadWaitNote
+        isShown={uploading && reframeQueue.length === 0}
+        className={styles.waitNote}
+      />
 
       {uploadError && (
         <p className={styles.error} role="alert">
@@ -117,15 +133,17 @@ export function AddGalleryPhotosModal({
         <PhotoReframeModal
           // One PhotoReframeModal instance is reused across the whole queue
           // (unlike the single-file pickers, which unmount/remount per
-          // file), so it needs an explicit per-file key to fully remount —
-          // and reset its internal `rect` — on every queue advance. Without
+          // file), so it needs an explicit per-file key to fully remount,
+          // resetting its internal `rect`, on every queue advance. Without
           // this, `rect` stays non-undefined across files (Save enables
           // immediately, before the next image's onLoad reseeds it via
           // ImageReframer's own key), so a fast Save on the next photo could
-          // apply the previous photo's crop.
+          // apply the previous photo's crop. It stays open through the upload
+          // with `isSaving`, so its buttons lock and the wait note shows.
           key={`${reframeQueue.length}:${reframeQueue[0].name}`}
           file={reframeQueue[0]}
           kind="work-image"
+          isSaving={uploading}
           onCancel={() => void resolveQueueHead()}
           onConfirm={(crop) => void resolveQueueHead(crop)}
         />

@@ -8,12 +8,35 @@ import type { GatheringForm } from "../useGatheringForm";
 import { VenuePicker } from "../VenuePicker";
 import { ONLINE_HOOD_VALUE } from "./dateNotes.data";
 import { LinkedVenueAddress } from "./LinkedVenueAddress";
-import { useVenueAddress } from "./useVenueAddress";
+import type { PlainSetters } from "./plainSetters";
+import { useVenueAddress, type VenueAddressForm } from "./useVenueAddress";
 import styles from "./WhenWhereChapter.module.css";
+
+/** The members the place fields read, so the month page can pass its own
+ *  small object. */
+export type PlaceFieldsForm = VenueAddressForm &
+  PlainSetters<
+    Pick<
+      GatheringForm,
+      | "hood"
+      | "setHood"
+      | "venue"
+      | "setVenue"
+      | "venueListingId"
+      | "setVenueListingId"
+      | "setVenueListing"
+      | "directions"
+      | "setDirections"
+      | "onlineUrl"
+      | "setOnlineUrl"
+      | "onlineUrlValid"
+      | "isVenueListingRefused"
+    >
+  >;
 
 /** The join link an online gathering asks for, with the same validation and
  *  hints the wizard has always used. */
-function JoinLinkField({ form }: { form: GatheringForm }) {
+function JoinLinkField({ form }: { form: PlaceFieldsForm }) {
   const { t } = useTranslation();
   const fieldId = useId();
   const inputId = `${fieldId}-onlineUrl`;
@@ -54,7 +77,7 @@ function JoinLinkField({ form }: { form: GatheringForm }) {
 /** The street address and arrival directions a gathering with a door asks
  *  for. Both are shared only with confirmed attendees. A venue linked from
  *  the directory supplies the address, so the host only adds directions. */
-function AddressFields({ form }: { form: GatheringForm }) {
+function AddressFields({ form }: { form: PlaceFieldsForm }) {
   const { t } = useTranslation();
   const fieldId = useId();
   const addressId = `${fieldId}-address`;
@@ -120,7 +143,7 @@ function AddressFields({ form }: { form: GatheringForm }) {
  * and their attendees saw a locked address row about an address that did not
  * exist.
  */
-export function PlaceFields({ form }: { form: GatheringForm }) {
+export function PlaceFields({ form }: { form: PlaceFieldsForm }) {
   const { t } = useTranslation();
   const fieldId = useId();
   const isOnline = form.hood === ONLINE_HOOD_VALUE;

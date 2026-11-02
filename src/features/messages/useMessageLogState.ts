@@ -36,16 +36,12 @@ export interface MessageLogState {
    *  aren't defeated by an unstable object prop. */
   counterpart: RunParticipant;
   groupSeenBy: SeenByEntry[];
-  lastOutbound: ChatMessage | undefined;
-  seenActive: boolean;
-  deliveredActive: boolean;
 }
 
 /**
  * Every value the scrolling message log (`MessageArea`) is derived from: the
- * flattened message list, the unread-divider anchor, the "Seen"/"Delivered"
- * watermark comparison, the GROUP "Seen by N" receipt, the virtualized row
- * list + `@tanstack/react-virtual` instance, stick-to-bottom/jump-pill scroll
+ * flattened message list, the unread-divider anchor, the GROUP "Seen by N"
+ * receipt, the virtualized row list + `@tanstack/react-virtual` instance, stick-to-bottom/jump-pill scroll
  * state, and the jump-to-message resolver. Extracted from `ConversationPanel`
  * (a pre-existing oversized orchestrator) to keep it under the component-size
  * cap — this is the single cohesive "message log" concern, distinct from the
@@ -56,8 +52,6 @@ export function useMessageLogState(
   messageGroups: { day: string; items: ChatMessage[] }[],
   myUserId: string | null | undefined,
   mySlug: string | undefined,
-  counterpartLastReadAt: string | null,
-  counterpartDeliveredAt: string | null,
   /** Paging state plus whether page 0 is current (see `ThreadHistory`). */
   history: ThreadHistory,
   jumpToMessageId: string | null | undefined,
@@ -97,13 +91,14 @@ export function useMessageLogState(
     history.isHistorySettled && !history.isHistoryError,
   );
 
-  // "Seen": the last message I sent that still shows a meta, and whether the
-  // counterpart's read watermark has caught up to it; only that bubble shows
-  // the escalation. A deleted message is skipped because its tombstone renders
-  // no meta, so pointing at it dropped the tick from the bubble before it. A
-  // system pill is skipped for the same reason. The group "Seen by" row and
-  // `useGroupIndicators` read this same value. A single backward walk (not a
-  // copy+reverse of the whole history) finds it in the fewest steps.
+  // The last message I sent that still shows a meta. It anchors the GROUP
+  // "Seen by" receipt only (`useGroupIndicators`, the row builder). The per
+  // bubble ticks no longer ride it: each own message is compared against the
+  // counterpart's read/delivered watermarks by its own `at` in
+  // `resolveSendStatus`, so a burst all reads "seen" together. A deleted message
+  // is skipped because its tombstone renders no meta, and so is a system pill.
+  // A single backward walk (not a copy+reverse of the whole history) finds it
+  // in the fewest steps.
   const lastOutbound = useMemo(() => {
     for (let index = flatMessages.length - 1; index >= 0; index -= 1) {
       const candidate = flatMessages[index]!;
@@ -117,17 +112,6 @@ export function useMessageLogState(
     }
     return undefined;
   }, [flatMessages]);
-  const seenActive =
-    !!lastOutbound?.at &&
-    !!counterpartLastReadAt &&
-    lastOutbound.at <= counterpartLastReadAt;
-  // "Delivered" (double check): the counterpart's delivered watermark has caught
-  // the last outbound message. One rung below seen — resolved with lower
-  // precedence in the run view, so a seen message never regresses to delivered.
-  const deliveredActive =
-    !!lastOutbound?.at &&
-    !!counterpartDeliveredAt &&
-    lastOutbound.at <= counterpartDeliveredAt;
 
   // The scroll container + its stable inner wrapper — see the file comment for
   // why these live alongside the virtualizer/scroll hooks that consume them.
@@ -272,8 +256,5 @@ export function useMessageLogState(
     jumpToMessageVirtualized,
     counterpart,
     groupSeenBy,
-    lastOutbound,
-    seenActive,
-    deliveredActive,
   };
 }

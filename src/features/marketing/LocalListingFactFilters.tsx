@@ -106,6 +106,7 @@ function FactGroup({
   extra,
   footer,
   isSingleChoice = false,
+  sectionTitleId,
 }: {
   label: string;
   note: string;
@@ -116,18 +117,28 @@ function FactGroup({
   footer?: ReactNode;
   /** One chip at most: the fieldset is announced as a radio group. */
   isSingleChoice?: boolean;
+  /** Given inside a desktop sidebar section, whose header names the group:
+   *  the legend is left out and the fieldset is labelled by the header's
+   *  title. */
+  sectionTitleId?: string;
 }) {
   const glide = useRefineGlide();
   const legendId = useId();
   return (
     <fieldset
-      className={s.accessGroup}
+      className={[s.accessGroup, sectionTitleId && s.flush]
+        .filter(Boolean)
+        .join(" ")}
       role={isSingleChoice ? "radiogroup" : undefined}
-      aria-labelledby={isSingleChoice ? legendId : undefined}
+      aria-labelledby={
+        sectionTitleId ?? (isSingleChoice ? legendId : undefined)
+      }
     >
-      <legend id={legendId} className={s.groupLabel}>
-        {label}
-      </legend>
+      {!sectionTitleId && (
+        <legend id={legendId} className={s.groupLabel}>
+          {label}
+        </legend>
+      )}
       <p className={s.accessNote}>{note}</p>
       <m.div {...glide.row} className={s.accessChips}>
         {children}
@@ -136,6 +147,16 @@ function FactGroup({
       {footer}
     </fieldset>
   );
+}
+
+/** What every fact group takes. */
+export interface LocalFactGroupProps {
+  listingFacts: DirectoryListingFactFilters;
+  onToggleListingFact: (change: ListingFactFilterChange) => void;
+  counts: ListingFactCounts;
+  isLoadedSetComplete: boolean;
+  /** Given inside a desktop sidebar section: see `FactGroup`. */
+  sectionTitleId?: string;
 }
 
 /** A disabled radio chip: out of the tab order, with no keys of its own. */
@@ -150,17 +171,13 @@ const UNPICKABLE_RADIO: RovingRadioProps<HTMLButtonElement> = {
  * arrow keys move the choice across the pickable chips (a chip that would
  * empty the list is skipped), and pressing the checked chip clears it.
  */
-function EntryModeFactGroup({
+export function EntryModeFactGroup({
   listingFacts,
   onToggleListingFact,
   counts,
   isLoadedSetComplete,
-}: {
-  listingFacts: DirectoryListingFactFilters;
-  onToggleListingFact: (change: ListingFactFilterChange) => void;
-  counts: ListingFactCounts;
-  isLoadedSetComplete: boolean;
-}) {
+  sectionTitleId,
+}: LocalFactGroupProps) {
   const { t } = useTranslation();
   const pickableModes = LISTING_ENTRY_MODES.filter(
     (mode) =>
@@ -189,6 +206,7 @@ function EntryModeFactGroup({
       label={t("marketing:local.filter.entryLabel")}
       note={t("marketing:local.filter.entryNote")}
       isSingleChoice
+      sectionTitleId={sectionTitleId}
     >
       {LISTING_ENTRY_MODES.map((mode) => {
         const pickableIndex = pickableModes.indexOf(mode);
@@ -219,17 +237,13 @@ function EntryModeFactGroup({
  * "Show more languages". While the rest are shown, every uncommon language
  * sits in that second row, so pressing a chip never moves it.
  */
-function LanguageFactGroup({
+export function LanguageFactGroup({
   listingFacts,
   onToggleListingFact,
   counts,
   isLoadedSetComplete,
-}: {
-  listingFacts: DirectoryListingFactFilters;
-  onToggleListingFact: (change: ListingFactFilterChange) => void;
-  counts: ListingFactCounts;
-  isLoadedSetComplete: boolean;
-}) {
+  sectionTitleId,
+}: LocalFactGroupProps) {
   const { t } = useTranslation();
   const glide = useRefineGlide();
   const moreLanguagesId = useId();
@@ -259,6 +273,7 @@ function LanguageFactGroup({
     <FactGroup
       label={t("marketing:local.filter.langLabel")}
       note={t("marketing:local.filter.langNote")}
+      sectionTitleId={sectionTitleId}
       footer={
         <button
           type="button"
@@ -296,33 +311,52 @@ function LanguageFactGroup({
   );
 }
 
-/**
- * "How to get in", "Ways to pay", "Languages" and "Inclusion practices",
- * beside "Who runs it" and the access needs. The Online tab leaves the first
- * two out (an online listing has neither) and offers the practices an online
- * listing can follow, plus any chosen one, so a stale link can be undone
- * here.
- */
-export function LocalListingFactFilters({
+/** "Ways to pay": any of the picked methods. */
+export function PaymentFactGroup({
   listingFacts,
   onToggleListingFact,
   counts,
   isLoadedSetComplete,
+  sectionTitleId,
+}: LocalFactGroupProps) {
+  const { t } = useTranslation();
+  return (
+    <FactGroup
+      label={t("marketing:local.filter.payLabel")}
+      note={t("marketing:local.filter.payNote")}
+      sectionTitleId={sectionTitleId}
+    >
+      {LISTING_PAYMENT_METHODS.map((method) => (
+        <LocalFactChip
+          key={method}
+          listingFacts={listingFacts}
+          isLoadedSetComplete={isLoadedSetComplete}
+          onToggle={onToggleListingFact}
+          label={t(PAYMENT_METHOD_LABEL_KEYS[method])}
+          isOn={listingFacts.payments.includes(method)}
+          change={{ kind: "payment", method }}
+          count={counts.payments[method]}
+        />
+      ))}
+    </FactGroup>
+  );
+}
+
+/**
+ * "Inclusion practices". The Online tab offers the practices an online
+ * listing can follow, plus any chosen one, so a stale link can be undone
+ * here.
+ */
+export function PracticeFactGroup({
+  listingFacts,
+  onToggleListingFact,
+  counts,
+  isLoadedSetComplete,
+  sectionTitleId,
   isOnlineScope,
-}: {
-  listingFacts: DirectoryListingFactFilters;
-  onToggleListingFact: (change: ListingFactFilterChange) => void;
-  counts: ListingFactCounts;
-  isLoadedSetComplete: boolean;
-  isOnlineScope: boolean;
-}) {
+}: LocalFactGroupProps & { isOnlineScope: boolean }) {
   const { t } = useTranslation();
   const vocabulary = useListingAttributeVocabulary();
-  const shared = {
-    listingFacts,
-    isLoadedSetComplete,
-    onToggle: onToggleListingFact,
-  };
   const offeredPractices: readonly string[] = isOnlineScope
     ? offeredInclusionPractices("online", [], vocabulary.inclusionPractices)
     : LISTING_INCLUSION_PRACTICES;
@@ -331,55 +365,43 @@ export function LocalListingFactFilters({
       offeredPractices.includes(practice) ||
       listingFacts.practices.includes(practice),
   );
+  return (
+    <FactGroup
+      label={t("marketing:local.filter.practiceLabel")}
+      note={t("marketing:local.filter.practiceNote")}
+      sectionTitleId={sectionTitleId}
+    >
+      {practices.map((practice) => (
+        <LocalFactChip
+          key={practice}
+          listingFacts={listingFacts}
+          isLoadedSetComplete={isLoadedSetComplete}
+          onToggle={onToggleListingFact}
+          label={t(INCLUSION_PRACTICE_LABEL_KEYS[practice])}
+          isOn={listingFacts.practices.includes(practice)}
+          change={{ kind: "practice", practice }}
+          count={counts.practices[practice]}
+        />
+      ))}
+    </FactGroup>
+  );
+}
 
+/**
+ * "How to get in", "Ways to pay", "Languages" and "Inclusion practices",
+ * beside "Who runs it" and the access needs. The Online tab leaves the first
+ * two out, since an online listing has neither.
+ */
+export function LocalListingFactFilters({
+  isOnlineScope,
+  ...groupProps
+}: LocalFactGroupProps & { isOnlineScope: boolean }) {
   return (
     <>
-      {!isOnlineScope && (
-        <EntryModeFactGroup
-          listingFacts={listingFacts}
-          onToggleListingFact={onToggleListingFact}
-          counts={counts}
-          isLoadedSetComplete={isLoadedSetComplete}
-        />
-      )}
-      {!isOnlineScope && (
-        <FactGroup
-          label={t("marketing:local.filter.payLabel")}
-          note={t("marketing:local.filter.payNote")}
-        >
-          {LISTING_PAYMENT_METHODS.map((method) => (
-            <LocalFactChip
-              key={method}
-              {...shared}
-              label={t(PAYMENT_METHOD_LABEL_KEYS[method])}
-              isOn={listingFacts.payments.includes(method)}
-              change={{ kind: "payment", method }}
-              count={counts.payments[method]}
-            />
-          ))}
-        </FactGroup>
-      )}
-      <LanguageFactGroup
-        listingFacts={listingFacts}
-        onToggleListingFact={onToggleListingFact}
-        counts={counts}
-        isLoadedSetComplete={isLoadedSetComplete}
-      />
-      <FactGroup
-        label={t("marketing:local.filter.practiceLabel")}
-        note={t("marketing:local.filter.practiceNote")}
-      >
-        {practices.map((practice) => (
-          <LocalFactChip
-            key={practice}
-            {...shared}
-            label={t(INCLUSION_PRACTICE_LABEL_KEYS[practice])}
-            isOn={listingFacts.practices.includes(practice)}
-            change={{ kind: "practice", practice }}
-            count={counts.practices[practice]}
-          />
-        ))}
-      </FactGroup>
+      {!isOnlineScope && <EntryModeFactGroup {...groupProps} />}
+      {!isOnlineScope && <PaymentFactGroup {...groupProps} />}
+      <LanguageFactGroup {...groupProps} />
+      <PracticeFactGroup {...groupProps} isOnlineScope={isOnlineScope} />
     </>
   );
 }

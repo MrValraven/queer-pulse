@@ -79,7 +79,8 @@ function StudioTopSupportersNotFound() {
   );
 }
 
-/** One ranked supporter, shown as the identity they chose. The ordered list
+/** One ranked listener, shown as the identity they picked (their account
+ *  unless they changed it). The ordered list
  *  carries the rank, so the visible number stays out of the reading. */
 function StudioTopSupporterRow({
   identity,
@@ -127,10 +128,11 @@ function StudioTopSupporterRow({
   );
 }
 
-/** "Top supporters": the listeners who chose to show themselves on this
- *  persona, ranked by the server on their last 28 days of plays. Each shows
- *  only the identity they chose, linked when it can be; no row carries a
- *  count. The opted-in total reads "Fewer than 5" under the floor. */
+/** "Top listeners": everyone who played this persona in the last 28 days
+ *  and did not turn off Show me among the top listeners, ranked by the
+ *  server on those plays. Each shows only the identity they picked, linked
+ *  when it can be; no row carries a count. The total of listeners shown
+ *  (`optedInCount` on the wire) reads "Fewer than 5" under the floor. */
 export function StudioTopSupportersCard({
   subprofileId,
   personaName,

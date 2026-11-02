@@ -1,5 +1,5 @@
 import { m, useIsPresent } from "motion/react";
-import { useId } from "react";
+import { useId, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { Avatar, Button, Collapse } from "../../shared/components/ui";
@@ -20,9 +20,9 @@ import styles from "./StudioListeningLists.module.css";
 
 const AVATAR_SIZE = 48;
 
-/** One artist the listener supports: who they are, how that artist sees
- *  the listener, since when, the artist's support links, Follow and Stop
- *  supporting. The row's link carries `data-supporting-link`, so the list
+/** One artist who sees the listener's name: who they are, how that artist
+ *  sees the listener, since when (only once the listener changed the
+ *  default), the artist's support links, Follow and Stop showing my name. The row's link carries `data-supporting-link`, so the list
  *  can move focus onto it after a removal. */
 export function StudioListeningSupportingRow({
   supporting,
@@ -31,7 +31,7 @@ export function StudioListeningSupportingRow({
 }: {
   supporting: StudioSupportingView;
   index: number;
-  /** After the artist's opt-in is turned off, before the row leaves. */
+  /** After the listener hid from the artist, before the row leaves. */
   onRemoved: (artistId: string, index: number, artistName: string) => void;
 }) {
   const { t } = useTranslation();
@@ -42,6 +42,10 @@ export function StudioListeningSupportingRow({
   const { artist, shownAs, since, supportLinks, isFollowing } = supporting;
   const { remove, isRemoving, error } = useRemoveStudioSupporter(artist.id);
   const errorId = useId();
+  // The date keeps its words while its line folds away.
+  const [lastSince, setLastSince] = useState(since);
+  if (since !== null && since !== lastSince) setLastSince(since);
+  const shownSince = since ?? lastSince;
   const hasFailed = Boolean(error) && !isRemoving;
   const collapsed = { opacity: 0, height: 0, overflow: "hidden" } as const;
   return (
@@ -87,11 +91,15 @@ export function StudioListeningSupportingRow({
           <p className={styles.meta}>
             {t("studio:listening.supporting.shownAs", { name: shownAs.name })}
           </p>
-          <p className={styles.meta}>
-            {t("studio:listening.supporting.since", {
-              date: fmt.date(since, { dateStyle: "medium" }),
-            })}
-          </p>
+          <Collapse isOpen={since !== null}>
+            {shownSince && (
+              <p className={styles.meta}>
+                {t("studio:listening.supporting.since", {
+                  date: fmt.date(shownSince, { dateStyle: "medium" }),
+                })}
+              </p>
+            )}
+          </Collapse>
           {supportLinks.length > 0 && (
             <div className={styles.links}>
               <StudioExternalLinkList
@@ -142,7 +150,7 @@ export function StudioListeningSupportingRow({
   );
 }
 
-/** Why turning the opt-in off failed. The row stays in the list. */
+/** Why hiding from the artist failed. The row stays in the list. */
 function StudioStopSupportingError({
   id,
   error,

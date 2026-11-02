@@ -7,14 +7,28 @@ import type { StudioLoadState } from "./api/studioLoadState";
 import { StudioLoadError } from "./StudioLoadStates";
 import { StudioLine } from "./StudioSkeletons";
 import { StudioSupporterIdentity } from "./StudioSupporterIdentity";
+import {
+  studioErrorMessageKey,
+  studioErrorMessageKeyOf,
+} from "./studioErrors.data";
 import { studioReasonCopyKey, studioReasonOf } from "./studioReason";
 import styles from "./StudioSupporter.module.css";
 import kit from "./studioKit.module.css";
 
 /** What the card's live region last reported. */
-export type StudioSupporterStatus = "saved" | "removed" | "removeFailed";
+export type StudioSupporterStatus =
+  "saved" | "removed" | "removeFailed" | "turnOnFailed";
 
 const SUPPORTER_WHAT_KEY = "studio:errors.what.supporter";
+
+/** A refused turn-on as a catalog key: a Studio code names its own line (the
+ *  kept identity is not yours any more), else the reason. */
+function turnOnErrorKeyOf(error: unknown): string {
+  const key = studioErrorMessageKeyOf(error, "save");
+  return key === studioErrorMessageKey(null)
+    ? studioReasonCopyKey(studioReasonOf(error), "save")
+    : key;
+}
 
 function StudioArtistSupporterSkeleton() {
   return (
@@ -128,20 +142,23 @@ export function StudioArtistSupporterConfirmation({
   );
 }
 
-/** One live region for the card. A removal (or a failed one) shows its
- *  line; a saved identity is announced only, since the confirmation line
- *  above already shows it. */
+/** One live region for the card. A removal or a failed turn on or off
+ *  shows its line; a saved identity is announced only, since the
+ *  confirmation line above already shows it. */
 export function StudioArtistSupporterStatus({
   status,
   personaName,
   shownAsName,
   removeError,
+  saveError,
 }: {
   status: StudioSupporterStatus | null;
   personaName: string;
   /** The name the artist sees now; null when none can be read. */
   shownAsName: string | null;
   removeError: unknown;
+  /** The latest save's refusal, named after a failed turn-on. */
+  saveError: unknown;
 }) {
   const { t } = useTranslation();
   const statusText =
@@ -149,7 +166,9 @@ export function StudioArtistSupporterStatus({
       ? t("studio:supporter.removed", { persona: personaName })
       : status === "removeFailed"
         ? `${t("studio:supporter.removeFailed")}. ${t(studioReasonCopyKey(studioReasonOf(removeError), "save"))}`
-        : null;
+        : status === "turnOnFailed"
+          ? `${t("studio:supporter.turnOnFailed")}. ${t(turnOnErrorKeyOf(saveError))}`
+          : null;
   const announcedText =
     status === "saved" && shownAsName !== null
       ? t("studio:supporter.confirmation", {

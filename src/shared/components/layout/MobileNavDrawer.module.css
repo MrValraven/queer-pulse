@@ -124,22 +124,46 @@
    reservation in standalone.css, unqualified for the same reason. Replaces
    (not stacks on top of) the base `.panel` bottom padding above: that
    `max(16px, env(...))` has no tab-bar term, so this is the real value
-   whenever the bar is on screen. */
+   whenever the bar is on screen. The Studio player floats above the tab bar
+   (z-nav, over this sheet), so its published height joins the reservation;
+   otherwise the last link sits under the player while a track plays.
+   The inset is 0 when nothing is queued. */
 @media (--mobile) {
   .panel {
-    padding-bottom: calc(28px + var(--tab-bar-h) + env(safe-area-inset-bottom));
+    padding-bottom: calc(
+      28px + var(--tab-bar-h) + var(--studio-player-inset, 0px) +
+        env(safe-area-inset-bottom)
+    );
   }
 }
-.link {
-  margin-top: 20px;
-  font-size: var(--text-16);
-  font-weight: 600;
-  color: var(--text-strong);
-  text-decoration: none;
-  padding: 12px 0;
+/* Signed-out visitors get the two account actions above the page list, so
+   the invite request is the first thing the sheet offers. The top margin
+   clears the absolutely positioned close button (it ends 52px down the panel,
+   the group starts 64px down). */
+.authActions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 16px auto;
+  /* The same readable measure as the page list beneath (MoreSheetRows
+     .root), so on a tablet-width sheet the pair lines up with the cards. */
+  inline-size: 100%;
+  max-inline-size: 36rem;
 }
-.cta {
-  margin-top: 10px;
+/* The child selector outranks Button's own padding whatever order the two
+   modules load in. A tighter inline padding keeps the longest label ("Request
+   an invite", about 144px wide this way) inside half the row from a 360px
+   phone up. */
+.authActions > .authAction {
+  width: 100%;
+  padding-inline: 12px;
+}
+/* Below 360px two equal halves no longer hold that label, so the pair
+   stacks with the invite on top. */
+@media (max-width: 359px) {
+  .authActions {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 :global([data-theme="dark"]) .panel {

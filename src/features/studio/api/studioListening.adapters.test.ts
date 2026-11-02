@@ -257,6 +257,13 @@ describe("supporting and the supporter state", () => {
       supportLinks.every((link) => link.href?.startsWith("https://")),
     ).toBe(true);
   });
+  it("keeps a row shown by default, with no start date", () => {
+    const views = toSupportingViews({
+      items: [{ ...supportingDto, since: null }],
+    });
+    expect(views).toHaveLength(1);
+    expect(views[0]?.since).toBeNull();
+  });
   it("keeps the options in server order with the account first", () => {
     const view = toSupporterStateView(stateDto);
     expect(view.options.map((option) => option.identity.key)).toEqual([

@@ -1,12 +1,14 @@
 import { describe, expect, it } from "vitest";
-import type {
-  QuizshowAnswerPayload,
-  QuizshowLobbyJoinInput,
-  QuizshowQuestion,
-  QuizshowQuiz,
-  QuizshowRound,
-  QuizshowRoundKind,
-  QuizshowText,
+import {
+  QUIZSHOW_LIMITS,
+  QUIZSHOW_TEAM_COLOR_KEYS,
+  type QuizshowAnswerPayload,
+  type QuizshowLobbyJoinInput,
+  type QuizshowQuestion,
+  type QuizshowQuiz,
+  type QuizshowRound,
+  type QuizshowRoundKind,
+  type QuizshowText,
 } from "../../../shared/contracts/quizshow";
 import type { QuizshowServerFrame } from "../realtime/quizshowFrames";
 import { createQuizshowEngine, reduceQuizshowEngine } from "./quizshowEngine";
@@ -1142,7 +1144,8 @@ describe("demo engine double taps", () => {
       { name: "Quizzly Bears", colorKey: "circle" },
       0,
     );
-    const bearsId = at(first.state.teams, 1).teamId;
+    // Rita was Disco Inferno's only player, so the lobby deleted it as she left.
+    const bearsId = at(first.state.teams, 0).teamId;
     expect(first.ack).toMatchObject({ ok: true, teamId: bearsId });
     const doubleTap = playerStep(
       first.state,
@@ -1157,7 +1160,7 @@ describe("demo engine double taps", () => {
       me: { teamId: bearsId },
     });
     expect(doubleTap.frames).toEqual([]);
-    expect(doubleTap.state.teams).toHaveLength(2);
+    expect(doubleTap.state.teams).toHaveLength(1);
     expect(
       playerStep(
         first.state,
@@ -1167,6 +1170,206 @@ describe("demo engine double taps", () => {
         100,
       ).ack,
     ).toMatchObject({ ok: false, code: "quizshow_team_name_taken" });
+  });
+});
+
+describe("demo engine lobby teams with nobody left in them", () => {
+  it("deletes a lobby team when its last player picks another team, freeing its name and colour", () => {
+    let state = engineWith({ playMode: "teams" });
+    state = joinTeamed(state, RITA, "Rita", {
+      newTeam: { name: "Quizzly Bears", colorKey: "circle" },
+    }).state;
+    const bearsId = at(state.teams, 0).teamId;
+    state = joinTeamed(state, NUNO, "Nuno", {
+      newTeam: { name: "Spill the Tea", colorKey: "triangle" },
+    }).state;
+    const picked = playerStep(
+      state,
+      NUNO,
+      "lobby:pickTeam",
+      { teamId: bearsId },
+      100,
+    );
+    expect(picked.ack).toMatchObject({ ok: true, me: { teamId: bearsId } });
+    expect(picked.state.teams.map((team) => team.teamId)).toEqual([bearsId]);
+    const lobby = at(payloadsOf(screenFrames(picked), "lobby:update"), 0);
+    expect(lobby.teams.map((team) => team.teamId)).toEqual([bearsId]);
+    expect(
+      joinTeamed(
+        picked.state,
+        BEA,
+        "Bea",
+        { newTeam: { name: "Spill the Tea", colorKey: "triangle" } },
+        200,
+      ).ack,
+    ).toMatchObject({ ok: true });
+  });
+
+  it("deletes the team a player starts a new one from only once nobody is left in it", () => {
+    let state = engineWith({ playMode: "teams" });
+    state = joinTeamed(state, RITA, "Rita", {
+      newTeam: { name: "Quizzly Bears", colorKey: "circle" },
+    }).state;
+    const bearsId = at(state.teams, 0).teamId;
+    state = joinTeamed(state, NUNO, "Nuno", { teamId: bearsId }).state;
+    const ritaCreated = playerStep(
+      state,
+      RITA,
+      "lobby:createTeam",
+      { name: "Disco Inferno", colorKey: "star" },
+      100,
+    );
+    expect(ritaCreated.state.teams.map((team) => team.name)).toEqual([
+      "Quizzly Bears",
+      "Disco Inferno",
+    ]);
+    const nunoCreated = playerStep(
+      ritaCreated.state,
+      NUNO,
+      "lobby:createTeam",
+      { name: "Spill the Tea", colorKey: "triangle" },
+      200,
+    );
+    expect(nunoCreated.ack).toMatchObject({ ok: true });
+    expect(nunoCreated.state.teams.map((team) => team.name)).toEqual([
+      "Disco Inferno",
+      "Spill the Tea",
+    ]);
+    const lobby = at(payloadsOf(screenFrames(nunoCreated), "lobby:update"), 0);
+    expect(lobby.teams.map((team) => team.name)).toEqual([
+      "Disco Inferno",
+      "Spill the Tea",
+    ]);
+  });
+
+  it("deletes a lobby team when the host removes its last player, and keeps every team once the game runs", () => {
+    let state = engineWith({ playMode: "teams" });
+    state = joinTeamed(state, RITA, "Rita", {
+      newTeam: { name: "Quizzly Bears", colorKey: "circle" },
+    }).state;
+    const bearsId = at(state.teams, 0).teamId;
+    state = joinTeamed(state, NUNO, "Nuno", {
+      newTeam: { name: "Spill the Tea", colorKey: "triangle" },
+    }).state;
+    const teaId = at(state.teams, 1).teamId;
+    state = joinTeamed(state, BEA, "Bea", { teamId: teaId }).state;
+    state = joinTeamed(state, KIKO, "Kiko", {
+      newTeam: { name: "Disco Inferno", colorKey: "star" },
+    }).state;
+    state = hostStep(
+      state,
+      "host:removePlayer",
+      { playerId: playerIdFor(state, BEA) },
+      100,
+    ).state;
+    expect(state.teams).toHaveLength(3);
+    const removedInLobby = hostStep(
+      state,
+      "host:removePlayer",
+      { playerId: playerIdFor(state, KIKO) },
+      200,
+    );
+    expect(removedInLobby.ack).toEqual({ ok: true, isNoop: false });
+    expect(removedInLobby.state.teams.map((team) => team.teamId)).toEqual([
+      bearsId,
+      teaId,
+    ]);
+    const lobby = at(
+      payloadsOf(screenFrames(removedInLobby), "lobby:update"),
+      0,
+    );
+    expect(lobby.teams.map((team) => team.teamId)).toEqual([bearsId, teaId]);
+    state = hostStep(
+      removedInLobby.state,
+      "host:start",
+      { phaseId: "0" },
+      300,
+    ).state;
+    state = hostStep(
+      state,
+      "host:removePlayer",
+      { playerId: playerIdFor(state, NUNO) },
+      400,
+    ).state;
+    expect(state.cursor.status).toBe("running");
+    expect(state.teams.map((team) => team.teamId)).toEqual([bearsId, teaId]);
+  });
+});
+
+describe("demo engine new teams founded from a team the player leaves empty", () => {
+  it("lets a team's only player start a new team in their own team's colour", () => {
+    const joined = joinTeamed(engineWith({ playMode: "teams" }), RITA, "Rita", {
+      newTeam: { name: "Quizzly Bears", colorKey: "circle" },
+    });
+    const created = playerStep(
+      joined.state,
+      RITA,
+      "lobby:createTeam",
+      { name: "Cubs", colorKey: "circle" },
+      100,
+    );
+    const cubsId = at(created.state.teams, 0).teamId;
+    expect(created.ack).toMatchObject({
+      ok: true,
+      teamId: cubsId,
+      me: { teamId: cubsId },
+    });
+    expect(
+      created.state.teams.map((team) => [team.name, team.colorKey]),
+    ).toEqual([["Cubs", "circle"]]);
+  });
+
+  it("lets a team's only player start a new team when the session is at the team limit", () => {
+    let state = engineWith({ playMode: "teams" });
+    const teamColorKeys = QUIZSHOW_TEAM_COLOR_KEYS.slice(
+      0,
+      QUIZSHOW_LIMITS.teamsPerSessionMax,
+    );
+    teamColorKeys.forEach((colorKey, teamIndex) => {
+      state = joinTeamed(state, `member-founder-${teamIndex}`, "Founder", {
+        newTeam: { name: `Team ${teamIndex}`, colorKey },
+      }).state;
+    });
+    expect(state.teams).toHaveLength(QUIZSHOW_LIMITS.teamsPerSessionMax);
+    const firstColorKey = at(teamColorKeys, 0);
+    const created = playerStep(
+      state,
+      "member-founder-0",
+      "lobby:createTeam",
+      { name: "Fresh Start", colorKey: firstColorKey },
+      100,
+    );
+    expect(created.ack).toMatchObject({ ok: true });
+    expect(created.state.teams).toHaveLength(
+      QUIZSHOW_LIMITS.teamsPerSessionMax,
+    );
+    expect(created.state.teams.map((team) => team.name)).not.toContain(
+      "Team 0",
+    );
+    expect(created.state.teams.map((team) => team.name)).toContain(
+      "Fresh Start",
+    );
+  });
+
+  it("keeps the checks on a team another player is still in", () => {
+    let state = engineWith({ playMode: "teams" });
+    state = joinTeamed(state, RITA, "Rita", {
+      newTeam: { name: "Quizzly Bears", colorKey: "circle" },
+    }).state;
+    const bearsId = at(state.teams, 0).teamId;
+    state = joinTeamed(state, NUNO, "Nuno", { teamId: bearsId }).state;
+    const refused = playerStep(
+      state,
+      RITA,
+      "lobby:createTeam",
+      { name: "Cubs", colorKey: "circle" },
+      100,
+    );
+    expect(refused.ack).toMatchObject({
+      ok: false,
+      code: "quizshow_team_color_taken",
+    });
+    expect(refused.frames).toEqual([]);
   });
 });
 

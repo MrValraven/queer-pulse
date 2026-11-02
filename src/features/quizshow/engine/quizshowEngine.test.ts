@@ -356,7 +356,22 @@ describe("demo engine lobby and start", () => {
       { teamId: keptTeamId },
       0,
     ).state;
-    expect(state.teams).toHaveLength(2);
+    // The lobby already deleted Spill the Tea when Nuno left it; a hand-built empty team checks the start drops any left over, as the server does.
+    expect(state.teams).toHaveLength(1);
+    state = {
+      ...state,
+      teams: [
+        ...state.teams,
+        {
+          teamId: "team-left-over",
+          name: "Disco Inferno",
+          colorKey: "star",
+          score: 0,
+          hasUsedJoker: false,
+          jokerRoundIndex: null,
+        },
+      ],
+    };
     const result = hostStep(state, "host:start", { phaseId: "0" }, 0);
     expect(result.ack).toEqual({ ok: true, isNoop: false });
     expect(result.state.cursor).toMatchObject({

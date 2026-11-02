@@ -19,6 +19,7 @@ import {
   currentUserSlug,
 } from "../../features/members/data/demoCurrentUser";
 import { clearStoredGatheringDrafts } from "../../features/gatherings/createGatheringDraftStorage";
+import { clearStoredAddMonthDrafts } from "../../features/gatherings/addMonth/addMonthDraftStorage";
 import { clearLegacyCreatorDraftCopies } from "../../features/creatorDrafts/legacyCreatorDraftStorage";
 import { clearCreatorDraftDemoStore } from "../../features/creatorDrafts/api/creatorDrafts.demoStore";
 import { CREATOR_DRAFT_QUERY_ROOT } from "../../features/creatorDrafts/api/creatorDraftQueryKeys";
@@ -149,11 +150,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = useCallback(() => {
     setPreparing(false);
-    // Forget every unpublished gathering draft in this browser before the
-    // cache goes, in demo and live alike, so the next person on a shared
-    // device starts clean. Only this explicit sign-out clears them: a session
-    // that expires keeps its draft for the member's return (ruling F4).
+    // Forget every unpublished gathering draft and every unpublished month of
+    // events in this browser before the cache goes, in demo and live alike, so
+    // the next person on a shared device starts clean. Only this explicit
+    // sign-out clears them: a session that expires keeps its draft for the
+    // member's return (ruling F4).
     clearStoredGatheringDrafts();
+    clearStoredAddMonthDrafts();
     // Creator drafts live on the server now. Their only client copies are the
     // react-query cache, the demo store and the old browser keys, so all
     // three go here, in demo and live, before anything else.

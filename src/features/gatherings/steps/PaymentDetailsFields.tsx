@@ -9,6 +9,18 @@ import {
   MAX_PAYMENT_URL_LENGTH,
 } from "../paymentDetails";
 import type { GatheringForm } from "../useGatheringForm";
+import type { PlainSetters } from "./plainSetters";
+
+/** The members this field reads, so the month page can pass its own small object. */
+export type PaymentDetailsFieldsForm = PlainSetters<
+  Pick<
+    GatheringForm,
+    | "paymentUrl"
+    | "setPaymentUrl"
+    | "paymentInstructions"
+    | "setPaymentInstructions"
+  >
+>;
 
 /** Rows the instructions box opens at: two short lines and room for a third. */
 const INSTRUCTIONS_ROWS = 3;
@@ -21,7 +33,11 @@ const INSTRUCTIONS_ROWS = 3;
  * DISPLAY ONLY. The money goes from guest to host directly; nothing here
  * takes a payment.
  */
-export function PaymentDetailsFields({ form }: { form: GatheringForm }) {
+export function PaymentDetailsFields({
+  form,
+}: {
+  form: PaymentDetailsFieldsForm;
+}) {
   const { t } = useTranslation();
   const fieldId = useId();
   const linkId = `${fieldId}-payment-link`;

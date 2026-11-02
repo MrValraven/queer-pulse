@@ -78,8 +78,13 @@ export function useMyEventsData(options?: {
       if (demoMode) {
         // Demo mock is code-split: the registry loads only when the demo
         // dashboard actually mounts, never on the eager import path.
-        const { INITIAL_EVENTS } = await import("../myEvents.mock");
-        return { events: INITIAL_EVENTS };
+        // A demo month of events joins the hosting cards for the tab's session.
+        const [{ INITIAL_EVENTS }, { demoBatchHostingEvents }] =
+          await Promise.all([
+            import("../myEvents.mock"),
+            import("../../gatherings/addMonth/eventBatchDemo"),
+          ]);
+        return { events: [...INITIAL_EVENTS, ...demoBatchHostingEvents()] };
       }
       const [pages, invites] = await Promise.all([
         Promise.all(LIVE_FILTERS.map((filter) => getEvents({ filter }))),

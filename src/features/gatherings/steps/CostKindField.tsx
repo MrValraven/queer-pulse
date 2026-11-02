@@ -4,9 +4,19 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { Field, TextInput } from "../CreateGatheringFields";
 import { CostKindSegment } from "../fields/CostKindSegment";
 import type { GatheringForm } from "../useGatheringForm";
-import { PaymentDetailsFields } from "./PaymentDetailsFields";
+import {
+  PaymentDetailsFields,
+  type PaymentDetailsFieldsForm,
+} from "./PaymentDetailsFields";
+import type { PlainSetters } from "./plainSetters";
 import { COST_PLACEHOLDER_KEYS, MAX_COST_TEXT_LENGTH } from "./whoChapter.data";
 import styles from "./WhoChapter.module.css";
+
+/** The members this field reads, so the month page can pass its own small object. */
+export type CostFieldsForm = PaymentDetailsFieldsForm &
+  PlainSetters<
+    Pick<GatheringForm, "costKind" | "setCostKind" | "cost" | "setCost">
+  >;
 
 /**
  * What it costs: free, pay what you can or a fixed price, and for the two paid
@@ -19,7 +29,7 @@ import styles from "./WhoChapter.module.css";
  * Under the price, for the two paid kinds, the payment link and instructions
  * fold open (`PaymentDetailsFields`), under the same keep-but-do-not-send rule.
  */
-export function CostKindField({ form }: { form: GatheringForm }) {
+export function CostKindField({ form }: { form: CostFieldsForm }) {
   const { t } = useTranslation();
   const labelId = useId();
   const costLabel = t("gatherings:create.step3.costLabel");

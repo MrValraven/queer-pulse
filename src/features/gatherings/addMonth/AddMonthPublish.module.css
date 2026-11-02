@@ -1,0 +1,229 @@
+/* Publish section, results and failure panel of "Add a month of events". */
+
+.publish {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-heading);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.pledges {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+/* Matches the wizard's pledge group label (CreateGatheringShell .confirmsLabel). */
+.pledgesLabel {
+  font-size: var(--text-12);
+  font-weight: 600;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.publishButton {
+  align-self: flex-start;
+}
+
+.reason {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.45;
+  color: var(--accent-text);
+}
+
+.reasonIcon {
+  flex: none;
+  margin-top: 2px;
+  font-size: var(--text-16);
+}
+
+.allTogether {
+  margin: 0;
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+/* Results: the plum-panel success surface (docs/STYLE-RULES.md), with the
+   list of new events on it. */
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  padding: 40px;
+  border-radius: var(--radius-28);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+}
+
+.resultsIcon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  font-size: var(--text-24);
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.2);
+}
+
+.results .resultsTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-heading);
+  font-weight: 400;
+  line-height: 1.15;
+  color: rgba(var(--cream-rgb), 1);
+}
+
+/* Focus lands here after a publish; only a keyboard user sees the ring. */
+.results .resultsTitle:focus {
+  outline: none;
+}
+.results .resultsTitle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.results .resultsTitle em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.lede {
+  margin: 0;
+  max-width: 52ch;
+  font-size: var(--text-15);
+  line-height: 1.55;
+  color: rgba(var(--cream-rgb), 0.82);
+}
+
+.eventList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(var(--cream-rgb), 0.16);
+}
+
+.eventItem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.16);
+}
+
+.eventWhen {
+  flex: none;
+  min-width: 9.5em;
+  font-size: var(--text-13-5);
+  font-variant-numeric: tabular-nums;
+  color: rgba(var(--cream-rgb), 0.72);
+}
+
+.results .eventLink {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: rgba(var(--cream-rgb), 1);
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--cream-rgb), 0.4);
+  text-underline-offset: 3px;
+  border-radius: var(--radius-4);
+}
+
+.results .eventLink:hover {
+  text-decoration-color: currentColor;
+}
+
+.results .eventLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+  margin-top: 8px;
+}
+
+@media (--md) {
+  .results {
+    padding: 28px 20px;
+  }
+}
+
+/* Failure */
+
+.failure {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-card);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+
+.failureIcon {
+  flex: none;
+  margin-top: 2px;
+  font-size: var(--text-20);
+  color: var(--accent-text);
+}
+
+.failureBody {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.failureTitle {
+  margin: 0;
+  font-size: var(--text-16);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* Focus lands here after a failed publish that names no card. */
+.failureTitle:focus {
+  outline: none;
+}
+.failureTitle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.failureText {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.failureLink {
+  align-self: flex-start;
+}

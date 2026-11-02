@@ -14,7 +14,7 @@ export interface FooterColumn {
 }
 
 /**
- * Four balanced columns (5–6 links each). The long tail of routes is reachable
+ * Four balanced columns (5–7 links each). The long tail of routes is reachable
  * via the nav / sitemap and deliberately kept out of the footer for scannability.
  */
 export const COLUMNS: FooterColumn[] = [
@@ -33,6 +33,15 @@ export const COLUMNS: FooterColumn[] = [
       {
         labelKey: "shared:megaNav.community.col.organise.activismVolunteering",
         href: routes.volunteer,
+      },
+      // The phone "More" sheet no longer lists these two, so the footer does.
+      {
+        labelKey: "shared:megaNav.community.col.discover.partners",
+        href: routes.partners,
+      },
+      {
+        labelKey: "shared:megaNav.community.col.people.topics",
+        href: routes.topics,
       },
     ],
   },
@@ -133,6 +142,27 @@ export const BASE_LINKS: FooterLink[] = [
     href: routes.policiesSecurity,
   },
   { labelKey: "shared:adminNav.items.governance", href: routes.governance },
+  // The About group, dropped from the phone "More" sheet's grid. It joins this
+  // quiet row (not a fifth column) because the column grid is already four
+  // wide on desktop and two wide on phones.
+  {
+    labelKey: "shared:megaNav.about.col.mission.aboutQueerPulse",
+    href: routes.about,
+  },
+  { labelKey: "shared:megaNav.about.col.using.helpFaq", href: routes.help },
+  { labelKey: "shared:megaNav.about.col.using.roadmap", href: routes.roadmap },
+  {
+    labelKey: "shared:megaNav.about.col.using.forOrganisations",
+    href: routes.forOrganisations,
+  },
+  {
+    labelKey: "shared:megaNav.about.col.legal.pressKit",
+    href: routes.pressKit,
+  },
+  {
+    labelKey: "shared:megaNav.about.col.legal.dataRequest",
+    href: routes.dsar,
+  },
   {
     labelKey: "marketing:roadmap.subpageIndex.changelog.label",
     href: routes.changelog,

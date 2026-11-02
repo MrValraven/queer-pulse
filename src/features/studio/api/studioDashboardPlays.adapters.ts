@@ -32,6 +32,8 @@ export interface StudioArtistPlaysView {
 
 export interface StudioTopSupportersView {
   identities: StudioSupporterIdentityView[];
+  /** Listeners shown: everyone who played in the last 28 days and did not
+   *  turn it off. The wire keeps the older name. */
   optedInCount: StudioCountView;
 }
 

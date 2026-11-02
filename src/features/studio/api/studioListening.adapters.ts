@@ -60,7 +60,8 @@ export interface StudioListenView {
 
 export interface StudioSupportingView {
   artist: StudioArtistRefView;
-  since: Date;
+  /** Null while the listener is shown by default and never changed it. */
+  since: Date | null;
   shownAs: StudioSupporterIdentityView;
   supportLinks: StudioExternalLinkView[];
   isFollowing: boolean;
@@ -180,19 +181,19 @@ export function toListenView(dto: StudioListenDTO): StudioListenView {
   };
 }
 
-/** Newest first, as sent. Support links follow the artist page's rule;
- *  a row whose identity or start date cannot be read is dropped. */
+/** In the server's order. Support links follow the artist page's rule; a
+ *  row whose identity cannot be read is dropped, and a start date that is
+ *  missing or cannot be read reads as null. */
 export function toSupportingViews(
   dto: StudioSupportingResponseDTO,
 ): StudioSupportingView[] {
   return dto.items.flatMap((item) => {
     const shownAs = toSupporterIdentityView(item.shownAs);
-    const since = parsedDate(item.since);
-    if (!shownAs || !since) return [];
+    if (!shownAs) return [];
     return [
       {
         artist: toArtistRefView(item.artist),
-        since,
+        since: item.since ? parsedDate(item.since) : null,
         shownAs,
         supportLinks: toSupportLinkViews(item.supportLinks),
         isFollowing: item.isFollowing,

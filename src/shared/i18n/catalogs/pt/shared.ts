@@ -538,6 +538,27 @@ export const shared: Catalog = {
   "megaNav.community.col.discover.partners": "Parceiros",
   "megaNav.community.col.gatheringsPlaces.head": "Eventos e lugares",
 
+  // mobileNav.data.ts: sheet-only labels and subtitles.
+  "mobileNav.label.studio": "Studio",
+  "mobileNav.label.cinema": "Cinema",
+  "mobileNav.subtitle.about": "Quem somos e como falar connosco",
+  // mobileNav.data.ts: one-line description under each "More" sheet tile.
+  "mobileNav.desc.members": "Encontra pessoas perto de ti",
+  "mobileNav.desc.professionals": "Profissionais e serviços queer",
+  "mobileNav.desc.forum": "Pergunta, partilha e conversa",
+  "mobileNav.desc.events": "O que se passa esta semana",
+  "mobileNav.desc.communities": "Grupos a que te podes juntar",
+  "mobileNav.desc.activism": "Causas que precisam de ajuda",
+  "mobileNav.desc.businesses": "Espaços queer-friendly",
+  "mobileNav.desc.housing": "Quartos e colegas de casa",
+  "mobileNav.desc.resources": "Guias de saúde e direitos",
+  "mobileNav.desc.magazine": "Ensaios e entrevistas",
+  "mobileNav.desc.studio": "Música de artistas queer",
+  "mobileNav.desc.cinema": "Cinema queer para ver",
+  "mobileNav.desc.about": "A nossa missão e equipa",
+  "mobileNav.desc.help": "Respostas às tuas dúvidas",
+  "mobileNav.desc.contact": "Fala com a nossa equipa",
+
   // MegaNav — Resources
   "megaNav.resources.title": "Recursos",
   "megaNav.resources.subtitle": "Saúde, segurança, biblioteca",
@@ -747,6 +768,15 @@ export const shared: Catalog = {
   "reframe.preview.group": "Como vai ficar",
   "reframe.hintTouch": "Arrasta para mover. Dois dedos para ampliar.",
   "reframe.hintPointer": "Arrasta para mover. Usa a roda para aproximar.",
+
+  // upload.*: mostrado enquanto uma foto carrega (UploadWaitNote.tsx, o botão
+  // Guardar do reenquadramento, os botões de origem da galeria e do seletor de
+  // fotos). A preparação descodifica e reduz a foto no dispositivo antes de
+  // enviar, por isso a percentagem fica em 0 durante um bocado.
+  "upload.preparing": "A preparar a foto…",
+  "upload.inProgress": "A carregar…",
+  "upload.waitNote":
+    "As fotos podem demorar até um minuto a carregar. Aguarda aqui, não precisas de as adicionar outra vez: cada uma aparece sozinha quando estiver pronta.",
 
   // announcement.*: faixa de aviso em todo o site, escrita por quem administra
   // (AnnouncementBanner.tsx), montada tanto no AppShell como no PageShell —

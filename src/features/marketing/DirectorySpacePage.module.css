@@ -924,19 +924,6 @@
     grid-column: 1;
   }
 }
-/* "Suggest an edit to these details" under the policy link: the shared
-   trigger's side padding goes so its text starts on the link's left edge, and
-   it carries the link's underline. The block padding stays, which keeps the
-   44px touch target. The wrapper class plus its child button outranks the
-   shared trigger's own padding whichever stylesheet loads first, and leaves
-   DirectoryContestControl.module.css as its other users have it. */
-.suggestDetails > button {
-  min-height: var(--tap-min);
-  padding-inline: 0;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
 /* Before you go: label and answer side by side, stacked on a phone and in a
    narrow container (the moderation drawer). The rows start 18px further down,
    the same air a .subLine leaves, so the heading sits as far from its first

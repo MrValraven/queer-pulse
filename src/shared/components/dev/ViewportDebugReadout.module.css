@@ -1,0 +1,73 @@
+/* Hidden on-device viewport readout (ViewportDebugReadout.tsx). A measuring
+   tool for screenshots: monospace so columns of figures line up, and
+   click-through everywhere except the close button so the app underneath
+   stays fully usable while the numbers are on screen. */
+
+.panel {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + 4px);
+  inset-inline-start: calc(env(safe-area-inset-left) + 4px);
+  z-index: var(--z-toast);
+  box-sizing: border-box;
+  max-width: min(380px, calc(100vw - 8px));
+  padding: 6px 8px;
+  padding-inline-end: 40px;
+  border-radius: var(--radius-6);
+  background: color-mix(in srgb, var(--ink-surface) 78%, transparent);
+  color: rgba(var(--cream-rgb), 0.96);
+  font-family: var(--mono);
+  font-size: var(--text-10);
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+.closeButton {
+  position: absolute;
+  top: 0;
+  inset-inline-end: 0;
+  pointer-events: auto;
+}
+
+.rows {
+  margin: 0;
+}
+
+.row {
+  display: flex;
+  gap: 6px;
+}
+
+.label {
+  flex: none;
+  color: rgba(var(--cream-rgb), 0.7);
+}
+
+.value {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Where a `position: fixed; bottom: 0` box really anchors on this device. */
+.fixedProbe {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Carries the safe-area insets as padding so getComputedStyle can read them
+   back as pixels. */
+.safeAreaProbe {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+  visibility: hidden;
+  pointer-events: none;
+}

@@ -29,20 +29,20 @@ import type {
 } from "./api/subprofiles.adapters";
 import type { SkinFamily } from "./subprofile-skins";
 
-/** Skins that paint `.pp-cover` as a thin rule above the hero and hide its
- *  image slot whatever the owner uploads, so the rule is part of their design
- *  and looks the same with or without a cover. */
+/** Skins that paint `.pp-cover` as an invisible spacer above the hero and hide
+ *  its image slot whatever the owner uploads, so it looks the same with or
+ *  without a cover. The poster skin (`collective`) shows an uploaded cover as
+ *  a full banner, so like every banner skin it mounts the band only then. */
 const RULE_COVER_SKINS: ReadonlySet<SkinFamily> = new Set([
   "practice",
   "chair",
-  "collective",
 ]);
 
 /**
  * Whether the page mounts its `.pp-cover` band. Every banner skin needs an
  * uploaded image for it: without one the page starts right under the nav,
  * and `.pp:not([data-has-cover])` in `persona-skins.css` sets that layout's
- * top gap. The rule skins above keep their band either way, except the
+ * top gap. The spacer skins above keep their band either way, except the
  * therapist layout, which shows a real image in it and, without one, starts
  * right under the nav as its design does.
  */

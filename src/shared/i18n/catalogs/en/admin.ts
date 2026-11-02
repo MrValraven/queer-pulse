@@ -1192,6 +1192,7 @@ export const admin: Catalog = {
     "Could not draw a sample just now. Try again in a moment.",
 
   "members.drawer.verifiedChip": "Verified member",
+  "members.drawer.seeProfileCta": "See profile",
   "members.drawer.verifyCta": "Verify",
   "members.drawer.verifiedToast": "{name} is verified.",
   "members.drawer.messageCta": "Message",
@@ -2340,6 +2341,7 @@ export const admin: Catalog = {
   "adminListings.view.editSuggestions": "Edit suggestions",
   "adminListings.view.claims": "Ownership claims",
   "adminListings.view.drafts": "Unfinished drafts",
+  "adminListings.view.partners": "Partners",
   "adminListings.remove.cta": "Delete",
   "adminListings.actions.moreAriaLabel": "More actions for {name}",
   "adminListings.remove.toast.removed": "{name} was deleted.",
@@ -9616,6 +9618,9 @@ export const admin: Catalog = {
   "earlyAccess.feature.quizshow.name": "Pulse Live",
   "earlyAccess.feature.quizshow.description":
     "Hosting live quiz games at events and anywhere else. Playing needs only a code",
+  "earlyAccess.feature.eventBatch.name": "Add a month of events",
+  "earlyAccess.feature.eventBatch.description":
+    "Hosts add many dates at once from one of their events",
   "earlyAccess.page.title": "Early <em>access</em>",
   "earlyAccess.page.subtitle":
     "Members testing features before launch. Admins turn access on from a member's drawer in Members.",
@@ -9774,4 +9779,95 @@ export const admin: Catalog = {
   "utilities.pdf.announce.cutRemoved": "Split removed",
   "utilities.pdf.announce.undone": "Edit undone",
   "utilities.pdf.announce.redone": "Edit redone",
+  // ── Directory partners (Admin only) ──────────────────────────────────────
+  "directoryPartners.heading": "Businesses we partner with",
+  "directoryPartners.intro":
+    "Pick the businesses we partner with. They show in a row at the top of the directory, in this order.",
+  "directoryPartners.count": "{count} of {max}",
+  "directoryPartners.addCta": "Add partner",
+  "directoryPartners.full":
+    "The row holds {max} partners. Remove one to add another",
+  "directoryPartners.empty.title": "No partners yet",
+  "directoryPartners.empty.body":
+    "Add a business and it shows at the top of the directory for everyone",
+  "directoryPartners.loadError.title": "We couldn't load the partners",
+  "directoryPartners.loadError.retryCta": "Load the partners again",
+  "directoryPartners.row.moveUpCta": "Move up",
+  "directoryPartners.row.moveUpAria": "Move {name} up",
+  "directoryPartners.row.moveDownCta": "Move down",
+  "directoryPartners.row.moveDownAria": "Move {name} down",
+  "directoryPartners.row.editNoteCta": "Edit note",
+  "directoryPartners.row.editNoteAria": "Edit note for {name}",
+  "directoryPartners.row.addNoteCta": "Add a note",
+  "directoryPartners.row.addNoteAria": "Add a note to {name}",
+  "directoryPartners.row.removeCta": "Remove from partners",
+  "directoryPartners.row.removeAria": "Remove {name} from partners",
+  "directoryPartners.row.dragTitle": "Drag {name} to a new position",
+  "directoryPartners.publicState.not_live":
+    "Not showing: the listing isn't live",
+  "directoryPartners.publicState.closed_for_good":
+    "Not showing: the business has closed for good",
+  "directoryPartners.publicState.hidden_by_owner":
+    "Not showing: the owner hid it from the directory",
+  "directoryPartners.publicState.moderated":
+    "Not showing: moderation took it off the directory",
+  "directoryPartners.publicState.adult_only":
+    "Not showing: it's in the 18+ category, which the public row leaves out",
+  "directoryPartners.moved": "{name} is now number {position}",
+  "directoryPartners.toast.added": "{name} is now a partner",
+  "directoryPartners.toast.removed": "{name} is no longer a partner",
+  "directoryPartners.toast.noteSaved": "Note saved",
+  "directoryPartners.addDialog.title": "Add partner",
+  "directoryPartners.addDialog.searchLabel": "Search live listings",
+  "directoryPartners.addDialog.searchPlaceholder": "Business name",
+  "directoryPartners.addDialog.searchHint":
+    "Only listings showing in the public directory appear here",
+  "directoryPartners.addDialog.idle": "Type a business name to find it",
+  "directoryPartners.addDialog.searching": "Searching",
+  "directoryPartners.addDialog.noResults": "No live listing matches {query}",
+  "directoryPartners.addDialog.resultsLabel": "Matching listings",
+  "directoryPartners.addDialog.alreadyPartner": "Already a partner",
+  "directoryPartners.addDialog.searchErrorTitle": "The search didn't finish",
+  "directoryPartners.addDialog.searchRetryCta": "Search again",
+  "directoryPartners.addDialog.chooseFirst": "Choose a business first",
+  "directoryPartners.addDialog.chosenHeading": "Your choice",
+  "directoryPartners.addDialog.changeCta": "Choose another business",
+  "directoryPartners.addDialog.submitCta": "Add partner",
+  "directoryPartners.noteHint":
+    "Shows on the business's card in the partner row. Leave it empty to show nothing",
+  "directoryPartners.noteDialog.saveCta": "Save note",
+  "directoryPartners.error.listing_not_found":
+    "That listing no longer exists, so it can't be added",
+  "directoryPartners.error.partner_not_found":
+    "That partner was already removed, maybe in another tab. Reload to see the current list",
+  "directoryPartners.error.listing_not_live":
+    "This listing isn't showing in the public directory right now, so it can't be a partner",
+  "directoryPartners.error.listing_adult_only":
+    "18+ listings can't be partners, because the partner row is public for everyone",
+  "directoryPartners.error.already_partner":
+    "This business is already a partner",
+  "directoryPartners.error.partner_limit_reached":
+    "The row already has {max} partners. Remove one to add another",
+  "directoryPartners.error.note_too_long":
+    "The note is longer than {noteMax} characters. Shorten it and save again",
+  "directoryPartners.error.order_mismatch":
+    "The partner list changed in another tab, so the current order is back. Move it again",
+  "directoryPartners.failure.offline":
+    "You're offline, so this didn't reach QueerPulse. Check your connection and try again",
+  "directoryPartners.failure.timeout":
+    "QueerPulse took too long to answer. Try again",
+  "directoryPartners.failure.rateLimited":
+    "You've made a lot of changes in a short time. Wait a minute, then try again",
+  "directoryPartners.failure.server":
+    "Our server ran into a problem. This one is on us, so try again in a moment",
+  "directoryPartners.failure.unreachable":
+    "We couldn't reach QueerPulse. Check your connection, or try again in a moment",
+  "directoryPartners.failure.forbidden":
+    "Only admins can change directory partners, and this account isn't an admin",
+  "directoryPartners.failure.notFound":
+    "This server doesn't offer directory partners yet. Reload the page, and tell the tech team if it keeps happening",
+  "directoryPartners.failure.restricted":
+    "You can't make changes while a moderation restriction is in effect on your account",
+  "directoryPartners.failure.unknown":
+    "This didn't go through and the server sent no reason. Try again",
 };

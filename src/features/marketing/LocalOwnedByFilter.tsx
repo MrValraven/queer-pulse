@@ -25,19 +25,31 @@ import s from "./LocalFilterBar.module.css";
 export function LocalOwnedByFilter({
   owned,
   onToggleOwned,
+  sectionTitleId,
 }: {
   /** The tags currently filtered on, in canonical order. */
   owned: ListingOwnedBy[];
   onToggleOwned: (value: ListingOwnedBy) => void;
+  /** Given inside a desktop sidebar section, whose header names the group:
+   *  the legend is left out and the fieldset is labelled by the header's
+   *  title. */
+  sectionTitleId?: string;
 }) {
   const { t } = useTranslation();
   const glide = useRefineGlide();
 
   return (
-    <fieldset className={s.ownedByGroup}>
-      <legend className={s.groupLabel}>
-        {t("marketing:local.filter.ownedByLabel")}
-      </legend>
+    <fieldset
+      className={[s.ownedByGroup, sectionTitleId && s.flush]
+        .filter(Boolean)
+        .join(" ")}
+      aria-labelledby={sectionTitleId}
+    >
+      {!sectionTitleId && (
+        <legend className={s.groupLabel}>
+          {t("marketing:local.filter.ownedByLabel")}
+        </legend>
+      )}
       <p className={s.ownedByNote}>{t("marketing:local.filter.ownedByNote")}</p>
       <m.div {...glide.row} className={s.ownedByChips}>
         {LISTING_OWNED_BY.map((value) => {

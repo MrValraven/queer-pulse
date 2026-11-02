@@ -30,6 +30,7 @@ export function LocalCategoryFilter({
   categoryIds = LOCAL_CATEGORIES,
   labelKey = "marketing:local.filter.categoryLabel",
   hasSwatches = true,
+  sectionTitleId,
 }: {
   /** The chosen place types. Empty means every type. */
   categories: string[];
@@ -47,6 +48,10 @@ export function LocalCategoryFilter({
   /** Leads each chip with its map-pin swatch. Off for the online categories,
    *  which have no pin on the map. */
   hasSwatches?: boolean;
+  /** Given inside a desktop sidebar section, whose header names the group:
+   *  the band label is left out, the chips are labelled by the header's
+   *  title, and they take the compact size the other groups' chips use. */
+  sectionTitleId?: string;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -118,18 +123,24 @@ export function LocalCategoryFilter({
   // zero may only mean the match sits on a page the browser has yet to fetch.
   // A chosen type always stays clickable (ChipSelect keeps selected chips
   // live), and "All" carries no flag, so it is always pickable.
+  const chipSelect = (
+    <ChipSelect
+      labelledBy={sectionTitleId ?? categoryLabelId}
+      options={categoryOptions}
+      selected={selected}
+      onToggle={toggleChip}
+      tick={false}
+      className={sectionTitleId ? s.compactChips : undefined}
+    />
+  );
+  if (sectionTitleId) return chipSelect;
+
   return (
     <div className={s.group}>
       <span className={s.groupLabel} id={categoryLabelId}>
         {t(labelKey)}
       </span>
-      <ChipSelect
-        labelledBy={categoryLabelId}
-        options={categoryOptions}
-        selected={selected}
-        onToggle={toggleChip}
-        tick={false}
-      />
+      {chipSelect}
     </div>
   );
 }

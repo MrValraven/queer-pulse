@@ -511,7 +511,8 @@
 }
 
 /* Jump-to-list: only meaningful on mobile, where the map stacks above the list.
-   Hidden on desktop (map + list sit side by side, no dead-end scroll). */
+   Hidden on desktop, where map and list sit side by side and both stay in
+   reach. */
 .jumpToList {
   display: none;
 }
@@ -524,10 +525,20 @@
    uses this same stage. These classes are separate from .mapPanel/.mapCanvas
    above, which the location picker still uses. */
 .directoryMapBody {
-  padding: 32px 0 var(--section-y-80);
+  /* Inside the desktop directory's results column the column spaces the map
+     (DirectoryLayout.module.css sets the variable); the housing map and the
+     phone layout keep this band's own padding. */
+  padding: var(--directory-view-padding, 32px 0 var(--section-y-80));
 }
 .stage {
   position: relative;
+  /* The floating list's width, shared with the full screen card that sits
+     beside it. The stage is the containing block of both, so the percentage
+     reads as a share of the stage: 380px from a 905px stage up, and down to
+     280px on a narrow stage (a 652px stage beside the filter sidebar keeps
+     360px of map in view). Each absolute child substitutes it and resolves
+     the percentage against its containing block, the stage. */
+  --map-panel-width: clamp(280px, 42%, 380px);
 }
 .stage[data-fullscreen="true"] {
   position: fixed;
@@ -559,6 +570,15 @@
   width: 100%;
   height: clamp(560px, calc(100svh - var(--sticky-top) - 48px), 860px);
 }
+/* A short window (a phone held sideways, about 430px tall) would get a map
+   taller than itself from the 560px floor. A 320px floor keeps the whole map
+   in view under the nav with room to pan. The phone layout below sets its
+   own height. */
+@media (max-height: 500px) {
+  .stageMapCanvas {
+    height: clamp(320px, calc(100svh - var(--sticky-top) - 48px), 860px);
+  }
+}
 :global([data-theme="dark"]) .stageMapCanvas {
   filter: saturate(0.92) brightness(0.82);
 }
@@ -578,7 +598,7 @@
   inset-block: 12px;
   inset-inline-end: 12px;
   z-index: var(--z-raised);
-  width: 380px;
+  width: var(--map-panel-width);
   overflow-y: auto;
   overscroll-behavior: contain;
   /* Keep the scrollbar off the cards, as in .sidebar. */
@@ -602,25 +622,93 @@
   padding: 16px 0 12px;
   background: var(--paper);
 }
+/* A narrow stage (under 640px, measured in useNarrowMapStage) docks the list
+   as a drawer along the map's bottom edge, the full map width wide, so the
+   map keeps its whole width above it. Its measured height plus inset becomes
+   the camera's bottom padding (useLisbonMap). Full screen spans the window
+   and keeps the side panel, so the drawer applies inline only. */
+.stage[data-narrow="true"]:not([data-fullscreen="true"]) .floatingPanel {
+  inset-block: auto 12px;
+  inset-inline: 12px;
+  width: auto;
+  max-height: 45%;
+}
+/* The drawer covers the bottom-left corner the credit moved to, so the
+   credit takes the free top-right corner, capped short of the zoom column on
+   the left as in the phone's full screen sheet. */
+.stage[data-narrow="true"]:not([data-fullscreen="true"])
+  :global(.maplibregl-ctrl-bottom-right) {
+  top: 0;
+  right: 0;
+  bottom: auto;
+  left: auto;
+  max-width: calc(100% - 56px);
+}
+/* A stage resized across the threshold moves the list between the side and
+   the bottom. It fades in at its new place: each direction names its own
+   keyframe so the change of name restarts the fade. Opacity alone, so the
+   camera padding measured from the list's box is exact from the first
+   frame. The first measurement happens before the first paint, so a stage
+   that loads narrow keeps the usual entrance. */
+.stage[data-layout-switched="true"][data-narrow="true"] .floatingPanel {
+  animation: qpMapPanelDock var(--dur-base) var(--ease-out) both;
+}
+.stage[data-layout-switched="true"]:not([data-narrow="true"]) .floatingPanel {
+  animation: qpMapPanelUndock var(--dur-base) var(--ease-out) both;
+}
+@keyframes qpMapPanelDock {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes qpMapPanelUndock {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+/* Reduced motion moves the list in one step. Same selectors as above, so
+   the later rule wins. */
+@media (prefers-reduced-motion: reduce) {
+  .stage[data-layout-switched="true"][data-narrow="true"] .floatingPanel,
+  .stage[data-layout-switched="true"]:not([data-narrow="true"]) .floatingPanel {
+    animation: none;
+  }
+}
 /* The page's search row, carried into the full screen map on desktop so a
    member can filter without leaving it. A paper card along the top edge, set
    between maplibre's zoom column in the top-left corner (29px of buttons on a
-   10px margin, so 56px clears it) and the list: the list's 380px, its 12px
-   inset and a 12px gap. On a short window it scrolls on its own once the
-   drawer outgrows the map's height, and stops 40px above the map's bottom
-   edge so the OpenFreeMap credit (about 24px tall, in the bottom-left corner)
-   stays readable below it. A tall window leaves it unclipped, so the sort
-   select's options can hang past the card's bottom edge as they do on the
-   page.
+   10px margin, so 56px clears it) and the list: the list's width, its 12px
+   inset and a 12px gap. It scrolls on its own once the drawer outgrows the
+   map's height, at every window height, and stops 40px above the map's
+   bottom edge so the OpenFreeMap credit (about 24px tall, in the bottom-left
+   corner) stays readable below it. The sort select sits inside the Refine
+   drawer with more filter bands below it, so its options open over those
+   bands within the card, and the select scrolls the card when they reach
+   its bottom edge.
    Its entrance waits for the full screen grow to finish: the card carries no
    view-transition name, so it would otherwise ride the root snapshot, show,
    vanish under the growing map and pop back. The `both` fill holds it at the
-   keyframes' transparent start during the wait. */
+   keyframes' transparent start during the wait.
+   The card is the query container its search row (`.barRow` in
+   LocalFilterBar.module.css) reads to stack the field above its controls on a
+   narrow window. Its width comes from its two insets, so the inline-size
+   containment leaves it unchanged. That containment also makes the card the
+   containing block for any `position: fixed` descendant; none sits inside it
+   today (the location help modal and every tooltip portal to <body>, and the
+   Select panel is `position: absolute`), and a future one belongs in a portal
+   too. */
 .fullscreenControls {
+  container: map-filter-card / inline-size;
   position: absolute;
   top: 12px;
   inset-inline-start: 56px;
-  inset-inline-end: calc(380px + 24px);
+  inset-inline-end: calc(var(--map-panel-width) + 24px);
   z-index: var(--z-raised);
   max-height: calc(100% - 12px - 40px);
   overflow-y: auto;
@@ -661,12 +749,6 @@
 }
 :global([data-theme="dark"]) .fullscreenControls {
   border-color: rgba(var(--cream-rgb), 0.1);
-}
-@media (min-height: 760px) {
-  .fullscreenControls {
-    max-height: none;
-    overflow: visible;
-  }
 }
 /* maplibre parks its attribution in the bottom-right corner, which the list
    covers. The bottom-left corner is free, so the credit moves there. */

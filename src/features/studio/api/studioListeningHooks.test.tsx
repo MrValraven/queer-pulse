@@ -115,14 +115,15 @@ describe("Studio listening hooks in demo", () => {
     );
   });
 
-  it("saves the account as the identity and reflects it in Artists who see your name", async () => {
+  it("starts shown as the account, saves it and reflects it in Artists who see your name", async () => {
     const state = renderHook(
       () => useStudioSupporterState(DEMO_ARTIST_LUA_CARDOSO.id, true),
       { wrapper },
     );
     await waitFor(() =>
-      expect(state.result.current.state?.isSupporting).toBe(false),
+      expect(state.result.current.state?.isSupporting).toBe(true),
     );
+    expect(state.result.current.state?.since).toBeNull();
     const save = renderHook(
       () => useSaveStudioSupporter(DEMO_ARTIST_LUA_CARDOSO.id),
       { wrapper },
@@ -131,6 +132,7 @@ describe("Studio listening hooks in demo", () => {
       expect(await save.result.current.save(null)).toBe(true),
     );
     expect(state.result.current.state?.isSupporting).toBe(true);
+    expect(state.result.current.state?.since).toBeInstanceOf(Date);
     expect(state.result.current.state?.shownAs?.kind).toBe("account");
     const supporting = renderHook(() => useStudioListeningSupporting(), {
       wrapper,

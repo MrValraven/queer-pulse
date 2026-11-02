@@ -20,7 +20,6 @@ import "../../../../subprofiles/persona-motion.css";
 const RULE_COVER_SKINS: ReadonlySet<SkinFamily> = new Set([
   "practice",
   "chair",
-  "collective",
 ]);
 
 function shouldMountCoverBand(

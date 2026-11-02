@@ -374,7 +374,7 @@ export const studio: Catalog = {
     "A tua persona vive dentro da tua conta, e nenhum outro membro consegue ver a ligação entre as duas.",
   "landing.forArtists.numbers.title": "Vê quem te ouve",
   "landing.forArtists.numbers.body":
-    "Totais e tendências de audições, e quem escolhe mostrar o nome como apoiante.",
+    "Totais e tendências de audições, e quem mais te ouviu nos últimos 28 dias, com o nome que cada pessoa escolheu.",
   "landing.forArtists.tools.title": "Ferramentas para cada lançamento",
   "landing.forArtists.tools.body":
     "Lançamentos agendados, notas de versão, links privados de pré-escuta, um kit de imprensa e álbuns que tocam sem pausas.",
@@ -430,7 +430,8 @@ export const studio: Catalog = {
   "landing.compare.fans.topic": "Quem são os teus fãs",
   "landing.compare.fans.streaming": "Números anónimos",
   "landing.compare.fans.platforms": "Quem compra e quem segue",
-  "landing.compare.fans.studio": "Apoiantes que escolhem mostrar o nome",
+  "landing.compare.fans.studio":
+    "Quem mais te ouve, com o nome que cada pessoa escolheu",
   "landing.compare.safety.topic": "Segurança",
   "landing.compare.safety.streaming": "Uma etiqueta de conteúdo explícito",
   "landing.compare.safety.platforms":
@@ -2646,7 +2647,7 @@ export const studio: Catalog = {
     "O Studio é o sítio do QueerPulse onde artistas queer partilham a sua música com as pessoas da comunidade. Ouvir é gratuito, artistas podem vender a sua música diretamente, e está aberto a quem a nossa equipa deu acesso ao Studio.",
   "helpLive.faq.tracking.q": "O Studio guarda o que eu oiço?",
   "helpLive.faq.tracking.a":
-    "Sim, em privado. O Studio guarda um histórico de audição que só tu vês, em <a>O que ouves</a>, onde o podes pausar ou limpar. Quem faz a música vê o total de audições, com qualquer número de 1 a 4 como Menos de 5, e o teu nome só se ligares Mostrar-me entre quem mais ouve na página de artista.",
+    "Sim, em privado. O Studio guarda um histórico de audição que só tu vês, em <a>O que ouves</a>, onde o podes pausar ou limpar. Quem faz a música vê o total de audições, com qualquer número de 1 a 4 como Menos de 5, e quem ouviste nos últimos 28 dias vê também o teu nome entre quem mais o ouve. Podes desligar isso em Mostrar-me entre quem mais ouve na página de artista.",
   "helpLive.faq.saving.q":
     "Como funcionam os gostos, as playlists e seguir artistas?",
   "helpLive.faq.saving.a":
@@ -2702,7 +2703,7 @@ export const studio: Catalog = {
   "aboutLive.sec.privacy.num": "02: o que controlas",
   "aboutLive.sec.privacy.heading": "O que ouves fica <em>contigo</em>",
   "aboutLive.sec.privacy.p1":
-    "O teu histórico de audição é teu: só tu o vês, e podes pausá-lo ou limpá-lo quando quiseres. Quem faz a música vê o total de audições, e o teu nome só se escolheres mostrá-lo.",
+    "O teu histórico de audição é teu: só tu o vês, e podes pausá-lo ou limpá-lo quando quiseres. Quem faz a música vê o total de audições, e quem ouviste nos últimos 28 dias vê o teu nome entre quem mais o ouve até desligares isso na página de artista.",
   "aboutLive.sec.privacy.p2":
     "Artistas veem audições, pessoas que seguem, guardados e inclusões em playlists públicas, e qualquer número de 1 a 4 aparece como Menos de 5.",
   "aboutLive.sec.control.num": "03: como artistas mantêm o controlo",
@@ -2744,7 +2745,7 @@ export const studio: Catalog = {
   "termsLive.sec.stored.num": "03: o que o Studio guarda",
   "termsLive.sec.stored.heading": "O que <em>guardamos</em>",
   "termsLive.sec.stored.p1":
-    "O Studio guarda os teus lançamentos com o áudio e as capas, os teus guardados, playlists e artistas que segues, as definições do leitor, o teu histórico de audição enquanto está ligado (guardado durante 13 meses, e podes limpá-lo), as páginas de artista onde escolheste aparecer entre quem mais ouve, as tuas compras (o que compraste, o valor, o código de referência, o nome no pagamento que deste, o estado e a tua escolha no mural de apoio), as formas de receber que cada artista indica, as contestações que envias com a resposta da nossa equipa, e as reivindicações de direitos de autor e contranotificações que envias com a decisão da nossa equipa. Os totais de audições de cada faixa não levam nenhum nome.",
+    "O Studio guarda os teus lançamentos com o áudio e as capas, os teus guardados, playlists e artistas que segues, as definições do leitor, o teu histórico de audição enquanto está ligado (guardado durante 13 meses, e podes limpá-lo), as páginas de artista onde desligaste Mostrar-me entre quem mais ouve ou escolheste como apareces, as tuas compras (o que compraste, o valor, o código de referência, o nome no pagamento que deste, o estado e a tua escolha no mural de apoio), as formas de receber que cada artista indica, as contestações que envias com a resposta da nossa equipa, e as reivindicações de direitos de autor e contranotificações que envias com a decisão da nossa equipa. Os totais de audições de cada faixa não levam nenhum nome.",
   "termsLive.sec.stored.p2":
     "Tudo o que o Studio guarda sobre ti está coberto pela <a>política de privacidade</a> do QueerPulse.",
   "termsLive.sec.takedown.num": "04: retiradas e contestações",
@@ -3767,12 +3768,12 @@ export const studio: Catalog = {
     "O teu histórico de audição está em pausa. Volta a ligá-lo e os teus artistas e faixas de topo começam a aparecer",
   "listening.supporting.heading": "Artistas que veem o teu nome",
   "listening.supporting.dek":
-    "Veem-te entre quem mais os ouve, com o nome que escolheste",
+    "Quem ouviste nos últimos 28 dias vê-te entre quem mais o ouve, com a tua conta ou o nome que escolheste na página de artista",
   "listening.supporting.since": "Apareces desde {date}",
   "listening.supporting.shownAs": "Apareces como {name}",
   "listening.supporting.linksLabel": "Formas de apoiar {name}",
   "listening.supporting.empty":
-    "Liga Mostrar-me entre quem mais ouve numa página de artista para a juntares aqui",
+    "Ouve uma faixa durante 30 segundos e quem a fez aparece aqui. Apareces entre quem mais o ouve até desligares isso na página de artista",
   "listening.supporting.stop": "Deixar de mostrar o meu nome",
   "listening.supporting.stopAria": "Deixar de mostrar o teu nome a {artist}",
   "listening.supporting.pausedNote":
@@ -3807,7 +3808,7 @@ export const studio: Catalog = {
   "settingsLive.history.title": "O que o Studio <em>guarda</em> para ti",
   "supporter.heading": "Mostrar-me entre quem mais ouve {persona}",
   "supporter.body":
-    "{persona} vê o nome e a foto que escolheres entre quem mais ouve a sua música, pelo quanto a ouviste nos últimos 28 dias",
+    "{persona} vê o nome e a foto que escolheres entre quem mais ouve a sua música, pelo quanto a ouviste nos últimos 28 dias. Começa ligado com a tua conta, e podes desligá-lo quando quiseres",
   "supporter.pausedNote":
     "Enquanto o teu histórico estiver em pausa, não apareces entre quem mais ouve a sua música",
   "supporter.pickerLegend": "Como {persona} te vê",
@@ -3822,6 +3823,8 @@ export const studio: Catalog = {
   "supporter.saveFailed": "Não conseguimos guardar como apareces",
   "supporter.removeFailed":
     "Não conseguimos desligar Mostrar-me entre quem mais ouve",
+  "supporter.turnOnFailed":
+    "Não conseguimos ligar Mostrar-me entre quem mais ouve",
   "numbers.column.plays": "Audições",
   "numbers.plays.showsNotCounted": "Não contam nos programas",
   "numbers.plays.title": "Audições",
@@ -3837,10 +3840,10 @@ export const studio: Catalog = {
   "numbers.plays.empty": "Ainda sem audições nos últimos 28 dias",
   "numbers.supporters.heading": "Quem mais te ouve",
   "numbers.supporters.dek":
-    "Pessoas que escolheram aparecer, por ordem das audições nos últimos 28 dias",
-  "numbers.supporters.optedIn": "A aparecer entre quem mais te ouve: {value}",
+    "Quem te ouviu nos últimos 28 dias, por ordem das audições, menos quem desligou Mostrar-me entre quem mais ouve",
+  "numbers.supporters.optedIn": "Pessoas que aparecem: {value}",
   "numbers.supporters.empty":
-    "Quando alguém liga Mostrar-me entre quem mais ouve, aparece aqui",
+    "Quando alguém ouve a tua música durante 30 segundos, aparece aqui, a menos que tenha desligado Mostrar-me entre quem mais ouve",
   "numbers.supporters.listLabel": "Quem mais ouve {name}",
   "errors.reason.studio_supporter_artist_not_found":
     "Esta página de artista não está disponível para mostrares o teu nome",

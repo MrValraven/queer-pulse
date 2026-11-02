@@ -114,8 +114,10 @@ export interface StudioArtistPlaysDTO {
   total28d: StudioCountDTO;
 }
 
-/** GET /studio/artists/:subprofileId/supporters, ranked, no counts. */
+/** GET /studio/artists/:subprofileId/supporters, ranked, no counts: every
+ *  listener of the last 28 days who did not turn it off. */
 export interface StudioTopSupportersDTO {
   items: { identity: StudioSupporterIdentityDTO }[];
+  /** Listeners shown; the name predates on-by-default. */
   optedInCount: StudioCountDTO;
 }

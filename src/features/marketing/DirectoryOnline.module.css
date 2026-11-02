@@ -1,9 +1,12 @@
 /* The directory's Online tab: a compact constellation band, then the
    storefront cards. The band stands where the map stands on the Map tab, so it
    borrows the map frame's surface and the same rhythm below the results
-   header. */
+   header. On desktop the band folds to one quiet line (see the end of the
+   file). */
 .view {
-  padding: 32px 0 var(--section-y-80);
+  /* The desktop results column spaces this view itself (see
+     `--directory-view-padding` in DirectoryLayout.module.css). */
+  padding: var(--directory-view-padding, 32px 0 var(--section-y-80));
   container: online-view / inline-size;
 }
 
@@ -148,7 +151,7 @@
 /* ── The stage: orbits, signal lines, the pulse and the nodes ────────────────
    Square, so the percentage offsets `layoutConstellation` hands out land on
    true circles; and a size container, so the nodes and their initials scale
-   with it instead of being tuned per breakpoint. */
+   with it and need no tuning per breakpoint. */
 .stage {
   grid-area: stage;
   position: relative;
@@ -271,7 +274,7 @@
 }
 /* A business: its initials on its own tint, mixed down into the plum so the
    cream initials hold their contrast. `scale` (not `transform`) carries the
-   active lift, so it composes with the entrance instead of fighting it. */
+   active lift, so it composes cleanly with the entrance. */
 .node {
   --node-tint: var(--accent);
   position: relative;
@@ -569,6 +572,84 @@
   }
 }
 
+/* ── Desktop: one quiet line above the cards ─────────────────────────────────
+   Beside the filter sidebar the results column leads with the businesses
+   themselves, so the band folds to a single line: the live dot, the eyebrow
+   and the counts, run together with dots between them. The picture and the
+   lead step out, and the title stays as a visually hidden heading that still
+   names the band's region. Phones keep the full band above. 861px is the
+   exact complement of `--mobile` (see breakpoints.css), so the two layouts
+   never overlap at 860px. Placed after the container query on purpose: a
+   narrow results column on a desktop window takes this line too. */
+@media (min-width: 861px) {
+  .panel {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 16px;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+  }
+  :global([data-theme="dark"]) .panel {
+    background: none;
+  }
+  .panel::before,
+  .stage,
+  .body {
+    display: none;
+  }
+  .title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  .eyebrow {
+    margin: 0;
+  }
+  .meta {
+    gap: 6px;
+    margin-top: 0;
+  }
+  .stats {
+    gap: 6px;
+  }
+  /* The flex row runs reversed (number before label), so the pseudo element
+     that comes last in the markup lands first on screen: the separator in
+     front of every stat after the first. Decoration only, with empty alt
+     text, as on the card's channel list. */
+  .stat + .stat::after {
+    content: "\00B7";
+    content: "\00B7" / "";
+    color: var(--ink-40);
+  }
+  .overflow::before {
+    content: "\00B7";
+    content: "\00B7" / "";
+    margin-inline-end: 6px;
+    color: var(--ink-40);
+  }
+  /* The loading stand-in keeps a faint surface of its own, a line tall. */
+  .panel.panelSkeleton {
+    min-height: 20px;
+    max-width: 480px;
+    background: color-mix(in srgb, var(--cream) 95%, var(--accent));
+    border-radius: var(--radius-pill);
+  }
+  :global([data-theme="dark"]) .panel.panelSkeleton {
+    background: color-mix(in srgb, var(--cream) 88%, var(--plum));
+  }
+  .grid {
+    margin-top: 18px;
+  }
+}
+
 @keyframes qpOnlineIn {
   from {
     opacity: 0;
@@ -635,8 +716,8 @@
   }
 }
 
-/* Reduced motion: every loop stops, and the pulse rests as a still halo
-   rather than three rings frozen at a random point of their cycle. */
+/* Reduced motion: every loop stops, and the pulse rests as a still halo,
+   its three rings held at fixed sizes, each fainter than the last. */
 @media (prefers-reduced-motion: reduce) {
   .orbits,
   .core,

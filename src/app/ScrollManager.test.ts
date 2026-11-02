@@ -66,4 +66,26 @@ describe("isSameRouteQueryChange", () => {
       }),
     ).toBe(false);
   });
+
+  it("treats a changed id param on the same path as a real navigation", () => {
+    // Picking another album from the "More from" shelf: same pathname, but the
+    // `id` names a different album, so it is a new page and lands at the top.
+    expect(
+      isSameRouteQueryChange(
+        { pathname: "/studio/album", search: "?id=a" },
+        { pathname: "/studio/album", search: "?id=b" },
+      ),
+    ).toBe(false);
+  });
+
+  it("treats another param change under the same id as staying put", () => {
+    // Switching the artist page's tab keeps the same artist on screen, so it
+    // is a re-filter and the scroll offset survives it.
+    expect(
+      isSameRouteQueryChange(
+        { pathname: "/studio/artist", search: "?id=a&tab=gigs" },
+        { pathname: "/studio/artist", search: "?id=a&tab=about" },
+      ),
+    ).toBe(true);
+  });
 });

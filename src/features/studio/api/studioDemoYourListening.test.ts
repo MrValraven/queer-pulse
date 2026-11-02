@@ -99,32 +99,47 @@ describe("studioDemoYourListening", () => {
     );
   });
 
-  it("clears the history and leaves the supporting list", () => {
+  it("clears the history, and with it the artists who see the viewer's name", () => {
     demoClearStudioListening();
     expect(demoStudioListeningRecent(null, now).items).toEqual([]);
     expect(demoStudioListeningSummary("12m", now).totalListens).toBe(0);
-    expect(demoStudioListeningSupporting().items.length).toBeGreaterThan(0);
+    expect(demoStudioListeningSupporting().items).toEqual([]);
   });
 
-  it("reads the seeded opt-ins with the identity each one chose", () => {
+  it("shows the viewer to every artist played in the last 28 days, the latest first", () => {
     const items = demoStudioListeningSupporting().items;
-    expect(items.map((item) => item.artist.id)).toEqual([
-      DEMO_ARTIST_VANDA_DIESEL.id,
+    expect(items.map((item) => item.artist.id).slice(0, 3)).toEqual([
       DEMO_ARTIST_NIGHTFORM.id,
+      DEMO_ARTIST_VANDA_DIESEL.id,
+      DEMO_ARTIST_LUA_CARDOSO.id,
     ]);
-    expect(items[1]?.shownAs).toEqual({
+    expect(items[0]?.shownAs).toEqual({
       kind: "account",
       member: DEMO_ACCOUNT_MEMBER,
     });
-    expect(items[0]?.shownAs).toMatchObject({
+    expect(items[0]?.since).toBeNull();
+    expect(items[1]?.shownAs).toMatchObject({
       kind: "persona",
       persona: { id: DEMO_ARTIST_MARIANA.id },
     });
+    expect(items[1]?.since).toEqual(expect.any(String));
+    expect(items.some((item) => isDemoOwnedPersona(item.artist.id))).toBe(
+      false,
+    );
+  });
+
+  it("leaves out an artist the viewer hid from", () => {
+    demoDeleteStudioSupporter(DEMO_ARTIST_NIGHTFORM.id);
+    expect(
+      demoStudioListeningSupporting().items.map((item) => item.artist.id),
+    ).not.toContain(DEMO_ARTIST_NIGHTFORM.id);
   });
 
   it("offers the account first, then the viewer's personas by name", () => {
     const state = demoStudioSupporterState(DEMO_ARTIST_LUA_CARDOSO.id);
-    expect(state.isSupporting).toBe(false);
+    expect(state.isSupporting).toBe(true);
+    expect(state.shownAsSubprofileId).toBeNull();
+    expect(state.since).toBeNull();
     expect(state.options.map((option) => option.shownAsSubprofileId)).toEqual([
       null,
       DEMO_ARTIST_LATE_BLOOMERS.id,
@@ -149,7 +164,7 @@ describe("studioDemoYourListening", () => {
     ).toBe("studio_supporter_identity_not_yours");
   });
 
-  it("saves, changes and removes an opt-in, keeping the first since", () => {
+  it("saves and changes the identity keeping the first since, then hides and restores it", () => {
     const first = demoPutStudioSupporter(DEMO_ARTIST_LUA_CARDOSO.id, null);
     const changed = demoPutStudioSupporter(
       DEMO_ARTIST_LUA_CARDOSO.id,
@@ -157,11 +172,20 @@ describe("studioDemoYourListening", () => {
     );
     expect(changed.since).toBe(first.since);
     demoDeleteStudioSupporter(DEMO_ARTIST_LUA_CARDOSO.id);
-    expect(
-      demoStudioSupporterState(DEMO_ARTIST_LUA_CARDOSO.id).isSupporting,
-    ).toBe(false);
+    const hidden = demoStudioSupporterState(DEMO_ARTIST_LUA_CARDOSO.id);
+    expect(hidden.isSupporting).toBe(false);
+    expect(hidden.shownAsSubprofileId).toBe(DEMO_ARTIST_LATE_BLOOMERS.id);
     expect(() =>
       demoDeleteStudioSupporter(DEMO_ARTIST_LUA_CARDOSO.id),
     ).not.toThrow();
+    const restored = demoPutStudioSupporter(
+      DEMO_ARTIST_LUA_CARDOSO.id,
+      hidden.shownAsSubprofileId,
+    );
+    expect(restored.isSupporting).toBe(true);
+    expect(restored.shownAs).toMatchObject({
+      kind: "persona",
+      persona: { id: DEMO_ARTIST_LATE_BLOOMERS.id },
+    });
   });
 });

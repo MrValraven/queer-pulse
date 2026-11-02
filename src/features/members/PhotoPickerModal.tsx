@@ -6,6 +6,7 @@ import {
   ImageSlot,
   PhotoReframeModal,
   SkeletonLine,
+  UploadWaitNote,
 } from "../../shared/components/ui";
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -158,6 +159,72 @@ function PastUploadsSection({
             </li>
           ))}
         </ul>
+      )}
+    </>
+  );
+}
+
+interface PhotoSourcesRowProps {
+  isUploading: boolean;
+  /** Upload percent; 0 during the on-device prep step and before it. */
+  progress: number;
+  googlePhoto?: string;
+  uploadError: string | null;
+  onUploadClick: () => void;
+  onGoogleClick: (url: string) => void;
+}
+
+/**
+ * The picker's source buttons (device upload, Google photo), the wait note
+ * that folds in under them while a photo uploads, and the upload error. The
+ * upload button reads "getting ready" while the photo is prepared on the
+ * device and the percent is still 0, then counts the upload itself.
+ */
+function PhotoSourcesRow({
+  isUploading,
+  progress,
+  googlePhoto,
+  uploadError,
+  onUploadClick,
+  onGoogleClick,
+}: PhotoSourcesRowProps) {
+  const { t } = useTranslation();
+  const uploadLabel = !isUploading
+    ? t("members:avatar.picker.upload")
+    : progress === 0
+      ? t("shared:upload.preparing")
+      : t("members:avatar.uploading", { percent: progress });
+
+  return (
+    <>
+      <div className={styles.sources}>
+        <button
+          type="button"
+          className={styles.sourceBtn}
+          onClick={onUploadClick}
+          disabled={isUploading}
+        >
+          <FiCamera size={16} />
+          {uploadLabel}
+        </button>
+        {googlePhoto && (
+          <button
+            type="button"
+            className={styles.sourceBtn}
+            onClick={() => onGoogleClick(googlePhoto)}
+            disabled={isUploading}
+          >
+            <FcGoogle size={16} />
+            {t("members:avatar.useGoogle")}
+          </button>
+        )}
+      </div>
+      <UploadWaitNote isShown={isUploading} className={styles.waitNote} />
+
+      {uploadError && (
+        <p className={styles.error} role="alert">
+          {uploadError}
+        </p>
       )}
     </>
   );
@@ -333,39 +400,17 @@ export function PhotoPickerModal({
 
   return (
     <Modal title={t("members:avatar.picker.title")} onClose={onClose} wide>
-      <div className={styles.sources}>
-        <button
-          type="button"
-          className={styles.sourceBtn}
-          onClick={() => fileRef.current?.click()}
-          disabled={uploading}
-        >
-          <FiCamera size={16} />
-          {uploading
-            ? t("members:avatar.uploading", { percent: progress })
-            : t("members:avatar.picker.upload")}
-        </button>
-        {googlePhoto && (
-          <button
-            type="button"
-            className={styles.sourceBtn}
-            onClick={() => {
-              onPickGoogle?.(googlePhoto);
-              onClose();
-            }}
-            disabled={uploading}
-          >
-            <FcGoogle size={16} />
-            {t("members:avatar.useGoogle")}
-          </button>
-        )}
-      </div>
-
-      {uploadError && (
-        <p className={styles.error} role="alert">
-          {uploadError}
-        </p>
-      )}
+      <PhotoSourcesRow
+        isUploading={uploading}
+        progress={progress}
+        googlePhoto={googlePhoto}
+        uploadError={uploadError}
+        onUploadClick={() => fileRef.current?.click()}
+        onGoogleClick={(url) => {
+          onPickGoogle?.(url);
+          onClose();
+        }}
+      />
 
       <PastUploadsSection
         items={items}

@@ -96,6 +96,13 @@
   align-items: center;
   flex-wrap: wrap;
 }
+/* The upload wait note, lined up with the controls above it. Spacing sits
+   inside the fold, so a closed note adds no height to the bar. */
+.controlsNote {
+  max-width: 1180px;
+  margin: 10px auto 0;
+  padding: 0 28px;
+}
 .chip {
   background: transparent;
   border: 1px solid rgba(var(--line-rgb), 0.14);

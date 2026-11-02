@@ -14,8 +14,8 @@ import type { ConversationWithPreview } from "./api/messages.adapters";
  *  watermarks rather than a `ChatMessage`: the row has no per-message
  *  `deliveredAt`/`status` to read, only the thread's own `otherLastReadAt`/
  *  `otherDeliveredAt` plus `updatedAt` as the last message's timestamp
- *  (`useMessageLogState`'s `seenActive`/`deliveredActive` compare the same
- *  way: `lastOutbound.at <= watermark`). With no ISO `updatedAt` (a row a
+ *  (`resolveSendStatus` compares the same way per own message:
+ *  `message.at <= watermark`). With no ISO `updatedAt` (a row a
  *  cache patch built before the field existed), the message still exists
  *  in the DTO, so it is at least "sent"; there's simply nothing to compare
  *  against yet. */

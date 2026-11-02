@@ -132,8 +132,9 @@ export const DEMO_TRACK_PLAYS: Readonly<Record<string, number>> = {
   "demo-track-mariana-single-5-01": 0,
 };
 
-/** Mariana's top supporters, ranked. The last is a persona that can no
- *  longer be listened to, so the unlinked row can be reviewed. */
+/** Mariana's top listeners of the last 28 days, ranked, each as the
+ *  identity they picked. The last is a persona that can no longer be
+ *  listened to, so the unlinked row can be reviewed. */
 export const DEMO_TOP_SUPPORTERS: readonly StudioSupporterIdentityDTO[] = [
   {
     kind: "persona",
@@ -178,4 +179,5 @@ export const DEMO_TOP_SUPPORTERS: readonly StudioSupporterIdentityDTO[] = [
   },
 ];
 
-export const DEMO_OPTED_IN_SUPPORTERS = 7;
+/** Listeners shown, one per ranked row above (the list holds up to 10). */
+export const DEMO_OPTED_IN_SUPPORTERS = 5;

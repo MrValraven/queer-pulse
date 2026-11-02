@@ -51,10 +51,9 @@ export function useGalleryUploadQueue(remaining: number): GalleryUploadQueue {
   const { t } = useTranslation();
   const uploadImage = useUploadImage("work-image");
   // Guards `resolveQueueHead` against re-entrancy: the reframe modal for
-  // `reframeQueue[0]` stays mounted (and its Save/Cancel buttons don't
-  // disable) for the whole async upload, so a second click while one is in
-  // flight must be ignored rather than kicking off a second concurrent
-  // upload of the same file.
+  // `reframeQueue[0]` stays mounted for the whole async upload. Its buttons
+  // lock through `isSaving`, and this ref is the backstop that drops a second
+  // click landing in the same frame, so one file only ever uploads once.
   const processingRef = useRef(false);
 
   const [staged, setStaged] = useState<StagedPhoto[]>([]);

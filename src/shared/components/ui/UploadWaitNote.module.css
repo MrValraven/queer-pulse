@@ -1,0 +1,16 @@
+/* No margin here: each caller spaces the note through `className`, inside the
+   fold, so a closed note leaves no gap behind. */
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--ink-60);
+  font-family: var(--sans);
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+}
+
+.icon {
+  flex-shrink: 0;
+  margin-top: 0.2em;
+}

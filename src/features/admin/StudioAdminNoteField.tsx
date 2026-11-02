@@ -26,18 +26,28 @@ export function StudioAdminNoteField({
   onChange,
   inputRef,
   hintKey = "admin:studioAdmin.pickDialog.noteHint",
+  maxLength = STUDIO_DISCOVERY_LIMITS.curationNoteMaxLength,
+  measureLength,
 }: {
   value: string;
   onChange: (value: string) => void;
   inputRef?: Ref<HTMLTextAreaElement>;
   hintKey?: string;
+  /** The longest note. Defaults to the Studio pick note's limit. */
+  maxLength?: number;
+  /** Counts the note the way its limit does (code points for a directory
+   *  partner note). When passed, the counter uses it, the native
+   *  `maxLength` is left off, and a change is cut to `maxLength` code
+   *  points. Without it, the field counts UTF-16 units as before. */
+  measureLength?: (value: string) => number;
 }) {
   const { t } = useTranslation();
   const fieldId = useId();
   const hintId = useId();
   const counterId = useId();
-  const max = STUDIO_DISCOVERY_LIMITS.curationNoteMaxLength;
-  const isNearLimit = value.length >= max - COUNTER_WARNING_REMAINING;
+  const max = maxLength;
+  const length = measureLength ? measureLength(value) : value.length;
+  const isNearLimit = length >= max - COUNTER_WARNING_REMAINING;
   return (
     <div className={css.field}>
       <label htmlFor={fieldId} className={css.fieldLabel}>
@@ -49,12 +59,17 @@ export function StudioAdminNoteField({
         rows={2}
         className={css.noteInput}
         value={value}
-        maxLength={max}
+        maxLength={measureLength ? undefined : max}
         aria-describedby={`${hintId} ${counterId}`}
         onKeyDown={submitOnEnter}
-        onChange={(event) =>
-          onChange(event.target.value.replace(LINE_BREAKS, " "))
-        }
+        onChange={(event) => {
+          const nextValue = event.target.value.replace(LINE_BREAKS, " ");
+          onChange(
+            measureLength
+              ? Array.from(nextValue).slice(0, max).join("")
+              : nextValue,
+          );
+        }}
       />
       <div className={css.noteFoot}>
         <p id={hintId} className={css.fieldHint}>
@@ -67,7 +82,7 @@ export function StudioAdminNoteField({
           }
         >
           {t("admin:studioAdmin.pickDialog.noteCount", {
-            count: value.length,
+            count: length,
             max,
           })}
         </span>

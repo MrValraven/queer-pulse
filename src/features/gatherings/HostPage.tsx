@@ -6,6 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { HostSteps } from "./HostSteps";
 import { HostSidebar } from "./HostSidebar";
+import { AddEventMonthButton } from "./addMonth/AddEventMonthButton";
 import { HERO_TYPE_KEYS } from "./hostPage.data";
 import { findFormat } from "./gatheringCatalog";
 import styles from "./HostPage.module.css";
@@ -59,6 +60,7 @@ export function HostPage() {
         <Button to={routes.createGathering} size="lg">
           {t("gatherings:host.createGatheringCta")} <FiArrowRight aria-hidden />
         </Button>
+        <AddEventMonthButton variant="ghost-dark" size="lg" />
       </Outro>
     </PageShell>
   );

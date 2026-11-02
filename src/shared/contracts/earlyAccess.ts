@@ -4,7 +4,7 @@
  * `queerpulse-backend/src/launchedFeatures.ts`; edit both together.
  */
 
-export const EARLY_ACCESS_FEATURE_KEYS = ["quizshow"] as const;
+export const EARLY_ACCESS_FEATURE_KEYS = ["quizshow", "eventBatch"] as const;
 export type EarlyAccessFeatureKey = (typeof EARLY_ACCESS_FEATURE_KEYS)[number];
 
 /** Narrows a wire string (a session or admin DTO `featureKey`) to a known key. */

@@ -19,8 +19,8 @@ const STATUS_MESSAGE_KEYS: Record<string, string> = {
  * "Sort by what is closest to me", offered once and reversible at any moment.
  *
  * The whole feature is one press and one promise. The press asks the browser
- * for a position; the promise, stated on screen rather than buried in a policy,
- * is that the position stays on the device. It is held in React state by
+ * for a position; the promise, stated right on screen beside the control, is
+ * that the position stays on the device. It is held in React state by
  * `useMyLocation`, used for haversine distances over coordinates the page has
  * already loaded, and forgotten when the tab closes. Nothing is sent, stored or
  * counted, so turning it on costs no request and leaves no trace.
@@ -90,12 +90,13 @@ export function DirectoryNearMe({
           onClick={() => (isOn ? location.clear() : location.request())}
         >
           <FiCrosshair aria-hidden />
-          {label}
+          {/* Its own span, so the desktop row can fold the label away on a
+              narrow results column while the button keeps it as its name. */}
+          <span className={s.nearMeLabel}>{label}</span>
         </button>
       )}
-      {/* The promise stays on screen while the feature is on, rather than
-          appearing only at the moment of asking: the reassurance matters most
-          once a position actually exists. A state the browser refused gets an
+      {/* The promise stays on screen for as long as the feature is on: the
+          reassurance matters most once a position actually exists. A state the browser refused gets an
           explanation in its place, marked as the different kind of news it is. */}
       <p className={s.nearMeNote} role="status">
         {isRefused ? <FiAlertCircle aria-hidden /> : <FiLock aria-hidden />}

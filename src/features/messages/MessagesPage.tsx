@@ -119,7 +119,7 @@ export function MessagesPage() {
           onSendImage={sendImage}
           onSendDocument={sendDocument}
         >
-          <div className={styles.app}>
+          <div className={styles.app} data-messages-shell>
             {showList && (
               <MessagesThreadList
                 loading={loading}

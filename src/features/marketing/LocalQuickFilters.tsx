@@ -26,6 +26,7 @@ export function LocalQuickFilters({
   showOutAndAbout = false,
   isOutAndAbout,
   onToggleOutAndAbout,
+  sectionTitleId,
 }: {
   /** Off on the Online tab, which lists businesses by how they sell online,
    *  so opening hours are no filter there. */
@@ -47,6 +48,10 @@ export function LocalQuickFilters({
   showOutAndAbout?: boolean;
   isOutAndAbout?: boolean;
   onToggleOutAndAbout?: () => void;
+  /** Given inside a desktop sidebar section, whose header names the group:
+   *  the band label is left out and the chips are labelled by the header's
+   *  title. */
+  sectionTitleId?: string;
 }) {
   const { t } = useTranslation();
   const quickLabelId = useId();
@@ -66,6 +71,72 @@ export function LocalQuickFilters({
     chipCounts.outAndAbout !== undefined &&
     chipCounts.outAndAbout === 0;
 
+  const chipRow = (
+    <m.div
+      {...glide.row}
+      className={[s.safeRow, sectionTitleId && s.flush]
+        .filter(Boolean)
+        .join(" ")}
+      role={sectionTitleId ? "group" : undefined}
+      aria-labelledby={sectionTitleId}
+    >
+      {showOpenNow && (
+        <m.button
+          {...glide.chip}
+          type="button"
+          aria-pressed={openNow}
+          disabled={isOpenNowDisabled}
+          className={[s.chip, openNow && s.chipOn].filter(Boolean).join(" ")}
+          onClick={onToggleOpenNow}
+        >
+          <FiClock aria-hidden />
+          {t("marketing:local.filter.openNow")}
+        </m.button>
+      )}
+      <m.button
+        {...glide.chip}
+        type="button"
+        aria-pressed={safeOnly}
+        disabled={isSafeOnlyDisabled}
+        className={[s.chip, safeOnly && s.chipOn].filter(Boolean).join(" ")}
+        onClick={onToggleSafeOnly}
+      >
+        <FiShield aria-hidden />
+        {t("marketing:local.filter.verifiedSafeSpaces")}
+      </m.button>
+      {showOutAndAbout && onToggleOutAndAbout && (
+        <m.button
+          {...glide.chip}
+          type="button"
+          aria-pressed={isOutAndAbout === true}
+          disabled={isOutAndAboutDisabled}
+          className={[s.chip, isOutAndAbout && s.chipOn]
+            .filter(Boolean)
+            .join(" ")}
+          onClick={onToggleOutAndAbout}
+        >
+          <FiNavigation aria-hidden />
+          {t("marketing:local.filter.outAndAbout")}
+        </m.button>
+      )}
+      {showAdult && onToggleAdult && (
+        <m.button
+          {...glide.chip}
+          type="button"
+          aria-pressed={isAdultShown === true}
+          className={[s.chip, isAdultShown && s.chipOn]
+            .filter(Boolean)
+            .join(" ")}
+          onClick={onToggleAdult}
+        >
+          <FiEye aria-hidden />
+          {t("marketing:local.filter.adult")}
+        </m.button>
+      )}
+    </m.div>
+  );
+  if (sectionTitleId) return chipRow;
+
   return (
     <RefineGroup
       label={t("marketing:local.filter.quickFiltersLabel")}
@@ -73,61 +144,7 @@ export function LocalQuickFilters({
       role="group"
       aria-labelledby={quickLabelId}
     >
-      <m.div {...glide.row} className={s.safeRow}>
-        {showOpenNow && (
-          <m.button
-            {...glide.chip}
-            type="button"
-            aria-pressed={openNow}
-            disabled={isOpenNowDisabled}
-            className={[s.chip, openNow && s.chipOn].filter(Boolean).join(" ")}
-            onClick={onToggleOpenNow}
-          >
-            <FiClock aria-hidden />
-            {t("marketing:local.filter.openNow")}
-          </m.button>
-        )}
-        <m.button
-          {...glide.chip}
-          type="button"
-          aria-pressed={safeOnly}
-          disabled={isSafeOnlyDisabled}
-          className={[s.chip, safeOnly && s.chipOn].filter(Boolean).join(" ")}
-          onClick={onToggleSafeOnly}
-        >
-          <FiShield aria-hidden />
-          {t("marketing:local.filter.verifiedSafeSpaces")}
-        </m.button>
-        {showOutAndAbout && onToggleOutAndAbout && (
-          <m.button
-            {...glide.chip}
-            type="button"
-            aria-pressed={isOutAndAbout === true}
-            disabled={isOutAndAboutDisabled}
-            className={[s.chip, isOutAndAbout && s.chipOn]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={onToggleOutAndAbout}
-          >
-            <FiNavigation aria-hidden />
-            {t("marketing:local.filter.outAndAbout")}
-          </m.button>
-        )}
-        {showAdult && onToggleAdult && (
-          <m.button
-            {...glide.chip}
-            type="button"
-            aria-pressed={isAdultShown === true}
-            className={[s.chip, isAdultShown && s.chipOn]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={onToggleAdult}
-          >
-            <FiEye aria-hidden />
-            {t("marketing:local.filter.adult")}
-          </m.button>
-        )}
-      </m.div>
+      {chipRow}
     </RefineGroup>
   );
 }

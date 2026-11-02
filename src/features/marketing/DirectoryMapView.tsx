@@ -5,14 +5,32 @@ import { type LocalPlace } from "./localPlaces";
 import { LisbonMap } from "./LisbonMap";
 import { DirectoryMapSidebar } from "./DirectoryMapSidebar";
 import { DirectoryServerPageFooter } from "./DirectoryServerPageFooter";
-import { useDirectoryMapView } from "./useDirectoryMapView";
+import { useDirectoryMapView, useNarrowMapStage } from "./useDirectoryMapView";
 import { useMapFullscreen } from "./useMapFullscreen";
 import { type MapPanelEdge } from "./useLisbonMap";
 import s from "./localMap.module.css";
 
+/** Which map edge the list covers, for the camera padding. Desktop floats it
+ *  over the right edge, or docks it along the bottom on a narrow stage. A
+ *  phone stacks it below the map (no edge), until full screen turns it into
+ *  a sheet over the bottom. */
+function mapPanelEdgeFor({
+  isMobile,
+  isFullscreen,
+  isNarrowStage,
+}: {
+  isMobile: boolean;
+  isFullscreen: boolean;
+  isNarrowStage: boolean;
+}): MapPanelEdge | null {
+  if (isMobile) return isFullscreen ? "bottom" : null;
+  return isNarrowStage && !isFullscreen ? "bottom" : "right";
+}
+
 /** The unified map view: a full-width Lisbon map of coords-having places with
- *  the parish-grouped list of mixed cards floating over its right edge (stacked
- *  below it on a phone). Filtering happens upstream in the shell. */
+ *  the parish-grouped list of mixed cards floating over its right edge (docked
+ *  along its bottom on a narrow stage, stacked below it on a phone).
+ *  Filtering happens upstream in the shell. */
 export function DirectoryMapView({
   places,
   loading,
@@ -76,13 +94,18 @@ export function DirectoryMapView({
   // opens over the map like a menu, so the map holds still while it opens
   // and closes.
   const fullscreenSearchRow = fullscreenControlsElement?.firstElementChild;
-  // Desktop floats the list over the map's right edge. A phone stacks it below
-  // the map, until full screen turns it into a sheet over the bottom.
-  const panelEdge: MapPanelEdge | null = state.isMobile
-    ? fullscreen.isFullscreen
-      ? "bottom"
-      : null
-    : "right";
+  // A desktop stage too narrow for the list beside the map docks it as a
+  // drawer along the bottom. Full screen spans the window, so it keeps the
+  // side panel and the last inline answer holds until it closes.
+  const stageLayout = useNarrowMapStage(stageRef, {
+    isEnabled: !state.isMobile && !fullscreen.isFullscreen,
+  });
+  const isNarrowStage = !state.isMobile && stageLayout.isNarrow;
+  const panelEdge = mapPanelEdgeFor({
+    isMobile: state.isMobile,
+    isFullscreen: fullscreen.isFullscreen,
+    isNarrowStage,
+  });
 
   // Full screen covers the page, so the footer moves into the stage as a
   // floating status. It shows while a page is in flight or has failed, which
@@ -103,6 +126,10 @@ export function DirectoryMapView({
           ref={stageRef}
           className={s.stage}
           data-fullscreen={fullscreen.isFullscreen ? "true" : undefined}
+          data-narrow={isNarrowStage ? "true" : undefined}
+          data-layout-switched={
+            stageLayout.hasSwitched && !state.isMobile ? "true" : undefined
+          }
         >
           <LisbonMap
             venues={state.markers}

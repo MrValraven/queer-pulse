@@ -97,8 +97,9 @@ export function demoStudioArtistPlays(
   };
 }
 
-/** GET /studio/artists/:id/supporters in the demo: Mariana's ranked list,
- *  none for the other owned persona, a 404 for any other. */
+/** GET /studio/artists/:id/supporters in the demo: Mariana's ranked list
+ *  with its count of listeners shown, none for the other owned persona, a
+ *  404 for any other. */
 export function demoStudioTopSupporters(
   subprofileId: string,
 ): StudioTopSupportersDTO {

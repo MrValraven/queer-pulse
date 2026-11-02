@@ -13,7 +13,7 @@ import { traceScrollEvent } from "./scrollTrace";
  *    height, the typing row). None of these change the message count, so the
  *    content effect in `useMessageScroll` never fires for them.
  *  - The scroll CONTAINER shrinks or grows (the on-screen keyboard changing
- *    `--keyboard-inset`, the composer auto-growing a line, a banner mounting
+ *    the visual viewport variables, the composer auto-growing a line, a banner mounting
  *    above the log). `.area` loses height while the browser keeps `scrollTop`,
  *    so the newest lines slide under the composer with no scroll event at all.
  *    Watching only the content wrapper never saw this.

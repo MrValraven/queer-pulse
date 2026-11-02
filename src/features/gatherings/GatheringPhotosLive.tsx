@@ -7,6 +7,7 @@ import {
   LoadErrorState,
   PhotoReframeModal,
   SkeletonLine,
+  UploadWaitNote,
 } from "../../shared/components/ui";
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -267,6 +268,7 @@ export function GatheringPhotosLive({
                 : t("gatherings:photos.addCta")}
             </Button>
           </div>
+          <UploadWaitNote isShown={uploading} className={styles.controlsNote} />
         </div>
       )}
 

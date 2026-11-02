@@ -87,6 +87,8 @@ const GATED_PATTERNS: string[] = [
   "/rsvp",
   "/host",
   "/create-gathering",
+  // The month page (`/create-gathering/month`). matchPath reads the bare pattern as exact.
+  "/create-gathering/*",
   // Pulse Live's player screen (quizshow), members only. The presenter and the remote sit under /gatherings/* above.
   "/play",
   "/play/*",

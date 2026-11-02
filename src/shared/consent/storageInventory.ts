@@ -338,6 +338,8 @@ export const STORAGE_INVENTORY: StorageEntry[] = [
     names: [
       "qp.members.filterSections",
       "qp.members.filtersPanelOpen",
+      "qp.local.filtersPanelOpen",
+      "qp.local.filterSections",
       "qp.adminNav.collapsed",
       "qp.adminNav.open",
       "qp.governancePolicy.railCollapsed",
@@ -350,7 +352,7 @@ export const STORAGE_INVENTORY: StorageEntry[] = [
     purposeKey: `${NS}.panelLayout.purpose`,
     lifetimeKey: `${NS}.lifetime.untilCleared`,
     sourceHint:
-      "features/members/MemberDirectoryFilterPage.tsx, shared/components/layout/AdminShell.tsx, features/admin/*, features/subprofiles/usePersonaDashboardView.ts",
+      "features/members/MemberDirectoryFilterPage.tsx, features/marketing/DirectoryDesktopLayout.tsx, features/marketing/LocalFilterSidebar.tsx, shared/components/layout/AdminShell.tsx, features/admin/*, features/subprofiles/usePersonaDashboardView.ts",
   },
   {
     id: "calculators",

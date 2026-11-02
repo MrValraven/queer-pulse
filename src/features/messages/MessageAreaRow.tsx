@@ -7,7 +7,7 @@ import { SystemMessagePill } from "./SystemMessagePill";
 import { dayHeading } from "./dayHeading";
 import type { LongPressOrigin } from "./useLongPress";
 import type { ChatMessage } from "./data";
-import { lastUndeletedIndex, type MessageRow } from "./messageRows";
+import type { MessageRow } from "./messageRows";
 import styles from "./MessagesPage.module.css";
 
 export interface MessageAreaRowProps {
@@ -27,9 +27,11 @@ export interface MessageAreaRowProps {
   counterpartName: string;
   isGroup?: boolean;
   onRetry: (message: ChatMessage) => void;
-  lastOutbound: ChatMessage | undefined;
-  seenActive: boolean;
-  deliveredActive: boolean;
+  /** The counterpart's READ watermark (ISO). Each own message in a run at or
+   *  before it renders "Seen", whichever position it holds in the thread. */
+  counterpartLastReadAt: string | null;
+  /** The counterpart's DELIVERED watermark (ISO), one rung below read. */
+  counterpartDeliveredAt: string | null;
   groupSeenByCount: number;
   onOpenSeenBy?: () => void;
   onReactionToggle: (
@@ -66,9 +68,8 @@ function MessageAreaRowImpl({
   counterpartName,
   isGroup,
   onRetry,
-  lastOutbound,
-  seenActive,
-  deliveredActive,
+  counterpartLastReadAt,
+  counterpartDeliveredAt,
   groupSeenByCount,
   onOpenSeenBy,
   onReactionToggle,
@@ -145,14 +146,8 @@ function MessageAreaRowImpl({
           counterpartName={counterpartName}
           isGroup={isGroup}
           onRetry={onRetry}
-          showSeen={
-            seenActive &&
-            row.run.items[lastUndeletedIndex(row.run.items)] === lastOutbound
-          }
-          showDelivered={
-            deliveredActive &&
-            row.run.items[lastUndeletedIndex(row.run.items)] === lastOutbound
-          }
+          counterpartLastReadAt={counterpartLastReadAt}
+          counterpartDeliveredAt={counterpartDeliveredAt}
           onReactionToggle={onReactionToggle}
           onReply={onReply}
           onOpenActions={onOpenActions}

@@ -13,6 +13,7 @@ import { StudioPlaylistCreditField } from "./StudioPlaylistCreditField";
 import { StudioPlaylistVisibilityField } from "./StudioPlaylistVisibilityField";
 import {
   useStudioPlaylistDialogSubmit,
+  type StudioPlaylistDialogDraft,
   type StudioPlaylistDialogMode,
 } from "./useStudioPlaylistDialogSubmit";
 import css from "./StudioPlaylist.module.css";
@@ -97,20 +98,26 @@ export function StudioPlaylistDialog({
     if (persona) setNoteName(persona.name);
   }
 
+  const draft: StudioPlaylistDialogDraft = {
+    name: trimmedName,
+    description: description.trim(),
+    visibility,
+    creditId,
+    creditPersonaId: creditPersona?.id ?? null,
+  };
+  // Save waits for a change. Create has its own name check instead.
+  const isUnchanged = mode !== "create" && !submitter.hasChangesFor(draft);
+
   function submit() {
+    // aria-disabled does not block clicks or Enter, so the guard lives here.
+    if (isUnchanged) return;
     setHasTriedSubmit(true);
     if (isNameMissing) {
       // Focus goes to the field that needs fixing, so its error is read out.
       nameInputRef.current?.focus();
       return;
     }
-    void submitter.submit({
-      name: trimmedName,
-      description: description.trim(),
-      visibility,
-      creditId,
-      creditPersonaId: creditPersona?.id ?? null,
-    });
+    void submitter.submit(draft);
   }
 
   return (
@@ -126,7 +133,7 @@ export function StudioPlaylistDialog({
             </Button>
             <Button
               variant="primary"
-              aria-disabled={submitter.isBusy || undefined}
+              aria-disabled={submitter.isBusy || isUnchanged || undefined}
               aria-busy={submitter.isBusy || undefined}
               onClick={submit}
             >

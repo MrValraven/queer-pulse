@@ -10,9 +10,10 @@ const PINCH_ZOOM_SCALE_TOLERANCE = 0.01;
  * `.app` is the only scroll surface). The result is a page shifted upward with
  * the conversation header off the top of the screen.
  *
- * Snapping back to 0 is safe here because `.app` already shrinks by
- * `--keyboard-inset`, so the composer sits above the keyboard with the header in
- * place; the reveal-scroll has nothing left to reveal. A pinch-zoomed reader is
+ * Snapping back to 0 is safe here because, with the keyboard open, `.app` is
+ * sized from the visual viewport (`--visual-viewport-top` and
+ * `--visual-viewport-height`), so the composer sits above the keyboard with the
+ * header in place; the reveal-scroll has nothing left to reveal. A pinch-zoomed reader is
  * exempt (visual viewport scale other than 1), since their pan position is a
  * deliberate document offset.
  *

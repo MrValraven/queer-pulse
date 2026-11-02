@@ -1,0 +1,434 @@
+/* The phone "More" sheet: grouped inset lists. Each section is one rounded
+   card of rows (a quiet plum-tinted chip, label over description, chevron)
+   under a Fraunces heading. The first section lifts two tiles into a coral
+   and a plum shortcut card. Coral is the one accent: beyond the first card
+   it only warms a row's chip and chevron on hover or press. Tokens only. */
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-block: 4px 8px;
+  /* On a tablet-width sheet the rows stop at a readable measure, so each
+     chevron stays near its label. */
+  inline-size: 100%;
+  max-inline-size: 36rem;
+  margin-inline: auto;
+  /* The rows tighten off this element's own width (see the end of the file),
+     since the sheet's side padding leaves a 320px phone only ~264px. */
+  container-type: inline-size;
+}
+
+/* ── Section heading ── */
+.sectionHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 10px;
+  row-gap: 2px;
+  margin-block: 0 10px;
+  margin-inline: 4px;
+}
+.sectionTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+}
+.sectionSubtitle {
+  margin: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.3;
+  color: var(--ink-60);
+}
+
+/* ── The grouped card ── */
+.card {
+  /* The ground each row sits on; dark mode steps down to --cream like the
+     baseline tiles, since the dark sheet itself is already --paper. */
+  --rows-ground: var(--paper);
+  /* Row geometry, shared with the hairline inset below. */
+  --row-pad-start: 14px;
+  --row-chip: 36px;
+  --row-gap: 14px;
+  /* The hover/press wash: a breath of coral over the ground, so the warmed
+     chip and chevron read as part of the same touch. */
+  --row-press: color-mix(in srgb, var(--accent) 6%, var(--rows-ground));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--rows-ground);
+  border-radius: var(--radius-18);
+  box-shadow: var(--shadow-e1);
+  /* An inset outline draws the hairline edge on top of the rows, so the
+     first and last row can share the card's exact radius with no border
+     width to subtract. */
+  outline: 1px solid rgba(var(--line-rgb), 0.09);
+  outline-offset: -1px;
+}
+:global([data-theme="dark"]) .card {
+  --rows-ground: var(--cream);
+}
+
+.item {
+  position: relative;
+}
+/* Hairline between rows, inset past the chip so the icons read as a column. */
+.item + .item::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: calc(
+    var(--row-pad-start) + var(--row-chip) + var(--row-gap)
+  );
+  inset-inline-end: 0;
+  block-size: 1px;
+  background: rgba(var(--line-rgb), 0.09);
+  pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+/* A pressed or hovered row swallows the hairlines on both its edges. */
+.item:has(> .row:active)::before,
+.item:has(> .row:active) + .item::before,
+.item:has(> .row:focus-visible)::before,
+.item:has(> .row:focus-visible) + .item::before {
+  opacity: 0;
+}
+@media (hover: hover) and (pointer: fine) {
+  .item:has(> .row:hover)::before,
+  .item:has(> .row:hover) + .item::before {
+    opacity: 0;
+  }
+}
+
+/* ── Row ── */
+.row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--row-gap);
+  min-block-size: 62px;
+  padding-block: 10px;
+  padding-inline: var(--row-pad-start) 12px;
+  color: var(--text-strong);
+  text-decoration: none;
+  border-radius: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+.item:first-child > .row {
+  border-radius: var(--radius-18) var(--radius-18) 0 0;
+}
+.item:last-child > .row {
+  border-radius: 0 0 var(--radius-18) var(--radius-18);
+}
+.item:only-child > .row {
+  border-radius: var(--radius-18);
+}
+.row:active {
+  background-color: var(--row-press);
+}
+@media (hover: hover) and (pointer: fine) {
+  .row:hover {
+    background-color: var(--row-press);
+  }
+}
+/* The global :focus-visible rule squares the corners to --radius-4; restate
+   the ring triple and keep each row's own (card-matching) radius. */
+.row:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.item:not(:first-child, :last-child) > .row:focus-visible {
+  border-radius: var(--radius-4);
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--row-chip);
+  block-size: var(--row-chip);
+  border-radius: var(--radius-10);
+  font-size: var(--text-18);
+  color: var(--text-strong);
+  /* One quiet treatment for every row: --line-rgb is plum on the light paper
+     card and flips to cream channels on the dark one, so the same square
+     reads as a soft plum tint in light and a lifted cream tint in dark. */
+  background: rgba(var(--line-rgb), 0.07);
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+:global([data-theme="dark"]) .chip {
+  background: rgba(var(--line-rgb), 0.09);
+}
+/* Hover and press warm the chip to coral, the only coral in the list.
+   --accent-ink lifts to plain --accent in dark mode on its own. */
+.row:active .chip {
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.14);
+}
+@media (hover: hover) and (pointer: fine) {
+  .row:hover .chip {
+    color: var(--accent-ink);
+    background: rgba(var(--accent-rgb), 0.14);
+  }
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-inline-size: 0;
+}
+.labelLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 6px;
+  row-gap: 2px;
+}
+.label {
+  font-size: var(--text-15);
+  font-weight: 600;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+.badge {
+  display: flex;
+  color: var(--ink-60);
+}
+/* NavBuildBadge carries its own start margin for inline use; here the
+   wrapper's column gap spaces it, so a badge that wraps lines up flush. */
+.badge > span,
+.shortcutBadge > span {
+  margin-inline: 0;
+}
+.description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  font-size: var(--text-12-5);
+  line-height: 1.35;
+  color: var(--ink-60);
+}
+
+.chevron {
+  display: flex;
+  font-size: var(--text-18);
+  color: var(--ink-40);
+  transition:
+    color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+.row:active .chevron {
+  color: var(--accent-ink);
+}
+@media (hover: hover) and (pointer: fine) {
+  .row:hover .chevron {
+    color: var(--accent-ink);
+  }
+}
+
+/* ── Shortcut pair (first section only): coral, then plum ── */
+.shortcuts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-block: 0 10px;
+  margin-inline: 0;
+  padding: 0;
+  list-style: none;
+}
+.shortcutItem {
+  display: flex;
+}
+.shortcut {
+  position: relative;
+  flex: 1;
+  min-inline-size: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-block-size: 112px;
+  padding-block: 12px 14px;
+  padding-inline: 14px 12px;
+  /* The light ink is fixed (--cream-rgb never flips), since both grounds
+     stay deep in either theme. */
+  color: rgb(var(--cream-rgb));
+  text-decoration: none;
+  /* A transparent edge by default, so both cards keep the same box when the
+     dark plum card paints its hairline. */
+  border: 1px solid var(--shortcut-edge);
+  border-radius: var(--radius-18);
+  box-shadow: var(--shadow-e2);
+  /* Light type on --accent-fill measures under 4.5:1; --accent-deep gives
+     the cream ink 5.38:1. It holds in dark mode too, where the coral still
+     stands well clear of the deep sheet. */
+  --shortcut-ground: var(--accent-deep);
+  --shortcut-glow: rgba(var(--cream-rgb), 0.22);
+  --shortcut-edge: transparent;
+  /* A soft light orb with a fixed small radius, so it only sits behind the
+     icon and arrow corner and never lifts the ground under the label. */
+  background:
+    radial-gradient(
+      circle 72px at 100% 0%,
+      var(--shortcut-glow),
+      transparent
+    ),
+    var(--shortcut-ground);
+  background-origin: border-box;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform var(--dur-fast) var(--ease),
+    filter var(--dur-fast) var(--ease);
+}
+/* The plum card's orb picks up a faint coral, so the pair reads as one set. */
+.shortcut[data-variant="plum"] {
+  --shortcut-ground: var(--plum);
+  --shortcut-glow: rgba(var(--accent-rgb), 0.3);
+}
+/* The dark sheet is a deep plum itself, so the plum card steps up to the
+   vivid plum and draws a cream hairline to hold its edge. */
+:global([data-theme="dark"]) .shortcut[data-variant="plum"] {
+  --shortcut-ground: var(--plum-vivid);
+  --shortcut-edge: rgba(var(--line-rgb), 0.14);
+}
+.shortcut:active {
+  filter: brightness(0.94);
+}
+.shortcut:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-18);
+}
+.shortcutTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-block-end: auto;
+  padding-block-end: 12px;
+}
+.shortcutIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 34px;
+  block-size: 34px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-17);
+  background: color-mix(in srgb, currentColor 16%, transparent);
+}
+.shortcutArrow {
+  display: flex;
+  font-size: var(--text-18);
+  opacity: 0.85;
+  transition: transform var(--dur-fast) var(--ease);
+}
+.shortcutLabel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 6px;
+  row-gap: 2px;
+  font-size: var(--text-15);
+  font-weight: 700;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.shortcutBadge {
+  display: flex;
+}
+.shortcutDescription {
+  font-size: var(--text-12-5);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* ── Motion: press nudges and a staggered entrance ── */
+@media (prefers-reduced-motion: no-preference) {
+  .row:active .chevron {
+    transform: translateX(2px);
+  }
+  .shortcut:active {
+    transform: scale(0.97);
+  }
+  .shortcut:active .shortcutArrow {
+    transform: translateX(2px);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .row:hover .chevron {
+      transform: translateX(2px);
+    }
+    .shortcut:hover .shortcutArrow {
+      transform: translateX(2px);
+    }
+  }
+
+  .section {
+    animation: moreRowsRise var(--dur-slow) var(--ease-out) both;
+    /* A short lead and step so the first section is on screen as the sheet
+       lands; opacity starts at half so nothing ever reads as empty. */
+    animation-delay: calc(20ms + var(--i, 0) * 40ms);
+  }
+}
+@keyframes moreRowsRise {
+  from {
+    opacity: 0.5;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Narrow phones (320px wide leaves ~264px of sheet) ── */
+@container (max-width: 300px) {
+  .card {
+    --row-pad-start: 12px;
+    --row-chip: 32px;
+    --row-gap: 12px;
+  }
+  .sectionHead {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .row {
+    min-block-size: 58px;
+    padding-inline-end: 8px;
+  }
+  .chip {
+    border-radius: var(--radius-9);
+    font-size: var(--text-16);
+  }
+  .label {
+    font-size: var(--text-14-5);
+  }
+  .description {
+    font-size: var(--text-12);
+  }
+  .chevron {
+    font-size: var(--text-16);
+  }
+  .shortcut {
+    min-block-size: 104px;
+    padding-block: 10px 12px;
+    padding-inline: 12px 10px;
+  }
+  .shortcutLabel {
+    font-size: var(--text-14-5);
+  }
+  .shortcutDescription {
+    font-size: var(--text-12);
+  }
+}

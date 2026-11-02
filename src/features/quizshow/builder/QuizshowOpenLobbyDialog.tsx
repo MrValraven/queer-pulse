@@ -118,12 +118,22 @@ function OpenLobbyForm({
             checkedClassName={styles.modeOptionOn}
             options={PLAY_MODES.map((mode) => {
               const ModeIcon = PLAY_MODE_ICONS[mode];
+              // Title and hint both sit inside the radio button, so a screen
+              // reader announces the explanation as part of the option.
               return {
                 id: mode,
                 render: (
                   <>
-                    <ModeIcon className={styles.modeIcon} aria-hidden />
-                    {t(`quizshow:lobby.playMode.${mode}`)}
+                    <span className={styles.modeTop}>
+                      <ModeIcon className={styles.modeIcon} aria-hidden />
+                      <span className={styles.modeMark} aria-hidden />
+                    </span>
+                    <span className={styles.modeTitle}>
+                      {t(`quizshow:lobby.playMode.${mode}Title`)}
+                    </span>
+                    <span className={styles.modeHint}>
+                      {t(`quizshow:lobby.playMode.${mode}Hint`)}
+                    </span>
                   </>
                 ),
               };
@@ -142,6 +152,9 @@ function OpenLobbyForm({
               labelledBy={teamSizeLabelId}
               searchable={false}
             />
+            <p className={styles.fieldHint}>
+              {t("quizshow:lobby.playMode.teamsScoring")}
+            </p>
           </div>
         </Collapse>
         <ToggleRow

@@ -1,4 +1,5 @@
 import { Button } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -15,6 +16,9 @@ import styles from "./AdminMembersPage.module.css";
  * demo-aware mutations. Message has no backend (it just opens the DM composer)
  * so it stays disabled-with-reason in live; demo keeps its functional
  * prototype.
+ *
+ * See profile is a plain link to the member's profile page; the drawer
+ * unmounts with the page, so it needs no close handling.
  *
  * Verify owns its own mutation because nothing else in the drawer needs it;
  * Restrict/Ban only open a modal here, so the restriction mutation stays with
@@ -40,6 +44,13 @@ export function AdminMemberDrawerActions({
 
   return (
     <div className={styles.dFoot}>
+      <Button
+        variant="ghost"
+        size="md"
+        to={`${routes.members}/${encodeURIComponent(member.slug)}`}
+      >
+        {t("admin:members.drawer.seeProfileCta")}
+      </Button>
       <Button
         variant="jade"
         size="md"

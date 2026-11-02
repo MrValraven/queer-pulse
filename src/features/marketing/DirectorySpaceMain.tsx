@@ -69,11 +69,7 @@ export function DirectorySpaceMain({
 }: Props) {
   return (
     <div>
-      <DirectoryAboutSection
-        place={place}
-        ownerRef={ownerRef}
-        preview={preview}
-      />
+      <DirectoryAboutSection place={place} />
       <DirectoryTeamSection place={place} />
       {/* An online-only business has no hours: its ordering block takes the
           spot. A place that also sells online keeps its hours and follows

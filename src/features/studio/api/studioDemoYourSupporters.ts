@@ -19,9 +19,15 @@ import {
   DEMO_SUPPORTER_SEEDS,
 } from "./studioDemoYourListening.data";
 
+// The demo viewer is shown among the top listeners of every artist they
+// play until they hide from one. A row exists only once the viewer changed
+// that default: it keeps the identity even while hidden, so turning the
+// switch back on restores it.
 interface DemoSupporterRow {
   shownAsSubprofileId: string | null;
-  since: string;
+  isShown: boolean;
+  /** When the viewer last turned it on; null while hidden. */
+  since: string | null;
 }
 
 let supporterStore: Map<string, DemoSupporterRow> | null = null;
@@ -34,6 +40,7 @@ function supporterRows(): Map<string, DemoSupporterRow> {
         seed.subprofileId,
         {
           shownAsSubprofileId: seed.shownAsSubprofileId,
+          isShown: true,
           since: new Date(
             nowMilliseconds - seed.daysAgo * 24 * 3600 * 1000,
           ).toISOString(),
@@ -124,12 +131,14 @@ export function optionsOfViewer(): StudioSupporterOptionDTO[] {
   ];
 }
 
+/** No row reads as the default: shown as the account, with no since. */
 function stateOf(subprofileId: string): StudioSupporterStateDTO {
   const row = supporterRows().get(subprofileId);
+  const shownAsSubprofileId = row?.shownAsSubprofileId ?? null;
   return {
-    isSupporting: row !== undefined,
-    shownAsSubprofileId: row?.shownAsSubprofileId ?? null,
-    shownAs: row ? identityOf(row.shownAsSubprofileId) : null,
+    isSupporting: row?.isShown ?? true,
+    shownAsSubprofileId,
+    shownAs: identityOf(shownAsSubprofileId),
     since: row?.since ?? null,
     options: optionsOfViewer(),
   };
@@ -160,41 +169,50 @@ export function demoPutStudioSupporter(
     );
   }
   const existing = supporterRows().get(subprofileId);
-  if (
-    existing === undefined ||
-    existing.shownAsSubprofileId !== shownAsSubprofileId
-  ) {
-    supporterRows().set(subprofileId, {
-      shownAsSubprofileId,
-      since: existing?.since ?? new Date().toISOString(),
-    });
-  }
+  supporterRows().set(subprofileId, {
+    shownAsSubprofileId,
+    isShown: true,
+    since:
+      existing?.isShown === true && existing.since !== null
+        ? existing.since
+        : new Date().toISOString(),
+  });
   return stateOf(subprofileId);
 }
 
+/** Hides the viewer and keeps the identity they showed as. */
 export function demoDeleteStudioSupporter(subprofileId: string): void {
-  supporterRows().delete(subprofileId);
+  const existing = supporterRows().get(subprofileId);
+  supporterRows().set(subprofileId, {
+    shownAsSubprofileId: existing?.shownAsSubprofileId ?? null,
+    isShown: false,
+    since: null,
+  });
 }
 
-/** Newest opt-in first. */
-export function demoStudioListeningSupporting(): StudioSupportingResponseDTO {
-  const rows = [...supporterRows().entries()].sort(([, left], [, right]) =>
-    right.since.localeCompare(left.since),
-  );
+/** The artists the viewer played in the last 28 days (`recentArtistIds`,
+ *  in the caller's order) that the viewer did not hide from, each with the
+ *  identity it sees. */
+export function demoSupportingOf(
+  recentArtistIds: readonly string[],
+): StudioSupportingResponseDTO {
   return {
-    items: rows.flatMap(([subprofileId, row]) => {
+    items: recentArtistIds.flatMap((subprofileId) => {
       const artist = catalogueArtistOf(subprofileId);
-      return artist
-        ? [
-            {
-              artist,
-              since: row.since,
-              shownAs: identityOf(row.shownAsSubprofileId),
-              supportLinks: demoSupportLinksFor(artist.id),
-              isFollowing: demoIsFollowingArtist(artist.id),
-            },
-          ]
-        : [];
+      const row = supporterRows().get(subprofileId);
+      const isOwned = DEMO_STUDIO_ME.uploadablePersonas.some(
+        (owned) => owned.id === subprofileId,
+      );
+      if (artist === null || isOwned || row?.isShown === false) return [];
+      return [
+        {
+          artist,
+          since: row?.since ?? null,
+          shownAs: identityOf(row?.shownAsSubprofileId ?? null),
+          supportLinks: demoSupportLinksFor(artist.id),
+          isFollowing: demoIsFollowingArtist(artist.id),
+        },
+      ];
     }),
   };
 }

@@ -377,7 +377,7 @@ export const gatherings: Catalog = {
   "photos.chipAll": "Todas",
   "photos.backToRecap": "Voltar ao resumo",
   "photos.addCta": "Adicionar fotos",
-  "photos.uploadingCta": "A enviar…",
+  "photos.uploadingCta": "A carregar a foto…",
   "photos.emptyLive": "Ainda não há fotos.",
   "photos.uploadError": "Não foi possível enviar essa foto. Tenta novamente.",
   "photos.albumLabel_one": "Álbum de fotos · {count} foto",
@@ -1276,6 +1276,244 @@ export const gatherings: Catalog = {
   "host.sidebar.spacesBody":
     "Espaços que já receberam eventos da QueerPulse e estão disponíveis para receber mais.",
   "host.sidebar.capacity": "até {max}",
+
+  // ── Add a month of events (addMonth/) ──────────────────────────────────────
+  // /create-gathering/month: vários eventos com data copiados de um evento de
+  // origem. `error.*` nomeia cada EventBatchFailureReason
+  // (eventBatchErrors.ts).
+  "addMonth.entry.cta": "Adicionar um mês de eventos",
+  "addMonth.entry.fromEventCta": "Adicionar um mês a partir deste evento",
+  "addMonth.page.eyebrow": "Organizar",
+  "addMonth.page.title": "Adicionar um mês de eventos",
+  "addMonth.page.lede":
+    "Define os detalhes partilhados uma vez e depois dá a cada data o seu título, descrição e foto.",
+  "addMonth.noAccess.backToHost": "Voltar a organizar",
+  "addMonth.draft.title": "Continuar o teu mês onde ficaste?",
+  "addMonth.draft.label_one": "{count} data",
+  "addMonth.draft.label_other": "{count} datas",
+  "addMonth.template.heading": "Começa a partir de um evento",
+  "addMonth.template.lede":
+    "Escolhe um dos teus eventos. Cada data copia os detalhes dele.",
+  "addMonth.template.online": "Online",
+  "addMonth.template.changeTemplate": "Usar outro evento",
+  "addMonth.template.loadMore": "Mostrar mais eventos",
+  "addMonth.template.loadingMore": "A carregar mais eventos",
+  "addMonth.template.loadingList": "A carregar os teus eventos",
+  "addMonth.template.loadFailed":
+    "Não conseguimos carregar os teus eventos. Verifica a ligação e tenta outra vez.",
+  "addMonth.template.retry": "Tentar outra vez",
+  "addMonth.template.loading": "A carregar os detalhes do evento",
+  "addMonth.template.empty.title": "Ainda não tens eventos de onde partir",
+  "addMonth.template.empty.body":
+    "Cria o teu primeiro evento e depois volta para adicionar um mês a partir dele.",
+  "addMonth.template.empty.cta": "Criar um evento",
+  "addMonth.template.summary.heading": "Todas as datas partilham",
+  "addMonth.template.summary.edit": "Editar local e preço",
+  "addMonth.template.summary.doneEditing": "Terminar edição",
+  "addMonth.template.summary.row.format": "Formato",
+  "addMonth.template.summary.row.place": "Local",
+  "addMonth.template.summary.row.times": "Hora",
+  "addMonth.template.summary.row.cost": "Preço",
+  "addMonth.template.summary.row.payment": "Como se paga",
+  "addMonth.template.summary.row.rsvpCutoff": "As inscrições fecham",
+  "addMonth.template.summary.row.capacity": "Lotação",
+  "addMonth.template.summary.row.visibility": "Quem pode ver",
+  "addMonth.template.summary.row.community": "Comunidade",
+  "addMonth.template.summary.row.runBy": "Organizado por",
+  "addMonth.template.summary.row.careNotes": "Notas de cuidado",
+  "addMonth.template.summary.row.houseRules": "Regras da casa",
+  "addMonth.template.summary.row.accessibility": "Acessibilidade",
+  "addMonth.template.summary.noLimit": "Sem limite",
+  "addMonth.template.summary.none": "Sem informação",
+  "addMonth.template.summary.times": "{start} às {end}",
+  "addMonth.template.summary.timesNoEnd": "A partir das {start}",
+  "addMonth.template.summary.timesPointer": "Define-se nas datas abaixo",
+  "addMonth.template.summary.accessibilityAnswered":
+    "{answered} de {total} perguntas respondidas",
+  "addMonth.template.summary.editElsewhere":
+    "Para mudar mais alguma coisa, edita primeiro {title}, ou edita cada evento depois de publicar.",
+  "addMonth.template.summary.editElsewhereUnnamed":
+    "Para mudar mais alguma coisa, edita primeiro o evento de origem, ou edita cada evento depois de publicar.",
+  "addMonth.template.summary.notCopied":
+    "Coanfitriões, comunidades convidadas, quizzes e Vamos juntes definem-se em cada evento depois de publicar.",
+  "addMonth.template.notice.runBy.notManager":
+    "Estes eventos não vão ser organizados por {name}, porque não geres esse espaço.",
+  "addMonth.template.notice.runBy.notManagerUnnamed":
+    "Estes eventos não vão ser organizados pelo negócio do evento de origem, porque não geres esse espaço.",
+  "addMonth.template.notice.runBy.unavailable":
+    "Estes eventos não vão ser organizados por {name}, porque já não está aberto no diretório.",
+  "addMonth.template.notice.runBy.unavailableUnnamed":
+    "Estes eventos não vão ser organizados pelo negócio do evento de origem, porque já não está aberto no diretório.",
+  "addMonth.template.notice.community.notModerator":
+    "Estes eventos não vão ser publicados em {name}, porque não fazes parte da moderação.",
+  "addMonth.template.notice.community.notModeratorUnnamed":
+    "Estes eventos não vão ser publicados na comunidade do evento de origem, porque não fazes parte da moderação.",
+  "addMonth.template.notice.community.unavailable":
+    "Estes eventos não vão ser publicados em {name}, porque essa comunidade já não está ativa.",
+  "addMonth.template.notice.community.unavailableUnnamed":
+    "Estes eventos não vão ser publicados na comunidade do evento de origem, porque essa comunidade já não está ativa.",
+  "addMonth.template.notice.venueLink":
+    "{venue} saiu do diretório, por isso estes eventos mostram o nome do local sem ligação ao diretório.",
+  "addMonth.template.notice.venueLinkUnnamed":
+    "O local do evento de origem saiu do diretório, por isso estes eventos mostram o nome do local sem ligação ao diretório.",
+  "addMonth.edit.placeHeading": "Local",
+  "addMonth.edit.costHeading": "Preço",
+  "addMonth.edit.resetToTemplate": "Repor o local e o preço",
+  "addMonth.dates.heading": "Escolhe as datas",
+  "addMonth.dates.lede":
+    "Toca em cada data em que queres um evento. Também podes passar para o mês seguinte.",
+  "addMonth.calendar.previousMonth": "Mês anterior",
+  "addMonth.calendar.nextMonth": "Mês seguinte",
+  "addMonth.calendar.count_one": "{count} data escolhida",
+  "addMonth.calendar.count_other": "{count} datas escolhidas",
+  "addMonth.calendar.cap": "Podes adicionar até {limit} datas de cada vez.",
+  "addMonth.calendar.windowHint":
+    "Podes escolher datas de hoje até {lastDate}.",
+  "addMonth.times.heading": "Hora de todas as datas",
+  "addMonth.times.startLabel": "Começa às",
+  "addMonth.times.endLabel": "Termina às",
+  "addMonth.times.endsNextDay": "Termina no dia seguinte",
+  "addMonth.times.zoneNote":
+    "As horas estão em {timezone}, o fuso horário do evento de origem.",
+  "addMonth.cover.heading": "Foto de capa de todas as datas",
+  "addMonth.cover.fromTemplate": "A capa de {title}",
+  "addMonth.cover.none":
+    "{title} não tem capa, por isso as datas sem foto própria são publicadas sem capa.",
+  "addMonth.cover.replace": "Substituir a capa partilhada",
+  "addMonth.cover.useTemplate": "Usar a capa do evento de origem",
+  "addMonth.cover.added": "Foto adicionada",
+  "addMonth.rows.heading": "Um evento por data",
+  "addMonth.rows.empty":
+    "Escolhe datas no calendário e aparece aqui um cartão para cada uma.",
+  "addMonth.row.cardLabel": "Evento a {date}",
+  "addMonth.row.titleLabel": "Título",
+  "addMonth.row.descriptionLabel": "Descrição",
+  "addMonth.row.sameAsTemplate": "Igual ao evento de origem",
+  "addMonth.row.titleMissing": "Adiciona um título para esta data.",
+  "addMonth.row.descriptionMissing": "Adiciona uma descrição para esta data.",
+  "addMonth.row.startPassed":
+    "Esta hora de início já passou. Escolhe uma hora mais tarde.",
+  "addMonth.row.photo.shared": "Capa partilhada",
+  "addMonth.row.photo.useDifferent": "Usar outra foto",
+  "addMonth.row.photo.closePicker": "Fechar o seletor de fotos",
+  "addMonth.row.photo.change": "Mudar a foto",
+  "addMonth.row.photo.useShared": "Usar a capa partilhada",
+  "addMonth.row.photo.added": "Foto adicionada",
+  "addMonth.row.time.shared": "{start} às {end}",
+  "addMonth.row.time.sharedNoEnd": "A partir das {start}",
+  "addMonth.row.time.nextDay": "termina no dia seguinte",
+  "addMonth.row.time.change": "Mudar a hora desta data",
+  "addMonth.row.time.useShared": "Usar a hora partilhada",
+  "addMonth.row.time.startLabel": "Começa às",
+  "addMonth.row.time.endLabel": "Termina às",
+  "addMonth.row.remove": "Remover esta data",
+  "addMonth.publish.heading": "Publicar",
+  "addMonth.publish.button_one": "Publicar {count} evento",
+  "addMonth.publish.button_other": "Publicar {count} eventos",
+  "addMonth.publish.publishing_one": "A publicar {count} evento",
+  "addMonth.publish.publishing_other": "A publicar {count} eventos",
+  "addMonth.publish.allTogether":
+    "Todas as datas são publicadas juntas. Se uma não puder, nenhuma é publicada.",
+  "addMonth.publish.pledges.codeOfCare":
+    "Estes eventos seguem o Código de Cuidado da QueerPulse.",
+  "addMonth.publish.pledges.accessibility":
+    "As respostas de acessibilidade destes eventos são exatas, tanto quanto sei.",
+  "addMonth.publish.block.noTemplate":
+    "Escolhe primeiro um evento de onde partir.",
+  "addMonth.publish.block.templateLoading":
+    "O evento de origem ainda está a carregar. Publica quando os detalhes aparecerem.",
+  "addMonth.publish.block.noDates":
+    "Escolhe pelo menos uma data no calendário.",
+  "addMonth.publish.block.sharedInvalid":
+    "Corrige primeiro os detalhes do local ou do preço.",
+  "addMonth.publish.block.rowsInvalid_one":
+    "{count} data precisa de uma alteração antes de publicar.",
+  "addMonth.publish.block.rowsInvalid_other":
+    "{count} datas precisam de uma alteração antes de publicar.",
+  "addMonth.publish.block.pledgesOpen":
+    "Marca os dois compromissos para publicar.",
+  "addMonth.results.title_one": "{count} evento <em>publicado</em>",
+  "addMonth.results.title_other": "{count} eventos <em>publicados</em>",
+  "addMonth.results.lede":
+    "Cada um é agora um evento independente. Edita, cancela ou apaga qualquer um na sua própria página.",
+  "addMonth.results.goToEvents": "Ir para os teus eventos",
+  "addMonth.results.addAnother": "Adicionar outro mês",
+  "addMonth.results.titleUnlisted": "O teu mês está <em>publicado</em>",
+  "addMonth.results.unlistedLede":
+    "Cada data é agora um evento independente. Encontra-os todos na página dos teus eventos.",
+  "addMonth.failure.title": "Nada foi publicado",
+  "addMonth.failure.markedRow": "Marcámos a data que precisa de uma alteração.",
+  "addMonth.failure.titleUnconfirmed": "Não conseguimos confirmar o teu mês",
+  "addMonth.toast.published_one": "{count} evento publicado",
+  "addMonth.toast.published_other": "{count} eventos publicados",
+  "addMonth.error.noAccess":
+    "Adicionar um mês de eventos está a ser ativado membro a membro enquanto o testamos. Pede à nossa equipa para o ativar para ti.",
+  "addMonth.error.templateNotFound":
+    "O evento de onde partiste já não pode ser usado. Pode ter sido cancelado ou retirado, ou já não o organizas nem coorganizas. Escolhe outro evento.",
+  "addMonth.error.communityOnly":
+    "O evento de onde partiste é só para membros de {communityName}, e só a moderação dessa comunidade pode publicar eventos lá. Escolhe outro evento.",
+  "addMonth.error.communityOnlyUnnamed":
+    "O evento de origem é só para membros de uma comunidade onde já não podes publicar, por isso estes eventos não podem ser publicados.",
+  "addMonth.error.tooManyDates":
+    "Podes adicionar até {limit} datas de cada vez. Remove algumas datas e publica outra vez.",
+  "addMonth.error.duplicateDate":
+    "{date} aparece duas vezes. Cada data tem um só evento.",
+  "addMonth.error.dateInPast":
+    "A hora de início de {date} já passou. Escolhe uma hora mais tarde ou remove essa data.",
+  "addMonth.error.dateTooFar":
+    "{date} fica a mais de 12 meses. A última data que podes adicionar é {lastDate}.",
+  "addMonth.error.rowInvalid":
+    "As horas de {date} não funcionam: o fim tem de vir depois do início.",
+  "addMonth.error.venueNotFound":
+    "O local que escolheste já não está no diretório. Escolhe outro local ou escreve o nome.",
+  "addMonth.error.restricted":
+    "A tua conta está restrita neste momento, por isso não podes publicar eventos. As tuas notificações explicam porquê.",
+  "addMonth.error.membershipInactive":
+    "A tua conta de membro não está ativa neste momento, por isso não podes publicar eventos.",
+  "addMonth.error.coverNotYours":
+    "Uma das fotos foi carregada por outra pessoa, por isso nada foi publicado. Carrega tu essa foto e publica outra vez.",
+  "addMonth.error.rateLimited":
+    "Publicaste vários meses em pouco tempo. Espera uns minutos e publica outra vez.",
+  "addMonth.error.invalid":
+    "Algo na página não passou nas nossas verificações, provavelmente os links do local ou do pagamento, um título ou uma descrição, por isso revê isso e publica outra vez.",
+  "addMonth.error.signedOut":
+    "A tua sessão terminou. Inicia sessão outra vez e publica. As tuas datas estão guardadas neste dispositivo.",
+  "addMonth.error.offline":
+    "Estás offline, por isso este mês pode não ter chegado até nós. Quando tiveres ligação, vê os teus eventos antes de publicar outra vez.",
+  "addMonth.error.unreachable":
+    "Não conseguimos chegar ao QueerPulse, por isso este mês pode ou não estar publicado. Vê os teus eventos antes de publicar outra vez.",
+  "addMonth.error.server":
+    "O nosso servidor teve um problema, por isso este mês pode ou não estar publicado. Vê os teus eventos antes de publicar outra vez.",
+  "addMonth.error.refused":
+    "O servidor recusou este pedido (erro {status}). As tuas datas estão guardadas neste dispositivo.",
+  "addMonth.error.timedOut":
+    "Não tivemos resposta a tempo, por isso este mês pode já estar publicado. Vê os teus eventos antes de publicar outra vez.",
+  "addMonth.error.unreadableAnswer":
+    "O servidor respondeu, mas não conseguimos ler a resposta, por isso este mês pode já estar publicado. Vê os teus eventos antes de publicar outra vez.",
+  "addMonth.error.read.offline":
+    "Não conseguimos carregar o evento de origem porque estás sem ligação. Verifica a tua ligação e tenta outra vez.",
+  "addMonth.error.read.unreachable":
+    "Não conseguimos carregar o evento de origem porque não foi possível chegar ao QueerPulse. Tenta outra vez.",
+  "addMonth.error.read.server":
+    "Não conseguimos carregar o evento de origem porque o nosso servidor teve um problema. Tenta outra vez.",
+  "addMonth.error.read.signedOut":
+    "A tua sessão terminou, por isso não conseguimos carregar o evento de origem. Inicia sessão outra vez para continuar.",
+  "addMonth.error.read.rateLimited":
+    "Não conseguimos carregar o evento de origem porque houve demasiados pedidos em pouco tempo. Espera uns minutos e tenta outra vez.",
+  "addMonth.error.read.refused":
+    "O servidor recusou carregar o evento de origem (erro {status}). Tenta outra vez ou escolhe outro evento.",
+  "addMonth.error.read.timedOut":
+    "Carregar o evento de origem demorou demasiado. Tenta outra vez.",
+  "addMonth.error.plain.duplicateDate":
+    "Uma das datas aparece duas vezes. Cada data tem um só evento.",
+  "addMonth.error.plain.dateInPast":
+    "A hora de início de uma das datas já passou. Escolhe uma hora mais tarde ou remove essa data.",
+  "addMonth.error.plain.dateTooFar":
+    "Uma das datas fica a mais de 12 meses. Escolhe datas dentro dos próximos 12 meses.",
+  "addMonth.error.plain.rowInvalid":
+    "As horas de uma das datas não funcionam: o fim tem de vir depois do início.",
+  "addMonth.error.tooLarge":
+    "Este mês tem texto a mais para publicar de uma vez. Encurta algumas descrições, ou publica algumas datas agora e as restantes depois.",
 
   // ── Host dashboard, manage, cohosts, QR, album ────────────────────────────
 

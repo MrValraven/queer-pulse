@@ -141,6 +141,15 @@ function JoinFormBody({
   const [errors, setErrors] = useState<JoinErrors>(NO_ERRORS);
   const [isSending, setIsSending] = useState(false);
   const isTeams = session.playMode === "teams";
+  // A picked team that emptied and vanished drops the pick, and says why.
+  if (
+    team !== null &&
+    "teamId" in team &&
+    !session.lobby.teams.some((lobbyTeam) => lobbyTeam.teamId === team.teamId)
+  ) {
+    setTeam(null);
+    setErrors({ ...errors, team: "quizshow:errors.team_not_found" });
+  }
 
   async function submitJoin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

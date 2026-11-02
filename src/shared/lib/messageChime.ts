@@ -62,6 +62,20 @@ function resolveAudioContextConstructor(): AudioContextConstructor | null {
   return window.AudioContext ?? legacyWindow.webkitAudioContext ?? null;
 }
 
+/**
+ * Whether the page has had user activation, which Chrome requires before an
+ * AudioContext may start. A touch pointerdown does not count, so creating or
+ * resuming on it makes Chrome log "The AudioContext was not allowed to start".
+ * Browsers without `navigator.userActivation` get true and keep the old
+ * try-on-every-gesture behaviour.
+ */
+function hasUserActivation(): boolean {
+  if (typeof navigator === "undefined" || !navigator.userActivation) {
+    return true;
+  }
+  return navigator.userActivation.hasBeenActive;
+}
+
 /** Create the shared context on first use; only call from a real gesture. */
 function ensureContext(): AudioContext | null {
   if (sharedContext) return sharedContext;
@@ -177,6 +191,9 @@ export function primeMessageChime(): void {
   isPrimed = true;
   const unlock = () => {
     try {
+      // Wait for an event the browser counts as activation (the touchend or
+      // click after a touch pointerdown), so no blocked start is attempted.
+      if (!hasUserActivation()) return;
       const context = ensureContext();
       if (context && context.state !== "running") {
         context.resume().catch(() => undefined);
@@ -227,6 +244,8 @@ export function playMessageChime(
     }
     if (!context) return false;
     if (context.state !== "running") {
+      // Without activation the resume would be blocked and logged by Chrome.
+      if (!hasUserActivation()) return false;
       const resumingContext = context;
       const requestedAtMs = Date.now();
       resumingContext

@@ -3456,7 +3456,7 @@ export const marketing: Catalog = {
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-11-02.headline":
-    "Gigs get a rebuilt editor, and chat photos now slide smoothly from one to the next.",
+    "Gigs get a rebuilt editor, and admins can pick partner businesses for the directory.",
   "changelog.releases.2026-11-01.headline":
     "Discography and Mixes on a persona page point to Studio for uploads.",
   "changelog.releases.2026-10-30.headline":
@@ -3712,10 +3712,54 @@ export const marketing: Catalog = {
     "Search members when setting invite limits",
   "changelog.entries.invite-quotas-search.body":
     "Admins see each member's invites this month against their limit, and can change it inline.",
+  "changelog.entries.more-menu-clears-studio-player.title":
+    "Search in the More menu no longer hides behind the Studio player",
+  "changelog.entries.more-menu-clears-studio-player.body":
+    "On a phone, the menu now leaves room above the player, so its last link stays in view.",
+  "changelog.entries.add-a-month-of-events.title":
+    "Add a month of events at once",
+  "changelog.entries.add-a-month-of-events.body":
+    "Hosts with early access pick dates on a calendar and publish one event per date from one of their events.",
+  "changelog.entries.past-events-sit-at-their-date.title":
+    "Past events sit at their date in the feed",
+  "changelog.entries.past-events-sit-at-their-date.body":
+    "An event posted after it took place now sits in the feed at the date it happened.",
+  "changelog.entries.local-directory-filters-sidebar.title":
+    "Local directory filters sit in a sidebar",
+  "changelog.entries.local-directory-filters-sidebar.body":
+    "Like on Members, filters fold into sections beside the places, so the list, map and shops start higher up.",
+  "changelog.entries.chat-composer-above-iphone-keyboard.title":
+    "Chat box stays above the iPhone keyboard",
+  "changelog.entries.chat-composer-above-iphone-keyboard.body":
+    "On iOS 26 the conversation now fits the visible screen, so you see what you type and no gap sits below.",
+  "changelog.entries.read-ticks-on-every-message.title":
+    "Read ticks on every message",
+  "changelog.entries.read-ticks-on-every-message.body":
+    "When someone reads a few messages in a row, each one you sent now shows the read ticks.",
+  "changelog.entries.photo-uploads-say-to-wait.title":
+    "Photo uploads tell you to wait",
+  "changelog.entries.photo-uploads-say-to-wait.body":
+    "While a photo uploads, it says it can take up to a minute, so nobody adds the same photo twice.",
+  "changelog.entries.admin-member-drawer-see-profile.title":
+    "Admins can open a member's profile from the member panel",
+  "changelog.entries.admin-member-drawer-see-profile.body":
+    "A See profile button sits first in the panel footer and goes straight to that member's page.",
   "changelog.entries.persona-long-names-fit.title":
     "Long persona names fit on the first screen",
   "changelog.entries.persona-long-names-fit.body":
     "Poster-style pages shrink a long name to two or three lines, so your actions stay in view.",
+  "changelog.entries.studio-playlist-save-waits-for-a-change.title":
+    "Saving playlist details waits for a change",
+  "changelog.entries.studio-playlist-save-waits-for-a-change.body":
+    "Save details stays greyed out until you edit the name, description or who it shows as.",
+  "changelog.entries.studio-top-listeners-on-by-default.title":
+    "Top listeners are on by default",
+  "changelog.entries.studio-top-listeners-on-by-default.body":
+    "Artists see you among their top listeners as your account, and you can turn it off on any artist page.",
+  "changelog.entries.studio-new-album-opens-at-top.title":
+    "Opening another album starts at the top",
+  "changelog.entries.studio-new-album-opens-at-top.body":
+    "Picking a release from More from on an album or artist page now lands you at its cover.",
   "changelog.entries.studio-long-titles-fit.title":
     "Long release titles fit in Studio",
   "changelog.entries.studio-long-titles-fit.body":
@@ -3724,10 +3768,26 @@ export const marketing: Catalog = {
     "Photos in chat slide smoothly as you swipe",
   "changelog.entries.chat-photos-swipe-smoothly.body":
     "The next photo comes in beside the one you're dragging, and a quick flick is enough to move on.",
+  "changelog.entries.more-menu-icon-grid.title":
+    "The More menu on mobile is now calmer and on brand",
+  "changelog.entries.more-menu-icon-grid.body":
+    "Communities and local businesses lead as coral and plum cards, with every other page in one quiet list.",
   "changelog.entries.gigs-editor-redo.title":
     "Manage your gigs in a rebuilt persona editor section",
   "changelog.entries.gigs-editor-redo.body":
     "Each gig shows its date, venue, doors time and status, and a form adds a poster, ticket link and live preview.",
+  "changelog.entries.directory-partners.title":
+    "See the businesses we partner with at the top of the directory",
+  "changelog.entries.directory-partners.body":
+    "Admins pick up to 12 partner businesses with an optional note, shown in a row above the directory results.",
+  "changelog.entries.listing-editor-tabs-under-top-bar.title":
+    "Place editor tabs stay pinned under the top bar on phones",
+  "changelog.entries.listing-editor-tabs-under-top-bar.body":
+    "They sit right below the bar and rise with it as you scroll, so the form no longer shows above them.",
+  "changelog.entries.poster-persona-banners.title":
+    "Show your banner on Poster persona pages",
+  "changelog.entries.poster-persona-banners.body":
+    "It now runs full width across the top of the page, and the Banner edge setting works there too.",
   "changelog.entries.chat-reaches-screen-edge.title":
     "Chats on iPhone reach the bottom of the screen",
   "changelog.entries.chat-reaches-screen-edge.body":
@@ -10490,6 +10550,8 @@ export const marketing: Catalog = {
   "directory.online.emptyFiltered.title": "No online businesses match",
   "directory.online.emptyFiltered.body":
     "Try another category or a different search, or clear the filters to see every online business.",
+  "directory.partners.title": "Businesses we partner with",
+  "directory.partners.sub": "Queer businesses we work with and love",
   "directory.empty.title": "No places match those filters",
   "directory.empty.body":
     "Try a broader category, fewer filters, or a different search, or clear the filters to see everything.",
@@ -10613,9 +10675,6 @@ export const marketing: Catalog = {
   "directory.detail.whatsHere.titleElsewhere": "What to <em>expect</em>",
   "directory.detail.whatsHere.practicesTitle": "Inclusion practices",
   "directory.detail.whatsHere.policyLink": "Read the safer-space policy",
-  "directory.detail.whatsHere.suggestEdit": "Suggest an edit to these details",
-  "directory.detail.whatsHere.suggestEditAria":
-    "Suggest an edit to these details: {name}",
   "directory.detail.gettingIn.title": "Before you <em>go</em>",
   "directory.detail.gettingIn.titleOnline": "Good to <em>know</em>",
   "directory.detail.gettingIn.entry": "How to get in",
@@ -11689,6 +11748,7 @@ export const marketing: Catalog = {
   "local.filter.ownedByNote":
     "In the owner's own words. Pick more than one to see places matching any of them.",
   "local.filter.filters": "Filters",
+  "local.filter.hideFilters": "Hide filters",
   "local.filter.quickFiltersLabel": "Quick filters",
   "local.filter.openNow": "Open now",
   "local.filter.outAndAbout": "Out and about",

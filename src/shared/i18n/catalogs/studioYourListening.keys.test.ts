@@ -65,6 +65,7 @@ const NEW_KEYS = [
   "supporter.removed",
   "supporter.saveFailed",
   "supporter.removeFailed",
+  "supporter.turnOnFailed",
   "numbers.column.plays",
   "numbers.plays.showsNotCounted",
   "numbers.plays.title",

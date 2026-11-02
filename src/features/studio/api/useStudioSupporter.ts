@@ -20,21 +20,24 @@ import { studioLoadStateOf, type StudioLoadState } from "./studioLoadState";
 import { readStudio, studioKeys } from "./studioQueryKeys";
 import { useStudioAccess } from "./useStudioAccess";
 
-// The supporter opt-in on an artist page (CONTRACT-PART-2 section 5, backend
-// delta 4). Neither write toasts: the card names the reason under the picker
+// "Show me among the top listeners" on an artist page (CONTRACT-PART-2
+// section 5, backend delta 4). It is on by default: PUT shows the caller as
+// an identity, DELETE hides them and the server keeps that identity, so a
+// later PUT can restore it. Neither write toasts: the card names the reason under the picker
 // through `studioErrorMessageKeyOf(error, "save")`.
 
 const SILENT = { silentError: true } as const;
 const loadDemoSupporters = () => import("./studioDemoYourListening");
 
-/** A saved or removed opt-in changes "Artists you support". */
+/** Showing or hiding the caller changes "Artists who see your name". */
 function refreshSupporting(queryClient: QueryClient, demoMode: boolean) {
   void queryClient.invalidateQueries({
     queryKey: studioKeys.listeningSupporting(demoMode),
   });
 }
 
-/** The caller's opt-in for one artist persona. Reads nothing while
+/** Whether the caller shows among one artist persona's top listeners, on
+ *  until they turn it off. Reads nothing while
  *  disabled (an owner, or a page that has not asked yet). */
 export function useStudioSupporterState(
   subprofileId: string,
@@ -110,7 +113,8 @@ export function useSaveStudioSupporter(subprofileId: string): {
   };
 }
 
-/** Turns the opt-in off. DELETE answers 204 for any uuid. */
+/** Hides the caller from the artist's top listeners. DELETE answers 204
+ *  for any uuid. */
 export function useRemoveStudioSupporter(subprofileId: string): {
   remove: () => Promise<boolean>;
   isRemoving: boolean;
@@ -129,23 +133,19 @@ export function useRemoveStudioSupporter(subprofileId: string): {
       await deleteStudioSupporter(subprofileId);
     },
     onSuccess: () => {
-      // Drop the artist from "Artists you support" at once. An empty cache
+      // Drop the artist from "Artists who see your name" at once. An empty cache
       // stays empty: the updater returns undefined, so no row is invented.
       queryClient.setQueryData<StudioSupportingView[]>(
         studioKeys.listeningSupporting(demoMode),
         (previous) =>
           previous?.filter((item) => item.artist.id !== subprofileId),
       );
+      // The server keeps the identity, so turning the switch back on
+      // restores it.
       queryClient.setQueryData<StudioSupporterStateView>(
         queryKey,
         (previous) =>
-          previous && {
-            ...previous,
-            isSupporting: false,
-            shownAsSubprofileId: null,
-            shownAs: null,
-            since: null,
-          },
+          previous && { ...previous, isSupporting: false, since: null },
       );
       refreshSupporting(queryClient, demoMode);
     },

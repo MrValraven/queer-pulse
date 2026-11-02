@@ -3,6 +3,7 @@ import { Button, Reveal, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useHostSpaces } from "./api/useHostSpaces";
+import { AddEventMonthButton } from "./addMonth/AddEventMonthButton";
 import styles from "./HostPage.module.css";
 
 export function HostSidebar() {
@@ -23,6 +24,7 @@ export function HostSidebar() {
         <Button className={styles.fullBtn} to={routes.createGathering}>
           {t("gatherings:host.createGatheringCta")} <FiArrowRight aria-hidden />
         </Button>
+        <AddEventMonthButton variant="ghost" className={styles.fullBtn} />
       </div>
       {(isLoading || hasSpaces) && (
         <div className={styles.sidebarCard}>

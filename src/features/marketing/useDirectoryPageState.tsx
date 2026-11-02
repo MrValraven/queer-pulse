@@ -90,8 +90,8 @@ function useAdultLocals(
  * All the state, data fetching and derived values `DirectoryPage` renders
  * from: the URL-held filter state, the paginated local-places fetch, the
  * opt-in member location, and the pieces (near-me control, active-filter
- * chips, the shared filter-field props) that both the desktop search row and
- * the mobile results header need in different slots.
+ * chips, the shared filter-field props) that both the desktop results column
+ * and the mobile results header need in different slots.
  */
 export function useDirectoryPageState() {
   const { demoMode } = useDemoMode();
@@ -147,22 +147,18 @@ export function useDirectoryPageState() {
   // for a read that loaded nothing; once places are on screen they stay, and
   // the grid's footer reports the failed page and retries it.
   const hasPlacesError = isPlacesError && places.length === 0;
-  // Opt-in, memory-only, never sent anywhere. Held here so one position serves
+  // Opt-in, and held in memory on this device alone. Held here so one position serves
   // both the ordering and the walking times, and so turning it off is a single
   // state change that hands the previous ordering straight back.
   const myLocation = useMyLocation();
-  // Where the "use my location" control lives. On desktop it rides the search
-  // row, between the field and "Refine". On phones that row collapses into the
-  // Filters sheet, and distance is too central to bury behind a tap, so there
-  // it stays in the results header. Same breakpoint the bar itself switches on,
-  // so exactly one of the two renders.
+  // Where the "use my location" control lives. On desktop it sits on the row
+  // above the results, beside the Filters toggle and the sort. On phones the
+  // filters collapse into the Filters sheet, and distance is too central to
+  // bury behind a tap, so there it stays in the results header. Both places
+  // stack its privacy note under the button. `isMobile` is the breakpoint the
+  // page switches its layout on, so exactly one of the two renders.
   const isMobile = useMediaQuery(mediaMax("mobile"));
-  const nearMe = (
-    <DirectoryNearMe
-      location={myLocation}
-      layout={isMobile ? "stack" : "inline"}
-    />
-  );
+  const nearMe = <DirectoryNearMe location={myLocation} layout="stack" />;
   // The Online tab reads the server's `online=true` pool (online-only listings
   // and places that sell online), so its total and paging are the server's.
   // A position means nothing to a business with no door, so distance never
@@ -212,8 +208,8 @@ export function useDirectoryPageState() {
   // The chip counts only cover the places fetched so far, and a zero over a
   // partial load can hide a match on a page that has yet to arrive. So a chip
   // goes unpickable only once the whole set is in: nothing loading (a server
-  // filter change refetches from scratch, with no placeholder data), no error,
-  // and no further page to fetch.
+  // filter change refetches from scratch, with no placeholder data), the read
+  // succeeded, and no further page to fetch.
   // The 18+ shops count too while a member has asked for them, so the
   // `intimacy` chip is never marked empty before they arrive or after their
   // read failed.
@@ -248,8 +244,8 @@ export function useDirectoryPageState() {
   );
   const hasActiveFilters = activeFiltersWithAdult.length > 0;
   // What is narrowing the list right now, as removable chips. Placed the same
-  // way as `nearMe` above: on the search row on desktop, where it answers
-  // "what's on?" without opening the drawer, and in the results header on
+  // way as `nearMe` above: above the results on desktop, where it answers
+  // "what's on?" with the sidebar hidden too, and in the results header on
   // phones, where the sticky bar has no room for a wrapping row. Mounted even
   // with nothing active, so "Clear all" lets the row animate itself away.
   const activeFilterChips = (
@@ -258,8 +254,8 @@ export function useDirectoryPageState() {
       onClearFilters={clearFilters}
     />
   );
-  // One set of field props for the page's bar and the full screen map's card,
-  // so both drive the same URL filters.
+  // One set of field props for the desktop sidebar, the mobile sheet and the
+  // full screen map's card, so all three drive the same URL filters.
   const filterFieldProps: LocalFilterFieldsProps = {
     categories: shownCategories,
     onToggleCategory: toggleCategory,

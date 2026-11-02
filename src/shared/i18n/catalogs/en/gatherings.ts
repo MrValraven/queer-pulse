@@ -376,7 +376,7 @@ export const gatherings: Catalog = {
   "photos.chipAll": "All",
   "photos.backToRecap": "Back to recap",
   "photos.addCta": "Add photos",
-  "photos.uploadingCta": "Uploading…",
+  "photos.uploadingCta": "Uploading photo…",
   "photos.emptyLive": "No photos yet.",
   "photos.uploadError": "Couldn't upload that photo. Try again.",
   "photos.albumLabel_one": "Photo album · {count} photo",
@@ -1266,6 +1266,240 @@ export const gatherings: Catalog = {
   "host.sidebar.spacesBody":
     "Spaces that have hosted QueerPulse events and are open to hosting more.",
   "host.sidebar.capacity": "up to {max}",
+
+  // ── Add a month of events (addMonth/) ──────────────────────────────────────
+  // /create-gathering/month: many dated events copied from one starting
+  // event. `error.*` names each EventBatchFailureReason (eventBatchErrors.ts).
+  "addMonth.entry.cta": "Add a month of events",
+  "addMonth.entry.fromEventCta": "Add a month from this event",
+  "addMonth.page.eyebrow": "Hosting",
+  "addMonth.page.title": "Add a month of events",
+  "addMonth.page.lede":
+    "Set the shared details once, then give each date its own title, description and photo.",
+  "addMonth.noAccess.backToHost": "Back to hosting",
+  "addMonth.draft.title": "Pick up your month where you left off?",
+  "addMonth.draft.label_one": "{count} date",
+  "addMonth.draft.label_other": "{count} dates",
+  "addMonth.template.heading": "Start from an event",
+  "addMonth.template.lede":
+    "Pick one of your events. Every date copies its details.",
+  "addMonth.template.online": "Online",
+  "addMonth.template.changeTemplate": "Use a different event",
+  "addMonth.template.loadMore": "Show more events",
+  "addMonth.template.loadingMore": "Loading more events",
+  "addMonth.template.loadingList": "Loading your events",
+  "addMonth.template.loadFailed":
+    "We couldn't load your events. Check your connection and try again.",
+  "addMonth.template.retry": "Try again",
+  "addMonth.template.loading": "Loading the event's details",
+  "addMonth.template.empty.title": "No events to start from yet",
+  "addMonth.template.empty.body":
+    "Create your first event, then come back to add a month from it.",
+  "addMonth.template.empty.cta": "Create an event",
+  "addMonth.template.summary.heading": "Every date shares",
+  "addMonth.template.summary.edit": "Edit place and cost",
+  "addMonth.template.summary.doneEditing": "Done editing",
+  "addMonth.template.summary.row.format": "Format",
+  "addMonth.template.summary.row.place": "Place",
+  "addMonth.template.summary.row.times": "Time",
+  "addMonth.template.summary.row.cost": "Cost",
+  "addMonth.template.summary.row.payment": "How guests pay",
+  "addMonth.template.summary.row.rsvpCutoff": "RSVPs close",
+  "addMonth.template.summary.row.capacity": "Capacity",
+  "addMonth.template.summary.row.visibility": "Who can see it",
+  "addMonth.template.summary.row.community": "Community",
+  "addMonth.template.summary.row.runBy": "Run by",
+  "addMonth.template.summary.row.careNotes": "Care notes",
+  "addMonth.template.summary.row.houseRules": "House rules",
+  "addMonth.template.summary.row.accessibility": "Accessibility",
+  "addMonth.template.summary.noLimit": "No limit",
+  "addMonth.template.summary.none": "None",
+  "addMonth.template.summary.times": "{start} to {end}",
+  "addMonth.template.summary.timesNoEnd": "From {start}",
+  "addMonth.template.summary.timesPointer": "Set on the dates below",
+  "addMonth.template.summary.accessibilityAnswered":
+    "{answered} of {total} questions answered",
+  "addMonth.template.summary.editElsewhere":
+    "To change anything else, edit {title} first, or edit each event after publishing.",
+  "addMonth.template.summary.editElsewhereUnnamed":
+    "To change anything else, edit the starting event first, or edit each event after publishing.",
+  "addMonth.template.summary.notCopied":
+    "Co-hosts, guest communities, quizzes and Go together are set per event after publishing.",
+  "addMonth.template.notice.runBy.notManager":
+    "These events won't be run by {name}, because you don't manage it.",
+  "addMonth.template.notice.runBy.notManagerUnnamed":
+    "These events won't be run by the business on the starting event, because you don't manage it.",
+  "addMonth.template.notice.runBy.unavailable":
+    "These events won't be run by {name}, because it's no longer open in the directory.",
+  "addMonth.template.notice.runBy.unavailableUnnamed":
+    "These events won't be run by the business on the starting event, because it's no longer open in the directory.",
+  "addMonth.template.notice.community.notModerator":
+    "These events won't be posted in {name}, because you're not a moderator there.",
+  "addMonth.template.notice.community.notModeratorUnnamed":
+    "These events won't be posted in the starting event's community, because you're not a moderator there.",
+  "addMonth.template.notice.community.unavailable":
+    "These events won't be posted in {name}, because that community is no longer active.",
+  "addMonth.template.notice.community.unavailableUnnamed":
+    "These events won't be posted in the starting event's community, because that community is no longer active.",
+  "addMonth.template.notice.venueLink":
+    "{venue} left the directory, so these events show the venue name with no directory link.",
+  "addMonth.template.notice.venueLinkUnnamed":
+    "The starting event's venue left the directory, so these events show the venue name with no directory link.",
+  "addMonth.edit.placeHeading": "Place",
+  "addMonth.edit.costHeading": "Cost",
+  "addMonth.edit.resetToTemplate": "Use the starting event's place and cost",
+  "addMonth.dates.heading": "Pick the dates",
+  "addMonth.dates.lede":
+    "Tap each date you want an event on. You can move on to the next month too.",
+  "addMonth.calendar.previousMonth": "Previous month",
+  "addMonth.calendar.nextMonth": "Next month",
+  "addMonth.calendar.count_one": "{count} date picked",
+  "addMonth.calendar.count_other": "{count} dates picked",
+  "addMonth.calendar.cap": "You can add up to {limit} dates at a time.",
+  "addMonth.calendar.windowHint":
+    "Dates from today up to {lastDate} can be picked.",
+  "addMonth.times.heading": "Time for every date",
+  "addMonth.times.startLabel": "Starts at",
+  "addMonth.times.endLabel": "Ends at",
+  "addMonth.times.endsNextDay": "Ends the next day",
+  "addMonth.times.zoneNote":
+    "Times are in {timezone}, the time zone of the event you started from.",
+  "addMonth.cover.heading": "Cover photo for every date",
+  "addMonth.cover.fromTemplate": "The cover of {title}",
+  "addMonth.cover.none":
+    "{title} has no cover, so dates without their own photo publish with no cover.",
+  "addMonth.cover.replace": "Replace the shared cover",
+  "addMonth.cover.useTemplate": "Use the starting event's cover",
+  "addMonth.cover.added": "Photo added",
+  "addMonth.rows.heading": "One event per date",
+  "addMonth.rows.empty":
+    "Pick dates on the calendar and a card appears here for each one.",
+  "addMonth.row.cardLabel": "Event on {date}",
+  "addMonth.row.titleLabel": "Title",
+  "addMonth.row.descriptionLabel": "Description",
+  "addMonth.row.sameAsTemplate": "Same as the starting event",
+  "addMonth.row.titleMissing": "Add a title for this date.",
+  "addMonth.row.descriptionMissing": "Add a description for this date.",
+  "addMonth.row.startPassed":
+    "This start time has already passed. Pick a later time.",
+  "addMonth.row.photo.shared": "Shared cover",
+  "addMonth.row.photo.useDifferent": "Use a different photo",
+  "addMonth.row.photo.closePicker": "Close photo picker",
+  "addMonth.row.photo.change": "Change photo",
+  "addMonth.row.photo.useShared": "Use the shared cover",
+  "addMonth.row.photo.added": "Photo added",
+  "addMonth.row.time.shared": "{start} to {end}",
+  "addMonth.row.time.sharedNoEnd": "From {start}",
+  "addMonth.row.time.nextDay": "ends the next day",
+  "addMonth.row.time.change": "Change time for this date",
+  "addMonth.row.time.useShared": "Use the shared time",
+  "addMonth.row.time.startLabel": "Starts at",
+  "addMonth.row.time.endLabel": "Ends at",
+  "addMonth.row.remove": "Remove this date",
+  "addMonth.publish.heading": "Publish",
+  "addMonth.publish.button_one": "Publish {count} event",
+  "addMonth.publish.button_other": "Publish {count} events",
+  "addMonth.publish.publishing_one": "Publishing {count} event",
+  "addMonth.publish.publishing_other": "Publishing {count} events",
+  "addMonth.publish.allTogether":
+    "Every date publishes together. If one can't, none are published.",
+  "addMonth.publish.pledges.codeOfCare":
+    "These events follow the QueerPulse Code of Care.",
+  "addMonth.publish.pledges.accessibility":
+    "The accessibility answers on these events are accurate to the best of my knowledge.",
+  "addMonth.publish.block.noTemplate": "Pick an event to start from first.",
+  "addMonth.publish.block.templateLoading":
+    "The starting event is still loading. Publish once its details show.",
+  "addMonth.publish.block.noDates": "Pick at least one date on the calendar.",
+  "addMonth.publish.block.sharedInvalid":
+    "Fix the place or cost details first.",
+  "addMonth.publish.block.rowsInvalid_one":
+    "{count} date needs a change before publishing.",
+  "addMonth.publish.block.rowsInvalid_other":
+    "{count} dates need a change before publishing.",
+  "addMonth.publish.block.pledgesOpen": "Tick both pledges to publish.",
+  "addMonth.results.title_one": "{count} event <em>published</em>",
+  "addMonth.results.title_other": "{count} events <em>published</em>",
+  "addMonth.results.lede":
+    "Each one is its own event now. Edit, cancel or delete any of them on its own page.",
+  "addMonth.results.goToEvents": "Go to your events",
+  "addMonth.results.addAnother": "Add another month",
+  "addMonth.results.titleUnlisted": "Your month is <em>published</em>",
+  "addMonth.results.unlistedLede":
+    "Each date is its own event now. Find them all on your events page.",
+  "addMonth.failure.title": "Nothing was published",
+  "addMonth.failure.markedRow": "We marked the date that needs a change.",
+  "addMonth.failure.titleUnconfirmed": "We couldn't confirm your month",
+  "addMonth.toast.published_one": "{count} event published",
+  "addMonth.toast.published_other": "{count} events published",
+  "addMonth.error.noAccess":
+    "Adding a month of events is switched on per member while we try it out. Ask our team to switch it on for you.",
+  "addMonth.error.templateNotFound":
+    "The event you started from can no longer be used. It may have been cancelled or taken down, or you no longer host or co-host it. Pick another event.",
+  "addMonth.error.communityOnly":
+    "The event you started from is only for members of {communityName}, and only its moderators can post events there. Pick another event.",
+  "addMonth.error.communityOnlyUnnamed":
+    "The starting event is only for members of a community you can't post in anymore, so these events can't be published.",
+  "addMonth.error.tooManyDates":
+    "You can add up to {limit} dates at a time. Remove some dates and publish again.",
+  "addMonth.error.duplicateDate":
+    "{date} appears twice. Each date holds one event.",
+  "addMonth.error.dateInPast":
+    "The start time on {date} has already passed. Pick a later time or remove that date.",
+  "addMonth.error.dateTooFar":
+    "{date} is more than 12 months away. The last date you can add is {lastDate}.",
+  "addMonth.error.rowInvalid":
+    "The times on {date} don't work: the end has to come after the start.",
+  "addMonth.error.venueNotFound":
+    "The venue you picked is no longer listed in the directory. Pick another venue or type its name.",
+  "addMonth.error.restricted":
+    "Your account is restricted right now, so you can't publish events. Your notifications explain why.",
+  "addMonth.error.membershipInactive":
+    "Your membership isn't active right now, so you can't publish events.",
+  "addMonth.error.coverNotYours":
+    "One of the photos was uploaded by someone else, so nothing was published. Upload that photo yourself and publish again.",
+  "addMonth.error.rateLimited":
+    "You've published several months in a short time. Wait a few minutes, then publish again.",
+  "addMonth.error.invalid":
+    "Something on the page didn't pass our checks, most likely the place or payment links, a title or a description, so check those and publish again.",
+  "addMonth.error.signedOut":
+    "Your session ended. Sign in again, then publish. Your dates are saved on this device.",
+  "addMonth.error.offline":
+    "You're offline, so this month may not have reached us. Once you're connected, check your events before publishing again.",
+  "addMonth.error.unreachable":
+    "We couldn't reach QueerPulse, so this month may or may not be published. Check your events before publishing again.",
+  "addMonth.error.server":
+    "Our server had a problem, so this month may or may not be published. Check your events before publishing again.",
+  "addMonth.error.refused":
+    "The server refused this request (error {status}). Your dates are saved on this device.",
+  "addMonth.error.timedOut":
+    "We didn't hear back in time, so this month may already be published. Check your events before publishing again.",
+  "addMonth.error.unreadableAnswer":
+    "The server answered, but we couldn't read its reply, so this month may already be published. Check your events before publishing again.",
+  "addMonth.error.read.offline":
+    "We couldn't load the starting event because you're offline. Check your connection and try again.",
+  "addMonth.error.read.unreachable":
+    "We couldn't load the starting event because QueerPulse could not be reached. Try again.",
+  "addMonth.error.read.server":
+    "We couldn't load the starting event because our server had a problem. Try again.",
+  "addMonth.error.read.signedOut":
+    "Your session ended, so we couldn't load the starting event. Sign in again to keep going.",
+  "addMonth.error.read.rateLimited":
+    "We couldn't load the starting event because of too many requests in a short time. Wait a few minutes, then try again.",
+  "addMonth.error.read.refused":
+    "The server refused to load the starting event (error {status}). Try again or pick another event.",
+  "addMonth.error.read.timedOut":
+    "Loading the starting event took too long. Try again.",
+  "addMonth.error.plain.duplicateDate":
+    "One of the dates appears twice. Each date holds one event.",
+  "addMonth.error.plain.dateInPast":
+    "The start time on one of the dates has already passed. Pick a later time or remove that date.",
+  "addMonth.error.plain.dateTooFar":
+    "One of the dates is more than 12 months away. Pick dates within the next 12 months.",
+  "addMonth.error.plain.rowInvalid":
+    "The times on one of the dates don't work: the end has to come after the start.",
+  "addMonth.error.tooLarge":
+    "This month has too much text to publish in one go. Shorten a few descriptions, or publish some dates now and the rest after.",
 
   // ── Host dashboard, manage, cohosts, QR, album ────────────────────────────
 

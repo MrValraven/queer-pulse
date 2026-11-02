@@ -17,7 +17,8 @@
    alone now, not install state) — reusing it here is what keeps the
    composer clear of `BottomTabBar` instead of hiding behind it.
    `--keyboard-inset` (useVisualViewportKeyboard) is the on-screen keyboard's
-   overlap. It is NOT additional clearance stacked on top of the tab bar's:
+   overlap, and reads 0px unless a keyboard-raising field has focus. It is NOT
+   additional clearance stacked on top of the tab bar's:
    an open keyboard already covers/replaces the tab bar (they can't both be
    visible at once), so summing them lifted the composer by the tab bar's
    height even while the keyboard was up. Taking the larger of the two is
@@ -30,7 +31,16 @@
    the composer (reported on an iPhone 14, 2026-11-02). A fixed box anchored
    with `bottom` reaches the real screen edge (it is how BottomTabBar sits
    flush), so the mobile rule pins `.app` with `position: fixed` and
-   `top`/`bottom` insets. */
+   `top`/`bottom` insets.
+   With the keyboard open in a phone thread (`data-keyboard-open`, set only
+   while a field has focus and the visual viewport has shrunk by a keyboard's
+   height) the box is sized from the visual viewport alone: `top` is
+   `--visual-viewport-top` and `height` is `--visual-viewport-height`. A fixed
+   box's `top` and `height` are in layout-viewport coordinates, the frame the
+   visual viewport reports in, so `.app` lands on the visible region whatever
+   `innerHeight` says. Subtracting a keyboard overlap measured from `innerHeight`
+   left the chat unlifted on the same iPhone, with the composer behind the
+   keyboard. */
 .app {
   display: flex;
   --messages-top-offset: 0px;
@@ -55,7 +65,9 @@
    fighting the insets. In a phone thread the tab bar is hidden, so the bottom
    inset drops `--bottom-inset` (the home indicator) and keeps only the
    keyboard and the studio player: the composer's own padding paints that
-   strip (see `.composer`). */
+   strip (see `.composer`). While the keyboard is open the thread rule below
+   drops the bottom inset altogether: the studio player bar stays pinned to the
+   screen bottom behind the keyboard, so nothing of it needs clearing. */
 @media (--mobile) {
   .app {
     position: fixed;
@@ -73,6 +85,11 @@
   }
   :global(html[data-messages-thread="true"]) .app {
     bottom: calc(var(--keyboard-inset, 0px) + var(--studio-player-inset, 0px));
+  }
+  :global(html[data-messages-thread="true"][data-keyboard-open]) .app {
+    top: var(--visual-viewport-top, 0px);
+    bottom: auto;
+    height: var(--visual-viewport-height, 100svh);
   }
   /* While a RouteTransition plane or SwipeBackShell surface carries a
      `transform`, that ancestor becomes the containing block of the fixed
@@ -1878,13 +1895,14 @@
   flex: none;
   background: var(--paper);
 }
-/* The `max` gives full clearance with the keyboard closed and none once the
-   keyboard covers the home indicator. */
+/* Full home-indicator clearance with the keyboard closed. Once the keyboard is
+   open it covers the home indicator, so the padding drops to the flat 12px. */
 @media (--mobile) {
   :global(html[data-messages-thread="true"]) .composer {
-    padding-bottom: calc(
-      12px + max(0px, env(safe-area-inset-bottom) - var(--keyboard-inset, 0px))
-    );
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+  :global(html[data-messages-thread="true"][data-keyboard-open]) .composer {
+    padding-bottom: 12px;
   }
 }
 .composerRow {

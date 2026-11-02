@@ -4,49 +4,103 @@ import { FiSliders } from "react-icons/fi";
 import { Collapse, useRefineGlide } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
-  type DirectoryListingFactFilters,
-  type ListingFactCounts,
-  type ListingFactFilterChange,
-} from "./directoryListingFactFilters";
-import { useListingAttributeVocabulary } from "./listBusiness/api/useListingAttributeVocabulary";
-import {
   attributeGroupLabel,
   attributeLabel,
-  filterableAttributeGroupsFor,
-  OTHER_ATTRIBUTE_GROUP_ID,
 } from "./listBusiness/listingAttributes.data";
-import { LocalFactChip } from "./LocalListingFactFilters";
+import {
+  LocalFactChip,
+  type LocalFactGroupProps,
+} from "./LocalListingFactFilters";
+import {
+  useMoreFilterGroups,
+  type MoreFilterGroup,
+} from "./useMoreFilterGroups";
 import s from "./LocalFilterBar.module.css";
 
 /**
- * "Show more filters": the attributes of the chosen place types first, then
- * "Around the place" and "Pricing" underneath (with none chosen, those two
- * alone; the online equivalents on the Online tab), each once and none of
- * them sensitive (`filterableAttributeGroupsFor`). A disclosure inside the
- * drawer and the sheet, opened on its own when an attribute filter is
- * already on. A chosen attribute the current place types no longer offer
- * stays listed so it can be turned off.
+ * The attribute groups as one named fieldset: its note, then each group's
+ * heading over its chips. Inside a desktop sidebar section (`sectionTitleId`)
+ * the section header names the fieldset and the legend is left out.
  */
-export function LocalMoreFilters({
+export function MoreFiltersFieldset({
+  id,
+  groups,
   listingFacts,
   onToggleListingFact,
   counts,
   isLoadedSetComplete,
+  sectionTitleId,
+}: LocalFactGroupProps & { id?: string; groups: MoreFilterGroup[] }) {
+  const { t } = useTranslation();
+  const glide = useRefineGlide();
+  const headingIdPrefix = useId();
+  return (
+    <fieldset
+      id={id}
+      className={[s.accessGroup, sectionTitleId && s.flush]
+        .filter(Boolean)
+        .join(" ")}
+      aria-labelledby={sectionTitleId}
+    >
+      {!sectionTitleId && (
+        <legend className={s.groupLabel}>
+          {t("marketing:local.filter.moreFilters.label")}
+        </legend>
+      )}
+      <p className={s.accessNote}>
+        {t("marketing:local.filter.moreFilters.note")}
+      </p>
+      {groups.map((group) => {
+        const headingId = `${headingIdPrefix}-${group.id}`;
+        return (
+          <div
+            key={group.id}
+            className={s.moreFiltersGroup}
+            role="group"
+            aria-labelledby={headingId}
+          >
+            <span id={headingId} className={s.moreFiltersHeading}>
+              {attributeGroupLabel(t, group.id)}
+            </span>
+            <m.div {...glide.row} className={s.accessChips}>
+              {group.attributes.map((slug) => (
+                <LocalFactChip
+                  key={slug}
+                  listingFacts={listingFacts}
+                  isLoadedSetComplete={isLoadedSetComplete}
+                  onToggle={onToggleListingFact}
+                  label={attributeLabel(t, slug)}
+                  isOn={listingFacts.attributes.includes(slug)}
+                  change={{ kind: "attribute", slug }}
+                  count={counts.attributes[slug] ?? 0}
+                />
+              ))}
+            </m.div>
+          </div>
+        );
+      })}
+    </fieldset>
+  );
+}
+
+/**
+ * "Show more filters": the attribute groups (`useMoreFilterGroups`) behind a
+ * disclosure inside the drawer and the sheet, opened on its own when an
+ * attribute filter is already on. The desktop sidebar shows the same
+ * fieldset as a section of its own.
+ */
+export function LocalMoreFilters({
   isOnlineScope,
   categories,
-}: {
-  listingFacts: DirectoryListingFactFilters;
-  onToggleListingFact: (change: ListingFactFilterChange) => void;
-  counts: ListingFactCounts;
-  isLoadedSetComplete: boolean;
+  ...groupProps
+}: LocalFactGroupProps & {
   isOnlineScope: boolean;
   /** The chosen place types (`?cat=`). */
   categories: readonly string[];
 }) {
   const { t } = useTranslation();
-  const vocabulary = useListingAttributeVocabulary();
-  const glide = useRefineGlide();
   const panelId = useId();
+  const { listingFacts } = groupProps;
   // Opens on its own whenever attribute filters appear (on mount, or a
   // back or forward step that brings `?attr=` back), and closes only when
   // the visitor closes it. Adjusted during render, React's pattern for state
@@ -59,17 +113,12 @@ export function LocalMoreFilters({
     setHadAttributeFilters(hasAttributeFilters);
     if (hasAttributeFilters) setIsOpen(true);
   }
-  const groups = filterableAttributeGroupsFor(vocabulary, {
-    categories,
+  const groups = useMoreFilterGroups({
+    listingFacts,
     isOnlineScope,
+    categories,
   });
-  const shown = new Set(groups.flatMap((group) => group.attributes));
-  const strays = listingFacts.attributes.filter((slug) => !shown.has(slug));
-  const allGroups =
-    strays.length > 0
-      ? [...groups, { id: OTHER_ATTRIBUTE_GROUP_ID, attributes: strays }]
-      : groups;
-  if (allGroups.length === 0) return null;
+  if (groups.length === 0) return null;
   const chosenCount = listingFacts.attributes.length;
 
   return (
@@ -94,43 +143,7 @@ export function LocalMoreFilters({
         )}
       </button>
       <Collapse isOpen={isOpen}>
-        <fieldset id={panelId} className={s.accessGroup}>
-          <legend className={s.groupLabel}>
-            {t("marketing:local.filter.moreFilters.label")}
-          </legend>
-          <p className={s.accessNote}>
-            {t("marketing:local.filter.moreFilters.note")}
-          </p>
-          {allGroups.map((group) => {
-            const headingId = `${panelId}-${group.id}`;
-            return (
-              <div
-                key={group.id}
-                className={s.moreFiltersGroup}
-                role="group"
-                aria-labelledby={headingId}
-              >
-                <span id={headingId} className={s.moreFiltersHeading}>
-                  {attributeGroupLabel(t, group.id)}
-                </span>
-                <m.div {...glide.row} className={s.accessChips}>
-                  {group.attributes.map((slug) => (
-                    <LocalFactChip
-                      key={slug}
-                      listingFacts={listingFacts}
-                      isLoadedSetComplete={isLoadedSetComplete}
-                      onToggle={onToggleListingFact}
-                      label={attributeLabel(t, slug)}
-                      isOn={listingFacts.attributes.includes(slug)}
-                      change={{ kind: "attribute", slug }}
-                      count={counts.attributes[slug] ?? 0}
-                    />
-                  ))}
-                </m.div>
-              </div>
-            );
-          })}
-        </fieldset>
+        <MoreFiltersFieldset {...groupProps} id={panelId} groups={groups} />
       </Collapse>
     </div>
   );

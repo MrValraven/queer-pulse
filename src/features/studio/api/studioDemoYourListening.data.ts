@@ -87,19 +87,16 @@ export const DEMO_LISTEN_SEEDS: readonly {
   { id: "demo-listen-40", trackId: "demo-track-home-4-01", hoursAgo: 8611 },
 ];
 
-/** The viewer's opt-ins: NIGHTFORM shown as the account, Vanda Diesel shown
- *  as the viewer's persona Mariana Sol. The viewer never supports Mariana or
- *  Late Bloomers (their own). */
+/** Where the viewer changed the default. Every artist they played in the
+ *  last 28 days sees them as the account (NIGHTFORM among them) unless a
+ *  seed says otherwise: Vanda Diesel sees the viewer's persona Mariana Sol,
+ *  picked 12 days ago. The viewer never appears for Mariana or Late
+ *  Bloomers (their own). */
 export const DEMO_SUPPORTER_SEEDS: readonly {
   subprofileId: string;
   shownAsSubprofileId: string | null;
   daysAgo: number;
 }[] = [
-  {
-    subprofileId: "sp-diogo-nightform",
-    shownAsSubprofileId: null,
-    daysAgo: 40,
-  },
   {
     subprofileId: "sp-ines-fonseca-vanda-diesel",
     shownAsSubprofileId: "demo-persona-mariana-sol",

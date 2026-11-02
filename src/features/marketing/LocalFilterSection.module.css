@@ -1,0 +1,114 @@
+/* The Local directory's desktop filter sections, copied from the members
+   directory's sidebar (MemberDirectoryFilterPage.module.css) so the two
+   panels read as one control. */
+
+/* The run of sections inside the sidebar panel. Its box is dropped, so the
+   panel's own row rules (`.bands > *` in DirectoryLayout.module.css) land on
+   nothing and each section keeps the members spacing. */
+.sectionList {
+  display: contents;
+}
+
+/* One section within the panel: a transparent row, divided from the section
+   above by an inset hairline. */
+.section:not(:first-child) {
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* The header: a full-width button holding the title, an optional
+   active-count badge, and a chevron. */
+.sectionHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-10);
+  padding: 13px 12px;
+  margin: 0;
+  cursor: pointer;
+  font-family: var(--sans);
+  text-align: left;
+  transition: background 0.15s var(--ease);
+}
+@media (hover: hover) {
+  .sectionHeader:hover {
+    background: rgba(var(--plum-rgb), 0.045);
+  }
+  .sectionHeader:hover .sectionTitle,
+  .sectionHeader:hover .sectionChevron {
+    color: var(--ink-60);
+  }
+}
+.sectionHeader:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.sectionTitle {
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  transition: color 0.15s var(--ease);
+}
+.sectionCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.636em;
+  height: 1.636em;
+  padding: 0 5px;
+  border-radius: var(--radius-pill);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-11);
+  font-weight: 700;
+  line-height: 1;
+}
+.sectionChevron {
+  margin-left: auto;
+  color: var(--ink-40);
+  font-size: var(--text-14);
+  line-height: 1;
+  transition:
+    transform 0.2s var(--ease),
+    color 0.15s var(--ease);
+}
+.sectionChevronOpen {
+  transform: rotate(180deg);
+}
+
+/* Height-animated collapse without measuring: the wrapper is a one-row grid
+   whose track eases between 0fr (shut) and 1fr (its content's height).
+   `overflow: hidden` on the wrapper clips the shut track to nothing, so no
+   chip peeks under the header. */
+.sectionBodyWrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows 0.28s var(--ease);
+}
+.sectionBodyWrapOpen {
+  grid-template-rows: 1fr;
+}
+/* The collapsing grid item carries no padding of its own: a padded item keeps
+   a minimum height, which stops the 0fr track at a sliver. */
+.sectionBody {
+  overflow: hidden;
+  min-height: 0;
+}
+/* All padding lives here, inside the clipped box, so the gaps fade in with
+   the body. The inline padding lines the content up with the header text;
+   the bottom padding spaces it off the next section's divider. */
+.sectionBodyInner {
+  padding: 4px 12px 14px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sectionChevron,
+  .sectionBodyWrap {
+    transition: none;
+  }
+}

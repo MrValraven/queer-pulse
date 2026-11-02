@@ -10,6 +10,8 @@ import { type CropRect, IDENTITY_CROP } from "./cropGeometry";
 import ImageReframer from "./ImageReframer";
 import type { FreeformChoiceKey } from "./useImageReframerState";
 import { Modal } from "./Modal";
+import { UploadWaitNote } from "./UploadWaitNote";
+import styles from "./PhotoReframeModal.module.css";
 
 /** The photo to reframe: a freshly picked `File`, or the URL of an upload
  *  that is already stored (repositioning a past upload). */
@@ -25,7 +27,17 @@ export type PhotoReframeModalProps = ReframeSource & {
   note?: string;
   onCancel: () => void;
   onConfirm: (crop: CropRect) => void;
+  /** True while the caller uploads the confirmed photo with this modal still
+   *  open (the gallery's one-at-a-time queue). Save and Cancel disable, Save
+   *  reads "Uploading…", backdrop and Escape stop closing it, and the wait
+   *  note folds in under the reframer. Callers that close the modal before
+   *  uploading leave it out. */
+  isSaving?: boolean;
 };
+
+/** Backdrop and Escape do nothing while the confirmed photo uploads: closing
+ *  then would drop the queue head mid-upload. */
+function ignoreCloseWhileSaving() {}
 
 /**
  * Modal wrapper around `ImageReframer` for one picked `File` or stored image
@@ -48,6 +60,7 @@ export default function PhotoReframeModal({
   note,
   onCancel,
   onConfirm,
+  isSaving = false,
 }: PhotoReframeModalProps) {
   const { t } = useTranslation();
   const [objectUrl, setObjectUrl] = useState<string | null>(null);
@@ -77,17 +90,20 @@ export default function PhotoReframeModal({
       wide
       title={t("shared:reframe.title")}
       sub={note}
-      onClose={onCancel}
+      onClose={isSaving ? ignoreCloseWhileSaving : onCancel}
       footer={
         <>
-          <Button variant="ghost" onClick={onCancel}>
+          <Button variant="ghost" onClick={onCancel} disabled={isSaving}>
             {t("shared:reframe.cancel")}
           </Button>
           <Button
             onClick={() => onConfirm(rect ?? IDENTITY_CROP)}
-            disabled={!rect}
+            disabled={!rect || isSaving}
+            aria-busy={isSaving}
           >
-            {t("shared:reframe.save")}
+            {isSaving
+              ? t("shared:upload.inProgress")
+              : t("shared:reframe.save")}
           </Button>
         </>
       }
@@ -106,6 +122,7 @@ export default function PhotoReframeModal({
           shouldShowShapePreview={shouldShowShapePreview}
         />
       )}
+      <UploadWaitNote isShown={isSaving} className={styles.waitNote} />
     </Modal>
   );
 }
