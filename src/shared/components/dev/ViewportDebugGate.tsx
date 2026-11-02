@@ -1,4 +1,10 @@
-import { lazy, Suspense, useEffect, useSyncExternalStore } from "react";
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useSyncExternalStore,
+  type ComponentType,
+} from "react";
 import { useLocation } from "react-router-dom";
 import { safeStorage } from "../../storage/safeStorage";
 
@@ -12,8 +18,9 @@ function ReadoutChunkUnavailable(_props: { onClose: () => void }) {
 }
 
 // Lazy so the readout and its measuring code ship in their own chunk, fetched
-// only on a device where the flag is on.
-const ViewportDebugReadout = lazy(() =>
+// only on a device where the flag is on. Typed so the null-rendering fallback
+// fits beside the portal-returning readout.
+const ViewportDebugReadout = lazy<ComponentType<{ onClose: () => void }>>(() =>
   import("./ViewportDebugReadout")
     .then((module) => ({ default: module.ViewportDebugReadout }))
     .catch(() => ({ default: ReadoutChunkUnavailable })),
