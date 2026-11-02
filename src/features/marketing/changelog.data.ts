@@ -63,6 +63,61 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "persona-long-names-fit",
+        category: "fix",
+        date: "2 Nov 2026",
+        ...entryKeys("persona-long-names-fit"),
+      },
+      {
+        id: "studio-long-titles-fit",
+        category: "improvement",
+        date: "2 Nov 2026",
+        ...entryKeys("studio-long-titles-fit"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "chat-photos-swipe-smoothly",
+        category: "improvement",
+        date: "2 Nov 2026",
+        ...entryKeys("chat-photos-swipe-smoothly"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "chat-reaches-screen-edge",
+        category: "fix",
+        date: "2 Nov 2026",
+        ...entryKeys("chat-reaches-screen-edge"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "gigs-editor-redo",
+        category: "feature",
+        date: "2 Nov 2026",
+        ...entryKeys("gigs-editor-redo"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "musician-page-name-higher",
+        category: "improvement",
+        date: "2 Nov 2026",
+        ...entryKeys("musician-page-name-higher"),
+      },
+      {
+        id: "persona-studio-music-chapters",
+        category: "improvement",
+        date: "1 Nov 2026",
+        ...entryKeys("persona-studio-music-chapters"),
+      },
+      {
         id: "business-team-members",
         category: "feature",
         date: "30 Oct 2026",

@@ -1,0 +1,67 @@
+/* Wraps at 390px: every piece may drop to its own line and every text
+   ellipsizes inside a min-width 0 box. */
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 12px;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  max-width: 100%;
+}
+.icon {
+  flex: none;
+  width: 13px;
+  height: 13px;
+}
+.text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* The venue wraps to a second line before it clips, so a long name stays
+   readable at 390px. The full text is also in the line's title attribute. */
+.venue {
+  align-items: flex-start;
+}
+.venue .icon {
+  margin-top: 0.2em;
+}
+.venueText {
+  min-width: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+.warning {
+  color: var(--amber-ink);
+  font-weight: 600;
+}
+.warning .text {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+/* Intl.RelativeTimeFormat returns "today" and "in 3 days" in lower case.
+   Neutral ink: coral and amber are reserved for problems (no date, bad link). */
+.countdown {
+  display: inline-block;
+  color: var(--ink-60);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.countdown::first-letter {
+  text-transform: uppercase;
+}

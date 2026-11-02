@@ -764,6 +764,14 @@ export const subprofiles: Catalog = {
   "sectionEditor.addedExamplesAnnounce_one": "Added {count} example",
   "sectionEditor.addedExamplesAnnounce_other": "Added {count} examples",
   "sectionEditor.capHint": "That's the most you can add to one section.",
+  // Studio-backed music chapters (Discography, Mixes): StudioSectionPanel.
+  "studioSection.upload.title": "Releases come from Studio",
+  "studioSection.upload.body":
+    "Upload a release in Studio and it shows on this page by itself.",
+  "studioSection.upload.cta": "Upload in Studio",
+  "studioSection.noAccess.title": "Not available yet",
+  "studioSection.noAccess.body":
+    "Releases are uploaded in Studio, and your account has no Studio access yet. Request it and our team will review your request.",
 
   // Publish panel (SubprofilePublishPanel)
   "publishPanel.successTitle": "You're",
@@ -1764,6 +1772,8 @@ export const subprofiles: Catalog = {
   "editorPreview.label": "Live preview",
   "editorPreview.chapterEmpty":
     "{title} isn't on your page yet. Add something and it shows up here.",
+  "editorPreview.chapterEmptyStudio":
+    "{title} isn't on your page yet. Upload a release in Studio and it shows up here.",
   "editorPreview.openLive": "Open live",
   "editorPreview.openDraftPage": "Open draft page",
   // Mobile / Desktop switch in the preview bar (PreviewDeviceToggle).
@@ -3745,4 +3755,55 @@ export const subprofiles: Catalog = {
   "tattoo.project.nextSessions": "Next sessions",
   // Studio landing v2 (2026-10-28)
   "foundingArtist.badge": "Founding artist",
+  // Gigs editor (GigRowGroup, GigRow, GigItemDrawer, GigLivePreview). The
+  // status chip labels reuse `richField.gigState.option.*`.
+  "gigEditor.group.upcoming": "Upcoming",
+  "gigEditor.group.past": "Past",
+  "gigEditor.upcoming.empty":
+    "No upcoming gigs yet. Add your next one when it is booked.",
+  "gigEditor.past.show_one": "Show {count} past gig",
+  "gigEditor.past.show_other": "Show {count} past gigs",
+  "gigEditor.past.hide": "Hide past gigs",
+  "gigEditor.add": "Add gig",
+  "gigEditor.save": "Save gig",
+  "gigEditor.drawer.addTitle": "Add gig",
+  "gigEditor.drawer.editTitle": "Edit gig",
+  "gigEditor.row.doors": "Doors {time}",
+  "gigEditor.row.tickets": "Tickets",
+  "gigEditor.row.ticketInvalid": "Ticket link needs https://",
+  "gigEditor.row.noDate": "No date",
+  "gigEditor.row.spotlight": "Spotlight",
+  "gigEditor.row.today": "Today",
+  "gigEditor.field.name.label": "Gig name",
+  "gigEditor.field.name.placeholder": "Late set at The Yard",
+  "gigEditor.field.city.label": "City",
+  "gigEditor.field.city.placeholder": "Lisbon",
+  "gigEditor.field.date.label": "Date",
+  "gigEditor.field.doors.label": "Doors open",
+  "gigEditor.field.venue.label": "Venue",
+  "gigEditor.field.venue.placeholder": "The Yard",
+  "gigEditor.field.status.label": "Status",
+  "gigEditor.field.ticket.label": "Ticket link",
+  "gigEditor.field.ticket.helper":
+    "Visitors tap the gig on your page to buy tickets here.",
+  "gigEditor.field.ticket.error": "Ticket link needs to start with https://",
+  "gigEditor.field.eventLink.label": "Event page link",
+  "gigEditor.field.eventLink.helper":
+    "Optional. Your Spotlight strip links to this page.",
+  "gigEditor.field.poster.label": "Poster",
+  "gigEditor.field.poster.add": "Add poster",
+  "gigEditor.field.poster.change": "Change poster",
+  "gigEditor.field.poster.helper":
+    "Shows next to this gig in your editor. A portrait image works best.",
+  "gigEditor.preview.title": "Live preview",
+  "gigEditor.preview.editor": "In your editor",
+  "gigEditor.preview.page": "On your page",
+  "gigEditor.preview.venueNote":
+    "The venue shows in the Next up bar on your page. The poster shows only in your editor row.",
+  "gigEditor.preview.show": "Show preview",
+  "gigEditor.preview.hide": "Hide preview",
+  "gigEditor.preview.untitled": "Untitled gig",
+  "gigEditor.preview.emptyHint": "Your gig appears here as you fill it in",
+  "gigEditor.status.needsDate": "Pick the gig date to save",
+  "gigEditor.status.badTicketLink": "Ticket link needs to start with https://",
 };

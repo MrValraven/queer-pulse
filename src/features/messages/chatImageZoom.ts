@@ -131,11 +131,166 @@ const DISMISS_MIN_SCALE = 0.85;
  *  conversation reads through it and the dismiss feels like putting the photo
  *  back where it came from. */
 const SCRIM_MIN_OPACITY = 0.15;
-/** Past the navigate threshold a horizontal drag follows at this fraction of
- *  the finger, so it resists rather than sliding away from nothing. */
-const HORIZONTAL_RESIST = 0.35;
-/** And never travels further than this multiple of the threshold. */
-const HORIZONTAL_MAX_FACTOR = 1.6;
+/** In a single-photo gallery a horizontal drag has nowhere to go, so past the
+ *  swipe floor it follows at this fraction of the finger and settles back. A
+ *  gallery with neighbours never resists: the track follows the finger 1:1. */
+const SINGLE_PHOTO_RESIST = 0.35;
+/** And the single-photo drag never travels further than this multiple of the
+ *  swipe floor. */
+const SINGLE_PHOTO_MAX_FACTOR = 1.6;
+
+// ── Horizontal paging ────────────────────────────────────────────────────────
+// The numbers behind the finger-tracked slide between photos. Pure and free of
+// the DOM so the commit decision can be tested without a pointer stream; the
+// hook that writes the track transform (`useSwipeTrack`) supplies the samples.
+
+/** The least travel that commits a swipe by distance alone, whatever the stage
+ *  width: a narrow stage must not commit on a nudge. */
+export const SWIPE_DISTANCE_FLOOR_PX = 64;
+/** Travel that commits a swipe by distance, as a share of the stage width. */
+export const SWIPE_DISTANCE_FRACTION = 0.25;
+/** A release faster than this, in the direction of the drag, is a flick and
+ *  commits however short the drag was. */
+export const FLICK_VELOCITY_PX_PER_MS = 0.4;
+/** How far back from the release the pointer samples still count toward the
+ *  release velocity. A finger that paused before lifting reads as slow. */
+export const FLICK_SAMPLE_WINDOW_MS = 100;
+/** Two samples closer together than this say nothing reliable about speed. */
+const MIN_VELOCITY_SPAN_MS = 4;
+/** The decelerating curve every settle uses: fast out of the finger's hands,
+ *  long soft landing. */
+export const SETTLE_EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
+/** Bounds on how long a settle runs. */
+const SETTLE_MIN_MS = 180;
+const SETTLE_MAX_MS = 320;
+/** The slowest speed a settle is paced at, so a release with no speed still
+ *  lands in a sensible time. */
+const SETTLE_MIN_SPEED_PX_PER_MS = 1;
+
+export type SwipeDirection = "next" | "prev";
+
+/** One recorded pointer position of a horizontal drag. */
+export interface PointerSample {
+  /** Drag offset from where the finger went down, in CSS pixels. */
+  x: number;
+  /** A `DOMHighResTimeStamp` in milliseconds. */
+  time: number;
+}
+
+/**
+ * The signed release velocity in px/ms (positive is rightward), read from the
+ * samples inside `FLICK_SAMPLE_WINDOW_MS` of `releaseTime`. Zero when fewer
+ * than two usable samples remain, which is what a finger that rested before
+ * lifting looks like.
+ */
+export function releaseVelocity(
+  samples: PointerSample[],
+  releaseTime: number,
+): number {
+  const recent = samples.filter(
+    (sample) => releaseTime - sample.time <= FLICK_SAMPLE_WINDOW_MS,
+  );
+  const first = recent[0];
+  const last = recent[recent.length - 1];
+  if (!first || !last) return 0;
+  const elapsed = last.time - first.time;
+  if (!(elapsed >= MIN_VELOCITY_SPAN_MS)) return 0;
+  return (last.x - first.x) / elapsed;
+}
+
+/**
+ * Whether a release commits to the next or previous photo, or null to spring
+ * back. `offset` is where the track sits (negative is dragged left, toward the
+ * next photo), `velocity` the signed release velocity and `width` the stage
+ * width the distance rule is a share of.
+ *
+ * A flick in the direction of the drag commits however short the drag was. A
+ * flick AGAINST the drag cancels even past the distance, because the finger
+ * has already said it is taking the photo back. Otherwise distance decides.
+ */
+export function swipeDecision({
+  offset,
+  velocity,
+  width,
+}: {
+  offset: number;
+  velocity: number;
+  width: number;
+}): SwipeDirection | null {
+  if (!Number.isFinite(offset) || !Number.isFinite(velocity)) return null;
+  const dragSign = Math.sign(offset);
+  const flickSign =
+    Math.abs(velocity) > FLICK_VELOCITY_PX_PER_MS ? Math.sign(velocity) : 0;
+  if (flickSign !== 0 && dragSign !== 0 && flickSign !== dragSign) return null;
+  const threshold = Math.max(
+    SWIPE_DISTANCE_FLOOR_PX,
+    width * SWIPE_DISTANCE_FRACTION,
+  );
+  const hasTravelled = Math.abs(offset) >= threshold;
+  const sign = flickSign !== 0 ? flickSign : hasTravelled ? dragSign : 0;
+  if (sign === 0) return null;
+  return sign < 0 ? "next" : "prev";
+}
+
+/**
+ * Where the track sits for a raw horizontal drag offset. With neighbours it is
+ * the finger, one to one: the next photo is right there beside the current one,
+ * so there is nothing to resist. Without neighbours (a single-photo gallery)
+ * the drag follows the finger only up to the swipe floor, resists beyond it
+ * and is capped, so it still reads as "nowhere to go" and settles back.
+ */
+export function horizontalTrackOffset(
+  rawOffset: number,
+  hasNeighbours: boolean,
+): number {
+  if (!Number.isFinite(rawOffset)) return 0;
+  if (hasNeighbours) return rawOffset;
+  const magnitude = Math.abs(rawOffset);
+  const followed =
+    magnitude <= SWIPE_DISTANCE_FLOOR_PX
+      ? magnitude
+      : SWIPE_DISTANCE_FLOOR_PX +
+        (magnitude - SWIPE_DISTANCE_FLOOR_PX) * SINGLE_PHOTO_RESIST;
+  return (
+    Math.sign(rawOffset) *
+    Math.min(SWIPE_DISTANCE_FLOOR_PX * SINGLE_PHOTO_MAX_FACTOR, followed)
+  );
+}
+
+/** How long a settle over `remainingPx` runs at `speedPxPerMs`: the time the
+ *  distance takes at that speed (never slower than the minimum pace), held
+ *  inside the 180 to 320ms band so neither a flick nor a slow release feels
+ *  abrupt or sluggish. */
+export function settleDurationMs(
+  remainingPx: number,
+  speedPxPerMs: number,
+): number {
+  const pace = Math.max(SETTLE_MIN_SPEED_PX_PER_MS, speedPxPerMs);
+  const duration = Math.abs(remainingPx) / pace;
+  if (!Number.isFinite(duration)) return SETTLE_MIN_MS;
+  return Math.round(Math.min(SETTLE_MAX_MS, Math.max(SETTLE_MIN_MS, duration)));
+}
+
+/** The inline `transform` the swipe track carries for a horizontal offset. */
+export function trackTransform(offset: number): string {
+  return `translateX(${offset}px)`;
+}
+
+/**
+ * The horizontal translation in a computed `transform` value, which is what
+ * lets a drag that begins mid-settle pick up from where the track visibly is.
+ * Reads the `matrix(...)` and `matrix3d(...)` forms browsers compute, plus the
+ * `translateX(...)` form an inline value keeps where no style is computed;
+ * anything else (`none` included) is zero.
+ */
+export function translateXFromTransform(transform: string): number {
+  const matrix = /^matrix\(([^)]+)\)$/.exec(transform.trim());
+  if (matrix?.[1]) return Number(matrix[1].split(",")[4]) || 0;
+  const matrix3d = /^matrix3d\(([^)]+)\)$/.exec(transform.trim());
+  if (matrix3d?.[1]) return Number(matrix3d[1].split(",")[12]) || 0;
+  const translate = /^translateX\((-?[\d.]+)px\)$/.exec(transform.trim());
+  return translate?.[1] ? Number(translate[1]) : 0;
+}
 
 export type DragAxis = "horizontal" | "vertical";
 
@@ -189,7 +344,7 @@ export function dragFeedbackFor(
   axis: DragAxis,
   deltaX: number,
   deltaY: number,
-  thresholds: { dismissDistance: number; nextDistance: number },
+  thresholds: { dismissDistance: number },
   options: { allowScale: boolean },
 ): DragFeedback {
   // A later frame can carry a non-finite coordinate even once the axis has
@@ -200,19 +355,10 @@ export function dragFeedbackFor(
   // one frame and recovers on the next. Idle is always a safe frame to paint
   // instead.
   if (!Number.isFinite(deltaX) || !Number.isFinite(deltaY)) return IDLE_DRAG;
-  if (axis === "horizontal") {
-    const limit = thresholds.nextDistance * HORIZONTAL_MAX_FACTOR;
-    const magnitude = Math.abs(deltaX);
-    const followed =
-      magnitude <= thresholds.nextDistance
-        ? magnitude
-        : thresholds.nextDistance +
-          (magnitude - thresholds.nextDistance) * HORIZONTAL_RESIST;
-    return {
-      ...IDLE_DRAG,
-      x: Math.sign(deltaX) * Math.min(limit, followed),
-    };
-  }
+  // A sideways drag moves the swipe track, so the stage itself has nothing
+  // to show for it (see `horizontalTrackOffset` and
+  // `useSwipeTrack`). Idle here keeps the stage, the wash and the scale still.
+  if (axis === "horizontal") return IDLE_DRAG;
   // Only downward travel means anything: there is no upward dismiss.
   const travel = Math.max(0, deltaY);
   if (travel === 0) return IDLE_DRAG;

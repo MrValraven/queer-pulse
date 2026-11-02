@@ -22,12 +22,15 @@
    visible at once), so summing them lifted the composer by the tab bar's
    height even while the keyboard was up. Taking the larger of the two is
    what's actually on screen at the bottom edge in either state.
-   The height starts from `--layout-viewport-height` (useVisualViewportKeyboard,
-   `window.innerHeight`) instead of `100svh`: iOS standalone web apps can report
-   `100svh` short of the real viewport (~45px on iOS 26), which left a dead strip
-   under the composer, and `--keyboard-inset` is itself measured against
-   `innerHeight`, so both terms of the subtraction share one measure. The
-   `100svh` fallback covers first paint and engines without visualViewport. */
+   Desktop keeps the computed height below, starting from
+   `--layout-viewport-height` (useVisualViewportKeyboard, `window.innerHeight`)
+   with a `100svh` fallback for first paint. On a phone, iOS 26 standalone
+   reports both `100svh` and `innerHeight` about 47px short of the real
+   screen, so a computed height ends early and leaves an unpainted strip under
+   the composer (reported on an iPhone 14, 2026-11-02). A fixed box anchored
+   with `bottom` reaches the real screen edge (it is how BottomTabBar sits
+   flush), so the mobile rule pins `.app` with `position: fixed` and
+   `top`/`bottom` insets. */
 .app {
   display: flex;
   --messages-top-offset: 0px;
@@ -44,13 +47,40 @@
    its ground under it; `.app` takes that job now, painting the strip in the
    panels' own `--paper` and padding its contents down by the inset, which is
    0 in a browser tab. The global border-box sizing keeps that padding inside
-   the height math above. (`main[data-page-main][data-shell="full-height"]` in
+   the pinned box. (`main[data-page-main][data-shell="full-height"]` in
    standalone.css zeroes the generic app-bar margin for this route, so nothing
-   else offsets it.) */
+   else offsets it.)
+   The shell is pinned with `top` and `bottom` and no computed height; `height:
+   auto` and `margin-top: 0` stop the base rule's height and margin from
+   fighting the insets. In a phone thread the tab bar is hidden, so the bottom
+   inset drops `--bottom-inset` (the home indicator) and keeps only the
+   keyboard and the studio player: the composer's own padding paints that
+   strip (see `.composer`). */
 @media (--mobile) {
   .app {
+    position: fixed;
+    top: var(--messages-top-offset);
+    left: 0;
+    right: 0;
+    bottom: calc(
+      max(var(--bottom-inset), var(--keyboard-inset, 0px)) +
+        var(--studio-player-inset, 0px)
+    );
+    height: auto;
+    margin-top: 0;
     padding-top: env(safe-area-inset-top);
     background: var(--paper);
+  }
+  :global(html[data-messages-thread="true"]) .app {
+    bottom: calc(var(--keyboard-inset, 0px) + var(--studio-player-inset, 0px));
+  }
+  /* While a RouteTransition plane or SwipeBackShell surface carries a
+     `transform`, that ancestor becomes the containing block of the fixed
+     `.app`. `.app` has left the flow, so `main` would be 0px tall and the
+     shell would collapse with it. This in-flow height keeps the routed plane
+     viewport tall for the whole slide. */
+  :global(main[data-page-main]):has(> .app) {
+    min-height: var(--layout-viewport-height, 100svh);
   }
 }
 
@@ -1832,13 +1862,11 @@
 }
 
 .composer {
-  /* No extra `env(safe-area-inset-bottom)` here: `.app`'s height already
-     stops short of the tab bar/home-indicator by `--bottom-inset` (which
-     itself folds in `env(safe-area-inset-bottom)` — see standalone.css), and
-     by `--keyboard-inset` when the keyboard is up. `.composer` is a normal
-     flex child inside that already-clamped box, so adding the safe-area
-     inset again here just padded an extra gap between the composer and
-     whatever's actually below it. */
+  /* On a tablet or desktop `.app` already stops at the bottom edge, so no
+     `env(safe-area-inset-bottom)` is added here. A phone thread hides the tab
+     bar and pins `.app` to the screen edge, so the media rule below adds the
+     home-indicator clearance as padding and the composer's ground reaches the
+     edge (also in `ComposerBlockedState`, which reuses this class). */
   padding: 12px 16px;
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
   display: flex;
@@ -1849,6 +1877,15 @@
   gap: 0;
   flex: none;
   background: var(--paper);
+}
+/* The `max` gives full clearance with the keyboard closed and none once the
+   keyboard covers the home indicator. */
+@media (--mobile) {
+  :global(html[data-messages-thread="true"]) .composer {
+    padding-bottom: calc(
+      12px + max(0px, env(safe-area-inset-bottom) - var(--keyboard-inset, 0px))
+    );
+  }
 }
 .composerRow {
   display: flex;

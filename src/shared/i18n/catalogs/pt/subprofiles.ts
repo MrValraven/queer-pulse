@@ -758,6 +758,14 @@ export const subprofiles: Catalog = {
   "sectionEditor.addedExamplesAnnounce_one": "{count} exemplo acrescentado",
   "sectionEditor.addedExamplesAnnounce_other": "{count} exemplos acrescentados",
   "sectionEditor.capHint": "É o máximo que podes acrescentar a uma secção.",
+  // Capítulos de música com o Studio (Discografia, Mixes): StudioSectionPanel.
+  "studioSection.upload.title": "Os lançamentos vêm do Studio",
+  "studioSection.upload.body":
+    "Carrega um lançamento no Studio e ele aparece nesta página sozinho.",
+  "studioSection.upload.cta": "Carregar no Studio",
+  "studioSection.noAccess.title": "Ainda não está disponível",
+  "studioSection.noAccess.body":
+    "Os lançamentos são carregados no Studio e a tua conta ainda não tem acesso ao Studio. Pede-o e a nossa equipa vai analisar o teu pedido.",
 
   // Painel de publicação (SubprofilePublishPanel)
   "publishPanel.successTitle": "Estás",
@@ -1789,6 +1797,8 @@ export const subprofiles: Catalog = {
   "editorPreview.label": "Pré-visualização ao vivo",
   "editorPreview.chapterEmpty":
     "{title} ainda não aparece na tua página. Adiciona algo e surge aqui.",
+  "editorPreview.chapterEmptyStudio":
+    "{title} ainda não aparece na tua página. Carrega um lançamento no Studio e surge aqui.",
   "editorPreview.openLive": "Abrir ao vivo",
   "editorPreview.openDraftPage": "Abrir página do rascunho",
   // Mobile / Desktop switch in the preview bar (PreviewDeviceToggle).
@@ -3835,4 +3845,58 @@ export const subprofiles: Catalog = {
   "tattoo.project.nextSessions": "Sessões seguintes",
   // Studio landing v2 (2026-10-28)
   "foundingArtist.badge": "Artista da fundação",
+  // Editor de concertos (GigRowGroup, GigRow, GigItemDrawer, GigLivePreview).
+  // As etiquetas de estado reutilizam `richField.gigState.option.*`.
+  "gigEditor.group.upcoming": "Próximos",
+  "gigEditor.group.past": "Passados",
+  "gigEditor.upcoming.empty":
+    "Ainda não tens concertos marcados. Acrescenta o próximo quando estiver confirmado.",
+  "gigEditor.past.show_one": "Mostrar {count} concerto passado",
+  "gigEditor.past.show_other": "Mostrar {count} concertos passados",
+  "gigEditor.past.hide": "Esconder concertos passados",
+  "gigEditor.add": "Acrescentar concerto",
+  "gigEditor.save": "Guardar concerto",
+  "gigEditor.drawer.addTitle": "Acrescentar concerto",
+  "gigEditor.drawer.editTitle": "Editar concerto",
+  "gigEditor.row.doors": "Portas {time}",
+  "gigEditor.row.tickets": "Bilhetes",
+  "gigEditor.row.ticketInvalid": "O link de bilhetes precisa de https://",
+  "gigEditor.row.noDate": "Sem data",
+  "gigEditor.row.spotlight": "Destaque",
+  "gigEditor.row.today": "Hoje",
+  "gigEditor.field.name.label": "Nome do concerto",
+  "gigEditor.field.name.placeholder": "Sessão tardia no Pátio",
+  "gigEditor.field.city.label": "Cidade",
+  "gigEditor.field.city.placeholder": "Lisboa",
+  "gigEditor.field.date.label": "Data",
+  "gigEditor.field.doors.label": "Abertura de portas",
+  "gigEditor.field.venue.label": "Local",
+  "gigEditor.field.venue.placeholder": "O Pátio",
+  "gigEditor.field.status.label": "Estado",
+  "gigEditor.field.ticket.label": "Link de bilhetes",
+  "gigEditor.field.ticket.helper":
+    "Quem toca no concerto na tua página compra os bilhetes aqui.",
+  "gigEditor.field.ticket.error":
+    "O link de bilhetes tem de começar por https://",
+  "gigEditor.field.eventLink.label": "Link da página do evento",
+  "gigEditor.field.eventLink.helper":
+    "Opcional. A faixa de Destaque da tua página liga a esta página.",
+  "gigEditor.field.poster.label": "Cartaz",
+  "gigEditor.field.poster.add": "Acrescentar cartaz",
+  "gigEditor.field.poster.change": "Mudar cartaz",
+  "gigEditor.field.poster.helper":
+    "Aparece ao lado deste concerto no teu editor. Uma imagem vertical fica melhor.",
+  "gigEditor.preview.title": "Pré-visualização em direto",
+  "gigEditor.preview.editor": "No teu editor",
+  "gigEditor.preview.page": "Na tua página",
+  "gigEditor.preview.venueNote":
+    "O local aparece na barra Próximo concerto da tua página. O cartaz aparece só na linha do teu editor.",
+  "gigEditor.preview.show": "Mostrar pré-visualização",
+  "gigEditor.preview.hide": "Esconder pré-visualização",
+  "gigEditor.preview.untitled": "Concerto sem nome",
+  "gigEditor.preview.emptyHint":
+    "O teu concerto aparece aqui à medida que preenches",
+  "gigEditor.status.needsDate": "Escolhe a data do concerto para guardar",
+  "gigEditor.status.badTicketLink":
+    "O link de bilhetes tem de começar por https://",
 };

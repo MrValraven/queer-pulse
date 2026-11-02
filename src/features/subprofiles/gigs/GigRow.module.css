@@ -1,0 +1,233 @@
+/* The gig row in the persona editor list. Layout-only additions on top of the
+   global `.itemrow` (persona-editor.css). The grid follows the `.flat` pattern
+   of EditorItemRow.module.css and answers to the `section-list` container:
+   - below 400px (the default) the actions take their own line under the date,
+     poster and content, five buttons that shrink from 44px to 40px wide;
+   - from 400px the actions rejoin the row (rows with a poster join from
+     460px, a modifier class keeps `:has()` out of it);
+   - fine pointers use 36px buttons inline, coarse pointers 44px tall and
+     40px wide.
+   `:global(.itemrow)` lifts these rules over the global ones whatever order
+   the sheets load in. `min-width: 0` keeps a narrow phone from ever
+   scrolling sideways. */
+:global(.itemrow).gigRow {
+  display: grid;
+  grid-template-columns: auto auto auto minmax(0, 1fr);
+  grid-template-areas:
+    "grip date poster content"
+    "grip actions actions actions";
+  align-items: start;
+  --gig-action-width: 36px;
+  --gig-action-height: 36px;
+  column-gap: 0;
+  row-gap: 2px;
+  padding: 12px;
+  transition:
+    border-color var(--dur-base) var(--ease),
+    opacity var(--dur-base) var(--ease);
+}
+.gigRow > :global(.grip) {
+  grid-area: grip;
+  margin-inline-end: 10px;
+  align-self: center;
+}
+.date {
+  grid-area: date;
+  margin-inline-end: 12px;
+}
+.poster {
+  grid-area: poster;
+  margin-inline-end: 12px;
+}
+.content {
+  grid-area: content;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.headline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  min-width: 0;
+}
+/* The title button opens Edit. Its pseudo-element stretches over the whole
+   content area so the lines below it are part of the target. */
+.title {
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: var(--text-15);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+  text-align: start;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+span.title {
+  cursor: default;
+}
+.titleEmpty {
+  color: var(--ink-40);
+  font-weight: 500;
+}
+button.title::after {
+  content: "";
+  position: absolute;
+  inset: -4px -6px;
+  border-radius: var(--radius-8);
+}
+/* The global `:focus-visible` rule (base.css) draws an outline AND a cream
+   halo box-shadow on the button itself. Both go, so the stretched ::after
+   below carries the one ring. */
+button.title:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+button.title:focus-visible::after {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.spotlight {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-ink);
+  font-size: var(--text-12);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* Past gigs fade until the owner points at or focuses them. A dragged row is
+   always full strength. */
+.past,
+.cancelled {
+  opacity: 0.6;
+}
+.past:hover,
+.past:focus-within,
+.cancelled:hover,
+.cancelled:focus-within {
+  opacity: 1;
+}
+.cancelled .title {
+  text-decoration: line-through;
+}
+:global(.itemrow).gigRow.dragging {
+  opacity: 1;
+  z-index: 1;
+  border-color: var(--line-2);
+  box-shadow: var(--shadow-e2);
+  cursor: grabbing;
+}
+
+/* Chapter list: a hairline list in the chapter card. */
+:global(.itemrow).gigRow.flat {
+  margin-inline: -8px;
+  padding: 12px 8px;
+  border: none;
+  border-radius: 0;
+  background: none;
+}
+:global(.itemrow).gigRow.flat + :global(.itemrow).gigRow.flat {
+  border-top: 1px solid var(--line);
+}
+:global(.itemrow).gigRow.flat.dragging {
+  border-radius: var(--radius-12);
+  background: var(--paper);
+}
+
+/* Preview copy in the drawer: date, poster and content only. */
+:global(.itemrow).gigRow.static {
+  grid-template-columns: auto auto minmax(0, 1fr);
+  grid-template-areas: "date poster content";
+  align-items: center;
+}
+
+/* Five targets on their own line, the first icon lined up under the date
+   block. They stay 44px tall and shrink in width down to 40px when the
+   container is narrow. */
+:global(.itemrow).gigRow > :global(.itemacts) {
+  grid-area: actions;
+  justify-self: stretch;
+  gap: 0;
+  margin-inline: -12px 0;
+}
+:global(.itemrow).gigRow :global(.iact) {
+  flex: 0 1 44px;
+  width: auto;
+  min-width: 40px;
+  height: 44px;
+}
+/* Narrowest phones: the line starts at the row's left edge so five 40px
+   buttons fit beside no grip. */
+@container section-list (max-width: 229px) {
+  :global(.itemrow).gigRow:not(.static) {
+    grid-template-areas:
+      "grip date poster content"
+      "actions actions actions actions";
+  }
+  :global(.itemrow).gigRow > :global(.itemacts) {
+    margin-inline: -8px 0;
+  }
+}
+/* Coarse pointers keep 44px tall targets inline too, 40px wide so the
+   content column keeps room. */
+@media (pointer: coarse) {
+  :global(.itemrow).gigRow {
+    --gig-action-width: 40px;
+    --gig-action-height: 44px;
+  }
+}
+/* Inline from 400px: grip, date block, content and the five actions share
+   one line. The content column truncates. */
+@container section-list (min-width: 400px) {
+  :global(.itemrow).gigRow:not(.hasPoster):not(.static) {
+    grid-template-columns: auto auto auto minmax(0, 1fr) auto;
+    grid-template-areas: "grip date poster content actions";
+    align-items: center;
+  }
+  :global(.itemrow).gigRow:not(.hasPoster) > :global(.itemacts) {
+    justify-self: end;
+    margin-inline: var(--gap-xs) -4px;
+  }
+  :global(.itemrow).gigRow:not(.hasPoster) :global(.iact) {
+    flex: none;
+    width: var(--gig-action-width);
+    min-width: 0;
+    height: var(--gig-action-height);
+  }
+}
+/* A poster takes another 56px, so those rows rejoin from 460px. */
+@container section-list (min-width: 460px) {
+  :global(.itemrow).gigRow.hasPoster:not(.static) {
+    grid-template-columns: auto auto auto minmax(0, 1fr) auto;
+    grid-template-areas: "grip date poster content actions";
+    align-items: center;
+  }
+  :global(.itemrow).gigRow.hasPoster > :global(.itemacts) {
+    justify-self: end;
+    margin-inline: var(--gap-xs) -4px;
+  }
+  :global(.itemrow).gigRow.hasPoster :global(.iact) {
+    flex: none;
+    width: var(--gig-action-width);
+    min-width: 0;
+    height: var(--gig-action-height);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :global(.itemrow).gigRow {
+    transition: none;
+  }
+}

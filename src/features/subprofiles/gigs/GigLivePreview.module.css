@@ -1,0 +1,102 @@
+/* The drawer's live gig preview: a quiet card holding the editor row and the
+   public stage row. Tokens only. */
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-e1);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-body-lg);
+  color: var(--text-strong);
+}
+
+/* Three classes outrank the shared `.quiet.sm` 36px floor so the toggle
+   keeps a 44px target. */
+.preview .head .toggle {
+  min-height: var(--tap-min);
+  gap: 6px;
+}
+
+.chevron,
+.chevronOpen {
+  flex: none;
+  transition: transform 0.28s var(--ease);
+}
+.chevronOpen {
+  transform: rotate(180deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .chevron,
+  .chevronOpen {
+    transition: none;
+  }
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  padding-top: 4px;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.label {
+  margin: 0;
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+/* The real `.pp` skin root, trimmed to a frame around one row. `.pp` brings
+   the stage ground (dark in both themes), the `--sk-*` tokens and the cream
+   ink; this only drops the page-sized padding and height it also carries.
+   Two classes outrank the global single-class `.pp` rule whatever the sheet
+   order. */
+.pageFrame:global(.pp) {
+  min-height: 0;
+  padding: 4px 16px;
+  overflow: hidden;
+  border-radius: var(--radius-14);
+}
+
+.note {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* The empty-draft hint under the page row: names what the row is waiting for. */
+.hint {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: var(--ink-60);
+}

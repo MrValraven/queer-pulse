@@ -89,13 +89,80 @@
      a bad trade. */
 }
 
+/* The swipe track: the previous, current and next photos laid side by side,
+   moved as one by useSwipeTrack, which writes its transform straight to
+   `style` (a drag follows the finger, a settle runs as an inline transition).
+   It fills the flip layer, so each slide's `max-width: 100%` photo resolves
+   against exactly the box the lone photo used to, and the zoom maths keeps
+   measuring the same numbers.
+
+   No permanent `will-change` here, unlike .stage. The track only moves while a
+   swipe or a settle is running, and useSwipeTrack marks exactly that span with
+   data-paging, below. A full-screen layer held at rest for the sake of a
+   gesture that mostly never happens is a bad trade. */
+.track {
+  position: absolute;
+  inset: 0;
+}
+
+.track[data-paging="true"] {
+  will-change: transform;
+}
+
+/* One photo on the track. Each slide is a full stage wide, centring its photo
+   the way the flip layer did when there was only one. The neighbours are
+   placed with `left`, which makes their offset real layout (a transform
+   would hide it from script): useSwipeTrack reads it off the slide to know how far to travel, gap
+   included, with no second copy of the gap in script. The gap is a token so
+   the photos never touch while they slide past each other. */
+.slide {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slidePrev {
+  left: calc(-100% - var(--gap-grid));
+}
+
+.slideNext {
+  left: calc(100% + var(--gap-grid));
+}
+
+/* The neighbours stay in the DOM so their photos are loaded and decoded before
+   a swipe needs them, but they are hidden at rest: they sit outside the
+   stage's clip anyway, and this keeps them out of the open and close flights
+   (which lift the clip) and out of a downward dismiss. They show only while
+   the track is paging. */
+.slidePrev,
+.slideNext {
+  visibility: hidden;
+}
+
+.track[data-paging="true"] > .slidePrev,
+.track[data-paging="true"] > .slideNext {
+  visibility: visible;
+}
+
 .image {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
   transform-origin: center center;
-  will-change: transform;
   -webkit-user-drag: none;
+}
+
+/* Only the current photo is ever zoomed, so only it is promoted. Held for the
+   photo's whole time on screen, as before, because a pinch or a pan rewrites
+   its transform on every pointer frame. The neighbours never move on their
+   own, and three full-size layers would cost memory for nothing. */
+.slide[data-slide="current"] > .image {
+  will-change: transform;
 }
 
 .imageZoomed {

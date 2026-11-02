@@ -128,6 +128,9 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   overflow-wrap: anywhere;
+  /* Evens out the two lines so a short tagline ("Amante de desporto e da /
+     dança.") does not leave one word alone on the second line. */
+  text-wrap: balance;
 }
 
 /* The whole point of the card: it says why. Kept visually distinct from the

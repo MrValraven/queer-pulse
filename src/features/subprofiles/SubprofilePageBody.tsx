@@ -20,6 +20,8 @@ import { TattooBody } from "./skins/tattoo/TattooBody";
 // these same selectors — see that file's load-order note).
 import "./persona-skins.css";
 import "./persona-motion.css";
+// The stage skin's hero: identity block over the banner, pills on one line.
+import "./persona-stage-hero.css";
 import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
 import type {
   PublicSubprofileView,

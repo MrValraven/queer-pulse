@@ -2,6 +2,7 @@ import { useEffect, useRef, type RefObject } from "react";
 import { useSearchParams } from "react-router-dom";
 import { prefersReducedMotionNow } from "../../shared/hooks/usePrefersReducedMotion";
 import type { SkinChapterDescriptor } from "./skinBlockFields.data";
+import { isStudioMusicSection, usePersonaStudio } from "./personaStudio";
 import { soleListSection } from "./skinChapterFill";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
 
@@ -40,8 +41,11 @@ export interface PreviewChapterFocus {
   /** The chapter on screen while Page blocks is open, else undefined. */
   chapter: SkinChapterDescriptor | undefined;
   /** The chapter is one section list with nothing in it, so the page shows
-   *  nothing for it yet. */
+   *  nothing for it yet. A Studio-backed music chapter counts as empty
+   *  only while the persona has no Studio release either. */
   isChapterEmpty: boolean;
+  /** The chapter lists releases uploaded in Studio (Discography, Mixes). */
+  isStudioBacked: boolean;
 }
 
 /**
@@ -63,7 +67,8 @@ export function usePreviewChapterFocus({
   pageRef: RefObject<HTMLDivElement | null>;
 }): PreviewChapterFocus {
   const [searchParams] = useSearchParams();
-  const { skinBlocks } = useSubprofileEditorContext();
+  const { skinBlocks, subprofile } = useSubprofileEditorContext();
+  const studioContent = usePersonaStudio(subprofile);
   const isPageBlocks = searchParams.get("pane") === PAGE_BLOCKS_PANE;
   const requestedKey = searchParams.get("chapter");
   const chapters = skinBlocks.chapters;
@@ -129,7 +134,11 @@ export function usePreviewChapterFocus({
   }, [anchorKey, scrollRef, pageRef]);
 
   const listSection = chapter ? soleListSection(chapter) : undefined;
+  const isStudioBacked = isStudioMusicSection(subprofile.kind, listSection);
+  const hasStudioReleases = isStudioBacked && studioContent.releases.length > 0;
   const isChapterEmpty =
-    listSection !== undefined && skinBlocks.sectionRowCount(listSection) === 0;
-  return { chapter, isChapterEmpty };
+    listSection !== undefined &&
+    skinBlocks.sectionRowCount(listSection) === 0 &&
+    !hasStudioReleases;
+  return { chapter, isChapterEmpty, isStudioBacked };
 }

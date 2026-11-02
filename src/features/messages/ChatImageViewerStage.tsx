@@ -1,7 +1,14 @@
-import { useRef, type RefObject } from "react";
+import {
+  useEffect,
+  useRef,
+  type MutableRefObject,
+  type RefObject,
+} from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { usePrefersReducedMotion } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { slidesFor } from "./chatImageSlides";
+import { ChatImageViewerSlide } from "./ChatImageViewerSlide";
 import { useViewerPhotoMotion } from "./useViewerPhotoMotion";
 import { useZoomPan } from "./useZoomPan";
 import type { ViewerCloseReason } from "./useViewerClose";
@@ -13,9 +20,16 @@ import styles from "./chatImageViewer.module.css";
  * arbitration lives in `useZoomPan`; this component only wires its handlers to
  * the surface and renders the desktop arrow buttons (hidden on touch, where
  * the swipe does the same job).
+ *
+ * The photo sits on a track of three slides (previous, current, next) so a
+ * sideways swipe shows the neighbour arriving beside it. Only the current
+ * slide is ever zoomed, and the track is moved by `useSwipeTrack`.
  */
 export function ChatImageViewerStage({
   photo,
+  prevPhoto,
+  nextPhoto,
+  stepRef,
   hasSiblings,
   isChromeVisible,
   scrimWashRef,
@@ -29,6 +43,15 @@ export function ChatImageViewerStage({
   canFlipBack,
 }: {
   photo: ViewerPhoto;
+  /** The photos either side of `photo` in the gallery's wrap-around order,
+   *  or null in a single-photo gallery. Rendered as the neighbouring slides.
+   *  With two photos both are the other photo. */
+  prevPhoto: ViewerPhoto | null;
+  nextPhoto: ViewerPhoto | null;
+  /** Filled with the function that pages by one photo with the slide
+   *  animation, for the shell's arrow keys. The shell owns the key listener
+   *  (it also re-shows the chrome), so it needs a way in. */
+  stepRef: MutableRefObject<((delta: 1 | -1) => void) | null>;
   hasSiblings: boolean;
   isChromeVisible: boolean;
   /** The plum wash behind the dialog, owned by the shell. A downward drag
@@ -57,9 +80,11 @@ export function ChatImageViewerStage({
   const viewportRef = useRef<HTMLDivElement>(null);
   const flipLayerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
-  const { isZoomed, handlers } = useZoomPan({
+  const trackRef = useRef<HTMLDivElement>(null);
+  const { isZoomed, step, handlers } = useZoomPan({
     imageRef,
     viewportRef,
+    trackRef,
     scrimWashRef,
     onGestureActive,
     photoKey: photo.key,
@@ -80,29 +105,27 @@ export function ChatImageViewerStage({
     isZoomed,
     reducedMotion,
   });
+  useEffect(() => {
+    stepRef.current = step;
+    return () => {
+      stepRef.current = null;
+    };
+  }, [stepRef, step]);
 
   return (
     <div ref={viewportRef} className={styles.stage} {...handlers}>
       <div ref={flipLayerRef} className={styles.flipLayer}>
-        <img
-          ref={imageRef}
-          className={[styles.image, isZoomed && styles.imageZoomed]
-            .filter(Boolean)
-            .join(" ")}
-          src={photo.url}
-          alt={photo.alt ?? t("messages:attachments.imageAlt")}
-          // Reserve the letterbox before decode. `.image` caps the rendered
-          // size with max-width/max-height plus object-fit: contain, so these
-          // intrinsic attributes only seed the browser's default aspect-ratio
-          // and never force the photo to its native pixel size. Omitted, not
-          // 0, when the attachment carried no dimensions: an explicit 0 would
-          // ask the browser to reserve no box at all.
-          width={photo.width > 0 ? photo.width : undefined}
-          height={photo.height > 0 ? photo.height : undefined}
-          decoding="async"
-          referrerPolicy="no-referrer"
-          draggable={false}
-        />
+        <div ref={trackRef} className={styles.track}>
+          {slidesFor(prevPhoto, photo, nextPhoto).map((slide) => (
+            <ChatImageViewerSlide
+              key={slide.key}
+              photo={slide.photo}
+              role={slide.role}
+              imageRef={imageRef}
+              isZoomed={isZoomed}
+            />
+          ))}
+        </div>
       </div>
       {hasSiblings && (
         <>
@@ -115,7 +138,7 @@ export function ChatImageViewerStage({
             ]
               .filter(Boolean)
               .join(" ")}
-            onClick={onPrev}
+            onClick={() => step(-1)}
             aria-label={t("messages:viewer.prev")}
           >
             <FiChevronLeft aria-hidden size={24} />
@@ -129,7 +152,7 @@ export function ChatImageViewerStage({
             ]
               .filter(Boolean)
               .join(" ")}
-            onClick={onNext}
+            onClick={() => step(1)}
             aria-label={t("messages:viewer.next")}
           >
             <FiChevronRight aria-hidden size={24} />

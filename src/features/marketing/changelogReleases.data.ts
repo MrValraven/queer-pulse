@@ -15,6 +15,10 @@ export const CHANGELOG_RELEASE_NOTES: Record<
   string,
   { highlights: string[]; pushes?: number }
 > = {
+  "2 Nov 2026": {
+    highlights: ["gigs-editor-redo", "chat-photos-swipe-smoothly"],
+  },
+  "1 Nov 2026": { highlights: [] },
   "30 Oct 2026": { highlights: [], pushes: 2 },
   "29 Oct 2026": {
     highlights: [

@@ -5758,6 +5758,12 @@ button.pp-row {
   line-height: 0.84;
   letter-spacing: -0.03em;
   color: var(--ink);
+  /* A balanced wrap keeps a long name from stranding one word on the last
+     line, and `break-word` lets a single over-wide word break rather than push
+     the page sideways. (`anywhere` would also shrink the name's min-content
+     width and narrow its column, so it is not used.) */
+  text-wrap: balance;
+  overflow-wrap: break-word;
 }
 .pp[data-skin="collective"] .pp-tagline {
   font-size: clamp(1.0625rem, 2.1cqw, 1.5rem);
@@ -7485,6 +7491,66 @@ button.pp-row {
   .pp[data-skin="chair"] .pp-tile:hover .art .ph {
     transform: none;
   }
+}
+
+/* Long display names on the poster skins.
+
+   These skins size the name from the container width alone, so a name like
+   "Event Producer - Lisbon Drawing Club" filled the whole first screen and
+   pushed the tagline and actions below the fold. SubprofileHero tags the `<h1>`
+   with `data-name-length` ("short" up to 16 characters, "long" up to 28,
+   "xlong" past that; see personaHeroNameFit.ts). Short names keep the base rule
+   above untouched; the two longer tiers step the slope and the ceiling down.
+   Each rule sets its own `--pp-name-fit` and reads it back, so the type curves
+   sit in one place per skin. The extra attribute selector puts these rules
+   above every base, centred and gallery-grid `.pp-name` size regardless of
+   source order, and `persona-stage-hero.css` only adds a text-shadow to the
+   stage name, so it does not compete. */
+.pp[data-skin="collective"] .pp-name[data-name-length="long"] {
+  --pp-name-fit: clamp(2.5rem, 8.5cqw, 6.5rem);
+  font-size: var(--pp-name-fit);
+}
+.pp[data-skin="collective"] .pp-name[data-name-length="xlong"] {
+  --pp-name-fit: clamp(2.25rem, 6.5cqw, 5.25rem);
+  font-size: var(--pp-name-fit);
+}
+.pp[data-skin="stage"] .pp-name[data-name-length="long"] {
+  --pp-name-fit: clamp(2.75rem, 8.5cqw, 5.5rem);
+  font-size: var(--pp-name-fit);
+}
+.pp[data-skin="stage"] .pp-name[data-name-length="xlong"] {
+  --pp-name-fit: clamp(2.5rem, 7cqw, 4.75rem);
+  font-size: var(--pp-name-fit);
+}
+.pp[data-skin="runway"] .pp-name[data-name-length="long"] {
+  --pp-name-fit: clamp(2rem, 6.5cqw, 5rem);
+  font-size: var(--pp-name-fit);
+}
+.pp[data-skin="runway"] .pp-name[data-name-length="xlong"] {
+  --pp-name-fit: clamp(1.875rem, 4.6cqw, 4rem);
+  font-size: var(--pp-name-fit);
+}
+.pp[data-skin="runway"] .pp-name[data-name-length="long"],
+.pp[data-skin="runway"] .pp-name[data-name-length="xlong"] {
+  /* The runway name normally never breaks inside a word. A long name is the
+     one case where an over-wide word may, rather than overflow the hero. */
+  overflow-wrap: break-word;
+}
+.pp[data-skin="chair"] .pp-name[data-name-length="long"] {
+  --pp-name-fit: clamp(2.5rem, 7.5cqw, 5.5rem);
+  font-size: var(--pp-name-fit);
+}
+.pp[data-skin="chair"] .pp-name[data-name-length="xlong"] {
+  --pp-name-fit: clamp(2.25rem, 6cqw, 4.75rem);
+  font-size: var(--pp-name-fit);
+}
+.pp[data-skin="gallery"] .pp-name[data-name-length="long"] {
+  --pp-name-fit: clamp(2.375rem, 8cqw, 5.5rem);
+  font-size: var(--pp-name-fit);
+}
+.pp[data-skin="gallery"] .pp-name[data-name-length="xlong"] {
+  --pp-name-fit: clamp(2.25rem, 6.5cqw, 4.5rem);
+  font-size: var(--pp-name-fit);
 }
 
 /* Keyboard focus ring for the enlarge-photo button.

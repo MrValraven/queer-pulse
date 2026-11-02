@@ -27,13 +27,10 @@ export function StudioArtistSupportCard({
         {t("studio:support.artistHeading", { name })}
       </h2>
       {hasLinks ? (
-        <>
-          <StudioExternalLinkList
-            links={artist.supportLinks}
-            label={t("studio:support.listLabel", { name })}
-          />
-          <p className={styles.note}>{t("studio:support.note", { name })}</p>
-        </>
+        <StudioExternalLinkList
+          links={artist.supportLinks}
+          label={t("studio:support.listLabel", { name })}
+        />
       ) : (
         <>
           <p className={styles.note}>{t("studio:support.ownerEmpty")}</p>

@@ -104,9 +104,12 @@ export function EditorPreview({
             preview says where it will appear instead of staying silent. */}
         {focus.chapter && focus.isChapterEmpty && (
           <p className="ed-prev-note" role="status">
-            {t("subprofiles:editorPreview.chapterEmpty", {
-              title: t(focus.chapter.titleKey),
-            })}
+            {t(
+              focus.isStudioBacked
+                ? "subprofiles:editorPreview.chapterEmptyStudio"
+                : "subprofiles:editorPreview.chapterEmpty",
+              { title: t(focus.chapter.titleKey) },
+            )}
           </p>
         )}
         {/* `usePreviewFit` writes the page's layout width and `zoom` onto

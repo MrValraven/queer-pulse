@@ -1,7 +1,15 @@
-import { render, screen, waitFor, within } from "@testing-library/react";
+import {
+  act,
+  createEvent,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useRef, type ReactNode } from "react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { I18nProvider } from "../../app/providers/I18nProvider";
 import { ToastProvider } from "../../shared/components/feedback/ToastProvider";
 import { useInertWhileCovered } from "../../shared/components/ui/modalStack";
@@ -304,6 +312,179 @@ describe("ChatImageViewer", () => {
     expect(viewerScrim).toHaveAttribute("inert");
     view.rerender(<ViewerWithCover isCovered={false} />);
     expect(viewerScrim).not.toHaveAttribute("inert");
+  });
+});
+
+/**
+ * The slide between photos, driven through the real viewer. jsdom has no
+ * layout, so the stage is given a width by hand (the slide offsets stay zero,
+ * which makes the track travel one stage width), and the pointer events carry
+ * explicit timestamps because the commit decision reads release velocity.
+ */
+describe("ChatImageViewer swipe paging", () => {
+  const STAGE_WIDTH = 400;
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.spyOn(HTMLElement.prototype, "offsetWidth", "get").mockReturnValue(
+      STAGE_WIDTH,
+    );
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.useRealTimers();
+  });
+
+  /** The stage element and the track inside it, found from the photo. */
+  function stageParts() {
+    const track = screen.getByRole("img").closest("[data-slide]")!
+      .parentElement as HTMLElement;
+    const stage = track.parentElement!.parentElement as HTMLElement;
+    return { stage, track };
+  }
+
+  function pointer(
+    type: "pointerDown" | "pointerMove" | "pointerUp",
+    target: HTMLElement,
+    clientX: number,
+    time: number,
+  ) {
+    const event = createEvent[type](target, {
+      pointerId: 1,
+      clientX,
+      clientY: 300,
+      button: 0,
+    });
+    Object.defineProperty(event, "timeStamp", { value: time });
+    fireEvent(target, event);
+  }
+
+  function settle() {
+    act(() => {
+      vi.advanceTimersByTime(1000);
+    });
+  }
+
+  function renderViewer(viewerPhotos = photos) {
+    render(
+      <ChatImageViewer
+        photos={viewerPhotos}
+        startIndex={0}
+        onClose={vi.fn()}
+      />,
+      { wrapper },
+    );
+  }
+
+  it("lays the previous, current and next photos on a track, the neighbours hidden from assistive technology", () => {
+    renderViewer();
+    const slides = [...document.querySelectorAll<HTMLElement>("[data-slide]")];
+    expect(slides.map((slide) => slide.dataset.slide)).toEqual([
+      "prev",
+      "current",
+      "next",
+    ]);
+    // Two photos: both neighbours are the other one, and the wrap-around means
+    // a swipe either way lands on it.
+    const sources = slides.map((slide) => slide.querySelector("img")!.src);
+    expect(sources).toEqual([
+      "https://cdn.example/two.jpg",
+      "https://cdn.example/one.jpg",
+      "https://cdn.example/two.jpg",
+    ]);
+    for (const neighbour of [slides[0]!, slides[2]!]) {
+      const image = neighbour.querySelector("img")!;
+      expect(image).toHaveAttribute("aria-hidden", "true");
+      expect(image).toHaveAttribute("alt", "");
+    }
+    // The one photo a screen reader meets is still the current one.
+    expect(screen.getAllByRole("img")).toHaveLength(1);
+  });
+
+  it("renders no neighbours for a single photo", () => {
+    renderViewer(photosWithoutAvatar);
+    expect(
+      [...document.querySelectorAll<HTMLElement>("[data-slide]")].map(
+        (slide) => slide.dataset.slide,
+      ),
+    ).toEqual(["current"]);
+  });
+
+  it("slides to the next photo on a committed swipe, changing photo only after the settle", () => {
+    renderViewer();
+    const { stage, track } = stageParts();
+    pointer("pointerDown", stage, 300, 1000);
+    pointer("pointerMove", stage, 150, 1100);
+    // Following the finger one to one, with the neighbour beside it.
+    expect(track.style.transform).toBe("translateX(-150px)");
+    pointer("pointerUp", stage, 150, 1600);
+
+    expect(track.style.transform).toBe(`translateX(-${STAGE_WIDTH}px)`);
+    expect(screen.getByRole("img")).toHaveAttribute(
+      "src",
+      "https://cdn.example/one.jpg",
+    );
+
+    settle();
+    expect(screen.getByRole("img")).toHaveAttribute(
+      "src",
+      "https://cdn.example/two.jpg",
+    );
+    // Reset in the same commit as the photo, with no transition to animate it.
+    expect(track.style.transform).toBe("translateX(0px)");
+    expect(track.style.transition).toBe("none");
+  });
+
+  it("still commits a flick that stopped below the distance threshold", () => {
+    renderViewer();
+    const { stage, track } = stageParts();
+    pointer("pointerDown", stage, 300, 1000);
+    pointer("pointerMove", stage, 280, 1000);
+    pointer("pointerMove", stage, 260, 1016);
+    pointer("pointerMove", stage, 240, 1032);
+    pointer("pointerUp", stage, 240, 1032);
+
+    // 60px is well under a quarter of the stage, but at 1.25px/ms it is a flick.
+    expect(track.style.transform).toBe(`translateX(-${STAGE_WIDTH}px)`);
+    settle();
+    expect(screen.getByRole("img")).toHaveAttribute(
+      "src",
+      "https://cdn.example/two.jpg",
+    );
+  });
+
+  it("springs back to the centre on a cancel, staying on the same photo", () => {
+    renderViewer();
+    const { stage, track } = stageParts();
+    pointer("pointerDown", stage, 300, 1000);
+    pointer("pointerMove", stage, 240, 1100);
+    pointer("pointerUp", stage, 240, 1700);
+
+    expect(track.style.transform).toBe("translateX(0px)");
+    expect(track.style.transition).toContain("transform");
+    settle();
+    expect(screen.getByRole("img")).toHaveAttribute(
+      "src",
+      "https://cdn.example/one.jpg",
+    );
+    expect(track.dataset.paging).toBeUndefined();
+  });
+
+  it("slides on the right arrow too, and lands on the next photo after the settle", () => {
+    renderViewer();
+    const { track } = stageParts();
+    fireEvent.keyDown(document, { key: "ArrowRight" });
+    expect(track.style.transform).toBe(`translateX(-${STAGE_WIDTH}px)`);
+    expect(screen.getByRole("img")).toHaveAttribute(
+      "src",
+      "https://cdn.example/one.jpg",
+    );
+    settle();
+    expect(screen.getByRole("img")).toHaveAttribute(
+      "src",
+      "https://cdn.example/two.jpg",
+    );
   });
 });
 

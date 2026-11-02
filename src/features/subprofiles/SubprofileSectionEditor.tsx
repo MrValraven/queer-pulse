@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, type ComponentProps } from "react";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileKind } from "./api/subprofiles.api";
@@ -19,6 +19,7 @@ import {
   SectionEditorDialogs,
   type SectionEditorDrawerState,
 } from "./SectionEditorDialogs";
+import { GigSectionEditor } from "./gigs/GigSectionEditor";
 import styles from "./SubprofileEditor.module.css";
 
 /** Cap on the universal `gallery` section: matches the public page's 6-photo
@@ -30,12 +31,13 @@ const MAX_GALLERY_PHOTOS = 6;
  * `SectionEditorDialogs`). CONTROLLED by `SubprofileEditorContext`, no local
  * state; renders WITHOUT card chrome inside a Page blocks chapter card.
  */
-export function SubprofileSectionEditor({
+function GenericSectionEditor({
   subprofileId,
   section,
   isInChapter = false,
   isFeatureHidden = false,
   kind,
+  isStudioBacked = false,
 }: {
   subprofileId: string;
   section: SubprofileSectionView;
@@ -46,6 +48,9 @@ export function SubprofileSectionEditor({
   isInChapter?: boolean;
   /** No spotlight slot for this section in the kind's layout (S6). */
   isFeatureHidden?: boolean;
+  /** Releases come from Studio (Discography, Mixes): the empty line,
+   *  "Insert examples" and Add are left out, and the rows stay editable. */
+  isStudioBacked?: boolean;
 }) {
   const { t } = useTranslation();
   const { sectionRows, setSectionRows, meta } = useSubprofileEditorContext();
@@ -62,12 +67,13 @@ export function SubprofileSectionEditor({
   const isAtMax = rows.length >= MAX_ITEMS_PER_SECTION;
   const isGalleryFull = isGallery && rows.length >= MAX_GALLERY_PHOTOS;
   // A field jump lands on Add, else (list full) the first row's Edit button.
-  const hasAddButton = !isGalleryFull && !isAtMax;
+  const hasAddButton = !isStudioBacked && !isGalleryFull && !isAtMax;
   const canFeature =
     section.section !== "links" &&
     section.section !== "gallery" &&
     !isFeatureHidden;
   const canInsertExamples =
+    !isStudioBacked &&
     section.section !== "links" &&
     rows.length === 0 &&
     templateItemsFor(section.section, kind) !== undefined;
@@ -95,7 +101,7 @@ export function SubprofileSectionEditor({
       <p aria-live="polite" className="visuallyHidden">
         {announcement}
       </p>
-      {rows.length === 0 && (
+      {rows.length === 0 && !isStudioBacked && (
         <p className={styles.emptySection}>
           {t("subprofiles:sectionEditor.empty")}
         </p>
@@ -136,20 +142,22 @@ export function SubprofileSectionEditor({
           />
         ))}
       </div>
-      <SectionEditorAddFooter
-        isGallery={isGallery}
-        isGalleryFull={isGalleryFull}
-        isAtMax={isAtMax}
-        hasAddButton={hasAddButton}
-        sectionLabelKey={section.labelKey}
-        addLabelKey={SECTION_ADD_LABEL_KEYS[section.section]}
-        addButtonRef={addButtonRef}
-        onAdd={() =>
-          isGallery
-            ? setIsGalleryPickerOpen(true)
-            : setDrawerState({ mode: "add" })
-        }
-      />
+      {!isStudioBacked && (
+        <SectionEditorAddFooter
+          isGallery={isGallery}
+          isGalleryFull={isGalleryFull}
+          isAtMax={isAtMax}
+          hasAddButton={hasAddButton}
+          sectionLabelKey={section.labelKey}
+          addLabelKey={SECTION_ADD_LABEL_KEYS[section.section]}
+          addButtonRef={addButtonRef}
+          onAdd={() =>
+            isGallery
+              ? setIsGalleryPickerOpen(true)
+              : setDrawerState({ mode: "add" })
+          }
+        />
+      )}
       <SectionEditorDialogs
         subprofileId={subprofileId}
         section={section}
@@ -167,5 +175,20 @@ export function SubprofileSectionEditor({
         }
       />
     </>
+  );
+}
+
+/**
+ * Picks the editor for a section: the gig-specific list and drawer for
+ * `gigs`, the generic one for every other section. A component of its own so
+ * neither editor ever returns early ahead of its hooks.
+ */
+export function SubprofileSectionEditor(
+  props: ComponentProps<typeof GenericSectionEditor>,
+) {
+  return props.section.section === "gigs" ? (
+    <GigSectionEditor {...props} />
+  ) : (
+    <GenericSectionEditor {...props} />
   );
 }

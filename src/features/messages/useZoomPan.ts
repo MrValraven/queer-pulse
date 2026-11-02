@@ -20,6 +20,7 @@ import {
   type DragFeedbackController,
 } from "./useDragFeedback";
 import { isInteractiveTarget } from "./useMessageGestures";
+import { useSwipeTrack, type SwipeTrackController } from "./useSwipeTrack";
 
 /** Max gap between the two taps of a double tap. */
 const DOUBLE_TAP_MS = 280;
@@ -438,7 +439,27 @@ function resolveGestureEnd(
   // A drag while zoomed was a pan; the transform is already written.
   if (gesture.startZoom.scale > 1) return;
   if (!wasDragging) return;
-  drag.end(deltaX, deltaY);
+  drag.end(deltaX, deltaY, event.timeStamp);
+}
+
+/**
+ * Pages by one photo from a button or a key. Slides the track like a swipe
+ * does, except while the photo is zoomed: a zoomed photo is being inspected,
+ * and sliding it away would animate the zoom out from under the member, so it
+ * changes at once (the photo-change layout effect resets the zoom). Hoisted to
+ * module scope purely to keep `useZoomPan` under the repo's
+ * max-lines-per-function budget.
+ */
+function stepAcrossPhotos(
+  delta: 1 | -1,
+  isZoomed: boolean,
+  track: SwipeTrackController,
+  onNext: () => void,
+  onPrev: () => void,
+): void {
+  if (!isZoomed) track.slideBy(delta);
+  else if (delta > 0) onNext();
+  else onPrev();
 }
 
 /**
@@ -641,12 +662,11 @@ interface PointerEndContext extends EndGestureContext {
 /**
  * Resolves a `pointerup`: drops the pointer, re-baselines a pinch that just
  * dropped to one finger (see `rebaselineAfterPinchDrop`), or, once every
- * finger is up, announces the gesture's end and hands off to
- * `resolveGestureEnd`. `announceGesture(false)` runs unconditionally before
- * that hand-off so it covers every branch inside it, including the tap
- * branch, which never touches `drag` at all. Hoisted to module scope purely
- * to keep `useZoomPan` under the repo's max-lines-per-function budget, the
- * same reason `resolveGestureEnd` itself is.
+ * finger is up, hands off to `resolveGestureEnd` and then announces the
+ * gesture's end, unless a sideways release is still settling (see the comment
+ * at the call). Hoisted to module scope purely to keep `useZoomPan` under the
+ * repo's max-lines-per-function budget, the same reason `resolveGestureEnd`
+ * itself is.
  */
 function handlePointerEnd(
   event: React.PointerEvent,
@@ -665,13 +685,21 @@ function handlePointerEnd(
     return;
   }
   gestureRef.current = null;
-  announceGesture(false);
   resolveGestureEnd(event, gesture, ctx);
+  // Announced after the hand-off so a sideways release can keep the chrome
+  // hidden: its settle is still running, and the drag controller announces
+  // the end itself once the track is at rest. Every other branch has already
+  // settled or committed by here, so this still covers all of them, the tap
+  // branch (which never touches `drag`) included.
+  if (!ctx.drag.isHoldingChrome()) announceGesture(false);
 }
 
 interface UseZoomPanOptions {
   imageRef: RefObject<HTMLImageElement | null>;
   viewportRef: RefObject<HTMLDivElement | null>;
+  /** The track of previous, current and next slides a sideways swipe moves.
+   *  Optional so the hook can still be driven without a stage around it. */
+  trackRef?: RefObject<HTMLDivElement | null>;
   /** The full-bleed plum wash behind the dialog. A downward drag fades it so
    *  the conversation reads through, which is what makes the dismiss feel like
    *  putting the photo back. It is a separate node from the scrim precisely so
@@ -686,7 +714,7 @@ interface UseZoomPanOptions {
   onGestureActive: (isGestureActive: boolean) => void;
   /** Identity of the photo on screen. Changing it resets zoom and pan. */
   photoKey: string;
-  /** Whether there is another photo to swipe to. See `useDragFeedback`. */
+  /** Whether there is another photo to swipe to. See `useSwipeTrack`. */
   hasSiblings: boolean;
   reducedMotion: boolean;
   onNext: () => void;
@@ -709,6 +737,7 @@ interface UseZoomPanOptions {
 export function useZoomPan({
   imageRef,
   viewportRef,
+  trackRef,
   scrimWashRef,
   onGestureActive,
   photoKey,
@@ -758,6 +787,20 @@ export function useZoomPan({
     [onGestureActive],
   );
 
+  /** The horizontal slide between photos: it moves the track the stage lays
+   *  its three slides on, for a sideways drag and for `step` alike. Without a
+   *  `trackRef` (a test that drives the hook alone) it has no node to move and
+   *  asks for the photo change at once. */
+  const fallbackTrackRef = useRef<HTMLDivElement | null>(null);
+  const track = useSwipeTrack({
+    trackRef: trackRef ?? fallbackTrackRef,
+    stageRef: viewportRef,
+    hasNeighbours: hasSiblings,
+    reducedMotion,
+    onNext,
+    onPrev,
+  });
+
   /** The live follow shown while a one-finger drag at scale 1 is in progress.
    *  Its own hook: see `useDragFeedback` for why it is kept out of the zoom
    *  state entirely. `stageRef` is `viewportRef`: the same node `.stage`
@@ -767,12 +810,17 @@ export function useZoomPan({
     stageRef: viewportRef,
     scrimWashRef,
     reducedMotion,
-    hasSiblings,
+    track,
     onDragActive: announceGesture,
-    onNext,
-    onPrev,
     onDismiss,
   });
+
+  /** Pages by one photo from a button or a key: see `stepAcrossPhotos`. */
+  const step = useCallback(
+    (delta: 1 | -1) =>
+      stepAcrossPhotos(delta, zoomRef.current.scale > 1, track, onNext, onPrev),
+    [track, onNext, onPrev],
+  );
 
   /** Both boxes the arithmetic needs, and their shared centre; see
    *  `StageGeometry` above. Deliberately does NOT clear a drag follow: the tap
@@ -924,6 +972,7 @@ export function useZoomPan({
 
   return {
     isZoomed,
+    step,
     handlers: {
       onPointerDown,
       onPointerMove,

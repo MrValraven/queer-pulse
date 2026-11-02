@@ -3457,8 +3457,6 @@ export const studio: Catalog = {
   "support.artistHeading": "Support {name}",
   "support.releaseHeading": "Buy and support {name}",
   "support.listLabel": "Where to support {name}",
-  "support.note":
-    "These open {name}'s own pages and QueerPulse never handles money",
   "support.ownerEmpty":
     "Add Bandcamp, Ko-fi or Patreon to your persona's links",
   "support.ownerEmptyCta": "Edit persona links",

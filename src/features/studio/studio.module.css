@@ -1792,6 +1792,28 @@
   letter-spacing: -0.025em;
   line-height: 0.96;
   margin: 12px 0;
+  /* A long title wraps evenly, and a word wider than the column breaks
+     rather than scrolling a phone sideways. */
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+/* A long title steps down (studioHeroTitleSize.ts) and stops at three
+   lines, so the hero never grows past the cover. The full text stays in
+   the DOM and in the h1's title attribute. */
+.detailHero h1[data-length] {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+.detailHero h1[data-length="long"] {
+  font-size: var(--text-detail-long);
+  line-height: 1;
+}
+.detailHero h1[data-length="very-long"] {
+  font-size: var(--text-detail-very-long);
+  line-height: 1.06;
 }
 .detailHero h1 em {
   font-style: italic;
@@ -1903,6 +1925,17 @@
   overflow-wrap: anywhere;
   text-wrap: balance;
   text-shadow: 0 2px 24px rgba(var(--scrim-rgb), 0.35);
+}
+/* A long name in the band steps down the display scale; its line clamp and
+   wrapping come from the h1 rules above. The extra class beats the plain
+   hero rules' specificity. */
+.detailHero .detailBand h1[data-length="long"] {
+  font-size: var(--text-display);
+  line-height: 0.96;
+}
+.detailHero .detailBand h1[data-length="very-long"] {
+  font-size: var(--text-title);
+  line-height: 1.02;
 }
 .detailHero .detailBand .by {
   color: rgba(var(--cream-rgb), 0.86);

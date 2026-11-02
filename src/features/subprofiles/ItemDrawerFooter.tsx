@@ -27,6 +27,8 @@ export function ItemDrawerFooter({
   isNew,
   isDirty,
   missingRequiredKey,
+  saveNewLabelKey = "subprofiles:itemDrawer.saveNew",
+  saveChangesLabelKey = "subprofiles:itemDrawer.saveChanges",
   onCancel,
   onSave,
 }: {
@@ -34,6 +36,13 @@ export function ItemDrawerFooter({
   isDirty: boolean;
   /** The "add a … to save" line when a required field is empty, else null. */
   missingRequiredKey: string | null;
+  /** Optional catalog key for the Save label on a new item. Defaults to the
+   *  generic `subprofiles:itemDrawer.saveNew`; a section-specific drawer
+   *  passes its own so the button names the object (for example "Add gig"). */
+  saveNewLabelKey?: string;
+  /** Optional catalog key for the Save label on an existing item. Defaults to
+   *  the generic `subprofiles:itemDrawer.saveChanges`. */
+  saveChangesLabelKey?: string;
   onCancel: () => void;
   onSave: () => void;
 }) {
@@ -67,11 +76,7 @@ export function ItemDrawerFooter({
           disabled={!canSave}
           aria-keyshortcuts="Meta+Enter Control+Enter"
         >
-          {t(
-            isNew
-              ? "subprofiles:itemDrawer.saveNew"
-              : "subprofiles:itemDrawer.saveChanges",
-          )}
+          {t(isNew ? saveNewLabelKey : saveChangesLabelKey)}
           {canSave && (
             <kbd className={styles.shortcut} aria-hidden>
               {shortcut}

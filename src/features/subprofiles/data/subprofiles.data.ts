@@ -10,6 +10,7 @@ import { handleIsKindName } from "../personaHandle";
 import { isContentSection } from "../subprofile-kinds";
 import { kindsMatchingSearch } from "../kindSearch";
 import { toCardTableSummary } from "../questTable.data";
+import { nightformEditorDemoGigs } from "../gigs/gigDemoDates.data";
 import { QUEST_DEMO_SUBPROFILES } from "./questDemoSubprofiles.data";
 import {
   demoDaysAgoIso,
@@ -305,6 +306,9 @@ const NIGHTFORM: DemoSubprofile = {
       ticketUrl: "https://example.com/nightform/mina-tickets",
       gigState: "guest",
     },
+    // Gigs-editor coverage (poster, sold out, cancelled, guest, past, undated,
+    // bad ticket link). Relative dates, see gigs/gigDemoDates.data.ts.
+    ...nightformEditorDemoGigs(),
     {
       id: "itm-links-bandcamp",
       section: "links",

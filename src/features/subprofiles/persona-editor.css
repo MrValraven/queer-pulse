@@ -422,6 +422,13 @@
      the strip moves as one piece (see the collapsed rules below). */
   transition: padding var(--dur-slow) var(--ease);
 }
+/* Rows keep their own height. The rail is a height-capped flex column, and the
+   group headings clip their text (`overflow: hidden`), so without this they
+   shrink to fit a short window and cut their labels in half instead of letting
+   the rail scroll. */
+.ed-rail > * {
+  flex-shrink: 0;
+}
 .ed-rail button {
   display: flex;
   align-items: center;

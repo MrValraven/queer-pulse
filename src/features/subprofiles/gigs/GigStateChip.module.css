@@ -1,0 +1,30 @@
+.chip {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-11);
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.icon {
+  flex: none;
+  width: 12px;
+  height: 12px;
+}
+.sold_out {
+  background: rgba(var(--jade-rgb), 0.16);
+  color: var(--jade-text);
+}
+.cancelled {
+  background: rgba(var(--danger-rgb), 0.12);
+  color: var(--danger-ink);
+}
+.guest {
+  background: rgba(var(--violet-rgb), 0.14);
+  color: var(--violet);
+}

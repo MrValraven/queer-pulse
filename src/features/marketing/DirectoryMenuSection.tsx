@@ -85,12 +85,7 @@ export function DirectoryMenuSection({ place }: { place: DirectoryPlace }) {
         />
       </h2>
       <p className={s.subLine}>
-        {t(
-          place.owner.first
-            ? "marketing:directory.detail.menu.subNamed"
-            : "marketing:directory.detail.menu.sub",
-          { name: place.owner.first },
-        )}
+        {t("marketing:directory.detail.menu.subNamed", { name: place.name })}
       </p>
       {usedLabels.length > 0 && (
         <p className={styles.summary}>

@@ -6,6 +6,7 @@ import { useStudioAccess } from "../studio/api/useStudioAccess";
 import { useStudioArtist } from "../studio/api/useStudioArtist";
 import {
   isStudioArtistPersonaKind,
+  studioFormatOfKind,
   type StudioArtistPersonaKind,
 } from "../studio/api/studio.types";
 import { studioArtistPath } from "../studio/studioPaths";
@@ -36,6 +37,20 @@ export function studioSectionFor(
   kind: SubprofileKind,
 ): SubprofileSection | null {
   return isStudioArtistPersonaKind(kind) ? STUDIO_SECTION_BY_KIND[kind] : null;
+}
+
+/** Whether `section` is the Studio-backed music chapter of `kind`
+ *  (Discography for a musician, Mixes for a DJ). Releases there are uploaded
+ *  in Studio, so the editor points the owner to Studio for them. */
+export function isStudioMusicSection(
+  kind: SubprofileKind,
+  section: SubprofileSection | undefined,
+): boolean {
+  return (
+    section !== undefined &&
+    studioFormatOfKind(kind) === "music" &&
+    studioSectionFor(kind) === section
+  );
 }
 
 export interface PersonaStudioContent {

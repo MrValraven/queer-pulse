@@ -1,0 +1,147 @@
+/* QueerPulse: the stage persona hero (musician, DJ).
+
+   The identity block climbs onto the lower part of the banner, so the persona
+   name starts near the top of a laptop screen instead of waiting behind the
+   banner and the "Next up" bar. The banner melts into the plum ground, and a
+   dark scrim behind the name keeps the cream type above 4.5:1 over the photo.
+   The kind chip and the Founding artist badge share one line above the
+   tagline, and the "Next up" bar follows the bio. A persona without a cover
+   keeps its spacing and takes only modest trims.
+
+   Every rule sits under `.pp[data-skin="stage"]`, with one extra element or
+   child selector where it has to outrank a stage rule in persona-skins.css
+   (including its "last word" block), so no rule needs `!important`. The
+   container-query block at the end outranks the `:where()`-wrapped mobile
+   rules the same way.
+
+   Sizes use `cqw` and the banner's own clamp, never viewport units, so the
+   owner's docked preview (a narrow card without `data-cover-rise`) scales the
+   same way as the full page. */
+
+.pp[data-skin="stage"] {
+  /* The stage banner's own clamp (persona-skins.css `.pp-cover`), restated
+     because custom properties set on `.pp-cover` are not visible to `.pp-hero`. */
+  --hl-banner: clamp(180px, 26cqw, 300px);
+  /* How far up the bleed fade starts inside the banner. */
+  --hl-fade: 56%;
+  --hl-id-pad: 24px;
+  --hl-overlap: calc(var(--hl-banner) * 0.55);
+  --hl-mobile-lift: 60px;
+  /* The name's line box: Anton at the stage name size with line-height .9. */
+  --hl-name-h: calc(clamp(3rem, 10cqw, 6.875rem) * 0.9);
+  /* The dark scrim behind the name, all made from the skin's own ground. */
+  --hl-shade-clear: color-mix(
+    in srgb,
+    var(--skin-stage-ground) 0%,
+    transparent
+  );
+  --hl-shade-mid: color-mix(in srgb, var(--skin-stage-ground) 74%, transparent);
+  --hl-shade-deep: color-mix(
+    in srgb,
+    var(--skin-stage-ground) 88%,
+    transparent
+  );
+}
+
+/* ── The "Next up" bar follows the hero ──────────────────────────────────── */
+.pp[data-skin="stage"] div.wrap {
+  display: flex;
+  flex-direction: column;
+  /* The bleed rule adds a top gap for the old layout; the hero sets its own. */
+  margin-top: 0;
+}
+.pp[data-skin="stage"] div.wrap > .nextup {
+  order: 1;
+}
+.pp[data-skin="stage"] div.wrap > :not(.nextup):not(.pp-hero):not(.pp-runhead) {
+  order: 2;
+}
+
+/* ── A banner that always melts into the ground ──────────────────────────── */
+.pp[data-skin="stage"][data-has-cover] .pp-cover {
+  --pp-cover-fade: var(--hl-fade);
+}
+
+/* ── Trimmed top spacing without a cover ─────────────────────────────────── */
+.pp[data-skin="stage"]:not([data-has-cover]) .pp-hero > .pp-id {
+  padding-top: 20px;
+}
+
+/* ── The identity block rides up onto the banner ─────────────────────────── */
+.pp[data-skin="stage"][data-has-cover] .pp-hero {
+  margin-top: calc(-1 * var(--hl-overlap));
+}
+.pp[data-skin="stage"][data-has-cover] .pp-hero::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  /* Page-wide: centred on the hero, as wide as the container. */
+  left: calc(50% - 50cqw);
+  width: 100cqw;
+  top: -70px;
+  height: calc(var(--hl-overlap) + var(--hl-name-h) + 180px);
+  background: linear-gradient(
+    to bottom,
+    var(--hl-shade-clear) 0%,
+    var(--hl-shade-mid) 22%,
+    var(--hl-shade-deep) 48%,
+    var(--skin-stage-ground) 100%
+  );
+  pointer-events: none;
+}
+.pp[data-skin="stage"][data-has-cover] .pp-hero > .pp-id {
+  position: relative;
+  z-index: 1;
+  padding-top: var(--hl-id-pad);
+}
+.pp[data-skin="stage"][data-has-cover] .pp-name {
+  text-shadow:
+    0 2px 28px var(--hl-shade-deep),
+    0 1px 3px var(--hl-shade-deep);
+}
+
+/* ── Kind chip and Founding artist badge on one line ─────────────────────── */
+.pp[data-skin="stage"] .pp-taglineRow {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  /* The tagline's reading measure (`.pp-tagline` caps itself at 48ch, which
+     would also stop it filling the row), restated on the row in the tagline's
+     own font size so a `ch` means the same width. */
+  font-size: clamp(1rem, 1.7cqw, 1.1875rem);
+  max-width: 48ch;
+}
+/* The tagline takes the whole row, so the sentence sits on its own line below
+   the pills. Its own `max-width` is lifted: the row carries the measure. */
+.pp[data-skin="stage"] .pp-taglineRow > .pp-tagline {
+  flex-basis: 100%;
+  max-width: none;
+}
+/* The badge matches the kind chip's height, whatever the two font sizes are. */
+.pp[data-skin="stage"] .pp-taglineRow > .pp-founding {
+  align-self: stretch;
+}
+
+/* ── Narrow containers: the stacked, centred layout ──────────────────────── */
+@container (max-width: 640px) {
+  .pp[data-skin="stage"]:not([data-has-cover]) .pp-hero > .pp-id {
+    padding-top: 12px;
+  }
+  .pp[data-skin="stage"][data-has-cover] .pp-hero > .pp-id {
+    padding-top: 0;
+  }
+  /* The avatar straddles the banner's bottom edge and the name follows it. */
+  .pp[data-skin="stage"][data-has-cover] .pp-hero {
+    margin-top: calc(-1 * var(--hl-mobile-lift));
+  }
+  /* The name sits below the banner here, so the scrim has nothing to dim. */
+  .pp[data-skin="stage"][data-has-cover] .pp-hero::before {
+    display: none;
+  }
+  /* The pill row centres under the centred name; the tagline stays centred
+     below it. */
+  .pp[data-skin="stage"] .pp-taglineRow {
+    justify-content: center;
+  }
+}

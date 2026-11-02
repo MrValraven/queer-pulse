@@ -18,6 +18,10 @@ import {
   canReadPersonaEndorsers,
   isPersonaOpenToEngagement,
 } from "./personaEngagement";
+import {
+  bindSeparatorsToPrecedingWord,
+  personaNameLengthTier,
+} from "./personaHeroNameFit";
 import { SubprofileSocialRow } from "./SubprofileSocialRow";
 import { SubprofileHeroActions } from "./SubprofileHeroActions";
 import { SubprofileTitleBlock } from "./SubprofileTitleBlock";
@@ -205,7 +209,14 @@ export function SubprofileHero({
 
         <div className="pp-text">
           <div className="pp-nameRow">
-            <h1 className="pp-name">{titleName}</h1>
+            {/* The length tier lets the poster skins shrink a long name so
+                the tagline and actions stay on the first screen. */}
+            <h1
+              className="pp-name"
+              data-name-length={personaNameLengthTier(titleName)}
+            >
+              {bindSeparatorsToPrecedingWord(titleName)}
+            </h1>
           </div>
           {/* The craft chip labels the tagline, so `.pp-taglineRow` stacks the
               two under the name — eyebrow, then the sentence it introduces,

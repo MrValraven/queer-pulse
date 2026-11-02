@@ -14,6 +14,7 @@ import { useViewerClose } from "./useViewerClose";
 import { ChatImageViewerTopBar } from "./ChatImageViewerChrome";
 import { ChatImageViewerFilmstrip } from "./ChatImageViewerFilmstrip";
 import { ChatImageViewerStage } from "./ChatImageViewerStage";
+import { neighbourPhotos } from "./chatImageSlides";
 import { useChatImageSave } from "./useChatImageSave";
 import { useViewerPhotoCursor } from "./useChatImageViewerState";
 import type { ViewerPhoto } from "./useThreadImageGallery";
@@ -118,15 +119,27 @@ export function ChatImageViewer({
   // without this, a mixed-input user (mouse plus keyboard, or a touchscreen
   // with an external keyboard) who taps the photo to hide the chrome would
   // have no visible path back to Close, Save, Reply, Forward or Star.
+  //
+  // Paging goes through the stage's `step` when it has registered one, so an
+  // arrow key plays the same slide a swipe does. `move` is the fallback for
+  // the render before the stage's effect has run.
+  const stepRef = useRef<((delta: 1 | -1) => void) | null>(null);
+  const pageBy = useCallback(
+    (delta: 1 | -1) => {
+      if (stepRef.current) stepRef.current(delta);
+      else move(delta);
+    },
+    [move],
+  );
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       setIsChromeVisible(true);
-      if (event.key === "ArrowRight") move(1);
-      else if (event.key === "ArrowLeft") move(-1);
+      if (event.key === "ArrowRight") pageBy(1);
+      else if (event.key === "ArrowLeft") pageBy(-1);
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [move]);
+  }, [pageBy]);
 
   // `useDismiss` above locks scroll and pushes onto the modal stack
   // unconditionally, before this component knows whether it has anything to
@@ -141,6 +154,7 @@ export function ChatImageViewer({
 
   if (!photo) return null;
 
+  const { prevPhoto, nextPhoto } = neighbourPhotos(photos, index);
   const canAct = !!photo.message.id;
   const closeAfter = (act: () => void) => () => {
     act();
@@ -198,6 +212,9 @@ export function ChatImageViewer({
         />
         <ChatImageViewerStage
           photo={photo}
+          prevPhoto={prevPhoto}
+          nextPhoto={nextPhoto}
+          stepRef={stepRef}
           hasSiblings={total > 1}
           isChromeVisible={showChrome}
           scrimWashRef={scrimWashRef}

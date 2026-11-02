@@ -1,0 +1,78 @@
+/* One gig group (Upcoming or Past): a header, then the rows. The header sits
+   OUTSIDE `.rows` because the drag engine reads `container.children` and
+   expects rows only. */
+.group + .group {
+  margin-top: var(--gap-sm);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-xs);
+  min-height: 44px;
+}
+.label {
+  display: flex;
+  align-items: baseline;
+  gap: var(--gap-xs);
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.count {
+  font-size: var(--text-label);
+  letter-spacing: 0;
+  color: var(--ink-40);
+}
+
+.toggle {
+  min-height: 44px;
+  gap: 6px;
+}
+.chevron {
+  flex: none;
+  transition: transform var(--dur-base) var(--ease);
+}
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.empty {
+  margin: 0 0 var(--gap-xs);
+  font-size: var(--text-14);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+/* The `section-list` container the rows' narrow and wide layouts read
+   (see GigRow.module.css). Wraps rows only. */
+.rows {
+  container: section-list / inline-size;
+  display: flex;
+  flex-direction: column;
+}
+
+/* One row's animated shell. Clips only while it moves (the animation targets
+   carry the overflow), so focus rings show at rest. `position: relative`
+   lets the held row sit above its neighbours. */
+.slot {
+  position: relative;
+  display: flow-root;
+}
+.slotHeld {
+  z-index: 1;
+}
+.slotExiting {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron {
+    transition: none;
+  }
+}

@@ -10,9 +10,7 @@ import { useDragFeedback } from "./useDragFeedback";
  * around it, which is where the viewer's gestures can go wrong without any
  * test noticing.
  */
-function setup(
-  options: { reducedMotion?: boolean; hasSiblings?: boolean } = {},
-) {
+function setup(options: { reducedMotion?: boolean } = {}) {
   // The controller reaches the stage through an explicit `stageRef` (see
   // `useDragFeedback.ts`), the same ref `useZoomPan` attaches to `.stage`, so
   // standing up `stageNode` directly and handing it in as `stageRef` is what
@@ -31,20 +29,28 @@ function setup(
   scrimWashRef.current = washNode;
   const actions = {
     onDragActive: vi.fn(),
-    onNext: vi.fn(),
-    onPrev: vi.fn(),
     onDismiss: vi.fn(),
+  };
+  // A sideways drag is the swipe track's job (see `useSwipeTrack.test.ts` for
+  // the commit decision and the settle), so this controller only has to hand
+  // it the right calls.
+  const track = {
+    follow: vi.fn(),
+    release: vi.fn(),
+    cancel: vi.fn(),
+    slideBy: vi.fn(),
+    reset: vi.fn(),
   };
   const { result } = renderHook(() =>
     useDragFeedback({
       stageRef,
       scrimWashRef,
       reducedMotion: options.reducedMotion ?? false,
-      hasSiblings: options.hasSiblings ?? true,
+      track,
       ...actions,
     }),
   );
-  return { controller: result.current, stageNode, washNode, actions };
+  return { controller: result.current, stageNode, washNode, actions, track };
 }
 
 /** A pointer event shaped enough for the controller's own reads. */
@@ -79,11 +85,28 @@ describe("useDragFeedback while the finger is down", () => {
     expect(Number(washNode.style.opacity)).toBeLessThan(1);
   });
 
-  it("leaves the wash alone during a sideways drag, since nothing is being dismissed", () => {
-    const { controller, stageNode, washNode } = setup();
+  it("hands a sideways drag to the swipe track and leaves the stage and the wash alone", () => {
+    const { controller, stageNode, washNode, track } = setup();
     controller.follow(100, 100, pointerAt(40, 100));
-    expect(stageNode.style.transform).toContain("translate(-60px, 0px)");
-    expect(washNode.style.opacity).toBe("1");
+    expect(track.follow).toHaveBeenCalledWith(-60, expect.any(Number));
+    expect(stageNode.style.transform).toBe("");
+    expect(washNode.style.opacity).toBe("");
+  });
+
+  it("announces a sideways drag once, on its first followed frame", () => {
+    const { controller, actions } = setup();
+    controller.follow(100, 100, pointerAt(70, 100));
+    controller.follow(100, 100, pointerAt(40, 100));
+    expect(actions.onDragActive).toHaveBeenCalledTimes(1);
+    expect(actions.onDragActive).toHaveBeenCalledWith(true);
+  });
+
+  it("skips a sideways frame that carries a non-finite coordinate", () => {
+    const { controller, track } = setup();
+    controller.follow(100, 100, pointerAt(40, 100));
+    track.follow.mockClear();
+    controller.follow(100, 100, pointerAt(NaN, 100));
+    expect(track.follow).not.toHaveBeenCalled();
   });
 
   it("does not shrink the photo under reduced motion, but still follows it", () => {
@@ -146,11 +169,11 @@ describe("useDragFeedback while the finger is down", () => {
 
 describe("useDragFeedback when the finger lifts", () => {
   it("dismisses a downward drag that crossed the threshold", () => {
-    const { controller, actions } = setup();
+    const { controller, actions, track } = setup();
     controller.follow(100, 100, pointerAt(100, 220));
     controller.end(0, 120);
     expect(actions.onDismiss).toHaveBeenCalledTimes(1);
-    expect(actions.onNext).not.toHaveBeenCalled();
+    expect(track.release).not.toHaveBeenCalled();
     expect(actions.onDragActive).toHaveBeenLastCalledWith(false);
   });
 
@@ -164,27 +187,48 @@ describe("useDragFeedback when the finger lifts", () => {
     expect(washNode.style.opacity).toBe("1");
   });
 
-  it("moves to the next photo on a leftward drag past the threshold", () => {
-    const { controller, actions } = setup();
+  it("hands a sideways release to the swipe track, with the release time", () => {
+    // Whether it commits to a neighbour or springs back is decided there, on
+    // distance and velocity (see `useSwipeTrack.test.ts`).
+    const { controller, actions, track } = setup();
     controller.follow(100, 100, pointerAt(20, 100));
-    controller.end(-80, 0);
-    expect(actions.onNext).toHaveBeenCalledTimes(1);
-    expect(actions.onPrev).not.toHaveBeenCalled();
+    controller.end(-80, 0, 1234);
+    expect(track.release).toHaveBeenCalledTimes(1);
+    expect(track.release).toHaveBeenCalledWith(-80, 1234, expect.any(Function));
+    expect(actions.onDismiss).not.toHaveBeenCalled();
   });
 
-  it("moves to the previous photo on a rightward drag past the threshold", () => {
-    const { controller, actions } = setup();
-    controller.follow(100, 100, pointerAt(180, 100));
-    controller.end(80, 0);
-    expect(actions.onPrev).toHaveBeenCalledTimes(1);
-    expect(actions.onNext).not.toHaveBeenCalled();
-  });
-
-  it("settles a committed photo change instantly, so nothing animates on its way out", () => {
+  it("leaves the stage untouched when a sideways drag is released", () => {
     const { controller, stageNode } = setup();
     controller.follow(100, 100, pointerAt(20, 100));
     controller.end(-80, 0);
-    expect(stageNode.style.transition).toBe("none");
+    expect(stageNode.style.transform).toBe("");
+  });
+
+  it("keeps the chrome hidden through a sideways settle and returns it when the track lands", () => {
+    const { controller, actions, track } = setup();
+    controller.follow(100, 100, pointerAt(20, 100));
+    controller.end(-80, 0);
+    expect(controller.isActive()).toBe(false);
+    expect(controller.isHoldingChrome()).toBe(true);
+    expect(actions.onDragActive).not.toHaveBeenCalledWith(false);
+    const onSettled = track.release.mock.calls[0]![2] as () => void;
+    onSettled();
+    expect(actions.onDragActive).toHaveBeenLastCalledWith(false);
+    expect(controller.isHoldingChrome()).toBe(false);
+  });
+
+  it("announces the end only once if the settle lands after a photo change already did", () => {
+    const { controller, actions, track } = setup();
+    controller.follow(100, 100, pointerAt(20, 100));
+    controller.end(-80, 0);
+    controller.reset();
+    const onSettled = track.release.mock.calls[0]![2] as () => void;
+    onSettled();
+    const endings = actions.onDragActive.mock.calls.filter(
+      ([isActive]) => isActive === false,
+    );
+    expect(endings).toHaveLength(1);
   });
 
   it("never starts a drag for a press that stayed inside the tap slop", () => {
@@ -198,15 +242,24 @@ describe("useDragFeedback when the finger lifts", () => {
   });
 
   it("commits nothing when a real drag is settled without committing", () => {
-    const { controller, stageNode, washNode, actions } = setup();
+    const { controller, stageNode, washNode, actions, track } = setup();
     controller.follow(100, 100, pointerAt(100, 150));
     controller.settleWithoutCommitting();
     expect(actions.onDismiss).not.toHaveBeenCalled();
-    expect(actions.onNext).not.toHaveBeenCalled();
+    expect(track.release).not.toHaveBeenCalled();
     expect(actions.onDragActive).toHaveBeenLastCalledWith(false);
     expect(controller.isActive()).toBe(false);
     expect(stageNode.style.transform).toBe("translate(0px, 0px) scale(1)");
     expect(washNode.style.opacity).toBe("1");
+  });
+
+  it("springs a sideways drag back through the track when it is cancelled", () => {
+    const { controller, track } = setup();
+    controller.follow(100, 100, pointerAt(20, 100));
+    controller.settleWithoutCommitting();
+    expect(track.cancel).toHaveBeenCalledTimes(1);
+    expect(track.release).not.toHaveBeenCalled();
+    expect(controller.isActive()).toBe(false);
   });
 
   it("ignores an end with no drag in progress", () => {
@@ -224,9 +277,10 @@ describe("useDragFeedback when the finger lifts", () => {
   });
 
   it("clears everything instantly on a photo change", () => {
-    const { controller, stageNode, washNode } = setup();
+    const { controller, stageNode, washNode, track } = setup();
     controller.follow(100, 100, pointerAt(100, 200));
     controller.reset();
+    expect(track.reset).toHaveBeenCalledTimes(1);
     expect(controller.isActive()).toBe(false);
     expect(stageNode.style.transform).toBe("translate(0px, 0px) scale(1)");
     expect(stageNode.style.transition).toBe("none");
@@ -245,40 +299,22 @@ describe("useDragFeedback when the finger lifts", () => {
     // An L-shaped drag: locked horizontal, then travelled past the dismiss
     // distance vertically. The follow promised a slide, so the release must
     // not close the viewer.
-    const { controller, actions } = setup({ hasSiblings: false });
+    const { controller, actions, track } = setup();
     controller.follow(100, 100, pointerAt(119, 105));
     controller.end(25, 130);
     expect(actions.onDismiss).not.toHaveBeenCalled();
-    expect(actions.onNext).not.toHaveBeenCalled();
-    expect(actions.onPrev).not.toHaveBeenCalled();
-  });
-
-  it("does not dismiss on a sideways-locked drag even with siblings present", () => {
-    const { controller, actions } = setup({ hasSiblings: true });
-    controller.follow(100, 100, pointerAt(119, 105));
-    controller.end(25, 130);
-    expect(actions.onDismiss).not.toHaveBeenCalled();
-  });
-
-  it("settles back rather than committing a sideways drag with nowhere to go", () => {
-    const { controller, stageNode, actions } = setup({ hasSiblings: false });
-    controller.follow(100, 100, pointerAt(20, 100));
-    controller.end(-80, 0);
-    expect(actions.onNext).not.toHaveBeenCalled();
-    expect(actions.onPrev).not.toHaveBeenCalled();
-    // Settled, not hard-cut: a gesture that commits nothing should animate back.
-    expect(stageNode.style.transition).toContain("transform");
+    expect(track.release).toHaveBeenCalledTimes(1);
   });
 
   it("never navigates on a vertical-locked drag, however far sideways it also travelled", () => {
     // The mirror of the L-shaped case above: locked vertical, then travelled
     // well past the navigate distance sideways. The follow promised a
     // dismiss-style fade, so the release must not slide to another photo.
-    const { controller, actions } = setup();
+    const { controller, track } = setup();
     controller.follow(100, 100, pointerAt(105, 119));
     controller.end(120, 40);
-    expect(actions.onNext).not.toHaveBeenCalled();
-    expect(actions.onPrev).not.toHaveBeenCalled();
+    expect(track.follow).not.toHaveBeenCalled();
+    expect(track.release).not.toHaveBeenCalled();
   });
 
   it("leaves the dragged pose on screen when a drag dismisses, for the exit to carry out", () => {
@@ -295,14 +331,14 @@ describe("useDragFeedback when the finger lifts", () => {
     expect(Number(washNode.style.opacity)).toBeLessThan(1);
   });
 
-  it("commits a navigation only once even if end is called twice in a row", () => {
+  it("releases a sideways drag to the track only once even if end is called twice in a row", () => {
     // A lost-then-redelivered pointerup, or a duplicate event from a flaky
-    // touchscreen, must not fire onNext twice for one physical swipe.
-    const { controller, actions } = setup();
+    // touchscreen, must not hand the track two releases for one physical swipe.
+    const { controller, track } = setup();
     controller.follow(100, 100, pointerAt(20, 100));
     controller.end(-80, 0);
     controller.end(-80, 0);
-    expect(actions.onNext).toHaveBeenCalledTimes(1);
+    expect(track.release).toHaveBeenCalledTimes(1);
   });
 
   it("lets a cancelled gesture win over a position that would have committed", () => {
@@ -370,19 +406,5 @@ describe("useDragFeedback when the finger lifts", () => {
     controller.follow(100, 100, pointerAt(100, 220));
     controller.end(0, 109);
     expect(actions.onDismiss).not.toHaveBeenCalled();
-  });
-
-  it("navigates on a sideways drag of exactly the swipe distance", () => {
-    const { controller, actions } = setup();
-    controller.follow(100, 100, pointerAt(20, 100));
-    controller.end(-64, 0);
-    expect(actions.onNext).toHaveBeenCalledTimes(1);
-  });
-
-  it("settles back one pixel short of the swipe distance", () => {
-    const { controller, actions } = setup();
-    controller.follow(100, 100, pointerAt(20, 100));
-    controller.end(-63, 0);
-    expect(actions.onNext).not.toHaveBeenCalled();
   });
 });

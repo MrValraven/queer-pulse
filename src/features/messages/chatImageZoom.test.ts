@@ -6,10 +6,17 @@ import {
   dragFeedbackFor,
   DRAG_AXIS_LOCK_PX,
   IDLE_DRAG,
+  FLICK_SAMPLE_WINDOW_MS,
+  horizontalTrackOffset,
   IDLE_ZOOM,
   lockDragAxis,
   MAX_SCALE,
+  releaseVelocity,
+  settleDurationMs,
+  swipeDecision,
   toTransform,
+  trackTransform,
+  translateXFromTransform,
   zoomAround,
 } from "./chatImageZoom";
 
@@ -144,7 +151,7 @@ describe("toTransform", () => {
 // The live feedback shown WHILE a one-finger drag at scale 1 is in progress.
 // The thresholds are the same ones `useZoomPan` judges the release against, so
 // progress reaching 1 means "let go now and it commits".
-const dragThresholds = { dismissDistance: 110, nextDistance: 64 };
+const dragThresholds = { dismissDistance: 110 };
 const withScale = { allowScale: true };
 
 describe("lockDragAxis", () => {
@@ -240,52 +247,154 @@ describe("dragFeedbackFor, non-finite input", () => {
 });
 
 describe("dragFeedbackFor, horizontal", () => {
-  it("follows the finger one-to-one up to the point a release would navigate", () => {
-    const feedback = dragFeedbackFor(
-      "horizontal",
-      -64,
-      0,
-      dragThresholds,
-      withScale,
-    );
-    expect(feedback.x).toBe(-64);
-    expect(feedback.y).toBe(0);
+  it("leaves the stage idle, since a sideways drag moves the swipe track instead", () => {
+    // The stage carries only the dismiss pose now. Moving it sideways as well
+    // would slide the clip and the track together and the neighbour would
+    // never appear to arrive.
+    expect(
+      dragFeedbackFor("horizontal", -90, 0, dragThresholds, withScale),
+    ).toEqual(IDLE_DRAG);
+  });
+});
+
+describe("horizontalTrackOffset", () => {
+  it("follows the finger one-to-one when there are neighbours, however far it goes", () => {
+    expect(horizontalTrackOffset(-30, true)).toBe(-30);
+    expect(horizontalTrackOffset(-250, true)).toBe(-250);
+    expect(horizontalTrackOffset(310, true)).toBe(310);
   });
 
-  it("resists beyond that point instead of sliding off into nothing", () => {
-    const feedback = dragFeedbackFor(
-      "horizontal",
-      -200,
-      0,
-      dragThresholds,
-      withScale,
-    );
-    expect(Math.abs(feedback.x)).toBeGreaterThan(64);
-    expect(Math.abs(feedback.x)).toBeLessThan(200);
+  it("resists a single-photo drag past the swipe floor, so it reads as nowhere to go", () => {
+    expect(horizontalTrackOffset(-64, false)).toBe(-64);
+    const resisted = Math.abs(horizontalTrackOffset(-200, false));
+    expect(resisted).toBeGreaterThan(64);
+    expect(resisted).toBeLessThan(200);
   });
 
-  it("never travels further than the cap, however hard it is thrown", () => {
-    const feedback = dragFeedbackFor(
-      "horizontal",
-      5000,
-      0,
-      dragThresholds,
-      withScale,
-    );
-    expect(feedback.x).toBeLessThanOrEqual(64 * 1.6);
+  it("caps a single-photo drag however hard it is thrown", () => {
+    expect(horizontalTrackOffset(5000, false)).toBeLessThanOrEqual(64 * 1.6);
   });
 
-  it("leaves the scrim and the scale alone, since nothing is being dismissed", () => {
-    const feedback = dragFeedbackFor(
-      "horizontal",
-      -90,
-      0,
-      dragThresholds,
-      withScale,
+  it("falls back to the centre for a non-finite offset", () => {
+    expect(horizontalTrackOffset(NaN, true)).toBe(0);
+  });
+});
+
+describe("releaseVelocity", () => {
+  it("reads speed and direction off the samples inside the window", () => {
+    const samples = [
+      { x: 0, time: 1000 },
+      { x: -20, time: 1016 },
+      { x: -40, time: 1032 },
+    ];
+    expect(releaseVelocity(samples, 1032)).toBeCloseTo(-40 / 32, 5);
+  });
+
+  it("ignores samples older than the window, so a finger that rested before lifting is slow", () => {
+    const samples = [
+      { x: 0, time: 1000 },
+      { x: -200, time: 1016 },
+      { x: -200, time: 1016 + FLICK_SAMPLE_WINDOW_MS + 50 },
+    ];
+    const releaseTime = 1016 + FLICK_SAMPLE_WINDOW_MS + 50;
+    expect(releaseVelocity(samples, releaseTime)).toBe(0);
+  });
+
+  it("returns zero without two samples a measurable time apart", () => {
+    expect(releaseVelocity([], 1000)).toBe(0);
+    expect(releaseVelocity([{ x: 10, time: 1000 }], 1000)).toBe(0);
+    expect(
+      releaseVelocity(
+        [
+          { x: 0, time: 1000 },
+          { x: 50, time: 1001 },
+        ],
+        1001,
+      ),
+    ).toBe(0);
+  });
+});
+
+describe("swipeDecision", () => {
+  const width = 400;
+
+  it("commits to the next photo on a leftward drag past a quarter of the stage", () => {
+    expect(swipeDecision({ offset: -100, velocity: 0, width })).toBe("next");
+  });
+
+  it("commits to the previous photo on a rightward drag past a quarter of the stage", () => {
+    expect(swipeDecision({ offset: 100, velocity: 0, width })).toBe("prev");
+  });
+
+  it("springs back one pixel short of the distance", () => {
+    expect(swipeDecision({ offset: -99, velocity: 0, width })).toBeNull();
+  });
+
+  it("never asks for less than the 64px floor on a narrow stage", () => {
+    // A quarter of 120 is 30, below the floor.
+    expect(swipeDecision({ offset: -40, velocity: 0, width: 120 })).toBeNull();
+    expect(swipeDecision({ offset: -64, velocity: 0, width: 120 })).toBe(
+      "next",
     );
-    expect(feedback.scrimOpacity).toBe(1);
-    expect(feedback.scale).toBe(1);
-    expect(feedback.progress).toBe(0);
+  });
+
+  it("commits a flick in the drag direction even when the drag was short", () => {
+    expect(swipeDecision({ offset: -30, velocity: -0.6, width })).toBe("next");
+    expect(swipeDecision({ offset: 25, velocity: 0.5, width })).toBe("prev");
+  });
+
+  it("does not treat a slow release as a flick", () => {
+    expect(swipeDecision({ offset: -30, velocity: -0.4, width })).toBeNull();
+  });
+
+  it("cancels on a flick against the drag, even past the distance", () => {
+    expect(swipeDecision({ offset: -150, velocity: 0.8, width })).toBeNull();
+    expect(swipeDecision({ offset: 150, velocity: -0.8, width })).toBeNull();
+  });
+
+  it("takes its direction from a flick when the track sits exactly at the centre", () => {
+    expect(swipeDecision({ offset: 0, velocity: -0.9, width })).toBe("next");
+  });
+
+  it("springs back on non-finite input", () => {
+    expect(swipeDecision({ offset: NaN, velocity: 0, width })).toBeNull();
+    expect(swipeDecision({ offset: -200, velocity: NaN, width })).toBeNull();
+  });
+});
+
+describe("settleDurationMs", () => {
+  it("stays inside the 180 to 320ms band", () => {
+    expect(settleDurationMs(10, 5)).toBe(180);
+    expect(settleDurationMs(2000, 0)).toBe(320);
+  });
+
+  it("takes longer to cover more distance and less at a higher release speed", () => {
+    expect(settleDurationMs(300, 0)).toBeGreaterThan(settleDurationMs(200, 0));
+    expect(settleDurationMs(300, 3)).toBeLessThan(settleDurationMs(300, 0));
+  });
+
+  it("falls back to the shortest settle for a non-finite distance", () => {
+    expect(settleDurationMs(NaN, 0)).toBe(180);
+  });
+});
+
+describe("track transform", () => {
+  it("renders a horizontal offset as a translateX", () => {
+    expect(trackTransform(-120)).toBe("translateX(-120px)");
+  });
+
+  it("reads the offset back out of the forms a browser reports", () => {
+    expect(translateXFromTransform("matrix(1, 0, 0, 1, -137.5, 0)")).toBe(
+      -137.5,
+    );
+    expect(
+      translateXFromTransform(
+        "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 88, 0, 0, 1)",
+      ),
+    ).toBe(88);
+    expect(translateXFromTransform("translateX(-42px)")).toBe(-42);
+    expect(translateXFromTransform("none")).toBe(0);
+    expect(translateXFromTransform("")).toBe(0);
   });
 });
 

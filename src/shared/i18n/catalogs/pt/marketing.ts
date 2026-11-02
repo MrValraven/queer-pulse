@@ -3538,6 +3538,10 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-02.headline":
+    "Os concertos ganham um editor novo, e as fotos no chat deslizam suavemente de uma para a outra.",
+  "changelog.releases.2026-11-01.headline":
+    "A Discografia e os Mixes numa página de persona apontam para o Studio para carregar lançamentos.",
   "changelog.releases.2026-10-30.headline":
     "Os negócios podem juntar membros à equipa, e as listas longas de votos de confiança nos perfis passam a caber numa legenda curta.",
   "changelog.releases.2026-10-29.headline":
@@ -3792,6 +3796,34 @@ export const marketing: Catalog = {
     "Pesquisa membros ao definir limites de convites",
   "changelog.entries.invite-quotas-search.body":
     "Quem administra vê os convites de cada membro este mês face ao limite, e muda-o ali mesmo.",
+  "changelog.entries.persona-long-names-fit.title":
+    "Os nomes longos de persona cabem no primeiro ecrã",
+  "changelog.entries.persona-long-names-fit.body":
+    "As páginas em estilo cartaz encolhem um nome longo para duas ou três linhas, e os botões ficam à vista.",
+  "changelog.entries.studio-long-titles-fit.title":
+    "Os títulos longos de lançamentos cabem no Studio",
+  "changelog.entries.studio-long-titles-fit.body":
+    "Álbuns, singles e faixas com um título muito longo encolhem para três linhas, e a capa e o Play ficam à vista.",
+  "changelog.entries.chat-photos-swipe-smoothly.title":
+    "As fotos no chat deslizam suavemente quando passas o dedo",
+  "changelog.entries.chat-photos-swipe-smoothly.body":
+    "A foto seguinte entra ao lado da que estás a arrastar, e basta um gesto rápido para avançar.",
+  "changelog.entries.gigs-editor-redo.title":
+    "Gere os teus concertos numa secção renovada do editor de persona",
+  "changelog.entries.gigs-editor-redo.body":
+    "Cada concerto mostra data, local, hora de abertura e estado, e o formulário traz cartaz, link de bilhetes e pré-visualização.",
+  "changelog.entries.chat-reaches-screen-edge.title":
+    "As conversas no iPhone chegam ao fundo do ecrã",
+  "changelog.entries.chat-reaches-screen-edge.body":
+    "A app instalada perde a faixa vazia que ficava por baixo da caixa de mensagem.",
+  "changelog.entries.musician-page-name-higher.title":
+    "As páginas de músico põem o nome mais acima",
+  "changelog.entries.musician-page-name-higher.body":
+    "O nome passa a ficar sobre a foto de capa, e as etiquetas Música e Artista da fundação ficam na mesma linha.",
+  "changelog.entries.persona-studio-music-chapters.title":
+    "Carrega lançamentos a partir dos capítulos da tua persona",
+  "changelog.entries.persona-studio-music-chapters.body":
+    "A Discografia e os Mixes passam a ligar ao carregamento no Studio, ou deixam-te pedir acesso ao Studio no editor.",
   "changelog.entries.business-team-members.title":
     "Junta membros à equipa do teu negócio",
   "changelog.entries.business-team-members.body":
@@ -10929,7 +10961,6 @@ export const marketing: Catalog = {
 
   // ── O menu, do lado público.
   "directory.detail.menu.title": "O <em>menu.</em>",
-  "directory.detail.menu.sub": "O que servem e quanto custa.",
   "directory.detail.menu.subNamed": "O que {name} serve e quanto custa.",
   "directory.detail.menu.dietarySummary": "Etiquetas neste menu: {labels}",
   "directory.detail.menu.jumpLabel": "Saltar para uma secção",

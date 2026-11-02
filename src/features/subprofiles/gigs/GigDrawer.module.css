@@ -1,0 +1,102 @@
+/* The gig drawer's own layout. The sheet shell (.drawer, .drawer-body,
+   .drawer-main, .drawer-foot) is global in persona-editor.css; this file only
+   orders its children and styles the gig fields. Tokens only.
+
+   One column (phone): preview, form, settings rail. The aside wrapper
+   dissolves so its two children take part in the body's column and `order`
+   places them around the form. From 900px the body is a two-column grid and
+   the aside is the second column: preview, then settings rail. The media
+   query is the viewport on purpose: the drawer is portaled to document.body,
+   so no container ancestor exists. */
+
+.main {
+  order: 1;
+}
+
+.aside {
+  display: contents;
+}
+
+.aside > section {
+  order: 0;
+}
+
+.aside > aside {
+  order: 2;
+}
+
+@media (min-width: 900px) {
+  .main {
+    order: 0;
+  }
+
+  .aside {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    min-width: 0;
+  }
+}
+
+/* Two fields side by side from 560px, stacked below it. */
+.pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+
+.pair > * {
+  margin-bottom: 0;
+  min-width: 0;
+}
+
+@media (min-width: 560px) {
+  .pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* A labelled control that FormField cannot wire: the status chips and the
+   poster. The label matches FormField's own. */
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.groupLabel {
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.statusChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.helper {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* Touch targets on the one-column drawer. The poster chips come from the
+   shared ImageUploadField and the clear chip from the shared DatePicker, so
+   both are reached through the wrapper they sit in. The clear chip is the
+   only doors-field button without aria-haspopup (the trigger has it). */
+@media (max-width: 899px) {
+  .posterGroup button {
+    min-height: var(--tap-min);
+  }
+
+  .doorsField button:not([aria-haspopup]) {
+    min-width: var(--tap-min);
+    min-height: var(--tap-min);
+  }
+}

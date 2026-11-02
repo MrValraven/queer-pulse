@@ -3455,6 +3455,10 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-02.headline":
+    "Gigs get a rebuilt editor, and chat photos now slide smoothly from one to the next.",
+  "changelog.releases.2026-11-01.headline":
+    "Discography and Mixes on a persona page point to Studio for uploads.",
   "changelog.releases.2026-10-30.headline":
     "Businesses can add members to their team, and long voucher lists on member profiles fold into a short caption.",
   "changelog.releases.2026-10-29.headline":
@@ -3708,6 +3712,34 @@ export const marketing: Catalog = {
     "Search members when setting invite limits",
   "changelog.entries.invite-quotas-search.body":
     "Admins see each member's invites this month against their limit, and can change it inline.",
+  "changelog.entries.persona-long-names-fit.title":
+    "Long persona names fit on the first screen",
+  "changelog.entries.persona-long-names-fit.body":
+    "Poster-style pages shrink a long name to two or three lines, so your actions stay in view.",
+  "changelog.entries.studio-long-titles-fit.title":
+    "Long release titles fit in Studio",
+  "changelog.entries.studio-long-titles-fit.body":
+    "Albums, singles and tracks with a very long title shrink to three lines, so the cover and Play stay in view.",
+  "changelog.entries.chat-photos-swipe-smoothly.title":
+    "Photos in chat slide smoothly as you swipe",
+  "changelog.entries.chat-photos-swipe-smoothly.body":
+    "The next photo comes in beside the one you're dragging, and a quick flick is enough to move on.",
+  "changelog.entries.gigs-editor-redo.title":
+    "Manage your gigs in a rebuilt persona editor section",
+  "changelog.entries.gigs-editor-redo.body":
+    "Each gig shows its date, venue, doors time and status, and a form adds a poster, ticket link and live preview.",
+  "changelog.entries.chat-reaches-screen-edge.title":
+    "Chats on iPhone reach the bottom of the screen",
+  "changelog.entries.chat-reaches-screen-edge.body":
+    "The installed app drops the empty strip that sat under the message box.",
+  "changelog.entries.musician-page-name-higher.title":
+    "Musician pages put the name higher up the page",
+  "changelog.entries.musician-page-name-higher.body":
+    "The name now sits over the cover photo, and the Musician and Founding artist tags share one line.",
+  "changelog.entries.persona-studio-music-chapters.title":
+    "Upload releases from your persona page chapters",
+  "changelog.entries.persona-studio-music-chapters.body":
+    "Discography and Mixes now link to the Studio upload, or let you request Studio access from the editor.",
   "changelog.entries.business-team-members.title":
     "Add members to your business team",
   "changelog.entries.business-team-members.body":
@@ -10785,7 +10817,6 @@ export const marketing: Catalog = {
 
   // ── The menu, public side.
   "directory.detail.menu.title": "The <em>menu.</em>",
-  "directory.detail.menu.sub": "What they serve and what it costs.",
   "directory.detail.menu.subNamed": "What {name} serves and what it costs.",
   "directory.detail.menu.dietarySummary": "Labels on this menu: {labels}",
   "directory.detail.menu.jumpLabel": "Jump to a section",
