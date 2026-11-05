@@ -58,25 +58,27 @@ div:has(> .directory) {
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
-/* The Profession section: one chip row per page family, each under its own
+/* The Profession section: one chip row per work field, each under its own
    heading, stacked down the 280px column so ninety-four professions stay
-   navigable. The heading is a label; the family itself is not pickable.
-   The "At the table" section reuses the same stack for format and vibe. */
+   navigable. The heading is a label; the field itself is not pickable.
+   It reads one step below the uppercase section title: sentence case at 13px
+   in --ink-60, quieter than a selected chip. The 20px between groups is
+   well over the 8px from heading to chips, so each heading binds to its own
+   row by proximity. The "At the table" section reuses the same stack for
+   format and vibe. */
 .professionGroups {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 20px;
 }
 .professionGroup {
   min-width: 0;
 }
 .professionGroupLabel {
-  font-size: var(--text-10-5);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-  margin: 0 0 6px;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink-60);
+  margin: 0 0 8px;
 }
 
 /* ── Results grid ────────────────────────────────────────────────────────── */

@@ -157,9 +157,9 @@ export function SubprofileDirectoryFilterSidebar({
 }
 
 /**
- * The Profession section's body: one chip row per page family, each headed
- * by the family name, stacked down the 280px column. Multi-select, OR within
- * the facet.
+ * The Profession section's body: one chip row per work field, each headed
+ * by the professional area members pick in onboarding, stacked down the
+ * 280px column. Multi-select, OR within the facet.
  *
  * Each chip's count is a LIVE facet, taken under the other filters but not
  * under the profession selection itself, so picking "Poet" leaves the other
@@ -188,9 +188,9 @@ function SubprofileProfessionFilter({
   return (
     <div className={styles.professionGroups}>
       {professionGroups.map((group) => {
-        const groupLabelId = `${groupIdPrefix}-${group.family}`;
+        const groupLabelId = `${groupIdPrefix}-${group.field}`;
         return (
-          <div className={styles.professionGroup} key={group.family}>
+          <div className={styles.professionGroup} key={group.field}>
             <p id={groupLabelId} className={styles.professionGroupLabel}>
               {t(group.labelKey)}
             </p>

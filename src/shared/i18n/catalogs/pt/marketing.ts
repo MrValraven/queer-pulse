@@ -3838,6 +3838,10 @@ export const marketing: Catalog = {
   "changelog.entries.studio-always-dark.title": "O Studio fica sempre escuro",
   "changelog.entries.studio-always-dark.body":
     "Todas as páginas do Studio abrem agora em modo escuro, e o resto da QueerPulse mantém o tema que escolheste.",
+  "changelog.entries.persona-professions-by-work-area.title":
+    "Encontra personas pelas mesmas áreas de trabalho que escolhes ao entrar",
+  "changelog.entries.persona-professions-by-work-area.body":
+    "O filtro de profissão agrupa as opções em áreas como Música ou Restauração e gastronomia, com títulos mais claros.",
   "changelog.entries.persona-wall-curation.title":
     "Vê no topo do diretório de pessoas as personas escolhidas pela nossa equipa",
   "changelog.entries.persona-wall-curation.body":

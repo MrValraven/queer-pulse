@@ -56,9 +56,11 @@ export const subprofiles: Catalog = {
   "directory.sort.name": "Name, A to Z",
 
   // Refine drawer (SubprofileDirectoryToolbar / SubprofileDirectoryRefinePanel).
-  // The Profession band is headed by page family, and those headings reuse the
-  // create flow's own `family.*.label` keys.
+  // The Profession band is headed by work field, and those headings reuse the
+  // onboarding's own `members:directory.discipline.*` keys. Kinds with no
+  // single field close the band under professionOtherGroup.
   "directory.refine.professionLabel": "Profession",
+  "directory.refine.professionOtherGroup": "Something else",
   "directory.refine.availabilityLabel": "Availability",
   "directory.refine.availabilityAny": "Any availability",
   "directory.refine.tagsLabel": "Tags",

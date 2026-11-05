@@ -3753,6 +3753,10 @@ export const marketing: Catalog = {
   "changelog.entries.studio-always-dark.title": "Studio is always dark",
   "changelog.entries.studio-always-dark.body":
     "Every Studio page now opens in dark mode, and the rest of QueerPulse keeps the theme you picked.",
+  "changelog.entries.persona-professions-by-work-area.title":
+    "Find personas by the same work areas you pick when you join",
+  "changelog.entries.persona-professions-by-work-area.body":
+    "The Profession filter groups its chips under areas like Music or Food & drink, with clearer headings.",
   "changelog.entries.persona-wall-curation.title":
     "See the personas our team picked at the top of the people directory",
   "changelog.entries.persona-wall-curation.body":

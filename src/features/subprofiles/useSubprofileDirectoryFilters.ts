@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useDebouncedValue } from "../../shared/hooks";
 import type { SubprofileKind } from "./api/subprofiles.api";
 import { useSubprofileDirectory } from "./api/useSubprofileDirectory";
-import { groupProfessionsByFamily } from "./subprofileDirectory.data";
+import { groupProfessionsByWorkField } from "./subprofileDirectory.data";
 import type { DirectoryAvailability } from "./subprofileDirectoryAvailability.data";
 import { DIRECTORY_FACET_TAG_CAP, topTags } from "./subprofileDirectoryFacets";
 import {
@@ -89,7 +89,7 @@ export function useSubprofileDirectoryFilters() {
   }, [cards, facets]);
   const seenKinds = useSeenVocabulary(loadedKinds);
   const professionGroups = useMemo(
-    () => groupProfessionsByFamily(new Set(seenKinds)),
+    () => groupProfessionsByWorkField(new Set(seenKinds)),
     [seenKinds],
   );
   const loadedTopTags = useMemo(

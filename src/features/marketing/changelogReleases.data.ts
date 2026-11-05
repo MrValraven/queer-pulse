@@ -17,7 +17,7 @@ export const CHANGELOG_RELEASE_NOTES: Record<
 > = {
   "5 Nov 2026": {
     highlights: ["persona-directory-credits", "persona-wall-curation"],
-    pushes: 2,
+    pushes: 3,
   },
   "4 Nov 2026": {
     highlights: [

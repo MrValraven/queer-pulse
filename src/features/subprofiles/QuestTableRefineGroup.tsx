@@ -21,7 +21,7 @@ const FORMAT_CHIPS: readonly TableChipFormat[] = ["online", "in_person"];
  * chips appear only for professions present.
  *
  * The two rows stack under visible sub-headings styled like the Profession
- * section's family headings, since the 280px column holds one chip row
+ * section's work field headings, since the 280px column holds one chip row
  * across. Formats OR, vibes AND (`matchesTable`); each chip's count is the
  * server's live facet, a chip that reaches 0 dims (`ChipSelect`), and an
  * uncounted chip draws no number and stays pickable.

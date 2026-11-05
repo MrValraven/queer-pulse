@@ -52,9 +52,11 @@ export const subprofiles: Catalog = {
   "directory.sort.name": "Nome, de A a Z",
 
   // Painel "Refinar" (SubprofileDirectoryToolbar / SubprofileDirectoryRefinePanel).
-  // A faixa Profissão é encabeçada pela família da página, e esses títulos
-  // reutilizam as chaves `family.*.label` do fluxo de criação.
+  // A faixa Profissão é encabeçada pela área de trabalho, e esses títulos
+  // reutilizam as chaves `members:directory.discipline.*` do onboarding. Os
+  // tipos sem uma área única fecham a faixa em professionOtherGroup.
   "directory.refine.professionLabel": "Profissão",
+  "directory.refine.professionOtherGroup": "Outra coisa",
   "directory.refine.availabilityLabel": "Disponibilidade",
   "directory.refine.availabilityAny": "Qualquer disponibilidade",
   "directory.refine.tagsLabel": "Tags",
