@@ -30,7 +30,8 @@ const DIRECTORY_TITLE_ID = "subprofile-directory-title";
  * `SubprofileDirectoryBrowse`.
  *
  * **You follow** is the personal list of personas this member follows
- * (PRD-208), in `FollowedPersonasPanel`.
+ * (PRD-208), in `FollowedPersonasPanel`: the same portrait grid and "Show
+ * more" pager, each card noting the month the follow started.
  *
  * WHY FOLLOWING LIVES HERE. It is a list of somebody else's personas, so it
  * does not belong on `/account/subprofiles`, which is the dashboard for the

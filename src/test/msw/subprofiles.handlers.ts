@@ -30,6 +30,7 @@ import {
 } from "../../features/subprofiles/data/subprofiles.data";
 import { MADE_TOGETHER_DEMO_ITEMS } from "../../features/subprofiles/data/madeTogether.data";
 import { linkedPersonaHandleCandidate } from "../../features/subprofiles/personaHandle";
+import { demoPublicPersonaWall } from "../../features/subprofiles/personaWallDemoStore";
 import { currentUserSlug } from "../../features/members/data/demoCurrentUser";
 import {
   KIND_LABELS,
@@ -448,6 +449,10 @@ export function subprofileHandlers(api: string) {
         items: MADE_TOGETHER_DEMO_ITEMS.slice(0, limit),
       });
     }),
+    // Literal route above `/subprofiles/:id`, so "wall" is never read as a persona id.
+    http.get(`${api}/subprofiles/wall`, () =>
+      HttpResponse.json({ items: demoPublicPersonaWall() }),
+    ),
 
     // ── Owner reads/writes ───────────────────────────────────────────────────
     http.get(`${api}/subprofiles/mine`, () =>

@@ -63,6 +63,26 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "persona-wall-curation",
+        category: "feature",
+        date: "5 Nov 2026",
+        ...entryKeys("persona-wall-curation"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "persona-following-grid",
+        category: "improvement",
+        date: "5 Nov 2026",
+        ...entryKeys("persona-following-grid"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
         id: "persona-directory-credits",
         category: "feature",
         date: "5 Nov 2026",

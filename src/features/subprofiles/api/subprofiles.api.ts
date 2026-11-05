@@ -1580,6 +1580,22 @@ export interface FollowedPersonaDTO {
   followerCount: number;
   /** ISO instant this member started following. Newest first in the list. */
   followedAt: string;
+  // The directory card's fields, so the "You follow" tab draws the same
+  // portrait card as "Everyone" (`followedCard.adapters.ts`). Same meaning
+  // and types as on `SubprofileCardDTO`, and optional because an older server
+  // sends none of them: the adapter normalizes each one to the card's default.
+  coverUrl?: string | null;
+  crop?: CropRect | null;
+  coverCrop?: CropRect | null;
+  availability?: string | null;
+  availabilityUpdatedAt?: string | null;
+  tags?: string[];
+  /** True on every row the server sends, since the list IS the follows. Read
+   *  so an in-place unfollow (`followedPersonasCache.ts`) can flip it. */
+  viewerFollowing?: boolean;
+  viewerIsMember?: boolean;
+  credits?: CardCreditsDTO;
+  table?: CardTableSummary;
 }
 
 /** One page of `GET /subprofiles/following`. */
@@ -1588,6 +1604,10 @@ export interface FollowedPersonasPage {
   total: number;
   page: number;
   pageSize: number;
+  /** Keyset cursor for the page after this one, sent back as `?before=`;
+   *  null on the last page. Absent from an older server, which pages by
+   *  number alone. */
+  nextCursor?: string | null;
 }
 
 /**
@@ -1602,6 +1622,23 @@ export interface FollowedPersonasPage {
 export const getFollowedPersonas = (page: number, signal?: AbortSignal) =>
   apiGet<FollowedPersonasPage>(
     `/subprofiles/following?page=${page}`,
+    undefined,
+    undefined,
+    signal,
+  );
+
+/**
+ * The page of followed personas after `cursor` (a previous page's
+ * `nextCursor`). Keyset paging, so a row unfollowed in place on an earlier
+ * page never shifts what this one returns, which page numbers would. The
+ * cursor is opaque, so it is URL-encoded as it stands.
+ */
+export const getFollowedPersonasAfter = (
+  cursor: string,
+  signal?: AbortSignal,
+) =>
+  apiGet<FollowedPersonasPage>(
+    `/subprofiles/following?before=${encodeURIComponent(cursor)}`,
     undefined,
     undefined,
     signal,

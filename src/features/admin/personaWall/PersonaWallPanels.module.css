@@ -1,0 +1,164 @@
+/* The wall curation page's Fill order and Preview panels. */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-24);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.intro {
+  max-width: 62ch;
+  margin: 8px 0 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+  color: var(--ink-60);
+  text-wrap: pretty;
+}
+
+/* Fill order: four cards, two across on a wide screen. */
+.choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.choice {
+  /* A <button> takes the UA font; the card reads in the page's own type. */
+  font: inherit;
+  position: relative;
+  display: flex;
+  min-height: 44px;
+  padding: 12px 14px;
+  text-align: start;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1.5px solid rgba(var(--line-rgb), 0.18);
+  border-radius: var(--radius-12);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background-color var(--dur-fast) var(--ease);
+}
+
+.choice:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* RadioCardGroup's `.option:focus-visible` sets `border-radius: inherit`,
+   which drops the card's corners while it has focus. Two classes outrank it. */
+.choices .choice:focus-visible {
+  border-radius: var(--radius-12);
+}
+
+/* The border alone reads faintly on the dark surface, so the picked card
+   also takes a soft coral fill. */
+.choiceChecked {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+
+/* The picked card also carries a check in its corner, so the choice does not
+   ride on colour alone. It is always drawn and fades and grows in with the
+   card's checked state. */
+.choiceCheck {
+  position: absolute;
+  inset-block-start: 10px;
+  inset-inline-end: 10px;
+  color: var(--accent-text);
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.choice[data-checked] .choiceCheck {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.choiceBody {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  /* Keeps a long title clear of the check in the corner. */
+  padding-inline-end: 22px;
+}
+
+.choiceTitle {
+  font-weight: 600;
+}
+
+.choiceText {
+  font-size: var(--text-body-sm);
+  color: var(--ink-60);
+}
+
+.saved,
+.failure,
+.tooFew {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+}
+
+.saved {
+  color: var(--ink-60);
+}
+
+.failure {
+  color: var(--danger);
+}
+
+.tooFew {
+  padding: 14px 16px;
+  color: var(--ink-60);
+  border: 1px dashed rgba(var(--line-rgb), 0.18);
+  border-radius: var(--radius-12);
+}
+
+/* Preview: the head holds the heading and the device switch. */
+.previewHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* The wall draws on plum, as it does on the directory hero. The widths are
+   the ones the wall is drawn for: 620px on desktop, a phone's 360px. */
+.frame {
+  box-sizing: border-box;
+  inline-size: min(100%, 38.75rem);
+  margin-inline: auto;
+  padding: 16px;
+  background: var(--plum);
+  border-radius: var(--radius-16);
+  /* The same cream hairline the wall tiles wear, so the plum frame keeps an
+     edge against the dark page. */
+  box-shadow: var(--ring-cream-hairline);
+  transition: inline-size var(--dur-base) var(--ease);
+}
+
+.frame[data-device="phone"] {
+  inline-size: min(100%, 22.5rem);
+}
+
+@media (--md) {
+  .choices {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

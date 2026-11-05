@@ -3456,7 +3456,7 @@ export const marketing: Catalog = {
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-11-05.headline":
-    "Personas get a redesigned directory, and Settings drops the Profile theme picker.",
+    "Personas get a redesigned directory and a team-picked wall of faces.",
   "changelog.releases.2026-11-04.headline":
     "Host an event offers the hosting guide or the form, and the Events page fits a phone.",
   "changelog.releases.2026-11-03.headline":
@@ -3753,6 +3753,14 @@ export const marketing: Catalog = {
   "changelog.entries.studio-always-dark.title": "Studio is always dark",
   "changelog.entries.studio-always-dark.body":
     "Every Studio page now opens in dark mode, and the rest of QueerPulse keeps the theme you picked.",
+  "changelog.entries.persona-wall-curation.title":
+    "See the personas our team picked at the top of the people directory",
+  "changelog.entries.persona-wall-curation.body":
+    "Our team picks the first faces, and the rest fill in by endorsements, follows, newest or a daily shuffle.",
+  "changelog.entries.persona-following-grid.title":
+    "See the personas you follow as portrait cards",
+  "changelog.entries.persona-following-grid.body":
+    "Each card says when you started following, and unfollowing keeps the card in place so you can undo.",
   "changelog.entries.persona-directory-credits.title":
     "Browse personas in a redesigned directory",
   "changelog.entries.persona-directory-credits.body":

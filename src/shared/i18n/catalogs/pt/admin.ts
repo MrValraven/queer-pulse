@@ -10072,4 +10072,125 @@ export const admin: Catalog = {
     "Não podes fazer alterações enquanto houver uma restrição de moderação na tua conta",
   "directoryPartners.failure.unknown":
     "Isto não seguiu e o servidor não indicou o motivo. Tenta de novo",
+
+  // ── Directory wall (Admin only) ──
+  "personaWall.navLabel": "Mural do diretório",
+  "personaWall.title": "Mural do diretório",
+  "personaWall.intro":
+    "Escolhe quem aparece no topo do diretório de pessoas. Os lugares que deixares livres são preenchidos automaticamente.",
+  "personaWall.picksHeading": "Personas escolhidas",
+  "personaWall.count": "{count} de {max} escolhidas",
+  "personaWall.phoneNote":
+    "Os telemóveis mostram os primeiros 6 lugares. Uma escolha com a etiqueta “Só no computador” aparece apenas em ecrãs maiores",
+  "personaWall.addCta": "Adicionar persona",
+  "personaWall.full":
+    "O mural já tem {max} escolhas. Remove uma para adicionares outra",
+  "personaWall.empty.title": "Ainda não escolheste nenhuma persona",
+  "personaWall.empty.body":
+    "Todos os lugares se preenchem automaticamente até adicionares uma",
+  "personaWall.loadError.title":
+    "Não conseguimos carregar o mural do diretório",
+  "personaWall.loadError.retryCta": "Carregar o mural de novo",
+  "personaWall.row.moveUpCta": "Subir",
+  "personaWall.row.moveUpAria": "Subir {name}",
+  "personaWall.row.moveDownCta": "Descer",
+  "personaWall.row.moveDownAria": "Descer {name}",
+  "personaWall.row.removeCta": "Tirar do mural",
+  "personaWall.row.removeAria": "Tirar {name} do mural",
+  "personaWall.row.dragTitle": "Arrasta {name} para outra posição",
+  "personaWall.row.desktopOnly": "Só no computador",
+  "personaWall.state.draft": "Rascunho",
+  "personaWall.state.not_open": "Não pública",
+  "personaWall.state.removed": "Removida",
+  "personaWall.state.taken_down": "Retirada",
+  "personaWall.stateReason.draft":
+    "Não está no mural: quem a gere voltou a pô-la em rascunho",
+  "personaWall.stateReason.not_open":
+    "Não está no mural: quem a gere tornou-a só para membros ou privada",
+  "personaWall.stateReason.removed":
+    "Não está no mural: a persona foi removida da QueerPulse",
+  "personaWall.stateReason.taken_down":
+    "Não está no mural: a moderação retirou-a",
+  "personaWall.moved": "{name} está agora na posição {position}",
+  "personaWall.toast.added": "{name} está no mural",
+  "personaWall.toast.removed": "{name} saiu do mural",
+  "personaWall.addDialog.title": "Adicionar persona",
+  "personaWall.addDialog.searchLabel": "Pesquisar personas",
+  "personaWall.addDialog.searchPlaceholder": "Nome ou ofício",
+  "personaWall.addDialog.searchHint":
+    "Só aparecem aqui personas que estão no diretório",
+  "personaWall.addDialog.idle": "Escreve um nome para encontrares uma persona",
+  "personaWall.addDialog.searching": "A pesquisar",
+  "personaWall.addDialog.noResults":
+    "Nenhuma persona do diretório corresponde a {query}",
+  "personaWall.addDialog.resultsLabel": "Personas encontradas",
+  "personaWall.addDialog.addResultAria": "Adicionar {name} ao mural",
+  "personaWall.addDialog.alreadyPicked": "Já está no mural",
+  "personaWall.addDialog.searchErrorTitle": "A pesquisa não terminou",
+  "personaWall.addDialog.searchRetryCta": "Pesquisar de novo",
+  "personaWall.fill.heading": "Preencher o resto",
+  "personaWall.fill.intro":
+    "Os lugares sem escolha enchem-se primeiro com personas com foto, por esta ordem",
+  "personaWall.fill.order.endorsed.label": "Mais recomendadas",
+  "personaWall.fill.order.endorsed.description":
+    "Primeiro as personas com mais recomendações",
+  "personaWall.fill.order.followed.label": "Mais seguidas",
+  "personaWall.fill.order.followed.description":
+    "Primeiro as personas com mais seguidores",
+  "personaWall.fill.order.newest.label": "Mais recentes",
+  "personaWall.fill.order.newest.description":
+    "Primeiro as personas criadas mais recentemente",
+  "personaWall.fill.order.daily_shuffle.label": "Mistura diária",
+  "personaWall.fill.order.daily_shuffle.description":
+    "Muda uma vez por dia, igual para toda a gente",
+  "personaWall.fill.saved": "Ordem guardada",
+  "personaWall.preview.heading": "Pré-visualização",
+  "personaWall.preview.intro":
+    "O mural como os membros o veem: as tuas escolhas e depois o preenchimento automático",
+  "personaWall.preview.deviceLabel": "Tamanho da pré-visualização",
+  "personaWall.preview.desktop": "Computador",
+  "personaWall.preview.phone": "Telemóvel",
+  "personaWall.preview.picked": "Escolhida",
+  "personaWall.preview.filled": "Automática",
+  "personaWall.preview.tooFew":
+    "O mural precisa de pelo menos 3 personas, por isso está escondido por agora",
+  "personaWall.error.full":
+    "O mural já tem {max} personas. Remove uma para adicionares outra",
+  "personaWall.error.alreadyPicked": "Esta persona já está no mural",
+  "personaWall.error.personaNotFound":
+    "Essa persona já não existe, por isso não pode ser adicionada",
+  "personaWall.error.notListed.draft":
+    "Esta persona está em rascunho, por isso não pode ir para o mural",
+  "personaWall.error.notListed.not_open":
+    "Esta persona é só para membros ou privada, por isso não pode ir para o mural",
+  "personaWall.error.notListed.removed":
+    "Esta persona foi removida da QueerPulse, por isso não pode ir para o mural",
+  "personaWall.error.notListed.taken_down":
+    "A moderação retirou esta persona, por isso não pode ir para o mural",
+  "personaWall.error.notListed.unknownState":
+    "Esta persona saiu do diretório: está em rascunho, é privada, foi removida ou retirada, por isso não pode ir para o mural",
+  "personaWall.error.pickNotFound":
+    "Essa escolha já foi removida, talvez noutro separador. A lista mostra agora o mural atual",
+  "personaWall.error.reorderMismatch":
+    "As escolhas mudaram noutro separador, por isso voltou a ordem atual. Move de novo",
+  "personaWall.error.invalidFillOrder":
+    "O servidor não conhece essa ordem. Recarrega a página e escolhe de novo",
+  "personaWall.failure.offline":
+    "Estás offline, por isso isto não chegou ao QueerPulse. Verifica a ligação e tenta de novo",
+  "personaWall.failure.timeout":
+    "O QueerPulse demorou demasiado a responder. Tenta de novo",
+  "personaWall.failure.rateLimited":
+    "Fizeste muitas alterações em pouco tempo. Espera um minuto e tenta de novo",
+  "personaWall.failure.server":
+    "O nosso servidor teve um problema. A falha é nossa, tenta de novo daqui a pouco",
+  "personaWall.failure.unreachable":
+    "Não conseguimos chegar ao QueerPulse. Verifica a ligação ou tenta de novo daqui a pouco",
+  "personaWall.failure.forbidden":
+    "Só admins podem mudar o mural do diretório, e esta conta não é admin",
+  "personaWall.failure.notFound":
+    "Este servidor ainda não tem o mural do diretório. Recarrega a página e avisa a equipa técnica se continuar",
+  "personaWall.failure.restricted":
+    "Não podes fazer alterações enquanto houver uma restrição de moderação na tua conta",
+  "personaWall.failure.unknown":
+    "Isto não seguiu e o servidor não indicou o motivo. Tenta de novo",
 };

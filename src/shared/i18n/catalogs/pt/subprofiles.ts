@@ -94,18 +94,10 @@ export const subprofiles: Catalog = {
   "following.empty.cta": "Ver personas",
   "following.countLine_one": "Segues {count} persona",
   "following.countLine_other": "Segues {count} personas",
-  "following.previousPage": "Anterior",
-  "following.nextPage": "Seguinte",
-  "following.unfollow": "Deixar de seguir",
-  "following.unfollowing": "A deixar de seguir…",
-  "following.unfollowLabel": "Deixar de seguir {name}",
-  "following.unfollowedToast": "Já não segues {name}.",
-  "following.unfollowError":
-    "Não conseguimos deixar de seguir essa. Tenta outra vez.",
-  "following.followerCount_one": "1 seguidor",
-  "following.followerCount_other": "{count} seguidores",
+  // A nota em cada cartao, "Segues desde mar. de 2026"; `since` e a versao
+  // curta para o cartao compacto do telemovel.
+  "following.cardSince": "Segues desde {date}",
   "following.since": "Desde {date}",
-  "following.noAddress": "Sem página pública neste momento",
 
   // Nota de reencaminhamento em `/p/:handle` (PRD-204). Chaves proprias, nao as
   // de `members:profile.moved.*`: o nome do endereco aqui e um identificador de

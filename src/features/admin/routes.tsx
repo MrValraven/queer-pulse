@@ -122,6 +122,10 @@ const AdminListingEditPage = lazyNamed(
   () => import("./AdminListingEditPage"),
   "AdminListingEditPage",
 );
+const AdminPersonaWallPage = lazyNamed(
+  () => import("./AdminPersonaWallPage"),
+  "AdminPersonaWallPage",
+);
 const AdminMediaPage = lazyNamed(
   () => import("./AdminMediaPage"),
   "AdminMediaPage",
@@ -402,6 +406,14 @@ function peopleRoutes() {
   );
 }
 
+/** The People Directory hero wall curation page. `@Roles(Admin)` with an
+ *  empty `@StaffRoles()`: Admin only through the blanket `/admin/*` gate. */
+function personaWallRoutes() {
+  return (
+    <Route path={routes.adminPersonaWall} element={<AdminPersonaWallPage />} />
+  );
+}
+
 /** The admin & moderation panels (role-gated in authGate.ts). */
 export function adminRoutes() {
   return (
@@ -463,6 +475,7 @@ export function adminRoutes() {
         path={routes.adminListingEdit}
         element={<AdminListingEditPage />}
       />
+      {personaWallRoutes()}
       <Route path={routes.adminMedia} element={<AdminMediaPage />} />
       <Route
         path={routes.adminStickerPacks}

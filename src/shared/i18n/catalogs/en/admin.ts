@@ -9930,4 +9930,121 @@ export const admin: Catalog = {
     "You can't make changes while a moderation restriction is in effect on your account",
   "directoryPartners.failure.unknown":
     "This didn't go through and the server sent no reason. Try again",
+
+  // ── Directory wall (Admin only) ──
+  "personaWall.navLabel": "Directory wall",
+  "personaWall.title": "Directory wall",
+  "personaWall.intro":
+    "Choose who appears on the People Directory hero. Any tiles you don't fill are filled automatically.",
+  "personaWall.picksHeading": "Picked personas",
+  "personaWall.count": "{count} of {max} picked",
+  "personaWall.phoneNote":
+    "Phones show the first 6 tiles. A pick tagged “Desktop only” shows on bigger screens",
+  "personaWall.addCta": "Add persona",
+  "personaWall.full": "The wall has {max} picks. Remove one to add another",
+  "personaWall.empty.title": "No personas picked yet",
+  "personaWall.empty.body": "Every tile fills automatically until you add one",
+  "personaWall.loadError.title": "We couldn't load the directory wall",
+  "personaWall.loadError.retryCta": "Load the wall again",
+  "personaWall.row.moveUpCta": "Move up",
+  "personaWall.row.moveUpAria": "Move {name} up",
+  "personaWall.row.moveDownCta": "Move down",
+  "personaWall.row.moveDownAria": "Move {name} down",
+  "personaWall.row.removeCta": "Remove from wall",
+  "personaWall.row.removeAria": "Remove {name} from the wall",
+  "personaWall.row.dragTitle": "Drag {name} to a new position",
+  "personaWall.row.desktopOnly": "Desktop only",
+  "personaWall.state.draft": "Draft",
+  "personaWall.state.not_open": "Not public",
+  "personaWall.state.removed": "Removed",
+  "personaWall.state.taken_down": "Taken down",
+  "personaWall.stateReason.draft":
+    "Not on the wall: the owner moved it back to draft",
+  "personaWall.stateReason.not_open":
+    "Not on the wall: the owner made it members only or private",
+  "personaWall.stateReason.removed":
+    "Not on the wall: the persona was removed from QueerPulse",
+  "personaWall.stateReason.taken_down":
+    "Not on the wall: moderation took it down",
+  "personaWall.moved": "{name} is now number {position}",
+  "personaWall.toast.added": "{name} is on the wall",
+  "personaWall.toast.removed": "{name} is off the wall",
+  "personaWall.addDialog.title": "Add persona",
+  "personaWall.addDialog.searchLabel": "Search personas",
+  "personaWall.addDialog.searchPlaceholder": "Name or craft",
+  "personaWall.addDialog.searchHint":
+    "Only personas listed in the directory appear here",
+  "personaWall.addDialog.idle": "Type a name to find a persona",
+  "personaWall.addDialog.searching": "Searching",
+  "personaWall.addDialog.noResults": "No listed persona matches {query}",
+  "personaWall.addDialog.resultsLabel": "Matching personas",
+  "personaWall.addDialog.addResultAria": "Add {name} to the wall",
+  "personaWall.addDialog.alreadyPicked": "On the wall",
+  "personaWall.addDialog.searchErrorTitle": "The search didn't finish",
+  "personaWall.addDialog.searchRetryCta": "Search again",
+  "personaWall.fill.heading": "Fill the rest",
+  "personaWall.fill.intro":
+    "Tiles without a pick fill with personas that have a photo first, in this order",
+  "personaWall.fill.order.endorsed.label": "Most endorsed",
+  "personaWall.fill.order.endorsed.description":
+    "Personas with the most endorsements first",
+  "personaWall.fill.order.followed.label": "Most followed",
+  "personaWall.fill.order.followed.description":
+    "Personas with the most followers first",
+  "personaWall.fill.order.newest.label": "Newest",
+  "personaWall.fill.order.newest.description":
+    "Personas created most recently first",
+  "personaWall.fill.order.daily_shuffle.label": "Daily shuffle",
+  "personaWall.fill.order.daily_shuffle.description":
+    "Changes once a day, the same for everyone",
+  "personaWall.fill.saved": "Fill order saved",
+  "personaWall.preview.heading": "Preview",
+  "personaWall.preview.intro":
+    "The wall as members see it: your picks, then the automatic fill",
+  "personaWall.preview.deviceLabel": "Preview size",
+  "personaWall.preview.desktop": "Desktop",
+  "personaWall.preview.phone": "Phone",
+  "personaWall.preview.picked": "Picked",
+  "personaWall.preview.filled": "Filled",
+  "personaWall.preview.tooFew":
+    "The wall needs at least 3 personas, so it's hidden for now",
+  "personaWall.error.full":
+    "The wall already has {max} personas. Remove one to add another",
+  "personaWall.error.alreadyPicked": "This persona is already on the wall",
+  "personaWall.error.personaNotFound":
+    "That persona no longer exists, so it can't be added",
+  "personaWall.error.notListed.draft":
+    "This persona is a draft, so it can't go on the wall",
+  "personaWall.error.notListed.not_open":
+    "This persona is members only or private, so it can't go on the wall",
+  "personaWall.error.notListed.removed":
+    "This persona was removed from QueerPulse, so it can't go on the wall",
+  "personaWall.error.notListed.taken_down":
+    "Moderation took this persona down, so it can't go on the wall",
+  "personaWall.error.notListed.unknownState":
+    "This persona left the directory: it's a draft, private, removed or taken down, so it can't go on the wall",
+  "personaWall.error.pickNotFound":
+    "That pick was already removed, maybe in another tab. The list now shows the current wall",
+  "personaWall.error.reorderMismatch":
+    "The picks changed in another tab, so the current order is back. Move it again",
+  "personaWall.error.invalidFillOrder":
+    "The server doesn't know that fill order. Reload the page and choose again",
+  "personaWall.failure.offline":
+    "You're offline, so this didn't reach QueerPulse. Check your connection and try again",
+  "personaWall.failure.timeout":
+    "QueerPulse took too long to answer. Try again",
+  "personaWall.failure.rateLimited":
+    "You've made a lot of changes in a short time. Wait a minute, then try again",
+  "personaWall.failure.server":
+    "Our server ran into a problem. This one is on us, so try again in a moment",
+  "personaWall.failure.unreachable":
+    "We couldn't reach QueerPulse. Check your connection, or try again in a moment",
+  "personaWall.failure.forbidden":
+    "Only admins can change the directory wall, and this account isn't an admin",
+  "personaWall.failure.notFound":
+    "This server doesn't offer the directory wall yet. Reload the page, and tell the tech team if it keeps happening",
+  "personaWall.failure.restricted":
+    "You can't make changes while a moderation restriction is in effect on your account",
+  "personaWall.failure.unknown":
+    "This didn't go through and the server sent no reason. Try again",
 };

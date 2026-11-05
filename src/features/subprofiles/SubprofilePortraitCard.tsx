@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PersonaPortraitArt } from "./PersonaPortraitArt";
@@ -15,6 +16,12 @@ export interface SubprofilePortraitCardProps {
   /** The name's heading level, so the card fits the page outline it lands
    *  in. Defaults to h3 (the directory section carries the h2). */
   headingLevel?: "h2" | "h3" | "h4";
+  /** A quiet one-line note under the credits, such as the You follow tab's
+   *  "Following since Mar 2026". The directory passes none. */
+  note?: ReactNode;
+  /** The note's shorter wording for the compact card, where the long one
+   *  would lose its end to the ellipsis. Defaults to `note`. */
+  compactNote?: ReactNode;
 }
 
 /**
@@ -28,11 +35,14 @@ export interface SubprofilePortraitCardProps {
  * 230px wide (two columns on a phone) it turns compact: the profession line
  * drops its second half, the tagline clamps to two lines, the credit line
  * shortens, View persona keeps only its stretched area and Follow becomes an
- * icon disc on the picture's corner.
+ * icon disc on the picture's corner. An optional note stays one line in both
+ * sizes, swapping to its compact wording when one is given.
  */
 export function SubprofilePortraitCard({
   view,
   headingLevel = "h3",
+  note,
+  compactNote,
 }: SubprofilePortraitCardProps) {
   const { t } = useTranslation();
   const Heading = headingLevel;
@@ -82,6 +92,18 @@ export function SubprofilePortraitCard({
             credits={view.credits}
             isLinked={isLinked}
           />
+          {note != null && (
+            <p className={styles.note}>
+              {compactNote == null ? (
+                note
+              ) : (
+                <>
+                  <span className={styles.noteLong}>{note}</span>
+                  <span className={styles.noteShort}>{compactNote}</span>
+                </>
+              )}
+            </p>
+          )}
           <div className={styles.actions}>
             {view.canFollow && view.id !== null && (
               <SubprofilePortraitCardFollow

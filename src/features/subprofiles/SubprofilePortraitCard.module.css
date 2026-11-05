@@ -184,6 +184,37 @@
   display: none;
 }
 
+/* ── Note ─────────────────────────────────────────────────────────────── */
+
+/* A quiet line under the credits ("Following since Mar 2026"). One line
+   always: a long name or locale ends in an ellipsis instead of pushing the
+   actions row down and breaking the grid's even bottoms. It sits at the
+   card's foot with the actions straight under it, so the notes of a row line
+   up whether a card has credits, a tagline, both or neither. A card with no
+   note keeps its actions pinned on their own. */
+.note {
+  margin: 0;
+  margin-block-start: auto;
+  min-width: 0;
+  color: var(--ink-60);
+  font-size: var(--text-13);
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The note already takes the free space above it. */
+.note + .actions,
+.note + .skeletonActions {
+  margin-block-start: 0;
+}
+
+/* As with the credit line, only one wording shows at a time. */
+.noteShort {
+  display: none;
+}
+
 /* ── Actions ──────────────────────────────────────────────────────────── */
 
 .actions {
@@ -339,6 +370,21 @@
   flex: 1;
 }
 
+/* The credits row's faces, as shimmer discs the size of `.face`. Paper under
+   the shimmer and the same paper ring, so the overlap reads as on a real
+   card. */
+.skeletonFace {
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-avatar);
+  overflow: hidden;
+  background: var(--paper);
+  box-shadow: var(--ring-paper);
+}
+.skeletonFace + .skeletonFace {
+  margin-inline-start: -8px;
+}
+
 /* ── Compact mode: a two-column phone grid ────────────────────────────── */
 
 @container portrait-card (max-width: 229px) {
@@ -400,6 +446,22 @@
     display: none;
   }
   .creditShort {
+    display: inline;
+  }
+
+  /* The note joins the credits at the card's foot, so cards with and without
+     credits still end level. With credits above it, the credits already take
+     the free space. */
+  .note {
+    font-size: var(--text-11);
+  }
+  .credits + .note {
+    margin-block-start: 0;
+  }
+  .noteLong {
+    display: none;
+  }
+  .noteShort {
     display: inline;
   }
 
@@ -488,5 +550,12 @@
 
   .skeletonActions {
     display: none;
+  }
+  .skeletonFace {
+    width: 22px;
+    height: 22px;
+  }
+  .skeletonFace + .skeletonFace {
+    margin-inline-start: -7px;
   }
 }

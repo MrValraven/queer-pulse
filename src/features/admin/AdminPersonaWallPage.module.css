@@ -1,0 +1,66 @@
+/* The wall curation page: picks and fill order on the left, the preview on
+   the right. The preview stays under the sticky top bar while the picks
+   scroll. The two columns appear only when the page body (the `.bodyFrame`
+   container) is at least 920px wide: a 440px preview column, a 40px gap and a
+   440px main column. Below that everything stacks in one column. */
+
+/* The page body is the container: two columns turn on once it can hold
+   them, with the preview column at least 440px (the narrowest the public
+   wall draws) plus the 40px gap. That is 920px, so the drawer's open or
+   closed width is accounted for. */
+.bodyFrame {
+  container-type: inline-size;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+  margin-top: 24px;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  min-width: 0;
+}
+
+.aside {
+  min-width: 0;
+}
+
+.skeletonRows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.skeletonRows > * {
+  border-radius: var(--radius-14);
+}
+
+/* A background read failed while the wall stays on screen. */
+.refreshError {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 16px 0 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+@container (min-width: 920px) {
+  .body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .aside {
+    position: sticky;
+    top: calc(var(--admin-topbar-h, 67px) + 16px);
+  }
+}

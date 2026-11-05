@@ -148,6 +148,43 @@
   opacity: 0.85;
 }
 
+/* The admin preview's Picked or Filled mark: the top corner opposite the
+   monogram, cream type on the plum-deep scrim, layered with the caption. */
+.badge {
+  position: absolute;
+  inset-block-start: 8px;
+  inset-inline-end: 8px;
+  z-index: 1;
+  /* Never wider than the tile less its two 8px offsets: a long word in a
+     narrow tile ends in an ellipsis and does not clip mid-glyph. */
+  max-inline-size: calc(100% - 16px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--plum-deep) 74%, transparent);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-11);
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+/* The Picked mark carries a coral fill (the primary button's coral under its
+   cream label, 4.56:1); Filled keeps the plum-deep pill above. The preview
+   tags its label with the source. */
+.badge:has([data-wall-source="picked"]) {
+  background: var(--accent-fill-strong);
+}
+
+/* A narrow tile (a phone-wall tile, or a 1x1 cell) gives the badge less room
+   beside the corner monogram: smaller type and tighter padding. */
+.grid[data-device="phone"] .badge,
+.cell[data-column-span="1"][data-row-span="1"] .badge {
+  padding: 1px 6px;
+  font-size: var(--text-10);
+}
+
 .tile:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
@@ -212,6 +249,8 @@
 /* ── Phone: 3 columns, rows as tall as a column is wide ── */
 
 @media (--lg) {
+  /* The `.grid[data-device="phone"]` block after this media block mirrors
+     these rules for the admin preview: change both together. */
   .grid {
     --wall-gap: 8px;
     /* One name line on phone, so the caption needs less room. */
@@ -252,6 +291,43 @@
   .kind {
     font-size: var(--text-11);
   }
+}
+
+/* A grid forced to phone (the admin preview, `data-device="phone"`) draws
+   the phone rows whatever the viewport: the same declarations as the
+   `@media (--lg)` block above. The public wall never sets it. */
+.grid[data-device="phone"] {
+  --wall-gap: 8px;
+  --wall-caption-reserve: 56px;
+  grid-auto-rows: clamp(92px, calc((100cqi - 2 * var(--wall-gap)) / 3), 160px);
+  gap: var(--wall-gap);
+}
+
+.grid[data-device="phone"] .tile,
+.grid[data-device="phone"] .tile:focus-visible,
+.grid[data-device="phone"] .skeletonTile {
+  border-radius: var(--radius-16);
+}
+
+.grid[data-device="phone"] .caption {
+  padding: 10px;
+}
+
+.grid[data-device="phone"] .name {
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-wrap: normal;
+  font-size: var(--text-13);
+}
+
+.grid[data-device="phone"] .kind {
+  font-size: var(--text-11);
+}
+
+/* The desktop hover growth stays off in a phone-drawn grid. */
+.grid[data-device="phone"] .tile:hover {
+  transform: none;
 }
 
 /* Local copy of the shared keyframe (src/styles/tokens/effects.css): a global

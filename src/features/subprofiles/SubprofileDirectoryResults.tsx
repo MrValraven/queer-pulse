@@ -1,17 +1,9 @@
 import { FiLayers, FiAlertTriangle } from "react-icons/fi";
-import {
-  EmptyState,
-  LoadMoreButton,
-  LoadMoreStatus,
-  Reveal,
-  SuccessPanel,
-} from "../../shared/components/ui";
-import { RollingNumber } from "../../shared/components/ui/RollingNumber";
-import { useFormat } from "../../shared/i18n/format";
-import { Translation } from "../../shared/i18n/Translation";
+import { EmptyState, Reveal, SuccessPanel } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SubprofilePortraitCard } from "./SubprofilePortraitCard";
-import { SubprofilePortraitCardSkeleton } from "./SubprofilePortraitCardSkeleton";
+import { SubprofileDirectoryLoadingGrid } from "./SubprofileDirectoryLoadingGrid";
+import { SubprofileDirectoryPager } from "./SubprofileDirectoryPager";
 import { toPortraitCardView } from "./api/directoryCard.adapters";
 import type { SubprofileDirectoryFilters } from "./useSubprofileDirectoryFilters";
 import styles from "./SubprofileDirectoryPage.module.css";
@@ -34,7 +26,6 @@ export function SubprofileDirectoryResults({
   hasNothingLoadedError: boolean;
 }) {
   const { t } = useTranslation();
-  const fmt = useFormat();
   const {
     isLoading,
     isFetchNextPageError,
@@ -47,7 +38,13 @@ export function SubprofileDirectoryResults({
     onClearFilters,
   } = directory;
 
-  if (isLoading) return <DirectoryLoadingGrid />;
+  if (isLoading) {
+    return (
+      <SubprofileDirectoryLoadingGrid
+        label={t("subprofiles:directory.loading")}
+      />
+    );
+  }
 
   if (hasNothingLoadedError) {
     // Distinct from the empty state: a failed fetch must not read as "no
@@ -100,79 +97,17 @@ export function SubprofileDirectoryResults({
           })}
         </div>
       )}
-      <div
-        className={
-          shownCards.length > 0
-            ? styles.pager
-            : `${styles.pager} ${styles.pagerBare}`
-        }
-      >
-        <span className={styles.pagerCount}>
-          {/* Show more and the filters move the shown figure; a new search
-              term moves the server total. */}
-          <Translation
-            i18nKey="subprofiles:directory.shownOfTotal"
-            values={{ shown: shownCards.length, total }}
-            slots={{
-              shown: (
-                <RollingNumber
-                  value={fmt.number(shownCards.length)}
-                  numericValue={shownCards.length}
-                />
-              ),
-              total: (
-                <RollingNumber value={fmt.number(total)} numericValue={total} />
-              ),
-            }}
-          />
-        </span>
-        {/* The failure line sits between the count and its Retry. */}
-        <LoadMoreStatus
-          className={styles.pagerStatus}
-          messageClassName={styles.pagerStatusMessage}
-          isFetchingNextPage={isFetchingMore}
-          isFetchNextPageError={hasMore && isFetchNextPageError}
-          errorMessage={t("subprofiles:directory.showMoreError")}
-        />
-        {hasMore && (
-          <LoadMoreButton
-            size="sm"
-            className={styles.pagerShowMore}
-            isFetchingNextPage={isFetchingMore}
-            isFetchNextPageError={isFetchNextPageError}
-            onLoadMore={onShowMore}
-            label={t("subprofiles:directory.showMore")}
-            loadingLabel={t("subprofiles:directory.showMoreLoading")}
-          />
-        )}
-      </div>
+      {/* Show more and the filters move the shown figure; a new search term
+          moves the server total. */}
+      <SubprofileDirectoryPager
+        shownCount={shownCards.length}
+        total={total}
+        hasMore={hasMore}
+        isFetchingMore={isFetchingMore}
+        isFetchNextPageError={isFetchNextPageError}
+        onShowMore={onShowMore}
+        isBare={shownCards.length === 0}
+      />
     </>
-  );
-}
-
-/** How many placeholder cards the loading grid renders: two rows of three
- *  on a wide results column, three rows of two on a phone. */
-const DIRECTORY_SKELETON_COUNT = 6;
-
-/**
- * Portrait-card skeletons shown while the standalone-persona set loads. They
- * render into the SAME `.grid` the real cards use and share the card's
- * container and surface, so the real data lands with no layout jump. The
- * skeletons are aria-hidden; this one `aria-busy` region carries the
- * announcement.
- */
-function DirectoryLoadingGrid() {
-  const { t } = useTranslation();
-  return (
-    <div
-      className={styles.grid}
-      role="status"
-      aria-busy="true"
-      aria-label={t("subprofiles:directory.loading")}
-    >
-      {Array.from({ length: DIRECTORY_SKELETON_COUNT }, (_, index) => (
-        <SubprofilePortraitCardSkeleton key={index} />
-      ))}
-    </div>
   );
 }

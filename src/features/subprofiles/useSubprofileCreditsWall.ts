@@ -6,11 +6,7 @@ import {
   selectWallTiles,
   type WallTileView,
 } from "./api/directoryCard.adapters";
-import {
-  DIRECTORY_PAGE_LIMIT,
-  useSubprofileDirectory,
-} from "./api/useSubprofileDirectory";
-import { DEFAULT_DIRECTORY_SORT } from "./subprofileDirectorySort";
+import { useSubprofileWall } from "./api/useSubprofileWall";
 import {
   WALL_LAYOUT_DESKTOP_NINE,
   WALL_LAYOUT_DESKTOP_SIX,
@@ -19,7 +15,7 @@ import {
   type WallLayout,
 } from "./subprofileCreditsWall.data";
 
-/** What the wall draws: skeleton tiles while the first page loads, the tiles
+/** What the wall draws: skeleton tiles while the wall loads, the tiles
  *  once it lands, or nothing (under three personas, or no data at all). */
 export type CreditsWallState =
   | { status: "loading"; layout: WallLayout }
@@ -34,11 +30,12 @@ interface LatchedWall {
 
 /** The most tiles any layout draws. The selection is latched at this size
  *  whatever the width, so a phone turned to landscape has its nine ready. */
-const MAX_WALL_TILES = WALL_LAYOUT_DESKTOP_NINE.spans.length;
+export const MAX_WALL_TILES = WALL_LAYOUT_DESKTOP_NINE.spans.length;
 
 /** The largest wall that the available personas fill as a full rectangle:
- *  nine on desktop, else six, else the three-tile wall. */
-function wallLayoutFor(tileCount: number, isPhone: boolean): WallLayout {
+ *  nine on desktop, else six, else the three-tile wall. The admin preview
+ *  draws its wall with this same choice. */
+export function wallLayoutFor(tileCount: number, isPhone: boolean): WallLayout {
   const sixTiles = isPhone ? WALL_LAYOUT_PHONE_SIX : WALL_LAYOUT_DESKTOP_SIX;
   if (!isPhone && tileCount >= WALL_LAYOUT_DESKTOP_NINE.spans.length) {
     return WALL_LAYOUT_DESKTOP_NINE;
@@ -48,27 +45,22 @@ function wallLayoutFor(tileCount: number, isPhone: boolean): WallLayout {
 }
 
 /**
- * The hero's wall of faces. It reads the directory's first page in the
- * page's default order with no filters (decision D4), so it shares that
- * cached request with the grid until the member refines it. Personas with a
- * picture come first.
+ * The hero's wall of faces. It reads the curated wall endpoint
+ * (`GET /subprofiles/wall`, or the demo persona wall store), and keeps the
+ * server's order as it comes: the admin's picks first, then the fill.
  *
- * The faces are chosen from page 1 only and LATCHED once three or more are
- * in: "Show more" appends pages to the same cache entry, and a refetch or a
- * follow patch rewrites it, and none of that should swap the faces under the
- * member's eye. Tiles carry no follow state, so a latched tile never goes
- * stale on screen. A demo or live switch chooses afresh.
+ * The faces are LATCHED once three or more are in: a refetch, or an admin
+ * reordering or changing the picks in another tab, rewrites the cached wall,
+ * and none of that should swap the faces under the member's eye. Tiles carry
+ * no follow state, so a latched tile never goes stale on screen. A demo or
+ * live switch chooses afresh.
  */
 export function useSubprofileCreditsWall(): CreditsWallState {
   const isPhone = useMediaQuery(mediaMax("lg"));
   const { demoMode } = useDemoMode();
-  const { cards, isLoading, isShowingPreviousResults } = useSubprofileDirectory(
-    {
-      sort: DEFAULT_DIRECTORY_SORT,
-    },
-  );
+  const { cards, isLoading, isShowingPreviousResults } = useSubprofileWall();
   const freshTiles = useMemo(
-    () => selectWallTiles(cards.slice(0, DIRECTORY_PAGE_LIMIT), MAX_WALL_TILES),
+    () => selectWallTiles(cards, MAX_WALL_TILES),
     [cards],
   );
 

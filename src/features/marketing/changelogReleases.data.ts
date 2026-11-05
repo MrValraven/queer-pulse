@@ -15,6 +15,10 @@ export const CHANGELOG_RELEASE_NOTES: Record<
   string,
   { highlights: string[]; pushes?: number }
 > = {
+  "5 Nov 2026": {
+    highlights: ["persona-directory-credits", "persona-wall-curation"],
+    pushes: 2,
+  },
   "4 Nov 2026": {
     highlights: [
       "host-event-choice-modal",

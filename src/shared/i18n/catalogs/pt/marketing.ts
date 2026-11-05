@@ -3540,7 +3540,7 @@ export const marketing: Catalog = {
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-11-05.headline":
-    "As personas ganham um diretório novo, e as Definições deixam de ter o seletor de tema do perfil.",
+    "As personas ganham um diretório renovado e um mural de caras escolhido pela equipa.",
   "changelog.releases.2026-11-04.headline":
     "Organizar um evento oferece o guia ou o formulário, e a página Eventos cabe no telemóvel.",
   "changelog.releases.2026-11-03.headline":
@@ -3838,6 +3838,14 @@ export const marketing: Catalog = {
   "changelog.entries.studio-always-dark.title": "O Studio fica sempre escuro",
   "changelog.entries.studio-always-dark.body":
     "Todas as páginas do Studio abrem agora em modo escuro, e o resto da QueerPulse mantém o tema que escolheste.",
+  "changelog.entries.persona-wall-curation.title":
+    "Vê no topo do diretório de pessoas as personas escolhidas pela nossa equipa",
+  "changelog.entries.persona-wall-curation.body":
+    "A nossa equipa escolhe as primeiras caras, e as restantes entram por recomendações, seguidores, novidade ou mistura diária.",
+  "changelog.entries.persona-following-grid.title":
+    "Vê as personas que segues em cartões de retrato",
+  "changelog.entries.persona-following-grid.body":
+    "Cada cartão diz desde quando segues, e deixar de seguir mantém o cartão no lugar para poderes desfazer.",
   "changelog.entries.persona-directory-credits.title":
     "Explora as personas num diretório renovado",
   "changelog.entries.persona-directory-credits.body":

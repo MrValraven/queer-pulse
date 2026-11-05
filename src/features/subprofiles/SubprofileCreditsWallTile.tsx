@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { WallTileView } from "./api/directoryCard.adapters";
@@ -12,6 +13,9 @@ import styles from "./SubprofileCreditsWall.module.css";
 interface SubprofileCreditsWallTileProps {
   tile: WallTileView;
   span: WallTileSpan;
+  /** A mark on the tile's top corner, opposite the monogram (the admin
+   *  preview's Picked or Filled). The public wall draws none. */
+  badge?: ReactNode;
 }
 
 /**
@@ -29,6 +33,7 @@ interface SubprofileCreditsWallTileProps {
 export function SubprofileCreditsWallTile({
   tile,
   span,
+  badge,
 }: SubprofileCreditsWallTileProps) {
   const { t } = useTranslation();
   const hasPhoto = tile.image !== null;
@@ -62,6 +67,7 @@ export function SubprofileCreditsWallTile({
         <span className={styles.name}>{tile.titleName}</span>
         <span className={styles.kind}>{t(tile.kindLabelKey)}</span>
       </span>
+      {badge ? <span className={styles.badge}>{badge}</span> : null}
     </Link>
   );
 }

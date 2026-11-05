@@ -239,14 +239,13 @@ export function toWallTileView(card: SubprofileCardDTO): WallTileView {
 }
 
 /**
- * The wall's tiles, `limit` of them (9 on desktop, 6 on a phone): the cards
- * with a picture first, in the order given, then the rest to fill the wall.
+ * The wall's tiles, at most `limit` of them, in the order given. The server
+ * (or the demo store) already ordered the wall: the admin's picks, then the
+ * fill with photos ahead of tints, so nothing here reorders.
  */
 export function selectWallTiles(
   cards: readonly SubprofileCardDTO[],
   limit: number,
 ): WallTileView[] {
-  const withImage = cards.filter((card) => pickDirectoryCardImage(card));
-  const withoutImage = cards.filter((card) => !pickDirectoryCardImage(card));
-  return [...withImage, ...withoutImage].slice(0, limit).map(toWallTileView);
+  return cards.slice(0, limit).map(toWallTileView);
 }

@@ -5,6 +5,10 @@ import { patchStudioArtistFollow } from "../../studio/api/useStudioArtist";
 import { studioKeys } from "../../studio/api/studioQueryKeys";
 import type { PublicSubprofileOutcome } from "./usePublicSubprofile";
 import { patchDirectoryCardFollow } from "./directoryCardCache";
+import {
+  FOLLOWED_PERSONAS_QUERY_KEY_PREFIX,
+  patchFollowedPersonaFollow,
+} from "./followedPersonasCache";
 
 /** Result shape shared by the follow and unfollow endpoints. */
 export interface FollowResult {
@@ -33,9 +37,9 @@ export interface UnfollowVariables {
  * invalidate-triggered refetch below). Unlike endorsements, followers are
  * never listed (count-only, anonymity-preserving), so there is no separate
  * "followers" query to invalidate. The result is patched into the persona
- * public query, the Studio artist caches and every cached directory page
- * (portrait cards and hero wall); only the followed-personas lists are
- * invalidated.
+ * public query, the Studio artist caches, every cached directory page
+ * (portrait cards and hero wall) and every cached followed-personas page;
+ * the followed-personas lists are then marked stale without a refetch.
  */
 export function useFollow(subprofileId: string) {
   const { demoMode } = useDemoMode();
@@ -76,11 +80,15 @@ export function useFollow(subprofileId: string) {
     void queryClient.invalidateQueries({
       queryKey: studioKeys.followedArtists(demoMode),
     });
-    // The "personas you follow" list gains or loses this row. Its cached
-    // pages stay fresh for the default staleTime, so a toggle made here would
-    // otherwise leave the old list showing when the member goes back to it.
+    // The "You follow" tab flips this card in place and keeps it on the grid,
+    // so a mis-tapped unfollow is one tap to undo. Its pages are then marked
+    // stale WITHOUT a refetch: refetching here would pull the unfollowed card
+    // out from under the tap. The next mount of the list refetches, which
+    // drops the row for good and picks up a follow made on another surface.
+    patchFollowedPersonaFollow(queryClient, subprofileId, result);
     void queryClient.invalidateQueries({
-      queryKey: ["subprofile", "following"],
+      queryKey: FOLLOWED_PERSONAS_QUERY_KEY_PREFIX,
+      refetchType: "none",
     });
   };
 

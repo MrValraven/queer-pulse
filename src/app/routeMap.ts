@@ -194,6 +194,10 @@ export const routes = {
   /** One draft's read-only preview (`adminCreatorDraftPath`). Each open writes
    *  a `creator_draft_viewed` Platform log row. */
   adminCreatorDraft: "/admin/creator-drafts/:kind/:id",
+  /** The Directory wall console: which personas fill the People Directory
+   *  hero wall. Admin only through the blanket `/admin/*` gate
+   *  (`AdminPersonaWallController` is `@Roles(Admin)` alone). */
+  adminPersonaWall: "/admin/personas/wall",
   adminPartnerApplications: "/admin/partner-applications",
   adminSettings: "/admin/settings",
   adminReports: "/admin/reports",

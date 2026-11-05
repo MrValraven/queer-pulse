@@ -106,17 +106,10 @@ export const subprofiles: Catalog = {
   "following.empty.cta": "Browse personas",
   "following.countLine_one": "Following {count} persona",
   "following.countLine_other": "Following {count} personas",
-  "following.previousPage": "Previous",
-  "following.nextPage": "Next",
-  "following.unfollow": "Unfollow",
-  "following.unfollowing": "Unfollowing…",
-  "following.unfollowLabel": "Unfollow {name}",
-  "following.unfollowedToast": "You no longer follow {name}.",
-  "following.unfollowError": "We couldn't unfollow that one. Try again.",
-  "following.followerCount_one": "1 follower",
-  "following.followerCount_other": "{count} followers",
+  // The note on each card, "Following since Mar 2026"; `since` is its
+  // shorter wording on a compact phone card.
+  "following.cardSince": "Following since {date}",
   "following.since": "Since {date}",
-  "following.noAddress": "No public page right now",
 
   // Forwarded-from-an-old-handle note on `/p/:handle` (PRD-204). Its own keys
   // rather than the `members:profile.moved.*` set, for two reasons: that

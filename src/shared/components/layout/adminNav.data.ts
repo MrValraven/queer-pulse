@@ -428,6 +428,15 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         isAdminOnly: true,
       },
       {
+        // The Directory wall console. `AdminPersonaWallController` is
+        // `@Roles(Admin)` with an empty `@StaffRoles()`, so no grant reaches
+        // it: hence `isAdminOnly` and no `capabilities`.
+        labelKey: "admin:personaWall.navLabel",
+        to: routes.adminPersonaWall,
+        icon: FiLayout,
+        isAdminOnly: true,
+      },
+      {
         labelKey: "shared:adminNav.items.housingListings",
         to: routes.adminHousingListings,
         capabilities: ["housing_moderator"],
