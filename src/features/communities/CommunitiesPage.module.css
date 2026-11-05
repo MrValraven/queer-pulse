@@ -223,7 +223,23 @@
 }
 
 .featured {
-  margin-bottom: 20px;
+  margin-bottom: var(--gap-lg);
+  /* FeaturedCommunityCard stacks on this box's width, which the filters
+     sidebar narrows independently of the viewport. */
+  container: featured-community / inline-size;
+}
+
+/* A section heading inside the filter layout's results column ("Suggested
+   for you", "More communities"). The shared SectionHead title is display
+   size, as large as the page h1; here it steps down to the featured card's
+   32px serif scale, 26px on a phone. */
+.compactSectionHead h2 {
+  font-size: var(--text-32);
+}
+@media (--mobile) {
+  .compactSectionHead h2 {
+    font-size: var(--text-26);
+  }
 }
 
 /* "More communities" over the browse grid, shown only while the suggested
@@ -464,6 +480,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap;
   font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--jade);
@@ -545,8 +562,12 @@
   margin-left: 0;
 }
 
+/* Wraps so a narrow card (the results column beside the filters sidebar
+   holds 290px cards at 1280) drops the action pill under the meta line,
+   which then keeps each phrase whole. */
 .foot {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
@@ -729,4 +750,32 @@
 }
 :global([data-theme="dark"]) .chipCount {
   background: rgba(var(--cream-rgb), 0.1);
+}
+
+/* The card grid inside the filter layout's results column (`CommunitiesGrid`),
+   the members directory's track: as many 280px-or-wider columns as the column
+   holds, so it reads 1 → 2 → 3 as the sidebar shows or hides and the
+   viewport grows. The min() keeps a single track inside a phone narrower than
+   280px. Rows stay as tall as the tallest card, as in `.grid`. */
+.gridInLayout {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+  gap: 20px;
+  grid-auto-rows: 1fr;
+}
+.gridInLayout > * {
+  min-width: 0;
+  height: 100%;
+}
+
+/* The tags search box inside the sidebar's "Tags" section, spaced off the
+   chips under it. */
+.tagsSectionSearch {
+  margin-bottom: 10px;
+}
+
+/* Holds the sort select in the results top row so it can fade out and back
+   in with the Filters button (`CommunitiesFilterLayout`). */
+.sortSlot {
+  display: inline-flex;
 }

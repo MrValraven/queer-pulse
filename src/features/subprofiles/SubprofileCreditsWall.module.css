@@ -1,0 +1,266 @@
+/* The hero's wall of faces: a bento grid of persona tiles on the plum band.
+   The band is --plum in both themes, so every colour here is a fixed one:
+   tint type is the persona's own --accent-on (ACCENT_TOKENS, non-flipping),
+   scrim type is --cream-rgb, and the scrim is built on --plum-deep. */
+
+.wall {
+  container: credits-wall / inline-size;
+  min-width: 0;
+}
+
+.grid {
+  /* Room the caption can take at the foot of a tile (padding plus a two-line
+     name plus the craft line); the corner monogram stays above it. */
+  --wall-caption-reserve: 72px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: 118px;
+  grid-auto-flow: dense;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.grid[data-columns="3"] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.cell {
+  min-width: 0;
+}
+
+.cell[data-column-span="2"] {
+  grid-column: span 2;
+}
+
+.cell[data-row-span="2"] {
+  grid-row: span 2;
+}
+
+/* ── Tile ── */
+
+.tile {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-18);
+  /* Set inline per tile by accentStyle(): ink on amber, cream on plum. */
+  color: var(--accent-on);
+  text-decoration: none;
+  /* A cream hairline keeps a plum-tinted tile legible on the plum band. */
+  box-shadow: var(--ring-cream-hairline);
+  transition: transform var(--dur-slow) var(--ease-out);
+  touch-action: manipulation;
+}
+
+/* The art needs a box with a definite width and height: it is a size
+   container and would collapse inside a shrink-to-fit parent. */
+.artBox {
+  position: absolute;
+  inset: 0;
+}
+
+/* artBox is a size container too, so the corner monogram can read the tile's
+   height (cqb: the art itself only contains its inline size). */
+.artBox {
+  container-type: size;
+}
+
+.art {
+  --portrait-art-ratio: auto;
+  /* The corner letter is 56% of the tile width, but never taller than the
+     room above the caption (tile height, minus the 8px top offset, minus the
+     caption's reserve), so on a short strip it can't drop behind the name. */
+  --portrait-art-monogram-size: min(
+    56cqi,
+    max(24px, calc(100cqb - 8px - var(--wall-caption-reserve)))
+  );
+}
+
+/* A plum tile is the band's own colour: lift it with 8% cream. The cream
+   hairline on .tile stays. */
+.tile[data-plum-tint="true"] .art {
+  background: color-mix(in srgb, rgb(var(--cream-rgb)) 8%, var(--accent-tint));
+}
+
+.caption {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 12px;
+  line-height: 1.2;
+}
+
+/* The scrim, on photo tiles and on the tints listed in WALL_SCRIM_ACCENTS: a
+   band exactly behind the caption, so the type sits on the same ground
+   whatever the tile's size or picture, feathered into the art over a fixed
+   24px. Photo: 74% plum-deep (cream on it over a white photo is 6.7:1). Tint:
+   the tile's own tint at 55% over plum-deep, opaque, so it reads as a deeper
+   shade of the tile (cream on it: coral 5.84, jade 7.23, violet 7.09 to 8.71;
+   the 12px craft line at 85% opacity stays above 4.7:1). */
+.tile[data-scrim] {
+  --wall-scrim: color-mix(in srgb, var(--plum-deep) 74%, transparent);
+  color: rgba(var(--cream-rgb), 1);
+}
+
+.tile[data-scrim="tint"] {
+  --wall-scrim: color-mix(in srgb, var(--accent-tint) 55%, var(--plum-deep));
+}
+
+.tile[data-scrim] .caption {
+  background: var(--wall-scrim);
+}
+
+.tile[data-scrim] .caption::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 100%;
+  height: 24px;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    var(--wall-scrim),
+    color-mix(in srgb, var(--wall-scrim) 0%, transparent)
+  );
+}
+
+.name {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow-wrap: anywhere;
+  font-size: var(--text-14);
+  font-weight: 600;
+}
+
+.kind {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: var(--text-12);
+  opacity: 0.85;
+}
+
+.tile:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-18);
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .tile:hover {
+    z-index: 1;
+    transform: scale(1.03);
+  }
+}
+
+/* The in-app "Reduce motion" setting turns the hover growth off too. */
+:global(html[data-reduce-motion="true"]) .tile:hover {
+  transform: none;
+}
+
+/* A narrow desktop wall (760px to about 1100px): smaller type so names fit
+   the slimmer columns. */
+@container credits-wall (max-width: 440px) {
+  .grid[data-columns="4"] .caption {
+    padding: 10px;
+  }
+
+  .grid[data-columns="4"] .name {
+    font-size: var(--text-12-5);
+  }
+
+  .grid[data-columns="4"] .kind {
+    font-size: var(--text-11);
+  }
+}
+
+/* ── Skeleton ── */
+
+.skeletonTile {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-18);
+  background: linear-gradient(
+    90deg,
+    rgba(var(--cream-rgb), 0.05) 25%,
+    rgba(var(--cream-rgb), 0.1) 50%,
+    rgba(var(--cream-rgb), 0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: qpShimmer 1.5s ease infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeletonTile {
+    animation: none;
+  }
+}
+
+:global(html[data-reduce-motion="true"]) .skeletonTile {
+  animation: none;
+}
+
+/* ── Phone: 3 columns, rows as tall as a column is wide ── */
+
+@media (--lg) {
+  .grid {
+    --wall-gap: 8px;
+    /* One name line on phone, so the caption needs less room. */
+    --wall-caption-reserve: 56px;
+    /* Row height follows the column width (the wall's own width, minus the two
+       gaps, over three) so a small tile stays close to square at every phone
+       width. Floor 92px keeps the caption roomy on the narrowest wall; the
+       160px ceiling stops a tablet-width wall from growing into a tall block. */
+    grid-auto-rows: clamp(
+      92px,
+      calc((100cqi - 2 * var(--wall-gap)) / 3),
+      160px
+    );
+    gap: var(--wall-gap);
+  }
+
+  .tile,
+  .tile:focus-visible,
+  .skeletonTile {
+    border-radius: var(--radius-16);
+  }
+
+  .caption {
+    padding: 10px;
+  }
+
+  /* One line with an ellipsis, never a mid-word break (a single clipped line
+     also ellipsizes a long unbroken word, which -webkit-line-clamp does not).
+     The full name is still the link's text, so it stays the accessible name. */
+  .name {
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-wrap: normal;
+    font-size: var(--text-13);
+  }
+
+  .kind {
+    font-size: var(--text-11);
+  }
+}
+
+/* Local copy of the shared keyframe (src/styles/tokens/effects.css): a global
+   keyframe can't be named from a CSS module. */
+@keyframes qpShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}

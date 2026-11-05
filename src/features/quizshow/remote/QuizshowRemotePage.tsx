@@ -34,9 +34,11 @@ import {
 import { useQuizshowEventSession } from "../screen/useQuizshowEventSession";
 import type { QuizshowCue } from "../sound/quizshowCues";
 import { useQuizshowCues } from "../sound/useQuizshowCues";
+import { QuizshowBackdrop } from "../stage/QuizshowBackdrop";
 import { QuizshowConnectionBanner } from "../stage/QuizshowConnectionBanner";
 import { QuizshowCountdownBar } from "../stage/QuizshowCountdownBar";
 import { QuizshowPausedNote } from "../stage/QuizshowPausedNote";
+import { QuizshowTimerRing } from "../stage/QuizshowTimerRing";
 import { useQuizshowFramelessPage } from "../useQuizshowFramelessPage";
 import { QuizshowRemoteAnswerKey } from "./QuizshowRemoteAnswerKey";
 import {
@@ -101,7 +103,7 @@ function RemoteMessage({
   return (
     <div className={styles.message}>
       <h1 className={styles.messageTitle}>{t(messageKey)}</h1>
-      <Button to={backPath} variant="ghost">
+      <Button to={backPath} variant="stage-ghost">
         {t(backLabelKey)}
       </Button>
     </div>
@@ -127,6 +129,8 @@ function RemoteHeader({
   const isMuteBusy = isPending("host:setScreenMuted");
   const fade = { duration: reducedMotion ? 0 : 0.2 };
   const isPaused = cursor.status === "paused";
+  const isLobby = cursor.phase === "lobby";
+  const isTimed = standardLimitMsOf(cursor.phase, question) !== null;
   const metaKey = `${cursor.phaseId}:${answerCount === null ? "none" : "count"}`;
   // The polite line a screen reader hears on every phase change and on pause.
   const spokenPhase = [
@@ -146,93 +150,125 @@ function RemoteHeader({
   return (
     <header className={styles.header}>
       <div className={styles.headerRow}>
-        <AnimatePresence mode="wait" initial={false}>
-          <m.h1
-            key={cursor.phase}
-            className={styles.phase}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={fade}
-          >
-            {t(`quizshow:remote.phase.${cursor.phase}`)}
-          </m.h1>
-        </AnimatePresence>
-        <div className={styles.headerActions}>
-          <IconButton
-            aria-label={t("quizshow:remote.muteScreen")}
-            aria-pressed={isScreenMuted}
-            aria-disabled={isMuteBusy}
-            onClick={toggleScreenMute}
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              <m.span
-                key={isScreenMuted ? "muted" : "sounding"}
-                className={styles.iconSwap}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={fade}
-              >
-                {isScreenMuted ? (
-                  <FiVolumeX aria-hidden="true" fill="none" />
-                ) : (
-                  <FiVolume2 aria-hidden="true" fill="none" />
+        <div className={styles.headerText}>
+          <AnimatePresence mode="wait" initial={false}>
+            <m.h1
+              key={cursor.phase}
+              className={styles.phase}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={fade}
+            >
+              {t(`quizshow:remote.phase.${cursor.phase}`)}
+            </m.h1>
+          </AnimatePresence>
+          <AnimatePresence mode="wait" initial={false}>
+            <m.p
+              key={metaKey}
+              className={styles.meta}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={fade}
+            >
+              {/* Two lines are always reserved, so the header keeps one height in every phase. */}
+              <span className={styles.metaLine}>
+                {isLobby && <span>{session.quizTitle}</span>}
+                {!isLobby && round !== null && (
+                  <span>
+                    {t("quizshow:stage.roundOf", {
+                      number: round.roundIndex + 1,
+                      total: cursor.roundCount,
+                    })}
+                  </span>
                 )}
-              </m.span>
-            </AnimatePresence>
-          </IconButton>
-          <Button
-            variant="ghost"
-            size="md"
-            aria-expanded={isPlayersOpen}
-            aria-controls={PLAYERS_PANEL_ID}
-            onClick={onTogglePlayers}
-          >
-            <FiUsers aria-hidden="true" fill="none" />
-            {t("quizshow:live.players", { count: lobby.playerCount })}
-          </Button>
+                {!isLobby && round !== null && question !== null && (
+                  <span>
+                    {t("quizshow:stage.questionOf", {
+                      number: question.questionIndex + 1,
+                      total: round.questionCount,
+                    })}
+                  </span>
+                )}
+              </span>
+              <span className={styles.metaLine}>
+                {isLobby && (
+                  <span className={styles.joinCode}>
+                    {t("quizshow:live.code", { code: session.joinCode })}
+                  </span>
+                )}
+                {answerCount !== null && (
+                  <span className={styles.count}>
+                    {t(answerCountKeyOf(cursor.phase), answerCount)}
+                  </span>
+                )}
+              </span>
+            </m.p>
+          </AnimatePresence>
+        </div>
+        {/* The bar below is the countdown for assistive tech (one announcement
+            at 10 s and 5 s), so the ring stays out of the accessibility tree. */}
+        <div
+          className={styles.ringSlot}
+          aria-hidden="true"
+          data-is-idle={!isTimed}
+        >
+          <QuizshowTimerRing
+            cursor={cursor}
+            clockOffsetMs={controller.clockOffsetMs}
+            hasExtraTime={false}
+            size="phone"
+            standardLimitMs={standardLimitMsOf(cursor.phase, question)}
+          />
         </div>
       </div>
-      <AnimatePresence mode="wait" initial={false}>
-        <m.p
-          key={metaKey}
-          className={styles.meta}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={fade}
+      <div className={styles.headerActions}>
+        <IconButton
+          className={styles.iconGlass}
+          tone="dark"
+          aria-label={t("quizshow:remote.muteScreen")}
+          aria-pressed={isScreenMuted}
+          aria-disabled={isMuteBusy}
+          onClick={toggleScreenMute}
         >
-          {round !== null && (
-            <span>
-              {t("quizshow:stage.roundOf", {
-                number: round.roundIndex + 1,
-                total: cursor.roundCount,
-              })}
-            </span>
-          )}
-          {round !== null && question !== null && (
-            <span>
-              {t("quizshow:stage.questionOf", {
-                number: question.questionIndex + 1,
-                total: round.questionCount,
-              })}
-            </span>
-          )}
-          {answerCount !== null && (
-            <span className={styles.count}>
-              {t(answerCountKeyOf(cursor.phase), answerCount)}
-            </span>
-          )}
-        </m.p>
-      </AnimatePresence>
-      <QuizshowCountdownBar
-        cursor={cursor}
-        clockOffsetMs={controller.clockOffsetMs}
-        hasExtraTime={false}
-        size="phone"
-        standardLimitMs={standardLimitMsOf(cursor.phase, question)}
-      />
+          <AnimatePresence mode="wait" initial={false}>
+            <m.span
+              key={isScreenMuted ? "muted" : "sounding"}
+              className={styles.iconSwap}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={fade}
+            >
+              {isScreenMuted ? (
+                <FiVolumeX aria-hidden="true" fill="none" />
+              ) : (
+                <FiVolume2 aria-hidden="true" fill="none" />
+              )}
+            </m.span>
+          </AnimatePresence>
+        </IconButton>
+        <Button
+          variant="stage-ghost"
+          size="md"
+          aria-expanded={isPlayersOpen}
+          aria-controls={PLAYERS_PANEL_ID}
+          onClick={onTogglePlayers}
+        >
+          <FiUsers aria-hidden="true" fill="none" />
+          {t("quizshow:live.players", { count: lobby.playerCount })}
+        </Button>
+      </div>
+      <div className={styles.rail} data-is-idle={!isTimed}>
+        <QuizshowCountdownBar
+          cursor={cursor}
+          clockOffsetMs={controller.clockOffsetMs}
+          hasExtraTime={false}
+          size="phone"
+          standardLimitMs={standardLimitMsOf(cursor.phase, question)}
+        />
+      </div>
       <QuizshowPausedNote isPaused={isPaused} />
       <span role="status" className={styles.visuallyHidden}>
         {spokenPhase}
@@ -275,11 +311,13 @@ function RemoteConsole({
       />
       <div id={PLAYERS_PANEL_ID}>
         <Collapse isOpen={isPlayersOpen}>
-          <QuizshowRemotePlayers
-            controller={controller}
-            lobby={session.lobby}
-            playMode={session.playMode}
-          />
+          <div className={styles.drawer}>
+            <QuizshowRemotePlayers
+              controller={controller}
+              lobby={session.lobby}
+              playMode={session.playMode}
+            />
+          </div>
         </Collapse>
       </div>
       <QuizshowRemotePreview
@@ -308,7 +346,7 @@ function RemoteConsole({
         <QuizshowRemoteReview controller={controller} state={session} />
       </Collapse>
       <Collapse isOpen={phase === "ended"}>
-        <Button to={backPath} variant="ghost">
+        <Button to={backPath} variant="stage-ghost">
           {t(backLabelKey)}
         </Button>
       </Collapse>
@@ -400,7 +438,10 @@ export function QuizshowRemoteView({
       : undefined;
 
   return (
-    <div className={styles.page} style={pageStyle}>
+    <div className={styles.page} style={pageStyle} data-theme="dark">
+      <div className={styles.backdrop}>
+        <QuizshowBackdrop variant="phone" />
+      </div>
       <PageMeta title={t("quizshow:remote.metaTitle")} noIndex />
       <QuizshowConnectionBanner status={state.status} />
       <main

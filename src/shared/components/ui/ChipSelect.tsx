@@ -19,15 +19,17 @@ const PLAIN_CHIP = "button" as unknown as typeof m.button;
 export interface ChipOption {
   value: string;
   label?: ReactNode;
-  /** Availability count shown as a trailing badge (`ChipSelect` only). `0`
-   *  renders the chip dimmed and unpickable — unless it is already selected,
-   *  which must always stay clickable or a member could trap themselves in a
-   *  filter they cannot undo. */
+  /** Availability count shown as a trailing badge (`ChipSelect` and
+   *  `FilterChips`). `0` renders the chip dimmed and unpickable, unless it
+   *  is already selected, which must always stay clickable or a member could
+   *  trap themselves in a filter they cannot undo. */
   count?: number;
   /** Marks the chip dimmed and unpickable for a reason the caller knows and
    *  `count` cannot carry, such as a count rendered inside the label. Same
    *  rule as a zero `count`: a selected chip stays clickable whatever this
-   *  says (`ChipSelect` only). */
+   *  says. In `FilterChips` an explicit `false` also keeps a zero-count chip
+   *  pickable, which is what an "Any" or "All" chip passes: it only lifts a
+   *  filter, so it is never a dead end. */
   isUnavailable?: boolean;
   /** Accessible name for the chip. Required alongside `count`: the badge is
    *  `aria-hidden`, so without this a screen reader hears the bare label and
@@ -97,6 +99,10 @@ interface FilterChipsProps extends ChipGroupLabelling {
  * filter/segment pattern reimplemented across cinema, communities, marketing,
  * resources… `aria-pressed` reflects the active chip. No tick (single-select).
  * Inside a `RefinePanel` the chips glide when one changes width.
+ *
+ * An option may carry `count`, `isUnavailable` and `ariaLabel`, drawn and
+ * disabled the way `ChipSelect` does it. A row passing none of them renders
+ * exactly as it did before they existed.
  */
 export function FilterChips({
   options,
@@ -109,6 +115,7 @@ export function FilterChips({
   label,
   labelledBy,
 }: FilterChipsProps) {
+  const fmt = useFormat();
   const glide = useRefineGlide();
   const Row = glide.isGliding ? m.div : PLAIN_ROW;
   const Chip = glide.isGliding ? m.button : PLAIN_CHIP;
@@ -120,23 +127,41 @@ export function FilterChips({
       aria-labelledby={labelledBy}
       {...glide.row}
     >
-      {normalize(options).map((option) => (
-        <Chip
-          key={option.value}
-          type="button"
-          aria-pressed={value === option.value}
-          className={chipClass(
-            value === option.value,
-            tone,
-            tint,
-            size === "touch",
-          )}
-          onClick={() => onChange(option.value)}
-          {...glide.chip}
-        >
-          {option.label}
-        </Chip>
-      ))}
+      {normalize(options).map((option) => {
+        const isActive = value === option.value;
+        // Nobody is left under this chip. Never the active one, which is
+        // where the member already stands and would read as broken dimmed;
+        // an explicit `isUnavailable: false` ("Any", "All") wins over a zero.
+        const isUnavailable =
+          !isActive && (option.isUnavailable ?? option.count === 0);
+        return (
+          <Chip
+            key={option.value}
+            type="button"
+            aria-pressed={isActive}
+            aria-label={option.ariaLabel}
+            disabled={isUnavailable}
+            className={[
+              chipClass(isActive, tone, tint, size === "touch"),
+              isUnavailable && styles.chipEmpty,
+            ]
+              .filter(Boolean)
+              .join(" ")}
+            onClick={() => onChange(option.value)}
+            {...glide.chip}
+          >
+            {option.label}
+            {option.count !== undefined && (
+              <span className={styles.chipCount} aria-hidden>
+                <RollingNumber
+                  value={fmt.number(option.count)}
+                  numericValue={option.count}
+                />
+              </span>
+            )}
+          </Chip>
+        );
+      })}
     </Row>
   );
 }

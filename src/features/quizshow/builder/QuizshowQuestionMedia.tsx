@@ -22,7 +22,26 @@ interface QuizshowQuestionMediaProps {
   /** Hands the draft a preview of a fresh pick that outlives this field. */
   onPickedPreview?: (mediaRef: string, previewUrl: string) => void;
   onChange: (mediaRef: string | null, mediaUrl?: string | null) => void;
+  /**
+   * Additive. `field` (the default) is the labelled form field. `slide` draws
+   * the slot as a dashed glass zone on the studio's slide, its label kept for
+   * screen readers only. `chip` shows only the add button, for a slide with
+   * no picture yet.
+   */
+  variant?: QuizshowQuestionMediaVariant;
+  /** Additive. The slot's height in pixels; 160 when left out. */
+  slotHeight?: number;
+  /** Additive. The empty slot's caption; the upload field's own when left out. */
+  placeholder?: string;
 }
+
+export type QuizshowQuestionMediaVariant = "field" | "slide" | "chip";
+
+const VARIANT_CLASS_NAMES: Record<QuizshowQuestionMediaVariant, string> = {
+  field: "",
+  slide: styles.mediaSlide ?? "",
+  chip: styles.mediaChip ?? "",
+};
 
 /**
  * The question's picture, uploaded as an `event-cover`. A fresh upload the host
@@ -37,6 +56,9 @@ export function QuizshowQuestionMedia({
   pickedPreviewUrl = null,
   onPickedPreview,
   onChange,
+  variant = "field",
+  slotHeight = MEDIA_SLOT_HEIGHT,
+  placeholder,
 }: QuizshowQuestionMediaProps) {
   const { t } = useTranslation();
   const labelId = useId();
@@ -77,15 +99,35 @@ export function QuizshowQuestionMedia({
   const value = isPickedHere ? mediaRef : (pickedPreviewUrl ?? fallbackValue);
 
   return (
-    <div className={styles.mediaField} role="group" aria-labelledby={labelId}>
-      <span id={labelId} className={styles.groupLabel}>
+    <div
+      className={[styles.mediaField, VARIANT_CLASS_NAMES[variant]]
+        .filter(Boolean)
+        .join(" ")}
+      role="group"
+      aria-labelledby={labelId}
+    >
+      <span
+        id={labelId}
+        className={
+          variant === "field" ? styles.groupLabel : styles.mediaHiddenLabel
+        }
+      >
         {t("quizshow:questions.media.label")}
       </span>
       <ImageUploadField
         kind="event-cover"
         value={value}
-        size={MEDIA_SLOT_HEIGHT}
-        isPosterAware
+        size={slotHeight}
+        placeholder={placeholder}
+        className={variant === "field" ? undefined : styles.mediaUpload}
+        slotClassName={variant === "slide" ? styles.mediaSlideSlot : undefined}
+        buttonClassName={
+          variant === "field" ? undefined : styles.mediaSlideButton
+        }
+        isSlotHidden={variant === "chip"}
+        // On the slide the slot keeps its height, so a poster never pushes
+        // the answers off the 720px canvas; the Big screen preview shows it whole.
+        isPosterAware={variant === "field"}
         onUploaded={track}
         onChange={(key) => {
           // Set at once: the preview callback can fire in the same tick and

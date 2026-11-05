@@ -304,11 +304,17 @@ export interface DirectoryFacetCounts {
   disciplines: Record<string, number>;
   professions: Record<string, number>;
   languages: Record<string, number>;
-  /** Per-focus-area count, each ASSUMING `isAmbassadorsOnly` is on: there is no
-   *  separate "how many ambassadors total" figure (mirrors the backend's
-   *  per-focus `ambassador` facet, Task B6). Every other filter group still
-   *  applies, same "lift my own group" contract as the rest of this type. */
+  /** Per-focus-area count, each ASSUMING `isAmbassadorsOnly` is on (mirrors
+   *  the backend's per-focus `ambassador` facet, Task B6). Every other filter
+   *  group still applies, same "lift my own group" contract as the rest of
+   *  this type. */
   ambassador: Record<AmbassadorFocusArea, number>;
+  /** The "Ambassadors" switch's own count: how many ambassadors turning it on
+   *  would show, with the switch and its focus areas lifted and every other
+   *  group applied. Each member counts once, so it stays a distinct total
+   *  even where the `ambassador` counts above overlap. Optional because an
+   *  older server sends no such field, and a missing count draws no number. */
+  ambassadorsOnly?: number;
 }
 
 /** Which `FilterState` key a counted group narrows — the key lifted when
@@ -423,6 +429,9 @@ export function directoryFacetCounts(
       (member) => member.languages,
     ),
     ambassador,
+    // The switch's total is that same population's size: one entry per
+    // member, so an ambassador is counted once whatever their focus area.
+    ambassadorsOnly: ambassadorPopulation.length,
   };
 }
 

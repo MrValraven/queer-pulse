@@ -1,0 +1,102 @@
+/* Overridable: a composing module sets --qs-glass-radius or --qs-glass-bg (--qs-pill-* for .pill) instead of relying on CSS order. Padding is the composing module's own. */
+/* Shared stage surfaces. Other modules reach these with
+   `composes: glass from "../stage/quizshowSurfaces.module.css"` (the path is
+   relative to the composing module). Every value is a --qs-* token, so the
+   light stage variant ([data-qs-theme="light"]) restyles all of them. */
+
+/* Frosted glass: a dark tint under a white wash, a hairline border, a lit top
+   edge and a soft drop shadow. */
+.glass {
+  box-sizing: border-box;
+  color: var(--qs-text);
+  background: var(
+    --qs-glass-bg,
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint)
+  );
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-glass-radius, var(--qs-radius-card));
+  box-shadow: var(--qs-shadow-glass);
+  -webkit-backdrop-filter: var(--qs-glass-blur);
+  backdrop-filter: var(--qs-glass-blur);
+}
+
+/* One step up: a brighter wash, a stronger edge and a deeper shadow, for the
+   piece the eye should land on (the join code card, a prompt card). */
+.glassRaised {
+  box-sizing: border-box;
+  color: var(--qs-text);
+  background: var(
+    --qs-glass-bg,
+    linear-gradient(
+      180deg,
+      var(--qs-glass-raised-top) 0%,
+      var(--qs-glass-raised-bottom) 100%
+    ),
+    var(--qs-glass-tint)
+  );
+  border: 1px solid var(--qs-glass-border-strong);
+  border-radius: var(--qs-glass-radius, var(--qs-radius-card));
+  box-shadow: var(--qs-shadow-lift);
+  -webkit-backdrop-filter: var(--qs-glass-blur);
+  backdrop-filter: var(--qs-glass-blur);
+}
+
+/* A glass pill for round and question meta. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  box-sizing: border-box;
+  padding: var(--qs-pill-padding, 0.4em 1em);
+  color: var(--qs-text);
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  background: var(
+    --qs-pill-bg,
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint)
+  );
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-pill-radius, var(--qs-radius-pill));
+  box-shadow: var(--qs-shadow-pill);
+  -webkit-backdrop-filter: var(--qs-glass-blur);
+  backdrop-filter: var(--qs-glass-blur);
+}
+
+/* The emphasis italic: coral to pink to lilac. For large type only (24px and
+   up); see the contrast note in tokens/quizshowStage.css. */
+.gradientText {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--qs-text);
+  background-image: var(--qs-em-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* An italic overhangs its box; padding keeps the clip from shaving the
+     last letter. */
+  padding-inline: 0.06em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+@media (forced-colors: active) {
+  .gradientText {
+    background-image: none;
+    -webkit-text-fill-color: currentcolor;
+    color: CanvasText;
+  }
+}

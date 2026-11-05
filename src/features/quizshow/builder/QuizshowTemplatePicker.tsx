@@ -3,7 +3,6 @@ import { AnimatePresence, m } from "motion/react";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import {
   Button,
-  CollapseListItem,
   LoadErrorState,
   Modal,
   SkeletonLine,
@@ -13,6 +12,8 @@ import type { QuizshowTemplateCard } from "../../../shared/contracts/quizshow";
 import { useQuizshowTemplateCards } from "../api/useQuizshowTemplates";
 import { quizshowTemplateErrorKeyOf } from "../templates/quizshowTemplateErrors";
 import { templateCardTitleOf } from "../templates/quizshowTemplateResponse";
+import { QuizshowGameCover } from "../games/QuizshowGameCover";
+import { useQuizshowDarkDialog } from "./useQuizshowDarkDialog";
 import styles from "./QuizshowImport.module.css";
 
 const FADE_EASE = [0.22, 0.68, 0.16, 1] as const;
@@ -43,7 +44,25 @@ export function QuizshowPickerFade({
   );
 }
 
-export function QuizshowPickerSkeleton() {
+/** Placeholder rows for a picker's list, or cover-shaped cards for the template gallery. */
+export function QuizshowPickerSkeleton({
+  layout = "list",
+}: {
+  layout?: "list" | "gallery";
+}) {
+  if (layout === "gallery") {
+    return (
+      <div aria-hidden className={styles.gallery}>
+        {SKELETON_ROW_KEYS.map((cardKey) => (
+          <SkeletonLine
+            key={cardKey}
+            height="auto"
+            style={{ aspectRatio: "4 / 3", borderRadius: "var(--radius-20)" }}
+          />
+        ))}
+      </div>
+    );
+  }
   return (
     <div aria-hidden>
       {SKELETON_ROW_KEYS.map((rowKey) => (
@@ -71,7 +90,7 @@ type TemplatePickerBodyProps = Omit<
   "isOpen" | "onClose"
 >;
 
-function TemplateRow({
+function TemplateCard({
   card,
   isBlocked,
   onPick,
@@ -82,19 +101,18 @@ function TemplateRow({
 }) {
   const { t, language } = useTranslation();
   const adultsTagId = useId();
+  const title = templateCardTitleOf(card.title, language);
   return (
-    <div className={styles.row}>
-      <div className={styles.rowText}>
-        <h3 className={styles.rowTitle}>
-          {templateCardTitleOf(card.title, language)}
-        </h3>
-        <p className={styles.rowMeta}>
+    <li className={styles.galleryItem} aria-label={title}>
+      <QuizshowGameCover
+        title={title}
+        roundCount={card.roundCount}
+        questionCount={card.questionCount}
+        isAdultsOnly={card.hasAdultsRounds}
+      />
+      <div className={styles.galleryBody}>
+        <p className={styles.galleryDescription}>
           {templateCardTitleOf(card.description, language)}
-        </p>
-        <p className={styles.rowMeta}>
-          {t("quizshow:packs.rounds", { count: card.roundCount })}
-          {", "}
-          {t("quizshow:packs.questions", { count: card.questionCount })}
         </p>
         {card.hasAdultsRounds && (
           <ul className={styles.tags}>
@@ -106,18 +124,22 @@ function TemplateRow({
             </li>
           </ul>
         )}
+        <Button
+          variant="stage-ghost"
+          size="md"
+          className={styles.galleryAction}
+          aria-disabled={isBlocked}
+          aria-describedby={isBlocked ? adultsTagId : undefined}
+          onClick={() => {
+            if (!isBlocked) onPick(card);
+          }}
+        >
+          {t("quizshow:templates.use")}
+          {/* The button names its template, since the gallery repeats it. */}
+          <span className="visuallyHidden">{`, ${title}`}</span>
+        </Button>
       </div>
-      <Button
-        size="md"
-        aria-disabled={isBlocked}
-        aria-describedby={isBlocked ? adultsTagId : undefined}
-        onClick={() => {
-          if (!isBlocked) onPick(card);
-        }}
-      >
-        {t("quizshow:templates.use")}
-      </Button>
-    </div>
+    </li>
   );
 }
 
@@ -143,7 +165,7 @@ function TemplatePickerBody({
   if (!templateCards.data) {
     return (
       <QuizshowPickerFade stateKey="loading">
-        <QuizshowPickerSkeleton />
+        <QuizshowPickerSkeleton layout="gallery" />
       </QuizshowPickerFade>
     );
   }
@@ -156,18 +178,15 @@ function TemplatePickerBody({
   }
   return (
     <QuizshowPickerFade stateKey="list">
-      <ul className={styles.list}>
-        <AnimatePresence initial={false}>
-          {templateCards.data.items.map((card) => (
-            <CollapseListItem key={card.id}>
-              <TemplateRow
-                card={card}
-                isBlocked={card.hasAdultsRounds && !isAdultsAllowed}
-                onPick={onPick}
-              />
-            </CollapseListItem>
-          ))}
-        </AnimatePresence>
+      <ul className={styles.gallery}>
+        {templateCards.data.items.map((card) => (
+          <TemplateCard
+            key={card.id}
+            card={card}
+            isBlocked={card.hasAdultsRounds && !isAdultsAllowed}
+            onPick={onPick}
+          />
+        ))}
       </ul>
     </QuizshowPickerFade>
   );
@@ -180,6 +199,7 @@ export function QuizshowTemplatePicker({
   onPick,
 }: QuizshowTemplatePickerProps) {
   const { t } = useTranslation();
+  const darkDialogRef = useQuizshowDarkDialog();
   return (
     <AnimatePresence>
       {isOpen && (
@@ -188,7 +208,10 @@ export function QuizshowTemplatePicker({
           title={t("quizshow:templates.title")}
           sub={t("quizshow:templates.sub")}
           onClose={onClose}
+          wide
+          className={styles.dialog}
         >
+          <div ref={darkDialogRef} />
           <TemplatePickerBody
             isAdultsAllowed={isAdultsAllowed}
             onPick={onPick}

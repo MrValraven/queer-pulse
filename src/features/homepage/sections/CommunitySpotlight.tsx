@@ -253,7 +253,9 @@ function FullSpotlight({ community: d }: { community: FullCommunity }) {
           <div className={styles.roster}>
             <RosterFaces faces={d.faces} more={d.facesMore} />
             <span className={styles.count}>
-              <b>{d.count}</b>
+              <b>
+                {t("communities:common.count.members", { count: d.members })}
+              </b>
               <br />
               {d.growth}
             </span>

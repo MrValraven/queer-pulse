@@ -2,7 +2,6 @@ import { existsSync, readFileSync } from "node:fs";
 import { beforeAll, describe, expect, it } from "vitest";
 import { loadNamespace } from "../../../shared/i18n/catalogs";
 import type { Catalog } from "../../../shared/i18n/types";
-import type { Theme } from "../../../app/providers/themeContext";
 import {
   SPOTIFY_ROYALTY_SOURCE_URL,
   STUDIO_LANDING_ARTIST_SHOTS,
@@ -23,7 +22,6 @@ import {
 } from "./studioLanding.data";
 
 const DATA_FILE_PATH = "src/features/studio/landing/studioLanding.data.ts";
-const THEMES: readonly Theme[] = ["light", "dark"];
 const BANNED_COPY_PATTERN =
   /[\u2013\u2014]|, not |\bgathering\b|\broom\b|a real person|€|\d+%/;
 
@@ -108,18 +106,18 @@ describe("studioLanding.data", () => {
     }
   });
 
-  it("builds the themed webp path for a shot", () => {
+  it("builds the dark webp path for a shot", () => {
     const homeScreen = STUDIO_LANDING_SCREENS.find(
       (screen) => screen.screenId === "home",
     );
     expect(homeScreen).toBeDefined();
     if (!homeScreen) return;
-    expect(studioLandingShotSrc(homeScreen.shot, "dark")).toBe(
+    expect(studioLandingShotSrc(homeScreen.shot)).toBe(
       "/studio-landing/home-desktop-dark.webp",
     );
-    expect(
-      studioLandingShotSrc(STUDIO_LANDING_ARTIST_SHOTS.phone, "light"),
-    ).toBe("/studio-landing/dashboard-phone-light.webp");
+    expect(studioLandingShotSrc(STUDIO_LANDING_ARTIST_SHOTS.phone)).toBe(
+      "/studio-landing/dashboard-phone-dark.webp",
+    );
   });
 
   it("gives every screen a phone shot at the phone size", () => {
@@ -134,12 +132,10 @@ describe("studioLanding.data", () => {
     expect(STUDIO_LANDING_ARTIST_SHOTS.phone.device).toBe("phone");
   });
 
-  it("has an image file for every shot in both themes, the artist shots included", () => {
+  it("has a dark image file for every shot, the artist shots included", () => {
     for (const shot of ALL_SHOTS) {
-      for (const theme of THEMES) {
-        const imagePath = `public${studioLandingShotSrc(shot, theme)}`;
-        expect(existsSync(imagePath), imagePath).toBe(true);
-      }
+      const imagePath = `public${studioLandingShotSrc(shot)}`;
+      expect(existsSync(imagePath), imagePath).toBe(true);
     }
   });
 

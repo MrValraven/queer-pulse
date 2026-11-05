@@ -20,11 +20,9 @@ import {
 import { DIRECTORY_PLACES } from "./directoryPlaces";
 import { ADULT_ONLINE_DIRECTORY_PLACES } from "./directoryOnlinePlaces.data";
 import { isSellingOnline } from "./listBusiness/listingOnline.data";
+import { LISTING_OWNED_BY } from "./listBusiness/listingOwnedBy.data";
 import { CONSTELLATION_LIMIT } from "./onlineConstellation";
-import {
-  ACCESSIBILITY_QUESTION_SLUGS,
-  type AccessibilitySlug,
-} from "./listBusiness/listingAccessibility.data";
+import { ACCESSIBILITY_QUESTION_SLUGS } from "./listBusiness/listingAccessibility.data";
 
 /** The demo Online tab's pool: online-only listings and places that also
  *  sell online. The 18+ fixture sits outside `DIRECTORY_PLACES`. */
@@ -167,17 +165,17 @@ describe("LocalFilterFields, online scope", () => {
     onToggleCategory: noop,
     onClearCategories: noop,
     categoryCounts: { all: 0 },
-    // An incomplete loaded set keeps every chip pickable whatever the counts
-    // say, and each count above zero would keep a chip pickable on its own.
+    // Each count above zero keeps a chip pickable, and a category with no
+    // count is not known yet, which keeps it pickable too.
     chipCounts: {
       openNow: 1,
       safe: 1,
       access: Object.fromEntries(
         ACCESSIBILITY_QUESTION_SLUGS.map((slug) => [slug, 1]),
-      ) as Record<AccessibilitySlug, number>,
+      ),
+      owned: Object.fromEntries(LISTING_OWNED_BY.map((value) => [value, 1])),
       listingFacts: countListingFactChips(() => 1, NO_LISTING_FACT_FILTERS, []),
     },
-    isLoadedSetComplete: false,
     query: "",
     onQueryChange: noop,
     listingFacts: NO_LISTING_FACT_FILTERS,

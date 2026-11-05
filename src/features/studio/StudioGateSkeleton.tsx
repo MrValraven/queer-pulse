@@ -1,3 +1,4 @@
+import { useForcedTheme } from "../../app/providers/themeContext";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { StudioCardGridSkeleton, StudioLine } from "./StudioSkeletons";
 import styles from "./studio.module.css";
@@ -5,8 +6,11 @@ import sk from "./studioSkeleton.module.css";
 
 /** Held while GET /studio/me answers, so a granted member never sees the
  *  coming-soon teaser flash before their Studio appears. Paints the whole
- *  shell (rail, topbar, phone tab bar) so the real one lands without a jump. */
+ *  shell (rail, topbar, phone tab bar) so the real one lands without a jump.
+ *  While the grant is read it is the only Studio element on screen (it sits
+ *  outside StudioErrorBoundary), so it holds Studio's dark theme too. */
 export function StudioGateSkeleton() {
+  useForcedTheme("dark");
   const { t } = useTranslation();
   return (
     <div

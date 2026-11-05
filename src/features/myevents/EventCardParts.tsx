@@ -45,13 +45,13 @@ export function EventMeta({ ev, links }: { ev: MyEvent; links: boolean }) {
     myEventSpanNote(ev, fmt, t),
   );
   return (
-    <div className={sx("ev-meta")}>
+    // The dots between the parts are drawn by `.sep-list` in CSS, so a part
+    // that wraps onto a new line starts clean instead of under a stray dot.
+    <div className={sx("ev-meta sep-list")}>
       <span>{timeLabel}</span>
-      <span className={sx("dotsep")} />
       <span>{ev.venue}</span>
       {links && (
         <>
-          <span className={sx("dotsep")} />
           {isOnline(ev) ? (
             <JoinLinkButton ev={ev} className="meta-link" />
           ) : (
@@ -120,32 +120,29 @@ export function SoonBar({ ev }: { ev: MyEvent }) {
   return (
     <div className={sx("soon-bar")}>
       <span className={sx("live")} />
-      {lab}
-      <span className={sx("soon-sep")}>·</span>
-      <button
-        type="button"
-        className={sx("soon-link")}
-        onClick={() => toast(t("myevents:soon.checkedInToast"), "success")}
-      >
-        {t("myevents:soon.checkInCta")}
-      </button>
-      <span className={sx("soon-sep")}>·</span>
-      {isOnline(ev) ? (
-        <JoinLinkButton ev={ev} className="soon-link" />
-      ) : (
+      <div className={sx("soon-items sep-list")}>
+        <span>{lab}</span>
         <button
           type="button"
           className={sx("soon-link")}
-          onClick={() =>
-            toast(t("myevents:card.directionsToast", { venue: ev.venue }))
-          }
+          onClick={() => toast(t("myevents:soon.checkedInToast"), "success")}
         >
-          {t("myevents:card.directionsCta")}
+          {t("myevents:soon.checkInCta")}
         </button>
-      )}
-      {ev.ticket && (
-        <>
-          <span className={sx("soon-sep")}>·</span>
+        {isOnline(ev) ? (
+          <JoinLinkButton ev={ev} className="soon-link" />
+        ) : (
+          <button
+            type="button"
+            className={sx("soon-link")}
+            onClick={() =>
+              toast(t("myevents:card.directionsToast", { venue: ev.venue }))
+            }
+          >
+            {t("myevents:card.directionsCta")}
+          </button>
+        )}
+        {ev.ticket && (
           <button
             type="button"
             className={sx("soon-link")}
@@ -153,8 +150,8 @@ export function SoonBar({ ev }: { ev: MyEvent }) {
           >
             {t("myevents:soon.ticketCta")}
           </button>
-        </>
-      )}
+        )}
+      </div>
     </div>
   );
 }

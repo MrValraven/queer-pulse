@@ -155,7 +155,7 @@ export function QuizshowRemoteReview({
             </span>
           ) : (
             <Button
-              variant="soft"
+              variant="stage-ghost"
               size="md"
               aria-describedby={describedBy}
               aria-disabled={isFavouriteBusy}
@@ -175,7 +175,7 @@ export function QuizshowRemoteReview({
         </QuizshowRemoteFade>
         <QuizshowRemoteFade fadeKey={hideSlot}>
           <Button
-            variant="ghost"
+            variant="stage-ghost"
             size="md"
             aria-describedby={describedBy}
             aria-disabled={isHideBusy}

@@ -490,9 +490,19 @@
   gap: 48px;
   align-items: flex-start;
 }
+/* Stacked, the rail follows the main column's last section, which already
+   carries its own bottom margin. The grid's row gap on top of that left a
+   double-height hole before "Upcoming here", so the stacked rail takes the
+   same hairline and top padding as consecutive main-column sections instead
+   (see `.sec + .sec`), and the column reads as one even rhythm. */
 @media (--mobile) {
   .grid {
     grid-template-columns: 1fr;
+    row-gap: 0;
+  }
+  .side {
+    border-top: 1px solid rgba(var(--line-rgb), 0.07);
+    padding-top: 34px;
   }
 }
 /* Collapse once the body's own available width (the container, whatever the
@@ -503,6 +513,11 @@
 @container directorySpace (max-width: 760px) {
   .grid {
     grid-template-columns: 1fr;
+    row-gap: 0;
+  }
+  .side {
+    border-top: 1px solid rgba(var(--line-rgb), 0.07);
+    padding-top: 34px;
   }
 }
 /* A safety net for an empty rail. On a two-column page the visit card opens
@@ -2201,6 +2216,29 @@
   font-size: var(--text-13-5);
   line-height: 1.6;
   color: var(--ink-40);
+}
+/* The live badge panel has no bottom margin of its own (the legacy
+   `.trustBanner` it replaced did), so without this the grid's first card butts
+   into the panel's "Raise it with us" row at every width. */
+.trustGrid {
+  margin-top: 28px;
+}
+/* Stacked on a phone or tablet, the section's pieces need their own spacing.
+   The rail ends with the report links, which carry no bottom margin, so the
+   divider above the section gets the same air the main column's sections
+   leave (`.sec`). And the last vouch section drops its bottom margin so the
+   footnote sits with the vouches it qualifies. Element selectors reach into
+   the safety module's own markup, as `.sideFooter` does. */
+@media (--mobile) {
+  .trustSection {
+    margin-top: 40px;
+  }
+  .grid:has(> .side:empty) + .trustSection {
+    margin-top: 8px;
+  }
+  .trustGrid > div > section:last-child {
+    margin-bottom: 0;
+  }
 }
 .trustHowLink {
   color: var(--accent-ink);

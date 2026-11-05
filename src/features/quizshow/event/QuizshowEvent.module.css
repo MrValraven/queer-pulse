@@ -2,6 +2,35 @@
   margin-block: var(--gap-sm);
 }
 
+/* The results without a card of their own, inside a surface that already is
+   one (the studio's dark results panel). */
+.resultsFlat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  color: var(--ink);
+}
+
+/* Delete results in the studio panel: one quiet destructive style on the dark
+   stage, the same in both app themes: an outline in the stage's caution tone,
+   no fill and no glow, so it warns without being the loudest thing in the
+   panel. The doubled class outranks the shared button colours in every state. */
+.resultsDeleteInStudio.resultsDeleteInStudio,
+.resultsDeleteInStudio.resultsDeleteInStudio:hover:not(:disabled),
+.resultsDeleteInStudio.resultsDeleteInStudio:active:not(:disabled) {
+  background: transparent;
+  box-shadow: none;
+  color: var(--qs-low);
+  border-color: color-mix(in srgb, var(--qs-low) 55%, transparent);
+}
+
+@media (hover: hover) {
+  .resultsDeleteInStudio.resultsDeleteInStudio:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--qs-low) 12%, transparent);
+    border-color: var(--qs-low);
+  }
+}
+
 .banner,
 .results {
   display: flex;

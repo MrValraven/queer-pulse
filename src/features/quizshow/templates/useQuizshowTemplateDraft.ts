@@ -19,6 +19,12 @@ export interface QuizshowTemplateDraft {
   /** The save body's template part; null outside a template. */
   fieldsToSave: QuizshowTemplateFields | null;
   resetTo: (response: QuizshowQuizResponse | null) => void;
+  /**
+   * Additive. A save answered while the host kept typing: only the baseline
+   * moves to the saved card and notes, so the newer edits stay in the draft
+   * and the next save sends them.
+   */
+  rebaseTo: (response: QuizshowQuizResponse) => void;
 }
 
 const BLANK_FIELDS: QuizshowTemplateFields = {
@@ -102,6 +108,10 @@ export function useQuizshowTemplateDraft(options: {
     resetTo: (response) => {
       const resetFields = savedFieldsOf(response ?? data);
       setFieldsState({ draft: resetFields, baseline: resetFields });
+    },
+    rebaseTo: (response) => {
+      const rebasedFields = savedFieldsOf(response);
+      setFieldsState((current) => ({ ...current, baseline: rebasedFields }));
     },
   };
 }

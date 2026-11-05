@@ -4,26 +4,15 @@ import { formatDate } from "../../shared/lib/date";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { BEDROOM_OPTIONS, FILTERS } from "./housing.data";
 import type { HousingFilters } from "./housingFilters";
-
-/** The yes/no narrowings, paired with the label their chip carries. Same order
- * as the toggle row in `HousingFilterBar`, so a chip sits where its control
- * does. */
-const FLAG_FILTERS = [
-  ["billsIncluded", "economy:housing.filterBar.bills"],
-  ["furnished", "economy:housing.filterBar.furnished"],
-  ["petsWelcome", "economy:housing.filterBar.pets"],
-  ["hasAccessibilityInfo", "economy:housing.filterBar.accessibility"],
-  ["verifiedOnly", "economy:housing.filterBar.verified"],
-] as const;
+import { HOUSING_MUST_HAVE_OPTIONS } from "./housingFilterSections";
 
 /**
  * Everything currently narrowing the housing board, as removable chips.
  *
- * The price, area, bedroom, move-in and yes/no filters live behind the
- * "Refine" toggle, so this row is what keeps a shut drawer from hiding what is
- * applied. The type also gets a chip even though its own chip row stays on
- * screen: the pattern is that every narrowing is on this row, so "Clear all"
- * reads as dropping everything rather than everything-but-one.
+ * The filters sidebar folds its sections shut and can be hidden altogether,
+ * so this row is what keeps every applied filter in view above the results.
+ * Every narrowing gets a chip, the listing type included, so the row reads
+ * as the whole set of filters on the board.
  *
  * Each chip removes only its own filter, back to the neutral value the URL
  * drops. A neighbourhood carried in from a shared link may no longer be one
@@ -62,9 +51,9 @@ export function useHousingActiveFilters({
       });
     }
 
-    // The single free-text `area` predates the multi-select picker and is only
-    // reachable through a hand-written link, but it still narrows the board,
-    // so it still needs a way off.
+    // The single free-text `area` predates the neighbourhood checkboxes and is
+    // only reachable through a hand-written link, but it still narrows the
+    // board, so it still needs a way off.
     if (filters.area) {
       list.push({
         key: `areaText:${filters.area}`,
@@ -74,7 +63,7 @@ export function useHousingActiveFilters({
     }
 
     // One chip for the range, however many of its two ends are set: removing
-    // "€500 to €900" in two goes would read as two filters where the drawer
+    // "€500 to €900" in two goes would read as two filters where the sidebar
     // shows one.
     if (filters.priceMin !== undefined || filters.priceMax !== undefined) {
       const removePrice = () =>
@@ -149,7 +138,9 @@ export function useHousingActiveFilters({
       });
     }
 
-    for (const [key, labelKey] of FLAG_FILTERS) {
+    // Same order as the "Must have" checkbox rows, so a chip reads where its
+    // checkbox does.
+    for (const [key, labelKey] of HOUSING_MUST_HAVE_OPTIONS) {
       if (!filters[key]) continue;
       list.push({
         key,

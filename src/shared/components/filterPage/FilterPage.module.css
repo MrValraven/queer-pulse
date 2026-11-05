@@ -1,0 +1,651 @@
+/* The shared filter-page layout, lifted from the members directory
+   (`features/members`), which was its first consumer: a compact header over a
+   sticky 280px filters sidebar beside a results column, with the sidebar
+   folding into a bottom sheet on mobile. Every page built on
+   `shared/components/filterPage` reads these classes, so a change here lands
+   on all of them at once. */
+
+.page {
+  /* Wider than the site's default container so the 280px sidebar + a results
+     track roomy enough for THREE 280px cards (auto-fill minmax(280px)) fit on
+     large screens. Capped below ~1534px, where a 4th column would appear, so
+     the grid stays a calm 1 → 2 → 3 columns as the viewport grows. */
+  max-width: 1440px;
+  margin: 0 auto;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 28px 28px var(--section-y-80);
+}
+
+.head {
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
+  margin-bottom: 24px;
+}
+.eyebrow {
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-display);
+  color: var(--text-strong);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin-bottom: 14px;
+}
+.h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.lead {
+  font-size: var(--text-14-5);
+  color: var(--ink-60);
+  line-height: 1.6;
+  max-width: 54ch;
+}
+.lead b {
+  color: var(--text-strong);
+  font-weight: 600;
+}
+/* An optional status line under the lead (`FilterPageHeader`'s `note`). With
+   `isNoteLive` it leads with a small jade dot, the "this is live now" mark the
+   plum heroes used, recoloured to ink for the cream header. */
+.note {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+.noteDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--jade);
+  flex: none;
+}
+/* The header's action row (`actions`): buttons, pill tabs or a quiet stat
+   line, wrapping onto a second line on narrow screens. */
+.headActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+  margin-top: 18px;
+}
+/* A header carrying underline tabs (`tabs`): the bottom padding goes so the
+   tabs sit on the header's own hairline, which then reads as their track.
+   The -1px pulls the active tab's underline over that hairline. */
+.headWithTabs {
+  padding-bottom: 0;
+}
+.headTabs {
+  margin-top: 20px;
+  margin-bottom: -1px;
+}
+/* `FilterPageHeaderSkeleton`'s tab placeholders: shimmer labels padded to an
+   underline tab's height (10px top, 10px bottom + its 2px indicator strip). */
+.headTabsSkeleton {
+  display: flex;
+  gap: 24px;
+  padding: 10px 0 12px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 36px;
+  align-items: flex-start;
+  /* The sidebar track + gutter ease to 0 so the results reclaim the width
+     smoothly, so the layout glides when filters are hidden. */
+  transition:
+    grid-template-columns 0.34s var(--ease),
+    gap 0.34s var(--ease);
+}
+/* Filters hidden on desktop → the sidebar track collapses to 0 (the .filtersCol
+   wrapper clips its 280px content) and the results span the full width. */
+.gridFull {
+  grid-template-columns: 0 1fr;
+  gap: 0;
+}
+@media (--mobile) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .page {
+    /* Tighter gutters so the results grid keeps its full width on phones; at the
+       old 28px the minmax(280px) columns overflowed narrow viewports.
+       nav band reserved by shell (base.css); this is only breathing room */
+    padding: 12px 16px var(--section-y-64);
+  }
+}
+/* `FilterPageFrame isBottomFlush`: the page's own sections follow the frame
+   and bring their own spacing, so the frame adds none at the bottom. Two
+   classes deep so it also beats the mobile `.page` padding above. */
+.page.pageFlush {
+  padding-bottom: 0;
+}
+
+/* The grid item AND the sticky/clipping container. Sticky sits on this very
+   element so the column can clip the collapsing content and still stick to
+   the viewport. Its width follows the grid track (280px → 0), and the clip is
+   what hides the panel while the track eases to 0.
+
+   `--filters-col-top` is the sticky offset, read again by `.filters` below
+   to cap the panel at the viewport. */
+.filtersCol {
+  --filters-col-top: 90px;
+  position: sticky;
+  top: var(--filters-col-top);
+  min-width: 0;
+  overflow: hidden;
+}
+/* The desktop panel. A sidebar with every section open can run taller than
+   the screen, and a sticky box taller than the viewport would hide its own
+   bottom, so the panel is capped at the viewport (less a small gap) and
+   scrolls inside its own border. A classic scrollbar then sits between the
+   padding and the border, so it narrows the content and leaves the 6px inset
+   intact. Wheel scroll at either end chains on to the page.
+
+   Focus rings fit inside the scroll clip: a section header's ring reaches 6px
+   past its box (3px outline + 3px offset; the 3px cream halo sits under the
+   outline), and the panel's 6px padding holds exactly that on every side. */
+.filters {
+  /* Rigid width so the cards keep their layout (no text reflow) while the
+     column clips them during the collapse. */
+  width: 280px;
+  max-height: calc(100dvh - var(--filters-col-top) - var(--gap-sm));
+  overflow-y: auto;
+  scrollbar-width: thin;
+  transition:
+    opacity 0.26s var(--ease),
+    transform 0.34s var(--ease);
+}
+/* Once the cap bites, a flex column would squeeze its children to fit, and a
+   child that clips (the clear-all row's Collapse wrapper) has no content
+   floor to stop it. Every row keeps its own height and the panel scrolls. */
+.filters > * {
+  flex-shrink: 0;
+}
+/* The filter groups read as ONE control: a single paper panel whose sections
+   are divided rows, which stays calmer than a stack of near-identical
+   floating boxes. The 6px inset keeps each row's rounded hover/focus surface
+   clear of the panel's own rounded corners and holds the rows' focus rings.
+   Shared by the desktop sidebar and the mobile filters sheet. */
+.filters,
+.filtersSheet {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  padding: 6px;
+}
+.filtersColHidden .filters {
+  opacity: 0;
+  transform: translateX(-12px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .grid,
+  .filters {
+    transition: none;
+  }
+}
+/* Same filter panel, rendered inside the mobile filters sheet (styling shared
+   with `.filters` above): no sticky offset, flows in the sheet's own scroll. */
+
+/* One section within the panel: a transparent row, divided from the section
+   above by an inset hairline. The card's own surface/border/radius are gone:
+   the panel is the surface now. */
+.filterCard:not(:first-child) {
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.filterCard h4 {
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 10px;
+}
+/* Collapsible filter-group header: a full-width button holding the title, an
+   optional active-count badge, and a chevron. Reuses the .filterCard shell. */
+.sectionHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-10);
+  padding: 13px 12px;
+  margin: 0;
+  cursor: pointer;
+  font-family: var(--sans);
+  text-align: left;
+  transition: background 0.15s var(--ease);
+}
+@media (hover: hover) {
+  .sectionHeader:hover {
+    background: rgba(var(--plum-rgb), 0.045);
+  }
+  .sectionHeader:hover .sectionTitle,
+  .sectionHeader:hover .sectionChevron {
+    color: var(--ink-60);
+  }
+}
+.sectionHeader:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.sectionTitle {
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  transition: color 0.15s var(--ease);
+}
+/* Width-animated wrapper for a section's count badge (`AnimatedCountBadge`):
+   it clips the pill while it widens in or folds away. */
+.sectionCountSlot {
+  display: inline-flex;
+  overflow: hidden;
+}
+.sectionCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.636em;
+  height: 1.636em;
+  padding: 0 5px;
+  border-radius: var(--radius-pill);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-11);
+  font-weight: 700;
+  line-height: 1;
+}
+.sectionChevron {
+  margin-left: auto;
+  color: var(--ink-40);
+  font-size: var(--text-14);
+  line-height: 1;
+  transition:
+    transform 0.2s var(--ease),
+    color 0.15s var(--ease);
+}
+.sectionChevronOpen {
+  transform: rotate(180deg);
+}
+/* Height-animated collapse without measuring: the wrapper is a 1-row grid
+   whose track eases between 0fr (collapsed) and 1fr (its content's height).
+   `overflow: hidden` on the wrapper (as well as on the inner body) is what
+   actually clips the collapsed track to nothing. Without it the body's own height can
+   leak a sliver of content past the 0fr row in some engines, so a checkbox or
+   chip peeks under the header. When open the track is the content's height, so
+   there's nothing to clip. */
+.sectionBodyWrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows 0.28s var(--ease);
+}
+.sectionBodyWrapOpen {
+  grid-template-rows: 1fr;
+}
+.sectionBody {
+  /* The collapsing grid item. It carries NO padding of its own: a padded item
+     keeps a non-zero minimum that stops the 0fr track collapsing to true zero
+     (the body then peeks under the header). Padding moves to `.sectionBodyInner`
+     below, which this clips when the track is < its height. */
+  overflow: hidden;
+  min-height: 0;
+}
+.sectionBodyInner {
+  /* All padding lives here, inside the clipped box, so the gaps fade in with the
+     body and hold no open space when collapsed. Inline padding aligns
+     the content with the header text (both inset 12px); the bottom padding
+     spaces it off the next section's divider. */
+  padding: 4px 12px 14px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sectionChevron,
+  .sectionBodyWrap {
+    transition: none;
+  }
+}
+.filterRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+  font-size: var(--text-13);
+  color: var(--ink);
+  cursor: pointer;
+}
+.filterRow input {
+  accent-color: var(--text-strong);
+}
+.filterRow .ct {
+  margin-left: auto;
+  font-size: var(--text-11-5);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-40);
+}
+/* Nobody matches this option under the current filters. The row stays, dimmed and
+   disabled: an option that disappears makes the vocabulary feel
+   unstable, and "0" is a real answer to "who is here?". A CHECKED option never
+   gets this treatment: its count was taken with itself lifted, so it is the
+   one zero that is still worth clicking (to undo). */
+.filterRowEmpty {
+  color: var(--ink-40);
+  cursor: not-allowed;
+}
+/* The counts on screen still describe the previous filter run. Quieting them
+   for the moment reads better than blanking them: a number that vanishes and
+   returns on every click is harder to follow than one that briefly fades. */
+.filterRowStale .ct,
+.ctStale {
+  opacity: 0.45;
+}
+.chipsStale {
+  opacity: 0.6;
+  transition: opacity 0.16s var(--ease);
+}
+
+.clearRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 13px 12px 9px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+  font-size: var(--text-12-5);
+}
+.clearRow button {
+  color: var(--accent-ink);
+  font-weight: 600;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: var(--sans);
+  font-size: var(--text-12-5);
+  border-radius: var(--radius-4);
+}
+@media (hover: hover) {
+  .clearRow button:hover {
+    text-decoration: underline;
+  }
+}
+.clearRow button:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.clearRow span {
+  color: var(--ink-40);
+}
+
+/* The name search sits on its own row above the count/sort row. That row
+   already wraps a Filters button and a sort select on a phone, and a field
+   squeezed in beside them ends up too narrow to read a name in. */
+.searchRow {
+  display: flex;
+  margin-bottom: 14px;
+}
+.directorySearch {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 480px;
+}
+
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.count {
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+.count b {
+  color: var(--text-strong);
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-20);
+  letter-spacing: -0.005em;
+}
+.count b em {
+  font-style: italic;
+  color: var(--accent);
+}
+/* Groups the mobile Filters button with the sort control so they stay together
+   on the right of the top row (and share a line when it wraps on phones). */
+.topControls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.sort {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.sortLabel {
+  font-size: var(--text-12);
+  color: var(--ink-40);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.sort select {
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-9);
+  padding: 7px 12px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Opens the filters sheet on mobile; toggles the sidebar on desktop.
+   Pushed to the left of the sort control by the topRow's space-between. */
+.filtersBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--text-strong);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-9);
+  padding: 8px 14px;
+  cursor: pointer;
+}
+.filtersBtn svg {
+  font-size: var(--text-15);
+}
+/* On phones and touch screens the button (35px) and the sort select
+   (40px) are short of the 44px tap target, and the housing view toggle beside
+   them is already 44px. Both grow to the floor with min-height, so the row
+   reads as one height; the content stays centred (inline-flex) and the type
+   size is untouched. The select selector is prefixed with `.topControls` to
+   outrank the Select trigger's own `.trigger.sm` floor. A mouse on a wide
+   window keeps the compact sizes. */
+@media (--mobile), (pointer: coarse) {
+  .filtersBtn,
+  .topControls .sort button[aria-haspopup="listbox"] {
+    min-height: var(--tap-min);
+  }
+}
+/* Animated width wrapper for the count badge; see `AnimatedCountBadge`. */
+.filtersBtnCountSlot {
+  display: inline-flex;
+  overflow: hidden;
+}
+.filtersBtnCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.636em;
+  height: 1.636em;
+  padding: 0 5px;
+  border-radius: var(--radius-pill);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-11);
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Holds the Filters button inside `.topControls`, so the button can fade out
+   and back in when a page's sidebar becomes unavailable or available again
+   (`FilterResultsTop`). */
+.filtersBtnSlot {
+  display: inline-flex;
+}
+
+/* Opt-in (`FilterSortControl isLabelHiddenOnPhone`): on a phone the Filters
+   button and the sort share one row as two equal halves. The "Sort" label
+   leaves the screen (it stays the select's accessible name through
+   aria-labelledby) and the chosen option ellipsises, so a long Portuguese
+   option never pushes the sort onto its own line. Only a `.topControls`
+   holding such a sort is touched; every other filter page keeps its row. */
+@media (--lg) {
+  .topControls:has(.sortHalfOnPhone) {
+    flex-wrap: nowrap;
+    width: 100%;
+  }
+  .topControls:has(.sortHalfOnPhone) .filtersBtnSlot,
+  .topControls .sortHalfOnPhone {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .topControls:has(.sortHalfOnPhone) .filtersBtnSlot .filtersBtn {
+    width: 100%;
+    justify-content: center;
+  }
+  .sortHalfOnPhone .sortLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .sortHalfOnPhone > div {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+
+/* Filters sheet header + apply footer. */
+.sheetTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-24);
+  color: var(--text-strong);
+  letter-spacing: -0.015em;
+  margin-bottom: 16px;
+}
+/* The footer sticks inside the ModalSheet scroller (`.sheet` in
+   `ui/Modal.module.css`), which keeps `max(40px, env(safe-area-inset-bottom))`
+   of bottom padding on phones and `--section-y-48` from 720px. Sticky stops at
+   the padding edge, so the footer would end that far above the sheet's bottom
+   and let list rows scroll through the strip. `--sheet-bleed` repeats the
+   scroller's padding: the negative margin pulls the footer's box over it, the
+   negative `bottom` pins that box to the sheet's real edge, and the matching
+   padding-bottom keeps the button exactly where it sat. */
+.sheetFoot {
+  --sheet-bleed: max(40px, env(safe-area-inset-bottom));
+  position: sticky;
+  bottom: calc(-1 * var(--sheet-bleed));
+  margin-top: 18px;
+  margin-bottom: calc(-1 * var(--sheet-bleed));
+  padding-top: 16px;
+  padding-bottom: var(--sheet-bleed);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--cream);
+}
+@media (min-width: 720px) {
+  .sheetFoot {
+    --sheet-bleed: var(--section-y-48);
+  }
+}
+.sheetFoot :global(button) {
+  width: 100%;
+}
+
+/* The applied-chips row (`AppliedChipsRow`). Its wrapper springs its
+   height to 0 when the last chip leaves and back when the first arrives, so
+   content below moves with it. flow-root keeps the row's bottom margin
+   inside the wrapper's height at every overflow state, so the spring starts
+   from the full visual height. The row stays rendered so the last chip can
+   play its exit; `:empty` then drops it mid-spring (the exit ends at 0.22s
+   of the 0.4s collapse), under the wrapper's clipped inline height, so the
+   page below stays put. */
+.appliedRowClip {
+  display: flow-root;
+}
+.appliedRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+.appliedRow:empty {
+  display: none;
+}
+.applied {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 600;
+  border-radius: var(--radius-pill);
+}
+.applied button {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  border: none;
+  color: rgba(var(--cream-rgb), 0.7);
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  font-size: var(--text-14);
+}
+@media (hover: hover) {
+  .applied button:hover {
+    color: rgba(var(--cream-rgb), 1);
+  }
+}
+/* A page's own control at the end of the chip row (`AppliedChipsRow`'s
+   `trailing`), such as a "Save search" button, kept on the chips' line. */
+.appliedTrailing {
+  display: inline-flex;
+  align-items: center;
+}

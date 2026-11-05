@@ -101,12 +101,11 @@
   color: var(--studio-accent-text);
   font-style: normal;
 }
-/* The sheet music preview is a page of paper: white with a hairline edge on
-   the light Studio surface, and the darker inset panel it always was in dark
-   mode. */
+/* The sheet music preview is a page of paper: an inset panel on the dark
+   Studio surface. */
 .pdf {
-  --sheet-paper: var(--paper);
-  --sheet-paper-edge: rgba(var(--line-rgb), 0.09);
+  --sheet-paper: var(--cream);
+  --sheet-paper-edge: transparent;
   background: var(--sheet-paper);
   outline: 1px solid var(--sheet-paper-edge);
   outline-offset: -1px;
@@ -115,10 +114,6 @@
   position: relative;
   overflow: hidden;
   height: 360px;
-}
-:global([data-theme="dark"]) .pdf {
-  --sheet-paper: var(--cream);
-  --sheet-paper-edge: transparent;
 }
 .watermark {
   position: absolute;

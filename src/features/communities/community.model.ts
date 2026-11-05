@@ -292,5 +292,11 @@ export type LivingCommunitySeed = Omit<
 /** One card on a parent's Spaces tab: the discover card plus `isMember`, the
  *  viewer's own roster row in that space. `myRole` on the card is the
  *  effective role (a parent's staff carry one into every space), so the
- *  "You're in" badge and the card's join action read `isMember`. */
-export type SpaceCardModel = Community & { isMember: boolean };
+ *  "You're in" badge and the card's join action read `isMember`. A demo space
+ *  also carries its numeric `memberCount`, which the demo hooks turn into the
+ *  localised `count` label (`localizeDemoCommunity`); live cards arrive with
+ *  `count` already translated and leave it unset. */
+export type SpaceCardModel = Community & {
+  isMember: boolean;
+  memberCount?: number;
+};

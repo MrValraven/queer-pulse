@@ -4,27 +4,47 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   getSubprofileDirectory,
   type SubprofileCardDTO,
+  type SubprofileDirectoryFacetsDTO,
+  type SubprofileDirectoryRefinement,
+  type SubprofileDirectorySort,
 } from "./subprofiles.api";
+import {
+  countDirectoryFacets,
+  matchesRefinement,
+} from "../subprofileDirectoryFacets";
+import { sortDirectoryCards } from "../subprofileDirectorySort";
 
 /** Page size. The endpoint defaults to 40 and caps `limit` at 100, so this is
- *  the largest slice one request can pull. A big first page keeps the number
- *  of round trips down AND gives the browser-side tag/availability narrowing
- *  a wide pool to work over. */
-const DIRECTORY_PAGE_LIMIT = 100;
+ *  the largest slice one request can pull, which keeps the number of round
+ *  trips down. Exported so a reader of the first page alone (the hero's wall
+ *  of faces) can slice the flattened cards to it. */
+export const DIRECTORY_PAGE_LIMIT = 100;
 
-export interface SubprofileDirectoryParams {
+/** A copy of `values` in a fixed order, so picking the same chips in another
+ *  order reads the same cached pages. */
+const sortedList = <Value extends string>(values?: readonly Value[]) =>
+  [...(values ?? [])].sort();
+
+export interface SubprofileDirectoryParams extends SubprofileDirectoryRefinement {
   /** Free-text term, already trimmed and debounced by the caller. Sent as
    *  `?query=`: a case-insensitive substring match over `display_name` and
    *  `tagline`, both backed by GIN trigram indexes, OR an accent-folded match
    *  on the OWNER's name and profile handle for a linked persona. An empty
    *  string is a no-op server-side, so it is simply not sent. */
   query?: string;
+  /** The order. Left out, nothing is sent and the server orders by name (demo
+   *  mode does the same). The directory page always passes one. */
+  sort?: SubprofileDirectorySort;
 }
 
 export interface SubprofileDirectoryResult {
   /** Every persona loaded so far, flattened across the fetched pages, already
-   *  narrowed by the search term SERVER-SIDE. */
+   *  narrowed by the search term and every sidebar filter SERVER-SIDE. */
   cards: SubprofileCardDTO[];
+  /** The sidebar's availability counts, read off the first page. Undefined
+   *  while nothing has loaded, after a failed fetch, or from an older server
+   *  that sends none: the sidebar then draws no numbers. */
+  facets: SubprofileDirectoryFacetsDTO | undefined;
   /** Server-reported count of everything matching the current term, across
    *  every page. Demo reports its fixture's own length. */
   total: number;
@@ -44,10 +64,13 @@ export interface SubprofileDirectoryResult {
   isShowingPreviousResults: boolean;
 }
 
-interface SubprofileDirectoryPageVM {
+/** One cached page of the directory. Exported so cache patches
+ *  (`directoryCardCache.ts`) type the infinite pages they rewrite. */
+export interface SubprofileDirectoryPageVM {
   items: SubprofileCardDTO[];
   total: number;
   page: number;
+  facets?: SubprofileDirectoryFacetsDTO;
 }
 
 /**
@@ -75,18 +98,14 @@ interface SubprofileDirectoryPageVM {
  * name on screen has to be findable; an unlinked persona's owner is unnamed on
  * the card by design, and matching it here would hand that tie back out.
  *
- * `kind` and tags are deliberately NOT sent, and this is the one thing here
- * that still needs backend work. The endpoint's `kind` takes a single enum
- * value while the profession chips are a multi-select OR facet, and there is no
- * `tags` param at all (persona tags are derived per page from
- * `subprofile_items.tags`, so filtering on them needs an EXISTS sub-predicate
- * and a new index). Sending a single `kind` would also narrow the pool the
- * Refine drawer counts its own chips from, which would read every other
- * profession as 0 and then drop it from the drawer entirely. Closing that
- * properly means the endpoint accepting repeated `kind` values and returning a
- * `facets` block, the way `GET /communities` and `GET /members` already do.
- * Until then profession, tags and open-to-collabs narrow the LOADED pages in
- * `useSubprofileDirectoryFilters`, which says so on screen.
+ * THE SIDEBAR'S FILTERS ARE SERVER PARAMS TOO. Professions, tags,
+ * availability and the "At the table" format and vibe go out as repeated
+ * params (`getSubprofileDirectory`), so they narrow the whole table before
+ * paging and `total` is the exact answer. Page 1 carries the `facets` block,
+ * each group counted with its own selection lifted, which is what the sidebar
+ * draws its numbers from. Demo mode does the same over the mock: the fixture
+ * searches, `matchesRefinement` narrows, and `countDirectoryFacets` counts with
+ * the endpoint's semantics, so the page reads one shape in both modes.
  *
  * `keepPreviousData` holds the previous term's cards while the next term is in
  * flight, so typing swaps results instead of flashing the skeleton grid on
@@ -98,11 +117,28 @@ export function useSubprofileDirectory(
 ): SubprofileDirectoryResult {
   const { demoMode } = useDemoMode();
   const searchTerm = params.query?.trim() ?? "";
+  const sort = params.sort ?? null;
+  const refinement: SubprofileDirectoryRefinement = {
+    kinds: sortedList(params.kinds),
+    tags: sortedList(params.tags),
+    availability: params.availability,
+    tableFormats: sortedList(params.tableFormats),
+    tableVibes: sortedList(params.tableVibes),
+  };
   const directoryQuery = useInfiniteQuery<SubprofileDirectoryPageVM>({
-    // Every server-side filter rides in the key. Without the term in it a new
-    // search would read the previous term's cached pages and render the wrong
-    // personas; `demoMode` keeps the two modes' caches apart.
-    queryKey: ["subprofiles", "directory", demoMode, searchTerm],
+    // Every server-side filter rides in the key. Without the term and the
+    // sidebar's filters in it, a new search or chip would read the previous
+    // set's cached pages and render the wrong personas; `demoMode` keeps the
+    // two modes' caches apart. The order rides in it too, last, so the
+    // `["subprofiles", "directory"]` prefix still reaches every cached page.
+    queryKey: [
+      "subprofiles",
+      "directory",
+      demoMode,
+      searchTerm,
+      refinement,
+      sort,
+    ],
     initialPageParam: 1,
     placeholderData: keepPreviousData,
     queryFn: async ({ pageParam, signal }) => {
@@ -110,18 +146,32 @@ export function useSubprofileDirectory(
         const { mockDirectory } = await import("../data/subprofiles.data");
         // The fixture applies the SAME display-name/tagline substring
         // predicate the endpoint does, plus the same linked-only folded
-        // owner-name branch, so the demo directory searches standalone. It has no pagination, so its single page IS the whole
-        // matching set and `getNextPageParam` below yields nothing further.
-        const items = mockDirectory(
+        // owner-name branch, so the demo directory searches standalone. The
+        // sidebar's filters and their counts then run over that searched set
+        // with the endpoint's semantics. It has no pagination, so its single
+        // page IS the whole matching set and `getNextPageParam` below yields
+        // nothing further.
+        const searchedPool = mockDirectory(
           searchTerm ? { query: searchTerm } : undefined,
         );
-        return { items, total: items.length, page: 1 };
+        const items = sortDirectoryCards(
+          searchedPool.filter((card) => matchesRefinement(card, refinement)),
+          sort ?? "name",
+        );
+        const facets = countDirectoryFacets(
+          searchedPool,
+          mockDirectory(),
+          refinement,
+        );
+        return { items, total: items.length, page: 1, facets };
       }
       const page = await getSubprofileDirectory(
         {
           page: pageParam as number,
           limit: DIRECTORY_PAGE_LIMIT,
           ...(searchTerm ? { query: searchTerm } : {}),
+          ...(sort ? { sort } : {}),
+          ...refinement,
         },
         signal,
       );
@@ -133,6 +183,7 @@ export function useSubprofileDirectory(
         items: page.items,
         total: page.total ?? page.items.length,
         page: page.page ?? (pageParam as number),
+        facets: page.facets,
       };
     },
     getNextPageParam: (lastPage, allPages) => {
@@ -154,6 +205,9 @@ export function useSubprofileDirectory(
   const cards = useMemo(() => pages.flatMap((page) => page.items), [pages]);
   return {
     cards,
+    // While the next filters are in flight, the previous page's counts stay
+    // up and the sidebar draws them stale (`isShowingPreviousResults`).
+    facets: pages[0]?.facets,
     total: pages[0]?.total ?? 0,
     hasNextPage: directoryQuery.hasNextPage,
     fetchNextPage: () => void directoryQuery.fetchNextPage(),

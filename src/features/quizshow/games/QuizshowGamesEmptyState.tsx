@@ -62,13 +62,22 @@ export function QuizshowGamesEmptyState({
 
   return (
     <section className={styles.emptyCard} aria-labelledby={titleId}>
+      {/* Three blank title slides, stacked: where the first game will sit. */}
+      <div aria-hidden className={styles.emptySlides}>
+        <span className={`${styles.emptySlide} ${styles.emptySlideBack}`} />
+        <span className={`${styles.emptySlide} ${styles.emptySlideMid}`} />
+        <span className={`${styles.emptySlide} ${styles.emptySlideFront}`}>
+          <span className={styles.emptyBarLong} />
+          <span className={styles.emptyBarShort} />
+        </span>
+      </div>
       <h3 id={titleId} className={styles.emptyTitle}>
         {t("quizshow:home.myGames.emptyTitle")}
       </h3>
       <p className={styles.emptyBody}>{t("quizshow:home.myGames.emptyBody")}</p>
       <div className={styles.emptyActions}>
         <Button
-          variant="soft"
+          variant="stage"
           aria-disabled={createGame.isPending}
           onClick={() => {
             if (!createGame.isPending) setIsTemplatePickerOpen(true);
@@ -76,10 +85,10 @@ export function QuizshowGamesEmptyState({
         >
           {t("quizshow:builder.empty.fromTemplate")}
         </Button>
-        <Button variant="ghost" onClick={() => onStartNewGame("copy")}>
+        <Button variant="stage-ghost" onClick={() => onStartNewGame("copy")}>
           {t("quizshow:import.fromCopy")}
         </Button>
-        <Button variant="ghost" onClick={() => onStartNewGame("blank")}>
+        <Button variant="stage-ghost" onClick={() => onStartNewGame("blank")}>
           {t("quizshow:builder.empty.blank")}
         </Button>
       </div>

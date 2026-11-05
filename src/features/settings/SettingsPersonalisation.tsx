@@ -5,7 +5,6 @@ import { useAccessibilityPrefs } from "../../app/providers/accessibilityContext"
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Pane } from "./SettingsControls";
-import { ThemeStudio } from "./ThemeStudio";
 import { DEFAULT_PREFS, type A11yPrefs } from "./accessibilityPreferences.data";
 import {
   A11yDisplaySection,
@@ -17,23 +16,6 @@ import { setSkipLinkPref, useSkipLinkPref } from "./skipLinkPref";
 import a11yStyles from "./AccessibilityPrefSections.module.css";
 
 const noRef: RefCallback<HTMLElement> = () => {};
-
-export function ProfileThemePane({ onChange }: { onChange: () => void }) {
-  const { t } = useTranslation();
-  return (
-    <Pane
-      title={
-        <Translation
-          i18nKey="settings:personalisation.theme.title"
-          components={{ em: <em /> }}
-        />
-      }
-      sub={t("settings:personalisation.theme.sub")}
-    >
-      <ThemeStudio onChange={onChange} />
-    </Pane>
-  );
-}
 
 /**
  * Accessibility preferences.

@@ -3,20 +3,15 @@ import { useDebouncedValue } from "../../shared/hooks";
 import type { SubprofileKind } from "./api/subprofiles.api";
 import { useSubprofileDirectory } from "./api/useSubprofileDirectory";
 import { groupProfessionsByFamily } from "./subprofileDirectory.data";
+import type { DirectoryAvailability } from "./subprofileDirectoryAvailability.data";
+import { DIRECTORY_FACET_TAG_CAP, topTags } from "./subprofileDirectoryFacets";
 import {
-  countByKind,
-  countByTableFormat,
-  countByTableVibe,
-  countByTag,
-  matchesKind,
-  matchesOpenToCollabs,
-  matchesTable,
-  matchesTags,
-  topTags,
-} from "./subprofileDirectoryFacets";
+  DEFAULT_DIRECTORY_SORT,
+  type SubprofileDirectorySort,
+} from "./subprofileDirectorySort";
 import { useQuestTableFacet } from "./useQuestTableFacet";
+import { useLatchedFlag, useSeenVocabulary } from "./useSeenVocabulary";
 
-const AVAILABLE_TAGS_CAP = 20;
 /** How long the search box waits after the last keystroke before its term
  *  becomes a query key and reaches the network. Matches every other
  *  list-with-search control in the app (`useDiscoverCommunities`,
@@ -25,173 +20,111 @@ const SEARCH_DEBOUNCE_MS = 300;
 
 /**
  * The directory page's whole refine state (professions, tags, free-text
- * search, open-to-collabs) plus the paginated query that feeds it, extracted
- * out of `SubprofileDirectoryPage` so that component stays
- * under the 200-line cap. Owning the fetch here is what lets the search term
- * reach the server, the shape `/communities` uses (`useDiscoverCommunities`).
+ * search, the single availability choice, the "At the table" facet, the sort)
+ * plus the paginated query
+ * that feeds it, extracted out of `SubprofileDirectoryPage` so that component
+ * stays under the 200-line cap. Owning the fetch here is what lets every
+ * filter reach the server, the shape `/communities` uses
+ * (`useDiscoverCommunities`).
  *
- * SEARCH IS SERVER-SIDE. The term is debounced, then handed to
- * `useSubprofileDirectory`, which sends it as `?query=`: an ILIKE over
- * displayName and tagline, plus an accent-folded match on the owner's name and
- * profile handle for a LINKED persona, applied across the whole table. It used to be a
- * browser-side `matchesQuery` over whatever pages had been pulled, which could
- * not see past the walk's 2000-persona ceiling. That predicate is gone rather
- * than left on top of the server's: two spellings of one filter is how a
- * correct result set quietly loses rows. Every facet count below already
- * counted under the search term, so counting them over an already-searched set
- * gives the identical numbers.
+ * EVERY FILTER IS SERVER-SIDE. The search term is debounced; the chip groups
+ * go out as they are picked. `useSubprofileDirectory` sends them all as
+ * params, so they narrow the whole table before paging, and the grid, `total`
+ * and "Show more" are the exact answer. Demo mode runs the same predicates
+ * over the mock inside the query function, so this hook never filters.
  *
- * PAGING IS SERVER-SIDE TOO. "Show more" fetches the next page rather than
- * revealing rows the browser was already sitting on, so first paint is one
- * request instead of the walk that used to drain up to twenty pages before a
- * card appeared.
+ * THE COUNTS ARE THE SERVER'S `facets` BLOCK, each group counted with its own
+ * selection lifted and the others applied, so picking "Poet" leaves the other
+ * professions' numbers standing. Every count is `undefined` when the block is
+ * missing (nothing loaded yet, a failed fetch, an older server): the sidebar
+ * then draws no number and keeps the option pickable, because "not counted"
+ * is a different answer from "nobody".
  *
- * PROFESSION, TAGS, OPEN-TO-COLLABS AND THE TABLE FACET stay in the browser,
- * because the endpoint has no param for them (`kind` is single-valued against a
- * multi-select OR facet; there is no `tags` or table param) and returns no
- * facet counts. The table facet (`useQuestTableFacet`) is the Quest personas'
- * "At the table" format and vibe, read off each card's `table` summary.
- * They therefore narrow the pages LOADED SO FAR, and `isNarrowedInBrowser`
- * says when that is happening so the page can tell the member rather than let
- * a partial answer read as the whole one.
- *
- * Professions replaced the old page-family facet (see
- * `groupProfessionsByFamily`). They are multi-select and OR within the facet,
- * matching the tag row beside them: "poets or illustrators" is a question
- * somebody browsing a directory actually has, and single-select could not
- * answer it.
+ * Professions are multi-select and OR within the facet, matching the tag row
+ * beside them: "poets or illustrators" is a question somebody browsing a
+ * directory actually has, and single-select could not answer it.
  */
 export function useSubprofileDirectoryFilters() {
   const [kinds, setKinds] = useState<SubprofileKind[]>([]);
   const [query, setQuery] = useState("");
   const [activeTags, setActiveTags] = useState<string[]>([]);
-  const [openToCollabs, setOpenToCollabs] = useState(false);
+  const [availability, setAvailability] =
+    useState<DirectoryAvailability | null>(null);
+  const [sort, setSort] = useState<SubprofileDirectorySort>(
+    DEFAULT_DIRECTORY_SORT,
+  );
   const table = useQuestTableFacet();
   const { tableFormats, tableVibes, hasTableSelection } = table;
 
   const term = query.trim();
   // Only a settled term becomes a query key, so a fast typist fans out once
-  // rather than once per keystroke. `useSubprofileDirectory` holds the previous
-  // term's cards on screen until the new set lands.
+  // per settled term. `useSubprofileDirectory` holds the previous
+  // set's cards on screen until the new one lands.
   const debouncedTerm = useDebouncedValue(term, SEARCH_DEBOUNCE_MS);
-  const directoryQuery = useSubprofileDirectory({ query: debouncedTerm });
-  const cards = directoryQuery.cards;
+  const directoryQuery = useSubprofileDirectory({
+    query: debouncedTerm,
+    kinds,
+    tags: activeTags,
+    availability: availability ?? undefined,
+    sort,
+    tableFormats,
+    tableVibes,
+  });
+  const { cards, facets } = directoryQuery;
 
-  // The two chip vocabularies come from the loaded set, so neither row
-  // reshuffles as the drawer's own facets are picked. What moves is the counts.
-  // A search term does reshape them, because the term narrows the set itself
-  // now: a chip that would yield nothing under the term leaves the row instead
-  // of sitting there dimmed at 0. Loading a further page can add a chip, which
-  // is the honest read of a vocabulary drawn from what is actually in hand.
+  // The two chip vocabularies are latched (`useSeenVocabulary`), so neither
+  // row reshuffles as the sidebar's own facets are picked, and a search term
+  // that narrows the set keeps its chips on the row at 0 and dimmed. What
+  // moves is the counts. Professions come from the loaded cards and from every
+  // profession the facet block counts above 0; tags come from the block's own
+  // vocabulary (the directory's top tags), or from the loaded cards when an
+  // older server sends no block.
+  const loadedKinds = useMemo(() => {
+    const countedKinds = facets
+      ? (Object.keys(facets.kinds) as SubprofileKind[]).filter(
+          (kind) => (facets.kinds[kind] ?? 0) > 0,
+        )
+      : [];
+    return [...new Set([...cards.map((card) => card.kind), ...countedKinds])];
+  }, [cards, facets]);
+  const seenKinds = useSeenVocabulary(loadedKinds);
   const professionGroups = useMemo(
-    () => groupProfessionsByFamily(new Set(cards.map((card) => card.kind))),
-    [cards],
+    () => groupProfessionsByFamily(new Set(seenKinds)),
+    [seenKinds],
   );
-  const availableTags = useMemo(
-    () => topTags(cards, AVAILABLE_TAGS_CAP),
-    [cards],
-  );
-
-  // Each facet is counted under the OTHER facets and leaves its own selection
-  // out: counting professions under the profession selection would read every
-  // unpicked chip as 0 the moment one was picked, which is exactly backwards
-  // for an OR facet.
-  const professionCounts = useMemo(
+  const loadedTopTags = useMemo(
     () =>
-      countByKind(
-        cards.filter(
-          (card) =>
-            matchesTags(card, activeTags) &&
-            matchesOpenToCollabs(card, openToCollabs) &&
-            matchesTable(card, tableFormats, tableVibes),
-        ),
-      ),
-    [cards, activeTags, openToCollabs, tableFormats, tableVibes],
+      facets
+        ? facets.tags.map((entry) => entry.tag)
+        : topTags(cards, DIRECTORY_FACET_TAG_CAP),
+    [cards, facets],
   );
+  const availableTags = useSeenVocabulary(loadedTopTags);
   const tagCounts = useMemo(
     () =>
-      countByTag(
-        cards.filter(
-          (card) =>
-            matchesKind(card, kinds) &&
-            matchesOpenToCollabs(card, openToCollabs) &&
-            matchesTable(card, tableFormats, tableVibes),
-        ),
-      ),
-    [cards, kinds, openToCollabs, tableFormats, tableVibes],
+      facets
+        ? (Object.fromEntries(
+            facets.tags.map((entry) => [entry.tag, entry.count]),
+          ) as Partial<Record<string, number>>)
+        : undefined,
+    [facets],
   );
 
-  // The availability pill is a facet too, so it carries the same live count as
-  // the chip rows and dims at 0. Counted under the professions, tags and table
-  // facet (and the server's search, which already shaped `cards`) but NOT
-  // under itself:
-  // with the toggle already on, counting under it would just restate the
-  // grid's own size rather than answer "how many are open to collabs".
-  const openToCollabsCount = useMemo(
+  // The "At the table" section folds in once any persona has a table, read
+  // off the loaded cards or the facet block, and is latched like the chip
+  // vocabularies, so a search that matches no Quest persona leaves the
+  // section standing with its chips at 0.
+  const hasLoadedTableData = useMemo(
     () =>
-      cards.filter(
-        (card) =>
-          matchesKind(card, kinds) &&
-          matchesTags(card, activeTags) &&
-          matchesOpenToCollabs(card, true) &&
-          matchesTable(card, tableFormats, tableVibes),
-      ).length,
-    [cards, kinds, activeTags, tableFormats, tableVibes],
+      cards.some((card) => card.table) ||
+      (facets !== undefined &&
+        [
+          ...Object.values(facets.tableFormats),
+          ...Object.values(facets.tableVibes),
+        ].some((count) => (count ?? 0) > 0)),
+    [cards, facets],
   );
-
-  // The table facets count under every OTHER facet. Formats are an OR facet,
-  // so they count without the format selection (like professions); vibes are
-  // an AND facet, so each vibe chip counts under the vibes already picked:
-  // the number says what adding that vibe would leave.
-  const hasTableData = useMemo(() => cards.some((card) => card.table), [cards]);
-  const tableFormatCounts = useMemo(
-    () =>
-      countByTableFormat(
-        cards.filter(
-          (card) =>
-            matchesKind(card, kinds) &&
-            matchesTags(card, activeTags) &&
-            matchesOpenToCollabs(card, openToCollabs) &&
-            matchesTable(card, [], tableVibes),
-        ),
-      ),
-    [cards, kinds, activeTags, openToCollabs, tableVibes],
-  );
-  const tableVibeCounts = useMemo(
-    () =>
-      countByTableVibe(
-        cards.filter(
-          (card) =>
-            matchesKind(card, kinds) &&
-            matchesTags(card, activeTags) &&
-            matchesOpenToCollabs(card, openToCollabs) &&
-            matchesTable(card, tableFormats, tableVibes),
-        ),
-      ),
-    [cards, kinds, activeTags, openToCollabs, tableFormats, tableVibes],
-  );
-
-  const visibleCards = useMemo(
-    () =>
-      cards.filter(
-        (card) =>
-          matchesKind(card, kinds) &&
-          matchesTags(card, activeTags) &&
-          matchesOpenToCollabs(card, openToCollabs) &&
-          matchesTable(card, tableFormats, tableVibes),
-      ),
-    [cards, kinds, activeTags, openToCollabs, tableFormats, tableVibes],
-  );
-
-  // True while a facet the ENDPOINT cannot express is narrowing the grid. The
-  // page says so beside the count, because these facets cut the pages already
-  // loaded rather than the whole directory, and a count that looks total when
-  // it is partial is worse than no count.
-  const isNarrowedInBrowser =
-    kinds.length > 0 ||
-    activeTags.length > 0 ||
-    openToCollabs ||
-    hasTableSelection;
+  const hasTableData = useLatchedFlag(hasLoadedTableData);
 
   const onToggleKind = (kind: string) => {
     const next = kind as SubprofileKind;
@@ -210,15 +143,22 @@ export function useSubprofileDirectoryFilters() {
     );
   };
 
-  const onToggleOpenToCollabs = () => setOpenToCollabs((current) => !current);
-
   const onClearFilters = () => {
     setKinds([]);
     setQuery("");
     setActiveTags([]);
-    setOpenToCollabs(false);
+    setAvailability(null);
     table.clearTable();
   };
+
+  // The Filters badge counts the sidebar's own filters only. The search term
+  // lives in the hero and the sort is an order, so neither adds to it.
+  const sidebarActiveCount =
+    kinds.length +
+    activeTags.length +
+    (availability === null ? 0 : 1) +
+    tableFormats.length +
+    tableVibes.length;
 
   return {
     kinds,
@@ -229,28 +169,42 @@ export function useSubprofileDirectoryFilters() {
     activeTags,
     onToggleTag,
     setActiveTags,
-    openToCollabs,
-    onToggleOpenToCollabs,
-    setOpenToCollabs,
-    openToCollabsCount,
+    /** The single availability choice, or `null` for "Any availability". */
+    availability,
+    setAvailability,
+    /** Personas per availability value under every other filter; `undefined`
+     *  when not counted. */
+    availabilityCounts: facets?.availability as
+      Partial<Record<DirectoryAvailability, number>> | undefined,
+    /** The order the grid is fetched in. */
+    sort,
+    setSort,
+    /** What the sidebar's Filters badge shows: kinds, tags, availability and
+     *  the table facet, never the search term. */
+    sidebarActiveCount,
     tableFormats,
     setTableFormats: table.setTableFormats,
     onToggleTableFormat: table.onToggleTableFormat,
     tableVibes,
     setTableVibes: table.setTableVibes,
     onToggleTableVibe: table.onToggleTableVibe,
-    tableFormatCounts,
-    tableVibeCounts,
-    /** True once a loaded persona carries an "At the table" summary; the
-     *  Refine drawer's table band stays hidden until then. */
+    tableFormatCounts: facets?.tableFormats,
+    tableVibeCounts: facets?.tableVibes,
+    /** True once any persona loaded since the page opened carried an "At the
+     *  table" summary; the sidebar's "At the table" section stays hidden until
+     *  then, and stays put after. */
     hasTableData,
     professionGroups,
-    professionCounts,
+    professionCounts: facets?.kinds,
     availableTags,
     tagCounts,
     /** True while anything is narrowing the grid, the search term included. */
-    hasActiveRefinement: isNarrowedInBrowser || term !== "",
-    isNarrowedInBrowser,
+    hasActiveRefinement:
+      kinds.length > 0 ||
+      activeTags.length > 0 ||
+      availability !== null ||
+      hasTableSelection ||
+      term !== "",
     /** True while the FIRST page for the current term is in flight. */
     isLoading: directoryQuery.isLoading,
     /** True when the directory fetch failed: a retryable outage, distinct
@@ -263,15 +217,16 @@ export function useSubprofileDirectoryFilters() {
      *  itself. */
     isFetchNextPageError: directoryQuery.isError && cards.length > 0,
     refetch: directoryQuery.refetch,
-    /** True while the cards on screen belong to the PREVIOUS search term,
-     *  held there by `keepPreviousData` until the new page lands. */
+    /** True while the cards and counts on screen belong to the PREVIOUS
+     *  search or filters, held there by `keepPreviousData` until the new page
+     *  lands. */
     isShowingPreviousResults: directoryQuery.isShowingPreviousResults,
-    /** Server-reported count of everything matching the current term. */
+    /** Server-reported count of everything matching the search and every
+     *  filter, across all pages. */
     total: directoryQuery.total,
-    visibleCards,
-    /** What the grid renders. Identical to `visibleCards`: paging is the
-     *  endpoint's job now, so there is nothing held back locally. */
-    shownCards: visibleCards,
+    /** What the grid renders: every page loaded so far, already narrowed by
+     *  the server. */
+    shownCards: cards,
     hasMore: directoryQuery.hasNextPage,
     isFetchingMore: directoryQuery.isFetchingNextPage,
     onShowMore: directoryQuery.fetchNextPage,

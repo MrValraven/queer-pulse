@@ -17,6 +17,7 @@ import {
   hasActiveBrowseFilters,
   readBrowseFilters,
   toEventBrowseFilters,
+  whenPresetWindows,
   writeBrowseFilters,
   type BrowseFilterState,
 } from "./browseFilters";
@@ -105,8 +106,11 @@ function useBrowseRefineDrawer() {
  * query with the filters attached, which means the counts are honest and page
  * two is filtered too.
  *
- * With no filters set, that query is byte-for-byte the hub's own
- * `filter=upcoming` fetch and react-query serves both from one request.
+ * It also asks for the filter options' availability counts (`facets`), so
+ * every option in the drawer says how many events picking it would show.
+ * That makes it its own request, apart from the hub's bare `filter=upcoming`
+ * fetch, even with no filters set: a cached list without counts never
+ * stands in for one that has to carry them.
  */
 export function BrowseView() {
   const { t } = useTranslation();
@@ -124,6 +128,9 @@ export function BrowseView() {
     () => toEventBrowseFilters(filters, now),
     [filters, now],
   );
+  // The date chips' windows the counts are taken over, against the same
+  // stable "now" the chips' own filters resolve against.
+  const facetWhenWindows = useMemo(() => whenPresetWindows(now), [now]);
 
   const {
     items,
@@ -134,7 +141,8 @@ export function BrowseView() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = useEvents({ filter: "upcoming", browse });
+    facets,
+  } = useEvents({ filter: "upcoming", browse, facetWhenWindows });
   // ENG-501: a failed first page shows the error state, so an outage does not
   // read as "nothing matches". A failed later page keeps the loaded rows.
   const hasNothingLoadedError = isError && items.length === 0;
@@ -205,6 +213,7 @@ export function BrowseView() {
           refine={refine}
           communitiesSearchRef={communitiesSearchRef}
           notice={<HiddenCommunitiesNotice onManage={openHiddenCommunities} />}
+          facets={facets}
         />
 
         {isLoading ? (

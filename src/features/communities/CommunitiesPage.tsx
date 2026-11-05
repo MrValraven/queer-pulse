@@ -1,25 +1,29 @@
+import type { FilterPageState } from "../../shared/components/filterPage";
+import { CommunitiesFilterLayout } from "./CommunitiesFilterLayout";
 import { CommunitiesGrid } from "./CommunitiesGrid";
 import { CommunitiesDiscoverOutro } from "./CommunitiesDiscoverOutro";
+import type { CommunitiesFilterSectionKey } from "./communitiesFilterSections";
 import type { DiscoverCommunities } from "./useDiscoverCommunities";
-import styles from "./CommunitiesPage.module.css";
 
 /**
- * The `/communities?tab=discover` body: the platform-wide directory. The grid
- * and join flow live in `CommunitiesGrid` (shared with the "My communities"
- * tab) and the search, Refine drawer and chip row live in the page header's
- * toolbar; this is the page frame plus Discover's own outro.
+ * The `/communities?tab=discover` body: the platform-wide directory. The
+ * filter layout puts the sidebar beside the shared `CommunitiesGrid` (the same
+ * grid the "My communities" tab uses), and Discover's own outro follows the
+ * layout at the frame's full width.
  */
 export function CommunitiesDiscover({
   discover,
+  filterPage,
 }: {
   discover: DiscoverCommunities;
+  filterPage: FilterPageState<CommunitiesFilterSectionKey>;
 }) {
   return (
-    <div className={styles.body}>
-      <div className="wrap">
+    <>
+      <CommunitiesFilterLayout discover={discover} filterPage={filterPage}>
         <CommunitiesGrid discover={discover} />
-        <CommunitiesDiscoverOutro />
-      </div>
-    </div>
+      </CommunitiesFilterLayout>
+      <CommunitiesDiscoverOutro />
+    </>
   );
 }

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { AnimatePresence } from "motion/react";
 import { FiFlag } from "react-icons/fi";
 import { Collapse } from "../../../shared/components/ui";
-import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type {
   QuizshowLanguage,
@@ -13,6 +12,7 @@ import { ReportListingModal } from "../../economy/ReportListingModal";
 import { orderRevealEntries } from "../stage/quizshowRevealOrder";
 import styles from "./QuizshowPlayer.module.css";
 import { partyHeadingOf } from "./quizshowPartyHeading";
+import { QuizshowPointsLine } from "./QuizshowPhoneResult";
 import { entrantTotalOf } from "./quizshowRevealOutcome";
 import { useQuizshowHeadingFocus } from "./useQuizshowHeadingFocus";
 
@@ -31,7 +31,6 @@ export function QuizshowPartyReveal({
   const [reportedEntry, setReportedEntry] =
     useState<QuizshowPartyRevealEntry | null>(null);
   const { reveal, question, voteOptions, myReveal } = state;
-  const format = useFormat();
   const headingRef = useQuizshowHeadingFocus(state.cursor.phaseId);
   if (reveal === null || reveal.distribution.kind !== "votes") return null;
   const { entries, favouriteOptionId } = reveal.distribution;
@@ -50,6 +49,23 @@ export function QuizshowPartyReveal({
       {question !== null && question.mediaUrl !== null && (
         <img className={styles.media} src={question.mediaUrl} alt="" />
       )}
+      <Collapse isOpen={myReveal !== null}>
+        {myReveal !== null && (
+          <div className={styles.result}>
+            <QuizshowPointsLine points={myReveal.pointsAwarded} />
+            <ul className={styles.facts}>
+              <li className={`${styles.fact} ${styles.placeFact}`}>
+                {t(
+                  state.playMode === "teams"
+                    ? "quizshow:player.teamPlace"
+                    : "quizshow:player.place",
+                  { place: myReveal.rank, total: entrantTotalOf(state) },
+                )}
+              </li>
+            </ul>
+          </div>
+        )}
+      </Collapse>
       <ul className={styles.entries}>
         {orderRevealEntries(entries).map((entry) => {
           const isOwn =
@@ -57,7 +73,12 @@ export function QuizshowPartyReveal({
             (ownAnswerId !== null && entry.answerId === ownAnswerId);
           const canReport = entry.answerId !== null && !isOwn;
           return (
-            <li key={entry.optionId} className={styles.entry}>
+            <li
+              key={entry.optionId}
+              className={styles.entry}
+              data-truth={entry.isTruth ? "true" : undefined}
+              data-own={isOwn ? "true" : undefined}
+            >
               <p className={styles.entryText}>{entry.text}</p>
               <div className={styles.entryMeta}>
                 {entry.isTruth && (
@@ -96,25 +117,6 @@ export function QuizshowPartyReveal({
           );
         })}
       </ul>
-      <Collapse isOpen={myReveal !== null}>
-        {myReveal !== null && (
-          <ul className={styles.facts}>
-            <li className={`${styles.fact} ${styles.factStrong}`}>
-              {t("quizshow:player.pointsEarned", {
-                points: format.number(myReveal.pointsAwarded),
-              })}
-            </li>
-            <li className={styles.fact}>
-              {t(
-                state.playMode === "teams"
-                  ? "quizshow:player.teamPlace"
-                  : "quizshow:player.place",
-                { place: myReveal.rank, total: entrantTotalOf(state) },
-              )}
-            </li>
-          </ul>
-        )}
-      </Collapse>
       <AnimatePresence>
         {reportedEntry !== null && reportedEntry.answerId !== null && (
           <ReportListingModal

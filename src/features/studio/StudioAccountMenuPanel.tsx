@@ -22,14 +22,13 @@ import {
 } from "./StudioAccountMenuDisclosures";
 import { StudioAccountMenuGroup } from "./StudioAccountMenuGroups";
 import { StudioAccountMenuHeader } from "./StudioAccountMenuHeader";
-import { StudioThemeRow } from "./StudioAccountMenuRows";
 import { useStudioMenuItemFilter } from "./useStudioMenuItemFilter";
 import styles from "./StudioAccountMenu.module.css";
 
 /** The open panel of {@link StudioAccountMenu}: the member's header, the
  *  creator pages, their artist pages, the showcase's contribute and co-op
- *  pages, staff tools, the Studio pages with Help and info, the theme
- *  switch, and the exits back to QueerPulse and out of the session. The
+ *  pages, staff tools, the Studio pages with Help and info, and the exits
+ *  back to QueerPulse and out of the session. The
  *  phone side sheet (StudioNavSheet) reuses it full height through
  *  `className` and `isSheet`. */
 export function StudioAccountMenuPanel({
@@ -141,12 +140,6 @@ export function StudioAccountMenuPanel({
             onNavigate={onNavigate}
           />
         </StudioAccountMenuGroup>
-        {isSheet && (
-          <>
-            <div className={styles.divider} />
-            <StudioThemeRow />
-          </>
-        )}
       </div>
 
       <div className={styles.footer}>

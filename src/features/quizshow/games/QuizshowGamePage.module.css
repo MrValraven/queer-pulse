@@ -1,94 +1,113 @@
-/* The game page sits on the cream page ground; the nav band is reserved by
-   the shell (base.css), this is only breathing room. The bottom clears the
-   builder's fixed save bar, so the results card never sits under it. */
-.page {
-  padding-block: var(--gap-grid) var(--section-y-96);
-  background: var(--cream);
+/* The game page is the studio. These are the two pieces the page adds around
+   it: the dark ground held while a confirmed delete is out, and the results
+   panel that slides in from the right over the studio (it renders inside the
+   studio root, so every token here reads the studio's dark). */
+
+.leaving {
+  position: fixed;
+  inset: 0;
+  isolation: isolate;
+  background: var(--qs-base);
+  color-scheme: dark;
 }
 
-.body {
+/* ── Results panel ─────────────────────────────────────────────────────── */
+.resultsLayer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
   display: flex;
-  flex-direction: column;
-  gap: var(--gap-lg);
-  min-width: 0;
+  justify-content: flex-end;
+  background: var(--qs-scrim);
+  animation: resultsScrimIn var(--dur-base) var(--ease-out);
 }
 
-.header {
+.resultsPanel {
   display: flex;
   flex-direction: column;
+  inline-size: min(26rem, 100%);
+  block-size: 100%;
+  background: var(--qs-raised);
+  border-inline-start: 1px solid var(--qs-line);
+  box-shadow: var(--qs-shadow-lift);
+  color: var(--qs-text);
+  animation: resultsPanelIn var(--dur-slow) var(--ease-out);
+}
+
+.resultsPanel:focus {
+  outline: none;
+}
+
+.resultsHead {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
   gap: var(--gap-sm);
-  padding-block-end: var(--gap-lg);
-  border-block-end: 1px solid rgba(var(--line-rgb), 0.09);
+  padding-block: max(var(--gap-xs), env(safe-area-inset-top)) var(--gap-xs);
+  padding-inline: var(--gap-grid) max(var(--gap-xs), env(safe-area-inset-right));
+  border-block-end: 1px solid var(--qs-line);
 }
 
-.back {
-  align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--icon-gap-inline);
-  min-height: var(--tap-min);
-  font-size: var(--text-body-sm);
-  font-weight: 600;
-  color: var(--ink-60);
-  text-decoration: none;
-  border-radius: var(--radius-tag);
-  transition: color var(--dur-fast) var(--ease);
-}
-@media (hover: hover) and (pointer: fine) {
-  .back:hover {
-    color: var(--ink);
-  }
-}
-.back:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
-}
-
-.titleRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--gap-xs) var(--gap-sm);
-  min-width: 0;
-}
-
-.title {
-  min-width: 0;
+/* The inspector's context title: Fraunces at the same step. */
+.resultsTitle {
   margin: 0;
   font-family: var(--serif);
-  font-weight: 300;
-  font-size: var(--text-title);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  color: var(--text-strong);
-  overflow-wrap: anywhere;
+  font-size: var(--text-22);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--qs-text);
 }
 
-/* Same treatment as the import picker's adults tag, so 18+ reads the same
-   everywhere in Pulse Live. */
-.adultsTag {
-  padding: 2px 9px;
-  font-size: var(--text-caption);
-  font-weight: 600;
-  color: var(--ink);
-  background: rgba(var(--accent-rgb), 0.14);
-  border-radius: var(--radius-pill);
+.resultsBody {
+  flex: 1;
+  min-block-size: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--gap-grid);
+  padding-block-end: max(var(--gap-grid), env(safe-area-inset-bottom));
 }
 
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--gap-xs);
+.resultsLayerClosing {
+  pointer-events: none;
+  animation: resultsScrimOut var(--dur-base) var(--ease-in) forwards;
 }
 
-/* The body's gap alone sits above the results card. */
-.results {
-  padding-block-start: 0;
+.resultsPanelClosing {
+  animation: resultsPanelOut var(--dur-base) var(--ease-in) forwards;
 }
 
-.skeleton {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-sm);
+@keyframes resultsScrimIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes resultsScrimOut {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes resultsPanelIn {
+  from {
+    opacity: 0;
+    transform: translateX(2.5rem);
+  }
+}
+
+@keyframes resultsPanelOut {
+  to {
+    opacity: 0;
+    transform: translateX(2.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resultsLayer,
+  .resultsPanel,
+  .resultsLayerClosing,
+  .resultsPanelClosing {
+    animation: none;
+  }
 }

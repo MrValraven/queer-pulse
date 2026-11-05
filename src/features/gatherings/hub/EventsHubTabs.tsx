@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, type KeyboardEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, type KeyboardEvent } from "react";
 import { HUB_TABS } from "./hub.data";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { usePrefersReducedMotion } from "../../../shared/hooks";
@@ -20,9 +20,12 @@ function hubPanelId(view: HubView): string {
  * tab positions/widths, so the moving indicator never animates a layout
  * property.
  *
- * It renders inline in the `/events` header row (after the My events |
- * Discover switch, before the Host action), so it is a bare tablist with no
- * bar of its own. It used to be a sticky full-bleed bar under the hero.
+ * It renders in the `/events` header (after the My events | Discover switch,
+ * before the Host action on wide screens, on a row of its own on a phone), so
+ * it is a bare tablist with no bar of its own. It used to be a sticky
+ * full-bleed bar under the hero. On a phone the same indicator is drawn as
+ * a sliding underline (see the stylesheet). Either way it re-measures
+ * whenever the row or a tab changes size.
  */
 export function EventsHubTabs({
   active,
@@ -77,6 +80,33 @@ export function EventsHubTabs({
 
     previousRectRef.current = nextRect;
   }, [activeIndex, prefersReducedMotion]);
+
+  // Keep the indicator on the active tab when the row resizes (a phone
+  // rotating, a late webfont): it moves straight to the new box with no
+  // animation.
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(() => {
+      const indicator = indicatorRef.current;
+      const node = tabRefs.current[activeIndex];
+      if (!indicator || !node) return;
+      const listRect = list.getBoundingClientRect();
+      const nodeRect = node.getBoundingClientRect();
+      const nextRect = {
+        start: nodeRect.left - listRect.left,
+        size: nodeRect.width,
+      };
+      indicator.style.insetInlineStart = `${nextRect.start}px`;
+      indicator.style.inlineSize = `${nextRect.size}px`;
+      previousRectRef.current = nextRect;
+    });
+    observer.observe(list);
+    for (const tabNode of tabRefs.current) {
+      if (tabNode) observer.observe(tabNode);
+    }
+    return () => observer.disconnect();
+  }, [activeIndex]);
 
   const moveTo = (index: number) => {
     const nextIndex = (index + HUB_TABS.length) % HUB_TABS.length;

@@ -50,8 +50,26 @@ export interface QuizshowDraftController {
   ) => void;
   duplicateQuestion: (roundIndex: number, questionIndex: number) => void;
   removeQuestion: (roundIndex: number, questionIndex: number) => void;
-  /** A new baseline from the server (after load, save or import); the draft follows it. */
-  resetTo: (quiz: QuizshowQuiz | null) => void;
+  /**
+   * A new baseline from the server (after load, save or import); the draft
+   * follows it. Additive: `shouldKeepKeys` reuses the current draft keys by
+   * position when the new quiz has the same shape (round count and question
+   * count per round), so a list keyed by them keeps its rows (the studio's
+   * post-save reset). Left out, every key is minted fresh, as before.
+   */
+  resetTo: (quiz: QuizshowQuiz | null, options?: QuizshowResetOptions) => void;
+  /**
+   * A new baseline from the server that leaves the draft, its keys and its
+   * picked previews alone: a save answered while the host kept typing. The
+   * draft stays dirty against it until those edits are saved too.
+   */
+  rebaseTo?: (quiz: QuizshowQuiz | null) => void;
+  /**
+   * `updatedAt` of the server quiz the draft is built on (null for none). It
+   * moves on a load, a reset, a rebase, and when a clean draft adopts a newer
+   * quiz; a poll that leaves the draft alone never moves it.
+   */
+  baselineStamp?: string | null;
   /** A blank quiz written in `language` (the app language); English when left out. */
   startBlank: (language?: QuizshowLanguage) => void;
   /**
@@ -71,6 +89,11 @@ export interface QuizshowDraftController {
 }
 
 type PickedPreviewUrls = ReadonlyMap<string, string>;
+
+/** Additive options for `resetTo`. */
+export interface QuizshowResetOptions {
+  shouldKeepKeys?: boolean;
+}
 
 interface DraftState {
   draft: QuizshowDraft;
@@ -122,6 +145,52 @@ function stateFromQuiz(
   };
 }
 
+/** Whether two drafts have the same rounds and the same question count in each. */
+function isSameShape(first: QuizshowDraft, second: QuizshowDraft): boolean {
+  return (
+    first.rounds.length === second.rounds.length &&
+    first.rounds.every(
+      (round, roundIndex) =>
+        round.questions.length === second.rounds[roundIndex]?.questions.length,
+    )
+  );
+}
+
+/** `next` wearing the draft keys of `previous`, by position, when the shapes match. */
+function withKeysOf(
+  next: QuizshowDraft,
+  previous: QuizshowDraft,
+): QuizshowDraft {
+  if (!isSameShape(next, previous)) return next;
+  return {
+    ...next,
+    rounds: next.rounds.map((round, roundIndex) => {
+      const previousRound = previous.rounds[roundIndex];
+      if (!previousRound) return round;
+      return {
+        ...round,
+        draftKey: previousRound.draftKey,
+        questions: round.questions.map((draftQuestion, questionIndex) => ({
+          ...draftQuestion,
+          draftKey:
+            previousRound.questions[questionIndex]?.draftKey ??
+            draftQuestion.draftKey,
+        })),
+      };
+    }),
+  };
+}
+
+/** A reset that keeps the previous draft's keys (see `QuizshowResetOptions`). */
+function stateFromQuizKeepingKeys(
+  quiz: QuizshowQuiz | null,
+  previous: DraftState,
+): DraftState {
+  const fresh = stateFromQuiz(quiz, previous.pickedPreviewUrls);
+  const baseline = withKeysOf(fresh.baseline, previous.draft);
+  return { ...fresh, baseline, draft: structuredClone(baseline) };
+}
+
 /**
  * Revokes each picked preview the moment it leaves the map, and every one
  * still kept when the builder unmounts. Also tracks the committed draft, so a
@@ -162,6 +231,15 @@ function usePickedPreviewRevoking(
   return { isMountedRef, latestDraftRef };
 }
 
+/** `previous` with the baseline taken from `quiz`; the draft and its previews stay. */
+function rebased(previous: DraftState, quiz: QuizshowQuiz | null): DraftState {
+  return {
+    ...previous,
+    baseline: quiz ? draftFromQuiz(quiz) : emptyDraft(),
+    baselineStamp: quiz?.updatedAt ?? null,
+  };
+}
+
 function isNewerThan(quiz: QuizshowQuiz, stamp: string | null): boolean {
   return stamp === null || quiz.updatedAt > stamp;
 }
@@ -179,9 +257,30 @@ function withRound(
   };
 }
 
+export interface QuizshowDraftOptions {
+  /**
+   * Holds the adoption of a newer server quiz (the studio's own save is in
+   * flight, and its response is about to rebase the draft). Off by default.
+   */
+  isAdoptPaused?: boolean;
+}
+
+/** The state a newer server quiz replaces a clean draft with; null when the draft stays. */
+function adoptedStateOf(
+  quiz: QuizshowQuiz | null,
+  state: DraftState,
+  isDirty: boolean,
+  options: QuizshowDraftOptions,
+): DraftState | null {
+  if (!quiz || !isNewerThan(quiz, state.baselineStamp)) return null;
+  if (isDirty || options.isAdoptPaused === true) return null;
+  return stateFromQuiz(quiz, state.pickedPreviewUrls);
+}
+
 /** Follows a newer server quiz (by `updatedAt`) on its own while the draft is clean; a dirty draft waits for the save. */
 export function useQuizshowDraft(
   quiz: QuizshowQuiz | null,
+  options: QuizshowDraftOptions = {},
 ): QuizshowDraftController {
   const [state, setState] = useState<DraftState>(() => stateFromQuiz(quiz));
   const isDirty = useMemo(
@@ -191,9 +290,8 @@ export function useQuizshowDraft(
 
   // A newer server quiz arriving while the draft is clean replaces it during
   // render, so no frame paints the old quiz.
-  if (quiz && isNewerThan(quiz, state.baselineStamp) && !isDirty) {
-    setState(stateFromQuiz(quiz, state.pickedPreviewUrls));
-  }
+  const adopted = adoptedStateOf(quiz, state, isDirty, options);
+  if (adopted !== null) setState(adopted);
   const { isMountedRef, latestDraftRef } = usePickedPreviewRevoking(
     state.pickedPreviewUrls,
     state.draft,
@@ -329,10 +427,17 @@ export function useQuizshowDraft(
     [editDraft],
   );
   const resetTo = useCallback(
-    (nextQuiz: QuizshowQuiz | null) =>
+    (nextQuiz: QuizshowQuiz | null, resetOptions?: QuizshowResetOptions) =>
       setState((previous) =>
-        stateFromQuiz(nextQuiz, previous.pickedPreviewUrls),
+        resetOptions?.shouldKeepKeys === true
+          ? stateFromQuizKeepingKeys(nextQuiz, previous)
+          : stateFromQuiz(nextQuiz, previous.pickedPreviewUrls),
       ),
+    [],
+  );
+  const rebaseTo = useCallback(
+    (nextQuiz: QuizshowQuiz | null) =>
+      setState((previous) => rebased(previous, nextQuiz)),
     [],
   );
   const startBlank = useCallback(
@@ -374,8 +479,10 @@ export function useQuizshowDraft(
     duplicateQuestion,
     removeQuestion,
     resetTo,
+    rebaseTo,
     startBlank,
     pickedPreviewUrls: state.pickedPreviewUrls,
     rememberPickedPreview,
+    baselineStamp: state.baselineStamp,
   };
 }

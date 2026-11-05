@@ -1,0 +1,25 @@
+/* The list of what to finish first, in the Try it buttons (the studio's
+   tooltip among them) and the open lobby dialog. */
+.problemList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.problemItem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+  padding-block: 8px;
+  font-size: var(--text-14);
+  line-height: 1.45;
+  color: var(--ink);
+}
+.problemItem + .problemItem {
+  border-top: 1px solid var(--line);
+}
+.problemText {
+  flex: 1 1 240px;
+  min-width: 0;
+}

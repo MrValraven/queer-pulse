@@ -6,6 +6,7 @@ import { useCommunityEdits } from "../../app/providers/useCommunityEdits";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import { applyCommunityOverride } from "./api/communities.adapters";
+import { localizeDemoCommunity } from "./memberCountLabel";
 import { communities } from "../homepage/data/communities";
 import type { Community } from "../homepage/data/types";
 import {
@@ -58,7 +59,9 @@ export function useAllCommunities(): Community[] {
       demoMode
         ? [
             ...created.map((community) => createdToCommunity(community, t)),
-            ...communities,
+            ...communities.map((community) =>
+              localizeDemoCommunity(community, t),
+            ),
           ].map((community) => {
             const override = community.slug
               ? overrides[community.slug]

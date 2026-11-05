@@ -67,12 +67,18 @@ function NewGameForm({
       sub={t("quizshow:games.new.sub")}
       onClose={onClose}
       initialFocusRef={titleInputRef}
+      className={`${styles.stageScope} ${styles.dialog}`}
       footer={
         <div className={styles.dialogFooter}>
-          <Button variant="ghost" onClick={onClose}>
+          <Button variant="stage-ghost" onClick={onClose}>
             {t("shared:confirmDialog.cancel")}
           </Button>
-          <Button type="submit" form={formId} aria-disabled={isBlocked}>
+          <Button
+            type="submit"
+            variant="stage"
+            form={formId}
+            aria-disabled={isBlocked}
+          >
             {t("quizshow:games.new.create")}
           </Button>
         </div>

@@ -23,6 +23,23 @@
   color: var(--ink-60);
 }
 
+/* Phones: the row opens the results under the sticky toolbar at the results
+   header's own 14px, with a title sized to the card names below it, so it
+   takes less of the first screen. */
+@media (--mobile) {
+  .row {
+    margin-top: 14px;
+  }
+  .title {
+    font-size: var(--text-20);
+  }
+  .sub {
+    margin-top: 2px;
+    font-size: var(--text-13);
+    text-wrap: pretty;
+  }
+}
+
 /* On desktop the title and subtitle keep to one line each, so the column
    width never changes the row's height. Phones let the subtitle wrap. */
 @media (--mobile-up) {
@@ -108,14 +125,26 @@
   scroll-snap-align: start;
 }
 
+/* The phone layout (every window to 860px, tablets included): the cards drop
+   to 88px (DirectoryPartnerCard.module.css), so the rail keeps its 8px of
+   focus-ring room around one 88px row, plus the 12px for a classic
+   scrollbar, and the first place below starts on the first screen. */
+@media (--mobile) {
+  .rail {
+    grid-template-rows: 88px;
+    height: 116px;
+  }
+}
+
 /* Phones: each card is sized so the next one peeks in from the right, which
-   is the scroll affordance with the fade, so the scrollbar is hidden. The
-   rail bleeds to the screen edges and its padding keeps the first card lined
-   up with the heading (DirectorySpacePage.module.css `.relatedGrid`). */
+   is the scroll affordance with the fade, so the scrollbar is hidden and the
+   rail gives back the 12px it kept for one. The rail bleeds to the screen
+   edges and its padding keeps the first card lined up with the heading
+   (DirectorySpacePage.module.css `.relatedGrid`). */
 @media (--sm) {
   .rail {
     grid-auto-columns: min(82%, 18rem);
-    height: 144px;
+    height: 104px;
     margin-inline: calc(-1 * var(--wrap-px));
     padding-inline: var(--wrap-px);
     scroll-padding-inline: var(--wrap-px);

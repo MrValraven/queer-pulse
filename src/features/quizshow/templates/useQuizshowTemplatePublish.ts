@@ -41,8 +41,13 @@ export interface QuizshowTemplatePublishing {
 }
 
 const SAVE_FIRST_KEY = "quizshow:templates.details.saveFirst";
-const FIX_FIRST_KEY = "quizshow:templates.details.fixFirst";
-const CARD_INCOMPLETE_KEY = "quizshow:errors.template_card_incomplete";
+/** Additive export: the studio's top bar words this reason for itself (it has no list below it). */
+export const TEMPLATE_FIX_FIRST_KEY = "quizshow:templates.details.fixFirst";
+const FIX_FIRST_KEY = TEMPLATE_FIX_FIRST_KEY;
+/** Additive export: the studio's top bar takes the host to the card fields on this reason. */
+export const TEMPLATE_CARD_INCOMPLETE_KEY =
+  "quizshow:errors.template_card_incomplete";
+const CARD_INCOMPLETE_KEY = TEMPLATE_CARD_INCOMPLETE_KEY;
 const PUBLISHED_KEY = "quizshow:templates.published";
 const UNPUBLISHED_KEY = "quizshow:templates.unpublished";
 

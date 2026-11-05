@@ -5,7 +5,7 @@ export interface HubDigest {
   posts: number;
   /**
    * Demo only. `GET /me/communities/digest` counts new posts, new members and
-   * upcoming gatherings, and carries no active-member figure, so the live band
+   * upcoming events, and carries no active-member figure, so the live band
    * leaves this undefined and drops the tile. A tile reading 0 would be a
    * measurement nobody took.
    */
@@ -16,7 +16,12 @@ export interface HubDigest {
 
 /** The quiet "this week" band on the "My communities" tab, sitting between
  *  the category chips and the grid: label, the counts, and a note saying the
- *  band is the whole notification — nothing here pings you. */
+ *  band is the whole notification and nothing here pings you.
+ *
+ *  The band lays itself out by its own width (the frame is an inline-size
+ *  container), because the filters sidebar narrows the results column
+ *  independently of the viewport: one row when wide, label and note around a
+ *  single row of counts when medium, the counts in an even grid when narrow. */
 export function CommunitiesHomeDigest({ digest }: { digest: HubDigest }) {
   const { t } = useTranslation();
   const tiles = [
@@ -28,19 +33,28 @@ export function CommunitiesHomeDigest({ digest }: { digest: HubDigest }) {
     { count: digest.joined, labelKey: "communities:hub.digest.joined" },
   ];
   return (
-    <div className={styles.digest}>
-      <div className={styles.digestLbl}>
-        {t("communities:hub.digest.label")}
+    <div className={styles.digestFrame}>
+      <div className={styles.digest}>
+        <div className={styles.digestLbl}>
+          {t("communities:hub.digest.label")}
+        </div>
+        <div
+          className={[
+            styles.digestTiles,
+            tiles.length === 3 && styles.digestTilesThree,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          {tiles.map((tile) => (
+            <div key={tile.labelKey} className={styles.tile}>
+              <div className={styles.tileNum}>{tile.count}</div>
+              <div className={styles.tileLbl}>{t(tile.labelKey)}</div>
+            </div>
+          ))}
+        </div>
+        <p className={styles.digestNote}>{t("communities:hub.digest.note")}</p>
       </div>
-      <div className={styles.digestTiles}>
-        {tiles.map((tile) => (
-          <div key={tile.labelKey} className={styles.tile}>
-            <div className={styles.tileNum}>{tile.count}</div>
-            <div className={styles.tileLbl}>{t(tile.labelKey)}</div>
-          </div>
-        ))}
-      </div>
-      <p className={styles.digestNote}>{t("communities:hub.digest.note")}</p>
     </div>
   );
 }

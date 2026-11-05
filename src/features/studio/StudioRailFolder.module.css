@@ -4,11 +4,7 @@
 
 .folder {
   position: relative;
-  /* A drop target's fill: Daylight's neutral selected grey, and the faint
-     coral dark mode has always used. */
-  --folder-drop-fill: var(--studio-selected);
-}
-:global([data-theme="dark"]) .folder {
+  /* A drop target's fill: a faint coral. */
   --folder-drop-fill: rgba(var(--accent-rgb), 0.14);
 }
 
@@ -183,8 +179,7 @@
   background: var(--folder-drop-fill);
 }
 /* The folder's tile: open, 48px like the covers beside it; folded, the
-   strip's 44px. Its icon is the sidebar icon colour in Daylight and the
-   rail's ink in dark. */
+   strip's 44px. Its icon is the rail's ink. */
 .tile {
   display: grid;
   flex: none;
@@ -193,7 +188,7 @@
   height: 48px;
   border-radius: var(--radius-8);
   background: var(--studio-wash-2);
-  color: var(--studio-rail-icon);
+  color: var(--studio-text);
   outline: 2px solid transparent;
   outline-offset: 2px;
   transition-property: background-color, outline-color;
@@ -203,9 +198,6 @@
 .tile svg {
   width: 18px;
   height: 18px;
-}
-:global([data-theme="dark"]) .tile {
-  color: var(--studio-text);
 }
 .folder .head[data-compact] .tile {
   width: 44px;

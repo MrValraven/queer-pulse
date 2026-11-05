@@ -1,5 +1,9 @@
 import { useCallback, useId, useMemo, useState } from "react";
 import { ChipSelect, SearchInput } from "../../shared/components/ui";
+import {
+  FilterSection,
+  filterPageClassNames,
+} from "../../shared/components/filterPage";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   DIRECTORY_DISCIPLINES,
@@ -9,7 +13,6 @@ import {
   type DirectoryFacetCounts,
   type FilterState,
 } from "./memberDirectoryFilter.data";
-import { FilterSection } from "./FilterSection";
 import { useChipCount } from "./useChipCount";
 import { type SectionKey } from "./filterSectionKeys";
 import styles from "./MemberDirectoryFilterPage.module.css";
@@ -22,8 +25,8 @@ function toggle(arr: string[], value: string): string[] {
 /** The "What they do" (field) + "Profession" filter cards. Owns the free-text
  *  search that widens the profession pool to every matching profession.
  *  Chips carry a stable `id` (compared/stored) alongside a `t()`-resolved
- *  display label — see the i18n sweep note on `memberDirectoryFilter.data.ts`
- *  for why the two were split. The free-text search matches against the
+ *  display label (see the i18n sweep note on `memberDirectoryFilter.data.ts`
+ *  for why the two were split). The free-text search matches against the
  *  *resolved* label so it works in whichever language is active. Search lives
  *  in the "What they do" card but drives the Profession card below it too. */
 export function FilterProfessions({
@@ -35,8 +38,8 @@ export function FilterProfessions({
   onToggleSection,
 }: {
   filters: FilterState;
-  /** Per-option availability counts, or `undefined` when none are available —
-   *  see `DirectoryFacetCounts`. Both cards read from the same object so a
+  /** Per-option availability counts, or `undefined` when none are available
+   *  (see `DirectoryFacetCounts`). Both cards read from the same object so a
    *  field and the professions under it can never be counted differently. */
   counts?: DirectoryFacetCounts;
   countsAreStale: boolean;
@@ -82,7 +85,9 @@ export function FilterProfessions({
         />
         {disciplineOptions.length > 0 ? (
           <ChipSelect
-            className={countsAreStale ? styles.chipsStale : undefined}
+            className={
+              countsAreStale ? filterPageClassNames.chipsStale : undefined
+            }
             labelledBy={`${uid}-fields`}
             options={disciplineOptions.map((o) => ({
               value: o.id,
@@ -117,13 +122,13 @@ export function FilterProfessions({
   );
 }
 
-/** The "Profession" card. Three states, never a wall of ~70 chips:
+/** The "Profession" card. Three states, each a short list of chips:
  *   • searching → matching professions grouped under their parent field, so a
  *     result like "Nurse" is never a floating, contextless chip;
  *   • field(s) chosen, no search → just those fields' professions (already
  *     scoped, so a flat row);
- *   • nothing chosen, no search → a prompt to pick a field or search, not the
- *     entire flattened pool. */
+ *   • nothing chosen, no search → a prompt to pick a field or search, which
+ *     keeps the flattened pool of ~70 out of view. */
 function ProfessionFilterCard({
   filters,
   counts,
@@ -164,8 +169,8 @@ function ProfessionFilterCard({
   );
 
   // With no search, professions are scoped to the chosen fields. No field chosen
-  // means an intentional empty list (the card shows a prompt) — never the whole
-  // flattened pool.
+  // means an intentional empty list (the card shows a prompt), and the whole
+  // flattened pool never shows.
   const scopedProfessions = useMemo(
     () =>
       !q && filters.disciplines.length
@@ -175,8 +180,8 @@ function ProfessionFilterCard({
   );
 
   // Toggling a profession on also selects its parent field, so the choice
-  // survives `reconcileProfessions` and the field chip lights up to match —
-  // this is what keeps a searched profession coherent once picked.
+  // survives `reconcileProfessions` and the field chip lights up to match.
+  // This is what keeps a searched profession coherent once picked.
   const toggleProfession = useCallback(
     (value: string) => {
       const has = filters.professions.includes(value);
@@ -227,7 +232,11 @@ function ProfessionFilterCard({
                     {t(group.labelKey)}
                   </p>
                   <ChipSelect
-                    className={countsAreStale ? styles.chipsStale : undefined}
+                    className={
+                      countsAreStale
+                        ? filterPageClassNames.chipsStale
+                        : undefined
+                    }
                     labelledBy={groupLabelId}
                     options={group.professions.map((o) => ({
                       value: o.id,
@@ -250,7 +259,9 @@ function ProfessionFilterCard({
         )
       ) : filters.disciplines.length ? (
         <ChipSelect
-          className={countsAreStale ? styles.chipsStale : undefined}
+          className={
+            countsAreStale ? filterPageClassNames.chipsStale : undefined
+          }
           labelledBy={`${uid}-professions`}
           options={scopedProfessions.map((o) => ({
             value: o.id,

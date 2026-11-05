@@ -128,13 +128,7 @@ export function HousingListingPage() {
 
           <header className={s.head}>
             <div className={s.headTop}>
-              <span
-                className={s.type}
-                style={{
-                  background: listing.typeColor,
-                  color: listing.typeText,
-                }}
-              >
+              <span className={s.type} data-listing-type={listing.type}>
                 {typeLabel}
               </span>
               <SaveButton

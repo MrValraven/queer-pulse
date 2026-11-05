@@ -20,6 +20,13 @@ const SHAPE_SIZES = {
   preview: "small",
 } as const;
 
+/** The top three ranks wear a coral, rose and lilac edge. */
+const TOP_RANK_CLASS_NAMES: Partial<Record<number, string>> = {
+  1: `${styles.leaderboardRowTop} ${styles.leaderboardRowFirst}`,
+  2: `${styles.leaderboardRowTop} ${styles.leaderboardRowSecond}`,
+  3: `${styles.leaderboardRowTop} ${styles.leaderboardRowThird}`,
+};
+
 /** Rows rank in place: when a score lands, the row glides to its new spot and its
  *  number rolls up from the previous score. */
 export function QuizshowLeaderboard({
@@ -50,11 +57,15 @@ export function QuizshowLeaderboard({
               layout: layoutTransition,
               opacity: { duration: reducedMotion ? 0 : 0.25 },
             }}
-            className={`${styles.leaderboardRow} ${
+            className={[
+              styles.leaderboardRow,
+              TOP_RANK_CLASS_NAMES[entry.rank] ?? "",
               entry.entrantId === highlightEntrantId
                 ? styles.leaderboardRowSelf
-                : ""
-            }`}
+                : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
             aria-current={
               entry.entrantId === highlightEntrantId ? "true" : undefined
             }
@@ -65,6 +76,7 @@ export function QuizshowLeaderboard({
                 colorKey={entry.colorKey}
                 size={SHAPE_SIZES[size]}
                 label={null}
+                isGlowing
               />
             ) : (
               <span aria-hidden="true" />

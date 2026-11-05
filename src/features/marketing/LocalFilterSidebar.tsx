@@ -76,7 +76,6 @@ export function LocalFilterSidebar(fields: LocalFilterFieldsProps) {
     listingFacts,
     onToggleListingFact: fields.onToggleListingFact,
     counts: fields.chipCounts.listingFacts,
-    isLoadedSetComplete: fields.isLoadedSetComplete,
     sectionTitleId: titleId(key),
   });
 
@@ -92,7 +91,6 @@ export function LocalFilterSidebar(fields: LocalFilterFieldsProps) {
           onToggleCategory={fields.onToggleCategory}
           onClearCategories={fields.onClearCategories}
           categoryCounts={fields.categoryCounts}
-          isLoadedSetComplete={fields.isLoadedSetComplete}
           categoryIds={localCategoryChipIds(isOnlineScope, fields.isAdultShown)}
           hasSwatches={!isOnlineScope}
           sectionTitleId={titleId("placeType")}
@@ -113,7 +111,6 @@ export function LocalFilterSidebar(fields: LocalFilterFieldsProps) {
           safeOnly={fields.safeOnly}
           onToggleSafeOnly={fields.onToggleSafeOnly}
           chipCounts={fields.chipCounts}
-          isLoadedSetComplete={fields.isLoadedSetComplete}
           showAdult={isOnlineScope && fields.canShowAdult === true}
           isAdultShown={fields.isAdultShown}
           onToggleAdult={fields.onToggleAdult}
@@ -126,6 +123,7 @@ export function LocalFilterSidebar(fields: LocalFilterFieldsProps) {
         <LocalOwnedByFilter
           owned={fields.owned}
           onToggleOwned={fields.onToggleOwned}
+          ownedCounts={fields.chipCounts.owned}
           sectionTitleId={titleId("ownedBy")}
         />,
       )}
@@ -162,7 +160,6 @@ export function LocalFilterSidebar(fields: LocalFilterFieldsProps) {
             access={fields.access}
             onToggleAccess={fields.onToggleAccess}
             accessCounts={fields.chipCounts.access}
-            isLoadedSetComplete={fields.isLoadedSetComplete}
             sectionTitleId={titleId("access")}
           />,
         )}

@@ -1,8 +1,9 @@
-/* Bare tablist for the Discover sub-views. It renders inline in the /events
-   header row, after the My events | Discover switch, so it carries no bar,
-   ground or sticky behaviour of its own; the header owns the row. Vertical
-   sizing (4px + 44px + 4px = 52px) matches EventsTopTabs so the two tab
-   levels line up on one baseline. */
+/* Bare tablist for the Discover sub-views. It renders in the /events header,
+   after the My events | Discover switch (inline on wide screens, on a row of
+   its own on a phone), so it carries no bar, ground or sticky behaviour of
+   its own; the header owns the layout. Vertical sizing (4px + 44px + 4px =
+   52px) matches EventsTopTabs so the two tab levels line up on one
+   baseline. */
 .list {
   position: relative;
   display: flex;
@@ -84,5 +85,51 @@
 @media (prefers-reduced-motion: reduce) {
   .tab {
     transition: none;
+  }
+}
+
+/* On a phone the sub-tabs are quiet underline tabs, the same second-level
+   style as My events' List | Calendar row (MyEvents.module.css, `.mview`):
+   left aligned, no track and no pill, a hairline under the row and a 2px
+   coral rule under the tab that is on. The rule is the same FLIP indicator,
+   so it still slides between tabs (transform only, instant under reduced
+   motion), and the component re-measures it whenever the row resizes. The
+   tabs fit a 320px phone in either language, so the row drops its scroller
+   here, which leaves the end tabs' focus rings unclipped. */
+@media (--md) {
+  .list {
+    inline-size: 100%;
+    gap: var(--gap-grid);
+    padding-block: 0;
+    overflow-x: visible;
+    border-block-end: 1px solid rgba(var(--line-rgb), 0.1);
+  }
+
+  .tab {
+    min-block-size: var(--tap-min);
+    padding: 0 2px;
+    border-radius: 0;
+    font-size: var(--text-13);
+  }
+
+  .tab:focus-visible {
+    outline-offset: -2px;
+  }
+
+  .indicator {
+    inset-block: auto -1px;
+    block-size: 2px;
+    border-radius: 0;
+    background: var(--accent);
+  }
+
+  .tabOn {
+    color: var(--text-strong);
+  }
+}
+
+@media (--md) and (hover: hover) and (pointer: fine) {
+  .tabOn:hover {
+    color: var(--text-strong);
   }
 }

@@ -11,6 +11,7 @@ import { eventZoneFormat } from "../eventTimezone";
 import { gatheringWhen } from "../gatheringSchedule";
 import { sizedCover } from "./coverUrl";
 import { EventCommunityMenu } from "./EventCommunityMenu";
+import { EventCoverFallback } from "./EventCoverFallback";
 import {
   CtaPill,
   EventSpan,
@@ -85,7 +86,8 @@ function DateChip({
  * row for `list`. A landscape cover fills the frame; a poster shows whole over
  * its own blurred backdrop, in every variant. One `<Link>` per card; `aria-label`
  * pins the accessible name to the event title regardless of how much text sits
- * inside. A `lead` or `featured` poster that names its hosting community sits
+ * inside. A `lead` or `featured` poster with no cover wears the tinted
+ * `EventCoverFallback` surface under its scrim. A `lead` or `featured` poster that names its hosting community sits
  * in a `.shell` with the community menu on its top trailing corner, beside the
  * link.
  */
@@ -182,7 +184,14 @@ export function EventPosterCard({
       className={`${styles.link} ${styles[variant]}`}
     >
       <span className={styles.frame}>
-        <PosterAwareImageSlot {...imageProps} />
+        {event.coverImageUrl ? (
+          <PosterAwareImageSlot {...imageProps} />
+        ) : (
+          <EventCoverFallback
+            event={event}
+            size={variant === "lead" ? "hero" : "card"}
+          />
+        )}
         <span className={styles.scrim} aria-hidden />
         <span className={styles.scrimHover} aria-hidden />
         {showRibbon && <WhenRibbon event={event} now={effectiveNow} />}

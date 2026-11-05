@@ -1,14 +1,17 @@
 /* The "Suggested for you" band on the Discover directory. Its card grid
-   matches the Discover browse grid below it (`.grid` in
-   CommunitiesPage.module.css): three equal tracks, so a lone suggestion is the
-   same width as the cards under it and the two grids line up. */
+   matches the Discover browse grid below it (`.gridInLayout` in
+   CommunitiesPage.module.css): as many 280px-or-wider tracks as the results
+   column holds, so a lone suggestion is the same width as the cards under it
+   and the two grids line up whether the filters sidebar shows or hides. The
+   min() keeps a single track inside a phone narrower than 280px, so a phone
+   gets one column with no media query, as the browse grid does. */
 .section {
   margin: 8px 0 36px;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
   gap: 20px;
   grid-auto-rows: 1fr;
   margin-top: 24px;
@@ -17,10 +20,4 @@
 .grid > * {
   min-width: 0;
   height: 100%;
-}
-/* Single column on narrow phones, same as the browse grid. */
-@media (--sm) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
 }

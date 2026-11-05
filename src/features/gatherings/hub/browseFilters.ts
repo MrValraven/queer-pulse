@@ -1,4 +1,4 @@
-import type { EventBrowseFilters } from "../api/events.api";
+import type { EventBrowseFilters, EventWhenWindows } from "../api/events.api";
 import {
   findFamily,
   findFormat,
@@ -209,6 +209,24 @@ export function whenPresetRange(
   return {
     from: from.toISOString(),
     to: endOfDay(addDays(now, daysUntilSunday)).toISOString(),
+  };
+}
+
+/**
+ * Every date chip's window but "Any time", for the availability counts: each
+ * one exactly the `from`/`to` that chip would send, so a chip's count and the
+ * board it would show read the same window.
+ */
+export function whenPresetWindows(now: Date): EventWhenWindows {
+  const windowFor = (preset: Exclude<WhenPreset, "any">) => {
+    const range = whenPresetRange(preset, now);
+    return { from: range.from ?? "", to: range.to ?? "" };
+  };
+  return {
+    today: windowFor("today"),
+    weekend: windowFor("weekend"),
+    week: windowFor("week"),
+    month: windowFor("month"),
   };
 }
 

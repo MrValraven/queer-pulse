@@ -34,7 +34,7 @@ export function QuizshowRemovedNotice({
   const { t } = useTranslation();
   const backLink = playerBackLinkOf(kind ?? "game", eventSlug);
   return (
-    <div className={styles.endStack}>
+    <div className={`${styles.endStack} ${styles.sheet}`}>
       <h1 className={styles.title}>{t("quizshow:errors.player_removed")}</h1>
       <p className={styles.lead}>
         {t(
@@ -43,10 +43,13 @@ export function QuizshowRemovedNotice({
             : "quizshow:player.removedBodyGame",
         )}
       </p>
-      <Button to={backLink.to} size="lg">
+      <Button to={backLink.to} variant="stage" size="lg">
         {t(backLink.labelKey)}
       </Button>
-      <Collapse isOpen={kind === "game" && reportSubject !== null}>
+      <Collapse
+        isOpen={kind === "game" && reportSubject !== null}
+        className={styles.reportRow}
+      >
         {reportSubject !== null && (
           <QuizshowReportGameButton
             sessionId={reportSubject.sessionId}
@@ -125,12 +128,14 @@ export function QuizshowPlayerEnd({
           : t("quizshow:player.endedTitle")}
       </h1>
       {place !== null && (
-        <p className={styles.place} role="status">
-          {t(placeKey, {
-            place: place.place,
-            total: place.total,
-          })}
-        </p>
+        <div className={styles.placeCard}>
+          <p className={styles.place} role="status">
+            {t(placeKey, {
+              place: place.place,
+              total: place.total,
+            })}
+          </p>
+        </div>
       )}
       {podium.length > 0 && <QuizshowPodium entries={podium} size="phone" />}
       {nextEvent && (
@@ -143,15 +148,19 @@ export function QuizshowPlayerEnd({
       )}
       <div className={styles.actions}>
         {onPlayAgain !== undefined && (
-          <Button size="lg" onClick={onPlayAgain}>
+          <Button variant="stage" size="lg" onClick={onPlayAgain}>
             {t("quizshow:player.playAgain")}
           </Button>
         )}
-        <Button to={backLink.to} variant="ghost" size="lg">
+        <Button
+          to={backLink.to}
+          variant={onPlayAgain === undefined ? "stage" : "stage-ghost"}
+          size="lg"
+        >
           {t(backLink.labelKey)}
         </Button>
       </div>
-      <Collapse isOpen={isReportShown}>
+      <Collapse isOpen={isReportShown} className={styles.reportRow}>
         {playerSession !== null && (
           <QuizshowReportGameButton
             sessionId={playerSession.sessionId}

@@ -1,179 +1,63 @@
-.hero {
-  background: var(--plum);
-  /* nav band reserved by shell (base.css); this is only breathing room.
-     Tightened (was 60px 0 88px) so the tab bar and the first listings are
-     above the fold on load. The hero keeps every part, just less air. */
-  padding: 40px 0 40px;
-  position: relative;
-  overflow: hidden;
+/* The housing tab's results column, beside the shared filters sidebar.
+   `min-width: 0` lets the grid track shrink below its content (the map and
+   long chip rows), and the variable drops the map band's own padding, since
+   the column spaces the map here, as it does on /local. */
+.results {
+  min-width: 0;
+  --directory-view-padding: 0;
 }
-.hero::before {
-  content: "";
-  position: absolute;
-  top: -10%;
-  right: -5%;
-  /* scaled with the shorter hero so the glow still reads as a corner wash */
-  width: 400px;
-  height: 400px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(var(--jade-rgb), 0.13),
-    transparent 62%
-  );
-  pointer-events: none;
-}
-.cat {
-  font-size: var(--text-12);
-  font-weight: 700;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 12px;
-}
-.hero h1 {
-  font-family: var(--serif);
-  font-weight: 300;
-  /* top of the clamp pulled in (was 80px) to match the compact PageHero.
-     Still the biggest thing on the page, ~1/4 shorter per line. */
-  font-size: var(--text-display);
-  color: rgba(var(--cream-rgb), 1);
-  letter-spacing: -0.025em;
-  line-height: 0.98;
-  max-width: 15ch;
-}
-.hero h1 em {
-  font-style: italic;
-  color: var(--accent);
-  font-weight: 400;
-}
-.hero p {
-  font-size: var(--text-16);
-  color: rgba(var(--cream-rgb), 0.68);
-  /* wider measure (was 52ch) so the same lead sets in one fewer line */
-  max-width: 62ch;
-  margin-top: 16px;
-  line-height: 1.6;
-}
-.note {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: var(--text-13-5);
-  color: rgba(var(--cream-rgb), 0.68);
-  margin-top: 16px;
-}
-.noteDot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--jade);
-  flex: none;
-}
-
-.tabBar {
-  background: var(--cream);
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
-  padding: 18px 0;
-}
-
-/* First section under the hero: top padding trimmed (was 72px) to buy more
-   above-the-fold room; the bottom keeps the page's normal section rhythm. */
-.body {
-  padding: var(--section-y-48) 0 var(--section-y-88);
-}
-.top {
+/* ── Header actions ─────────────────────────────────────────────────────────── */
+/* The page header's action row holds the Housing/Flatmates tabs and, pushed
+   to the row's end, the active tab's calls to action ("My listings" and
+   "List your space", or "Post your profile"). The group is keyed by tab, so
+   it fades in when the tab switches. */
+.headCtas {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 36px;
+  gap: 10px 12px;
+  margin-left: auto;
+  animation: headCtasIn 0.28s var(--ease) both;
 }
-.filters {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.chip {
-  font-family: var(--sans);
-  font-size: var(--text-14);
-  font-weight: 500;
-  color: var(--ink-60);
-  cursor: pointer;
-  border: 1px solid rgba(var(--line-rgb), 0.16);
-  background: transparent;
-  border-radius: var(--radius-pill);
-  padding: 9px 17px;
-  transition:
-    background var(--dur-base) var(--ease),
-    color var(--dur-base) var(--ease),
-    border-color var(--dur-base) var(--ease);
-}
-@media (hover: hover) {
-  .chip:not(.chipActive):hover {
-    color: var(--ink);
-    border-color: rgba(var(--line-rgb), 0.4);
+@keyframes headCtasIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
-.chipActive {
-  background: var(--plum);
-  color: rgba(var(--cream-rgb), 1);
-  border-color: var(--line-strong);
-}
-.listActions {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.myListingsLink {
-  font-family: var(--sans);
-  font-size: var(--text-14);
-  font-weight: 600;
-  color: var(--ink-60);
-  white-space: nowrap;
-}
-.myListingsLink:hover {
-  color: var(--ink);
-}
-.listBtn {
-  font-family: var(--sans);
-  font-size: var(--text-14);
-  font-weight: 600;
-  padding: 11px 22px;
-  border-radius: var(--radius-pill);
-  background: var(--accent);
-  color: rgba(var(--cream-rgb), 1);
-  border: none;
-  cursor: pointer;
-  transition: background 0.25s;
-  white-space: nowrap;
-}
-@media (hover: hover) {
-  .listBtn:hover {
-    background: var(--accent-ink);
+@media (prefers-reduced-motion: reduce) {
+  .headCtas {
+    animation: none;
   }
 }
-
-/* ── Refine bar ────────────────────────────────────────────────────────────── */
-/* The board's filters live behind the shared "Refine" drawer, the way the
-   browse board's and the communities grid's do. The paper card they used to
-   stand in was ~230px of controls above the fold on every visit, for choices
-   most visitors make once or never; what stays on screen now is this one row
-   and the chip row saying what is currently applied. */
-.refineBar {
-  margin-block: 4px 22px;
+/* Phones: the tabs take their own line, then the buttons follow at their
+   natural width, left-aligned and wrapping, the way /about/volunteer's do. */
+@media (--mobile) {
+  .headTabsSwitch {
+    flex: 1 1 100%;
+  }
+  .headCtas {
+    margin-left: 0;
+  }
 }
-/* The one row that is always visible. No gap on `.refineBar` around it: the
-   drawer stays mounted so it can animate shut, and a gap would keep reserving
-   space around a collapsed panel. */
-.refineRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+/* ── Sidebar fields ─────────────────────────────────────────────────────────── */
+/* The Available by date picker spans the section like the Price and Deposit
+   inputs: the picker shrinks to its field by default, so the root (its
+   `role="group"` adds the weight to beat that default whatever the stylesheet
+   order) takes the full width and the typeable field grows into it beside
+   the calendar button. */
+.availablePicker[role="group"] {
+  width: 100%;
 }
+.availablePicker[role="group"] > :first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+/* The number inputs in the filters sidebar's Price and Deposit sections. */
 .filterInput {
   font-family: var(--sans);
   font-size: var(--text-14);
@@ -194,22 +78,73 @@
   align-items: center;
   gap: 8px;
 }
+/* The two ends share the sidebar's width evenly. */
 .priceRange .filterInput {
-  width: 92px;
+  flex: 1 1 0;
 }
 .priceDash {
   color: var(--ink-40);
 }
-/* A `RefineSplit`'s second column is a 1fr track, so a lone select or date
-   field in it would stretch the width of the panel. Cap it to read as a
-   sibling of the capped first column. */
-.narrowField {
-  max-width: 260px;
+/* The Neighbourhood section: its search field over the checkbox rows. */
+.areaSearch {
+  margin-bottom: 6px;
 }
-.toggleRow {
+.areaClearRow {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  justify-content: flex-end;
+  padding: 2px 0 4px;
+}
+.areaClear {
+  font-family: var(--sans);
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--accent-ink);
+  background: none;
+  border: none;
+  padding: 2px 0;
+  cursor: pointer;
+}
+@media (hover: hover) and (pointer: fine) {
+  .areaClear:hover {
+    color: var(--accent-deep);
+  }
+}
+.areaClear:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+/* A neighbourhood row folds shut (grid rows 1fr to 0fr) while the search
+   leaves it out. The inner box carries no block padding, so the 0fr track
+   reaches true zero; its inline padding, pulled back by the negative margin,
+   keeps the checkbox focus ring clear of the clip. */
+.areaRow {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.22s var(--ease),
+    opacity 0.18s var(--ease);
+}
+.areaRowShown {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.areaRowInner {
+  min-height: 0;
+  overflow: hidden;
+  margin-inline: -4px;
+  padding-inline: 4px;
+}
+.areaEmpty {
+  padding: 5px 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+@media (prefers-reduced-motion: reduce) {
+  .areaRow {
+    transition: none;
+  }
 }
 .saveForm {
   display: flex;
@@ -300,8 +235,19 @@
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 18px;
 }
-/* Let the empty state span the full grid width so it centers, rather than
-   sitting in a single left-hand column. */
+/* Inside the results column the listing grid follows the column's own
+   width: each card at least 280px and at least a third of the row, so a wide
+   column holds three and a narrower one two (or one) wider cards. The 37px
+   is the grid's two 18px gaps plus 1px of slack, so rounding never drops the
+   third card. */
+.results .grid {
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(max(min(100%, 280px), calc((100% - 37px) / 3)), 1fr)
+  );
+}
+/* Let the empty state span the full grid width so it centers across every
+   column. */
 .empty {
   grid-column: 1 / -1;
 }
@@ -394,6 +340,37 @@
   align-self: flex-start;
 }
 
+/* Type badge colours per listing type. Light values are the original inline
+   tints; dark swaps the ink to a lifted token because --plum is the dark page
+   colour and --jade sits under 4.5:1 on the dark card. Sublet and room
+   use the AA text tokens (--accent-text 5.39:1, --jade-ink 5.07:1 over their
+   10% tints on paper); both tokens lift themselves in dark. */
+.type[data-listing-type="sublet"] {
+  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--accent-text);
+}
+.type[data-listing-type="room"] {
+  background: rgba(var(--jade-rgb), 0.1);
+  color: var(--jade-ink);
+}
+.type[data-listing-type="short"] {
+  background: rgba(var(--plum-rgb), 0.08);
+  color: var(--text-strong);
+}
+.type[data-listing-type="studio"] {
+  background: rgba(var(--violet-rgb), 0.1);
+  color: var(--violet);
+}
+:global([data-theme="dark"]) .type[data-listing-type="room"] {
+  color: var(--jade-ink);
+}
+:global([data-theme="dark"]) .type[data-listing-type="short"] {
+  background: rgba(var(--plum-tint-rgb), 0.14);
+}
+:global([data-theme="dark"]) .type[data-listing-type="studio"] {
+  color: var(--plum-tint);
+}
+
 /* Spacing for the LGBTQ+ affirming baseline norm line at the top of the board. */
 .affirmingNote {
   margin-block: 4px 18px;
@@ -473,13 +450,15 @@
   color: var(--ink-60);
 }
 
+/* The landlords and tips bands render inside the filter page frame, after the
+   sidebar and results, so they share its left edge and gutters; the frame's
+   bottom padding closes the last one. */
 .landlords {
-  padding: var(--section-y-72) 0;
-  background: var(--cream);
+  padding-top: var(--section-y-72);
 }
 .llGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 14px;
   margin-top: 36px;
 }
@@ -558,7 +537,7 @@
 }
 
 .tips {
-  padding: var(--section-y-72) 0 var(--section-y-104);
+  padding-top: var(--section-y-72);
 }
 .tipsGrid {
   display: grid;
@@ -596,16 +575,6 @@
 :global([data-theme="dark"]) .llCard,
 :global([data-theme="dark"]) .tipCard {
   border-color: rgba(var(--cream-rgb), 0.1);
-}
-
-@media (max-width: 700px) {
-  .hero {
-    /* nav band reserved by shell (base.css); this is only breathing room */
-    padding: 28px 0 32px;
-  }
-  .body {
-    padding: 32px 0 var(--section-y-72);
-  }
 }
 
 /* The compact listing card in the map's floating panel (HousingMapCard). In
@@ -704,4 +673,30 @@
 .viewToggleBtnOn {
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
+}
+/* --plum is the dark page colour, so the selected pill lifts to a lavender
+   wash with a cream hairline ring; the cream text stays light. */
+:global([data-theme="dark"]) .viewToggleBtnOn {
+  background: rgba(var(--plum-tint-rgb), 0.5);
+  box-shadow: var(--ring-cream-hairline);
+}
+
+/* Below the wide cutover the results top row has no room for the labels, so the
+   toggle shrinks to icons; the label stays as the button's accessible name. */
+@media (--wide) {
+  .viewToggleBtn {
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 12px;
+    gap: 0;
+  }
+  .viewToggleLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
 }

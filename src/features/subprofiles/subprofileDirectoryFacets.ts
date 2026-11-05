@@ -1,32 +1,47 @@
 import type {
   SubprofileCardDTO,
+  SubprofileDirectoryFacetsDTO,
+  SubprofileDirectoryRefinement,
   SubprofileKind,
+  TableChipFormat,
   TableFormat,
   TableVibe,
 } from "./api/subprofiles.api";
 import { TABLE_VIBES } from "./questTable.data";
+import { KIND_LABEL_KEYS } from "./subprofile-kinds";
+import { AVAILABILITY_OPTIONS } from "./subprofilePresence.data";
 
-/** The persona availability value the "Open to collabs" toggle narrows to. */
-const OPEN_TO_COLLABS = "open_to_collabs";
+/** How many of the directory's most-used tags the sidebar is offered; the
+ *  endpoint's `DIRECTORY_FACET_TAG_CAP`. */
+export const DIRECTORY_FACET_TAG_CAP = 20;
+
+const TABLE_CHIP_FORMATS: readonly TableChipFormat[] = ["online", "in_person"];
+
+/** A facet group, named as its server param. */
+export type DirectoryFacetGroup = keyof SubprofileDirectoryRefinement;
 
 /**
- * The directory's narrowing predicates, kept apart from the hook that combines
- * them so each facet's counts can be taken under the OTHERS.
+ * The directory's narrowing predicates, the demo mirror of the endpoint's
+ * `subprofile-directory-refinement.ts`. Live mode filters and counts on the
+ * server (`GET /subprofiles/directory` takes every group as a param and
+ * returns a `facets` block); demo mode runs these over the mock directory
+ * inside the query function, so both modes hand the page the same shape:
+ * an already-narrowed set plus its facet counts.
  *
- * That is the whole reason these are separate one-liners rather than a single
- * `matchesAll`: a profession chip's badge has to say how many personas it would
- * yield under the current tags and availability, but NOT under the profession
- * selection itself. Counting a facet under its own selection is what makes a
- * multi-select row where every unpicked chip reads 0.
+ * They stay separate one-liners so each
+ * facet's counts can be taken under the OTHERS: a profession chip's badge has
+ * to say how many personas it would yield under the current tags and
+ * availability, but NOT under the profession selection itself. Counting a
+ * facet under its own selection is what makes a multi-select row where every
+ * unpicked chip reads 0.
  *
  * `matchesTable` is the Quest personas' "At the table" facet (format and table
  * vibe), which only a card carrying a `table` summary can pass once one of its
  * chips is on.
  *
- * There is no free-text predicate here any more. Search is a server param now
- * (`GET /subprofiles/directory?query=`), so the set these run over has already
- * been searched, and a second browser-side spelling of the same ILIKE would be
- * a filter nobody could see running.
+ * There is no free-text predicate here. Search is a server param
+ * (`?query=`), and the demo fixture applies its own copy of it
+ * (`mockDirectory`), so the set these run over has already been searched.
  */
 export const matchesKind = (
   card: SubprofileCardDTO,
@@ -36,10 +51,10 @@ export const matchesKind = (
 export const matchesTags = (card: SubprofileCardDTO, tags: readonly string[]) =>
   tags.length === 0 || card.tags.some((tag) => tags.includes(tag));
 
-export const matchesOpenToCollabs = (
+export const matchesAvailability = (
   card: SubprofileCardDTO,
-  isOpenToCollabsOnly: boolean,
-) => !isOpenToCollabsOnly || card.availability === OPEN_TO_COLLABS;
+  availability: string | undefined,
+) => !availability || card.availability === availability;
 
 /** How many of `cards` carry each profession (`kind`). */
 export function countByKind(
@@ -128,4 +143,79 @@ export function countByTableVibe(
     for (const vibe of new Set(card.table?.vibe ?? [])) counts[vibe] += 1;
   }
   return counts;
+}
+
+/** Every refinement group except `lift`, so a count can lift its own group. */
+export function matchesRefinement(
+  card: SubprofileCardDTO,
+  refinement: SubprofileDirectoryRefinement,
+  lift?: DirectoryFacetGroup,
+): boolean {
+  return (
+    (lift === "kinds" || matchesKind(card, refinement.kinds ?? [])) &&
+    (lift === "tags" || matchesTags(card, refinement.tags ?? [])) &&
+    (lift === "availability" ||
+      matchesAvailability(card, refinement.availability)) &&
+    matchesTable(
+      card,
+      lift === "tableFormats" ? [] : (refinement.tableFormats ?? []),
+      lift === "tableVibes" ? [] : (refinement.tableVibes ?? []),
+    )
+  );
+}
+
+/** Each of `options` keyed to its count in `counts`, 0 when absent, so the
+ *  map carries the full vocabulary the way the endpoint's does. */
+function fillCounts<Option extends string>(
+  options: readonly Option[],
+  counts: Record<string, number>,
+): Record<Option, number> {
+  return Object.fromEntries(
+    options.map((option) => [option, counts[option] ?? 0]),
+  ) as Record<Option, number>;
+}
+
+/**
+ * The demo directory's `facets` block, with the endpoint's semantics
+ * (`countSubprofileDirectoryFacets`): every group counted over `searchedPool`
+ * with its own selection lifted and the others applied, the AND vibe group
+ * counted under the vibes already picked, and the tag vocabulary drawn from
+ * `visibleDirectory` (the whole unsearched directory) plus any picked tag.
+ */
+export function countDirectoryFacets(
+  searchedPool: readonly SubprofileCardDTO[],
+  visibleDirectory: readonly SubprofileCardDTO[],
+  refinement: SubprofileDirectoryRefinement,
+): SubprofileDirectoryFacetsDTO {
+  const poolWithout = (lift?: DirectoryFacetGroup) =>
+    searchedPool.filter((card) => matchesRefinement(card, refinement, lift));
+  const tagVocabulary = [
+    ...new Set([
+      ...topTags(visibleDirectory, DIRECTORY_FACET_TAG_CAP),
+      ...(refinement.tags ?? []),
+    ]),
+  ];
+  const tagCounts = countByTag(poolWithout("tags"));
+  const availabilityCounts: Record<string, number> = {};
+  for (const card of poolWithout("availability")) {
+    if (card.availability === null) continue;
+    availabilityCounts[card.availability] =
+      (availabilityCounts[card.availability] ?? 0) + 1;
+  }
+  return {
+    kinds: fillCounts(
+      Object.keys(KIND_LABEL_KEYS) as SubprofileKind[],
+      countByKind(poolWithout("kinds")),
+    ),
+    tags: tagVocabulary.map((tag) => ({ tag, count: tagCounts[tag] ?? 0 })),
+    availability: fillCounts(
+      AVAILABILITY_OPTIONS.map((option) => option.value),
+      availabilityCounts,
+    ),
+    tableFormats: fillCounts(
+      TABLE_CHIP_FORMATS,
+      countByTableFormat(poolWithout("tableFormats")),
+    ),
+    tableVibes: countByTableVibe(poolWithout()),
+  };
 }

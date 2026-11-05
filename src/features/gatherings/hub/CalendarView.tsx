@@ -10,8 +10,9 @@ import styles from "./CalendarView.module.css";
 /**
  * The Calendar tab of the Events Hub. Lifted straight out of the old
  * `CalendarPage` composition (month grid + selected-day sidebar + upcoming
- * list + legend) — only the page-level hero chrome was dropped, since the
- * featured card + `EventsHubTabs` already own that above this view.
+ * list + legend). Only the page-level hero chrome was dropped, since
+ * `EventsHubTabs` already owns that above this view (the featured card shows
+ * on Highlights alone).
  * `now` replaces the old page's hardcoded `CALENDAR_TODAY` for the initial
  * month and the "upcoming" cutoff, so the hub's one shared clock wins.
  *
@@ -131,7 +132,7 @@ export function CalendarView({
         </FadeIn>
 
         <div className={styles.layout}>
-          <div>
+          <div className={styles.mainColumn}>
             <MonthGrid
               view={view}
               selected={selected}

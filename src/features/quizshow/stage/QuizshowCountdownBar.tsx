@@ -14,6 +14,8 @@ interface QuizshowCountdownBarProps {
   size: QuizshowStageSize;
   /** The phase's standard limit in ms, so a bar that mounts during a pause still holds its place. */
   standardLimitMs?: number | null;
+  /** Whether the visible "Finishing up" line shows under the bar. The spoken status stays either way. */
+  hasNote?: boolean;
 }
 
 const LOW_FRACTION = 0.25;
@@ -26,6 +28,7 @@ export function QuizshowCountdownBar({
   hasExtraTime,
   size,
   standardLimitMs = null,
+  hasNote = true,
 }: QuizshowCountdownBarProps) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
@@ -77,23 +80,29 @@ export function QuizshowCountdownBar({
         <div className={`${styles.countdown} ${styles[size]}`}>
           <div className={styles.track} aria-hidden="true">
             <div
-              className={fillClassName}
-              style={{ transform: `scaleX(${fraction ?? 0})` }}
-            />
-          </div>
-          <AnimatePresence mode="wait" initial={false}>
-            <m.span
-              key={visibleNote ?? "none"}
-              className={styles.countdownNote}
-              aria-hidden="true"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: reducedMotion ? 0 : 0.15 }}
+              className={`${styles.fillGlow} ${isLow ? styles.fillGlowLow : ""}`}
             >
-              {visibleNote}
-            </m.span>
-          </AnimatePresence>
+              <div
+                className={fillClassName}
+                style={{ transform: `scaleX(${fraction ?? 0})` }}
+              />
+            </div>
+          </div>
+          {hasNote && (
+            <AnimatePresence mode="wait" initial={false}>
+              <m.span
+                key={visibleNote ?? "none"}
+                className={styles.countdownNote}
+                aria-hidden="true"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: reducedMotion ? 0 : 0.15 }}
+              >
+                {visibleNote}
+              </m.span>
+            </AnimatePresence>
+          )}
         </div>
       </Collapse>
       <span role="status" className={styles.visuallyHidden}>

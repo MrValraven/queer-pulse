@@ -16,7 +16,6 @@ import { EmployerAffiliationProvider } from "../app/providers/EmployerAffiliatio
 import { PostedJobsProvider } from "../app/providers/PostedJobsProvider";
 import { ProfileProvider } from "../app/providers/ProfileProvider";
 import { PublicProfileProvider } from "../app/providers/PublicProfileProvider";
-import { ProfileThemeProvider } from "../app/providers/ProfileThemeProvider";
 import { ConnectionsProvider } from "../app/providers/ConnectionsProvider";
 import { ConnectProvider } from "../app/providers/ConnectProvider";
 import { VouchProvider } from "../app/providers/VouchProvider";
@@ -63,7 +62,6 @@ const PROVIDERS: ProviderComponent[] = [
   PostedJobsProvider,
   ProfileProvider,
   PublicProfileProvider,
-  ProfileThemeProvider,
   ConnectionsProvider,
   ConnectProvider,
   VouchProvider,

@@ -61,13 +61,19 @@ function useAdultLocals(
   }: Pick<DirectoryFilterParams, "listingFacts" | "safe" | "owned" | "access">,
 ) {
   // The 18+ list comes from an endpoint that takes no fact filters, so its
-  // cards are narrowed here, with the server's semantics.
+  // cards are narrowed here, with the server's semantics. The facet counts
+  // read the candidates before that narrowing, since a lifted group (a
+  // language, a way in) counts places the current choice leaves out.
+  const adultCandidates = useMemo(
+    () => adultPlaces.map((place) => businessToLocal(place, demoMode)),
+    [adultPlaces, demoMode],
+  );
   const adultLocals = useMemo(
     () =>
-      adultPlaces
-        .map((place) => businessToLocal(place, demoMode))
-        .filter((place) => localPlaceMatchesListingFacts(place, listingFacts)),
-    [adultPlaces, demoMode, listingFacts],
+      adultCandidates.filter((place) =>
+        localPlaceMatchesListingFacts(place, listingFacts),
+      ),
+    [adultCandidates, listingFacts],
   );
   const adultMatchCount = useMemo(
     () =>
@@ -83,7 +89,7 @@ function useAdultLocals(
         : 0,
     [isAdultShown, adultLocals, safe, owned, access],
   );
-  return { adultLocals, adultMatchCount };
+  return { adultCandidates, adultLocals, adultMatchCount };
 }
 
 /**
@@ -125,6 +131,14 @@ export function useDirectoryPageState() {
   } = filterParams;
   // Known before `useLocalPlaces`, which asks for the Online tab's pool.
   const isOnlineView = view === "online";
+  // Known before `useLocalPlaces` too, which sends the categories: the 18+
+  // shops are an active member's own opt-in on the Online tab (see below).
+  const canShowAdult = isOnlineView && loggedIn && status === "active";
+  const isAdultShown = canShowAdult && adult;
+  const shownCategories = useShownCategories(
+    categories,
+    isOnlineView && !isAdultShown,
+  );
   const {
     places,
     total: serverTotal,
@@ -135,12 +149,15 @@ export function useDirectoryPageState() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    facets: serverFacets,
   } = useLocalPlaces({
     query,
+    categories: shownCategories,
     safe,
     access,
     owned,
     online: isOnlineView,
+    isOutAndAbout,
     listingFacts,
   });
   // ENG-501: a failed next page also sets `isError`. The full error state is
@@ -168,18 +185,12 @@ export function useDirectoryPageState() {
   // the member-only endpoint (`ActiveMemberGuard`) and merged after the public
   // pool. Signed out, or signed in to an account that is not active,
   // `?adult=1` does nothing.
-  const canShowAdult = isOnlineView && loggedIn && status === "active";
-  const isAdultShown = canShowAdult && adult;
   const adultDirectory = useAdultDirectoryPlaces({
     query,
     isEnabled: isAdultShown,
   });
   const isAdultLoading = isAdultShown && adultDirectory.isLoading;
-  const shownCategories = useShownCategories(
-    categories,
-    isOnlineView && !isAdultShown,
-  );
-  const { adultLocals, adultMatchCount } = useAdultLocals(
+  const { adultCandidates, adultLocals, adultMatchCount } = useAdultLocals(
     adultDirectory.places,
     demoMode,
     isAdultShown,
@@ -204,21 +215,19 @@ export function useDirectoryPageState() {
     scopedPlaces,
     { ...filterParams, categories: shownCategories },
     isOnlineView ? null : myLocation.coordinates,
+    {
+      publicPlaces: places,
+      // Whole once nothing is loading (a server filter change refetches from
+      // scratch, with no placeholder data), the read succeeded, and no
+      // further page is to come. Only a whole set may be counted in the
+      // browser: a count over part of it is never drawn.
+      isPublicSetComplete: !placesLoading && !isPlacesError && !hasNextPage,
+      serverFacets,
+      adultCandidates,
+      isAdultShown,
+      isAdultSettled: !adultDirectory.isLoading && !adultDirectory.isError,
+    },
   );
-  // The chip counts only cover the places fetched so far, and a zero over a
-  // partial load can hide a match on a page that has yet to arrive. So a chip
-  // goes unpickable only once the whole set is in: nothing loading (a server
-  // filter change refetches from scratch, with no placeholder data), the read
-  // succeeded, and no further page to fetch.
-  // The 18+ shops count too while a member has asked for them, so the
-  // `intimacy` chip is never marked empty before they arrive or after their
-  // read failed.
-  const isLoadedSetComplete =
-    !placesLoading &&
-    !isPlacesError &&
-    !hasNextPage &&
-    !isAdultLoading &&
-    !(isAdultShown && adultDirectory.isError);
   // `useSimulatedLoad` is a DEMO device (ENG-172). The demo registry resolves
   // in the same tick, so without a short fake beat the grid pops in with no
   // loading state at all. Live mode has a real one in `placesLoading`, and the
@@ -262,7 +271,6 @@ export function useDirectoryPageState() {
     onClearCategories: clearCategories,
     categoryCounts,
     chipCounts,
-    isLoadedSetComplete,
     query,
     onQueryChange: setQuery,
     listingFacts,

@@ -2,14 +2,14 @@
  * The single source of truth for **everything QueerPulse puts on a visitor's
  * device**, rendered by both disclosure surfaces:
  *
- * - `ConsentPreferences` — the in-app preference center, behind a per-row
+ * - `ConsentPreferences`: the in-app preference center, behind a per-row
  *   "what this stores" disclosure.
- * - `CookieCategoryCards` — the long-form `/cookies` page.
+ * - `CookieCategoryCards`: the long-form `/cookies` page.
  *
  * One list, two consumers, so the two can never disagree. Before this existed
  * each surface carried its own hand-written table and `/cookies` published
  * seven cookie names (`qp_session`, `qp_csrf`, `qp_auth`, `qp_prefs`,
- * `qp_theme`, `qp_lang`, `qp_notif`) that **nothing in either repo ever set** —
+ * `qp_theme`, `qp_lang`, `qp_notif`) that **nothing in either repo ever set**:
  * a transparency page that was itself inaccurate.
  *
  * ## Keeping it true
@@ -22,7 +22,7 @@
  * ## i18n Pattern A
  *
  * `names` are technical identifiers and are NEVER translated. Everything a
- * human reads — purpose, lifetime — resolves through `t()`, since "Until you
+ * human reads (purpose, lifetime) resolves through `t()`, since "Until you
  * clear it" and "15 minutes" both read differently in pt-PT.
  */
 
@@ -33,9 +33,9 @@ export type StorageKind =
 /**
  * Which consent row owns the entry.
  *
- * `necessary` and `functional` are BOTH always-on — functional storage holds a
- * member's own choices (theme, language, unsent drafts), which we honour rather
- * than gate behind a toggle they'd have to re-accept every visit. The consent
+ * `necessary` and `functional` are BOTH always-on: functional storage holds a
+ * member's own choices (theme, language, unsent drafts), which we honour as
+ * they stand, so nobody has to re-accept a toggle every visit. The consent
  * modal therefore shows them together under its one locked row; `/cookies`
  * keeps them as two cards, which is the distinction the ePrivacy wording draws.
  */
@@ -139,7 +139,7 @@ export const STORAGE_INVENTORY: StorageEntry[] = [
       "app/providers/signInPending.ts, features/settings/api/useReauthToken.ts, features/auth/api/pendingInvite.ts, shared/lib/staleChunkReload.ts",
   },
 
-  // ── Functional device storage (your own choices — always on) ────────────────
+  // ── Functional device storage (your own choices, always on) ────────────────
   {
     id: "displayPreferences",
     names: [
@@ -291,7 +291,6 @@ export const STORAGE_INVENTORY: StorageEntry[] = [
       "qp.connections.v1",
       "qp.vouches.v1",
       "qp.social.v1",
-      "qp.profileTheme.v1",
       "qp.nudges.v1",
     ],
     kind: "localStorage",
@@ -299,7 +298,7 @@ export const STORAGE_INVENTORY: StorageEntry[] = [
     purposeKey: `${NS}.yourLists.purpose`,
     lifetimeKey: `${NS}.lifetime.untilCleared`,
     sourceHint:
-      "app/providers/{Saved,Connections,Vouch,ProfileTheme,Nudges}Provider.tsx, app/providers/useSocialStore.ts",
+      "app/providers/{Saved,Connections,Vouch,Nudges}Provider.tsx, app/providers/useSocialStore.ts",
   },
   {
     id: "dismissals",
@@ -338,6 +337,15 @@ export const STORAGE_INVENTORY: StorageEntry[] = [
     names: [
       "qp.members.filterSections",
       "qp.members.filtersPanelOpen",
+      "qp.subprofiles.filtersPanelOpen",
+      "qp.subprofiles.filterSections",
+      "qp.communities.filtersPanelOpen",
+      "qp.communities.filterSections",
+      "qp.volunteer.filtersPanelOpen",
+      "qp.volunteer.filterSections",
+      "qp.housing.filtersPanelOpen",
+      "qp.housing.filterSections",
+      "qp.flatmates.filterSections",
       "qp.local.filtersPanelOpen",
       "qp.local.filterSections",
       "qp.adminNav.collapsed",
@@ -352,7 +360,7 @@ export const STORAGE_INVENTORY: StorageEntry[] = [
     purposeKey: `${NS}.panelLayout.purpose`,
     lifetimeKey: `${NS}.lifetime.untilCleared`,
     sourceHint:
-      "features/members/MemberDirectoryFilterPage.tsx, features/marketing/DirectoryDesktopLayout.tsx, features/marketing/LocalFilterSidebar.tsx, shared/components/layout/AdminShell.tsx, features/admin/*, features/subprofiles/usePersonaDashboardView.ts",
+      "shared/components/filterPage/useFilterPageState.ts, features/members/MemberDirectoryFilterPage.tsx, features/subprofiles/SubprofileDirectoryBrowse.tsx, features/communities/CommunitiesHubPage.tsx, features/marketing/VolunteerPage.tsx, features/economy/{HousingBoard,FlatmatesBoard}.tsx, features/marketing/DirectoryDesktopLayout.tsx, features/marketing/LocalFilterSidebar.tsx, shared/components/layout/AdminShell.tsx, features/admin/*, features/subprofiles/usePersonaDashboardView.ts",
   },
   {
     id: "calculators",

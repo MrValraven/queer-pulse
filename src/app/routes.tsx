@@ -17,6 +17,7 @@ import {
 } from "./authGate";
 import { useAuth } from "./providers/authContext";
 import { useDemoMode } from "./providers/DemoModeProvider";
+import { useReleaseStudioBootTheme } from "./providers/themeContext";
 import { useRouteTransitionScope } from "../shared/components/layout/routeTransitionScope";
 
 // Per-feature route groups. Each feature owns its own <Route> registrations in
@@ -77,6 +78,10 @@ export function AppRoutes() {
   const { checking, role } = useAuth();
   const gateRedirect = useAuthGateRedirect();
   const liveLocation = useLocation();
+  // A first load onto a Studio URL starts dark (ThemeProvider). If a gate
+  // sends the visit out of Studio before a Studio page mounts, the member's
+  // own theme comes back here.
+  useReleaseStudioBootTheme(liveLocation.pathname);
   // Inside RouteTransition every plane is pinned to the route it was rendered
   // for, so the outgoing page keeps rendering ITSELF while it fades instead of
   // becoming a second copy of the page the member is arriving on (see

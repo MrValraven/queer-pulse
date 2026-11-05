@@ -10,11 +10,18 @@ import {
   type CommunityBrowseFacets,
 } from "./communities.api";
 import { cardDtoToCommunity } from "./communities.adapters";
+import { localizeDemoCommunity } from "../memberCountLabel";
 import { useAllCommunities } from "../useAllCommunities";
 import { communities } from "../../homepage/data/communities";
 import { COMMUNITY_TAGS } from "../communityTags.data";
-import { BUSY_THRESHOLD } from "../communitiesDiscover.data";
-import type { Community } from "../../homepage/data/types";
+import { BUSY_THRESHOLD, FILTERS } from "../communitiesDiscover.data";
+import type { Community, CommunityType } from "../../homepage/data/types";
+
+/** Every community type the Category rows offer, "All" aside: the demo
+ *  mirror's stand-in for the server's `CommunityType` enum. */
+const COMMUNITY_TYPES = FILTERS.flatMap((option): CommunityType[] =>
+  option.value === "all" ? [] : [option.value],
+);
 
 export interface CommunitiesResult {
   /** Every community fetched so far, flattened across the loaded pages. */
@@ -126,8 +133,8 @@ export function useCommunities(
             (community) =>
               community.slug != null && memberships[community.slug],
           )
-        : communities,
-    [demoMode, isMineScope, demoDirectory, memberships],
+        : communities.map((community) => localizeDemoCommunity(community, t)),
+    [demoMode, isMineScope, demoDirectory, memberships, t],
   );
   // The narrowed list's identity, for the query key: joining, leaving,
   // founding or renaming a community in demo mode all have to re-derive the
@@ -258,6 +265,26 @@ export function useCommunities(
             (!params.access ||
               (community.accessTier ?? "public") === params.access),
         ).length;
+        // Mirror the live endpoint's `facets.types` and `facets.allTypes`: the
+        // Category rows, counted over search, both toggles and tags with the
+        // `type` filter itself lifted (`searched`, upstream of `typeMatched`),
+        // which is what the server's `browseBaseQuery(query, 'type')` builds.
+        // Every type is present, zeros included. A community has exactly one
+        // type, so the lifted base's length is the distinct "All" total.
+        const typeFacetBase = searched.filter(
+          (community) =>
+            (!params.access ||
+              (community.accessTier ?? "public") === params.access) &&
+            (!params.busy || isBusy(community)) &&
+            matchesTags(community),
+        );
+        const typeCounts: Record<string, number> = Object.fromEntries(
+          COMMUNITY_TYPES.map((communityType) => [communityType, 0]),
+        );
+        for (const community of typeFacetBase) {
+          const soFar = typeCounts[community.type];
+          if (soFar !== undefined) typeCounts[community.type] = soFar + 1;
+        }
         return {
           items: sorted,
           total: sorted.length,
@@ -266,6 +293,8 @@ export function useCommunities(
             tags: tagCounts,
             openToAll: openToAllCount,
             busy: busyCount,
+            types: typeCounts,
+            allTypes: typeFacetBase.length,
           },
         };
       }

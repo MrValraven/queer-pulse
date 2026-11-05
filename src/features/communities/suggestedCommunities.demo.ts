@@ -1,5 +1,5 @@
 import { communities } from "../homepage/data/communities";
-import type { Community } from "../homepage/data/types";
+import type { DemoCommunity } from "../homepage/data/types";
 import { LIVING } from "./livingCommunities.data";
 
 /** Mirrors the backend's own `SUGGESTED_COMMUNITIES_LIMIT`, so the demo band
@@ -37,7 +37,7 @@ function rosterSlugs(communitySlug: string): Set<string> {
 export function demoSuggestedCommunities(
   connectedMemberSlugs: string[],
   isMemberOf: (communitySlug: string) => boolean,
-): Community[] {
+): DemoCommunity[] {
   if (connectedMemberSlugs.length === 0) return [];
   const connected = new Set(connectedMemberSlugs);
 
@@ -67,7 +67,7 @@ export function demoSuggestedCommunities(
           (community) => community.slug === candidate.communitySlug,
         ),
       )
-      .filter((community): community is Community => Boolean(community))
+      .filter((community): community is DemoCommunity => Boolean(community))
       .slice(0, SUGGESTED_COMMUNITIES_LIMIT)
   );
 }

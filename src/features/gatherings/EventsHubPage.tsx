@@ -2,7 +2,11 @@ import { useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { FiCalendar } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { EmptyState, PullToRefresh } from "../../shared/components/ui";
+import {
+  Collapse,
+  EmptyState,
+  PullToRefresh,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useEvents } from "./api/useEvents";
 import { eventKeys } from "./api/eventKeys";
@@ -17,16 +21,18 @@ import styles from "./EventsHubPage.module.css";
 
 /**
  * Canonical Events Hub content (`/events`) — merges the old Events /
- * Gatherings / Calendar pages into one utility panel: a compact "next up"
- * featured card above Highlights · Browse · Calendar view tabs. Fetches the
- * shared `useEvents({ filter: "upcoming" })` list ONCE here and threads the
- * same `items`/`now` into whichever view is active, so switching tabs never
+ * Gatherings / Calendar pages into one utility panel of Highlights · Browse ·
+ * Calendar views, with a compact "next up" featured card heading the
+ * Highlights view only (Browse already leads with the same event, and the
+ * calendar opens on its month). Fetches the shared
+ * `useEvents({ filter: "upcoming" })` list ONCE here and threads the same
+ * `items`/`now` into whichever view is active, so switching tabs never
  * re-fetches.
  *
  * The active view lives in `?view=` (see `useEventsHubView`). Its tablist is
- * NOT rendered here: it sits in the page header, beside the My events |
- * Discover switch, so both tab levels read as one row. This page only reads
- * the view and renders the matching panel.
+ * NOT rendered here: it sits in the page header with the My events |
+ * Discover switch, so both tab levels read as one hierarchy. This page only
+ * reads the view and renders the matching panel.
  *
  * When the (live) `useEvents` fetch fails, `isError` swaps the whole board for a
  * branded error state with a "Try again" action (audit P1-14) — an outage must
@@ -79,19 +85,23 @@ export function EventsDiscover() {
 
   return (
     <div className={styles.root}>
-      {/* The hero is tall, so a placeholder holds its place while the list
-          loads and the view below never jumps. A load that finds no lead
-          renders nothing, as before. */}
-      {isLoading ? (
-        <FeaturedEventSkeleton />
-      ) : (
-        <FeaturedEventCard lead={lead} now={now} />
-      )}
+      {/* The hero heads Highlights alone, and folds away as the member
+          moves to Browse or the calendar. It is tall, so a placeholder holds
+          its place while the list loads and the view below never jumps. A
+          load that finds no lead renders nothing, as before. */}
+      <Collapse isOpen={view === "highlights"}>
+        {isLoading ? (
+          <FeaturedEventSkeleton />
+        ) : (
+          <FeaturedEventCard lead={lead} now={now} />
+        )}
+      </Collapse>
+      {/* No tabIndex: every view opens with focusable controls, so per the
+          APG Tab moves from the sub-tabs straight to the first of them. */}
       <div
         role="tabpanel"
         id={`events-hub-panel-${view}`}
         aria-labelledby={`events-hub-tab-${view}`}
-        tabIndex={0}
       >
         {/* `eventKeys.listRoot` (`["events"]`) is the repo's own invalidation
             prefix for this domain — matches every `eventKeys.list(filter, mode)`

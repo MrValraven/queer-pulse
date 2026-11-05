@@ -9,14 +9,14 @@ import { gatheringPath } from "../features/gatherings/gatheringPaths";
  * Tier-2 breadth net: mount a representative path per route family through the
  * real <AppRoutes> (lazy import + Suspense + route ErrorBoundary) under the full
  * test-provider stack in demo mode, and assert each resolves without tripping
- * the error boundary. This is boolean pass/fail — "every route family renders" —
- * not line coverage of each page.
+ * the error boundary. This is a boolean pass/fail check that every route family
+ * renders; line coverage of each page lives in the pages' own tests.
  *
  * Demo mode (empty VITE_API_URL in vitest.config) guarantees: the auth gate
  * passes (logged-in mock user), and every data hook short-circuits to mock data,
  * so no network is touched and renders are deterministic.
  *
- * Deliberately a curated SAMPLE (~25), not all ~290 routes: one concrete URL per
+ * Deliberately a curated SAMPLE (~25) of the ~290 routes: one concrete URL per
  * family, param routes filled with a slug the mock data knows. The covered set is
  * logged below so it's auditable and easy to extend.
  */
@@ -64,9 +64,13 @@ const SMOKE_PATHS: ReadonlyArray<readonly [string, string]> = [
   ["pulse live 18+ join", "/play/QG4MW8"],
   ["pulse live player", "/play/QZ7KP4"],
   ["pulse live screen", `${gatheringPath("pride-brunch-jun")}/quizshow/screen`],
+  [
+    "pulse live event editor",
+    `${gatheringPath("pride-brunch-jun")}/quizshow/edit`,
+  ],
   ["quiz templates", "/admin/quizshow/templates"],
   [
-    "quiz template builder",
+    "quiz template studio",
     "/admin/quizshow/templates/a7e3b1c0-5eed-4000-8000-000000000001",
   ],
   ["for businesses", routes.forBusinesses],
@@ -75,7 +79,7 @@ const SMOKE_PATHS: ReadonlyArray<readonly [string, string]> = [
   ["for practitioners", routes.forPractitioners],
 ];
 
-/** The route ErrorBoundary's branded fallback heading — its presence = a crash. */
+/** The route ErrorBoundary's branded fallback heading: its presence means a crash. */
 const ERROR_FALLBACK = /Something broke on our/i;
 
 describe("route smoke tests (demo mode)", () => {
@@ -95,8 +99,8 @@ describe("route smoke tests (demo mode)", () => {
 
       // Wait for the lazy chunk (and any redirect hop) to resolve: the Suspense
       // fallback clears AND real content has mounted into the body. Both
-      // conditions live inside the same waitFor — rather than asserting body
-      // length once, after — to close a race on REDIRECT routes like
+      // conditions live inside the same waitFor (rather than asserting body
+      // length once, after it) to close a race on REDIRECT routes like
       // /calendar → /events?view=calendar: the intermediate <Navigate> renders
       // no "Loading…" text, so a bare "Loading… is absent" wait can pass in the
       // brief window after the redirect but before the redirected lazy page
@@ -113,8 +117,8 @@ describe("route smoke tests (demo mode)", () => {
       );
 
       // The page mounted instead of the branded crash panel. (A crash also
-      // fills the body, so this is asserted after content settles, not folded
-      // into the wait above.)
+      // fills the body, so this is asserted after content settles, apart from
+      // the wait above.)
       expect(screen.queryByText(ERROR_FALLBACK)).not.toBeInTheDocument();
     },
     15000,

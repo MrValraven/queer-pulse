@@ -1,33 +1,35 @@
-import { useId, useMemo, useState } from "react";
-import { FiChevronDown, FiChevronUp } from "react-icons/fi";
+import { useMemo, useState } from "react";
 import { ChipSelect, SearchInput } from "../../shared/components/ui";
-import { RollingNumber } from "../../shared/components/ui/RollingNumber";
-import { useFormat } from "../../shared/i18n/format";
+import {
+  FilterSection,
+  filterPageClassNames,
+} from "../../shared/components/filterPage";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { COMMUNITY_TAGS } from "./communityTags.data";
 import styles from "./CommunitiesPage.module.css";
 
 /**
- * The Discover page's tags filter: a disclosure chip (matching the category
- * chips it sits beside) that opens onto the full curated tag vocabulary — a
- * search-narrowed `ChipSelect`, the same "search widens/narrows a curated
- * multi-select pool" pattern the member directory's "What they do" filter
- * uses (`FilterProfessions.tsx`). Kept collapsed by default since 53 tags
- * would otherwise dominate the toolbar above the grid; open, the tray
- * expands in flow and pushes the grid down (see `.tagsPanel`) rather than
- * floating over the cards.
+ * The "Tags" section of the communities filter sidebar: a search box over the
+ * full curated tag vocabulary, then the matching tags as a multi-select
+ * `ChipSelect`. The same "search narrows a curated pool" pattern the member
+ * directory's "What they do" section uses (`FilterProfessions.tsx`). The
+ * section itself is the disclosure, so the 53 tags stay folded until a member
+ * opens it, and the sidebar column scrolls once it runs taller than the
+ * viewport.
  *
  * Each tag carries an availability count, and a tag that lands on 0 goes inert
- * (`ChipSelect` dims and disables it) — picking it could only empty the grid.
- * Unlike the category chips' totals just above, this number is a LIVE facet:
- * it is counted under the rest of the drawer's filters, so it moves as the
- * member narrows. That is what makes greying a chip out honest here: "nothing
- * under this tag as well", rather than "nothing under this tag ever".
+ * (`ChipSelect` dims and disables it): picking it could only empty the grid.
+ * Unlike the category totals above it, this number is a LIVE facet, counted
+ * under the rest of the sidebar's filters, so it moves as the member narrows
+ * and dims while it still describes the previous run.
  */
 export function CommunitiesTagsFilter({
   selectedTagIds,
   onChange,
   tagCounts,
+  isCountStale,
+  isOpen,
+  onToggle,
 }: {
   selectedTagIds: string[];
   onChange: (next: string[]) => void;
@@ -37,16 +39,17 @@ export function CommunitiesTagsFilter({
    *  still in flight, shows no badge: "not counted" must never be rendered as
    *  a `0`, which is the state that greys a chip out. */
   tagCounts?: Record<string, number>;
+  /** The counts describe the previous filter run while a new one loads. */
+  isCountStale: boolean;
+  isOpen: boolean;
+  onToggle: () => void;
 }) {
   const { t } = useTranslation();
-  const fmt = useFormat();
-  const uid = useId();
-  const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const q = query.trim().toLowerCase();
+  const normalisedQuery = query.trim().toLowerCase();
 
   const options = useMemo(() => {
-    const all = COMMUNITY_TAGS.map((tag) => {
+    const allOptions = COMMUNITY_TAGS.map((tag) => {
       const label = t(tag.labelKey);
       const count = tagCounts?.[tag.id];
       return {
@@ -56,9 +59,8 @@ export function CommunitiesTagsFilter({
           ? {}
           : {
               count,
-              // The badge is aria-hidden, so the chip has to carry the whole
-              // phrase as its name: "Book club, 4 communities", never
-              // "Book club 4" (which reads as a quantity of book clubs).
+              // The badge is aria-hidden, so the chip carries the whole
+              // phrase as its name: "Book club, 4 communities".
               ariaLabel: t("communities:discover.filter.tagWithCount", {
                 label,
                 count,
@@ -66,84 +68,53 @@ export function CommunitiesTagsFilter({
             }),
       };
     });
-    return q
-      ? all.filter((option) => option.label.toLowerCase().includes(q))
-      : all;
-  }, [q, t, tagCounts]);
+    return normalisedQuery
+      ? allOptions.filter((option) =>
+          option.label.toLowerCase().includes(normalisedQuery),
+        )
+      : allOptions;
+  }, [normalisedQuery, t, tagCounts]);
 
   const selected = new Set(selectedTagIds);
-  const toggleTag = (id: string) =>
+  const toggleTag = (tagId: string) =>
     onChange(
-      selected.has(id)
-        ? selectedTagIds.filter((tagId) => tagId !== id)
-        : [...selectedTagIds, id],
+      selected.has(tagId)
+        ? selectedTagIds.filter((selectedId) => selectedId !== tagId)
+        : [...selectedTagIds, tagId],
     );
 
   return (
-    <div className={styles.tagsFilter}>
-      <button
-        type="button"
-        className={[styles.chip, selectedTagIds.length > 0 && styles.chipActive]
-          .filter(Boolean)
-          .join(" ")}
-        aria-expanded={isOpen}
-        aria-controls={`${uid}-panel`}
-        onClick={() => setIsOpen((value) => !value)}
-      >
-        {t("communities:discover.filter.tagsTitle")}
-        {selectedTagIds.length > 0 && (
-          <span className={styles.chipCount}>
-            <RollingNumber
-              value={fmt.number(selectedTagIds.length)}
-              numericValue={selectedTagIds.length}
-            />
-          </span>
-        )}
-        {isOpen ? <FiChevronUp aria-hidden /> : <FiChevronDown aria-hidden />}
-      </button>
-
-      {/* The tray stays mounted so its height can ease open AND closed; the
-          grid-rows 0fr-to-1fr wrapper in the stylesheet does the animating
-          without measuring, and `inert` keeps the closed tray's search box and
-          53 chips out of the tab order and off screen readers. */}
-      <div
-        className={[styles.tagsPanelWrap, isOpen && styles.tagsPanelWrapOpen]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        <div
-          id={`${uid}-panel`}
-          className={styles.tagsPanelClip}
-          inert={!isOpen || undefined}
-        >
-          <div className={styles.tagsPanel}>
-            <SearchInput
-              className={styles.tagsSearch}
-              value={query}
-              onChange={setQuery}
-              placeholder={t(
-                "communities:discover.filter.tagsSearchPlaceholder",
-              )}
-              ariaLabel={t("communities:discover.filter.tagsAriaLabel")}
-            />
-            {options.length > 0 ? (
-              <ChipSelect
-                className={styles.tagsChips}
-                label={t("communities:discover.filter.tagsAriaLabel")}
-                options={options}
-                selected={selected}
-                onToggle={toggleTag}
-              />
-            ) : (
-              <p className={styles.tagsNoMatch}>
-                <em>
-                  {t("communities:discover.filter.tagsNoMatch", { query })}
-                </em>
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+    <FilterSection
+      title={t("communities:discover.filter.tagsTitle")}
+      open={isOpen}
+      onToggle={onToggle}
+      activeCount={selectedTagIds.length}
+    >
+      <SearchInput
+        className={styles.tagsSectionSearch}
+        value={query}
+        onChange={setQuery}
+        placeholder={t("communities:discover.filter.tagsSearchPlaceholder")}
+        ariaLabel={t("communities:discover.filter.tagsAriaLabel")}
+      />
+      {options.length > 0 ? (
+        <ChipSelect
+          className={[
+            styles.tagsChips,
+            isCountStale && filterPageClassNames.chipsStale,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          label={t("communities:discover.filter.tagsAriaLabel")}
+          options={options}
+          selected={selected}
+          onToggle={toggleTag}
+        />
+      ) : (
+        <p className={styles.tagsNoMatch}>
+          <em>{t("communities:discover.filter.tagsNoMatch", { query })}</em>
+        </p>
+      )}
+    </FilterSection>
   );
 }

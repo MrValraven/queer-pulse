@@ -1,5 +1,4 @@
 import { communityPath } from "../../app/routeMap";
-import type { Community } from "../homepage/data/types";
 import type {
   CommunityInheritedRules,
   CommunityParentRef,
@@ -55,7 +54,9 @@ const PARENTS_SPACE: SpaceCardModel = {
   name: "Runners with kids",
   description:
     "Buggy-friendly routes and a Saturday park loop for parents who run.",
+  // English fallback label; the demo hooks re-label it from `memberCount`.
   count: "18 members",
+  memberCount: 18,
   joinLabel: "Join",
   accessTier: "public",
   activeThisWeek: 6,
@@ -72,6 +73,7 @@ const FLINTA_SPACE: SpaceCardModel = {
   description:
     "Evening runs for women, lesbian, intersex, non-binary, trans and agender runners.",
   count: "24 members",
+  memberCount: 24,
   joinLabel: "Join",
   accessTier: "request",
   activeThisWeek: 9,
@@ -87,7 +89,9 @@ export const DEMO_SPACES_BY_PARENT: Record<string, SpaceCardModel[]> = {
 };
 
 /** Find a demo space card by its own slug, across every parent. */
-export function findDemoSpace(slug: string | undefined): Community | undefined {
+export function findDemoSpace(
+  slug: string | undefined,
+): SpaceCardModel | undefined {
   if (!slug) return undefined;
   return Object.values(DEMO_SPACES_BY_PARENT)
     .flat()

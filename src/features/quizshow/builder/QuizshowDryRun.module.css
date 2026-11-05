@@ -1,16 +1,132 @@
-/* The try-out draws the presenter stage at TV size on a 16:9 canvas as tall
-   as the viewport (so the stage's vh based type reads as it does on the TV),
-   then scales that canvas down into the frame. */
+/* The try-out is a full-screen dark overlay: a slim control bar on top, the
+   presenter stage below. The stage is drawn at TV size on a 16:9 canvas as
+   tall as the viewport (so its vh based type reads as it does on the TV) and
+   scaled down into a frame that takes the largest 16:9 size the area allows.
+   The frame owns its backdrop, since the stage itself is transparent. */
+
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+}
+
+.root {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
+  background: var(--qs-base);
+  color: var(--qs-text);
+  color-scheme: dark;
+  font-family: var(--sans);
+  animation: dryRunIn var(--dur-base) var(--ease-out);
+}
+
+.root:focus {
+  outline: none;
+}
+
+.closing {
+  pointer-events: none;
+  animation: dryRunOut var(--dur-fast) var(--ease-in) forwards;
+}
+
+@keyframes dryRunIn {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes dryRunOut {
+  to {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root,
+  .closing {
+    animation: none;
+  }
+}
+
+/* ── Control bar ─────────────────────────────────────────────────────── */
+.bar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+  padding: 10px max(16px, env(safe-area-inset-right)) 10px
+    max(16px, env(safe-area-inset-left));
+  padding-block-start: max(10px, env(safe-area-inset-top));
+  background: var(--qs-raised);
+  border-block-end: 1px solid var(--qs-line);
+}
+
+.barText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.barTitle {
+  margin: 0;
+  overflow: hidden;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--qs-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.barSub {
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--text-13);
+  line-height: 1.3;
+  color: var(--qs-text-mute);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.barActions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Stage ───────────────────────────────────────────────────────────── */
+.stageArea {
+  display: grid;
+  flex: 1;
+  place-content: center;
+  justify-items: center;
+  gap: var(--gap-xs);
+  min-height: 0;
+  padding: var(--gap-sm);
+  container-type: size;
+}
 
 .frame {
   position: relative;
   overflow: hidden;
-  width: 100%;
+  width: min(100cqw, 100cqh * 16 / 9);
   aspect-ratio: 16 / 9;
-  margin-inline: auto;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-12);
-  background: var(--cream);
+  background: var(--qs-base);
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-tile);
+  box-shadow: var(--qs-shadow-lift);
+  isolation: isolate;
 }
 
 .canvas {
@@ -22,10 +138,18 @@
   width: calc(100svh * 16 / 9);
   height: 100svh;
   overflow: hidden;
-  background: var(--cream);
-  color: var(--ink);
+  color: var(--qs-text);
   font-family: var(--sans);
   transform-origin: top left;
+}
+
+.canvasStage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
 }
 
 /* Nobody joins a try-out, so the lobby's roster takes the whole width. */
@@ -33,18 +157,53 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
-/* On a desktop dialog the body is the space between the header and the
-   footer. It becomes a size container so the 16:9 frame takes the largest
-   size that fits both its width and its height, and the body never scrolls
-   on a short window. The scaled canvas follows the frame. The phone sheet
-   keeps the full-width frame, whose height is set by its width. */
-@media (min-width: 720px) {
-  .body {
-    container-type: size;
+/* The hint is for a phone held upright, where the TV-shaped frame is small. */
+.hint {
+  display: none;
+  max-width: 100cqw;
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.4;
+  color: var(--qs-text-mute);
+  text-align: center;
+  text-wrap: balance;
+}
+
+/* On a phone the title and the explanation give way to the two buttons. */
+@media (max-width: 719.98px) {
+  .barTitle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
     overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
-  .body .frame {
-    width: min(100cqw, 100cqh * 16 / 9);
+  .bar {
+    gap: 0;
+  }
+
+  .barSub {
+    display: none;
+  }
+
+  .barActions {
+    flex: 1;
+    justify-content: space-between;
+  }
+
+  .stageArea {
+    padding: var(--gap-xs);
+  }
+
+  .frame {
+    border-radius: var(--radius-12);
+  }
+}
+
+@media (max-width: 719.98px) and (orientation: portrait) {
+  .hint {
+    display: block;
   }
 }

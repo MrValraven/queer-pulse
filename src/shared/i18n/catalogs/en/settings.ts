@@ -25,7 +25,6 @@ export const settings: Catalog = {
   "nav.item.visibility": "Visibility",
   "nav.item.profile": "Profile",
   "nav.item.account": "Account",
-  "nav.item.profileTheme": "Profile theme",
   "nav.item.accessibility": "Accessibility",
   "nav.item.interests": "Interests",
   "nav.item.blockedUsers": "Blocked and muted",
@@ -72,11 +71,6 @@ export const settings: Catalog = {
   "controls.deleteModal.continue": "Continue to delete",
 
   // ── SuggestEditModal (terminology guide) ────────────
-
-  // ── SettingsPersonalisation.tsx — ProfileThemePane ───────────────────────
-  "personalisation.theme.title": "Profile <em>theme.</em>",
-  "personalisation.theme.sub":
-    "Personalise how your profile and directory card look. Pick a pride flag, cover style, and pattern, and choose what shows up next to your name.",
 
   // ── SettingsPersonalisation.tsx — AccessibilityPane ──────────────────────
   "personalisation.accessibility.title": "Accessibility <em>preferences.</em>",
@@ -1318,39 +1312,6 @@ export const settings: Catalog = {
   "destructiveFlow.delete.resultTitle": "It's <em>scheduled.</em>",
   "destructiveFlow.delete.resultBody":
     "Your account is scheduled for deletion. You have <strong>30 days</strong> to change your mind. Just sign back in and we'll stop the erasure. After that, your data is permanently erased. Take care of yourself.",
-
-  // ── ThemeStudio.tsx / profileTheme.data.ts — profile theme picker. Pride
-  // flag NAMES (FLAG_SWATCHES.label) are deliberately left in English: they're
-  // the stored `title` tooltip and several are contested-neologism territory
-  // in pt-PT (e.g. "aromantic") — flagged for native-speaker review rather
-  // than guessed. The persisted value is the array index either way, never
-  // the label, so this is a translate-later content decision, not a bug. ───
-  "themeStudio.sectionLabel": "Profile theme",
-  "themeStudio.sub":
-    "Shown on your public profile and in the member directory.",
-  "themeStudio.prideThemesLabel": "Pride themes",
-  "themeStudio.coverStyleLabel": "Cover style",
-  "themeStudio.coverPatternLabel": "Cover pattern",
-  "themeStudio.badgeDisplayLabel": "Badge display",
-  "themeStudio.showBadgesToggle": "Show badges on profile",
-  "themeStudio.showLevelToggle": "Show level on profile",
-  "themeStudio.previewLabel": "Preview",
-  "themeStudio.previewHintTop":
-    "Updates live as you pick a theme. Saved to this browser as a preview. It isn't shown on your public profile yet.",
-  "themeStudio.profileCardLabel": "Profile card",
-  "themeStudio.directoryCardLabel": "Directory card",
-  "themeStudio.directoryHint":
-    "This is how your profile appears in search results and the member directory.",
-  "themeStudio.memberSince": "Lisbon · Member since {year}",
-  // Both halves come from code: the number from `PREVIEW_LEVEL`, the name
-  // from `levelNameKeyFor(4)`. It used to be a fourth hand-written copy of a
-  // ladder word, which meant a PT reader saw an English one.
-  "themeStudio.levelPreview": "Lv.{level} · {name}",
-  "themeStudio.cover.stripe": "Bold stripe",
-  "themeStudio.pattern.none": "Solid",
-  "themeStudio.pattern.stripe": "Diagonal stripes",
-  "themeStudio.pattern.dots": "Dot grid",
-  "themeStudio.pattern.grid": "Grid",
 
   // ── AccountDataSheet.tsx — the profile's "Your data" sheet, which now
   // signposts the one page that owns each account-lifecycle action instead of

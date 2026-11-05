@@ -1,8 +1,10 @@
 import { FiUsers } from "react-icons/fi";
-import { EmptyState } from "../../shared/components/ui";
+import { Collapse, EmptyState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
+import type { FilterPageState } from "../../shared/components/filterPage";
 import { routes } from "../../app/routeMap";
+import { CommunitiesFilterLayout } from "./CommunitiesFilterLayout";
 import { CommunitiesGrid } from "./CommunitiesGrid";
 import { CommunitiesHomeDigest } from "./CommunitiesHomeDigest";
 import { CommunitiesHomeSidebar } from "./CommunitiesHomeSidebar";
@@ -12,6 +14,7 @@ import {
   CommunitiesHomePulse,
   CommunitiesHomeTodos,
 } from "./CommunitiesHomeFeed";
+import type { CommunitiesFilterSectionKey } from "./communitiesFilterSections";
 import { useCommunitiesHomeData } from "./useCommunitiesHomeData";
 import type { DiscoverCommunities } from "./useDiscoverCommunities";
 import styles from "./CommunitiesHomePage.module.css";
@@ -19,26 +22,26 @@ import styles from "./CommunitiesHomePage.module.css";
 /**
  * The `/communities?tab=mine` body.
  *
- * The greeting, the tab switch and the whole filter bar all live one level up
- * in `CommunitiesHubHeader` — this body starts straight at the cards, so the
- * first community is visible without scrolling.
- *
- * The communities you belong to lead the page as real cards, through the same
- * `CommunitiesGrid` (and the same filters, chips and sort) that Discover uses
- * — scoped to your own memberships. Everything the hub carried before sits
- * underneath: the mod to-do list, the cross-community pulse, and the events /
- * suggestions rail.
+ * The greeting and the tab switch live one level up in `CommunitiesHubHeader`.
+ * This body starts at the filter layout: the sidebar beside the weekly digest
+ * band and the communities you belong to, as real cards through the same
+ * `CommunitiesGrid` (and the same filters, chips and sort) that Discover uses,
+ * scoped to your own memberships. Everything else the hub carries follows the
+ * layout at the frame's full width: the mod to-do list, the cross-community
+ * pulse, and the events and suggestions rail.
  *
  * `useCommunitiesHomeData().live` is the mode switch for the whole body: an
  * object in live mode (fed by `GET /me/communities/digest`) and `null` in demo
  * mode, where every section keeps reading the mock registry exactly as before.
- * Reading it rather than `demoMode` directly means a live branch cannot
+ * Reading it (and leaving `demoMode` alone) means a live branch cannot
  * accidentally reach a mock list: the demo lists are empty in that mode.
  */
 export function CommunitiesHome({
   discover,
+  filterPage,
 }: {
   discover: DiscoverCommunities;
+  filterPage: FilterPageState<CommunitiesFilterSectionKey>;
 }) {
   const { t } = useTranslation();
   // A demo-prototype device: the mock pulse has nothing to wait for, so the
@@ -62,14 +65,21 @@ export function CommunitiesHome({
     upcomingCounts.length > 0 ||
     suggestions.length > 0;
 
+  // Only an empty membership map we've actually resolved earns the empty
+  // state. While it's still in flight we fall through to the grid, which
+  // carries its own card skeletons, so a member who does belong to
+  // communities never gets told they belong to none.
+  const isShowingEmptyState =
+    !isMembershipsLoading && myCommunities.length === 0;
+
   return (
-    <div className={styles.page}>
-      <div className="wrap">
-        {/* Only an empty membership map we've actually resolved earns the
-            empty state. While it's still in flight we fall through to the
-            grid, which carries its own card skeletons, so a member who does
-            belong to communities never gets told they belong to none. */}
-        {!isMembershipsLoading && myCommunities.length === 0 ? (
+    <>
+      <CommunitiesFilterLayout
+        discover={discover}
+        filterPage={filterPage}
+        isPending={isMembershipsLoading}
+      >
+        {isShowingEmptyState ? (
           <EmptyState
             icon={<FiUsers />}
             title={t("communities:hub.empty.title")}
@@ -80,71 +90,70 @@ export function CommunitiesHome({
             }}
           />
         ) : (
-          <>
-            <CommunitiesGrid
-              discover={discover}
-              isPending={isMembershipsLoading}
-              beforeGrid={
-                digest ? <CommunitiesHomeDigest digest={digest} /> : null
-              }
-            />
-
-            {/* The rail only exists when it has something in it, so the column
-                drops rather than leaving a 300px gutter of nothing beside the
-                feed. */}
-            <div
-              className={[
-                styles.layout,
-                styles.belowGrid,
-                !hasSidebar && styles.layoutFull,
-              ]
-                .filter(Boolean)
-                .join(" ")}
-            >
-              <div>
-                {/* Moderation to-dos, in both modes now (PRD-144): the digest
-                    carries a pending-join-request and open-report count for
-                    each community the viewer staffs, so the live block reads
-                    the same one request the rest of this page does. Each count
-                    links into the mod-console pane that clears it, and a
-                    viewer who staffs nothing gets no block in any state. */}
-                {live ? (
-                  <CommunitiesHomeLiveTodos
-                    isModeratorSomewhere={live.isModeratorSomewhere}
-                    isLoading={live.isLoading}
-                    isError={live.isError}
-                    onRetry={live.refetch}
-                    todos={live.todos}
-                  />
-                ) : (
-                  <CommunitiesHomeTodos todos={demo.todos} />
-                )}
-                {live ? (
-                  <CommunitiesHomeLivePulse
-                    isLoading={live.isLoading}
-                    isError={live.isError}
-                    onRetry={live.refetch}
-                    excerpts={live.pulse}
-                  />
-                ) : (
-                  <CommunitiesHomePulse
-                    loading={isSimulatedLoading}
-                    pulse={demo.pulse}
-                  />
-                )}
-              </div>
-
-              {hasSidebar && (
-                <CommunitiesHomeSidebar
-                  upcoming={demo.upcoming}
-                  upcomingCounts={upcomingCounts}
-                  suggestions={suggestions}
-                />
-              )}
-            </div>
-          </>
+          <CommunitiesGrid
+            discover={discover}
+            isPending={isMembershipsLoading}
+            beforeGrid={
+              digest ? <CommunitiesHomeDigest digest={digest} /> : null
+            }
+          />
         )}
-      </div>
-    </div>
+      </CommunitiesFilterLayout>
+
+      <Collapse isOpen={!isShowingEmptyState}>
+        {/* The rail only exists when it has something in it, so the column
+            drops and the feed takes the full width. */}
+        <div
+          className={[
+            styles.layout,
+            styles.belowGrid,
+            !hasSidebar && styles.layoutFull,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          <div>
+            {/* Moderation to-dos, in both modes now (PRD-144): the digest
+                carries a pending-join-request and open-report count for each
+                community the viewer staffs, so the live block reads the same
+                one request the rest of this page does. Each count links into
+                the mod-console pane that clears it, and a viewer who staffs
+                nothing gets no block in any state. */}
+            {live ? (
+              <CommunitiesHomeLiveTodos
+                isModeratorSomewhere={live.isModeratorSomewhere}
+                isLoading={live.isLoading}
+                isError={live.isError}
+                onRetry={live.refetch}
+                todos={live.todos}
+              />
+            ) : (
+              <CommunitiesHomeTodos todos={demo.todos} />
+            )}
+            {live ? (
+              <CommunitiesHomeLivePulse
+                isLoading={live.isLoading}
+                isError={live.isError}
+                onRetry={live.refetch}
+                excerpts={live.pulse}
+              />
+            ) : (
+              <CommunitiesHomePulse
+                loading={isSimulatedLoading}
+                pulse={demo.pulse}
+              />
+            )}
+          </div>
+
+          {hasSidebar && (
+            <CommunitiesHomeSidebar
+              upcoming={demo.upcoming}
+              upcomingCounts={upcomingCounts}
+              suggestions={suggestions}
+            />
+          )}
+        </div>
+      </Collapse>
+    </>
   );
 }

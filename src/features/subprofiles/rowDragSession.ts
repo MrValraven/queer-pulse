@@ -36,6 +36,7 @@ export function openRowDragSession(
   index: number,
   event: GripPress,
   element: HTMLElement,
+  scale = 1,
 ): RowDragSession {
   return {
     pointerId: event.pointerId,
@@ -45,7 +46,7 @@ export function openRowDragSession(
     startY: event.clientY,
     dragThresholdPx: dragThresholdFor(event.pointerType),
     pointerY: event.clientY,
-    grabOffset: event.clientY - layoutTopOf(element),
+    grabOffset: event.clientY - layoutTopOf(element, scale),
     element,
     releaseHeldStyle: () => undefined,
     isDragging: false,

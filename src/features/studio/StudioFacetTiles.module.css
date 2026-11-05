@@ -94,7 +94,7 @@
 /* The dark page swallows the deeper grounds, so a faint hairline drawn
    inside the tile edge keeps its shape. It sits inside the tile, so the
    focus ring outside never meets it. */
-[data-theme="dark"] .tile::after {
+.tile::after {
   content: "";
   position: absolute;
   inset: 0;

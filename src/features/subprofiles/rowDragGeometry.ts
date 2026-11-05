@@ -37,15 +37,20 @@ export function liveRowsOf(container: Element): HTMLElement[] {
  * Where the list LAID OUT a row, in viewport coordinates, with every
  * in-flight translation taken back off. Measured through the box centre, so a
  * centred lift scale on the held row leaves the answer unchanged.
+ *
+ * `scale` is how much an ancestor transform scales the list on screen (1
+ * unless the list sits on a scaled canvas): the row's own offsets and height
+ * are layout pixels, so they are scaled into viewport pixels here.
  */
-export function layoutTopOf(element: HTMLElement): number {
+export function layoutTopOf(element: HTMLElement, scale = 1): number {
   const rect = element.getBoundingClientRect();
-  const layoutCentre = rect.top + rect.height / 2 - paintedOffsetYOf(element);
-  return layoutCentre - element.offsetHeight / 2;
+  const layoutCentre =
+    rect.top + rect.height / 2 - paintedOffsetYOf(element) * scale;
+  return layoutCentre - (element.offsetHeight * scale) / 2;
 }
 
-function layoutMidpointOf(element: HTMLElement): number {
-  return layoutTopOf(element) + element.offsetHeight / 2;
+function layoutMidpointOf(element: HTMLElement, scale = 1): number {
+  return layoutTopOf(element, scale) + (element.offsetHeight * scale) / 2;
 }
 
 /**
@@ -60,11 +65,12 @@ export function nextRowNeighbourIndex(
   rows: HTMLElement[],
   heldIndex: number,
   heldCentre: number,
+  scale = 1,
 ): number | null {
   const next = rows[heldIndex + 1];
-  if (next && heldCentre > layoutMidpointOf(next)) return heldIndex + 1;
+  if (next && heldCentre > layoutMidpointOf(next, scale)) return heldIndex + 1;
   const previous = rows[heldIndex - 1];
-  if (previous && heldCentre < layoutMidpointOf(previous)) {
+  if (previous && heldCentre < layoutMidpointOf(previous, scale)) {
     return heldIndex - 1;
   }
   return null;
@@ -82,15 +88,15 @@ export function clampHeldRowTop(
   rows: HTMLElement[],
   held: HTMLElement,
   desiredTop: number,
+  scale = 1,
 ): number {
   const first = rows[0];
   const last = rows[rows.length - 1];
   if (!first || !last) return desiredTop;
-  const highestTop = layoutTopOf(first) - HELD_ROW_OVERSHOOT_PX;
+  const highestTop = layoutTopOf(first, scale) - HELD_ROW_OVERSHOOT_PX;
   const lowestTop =
-    layoutTopOf(last) +
-    last.offsetHeight -
-    held.offsetHeight +
+    layoutTopOf(last, scale) +
+    (last.offsetHeight - held.offsetHeight) * scale +
     HELD_ROW_OVERSHOOT_PX;
   return Math.min(
     Math.max(desiredTop, highestTop),

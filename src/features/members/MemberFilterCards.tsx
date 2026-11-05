@@ -6,11 +6,13 @@ import {
   ChipSelect,
   SkeletonAvatar,
   SkeletonLine,
-  Toggle,
 } from "../../shared/components/ui";
-import { RollingNumber } from "../../shared/components/ui/RollingNumber";
-import { useFormat } from "../../shared/i18n/format";
-import { Translation } from "../../shared/i18n/Translation";
+import {
+  FilterOptionRow,
+  FilterSection,
+  FilterSidebarPanel,
+  filterPageClassNames,
+} from "../../shared/components/filterPage";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   AMBASSADOR_FOCUS_AREAS,
@@ -33,7 +35,6 @@ import {
   type MemberCard,
 } from "./memberDirectoryFilter.data";
 import { FilterProfessions } from "./FilterProfessions";
-import { FilterSection } from "./FilterSection";
 import { type SectionKey } from "./filterSectionKeys";
 import { useChipCount } from "./useChipCount";
 import styles from "./MemberDirectoryFilterPage.module.css";
@@ -64,8 +65,8 @@ function FilterCheckboxSection({
   options: CheckboxOption[];
   /** The ids currently ticked in this group. */
   selected: string[];
-  /** This group's availability counts, or `undefined` when none are available
-   *  — in which case no badges render at all. A missing count must never be
+  /** This group's availability counts, or `undefined` when none are available,
+   *  in which case no badges render at all. A missing count must never be
    *  drawn as a zero: "not counted" and "nobody" are different answers. */
   counts?: Record<string, number>;
   countsAreStale: boolean;
@@ -74,7 +75,6 @@ function FilterCheckboxSection({
   onToggleOption: (id: string) => void;
 }) {
   const { t } = useTranslation();
-  const fmt = useFormat();
   return (
     <FilterSection
       title={title}
@@ -88,63 +88,46 @@ function FilterCheckboxSection({
         const label = option.labelKey ? t(option.labelKey) : option.id;
         const count = counts?.[option.id];
         const isChecked = selected.includes(option.id);
-        // Nobody is left under this option, so it is a dead end — disabled, not
-        // merely dimmed, so the affordance matches the outcome. Never while it
-        // is CHECKED, though: that count was taken with this very box lifted, so
-        // a ticked zero is the one zero still worth clicking (to untick), and
-        // disabling it would trap a member in a filter they cannot undo.
+        // Nobody is left under this option, so it is a dead end: disabled as
+        // well as dimmed, so the affordance matches the outcome. Never while
+        // it is CHECKED, though: that count was taken with this very box
+        // lifted, so a ticked zero is the one zero still worth clicking (to
+        // untick), and disabling it would trap a member in a filter they
+        // cannot undo.
         const isUnavailable = count === 0 && !isChecked;
         return (
-          <label
+          <FilterOptionRow
             key={option.id}
-            className={[
-              styles.filterRow,
-              isUnavailable && styles.filterRowEmpty,
-              countsAreStale && styles.filterRowStale,
-            ]
-              .filter(Boolean)
-              .join(" ")}
-          >
-            <input
-              type="checkbox"
-              checked={isChecked}
-              disabled={isUnavailable}
-              // The visible label and badge are decorative for assistive tech;
-              // the control carries the whole phrase, so a screen reader hears
-              // "Mentoring, 7 members" rather than "Mentoring 7".
-              aria-label={
-                count === undefined
-                  ? label
-                  : t("members:directory.filter.optionWithCount", {
-                      label,
-                      count,
-                    })
-              }
-              onChange={() => onToggleOption(option.id)}
-            />
-            {label}
-            {count !== undefined && (
-              <span
-                className={[styles.ct, countsAreStale && styles.ctStale]
-                  .filter(Boolean)
-                  .join(" ")}
-                aria-hidden
-              >
-                <RollingNumber value={fmt.number(count)} numericValue={count} />
-              </span>
-            )}
-          </label>
+            type="checkbox"
+            label={label}
+            isChecked={isChecked}
+            isDisabled={isUnavailable}
+            count={count}
+            isCountStale={countsAreStale}
+            // The visible label and badge are decorative for assistive tech;
+            // the control carries the whole phrase, so a screen reader hears
+            // "Mentoring, 7 members" where the screen shows "Mentoring 7".
+            ariaLabel={
+              count === undefined
+                ? label
+                : t("members:directory.filter.optionWithCount", {
+                    label,
+                    count,
+                  })
+            }
+            onChange={() => onToggleOption(option.id)}
+          />
         );
       })}
     </FilterSection>
   );
 }
 
-/** The "Ambassadors" filter card: one switch, plus the 12 focus-area chips as
- *  a multi-select once it's on. Focus areas are meaningless while the switch
- *  is off, so turning it off clears them (mirrors `removeChip`'s "ambassador"
- *  case in `MemberDirectorySections.tsx`, which does the same from the
- *  applied-chip row). */
+/** The "Ambassadors" filter card: one "ambassadors only" row with its count,
+ *  plus the focus-area chips as a multi-select once it's on. Focus areas are
+ *  meaningless while the row is off, so turning it off clears them (mirrors
+ *  `removeChip`'s "ambassador" case in `MemberDirectorySections.tsx`, which
+ *  does the same from the applied-chip row). */
 function AmbassadorFilterSection({
   filters,
   counts,
@@ -163,6 +146,10 @@ function AmbassadorFilterSection({
   const { t } = useTranslation();
   const uid = useId();
   const chipCount = useChipCount(counts?.ambassador);
+  const switchLabel = t("members:directory.filters.ambassadors.switchLabel");
+  // The switch's own distinct total; `undefined` (loading, or an older
+  // server) draws no number and leaves the row enabled.
+  const ambassadorsOnlyCount = counts?.ambassadorsOnly;
   return (
     <FilterSection
       title={t("members:directory.filters.ambassadors.title")}
@@ -173,31 +160,43 @@ function AmbassadorFilterSection({
         filters.isAmbassadorsOnly ? 1 + filters.ambassadorFocusAreas.length : 0
       }
     >
-      <div className={styles.switchRow}>
-        <label htmlFor={`${uid}-switch`} className={styles.switchLabel}>
-          {t("members:directory.filters.ambassadors.switchLabel")}
-        </label>
-        <Toggle
-          id={`${uid}-switch`}
-          tone="coral"
-          checked={filters.isAmbassadorsOnly}
-          onChange={(checked) =>
-            onChange({
-              ...filters,
-              isAmbassadorsOnly: checked,
-              ambassadorFocusAreas: checked ? filters.ambassadorFocusAreas : [],
-            })
-          }
-          label={t("members:directory.filters.ambassadors.switchLabel")}
-        />
-      </div>
+      <FilterOptionRow
+        type="checkbox"
+        label={switchLabel}
+        isChecked={filters.isAmbassadorsOnly}
+        // Same zero rule as every checkbox row: a counted zero is a dead end,
+        // except while it is on, so it can always be turned back off.
+        isDisabled={ambassadorsOnlyCount === 0 && !filters.isAmbassadorsOnly}
+        count={ambassadorsOnlyCount}
+        isCountStale={countsAreStale}
+        ariaLabel={
+          ambassadorsOnlyCount === undefined
+            ? switchLabel
+            : t("members:directory.filter.optionWithCount", {
+                label: switchLabel,
+                count: ambassadorsOnlyCount,
+              })
+        }
+        onChange={() =>
+          onChange({
+            ...filters,
+            isAmbassadorsOnly: !filters.isAmbassadorsOnly,
+            // Turning it off clears the focus areas it scopes.
+            ambassadorFocusAreas: filters.isAmbassadorsOnly
+              ? []
+              : filters.ambassadorFocusAreas,
+          })
+        }
+      />
       {filters.isAmbassadorsOnly && (
         <>
           <p id={`${uid}-focusCaption`} className={styles.focusCaption}>
             {t("members:directory.filters.ambassadors.focusCaption")}
           </p>
           <ChipSelect
-            className={countsAreStale ? styles.chipsStale : undefined}
+            className={
+              countsAreStale ? filterPageClassNames.chipsStale : undefined
+            }
             labelledBy={`${uid}-focusCaption`}
             options={AMBASSADOR_FOCUS_AREAS.map((focusArea) => ({
               value: focusArea,
@@ -235,32 +234,32 @@ export function FiltersSidebar({
 }: {
   filters: FilterState;
   /** DEMO ONLY: the whole mock directory, which demo mode counts itself. Live
-   *  mode holds one page of a much larger set and must never count it — see
-   *  `facets`. */
+   *  mode holds one page of a much larger set and must never count it (see
+   *  `facets`). */
   members: MemberCard[];
   /** LIVE: the server's per-option availability counts. */
   facets?: DirectoryFacetCounts;
   /** The counts on screen describe the previous filter run; the new one is
-   *  still in flight. Dimmed rather than blanked — see `useMembers`. */
+   *  still in flight. They dim for the moment (see `useMembers`). */
   countsAreStale?: boolean;
   appliedCount: number;
   onChange: (next: FilterState) => void;
   onClearAll: () => void;
   sectionsOpen: Record<SectionKey, boolean>;
   onToggleSection: (key: SectionKey) => void;
-  /** Rendered inside the mobile filters sheet — drops the sticky desktop
+  /** Rendered inside the mobile filters sheet: drops the sticky desktop
    *  positioning so the cards flow naturally in the scrolling sheet. */
   inSheet?: boolean;
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const uid = useId();
-  // Counts are counted, never authored — and never counted off the cards on
-  // screen. Live mode fetched page 1 (20 cards) of the CURRENT filter, so
-  // tallying those would put "Lesbian 3" beside a 400-member directory, a badge
-  // that shrank as filters narrowed and read as the community shrinking. The
-  // server counts the whole matching set instead (`facets`), and demo mode —
-  // where the mock list genuinely IS the whole directory — counts it here to
+  // Counts are counted from data and stay off the cards on screen. Live mode
+  // fetched page 1 (20 cards) of the CURRENT filter, so tallying those would
+  // put "Lesbian 3" beside a 400-member directory, a badge that shrank as
+  // filters narrowed and read as the community shrinking. The
+  // server counts the whole matching set instead (`facets`), and demo mode
+  // (where the mock list genuinely IS the whole directory) counts it here to
   // the same contract. Either way `undefined` means "no counts available" and
   // renders no badges at all, which stays better than a wrong number.
   const counts = useMemo<DirectoryFacetCounts | undefined>(
@@ -268,11 +267,12 @@ export function FiltersSidebar({
     [demoMode, members, filters, facets],
   );
   const languageChipCount = useChipCount(counts?.languages);
-  // Nothing selected means nothing to clear, so the row would offer a no-op
-  // beside a "0 applied" that reads as a count of something.
-  const hasSomethingToClear = appliedCount > 0;
   return (
-    <aside className={inSheet ? styles.filtersSheet : styles.filters}>
+    <FilterSidebarPanel
+      isInSheet={inSheet}
+      appliedCount={appliedCount}
+      onClearAll={onClearAll}
+    >
       <AmbassadorFilterSection
         filters={filters}
         counts={counts}
@@ -338,7 +338,9 @@ export function FiltersSidebar({
         activeCount={filters.languages.length}
       >
         <ChipSelect
-          className={countsAreStale ? styles.chipsStale : undefined}
+          className={
+            countsAreStale ? filterPageClassNames.chipsStale : undefined
+          }
           labelledBy={`${uid}-languages`}
           options={LANGUAGES.map((o) => ({
             value: o.label,
@@ -354,45 +356,7 @@ export function FiltersSidebar({
           }
         />
       </FilterSection>
-
-      {hasSomethingToClear && (
-        <ClearAllRow appliedCount={appliedCount} onClearAll={onClearAll} />
-      )}
-    </aside>
-  );
-}
-
-/** The sidebar's closing row: "Clear all" beside the applied-filter tally,
- *  whose number rolls as filters are ticked and unticked. */
-function ClearAllRow({
-  appliedCount,
-  onClearAll,
-}: {
-  appliedCount: number;
-  onClearAll: () => void;
-}) {
-  const { t } = useTranslation();
-  const fmt = useFormat();
-  return (
-    <div className={styles.clearRow}>
-      <button type="button" onClick={onClearAll}>
-        {t("members:directory.clearAllFiltersCta")}
-      </button>
-      <span>
-        <Translation
-          i18nKey="members:directory.appliedCount"
-          values={{ count: appliedCount }}
-          slots={{
-            count: (
-              <RollingNumber
-                value={fmt.number(appliedCount)}
-                numericValue={appliedCount}
-              />
-            ),
-          }}
-        />
-      </span>
-    </div>
+    </FilterSidebarPanel>
   );
 }
 
@@ -477,7 +441,7 @@ export function MemberResultCard({
 }) {
   const { user } = useAuth();
   const { demoMode } = useDemoMode();
-  // The signed-in member sees their own card marked "You" — for now they may be
+  // The signed-in member sees their own card marked "You": for now they may be
   // the only registered account, so this keeps the directory from reading as a
   // stranger's list. As other members join, every other card renders normally.
   const isMe = !!user && member.slug === user.profile.slug;
@@ -485,7 +449,7 @@ export function MemberResultCard({
   // back to the local registry (demo cards), then to slug-derived defaults so a
   // member with no mock profile never crashes the card. The registry read is
   // DEMO-ONLY: in live mode a real member whose slug happens to collide with a
-  // mock entry must keep their own photo/tags rather than have the mock's win.
+  // mock entry must keep their own photo/tags, so the mock's never win.
   const profile = demoMode ? memberProfiles[member.slug] : undefined;
   const name = member.firstName
     ? `${member.firstName} ${member.lastName ?? ""}`.trim()
@@ -501,10 +465,10 @@ export function MemberResultCard({
   const photo = profile?.photo ?? member.avatarUrl ?? undefined;
   // Live/API cards (including the signed-in member's own) can arrive without a
   // tagline or tags; fall back to the colocated profile so the card still reads
-  // as a whole person rather than a blank row.
+  // as a whole person.
   // The card's blurb is the member's short bio, falling back to the opening of
   // their longer bio. In live mode the backend has already resolved that fallback
-  // into `tagline` (the card DTO carries no bio — see directoryBlurb.ts), so
+  // into `tagline` (the card DTO carries no bio; see directoryBlurb.ts), so
   // `member.role` is already final and the bio branch never fires. The registry
   // bio is passed only in demo mode: pulling a mock bio onto a live card would
   // put words in a real member's mouth. Demo borrows it only from an `open`

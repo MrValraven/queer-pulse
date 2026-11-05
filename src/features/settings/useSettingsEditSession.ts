@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { useProfileEdit } from "../../app/providers/useProfile";
-import { useProfileTheme } from "../../app/providers/useProfileTheme";
 import { useUnsavedChangesGuard } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -10,7 +9,7 @@ import { useProfilePlaylistsDraft } from "./useProfilePlaylistsDraft";
 /**
  * The Settings page's unsaved-changes lifecycle: the dirty flag and its "what
  * changed" keys, the profile edit session the page opens for its
- * profile-backed panes, the theme draft, and the leave guard. Lifted out of
+ * profile-backed panes, the playlists draft, and the leave guard. Lifted out of
  * `SettingsPage` so the page component stays inside the 200-line rule, and so
  * the save bar and the leave dialog's "Save and leave" run one save routine.
  */
@@ -23,7 +22,6 @@ export function useSettingsEditSession({
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { commit: commitTheme, discard: discardTheme } = useProfileTheme();
   const { save, cancelEditing, startEditing, isSaving, saveError, isEditing } =
     useProfileEdit();
   // The profile pane's Playlists draft; saved with the rest by saveChanges.
@@ -31,15 +29,15 @@ export function useSettingsEditSession({
   const [isDirty, setIsDirty] = useState(false);
   // Which fields changed, in the order they were touched. Feeds the save
   // bar's "what changed" disclosure. Only panes backed by real persisted
-  // state (profile draft, theme draft) pass a key; cosmetic/coming-soon
+  // state (profile draft, playlists draft) pass a key; cosmetic/coming-soon
   // controls elsewhere still mark the page dirty but report nothing here.
   const [changedKeys, setChangedKeys] = useState<string[]>([]);
   const openedRef = useRef(false);
   const cancelEditingRef = useRef(cancelEditing);
   // Set once "Save and leave" has saved everything. The leave that follows
-  // then skips the Discard-style rollback, whose `cancelEditing` and
-  // `discardTheme` were captured before the save and would reset the shared
-  // drafts to the pre-save values. The next edit clears it.
+  // then skips the Discard-style rollback, whose `cancelEditing` was captured
+  // before the save and would reset the shared profile draft to the pre-save
+  // values. The next edit clears it.
   const hasSavedForLeaveRef = useRef(false);
 
   // Keep the ref current after every render (outside render, so this is safe),
@@ -48,11 +46,6 @@ export function useSettingsEditSession({
   useEffect(() => {
     cancelEditingRef.current = cancelEditing;
   });
-
-  // Drop any leftover unsaved theme edits when re-entering Settings.
-  useEffect(() => {
-    discardTheme();
-  }, [discardTheme]);
 
   // Open a profile edit session once when a profile-editing pane is active and
   // none is already open. Track that WE opened it, so we only ever tear down our
@@ -90,15 +83,15 @@ export function useSettingsEditSession({
       cancelEditing();
       openedRef.current = false;
     }
-    discardTheme();
     playlistsDraft.discard();
     setIsDirty(false);
     setChangedKeys([]);
   };
 
   // The one save routine behind both the save bar and "Save and leave":
-  // persists the profile draft when this page opened a session, commits the
-  // theme draft, and toasts the outcome. True only when all of it saved.
+  // persists the profile draft when this page opened a session, saves the
+  // playlists draft when it changed, and toasts the outcome. True only when all
+  // of it saved.
   const saveChanges = async (): Promise<boolean> => {
     // A playlists-only edit leaves the profile draft untouched.
     const isPlaylistsOnly =
@@ -117,7 +110,6 @@ export function useSettingsEditSession({
         return false;
       }
     }
-    commitTheme();
     setIsDirty(false);
     setChangedKeys([]);
     showToast(t("settings:page.saveBar.savedToast"), "success");

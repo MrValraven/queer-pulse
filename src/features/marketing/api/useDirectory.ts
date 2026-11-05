@@ -37,6 +37,10 @@ import {
   getDirectorySpace,
 } from "./directory.api";
 import { DIRECTORY_KEY } from "./directoryQueryKey";
+import {
+  readDirectoryFacets,
+  type DirectoryFacetCountsDTO,
+} from "./directoryFacets.api";
 
 export { DIRECTORY_KEY };
 
@@ -99,6 +103,12 @@ export function useDirectoryPlacesQuery(): DirectoryPlacesResult {
 export interface DirectoryPlacesPageFilters {
   /** Free-text search, sent server-side as `q` in live mode. */
   query?: string;
+  /** Category chip ids of the tab, any of which the primary category must
+   *  read as, sent server-side as `cat` live; the demo fixture is narrowed
+   *  by `useDirectoryFilterResults` with the same semantics. */
+  categories?: string[];
+  /** "Out and about" only, sent server-side as `mobile=true` live. */
+  isOutAndAbout?: boolean;
   /** `"verified"` restricts to safe-space-verified listings, sent
    * server-side as `safe`. `null`/absent = no restriction. */
   safe?: "verified" | null;
@@ -152,12 +162,21 @@ export interface DirectoryPlacesPageResult {
   fetchNextPage: () => void;
   /** True while a subsequent page loads. */
   isFetchingNextPage: boolean;
+  /**
+   * The availability count of every filter option, read off the FIRST page
+   * (every page of one filter run shares them). Undefined in demo (the page
+   * counts the fixture itself), while that page is in flight, after it
+   * failed, and on a server that predates the facets. Undefined means "not
+   * counted", which must never render as a `0`.
+   */
+  facets: DirectoryFacetCountsDTO | undefined;
 }
 
 interface DirectoryPageVM {
   items: DirectoryPlace[];
   total: number;
   page: number;
+  facets?: DirectoryFacetCountsDTO;
 }
 
 /** The demo registry as one page, narrowed to listings that sell online for
@@ -170,14 +189,14 @@ export function demoDirectoryPlaces(isOnlineOnly: boolean): DirectoryPlace[] {
 
 /**
  * Paginated, server-filtered source for the `/local/directory` grid
- * (gap-audit HSG-5): sends the active search, safe-space, access, owned-by
- * and listing-fact filters to the backend as query params (`q`, `safe`,
- * `access`, `owned`, `attr`, `entry`, `pay`, `lang`, `practice`), so the
- * server narrows the list (`useDirectoryPlaces` fetches every live listing
- * unfiltered), and pages through the real backend `total` via
- * `getDirectoryPage` all the way past `DEFAULT_LIST_LIMIT`. `cat` (category)
- * deliberately stays a client-side filter over the loaded pages (see
- * `useDirectoryFilters`'s `categoryCounts`).
+ * (gap-audit HSG-5): sends the active search, category, safe-space, out and
+ * about, access, owned-by and listing-fact filters to the backend as query
+ * params (`q`, `cat`, `safe`, `mobile`, `access`, `owned`, `attr`, `entry`,
+ * `pay`, `lang`, `practice`), so the server narrows the list
+ * (`useDirectoryPlaces` fetches every live listing unfiltered) and counts
+ * every option's facet, and pages through the real backend `total` via
+ * `getDirectoryPage` all the way past `DEFAULT_LIST_LIMIT`. "Open now" alone
+ * stays a client-side filter (see `isPlaceOpenNow`).
  *
  * Demo mode returns the full `DIRECTORY_PLACES` fixture as a single terminal
  * page (`hasNextPage: false`), so demo renders exactly as before with no
@@ -204,6 +223,12 @@ export function useDirectoryPlacesPage(
   const isOnlineOnly = filters.online === true;
   const listingFacts = filters.listingFacts ?? NO_LISTING_FACT_FILTERS;
   const listingFactsKey = listingFactFilterKey(listingFacts);
+  // Already in chip order (`toCategories`). Demo narrows the fixture
+  // client-side, so the two server-only filters stay out of its key and a
+  // demo chip press never reloads the page.
+  const categories = filters.categories ?? [];
+  const categoriesKey = demoMode ? null : categories.join(",");
+  const isOutAndAbout = !demoMode && filters.isOutAndAbout === true;
 
   const query = useInfiniteQuery<DirectoryPageVM>({
     queryKey: [
@@ -216,6 +241,8 @@ export function useDirectoryPlacesPage(
       ownedKey,
       listingFactsKey,
       isOnlineOnly,
+      categoriesKey,
+      isOutAndAbout,
     ],
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
@@ -223,23 +250,25 @@ export function useDirectoryPlacesPage(
         const demoItems = demoDirectoryPlaces(isOnlineOnly);
         return { items: demoItems, total: demoItems.length, page: 1 };
       }
-      const res = toItemsPage(
-        await getDirectoryPage({
-          q: trimmedQuery || undefined,
-          safe,
-          access: access.length > 0 ? access : undefined,
-          owned: owned.length > 0 ? owned : undefined,
-          online: isOnlineOnly || undefined,
-          listingFacts: hasListingFactFilters(listingFacts)
-            ? listingFacts
-            : undefined,
-          page: pageParam as number,
-        }),
-      );
+      const response = await getDirectoryPage({
+        q: trimmedQuery || undefined,
+        categories: categories.length > 0 ? categories : undefined,
+        safe,
+        access: access.length > 0 ? access : undefined,
+        owned: owned.length > 0 ? owned : undefined,
+        online: isOnlineOnly || undefined,
+        isOutAndAbout: isOutAndAbout || undefined,
+        listingFacts: hasListingFactFilters(listingFacts)
+          ? listingFacts
+          : undefined,
+        page: pageParam as number,
+      });
+      const res = toItemsPage(response);
       return {
         items: res.items.map(cardDtoToPlace),
         total: res.total,
         page: res.page,
+        facets: readDirectoryFacets(response),
       };
     },
     getNextPageParam: (last, all) => {
@@ -259,6 +288,7 @@ export function useDirectoryPlacesPage(
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,
+    facets: pages[0]?.facets,
   };
 }
 

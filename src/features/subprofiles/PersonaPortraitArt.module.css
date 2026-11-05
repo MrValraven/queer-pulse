@@ -1,0 +1,48 @@
+/* The persona picture slot (portrait cards and wall tiles). The root is a
+   size container so the monogram scales with the slot's own width, whatever
+   the grid or the viewport does. It fills its parent; the parent supplies the
+   rounded corners and clips. */
+
+.art {
+  /* 4:5 by default. A consumer inside a box with its own height sets
+     `--portrait-art-ratio: auto` (and keeps the 100% height below). */
+  aspect-ratio: var(--portrait-art-ratio, 4 / 5);
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  container-type: inline-size;
+  background: var(--accent-tint);
+  color: var(--accent-on);
+}
+
+/* ImageSlot draws a hairline border and its own box; the art needs neither. */
+.art .image {
+  position: absolute;
+  inset: 0;
+  border: 0;
+}
+
+.monogram {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  /* 84cqi is the 210px-in-a-250px portrait of the approved design. */
+  font-size: var(--portrait-art-monogram-size, 84cqi);
+  line-height: 1;
+  opacity: var(--portrait-art-monogram-opacity, 0.16);
+  user-select: none;
+}
+
+/* Wall tiles: the letter sits in the top left corner, stronger, with the name
+   overlaid at the bottom by the consumer. */
+.monogramCorner {
+  display: block;
+  inset: 8px auto auto 12px;
+  font-size: var(--portrait-art-monogram-size, 56cqi);
+  opacity: var(--portrait-art-monogram-opacity, 0.35);
+}

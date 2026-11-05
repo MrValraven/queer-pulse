@@ -2,8 +2,8 @@ import type { Cause } from "./api/volunteering.api";
 
 /**
  * THE volunteering cause taxonomy. One ordered list, and everything else about
- * a cause derives from it: the post/edit form's chip picker, the board's filter
- * chips, the label on a card, and the avatar tint.
+ * a cause derives from it: the post/edit form's chip picker, the board's cause
+ * filter, the label on a card, and the avatar tint.
  *
  * It used to live in six hand-kept copies (`CAUSE_OPTIONS`, `CAUSE_FILTERS`,
  * `FILTERS`, `CAUSE_TITLE`, `CAUSE_LOWER`, `CAUSE_TINT`) plus two i18n key sets
@@ -105,9 +105,8 @@ export function causeTint(value: Cause | undefined): CauseDefinition["tint"] {
   return causeDefinition(value).tint;
 }
 
-/** True when the string is a cause this build knows, narrowing it to `Cause`.
- *  Used to tell a cause chip apart from a commitment chip in the board's
- *  filter state, which is a single string holding either. */
+/** True when the string is a cause this build knows, narrowing it to `Cause`,
+ *  for a value that arrives as a plain string. */
 export function isCause(value: string): value is Cause {
   return BY_VALUE.has(value as Cause);
 }

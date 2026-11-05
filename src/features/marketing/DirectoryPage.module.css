@@ -1,7 +1,8 @@
 /* A page band: the list view's on phones, and the closing strip's
    (DirectorySubmitStrip) at every width. Inside the desktop results column
    (where DirectoryLayout.module.css sets `--directory-view-padding`) the
-   column already spaces the list, so the list drops this padding there. */
+   column already spaces the list, so the list drops this padding there. On
+   phones the page sets a tighter band rhythm through the same variable. */
 .content {
   padding: var(--directory-view-padding, 32px 0 var(--section-y-80));
 }
@@ -189,6 +190,60 @@
 }
 .saveBtnOn {
   color: var(--accent-ink);
+}
+
+/* Phones: the photo's overlays share one 12px inset from the photo's edges.
+   The badge corner reads as one signal: the plum pill becomes the group's
+   ground, carrying the ownership words and, when the place has one, the
+   safe-space mark after a hairline. They stay two meanings (who owns it,
+   what its safe-space badge says), seated in one shape. The bookmark is a
+   36px circle at the same inset, with its 44px tap area kept through the
+   pseudo-element. */
+@media (--mobile) {
+  .photoBadges {
+    gap: 0;
+    background: rgba(var(--plum-rgb), 0.72);
+    border-radius: var(--radius-pill);
+  }
+  .photoBadges > .photoBadgeDark {
+    background: none;
+  }
+  .photoBadges > :not(.photoBadgeDark) {
+    display: flex;
+    align-self: stretch;
+    align-items: center;
+    padding-inline: 8px 9px;
+    border-inline-start: 1px solid rgba(var(--cream-rgb), 0.24);
+  }
+  /* The shield sits on the plum pill, so it trades its paper disc for the
+     light jade made for dark grounds; a paused badge keeps its pause icon
+     in a dimmed cream. */
+  .photoBadges [data-safe-space] {
+    width: auto;
+    height: auto;
+    color: var(--jade-soft);
+    background: none;
+    box-shadow: none;
+  }
+  .photoBadges [data-safe-space="paused"] {
+    color: rgba(var(--cream-rgb), 0.75);
+  }
+  .photoBadges [data-safe-space] svg {
+    width: 13px;
+    height: 13px;
+  }
+  .saveBtn {
+    inset-block-start: 12px;
+    inset-inline-end: 12px;
+    width: 36px;
+    height: 36px;
+    box-shadow: var(--shadow-e2);
+  }
+  .saveBtn::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+  }
 }
 
 /* Top-aligned: a line-clamped name has no reliable baseline to share, so the
@@ -542,6 +597,28 @@
   margin-top: 6px;
   line-height: 1.6;
 }
+/* Phones: the strip follows the verification band at the band-to-band gap
+   (its section's 16px top padding), with the band's own inset and type
+   rhythm, so the two closing panels read as one family. */
+@media (--mobile) {
+  .submitStrip {
+    gap: 18px;
+    padding: 24px 20px;
+    margin-top: 0;
+    border-radius: var(--radius-card);
+  }
+  .submitStrip h3 {
+    font-size: var(--text-24);
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  .submitStrip p {
+    margin-top: 8px;
+    font-size: var(--text-14);
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+}
 
 @media (--wide) {
   .grid {
@@ -610,6 +687,135 @@
   align-items: flex-start;
   gap: 12px;
   flex-wrap: wrap;
+}
+/* Phones: one line for what the controls found and the one control that
+   reorders it. The count opens the line and "Use my location" closes it,
+   at the shared 44px height; the control's note (the privacy promise, or
+   what the browser refused) takes the full line under both, as one quiet
+   line. The wrapper boxes drop out so the button and the note are items of
+   this row, which spreads them to its two ends. A row too narrow for the
+   count and the button moves the button to a line of its own, at the start
+   under the count, so the three lines read as one column (the container
+   queries after this block). */
+@media (--mobile) {
+  .resultsHeader {
+    padding-top: 14px;
+  }
+  /* The toolbar above holds 44px at every pointer, so the row's control
+     keeps the same height on a narrow desktop window too. The row is the
+     `directory-results-row` container the stacking below reads. Its width
+     comes from the wrap around it, so the containment changes no size. */
+  .resultsRow {
+    --results-control-h: 44px;
+    container: directory-results-row / inline-size;
+    align-items: flex-start;
+    gap: 4px 10px;
+  }
+  .resultsHeader .resultsControls,
+  .resultsHeader .nearMe {
+    display: contents;
+  }
+  /* A half step smaller than desktop, so the English sentence and the
+     full "Turn off my location" share a 390px phone's line. A plain block, so a
+     note under the sentence ("35 on map") stacks without widening the
+     count: a wrapping flex box would measure the sentence and the note side
+     by side and push the button off the line. */
+  .resultsHeader .count {
+    display: block;
+    flex: 0 1 auto;
+    min-width: 0;
+    font-size: var(--text-13-5);
+  }
+  .resultsHeader .countNote {
+    display: block;
+  }
+  .resultsHeader .nearMeButton,
+  .resultsHeader .nearMePermission {
+    flex: none;
+  }
+  /* The toolbar's sibling shape: paper, the same hairline and type, so the
+     row's control matches the bar above it. "On" keeps its plum. */
+  .resultsHeader .nearMeButton {
+    gap: 6px;
+    padding: 0 13px 0 12px;
+    font-size: var(--text-13);
+  }
+  .resultsHeader .nearMeButton svg {
+    flex: none;
+    font-size: var(--text-15);
+  }
+  .resultsHeader .nearMeButton:not(.nearMeButtonOn) {
+    color: var(--text-strong);
+    background: var(--paper);
+    border-color: rgba(var(--line-rgb), 0.14);
+  }
+  :global([data-theme="dark"])
+    .resultsHeader
+    .nearMeButton:not(.nearMeButtonOn) {
+    border-color: rgba(var(--cream-rgb), 0.14);
+  }
+  /* The browser's button (a blocked site) takes the same 44px and hairline:
+     42px of content box plus its two border pixels. Chrome caps that box at
+     3em, so its label steps up to 14px to make room for the 42px. Chrome
+     polices the text and ground colours, and the lighter border leaves the
+     element active (measured in Chromium 149). */
+  .resultsHeader .nearMePermission {
+    height: 42px;
+    font-size: var(--text-14);
+    border-color: rgba(var(--line-rgb), 0.14);
+  }
+  :global([data-theme="dark"]) .resultsHeader .nearMePermission {
+    border-color: rgba(var(--cream-rgb), 0.14);
+  }
+  .resultsHeader .nearMeNote {
+    order: 1;
+    flex: 0 0 100%;
+    max-width: none;
+    margin: 0;
+  }
+  /* "Show me how" is one 17px text line. Its hit area grows through the
+     pseudo-element, as on "List your business" (DirectoryLayout.module.css
+     `.headLink`), to about 43px: the note keeps 20px of air above the link
+     and 16px under it before the first card. */
+  .resultsHeader .nearMeHelpLink {
+    position: relative;
+  }
+  .resultsHeader .nearMeHelpLink::after {
+    content: "";
+    position: absolute;
+    inset: -12px 0 -14px;
+  }
+}
+/* From 560px the button always shares the count's line at its end, so the
+   note sits under the button it explains, end-aligned like the desktop
+   row's note (`.topNearMe .nearMeNote`). There the browser's
+   `<geolocation>` button sits 4px above the link, and Chrome switches that
+   element off when anything covers it, so the hit area reaches only 4px
+   up (about 35px tall). */
+@media (--mobile) and (--sm-up) {
+  .resultsHeader .nearMeNote {
+    justify-content: flex-end;
+    text-align: end;
+  }
+  .resultsHeader .nearMeHelpLink::after {
+    top: -4px;
+  }
+}
+/* The button shares the count's line only where the row holds the count
+   and the LONGER of the button's two labels ("Turn off my location", 343px
+   with the count in English; "Desligar a minha localização", 411px in
+   Portuguese, measured with the demo's two-digit count). Narrower, the count
+   takes the whole line in both states, so turning location on never drops
+   the button to a new line and the list below never jumps. */
+@container directory-results-row (max-width: 345px) {
+  .resultsHeader .count {
+    flex-basis: 100%;
+  }
+}
+@container directory-results-row (max-width: 413px) {
+  :lang(pt) .resultsHeader .count {
+    flex-basis: 100%;
+  }
 }
 .srOnly {
   position: absolute;

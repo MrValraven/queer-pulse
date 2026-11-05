@@ -70,6 +70,24 @@
   }
 }
 
+/* A phone stacks the tickets as compact rows (see EventTicketCard's narrow
+   block), which read as one list at a tighter step. The month heading comes
+   down a size with them, and sits closer to its first row. */
+@media (--md) {
+  .ticketGrid {
+    gap: 10px;
+  }
+
+  .monthGroup {
+    margin-block-end: var(--gap-lg);
+  }
+
+  .monthHeading {
+    font-size: var(--text-20);
+    margin-block-end: var(--gap-xs);
+  }
+}
+
 @media (--wide-up) {
   .ticketGrid {
     grid-template-columns: repeat(3, minmax(0, 1fr));

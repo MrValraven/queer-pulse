@@ -1,0 +1,125 @@
+/* The Manage page's Live game tab, in the app's cream style: one paper card
+   with the quiz's title slide beside its text and actions, then the open
+   game's panel and the kept results at the tab's gap. The card lays itself
+   out by the tab's width, so it reads the same in any column. */
+
+.tab {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+  min-width: 0;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap-grid);
+  padding: var(--gap-grid);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-e1);
+}
+
+/* The slide sits beside the text once the card has room for both. */
+@container (min-width: 40rem) {
+  .card[data-has-cover] {
+    grid-template-columns: minmax(14rem, 2fr) minmax(0, 3fr);
+    align-items: center;
+  }
+}
+
+.cover {
+  overflow: hidden;
+  border-radius: var(--radius-16);
+  box-shadow: var(--shadow-e2);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: var(--text-28);
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.lead {
+  margin: 0;
+  max-width: 62ch;
+  font-size: var(--text-14-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+/* The lobby state: a dot and its words, so the colour is never the only signal. */
+.status {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: var(--gap-xs);
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.statusDot {
+  flex: none;
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: var(--radius-avatar);
+  background: var(--accent);
+}
+
+.status[data-tone="ready"] .statusDot,
+.status[data-tone="live"] .statusDot {
+  background: var(--jade);
+}
+
+/* The open lobby's dot breathes, the same cue My games gives a live game. */
+.status[data-tone="live"] .statusDot {
+  animation: summaryLivePulse 2.4s var(--ease-in-out) infinite alternate;
+}
+
+@keyframes summaryLivePulse {
+  to {
+    opacity: 0.45;
+    transform: scale(0.8);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status[data-tone="live"] .statusDot {
+    animation: none;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 10px;
+  padding-block-start: 4px;
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}

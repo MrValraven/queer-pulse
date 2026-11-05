@@ -18,6 +18,10 @@ const VIEW_TABS: { key: SubprofileDirectoryView; labelKey: string }[] = [
  * some" is the tab next door, not another page, and the Follow control that
  * fills this list is on the persona pages this same tab links out to.
  *
+ * Drawn as a segmented pill at the top of the directory section: the active
+ * tab fills plum, and below --lg the pill spans the column in two equal
+ * halves (`SubprofileDirectoryPage.module.css`).
+ *
  * A full `role="tablist"` with a roving tabindex, mirroring
  * `CommunitiesTopTabs`: arrow keys move between the tabs, only the active one
  * is in the tab sequence, and each names the panel it controls. The panel

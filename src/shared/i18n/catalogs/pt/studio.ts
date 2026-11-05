@@ -3054,11 +3054,6 @@ export const studio: Catalog = {
   "settingsLive.claims.body":
     "As reivindicações de direitos de autor que enviaste sobre faixas do Studio, e o que aconteceu a cada uma.",
   "settingsLive.claims.cta": "Abrir as tuas reivindicações",
-  "settingsLive.theme.label": "Tema",
-  "settingsLive.theme.title": "O aspeto do <em>Studio</em>",
-  "settingsLive.theme.dark.heading": "Modo escuro",
-  "settingsLive.theme.dark.body":
-    "O Studio segue o tema do QueerPulse, por isso uma mudança aqui aplica-se a todo o QueerPulse neste dispositivo.",
   "settingsLive.saveError":
     "Não conseguimos guardar essa definição. Tenta outra vez",
   "settingsLive.pageTitle": "Definições",

@@ -1,6 +1,12 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { getOpportunities, type Cause, type Commit } from "./volunteering.api";
+import { CAUSES } from "../causes.data";
+import {
+  getOpportunities,
+  type Cause,
+  type Commit,
+  type VolunteerFacets,
+} from "./volunteering.api";
 import { opportunityKeys } from "./opportunityKeys";
 import { cardToOpportunity } from "./volunteering.adapters";
 import type { VolunteerOpportunity } from "../volunteerOpportunities";
@@ -32,12 +38,53 @@ export interface OpportunitiesResult {
   isError: boolean;
   /** Re-run the failed read, for the error state's retry. */
   refetch: () => void;
+  /**
+   * The sidebar's availability counts, read off the FIRST page: every page of
+   * one filter run shares them. Undefined while that page is in flight, after
+   * it failed, and on a server that predates the facets. Undefined means "not
+   * counted", which must never render as a `0`.
+   */
+  facets: VolunteerFacets | undefined;
 }
 
 interface OpportunitiesPageVM {
   items: VolunteerOpportunity[];
   total: number;
   page: number;
+  facets?: VolunteerFacets;
+}
+
+/**
+ * Demo mode's stand-in for the live endpoint's `facets`, with the same rules:
+ * each group is counted with its own filter lifted and the other applied, and
+ * an opportunity counts once under each of its causes. `includes` matches the
+ * API's overlap filter, so a cause listed second or third still counts.
+ */
+function countDemoFacets(
+  items: readonly VolunteerOpportunity[],
+  params: { cause?: Cause; commit?: Commit },
+): VolunteerFacets {
+  const commitCounts: Record<Commit, number> = { low: 0, medium: 0 };
+  const causeCounts = Object.fromEntries(
+    CAUSES.map((definition) => [definition.value, 0]),
+  ) as Record<Cause, number>;
+  let allCausesCount = 0;
+  for (const opportunity of items) {
+    const isUnderCause =
+      params.cause === undefined || opportunity.causes.includes(params.cause);
+    const isUnderCommit =
+      params.commit === undefined || opportunity.commit === params.commit;
+    if (isUnderCause) commitCounts[opportunity.commit] += 1;
+    if (isUnderCommit) {
+      allCausesCount += 1;
+      for (const cause of opportunity.causes) causeCounts[cause] += 1;
+    }
+  }
+  return {
+    commit: commitCounts,
+    cause: causeCounts,
+    allCauses: allCausesCount,
+  };
 }
 
 /**
@@ -68,6 +115,9 @@ export function useOpportunities(
           items: VOLUNTEER_OPPORTUNITIES,
           total: VOLUNTEER_OPPORTUNITIES.length,
           page: 1,
+          // The demo page ignores the params, so its counts are taken here
+          // over the whole registry, the way the server takes them.
+          facets: countDemoFacets(VOLUNTEER_OPPORTUNITIES, params),
         };
       }
       const res = await getOpportunities({
@@ -78,6 +128,7 @@ export function useOpportunities(
         items: res.items.map(cardToOpportunity),
         total: res.total,
         page: res.page,
+        facets: res.facets,
       };
     },
     getNextPageParam: (last, all) => {
@@ -97,5 +148,6 @@ export function useOpportunities(
     isLoading: query.isLoading,
     isError: query.isError,
     refetch: () => void query.refetch(),
+    facets: pages[0]?.facets,
   };
 }

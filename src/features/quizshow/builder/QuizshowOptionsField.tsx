@@ -33,6 +33,11 @@ interface QuizshowOptionsFieldProps {
   errorText: (language: QuizshowLanguage) => string;
   /** The "needs a correct answer" line. */
   answerErrorText?: string;
+  /**
+   * Only the texts: no right-answer radio, no remove or add. The studio
+   * inspector's other-language fields set it, so the inputs get the full width.
+   */
+  isTextOnly?: boolean;
   onChange: (question: QuizshowQuestionInput) => void;
 }
 
@@ -54,6 +59,7 @@ export function QuizshowOptionsField({
   missingLanguages,
   errorText,
   answerErrorText,
+  isTextOnly = false,
   onChange,
 }: QuizshowOptionsFieldProps) {
   const { t } = useTranslation();
@@ -97,52 +103,57 @@ export function QuizshowOptionsField({
                       })
                     }
                   />
-                  <div className={styles.optionActions}>
-                    <input
-                      type="radio"
-                      name={radioName}
-                      className={styles.radio}
-                      checked={answer?.correctIndex === optionIndex}
-                      aria-label={t("quizshow:questions.options.markCorrect", {
-                        number,
-                      })}
-                      onChange={() =>
-                        onChange({
-                          ...question,
-                          answer: { correctIndex: optionIndex },
-                        })
-                      }
-                    />
-                    <Collapse isOpen={canRemove}>
-                      <IconButton
-                        size="sm"
-                        aria-label={t("quizshow:questions.options.remove", {
-                          number,
-                        })}
-                        onClick={() =>
+                  {!isTextOnly && (
+                    <div className={styles.optionActions}>
+                      <input
+                        type="radio"
+                        name={radioName}
+                        className={styles.radio}
+                        checked={answer?.correctIndex === optionIndex}
+                        aria-label={t(
+                          "quizshow:questions.options.markCorrect",
+                          {
+                            number,
+                          },
+                        )}
+                        onChange={() =>
                           onChange({
                             ...question,
-                            options: options.filter(
-                              (_existing, index) => index !== optionIndex,
-                            ),
-                            answer: correctIndexAfterRemoving(
-                              answer?.correctIndex,
-                              optionIndex,
-                            ),
+                            answer: { correctIndex: optionIndex },
                           })
                         }
-                      >
-                        <FiX aria-hidden />
-                      </IconButton>
-                    </Collapse>
-                  </div>
+                      />
+                      <Collapse isOpen={canRemove}>
+                        <IconButton
+                          size="sm"
+                          aria-label={t("quizshow:questions.options.remove", {
+                            number,
+                          })}
+                          onClick={() =>
+                            onChange({
+                              ...question,
+                              options: options.filter(
+                                (_existing, index) => index !== optionIndex,
+                              ),
+                              answer: correctIndexAfterRemoving(
+                                answer?.correctIndex,
+                                optionIndex,
+                              ),
+                            })
+                          }
+                        >
+                          <FiX aria-hidden />
+                        </IconButton>
+                      </Collapse>
+                    </div>
+                  )}
                 </div>
               </CollapseListItem>
             );
           })}
         </AnimatePresence>
       </ul>
-      <Collapse isOpen={canAdd}>
+      <Collapse isOpen={canAdd && !isTextOnly}>
         <Button
           type="button"
           variant="ghost"

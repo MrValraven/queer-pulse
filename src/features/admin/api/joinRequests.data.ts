@@ -13,6 +13,15 @@ function expiryDaysFromNow(days: number): string {
 }
 
 /**
+ * A past moment as an offset from right now, for the welcome email's "last
+ * on" date: it stays as recent as the invite it was sent for, whenever the
+ * demo is opened.
+ */
+function daysAgo(days: number): string {
+  return new Date(Date.now() - days * DAY_MS).toISOString();
+}
+
+/**
  * The OPS-04 due date as an offset from right now, for the same reason
  * `expiryDaysFromNow` exists: a frozen ISO string would read as overdue
  * forever once the date passed, and the pending queue needs to show both a
@@ -190,6 +199,10 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     // Still redeemable: the reviewer can copy this link and it will work.
     inviteStatus: "valid",
     inviteExpiresAt: expiryDaysFromNow(3),
+    // Sent once the day the current link was minted, so the card shows the
+    // "sent once" line and "Send again" asks before a second copy goes out.
+    welcomeEmailSendCount: 1,
+    welcomeEmailLastSentAt: daysAgo(4),
     message:
       "A friend from the reading group told me about this place. I'd like to find people nearby who share the same books.",
     mutualMemberEmail: "devon@example.com",
@@ -271,6 +284,9 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     // exists for: the reissue action makes the same code work again.
     inviteStatus: "expired",
     inviteExpiresAt: expiryDaysFromNow(-9),
+    // Nobody sent the welcome email either, which is why the link lapsed.
+    welcomeEmailSendCount: 0,
+    welcomeEmailLastSentAt: null,
     message:
       "I read the piece on housing co-ops and would like to meet the people behind it.",
     mutualMemberEmail: null,
@@ -310,6 +326,8 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     // over and no reissue to offer.
     inviteStatus: "used",
     inviteExpiresAt: "2026-05-20T09:20:00.000Z",
+    welcomeEmailSendCount: 1,
+    welcomeEmailLastSentAt: "2026-05-13T09:25:00.000Z",
     message:
       "A friend vouched for me at an event last month. I would like to stay in touch with people I met there.",
     mutualMemberEmail: "devon@example.com",

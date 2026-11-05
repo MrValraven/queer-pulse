@@ -6,6 +6,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { isPlayerState } from "../realtime/quizshowClientStore";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import styles from "./QuizshowPlay.module.css";
+import lobbyStyles from "./QuizshowPlayerLobby.module.css";
 import { QuizshowErrorLine } from "./QuizshowJoinForm";
 import { sendFailureKeyOf } from "./usePlayJoin";
 
@@ -66,17 +67,23 @@ export function QuizshowJokerButton({
   return (
     <div className={styles.group}>
       <Collapse isOpen={!me.hasUsedJoker}>
-        <div className={styles.group}>
+        <div className={`${styles.group} ${lobbyStyles.joker}`}>
           <Button
-            variant="soft"
+            variant="stage-ghost"
             size="lg"
             aria-disabled={isSending}
             onClick={() => void playJoker()}
           >
-            <FiStar aria-hidden="true" fill="none" />
+            <FiStar
+              aria-hidden="true"
+              fill="none"
+              className={lobbyStyles.jokerStar}
+            />
             {t("quizshow:player.jokerPlay")}
           </Button>
-          <p className={styles.hint}>{t(hintKey)}</p>
+          <p className={`${styles.hint} ${lobbyStyles.jokerHint}`}>
+            {t(hintKey)}
+          </p>
         </div>
       </Collapse>
       <Collapse isOpen={me.hasUsedJoker}>

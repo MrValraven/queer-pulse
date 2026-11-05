@@ -148,6 +148,14 @@
   margin-block-start: 0;
 }
 
+/* The phone row's own parts, the date kicker over the title and the price
+   beside who is going. The wide card carries both on its cover, so they stay
+   out until the narrow block below shows them. */
+.phoneKicker,
+.phonePrice {
+  display: none;
+}
+
 /* ── Body ── */
 .body {
   position: relative;
@@ -279,6 +287,188 @@
   max-inline-size: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* ── Phone: a compact row ──
+   Below 640px the board is one column, and a full 4:3 cover per card left
+   room for about one and a half events per screen. The card turns into a
+   row instead: a square thumbnail at the leading edge, then a date kicker
+   (with the urgent pill), the title on at most two lines, one "with" line,
+   where and when, and who is going beside the price. The cover's stamp,
+   ribbon and badges step aside, since the text column now says all three. */
+@media (--md) {
+  .card,
+  .shell {
+    --ticket-max-inline: none;
+  }
+
+  .surface {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--gap-sm);
+    padding: 10px;
+  }
+
+  .media {
+    --cover-fallback-mark-size: 56%;
+    inline-size: 5.75rem;
+    aspect-ratio: 1;
+    border-radius: var(--radius-12);
+  }
+
+  .stamp,
+  .scrim,
+  .mediaFoot,
+  .media .ribbon,
+  .formatLine,
+  .themeStrip,
+  .cta {
+    display: none;
+  }
+
+  .body {
+    align-self: center;
+    gap: 3px;
+    padding: 0;
+  }
+
+  /* The text keeps clear of the menu trigger on the row's top trailing
+     corner. */
+  .shell .body {
+    padding-inline-end: calc(var(--card-menu-size) + 2px);
+  }
+
+  .phoneKicker {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px 6px;
+    min-inline-size: 0;
+  }
+
+  .title {
+    font-size: var(--text-17);
+  }
+
+  /* One "with" line: the leading community, when the event names one, reads
+     closer to the member than the business that runs it. */
+  .runBy:has(+ .hostedWith) {
+    display: none;
+  }
+
+  .foot {
+    gap: 0;
+    margin-block-start: 2px;
+  }
+
+  /* Element-qualified so the row stays in the flow here whatever the wide
+     card's floated-pill rules above decide. It wraps, so a long price drops
+     whole under the going count instead of breaking inside its pill. */
+  .foot > .footRow {
+    position: static;
+    flex-wrap: wrap;
+    row-gap: 4px;
+    padding-block-start: 0;
+  }
+
+  /* Where and when wraps onto a second line on a narrow row, so the
+     neighbourhood and the time both stay whole. The outer span is the
+     shared meta row and the inner ones its two items. */
+  .meta > span {
+    flex-wrap: wrap;
+    row-gap: 0;
+  }
+
+  .meta > span > span {
+    overflow: visible;
+    white-space: normal;
+  }
+
+  .phonePrice {
+    display: inline-flex;
+    max-inline-size: 100%;
+  }
+
+  .phonePrice:empty {
+    display: none;
+  }
+
+  /* Element-qualified so it outranks the price pill's own spacing. A price
+     never breaks inside its pill ("€6.00–€18.00" stays one piece). */
+  .phonePrice > span {
+    margin-block-start: 0;
+    padding: 2px 9px;
+    white-space: nowrap;
+  }
+
+  /* Neither a count nor a price: the row would hold nothing visible. */
+  .footRow:not(:has(> .going)):not(:has(> .phonePrice:not(:empty))) {
+    display: none;
+  }
+
+  /* The trigger's 44px press target reaches the row's corner exactly. */
+  .shell > .menuSlot {
+    inset-block-start: 6px;
+    inset-inline-end: 6px;
+  }
+}
+
+/* ── The narrowest phones (under 360px, the 320px class) ──
+   The text column there was about 126px, so titles, the "with" line and
+   where and when all cut short. The thumbnail shrinks and the gap with it,
+   and only the kicker keeps clear of the menu trigger: it holds the
+   trigger's height, so the title starts below the disc and runs the full
+   width of the column. */
+@media (max-width: 359px) {
+  .surface {
+    gap: var(--gap-xs);
+  }
+
+  .media {
+    inline-size: 4.5rem;
+  }
+
+  .shell .body {
+    padding-inline-end: 0;
+  }
+
+  .shell .phoneKicker {
+    min-block-size: calc(var(--card-menu-size) - 4px);
+    padding-inline-end: calc(var(--card-menu-size) + 2px);
+  }
+}
+
+/* The kicker's date, in small caps in the accent. */
+.dateLine {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--sans);
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+/* "Tonight" and "Happening now" in the kicker: the urgent ribbon's coral
+   fill at the kicker's own small size. */
+.kickerPill {
+  flex: none;
+  padding: 1px 7px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  /* css-scale-allow: non-flipping-text. The ground under this label is a
+     coral fill in both themes, so it must stay dark. --text-strong would
+     flip. */
+  color: var(--plum);
+  font-family: var(--sans);
+  font-size: var(--text-10);
+  font-weight: 700;
+  letter-spacing: var(--ls-label);
+  line-height: 1.5;
+  text-transform: uppercase;
 }
 
 /* ── Hover and focus ── */

@@ -2,7 +2,7 @@ import { useId, useState } from "react";
 import { FiAlertCircle } from "react-icons/fi";
 import { Collapse, Toggle } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import styles from "./QuizshowBuilder.module.css";
+import styles from "./QuizshowAdultsSwitch.module.css";
 
 /**
  * A game's 18+ switch. While a round carries the adults label the switch

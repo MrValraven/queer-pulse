@@ -7,6 +7,7 @@ import {
 } from "../../../shared/api/client";
 import { toPage } from "../../../shared/api/pagination";
 import type {
+  ForumFundingFacets,
   ForumFundingView,
   FundingEligibility,
   FundingEndReason,
@@ -232,8 +233,14 @@ export interface GetThreadsOptions {
   scope?: FundingScope;
 }
 
+/** The thread list envelope. The first page of `category=funding` adds
+ *  `fundingFacets`; a server that predates it sends none. */
+type ThreadListResponse = Paginated<ForumThreadResponse> & {
+  fundingFacets?: ForumFundingFacets;
+};
+
 /** GET /forum/threads?category=&cursor=&sort=&tag=&q= — a cursor page of
- *  threads. */
+ *  threads, with the Funding & Grants chip counts when the server sent them. */
 export async function getThreads(
   category?: string,
   cursor?: string,
@@ -252,10 +259,13 @@ export async function getThreads(
     params.append("eligibility", value);
   if (opts?.scope) params.set("scope", opts.scope);
   const qs = params.toString();
-  const res = await apiGet<
-    ForumThreadResponse[] | Paginated<ForumThreadResponse>
-  >(`/forum/threads${qs ? `?${qs}` : ""}`);
-  return toPage(res);
+  const res = await apiGet<ForumThreadResponse[] | ThreadListResponse>(
+    `/forum/threads${qs ? `?${qs}` : ""}`,
+  );
+  return {
+    ...toPage(res),
+    fundingFacets: Array.isArray(res) ? undefined : res?.fundingFacets,
+  };
 }
 
 /** Per-category thread counts plus an `all` total, block-filtered like the

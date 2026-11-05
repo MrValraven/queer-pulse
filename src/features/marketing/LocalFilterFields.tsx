@@ -13,7 +13,10 @@ import type {
 import { countActiveLocalFilters } from "./localActiveFilterCount";
 import { LocalFilterGroups } from "./LocalFilterGroups";
 import { LocalSearch } from "./LocalSearchField";
-import type { LocalChipCounts } from "./useDirectoryFilters";
+import type {
+  LocalCategoryCounts,
+  LocalChipCounts,
+} from "./directoryFacetCounts";
 import type { AccessibilitySlug } from "./listBusiness/listingAccessibility.data";
 import type { ListingOwnedBy } from "./listBusiness/listingOwnedBy.data";
 import s from "./LocalFilterBar.module.css";
@@ -23,16 +26,14 @@ export interface LocalFilterFieldsProps {
   categories: string[];
   onToggleCategory: (categoryId: string) => void;
   onClearCategories: () => void;
-  /** Live count per category id (+ "all"), reflecting the other active filters. */
-  categoryCounts: Record<string, number>;
-  /** How many loaded places each one-tap chip (open now, verified, each access
-   *  need, each fact chip) would leave if turned on, with the other filters
-   *  kept. */
+  /** Count per category id (+ "all"), reflecting the other active filters.
+   *  A missing entry is not known yet. */
+  categoryCounts: LocalCategoryCounts;
+  /** How many places each other chip (open now, verified, each access need,
+   *  each fact chip) would show if picked, with the other filters kept. A
+   *  missing count is not known yet: it draws no number and never disables
+   *  its chip. A known 0 disables a chip that is off. */
   chipCounts: LocalChipCounts;
-  /** True once every page of places has loaded without error, which is when a
-   *  zero count is final and its chip can go unpickable. Until then a zero may
-   *  only mean the matching place sits on a page still to come. */
-  isLoadedSetComplete: boolean;
   query: string;
   onQueryChange: (value: string) => void;
   /** The attribute and fact filters (`?attr=`, `?entry=`, `?pay=`,

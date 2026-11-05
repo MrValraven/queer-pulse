@@ -114,152 +114,28 @@
   flex: none;
 }
 
-.filterBar {
-  background: var(--cream);
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
-  padding: 14px 0;
-  position: sticky;
-  top: 64px;
-  z-index: var(--z-sticky);
-}
-.filterRow {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  flex-wrap: wrap;
-}
-.filterRow + .filterRow {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(var(--line-rgb), 0.06);
-}
-.fLabel {
-  font-size: var(--text-11-5);
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-  white-space: nowrap;
-  margin-right: 2px;
-}
-.spacer {
-  flex: 1;
-  min-width: 12px;
-}
-.typeChip {
-  font-family: var(--sans);
-  font-size: var(--text-13-5);
-  font-weight: 500;
-  border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: var(--radius-pill);
-  padding: 8px 15px;
-  cursor: pointer;
-  transition:
-    background 0.22s var(--ease),
-    color 0.22s var(--ease),
-    border-color 0.22s var(--ease);
-  color: var(--ink-60);
-  background: transparent;
-  white-space: nowrap;
-}
-@media (hover: hover) {
-  .typeChip:hover {
-    border-color: rgba(var(--line-rgb), 0.38);
-    color: var(--ink);
-  }
-}
-.typeOn {
-  background: var(--plum);
-  color: rgba(var(--cream-rgb), 1);
-  border-color: var(--line-strong);
-}
-.fSelect {
-  font-family: var(--sans);
-  font-size: var(--text-16);
-  color: var(--ink);
-  background: var(--paper);
-  border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: var(--radius-pill);
-  padding: 7px 30px 7px 15px;
-  cursor: pointer;
-  transition: border-color 0.2s var(--ease);
-}
-.fSelect:focus {
-  border-color: var(--line-strong);
-}
-.tagChip {
-  font-family: var(--sans);
-  font-size: var(--text-12-5);
-  font-weight: 500;
-  border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: var(--radius-pill);
-  padding: 6px 13px;
-  cursor: pointer;
-  transition:
-    background 0.2s var(--ease),
-    color 0.2s var(--ease),
-    border-color 0.2s var(--ease);
-  color: var(--ink-60);
-  background: transparent;
-  white-space: nowrap;
-}
-@media (hover: hover) {
-  .tagChip:hover {
-    border-color: rgba(var(--line-rgb), 0.3);
-    color: var(--ink);
-  }
-}
-.tagOn {
-  background: rgba(var(--accent-rgb), 0.1);
-  color: var(--accent-ink);
-  border-color: rgba(var(--accent-rgb), 0.34);
-}
-
-.body {
-  padding: var(--section-y-56) 0 var(--section-y-112);
-}
-.top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 34px;
-}
-.count {
-  font-size: var(--text-14);
-  color: var(--ink-60);
-}
-.count b {
-  color: var(--jade);
-  font-weight: 600;
-}
-.postBtn {
-  font-family: var(--sans);
-  font-size: var(--text-14);
-  font-weight: 600;
-  padding: 11px 22px;
-  border-radius: var(--radius-pill);
-  background: var(--plum);
-  color: rgba(var(--cream-rgb), 1);
-  border: none;
-  cursor: pointer;
-  transition: background 0.25s var(--ease);
-  white-space: nowrap;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-}
-@media (hover: hover) {
-  .postBtn:hover {
-    background: var(--accent-ink);
-  }
-}
-
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 20px;
+}
+/* The flatmates tab's results column, beside the shared filters sidebar.
+   `min-width: 0` lets the grid track shrink below its content (long chip
+   rows, the discovery deck). */
+.results {
+  min-width: 0;
+}
+/* Inside the results column the card grid follows the column's own width:
+   each card at least 340px (the card's header needs it) and at least a third
+   of the row, so a wide column holds three and a narrower one two (or one)
+   wider cards. `min(100%, 340px)` lets a phone column hold one card at its
+   own width. The 41px is the grid's two 20px gaps plus 1px of slack, so
+   rounding never drops the third card. */
+.results .grid {
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(max(min(100%, 340px), calc((100% - 41px) / 3)), 1fr)
+  );
 }
 
 .loadMoreRow {
@@ -267,8 +143,8 @@
   justify-content: center;
   margin-top: 28px;
 }
-/* Let the empty state span the full grid width so it centers, rather than
-   sitting in a single left-hand column. */
+/* Let the empty state span the full grid width so it centers across every
+   column. */
 .empty {
   grid-column: 1 / -1;
 }
@@ -298,6 +174,32 @@
   gap: 12px;
   margin-bottom: 16px;
 }
+/* A board card (and its skeleton) is a size container, so its header follows
+   the card's own width, set by the grid track. Below 420px of content the
+   avatar, name and type badge no longer share one line (the PT badge alone
+   runs ~190px), so the header becomes a two-column grid and the badge drops
+   under the name, in the identity column. */
+.boardCard {
+  container: flatmate-card / inline-size;
+}
+@container flatmate-card (max-width: 420px) {
+  .cardTop {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 10px 12px;
+  }
+  .cardTop > .badge,
+  .cardTop > .badgeSlot {
+    grid-column: 2;
+    justify-self: start;
+    margin-top: 0;
+  }
+}
+/* Holds the skeleton's badge placeholder, so it moves with the real badge. */
+.badgeSlot {
+  display: flex;
+  flex: none;
+}
 .av {
   width: 2.737em;
   height: 2.737em;
@@ -319,6 +221,13 @@
   align-items: center;
   gap: 7px;
   flex-wrap: wrap;
+}
+/* Names and pronouns wrap between words: the page-wide `overflow-wrap:
+   anywhere` would otherwise let a squeezed identity column split them letter
+   by letter. A single word longer than the line still breaks to fit. */
+.name,
+.pronouns {
+  overflow-wrap: break-word;
 }
 .name {
   display: inline-block;
@@ -585,8 +494,8 @@
   width: 100%;
   max-width: 580px;
   padding: 32px 36px var(--section-y-56);
-  /* svh, not vh: vh is the large viewport, so 90vh overflows under mobile
-     browser chrome and pushes actions off-screen. */
+  /* svh is the small viewport: the large one (vh) makes 90vh overflow under
+     mobile browser chrome and pushes actions off-screen. */
   max-height: 90svh;
   overflow-y: auto;
   position: relative;
@@ -909,18 +818,9 @@
   .hero {
     padding: var(--section-y-120) 0 var(--section-y-64);
   }
-  .body {
-    padding: 44px 0 var(--section-y-80);
-  }
 }
 
-/* ── Board header actions + list/discovery view toggle ───────────────────── */
-.topActions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
+/* ── List/discovery view toggle ──────────────────────────────────────────── */
 .viewToggle {
   display: inline-flex;
   gap: 4px;
@@ -954,6 +854,32 @@
 .viewChipOn {
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
+}
+/* --plum is the dark page colour, so the selected pill lifts to a lavender
+   wash with a cream hairline ring; the cream text stays light. */
+:global([data-theme="dark"]) .viewChipOn {
+  background: rgba(var(--plum-tint-rgb), 0.5);
+  box-shadow: var(--ring-cream-hairline);
+}
+
+/* Below the wide cutover the results top row has no room for the labels, so the
+   toggle shrinks to icons; the label stays as the button's accessible name. */
+@media (--wide) {
+  .viewChip {
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 12px;
+    gap: 0;
+  }
+  .viewChipLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
 }
 
 /* ── Say-hello modal ─────────────────────────────────────────────────────── */

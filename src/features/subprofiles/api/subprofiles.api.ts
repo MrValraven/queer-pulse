@@ -1081,6 +1081,65 @@ export interface SubprofileCardDTO {
   followerCount: number;
   /** Quest personas only: cleaned "At the table" summary, absent when empty. */
   table?: CardTableSummary;
+  // Directory redesign ("The Credits"). Optional so the older payloads, the
+  // MSW fixtures and every other builder of this DTO keep compiling; the
+  // card adapters (`directoryCard.adapters.ts`) normalize each one.
+  /** The persona's non-identifying id, the key the follow routes use. */
+  id?: string;
+  /** Saved reframe crop for `avatarUrl`, the portrait's focal point. */
+  crop?: CropRect | null;
+  /** Whether the viewer follows this persona. */
+  viewerFollowing?: boolean;
+  /** Whether the viewer is this persona's creator or one of its members. */
+  viewerIsMember?: boolean;
+  /** Who this persona made things with, as this viewer may see them. */
+  credits?: CardCreditsDTO;
+}
+
+/** The directory's sort order. The server defaults to `name`; the page
+ *  defaults to `recent` (`DEFAULT_DIRECTORY_SORT`). */
+export type SubprofileDirectorySort = "name" | "recent" | "followed";
+
+/** One face on a card's credits row: a persona or a member credited with it. */
+export interface CreditFaceDTO {
+  kind: "persona" | "member";
+  name: string;
+  avatarUrl: string | null;
+  accent: string | null;
+}
+
+/** A card's credits: distinct counterparts and at most three faces, newest
+ *  shared work first. */
+export interface CardCreditsDTO {
+  count: number;
+  faces: CreditFaceDTO[];
+}
+
+/** One side of a "Made together" card. Carries no persona id, owner slug,
+ *  owner name or link visibility: the card links by handle alone. */
+export interface MadeTogetherPersonaDTO {
+  handle: string;
+  displayName: string;
+  kind: SubprofileKind;
+  avatarUrl: string | null;
+  avatarCrop?: CropRect;
+  accent: string | null;
+}
+
+/** One credited piece of work, its author and the partner it credits. */
+export interface MadeTogetherItemDTO {
+  itemId: string;
+  title: string;
+  imageUrl: string | null;
+  imageCrop?: CropRect;
+  createdAt: string;
+  author: MadeTogetherPersonaDTO;
+  partner: MadeTogetherPersonaDTO;
+}
+
+/** `GET /subprofiles/made-together` body. */
+export interface MadeTogetherResponseDTO {
+  items: MadeTogetherItemDTO[];
 }
 
 /** Publish failure body (HTTP 422). */
@@ -1332,6 +1391,41 @@ export interface SubprofileDirectoryPage {
   total: number;
   page: number;
   limit: number;
+  /** The sidebar's availability counts, on page 1 only. Optional: an older
+   *  server sends none, and the sidebar then draws no numbers. */
+  facets?: SubprofileDirectoryFacetsDTO;
+}
+
+/** The directory sidebar's chip filters, sent as server params. Professions,
+ *  tags and table formats OR within their group; table vibes AND. */
+export interface SubprofileDirectoryRefinement {
+  kinds?: readonly SubprofileKind[];
+  tags?: readonly string[];
+  /** One stored availability key; the sidebar sends `open_to_collabs`. */
+  availability?: string;
+  tableFormats?: readonly TableChipFormat[];
+  tableVibes?: readonly TableVibe[];
+}
+
+/** The "At the table" format chips. A stored `both` matches either. */
+export type TableChipFormat = Exclude<TableFormat, "both">;
+
+/**
+ * For every sidebar option, how many personas picking it would give, counted
+ * with that group's own selection lifted and every other filter (the search
+ * term included) applied. Each map carries the group's full vocabulary, so a
+ * missing key means the count is unknown and the sidebar draws no number.
+ *
+ * `tags` is ordered most-used first and doubles as the tag vocabulary: the
+ * directory's top tags plus any tag already picked. `tableVibes` is an AND
+ * group, so it counts under the vibes already picked.
+ */
+export interface SubprofileDirectoryFacetsDTO {
+  kinds: Partial<Record<SubprofileKind, number>>;
+  tags: { tag: string; count: number }[];
+  availability: Partial<Record<string, number>>;
+  tableFormats: Partial<Record<TableChipFormat, number>>;
+  tableVibes: Partial<Record<TableVibe, number>>;
 }
 
 /** One page of the standalone-persona directory.
@@ -1345,15 +1439,18 @@ export interface SubprofileDirectoryPage {
  *  than only the pages the browser happened to pull.
  *
  *  `kind` scopes to a single profession, for kind-scoped directories (e.g. the
- *  therapist directory). Paging is `page`/`limit`, `limit` capped at 100
- *  server-side. */
+ *  therapist directory). The sidebar's chip filters (`refinement`) go out as
+ *  repeated params (`?kinds=a&kinds=b`), since a tag may itself hold a comma.
+ *  Paging is `page`/`limit`, `limit` capped at 100 server-side. `sort` picks
+ *  the order (`name` when left out, the server's default). */
 export const getSubprofileDirectory = (
   params: {
     page?: number;
     limit?: number;
     kind?: string;
     query?: string;
-  } = {},
+    sort?: SubprofileDirectorySort;
+  } & SubprofileDirectoryRefinement = {},
   signal?: AbortSignal,
 ) => {
   const q = new URLSearchParams();
@@ -1361,6 +1458,12 @@ export const getSubprofileDirectory = (
   if (params.limit !== undefined) q.set("limit", String(params.limit));
   if (params.kind) q.set("kind", params.kind);
   if (params.query) q.set("query", params.query);
+  if (params.sort) q.set("sort", params.sort);
+  params.kinds?.forEach((kind) => q.append("kinds", kind));
+  params.tags?.forEach((tag) => q.append("tags", tag));
+  if (params.availability) q.set("availability", params.availability);
+  params.tableFormats?.forEach((format) => q.append("tableFormats", format));
+  params.tableVibes?.forEach((vibe) => q.append("tableVibes", vibe));
   const qs = q.toString();
   return apiGet<SubprofileDirectoryPage>(
     `/subprofiles/directory${qs ? `?${qs}` : ""}`,
@@ -1369,6 +1472,16 @@ export const getSubprofileDirectory = (
     signal,
   );
 };
+
+/** Recent work where personas credited each other, for the directory's
+ *  "Made together" strip. `limit` is 1 to 12 server-side (default 8). */
+export const getMadeTogether = (limit?: number, signal?: AbortSignal) =>
+  apiGet<MadeTogetherResponseDTO>(
+    `/subprofiles/made-together${limit !== undefined ? `?limit=${limit}` : ""}`,
+    undefined,
+    undefined,
+    signal,
+  );
 
 /** Endorse a published persona (one-tap + optional note). Keyed on the
  *  persona's non-identifying `id`, not its slug/handle. */

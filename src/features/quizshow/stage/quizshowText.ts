@@ -21,3 +21,21 @@ export function optionLetter(optionIndex: number): string {
 
 /** Where a stage piece is drawn: the big screen, a player's phone, or a small preview. */
 export type QuizshowStageSize = "screen" | "phone" | "preview";
+
+/** Below this a number answer prints bare, so a year reads 1956 as people write it. */
+const ANSWER_GROUPING_FROM = 10_000;
+
+/**
+ * Formats a number answer (a closest-number key or guess) the way people
+ * write it: no thousands separator under 10,000, so a year stays "1956",
+ * and the locale's grouping from 10,000 up. The TV, the reveal counts and
+ * the phone all read a number answer through it.
+ */
+export function quizshowAnswerNumberFormatter(
+  formatNumber: (value: number, options?: Intl.NumberFormatOptions) => string,
+): (value: number) => string {
+  return (value) =>
+    Math.abs(value) >= ANSWER_GROUPING_FROM
+      ? formatNumber(value)
+      : formatNumber(value, { useGrouping: false });
+}

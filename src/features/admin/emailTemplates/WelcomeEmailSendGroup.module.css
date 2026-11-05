@@ -27,28 +27,29 @@
   color: var(--ink-60);
 }
 
-.sent {
+/* The send record above the language choice: muted before the first send,
+   ink with a jade check once the email went out. */
+/* The check sits on the first line when a narrow queue card wraps the text. */
+.status {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px 12px;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 0 10px;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
 }
 
-.sentLine {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
-  font-size: var(--text-13);
+.statusSent {
   font-weight: 600;
-  line-height: 1.5;
   color: var(--ink);
 }
 
-.sentLine svg {
+.statusSent svg {
   width: 15px;
   height: 15px;
+  /* Centres the 15px icon on the first 19.5px line. */
+  margin-top: 2px;
   flex-shrink: 0;
   color: var(--jade);
 }

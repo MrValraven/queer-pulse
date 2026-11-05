@@ -74,3 +74,34 @@ export function EventDateStamp({
     </span>
   );
 }
+
+/**
+ * The stamp's date on one line ("Wed, Nov 4"), for a row too narrow to carry
+ * the stamp itself: the phone ticket card sets it as the kicker over its
+ * title. It reads in the event's own zone like the stamp, and drops every
+ * abbreviation point ("qua, 4 de nov") for the same reason. Always
+ * decorative: the card names the full date in its link's `aria-label`.
+ */
+export function EventDateLine({
+  event,
+  className,
+}: {
+  event: CalendarEvent;
+  className?: string;
+}) {
+  const formatters = useFormat();
+  const zone = eventZoneFormat(event.timezone, event.date);
+  const dateText = formatters
+    .date(event.date, {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      ...zone.dateOptions,
+    })
+    .replace(/\./g, "");
+  return (
+    <span className={className} aria-hidden>
+      {dateText}
+    </span>
+  );
+}

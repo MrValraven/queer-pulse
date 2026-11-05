@@ -71,8 +71,6 @@ export interface Poster {
 export interface HousingListing {
   slug: string;
   type: string;
-  typeColor: string;
-  typeText: string;
   tint: Tint;
   title: string;
   hood: string;
@@ -134,8 +132,6 @@ export const HOUSING_LISTINGS: HousingListing[] = [
   {
     slug: "principe-real-sunny-onebed",
     type: "sublet",
-    typeColor: "rgba(var(--accent-rgb),.1)",
-    typeText: "var(--accent-ink)",
     tint: "coral",
     title: "Sunny one-bed in Príncipe Real, July & August",
     hood: "Misericórdia",
@@ -218,8 +214,6 @@ export const HOUSING_LISTINGS: HousingListing[] = [
   {
     slug: "arroios-room-share",
     type: "room",
-    typeColor: "rgba(var(--jade-rgb),.1)",
-    typeText: "var(--jade)",
     tint: "jade",
     title: "Room in shared flat, Arroios, long-term",
     hood: "Arroios",
@@ -286,8 +280,6 @@ export const HOUSING_LISTINGS: HousingListing[] = [
   {
     slug: "graca-studio-shortterm",
     type: "short",
-    typeColor: "rgba(var(--plum-rgb),.08)",
-    typeText: "var(--plum)",
     tint: "plum",
     title: "Studio in Graça, 2 weeks minimum",
     hood: "São Vicente",
@@ -355,8 +347,6 @@ export const HOUSING_LISTINGS: HousingListing[] = [
   {
     slug: "marvila-warehouse-room",
     type: "room",
-    typeColor: "rgba(var(--jade-rgb),.1)",
-    typeText: "var(--jade)",
     tint: "jade",
     title: "Room in Marvila warehouse flat, creative people",
     hood: "Marvila",
@@ -422,8 +412,6 @@ export const HOUSING_LISTINGS: HousingListing[] = [
   {
     slug: "cais-do-sodre-full-flat",
     type: "studio",
-    typeColor: "rgba(var(--violet-rgb),.1)",
-    typeText: "var(--violet)",
     tint: "plum",
     title: "Full flat in Cais do Sodré, 3 months",
     hood: "Misericórdia",
@@ -485,8 +473,6 @@ export const HOUSING_LISTINGS: HousingListing[] = [
   {
     slug: "mouraria-two-bed",
     type: "sublet",
-    typeColor: "rgba(var(--accent-rgb),.1)",
-    typeText: "var(--accent-ink)",
     tint: "coral",
     title: "Two-bedroom in Mouraria, June & July",
     hood: "Santa Maria Maior",

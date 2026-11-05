@@ -178,20 +178,50 @@ export type UpdateOpportunityDto = Partial<
   Omit<CreateOpportunityDto, "handle" | "team">
 >;
 
+// ── List facets ──────────────────────────────────────────────────────────────
+
+/** The board sidebar's availability counts, sent with GET /volunteering. Each
+ *  group is counted with its own filter lifted and the other one applied, so
+ *  a row says how many opportunities picking it would leave. */
+export interface VolunteerFacets {
+  /** Opportunities per commitment, under the request's `cause` filter. */
+  commit: Record<Commit, number>;
+  /** Opportunities per cause, under the request's `commit` filter. An
+   *  opportunity counts once under each of its causes, so these do not sum
+   *  to a total. */
+  cause: Record<Cause, number>;
+  /** Opportunities under the request's `commit` filter with the `cause`
+   *  filter lifted, each counted once: the "Any cause" row's count. Undefined
+   *  on a server that predates it, which must render as no count. */
+  allCauses?: number;
+}
+
+/** A GET /volunteering page. `facets` is undefined on a server that predates
+ *  them, and every row then draws no count. */
+export interface OpportunitiesPage extends Paginated<OpportunityCardDTO> {
+  facets?: VolunteerFacets;
+}
+
 // ── Raw calls (one per endpoint) ─────────────────────────────────────────────
 
 export async function getOpportunities(
   params: { cause?: Cause; commit?: Commit; page?: number } = {},
-): Promise<Paginated<OpportunityCardDTO>> {
+): Promise<OpportunitiesPage> {
   const q = new URLSearchParams();
   if (params.cause) q.set("cause", params.cause);
   if (params.commit) q.set("commit", params.commit);
   if (params.page) q.set("page", String(params.page));
   const qs = q.toString();
   const res = await apiGet<
-    OpportunityCardDTO[] | Paginated<OpportunityCardDTO>
+    | OpportunityCardDTO[]
+    | (Paginated<OpportunityCardDTO> & { facets?: VolunteerFacets })
   >(`/volunteering${qs ? `?${qs}` : ""}`);
-  return toItemsPage(res);
+  // `toItemsPage` normalises the envelope (and a bare-array response) but only
+  // knows the four page fields, so the facets are carried across by hand.
+  return {
+    ...toItemsPage(res),
+    facets: Array.isArray(res) ? undefined : res?.facets,
+  };
 }
 
 /** GET /communities/:slug/volunteering: one community's open opportunities,

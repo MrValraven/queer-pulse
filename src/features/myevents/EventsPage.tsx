@@ -26,11 +26,13 @@ export function EventsPage() {
   const surface = (
     <>
       <EventsHeader active={active} onChange={setTab} />
+      {/* No tabIndex: each body opens with focusable controls, so per the
+          APG the next Tab stop after the tablist is the first of them. A
+          focusable panel this tall only parked focus on itself. */}
       <div
         role="tabpanel"
         id={`events-top-panel-${active}`}
         aria-labelledby={`events-top-tab-${active}`}
-        tabIndex={0}
       >
         {active === "mine" ? <MyEventsBody /> : <EventsDiscover />}
       </div>

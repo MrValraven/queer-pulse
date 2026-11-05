@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import {
@@ -6,8 +7,6 @@ import {
   CollapseListItem,
   QrCode,
 } from "../../../shared/components/ui";
-import { RollingNumber } from "../../../shared/components/ui/RollingNumber";
-import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type {
   QuizshowLanguage,
@@ -21,7 +20,9 @@ import { appHost } from "../../../shared/lib/inviteUrl";
 import { QuizshowShape } from "../QuizshowShape";
 import { quizshowPlayUrl } from "../quizshowPaths";
 import { pickQuizshowText } from "../stage/quizshowText";
+import { EmphasisText } from "./QuizshowScreenChrome";
 import type { QuizshowScreenStageSize } from "./QuizshowScreenStage";
+import { SCREEN_EASE } from "./quizshowScreenMotion";
 import styles from "./QuizshowScreen.module.css";
 
 // A scanner needs dark-on-light polarity. Both channel tokens stay fixed in
@@ -29,7 +30,7 @@ import styles from "./QuizshowScreen.module.css";
 const QR_LIGHT_FILL = "rgb(var(--cream-rgb))";
 const QR_DARK_FILL = "rgb(var(--plum-rgb))";
 const QR_SIZES: Record<QuizshowScreenStageSize, number> = {
-  screen: 320,
+  screen: 480,
   preview: 96,
 };
 const AVATAR_SIZES: Record<QuizshowScreenStageSize, number> = {
@@ -47,16 +48,25 @@ const SHORT_SCREEN_QUERY = "(max-height: 50rem)";
 /** Up to four teams stack in one column; more split into two, so eight fit beside the code. */
 const TEAM_ROWS_ONE_COLUMN_MAX = 4;
 
+/** A new chip pops in on a soft spring; reduced motion shows it at once. */
+const CHIP_SPRING = { type: "spring", stiffness: 520, damping: 26 } as const;
+const CHIP_EXIT = { duration: 0.2, ease: SCREEN_EASE } as const;
+
 function PlayerChip({
   player,
   size,
+  isArrival,
 }: {
   player: QuizshowLobbyPlayer;
   size: QuizshowScreenStageSize;
+  /** Joined while the lobby was on screen: it lands with the glow. */
+  isArrival: boolean;
 }) {
   const { reducedMotion } = useMotionPrefs();
   return (
-    <span className={styles.playerChip}>
+    <span
+      className={`${styles.playerChip} ${isArrival && !reducedMotion ? styles.playerChipGlow : ""}`}
+    >
       <AnimatePresence initial={false}>
         {player.avatarUrl !== null && (
           <m.span
@@ -119,6 +129,47 @@ function RoundRow({
   );
 }
 
+/**
+ * The solo lobby's chips. Players already here when the lobby mounted (a
+ * reload, a reconnect) show at once; only an arrival pops in and glows.
+ */
+function PlayerChipList({
+  players,
+  size,
+}: {
+  players: QuizshowLobbyPlayer[];
+  size: QuizshowScreenStageSize;
+}) {
+  const { reducedMotion } = useMotionPrefs();
+  const [presentAtMountIds] = useState(
+    () => new Set(players.map((player) => player.playerId)),
+  );
+  return (
+    <ul className={styles.playerList}>
+      {/* The chips are motion rows themselves, so popLayout can lift a leaving one out of the wrap. */}
+      <AnimatePresence initial={false} mode="popLayout">
+        {players.map((player) => (
+          <m.li
+            key={player.playerId}
+            className={styles.playerItem}
+            layout={reducedMotion ? false : "position"}
+            initial={reducedMotion ? false : { opacity: 0, scale: 0.6 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.85, transition: CHIP_EXIT }}
+            transition={reducedMotion ? { duration: 0 } : CHIP_SPRING}
+          >
+            <PlayerChip
+              player={player}
+              size={size}
+              isArrival={!presentAtMountIds.has(player.playerId)}
+            />
+          </m.li>
+        ))}
+      </AnimatePresence>
+    </ul>
+  );
+}
+
 interface QuizshowScreenLobbyProps {
   session: QuizshowScreenState;
   size: QuizshowScreenStageSize;
@@ -137,7 +188,9 @@ export function QuizshowScreenLobby({
 }: QuizshowScreenLobbyProps) {
   const { t } = useTranslation();
   const { joinCode, lobby, rounds, playMode, screenLanguage } = session;
-  const playerCount = lobby.playerCount;
+  const isTeams = playMode === "teams";
+  // Solo: the count is the chips' own list, so the line and the chips always agree.
+  const playerCount = isTeams ? lobby.playerCount : lobby.players.length;
   const isShortScreen = useMediaQuery(SHORT_SCREEN_QUERY);
   let shownPlayersMax: number = SHOWN_PLAYERS_MAX.preview;
   if (size === "screen") {
@@ -148,7 +201,6 @@ export function QuizshowScreenLobby({
   }
   const shownPlayers = lobby.players.slice(-shownPlayersMax);
   const earlierPlayerCount = lobby.players.length - shownPlayers.length;
-  const isTeams = playMode === "teams";
   return (
     <div
       className={styles.lobby}
@@ -175,72 +227,60 @@ export function QuizshowScreenLobby({
         </section>
       )}
       <section className={styles.lobbyRoster}>
-        <h1 className={styles.lobbyTitle}>
-          {t("quizshow:screen.waitingTitle")}
-        </h1>
-        <p className={styles.playerCount}>
-          <Translation
-            i18nKey="quizshow:live.players"
-            values={{ count: playerCount }}
-            slots={{
-              count: (
-                <RollingNumber
-                  value={String(playerCount)}
-                  numericValue={playerCount}
-                />
-              ),
-            }}
-          />
-        </p>
-        {/* Teams: one row per team with its member count. Solo: the player chips. */}
-        <Collapse isOpen={isTeams}>
-          <ul
-            className={styles.teamList}
-            data-columns={
-              lobby.teams.length > TEAM_ROWS_ONE_COLUMN_MAX ? "two" : "one"
-            }
-          >
-            <AnimatePresence initial={false}>
-              {lobby.teams.map((team) => (
-                <CollapseListItem key={team.teamId}>
-                  <TeamRow team={team} />
-                </CollapseListItem>
-              ))}
-            </AnimatePresence>
-          </ul>
-        </Collapse>
-        <Collapse isOpen={!isTeams}>
-          <div className={styles.lobbyPlayers}>
-            <ul className={styles.playerList}>
+        <div className={styles.lobbyPeople}>
+          <h1 className={styles.lobbyTitle}>
+            <EmphasisText i18nKey="quizshow:screen.waitingTitleEm" />
+          </h1>
+          {/* Plain text: a roll per arrival lagged behind a burst of joins (a
+              restarted try-out fills the lobby in a second) and could read "0"
+              beside a row of chips. The chips carry the motion. */}
+          <p className={styles.playerCount}>
+            {t("quizshow:live.players", { count: playerCount })}
+          </p>
+          {/* Teams: one row per team with its member count. Solo: the player chips. */}
+          <Collapse isOpen={isTeams}>
+            <ul
+              className={styles.teamList}
+              data-columns={
+                lobby.teams.length > TEAM_ROWS_ONE_COLUMN_MAX ? "two" : "one"
+              }
+            >
               <AnimatePresence initial={false}>
-                {shownPlayers.map((player) => (
-                  <CollapseListItem key={player.playerId}>
-                    <PlayerChip player={player} size={size} />
+                {lobby.teams.map((team) => (
+                  <CollapseListItem key={team.teamId}>
+                    <TeamRow team={team} />
                   </CollapseListItem>
                 ))}
               </AnimatePresence>
             </ul>
-            <Collapse isOpen={earlierPlayerCount > 0}>
-              <p className={styles.playerCount}>
-                {t("quizshow:screen.morePlayers", {
-                  count: earlierPlayerCount,
-                })}
-              </p>
-            </Collapse>
-          </div>
-        </Collapse>
-        <h2 className={styles.roundsTitle}>
-          {t("quizshow:screen.roundsTitle")}
-        </h2>
-        <ol className={styles.roundList}>
-          {rounds.map((round) => (
-            <RoundRow
-              key={round.roundIndex}
-              round={round}
-              language={screenLanguage}
-            />
-          ))}
-        </ol>
+          </Collapse>
+          <Collapse isOpen={!isTeams}>
+            <div className={styles.lobbyPlayers}>
+              <PlayerChipList players={shownPlayers} size={size} />
+              <Collapse isOpen={earlierPlayerCount > 0}>
+                <p className={styles.playerCount}>
+                  {t("quizshow:screen.morePlayers", {
+                    count: earlierPlayerCount,
+                  })}
+                </p>
+              </Collapse>
+            </div>
+          </Collapse>
+        </div>
+        <div className={styles.lobbyRounds}>
+          <h2 className={styles.roundsTitle}>
+            {t("quizshow:screen.roundsTitle")}
+          </h2>
+          <ol className={styles.roundList}>
+            {rounds.map((round) => (
+              <RoundRow
+                key={round.roundIndex}
+                round={round}
+                language={screenLanguage}
+              />
+            ))}
+          </ol>
+        </div>
       </section>
     </div>
   );

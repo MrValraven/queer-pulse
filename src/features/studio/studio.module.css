@@ -535,32 +535,12 @@
   z-index: var(--z-sticky);
   background: color-mix(in srgb, var(--studio-surface) 82%, transparent);
   backdrop-filter: var(--blur-lg);
-  /* In light the frosted fill alone parts the bar from the page; the clear
-     1px edge keeps the bar on --studio-topbar-box-h. Dark draws the
-     hairline. */
+  /* The 1px edge keeps the bar on --studio-topbar-box-h; the dark rule
+     below paints it as the hairline. */
   border-bottom: 1px solid transparent;
 }
 :global([data-theme="dark"]) .topbar {
   border-bottom-color: var(--s-line);
-}
-/* Light: while a hero tinted from its cover is mounted, it sets
-   --studio-page-tint on <html>, and the frosted bar takes that colour, so
-   the bar reads as part of the tinted header above the hero's wash. */
-:global(:root:not([data-theme="dark"])) .topbar {
-  background: color-mix(
-    in srgb,
-    var(--studio-page-tint, var(--studio-surface)) 82%,
-    transparent
-  );
-  transition: background-color 320ms var(--ease);
-}
-@media (prefers-reduced-motion: reduce) {
-  :global(:root:not([data-theme="dark"])) .topbar {
-    transition: none;
-  }
-}
-:global(html[data-reduce-motion="true"]:not([data-theme="dark"])) .topbar {
-  transition: none;
 }
 
 /* Named only while a Studio page morph runs (studioPageMorph.ts), so the
@@ -627,22 +607,6 @@
   background: var(--accent);
   border-radius: var(--radius-pill);
   padding: 8px 16px;
-}
-/* Light: a neutral control on the grey wash with the search field's
-   corners beside it. Dark keeps the accent pill above. */
-:global(:root:not([data-theme="dark"])) .sustainPill {
-  color: var(--studio-text);
-  background: var(--studio-wash-2);
-  border-radius: var(--studio-control-radius);
-  transition: background-color var(--dur-fast) var(--ease);
-}
-@media (hover: hover) {
-  :global(:root:not([data-theme="dark"])) .sustainPill:hover {
-    background: var(--studio-wash-3);
-  }
-}
-:global(:root:not([data-theme="dark"])) .sustainPill svg {
-  color: var(--studio-icon);
 }
 /* The page column is a named container, so a detail page stacks its sidebar
    when the column narrows beside the docked side panel. Phones keep their
@@ -822,10 +786,10 @@
   }
   /* The bar takes the top gap into its own padding, so its row lines up
      with the rail's brand row and its opaque backdrop fill covers the page
-     from the viewport's top to the page tile. Chained through :root so it
-     outranks the light bar's tinted fill above. The start margin lines its
-     search up with the page tile; the end padding adds the outer gap, so
-     the bell and avatar end on the page's end gutter. */
+     from the viewport's top to the page tile. The :root chain keeps it ahead
+     of the dark .topbar hairline rule. The start margin lines its search up
+     with the page tile; the end padding adds the outer gap, so the bell and
+     avatar end on the page's end gutter. */
   :global(:root) .app .topbar {
     margin-inline-start: var(--studio-tile-gap);
     padding-block-start: calc(
@@ -1593,10 +1557,10 @@
 }
 /* Light, once the cover's colour is known (StudioDetailHero sets
    data-cover-tint and --hero-cover-tint): a layer over the neutral wash
-   fades in with that colour, solid at the top and fading to the page. The
-   wash runs up under the frosted topbar, and the hero sets the same colour
-   as --studio-page-tint on <html>, which the bar paints its fill from
-   (.topbar), so the bar and the wash read as one header. */
+   fades in with that colour, solid at the top and fading to the page.
+   Studio itself is always dark; this light wash is for the admin draft
+   preview (StudioDraftPreview), which renders the hero in the app's
+   theme. */
 :global(:root:not([data-theme="dark"])) .detailWash::after {
   content: "";
   position: absolute;
@@ -1668,21 +1632,6 @@
 .detailHeroUnderCrumb .detailWash {
   --wash-run-up: 0px;
   mask-image: linear-gradient(180deg, transparent, var(--studio-surface) 72px);
-}
-/* Light with the cover's colour: the wash runs up under the crumb and the
-   topbar like the other heroes, reaching 40px further for the crumb's row.
-   The crumb (the nav just before the hero) lifts above the wash, so its
-   links stay on top of the colour. */
-:global(:root:not([data-theme="dark"]))
-  .detailHeroUnderCrumb[data-cover-tint]
-  .detailWash {
-  --wash-run-up: 136px;
-  mask-image: none;
-}
-:global(:root:not([data-theme="dark"]))
-  nav:has(+ .detailHeroUnderCrumb[data-cover-tint]) {
-  position: relative;
-  z-index: 1;
 }
 /* The phone action row: Play, then square 44px icon buttons. It fits one
    line at 360px for a release or a track; a longer row (an artist's Follow

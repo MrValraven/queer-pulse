@@ -38,15 +38,11 @@
   min-height: 0;
   margin: 0 8px 8px;
   border-radius: var(--radius-14);
-  background: var(--studio-surface-rail);
-  color: var(--studio-text);
-  border: 1px solid var(--studio-line);
-  overflow: hidden;
-}
-
-/* Dark: the same lighter wash as the floating card (StudioQueue.module.css). */
-:global([data-theme="dark"]) .card {
+  /* The same lighter wash as the floating card (StudioQueue.module.css). */
   background:
     linear-gradient(var(--studio-wash-2), var(--studio-wash-2)),
     var(--studio-surface-rail);
+  color: var(--studio-text);
+  border: 1px solid var(--studio-line);
+  overflow: hidden;
 }

@@ -1,10 +1,10 @@
-/* EventsHubPage — page-level rhythm only; every section (hero, each view)
-   owns its own styles.
+/* EventsHubPage: page-level rhythm only; every section (the Highlights hero,
+   each view) owns its own styles.
 
    `--hub-tabs-h` is the height of whatever sticks above the hub's scrolling
    content, and BrowseView's sticky month subheads offset themselves by it.
    The Highlights / Browse / Calendar tablist used to be a sticky 4rem bar
-   here; it now renders inline in the (non-sticky) page header, so nothing
+   here; it now renders in the (non-sticky) page header, so nothing
    sits above the views any more and the offset is zero. Kept as a declared
    token so the relationship stays visible if a sticky bar returns. */
 .root {

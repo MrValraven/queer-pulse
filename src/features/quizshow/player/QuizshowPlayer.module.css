@@ -1,14 +1,18 @@
+/* The player's phone during the game, on the velvet stage: a controller.
+   The question fills the top, the answers sit in the thumb's reach at the
+   bottom, and every surface is a --qs-* glass. */
 .stage {
   display: flex;
+  flex: 1 0 auto;
   flex-direction: column;
   gap: var(--gap-sm);
   min-width: 0;
-  padding: var(--gap-sm);
-  color: var(--ink);
+  color: var(--qs-text);
 }
 
 .screenBody {
   display: flex;
+  flex: 1 0 auto;
   flex-direction: column;
   gap: var(--gap-sm);
   min-width: 0;
@@ -26,8 +30,13 @@
 
 .heading {
   margin: 0;
+  font-family: var(--serif);
   font-size: var(--text-heading);
-  line-height: 1.2;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--qs-text);
+  text-wrap: balance;
   overflow-wrap: anywhere;
 }
 
@@ -41,38 +50,79 @@
   box-shadow: var(--ring-cream);
 }
 
+/* Read: the question alone, centred in the screen while answers wait. */
+.readBody {
+  justify-content: center;
+  gap: var(--gap-grid);
+  padding-block: var(--gap-lg);
+  text-align: center;
+}
+
+.readBody .heading {
+  font-size: var(--text-title);
+}
+
 .subheading {
   margin: 0;
-  font-size: var(--text-subhead);
+  font-family: var(--serif);
+  font-size: var(--text-heading);
+  font-weight: 600;
+  line-height: 1.15;
   overflow-wrap: anywhere;
 }
 
 .note {
   margin: 0;
   font-size: var(--text-body);
-  color: var(--ink-60);
+  line-height: 1.5;
+  color: var(--qs-text-mute);
 }
 
 .media {
   display: block;
   width: 100%;
-  max-height: 32svh;
+  max-height: 28svh;
   object-fit: contain;
-  border-radius: var(--radius-16);
-  background: rgba(var(--ink-rgb), 0.06);
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-tile);
+  background: var(--qs-glass-tint);
+}
+
+/* The answers sit at the foot of the screen, in the thumb's reach. */
+.answers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  margin-block-start: auto;
+  padding-block-start: var(--gap-xs);
 }
 
 .tiles {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
+  grid-auto-rows: minmax(max(64px, 10.5svh), auto);
   gap: var(--gap-xs);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+/* True or false: two big halves of the controller. */
+.tiles[data-count="2"] {
+  grid-auto-rows: minmax(max(80px, 17svh), auto);
+}
+
+/* Each answer stretches to its row, so every tile in a set is the same height. */
+.tileSlot {
+  display: grid;
+  min-width: 0;
+  /* The tile reads this container: in a slot under 15rem (two answers side
+     by side on a phone) it puts its text on its own line. */
+  container: quizshow-tile-slot / inline-size;
+}
+
 @media (min-width: 420px) {
-  .tiles {
+  .tiles:not([data-count="2"]):where(:not([data-fixed-canvas="true"] *)) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -83,9 +133,27 @@
   gap: var(--gap-xs);
 }
 
+/* A typed answer, a party caption: the field and its send button on glass. */
+.answerSheet {
+  composes: glass from "../stage/quizshowSurfaces.module.css";
+  padding: var(--gap-sm);
+}
+
+.answerSheet input,
+.answerSheet textarea {
+  border-color: var(--qs-glass-border-strong);
+  background: var(--qs-glass-tint);
+  color: var(--qs-text);
+  font-size: var(--text-20);
+}
+
+.answerSheet label {
+  color: var(--qs-text-mute);
+}
+
 .counter {
   font-size: var(--text-caption);
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
   font-variant-numeric: tabular-nums;
 }
 
@@ -93,31 +161,76 @@
   margin: 0;
   font-size: var(--text-body);
   font-weight: 600;
-  color: var(--danger-ink);
+  color: var(--qs-low);
 }
 
+/* Locked: the answer is in. A glass card with a calm breathing row of dots. */
+/* Row-level surfaces draw the glass gradient without a backdrop blur, so a
+   screen of rows never stacks blur layers over the drifting backdrop. */
 .locked {
+  box-sizing: border-box;
+  border: 1px solid var(--qs-glass-border);
+  background:
+    linear-gradient(180deg, var(--qs-glass-top), var(--qs-glass-bottom)),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-glass);
+  color: var(--qs-text);
+  border-radius: var(--qs-radius-card);
+  padding: var(--gap-sm);
   display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+
+.lockedMark {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border: 1.5px solid var(--qs-right-border);
+  border-radius: 50%;
+  background: var(--qs-right-fill);
+  color: var(--qs-text);
+  font-size: var(--text-20);
+}
+
+.lockedText {
+  display: flex;
+  flex: 1;
   flex-direction: column;
   gap: var(--triage-gap-hair);
-  padding: var(--gap-sm);
-  border-radius: var(--radius-16);
-  background: rgba(var(--ink-rgb), 0.06);
+  min-width: 0;
 }
 
 .lockedTitle {
-  display: flex;
-  align-items: center;
-  gap: var(--gap-xs);
   margin: 0;
-  font-size: var(--text-subhead);
-  font-weight: 700;
+  font-family: var(--serif);
+  font-size: var(--text-24);
+  font-weight: 600;
+  line-height: 1.15;
 }
 
 .lockedBody {
   margin: 0;
   font-size: var(--text-body);
-  color: var(--ink-60);
+  line-height: 1.4;
+  color: var(--qs-text-mute);
+}
+
+.waitDots {
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: var(--triage-gap-tight);
+}
+
+.waitDot {
+  inline-size: 0.45rem;
+  block-size: 0.45rem;
+  border-radius: 50%;
+  background: var(--qs-text);
+  opacity: 0.4;
 }
 
 /* Order */
@@ -135,15 +248,20 @@
 }
 
 .orderRow {
+  box-sizing: border-box;
+  border: 1px solid var(--qs-glass-border);
+  background:
+    linear-gradient(180deg, var(--qs-glass-top), var(--qs-glass-bottom)),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-glass);
+  color: var(--qs-text);
+  border-radius: var(--qs-radius-tile);
+  padding: var(--triage-gap-hair) var(--gap-xs);
   position: relative;
   display: flex;
   align-items: center;
   gap: var(--gap-xs);
-  min-height: var(--tap-min);
-  padding: var(--triage-gap-hair) var(--gap-xs);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-16);
-  background: var(--paper);
+  min-height: 64px;
 }
 
 .orderRow > :first-child {
@@ -160,16 +278,18 @@
 .orderLetter {
   font-size: var(--text-body);
   font-weight: 700;
+  color: var(--qs-text-mute);
 }
 
 .orderText {
   min-width: 0;
   flex: 1;
   font-size: var(--text-body);
+  font-weight: 600;
   overflow-wrap: anywhere;
 }
 
-/* Voting */
+/* Voting: glass cards the thumb can hit anywhere. */
 .voteList {
   display: flex;
   flex-direction: column;
@@ -188,16 +308,20 @@
   width: 100%;
   min-height: 64px;
   padding: var(--gap-xs) var(--gap-sm);
-  border: 2px solid var(--line);
-  border-radius: var(--radius-16);
-  background: var(--paper);
-  color: var(--ink);
+  border: 1.5px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-tile);
+  background:
+    linear-gradient(180deg, var(--qs-glass-top), var(--qs-glass-bottom)),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-glass);
+  color: var(--qs-text);
   font: inherit;
   font-size: var(--text-body);
+  font-weight: 600;
   text-align: start;
   cursor: pointer;
   touch-action: manipulation;
-  transition-property: opacity, transform;
+  transition-property: opacity, transform, border-color;
   transition-duration: var(--dur-base);
   transition-timing-function: var(--ease);
 }
@@ -207,7 +331,13 @@
 }
 
 .voteButton:active:not([aria-disabled="true"]) {
-  transform: scale(0.98);
+  transform: scale(0.97);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .voteButton:hover:not([aria-disabled="true"]) {
+    border-color: var(--qs-glass-border-strong);
+  }
 }
 
 .voteButton:focus-visible {
@@ -218,10 +348,18 @@
 
 .voteButtonChosen {
   border-color: var(--accent);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--accent) 30%, transparent),
+      color-mix(in srgb, var(--accent) 14%, transparent)
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-glow-coral);
 }
 
 .voteButtonDimmed {
-  opacity: 0.55;
+  opacity: 0.38;
 }
 
 .voteText {
@@ -233,37 +371,146 @@
   flex-shrink: 0;
   font-size: var(--text-caption);
   font-weight: 700;
-  color: var(--ink-60);
+  letter-spacing: 0.04em;
+  color: var(--qs-text-mute);
 }
 
-/* Reveal */
-.outcome {
+/* Reveal: a hero for the player's own result, then the right answer. */
+.result {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: var(--gap-xs);
+  padding-block: var(--gap-sm) var(--gap-xs);
+  text-align: center;
+}
+
+.outcomeMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 4rem;
+  block-size: 4rem;
+  border: 2px solid var(--qs-glass-border-strong);
+  border-radius: 50%;
+  background: var(--qs-glass-tint);
+  font-size: var(--text-32);
+}
+
+.outcomeMark[data-tone="right"] {
+  border-color: var(--qs-right-border);
+  background: var(--qs-right-fill);
+  box-shadow: var(--qs-glow-jade);
+}
+
+.outcome {
   margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-display);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.points {
+  margin: 0;
+  font-family: var(--serif);
   font-size: var(--text-title);
-  font-weight: 700;
+  font-weight: 600;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
 }
 
 .facts {
   display: flex;
-  flex-direction: column;
-  gap: var(--triage-gap-hair);
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--gap-xs);
   margin: 0;
   padding: 0;
   list-style: none;
   font-size: var(--text-body);
 }
 
+/* Fact pills: the pill look without its blur, since a reveal can show four. */
 .fact {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-pill);
+  background:
+    linear-gradient(180deg, var(--qs-glass-top), var(--qs-glass-bottom)),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-pill);
+  color: var(--qs-text);
+  line-height: 1.2;
+  padding: 0.45em 1em;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
-.factStrong {
+/* The place is the second thing the eye lands on, after the points. */
+.facts .placeFact {
+  padding: 0.55em 1.3em;
+  border-color: var(--qs-glass-border-strong);
+  font-size: var(--text-20);
   font-weight: 700;
 }
 
+/* A long fact wraps on a narrow phone; the list scope outranks the pill's nowrap. */
+.facts .fact {
+  font-size: var(--text-body);
+  white-space: normal;
+}
+
+.correctLabel {
+  margin: 0;
+  font-size: var(--text-label);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--qs-text-mute);
+}
+
+/* Jade-edged glass, written out so the edge never depends on module order. */
+.correctCard {
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--gap-sm);
+  border: 1.5px solid var(--qs-right-border);
+  border-radius: var(--qs-radius-tile);
+  background: var(--qs-right-fill), var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-glass);
+  color: var(--qs-text);
+  font-size: var(--text-subhead);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* The full-screen wash behind a reveal: jade for right, a calm rose for wrong. */
+.wash {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.wash[data-tone="right"] {
+  background: var(--qs-right-fill);
+}
+
+.wash[data-tone="wrong"] {
+  background: linear-gradient(
+    180deg,
+    var(--qs-wrong-wash) 0%,
+    var(--qs-wrong-wash) 45%,
+    transparent 100%
+  );
+}
+
+/* Party reveal entries */
 .entries {
   display: flex;
   flex-direction: column;
@@ -274,17 +521,34 @@
 }
 
 .entry {
+  box-sizing: border-box;
+  border: 1px solid var(--qs-glass-border);
+  background:
+    linear-gradient(180deg, var(--qs-glass-top), var(--qs-glass-bottom)),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-glass);
+  color: var(--qs-text);
+  border-radius: var(--qs-radius-tile);
+  padding: var(--gap-sm);
   display: flex;
   flex-direction: column;
   gap: var(--triage-gap-hair);
-  padding: var(--gap-sm);
-  border-radius: var(--radius-16);
-  background: rgba(var(--ink-rgb), 0.06);
+}
+
+.entry[data-truth="true"] {
+  border-color: var(--qs-right-border);
+  box-shadow: var(--qs-glow-jade);
+}
+
+.entry[data-own="true"] {
+  border-color: var(--accent);
 }
 
 .entryText {
   margin: 0;
+  font-family: var(--serif);
   font-size: var(--text-subhead);
+  font-weight: 600;
   overflow-wrap: anywhere;
 }
 
@@ -294,12 +558,27 @@
   align-items: center;
   gap: var(--triage-gap-hair) var(--gap-xs);
   font-size: var(--text-caption);
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
 }
 
 .entryTag {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-pill);
+  background:
+    linear-gradient(180deg, var(--qs-glass-top), var(--qs-glass-bottom)),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-pill);
+  color: var(--qs-text);
+  line-height: 1.2;
+  padding: 0.25em 0.75em;
+}
+
+.entryMeta .entryTag {
+  font-size: var(--text-caption);
   font-weight: 700;
-  color: var(--ink);
 }
 
 .reportButton {
@@ -312,7 +591,7 @@
   border: 0;
   border-radius: var(--radius-pill);
   background: none;
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
   font: inherit;
   font-size: var(--text-caption);
   cursor: pointer;
@@ -327,6 +606,148 @@
 
 @media (hover: hover) and (pointer: fine) {
   .reportButton:hover {
-    color: var(--ink);
+    color: var(--qs-text);
   }
+}
+
+/* The quiet report link at the foot of the game. */
+.reportRow {
+  /* Collapse draws its panel as a flow-root, so the button centres as inline content. */
+  text-align: center;
+}
+
+/* "Get ready", with the calm dots, while the big screen reads the question. */
+.readyPill {
+  composes: pill from "../stage/quizshowSurfaces.module.css";
+  --qs-pill-padding: 0.6em 1.2em;
+  align-self: center;
+  margin: 0;
+}
+
+/* The element in the selector outranks the pill's own size and gap, whatever the module order. */
+p.readyPill {
+  gap: var(--gap-xs);
+  font-size: var(--text-body);
+}
+
+.voteTagChosen {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--triage-gap-hair);
+  color: var(--qs-text);
+}
+
+/* The podium stands in the middle of the screen, the way it does on the big one. */
+.podiumBody {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* A narrow phone: the question read aloud steps down one size so it fits. */
+@media (max-width: 359px) {
+  .readBody .heading:where(:not([data-fixed-canvas="true"] *)) {
+    font-size: var(--text-24);
+  }
+}
+
+/* A short phone: the locked card and the true or false halves give the
+   answers back their room, and tiles keep their 64px floor. */
+@media (max-height: 700px) {
+  .locked:where(:not([data-fixed-canvas="true"] *)) {
+    gap: var(--gap-xs);
+    padding: var(--gap-xs) var(--gap-sm);
+  }
+
+  .lockedMark:where(:not([data-fixed-canvas="true"] *)) {
+    inline-size: 2.25rem;
+    block-size: 2.25rem;
+  }
+
+  .lockedTitle:where(:not([data-fixed-canvas="true"] *)) {
+    font-size: var(--text-20);
+  }
+
+  .lockedBody:where(:not([data-fixed-canvas="true"] *)) {
+    font-size: var(--text-caption);
+  }
+
+  .tiles[data-count="2"]:where(:not([data-fixed-canvas="true"] *)) {
+    grid-auto-rows: minmax(max(64px, 13svh), auto);
+  }
+}
+
+/* The player's own pick at a reveal: an outline and a small tag over the
+   tile, so it reads as theirs while the jade answer stays the hero. */
+.tileSlot[data-mine="true"] {
+  position: relative;
+}
+
+.tileSlot[data-mine="true"]::after {
+  position: absolute;
+  inset: -3px;
+  border: 1.5px dashed var(--qs-glass-border-strong);
+  border-radius: var(--radius-20);
+  content: "";
+  pointer-events: none;
+}
+
+.mineTag {
+  position: absolute;
+  inset-block-start: -0.7em;
+  inset-inline-end: var(--gap-sm);
+  z-index: 1;
+  padding: 0.15em 0.7em;
+  border: 1px solid var(--qs-glass-border-strong);
+  border-radius: var(--qs-radius-pill);
+  background: var(--qs-base);
+  color: var(--qs-text);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+}
+
+/* The question in the free space above the answers: centred, one size up. */
+.promptArea {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--gap-sm);
+  padding-block: var(--gap-sm);
+}
+
+.promptArea .heading {
+  font-size: var(--text-title);
+}
+
+@media (max-width: 359px) {
+  .promptArea .heading:where(:not([data-fixed-canvas="true"] *)) {
+    font-size: var(--text-24);
+  }
+}
+
+/* The studio's phone preview draws this view on a fixed 390x844 canvas
+   scaled into a frame, where svh, vw and viewport media queries read the
+   studio's window. Under data-fixed-canvas the view takes that phone's own
+   values: one svh is 8.44px, the fluid type tokens sit at their 390px size,
+   and the viewport rules above leave it alone. */
+.screenBody[data-fixed-canvas="true"] {
+  --phone-vh: 8.44px;
+  --text-title: var(--text-28);
+  --text-heading: var(--text-22);
+}
+
+.screenBody[data-fixed-canvas="true"] .media {
+  max-height: calc(28 * var(--phone-vh));
+}
+
+.screenBody[data-fixed-canvas="true"] .tiles {
+  grid-auto-rows: minmax(max(64px, calc(10.5 * var(--phone-vh))), auto);
+}
+
+.screenBody[data-fixed-canvas="true"] .tiles[data-count="2"] {
+  grid-auto-rows: minmax(max(80px, calc(17 * var(--phone-vh))), auto);
 }

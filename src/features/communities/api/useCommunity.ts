@@ -25,6 +25,7 @@ import { useAllCommunities, useCreatedDetail } from "../useAllCommunities";
 import type { CommunityDetail } from "../communityDetails";
 import { getCommunityDetail } from "../communityDetail.lookup";
 import { getLiving } from "../livingCommunities.data";
+import { localizeDemoCommunity } from "../memberCountLabel";
 import { DEMO_SPACE_DETAILS, findDemoSpace } from "../spaces.data";
 import type { Community } from "../../homepage/data/types";
 import type { LivingCommunity } from "../community.model";
@@ -180,7 +181,10 @@ export function useCommunity(slug: string | undefined): CommunityResult {
     // its card and detail come from the spaces fixtures instead. Its living
     // entry (with `parent` and `inheritedRules`) comes from `getLiving` below
     // like every other flagship's.
-    const demoSpace = demoMode ? findDemoSpace(slug) : undefined;
+    const foundDemoSpace = demoMode ? findDemoSpace(slug) : undefined;
+    const demoSpace = foundDemoSpace
+      ? localizeDemoCommunity(foundDemoSpace, t)
+      : undefined;
     const community = all.find((c) => c.slug === slug) ?? demoSpace ?? null;
     const detail =
       (slug ? getCommunityDetail(slug) : undefined) ??

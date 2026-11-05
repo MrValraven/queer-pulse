@@ -5,6 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
 import { useFollow, type FollowResult } from "./api/useFollow";
+import { personaFollowErrorKey } from "./api/personaFollowError";
 
 /**
  * The persona's follow control: a one-tap Follow/Following toggle. Mirrors
@@ -46,8 +47,8 @@ export function SubprofileFollow({
         ? await unfollow.mutateAsync({ currentFollowerCount: followerCount })
         : await follow.mutateAsync({ currentFollowerCount: followerCount });
       onFollowResult?.(result);
-    } catch {
-      showToast(t("subprofiles:hero.follow.error"), "error");
+    } catch (error) {
+      showToast(t(personaFollowErrorKey(error)), "error");
     }
   }
 

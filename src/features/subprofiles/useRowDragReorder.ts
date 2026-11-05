@@ -15,6 +15,15 @@ export {
   type RowDragStartDetail,
 } from "./rowDragGestureGuards";
 
+export interface RowDragReorderOptions {
+  /**
+   * How much an ancestor transform scales the list on screen (a list drawn on
+   * a canvas scaled with `transform: scale()`). Read at every pointer move;
+   * 1 when left out, which is every list that is not scaled.
+   */
+  readScale?: () => number;
+}
+
 /**
  * Pointer-driven drag-to-reorder for a `.itemrow`-style list, with the grip as
  * the handle.
@@ -60,6 +69,7 @@ export {
  */
 export function useRowDragReorder(
   onReorder: (from: number, to: number) => void,
+  options: RowDragReorderOptions = {},
 ) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
@@ -67,8 +77,10 @@ export function useRowDragReorder(
   // Keep the latest callback (it closes over the current rows) reachable from
   // the window listeners below without re-binding them every render.
   const onReorderRef = useRef(onReorder);
+  const readScaleRef = useRef(options.readScale);
   useLayoutEffect(() => {
     onReorderRef.current = onReorder;
+    readScaleRef.current = options.readScale;
   });
 
   useEffect(() => {
@@ -76,6 +88,7 @@ export function useRowDragReorder(
       readContainer: () => containerRef.current,
       reorder: (from, to) => onReorderRef.current(from, to),
       setDraggingIndex,
+      readScale: () => readScaleRef.current?.() ?? 1,
     });
     controllerRef.current = controller;
     window.addEventListener("pointermove", controller.handlePointerMove);

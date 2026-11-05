@@ -14,6 +14,7 @@ import { QuizshowErrorLine } from "./QuizshowJoinForm";
 import { QuizshowTeamPicker } from "./QuizshowTeamPicker";
 import { sendFailureKeyOf } from "./usePlayJoin";
 import styles from "./QuizshowPlay.module.css";
+import lobbyStyles from "./QuizshowPlayerLobby.module.css";
 
 type TeamChoice = QuizshowLobbyJoinInput["team"];
 type SendResult =
@@ -118,11 +119,11 @@ export function QuizshowChangeTeam({
 
   return (
     <Collapse isOpen={isChangeAllowed}>
-      <div className={styles.changeTeam}>
+      <div className={lobbyStyles.changeTeam}>
         <Button
           ref={openButtonRef}
-          variant="ghost"
-          className={styles.changeTeamButton}
+          variant="stage-ghost"
+          className={lobbyStyles.changeTeamButton}
           aria-expanded={isPickerOpen}
           onClick={() => {
             if (isPickerOpen) {
@@ -138,7 +139,7 @@ export function QuizshowChangeTeam({
           {t("quizshow:player.changeTeam.open")}
           <FiChevronDown
             aria-hidden
-            className={`${styles.changeTeamChevron} ${isPickerOpen ? styles.changeTeamChevronOpen : ""}`}
+            className={`${lobbyStyles.changeTeamChevron} ${isPickerOpen ? lobbyStyles.changeTeamChevronOpen : ""}`}
           />
         </Button>
         <Collapse isOpen={isPickerOpen}>
@@ -165,9 +166,11 @@ export function QuizshowChangeTeam({
             <QuizshowErrorLine errorKey={errorKey} />
             <Button
               type="submit"
-              variant={isTeamChanging ? "primary" : "ghost"}
+              variant={isTeamChanging ? "stage" : "stage-ghost"}
               // Kept to its own width, the quiet keep button reads apart from the team rows.
-              className={isTeamChanging ? undefined : styles.keepTeamButton}
+              className={
+                isTeamChanging ? undefined : lobbyStyles.keepTeamButton
+              }
               aria-disabled={isSending}
             >
               {confirmLabel}

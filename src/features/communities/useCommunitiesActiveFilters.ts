@@ -6,18 +6,18 @@ import { COMMUNITY_TAGS } from "./communityTags.data";
 import { FILTERS, type DiscoverSort } from "./communitiesDiscover.data";
 
 /**
- * Everything currently narrowing the communities grid, as removable chips.
+ * Everything currently applied to the communities grid, as removable entries
+ * keyed `type:*`, `open`, `busy`, `tag:*`, `q` and `sort:*`.
  *
- * Every refinement is here, the search term included, because the whole point
- * is that a shut "Refine" drawer never hides what is applied.
+ * `CommunitiesFilterLayout` turns the sidebar ones into the applied chip row
+ * and leaves out `q` and `sort:*`: the search box and the sort select already
+ * show those on screen beside the chips.
  *
- * Sort is in here too, as a chip whenever it is off its "Newest" default. It
- * is an ordering rather than a narrowing, so it deliberately does NOT count
+ * The sort entry appears whenever the order is off its "Newest" default. Sort
+ * orders the list and narrows nothing, so it deliberately does NOT count
  * towards `useDiscoverCommunities`'s `hasActiveRefinement` (the featured card
- * and the suggestions band still belong on a re-sorted directory). The chip
- * exists because the toolbar keeps sort inside the Refine drawer, and a shut
- * drawer must never be the only place a member can see how the list is
- * ordered. Removing it puts the order back to Newest.
+ * and the suggestions band still belong on a re-sorted directory). Removing it
+ * puts the order back to Newest.
  */
 export function useCommunitiesActiveFilters({
   searchInput,

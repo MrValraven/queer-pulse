@@ -54,8 +54,24 @@
   align-items: flex-start;
 }
 
+.mainColumn {
+  min-inline-size: 0;
+}
+
 @media (--mobile) {
   .layout {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Phone: a tighter top. The month switcher's own phone rule lives with its
+   styles in CalendarGrid.module.css. */
+@media (--md) {
+  .section {
+    padding-block-start: var(--gap-sm);
+  }
+
+  .head {
+    margin-block-end: var(--card-pad);
   }
 }

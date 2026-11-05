@@ -7,6 +7,7 @@ import type { QuizshowGameSummary } from "../../../shared/contracts/quizshow";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { quizshowGamePath } from "../quizshowPaths";
+import { QuizshowGameCover } from "./QuizshowGameCover";
 import styles from "./QuizshowGames.module.css";
 
 const EDITED_DATE_FORMAT: Intl.DateTimeFormatOptions = {
@@ -43,36 +44,64 @@ export function FadingTag({
 export function QuizshowGameRow({ game }: { game: QuizshowGameSummary }) {
   const { t } = useTranslation();
   const format = useFormat();
+  const { reducedMotion } = useMotionPrefs();
   const trimmedTitle = game.title.trim();
+  const liveSession = game.liveSession;
+  const isLobbyOpen = liveSession?.status === "lobby";
   return (
     <Link to={quizshowGamePath(game.id)} className={styles.card}>
+      {/* The cover is a picture of the title slide; the text below carries the same facts. */}
+      <div aria-hidden className={styles.coverFrame}>
+        <QuizshowGameCover
+          title={game.title}
+          roundCount={game.roundCount}
+          questionCount={game.questionCount}
+          isAdultsOnly={false}
+        />
+      </div>
       <div className={styles.cardText}>
-        <h3 className={styles.cardTitle}>
+        {/* The cover is the visible title; this heading names the link and holds the full title. */}
+        <h3 className={styles.visuallyHidden}>
           {trimmedTitle.length > 0 ? trimmedTitle : t("quizshow:game.untitled")}
         </h3>
-        <p className={styles.cardMeta}>
-          {t("quizshow:packs.rounds", { count: game.roundCount })}
-          {", "}
-          {t("quizshow:packs.questions", { count: game.questionCount })}
-          <span aria-hidden className={styles.metaDot}>
-            {" · "}
-          </span>
-          <span className={styles.visuallyHidden}>{", "}</span>
-          {t("quizshow:games.row.edited", {
-            date: format.date(new Date(game.updatedAt), EDITED_DATE_FORMAT),
-          })}
-        </p>
+        <div className={styles.cardHead}>
+          <p className={styles.cardMeta}>
+            {/* The cover shows the counts, so the text carries them for assistive tech. */}
+            <span className={styles.visuallyHidden}>
+              {t("quizshow:packs.rounds", { count: game.roundCount })}
+              {", "}
+              {t("quizshow:packs.questions", { count: game.questionCount })}
+              {", "}
+            </span>
+            {t("quizshow:games.row.edited", {
+              date: format.date(new Date(game.updatedAt), EDITED_DATE_FORMAT),
+            })}
+          </p>
+          <FiChevronRight
+            aria-hidden
+            fill="none"
+            className={styles.cardChevron}
+          />
+        </div>
         <span className={styles.tags}>
           <AnimatePresence initial={false}>
-            {game.liveSession !== null && (
+            {liveSession !== null && (
               <FadingTag
                 key="live"
                 className={`${styles.tag} ${styles.tagLive}`}
               >
-                <span aria-hidden className={styles.liveDot} />
-                {t("quizshow:games.row.liveTag", {
-                  code: game.liveSession.joinCode,
-                })}
+                <span
+                  aria-hidden
+                  className={`${styles.liveDot} ${
+                    reducedMotion ? "" : styles.liveDotPulse
+                  }`}
+                />
+                {t(
+                  isLobbyOpen
+                    ? "quizshow:games.row.lobbyTag"
+                    : "quizshow:games.row.liveTag",
+                  { code: liveSession.joinCode },
+                )}
               </FadingTag>
             )}
             {game.isAdultsOnly && (
@@ -91,7 +120,6 @@ export function QuizshowGameRow({ game }: { game: QuizshowGameSummary }) {
           </AnimatePresence>
         </span>
       </div>
-      <FiChevronRight aria-hidden fill="none" className={styles.cardChevron} />
     </Link>
   );
 }

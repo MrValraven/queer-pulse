@@ -1,6 +1,5 @@
 /* The artist of the month on Studio home: one wide card under the shelf
-   header. Studio tokens only, so it reads as Daylight in light mode and as
-   the Studio night in dark mode. */
+   header, drawn in Studio tokens. */
 
 .card {
   position: relative;
@@ -12,29 +11,6 @@
   border-radius: var(--radius-20);
   background: var(--studio-wash-1);
   color: var(--studio-text);
-}
-
-/* Light, once the portrait's colour is known (useStudioCoverTint): a layer
-   over the neutral wash fades in with that colour from the portrait's
-   corner, the way the Daylight release hero does. Dark keeps the night. */
-:global(:root:not([data-theme="dark"])) .card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  background: linear-gradient(
-    120deg,
-    var(--card-cover-tint) 0%,
-    transparent 72%
-  );
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 320ms var(--ease);
-}
-
-:global(:root:not([data-theme="dark"])) .card[data-cover-tint]::before {
-  opacity: 1;
 }
 
 /* The persona's picture: a square that holds its ratio while it loads. */
@@ -180,13 +156,4 @@
   .openLink:active {
     transform: none;
   }
-
-  :global(:root:not([data-theme="dark"])) .card::before {
-    transition: none;
-  }
-}
-
-:global(html[data-reduce-motion="true"]:not([data-theme="dark"]))
-  .card::before {
-  transition: none;
 }

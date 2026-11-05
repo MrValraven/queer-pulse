@@ -151,52 +151,56 @@ describe("isListingFactChipDisabled", () => {
     languages: ["pt" as const],
   };
 
-  it("never disables a language added to an OR, whatever its count", () => {
+  it("disables a chip that is off at a known zero, a language in an OR too", () => {
     expect(
       isListingFactChipDisabled({
         filters: withPortuguese,
         change: { kind: "language", code: "en" },
         count: 0,
-        isLoadedSetComplete: true,
       }),
-    ).toBe(false);
-  });
-
-  it("never disables another way in while one is chosen", () => {
+    ).toBe(true);
     expect(
       isListingFactChipDisabled({
         filters: { ...NO_LISTING_FACT_FILTERS, entryMode: "walkIn" },
         change: { kind: "entryMode", mode: "membersOnly" },
         count: 0,
-        isLoadedSetComplete: true,
+      }),
+    ).toBe(true);
+  });
+
+  it("keeps a chip pickable while its count is not known yet", () => {
+    expect(
+      isListingFactChipDisabled({
+        filters: NO_LISTING_FACT_FILTERS,
+        change: { kind: "payment", method: "mbway" },
+        count: undefined,
       }),
     ).toBe(false);
   });
 
-  it("disables an AND chip at zero only once every page is in", () => {
-    const change = { kind: "payment", method: "mbway" } as const;
+  it("keeps a chip that is on pickable at zero, so it can be undone", () => {
     expect(
       isListingFactChipDisabled({
-        filters: NO_LISTING_FACT_FILTERS,
-        change,
+        filters: { ...NO_LISTING_FACT_FILTERS, payments: ["mbway"] },
+        change: { kind: "payment", method: "mbway" },
         count: 0,
-        isLoadedSetComplete: false,
       }),
     ).toBe(false);
     expect(
       isListingFactChipDisabled({
-        filters: NO_LISTING_FACT_FILTERS,
-        change,
+        filters: withPortuguese,
+        change: { kind: "language", code: "pt" },
         count: 0,
-        isLoadedSetComplete: true,
       }),
-    ).toBe(true);
+    ).toBe(false);
+  });
+
+  it("keeps a chip with places to show pickable", () => {
     expect(
       isListingFactChipDisabled({
-        filters: { ...NO_LISTING_FACT_FILTERS, payments: ["mbway"] },
-        change,
-        count: 0,
-        isLoadedSetComplete: true,
+        filters: NO_LISTING_FACT_FILTERS,
+        change: { kind: "payment", method: "mbway" },
+        count: 3,
       }),
     ).toBe(false);
   });

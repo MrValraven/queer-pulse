@@ -16,7 +16,8 @@ interface QuizshowPlayHomeProps {
 }
 
 /** The `/play` home: anyone signed in types a code; hosts with Pulse Live also see their games.
- *  The page has no app frame (and an installed app has no Back), so a quiet link leads home. */
+ *  The page has no app frame (and an installed app has no Back), so a quiet link leads home.
+ *  The page behind is the Pulse Live velvet; the games grid is wider than the join column. */
 export function QuizshowPlayHome({
   initialErrorCode,
   hasUnknownFailure = false,
@@ -24,18 +25,20 @@ export function QuizshowPlayHome({
   const { t } = useTranslation();
   const isQuizshowVisible = useIsQuizshowVisible();
   return (
-    <>
+    <div className={styles.home}>
       <Link to={routes.feed} className={styles.homeBack}>
         <FiArrowLeft aria-hidden fill="none" />
         {t("quizshow:home.back")}
       </Link>
-      <QuizshowCodeForm
-        initialErrorCode={initialErrorCode}
-        hasUnknownFailure={hasUnknownFailure}
-      />
+      <section className={styles.hero}>
+        <QuizshowCodeForm
+          initialErrorCode={initialErrorCode}
+          hasUnknownFailure={hasUnknownFailure}
+        />
+      </section>
       <Collapse isOpen={isQuizshowVisible}>
         <QuizshowMyGames />
       </Collapse>
-    </>
+    </div>
   );
 }

@@ -86,7 +86,7 @@ export const shared: Catalog = {
   "consent.storage.outbox.purpose":
     "Mensagens que enviaste sem ligação, guardadas aqui até chegarem ao servidor, mais as tuas definições de cada conversa.",
   "consent.storage.yourLists.purpose":
-    "Os teus itens guardados, conexões, votos de confiança e tema de perfil, em cache para aparecerem de imediato. Associados à tua conta num dispositivo partilhado.",
+    "Os teus itens guardados, conexões e votos de confiança, em cache para aparecerem de imediato. Associados à tua conta num dispositivo partilhado.",
   "consent.storage.dismissals.purpose":
     "Que avisos, faixas e sugestões já fechaste, para não voltarmos a mostrá-los.",
   "consent.storage.readingPlace.purpose":
@@ -891,4 +891,10 @@ export const shared: Catalog = {
     "Não conseguimos confirmar que és tu neste momento: os códigos de entrada estão desligados. Escreve-nos e a nossa equipa ajuda-te.",
   reauthStatusPending:
     "Ainda estamos a ver como confirmar que és tu. Tenta outra vez daqui a pouco.",
+  "filterPage.filtersCta": "Filtros",
+  "filterPage.hideFiltersCta": "Ocultar filtros",
+  "filterPage.clearAllCta": "Limpar todos os filtros",
+  "filterPage.appliedCount_one": "{count} aplicado",
+  "filterPage.appliedCount_other": "{count} aplicados",
+  "filterPage.removeChipLabel": "Remover {label}",
 };

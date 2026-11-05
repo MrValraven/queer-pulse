@@ -1,0 +1,371 @@
+/* The studio canvas: a slim bar (where you are, and how you look at it) over
+   the slide, drawn on a fixed canvas scaled into the largest frame that fits.
+   Every colour is a --qs-* token: the studio is dark whatever the app theme. */
+
+.root {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  padding: var(--gap-sm) var(--gap-grid) var(--gap-xs);
+  color: var(--qs-text);
+  font-family: var(--sans);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── The bar ── */
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-xs) var(--gap-sm);
+  min-height: 2.5rem;
+}
+
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4em;
+  min-width: 0;
+  margin: 0;
+  color: var(--qs-text-mute);
+  font-size: var(--text-14);
+  font-weight: 500;
+}
+
+.crumbs svg {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+}
+
+.crumbCurrent {
+  color: var(--qs-text);
+  font-weight: 600;
+}
+
+.switches {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+
+/* ── Segmented switch: native radios in a glass track ── */
+.segment {
+  display: inline-flex;
+  gap: 2px;
+  min-width: 0;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-pill);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+}
+
+.segmentOption {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  min-height: 2rem;
+  padding: 0 0.95em;
+  border-radius: var(--qs-radius-pill);
+  color: var(--qs-text-mute);
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition-property: color, background-color, box-shadow;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+.segmentOption svg {
+  width: 1em;
+  height: 1em;
+}
+
+.segmentOption input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .segmentOption:hover {
+    color: var(--qs-text);
+  }
+}
+
+.segmentOption:has(input:checked) {
+  background-color: rgba(255, 255, 255, 0.14);
+  color: var(--qs-text);
+  box-shadow: var(--qs-shadow-pill);
+}
+
+.segmentOption:has(input:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--qs-focus-halo);
+}
+
+/* ── Frame and canvas ── */
+
+/* One view of the canvas (Edit, Big screen or Phone), swapped with a fade. */
+.view {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.root[data-layout="narrow"] .view {
+  flex: none;
+}
+
+/* The area the frame fits into. It is a size container, so the frame takes
+   the largest box of its canvas's shape with container units alone. */
+.area {
+  position: relative;
+  display: grid;
+  flex: 1;
+  place-items: center;
+  min-width: 0;
+  min-height: 0;
+  container-type: size;
+}
+
+/* Below the wide layout the page scrolls, so the area takes its height from
+   its width: the TV's 16:9, or a phone tall enough to read. */
+.root[data-layout="narrow"] {
+  height: auto;
+  min-height: auto;
+}
+
+.root[data-layout="narrow"] .area {
+  flex: none;
+}
+
+.root[data-layout="narrow"] .area[data-variant="screen"] {
+  aspect-ratio: 16 / 9;
+}
+
+.root[data-layout="narrow"] .area[data-variant="phone"] {
+  height: min(78svh, 40rem);
+}
+
+.frame {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: min(100cqw, 100cqh * 16 / 9);
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-card);
+  background: var(--qs-base);
+  box-shadow: var(--qs-shadow-lift);
+}
+
+.frame[data-variant="phone"] {
+  width: min(100cqw, 100cqh * 390 / 844);
+  aspect-ratio: 390 / 844;
+  border: 1px solid var(--qs-glass-border-strong);
+  border-radius: var(--radius-30);
+}
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  isolation: isolate;
+  overflow: hidden;
+  color: var(--qs-text);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  transform-origin: top left;
+}
+
+/* Painted after the backdrop, so it sits above it without a z-index. */
+.canvasContent {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+/* The phone's own page padding, inside the frame. */
+.phoneBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-height: 0;
+  padding: calc(var(--gap-lg) + var(--gap-xs)) var(--gap-sm) var(--gap-lg);
+  overflow: hidden;
+  /* A long question runs past the frame as it would scroll on a phone; the
+     fade says there is more below. */
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 1) calc(100% - var(--gap-lg)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 1) calc(100% - var(--gap-lg)),
+    transparent 100%
+  );
+}
+
+/* A phone with nothing to answer: the quiz or a round header is selected. */
+.phoneEmpty {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-sm);
+  padding: var(--gap-lg);
+  color: var(--qs-text-mute);
+  font-size: var(--text-18);
+  line-height: 1.4;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.phoneEmpty svg {
+  width: var(--text-40);
+  height: var(--text-40);
+  color: var(--qs-text);
+  opacity: 0.6;
+}
+
+/* Under the frame on a narrow layout: where the slide is edited there. */
+.narrowHint {
+  margin: 0;
+  color: var(--qs-text-mute);
+  font-size: var(--text-14);
+  text-align: center;
+}
+
+/* ── Start panel: an event or game with no quiz yet ── */
+.startArea {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  min-height: 0;
+  padding: var(--gap-lg) 0;
+}
+
+.startCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-sm);
+  box-sizing: border-box;
+  width: min(100%, 32rem);
+  padding: var(--gap-lg) var(--gap-lg) calc(var(--gap-lg) + var(--gap-xs));
+  border: 1px solid var(--qs-glass-border-strong);
+  border-radius: var(--qs-radius-card);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-raised-top) 0%,
+      var(--qs-glass-raised-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-lift);
+  text-align: center;
+}
+
+/* Three blank velvet slides fanned out: a quiz waiting to be written. */
+.startMark {
+  position: relative;
+  width: 7.5rem;
+  height: 4.5rem;
+  margin-block-end: var(--gap-xs);
+}
+
+.startSlide {
+  position: absolute;
+  inset: 0.5rem 1rem;
+  border: 1px solid var(--qs-glass-border-strong);
+  border-radius: var(--radius-8);
+  background:
+    radial-gradient(
+      closest-side at 25% 20%,
+      var(--qs-field-coral) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      closest-side at 80% 90%,
+      var(--qs-field-plum) 0%,
+      transparent 100%
+    ),
+    var(--qs-base);
+  box-shadow: var(--qs-shadow-pill);
+}
+
+.startSlide:nth-child(1) {
+  transform: translateX(-1.4rem) rotate(-9deg);
+  opacity: 0.7;
+}
+
+.startSlide:nth-child(3) {
+  transform: translateX(1.4rem) rotate(9deg);
+  opacity: 0.85;
+}
+
+.startTitle {
+  margin: 0;
+  color: var(--qs-text);
+  font-family: var(--serif);
+  font-size: var(--text-32);
+  font-weight: 600;
+  line-height: var(--lh-title);
+}
+
+.startBody {
+  max-width: 38ch;
+  margin: 0;
+  color: var(--qs-text-mute);
+  font-size: var(--text-16);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+/* The buttons stack full width, the series shortcut and its hint above them. */
+.startActions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--gap-xs);
+  width: 100%;
+  margin-block-start: var(--gap-xs);
+}

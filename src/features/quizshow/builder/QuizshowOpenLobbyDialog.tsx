@@ -14,6 +14,7 @@ import {
   type QuizshowSessionScope,
 } from "../quizshowScope";
 import { QuizshowProblemList } from "./QuizshowProblemList";
+import { useQuizshowDarkDialog } from "./useQuizshowDarkDialog";
 import { useQuizshowOpenLobby } from "./useQuizshowOpenLobby";
 import styles from "./QuizshowLobby.module.css";
 
@@ -73,6 +74,7 @@ function OpenLobbyForm({
   const [shouldNotifyGuests, setShouldNotifyGuests] = useState(true);
   const isGame = scope.kind === "game";
   const lobby = useQuizshowOpenLobby(scope);
+  const darkDialogRef = useQuizshowDarkDialog();
 
   function handleOpen() {
     if (lobby.isPending) return;
@@ -92,18 +94,23 @@ function OpenLobbyForm({
       title={t("quizshow:lobby.dialogTitle")}
       sub={t("quizshow:lobby.dialogSub")}
       onClose={onClose}
+      className={styles.stageDialog}
       footer={
         <div className={styles.footer}>
-          <Button variant="ghost" onClick={onClose}>
+          <Button variant="stage-ghost" onClick={onClose}>
             {t("shared:confirmDialog.cancel")}
           </Button>
-          <Button aria-disabled={lobby.isPending} onClick={handleOpen}>
+          <Button
+            variant="stage"
+            aria-disabled={lobby.isPending}
+            onClick={handleOpen}
+          >
             {t("quizshow:lobby.open")}
           </Button>
         </div>
       }
     >
-      <div className={styles.form}>
+      <div className={styles.form} ref={darkDialogRef}>
         <div className={styles.field}>
           <span className={styles.label} id={groupLabelId}>
             {t("quizshow:lobby.playMode.label")}
@@ -193,7 +200,7 @@ function OpenLobbyForm({
               )}
             </p>
             <Button
-              variant="soft"
+              variant="stage-ghost"
               size="sm"
               to={quizshowScopeScreenPath(scope)}
               onClick={onClose}

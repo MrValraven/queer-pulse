@@ -39,6 +39,8 @@ export function demoRow(id: string): JoinRequestDTO {
     inviteCode: demoInviteCode(id),
     inviteStatus: "expired",
     inviteExpiresAt: now,
+    welcomeEmailSendCount: 0,
+    welcomeEmailLastSentAt: null,
     declineReason: null,
     approvalReason: null,
     approvalNote: null,

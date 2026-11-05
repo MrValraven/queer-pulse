@@ -19,6 +19,7 @@ import { useQuizshowFramelessPage } from "../useQuizshowFramelessPage";
 import { useQuizshowSession } from "../realtime/useQuizshowSession";
 import type { QuizshowCue } from "../sound/quizshowCues";
 import { useQuizshowCues } from "../sound/useQuizshowCues";
+import { QuizshowBackdrop } from "../stage/QuizshowBackdrop";
 import { QuizshowConnectionBanner } from "../stage/QuizshowConnectionBanner";
 import { QuizshowScreenStage } from "./QuizshowScreenStage";
 import { QuizshowScreenToolbar } from "./QuizshowScreenToolbar";
@@ -64,7 +65,7 @@ function QuizshowScreenMessage({
     <div className={styles.message}>
       <h1 className={styles.messageTitle}>{t(messageKey)}</h1>
       {hasQuizshowScopeId(hostSession.scope) && (
-        <Button variant="ghost" to={hostSession.backPath}>
+        <Button variant="stage-ghost" to={hostSession.backPath}>
           {t(hostSession.backLabelKey)}
         </Button>
       )}
@@ -151,7 +152,12 @@ function messageKeyOf(hostSession: QuizshowHostSession): string | null {
   return null;
 }
 
-/** The presenter screen for the venue TV, for an event or a game: chromeless, organisers only, dark by default. */
+/**
+ * The presenter screen for the venue TV, for an event or a game: chromeless,
+ * organisers only, dark by default. The velvet backdrop is drawn here, behind
+ * the stage; the stage itself draws none, since the try-out, the remote's
+ * preview and the studio each draw their own behind it.
+ */
 export function QuizshowScreenView({
   hostSession: loadedHostSession,
 }: {
@@ -207,7 +213,13 @@ export function QuizshowScreenView({
   }
 
   return (
-    <div className={styles.page} data-theme={theme} data-quizshow-screen="">
+    <div
+      className={styles.page}
+      data-theme={theme}
+      data-qs-theme={theme}
+      data-quizshow-screen=""
+    >
+      <QuizshowBackdrop variant="stage" />
       <PageMeta title={t("quizshow:screen.metaTitle")} noIndex />
       <AnimatePresence mode="wait" initial={false}>
         <m.main

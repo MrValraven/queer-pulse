@@ -6,6 +6,7 @@ import {
   ACCESSIBILITY_QUESTIONS,
   type AccessibilitySlug,
 } from "./listBusiness/listingAccessibility.data";
+import { LocalChipCount } from "./LocalChipCount";
 import s from "./LocalFilterBar.module.css";
 
 /**
@@ -29,23 +30,21 @@ import s from "./LocalFilterBar.module.css";
  *
  * A real `<fieldset>`/`<legend>` names the group, and each need is a toggle
  * carrying its own pressed state, so the whole thing is keyboard-operable and
- * announces what is on.
+ * announces what is on. Each need ends with its live count, how many places
+ * would show with it ticked.
  */
 export function LocalAccessFilter({
   access,
   onToggleAccess,
   accessCounts,
-  isLoadedSetComplete,
   sectionTitleId,
 }: {
   /** The needs currently filtered on, in canonical question order. */
   access: AccessibilitySlug[];
   onToggleAccess: (slug: AccessibilitySlug) => void;
-  /** How many loaded places would remain with each need added to the ticked
-   *  ones. */
-  accessCounts: Record<AccessibilitySlug, number>;
-  /** True once every page of places has loaded, so a zero count is final. */
-  isLoadedSetComplete: boolean;
+  /** How many places would remain with each need added to the ticked ones;
+   *  missing when not known yet. */
+  accessCounts: Partial<Record<AccessibilitySlug, number>>;
   /** Given inside a desktop sidebar section, whose header names the group:
    *  the legend is left out and the fieldset is labelled by the header's
    *  title. */
@@ -72,10 +71,9 @@ export function LocalAccessFilter({
       <m.div {...glide.row} className={s.accessChips}>
         {ACCESSIBILITY_QUESTIONS.map((question) => {
           const isOn = access.includes(question.slug);
-          // A need no remaining place meets goes unpickable once the whole
-          // set has loaded. A ticked need stays clickable so it can be undone.
-          const isDisabled =
-            isLoadedSetComplete && !isOn && accessCounts[question.slug] === 0;
+          // A need no remaining place meets (a known 0) goes unpickable. A
+          // ticked need stays clickable so it can be undone.
+          const isDisabled = !isOn && accessCounts[question.slug] === 0;
           return (
             <m.button
               {...glide.chip}
@@ -94,6 +92,7 @@ export function LocalAccessFilter({
                 )}
               </AnimatePresence>
               {t(question.labelKey)}
+              <LocalChipCount count={accessCounts[question.slug]} />
             </m.button>
           );
         })}

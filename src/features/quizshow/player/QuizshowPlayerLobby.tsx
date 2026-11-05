@@ -9,17 +9,19 @@ import {
   type QuizshowErrorCode,
   type QuizshowMe,
   type QuizshowPlayerState,
+  type QuizshowTeamColorKey,
 } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { QuizshowShape } from "../QuizshowShape";
 import { isPlayerState } from "../realtime/quizshowClientStore";
 import { QuizshowPausedNote } from "../stage/QuizshowPausedNote";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import { QuizshowChangeTeam } from "./QuizshowChangeTeam";
 import { QuizshowJokerButton } from "./QuizshowJokerButton";
 import { QuizshowErrorLine, QuizshowToggleRow } from "./QuizshowJoinForm";
+import { QuizshowLobbyChip, QuizshowLobbyCount } from "./QuizshowLobbyChip";
 import { sendFailureKeyOf } from "./usePlayJoin";
 import styles from "./QuizshowPlay.module.css";
+import lobbyStyles from "./QuizshowPlayerLobby.module.css";
 
 type SettingResult =
   { ok: true } | { ok: false; code: QuizshowErrorCode | "transport_timeout" };
@@ -61,7 +63,7 @@ function LobbySettings({
     controller.send("settings:avatar", { isAvatarShown }),
   );
   return (
-    <div className={styles.group}>
+    <div className={`${styles.group} ${lobbyStyles.sheet}`}>
       <QuizshowToggleRow
         label={t("quizshow:player.avatarLabel")}
         isOn={avatar.value}
@@ -82,9 +84,11 @@ function LobbySettings({
 function NameEditor({
   controller,
   me,
+  teamColorKey,
 }: {
   controller: QuizshowSessionController;
   me: QuizshowMe;
+  teamColorKey: QuizshowTeamColorKey | null;
 }) {
   const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
@@ -114,10 +118,14 @@ function NameEditor({
 
   return (
     <>
-      <div className={styles.nameLine}>
-        <span className={styles.screenName}>{me.screenName}</span>
+      <QuizshowLobbyChip
+        screenName={me.screenName}
+        teamColorKey={teamColorKey}
+      />
+      <div className={lobbyStyles.nameActions}>
         <Button
-          variant="ghost"
+          variant="stage-ghost"
+          size="sm"
           aria-expanded={isEditing}
           onClick={() => {
             setDraftName(me.screenName);
@@ -128,7 +136,7 @@ function NameEditor({
           {t("quizshow:player.changeName")}
         </Button>
       </div>
-      <Collapse isOpen={isEditing}>
+      <Collapse isOpen={isEditing} className={lobbyStyles.nameForm}>
         <form
           className={styles.form}
           onSubmit={(event) => {
@@ -150,7 +158,7 @@ function NameEditor({
               onChange={(event) => setDraftName(event.target.value)}
             />
           </FormField>
-          <Button type="submit" aria-disabled={isSending}>
+          <Button type="submit" variant="stage" aria-disabled={isSending}>
             {t("quizshow:player.saveName")}
           </Button>
         </form>
@@ -202,40 +210,41 @@ function LobbyBody({
         </span>
       </p>
       <QuizshowPausedNote isPaused={isPaused} />
-      <section className={styles.card}>
+      <section className={lobbyStyles.card}>
         <AnimatePresence mode="wait" initial={false}>
           <m.div
             key={session.cursor.phase === "lobby" ? "editable" : "fixed"}
+            className={lobbyStyles.cardSwap}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: reducedMotion ? 0 : 0.2 }}
           >
             {session.cursor.phase === "lobby" ? (
-              <NameEditor controller={controller} me={me} />
+              <NameEditor
+                controller={controller}
+                me={me}
+                teamColorKey={team?.colorKey ?? null}
+              />
             ) : (
-              <span className={styles.screenName}>{me.screenName}</span>
+              <QuizshowLobbyChip
+                screenName={me.screenName}
+                teamColorKey={team?.colorKey ?? null}
+              />
             )}
           </m.div>
         </AnimatePresence>
         {/* The play mode is fixed for the game, and the line stays mounted
             so a change of team is announced. */}
         {session.playMode === "teams" && (
-          <p className={styles.teamLine} role="status">
-            {team !== undefined && (
-              <>
-                <QuizshowShape
-                  colorKey={team.colorKey}
-                  size="small"
-                  label={null}
-                />
-                {t("quizshow:player.yourTeam", { team: team.name })}
-              </>
-            )}
+          <p className={lobbyStyles.teamLine} role="status">
+            {team !== undefined &&
+              t("quizshow:player.yourTeam", { team: team.name })}
           </p>
         )}
-        <QuizshowChangeTeam controller={controller} session={session} me={me} />
+        <QuizshowLobbyCount playerCount={session.lobby.playerCount} />
       </section>
+      <QuizshowChangeTeam controller={controller} session={session} me={me} />
       <LobbySettings controller={controller} me={me} />
       {firstRound?.isJokerAllowed === true && (
         <QuizshowJokerButton controller={controller} roundIndex={0} />

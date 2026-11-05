@@ -68,6 +68,20 @@ export type FundingListView =
   "all" | "open" | "closing" | "asks" | "discussion";
 export type FundingWireView = Exclude<FundingListView, "all">;
 
+/** The scope row's "Anywhere" chip, which lifts the scope filter. */
+export type FundingAnyScope = "any";
+
+/** `fundingFacets` on the first page of `GET /forum/threads?category=funding`
+ *  (`forum-funding-facets.ts`): how many threads each chip would list, with
+ *  that chip row's own filter lifted and every other filter applied. `all`
+ *  and `any` are distinct totals. `eligibility` and `scope` are null outside
+ *  the call views. A key the server leaves out reads as "not counted". */
+export interface ForumFundingFacets {
+  view: Partial<Record<FundingListView, number>>;
+  eligibility: Partial<Record<FundingEligibility, number>> | null;
+  scope: Partial<Record<FundingScope | FundingAnyScope, number>> | null;
+}
+
 /** `GET /forum/funding/lookup` 200 body. A 204 reads as null. */
 export interface FundingLookupResult {
   slug: string;

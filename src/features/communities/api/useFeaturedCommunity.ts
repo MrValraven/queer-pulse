@@ -1,10 +1,11 @@
-import { useSyncExternalStore } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { getFeaturedCommunity } from "./communities.api";
 import { cardDtoToCommunity } from "./communities.adapters";
 import { communities } from "../../homepage/data/communities";
+import { localizeDemoCommunity } from "../memberCountLabel";
 import type { Community } from "../../homepage/data/types";
 import {
   getDemoFeaturedSlug,
@@ -49,9 +50,14 @@ export function useFeaturedCommunity(
     },
   });
 
+  // The demo twin of the live adapter's translated count, memoised so the
+  // card keeps one identity between renders.
+  const demoCommunity = useMemo(() => {
+    const found = communities.find((community) => community.slug === demoSlug);
+    return found ? localizeDemoCommunity(found, t) : null;
+  }, [demoSlug, t]);
+
   if (!enabled) return null;
-  if (demoMode) {
-    return communities.find((community) => community.slug === demoSlug) ?? null;
-  }
+  if (demoMode) return demoCommunity;
   return query.data ?? null;
 }

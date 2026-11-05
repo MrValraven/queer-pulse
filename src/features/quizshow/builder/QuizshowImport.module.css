@@ -1,37 +1,3 @@
-.emptyCard {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--gap-sm);
-  padding: var(--gap-lg);
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-}
-
-.emptyTitle {
-  margin: 0;
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: var(--text-22);
-  color: var(--ink);
-}
-
-.emptyBody {
-  margin: 0;
-  max-width: 60ch;
-  font-size: var(--text-body);
-  line-height: 1.5;
-  color: var(--ink-60);
-}
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--gap-xs);
-}
-
 .seriesShortcut {
   flex-basis: 100%;
 }
@@ -47,6 +13,13 @@
 .seriesHint {
   font-size: var(--text-caption);
   color: var(--ink-60);
+}
+
+/* ── Pickers: dark dialogs ───────────────────────────────────────────────
+   Both pickers open in the shared Modal, which useQuizshowDarkDialog turns
+   dark. The shell is the Open lobby dialog's. */
+.dialog {
+  composes: stageDialog from "./QuizshowLobby.module.css";
 }
 
 .list {
@@ -66,9 +39,19 @@
   gap: var(--gap-sm);
   margin-block-end: var(--gap-xs);
   padding: var(--gap-sm);
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-16);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--qs-line);
+  border-radius: var(--qs-radius-tile);
+  transition-property: background-color, border-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+@media (hover: hover) {
+  .row:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: var(--qs-glass-border-strong);
+  }
 }
 
 .rowText {
@@ -83,14 +66,14 @@
   margin: 0;
   font-size: var(--text-body);
   font-weight: 600;
-  color: var(--ink);
+  color: var(--qs-text);
 }
 
 .rowMeta {
   margin: 0;
   font-size: var(--text-caption);
   line-height: 1.45;
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
 }
 
 .tags {
@@ -105,22 +88,80 @@
 .tag {
   padding: 2px 9px;
   font-size: var(--text-caption);
-  color: var(--ink);
-  background: rgba(var(--ink-rgb), 0.06);
+  color: var(--qs-text);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-pill);
 }
 
 .tagWarning {
-  background: rgba(var(--accent-rgb), 0.14);
+  background: rgba(var(--accent-rgb), 0.22);
 }
 
 .emptyNote {
   margin: 0;
   padding: var(--gap-sm) 0;
   font-size: var(--text-body);
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
 }
 
 .skeletonRow {
   margin-block-end: var(--gap-xs);
+}
+
+/* ── Template gallery ────────────────────────────────────────────────── */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+  gap: var(--gap-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.galleryItem {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--qs-raised-2);
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-card);
+  box-shadow: var(--qs-shadow-pill);
+  transition-property: border-color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .galleryItem:hover {
+    border-color: var(--qs-glass-border-strong);
+    transform: translateY(-2px);
+  }
+}
+
+.galleryBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+  padding: var(--gap-sm);
+}
+
+.galleryDescription {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  flex: 1;
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: var(--qs-text-mute);
+}
+
+.galleryAction {
+  width: 100%;
+  justify-content: center;
 }

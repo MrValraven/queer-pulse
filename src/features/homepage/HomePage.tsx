@@ -20,7 +20,6 @@ import {
   PainPoints,
   PersonasShowcase,
   Stories,
-  WhoItsFor,
 } from "./sections";
 import { useLandingVisitBeacon } from "./api/useLandingVisitBeacon";
 
@@ -54,9 +53,6 @@ import { useLandingVisitBeacon } from "./api/useLandingVisitBeacon";
  * interactive showcase content (specific example listings/personas) is
  * fabricated illustrative copy shown in BOTH modes by product decision —
  * neither section is backed by real listing/persona data yet.
- * WhoItsFor, the strip of four tiles linking to the unlisted audience pages
- * (`/for/*`), sits between personas and the pain points and is identical in
- * both modes.
  *
  * Staff who curate the landing page can open `/?preview=visitor` to read it
  * as a signed-out visitor (`VisitorPreview`). The whole body, the visit
@@ -90,7 +86,6 @@ function HomePageBody() {
       {demoMode ? <Gatherings /> : <LiveGatherings />}
       <HousingShowcase />
       <PersonasShowcase />
-      <WhoItsFor />
       <PainPoints />
       {demoMode ? <Stories /> : <LiveStories />}
       {demoMode ? <ChangeMakers /> : <LiveChangeMakers />}

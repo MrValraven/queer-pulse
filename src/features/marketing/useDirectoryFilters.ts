@@ -6,15 +6,12 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { listingFactActiveFilters } from "./directoryListingFactActiveFilters";
 import {
   clearListingFactParams,
-  countListingFactChips,
   dropOnlineHiddenFactParams,
-  FILTERABLE_ATTRIBUTE_SLUGS,
   LISTING_FACT_PARAM_KEYS,
   readListingFactFilters,
   withListingFactChange,
   writeListingFactFilters,
   type DirectoryListingFactFilters,
-  type ListingFactCounts,
   type ListingFactFilterChange,
 } from "./directoryListingFactFilters";
 import {
@@ -28,9 +25,14 @@ import {
   categoryForScope,
   filterLocalPlaces,
   sortLocalPlaces,
+  type LocalFilters,
   type LocalPlace,
   type LocalSort,
 } from "./localPlaces";
+import {
+  useDirectoryFacetCounts,
+  type DirectoryFacetSources,
+} from "./useDirectoryFacetCounts";
 import {
   ACCESSIBILITY_QUESTIONS,
   ACCESSIBILITY_QUESTION_SLUGS,
@@ -49,24 +51,10 @@ import {
   type ListingOwnedBy,
 } from "./listBusiness/listingOwnedBy.data";
 
-/**
- * How many of the LOADED places each one-tap chip would leave on screen if it
- * were turned on, with every other current filter kept. The drawer reads it to
- * disable a chip that would empty the list, and only once the whole set has
- * loaded (see `isLoadedSetComplete` in `useDirectoryPageState`).
- */
-export interface LocalChipCounts {
-  /** Matches with "Open now" turned on. */
-  openNow: number;
-  /** Matches with "Out and about" turned on. Optional so older literals compile. */
-  outAndAbout?: number;
-  /** Matches with "Verified safe spaces" turned on. */
-  safe: number;
-  /** Matches with each access need added to the ones already ticked. */
-  access: Record<AccessibilitySlug, number>;
-  /** Matches with each attribute and fact chip pressed, every other filter kept. */
-  listingFacts: ListingFactCounts;
-}
+export type {
+  LocalCategoryCounts,
+  LocalChipCounts,
+} from "./directoryFacetCounts";
 
 const SORT_VALUES: LocalSort[] = ["default", "name", "hood"];
 
@@ -586,15 +574,15 @@ function useActiveFilters(params: DirectoryFilterParams): ActiveFilter[] {
 /**
  * Derives the displayed list, chip counts, and active-filter pills from an
  * already-fetched `places` array plus the URL state from
- * `useDirectoryFilterParams`. `query`/`safe`/`access`/`owned` are ALSO applied
- * here (even though the network fetch already filtered by them server-side)
- * purely as a cheap, harmless no-op safety net, and so the demo fixture
- * answers the same filters with no backend at all. `cat` and `open` only ever
- * apply here: `cat` for the reasons in that hook's doc comment, and `open`
- * because the grid is CDN-cached and a server-computed open state would go
- * stale in the dangerous direction. The attribute and fact filters apply here
- * in demo mode only (live, the server narrowed them, and the list is shown as
- * it came back).
+ * `useDirectoryFilterParams`. Every filter but "Open now" goes to the server
+ * live, and is ALSO applied here as a cheap, harmless no-op safety net, so
+ * the demo fixture answers the same filters with no backend at all and the
+ * member-only 18+ list (read with `q` alone) is narrowed by the rest.
+ * `open` only ever applies here, because the grid is CDN-cached and a
+ * server-computed open state would go stale in the dangerous direction. The
+ * attribute and fact filters apply here in demo mode only (live, the server
+ * narrowed them, and the list is shown as it came back). The chip counts come
+ * from `useDirectoryFacetCounts`.
  */
 export function useDirectoryFilterResults(
   places: LocalPlace[],
@@ -603,10 +591,11 @@ export function useDirectoryFilterResults(
    * The member's own position, when they have opted in to "near me". It comes
    * from `useMyLocation`, lives in React state only, and is used here for one
    * thing: ordering the already-loaded places and labelling each card with a
-   * walking time. Passing `null` (the default, and what turning the control
-   * off produces) restores the previous ordering exactly.
+   * walking time. Passing `null` restores the previous ordering exactly.
    */
-  origin: MyLocationCoordinates | null = null,
+  origin: MyLocationCoordinates | null,
+  /** Where the availability counts come from (see `useDirectoryFacetCounts`). */
+  facetSources: DirectoryFacetSources,
 ) {
   const {
     view,
@@ -627,25 +616,20 @@ export function useDirectoryFilterResults(
   // counterparts on the list and the map.
   const isOnlineScope = view === "online";
 
-  const matched = useMemo(
-    () =>
-      sortLocalPlaces(
-        filterLocalPlaces(places, {
-          categories,
-          query,
-          listingFacts,
-          areListingFactsServerFiltered,
-          safe,
-          owned,
-          openNow,
-          isOutAndAboutOnly: isOutAndAbout,
-          access,
-          isOnlineScope,
-        }),
-        sort,
-      ),
+  const currentFilters = useMemo<LocalFilters>(
+    () => ({
+      categories,
+      query,
+      listingFacts,
+      areListingFactsServerFiltered,
+      safe,
+      owned,
+      openNow,
+      isOutAndAboutOnly: isOutAndAbout,
+      access,
+      isOnlineScope,
+    }),
     [
-      places,
       categories,
       query,
       listingFacts,
@@ -656,8 +640,12 @@ export function useDirectoryFilterResults(
       isOutAndAbout,
       access,
       isOnlineScope,
-      sort,
     ],
+  );
+
+  const matched = useMemo(
+    () => sortLocalPlaces(filterLocalPlaces(places, currentFilters), sort),
+    [places, currentFilters, sort],
   );
 
   // Distances are measured only over what is already on screen, and only once
@@ -693,97 +681,10 @@ export function useDirectoryFilterResults(
     return sortByDistance(matched, distanceById);
   }, [matched, distanceById, sort]);
 
-  // Chip counts reflect every other filter and leave the chosen place types
-  // out, so each chip shows how many of the LOADED places it would add right
-  // now. That is an honest count against what has been fetched so far, which
-  // can sit below the platform-wide grand total (see `useLocalPlaces`'s doc
-  // comment on why category stays client-side over the loaded pages).
-  const categoryCounts = useMemo(
-    () =>
-      countByCategory(
-        filterLocalPlaces(places, {
-          categories: [],
-          query,
-          listingFacts,
-          areListingFactsServerFiltered,
-          safe,
-          owned,
-          openNow,
-          isOutAndAboutOnly: isOutAndAbout,
-          access,
-          isOnlineScope,
-        }),
-        isOnlineScope,
-      ),
-    [
-      places,
-      query,
-      listingFacts,
-      areListingFactsServerFiltered,
-      safe,
-      owned,
-      openNow,
-      isOutAndAbout,
-      access,
-      isOnlineScope,
-    ],
+  const { categoryCounts, chipCounts } = useDirectoryFacetCounts(
+    facetSources,
+    currentFilters,
   );
-
-  // The same "what would this chip leave" question for the other chips: each
-  // count runs the full filter over the loaded places with that one chip
-  // turned on and everything else as it stands, chosen place types included.
-  const chipCounts = useMemo<LocalChipCounts>(() => {
-    const current = {
-      categories,
-      query,
-      listingFacts,
-      areListingFactsServerFiltered,
-      safe,
-      owned,
-      openNow,
-      isOutAndAboutOnly: isOutAndAbout,
-      access,
-      isOnlineScope,
-    };
-    const countWith = (overrides: Partial<typeof current>) =>
-      filterLocalPlaces(places, { ...current, ...overrides }).length;
-    return {
-      openNow: countWith({ openNow: true }),
-      outAndAbout: countWith({ isOutAndAboutOnly: true }),
-      safe: countWith({ safe: "verified" }),
-      access: Object.fromEntries(
-        ACCESSIBILITY_QUESTION_SLUGS.map((slug) => [
-          slug,
-          countWith({ access: [...access, slug] }),
-        ]),
-      ) as Record<AccessibilitySlug, number>,
-      // Over the loaded set with the predicate on, even live: the server
-      // already narrowed by the current choice, so each count says what one
-      // more press would leave (see `isListingFactChipDisabled`).
-      listingFacts: countListingFactChips(
-        (facts) =>
-          filterLocalPlaces(places, {
-            ...current,
-            listingFacts: facts,
-            areListingFactsServerFiltered: false,
-          }).length,
-        listingFacts,
-        FILTERABLE_ATTRIBUTE_SLUGS,
-      ),
-    };
-  }, [
-    places,
-    categories,
-    query,
-    listingFacts,
-    areListingFactsServerFiltered,
-    safe,
-    owned,
-    openNow,
-    isOutAndAbout,
-    access,
-    isOnlineScope,
-  ]);
 
   const mappableCount = useMemo(
     () => filtered.filter((place) => place.coords !== null).length,

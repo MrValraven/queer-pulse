@@ -224,39 +224,38 @@ export const auth: Catalog = {
   // ── Cartão de pré-visualização do convite (espelha as tags Open Graph) ──
   "sharePreview.heroTitle.line1": "Entra numa sala",
   "sharePreview.heroTitle.line2": "<em>onde já pertences</em>",
-  "sharePreview.heroExplainer": "Uma rede queer. Enraizada em Lisboa.",
-  "sharePreview.heroSub_one": "{count} pessoa, com voto de confiança",
-  "sharePreview.heroSub_other":
-    "{count} pessoas, cada uma com voto de confiança",
-  "sharePreview.title": "{senderName} convidou-te para o QueerPulse",
+  "sharePreview.heroExplainer": "Uma rede queer com raízes em Lisboa.",
+  "sharePreview.heroSub_one": "{count} pessoa com voto de confiança",
+  "sharePreview.heroSub_other": "{count} pessoas, todas com voto de confiança",
+  "sharePreview.title": "{senderName} convidou-te para a QueerPulse",
 
   // ── Autoatestação 18+ (partilhada por onboarding + pedir convite) ──
   "ageAttestation.confirmLabel": "Confirmo que tenho 18 anos ou mais.",
   "ageAttestation.helper":
-    "O QueerPulse é uma comunidade só para adultos, <eligibility>percebe porquê</eligibility>. Não precisas de identificação; confiamos em ti. <under18>Ainda não tens 18?</under18>",
+    "A QueerPulse é uma comunidade só para adultos (<eligibility>vê porquê</eligibility>). Não precisas de identificação: confiamos em ti. <under18>Ainda não tens 18 anos?</under18>",
   "adultsOnly.eyebrow": "Adesão",
-  "adultsOnly.ariaLabel": "Porque o QueerPulse é só para adultos",
-  "adultsOnly.title": "Porque o QueerPulse é <em>só para adultos</em>",
+  "adultsOnly.ariaLabel": "Porque é que a QueerPulse é só para adultos",
+  "adultsOnly.title": "Porque é que a QueerPulse é <em>só para adultos</em>",
   "adultsOnly.body1":
-    "O QueerPulse está aberto a qualquer pessoa com 18 anos ou mais que seja convidada ou entre na comunidade com um voto de confiança.",
+    "A QueerPulse está aberta a qualquer pessoa com 18 anos ou mais que receba um convite ou um voto de confiança da comunidade.",
   "adultsOnly.body2":
-    "Mantemos o espaço só para adultos por uma razão. Muito do que acontece aqui são conversas francas sobre sexo e saúde sexual, encontros e vida noturna, e o tipo de conversa sem filtros que só é seguro entre adultos. Não é adequado para menores, e misturar os dois poria a segurança de toda a gente em risco. As pessoas com menos de 18 também merecem comunidade queer; este só ainda não é o espaço para isso.",
+    "Mantemos o espaço só para adultos por uma razão. Muito do que acontece aqui são conversas francas sobre sexo e saúde sexual, encontros e vida noturna, e conversas sem filtros que só são seguras entre adultos. Não é um espaço para menores, e misturar as duas coisas poria em risco a segurança de toda a gente. Quem tem menos de 18 anos também merece comunidade queer; esta só ainda não é o sítio certo para isso.",
   "adultsOnly.reassure": "Não precisas de identificação. Confiamos em ti.",
   "adultsOnly.done": "Percebi",
 
   // ── Bloco humano para menores de 18 ──
-  "under18.title": "Vamos estar aqui <em>quando estiveres preparade</em>",
+  "under18.title": "Vamos estar aqui <em>quando chegar a tua altura</em>",
   "under18.body1":
-    "A parte comunitária do QueerPulse é 18+ por agora, por isso ainda não podemos criar-te uma conta. Isto não diz nada sobre ti. Mas quase tudo o que fazemos está aberto a toda a gente, sem precisares de iniciar sessão. Pertences à comunidade queer, e há muita dela à tua espera aqui mesmo.",
-  "under18.body2":
-    "Dá uma vista de olhos à biblioteca e a tudo o resto que já é teu:",
-  "under18.link.library": "A biblioteca: livre para explorares, sem conta",
+    "Por agora, a parte da comunidade da QueerPulse é só para maiores de 18, por isso ainda não te podemos criar uma conta. Isto não tem nada a ver contigo. Quase tudo o que fazemos está aberto a toda a gente, sem teres de iniciar sessão. Fazes parte da comunidade queer, e há muito à tua espera aqui mesmo.",
+  "under18.body2": "Espreita a biblioteca e tudo o resto que já podes usar:",
+  "under18.link.library": "A biblioteca: explora à vontade, sem conta",
   "under18.link.queer101": "Queer 101: o essencial, sem barreiras",
-  "under18.link.comingOut": "Assumir-te, ao teu próprio ritmo",
+  "under18.link.comingOut": "Sair do armário, ao teu ritmo",
   "under18.link.resources": "Recursos e apoio da comunidade",
-  "under18.link.eligibility": "Porque somos 18+ (os nossos Termos)",
+  "under18.link.eligibility":
+    "Porque é que somos só para maiores de 18 (os nossos Termos)",
   "under18.backDefault": "Voltar",
-  "under18.link.contact": "Fala connosco se algo aqui parecer errado",
+  "under18.link.contact": "Fala connosco se achares que há aqui um erro",
 
   // ── Voltar a concordar quando os Termos ou as Diretrizes mudam (ID-14) ──
   "policyReacceptance.eyebrow": "Antes de continuares",
@@ -673,51 +672,51 @@ export const auth: Catalog = {
 
   // ── Onboarding (fluxo de 7 passos após o registo, em /onboarding) ──
   "onboarding.stepLabel": "Passo {current} de {total}",
-  "onboarding.welcomeToQueerPulse": "Bem-vinde ao QueerPulse",
-  "onboarding.stepIntro.heading": "Vamos <em>instalar-te</em> por aqui",
+  "onboarding.welcomeToQueerPulse": "Bem-vinde à QueerPulse",
+  "onboarding.stepIntro.heading": "Vamos pôr-te <em>à vontade</em>",
   "onboarding.stepIntro.body":
-    "Uns passos rápidos para configurares o teu perfil e começares a encontrar a tua gente. Demora só uns minutos, e podes sempre mudar tudo depois.",
+    "São só uns passos rápidos para criares o teu perfil e começares a conhecer pessoas. Demora poucos minutos, e podes mudar tudo mais tarde.",
   "onboarding.stepIntro.cta": "Vamos começar",
-  "onboarding.preview.makeItYours.title": "Torna-o teu",
+  "onboarding.preview.makeItYours.title": "Cria o teu perfil",
   "onboarding.preview.makeItYours.desc":
-    "Adiciona uma foto e alguns detalhes para que as pessoas te conheçam melhor.",
+    "Junta uma foto e alguns detalhes para as pessoas te conhecerem.",
   "onboarding.preview.setIntentions.title": "O que te traz aqui?",
   "onboarding.preview.setIntentions.desc":
-    "Conta-nos um pouco sobre o que procuras e de que gostavas de fazer parte.",
+    "Diz-nos o que procuras e em que gostavas de participar.",
   "onboarding.preview.findCommunities.title": "Encontra as tuas comunidades",
   "onboarding.preview.findCommunities.desc":
-    "Escolhe as comunidades que fazem sentido para ti e descobre onde pertences.",
+    "Escolhe os grupos que te interessam e junta-te a eles.",
 
-  "onboarding.stepWelcome.eyebrowSuffix": "Já estás dentro",
+  "onboarding.stepWelcome.eyebrowSuffix": "Já entraste",
   "onboarding.stepWelcome.invitedByAmbassador": "Pessoa embaixadora QueerPulse",
   "onboarding.stepWelcome.heading": "Bem-vinde, <em>{firstName}</em>",
   "onboarding.stepWelcome.memberSince": "Aqui desde {since}",
   "onboarding.stepWelcome.invitedYou": "Convidou-te",
   "onboarding.stepWelcome.memberSinceRole": "Aqui desde {since} · {role}",
   "onboarding.stepWelcome.vouchFallback":
-    "{firstName} é atente, criative, e exatamente quem esperávamos encontrar aqui.",
+    "{firstName} é uma pessoa atenciosa e criativa, exatamente quem esperávamos ver por aqui.",
   "onboarding.stepWelcome.body1":
     "Estás aqui porque alguém achou que devias estar.",
   "onboarding.stepWelcome.body2":
-    "A QueerPulse é uma comunidade para pessoas LGBTQ+ e para quem constrói, cria e contribui à volta delas em Lisboa.",
+    "A QueerPulse é uma comunidade em Lisboa para pessoas LGBTQ+ e para quem cria, trabalha e faz acontecer ao lado delas.",
   "onboarding.stepWelcome.body3":
-    "Alguém que te conhece convidou-te a entrar. Agora é a tua vez de fazeres deste espaço o teu.",
+    "Quem te convidou conhece-te. Agora é contigo: faz deste espaço também o teu.",
   "onboarding.stepWelcome.cta": "Vamos a isto",
   "onboarding.stepWelcome.back": "Voltar",
 
-  "onboarding.stepPhoto.heading": "Põe um rosto ao <em>nome</em>",
+  "onboarding.stepPhoto.heading": "Mostra <em>quem és</em>",
   "onboarding.stepPhoto.body":
-    "Uma foto e alguns detalhes rápidos ajudam as pessoas a sentirem-se confortáveis a conectar-se a ti. Podes sempre adicionar ou mudar isto depois.",
+    "Com uma foto e alguns detalhes, as pessoas sentem-se mais à vontade para falar contigo. Podes acrescentar ou mudar isto mais tarde.",
   "onboarding.stepPhoto.captionPreview":
-    "Ótimo aspeto. Toca na foto para a alterar",
+    "Ficou ótima. Toca na foto para a mudar",
   "onboarding.stepPhoto.captionGoogle":
-    "Da tua conta Google. Toca na foto para a alterar",
+    "Vem da tua conta Google. Toca na foto para a mudar",
   "onboarding.stepPhoto.captionUpload": "Toca para carregar uma foto",
   "onboarding.stepPhoto.uploadAriaLabel": "Carregar uma foto de perfil",
   "onboarding.stepPhoto.photoAlt": "A tua foto de perfil",
   "onboarding.stepPhoto.placeholder": "a tua foto",
   "onboarding.stepPhoto.continue": "Continuar",
-  "onboarding.stepPhoto.skip": "Saltar por agora",
+  "onboarding.stepPhoto.skip": "Saltar este passo",
   "onboarding.stepPhoto.back": "Voltar",
   "onboarding.stepPhoto.uploadError":
     "Não conseguimos adicionar essa foto. Tenta novamente.",
@@ -726,78 +725,77 @@ export const auth: Catalog = {
   "onboarding.stepPhoto.firstName.label": "Nome próprio",
   "onboarding.stepPhoto.lastName.label": "Apelido",
   "onboarding.stepPhoto.name.helper":
-    "É isto que as outras pessoas vão ver no teu perfil. Tirámos isto da tua conta Google, mas podes mudá-lo.",
+    "É o nome que as outras pessoas vão ver no teu perfil. Veio da tua conta Google, mas podes mudá-lo.",
   "onboarding.stepPhoto.name.helperEmail":
-    "É isto que os membros vão ver no teu perfil. Podes mudá-lo.",
+    "É o nome que as outras pessoas vão ver no teu perfil. Podes mudá-lo quando quiseres.",
   "onboarding.stepPhoto.preview.caption":
-    "Como vai ficar o teu cartão de perfil",
+    "Assim vai ficar o teu cartão de perfil",
   "onboarding.stepPhoto.pronouns.label": "Pronomes",
   "onboarding.stepPhoto.pronouns.helper":
-    "Como preferires que as outras pessoas se refiram a ti. Totalmente opcional.",
+    "Como queres que as pessoas se refiram a ti. É opcional.",
   "onboarding.stepPhoto.pronouns.placeholder": "ex.: they/them",
-  "onboarding.stepPhoto.pronouns.quickPickLabel":
-    "Escolhas rápidas de pronomes",
+  "onboarding.stepPhoto.pronouns.quickPickLabel": "Pronomes sugeridos",
   "onboarding.stepPhoto.bio.label": "Uma linha sobre ti",
   "onboarding.stepPhoto.bio.helper":
-    "Aparece no teu perfil. Podes mudar isto a qualquer momento nas Definições.",
-  "onboarding.stepPhoto.bio.placeholder": "Conta um pouco sobre quem és",
+    "Aparece no teu perfil. Podes mudá-la quando quiseres nas Definições.",
+  "onboarding.stepPhoto.bio.placeholder": "Conta um pouco sobre ti",
 
-  "onboarding.stepNorms.heading": "Este é um espaço <em>cuidado</em>",
-  "onboarding.stepNorms.norm.bePresent.title": "Está presente",
+  "onboarding.stepNorms.heading": "Aqui <em>cuidamos</em> de toda a gente",
+  "onboarding.stepNorms.norm.bePresent.title": "Participa com atenção",
   "onboarding.stepNorms.norm.bePresent.desc":
-    "Dá às conversas a tua atenção genuína. Passar ao lado tudo bem; envolveres-te a meio gás não.",
+    "Quando entras numa conversa, dá-lhe a tua atenção a sério. Se não te apetecer participar, podes simplesmente seguir em frente.",
   "onboarding.stepNorms.norm.namesPronouns.title": "Respeita nomes e pronomes",
   "onboarding.stepNorms.norm.namesPronouns.desc":
-    "Usa o nome e os pronomes que cada pessoa partilha. Se tiveres dúvidas, pergunta. Isso é sempre bem-vindo aqui.",
+    "Usa o nome e os pronomes que cada pessoa indica. Na dúvida, pergunta: ninguém leva a mal.",
   "onboarding.stepNorms.norm.staysHere.title":
     "O que se partilha aqui, fica aqui",
   "onboarding.stepNorms.norm.staysHere.desc":
-    "As pessoas partilham aqui coisas que talvez não partilhem noutro lado. Trata isso como um privilégio.",
+    "Há quem partilhe aqui coisas que não conta em mais lado nenhum. Respeita essa confiança.",
   "onboarding.stepNorms.norm.askBeforePhoto.title":
-    "Pergunta antes de fotografar",
+    "Pergunta antes de tirares fotos",
   "onboarding.stepNorms.norm.askBeforePhoto.desc":
-    "Nos eventos, pergunta sempre antes de fotografar outras pessoas, mesmo num espaço partilhado.",
+    "Nos eventos, pede sempre autorização antes de fotografares alguém, mesmo em zonas comuns.",
   "onboarding.stepNorms.agree":
     "Li e concordo com as <guidelines>Diretrizes da Comunidade</guidelines>",
   "onboarding.stepNorms.readHint":
-    "Abre as diretrizes e lê até ao fim para continuar.",
-  "onboarding.stepNorms.continue": "Concordo, continuar",
+    "Para continuar, abre as diretrizes e lê-as até ao fim.",
+  "onboarding.stepNorms.continue": "Concordar e continuar",
   "onboarding.stepNorms.back": "Voltar",
   "onboarding.stepNorms.control.title": "Tens sempre o controlo",
   "onboarding.stepNorms.control.desc":
-    "Podes bloquear, silenciar ou denunciar qualquer pessoa, a qualquer momento. <a>Vê como funciona bloquear e silenciar</a>.",
+    "Podes bloquear, silenciar ou denunciar qualquer pessoa, quando quiseres. <a>Vê como funciona bloquear e silenciar</a>.",
 
   "onboarding.stepIntents.heading": "O que te traz <em>aqui?</em>",
   "onboarding.stepIntents.hint":
-    "Escolhe pelo menos uma, e quantas fizerem sentido.",
+    "Escolhe pelo menos uma opção. Podes escolher várias.",
   "onboarding.stepIntents.continue": "Continuar",
-  "onboarding.stepIntents.skip": "Saltar por agora",
+  "onboarding.stepIntents.skip": "Saltar este passo",
   "onboarding.stepIntents.back": "Voltar",
   "onboarding.stepIntents.saveError":
     "Não conseguimos guardar isso agora. Tenta novamente.",
   "onboarding.stepIntents.loadError.title":
     "Não conseguimos carregar <em>as tuas respostas</em>",
   "onboarding.stepIntents.loadError.body":
-    "As intenções que guardaste antes, e a definição de visibilidade delas, não carregaram. Tenta novamente, ou salta este passo e define isso mais tarde nas Definições.",
+    "Não conseguimos carregar o que escolheste antes, nem se o querias mostrar no perfil. Tenta novamente, ou salta este passo e trata disso mais tarde nas Definições.",
   "onboarding.stepIntents.visibility.title": "Mostrar isto no meu perfil",
   "onboarding.stepIntents.visibility.descPublic":
-    "Outros membros vão ver no teu perfil o que procuras.",
+    "As outras pessoas vão ver no teu perfil o que procuras.",
   "onboarding.stepIntents.visibility.descPrivate":
-    "Fica só para ti. Podes ativar quando quiseres nas Definições.",
+    "Só tu vês isto. Podes mostrá-lo quando quiseres nas Definições.",
   // ── Passo 6: o que fazes (StepWork) ─────────────────────────────────────────
   // Guarda a área e a função no próprio perfil, que é o que os filtros do
   // diretório procuram. Opcional: saltar não guarda nada.
   "onboarding.stepWork.heading": "O que <em>fazes?</em>",
   "onboarding.stepWork.hint":
-    "Pesquisa o teu trabalho, ou explora por área. Isto é público e é assim que as pessoas te encontram no diretório de membros.",
+    "Pesquisa a tua profissão ou procura por área. Esta informação é pública e ajuda as pessoas a encontrarem-te no diretório de membros.",
   "onboarding.stepWork.continue": "Continuar",
-  "onboarding.stepWork.skip": "Saltar por agora",
+  "onboarding.stepWork.skip": "Saltar este passo",
   "onboarding.stepWork.back": "Voltar",
   "onboarding.stepWork.saveError":
     "Não conseguimos guardar isso agora. Tenta novamente.",
   "onboarding.intent.community": "Comunidade",
   "onboarding.intent.gatherings": "Eventos",
-  "onboarding.intent.professional": "Conexões profissionais",
+  "onboarding.intent.professional": "Contactos profissionais",
   "onboarding.intent.dating": "Namoro",
   "onboarding.intent.friendship": "Amizade",
   "onboarding.intent.resources": "Recursos e apoio",
@@ -805,38 +803,38 @@ export const auth: Catalog = {
   "onboarding.intent.housing": "Habitação",
   "onboarding.intent.flatmates": "Encontrar colegas de casa",
   "onboarding.intent.activism": "Ativismo",
-  "onboarding.intent.creative": "Colaboração criativa",
+  "onboarding.intent.creative": "Projetos criativos",
   "onboarding.intent.media": "Media e cultura",
-  "onboarding.intent.discussions": "Discussões",
+  "onboarding.intent.discussions": "Conversas e debates",
   "onboarding.intent.mentorship": "Mentoria",
 
   "onboarding.stepCommunities.heading": "Encontra as tuas <em>comunidades</em>",
   "onboarding.stepCommunities.body":
-    "Grupos que talvez gostes, com base nos teus interesses.",
-  "onboarding.stepCommunities.join": "Junta-te",
-  "onboarding.stepCommunities.joined": "Já estás dentro",
+    "Grupos de que podes gostar, com base nos teus interesses.",
+  "onboarding.stepCommunities.join": "Entrar",
+  "onboarding.stepCommunities.joined": "Já entraste",
   "onboarding.stepCommunities.leave": "Sair da comunidade",
   "onboarding.stepCommunities.requested": "Pedido enviado",
   "onboarding.stepCommunities.joining": "A entrar…",
   "onboarding.stepCommunities.joinedAnnouncement": "Entraste em {name}",
   "onboarding.stepCommunities.leftAnnouncement": "Saíste de {name}",
   "onboarding.stepCommunities.requestedNotice":
-    "O teu pedido para entrar em {name} está com a moderação.",
+    "O teu pedido para entrar em {name} foi enviado à moderação.",
   "onboarding.stepCommunities.continue": "Continuar",
-  "onboarding.stepCommunities.skip": "Saltar por agora",
+  "onboarding.stepCommunities.skip": "Saltar este passo",
   "onboarding.stepCommunities.back": "Voltar",
   "onboarding.stepCommunities.empty":
-    "Sem sugestões de momento. Podes explorar e juntar-te a comunidades quando quiseres.",
+    "Ainda não temos sugestões para ti. Podes procurar comunidades e entrar nelas quando quiseres.",
 
-  "onboarding.stepDone.heading": "Já fazes <em>parte disto</em>",
-  "onboarding.stepDone.cta": "Ir para o meu início",
+  "onboarding.stepDone.heading": "Agora já fazes <em>parte da comunidade</em>",
+  "onboarding.stepDone.cta": "Ir para o Início",
   "onboarding.stepDone.notifications.title": "Fica a par de tudo",
   "onboarding.stepDone.notifications.desc":
-    "Recebe notificações de mensagens, convites e lembretes de eventos no teu telemóvel. Podes mudar isto a qualquer momento nas Definições.",
+    "Recebe no telemóvel notificações de mensagens, convites e lembretes de eventos. Podes mudar isto quando quiseres nas Definições.",
   "onboarding.stepDone.stampFailed.title":
-    "Não conseguimos guardar que terminaste",
+    "Não conseguimos registar que terminaste",
   "onboarding.stepDone.stampFailed.desc":
-    "Estás dentro à mesma. Sem isto, podemos voltar a levar-te por esta mesma configuração da próxima vez.",
+    "A tua conta está pronta na mesma. Mas, se isto não ficar registado, podemos voltar a mostrar-te estes passos da próxima vez.",
   "onboarding.stepDone.stampFailed.retry": "Tentar de novo",
   "onboarding.quickStart.communities.title": "Descobre comunidades e coletivos",
   "onboarding.quickStart.communities.desc":
@@ -844,13 +842,13 @@ export const auth: Catalog = {
   "onboarding.quickStart.businessDirectory.title":
     "Explora o diretório de negócios locais",
   "onboarding.quickStart.businessDirectory.desc":
-    "Espaços queer e inclusivos por toda Lisboa",
+    "Espaços queer e inclusivos em toda a Lisboa",
   "onboarding.quickStart.forum.title": "Espreita o fórum",
   "onboarding.quickStart.forum.desc": "Perguntas, conselhos e conversas",
   "onboarding.quickStart.gettingStarted.title":
     "Vê a tua lista de primeiros passos",
   "onboarding.quickStart.gettingStarted.desc":
-    "Alguns pequenos marcos para te ajudarem a instalar-te",
+    "Pequenos passos para te sentires em casa",
 
   // ── `tour.neighbourhood.elsewhere` é o único sobrevivente do Tour de
   //    boas-vindas removido (antigo /welcome-tour, uma superfície morta
@@ -861,74 +859,72 @@ export const auth: Catalog = {
 
   // ── Primeiros passos — a lista em /account/getting-started. Cada passo é
   //    detetado a partir de dados reais da conta (ver useGettingStarted). ──
-  "gettingStarted.eyebrow": "Novo por aqui",
+  "gettingStarted.eyebrow": "Acabaste de chegar",
   "gettingStarted.title": "Primeiros <em>passos</em>",
   "gettingStarted.lede":
-    "Alguns primeiros passos para encontrares a tua gente e te instalares. Sem pressa: pela ordem que quiseres, quando quiseres.",
+    "Alguns passos para conheceres pessoas e te sentires em casa. Sem pressa: faz pela ordem que quiseres, quando quiseres.",
   "gettingStarted.ledeProgress":
-    "Bom progresso até agora: já fizeste {done} de {total}. Faltam mais alguns passos para encontrares a tua gente e te instalares.",
+    "Estás a ir bem: já fizeste {done} de {total}. Faltam só alguns para te sentires em casa.",
   "gettingStarted.progress": "{done} de {total} feitos",
   "gettingStarted.levelStrip.eyebrow": "O teu nível",
   "gettingStarted.levelStrip.progress": "{xp} de {xpMax} XP",
   "gettingStarted.levelStrip.hint":
-    "Cada passo que concluis dá XP para o teu próximo nível.",
+    "Cada passo que fazes dá-te XP para subires de nível.",
   "gettingStarted.levelStrip.hintDone":
-    "Continua a explorar a QueerPulse para ganhares mais.",
-  "gettingStarted.xpSources.eyebrow": "O que já rendeu XP",
+    "Continua a explorar a QueerPulse para ganhares mais XP.",
+  "gettingStarted.xpSources.eyebrow": "Onde já ganhaste XP",
   "gettingStarted.xpSources.amount": "+{xp} XP",
-  "gettingStarted.xpSources.seeAll": "Ver detalhe completo",
+  "gettingStarted.xpSources.seeAll": "Ver tudo em detalhe",
   "gettingStarted.xpSources.seeBadgesPage": "Ir para a página de Emblemas",
   "gettingStarted.stepXp": "+{xp} XP",
   "gettingStarted.stepXpEarned": "+{xp} XP ganhos",
-  // O NOME do distintivo e interpolado a partir do catalogo, para nao poder
-  // divergir. Antes estava fixo em ingles nas duas linguas. "distintivo" e a
-  // palavra usada no resto da copy dos distintivos, em vez de "cracha".
-  // DES-143.
-  "gettingStarted.success.badge": "Ganhaste o distintivo {badge}.",
+  // O NOME do emblema e interpolado a partir do catalogo, para nao poder
+  // divergir. "emblema" e a palavra da pagina de Emblemas (members:badges),
+  // por isso usamo-la aqui em vez de "distintivo" ou "cracha". DES-143.
+  "gettingStarted.success.badge": "Ganhaste o emblema {badge}.",
   "gettingStarted.meterAria": "{done} de {total} primeiros passos feitos",
   "gettingStarted.checking": "A verificar o teu progresso…",
   "gettingStarted.doneLabel": "Feito",
   "gettingStarted.steps.profile.title": "Preenche o teu perfil",
   "gettingStarted.steps.profile.desc":
-    "Uma foto e umas palavras ajudam as pessoas a reconhecer-te e a dizer olá.",
+    "Uma foto e umas palavras ajudam as pessoas a reconhecer-te e a meter conversa contigo.",
   "gettingStarted.steps.profile.done": "O teu perfil já tem a tua cara.",
   "gettingStarted.steps.profile.cta": "Editar perfil",
   "gettingStarted.steps.community.title": "Entra numa comunidade",
   "gettingStarted.steps.community.desc":
-    "Encontra os círculos que combinam contigo (livros, noite, ativismo) e aparece.",
-  "gettingStarted.steps.community.done": "Estás dentro. Bem-vinde ao círculo.",
+    "Encontra grupos à tua medida, de clubes de leitura a ativismo ou vida noturna, e junta-te.",
+  "gettingStarted.steps.community.done": "Já entraste. Bem-vinde ao grupo.",
   "gettingStarted.steps.community.cta": "Ver comunidades",
   "gettingStarted.steps.persona.title": "Cria uma persona",
   "gettingStarted.steps.persona.desc":
-    "Dá a um lado teu o seu próprio espaço: o teu nome de DJ, a tua arte, a tua escrita.",
+    "Dá um espaço próprio a outro lado de ti: o teu nome de DJ, a tua arte, a tua escrita.",
   "gettingStarted.steps.persona.done": "A tua persona já tem o seu cantinho.",
   "gettingStarted.steps.persona.cta": "Criar uma persona",
   "gettingStarted.steps.vouch.title": "Dá um voto de confiança a alguém",
   "gettingStarted.steps.vouch.desc":
-    "Dá um voto de confiança a alguém em quem confias. É assim que a rede se mantém genuína.",
+    "Escolhe alguém que conheces e em quem confias. É assim que a rede se mantém próxima e verdadeira.",
   "gettingStarted.steps.vouch.done":
-    "Deste um voto de confiança. Obrigade por manteres tudo genuíno.",
-  "gettingStarted.steps.vouch.cta":
-    "Encontrar alguém a quem dar um voto de confiança",
-  "gettingStarted.steps.connect.title": "Conecta-te a alguém",
+    "Deste um voto de confiança. Obrigade por ajudares a manter a rede verdadeira.",
+  "gettingStarted.steps.vouch.cta": "Dar um voto de confiança",
+  "gettingStarted.steps.connect.title": "Faz uma conexão",
   "gettingStarted.steps.connect.desc":
-    "Fala com alguém que gostavas de conhecer. Conectares-te abre as mensagens.",
+    "Fala com alguém que gostavas de conhecer. Depois de criarem uma conexão, podem trocar mensagens.",
   "gettingStarted.steps.connect.done": "Fizeste a tua primeira conexão.",
   "gettingStarted.steps.connect.cta": "Ver membros",
   "gettingStarted.steps.post.title": "Publica pela primeira vez",
   "gettingStarted.steps.post.desc":
-    "Diz olá numa comunidade onde entraste. Sem pressão, uma frase chega.",
+    "Diz olá numa comunidade onde entraste. Sem pressão: uma frase chega.",
   "gettingStarted.steps.post.done": "Já disseste o teu primeiro olá.",
   "gettingStarted.steps.post.cta": "Abrir uma comunidade",
   "gettingStarted.allDone.title": "Está tudo",
   "gettingStarted.allDone.em": "pronto",
   "gettingStarted.allDone.body":
-    "Já fizeste o essencial. O resto do QueerPulse é teu para explorares, com calma.",
-  "gettingStarted.allDone.cta": "Explorar o QueerPulse",
+    "Já fizeste o essencial. Agora explora o resto da QueerPulse com calma.",
+  "gettingStarted.allDone.cta": "Explorar a QueerPulse",
   "gettingStarted.sideQuests.eyebrow": "A seguir",
-  "gettingStarted.sideQuests.title": "Missões <em>secundárias</em>",
+  "gettingStarted.sideQuests.title": "Mais <em>desafios</em>",
   "gettingStarted.sideQuests.lede":
-    "Agora que já te instalaste, ainda há mais para descobrir: mais umas coisas para experimentares, cada uma com um crachá ou regalia à espera no fim.",
+    "Agora que já estás à vontade, há mais coisas para experimentares. Cada uma dá-te um emblema ou uma vantagem no fim.",
   "gettingStarted.sideQuests.cta": "Começar",
   "gettingStarted.sideQuests.showMore": "Mostrar mais {count}",
 };

@@ -22,9 +22,11 @@ import { QuizshowLeaderboard } from "../stage/QuizshowLeaderboard";
 import { QuizshowPausedNote } from "../stage/QuizshowPausedNote";
 import { QuizshowPodium } from "../stage/QuizshowPodium";
 import { QuizshowRoundCard } from "../stage/QuizshowRoundCard";
+import { EmphasisText } from "./QuizshowScreenChrome";
 import { QuizshowScreenLobby } from "./QuizshowScreenLobby";
 import { QuizshowScreenParty } from "./QuizshowScreenParty";
 import { QuizshowScreenQuestion } from "./QuizshowScreenQuestion";
+import { SCREEN_EASE } from "./quizshowScreenMotion";
 import styles from "./QuizshowScreen.module.css";
 
 /** Where the presenter stage is drawn: the big screen, or the remote's small preview. */
@@ -89,21 +91,58 @@ function QuizshowScreenThanks({
   const format = useFormat();
   return (
     <div className={styles.thanks}>
-      <h1 className={styles.thanksTitle}>
-        {t(
-          isAbandoned
-            ? "quizshow:stage.abandoned"
-            : "quizshow:stage.thanksTitle",
+      <div className={styles.thanksCard}>
+        <h1 className={styles.thanksTitle}>
+          {isAbandoned ? (
+            t("quizshow:stage.abandoned")
+          ) : (
+            <EmphasisText i18nKey="quizshow:stage.thanksTitleEm" />
+          )}
+        </h1>
+        {nextEvent !== null && (
+          <p className={styles.thanksNext}>
+            {t("quizshow:stage.nextEvent", {
+              event: nextEvent.title,
+              date: format.date(new Date(nextEvent.startAt)),
+            })}
+          </p>
         )}
-      </h1>
-      {nextEvent !== null && (
-        <p className={styles.thanksNext}>
-          {t("quizshow:stage.nextEvent", {
-            event: nextEvent.title,
-            date: format.date(new Date(nextEvent.startAt)),
-          })}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * The scores board's heading. After a question it reads "Leaderboard"; at the
+ * end of a round it names the round just played and how many are left, so
+ * the room sees the step from one to the other when the host moves on.
+ */
+function ScoresBoardTitle({
+  session,
+  leaderboardTitle,
+}: {
+  session: QuizshowScreenState;
+  leaderboardTitle: string;
+}) {
+  const { t } = useTranslation();
+  const { phase, roundIndex, roundCount } = session.cursor;
+  if (phase !== "leaderboard" || roundIndex === null) {
+    return <h1 className={styles.boardTitle}>{leaderboardTitle}</h1>;
+  }
+  const roundsLeft = Math.max(0, roundCount - roundIndex - 1);
+  return (
+    <div className={styles.boardHeading}>
+      {roundsLeft > 0 && (
+        <p className={styles.boardEyebrow}>
+          {t("quizshow:stage.roundsToGo", { count: roundsLeft })}
         </p>
       )}
+      <h1 className={styles.boardTitle}>
+        <EmphasisText
+          i18nKey="quizshow:stage.afterRoundEm"
+          values={{ number: roundIndex + 1, total: roundCount }}
+        />
+      </h1>
     </div>
   );
 }
@@ -113,7 +152,7 @@ function viewFor(
   session: QuizshowScreenState,
   clockOffsetMs: number,
   size: QuizshowScreenStageSize,
-  titles: { leaderboard: string; podium: string },
+  leaderboardTitle: string,
   isJoinHidden = false,
   isFixedCanvas = false,
 ): { viewKey: string; body: ReactNode } {
@@ -190,8 +229,14 @@ function viewFor(
     return {
       viewKey: `${phase}-${cursor.phaseId}`,
       body: (
-        <div className={`${styles.board} ${styles.scoresBoard}`}>
-          <h1 className={styles.boardTitle}>{titles.leaderboard}</h1>
+        <div
+          className={`${styles.board} ${styles.scoresBoard}`}
+          data-scope={phase === "leaderboard" ? "round" : "question"}
+        >
+          <ScoresBoardTitle
+            session={session}
+            leaderboardTitle={leaderboardTitle}
+          />
           <QuizshowLeaderboard
             scores={session.scores}
             highlightEntrantId={null}
@@ -205,8 +250,10 @@ function viewFor(
     return {
       viewKey: "podium",
       body: (
-        <div className={styles.board}>
-          <h1 className={styles.boardTitle}>{titles.podium}</h1>
+        <div className={`${styles.board} ${styles.podiumBoard}`}>
+          <h1 className={styles.boardTitle}>
+            <EmphasisText i18nKey="quizshow:stage.podiumTitleEm" />
+          </h1>
           <QuizshowPodium entries={session.podium ?? []} size={size} />
         </div>
       ),
@@ -269,6 +316,12 @@ function QuizshowScreenStageBody({
 }) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
+  // The reveal of a quiz answer tints the stage toward jade: a still field
+  // under the content that fades in and out by opacity alone.
+  const isRightAnswerShown =
+    session?.cursor.phase === "reveal" &&
+    session.reveal !== null &&
+    session.reveal.correct !== null;
   const { viewKey, body } =
     session === null
       ? viewWithoutSession(sessionEnd)
@@ -276,10 +329,7 @@ function QuizshowScreenStageBody({
           session,
           clockOffsetMs,
           size,
-          {
-            leaderboard: t("quizshow:stage.leaderboard"),
-            podium: t("quizshow:stage.podiumTitle"),
-          },
+          t("quizshow:stage.leaderboard"),
           isJoinHidden,
           isFixedCanvas,
         );
@@ -288,6 +338,11 @@ function QuizshowScreenStageBody({
       className={`${styles.stage} ${styles[size]}`}
       data-fixed-canvas={isFixedCanvas ? "true" : undefined}
     >
+      <div
+        className={styles.revealGlow}
+        data-shown={isRightAnswerShown ? "true" : "false"}
+        aria-hidden="true"
+      />
       <AnimatePresence mode="wait" initial={false}>
         <m.div
           key={viewKey}
@@ -297,7 +352,7 @@ function QuizshowScreenStageBody({
           exit={{ opacity: 0 }}
           transition={{
             duration: reducedMotion ? 0 : 0.25,
-            ease: [0.22, 0.68, 0.16, 1],
+            ease: SCREEN_EASE,
           }}
         >
           {body}

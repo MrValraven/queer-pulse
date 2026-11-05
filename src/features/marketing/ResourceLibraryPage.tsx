@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { PageHero, PageShell } from "../../shared/components/layout";
+import { PageShell } from "../../shared/components/layout";
+import { FilterPageHeader } from "../../shared/components/filterPage";
 import { Button, Outro, SubpageIndex } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
@@ -13,8 +14,8 @@ import { OrganisationCard, ResourceFilterBar } from "./ResourceLibrarySections";
 import { ResourceLibraryGuides } from "./ResourceLibraryGuides";
 import s from "./ResourceLibraryPage.module.css";
 
-// CNT-11: the canonical, nav-linked "/resources" surface — consolidated onto
-// real backend-driven guide data (see useLibraryData) instead of the old
+// CNT-11: the canonical, nav-linked "/resources" surface. It reads real
+// backend-driven guide data (see useLibraryData), which retired the old
 // static mock, so there is exactly one resource library with one taxonomy.
 // The old resources-feature `LibraryPage` at "/resources/library" now
 // redirects here (see resources/routes.tsx).
@@ -27,7 +28,7 @@ export function ResourceLibraryPage() {
   // past the tracked intake this very page already offers a few hundred pixels
   // higher up (`SuggestEditTrigger`, `context: "library"`). Both now open the
   // same modal and land in the same queue, so a suggestion carries a status
-  // and an in-app answer instead of disappearing into a shared mailbox.
+  // and an in-app answer, and stays out of a shared mailbox.
   const [isSuggestOpen, setIsSuggestOpen] = useState(false);
   const {
     guides,
@@ -70,31 +71,37 @@ export function ResourceLibraryPage() {
           { name: t("nav:resources"), path: "/resources" },
         ])}
       />
-      <PageHero
-        eyebrow={t("marketing:resourceLibrary.hero.eyebrow")}
-        title={
-          <Translation
-            i18nKey="marketing:resourceLibrary.hero.title"
-            components={{ em: <em /> }}
-          />
-        }
-        sub={t("marketing:resourceLibrary.hero.sub")}
-      >
-        <div className={s.stats}>
-          <div className={s.stat}>
-            <b>{loading || hasFailedWithoutData ? "…" : guides.length}</b>
-            <span>{t("marketing:resourceLibrary.stats.resources")}</span>
-          </div>
-          <div className={s.stat}>
-            <b>{CATEGORIES.length - 1}</b>
-            <span>{t("marketing:resourceLibrary.stats.categories")}</span>
-          </div>
-          <div className={s.stat}>
-            <b>{t("marketing:resourceLibrary.stats.communityLabel")}</b>
-            <span>{t("marketing:resourceLibrary.stats.maintained")}</span>
-          </div>
-        </div>
-      </PageHero>
+      {/* The members header, kept inside the page's 1240px `.wrap` so its
+          left edge lines up with the sticky filter bar and the guides below.
+          The stats ride in the actions row as one quiet inline line. */}
+      <div className={`wrap ${s.headWrap}`}>
+        <FilterPageHeader
+          eyebrow={t("marketing:resourceLibrary.hero.eyebrow")}
+          title={
+            <Translation
+              i18nKey="marketing:resourceLibrary.hero.title"
+              components={{ em: <em /> }}
+            />
+          }
+          lead={t("marketing:resourceLibrary.hero.sub")}
+          actions={
+            <div className={s.stats}>
+              <div className={s.stat}>
+                <b>{loading || hasFailedWithoutData ? "…" : guides.length}</b>
+                <span>{t("marketing:resourceLibrary.stats.resources")}</span>
+              </div>
+              <div className={s.stat}>
+                <b>{CATEGORIES.length - 1}</b>
+                <span>{t("marketing:resourceLibrary.stats.categories")}</span>
+              </div>
+              <div className={s.stat}>
+                <b>{t("marketing:resourceLibrary.stats.communityLabel")}</b>
+                <span>{t("marketing:resourceLibrary.stats.maintained")}</span>
+              </div>
+            </div>
+          }
+        />
+      </div>
 
       <ResourceFilterBar
         query={query}

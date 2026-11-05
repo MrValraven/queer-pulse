@@ -6,9 +6,10 @@ import { ADMIN_LANDING_QUICK_LINKS } from "./adminLandingQuickLinks.data";
 import styles from "./AdminLandingPage.module.css";
 
 /**
- * The "Quick links" row on `/admin/landing`: opens each signed-out landing
- * page in a new tab, rendered the way a visitor sees it, so a curator can
- * check their picks in place on the live page.
+ * The "Quick links" row on `/admin/landing`: opens each public landing page
+ * in a new tab so a curator can check their picks in place on the live page.
+ * The homepage and Studio render the way a visitor sees them (see
+ * `adminLandingQuickLinks.data.ts`).
  */
 export function AdminLandingQuickLinks() {
   const { t } = useTranslation();

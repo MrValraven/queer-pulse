@@ -7,7 +7,7 @@ import {
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useQuizshowScopeKind } from "../quizshowScope";
 import type { QuizshowLocalProblem } from "./quizshowValidation";
-import styles from "./QuizshowBuilder.module.css";
+import styles from "./QuizshowProblemList.module.css";
 
 /** Where a problem sends the host: the round and, when it names one, the question. */
 export interface QuizshowProblemTarget {

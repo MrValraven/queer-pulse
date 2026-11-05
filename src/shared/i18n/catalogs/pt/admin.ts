@@ -5165,9 +5165,13 @@ export const admin: Catalog = {
     "Cura as secções que os visitantes não autenticados veem na página inicial.",
   "landing.quickLinks.heading": "Atalhos",
   "landing.quickLinks.helper":
-    "Cada atalho abre num novo separador, tal como um visitante não autenticado vê a página.",
+    "Cada atalho abre num novo separador. A página inicial e o Studio mostram a vista de um visitante não autenticado.",
   "landing.quickLinks.homepage": "Abrir a página inicial como visitante",
   "landing.quickLinks.studio": "Abrir a página do Studio como visitante",
+  "landing.quickLinks.forBusinesses": "Abrir a página para negócios",
+  "landing.quickLinks.forCommunities": "Abrir a página para comunidades",
+  "landing.quickLinks.forPerformers": "Abrir a página para artistas",
+  "landing.quickLinks.forPractitioners": "Abrir a página para profissionais",
   "landing.quickLinks.opensInNewTab": "(abre num novo separador)",
 
   "landing.tabs.member": "Pessoas",
@@ -7236,6 +7240,46 @@ export const admin: Catalog = {
     "{count} filas precisam de alguém agora.",
   "moderationHealth.indicator.cta": "Ver estado das filas",
 
+  "moderationHealth.overview.headline.critical_one":
+    "{count} fila precisa de alguém agora",
+  "moderationHealth.overview.headline.critical_other":
+    "{count} filas precisam de alguém agora",
+  "moderationHealth.overview.headline.warning_one":
+    "{count} fila está a encher",
+  "moderationHealth.overview.headline.warning_other":
+    "{count} filas estão a encher",
+  "moderationHealth.overview.headline.ok": "Todas as filas estão em dia",
+  "moderationHealth.overview.legendAriaLabel": "Filas por nível",
+  "moderationHealth.overview.legend.critical_one":
+    "{count} precisa de alguém agora",
+  "moderationHealth.overview.legend.critical_other":
+    "{count} precisam de alguém agora",
+  "moderationHealth.overview.legend.warning_one": "{count} a encher",
+  "moderationHealth.overview.legend.warning_other": "{count} a encher",
+  "moderationHealth.overview.legend.ok_one": "{count} em dia",
+  "moderationHealth.overview.legend.ok_other": "{count} em dia",
+  "moderationHealth.overview.total.waitingNote_one": "em {count} fila",
+  "moderationHealth.overview.total.waitingNote_other": "em {count} filas",
+  "moderationHealth.overview.total.overdueNote":
+    "à espera para lá de um prazo que publicámos",
+  "moderationHealth.overview.total.unclaimedNote":
+    "nas filas com passo de atribuição",
+  "moderationHealth.overview.total.unclaimedNotApplicable": "Não se aplica",
+  "moderationHealth.overview.total.unclaimedNoClaimingNote":
+    "Nenhuma destas filas tem passo de atribuição",
+  "moderationHealth.overview.total.rota": "De serviço",
+  "moderationHealth.overview.total.rotaNote_one":
+    "pessoa que pode tratar destas filas",
+  "moderationHealth.overview.total.rotaNote_other":
+    "pessoas que podem tratar destas filas",
+  "moderationHealth.overview.refreshFailed":
+    "A última atualização falhou, por isso estes números são das {time}",
+  "moderationHealth.overview.refreshFailedUndated":
+    "A última atualização falhou, por isso estes números podem estar desatualizados",
+  "moderationHealth.overview.refreshFailedReason": "Motivo: {reason}",
+  "moderationHealth.refresh": "Atualizar",
+  "moderationHealth.row.openQueue": "Abrir fila",
+
   // A notificação para a equipa. `ok` é o aviso de recuperação, por isso fecha
   // o alerta em vez de abrir um. Nada aqui pede pressa a ninguém.
   "moderationHealth.notification.warning.text_one":
@@ -8736,8 +8780,26 @@ export const admin: Catalog = {
   "emailTemplates.send.cta": "Enviar email de boas-vindas",
   "emailTemplates.send.sending": "A enviar…",
   "emailTemplates.send.sentToast": "Email de boas-vindas enviado para {email}",
-  "emailTemplates.send.sentTo": "Enviado para {email}",
   "emailTemplates.send.sendAgainCta": "Enviar outra vez",
+  // O registo de envios por cima da escolha de idioma, unido como "{sent} · {lastOn}".
+  "emailTemplates.send.status.notSent": "Ainda não enviado",
+  "emailTemplates.send.status.sent_one": "Email de boas-vindas enviado uma vez",
+  "emailTemplates.send.status.sent_other":
+    "Email de boas-vindas enviado {count} vezes",
+  "emailTemplates.send.status.lastOn": "último envio a {date}",
+  // Perguntado antes de seguir uma segunda cópia ou mais. {language} fica a meio da frase.
+  "emailTemplates.send.confirmResend.title":
+    "Enviar o email de boas-vindas outra vez?",
+  "emailTemplates.send.confirmResend.description_one":
+    "Já o enviaste uma vez para {email}, a {date}. A pessoa vai receber outra cópia em {language}.",
+  "emailTemplates.send.confirmResend.description_other":
+    "Já o enviaste {count} vezes para {email}, a última a {date}. A pessoa vai receber outra cópia em {language}.",
+  "emailTemplates.send.confirmResend.descriptionUndated_one":
+    "Já o enviaste uma vez para {email}. A pessoa vai receber outra cópia em {language}.",
+  "emailTemplates.send.confirmResend.descriptionUndated_other":
+    "Já o enviaste {count} vezes para {email}. A pessoa vai receber outra cópia em {language}.",
+  "emailTemplates.send.languageName.en": "inglês",
+  "emailTemplates.send.languageName.pt": "português",
   "emailTemplates.send.error.join_request_not_found":
     "Este pedido de adesão já não existe, por isso não foi enviado nenhum email. Atualiza a página e procura outra vez.",
   "emailTemplates.send.error.invite_not_usable":

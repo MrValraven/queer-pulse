@@ -137,10 +137,12 @@ export function ListingTeamMemberRow({
         onLayoutAnimationComplete={() => setIsGliding(false)}
       >
         <ListingTeamRowIdentity row={row} isRoleShown />
+        <div className={styles.moveGroup}>
+          {moveButton("up")}
+          {moveButton("down")}
+        </div>
         <Collapse isOpen={!isEditing} className={styles.actionsPanel}>
           <div className={styles.actions}>
-            {moveButton("up")}
-            {moveButton("down")}
             <Button
               ref={restoreEditFocus}
               size="sm"

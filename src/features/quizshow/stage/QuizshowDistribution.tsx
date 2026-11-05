@@ -23,6 +23,7 @@ import { orderRevealEntries } from "./quizshowRevealOrder";
 import {
   optionLetter,
   pickQuizshowText,
+  quizshowAnswerNumberFormatter,
   type QuizshowStageSize,
 } from "./quizshowText";
 
@@ -91,6 +92,7 @@ function BarRow({
           colorKey={shape.colorKey}
           size={shapeSize}
           label={null}
+          isGlowing
         />
         {isCorrect && (
           <span className={styles.barCheck}>
@@ -175,7 +177,9 @@ function VoteEntryRow({
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
   return (
-    <div className={styles.voteEntry}>
+    <div
+      className={`${styles.voteEntry} ${entry.isTruth ? styles.voteEntryTruth : ""}`}
+    >
       <span className={styles.voteText}>{entry.text}</span>
       <span className={styles.voteMeta}>
         {entry.isTruth && (
@@ -272,7 +276,7 @@ function NoteLines({ lines }: { lines: string[] }) {
   return (
     <ul className={styles.distribution}>
       {lines.map((line) => (
-        <li key={line} className={styles.distributionNote}>
+        <li key={line} className={styles.noteLine}>
           {line}
         </li>
       ))}
@@ -375,7 +379,9 @@ export function QuizshowDistribution({
     if (distribution.closestValue !== null) {
       lines.push(
         t("quizshow:stage.closestValue", {
-          value: format.number(distribution.closestValue),
+          value: quizshowAnswerNumberFormatter(format.number)(
+            distribution.closestValue,
+          ),
         }),
       );
     }

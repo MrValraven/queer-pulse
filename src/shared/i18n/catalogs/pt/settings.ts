@@ -21,7 +21,6 @@ export const settings: Catalog = {
   "nav.item.visibility": "Visibilidade",
   "nav.item.profile": "Perfil",
   "nav.item.account": "Conta",
-  "nav.item.profileTheme": "Tema do perfil",
   "nav.item.accessibility": "Acessibilidade",
   "nav.item.interests": "Interesses",
   "nav.item.blockedUsers": "Bloqueados e silenciados",
@@ -68,11 +67,6 @@ export const settings: Catalog = {
   "controls.deleteModal.continue": "Continuar para eliminar",
 
   // ── SuggestEditModal (guia de terminologia) ─────────
-
-  // ── SettingsPersonalisation.tsx — ProfileThemePane ───────────────────────
-  "personalisation.theme.title": "Tema do <em>perfil.</em>",
-  "personalisation.theme.sub":
-    "Personaliza o aspeto do teu perfil e do cartão no diretório. Escolhe uma bandeira, um estilo de capa e um padrão, e o que aparece junto ao teu nome.",
 
   // ── SettingsPersonalisation.tsx — AccessibilityPane ──────────────────────
   "personalisation.accessibility.title":
@@ -1278,35 +1272,6 @@ export const settings: Catalog = {
   "destructiveFlow.delete.resultTitle": "Está <em>agendado.</em>",
   "destructiveFlow.delete.resultBody":
     "A tua conta está agendada para eliminação. Tens <strong>30 dias</strong> para mudar de ideias. Basta voltares a iniciar sessão e paramos a eliminação. Depois disso, os teus dados são permanentemente apagados. Cuida de ti.",
-
-  // ── ThemeStudio.tsx / profileTheme.data.ts — seletor de tema do perfil.
-  // Os NOMES das bandeiras (FLAG_SWATCHES.label) ficam deliberadamente em
-  // inglês — vários são neologismos contestados em pt-PT ("aromantic") e
-  // ficam sinalizados para revisão por falante nativo em vez de adivinhados.
-  "themeStudio.sectionLabel": "Tema do perfil",
-  "themeStudio.sub":
-    "Mostrado no teu perfil público e no diretório de pessoas.",
-  "themeStudio.prideThemesLabel": "Temas de orgulho",
-  "themeStudio.coverStyleLabel": "Estilo de capa",
-  "themeStudio.coverPatternLabel": "Padrão de capa",
-  "themeStudio.badgeDisplayLabel": "Exibição de distintivo",
-  "themeStudio.showBadgesToggle": "Mostrar distintivos no perfil",
-  "themeStudio.showLevelToggle": "Mostrar nível no perfil",
-  "themeStudio.previewLabel": "Pré-visualização",
-  "themeStudio.previewHintTop":
-    "Atualiza-se em direto à medida que escolhes um tema. Guardado neste navegador como pré-visualização. Ainda não aparece no teu perfil público.",
-  "themeStudio.profileCardLabel": "Cartão de perfil",
-  "themeStudio.directoryCardLabel": "Cartão no diretório",
-  "themeStudio.directoryHint":
-    "É assim que o teu perfil aparece nos resultados de pesquisa e no diretório de pessoas.",
-  "themeStudio.memberSince": "Lisboa · Aqui desde {year}",
-  // Ver a nota no catálogo EN.
-  "themeStudio.levelPreview": "Nív.{level} · {name}",
-  "themeStudio.cover.stripe": "Risca arrojada",
-  "themeStudio.pattern.none": "Liso",
-  "themeStudio.pattern.stripe": "Riscas diagonais",
-  "themeStudio.pattern.dots": "Grelha de pontos",
-  "themeStudio.pattern.grid": "Grelha",
 
   // ── AccountDataSheet.tsx — o painel "Os teus dados" do perfil, que agora
   // encaminha para a página que trata de cada ação em vez de construir uma

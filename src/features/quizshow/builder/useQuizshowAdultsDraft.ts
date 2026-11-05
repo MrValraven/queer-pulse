@@ -51,5 +51,10 @@ export function useQuizshowAdultsDraft(options: {
       const savedFlag = (response ?? data).isAdultsEvent;
       setAdultsState({ draft: savedFlag, baseline: savedFlag });
     },
+    /** A new saved flag that leaves the drafted switch alone: a save answered while the host flipped it again. */
+    rebaseTo: (response: QuizshowQuizResponse | null) => {
+      const savedFlag = (response ?? data).isAdultsEvent;
+      setAdultsState((current) => ({ ...current, baseline: savedFlag }));
+    },
   };
 }

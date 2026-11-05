@@ -1,12 +1,15 @@
-/* Simple segmented switch for the merged /events page: "My events" ·
-   "Discover". No FLIP indicator (see EventsHubTabs for that pattern) — just
-   a plain active-state fill, since there are only two tabs. */
+/* Simple segmented switch for the merged /communities page: "My communities"
+   and "Discover". No FLIP indicator (see EventsHubTabs for that pattern): a
+   plain active-state fill is enough for two tabs. The track tints in the
+   hairline channel, which is plum in light mode (so the light track is the
+   plum 6% it always was) and cream in dark mode, so the track stays visible
+   on the dark page. */
 .list {
   display: inline-flex;
   gap: var(--gap-xs);
   padding: 4px;
   border-radius: var(--radius-pill);
-  background: rgba(var(--plum-rgb), 0.06);
+  background: rgba(var(--line-rgb), 0.06);
 }
 
 .tab {
@@ -57,6 +60,17 @@
   color: var(--accent-ink);
   box-shadow: var(--shadow-e1);
 }
+/* Dark --paper sits about 1.1:1 on the dark page, so the selected pill would
+   be carried by its coral text alone. In dark mode the pill lifts to a cream
+   tint over the track and gets a cream hairline edge, so its shape reads as
+   well as its colour. */
+:global([data-theme="dark"]) .list {
+  background: rgba(var(--line-rgb), 0.08);
+}
+:global([data-theme="dark"]) .tabOn {
+  background: rgba(var(--line-rgb), 0.12);
+  box-shadow: var(--ring-cream-hairline);
+}
 @media (hover: hover) and (pointer: fine) {
   .tabOn:hover {
     color: var(--accent-ink);
@@ -70,16 +84,18 @@
 }
 
 /* On a phone the switch takes the toolbar's first row on its own and the two
-   tabs split it evenly, so "My communities" keeps its label instead of the
-   pair overflowing a 375px screen. */
-@media (--mobile) {
+   tabs share it, each growing from its own label width, so the longer label
+   ("Minhas comunidades 2" in Portuguese) gets the room it needs and stays on
+   one line. Tablets keep the inline pill beside "Start a community". */
+@media (--sm) {
   .list {
     display: flex;
     width: 100%;
   }
   .tab {
-    flex: 1 1 0;
+    flex: 1 1 auto;
     min-width: 0;
     padding-inline: 12px;
+    white-space: nowrap;
   }
 }

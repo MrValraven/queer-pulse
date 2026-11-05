@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient } from "@tanstack/react-query";
 import { StrictMode } from "react";
@@ -213,13 +213,39 @@ describe("QuizshowPlayPage", () => {
     const user = userEvent.setup();
     renderPlay("/play");
 
-    await user.type(screen.getByLabelText("Game code"), "ABC");
+    // Six characters, but 0 is never in a join code.
+    await user.type(screen.getByLabelText("Game code"), "QZ7KP0");
     await user.click(screen.getByRole("button", { name: "Join game" }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "We couldn't find a game with that code",
     );
     expect(screen.getByLabelText("Game code")).toBeInTheDocument();
+  });
+
+  it("asks for all six characters before it looks for a game", async () => {
+    const user = userEvent.setup();
+    renderPlay("/play");
+
+    await user.type(screen.getByLabelText("Game code"), "ABC");
+    await user.click(screen.getByRole("button", { name: "Join game" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Type all six letters and numbers",
+    );
+  });
+
+  it("fills every cell from a pasted code", async () => {
+    const user = userEvent.setup();
+    renderPlay("/play");
+
+    await user.click(screen.getByLabelText("Game code"));
+    await user.paste("qz7-kp4");
+
+    const cells = within(screen.getByRole("group", { name: "Game code" }))
+      .getAllByRole("textbox")
+      .map((cell) => (cell as HTMLInputElement).value);
+    expect(cells).toEqual(["Q", "Z", "7", "K", "P", "4"]);
   });
 
   it("goes straight to the name step from /play/:code", async () => {

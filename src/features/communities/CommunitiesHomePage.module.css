@@ -1,16 +1,12 @@
-/* The tab's heading lives in CommunitiesHubHeader, which already carries its
-   own bottom breathing room — this only adds the gap between that header and
-   the filter bar, so the first cards sit near the top of the viewport. */
-.page {
-  background: var(--cream);
-  min-height: 70vh;
-  padding: var(--gap-sm) 0 var(--section-y);
-}
+/* The "My communities" tab body. Its frame, header and filter layout come
+   from the shared filter page (`CommunitiesFilterLayout`); these are the
+   tab's own pieces: the digest band at the top of the results column, then
+   the to-dos, pulse and rail block below the layout. */
 
-/* A plum band, not a white card: the week's numbers are the one place on this
-   tab that isn't a card of its own, and the dark ground keeps them from
-   reading as a seventh community. Fixed cream/plum here rather than the
-   themed --paper/--ink pair, so the band stays plum in dark mode too. */
+/* A plum band: the week's numbers are the one place on this tab that isn't a
+   card of its own, and the dark ground keeps them from reading as a seventh
+   community. Fixed cream/plum here, so the band stays plum in dark mode too
+   (the themed --paper/--ink pair would flip). */
 .digest {
   position: relative;
   overflow: hidden;
@@ -25,7 +21,7 @@
   padding: 26px 32px;
   margin-bottom: 26px;
 }
-/* Soft coral bloom in the far corner — decorative, behind the content. */
+/* Soft coral bloom in the far corner: decorative, behind the content. */
 .digest::after {
   content: "";
   position: absolute;
@@ -90,18 +86,78 @@
   }
 }
 
+/* The band's own width decides its layout (see CommunitiesHomeDigest). The
+   frame carries the band's bottom margin so the container box and the band
+   end together. */
+.digestFrame {
+  container: hub-digest / inline-size;
+  margin-bottom: 26px;
+}
+.digestFrame > .digest {
+  margin-bottom: 0;
+}
+/* Medium: the label and the note share the top row, the counts take a full
+   row of their own under them, so nothing floats in a half-empty line. */
+@container hub-digest (max-width: 860px) {
+  .digest {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 22px 28px;
+  }
+  .digestLbl {
+    min-inline-size: 0;
+  }
+  .digestNote {
+    margin: 0;
+    text-align: end;
+  }
+  .digestTiles {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: repeat(4, max-content);
+    gap: 26px 40px;
+  }
+  .digestTilesThree {
+    grid-template-columns: repeat(3, max-content);
+  }
+}
+/* Narrow: label, then the counts as an even two-up grid (three across when
+   there are three, so no count sits alone on a row), then the note. */
+@container hub-digest (max-width: 520px) {
+  .digest {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  .digestNote {
+    grid-row: 3;
+    text-align: start;
+    max-inline-size: none;
+  }
+  .digestTiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 24px;
+  }
+  .digestTilesThree {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 .layout {
   display: grid;
   grid-template-columns: 1fr 300px;
   gap: 44px;
   align-items: flex-start;
 }
-/* No rail to show — both of its cards are demo-derived — so the feed takes
-   the full measure instead of leaving an empty 300px gutter. */
+/* No rail to show (both of its cards are demo-derived), so the feed takes
+   the full measure and the 300px gutter closes. */
 .layoutFull {
   grid-template-columns: 1fr;
 }
-/* Separates the cross-community feed from the card grid above it. */
+/* Separates the cross-community feed from the filter layout above it. The
+   Collapse that folds this block is a flow-root, so the margin stays inside
+   it and its height animates whole. */
 .belowGrid {
   margin-top: 54px;
 }
@@ -143,11 +199,10 @@
   gap: 14px;
   padding: 11px 0;
 }
-/* The rule between rows, written as an adjacent-sibling selector rather than
-   `:first-of-type`. Rows are `div`s now (each count inside one is its own
-   link, so the row itself cannot be), and the label above them is a `div`
-   too — `:first-of-type` would match the label and leave the first row with a
-   rule above it. */
+/* The rule between rows, written as an adjacent-sibling selector. Rows are
+   `div`s now (each count inside one is its own link, so the row itself cannot
+   be), and the label above them is a `div` too, so `:first-of-type` would
+   match the label and leave the first row with a rule above it. */
 .todoRow + .todoRow {
   border-top: 1px solid rgba(var(--cream-rgb), 0.12);
 }
@@ -183,9 +238,9 @@
     background-position: 200% 0;
   }
 }
-/* `LoadErrorState` renders an `EmptyState`, whose title and body are `--ink`:
-   readable on paper, not on plum. It gets a paper surface of its own inside
-   the block rather than the shared component growing a variant. */
+/* `LoadErrorState` renders an `EmptyState`, whose title and body are `--ink`,
+   which reads on paper only. It gets a paper surface of its own inside the
+   block, so the shared component keeps a single variant. */
 .todoError {
   background: var(--paper);
   border-radius: var(--radius-14);
@@ -382,7 +437,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* A mark with transparency lands on something solid, not the jade tint. */
+  /* A mark with transparency lands on a solid ground. */
   background: var(--paper);
 }
 /* A suggestion row carries a description too, so its tile pins to the top. */
@@ -399,8 +454,8 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-/* The live "upcoming" row: a gathering count rather than a date block, so it
-   takes the icon tile the suggestion rows use, in coral. */
+/* The live "upcoming" row: an event count with no date block, so it takes
+   the icon tile the suggestion rows use, in coral. */
 .sbIcUpcoming {
   background: rgba(var(--accent-rgb), 0.12);
   color: var(--accent-ink);

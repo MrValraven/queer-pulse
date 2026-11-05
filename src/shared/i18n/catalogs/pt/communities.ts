@@ -29,6 +29,7 @@ export const communities: Catalog = {
   "seo.post.title": "Uma publicação em {name} · QueerPulse",
 
   // ── Merged page shell (CommunitiesHubPage + header + top tabs) ────────────
+  "hubShell.eyebrow": "Comunidades",
   "hubShell.title": "Comunidades e",
   "hubShell.titleEm": "coletivos",
   "hubShell.subtitle":
@@ -80,6 +81,9 @@ export const communities: Catalog = {
   "discover.sort.chip": "Ordenado por {label}",
   "discover.resline.count_one": "{count} comunidade",
   "discover.resline.count_other": "{count} comunidades",
+  "discover.filtersSheetLabel": "Filtrar comunidades",
+  "discover.showResultsCta_one": "Ver {count} comunidade",
+  "discover.showResultsCta_other": "Ver {count} comunidades",
   "discover.outro.title": "Não encontraste o <em>espaço</em> certo?",
   "discover.outro.body":
     "As comunidades que existem aqui existem porque alguém decidiu começar uma. Se não encontras o que procuras, se calhar é hora de a criares tu.",
@@ -150,6 +154,7 @@ export const communities: Catalog = {
   "hub.sidebar.upcomingCount_other": "{count} eventos a caminho",
   "hub.sidebar.upcoming": "A caminho nas tuas comunidades",
   "hub.sidebar.suggestions": "Comunidades que podes gostar",
+  "hub.sidebar.ariaLabel": "Próximos eventos e sugestões",
   "hub.pulseCard.announcement": "Anúncio",
   "hub.pulseCard.open": "Abrir",
 

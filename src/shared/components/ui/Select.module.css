@@ -43,17 +43,13 @@
     box-shadow 0.16s var(--ease),
     background 0.16s var(--ease);
 }
+/* The house focus ring in both themes: the old 8% plum halo was too faint to
+   find in light mode. */
 .trigger:focus-visible {
-  outline: none;
-  border-color: var(--line-strong);
-  background: var(--paper);
-  box-shadow: var(--ring-plum-soft);
-}
-/* The plum ring vanishes on the dark surfaces, so dark mode takes the house
-   focus ring instead. */
-:global([data-theme="dark"]) .trigger:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
+  border-color: var(--line-strong);
+  background: var(--paper);
   box-shadow: var(--ring-cream);
 }
 .trigger[aria-expanded="true"] {
@@ -175,6 +171,15 @@
   /* The trigger above the panel (48px plus the 6px gap): when the panel and
      gutter barely fit, `block: "nearest"` keeps the trigger in view too. */
   scroll-margin-block-start: 56px;
+}
+/* Set by SelectPanel when the `min-width` floor would push the panel past
+   the viewport's right edge (a compact trigger at the end of a toolbar): the
+   panel then hangs from the trigger's right edge and grows leftward, and its
+   entrance animation scales from that same corner. */
+.panel[data-align="end"] {
+  left: auto;
+  right: 0;
+  transform-origin: top right;
 }
 /* A dialog covers the tab bar, so inside one only the home indicator needs
    clearing. Reserving the bar's height there over-scrolls a bottom sheet and

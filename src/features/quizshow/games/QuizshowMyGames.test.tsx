@@ -142,7 +142,7 @@ describe("QuizshowMyGames", () => {
       `/play/games/${QUIZSHOW_DEMO_GAME_IDS.afterDark}`,
     );
     expect(
-      within(afterDarkCard).getByText("Live now, code QG4MW8"),
+      within(afterDarkCard).getByText("Lobby open, code QG4MW8"),
     ).toBeTruthy();
     expect(within(afterDarkCard).getByText("18+")).toBeTruthy();
     expect(within(afterDarkCard).queryByText("Results")).toBeNull();

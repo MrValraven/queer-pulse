@@ -1,15 +1,17 @@
 /* "The personas you follow" (PRD-208), the persona hub's second tab.
-   A list of rows rather than the browse tab's card grid: this is a personal
-   register the member scans and prunes, so the useful shape is one line per
-   persona with the unfollow control always in the same place. */
+   One row per persona: this is a personal register the member scans and
+   prunes, so each line keeps the unfollow control in the same place. The
+   rows tile the frame's full width, two across at 1440 so a line stays short
+   enough to read, one per line once the frame is narrower than two 520px
+   rows. */
 
 .list {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 520px), 1fr));
+  gap: 10px var(--gap-grid);
 }
 
 .row {
@@ -67,8 +69,8 @@
   overflow-wrap: anywhere;
 }
 
-/* A persona with no resolvable public address. Says so plainly instead of
-   handing out a link that goes nowhere. */
+/* A persona with no resolvable public address. Says so plainly, and the row
+   carries no link. */
 .noAddress {
   font-size: var(--text-12);
   color: var(--ink-40);
@@ -120,24 +122,13 @@
 
 /* ── Pager ───────────────────────────────────────────────────────────────── */
 
+/* Previous and Next under the grid, at its end edge. The count line sits at
+   the top of the panel, as on the Everyone tab. */
 .pager {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding-block-start: 6px;
-}
-
-.pagerCount {
-  font-size: var(--text-13);
-  color: var(--ink-60);
-  font-variant-numeric: tabular-nums;
-}
-
-.pagerButtons {
-  display: inline-flex;
+  justify-content: flex-end;
   gap: 8px;
+  padding-block-start: var(--gap-grid);
 }
 
 /* ── Loading ─────────────────────────────────────────────────────────────── */

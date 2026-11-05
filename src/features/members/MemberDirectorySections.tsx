@@ -1,17 +1,18 @@
-import { useId } from "react";
-import { AnimatePresence, m } from "motion/react";
-import { FiSearch, FiSliders, FiUsers, FiX } from "react-icons/fi";
-import { useMotionPrefs } from "../../app/providers/motionPrefs";
+import { FiSearch, FiUsers } from "react-icons/fi";
 import {
-  Button,
   EmptyState,
-  FadeIn,
   LoadMoreFooter,
-  ModalSheet,
   SearchInput,
-  Select,
-  SkeletonLine,
 } from "../../shared/components/ui";
+import {
+  AppliedChipsRow,
+  FilterPageHeader,
+  FilterResultsTop,
+  FilterSortControl,
+  FiltersSheet,
+  FiltersToggleButton,
+  filterPageClassNames,
+} from "../../shared/components/filterPage";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -33,67 +34,7 @@ import {
   MemberResultsGrid,
   MemberResultsSkeletonGrid,
 } from "./MemberResultsGrid";
-import { SHUFFLE_SPRING } from "./shuffleMotion";
 import styles from "./MemberDirectoryFilterPage.module.css";
-
-/** Placeholder for the page header — mirrors the eyebrow / h1 / lead rhythm so
- *  the real header swaps in with no layout shift. */
-/* The slot opens its width (and swallows the button's 8px gap) while the
-   badge inside scales in, so the button grows smoothly instead of jumping
-   wider when the first filter lands. Children inherit the variant labels,
-   so the exit plays on both before AnimatePresence unmounts them. */
-const badgeSlotVariants = {
-  hidden: { width: 0, marginLeft: -8 },
-  shown: { width: "auto", marginLeft: 0 },
-};
-const badgeVariants = {
-  hidden: { opacity: 0, scale: 0.4 },
-  shown: { opacity: 1, scale: 1 },
-};
-
-function FiltersCountBadge({
-  count,
-  label,
-  reducedMotion,
-}: {
-  count: number;
-  label: string;
-  reducedMotion: boolean;
-}) {
-  return (
-    <AnimatePresence initial={false}>
-      {count > 0 && (
-        <m.span
-          key="count"
-          className={styles.filtersBtnCountSlot}
-          variants={badgeSlotVariants}
-          initial="hidden"
-          animate="shown"
-          exit="hidden"
-          transition={{
-            duration: reducedMotion ? 0 : 0.26,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-        >
-          <m.span className={styles.filtersBtnCount} variants={badgeVariants}>
-            <RollingNumber value={label} numericValue={count} />
-          </m.span>
-        </m.span>
-      )}
-    </AnimatePresence>
-  );
-}
-
-export function MemberHeaderSkeleton() {
-  return (
-    <div className={styles.head} aria-busy="true" aria-hidden="true">
-      <SkeletonLine width={200} height={11} style={{ marginBottom: 14 }} />
-      <SkeletonLine width="70%" height={48} style={{ marginBottom: 16 }} />
-      <SkeletonLine width="100%" height={13} style={{ marginTop: 4 }} />
-      <SkeletonLine width="45%" height={13} style={{ marginTop: 8 }} />
-    </div>
-  );
-}
 
 /** The figure the headline rolls up from when it first appears. */
 const HEADLINE_ROLL_FROM = 1;
@@ -110,42 +51,45 @@ export function MemberDirectoryHeader({
   const fmt = useFormat();
   const rollFrom = Math.min(HEADLINE_ROLL_FROM, totalMembers);
   return (
-    <FadeIn as="header" className={styles.head}>
-      <div className={styles.eyebrow}>{t("members:directory.eyebrow")}</div>
-      <h1 className={styles.h1}>
-        {t("members:directory.findPrefix")}
-        <em>
-          <span
-            className={styles.tally}
-            style={{ minWidth: `${fmt.number(totalMembers).length}ch` }}
-          >
-            <RollingNumber
-              value={fmt.number(totalMembers)}
-              numericValue={totalMembers}
-              revealFrom={{
-                value: fmt.number(rollFrom),
-                numericValue: rollFrom,
-              }}
-            />
-          </span>{" "}
-          {t("members:directory.memberCountSuffix", { count: totalMembers })}
-        </em>{" "}
-        {t("members:directory.findSuffix")}
-      </h1>
-      <p className={styles.lead}>
+    <FilterPageHeader
+      eyebrow={t("members:directory.eyebrow")}
+      title={
+        <>
+          {t("members:directory.findPrefix")}
+          <em>
+            <span
+              className={styles.tally}
+              style={{ minWidth: `${fmt.number(totalMembers).length}ch` }}
+            >
+              <RollingNumber
+                value={fmt.number(totalMembers)}
+                numericValue={totalMembers}
+                revealFrom={{
+                  value: fmt.number(rollFrom),
+                  numericValue: rollFrom,
+                }}
+              />
+            </span>{" "}
+            {t("members:directory.memberCountSuffix", { count: totalMembers })}
+          </em>{" "}
+          {t("members:directory.findSuffix")}
+        </>
+      }
+      lead={
         <Translation
           i18nKey="members:directory.lead"
           components={{ b: <b /> }}
         />
-      </p>
-    </FadeIn>
+      }
+    />
   );
 }
 
 export interface MemberResultsColumnProps {
   /** The name-search box's value and setter. The term itself is already
    *  folded into `hasActiveFilters`, so a search that matches nobody lands on
-   *  the "nothing matched, clear it" state rather than "no members yet". */
+   *  the "nothing matched, clear it" state, which differs from "no members
+   *  yet". */
   search: MemberDirectorySearch;
   filters: FilterState;
   sort: SortKey;
@@ -195,123 +139,63 @@ export function MemberResultsColumn({
 }: MemberResultsColumnProps) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const sortLabelId = useId();
-  const { reducedMotion } = useMotionPrefs();
 
   return (
     <div>
-      <div className={styles.searchRow}>
-        <SearchInput
-          className={styles.directorySearch}
-          value={search.input}
-          onChange={search.onChange}
-          placeholder={t("members:directory.searchPlaceholder")}
-          ariaLabel={t("members:directory.searchLabel")}
-        />
-      </div>
-
-      <div className={styles.topRow}>
-        {/* The count answers the search as it is typed, so it is announced
-            rather than only redrawn. Atomic, because the sentence only means
-            anything whole. */}
-        <div className={styles.count} aria-live="polite" aria-atomic="true">
-          {t("members:directory.showingPrefix")}{" "}
-          <b>
-            <em>
-              <RollingNumber
-                value={fmt.number(filteredCount)}
-                numericValue={filteredCount}
-              />
-            </em>
-          </b>{" "}
-          {t("members:directory.showingOf")} {fmt.number(totalMembers)}{" "}
-          {t("members:directory.memberCountLabel", { count: totalMembers })}
-        </div>
-        <div className={styles.topControls}>
-          <button
-            type="button"
-            className={styles.filtersBtn}
-            aria-expanded={isMobile ? undefined : panelOpen}
-            onClick={isMobile ? onOpenFilters : onTogglePanel}
-          >
-            <FiSliders aria-hidden />
-            {!isMobile && panelOpen
-              ? t("members:directory.hideFiltersCta")
-              : t("members:directory.filtersCta")}
-            <FiltersCountBadge
-              count={chips.length}
-              label={fmt.number(chips.length)}
-              reducedMotion={reducedMotion}
-            />
-          </button>
-          <div className={styles.sort}>
-            <span id={sortLabelId} className={styles.sortLabel}>
-              {t("members:directory.sortLabel")}
-            </span>
-            <Select
-              size="sm"
-              labelledBy={sortLabelId}
-              options={SORTS.map((sortKey) => ({
-                value: sortKey,
-                label: t(SORT_LABEL_KEY[sortKey]),
-              }))}
-              value={sort}
-              onChange={(value) => onSort(value as SortKey)}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Always mounted so a chip removed one at a time can play its exit
-          animation. The wrapper springs its real height (bottom spacing
-          included) to 0 and back on the grid's shared SHUFFLE_SPRING, so
-          the results below flow with it; it clips only while moving, so chip
-          focus rings show. `initial={false}` keeps chips already applied on
-          arrival from animating in; only chips added later do. */}
-      <m.div
-        className={styles.appliedRowClip}
-        initial={false}
-        animate={
-          chips.length > 0
-            ? {
-                height: "auto",
-                overflow: "hidden",
-                transitionEnd: { overflow: "visible" },
-              }
-            : { height: 0, overflow: "hidden" }
+      <FilterResultsTop
+        search={
+          <SearchInput
+            className={filterPageClassNames.search}
+            value={search.input}
+            onChange={search.onChange}
+            placeholder={t("members:directory.searchPlaceholder")}
+            ariaLabel={t("members:directory.searchLabel")}
+          />
         }
-        transition={reducedMotion ? { duration: 0 } : SHUFFLE_SPRING}
-      >
-        <div className={styles.appliedRow}>
-          <AnimatePresence initial={false}>
-            {chips.map((chip) => (
-              <m.span
-                key={`${chip.group}:${chip.value}`}
-                className={styles.applied}
-                layout={!reducedMotion}
-                initial={{ opacity: 0, scale: 0.86 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.86 }}
-                transition={{
-                  duration: reducedMotion ? 0 : 0.22,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-              >
-                {chip.label}
-                <button
-                  type="button"
-                  aria-label={t("members:directory.removeChipLabel", {
-                    label: chip.label,
-                  })}
-                  onClick={() => onApplyFilters(removeChip(filters, chip))}
-                >
-                  <FiX aria-hidden />
-                </button>
-              </m.span>
-            ))}
-          </AnimatePresence>
-        </div>
-      </m.div>
+        count={
+          <>
+            {t("members:directory.showingPrefix")}{" "}
+            <b>
+              <em>
+                <RollingNumber
+                  value={fmt.number(filteredCount)}
+                  numericValue={filteredCount}
+                />
+              </em>
+            </b>{" "}
+            {t("members:directory.showingOf")} {fmt.number(totalMembers)}{" "}
+            {t("members:directory.memberCountLabel", { count: totalMembers })}
+          </>
+        }
+        filtersButton={
+          <FiltersToggleButton
+            isMobile={isMobile}
+            isPanelOpen={panelOpen}
+            onTogglePanel={onTogglePanel}
+            onOpenSheet={onOpenFilters}
+            activeCount={chips.length}
+          />
+        }
+        controls={
+          <FilterSortControl
+            label={t("members:directory.sortLabel")}
+            value={sort}
+            options={SORTS.map((sortKey) => ({
+              value: sortKey,
+              label: t(SORT_LABEL_KEY[sortKey]),
+            }))}
+            onChange={onSort}
+          />
+        }
+      />
+
+      <AppliedChipsRow
+        chips={chips.map((chip) => ({
+          key: `${chip.group}:${chip.value}`,
+          label: chip.label,
+          onRemove: () => onApplyFilters(removeChip(filters, chip)),
+        }))}
+      />
 
       {loading ? (
         <MemberResultsSkeletonGrid />
@@ -381,13 +265,24 @@ export function MemberFiltersSheet({
   const { t } = useTranslation();
   const fmt = useFormat();
   return (
-    <ModalSheet
+    <FiltersSheet
+      title={t("members:directory.filtersSheetLabel")}
+      showResultsLabel={
+        <Translation
+          i18nKey="members:directory.showResultsCta"
+          values={{ count: filteredCount }}
+          slots={{
+            count: (
+              <RollingNumber
+                value={fmt.number(filteredCount)}
+                numericValue={filteredCount}
+              />
+            ),
+          }}
+        />
+      }
       onClose={onClose}
-      ariaLabel={t("members:directory.filtersSheetLabel")}
     >
-      <h2 className={styles.sheetTitle}>
-        {t("members:directory.filtersSheetLabel")}
-      </h2>
       <FiltersSidebar
         inSheet
         filters={filters}
@@ -400,25 +295,6 @@ export function MemberFiltersSheet({
         onChange={onApplyFilters}
         onClearAll={onClearAll}
       />
-      <div className={styles.sheetFoot}>
-        <Button type="button" variant="primary" onClick={onClose}>
-          {/* One flex item, so the Button's gap never splits the sentence. */}
-          <span>
-            <Translation
-              i18nKey="members:directory.showResultsCta"
-              values={{ count: filteredCount }}
-              slots={{
-                count: (
-                  <RollingNumber
-                    value={fmt.number(filteredCount)}
-                    numericValue={filteredCount}
-                  />
-                ),
-              }}
-            />
-          </span>
-        </Button>
-      </div>
-    </ModalSheet>
+    </FiltersSheet>
   );
 }

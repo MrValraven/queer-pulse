@@ -259,54 +259,42 @@ export function matchesListingFacts(
 }
 
 /**
- * Whether pressing the chip can only narrow what is loaded. A chip that is
- * on undoes itself; another language joins an OR; another way in replaces
- * the chosen one. Those can add places the server has not sent, so their
- * count over the loaded set says nothing (Review Focus 3).
+ * The rule every filter option on the directory follows: a chip whose count
+ * is a known 0 goes unpickable, unless it is on, so it can be undone. An
+ * unknown count (still loading, failed, or over a partial set) keeps the
+ * chip pickable.
  */
-export function isNarrowingChange(
-  filters: DirectoryListingFactFilters,
-  change: ListingFactFilterChange,
-): boolean {
-  switch (change.kind) {
-    case "attribute":
-      return !filters.attributes.includes(change.slug);
-    case "payment":
-      return !filters.payments.includes(change.method);
-    case "practice":
-      return !filters.practices.includes(change.practice);
-    case "entryMode":
-      return filters.entryMode === null;
-    case "language":
-      return filters.languages.length === 0;
-  }
-}
-
-/** The Access pattern: a narrowing chip with nothing left goes unpickable,
- *  and only once every page has loaded. */
 export function isListingFactChipDisabled({
   filters,
   change,
   count,
-  isLoadedSetComplete,
 }: {
   filters: DirectoryListingFactFilters;
   change: ListingFactFilterChange;
-  count: number;
-  isLoadedSetComplete: boolean;
+  /** Undefined when the count is not known. */
+  count: number | undefined;
 }): boolean {
-  return (
-    isLoadedSetComplete && isNarrowingChange(filters, change) && count === 0
-  );
+  return count === 0 && !isListingFactChipOn(filters, change);
 }
 
+/** How many places each fact chip would show. A missing entry is a count
+ *  that is not known, which draws no number (never a 0). */
 export interface ListingFactCounts {
-  entryModes: Record<ListingEntryMode, number>;
-  payments: Record<ListingPaymentMethod, number>;
-  languages: Record<ListingLanguageCode, number>;
-  practices: Record<ListingInclusionPractice, number>;
-  attributes: Record<string, number>;
+  entryModes: Partial<Record<ListingEntryMode, number>>;
+  payments: Partial<Record<ListingPaymentMethod, number>>;
+  languages: Partial<Record<ListingLanguageCode, number>>;
+  practices: Partial<Record<ListingInclusionPractice, number>>;
+  attributes: Partial<Record<string, number>>;
 }
+
+/** Every fact chip's count unknown. */
+export const UNKNOWN_LISTING_FACT_COUNTS: ListingFactCounts = {
+  entryModes: {},
+  payments: {},
+  languages: {},
+  practices: {},
+  attributes: {},
+};
 
 function countEach<Value extends string>(
   values: readonly Value[],
@@ -317,14 +305,44 @@ function countEach<Value extends string>(
   ) as Record<Value, number>;
 }
 
-/** How many loaded places each chip would leave, every other filter kept. */
+/** Whether the chip for this change is pressed right now. */
+export function isListingFactChipOn(
+  filters: DirectoryListingFactFilters,
+  change: ListingFactFilterChange,
+): boolean {
+  switch (change.kind) {
+    case "attribute":
+      return filters.attributes.includes(change.slug);
+    case "payment":
+      return filters.payments.includes(change.method);
+    case "practice":
+      return filters.practices.includes(change.practice);
+    case "entryMode":
+      return filters.entryMode === change.mode;
+    case "language":
+      return filters.languages.includes(change.code);
+  }
+}
+
+/**
+ * How many loaded places each chip would show with it on, every other filter
+ * kept. A chip that is off counts the press it stands for; a chip that is on
+ * counts what is on screen now, since pressing it would undo it. The
+ * languages are an OR, like the place types, so each one counts the places
+ * speaking it, the same number whether it is on or off, and a way in counts
+ * the places with that way in, in place of the chosen one. These are the
+ * server's `facets` semantics, so demo and live count alike.
+ */
 export function countListingFactChips(
   countWith: (filters: DirectoryListingFactFilters) => number,
   filters: DirectoryListingFactFilters,
   attributeSlugs: readonly string[],
 ): ListingFactCounts {
+  const currentCount = countWith(filters);
   const after = (change: ListingFactFilterChange) =>
-    countWith(withListingFactChange(filters, change));
+    isListingFactChipOn(filters, change)
+      ? currentCount
+      : countWith(withListingFactChange(filters, change));
   return {
     entryModes: countEach(LISTING_ENTRY_MODES, (mode) =>
       after({ kind: "entryMode", mode }),
@@ -333,7 +351,7 @@ export function countListingFactChips(
       after({ kind: "payment", method }),
     ),
     languages: countEach(LISTING_LANGUAGE_CODES, (code) =>
-      after({ kind: "language", code }),
+      countWith({ ...filters, languages: [code] }),
     ),
     practices: countEach(LISTING_INCLUSION_PRACTICES, (practice) =>
       after({ kind: "practice", practice }),

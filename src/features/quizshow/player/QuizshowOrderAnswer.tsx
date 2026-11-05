@@ -129,7 +129,8 @@ export function QuizshowOrderAnswer({
       </ul>
       <Button
         type="button"
-        variant="primary"
+        variant="stage"
+        size="lg"
         aria-disabled={isLocked || isHeld}
         onClick={() => {
           if (isLocked || isHeld) return;

@@ -1,13 +1,9 @@
-/* Off-air hero. The glow is a faint plum wash on the light page and keeps
-   its lilac look on the dark one. */
+/* Off-air hero, under a faint lilac glow. */
 .offairHero {
-  --off-air-hero-glow: rgba(var(--plum-rgb), 0.06);
+  --off-air-hero-glow: rgba(var(--violet-rgb), 0.16);
   padding: var(--section-y-64) 30px 40px;
   position: relative;
   overflow: hidden;
-}
-:global([data-theme="dark"]) .offairHero {
-  --off-air-hero-glow: rgba(var(--violet-rgb), 0.16);
 }
 
 /* Sized to the hero width so the radial fade ends inside the clipped box on

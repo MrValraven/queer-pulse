@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
-import { FiCheckCircle } from "react-icons/fi";
+import { FiCheck } from "react-icons/fi";
 import { Button, Collapse, FormField } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
@@ -17,6 +17,11 @@ import { QuizshowCountdownBar } from "../stage/QuizshowCountdownBar";
 import { pickQuizshowText } from "../stage/quizshowText";
 import styles from "./QuizshowPlayer.module.css";
 import { partyHeadingOf } from "./quizshowPartyHeading";
+import {
+  QuizshowLockedPanel,
+  QuizshowLockedStatus,
+  QuizshowWaitDots,
+} from "./QuizshowLockedPanel";
 import { useAnswerSender } from "./useQuizshowAnswerSender";
 import { useIsAnswerHeld } from "./useIsAnswerHeld";
 import { useQuizshowHeadingFocus } from "./useQuizshowHeadingFocus";
@@ -50,18 +55,6 @@ function Alert({ errorKey }: { errorKey: string | null }) {
   );
 }
 
-function LockedPanel({ title, body }: { title: string; body: string }) {
-  return (
-    <div className={styles.locked}>
-      <p className={styles.lockedTitle}>
-        <FiCheckCircle aria-hidden />
-        {title}
-      </p>
-      <p className={styles.lockedBody}>{body}</p>
-    </div>
-  );
-}
-
 function WriteForm({ controller, question, isHeld }: PartyInputProps) {
   const { t } = useTranslation();
   const { lockedPayload, errorKey, send } = useAnswerSender(
@@ -76,7 +69,7 @@ function WriteForm({ controller, question, isHeld }: PartyInputProps) {
   const charactersLeft = QUIZSHOW_LIMITS.partyTextMax - draft.length;
   return (
     <form
-      className={styles.form}
+      className={`${styles.form} ${styles.answerSheet}`}
       onSubmit={(event) => {
         event.preventDefault();
         if (isLocked || isHeld || !isReady) return;
@@ -102,14 +95,18 @@ function WriteForm({ controller, question, isHeld }: PartyInputProps) {
       </FormField>
       <Button
         type="submit"
-        variant="primary"
+        variant="stage"
+        size="lg"
         aria-disabled={isLocked || isHeld || !isReady}
       >
         {t("quizshow:player.writeSubmit")}
       </Button>
+      <QuizshowLockedStatus
+        text={isLocked ? t("quizshow:player.answerLocked") : null}
+      />
       <Collapse isOpen={isLocked}>
-        <LockedPanel
-          title={t("quizshow:player.lockedIn")}
+        <QuizshowLockedPanel
+          title={t("quizshow:player.answerLocked")}
           body={t("quizshow:player.waitingReview")}
         />
       </Collapse>
@@ -181,12 +178,13 @@ function VoteList({ controller, question, isHeld }: PartyInputProps) {
                 <AnimatePresence initial={false}>
                   {isChosen && (
                     <m.span
-                      className={styles.voteTag}
+                      className={`${styles.voteTag} ${styles.voteTagChosen}`}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: reducedMotion ? 0 : 0.15 }}
                     >
+                      <FiCheck aria-hidden="true" fill="none" />
                       {t("quizshow:player.voted")}
                     </m.span>
                   )}
@@ -206,7 +204,11 @@ export function QuizshowPlayerParty({
   controller,
   question,
   language,
-}: PartyProps) {
+  isFixedCanvas = false,
+}: PartyProps & {
+  /** Additive. A fixed 390x844 canvas (the studio's phone preview); see QuizshowPlayerQuestion. */
+  isFixedCanvas?: boolean;
+}) {
   const { t } = useTranslation();
   const { session } = controller.state;
   const phase = session?.cursor.phase ?? null;
@@ -229,16 +231,10 @@ export function QuizshowPlayerParty({
     );
   }
   return (
-    <div className={styles.screenBody}>
-      <h1 ref={headingRef} tabIndex={-1} className={styles.heading}>
-        {title}
-      </h1>
-      {phase === "vote" && prompt !== "" && (
-        <p className={styles.note}>{prompt}</p>
-      )}
-      {question.mediaUrl !== null && (
-        <img className={styles.media} src={question.mediaUrl} alt="" />
-      )}
+    <div
+      className={styles.screenBody}
+      data-fixed-canvas={isFixedCanvas ? "true" : undefined}
+    >
       <QuizshowCountdownBar
         cursor={
           phase === "write" || phase === "vote"
@@ -255,28 +251,44 @@ export function QuizshowPlayerParty({
         }
         size="phone"
       />
+      <div className={styles.promptArea}>
+        <h1 ref={headingRef} tabIndex={-1} className={styles.heading}>
+          {title}
+        </h1>
+        {phase === "vote" && prompt !== "" && (
+          <p className={styles.note}>{prompt}</p>
+        )}
+        {question.mediaUrl !== null && (
+          <img className={styles.media} src={question.mediaUrl} alt="" />
+        )}
+      </div>
       {(phase === "write" || phase === "vote") && isLateJoiner && (
         <p className={styles.note}>{t("quizshow:player.waitNextQuestion")}</p>
       )}
-      {phase === "write" && !isLateJoiner && (
-        <WriteForm
-          controller={controller}
-          question={question}
-          language={language}
-          isHeld={isHeld}
-        />
-      )}
-      {phase === "review" && (
-        <p className={styles.note}>{t("quizshow:stage.checking")}</p>
-      )}
-      {phase === "vote" && !isLateJoiner && (
-        <VoteList
-          controller={controller}
-          question={question}
-          language={language}
-          isHeld={isHeld}
-        />
-      )}
+      <div className={styles.answers}>
+        {phase === "write" && !isLateJoiner && (
+          <WriteForm
+            controller={controller}
+            question={question}
+            language={language}
+            isHeld={isHeld}
+          />
+        )}
+        {phase === "review" && (
+          <p className={styles.readyPill}>
+            {t("quizshow:stage.checking")}
+            <QuizshowWaitDots />
+          </p>
+        )}
+        {phase === "vote" && !isLateJoiner && (
+          <VoteList
+            controller={controller}
+            question={question}
+            language={language}
+            isHeld={isHeld}
+          />
+        )}
+      </div>
     </div>
   );
 }

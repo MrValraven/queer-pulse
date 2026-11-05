@@ -4,14 +4,16 @@ import styles from "./FlatmatesPage.module.css";
 // Mirrors FlatmateCard's shape so there's zero layout shift on swap.
 export function FlatmateSkeleton() {
   return (
-    <div className={styles.card} aria-hidden>
+    <div className={`${styles.card} ${styles.boardCard}`} aria-hidden>
       <div className={styles.cardTop}>
         <SkeletonAvatar size={52} />
         <div className={styles.identity}>
           <SkeletonLine width="60%" height={21} />
           <SkeletonLine width="40%" height={12} style={{ marginTop: 6 }} />
         </div>
-        <SkeletonLine width={92} height={22} style={{ borderRadius: 7 }} />
+        <span className={styles.badgeSlot}>
+          <SkeletonLine width={92} height={22} style={{ borderRadius: 7 }} />
+        </span>
       </div>
       <div className={styles.details}>
         <SkeletonLine width={104} height={24} style={{ borderRadius: 7 }} />

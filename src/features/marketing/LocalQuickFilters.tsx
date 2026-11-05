@@ -3,14 +3,17 @@ import { m } from "motion/react";
 import { FiClock, FiEye, FiNavigation, FiShield } from "react-icons/fi";
 import { RefineGroup, useRefineGlide } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { LocalChipCounts } from "./useDirectoryFilters";
+import { LocalChipCount } from "./LocalChipCount";
+import type { LocalChipCounts } from "./directoryFacetCounts";
 import s from "./LocalFilterBar.module.css";
 
 /**
  * The one-tap narrowings, side by side: is it open right now, has it been
  * verified as a safe space, is it out and about (List and Map) and, on the Online
  * tab for a signed-in member, Show 18+ shops. Each chip names itself, so the group only needs a name for the
- * set as a whole.
+ * set as a whole. The narrowings end with their live count, how many places
+ * would show with that chip on; Show 18+ shops adds a separate pool, so it
+ * carries none.
  */
 export function LocalQuickFilters({
   showOpenNow = true,
@@ -19,7 +22,6 @@ export function LocalQuickFilters({
   safeOnly,
   onToggleSafeOnly,
   chipCounts,
-  isLoadedSetComplete,
   showAdult = false,
   isAdultShown,
   onToggleAdult,
@@ -35,10 +37,9 @@ export function LocalQuickFilters({
   onToggleOpenNow: () => void;
   safeOnly: boolean;
   onToggleSafeOnly: () => void;
-  /** How many loaded places each chip would leave if turned on. */
+  /** How many places each chip would show if turned on; missing when not
+   *  known yet. */
   chipCounts: LocalChipCounts;
-  /** True once every page of places has loaded, so a zero count is final. */
-  isLoadedSetComplete: boolean;
   /** Offers "Show 18+ shops": the Online tab, for a signed-in member only. */
   showAdult?: boolean;
   /** Whether "Show 18+ shops" is on. */
@@ -58,18 +59,12 @@ export function LocalQuickFilters({
   // Inside the Refine drawer the chips glide to their new places as the
   // drawer's content shifts; in the mobile sheet the glide stays still.
   const glide = useRefineGlide();
-  // A chip that would empty the list goes unpickable, once the whole set has
-  // loaded and so the zero is final. A chip that is on stays clickable, so it
-  // can always be turned back off.
-  const isOpenNowDisabled =
-    isLoadedSetComplete && !openNow && chipCounts.openNow === 0;
-  const isSafeOnlyDisabled =
-    isLoadedSetComplete && !safeOnly && chipCounts.safe === 0;
-  const isOutAndAboutDisabled =
-    isLoadedSetComplete &&
-    !isOutAndAbout &&
-    chipCounts.outAndAbout !== undefined &&
-    chipCounts.outAndAbout === 0;
+  // A chip whose count is a known 0 would empty the list, so it goes
+  // unpickable. A count not known yet keeps it pickable, and a chip that is
+  // on stays clickable, so it can always be turned back off.
+  const isOpenNowDisabled = !openNow && chipCounts.openNow === 0;
+  const isSafeOnlyDisabled = !safeOnly && chipCounts.safe === 0;
+  const isOutAndAboutDisabled = !isOutAndAbout && chipCounts.outAndAbout === 0;
 
   const chipRow = (
     <m.div
@@ -91,6 +86,7 @@ export function LocalQuickFilters({
         >
           <FiClock aria-hidden />
           {t("marketing:local.filter.openNow")}
+          <LocalChipCount count={chipCounts.openNow} />
         </m.button>
       )}
       <m.button
@@ -103,6 +99,7 @@ export function LocalQuickFilters({
       >
         <FiShield aria-hidden />
         {t("marketing:local.filter.verifiedSafeSpaces")}
+        <LocalChipCount count={chipCounts.safe} />
       </m.button>
       {showOutAndAbout && onToggleOutAndAbout && (
         <m.button
@@ -117,6 +114,7 @@ export function LocalQuickFilters({
         >
           <FiNavigation aria-hidden />
           {t("marketing:local.filter.outAndAbout")}
+          <LocalChipCount count={chipCounts.outAndAbout} />
         </m.button>
       )}
       {showAdult && onToggleAdult && (

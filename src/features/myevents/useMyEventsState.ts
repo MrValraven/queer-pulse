@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import type { ToastAction } from "../../shared/components/feedback/toastContext";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -6,8 +6,6 @@ import { useFormat } from "../../shared/i18n/format";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { Pill } from "./myEvents.types";
 import type { MyEventsValue } from "./MyEventsContext";
-import { PILLS } from "./myEvents.data";
-import { hasEnded, inPill, PILLS_WITH_ENDED_GROUP } from "./myEvents.helpers";
 import { setMyEventsDemoClock } from "./myEvents.clock";
 import { useMyEventsCalendar } from "./useMyEventsCalendar";
 import { useMyEventsToolbar } from "./useMyEventsToolbar";
@@ -17,6 +15,7 @@ import { useMyEventsModals } from "./useMyEventsModals";
 import { useMyEventsRsvp } from "./useMyEventsRsvp";
 import { useMyEventsData } from "./api/useMyEventsData";
 import { useMyEventsSync } from "./useMyEventsSync";
+import { useMyEventsFacets } from "./useMyEventsFacets";
 
 /** Central state + actions for the My Events dashboard. */
 export function useMyEventsState(): MyEventsValue {
@@ -47,6 +46,7 @@ export function useMyEventsState(): MyEventsValue {
     loading: dataLoading,
     hasError,
     retry,
+    isComplete,
   } = useMyEventsData();
   const { events, setEvents, byId } = useMyEventsSync({ sourceEvents });
 
@@ -88,17 +88,19 @@ export function useMyEventsState(): MyEventsValue {
     t,
   });
 
-  // derived. A pill counts what is still ahead; the gatherings that are
-  // already over sit in its trailing ended group and add nothing here.
-  const counts = useMemo(() => {
-    const c = {} as Record<Pill, number>;
-    PILLS.forEach((p) => {
-      c[p] = events.filter(
-        (e) => inPill(e, p) && !(PILLS_WITH_ENDED_GROUP.has(p) && hasEnded(e)),
-      ).length;
-    });
-    return c;
-  }, [events]);
+  // derived: what each pill and chip would list, with every other filter
+  // applied. Read off the query's own pending flag, so the simulated beat a
+  // pill switch plays does not blank the numbers.
+  const { pillCounts, filterCounts } = useMyEventsFacets({
+    events,
+    pill,
+    selectedDate,
+    searchTerm: tb.searchTerm,
+    activeFilters: tb.activeFilters,
+    viewY: cal.viewY,
+    viewM: cal.viewM,
+    isCountable: !dataLoading && !hasError && isComplete,
+  });
 
   // ── primary view ──────────────────────────────────
   const setPill = useCallback(
@@ -143,7 +145,8 @@ export function useMyEventsState(): MyEventsValue {
 
   return {
     events,
-    counts,
+    pillCounts,
+    filterCounts,
     byId,
     hasError,
     retry,

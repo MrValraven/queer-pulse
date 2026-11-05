@@ -28,6 +28,7 @@ import {
   validatePublishDemo,
   type DemoPublicAccessResult,
 } from "../../features/subprofiles/data/subprofiles.data";
+import { MADE_TOGETHER_DEMO_ITEMS } from "../../features/subprofiles/data/madeTogether.data";
 import { linkedPersonaHandleCandidate } from "../../features/subprofiles/personaHandle";
 import { currentUserSlug } from "../../features/members/data/demoCurrentUser";
 import {
@@ -433,6 +434,18 @@ export function subprofileHandlers(api: string) {
           kind: url.searchParams.get("kind") ?? undefined,
           query: url.searchParams.get("query") ?? undefined,
         }),
+      });
+    }),
+    // Registered before `/subprofiles/:id`, as the backend's literal route is,
+    // so "made-together" is never read as a persona id.
+    http.get(`${api}/subprofiles/made-together`, ({ request }) => {
+      const url = new URL(request.url);
+      const askedLimit = Number(url.searchParams.get("limit") ?? 8);
+      const limit = Number.isFinite(askedLimit)
+        ? Math.min(12, Math.max(1, Math.round(askedLimit)))
+        : 8;
+      return HttpResponse.json({
+        items: MADE_TOGETHER_DEMO_ITEMS.slice(0, limit),
       });
     }),
 

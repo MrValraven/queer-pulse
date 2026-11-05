@@ -1,0 +1,564 @@
+/* ── TS-04 queue health: the panel shell, the overview card, and the loading
+   and error states. Staff-only; nothing here renders on a member surface. ── */
+
+/* The panel is the size container, so the card answers to the width it is
+   actually given (the admin sidebar takes 248px of a 1024 viewport). */
+.panel {
+  container: queue-health / inline-size;
+  display: grid;
+  gap: 20px;
+}
+
+.intro {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-14-5);
+  line-height: 1.6;
+  color: rgba(var(--line-rgb), 0.72);
+  max-width: 68ch;
+}
+
+.rows {
+  display: grid;
+  gap: 16px;
+}
+
+/* ── Severity tones. Each sets the channel the badge, the strip segment and
+   the legend glyph read, so one class keeps all three in step. ──────────── */
+
+.toneOk {
+  --health-tone: var(--jade);
+  --health-tone-ink: var(--jade-ink);
+  --health-tone-rgb: var(--jade-rgb);
+}
+
+.toneWarning {
+  --health-tone: var(--amber);
+  --health-tone-ink: var(--amber-ink);
+  --health-tone-rgb: var(--amber-rgb);
+}
+
+.toneCritical {
+  --health-tone: var(--danger);
+  --health-tone-ink: var(--danger-ink);
+  --health-tone-rgb: var(--danger-rgb);
+}
+
+/* ── The overview card ─────────────────────────────────────────────────── */
+
+/* Built like the queue cards below: an unpadded shell that is its own size
+   container, and a padded body. Both step their padding at the same content
+   width, so the two read as one set at every size. */
+.card {
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  box-shadow: var(--shadow-e1);
+  container: queue-health-card / inline-size;
+}
+
+.cardBody {
+  display: grid;
+  gap: 24px;
+  padding: var(--card-pad);
+}
+
+/* A quiet corner wash in the overall level's tone. It sits under the word and
+   the glyph, which carry the level on their own. */
+.washOk {
+  background:
+    radial-gradient(
+      120% 140% at 0% 0%,
+      rgba(var(--jade-rgb), 0.07),
+      rgba(var(--jade-rgb), 0) 55%
+    ),
+    var(--paper);
+}
+
+.washWarning {
+  background:
+    radial-gradient(
+      120% 140% at 0% 0%,
+      rgba(var(--amber-rgb), 0.09),
+      rgba(var(--amber-rgb), 0) 55%
+    ),
+    var(--paper);
+}
+
+.washCritical {
+  background:
+    radial-gradient(
+      120% 140% at 0% 0%,
+      rgba(var(--danger-rgb), 0.08),
+      rgba(var(--danger-rgb), 0) 55%
+    ),
+    var(--paper);
+}
+
+.headlineRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas: "badge text";
+  align-items: start;
+  column-gap: 16px;
+}
+
+.badge {
+  grid-area: badge;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(var(--health-tone-rgb), 0.14);
+  color: var(--health-tone-ink);
+}
+
+.badge svg {
+  width: 22px;
+  height: 22px;
+}
+
+.headlineText {
+  grid-area: text;
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.headline {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-28);
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--text-strong);
+  font-variant-numeric: tabular-nums;
+  text-wrap: balance;
+}
+
+.explainer {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  line-height: 1.55;
+  color: rgba(var(--line-rgb), 0.7);
+}
+
+/* ── The queue strip and its legend ────────────────────────────────────── */
+
+.stripBlock {
+  display: grid;
+  gap: 12px;
+}
+
+.strip {
+  display: flex;
+  gap: 4px;
+  height: 8px;
+}
+
+.segment {
+  flex: 1 1 0;
+  min-width: 0;
+  border-radius: var(--radius-pill);
+  background: var(--health-tone);
+  transition: background-color var(--dur-base) var(--ease);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.legendGlyph {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: var(--health-tone-ink);
+}
+
+/* ── The four totals ───────────────────────────────────────────────────── */
+
+.totals {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.tile {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  min-width: 0;
+  padding: 14px 16px;
+  border-radius: var(--radius-16);
+  background: var(--cream);
+}
+
+.tileLabel {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(var(--line-rgb), 0.7);
+}
+
+/* A step above the queue cards' figures, so the totals lead the page. */
+.tileFigure {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-36);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--dur-base) var(--ease);
+}
+
+/* The "does not apply" reading. Quieter than a number, because it is none,
+   on the number's line box so the four tiles stay level. */
+.tileFigureMuted {
+  font-size: var(--text-17);
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: calc(var(--text-36) * 1.05);
+  color: rgba(var(--line-rgb), 0.7);
+}
+
+.figureCalm {
+  color: var(--jade-ink);
+}
+
+.figureLoud {
+  color: var(--danger-ink);
+}
+
+.tileNote {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-12-5);
+  line-height: 1.45;
+  color: rgba(var(--line-rgb), 0.7);
+}
+
+/* ── Footer: when it was measured, and a way to measure again ──────────── */
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.measuredAt {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: var(--text-12-5);
+  color: rgba(var(--line-rgb), 0.7);
+  font-variant-numeric: tabular-nums;
+}
+
+.measuredAt svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+
+/* A failed background refresh: the older figures stay, and this line says
+   how old they are. */
+.refreshFailed {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-12-5);
+  line-height: 1.45;
+  color: var(--amber-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.refreshFailedGlyph {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+}
+
+.refreshFailedReason {
+  font-weight: 600;
+}
+
+.refreshButton {
+  margin-left: auto;
+}
+
+/* While a reading is in flight the button keeps focus and stays legible
+   (the shared aria-disabled look fades it to 0.4); the spinning glyph and
+   aria-busy say why a press does nothing. */
+.card .busyButton[aria-disabled="true"],
+.errorCard .busyButton[aria-disabled="true"] {
+  opacity: 0.75;
+  cursor: progress;
+}
+
+/* A full turn reads as a calm spin at 0.9s; the motion tokens top out at
+   400ms, which spins too fast for a loop. */
+.refreshIconSpinning {
+  animation: queueHealthSpin 0.9s linear infinite;
+}
+
+@keyframes queueHealthSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Error state ───────────────────────────────────────────────────────── */
+
+.errorCard {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 14px 16px;
+  padding: var(--card-pad);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  box-shadow: var(--shadow-e1);
+}
+
+/* The badge's named area belongs to the headline row; here it takes the first
+   column in plain flow. */
+.errorCard .badge {
+  grid-area: auto;
+}
+
+.errorBody {
+  display: grid;
+  justify-items: start;
+  gap: 14px;
+  min-width: 0;
+}
+
+.errorMessage {
+  display: grid;
+  gap: 4px;
+  padding-top: 10px;
+}
+
+.errorText {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-14-5);
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+/* The server's own reason, under the sentence that frames it. */
+.errorReason {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: rgba(var(--line-rgb), 0.7);
+}
+
+/* ── Loading skeleton: the same shapes the loaded panel settles into ───── */
+
+.skeletonHeadline {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.skeletonHeadlineText {
+  display: grid;
+  flex: 1 1 auto;
+  gap: 10px;
+  min-width: 0;
+}
+
+.skeletonBadge {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(var(--line-rgb), 0.07);
+}
+
+.skeletonFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* A queue card's shape, built the same way: an unpadded shell that is its
+   own size container, so the body steps and folds at the loaded card's
+   widths. */
+.skeletonRow {
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  box-shadow: var(--shadow-e1);
+  container: queue-health-skeleton-card / inline-size;
+}
+
+.skeletonRowBody {
+  display: grid;
+  gap: 20px;
+  padding: var(--card-pad);
+}
+
+.skeletonRowHead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.skeletonRowTitle {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.skeletonPill {
+  flex: none;
+  width: 64px;
+  height: 22px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.07);
+}
+
+.skeletonFigures {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px 28px;
+}
+
+.skeletonFigure {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  min-width: 0;
+}
+
+.skeletonMeter {
+  height: 6px;
+  margin: 4px 0;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.07);
+}
+
+.skeletonFacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 40px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.skeletonFact {
+  display: grid;
+  gap: 4px;
+}
+
+@container queue-health-skeleton-card (max-width: 560px) {
+  .skeletonRowBody {
+    padding: 18px;
+  }
+
+  .skeletonFigures {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+}
+
+/* ── Width steps. Four tiles once each has room for its note; a tighter
+   card and a smaller headline at phone width. ─────────────────────────── */
+
+@container queue-health (min-width: 760px) {
+  .totals {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* The overview body steps on its own card, the same measure the queue cards
+   use. */
+@container queue-health-card (max-width: 560px) {
+  .cardBody {
+    padding: 18px;
+    gap: 20px;
+  }
+}
+
+/* Panel-width steps: the error card's padding (it stands alone), a smaller
+   headline and tighter tiles. */
+@container queue-health (max-width: 560px) {
+  .errorCard {
+    padding: 18px;
+  }
+
+  .headlineRow {
+    column-gap: 14px;
+  }
+
+  .headline {
+    font-size: var(--text-22);
+  }
+
+  .tile {
+    padding: 12px 14px;
+  }
+
+  .tileFigure {
+    font-size: var(--text-30);
+  }
+
+  /* Restated after the step above, which would otherwise size it too. */
+  .tileFigureMuted {
+    font-size: var(--text-17);
+    line-height: calc(var(--text-30) * 1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .segment,
+  .tileFigure {
+    transition: none;
+  }
+
+  .refreshIconSpinning {
+    animation: none;
+  }
+}

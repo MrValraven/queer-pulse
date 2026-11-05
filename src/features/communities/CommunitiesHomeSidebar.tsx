@@ -58,7 +58,10 @@ export function CommunitiesHomeSidebar({
 }) {
   const { t } = useTranslation();
   return (
-    <aside className={styles.sidebar}>
+    <aside
+      className={styles.sidebar}
+      aria-label={t("communities:hub.sidebar.ariaLabel")}
+    >
       {(upcoming.length > 0 || upcomingCounts.length > 0) && (
         <div className={styles.sbCard}>
           <div className={styles.sbLbl}>

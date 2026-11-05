@@ -254,6 +254,42 @@ export interface EventsPage {
   total: number;
   page: number;
   pageSize: number;
+  /** The browse board's availability counts. Sent only when the request
+   *  asked for them (`withFacets`), and on the first page only. */
+  facets?: EventBrowseFacetsDTO;
+}
+
+/** The date chips a `when` facet counts, every preset but "Any time". */
+export type EventWhenFacetKey = "today" | "weekend" | "week" | "month";
+
+/** Each date chip's window, the `from`/`to` that chip itself would send. */
+export type EventWhenWindows = Record<
+  EventWhenFacetKey,
+  { from: string; to: string }
+>;
+
+/** One filter group's counts. `all` is the distinct number of events with
+ *  this group lifted, which is what its "Any" option yields. The server
+ *  counts it directly, since date windows overlap. */
+export interface EventFacetGroupDTO<Option extends string = string> {
+  options: Partial<Record<Option, number>>;
+  all: number;
+}
+
+/**
+ * Backend `EventBrowseFacets`: per option, how many events picking it would
+ * give, counted with that option's own group lifted and every other filter
+ * plus the search applied. `family` and `cost` carry every option. `hood`
+ * and `type` are keyed by the LOWERCASED stored value and list only the
+ * values some event carries, so a missing key there is a 0. `when` carries
+ * the windows the request sent, so a missing key there was not counted.
+ */
+export interface EventBrowseFacetsDTO {
+  family: EventFacetGroupDTO<GatheringFamily>;
+  when: EventFacetGroupDTO<EventWhenFacetKey>;
+  hood: EventFacetGroupDTO;
+  type: EventFacetGroupDTO;
+  cost: EventFacetGroupDTO<"free" | "paid">;
 }
 
 /** Full event detail from GET /events/:slug. */
@@ -698,6 +734,10 @@ export async function getEvents(
      *  Honoured on `filter: "upcoming"` only; the mention picker and the
      *  create wizard's clash notes send it so every event stays nameable. */
     includeHidden?: boolean;
+    /** The browse board's counts: asks `filter: "upcoming"` for its page
+     *  envelope with `facets`, each date chip counted over the window given
+     *  here. Every other caller leaves it off and reads the bare list. */
+    withFacets?: { whenWindows: EventWhenWindows };
   } & EventBrowseFilters = {},
 ): Promise<EventsPage> {
   const q = new URLSearchParams();
@@ -713,11 +753,20 @@ export async function getEvents(
   if (params.q) q.set("q", params.q);
   if (params.cost) q.set("cost", params.cost);
   if (params.includeHidden) q.set("includeHidden", "true");
+  if (params.withFacets) {
+    q.set("facets", "true");
+    for (const [key, window] of Object.entries(params.withFacets.whenWindows)) {
+      q.append("whenWindow", `${key},${window.from},${window.to}`);
+    }
+  }
   const qs = q.toString();
   const res = await apiGet<EventCardDTO[] | EventsPage>(
     `/events${qs ? `?${qs}` : ""}`,
   );
-  return toItemsPage(res);
+  // `toItemsPage` keeps the four envelope fields only, so the counts are
+  // carried past it. A bare array (an older server) has none.
+  const facets = Array.isArray(res) ? undefined : res?.facets;
+  return { ...toItemsPage(res), ...(facets ? { facets } : {}) };
 }
 
 export const getEvent = (

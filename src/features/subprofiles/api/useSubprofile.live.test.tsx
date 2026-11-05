@@ -141,7 +141,7 @@ describe("useSubprofiles (live mode via MSW)", () => {
 });
 
 describe("useSubprofileDirectory (live mode via MSW)", () => {
-  it("fetches GET /subprofiles/directory unfiltered when no search term is given (the profession/tag/availability facets still narrow client-side)", async () => {
+  it("fetches GET /subprofiles/directory unfiltered when no search term or sidebar filter is given", async () => {
     const { useSubprofileDirectory: useDirectoryLive, wrapper } =
       await loadLive();
     const { result } = renderHook(() => useDirectoryLive(), { wrapper });

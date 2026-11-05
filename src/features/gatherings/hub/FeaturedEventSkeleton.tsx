@@ -14,8 +14,9 @@ const PAPER_STAMP_HEIGHT = 80;
 /** The price pill, the tallest item on the facts row. */
 const FACTS_ROW_HEIGHT = 28;
 
-/** A `size="lg"` button: 15px padding above and below a 16px label. */
-const BUTTON_HEIGHT = 46;
+/** The hero's action pills share one height per width (`--hero-action-size`
+ *  on `.actions`, which the skeleton row also wears). */
+const BUTTON_HEIGHT = "var(--hero-action-size)";
 
 /**
  * Holds the "Next up" hero's place while the events list loads. It wears the

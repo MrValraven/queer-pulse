@@ -1,0 +1,136 @@
+/* The "Made together" strip. Phone first: the header and the track share a
+   16px gutter and the track runs edge to edge, so the next card peeks in.
+   From --lg-up the section becomes a centred 1280px column. */
+
+.root {
+  --made-gutter: var(--wrap-px);
+}
+
+.section {
+  /* Same 1440px column as the directory frame, so the left edges line up. */
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-block: var(--section-y-48) 8px;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 40px;
+  padding-inline: var(--made-gutter);
+  margin-block-end: 18px;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 640px;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-title);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: var(--text-strong);
+}
+
+.lead {
+  margin: 0;
+  font-size: var(--text-15);
+  line-height: 1.5;
+  color: var(--ink-60);
+  max-width: 52ch;
+}
+
+/* The scroll-snap track. The scrollbar is hidden because the arrows (wide
+   screens) and the dots (phones) show position and move it. */
+.track,
+.skeletonTrack {
+  display: flex;
+  gap: 12px;
+  margin: 0;
+  list-style: none;
+  padding-inline: var(--made-gutter);
+  padding-block: 4px 8px;
+}
+
+.track {
+  position: relative;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--made-gutter);
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.skeletonTrack {
+  overflow: hidden;
+}
+
+.item {
+  display: flex;
+  flex: 0 0 292px;
+  scroll-snap-align: start;
+}
+
+.skeletonCard {
+  flex: 0 0 292px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-panel);
+}
+
+@media (--lg-up) {
+  .section {
+    padding-block-start: var(--section-y-72);
+    padding-block-end: 24px;
+  }
+
+  .header {
+    /* The heading shrinks to leave room for the arrows, which stay on the
+       right instead of dropping under the text. */
+    flex-wrap: nowrap;
+    margin-block-end: 28px;
+  }
+
+  .heading {
+    flex: 1 1 0;
+    gap: 10px;
+  }
+
+  .lead {
+    font-size: var(--text-16);
+  }
+
+  .track,
+  .skeletonTrack {
+    gap: 18px;
+  }
+
+  .item {
+    flex-basis: 320px;
+  }
+
+  .skeletonCard {
+    flex-basis: 320px;
+    gap: 16px;
+    padding: 22px;
+    border-radius: var(--radius-card);
+  }
+}

@@ -210,7 +210,14 @@ describe("QuizshowPlayerQuestion", () => {
       questionId: "question-1",
       payload: { type: "multiple_choice", optionIndex: 0 },
     });
-    await screen.findByText("Locked in");
+    // The lock shows on the panel and is said by the status region that was waiting for it.
+    await waitFor(() =>
+      expect(
+        screen
+          .getAllByRole("status")
+          .some((region) => region.textContent === "Answer locked"),
+      ).toBe(true),
+    );
     for (const tile of screen.getAllByRole("button", { name: /^Answer / })) {
       expect(tile).toHaveAttribute("aria-disabled", "true");
     }
@@ -309,7 +316,7 @@ describe("QuizshowPlayerQuestion", () => {
       screen.getByRole("button", { name: "Answer A, Triangle: Stonewall" }),
     );
     expect(submitAnswer).not.toHaveBeenCalled();
-    expect(screen.queryByText("Locked in")).toBeNull();
+    expect(screen.queryAllByText("Answer locked")).toHaveLength(0);
   });
 
   it("holds a typed answer once the player's own deadline has passed", async () => {

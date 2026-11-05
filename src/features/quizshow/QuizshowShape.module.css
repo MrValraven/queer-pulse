@@ -48,3 +48,19 @@
 :global([data-theme="dark"]) :global([data-theme="light"]) .edged {
   outline-color: rgba(var(--ink-rgb), 0.35);
 }
+
+/* The velvet stage's glow: a halo in the shape's own colour and a lit top
+   edge. A still drop shadow, never animated. */
+.glowing {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(255, 255, 255, 0) 55%
+    ),
+    var(--quizshow-shape-fill);
+  filter: drop-shadow(
+    0 0 calc(var(--quizshow-shape-size) * 0.45)
+      color-mix(in srgb, var(--quizshow-shape-fill) 75%, transparent)
+  );
+}

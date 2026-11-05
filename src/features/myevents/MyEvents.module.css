@@ -143,7 +143,7 @@
 .cal-views {
   display: flex;
   gap: 2px;
-  background: rgba(var(--plum-rgb), 0.06);
+  background: rgba(var(--line-rgb), 0.06);
   border-radius: var(--radius-pill);
   padding: 3px;
   margin-bottom: 16px;
@@ -211,7 +211,7 @@
 }
 @media (hover: hover) {
   .cal-cell:hover:not(.blank) {
-    background: rgba(var(--plum-rgb), 0.05);
+    background: rgba(var(--line-rgb), 0.05);
   }
 }
 /* Lead-in cells before day 1. Named `blank` because `.empty` is the dashed
@@ -257,7 +257,7 @@
   background: var(--jade);
 }
 .cal-dot.past {
-  background: rgba(var(--plum-rgb), 0.28);
+  background: rgba(var(--line-rgb), 0.28);
 }
 .cal-dot.pending {
   background: transparent;
@@ -293,7 +293,7 @@ button.cal-cell.has {
   padding: 10px 12px;
   border-radius: var(--radius-12);
   border: 1px solid rgba(var(--line-rgb), 0.08);
-  background: rgba(var(--plum-rgb), 0.015);
+  background: rgba(var(--line-rgb), 0.015);
   cursor: pointer;
   text-align: left;
   width: 100%;
@@ -304,7 +304,7 @@ button.cal-cell.has {
 }
 @media (hover: hover) {
   .cw-day:hover {
-    background: rgba(var(--plum-rgb), 0.05);
+    background: rgba(var(--line-rgb), 0.05);
   }
 }
 .cw-day.today {
@@ -371,7 +371,7 @@ button.cal-cell.has {
   border-radius: var(--radius-12);
   padding: 10px 8px;
   cursor: pointer;
-  background: rgba(var(--plum-rgb), 0.015);
+  background: rgba(var(--line-rgb), 0.015);
   transition:
     background 0.15s,
     border-color 0.15s;
@@ -380,7 +380,7 @@ button.cal-cell.has {
 }
 @media (hover: hover) {
   .cy-m:hover {
-    background: rgba(var(--plum-rgb), 0.05);
+    background: rgba(var(--line-rgb), 0.05);
     border-color: rgba(var(--line-rgb), 0.2);
   }
 }
@@ -462,7 +462,7 @@ button.cal-cell.has {
   font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
-  background: rgba(var(--plum-rgb), 0.035);
+  background: rgba(var(--line-rgb), 0.035);
   border: 1px solid rgba(var(--line-rgb), 0.08);
   border-radius: var(--radius-12);
   padding: 10px 13px;
@@ -475,7 +475,7 @@ button.cal-cell.has {
 @media (hover: hover) {
   .cal-sub-btn:hover {
     border-color: rgba(var(--line-rgb), 0.2);
-    background: rgba(var(--plum-rgb), 0.06);
+    background: rgba(var(--line-rgb), 0.06);
   }
 }
 .cal-sub-btn svg {
@@ -661,6 +661,7 @@ button.cal-cell.has {
   color: var(--ink);
   background: var(--paper);
   outline: none;
+  text-overflow: ellipsis;
   transition: border-color 0.2s;
 }
 .ev-search:focus {
@@ -697,6 +698,20 @@ button.cal-cell.has {
   background: rgba(var(--jade-rgb), 0.12);
   border-color: rgba(var(--jade-rgb), 0.42);
   color: var(--jade);
+}
+.fchip .fc {
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  opacity: 0.7;
+}
+/* Nothing would be listed under it with the filters as they stand. Dimmed
+   the way the browse sidebars dim an empty row, and its zero stays readable.
+   After the hover rules, so pointing at one changes nothing. */
+.pill:disabled,
+.fchip:disabled {
+  color: var(--ink-40);
+  border-color: rgba(var(--line-rgb), 0.08);
+  cursor: not-allowed;
 }
 
 /* toolbar row 2: density / select / timezone note. Sorting and the filter
@@ -749,7 +764,7 @@ button.cal-cell.has {
   }
 }
 .ctrl-btn.on {
-  background: rgba(var(--plum-rgb), 0.06);
+  background: rgba(var(--line-rgb), 0.06);
   color: var(--text-strong);
   border-color: rgba(var(--line-rgb), 0.25);
 }
@@ -890,7 +905,7 @@ button.cal-cell.has {
 }
 .ev-card.cancelled .ev-name {
   text-decoration: line-through;
-  text-decoration-color: rgba(var(--plum-rgb), 0.3);
+  text-decoration-color: rgba(var(--line-rgb), 0.3);
 }
 
 /* density: compact */
@@ -917,7 +932,7 @@ button.cal-cell.has {
   width: 62px;
   text-align: center;
   border-radius: var(--radius-13);
-  background: rgba(var(--plum-rgb), 0.04);
+  background: rgba(var(--line-rgb), 0.04);
   padding: 10px 0 11px;
   border: 1px solid rgba(var(--line-rgb), 0.06);
 }
@@ -1026,7 +1041,7 @@ button.cal-cell.has {
   background: var(--jade);
 }
 .status-pill.maybe {
-  background: rgba(var(--plum-rgb), 0.06);
+  background: rgba(var(--line-rgb), 0.06);
   color: var(--text-strong);
 }
 .status-pill.maybe .sd {
@@ -1041,14 +1056,14 @@ button.cal-cell.has {
   background: var(--paper);
 }
 .status-pill.attended {
-  background: rgba(var(--plum-rgb), 0.07);
+  background: rgba(var(--line-rgb), 0.07);
   color: var(--ink-60);
 }
 .status-pill.attended .sd {
   background: var(--ink-40);
 }
 .status-pill.missed {
-  background: rgba(var(--plum-rgb), 0.05);
+  background: rgba(var(--line-rgb), 0.05);
   color: var(--ink-40);
 }
 .status-pill.missed .sd {
@@ -1114,17 +1129,38 @@ button.cal-cell.has {
   font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.55;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
 }
-.ev-meta .dotsep {
+
+/* A wrapping row of parts with a small dot between each pair (the meta line,
+   the starts-soon links). Every part carries its dot in the 19px lead-in to
+   its left, and the row is pulled left by that lead-in and clipped there, so
+   the dot of whichever part opens a line falls outside the clip. A wrapped
+   line never starts or ends on a dangling dot. The clip stops 6px short of the
+   part's edge and reaches 6px past the other sides, which keeps focus rings
+   whole. */
+.sep-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: 2px;
+  margin-left: -19px;
+  clip-path: inset(-6px -6px -6px 13px);
+}
+.sep-list > * {
+  position: relative;
+  margin-left: 19px;
+}
+.sep-list > *::before {
+  content: "";
+  position: absolute;
+  left: -11px;
+  top: 50%;
   width: 3px;
   height: 3px;
+  margin-top: -1.5px;
   border-radius: 50%;
   background: var(--ink-40);
-  flex: none;
+  pointer-events: none;
 }
 
 /* friends-going line */
@@ -1174,8 +1210,12 @@ button.cal-cell.has {
   font-family: var(--serif);
   font-size: var(--text-11);
   font-weight: 500;
+  /* Two serif initials nearly fill the disc, so the next disc only tucks
+     under the ring: a deeper overlap cut the second letter ("AK" read "A"). */
+  letter-spacing: -0.03em;
+  line-height: 1;
   border: 2px solid var(--paper);
-  margin-left: -8px;
+  margin-left: -5px;
   flex: none;
 }
 .av-stack .av:first-child {
@@ -1242,25 +1282,6 @@ button.cal-cell.has {
   gap: 7px;
 }
 
-@media (--sm) {
-  .ev-card {
-    flex-wrap: wrap;
-  }
-  .ev-tile {
-    width: 54px;
-  }
-  .ev-side {
-    width: 100%;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .ev-actions {
-    flex-direction: row;
-    align-items: center;
-  }
-}
-
 /* ---------- Access & safety chips ---------- */
 .ev-access {
   display: flex;
@@ -1306,7 +1327,7 @@ button.cal-cell.has {
 }
 .acc-chip.policy {
   color: var(--text-strong);
-  background: rgba(var(--plum-rgb), 0.07);
+  background: rgba(var(--line-rgb), 0.07);
 }
 .acc-chip.policy .ad {
   background: var(--plum);
@@ -1364,7 +1385,7 @@ button.cal-cell.has {
   font-weight: 700;
 }
 .ev-edge.cancel {
-  background: rgba(var(--plum-rgb), 0.05);
+  background: rgba(var(--line-rgb), 0.05);
   color: var(--ink-60);
 }
 .ev-edge.cancel strong {
@@ -1375,7 +1396,7 @@ button.cal-cell.has {
   color: var(--accent-ink);
 }
 .ev-edge.block {
-  background: rgba(var(--plum-rgb), 0.05);
+  background: rgba(var(--line-rgb), 0.05);
   color: var(--ink-60);
 }
 .ev-edge a {
@@ -1395,7 +1416,7 @@ button.cal-cell.has {
   font-weight: 600;
   color: var(--ink-60);
   margin-top: 11px;
-  background: rgba(var(--plum-rgb), 0.04);
+  background: rgba(var(--line-rgb), 0.04);
   border-radius: var(--radius-pill);
   padding: 5px 12px;
   transition: background 0.18s;
@@ -1405,7 +1426,7 @@ button.cal-cell.has {
 }
 @media (hover: hover) {
   .ev-series:hover {
-    background: rgba(var(--plum-rgb), 0.08);
+    background: rgba(var(--line-rgb), 0.08);
     color: var(--text-strong);
   }
 }
@@ -1483,7 +1504,7 @@ button.cal-cell.has {
   font-size: var(--text-11-5);
   font-weight: 700;
   color: var(--text-strong);
-  background: rgba(var(--plum-rgb), 0.06);
+  background: rgba(var(--line-rgb), 0.06);
   border-radius: var(--radius-pill);
   padding: 3px 10px;
 }
@@ -1522,7 +1543,7 @@ button.cal-cell.has {
   .tool-btn:hover {
     border-color: var(--line-strong);
     color: var(--text-strong);
-    background: rgba(var(--plum-rgb), 0.03);
+    background: rgba(var(--line-rgb), 0.03);
   }
 }
 .tool-btn svg {
@@ -1584,7 +1605,7 @@ button.cal-cell.has {
 }
 @media (hover: hover) {
   .mm-item:hover {
-    background: rgba(var(--plum-rgb), 0.05);
+    background: rgba(var(--line-rgb), 0.05);
   }
 }
 .mm-item svg {
@@ -1601,7 +1622,7 @@ button.cal-cell.has {
 }
 .mm-sep {
   height: 1px;
-  background: rgba(var(--plum-rgb), 0.08);
+  background: rgba(var(--line-rgb), 0.08);
   margin: 5px 8px;
 }
 
@@ -1611,7 +1632,7 @@ button.cal-cell.has {
   padding: var(--section-y-56) 24px;
   border: 1.5px dashed rgba(var(--line-rgb), 0.16);
   border-radius: var(--radius-20);
-  background: rgba(var(--plum-rgb), 0.015);
+  background: rgba(var(--line-rgb), 0.015);
   animation: qpTabIn 0.3s var(--ease) both;
 }
 .empty-icon {
@@ -1640,7 +1661,7 @@ button.cal-cell.has {
   stroke: var(--jade);
 }
 .empty-icon.plum {
-  background: rgba(var(--plum-rgb), 0.07);
+  background: rgba(var(--line-rgb), 0.07);
 }
 .empty-icon.plum svg {
   stroke: var(--plum);
@@ -1682,7 +1703,7 @@ button.cal-cell.has {
 .mview {
   display: none;
   gap: 3px;
-  background: rgba(var(--plum-rgb), 0.06);
+  background: rgba(var(--line-rgb), 0.06);
   border-radius: var(--radius-pill);
   padding: 4px;
   margin-bottom: 20px;
@@ -1775,7 +1796,6 @@ button.cal-cell.has {
   display: flex;
   align-items: center;
   gap: 9px;
-  flex-wrap: wrap;
   background: rgba(var(--accent-rgb), 0.1);
   border-radius: var(--radius-11);
   padding: 8px 13px;
@@ -1803,9 +1823,13 @@ button.cal-cell.has {
     box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0);
   }
 }
-.soon-sep {
-  color: rgba(var(--accent-rgb), 0.5);
-  font-weight: 600;
+/* The label and links beside the live dot, dotted apart by `.sep-list`. */
+.soon-items {
+  flex: 1;
+  min-width: 0;
+}
+.soon-items > *::before {
+  background: rgba(var(--accent-rgb), 0.5);
 }
 .soon-link {
   color: var(--accent-ink);
@@ -1846,7 +1870,7 @@ button.cal-cell.has {
   display: flex;
   align-items: flex-start;
   gap: 9px;
-  background: rgba(var(--plum-rgb), 0.05);
+  background: rgba(var(--line-rgb), 0.05);
   border-radius: var(--radius-11);
   padding: 8px 13px;
   margin-top: 12px;
@@ -2525,5 +2549,341 @@ button.cal-cell.has {
   }
   .ev-layout.view-cal .agenda-col {
     display: none;
+  }
+}
+
+/* ---------- Phone (640px and down) ----------
+   The desktop card is a date column, a body and an action column side by
+   side. At phone width that left the body about 220px, so every action took a
+   row of its own. Here the card becomes one column: the date shrinks to an
+   inline stamp in the top row beside the status pills, and the body, the
+   primary actions and the tools grid each use the full card width. */
+@media (--md) {
+  /* List | Calendar sits one level below the page's My events | Discover
+     switch, so it is drawn as quiet underline tabs: no track, no raised pill,
+     a hairline under the row and a coral rule under the view that is on.
+     The header's own bottom margin already spaces them from the switch. */
+  .ev-page {
+    padding-top: 0;
+  }
+  .mview {
+    width: 100%;
+    gap: 22px;
+    padding: 0;
+    margin-bottom: var(--gap-sm);
+    background: none;
+    border-radius: 0;
+    border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
+  }
+  .mview-btn {
+    min-height: var(--tap-min);
+    padding: 0 2px;
+    margin-bottom: -1px;
+    font-size: var(--text-13);
+    border-radius: 0;
+    border-bottom: 2px solid transparent;
+    transition:
+      color 0.18s var(--ease),
+      border-color 0.18s var(--ease);
+  }
+  .mview-btn.on {
+    background: none;
+    box-shadow: none;
+    border-bottom-color: var(--accent);
+  }
+  .mview-btn:focus-visible {
+    outline-offset: -2px;
+  }
+
+  /* Toolbar: the search field on its own row, then Refine with the density
+     and Select controls on one row, then the timezone note. The two wrapper
+     rows dissolve (display: contents) so their children share this one
+     wrapping row; the drawer and the active-filter row keep full lines and
+     sit between the controls and the note, so the drawer still opens right
+     under the button that opens it. */
+  .ev-toolbar {
+    margin-top: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 8px;
+  }
+  .ev-search-row,
+  .ev-controls {
+    display: contents;
+  }
+  .ev-toolbar > * {
+    flex: 0 0 100%;
+    order: 3;
+  }
+  .ev-search-wrap {
+    flex: 0 0 100%;
+    order: 0;
+  }
+  .ev-search {
+    min-height: var(--tap-min);
+  }
+  .ev-refine,
+  .ctrl-btn {
+    order: 1;
+    margin-top: 8px;
+  }
+  .ctrl-btn {
+    min-height: var(--tap-min);
+    padding: 7px 14px;
+  }
+  /* Density and Select gather on the right, across from Refine. */
+  .ev-controls > .ctrl-btn:first-child {
+    margin-left: auto;
+  }
+  .ctrl-spacer {
+    display: none;
+  }
+  /* The density button is icon-only here; its label stays as the name. */
+  .ctrl-btn:has(.ctrl-label) {
+    width: var(--tap-min);
+    justify-content: center;
+    padding: 0;
+  }
+  .ctrl-btn svg {
+    width: 15px;
+    height: 15px;
+  }
+  .ctrl-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .tz-note {
+    order: 4;
+    flex: 0 0 100%;
+    margin-top: 6px;
+    white-space: normal;
+  }
+  .agenda {
+    margin-top: 20px;
+  }
+
+  /* Calendar view. A square day cell with its 44px floor made seven columns
+     at least 338px wide, which pushed the card past a 375px screen. Here the
+     cells keep the 44px height and take whatever width the column gives. */
+  .cal-card {
+    min-width: 0;
+    padding: 18px 14px 20px;
+  }
+  .cal-grid {
+    gap: 3px;
+  }
+  .cal-cell {
+    aspect-ratio: auto;
+    min-width: 0;
+  }
+  .insights {
+    padding: 18px;
+  }
+
+  /* Card: one wrapping row. The body and pill wrappers dissolve (display:
+     contents), so the date stamp, the status pills and (in Select mode) the
+     checkbox share the top line and wrap onto a second one when a long label
+     needs it; every other part of the body takes a full line under them. */
+  .ev-card,
+  .ev-layout.compact .ev-card {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 8px;
+    padding: 13px var(--wrap-px) 18px;
+  }
+  .ev-layout.compact .ev-card {
+    padding: 9px var(--wrap-px) 14px;
+  }
+  .ev-body,
+  .ev-body > .ev-badges {
+    display: contents;
+  }
+  /* `flex: 1` lets a part pulled left by a negative margin (the meta line)
+     still reach the right edge. */
+  .ev-body > *,
+  .ev-side {
+    flex: 1 1 100%;
+    order: 2;
+  }
+  .ev-badges > * {
+    order: 0;
+    margin-block: 3px;
+  }
+  /* Select mode's checkbox is pinned to the card's top-right corner, level
+     with the first line, so a crowded top row can never push it onto a line
+     of its own. The last pill keeps clear of it. */
+  .ev-check {
+    position: absolute;
+    top: 19px;
+    right: var(--wrap-px);
+  }
+  .ev-layout.compact .ev-check {
+    top: 15px;
+  }
+  .ev-layout.selecting .ev-badges > :last-child {
+    margin-right: 34px;
+  }
+  /* The 22px box keeps its size; its hit area grows to the 44px floor. */
+  .ev-check::after {
+    content: "";
+    position: absolute;
+    inset: -11px;
+  }
+
+  /* The date tile, folded into one line: MON 29 JUN. */
+  .ev-tile,
+  .ev-layout.compact .ev-tile {
+    order: 0;
+    width: auto;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 5px;
+    margin-block: 3px;
+    padding: 4px 10px 5px;
+    border-radius: var(--radius-10);
+  }
+  .ev-tile .et-day,
+  .ev-layout.compact .ev-tile .et-day {
+    font-size: var(--text-17);
+    margin-top: 0;
+  }
+  .ev-tile .et-mon {
+    margin-top: 0;
+  }
+
+  .soon-bar {
+    margin: 9px 0 0;
+  }
+  .ev-name {
+    margin-top: 7px;
+  }
+
+  /* The primary actions (Manage, RSVP, Accept and Decline, the ticket) take a
+     full-width row above the tools grid, buttons sharing it equally. */
+  .ev-side {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 14px;
+  }
+  .ev-actions {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 18px;
+  }
+  .ev-actions > :not(.ev-link),
+  .invite-row > * {
+    flex: 1 1 0;
+  }
+  .invite-row {
+    flex: 1 1 100%;
+  }
+  .ev-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: var(--tap-min);
+  }
+
+  /* Tools: a grid of equal buttons, two to a row while a column can hold
+     136px, else one per row (a 320px screen), so a label never breaks inside
+     a word. An odd last button keeps its half cell. */
+  .card-tools {
+    order: 3;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 136px), 1fr));
+    gap: 8px;
+    margin-top: 14px;
+    padding-top: 14px;
+  }
+  .tool-btn {
+    justify-content: center;
+    min-height: var(--tap-min);
+    padding: 8px 10px;
+    text-align: center;
+    line-height: 1.25;
+    hyphens: none;
+    text-wrap: balance;
+  }
+
+  /* Select mode: room under the last card for the floating bar, so the bar
+     never covers it at full scroll. The page already pads 112px below. */
+  .ev-layout.selecting .agenda-col {
+    padding-bottom: var(--section-y-160);
+  }
+
+  /* Tap targets. Chips and inline links keep their drawn size and get a hit
+     area grown to about the 44px floor by an invisible ::after. */
+  .pill,
+  .fchip,
+  .ev-friends,
+  .ev-series,
+  .acc-chip.clickable,
+  .ev-alert button,
+  .ev-edge button {
+    position: relative;
+  }
+  .pill::after,
+  .fchip::after,
+  .ev-friends::after,
+  .ev-series::after,
+  .acc-chip.clickable::after,
+  .ev-alert button::after,
+  .ev-edge button::after,
+  .meta-link::after,
+  .soon-link::after {
+    content: "";
+    position: absolute;
+    inset: -13px -4px;
+  }
+  .pill::after {
+    inset: -5px 0;
+  }
+  .fchip::after,
+  .ev-series::after,
+  .acc-chip.clickable::after {
+    inset: -9px 0;
+  }
+  /* The dotted rows clip at their left edge to hide a line's leading dot;
+     the clip reaches far enough above and below to keep those hit areas. */
+  .sep-list {
+    clip-path: inset(-14px -6px -14px 13px);
+  }
+
+  /* Select mode's floating bar: the desktop pill squeezed its three actions
+     into a stack. Here it is a card across the gutter, the count and the
+     close control on top and the actions sharing the rows under them. The
+     `body` prefix outranks the shared bar's own placement rules. */
+  body .bulk-bar {
+    width: calc(100% - 2 * var(--wrap-px));
+    flex-wrap: wrap;
+    row-gap: 10px;
+    border-radius: var(--radius-card);
+    padding: 12px 10px 12px 18px;
+  }
+  body .bulk-bar > button:last-child {
+    margin-left: auto;
+    min-width: var(--tap-min);
+    min-height: var(--tap-min);
+    justify-content: center;
+  }
+  body .bulk-bar > div {
+    order: 3;
+    flex: 1 1 100%;
+    margin-inline-start: 0;
+    padding-right: 8px;
+  }
+  body .bulk-bar > div > * {
+    flex: 1 1 auto;
+    min-height: var(--tap-min);
+    padding: 8px 14px;
+    font-size: var(--text-13-5);
   }
 }

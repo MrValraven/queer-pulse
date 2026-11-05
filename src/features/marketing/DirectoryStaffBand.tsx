@@ -98,11 +98,16 @@ function StaffBandForModerators({
           />
         </div>
 
-        <div className={styles.actions}>
+        {/* Its own grid item, so a phone can lift it up beside the label
+            while the buttons below keep a full row to themselves. */}
+        <span className={styles.toggleSlot}>
           <DirectoryVisitorViewToggle
             tone="dark"
             onEnterVisitorView={onEnterVisitorView}
           />
+        </span>
+
+        <div className={styles.actions}>
           {isEditableByAdmin && listingReference && (
             <Button
               variant="ghost-dark"

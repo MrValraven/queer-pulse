@@ -12,7 +12,6 @@ import {
   FiUser,
   FiUsers,
 } from "react-icons/fi";
-import type { Theme } from "../../../app/providers/themeContext";
 import type { StudioLandingListenReason } from "../api/studioLanding.api";
 
 /**
@@ -146,12 +145,11 @@ export const STUDIO_LANDING_SHOT_SIZES: Record<
   phone: { width: 640, height: 1385 },
 };
 
-/** Public path of a screenshot for one theme, such as `/studio-landing/home-desktop-dark.webp`. */
-export function studioLandingShotSrc(
-  shot: StudioLandingShot,
-  theme: Theme,
-): string {
-  return `${STUDIO_LANDING_IMAGE_DIR}/${shot.fileBase}-${theme}.webp`;
+/** Public path of a screenshot's dark capture, such as
+ *  `/studio-landing/home-desktop-dark.webp`. Studio is always dark, so the
+ *  landing shows the dark captures only. */
+export function studioLandingShotSrc(shot: StudioLandingShot): string {
+  return `${STUDIO_LANDING_IMAGE_DIR}/${shot.fileBase}-dark.webp`;
 }
 
 const HOME_SHOT: StudioLandingShot = {

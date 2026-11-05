@@ -1,136 +1,388 @@
 /* ── TS-04 moderator workload and SLA health. Staff-only; nothing in this file
    is ever rendered on a member surface. ─────────────────────────────────── */
 
-.panel {
-  display: grid;
-  gap: 16px;
-}
-
-.intro {
-  margin: 0;
-  font-family: var(--sans);
-  font-size: var(--text-14-5);
-  line-height: 1.6;
-  color: var(--ink);
-  max-width: 68ch;
-}
-
-.summary {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  padding: 14px 16px;
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-16);
-  background: var(--paper);
-}
-
-.summaryFact {
-  font-family: var(--sans);
-  font-size: var(--text-13-5);
-  color: rgba(var(--line-rgb), 0.72);
-}
-
-.rows {
-  display: grid;
-  gap: 12px;
-}
-
+/* One queue card. The level reads as the chip's word and glyph, and a warning
+   or critical card adds a bar along its top edge as a shape, so the level
+   survives a greyscale print with the word still beside it. The card is its
+   own size container, so the body inside steps by the width the card gets. */
 .row {
-  display: grid;
-  gap: 12px;
-  padding: 16px 18px;
+  position: relative;
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-18);
+  border-radius: var(--radius-card);
   background: var(--paper);
+  box-shadow: var(--shadow-e1);
+  overflow: hidden;
+  container: queue-card / inline-size;
 }
 
-/* The left edge restates the severity as a shape, so the level survives a
-   greyscale print and a monochrome display. It is never the only carrier: the
-   chip beside it says the word. */
-.rowWarning {
-  border-left: 4px solid var(--amber);
+/* Two columns: the header and the link share the first line, and every other
+   block spans the card below them. The link comes last in the DOM, so a
+   keyboard reaches it after the readings it leads into. */
+.rowBody {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 20px;
+  padding: var(--card-pad);
 }
 
-.rowCritical {
-  border-left: 4px solid var(--danger);
+.rowBody > * {
+  grid-column: 1 / -1;
 }
 
+.rowWarning::before,
+.rowCritical::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+}
+
+.rowWarning::before {
+  background: var(--amber);
+}
+
+.rowCritical::before {
+  background: var(--danger);
+}
+
+/* The name and the chip wrap together on the left; the link holds the top
+   right corner of the same line however they wrap. */
 .rowHead {
+  grid-column: 1;
+  grid-row: 1;
   display: flex;
-  align-items: center;
-  gap: 12px;
   flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  min-width: 0;
 }
 
 .queueName {
+  margin: 0;
   font-family: var(--serif);
-  font-size: var(--text-18);
+  font-size: var(--text-20);
+  font-weight: 500;
+  line-height: 1.25;
   color: var(--text-strong);
-  text-decoration: none;
 }
 
-.queueName:hover {
-  text-decoration: underline;
+.rowBody > .openLink {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+}
+
+.openLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: -10px;
+  padding: 6px 10px;
+  border-radius: var(--radius-pill);
+  font-family: var(--sans);
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--text-strong);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.openLink:hover {
+  background: rgba(var(--line-rgb), 0.05);
+}
+
+.openLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.openLinkArrow {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--dur-base) var(--ease);
+}
+
+.openLink:hover .openLinkArrow,
+.openLink:focus-visible .openLinkArrow {
+  transform: translateX(2px);
 }
 
 .breaches {
-  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
   font-family: var(--sans);
-  font-size: var(--text-13-5);
-  line-height: 1.55;
-  color: var(--ink);
 }
 
 .breachLabel {
+  font-size: var(--text-13);
   font-weight: 600;
+  color: var(--ink);
 }
 
-.stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 12px;
+.breachList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
   margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Inline-block so the first letter can be capitalised: the axis copy is
+   written lowercase to read inside a sentence elsewhere. */
+.breachPill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  line-height: 1.3;
+  background: rgba(var(--line-rgb), 0.06);
+  color: var(--ink);
+}
+
+.breachPill::first-letter {
+  text-transform: uppercase;
+}
+
+.breachPillWarning {
+  background: rgba(var(--amber-rgb), 0.16);
+  color: var(--amber-ink);
+}
+
+.breachPillCritical {
+  background: rgba(var(--danger-rgb), 0.1);
+  color: var(--danger-ink);
+}
+
+/* The three figures severity is decided on. Fixed columns, so Waiting, Longest
+   wait and Past its window sit in the same place on every card. */
+.figures {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px 28px;
+  margin: 0;
+}
+
+.figure {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  min-width: 0;
+}
+
+.figureLabel {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(var(--line-rgb), 0.62);
+}
+
+.figureValue {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-28);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-strong);
+}
+
+/* "Nothing waiting" is a statement, so it reads quieter than a number while
+   keeping the number's line box, so the cards stay level. */
+.figureValueMuted {
+  font-size: var(--text-17);
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: calc(var(--text-28) * 1.15);
+  color: rgba(var(--line-rgb), 0.62);
+}
+
+.figureBand {
+  display: grid;
+  gap: 8px;
+  margin: 4px 0 0;
+}
+
+.figureNote {
+  font-family: var(--sans);
+  font-size: var(--text-12-5);
+  font-variant-numeric: tabular-nums;
+  color: rgba(var(--line-rgb), 0.62);
+}
+
+/* The threshold meter. The fill grows from the left by scaleX, so a new
+   reading slides to its place; the ticks mark the warning and critical levels
+   and stand proud of the track. */
+.meter {
+  position: relative;
+  height: 14px;
+}
+
+.meterTrack {
+  position: absolute;
+  inset: 4px 0;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.08);
+  overflow: hidden;
+}
+
+.meterFill {
+  width: 100%;
+  height: 100%;
+  transform-origin: left center;
+  transition: transform var(--dur-slow) var(--ease-out);
+  animation: meterGrow var(--dur-slow) var(--ease-out);
+}
+
+@keyframes meterGrow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+.meterFillCalm {
+  background: var(--jade);
+}
+
+.meterFillWarning {
+  background: var(--amber);
+}
+
+.meterFillCritical {
+  background: var(--danger);
+}
+
+/* A tick is a solid ink line edged in paper on both sides. Over any fill one
+   of the two edges contrasts with it (ink on jade, red and the track; paper on
+   amber and on the dark-theme fills), so the levels read exactly where a fill
+   reaches them. Critical stands the full meter height and warning a step
+   shorter, so the two stay apart by shape. */
+.meterTick {
+  position: absolute;
+  box-sizing: border-box;
+  width: 4px;
+  margin-left: -2px;
+  border-inline: 1px solid var(--paper);
+  background: var(--text-strong);
+}
+
+.meterTickWarning {
+  top: 2px;
+  height: 10px;
+}
+
+.meterTickCritical {
+  top: 0;
+  height: 14px;
+}
+
+/* The quieter readings under a hairline: none of them decide the severity. */
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 40px;
+  margin: 0;
+  padding-top: 16px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
 .stat {
   display: grid;
+  align-content: start;
   gap: 2px;
-  padding: 10px 12px;
-  border-radius: var(--radius-12);
-  background: var(--cream);
+  min-width: 0;
 }
 
 .statLabel {
   margin: 0;
   font-family: var(--sans);
-  font-size: var(--text-12);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+  font-size: var(--text-12-5);
   color: rgba(var(--line-rgb), 0.62);
 }
 
 .statValue {
   margin: 0;
   font-family: var(--sans);
-  font-size: var(--text-17);
-  color: var(--ink);
+  font-size: var(--text-15);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-strong);
 }
 
-/* The "not applicable" and "queue is empty" readings. Quieter than a number,
+/* The "not applicable" and "nobody on rota" readings. Quieter than a number,
    because neither is one. */
 .statValueMuted {
-  font-size: var(--text-14);
-  color: rgba(var(--line-rgb), 0.68);
+  font-weight: 500;
+  color: rgba(var(--line-rgb), 0.7);
 }
 
 .statNote {
   margin: 0;
+  max-width: 30ch;
   font-family: var(--sans);
   font-size: var(--text-12-5);
   color: rgba(var(--line-rgb), 0.62);
+}
+
+@container queue-card (max-width: 560px) {
+  .figures {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .figure + .figure {
+    padding-top: 16px;
+    border-top: 1px solid rgba(var(--line-rgb), 0.09);
+  }
+}
+
+/* Narrow cards: the header takes the whole first line and the link drops to
+   the foot of the card, where its DOM position already puts it. */
+@container queue-card (max-width: 480px) {
+  .rowHead {
+    grid-column: 1 / -1;
+  }
+
+  .rowBody > .openLink {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    justify-self: start;
+    margin-right: 0;
+    margin-left: -10px;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 20px;
+  }
+}
+
+/* Steps on the card's own width, the same measure the overview card uses, so
+   both cards tighten together. */
+@container queue-card (max-width: 560px) {
+  .rowBody {
+    gap: 16px;
+    padding: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .meterFill,
+  .openLink,
+  .openLinkArrow {
+    transition: none;
+    animation: none;
+  }
 }
 
 /* ── The compact indicator, for surfaces a moderator already opens. ─────── */

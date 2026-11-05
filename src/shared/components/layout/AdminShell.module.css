@@ -991,11 +991,15 @@
     z-index: var(--z-modal);
     width: min(84vw, 300px);
     transform: translateX(-100%);
-    transition: transform var(--dur, 0.24s) var(--ease, ease);
-    box-shadow: 0 0 60px rgba(0, 0, 0, 0.32);
+    transition:
+      transform var(--dur, 0.24s) var(--ease, ease),
+      box-shadow var(--dur, 0.24s) var(--ease, ease);
   }
+  /* The shadow belongs to the open drawer only: a closed dock sits just off
+     the left edge, where its shadow would show as a grey band on the page. */
   .sidebarDockOpen {
     transform: translateX(0);
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.32);
   }
 
   /* Fill the fixed dock and clear the notch; the nav scrolls internally. */

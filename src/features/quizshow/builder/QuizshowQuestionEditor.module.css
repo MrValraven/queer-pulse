@@ -1,17 +1,9 @@
-/* The question editor: stacked fields on the page's own surface, so it reads
-   the same in light and dark. Colours come from the shared tokens. */
-
-.editor {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  min-width: 0;
-}
+/* The question fields: stacked on the surface around them, so they read the
+   same in light and dark. Colours come from the shared tokens. */
 
 .bilingual,
 .answerField,
-.mediaField,
-.selectField {
+.mediaField {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -29,12 +21,14 @@
   margin-bottom: 0;
 }
 
+/* The --studio-field-label-* hooks are set by the studio inspector; nothing
+   else sets them, so every other caller keeps the values after each comma. */
 .groupLabel {
-  font-size: var(--text-11-5);
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--ink-60);
+  font-size: var(--studio-field-label-size, var(--text-11-5));
+  font-weight: var(--studio-field-label-weight, 600);
+  letter-spacing: var(--studio-field-label-spacing, 0.07em);
+  text-transform: var(--studio-field-label-case, uppercase);
+  color: var(--studio-field-label-color, var(--ink-60));
 }
 
 .hint {
@@ -48,12 +42,6 @@
   margin: 0;
   font-size: var(--text-13);
   color: var(--accent-text);
-}
-
-.scoreRow {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
 }
 
 /* Rows that come and go inside CollapseListItem. */
@@ -75,7 +63,8 @@
 }
 
 .optionRow > :nth-child(2),
-.orderRow > :nth-child(2) {
+.orderRow > :nth-child(2),
+.orderRow > :only-child {
   flex: 1;
   min-width: 0;
 }
@@ -92,12 +81,61 @@
   background: var(--paper);
 }
 
+/* A drawn radio: the native one paints a flat grey disc on a dark surface. */
 .radio {
+  appearance: none;
+  display: grid;
+  flex-shrink: 0;
+  place-content: center;
   width: 24px;
   height: 24px;
   margin: 10px;
-  accent-color: var(--accent);
+  border: 2px solid rgba(var(--line-rgb), 0.45);
+  border-radius: 50%;
+  background: transparent;
   cursor: pointer;
+  transition-property: border-color, background-color;
+  transition-duration: var(--dur-fast);
+}
+
+.radio::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent-deep);
+  transform: scale(0);
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.radio:checked {
+  border-color: var(--accent-deep);
+  background: rgba(var(--accent-rgb), 0.12);
+}
+
+.radio:checked::before {
+  transform: scale(1);
+}
+
+:global([data-theme="dark"]) .radio:checked {
+  border-color: var(--accent);
+}
+
+:global([data-theme="dark"]) .radio:checked::before {
+  background: var(--accent);
+}
+
+@media (hover: hover) {
+  .radio:not(:checked):hover {
+    border-color: rgba(var(--line-rgb), 0.7);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .radio,
+  .radio::before {
+    transition: none;
+  }
 }
 
 .radio:focus-visible {
@@ -160,9 +198,9 @@
   gap: 12px;
   min-height: var(--tap-min);
   padding: 12px 16px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(var(--line-rgb), 0.28);
   border-radius: var(--radius-14);
-  background: var(--paper);
+  background: rgba(var(--ink-rgb), 0.03);
   color: var(--ink);
   font-family: inherit;
   font-size: var(--text-15);
@@ -172,9 +210,14 @@
 }
 
 .cardChecked {
-  border-color: var(--accent);
-  background: rgba(var(--ink-rgb), 0.04);
+  border-color: var(--accent-deep);
+  background: rgba(var(--accent-rgb), 0.1);
   font-weight: 600;
+}
+
+:global([data-theme="dark"]) .cardChecked {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.14);
 }
 
 /* Accepted answers */
@@ -193,9 +236,9 @@
   gap: 2px;
   max-width: 100%;
   padding-inline: 14px 4px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(var(--line-rgb), 0.28);
   border-radius: var(--radius-pill);
-  background: var(--paper);
+  background: rgba(var(--ink-rgb), 0.04);
   font-size: var(--text-14);
   color: var(--ink);
 }
@@ -215,4 +258,90 @@
   flex: 1;
   min-width: 0;
   margin-bottom: 0;
+}
+
+/* ── The picture on the studio's slide (QuizshowQuestionMedia variants) ──
+   The field keeps its label for screen readers only, and hands the upload
+   field its classes for the slot and the buttons. The form field above is
+   untouched. */
+.mediaHiddenLabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.mediaSlide,
+.mediaChip {
+  position: relative;
+  color: var(--qs-text);
+}
+
+/* The element in the selector outranks the upload field's own root margin,
+   whatever the module order. */
+div.mediaUpload {
+  margin-block-end: 0;
+}
+
+/* An empty slot reads as a dashed glass drop zone on the slide; a picture
+   sits in it plainly. Scoped under the variant so it outranks the slot's
+   own dark tint rule. */
+.mediaSlide div.mediaSlideSlot {
+  border: 1.5px dashed rgba(255, 255, 255, 0.3);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  color: var(--qs-text-mute);
+  transition: border-color var(--dur-base) var(--ease);
+}
+
+.mediaSlide div.mediaSlideSlot:has(img) {
+  border-style: solid;
+  border-color: var(--qs-glass-border);
+}
+
+/* The whole picture shows, as it does on the TV; a slide-shaped picture is not cropped. */
+.mediaSlide div.mediaSlideSlot img {
+  object-fit: contain;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .mediaSlide:hover div.mediaSlideSlot {
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+/* The add, change and remove buttons on the slide: glass pills like the
+   slide's own meta pills. */
+button.mediaSlideButton {
+  min-height: 2.5rem;
+  padding: 0.45em 1.1em;
+  border: 1px solid var(--qs-glass-border-strong);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-pill);
+  color: var(--qs-text);
+  font-size: var(--text-18);
+}
+
+button.mediaSlideButton svg {
+  width: 1em;
+  height: 1em;
+}
+
+.mediaSlide .problem,
+.mediaChip .problem {
+  color: var(--qs-low);
 }

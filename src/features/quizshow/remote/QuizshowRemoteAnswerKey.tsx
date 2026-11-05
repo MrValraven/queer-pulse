@@ -7,7 +7,11 @@ import type {
   QuizshowOption,
 } from "../../../shared/contracts/quizshow";
 import { QuizshowAnswerTile } from "../stage/QuizshowAnswerTile";
-import { optionLetter, pickQuizshowText } from "../stage/quizshowText";
+import {
+  optionLetter,
+  pickQuizshowText,
+  quizshowAnswerNumberFormatter,
+} from "../stage/quizshowText";
 import { answerSwatchFor, trueFalseSwatchFor } from "../quizshowSwatches";
 import styles from "./QuizshowRemote.module.css";
 
@@ -123,7 +127,7 @@ function AnswerKeyBody({ answerKey, options, language }: AnswerKeyBodyProps) {
     case "closest_number":
       return (
         <p className={`${styles.keyText} ${styles.count}`}>
-          {format.number(answerKey.value)}
+          {quizshowAnswerNumberFormatter(format.number)(answerKey.value)}
         </p>
       );
     case "lie_detector":

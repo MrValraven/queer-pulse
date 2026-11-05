@@ -1,4 +1,5 @@
 import { useCallback, useId } from "react";
+import { LuRows2, LuRows4 } from "react-icons/lu";
 import {
   ActiveFilters,
   RefineGroup,
@@ -12,6 +13,7 @@ import { sx } from "./myEvents.styles";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMyEvents } from "./MyEventsContext";
 import { EventPills } from "./EventPills";
+import { EventFilterChips } from "./EventFilterChips";
 import { DEFAULT_PILL, TOOLBAR_FILTERS } from "./myEvents.filters";
 import { useMyEventsActiveFilters } from "./useMyEventsActiveFilters";
 import type { SortBy } from "./myEvents.types";
@@ -38,6 +40,10 @@ export function EventToolbar() {
   const hiddenFilterCount =
     (c.pill === DEFAULT_PILL ? 0 : 1) +
     TOOLBAR_FILTERS.filter((filter) => c.activeFilters[filter.key]).length;
+  const isCompact = c.density === "compact";
+  const densityLabel = isCompact
+    ? t("myevents:toolbar.density.compact")
+    : t("myevents:toolbar.density.comfortable");
   // "Clear all" answers the chip row, so it drops the bucket too. Kept out of
   // `clearSecondary` on purpose: that also backs the empty state's own "clear
   // filters" button, which must not move you out of the bucket you opened.
@@ -70,7 +76,11 @@ export function EventToolbar() {
             aria-label={t("myevents:toolbar.searchAria")}
           />
         </div>
-        <RefineToggle {...refine.toggleProps} activeCount={hiddenFilterCount} />
+        <RefineToggle
+          {...refine.toggleProps}
+          activeCount={hiddenFilterCount}
+          className={sx("ev-refine")}
+        />
       </div>
 
       <RefinePanel {...refine.panelProps}>
@@ -103,21 +113,7 @@ export function EventToolbar() {
             role="group"
             aria-labelledby={filtersLabelId}
           >
-            <div className={sx("ev-filters")}>
-              {TOOLBAR_FILTERS.map((filter) => (
-                <button
-                  key={filter.key}
-                  type="button"
-                  className={sx(
-                    `fchip${c.activeFilters[filter.key] ? " on" : ""}`,
-                  )}
-                  aria-pressed={c.activeFilters[filter.key]}
-                  onClick={() => c.toggleFilter(filter.key)}
-                >
-                  {t(filter.labelKey)}
-                </button>
-              ))}
-            </div>
+            <EventFilterChips />
           </RefineGroup>
         </RefineSplit>
       </RefinePanel>
@@ -130,24 +126,16 @@ export function EventToolbar() {
       <div className={sx("ev-controls")}>
         <button
           type="button"
-          className={sx(`ctrl-btn${c.density === "compact" ? " on" : ""}`)}
+          className={sx(`ctrl-btn${isCompact ? " on" : ""}`)}
+          title={densityLabel}
           onClick={c.toggleDensity}
         >
-          <svg
-            viewBox="0 0 14 14"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={1.5}
-            strokeLinecap="round"
-            aria-hidden
-          >
-            <path d="M2 3h10M2 7h10M2 11h10" />
-          </svg>
-          <span>
-            {c.density === "compact"
-              ? t("myevents:toolbar.density.compact")
-              : t("myevents:toolbar.density.comfortable")}
-          </span>
+          {/* Boxed rows, so the icon-only phone button reads apart from the
+              List tab's bare lines: two rows comfortable, four compact. */}
+          {isCompact ? <LuRows4 aria-hidden /> : <LuRows2 aria-hidden />}
+          {/* The label folds to an icon on a phone (CSS) and stays the
+              button's accessible name. */}
+          <span className={sx("ctrl-label")}>{densityLabel}</span>
         </button>
         <button
           type="button"

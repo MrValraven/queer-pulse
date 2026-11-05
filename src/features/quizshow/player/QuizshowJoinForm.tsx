@@ -204,7 +204,7 @@ function JoinFormBody({
 
   return (
     <form
-      className={styles.form}
+      className={`${styles.form} ${styles.sheet}`}
       onSubmit={(event) => void submitJoin(event)}
       noValidate
     >
@@ -245,6 +245,7 @@ function JoinFormBody({
       />
       {isTeams && (
         <>
+          <hr className={styles.divider} />
           <QuizshowTeamPicker
             lobby={session.lobby}
             maxTeamSize={session.maxTeamSize}
@@ -258,7 +259,7 @@ function JoinFormBody({
         </>
       )}
       <QuizshowErrorLine errorKey={errors.form} />
-      <Button type="submit" size="lg" aria-disabled={isSending}>
+      <Button type="submit" variant="stage" size="lg" aria-disabled={isSending}>
         {t("quizshow:player.joinCta")}
       </Button>
     </form>

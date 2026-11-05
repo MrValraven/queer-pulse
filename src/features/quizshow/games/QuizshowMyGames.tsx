@@ -1,13 +1,11 @@
 import { useId, useState } from "react";
 import { AnimatePresence, m } from "motion/react";
-import { FiPlus } from "react-icons/fi";
+import { FiAlertCircle, FiPlus } from "react-icons/fi";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import {
   Button,
   Collapse,
   CollapseListItem,
-  LoadErrorState,
-  SkeletonLine,
 } from "../../../shared/components/ui";
 import type { QuizshowGameListResponse } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -24,19 +22,21 @@ import styles from "./QuizshowGames.module.css";
 const SKELETON_CARD_KEYS = ["first-card", "second-card"] as const;
 const FADE_EASE = [0.22, 0.68, 0.16, 1] as const;
 
-/** Two cards shaped like game cards (title, counts, a tag), so the list lands without a jump. */
+/** Two cards shaped like game cards (cover, title, a tag), so the list lands without a jump. */
 function GameCardsSkeleton() {
+  const { reducedMotion } = useMotionPrefs();
   return (
-    <div aria-hidden>
+    <div
+      aria-hidden
+      className={`${styles.list} ${reducedMotion ? "" : styles.skeletonPulse}`}
+    >
       {SKELETON_CARD_KEYS.map((cardKey) => (
         <div key={cardKey} className={styles.skeletonCard}>
-          <SkeletonLine width="55%" height={26} />
-          <SkeletonLine width="75%" height={16} />
-          <SkeletonLine
-            width="5rem"
-            height={24}
-            style={{ borderRadius: "var(--radius-pill)" }}
-          />
+          <div className={styles.skeletonCover} />
+          <div className={styles.skeletonText}>
+            <div className={styles.skeletonTitle} />
+            <div className={styles.skeletonMeta} />
+          </div>
         </div>
       ))}
     </div>
@@ -79,12 +79,28 @@ function MyGamesBody({
   if (games.isError) {
     return (
       <QuizshowPickerFade stateKey="error">
-        <LoadErrorState
-          compact
-          title={t("quizshow:home.myGames.loadError")}
-          onRetry={() => void games.refetch()}
-          isRetrying={games.isFetching}
-        />
+        <div className={styles.errorPanel} role="status">
+          <FiAlertCircle
+            aria-hidden
+            fill="none"
+            className={styles.errorPanelIcon}
+          />
+          <h3 className={styles.errorPanelTitle}>
+            {t("quizshow:home.myGames.loadError")}
+          </h3>
+          <p className={styles.errorPanelBody}>{t("shared:loadError.body")}</p>
+          <Button
+            variant="stage"
+            aria-disabled={games.isFetching || undefined}
+            onClick={() => {
+              if (!games.isFetching) void games.refetch();
+            }}
+          >
+            {games.isFetching
+              ? t("shared:loadError.retryingCta")
+              : t("shared:loadError.retryCta")}
+          </Button>
+        </div>
       </QuizshowPickerFade>
     );
   }
@@ -134,7 +150,7 @@ export function QuizshowMyGames() {
               }}
             >
               <Button
-                variant="soft"
+                variant="stage-ghost"
                 aria-disabled={isAtLimit}
                 onClick={() => {
                   if (!isAtLimit) setOpenDialogStart("blank");

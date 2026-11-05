@@ -1,20 +1,31 @@
-/* Pulse Live presenter screen. Sized for distance on the TV (`.screen`) and
-   shrunk for the remote's preview (`.preview`); every piece reads the custom
-   properties below, so one class switches the whole stage. */
+/* Pulse Live presenter screen, in the "Velvet prism" look. Sized for distance
+   on the TV (`.screen`) and shrunk for a small preview (`.preview`); every
+   piece reads the custom properties below, so one class switches the whole
+   stage. Every colour is a --qs-* token (tokens/quizshowStage.css), so the
+   light stage ([data-qs-theme="light"] on the page) restyles it all. Glass is
+   written out on the many small surfaces (chips, rows, vote cards) without a
+   backdrop blur, so a cheap TV browser never stacks dozens of blurred layers;
+   the dark tint under the wash holds the contrast on its own. */
 
 /* A fixed viewport: the TV never scrolls, so every view fits 100svh and its
-   flex and grid children carry min-height: 0 to shrink into it. */
+   flex and grid children carry min-height: 0 to shrink into it. The velvet
+   backdrop is the page's first child and fills it. */
 .page {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   height: 100svh;
   overflow: hidden;
-  background: var(--cream);
-  color: var(--ink);
+  background: var(--qs-base);
+  color: var(--qs-text);
   font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
 }
 
 .pageBody {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -36,29 +47,48 @@
 .messageTitle {
   max-width: 32ch;
   margin: 0;
+  color: var(--qs-text);
   font-family: var(--serif);
   font-size: var(--text-title);
+  font-weight: 600;
   line-height: var(--lh-title);
   text-wrap: balance;
 }
 
-/* Toolbar: fixed top right, portaled to the body */
+/* Toolbar: a glass pill fixed bottom right, portaled to the body. The top
+   right corner belongs to the timer ring. It is the one stage surface that
+   keeps its blur: there is only one of it. */
 .toolbar {
   position: fixed;
-  top: max(var(--gap-sm), env(safe-area-inset-top));
+  bottom: max(var(--gap-sm), env(safe-area-inset-bottom));
   inset-inline-end: max(var(--gap-sm), env(safe-area-inset-right));
   z-index: var(--z-sticky);
   display: flex;
   gap: var(--gap-xs);
   padding: var(--gap-xs);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--paper) 88%, transparent);
-  color: var(--ink);
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-pill);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-pill);
+  -webkit-backdrop-filter: var(--qs-glass-blur);
+  backdrop-filter: var(--qs-glass-blur);
+  color: var(--qs-text);
+  /* The icon buttons' hover wash, in the stage text colour. */
+  --button-icon-hover: color-mix(in srgb, var(--qs-text) 14%, transparent);
   opacity: 1;
   transition-property: opacity;
   transition-duration: var(--dur-slow);
   transition-timing-function: var(--ease);
+}
+
+.toolbar :is(a, button) {
+  color: var(--qs-text-mute);
 }
 
 .toolbar[data-faded="true"] {
@@ -74,14 +104,29 @@
 /* Stage sizes. The stage is a size container, so widths read the stage
    (cqw) and follow the scaled 1280x720 canvas in the remote's preview and in
    Try it the same way they follow the TV. Heights read --screen-vh: one
-   viewport percent on a real screen, one percent of 720px on a fixed canvas. */
+   viewport percent on a real screen, one percent of 720px on a fixed canvas.
+   The stage draws no backdrop: the page behind it does (the TV), or the frame
+   that holds it (Try it, the remote's preview, the studio). */
 .stage {
   --screen-vh: 1vh;
+  /* No backdrop blur on the stage's glass: up to eight tiles and pills sit
+     over a drifting backdrop at once, too much for a cheap TV browser. The
+     tint under the wash carries the contrast on its own. */
+  --qs-glass-blur: none;
+  /* The tiles' vote share: the percent alone, at the answer's size, as the
+     mockup reads from the back of the room. */
+  --stage-share-percent-size: 1em;
+  --stage-share-count-display: none;
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex: 1;
   flex-direction: column;
   min-width: 0;
   min-height: 0;
+  color: var(--qs-text);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
   container-type: inline-size;
 }
 
@@ -90,16 +135,27 @@
   --screen-answer: var(--text-screen-answer);
   --screen-label: var(--text-screen-label);
   --screen-code: var(--text-screen-code);
+  --screen-meta: calc(var(--screen-label) * 0.85);
+  /* The bottom-right toolbar's height and offset (44px buttons, the pill's
+     padding, the gap to the edge), less the view's own padding, plus a gap. */
+  --screen-toolbar-clearance: calc(
+    44px + var(--gap-xs) * 3 + var(--gap-sm) - var(--screen-pad)
+  );
+  /* Read by a stage piece without its own size class (the paused note). */
+  --stage-label: var(--screen-label);
   --screen-gap: var(--gap-lg);
   --screen-pad: clamp(
     var(--gap-grid),
     calc(4 * var(--screen-vh)),
     calc(var(--gap-lg) * 2)
   );
+  /* The timer ring's dial, from the ring's own type size (2.9em). */
+  --screen-ring-size: calc(var(--text-screen-answer) * 2.9);
   --screen-picture-max: calc(38 * var(--screen-vh));
-  /* Answer tiles here: lower than the stage piece's own 20vh, so two rows of
-     tiles, the prompt and the countdown fit 1080p. */
+  /* Answer tiles: two rows of tiles, the prompt and the header fit 1080p. */
   --screen-tile-min: calc(11 * var(--screen-vh));
+  --screen-tile-pad: clamp(var(--gap-sm), 1.9cqw, calc(var(--gap-lg) * 1.2));
+  --screen-tile-gap: clamp(var(--gap-sm), 1.4cqw, var(--gap-lg));
   --screen-row-min: calc(7 * var(--screen-vh));
   --screen-row-pad: var(--gap-sm);
   /* A party picture shrinks once the captions or the reveal arrive below it. */
@@ -115,15 +171,46 @@
   --screen-vote-pad-inline: min(var(--gap-sm), calc(1.3 * var(--screen-vh)));
 }
 
+/* Light stage: a wrong answer steps back less, so it still reads on a
+   projector in daylight. */
+[data-qs-theme="light"] .stage {
+  --stage-dimmed-opacity: 0.5;
+}
+
+/* The reveal of a quiz answer: the stage tints toward jade, a still field
+   under the content that fades in by opacity alone. */
+.revealGlow {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: radial-gradient(
+    75% 65% at 50% 88%,
+    color-mix(in srgb, var(--qs-right-border) 30%, transparent) 0%,
+    transparent 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-slow) var(--ease);
+}
+
+.revealGlow[data-shown="true"] {
+  opacity: 1;
+  transition-duration: var(--dur-reveal);
+}
+
 .preview {
   --screen-question: var(--text-16);
   --screen-answer: var(--text-12);
   --screen-label: var(--text-10);
   --screen-code: var(--text-22);
+  --screen-meta: var(--text-10);
   --screen-gap: var(--gap-xs);
   --screen-pad: var(--gap-xs);
+  --screen-ring-size: calc(var(--text-14) * 2.9);
   --screen-picture-max: 5rem;
   --screen-tile-min: 2.5rem;
+  --screen-tile-pad: var(--gap-xs);
+  --screen-tile-gap: var(--gap-xs);
   --screen-row-min: 1.75rem;
   --screen-row-pad: var(--gap-xs);
   --screen-picture-party: 3rem;
@@ -155,30 +242,69 @@
 }
 
 .muted {
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
 }
 
-/* Lobby */
+/* The gradient italic, for the `<em>` run of a large stage heading. */
+.emphasis {
+  composes: gradientText from "../stage/quizshowSurfaces.module.css";
+  font-weight: 500;
+}
+
+/* Lobby: the join card on the left, who has joined and tonight's rounds on
+   the right. */
+/* The lobby fills the whole 16:9: the join card holds the left five
+   twelfths at full height, the people and the rounds the right seven. */
 .lobby {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-  align-items: center;
-  gap: calc(var(--screen-gap) * 2);
+  flex: 1;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: stretch;
+  gap: calc(var(--screen-gap) * 1.5);
+  min-height: 0;
 }
 
+/* Nobody can join (Try it, the studio canvas): the roster takes the whole
+   width. */
+.lobby[data-join-hidden="true"] {
+  grid-template-columns: minmax(0, 1fr);
+  flex: none;
+  align-items: start;
+}
+
+/* The real TV only (the page holds the toolbar): the last round row ends
+   above the toolbar's bottom-right corner, at every screen height. */
+.page .lobby {
+  padding-block-end: var(--screen-toolbar-clearance);
+}
+
+/* With no card to match in height, the roster is one block, centred by the
+   view, with no band between the people and the rounds. */
+.lobby[data-join-hidden="true"] .lobbyRoster {
+  justify-content: flex-start;
+}
+
+/* The join card: raised glass, so the eye lands on it first. */
 .lobbyJoin {
+  composes: glassRaised from "../stage/quizshowSurfaces.module.css";
+  --qs-glass-radius: var(--qs-radius-card);
+  padding: calc(var(--screen-gap) * 1.5) calc(var(--screen-gap) * 1.25);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--screen-gap);
+  justify-content: center;
+  gap: calc(var(--screen-gap) * 0.7);
   min-width: 0;
   text-align: center;
+  /* The join code sizes itself from the card's own width. */
+  container-type: inline-size;
 }
 
 .qr {
+  width: min(100%, calc(42 * var(--screen-vh)));
   max-width: 100%;
   height: auto;
-  border-radius: var(--radius-16);
+  border-radius: var(--qs-radius-tile);
 }
 
 .joinAt {
@@ -189,25 +315,41 @@
 
 .codeLabel {
   margin: 0;
-  color: var(--ink-60);
-  font-size: var(--screen-label);
-  letter-spacing: var(--ls-label);
+  color: var(--qs-text-mute);
+  font-size: calc(var(--screen-label) * 0.8);
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .joinCode {
   margin: 0;
-  /* Six letters in a two-fifths column: the width cap keeps them inside it. */
-  font-size: min(var(--screen-code), 6.5cqw);
+  /* Six letters on one line, sized by the card (cqi reads the card's width,
+     the container above): the widest code ("WWWMMW") fills about 94% of it,
+     a usual one about 77%, at every size. */
+  font-size: min(calc(var(--screen-code) * 1.15), 15cqi);
   font-weight: 700;
+  white-space: nowrap;
   font-variant-numeric: tabular-nums;
   line-height: 1;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   /* Letter spacing trails the last letter too; this pulls the code back to centre. */
-  margin-inline-end: -0.14em;
+  margin-inline-end: -0.1em;
 }
 
+/* The people at the top, tonight's rounds at the bottom, so the column
+   spans the card's height. */
 .lobbyRoster {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--screen-gap);
+  min-width: 0;
+  padding-block: calc(var(--screen-gap) * 0.5);
+}
+
+.lobbyPeople,
+.lobbyRounds {
   display: flex;
   flex-direction: column;
   gap: var(--gap-sm);
@@ -220,13 +362,19 @@
   margin: 0;
   font-family: var(--serif);
   font-size: var(--screen-question);
+  font-weight: 600;
   line-height: var(--lh-title);
+  letter-spacing: -0.01em;
   text-wrap: balance;
+}
+
+.lobbyTitle {
+  font-size: calc(var(--screen-question) * 1.15);
 }
 
 .playerCount {
   margin: 0;
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
   font-size: var(--screen-label);
 }
 
@@ -239,6 +387,11 @@
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+/* A leaving chip is lifted out of the wrap (popLayout) against this box. */
+.playerList {
+  position: relative;
 }
 
 .teamList,
@@ -266,10 +419,27 @@
   gap: var(--gap-sm);
 }
 
-.teamRow {
+/* Team and round rows: glass rows, no blur. */
+.teamRow,
+.roundRow {
   display: flex;
+  box-sizing: border-box;
   align-items: center;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-tile);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-glass);
+}
+
+.teamRow {
   gap: var(--gap-sm);
+  padding: calc(var(--gap-xs) * 1.2) var(--gap-sm);
   font-size: var(--screen-answer);
 }
 
@@ -279,58 +449,121 @@
   overflow-wrap: anywhere;
 }
 
+.playerItem {
+  display: flex;
+}
+
+/* A player chip: a glass pill. It lands with a soft coral glow that fades
+   (opacity only, on its own layer). */
 .playerChip {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: var(--gap-xs);
+  box-sizing: border-box;
   padding: var(--gap-xs) var(--gap-sm);
-  border-radius: var(--radius-pill);
-  background: rgba(var(--ink-rgb), 0.08);
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-pill);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-pill);
   font-size: var(--screen-label);
   font-weight: 600;
+  line-height: 1.2;
+}
+
+.playerChipGlow::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: var(--qs-glow-coral);
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  animation: chipGlow 1.6s var(--ease-out) both;
+}
+
+@keyframes chipGlow {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 
 .roundsTitle {
   margin: 0;
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
   font-size: var(--screen-label);
   font-weight: 600;
 }
 
+/* One line per round: the number, the title (which wraps in its own
+   column), then the kind and label chips. */
 .roundRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-wrap: nowrap;
   gap: var(--gap-xs) var(--gap-sm);
+  padding: calc(var(--gap-xs) * 1.2) var(--gap-sm);
   font-size: var(--screen-label);
 }
 
 .roundNumber {
+  flex-shrink: 0;
   min-width: 1.4em;
-  color: var(--ink-60);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
+  color: var(--qs-text-mute);
+  font-family: var(--serif);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 600;
+  text-align: center;
 }
 
+/* Two lines at most, ending in an ellipsis; the whole title stays in the
+   text for a screen reader. */
 .roundTitle {
+  display: -webkit-box;
+  flex: 0 1 auto;
   min-width: 0;
+  overflow: hidden;
   font-weight: 600;
   overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+/* The chips line up at the row's end in every row, whatever the title's length. */
+.roundRow > .chip {
+  flex-shrink: 0;
+}
+
+.roundTitle + .chip {
+  margin-inline-start: auto;
 }
 
 .chip {
-  padding: 0.1em 0.6em;
-  border: 1px solid var(--line-2);
-  border-radius: var(--radius-pill);
-  color: var(--ink-60);
+  padding: 0.1em 0.65em;
+  border: 1px solid var(--qs-glass-border-strong);
+  border-radius: var(--qs-radius-pill);
+  color: var(--qs-text-mute);
+  /* Never under 16px, so a kind still reads at 720p. */
+  font-size: max(0.8em, var(--text-16));
+  font-weight: 600;
 }
 
 .chipLabel {
   border-color: var(--accent);
-  color: var(--ink);
+  color: var(--qs-text);
 }
 
-/* Question and party */
+/* Question and party: a header row, the prompt, the answers, the count. */
 .question {
   display: flex;
   flex: 1;
@@ -340,12 +573,182 @@
   min-height: 0;
 }
 
-/* Picture, answers and the distribution as fixed columns side by side, the
-   same from `read` to `reveal`, so nothing changes width when the bars arrive. */
+/* The header keeps the ring's height and leaves its corner free, so the ring
+   folding away at the reveal moves nothing. */
+.stageHeader {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--screen-gap);
+  min-height: var(--screen-ring-size);
+}
+
+/* The ring's corner: as tall and wide as the dial, holding the ring (out of
+   flow, so its "Finishing up" line hangs below without moving the row) and,
+   at the reveal, the "got it" pill. */
+.headerEnd {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: var(--screen-ring-size);
+  min-height: var(--screen-ring-size);
+}
+
+.timerSlot {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+}
+
+/* "7 of 12 got it": jade glass, the right answer's colour. */
+.gotItPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.45em 1.1em;
+  border: 1px solid var(--qs-right-border);
+  border-radius: var(--qs-radius-pill);
+  background: var(--qs-right-fill), var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-pill), var(--qs-glow-jade);
+  color: var(--qs-text);
+  font-size: var(--screen-meta);
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Nobody got it: plain glass, so jade never celebrates a zero. */
+.gotItPill[data-tone="none"] {
+  border-color: var(--qs-glass-border-strong);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-pill);
+}
+
+.gotItPill svg {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+  stroke-width: 3;
+}
+
+/* The meta pill: round, round title, question. Glass written out here, since
+   its type size is the stage's. */
+.metaPill {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  padding: 0.45em 1.1em;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-pill);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-pill);
+  -webkit-backdrop-filter: var(--qs-glass-blur);
+  backdrop-filter: var(--qs-glass-blur);
+  color: var(--qs-text-mute);
+  font-size: var(--screen-meta);
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.metaSegment {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.metaSegment:first-child {
+  color: var(--qs-text);
+  font-weight: 700;
+}
+
+/* A long round title gives way first, ending in an ellipsis. */
+.metaSegment:nth-child(2):not(:last-child) {
+  display: block;
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.metaSegment + .metaSegment::before {
+  display: inline-block;
+  width: 0.26em;
+  height: 0.26em;
+  margin-inline: 0.7em;
+  border-radius: var(--radius-pill);
+  background: currentcolor;
+  content: "";
+  opacity: 0.7;
+  vertical-align: middle;
+}
+
+/* The prompt zone takes the free height. In `read` the prompt sits centred
+   in it, alone; once the question opens it sits at the top, under the
+   header, and the tiles hold the bottom. */
+.promptZone {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.promptZone[data-waiting="true"] {
+  justify-content: center;
+}
+
+/* Alone, the prompt is a size larger; the measure is in ch, so it keeps its
+   line breaks and the glide to the top reads as one zoom. */
+.promptZone[data-waiting="true"] .prompt {
+  font-size: calc(var(--screen-question) * 1.2);
+}
+
+.prompt {
+  max-width: min(34ch, 100%);
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--screen-question);
+  font-weight: 600;
+  line-height: var(--lh-title);
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+  text-shadow: 0 0.04em 0.5em var(--qs-glass-shadow);
+  text-wrap: balance;
+}
+
+[data-qs-theme="light"] .prompt {
+  text-shadow: none;
+}
+
+/* Picture, answers and (order, typed, closest) the reveal's column as fixed
+   columns side by side, the same from `read` to `reveal`, so nothing changes
+   width when the counts arrive. Multiple choice and true or false hold their
+   share in the tiles and take the whole width. */
 .questionBody {
   display: grid;
-  flex: 1 1 auto;
-  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  flex: 0 1 auto;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr);
   /* Top-aligned: a tall answer list grows down into its own column and never
      up over the prompt. */
@@ -354,22 +757,44 @@
   min-height: 0;
 }
 
+.questionBody[data-reveal="side"] {
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+}
+
+.questionBody[data-has-picture="true"] {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+}
+
 .answers {
   display: flex;
   flex-direction: column;
   gap: var(--gap-xs);
   min-width: 0;
   min-height: 0;
-  /* The answers own any overflow: the column scrolls inside the row it has. */
+  /* The answers own any overflow: the column scrolls inside the row it has.
+     Nobody scrolls a TV, so no scrollbar is drawn (the tiles' rise would
+     otherwise flash one for a moment). */
   max-height: 100%;
   overflow-y: auto;
+  scrollbar-width: none;
 }
 
-/* Beside a picture the answers stack in one column, each tile one line tall,
-   so a proper noun such as "Greenwich Village" keeps its words whole and the
-   rows line up with the distribution bars. */
+.answersLabel {
+  margin: 0;
+  color: var(--qs-text-mute);
+  font-size: var(--screen-label);
+  font-weight: 600;
+}
+
+/* Beside a picture the answers stack in one column, each tile one line
+   tall, so a proper noun such as "Greenwich Village" keeps its words whole
+   (and, beside a reveal column, the rows line up with the counts). */
 .questionBody[data-has-picture="true"] {
   --screen-tile-min: 0px;
+  --screen-tile-pad: var(--gap-sm);
+}
+
+.questionBody[data-has-picture="true"][data-reveal="side"] {
   grid-template-columns: minmax(0, 2fr) minmax(0, 3fr) minmax(0, 2fr);
 }
 
@@ -378,52 +803,34 @@
   /* One column keeps content-sized rows so a wrapped answer cannot push the
      stack past its height budget. */
   grid-auto-rows: auto;
-  /* Four stacked tiles: 4 x 111 + 3 x 14 = 486 at 1080p, inside the 508
-     an open question keeps for them while the Paused line shows. */
   gap: var(--gap-sm);
+}
+
+/* Long answers (a sentence each) step the tile type down, so a 2 by 2 grid
+   of them still fits once the reveal adds the share beside each one. */
+.screen .tileGrid[data-long="true"] > li > * {
+  --stage-main: max(calc(var(--screen-answer) * 0.8), var(--text-22));
 }
 
 .questionBody > .picture {
   align-self: start;
 }
 
-/* The tile reads its type size from the stage piece's own property; the
-   screen sets it from --screen-answer, so a short screen can shrink it. */
-.screen .tileGrid > li > *,
-.screen .tileColumn > li > * {
-  --stage-main: var(--screen-answer);
+/* With no reveal column beside the answers the picture takes the room. */
+.questionBody[data-reveal="tiles"] > .picture {
+  max-height: min(calc(var(--screen-picture-max) * 1.25), 100%);
 }
 
 .revealColumn {
   min-width: 0;
 }
 
-/* The bars on the TV: gaps sized from the screen height, so four thick rows
-   and the answered line fit the column at 1080p and at 720p. The
-   distribution sets its own sizes on its root; this selector reaches that
-   root by its data attribute, whatever wraps it. */
+/* The counts on the TV: gaps sized from the screen height. The distribution
+   sets its own sizes on its root; this selector reaches that root by its data
+   attribute, whatever wraps it. */
 .screen .revealColumn [data-quizshow-distribution] {
   --stage-gap: min(var(--gap-lg), calc(2 * var(--screen-vh)));
-}
-
-.eyebrow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--gap-xs) var(--screen-gap);
-  margin: 0;
-  color: var(--ink-60);
-  font-size: var(--screen-label);
-  font-weight: 600;
-}
-
-.prompt {
-  max-width: 40ch;
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--screen-question);
-  line-height: var(--lh-title);
-  overflow-wrap: anywhere;
-  text-wrap: balance;
+  --stage-label: min(var(--screen-label), calc(3 * var(--screen-vh)));
 }
 
 .picture {
@@ -431,7 +838,8 @@
   justify-self: center;
   max-width: 100%;
   max-height: min(var(--screen-picture-max), 100%);
-  border-radius: var(--radius-16);
+  border-radius: var(--qs-radius-tile);
+  box-shadow: var(--qs-shadow-glass);
   object-fit: contain;
 }
 
@@ -445,7 +853,7 @@
   /* Every row takes the tallest tile's height, so a wrapped answer never
      leaves its neighbours shorter. */
   grid-auto-rows: 1fr;
-  gap: var(--screen-gap);
+  gap: var(--screen-tile-gap);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -465,26 +873,42 @@
   display: flex;
 }
 
-/* The tile sets its own --stage-tile-min; this one-class-deeper selector
-   overrides it on the tile itself, from this module's custom properties. */
-.tileGrid > li > * {
+/* The tile sets its own sizes on its root (the stage module's size class);
+   these two-class selectors override them from this module's properties. */
+.stage .tileGrid > li > * {
   flex: 1;
   min-width: 0;
   --stage-tile-min: var(--screen-tile-min);
+  --stage-pad: var(--screen-tile-pad);
 }
 
-.tileColumn > li > * {
+.stage .tileColumn > li > * {
   --stage-tile-min: var(--screen-row-min);
   --stage-pad: var(--screen-row-pad);
 }
 
+.screen .tileGrid > li > *,
+.screen .tileColumn > li > * {
+  --stage-main: var(--screen-answer);
+}
+
+/* Typed and number questions: a raised glass card that turns jade with the
+   right answer. */
 .answerOnPhone {
-  margin: 0;
+  composes: glassRaised from "../stage/quizshowSurfaces.module.css";
+  --qs-glass-radius: var(--qs-radius-tile);
   padding: var(--screen-pad);
-  border-radius: var(--radius-16);
-  background: rgba(var(--ink-rgb), 0.06);
   font-size: var(--screen-answer);
   font-weight: 600;
+  transition-property: border-color, box-shadow;
+  transition-duration: var(--dur-slow);
+  transition-timing-function: var(--ease);
+}
+
+.answerOnPhone[data-revealed="true"] {
+  --qs-glass-bg: var(--qs-right-fill), var(--qs-glass-tint);
+  border-color: var(--qs-right-border);
+  box-shadow: var(--qs-shadow-lift), var(--qs-glow-jade);
 }
 
 .answerOnPhoneBody {
@@ -494,8 +918,28 @@
   margin: 0;
 }
 
+.answerOnPhoneLabel {
+  color: var(--qs-text-mute);
+  font-size: var(--screen-label);
+}
+
+.answerOnPhoneAnswer {
+  font-family: var(--serif);
+  font-size: calc(var(--screen-answer) * 1.3);
+  line-height: var(--lh-title);
+  overflow-wrap: anywhere;
+}
+
 .playerAvatar {
   display: inline-flex;
+}
+
+/* "9 of 12 answered" with its thin arc. */
+.answered {
+  display: flex;
+  align-items: center;
+  gap: 0.55em;
+  font-size: var(--screen-label);
 }
 
 .counter,
@@ -505,8 +949,197 @@
   font-weight: 600;
 }
 
+/* The arc: a conic gradient masked to a thin ring and to the share answered,
+   the timer ring's technique at a smaller size. */
+.answeredArc {
+  --arc-stroke: 0.16em;
+  position: relative;
+  flex-shrink: 0;
+  width: 1.15em;
+  height: 1.15em;
+  border-radius: 50%;
+  background: var(--qs-ring-track);
+  -webkit-mask-image: radial-gradient(
+    farthest-side,
+    transparent calc(100% - var(--arc-stroke)),
+    black calc(100% - var(--arc-stroke) + 1px)
+  );
+  mask-image: radial-gradient(
+    farthest-side,
+    transparent calc(100% - var(--arc-stroke)),
+    black calc(100% - var(--arc-stroke) + 1px)
+  );
+}
+
+.answeredFill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--qs-ring-gradient);
+  -webkit-mask-image: conic-gradient(
+    black 0deg,
+    black var(--qs-ring-sweep),
+    transparent calc(var(--qs-ring-sweep) + 0.4deg)
+  );
+  mask-image: conic-gradient(
+    black 0deg,
+    black var(--qs-ring-sweep),
+    transparent calc(var(--qs-ring-sweep) + 0.4deg)
+  );
+  transition: --qs-ring-sweep var(--dur-slow) var(--ease);
+}
+
+.answeredFillEmpty {
+  opacity: 0;
+}
+
+.answeredArcStill .answeredFill {
+  transition: none;
+}
+
+@media (forced-colors: active) {
+  .answeredArc {
+    background: CanvasText;
+  }
+
+  .answeredFill {
+    background: Highlight;
+  }
+}
+
+/* Review: the hosts are checking. A glass pill centred under the prompt, at
+   the answers' size, with a calm pulse beside the line, so the wait reads
+   from the back of the room. */
 .checking {
-  color: var(--ink-60);
+  display: flex;
+  box-sizing: border-box;
+  width: fit-content;
+  max-width: 100%;
+  align-items: center;
+  gap: 0.6em;
+  margin-inline: auto;
+  padding: 0.5em 1.2em;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-pill);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-pill);
+  color: var(--qs-text);
+  font-size: var(--screen-answer);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.checkingPulse {
+  flex-shrink: 0;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: var(--radius-pill);
+  background: var(--qs-text);
+  animation: checkingPulse 1.6s var(--ease-in-out) infinite alternate;
+}
+
+.checkingPulseStill {
+  animation: none;
+  opacity: 0.7;
+}
+
+@keyframes checkingPulse {
+  from {
+    opacity: 0.25;
+    transform: scale(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* A party prompt: raised glass holding the prompt and its picture. */
+.promptCard {
+  composes: glassRaised from "../stage/quizshowSurfaces.module.css";
+  --qs-glass-radius: var(--qs-radius-card);
+  padding: calc(var(--screen-gap) * 0.75) var(--screen-gap);
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(var(--screen-gap) * 0.6);
+  min-width: 0;
+}
+
+/* Inside the card the picture's height cap is its own: a percentage of the
+   card's content-sized height would not resolve. */
+/* While players write or wait for the review, the card is the whole screen:
+   a size up, centred. */
+.promptCard[data-compact="false"] {
+  align-items: center;
+  padding: calc(var(--screen-gap) * 1.25) calc(var(--screen-gap) * 1.5);
+  text-align: center;
+}
+
+.promptCard[data-compact="false"] > .partyPrompt {
+  font-size: calc(var(--screen-question) * 1.2);
+}
+
+.promptCard > .picture {
+  align-self: center;
+  max-height: var(--screen-picture-max);
+}
+
+.promptCard > .picture[data-size="compact"] {
+  max-height: var(--screen-picture-party);
+}
+
+/* Once the captions or the reveal sit below, the picture steps beside the
+   prompt, so the card gives the grid its height back. */
+.promptCard[data-compact="true"] {
+  flex-direction: row;
+  align-items: center;
+}
+
+.promptCard[data-compact="true"] > .partyPrompt {
+  flex: 1;
+  min-width: 0;
+}
+
+.promptCard[data-compact="true"] > .picture {
+  flex-shrink: 0;
+  max-width: 40%;
+  margin-inline-start: auto;
+}
+
+.partyPrompt {
+  max-width: 40ch;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--screen-question);
+  font-weight: 600;
+  line-height: var(--lh-title);
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+/* The party question's middle: it takes the free height above the count.
+   Write, review and reveal centre their card in it; the vote starts at the
+   top, since its grid needs the room. */
+.partyMain {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--screen-gap);
+  min-height: 0;
+}
+
+.partyMain[data-centred="true"] {
+  justify-content: safe center;
 }
 
 .voteGrid {
@@ -518,6 +1151,34 @@
   list-style: none;
   font-size: var(--screen-vote-text);
   line-height: 1.2;
+}
+
+/* Four captions or fewer: two to a row at the answer tiles' height and
+   type, so two lies and the truth fill the stage as the quiz tiles do. */
+.screen .voteGrid[data-density="few"] {
+  --screen-vote-columns: 2;
+  --screen-vote-text: var(--screen-answer);
+  --screen-vote-gap: var(--screen-tile-gap);
+  --screen-vote-pad-block: var(--screen-tile-pad);
+  --screen-vote-pad-inline: var(--screen-tile-pad);
+  grid-auto-rows: 1fr;
+}
+
+.screen .voteGrid[data-density="few"] .voteCard {
+  align-items: center;
+  gap: 0.6em;
+  min-height: var(--screen-tile-min);
+}
+
+.screen .voteGrid[data-density="few"] .voteNumber {
+  min-width: 1.7em;
+  height: 1.7em;
+}
+
+/* A few vote cards, and their reveal, sit at the bottom of the free height,
+   where the multiple-choice tiles sit; the prompt keeps the top. */
+.partyLow {
+  margin-block-start: auto;
 }
 
 /* 13 to 24 captions: four rows of six. */
@@ -532,6 +1193,7 @@
   --screen-vote-text: min(var(--screen-answer), calc(2.3 * var(--screen-vh)));
 }
 
+/* A vote card: glass, no blur (up to 32 sit on screen at once). */
 .voteCard {
   display: flex;
   box-sizing: border-box;
@@ -539,9 +1201,17 @@
   align-items: flex-start;
   gap: var(--screen-vote-pad-block);
   padding: var(--screen-vote-pad-block) var(--screen-vote-pad-inline);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-16);
-  background: rgba(var(--ink-rgb), 0.04);
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-tile);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-glass);
+  font-weight: 600;
 }
 
 /* The number sits on the first line of the caption, one line tall. */
@@ -553,9 +1223,11 @@
   min-width: 1.6em;
   height: 1.6em;
   border-radius: var(--radius-pill);
-  background: rgba(var(--ink-rgb), 0.12);
+  background: color-mix(in srgb, var(--qs-text) 14%, transparent);
+  font-family: var(--serif);
   font-size: 0.8em;
-  font-weight: 700;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 600;
 }
 
 /* "+N more" in the last slot of a full grid: card-sized, so the grid keeps
@@ -568,9 +1240,9 @@
   justify-content: center;
   margin: 0;
   padding: var(--screen-vote-pad-block) var(--screen-vote-pad-inline);
-  border: 1px dashed var(--line-2);
-  border-radius: var(--radius-16);
-  color: var(--ink-60);
+  border: 1px dashed var(--qs-glass-border-strong);
+  border-radius: var(--qs-radius-tile);
+  color: var(--qs-text-mute);
   font-weight: 700;
 }
 
@@ -599,6 +1271,32 @@
   line-height: 1.2;
 }
 
+/* Four entries or fewer (a small Lie Detector table): the entries take the
+   answer tiles' size and gaps, so the reveal lands where the vote cards
+   stood. */
+.screen .partyReveal[data-few="true"] > div {
+  --stage-main: var(--screen-answer);
+  --stage-label: calc(var(--screen-label) * 0.85);
+  --stage-pad: var(--screen-tile-pad);
+  --stage-gap: var(--screen-tile-gap);
+}
+
+/* The two cards of a row share its height, whichever carries a tag: the
+   grid's gaps space them (the list's own margins step aside), so each card
+   fills its stretched row. */
+.screen .partyReveal[data-few="true"] ul {
+  align-items: stretch;
+  gap: var(--screen-tile-gap);
+}
+
+.screen .partyReveal[data-few="true"] ul > li > div {
+  box-sizing: border-box;
+  height: 100%;
+  min-height: var(--screen-tile-min);
+  margin-block-end: 0;
+  justify-content: center;
+}
+
 .screen .partyReveal ul {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -620,6 +1318,42 @@
   margin-inline: auto;
 }
 
+.boardTitle {
+  text-align: center;
+}
+
+/* The end of a round: the rounds left as an eyebrow over "After round 2
+   of 3", so this board reads as a new step after the question's scores. */
+.boardHeading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--screen-gap) * 0.35);
+}
+
+.boardEyebrow {
+  margin: 0;
+  color: var(--qs-text-mute);
+  font-size: calc(var(--screen-label) * 0.8);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* The podium: the title close above, the steps and their beams owning the
+   middle of the screen, a size up from the stage piece's own. */
+.podiumBoard {
+  flex: 1;
+  justify-content: center;
+  gap: calc(var(--screen-gap) * 2.5);
+  max-width: 76rem;
+}
+
+.screen .podiumBoard > :not(h1) {
+  --stage-main: calc(var(--screen-answer) * 1.2);
+  --stage-label: var(--screen-answer);
+}
+
 /* Scores and the leaderboard on the TV: rows sized from the screen height,
    so the top ten fit 1080p and 720p under the title. */
 .screen .scoresBoard li {
@@ -631,23 +1365,56 @@
 .thanks {
   display: flex;
   flex: 1;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--screen-gap);
+}
+
+/* The ending: a large raised card with a warm glow, settling in once. */
+.thanksCard {
+  composes: glassRaised from "../stage/quizshowSurfaces.module.css";
+  --qs-glass-radius: var(--qs-radius-card);
+  padding: calc(var(--screen-gap) * 2.25) calc(var(--screen-gap) * 2.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--screen-gap) * 0.9);
+  width: min(100%, 60rem);
   text-align: center;
+  animation: thanksIn var(--dur-reveal) var(--ease-out) both;
+}
+
+.thanks .thanksCard {
+  box-shadow: var(--qs-shadow-lift), var(--qs-glow-coral);
+}
+
+@keyframes thanksIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.thanksTitle {
+  font-size: calc(var(--screen-question) * 1.6);
 }
 
 .thanksNext {
   margin: 0;
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
   font-size: var(--screen-answer);
+  text-wrap: balance;
 }
 
-/* A shorter screen (720p): smaller lobby chips and rounds, so 12 players,
-   the "+N" line and five rounds fit beside the code without scrolling.
+/* A shorter screen (720p): lobby chips and rounds a step smaller (22px,
+   still readable across a room), so 12 players and five rounds fit beside
+   the code without scrolling.
    Answers, team rows and gaps shrink too, so a question with a picture and
-   two rows of tiles fits above the countdown. */
+   two rows of tiles fits under the header. */
 @media (max-height: 50rem) {
   .screen {
     --screen-answer: var(--text-24);
@@ -656,12 +1423,11 @@
     --screen-picture-max: calc(26 * var(--screen-vh));
   }
 
-  .screen .questionBody[data-has-picture="true"] {
+  .screen .questionBody[data-has-picture="true"][data-reveal="side"] {
     grid-template-columns: minmax(0, 1.5fr) minmax(0, 3fr) minmax(0, 1.5fr);
   }
 
-  /* 720p: slimmer stacked tiles, 4 x 56 + 3 x 9 = 253, inside the 293 an
-     open question keeps for them while the Paused line shows. */
+  /* 720p: slimmer stacked tiles beside a picture. */
   .screen .questionBody[data-has-picture="true"] .tileGrid {
     gap: var(--gap-xs);
   }
@@ -670,15 +1436,25 @@
     --stage-pad: var(--gap-xs) var(--gap-sm);
   }
 
+  /* An order question's rows: five of them fit under the prompt at 720p. */
+  .screen {
+    --screen-row-min: calc(6 * var(--screen-vh));
+    --screen-row-pad: var(--gap-xs) var(--gap-sm);
+  }
+
   .screen .playerChip {
-    padding: var(--gap-xs) var(--gap-sm);
-    font-size: var(--text-16);
+    padding: calc(var(--gap-xs) * 0.8) var(--gap-sm);
+    font-size: var(--text-22);
   }
 
   .screen .roundRow,
   .screen .roundsTitle,
   .screen .playerCount {
-    font-size: var(--text-18);
+    font-size: var(--text-22);
+  }
+
+  .screen .roundRow {
+    padding-block: calc(var(--gap-xs) * 0.6);
   }
 
   .screen .qr {
@@ -698,9 +1474,10 @@
     grid-auto-rows: auto;
   }
 
-  /* The distribution moves under the answers, and the body takes its own
-     height, so the view scrolls and the bars keep the full width. */
+  /* The reveal's column moves under the answers, and the body takes its own
+     height, so the view scrolls and the counts keep the full width. */
   .screen:not([data-fixed-canvas="true"]) .questionBody,
+  .screen:not([data-fixed-canvas="true"]) .questionBody[data-reveal="side"],
   .screen:not([data-fixed-canvas="true"])
     .questionBody[data-has-picture="true"] {
     flex: none;
@@ -709,9 +1486,9 @@
   }
 }
 
-/* The fixed 1280x720 canvas (the remote's preview, Try it): the 720p values
-   of the max-height query above and of the screen type tokens, whatever the
-   window holding the canvas. Keep these in step with that query. */
+/* The fixed 1280x720 canvas (the remote's preview): the 720p values of the
+   max-height query above and of the screen type tokens, whatever the window
+   holding the canvas. Keep these in step with that query. */
 .stage[data-fixed-canvas="true"] {
   --screen-vh: 7.2px;
   --text-screen-question: var(--text-48);
@@ -724,11 +1501,14 @@
   --screen-picture-max: calc(26 * var(--screen-vh));
 }
 
-.stage[data-fixed-canvas="true"] .questionBody[data-has-picture="true"] {
+.stage[data-fixed-canvas="true"]
+  .questionBody[data-has-picture="true"][data-reveal="side"] {
   grid-template-columns: minmax(0, 1.5fr) minmax(0, 3fr) minmax(0, 1.5fr);
 }
 
-.stage[data-fixed-canvas="true"] .questionBody[data-has-picture="true"] .tileGrid {
+.stage[data-fixed-canvas="true"]
+  .questionBody[data-has-picture="true"]
+  .tileGrid {
   gap: var(--gap-xs);
 }
 
@@ -740,15 +1520,24 @@
   --stage-pad: var(--gap-xs) var(--gap-sm);
 }
 
+.stage[data-fixed-canvas="true"].screen {
+  --screen-row-min: calc(6 * var(--screen-vh));
+  --screen-row-pad: var(--gap-xs) var(--gap-sm);
+}
+
 .stage[data-fixed-canvas="true"] .playerChip {
-  padding: var(--gap-xs) var(--gap-sm);
-  font-size: var(--text-16);
+  padding: calc(var(--gap-xs) * 0.8) var(--gap-sm);
+  font-size: var(--text-22);
 }
 
 .stage[data-fixed-canvas="true"] .roundRow,
 .stage[data-fixed-canvas="true"] .roundsTitle,
 .stage[data-fixed-canvas="true"] .playerCount {
-  font-size: var(--text-18);
+  font-size: var(--text-22);
+}
+
+.stage[data-fixed-canvas="true"] .roundRow {
+  padding-block: calc(var(--gap-xs) * 0.6);
 }
 
 .stage[data-fixed-canvas="true"] .qr {

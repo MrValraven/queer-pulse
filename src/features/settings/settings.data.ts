@@ -2,7 +2,6 @@ import type { IconType } from "react-icons";
 import {
   FiAlertTriangle,
   FiBell,
-  FiDroplet,
   FiEdit2,
   FiEye,
   FiEyeOff,
@@ -34,7 +33,6 @@ export type PaneId =
   | "data"
   | "visibility"
   | "profile"
-  | "profile-theme"
   | "accessibility"
   | "interests"
   | "blockedUsers"
@@ -121,11 +119,6 @@ export const NAV: { groupKey: string; items: NavItem[] }[] = [
     groupKey: "settings:nav.group.personalisation",
     items: [
       {
-        id: "profile-theme",
-        icon: FiDroplet,
-        labelKey: "settings:nav.item.profileTheme",
-      },
-      {
         id: "accessibility",
         icon: FiSliders,
         labelKey: "settings:nav.item.accessibility",
@@ -168,8 +161,6 @@ export function changeLabelKey(key: string): string {
       return "settings:changes.interests.identities";
     case "interests.lookingFor":
       return "settings:changes.interests.lookingFor";
-    case "theme.appearance":
-      return "settings:nav.item.profileTheme";
     // Kept for any stale key still in flight. The accessibility pane no longer
     // marks the page dirty: its two real preferences save on flip and the rest
     // are inert, so nothing there is ever pending a save.

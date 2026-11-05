@@ -1,4 +1,5 @@
 import { PullToRefresh } from "../../shared/components/ui";
+import { FilterPageLayout } from "../../shared/components/filterPage";
 import type {
   AppliedChip,
   DirectoryFacetCounts,
@@ -10,15 +11,14 @@ import { type SectionKey } from "./filterSectionKeys";
 import type { MemberDirectorySearch } from "./useMemberDirectoryQuery";
 import { FiltersSidebar } from "./MemberFilterCards";
 import { MemberResultsColumn } from "./MemberDirectorySections";
-import styles from "./MemberDirectoryFilterPage.module.css";
 
 export interface MemberDirectoryLayoutProps {
   /** The name-search box's value and setter, rendered in the results column. */
   search: MemberDirectorySearch;
   filters: FilterState;
   /** Every member loaded so far. DEMO mode counts the sidebar's facets off
-   *  this (there it is the whole directory); live mode uses `facets` — see
-   *  `FiltersSidebar`. */
+   *  this (there it is the whole directory); live mode uses `facets` (see
+   *  `FiltersSidebar`). */
   sourceMembers: MemberCard[];
   /** LIVE: the server's per-option availability counts for the sidebar. */
   facets?: DirectoryFacetCounts;
@@ -48,11 +48,11 @@ export interface MemberDirectoryLayoutProps {
   onRefresh: () => Promise<unknown>;
 }
 
-/** The two-column desktop layout (sticky filters sidebar + results column,
- *  collapsing to a results-only column on mobile where filters live in a
- *  sheet instead) wrapped in the pull-to-refresh gesture. Extracted from
- *  `MemberDirectoryFilterPage` purely to keep that component under the
- *  200-line single-component limit — this owns no state of its own. */
+/** The members directory on the shared `FilterPageLayout`: the filters
+ *  sidebar beside the results column, which sits inside the pull-to-refresh
+ *  gesture. Extracted from `MemberDirectoryFilterPage` purely to keep that
+ *  component under the 200-line single-component limit; this owns no state
+ *  of its own. */
 export function MemberDirectoryLayout({
   search,
   filters,
@@ -83,37 +83,25 @@ export function MemberDirectoryLayout({
   onRefresh,
 }: MemberDirectoryLayoutProps) {
   return (
-    <div
-      className={[styles.grid, !isMobile && !panelOpen && styles.gridFull]
-        .filter(Boolean)
-        .join(" ")}
+    <FilterPageLayout
+      isMobile={isMobile}
+      isPanelOpen={panelOpen}
+      sidebar={
+        <FiltersSidebar
+          filters={filters}
+          members={sourceMembers}
+          facets={facets}
+          countsAreStale={countsAreStale}
+          appliedCount={chips.length}
+          onChange={onApplyFilters}
+          onClearAll={onClearAllFilters}
+          sectionsOpen={sectionsOpen}
+          onToggleSection={onToggleSection}
+        />
+      }
     >
-      {!isMobile && (
-        /* Kept mounted so the sidebar can slide/fade out rather than pop.
-           The column is the sticky, clipping container (grid track eases to
-           0), and `inert` drops the hidden filters from tab/AT reach. */
-        <div
-          className={[styles.filtersCol, !panelOpen && styles.filtersColHidden]
-            .filter(Boolean)
-            .join(" ")}
-          inert={!panelOpen || undefined}
-        >
-          <FiltersSidebar
-            filters={filters}
-            members={sourceMembers}
-            facets={facets}
-            countsAreStale={countsAreStale}
-            appliedCount={chips.length}
-            onChange={onApplyFilters}
-            onClearAll={onClearAllFilters}
-            sectionsOpen={sectionsOpen}
-            onToggleSection={onToggleSection}
-          />
-        </div>
-      )}
-
       {/* `queryKey: ["members"]` matches useMembers' inline
-          `["members", demoMode, params]` as a prefix — invalidates every
+          `["members", demoMode, params]` as a prefix, so it invalidates every
           filter/sort/mode variant, so a pull refresh refetches the
           directory as currently filtered. */}
       <PullToRefresh onRefresh={onRefresh}>
@@ -140,6 +128,6 @@ export function MemberDirectoryLayout({
           onFetchNextPage={onFetchNextPage}
         />
       </PullToRefresh>
-    </div>
+    </FilterPageLayout>
   );
 }

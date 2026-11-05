@@ -213,7 +213,7 @@
      `top` over the bar's own slide. */
   transition: top var(--dur-base) var(--ease);
   z-index: var(--z-sticky);
-  padding: 10px 0;
+  padding: 8px 0;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   background: rgba(var(--cream-rgb), 0.88);
   backdrop-filter: var(--blur-lg);
@@ -221,39 +221,32 @@
 :global([data-theme="dark"]) .mobileBar {
   background: color-mix(in srgb, var(--studio-bg) 86%, transparent);
 }
+/* One designed bar: "Filters" at its content width, the switcher taking the
+   rest of the line. Both controls share one height (the 44px touch target),
+   one paper ground, one hairline and one pill shape, so they read as a pair
+   of siblings. */
 .mobileBarRow {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 8px;
   container-type: inline-size;
 }
-/* Three labelled views and "Filters" overrun a small phone's row, so there the
-   views the visitor is NOT on shrink to their icons. The words stay in the
-   button for assistive tech, and the view they are on keeps its label, so the
-   row still says where they are. */
-@container (max-width: 400px) {
-  .mobileBarRow [aria-pressed="false"] .viewLabel {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-}
 .filtersButton {
+  flex: none;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 10px 16px;
+  gap: 7px;
+  box-sizing: border-box;
+  height: 44px;
+  padding: 0 15px 0 14px;
   font-family: var(--sans);
-  font-size: var(--text-14);
+  /* The switcher's segment size (Controls.module.css `.segBtn`), so the two
+     controls of the bar set their labels in one type. */
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--text-strong);
   background: var(--paper);
-  border: 1.5px solid rgba(var(--line-rgb), 0.16);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: var(--radius-pill);
   cursor: pointer;
   transition:
@@ -262,7 +255,8 @@
 }
 /* Count of active filters on the collapsed mobile control, so a shut sheet
    still signals that some are applied. (Desktop's equivalent rides the
-   Filters toggle beside the results.) */
+   Filters toggle beside the results.) It pops in when the first filter
+   lands. */
 .filtersCount {
   display: inline-flex;
   align-items: center;
@@ -276,8 +270,16 @@
   font-size: var(--text-11);
   font-weight: 700;
   line-height: 1;
+  animation: filtersCountIn 0.26s var(--ease);
+}
+@keyframes filtersCountIn {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
 }
 .filtersButton svg {
+  flex: none;
   width: 16px;
   height: 16px;
   color: var(--ink-40);
@@ -289,6 +291,117 @@
 }
 :global([data-theme="dark"]) .filtersButton {
   border-color: rgba(var(--cream-rgb), 0.14);
+}
+
+/* The List/Map/Online switcher in the bar (the shared SegmentedControl,
+   restyled here only). On a phone it fills the line after "Filters" and its
+   segments share the width, each growing from its own content, so the labels
+   stay centred and the three stay close to one size. Paper ground and
+   hairline, as on "Filters"; the 3px inset gives the selected segment a 36px
+   thumb. Two classes deep, so these win over the shared control's own
+   rules. */
+.mobileBarRow .mobileSwitcher {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  box-sizing: border-box;
+  height: 44px;
+  padding: 3px;
+  gap: 2px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+}
+.mobileBarRow .mobileSwitcher > button {
+  flex: 1 1 auto;
+  gap: 6px;
+  padding: 0 8px;
+}
+/* The view the visitor is on takes the plum of every other "on" state on the
+   page (a ticked chip, "Turn off my location"), so the bar says where they
+   are at a glance. */
+.mobileBarRow .mobileSwitcher > [aria-pressed="true"] {
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  box-shadow: none;
+}
+/* Three classes deep, so the paper ground holds over the shared control's
+   own dark ground (`:global([data-theme="dark"]) .seg`, two deep) whatever
+   order the stylesheets load in. */
+:global([data-theme="dark"]) .mobileBarRow .mobileSwitcher {
+  background: var(--paper);
+  border-color: rgba(var(--cream-rgb), 0.14);
+}
+/* Plum sinks into the dark page, so there the thumb is a cream wash. */
+:global([data-theme="dark"]) .mobileBarRow .mobileSwitcher > [aria-pressed="true"] {
+  background: rgba(var(--cream-rgb), 0.16);
+  color: var(--text-strong);
+}
+/* A tablet still gets this bar (to 860px), and a switcher stretched across
+   its line would spread three short labels over 600px or more. From 560px
+   it keeps to its content, each segment padded like the shared control's
+   own, and moves to the end of the line, so "Filters" opens the bar and
+   the switcher closes it. */
+@media (--sm-up) {
+  .mobileBarRow .mobileSwitcher {
+    flex: 0 0 auto;
+    margin-inline-start: auto;
+  }
+  .mobileBarRow .mobileSwitcher > button {
+    padding: 0 14px;
+  }
+}
+/* Each label eases its width and fades when it folds (below), and keeps its
+   words as the segment's accessible name. The negative margin takes back
+   the 6px icon gap as it closes. */
+.mobileBarRow .viewLabel {
+  display: inline-block;
+  max-width: 8em;
+  overflow: hidden;
+  white-space: nowrap;
+  transition:
+    max-width 0.26s var(--ease),
+    margin 0.26s var(--ease),
+    opacity 0.2s var(--ease);
+}
+/* A 360px phone's line (324px inside the gutters) gives each segment and
+   "Filters" a little less side padding, so the longer Portuguese labels
+   still fit beside "Filters" there. */
+@container (max-width: 339px) {
+  .mobileBarRow .mobileSwitcher > button {
+    padding: 0 6px;
+  }
+  .filtersButton {
+    padding: 0 13px 0 12px;
+  }
+}
+/* Three labelled views beside "Filters" fit a 360px phone. When they would
+   overrun the line (a smaller phone, or "Filters" carrying its count badge
+   on anything up to a 396px one), the views the visitor is NOT on fold to
+   their icons. The view they are on keeps its label, so the bar still says
+   where they are. Both steps were swept from 300 to 440px in English and
+   the longer Portuguese, the badge one with a two-digit count (its widest),
+   and the first width each leaves labelled still has about 3px of room
+   before a segment would cross the 3px inset. */
+@container (max-width: 316px) {
+  .mobileBarRow [aria-pressed="false"] .viewLabel {
+    max-width: 0;
+    margin-inline-start: -6px;
+    opacity: 0;
+  }
+}
+@container (max-width: 360px) {
+  .mobileBarRow:has(.filtersCount) [aria-pressed="false"] .viewLabel {
+    max-width: 0;
+    margin-inline-start: -6px;
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mobileBarRow .viewLabel,
+  .filtersCount {
+    transition: none;
+    animation: none;
+  }
 }
 
 /* ── Mobile: "Filters" sheet head + close CTA ───────────────────────────────── */

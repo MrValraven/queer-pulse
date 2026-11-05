@@ -6,17 +6,25 @@ import type { Catalog } from "../../types";
  * literals in their components; the plain supporting copy lives here.
  */
 export const subprofiles: Catalog = {
+  // Directory hero (SubprofileCreditsHero, SubprofileCreditsHeroSearch,
+  // SubprofileCreditsQuickChips)
+  "directory.hero.eyebrow": "The people directory",
+  "directory.hero.title":
+    "Find the people you will want to <em>work with again</em>",
+  "directory.hero.lead":
+    "Every persona belongs to a member of our community. Look through the work, follow what moves you and reach out when you want to make something together.",
+  "directory.hero.searchLabel": "Search personas",
+  "directory.hero.searchPlaceholder": "A DJ, a therapist, Rust…",
+  "directory.hero.searchSubmit": "Find people",
+  "directory.hero.quickFiltersLabel": "Quick filters",
+  "directory.hero.quick.therapists": "Therapists",
+  "directory.hero.quick.djs": "DJs for your event",
+  "directory.searchChip": "Search: {term}",
+
+  // Directory wall of personas
+  "directory.wall.label": "Some of the people in the directory",
+
   // Directory (SubprofileDirectoryPage)
-  "directory.eyebrow": "Directory · personas",
-  "directory.subtitle":
-    "Discover the work people are making across the community, from professional projects to creative work and everything in between.",
-  // A linked persona is titled by its owner on the card ("Ana Silva | Poet"),
-  // so the term reaches that name too — looking somebody up by the name you
-  // know them under is the directory's most obvious question. Only LINKED
-  // personas: an unlinked one's owner is unnamed on the card and stays unnamed
-  // in the results.
-  "directory.searchPlaceholder": "Search personas or owners",
-  "directory.searchAria": "Search personas by name, headline or owner name",
   "directory.loading": "Loading personas…",
   "directory.empty.title": "No personas here yet",
   "directory.empty.description":
@@ -28,11 +36,31 @@ export const subprofiles: Catalog = {
   "directory.error.retry": "Try again",
   "directory.openToCollabsChip": "Open to collabs",
 
+  // Directory "Made together" strip: recent work where personas credited each
+  // other.
+  "directory.madeTogether.title": "Made together",
+  "directory.madeTogether.lead":
+    "Recent work where personas credited each other. Good collaborators tend to know other good collaborators.",
+  "directory.madeTogether.pair": "{author} with {partner}",
+  "directory.madeTogether.metaTwo": "{first}, {second} · {month}",
+  "directory.madeTogether.metaOne": "{kind} · {month}",
+  "directory.madeTogether.previous": "Show previous collaborations",
+  "directory.madeTogether.next": "Show next collaborations",
+  "directory.madeTogether.loading": "Loading recent collaborations…",
+
+  // Directory browse section heading and sort control
+  "directory.sectionTitle": "Browse personas",
+  "directory.sort.label": "Sort",
+  "directory.sort.recent": "Recently updated",
+  "directory.sort.followed": "Most followed",
+  "directory.sort.name": "Name, A to Z",
+
   // Refine drawer (SubprofileDirectoryToolbar / SubprofileDirectoryRefinePanel).
   // The Profession band is headed by page family, and those headings reuse the
   // create flow's own `family.*.label` keys.
   "directory.refine.professionLabel": "Profession",
   "directory.refine.availabilityLabel": "Availability",
+  "directory.refine.availabilityAny": "Any availability",
   "directory.refine.tagsLabel": "Tags",
   "directory.refine.tableLabel": "At the table",
   "directory.refine.tableFormatLabel": "Format",
@@ -45,6 +73,12 @@ export const subprofiles: Catalog = {
   // narrowing the grid.
   "directory.resultCount_one": "{count} persona",
   "directory.resultCount_other": "{count} personas",
+  "directory.filtersSheetLabel": "Filter personas",
+  "directory.showResultsCta_one": "Show {count} persona",
+  "directory.showResultsCta_other": "Show {count} personas",
+  // CLDR has no "zero" plural category for en/pt, so `_zero` would never
+  // resolve; the hero picks this key itself when nothing matches.
+  "directory.showResultsCtaNone": "No personas match yet, see your options",
   "directory.showMore": "Show more",
   "directory.shownOfTotal": "{shown} of {total}",
   "directory.showMoreLoading": "Loading…",
@@ -70,7 +104,7 @@ export const subprofiles: Catalog = {
   "following.empty.description":
     "Follow a persona and its new work turns up here, and in your notifications.",
   "following.empty.cta": "Browse personas",
-  "following.countLine_one": "Following 1 persona",
+  "following.countLine_one": "Following {count} persona",
   "following.countLine_other": "Following {count} personas",
   "following.previousPage": "Previous",
   "following.nextPage": "Next",
@@ -103,17 +137,24 @@ export const subprofiles: Catalog = {
   "page.rehomed.ariaLabel": "Forwarded to a new persona address",
   "page.rehomed.dismiss": "Dismiss this note",
 
-  "directory.narrowedNote":
-    "Profession, tags and availability narrow the personas loaded so far. Show more to search wider.",
-  "directory.narrowedZeroNote":
-    "Nothing loaded so far matches these filters. Show more to keep looking.",
+  // Directory closing section
+  "directory.closing.title": "Your work belongs on this wall <em>too</em>",
+  "directory.closing.lead":
+    "Every persona here was made by someone who joined for something else. Set up a page for your craft and credit the people you make things with.",
+  "directory.closing.cta": "Make your persona",
 
-  // Directory closing nudge (SubprofileDirectoryFooterPrompt — personas
-  // discovery Phase 5, Moment 2). Dismissible; static copy, no live data.
-  "directory.footerPrompt.message":
-    "Every persona here was made by someone who joined for something else. <em>Yours could too.</em>",
-  "directory.footerPrompt.cta": "Make yours",
-  "directory.footerPrompt.notNow": "Not now",
+  // Directory card (credit lines, view link, follow errors)
+  "directory.card.creditLine_one": "Credited with {count} person",
+  "directory.card.creditLine_other": "Credited with {count} people",
+  "directory.card.creditShort_one": "{count} credit",
+  "directory.card.creditShort_other": "{count} credits",
+  "directory.card.viewPersona": "View persona",
+  "directory.card.viewPersonaNamed": "View persona {name}",
+  "directory.card.byOwner": "by {name}",
+  "directory.card.followError.notFollowable":
+    "This persona is no longer taking follows.",
+  "directory.card.followError.ownPersona":
+    "You run this persona, so you cannot follow it.",
 
   // Directory card affordances (SubprofileCard)
   "card.openToCollabs": "Open to collabs",
@@ -160,10 +201,6 @@ export const subprofiles: Catalog = {
   "alsoAs.sidesPrompt.notNow": "Not now",
 
   // Nav + command palette
-
-  // Directory headline (SubprofileDirectoryPage) — the coral <em> left raw
-  // JSX before <Translation> existed; now routed through it.
-  "directory.title": "The many ways we <em>make</em>",
 
   // Kind display labels — `kind` is a PERSISTED field (stored on the
   // subprofile), so these are label-key indirection: the canonical English id

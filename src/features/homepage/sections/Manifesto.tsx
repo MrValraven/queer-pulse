@@ -4,6 +4,7 @@ import {
   ReferenceDigestModal,
   Reveal,
 } from "../../../shared/components/ui";
+import { useAuth } from "../../../app/providers/authContext";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { manifestoAssurances } from "./Manifesto.data";
@@ -15,6 +16,7 @@ import styles from "./Manifesto.module.css";
 
 export function Manifesto() {
   const { t } = useTranslation();
+  const { loggedIn } = useAuth();
   // "Where we stand" and "How we keep this safe" open a digest of their page in
   // place, so a visitor reading the landing page keeps their spot; the dialog's
   // footer button is the way out to the full page.
@@ -97,6 +99,7 @@ export function Manifesto() {
         <ReferenceDigestModal
           topic={MANIFESTO_DIGESTS[openDigestId]}
           onClose={() => setOpenDigestId(null)}
+          isCtaHidden={!loggedIn}
         />
       )}
     </section>

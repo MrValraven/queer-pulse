@@ -42,16 +42,6 @@
   border: 1px solid var(--studio-line);
 }
 
-/* Light Studio (the shell stamps `data-studio-shell` on <html>, which reaches
-   the portalled bubbles too): Daylight's near-black ink with white text, so
-   the bubble matches the white Studio page. The :where() keeps this at the
-   bubble's own weight, so the placement rules above still apply. */
-:global(:where(html[data-studio-shell="true"]:not([data-theme="dark"])))
-  .bubble {
-  background: var(--studio-text);
-  color: rgba(255, 255, 255, 1);
-}
-
 .bottom {
   top: calc(100% + 6px);
 }

@@ -1,5 +1,10 @@
-/* The player's chromeless pages: code, name, lobby and end screens. */
+/* The player's chromeless pages: code, name, lobby and end screens, on the
+   velvet stage. The page carries data-theme="dark", so shared controls
+   (fields, switches, ghost buttons) read their dark tokens; stage colour comes
+   from the --qs-* tokens. */
 .page {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,12 +15,23 @@
   padding-block-end: max(var(--gap-lg), env(safe-area-inset-bottom));
   padding-inline-start: max(var(--gap-sm), env(safe-area-inset-left));
   padding-inline-end: max(var(--gap-sm), env(safe-area-inset-right));
-  background: var(--cream);
-  color: var(--ink);
+  overflow-x: clip;
+  background: var(--qs-base);
+  color: var(--qs-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The backdrop stays put while the page scrolls over it. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
 }
 
 .column {
   display: flex;
+  flex: 1 0 auto;
   flex-direction: column;
   gap: var(--gap-sm);
   width: 100%;
@@ -26,18 +42,58 @@
 .title {
   margin: 0;
   font-family: var(--serif);
-  font-size: var(--text-heading);
+  font-size: var(--text-title);
   font-weight: 600;
-  line-height: 1.15;
-  color: var(--text-strong);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  color: var(--qs-text);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.title:focus {
+  outline: none;
+}
+
+.title:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 .lead {
   margin: 0;
   font-size: var(--text-body);
   line-height: 1.5;
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
   max-inline-size: 60ch;
+}
+
+/* A glass sheet: the 18+ step, the name form, the end and removed notices. */
+.sheet {
+  composes: glass from "../stage/quizshowSurfaces.module.css";
+  padding: var(--gap-grid) var(--gap-sm);
+  --qs-glass-radius: var(--qs-radius-card);
+}
+
+/* Text fields on glass: a darker well with a lit edge, 16px type so iOS never
+   zooms. The extra attribute selectors outrank FormField's own field rules. */
+.sheet input:not([type="checkbox"]):not([type="radio"]),
+.sheet textarea {
+  border-color: var(--qs-glass-border-strong);
+  background: var(--qs-glass-tint);
+  color: var(--qs-text);
+}
+
+.sheet input:not([type="checkbox"]):not([type="radio"]):focus,
+.sheet textarea:focus {
+  border-color: var(--qs-text);
+  background: var(--qs-glass-tint);
+}
+
+.sheet label,
+.sheet legend {
+  color: var(--qs-text-mute);
 }
 
 .form {
@@ -46,10 +102,11 @@
   gap: var(--gap-sm);
 }
 
-.form .codeInput {
-  font-size: var(--text-subhead);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+/* The code step: title, the six cells, then the big join button. */
+.codeForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
 }
 
 .group {
@@ -69,7 +126,7 @@
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
 }
 
 /* A radio the whole row answers to: the input is visually hidden, the body draws the state. */
@@ -102,24 +159,39 @@
 
 .choiceBody {
   display: flex;
-  font-weight: 600;
   align-items: center;
   gap: var(--gap-xs);
   box-sizing: border-box;
-  min-height: 44px;
+  min-height: 52px;
   padding: var(--gap-xs) var(--gap-sm);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-16);
-  background: var(--paper);
+  border: 1.5px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-tile);
+  background:
+    linear-gradient(180deg, var(--qs-glass-top), var(--qs-glass-bottom)),
+    var(--qs-glass-tint);
+  color: var(--qs-text);
+  font-weight: 600;
   cursor: pointer;
-  transition-property: transform, opacity;
-  transition-duration: var(--dur-base);
+  touch-action: manipulation;
+  transition-property: transform, opacity, border-color;
+  transition-duration: var(--dur-fast);
   transition-timing-function: var(--ease);
+}
+
+.choice:active .choiceInput:not([aria-disabled="true"]) + .choiceBody {
+  transform: scale(0.98);
 }
 
 .choiceInput:checked + .choiceBody {
   border-color: var(--accent);
-  box-shadow: var(--ring-accent);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-raised-top),
+      var(--qs-glass-raised-bottom)
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-glow-coral);
 }
 
 .choiceInput:focus-visible + .choiceBody {
@@ -129,8 +201,14 @@
 }
 
 .choiceInput[aria-disabled="true"] + .choiceBody {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: default;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .choice:hover .choiceInput:not([aria-disabled="true"]) + .choiceBody {
+    border-color: var(--qs-glass-border-strong);
+  }
 }
 
 .choiceName {
@@ -143,7 +221,7 @@
 .choiceMeta {
   flex-shrink: 0;
   font-size: var(--text-caption);
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
 }
 
 .shapeGrid {
@@ -169,7 +247,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--gap-sm);
-  min-height: 44px;
+  min-height: var(--tap-min);
 }
 
 .toggleLabel {
@@ -179,13 +257,14 @@
   min-height: var(--tap-min);
   font-size: var(--text-body);
   font-weight: 600;
+  color: var(--qs-text);
 }
 
 .hint {
   margin: 0;
   font-size: var(--text-caption);
   line-height: 1.45;
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
 }
 
 .errorLine {
@@ -193,66 +272,14 @@
   font-size: var(--text-caption);
   font-weight: 600;
   line-height: 1.45;
-  color: var(--accent-text);
+  color: var(--qs-low);
 }
 
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-xs);
-  padding: var(--gap-sm);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-  background: var(--paper);
-}
-
-.nameLine {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--gap-sm);
-}
-
-.screenName {
-  min-width: 0;
-  overflow-wrap: anywhere;
-  font-family: var(--serif);
-  font-size: var(--text-subhead);
-  font-weight: 600;
-}
-
-.teamLine {
-  display: flex;
-  align-items: center;
-  gap: var(--gap-xs);
+/* A hairline between the parts of a sheet. */
+.divider {
   margin: 0;
-  font-size: var(--text-body);
-  font-weight: 600;
-}
-
-.changeTeam {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-xs);
-}
-
-.changeTeamButton {
-  align-self: flex-start;
-}
-
-/* The button's chevron turns over while the picker is open. */
-.changeTeamChevron {
-  flex-shrink: 0;
-  transition: transform var(--dur-fast) var(--ease);
-}
-
-.changeTeamChevronOpen {
-  transform: rotate(180deg);
-}
-
-/* Keeping the current team is a quiet, own-width button under the team rows. */
-.keepTeamButton {
-  align-self: flex-start;
+  border: 0;
+  border-block-start: 1px solid var(--qs-line);
 }
 
 .statusLine {
@@ -265,9 +292,13 @@
   color: var(--jade-text);
 }
 
+.statusLine:focus {
+  outline: none;
+}
+
 .actions {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: var(--gap-xs);
 }
 
@@ -278,12 +309,25 @@
   gap: var(--gap-sm);
 }
 
+/* The end screen's place card. */
+.placeCard {
+  composes: glassRaised from "../stage/quizshowSurfaces.module.css";
+  padding: var(--gap-grid) var(--gap-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--triage-gap-hair);
+  text-align: center;
+}
+
 .place {
   margin: 0;
   font-family: var(--serif);
-  font-size: var(--text-subhead);
+  font-size: var(--text-heading);
   font-weight: 600;
-  color: var(--accent-text);
+  line-height: 1.15;
+  color: var(--qs-text);
+  text-wrap: balance;
 }
 
 .loading {
@@ -291,7 +335,7 @@
   align-items: center;
   justify-content: center;
   min-height: 50svh;
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
 }
 
 .visuallyHidden {
@@ -306,19 +350,18 @@
 
 /* The game's host, above the 18+ step and the name step. */
 .hostCard {
+  composes: glass from "../stage/quizshowSurfaces.module.css";
+  padding: var(--gap-sm);
   display: flex;
   align-items: flex-start;
   gap: var(--gap-sm);
-  padding: var(--gap-sm);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-  background: var(--paper);
+  margin-block-end: var(--gap-sm);
 }
 
 .hostText {
   display: flex;
   flex-direction: column;
-  gap: var(--gap-xs);
+  gap: var(--triage-gap-hair);
   min-width: 0;
 }
 
@@ -329,13 +372,14 @@
   font-size: var(--text-subhead);
   font-weight: 600;
   line-height: 1.2;
-  color: var(--text-strong);
+  color: var(--qs-text);
 }
 
 .hostName {
   margin: 0;
   font-size: var(--text-body);
   font-weight: 600;
+  color: var(--qs-text-mute);
   overflow-wrap: anywhere;
 }
 
@@ -347,9 +391,11 @@
   min-height: var(--tap-min);
   font-size: var(--text-body);
   font-weight: 600;
-  color: var(--accent-text);
+  color: var(--qs-text);
   text-decoration: underline;
-  text-underline-offset: 0.2em;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25em;
   border-radius: var(--radius-tag);
 }
 
@@ -357,4 +403,16 @@
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
+}
+
+/* The 18+ marker above the consent step's title. */
+.adultBadge {
+  composes: pill from "../stage/quizshowSurfaces.module.css";
+  align-self: flex-start;
+}
+
+/* The quiet report link, centred under the actions. */
+.reportRow {
+  /* Collapse draws its panel as a flow-root, so the button centres as inline content. */
+  text-align: center;
 }

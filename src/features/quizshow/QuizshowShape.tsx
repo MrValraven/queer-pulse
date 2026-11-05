@@ -10,6 +10,8 @@ interface QuizshowShapeProps {
   size: QuizshowShapeSize;
   /** Accessible name, or null when a neighbour already names it (then aria-hidden). */
   label: string | null;
+  /** A soft halo in the shape's own colour, for the velvet stage. */
+  isGlowing?: boolean;
 }
 
 /** The two light fills that sit near 2:1 on the page; they get a faint ink edge in light. */
@@ -18,12 +20,18 @@ const EDGED_COLOR_KEYS: ReadonlySet<QuizshowTeamColorKey> = new Set([
   "hexagon",
 ]);
 
-export function QuizshowShape({ colorKey, size, label }: QuizshowShapeProps) {
+export function QuizshowShape({
+  colorKey,
+  size,
+  label,
+  isGlowing = false,
+}: QuizshowShapeProps) {
   const swatch = QUIZSHOW_SWATCHES[colorKey];
   const className = [
     styles.shape,
     styles[size],
     EDGED_COLOR_KEYS.has(colorKey) ? styles.edged : "",
+    isGlowing ? styles.glowing : "",
   ]
     .filter(Boolean)
     .join(" ");

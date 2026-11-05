@@ -2,6 +2,7 @@ import { Navigate, Route } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
 import {
+  QUIZSHOW_EDIT_ROUTE,
   QUIZSHOW_GAME_REMOTE_ROUTE,
   QUIZSHOW_GAME_ROUTE,
   QUIZSHOW_GAME_SCREEN_ROUTE,
@@ -21,6 +22,11 @@ const QuizshowRemotePage = lazyNamed(
   () => import("./remote/QuizshowRemotePage"),
   "QuizshowRemotePage",
   QUIZSHOW_REMOTE_ROUTE,
+);
+const QuizshowEventStudioPage = lazyNamed(
+  () => import("./event/QuizshowEventStudioPage"),
+  "QuizshowEventStudioPage",
+  QUIZSHOW_EDIT_ROUTE,
 );
 const QuizshowGamePage = lazyNamed(
   () => import("./games/QuizshowGamePage"),
@@ -46,13 +52,14 @@ const QuizshowPlayPage = lazyNamed(
 
 /**
  * Pulse Live (quizshow): the presenter screen and the host's remote under an
- * event or a game, the game pages, and the player's `/play` pages. The player
- * routes are members only (gated in `authGate.ts`). Until launch, `AppRoutes`
+ * event or a game, the event's quiz editor, the game pages (each one the
+ * game's editor), and the player's `/play` pages. The player routes are
+ * members only (gated in `authGate.ts`). Until launch, `AppRoutes`
  * (`app/routes.tsx`) sends a signed-in member for whom `useIsQuizshowVisible`
  * is false from the hosting paths alone (`isQuizshowHostingPath` in
- * `authGate.ts`: the event screen and remote, `/play/games` and everything
- * under it) to the roadmap. `/play` and `/play/:code` stay open to every
- * signed-in member, so anyone can join a game they were given a code for.
+ * `authGate.ts`: the event's screen, remote and editor, `/play/games` and
+ * everything under it) to the roadmap. `/play` and `/play/:code` stay open to
+ * every signed-in member, so anyone can join a game they were given a code for.
  */
 export function quizshowRoutes() {
   return (
@@ -67,6 +74,12 @@ export function quizshowRoutes() {
         path={QUIZSHOW_REMOTE_ROUTE}
         element={
           <PageKeyedByParam paramName="slug" page={QuizshowRemotePage} />
+        }
+      />
+      <Route
+        path={QUIZSHOW_EDIT_ROUTE}
+        element={
+          <PageKeyedByParam paramName="slug" page={QuizshowEventStudioPage} />
         }
       />
       <Route

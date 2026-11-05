@@ -7,6 +7,7 @@ import type { Community } from "../homepage/data/types";
 import { CommunityCard } from "./CommunityCard";
 import { CommunityJoinFlowModal } from "./CommunityJoinFlowModal";
 import { useSuggestedBand } from "./useSuggestedBand";
+import pageStyles from "./CommunitiesPage.module.css";
 import styles from "./SuggestedCommunitiesSection.module.css";
 
 /**
@@ -93,6 +94,7 @@ export function SuggestedCommunitiesSection({
       {isShowingBand && (
         <FadeIn ref={sectionRef} className={styles.section}>
           <SectionHead
+            className={pageStyles.compactSectionHead}
             title={t("communities:discover.suggested.heading")}
             subtitle={t("communities:discover.suggested.subtitle")}
           />

@@ -1,4 +1,23 @@
-/* The /play home's My games: heading, game cards, empty state and the New game dialog. */
+/* The /play home in the Pulse Live world: the join hero, My games as cover
+   cards, the empty state and the dark New game dialog. The page behind is the
+   velvet backdrop, so every colour here is a --qs-* stage token. */
+
+/* The home is wider than the join column: it breaks out of the page's narrow
+   column and centres itself. */
+.home {
+  --home-width: min(60rem, calc(100vw - 2 * var(--gap-sm)));
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  box-sizing: border-box;
+  inline-size: var(--home-width);
+  min-width: 0;
+  margin-inline: calc((100% - var(--home-width)) / 2);
+  color: var(--qs-text);
+  /* Above the page's backdrop layer, which is positioned. */
+  position: relative;
+  z-index: 1;
+}
 
 /* The quiet way home above the code form, styled like the game page's Back link. */
 .homeBack {
@@ -9,7 +28,7 @@
   min-height: var(--tap-min);
   font-size: var(--text-body-sm);
   font-weight: 600;
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
   text-decoration: none;
   border-radius: var(--radius-tag);
   transition: color var(--dur-fast) var(--ease);
@@ -17,22 +36,32 @@
 
 @media (hover: hover) and (pointer: fine) {
   .homeBack:hover {
-    color: var(--ink);
+    color: var(--qs-text);
   }
 }
 
 .homeBack:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
+  box-shadow: var(--qs-focus-halo);
 }
+
+/* Left-aligned to the page grid (the back link, My games and the cards all
+   start on the same edge); the join form keeps its own readable width. */
+.hero {
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: 32rem;
+  padding-block: var(--gap-sm) var(--gap-lg);
+}
+
 /* Margins over a flex gap here: the always-mounted limit status region is
    empty most of the time and must not add a gap of its own. */
 .section {
   display: flow-root;
-  margin-block-start: var(--gap-lg);
+  margin-block-start: var(--gap-sm);
   padding-block-start: var(--gap-lg);
-  border-block-start: 1px solid var(--line);
+  border-block-start: 1px solid var(--qs-line);
 }
 
 .head {
@@ -54,10 +83,11 @@
 .title {
   margin: 0;
   font-family: var(--serif);
-  font-size: var(--text-22);
+  font-size: var(--text-28);
   font-weight: 400;
-  line-height: 1.2;
-  color: var(--text-strong);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--qs-text);
 }
 
 .sub {
@@ -65,7 +95,7 @@
   max-inline-size: 60ch;
   font-size: var(--text-body-sm);
   line-height: 1.5;
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
   text-wrap: pretty;
 }
 
@@ -74,8 +104,9 @@
   padding: var(--gap-xs) var(--gap-sm);
   font-size: var(--text-body-sm);
   line-height: 1.45;
-  color: var(--ink);
-  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--qs-text);
+  background: var(--qs-glass-tint);
+  border: 1px solid var(--qs-low);
   border-radius: var(--radius-16);
 }
 
@@ -83,94 +114,101 @@
   margin-block-start: var(--gap-sm);
 }
 
-/* A loading stand-in sized like a game card: same padding, border, radius and gap. */
-.skeletonCard {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-block-end: var(--gap-xs);
-  padding: var(--gap-sm);
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-}
-
+/* Cards in a grid that adds a column whenever 17rem fits. */
 .list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  gap: var(--gap-sm);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-/* The whole card is the link. Its bottom margin stays inside the row's
-   flow-root, so it folds away with the row. */
+/* The whole card is the link. */
 .card {
+  composes: glass from "../stage/quizshowSurfaces.module.css";
   display: flex;
-  align-items: center;
-  gap: var(--gap-sm);
-  margin-block-end: var(--gap-xs);
-  padding: var(--gap-sm);
-  min-height: 44px;
-  color: var(--ink);
+  flex-direction: column;
+  block-size: 100%;
+  overflow: hidden;
+  color: var(--qs-text);
   text-decoration: none;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-  box-shadow: var(--shadow-e1);
-  transition-property: transform, box-shadow;
+  transition-property: transform, border-color, box-shadow;
   transition-duration: var(--dur-base);
   transition-timing-function: var(--ease);
 }
 
+.coverFrame {
+  overflow: hidden;
+}
+
+.coverFrame > * {
+  transition: transform var(--dur-base) var(--ease);
+}
+
 @media (hover: hover) and (pointer: fine) {
   .card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lift);
+    transform: translateY(-3px);
+    border-color: var(--qs-glass-border-strong);
+    box-shadow: var(--qs-shadow-lift);
+  }
+
+  .card:hover .coverFrame > * {
+    transform: scale(1.035);
+  }
+
+  .card:hover .cardChevron {
+    transform: translateX(2px);
+    color: var(--qs-text);
   }
 }
 
-/* After the hover rule, so a hovered card keeps its focus ring halo. */
+/* After the hover rule, so a hovered card keeps its focus halo. */
 .card:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
+  box-shadow: var(--qs-focus-halo);
+}
+
+.card:active {
+  transform: scale(0.985);
+  transition-duration: var(--dur-fast);
 }
 
 .cardText {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
   min-width: 0;
+  padding: var(--gap-xs) var(--gap-sm) var(--gap-sm);
 }
 
-.cardTitle {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-subhead);
-  font-weight: 400;
-  line-height: 1.25;
-  overflow-wrap: anywhere;
-  color: var(--text-strong);
+/* The title is the cover's; this row holds the edited date and the chevron. */
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-xs);
+  min-height: 24px;
 }
 
 .cardMeta {
+  min-width: 0;
   margin: 0;
   font-size: var(--text-caption);
   line-height: 1.45;
-  color: var(--ink-60);
-}
-
-.metaDot {
-  white-space: pre;
+  color: var(--qs-text-mute);
 }
 
 .cardChevron {
   flex: none;
   width: 20px;
   height: 20px;
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
+  transition-property: transform, color;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
 }
 
 .tags {
@@ -191,57 +229,252 @@
   font-size: var(--text-caption);
   font-weight: 600;
   line-height: 1.5;
-  color: var(--ink);
-  background: rgba(var(--ink-rgb), 0.06);
-  border-radius: var(--radius-pill);
+  color: var(--qs-text);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-pill);
 }
 
+/* "Lobby open" and "Live now": jade glass, the same signal as a right answer. */
 .tagLive {
-  background: rgba(var(--jade-rgb), 0.16);
+  background: var(--qs-right-fill);
+  border-color: var(--qs-right-border);
 }
 
 .tagAdults {
-  background: rgba(var(--accent-rgb), 0.16);
+  border-color: var(--qs-low);
 }
 
 .liveDot {
+  position: relative;
+  flex: none;
   width: 7px;
   height: 7px;
-  background: var(--jade);
+  background: var(--qs-right-border);
   border-radius: var(--radius-avatar);
 }
 
-.emptyCard {
+/* A soft ring that grows and fades off the dot. Transform and opacity only. */
+.liveDotPulse::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  border-radius: inherit;
+  animation: livePulse 1.9s ease-out infinite;
+}
+
+@keyframes livePulse {
+  from {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(3);
+  }
+}
+
+/* A loading stand-in shaped like a game card: same cover ratio and body. */
+.skeletonCard {
+  composes: glass from "../stage/quizshowSurfaces.module.css";
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  overflow: hidden;
+}
+
+.skeletonCover {
+  aspect-ratio: 16 / 9;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+@media (max-width: 30rem) {
+  .skeletonCover {
+    aspect-ratio: 2 / 1;
+  }
+}
+
+.skeletonText {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: var(--gap-xs) var(--gap-sm) var(--gap-sm);
+}
+
+.skeletonTitle,
+.skeletonMeta {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-tag);
+}
+
+.skeletonTitle {
+  inline-size: 38%;
+  block-size: 14px;
+}
+
+.skeletonMeta {
+  inline-size: 24%;
+  block-size: 20px;
+  border-radius: var(--qs-radius-pill);
+}
+
+.skeletonPulse .skeletonCard {
+  animation: skeletonPulse 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes skeletonPulse {
+  from {
+    opacity: 0.55;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* The load error: a glass panel with a warm icon and a stage retry button. */
+.errorPanel {
+  composes: glass from "../stage/quizshowSurfaces.module.css";
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-xs);
+  /* The shared glass surface sets padding itself and reads this variable. */
+  --qs-glass-padding: var(--gap-lg) var(--gap-sm);
+  padding: var(--qs-glass-padding);
+  text-align: center;
+}
+
+.errorPanelIcon {
+  inline-size: 28px;
+  block-size: 28px;
+  color: var(--qs-low);
+}
+
+.errorPanelTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--qs-text);
+}
+
+.errorPanelBody {
+  margin: 0 0 var(--gap-xs);
+  max-inline-size: 42ch;
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+  color: var(--qs-text-mute);
+  text-wrap: pretty;
+}
+
+.emptyCard {
+  composes: glassRaised from "../stage/quizshowSurfaces.module.css";
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: var(--gap-sm);
-  padding: var(--gap-lg) var(--gap-sm);
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
+  --qs-glass-padding: var(--gap-lg) var(--gap-sm);
+  padding: var(--qs-glass-padding);
+  text-align: center;
 }
 
 @media (min-width: 30rem) {
   .emptyCard {
-    padding-inline: var(--gap-lg);
+    --qs-glass-padding: var(--gap-lg);
   }
+}
+
+/* Three blank title slides, fanned out, where the first game will sit. */
+.emptySlides {
+  position: relative;
+  inline-size: min(12rem, 70%);
+  aspect-ratio: 16 / 10;
+  margin-block-end: var(--gap-sm);
+}
+
+.emptySlide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 8px;
+  box-sizing: border-box;
+  padding: 12%;
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-raised);
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--radius-16);
+  box-shadow: var(--qs-shadow-pill);
+}
+
+.emptySlideBack {
+  transform: translate(-14%, 4%) rotate(-9deg);
+  opacity: 0.55;
+}
+
+.emptySlideMid {
+  transform: translate(12%, 2%) rotate(7deg);
+  opacity: 0.8;
+}
+
+.emptySlideFront {
+  background:
+    radial-gradient(
+      90% 110% at 8% -10%,
+      var(--qs-field-coral) 0%,
+      transparent 72%
+    ),
+    radial-gradient(
+      80% 100% at 100% 115%,
+      var(--qs-field-plum) 0%,
+      transparent 70%
+    ),
+    var(--qs-base);
+  border-color: var(--qs-glass-border-strong);
+  transform: rotate(-1.5deg);
+}
+
+.emptyBarLong,
+.emptyBarShort {
+  display: block;
+  block-size: 6px;
+  border-radius: var(--qs-radius-pill);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.emptyBarLong {
+  inline-size: 72%;
+}
+
+.emptyBarShort {
+  inline-size: 34%;
+  background-image: var(--qs-em-gradient);
 }
 
 .emptyTitle {
   margin: 0;
   font-family: var(--serif);
-  font-size: var(--text-subhead);
+  font-size: var(--text-24);
   font-weight: 400;
-  color: var(--text-strong);
+  line-height: 1.2;
+  color: var(--qs-text);
 }
 
 .emptyBody {
   margin: 0;
-  max-inline-size: 60ch;
+  max-inline-size: 46ch;
   font-size: var(--text-body);
   line-height: 1.5;
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
   text-wrap: pretty;
 }
 
@@ -249,7 +482,18 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: var(--gap-xs);
+  margin-block-start: var(--gap-xs);
+}
+
+/* On a phone the three starts stack full width, easy to reach with a thumb. */
+@media (max-width: 30rem) {
+  .emptyActions {
+    flex-direction: column;
+    align-items: stretch;
+    inline-size: 100%;
+  }
 }
 
 .errorLine {
@@ -259,14 +503,51 @@
   margin: 0;
   font-size: var(--text-body-sm);
   line-height: 1.45;
-  color: var(--ink);
+  color: var(--qs-text);
 }
 
 .errorIcon {
   flex: none;
   width: 18px;
   height: 18px;
-  color: var(--danger);
+  color: var(--qs-low);
+}
+
+/* The shared dialog and form field read the app's light/dark tokens. This scope
+   points those tokens at the stage palette, so the New game dialog stays
+   velvet in either app theme. */
+.stageScope {
+  --cream: var(--qs-raised);
+  --paper: var(--qs-raised-2);
+  --ink: var(--qs-text);
+  --ink-60: var(--qs-text-mute);
+  --ink-40: rgba(255, 255, 255, 0.62);
+  --text-strong: var(--qs-text);
+  --line-rgb: var(--qs-line-rgb);
+  --accent-text: var(--qs-low);
+  color: var(--qs-text);
+}
+
+.dialog[role="dialog"] {
+  border-color: var(--qs-glass-border-strong);
+  box-shadow: var(--qs-shadow-lift);
+}
+
+/* Fields sit a step darker than the dialog so they read as wells. */
+.dialog[role="dialog"] input {
+  background: var(--qs-base);
+}
+
+.dialog[role="dialog"] input:focus {
+  background: var(--qs-base);
+}
+
+/* On a phone the dialog is a bottom sheet; its grabber was drawn for a
+   light surface. */
+@media (max-width: 719.98px) {
+  .dialog[role="dialog"]::before {
+    background: var(--qs-glass-border-strong);
+  }
 }
 
 .dialogForm {
@@ -280,6 +561,23 @@
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: var(--gap-xs);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .coverFrame > *,
+  .cardChevron {
+    transition: none;
+  }
+
+  .card:hover,
+  .card:active {
+    transform: none;
+  }
+
+  .card:hover .coverFrame > * {
+    transform: none;
+  }
 }
 
 .visuallyHidden {

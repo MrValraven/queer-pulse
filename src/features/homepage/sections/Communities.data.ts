@@ -56,7 +56,6 @@ export interface FullCommunity extends CommunityBase {
   does: Array<[label: string, cadence: string]>;
   faces: CommunityFace[];
   facesMore: number;
-  count: string;
   growth: string;
   live: { text: string; isLive?: boolean };
 }
@@ -120,7 +119,6 @@ export const spotlightCommunities: SpotlightCommunity[] = [
       { initials: "SL", tint: "violet" },
     ],
     facesMore: 210,
-    count: "214 members",
     growth: "9 joined this week",
     live: { text: "12 going Sunday" },
   },
@@ -168,7 +166,6 @@ export const spotlightCommunities: SpotlightCommunity[] = [
       { initials: "VP", tint: "jade" },
     ],
     facesMore: 309,
-    count: "312 members",
     growth: "9 joined this week",
     live: { text: "Clinic Thu 18:30" },
   },
@@ -216,7 +213,6 @@ export const spotlightCommunities: SpotlightCommunity[] = [
       { initials: "FS", tint: "plum" },
     ],
     facesMore: 125,
-    count: "128 members",
     growth: "4 joined this week",
     live: { text: "3 new works today" },
   },
@@ -264,7 +260,6 @@ export const spotlightCommunities: SpotlightCommunity[] = [
       { initials: "FS", tint: "plum" },
     ],
     facesMore: 165,
-    count: "168 members",
     growth: "6 joined this week",
     live: { text: "12 new photos" },
   },
@@ -312,7 +307,6 @@ export const spotlightCommunities: SpotlightCommunity[] = [
       { initials: "VP", tint: "jade" },
     ],
     facesMore: 238,
-    count: "241 members",
     growth: "14 joined this week",
     live: { text: "Live now · 6 chatting", isLive: true },
   },
@@ -359,7 +353,6 @@ export const spotlightCommunities: SpotlightCommunity[] = [
       { initials: "LK", tint: "coral" },
     ],
     facesMore: 130,
-    count: "132 members",
     growth: "3 joined this week",
     live: { text: "15 going Sunday" },
   },
@@ -406,7 +399,6 @@ export const spotlightCommunities: SpotlightCommunity[] = [
       { initials: "BC", tint: "plum" },
     ],
     facesMore: 92,
-    count: "94 members",
     growth: "5 joined this week",
     live: { text: "7 going Saturday" },
   },
@@ -458,7 +450,6 @@ export const spotlightCommunities: SpotlightCommunity[] = [
       { initials: "DP", tint: "violet" },
     ],
     facesMore: 87,
-    count: "89 members",
     growth: "€1,240 raised this month",
     live: { text: "Needs hands this week" },
   },
@@ -506,7 +497,6 @@ export const spotlightCommunities: SpotlightCommunity[] = [
       { initials: "ZM", tint: "jade" },
     ],
     facesMore: 74,
-    count: "76 members",
     growth: "7 joined this week",
     live: { text: "Coffee Wed 16:00" },
   },

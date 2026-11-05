@@ -28,6 +28,8 @@ export function makeJoinRequestRow(
     inviteCode: null,
     inviteStatus: null,
     inviteExpiresAt: null,
+    welcomeEmailSendCount: 0,
+    welcomeEmailLastSentAt: null,
     createdAt: new Date("2026-08-20T10:00:00.000Z").toISOString(),
     reviewedAt: null,
     reviewedBy: null,

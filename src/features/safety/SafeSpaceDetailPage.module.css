@@ -153,13 +153,6 @@
   .grid {
     grid-template-columns: 1fr;
   }
-  /* Safety-first: lift the address / verification / report card above the
-     write-ups on a phone rather than burying it beneath them. */
-  .side {
-    order: -1;
-    position: static;
-    top: auto;
-  }
 }
 .sec {
   margin-bottom: 44px;
@@ -360,6 +353,18 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+/* Safety-first: lift the address / verification / report card above the
+   write-ups on a phone rather than burying it beneath them, and stop it
+   pinning there. This has to come after the base `.side` rule above: at equal
+   specificity the later rule wins, and while it sat before it the sticky base
+   kept the stacked rail floating over the main column as the page scrolled. */
+@media (--mobile) {
+  .side {
+    order: -1;
+    position: static;
+    top: auto;
+  }
 }
 .sideCard {
   background: var(--paper);

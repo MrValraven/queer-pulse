@@ -1,28 +1,39 @@
-/* EventCoverFallback: the branded cover for a gathering with no photo. A deep
-   plum field washed in the family's hue, three soft orbs of light and the
-   family icon drawn large and faint. Every colour here is fixed in both
-   themes, as a photo would be: the field is an object on the card, so it
-   reads the same on cream and on the dark page. */
+/* EventCoverFallback: the cover for an event with no photo. A paper surface
+   tinted in the family's hue, two soft pools of light, and the family icon
+   centred in a tinted disc. The surface sits on `--paper` and every ink here
+   is a flipping token, so the cover follows the theme with the card around
+   it: a pale tint on the light page, a deep one on the dark page. */
 
 .field {
-  /* The family's hue, and the contrasting hue of the second orb. Each tone
-     class below sets both; `--fallback-wash` is how strongly the hue tints
-     the field at its brightest corner. */
+  /* The family's hue, the hue of the second pool of light, and the ink the
+     icon is drawn in. Each tone class below sets all three; `--fallback-wash`
+     is how strongly the hue tints the surface. */
   --fallback-hue-rgb: var(--violet-rgb);
   --fallback-pair-rgb: var(--accent-rgb);
-  --fallback-wash: 0.4;
+  --fallback-ink: var(--violet);
+  --fallback-wash: 0.1;
   position: absolute;
   inset: 0;
-  display: block;
+  display: flex;
+  align-items: var(--cover-fallback-mark-align, center);
+  justify-content: center;
   overflow: hidden;
   background:
-    linear-gradient(
-      155deg,
-      rgba(var(--fallback-hue-rgb), var(--fallback-wash)) 0%,
-      rgba(var(--fallback-hue-rgb), calc(var(--fallback-wash) * 0.55)) 55%,
-      rgba(var(--fallback-hue-rgb), calc(var(--fallback-wash) * 0.2)) 100%
+    radial-gradient(
+      circle at 82% 12%,
+      rgba(var(--fallback-hue-rgb), 0.2) 0%,
+      transparent 58%
     ),
-    linear-gradient(155deg, var(--plum-vivid) 0%, var(--plum-deep) 100%);
+    radial-gradient(
+      circle at 10% 100%,
+      rgba(var(--fallback-pair-rgb), 0.14) 0%,
+      transparent 62%
+    ),
+    linear-gradient(
+      rgba(var(--fallback-hue-rgb), var(--fallback-wash)),
+      rgba(var(--fallback-hue-rgb), var(--fallback-wash))
+    ),
+    var(--paper);
   pointer-events: none;
 }
 
@@ -30,99 +41,67 @@
 .plum {
   --fallback-hue-rgb: var(--violet-rgb);
   --fallback-pair-rgb: var(--accent-rgb);
-  --fallback-wash: 0.4;
+  --fallback-ink: var(--violet);
+  --fallback-wash: 0.1;
 }
 
 .coral {
   --fallback-hue-rgb: var(--accent-rgb);
   --fallback-pair-rgb: var(--rose-rgb);
-  --fallback-wash: 0.85;
+  --fallback-ink: var(--accent-text);
+  --fallback-wash: 0.12;
 }
 
 .amber {
   --fallback-hue-rgb: var(--amber-rgb);
   --fallback-pair-rgb: var(--accent-rgb);
-  --fallback-wash: 0.72;
+  --fallback-ink: var(--amber-ink);
+  --fallback-wash: 0.16;
 }
 
 .violet {
   --fallback-hue-rgb: var(--violet-rgb);
   --fallback-pair-rgb: var(--rose-rgb);
-  --fallback-wash: 0.85;
+  --fallback-ink: var(--violet);
+  --fallback-wash: 0.12;
 }
 
 .rose {
   --fallback-hue-rgb: var(--rose-rgb);
   --fallback-pair-rgb: var(--violet-rgb);
-  --fallback-wash: 0.85;
+  --fallback-ink: var(--rose-ink);
+  --fallback-wash: 0.12;
 }
 
 .jade {
   --fallback-hue-rgb: var(--jade-rgb);
   --fallback-pair-rgb: var(--amber-rgb);
-  --fallback-wash: 0.82;
+  --fallback-ink: var(--jade-ink);
+  --fallback-wash: 0.12;
 }
 
-/* ── Orbs: soft radial light, each fading to nothing at its own edge ── */
-.orb {
-  position: absolute;
-  display: block;
+/* ── The mark: the family icon centred in a tinted disc with a hairline in
+   the same hue. Its size is a share of the cover's height, so a 92px phone
+   thumbnail and a full card cover hold the same proportions; a caller tunes
+   it with `--cover-fallback-mark-size`. ── */
+.mark {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  block-size: var(--cover-fallback-mark-size, 36%);
   aspect-ratio: 1;
   border-radius: 50%;
+  border: 1px solid rgba(var(--fallback-hue-rgb), 0.24);
+  background: rgba(var(--fallback-hue-rgb), 0.14);
 }
 
-/* Cream light falling in from the top trailing corner. */
-.orbGlow {
-  inset-block-start: -38%;
-  inset-inline-end: -18%;
-  inline-size: 78%;
-  background: radial-gradient(
-    circle,
-    rgba(var(--cream-rgb), 0.2) 0%,
-    rgba(var(--cream-rgb), 0.06) 45%,
-    transparent 68%
-  );
-}
-
-/* The family hue pooling at the bottom leading corner. */
-.orbHue {
-  inset-block-end: -46%;
-  inset-inline-start: -22%;
-  inline-size: 86%;
-  background: radial-gradient(
-    circle,
-    rgba(var(--fallback-hue-rgb), 0.6) 0%,
-    rgba(var(--fallback-hue-rgb), 0.2) 42%,
-    transparent 70%
-  );
-}
-
-/* A small warm counterpoint behind the icon. */
-.orbPair {
-  inset-block-start: 18%;
-  inset-inline-end: 4%;
-  inline-size: 46%;
-  background: radial-gradient(
-    circle,
-    rgba(var(--fallback-pair-rgb), 0.3) 0%,
-    rgba(var(--fallback-pair-rgb), 0.1) 40%,
-    transparent 70%
-  );
-}
-
-/* ── The family icon: large, thin and faint, offset to the trailing side so
-   the date stamp (top leading) and the chips (bottom leading) stay clear ── */
 .icon {
-  position: absolute;
-  inset-block-start: 50%;
-  inset-inline-end: 14%;
-  block-size: 30%;
-  inline-size: auto;
-  aspect-ratio: 1;
-  translate: 0 -60%;
-  rotate: -8deg;
-  color: rgba(var(--cream-rgb), 0.32);
-  stroke-width: 1.25;
+  inline-size: 46%;
+  block-size: 46%;
+  color: var(--fallback-ink);
+  stroke-width: 1.5;
 }
 
 /* The card size is the default geometry above. */
@@ -130,57 +109,29 @@
   min-inline-size: 0;
 }
 
-/* ── Hero: a bigger mark, wider and brighter orbs and a fine grain for the
-   featured slot, where a field this large would otherwise read as flat ── */
-.hero .icon {
-  inset-inline-end: 10%;
-  block-size: 44%;
-  stroke-width: 1;
+/* ── Hero: a slimmer stroke and a fine dot screen for the featured slot,
+   where a surface this large would otherwise read as flat ── */
+.hero .mark {
+  block-size: var(--cover-fallback-mark-size, 34%);
 }
 
-/* A fine printed dot screen in cream, densest under the light falling in from
+.hero .icon {
+  stroke-width: 1.25;
+}
+
+/* A fine printed dot screen in the family hue, densest under the light in
    the top trailing corner and fading out toward the bottom leading one. It
-   paints first, so the orbs and the icon sit over it. */
+   paints first, so the mark sits over it. */
 .hero::before {
   content: "";
   position: absolute;
   inset: 0;
   background-image: radial-gradient(
     circle,
-    rgba(var(--cream-rgb), 0.14) 1px,
+    rgba(var(--fallback-hue-rgb), 0.22) 1px,
     transparent 1.6px
   );
   background-size: 7px 7px;
   mask-image: linear-gradient(215deg, black 10%, transparent 80%);
-}
-
-.hero .orbGlow {
-  inline-size: 96%;
-  background: radial-gradient(
-    circle,
-    rgba(var(--cream-rgb), 0.3) 0%,
-    rgba(var(--cream-rgb), 0.1) 45%,
-    transparent 68%
-  );
-}
-
-.hero .orbHue {
-  inline-size: 104%;
-  background: radial-gradient(
-    circle,
-    rgba(var(--fallback-hue-rgb), 0.85) 0%,
-    rgba(var(--fallback-hue-rgb), 0.32) 42%,
-    transparent 70%
-  );
-}
-
-.hero .orbPair {
-  inset-block-start: 12%;
-  inline-size: 60%;
-  background: radial-gradient(
-    circle,
-    rgba(var(--fallback-pair-rgb), 0.48) 0%,
-    rgba(var(--fallback-pair-rgb), 0.16) 40%,
-    transparent 70%
-  );
+  pointer-events: none;
 }

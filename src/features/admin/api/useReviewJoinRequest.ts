@@ -39,6 +39,8 @@ function demoRow(id: string): JoinRequestDTO {
     inviteCode: null,
     inviteStatus: null,
     inviteExpiresAt: null,
+    welcomeEmailSendCount: 0,
+    welcomeEmailLastSentAt: null,
     declineReason: null,
     approvalReason: null,
     approvalNote: null,

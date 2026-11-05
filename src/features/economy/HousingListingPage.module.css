@@ -109,6 +109,37 @@
   border-radius: var(--radius-7);
   display: inline-block;
 }
+
+/* Type badge colours per listing type. Light values are the original inline
+   tints; dark swaps the ink to a lifted token because --plum is the dark page
+   colour and --jade sits under 4.5:1 on the dark card. Sublet and room
+   use the AA text tokens (--accent-text 5.39:1, --jade-ink 5.07:1 over their
+   10% tints on paper); both tokens lift themselves in dark. */
+.type[data-listing-type="sublet"] {
+  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--accent-text);
+}
+.type[data-listing-type="room"] {
+  background: rgba(var(--jade-rgb), 0.1);
+  color: var(--jade-ink);
+}
+.type[data-listing-type="short"] {
+  background: rgba(var(--plum-rgb), 0.08);
+  color: var(--text-strong);
+}
+.type[data-listing-type="studio"] {
+  background: rgba(var(--violet-rgb), 0.1);
+  color: var(--violet);
+}
+:global([data-theme="dark"]) .type[data-listing-type="room"] {
+  color: var(--jade-ink);
+}
+:global([data-theme="dark"]) .type[data-listing-type="short"] {
+  background: rgba(var(--plum-tint-rgb), 0.14);
+}
+:global([data-theme="dark"]) .type[data-listing-type="studio"] {
+  color: var(--plum-tint);
+}
 .saveBtn {
   flex: none;
 }

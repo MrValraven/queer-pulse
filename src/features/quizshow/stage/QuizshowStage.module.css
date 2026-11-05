@@ -1,38 +1,58 @@
-/* Sizes: one set of custom properties per stage size, read by every piece. */
+/* The "Velvet prism" stage pieces. Every colour is a --qs-* token from
+   tokens/quizshowStage.css, so the light stage ([data-qs-theme="light"])
+   restyles them all, and the answer colours come from the --quizshow-* swatch
+   tokens. Glass is written out in full wherever a state changes its fill,
+   edge or shadow, because the order of composed modules in the bundle can
+   vary; whole surfaces compose from quizshowSurfaces.module.css and set its
+   --qs-glass-* properties.
+
+   Sizes: one set of custom properties per stage size, read by every piece. */
 .screen {
   --stage-main: var(--text-screen-answer);
   --stage-label: var(--text-screen-label);
+  --stage-title: var(--text-screen-question);
+  --stage-hero: calc(var(--text-screen-code) * 1.5);
   --stage-gap: var(--gap-lg);
   --stage-pad: var(--gap-grid);
-  --stage-track: var(--gap-sm);
+  --stage-track: 8px;
   --stage-bar: 1em;
   --stage-check: 0.9em;
   --stage-tile-min: 20vh;
   --stage-correct-edge: 6px;
+  --stage-edge: 6px;
+  --stage-share: 6px;
 }
 
 .phone {
   --stage-main: var(--text-subhead);
   --stage-label: var(--text-body);
+  --stage-title: var(--text-28);
+  --stage-hero: var(--text-64);
   --stage-gap: var(--gap-sm);
   --stage-pad: var(--gap-sm);
-  --stage-track: var(--gap-xs);
+  --stage-track: 6px;
   --stage-bar: 0.75em;
   --stage-check: 1.1em;
   --stage-tile-min: 64px;
   --stage-correct-edge: 4px;
+  --stage-edge: 5px;
+  --stage-share: 4px;
 }
 
 .preview {
   --stage-main: var(--text-16);
   --stage-label: var(--text-12);
+  --stage-title: var(--text-20);
+  --stage-hero: var(--text-40);
   --stage-gap: var(--gap-xs);
   --stage-pad: var(--gap-xs);
-  --stage-track: var(--gap-xs);
+  --stage-track: 4px;
   --stage-bar: 0.6em;
   --stage-check: 1.1em;
   --stage-tile-min: 40px;
   --stage-correct-edge: 2px;
+  --stage-edge: 3px;
+  --stage-share: 3px;
 }
 
 .visuallyHidden {
@@ -45,68 +65,152 @@
   border: 0;
 }
 
-/* Countdown bar */
+/* Countdown bar: a glowing gradient line for the phone, the remote and any
+   place a ring does not fit. The block padding holds the glow inside the
+   Collapse wrapper, which clips while it folds. */
 .countdown {
   display: flex;
   flex-direction: column;
   gap: var(--gap-xs);
+  padding-block: var(--stage-track);
+  color: var(--qs-text);
 }
 
 .track {
-  overflow: hidden;
   height: var(--stage-track);
   border-radius: var(--radius-pill);
-  background: rgba(var(--ink-rgb), 0.12);
+  background: var(--qs-ring-track);
+}
+
+/* The glow sits on a wrapper that never scales, so it keeps its full size as
+   the line shortens. Only the fill's inline scaleX moves. */
+.fillGlow {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  filter: drop-shadow(
+    0 0 calc(var(--stage-track) * 1.25)
+      color-mix(in srgb, var(--accent) 70%, transparent)
+  );
+}
+
+.fillGlowLow {
+  filter: drop-shadow(
+    0 0 calc(var(--stage-track) * 1.25)
+      color-mix(in srgb, var(--qs-low) 70%, transparent)
+  );
 }
 
 .fill {
   width: 100%;
   height: 100%;
-  background: var(--accent);
+  border-radius: inherit;
+  background: var(--qs-em-gradient);
   transform-origin: left center;
   transition-property: transform;
   transition-duration: 100ms;
   transition-timing-function: linear;
 }
 
+/* The last quarter warms to amber, so the line reads as running out. */
 .fillLow {
-  background: var(--quizshow-triangle);
+  background: linear-gradient(90deg, var(--qs-low), var(--accent));
 }
 
 .fillStill {
   transition: none;
 }
 
+@media (forced-colors: active) {
+  .track {
+    background: CanvasText;
+  }
+
+  .fill,
+  .fillLow {
+    background: Highlight;
+  }
+
+  .fillGlow {
+    filter: none;
+  }
+}
+
 .countdownNote {
   min-height: 1lh;
   font-size: var(--stage-label);
-  color: var(--ink-60);
+  font-weight: 600;
+  color: var(--qs-text-mute);
 }
 
-/* Answer tile */
+/* Answer tile: frosted glass with the answer colour as a left edge bar and a
+   glowing shape. States change one layer (::after) by opacity, so a reveal
+   crossfades instead of snapping a gradient. */
 .tile {
+  position: relative;
+  isolation: isolate;
   display: flex;
   align-items: center;
   gap: min(var(--stage-gap), var(--gap-sm));
   box-sizing: border-box;
   min-height: var(--stage-tile-min);
+  overflow: hidden;
   padding: var(--stage-pad);
-  border: 0;
-  border-radius: var(--radius-16);
-  background: var(--quizshow-tile-fill);
-  color: var(--quizshow-tile-ink);
+  padding-inline-start: calc(var(--stage-pad) + var(--stage-edge));
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-tile);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-glass);
+  -webkit-backdrop-filter: var(--qs-glass-blur);
+  backdrop-filter: var(--qs-glass-blur);
+  color: var(--qs-text);
   font: inherit;
+  font-family: var(--sans);
   font-size: var(--stage-main);
   font-weight: 600;
+  line-height: 1.2;
   text-align: start;
-  transition-property: opacity, transform;
+  -webkit-font-smoothing: antialiased;
+  transition-property: opacity, transform, border-color, box-shadow;
   transition-duration: var(--dur-base);
   transition-timing-function: var(--ease);
+}
+
+/* The colour edge. */
+.tile::before {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: var(--stage-edge);
+  background: var(--quizshow-tile-fill);
+  content: "";
+  pointer-events: none;
+}
+
+/* The state layer: under the content, over the glass. */
+.tile::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  border-radius: inherit;
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-base) var(--ease);
 }
 
 button.tile {
   width: 100%;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 button.tile[aria-disabled="true"] {
@@ -117,75 +221,80 @@ button.tile[aria-disabled="true"] {
   button.tile:not([aria-disabled="true"]):hover {
     transform: translateY(-2px);
   }
+
+  button.tile.tileIdle:not([aria-disabled="true"]):hover {
+    border-color: var(--qs-glass-border-strong);
+  }
 }
 
 button.tile:active:not([aria-disabled="true"]) {
   transform: scale(0.98);
+  transition-duration: var(--dur-fast);
 }
 
+/* The global coral outline stays; the stage halo stands in for the cream one,
+   which flips dark in the dark app theme (as on the stage Button). */
 .tile:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
+  box-shadow: var(--qs-shadow-glass), var(--qs-focus-halo);
 }
 
+/* Selected: the answer colour fills the glass at about 30% behind a 2px
+   colour edge (the tile's own border plus the layer's). */
 .tileSelected {
-  position: relative;
+  border-color: var(--quizshow-tile-fill);
 }
 
 .tileSelected::after {
-  position: absolute;
-  inset: 4px;
-  border: 4px solid var(--quizshow-tile-ink);
-  border-radius: var(--radius-12);
-  content: "";
-  pointer-events: none;
+  border-color: var(--quizshow-tile-fill);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--quizshow-tile-fill) 36%, transparent) 0%,
+    color-mix(in srgb, var(--quizshow-tile-fill) 24%, transparent) 100%
+  );
+  opacity: 1;
 }
 
-/* Correct: a jade edge on the tile and a check badge. The coral focus ring
+/* Correct: jade glass, a jade glow and a check badge. The coral focus ring
    stays free for focus, so a focused correct tile shows both. */
 .tileCorrect {
-  position: relative;
+  border-color: var(--qs-right-border);
+  box-shadow: var(--qs-shadow-glass), var(--qs-glow-jade);
 }
 
-.tileCorrect::before {
-  position: absolute;
-  inset: 0;
-  border: var(--stage-correct-edge) solid var(--jade-ink);
-  border-radius: inherit;
-  content: "";
-  pointer-events: none;
-  animation: tileCorrectIn var(--dur-base) var(--ease) both;
+.tileCorrect::after {
+  border-color: var(--qs-right-border);
+  background: var(--qs-right-fill);
+  opacity: 1;
 }
 
+.tileCorrect:focus-visible {
+  box-shadow: var(--qs-glow-jade), var(--qs-focus-halo);
+}
+
+/* A solid jade disc: the border token laid over the base, so the check reads
+   on any field behind it. */
 .tileCheck {
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 1.6em;
-  height: 1.6em;
+  width: 1.15em;
+  height: 1.15em;
   border-radius: var(--radius-pill);
-  background: var(--jade-ink);
-  color: var(--paper);
-  font-size: var(--stage-label);
-  animation: tileCheckIn var(--dur-base) var(--ease) both;
+  background:
+    linear-gradient(var(--qs-right-border), var(--qs-right-border)),
+    var(--qs-base);
+  color: var(--qs-base);
+  font-size: var(--stage-main);
+  animation: tileCheckIn var(--dur-slow) var(--ease) both;
 }
 
 .tileCheck svg {
   width: 62%;
   height: 62%;
-  stroke-width: 3;
-}
-
-@keyframes tileCorrectIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+  stroke-width: 3.5;
 }
 
 @keyframes tileCheckIn {
@@ -200,11 +309,32 @@ button.tile:active:not([aria-disabled="true"]) {
   }
 }
 
-/* Dimmed: faded and desaturated, with the text still at 3.27:1 or more on
-   every swatch in both themes. */
+/* Dimmed: a wrong answer at reveal steps back. The shape, letter, text and
+   edge drop to 38% and the glass to a fainter wash over the same dark tint;
+   the vote share stays at full strength, since it is what the room reads. */
+.tile > *,
+.tile::before {
+  transition: opacity var(--dur-base) var(--ease);
+}
+
 .tileDimmed {
-  opacity: 0.75;
-  filter: saturate(0.35);
+  border-color: color-mix(in srgb, var(--qs-glass-border) 45%, transparent);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--qs-glass-top) 40%, transparent) 0%,
+      color-mix(in srgb, var(--qs-glass-bottom) 40%, transparent) 100%
+    ),
+    var(--qs-glass-tint);
+}
+
+.tileDimmed > :not(.share),
+.tileDimmed::before {
+  opacity: var(--stage-dimmed-opacity, 0.38);
+}
+
+.tileDimmed > .shareBar {
+  opacity: 0.6;
 }
 
 .letter {
@@ -212,12 +342,14 @@ button.tile:active:not([aria-disabled="true"]) {
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  min-width: 1.6em;
-  height: 1.6em;
+  min-width: 1.5em;
+  height: 1.5em;
   border-radius: var(--radius-pill);
-  background: rgba(var(--ink-rgb), 0.16);
-  font-size: var(--stage-label);
+  background: color-mix(in srgb, var(--qs-text) 12%, transparent);
+  color: var(--qs-text);
+  font-size: 0.6em;
   font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .tileText {
@@ -225,6 +357,83 @@ button.tile:active:not([aria-disabled="true"]) {
   min-width: 0;
   overflow-wrap: break-word;
   hyphens: auto;
+  text-wrap: balance;
+}
+
+/* Additive hook: a tile in a slot narrower than 15rem (a phone's two
+   answers side by side) puts its text on its own line under the shape and
+   the letter, so words stay whole. The slot opts in by being a
+   `quizshow-tile-slot` inline-size container; a tile anywhere else, and a
+   wide slot (a tablet, a desktop), keeps one row. Only the text moves; the
+   share and the check stay on the first row. */
+@container quizshow-tile-slot (max-width: 15rem) {
+  .tile {
+    flex-wrap: wrap;
+    align-content: center;
+    row-gap: var(--gap-xs);
+  }
+
+  .tileText {
+    flex: 1 0 100%;
+    order: 1;
+  }
+}
+
+/* The vote share at reveal: the percent and the count in Fraunces on the
+   right, and a bar along the bottom at the share's width. */
+.share {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  align-items: flex-end;
+  gap: 0.2em;
+  font-family: var(--serif);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.sharePercent {
+  font-size: var(--stage-share-percent-size, 0.85em);
+  font-weight: 600;
+}
+
+.shareCount {
+  display: var(--stage-share-count-display, block);
+  color: var(--qs-text-mute);
+  font-size: max(0.42em, var(--text-12));
+  font-weight: 500;
+}
+
+.shareBar {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-start: 0;
+  width: calc(var(--quizshow-share) * 1%);
+  height: var(--stage-share);
+  border-start-end-radius: var(--radius-pill);
+  border-end-end-radius: var(--radius-pill);
+  background: var(--quizshow-tile-fill);
+  opacity: 0.85;
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+.tileCorrect .shareBar {
+  background: var(--qs-right-border);
+  opacity: 1;
+}
+
+@media (forced-colors: active) {
+  .tile::before,
+  .shareBar {
+    background: CanvasText;
+  }
+
+  .tileSelected,
+  .tileCorrect {
+    border-width: 3px;
+  }
 }
 
 /* Distribution */
@@ -236,7 +445,7 @@ button.tile:active:not([aria-disabled="true"]) {
   padding: 0;
   list-style: none;
   font-size: var(--stage-label);
-  color: var(--ink);
+  color: var(--qs-text);
 }
 
 /* Bars: the list is the grid and every row a subgrid of it, so the shape,
@@ -247,6 +456,7 @@ button.tile:active:not([aria-disabled="true"]) {
   gap: var(--stage-gap);
   min-width: 0;
   font-size: var(--stage-label);
+  color: var(--qs-text);
   container-type: inline-size;
 }
 
@@ -269,7 +479,7 @@ button.tile:active:not([aria-disabled="true"]) {
 
 /* Once a correct answer exists the wrong rows step back, as the tiles do. */
 .barList[data-has-correct="true"] .barRow:not(.barRowCorrect) {
-  opacity: 0.6;
+  opacity: 0.38;
 }
 
 .barShape {
@@ -277,8 +487,8 @@ button.tile:active:not([aria-disabled="true"]) {
   display: inline-flex;
 }
 
-/* The check sits on the shape's lower corner, ringed in the page colour so
-   it reads apart from the fill. */
+/* The check sits on the shape's lower corner, ringed in the stage base so it
+   reads apart from the fill. */
 .barCheck {
   position: absolute;
   inset-block-end: -0.3em;
@@ -289,10 +499,12 @@ button.tile:active:not([aria-disabled="true"]) {
   box-sizing: border-box;
   width: var(--stage-check);
   height: var(--stage-check);
-  border: 2px solid var(--cream);
+  border: 2px solid var(--qs-base);
   border-radius: var(--radius-pill);
-  background: var(--jade-ink);
-  color: var(--paper);
+  background:
+    linear-gradient(var(--qs-right-border), var(--qs-right-border)),
+    var(--qs-base);
+  color: var(--qs-base);
   animation: tileCheckIn var(--dur-base) var(--ease) both;
 }
 
@@ -305,7 +517,7 @@ button.tile:active:not([aria-disabled="true"]) {
 .barBody {
   display: flex;
   flex-direction: column;
-  gap: 0.25em;
+  gap: 0.3em;
   min-width: 0;
 }
 
@@ -314,6 +526,7 @@ button.tile:active:not([aria-disabled="true"]) {
   display: -webkit-box;
   overflow: hidden;
   overflow-wrap: break-word;
+  font-weight: 600;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   line-clamp: 2;
@@ -321,7 +534,7 @@ button.tile:active:not([aria-disabled="true"]) {
 
 .barLetter {
   margin-inline-end: 0.15em;
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
   font-weight: 700;
 }
 
@@ -329,26 +542,43 @@ button.tile:active:not([aria-disabled="true"]) {
   font-weight: 700;
 }
 
+/* A glass track with a lit top edge. */
 .barTrack {
   display: block;
+  box-sizing: border-box;
   overflow: hidden;
   height: var(--stage-bar);
+  border: 1px solid var(--qs-glass-border);
   border-radius: var(--radius-pill);
-  background: rgba(var(--ink-rgb), 0.08);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-pill);
 }
 
-/* An outline follows the pill and leaves the fill's clip alone. */
+/* The right answer's track turns jade and glows. */
 .barRowCorrect .barTrack {
-  outline: calc(var(--stage-correct-edge) / 2) solid var(--quizshow-bar-fill);
-  outline-offset: calc(var(--stage-correct-edge) / 2);
+  border-color: var(--qs-right-border);
+  box-shadow: var(--qs-shadow-pill), var(--qs-glow-jade);
 }
 
+/* The answer colour with a soft sheen across its top half. */
 .barFill {
   display: block;
   width: 100%;
   height: 100%;
   border-radius: inherit;
-  background: var(--quizshow-bar-fill);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(255, 255, 255, 0) 55%
+    ),
+    var(--quizshow-bar-fill);
   transform-origin: left center;
 }
 
@@ -359,27 +589,28 @@ button.tile:active:not([aria-disabled="true"]) {
   align-items: baseline;
   justify-content: flex-end;
   gap: 0.4em;
+  font-family: var(--serif);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
 .barNumber {
   min-width: 2ch;
-  font-weight: 700;
+  font-weight: 600;
   text-align: end;
 }
 
 /* Room for "100%", so a column of shares lines up on the right. */
 .barPercent {
   min-width: 4ch;
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
   font-size: 0.7em;
   text-align: end;
 }
 
 .barCaption {
   margin: 0;
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
   font-size: 0.8em;
 }
 
@@ -396,38 +627,97 @@ button.tile:active:not([aria-disabled="true"]) {
   }
 }
 
-.distributionNote {
-  margin: 0;
-  color: var(--ink-60);
+@media (forced-colors: active) {
+  .barFill {
+    background: Highlight;
+  }
 }
 
+/* The "+N more" line under a capped vote list. */
+.distributionNote {
+  margin: 0;
+  color: var(--qs-text-mute);
+}
+
+/* Typed, order and closest: each count on its own glass row. */
+.noteLine {
+  box-sizing: border-box;
+  padding: calc(var(--stage-pad) * 0.75) var(--stage-pad);
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-tile);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-glass);
+  color: var(--qs-text);
+  font-weight: 600;
+  overflow-wrap: break-word;
+}
+
+/* A party entry: a glass card. The right answer (the truth) wears the jade
+   edge the tiles use. */
 .voteEntry {
   display: flex;
   flex-direction: column;
   gap: var(--gap-xs);
+  box-sizing: border-box;
   padding: var(--stage-pad);
-  border-radius: var(--radius-16);
-  background: rgba(var(--ink-rgb), 0.06);
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-tile);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-glass);
+  color: var(--qs-text);
+}
+
+.voteEntryTruth {
+  border-color: var(--qs-right-border);
+  background: var(--qs-right-fill), var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-glass), var(--qs-glow-jade);
 }
 
 .voteText {
   font-size: var(--stage-main);
+  font-weight: 600;
+  line-height: 1.2;
   overflow-wrap: anywhere;
 }
 
 .voteMeta {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: var(--gap-xs) var(--stage-gap);
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
 }
 
 .voteTag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2em 0.75em;
+  border: 1px solid var(--qs-glass-border-strong);
+  border-radius: var(--qs-radius-pill);
+  background: color-mix(in srgb, var(--qs-text) 10%, transparent);
+  color: var(--qs-text);
   font-weight: 700;
-  color: var(--ink);
 }
 
-/* Leaderboard */
+.voteEntryTruth .voteTag {
+  border-color: var(--qs-right-border);
+}
+
+/* Leaderboard: glass rows. The top three carry a coral, rose and lilac edge,
+   sampled from the emphasis gradient so the light stage gets its own darker
+   stops for free. */
 .leaderboard {
   display: flex;
   flex-direction: column;
@@ -436,42 +726,118 @@ button.tile:active:not([aria-disabled="true"]) {
   padding: 0;
   list-style: none;
   font-size: var(--stage-main);
+  color: var(--qs-text);
 }
 
+/* No backdrop blur on rows: a long board would stack too many blurred layers
+   for a cheap TV browser. The tint under the wash holds the contrast. */
 .leaderboardRow {
   position: relative;
   display: grid;
   grid-template-columns: 1.6em auto minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--stage-gap);
-  padding: var(--stage-pad);
-  border-radius: var(--radius-16);
-  background: rgba(var(--ink-rgb), 0.06);
+  box-sizing: border-box;
+  padding: calc(var(--stage-pad) * 0.7) var(--stage-pad);
+  padding-inline-start: calc(var(--stage-pad) + var(--stage-edge));
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-tile);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-glass);
 }
 
+/* The edge is a full-row layer with the row's own radius, masked to its first
+   few pixels, so it follows the rounded corners without clipping the row (and
+   the shape's glow stays whole). */
+.leaderboardRowTop::before {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    black var(--stage-edge),
+    transparent var(--stage-edge)
+  );
+  mask-image: linear-gradient(
+    90deg,
+    black var(--stage-edge),
+    transparent var(--stage-edge)
+  );
+  pointer-events: none;
+  background-image: var(--qs-em-gradient);
+  background-position: var(--leaderboard-edge-stop) 0;
+  background-size: 2400% 100%;
+  content: "";
+}
+
+.leaderboardRowFirst {
+  --leaderboard-edge-stop: 0%;
+}
+
+.leaderboardRowSecond {
+  --leaderboard-edge-stop: 52%;
+}
+
+.leaderboardRowThird {
+  --leaderboard-edge-stop: 100%;
+}
+
+/* The player's own row: a raised glass and a coral edge all round. */
 .leaderboardRowSelf {
-  background: rgba(var(--ink-rgb), 0.14);
-  box-shadow: inset 0 0 0 2px var(--accent);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-raised-top) 0%,
+      var(--qs-glass-raised-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
 }
 
 .rank {
-  font-weight: 700;
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
+  font-family: var(--serif);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  text-align: center;
+}
+
+.leaderboardRowTop .rank {
+  color: var(--qs-text);
 }
 
 .entrantName {
   min-width: 0;
   overflow: hidden;
+  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .score {
-  font-weight: 700;
+  font-family: var(--serif);
   font-variant-numeric: tabular-nums;
+  font-weight: 600;
 }
 
-/* Podium */
+@media (forced-colors: active) {
+  .leaderboardRowTop::before {
+    background: CanvasText;
+  }
+}
+
+/* Podium: a spotlight beam over each step, glass blocks, and a slow glow
+   pulse on the winner's block. Each step sets its block height once, and the
+   beam lands on top of it. */
+/* The beams reach past the outer steps; the sides clip so the page never
+   scrolls sideways, and the top stays open for the light. */
 .podium {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -479,10 +845,15 @@ button.tile:active:not([aria-disabled="true"]) {
   gap: var(--stage-gap);
   margin: 0;
   padding: 0;
+  overflow-x: clip;
+  overflow-y: visible;
   list-style: none;
+  color: var(--qs-text);
 }
 
 .podiumStep {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -491,97 +862,348 @@ button.tile:active:not([aria-disabled="true"]) {
   text-align: center;
 }
 
+/* The beam: a cone of light from a point above the step, soft at its sides
+   and fading out at both ends, so it lands on the block as a glow. */
+.podiumStep::before {
+  position: absolute;
+  z-index: -1;
+  inset-block-start: calc(var(--stage-main) * -4.5);
+  inset-block-end: var(--podium-height);
+  inset-inline: -100%;
+  background: conic-gradient(
+    from 142deg at 50% 0%,
+    rgba(255, 255, 255, 0) 0deg,
+    rgba(255, 255, 255, 0.1) 18deg,
+    rgba(255, 255, 255, 0.2) 38deg,
+    rgba(255, 255, 255, 0.1) 58deg,
+    rgba(255, 255, 255, 0) 76deg
+  );
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    black 40%,
+    black 70%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    black 40%,
+    black 70%,
+    transparent 100%
+  );
+  content: "";
+  pointer-events: none;
+}
+
 .podiumFirst {
+  --podium-height: calc(var(--stage-main) * 6);
+  --podium-edge-stop: 0%;
   grid-column: 2;
   grid-row: 1;
 }
 
 .podiumSecond {
+  --podium-height: calc(var(--stage-main) * 4.5);
+  --podium-edge-stop: 52%;
   grid-column: 1;
   grid-row: 1;
 }
 
 .podiumThird {
+  --podium-height: calc(var(--stage-main) * 3.2);
+  --podium-edge-stop: 100%;
   grid-column: 3;
   grid-row: 1;
 }
 
+/* Tied entrants share the step, one name a line. */
+.podiumNames {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25em;
+  max-width: 100%;
+}
+
+.podiumEntrant {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-xs);
+  max-width: 100%;
+}
+
+/* A phone step is about 110px wide: the shape sits above the name, so the
+   name gets the whole width and stays in one piece. */
+.phone .podiumEntrant,
+.preview .podiumEntrant {
+  flex-direction: column;
+  gap: 0.3em;
+}
+
+/* A name too long for the step ends in an ellipsis on one line, so it never
+   splits mid-word; the full name is still in the text for screen readers. */
+.phone .podiumName,
+.preview .podiumName {
+  overflow: hidden;
+  font-size: var(--text-16);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview .podiumName {
+  font-size: var(--text-12);
+}
+
+.podiumMore {
+  color: var(--qs-text-mute);
+  font-size: var(--stage-label);
+  font-weight: 600;
+}
+
 .podiumName {
+  position: relative;
+  z-index: 1;
   max-width: 100%;
   font-size: var(--stage-main);
   font-weight: 700;
+  line-height: 1.15;
   overflow-wrap: anywhere;
+  text-wrap: balance;
 }
 
 .podiumScore {
+  position: relative;
+  z-index: 1;
+  color: var(--qs-text-mute);
+  font-family: var(--serif);
   font-size: var(--stage-label);
-  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
 }
 
+/* The block: raised glass lit from the top, the place number in the
+   emphasis gradient. */
 .podiumBlock {
+  position: relative;
   display: flex;
   align-items: flex-start;
   justify-content: center;
   box-sizing: border-box;
   width: 100%;
+  height: var(--podium-height);
   padding-top: var(--stage-pad);
-  border-radius: var(--radius-16) var(--radius-16) 0 0;
-  background: var(--accent-fill);
-  color: rgba(var(--cream-rgb), 1);
+  border: 1px solid var(--qs-glass-border-strong);
+  border-block-end: 0;
+  border-radius: var(--qs-radius-tile) var(--qs-radius-tile) 0 0;
+  background:
+    radial-gradient(
+      70% 45% at 50% 0%,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(255, 255, 255, 0) 100%
+    ),
+    linear-gradient(
+      180deg,
+      var(--qs-glass-raised-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-lift);
+  font-size: calc(var(--stage-main) * 1.6);
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* A colour edge along the top of the block. */
+.podiumBlock::before {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: var(--qs-radius-tile);
+  height: 3px;
+  border-radius: var(--radius-pill);
+  background-image: var(--qs-em-gradient);
+  background-position: var(--podium-edge-stop) 0;
+  background-size: 2400% 100%;
+  content: "";
+}
+
+.podiumPlace {
+  composes: gradientText from "./quizshowSurfaces.module.css";
+  position: relative;
+  z-index: 1;
+  font-variant-numeric: lining-nums;
+}
+
+/* The winner's glow sits on its own layer, so the pulse is opacity only. */
+.podiumBlockFirst::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow:
+    var(--qs-glow-ring), var(--qs-glow-coral-strong), var(--qs-glow-coral);
+  content: "";
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.podiumPulse .podiumBlockFirst::after {
+  animation: podiumGlow 3.2s var(--ease-in-out) 2.2s infinite alternate both;
+}
+
+@keyframes podiumGlow {
+  from {
+    opacity: 0.6;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* Confetti: a short burst above the winner, once, after its step lands. Off
+   under reduced motion (the component leaves it out, and the global kill
+   switch ends the keyframes on their hidden last frame). */
+/* It starts at the top of the step, above the name, and every piece stays
+   above that line (QuizshowPodium.tsx keeps each height negative). It sits
+   on the step's base layer, under the name and the score, which stand one
+   layer up. */
+.confetti {
+  position: absolute;
+  z-index: 0;
+  inset-block-start: 0;
+  inset-inline-start: 50%;
+  width: 0;
+  height: 0;
   font-size: var(--stage-main);
-  font-weight: 700;
+  pointer-events: none;
 }
 
-.podiumBlockFirst {
-  height: calc(var(--stage-main) * 6);
+/* Each piece hangs above the start line, its bottom edge on it. */
+.confettiPiece {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-start: -0.15em;
+  width: 0.3em;
+  height: 0.56em;
+  border-radius: var(--radius-2);
+  background: var(--piece-color);
+  opacity: 0;
+  animation: podiumConfetti 1.3s var(--ease-out) both;
+  animation-delay: calc(var(--confetti-delay) + var(--piece-delay));
 }
 
-.podiumBlockSecond {
-  height: calc(var(--stage-main) * 4.5);
-  background: color-mix(in srgb, var(--accent-fill) 80%, var(--plum));
+@keyframes podiumConfetti {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg) scale(0.6);
+  }
+
+  35% {
+    opacity: 1;
+    transform: translate(calc(var(--piece-x) * 0.65), var(--piece-rise))
+      rotate(calc(var(--piece-spin) * 0.4)) scale(1);
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(var(--piece-x), var(--piece-fall))
+      rotate(var(--piece-spin)) scale(1);
+  }
 }
 
-.podiumBlockThird {
-  height: calc(var(--stage-main) * 3.2);
-  background: color-mix(in srgb, var(--accent-fill) 60%, var(--plum));
+/* Glass pills: the round notes, the paused note and the connection banner.
+   Each sets its own type size, so the pill is written out here in full. */
+.stagePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  box-sizing: border-box;
+  padding: 0.45em 1.1em;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-pill);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-pill);
+  -webkit-backdrop-filter: var(--qs-glass-blur);
+  backdrop-filter: var(--qs-glass-blur);
+  color: var(--qs-text);
+  font-family: var(--sans);
+  font-weight: 600;
+  line-height: 1.2;
 }
 
-/* Dark: the plum mix sank to 2.54:1 on the page. A lighter stop (plum with
-   some plum tint) lifts it to 3.31:1 and keeps the cream number at 5.35:1.
-   The second rule puts the light mix back in a light subtree of a dark page. */
-:global([data-theme="dark"]) .podiumBlockThird {
-  background: color-mix(
-    in srgb,
-    var(--accent-fill) 60%,
-    color-mix(in srgb, var(--plum) 65%, var(--plum-tint))
-  );
+.stagePill svg {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
 }
 
-:global([data-theme="dark"]) :global([data-theme="light"]) .podiumBlockThird {
-  background: color-mix(in srgb, var(--accent-fill) 60%, var(--plum));
-}
-
-/* Round card */
+/* Round card: cinematic. A huge round number in the emphasis gradient, the
+   round's kind and title, and one light sweep across the glass. */
 .roundCard {
+  composes: glassRaised from "./quizshowSurfaces.module.css";
+  --qs-glass-radius: var(--qs-radius-card);
+  padding: calc(var(--stage-pad) * 1.5) calc(var(--stage-pad) * 2);
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
-  gap: var(--stage-gap);
-  padding: var(--stage-pad);
-  border-radius: var(--radius-16);
-  background: rgba(var(--ink-rgb), 0.06);
-  color: var(--ink);
+  align-items: center;
+  gap: calc(var(--stage-gap) * 0.5);
+  overflow: hidden;
+  text-align: center;
+}
+
+.roundKind {
+  composes: stagePill;
+  font-size: var(--stage-label);
+}
+
+.roundNumber {
+  composes: gradientText from "./quizshowSurfaces.module.css";
+  display: block;
+  font-size: var(--stage-hero);
+  font-weight: 600;
+  line-height: 0.95;
+  font-variant-numeric: lining-nums;
+}
+
+.roundHeading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--stage-gap) * 0.35);
 }
 
 .roundEyebrow {
   margin: 0;
+  color: var(--qs-text-mute);
   font-size: var(--stage-label);
-  color: var(--ink-60);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .roundTitle {
+  max-width: 24ch;
   margin: 0;
+  color: var(--qs-text);
   font-family: var(--serif);
-  font-size: var(--stage-main);
+  font-size: var(--stage-title);
+  font-weight: 600;
   line-height: var(--lh-title);
   overflow-wrap: break-word;
   text-wrap: balance;
@@ -590,44 +1212,71 @@ button.tile:active:not([aria-disabled="true"]) {
 .roundNotes {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--gap-xs) var(--stage-gap);
+  justify-content: center;
+  gap: var(--gap-xs);
   margin: 0;
-  padding: 0;
+  padding: calc(var(--stage-gap) * 0.6) 0 0;
   list-style: none;
   font-size: var(--stage-label);
 }
 
 .roundNote {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--gap-xs);
+  composes: stagePill;
+  font-size: calc(var(--stage-label) * 0.8);
 }
 
-/* Connection banner */
+/* The sweep: a soft band of light that crosses once. Transform only. */
+.roundSweep {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  pointer-events: none;
+  transform: translateX(-100%);
+  animation: roundSweep 0.9s var(--ease-in-out) 0.3s both;
+}
+
+@keyframes roundSweep {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Connection banner: a glass pill centred along the top, with the warning
+   icon in the warm low-time colour. */
+.bannerRow {
+  display: flex;
+  justify-content: center;
+  padding: var(--gap-xs) var(--gap-sm);
+}
+
 .banner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--gap-xs);
-  padding: var(--gap-xs) var(--gap-sm);
-  background: var(--accent-fill);
-  color: rgba(var(--cream-rgb), 1);
+  composes: stagePill;
   font-size: var(--text-body);
-  font-weight: 600;
 }
 
-/* Paused note: one line every surface shares. The size custom property is read
-   when an ancestor sets one; the body size stands in otherwise. */
+.banner svg {
+  color: var(--qs-low);
+}
+
+/* Paused note: one centred pill every surface shares. The size custom
+   property is read when an ancestor sets one; the body size stands in
+   otherwise. */
 .pausedNote {
+  composes: stagePill;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--gap-xs);
-  margin: 0;
-  padding: var(--gap-xs) var(--gap-sm);
-  border-radius: var(--radius-pill);
-  background: rgba(var(--ink-rgb), 0.08);
-  color: var(--ink);
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
   font-size: var(--stage-label, var(--text-body));
   font-weight: 700;
 }

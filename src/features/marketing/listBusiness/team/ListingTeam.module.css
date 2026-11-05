@@ -118,6 +118,16 @@
   overflow-wrap: anywhere;
 }
 
+/* The order arrows stay put while the role editor is open. The negative end
+   margin brings Edit role back to the 8px the buttons shared on one line. */
+.moveGroup {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+  margin-inline-end: -6px;
+}
+
 /* A member row's buttons and its role editor fold into each other. */
 .actionsPanel {
   min-inline-size: 0;
@@ -142,9 +152,22 @@
   gap: 8px;
   margin-inline-start: auto;
 }
+/* On a phone the arrows sit beside the name and the buttons share the next
+   line, each growing to fill it. */
 @media (max-width: 520px) {
+  .moveGroup {
+    margin-inline-end: 0;
+  }
+  .actionsPanel {
+    flex: 1 1 100%;
+    margin-inline-start: 0;
+  }
   .actions {
     flex-wrap: wrap;
+    margin-inline-start: 0;
+  }
+  .actions > * {
+    flex: 1 1 auto;
   }
 }
 

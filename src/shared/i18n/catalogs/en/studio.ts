@@ -2986,11 +2986,6 @@ export const studio: Catalog = {
   "settingsLive.claims.body":
     "The copyright claims you filed about Studio tracks, and what happened to each.",
   "settingsLive.claims.cta": "Open your claims",
-  "settingsLive.theme.label": "Theme",
-  "settingsLive.theme.title": "How Studio <em>looks</em>",
-  "settingsLive.theme.dark.heading": "Dark mode",
-  "settingsLive.theme.dark.body":
-    "Studio follows your QueerPulse theme, so a change here applies across QueerPulse on this device.",
   "settingsLive.saveError": "We couldn't save that setting. Try again",
   "settingsLive.pageTitle": "Settings",
   "settingsLive.loadingReason":

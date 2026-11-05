@@ -1,0 +1,698 @@
+/* The studio rail. Phone and narrow layouts first: a horizontal filmstrip
+   under the top bar. From 1024px (64rem) it is the 240px column of rounds and
+   slide thumbnails. Thumbnails are CSS miniatures of the velvet stage, so a
+   quiz of 200 questions costs no stage renders. */
+
+.rail {
+  grid-area: rail;
+  min-block-size: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  min-inline-size: 0;
+  padding: 0.75rem 1rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-padding-inline: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+  background: var(--qs-raised);
+  border-block-end: 1px solid var(--qs-line);
+  color: var(--qs-text);
+}
+
+.visuallyHidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Quiz settings row ── */
+.quizRow {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0.6rem;
+  min-block-size: var(--tap-min);
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--qs-line);
+  border-radius: var(--radius-10);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--qs-text);
+  font-family: var(--sans);
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  text-align: start;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+/* In the filmstrip the settings tile and Add round sit level with the slides. */
+.quizRow,
+.footer {
+  align-self: flex-end;
+  /* The round's empty note row and the list's own padding sit under the slides. */
+  margin-block-end: 0.6rem;
+}
+
+.quizRow {
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.3rem;
+  inline-size: 6.5rem;
+  min-block-size: 5.35rem;
+  white-space: normal;
+  text-align: center;
+}
+
+.quizRowIcon {
+  flex: none;
+  font-size: var(--text-15);
+  color: var(--qs-text-mute);
+}
+
+.quizRow[aria-current="true"] {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.quizRow[aria-current="true"] .quizRowIcon {
+  color: var(--accent);
+}
+
+@media (hover: hover) {
+  .quizRow:hover:not([aria-current="true"]) {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--qs-glass-border-strong);
+  }
+}
+
+.quizRow:focus-visible,
+.roundButton:focus-visible,
+.slide:focus-visible {
+  border-radius: var(--radius-10);
+}
+
+/* ── Rounds ── */
+.rounds {
+  display: flex;
+  gap: 0.875rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.round {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-areas:
+    "head head"
+    "thumbs add"
+    "note note";
+  align-items: start;
+  column-gap: 0.5rem;
+  row-gap: 0.4rem;
+}
+
+.roundHead {
+  grid-area: head;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-inline-size: 0;
+  border-radius: var(--radius-8);
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.roundHead[data-selected] {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.roundButton {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-inline-size: 0;
+  /* Room for the "..." button, so it never sits on the count. */
+  padding: 0.35rem 2.25rem 0.35rem 0.5rem;
+  border: 0;
+  border-radius: var(--radius-8);
+  background: none;
+  color: inherit;
+  font-family: var(--sans);
+  text-align: start;
+  cursor: pointer;
+  user-select: none;
+}
+
+@media (hover: hover) {
+  .roundHead:not([data-selected]):hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+.roundKind {
+  color: var(--accent);
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.round[data-party] .roundKind {
+  color: var(--plum-tint);
+}
+
+.roundTitleRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  min-inline-size: 0;
+}
+
+.roundNumber,
+.roundCount {
+  flex: none;
+  color: var(--qs-text-mute);
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.roundTitle {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.roundDot {
+  flex: none;
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: var(--radius-avatar);
+  background: var(--accent);
+}
+
+.quizRow .roundDot {
+  position: absolute;
+  inset-block-start: 0.5rem;
+  inset-inline-end: 0.5rem;
+}
+
+@media (min-width: 64rem) {
+  .quizRow .roundDot {
+    position: static;
+    margin-inline-start: auto;
+  }
+}
+
+/* ── Thumbnails ── */
+.thumbs {
+  grid-area: thumbs;
+  display: flex;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.2rem;
+  list-style: none;
+}
+
+.thumb {
+  position: relative;
+  inline-size: 9.5rem;
+}
+
+.slide {
+  display: block;
+  inline-size: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-10);
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.mini {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--qs-line);
+  border-radius: var(--radius-10);
+  background:
+    radial-gradient(70% 90% at 12% 0%, var(--qs-field-coral), transparent 62%),
+    radial-gradient(
+      60% 80% at 100% 100%,
+      var(--qs-field-plum),
+      transparent 60%
+    ),
+    var(--qs-base);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 5.35rem;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.thumb[data-party] .mini {
+  background:
+    radial-gradient(70% 90% at 12% 0%, var(--qs-field-plum), transparent 64%),
+    radial-gradient(
+      60% 80% at 100% 100%,
+      var(--qs-field-rose),
+      transparent 60%
+    ),
+    var(--qs-base);
+}
+
+@media (hover: hover) {
+  .thumb:not([data-selected]) .slide:hover .mini {
+    border-color: var(--qs-glass-border-strong);
+    transform: translateY(-1px);
+  }
+}
+
+.thumb[data-selected] .mini {
+  border-color: transparent;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: var(--qs-glow-coral);
+}
+
+.head {
+  position: absolute;
+  inset-block-start: 7%;
+  inset-inline-start: 7%;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.number {
+  color: var(--qs-text-mute);
+  font-size: var(--text-9-5);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.dot {
+  inline-size: 0.45rem;
+  block-size: 0.45rem;
+  border-radius: var(--radius-avatar);
+  background: var(--accent);
+}
+
+/* The prompt starts under the number row, where the "..." button sits. */
+.prompt {
+  position: absolute;
+  inset-block-start: 38%;
+  inset-inline: 7%;
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--qs-text);
+  font-family: var(--serif);
+  font-size: var(--text-10);
+  font-weight: 600;
+  line-height: 1.18;
+  text-align: start;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.prompt[data-empty] {
+  color: var(--qs-text-mute);
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* The answer layout sketch along the bottom of the slide. */
+.sketch {
+  position: absolute;
+  inset-block-end: 9%;
+  inset-inline: 7%;
+  block-size: 20%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: 1fr;
+  gap: 2px;
+}
+
+.cell {
+  min-block-size: 0;
+  border-radius: var(--radius-2);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* The answer tiles keep the stage's shape colours as a thin edge. */
+.sketch[data-layout="choice"] .cell,
+.sketch[data-layout="truth"] .cell {
+  border-inline-start: 2px solid var(--studio-cell-edge, transparent);
+}
+
+.sketch[data-layout="choice"] .cell:nth-child(1),
+.sketch[data-layout="truth"] .cell:nth-child(2) {
+  --studio-cell-edge: var(--quizshow-triangle);
+}
+
+.sketch[data-layout="choice"] .cell:nth-child(2) {
+  --studio-cell-edge: var(--quizshow-diamond);
+}
+
+.sketch[data-layout="choice"] .cell:nth-child(3) {
+  --studio-cell-edge: var(--quizshow-circle);
+}
+
+.sketch[data-layout="choice"] .cell:nth-child(4),
+.sketch[data-layout="truth"] .cell:nth-child(1) {
+  --studio-cell-edge: var(--quizshow-square);
+}
+
+.cell[data-correct] {
+  background: color-mix(in srgb, var(--jade-light) 48%, transparent);
+}
+
+.sketch[data-layout="typed"],
+.sketch[data-layout="number"] {
+  grid-template-columns: 1fr;
+}
+
+.sketch[data-layout="typed"] .cell {
+  border-inline-start: 2px solid var(--accent);
+}
+
+.sketch[data-layout="number"] .cell {
+  justify-self: center;
+  inline-size: 42%;
+}
+
+.sketch[data-layout="order"] {
+  grid-template-columns: 1fr;
+  gap: 1px;
+}
+
+.sketch[data-layout="order"] .cell:nth-child(2) {
+  inline-size: 86%;
+}
+
+.sketch[data-layout="order"] .cell:nth-child(3) {
+  inline-size: 72%;
+}
+
+.sketch[data-layout="order"] .cell:nth-child(4) {
+  inline-size: 58%;
+}
+
+.sketch[data-layout="prompt"],
+.sketch[data-layout="picture"] {
+  grid-template-columns: 1fr;
+}
+
+.card {
+  justify-self: center;
+  inline-size: 64%;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-3);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sketch[data-layout="picture"] {
+  inset-block-start: 50%;
+  block-size: auto;
+}
+
+.picture {
+  justify-self: end;
+  block-size: 100%;
+  aspect-ratio: 4 / 3;
+  border: 1px dashed rgba(255, 255, 255, 0.35);
+  border-radius: var(--radius-3);
+}
+
+/* The "..." menu: shown on hover, on focus, on the selected slide and on touch. */
+.more.more {
+  position: absolute;
+  inset-block-start: 0.3rem;
+  inset-inline-end: 0.3rem;
+  inline-size: 1.75rem;
+  min-inline-size: 0;
+  block-size: 1.75rem;
+  min-block-size: 0;
+  padding: 0;
+  border-radius: var(--radius-8);
+  background: rgba(0, 0, 0, 0.42);
+  color: var(--qs-text);
+  font-size: var(--text-14);
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+
+/* Over the end of the header, so the title keeps its full width until it shows. */
+.roundMore.roundMore {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0.25rem;
+  margin-block: auto;
+  background: rgba(0, 0, 0, 0.45);
+  inline-size: 1.75rem;
+  min-inline-size: 0;
+  block-size: 1.75rem;
+  min-block-size: 0;
+  padding: 0;
+  border-radius: var(--radius-8);
+  color: var(--qs-text-mute);
+  font-size: var(--text-14);
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+
+.thumb:hover .more,
+.thumb:focus-within .more,
+.thumb[data-selected] .more,
+.more[aria-expanded="true"],
+.roundHead:hover .roundMore,
+.roundHead:focus-within .roundMore,
+.roundHead[data-selected] .roundMore,
+.roundMore[aria-expanded="true"] {
+  opacity: 1;
+}
+
+/* On touch the "..." buttons always show. They draw at 28px, and a clear
+   ::before around them makes the target --tap-min; the round header keeps
+   room for its button, so the title and count never sit under it. */
+@media (hover: none) {
+  .more.more,
+  .roundMore.roundMore {
+    overflow: visible;
+    opacity: 1;
+  }
+
+  .more.more::before,
+  .roundMore.roundMore::before {
+    content: "";
+    position: absolute;
+    inset: calc((var(--tap-min) - 1.75rem) / -2);
+  }
+
+  .roundButton {
+    padding-inline-end: calc(var(--tap-min) + 0.25rem);
+  }
+}
+
+/* ── Add question, Add round ── */
+.addQuestion.addQuestion,
+.addRound.addRound {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  box-sizing: border-box;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-10);
+  background: none;
+  color: var(--qs-text-mute);
+  box-shadow: none;
+  font-size: var(--text-13);
+  font-weight: 600;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    background-color var(--dur-fast) var(--ease);
+}
+
+.addQuestion.addQuestion {
+  grid-area: add;
+  flex-direction: column;
+  inline-size: 5.5rem;
+  margin-block-start: 0.2rem;
+  aspect-ratio: auto;
+  min-block-size: 5.35rem;
+  padding: 0.4rem;
+}
+
+@media (hover: hover) {
+  .addQuestion.addQuestion:hover:not([aria-disabled="true"]),
+  .addRound.addRound:hover:not([aria-disabled="true"]) {
+    border-color: var(--qs-glass-border-strong);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--qs-text);
+  }
+}
+
+.addQuestion.addQuestion[aria-disabled="true"],
+.addRound.addRound[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.limitNote {
+  margin: 0;
+  padding-inline: 0.5rem;
+  color: var(--qs-text-mute);
+  font-size: var(--text-12);
+}
+
+.limitWrap {
+  grid-area: note;
+}
+
+.footer {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.4rem;
+  min-inline-size: 8.5rem;
+}
+
+.addRound.addRound {
+  min-block-size: var(--tap-min);
+  padding: 0.5rem 0.9rem;
+}
+
+.countLine {
+  margin: 0;
+  color: var(--qs-text-mute);
+  font-size: var(--text-12);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+/* ── Wide: the 240px column ── */
+@media (min-width: 64rem) {
+  .rail {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.1rem;
+    padding: 0.875rem 0.75rem 1.25rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-block-end: 0;
+    border-inline-end: 1px solid var(--qs-line);
+  }
+
+  .quizRow,
+  .footer {
+    align-self: stretch;
+    margin-block-end: 0;
+  }
+
+  .quizRow {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 0.6rem;
+    inline-size: auto;
+    min-block-size: 2.5rem;
+    white-space: nowrap;
+    text-align: start;
+  }
+
+  .rounds {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .round {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.45rem;
+  }
+
+  .thumbs {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .thumb {
+    inline-size: auto;
+  }
+
+  .mini {
+    contain-intrinsic-size: auto 7.4rem;
+  }
+
+  .number {
+    font-size: var(--text-11);
+  }
+
+  .dot {
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+  }
+
+  .prompt {
+    inset-block-start: 30%;
+    font-size: var(--text-12-5);
+  }
+
+  .sketch {
+    block-size: 22%;
+  }
+
+  .addQuestion.addQuestion {
+    flex-direction: row;
+    inline-size: 100%;
+    min-block-size: 2.25rem;
+    margin-block-start: 0;
+    padding: 0.4rem 0.75rem;
+  }
+
+  .footer {
+    margin-block-start: auto;
+    padding-block-start: 0.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mini,
+  .more.more,
+  .roundMore.roundMore {
+    transition: none;
+  }
+}

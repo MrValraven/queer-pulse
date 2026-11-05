@@ -125,6 +125,7 @@ export function QuizshowScreenToolbar({
     <div
       className={styles.toolbar}
       data-theme={theme}
+      data-qs-theme={theme}
       data-faded={isFaded ? "true" : "false"}
       onFocus={(event) => setHasFocusWithin(isKeyboardFocus(event.target))}
       onBlur={handleBlur}

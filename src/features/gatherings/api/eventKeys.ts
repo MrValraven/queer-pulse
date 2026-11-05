@@ -1,6 +1,10 @@
 import type { GuestPreviewRole } from "../guestPreview/guestPreview";
 import { eventKeySegment, type EventApiTarget } from "./eventApiTarget";
-import type { EventBrowseFilters, EventFilter } from "./events.api";
+import type {
+  EventBrowseFilters,
+  EventFilter,
+  EventWhenWindows,
+} from "./events.api";
 
 /**
  * Per-domain react-query key factory for the events domain.
@@ -47,19 +51,23 @@ export const eventKeys = {
    * The browse filters (LOC-17) are part of the key because they change WHICH
    * rows the server returns: a change has to start a fresh infinite query
    * rather than append a differently-filtered page 2 onto pages fetched under
-   * the old filter. An unfiltered call produces the same key it always did, so
-   * the hub's own `filter=upcoming` fetch and an unfiltered browse still share
-   * one request.
+   * the old filter. An unfiltered call produces the same key it always did.
    *
    * `includeHidden` (the create wizard's clash notes, the mention picker)
    * asks for the upcoming list with the member's hidden communities left in.
    * It lands in the key only when true, so every default key is unchanged.
+   *
+   * `facetWindows` (the browse board, which draws availability counts) asks
+   * for the page envelope with `facets`. It gets its own key segment, with
+   * the date windows the counts were taken over, so a cached bare list from
+   * the hub never stands in for a read that has to carry counts.
    */
   list: (
     filter: EventFilter | undefined,
     demoMode: boolean,
     browse?: EventBrowseFilters,
     includeHidden?: boolean,
+    facetWindows?: EventWhenWindows,
   ) =>
     [
       "events",
@@ -67,6 +75,7 @@ export const eventKeys = {
       demoMode,
       ...(browse && Object.values(browse).some(Boolean) ? [browse] : []),
       ...(includeHidden ? ["includeHidden"] : []),
+      ...(facetWindows ? ["facets", facetWindows] : []),
     ] as const,
   /**
    * The events a member hosts or co-hosts, for their profile's Events section

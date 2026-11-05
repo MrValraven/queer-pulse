@@ -4,6 +4,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMyEvents } from "./MyEventsContext";
+import { sx } from "./myEvents.styles";
 
 /** Floating action bar shown while selecting events. */
 export function BulkBar() {
@@ -38,6 +39,7 @@ export function BulkBar() {
       ariaLabel={t("myevents:bulk.selected", { count: selectedCount })}
       onClear={closeBulk}
       clearLabel={t("myevents:bulk.doneAria")}
+      className={sx("bulk-bar")}
     >
       <Button variant="ghost-dark" onClick={bulkAddCal}>
         {t("myevents:bulk.addToCalendar")}

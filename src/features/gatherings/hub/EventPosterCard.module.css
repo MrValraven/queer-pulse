@@ -103,6 +103,14 @@
   );
 }
 
+/* A cover-less poster's fallback lifts its mark into the top of the frame,
+   clear of the overlay text and under the lightest part of the scrim. */
+.frame [data-cover-fallback] {
+  --cover-fallback-mark-align: flex-start;
+  --cover-fallback-mark-size: 28%;
+  padding-block-start: 18%;
+}
+
 /* Second, deeper gradient — cross-faded in on hover/focus so the overlay text
    pops without animating `background` (opacity-only stays compositor-cheap). */
 .scrimHover {
@@ -375,6 +383,76 @@
 :global([data-theme="dark"]) .themeTagScrim {
   background: rgba(var(--plum-rgb), 0.72);
   color: rgb(var(--cream-rgb));
+}
+
+/* ── Phone: a shorter featured poster ──
+   A 3:4 poster at full phone width stood about 450px tall, so the Highlights
+   column showed one event per screen. Below 640px the frame is at least 4:3
+   of its own width (`75cqi`) and otherwise as tall as its overlay needs: the
+   overlay joins the flow at the foot of the frame, under a top band kept
+   clear for the ribbon and the menu. The date, kind and price share one chip
+   row (the badge row dissolves into the overlay's wrapping flex row, and the
+   price is ordered into it), and the overlay steps in to the phone's tighter
+   padding. The scrim climbs higher, since the text now covers most of the
+   frame. */
+@media (--md) {
+  .featured {
+    container-type: inline-size;
+  }
+
+  .featured .frame {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    aspect-ratio: auto;
+    min-block-size: 75cqi;
+    padding-block-start: calc(var(--gap-sm) * 2 + 1.75rem);
+  }
+
+  .featured .overlay {
+    position: relative;
+    inset: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px var(--gap-xs);
+    padding: var(--gap-sm) var(--gap-sm) var(--gap-sm);
+  }
+
+  .featured .overlay > * {
+    flex: 1 0 100%;
+    order: 1;
+    min-inline-size: 0;
+  }
+
+  .featured .badgeRow {
+    display: contents;
+  }
+
+  .featured .badgeRow > *,
+  .featured .overlay > .pricePillScrim {
+    flex: none;
+    order: 0;
+    align-self: center;
+    margin-block-start: 0;
+  }
+
+  .featured .scrim {
+    background: linear-gradient(
+      to top,
+      rgba(var(--plum-rgb), 0.94) 0%,
+      rgba(var(--plum-rgb), 0.86) 45%,
+      rgba(var(--plum-rgb), 0.6) 72%,
+      rgba(var(--plum-rgb), 0.24) 90%,
+      transparent 100%
+    );
+  }
+
+  /* With the text over most of the frame, a cover-less poster keeps its
+     surface and drops the mark the overlay would sit on. */
+  .featured .frame [data-cover-fallback] > * {
+    display: none;
+  }
 }
 
 /* ── List variant — thumb beside text, nothing overlaid ── */

@@ -2,7 +2,7 @@
   padding-block: 8px 0;
 }
 
-/* Soft plum panel — the same low-opacity treatment as the submit strip, so the
+/* Soft plum panel: the same low-opacity treatment as the submit strip, so the
    two bands at the foot of the directory read as one calm family. */
 .panel {
   display: grid;
@@ -88,5 +88,37 @@
   .panel {
     grid-template-columns: 1fr;
     gap: 28px;
+  }
+}
+/* Phones: the band follows the results at the page's band rhythm (the
+   views' 28px bottom padding), so it adds no space of its own above. The
+   panel takes the closing strip's 24px by 20px inset, and its copy wraps
+   without a stranded last word. */
+@media (--mobile) {
+  .section {
+    padding-block: 0;
+  }
+  .panel {
+    gap: 24px;
+    padding: 24px 20px;
+  }
+  .intro {
+    gap: 12px;
+  }
+  .title {
+    font-size: var(--text-24);
+    text-wrap: balance;
+  }
+  .lead,
+  .pillarBody {
+    font-size: var(--text-14);
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+  .pillars {
+    gap: 18px;
+  }
+  .pillar {
+    gap: 14px;
   }
 }

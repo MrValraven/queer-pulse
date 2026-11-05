@@ -92,8 +92,8 @@ function enterStep(stepElement: Element) {
   });
 }
 
-function lightSources(root: Element): string[] {
-  return [...root.querySelectorAll('img[data-shot-theme="light"]')].map(
+function shotSources(root: Element): string[] {
+  return [...root.querySelectorAll("img")].map(
     (image) => image.getAttribute("src") ?? "",
   );
 }
@@ -142,13 +142,13 @@ describe("StudioLandingStory", () => {
     const section = await renderStory();
     expect(section.querySelector('[data-device="laptop"]')).toBeNull();
     expect(section.querySelectorAll('[data-device="phone"]')).toHaveLength(6);
-    expect(section.querySelectorAll("img")).toHaveLength(12);
+    expect(section.querySelectorAll("img")).toHaveLength(6);
     const steps = section.querySelectorAll("li");
     expect(steps).toHaveLength(6);
     steps.forEach((step, index) => {
       const phoneShot = STUDIO_LANDING_SCREENS[index]?.phoneShot;
-      expect(lightSources(step)).toEqual([
-        `/studio-landing/${phoneShot?.fileBase}-light.webp`,
+      expect(shotSources(step)).toEqual([
+        `/studio-landing/${phoneShot?.fileBase}-dark.webp`,
       ]);
     });
   });
@@ -160,8 +160,8 @@ describe("StudioLandingStory", () => {
       expect(step.querySelector("img")).toBeNull();
     });
     expect(section.querySelectorAll('[data-device="laptop"]')).toHaveLength(1);
-    expect(lightSources(section)).toEqual([
-      "/studio-landing/home-desktop-light.webp",
+    expect(shotSources(section)).toEqual([
+      "/studio-landing/home-desktop-dark.webp",
     ]);
     expect(steps[0]).toHaveAttribute("data-active", "true");
 
@@ -171,8 +171,8 @@ describe("StudioLandingStory", () => {
     expect(releaseStep).toHaveAttribute("data-active", "true");
     expect(steps[0]).toHaveAttribute("data-active", "false");
     // The outgoing shot may still be fading out, so look at every image.
-    expect(lightSources(section)).toContain(
-      "/studio-landing/release-desktop-light.webp",
+    expect(shotSources(section)).toContain(
+      "/studio-landing/release-desktop-dark.webp",
     );
   });
 
@@ -181,8 +181,8 @@ describe("StudioLandingStory", () => {
     const playerStep = section.querySelectorAll("li")[4] as HTMLElement;
     enterStep(playerStep);
     expect(section.querySelector('[data-device="phone"]')).not.toBeNull();
-    expect(lightSources(section)).toContain(
-      "/studio-landing/player-phone-light.webp",
+    expect(shotSources(section)).toContain(
+      "/studio-landing/player-phone-dark.webp",
     );
   });
 

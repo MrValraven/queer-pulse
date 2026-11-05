@@ -15,6 +15,13 @@ export const CHANGELOG_RELEASE_NOTES: Record<
   string,
   { highlights: string[]; pushes?: number }
 > = {
+  "4 Nov 2026": {
+    highlights: [
+      "host-event-choice-modal",
+      "community-filters-show-counts",
+      "studio-always-dark",
+    ],
+  },
   "2 Nov 2026": {
     highlights: [
       "gigs-editor-redo",

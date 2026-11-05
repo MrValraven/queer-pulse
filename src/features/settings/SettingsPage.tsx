@@ -12,7 +12,7 @@ import type { DeleteOption } from "./deleteAccount.data";
 import { EditProfilePane } from "./EditProfilePane";
 import { HiddenCommunitiesPane } from "./HiddenCommunitiesPane";
 import { MyUploadsPane } from "./MyUploadsPane";
-import { ProfileThemePane, AccessibilityPane } from "./SettingsPersonalisation";
+import { AccessibilityPane } from "./SettingsPersonalisation";
 import { InterestsPane } from "./InterestsPane";
 import { DeleteAccountModal } from "./SettingsControls";
 import { SettingsSaveBar } from "./SettingsSaveBar";
@@ -126,11 +126,6 @@ export function SettingsPage() {
               <EditProfilePane
                 onChange={markChanged}
                 playlistsDraft={playlistsDraft}
-              />
-            )}
-            {pane === "profile-theme" && (
-              <ProfileThemePane
-                onChange={() => markChanged("theme.appearance")}
               />
             )}
             {/* Accessibility preferences save the moment they are flipped, so

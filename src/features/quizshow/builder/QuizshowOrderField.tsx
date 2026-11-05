@@ -30,6 +30,11 @@ interface QuizshowOrderFieldProps {
   languages: QuizshowLanguageMode;
   missingLanguages: readonly QuizshowLanguage[];
   errorText: (language: QuizshowLanguage) => string;
+  /**
+   * Only the item texts: no reorder, remove or add controls. The studio
+   * inspector's other-language fields set it, so the inputs get the full width.
+   */
+  isTextOnly?: boolean;
   onChange: (question: QuizshowQuestionInput) => void;
 }
 
@@ -51,6 +56,7 @@ export function QuizshowOrderField({
   languages,
   missingLanguages,
   errorText,
+  isTextOnly = false,
   onChange,
 }: QuizshowOrderFieldProps) {
   const { t } = useTranslation();
@@ -93,19 +99,21 @@ export function QuizshowOrderField({
                     ),
                   }}
                 >
-                  <QuizshowReorderControls
-                    index={optionIndex}
-                    count={options.length}
-                    moveUpLabel={t("quizshow:questions.order.moveUp", {
-                      number,
-                    })}
-                    moveDownLabel={t("quizshow:questions.order.moveDown", {
-                      number,
-                    })}
-                    dragLabel={t("quizshow:questions.order.drag", { number })}
-                    onMove={moveOption}
-                    gripHandlers={gripHandlers(optionIndex)}
-                  />
+                  {!isTextOnly && (
+                    <QuizshowReorderControls
+                      index={optionIndex}
+                      count={options.length}
+                      moveUpLabel={t("quizshow:questions.order.moveUp", {
+                        number,
+                      })}
+                      moveDownLabel={t("quizshow:questions.order.moveDown", {
+                        number,
+                      })}
+                      dragLabel={t("quizshow:questions.order.drag", { number })}
+                      onMove={moveOption}
+                      gripHandlers={gripHandlers(optionIndex)}
+                    />
+                  )}
                   <QuizshowBilingualInput
                     label={t("quizshow:questions.order.item", { number })}
                     value={option.text}
@@ -126,33 +134,35 @@ export function QuizshowOrderField({
                       )
                     }
                   />
-                  <Collapse isOpen={canRemove}>
-                    <IconButton
-                      size="sm"
-                      aria-label={t("quizshow:questions.order.remove", {
-                        number,
-                      })}
-                      onClick={() =>
-                        onChange(
-                          withOptions(
-                            question,
-                            options.filter(
-                              (_existing, index) => index !== optionIndex,
+                  {!isTextOnly && (
+                    <Collapse isOpen={canRemove}>
+                      <IconButton
+                        size="sm"
+                        aria-label={t("quizshow:questions.order.remove", {
+                          number,
+                        })}
+                        onClick={() =>
+                          onChange(
+                            withOptions(
+                              question,
+                              options.filter(
+                                (_existing, index) => index !== optionIndex,
+                              ),
                             ),
-                          ),
-                        )
-                      }
-                    >
-                      <FiX aria-hidden />
-                    </IconButton>
-                  </Collapse>
+                          )
+                        }
+                      >
+                        <FiX aria-hidden />
+                      </IconButton>
+                    </Collapse>
+                  )}
                 </m.div>
               </CollapseListItem>
             );
           })}
         </AnimatePresence>
       </ul>
-      <Collapse isOpen={canAdd}>
+      <Collapse isOpen={canAdd && !isTextOnly}>
         <Button
           type="button"
           variant="ghost"

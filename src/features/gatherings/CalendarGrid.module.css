@@ -50,6 +50,23 @@
   letter-spacing: -0.015em;
 }
 
+/* Phone: the month label comes down to fit one line, centred between its
+   arrows, which sit at the two edges of the grid below. */
+@media (--md) {
+  .monthNav {
+    justify-content: space-between;
+    gap: var(--gap-xs);
+    margin-bottom: var(--gap-sm);
+  }
+
+  .monthLabel {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    font-size: var(--text-22);
+    text-align: center;
+  }
+}
+
 .grid {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);

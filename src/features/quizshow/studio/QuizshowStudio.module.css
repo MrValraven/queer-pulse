@@ -1,0 +1,328 @@
+/* The studio: full screen and always dark (the root carries data-theme and
+   data-qs-theme "dark", so every app and stage token inside reads dark).
+   Narrow first: one scrolling column of top bar, filmstrip rail, canvas and
+   inspector. From 1024px (64rem) a fixed grid: a 56px bar over a 240px rail,
+   the canvas and a 300px inspector. */
+
+.root {
+  /* The sticky top bar's height; the inspector's own sticky headings sit under it. */
+  --studio-bar-height: calc(3.5rem + env(safe-area-inset-top));
+  --studio-inspector-sticky-top: var(--studio-bar-height);
+  position: fixed;
+  inset: 0;
+  isolation: isolate;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-padding-block-start: calc(var(--studio-bar-height) + 3rem);
+  background: var(--qs-base);
+  color: var(--qs-text);
+  color-scheme: dark;
+  font-family: var(--sans);
+}
+
+.visuallyHidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.workspace {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* Clipped, so nothing wider than the screen can scroll the page sideways. */
+  overflow-x: clip;
+  min-block-size: 100svh;
+  min-block-size: 100dvh;
+}
+
+.canvasCell {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  min-inline-size: 0;
+  background: radial-gradient(
+    60% 50% at 50% 40%,
+    color-mix(in srgb, var(--accent) 7%, transparent),
+    transparent 70%
+  );
+}
+
+.inspectorCell {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  padding-block-end: env(safe-area-inset-bottom);
+}
+
+.inspectorCell > * {
+  flex: 1 1 auto;
+}
+
+/* Narrow: the canvas takes the height of its content (a plain block, so its
+   100% height resolves to auto), and never collapses under the inspector. */
+.canvasSlot {
+  display: block;
+  min-inline-size: 0;
+}
+
+/* ── Hint strip under the canvas (keyboard screens only) ── */
+.hints {
+  display: none;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem 1.25rem;
+  margin: 0;
+  padding: 0.25rem 1.5rem 1rem;
+  list-style: none;
+  color: var(--qs-text-mute);
+  font-size: var(--text-12-5);
+}
+
+.hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  white-space: nowrap;
+}
+
+.keys {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-inline-size: 1.5rem;
+  block-size: 1.5rem;
+  padding: 0 0.375rem;
+  border: 1px solid var(--qs-glass-border);
+  border-block-end-width: 2px;
+  border-radius: var(--radius-6);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--qs-text);
+  font-family: var(--sans);
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* ── Shortcuts sheet ── */
+.shortcutList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.shortcutRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.7rem;
+  border-block-end: 1px solid var(--qs-line);
+}
+
+.shortcutRow:last-child {
+  border-block-end: 0;
+}
+
+.shortcutName {
+  color: var(--qs-text);
+  font-size: var(--text-14);
+}
+
+.shortcutKeys {
+  flex: none;
+  margin: 0;
+}
+
+/* ── Loading and error ── */
+.skeletonTitle,
+.skeletonRow,
+.skeletonThumb,
+.skeletonCanvas,
+.skeletonBlock {
+  display: block;
+  border-radius: var(--radius-8);
+  background: rgba(255, 255, 255, 0.06);
+  animation: studioSkeleton 1.4s var(--ease-in-out) infinite alternate;
+}
+
+.skeletonTitle {
+  inline-size: 11rem;
+  block-size: 1.1rem;
+  margin-inline-start: 0.5rem;
+}
+
+.skeletonRail {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  overflow: hidden;
+  background: var(--qs-raised);
+  border-block-end: 1px solid var(--qs-line);
+}
+
+.skeletonRow {
+  flex: none;
+  inline-size: 8rem;
+  block-size: 2.5rem;
+}
+
+.skeletonThumb {
+  flex: none;
+  inline-size: 8.25rem;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-10);
+}
+
+.skeletonCanvas {
+  aspect-ratio: 16 / 9;
+  margin: 1rem;
+  border-radius: var(--radius-16);
+}
+
+.skeletonInspector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+.skeletonInspector .skeletonRow {
+  inline-size: 60%;
+  block-size: 1rem;
+}
+
+.skeletonBlock {
+  block-size: 7rem;
+}
+
+.errorPanel {
+  display: grid;
+  flex: 1 1 auto;
+  place-items: center;
+  padding: 2rem 1rem;
+}
+
+@keyframes studioSkeleton {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeletonTitle,
+  .skeletonRow,
+  .skeletonThumb,
+  .skeletonCanvas,
+  .skeletonBlock {
+    animation: none;
+  }
+}
+
+/* ── Wide: the fixed grid ── */
+@media (min-width: 64rem) {
+  .root {
+    --studio-inspector-sticky-top: initial;
+    overflow: hidden;
+    scroll-padding-block-start: 0;
+  }
+
+  .workspace {
+    display: grid;
+    block-size: 100%;
+    min-block-size: 0;
+    grid-template-columns: 15rem minmax(0, 1fr) 18.75rem;
+    grid-template-rows: 3.5rem minmax(0, 1fr);
+    grid-template-areas:
+      "bar bar bar"
+      "rail canvas inspector";
+  }
+
+  .workspace[data-has-quiz="false"] {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "bar"
+      "canvas";
+  }
+
+  .skeletonRail {
+    grid-area: rail;
+    min-block-size: 0;
+  }
+
+  .canvasCell {
+    grid-area: canvas;
+    min-block-size: 0;
+  }
+
+  /* The canvas fills the cell above the hint strip. */
+  .canvasSlot {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-block-size: 0;
+  }
+
+  .inspectorCell {
+    grid-area: inspector;
+    min-block-size: 0;
+    padding-block-end: 0;
+    border-inline-start: 1px solid var(--qs-line);
+    background: var(--qs-raised);
+  }
+
+  .hints {
+    display: flex;
+  }
+
+  .skeletonRail {
+    flex-direction: column;
+    padding: 0.875rem 0.75rem;
+    border-block-end: 0;
+    border-inline-end: 1px solid var(--qs-line);
+  }
+
+  .skeletonRow {
+    inline-size: auto;
+  }
+
+  .skeletonThumb {
+    inline-size: auto;
+  }
+
+  .skeletonCanvas {
+    margin: 3.5rem 2.5rem;
+  }
+}
+
+/* 1024 to 1280: a slimmer rail and inspector, so the slide keeps a readable scale. */
+@media (min-width: 64rem) and (max-width: 79.99rem) {
+  .workspace {
+    grid-template-columns: 12.5rem minmax(0, 1fr) 16.25rem;
+  }
+}
+
+/* In the band the hint strip keeps to one line: "All shortcuts" stays in More. */
+@media (min-width: 64rem) and (max-width: 79.99rem) {
+  .hint[data-hint="help"] {
+    display: none;
+  }
+}

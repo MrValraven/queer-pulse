@@ -1,100 +1,71 @@
-.page {
-  background: var(--cream);
-  min-height: 60svh;
-  /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 28px 0 clamp(48px, 6vw, 96px);
+/* The page frame, results top and sidebar come from the shared filter page
+   (`shared/components/filterPage`), as on /members. What stays here is the
+   persona directory's own furniture. */
+
+/* ── Directory section ───────────────────────────────────────────────────── */
+/* The frame wraps only this section, so the frame is the div holding it.
+   Its gutters follow --wrap-px here, the gutter the hero, the Made together
+   strip and the closing band use, so every section's left edge lines up at
+   every width (the shared frame's own phone gutter is 16px). */
+div:has(> .directory) {
+  padding-inline: var(--wrap-px);
+}
+/* The hero search scrolls here; the margin keeps the floating nav off the
+   tabs. The top padding adds to the frame's own breathing room, so the
+   section opens clear of the Made together strip. */
+.directory {
+  scroll-margin-top: calc(var(--sticky-top) + var(--gap-sm));
+  padding-block-start: var(--gap-lg);
+}
+@media (--lg) {
+  .directory {
+    padding-block-start: var(--gap-grid);
+  }
 }
 
-.container {
-  width: min(1080px, 100% - (var(--wrap-px) * 2));
-  margin-inline: auto;
+/* The tabs' row above the sidebar and results. */
+.tabsRow {
+  display: flex;
+  margin-block-end: var(--gap-lg);
+}
+@media (--lg) {
+  .tabsRow {
+    margin-block-end: var(--gap-xs);
+  }
+}
+
+/* The results column: the card grid's size container, so the columns
+   follow the room the sidebar leaves them. */
+.results {
+  container: subprofile-results / inline-size;
+  min-width: 0;
+}
+
+/* The Following tab sits in the same frame with no sidebar and spans its
+   full width, the count on top and the rows in a grid below
+   (`FollowedPersonas.module.css`). The min-height holds the footer down when
+   the list is short or empty, as the hub's earlier panel did. */
+.followingPanel {
+  min-height: 60svh;
+}
+
+/* ── Sidebar section bodies ──────────────────────────────────────────────── */
+/* A sidebar section that folds in once the loaded personas give it something
+   to pick. The section inside is this slot's first child, so the shared
+   `.filterCard:not(:first-child)` divider never reaches it; the slot draws
+   the same hairline itself. */
+.sectionSlot:not(:first-child) {
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* The Profession section: one chip row per page family, each under its own
+   heading, stacked down the 280px column so ninety-four professions stay
+   navigable. The heading is a label; the family itself is not pickable.
+   The "At the table" section reuses the same stack for format and vibe. */
+.professionGroups {
   display: flex;
   flex-direction: column;
-  gap: var(--gap-grid);
-}
-/* --wrap-px is itself narrower below --md now (spacing.css), so the gutter
-   follows the ground-truth `.wrap` treatment without a second copy of it here.
-   Only the gap still needs tightening on a phone. */
-@media (--sm) {
-  .container {
-    gap: var(--gap-sm);
-  }
-}
-
-.header {
-  max-width: 60ch;
-  padding-block-end: 4px;
-}
-.eyebrow {
-  display: block;
-  font-size: var(--text-11-5);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--jade-ink);
-}
-.title {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: var(--text-display);
-  letter-spacing: -0.025em;
-  line-height: 1.04;
-  color: var(--text-strong);
-  margin: 10px 0 0;
-}
-.title em {
-  font-style: italic;
-  /* Coral-as-TEXT wants the AA-contrast `--accent-text`, not the brighter
-     `--accent` (which is tuned for fills/affordances, not body-size type). */
-  color: var(--accent-text);
-}
-.sub {
-  font-size: var(--text-body);
-  color: var(--ink-60);
-  line-height: 1.55;
-  margin: 10px 0 0;
-}
-
-/* ── Refine bar ──────────────────────────────────────────────────────────── */
-/* One row: the search field takes the width, Refine sits at its end. Mirrors
-   `/communities`' `.find`, minus the tab switch and primary action that page
-   has to share the line with. */
-.bar {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.search {
-  flex: 1 1 320px;
-  min-width: 0;
-  max-width: 480px;
-}
-.refineToggle {
-  flex: none;
-}
-@media (--mobile) {
-  .search {
-    flex: 1 1 100%;
-    max-width: none;
-  }
-}
-
-/* ── Refine drawer bands ─────────────────────────────────────────────────── */
-/* The Profession band: one chip row per page family, each under its own
-   heading, so ninety-four professions stay navigable. The heading is a label
-   rather than a filter — the family itself is no longer pickable. */
-/* An auto-fill grid rather than a stack: a family is one short chip row, so a
-   row apiece left most of the drawer's width empty at any realistic family
-   count. The browser fits as many columns as the drawer can hold and folds to
-   fewer as it narrows, which needs no profession-count threshold in React to
-   decide between two layouts. The 190px floor is what keeps a two-chip family
-   ("Musician" + "Dancer") on one line at the widths a column actually gets. */
-.professionGroups {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-  align-items: start;
-  gap: 16px 24px;
+  gap: 14px;
 }
 .professionGroup {
   min-width: 0;
@@ -108,128 +79,24 @@
   margin: 0 0 6px;
 }
 
-/* The availability pill. Same treatment as `/communities`' open/busy toggles:
-   a jade ground once on, since jade is this app's "an active, positive filter
-   is applied". */
-.toggles {
-  display: inline-flex;
-  gap: 9px;
-  flex-wrap: wrap;
-}
-.toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-family: var(--sans);
-  font-size: var(--text-14);
-  font-weight: 500;
-  color: var(--ink-60);
-  cursor: pointer;
-  border: 1px solid rgba(var(--line-rgb), 0.16);
-  background: transparent;
-  border-radius: var(--radius-pill);
-  padding: 9px 16px 9px 13px;
-  white-space: nowrap;
-  transition:
-    color var(--dur-base) var(--ease),
-    border-color var(--dur-base) var(--ease),
-    background var(--dur-base) var(--ease);
-}
-/* Without the `:not()` tail the ghost Button's own hover overrides `.toggleOn`
-   with a plum wash, so hovering an active toggle reads as "off". */
-@media (hover: hover) {
-  .toggle:not(.toggleOn):hover:not(:disabled) {
-    color: var(--ink);
-    border-color: rgba(var(--line-rgb), 0.4);
-  }
-}
-.toggleDot {
-  width: 7px;
-  height: 7px;
-  flex: none;
-  border-radius: 50%;
-  background: rgba(var(--line-rgb), 0.32);
-  transition: background var(--dur-base) var(--ease);
-}
-.toggleOn {
-  color: var(--jade);
-  background: rgba(var(--jade-rgb), 0.12);
-  border-color: rgba(var(--jade-rgb), 0.35);
-}
-.toggleOn .toggleDot {
-  background: var(--jade);
-}
-/* The live facet count, same treatment as `ChipSelect`'s `.chipCount`: the pill
-   is a filter like the chips above it, so it answers "how many would be left?"
-   the same way. `aria-hidden` — the button's `aria-label` says it in words. */
-.toggleCount {
-  font-size: var(--text-11-5);
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  opacity: 0.55;
-}
-@media (prefers-reduced-motion: reduce) {
-  .toggle,
-  .toggleDot {
-    transition: none;
-  }
-}
-
 /* ── Results grid ────────────────────────────────────────────────────────── */
+/* Portrait cards: as many 272px columns as the results column holds. The
+   frame caps at 1440px less 28px gutters, so beside the open 280px sidebar
+   (and its 36px gap) the column is 1068px at most: three cards of 341px, not
+   the four of 251px a 250px floor drew, which wrapped "View persona". With
+   the sidebar closed it holds four of 329px. Under about 600px of column,
+   where auto-fill would drop to one card, it holds two, as the phone layout
+   draws; each card turns compact by its own container query. */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: var(--gap-grid);
+  grid-template-columns: repeat(auto-fill, minmax(272px, 1fr));
+  gap: var(--gap-lg) var(--gap-grid);
 }
-/* A 300px column min is wider than some phones' full content width once the
-   page gutter is subtracted (e.g. a 320px viewport) — force a single column
-   below this breakpoint so the grid reflows cleanly instead of relying on
-   auto-fill to happen to fit, which would otherwise overflow horizontally. */
-@media (--md) {
+@container subprofile-results (max-width: 600px) {
   .grid {
-    grid-template-columns: 1fr;
-    gap: var(--gap-sm);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap-grid) var(--gap-sm);
   }
-}
-
-/* ── Loading skeleton ────────────────────────────────────────────────────── */
-/* Mirrors the `SubprofileCard` silhouette (header wash + cut-out avatar + a
-   text stack) so the real cards drop into the same `.grid` with no jump. The
-   shimmer itself comes from the shared `SkeletonLine`/`SkeletonAvatar`
-   primitives; these are only the card shell + layout. */
-.skCard {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-width: 0;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card);
-  overflow: clip;
-}
-.skHeader {
-  height: 72px;
-  flex: none;
-  background: color-mix(in srgb, var(--ink) 4%, var(--paper));
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.05);
-}
-.skAvatar {
-  flex: none;
-  margin-block-start: -34px;
-  margin-inline-start: var(--card-pad);
-}
-.skBody {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: var(--gap-xs);
-  padding: 14px var(--card-pad) 20px;
-}
-.skTags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--gap-xs);
-  margin-block-start: 6px;
 }
 
 /* ── "Show more" pager ───────────────────────────────────────────────────── */
@@ -240,7 +107,7 @@
   gap: 16px;
   flex-wrap: wrap;
   padding-block-start: 20px;
-  margin-block-start: 4px;
+  margin-block-start: var(--gap-grid);
   border-top: 1px solid rgba(var(--line-rgb), 0.12);
 }
 /* PRD-430: a filter that narrows the loaded pages to zero, with more still to
@@ -286,27 +153,6 @@
     flex-basis: 100%;
   }
 }
-/* Says that the profession/tag/availability chips cut the personas loaded so
-   far rather than the whole directory. Only rendered while one of them is on
-   and there are further pages to pull. */
-.pagerNote {
-  font-size: var(--text-12);
-  color: var(--ink-60);
-  margin-block-start: 10px;
-  max-width: 62ch;
-}
-/* S6: the zero-shown case of the same explanation, above the pager. This is
-   the moment it matters most (loaded pages are exhausted and only a further
-   fetch can turn up a match), so it reads at body size in the ink-strength
-   color; `.pagerNote` keeps the small, faded treatment for the non-zero
-   case. */
-.pagerNoteLead {
-  font-size: var(--text-body);
-  color: var(--ink);
-  line-height: 1.55;
-  margin: 0 0 16px;
-  max-width: 62ch;
-}
 /* N5: on a coarse pointer, Show more is the only action the zero-shown state
    offers, so it needs the full 44px target; the `.sm` floor alone is only
    40px. The doubled class beats Button's own `.sm` rule at equal specificity
@@ -320,55 +166,83 @@
 }
 
 /* ── Hub tabs ────────────────────────────────────────────────────────────── */
-/* "Everyone" and "You follow". Underline tabs rather than pills: the refine
-   bar below already carries pill affordances, and two competing pill rows
-   read as two filters rather than a switch between two surfaces. */
+/* "Everyone" and "You follow" as a segmented pill: a quiet track in the
+   hairline channel (plum tint in light mode, cream tint in dark) with the
+   active half filled plum. --plum does not flip with the theme, so the type
+   on it is the non-flipping cream. Below --lg the pill spans the column and
+   the two tabs split it evenly. */
 .viewTabs {
-  display: flex;
+  display: inline-flex;
   gap: 4px;
-  border-block-end: 1px solid rgba(var(--line-rgb), 0.14);
+  padding: 4px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.06);
 }
 .viewTab {
-  font-family: var(--sans);
-  font-size: var(--text-14);
-  font-weight: 600;
-  color: var(--ink-60);
-  background: transparent;
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--tap-min);
+  padding-inline: 22px;
   border: none;
-  border-block-end: 2px solid transparent;
-  padding: 10px 14px;
-  margin-block-end: -1px;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  font-family: var(--sans);
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--text-strong);
   cursor: pointer;
   white-space: nowrap;
+  touch-action: manipulation;
   transition:
     color var(--dur-base) var(--ease),
-    border-color var(--dur-base) var(--ease);
+    background-color var(--dur-base) var(--ease);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .viewTab:not(.viewTabOn):hover {
-    color: var(--ink);
+    background: rgba(var(--line-rgb), 0.06);
   }
 }
+.viewTab:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
 .viewTabOn {
-  color: var(--text-strong);
-  border-block-end-color: var(--accent);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+}
+/* On the dark page the plum half sits close to the ground, so a cream
+   hairline keeps its shape readable as well as its type. */
+:global([data-theme="dark"]) .viewTabOn {
+  box-shadow: var(--ring-cream-hairline);
+}
+:global([data-theme="dark"]) .viewTabOn:focus-visible {
+  box-shadow: var(--ring-cream);
+}
+/* Plum is the dark track's own colour (about 1.25:1, under the 3:1 a control
+   state needs), so in dark the selected half takes the coral fill that
+   carries the cream label at AA, as the card's View button does, and the
+   unselected label steps back to --ink-60. */
+:global([data-theme="dark"]) .viewTabOn {
+  background: var(--accent-fill-strong);
+}
+:global([data-theme="dark"]) .viewTab:not(.viewTabOn) {
+  color: var(--ink-60);
+}
+@media (--lg) {
+  .viewTabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    inline-size: 100%;
+  }
+  .viewTab {
+    padding-inline: 12px;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .viewTab {
     transition: none;
-  }
-}
-
-/* The tab panel. `.container` used to lay out the browse body's children
-   directly; now that they sit inside a panel wrapper, the panel carries the
-   same column rhythm so nothing collapses together. */
-.panel {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-grid);
-}
-@media (--sm) {
-  .panel {
-    gap: var(--gap-sm);
   }
 }

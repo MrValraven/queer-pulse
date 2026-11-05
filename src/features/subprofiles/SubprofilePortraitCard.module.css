@@ -1,0 +1,492 @@
+/* The directory's portrait card ("The Credits"). The article is a size
+   container and sizes to its grid cell; everything visible lives on `.surface`
+   inside it, because a container cannot query its own width. Under about 230px
+   (a two-column phone grid) the card switches to its compact mode at the end
+   of this file. */
+
+.card {
+  container: portrait-card / inline-size;
+  display: grid;
+  min-width: 0;
+  height: 100%;
+}
+
+.surface {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-card);
+  overflow: clip;
+  transition:
+    transform var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .surface:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lift);
+  }
+}
+
+/* The lift is motion, so it goes under reduced motion (the OS setting or the
+   in-app toggle); the shadow alone still answers the hover. */
+@media (prefers-reduced-motion: reduce) {
+  .surface:hover {
+    transform: none;
+  }
+}
+:global(html[data-reduce-motion="true"]) .surface:hover {
+  transform: none;
+}
+
+/* ── Portrait ─────────────────────────────────────────────────────────── */
+
+.media {
+  position: relative;
+  flex: none;
+}
+
+/* The availability pill sits on the picture, so it keeps a fixed light chip
+   with dark type in both themes. */
+.pill {
+  position: absolute;
+  inset-block-start: 14px;
+  inset-inline-start: 14px;
+  max-width: calc(100% - 28px);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--cream-rgb), 1);
+  /* css-scale-allow: non-flipping-text. The chip is the fixed light cream in
+     both themes, so its label stays plum in both too. */
+  color: var(--plum);
+  font-size: var(--text-12);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.pillLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pillDot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--jade);
+}
+.pill[data-tone="coral"] .pillDot {
+  background: var(--accent);
+}
+.pill[data-tone="muted"] .pillDot {
+  background: rgba(var(--plum-rgb), 0.4);
+}
+
+/* ── Text ─────────────────────────────────────────────────────────────── */
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 18px 20px 20px;
+}
+
+.profession {
+  margin: 0;
+  color: var(--accent-text);
+  font-size: var(--text-13);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.name {
+  margin: 0;
+  color: var(--text-strong);
+  font-family: var(--serif);
+  font-size: var(--text-25);
+  font-weight: 450;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.tagline {
+  margin: 0;
+  color: rgba(var(--ink-rgb), 0.76);
+  font-size: var(--text-15);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Credits ──────────────────────────────────────────────────────────── */
+
+.credits {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  margin: 4px 0 0;
+}
+
+.faces {
+  display: flex;
+  flex: none;
+}
+
+.face {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-avatar);
+  overflow: hidden;
+  background: var(--accent-tint);
+  color: var(--accent-on);
+  box-shadow: var(--ring-paper);
+  font-size: var(--text-10);
+  font-weight: 700;
+  line-height: 1;
+}
+.face + .face {
+  margin-inline-start: -8px;
+}
+
+.faceImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.creditLine {
+  min-width: 0;
+  color: var(--ink-60);
+  font-size: var(--text-13);
+  line-height: 1.3;
+}
+
+/* Only one of the two lines shows: the long one on a wide card, the short
+   count in compact mode. */
+.creditShort {
+  display: none;
+}
+
+/* ── Actions ──────────────────────────────────────────────────────────── */
+
+.actions {
+  display: flex;
+  /* Two buttons that do not fit side by side wrap as whole buttons; their
+     labels never break inside them. */
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-block-start: auto;
+  padding-block-start: 12px;
+}
+
+/* The real link. Its ::after stretches over the whole card, so a tap anywhere
+   opens the persona; the Follow button sits above it on z-index. It never
+   moves on hover: a transform here would make the link its own containing
+   block and shrink the stretched area under the pointer. */
+.view {
+  flex: 1 1 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: max-content;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: var(--radius-12);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  touch-action: manipulation;
+  transition: background var(--dur-base) var(--ease);
+}
+.view::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.view:focus-visible {
+  border-radius: var(--radius-12);
+}
+@media (hover: hover) and (pointer: fine) {
+  .surface:hover .view {
+    background: var(--plum-deep);
+  }
+}
+/* Plum is the dark paper's own colour, so the fill moves to the coral that
+   carries the cream label at AA in both themes. */
+:global([data-theme="dark"]) .view {
+  background: var(--accent-fill-strong);
+}
+@media (hover: hover) and (pointer: fine) {
+  :global([data-theme="dark"]) .surface:hover .view {
+    background: var(--accent-deep);
+  }
+}
+
+.follow {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: max-content;
+  min-height: 44px;
+  padding: 0 14px;
+  /* The outline is an inset ring, not a border: the border would make this
+     box 3px wider than the View link beside it, which has none. Every state
+     moves --follow-ring-color, and the focus rule combines the ring with the
+     house focus ring, so neither erases the other. */
+  --follow-ring-color: var(--line-strong);
+  border: 0;
+  border-radius: var(--radius-12);
+  box-shadow: inset 0 0 0 1.5px var(--follow-ring-color);
+  background: transparent;
+  color: var(--text-strong);
+  font: inherit;
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease);
+}
+.follow:focus-visible {
+  border-radius: var(--radius-12);
+  box-shadow:
+    inset 0 0 0 1.5px var(--follow-ring-color),
+    var(--ring-cream);
+}
+.follow[data-following="true"] {
+  --follow-ring-color: var(--jade-button);
+  background: var(--jade-button);
+  color: rgba(var(--cream-rgb), 1);
+}
+.follow[aria-disabled="true"] {
+  cursor: progress;
+  opacity: 0.6;
+}
+@media (hover: hover) and (pointer: fine) {
+  .follow:hover:not([data-following="true"]):not([aria-disabled="true"]) {
+    background: rgba(var(--line-rgb), 0.06);
+  }
+  .follow[data-following="true"]:hover:not([aria-disabled="true"]) {
+    --follow-ring-color: var(--jade-button-hover);
+    background: var(--jade-button-hover);
+  }
+}
+
+.followIcon {
+  display: none;
+  flex: none;
+}
+
+/* Hidden from sight, still read: the compact card's labels. */
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Skeleton ─────────────────────────────────────────────────────────── */
+
+/* A placeholder is not a target, so it never lifts. */
+.surface[data-skeleton]:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.skeletonActions {
+  display: flex;
+  gap: 8px;
+  margin-block-start: auto;
+  padding-block-start: 12px;
+}
+.skeletonActions > * {
+  flex: 1;
+}
+
+/* ── Compact mode: a two-column phone grid ────────────────────────────── */
+
+@container portrait-card (max-width: 229px) {
+  .surface {
+    border-radius: var(--radius-18);
+  }
+
+  .pill {
+    inset-block-start: auto;
+    inset-block-end: 8px;
+    inset-inline-start: 8px;
+    max-width: calc(100% - 16px);
+    gap: 5px;
+    padding: 4px 9px;
+    font-size: var(--text-11);
+  }
+  .pillDot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .body {
+    gap: 5px;
+    padding: 12px 12px 14px;
+  }
+  .profession {
+    font-size: var(--text-12);
+  }
+  .professionExtra {
+    display: none;
+  }
+  .name {
+    font-size: var(--text-19);
+    line-height: 1.12;
+  }
+  .tagline {
+    font-size: var(--text-13);
+    line-height: 1.4;
+    -webkit-line-clamp: 2;
+  }
+
+  .credits {
+    gap: 6px;
+    margin-block-start: auto;
+    padding-block-start: 6px;
+  }
+  .face {
+    width: 22px;
+    height: 22px;
+    font-size: var(--text-8);
+  }
+  .face + .face {
+    margin-inline-start: -7px;
+  }
+  .creditLine {
+    font-size: var(--text-11);
+  }
+  .creditLong {
+    display: none;
+  }
+  .creditShort {
+    display: inline;
+  }
+
+  /* The actions row folds away: the link keeps only its stretched area and
+     the Follow button moves onto the picture's corner. */
+  .actions {
+    margin: 0;
+    padding: 0;
+  }
+
+  .view {
+    flex: none;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+  }
+  .view,
+  .surface:hover .view,
+  :global([data-theme="dark"]) .view,
+  :global([data-theme="dark"]) .surface:hover .view {
+    background: none;
+  }
+  .viewLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  /* The link has no box of its own here, so the whole card carries its
+     focus ring. */
+  .view:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+  .surface:has(.view:focus-visible) {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+    box-shadow: var(--ring-cream);
+  }
+
+  .follow {
+    position: absolute;
+    inset-block-start: 8px;
+    inset-inline-end: 8px;
+    flex: none;
+    width: 44px;
+    min-width: 0;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    box-shadow: none;
+    background: rgba(var(--cream-rgb), 0.94);
+    /* css-scale-allow: non-flipping-text. The disc is the fixed light cream
+       over the picture in both themes, so its icon stays plum in both. */
+    color: var(--plum);
+  }
+  /* The disc has no ring of its own, so focus keeps only the house ring. */
+  .follow:focus-visible {
+    border-radius: 50%;
+    box-shadow: var(--ring-cream);
+  }
+  .follow[data-following="true"] {
+    background: var(--jade-button);
+    color: rgba(var(--cream-rgb), 1);
+  }
+  .follow:hover:not([data-following="true"]):not([aria-disabled="true"]) {
+    background: rgba(var(--cream-rgb), 1);
+  }
+  .followIcon {
+    display: block;
+    font-size: var(--text-18);
+  }
+  .followLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .skeletonActions {
+    display: none;
+  }
+}

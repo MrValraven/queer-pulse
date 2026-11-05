@@ -15,6 +15,7 @@ import type {
 import { useQuizshowImportSources } from "../api/useQuizshowQuiz";
 import { quizshowScopeKey, type QuizshowSessionScope } from "../quizshowScope";
 import { importInputOf } from "./useQuizshowImport";
+import { useQuizshowDarkDialog } from "./useQuizshowDarkDialog";
 import {
   QuizshowPickerFade,
   QuizshowPickerSkeleton,
@@ -105,6 +106,7 @@ function SourceRow({
         )}
       </div>
       <Button
+        variant="stage-ghost"
         size="sm"
         aria-disabled={isBlocked}
         aria-describedby={isBlocked ? adultsTagId : undefined}
@@ -199,6 +201,7 @@ export function QuizshowImportSourcePicker({
   onPick,
 }: QuizshowImportSourcePickerProps) {
   const { t } = useTranslation();
+  const darkDialogRef = useQuizshowDarkDialog();
   return (
     <AnimatePresence>
       {isOpen && (
@@ -215,7 +218,9 @@ export function QuizshowImportSourcePicker({
               : "quizshow:importSources.sub",
           )}
           onClose={onClose}
+          className={styles.dialog}
         >
+          <div ref={darkDialogRef} />
           <SourcePickerBody
             scope={scope}
             isAdultsEvent={isAdultsEvent}

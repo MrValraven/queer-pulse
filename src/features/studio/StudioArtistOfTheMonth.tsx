@@ -1,4 +1,4 @@
-import { useId, type CSSProperties } from "react";
+import { useId } from "react";
 import { Link } from "react-router-dom";
 import { Collapse, ImageSlot } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -8,7 +8,6 @@ import type { StudioArtistOfTheMonthView } from "./api/studioDiscovery.adapters"
 import { StudioPlayButton } from "./kit/StudioPlayButton";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import { StudioReleaseCoverArt } from "./StudioReleaseCoverArt";
-import { useStudioCoverTint } from "./useStudioCoverTint";
 import shelfStyles from "./kit/StudioShelf.module.css";
 import kit from "./studioKit.module.css";
 import css from "./StudioArtistOfTheMonth.module.css";
@@ -90,8 +89,6 @@ function StudioArtistOfTheMonthCard({
   const { t } = useTranslation();
   const headingId = useId();
   const { artist, note, latestRelease } = spotlight;
-  // Daylight washes the card in the portrait's colour, like a release hero.
-  const portraitTint = useStudioCoverTint(artist.avatarUrl);
   return (
     <section className={shelfStyles.shelf} aria-labelledby={headingId}>
       <header className={shelfStyles.head}>
@@ -104,15 +101,7 @@ function StudioArtistOfTheMonthCard({
           </h2>
         </div>
       </header>
-      <div
-        className={css.card}
-        data-cover-tint={portraitTint ? "" : undefined}
-        style={
-          portraitTint
-            ? ({ "--card-cover-tint": portraitTint } as CSSProperties)
-            : undefined
-        }
-      >
+      <div className={css.card}>
         <div className={css.portrait}>
           <ImageSlot
             src={artist.avatarUrl ?? undefined}

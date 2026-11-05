@@ -14,11 +14,14 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 10px;
-  font-size: var(--text-11-5);
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--ink-60);
+  /* The --studio-field-label-* hooks belong to the Pulse Live studio inspector;
+     nothing else sets them, so every other field keeps the values after each
+     comma. */
+  font-size: var(--studio-field-label-size, var(--text-11-5));
+  font-weight: var(--studio-field-label-weight, 600);
+  letter-spacing: var(--studio-field-label-spacing, 0.07em);
+  text-transform: var(--studio-field-label-case, uppercase);
+  color: var(--studio-field-label-color, var(--ink-60));
 }
 
 .req {

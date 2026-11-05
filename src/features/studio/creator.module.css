@@ -13,9 +13,9 @@
   --text: var(--s-text);
   --text60: var(--s-text-60);
   --text40: var(--s-text-40);
-  /* The creator shell sets no data-theme of its own and follows the app
-     theme. The wash and the stronger hairline sit on the Studio ink channel
-     so they match the rest of this shell in both themes. */
+  /* The creator shell sets no data-theme of its own; Studio routes are
+     always dark. The wash and the stronger hairline sit on the Studio ink
+     channel so they match the rest of this shell. */
   --wash: rgba(var(--studio-ink-rgb), 0.05);
   --line-2: rgba(var(--studio-ink-rgb), 0.22);
   background: var(--bg);
@@ -58,13 +58,10 @@
   gap: 20px;
   padding: 16px 30px;
   padding-block-start: max(16px, env(safe-area-inset-top));
-  /* Cream glass over the light page; plum glass in dark (below). */
-  background: color-mix(in srgb, var(--studio-surface) 86%, transparent);
+  /* Plum glass over the dark page. */
+  background: rgba(var(--plum-rgb), 0.86);
   backdrop-filter: var(--blur-lg);
   border-bottom: 1px solid var(--s-line);
-}
-:global([data-theme="dark"]) .topbar {
-  background: rgba(var(--plum-rgb), 0.86);
 }
 .brand {
   display: flex;

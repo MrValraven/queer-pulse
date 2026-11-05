@@ -3,12 +3,12 @@ import { useQueryClient } from "@tanstack/react-query";
 import { FiAlertTriangle } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { EmptyState } from "../../shared/components/ui";
+import { useSimulatedLoad } from "../../shared/hooks";
 import {
-  useLocalStorage,
-  useMediaQuery,
-  useSimulatedLoad,
-} from "../../shared/hooks";
-import { mediaMax } from "../../shared/theme/breakpoints";
+  FilterPageFrame,
+  FilterPageHeaderSkeleton,
+  useFilterPageState,
+} from "../../shared/components/filterPage";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   EMPTY_FILTERS,
@@ -21,18 +21,12 @@ import {
 } from "./memberDirectoryFilter.data";
 import { useMemberDirectoryQuery } from "./useMemberDirectoryQuery";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import {
-  ALL_SECTIONS_COLLAPSED,
-  isSectionOpenMap,
-  type SectionKey,
-} from "./filterSectionKeys";
+import { FILTER_SECTION_KEYS } from "./filterSectionKeys";
 import {
   MemberDirectoryHeader,
   MemberFiltersSheet,
-  MemberHeaderSkeleton,
 } from "./MemberDirectorySections";
 import { MemberDirectoryLayout } from "./MemberDirectoryLayout";
-import styles from "./MemberDirectoryFilterPage.module.css";
 
 export function MemberDirectoryFilterPage() {
   const { t } = useTranslation();
@@ -41,26 +35,24 @@ export function MemberDirectoryFilterPage() {
   const { demoMode } = useDemoMode();
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
   const [sort, setSort] = useState<SortKey>("Recently joined");
-  // Below the grid's single-column breakpoint the filter sidebar would stack as a
-  // tall wall above the results; there it collapses into a bottom-sheet opened
-  // from a "Filters" button instead. Matches the 860px grid breakpoint below.
-  const isMobile = useMediaQuery(mediaMax("mobile"));
-  const [filtersOpen, setFiltersOpen] = useState(false);
-
   // View-only preferences (which sections are open, whether the whole desktop
-  // panel is shown) persist across visits. They are SEPARATE from `filters` —
-  // hiding the panel never clears a selection.
-  const [panelOpen, setPanelOpen] = useLocalStorage<boolean>(
-    "qp.members.filtersPanelOpen",
-    true,
-    (value): value is boolean => typeof value === "boolean",
-  );
-  const [sectionsOpen, setSectionsOpen] = useLocalStorage<
-    Record<SectionKey, boolean>
-  >("qp.members.filterSections", ALL_SECTIONS_COLLAPSED, isSectionOpenMap);
-
-  const toggleSection = (key: SectionKey) =>
-    setSectionsOpen((prev) => ({ ...prev, [key]: !prev[key] }));
+  // panel is shown) persist across visits, apart from `filters`, so hiding the
+  // panel keeps every selection. Below the mobile cutover the sidebar folds
+  // into a bottom sheet opened from the Filters button.
+  const {
+    isMobile,
+    isPanelOpen,
+    togglePanel,
+    sectionsOpen,
+    toggleSection,
+    isSheetOpen,
+    openSheet,
+    closeSheet,
+  } = useFilterPageState({
+    panelStorageKey: "qp.members.filtersPanelOpen",
+    sectionsStorageKey: "qp.members.filterSections",
+    sectionKeys: FILTER_SECTION_KEYS,
+  });
 
   // Sidebar state → `GET /members`. See `useMemberDirectoryQuery` for how each
   // facet is translated (and why identities are not tags).
@@ -86,12 +78,12 @@ export function MemberDirectoryFilterPage() {
   const loading = isLoading || (demoMode && simLoading);
 
   // Demo mode sorts the whole mock list in the browser; live mode renders the
-  // server's order as-is — the API sorts across the full (paginated) directory,
+  // server's order as-is: the API sorts across the full (paginated) directory,
   // and the live cards carry no ranking fields to re-sort by anyway (they'd all
   // tie and scramble the server order). See `useMembers` / the directory API.
   const filtered = useMemo(() => {
     // Live mode: every facet now travels through the query key and the server
-    // does the actual filtering — `sourceMembers` already IS the filtered set.
+    // does the actual filtering, so `sourceMembers` already IS the filtered set.
     // Re-running `matchesFilters` here would be redundant at best; at worst a
     // client/server vocabulary drift (e.g. a hood match computed differently
     // client-side than `neighbourhoods.ts`'s `matchNeighbourhood`) could
@@ -115,9 +107,9 @@ export function MemberDirectoryFilterPage() {
   // A filter run can hold every fetched page's cards at once; `MemberResultsGrid`
   // (via `useMemberDirectoryVirtualizer`) mounts only the rows near the
   // viewport regardless of how long `shown` is, so no client-side windowing is
-  // needed here — this used to cap an initial slice with `useIncrementalList`
-  // and grow it via a scroll sentinel, which only capped the *initial* mount,
-  // not the steady-state DOM size once fully scrolled.
+  // needed here. This used to cap an initial slice with `useIncrementalList`
+  // and grow it via a scroll sentinel, which only capped the *initial* mount
+  // and let the DOM grow unbounded once fully scrolled.
   const shown = filtered;
 
   // Keep the profession selection coherent with the chosen fields.
@@ -138,15 +130,15 @@ export function MemberDirectoryFilterPage() {
     setSort("Recently joined");
   };
 
-  // A failed live fetch (with nothing loaded) must read as an outage, not as an
-  // empty directory (audit P1-14). Once any page has loaded we keep the results
-  // rather than blowing them away for a later-page failure.
+  // A failed live fetch (with nothing loaded) must read as an outage, distinct
+  // from an empty directory (audit P1-14). Once any page has loaded we keep the results
+  // through a later-page failure.
   const showError = isError && sourceMembers.length === 0;
 
   if (showError) {
     return (
       <PageShell>
-        <div className={styles.page}>
+        <FilterPageFrame>
           <EmptyState
             icon={<FiAlertTriangle />}
             title={t("members:directory.error.title")}
@@ -156,16 +148,16 @@ export function MemberDirectoryFilterPage() {
               onClick: refetch,
             }}
           />
-        </div>
+        </FilterPageFrame>
       </PageShell>
     );
   }
 
   return (
     <PageShell>
-      <div className={styles.page}>
+      <FilterPageFrame>
         {loading ? (
-          <MemberHeaderSkeleton />
+          <FilterPageHeaderSkeleton />
         ) : (
           <MemberDirectoryHeader totalMembers={totalMembers} />
         )}
@@ -183,9 +175,9 @@ export function MemberDirectoryFilterPage() {
           onClearAllFilters={clearAllFilters}
           onResetAll={resetAll}
           isMobile={isMobile}
-          panelOpen={panelOpen}
-          onTogglePanel={() => setPanelOpen((prev) => !prev)}
-          onOpenFilters={() => setFiltersOpen(true)}
+          panelOpen={isPanelOpen}
+          onTogglePanel={togglePanel}
+          onOpenFilters={openSheet}
           sectionsOpen={sectionsOpen}
           onToggleSection={toggleSection}
           loading={loading}
@@ -201,9 +193,9 @@ export function MemberDirectoryFilterPage() {
             queryClient.invalidateQueries({ queryKey: ["members"] })
           }
         />
-      </div>
+      </FilterPageFrame>
 
-      {isMobile && filtersOpen && (
+      {isMobile && isSheetOpen && (
         <MemberFiltersSheet
           filters={filters}
           members={sourceMembers}
@@ -215,7 +207,7 @@ export function MemberDirectoryFilterPage() {
           onToggleSection={toggleSection}
           onApplyFilters={applyFilters}
           onClearAll={clearAllFilters}
-          onClose={() => setFiltersOpen(false)}
+          onClose={closeSheet}
         />
       )}
     </PageShell>

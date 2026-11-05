@@ -43,7 +43,6 @@ export function ForumPage() {
               cat={page.cat}
               setCat={page.setCat}
               counts={page.counts}
-              totalCount={page.totalCount}
             />
             <div>
               {page.showFirstPostPrompt && (
@@ -60,6 +59,7 @@ export function ForumPage() {
                   scope={page.scope}
                   onScopeChange={page.setScope}
                   onClearFilters={page.clearFundingFilters}
+                  facets={page.fundingFacets}
                   followSlot={<FundingFollowButton />}
                 />
               )}

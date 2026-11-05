@@ -3539,6 +3539,12 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-05.headline":
+    "As personas ganham um diretório novo, e as Definições deixam de ter o seletor de tema do perfil.",
+  "changelog.releases.2026-11-04.headline":
+    "Organizar um evento oferece o guia ou o formulário, e a página Eventos cabe no telemóvel.",
+  "changelog.releases.2026-11-03.headline":
+    "As linhas da equipa numa página de negócio cabem no ecrã do telemóvel.",
   "changelog.releases.2026-11-02.headline":
     "Os concertos ganham um editor novo, e os admins já escolhem negócios parceiros para o diretório.",
   "changelog.releases.2026-11-01.headline":
@@ -3801,6 +3807,72 @@ export const marketing: Catalog = {
     "A Pesquisa no menu Mais já não fica escondida atrás do leitor do Studio",
   "changelog.entries.more-menu-clears-studio-player.body":
     "No telemóvel, o menu deixa espaço acima do leitor, por isso a última ligação fica à vista.",
+  "changelog.entries.listing-bands-fit-phones.title":
+    "Ajusta as faixas de dono e moderação ao telemóvel",
+  "changelog.entries.listing-bands-fit-phones.body":
+    "O cartão do dono perde o espaço vazio, e os botões de moderação ficam numa só linha com o olho no topo.",
+  "changelog.entries.audience-links-move-to-admin.title":
+    "Abre as páginas por público no painel de admin",
+  "changelog.entries.audience-links-move-to-admin.body":
+    "Os atalhos no admin abrem agora as quatro, e a página inicial deixa a faixa de quatro cartões.",
+  "changelog.entries.welcome-email-send-count.title":
+    "Os emails de boas-vindas mostram quantas vezes foram enviados",
+  "changelog.entries.welcome-email-send-count.body":
+    "O cartão do convite conta cada email de boas-vindas enviado e pergunta antes de mandar outra cópia.",
+  "changelog.entries.community-filters-show-counts.title":
+    "Os filtros da Comunidade mostram quantos resultados correspondem",
+  "changelog.entries.community-filters-show-counts.body":
+    "Cada filtro nas páginas da Comunidade mostra quantos resultados tem, e uma opção sem nenhum deixa de dar para clicar.",
+  "changelog.entries.directory-filters-show-counts.title":
+    "Os filtros do diretório mostram quantos sítios correspondem",
+  "changelog.entries.directory-filters-show-counts.body":
+    "Cada filtro na barra lateral mostra quantos sítios tem, e um filtro sem nenhum deixa de dar para clicar.",
+  "changelog.entries.queue-health-at-a-glance.title":
+    "Lê o estado das filas de moderação num relance",
+  "changelog.entries.queue-health-at-a-glance.body":
+    "Cada fila mostra barras face aos seus níveis de alerta, com totais e um botão para atualizar no topo.",
+  "changelog.entries.safe-space-card-stops-floating.title":
+    "Mantém os cartões do espaço seguro no lugar no telemóvel",
+  "changelog.entries.safe-space-card-stops-floating.body":
+    "O cartão de partilha de um espaço verificado acompanha agora a página e deixa à vista as promessas abaixo dele.",
+  "changelog.entries.studio-always-dark.title": "O Studio fica sempre escuro",
+  "changelog.entries.studio-always-dark.body":
+    "Todas as páginas do Studio abrem agora em modo escuro, e o resto da QueerPulse mantém o tema que escolheste.",
+  "changelog.entries.persona-directory-credits.title":
+    "Explora as personas num diretório renovado",
+  "changelog.entries.persona-directory-credits.body":
+    "Os cartões mostram com quem cada persona foi creditada, e a faixa Feito em conjunto reúne trabalhos recentes.",
+  "changelog.entries.profile-theme-removed.title":
+    "O tema do perfil saiu das Definições",
+  "changelog.entries.profile-theme-removed.body":
+    "O seletor de bandeira para a capa nunca apareceu no teu perfil público, por isso tirámo-lo das Definições.",
+  "changelog.entries.footer-evenly-balanced.title": "O rodapé fica equilibrado",
+  "changelog.entries.footer-evenly-balanced.body":
+    "As colunas de links espalham-se ao lado da marca e o seletor de língua fica em frente ao copyright.",
+  "changelog.entries.browse-pages-share-members-layout.title":
+    "Personas, comunidades, voluntariado e casas seguem os Membros",
+  "changelog.entries.browse-pages-share-members-layout.body":
+    "Cada uma abre agora com o cabeçalho dos Membros e filtra na mesma barra lateral, numa folha no telemóvel.",
+  "changelog.entries.housing-dark-badges-pt-counts.title":
+    "As etiquetas das casas aparecem no modo escuro",
+  "changelog.entries.housing-dark-badges-pt-counts.body":
+    "O tipo de anúncio lê-se nos cartões escuros, a lista do mapa encaixa em baixo e as contagens seguem a tua língua.",
+  "changelog.entries.directory-fits-phones.title":
+    "O diretório de negócios cabe no telemóvel",
+  "changelog.entries.directory-fits-phones.body":
+    "Uma barra de ferramentas arrumada, a contagem ao lado de Usar a minha localização e o primeiro sítio logo no primeiro ecrã.",
+  "changelog.entries.events-page-fits-phones.title":
+    "A página Eventos cabe no telemóvel",
+  "changelog.entries.events-page-fits-phones.body":
+    "Cartões, separadores e calendário ficam compactos em ecrãs pequenos, e o Explorar mostra uns cinco eventos de cada vez.",
+  "changelog.entries.host-event-choice-modal.title":
+    "Escolhe como começar a organizar um evento",
+  "changelog.entries.host-event-choice-modal.body":
+    "Organizar um evento, na página Eventos, pergunta agora se queres o guia para organizar ou o formulário do evento.",
+  "changelog.entries.team-rows-fit-a-phone.title":
+    "As linhas da equipa cabem no telemóvel",
+  "changelog.entries.team-rows-fit-a-phone.body":
+    "Num ecrã estreito, as setas de ordem ficam ao lado do nome e Editar função e Remover da equipa partilham uma linha.",
   "changelog.entries.add-a-month-of-events.title":
     "Adiciona um mês de eventos de uma vez",
   "changelog.entries.add-a-month-of-events.body":
@@ -10062,6 +10134,17 @@ export const marketing: Catalog = {
   "volunteer.filter.medium": "Compromisso médio",
   "volunteer.filter.commitmentGroup": "Filtrar por compromisso",
   "volunteer.filter.causeGroup": "Filtrar por causa",
+  "volunteer.filter.commitmentTitle": "Tempo que podes dar",
+  "volunteer.filter.causeTitle": "Causa",
+  "volunteer.filter.anyCommitment": "Qualquer disponibilidade",
+  "volunteer.filter.anyCause": "Qualquer causa",
+  "volunteer.filter.withCount_one": "{label}, {count} oportunidade",
+  "volunteer.filter.withCount_other": "{label}, {count} oportunidades",
+  "volunteer.resultCount_one": "{count} oportunidade",
+  "volunteer.resultCount_other": "{count} oportunidades",
+  "volunteer.filtersSheetLabel": "Filtrar oportunidades",
+  "volunteer.showResultsCta_one": "Ver {count} oportunidade",
+  "volunteer.showResultsCta_other": "Ver {count} oportunidades",
   "volunteer.loadMoreError": "Não conseguimos carregar mais oportunidades.",
   // A taxonomia de causas do voluntariado, um conjunto de chaves partilhado
   // pelos filtros do quadro, pelo seletor do formulário e pela etiqueta do

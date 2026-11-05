@@ -1,26 +1,53 @@
+/* The page header (`FilterPageHeader`, the members header) sits inside the
+   page's `.wrap`, so this adds the members frame's top breathing room (28px,
+   12px on phones); the nav band is reserved by the shell. The sticky filter
+   bar below draws its own full-bleed rule, so the header drops its hairline
+   here and the bar's frosted band opens straight under the stats, with the
+   header's 24px rhythm kept as the gap above it. */
+.headWrap {
+  padding-top: 28px;
+  padding-bottom: 24px;
+}
+.headWrap > header {
+  border-bottom: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+@media (--mobile) {
+  .headWrap {
+    padding-top: 12px;
+  }
+}
+
+/* The header stats: one quiet inline row in the header's actions slot, the
+   number in the strong ink and its label in the soft ink beside it. */
 .stats {
   display: flex;
-  gap: 40px;
-  margin-top: 28px;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+}
+.stat {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: var(--text-13);
+  line-height: 1.5;
 }
 .stat b {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: var(--text-30);
-  color: var(--accent);
-  display: block;
-  letter-spacing: -0.02em;
+  font-weight: 600;
+  color: var(--text-strong);
 }
 .stat span {
-  font-size: var(--text-12-5);
-  color: rgba(var(--cream-rgb), 0.55);
+  color: var(--ink-60);
 }
 
 .bar {
   padding: 20px 0;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   position: sticky;
-  top: 0;
+  /* Parks under the floating nav once stuck (the nav band, or the alternate
+     nav layouts' own offsets) so the pill never covers the search and chips. */
+  top: var(--sticky-top);
   z-index: var(--z-sticky);
   background: rgba(var(--cream-rgb), 0.88);
   backdrop-filter: var(--blur-lg);
@@ -233,7 +260,7 @@
     grid-template-columns: 1fr;
   }
   .stats {
-    gap: 24px;
+    gap: 6px 20px;
   }
 }
 

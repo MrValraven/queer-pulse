@@ -39,3 +39,71 @@
   flex-wrap: wrap;
   gap: var(--gap-sm);
 }
+
+/* Side by side, the two tab levels sit straight in the identity row, so the
+   wrapper steps out of the layout and the row wraps exactly as it did. */
+.tabs {
+  display: contents;
+}
+
+/* ── Below the mobile cutover ──
+   Three rows: the title with a small Host action at its trailing end, then
+   the My events | Discover switch, then (on Discover) the sub-tabs. The
+   identity wrapper steps out of the layout so the title and the tab stack
+   land in the grid's own areas. From 640px the two tab levels share the
+   second row at their natural widths; on a phone each one fills the row. */
+@media (--mobile) {
+  .header {
+    padding-block: var(--gap-sm) var(--gap-grid);
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "title actions"
+      "tabs tabs";
+    align-items: center;
+    gap: var(--gap-sm);
+  }
+
+  .identity {
+    display: contents;
+  }
+
+  .title {
+    grid-area: title;
+    font-size: var(--text-28);
+  }
+
+  .actions {
+    grid-area: actions;
+    flex-wrap: nowrap;
+  }
+
+  .tabs {
+    grid-area: tabs;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--gap-sm);
+    min-width: 0;
+  }
+}
+
+/* The gap above the sub-tabs is the tablist's own margin, inside the folding
+   wrapper (a flow-root), so it folds away with them instead of snapping shut
+   once they are gone. It matches the header's bottom padding, which is the
+   gap My events leaves above its own List | Calendar row, so both
+   second-level rows sit the same distance under the switch. */
+@media (--md) {
+  .tabs {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .hubTabs > * {
+    margin-block-start: var(--gap-grid);
+  }
+}

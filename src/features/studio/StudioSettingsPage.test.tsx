@@ -105,16 +105,12 @@ describe("Studio settings (live layout over demo data)", () => {
     );
   });
 
-  it("switches the app theme from Dark mode", async () => {
+  it("has no theme switch, since Studio is always dark", async () => {
     renderSettings();
-    const darkMode = await screen.findByRole("switch", { name: "Dark mode" });
-    const before = darkMode.getAttribute("aria-checked");
-    fireEvent.click(darkMode);
+    await screen.findByRole("switch", { name: "Autoplay next" });
     expect(
-      screen
-        .getByRole("switch", { name: "Dark mode" })
-        .getAttribute("aria-checked"),
-    ).not.toBe(before);
+      screen.queryByRole("switch", { name: "Dark mode" }),
+    ).not.toBeInTheDocument();
   });
 
   it("keeps the showcase sections to the demo", async () => {

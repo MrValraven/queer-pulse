@@ -69,6 +69,15 @@ export interface JoinRequestDTO {
   inviteStatus: "valid" | "used" | "expired" | "revoked" | null;
   /** ISO timestamp the invite stops working, or null when it has no expiry. */
   inviteExpiresAt: string | null;
+  /**
+   * How many times a reviewer sent the welcome email for this request through
+   * `POST /admin/join-requests/:id/invite/email`. Optional so a backend that
+   * predates the counter still type-checks; the adapter reads absent as 0.
+   */
+  welcomeEmailSendCount?: number;
+  /** ISO timestamp of the latest welcome email send, or null when none went
+   *  out. Absent on an older backend, which the adapter reads as null. */
+  welcomeEmailLastSentAt?: string | null;
   /** Closed-set reason key the reviewer picked when declining. Null for
    *  approvals, waitlists, and legacy declines that predate this field. */
   declineReason: string | null;

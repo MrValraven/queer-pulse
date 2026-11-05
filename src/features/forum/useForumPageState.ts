@@ -7,9 +7,12 @@ import { routes } from "../../app/routeMap";
 import { type Thread } from "./forum.data";
 import { useForumCounts, usePinnedThreads, useThreads } from "./api/useForum";
 import { useVotePost } from "./api/useForumMutations";
-import { type ForumThreadCounts } from "./api/forum.api";
 import { composeHref } from "./compose/useComposeThreadSeeds";
-import { SERVER_ORDERED_VIEWS } from "./funding/funding.data";
+import {
+  FUNDING_CATEGORY_ID,
+  SERVER_ORDERED_VIEWS,
+} from "./funding/funding.data";
+import { countDemoFundingFacets } from "./forumFacets.helpers";
 import { useForumRowModeration } from "./useForumRowModeration";
 import { useForumUrlParams } from "./useForumUrlParams";
 import { useForumFirstPostPrompt } from "./useForumFirstPostPrompt";
@@ -81,9 +84,10 @@ export function useForumPageState() {
   const loading = demoMode ? simLoading : threadsQuery.isLoading;
 
   // Truthful counts (server in live / mock-derived in demo) — never the length
-  // of the loaded page, which only ever sees the fetched slice.
+  // of the loaded page, which only ever sees the fetched slice. Undefined
+  // while loading or after a failure, which draws no number (never a 0).
   const countsResult = useForumCounts(q || undefined, tag);
-  const counts: ForumThreadCounts = countsResult.counts ?? { all: 0 };
+  const counts = countsResult.counts;
 
   // Safety filter, mirroring `useFeed`: threads by a member the viewer has
   // muted or blocked never render in the list. The live endpoint already
@@ -165,12 +169,17 @@ export function useForumPageState() {
     setQ("");
   }
 
+  const visibleThreads = useMemo(
+    () =>
+      allThreads.filter(
+        (thread) =>
+          !thread.author.slug || !hiddenAuthorHandles.has(thread.author.slug),
+      ),
+    [allThreads, hiddenAuthorHandles],
+  );
+
   const threads = useMemo(() => {
-    const visible = allThreads.filter(
-      (thread) =>
-        !thread.author.slug || !hiddenAuthorHandles.has(thread.author.slug),
-    );
-    return filterAndSortThreads(visible, {
+    return filterAndSortThreads(visibleThreads, {
       demoMode,
       cat,
       tag,
@@ -180,7 +189,7 @@ export function useForumPageState() {
     });
   }, [
     demoMode,
-    allThreads,
+    visibleThreads,
     cat,
     tag,
     q,
@@ -188,8 +197,35 @@ export function useForumPageState() {
     fundingView,
     eligibility,
     scope,
-    hiddenAuthorHandles,
   ]);
+
+  // The Funding & Grants chip counts: the server's in live, and in demo the
+  // same question asked of the very threads the demo list draws from.
+  const demoFundingFacets = useMemo(
+    () =>
+      demoMode && cat === FUNDING_CATEGORY_ID
+        ? countDemoFundingFacets(visibleThreads, {
+            tag,
+            q,
+            sort,
+            funding: { view: fundingView, eligibility, scope },
+          })
+        : undefined,
+    [
+      demoMode,
+      cat,
+      visibleThreads,
+      tag,
+      q,
+      sort,
+      fundingView,
+      eligibility,
+      scope,
+    ],
+  );
+  const fundingFacets = demoMode
+    ? demoFundingFacets
+    : threadsQuery.fundingFacets;
 
   // Vote on the list row: acts on the thread's OPENING post. Live threads carry
   // a real `opPostId`; demo threads carry a SYNTHETIC one (`demo-op-<id>`, see
@@ -206,11 +242,12 @@ export function useForumPageState() {
 
   // Every Funding & Grants view lists a slice of the category, so the
   // category total would miscount it: the count shows on the plain list only.
-  const headerCount = wireFundingView
-    ? null
-    : cat === "all"
-      ? (counts.all ?? 0)
-      : (counts[cat] ?? 0);
+  const headerCount =
+    wireFundingView || !counts
+      ? null
+      : cat === "all"
+        ? counts.all
+        : (counts[cat] ?? 0);
 
   // Only a failure that leaves nothing on screen becomes a panel: a "Load more"
   // page that fails still has the loaded threads to show.
@@ -253,7 +290,7 @@ export function useForumPageState() {
     setEditingTitleThreadId,
     closeEditTitle,
     counts,
-    totalCount: counts.all ?? 0,
+    fundingFacets,
     headerCount,
     threads,
     hasThreadsError,

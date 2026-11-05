@@ -109,3 +109,17 @@
   overflow: hidden;
   overflow-wrap: anywhere;
 }
+
+/* The phone layout (every window to 860px, tablets included): the card hugs
+   its 64px thumb (88px with the padding) and the note keeps to one line, so
+   the rail takes less of the first screen. Name, meta and one note line fit
+   the thumb's height. */
+@media (--mobile) {
+  .card {
+    height: 88px;
+  }
+  .noteText {
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+  }
+}

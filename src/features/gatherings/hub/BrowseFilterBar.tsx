@@ -1,6 +1,4 @@
 import { useId, type ReactNode, type RefObject } from "react";
-import type { IconType } from "react-icons";
-import { FiGrid } from "react-icons/fi";
 import {
   ActiveFilters,
   RefineGroup,
@@ -8,23 +6,14 @@ import {
   RefineSplit,
   RefineToggle,
   SearchInput,
-  Select,
 } from "../../../shared/components/ui";
 import type { useRefineDrawer } from "../../../shared/hooks";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { HOODS } from "../createGathering.data";
+import type { EventBrowseFacetsDTO } from "../api/events.api";
+import { formatsForFamily, type GatheringFamily } from "../gatheringCatalog";
+import { ChipRow, FacetSelect } from "./BrowseFacetControls";
 import {
-  formatsForFamily,
-  GATHERING_FAMILIES,
-  GATHERING_FORMATS,
-  type GatheringFamily,
-} from "../gatheringCatalog";
-import {
-  COST_FILTERS,
-  COST_LABEL_KEYS,
   EMPTY_BROWSE_FILTERS,
-  WHEN_LABEL_KEYS,
-  WHEN_PRESETS,
   type BrowseFilterState,
   type CostFilter,
   type WhenPreset,
@@ -34,45 +23,8 @@ import {
   countHiddenBrowseFilters,
   useBrowseActiveFilters,
 } from "./useBrowseActiveFilters";
+import { useBrowseFacetOptions } from "./useBrowseFacetOptions";
 import styles from "./BrowseFilterBar.module.css";
-
-interface ChipOption<Value extends string> {
-  value: Value;
-  label: string;
-  /** Drawn before the label, decorative. Only the family row carries one. */
-  icon?: IconType;
-}
-
-/** One row of chips that behave as a single-choice group. */
-function ChipRow<Value extends string>({
-  options,
-  active,
-  onChange,
-}: {
-  options: readonly ChipOption<Value>[];
-  active: Value;
-  onChange: (value: Value) => void;
-}) {
-  return (
-    <div className={styles.group}>
-      {options.map((option) => {
-        const Icon = option.icon;
-        return (
-          <button
-            key={option.value}
-            type="button"
-            aria-pressed={active === option.value}
-            className={styles.chip}
-            onClick={() => onChange(option.value)}
-          >
-            {Icon && <Icon className={styles.chipIcon} aria-hidden />}
-            {option.label}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
 
 /**
  * The browse board's whole control block: a search field and one "Refine"
@@ -97,6 +49,11 @@ function ChipRow<Value extends string>({
  * All five axes are real columns the server narrows on. They used to be three
  * chips keyed off `orgColor`, a colour the demo registry assigns, which meant
  * a live board's chips filtered on a value the API never sends.
+ *
+ * Every option carries its availability count (`facets`): how many events
+ * picking it would show, the other filters and the search applied. An option
+ * at 0 is disabled unless it is the one picked; "Any" never is. While the
+ * counts are unknown no number is drawn and every option stays open.
  */
 export function BrowseFilterBar({
   filters,
@@ -106,6 +63,7 @@ export function BrowseFilterBar({
   refine,
   communitiesSearchRef,
   notice,
+  facets,
 }: {
   filters: BrowseFilterState;
   onChange: (next: BrowseFilterState) => void;
@@ -120,6 +78,8 @@ export function BrowseFilterBar({
   /** A line under the active-filter chips, inside the bar's own spacing so
    *  the board below keeps one gap whether it shows or not. */
   notice?: ReactNode;
+  /** The board's availability counts. Undefined while they are unknown. */
+  facets: EventBrowseFacetsDTO | undefined;
 }) {
   const { t } = useTranslation();
   const familyLabelId = useId();
@@ -128,6 +88,8 @@ export function BrowseFilterBar({
   const typeLabelId = useId();
   const costLabelId = useId();
   const activeFilters = useBrowseActiveFilters({ filters, onChange });
+  const { familyOptions, whenOptions, hoodOptions, typeOptions, costOptions } =
+    useBrowseFacetOptions(filters, facets);
 
   return (
     <div className={styles.bar}>
@@ -142,6 +104,7 @@ export function BrowseFilterBar({
         <RefineToggle
           {...refine.toggleProps}
           activeCount={countHiddenBrowseFilters(filters)}
+          className={styles.refineToggle}
         />
       </div>
 
@@ -156,18 +119,7 @@ export function BrowseFilterBar({
         >
           <ChipRow<GatheringFamily | "">
             active={filters.family}
-            options={[
-              {
-                value: "",
-                label: t("gatherings:hub.browse.familyAny"),
-                icon: FiGrid,
-              },
-              ...GATHERING_FAMILIES.map((family) => ({
-                value: family.key,
-                label: t(family.nameKey),
-                icon: family.icon,
-              })),
-            ]}
+            options={familyOptions}
             onChange={(family) => {
               // A format only means something inside its own family. A family
               // change that orphans the chosen format clears it, which keeps
@@ -194,10 +146,7 @@ export function BrowseFilterBar({
         >
           <ChipRow<WhenPreset>
             active={filters.when}
-            options={WHEN_PRESETS.map((preset) => ({
-              value: preset,
-              label: t(WHEN_LABEL_KEYS[preset]),
-            }))}
+            options={whenOptions}
             onChange={(when) => onChange({ ...filters, when })}
           />
         </RefineGroup>
@@ -207,18 +156,11 @@ export function BrowseFilterBar({
             label={t("gatherings:hub.browse.hoodLabel")}
             labelId={hoodLabelId}
           >
-            <Select
-              size="sm"
+            <FacetSelect
               labelledBy={hoodLabelId}
-              options={[
-                { value: "", label: t("gatherings:hub.browse.hoodAny") },
-                ...HOODS.map((hood) => ({
-                  value: hood.value,
-                  label: t(hood.labelKey),
-                })),
-              ]}
+              options={hoodOptions}
               value={filters.hood || ""}
-              onChange={(hood) => onChange({ ...filters, hood: hood ?? "" })}
+              onChange={(hood) => onChange({ ...filters, hood })}
             />
           </RefineGroup>
 
@@ -227,25 +169,12 @@ export function BrowseFilterBar({
             labelId={typeLabelId}
           >
             <div className={styles.typeField}>
-              <Select
-                size="sm"
+              {/* Narrowed to the chosen family (`useBrowseFacetOptions`). */}
+              <FacetSelect
                 labelledBy={typeLabelId}
-                options={[
-                  { value: "", label: t("gatherings:hub.browse.typeAny") },
-                  // Narrowed to the chosen family, so the list is six or seven
-                  // rows rather than fifty-six. With no family chosen it is the
-                  // whole catalog, which is still the right answer for a member
-                  // who knows the word but not the kind.
-                  ...(filters.family
-                    ? formatsForFamily(filters.family)
-                    : GATHERING_FORMATS
-                  ).map((format) => ({
-                    value: format.key,
-                    label: t(format.nameKey),
-                  })),
-                ]}
+                options={typeOptions}
                 value={filters.type || ""}
-                onChange={(type) => onChange({ ...filters, type: type ?? "" })}
+                onChange={(type) => onChange({ ...filters, type })}
               />
             </div>
           </RefineGroup>
@@ -259,10 +188,7 @@ export function BrowseFilterBar({
         >
           <ChipRow<CostFilter>
             active={filters.cost}
-            options={COST_FILTERS.map((cost) => ({
-              value: cost,
-              label: t(COST_LABEL_KEYS[cost]),
-            }))}
+            options={costOptions}
             onChange={(cost) => onChange({ ...filters, cost })}
           />
         </RefineGroup>

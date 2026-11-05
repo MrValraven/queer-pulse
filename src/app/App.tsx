@@ -29,7 +29,6 @@ import { ConnectProvider } from "./providers/ConnectProvider";
 import { ConnectionsProvider } from "./providers/ConnectionsProvider";
 import { ProfileProvider } from "./providers/ProfileProvider";
 import { PublicProfileProvider } from "./providers/PublicProfileProvider";
-import { ProfileThemeProvider } from "./providers/ProfileThemeProvider";
 import { VouchProvider } from "./providers/VouchProvider";
 import { SessionBootstrapProvider } from "./providers/SessionBootstrapProvider";
 import { PushPreviewMirrorProvider } from "../features/push/PushPreviewMirrorProvider";
@@ -178,7 +177,6 @@ const DataProviders = composeProviders([
   // Live eligibility now comes from GET /me/public-eligibility, not the live
   // self profile — this provider no longer reads useProfileData().
   PublicProfileProvider,
-  ProfileThemeProvider,
   ConnectionsProvider,
   VouchProvider,
   SavedProvider,

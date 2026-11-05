@@ -24,7 +24,11 @@ export function useModerationQueueHealth() {
     queryKey: [MODERATION_QUEUE_HEALTH_KEY, demoMode],
     queryFn: () =>
       demoMode
-        ? Promise.resolve(MODERATION_QUEUE_HEALTH_DEMO)
+        ? Promise.resolve({
+            ...MODERATION_QUEUE_HEALTH_DEMO,
+            // Stamped per read, so Refresh visibly re-measures in demo.
+            generatedAt: new Date().toISOString(),
+          })
         : getModerationQueueHealth(),
     staleTime: 60_000,
     refetchOnWindowFocus: true,

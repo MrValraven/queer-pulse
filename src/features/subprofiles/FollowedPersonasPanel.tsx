@@ -2,12 +2,17 @@ import { useState } from "react";
 import { FiHeart } from "react-icons/fi";
 import {
   Button,
+  Collapse,
   EmptyState,
   LoadErrorState,
   SkeletonAvatar,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { FilterResultsTop } from "../../shared/components/filterPage";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { FollowedPersonaRow } from "./FollowedPersonaRow";
 import { personaAddressName } from "./subprofile-kinds";
@@ -18,7 +23,7 @@ import {
 } from "./api/useFollowedPersonas";
 import styles from "./FollowedPersonas.module.css";
 
-/** Skeleton rows while the first page loads: a screenful, no more. */
+/** Skeleton rows while the first page loads: about one screenful. */
 const FOLLOWING_SKELETON_COUNT = 4;
 
 /**
@@ -33,8 +38,9 @@ const FOLLOWING_SKELETON_COUNT = 4;
  * way is filtered out in the query, so this list can never resurrect something
  * moderation removed and never shows a row whose link would 404.
  *
- * Paged rather than infinite: `total` is honest, and the pager reads the same
- * way the browse tab's does.
+ * Paged: `total` is honest, and the pager reads the same
+ * way the browse tab's does. The count sits on top in the Everyone tab's
+ * results-top style (`FilterResultsTop`), so both tabs say how many first.
  */
 export function FollowedPersonasPanel({
   onBrowse,
@@ -76,22 +82,25 @@ export function FollowedPersonasPanel({
 
   if (followingQuery.isLoading) {
     return (
-      <div
-        className={styles.list}
-        role="status"
-        aria-busy="true"
-        aria-label={t("subprofiles:following.loading")}
-      >
-        {Array.from({ length: FOLLOWING_SKELETON_COUNT }, (_, index) => (
-          <div className={styles.skRow} key={index} aria-hidden>
-            <SkeletonAvatar size={48} />
-            <div className={styles.skText}>
-              <SkeletonLine width="38%" height={18} />
-              <SkeletonLine width="62%" height={13} />
+      <>
+        <FilterResultsTop count={<SkeletonLine width={150} height={14} />} />
+        <div
+          className={styles.list}
+          role="status"
+          aria-busy="true"
+          aria-label={t("subprofiles:following.loading")}
+        >
+          {Array.from({ length: FOLLOWING_SKELETON_COUNT }, (_, index) => (
+            <div className={styles.skRow} key={index} aria-hidden>
+              <SkeletonAvatar size={48} />
+              <div className={styles.skText}>
+                <SkeletonLine width="38%" height={18} />
+                <SkeletonLine width="62%" height={13} />
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </>
     );
   }
 
@@ -127,6 +136,7 @@ export function FollowedPersonasPanel({
 
   return (
     <>
+      <FilterResultsTop count={<FollowingCount total={following.total} />} />
       <ul className={styles.list}>
         {following.items.map((persona) => (
           <FollowedPersonaRow
@@ -138,8 +148,8 @@ export function FollowedPersonasPanel({
                 persona.id,
                 // The toast addresses the persona in a sentence, so it takes
                 // the owner's first name for a persona still named after its
-                // profession ("You no longer follow Tiago") rather than the
-                // row's composed "Tiago | Dancer" title.
+                // profession ("You no longer follow Tiago"); the row's composed
+                // "Tiago | Dancer" title is for the row alone.
                 personaAddressName({
                   displayName: persona.displayName,
                   kind: persona.kind,
@@ -150,33 +160,51 @@ export function FollowedPersonasPanel({
           />
         ))}
       </ul>
-      <div className={styles.pager}>
-        <span className={styles.pagerCount}>
-          {t("subprofiles:following.countLine", { count: following.total })}
-        </span>
-        {lastPage > 1 && (
-          <span className={styles.pagerButtons}>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setPage((current) => Math.max(1, current - 1))}
-              disabled={page <= 1}
-            >
-              {t("subprofiles:following.previousPage")}
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() =>
-                setPage((current) => Math.min(lastPage, current + 1))
-              }
-              disabled={page >= lastPage}
-            >
-              {t("subprofiles:following.nextPage")}
-            </Button>
-          </span>
-        )}
-      </div>
+      {/* An unfollow can bring the list down to one page, and the pager
+          then folds away. */}
+      <Collapse isOpen={lastPage > 1}>
+        <div className={styles.pager}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setPage((current) => Math.max(1, current - 1))}
+            disabled={page <= 1}
+          >
+            {t("subprofiles:following.previousPage")}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() =>
+              setPage((current) => Math.min(lastPage, current + 1))
+            }
+            disabled={page >= lastPage}
+          >
+            {t("subprofiles:following.nextPage")}
+          </Button>
+        </div>
+      </Collapse>
     </>
+  );
+}
+
+/** "Following 3 personas" with the number large, serif and coral, the way the
+ *  Everyone tab's result count reads. It rolls when an unfollow lowers it. */
+function FollowingCount({ total }: { total: number }) {
+  const fmt = useFormat();
+  return (
+    <Translation
+      i18nKey="subprofiles:following.countLine"
+      values={{ count: total }}
+      slots={{
+        count: (
+          <b>
+            <em>
+              <RollingNumber value={fmt.number(total)} numericValue={total} />
+            </em>
+          </b>
+        ),
+      }}
+    />
   );
 }

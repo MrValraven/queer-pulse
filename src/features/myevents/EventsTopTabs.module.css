@@ -1,12 +1,14 @@
 /* Simple segmented switch for the merged /events page: "My events" ·
-   "Discover". No FLIP indicator (see EventsHubTabs for that pattern) — just
-   a plain active-state fill, since there are only two tabs. */
+   "Discover". No FLIP indicator (see EventsHubTabs for that pattern), just a
+   plain active-state fill, since there are only two tabs. The track reads
+   `--line-rgb`, which is the plum channel in light and flips to cream in
+   dark, so the track stays visible on the dark page. */
 .list {
   display: inline-flex;
   gap: var(--gap-xs);
   padding: 4px;
   border-radius: var(--radius-pill);
-  background: rgba(var(--plum-rgb), 0.06);
+  background: rgba(var(--line-rgb), 0.06);
 }
 
 .tab {
@@ -47,8 +49,33 @@
   }
 }
 
+/* On the dark page --paper is darker than the cream-tinted track, so the
+   selected thumb read as sunken. There it takes a lighter cream tint over the
+   track instead, which lifts it the way the white thumb lifts on cream. */
+:global([data-theme="dark"]) .tabOn {
+  background: rgba(var(--line-rgb), 0.14);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .tab {
     transition: none;
+  }
+}
+
+/* On a phone the switch spans the header and the two tabs split it evenly.
+   The tabs drop the gap between them (only the active one has a fill) so
+   the longer Portuguese label still holds one line on a 320px phone. */
+@media (--md) {
+  .list {
+    display: flex;
+    inline-size: 100%;
+    gap: 0;
+  }
+
+  .tab {
+    flex: 1 1 0;
+    min-inline-size: 0;
+    padding-inline: var(--gap-xs);
+    white-space: nowrap;
   }
 }

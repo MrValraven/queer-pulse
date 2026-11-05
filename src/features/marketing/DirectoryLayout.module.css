@@ -28,6 +28,10 @@
 @media (--mobile) {
   .page {
     padding: 12px 0 0;
+    /* One band rhythm on phones, read by the list, map and Online views and
+       the closing strip (`.content` in DirectoryPage.module.css): 16px
+       under the results header, 28px under each band. */
+    --directory-view-padding: 16px 0 28px;
   }
 }
 
@@ -138,13 +142,32 @@
   .head {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
-    padding-bottom: 22px;
+    gap: 10px;
+    padding-bottom: 16px;
     border-bottom: 0;
     margin-bottom: 0;
   }
   .note {
     display: none;
+  }
+  /* A phone-sized title on a tighter rhythm (eyebrow, title, lead, link), so
+     the header and the toolbar leave the first place card above the fold of
+     a 390 by 844 screen. The title keeps its coral italic and fits one line
+     from 360px up; on a narrower screen `balance` splits it into two even
+     lines. The lead keeps every word at a smaller, still comfortable
+     size. */
+  .eyebrow {
+    margin-bottom: 8px;
+  }
+  .h1 {
+    font-size: var(--text-30);
+    line-height: 1.04;
+    margin-bottom: 8px;
+    text-wrap: balance;
+  }
+  .lead {
+    font-size: var(--text-13-5);
+    line-height: 1.5;
   }
 }
 

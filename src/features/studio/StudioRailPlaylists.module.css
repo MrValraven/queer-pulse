@@ -49,12 +49,7 @@
   transition-property: background-color;
   transition-duration: var(--dur-base);
   transition-timing-function: var(--ease);
-  /* A drop target's fills: Daylight's neutral selected grey, and the faint
-     coral dark mode has always used. */
-  --rail-drop-fill: var(--studio-selected);
-  --rail-drop-cover-fill: var(--studio-selected);
-}
-:global([data-theme="dark"]) .row {
+  /* A drop target's fills: a faint coral. */
   --rail-drop-fill: rgba(var(--accent-rgb), 0.14);
   --rail-drop-cover-fill: rgba(var(--accent-rgb), 0.18);
 }
@@ -205,21 +200,12 @@
     filter: brightness(1.08);
   }
 }
-/* The open playlist: in dark, a coral ring around its cover, 2px clear of
-   it. In Daylight the cover sits on a grey rounded tile 4px wider each way,
-   the selected fill the nav tiles above use, and a drag over it brings the
-   coral ring back. */
+/* The open playlist: a coral ring around its cover, 2px clear of it. */
 .row[data-compact][aria-current="page"] {
   background: none;
 }
 .row[data-compact][aria-current="page"] .cover {
   outline-color: var(--studio-accent);
-}
-:global(:root:not([data-theme="dark"]))
-  .row[data-compact][aria-current="page"]:not([data-drop-over])
-  .cover {
-  outline: 4px solid var(--studio-selected);
-  outline-offset: 0;
 }
 /* A dragged track over a folded playlist: a coral ring around the cover
    and the drop fill over it. */
@@ -237,18 +223,13 @@
   background: var(--rail-drop-cover-fill);
 }
 /* Liked songs, the rail's signature tile and its one coral cover: a coral
-   gradient under a light heart. The gradient starts on the theme's coral
-   (Daylight's fill coral, the brand coral in dark); the heart is white in
-   Daylight and cream in dark. */
+   gradient under a cream heart. The gradient starts on the Studio coral. */
 .likedCover {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
   background: linear-gradient(135deg, var(--studio-accent), var(--accent-deep));
-  color: rgba(255, 255, 255, 0.96);
-}
-:global([data-theme="dark"]) .likedCover {
   color: rgba(var(--cream-rgb), 0.96);
 }
 .likedCover svg {

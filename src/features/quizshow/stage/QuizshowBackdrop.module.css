@@ -1,0 +1,154 @@
+/* The velvet backdrop. Everything is sized in % or container units of its own
+   box (the root is a size container), so it works the same inside a scaled
+   1280x720 canvas and on a full-viewport screen. Fields are pre-blurred radial
+   gradients and drift by transform only. */
+.root {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+  pointer-events: none;
+  container-type: size;
+  background: var(--qs-base);
+  /* Per-variant pace: the stage drifts at the token's pace, the phone and
+     the studio slower. */
+  --qs-pace: 1;
+}
+
+.root[data-variant="phone"] {
+  --qs-pace: 1.7;
+}
+
+.root[data-variant="studio"] {
+  --qs-pace: 2.4;
+}
+
+.field {
+  position: absolute;
+  width: 78cqmax;
+  height: 78cqmax;
+  border-radius: 50%;
+  will-change: transform;
+  animation: qsDrift calc(var(--qs-drift-duration) * var(--qs-pace)) ease-in-out
+    infinite alternate;
+}
+
+.coral {
+  top: -30%;
+  left: -22%;
+  background: radial-gradient(
+    closest-side,
+    var(--qs-field-coral) 0%,
+    transparent 100%
+  );
+}
+
+.plum {
+  right: -26%;
+  bottom: -34%;
+  background: radial-gradient(
+    closest-side,
+    var(--qs-field-plum) 0%,
+    transparent 100%
+  );
+  animation-duration: calc(var(--qs-drift-duration) * var(--qs-pace) * 1.07);
+  animation-direction: alternate-reverse;
+}
+
+.rose {
+  top: 28%;
+  right: -12%;
+  width: 56cqmax;
+  height: 56cqmax;
+  background: radial-gradient(
+    closest-side,
+    var(--qs-field-rose) 0%,
+    transparent 100%
+  );
+  animation-duration: calc(var(--qs-drift-duration) * var(--qs-pace) * 0.95);
+}
+
+/* The phone keeps two fields: coral at the top, plum at the bottom. */
+.root[data-variant="phone"] .coral {
+  top: -22%;
+  left: -40%;
+}
+
+.root[data-variant="phone"] .plum {
+  right: -40%;
+  bottom: -20%;
+}
+
+/* The studio gets one faint field and no spotlight. */
+.root[data-variant="studio"] .plum {
+  top: -34%;
+  right: -18%;
+  bottom: auto;
+  opacity: 0.55;
+}
+
+/* A calm darkening over the fields, so type on the brightest overlap keeps its
+   contrast. */
+.veil {
+  position: absolute;
+  inset: 0;
+  background: var(--qs-veil);
+}
+
+/* The warm spotlight: a cone from the top that sways. */
+.spot {
+  position: absolute;
+  top: -20%;
+  left: 22%;
+  width: 56%;
+  height: 130%;
+  background: radial-gradient(
+    ellipse 50% 55% at 50% 0%,
+    var(--qs-spot) 0%,
+    transparent 100%
+  );
+  transform-origin: 50% 0%;
+  will-change: transform;
+  animation: qsSway calc(var(--qs-drift-duration) * var(--qs-pace) * 0.9)
+    ease-in-out infinite alternate;
+}
+
+/* Static film grain. The tile is 512px and stitches, so it does not repeat
+   visibly at 1920px. */
+.grain {
+  position: absolute;
+  inset: 0;
+  background-image: var(--qs-grain);
+  background-size: var(--qs-grain-size) var(--qs-grain-size);
+  opacity: var(--qs-grain-opacity);
+  mix-blend-mode: overlay;
+}
+
+/* Reduced motion: the fields hold the middle of their drift. */
+.still .field,
+.still .spot {
+  animation: none;
+  will-change: auto;
+}
+
+.still .field {
+  transform: translate3d(2%, 1%, 0) scale(1.03);
+}
+
+@keyframes qsDrift {
+  from {
+    transform: translate3d(-7%, 4%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(8%, -6%, 0) scale(1.1);
+  }
+}
+
+@keyframes qsSway {
+  from {
+    transform: rotate(-5deg);
+  }
+  to {
+    transform: rotate(5deg);
+  }
+}

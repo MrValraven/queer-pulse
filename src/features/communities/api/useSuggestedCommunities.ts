@@ -6,6 +6,7 @@ import { useConnections } from "../../../app/providers/useConnections";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Community } from "../../homepage/data/types";
 import { demoSuggestedCommunities } from "../suggestedCommunities.demo";
+import { localizeDemoCommunity } from "../memberCountLabel";
 import { cardDtoToCommunity } from "./communities.adapters";
 import { getSuggestedCommunities } from "./communities.api";
 
@@ -49,8 +50,13 @@ export function useSuggestedCommunities(): UseSuggestedCommunitiesResult {
   });
 
   const demoSuggestions = useMemo(
-    () => (demoMode ? demoSuggestedCommunities(connected, isMember) : EMPTY),
-    [demoMode, connected, isMember],
+    () =>
+      demoMode
+        ? demoSuggestedCommunities(connected, isMember).map((community) =>
+            localizeDemoCommunity(community, t),
+          )
+        : EMPTY,
+    [demoMode, connected, isMember, t],
   );
 
   if (demoMode) {

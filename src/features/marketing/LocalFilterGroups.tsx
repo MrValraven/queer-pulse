@@ -59,7 +59,6 @@ function LocalFilterBands({
   onClearCategories,
   categoryCounts,
   chipCounts,
-  isLoadedSetComplete,
   listingFacts,
   onToggleListingFact,
   safeOnly,
@@ -87,7 +86,6 @@ function LocalFilterBands({
         onToggleCategory={onToggleCategory}
         onClearCategories={onClearCategories}
         categoryCounts={categoryCounts}
-        isLoadedSetComplete={isLoadedSetComplete}
         categoryIds={localCategoryChipIds(isOnlineScope, isAdultShown)}
         labelKey={
           isOnlineScope
@@ -115,19 +113,21 @@ function LocalFilterBands({
           safeOnly={safeOnly}
           onToggleSafeOnly={onToggleSafeOnly}
           chipCounts={chipCounts}
-          isLoadedSetComplete={isLoadedSetComplete}
           showAdult={isOnlineScope && canShowAdult === true}
           isAdultShown={isAdultShown}
           onToggleAdult={onToggleAdult}
         />
       </RefineSplit>
       <FactBands isStacked={layout === "stacked"}>
-        <LocalOwnedByFilter owned={owned} onToggleOwned={onToggleOwned} />
+        <LocalOwnedByFilter
+          owned={owned}
+          onToggleOwned={onToggleOwned}
+          ownedCounts={chipCounts.owned}
+        />
         <LocalListingFactFilters
           listingFacts={listingFacts}
           onToggleListingFact={onToggleListingFact}
           counts={chipCounts.listingFacts}
-          isLoadedSetComplete={isLoadedSetComplete}
           isOnlineScope={isOnlineScope}
         />
         {!isOnlineScope && (
@@ -135,7 +135,6 @@ function LocalFilterBands({
             access={access}
             onToggleAccess={onToggleAccess}
             accessCounts={chipCounts.access}
-            isLoadedSetComplete={isLoadedSetComplete}
           />
         )}
       </FactBands>
@@ -143,7 +142,6 @@ function LocalFilterBands({
         listingFacts={listingFacts}
         onToggleListingFact={onToggleListingFact}
         counts={chipCounts.listingFacts}
-        isLoadedSetComplete={isLoadedSetComplete}
         isOnlineScope={isOnlineScope}
         categories={categories}
       />

@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { AnimatePresence } from "motion/react";
 import { ConfirmDialog } from "../../../shared/components/ui/ConfirmDialog";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -30,11 +31,14 @@ export function QuizshowSaveConflictDialog({
   onLoadTheirs,
   onSaveMine,
   onClose,
+  children,
 }: {
   isOpen: boolean;
   onLoadTheirs: () => void;
   onSaveMine: () => void;
   onClose: () => void;
+  /** Additive. Rendered inside the dialog (the studio's dark stamp). */
+  children?: ReactNode;
 }) {
   const { t } = useTranslation();
   const keys = CONFLICT_KEYS[useQuizshowScopeKind()];
@@ -54,7 +58,9 @@ export function QuizshowSaveConflictDialog({
             label: t(keys.overwrite),
             onClick: onSaveMine,
           }}
-        />
+        >
+          {children}
+        </ConfirmDialog>
       )}
     </AnimatePresence>
   );

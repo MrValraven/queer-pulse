@@ -1,4 +1,5 @@
 import type { IconType } from "react-icons";
+import type { Community as DomainCommunity } from "../../../shared/types/domain";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { VisibilityMode } from "../../../shared/components/ui/VisibilityBadge";
 
@@ -137,3 +138,10 @@ export interface ChangeMaker {
  * code should import these from `src/shared/types/domain` directly.
  */
 export type { Community, CommunityType } from "../../../shared/types/domain";
+
+/** A demo-registry community. `memberCount` is the numeric size the demo data
+ *  hooks turn into the localised `count` label (`localizeDemoCommunity`);
+ *  `count` itself stays as the English fallback the `Community` shape needs. */
+export interface DemoCommunity extends DomainCommunity {
+  memberCount: number;
+}

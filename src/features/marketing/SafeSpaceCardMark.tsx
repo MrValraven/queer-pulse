@@ -22,12 +22,12 @@ const LABEL_KEYS: Record<SafeSpaceCardBadgeState, string> = {
  * Three states, and the whole point of the component is that they can never
  * collapse into one:
  *
- * - **verified** — the badge stands. Jade shield, as before.
- * - **due** — the badge stands AND is past its yearly check. A badge due for
+ * - **verified**: the badge stands. Jade shield, as before.
+ * - **due**: the badge stands AND is past its yearly check. A badge due for
  *   re-review is STILL VALID, so it keeps the identical mark and only the
  *   wording carries the age of the claim. Dimming it would tell a member the
  *   place had lost something it has not lost.
- * - **paused** — the platform has put the badge on hold while a review runs.
+ * - **paused**: the platform has put the badge on hold while a review runs.
  *   The mark changes outright, because "verified" has stopped being true.
  *
  * The paused wording is a statement about the BADGE, never about the venue:
@@ -53,11 +53,14 @@ export function SafeSpaceCardMark({ place }: { place: DirectoryPlace }) {
     <Tooltip label={label} placement="top">
       {/* Not a button: the whole card is already one link, and this only ever
           names itself. `role="img"` + the label is what a screen reader
-          announces; the tooltip bubble is decorative. */}
+          announces; the tooltip bubble is decorative. `data-safe-space`
+          lets the card's phone badge group (DirectoryPage.module.css
+          `.photoBadges`) seat the mark inside its own pill. */}
       <span
         className={`${styles.mark} ${isPaused ? styles.paused : ""}`}
         role="img"
         aria-label={label}
+        data-safe-space={badgeState}
       >
         <Icon aria-hidden />
       </span>

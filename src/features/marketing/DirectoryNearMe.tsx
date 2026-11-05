@@ -40,10 +40,14 @@ export function DirectoryNearMe({
   layout = "stack",
 }: {
   location: MyLocation;
-  /** `"stack"` keeps the button and its note in their own column, for the
-   *  results header. `"inline"` dissolves the wrapper so both become items of
-   *  the search row's grid: the button sits on the field's line, the note drops
-   *  to a second line of its own and so can't stretch the field. */
+  /** `"stack"` keeps the button and its note in their own column. The phone
+   *  results header and the desktop row above the results each dissolve that
+   *  column in their own stylesheet rules (DirectoryPage.module.css
+   *  `.resultsHeader`, `.topNearMe`), so the button shares the count's line
+   *  and the note takes a line of its own. `"inline"` dissolves the wrapper
+   *  so both become items of the search row's grid: the button sits on the
+   *  field's line, the note drops to a second line of its own and so can't
+   *  stretch the field. */
   layout?: "stack" | "inline";
 }) {
   const { t } = useTranslation();

@@ -1,0 +1,373 @@
+/* The personas directory hero: a full-bleed plum band with the copy, search
+   and quick filters on the left and the wall of faces on the right. Solid
+   --plum, the same fill base.css paints the nav band above a `data-plum`
+   header and the shared PageHero uses, so the band meets the nav with no
+   seam. Plum does not flip with the theme, so every type colour on it is the
+   non-flipping --cream-rgb, and the cream search field carries the fixed
+   --ink-surface. Also styles SubprofileCreditsHeroSearch and
+   SubprofileCreditsQuickChips. */
+
+.hero {
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+}
+
+/* The 1440px column with the --wrap-px gutter, the recipe the Made together
+   strip and the directory frame use, so the headline shares their left edge.
+   The stack is content-driven, as in the approved design: copy and wall wrap
+   onto two lines once they no longer fit side by side (about 930px: 440 copy
+   + 56 gap + 440 wall, so 1024 less its 28px gutters sits side by side). */
+.inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--section-y-64) var(--wrap-px) var(--section-y-72);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  /* Side by side, the wall sits against the right edge; wrapped onto its own
+     line it starts at the left edge under the copy. */
+  justify-content: space-between;
+  gap: 48px 56px;
+}
+
+.copy {
+  flex: 1 1 440px;
+  min-width: 0;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+/* Capped so the tiles stay close to the designed cell size (about 147px
+   columns at the cap, never under about 101px beside the copy). */
+.wall {
+  flex: 1 1 440px;
+  max-width: 620px;
+}
+
+.eyebrow {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--text-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-soft);
+}
+
+.eyebrowRule {
+  flex: none;
+  width: 24px;
+  height: 1.5px;
+  background: currentColor;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 360;
+  font-size: var(--text-credits-hero);
+  line-height: var(--lh-display);
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  color: rgba(var(--cream-rgb), 1);
+}
+
+.title em {
+  font-style: italic;
+  color: var(--accent-soft);
+}
+
+.lead {
+  margin: 0;
+  max-width: 520px;
+  font-size: var(--text-18);
+  line-height: 1.6;
+  color: rgba(var(--cream-rgb), 0.78);
+}
+
+/* ── Search ── */
+
+.search {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-width: 600px;
+  padding: 8px;
+  border-radius: var(--radius-22);
+  background: rgba(var(--cream-rgb), 1);
+}
+
+/* The field is borderless inside the cream pill, so the pill draws focus. */
+.search:has(.searchInput:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.searchField {
+  flex: 999 1 260px;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 0 14px;
+  color: var(--ink-surface);
+}
+
+.searchIcon {
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+
+.searchInput {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  font: inherit;
+  font-size: var(--text-16);
+  color: var(--ink-surface);
+  /* A long placeholder ends in an ellipsis instead of a cut word. */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.searchInput::placeholder {
+  color: color-mix(in srgb, var(--ink-surface) 62%, transparent);
+  opacity: 1;
+  text-overflow: ellipsis;
+}
+
+.search .searchSubmit {
+  flex: 1 0 auto;
+  min-height: 52px;
+  padding: 0 26px;
+  border-radius: var(--radius-16);
+  font-size: var(--text-16);
+}
+
+/* ── Quick filters ── */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid rgba(var(--cream-rgb), 0.24);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  font: inherit;
+  font-size: var(--text-14);
+  white-space: nowrap;
+  color: rgba(var(--cream-rgb), 1);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background-color var(--dur-fast) var(--ease-std),
+    border-color var(--dur-fast) var(--ease-std),
+    color var(--dur-fast) var(--ease-std);
+}
+
+/* Pressed: the chip fills solid cream, a change of fill as well as colour.
+   The weight stays put so the row does not shift as chips toggle. */
+.chip[aria-pressed="true"] {
+  border-color: rgba(var(--cream-rgb), 1);
+  background: rgba(var(--cream-rgb), 1);
+  color: var(--ink-surface);
+}
+
+.chipDot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-avatar);
+  background: var(--jade-soft);
+}
+
+.chip[aria-pressed="true"] .chipDot {
+  background: var(--jade);
+}
+
+.chip:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-pill);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chip:not([aria-pressed="true"]):hover {
+    border-color: rgba(var(--cream-rgb), 0.5);
+    background: rgba(var(--cream-rgb), 0.08);
+  }
+}
+
+/* ── Show results ── Appears under the chips while the hero refines the grid,
+   and takes the member down to it. An outline pill on plum, the chips' sibling. */
+
+.resultsCta {
+  /* The gap above lives here, not on the column, so the closed button leaves
+     no empty row behind. Collapse keeps a child's margin inside its fold. */
+  margin-top: 14px;
+  /* Room below when scrollIntoView brings the button up from the fold. Keep in
+     step with RESULTS_CTA_BOTTOM_GAP_PX in SubprofileCreditsHero.tsx. */
+  scroll-margin-bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid rgba(var(--cream-rgb), 0.5);
+  border-radius: var(--radius-pill);
+  background: rgba(var(--cream-rgb), 0.1);
+  font: inherit;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: rgba(var(--cream-rgb), 1);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background-color var(--dur-fast) var(--ease-std),
+    border-color var(--dur-fast) var(--ease-std);
+}
+
+.resultsCtaIcon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+
+.resultsCta:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.resultsCta:active {
+  background: rgba(var(--cream-rgb), 0.2);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .resultsCta:hover {
+    border-color: rgba(var(--cream-rgb), 0.85);
+    background: rgba(var(--cream-rgb), 0.18);
+  }
+}
+
+/* ── Phone (matches the wall hook's isPhone, mediaMax("lg")): the 6-tile
+   wall at full width, the stacked search and the scrolling chips ── */
+
+@media (--lg) {
+  .inner {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 22px;
+    padding: 28px var(--wrap-px) 28px;
+  }
+
+  .copy {
+    flex: none;
+    max-width: none;
+    gap: 18px;
+  }
+
+  .wall {
+    flex: none;
+    max-width: none;
+  }
+
+  .eyebrow {
+    font-size: var(--text-12);
+  }
+
+  .eyebrowRule {
+    width: 20px;
+  }
+
+  .title {
+    letter-spacing: var(--ls-display);
+  }
+
+  .lead {
+    font-size: var(--text-16);
+    line-height: var(--lh-body);
+  }
+
+  .search {
+    flex-direction: column;
+    gap: 8px;
+    max-width: none;
+    padding: 6px;
+    border-radius: var(--radius-20);
+  }
+
+  .searchField {
+    flex: none;
+    gap: 10px;
+    min-height: 50px;
+    padding: 0 12px;
+  }
+
+  .searchIcon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .search .searchSubmit {
+    flex: none;
+    width: 100%;
+    min-height: 50px;
+    border-radius: var(--radius-15);
+  }
+
+  /* One row that scrolls sideways, bleeding to the band's edges. The block
+     padding leaves room for the focus ring, which the scroller would clip;
+     the matching negative margin keeps the row where it was. */
+  .chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    margin: -8px calc(-1 * var(--wrap-px));
+    padding: 8px var(--wrap-px);
+    scroll-padding-inline: var(--wrap-px);
+  }
+
+  .chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  .chip {
+    flex: 0 0 auto;
+    padding: 0 14px;
+  }
+}
+
+/* Two lines keep the wall near the top of a phone. The full lead shows from
+   561px up, so a tablet and a narrow window read it whole. */
+@media (--sm) {
+  .lead {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+  }
+}

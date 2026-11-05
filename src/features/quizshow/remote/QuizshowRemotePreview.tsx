@@ -2,6 +2,7 @@ import { useLayoutEffect, useState } from "react";
 import { Collapse } from "../../../shared/components/ui/Collapse";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { QuizshowClientState } from "../realtime/quizshowClientStore";
+import { QuizshowBackdrop } from "../stage/QuizshowBackdrop";
 import { QuizshowScreenStage } from "../screen/QuizshowScreenStage";
 import styles from "./QuizshowRemote.module.css";
 
@@ -39,8 +40,8 @@ export function QuizshowRemotePreview({
   return (
     <Collapse isOpen={state !== null}>
       <section aria-label={t("quizshow:remote.preview")}>
-        {/* The big screen defaults to its dark theme, so the preview does too.
-            Hidden from assistive tech: the remote already speaks the phase and
+        {/* The big screen defaults to its dark theme, so the preview does too,
+            with the stage backdrop behind the scaled canvas. Hidden from assistive tech: the remote already speaks the phase and
             the countdown, so the stage's own live regions would say them twice. */}
         <div
           ref={frameRef}
@@ -48,6 +49,7 @@ export function QuizshowRemotePreview({
           data-theme="dark"
           aria-hidden="true"
         >
+          <QuizshowBackdrop variant="stage" />
           <div
             data-testid="remote-preview-canvas"
             className={styles.previewCanvas}

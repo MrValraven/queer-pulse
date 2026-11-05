@@ -1,4 +1,3 @@
-import { useTheme } from "../../app/providers/themeContext";
 import { useStudioPlaybackPreferences } from "./api/useStudioPlaybackPreferences";
 import { Collapse } from "../../shared/components/ui";
 import { StudioLoadError } from "./StudioLoadStates";
@@ -8,8 +7,8 @@ import s from "./StudioSettingsPage.module.css";
 
 /**
  * Studio's real player settings, in both modes (spec 6.2): Playback
- * (Autoplay next and Crossfade), Content (Hide explicit tracks) and Theme
- * (the app theme the account menu switches too).
+ * (Autoplay next and Crossfade) and Content (Hide explicit tracks). Studio
+ * is always dark, so it has no Theme setting.
  */
 export function StudioPlaybackSettings() {
   const { preferences, isLoading, isError, loadState, savePreferences } =
@@ -18,7 +17,6 @@ export function StudioPlaybackSettings() {
   const isAwaitingRow = isLoading || isError;
   // Studio safety (spec 6.3): on unless the member switched it off.
   const isAskingBeforeWarnings = preferences.askBeforeWarnings !== false;
-  const { theme, toggleTheme } = useTheme();
   return (
     <>
       <Collapse isOpen={isError}>
@@ -72,19 +70,6 @@ export function StudioPlaybackSettings() {
           onToggle={() =>
             savePreferences({ askBeforeWarnings: !isAskingBeforeWarnings })
           }
-        />
-      </SettingsSection>
-
-      <SettingsSection
-        labelKey="studio:settingsLive.theme.label"
-        titleKey="studio:settingsLive.theme.title"
-      >
-        <ToggleOption
-          headingKey="studio:settingsLive.theme.dark.heading"
-          bodyKey="studio:settingsLive.theme.dark.body"
-          isOn={theme === "dark"}
-          isLoading={false}
-          onToggle={toggleTheme}
         />
       </SettingsSection>
     </>

@@ -21,15 +21,6 @@
   border-radius: var(--studio-control-radius);
 }
 
-/* Daylight: a grey wash with no edge, like the top search; a white field on
-   the white page had no visible boundary. Dark keeps the shared colours. */
-:global(:root:not([data-theme="dark"])) .search input {
-  background: var(--studio-wash-2);
-}
-:global(:root:not([data-theme="dark"])) .search input:not(:focus) {
-  border-color: transparent;
-}
-
 .controls {
   display: flex;
   flex-wrap: wrap;

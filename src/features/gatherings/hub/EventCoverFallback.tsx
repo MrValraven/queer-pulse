@@ -29,15 +29,17 @@ export interface EventCoverFallbackProps {
 }
 
 /**
- * The cover a gathering wears when its host never added a photo: a deep plum
- * field washed in its family's colour, a few soft orbs of light for depth,
- * and the family's icon drawn large and faint in cream. It never repeats the
- * title, which the card already sets in type beside it.
+ * The cover an event wears when its host never added a photo: a quiet paper
+ * surface tinted in its family's colour, two soft pools of light for depth,
+ * and the family's icon centred in a tinted disc. It never repeats the title,
+ * which the card already sets in type beside it.
  *
  * It fills its positioned parent (`position: absolute; inset: 0`) and is
- * decorative, so it is hidden from assistive tech. The field's colours are
- * fixed in both themes, like a photo would be. `size="hero"` scales the icon
- * and the orbs up for the featured slot.
+ * decorative, so it is hidden from assistive tech. The surface is built on
+ * `--paper`, so it flips with the theme like the card around it, and the icon
+ * takes its family's ink, which flips too. `size="hero"` adds a fine dot
+ * screen for the featured slot. A caller can resize or move the disc through
+ * `--cover-fallback-mark-size` and `--cover-fallback-mark-align`.
  */
 export function EventCoverFallback({ event, size }: EventCoverFallbackProps) {
   const family = event.gatheringFamily;
@@ -53,10 +55,9 @@ export function EventCoverFallback({ event, size }: EventCoverFallbackProps) {
   ].join(" ");
   return (
     <span className={className} data-cover-fallback="" aria-hidden>
-      <span className={`${styles.orb} ${styles.orbGlow}`} />
-      <span className={`${styles.orb} ${styles.orbHue}`} />
-      <span className={`${styles.orb} ${styles.orbPair}`} />
-      <FamilyIcon className={styles.icon} aria-hidden />
+      <span className={styles.mark}>
+        <FamilyIcon className={styles.icon} aria-hidden />
+      </span>
     </span>
   );
 }

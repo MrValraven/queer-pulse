@@ -1,12 +1,14 @@
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { foldForSearch } from "../../../shared/lib/foldForSearch";
+import { countDemoBrowseFacets, matchesDemoBrowse } from "./demoBrowseFacets";
 import {
   getEvents,
+  type EventBrowseFacetsDTO,
   type EventBrowseFilters,
   type EventFilter,
   type EventsPage,
+  type EventWhenWindows,
 } from "./events.api";
 import { eventKeys } from "./eventKeys";
 import type { HiddenEventCommunityDTO } from "./hiddenEventCommunities.api";
@@ -39,6 +41,11 @@ export interface EventsResult {
   isFetchNextPageError: boolean;
   /** Re-run the query — wired to the error state's "Try again" action. */
   refetch: () => void;
+  /** The browse board's availability counts, read off the FIRST page (one
+   *  filter run shares them). Undefined unless `facetWhenWindows` asked for
+   *  them, while that page is in flight, after it failed, and from a server
+   *  that predates them. Undefined means "not counted", and draws no number. */
+  facets: EventBrowseFacetsDTO | undefined;
 }
 
 /** One loaded page, as the infinite query caches it. Exported for the hide
@@ -47,6 +54,7 @@ export interface EventsPageVM {
   items: CalendarEvent[];
   total: number;
   page: number;
+  facets?: EventBrowseFacetsDTO;
 }
 
 /**
@@ -65,12 +73,18 @@ export interface EventsPageVM {
  * (live: the server; demo: `filterDemoEvents` against the demo hidden list in
  * the query cache). `includeHidden` keeps them in, for a surface that must see
  * every event (the create wizard's clash notes).
+ *
+ * `facetWhenWindows` (the browse board) asks for availability counts as well,
+ * each date chip counted over the window given. Live reads them off the
+ * server's page envelope; demo counts the registry the same way
+ * (`countDemoBrowseFacets`).
  */
 export function useEvents(
   params: {
     filter?: EventFilter;
     browse?: EventBrowseFilters;
     includeHidden?: boolean;
+    facetWhenWindows?: EventWhenWindows;
   } = {},
 ): EventsResult {
   const { demoMode } = useDemoMode();
@@ -78,8 +92,15 @@ export function useEvents(
   const queryClient = useQueryClient();
   const browse = params.browse;
   const includeHidden = params.includeHidden ?? false;
+  const facetWhenWindows = params.facetWhenWindows;
   const query = useInfiniteQuery<EventsPageVM>({
-    queryKey: eventKeys.list(params.filter, demoMode, browse, includeHidden),
+    queryKey: eventKeys.list(
+      params.filter,
+      demoMode,
+      browse,
+      includeHidden,
+      facetWhenWindows,
+    ),
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
@@ -89,28 +110,50 @@ export function useEvents(
           queryClient.getQueryData<HiddenEventCommunityDTO[]>(
             eventKeys.hiddenCommunities(true),
           ) ?? [];
+        const now = new Date();
+        const hiddenIds = new Set(hiddenRows.map((row) => row.communityId));
         const items = filterDemoEvents(
           calendarEvents,
           params.filter,
           browse,
-          new Date(),
-          new Set(hiddenRows.map((row) => row.communityId)),
+          now,
+          hiddenIds,
           includeHidden,
         );
+        // Counted over the rows before the browse filters, the way the
+        // server counts over its base query with one group lifted.
+        const facets = facetWhenWindows
+          ? countDemoBrowseFacets(
+              filterDemoEvents(
+                calendarEvents,
+                params.filter,
+                undefined,
+                now,
+                hiddenIds,
+                includeHidden,
+              ),
+              browse ?? {},
+              facetWhenWindows,
+            )
+          : undefined;
         // `total` is the FILTERED length, so `getNextPageParam` never asks the
         // synthetic single page for a page 2 that does not exist.
-        return { items, total: items.length, page: 1 };
+        return { items, total: items.length, page: 1, facets };
       }
       const res: EventsPage = await getEvents({
         filter: params.filter,
         page: pageParam as number,
         includeHidden,
+        ...(facetWhenWindows
+          ? { withFacets: { whenWindows: facetWhenWindows } }
+          : {}),
         ...browse,
       });
       return {
         items: res.items.map((card) => cardToCalendarEvent(card, t)),
         total: res.total,
         page: res.page,
+        facets: res.facets,
       };
     },
     getNextPageParam: (last, all) => {
@@ -130,6 +173,7 @@ export function useEvents(
     isError: query.isError,
     isFetchNextPageError: query.isFetchNextPageError,
     refetch: () => void query.refetch(),
+    facets: pages[0]?.facets,
   };
 }
 
@@ -192,39 +236,4 @@ export function filterDemoEvents(
     : timed;
   if (!browse) return shown;
   return shown.filter((event) => matchesDemoBrowse(event, browse));
-}
-
-/** One demo row against the browse filters (date range, place, kind, cost,
- *  free text). */
-function matchesDemoBrowse(
-  event: CalendarEvent,
-  browse: EventBrowseFilters,
-): boolean {
-  const term = foldForSearch(browse.q?.trim() ?? "");
-  const from = browse.from ? new Date(browse.from).getTime() : null;
-  const to = browse.to ? new Date(browse.to).getTime() : null;
-  const startedAt = event.date.getTime();
-  if (from !== null && startedAt < from) return false;
-  if (to !== null && startedAt > to) return false;
-  if (browse.hood && event.hood.toLowerCase() !== browse.hood.toLowerCase()) {
-    return false;
-  }
-  if (browse.family && event.gatheringFamily !== browse.family) return false;
-  if (
-    browse.type &&
-    (event.eventType ?? "").toLowerCase() !== browse.type.toLowerCase()
-  ) {
-    return false;
-  }
-  if (browse.cost === "free" && event.ticketed) return false;
-  if (browse.cost === "paid" && !event.ticketed) return false;
-  if (
-    term &&
-    !foldForSearch(event.title).includes(term) &&
-    !foldForSearch(event.hood).includes(term) &&
-    !foldForSearch(event.org).includes(term)
-  ) {
-    return false;
-  }
-  return true;
 }

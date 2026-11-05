@@ -78,6 +78,15 @@ interface ImageUploadFieldProps {
   /** The pick button's label once an image is in ("Change cover").
    *  Defaults to the generic "Change". */
   changeLabel?: string;
+  /** Additive. A class for the field's root, beside its own. */
+  className?: string;
+  /** Additive. A class for the image slot, beside its own. */
+  slotClassName?: string;
+  /** Additive. A class for the add, change and remove buttons, beside their own. */
+  buttonClassName?: string;
+  /** Additive. Leaves the slot out, so only the buttons show (a picker
+   *  offered as a lone "Add image" chip). Off by default. */
+  isSlotHidden?: boolean;
 }
 
 /**
@@ -112,6 +121,10 @@ export function ImageUploadField({
   isPosterAware = false,
   addLabel,
   changeLabel,
+  className,
+  slotClassName,
+  buttonClassName,
+  isSlotHidden = false,
 }: ImageUploadFieldProps) {
   const { t } = useTranslation();
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -202,16 +215,20 @@ export function ImageUploadField({
       className={[
         styles.imgField,
         circle && styles.avatarField,
-        isPosterSlot && styles.posterField,
+        // A hidden slot needs no width to measure a poster against.
+        isPosterSlot && !isSlotHidden && styles.posterField,
+        className,
       ]
         .filter(Boolean)
         .join(" ")}
       aria-busy={pickerOpen || undefined}
     >
-      {isPosterSlot ? (
+      {isSlotHidden ? null : isPosterSlot ? (
         <PosterAwareImageSlot
           {...slotProps}
-          className={styles.posterSlot}
+          className={[styles.posterSlot, slotClassName]
+            .filter(Boolean)
+            .join(" ")}
           onNaturalSize={({ width, height }) => {
             if (displayedValue && isPosterShaped(width, height)) {
               setMeasuredPoster({
@@ -222,12 +239,14 @@ export function ImageUploadField({
           }}
         />
       ) : (
-        <ImageSlot {...slotProps} />
+        <ImageSlot {...slotProps} className={slotClassName} />
       )}
       <div className={styles.imgActions}>
         <button
           type="button"
-          className={styles.smallBtn}
+          className={[styles.smallBtn, buttonClassName]
+            .filter(Boolean)
+            .join(" ")}
           onClick={() => setPickerOpen(true)}
         >
           <FiCamera size={14} aria-hidden />
@@ -238,7 +257,9 @@ export function ImageUploadField({
         {displayedValue && isRemovable && (
           <button
             type="button"
-            className={styles.smallBtn}
+            className={[styles.smallBtn, buttonClassName]
+              .filter(Boolean)
+              .join(" ")}
             aria-label={t("subprofiles:imageUpload.remove")}
             onClick={() => setConfirmRemoveOpen(true)}
           >

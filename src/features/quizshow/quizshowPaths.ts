@@ -7,6 +7,8 @@ import { memberPath } from "../forum/forumAuthor.helpers";
 export const QUIZSHOW_MANAGE_TAB = "quizshow" as const;
 export const QUIZSHOW_SCREEN_ROUTE = `${routes.gatherings}/:slug/quizshow/screen`;
 export const QUIZSHOW_REMOTE_ROUTE = `${routes.gatherings}/:slug/quizshow/remote`;
+/** The event's quiz in the full-screen studio editor. */
+export const QUIZSHOW_EDIT_ROUTE = `${routes.gatherings}/:slug/quizshow/edit`;
 export const QUIZSHOW_PLAY_CODE_ROUTE = `${routes.play}/:code`;
 export const QUIZSHOW_GAMES_ROUTE = `${routes.play}/games`;
 export const QUIZSHOW_GAME_ROUTE = `${routes.play}/games/:gameId`;
@@ -21,6 +23,10 @@ export function quizshowScreenPath(slug: string): string {
 
 export function quizshowRemotePath(slug: string): string {
   return `${gatheringPath(slug)}/quizshow/remote`;
+}
+
+export function quizshowEditPath(slug: string): string {
+  return `${gatheringPath(slug)}/quizshow/edit`;
 }
 
 export function quizshowGamePath(

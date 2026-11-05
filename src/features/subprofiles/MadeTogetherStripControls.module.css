@@ -1,0 +1,98 @@
+/* The strip's controls: round arrows from --lg-up, position dots below it. */
+
+.arrows {
+  display: none;
+  gap: 8px;
+}
+
+.arrow {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border-radius: var(--radius-avatar);
+  font-size: var(--text-18);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    transform var(--dur-fast) var(--ease),
+    opacity var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease);
+}
+
+.arrowPrevious {
+  border: 1px solid rgba(var(--line-rgb), 0.22);
+  background: var(--paper);
+  color: var(--text-strong);
+}
+
+.arrowNext {
+  border: 1px solid rgba(var(--line-rgb), 0.22);
+  background: var(--plum);
+  color: rgb(var(--cream-rgb));
+}
+
+.arrow:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.arrow:active:not([aria-disabled="true"]) {
+  transform: scale(0.96);
+}
+
+.arrow[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: default;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .arrowPrevious:hover:not([aria-disabled="true"]) {
+    background: var(--wash);
+  }
+
+  .arrowNext:hover:not([aria-disabled="true"]) {
+    background: var(--plum-deep);
+  }
+}
+
+@media (--lg-up) {
+  .arrows {
+    display: flex;
+  }
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding-block-start: 10px;
+}
+
+.dot,
+.dotActive {
+  height: 6px;
+  border-radius: var(--radius-3);
+  background: rgba(var(--line-rgb), 0.25);
+  transition:
+    width var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease);
+}
+
+.dot {
+  width: 6px;
+}
+
+.dotActive {
+  width: 18px;
+  background: var(--text-strong);
+}
+
+@media (--lg-up) {
+  .dots {
+    display: none;
+  }
+}

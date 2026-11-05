@@ -4,6 +4,7 @@ import { followSubprofile, unfollowSubprofile } from "./subprofiles.api";
 import { patchStudioArtistFollow } from "../../studio/api/useStudioArtist";
 import { studioKeys } from "../../studio/api/studioQueryKeys";
 import type { PublicSubprofileOutcome } from "./usePublicSubprofile";
+import { patchDirectoryCardFollow } from "./directoryCardCache";
 
 /** Result shape shared by the follow and unfollow endpoints. */
 export interface FollowResult {
@@ -31,7 +32,10 @@ export interface UnfollowVariables {
  * reads (a purely local count nudge here would get overwritten by the very
  * invalidate-triggered refetch below). Unlike endorsements, followers are
  * never listed (count-only, anonymity-preserving), so there is no separate
- * "followers" query to invalidate — only the persona public query.
+ * "followers" query to invalidate. The result is patched into the persona
+ * public query, the Studio artist caches and every cached directory page
+ * (portrait cards and hero wall); only the followed-personas lists are
+ * invalidated.
  */
 export function useFollow(subprofileId: string) {
   const { demoMode } = useDemoMode();
@@ -66,6 +70,9 @@ export function useFollow(subprofileId: string) {
     // Studio reads the same follow from its own caches: the artist view
     // (count and Follow state) and the library's Artists tab.
     patchStudioArtistFollow(queryClient, demoMode, subprofileId, result);
+    // The directory's portrait cards and its hero wall read the same follow
+    // off their cached infinite pages, patched in place like the public read.
+    patchDirectoryCardFollow(queryClient, subprofileId, result);
     void queryClient.invalidateQueries({
       queryKey: studioKeys.followedArtists(demoMode),
     });

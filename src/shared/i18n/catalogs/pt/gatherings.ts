@@ -2256,6 +2256,8 @@ export const gatherings: Catalog = {
   "hub.browse.cost.any": "Qualquer custo",
   "hub.browse.cost.free": "Gratuito",
   "hub.browse.cost.paid": "Tem entrada paga",
+  "hub.browse.withCount_one": "{label}, {count} evento",
+  "hub.browse.withCount_other": "{label}, {count} eventos",
 
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
   // PRD-38 — PRD-38 - taking a photo down from a gathering album (live mode). The control, its confirmation, and the two outcomes. Also two accessible names for the album tile link, which had none when a photo carried no caption.

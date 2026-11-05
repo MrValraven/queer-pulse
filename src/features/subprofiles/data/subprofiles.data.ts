@@ -20,6 +20,10 @@ import { LATE_BLOOMERS } from "./podcastDemoSubprofile.data";
 import { TATTOO_DEMO_SUBPROFILES } from "./tattooDemoSubprofiles.data";
 import { TATTOO_ARTIST_DEMO_SUBPROFILE } from "./tattooArtistDemoSubprofile.data";
 import {
+  buildDemoCardCredits,
+  DEMO_CARD_CREDIT_EDGES,
+} from "./subprofileCardCredits.data";
+import {
   demoListingWorksAt,
   registerDemoTeamPersonaLookup,
 } from "../../marketing/listBusiness/api/listingTeam.demo";
@@ -30,6 +34,7 @@ import type {
   MyInviteDTO,
   PersonaInviteDTO,
   RestrictedState,
+  CardCreditsDTO,
   SubprofileCardDTO,
   SubprofileDTO,
   SubprofileItemDTO,
@@ -1528,7 +1533,7 @@ const LECHATDASHINKO: DemoSubprofile = {
       description: null,
       url: null,
       imageUrl:
-        "https://images.unsplash.com/photo-1571266028243-e4733b0f5c6d?q=80&w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1574391884720-bbc3740c59d1?q=80&w=600&auto=format&fit=crop",
       date: "2026",
       meta: null,
       tags: ["techno"],
@@ -1544,7 +1549,7 @@ const LECHATDASHINKO: DemoSubprofile = {
       description: null,
       url: null,
       imageUrl:
-        "https://images.unsplash.com/photo-1571751239008-058e94b8e6e2?q=80&w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?q=80&w=600&auto=format&fit=crop",
       date: "2025",
       meta: null,
       tags: [],
@@ -3092,9 +3097,28 @@ function tableField(sp: DemoSubprofile): Pick<SubprofileCardDTO, "table"> {
   return table ? { table } : {};
 }
 
+/** Every demo persona's card credits, built once on first read: the edges and
+ *  the registry's identities never change at runtime. */
+let demoCardCreditsById: Map<string, CardCreditsDTO> | null = null;
+
+function demoCardCreditsFor(sp: DemoSubprofile): CardCreditsDTO {
+  demoCardCreditsById ??= buildDemoCardCredits(
+    DEMO_SUBPROFILES,
+    DEMO_CARD_CREDIT_EDGES,
+  );
+  return demoCardCreditsById.get(sp.id) ?? { count: 0, faces: [] };
+}
+
 export function toCardDto(sp: DemoSubprofile): SubprofileCardDTO {
   return {
     ...tableField(sp),
+    // The directory redesign's card fields, mirroring the backend's card:
+    // the follow key, the viewer's own follow and membership, and credits.
+    id: sp.id,
+    viewerFollowing: sp.viewerFollowing,
+    viewerIsMember:
+      sp.ownerSlug === currentUserSlug && isDemoViewerMemberOf(sp),
+    credits: demoCardCreditsFor(sp),
     // A handle-less UNLINKED persona has no real address here, but every demo
     // fixture predates the handle rollout, so falling back to its slug keeps
     // the card usable. A handle-less LINKED persona must NOT take that same

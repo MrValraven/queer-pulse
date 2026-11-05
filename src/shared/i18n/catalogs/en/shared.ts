@@ -94,7 +94,7 @@ export const shared: Catalog = {
   "consent.storage.outbox.purpose":
     "Messages you sent while offline, held here until they reach the server, plus your per-conversation settings.",
   "consent.storage.yourLists.purpose":
-    "Your saved items, connections, vouches and profile theme, cached so they appear instantly. Keyed to your account on a shared device.",
+    "Your saved items, connections and vouches, cached so they appear instantly. Keyed to your account on a shared device.",
   "consent.storage.dismissals.purpose":
     "Which prompts, banners and suggestions you've closed, so we don't show them again.",
   "consent.storage.readingPlace.purpose":
@@ -940,4 +940,10 @@ export const shared: Catalog = {
     "We can't confirm it's you right now: sign-in codes are switched off. Write to us and our team will help.",
   reauthStatusPending:
     "We're still checking how to confirm it's you. Try again in a moment.",
+  "filterPage.filtersCta": "Filters",
+  "filterPage.hideFiltersCta": "Hide filters",
+  "filterPage.clearAllCta": "Clear all filters",
+  "filterPage.appliedCount_one": "{count} applied",
+  "filterPage.appliedCount_other": "{count} applied",
+  "filterPage.removeChipLabel": "Remove {label}",
 };

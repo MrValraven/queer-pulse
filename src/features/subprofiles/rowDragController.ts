@@ -26,6 +26,8 @@ interface RowDragControllerOptions {
   readContainer: () => HTMLElement | null;
   reorder: (from: number, to: number) => void;
   setDraggingIndex: (index: number | null) => void;
+  /** How much an ancestor transform scales the list on screen; 1 when left out. */
+  readScale?: () => number;
 }
 
 /** The imperative half of `useRowDragReorder`: one press or drag at a time. */
@@ -33,6 +35,7 @@ export function createRowDragController({
   readContainer,
   reorder,
   setDraggingIndex,
+  readScale = () => 1,
 }: RowDragControllerOptions) {
   let session: RowDragSession | null = null;
   const clickSuppressor = createClickSuppressor();
@@ -48,12 +51,20 @@ export function createRowDragController({
     if (!session?.isDragging || !container) return;
     const { element, grabOffset, pointerY } = session;
     const rows = liveRowsOf(container);
-    const heldTop = clampHeldRowTop(rows, element, pointerY - grabOffset);
-    setRowOffset(element, heldTop - layoutTopOf(element));
+    // Viewport pixels throughout, turned into the row's own layout pixels
+    // only for the offset it is painted with (1:1 unless the list is scaled).
+    const scale = readScale();
+    const heldTop = clampHeldRowTop(
+      rows,
+      element,
+      pointerY - grabOffset,
+      scale,
+    );
+    setRowOffset(element, (heldTop - layoutTopOf(element, scale)) / scale);
     if (session.isAwaitingCommit) return;
-    const heldCentre = heldTop + element.offsetHeight / 2;
+    const heldCentre = heldTop + (element.offsetHeight * scale) / 2;
     const from = session.index;
-    const to = nextRowNeighbourIndex(rows, from, heldCentre);
+    const to = nextRowNeighbourIndex(rows, from, heldCentre, scale);
     if (to === null) return;
     session.isAwaitingCommit = true;
     session.index = to;
@@ -111,7 +122,7 @@ export function createRowDragController({
     // the click still fires. Touch and pen keep their native tap and focus.
     if (event.pointerType === "mouse") event.preventDefault();
     gestureGuard.arm();
-    session = openRowDragSession(index, event, element);
+    session = openRowDragSession(index, event, element, readScale());
   }
 
   function handlePointerMove(event: PointerEvent) {

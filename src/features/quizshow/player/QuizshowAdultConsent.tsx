@@ -21,15 +21,18 @@ export function QuizshowAdultConsent({
 }) {
   const { t } = useTranslation();
   return (
-    <section className={styles.endStack}>
+    <section className={`${styles.endStack} ${styles.sheet}`}>
+      <span className={styles.adultBadge}>
+        {t("quizshow:games.row.adultsTag")}
+      </span>
       {host === null && <p className={styles.hostQuizTitle}>{quizTitle}</p>}
       <h1 className={styles.title}>{t("quizshow:player.adults.title")}</h1>
       <p className={styles.lead}>{t("quizshow:player.adults.body")}</p>
       <div className={styles.actions}>
-        <Button size="lg" onClick={onAccept}>
+        <Button variant="stage" size="lg" onClick={onAccept}>
           {t("quizshow:player.adults.join")}
         </Button>
-        <Button variant="ghost" size="lg" onClick={onLeave}>
+        <Button variant="stage-ghost" size="lg" onClick={onLeave}>
           {t("quizshow:player.adults.leave")}
         </Button>
       </div>

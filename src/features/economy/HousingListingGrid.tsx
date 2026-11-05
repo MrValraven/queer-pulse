@@ -166,13 +166,7 @@ export function HousingListingGrid({
             </div>
             <div className={styles.cardBody}>
               <div className={styles.cardBadges}>
-                <span
-                  className={styles.type}
-                  style={{
-                    background: listing.typeColor,
-                    color: listing.typeText,
-                  }}
-                >
+                <span className={styles.type} data-listing-type={listing.type}>
                   {t(
                     FILTERS.find(
                       (filterOption) => filterOption.value === listing.type,

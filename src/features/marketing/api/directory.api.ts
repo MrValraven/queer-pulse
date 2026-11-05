@@ -44,6 +44,7 @@ import {
   writeListingFactFilters,
   type DirectoryListingFactFilters,
 } from "../directoryListingFactFilters";
+import type { DirectoryFacetCountsDTO } from "./directoryFacets.api";
 
 /** Photos as the detail endpoint returns them, each slot resolved to a URL or null. */
 export type PhotoSetView = Record<PhotoKey, string | null>;
@@ -336,13 +337,13 @@ export function getAdultDirectory(params?: {
 
 /**
  * GET /directory?page=N: the paginated variant backing the `/local/directory`
- * grid (gap-audit HSG-5): sends `q`/`safe` server-side, so the network payload
- * matches what's actually being searched for and leaves the other live
- * listings on the server, and pages through the real `total` all the way past
- * the backend's `DEFAULT_LIST_LIMIT` cap. `cat`
- * deliberately stays client-side (see `useDirectoryFilters`'s `categoryCounts`)
- * so each category chip's count stays correct against the loaded set no
- * matter which category is currently selected.
+ * grid (gap-audit HSG-5): sends every filter but "Open now" server-side
+ * (`q`, `cat`, `safe`, `mobile`, `online`, `owned`, `access` and the
+ * listing facts), so the network payload matches what's actually being
+ * searched for and leaves the other live listings on the server, and pages
+ * through the real `total` all the way past the backend's
+ * `DEFAULT_LIST_LIMIT` cap. Page 1 also carries `facets`, the availability
+ * count of every filter option (`readDirectoryFacets`).
  *
  * No response validator, mirroring `companies.api.ts#getCompanies`'s identical
  * dual-shape precedent: the backend answers a bare array when `page` is
@@ -351,6 +352,9 @@ export function getAdultDirectory(params?: {
  */
 export function getDirectoryPage(params: {
   q?: string;
+  /** Category chip ids of the tab, any of which the primary category must
+   *  read as (the Online tab's vocabulary with `online`). */
+  categories?: string[];
   safe?: "verified";
   /** Accessibility needs that must ALL be met (see `setAccessParam`). */
   access?: AccessibilitySlug[];
@@ -358,21 +362,31 @@ export function getDirectoryPage(params: {
   owned?: ListingOwnedBy[];
   /** Only listings that sell online (online only, or a place with a shop). */
   online?: boolean;
+  /** Only listings that are out and about (no premises). */
+  isOutAndAbout?: boolean;
   /** The attribute and fact filters (see `directoryListingFactFilters`). */
   listingFacts?: DirectoryListingFactFilters;
   page: number;
-}): Promise<DirectoryCardDTO[] | ItemsPage<DirectoryCardDTO>> {
+}): Promise<
+  | DirectoryCardDTO[]
+  | (ItemsPage<DirectoryCardDTO> & { facets?: DirectoryFacetCountsDTO })
+> {
   const search = new URLSearchParams();
   if (params.q) search.set("q", params.q);
+  if (params.categories && params.categories.length > 0) {
+    search.set("cat", params.categories.join(","));
+  }
   if (params.safe) search.set("safe", params.safe);
   if (params.online) search.set("online", "true");
+  if (params.isOutAndAbout) search.set("mobile", "true");
   setOwnedParam(search, params.owned);
   setAccessParam(search, params.access);
   if (params.listingFacts) writeListingFactFilters(search, params.listingFacts);
   search.set("page", String(params.page));
-  return apiGet<DirectoryCardDTO[] | ItemsPage<DirectoryCardDTO>>(
-    `/directory?${search.toString()}`,
-  );
+  return apiGet<
+    | DirectoryCardDTO[]
+    | (ItemsPage<DirectoryCardDTO> & { facets?: DirectoryFacetCountsDTO })
+  >(`/directory?${search.toString()}`);
 }
 
 /** A safe-space "promise" the venue keeps. Mirrors the backend's

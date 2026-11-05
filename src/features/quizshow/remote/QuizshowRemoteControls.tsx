@@ -21,8 +21,10 @@ import {
   type QuizshowPhase,
 } from "../../../shared/contracts/quizshow";
 import { QUIZSHOW_REMOTE_ADD_TIME_SECONDS } from "../quizshow.constants";
+import { QuizshowStudioDarkStamp } from "../studio/QuizshowStudioDarkStamp";
 import type { QuizshowHostFrameName } from "../engine/quizshowEngineTypes";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
+import { quizshowPrimaryControlOf } from "./quizshowPrimaryControl";
 import { useQuizshowHostCommand } from "./useQuizshowHostCommand";
 import styles from "./QuizshowRemote.module.css";
 
@@ -55,23 +57,6 @@ interface SecondaryControl {
   icon: ReactNode;
   isBlocked: boolean;
   onActivate: () => void;
-}
-
-/** The big button: Start game in the lobby, Show answers in review, Next elsewhere. */
-function primaryCommandOf(phase: QuizshowPhase): {
-  name: "host:start" | "host:showAnswers" | "host:next";
-  labelKey: string;
-} {
-  if (phase === "lobby") {
-    return { name: "host:start", labelKey: "quizshow:remote.start" };
-  }
-  if (phase === "review") {
-    return {
-      name: "host:showAnswers",
-      labelKey: "quizshow:remote.showAnswers",
-    };
-  }
-  return { name: "host:next", labelKey: "quizshow:remote.next" };
 }
 
 /** Which secondary controls the contract allows in this phase and status. */
@@ -268,7 +253,7 @@ export function QuizshowRemoteControls({
   const { cursor } = state;
   const { phase, status, phaseId } = cursor;
   const fade = { duration: reducedMotion ? 0 : 0.2 };
-  const primary = primaryCommandOf(phase);
+  const primary = quizshowPrimaryControlOf(phase);
   const isPrimaryBlocked =
     isPending(primary.name) ||
     (primary.name === "host:start" ? status !== "lobby" : status !== "running");
@@ -287,6 +272,7 @@ export function QuizshowRemoteControls({
           key="quizshow-remote-bar"
           ref={barRef}
           className={styles.bar}
+          data-theme="dark"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 24 }}
@@ -300,7 +286,7 @@ export function QuizshowRemoteControls({
               </p>
             </Collapse>
             <Button
-              variant="primary"
+              variant="stage"
               size="lg"
               className={styles.primary}
               aria-disabled={isPrimaryBlocked}
@@ -338,6 +324,7 @@ export function QuizshowRemoteControls({
                     >
                       <IconButton
                         className={styles.secondaryButton}
+                        tone="dark"
                         aria-label={label}
                         aria-disabled={isBlocked}
                         onClick={() => {
@@ -389,7 +376,10 @@ export function QuizshowRemoteControls({
             tone="destructive"
             loading={isPending("host:end")}
             initialFocus="cancel"
-          />
+          >
+            {/* The dialog portals to the body; the stamp keeps it in the remote's dark. */}
+            <QuizshowStudioDarkStamp />
+          </ConfirmDialog>
         )}
       </AnimatePresence>
     </>

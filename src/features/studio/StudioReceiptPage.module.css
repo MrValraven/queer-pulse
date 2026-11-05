@@ -59,19 +59,15 @@
   color: var(--studio-accent-text);
 }
 
-/* The receipt card: a slip with a coral/jade top stripe. It reads the page
-   text roles, so it follows the theme: a faint plum-tinted rail slip on the
-   light cream page, the near-black receipt ground in dark. */
+/* The receipt card: a slip with a coral/jade top stripe on the near-black
+   receipt ground. */
 .card {
   position: relative;
-  background: var(--studio-surface-rail);
+  background: var(--studio-receipt);
   border: 1px solid var(--s-line);
   border-radius: var(--radius-20);
   padding: 30px 32px 26px;
   overflow: hidden;
-}
-:global([data-theme="dark"]) .card {
-  background: var(--studio-receipt);
 }
 .card::before {
   content: "";

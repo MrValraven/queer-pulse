@@ -12,6 +12,17 @@ export const myevents: Catalog = {
   // ── Global events header (EventsHeader) ───────────────────────────────────
   "eventsHeader.title": "Events",
   "eventsHeader.hostCta": "Host an event",
+  // Choice dialog the Host action opens (HostChoiceModal)
+  "eventsHeader.hostChoice.title": "How do you want to start?",
+  "eventsHeader.hostChoice.sub":
+    "Read the hosting guide first, or create your event right away.",
+  "eventsHeader.hostChoice.learn.title": "Learn how to host an event",
+  "eventsHeader.hostChoice.learn.body":
+    "Read the guide on picking a format, finding a space and inviting people.",
+  "eventsHeader.hostChoice.host.title": "Create an event",
+  "eventsHeader.hostChoice.host.body":
+    "Go straight to the form and set the date, place and details.",
+  "eventsHeader.hostChoice.cancelCta": "Cancel",
 
   // ── Top-level My events | Discover switch (EventsTopTabs) ─────────────────
   "topTabs.mine": "My events",

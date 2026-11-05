@@ -322,7 +322,7 @@ function publicFaceRoutes() {
   );
 }
 
-/** Pulse Live quiz templates: the list and one template's builder. For
+/** Pulse Live quiz templates: the list and the studio for one template. For
  *  moderators and admins with Pulse Live access; `AppRoutes` sends staff
  *  without that access away before these mount. */
 function quizshowTemplateRoutes() {
@@ -586,7 +586,7 @@ export function adminRoutes() {
       <Route path={routes.adminSettings} element={<AdminSettingsPage />} />
       <Route path={routes.adminReports} element={<AdminReportsPage />} />
       {/* SUS-05: the volunteer-hours report, filed beside Reports because it
-          is the same kind of surface — figures the team can show a partner. */}
+          is the same kind of surface: figures the team can show a partner. */}
       <Route
         path={routes.adminVolunteerHours}
         element={<AdminVolunteerHoursPage />}

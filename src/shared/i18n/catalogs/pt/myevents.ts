@@ -11,6 +11,17 @@ export const myevents: Catalog = {
   // ── Cabeçalho global de eventos (EventsHeader) ────────────────────────────
   "eventsHeader.title": "Eventos",
   "eventsHeader.hostCta": "Organizar um evento",
+  // Escolha que a ação Organizar abre (HostChoiceModal)
+  "eventsHeader.hostChoice.title": "Como queres começar?",
+  "eventsHeader.hostChoice.sub":
+    "Lê primeiro o guia para organizar, ou cria já o teu evento.",
+  "eventsHeader.hostChoice.learn.title": "Aprende a organizar um evento",
+  "eventsHeader.hostChoice.learn.body":
+    "Lê o guia sobre escolher um formato, encontrar um espaço e convidar pessoas.",
+  "eventsHeader.hostChoice.host.title": "Cria um evento",
+  "eventsHeader.hostChoice.host.body":
+    "Vai direto ao formulário e define a data, o local e os detalhes.",
+  "eventsHeader.hostChoice.cancelCta": "Cancelar",
 
   // ── Interruptor de topo My events | Discover (EventsTopTabs) ──────────────
   "topTabs.mine": "Os meus eventos",

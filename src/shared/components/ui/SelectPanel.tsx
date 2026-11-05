@@ -1,6 +1,7 @@
 import {
   Fragment,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -212,6 +213,33 @@ function SelectOptionList({
   );
 }
 
+/** Clearance the panel must keep from the viewport's right edge before it
+ *  flips to end alignment. */
+const VIEWPORT_RIGHT_GUTTER = 8;
+
+/** The panel's `min-width` floor lets it outgrow a compact trigger, and that
+ *  extra width grows rightward, so a trigger at the right edge of a toolbar
+ *  opens a panel clipped off screen. When it would cross the viewport's right
+ *  edge, this reports true and the panel anchors to the trigger's right edge
+ *  instead. Measured from the container's left plus `offsetWidth`, which both
+ *  ignore the entrance animation's scale, and run as a layout effect so the
+ *  flip lands before the first paint. Runs once, since SelectPanel only
+ *  mounts while open. */
+function useIsEndAligned(panelRef: RefObject<HTMLDivElement | null>): boolean {
+  const [isEndAligned, setIsEndAligned] = useState(false);
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    const container = panel?.offsetParent ?? panel?.parentElement;
+    if (!panel || !container) return;
+    const panelRightEdge =
+      container.getBoundingClientRect().left + panel.offsetWidth;
+    const viewportRightEdge =
+      document.documentElement.clientWidth - VIEWPORT_RIGHT_GUTTER;
+    if (panelRightEdge > viewportRightEdge) setIsEndAligned(true);
+  }, [panelRef]);
+  return isEndAligned;
+}
+
 /**
  * The floating panel: an optional typeahead field plus a `role="listbox"` of
  * options, following the APG combobox pattern — focus stays on the search input
@@ -239,6 +267,7 @@ export function SelectPanel({
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const isEndAligned = useIsEndAligned(panelRef);
 
   const filtered = useMemo(
     () => filterOptions(options, query),
@@ -368,7 +397,11 @@ export function SelectPanel({
   );
 
   return (
-    <div ref={panelRef} className={styles.panel}>
+    <div
+      ref={panelRef}
+      className={styles.panel}
+      data-align={isEndAligned ? "end" : undefined}
+    >
       {searchable && (
         <input
           ref={inputRef}

@@ -4,6 +4,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useCommunityMembership } from "../../../app/providers/useCommunityMembership";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { SpaceCardModel } from "../community.model";
+import { localizeDemoCommunity } from "../memberCountLabel";
 import { DEMO_SPACES_BY_PARENT } from "../spaces.data";
 import { spaceCardDtoToModel } from "./communities.adapters";
 import { getSubcommunities } from "./communities.api";
@@ -42,7 +43,11 @@ export function useSubcommunities(
     enabled: options.enabled && Boolean(slug),
     queryFn: async (): Promise<SpaceCardModel[]> => {
       if (!slug) return [];
-      if (demoMode) return [...(DEMO_SPACES_BY_PARENT[slug] ?? [])];
+      if (demoMode) {
+        return (DEMO_SPACES_BY_PARENT[slug] ?? []).map((space) =>
+          localizeDemoCommunity(space, t),
+        );
+      }
       const response = await getSubcommunities(slug);
       return response.items.map((card) => spaceCardDtoToModel(card, t));
     },

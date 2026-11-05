@@ -1,4 +1,7 @@
-/* Host remote: phone first, one column, a fixed control bar at the bottom. */
+/* Host remote: a dark studio controller in the Velvet prism look. Phone first,
+   one column of glass cards, a fixed control bar at the bottom. The page and
+   the bar both carry data-theme="dark", so the shared buttons and inputs read
+   their cream-on-dark tokens. */
 .page {
   /* Fallback until the bar is measured: two wrapped rows plus the restart note at 320px. */
   --quizshow-remote-bar-space: 16rem;
@@ -9,8 +12,17 @@
   flex-direction: column;
   min-height: 100svh;
   min-height: 100dvh;
-  background: var(--cream);
-  color: var(--ink);
+  position: relative;
+  isolation: isolate;
+  background: var(--qs-base);
+  color: var(--qs-text);
+}
+
+/* The velvet backdrop fills the viewport behind the scrolling cards. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
 }
 
 .main {
@@ -47,16 +59,62 @@
 
 /* Header */
 .header {
+  --stage-track-height: 6px;
+  composes: glassRaised from "../stage/quizshowSurfaces.module.css";
+  --qs-glass-radius: var(--qs-radius-card);
+  --qs-glass-padding: var(--gap-sm);
   display: flex;
   flex-direction: column;
   gap: var(--gap-xs);
+  padding: var(--gap-sm);
 }
 
 .headerRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--gap-xs);
+  gap: var(--gap-sm);
+}
+
+.headerText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+/* The ring keeps its slot while it folds away, so the title never jumps. Out of
+   a timed phase the slot shows the ring's empty track, so the header reads the
+   same in every phase. The dial is 2.9em of the ring's 24px type. */
+.ringSlot {
+  --ring-size: calc(2.9 * var(--text-24));
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: flex-start;
+  justify-content: center;
+  inline-size: 4.5rem;
+  block-size: var(--ring-size);
+}
+
+.ringSlot::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 50%;
+  box-sizing: border-box;
+  inline-size: var(--ring-size);
+  block-size: var(--ring-size);
+  border: calc(0.2 * var(--text-24)) solid var(--qs-ring-track);
+  border-radius: 50%;
+  opacity: 0;
+  transform: translateX(-50%);
+  transition: opacity var(--dur-base) var(--ease);
+}
+
+.ringSlot[data-is-idle="true"]::before {
+  opacity: 1;
 }
 
 .phase {
@@ -65,6 +123,35 @@
   font-size: var(--text-28);
   font-weight: 500;
   line-height: 1.1;
+  color: var(--qs-text);
+}
+
+/* The thin rail under the header: the countdown assistive tech hears, shown as
+   a quiet line. Its own note is hidden because the ring shows it. The rail
+   keeps its height and draws an empty track when no clock is running. */
+.rail {
+  position: relative;
+  min-block-size: calc(3 * var(--stage-track-height));
+}
+
+.rail::before {
+  content: "";
+  position: absolute;
+  inset-block-start: var(--stage-track-height);
+  inset-inline: 0;
+  block-size: var(--stage-track-height);
+  border-radius: var(--radius-pill);
+  background: var(--qs-ring-track);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease);
+}
+
+.rail[data-is-idle="true"]::before {
+  opacity: 1;
+}
+
+.rail span[aria-hidden="true"] {
+  display: none;
 }
 
 .iconSwap,
@@ -75,16 +162,48 @@
 .headerActions {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  justify-content: space-between;
+  gap: 0.5rem;
 }
 
+/* A round glass chip for the mute switch. */
+.headerActions .iconGlass {
+  border-color: var(--qs-glass-border-strong);
+  background: var(--qs-glass-top);
+  color: var(--qs-text);
+}
+
+.headerActions .iconGlass[aria-pressed="true"] {
+  background: var(--qs-glass-raised-top);
+}
+
+/* Two fixed lines, so a phase with fewer facts never shortens the header. */
 .meta {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem var(--gap-sm);
+  flex-direction: column;
   margin: 0;
   font-size: var(--text-14);
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
+}
+
+.metaLine {
+  display: flex;
+  gap: var(--gap-sm);
+  min-block-size: 1.5em;
+  line-height: 1.5;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.metaLine > * {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.joinCode {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
 }
 
 .count {
@@ -93,39 +212,51 @@
 
 /* Sections */
 .section {
+  composes: glass from "../stage/quizshowSurfaces.module.css";
+  --qs-glass-radius: var(--qs-radius-card);
+  --qs-glass-padding: var(--gap-sm);
   display: flex;
   flex-direction: column;
   gap: var(--gap-xs);
   padding: var(--gap-sm);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-16);
-  background: rgba(var(--ink-rgb), 0.02);
 }
 
 .sectionTitle {
   margin: 0;
   font-size: var(--text-16);
   font-weight: 700;
+  color: var(--qs-text);
 }
 
 .hint {
   margin: 0;
   font-size: var(--text-14);
   line-height: 1.45;
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
+}
+
+/* The players drawer folds open under the header. A long roster scrolls inside
+   it, so the preview and the answer key stay within reach. */
+.drawer {
+  max-height: min(55svh, 30rem);
+  padding: 0.2rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 /* Preview: the stage is laid out on a fixed 1280x720 canvas and scaled into
    a 16:9 frame, so the lobby and tiles are never clipped. */
 .previewFrame {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
   width: 100%;
   aspect-ratio: 16 / 9;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-12);
-  background: var(--paper);
-  color: var(--ink);
+  border: 1px solid var(--qs-glass-border-strong);
+  border-radius: var(--qs-radius-tile);
+  background: var(--qs-base);
+  color: var(--qs-text);
+  box-shadow: var(--qs-shadow-glass);
 }
 
 .previewCanvas {
@@ -137,14 +268,16 @@
   width: 1280px;
   height: 720px;
   overflow: hidden;
-  background: var(--cream);
-  color: var(--ink);
+  color: var(--qs-text);
   font-family: var(--sans);
   transform-origin: top left;
 }
 
 /* Answer key */
 .tiles {
+  /* The host reads this key while players answer, so a wrong option steps back
+     only to 0.6, which keeps its text above 4.5:1. */
+  --stage-dimmed-opacity: 0.6;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--gap-xs);
@@ -154,6 +287,7 @@
   margin: 0;
   font-size: var(--text-20);
   font-weight: 700;
+  color: var(--qs-text);
   overflow-wrap: anywhere;
 }
 
@@ -165,10 +299,11 @@
   padding-inline-start: 1.5rem;
   font-size: var(--text-16);
   font-weight: 600;
+  color: var(--qs-text);
 }
 
 .keyLetter {
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
   font-variant-numeric: tabular-nums;
 }
 
@@ -186,7 +321,7 @@
   align-items: center;
   gap: var(--gap-xs);
   padding-block: var(--gap-xs);
-  border-block-end: 1px solid var(--line);
+  border-block-end: 1px solid var(--qs-line);
 }
 
 .rowBody {
@@ -201,11 +336,12 @@
   margin: 0;
   font-size: var(--text-16);
   font-weight: 600;
+  color: var(--qs-text);
   overflow-wrap: anywhere;
 }
 
 .rowHidden {
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
   text-decoration: line-through;
 }
 
@@ -216,12 +352,13 @@
   gap: 0.25rem 0.5rem;
   margin: 0;
   font-size: var(--text-13-5);
-  color: var(--ink-60);
+  color: var(--qs-text-mute);
 }
 
 .score {
   font-size: var(--text-14-5);
   font-weight: 700;
+  color: var(--qs-text);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -231,16 +368,19 @@
   align-items: center;
   gap: 0.25rem;
   padding: 0.1rem 0.5rem;
-  border-radius: var(--radius-pill);
-  background: rgba(var(--ink-rgb), 0.07);
-  color: var(--ink);
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-pill);
+  background: var(--qs-glass-top);
+  color: var(--qs-text);
   font-size: var(--text-12);
   font-weight: 600;
 }
 
+/* The accent tag wears the call-to-action gradient and its dark ink. */
 .tagAccent {
-  background: rgba(var(--accent-rgb), 0.16);
-  color: var(--accent-ink);
+  border-color: transparent;
+  background: var(--qs-cta-gradient);
+  color: var(--qs-cta-ink);
 }
 
 .rowActions {
@@ -270,24 +410,26 @@
 .label {
   font-size: var(--text-13-5);
   font-weight: 600;
+  color: var(--qs-text);
 }
 
 .input {
   box-sizing: border-box;
   min-height: 44px;
   padding: 0.5rem 0.75rem;
-  border: 1px solid var(--line-2);
+  border: 1px solid var(--qs-glass-border-strong);
   border-radius: var(--radius-12);
-  background: var(--paper);
-  color: var(--ink);
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--qs-text);
   font: inherit;
+  /* 16px keeps iOS from zooming into the field. */
   font-size: var(--text-16);
 }
 
 .input:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
+  box-shadow: var(--qs-focus-halo);
 }
 
 .formError {
@@ -296,8 +438,13 @@
 
 .error {
   margin: 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--radius-12);
+  background: var(--qs-wrong-wash);
   font-size: var(--text-14);
-  color: var(--danger);
+  line-height: 1.4;
+  color: var(--qs-text);
 }
 
 .error:empty {
@@ -319,10 +466,22 @@
     var(--gap-sm) +
       max(0px, env(safe-area-inset-bottom, 0px) - var(--consent-inset, 0px))
   );
-  border-block-start: 1px solid var(--line);
-  background: var(--paper);
-  color: var(--ink);
-  box-shadow: var(--shadow-e3);
+  border-block-start: 1px solid var(--qs-glass-border-strong);
+  border-start-start-radius: var(--qs-radius-card);
+  border-start-end-radius: var(--qs-radius-card);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-raised-top) 0%,
+      var(--qs-glass-raised-bottom) 100%
+    ),
+    color-mix(in srgb, var(--qs-base) 80%, transparent);
+  color: var(--qs-text);
+  box-shadow:
+    inset 0 1px 0 var(--qs-glass-highlight),
+    0 -18px 40px -16px var(--qs-glass-shadow);
+  -webkit-backdrop-filter: var(--qs-glass-blur);
+  backdrop-filter: var(--qs-glass-blur);
 }
 
 .barInner {
@@ -335,8 +494,10 @@
 
 .primary {
   width: 100%;
-  min-height: 56px;
+  min-height: 60px;
   font-size: var(--text-18);
+  font-weight: 700;
+  touch-action: manipulation;
 }
 
 .secondaryRow {
@@ -346,15 +507,33 @@
   gap: 0.25rem;
 }
 
+/* Up to five controls share one row on a phone; they wrap only when the
+   labels no longer fit. */
+.secondaryRow > * {
+  flex: 1 1 0;
+  min-width: 4rem;
+  max-width: 7rem;
+}
+
 .secondaryRow .secondaryButton {
   flex-direction: column;
   gap: 0.2rem;
-  width: auto;
-  min-width: 4.75rem;
-  padding: 0.35rem 0.5rem;
-  color: var(--ink);
+  width: 100%;
+  min-width: 0;
+  padding: 0.35rem 0.25rem;
+  border-color: var(--qs-glass-border);
+  border-radius: var(--qs-radius-tile);
+  background: var(--qs-glass-top);
+  color: var(--qs-text);
   white-space: normal;
   touch-action: manipulation;
+}
+
+@media (hover: hover) {
+  .secondaryRow .secondaryButton:hover:not([aria-disabled="true"]) {
+    background: var(--qs-glass-raised-top);
+    color: var(--qs-text);
+  }
 }
 
 /* The fading face inside a secondary button: icon over label, as the button lays them out. */
@@ -375,8 +554,10 @@
 .note {
   margin: 0;
   padding: 0.5rem 0.75rem;
+  border: 1px solid var(--qs-glass-border);
   border-radius: var(--radius-12);
-  background: rgba(var(--accent-rgb), 0.12);
+  background: var(--qs-glass-top);
+  color: var(--qs-text);
   font-size: var(--text-13-5);
   line-height: 1.4;
 }
@@ -395,6 +576,7 @@
   font-family: var(--serif);
   font-size: var(--text-24);
   font-weight: 500;
+  color: var(--qs-text);
 }
 
 .visuallyHidden {

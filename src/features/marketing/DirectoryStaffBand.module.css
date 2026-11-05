@@ -13,14 +13,21 @@
 /* The plum stripe behind the floating nav pill is painted by
    `DirectoryTopBands`, which wraps this band. */
 
+/* Three grid items on one row: the label and its chips take the free width,
+   then the visitor-view toggle, then the console buttons. The toggle sits 8px
+   from the first button, and the 8px margin on `.left` keeps 16px between the
+   chips and the toggle. Auto-flow places each item in its own column, so a
+   band without buttons grows no empty track. */
 .inner {
   max-width: var(--maxw-nav);
   margin: 0 auto;
   padding: 14px 16px;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  grid-auto-columns: auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  column-gap: 8px;
 }
 
 .left {
@@ -29,6 +36,7 @@
   flex-wrap: wrap;
   gap: 12px;
   min-width: 0;
+  margin-inline-end: 8px;
 }
 
 .label {
@@ -83,21 +91,60 @@
   color: rgba(var(--cream-rgb), 1);
 }
 
+.toggleSlot {
+  display: inline-flex;
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  flex: none;
 }
 
+.actions:empty {
+  display: none;
+}
+
+/* On a phone the toggle rides up beside the label, the chips get a row of
+   their own, and the buttons share the last row. `.left` steps out of the
+   layout so the label and the chips list become grid items themselves. The
+   rows are spaced with margins, so a band without chips or buttons collapses
+   that row cleanly. */
 @media (max-width: 720px) {
   .inner {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "label toggle"
+      "chips chips"
+      "actions actions";
+    column-gap: 12px;
+  }
+
+  .left {
+    display: contents;
   }
 
   .label {
+    grid-area: label;
     white-space: normal;
+  }
+
+  .chips {
+    grid-area: chips;
+    margin-top: 12px;
+  }
+
+  .toggleSlot {
+    grid-area: toggle;
+    justify-self: end;
+  }
+
+  .actions {
+    grid-area: actions;
+    margin-top: 12px;
+  }
+
+  .actions > * {
+    flex: 1 1 auto;
   }
 }

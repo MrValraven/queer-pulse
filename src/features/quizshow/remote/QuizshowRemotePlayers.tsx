@@ -68,6 +68,7 @@ function PlayerRow({
       </div>
       <span className={styles.score}>{format.number(player.score)}</span>
       <IconButton
+        tone="dark"
         aria-label={t("quizshow:remote.remove")}
         aria-describedby={nameId}
         onClick={onRemove}
@@ -131,6 +132,7 @@ function TeamRow({
         </div>
         <span className={styles.score}>{format.number(team.score)}</span>
         <IconButton
+          tone="dark"
           aria-label={t("quizshow:remote.renameTeam")}
           aria-describedby={nameId}
           aria-expanded={isRenaming}
@@ -160,14 +162,14 @@ function TeamRow({
           </div>
           <Button
             type="submit"
-            variant="primary"
+            variant="stage"
             size="md"
             aria-disabled={isSaving}
           >
             {t("quizshow:remote.renameSave")}
           </Button>
           <Button
-            variant="ghost"
+            variant="stage-ghost"
             size="md"
             onClick={() => setIsRenaming(false)}
           >

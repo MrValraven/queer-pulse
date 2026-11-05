@@ -35,11 +35,12 @@ function CommunityCardSkeleton() {
 /**
  * The communities card grid, shared verbatim by both `/communities` tabs. The
  * `discover` state driving it is owned by `CommunitiesHubPage` and shared with
- * the toolbar in the page header, which is where the search, Refine drawer and
- * chip row live. Its `scope` is the only difference between the two tabs:
- * "discover" draws from the platform directory, "mine" from the viewer's own
+ * `CommunitiesFilterLayout`, whose sidebar and results top hold the search,
+ * filters, sort and chip row; this grid is that layout's results body. Its
+ * `scope` is the only difference between the two tabs: "discover" draws from
+ * the platform directory, "mine" from the viewer's own
  * memberships (see `useDiscoverCommunities`). Renders bare, with no page
- * background or `.wrap` of its own, so each tab's body can place it.
+ * background or frame of its own, inside the layout's results column.
  *
  * `beforeGrid` is a slot above the cards: the "My communities" tab drops its
  * weekly digest in there.
@@ -135,11 +136,11 @@ export function CommunitiesGrid({
         <>
           {isShowingBrowseHead && (
             <SectionHead
-              className={styles.browseHead}
+              className={`${styles.browseHead} ${styles.compactSectionHead}`}
               title={t("communities:discover.browse.heading")}
             />
           )}
-          <div className={styles.grid}>
+          <div className={styles.gridInLayout}>
             {isShowingSkeletons
               ? Array.from({ length: 6 }).map((_, index) => (
                   <CommunityCardSkeleton key={index} />

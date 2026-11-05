@@ -1,0 +1,77 @@
+/* "Your work belongs on this wall too": the closing band under the directory.
+   A centred column holding one plum rounded panel. --plum does not flip with
+   the theme, so the cream type on it is the non-flipping --cream-rgb. The
+   column is the same 1440px and --wrap-px gutter as the directory frame and
+   the Made together strip, so the left edges line up. */
+
+.section {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--gap-lg) var(--wrap-px) var(--section-y-96);
+}
+
+.band {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px 48px;
+  padding: 28px 22px;
+  border-radius: var(--radius-28);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+}
+
+/* On the dark page the plum band, the gap and the plum footer read as three
+   stripes, so a cream hairline gives the band its own edge. */
+:global([data-theme="dark"]) .band {
+  box-shadow: var(--ring-cream-hairline);
+}
+
+.copy {
+  flex: 999 1 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 360;
+  font-size: var(--text-title);
+  line-height: 1.1;
+  color: rgba(var(--cream-rgb), 1);
+}
+
+.title em {
+  font-style: italic;
+  color: var(--accent-soft);
+}
+
+.lead {
+  margin: 0;
+  max-width: 520px;
+  font-size: var(--text-16);
+  line-height: var(--lh-body);
+  color: rgba(var(--cream-rgb), 0.76);
+}
+
+.cta {
+  flex: 0 0 auto;
+}
+
+@media (--lg-up) {
+  .band {
+    padding: var(--section-y-56) var(--section-y-64);
+  }
+}
+
+/* On a phone the button spans the band, as in the approved phone layout. */
+@media (--lg) {
+  .cta {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+}

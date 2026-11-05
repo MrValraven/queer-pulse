@@ -30,6 +30,7 @@ import {
   quizshowPlayPath,
 } from "../quizshowPaths";
 import { isPlayerState } from "../realtime/quizshowClientStore";
+import { QuizshowBackdrop } from "../stage/QuizshowBackdrop";
 import { QuizshowConnectionBanner } from "../stage/QuizshowConnectionBanner";
 import { useQuizshowFramelessPage } from "../useQuizshowFramelessPage";
 import { isRemovedOf } from "./usePlayJoin";
@@ -106,11 +107,11 @@ function RefusedNotice({
     (candidate) => candidate === controller.state.refusalCode,
   );
   return (
-    <div className={styles.endStack}>
+    <div className={`${styles.endStack} ${styles.sheet}`}>
       <h1 className={styles.title} role="alert">
         {t(quizshowErrorKeyOf(code ?? null))}
       </h1>
-      <Button to={quizshowPlayPath()} size="lg">
+      <Button to={quizshowPlayPath()} variant="stage" size="lg">
         {t("quizshow:player.codeTitle")}
       </Button>
     </div>
@@ -264,8 +265,17 @@ export function QuizshowPlayPage() {
   else if (isPending) viewKey = "joining";
 
   return (
-    <main id={MAIN_CONTENT_ID} tabIndex={-1} className={styles.page}>
+    // The phone sits on the velvet stage in either app theme, so shared controls read their dark tokens.
+    <main
+      id={MAIN_CONTENT_ID}
+      tabIndex={-1}
+      className={styles.page}
+      data-theme="dark"
+    >
       <PageMeta title={t("quizshow:player.metaTitle")} noIndex />
+      <div className={styles.backdrop}>
+        <QuizshowBackdrop variant="phone" />
+      </div>
       <AnimatePresence mode="wait">
         <Fade key={viewKey}>
           {viewKey === "joining" && <Connecting />}

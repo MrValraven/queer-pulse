@@ -12,13 +12,14 @@ import {
   getThreadPosts,
   getThreads,
   type ForumPostResponse,
-  type ForumThreadCounts,
   type ForumThreadCountsResponse,
   type ForumThreadResponse,
   type GetThreadsOptions,
   type ReplySort,
 } from "./forum.api";
 import { threadDetail, threadToCard } from "./forum.adapters";
+import { countDemoThreadsByCategory } from "../forumFacets.helpers";
+import type { ForumFundingFacets } from "../funding/funding.types";
 import { threadReadUpTo } from "./threadReadWatermark";
 
 /** One cursor page of thread cards. Exported so `useForumMutations` can type its
@@ -26,6 +27,9 @@ import { threadReadUpTo } from "./threadReadWatermark";
 export interface ThreadListPage {
   items: Thread[];
   nextCursor: string | null;
+  /** The Funding & Grants chip counts, on a live first page of the funding
+   *  category only (see `useThreads`). */
+  fundingFacets?: ForumFundingFacets;
 }
 
 /** One cursor page of a thread's posts (OP + replies). Exported so
@@ -98,6 +102,7 @@ export function useThreads(category: string, options?: GetThreadsOptions) {
       return {
         items: res.data.map((dto) => threadToCard(dto, t, fmt)),
         nextCursor: res.pageInfo.nextCursor,
+        fundingFacets: res.fundingFacets,
       };
     },
     getNextPageParam: (last) => last.nextCursor ?? undefined,
@@ -110,6 +115,11 @@ export function useThreads(category: string, options?: GetThreadsOptions) {
 
   return {
     threads,
+    /** LIVE: the server's Funding & Grants chip counts, read off the first
+     *  page. Undefined while it loads, after it failed, outside the funding
+     *  category, and from a server that predates them: each of those draws
+     *  no number. Demo derives its own (`countDemoFundingFacets`). */
+    fundingFacets: query.data?.pages[0]?.fundingFacets,
     isPending: query.isPending,
     isLoading: query.isLoading,
     // A failed list fetch must not read as "no threads yet" — ForumPage swaps
@@ -156,33 +166,20 @@ export function usePinnedThreads(category: string) {
 }
 
 /**
- * Demo counts derived ONCE from the static `THREADS` mock: `all` plus a tally
- * per category id. The mock never changes, so this is computed at module load,
- * not per render.
- */
-const DEMO_COUNTS: ForumThreadCounts = THREADS.reduce<ForumThreadCounts>(
-  (counts, thread) => {
-    counts.all += 1;
-    counts[thread.category] = (counts[thread.category] ?? 0) + 1;
-    return counts;
-  },
-  { all: 0 },
-);
-
-/**
  * Per-category thread counts for the sidebar + list header.
  *
  * Live: GET /forum/threads/counts?q=&tag= — the counts honour the same block +
  * `q`/`tag` filters as the list, and re-fetch when either filter changes (both
- * are in the query key). Demo: derived from the full `THREADS` mock (`all` + per
- * category), ignoring `q`/`tag` so the demo sidebar stays stable and matches the
- * single-terminal-page list.
+ * are in the query key). Demo: derived from the `THREADS` mock narrowed by the
+ * same `q`/`tag` the demo list applies (`countDemoThreadsByCategory`), so a
+ * badge always matches the list it opens.
  *
  * Returns `{ counts, hasPosted, isPending }`. `counts` is a `ForumThreadCounts`
  * (`{ all: number; [category]: number }`) — read `counts.all` and
  * `counts[categoryId]`; a category with no threads is simply absent, so treat a
- * missing key as 0. `counts` is `undefined` only while the LIVE query is still
- * loading; in demo it is always present.
+ * missing key as 0. `counts` is `undefined` while the LIVE query is loading
+ * and after it failed, which the sidebar draws as no number at all (never as
+ * a 0); in demo it is always present.
  *
  * `hasPosted` is the LIVE "has this member ever posted (thread or reply)"
  * signal the first-post prompt gates on (see `useForumPageState`) — always
@@ -197,14 +194,18 @@ export function useForumCounts(q?: string, tag?: string) {
     enabled: !demoMode,
     queryFn: () => getThreadCounts(q, tag),
   });
+  const demoCounts = useMemo(
+    () => (demoMode ? countDemoThreadsByCategory(THREADS, q, tag) : undefined),
+    [demoMode, q, tag],
+  );
 
   return {
-    counts: demoMode ? DEMO_COUNTS : query.data?.counts,
+    counts: demoMode ? demoCounts : query.data?.counts,
     hasPosted: !demoMode && !!query.data?.hasPosted,
     // Demo resolves synchronously; only the live fetch has a pending phase.
     isPending: !demoMode && query.isPending,
-    // Sidebar tallies degrade to zeroes on their own; surfaced for callers that
-    // want to distinguish "no threads" from "counts didn't load".
+    // A failed fetch leaves `counts` undefined, so the sidebar draws no
+    // number; surfaced for callers that want to say so.
     isError: query.isError,
   };
 }

@@ -1,11 +1,9 @@
 import type { ReactNode } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { NavLink } from "react-router-dom";
-import { FiMoon, FiSun } from "react-icons/fi";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { routes } from "../../app/routeMap";
-import { useTheme } from "../../app/providers/themeContext";
-import { Button, Collapse, Tooltip } from "../../shared/components/ui";
+import { Collapse } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -234,60 +232,6 @@ export function StudioAccountMenuLink({
         <StudioSalesPendingBadge className={styles.itemBadge} />
       )}
     </StudioMenuRowLink>
-  );
-}
-
-/** Light/dark switch. It acts in place, so the menu stays open. The label
- *  names the theme a press switches to, as the app's AccountMenu does. */
-export function StudioThemeRow() {
-  const { t } = useTranslation();
-  const { theme, toggleTheme } = useTheme();
-  const isDark = theme === "dark";
-  return (
-    <Button
-      variant="quiet"
-      className={`${styles.item} ${styles.itemButton}`}
-      onClick={toggleTheme}
-    >
-      {isDark ? (
-        <FiSun aria-hidden className={styles.itemIcon} />
-      ) : (
-        <FiMoon aria-hidden className={styles.itemIcon} />
-      )}
-      <span className={styles.itemLabel}>
-        {t(
-          isDark
-            ? "shared:accountMenu.items.lightMode"
-            : "shared:accountMenu.items.darkMode",
-        )}
-      </span>
-    </Button>
-  );
-}
-
-/** The desktop header's light/dark switch: an icon button beside the member's
- *  name, as the app's AccountMenu has it. The phone sheet keeps
- *  {@link StudioThemeRow}. The label names the theme a press switches to. */
-export function StudioThemeIconButton() {
-  const { t } = useTranslation();
-  const { theme, toggleTheme } = useTheme();
-  const isDark = theme === "dark";
-  const themeLabel = t(
-    isDark
-      ? "shared:accountMenu.items.lightMode"
-      : "shared:accountMenu.items.darkMode",
-  );
-  return (
-    <Tooltip label={themeLabel}>
-      <button
-        type="button"
-        className={`${styles.headerIcon} ${styles.headerIconButton}`}
-        aria-label={themeLabel}
-        onClick={toggleTheme}
-      >
-        {isDark ? <FiSun aria-hidden /> : <FiMoon aria-hidden />}
-      </button>
-    </Tooltip>
   );
 }
 

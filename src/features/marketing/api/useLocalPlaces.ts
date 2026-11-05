@@ -11,6 +11,7 @@ import {
   useDirectoryPlacesPage,
   type DirectoryPlacesPageFilters,
 } from "./useDirectory";
+import type { DirectoryFacetCountsDTO } from "./directoryFacets.api";
 
 export interface LocalPlacesResult {
   places: LocalPlace[];
@@ -34,6 +35,9 @@ export interface LocalPlacesResult {
   hasNextPage: boolean;
   fetchNextPage: () => void;
   isFetchingNextPage: boolean;
+  /** The server's availability count for every filter option, live only
+   *  (see `DirectoryPlacesPageResult.facets`). Undefined means "not counted". */
+  facets: DirectoryFacetCountsDTO | undefined;
 }
 
 /**
@@ -45,10 +49,9 @@ export interface LocalPlacesResult {
  * (business canonical), so live mode shows businesses alone — no mock venues
  * leak into production.
  *
- * `category` stays a client-side filter over whatever has been loaded so far
- * (see `useDirectoryFilters`), so its chip counts stay correct against the
- * loaded set. The attribute and fact filters go server-side live through
- * `filters.listingFacts`.
+ * Every filter but "Open now" goes server-side live, the categories and
+ * "Out and about" included, and the server answers each option's count in
+ * `facets` (see `useDirectoryFacetCounts`).
  *
  * The Online tab passes `online`, so its pool comes narrowed (server live,
  * demo fixture in demo) and no venue joins it.
@@ -67,6 +70,7 @@ export function useLocalPlaces(
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    facets,
   } = useDirectoryPlacesPage(filters);
 
   const isOnlineOnly = filters.online === true;
@@ -98,6 +102,8 @@ export function useLocalPlaces(
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    // Demo has no server facets: the page counts the merged set itself.
+    facets: demoMode ? undefined : facets,
   };
 }
 

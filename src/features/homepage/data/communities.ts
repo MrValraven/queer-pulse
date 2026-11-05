@@ -1,7 +1,7 @@
-import type { Community } from "./types";
+import type { DemoCommunity } from "./types";
 import { routes } from "../../../app/routeMap";
 
-export const communities: Community[] = [
+const demoCommunityRows: Omit<DemoCommunity, "count">[] = [
   {
     slug: "queer-social",
     href: `${routes.communities}#queer-social`,
@@ -10,7 +10,7 @@ export const communities: Community[] = [
     name: "Queer Social Lisbon",
     description:
       "Monthly casual meetups across the city. No agenda, no networking pressure, just queer people being in the same room.",
-    count: "340 members",
+    memberCount: 340,
     joinLabel: "Join",
     accessTier: "public",
     activeThisWeek: 26,
@@ -24,7 +24,7 @@ export const communities: Community[] = [
     name: "Rainbow Arts Collective",
     description:
       "An open studio collective for queer visual artists and makers. Monthly crits, shared resources, and group shows.",
-    count: "128 members",
+    memberCount: 128,
     joinLabel: "Join",
     accessTier: "request",
     activeThisWeek: 19,
@@ -38,7 +38,7 @@ export const communities: Community[] = [
     name: "Trans Mutual Aid Network",
     description:
       "Peer support, resource sharing, and practical help for trans people in Lisbon. Run by and for the community.",
-    count: "89 members",
+    memberCount: 89,
     joinLabel: "Join",
     accessTier: "request",
     activeThisWeek: 31,
@@ -52,7 +52,7 @@ export const communities: Community[] = [
     name: "Queer Runners Lisboa",
     description:
       "Weekly runs along the Tejo and through the city's parks. All paces welcome: inclusive, social, no performance pressure.",
-    count: "214 members",
+    memberCount: 214,
     joinLabel: "Join",
     accessTier: "public",
     activeThisWeek: 44,
@@ -66,7 +66,7 @@ export const communities: Community[] = [
     name: "Queer Parent Network",
     description:
       "For LGBTQ+ parents, co-parents, and people navigating parenthood. Often overlooked in queer spaces. Here, you're at the centre.",
-    count: "62 members",
+    memberCount: 62,
     joinLabel: "Join",
     accessTier: "public",
     activeThisWeek: 12,
@@ -80,7 +80,8 @@ export const communities: Community[] = [
     name: "Coming-Out Support",
     description:
       "A private, low-visibility space for people navigating coming out, at work, to family, or to themselves. Additional privacy controls apply.",
-    count: "Members only",
+    // Private tier: the label reads "Members only" whatever this is.
+    memberCount: 52,
     joinLabel: "Enter",
     accessTier: "private",
     dashed: true,
@@ -96,7 +97,7 @@ export const communities: Community[] = [
     name: "Trans & Non-Binary Hub",
     description:
       "Healthcare navigation, legal guides, peer support, and community: a dedicated space of its own.",
-    count: "147 members",
+    memberCount: 147,
     joinLabel: "Join",
     accessTier: "public",
     activeThisWeek: 38,
@@ -110,7 +111,7 @@ export const communities: Community[] = [
     name: "Queer Elders",
     description:
       "For LGBTQ+ members 50 and over. Enormous lived wisdom, long memories, and a community that sees and genuinely honours you.",
-    count: "38 members",
+    memberCount: 38,
     joinLabel: "Join",
     accessTier: "public",
     activeThisWeek: 9,
@@ -124,7 +125,7 @@ export const communities: Community[] = [
     name: "Queer Youth Network",
     description:
       "Career starting points, city navigation, and peer support for members 18–25, the community we all needed and mostly didn't have at that age.",
-    count: "93 members",
+    memberCount: 93,
     joinLabel: "Join",
     accessTier: "invite",
     activeThisWeek: 21,
@@ -138,7 +139,7 @@ export const communities: Community[] = [
     name: "Queer & of Colour",
     description:
       "An intersectional space for queer people of colour in Lisbon, where race and queerness are held as one conversation.",
-    count: "76 members",
+    memberCount: 76,
     joinLabel: "Join",
     accessTier: "request",
     activeThisWeek: 17,
@@ -152,10 +153,23 @@ export const communities: Community[] = [
     name: "Disabled Queers",
     description:
       "Disability, chronic illness, and queerness intersect in ways most platforms ignore. Both identities belong here, in full.",
-    count: "44 members",
+    memberCount: 44,
     joinLabel: "Join",
     accessTier: "public",
     activeThisWeek: 11,
     tags: ["disability-chronic-illness", "peer-support", "health-wellness"],
   },
 ];
+
+/** The English fallback label for a row; the demo data hooks replace it with
+ *  the language-aware one (`localizeDemoCommunity`). */
+function englishCount(row: Omit<DemoCommunity, "count">): string {
+  return row.accessTier === "private"
+    ? "Members only"
+    : `${row.memberCount} members`;
+}
+
+export const communities: DemoCommunity[] = demoCommunityRows.map((row) => ({
+  ...row,
+  count: englishCount(row),
+}));

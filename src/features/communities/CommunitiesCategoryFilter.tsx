@@ -1,91 +1,83 @@
 import { useId, type Dispatch, type SetStateAction } from "react";
-import { Button, RefineGroup } from "../../shared/components/ui";
-import { RollingNumber } from "../../shared/components/ui/RollingNumber";
-import { useFormat } from "../../shared/i18n/format";
+import {
+  FilterOptionRow,
+  FilterSection,
+} from "../../shared/components/filterPage";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CommunityType } from "../homepage/data/types";
-import type { DiscoverCategoryCounts } from "./useDiscoverCategoryCounts";
+import type { DiscoverCategoryCounts } from "./discoverCategoryCounts";
 import { FILTERS } from "./communitiesDiscover.data";
-import styles from "./CommunitiesPage.module.css";
 
 /**
- * The category chips, one band of the communities grid's "Refine" drawer.
+ * The "Category" section of the communities filter sidebar: one radio row per
+ * community type, "All communities" first, each carrying its own total.
  *
- * Each chip carries its own total. Those counts are stable across the search,
- * the sort and the toggles (see `CommunitiesPage`'s `allForCounts`) so
- * switching one chip never makes the others' numbers jump, and a count is
- * omitted rather than shown as "0" until its pool has fully loaded.
+ * Each total is a live facet off the browse response (`facets.types`, and
+ * `facets.allTypes` for "All communities"): how many communities that row
+ * would show under the search, the quick filters and the tags already
+ * applied. A count the server did not send (first page in flight, a failed
+ * read, an older server) is left off entirely and the row stays enabled.
  *
- * A chip that lands on 0 goes inert: picking it could only ever empty the
- * grid, and a dead end the viewer has to back out of is worse than a chip that
- * says up front there is nothing there.
+ * A row that lands on 0 is disabled: picking it could only ever empty the
+ * grid. Two rows never are: the one currently applied, so a member can always
+ * see what is on, and "All communities", which is the way back out of any
+ * other row.
  */
 export function CommunitiesCategoryFilter({
   filter,
   setFilter,
   categoryCounts,
+  isOpen,
+  onToggle,
 }: {
   filter: "all" | CommunityType;
   setFilter: Dispatch<SetStateAction<"all" | CommunityType>>;
-  /** Per-type totals, `null` for a chip whose count hasn't landed yet. */
+  /** Per-type totals; a row missing from the map has no count yet. */
   categoryCounts: DiscoverCategoryCounts;
+  isOpen: boolean;
+  onToggle: () => void;
 }) {
   const { t } = useTranslation();
-  const fmt = useFormat();
-  const labelId = useId();
+  const radioGroupName = useId();
+  const headingId = useId();
 
   return (
-    <RefineGroup
-      label={t("communities:discover.filter.categoryLabel")}
-      labelId={labelId}
-      role="group"
-      aria-labelledby={labelId}
+    <FilterSection
+      title={t("communities:discover.filter.categoryLabel")}
+      headingId={headingId}
+      open={isOpen}
+      onToggle={onToggle}
+      activeCount={filter === "all" ? 0 : 1}
     >
-      <div className={styles.filters}>
+      <div role="radiogroup" aria-labelledby={headingId}>
         {FILTERS.map((option) => {
+          const label = t(option.labelKey);
+          // Missing means "not counted", which must never be drawn as a 0.
           const count = categoryCounts[option.value];
-          const isSelected = filter === option.value;
-          // A chip whose pool is empty would filter the grid down to nothing,
-          // so it goes inert. Three chips never do: one still loading (`null`,
-          // no number shown yet), the one currently applied (otherwise the
-          // active chip greys out under the viewer), and "All communities",
-          // which stays the way back out of any other chip.
-          const isEmpty = count === 0 && !isSelected && option.value !== "all";
+          const isChecked = filter === option.value;
+          const isEmpty = count === 0 && !isChecked && option.value !== "all";
           return (
-            <Button
-              variant="ghost"
-              size="sm"
+            <FilterOptionRow
               key={option.value}
-              // The chips are a single-select filter, so each one announces
-              // whether it is the one currently applied.
-              aria-pressed={isSelected}
-              // `aria-disabled` rather than the `disabled` attribute: an empty
-              // category is worth hearing ("Sports, 0, dimmed") while tabbing
-              // the row, and a real `disabled` would drop it out of the tab
-              // order and say nothing at all. Same pixels (Button.module.css
-              // dims both identically), the click is refused below.
-              aria-disabled={isEmpty || undefined}
-              className={[styles.chip, isSelected && styles.chipActive]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => {
-                if (isEmpty) return;
-                setFilter(option.value);
-              }}
-            >
-              {t(option.labelKey)}
-              {count !== null && (
-                <span className={styles.chipCount}>
-                  <RollingNumber
-                    value={fmt.number(count)}
-                    numericValue={count}
-                  />
-                </span>
-              )}
-            </Button>
+              type="radio"
+              name={radioGroupName}
+              value={option.value}
+              label={label}
+              isChecked={isChecked}
+              isDisabled={isEmpty}
+              count={count}
+              // The visible count is decorative for assistive tech; the input
+              // carries the whole phrase, "Arts, 4 communities".
+              ariaLabel={
+                count === undefined
+                  ? label
+                  : t("communities:discover.toggle.withCount", { label, count })
+              }
+              onChange={() => setFilter(option.value)}
+            />
           );
         })}
       </div>
-    </RefineGroup>
+    </FilterSection>
   );
 }

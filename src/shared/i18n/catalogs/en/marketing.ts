@@ -3455,6 +3455,12 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-05.headline":
+    "Personas get a redesigned directory, and Settings drops the Profile theme picker.",
+  "changelog.releases.2026-11-04.headline":
+    "Host an event offers the hosting guide or the form, and the Events page fits a phone.",
+  "changelog.releases.2026-11-03.headline":
+    "Team rows on a business listing fit a phone screen.",
   "changelog.releases.2026-11-02.headline":
     "Gigs get a rebuilt editor, and admins can pick partner businesses for the directory.",
   "changelog.releases.2026-11-01.headline":
@@ -3716,6 +3722,72 @@ export const marketing: Catalog = {
     "Search in the More menu no longer hides behind the Studio player",
   "changelog.entries.more-menu-clears-studio-player.body":
     "On a phone, the menu now leaves room above the player, so its last link stays in view.",
+  "changelog.entries.listing-bands-fit-phones.title":
+    "Fit the listing owner and moderator bands on phones",
+  "changelog.entries.listing-bands-fit-phones.body":
+    "The owner card loses its empty gap, and the moderator buttons share one row with the eye up top.",
+  "changelog.entries.audience-links-move-to-admin.title":
+    "Open the audience pages from the admin dashboard",
+  "changelog.entries.audience-links-move-to-admin.body":
+    "Quick links in admin now open all four, and the homepage drops its four-tile strip.",
+  "changelog.entries.welcome-email-send-count.title":
+    "Welcome emails show how often they went out",
+  "changelog.entries.welcome-email-send-count.body":
+    "The invite card counts each welcome email sent and asks before sending another copy.",
+  "changelog.entries.community-filters-show-counts.title":
+    "Community filters show how many results match",
+  "changelog.entries.community-filters-show-counts.body":
+    "Every filter on the Community pages counts its matches, and an option with none goes unclickable.",
+  "changelog.entries.directory-filters-show-counts.title":
+    "Directory filters show how many places match",
+  "changelog.entries.directory-filters-show-counts.body":
+    "Each chip in the filter sidebar counts its places, and a chip with none goes unclickable.",
+  "changelog.entries.queue-health-at-a-glance.title":
+    "Read moderation queue health at a glance",
+  "changelog.entries.queue-health-at-a-glance.body":
+    "Each queue shows bars against its warning levels, with totals and a refresh button on top.",
+  "changelog.entries.safe-space-card-stops-floating.title":
+    "Keep the safe-space cards in place on phones",
+  "changelog.entries.safe-space-card-stops-floating.body":
+    "The share card on a verified listing now scrolls with the page and leaves the promises below it clear.",
+  "changelog.entries.studio-always-dark.title": "Studio is always dark",
+  "changelog.entries.studio-always-dark.body":
+    "Every Studio page now opens in dark mode, and the rest of QueerPulse keeps the theme you picked.",
+  "changelog.entries.persona-directory-credits.title":
+    "Browse personas in a redesigned directory",
+  "changelog.entries.persona-directory-credits.body":
+    "Cards show who each persona was credited with, and a Made together strip lists recent shared work.",
+  "changelog.entries.profile-theme-removed.title":
+    "Profile theme is gone from Settings",
+  "changelog.entries.profile-theme-removed.body":
+    "The pride flag cover picker never showed on your public profile, so we took it out of Settings.",
+  "changelog.entries.footer-evenly-balanced.title":
+    "Footer reads as one balanced block",
+  "changelog.entries.footer-evenly-balanced.body":
+    "Link columns spread evenly beside the brand, and the language switch sits opposite the copyright line.",
+  "changelog.entries.browse-pages-share-members-layout.title":
+    "Personas, communities, volunteering and housing match Members",
+  "changelog.entries.browse-pages-share-members-layout.body":
+    "Each now opens with the Members header and filters from the same sidebar, a bottom sheet on phones.",
+  "changelog.entries.housing-dark-badges-pt-counts.title":
+    "Housing labels show in dark mode",
+  "changelog.entries.housing-dark-badges-pt-counts.body":
+    "Type badges read on dark cards, the map list docks when narrow, and member counts follow your language.",
+  "changelog.entries.directory-fits-phones.title":
+    "The business directory fits a phone",
+  "changelog.entries.directory-fits-phones.body":
+    "One tidy toolbar, the place count beside Use my location, and the first place on the first screen.",
+  "changelog.entries.events-page-fits-phones.title":
+    "The Events page fits a phone",
+  "changelog.entries.events-page-fits-phones.body":
+    "Event cards, tabs and the calendar turn compact on small screens, so Browse shows about five events at once.",
+  "changelog.entries.host-event-choice-modal.title":
+    "Choose how to start hosting an event",
+  "changelog.entries.host-event-choice-modal.body":
+    "Host an event on the Events page now asks whether you want the hosting guide or the event form.",
+  "changelog.entries.team-rows-fit-a-phone.title": "Team rows fit on a phone",
+  "changelog.entries.team-rows-fit-a-phone.body":
+    "On a narrow screen the order arrows sit beside the name, and Edit role and Remove from team share one line.",
   "changelog.entries.add-a-month-of-events.title":
     "Add a month of events at once",
   "changelog.entries.add-a-month-of-events.body":
@@ -9929,6 +10001,17 @@ export const marketing: Catalog = {
   "volunteer.filter.medium": "Medium commitment",
   "volunteer.filter.commitmentGroup": "Filter by commitment",
   "volunteer.filter.causeGroup": "Filter by cause",
+  "volunteer.filter.commitmentTitle": "Time commitment",
+  "volunteer.filter.causeTitle": "Cause",
+  "volunteer.filter.anyCommitment": "Any commitment",
+  "volunteer.filter.anyCause": "Any cause",
+  "volunteer.filter.withCount_one": "{label}, {count} opportunity",
+  "volunteer.filter.withCount_other": "{label}, {count} opportunities",
+  "volunteer.resultCount_one": "{count} opportunity",
+  "volunteer.resultCount_other": "{count} opportunities",
+  "volunteer.filtersSheetLabel": "Filter opportunities",
+  "volunteer.showResultsCta_one": "Show {count} opportunity",
+  "volunteer.showResultsCta_other": "Show {count} opportunities",
   "volunteer.loadMoreError": "We couldn't load more opportunities.",
   // The volunteering cause taxonomy, one key set shared by the board's filter
   // chips, the post/edit form's picker and the label on a card. It replaced two

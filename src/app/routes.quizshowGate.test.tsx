@@ -39,6 +39,7 @@ vi.mock("../features/quizshow/routes", async () => {
   const { Route } = await import("react-router-dom");
   const { routes: routeMap } = await import("./routeMap");
   const {
+    QUIZSHOW_EDIT_ROUTE,
     QUIZSHOW_GAME_ROUTE,
     QUIZSHOW_PLAY_CODE_ROUTE,
     QUIZSHOW_SCREEN_ROUTE,
@@ -48,6 +49,10 @@ vi.mock("../features/quizshow/routes", async () => {
       <>
         <Route
           path={QUIZSHOW_SCREEN_ROUTE}
+          element={<div data-testid="pulse-live-page" />}
+        />
+        <Route
+          path={QUIZSHOW_EDIT_ROUTE}
           element={<div data-testid="pulse-live-page" />}
         />
         <Route
@@ -97,6 +102,7 @@ const PLAYER_PATH = "/play/QZ7KP4";
 const PLAY_PATH = "/play";
 const GAME_PATH = "/play/games/game-1";
 const SCREEN_PATH = "/gatherings/pride-brunch-jun-abcde/quizshow/screen";
+const EDIT_PATH = "/gatherings/pride-brunch-jun-abcde/quizshow/edit";
 
 function memberWith(earlyAccessFeatures: string[]): AuthUser {
   return {
@@ -202,6 +208,18 @@ describe("AppRoutes: Pulse Live hosting gate", () => {
     renderAt(SCREEN_PATH, authValue(memberWith([])));
     expect(await screen.findByTestId("roadmap-page")).toBeInTheDocument();
     expect(landedAt()).toBe(routes.roadmap);
+  });
+
+  it("sends a host without the grant away from the event's quiz editor", async () => {
+    renderAt(EDIT_PATH, authValue(memberWith([])));
+    expect(await screen.findByTestId("roadmap-page")).toBeInTheDocument();
+    expect(landedAt()).toBe(routes.roadmap);
+  });
+
+  it("renders the event's quiz editor for a host holding the grant", async () => {
+    renderAt(EDIT_PATH, authValue(memberWith(["quizshow"])));
+    expect(await screen.findByTestId("pulse-live-page")).toBeInTheDocument();
+    expect(landedAt()).toBe(EDIT_PATH);
   });
 
   it("renders Pulse Live for a member holding the grant", async () => {

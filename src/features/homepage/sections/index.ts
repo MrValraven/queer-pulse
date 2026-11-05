@@ -13,5 +13,4 @@ export { Communities } from "./Communities";
 export { LiveCommunities } from "./LiveCommunities";
 export { HousingShowcase } from "./HousingShowcase";
 export { PersonasShowcase } from "./PersonasShowcase";
-export { WhoItsFor } from "./WhoItsFor";
 export { Outro } from "./Outro";

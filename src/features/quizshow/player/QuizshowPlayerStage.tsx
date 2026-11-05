@@ -17,6 +17,7 @@ import { QuizshowRoundCard } from "../stage/QuizshowRoundCard";
 import { pickQuizshowText } from "../stage/quizshowText";
 import styles from "./QuizshowPlayer.module.css";
 import { QuizshowJokerButton } from "./QuizshowJokerButton";
+import { QuizshowWaitDots } from "./QuizshowLockedPanel";
 import { QuizshowPartyReveal } from "./QuizshowPartyReveal";
 import { QuizshowPlayerParty } from "./QuizshowPlayerParty";
 import { QuizshowPlayerQuestion } from "./QuizshowPlayerQuestion";
@@ -78,12 +79,15 @@ function ReadBody({
   const { t } = useTranslation();
   const headingRef = useQuizshowHeadingFocus(phaseId);
   return (
-    <>
+    <div className={`${styles.screenBody} ${styles.readBody}`}>
       <h1 ref={headingRef} tabIndex={-1} className={styles.heading}>
         {pickQuizshowText(question.prompt, language)}
       </h1>
-      <p className={styles.note}>{t("quizshow:player.getReady")}</p>
-    </>
+      <p className={styles.readyPill}>
+        {t("quizshow:player.getReady")}
+        <QuizshowWaitDots />
+      </p>
+    </div>
   );
 }
 
@@ -211,9 +215,14 @@ export function QuizshowPlayerStage({
     // The podium frame can land a moment after the phase change.
     body =
       player.podium === null ? (
-        <p className={styles.note}>{t("quizshow:player.getReady")}</p>
+        <p className={styles.readyPill}>
+          {t("quizshow:player.getReady")}
+          <QuizshowWaitDots />
+        </p>
       ) : (
-        <QuizshowPodium entries={player.podium} size="phone" />
+        <div className={styles.podiumBody}>
+          <QuizshowPodium entries={player.podium} size="phone" />
+        </div>
       );
   }
 
@@ -244,7 +253,7 @@ export function QuizshowPlayerStage({
           {body}
         </m.div>
       </AnimatePresence>
-      <Collapse isOpen={isReportShown}>
+      <Collapse isOpen={isReportShown} className={styles.reportRow}>
         <QuizshowReportGameButton
           sessionId={player.sessionId}
           quizTitle={player.quizTitle}

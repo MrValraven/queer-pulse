@@ -75,6 +75,12 @@ export interface JoinRequestView {
   inviteStatus: JoinRequestDTO["inviteStatus"];
   /** ISO timestamp the invite lapses, or null when it has no expiry. */
   inviteExpiresAt: string | null;
+  /** How many welcome emails a reviewer sent for this request. 0 when none
+   *  went out, and on a backend that predates the counter. */
+  welcomeEmailSendCount: number;
+  /** ISO timestamp of the latest welcome email send, or null when none went
+   *  out. */
+  welcomeEmailLastSentAt: string | null;
   /** ISO timestamp the request was submitted — the raw value, for a history
    *  row that wants an absolute date rather than `appliedLine`'s relative one. */
   createdAt: string;
@@ -257,6 +263,8 @@ export function dtoToView(
     inviteCode: dto.inviteCode,
     inviteStatus: dto.inviteStatus,
     inviteExpiresAt: dto.inviteExpiresAt,
+    welcomeEmailSendCount: dto.welcomeEmailSendCount ?? 0,
+    welcomeEmailLastSentAt: dto.welcomeEmailLastSentAt ?? null,
     createdAt: dto.createdAt,
     reviewedAt: dto.reviewedAt,
     reviewedBy: dto.reviewedBy,

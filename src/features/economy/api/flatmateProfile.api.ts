@@ -85,10 +85,41 @@ export interface FlatmateFilters {
   type?: string;
   neighbourhood?: string;
   budgetMax?: number;
+  /** One budget band id (`FlatmateBudgetBand` in `flatmatesFacets`). */
+  budgetBand?: string;
   moveInBy?: string;
+  /** One move-in window: `now`, `flex` or a month key such as `jul`. */
+  moveIn?: string;
   tags?: string[];
+  /** How several `tags` combine. The server defaults to `any`; the board
+   *  sends `all`, the reading its lifestyle chips have always had. */
+  tagMatch?: "any" | "all";
   page?: number;
 }
+
+/**
+ * The directory's availability counts, sent on page 1 only. Each group is
+ * counted with its own filter lifted and the rest applied, and each `all*`
+ * field is that group's distinct "Any" total. `neighbourhood` is keyed by the
+ * lowercased name and `tags` by the exact tag; both leave zeros out, so an
+ * absent key means nobody. Undefined on a server that predates the facets.
+ */
+export interface FlatmateFacets {
+  type: Record<FlatmateProfileDTO["type"], number>;
+  allTypes: number;
+  neighbourhood: Record<string, number>;
+  allNeighbourhoods: number;
+  budget: Record<string, number>;
+  allBudgets: number;
+  moveIn: Record<string, number>;
+  allMoveIns: number;
+  tags: Record<string, number>;
+}
+
+/** One `GET /flatmate-directory` page, with page 1's facets when sent. */
+export type FlatmateProfilesPage = ItemsPage<FlatmateProfileDTO> & {
+  facets?: FlatmateFacets;
+};
 
 export interface UpsertFlatmateProfileBody {
   type: FlatmateProfileDTO["type"];
@@ -112,19 +143,27 @@ export interface UpsertFlatmateProfileBody {
 
 export async function getFlatmateProfiles(
   filters: FlatmateFilters = {},
-): Promise<ItemsPage<FlatmateProfileDTO>> {
+): Promise<FlatmateProfilesPage> {
   const query = new URLSearchParams();
   if (filters.type && filters.type !== "all") query.set("type", filters.type);
   if (filters.neighbourhood) query.set("neighbourhood", filters.neighbourhood);
   if (filters.budgetMax) query.set("budgetMax", String(filters.budgetMax));
+  if (filters.budgetBand) query.set("budgetBand", filters.budgetBand);
   if (filters.moveInBy) query.set("moveInBy", filters.moveInBy);
+  if (filters.moveIn) query.set("moveIn", filters.moveIn);
   for (const tag of filters.tags ?? []) query.append("tags", tag);
+  if (filters.tagMatch) query.set("tagMatch", filters.tagMatch);
   if (filters.page) query.set("page", String(filters.page));
   const qs = query.toString();
-  const res = await apiGet<
-    FlatmateProfileDTO[] | ItemsPage<FlatmateProfileDTO>
-  >(`/flatmate-directory${qs ? `?${qs}` : ""}`);
-  return toItemsPage(res);
+  const res = await apiGet<FlatmateProfileDTO[] | FlatmateProfilesPage>(
+    `/flatmate-directory${qs ? `?${qs}` : ""}`,
+  );
+  // `toItemsPage` knows the four page fields only, so the facets are carried
+  // across by hand.
+  return {
+    ...toItemsPage(res),
+    facets: Array.isArray(res) ? undefined : res?.facets,
+  };
 }
 
 export const getMyFlatmateProfile = () =>

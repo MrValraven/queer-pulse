@@ -1,63 +1,10 @@
-/* main[data-page-main] (base.css) already reserves the floating nav's band as
-   padding-top; this is only the header's own breathing room below it. Not
-   sticky; the Discover sub-tabs keep their own sticky behaviour further down
-   the page. */
-.header {
-  padding-block: var(--gap-grid) var(--gap-grid);
-}
-
-/* Eyebrow → title → lead as one tight block; `.controls` owns the gap down to
-   the toolbar below it. */
-.headingGroup {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  min-width: 0;
-}
-
-/* The page name on the "My communities" tab, where the greeting takes the h1. */
-.eyebrow {
-  margin: 0;
-  font-size: var(--text-11);
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-}
-
-.title {
-  margin: 0;
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: var(--text-display);
-  line-height: var(--lh-display);
-  letter-spacing: var(--ls-display);
-  color: var(--text-strong);
-}
-
-.title em {
-  font-style: italic;
-  color: var(--accent);
-}
-
-.lead {
-  margin: 0;
-  font-size: var(--text-body-lg);
-  line-height: var(--lh-body-lg);
-  color: var(--ink-60);
-  max-width: 46ch;
-}
-
-/* The single control row, and its drawer and chip row, beneath the heading.
-   The gap is the heading's breathing room, so the bar reads as part of the
-   header rather than as the page's first content. */
-.controls {
-  margin-block-start: var(--gap-grid);
-}
+/* The `/communities` header's own pieces. The header itself (eyebrow, h1,
+   lead, hairline, the actions row) is the shared `FilterPageHeader`; these
+   style the invitations link in its note line and the primary action beside
+   the pill tabs. */
 
 /* PRD-140. The only route to the invitations shelf. Rendered only when an
-   invitation is waiting, so it reads as news rather than as furniture. */
+   invitation is waiting, so it reads as news. */
 .invitesLink {
   display: inline-flex;
   align-items: center;
@@ -77,4 +24,33 @@
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   border-radius: var(--radius-4);
+}
+
+/* On a phone the actions row stacks: the pill tabs take the first line (their
+   own module shares it between the two tabs) and "Start a community" runs
+   the full width under them. Tablets keep both inline at their own width. */
+@media (--sm) {
+  .startCta {
+    flex: 1 0 100%;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* `TabSwapSlot`: the active tab's line and the other tab's line share one
+   grid cell, so the slot takes the taller of the two and the header (and the
+   tab row under it) holds its height when the tab switches. The reserved
+   copy keeps its box and paints nothing. */
+.swapSlot {
+  display: grid;
+}
+.swapShown,
+.swapReserved {
+  grid-area: 1 / 1;
+  min-inline-size: 0;
+}
+.swapReserved {
+  visibility: hidden;
+  pointer-events: none;
+  user-select: none;
 }

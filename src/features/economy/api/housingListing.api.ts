@@ -238,9 +238,48 @@ export interface CreateHousingListingBody {
   virtualTourUrl?: string;
 }
 
+/** The yes/no "Must have" filters, as the facet keys the backend sends. */
+export type HousingMustHaveFlag =
+  | "billsIncluded"
+  | "hasAccessibilityInfo"
+  | "furnished"
+  | "petsWelcome"
+  | "verifiedOnly";
+
+/**
+ * The housing board sidebar's availability counts, sent with
+ * GET /housing-directory (mirrors the backend's `HousingBoardFacetCounts`).
+ * Each group is counted with its own filter lifted and every other filter
+ * applied, so a row says how many listings picking it would leave.
+ */
+export interface HousingBoardFacets {
+  /** Listings per listing type, under every filter except the type. */
+  type: Record<HousingListingDTO["type"], number>;
+  /** Listings under every filter except the type: the "All" row. */
+  allTypes: number;
+  /** Listings per neighbourhood, keyed by the LOWERCASED area name, under
+   *  every filter except the neighbourhood ones. A neighbourhood with no
+   *  listing has no key, which reads as zero. */
+  areas: Record<string, number>;
+  /** Listings per minimum-bedrooms threshold ("0" to "3", each a
+   *  `bedrooms >= N` count). The thresholds nest, so these never sum. */
+  bedroomsMin: Record<string, number>;
+  /** Listings under every filter except bedrooms: the "Any" row. */
+  allBedrooms: number;
+  /** Per flag: listings with it on, under every other ticked flag and every
+   *  other filter. */
+  mustHave: Record<HousingMustHaveFlag, number>;
+}
+
+/** A GET /housing-directory page. `facets` is undefined on a server that
+ *  predates them, and every row then draws no count. */
+export interface HousingListingsPage extends ItemsPage<HousingListingDTO> {
+  facets?: HousingBoardFacets;
+}
+
 export async function getHousingListings(
   filters: HousingListingFilters = {},
-): Promise<ItemsPage<HousingListingDTO>> {
+): Promise<HousingListingsPage> {
   const query = new URLSearchParams();
   if (filters.type && filters.type !== "all") query.set("type", filters.type);
   if (filters.area) query.set("area", filters.area);
@@ -263,10 +302,15 @@ export async function getHousingListings(
   if (filters.availableBy) query.set("availableBy", filters.availableBy);
   if (filters.page) query.set("page", String(filters.page));
   const qs = query.toString();
-  const res = await apiGet<HousingListingDTO[] | ItemsPage<HousingListingDTO>>(
+  const res = await apiGet<HousingListingDTO[] | HousingListingsPage>(
     `/housing-directory${qs ? `?${qs}` : ""}`,
   );
-  return toItemsPage(res);
+  // `toItemsPage` normalises the envelope (and a bare-array response) but only
+  // knows the four page fields, so the facets are carried across by hand.
+  return {
+    ...toItemsPage(res),
+    facets: Array.isArray(res) ? undefined : res?.facets,
+  };
 }
 
 export const getHousingListing = (slug: string) =>

@@ -91,8 +91,9 @@ function useLeadFadeThrough(nextLead: CalendarEvent) {
 }
 
 /**
- * The "Next up" poster hero at the top of the Highlights, Browse and Calendar
- * views: the single best upcoming gathering, its cover filling the leading
+ * The "Next up" poster hero at the top of the Highlights view (EventsDiscover
+ * folds it away on Browse and Calendar): the single best upcoming gathering,
+ * its cover filling the leading
  * side of the card and its own colours tinting the page behind it. With no
  * lead it folds away, so an empty hero never takes up space; the folding hero
  * keeps showing its last lead until it is gone.
@@ -172,15 +173,17 @@ function FeaturedEventHero({
                 className={posterStyles.runByLine}
               />
             </div>
+            {/* The dots between the parts are drawn in CSS (`.when`), so a
+                part that wraps never leaves a dot hanging at a line end. */}
             <p className={styles.when}>
               <span className={isDateRange ? undefined : styles.whenDate}>
                 {when.dateText}
-                {" · "}
               </span>
-              {when.timeText}
-              {when.nextDayNote ? ` ${when.nextDayNote}` : ""}
-              {" · "}
-              {lead.hood}
+              <span>
+                {when.timeText}
+                {when.nextDayNote ? ` ${when.nextDayNote}` : ""}
+              </span>
+              <span>{lead.hood}</span>
             </p>
             <GoingCount event={lead} />
             <div className={styles.facts}>

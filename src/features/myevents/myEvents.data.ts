@@ -1,15 +1,3 @@
-import type { Pill } from "./myEvents.types";
-
-/** Pill buckets, in display order. */
-export const PILLS: Pill[] = [
-  "upcoming",
-  "going",
-  "hosting",
-  "waitlisted",
-  "past",
-  "saved",
-];
-
 /**
  * The demo clock: the prototype is anchored to Mon 29 Jun 2026, 16:30. Live
  * mode reads the real clock instead; `myEvents.clock.ts` picks between them.
@@ -26,7 +14,12 @@ export const TINT_STYLE: Record<string, { background: string; color: string }> =
       color: "var(--accent-ink)",
     },
     jade: { background: "rgba(var(--jade-rgb),.18)", color: "var(--jade)" },
-    plum: { background: "rgba(var(--plum-rgb),.1)", color: "var(--plum)" },
+    // --line-rgb and --text-strong flip in dark mode, so the plum disc stays
+    // readable on the dark card instead of going plum on plum.
+    plum: {
+      background: "rgba(var(--line-rgb),.1)",
+      color: "var(--text-strong)",
+    },
   };
 
 /**

@@ -69,6 +69,12 @@
     align-items: stretch;
   }
 
+  /* In a column the 260px basis would become a 260px height, so the heading
+     sizes to its own text here. */
+  .heading {
+    flex: none;
+  }
+
   .actions > * {
     flex: 1 1 auto;
   }

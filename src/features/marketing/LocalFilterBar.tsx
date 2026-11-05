@@ -63,7 +63,11 @@ export function LocalFilterBar({
                 </span>
               )}
             </button>
-            <DirectoryViewSwitcher view={view} onViewChange={onViewChange} />
+            <DirectoryViewSwitcher
+              view={view}
+              onViewChange={onViewChange}
+              className={s.mobileSwitcher}
+            />
           </div>
         </div>
       </div>

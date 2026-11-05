@@ -244,20 +244,9 @@ export function hasEnded(ev: MyEvent, now: Date = clockNow()): boolean {
 }
 
 /**
- * The pills whose agenda moves ended gatherings into one trailing, greyed
- * "Already happened" group, and whose counts leave them out.
- */
-export const PILLS_WITH_ENDED_GROUP: ReadonlySet<Pill> = new Set<Pill>([
-  "upcoming",
-  "going",
-  "hosting",
-  "waitlisted",
-]);
-
-/**
  * Whether an event belongs to a given pill bucket. Ended gatherings stay in
  * their RSVP's pill: the agenda files them into its trailing ended group, and
- * the pill counts skip them through `hasEnded`.
+ * the pill counts include them, since picking the pill lists them there.
  */
 export function inPill(ev: MyEvent, p: Pill): boolean {
   switch (p) {

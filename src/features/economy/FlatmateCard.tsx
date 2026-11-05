@@ -65,7 +65,7 @@ export function FlatmateCard({
   };
 
   return (
-    <div className={styles.card}>
+    <div className={`${styles.card} ${styles.boardCard}`}>
       <div className={styles.cardTop}>
         <Avatar
           initials={p.initials}

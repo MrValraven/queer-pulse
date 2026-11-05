@@ -59,6 +59,10 @@ export const forum: Catalog = {
   "sidebar.housingBoard": "Quadro de habitação",
   "sidebar.jobBoard": "Quadro de emprego",
   "sidebar.governance": "Governação e transparência",
+  // A filter option's accessible name with its availability count (the
+  // sidebar categories and the Funding & Grants chips).
+  "filter.withCount_one": "{label}, {formatted} publicação",
+  "filter.withCount_other": "{label}, {formatted} publicações",
 
   // ── FirstPostPrompt ─────────────────────────────────────────────────────
   "firstPost.eyebrow": "Ainda não publicaste nada",

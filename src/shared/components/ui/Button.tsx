@@ -19,7 +19,12 @@ export type ButtonVariant =
    *  makes the `aria-label` mandatory. */
   | "icon"
   /** `icon` on a plum/dark ground. */
-  | "icon-dark";
+  | "icon-dark"
+  /** Pulse Live stage: a coral gradient pill with a coral glow and a dark
+   *  label. Reads the fixed --qs-* stage tokens, so it ignores the app theme. */
+  | "stage"
+  /** Pulse Live stage: a glass pill with the stage text colour. */
+  | "stage-ghost";
 export type ButtonSize = "sm" | "md" | "lg";
 
 const variantClass: Record<ButtonVariant, string | undefined> = {
@@ -33,6 +38,8 @@ const variantClass: Record<ButtonVariant, string | undefined> = {
   quiet: styles.quiet,
   icon: styles.icon,
   "icon-dark": `${styles.icon} ${styles.iconDark}`,
+  stage: styles.stage,
+  "stage-ghost": styles.stageGhost,
 };
 
 interface BaseProps {

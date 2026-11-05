@@ -6,11 +6,12 @@
 }
 
 /* ---- Top region: brand + columns ---- */
+/* Two tracks: the brand keeps a fixed reading width on the left and the
+   link columns share everything to its right. */
 .grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 40px 56px;
+  display: grid;
+  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+  gap: 40px 80px;
   align-items: start;
 }
 
@@ -106,22 +107,16 @@
   }
 }
 
-/* Content-sized so the four columns stay a cohesive block that hugs the right
-   edge (the `.grid` space-between drops the free space between it and the
-   brand). Even gaps keep the rhythm; `max-content` avoids the fr-collapse that
-   happens to a grid inside a shrink-to-fit flex item. */
+/* One equal track per column, however many the visitor sees (three signed
+   out, four signed in), so the columns spread across the whole right track.
+   Fluid tracks bound each column's width; a label longer than its track
+   wraps inside it. */
 .cols {
   display: grid;
-  grid-template-columns: repeat(4, max-content);
-  gap: 28px 44px;
-}
-/* Cap each column so a long label wraps to a second line instead of widening
-   the whole column. Short labels (English) stay under the cap, so the columns
-   still shrink to their content and hug the right; longer labels (Portuguese,
-   e.g. "Acabaste de chegar a Lisboa?") wrap rather than pushing the four-column
-   block past the page width and dropping it below the brand. */
-.col {
-  max-width: 150px;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 28px 40px;
+  align-items: start;
 }
 .col h2 {
   font-size: var(--text-12);
@@ -144,16 +139,23 @@
   }
 }
 
-/* ---- Bottom bar: copyright + legal links + controls ---- */
+/* ---- Bottom bar: legal links, then copyright + controls ---- */
+/* Two rows: the legal links get the full width to wrap, and the copyright and
+   language switcher share the row below, one at each end. */
 .base {
   margin-top: 56px;
   padding-top: 26px;
   border-top: 1px solid rgba(var(--cream-rgb), 0.1);
   display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.baseMeta {
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 18px 28px;
   flex-wrap: wrap;
+  gap: 18px 28px;
 }
 .copyright {
   font-size: var(--text-13);
@@ -216,24 +218,25 @@
 }
 
 /* ---- Responsive ---- */
+/* Laptop widths: a tighter brand gap hands the four member columns more room. */
+@media (max-width: 1240px) {
+  .grid {
+    column-gap: 48px;
+  }
+}
 @media (max-width: 980px) {
   .grid {
-    flex-direction: column;
-    align-items: stretch;
+    grid-template-columns: minmax(0, 1fr);
     gap: 40px;
   }
 }
 @media (max-width: 620px) {
+  /* Two by two on phones. `.baseMeta` needs no override: when the switcher
+     cannot fit beside the copyright it wraps and space-between starts it at
+     the left. */
   .cols {
+    grid-auto-flow: row;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  /* Two fluid columns already constrain width here — let them fill their track
-     instead of the desktop 150px cap. */
-  .col {
-    max-width: none;
-  }
-  .base {
-    justify-content: flex-start;
   }
 }
 

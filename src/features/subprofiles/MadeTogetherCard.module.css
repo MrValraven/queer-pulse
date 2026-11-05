@@ -1,0 +1,179 @@
+/* One "Made together" card. It fills its list item, which sets the width
+   and the snap point. Phone sizes first; the desktop
+   sizing layers on at --lg-up. Accent colours arrive as custom properties set
+   inline from ACCENT_TOKENS, so the card follows the theme. */
+
+.card {
+  --made-avatar-size: 40px;
+  --made-avatar-overlap: -12px;
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-card);
+}
+
+.pair {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.avatars {
+  display: flex;
+  flex: none;
+}
+
+.avatar {
+  position: relative;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: var(--made-avatar-size);
+  height: var(--made-avatar-size);
+  border: 3px solid var(--paper);
+  border-radius: var(--radius-avatar);
+  background: var(--accent-tint);
+  color: var(--accent-on);
+  overflow: hidden;
+}
+
+.avatar + .avatar {
+  margin-inline-start: var(--made-avatar-overlap);
+}
+
+.initials {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--text-14);
+}
+
+.names {
+  /* Plain running text with inline links: wrapped names sit one comfortable
+     line apart. Two lines are reserved so every card's title starts at the
+     same y whether the credit wraps or not. */
+  display: block;
+  min-width: 0;
+  min-height: 2.7em;
+  font-size: var(--text-13);
+  line-height: 1.35;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.nameLink {
+  /* Inline links inside a sentence (WCAG 2.5.8 inline exception), so the hit
+     area is the text itself: growing it vertically let the second name's box
+     cover the first name's line. A name stays on one line; the longest
+     persona name (28 characters) fits the narrowest card (258px of text). */
+  color: var(--text-strong);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nameLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-tag);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nameLink:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.media {
+  --made-media-height: 132px;
+  height: var(--made-media-height);
+  border-radius: var(--radius-12);
+  overflow: hidden;
+  /* The no-photo wash: a solid tint of the author's accent over paper. */
+  background: color-mix(in srgb, var(--author-tint) 14%, var(--paper));
+  position: relative;
+}
+
+/* The author's monogram on the wash (no photo, or the photo failed to load):
+   the same Fraunces italic letter as the portrait cards and the hero wall. */
+.monogram {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: calc(var(--made-media-height) * 0.8);
+  line-height: 1;
+  color: var(--author-tint);
+  opacity: 0.22;
+  user-select: none;
+}
+
+.media > div {
+  border: 0;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-19);
+  line-height: 1.2;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  margin: 0;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+@media (--lg-up) {
+  .card {
+    --made-avatar-size: 48px;
+    --made-avatar-overlap: -14px;
+    gap: 16px;
+    padding: 22px;
+    border-radius: var(--radius-card);
+  }
+
+  .names {
+    font-size: var(--text-14);
+  }
+
+  .initials {
+    font-size: var(--text-16);
+  }
+
+  .media {
+    --made-media-height: 150px;
+    border-radius: var(--radius-badge);
+  }
+
+  .title {
+    font-size: var(--text-21);
+  }
+
+  .meta {
+    font-size: var(--text-13);
+  }
+}

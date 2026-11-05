@@ -1,0 +1,182 @@
+/* The player's lobby on the velvet stage: the hero card with their chip, the
+   change team picker, the settings sheet and the joker. */
+
+/* The hero: the chip, the team and the live count, centred. */
+.card {
+  composes: glassRaised from "../stage/quizshowSurfaces.module.css";
+  padding: var(--gap-grid) var(--gap-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-sm);
+  text-align: center;
+}
+
+.cardSwap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-sm);
+  inline-size: 100%;
+}
+
+/* Settings and the joker sit on plain glass, one step below the hero. */
+.sheet {
+  composes: glass from "../stage/quizshowSurfaces.module.css";
+  padding: var(--gap-xs) var(--gap-sm);
+}
+
+.nameActions {
+  display: flex;
+  justify-content: center;
+}
+
+.nameForm {
+  inline-size: 100%;
+  text-align: start;
+}
+
+.nameForm input {
+  border-color: var(--qs-glass-border-strong);
+  background: var(--qs-glass-tint);
+  color: var(--qs-text);
+}
+
+/* The chip and the ring that breathes out of it. */
+.chipStage {
+  display: inline-flex;
+  max-inline-size: 100%;
+  margin-block: var(--gap-xs);
+}
+
+/* A ring the size of the mark that breathes outward from behind it. */
+.chipPulse {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: 2px solid var(--chip-color);
+  border-radius: 50%;
+  opacity: 0.35;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  box-sizing: border-box;
+  min-block-size: 3.5rem;
+  max-inline-size: 100%;
+  padding-block: var(--triage-gap-tight);
+  padding-inline: var(--triage-gap-tight) var(--gap-grid);
+  border: 2px solid var(--chip-color);
+  border-radius: var(--qs-radius-pill);
+  background:
+    radial-gradient(
+      120% 160% at 0% 50%,
+      color-mix(in srgb, var(--chip-color) 34%, transparent),
+      transparent 70%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-pill);
+}
+
+.chipMark {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--qs-text);
+  font-size: var(--text-20);
+}
+
+.chipName {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--serif);
+  font-size: var(--text-24);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--qs-text);
+  text-align: start;
+}
+
+.teamLine {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-xs);
+  min-block-size: 1lh;
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--qs-text);
+}
+
+/* The live count: a still jade dot and a rolling figure. */
+.count {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin: 0;
+  font-size: var(--text-body);
+  color: var(--qs-text-mute);
+  font-variant-numeric: tabular-nums;
+}
+
+.countDot {
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: 50%;
+  background: var(--qs-right-border);
+}
+
+.countFigure {
+  font-weight: 700;
+  color: var(--qs-text);
+}
+
+.changeTeam {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.changeTeamButton {
+  align-self: flex-start;
+}
+
+/* The button's chevron turns over while the picker is open. */
+.changeTeamChevron {
+  flex-shrink: 0;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.changeTeamChevronOpen {
+  transform: rotate(180deg);
+}
+
+/* Keeping the current team is a quiet, own-width button under the team rows. */
+.keepTeamButton {
+  align-self: flex-start;
+}
+
+/* The joker: a wide glass button with a lit star, its hint centred under it. */
+.joker {
+  text-align: center;
+}
+
+.jokerStar {
+  color: var(--qs-low);
+}
+
+.jokerHint {
+  text-align: center;
+}

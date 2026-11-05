@@ -1,18 +1,9 @@
-import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { JoinRequestView } from "./api/useJoinRequests";
 import { joinRequestReviewer } from "./joinRequestReviewer";
+import { useJoinRequestShortDate } from "./joinRequestShortDate";
 import rowStyles from "./AdminSubmissionList.module.css";
 import styles from "./AdminVerifyDecided.module.css";
-
-/** "20 Jun 2026": the absolute dates a history row is read for. Its spaces
- *  are non-breaking so a narrow row wraps between words of the sentence and
- *  keeps each date whole. */
-function shortDate(value: string | null, format: (at: Date) => string) {
-  if (!value) return null;
-  const at = new Date(value);
-  return Number.isNaN(at.getTime()) ? null : format(at).replace(/ /g, "\u00A0");
-}
 
 /**
  * The decided row's dates line: when they applied, when it was decided, and by
@@ -34,11 +25,9 @@ export function JoinRequestDecidedDates({
   currentUserId: string | null;
 }) {
   const { t } = useTranslation();
-  const format = useFormat();
-  const formatShort = (at: Date) =>
-    format.date(at, { day: "numeric", month: "short", year: "numeric" });
-  const appliedOn = shortDate(item.createdAt, formatShort);
-  const decidedOn = shortDate(item.reviewedAt, formatShort);
+  const shortDate = useJoinRequestShortDate();
+  const appliedOn = shortDate(item.createdAt);
+  const decidedOn = shortDate(item.reviewedAt);
 
   const reviewer = joinRequestReviewer(item, currentUserId);
   const reviewerName =

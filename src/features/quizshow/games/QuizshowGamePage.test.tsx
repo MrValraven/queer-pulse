@@ -7,7 +7,13 @@ import { LeaveConfirmProvider } from "../../../shared/components/feedback/LeaveC
 import { TestProviders } from "../../../test/TestProviders";
 import { resetQuizshowDemoStore } from "../api/quizshowDemoStore";
 import { ApiError } from "../../../shared/api/client";
-import { demoDeleteGame, demoListGames } from "../api/quizshowDemoGames";
+import {
+  demoCreateGame,
+  demoDeleteGame,
+  demoListGames,
+  demoPutGame,
+} from "../api/quizshowDemoGames";
+import { demoRefusal } from "../api/quizshowDemoQuizzes";
 import { QUIZSHOW_DEMO_GAME_IDS } from "../api/quizshowDemoGames.data";
 import { PageKeyedByParam } from "../PageKeyedByParam";
 import { QUIZSHOW_GAME_ROUTE, quizshowGamePath } from "../quizshowPaths";
@@ -16,7 +22,11 @@ import { QuizshowGamePage } from "./QuizshowGamePage";
 vi.mock("../api/quizshowDemoGames", async (importOriginal) => {
   const actual =
     await importOriginal<typeof import("../api/quizshowDemoGames")>();
-  return { ...actual, demoDeleteGame: vi.fn(actual.demoDeleteGame) };
+  return {
+    ...actual,
+    demoDeleteGame: vi.fn(actual.demoDeleteGame),
+    demoPutGame: vi.fn(actual.demoPutGame),
+  };
 });
 
 const GAME_ID = QUIZSHOW_DEMO_GAME_IDS.flatQuiz;
@@ -37,6 +47,20 @@ function LocationProbe() {
 
 function currentLocation(): string {
   return screen.getByTestId("location").textContent ?? "";
+}
+
+/** Opens the studio's More menu and picks one of its items. */
+async function chooseMoreAction(
+  user: ReturnType<typeof userEvent.setup>,
+  itemName: string,
+) {
+  await user.click(await screen.findByRole("button", { name: "More actions" }));
+  await user.click(await screen.findByRole("menuitem", { name: itemName }));
+}
+
+/** The studio's title fields: the one in the top bar and the one in the inspector. */
+async function findGameTitleFields(): Promise<HTMLElement[]> {
+  return screen.findAllByLabelText("Game title");
 }
 
 function renderGamePage(entry: string) {
@@ -71,32 +95,61 @@ describe("QuizshowGamePage", () => {
     vi.restoreAllMocks();
   });
 
-  it("shows the game's title, its builder and its results card", async () => {
+  it("opens the game in the studio, with the way back and its title", async () => {
     renderGamePage(quizshowGamePath(GAME_ID));
 
     expect(
-      await screen.findByRole("heading", { level: 1, name: GAME_TITLE }),
+      await screen.findByRole("heading", { level: 1, name: "Quiz editor" }),
     ).toBeTruthy();
+    const backLink = await screen.findByRole("link", {
+      name: "Back to Pulse Live",
+    });
+    expect(backLink.getAttribute("href")).toBe(routes.play);
+    for (const titleField of await findGameTitleFields()) {
+      expect(titleField).toHaveValue(GAME_TITLE);
+    }
+  });
+
+  it("shows the kept results in a panel from More", async () => {
+    const user = userEvent.setup();
+    renderGamePage(quizshowGamePath(GAME_ID));
+
+    await chooseMoreAction(user, "Show results");
+
+    // The panel's title names the results; the card inside has no heading or box of its own.
+    const panel = await screen.findByRole("dialog", {
+      name: "Pulse Live results",
+    });
     expect(
-      screen.getByRole("link", { name: "Back to Pulse Live" }),
+      await within(panel).findByRole("button", { name: "Delete results" }),
     ).toBeTruthy();
+    expect(within(panel).getAllByRole("heading")).toHaveLength(1);
+    await user.click(
+      within(panel).getByRole("button", { name: "Close the results" }),
+    );
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+  });
+
+  it("offers no Show results on a game with none kept", async () => {
+    const user = userEvent.setup();
+    const blankGame = demoCreateGame({ title: "Blank game", source: null });
+    renderGamePage(quizshowGamePath(blankGame.gameId));
+
+    await user.click(
+      await screen.findByRole("button", { name: "More actions" }),
+    );
+
     expect(
-      await screen.findByRole("heading", { name: "Your quiz" }),
+      await screen.findByRole("menuitem", { name: "Duplicate game" }),
     ).toBeTruthy();
-    expect(
-      await screen.findByRole("heading", { name: "Pulse Live results" }),
-    ).toBeTruthy();
-    // The flat quiz is not marked 18+, so its title carries no tag.
-    expect(screen.queryByText("18+")).toBeNull();
+    expect(screen.queryByRole("menuitem", { name: "Show results" })).toBeNull();
   });
 
   it("duplicates the game and opens the copy", async () => {
     const user = userEvent.setup();
     renderGamePage(quizshowGamePath(GAME_ID));
 
-    await user.click(
-      await screen.findByRole("button", { name: "Duplicate game" }),
-    );
+    await chooseMoreAction(user, "Duplicate game");
 
     expect(await screen.findByText("Game duplicated")).toBeTruthy();
     const copyId = demoListGames().games[0]?.id ?? "";
@@ -104,18 +157,44 @@ describe("QuizshowGamePage", () => {
     await waitFor(() =>
       expect(currentLocation()).toBe(quizshowGamePath(copyId)),
     );
+    for (const titleField of await findGameTitleFields()) {
+      expect(titleField).toHaveValue(GAME_TITLE);
+    }
+  });
+
+  it("names why the save failed and copies nothing when Duplicate's save is refused", async () => {
+    const user = userEvent.setup();
+    renderGamePage(quizshowGamePath(GAME_ID));
+    const [titleField] = await findGameTitleFields();
+    if (!titleField) throw new Error("The studio shows no title field");
+    await user.type(titleField, " live");
+    const gameCount = demoListGames().games.length;
+    vi.mocked(demoPutGame).mockImplementationOnce(() => {
+      throw demoRefusal(403, "quizshow_cohost_is_playing");
+    });
+
+    await chooseMoreAction(user, "Duplicate game");
+
+    // The toast says the save's own reason, never the generic retry line.
+    const reasons = await screen.findAllByText(
+      "You're playing in this game, so the host tools wait until it ends",
+    );
     expect(
-      await screen.findByRole("heading", { level: 1, name: GAME_TITLE }),
-    ).toBeTruthy();
+      reasons.some((reason) => reason.closest('[role="alert"]') !== null),
+    ).toBe(true);
+    expect(
+      screen.queryByText("We couldn't save the quiz. Try again"),
+    ).toBeNull();
+    expect(screen.queryByText("Game duplicated")).toBeNull();
+    expect(demoListGames().games).toHaveLength(gameCount);
+    expect(currentLocation()).toBe(quizshowGamePath(GAME_ID));
   });
 
   it("asks before deleting the game, then goes back to Pulse Live", async () => {
     const user = userEvent.setup();
     renderGamePage(quizshowGamePath(GAME_ID));
 
-    await user.click(
-      await screen.findByRole("button", { name: "Delete game" }),
-    );
+    await chooseMoreAction(user, "Delete game");
 
     const dialog = await screen.findByRole("dialog");
     expect(within(dialog).getByText("Delete this game?")).toBeTruthy();
@@ -139,9 +218,10 @@ describe("QuizshowGamePage", () => {
     const nativeConfirm = vi.spyOn(window, "confirm").mockReturnValue(false);
     renderGamePage(quizshowGamePath(GAME_ID));
 
-    const titleField = await screen.findByLabelText("Game title");
+    const [titleField] = await findGameTitleFields();
+    if (!titleField) throw new Error("The studio shows no title field");
     await user.type(titleField, " edited");
-    await user.click(screen.getByRole("button", { name: "Delete game" }));
+    await chooseMoreAction(user, "Delete game");
     const dialog = await screen.findByRole("dialog");
     await user.click(
       within(dialog).getByRole("button", { name: "Delete game" }),
@@ -163,56 +243,68 @@ describe("QuizshowGamePage", () => {
         name: "We couldn't find this game",
       }),
     ).toBeTruthy();
-    const backLink = screen.getByRole("link", { name: "Back to Pulse Live" });
-    expect(backLink.getAttribute("href")).toBe(routes.play);
-    expect(screen.queryByRole("heading", { level: 1 })).toBeNull();
+    // A gone game offers the way back (top bar and the panel's action), with no Try again.
+    const backLinks = screen.getAllByRole("link", {
+      name: "Back to Pulse Live",
+    });
+    expect(backLinks).toHaveLength(2);
+    for (const backLink of backLinks) {
+      expect(backLink.getAttribute("href")).toBe(routes.play);
+    }
+    expect(screen.queryByRole("button", { name: "Try again" })).toBeNull();
+    expect(screen.queryByLabelText("Game title")).toBeNull();
   });
 
   it("opens the source picker once for ?start=copy and clears the param", async () => {
     const user = userEvent.setup();
-    renderGamePage(quizshowGamePath(GAME_ID, { shouldOpenSources: true }));
+    // My games sends a new, empty game here to copy a quiz into.
+    const blankGame = demoCreateGame({ title: "Blank game", source: null });
+    renderGamePage(
+      quizshowGamePath(blankGame.gameId, { shouldOpenSources: true }),
+    );
 
     const dialog = await screen.findByRole("dialog");
-    expect(
-      within(dialog).getByText(
-        "Your other games, and events you run that hold a quiz",
-      ),
-    ).toBeTruthy();
+    expect(within(dialog).getByText(SOURCES_LEAD)).toBeTruthy();
     expect(screen.getAllByRole("dialog")).toHaveLength(1);
     await waitFor(() =>
-      expect(currentLocation()).toBe(quizshowGamePath(GAME_ID)),
+      expect(currentLocation()).toBe(quizshowGamePath(blankGame.gameId)),
     );
 
     await user.keyboard("{Escape}");
 
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
-    expect(currentLocation()).toBe(quizshowGamePath(GAME_ID));
+    expect(currentLocation()).toBe(quizshowGamePath(blankGame.gameId));
     expect(
-      screen.getByRole("heading", { level: 1, name: GAME_TITLE }),
+      screen.getByRole("button", { name: "Start with a blank quiz" }),
     ).toBeTruthy();
     expect(screen.queryByRole("dialog")).toBeNull();
   });
 
-  it("keeps the source picker closed when a failed delete brings the builder back", async () => {
+  it("keeps the source picker closed when a failed delete brings the studio back", async () => {
     const user = userEvent.setup();
     vi.mocked(demoDeleteGame).mockImplementationOnce(() => {
       throw new ApiError(500, "Server error");
     });
-    renderGamePage(quizshowGamePath(GAME_ID, { shouldOpenSources: true }));
+    const blankGame = demoCreateGame({ title: "Blank game", source: null });
+    renderGamePage(
+      quizshowGamePath(blankGame.gameId, { shouldOpenSources: true }),
+    );
 
     expect(await screen.findByText(SOURCES_LEAD)).toBeTruthy();
     await user.keyboard("{Escape}");
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
 
-    await user.click(screen.getByRole("button", { name: "Delete game" }));
+    await chooseMoreAction(user, "Delete game");
     const dialog = await screen.findByRole("dialog");
     await user.click(
       within(dialog).getByRole("button", { name: "Delete game" }),
     );
 
-    expect(await screen.findByLabelText("Game title")).toBeTruthy();
+    expect(
+      await screen.findByRole("button", { name: "Start with a blank quiz" }),
+    ).toBeTruthy();
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     expect(screen.queryByText(SOURCES_LEAD)).toBeNull();
-    expect(currentLocation()).toBe(quizshowGamePath(GAME_ID));
+    expect(currentLocation()).toBe(quizshowGamePath(blankGame.gameId));
   });
 });

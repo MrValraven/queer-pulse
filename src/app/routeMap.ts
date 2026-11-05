@@ -71,7 +71,7 @@ export const routes = {
   adminMusicEvent: "/admin/music-events/:slug",
   /** Pulse Live quiz templates: the staff list. Moderator and Admin. */
   adminQuizshowTemplates: "/admin/quizshow/templates",
-  /** One template's builder (`adminQuizshowTemplatePath`). */
+  /** One template in the full-screen studio (`adminQuizshowTemplatePath`). */
   adminQuizshowTemplate: "/admin/quizshow/templates/:templateId",
   adminLanding: "/admin/landing",
   adminPressKit: "/admin/press-kit",

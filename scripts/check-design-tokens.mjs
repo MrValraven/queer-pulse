@@ -158,14 +158,6 @@ const ALLOWED_FILES = new Map([
     },
   ],
   [
-    "features/settings/profileTheme.data.ts",
-    {
-      rules: ["hex"],
-      reason:
-        "pride flag swatches a member picks for their profile theme are content",
-    },
-  ],
-  [
     "features/admin/emailTemplates/design/emailPalette.ts",
     {
       rules: ["hex", "rgb-triple"],

@@ -9,8 +9,12 @@ import {
   matchesHousingFilters,
   type HousingFilters,
 } from "../housingFilters";
-import { getHousingListings } from "./housingListing.api";
+import {
+  getHousingListings,
+  type HousingBoardFacets,
+} from "./housingListing.api";
 import { listingDtoToHousingListing } from "./housingListing.adapters";
+import { countDemoHousingFacets } from "./housingListingFacets";
 
 const HOUSING_LISTINGS_KEY = "housing-listings";
 
@@ -19,6 +23,9 @@ interface HousingListingsPageVM {
   total: number;
   page: number;
   pageSize: number;
+  /** The sidebar's availability counts. Undefined on a server that predates
+   *  them, which must never render as a `0`. */
+  facets?: HousingBoardFacets;
 }
 
 /**
@@ -54,7 +61,14 @@ export function useHousingListings(
         const items = HOUSING_LISTINGS.filter((listing) =>
           matchesHousingFilters(listing, filters),
         );
-        return { items, total: items.length, page: 1, pageSize: items.length };
+        return {
+          items,
+          total: items.length,
+          page: 1,
+          pageSize: items.length,
+          // Counted over the whole fixture, the way the server counts.
+          facets: countDemoHousingFacets(HOUSING_LISTINGS, filters),
+        };
       }
       const listingPage = await getHousingListings({
         ...filters,
@@ -67,6 +81,7 @@ export function useHousingListings(
         total: listingPage.total,
         page: listingPage.page,
         pageSize: listingPage.pageSize,
+        facets: listingPage.facets,
       };
     },
     getNextPageParam: (lastPage) =>
@@ -90,5 +105,11 @@ export function useHousingListings(
       total: data?.pages[0]?.total ?? flattened.length,
     };
   }, [data]);
-  return { ...query, listings, total };
+  // Read off the FIRST page: every page of one filter run shares them. While
+  // a new filter run loads, `keepPreviousData` still serves the previous
+  // run's counts, flagged by `areFacetsStale` so the sidebar dims them and
+  // disables nothing on their word.
+  const facets = data?.pages[0]?.facets;
+  const areFacetsStale = query.isPlaceholderData;
+  return { ...query, listings, total, facets, areFacetsStale };
 }

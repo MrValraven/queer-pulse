@@ -152,14 +152,6 @@
     color: var(--studio-text);
   }
 }
-/* A <button> wearing .headerIcon; strip the UA button chrome. */
-.headerIconButton {
-  border: 0;
-  padding: 0;
-  background: none;
-  font-family: inherit;
-  cursor: pointer;
-}
 .headerIcon:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);

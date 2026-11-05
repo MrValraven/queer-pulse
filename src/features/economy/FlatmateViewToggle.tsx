@@ -43,7 +43,8 @@ export function FlatmateViewToggle({
           aria-pressed={view === option.id}
           onClick={() => setView(option.id)}
         >
-          {option.icon} {option.label}
+          {option.icon}{" "}
+          <span className={styles.viewChipLabel}>{option.label}</span>
         </button>
       ))}
     </div>

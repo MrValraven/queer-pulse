@@ -6,15 +6,17 @@ import {
   TABLE_VIBE_LABEL_KEY,
 } from "./questTable.data";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
+import { DIRECTORY_AVAILABILITY_LABEL_KEY } from "./subprofileDirectoryAvailability.data";
 import type { SubprofileDirectoryFilters } from "./useSubprofileDirectoryFilters";
 
 /**
  * Everything currently narrowing the persona grid, as removable chips.
  *
- * Every refinement is here, the search term included, because the point of
- * moving the controls into a "Refine" drawer is that a shut drawer hides the
- * controls without hiding their state. The directory has no sort, so unlike
- * `/communities` this list is narrowings only.
+ * Every refinement is here, the search term included (key `q`, labelled
+ * "Search: {term}"), so a folded sidebar hides the controls while their state
+ * stays on screen. The Filters badge does not read this list's length: it
+ * reads `sidebarActiveCount` on the filters hook, which leaves the search
+ * term out. The sort is an order, so this list is narrowings only.
  */
 export function useSubprofileDirectoryActiveFilters(
   directory: SubprofileDirectoryFilters,
@@ -25,8 +27,8 @@ export function useSubprofileDirectoryActiveFilters(
     setKinds,
     activeTags,
     setActiveTags,
-    openToCollabs,
-    setOpenToCollabs,
+    availability,
+    setAvailability,
     tableFormats,
     setTableFormats,
     tableVibes,
@@ -46,11 +48,11 @@ export function useSubprofileDirectoryActiveFilters(
           setKinds((current) => current.filter((entry) => entry !== kind)),
       });
     });
-    if (openToCollabs) {
+    if (availability !== null) {
       list.push({
-        key: "collabs",
-        label: t("subprofiles:directory.openToCollabsChip"),
-        onRemove: () => setOpenToCollabs(false),
+        key: `availability:${availability}`,
+        label: t(DIRECTORY_AVAILABILITY_LABEL_KEY[availability]),
+        onRemove: () => setAvailability(null),
       });
     }
     tableFormats.forEach((format) => {
@@ -82,7 +84,7 @@ export function useSubprofileDirectoryActiveFilters(
     if (query.trim()) {
       list.push({
         key: "q",
-        label: `"${query.trim()}"`,
+        label: t("subprofiles:directory.searchChip", { term: query.trim() }),
         onRemove: () => setQuery(""),
       });
     }
@@ -91,14 +93,14 @@ export function useSubprofileDirectoryActiveFilters(
   }, [
     kinds,
     activeTags,
-    openToCollabs,
+    availability,
     tableFormats,
     tableVibes,
     query,
     t,
     setKinds,
     setActiveTags,
-    setOpenToCollabs,
+    setAvailability,
     setTableFormats,
     setTableVibes,
     setQuery,

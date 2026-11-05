@@ -31,6 +31,8 @@
   border-radius: var(--radius-pill);
   padding: 11px 16px 11px 40px;
   outline: none;
+  /* A placeholder longer than a phone-width field ends in an ellipsis. */
+  text-overflow: ellipsis;
   transition:
     border-color 0.16s var(--ease),
     box-shadow 0.16s var(--ease);

@@ -129,7 +129,6 @@ export function Footer() {
         </div>
 
         <div className={styles.base}>
-          <span className={styles.copyright}>{t("footer:copyright")}</span>
           <nav
             className={styles.baseLinks}
             aria-label={t("footer:aria.legalNav")}
@@ -138,8 +137,11 @@ export function Footer() {
               <BaseLink key={link.href} link={link} />
             ))}
           </nav>
-          <div className={styles.controls}>
-            <LanguageSwitcher />
+          <div className={styles.baseMeta}>
+            <span className={styles.copyright}>{t("footer:copyright")}</span>
+            <div className={styles.controls}>
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       </div>

@@ -19,6 +19,19 @@
   margin-block-start: 32px;
 }
 
+/* A phone shows one poster per row: a tighter step between them and under
+   the heading, so the shorter posters read as one column. */
+@media (--md) {
+  .section {
+    padding-block-start: var(--gap-sm);
+  }
+
+  .grid {
+    gap: var(--gap-sm);
+    margin-block-start: var(--card-pad);
+  }
+}
+
 /* ── Ways to gather — a condensed strip. Whitespace-grouped (gap only, no
    card boxes/borders) so it reads lighter than the full landing-page grid
    this data also feeds. ── */

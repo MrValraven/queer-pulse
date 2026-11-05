@@ -90,7 +90,6 @@ function QuizshowTemplatePublishActions({
   // The alert repeats nothing the reason line already says.
   const isErrorShown = errorKey !== null && errorKey !== blockedReasonKey;
   const shownReasonKey = useLastKey(hasReason ? blockedReasonKey : null);
-  const shownErrorKey = useLastKey(isErrorShown ? errorKey : null);
 
   return (
     <div className={styles.actions}>
@@ -119,13 +118,26 @@ function QuizshowTemplatePublishActions({
           {shownReasonKey !== null && t(shownReasonKey)}
         </p>
       </Collapse>
-      <Collapse isOpen={isErrorShown}>
-        <p className={styles.alert} role="alert">
-          <FiAlertCircle aria-hidden fill="none" className={styles.alertIcon} />
-          {shownErrorKey !== null && t(shownErrorKey)}
-        </p>
-      </Collapse>
+      <QuizshowTemplatePublishAlert errorKey={isErrorShown ? errorKey : null} />
     </div>
+  );
+}
+
+/** The last publish refusal, named; it folds away once the next attempt clears it. */
+function QuizshowTemplatePublishAlert({
+  errorKey,
+}: {
+  errorKey: string | null;
+}) {
+  const { t } = useTranslation();
+  const shownErrorKey = useLastKey(errorKey);
+  return (
+    <Collapse isOpen={errorKey !== null}>
+      <p className={styles.alert} role="alert">
+        <FiAlertCircle aria-hidden fill="none" className={styles.alertIcon} />
+        {shownErrorKey !== null && t(shownErrorKey)}
+      </p>
+    </Collapse>
   );
 }
 
@@ -135,11 +147,18 @@ export function QuizshowTemplateDetails({
   meta,
   languages,
   publishing,
+  isFlat = false,
 }: {
   templateDraft: QuizshowTemplateDraft;
   meta: QuizshowTemplateMeta;
   languages: QuizshowLanguageMode;
   publishing: QuizshowTemplatePublishing;
+  /**
+   * Inside the Pulse Live studio inspector, whose section already names it:
+   * a plain group of fields, with no card, no header and no landmark, and
+   * the publish status line without Publish (the studio's top bar has it).
+   */
+  isFlat?: boolean;
 }) {
   const { t } = useTranslation();
   const headingId = useId();
@@ -149,18 +168,8 @@ export function QuizshowTemplateDetails({
   const { shownMissingFields } = publishing;
   const staffNotesMax = QUIZSHOW_LIMITS.templateStaffNotesMax;
 
-  return (
-    <section
-      ref={panelRef}
-      aria-labelledby={headingId}
-      className={styles.panel}
-    >
-      <header className={styles.header}>
-        <h3 id={headingId} className={styles.heading}>
-          {t("quizshow:templates.details.heading")}
-        </h3>
-        <p className={styles.sub}>{t("quizshow:templates.details.sub")}</p>
-      </header>
+  const content = (
+    <>
       <QuizshowBilingualInput
         label={t("quizshow:templates.details.cardTitle")}
         value={card.title}
@@ -195,12 +204,44 @@ export function QuizshowTemplateDetails({
       </FormField>
       <div className={styles.statusRow}>
         <QuizshowTemplateStatusLine meta={meta} />
-        <QuizshowTemplatePublishActions
-          meta={meta}
-          publishing={publishing}
-          onBlockedPublish={focusFirstMissingField}
-        />
+        {/* The studio's top bar holds Publish and its reason, so the flat group keeps the status and the last refusal. */}
+        {isFlat ? (
+          <QuizshowTemplatePublishAlert errorKey={publishing.errorKey} />
+        ) : (
+          <QuizshowTemplatePublishActions
+            meta={meta}
+            publishing={publishing}
+            onBlockedPublish={focusFirstMissingField}
+          />
+        )}
       </div>
+    </>
+  );
+  if (isFlat) {
+    return (
+      <div
+        ref={(node) => {
+          panelRef.current = node;
+        }}
+        className={styles.flat}
+      >
+        {content}
+      </div>
+    );
+  }
+  return (
+    <section
+      ref={panelRef}
+      aria-labelledby={headingId}
+      className={styles.panel}
+    >
+      <header className={styles.header}>
+        <h3 id={headingId} className={styles.heading}>
+          {t("quizshow:templates.details.heading")}
+        </h3>
+        <p className={styles.sub}>{t("quizshow:templates.details.sub")}</p>
+      </header>
+      {content}
     </section>
   );
 }

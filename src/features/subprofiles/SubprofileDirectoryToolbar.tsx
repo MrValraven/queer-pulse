@@ -1,125 +1,115 @@
+import { SkeletonLine, type ActiveFilter } from "../../shared/components/ui";
 import {
-  ActiveFilters,
-  RefineToggle,
-  SearchInput,
-} from "../../shared/components/ui";
+  AppliedChipsRow,
+  FilterResultsTop,
+  FilterSortControl,
+  FiltersToggleButton,
+  type FilterPageState,
+} from "../../shared/components/filterPage";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
-import { useRefineDrawer } from "../../shared/hooks";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { SubprofileDirectoryRefinePanel } from "./SubprofileDirectoryRefinePanel";
-import { useSubprofileDirectoryActiveFilters } from "./useSubprofileDirectoryActiveFilters";
+import type { SubprofileFilterSectionKey } from "./subprofileDirectoryFilterSections";
+import { SORT_OPTIONS } from "./subprofileDirectorySort";
 import type { SubprofileDirectoryFilters } from "./useSubprofileDirectoryFilters";
-import styles from "./SubprofileDirectoryPage.module.css";
 
 /**
- * The directory's whole control surface: search and Refine on one row, the
- * drawer beneath, then the chips saying what is currently narrowing the grid.
+ * The top of the persona results column: the live count beside the Filters
+ * button and the sort, then a chip for everything narrowing the grid. The
+ * search box is the hero's, so its term shows here as a "Search: {term}"
+ * chip; the Filters badge counts the sidebar's own filters only.
  *
- * This replaces four stacked bands that stood permanently open above the first
- * persona: thirteen page-family chips, an "N crafts to browse" note, the search
- * field, and a tag row. The families were the deeper problem (a page theme
- * derived from the profession, which the create flow says nobody picks
- * directly), so professions took their place and everything but search moved
- * behind the toggle, the same shape `/communities` uses.
- *
- * The "N crafts to browse" line went with them. Unrefined it counted a facet
- * rather than the results; once something IS narrowing, the count rides the
- * chip row below, beside the chips that explain it.
+ * The count row is the filter page's `aria-live` region, so it is what tells
+ * a screen reader how many personas a refinement left behind. It shimmers
+ * only while the first page loads; when that fetch fails the error panel
+ * below speaks for the directory, so the row holds no count.
  */
 export function SubprofileDirectoryToolbar({
   directory,
   isCountKnown,
+  isShowingControls,
+  filterPage,
+  activeFilters,
+  resultCount,
 }: {
   directory: SubprofileDirectoryFilters;
   /** False while the fetch is in flight or failed, so a count of 0 is never
    *  shown as an answer to a question that has not been answered yet. */
   isCountKnown: boolean;
+  /** The directory has something to filter. False drops the Filters button
+   *  (the sidebar folds away with it); the sort is always shown. */
+  isShowingControls: boolean;
+  filterPage: FilterPageState<SubprofileFilterSectionKey>;
+  /** Everything narrowing the grid, the search term included. */
+  activeFilters: readonly ActiveFilter[];
+  /** The figure the count row says, worked out by `SubprofileDirectoryBrowse`
+   *  so the filters sheet's "Show N personas" says the same number. */
+  resultCount: number;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const refine = useRefineDrawer("qp.subprofiles.refineOpen");
-  const activeFilters = useSubprofileDirectoryActiveFilters(directory);
-
-  // The search term shows in the field itself, so the badge counts only what
-  // the shut drawer is actually hiding.
-  const hiddenFilterCount =
-    directory.kinds.length +
-    directory.activeTags.length +
-    (directory.openToCollabs ? 1 : 0) +
-    directory.tableFormats.length +
-    directory.tableVibes.length;
-
-  const resultCount = directory.visibleCards.length;
-
-  // `professionGroups` is built from every fetched persona, so an empty one is
-  // an empty directory: refining nothing is an affordance for nothing, and the
-  // page's own empty state says more than a search box would. Kept while the
-  // first fetch is still in flight (the pool isn't known to be empty yet) and
-  // kept whenever a term is typed, so a search can always be cleared.
-  const isPoolEmpty = directory.professionGroups.length === 0;
-  const isShowingControls =
-    !isCountKnown || !isPoolEmpty || directory.hasActiveRefinement;
 
   return (
     <>
-      {isShowingControls && (
-        <div className={styles.bar}>
-          <SearchInput
-            className={styles.search}
-            value={directory.query}
-            onChange={directory.setQuery}
-            placeholder={t("subprofiles:directory.searchPlaceholder")}
-            ariaLabel={t("subprofiles:directory.searchAria")}
-          />
-          <RefineToggle
-            {...refine.toggleProps}
-            activeCount={hiddenFilterCount}
-            className={styles.refineToggle}
-          />
-        </div>
-      )}
-
-      {/* Gated on the same condition as its toggle: the drawer's open state is
-          remembered per device, so a member who left it open and then hit an
-          empty directory would otherwise face a panel with no way to shut it. */}
-      {isShowingControls && (
-        <SubprofileDirectoryRefinePanel
-          directory={directory}
-          panelProps={refine.panelProps}
-        />
-      )}
-
-      <ActiveFilters
-        filters={activeFilters}
-        onClearFilters={directory.onClearFilters}
-        trailing={
+      <FilterResultsTop
+        count={
           isCountKnown ? (
             <Translation
               i18nKey="subprofiles:directory.resultCount"
               values={{ count: resultCount }}
               slots={{
                 count: (
-                  <RollingNumber
-                    value={fmt.number(resultCount)}
-                    numericValue={resultCount}
-                  />
+                  <b>
+                    <em>
+                      <RollingNumber
+                        value={fmt.number(resultCount)}
+                        numericValue={resultCount}
+                      />
+                    </em>
+                  </b>
                 ),
               }}
             />
+          ) : directory.isLoading ? (
+            <SkeletonLine width={110} height={14} />
           ) : null
+        }
+        filtersButton={
+          isShowingControls ? (
+            <FiltersToggleButton
+              isMobile={filterPage.isMobile}
+              isPanelOpen={filterPage.isPanelOpen}
+              onTogglePanel={filterPage.togglePanel}
+              onOpenSheet={filterPage.openSheet}
+              activeCount={directory.sidebarActiveCount}
+            />
+          ) : undefined
+        }
+        // Always on screen, so it never pops in or out with the sidebar.
+        controls={
+          <FilterSortControl
+            label={t("subprofiles:directory.sort.label")}
+            value={directory.sort}
+            options={SORT_OPTIONS.map((option) => ({
+              value: option.value,
+              label: t(option.labelKey),
+            }))}
+            onChange={directory.setSort}
+            isLabelHiddenOnPhone
+          />
         }
       />
 
-      {/* The visible count only appears once something is narrowing the grid,
-          so this is what tells a screen reader how many personas a refinement
-          left behind. */}
-      <p className="visuallyHidden" aria-live="polite">
-        {isCountKnown && directory.hasActiveRefinement
-          ? t("subprofiles:directory.resultCount", { count: resultCount })
-          : ""}
-      </p>
+      <AppliedChipsRow
+        chips={activeFilters.map((filter) => ({
+          key: filter.key,
+          // The hook builds every label as a string; `ActiveFilter` only
+          // types it as a ReactNode, so this narrows it back.
+          label: typeof filter.label === "string" ? filter.label : filter.key,
+          onRemove: filter.onRemove,
+        }))}
+      />
     </>
   );
 }

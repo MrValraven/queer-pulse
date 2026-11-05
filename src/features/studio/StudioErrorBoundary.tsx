@@ -1,6 +1,7 @@
 import { Suspense, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { lazyNamed } from "../../app/routeHelpers";
+import { useForcedTheme } from "../../app/providers/themeContext";
 import { ErrorBoundary } from "../../shared/components/feedback/ErrorBoundary";
 import { StudioErrorRetryProvider } from "./studioErrorRetry";
 import { StudioGateSkeleton } from "./StudioGateSkeleton";
@@ -25,8 +26,14 @@ const Studio500Page = lazyNamed(
  * a full reload instead. If the Studio frame itself throws while painting
  * the fallback, the error climbs to the app boundary above, which needs no
  * frame at all.
+ *
+ * Being the one element around every Studio route, it also holds the dark
+ * theme: Studio has no light mode, from the landing and info pages to the
+ * shells and the error screens. The member's own theme returns when they
+ * leave Studio.
  */
 export function StudioErrorBoundary() {
+  useForcedTheme("dark");
   const { pathname, search } = useLocation();
   const resetKey = `${pathname}${search}`;
   const [retryCount, setRetryCount] = useState(0);

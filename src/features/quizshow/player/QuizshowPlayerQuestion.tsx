@@ -1,6 +1,8 @@
 import { useState, type FormEvent } from "react";
-import { FiCheckCircle } from "react-icons/fi";
+import { m } from "motion/react";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { Button, Collapse, FormField } from "../../../shared/components/ui";
+import { hapticTap } from "../../../shared/lib/haptics";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   QUIZSHOW_LIMITS,
@@ -18,6 +20,10 @@ import {
   trueFalseSwatchFor,
   type QuizshowSwatch,
 } from "../quizshowSwatches";
+import {
+  QuizshowLockedPanel,
+  QuizshowLockedStatus,
+} from "./QuizshowLockedPanel";
 import { QuizshowOrderAnswer } from "./QuizshowOrderAnswer";
 import { useAnswerSender } from "./useQuizshowAnswerSender";
 import { useIsAnswerHeld } from "./useIsAnswerHeld";
@@ -70,7 +76,7 @@ function TextAnswer({
     }
   };
   return (
-    <form className={styles.form} onSubmit={submit}>
+    <form className={`${styles.form} ${styles.answerSheet}`} onSubmit={submit}>
       <FormField
         label={t(
           kind === "number"
@@ -92,7 +98,8 @@ function TextAnswer({
       </FormField>
       <Button
         type="submit"
-        variant="primary"
+        variant="stage"
+        size="lg"
         aria-disabled={isLocked || isHeld || !isReady}
       >
         {t("quizshow:player.submit")}
@@ -125,7 +132,9 @@ function TileChoices({
   onSend,
 }: TileChoicesProps) {
   const { t } = useTranslation();
+  const { reducedMotion } = useMotionPrefs();
   const isLocked = lockedPayload !== null;
+  const isTappable = !isLocked && !isHeld;
   const choices: Array<{
     key: string;
     swatch: QuizshowSwatch;
@@ -157,9 +166,20 @@ function TileChoices({
           payload: { type: "multiple_choice", optionIndex },
         }));
   return (
-    <ul className={styles.tiles}>
+    <ul className={styles.tiles} data-count={choices.length}>
       {choices.map((choice, choiceIndex) => (
-        <li key={choice.key}>
+        // The press scale and the settle on lock ride on the slot, so the tile keeps its own states.
+        <m.li
+          key={choice.key}
+          className={styles.tileSlot}
+          whileTap={isTappable && !reducedMotion ? { scale: 0.96 } : undefined}
+          animate={
+            choice.isChosen && !reducedMotion
+              ? { scale: [0.96, 1.03, 1] }
+              : { scale: 1 }
+          }
+          transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+        >
           <QuizshowAnswerTile
             colorKey={choice.swatch.colorKey}
             letter={optionLetter(choiceIndex)}
@@ -168,7 +188,9 @@ function TileChoices({
             state={tileState(choice.isChosen, isLocked)}
             isDisabled={isLocked || isHeld}
             onSelect={() => {
-              if (isLocked || isHeld) return;
+              if (!isTappable) return;
+              // The same short tap the rest of the app gives, inside the gesture so the phone allows it.
+              if (!reducedMotion) hapticTap(12);
               onSend(choice.payload);
             }}
             ariaLabel={t("quizshow:stage.answerLabel", {
@@ -177,7 +199,7 @@ function TileChoices({
               text: choice.text,
             })}
           />
-        </li>
+        </m.li>
       ))}
     </ul>
   );
@@ -187,10 +209,17 @@ export function QuizshowPlayerQuestion({
   controller,
   question,
   language,
+  isFixedCanvas = false,
 }: {
   controller: QuizshowSessionController;
   question: QuizshowQuestionView;
   language: QuizshowLanguage;
+  /**
+   * Additive. Drawn on a fixed 390x844 canvas scaled into a frame (the
+   * studio's phone preview): the view takes that phone's sizes, whatever the
+   * window. A real phone leaves it off.
+   */
+  isFixedCanvas?: boolean;
 }) {
   const { t } = useTranslation();
   const headingRef = useQuizshowHeadingFocus(question.questionId);
@@ -210,13 +239,10 @@ export function QuizshowPlayerQuestion({
   );
 
   return (
-    <div className={styles.screenBody}>
-      <h1 ref={headingRef} tabIndex={-1} className={styles.heading}>
-        {pickQuizshowText(question.prompt, language)}
-      </h1>
-      {question.mediaUrl !== null && (
-        <img className={styles.media} src={question.mediaUrl} alt="" />
-      )}
+    <div
+      className={styles.screenBody}
+      data-fixed-canvas={isFixedCanvas ? "true" : undefined}
+    >
       <QuizshowCountdownBar
         cursor={player?.cursor ?? null}
         clockOffsetMs={controller.clockOffsetMs}
@@ -224,13 +250,36 @@ export function QuizshowPlayerQuestion({
         standardLimitMs={question.timeLimitSeconds * 1000}
         size="phone"
       />
-      <Collapse isOpen={hasExtraTime}>
-        <p className={styles.note}>{t("quizshow:player.extraTimeOn")}</p>
-      </Collapse>
+      {/* The prompt sits in the middle of the free space above the answers. */}
+      <div className={styles.promptArea}>
+        <h1 ref={headingRef} tabIndex={-1} className={styles.heading}>
+          {pickQuizshowText(question.prompt, language)}
+        </h1>
+        {question.mediaUrl !== null && (
+          <img className={styles.media} src={question.mediaUrl} alt="" />
+        )}
+        <Collapse isOpen={hasExtraTime}>
+          <p className={styles.note}>{t("quizshow:player.extraTimeOn")}</p>
+        </Collapse>
+      </div>
       {isLateJoiner ? (
         <p className={styles.note}>{t("quizshow:player.waitNextQuestion")}</p>
       ) : (
-        <>
+        <div className={styles.answers}>
+          <QuizshowLockedStatus
+            text={isLocked ? t("quizshow:player.answerLocked") : null}
+          />
+          <Collapse isOpen={isLocked}>
+            <QuizshowLockedPanel
+              title={t("quizshow:player.answerLocked")}
+              body={t("quizshow:player.lockedInBody")}
+            />
+          </Collapse>
+          <Collapse isOpen={errorKey !== null}>
+            <p role="alert" className={styles.alert}>
+              {errorKey === null ? "" : t(errorKey)}
+            </p>
+          </Collapse>
           {(question.type === "multiple_choice" ||
             question.type === "true_false") && (
             <TileChoices
@@ -273,23 +322,7 @@ export function QuizshowPlayerQuestion({
               onSubmit={(orderedIds) => send({ type: "order", orderedIds })}
             />
           )}
-          <Collapse isOpen={isLocked}>
-            <div className={styles.locked}>
-              <p className={styles.lockedTitle}>
-                <FiCheckCircle aria-hidden />
-                {t("quizshow:player.lockedIn")}
-              </p>
-              <p className={styles.lockedBody}>
-                {t("quizshow:player.lockedInBody")}
-              </p>
-            </div>
-          </Collapse>
-          <Collapse isOpen={errorKey !== null}>
-            <p role="alert" className={styles.alert}>
-              {errorKey === null ? "" : t(errorKey)}
-            </p>
-          </Collapse>
-        </>
+        </div>
       )}
     </div>
   );

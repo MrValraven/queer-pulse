@@ -7,27 +7,23 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioArtistRefView } from "./api/studio.adapters";
 import { useStudioMenuShouldReplace } from "./studioAccountMenuNavigation";
 import { useStudioShowcase } from "./useStudioShowcase";
-import {
-  StudioAccountMenuGiving,
-  StudioThemeIconButton,
-} from "./StudioAccountMenuRows";
+import { StudioAccountMenuGiving } from "./StudioAccountMenuRows";
 import styles from "./StudioAccountMenu.module.css";
 
 /** The top of {@link StudioAccountMenuPanel}: the member's avatar, name and
  *  persona line, all one link to their Studio profile (the "You" page). The
  *  visible name and persona line already form the link's accessible name, so
  *  it carries no aria-label. "Back to QueerPulse" stays the way to the main
- *  app. The light/dark icon button and the Settings icon link sit at the far
- *  end of that line on desktop. The showcase's giving note sits under it,
- *  outside the link. */
+ *  app. The Settings icon link sits at the far end of that line on desktop.
+ *  The showcase's giving note sits under it, outside the link. */
 export function StudioAccountMenuHeader({
   persona,
   onNavigate,
   shouldShowHeaderActions,
 }: {
   persona: StudioArtistRefView | null;
-  /** Shows the theme icon button and the Settings icon link; the phone sheet
-   *  lists both as rows instead. */
+  /** Shows the Settings icon link; the phone sheet lists it as a row
+   *  instead. */
   shouldShowHeaderActions: boolean;
   /** Closes the menu at once. */
   onNavigate: () => void;
@@ -64,7 +60,6 @@ export function StudioAccountMenuHeader({
         </Link>
         {shouldShowHeaderActions && (
           <div className={styles.headerActions}>
-            <StudioThemeIconButton />
             <Tooltip label={settingsLabel}>
               <Link
                 to={routes.studioSettings}

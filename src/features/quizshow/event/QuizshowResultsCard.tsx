@@ -14,6 +14,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useDeleteQuizshowResults } from "../api/useQuizshowMutations";
 import { useQuizshowResults } from "../api/useQuizshowResults";
 import { quizshowErrorCodeOf, quizshowErrorKeyOf } from "../api/quizshowErrors";
+import { useQuizshowDarkDialog } from "../builder/useQuizshowDarkDialog";
 import { QuizshowShape } from "../QuizshowShape";
 import type { QuizshowSessionScope } from "../quizshowScope";
 import { QuizshowRecap } from "./QuizshowRecap";
@@ -71,10 +72,13 @@ function OwnPlacing({ results }: { results: QuizshowResultsResponse }) {
 function ResultsBody({
   results,
   canDelete,
+  isFlat,
   onDelete,
 }: {
   results: QuizshowResultsResponse;
   canDelete: boolean;
+  /** In the studio's results panel: no card surface, and the panel's title stands in for this heading. */
+  isFlat: boolean;
   onDelete: () => void;
 }) {
   const { t, language } = useTranslation();
@@ -87,10 +91,15 @@ function ResultsBody({
       : []),
   ].join(" · ");
   return (
-    <section className={styles.results} aria-labelledby={`${recapId}-title`}>
-      <h2 id={`${recapId}-title`} className={styles.resultsTitle}>
-        {t("quizshow:results.title")}
-      </h2>
+    <section
+      className={isFlat ? styles.resultsFlat : styles.results}
+      aria-labelledby={isFlat ? undefined : `${recapId}-title`}
+    >
+      {!isFlat && (
+        <h2 id={`${recapId}-title`} className={styles.resultsTitle}>
+          {t("quizshow:results.title")}
+        </h2>
+      )}
       <ol className={styles.podium} aria-label={t("quizshow:results.podium")}>
         {results.podium.map((entry) => (
           <PodiumRow key={`${entry.place}-${entry.name}`} entry={entry} />
@@ -115,7 +124,12 @@ function ResultsBody({
           </Button>
         )}
         {canDelete && (
-          <Button variant="ghost" size="sm" onClick={onDelete}>
+          <Button
+            variant={isFlat ? "ghost-dark" : "ghost"}
+            size="sm"
+            className={isFlat ? styles.resultsDeleteInStudio : undefined}
+            onClick={onDelete}
+          >
             {t("quizshow:results.delete")}
           </Button>
         )}
@@ -136,11 +150,19 @@ function ResultsBody({
 export function QuizshowResultsCard({
   scope,
   canDelete,
+  isInDarkStudio = false,
 }: {
   scope: QuizshowSessionScope;
   canDelete: boolean;
+  /**
+   * In the dark studio's results panel: no card surface (the panel is the
+   * surface and its title names the results), a caution-toned ghost Delete
+   * results, and a delete confirm that turns dark too (it portals to the body).
+   */
+  isInDarkStudio?: boolean;
 }) {
   const { t } = useTranslation();
+  const darkDialogRef = useQuizshowDarkDialog();
   const { showToast } = useToast();
   const query = useQuizshowResults(scope, { isEnabled: true });
   const deleteResults = useDeleteQuizshowResults(scope);
@@ -167,12 +189,16 @@ export function QuizshowResultsCard({
       <ResultsBody
         results={query.data}
         canDelete={canDelete}
+        isFlat={isInDarkStudio}
         onDelete={() => setIsConfirming(true)}
       />
     );
   } else if (query.isError) {
     body = (
-      <div className={styles.results} role="alert">
+      <div
+        className={isInDarkStudio ? styles.resultsFlat : styles.results}
+        role="alert"
+      >
         <p>{t("quizshow:results.loadError")}</p>
         <Button variant="ghost" size="sm" onClick={() => void query.refetch()}>
           {t("quizshow:common.retry")}
@@ -195,7 +221,9 @@ export function QuizshowResultsCard({
         confirmLabel={t("quizshow:results.delete")}
         tone="destructive"
         loading={deleteResults.isPending}
-      />
+      >
+        {isInDarkStudio && <span ref={darkDialogRef} hidden />}
+      </ConfirmDialog>
     </>
   );
 }

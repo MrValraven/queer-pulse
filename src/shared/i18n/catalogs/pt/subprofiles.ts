@@ -2,13 +2,25 @@ import type { Catalog } from "../../types";
 
 /** Subperfis — pt-PT inclusivo. Mesmas chaves que `en/subprofiles.ts`. */
 export const subprofiles: Catalog = {
+  // Cabeçalho do diretório (SubprofileCreditsHero, SubprofileCreditsHeroSearch,
+  // SubprofileCreditsQuickChips)
+  "directory.hero.eyebrow": "O diretório de pessoas",
+  "directory.hero.title":
+    "Encontra as pessoas com quem vais querer <em>trabalhar outra vez</em>",
+  "directory.hero.lead":
+    "Cada persona pertence a alguém da nossa comunidade. Vê o trabalho, segue o que te toca e fala quando quiseres fazer algo em conjunto.",
+  "directory.hero.searchLabel": "Pesquisar personas",
+  "directory.hero.searchPlaceholder": "Um DJ, terapia, Rust…",
+  "directory.hero.searchSubmit": "Encontrar pessoas",
+  "directory.hero.quickFiltersLabel": "Filtros rápidos",
+  "directory.hero.quick.therapists": "Terapeutas",
+  "directory.hero.quick.djs": "DJs para o teu evento",
+  "directory.searchChip": "Pesquisa: {term}",
+
+  // Parede de personas do diretório
+  "directory.wall.label": "Algumas das pessoas no diretório",
+
   // Diretório (SubprofileDirectoryPage)
-  "directory.eyebrow": "Diretório · personas",
-  "directory.subtitle":
-    "Descobre o trabalho que as pessoas andam a fazer em toda a comunidade, de projetos profissionais a trabalho criativo e tudo o que fica pelo meio.",
-  "directory.searchPlaceholder": "Pesquisar personas ou responsáveis",
-  "directory.searchAria":
-    "Pesquisar personas por nome, descrição ou nome do responsável",
   "directory.loading": "A carregar personas…",
   "directory.empty.title": "Ainda não há personas aqui",
   "directory.empty.description":
@@ -20,11 +32,31 @@ export const subprofiles: Catalog = {
   "directory.error.retry": "Tentar novamente",
   "directory.openToCollabsChip": "Aberto a colaborações",
 
+  // Faixa "Feito em conjunto" do diretório: trabalho recente em que personas
+  // se creditaram umas às outras.
+  "directory.madeTogether.title": "Feito em conjunto",
+  "directory.madeTogether.lead":
+    "Trabalho recente em que personas se creditaram umas às outras. Quem colabora bem costuma conhecer quem também colabora bem.",
+  "directory.madeTogether.pair": "{author} com {partner}",
+  "directory.madeTogether.metaTwo": "{first}, {second} · {month}",
+  "directory.madeTogether.metaOne": "{kind} · {month}",
+  "directory.madeTogether.previous": "Mostrar colaborações anteriores",
+  "directory.madeTogether.next": "Mostrar colaborações seguintes",
+  "directory.madeTogether.loading": "A carregar colaborações recentes…",
+
+  // Título da secção de exploração do diretório e ordenação
+  "directory.sectionTitle": "Explorar personas",
+  "directory.sort.label": "Ordenar",
+  "directory.sort.recent": "Atualizadas recentemente",
+  "directory.sort.followed": "Mais seguidas",
+  "directory.sort.name": "Nome, de A a Z",
+
   // Painel "Refinar" (SubprofileDirectoryToolbar / SubprofileDirectoryRefinePanel).
   // A faixa Profissão é encabeçada pela família da página, e esses títulos
   // reutilizam as chaves `family.*.label` do fluxo de criação.
   "directory.refine.professionLabel": "Profissão",
   "directory.refine.availabilityLabel": "Disponibilidade",
+  "directory.refine.availabilityAny": "Qualquer disponibilidade",
   "directory.refine.tagsLabel": "Tags",
   "directory.refine.tableLabel": "À mesa",
   "directory.refine.tableFormatLabel": "Formato",
@@ -37,6 +69,10 @@ export const subprofiles: Catalog = {
   // a filtrar a grelha.
   "directory.resultCount_one": "{count} persona",
   "directory.resultCount_other": "{count} personas",
+  "directory.filtersSheetLabel": "Filtrar personas",
+  "directory.showResultsCta_one": "Ver {count} persona",
+  "directory.showResultsCta_other": "Ver {count} personas",
+  "directory.showResultsCtaNone": "Ainda não há personas, vê as opções",
   "directory.showMore": "Ver mais",
   "directory.shownOfTotal": "{shown} de {total}",
   "directory.showMoreLoading": "A carregar…",
@@ -56,7 +92,7 @@ export const subprofiles: Catalog = {
   "following.empty.description":
     "Segue uma persona e o trabalho novo dela aparece aqui, e nas tuas notificações.",
   "following.empty.cta": "Ver personas",
-  "following.countLine_one": "Segues 1 persona",
+  "following.countLine_one": "Segues {count} persona",
   "following.countLine_other": "Segues {count} personas",
   "following.previousPage": "Anterior",
   "following.nextPage": "Seguinte",
@@ -88,17 +124,25 @@ export const subprofiles: Catalog = {
     "Aviso de encaminhamento para um novo endereço da persona",
   "page.rehomed.dismiss": "Dispensar esta nota",
 
-  "directory.narrowedNote":
-    "Profissão, etiquetas e disponibilidade filtram as personas já carregadas. Mostra mais para procurar mais longe.",
-  "directory.narrowedZeroNote":
-    "Nada do que já carregámos corresponde a estes filtros. Carrega em Ver mais para continuar a procurar.",
+  // Secção final do diretório
+  "directory.closing.title":
+    "O teu trabalho <em>também</em> pertence a esta parede",
+  "directory.closing.lead":
+    "Cada persona aqui foi criada por alguém que entrou por outro motivo. Cria uma página para o teu ofício e credita as pessoas com quem fazes coisas.",
+  "directory.closing.cta": "Cria a tua persona",
 
-  // Lembrete final do diretório (SubprofileDirectoryFooterPrompt — descoberta
-  // de personas, Fase 5, Momento 2). Dispensável; texto estático, sem dados ao vivo.
-  "directory.footerPrompt.message":
-    "Cada persona aqui foi criada por alguém que se juntou por outra razão. <em>A tua também pode ser.</em>",
-  "directory.footerPrompt.cta": "Cria a tua",
-  "directory.footerPrompt.notNow": "Agora não",
+  // Cartão do diretório (linhas de créditos, ligação, erros ao seguir)
+  "directory.card.creditLine_one": "Creditada com {count} pessoa",
+  "directory.card.creditLine_other": "Creditada com {count} pessoas",
+  "directory.card.creditShort_one": "{count} crédito",
+  "directory.card.creditShort_other": "{count} créditos",
+  "directory.card.viewPersona": "Ver persona",
+  "directory.card.viewPersonaNamed": "Ver persona {name}",
+  "directory.card.byOwner": "por {name}",
+  "directory.card.followError.notFollowable":
+    "Esta persona já não aceita seguidores.",
+  "directory.card.followError.ownPersona":
+    "Geres esta persona, por isso não a podes seguir.",
 
   // Afinidades do cartão do diretório (SubprofileCard)
   "card.openToCollabs": "Aberto a colaborar",
@@ -145,10 +189,6 @@ export const subprofiles: Catalog = {
   "alsoAs.sidesPrompt.notNow": "Agora não",
 
   // Navegação + paleta de comandos
-
-  // Título do diretório (SubprofileDirectoryPage) — o <em> a coral ficou como
-  // JSX em bruto antes de existir o <Translation>; agora passa por ele.
-  "directory.title": "As muitas formas de <em>criar</em>",
 
   // Rótulos de ofício — `kind` é um campo PERSISTIDO (guardado no subperfil),
   // por isso usa indireção por chave: o id canónico em inglês

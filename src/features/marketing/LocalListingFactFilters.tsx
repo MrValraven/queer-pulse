@@ -24,6 +24,7 @@ import {
   PAYMENT_METHOD_LABEL_KEYS,
   type ListingLanguageCode,
 } from "./listBusiness/listingFacts.data";
+import { LocalChipCount } from "./LocalChipCount";
 import s from "./LocalFilterBar.module.css";
 
 /** Space and Enter on a radio chip are left to the button's own click, so
@@ -33,25 +34,24 @@ function isActivationKey(key: string): boolean {
 }
 
 /** One fact chip in the Access pattern: pressed state, a popped-in tick,
- *  and unpickable only when it can only narrow and nothing would remain. */
+ *  its live count, and unpickable only when that count is a known 0 and the
+ *  chip is off. */
 export function LocalFactChip({
   label,
   isOn,
   change,
   count,
   listingFacts,
-  isLoadedSetComplete,
   onToggle,
   radio,
 }: {
   label: string;
   isOn: boolean;
   change: ListingFactFilterChange;
-  /** How many loaded places would remain with this chip pressed. */
-  count: number;
+  /** How many places the visitor would see with this chip on (see
+   *  `countListingFactChips`); undefined when not known yet. */
+  count: number | undefined;
   listingFacts: DirectoryListingFactFilters;
-  /** True once every page of places has loaded, so a zero count is final. */
-  isLoadedSetComplete: boolean;
   onToggle: (change: ListingFactFilterChange) => void;
   /** Given in a single-choice group: the chip becomes a `role="radio"` with
    *  the group's roving tab stop and arrow keys. */
@@ -80,7 +80,6 @@ export function LocalFactChip({
         filters: listingFacts,
         change,
         count,
-        isLoadedSetComplete,
       })}
       className={[s.chip, isOn && s.chipOn].filter(Boolean).join(" ")}
       onClick={() => onToggle(change)}
@@ -93,6 +92,7 @@ export function LocalFactChip({
         )}
       </AnimatePresence>
       {label}
+      <LocalChipCount count={count} />
     </m.button>
   );
 }
@@ -154,7 +154,6 @@ export interface LocalFactGroupProps {
   listingFacts: DirectoryListingFactFilters;
   onToggleListingFact: (change: ListingFactFilterChange) => void;
   counts: ListingFactCounts;
-  isLoadedSetComplete: boolean;
   /** Given inside a desktop sidebar section: see `FactGroup`. */
   sectionTitleId?: string;
 }
@@ -175,7 +174,6 @@ export function EntryModeFactGroup({
   listingFacts,
   onToggleListingFact,
   counts,
-  isLoadedSetComplete,
   sectionTitleId,
 }: LocalFactGroupProps) {
   const { t } = useTranslation();
@@ -185,7 +183,6 @@ export function EntryModeFactGroup({
         filters: listingFacts,
         change: { kind: "entryMode", mode },
         count: counts.entryModes[mode],
-        isLoadedSetComplete,
       }),
   );
   const roving = useRovingRadioGroup<HTMLButtonElement>({
@@ -214,7 +211,6 @@ export function EntryModeFactGroup({
           <LocalFactChip
             key={mode}
             listingFacts={listingFacts}
-            isLoadedSetComplete={isLoadedSetComplete}
             onToggle={onToggleListingFact}
             label={t(ENTRY_MODE_LABEL_KEYS[mode])}
             isOn={listingFacts.entryMode === mode}
@@ -241,7 +237,6 @@ export function LanguageFactGroup({
   listingFacts,
   onToggleListingFact,
   counts,
-  isLoadedSetComplete,
   sectionTitleId,
 }: LocalFactGroupProps) {
   const { t } = useTranslation();
@@ -260,7 +255,6 @@ export function LanguageFactGroup({
     <LocalFactChip
       key={code}
       listingFacts={listingFacts}
-      isLoadedSetComplete={isLoadedSetComplete}
       onToggle={onToggleListingFact}
       label={languageLabel(t, code)}
       isOn={listingFacts.languages.includes(code)}
@@ -316,7 +310,6 @@ export function PaymentFactGroup({
   listingFacts,
   onToggleListingFact,
   counts,
-  isLoadedSetComplete,
   sectionTitleId,
 }: LocalFactGroupProps) {
   const { t } = useTranslation();
@@ -330,7 +323,6 @@ export function PaymentFactGroup({
         <LocalFactChip
           key={method}
           listingFacts={listingFacts}
-          isLoadedSetComplete={isLoadedSetComplete}
           onToggle={onToggleListingFact}
           label={t(PAYMENT_METHOD_LABEL_KEYS[method])}
           isOn={listingFacts.payments.includes(method)}
@@ -351,7 +343,6 @@ export function PracticeFactGroup({
   listingFacts,
   onToggleListingFact,
   counts,
-  isLoadedSetComplete,
   sectionTitleId,
   isOnlineScope,
 }: LocalFactGroupProps & { isOnlineScope: boolean }) {
@@ -375,7 +366,6 @@ export function PracticeFactGroup({
         <LocalFactChip
           key={practice}
           listingFacts={listingFacts}
-          isLoadedSetComplete={isLoadedSetComplete}
           onToggle={onToggleListingFact}
           label={t(INCLUSION_PRACTICE_LABEL_KEYS[practice])}
           isOn={listingFacts.practices.includes(practice)}

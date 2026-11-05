@@ -1,0 +1,204 @@
+/* Pulse Live (quizshow): the "Velvet prism" stage.
+
+   Every name here is --qs-*. They sit on :root and do NOT follow the app's
+   data-theme, because the stage is its own surface: the TV, the player phone,
+   the host remote and the studio all stay on the velvet base in dark and light
+   app themes alike. The stage has its own light variant, switched by
+   [data-qs-theme="light"] on any ancestor (the screen toolbar's theme switch).
+
+   Contrast, measured against the BRIGHTEST point of the backdrop (all three
+   colour fields stacked at their peak, under --qs-veil, with the spotlight on
+   top: about #763a5c):
+   - --qs-text on that point is 7.8:1 and --qs-text-mute is 5.4:1, both on the
+     bare backdrop and on --qs-glass (7.4:1 and 5.3:1).
+   - The emphasis gradient stops (#ff9270, #f07aa8, #c7a2ff) are 3.9, 3.3 and
+     4.1:1 on it, which clears the 3:1 that large type (24px and up) needs.
+     They are for large type only.
+   - --qs-cta-ink on both ends of the CTA gradient is 6.4:1 or better.
+   Light variant, against its darkest point (all fields stacked on the blush):
+   text 8.1:1, mute 5.7:1, emphasis stops 3.6, 4.0 and 4.4:1.
+
+   features/subprofiles/persona-skins.css also uses --qs-* names, for the
+   quest skin; none of them collides with these today. */
+
+:root {
+  /* ── Base and fields ── */
+  --qs-base: #150a1d;
+  /* Studio panels: two steps up from the base. */
+  --qs-raised: #1d1027;
+  --qs-raised-2: #271636;
+  /* The three colour fields. The alpha is part of the token. */
+  --qs-field-coral: rgba(232, 85, 58, 0.55);
+  --qs-field-plum: rgba(138, 63, 192, 0.6);
+  --qs-field-rose: rgba(194, 69, 110, 0.35);
+  /* A calm darkening laid over the fields, under the spotlight, so type on the
+     brightest overlap keeps its contrast. */
+  --qs-veil: rgba(21, 10, 29, 0.4);
+  /* The warm spotlight. */
+  --qs-spot: rgba(255, 184, 140, 0.1);
+
+  /* ── Text and lines ── */
+  --qs-text: #fbf3f6;
+  --qs-text-mute: rgba(251, 243, 246, 0.78);
+  --qs-line: rgba(255, 255, 255, 0.12);
+
+  /* ── Glass ── */
+  --qs-glass-top: rgba(255, 255, 255, 0.11);
+  --qs-glass-bottom: rgba(255, 255, 255, 0.04);
+  /* A dark base under the white wash, which is what holds AA on the brightest
+     field. */
+  --qs-glass-tint: rgba(21, 10, 29, 0.3);
+  --qs-glass-border: rgba(255, 255, 255, 0.15);
+  --qs-glass-border-strong: rgba(255, 255, 255, 0.26);
+  --qs-glass-highlight: rgba(255, 255, 255, 0.22);
+  --qs-glass-shadow: rgba(0, 0, 0, 0.45);
+  --qs-glass-raised-top: rgba(255, 255, 255, 0.17);
+  --qs-glass-raised-bottom: rgba(255, 255, 255, 0.07);
+  --qs-glass-blur: blur(18px) saturate(1.35);
+  --qs-scrim: rgba(12, 5, 18, 0.62);
+
+  /* ── Gradients and glows ── */
+  --qs-em-gradient: linear-gradient(
+    100deg,
+    #ff9270 0%,
+    #f07aa8 52%,
+    #c7a2ff 100%
+  );
+  /* The timer ring's stroke. A conic gradient from 12 o'clock; the ring masks
+     it to the time that is left. */
+  --qs-ring-gradient: conic-gradient(
+    from 0deg,
+    #ff9270 0deg,
+    #f07aa8 150deg,
+    #c7a2ff 300deg,
+    #c7a2ff 360deg
+  );
+  /* The last quarter of the clock. */
+  --qs-ring-low-gradient: conic-gradient(from 0deg, #ffc27a, #ff8d5c);
+  --qs-ring-track: rgba(255, 255, 255, 0.14);
+  --qs-low: #ffc27a;
+  --qs-glow-coral: 0 10px 30px -8px rgba(245, 106, 88, 0.6);
+  --qs-glow-coral-strong: 0 14px 38px -8px rgba(245, 106, 88, 0.78);
+  --qs-glow-jade:
+    0 0 34px -2px rgba(60, 203, 157, 0.5),
+    0 0 90px -10px rgba(60, 203, 157, 0.3);
+  /* A soft halo for the ring, drawn on a still layer under the moving arc. */
+  --qs-glow-ring: 0 0 36px -4px rgba(240, 122, 168, 0.5);
+  /* The right answer: jade glass. */
+  --qs-right-fill: linear-gradient(
+    180deg,
+    rgba(60, 203, 157, 0.34),
+    rgba(60, 203, 157, 0.16)
+  );
+  --qs-right-border: rgba(110, 236, 196, 0.75);
+  /* A wrong answer on the phone: a calm rose wash. */
+  --qs-wrong-wash: rgba(214, 96, 146, 0.19);
+
+  /* ── Call to action (Button variant "stage") ── */
+  --qs-cta-gradient: linear-gradient(135deg, #ff9a7d 0%, #f56a58 100%);
+  --qs-cta-gradient-hover: linear-gradient(135deg, #ffab92 0%, #ff7d68 100%);
+  --qs-cta-ink: #1c0a12;
+  /* The keyboard halo that sits beside the global outline. */
+  --qs-focus-halo: 0 0 0 3px rgba(255, 255, 255, 0.95);
+
+  /* ── Grain ── */
+  /* Fractal noise, grey, on a 512px tile that stitches. Drawn at 15% with an
+     overlay blend. */
+  --qs-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --qs-grain-opacity: 0.15;
+  --qs-grain-size: 512px;
+
+  /* ── Timing ── */
+  --qs-drift-duration: 15s;
+
+  /* ── Radii and shadows the stage modules share ── */
+  --qs-radius-card: var(--radius-20);
+  --qs-radius-tile: var(--radius-16);
+  --qs-radius-pill: var(--radius-pill);
+
+  /* The channels of --qs-line, for a module that needs the same edge colour
+     as an rgb triple (it re-points a shared component's --line-rgb with it). */
+  --qs-line-rgb: 255, 255, 255;
+}
+
+/* ── Light stage: a daylight variant of the same structure ── */
+[data-qs-theme="light"] {
+  --qs-base: #f9e8e3;
+  --qs-raised: #f3d9d5;
+  --qs-raised-2: #ecc9c6;
+  --qs-field-coral: rgba(232, 85, 58, 0.22);
+  --qs-field-plum: rgba(138, 63, 192, 0.14);
+  --qs-field-rose: rgba(194, 69, 110, 0.16);
+  --qs-veil: transparent;
+  --qs-spot: rgba(255, 255, 255, 0.5);
+
+  --qs-text: #2b1238;
+  --qs-text-mute: rgba(43, 18, 56, 0.82);
+  --qs-line: rgba(43, 18, 56, 0.14);
+  --qs-line-rgb: 43, 18, 56;
+
+  --qs-glass-top: rgba(255, 250, 244, 0.82);
+  --qs-glass-bottom: rgba(255, 250, 244, 0.62);
+  --qs-glass-tint: transparent;
+  --qs-glass-border: rgba(43, 18, 56, 0.12);
+  --qs-glass-border-strong: rgba(43, 18, 56, 0.22);
+  --qs-glass-highlight: rgba(255, 255, 255, 0.9);
+  --qs-glass-shadow: rgba(60, 24, 70, 0.28);
+  --qs-glass-raised-top: rgba(255, 252, 248, 0.94);
+  --qs-glass-raised-bottom: rgba(255, 250, 244, 0.78);
+  --qs-scrim: rgba(249, 232, 227, 0.74);
+
+  --qs-em-gradient: linear-gradient(
+    100deg,
+    #9c2c14 0%,
+    #8f2155 52%,
+    #5b2d99 100%
+  );
+  --qs-ring-gradient: conic-gradient(
+    from 0deg,
+    #c2381f 0deg,
+    #b02a63 150deg,
+    #6d3aa8 300deg,
+    #6d3aa8 360deg
+  );
+  --qs-ring-low-gradient: conic-gradient(from 0deg, #b3470a, #9c2c14);
+  --qs-ring-track: rgba(43, 18, 56, 0.14);
+  --qs-low: #8f3a05;
+  --qs-glow-ring: 0 0 30px -6px rgba(176, 42, 99, 0.35);
+  --qs-glow-jade: 0 0 30px -4px rgba(0, 128, 96, 0.4);
+  --qs-right-fill: linear-gradient(
+    180deg,
+    rgba(0, 128, 96, 0.4),
+    rgba(0, 128, 96, 0.24)
+  );
+  --qs-right-border: rgba(0, 110, 82, 0.7);
+  --qs-wrong-wash: rgba(194, 69, 110, 0.16);
+
+  --qs-focus-halo: 0 0 0 3px rgba(43, 18, 56, 0.9);
+  --qs-grain-opacity: 0.1;
+}
+
+/* The timer ring's sweep, registered as an angle so the ring can ease between
+   the 100ms countdown ticks the same way the bar's fill does. */
+@property --qs-ring-sweep {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 360deg;
+}
+
+/* Derived tokens. A custom property that is built from other custom properties
+   resolves on the element that declares it, so these are declared where each
+   theme's inputs live: on :root and again on the light variant. Keep every
+   token that reads another --qs-* token in this rule. */
+:root,
+[data-qs-theme="light"] {
+  --qs-shadow-glass:
+    inset 0 1px 0 var(--qs-glass-highlight),
+    0 18px 40px -16px var(--qs-glass-shadow);
+  --qs-shadow-lift:
+    inset 0 1px 0 var(--qs-glass-highlight),
+    0 26px 56px -18px var(--qs-glass-shadow);
+  --qs-shadow-pill:
+    inset 0 1px 0 var(--qs-glass-highlight),
+    0 6px 16px -8px var(--qs-glass-shadow);
+}

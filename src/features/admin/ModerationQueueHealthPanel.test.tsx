@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { ModerationQueueHealthPanel } from "./ModerationQueueHealthPanel";
@@ -33,6 +33,14 @@ function renderPanel(dto: ModerationQueueHealthDTO) {
   render(<ModerationQueueHealthPanel />, { wrapper: TestProviders });
 }
 
+/** The overview's "On rota" tile, found from its label. A bare figure such as
+ *  "4" can also appear in the queue cards, so rota assertions stay inside it. */
+function rotaTileFor(label: HTMLElement): HTMLElement {
+  const tile = label.closest("div");
+  if (!tile) throw new Error('The "On rota" label sits outside a tile');
+  return tile;
+}
+
 beforeEach(() => {
   health = makeQueueHealth();
 });
@@ -49,8 +57,8 @@ describe("ModerationQueueHealthPanel", () => {
       screen.getByText("Bans needing a second signature"),
     ).toBeInTheDocument();
 
-    // One chip per queue plus the overall summary chip.
-    expect(screen.getAllByText("Clear")).toHaveLength(6);
+    // One chip per queue.
+    expect(screen.getAllByText("Clear")).toHaveLength(5);
     // Nothing tripped, so no queue explains itself.
     expect(screen.queryByText("What tipped it:")).not.toBeInTheDocument();
   });
@@ -58,8 +66,10 @@ describe("ModerationQueueHealthPanel", () => {
   it("names the rota size without attributing work to anyone", async () => {
     renderPanel(makeQueueHealth({ activeModeratorCount: 4 }));
 
+    const rotaTile = rotaTileFor(await screen.findByText("On rota"));
+    expect(within(rotaTile).getByText("4")).toBeInTheDocument();
     expect(
-      await screen.findByText("4 people can work these queues"),
+      within(rotaTile).getByText("people who can work these queues"),
     ).toBeInTheDocument();
   });
 
@@ -119,10 +129,13 @@ describe("ModerationQueueHealthPanel", () => {
     );
 
     expect(await screen.findByText("What tipped it:")).toBeInTheDocument();
+    // One pill per axis that tripped, each naming its axis.
+    expect(screen.getByText("a lot is waiting")).toBeInTheDocument();
     expect(
-      screen.getByText(
-        "a lot is waiting · something has waited a long time · windows we published have passed",
-      ),
+      screen.getByText("something has waited a long time"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("windows we published have passed"),
     ).toBeInTheDocument();
     // The level is a word, never colour alone.
     expect(screen.getAllByText("Needs someone now").length).toBeGreaterThan(0);
@@ -197,10 +210,12 @@ describe("ModerationQueueHealthPanel", () => {
       expect(
         screen.getByText("No active moderator or admin accounts"),
       ).toBeInTheDocument();
-      // The summary states the same fact plainly rather than hiding it: an
-      // empty rota is the loudest thing this panel can report.
+      // The rota tile states it plainly: an empty rota is the loudest thing
+      // this panel can report.
+      const rotaTile = rotaTileFor(screen.getByText("On rota"));
+      expect(within(rotaTile).getByText("0")).toBeInTheDocument();
       expect(
-        screen.getByText("0 people can work these queues"),
+        within(rotaTile).getByText("people who can work these queues"),
       ).toBeInTheDocument();
     });
   });

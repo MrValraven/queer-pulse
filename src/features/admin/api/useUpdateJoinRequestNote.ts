@@ -28,7 +28,7 @@ export interface UpdateJoinRequestNoteVars {
  * below only touches keys whose second element is the demo-mode boolean that
  * `useJoinRequests` puts there.
  */
-function isPlatformQueueQuery(query: Query): boolean {
+export function isPlatformQueueQuery(query: Query): boolean {
   return typeof query.queryKey[1] === "boolean";
 }
 

@@ -366,6 +366,15 @@ export interface CommunityBrowseFacets {
    *  request's filters with `busy` itself lifted — the "Busy this week" pill's
    *  count. `undefined` means "not counted", never "nobody is here". */
   busy?: number;
+  /** Community type → matching communities under the rest of this request's
+   *  filters, its own `type` filter lifted: the Category rows' counts. A type
+   *  MISSING from this map (or the whole map, on a server that predates the
+   *  facet) was not counted, which must never render as a `0`. */
+  types?: Record<string, number>;
+  /** The "All communities" row: every community under the rest of this
+   *  request's filters with `type` lifted. A community has exactly one type,
+   *  so this is a distinct total and equals the sum of `types`. */
+  allTypes?: number;
 }
 
 export interface CommunitiesPage extends Paginated<CommunityCardDTO> {

@@ -330,6 +330,68 @@
   }
 }
 
+/* Stage: the Pulse Live call to action. A coral gradient pill with a coral
+   glow. The label is the dark --qs-cta-ink (6.4:1 or better on both ends of
+   the gradient; white would be under 3.6:1). Every value is a fixed --qs-*
+   stage token, so it looks the same in either app theme. */
+.stage {
+  background: var(--qs-cta-gradient);
+  color: var(--qs-cta-ink);
+  --button-glow: var(--qs-glow-coral);
+  box-shadow: var(--button-glow);
+}
+/* The global :focus-visible outline stays; the stage halo replaces the cream
+   one (which flips dark in the dark app theme) and keeps the glow. */
+.stage:focus-visible {
+  box-shadow: var(--qs-focus-halo), var(--button-glow);
+}
+.stageGhost:focus-visible {
+  box-shadow: var(--qs-focus-halo);
+}
+@media (hover: hover) {
+  .stage:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--qs-cta-gradient-hover);
+    transform: translateY(-1px);
+    --button-glow: var(--qs-glow-coral-strong);
+    box-shadow: var(--button-glow);
+  }
+}
+
+/* Stage ghost: a glass pill with the stage text colour, for the action beside
+   a stage button. A dark tint sits under the white wash, which holds the label
+   at 5:1 or better on the brightest backdrop field. */
+.stageGhost {
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  color: var(--qs-text);
+  border: 1px solid var(--qs-glass-border-strong);
+  box-shadow: var(--qs-shadow-pill);
+  -webkit-backdrop-filter: var(--qs-glass-blur);
+  backdrop-filter: var(--qs-glass-blur);
+}
+@media (hover: hover) {
+  .stageGhost:hover:not(:disabled):not([aria-disabled="true"]) {
+    background:
+      linear-gradient(
+        180deg,
+        var(--qs-glass-raised-top) 0%,
+        var(--qs-glass-raised-bottom) 100%
+      ),
+      var(--qs-glass-tint);
+    transform: translateY(-1px);
+  }
+}
+/* An aria-disabled stage button keeps only the halo on focus (see Disabled). */
+.button.stage[aria-disabled="true"]:focus-visible,
+.button.stageGhost[aria-disabled="true"]:focus-visible {
+  box-shadow: var(--qs-focus-halo);
+}
+
 /* Press feedback. Last in the file so it outranks the hover lift at equal
    specificity: pressing drops the lift and sinks the button slightly, and the
    fast duration keeps the tap feeling immediate. */

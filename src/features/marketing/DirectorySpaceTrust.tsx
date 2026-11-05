@@ -86,7 +86,7 @@ export function DirectorySpaceTrust({ place }: { place: DirectoryPlace }) {
 
       {hasBadgeRecord && (
         <>
-          <div className={safetyStyles.grid}>
+          <div className={[safetyStyles.grid, s.trustGrid].join(" ")}>
             <div>
               <SafeSpacePromisesList promises={place.safeSpacePromises ?? []} />
               <SafeSpaceVouchesList

@@ -83,7 +83,11 @@ export function useCreateSubcommunity(parentSlug: string) {
       const detail = buildDemoSpaceDetail(body, parent, parentSlug);
       appendDemoSpace(
         parentSlug,
-        { ...cardDtoToCommunity(detail, t), isMember: true },
+        {
+          ...cardDtoToCommunity(detail, t),
+          isMember: true,
+          memberCount: detail.memberCount,
+        },
         detail.whoFor,
       );
       createOwned(detail.slug);

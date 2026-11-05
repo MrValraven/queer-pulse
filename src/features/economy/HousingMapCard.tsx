@@ -30,10 +30,7 @@ export function HousingMapCard({ listing }: { listing: HousingListing }) {
       />
       <div className={styles.mapCardBody}>
         <div className={styles.cardBadges}>
-          <span
-            className={styles.type}
-            style={{ background: listing.typeColor, color: listing.typeText }}
-          >
+          <span className={styles.type} data-listing-type={listing.type}>
             {t(typeLabelKey)}
           </span>
           <AffirmingBaselineBadge />

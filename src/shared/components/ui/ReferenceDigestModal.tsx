@@ -41,9 +41,11 @@ export interface ReferenceDigestTopic {
 export function ReferenceDigestModal({
   topic,
   onClose,
+  isCtaHidden = false,
 }: {
   topic: ReferenceDigestTopic;
   onClose: () => void;
+  isCtaHidden?: boolean;
 }) {
   const { t } = useTranslation();
 
@@ -75,11 +77,13 @@ export function ReferenceDigestModal({
         ))}
       </ul>
 
-      <div className={s.footer}>
-        <Button variant="primary" to={topic.href}>
-          {t(topic.ctaKey)}
-        </Button>
-      </div>
+      {!isCtaHidden && (
+        <div className={s.footer}>
+          <Button variant="primary" to={topic.href}>
+            {t(topic.ctaKey)}
+          </Button>
+        </div>
+      )}
     </ModalSheet>
   );
 }

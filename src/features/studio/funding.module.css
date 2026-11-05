@@ -234,11 +234,7 @@
 }
 .tagGrant {
   background: rgba(var(--violet-rgb), 0.16);
-  /* Deep violet grant-tag text on the violet tint; lilac in dark (below). */
-  color: color-mix(in srgb, var(--violet) 70%, var(--text-strong));
-}
-:global([data-theme="dark"]) .tagGrant,
-:global([data-theme="dark"]) .tagGrantCall {
+  /* Lilac grant-tag text on the violet tint. */
   color: color-mix(in srgb, var(--violet) 45%, white);
 }
 .tagAccess {
@@ -445,9 +441,8 @@
 }
 .tagGrantCall {
   background: rgba(var(--violet-rgb), 0.16);
-  /* Deep violet grant-tag text on the violet tint; lilac in dark, set beside
-     .tagGrant. */
-  color: color-mix(in srgb, var(--violet) 70%, var(--text-strong));
+  /* Lilac grant-tag text on the violet tint, as on .tagGrant. */
+  color: color-mix(in srgb, var(--violet) 45%, white);
 }
 .tagResidency {
   background: rgba(var(--jade-rgb), 0.16);

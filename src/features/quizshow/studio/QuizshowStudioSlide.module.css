@@ -1,0 +1,769 @@
+/* The editable slide, drawn on the fixed 1280x720 canvas in canvas pixels.
+   It reads the same --qs-* tokens as the stage pieces, so a slide being typed
+   looks like the TV. Glass is written out in full wherever a state changes
+   it, because the order of composed modules in the bundle can vary.
+
+   The stage's own pieces (the round card) read the --text-screen-* tokens;
+   the slide sets their 720p values, as the fixed canvas does for the stage. */
+.slide {
+  --screen-vh: 7.2px;
+  --text-screen-question: var(--text-48);
+  --text-screen-answer: var(--text-32);
+  --text-screen-label: var(--text-24);
+  --text-screen-code: calc(12 * var(--screen-vh));
+  --slide-edge: 6px;
+
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--gap-grid);
+  box-sizing: border-box;
+  min-height: 0;
+  /* The stage's own padding on the fixed canvas: 4% of its height. */
+  padding: calc(4 * var(--screen-vh));
+  overflow-y: auto;
+  scrollbar-width: thin;
+  color: var(--qs-text);
+  font-family: var(--sans);
+}
+
+/* Nothing on the slide shrinks under its content: a slide too full for 720px
+   scrolls inside the canvas instead of overlapping. */
+.slide > * {
+  flex-shrink: 0;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Meta row: round and question pill, the time ── */
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  box-sizing: border-box;
+  padding: 0.5em 1.1em;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-pill);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-pill);
+  color: var(--qs-text-mute);
+  font-size: var(--text-18);
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.pill strong {
+  color: var(--qs-text);
+  font-weight: 700;
+}
+
+.pill svg {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+}
+
+/* ── Fields typed on the slide ── */
+
+/* At rest a field is the stage type itself; hover draws a dashed edge so it
+   reads as editable, and focus draws the ring. */
+.field {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 0.08em 0.28em;
+  border: 1px dashed transparent;
+  border-radius: var(--radius-12);
+  background: transparent;
+  color: var(--qs-text);
+  font: inherit;
+  caret-color: var(--qs-text);
+  resize: none;
+  field-sizing: content;
+  overflow: hidden;
+  transition-property: border-color, background-color, box-shadow;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+.field::placeholder {
+  color: var(--qs-text-mute);
+  opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .field:hover {
+    border-color: rgba(255, 255, 255, 0.26);
+    background: rgba(255, 255, 255, 0.04);
+  }
+}
+
+.field:focus-visible {
+  border-color: transparent;
+  background: rgba(255, 255, 255, 0.06);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--qs-focus-halo);
+}
+
+/* A quiz question's head: the meta pill, the picture and the time on the
+   first row, the prompt under them. With a picture, the picture leaves the
+   first row and takes a 17.5rem column beside the prompt. */
+.questionHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas:
+    "meta media time"
+    "prompt prompt prompt";
+  align-items: center;
+  gap: var(--gap-grid) var(--gap-xs);
+}
+
+.questionHead[data-has-picture="true"] {
+  grid-template-columns: minmax(0, 1fr) 0 17.5rem;
+  grid-template-areas:
+    "meta meta time"
+    "prompt media media";
+  column-gap: var(--gap-lg);
+}
+
+.headMeta {
+  grid-area: meta;
+  justify-self: start;
+}
+
+.headTime {
+  display: flex;
+  grid-area: time;
+  justify-self: end;
+}
+
+.headPrompt {
+  grid-area: prompt;
+  align-self: start;
+  min-width: 0;
+}
+
+/* The question in Fraunces, a step smaller as it grows, so a 280 character
+   prompt and two rows of answers still fit the slide. */
+.prompt {
+  margin-inline-start: calc(-0.28em - 1px);
+  font-family: var(--serif);
+  font-size: var(--text-48);
+  font-weight: 600;
+  line-height: var(--lh-title);
+  overflow-wrap: anywhere;
+}
+
+.prompt[data-length="medium"] {
+  font-size: var(--text-40);
+}
+
+.prompt[data-length="long"] {
+  font-size: var(--text-32);
+}
+
+/* The picture slot: the upload field on a dark glass card. */
+/* The picture's column: the slot fades in once a picture arrives. */
+.picture {
+  grid-area: media;
+  align-self: start;
+  min-width: 0;
+  font-size: var(--text-16);
+  animation: slidePictureIn var(--dur-slow) var(--ease) both;
+}
+
+@keyframes slidePictureIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* No picture yet: an "Add image" chip beside the time. */
+.pictureChip {
+  display: flex;
+  grid-area: media;
+  font-size: var(--text-16);
+  white-space: nowrap;
+}
+
+/* ── Footer hint ── */
+.foot {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  min-height: 1.6em;
+  margin: 0;
+  color: var(--qs-text-mute);
+  font-size: var(--text-18);
+  line-height: 1.3;
+}
+
+.foot strong {
+  color: var(--qs-text);
+  font-weight: 600;
+}
+
+.foot svg {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+}
+
+/* ── Title slide (the quiz) and round intro ── */
+.centred {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-sm);
+  min-height: 0;
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--qs-text-mute);
+  font-size: var(--text-20);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.titleField {
+  max-width: 22ch;
+  font-family: var(--serif);
+  font-size: var(--text-64);
+  font-weight: 600;
+  line-height: var(--lh-title);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.titleField[data-length="long"] {
+  font-size: var(--text-48);
+}
+
+/* The read-only title (the Big screen view): a paragraph in the field's type. */
+.titleStatic {
+  margin: 0;
+  padding: 0.08em 0.28em;
+}
+
+.titleStatic[data-is-empty] {
+  color: var(--qs-text-mute);
+}
+
+.rule {
+  width: 4.5rem;
+  height: 3px;
+  border-radius: var(--qs-radius-pill);
+  background: var(--qs-em-gradient);
+}
+
+.titleMeta {
+  margin: 0;
+  color: var(--qs-text-mute);
+  font-size: var(--text-24);
+  font-weight: 500;
+}
+
+/* The round title typed straight into the stage's round card. */
+.roundTitleField {
+  max-width: 24ch;
+  font-family: var(--serif);
+  font-size: var(--text-48);
+  font-weight: 600;
+  line-height: var(--lh-title);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+/* ── Party prompt card ── */
+.partyCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  box-sizing: border-box;
+  padding: var(--gap-grid) var(--gap-lg);
+  border: 1px solid var(--qs-glass-border-strong);
+  border-radius: var(--qs-radius-card);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-raised-top) 0%,
+      var(--qs-glass-raised-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-lift);
+}
+
+.partyLabel {
+  margin: 0;
+  color: var(--qs-text-mute);
+  font-size: var(--text-16);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.partyBody {
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--gap-grid);
+  min-height: 0;
+}
+
+.partyBody[data-has-picture="true"] {
+  grid-template-columns: minmax(0, 1fr) 22rem;
+}
+
+/* A dot between the parts of a meta pill. */
+.pillParts > * + *::before {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin-inline-end: 0.6em;
+  border-radius: 50%;
+  background: currentcolor;
+  content: "";
+  opacity: 0.6;
+  vertical-align: middle;
+}
+
+.foot[data-tone="problem"] {
+  color: var(--qs-low);
+}
+
+.roundCard {
+  min-width: 34rem;
+  max-width: 54rem;
+}
+
+/* ── Answers ── */
+.answerGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(5.5rem, auto);
+  gap: var(--gap-sm) var(--gap-grid);
+  margin: auto 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The answers' group: it takes the answer grid's place at the foot. */
+.choiceSet {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: auto 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.choiceSet .answerGrid {
+  margin: 0;
+}
+
+.tileCell {
+  display: flex;
+  min-width: 0;
+}
+
+/* A stage tile, typed on: glass, the answer colour as a left edge and a
+   glowing shape, the circle that marks the right answer at the end. */
+.tile {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--gap-sm);
+  box-sizing: border-box;
+  min-width: 0;
+  padding: var(--gap-sm) var(--gap-sm) var(--gap-sm)
+    calc(var(--gap-sm) + var(--slide-edge));
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-tile);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-glass);
+  color: var(--qs-text);
+  font-size: var(--text-24);
+  font-weight: 600;
+  line-height: 1.2;
+  transition-property: border-color, box-shadow;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+.tile::before {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: var(--slide-edge);
+  border-start-start-radius: inherit;
+  border-end-start-radius: inherit;
+  background: var(--quizshow-tile-fill);
+  content: "";
+  pointer-events: none;
+}
+
+/* The right answer's jade layer, crossfaded in. */
+.tile::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--qs-right-fill);
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-base) var(--ease);
+}
+
+.tile[data-right="true"] {
+  border-color: var(--qs-right-border);
+  box-shadow: var(--qs-shadow-glass), var(--qs-glow-jade);
+}
+
+.tile[data-right="true"]::after {
+  opacity: 1;
+}
+
+.tile[data-pickable="true"] {
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tile:hover {
+    border-color: var(--qs-glass-border-strong);
+  }
+
+  .tile[data-right="true"]:hover {
+    border-color: var(--qs-right-border);
+  }
+}
+
+/* Typing on a tile rings the whole tile; the field inside stays plain. */
+.tile:has(.tileField:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--qs-shadow-glass), var(--qs-focus-halo);
+}
+
+.tile[data-right="true"]:has(.tileField:focus-visible) {
+  box-shadow: var(--qs-glow-jade), var(--qs-focus-halo);
+}
+
+.letter {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5em;
+  height: 1.5em;
+  border-radius: var(--qs-radius-pill);
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--qs-text);
+  font-size: var(--text-14);
+  font-weight: 700;
+}
+
+.tileField {
+  flex: 1;
+  min-width: 0;
+  margin-block: -0.15em;
+}
+
+.tileField:focus-visible {
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.tileText {
+  flex: 1;
+  min-width: 0;
+}
+
+/* The mark: a ring that fills jade with a check once it is the right answer. */
+.markWrap {
+  position: relative;
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.mark {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  background: transparent;
+  appearance: none;
+  cursor: pointer;
+  transition-property: border-color, background-color, box-shadow;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .mark:hover {
+    border-color: rgba(255, 255, 255, 0.75);
+  }
+}
+
+.mark:checked {
+  border-color: var(--qs-right-border);
+  background:
+    linear-gradient(var(--qs-right-border), var(--qs-right-border)),
+    var(--qs-base);
+  box-shadow: var(--qs-glow-jade);
+}
+
+.mark:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--qs-focus-halo);
+}
+
+.markCheck {
+  position: absolute;
+  width: 55%;
+  height: 55%;
+  color: var(--qs-base);
+  opacity: 0;
+  pointer-events: none;
+  stroke-width: 3.5;
+  transform: scale(0.6);
+  transition-property: opacity, transform;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+.mark:checked + .markCheck {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Remove shows only while the tile is hovered or worked in; it stays in the
+   tab order, and focusing it shows it. */
+.tileRemove {
+  display: inline-flex;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease);
+}
+
+.tile:hover .tileRemove,
+.tile:focus-within .tileRemove {
+  opacity: 1;
+}
+
+.tileRemove[data-hidden="true"] {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.answerGrid .addTile {
+  flex: 1;
+  min-height: 5.5rem;
+  border-style: dashed;
+  border-radius: var(--qs-radius-tile);
+  font-size: var(--text-20);
+}
+
+/* ── Type the answer and closest number ── */
+.answerBox {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  box-sizing: border-box;
+  width: min(100%, 44rem);
+  margin-block-start: auto;
+  padding: var(--gap-grid) var(--gap-lg);
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-card);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-glass);
+}
+
+.answerBoxNote {
+  margin: 0;
+  color: var(--qs-text);
+  font-size: var(--text-24);
+  font-weight: 600;
+}
+
+.answerBoxLabel {
+  color: var(--qs-text-mute);
+  font-size: var(--text-16);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.answerBoxField {
+  margin-inline-start: calc(-0.28em - 1px);
+  font-family: var(--serif);
+  font-size: var(--text-40);
+  font-weight: 600;
+  line-height: var(--lh-title);
+}
+
+/* ── Put in order ── */
+.orderList {
+  display: flex;
+  flex-direction: column;
+  margin: auto 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The gap sits on the row, so it folds with the row. */
+.orderList > li:not(:last-child) > .orderRow {
+  margin-block-end: var(--gap-xs);
+}
+
+.orderRow {
+  min-height: 3.5rem;
+  padding-block: var(--gap-xs);
+  font-size: var(--text-20);
+}
+
+/* Five and six items step the rows down, so the list, the prompt and the
+   footer still fit the 720px slide. */
+.orderList[data-count="5"] .orderRow {
+  min-height: 3rem;
+  padding-block: 6px;
+  font-size: var(--text-18);
+}
+
+.orderList[data-count="6"] .orderRow {
+  min-height: 2.75rem;
+  padding-block: 4px;
+  font-size: var(--text-17);
+}
+
+.orderList[data-count="5"] > li:not(:last-child) > .orderRow,
+.orderList[data-count="6"] > li:not(:last-child) > .orderRow {
+  margin-block-end: 6px;
+}
+
+.orderRow[data-dragging="true"] {
+  border-color: var(--qs-glass-border-strong);
+  box-shadow: var(--qs-shadow-lift);
+}
+
+.grip {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.75rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-8);
+  background: transparent;
+  color: var(--qs-text-mute);
+  cursor: grab;
+  touch-action: none;
+}
+
+.grip:active {
+  cursor: grabbing;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .grip:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--qs-text);
+  }
+}
+
+.grip:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--qs-focus-halo);
+}
+
+.grip svg {
+  width: 1.1em;
+  height: 1.1em;
+}
+
+.rowTools {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 2px;
+}
+
+.orderFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-xs) var(--gap-sm);
+}
+
+/* A field with a problem: a warm edge, and the sentence it is described by. */
+.field[aria-invalid="true"] {
+  border-style: solid;
+  border-color: var(--qs-low);
+}
+
+.tile:has(.tileField[aria-invalid="true"]) {
+  border-color: var(--qs-low);
+}
+
+.tile .tileField[aria-invalid="true"] {
+  border-color: transparent;
+}

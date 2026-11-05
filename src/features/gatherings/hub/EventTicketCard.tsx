@@ -3,13 +3,14 @@ import {
   PosterAwareImageSlot,
   type ImageSlotTint,
 } from "../../../shared/components/ui";
+import { useMediaQuery } from "../../../shared/hooks";
 import { useFormat } from "../../../shared/i18n/format";
 import type { CalendarEvent } from "../data";
 import { eventZoneFormat } from "../eventTimezone";
 import { sizedCover } from "./coverUrl";
 import { EventCoverFallback } from "./EventCoverFallback";
 import { EventCommunityMenu } from "./EventCommunityMenu";
-import { EventDateStamp } from "./EventDateStamp";
+import { EventDateLine, EventDateStamp } from "./EventDateStamp";
 import {
   CtaPill,
   EventTime,
@@ -38,6 +39,14 @@ const URGENT_RIBBON_BUCKETS: ReadonlySet<TimeBucket> = new Set([
 /** Retina-aware (~2x) download width for the ticket's 4:3 cover. */
 const TICKET_COVER_WIDTH = 640;
 
+/** Retina-aware (~2x) download width for the phone row's ~92px square
+ *  thumbnail. */
+const TICKET_THUMB_WIDTH = 200;
+
+/** The phone row layout's query, the `--md` breakpoint the stylesheet uses
+ *  for the same switch (custom media cannot be read from script). */
+const PHONE_ROW_QUERY = "(max-width: 640px)";
+
 /** Theme tags a ticket shows before folding the rest into a "+N" tag. */
 const TICKET_VISIBLE_THEMES = 2;
 
@@ -50,24 +59,36 @@ export interface EventTicketCardProps {
 
 /** The ticket's 4:3 cover with its stamp, ribbon, scrim and bottom badges.
  *  A landscape photo fills it; a poster shows whole over its own blurred
- *  backdrop. A gathering with no photo wears the branded `EventCoverFallback` field,
- *  which is dark enough on its own, so the scrim is skipped there. */
+ *  backdrop. An event with no photo wears the tinted `EventCoverFallback`
+ *  surface, which needs no scrim, so its badges take their paper fills. On a
+ *  phone the cover becomes the row's square thumbnail and the stylesheet
+ *  hides the stamp, ribbon and badges there (the text column carries them),
+ *  so the thumbnail downloads a small render. */
 function TicketMedia({
   event,
   now,
+  isUrgent,
   isPriority,
-}: Required<EventTicketCardProps>) {
+}: {
+  event: CalendarEvent;
+  now: Date;
+  isUrgent: boolean;
+  isPriority: boolean;
+}) {
   const formatters = useFormat();
+  const isPhoneRow = useMediaQuery(PHONE_ROW_QUERY);
   const tint: ImageSlotTint =
     event.orgColor === "var(--accent)" ? "coral" : "plum";
-  const isUrgent = URGENT_RIBBON_BUCKETS.has(timeBucketOf(event, now));
   const hasCover = Boolean(event.coverImageUrl);
   return (
     <span className={styles.media}>
       {hasCover ? (
         <>
           <PosterAwareImageSlot
-            src={sizedCover(event.coverImageUrl, TICKET_COVER_WIDTH)}
+            src={sizedCover(
+              event.coverImageUrl,
+              isPhoneRow ? TICKET_THUMB_WIDTH : TICKET_COVER_WIDTH,
+            )}
             alt=""
             tint={tint}
             placeholder={event.title}
@@ -95,8 +116,8 @@ function TicketMedia({
         />
       )}
       <span className={styles.mediaFoot}>
-        <KindTag kind={event.kind} onScrim />
-        <PricePill event={event} fmt={formatters} onScrim />
+        <KindTag kind={event.kind} onScrim={hasCover} />
+        <PricePill event={event} fmt={formatters} onScrim={hasCover} />
       </span>
     </span>
   );
@@ -111,6 +132,13 @@ function TicketMedia({
  * the body's trailing edge; keyboard focus gets the same reveal. A card that
  * names its hosting community sits in a `.shell` with the community menu
  * pinned to the cover's top trailing corner, beside the link.
+ *
+ * Below 640px the same card turns into a compact row: a square thumbnail
+ * beside the text, a one-line date kicker (with the urgent pill beside it)
+ * over the title, and the price beside who is going. The phone-only parts
+ * (`.phoneKicker`, `.phonePrice`) are in the markup at every width and the
+ * stylesheet shows one set or the other, so the link and its name never
+ * change.
  */
 export function EventTicketCard({
   event,
@@ -118,6 +146,8 @@ export function EventTicketCard({
   isPriority = false,
 }: EventTicketCardProps) {
   const formatters = useFormat();
+  const effectiveNow = now ?? new Date();
+  const isUrgent = URGENT_RIBBON_BUCKETS.has(timeBucketOf(event, effectiveNow));
   const zone = eventZoneFormat(event.timezone, event.date);
   const spokenDate = formatters.date(event.date, {
     weekday: "long",
@@ -134,16 +164,33 @@ export function EventTicketCard({
       <span className={styles.surface}>
         <TicketMedia
           event={event}
-          now={now ?? new Date()}
+          now={effectiveNow}
+          isUrgent={isUrgent}
           isPriority={isPriority}
         />
         <span className={styles.body}>
-          <FormatLine event={event} className={`${posterStyles.formatLine}`} />
+          <span className={styles.phoneKicker}>
+            <EventDateLine event={event} className={styles.dateLine} />
+            {isUrgent && (
+              <WhenRibbon
+                event={event}
+                now={effectiveNow}
+                className={`${styles.kickerPill}`}
+              />
+            )}
+          </span>
+          <FormatLine
+            event={event}
+            className={`${posterStyles.formatLine} ${styles.formatLine}`}
+          />
           <h3 className={styles.title}>{event.title}</h3>
-          <RunByLine event={event} className={posterStyles.runByLine} />
+          <RunByLine
+            event={event}
+            className={`${posterStyles.runByLine} ${styles.runBy}`}
+          />
           <HostingCommunityLine
             event={event}
-            className={posterStyles.runByLine}
+            className={`${posterStyles.runByLine} ${styles.hostedWith}`}
           />
           <span className={styles.meta}>
             <MetaRow event={event}>
@@ -153,6 +200,9 @@ export function EventTicketCard({
           <span className={styles.foot}>
             <span className={styles.footRow}>
               <GoingCount event={event} className={`${styles.going}`} />
+              <span className={styles.phonePrice}>
+                <PricePill event={event} fmt={formatters} />
+              </span>
               <CtaPill className={`${styles.cta}`} />
             </span>
             <span className={styles.themeStrip}>

@@ -1,5 +1,11 @@
 import { useId, type ReactNode } from "react";
-import { Button, ChipSelect, FilterChips } from "../../../shared/components/ui";
+import {
+  Button,
+  ChipSelect,
+  FilterChips,
+  type ChipOption,
+} from "../../../shared/components/ui";
+import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   CALL_LIST_VIEWS,
@@ -14,6 +20,7 @@ import {
   parseScope,
 } from "./funding.data";
 import type {
+  ForumFundingFacets,
   FundingEligibility,
   FundingListView,
   FundingScope,
@@ -31,6 +38,10 @@ export interface FundingCategoryBarProps {
   scope: FundingScope | null;
   onScopeChange: (scope: FundingScope | null) => void;
   onClearFilters: () => void;
+  /** How many threads each chip would list (server in live, mock-derived in
+   *  demo). Undefined, or a key left out, draws no number and disables
+   *  nothing: "not counted" is never shown as 0. */
+  facets?: ForumFundingFacets;
   /** Task 19 puts "Follow new calls" here. */
   followSlot?: ReactNode;
 }
@@ -48,9 +59,33 @@ export function FundingCategoryBar({
   scope,
   onScopeChange,
   onClearFilters,
+  facets,
   followSlot,
 }: FundingCategoryBarProps) {
   const { t } = useTranslation();
+  const fmt = useFormat();
+  // A chip's count and its accessible name, which carries the number the
+  // `aria-hidden` badge does not. An "All" or "Anywhere" chip passes
+  // `isLiftingFilter`: it only lifts a filter, so a 0 never disables it.
+  const counted = (
+    value: string,
+    label: string,
+    count: number | undefined,
+    isLiftingFilter = false,
+  ): ChipOption => ({
+    value,
+    label,
+    count,
+    ariaLabel:
+      count === undefined
+        ? undefined
+        : t("forum:filter.withCount", {
+            label,
+            count,
+            formatted: fmt.number(count),
+          }),
+    ...(isLiftingFilter ? { isUnavailable: false } : {}),
+  });
   const headingId = useId();
   const eligibilityLabelId = useId();
   const scopeLabelId = useId();
@@ -66,10 +101,14 @@ export function FundingCategoryBar({
         {followSlot}
       </div>
       <FilterChips
-        options={FUNDING_LIST_VIEWS.map((value) => ({
-          value,
-          label: t(LIST_VIEW_LABEL_KEYS[value]),
-        }))}
+        options={FUNDING_LIST_VIEWS.map((value) =>
+          counted(
+            value,
+            t(LIST_VIEW_LABEL_KEYS[value]),
+            facets?.view[value],
+            value === "all",
+          ),
+        )}
         value={view}
         onChange={(next) => onViewChange(parseFundingListView(next))}
         labelledBy={headingId}
@@ -83,10 +122,13 @@ export function FundingCategoryBar({
               {t("forum:funding.filter.eligibilityLabel")}
             </span>
             <ChipSelect
-              options={FUNDING_ELIGIBILITIES.map((value) => ({
-                value,
-                label: t(ELIGIBILITY_LABEL_KEYS[value]),
-              }))}
+              options={FUNDING_ELIGIBILITIES.map((value) =>
+                counted(
+                  value,
+                  t(ELIGIBILITY_LABEL_KEYS[value]),
+                  facets?.eligibility?.[value],
+                ),
+              )}
               selected={new Set(eligibility)}
               onToggle={(value) => {
                 const [known] = parseEligibility([value]);
@@ -103,11 +145,19 @@ export function FundingCategoryBar({
             </span>
             <FilterChips
               options={[
-                { value: ANY_SCOPE, label: t("forum:funding.filter.anyScope") },
-                ...FUNDING_SCOPES.map((value) => ({
-                  value,
-                  label: t(SCOPE_LABEL_KEYS[value]),
-                })),
+                counted(
+                  ANY_SCOPE,
+                  t("forum:funding.filter.anyScope"),
+                  facets?.scope?.any,
+                  true,
+                ),
+                ...FUNDING_SCOPES.map((value) =>
+                  counted(
+                    value,
+                    t(SCOPE_LABEL_KEYS[value]),
+                    facets?.scope?.[value],
+                  ),
+                ),
               ]}
               value={scope ?? ANY_SCOPE}
               onChange={(next) =>

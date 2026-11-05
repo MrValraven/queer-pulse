@@ -32,7 +32,10 @@ export function HousingViewToggle({
         aria-pressed={view === "list"}
         onClick={() => onSelectView("list")}
       >
-        <FiList aria-hidden /> {t("economy:housing.map.viewList")}
+        <FiList aria-hidden />{" "}
+        <span className={styles.viewToggleLabel}>
+          {t("economy:housing.map.viewList")}
+        </span>
       </button>
       <button
         type="button"
@@ -45,7 +48,10 @@ export function HousingViewToggle({
         aria-pressed={view === "map"}
         onClick={() => onSelectView("map")}
       >
-        <FiMap aria-hidden /> {t("economy:housing.map.viewMap")}
+        <FiMap aria-hidden />{" "}
+        <span className={styles.viewToggleLabel}>
+          {t("economy:housing.map.viewMap")}
+        </span>
       </button>
     </div>
   );

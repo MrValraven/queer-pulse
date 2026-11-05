@@ -6,30 +6,20 @@ import { tintForSlug } from "../../../shared/api/refs";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
 
-// Values copied verbatim from the housingListings.ts fixture (per type).
-const TYPE_STYLE: Record<
-  HousingListingDTO["type"],
-  { tint: Tint; typeColor: string; typeText: string }
-> = {
+// Values copied verbatim from the housingListings.ts fixture (per type). The
+// type badge colours live in the CSS modules, keyed by `data-listing-type`.
+const TYPE_STYLE: Record<HousingListingDTO["type"], { tint: Tint }> = {
   sublet: {
     tint: "coral",
-    typeColor: "rgba(var(--accent-rgb),.1)",
-    typeText: "var(--accent-ink)",
   },
   room: {
     tint: "jade",
-    typeColor: "rgba(var(--jade-rgb),.1)",
-    typeText: "var(--jade)",
   },
   short: {
     tint: "plum",
-    typeColor: "rgba(var(--plum-rgb),.08)",
-    typeText: "var(--plum)",
   },
   studio: {
     tint: "plum",
-    typeColor: "rgba(var(--violet-rgb),.1)",
-    typeText: "var(--violet)",
   },
 };
 
@@ -155,8 +145,6 @@ export function listingDtoToHousingListing(
   return {
     slug: dto.slug,
     type: dto.type,
-    typeColor: style.typeColor,
-    typeText: style.typeText,
     tint: style.tint,
     title: dto.title,
     hood: dto.area || dto.city,

@@ -4,6 +4,7 @@ import { TestProviders } from "../../test/TestProviders";
 import {
   countListingFactChips,
   NO_LISTING_FACT_FILTERS,
+  UNKNOWN_LISTING_FACT_COUNTS,
   type DirectoryListingFactFilters,
 } from "./directoryListingFactFilters";
 import { LocalListingFactFilters } from "./LocalListingFactFilters";
@@ -13,7 +14,7 @@ function renderFilters({
   isOnlineScope = false,
   count = 1,
   countWith,
-  isLoadedSetComplete = true,
+  areCountsKnown = true,
   listingFacts = NO_LISTING_FACT_FILTERS,
 }: {
   isOnlineScope?: boolean;
@@ -21,7 +22,8 @@ function renderFilters({
   /** How many places a chip would leave, given the filters it would set.
    *  Overrides `count`. */
   countWith?: (filters: DirectoryListingFactFilters) => number;
-  isLoadedSetComplete?: boolean;
+  /** False draws the filters with every count not known yet. */
+  areCountsKnown?: boolean;
   listingFacts?: typeof NO_LISTING_FACT_FILTERS;
 } = {}) {
   const onToggle = vi.fn();
@@ -29,12 +31,11 @@ function renderFilters({
     <LocalListingFactFilters
       listingFacts={listingFacts}
       onToggleListingFact={onToggle}
-      counts={countListingFactChips(
-        countWith ?? (() => count),
-        listingFacts,
-        [],
-      )}
-      isLoadedSetComplete={isLoadedSetComplete}
+      counts={
+        areCountsKnown
+          ? countListingFactChips(countWith ?? (() => count), listingFacts, [])
+          : UNKNOWN_LISTING_FACT_COUNTS
+      }
       isOnlineScope={isOnlineScope}
     />,
     { wrapper: TestProviders },
@@ -206,8 +207,8 @@ describe("LocalListingFactFilters", () => {
     expect(screen.queryByRole("button", { name: "Italiano" })).toBeNull();
   });
 
-  it("keeps every chip pickable at zero while pages are still loading", () => {
-    renderFilters({ count: 0, isLoadedSetComplete: false });
+  it("keeps every chip pickable while its count is not known yet", () => {
+    renderFilters({ areCountsKnown: false });
     expect(screen.getByRole("button", { name: "MB WAY" })).toBeEnabled();
   });
 });
@@ -219,7 +220,6 @@ describe("LocalMoreFilters", () => {
         listingFacts={NO_LISTING_FACT_FILTERS}
         onToggleListingFact={vi.fn()}
         counts={countListingFactChips(() => 1, NO_LISTING_FACT_FILTERS, [])}
-        isLoadedSetComplete={false}
         isOnlineScope={false}
         categories={["health"]}
       />,
@@ -244,7 +244,6 @@ describe("LocalMoreFilters", () => {
     const props = {
       onToggleListingFact: vi.fn(),
       counts: countListingFactChips(() => 1, NO_LISTING_FACT_FILTERS, []),
-      isLoadedSetComplete: false,
       isOnlineScope: false,
       categories: [],
     };
@@ -278,7 +277,6 @@ describe("LocalMoreFilters", () => {
         listingFacts={{ ...NO_LISTING_FACT_FILTERS, attributes: ["wifi"] }}
         onToggleListingFact={vi.fn()}
         counts={countListingFactChips(() => 1, NO_LISTING_FACT_FILTERS, [])}
-        isLoadedSetComplete={false}
         isOnlineScope={false}
         categories={[]}
       />,

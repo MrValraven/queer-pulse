@@ -1,5 +1,6 @@
 import { initialsOf, tintForSlug } from "../../../shared/api/refs";
 import type { Profile } from "../flatmates.data";
+import { flatmateMoveInWindow } from "../flatmatesFacets";
 import type { FlatmateProfileDTO } from "./flatmateProfile.api";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
@@ -36,7 +37,9 @@ export function flatmateDtoToProfile(
       : "",
     budgetRange: dto.budgetEuros,
     movein: moveInLabel(dto, t),
-    moveinKey: dto.flexibleTiming ? "flex" : (dto.moveInFrom ?? ""),
+    // The same window the directory's `moveIn` filter files the profile
+    // under, so the board's own move-in check agrees with the server's.
+    moveinKey: flatmateMoveInWindow(dto.moveInFrom, dto.flexibleTiming),
     note: dto.about,
     tags: dto.lifestyleTags,
     // Special-category fields are already gated server-side — an empty value

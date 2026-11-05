@@ -54,6 +54,10 @@ export const forum: Catalog = {
   "sidebar.housingBoard": "Housing board",
   "sidebar.jobBoard": "Job board",
   "sidebar.governance": "Governance & transparency",
+  // A filter option's accessible name with its availability count (the
+  // sidebar categories and the Funding & Grants chips).
+  "filter.withCount_one": "{label}, {formatted} thread",
+  "filter.withCount_other": "{label}, {formatted} threads",
 
   // ── FirstPostPrompt ─────────────────────────────────────────────────────
   "firstPost.eyebrow": "You haven't posted yet",

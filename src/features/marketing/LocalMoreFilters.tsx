@@ -28,7 +28,6 @@ export function MoreFiltersFieldset({
   listingFacts,
   onToggleListingFact,
   counts,
-  isLoadedSetComplete,
   sectionTitleId,
 }: LocalFactGroupProps & { id?: string; groups: MoreFilterGroup[] }) {
   const { t } = useTranslation();
@@ -67,12 +66,11 @@ export function MoreFiltersFieldset({
                 <LocalFactChip
                   key={slug}
                   listingFacts={listingFacts}
-                  isLoadedSetComplete={isLoadedSetComplete}
                   onToggle={onToggleListingFact}
                   label={attributeLabel(t, slug)}
                   isOn={listingFacts.attributes.includes(slug)}
                   change={{ kind: "attribute", slug }}
-                  count={counts.attributes[slug] ?? 0}
+                  count={counts.attributes[slug]}
                 />
               ))}
             </m.div>

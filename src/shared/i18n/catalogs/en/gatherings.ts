@@ -2224,6 +2224,10 @@ export const gatherings: Catalog = {
   "hub.browse.cost.any": "Any cost",
   "hub.browse.cost.free": "Free",
   "hub.browse.cost.paid": "Has a door price",
+  // A filter option's accessible name once its availability count is known:
+  // the option, then how many events picking it would show.
+  "hub.browse.withCount_one": "{label}, {count} event",
+  "hub.browse.withCount_other": "{label}, {count} events",
 
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
   // PRD-38 — PRD-38 - taking a photo down from a gathering album (live mode). The control, its confirmation, and the two outcomes. Also two accessible names for the album tile link, which had none when a photo carried no caption.

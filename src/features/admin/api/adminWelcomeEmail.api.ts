@@ -1,9 +1,20 @@
 import { apiPost } from "../../../shared/api/client";
 import type { Language } from "../../../shared/i18n/types";
 
-/** What the backend answers once Resend accepted the welcome email. */
+/**
+ * What the backend answers once Resend accepted the welcome email: the
+ * request's new send total, counting this one, and when this send went out.
+ * Every send is a real new email, so a resend lands a second copy in the
+ * applicant's inbox and the count says how many they have.
+ *
+ * Both fields are optional for one release, because a backend that predates
+ * the counter answers `{ sent: true }` alone. `useSendWelcomeEmail` fills them
+ * in for that case, so callers always read a complete result.
+ */
 export interface WelcomeEmailSendResult {
   sent: true;
+  welcomeEmailSendCount?: number;
+  welcomeEmailLastSentAt?: string;
 }
 
 /**

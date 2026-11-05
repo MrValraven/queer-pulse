@@ -25,7 +25,11 @@ export interface MoreMenuState {
 export interface MyEventsValue {
   // data
   events: MyEvent[];
-  counts: Record<Pill, number>;
+  /** Events each bucket pill would list with the search and chips applied.
+   *  Undefined until the whole list has loaded, which draws no number. */
+  pillCounts: Record<Pill, number> | undefined;
+  /** Events each filter chip would list, with its own group lifted. */
+  filterCounts: Record<FilterKey, number> | undefined;
   byId: (id: string) => MyEvent | undefined;
   /** True once the live fetch has failed — agenda shows an error/retry state
    *  instead of a false "no events". */

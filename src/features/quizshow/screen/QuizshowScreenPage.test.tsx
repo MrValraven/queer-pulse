@@ -483,7 +483,15 @@ describe("QuizshowScreenStage", () => {
         extraTimeDeadline: Date.now() + 10_000,
       }),
     );
-    expect(await screen.findByText("Finishing up")).toBeInTheDocument();
+    // The ring shows the note to the room and says it once in its status line.
+    expect(
+      await screen.findByText("Finishing up", { selector: "[role='status']" }),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText("Finishing up", {
+        selector: "[aria-hidden='true']",
+      }),
+    ).toBeInTheDocument();
   });
 
   it("shows the checking line during review and the vote options without authors", async () => {

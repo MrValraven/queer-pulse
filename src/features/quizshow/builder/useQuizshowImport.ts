@@ -42,6 +42,14 @@ export function useQuizshowImport(
     hasQuiz: boolean;
     /** Called with the server response after a successful import. */
     onImported?: (response: QuizshowQuizResponse) => void;
+    /** Additive. Rendered inside the replace confirm (the studio stamps it dark). */
+    confirmChildren?: ReactNode;
+    /**
+     * Additive. Awaited before the import goes out: the studio lands its
+     * autosave, so the import never races our own save into a conflict.
+     * Its result is not read, since the import replaces the quiz either way.
+     */
+    beforeImport?: () => Promise<unknown>;
   },
 ): QuizshowImportApi {
   const { t } = useTranslation();
@@ -52,11 +60,22 @@ export function useQuizshowImport(
   const [pendingInput, setPendingInput] = useState<QuizshowImportInput | null>(
     null,
   );
+  // True while `beforeImport` runs; it counts as pending, so a second pick never imports twice.
+  const [isPreparing, setIsPreparing] = useState(false);
+  const isPending = isPreparing || importMutation.isPending;
 
   // mutateAsync awaits here because the empty state unmounts the moment the
   // quiz lands in the cache, and per-call callbacks of an unmounted caller
   // never run, so the toast would be lost.
   async function runImport(input: QuizshowImportInput): Promise<void> {
+    if (options.beforeImport) {
+      setIsPreparing(true);
+      try {
+        await options.beforeImport();
+      } finally {
+        setIsPreparing(false);
+      }
+    }
     try {
       const response = await importMutation.mutateAsync(input);
       options.onImported?.(response);
@@ -74,7 +93,7 @@ export function useQuizshowImport(
   }
 
   function requestImport(input: QuizshowImportInput): void {
-    if (importMutation.isPending) return;
+    if (isPending) return;
     if (options.hasQuiz) {
       setPendingInput(input);
       return;
@@ -102,6 +121,7 @@ export function useQuizshowImport(
           cancelLabel: t("quizshow:common.cancel"),
           onClose: () => setPendingInput(null),
           onConfirm: confirmImport,
+          children: options.confirmChildren,
         })
       : null,
   );
@@ -109,6 +129,6 @@ export function useQuizshowImport(
   return {
     requestImport,
     confirmDialog,
-    isPending: importMutation.isPending,
+    isPending,
   };
 }

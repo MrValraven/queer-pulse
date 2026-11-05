@@ -139,10 +139,16 @@ export function EventPosterSkeleton({ variant }: EventPosterSkeletonProps) {
   return (
     <div className={`${styles.featured} ${styles.isSkeleton}`} aria-hidden>
       <div className={styles.frame}>
-        <SkeletonLine width="100%" height="100%" style={{ borderRadius: 0 }} />
-        {/* Mirrors `.overlay`'s absolute position — the real card's text sits
-            on top of the frame and adds zero flow height, so the skeleton
-            must too, or swapping loading→loaded jumps the layout (CLS). */}
+        {/* Pinned to the frame like the real cover, so the phone frame, which
+            sizes itself from its overlay, measures the same here. */}
+        <SkeletonLine
+          width="100%"
+          height="100%"
+          style={{ borderRadius: 0, position: "absolute", inset: 0 }}
+        />
+        {/* Mirrors `.overlay`'s position: absolute over the frame on wider
+            screens, and in the flow at the frame's foot on a phone, so
+            swapping loading to loaded never jumps the layout (CLS). */}
         <div className={styles.overlay}>
           <SkeletonLine width={72} height={18} style={{ borderRadius: 999 }} />
           <SkeletonLine

@@ -1,15 +1,7 @@
 import type { MyEvent, Pill, SortBy, FilterKey } from "./myEvents.types";
 import type { TFunction } from "../../shared/i18n/types";
-import {
-  atTime,
-  parseDate,
-  dayDiff,
-  hasEnded,
-  inPill,
-  isInMonth,
-  isOnDay,
-  isOnline,
-} from "./myEvents.helpers";
+import { atTime, parseDate, dayDiff, hasEnded } from "./myEvents.helpers";
+import { agendaBase, matchesSecondary } from "./myEvents.facets";
 import { clockNow } from "./myEvents.clock";
 
 export interface AgendaGroup {
@@ -40,34 +32,6 @@ export interface AgendaResult {
   loadMoreCount: number;
 }
 
-function applySecondary(list: MyEvent[], st: AgendaState): MyEvent[] {
-  const { activeFilters: f, viewM, viewY } = st;
-  const q = st.searchTerm.trim().toLowerCase();
-  return list.filter((ev) => {
-    if (
-      q &&
-      `${ev.title} ${ev.venue} ${ev.community || ""}`
-        .toLowerCase()
-        .indexOf(q) === -1
-    )
-      return false;
-    const loc: boolean[] = [];
-    if (f.online) loc.push(isOnline(ev));
-    if (f.inperson) loc.push(!isOnline(ev));
-    if (loc.length && !loc.includes(true)) return false;
-    const pr: boolean[] = [];
-    if (f.free) pr.push(!ev.paid);
-    if (f.paid) pr.push(!!ev.paid);
-    if (pr.length && !pr.includes(true)) return false;
-    // Any day the gathering RUNS puts it in the viewed month. Matching on its
-    // opening day alone filtered a festival that ran 29 September to 2 October
-    // out of the agenda for a member looking at October, so their own running
-    // gathering vanished from their own list.
-    if (f.month && !isInMonth(ev, viewY, viewM)) return false;
-    return true;
-  });
-}
-
 const byDateAsc = (a: MyEvent, b: MyEvent) =>
   +parseDate(a.date) - +parseDate(b.date);
 
@@ -85,13 +49,11 @@ export function buildAgenda(
   st: AgendaState,
   t: TFunction,
 ): AgendaResult {
-  const selectedDate = st.selectedDate;
-  // A day the member picked shows everything RUNNING that day, so day two of a
-  // festival lists it rather than looking like an empty afternoon.
-  const base = selectedDate
-    ? events.filter((e) => isOnDay(e, selectedDate))
-    : events.filter((e) => inPill(e, st.pill));
-  const list = applySecondary(base, st);
+  // The same predicates the pill and chip counts read, so a count always says
+  // what picking it lists.
+  const list = agendaBase(events, st.pill, st.selectedDate).filter((event) =>
+    matchesSecondary(event, st),
+  );
 
   const empty: AgendaResult = {
     groups: [],

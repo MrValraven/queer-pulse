@@ -70,9 +70,9 @@ function renderPicker(isAdultsAllowed: boolean) {
 async function adultsUseButton(): Promise<HTMLElement> {
   const dialog = await screen.findByRole("dialog");
   const adultsTitle = within(dialog).getByText("After dark");
-  const adultsRow = adultsTitle.closest("div")?.parentElement;
+  const adultsRow = adultsTitle.closest("li");
   if (!adultsRow) throw new Error("no adults template row");
-  return within(adultsRow).getByRole("button", { name: "Use this template" });
+  return within(adultsRow).getByRole("button", { name: /^Use this template/ });
 }
 
 describe("QuizshowTemplatePicker", () => {
@@ -96,7 +96,7 @@ describe("QuizshowTemplatePicker", () => {
     expect(onPick).not.toHaveBeenCalled();
 
     const useButtons = screen.getAllByRole("button", {
-      name: "Use this template",
+      name: /^Use this template/,
     });
     const familyButton = useButtons[0];
     if (!familyButton) throw new Error("no family template row");
@@ -130,7 +130,7 @@ describe("QuizshowTemplatePicker", () => {
       ),
     ).toBeTruthy();
     expect(
-      within(dialog).queryByRole("button", { name: "Use this template" }),
+      within(dialog).queryByRole("button", { name: /^Use this template/ }),
     ).toBeNull();
   });
 

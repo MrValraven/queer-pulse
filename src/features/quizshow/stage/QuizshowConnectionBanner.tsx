@@ -4,7 +4,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { QuizshowConnectionStatus } from "../realtime/quizshowClientStore";
 import styles from "./QuizshowStage.module.css";
 
-/** A line across the top while the socket reconnects; folds away once attached.
+/** A glass pill along the top while the socket reconnects; folds away once attached.
  *  The live region stays mounted and fills in, so the line is announced. */
 export function QuizshowConnectionBanner({
   status,
@@ -20,9 +20,11 @@ export function QuizshowConnectionBanner({
         {isReconnecting ? reconnectingLine : ""}
       </span>
       <Collapse isOpen={isReconnecting}>
-        <div className={styles.banner} aria-hidden="true">
-          <FiWifiOff aria-hidden="true" fill="none" />
-          {reconnectingLine}
+        <div className={styles.bannerRow} aria-hidden="true">
+          <span className={styles.banner}>
+            <FiWifiOff aria-hidden="true" fill="none" />
+            {reconnectingLine}
+          </span>
         </div>
       </Collapse>
     </>

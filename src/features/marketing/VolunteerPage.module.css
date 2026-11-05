@@ -1,34 +1,17 @@
-.note {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  margin-top: 16px;
-  font-size: var(--text-13);
-  color: rgba(var(--cream-rgb), 0.7);
-  position: relative;
-}
-.note .dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--jade);
-}
-.heroCta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 12px;
-  margin-top: 20px;
-}
-.heroCta svg {
-  margin-right: 2px;
-  vertical-align: -2px;
-}
+/* The page sits on the shared filter page (FilterPage.module.css): the header
+   note, its live dot and the actions row are styled there. This module keeps
+   the guide band, the roles grid, the role card (also used by the community
+   Volunteering tab through VolunteerRoleCard) and the contribution card. */
 
+/* Follows the filters layout inside the frame, across its full width. A quiet
+   paper card on the cream with the standard hairline, so the full-bleed plum
+   Outro right after it stays the page's one plum moment. */
 .guideWrap {
-  padding: 32px 0 0;
+  margin-top: var(--section-y-56);
 }
 .guide {
-  background: var(--plum);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-20);
   padding: 30px 36px;
   display: flex;
@@ -36,6 +19,11 @@
   justify-content: space-between;
   gap: 28px;
   flex-wrap: wrap;
+}
+@media (--mobile) {
+  .guide {
+    padding: 24px 22px;
+  }
 }
 .guideText {
   max-width: 620px;
@@ -51,7 +39,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: var(--text-heading);
-  color: rgba(var(--cream-rgb), 1);
+  color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.15;
   margin: 8px 0 0;
@@ -62,55 +50,16 @@
 }
 .guideBody {
   font-size: var(--text-14);
-  color: rgba(var(--cream-rgb), 0.72);
+  color: var(--ink-60);
   line-height: 1.6;
   margin: 10px 0 0;
 }
 
-.body {
-  padding: 40px 0 var(--section-y-80);
-}
-.filters {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 28px;
-}
-/* The commitment row sits directly above the cause row, so the two read as one
-   control block: the 28px gap belongs under the pair, not between them. */
-.filtersCommitment {
-  margin-bottom: 10px;
-}
-.chip {
-  font-family: var(--sans);
-  font-size: var(--text-13);
-  font-weight: 500;
-  color: var(--ink-60);
-  background: transparent;
-  border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: var(--radius-pill);
-  padding: 8px 16px;
-  cursor: pointer;
-  transition:
-    color 0.18s var(--ease),
-    background 0.18s var(--ease),
-    border-color 0.18s var(--ease);
-}
-@media (hover: hover) {
-  .chip:not(.chipOn):hover {
-    border-color: var(--line-strong);
-    color: var(--text-strong);
-  }
-}
-.chipOn {
-  background: var(--plum);
-  color: rgba(var(--cream-rgb), 1);
-  border-color: var(--line-strong);
-}
-
+/* The results column beside the 280px sidebar: as many 280px cards as fit,
+   one per row on a phone, the way the members grid fills its column. */
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
   gap: 18px;
 }
 .card {
@@ -245,35 +194,23 @@
   gap: var(--icon-gap-inline);
 }
 
-@media (--wide) {
-  .grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-@media (--sm) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-:global([data-theme="dark"]) .card {
+:global([data-theme="dark"]) .card,
+:global([data-theme="dark"]) .guide {
   border-color: rgba(var(--cream-rgb), 0.1);
-}
-
-.loadMore {
-  display: flex;
-  justify-content: center;
-  margin-top: 12px;
 }
 
 /* ── The volunteer's own confirmed contribution (SUS-05) ─────────────────── */
 
+/* Closes the results column, under the grid and its pagination. The count row
+   leads the column, so this card folding in after load moves nothing above
+   it. */
 .contribution {
-  padding: 2rem 0 0;
+  margin-top: var(--section-y-48);
 }
 
 .contributionTitle {
   font-family: var(--serif);
+  font-weight: 500;
   font-size: var(--text-22);
   margin: 0 0 1rem;
 }

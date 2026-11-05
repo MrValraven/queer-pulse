@@ -3,8 +3,10 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import { PROFILES, type Profile } from "../flatmates.data";
+import { countDemoFlatmateFacets } from "../flatmatesFacets";
 import {
   getFlatmateProfiles,
+  type FlatmateFacets,
   type FlatmateFilters,
 } from "./flatmateProfile.api";
 import { flatmateDtoToProfile } from "./flatmateProfile.adapters";
@@ -16,6 +18,7 @@ interface FlatmateProfilesPageVM {
   total: number;
   page: number;
   pageSize: number;
+  facets?: FlatmateFacets;
 }
 
 /**
@@ -49,6 +52,9 @@ export function useFlatmateProfiles(filters: FlatmateFilters = {}) {
           total: PROFILES.length,
           page: 1,
           pageSize: PROFILES.length,
+          // The demo page ignores the filters, so its counts are taken here
+          // over the whole mock, the way the server takes them.
+          facets: countDemoFlatmateFacets(PROFILES, filters),
         };
       }
       const page = pageParam as number;
@@ -61,6 +67,7 @@ export function useFlatmateProfiles(filters: FlatmateFilters = {}) {
         total: profilePage.total,
         page: profilePage.page,
         pageSize: profilePage.pageSize,
+        facets: profilePage.facets,
       };
     },
     getNextPageParam: (lastPage) =>
@@ -72,5 +79,10 @@ export function useFlatmateProfiles(filters: FlatmateFilters = {}) {
   });
   const profiles = query.data?.pages.flatMap((page) => page.items) ?? [];
   const total = query.data?.pages[0]?.total ?? profiles.length;
-  return { ...query, profiles, total };
+  // The sidebar's availability counts, read off the FIRST page: every page of
+  // one filter run shares them. Undefined while that page is in flight, after
+  // it failed, and on a server that predates the facets, which must never
+  // render as a 0.
+  const facets = query.data?.pages[0]?.facets;
+  return { ...query, profiles, total, facets };
 }

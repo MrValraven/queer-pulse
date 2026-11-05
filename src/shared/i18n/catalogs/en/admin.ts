@@ -5105,9 +5105,13 @@ export const admin: Catalog = {
     "Curate the sections signed-out visitors see on the homepage.",
   "landing.quickLinks.heading": "Quick links",
   "landing.quickLinks.helper":
-    "Each one opens in a new tab, the way a signed-out visitor sees it.",
+    "Each one opens in a new tab. The homepage and Studio show the signed-out visitor view.",
   "landing.quickLinks.homepage": "Open homepage as a visitor",
   "landing.quickLinks.studio": "Open Studio landing as a visitor",
+  "landing.quickLinks.forBusinesses": "Open businesses page",
+  "landing.quickLinks.forCommunities": "Open communities page",
+  "landing.quickLinks.forPerformers": "Open performers page",
+  "landing.quickLinks.forPractitioners": "Open practitioners page",
   "landing.quickLinks.opensInNewTab": "(opens in a new tab)",
 
   "landing.tabs.member": "Members",
@@ -7150,6 +7154,46 @@ export const admin: Catalog = {
     "{count} queues need someone now.",
   "moderationHealth.indicator.cta": "See queue health",
 
+  // The overview card at the top of the health tab. Every count here counts
+  // queues.
+  "moderationHealth.overview.headline.critical_one":
+    "{count} queue needs someone now",
+  "moderationHealth.overview.headline.critical_other":
+    "{count} queues need someone now",
+  "moderationHealth.overview.headline.warning_one":
+    "{count} queue is getting busy",
+  "moderationHealth.overview.headline.warning_other":
+    "{count} queues are getting busy",
+  "moderationHealth.overview.headline.ok": "Every queue is clear",
+  "moderationHealth.overview.legendAriaLabel": "Queues by level",
+  "moderationHealth.overview.legend.critical_one": "{count} needs someone now",
+  "moderationHealth.overview.legend.critical_other": "{count} need someone now",
+  "moderationHealth.overview.legend.warning_one": "{count} getting busy",
+  "moderationHealth.overview.legend.warning_other": "{count} getting busy",
+  "moderationHealth.overview.legend.ok_one": "{count} clear",
+  "moderationHealth.overview.legend.ok_other": "{count} clear",
+  "moderationHealth.overview.total.waitingNote_one": "across {count} queue",
+  "moderationHealth.overview.total.waitingNote_other": "across {count} queues",
+  "moderationHealth.overview.total.overdueNote":
+    "waiting past a window we published",
+  "moderationHealth.overview.total.unclaimedNote":
+    "in queues with a claiming step",
+  "moderationHealth.overview.total.unclaimedNotApplicable": "Does not apply",
+  "moderationHealth.overview.total.unclaimedNoClaimingNote":
+    "None of these queues has a claiming step",
+  "moderationHealth.overview.total.rota": "On rota",
+  "moderationHealth.overview.total.rotaNote_one":
+    "person who can work these queues",
+  "moderationHealth.overview.total.rotaNote_other":
+    "people who can work these queues",
+  "moderationHealth.overview.refreshFailed":
+    "The last refresh failed, so these figures are from {time}",
+  "moderationHealth.overview.refreshFailedUndated":
+    "The last refresh failed, so these figures may be out of date",
+  "moderationHealth.overview.refreshFailedReason": "Reason: {reason}",
+  "moderationHealth.refresh": "Refresh",
+  "moderationHealth.row.openQueue": "Open queue",
+
   // The staff notification. `ok` is the recovery notice, so it closes the
   // alert rather than opening one. No copy here asks anyone to hurry.
   "moderationHealth.notification.warning.text_one":
@@ -8631,8 +8675,24 @@ export const admin: Catalog = {
   "emailTemplates.send.cta": "Send welcome email",
   "emailTemplates.send.sending": "Sending…",
   "emailTemplates.send.sentToast": "Welcome email sent to {email}",
-  "emailTemplates.send.sentTo": "Sent to {email}",
   "emailTemplates.send.sendAgainCta": "Send again",
+  // The send record above the language choice, joined as "{sent} · {lastOn}".
+  "emailTemplates.send.status.notSent": "Not sent yet",
+  "emailTemplates.send.status.sent_one": "Welcome email sent once",
+  "emailTemplates.send.status.sent_other": "Welcome email sent {count} times",
+  "emailTemplates.send.status.lastOn": "last on {date}",
+  // Asked before a second or later copy goes out. {language} reads mid-sentence.
+  "emailTemplates.send.confirmResend.title": "Send the welcome email again?",
+  "emailTemplates.send.confirmResend.description_one":
+    "You already sent it once to {email}, last on {date}. They will get another copy in {language}.",
+  "emailTemplates.send.confirmResend.description_other":
+    "You already sent it {count} times to {email}, last on {date}. They will get another copy in {language}.",
+  "emailTemplates.send.confirmResend.descriptionUndated_one":
+    "You already sent it once to {email}. They will get another copy in {language}.",
+  "emailTemplates.send.confirmResend.descriptionUndated_other":
+    "You already sent it {count} times to {email}. They will get another copy in {language}.",
+  "emailTemplates.send.languageName.en": "English",
+  "emailTemplates.send.languageName.pt": "Portuguese",
   "emailTemplates.send.error.join_request_not_found":
     "This join request no longer exists, so no email was sent. Refresh the page and look again.",
   "emailTemplates.send.error.invite_not_usable":

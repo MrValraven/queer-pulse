@@ -22,6 +22,28 @@
   max-width: 420px;
 }
 
+/* A phone keeps the search and the Refine toggle on one row: the field
+   takes whatever the toggle leaves, and the toggle trims its side padding.
+   The bar keeps its full bottom margin: the sticky month heading's cream
+   band reaches `--gap-lg` above the heading, and any less would paint over
+   the foot of this row. */
+@media (--md) {
+  .searchRow {
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  .search {
+    flex: 1 1 0;
+    max-width: none;
+  }
+
+  .searchRow > .refineToggle {
+    flex: none;
+    padding-inline: 12px;
+  }
+}
+
 .group {
   display: flex;
   flex-wrap: wrap;
@@ -106,9 +128,117 @@
   }
 }
 
+/* ── availability counts ─────────────────────────────────────────────────
+   The trailing number on a chip or a select row ("Free 12"), drawn the way
+   `ChipSelect`'s `.chipCount` draws it: quieter than the label it follows,
+   a hint about what a tap would yield. `aria-hidden` in the markup; the
+   option carries the whole phrase as its accessible name instead. */
+.chipCount,
+.optionCount {
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.55;
+}
+
+/* Nothing matches this chip under the other filters. It stays in place,
+   dimmed, like `ChipSelect`'s `.chipEmpty`: an option that disappears makes
+   the vocabulary feel unstable, and "0" is a real answer. */
+.chipEmpty {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chipEmpty:hover {
+    border-color: rgba(var(--line-rgb), 0.14);
+    color: var(--ink-60);
+  }
+}
+
+.chipEmpty:active {
+  transform: none;
+}
+
+/* A select row: the label takes the room, the count and the tick trail it.
+   The row itself (`Select`'s option) dims a disabled one. */
+.optionLabel {
+  flex: 1;
+  min-width: 0;
+}
+
+.optionCheck {
+  flex-shrink: 0;
+  color: var(--text-strong);
+}
+
+/* The select row's spoken name, read in place of the drawn label and count. */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* The split's second column is a 1fr track, so a lone select in it would
    stretch the width of the panel. Cap it to read as a sibling of the
    neighbourhood one in the capped first column. */
 .typeField {
   max-width: 260px;
+}
+
+/* ── Phone: each chip group is one row that scrolls sideways ──
+   Wrapped, the eleven kind chips took about one line each and the drawer
+   stood a screen and a half tall, with "When" far below the fold. On a
+   phone every group keeps to one line: it scrolls on its own axis, snaps
+   chip by chip, hides its scrollbar and fades at both ends so a cut chip
+   reads as "more this way".
+
+   The row reaches out over the panel's side padding (the negative margin)
+   and pays it back as its own padding, so the first chip still lines up
+   with the group label while the fade sits outside the chips at rest. The
+   block padding, paid back the same way, leaves room for the focus ring:
+   the scroller clips on both axes, and the ring sits 3px off the chip with
+   the cream halo around it. Snapping and keyboard scrolling keep the
+   focused chip clear of the fade through the matching scroll padding.
+   `contain: inline-size` stops the row's full chip width counting as its
+   minimum: the group sits in a fieldset, which grows to its content's
+   minimum by default and pushed the whole panel off the screen. */
+@media (--md) {
+  .group {
+    --chip-row-bleed: var(--gap-sm);
+    --chip-row-ring-room: 8px;
+    contain: inline-size;
+    flex-wrap: nowrap;
+    margin-inline: calc(-1 * var(--chip-row-bleed));
+    margin-block: calc(-1 * var(--chip-row-ring-room));
+    padding: var(--chip-row-ring-room) var(--chip-row-bleed);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: var(--chip-row-bleed);
+    scrollbar-width: none;
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      black 10px,
+      black calc(100% - 10px),
+      transparent 100%
+    );
+  }
+
+  .group::-webkit-scrollbar {
+    display: none;
+  }
+
+  .group > .chip {
+    flex: none;
+    white-space: nowrap;
+    scroll-snap-align: start;
+  }
 }

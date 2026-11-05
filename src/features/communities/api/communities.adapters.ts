@@ -25,6 +25,7 @@ import type {
   RosterMember,
   SpaceCardModel,
 } from "../community.model";
+import { memberCountLabel } from "../memberCountLabel";
 import type { CommunityDraft } from "../startCommunity/startCommunity.data";
 import { READING_GROUP_TAG } from "../communityTags.data";
 import type {
@@ -138,12 +139,7 @@ export function cardDtoToCommunity(
     typeLabel: shortTypeLabel(dto.type),
     name: dto.name,
     description: dto.tagline,
-    count:
-      dto.accessTier === "private"
-        ? translate("communities:common.count.membersOnly")
-        : translate("communities:common.count.members", {
-            count: dto.memberCount,
-          }),
+    count: memberCountLabel(dto.accessTier, dto.memberCount, translate),
     joinLabel: joinLabelFor(dto.accessTier, translate),
     dashed: dto.accessTier === "private",
     privateBadge: dto.accessTier === "private",
