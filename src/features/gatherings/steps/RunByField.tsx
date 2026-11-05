@@ -5,7 +5,11 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { ManagedListingItem } from "../../marketing/listBusiness/api/managedListings.api";
 import { useManagedListings } from "../../marketing/listBusiness/api/useManagedListings";
 import { Field } from "../CreateGatheringFields";
-import { meetingPointPrefill } from "../runByListing";
+import {
+  meetingPointPrefill,
+  runByVenueChange,
+  type RunByLinkedVenue,
+} from "../runByListing";
 import type { GatheringForm } from "../useGatheringForm";
 
 /** The option value for "No business". */
@@ -59,7 +63,9 @@ export function RunByPicker({
  * "Run by one of your businesses", optional, in the "Who is it for?"
  * chapter. Shown only to a host who manages at least one listing. Picking a
  * business with a public meeting point fills the gathering's neighbourhood
- * and address where they are still empty, and the hint says so.
+ * and address where they are still empty, and the hint says so. Picking a
+ * business with a door links it as the venue (see `runByVenueChange`), and
+ * its directory address follows.
  *
  * A pick the server refused on publish (a business hidden or paused since,
  * or one this host no longer runs) shows its error here until the host picks
@@ -73,6 +79,9 @@ export function RunByField({ form }: { form: GatheringForm }) {
   const { checking } = useAuth();
   const { items, isResolving } = useManagedListings();
   const [prefilledFrom, setPrefilledFrom] = useState<string | null>(null);
+  // The venue a pick here linked. Starts empty, so a restored draft's venue
+  // always counts as the host's own and no pick ever replaces it.
+  const [linkedVenue, setLinkedVenue] = useState<RunByLinkedVenue | null>(null);
   const { runByListingId, setRunByListingId } = form;
   const isUnmanaged =
     runByListingId !== null &&
@@ -86,8 +95,25 @@ export function RunByField({ form }: { form: GatheringForm }) {
 
   const choose = (item: ManagedListingItem | null) => {
     setRunByListingId(item?.id ?? null);
+    const venueChange = runByVenueChange(
+      { text: form.venue, venueListing: form.venueListing, hood: form.hood },
+      linkedVenue,
+      item,
+    );
+    if (venueChange.selection) {
+      form.setVenue(venueChange.selection.text);
+      form.setVenueListingId(venueChange.selection.listingId);
+      form.setVenueListing(venueChange.selection.venueListing);
+    }
+    setLinkedVenue(venueChange.linkedVenue);
+    // Unlinking the auto-linked venue clears its address on the next render
+    // (`useVenueAddress`), so the meeting point counts that address as empty.
+    const isUnlinkingAutoVenue =
+      linkedVenue !== null &&
+      Boolean(venueChange.selection) &&
+      venueChange.linkedVenue === null;
     const prefill = meetingPointPrefill(
-      { hood: form.hood, address: form.address },
+      { hood: form.hood, address: isUnlinkingAutoVenue ? "" : form.address },
       item?.meetingPoint ?? null,
     );
     if (prefill.hood !== undefined) form.setHood(prefill.hood);
@@ -97,9 +123,18 @@ export function RunByField({ form }: { form: GatheringForm }) {
     setPrefilledFrom(isPrefilled && item ? item.name : null);
   };
 
-  const hint = prefilledFrom
-    ? t("gatherings:create.v2.who.runByPrefilled", { name: prefilledFrom })
-    : t("gatherings:create.v2.who.runByHint");
+  // The venue hint holds only while the venue is still the one this field
+  // linked: once the host changes or unlinks it, their choice is the one
+  // that counts and the hint goes back to the plain one.
+  const linkedVenueName =
+    linkedVenue !== null && form.venueListing?.slug === linkedVenue.slug
+      ? form.venueListing.name
+      : null;
+  const hint = linkedVenueName
+    ? t("gatherings:create.v2.who.runByVenueLinked", { name: linkedVenueName })
+    : prefilledFrom
+      ? t("gatherings:create.v2.who.runByPrefilled", { name: prefilledFrom })
+      : t("gatherings:create.v2.who.runByHint");
   return (
     <Field
       label={t("gatherings:create.v2.who.runByLabel")}

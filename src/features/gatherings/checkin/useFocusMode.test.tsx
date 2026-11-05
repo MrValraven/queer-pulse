@@ -1,7 +1,7 @@
 import { act, renderHook } from "@testing-library/react";
 import { MemoryRouter, useSearchParams } from "react-router-dom";
 import type { ReactNode } from "react";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { useFocusMode } from "./useFocusMode";
 
 const wrapper = (initialEntry: string) =>
@@ -12,6 +12,10 @@ const wrapper = (initialEntry: string) =>
   };
 
 describe("useFocusMode", () => {
+  afterEach(() => {
+    Reflect.deleteProperty(navigator, "wakeLock");
+  });
+
   it("reads and writes the focus flag, keeping the tab", () => {
     const { result } = renderHook(
       () => ({ focus: useFocusMode(), params: useSearchParams()[0] }),
@@ -105,5 +109,28 @@ describe("useFocusMode", () => {
     await pressEscape();
     expect(result.current.isFocusMode).toBe(false);
     searchInput.remove();
+  });
+
+  it("holds a screen wake lock only while focus mode is on", async () => {
+    const release = vi.fn(() => Promise.resolve());
+    const request = vi.fn(() => Promise.resolve({ release }));
+    Object.defineProperty(navigator, "wakeLock", {
+      configurable: true,
+      value: { request },
+    });
+    const { result } = renderHook(() => useFocusMode(), {
+      wrapper: wrapper("/gatherings/x/manage?tab=checkin"),
+    });
+    expect(request).not.toHaveBeenCalled();
+    await act(async () => {
+      result.current.enterFocusMode();
+      await Promise.resolve();
+    });
+    expect(request).toHaveBeenCalledWith("screen");
+    await act(async () => {
+      result.current.exitFocusMode();
+      await Promise.resolve();
+    });
+    expect(release).toHaveBeenCalledTimes(1);
   });
 });

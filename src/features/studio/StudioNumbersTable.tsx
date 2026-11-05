@@ -1,7 +1,8 @@
 import { useId, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiChevronRight } from "react-icons/fi";
-import { AnimatePresence } from "motion/react";
+import { AnimatePresence, m } from "motion/react";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { IconButton } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -10,6 +11,7 @@ import type {
   StudioDashboardStatsView,
 } from "./api/studioDashboard.adapters";
 import { formatStudioCount } from "./studioCount";
+import { STUDIO_ROW_BLOCK_EASE, studioRowBlockDuration } from "./studioMotion";
 import { StudioNumbersTrackRow } from "./StudioNumbersTrackRow";
 import css from "./StudioNumbers.module.css";
 
@@ -27,6 +29,10 @@ function ReleaseRows({
   const { t } = useTranslation();
   const fmt = useFormat();
   const tracksId = useId();
+  const { reducedMotion } = useMotionPrefs();
+  // One clock for the chevron and every track row, so the turn and the
+  // block's open or fold start and land together.
+  const blockDuration = studioRowBlockDuration(row.tracks.length);
   return (
     <tbody className={css.group} id={tracksId}>
       <tr className={css.releaseRow}>
@@ -45,7 +51,19 @@ function ReleaseRows({
                 )}
                 onClick={onToggle}
               >
-                <FiChevronRight aria-hidden className={css.chevron} />
+                <m.span
+                  aria-hidden
+                  className={css.chevron}
+                  initial={false}
+                  animate={{ rotate: isOpen ? 90 : 0 }}
+                  transition={
+                    reducedMotion
+                      ? { duration: 0 }
+                      : { duration: blockDuration, ease: STUDIO_ROW_BLOCK_EASE }
+                  }
+                >
+                  <FiChevronRight />
+                </m.span>
               </IconButton>
             ) : (
               <span aria-hidden className={css.expandSpacer} />
@@ -86,6 +104,7 @@ function ReleaseRows({
               key={trackRow.track.id}
               trackRow={trackRow}
               index={index}
+              blockDuration={blockDuration}
               hasPlays={hasPlays}
               isPodcast={row.release.type === "podcast"}
             />

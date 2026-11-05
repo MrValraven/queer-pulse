@@ -707,6 +707,15 @@ const CAPABILITY_ELEVATED_PATTERNS: {
     capabilities: ["music_manager_producer"],
   },
   {
+    // `AdminLeadsController` (`RolesOrStaffGuard`, `@Roles(Admin)`,
+    // `@StaffRoles('music_manager_producer')`): the account tier Admin OR the
+    // `music_manager_producer` grant. It stays out of
+    // `MOD_ACCESSIBLE_ADMIN_PATTERNS` because the backend tier is Admin alone,
+    // so a moderator gets a 403 from every leads endpoint.
+    patterns: [routes.adminLeads, `${routes.adminLeads}/*`],
+    capabilities: ["music_manager_producer"],
+  },
+  {
     // Studio discovery. `AdminStudioCurationController`,
     // `AdminStudioScenesController` and `AdminStudioSpotlightController` are
     // guarded by `RolesOrStaffGuard`: `@Roles(Moderator, Admin)` plus

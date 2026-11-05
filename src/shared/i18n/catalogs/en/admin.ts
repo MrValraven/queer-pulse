@@ -608,6 +608,10 @@ export const admin: Catalog = {
   "platformLog.kind.mod.community_member_removed": "removed a community member",
   "platformLog.kind.mod.community_member_removed.target":
     "removed a community member:",
+  "platformLog.kind.mod.lead_persona_linked": "linked a lead to a persona",
+  "platformLog.kind.mod.lead_persona_unlinked":
+    "unlinked a persona from a lead",
+  "platformLog.kind.mod.lead_deleted": "deleted a lead",
   "platformLog.kind.governance.section_changed":
     "updated the {section} section of governance",
   "platformLog.kind.governance.finance_changed":
@@ -1358,7 +1362,7 @@ export const admin: Catalog = {
     "Keeps the landing page, press kit and marketing videos current. Story submissions and writer applications stay with Editorial.",
   "staffRoles.musicManagerProducer.label": "Music manager & producer",
   "staffRoles.musicManagerProducer.desc":
-    "Creates and runs the music events QueerPulse hosts, from the lineup to the door, and curates Studio home: the featured release, shelves, scenes, Artist of the month and New stars.",
+    "Creates and runs the music events QueerPulse hosts, from the lineup to the door, and curates Studio home: the featured release, shelves, scenes, Artist of the month and New stars. Keeps the leads directory too: adds, edits and deletes leads, their links, notes and follow-ups, and links a lead to a persona.",
   "staffRoles.adminSuperset": "Admins already have every staff capability.",
   "staffRoles.systemLocked": "System accounts can't hold staff roles.",
 
@@ -9730,6 +9734,10 @@ export const admin: Catalog = {
     "Quiz template unpublished",
   "governance.audit.actionType.quizshow_template_deleted":
     "Quiz template deleted",
+  "governance.audit.actionType.lead_persona_linked": "Lead linked to a persona",
+  "governance.audit.actionType.lead_persona_unlinked":
+    "Lead unlinked from a persona",
+  "governance.audit.actionType.lead_deleted": "Lead deleted",
   "moderation.quizshowGame.reasonLabel": "Reason",
   "moderation.quizshowGame.reasonHint":
     "Saved in the moderation log with this report",
@@ -10046,5 +10054,222 @@ export const admin: Catalog = {
   "personaWall.failure.restricted":
     "You can't make changes while a moderation restriction is in effect on your account",
   "personaWall.failure.unknown":
+    "This didn't go through and the server sent no reason. Try again",
+
+  // ── Leads (Admin and music_manager_producer) ──
+  "leads.title": "Leads",
+  "leads.intro":
+    "Everyone we reach out to, with their links, notes and next follow-up",
+  "leads.addCta": "Add lead",
+  "leads.list.searchLabel": "Search leads",
+  "leads.list.searchPlaceholder": "Name, email or link",
+  "leads.list.stageFilterLabel": "Stage",
+  "leads.list.stageAll": "All",
+  "leads.list.stageChipAria_one": "{stage}, {count} lead",
+  "leads.list.stageChipAria": "{stage}, {count} leads",
+  "leads.list.typeFilterLabel": "Type",
+  "leads.list.typeAll": "All types",
+  "leads.list.dueOnly": "Follow-up due",
+  "leads.list.followUpOn": "Follow up {date}",
+  "leads.list.followUpDue": "Follow-up due {date}",
+  "leads.list.noteCount_one": "{count} note",
+  "leads.list.noteCount": "{count} notes",
+  "leads.list.linksLabel": "Links: {platforms}",
+  "leads.list.moreLinksAria_one": "{count} more link",
+  "leads.list.moreLinksAria": "{count} more links",
+  "leads.list.personaLinked": "Linked to {name}",
+  "leads.list.loadMore": "Show more leads",
+  "leads.list.loadError": "We couldn't load the leads",
+  "leads.list.retryCta": "Load the leads again",
+  "leads.empty.none.title": "No leads yet",
+  "leads.empty.none.body": "Add the first person we're reaching out to",
+  "leads.empty.filtered.title": "No leads match these filters",
+  "leads.empty.filtered.body":
+    "Try another name or stage, or clear the filters",
+  "leads.empty.clearFilters": "Clear filters",
+  "leads.action.openLead": "Open {name}",
+  "leads.toast.created": "{name} is in the leads",
+  "leads.toast.deleted": "{name} was deleted",
+  "leads.stage.to_contact": "To contact",
+  "leads.stage.contacted": "Contacted",
+  "leads.stage.in_talks": "In talks",
+  "leads.stage.on_board": "On board",
+  "leads.stage.not_now": "Not now",
+  "leads.type.artist": "Artist",
+  "leads.type.dj": "DJ",
+  "leads.type.band": "Band",
+  "leads.type.venue": "Venue",
+  "leads.type.promoter": "Promoter",
+  "leads.type.collective": "Collective",
+  "leads.type.business": "Business",
+  "leads.type.other": "Other",
+  "leads.platform.instagram": "Instagram",
+  "leads.platform.tiktok": "TikTok",
+  "leads.platform.soundcloud": "SoundCloud",
+  "leads.platform.spotify": "Spotify",
+  "leads.platform.bandcamp": "Bandcamp",
+  "leads.platform.youtube": "YouTube",
+  "leads.platform.facebook": "Facebook",
+  "leads.platform.x": "X",
+  "leads.platform.residentAdvisor": "Resident Advisor",
+  "leads.platform.mixcloud": "Mixcloud",
+  "leads.platform.website": "Website",
+  "leads.field.name": "Name",
+  "leads.field.type": "Type",
+  "leads.field.typePlaceholder": "Choose a type",
+  "leads.field.stage": "Stage",
+  "leads.field.location": "Location",
+  "leads.field.locationPlaceholder": "City or area",
+  "leads.field.email": "Email",
+  "leads.field.phone": "Phone",
+  "leads.field.links": "Links",
+  "leads.field.linksHint":
+    "Paste any link and we spot the platform from the address",
+  "leads.field.linkLabel": "Link {position}",
+  "leads.field.linkPlaceholder": "instagram.com/name",
+  "leads.field.openLinkAria": "Open link {position} in a new tab",
+  "leads.field.removeLinkAria": "Remove link {position}",
+  "leads.field.addLink": "Add link",
+  "leads.field.linksFull": "A lead holds up to {max} links",
+  "leads.field.followUp": "Follow-up date",
+  "leads.field.followUpHint":
+    "On this day the lead moves to the top of the list",
+  "leads.field.firstNote": "First note",
+  "leads.field.firstNoteHint":
+    "Optional. How you met and what you talked about",
+  "leads.addDialog.title": "Add lead",
+  "leads.addDialog.submit": "Add lead",
+  "leads.details.heading": "Details",
+  "leads.details.save": "Save changes",
+  "leads.details.discard": "Discard changes",
+  "leads.details.saved": "Changes saved",
+  "leads.details.stageSaved": "Moved to {stage}",
+  "leads.details.clearFollowUp": "Clear follow-up",
+  "leads.details.emailAction": "Email {name}",
+  "leads.details.phoneAction": "Call {name}",
+  "leads.persona.heading": "Persona",
+  "leads.persona.none":
+    "No persona linked yet. Link one once they join QueerPulse",
+  "leads.persona.linkCta": "Link persona",
+  "leads.persona.unlinkCta": "Unlink persona",
+  "leads.persona.openAria": "Open {name} in a new tab",
+  "leads.persona.moveToOnBoardPrompt":
+    "Persona linked. The stage is still {stage}",
+  "leads.persona.moveToOnBoard": "Move to On board",
+  "leads.persona.linkedToast": "{name} is linked to this lead",
+  "leads.persona.unlinkedToast": "{name} is no longer linked",
+  "leads.persona.state.draft":
+    "Not public now: the owner moved this persona back to draft",
+  "leads.persona.state.not_open":
+    "Not public now: the owner made this persona members only or private",
+  "leads.persona.state.removed":
+    "Not public now: this persona was removed from QueerPulse",
+  "leads.persona.state.taken_down":
+    "Not public now: moderation took this persona down",
+  "leads.personaDialog.title": "Link persona",
+  "leads.personaDialog.searchLabel": "Search personas",
+  "leads.personaDialog.searchPlaceholder": "Name or @handle",
+  "leads.personaDialog.searchHint":
+    "Only personas listed in the public directory appear here",
+  "leads.personaDialog.idle": "Type a name or @handle to find a persona",
+  "leads.personaDialog.searching": "Searching",
+  "leads.personaDialog.noResults": "No listed persona matches {query}",
+  "leads.personaDialog.resultsLabel": "Matching personas",
+  "leads.personaDialog.chooseAria": "Link {name} to this lead",
+  "leads.personaDialog.linkedElsewhere": "Linked to {name}",
+  "leads.personaDialog.searchErrorTitle": "The search didn't finish",
+  "leads.personaDialog.retryCta": "Search again",
+  "leads.history.heading": "History",
+  "leads.history.composerLabel": "New note",
+  "leads.history.composerPlaceholder": "What happened and what comes next",
+  "leads.history.noteCounter": "{used} of {max}",
+  "leads.history.addNote": "Add note",
+  "leads.history.editNote": "Edit note",
+  "leads.history.deleteNote": "Delete note",
+  "leads.history.saveNote": "Save note",
+  "leads.history.noteEditLabel": "Edit this note",
+  "leads.history.edited": "edited",
+  "leads.history.unknownAuthor": "A former team member",
+  "leads.history.created": "{author} added this lead as {stage}",
+  "leads.history.stageChanged": "{author} moved this from {from} to {to}",
+  "leads.history.personaLinked": "{author} linked {persona}",
+  "leads.history.personaUnlinked": "{author} unlinked {persona}",
+  "leads.history.personaGoneLinked":
+    "{author} linked a persona that is no longer available",
+  "leads.history.personaGoneUnlinked":
+    "{author} unlinked a persona that is no longer available",
+  "leads.history.deleteConfirm.title": "Delete this note",
+  "leads.history.deleteConfirm.body": "The note leaves the history for good",
+  "leads.delete.heading": "Delete lead",
+  "leads.delete.body":
+    "Deleting removes this lead and its whole history for good",
+  "leads.delete.cta": "Delete lead",
+  "leads.delete.confirmTitle": "Delete {name}",
+  "leads.delete.confirmBody":
+    "{name} and every note, stage change and persona link in its history will be deleted for good. This can't be undone",
+  "leads.delete.confirmCta": "Delete lead",
+  "leads.page.backCta": "Back to leads",
+  "leads.page.notFound.title": "This lead isn't here anymore",
+  "leads.page.notFound.body":
+    "Someone deleted it, maybe in another tab, or the link has a typo",
+  "leads.page.loadError.title": "We couldn't load this lead",
+  "leads.page.loadError.retryCta": "Load the lead again",
+  "leads.error.notFound": "This lead was deleted, maybe in another tab",
+  "leads.error.nameRequired": "Add a name for this lead",
+  "leads.error.nameTooLong": "Names can be up to {max} characters",
+  "leads.error.typeInvalid": "Choose one of the types in the list",
+  "leads.error.stageInvalid": "Choose one of the stages in the list",
+  "leads.error.locationTooLong": "Locations can be up to {max} characters",
+  "leads.error.emailInvalid":
+    "This email address isn't valid. Check it for typos",
+  "leads.error.emailTaken": "{name} already has this email",
+  "leads.error.phoneTooLong": "Phone numbers can be up to {max} characters",
+  "leads.error.linkInvalid":
+    "This isn't a web address. Links start with http:// or https://",
+  "leads.error.linkTooLong": "Links can be up to {max} characters",
+  "leads.error.tooManyLinks":
+    "A lead holds up to {max} links. Remove one to add another",
+  "leads.error.linkTaken": "{name} already has this link",
+  "leads.error.followUpInvalid":
+    "Pick a real day between 2000 and 2100 for the follow-up",
+  "leads.error.personaNotFound":
+    "That persona no longer exists, so it can't be linked",
+  "leads.error.personaNotListed.draft":
+    "This persona is a draft, so it can't be linked",
+  "leads.error.personaNotListed.not_open":
+    "This persona is members only or private, so it can't be linked",
+  "leads.error.personaNotListed.removed":
+    "This persona was removed from QueerPulse, so it can't be linked",
+  "leads.error.personaNotListed.taken_down":
+    "Moderation took this persona down, so it can't be linked",
+  "leads.error.personaNotListed.unknownState":
+    "This persona left the public directory: it's a draft, private, removed or taken down, so it can't be linked",
+  "leads.error.personaTaken": "This persona is already linked to {name}",
+  "leads.error.noteEmpty": "Write something before you add the note",
+  "leads.error.noteTooLong": "Notes can be up to {max} characters",
+  "leads.error.noteNotFound":
+    "This note was deleted, maybe in another tab. The history now shows what's left",
+  "leads.error.noteNotYours":
+    "Only the note's author or an admin can change this note",
+  "leads.error.entryNotEditable":
+    "Only notes can be edited or deleted. Stage and persona lines stay as the record",
+  "leads.error.cursorInvalid":
+    "The list changed while you were paging. Load the leads again",
+  "leads.failure.offline":
+    "You're offline, so this didn't reach QueerPulse. Check your connection and try again",
+  "leads.failure.timeout": "QueerPulse took too long to answer. Try again",
+  "leads.failure.rateLimited":
+    "You've made a lot of changes in a short time. Wait a minute, then try again",
+  "leads.failure.server":
+    "Our server ran into a problem. This one is on us, so try again in a moment",
+  "leads.failure.unreachable":
+    "We couldn't reach QueerPulse. Check your connection, or try again in a moment",
+  "leads.failure.forbidden":
+    "Leads is open to admins and the Music manager & producer grant, and this account has neither",
+  "leads.failure.notFound":
+    "This server doesn't offer leads yet. Reload the page, and tell the tech team if it keeps happening",
+  "leads.failure.restricted":
+    "You can't make changes while a moderation restriction is in effect on your account",
+  "leads.failure.unknown":
     "This didn't go through and the server sent no reason. Try again",
 };

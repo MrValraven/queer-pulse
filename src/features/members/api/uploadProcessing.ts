@@ -171,6 +171,12 @@ export const UPLOAD_LIMITS: Record<UploadKind, UploadLimit> = {
   // through features/studio/api/studioAudioUpload.ts. Present only so the
   // Record stays total. 50 MB mirrors the backend's `studio_audio` cap.
   studio_audio: { maxBytes: 50 * MB, maxLabel: "50 MB" },
+  // VJ library (admin). Never read by this image pipeline: clips go through
+  // features/vj/upload and the thumbnail is built there. Present only so the
+  // Record stays total. The caps mirror the backend's `vj_clip` and
+  // `vj_thumbnail` kinds.
+  vj_clip: { maxBytes: 100 * MB, maxLabel: "100 MB" },
+  vj_thumbnail: { maxBytes: 256 * 1024, maxLabel: "256 KB" },
 };
 
 /**
@@ -299,6 +305,10 @@ const MAX_DIMENSION_PX: Record<UploadKind, number> = {
   sticker: 0,
   // Unused: audio is never resampled. Present only so the Record stays total.
   studio_audio: 0,
+  // Unused: VJ clips and thumbnails are never resampled here. Present only so
+  // the Record stays total.
+  vj_clip: 0,
+  vj_thumbnail: 0,
 };
 
 /** Re-encode quality used once an image is actually being downscaled — a
@@ -584,8 +594,9 @@ function skipSubBlocks(bytes: Uint8Array, pos: number): number {
  * Graphic-control, plain-text, image-descriptor and colour-table blocks are
  * preserved byte-for-byte. Throws on any structural surprise — the caller
  * turns that into a blocked upload rather than shipping the original.
+ * Exported for the VJ upload pipeline, which keeps GIF animation and never re-encodes.
  */
-function sanitizeGif(bytes: Uint8Array): Uint8Array<ArrayBuffer> {
+export function sanitizeGif(bytes: Uint8Array): Uint8Array<ArrayBuffer> {
   // `read` returns the byte at `index`, or 0 past the end; every read below is
   // either length-checked or followed by a `skipSubBlocks` that throws on a
   // truncated stream, so a bogus 0 can never smuggle raw metadata through.
@@ -995,6 +1006,9 @@ export const CROP_CONFIG: Record<UploadKind, AspectConfig> = {
   sticker: { aspect: "free", aspectLabel: "free", allowFreeform: true },
   // Unused: audio has no crop. Present only so the Record stays total.
   studio_audio: { aspect: "free", aspectLabel: "free", allowFreeform: true },
+  // Unused: VJ clips have no crop. Present only so the Record stays total.
+  vj_clip: { aspect: "free", aspectLabel: "free", allowFreeform: true },
+  vj_thumbnail: { aspect: "free", aspectLabel: "free", allowFreeform: true },
 };
 
 /** Minimum output pixel dimensions for the crop, derived from `UPLOAD_LIMITS`. */

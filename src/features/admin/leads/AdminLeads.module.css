@@ -1,0 +1,373 @@
+/* The leads directory (AdminLeadsPage): toolbar, list and rows, the Add
+   lead dialog's form, and the lead page's persona panel. */
+
+/* ── Toolbar ── */
+.toolbar {
+  display: grid;
+  gap: var(--gap-sm);
+  margin-block-start: var(--gap-sm);
+}
+
+.search {
+  /* A search field reads best at about a name and an email long. */
+  max-width: 28rem;
+}
+
+.stageGroup {
+  min-width: 0;
+}
+
+.toolbarRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs) var(--gap-sm);
+}
+
+.typeFilter {
+  /* Wide enough for the longest type label beside its clear button. */
+  min-width: 12rem;
+}
+
+.dueToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  min-height: var(--tap-min);
+}
+
+/* The visible label is part of the switch's tap target. */
+.dueToggleLabel {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  font-size: var(--text-14);
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+/* A phone keeps the stage chips on one row that scrolls sideways, bled to
+   the screen edge so the last chip shows it continues. */
+@media (--md) {
+  .search {
+    max-width: none;
+  }
+
+  /* Two classes, so the one-row scroller outranks FilterChips' own
+     wrapping row whichever stylesheet loads last. */
+  .stageGroup .stageChips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+    margin-inline: calc(-1 * var(--wrap-px));
+    padding-inline: var(--wrap-px);
+    scroll-padding-inline: var(--wrap-px);
+    /* Room for the focus ring, which the scroller would otherwise clip. */
+    padding-block: 6px;
+    margin-block: -6px;
+  }
+
+  .stageGroup .stageChips::-webkit-scrollbar {
+    display: none;
+  }
+
+  .stageGroup .stageChips > * {
+    flex: none;
+    white-space: nowrap;
+    scroll-snap-align: start;
+  }
+
+  .typeFilter {
+    flex: 1 1 12rem;
+  }
+}
+
+/* ── The list ── */
+.panel {
+  margin-block-start: var(--gap-sm);
+}
+
+/* The positioned parent a leaving view is lifted out against while the
+   next view fades in (ViewFade, AnimatePresence mode="popLayout"). */
+.viewStage {
+  position: relative;
+}
+
+/* Rows carry their own block-end margin, so a row that leaves takes its gap
+   with it. The list is the container the rows lay themselves out against. */
+.rows {
+  container: leads-list / inline-size;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+
+/* Rows for the previous filters, while the new ones load. */
+.rows[data-stale] {
+  opacity: 0.6;
+}
+
+.listState {
+  margin-block-end: var(--gap-xs);
+}
+
+.skeletonRows {
+  display: grid;
+  gap: var(--gap-xs);
+  margin-block-end: var(--gap-xs);
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  padding-block: var(--gap-xs) var(--gap-grid);
+}
+
+/* ── One row: a card on a narrow list ── */
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "name stage"
+    "details details";
+  align-items: center;
+  gap: var(--gap-xs) var(--gap-sm);
+  min-height: var(--tap-min);
+  margin-block-end: var(--gap-xs);
+  padding: var(--gap-sm);
+  color: var(--ink);
+  text-decoration: none;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .row:hover {
+    border-color: rgba(var(--accent-rgb), 0.4);
+    box-shadow: var(--shadow-lift);
+  }
+}
+
+/* After the hover rule, so a hovered row that has focus keeps its ring. */
+.row:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.rowName {
+  grid-area: name;
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.rowTitle {
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.rowType {
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+/* The stage and the persona thumb share the top-right cell on a narrow
+   card, stacked and end-aligned, so the details below get the full width. */
+.rowAside {
+  grid-area: stage;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--icon-gap-inline);
+  align-self: start;
+}
+
+.rowStage {
+  grid-area: stage;
+}
+
+.rowDetails {
+  grid-area: details;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--icon-gap-inline) var(--gap-sm);
+  min-width: 0;
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
+}
+
+.rowMeta,
+.followUp {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  min-width: 0;
+}
+
+.rowMetaIcon {
+  flex: none;
+}
+
+.rowMetaText {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.rowLinks {
+  display: inline-flex;
+  min-width: 0;
+}
+
+.rowLinks:empty {
+  display: none;
+}
+
+/* A closed lead's old date reads quietly, with no clock. */
+.followUp[data-past] {
+  font-style: italic;
+  color: var(--ink-60);
+}
+
+/* A due follow-up reads in the warn tone, with a tint behind it so the
+   state never rides on colour alone beside its "due" wording. */
+.followUp[data-due] {
+  /* A hairline of block padding keeps the tag compact. */
+  padding: 2px var(--gap-xs);
+  font-weight: 600;
+  color: var(--amber-ink);
+  background: rgba(var(--amber-rgb), 0.18);
+  border-radius: var(--radius-pill);
+}
+
+.rowPersona {
+  grid-area: persona;
+  display: inline-flex;
+  justify-self: end;
+}
+
+.rowPersona:empty {
+  display: none;
+}
+
+/* ── One row: a single line on a wide list ── */
+@container leads-list (min-width: 760px) {
+  .row {
+    grid-template-columns:
+      minmax(0, 1.6fr) 8.5rem minmax(0, 1.2fr) 6rem minmax(0, 1.5fr)
+      5.5rem 32px;
+    grid-template-areas: "name stage location links followUp notes persona";
+    padding-block: var(--gap-xs);
+  }
+
+  /* The stage and the persona go back to their own columns. */
+  .rowAside {
+    display: contents;
+  }
+
+  .rowStage {
+    justify-self: start;
+  }
+
+  .rowPersona:empty {
+    display: inline-flex;
+  }
+
+  /* The details join the row's own columns, so every row lines up. */
+  .rowDetails {
+    display: contents;
+  }
+
+  .rowLocation {
+    grid-area: location;
+  }
+
+  .rowLinks {
+    grid-area: links;
+  }
+
+  .rowLinks:empty {
+    display: inline-flex;
+  }
+
+  .followUp {
+    grid-area: followUp;
+    justify-self: start;
+  }
+
+  .rowNotes {
+    grid-area: notes;
+  }
+}
+
+/* ── Add lead dialog ── */
+.addForm {
+  display: grid;
+  gap: var(--gap-sm);
+}
+
+/* ── Persona panel (lead page): the section frame and heading come from
+   AdminLead.module.css, shared with Details and History ── */
+.personaEmpty,
+.personaPrompt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-xs) var(--gap-sm);
+  padding: 14px 16px;
+  border-radius: var(--radius-16);
+}
+
+.personaEmpty {
+  border: 1px dashed rgba(var(--line-rgb), 0.18);
+}
+
+.personaPrompt {
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.24);
+}
+
+.personaNone,
+.personaPromptText {
+  flex: 1 1 14rem;
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+}
+
+.personaNone {
+  color: var(--ink-60);
+}
+
+/* Link, Unlink and Move to On board reach the 44px target on a phone. Two
+   classes, so this outranks the shared small button's height. */
+@media (--md) {
+  .personaAction.personaAction {
+    min-height: var(--tap-min);
+  }
+}
+
+.personaPromptText {
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rows,
+  .row {
+    transition: none;
+  }
+}

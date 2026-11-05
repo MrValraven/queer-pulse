@@ -21,6 +21,8 @@ import { useStudioLightbox } from "./useStudioLightbox";
 import { useImageLightbox } from "./useImageLightbox";
 import { usePoemDeepLink } from "./usePoemDeepLink";
 import { PoemReaderModal } from "./poem/PoemReaderModal";
+import { useEventDeepLink } from "./event/useEventDeepLink";
+import { EventSheet } from "./event/EventSheet";
 import { slugify } from "./poem/poemModel";
 import { personaShareUrl } from "./personaLinks.data";
 import { DEFAULT_ACCENT, skinVars } from "./subprofilePresence.data";
@@ -109,7 +111,13 @@ export function SubprofilePage() {
   // deliberately not in the URL: it is a way of looking, not an address — and
   // a shared link that dropped someone else into "preview" would be nonsense.
   const [previewingAsVisitor, setPreviewingAsVisitor] = useState(false);
-  const { poemItem, openPoem, closePoem } = usePoemDeepLink(sections);
+  const { poemItem, openPoem, closePoem, poems, poemIndex, goTo } =
+    usePoemDeepLink(sections);
+  // `?event=<id>` opens the event sheet, on Poster (collective) pages only.
+  const eventLink = useEventDeepLink(sections, {
+    isEnabled:
+      result.state === "ok" && skinFor(result.data.kind) === "collective",
+  });
 
   function handleAction(action: PersonaAction) {
     if (action === "report") setReportOpen(true);
@@ -178,17 +186,34 @@ export function SubprofilePage() {
         onOpenWorkItem={lightbox.openItem}
         onOpenGalleryPhoto={galleryLightbox.openItem}
         onOpenPoem={openPoem}
+        onOpenEvent={skin === "collective" ? eventLink.openEvent : undefined}
       />
 
       {poemItem && (
         <PoemReaderModal
           item={poemItem}
+          authorName={data.displayName}
+          skin={skin}
+          poems={poems}
+          poemIndex={poemIndex}
+          onGoTo={goTo}
           shareUrl={
             poemShareUrl
               ? `${poemShareUrl}?poem=${slugify(poemItem.title)}`
               : null
           }
           onClose={closePoem}
+        />
+      )}
+
+      {eventLink.eventItem && (
+        <EventSheet
+          item={eventLink.eventItem}
+          events={eventLink.events}
+          eventIndex={eventLink.eventIndex}
+          onGoTo={eventLink.goTo}
+          onClose={eventLink.closeEvent}
+          accentStyle={skinStyle}
         />
       )}
 

@@ -1,0 +1,74 @@
+/* SubprofileKindField: the Identity pane's Type field. One `.ed-grid` item;
+   the folds below the field carry their own top padding, so a closed fold
+   leaves no gap and an opening one grows its spacing with its height. The
+   field's bottom margin moves from FormField to this wrapper, so the hint and
+   the alert sit right under the helper and the margin closes the whole
+   group. */
+.kindField {
+  min-width: 0;
+  margin-bottom: 16px;
+}
+
+.kindField .formField {
+  margin-bottom: 0;
+}
+
+/* The current type on the left, the toggle on the right, wrapping under it
+   on a narrow pane. */
+.current {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+}
+
+.kindName {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.kindIcon {
+  flex: none;
+  color: var(--accent);
+}
+
+.toggle {
+  margin-inline-start: auto;
+}
+
+/* Icon, colour and text together; the 7px top matches FormField's gap
+   between the control and its helper. */
+.hint,
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0;
+  padding-top: 7px;
+  font-size: var(--text-13);
+  line-height: 1.5;
+}
+
+/* 1em tall on a 1.5 line, so a 0.25em nudge centres it on the first line. */
+.noteIcon {
+  flex: none;
+  margin-top: 0.25em;
+}
+
+.hint {
+  color: var(--ink-60);
+}
+
+/* The same readable error colour FormField uses for its own errors. */
+.error {
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+.fold {
+  padding-top: 16px;
+}

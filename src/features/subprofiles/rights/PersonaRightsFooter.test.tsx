@@ -1,8 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
-import { PersonaRightsFooter } from "./PersonaRightsFooter";
-import { firstPublishedISO } from "./firstPublished";
+import { PersonaColophon, PersonaRightsFooter } from "./PersonaRightsFooter";
+import {
+  firstPublishedISO,
+  latestPublishedISO,
+  publishedYearRange,
+} from "./firstPublished";
 import type {
   PublicSubprofileView,
   SubprofileItemView,
@@ -101,6 +105,55 @@ describe("firstPublishedISO", () => {
 
   it("returns null for a persona with no dated work", () => {
     expect(firstPublishedISO(makeView())).toBeNull();
+  });
+});
+
+describe("latestPublishedISO and publishedYearRange", () => {
+  it("picks the latest valid createdAt and prints the years as a range", () => {
+    const view = makeView({ sections: SECTIONS });
+    const latestISO = latestPublishedISO(view);
+    expect(latestISO).toBe("2026-01-20T09:00:00.000Z");
+    expect(
+      publishedYearRange(firstPublishedISO(view) ?? "", latestISO ?? ""),
+    ).toBe("2024–2026");
+  });
+
+  it("prints a single year when the work spans one year", () => {
+    expect(
+      publishedYearRange(
+        "2025-03-02T12:00:00.000Z",
+        "2025-11-02T12:00:00.000Z",
+      ),
+    ).toBe("2025");
+  });
+});
+
+describe("PersonaColophon", () => {
+  it("prints the page skin's copyright as a year range with no shield", async () => {
+    const { container } = render(
+      <TestProviders>
+        <PersonaColophon
+          persona={makeView({ kind: "poet", sections: SECTIONS })}
+          isRightsShown
+        />
+      </TestProviders>,
+    );
+
+    expect(
+      await screen.findByText("© 2024–2026. All rights reserved."),
+    ).toBeInTheDocument();
+    expect(container.querySelectorAll("footer")).toHaveLength(1);
+    expect(container.querySelector("svg")).toBeNull();
+  });
+
+  it("renders nothing with neither a note nor dated work", () => {
+    const { container } = render(
+      <TestProviders>
+        <PersonaColophon persona={makeView({ kind: "poet" })} isRightsShown />
+      </TestProviders>,
+    );
+
+    expect(container.querySelector("footer")).toBeNull();
   });
 });
 

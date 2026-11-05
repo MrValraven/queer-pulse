@@ -1,0 +1,102 @@
+/* Previous on the left, Next on the right, the position centred beneath,
+   under the same heavy ink rule the poster sections hang from. The rule runs
+   edge to edge across the sheet and closes off both columns; the links keep
+   the details column's inset. */
+.pager {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 0.5rem 1rem;
+  margin: 0;
+  padding-block: 0.75rem clamp(1.5rem, 4vw, 2rem);
+  padding-inline: clamp(1.25rem, 4vw, 2rem);
+  border-top: 4px solid var(--ink);
+}
+.link {
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  min-height: 56px;
+  min-width: 0;
+  padding: 0.5rem 0.25rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  text-align: start;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background var(--dur-fast) var(--ease);
+}
+.linkNext {
+  grid-column: 2;
+  align-items: flex-end;
+  text-align: end;
+}
+@media (hover: hover) {
+  .link:hover {
+    background: color-mix(in srgb, var(--ink) 5%, transparent);
+  }
+}
+.link:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: var(--text-label);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+/* The target event's title. Keyed on the event, so it fades in on each
+   page. */
+.title {
+  max-width: 100%;
+  font-family: "Archivo Black", var(--sans);
+  font-size: var(--text-body-lg);
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--ink);
+  overflow-wrap: break-word;
+  animation: titleIn var(--dur-base) var(--ease-out);
+}
+.position {
+  grid-column: 1 / -1;
+  justify-self: center;
+  margin: 0.25rem 0 0;
+  font-size: var(--text-label);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+@media (max-width: 600px) {
+  .pager {
+    padding-inline: max(1.25rem, env(safe-area-inset-left))
+      max(1.25rem, env(safe-area-inset-right));
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  }
+}
+
+@keyframes titleIn {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .title {
+    animation: none;
+  }
+  .link {
+    transition: none;
+  }
+}

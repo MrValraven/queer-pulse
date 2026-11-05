@@ -86,6 +86,46 @@ const GIG_FIELDS: RichFieldDescriptor[] = [
   },
 ];
 
+/** A producer's own `events` or a promoter's `nights`: where, when the doors
+ *  open, where to buy a ticket, and whether it sold out or was cancelled.
+ *  "Guest set" means nothing for an event the owner runs, so it is left out. */
+const EVENT_FIELDS: RichFieldDescriptor[] = [
+  {
+    key: "venue",
+    kind: "text",
+    labelKey: "subprofiles:richField.venue.label",
+    placeholderKey: "subprofiles:richField.venue.placeholder",
+  },
+  {
+    key: "doors",
+    kind: "text",
+    labelKey: "subprofiles:richField.doors.label",
+    placeholderKey: "subprofiles:richField.doors.placeholder",
+  },
+  {
+    key: "ticketUrl",
+    kind: "text",
+    labelKey: "subprofiles:richField.ticketUrl.label",
+    placeholderKey: "subprofiles:richField.ticketUrl.placeholder",
+  },
+  {
+    key: "gigState",
+    kind: "select",
+    labelKey: "subprofiles:richField.gigState.label",
+    options: [
+      { value: "", labelKey: "subprofiles:richField.gigState.option.none" },
+      {
+        value: "sold_out",
+        labelKey: "subprofiles:richField.gigState.option.sold_out",
+      },
+      {
+        value: "cancelled",
+        labelKey: "subprofiles:richField.gigState.option.cancelled",
+      },
+    ],
+  },
+];
+
 /** A game master's `sessions`: one evening at a table. The same stored
  *  fields as a gig, worded for play: whether seats are left, where, when it
  *  starts, where to sign up. "Guest set" means nothing here, so it is not
@@ -172,7 +212,11 @@ const PROJECT_FIELDS: RichFieldDescriptor[] = [
  *
  *  Groupings:
  *  - `gigs` (musician + dj) and `shows` (drag) are the two date/venue-driven
- *    live-event sections across all kinds.
+ *    live-event sections across all kinds. `events` (event producer, and the
+ *    florist, caterer, tournament organiser and puzzle designer kinds that
+ *    share the section) and `nights` (promoter, game night host) take the
+ *    event fields: a venue, doors, a ticket link and a sold out or cancelled
+ *    state, which the Poster event rows and sheet read.
  *  - Visual-work sections span everything that produces a single
  *    physical/visual artifact worth a medium+dimensions+edition note:
  *    `portfolio`/`series` (visual_artist/photographer), `looks` (drag),
@@ -188,6 +232,8 @@ export const RICH_FIELDS_FOR_SECTION: Partial<
 > = {
   gigs: GIG_FIELDS,
   shows: GIG_FIELDS,
+  events: EVENT_FIELDS,
+  nights: EVENT_FIELDS,
   portfolio: VISUAL_WORK_FIELDS,
   looks: VISUAL_WORK_FIELDS,
   series: VISUAL_WORK_FIELDS,

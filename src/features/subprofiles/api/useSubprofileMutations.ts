@@ -1,7 +1,15 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCallback } from "react";
+import {
+  useMutation,
+  useQueryClient,
+  type UseMutationResult,
+} from "@tanstack/react-query";
 import { ApiError } from "../../../shared/api/client";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useToast } from "../../../shared/components/feedback/useToast";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
+  changeSubprofileKind,
   createSubprofile,
   deleteSubprofile,
   publishSubprofile,
@@ -17,10 +25,18 @@ import {
   type SocialLinkDTO,
   type SubprofileDTO,
   type SubprofileItemInputDTO,
+  type SubprofileKind,
   type SubprofileSection,
   type UpdateSubprofileDTO,
 } from "./subprofiles.api";
-import { KIND_LABELS, defaultSlugForKind, slugify } from "../subprofile-kinds";
+import {
+  KIND_LABEL_KEYS,
+  KIND_LABELS,
+  defaultSlugForKind,
+  slugify,
+} from "../subprofile-kinds";
+import { SKIN_OF, kindsSwitchableFrom } from "../subprofile-skins";
+import { toPersonaKindChangeError } from "./personaKindChangeError";
 import { subprofileToView } from "./subprofiles.adapters";
 import { subprofileQueryKey } from "./useSubprofile";
 import { linkedPersonaHandleCandidate } from "../personaHandle";
@@ -250,6 +266,33 @@ async function demoReplaceAffiliations(
     affiliations: items.map(demoResolveCopiedAffiliation),
     editVersion: mockBumpEditVersion(id),
   };
+}
+
+/** Demo type change. Refuses with the same 422 codes and details the server
+ *  sends (contract C2), so `toPersonaKindChangeError` reads both modes alike.
+ *  The Studio guard, the status rewrite and the `skinData` stripping stay on
+ *  the backend. */
+async function demoChangeKind(
+  id: string,
+  kind: SubprofileKind,
+): Promise<SubprofileDTO> {
+  const current = await demoOwnedSubprofile(id);
+  if (kind === current.kind) {
+    throw new ApiError(422, "PERSONA_KIND_UNCHANGED", {
+      code: "PERSONA_KIND_UNCHANGED",
+    });
+  }
+  if (!kindsSwitchableFrom(current.kind).includes(kind)) {
+    throw new ApiError(422, "PERSONA_KIND_OTHER_FAMILY", {
+      code: "PERSONA_KIND_OTHER_FAMILY",
+      currentFamily: SKIN_OF[current.kind],
+      requestedFamily: SKIN_OF[kind],
+    });
+  }
+  const { mockChangeSubprofileKind } = await loadDemoStore();
+  const changed = mockChangeSubprofileKind(id, kind);
+  if (!changed) throw new Error("Subprofile not found");
+  return changed;
 }
 
 /** Live publish. The 422 carries `{ unmet: string[] }` in the ApiError body;
@@ -504,4 +547,77 @@ export function useSubprofileMutations() {
     unpublish,
     remove,
   };
+}
+
+/** The type-change mutation plus the step that applies a saved change. */
+export type ChangeSubprofileKindMutation = UseMutationResult<
+  SubprofileDTO,
+  Error,
+  SubprofileKind
+> & {
+  /** Writes the saved owner view into the owner query, refreshes the lists
+   *  that show the persona and toasts the new type. */
+  applyKindChange: (saved: SubprofileDTO) => void;
+};
+
+/**
+ * Change a persona's type within its group. Branches demo/live like the hooks
+ * above. A refusal comes back as a `PersonaKindChangeError` naming its reason,
+ * and anything else rethrows as it arrived, so the caller shows its own
+ * message. A success only resolves with the saved owner view: the new type
+ * re-seeds the editor and remounts the field that asked, so the field lets its
+ * dialog and list fold away first and then calls `applyKindChange`, which
+ * writes the cache, refreshes the lists and fires the success toast.
+ */
+export function useChangeSubprofileKind(
+  id: string,
+): ChangeSubprofileKindMutation {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+  const { t } = useTranslation();
+
+  const mutation = useMutation<SubprofileDTO, Error, SubprofileKind>({
+    // The Type field shows its refusal as an inline alert, so silence the
+    // global duplicate.
+    meta: { silentError: true },
+    mutationFn: async (kind) => {
+      try {
+        return demoMode
+          ? await demoChangeKind(id, kind)
+          : await changeSubprofileKind(id, kind);
+      } catch (error) {
+        throw toPersonaKindChangeError(error) ?? error;
+      }
+    },
+  });
+
+  const applyKindChange = useCallback(
+    (saved: SubprofileDTO) => {
+      // The response is the whole owner view and is authoritative, so the
+      // owner query takes it as written and is not refetched.
+      queryClient.setQueryData(
+        subprofileQueryKey(demoMode, id),
+        subprofileToView(saved),
+      );
+      void queryClient.invalidateQueries({ queryKey: ["subprofiles"] });
+      void queryClient.invalidateQueries({
+        queryKey: ["subprofile", "public"],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: ["subprofile", "following"],
+      });
+      // A switch into or out of an artist type adds or drops a Studio persona.
+      void queryClient.invalidateQueries({ queryKey: studioKeys.meAll });
+      showToast(
+        t("subprofiles:kindChange.successToast", {
+          kind: t(KIND_LABEL_KEYS[saved.kind]),
+        }),
+        "success",
+      );
+    },
+    [demoMode, id, queryClient, showToast, t],
+  );
+
+  return { ...mutation, applyKindChange };
 }

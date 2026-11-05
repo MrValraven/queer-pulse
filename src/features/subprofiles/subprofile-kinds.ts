@@ -90,6 +90,19 @@ export const sectionsForKind = (k: SubprofileKind): SubprofileSection[] => [
   "gallery",
 ];
 
+/** True when a persona of `kind` shows `section`: its own sections, the
+ *  universal 'gallery', and the universal 'links'. */
+export const isSectionShownForKind = (
+  section: SubprofileSection,
+  kind: SubprofileKind,
+): boolean => section === "links" || sectionsForKind(kind).includes(section);
+
+/** The items whose section a persona of `kind` shows, in their original order. */
+export const itemsShownForKind = <Item extends { section: SubprofileSection }>(
+  items: readonly Item[],
+  kind: SubprofileKind,
+): Item[] => items.filter((item) => isSectionShownForKind(item.section, kind));
+
 /** 'links' is universal but not a "content" section (excluded from the ≥3
  *  check / MIN_CONTENT_ITEMS). The other universal section, 'gallery', IS a
  *  content section — its items count toward that same readiness check. */
@@ -500,7 +513,15 @@ export const SECTION_META: Record<SubprofileSection, SectionMeta> = {
   events: {
     labelKey: "subprofiles:section.events",
     icon: FiCalendar,
-    fields: ["title", "subtitle", "date", "url"],
+    fields: [
+      "title",
+      "subtitle",
+      "date",
+      "meta",
+      "description",
+      "imageUrl",
+      "url",
+    ],
   },
   analyses: {
     labelKey: "subprofiles:section.analyses",
@@ -725,7 +746,15 @@ export const SECTION_META: Record<SubprofileSection, SectionMeta> = {
   nights: {
     labelKey: "subprofiles:section.nights",
     icon: FiCalendar,
-    fields: ["title", "subtitle", "date", "url"],
+    fields: [
+      "title",
+      "subtitle",
+      "date",
+      "meta",
+      "description",
+      "imageUrl",
+      "url",
+    ],
   },
   roster: {
     labelKey: "subprofiles:section.roster",

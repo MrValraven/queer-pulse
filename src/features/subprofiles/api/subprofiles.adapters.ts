@@ -23,7 +23,11 @@ import type {
 } from "./subprofiles.api";
 import type { ListingWorksAtView } from "../../marketing/listBusiness/api/listingTeam.types";
 import { toListingWorksAtViews } from "../../marketing/listBusiness/api/listingTeam.adapters";
-import { SECTION_META, sectionsForKind } from "../subprofile-kinds";
+import {
+  SECTION_META,
+  itemsShownForKind,
+  sectionsForKind,
+} from "../subprofile-kinds";
 import {
   ACCENT_OPTIONS,
   AVAILABILITY_OPTIONS,
@@ -231,10 +235,17 @@ export function itemToView(dto: SubprofileItemDTO): SubprofileItemView {
   };
 }
 
-/** Find the single featured item across all sections (the backend enforces at
- *  most one); `null` when none. Not a wire field — computed from `items`. */
-function findFeatured(items: SubprofileItemDTO[]): SubprofileItemView | null {
-  const featured = items.find((item) => item.isFeatured);
+/** Find the single featured item across the sections the persona's kind shows
+ *  (the backend enforces at most one); `null` when none. An item kept in a
+ *  section the kind hides after a type change never counts as featured. Not a
+ *  wire field, computed from `items`. */
+function findFeatured(
+  items: SubprofileItemDTO[],
+  kind: SubprofileKind,
+): SubprofileItemView | null {
+  const featured = itemsShownForKind(items, kind).find(
+    (item) => item.isFeatured,
+  );
   return featured ? itemToView(featured) : null;
 }
 
@@ -288,7 +299,7 @@ export function subprofileToView(dto: SubprofileDTO): SubprofileView {
     status: dto.status,
     position: dto.position,
     sections: buildSections(dto.items, dto.kind, { includeEmpty: true }),
-    featured: findFeatured(dto.items),
+    featured: findFeatured(dto.items, dto.kind),
     affiliations: dto.affiliations ?? [],
     endorsementCount: dto.endorsementCount,
     followerCount: dto.followerCount,
@@ -325,7 +336,7 @@ export function publicSubprofileToView(
     ...(dto.ownerSlug !== undefined ? { ownerSlug: dto.ownerSlug } : {}),
     ...(dto.ownerName !== undefined ? { ownerName: dto.ownerName } : {}),
     sections: buildSections(dto.items, dto.kind),
-    featured: findFeatured(dto.items),
+    featured: findFeatured(dto.items, dto.kind),
     affiliations: dto.affiliations ?? [],
     worksAt: toListingWorksAtViews(dto.worksAt),
     endorsementCount: dto.endorsementCount,

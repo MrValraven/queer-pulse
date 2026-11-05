@@ -105,7 +105,7 @@
   font-size: var(--text-13);
   font-weight: 600;
   /* Coral by default. A surface whose ground this component cannot know —
-     every persona skin paints its own — sets this to `inherit` instead, so the
+     every persona skin paints its own — sets this to `currentColor` instead, so the
      toggle takes that skin's already-legible text colour and stays
      distinguishable by weight, chevron and underline rather than hue. */
   color: var(--expandable-text-toggle-ink, var(--accent));

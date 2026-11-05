@@ -1,0 +1,124 @@
+/* Small pieces every lead surface shares: the link icons of a list row, a
+   linked persona's picture, and the refusal line under a field. */
+
+/* ── Link icons ─────────────────────────────────────────────────────────── */
+.linkIcons {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: var(--ink-60);
+}
+
+.linkIcon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+
+.moreLinks {
+  font-size: var(--text-12);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--ink-60);
+}
+
+/* ── Persona thumb ──────────────────────────────────────────────────────── */
+/* The box clips the portrait art to a rounded square; the art fills it at
+   the box's own height, with a monogram sized for a thumbnail. */
+.thumb {
+  display: block;
+  flex: none;
+  overflow: hidden;
+  border-radius: var(--radius-12);
+  --portrait-art-ratio: auto;
+  --portrait-art-monogram-size: 56cqi;
+  --portrait-art-monogram-opacity: 0.72;
+}
+
+.thumbSize48 {
+  width: 48px;
+  height: 48px;
+}
+
+.thumbSize40 {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-10);
+}
+
+.thumbSize32 {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-8);
+}
+
+/* ── Refusal line ───────────────────────────────────────────────────────── */
+/* Colour, an icon and the words together, so the state never rests on
+   colour alone. The top padding sits inside the fold, so the gap opens and
+   closes with it. */
+.refusal {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding-top: 8px;
+  color: var(--accent-text);
+}
+
+.refusalIcon {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  margin-top: 1px;
+}
+
+.refusalBody {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 12px;
+  min-width: 0;
+}
+
+.refusalText {
+  margin: 0;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+/* A small text link with a 44px tall hit area drawn by the pseudo element,
+   so the line keeps its height and a finger still lands on it. */
+.refusalLink {
+  position: relative;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--ink-rgb), 0.35);
+  text-underline-offset: 3px;
+  border-radius: var(--radius-4);
+  transition: text-decoration-color var(--dur-fast) var(--ease);
+}
+
+.refusalLink::after {
+  content: "";
+  position: absolute;
+  inset: -12px -6px;
+}
+
+@media (hover: hover) {
+  .refusalLink:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+.refusalLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}

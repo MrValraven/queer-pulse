@@ -1,80 +1,89 @@
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { FiCopy, FiLink, FiX } from "react-icons/fi";
-import { SegmentedControl } from "../../../shared/components/ui";
-import { useScrollLock, useShareLink } from "../../../shared/hooks";
-import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useScrollLock } from "../../../shared/hooks";
 import { useLightboxDialog } from "../useLightboxDialog";
 import type { SubprofileItemView } from "../api/subprofiles.adapters";
-import { WorkRightsFooter } from "../rights/WorkRightsFooter";
-import { PoemBlocksView } from "./PoemBlocksView";
-import { normalizePoemVersions, poemToPlainText } from "./poemModel";
+import type { SkinFamily } from "../subprofile-skins";
+import { PoemReaderContent } from "./PoemReaderContent";
+import { PoemReaderPager } from "./PoemReaderPager";
+import { PoemReaderTopBar } from "./PoemReaderTopBar";
+import { useIsScrolledOutOfView } from "./useIsScrolledOutOfView";
+import { usePoemReaderSwipe } from "./usePoemReaderSwipe";
 import styles from "./PoemReaderModal.module.css";
-
-const NO_MOVE = () => {};
 
 export interface PoemReaderModalProps {
   item: SubprofileItemView;
+  /** The persona's display name, the byline under the title. */
+  authorName: string;
+  /** The persona's skin family. The page skin dresses the reader in its own
+   *  ground and ink so opening a poem keeps the page's colours; every other
+   *  skin reads on the app's cream and ink. */
+  skin: SkinFamily;
+  /** Every poem in page order, and where `item` sits in it (-1 when it is
+   *  not in the list, which hides Previous/Next). */
+  poems: SubprofileItemView[];
+  poemIndex: number;
+  /** Swap the reader to `poems[index]`. */
+  onGoTo: (index: number) => void;
   /** Absolute, deep-linkable URL for this exact poem (persona share URL +
-   *  `?poem=<slug>`), copied by the "Copy link" affordance below. `null` when
-   *  the persona has no public address yet, which drops the affordance rather
+   *  `?poem=<slug>`), copied by the "Copy link" affordance. `null` when the
+   *  persona has no public address yet, which drops the affordance rather
    *  than copying a link that resolves nowhere. */
   shareUrl: string | null;
   onClose: () => void;
 }
 
 /**
- * The centered, wider-than-tall poem reading modal. Portaled `role="dialog"`
- * with the shared focus-trap/Escape behaviour (`useLightboxDialog`); a
- * single-poem reader, so ←/→ move is a no-op. `prefers-reduced-motion` is
- * honoured in the CSS module's open transition.
+ * The poem reader: a centred panel on wider screens and a full-screen sheet
+ * on phones. Portaled `role="dialog"` with the shared focus-trap and keyboard
+ * behaviour (`useLightboxDialog`): Escape closes, the arrow keys move to the
+ * previous or next poem, and so does a sideways swipe on the poem. Moving
+ * scrolls back to the top and fades the new poem in; `prefers-reduced-motion`
+ * drops every transition in the CSS modules.
  */
 export function PoemReaderModal({
   item,
+  authorName,
+  skin,
+  poems,
+  poemIndex,
+  onGoTo,
   shareUrl,
   onClose,
 }: PoemReaderModalProps) {
-  const { t } = useTranslation();
   useScrollLock();
   const dialogRef = useRef<HTMLDivElement>(null);
-  useLightboxDialog(dialogRef, { onClose, onMove: NO_MOVE });
-  const { share: copyShareLink } = useShareLink({
-    copied: t("subprofiles:share.copied"),
-  });
-  const { share: copyPoemText } = useShareLink({
-    copied: t("subprofiles:poem.reader.copied"),
-  });
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
 
-  const meta = [item.subtitle, item.date].filter(Boolean).join(" · ");
-
-  // Named translations of this poem (always ≥1; a single-version poem reads as
-  // one default version). Readers cycle the rest via the tab strip below.
-  const versions = useMemo(
-    () =>
-      normalizePoemVersions(
-        item.structured?.poemVersions ?? null,
-        item.structured?.poem ?? null,
-      ),
-    [item.structured],
+  const move = useCallback(
+    (delta: number) => {
+      if (poemIndex < 0) return;
+      const targetIndex = poemIndex + delta;
+      if (targetIndex >= 0 && targetIndex < poems.length) onGoTo(targetIndex);
+    },
+    [poemIndex, poems.length, onGoTo],
   );
-  const [activeId, setActiveId] = useState<string>(() => versions[0]!.id);
-  const activeIndex = Math.max(
-    0,
-    versions.findIndex((version) => version.id === activeId),
+  useLightboxDialog(dialogRef, { onClose, onMove: move });
+  usePoemReaderSwipe(scrollerRef, move);
+  const isTitleScrolledAway = useIsScrolledOutOfView(
+    titleRef,
+    scrollerRef,
+    item.id,
   );
-  const activeVersion = versions[activeIndex]!;
 
-  function versionLabel(
-    version: (typeof versions)[number],
-    index: number,
-  ): string {
-    return (
-      version.label.trim() ||
-      t("subprofiles:poem.versions.untitled", { index: index + 1 })
-    );
-  }
+  // A new poem starts at its title, before the browser paints it.
+  useLayoutEffect(() => {
+    scrollerRef.current?.scrollTo({ top: 0 });
+  }, [item.id]);
 
-  const poemPlainText = poemToPlainText(activeVersion.blocks);
+  // Moving can unmount the focused control (a version tab of the old poem,
+  // or Next on reaching the last poem). Hand focus back to the dialog so the
+  // focus trap keeps holding it.
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (dialog && !dialog.contains(document.activeElement)) dialog.focus();
+  }, [item.id]);
 
   return createPortal(
     <div
@@ -91,72 +100,27 @@ export function PoemReaderModal({
         role="dialog"
         aria-modal="true"
         aria-label={item.title}
+        data-persona-skin={skin}
       >
-        <button
-          type="button"
-          className={styles.close}
-          onClick={onClose}
-          aria-label={t("shared:modal.close")}
-        >
-          <FiX aria-hidden />
-        </button>
-
-        <header className={styles.head}>
-          <h2 className={styles.title}>{item.title}</h2>
-          {meta && <p className={styles.meta}>{meta}</p>}
-          {item.collaborators.length > 0 && (
-            <p className={styles.collab}>
-              {t("subprofiles:poem.reader.withLabel", {
-                names: item.collaborators
-                  .map((collaborator) => collaborator.name)
-                  .join(", "),
-              })}
-            </p>
-          )}
-          <div className={styles.actions}>
-            {shareUrl && (
-              <button
-                type="button"
-                className={styles.actionButton}
-                onClick={() => void copyShareLink(shareUrl)}
-                aria-label={t("subprofiles:poem.reader.copyLinkAria", {
-                  title: item.title,
-                })}
-              >
-                <FiLink aria-hidden /> {t("subprofiles:poem.reader.copyLink")}
-              </button>
-            )}
-            <button
-              type="button"
-              className={styles.actionButton}
-              onClick={() =>
-                void copyPoemText(poemPlainText || item.description || "")
-              }
-              aria-label={t("subprofiles:poem.reader.copy")}
-            >
-              <FiCopy aria-hidden /> {t("subprofiles:poem.reader.copy")}
-            </button>
-          </div>
-        </header>
-
-        <div className={styles.body}>
-          {versions.length > 1 && (
-            <SegmentedControl
-              className={styles.versions}
-              label={t("subprofiles:poem.versions.readerAria")}
-              options={versions.map((version, index) => ({
-                value: version.id,
-                label: versionLabel(version, index),
-              }))}
-              value={activeVersion.id}
-              onChange={setActiveId}
+        <PoemReaderTopBar
+          title={item.title}
+          isTitleShown={isTitleScrolledAway}
+          onClose={onClose}
+        />
+        <div ref={scrollerRef} className={styles.scroller}>
+          <div key={item.id} className={styles.poemFade}>
+            <PoemReaderContent
+              item={item}
+              authorName={authorName}
+              shareUrl={shareUrl}
+              titleRef={titleRef}
             />
-          )}
-          <PoemBlocksView
-            blocks={activeVersion.blocks}
-            description={activeIndex === 0 ? item.description : undefined}
+          </div>
+          <PoemReaderPager
+            poems={poems}
+            poemIndex={poemIndex}
+            onGoTo={onGoTo}
           />
-          <WorkRightsFooter createdAtISO={item.createdAt} />
         </div>
       </div>
     </div>,

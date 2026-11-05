@@ -959,6 +959,8 @@ export const gatherings: Catalog = {
   // steps/PlaceFields.tsx: chapter 2, the address only confirmed attendees get
   "create.v2.when.addressLabel": "Full address",
   "create.v2.when.addressNote": "shared only with confirmed attendees",
+  "create.v2.when.addressNoteLinkedVenue":
+    "public, it's already on the business's page",
   "create.v2.when.addressFromListing": "From the {name} listing",
   "create.v2.when.directionsLabel": "Getting there",
 
@@ -1038,6 +1040,8 @@ export const gatherings: Catalog = {
   "create.v2.who.runByNone": "No business",
   "create.v2.who.runByPrefilled":
     "We filled in the meeting point from {name}. You can change it.",
+  "create.v2.who.runByVenueLinked":
+    "We set the venue and address to {name}. You can change them.",
   "create.v2.who.runByRefused":
     "This business can't run this event. Pick another, or none.",
   "create.v2.who.paymentLinkLabel": "Payment link",

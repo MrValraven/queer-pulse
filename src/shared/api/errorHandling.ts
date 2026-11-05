@@ -333,6 +333,10 @@ function isStudioWithdrawnFailure(error: unknown): boolean {
  *
  * Param types are kept structurally loose so they satisfy the cache callback
  * contract without importing react-query's deep generics.
+ *
+ * `meta.isPrivateQueryKey: true` keeps the key out of the report: a key that
+ * carries what a member typed (the leads search, say) logs `"[private]"` in
+ * its place. The error itself is still reported.
  */
 export function handleQueryError(
   error: unknown,
@@ -343,7 +347,10 @@ export function handleQueryError(
   },
 ): void {
   if (!isExpectedQueryFailure(error)) {
-    logError(error, { queryKey: query.queryKey });
+    const isPrivateQueryKey = query.meta?.isPrivateQueryKey === true;
+    logError(error, {
+      queryKey: isPrivateQueryKey ? "[private]" : query.queryKey,
+    });
   }
   if (demo.current) return;
   // Opt-out for queries whose failure is not the visitor's problem: they fail

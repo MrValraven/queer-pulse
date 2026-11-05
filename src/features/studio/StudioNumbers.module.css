@@ -156,8 +156,9 @@
 }
 
 /* A release and its tracks share one row group. The track cells carry no
-   padding of their own: the inner block holds it, so a cell can open from
-   zero height. */
+   padding of their own: a clip box opens from zero height and the padded
+   box inside it holds the padding, so the clip's measured height is the
+   whole cell. */
 .group {
   border-top: 1px solid rgba(var(--studio-ink-rgb), 0.12);
 }
@@ -173,8 +174,11 @@
   font-weight: 400;
 }
 
-.trackCellInner {
+.trackCellClip {
   overflow: hidden;
+}
+
+.trackCellInner {
   padding: 10px 8px;
 }
 
@@ -204,14 +208,9 @@
   height: var(--tap-min);
 }
 
+/* Turned by Motion on the track rows' own clock (StudioNumbersTable). */
 .chevron {
-  transition-property: transform;
-  transition-duration: var(--dur-base);
-  transition-timing-function: var(--ease);
-}
-
-.expand[aria-expanded="true"] .chevron {
-  transform: rotate(90deg);
+  display: inline-flex;
 }
 
 .releaseLink {
@@ -286,8 +285,15 @@
     font-size: var(--text-12);
   }
 
+  /* The figure padding above would reach the track cells and keep a folded
+     row 20px tall; their padded inner box holds the padding instead, with
+     the same 2px sides, so track figures line up under the release's. */
+  .table td.trackCell {
+    padding: 0;
+  }
+
   .trackCellInner {
-    padding-inline: 4px;
+    padding-inline: 2px;
   }
 
   .table th.trackCell .trackCellInner {

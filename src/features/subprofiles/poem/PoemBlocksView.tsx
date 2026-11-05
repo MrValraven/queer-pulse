@@ -30,14 +30,24 @@ function renderSpan(span: PoemSpan, spanIndex: number): ReactNode {
   return <Fragment key={spanIndex}>{span.text}</Fragment>;
 }
 
-/** Renders a stanza/note's verse lines, each line's spans concatenated and
- *  successive lines separated by a `<br/>`. */
+/** True when a verse line carries no visible text: a deliberate blank line. */
+function isBlankLine(line: PoemLine): boolean {
+  return line.every((span) => span.text.trim() === "");
+}
+
+/** Renders a stanza/note's verse lines, each as its own block so a long line
+ *  that wraps hangs its continuation under an indent (the CSS gives `.line` a
+ *  negative text-indent) and never reads as a new verse line. A blank line
+ *  keeps one line of height through its `<br />`. */
 function renderLines(lines: PoemLine[]): ReactNode {
   return lines.map((line, lineIndex) => (
-    <Fragment key={lineIndex}>
-      {line.map((span, spanIndex) => renderSpan(span, spanIndex))}
-      {lineIndex < lines.length - 1 ? <br /> : null}
-    </Fragment>
+    <span key={lineIndex} className={styles.line}>
+      {isBlankLine(line) ? (
+        <br />
+      ) : (
+        line.map((span, spanIndex) => renderSpan(span, spanIndex))
+      )}
+    </span>
   ));
 }
 
@@ -60,7 +70,9 @@ export function PoemBlocksView({ blocks, description }: PoemBlocksViewProps) {
         if (block.kind === "break") {
           return (
             <div key={block.id} className={styles.break}>
-              <span aria-hidden>* * *</span>
+              <span aria-hidden className={styles.breakMark}>
+                * * *
+              </span>
               <span className={styles.visuallyHidden}>
                 {t("subprofiles:poem.reader.sectionBreak")}
               </span>

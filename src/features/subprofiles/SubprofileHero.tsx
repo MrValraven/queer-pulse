@@ -1,23 +1,17 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, type ReactNode } from "react";
 import { initialsFromName } from "../../shared/lib/initials";
 import { Avatar, ExpandableText } from "../../shared/components/ui";
 import { ProfilePhotoViewer } from "../members/ProfilePhotoViewer";
-import { RollingNumber } from "../../shared/components/ui/RollingNumber";
-import { useFormat } from "../../shared/i18n/format";
-import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ResolvedMentionText } from "../../shared/mentions/ResolvedMentionText";
 import { useAuth } from "../../app/providers/authContext";
-import { routes } from "../../app/routeMap";
 import { KIND_LABEL_KEYS, personaTitleName } from "./subprofile-kinds";
 import { skinFor } from "./subprofile-skins";
 import { DEFAULT_ACCENT } from "./subprofilePresence.data";
-import { personaPublicPathOrNull } from "./personaLinks.data";
-import {
-  canReadPersonaEndorsers,
-  isPersonaOpenToEngagement,
-} from "./personaEngagement";
+import { canReadPersonaEndorsers } from "./personaEngagement";
+import { PersonaEngagementCounts } from "./PersonaEngagementCounts";
+import { PersonaOwnerLine } from "./PersonaOwnerLine";
+import { hasEngagementCounts, isOwnerTieRedundant } from "./personaHeroMeta";
 import {
   bindSeparatorsToPrecedingWord,
   personaNameLengthTier,
@@ -28,90 +22,6 @@ import { SubprofileTitleBlock } from "./SubprofileTitleBlock";
 import { PersonaFoundingBadge } from "./PersonaFoundingBadge";
 import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
-
-/** A follower or endorsement count in the meta line; rolls when the viewer
- *  follows or endorses. */
-function PersonaMetaCount({
-  i18nKey,
-  count,
-}: {
-  i18nKey: string;
-  count: number;
-}) {
-  const fmt = useFormat();
-  // One span: on narrow heroes the count button is inline-flex
-  // (persona-skins.css), and a bare sentence would split into flex items
-  // that drop the space after the number.
-  return (
-    <span>
-      <Translation
-        i18nKey={i18nKey}
-        values={{ count }}
-        slots={{
-          count: (
-            <RollingNumber value={fmt.number(count)} numericValue={count} />
-          ),
-        }}
-      />
-    </span>
-  );
-}
-
-/** The endorsement and follower counts at the head of the meta line. A zero
- *  count, or a list this viewer may not read, would open an empty modal, so
- *  it renders as plain text and leaves nothing dead to click. */
-function PersonaEngagementCounts({
-  view,
-  interactive,
-  isEndorserListOpenable,
-  onAction,
-}: {
-  view: PublicSubprofileView;
-  interactive: boolean;
-  isEndorserListOpenable: boolean;
-  onAction: (action: PersonaAction) => void;
-}) {
-  const endorsementLabel = (
-    <PersonaMetaCount
-      i18nKey="subprofiles:hero.endorse.count"
-      count={view.endorsementCount}
-    />
-  );
-  const followerLabel = (
-    <PersonaMetaCount
-      i18nKey="subprofiles:hero.follow.count"
-      count={view.followerCount}
-    />
-  );
-  return (
-    <>
-      {isEndorserListOpenable ? (
-        <button
-          type="button"
-          className="pp-metabtn"
-          disabled={!interactive}
-          onClick={interactive ? () => onAction("people:endorsers") : undefined}
-        >
-          {endorsementLabel}
-        </button>
-      ) : (
-        <span>{endorsementLabel}</span>
-      )}
-      {view.followerCount > 0 ? (
-        <button
-          type="button"
-          className="pp-metabtn"
-          disabled={!interactive}
-          onClick={interactive ? () => onAction("people:followers") : undefined}
-        >
-          {followerLabel}
-        </button>
-      ) : (
-        <span>{followerLabel}</span>
-      )}
-    </>
-  );
-}
 
 /**
  * The persona page's `.pp-hero` — avatar, name, tagline, social row, actions
@@ -130,10 +40,15 @@ export function SubprofileHero({
   view,
   mode,
   onAction,
+  afterTagline,
 }: {
   view: PublicSubprofileView;
   mode: PersonaViewMode;
   onAction: (action: PersonaAction) => void;
+  /** A skin block under the tagline, above the social row and actions (the
+   *  Poster skin's NEXT band, through `SubprofileSkinExtras`'s
+   *  `afterTagline` slot). */
+  afterTagline?: ReactNode;
 }) {
   const { t } = useTranslation();
   const { loggedIn } = useAuth();
@@ -144,7 +59,6 @@ export function SubprofileHero({
     view.linkVisibility === "linked" &&
     Boolean(view.ownerName) &&
     Boolean(view.ownerSlug);
-  const standaloneAddress = personaPublicPathOrNull(view);
   const interactive = mode !== "preview";
   // The studio skin `display:none`s the avatar entirely (see
   // `persona-skins.css`) — wrapping a hidden avatar in a real `<button>` would
@@ -171,13 +85,14 @@ export function SubprofileHero({
   const isEndorserListOpenable =
     view.endorsementCount > 0 &&
     canReadPersonaEndorsers(view, view.viewerIsMember && mode !== "visitor");
-  // A members-only persona takes no follows or endorsements, so "0
-  // endorsements · 0 followers" there is a count nobody can move. Any count
-  // it already holds (from before it closed) still shows.
-  const shouldShowEngagementCounts =
-    isPersonaOpenToEngagement(view) ||
-    view.endorsementCount > 0 ||
-    view.followerCount > 0;
+  // A zero count is left out on every skin (see `PersonaEngagementCounts`),
+  // which also covers a members-only persona: it takes no follows or
+  // endorsements, so only a count it held from before it closed can show.
+  const hasCounts = hasEngagementCounts(view);
+  // A persona named after its owner already says whose it is in the title.
+  const isOwnerLineShown = !(
+    linkedToOwner && isOwnerTieRedundant(titleName, view.ownerName)
+  );
 
   const avatar = (
     <Avatar
@@ -232,6 +147,8 @@ export function SubprofileHero({
             {view.tagline && <p className="pp-tagline">{view.tagline}</p>}
           </div>
 
+          {afterTagline}
+
           <SubprofileSocialRow
             links={view.socialLinks}
             accent={accent}
@@ -240,47 +157,25 @@ export function SubprofileHero({
 
           <SubprofileHeroActions view={view} mode={mode} onAction={onAction} />
 
-          <div className="pp-meta">
-            {shouldShowEngagementCounts && (
-              <PersonaEngagementCounts
-                view={view}
-                interactive={interactive}
-                isEndorserListOpenable={isEndorserListOpenable}
-                onAction={onAction}
-              />
-            )}
-            {linkedToOwner && interactive ? (
-              <Link
-                className="pp-owner"
-                to={`${routes.members}/${view.ownerSlug}`}
-              >
-                <Translation
-                  i18nKey="subprofiles:page.ownerTie"
-                  components={{ em: <em /> }}
-                  values={{ name: view.ownerName ?? "" }}
+          {(hasCounts || isOwnerLineShown) && (
+            <div className="pp-meta">
+              {hasCounts && (
+                <PersonaEngagementCounts
+                  view={view}
+                  interactive={interactive}
+                  isEndorserListOpenable={isEndorserListOpenable}
+                  onAction={onAction}
                 />
-              </Link>
-            ) : linkedToOwner ? (
-              <span className="pp-owner">
-                <Translation
-                  i18nKey="subprofiles:page.ownerTie"
-                  components={{ em: <em /> }}
-                  values={{ name: view.ownerName ?? "" }}
+              )}
+              {isOwnerLineShown && (
+                <PersonaOwnerLine
+                  view={view}
+                  isLinkedToOwner={linkedToOwner}
+                  interactive={interactive}
                 />
-              </span>
-            ) : (
-              <span className="pp-owner">
-                {/* An unlinked draft with no handle has no address yet:
-                    `/p/:handle` only resolves handles, so showing a fabricated
-                    `/p/<slug>` gave the owner a dead link to copy. */}
-                {standaloneAddress
-                  ? t("subprofiles:hero.standalone", {
-                      address: standaloneAddress,
-                    })
-                  : t("subprofiles:hero.noAddressYet")}
-              </span>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
 
         <SubprofileTitleBlock view={view} />

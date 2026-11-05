@@ -43,6 +43,7 @@ export type Namespace =
   | "culture"
   | "notifications"
   | "quizshow"
+  | "vj"
   | "audiences"
   | "forBusinesses"
   | "forCommunities"

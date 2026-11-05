@@ -197,6 +197,12 @@
 .kindBtn[data-leaving] {
   pointer-events: none;
 }
+/* A touch target stays at least 44px tall. */
+@media (pointer: coarse) {
+  .kindBtn {
+    min-height: 44px;
+  }
+}
 .kindBtn:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);

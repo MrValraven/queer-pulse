@@ -1,0 +1,110 @@
+.head {
+  text-align: center;
+  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+}
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-title);
+  font-weight: 350;
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-heading);
+  color: var(--ink);
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+/* The poet's name, set in small caps under the title like a book's byline. */
+.byline {
+  margin: 0.6rem 0 0;
+  font-family: var(--serif);
+  font-size: var(--text-body-lg);
+  font-variant-caps: small-caps;
+  letter-spacing: 0.06em;
+  color: var(--ink-60);
+}
+/* Subtitle and date in the serif italic the poems list uses for the
+   subtitle, so the title page reads in one face. */
+.meta {
+  margin: 0.35rem 0 0;
+  color: var(--ink-60);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--text-body-lg);
+}
+.collab {
+  margin: 0.25rem 0 0;
+  color: var(--ink-60);
+  font-size: var(--text-13-5);
+}
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-strong);
+  font-size: var(--text-13);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .actionButton:hover {
+    border-color: var(--accent);
+    color: var(--accent-text);
+  }
+}
+.actionButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.body {
+  max-width: 56ch;
+  margin: 0 auto;
+  font-family: var(--serif);
+  font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+}
+/* The rights colophon closing the poem: centred under the verse, a section
+   gap above it and no rule, so the pager's border-top below is the only
+   divider. */
+.rights {
+  margin-top: var(--section-y-48);
+}
+/* Translation tab strip, centred above the verse. Uses the UI font (the body
+   is serif) and flex-wraps when there are several languages. The control is
+   inline-flex, so it takes block flex at its own width to centre on auto
+   margins. */
+.body .versions {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0 auto clamp(1.5rem, 3vw, 2rem);
+  font-family: var(--sans);
+}
+/* Phones: each tab is a full 44px target. */
+@media (max-width: 600px) {
+  .body .versions > button {
+    min-height: 44px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .actionButton {
+    transition: none;
+  }
+}

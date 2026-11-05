@@ -1,5 +1,6 @@
 import { FiShield } from "react-icons/fi";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { publishedYearRange } from "./firstPublished";
 import styles from "./WorkRightsFooter.module.css";
 
 export interface WorkRightsFooterProps {
@@ -7,8 +8,14 @@ export interface WorkRightsFooterProps {
   createdAtISO: string;
   /** `"item"` (default) is the inline footer under a single work's body, used
    *  by the one-work modal surfaces. `"page"` is the centred, full-width
-   *  notice that closes a whole persona page — see `PersonaRightsFooter`. */
-  variant?: "item" | "page";
+   *  notice that closes a whole persona page — see `PersonaRightsFooter`.
+   *  `"colophon"` is the page skin's closing block (`PersonaColophon`): no
+   *  shield, the years as a range, and a plain `<div>` because the colophon
+   *  around it is already the `<footer>`. */
+  variant?: "item" | "page" | "colophon";
+  /** The latest item's ISO `createdAt`, read by the `colophon` variant only:
+   *  the © line then prints "2024–2026" from first to latest year. */
+  latestISO?: string | null;
 }
 
 /**
@@ -25,7 +32,9 @@ export interface WorkRightsFooterProps {
  *
  * The shield hangs to the left of both lines in the inline `item` variant. In
  * the centred `page` variant it sits inline with the © line, so it reads as
- * part of the notice rather than floating beside a centred block.
+ * part of the notice rather than floating beside a centred block. The
+ * `colophon` variant drops the shield: the book-page skin closes on type
+ * alone, and its ornament is drawn by the colophon around it.
  *
  * It is deliberately NOT rendered per row/spotlight/menu-card on a persona
  * page — repeating it beside every item read as spam. The page shows it once
@@ -36,6 +45,7 @@ export interface WorkRightsFooterProps {
 export function WorkRightsFooter({
   createdAtISO,
   variant = "item",
+  latestISO = null,
 }: WorkRightsFooterProps) {
   const { t, language } = useTranslation();
   const createdAt = new Date(createdAtISO);
@@ -45,6 +55,21 @@ export function WorkRightsFooter({
     month: "short",
     year: "numeric",
   });
+
+  if (variant === "colophon") {
+    return (
+      <div className={styles.colophon}>
+        <p className={styles.copyright}>
+          {t("subprofiles:rights.copyright", {
+            year: publishedYearRange(createdAtISO, latestISO ?? createdAtISO),
+          })}
+        </p>
+        <p className={`${styles.provenance} pp-provenance`}>
+          {t("subprofiles:rights.firstPublished", { date: formattedDate })}
+        </p>
+      </div>
+    );
+  }
 
   const isPageVariant = variant === "page";
   const shieldIcon = <FiShield aria-hidden className={styles.icon} />;

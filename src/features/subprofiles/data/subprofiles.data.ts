@@ -7,7 +7,7 @@ import {
 import { foldForSearch } from "../../connect/connectionsFilter";
 import { handleFormatError } from "../../../shared/handles";
 import { handleIsKindName } from "../personaHandle";
-import { isContentSection } from "../subprofile-kinds";
+import { isContentSection, itemsShownForKind } from "../subprofile-kinds";
 import { kindsMatchingSearch } from "../kindSearch";
 import { toCardTableSummary } from "../questTable.data";
 import { nightformEditorDemoGigs } from "../gigs/gigDemoDates.data";
@@ -38,6 +38,7 @@ import type {
   SubprofileCardDTO,
   SubprofileDTO,
   SubprofileItemDTO,
+  SubprofileKind,
   SubprofilePublicDTO,
   SubprofileSection,
 } from "../api/subprofiles.api";
@@ -2990,6 +2991,39 @@ export function resetDemoItemWritesForTests(): void {
   originalDemoItems.clear();
 }
 
+/** Each persona's kind as first loaded, kept the first time a demo type
+ *  change rewrites it, so `resetDemoKindChangesForTests` can put it back. */
+const originalDemoKinds = new Map<string, SubprofileKind>();
+
+/**
+ * Demo write for a persona type change: set `kind` on the registry entry the
+ * editor and the public page read, and raise the persona's `editVersion` as
+ * the server does. Items stay stored as they are, and every DTO below hides
+ * the sections the new kind does not show, so a switch back brings them
+ * back. Returns the owner view after the write, or `null` when the persona is
+ * not in the registry.
+ */
+export function mockChangeSubprofileKind(
+  id: string,
+  kind: SubprofileKind,
+): SubprofileDTO | null {
+  const persona = DEMO_SUBPROFILES.find((candidate) => candidate.id === id);
+  if (!persona) return null;
+  if (!originalDemoKinds.has(id)) originalDemoKinds.set(id, persona.kind);
+  persona.kind = kind;
+  mockBumpEditVersion(id);
+  return toOwnerDto(persona);
+}
+
+/** Test-only: undo every `mockChangeSubprofileKind` write. */
+export function resetDemoKindChangesForTests(): void {
+  for (const [id, kind] of originalDemoKinds) {
+    const persona = DEMO_SUBPROFILES.find((candidate) => candidate.id === id);
+    if (persona) persona.kind = kind;
+  }
+  originalDemoKinds.clear();
+}
+
 // ── Mock selectors (mirror the backend gating; used by the demo hook branches) ─
 
 /** Strip the owner-only demo fields down to the owner-full wire DTO. */
@@ -3013,7 +3047,9 @@ export function toOwnerDto(sp: DemoSubprofile): SubprofileDTO {
     visibility: sp.visibility,
     status: sp.status,
     position: sp.position,
-    items: sp.items,
+    // Items of sections the persona's kind does not show stay stored and
+    // come back on a switch back, as on the backend.
+    items: itemsShownForKind(sp.items, sp.kind),
     endorsementCount: sp.endorsementCount,
     followerCount: sp.followerCount,
     affiliations: sp.affiliations,
@@ -3056,7 +3092,7 @@ export function toPublicDto(
     linkVisibility: sp.linkVisibility,
     visibility: sp.visibility,
     status: sp.status,
-    items: sp.items,
+    items: itemsShownForKind(sp.items, sp.kind),
     endorsementCount: sp.endorsementCount,
     viewerEndorsed: sp.viewerEndorsed,
     followerCount: sp.followerCount,
@@ -3076,10 +3112,11 @@ export function toPublicDto(
 }
 
 /** Union of tags across a persona's content items (excludes `links`), dedup,
- *  capped at 12 — mirrors the backend's batched `loadContentTagsFor`. */
+ *  capped at 12, mirroring the backend's batched `loadContentTagsFor`. Reads
+ *  only the sections the persona's kind shows. */
 function contentItemTags(sp: DemoSubprofile): string[] {
   const tags: string[] = [];
-  for (const item of sp.items) {
+  for (const item of itemsShownForKind(sp.items, sp.kind)) {
     if (!isContentSection(item.section)) continue;
     for (const tag of item.tags ?? []) {
       if (tags.length < 12 && !tags.includes(tag)) {

@@ -22,6 +22,7 @@ export function SubprofileFollow({
   viewerFollowing,
   isOwnerViewing,
   onFollowResult,
+  isQuiet = false,
 }: {
   subprofileId: string;
   followerCount: number;
@@ -30,6 +31,10 @@ export function SubprofileFollow({
   /** Called with the server's answer after a follow or an unfollow, so a
    *  surface with its own cache (the Studio artist hero) can store it. */
   onFollowResult?: (result: FollowResult) => void;
+  /** A host whose action row keeps one primary (the page skin's hero) shows
+   *  Following as a ghost too; the check icon, the label and `aria-pressed`
+   *  carry the state instead of the jade fill. */
+  isQuiet?: boolean;
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
@@ -56,7 +61,7 @@ export function SubprofileFollow({
 
   return (
     <Button
-      variant={viewerFollowing ? "jade" : "ghost"}
+      variant={viewerFollowing && !isQuiet ? "jade" : "ghost"}
       size="md"
       aria-pressed={viewerFollowing}
       onClick={() => void toggle()}

@@ -1,0 +1,178 @@
+/* The lead fields: the Add lead dialog and the lead page's details share
+   them. Fields stack one per row on a phone; wider forms pair type with
+   stage and set location, email and phone three across. */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+
+/* A field and the refusal line under it. The FormField's own bottom margin
+   gives way to the form's gap, so the refusal sits right under its field. */
+.fieldBlock {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.fieldBlock > .field {
+  margin-bottom: 0;
+}
+
+/* Type and stage share a row once both fit at a comfortable width; with
+   the stage hidden, the type takes the whole row. */
+.pairGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 18px 16px;
+  align-items: start;
+}
+
+/* The contact trio measures the form it sits in, so the grid follows the
+   dialog or the page column, whichever holds it. Three across needs about
+   230px a column for a full email and its refusal line, so the 630px Add
+   lead dialog and the 572px lead page column both keep one per row. */
+.contactShell {
+  container-type: inline-size;
+}
+
+.contactGrid {
+  display: grid;
+  gap: 18px;
+  align-items: start;
+}
+
+@container (min-width: 720px) {
+  .contactGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+
+/* ── Links ──────────────────────────────────────────────────────────────── */
+/* The group label and hint read like a FormField label and helper. */
+.groupLabel {
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.groupHint {
+  margin: 6px 0 0;
+  font-size: var(--text-12);
+  line-height: 1.5;
+  color: var(--ink-60);
+  text-wrap: pretty;
+}
+
+.linkList {
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.linkRow {
+  display: block;
+}
+
+/* The row's spacing lives inside the fold, so it opens and closes with it. */
+.linkRowInner {
+  padding-bottom: 8px;
+}
+
+.linkControls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.linkInputShell {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.linkPlatformIcon {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 15px;
+  display: flex;
+  align-items: center;
+  color: var(--ink-60);
+  pointer-events: none;
+}
+
+.linkPlatformIcon svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* The FormField input look, with room on the left for the platform icon.
+   16px type keeps iOS Safari from zooming in on focus. */
+.linkInput {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 15px 12px 44px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-12);
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--text-16);
+  outline: none;
+  transition-property: border-color, box-shadow, background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.linkInput::placeholder {
+  color: var(--ink-40);
+  opacity: 1;
+}
+
+.linkInput:focus-visible {
+  border-color: var(--focus-field-border);
+  background: var(--paper);
+  box-shadow: var(--focus-field-glow);
+}
+
+.linkInput[aria-invalid="true"] {
+  border-color: var(--accent-ink);
+}
+
+.linkInput:disabled {
+  color: var(--ink-40);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Motion sets the width: 44px while the row holds a link to open, none
+   while it does not. The open link inside keeps its own 44px box, so it
+   never squeezes while the slot opens. */
+.linkOpenSlot {
+  display: inline-flex;
+  flex: none;
+  height: 44px;
+}
+
+.linkOpen {
+  display: inline-flex;
+  flex: none;
+}
+
+.linkAddRow {
+  display: flex;
+  padding-top: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .linkInput {
+    transition: none;
+  }
+}

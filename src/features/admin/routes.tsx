@@ -303,6 +303,23 @@ const AdminMusicEventPage = lazyNamed(
   () => import("./musicEvents/AdminMusicEventPage"),
   "AdminMusicEventPage",
 );
+const AdminLeadsPage = lazyNamed(
+  () => import("./leads/AdminLeadsPage"),
+  "AdminLeadsPage",
+);
+const AdminLeadPage = lazyNamed(
+  () => import("./leads/AdminLeadPage"),
+  "AdminLeadPage",
+);
+const AdminVjPage = lazyNamed(() => import("../vj/AdminVjPage"), "AdminVjPage");
+const VjScreenPage = lazyNamed(
+  () => import("../vj/screen/VjScreenPage"),
+  "VjScreenPage",
+);
+const AdminVjRemotePage = lazyNamed(
+  () => import("../vj/remote/AdminVjRemotePage"),
+  "AdminVjRemotePage",
+);
 
 /**
  * What the public sees of QueerPulse, curated from admin: the landing page,
@@ -367,6 +384,24 @@ function musicEventRoutes() {
   );
 }
 
+/** The leads directory: the list and one lead's page. `AdminLeadsController`
+ *  guards them with `RolesOrStaffGuard`, `@Roles(Admin)` and
+ *  `@StaffRoles('music_manager_producer')`, so an Admin or a holder of that
+ *  grant gets in; authGate admits the grant through its
+ *  `CAPABILITY_ELEVATED_PATTERNS` entry for `routes.adminLeads` and
+ *  everything under it. */
+function leadRoutes() {
+  return (
+    <>
+      <Route path={routes.adminLeads} element={<AdminLeadsPage />} />
+      <Route
+        path={`${routes.adminLeads}/:leadId`}
+        element={<AdminLeadPage />}
+      />
+    </>
+  );
+}
+
 /** Members' unfinished creator drafts: the list and one draft's read-only
  *  preview. The backend answers these for the Admin role alone. */
 function creatorDraftRoutes() {
@@ -411,6 +446,31 @@ function peopleRoutes() {
 function personaWallRoutes() {
   return (
     <Route path={routes.adminPersonaWall} element={<AdminPersonaWallPage />} />
+  );
+}
+
+/** The VJ library, the projector screen and the phone remote. Admin only
+ *  through the blanket `/admin/*` gate (`AdminVjController` is `@Roles(Admin)`
+ *  with an empty `@StaffRoles()`). The screen and the remote are chromeless:
+ *  neither renders `AdminShell`. */
+function vjRoutes() {
+  return (
+    <>
+      <Route path={routes.adminVj} element={<AdminVjPage />} />
+      <Route path={routes.adminVjScreen} element={<VjScreenPage />} />
+      <Route path={routes.adminVjRemote} element={<AdminVjRemotePage />} />
+    </>
+  );
+}
+
+/** The Admin-only tools mounted together: the Directory wall curation and
+ *  VJ. Grouped so `adminRoutes()` stays under the 200-line cap. */
+function adminOnlyToolRoutes() {
+  return (
+    <>
+      {personaWallRoutes()}
+      {vjRoutes()}
+    </>
   );
 }
 
@@ -475,7 +535,7 @@ export function adminRoutes() {
         path={routes.adminListingEdit}
         element={<AdminListingEditPage />}
       />
-      {personaWallRoutes()}
+      {adminOnlyToolRoutes()}
       <Route path={routes.adminMedia} element={<AdminMediaPage />} />
       <Route
         path={routes.adminStickerPacks}
@@ -528,6 +588,7 @@ export function adminRoutes() {
       <Route path={routes.adminStudio} element={<StudioAdminPage />} />
       {quizshowTemplateRoutes()}
       {musicEventRoutes()}
+      {leadRoutes()}
       <Route
         path={routes.adminCommunityTagRequests}
         element={<AdminCommunityTagRequestsPage />}

@@ -30,6 +30,7 @@ export function SubprofileEndorse({
   isOwnerViewing,
   personaName,
   personaAvatarUrl,
+  isQuiet = false,
 }: {
   subprofileId: string;
   endorsementCount: number;
@@ -37,6 +38,9 @@ export function SubprofileEndorse({
   isOwnerViewing: boolean;
   personaName: string;
   personaAvatarUrl: string | null;
+  /** Keeps Endorsed a ghost for a host with one primary action (the page
+   *  skin's hero); the check icon and `aria-pressed` carry the state. */
+  isQuiet?: boolean;
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
@@ -57,7 +61,7 @@ export function SubprofileEndorse({
       <div className={styles.controlRow}>
         {canEndorse && (
           <Button
-            variant={viewerEndorsed ? "jade" : "ghost"}
+            variant={viewerEndorsed && !isQuiet ? "jade" : "ghost"}
             size="md"
             aria-pressed={viewerEndorsed}
             onClick={() => setModalOpen(true)}

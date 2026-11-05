@@ -11,10 +11,15 @@ import {
   itemCoverUrl,
 } from "./skins/tattoo/tattooItemImages";
 import { BlurredPhoto } from "./BlurredPhoto";
+import { SubprofileEventSpotlight } from "./SubprofileEventSpotlight";
+import { isEventSection } from "./eventDates";
 import { SubprofileSocialRow } from "./SubprofileSocialRow";
 import { DEFAULT_ACCENT } from "./subprofilePresence.data";
 import type { PersonaViewMode } from "./personaSkinRender";
-import type { SubprofileItemView } from "./api/subprofiles.adapters";
+import type {
+  SubprofileItemView,
+  SubprofileSectionView,
+} from "./api/subprofiles.adapters";
 import type { AccentKey } from "./api/subprofiles.api";
 import type { SkinFamily } from "./subprofile-skins";
 
@@ -31,9 +36,44 @@ import type { SkinFamily } from "./subprofile-skins";
  * and collaborator credits render as non-navigating look-alikes — same
  * classes, no `href`/`to` — mirroring `SubprofileSections`' `LinksSection`
  * pattern, so a click inside the preview can never leave the editor.
-
+ *
+ * A Poster (collective) page whose featured item is an event prints it as
+ * that event's poster instead (`SubprofileEventSpotlight`).
  */
 export function SubprofileSpotlight({
+  item,
+  skin,
+  mode,
+  accent,
+  onOpenEvent,
+  sections,
+}: {
+  item: SubprofileItemView;
+  skin: SkinFamily;
+  mode: PersonaViewMode;
+  accent: AccentKey | null;
+  /** Opens the Poster event sheet, read by the event poster only. */
+  onOpenEvent?: (item: SubprofileItemView) => void;
+  /** The page's sections, so the event poster can tell whether its event
+   *  is the soonest one ("Next event") or a later one ("Coming up"). */
+  sections?: SubprofileSectionView[];
+}) {
+  if (skin === "collective" && isEventSection(item.section)) {
+    return (
+      <SubprofileEventSpotlight
+        item={item}
+        mode={mode}
+        onOpenEvent={onOpenEvent}
+        sections={sections}
+      />
+    );
+  }
+  return (
+    <GenericSpotlight item={item} skin={skin} mode={mode} accent={accent} />
+  );
+}
+
+function GenericSpotlight({
   item,
   skin,
   mode,
@@ -133,6 +173,7 @@ export function SubprofileSpotlight({
             <Button
               variant="primary"
               size="md"
+              className="pp-spot-cta"
               href={spotlightHref}
               target="_blank"
               rel="noopener noreferrer"
@@ -140,7 +181,13 @@ export function SubprofileSpotlight({
               {t("subprofiles:spotlight.open")} <FiExternalLink aria-hidden />
             </Button>
           ) : (
-            <Button type="button" variant="primary" size="md" disabled>
+            <Button
+              type="button"
+              variant="primary"
+              size="md"
+              className="pp-spot-cta"
+              disabled
+            >
               {t("subprofiles:spotlight.open")} <FiExternalLink aria-hidden />
             </Button>
           ))}

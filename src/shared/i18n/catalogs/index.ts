@@ -80,6 +80,7 @@ export const enNamespaceLoaders: Partial<
   notifications: () =>
     import("./en/notifications").then((module) => module.notifications),
   quizshow: () => import("./en/quizshow").then((module) => module.quizshow),
+  vj: () => import("./en/vj").then((module) => module.vj),
   audiences: () => import("./en/audiences").then((module) => module.audiences),
   forBusinesses: () =>
     import("./en/forBusinesses").then((module) => module.forBusinesses),
@@ -136,6 +137,7 @@ export const ptNamespaceLoaders: Partial<
   notifications: () =>
     import("./pt/notifications").then((module) => module.notifications),
   quizshow: () => import("./pt/quizshow").then((module) => module.quizshow),
+  vj: () => import("./pt/vj").then((module) => module.vj),
   audiences: () => import("./pt/audiences").then((module) => module.audiences),
   forBusinesses: () =>
     import("./pt/forBusinesses").then((module) => module.forBusinesses),
@@ -204,6 +206,7 @@ const en: Record<Namespace, Catalog> = {
   culture: PENDING_CATALOG,
   notifications: PENDING_CATALOG,
   quizshow: PENDING_CATALOG,
+  vj: PENDING_CATALOG,
   audiences: PENDING_CATALOG,
   forBusinesses: PENDING_CATALOG,
   forCommunities: PENDING_CATALOG,
@@ -250,6 +253,7 @@ const pt: Record<Namespace, Catalog> = {
   culture: PENDING_CATALOG,
   notifications: PENDING_CATALOG,
   quizshow: PENDING_CATALOG,
+  vj: PENDING_CATALOG,
   audiences: PENDING_CATALOG,
   forBusinesses: PENDING_CATALOG,
   forCommunities: PENDING_CATALOG,

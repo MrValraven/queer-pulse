@@ -1,0 +1,62 @@
+/* The VJ library page. The `.frame` is the container: from 880px the packs
+   rail (260px) sits beside the main column, below that the pack picker sits
+   above it. `AdminVjPage.tsx` swaps the rail for the picker at the same
+   width (VJ_WIDE_FRAME_MIN_PX). */
+
+.page {
+  margin-top: var(--gap-lg);
+}
+
+.frame {
+  container-type: inline-size;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap-lg);
+}
+
+.rail {
+  min-width: 0;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+  min-width: 0;
+}
+
+.skeletonRows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.skeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  gap: var(--gap-sm);
+}
+
+.skeletonRows > *,
+.skeletonGrid > * {
+  border-radius: var(--radius-14);
+}
+
+/* On a phone the picker is one row, so its skeleton is one row too. */
+.skeletonRows > :nth-child(n + 2) {
+  display: none;
+}
+
+@container (min-width: 880px) {
+  .skeletonRows > :nth-child(n + 2) {
+    display: block;
+  }
+
+  .body {
+    grid-template-columns: 260px minmax(0, 1fr);
+    align-items: start;
+  }
+}

@@ -1226,6 +1226,10 @@ export const subprofiles: Catalog = {
   // Featured item spotlight (SubprofileSpotlight)
   "spotlight.eyebrow": "Start here",
   "spotlight.open": "Open",
+  "spotlight.nextEvent": "Next event",
+  "spotlight.fromArchive": "From the archive",
+  "spotlight.comingUp": "Coming up",
+  "spotlight.eventDetails": "See the event",
 
   // Collaborator credits on a public item (ItemCollaborators, in
   // SubprofileSections; also SubprofileSpotlight's featured-item credits)
@@ -1619,12 +1623,29 @@ export const subprofiles: Catalog = {
     "This looks like an older poem saved as one long line. We can suggest new line breaks from its punctuation. You'll still be able to edit them afterwards.",
   "poem.editor.resplit.action": "Re-split into lines",
   "poem.row.openAria": "Read the poem “{title}”",
+  "poem.row.openPrefix": "Read the poem",
+  "event.row.openPrefix": "Open event",
   "poem.reader.withLabel": "With {names}",
   "poem.reader.sectionBreak": "Section break",
   "poem.reader.copyLink": "Copy link",
   "poem.reader.copyLinkAria": "Copy link to the poem “{title}”",
   "poem.reader.copy": "Copy poem",
   "poem.reader.copied": "Poem copied",
+  "poem.reader.previous": "Previous poem",
+  "poem.reader.next": "Next poem",
+  "poem.reader.position": "{index} of {total}",
+  // Event detail sheet (collective events/nights)
+  "event.sheet.dialogLabel": "{title}, event details",
+  "event.sheet.close": "Close",
+  "event.sheet.lineup": "Line-up",
+  "event.sheet.addToCalendar": "Add to calendar",
+  "event.sheet.calendarBlocked":
+    "Your browser would not let us save the calendar file. Check that downloads are allowed for this site.",
+  "event.sheet.eventPage": "Event page",
+  "event.sheet.tickets": "Tickets",
+  "event.sheet.previous": "Previous event",
+  "event.sheet.next": "Next event",
+  "event.sheet.position": "{index} of {total}",
 
   // Poem translations/versions — several versions of one poem (e.g. original +
   // translations), cycled through tabs in the editor and the reader.
@@ -1640,6 +1661,11 @@ export const subprofiles: Catalog = {
   // Public copyright + provenance footer (WorkRightsFooter, protect-your-work Task 3)
   "rights.copyright": "© {year}. All rights reserved.",
   "rights.firstPublished": "First published on QueerPulse · {date}",
+  // The Poster skin's page foot (PersonaPosterColophon)
+  "colophon.poster.producingSince": "producing since {year}",
+  "colophon.poster.organisingSince": "organising since {year}",
+  "colophon.poster.eventCount_one": "{count} event",
+  "colophon.poster.eventCount_other": "{count} events",
 
   // Skin-blocks editor (personas expansion — page-block editor pane, rail entry & field labels)
   "editorRail.skinBlocks": "Page blocks",
@@ -2056,6 +2082,26 @@ export const subprofiles: Catalog = {
   // Persona audit remediation (2026-08-11)
   "section.countLabel_one": "{count} item",
   "section.countLabel_other": "{count} items",
+  "section.poemsCaption_one": "{count} poem · {span}",
+  "section.poemsCaption_other": "{count} poems · {span}",
+  "section.yearSpan": "{from} to {to}",
+  "section.poemsUndated": "Undated",
+  "section.poemsEmptyOwner": "Your poems will be listed here",
+  "section.poemsAdd": "Add a poem",
+  // Poster (collective) events, nights, clients and roster
+  "section.eventsPast": "Past events",
+  "section.nightsPast": "Past nights",
+  "section.eventsUpcomingCount_one": "{count} coming up",
+  "section.eventsUpcomingCount_other": "{count} coming up",
+  "section.eventsPastCount_one": "{count} past",
+  "section.eventsPastCount_other": "{count} past",
+  "section.eventsSince": "since {year}",
+  "section.clientsCount_one": "{count} client",
+  "section.clientsCount_other": "{count} clients",
+  "section.rosterCount_one": "{count} artist",
+  "section.rosterCount_other": "{count} artists",
+  "section.eventsEmptyOwner": "Your first event goes here",
+  "section.eventsAdd": "Add an event",
   "page.ogImageAlt": "{name}, {craft} on QueerPulse",
   "peopleModal.followersCountOnlyTitle": "Followers stay private",
   "peopleModal.followersCountOnlyBody":
@@ -3376,6 +3422,8 @@ export const subprofiles: Catalog = {
   "itemField.architect.competitions.meta.label": "Result",
   "itemField.architect.competitions.meta.placeholder":
     "e.g. Honourable mention",
+  "itemField.lineUp.label": "Line-up",
+  "itemField.lineUp.placeholder": "w/ Odete, Nídia",
   "skinControl.listFull": "Up to {count}",
   "skinControl.validate.httpsUrl": "Use a link that starts with https://",
   "skinControl.validate.year": "Use a year from 1900 to this year",
@@ -3838,4 +3886,45 @@ export const subprofiles: Catalog = {
   "gigEditor.preview.emptyHint": "Your gig appears here as you fill it in",
   "gigEditor.status.needsDate": "Pick the gig date to save",
   "gigEditor.status.badTicketLink": "Ticket link needs to start with https://",
+
+  // Persona type change
+  "kindChange.label": "Type",
+  "kindChange.help":
+    "Pick another type from the {family} group. Your handle, followers, credits and posts stay with this persona.",
+  "kindChange.helpGeneric":
+    "Pick the type that fits this persona. After that, you can change it to another type in the same group.",
+  "kindChange.onlyType":
+    "{kind} is the only type in the {family} group, so this persona keeps it.",
+  "kindChange.open": "Change type",
+  "kindChange.close": "Close type list",
+  "kindChange.saveFirst":
+    "Save or discard your changes first, then change the type.",
+  "kindChange.confirm.title": "Change type to {kind}?",
+  "kindChange.confirm.action": "Change type",
+  "kindChange.confirm.hidden_one": "{sections} will be hidden.",
+  "kindChange.confirm.hidden_other": "{sections} will be hidden.",
+  "kindChange.confirm.appearing_one": "{sections} will appear.",
+  "kindChange.confirm.appearing_other": "{sections} will appear.",
+  "kindChange.confirm.staying_one": "{sections} stays.",
+  "kindChange.confirm.staying_other": "{sections} stay.",
+  "kindChange.confirm.noSectionChange": "Every section stays as it is.",
+  "kindChange.confirm.keepsContent":
+    "Nothing is deleted. Change back to {currentKind} and the hidden sections return as they were.",
+  "kindChange.successToast": "Type changed to {kind}.",
+  "kindChange.error.action": "Couldn't change the type",
+  "kindChange.error.unchanged": "This persona's type is already {kind}.",
+  "kindChange.error.otherFamily":
+    "{kind} belongs to the {requestedFamily} group, and this persona is in the {currentFamily} group. Pick a type from {currentFamily}.",
+  "kindChange.error.studioNoFormat_one":
+    "This persona has 1 Studio release, and {kind} can't publish in Studio. Unschedule, unpublish or delete it first.",
+  "kindChange.error.studioNoFormat_other":
+    "This persona has {count} Studio releases, and {kind} can't publish in Studio. Unschedule, unpublish or delete them first.",
+  "kindChange.error.studioOtherFormat_one":
+    "This persona has 1 Studio release, and {kind} publishes a different format in Studio. Unschedule, unpublish or delete it first.",
+  "kindChange.error.studioOtherFormat_other":
+    "This persona has {count} Studio releases, and {kind} publishes a different format in Studio. Unschedule, unpublish or delete them first.",
+  "kindChange.error.studioTakenDown_one":
+    "Our team took down a Studio release on this persona. Ask our team before changing its type.",
+  "kindChange.error.studioTakenDown_other":
+    "Our team took down {count} Studio releases on this persona. Ask our team before changing its type.",
 };

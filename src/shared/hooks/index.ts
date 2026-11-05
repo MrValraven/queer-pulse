@@ -1,4 +1,5 @@
 export { useScrollReveal } from "./useScrollReveal";
+export { useScreenWakeLock } from "./useScreenWakeLock";
 export {
   useIncrementalList,
   type IncrementalList,

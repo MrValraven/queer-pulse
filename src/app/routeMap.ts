@@ -69,6 +69,9 @@ export const routes = {
   adminMusicEventNew: "/admin/music-events/new",
   /** One music event's host console. */
   adminMusicEvent: "/admin/music-events/:slug",
+  /** Leads directory (`AdminLeadsPage`): the people staff reach out to.
+   *  Admin and the `music_manager_producer` grant. */
+  adminLeads: "/admin/leads",
   /** Pulse Live quiz templates: the staff list. Moderator and Admin. */
   adminQuizshowTemplates: "/admin/quizshow/templates",
   /** One template in the full-screen studio (`adminQuizshowTemplatePath`). */
@@ -141,6 +144,12 @@ export const routes = {
    *  `@Roles(Admin)` alone, so this path is deliberately absent from
    *  MOD_ACCESSIBLE_ADMIN_PATTERNS. */
   adminStickerPacks: "/admin/sticker-packs",
+  /** The VJ library (AdminVjPage): packs and clips for the projector. Admin only through the blanket `/admin/*` gate (`AdminVjController` is `@Roles(Admin)` with an empty `@StaffRoles()`). */
+  adminVj: "/admin/vj",
+  /** The VJ projector screen (PLAN-3), chromeless, under the same gate. */
+  adminVjScreen: "/admin/vj/screen",
+  /** The VJ phone remote (PLAN-3), under the same gate. */
+  adminVjRemote: "/admin/vj/remote",
   adminInvites: "/admin/invites",
   /** The email template library: emails staff copy and send by hand. `/edit/`
    *  keeps the dynamic id clear of the static `new` segment, the same shape as

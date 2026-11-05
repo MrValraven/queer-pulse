@@ -1,0 +1,197 @@
+/* A lead's history: the new note box, then the entries newest first. Notes
+   are small paper cards with their author; stage, persona and created
+   entries are one quiet line each, so the notes carry the weight. */
+
+/* ── Composer ───────────────────────────────────────────────────────────── */
+.composer {
+  display: flex;
+  flex-direction: column;
+}
+
+.composer > .composerField,
+.noteEditor > .composerField {
+  margin-bottom: 0;
+}
+
+/* The box grows with the note, up to about half the screen, then scrolls. */
+.composer .composerField textarea,
+.noteEditor .composerField textarea {
+  field-sizing: content;
+  max-height: 50svh;
+}
+
+.composerActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px 16px;
+  padding-top: 10px;
+}
+
+/* The counter's place stays in the row while it is hidden, so Add note
+   holds the end of the row either way. */
+.counterSlot {
+  margin-inline-end: auto;
+}
+
+.counter {
+  font-size: var(--text-12-5);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+
+.counter[data-over] {
+  font-weight: 600;
+  color: var(--accent-text);
+}
+
+/* ── Entries ────────────────────────────────────────────────────────────── */
+/* Positioned, so a leaving note can pop out of the flow while the entries
+   below glide up. */
+.list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  position: relative;
+  min-width: 0;
+}
+
+/* A quiet line: the icon, the words, then the time in the faintest tier. */
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+  margin: 0;
+  padding-inline: 4px;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.lineIcon {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  transform: translateY(2px);
+}
+
+.lineText {
+  flex: 1 1 200px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.lineTime {
+  font-size: var(--text-12);
+  white-space: nowrap;
+  color: var(--ink-60);
+}
+
+/* ── Note ───────────────────────────────────────────────────────────────── */
+.note {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
+  background: var(--paper);
+}
+
+.noteHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.noteMeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.noteAvatar {
+  display: inline-flex;
+  flex: none;
+}
+
+.noteByline {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.noteAuthor {
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+}
+
+.noteTime {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 8px;
+  font-size: var(--text-12);
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+
+.noteEdited {
+  font-style: italic;
+}
+
+/* The two icon buttons keep their 44px targets and tuck into the card's
+   corner. */
+.noteActions {
+  display: flex;
+  flex: none;
+  gap: 2px;
+  margin: -8px -10px 0 0;
+}
+
+.noteBody {
+  max-width: 68ch;
+  margin: 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+}
+
+.noteEditor {
+  display: flex;
+  flex-direction: column;
+}
+
+.editorActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 10px;
+}
+
+/* The small buttons keep a 44px target on a phone, whatever the pointer
+   reports. */
+@media (--md) {
+  .composerActions > .phoneTarget,
+  .editorActions > .phoneTarget {
+    min-height: 44px;
+  }
+}

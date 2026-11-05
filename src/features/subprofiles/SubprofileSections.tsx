@@ -3,6 +3,17 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { isUpcoming, sectionShape } from "./personaSkinRender";
 import type { PersonaViewMode } from "./personaSkinRender";
 import { SubprofileItemRow } from "./SubprofileItemRow";
+import { PersonaSectionHeader } from "./PersonaSectionHeader";
+import { PoemsEmptyOwner } from "./PoemsEmptyOwner";
+import { PoemsToc } from "./PoemsToc";
+import { EventsEmptyOwner } from "./EventsEmptyOwner";
+import { EventsTimeline } from "./EventsTimeline";
+import { PosterCreditsGrid } from "./PosterCreditsGrid";
+import { isEventSection } from "./eventDates";
+import {
+  ownerEmptyEventSection,
+  withOwnerEmptySections,
+} from "./ownerPoemsSection";
 import { SubprofileItemTile } from "./SubprofileItemTile";
 import { PersonaStudioPlaylists } from "./PersonaStudioPlaylists";
 import { PersonaStudioReleases } from "./PersonaStudioReleases";
@@ -24,6 +35,7 @@ export function SectionBody({
   onOpenWork,
   onOpenGalleryPhoto,
   onOpenPoem,
+  onOpenEvent,
   displayName,
   accent,
   kind,
@@ -40,6 +52,9 @@ export function SectionBody({
   /** Opens the poem reader modal on a clicked `poems` row. Only wired when
    *  `interactive` (never in the editor preview). */
   onOpenPoem?: (item: SubprofileItemView) => void;
+  /** Opens the event sheet on a clicked Poster (collective) `events` or
+   *  `nights` row. Only wired when `interactive`. */
+  onOpenEvent?: (item: SubprofileItemView) => void;
   /** The persona's display name — used to derive per-photo alt text for the
    *  caption-less `gallery` section (`subprofiles:galleryPhotoAlt`). */
   displayName: string;
@@ -154,26 +169,53 @@ export function SectionBody({
     );
   }
 
+  // A section holds one kind of item, so its first row names the section.
+  // On a Poster page the events read as a timeline, and the clients and the
+  // promoter's roster as a ruled grid of names.
+  const sectionName = items[0]?.section;
+  if (skin === "collective" && sectionName && isEventSection(sectionName)) {
+    return (
+      <EventsTimeline
+        items={items}
+        section={sectionName}
+        interactive={interactive}
+        onOpenEvent={onOpenEvent}
+      />
+    );
+  }
+  if (
+    skin === "collective" &&
+    (sectionName === "clients" || sectionName === "roster")
+  ) {
+    return <PosterCreditsGrid items={items} interactive={interactive} />;
+  }
+
+  // The poems section reads as contents grouped by year.
+  if (sectionName === "poems") {
+    return (
+      <PoemsToc
+        items={items}
+        skin={skin}
+        interactive={interactive}
+        accent={accent}
+        kind={kind}
+        onOpenPoem={onOpenPoem}
+      />
+    );
+  }
+
   return (
     <div className="pp-list">
-      {items.map((item, index) => {
-        const poemOpen =
-          interactive && item.section === "poems" && onOpenPoem
-            ? onOpenPoem
-            : undefined;
-        return (
-          <SubprofileItemRow
-            key={`${item.title}::${item.date}::${index}`}
-            item={item}
-            skin={skin}
-            interactive={interactive}
-            accent={accent}
-            kind={kind}
-            onOpen={poemOpen}
-            hideBody={item.section === "poems"}
-          />
-        );
-      })}
+      {items.map((item, index) => (
+        <SubprofileItemRow
+          key={`${item.title}::${item.date}::${index}`}
+          item={item}
+          skin={skin}
+          interactive={interactive}
+          accent={accent}
+          kind={kind}
+        />
+      ))}
     </div>
   );
 }
@@ -195,6 +237,7 @@ export function SubprofileSections({
   onOpenWork,
   onOpenGalleryPhoto,
   onOpenPoem,
+  onOpenEvent,
 }: {
   persona: PublicSubprofileView;
   skin: SkinFamily;
@@ -211,20 +254,32 @@ export function SubprofileSections({
   /** Opens the poem reader modal on a clicked `poems` row — see
    *  `SectionBody`'s default `list` branch. */
   onOpenPoem?: (item: SubprofileItemView) => void;
+  /** Opens the event sheet on a clicked Poster `events`/`nights` row, see
+   *  `SectionBody`'s collective events branch. */
+  onOpenEvent?: (item: SubprofileItemView) => void;
 }) {
   const { t } = useTranslation();
   const interactive = mode !== "preview";
+  const isOwner = mode === "owner";
   const studioSection = studioSectionFor(persona.kind);
   const studio = usePersonaStudio(persona);
   const hasStudioContent =
     studio.releases.length > 0 || studio.playlists.length > 0;
-  const hasStudioSection = persona.sections.some(
+  // Only the owner sees a poems section before it has any poems in it, and
+  // on a Poster page an events (or nights) section before the first event.
+  const sections = isOwner
+    ? withOwnerEmptySections(persona.sections, persona.kind)
+    : persona.sections;
+  const ownerEventSection = isOwner
+    ? ownerEmptyEventSection(persona.kind)
+    : null;
+  const hasStudioSection = sections.some(
     (section) => section.section === studioSection,
   );
 
   return (
     <>
-      {persona.sections.map((section) => {
+      {sections.map((section) => {
         // Only the one item the Spotlight shows leaves its list. Matching on
         // `isFeatured` alone dropped a second starred item from the page
         // entirely, shown neither in the Spotlight nor in its own section.
@@ -236,28 +291,50 @@ export function SubprofileSections({
             : section.items;
         const isStudioSection =
           section.section === studioSection && hasStudioContent;
+        const isOwnerEmptyPoems =
+          isOwner &&
+          section.section === "poems" &&
+          section.items.length === 0 &&
+          !isStudioSection;
+        if (isOwnerEmptyPoems) {
+          return (
+            <PoemsEmptyOwner
+              key={section.section}
+              personaId={persona.id}
+              labelKey={section.labelKey}
+            />
+          );
+        }
+        const isOwnerEmptyEvents =
+          section.section === ownerEventSection &&
+          section.items.length === 0 &&
+          !isStudioSection;
+        if (isOwnerEmptyEvents) {
+          return (
+            <EventsEmptyOwner
+              key={section.section}
+              personaId={persona.id}
+              section={section.section}
+              labelKey={section.labelKey}
+            />
+          );
+        }
         if (items.length === 0 && !isStudioSection) return null;
         const shape = sectionShape(section.section, skin, items);
         return (
           <section
             key={section.section}
             className="pp-sec"
+            data-section={section.section}
             data-preview-anchor={`section:${section.section}`}
             aria-labelledby={`pp-sec-${section.section}`}
           >
-            <header>
-              <h2 id={`pp-sec-${section.section}`}>{t(section.labelKey)}</h2>
-              {items.length > 1 && (
-                <span
-                  className="count"
-                  aria-label={t("subprofiles:section.countLabel", {
-                    count: items.length,
-                  })}
-                >
-                  {items.length}
-                </span>
-              )}
-            </header>
+            <PersonaSectionHeader
+              section={section.section}
+              labelKey={section.labelKey}
+              items={items}
+              captionItems={section.items}
+            />
             {isStudioSection && (
               <>
                 <PersonaStudioReleases
@@ -279,6 +356,7 @@ export function SubprofileSections({
                 onOpenWork={onOpenWork}
                 onOpenGalleryPhoto={onOpenGalleryPhoto}
                 onOpenPoem={onOpenPoem}
+                onOpenEvent={onOpenEvent}
                 displayName={persona.displayName}
                 accent={persona.accent ?? undefined}
                 kind={persona.kind}
@@ -290,6 +368,7 @@ export function SubprofileSections({
       {studioSection && !hasStudioSection && hasStudioContent && (
         <section
           className="pp-sec"
+          data-section={studioSection}
           data-preview-anchor={`section:${studioSection}`}
           aria-labelledby={`pp-sec-${studioSection}`}
         >

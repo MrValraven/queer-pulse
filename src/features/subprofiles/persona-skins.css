@@ -212,13 +212,16 @@
 .pp {
   --pp-cover-rise: var(--nav-band-visible);
   /* The bio's Read more / Show less toggle (shared `ExpandableText`) would
-     otherwise be coral, which every skin's ground is free to make illegible —
+     otherwise be coral, which every skin's ground is free to make illegible:
      `stage`, `chair` and `classroom` already paint dark grounds with cream
      text, and a new skin can too. Each skin sets a readable `color` on `.pp`,
      so the toggle takes that and stays distinguishable by weight, chevron and
      hover underline instead of hue. Enumerating the dark skins here would
-     silently rot the next time one is added. */
-  --expandable-text-toggle-ink: inherit;
+     silently rot the next time one is added. The value is `currentColor`
+     because a CSS-wide keyword such as `inherit` is never stored as a custom
+     property's value: it makes the property itself inherit from `.pp`'s
+     parent, which sets none, so the toggle fell back to coral. */
+  --expandable-text-toggle-ink: currentColor;
 }
 .pp[data-cover-rise="true"]:is(
     [data-skin="stage"],
@@ -652,6 +655,11 @@
     flex: 0 0 100%;
     justify-content: center;
   }
+  /* The page skin's quiet pills keep their natural widths, centred as a group:
+     a stretched wrapper left its button floating in a wide empty slot. */
+  .pp[data-skin="page"] .pp-acts > :not(.pp-avail):not(.pp-moreMenu) {
+    flex: 0 1 auto;
+  }
   /* Bio was a sibling of the identity block, so it never inherited the centered
      column — center it explicitly so alignment no longer breaks mid-hero. */
   .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-bio {
@@ -716,6 +724,9 @@
   color: var(--ink-40);
   font-weight: 600;
 }
+.pp-sec .count-caption {
+  display: none;
+}
 .pp-list {
   display: flex;
   flex-direction: column;
@@ -764,6 +775,69 @@ button.pp-row {
   color: inherit;
   text-align: left;
   width: 100%;
+  cursor: pointer;
+  /* A skin that publishes a text-safe tint (`--sk-text`, the dark grounds)
+     lends it to the cue; every other skin paints the raw persona tint. */
+  --pp-open-tint: var(--sk-text, var(--sk-tint));
+}
+/* Nothing else told a reader a poem row opens the poem, so the row carries
+   three quiet cues: a trailing chevron in the persona tint, a tint underline
+   under the title on hover, and the title taking the tint while pressed (the
+   touch feedback). The underline is always on and transparent at rest so its
+   colour can fade in. */
+button.pp-row b {
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition:
+    text-decoration-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+button.pp-row .pp-open {
+  order: 99;
+  margin-left: auto;
+  align-self: center;
+  display: inline-flex;
+  color: var(--pp-open-tint);
+  font-size: var(--text-16);
+  line-height: 1;
+  transition: transform var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  button.pp-row:hover b {
+    text-decoration-color: var(--pp-open-tint);
+  }
+  button.pp-row:hover .pp-open {
+    transform: translateX(3px);
+  }
+}
+button.pp-row:active b {
+  color: var(--pp-open-tint);
+}
+button.pp-row:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+@media (prefers-reduced-motion: reduce) {
+  button.pp-row .pp-open {
+    transition: none;
+  }
+  button.pp-row:hover .pp-open {
+    transform: none;
+  }
+}
+/* The dark theme leaves the brand tints unflipped, so a plum or violet cue
+   would sink into a dark ground. Lift it most of the way toward the skin's ink,
+   which keeps the hue and stays legible on any ground that flipped. */
+[data-theme="dark"] button.pp-row {
+  --pp-open-tint: color-mix(
+    in srgb,
+    var(--sk-text, var(--sk-tint)) 40%,
+    var(--ink)
+  );
 }
 .pp-link .href {
   margin-left: auto;
@@ -1437,7 +1511,11 @@ button.pp-row {
   white-space: nowrap;
   gap: 20px;
 }
+/* One ink on the page: the hero's strong text (the name, the ghost buttons'
+   labels) takes the skin ink in both themes instead of the app's plum or
+   cream, so it matches the bio and the chapter headings. */
 .pp[data-skin="page"] .pp-hero {
+  --text-strong: var(--ink);
   padding-top: 0;
 }
 .pp[data-skin="page"] .pp-id {
@@ -1464,7 +1542,10 @@ button.pp-row {
 .pp[data-skin="page"] .pp-av:not(:has(img)) {
   display: none;
 }
+/* The base `flex: 1 1 340px` sizes a ROW item's width; in this column it
+   became a 340px minimum height and left a void under the meta line. */
 .pp[data-skin="page"] .pp-text {
+  flex: none;
   align-items: center;
   gap: 14px;
 }
@@ -1475,32 +1556,102 @@ button.pp-row {
   font-weight: 300;
   font-size: clamp(2.25rem, 5.6cqw, 3.625rem);
   letter-spacing: -0.03em;
+  color: var(--ink);
 }
 .pp[data-skin="page"] .pp-tagline {
   font-style: italic;
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(1.0625rem, 2cqw, 1.3125rem);
-  color: var(--accent-ink);
+  color: var(--accent-text);
   max-width: 32ch;
 }
+/* The bio is set in the page's own face. Ragged by default: a narrow column
+   justified opens rivers between the words, so justification and hyphens
+   wait for a measure wide enough to absorb them. The space above is a margin
+   because ExpandableText clamps this box to whole lines with `max-height`,
+   and a border-box padding there would eat into those lines. */
 .pp[data-skin="page"] .pp-bio {
   max-width: 600px;
-  margin: 0 auto;
+  margin: var(--section-y-48) auto 0;
+  font-family: var(--serif);
+  font-weight: 300;
   font-size: var(--text-17);
-  line-height: 1.9;
-  text-align: justify;
-  hyphens: auto;
-  padding-top: 34px;
+  line-height: 1.65;
+  text-align: start;
+  text-wrap: pretty;
+  padding-top: 0;
 }
+@container (min-width: 560px) {
+  .pp[data-skin="page"] .pp-bio {
+    text-align: justify;
+    hyphens: auto;
+  }
+}
+/* A two-line drop cap. The float is the fallback for engines without
+   `initial-letter`, sized so the cap runs from the first line's cap height
+   to the second line's baseline at this 1.65 leading. */
 .pp[data-skin="page"] .pp-bio::first-letter {
   font-family: var(--serif);
-  font-size: var(--text-58);
-  line-height: 0.84;
+  font-size: var(--text-56);
+  line-height: 0.8;
   float: left;
-  padding: 7px 12px 0 0;
+  padding: 7px 10px 0 0;
   font-weight: 300;
   color: var(--accent-ink);
+}
+@supports (initial-letter: 2) {
+  .pp[data-skin="page"] .pp-bio::first-letter {
+    initial-letter: 2;
+    font-size: inherit;
+    line-height: inherit;
+    float: none;
+    padding: 0;
+    margin-inline-end: 0.3em;
+  }
+}
+/* The bio's Read more toggle: a 44px tap target from padding alone, starting
+   on the bio column's left edge, set in the bio's own serif italic so it reads
+   as part of the page. */
+.pp[data-skin="page"] .pp-bio + button {
+  min-height: 44px;
+  padding-block: 12px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--text-15);
+  margin-block-start: 0;
+  margin-inline-start: max(0px, (100% - 600px) / 2);
+}
+/* A quieter action row: the small Button size and no coloured glow, so the
+   page's type leads. Set here because the Message button comes from the
+   messages feature and takes no `size` prop; the values mirror
+   Button.module.css `.sm`. The glow is zeroed through the
+   Button's own `--button-glow`, so its focus halo still shows. */
+.pp[data-skin="page"] .pp-acts :is(a[class], button):not(.pp-moreMenu *) {
+  --button-glow: 0 0 transparent;
+  min-height: 40px;
+  padding: 8px 16px;
+  font-size: var(--text-13-5);
+}
+@media (pointer: coarse) {
+  .pp[data-skin="page"] .pp-acts :is(a[class], button):not(.pp-moreMenu *) {
+    min-height: 44px;
+  }
+}
+/* With a mouse the pills above are 40px tall, so the more-menu trigger beside
+   them shrinks from its 44px touch size to the same 40px circle. */
+@media (pointer: fine) {
+  .pp[data-skin="page"] .pp-moreMenu > button {
+    width: 40px;
+    height: 40px;
+  }
+}
+/* Follow and Endorse stay ghosts once pressed here (`isQuiet`), so a pressed
+   one reads by a full-ink border and a faint ink wash beside its check icon. */
+.pp[data-skin="page"] .pp-acts [aria-pressed="true"] {
+  border-color: var(--ink);
+  background: rgba(var(--skin-page-ink-rgb), 0.06);
 }
 .pp[data-skin="page"] .pp-body,
 .pp[data-skin="page"] .pp-foot {
@@ -1531,16 +1682,42 @@ button.pp-row {
   color: var(--ink-40);
   padding-top: 40px;
 }
+/* No folio after the last chapter: the colophon closes the page instead. */
+.pp[data-skin="page"] .pp-sec:not(:has(~ .pp-sec))::after {
+  content: none;
+}
+/* Every chapter opens the same way: an italic title centred over the column,
+   and under it, when the section counts more than one item, the count as a
+   small-caps caption line (the poems section writes its own fuller caption). */
 .pp[data-skin="page"] .pp-sec > header {
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  gap: 6px;
   border-bottom: none;
   padding-bottom: 18px;
 }
 .pp[data-skin="page"] .pp-sec h2 {
-  font-weight: 400;
+  font-weight: 300;
   font-style: italic;
-  font-size: var(--text-23);
-  letter-spacing: 0.01em;
+  font-size: var(--text-heading);
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-align: center;
+}
+.pp[data-skin="page"] .pp-sec .count {
+  display: none;
+}
+.pp[data-skin="page"] .pp-sec .count-caption {
+  display: block;
+  font-family: var(--serif);
+  font-size: var(--text-15);
+  font-weight: 400;
+  font-variant-caps: small-caps;
+  font-variant-numeric: oldstyle-nums;
+  letter-spacing: 0.06em;
+  color: var(--ink-40);
+  text-align: center;
 }
 .pp[data-skin="page"] .pp-list {
   gap: 2px;
@@ -1561,14 +1738,23 @@ button.pp-row {
   display: inline;
 }
 .pp[data-skin="page"] .pp-row small {
+  font-family: var(--serif);
   font-variant: small-caps;
   letter-spacing: 0.06em;
   font-size: var(--text-15);
   color: var(--ink-60);
   display: inline;
 }
-.pp[data-skin="page"] .pp-row b::after {
+/* The comma lives on the small that follows the title, so a title with nothing
+   after it gets no trailing comma and the hover underline on the b stops at the
+   last letter. JSX leaves no whitespace between the two, which keeps the comma
+   glued to the title's last word. */
+.pp[data-skin="page"] .pp-row b + small::before {
   content: ", ";
+  font-family: var(--serif);
+  font-size: var(--text-19);
+  font-variant: normal;
+  letter-spacing: normal;
   color: var(--ink-60);
 }
 .pp[data-skin="page"] .pp-row .when {
@@ -2750,10 +2936,21 @@ button.pp-row {
    below). Flipping only the ground here would strand that dark-brown ink on
    the near-black dark ground — so flip the ink to a warm off-white too, and
    its -rgb triplet so the derived rgba() hairlines/opacities flip with it. */
-[data-theme="dark"] .pp[data-skin="page"] {
-  --skin-page-ground: #120c1e;
+/* The poem reader is portaled to body, outside `.pp`, so it takes the same dark
+   tokens through its own `data-persona-skin` hook. */
+[data-theme="dark"] .pp[data-skin="page"],
+[data-theme="dark"] [data-persona-skin="page"] {
+  /* A warm near-black under the warm ink, so the page reads as one paper in
+     the dark too (ink-40 dates on it: 6.38:1). */
+  --skin-page-ground: #1a1612;
   --skin-page-ink: #ece3d6;
   --skin-page-ink-rgb: 236, 227, 214;
+}
+/* Painted here because the generic dark `.pp` rule above ties the skin's own
+   `background` on specificity and, coming later, used to paint the app's
+   violet black. */
+[data-theme="dark"] .pp[data-skin="page"] {
+  background: var(--skin-page-ground);
 }
 [data-theme="dark"] .pp[data-skin="page"] .pp-runhead,
 [data-theme="dark"] .pp[data-skin="page"] .pp-foot {
@@ -3205,17 +3402,39 @@ button.pp-row {
   text-transform: none;
   letter-spacing: 0;
   font-size: var(--text-14);
-  color: var(--accent-ink);
+  color: var(--accent-text);
+}
+/* The page skin's one closing block (`PersonaColophon`): a hairline at the
+   column's width, the owner's note, the © and provenance lines, then a small
+   lozenge drawn in CSS to end the page, all centred in the 600px column. */
+.pp-colophon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  max-width: 600px;
+  margin: var(--section-y-56) auto 0;
+  padding: 28px 0 var(--section-y-56);
+  border-top: 0.5px solid rgba(var(--skin-page-ink-rgb), 0.25);
+  text-align: center;
+}
+.pp-colophon::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  margin-top: 10px;
+  border: 1px solid var(--accent-ink);
+  transform: rotate(45deg);
 }
 .colophon {
-  max-width: 600px;
-  margin: 26px auto 0;
-  text-align: center;
-  font-size: var(--text-12-5);
+  max-width: 44ch;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-14);
   font-style: italic;
-  color: var(--ink-40);
-  border-top: 0.5px solid rgba(var(--skin-page-ink-rgb), 0.25);
-  padding-top: 22px;
+  line-height: 1.55;
+  color: var(--ink-60);
+  text-wrap: balance;
 }
 /* The date sits in its own left column, lifted out of the title's inline flow.
    That column has to hold the widest value `formatMonthYear` can produce in
@@ -3259,8 +3478,160 @@ button.pp-row {
     margin-bottom: 2px;
   }
 }
-.pp[data-skin="page"] .pp-row b::after {
-  content: ", ";
+/* A page row is a block of inline type, so the base flex placement of the
+   chevron does nothing here. Pin it to the right edge, centred on the row, and
+   reserve a gutter on that side so a long title wraps before it reaches the
+   chevron. The <=480px container layout only drops the left date column, so
+   this gutter holds there too. */
+.pp[data-skin="page"] button.pp-row {
+  padding-right: 2rem;
+  /* The page sets everything in one warm ink, so the chevron, hover underline
+     and pressed title take its quieter step in place of the persona tint. The
+     ink tokens flip with the theme, so this also covers the dark page. */
+  --pp-open-tint: var(--ink-60);
+}
+.pp[data-skin="page"] button.pp-row .pp-open {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  text-indent: 0;
+}
+@media (hover: hover) {
+  .pp[data-skin="page"] button.pp-row:hover .pp-open {
+    transform: translate(3px, -50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pp[data-skin="page"] button.pp-row:hover .pp-open {
+    transform: translateY(-50%);
+  }
+}
+/* The poems section reads as a book's contents (`PoemsToc`). Its header is
+   every chapter's (above), with a fuller small-caps caption under the h2
+   ("9 poems · 2024 to 2026") in place of the bare count. */
+.pp[data-skin="page"] .pp-sec-caption {
+  font-family: var(--serif);
+  font-size: var(--text-15);
+  font-variant-caps: small-caps;
+  font-variant-numeric: oldstyle-nums;
+  letter-spacing: 0.06em;
+  color: var(--ink-40);
+  text-align: center;
+}
+/* One group per year, newest first, each under a quiet italic year. The year
+   carries the date, so a row keeps only a short month on its right. */
+.pp[data-skin="page"] .pp-toc-year {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--text-19);
+  font-variant-numeric: oldstyle-nums;
+  color: var(--ink-60);
+  text-align: center;
+  margin: var(--section-y-48) 0 4px;
+}
+.pp[data-skin="page"] .pp-toc-group:first-child .pp-toc-year {
+  margin-top: var(--gap-sm);
+}
+/* A poem row drops the left date column for a two-track grid: the title with
+   its subtitle under it on the left, the month on the right. The chevron
+   stays absolutely placed in the gutter the button keeps on its right. */
+.pp[data-skin="page"] .pp-toc .pp-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 var(--gap-sm);
+  align-items: baseline;
+  min-height: 44px;
+  padding: 12px 0;
+}
+.pp[data-skin="page"] .pp-toc button.pp-row {
+  padding-right: 2rem;
+}
+.pp[data-skin="page"] .pp-toc .pp-row > * {
+  grid-column: 1;
+}
+.pp[data-skin="page"] .pp-toc .pp-row b {
+  display: block;
+  line-height: 1.55;
+}
+/* A contents row can run to two or three lines (a long title, a subtitle), and
+   the month sits on the title's first line, so the chevron pins to that line
+   instead of the row's middle: it starts at the row's 12px top padding and
+   spans one title line box (19px type at the 1.55 leading set just above). */
+.pp[data-skin="page"] .pp-toc button.pp-row .pp-open {
+  top: 12px;
+  height: calc(var(--text-19) * 1.55);
+  display: flex;
+  align-items: center;
+  transform: none;
+}
+@media (hover: hover) {
+  .pp[data-skin="page"] .pp-toc button.pp-row:hover .pp-open {
+    transform: translateX(3px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pp[data-skin="page"] .pp-toc button.pp-row:hover .pp-open {
+    transform: none;
+  }
+}
+.pp[data-skin="page"] .pp-toc .pp-row small {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-variant: normal;
+  letter-spacing: normal;
+  font-size: var(--text-15);
+  color: var(--ink-60);
+}
+/* The subtitle sits on its own line, so the comma that joins it to the title
+   in every other section goes. */
+.pp[data-skin="page"] .pp-toc .pp-row b + small::before {
+  content: none;
+}
+.pp[data-skin="page"] .pp-toc .pp-row .when {
+  grid-column: 2;
+  grid-row: 1;
+  position: static;
+  width: auto;
+  font-size: var(--text-13);
+  font-variant-numeric: oldstyle-nums tabular-nums;
+  color: var(--ink-40);
+  white-space: nowrap;
+  text-align: right;
+}
+/* On a narrow card the year heading already dates the poem: a row is the title
+   and, when it has one, the subtitle. */
+@container (max-width:480px) {
+  .pp[data-skin="page"] .pp-toc .pp-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pp[data-skin="page"] .pp-toc .pp-row .when {
+    display: none;
+  }
+  /* A phone shows several years in one screen, so the 48px between them
+     reads as a section break. The first year keeps its smaller top margin
+     through the more specific `:first-child` rule above. */
+  .pp[data-skin="page"] .pp-toc-year {
+    margin-top: var(--gap-lg);
+  }
+}
+/* The owner's poems section before the first poem: a quiet line and the way
+   to the editor, centred under the heading. */
+.pp-empty-owner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-sm);
+  text-align: center;
+}
+.pp-empty-owner p {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--text-17);
+  color: var(--ink-60);
 }
 
 /* — WORKSHOP — */
@@ -3960,7 +4331,11 @@ button.pp-row {
 .pp[data-skin="studio"] .partof > * {
   transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.pp[data-skin="page"] * {
+/* The page holds still: no section reveal, no tile motion. The one exception
+   is a poem row's hover and press feedback, so its title underline and colour
+   fade and its chevron nudges. Reduced motion still flattens those through the
+   global rule in base.css. */
+.pp[data-skin="page"] *:not(button.pp-row b, button.pp-row .pp-open) {
   transition: none !important;
 }
 .pp[data-skin="workshop"] .pp-row,
@@ -5708,7 +6083,8 @@ button.pp-row {
 }
 
 /* ═══════════ POSTER (collective) — riso ink on cheap paper ═══════════ */
-.pp[data-skin="collective"] {
+.pp[data-skin="collective"],
+[data-persona-skin="collective"] {
   background: var(--skin-collective-ground);
   color: #141210;
   --ink: #141210;
@@ -5716,6 +6092,31 @@ button.pp-row {
   --ink-40: rgba(20, 18, 16, 0.61);
   --text-strong: #141210;
   --sk-ink: #141210;
+  /* Row and divider rules, the hover wash on a row that opens something, and
+     the solid block behind an upcoming event's date. All three mix from the
+     skin's own ink and ground, so they follow the dark block below. The date
+     fill is half accent for a riso punch and keeps the poster ink on it at
+     5.2:1 or more for every accent (plum is the lowest; 55% would drop plum
+     to 4.53:1), measured against this ground. */
+  --sk-rule: color-mix(in srgb, var(--ink) 20%, transparent);
+  --sk-hover: color-mix(in srgb, var(--ink) 4%, transparent);
+  --sk-date-fill: color-mix(
+    in srgb,
+    var(--sk-tint) 50%,
+    var(--skin-collective-ground)
+  );
+  /* The accent as type on the paper: half accent, half ink. 4.8:1 or more on
+     the ground for every accent in both themes (amber in light is the lowest;
+     the plain accent was 2.5:1 for coral and 1.6:1 for amber). */
+  --sk-tint-text: color-mix(in srgb, var(--sk-tint) 50%, var(--ink));
+  /* The ink panel the spotlight and the NEXT band print on: the ink as the
+     ground and the paper as the type, 15.9:1 in light and 16.1:1 in dark. The
+     accent on it is `--sk-date-fill`, as type (the eyebrow, the label) or as
+     a block under ink (the date stamp, the button): 5.2:1 or more in light
+     and 4.8:1 or more in dark for every accent. Both resolve here, so a
+     panel that swaps `--ink` for its own type still reads the page's ink. */
+  --sk-panel: var(--ink);
+  --sk-panel-ink: var(--skin-collective-ground);
 }
 .pp[data-skin="collective"] .wrap {
   max-width: 1040px;
@@ -5738,9 +6139,12 @@ button.pp-row {
   gap: 14px;
   width: 100%;
 }
+/* Ink on the accent mixed into the paper, the date blocks' pairing: 5.2:1 or
+   more in light and 4.8:1 or more in dark for every accent (cream on the
+   plain accent was 2.6:1 on coral). */
 .pp[data-skin="collective"] .pp-kind {
-  background: var(--sk-tint);
-  color: var(--sk-on);
+  background: var(--sk-date-fill);
+  color: var(--ink);
   border-radius: 0;
   font-size: var(--text-11);
   font-weight: 700;
@@ -5786,7 +6190,9 @@ button.pp-row {
   font-family: "Archivo Black", var(--sans);
   font-weight: 400;
   text-transform: uppercase;
-  font-size: clamp(1.375rem, 3.2cqw, 2.375rem);
+  /* The 28px floor keeps a phone's section heading level with the
+     spotlight's title. */
+  font-size: clamp(var(--text-28), 3.2cqw, 2.375rem);
   letter-spacing: -0.02em;
   line-height: 1;
   color: var(--ink);
@@ -5797,13 +6203,13 @@ button.pp-row {
 }
 .pp[data-skin="collective"] .pp-row {
   border-top: none;
-  border-bottom: 2px solid rgba(20, 18, 16, 0.2);
+  border-bottom: 2px solid var(--sk-rule);
   padding: 20px 2px;
   align-items: baseline;
   gap: 20px;
 }
 .pp[data-skin="collective"] .pp-row:last-child {
-  border-bottom: 2px solid rgba(20, 18, 16, 0.2);
+  border-bottom: 2px solid var(--sk-rule);
 }
 .pp[data-skin="collective"] .pp-row b {
   font-family: "Archivo Black", var(--sans);
@@ -5828,7 +6234,7 @@ button.pp-row {
   font-size: var(--text-14);
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  color: var(--sk-tint);
+  color: var(--sk-tint-text);
 }
 .pp[data-skin="collective"] .pp-row p {
   font-size: var(--text-15-5);
@@ -5873,9 +6279,16 @@ button.pp-row {
 .plate {
   display: none;
 }
+/* The spotlight prints on the ink panel. It swaps the ink tiers for the
+   paper inside, so every base rule that reads `--ink` (the description, the
+   credits, the state chip) follows without a rule of its own. */
 .pp[data-skin="collective"] .pp-spot {
-  background: var(--sk-tint);
-  color: var(--sk-on);
+  --ink: var(--sk-panel-ink);
+  --ink-60: color-mix(in srgb, var(--sk-panel-ink) 80%, var(--sk-panel));
+  --ink-40: color-mix(in srgb, var(--sk-panel-ink) 72%, var(--sk-panel));
+  --text-strong: var(--sk-panel-ink);
+  background: var(--sk-panel);
+  color: var(--sk-panel-ink);
   border: none;
   border-radius: 0;
 }
@@ -5886,10 +6299,45 @@ button.pp-row {
   font-size: clamp(1.75rem, 4.4cqw, 3.25rem);
   line-height: 0.92;
   letter-spacing: -0.03em;
-  color: var(--sk-on);
+  color: var(--sk-panel-ink);
+  text-wrap: balance;
+  overflow-wrap: break-word;
 }
 .pp[data-skin="collective"] .pp-spot .art {
   border-radius: 0;
+}
+/* A featured item with no picture drops the empty frame instead of showing
+   the striped "Image" placeholder (the quest skin does the same). */
+.pp[data-skin="collective"] .pp-spot:not([data-has-image]) .art {
+  display: none;
+}
+.pp[data-skin="collective"] .pp-spot .pp-spot-eyebrow {
+  font-family: "Archivo Black", var(--sans);
+  font-weight: 400;
+  font-size: var(--text-12);
+  letter-spacing: 0.16em;
+  color: var(--sk-date-fill);
+}
+/* The action is a printed block: ink on the accent fill, square, no glow. On
+   hover it turns to paper on the panel. */
+.pp[data-skin="collective"] .pp-spot .pp-spot-cta {
+  --button-glow: 0 0 transparent;
+  margin-top: 6px;
+  background: var(--sk-date-fill);
+  color: var(--sk-ink);
+  border-radius: 0;
+  font-family: "Archivo Black", var(--sans);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+@media (hover: hover) {
+  .pp[data-skin="collective"]
+    .pp-spot
+    .pp-spot-cta:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--sk-panel-ink);
+    color: var(--sk-panel);
+  }
 }
 .pp[data-skin="collective"] .endo,
 .pp[data-skin="collective"] .partof > * {
@@ -5917,40 +6365,100 @@ button.pp-row {
 .principles {
   display: none;
 }
+/* The NEXT band, under the tagline: printed on the ink panel in both themes,
+   the label in the accent fill (5.2:1 or more in light, 4.8:1 in dark), the
+   title in Archivo caps, the date and venue pushed to the far edge on a wide
+   page. A narrow page stacks the three flush left (below). */
 .pp[data-skin="collective"] .nextaction {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 18px;
-  margin-top: 22px;
+  align-items: baseline;
+  gap: 6px 18px;
+  width: 100%;
+  margin-block: 4px;
   padding: 14px 18px;
-  background: var(--ink);
-  color: var(--skin-collective-ground);
+  background: var(--sk-panel);
+  color: var(--sk-panel-ink);
+  text-decoration: none;
+  /* The title's size, shared with the trailing arrow so the two match. */
+  --nextaction-title-size: clamp(1.125rem, 2.2cqw, 1.5rem);
 }
 .pp[data-skin="collective"] .nextaction-label {
   font-family: "Archivo Black", var(--sans);
   text-transform: uppercase;
   font-size: var(--text-12);
   letter-spacing: 0.16em;
-  color: var(--sk-tint);
+  color: var(--sk-date-fill);
 }
 .pp[data-skin="collective"] .nextaction b {
   font-family: "Archivo Black", var(--sans);
   font-weight: 400;
   text-transform: uppercase;
-  font-size: clamp(1.125rem, 2.2cqw, 1.5rem);
+  font-size: var(--nextaction-title-size);
   letter-spacing: -0.01em;
+  overflow-wrap: break-word;
+}
+.pp[data-skin="collective"] .nextaction-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  margin-left: auto;
 }
 .pp[data-skin="collective"] .nextaction-when {
   font-weight: 700;
   font-size: var(--text-14);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  margin-left: auto;
 }
+/* The paper at 80% over the ink: 11.6:1 in light, 11.9:1 in dark. */
 .pp[data-skin="collective"] .nextaction-where {
   font-size: var(--text-14);
-  opacity: 0.7;
+  color: color-mix(in srgb, var(--sk-panel-ink) 80%, var(--sk-panel));
+}
+/* The band's trailing arrow says it opens the event: the band's own colour
+   at the title's size, its centre on the caps' middle, and a 3px nudge
+   along on hover. */
+.pp[data-skin="collective"] .nextaction-go {
+  flex: none;
+  align-self: baseline;
+  width: 1em;
+  height: 1em;
+  font-size: var(--nextaction-title-size);
+  color: inherit;
+  transform: translateY(0.12em);
+  transition: transform var(--dur-fast) var(--ease);
+}
+.pp[data-skin="collective"] .nextaction.is-link {
+  transition: background-color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .pp[data-skin="collective"] .nextaction.is-link:hover {
+    background: color-mix(in srgb, var(--sk-panel) 86%, var(--sk-panel-ink));
+  }
+  .pp[data-skin="collective"] .nextaction.is-link:hover .nextaction-go {
+    transform: translate(3px, 0.12em);
+  }
+  .pp[data-skin="collective"] .nextaction.is-link:hover b {
+    text-decoration: underline;
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.12em;
+  }
+}
+.pp[data-skin="collective"] .nextaction.is-link:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+@container (max-width: 640px) {
+  .pp[data-skin="collective"] .nextaction {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .pp[data-skin="collective"] .nextaction-info {
+    margin-left: 0;
+  }
 }
 .pp[data-skin="collective"] .principles {
   display: block;
@@ -5959,7 +6467,7 @@ button.pp-row {
   font-family: "Archivo Black", var(--sans);
   font-weight: 400;
   text-transform: uppercase;
-  font-size: clamp(1.375rem, 3.2cqw, 2.375rem);
+  font-size: clamp(var(--text-28), 3.2cqw, 2.375rem);
   letter-spacing: -0.02em;
   border-bottom: 4px solid var(--ink);
   padding-bottom: 8px;
@@ -5975,7 +6483,7 @@ button.pp-row {
 .pp[data-skin="collective"] .principles li {
   counter-increment: pr;
   padding: 20px 22px 20px 0;
-  border-bottom: 2px solid rgba(20, 18, 16, 0.2);
+  border-bottom: 2px solid var(--sk-rule);
   font-size: var(--text-17);
   line-height: 1.5;
   font-weight: 500;
@@ -5987,11 +6495,904 @@ button.pp-row {
   content: counter(pr, decimal-leading-zero);
   font-family: "Archivo Black", var(--sans);
   font-size: var(--text-14);
-  color: var(--sk-tint);
+  color: var(--sk-tint-text);
   padding-top: 3px;
   flex: none;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
+}
+
+/* ── POSTER frame: event poster, flush-left hero, page foot ──
+   The featured event prints as its own poster (`SubprofileEventSpotlight`):
+   the art in the riso grade at 4:5, then the stacked date at twice the row
+   size, the title, the venue and the line-up. The art takes 40% beside the
+   text from a 760px page, and the full width above it on a phone. */
+.pp[data-skin="collective"] .pp-spot-poster {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  padding: 0;
+}
+.pp[data-skin="collective"] .pp-spot-poster .art {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+}
+/* The picture is printed straight onto the panel, without the image slot's
+   hairline frame. */
+.pp[data-skin="collective"] .pp-spot .art .ph {
+  border: 0;
+}
+.pp[data-skin="collective"] .pp-spot-poster .txt {
+  align-self: center;
+  gap: 12px;
+  padding: clamp(22px, 4cqw, 44px);
+}
+/* The date stamp: the poster ink on the accent fill, the pairing of every
+   Poster date block, read against the page's own ink (`--sk-ink`), since the
+   panel swaps `--ink` for its paper. */
+.pp[data-skin="collective"] .pp-spot-poster .pp-ev-date {
+  align-self: flex-start;
+  min-width: 8rem;
+  min-height: 8rem;
+  gap: 6px;
+  margin-block: 4px 6px;
+  padding: 14px 18px;
+  background: var(--sk-date-fill);
+  color: var(--sk-ink);
+}
+.pp[data-skin="collective"] .pp-spot-poster .pp-ev-day {
+  font-size: var(--text-64);
+}
+.pp[data-skin="collective"] .pp-spot-poster .pp-ev-date.is-month .pp-ev-day {
+  font-size: var(--text-40);
+}
+.pp[data-skin="collective"] .pp-spot-poster .pp-ev-dow,
+.pp[data-skin="collective"] .pp-spot-poster .pp-ev-mon {
+  font-size: var(--text-16);
+}
+.pp[data-skin="collective"] .pp-spot-poster .pp-ev-yr {
+  font-size: var(--text-14);
+}
+/* Fill means upcoming: a featured event that has passed prints its stamp as
+   an outline in the panel's own paper, the way the archive rows drop the
+   fill. A border keeps the stamp's box the same size (border-box). */
+.pp[data-skin="collective"] .pp-spot-poster[data-upcoming="false"] .pp-ev-date {
+  background: none;
+  border: 2px solid var(--sk-panel-ink);
+  color: var(--sk-panel-ink);
+}
+/* Free text in place of a date ("Summer 2019") prints small on the panel. */
+.pp[data-skin="collective"] .pp-spot-poster .pp-ev-date.is-undated {
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+}
+.pp[data-skin="collective"] .pp-spot-poster .pp-ev-raw {
+  font-size: var(--text-15);
+  color: var(--ink-60);
+}
+.pp[data-skin="collective"] .pp-spot-venue {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.pp[data-skin="collective"] .pp-spot-venue svg {
+  flex: none;
+  width: 1em;
+  height: 1em;
+  transform: translateY(0.12em);
+}
+.pp[data-skin="collective"] .pp-spot-lineup {
+  margin: 0;
+  max-width: 48ch;
+  font-size: var(--text-15-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+/* "Doors 23:00" under the venue, in the venue's caps at the body-small size.
+   It reads the panel's `--ink-60`, the paper at 80% over the ink: 10.4:1 in
+   light and 9.4:1 on the dark panel. */
+.pp[data-skin="collective"] .pp-spot-doors {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+@container (min-width: 760px) {
+  .pp[data-skin="collective"] .pp-spot-poster[data-has-image] {
+    grid-template-columns: 40% minmax(0, 1fr);
+  }
+  /* Beside the text the art fills the row's full height, so a text column
+     taller than 4:5 never leaves bands of bare panel above and below the
+     picture. The picture crops to fit. */
+  .pp[data-skin="collective"] .pp-spot-poster[data-has-image] .art {
+    aspect-ratio: auto;
+    align-self: stretch;
+    min-height: 100%;
+  }
+  .pp[data-skin="collective"] .pp-spot-poster[data-has-image] .art > *,
+  .pp[data-skin="collective"] .pp-spot-poster[data-has-image] .art .ph {
+    height: 100%;
+  }
+  .pp[data-skin="collective"] .pp-spot-poster[data-has-image] .art img {
+    height: 100%;
+    object-fit: cover;
+  }
+  .pp[data-skin="collective"] .pp-spot-poster .pp-ev-date {
+    min-width: 9rem;
+    min-height: 9rem;
+  }
+  .pp[data-skin="collective"] .pp-spot-poster .pp-ev-day {
+    font-size: calc(var(--text-40) * 2);
+  }
+}
+
+/* The state chips: sold out mixes the coral with the ink (6.4:1 on the light
+   paper, 10.4:1 on the dark; the plain coral was 2.5:1), and a guest spot
+   takes the accent's text mix. On the ink panel they read the panel's own
+   ink and the accent fill. The event sheet is portaled outside `.pp` and
+   carries `data-persona-skin`, so it names the same chips. */
+.pp[data-skin="collective"] :is(.gigstate.sold_out, .gigstate.sold),
+[data-persona-skin="collective"] :is(.gigstate.sold_out, .gigstate.sold) {
+  color: color-mix(in srgb, var(--accent) 50%, var(--ink));
+}
+.pp[data-skin="collective"] .gigstate.guest,
+[data-persona-skin="collective"] .gigstate.guest {
+  color: var(--sk-tint-text);
+}
+/* The owner's name in the hero's owner line: the coral pulled toward the
+   ink, 6.4:1 on the light paper (the base --accent-ink was 3.6:1 here). */
+.pp[data-skin="collective"] .pp-owner em {
+  color: color-mix(in srgb, var(--accent) 50%, var(--ink));
+}
+.pp[data-skin="collective"] .pp-spot .gigstate.guest {
+  color: var(--sk-date-fill);
+}
+
+/* ── POSTER buttons: printed blocks ──
+   Every action on the page and in the event sheet prints like the kind chip
+   and the spotlight's call to action: square, Archivo caps, no glow. The
+   buttons are the shared `Button`, whose classes are hashed, so the shape
+   lands structurally: the hero's action row, the owner's empty events frame,
+   and the sheet's action row (the only links and buttons that sit straight
+   inside a `div` in the sheet's `article`). The more-menu's items and the
+   social icons keep out. A ghost's border prints in the ink; a filled
+   button has no border, so the colour lands on nothing. The glow is zeroed
+   through the Button's own `--button-glow`, so the focus halo still shows,
+   and the 44px floor and the focus outline stay the Button's own. */
+.pp[data-skin="collective"]
+  :is(.pp-acts, .pp-ev-empty-body)
+  :is(a[class], button):not([role="menuitem"], .pp-social-row > *),
+[data-persona-skin="collective"] article div > :is(a[class], button) {
+  --button-glow: 0 0 transparent;
+  border-radius: 0;
+  border-width: 2px;
+  border-color: var(--ink);
+  font-family: "Archivo Black", var(--sans);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+/* The sheet's selector is lighter than the Button's hover rules, so the
+   hover restates the missing glow and the ink border. */
+@media (hover: hover) {
+  [data-persona-skin="collective"]
+    article
+    div
+    > :is(a[class], button):hover:not(:disabled):not([aria-disabled="true"]) {
+    --button-glow: 0 0 transparent;
+    border-color: var(--ink);
+  }
+}
+/* The social icons print as small square stamps in the ink, and fill with
+   it on hover, like the sheet's close button. */
+.pp[data-skin="collective"] .pp-social-row > * {
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  background: none;
+  color: var(--ink);
+}
+@media (hover: hover) and (pointer: fine) {
+  .pp[data-skin="collective"] .pp-social-row > a:hover {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--skin-collective-ground);
+  }
+  /* On the spotlight's panel the ink is the paper, so the glyph takes the
+     panel colour. */
+  .pp[data-skin="collective"] .pp-spot .pp-social-row > a:hover {
+    color: var(--sk-panel);
+  }
+}
+.pp[data-skin="collective"] .pp-social-row > a:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* A phone reads the poster hero flush left: name, craft chip, tagline, NEXT
+   band, actions, counts and bio all hang from one left edge, in place of the
+   shared centred hero. */
+@container (max-width: 640px) {
+  .pp[data-skin="collective"] .pp-id {
+    align-items: flex-start;
+    text-align: left;
+  }
+  .pp[data-skin="collective"] .pp-text,
+  .pp[data-skin="collective"] .pp-taglineRow {
+    align-items: flex-start;
+  }
+  .pp[data-skin="collective"] .pp-social-row,
+  .pp[data-skin="collective"] .pp-meta,
+  .pp[data-skin="collective"] .pp-acts,
+  .pp[data-skin="collective"] .pp-acts > .pp-avail {
+    justify-content: flex-start;
+  }
+  .pp[data-skin="collective"] .pp-owner {
+    text-align: left;
+    justify-content: flex-start;
+  }
+  .pp[data-skin="collective"] .pp-bio {
+    max-width: 52ch;
+    margin-inline: 0;
+    text-align: left;
+  }
+}
+/* The bio's Read more: on the bio's left edge, a 44px tap target from
+   padding alone, set in the poster's small caps. */
+.pp[data-skin="collective"] .pp-bio + button {
+  min-height: 44px;
+  margin-block-start: 0;
+  padding-block: 12px;
+  font-size: var(--text-12-5);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* The page foot (`PersonaPosterColophon`): one 4px ink rule, then the
+   persona's line in Archivo caps and the © years small. It sits flush under
+   the page's last row and pulls up over that row's 2px rule, so the page
+   ends on this one rule. */
+.pp[data-skin="collective"] .pp-poster-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: -2px;
+  padding-top: 14px;
+  border-top: 4px solid var(--ink);
+}
+/* After anything other than the body (the affiliations), it keeps a gap. */
+.pp[data-skin="collective"] :not(.pp-body) + .pp-poster-foot {
+  margin-top: var(--gap-lg);
+}
+.pp[data-skin="collective"] .pp-poster-foot-line {
+  margin: 0;
+  font-family: "Archivo Black", var(--sans);
+  font-size: var(--text-12);
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+/* The persona's name may wrap; the year and the count each stay whole. */
+.pp[data-skin="collective"] .pp-poster-foot-line > span + span {
+  white-space: nowrap;
+}
+.pp[data-skin="collective"] .pp-poster-foot-rights {
+  margin: 0;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+/* Below the page, `main` reserves the bottom tab bar's height on a phone
+   (standalone.css), painted by the app's own ground: a cream or violet-black
+   band under the poster paper. A strip pinned under `.pp` paints that
+   reserve in the skin's ground, the mirror of the nav-band strip above it,
+   with the same page-only gate. The page skin paints its own ground on `.pp`
+   in both themes and leaves `::after` free, so it shares the strip. */
+@media (--mobile) {
+  html:not([data-landing-visitor="true"])
+    .pp[data-nav-band="true"][data-skin="collective"]::after,
+  html:not([data-landing-visitor="true"])
+    .pp[data-nav-band="true"][data-skin="page"]::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    height: calc(var(--tab-bar-h) + env(safe-area-inset-bottom));
+    background-color: inherit;
+    pointer-events: none;
+  }
+}
+
+/* ── POSTER events timeline (`EventsTimeline`, `EventRow`) ──
+   Events and nights read as a poster's listing: a stacked date block you can
+   read across a room, the title, then the venue and the line-up in quiet
+   sentence case. What is coming up sits first with its date on a solid
+   tinted block; the archive follows under "Past events", grouped by year,
+   with the titles one ink step down. The grid moves the venue into its own
+   column once the page is wide enough to line the venues up. */
+.pp[data-skin="collective"] .pp-ev-list {
+  display: flex;
+  flex-direction: column;
+}
+.pp[data-skin="collective"] .pp-ev {
+  position: relative;
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  grid-template-areas:
+    "date title"
+    "date venue"
+    "date doors"
+    "date meta"
+    "date chips"
+    "date desc";
+  grid-template-rows: repeat(5, auto) 1fr;
+  column-gap: var(--gap-sm);
+  align-items: start;
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  /* The date block sits flush on the page's left edge, under the h2. */
+  padding-block: 18px;
+  padding-inline: 0 2px;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid var(--sk-rule);
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  /* A jump to one event (the next-event band links here) lands just below
+     the sticky app nav. */
+  scroll-margin-top: calc(var(--sticky-top) + var(--gap-sm));
+}
+.pp[data-skin="collective"] .pp-ev-date {
+  grid-area: date;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 4.5rem;
+  padding: 8px 2px;
+  font-family: "Archivo Black", var(--sans);
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--ink);
+}
+.pp[data-skin="collective"] .pp-ev.is-upcoming .pp-ev-date {
+  background: var(--sk-date-fill);
+}
+.pp[data-skin="collective"] .pp-ev-dow,
+.pp[data-skin="collective"] .pp-ev-mon,
+.pp[data-skin="collective"] .pp-ev-yr {
+  font-family: var(--sans);
+  font-weight: 700;
+}
+.pp[data-skin="collective"] .pp-ev-dow {
+  font-size: var(--text-11);
+  letter-spacing: 0.16em;
+  /* Tracking pads the right of the last letter; the matching indent keeps
+     the word centred over the day. */
+  text-indent: 0.16em;
+}
+.pp[data-skin="collective"] .pp-ev-day {
+  font-size: var(--text-40);
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+}
+.pp[data-skin="collective"] .pp-ev-date.is-month .pp-ev-day {
+  font-size: var(--text-24);
+}
+.pp[data-skin="collective"] .pp-ev-mon {
+  font-size: var(--text-12);
+  letter-spacing: 0.12em;
+  text-indent: 0.12em;
+}
+.pp[data-skin="collective"] .pp-ev-yr {
+  font-size: var(--text-11);
+  letter-spacing: 0.08em;
+}
+/* An event with no usable date keeps the column, so its title still lines
+   up, and shows the owner's free text small. */
+.pp[data-skin="collective"] .pp-ev-date.is-undated {
+  min-height: 0;
+  padding-top: 4px;
+}
+.pp[data-skin="collective"] .pp-ev-raw {
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 600;
+  line-height: 1.3;
+  text-transform: none;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+.pp[data-skin="collective"] .pp-ev-title {
+  grid-area: title;
+  font-family: "Archivo Black", var(--sans);
+  font-weight: 400;
+  font-size: clamp(1.1875rem, 2.2cqw, 1.625rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--ink);
+  /* The title has the whole column: it wraps between words and never
+     hyphenates. Only a single word wider than the column may break. */
+  hyphens: manual;
+  overflow-wrap: anywhere;
+}
+.pp[data-skin="collective"] .pp-ev.is-past .pp-ev-title {
+  color: var(--ink-60);
+}
+.pp[data-skin="collective"] .pp-ev.is-off .pp-ev-title {
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+.pp[data-skin="collective"] .pp-ev-venue {
+  grid-area: venue;
+  display: flex;
+  align-items: baseline;
+  gap: var(--icon-gap-inline);
+  margin-top: 8px;
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+.pp[data-skin="collective"] .pp-ev-venue svg {
+  flex: none;
+  width: 1em;
+  height: 1em;
+  transform: translateY(0.125em);
+}
+/* "Doors 23:00" after the venue: the meta line's size in caps, ink-60 on
+   the paper (5.6:1 light, 7.3:1 dark). */
+.pp[data-skin="collective"] .pp-ev-doors {
+  grid-area: doors;
+  margin-top: 4px;
+  font-family: var(--sans);
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.pp[data-skin="collective"] .pp-ev-meta {
+  grid-area: meta;
+  margin-top: 4px;
+  font-size: var(--text-body-sm);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+.pp[data-skin="collective"] .pp-ev-chips {
+  grid-area: chips;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.pp[data-skin="collective"] .pp-ev-desc {
+  grid-area: desc;
+  max-width: 60ch;
+  margin-top: 10px;
+  font-size: var(--text-15-5);
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+/* The archive: a quiet caps label over the year groups, each year a poster
+   heading on the section h2's 4px rule. */
+.pp[data-skin="collective"] .pp-ev-past {
+  margin-top: var(--section-y-48);
+}
+.pp[data-skin="collective"] .pp-ev-past-label {
+  margin-bottom: 10px;
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.pp[data-skin="collective"] .pp-ev-year {
+  margin-top: var(--gap-lg);
+  padding-bottom: 8px;
+  border-bottom: 4px solid var(--ink);
+  font-family: "Archivo Black", var(--sans);
+  font-weight: 400;
+  font-size: var(--text-heading);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.pp[data-skin="collective"] .pp-ev-past-label + .pp-ev-year-group .pp-ev-year {
+  margin-top: 0;
+}
+/* No year to head them, so the undated events open on the same 4px rule a
+   year heading stands on, which keeps them from reading as the last year's. */
+.pp[data-skin="collective"] .pp-ev-year-group.is-undated {
+  margin-top: var(--gap-lg);
+  border-top: 4px solid var(--ink);
+}
+/* A row that opens the event sheet: a chevron in the gutter it keeps on its
+   right, a wash on hover, the date block filling and the title nudging
+   along. The chevron takes the accent pulled halfway to the ink, which keeps
+   the hue and measures 4.8:1 or more on both grounds for every accent (raw
+   coral on this paper is 2.5:1). */
+.pp[data-skin="collective"] button.pp-ev {
+  padding-right: 2.75rem;
+  cursor: pointer;
+  --pp-open-tint: color-mix(in srgb, var(--sk-tint) 50%, var(--ink));
+  transition: background-color var(--dur-fast) var(--ease);
+}
+.pp[data-skin="collective"] button.pp-ev .pp-ev-date {
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+.pp[data-skin="collective"] button.pp-ev .pp-ev-title {
+  transition: transform var(--dur-fast) var(--ease);
+}
+.pp[data-skin="collective"] .pp-ev .pp-open {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  display: inline-flex;
+  font-size: var(--text-20);
+  line-height: 1;
+  color: var(--pp-open-tint);
+  transform: translateY(-50%);
+  transition: transform var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .pp[data-skin="collective"] button.pp-ev:hover {
+    background: var(--sk-hover);
+  }
+  /* Fill means upcoming, so a past row's hover is the wash alone and its
+     date block stays bare paper. Only a row that is neither (no such row
+     today) would take the fill. */
+  .pp[data-skin="collective"]
+    button.pp-ev:not([data-past="true"], .is-past):hover
+    .pp-ev-date {
+    background: var(--sk-date-fill);
+  }
+  /* An upcoming date already sits on the fill, so it prints in solid ink. */
+  .pp[data-skin="collective"] button.pp-ev.is-upcoming:hover .pp-ev-date {
+    background: var(--ink);
+    color: var(--skin-collective-ground);
+  }
+  .pp[data-skin="collective"] button.pp-ev:hover .pp-ev-title {
+    transform: translateX(6px);
+  }
+  .pp[data-skin="collective"] button.pp-ev:hover .pp-open {
+    transform: translate(3px, -50%);
+  }
+}
+.pp[data-skin="collective"] button.pp-ev:active .pp-ev-title {
+  color: var(--pp-open-tint);
+}
+.pp[data-skin="collective"] button.pp-ev:focus-visible {
+  z-index: 1;
+  border-radius: 0;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+/* The date grows from a 760px page; the venue moves into its own column only
+   from 880px, where the title still keeps a measure of its own (at 760 the
+   16rem column squeezed titles to about 260px). */
+@container (min-width: 760px) {
+  .pp[data-skin="collective"] .pp-ev {
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    column-gap: var(--gap-lg);
+    padding-block: 22px;
+  }
+  .pp[data-skin="collective"] .pp-ev-date {
+    min-height: 5.5rem;
+  }
+  .pp[data-skin="collective"] .pp-ev-day {
+    font-size: var(--text-52);
+  }
+  .pp[data-skin="collective"] .pp-ev-date.is-month .pp-ev-day {
+    font-size: var(--text-32);
+  }
+}
+@container (min-width: 880px) {
+  .pp[data-skin="collective"] .pp-ev {
+    grid-template-columns: 5.5rem minmax(0, 1fr) 16rem;
+    grid-template-areas:
+      "date title venue"
+      "date meta doors"
+      "date chips doors"
+      "date desc doors";
+    grid-template-rows: repeat(3, auto) 1fr;
+  }
+  .pp[data-skin="collective"] .pp-ev-venue {
+    margin-top: 0;
+    /* Sits on the title's first line. */
+    padding-top: 0.3em;
+  }
+  .pp[data-skin="collective"] .pp-ev-doors {
+    align-self: start;
+  }
+}
+
+/* The caption under an events, nights, clients or roster h2 ("4 coming up ·
+   7 past · since 2025") stands in for the bare count badge on this skin. */
+.pp-sec .pp-ev-caption {
+  display: none;
+}
+.pp[data-skin="collective"]
+  .pp-sec:is(
+    [data-section="events"],
+    [data-section="nights"],
+    [data-section="clients"],
+    [data-section="roster"]
+  )
+  > header {
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+.pp[data-skin="collective"]
+  .pp-sec:is(
+    [data-section="events"],
+    [data-section="nights"],
+    [data-section="clients"],
+    [data-section="roster"]
+  )
+  .count {
+  display: none;
+}
+.pp[data-skin="collective"] .pp-sec .pp-ev-caption {
+  display: block;
+  flex-basis: 100%;
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+/* Clients ("worked with") and a promoter's roster (the line-up wall): a grid
+   of names on 2px ink rules. The section h2's own rule closes the top and the
+   grid's own bottom rule closes the foot across the full width, so a short
+   last row never leaves a ragged rule. Between them each cell draws its
+   bottom rule (every row above the last is full, so those rules run edge to
+   edge) and, past the first column, its left one: no rule ever doubles. */
+.pp[data-skin="collective"] .pp-credits {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 2px solid var(--ink);
+}
+/* Each cell: a linked collaborator's photo sits inline before the name (from
+   760px, below), so names line up across a row; the role, years and
+   description run under both. A cell with no photo lets the name take the
+   whole width. */
+.pp[data-skin="collective"] .pp-credit {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: start;
+  align-items: center;
+  gap: 4px 8px;
+  min-width: 0;
+  padding: 18px var(--gap-sm);
+  border-bottom: 2px solid var(--ink);
+  border-left: 2px solid var(--ink);
+}
+.pp[data-skin="collective"] .pp-credit > * {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+.pp[data-skin="collective"] .pp-credit > .pp-credit-av {
+  grid-column: 1;
+  width: 28px;
+  height: 28px;
+  font-size: var(--text-9-5);
+}
+/* Two across on a phone a cell is about 110px beside the photo, which split
+   a long word like "ASSOCIAÇÃO" mid-word, so there the photo sits over the
+   name; from 760px (three across, about 170px beside it) it goes inline. */
+.pp[data-skin="collective"] .pp-credit > .pp-credit-av + .pp-credit-name {
+  grid-column: 1 / -1;
+}
+.pp[data-skin="collective"] .pp-credit:nth-child(2n + 1) {
+  padding-left: 0;
+  border-left: 0;
+}
+/* The last row (the first-column cell among the last two, and any cell
+   after it) leaves its bottom rule to the grid's. */
+.pp[data-skin="collective"] .pp-credit:nth-child(2n + 1):nth-last-child(-n + 2),
+.pp[data-skin="collective"]
+  .pp-credit:nth-child(2n + 1):nth-last-child(-n + 2)
+  ~ .pp-credit {
+  border-bottom: 0;
+}
+.pp[data-skin="collective"] .pp-credit-name {
+  font-family: "Archivo Black", var(--sans);
+  font-weight: 400;
+  font-size: var(--text-17);
+  line-height: 1.15;
+  text-transform: uppercase;
+  color: var(--ink);
+  hyphens: manual;
+  overflow-wrap: anywhere;
+}
+/* The link stays inline so a long name wraps like the plain ones; its block
+   padding grows the tap target to 44px without moving the lines around it. */
+.pp[data-skin="collective"] .pp-credit-name a {
+  padding-block: 13px;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.18em;
+}
+.pp[data-skin="collective"] .pp-credit-name a svg {
+  margin-left: var(--icon-gap-inline);
+  vertical-align: -0.1em;
+}
+.pp[data-skin="collective"] .pp-credit-name a:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.pp[data-skin="collective"] .pp-credit-line,
+.pp[data-skin="collective"] .pp-credit-desc {
+  font-size: var(--text-body-sm);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+.pp[data-skin="collective"] .pp-credit-desc {
+  margin-top: 4px;
+}
+@container (min-width: 760px) {
+  .pp[data-skin="collective"] .pp-credits {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .pp[data-skin="collective"] .pp-credit:nth-child(2n + 1) {
+    padding-left: var(--gap-sm);
+    border-left: 2px solid var(--ink);
+  }
+  .pp[data-skin="collective"] .pp-credit:nth-child(3n + 1) {
+    padding-left: 0;
+    border-left: 0;
+  }
+  .pp[data-skin="collective"] .pp-credit > .pp-credit-av + .pp-credit-name {
+    grid-column: 2;
+  }
+  /* Beside the name the photo pulls 4px out of its row at each edge, so it
+     takes the name's own line height and the name sits level with a plain
+     name in the next cell. */
+  .pp[data-skin="collective"] .pp-credit > .pp-credit-av {
+    margin-block: -4px;
+  }
+  /* Three across: the phone's last-row rule is undone, and the last row
+     starts at the first-column cell among the last three. */
+  .pp[data-skin="collective"]
+    .pp-credit:nth-child(2n + 1):nth-last-child(-n + 2),
+  .pp[data-skin="collective"]
+    .pp-credit:nth-child(2n + 1):nth-last-child(-n + 2)
+    ~ .pp-credit {
+    border-bottom: 2px solid var(--ink);
+  }
+  .pp[data-skin="collective"]
+    .pp-credit:nth-child(3n + 1):nth-last-child(-n + 3),
+  .pp[data-skin="collective"]
+    .pp-credit:nth-child(3n + 1):nth-last-child(-n + 3)
+    ~ .pp-credit {
+    border-bottom: 0;
+  }
+}
+
+/* The owner's events section before the first event: a dashed poster frame
+   holding a ghost date block, the line, and the way to the editor. */
+.pp[data-skin="collective"] .pp-ev-empty {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  align-items: center;
+  gap: var(--gap-sm);
+  margin-top: 18px;
+  padding: var(--gap-sm);
+  border: 2px dashed var(--ink);
+}
+.pp[data-skin="collective"] .pp-ev-ghost {
+  /* The empty frame is its own two-column grid with no named areas. */
+  grid-area: auto;
+  gap: 6px;
+  border: 2px dashed var(--sk-rule);
+}
+.pp[data-skin="collective"] .pp-ev-ghost > span {
+  display: block;
+  background: var(--sk-rule);
+}
+.pp[data-skin="collective"] .pp-ev-ghost .pp-ev-dow {
+  width: 55%;
+  height: 6px;
+}
+.pp[data-skin="collective"] .pp-ev-ghost .pp-ev-day {
+  width: 60%;
+  height: 1.75rem;
+}
+.pp[data-skin="collective"] .pp-ev-ghost .pp-ev-mon {
+  width: 45%;
+  height: 6px;
+}
+.pp[data-skin="collective"] .pp-ev-empty-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-sm);
+}
+.pp[data-skin="collective"] .pp-ev-empty-body p {
+  font-family: "Archivo Black", var(--sans);
+  font-size: clamp(1.1875rem, 2.2cqw, 1.625rem);
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+@container (min-width: 760px) {
+  .pp[data-skin="collective"] .pp-ev-empty {
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: var(--gap-lg);
+    padding: var(--gap-lg);
+  }
+}
+
+/* Motion: as the events section reveals, each upcoming date block stamps
+   onto the paper, one after another. Only under the `data-motion` gate
+   (`usePersonaMotion`), so a reduced-motion or no-JS page paints still. */
+@keyframes ppEventStamp {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.pp[data-motion][data-skin="collective"]
+  .pp-sec.is-in
+  .pp-ev.is-upcoming
+  .pp-ev-date {
+  animation: ppEventStamp 180ms var(--ease-out) both;
+  animation-delay: calc(160ms + var(--pp-ev-index, 0) * 40ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .pp[data-skin="collective"] button.pp-ev:hover .pp-ev-title,
+  .pp[data-skin="collective"] button.pp-ev:hover .pp-open {
+    transform: none;
+  }
+  .pp[data-skin="collective"] button.pp-ev:hover .pp-open {
+    transform: translateY(-50%);
+  }
+  .pp[data-skin="collective"] .nextaction-go,
+  .pp[data-skin="collective"] .nextaction.is-link:hover .nextaction-go {
+    transform: translateY(0.12em);
+    transition: none;
+  }
 }
 
 /* ═══════════ CLASSROOM — a board and a handout ═══════════ */
@@ -7186,8 +8587,8 @@ button.pp-row {
   background: rgba(122, 91, 51, 0.22);
 }
 .pp[data-skin="collective"] *::selection {
-  background: var(--sk-tint);
-  color: var(--sk-on);
+  background: var(--sk-date-fill);
+  color: var(--sk-ink);
 }
 .pp[data-skin="classroom"] *::selection {
   background: rgba(36, 56, 47, 0.16);
@@ -7223,9 +8624,11 @@ button.pp-row {
 .pp[data-skin="collective"] .partof > * {
   transition: none;
 }
+/* Only a row that opens or links somewhere washes on hover: an inert row
+   that tinted under the pointer promised a click that did nothing. */
 @media (hover: hover) {
-  .pp[data-skin="collective"] .pp-row:hover {
-    background: rgba(20, 18, 16, 0.04);
+  .pp[data-skin="collective"] :is(a.pp-row, button.pp-row):hover {
+    background: var(--sk-hover);
   }
 }
 .pp[data-skin="classroom"] .pp-row,
@@ -7392,7 +8795,8 @@ button.pp-row {
   background: #241b0d;
   color: #d9b87b;
 }
-[data-theme="dark"] .pp[data-skin="collective"] {
+[data-theme="dark"] .pp[data-skin="collective"],
+[data-theme="dark"] [data-persona-skin="collective"] {
   --skin-collective-ground: #100e0c;
   color: #f1eadd;
   --ink: #f1eadd;
@@ -7400,17 +8804,49 @@ button.pp-row {
   --ink-40: rgba(241, 234, 221, 0.61);
   --text-strong: #f1eadd;
   --sk-ink: #f1eadd;
-}
-[data-theme="dark"] .pp[data-skin="collective"] .nextaction {
-  background: var(--sk-tint);
-  color: var(--sk-on);
-}
-[data-theme="dark"] .pp[data-skin="collective"] .nextaction-label {
-  color: var(--sk-on);
-  opacity: 0.7;
+  /* The cream ink needs a little more weight to read as a rule on the near
+     black ground, and the date fill mixes the accent into a lifted ground so
+     a plum block still separates from the page. Cream on it measures 4.8:1
+     or more for every accent (amber is the lowest, coral 6.1:1). */
+  --sk-rule: color-mix(in srgb, var(--ink) 24%, transparent);
+  --sk-hover: color-mix(in srgb, var(--ink) 6%, transparent);
+  --sk-date-fill: color-mix(
+    in srgb,
+    var(--sk-tint) 40%,
+    color-mix(in srgb, var(--ink) 14%, var(--skin-collective-ground))
+  );
 }
 [data-theme="dark"] .pp[data-skin="collective"] .ph {
   background: #1c1814;
+}
+/* In dark the ink panel would be a cream slab, the brightest thing on the
+   page. The spotlight (poster and plain) prints instead on the ground lifted
+   by 7% of the cream ink, framed by a 3px cream rule, with cream type: the
+   panel swaps resolve through `--sk-panel` and `--sk-panel-ink` (the base
+   `.pp-spot` rule reads them), so every panel rule follows. Measured on the
+   lifted panel: cream 14.0:1, `--ink-60` 9.4:1, the eyebrow and a guest
+   chip in `--sk-tint-text` 4.6:1 (plum, the lowest) to 11.1:1 (amber), cream
+   on the date fill and the button 4.8:1 (amber) or more. The NEXT band keeps
+   the cream sticker. */
+[data-theme="dark"] .pp[data-skin="collective"] .pp-spot {
+  --sk-panel: color-mix(
+    in srgb,
+    var(--sk-ink) 7%,
+    var(--skin-collective-ground)
+  );
+  --sk-panel-ink: var(--sk-ink);
+  border: 3px solid var(--sk-ink);
+}
+[data-theme="dark"] .pp[data-skin="collective"] .pp-spot .pp-spot-eyebrow,
+[data-theme="dark"] .pp[data-skin="collective"] .pp-spot .gigstate.guest {
+  color: var(--sk-tint-text);
+}
+/* The date fill sits close to the lifted panel in dark (1.1:1 for plum), so
+   the stamp and the button would melt into it. A 2px cream rule prints their
+   edge; box-sizing keeps their size. */
+[data-theme="dark"] .pp[data-skin="collective"] .pp-spot-poster .pp-ev-date,
+[data-theme="dark"] .pp[data-skin="collective"] .pp-spot .pp-spot-cta {
+  border: 2px solid var(--sk-ink);
 }
 [data-theme="dark"] .pp[data-skin="classroom"] {
   --skin-classroom-ground: #0f140f;

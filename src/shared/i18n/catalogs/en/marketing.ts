@@ -3753,10 +3753,42 @@ export const marketing: Catalog = {
   "changelog.entries.studio-always-dark.title": "Studio is always dark",
   "changelog.entries.studio-always-dark.body":
     "Every Studio page now opens in dark mode, and the rest of QueerPulse keeps the theme you picked.",
+  "changelog.entries.event-producer-page-revamp.title":
+    "See what's on next, then the nights behind it",
+  "changelog.entries.event-producer-page-revamp.body":
+    "Event producer pages list what's coming up and past events by year, with poster dates, and each event opens with its line-up, venue and an Add to calendar button.",
+  "changelog.entries.poet-page-revamp.title":
+    "Read a poet's work like a book, poem after poem",
+  "changelog.entries.poet-page-revamp.body":
+    "Poems group by year, the reader sets verse with hanging indents, and Next poem moves through the collection.",
   "changelog.entries.persona-professions-by-work-area.title":
     "Find personas by the same work areas you pick when you join",
   "changelog.entries.persona-professions-by-work-area.body":
     "The Profession filter groups its chips under areas like Music or Food & drink, with clearer headings.",
+  "changelog.entries.persona-type-change.title":
+    "Change a persona's type and keep everything on it",
+  "changelog.entries.persona-type-change.body":
+    "Switch a persona to another type in its group. Its handle, followers, credits and posts stay, and sections the new type doesn't use are hidden until you switch back.",
+  "changelog.entries.admin-vj-screen-and-remote.title":
+    "Run visuals for DJ sets from your phone",
+  "changelog.entries.admin-vj-screen-and-remote.body":
+    "Clips and GIFs go into packs, fade or cut on a projector screen, and keep playing through wifi drops",
+  "changelog.entries.staff-leads-directory.title":
+    "Staff keep one shared list of the people they reach out to",
+  "changelog.entries.staff-leads-directory.body":
+    "Each lead holds its links, dated notes, a stage and a follow-up date, plus their persona once they join.",
+  "changelog.entries.lyric-timing-keeps-page-scrolling.title":
+    "Close Time the lyrics and the page scrolls again",
+  "changelog.entries.lyric-timing-keeps-page-scrolling.body":
+    "Switching between Tap along and Paste LRC used to leave the page frozen until a refresh.",
+  "changelog.entries.studio-track-rows-open-smoothly.title":
+    "Open a release in Your numbers and its tracks glide in",
+  "changelog.entries.studio-track-rows-open-smoothly.body":
+    "All the tracks open and fold together in one smooth motion, with the arrow turning in step.",
+  "changelog.entries.business-event-public-address.title":
+    "Run an event from your business and its address fills in",
+  "changelog.entries.business-event-public-address.body":
+    "A business's public address shows to everyone on the event page, with no RSVP needed to see it.",
   "changelog.entries.persona-wall-curation.title":
     "See the personas our team picked at the top of the people directory",
   "changelog.entries.persona-wall-curation.body":

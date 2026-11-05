@@ -970,6 +970,8 @@ export const gatherings: Catalog = {
   // steps/PlaceFields.tsx: chapter 2, the address only confirmed attendees get
   "create.v2.when.addressLabel": "Morada completa",
   "create.v2.when.addressNote": "só partilhada com quem confirmar",
+  "create.v2.when.addressNoteLinkedVenue":
+    "pública, já está na página do negócio",
   "create.v2.when.addressFromListing": "Da ficha de {name}",
   "create.v2.when.directionsLabel": "Como chegar",
 
@@ -1049,6 +1051,8 @@ export const gatherings: Catalog = {
   "create.v2.who.runByNone": "Nenhum negócio",
   "create.v2.who.runByPrefilled":
     "Preenchemos o ponto de encontro de {name}. Podes mudá-lo.",
+  "create.v2.who.runByVenueLinked":
+    "Usámos o local e a morada de {name}. Podes mudá-los.",
   "create.v2.who.runByRefused":
     "Este negócio não pode organizar este evento. Escolhe outro, ou nenhum.",
   "create.v2.who.paymentLinkLabel": "Link de pagamento",

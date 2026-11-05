@@ -1,0 +1,177 @@
+/* VJ library uploads: the drop zone and the rows under it. */
+
+.zone {
+  display: grid;
+  justify-items: center;
+  gap: var(--gap-xs);
+  padding: var(--card-pad);
+  border: 1.5px dashed rgba(var(--line-rgb), 0.22);
+  border-radius: var(--radius-badge);
+  background: var(--paper);
+  text-align: center;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background-color var(--dur-fast) var(--ease);
+}
+
+.zone[data-dragging="true"] {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.06);
+}
+
+.zoneIcon {
+  display: grid;
+  place-items: center;
+  inline-size: var(--tap-min);
+  block-size: var(--tap-min);
+  border-radius: var(--radius-avatar);
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-ink);
+  font-size: var(--text-20);
+}
+
+.zoneTitle {
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.zoneNotes {
+  display: grid;
+  gap: var(--icon-gap-inline);
+  max-inline-size: 60ch;
+}
+
+.zoneNote {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.fileInput {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.rows {
+  display: grid;
+  gap: var(--gap-xs);
+  padding-block-start: var(--gap-sm);
+}
+
+.rowsHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-xs);
+  min-block-size: var(--tap-min);
+}
+
+.rowsTitle {
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.row {
+  display: grid;
+  gap: var(--icon-gap-inline);
+  padding-block: var(--gap-xs);
+  border-block-end: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.rowMain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs) var(--gap-sm);
+}
+
+.rowIcon {
+  flex-shrink: 0;
+  font-size: var(--text-18);
+  color: var(--ink-60);
+}
+
+.row[data-stage="done"] .rowIcon {
+  color: var(--jade-ink);
+}
+
+.rowText {
+  display: grid;
+  flex: 1 1 12rem;
+  min-inline-size: 0;
+}
+
+.fileLine {
+  display: flex;
+  align-items: baseline;
+  gap: var(--gap-xs);
+  min-inline-size: 0;
+  margin: 0;
+  font-size: var(--text-body-sm);
+  color: var(--ink);
+}
+
+.fileName {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.fileSize {
+  flex-shrink: 0;
+  font-size: var(--text-caption);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+}
+
+.status {
+  font-size: var(--text-caption);
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+}
+
+.row[data-stage="done"] .status {
+  color: var(--jade-ink);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  margin-inline-start: auto;
+}
+
+.progressTrack {
+  block-size: 0.25rem;
+  margin-block-start: var(--icon-gap-inline);
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.09);
+  overflow: hidden;
+}
+
+.progressFill {
+  block-size: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+}

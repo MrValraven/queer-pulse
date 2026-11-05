@@ -11,6 +11,8 @@ import { useMessagingCachePersistence } from "../../shared/api/queryPersistence/
 import { OfflineBanner } from "../../shared/components/ui";
 import { useOnlineStatus } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useVjScreenProvisionalSession } from "../vj/screen/useVjScreenProvisionalSession";
+import { isVjScreenPath } from "../vj/screen/vjScreenPath";
 import { OfflineStandInContext } from "./offlineStandInContext";
 import { OfflinePage } from "./OfflinePage";
 
@@ -51,6 +53,18 @@ const OFFLINE_GRACE_MS = 2_000;
  * inbox when a record exists. On the messages route the frame stays blank
  * while the local read settles, so the cold boot screen does not flash first.
  *
+ * **The VJ screen at `/admin/vj/screen`**: the projector must survive a reload
+ * with no internet in the middle of a show. A confirmed active admin on that
+ * route saves a small session record (see `useVjScreenProvisionalSession`),
+ * and a cold offline boot on that route reads it synchronously and renders
+ * the page with the saved admin as a PROVISIONAL session, so the admin gate
+ * lets the projector through and it restores the last look from its own
+ * storage. A boot whose `/auth/me` failed on the network while the browser
+ * reports online (a dead uplink behind live wifi) does the same on that
+ * route. Every other route ignores that record. Once online, `/auth/me` is
+ * probed the same way as for the saved inbox. The projector shows visuals
+ * only, so the offline banner never renders on that route.
+ *
  * **Going offline mid-session**: `children` stay mounted and rendered, and the
  * shared {@link OfflineBanner} announces the drop. Unmounting the routed
  * subtree here would destroy every uncommitted piece of state behind it: a
@@ -80,6 +94,17 @@ export function OfflineGate({ children }: { children: ReactNode }) {
   );
   const [isOfflineConfirmed, setIsOfflineConfirmed] = useState(false);
   const isMessagesRoute = isMessagesPath(pathname);
+  const isVjScreenRoute = isVjScreenPath(pathname);
+  const vjScreen = useVjScreenProvisionalSession({
+    demoMode,
+    user: auth.user,
+    isOnline,
+    isColdOfflineBoot: !isOnline && !hasEverRenderedOnline,
+    isVjScreenRoute,
+    refreshSession: auth.refresh,
+    authError: auth.authError,
+    isSessionChecking: auth.checking,
+  });
   const { isRestorePending, hasSavedMessages, provisionalUser } =
     useMessagingCachePersistence({
       demoMode,
@@ -90,26 +115,36 @@ export function OfflineGate({ children }: { children: ReactNode }) {
       isSessionChecking: auth.checking,
       refreshSession: auth.refresh,
     });
+  // The saved member stands in on the messages route, the saved admin on the
+  // VJ screen route, and nobody stands in anywhere else.
+  const standInUser = isMessagesRoute
+    ? provisionalUser
+    : isVjScreenRoute
+      ? vjScreen.provisionalUser
+      : null;
   const provisionalAuth = useMemo<AuthContextValue | null>(
     () =>
-      provisionalUser
+      standInUser
         ? {
             ...auth,
             loggedIn: true,
             checking: false,
             preparing: false,
-            user: provisionalUser,
-            status: provisionalUser.status,
-            role: provisionalUser.role,
+            user: standInUser,
+            status: standInUser.status,
+            role: standInUser.role,
             staffRoles: [],
             authError: null,
           }
         : null,
-    [auth, provisionalUser],
+    [auth, standInUser],
   );
   // The provisional member only ever reaches the messages route.
   const savedMessagesAuth = isMessagesRoute ? provisionalAuth : null;
   const isReadingSavedMessages = savedMessagesAuth !== null;
+  // The provisional admin only ever reaches the VJ screen route.
+  const vjScreenAuth =
+    isVjScreenRoute && vjScreen.provisionalUser ? provisionalAuth : null;
 
   // Both latches are adjusted during render rather than in an effect: each is
   // guarded by the condition it clears, so it runs once per transition instead
@@ -129,7 +164,12 @@ export function OfflineGate({ children }: { children: ReactNode }) {
 
   if (demoMode) return <>{children}</>;
 
-  if (!isOnline && !hasEverRenderedOnline && !isReadingSavedMessages) {
+  if (
+    !isOnline &&
+    !hasEverRenderedOnline &&
+    !isReadingSavedMessages &&
+    vjScreenAuth === null
+  ) {
     if (isRestorePending && isMessagesRoute) return null;
     return (
       <OfflinePage
@@ -147,18 +187,21 @@ export function OfflineGate({ children }: { children: ReactNode }) {
           Its message is empty while online on purpose: a `role="status"` live
           region only announces content that ARRIVES after it is registered, so
           filling it at the moment of the drop is what makes the announcement
-          happen at all. */}
-      <OfflineBanner
-        offline={isOfflineConfirmed}
-        showDot={isOfflineConfirmed}
-        role="status"
-        message={isOfflineConfirmed ? t(bannerMessageKey) : ""}
-      />
+          happen at all. The VJ projector shows visuals only, so it gets no
+          banner at all. */}
+      {!isVjScreenRoute && (
+        <OfflineBanner
+          offline={isOfflineConfirmed}
+          showDot={isOfflineConfirmed}
+          role="status"
+          message={isOfflineConfirmed ? t(bannerMessageKey) : ""}
+        />
+      )}
       {/* Always the same element, carrying the real session or the
           provisional one, so the routed subtree never remounts when the
           provisional member hands over to the confirmed session. */}
       <OfflineStandInContext.Provider value={isReadingSavedMessages}>
-        <AuthContext.Provider value={savedMessagesAuth ?? auth}>
+        <AuthContext.Provider value={savedMessagesAuth ?? vjScreenAuth ?? auth}>
           {children}
         </AuthContext.Provider>
       </OfflineStandInContext.Provider>

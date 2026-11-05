@@ -7,6 +7,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { FiX } from "react-icons/fi";
+import { PresenceContext } from "motion/react";
 import { useTranslation } from "../../i18n/useTranslation";
 import { useDismiss, useScrimDismiss } from "./useDismiss";
 import { useInertWhileCovered } from "./modalStack";
@@ -96,72 +97,82 @@ export function Modal({
   // resting transform from its `feedEnter` fill-mode animation). Rendering
   // through <body> escapes all of them. React events still bubble via the React
   // tree, so onClose et al. work unchanged.
+  //
+  // The provider cuts the presence context. Motion elements inside the dialog
+  // (a tab underline with a layoutId, say) register with the dialog's exit
+  // through usePresence, which never unregisters on unmount, so one that
+  // unmounted while the dialog was open would hold the exit open forever and
+  // leave the invisible dialog holding the scroll lock. With the context cut,
+  // the dialog's own exit is the only thing its removal waits on. See
+  // RouteTransition.tsx for the same fix.
   return createPortal(
-    <div
-      ref={scrimRef}
-      className={[styles.scrim, exit.isClosing && styles.scrimClosing]
-        .filter(Boolean)
-        .join(" ")}
-      role="presentation"
-      data-studio-player={isStudioPlayerSurface ? "" : undefined}
-      {...scrimProps}
-    >
+    <PresenceContext.Provider value={null}>
       <div
-        ref={dialogRef}
-        tabIndex={-1}
-        inert={exit.isClosing}
-        onAnimationEnd={exit.handleExitAnimationEnd}
-        className={[
-          styles.modal,
-          wide && styles.modalWide,
-          full && styles.modalFull,
-          shouldCollapseSubWithKeyboard && styles.modalCollapsesWithKeyboard,
-          exit.isClosing && styles.modalClosing,
-          className,
-        ]
+        ref={scrimRef}
+        className={[styles.scrim, exit.isClosing && styles.scrimClosing]
           .filter(Boolean)
           .join(" ")}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
+        role="presentation"
+        data-studio-player={isStudioPlayerSurface ? "" : undefined}
+        {...scrimProps}
       >
-        <div className={styles.modalHead}>
-          <div className={styles.modalHeadTx}>
-            {eyebrow && <div className={styles.modalEyebrow}>{eyebrow}</div>}
-            <h3 id={titleId} className={styles.modalTitle}>
-              {title}
-            </h3>
-            {sub && (
-              <p
-                className={[styles.modalSub, subClassName]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                {sub}
-              </p>
-            )}
-          </div>
-          <button
-            type="button"
-            className={styles.modalX}
-            onClick={exit.close}
-            aria-label={t("shared:modal.close")}
-          >
-            <FiX />
-          </button>
-        </div>
         <div
-          className={[styles.modalBody, bodyClassName]
+          ref={dialogRef}
+          tabIndex={-1}
+          inert={exit.isClosing}
+          onAnimationEnd={exit.handleExitAnimationEnd}
+          className={[
+            styles.modal,
+            wide && styles.modalWide,
+            full && styles.modalFull,
+            shouldCollapseSubWithKeyboard && styles.modalCollapsesWithKeyboard,
+            exit.isClosing && styles.modalClosing,
+            className,
+          ]
             .filter(Boolean)
             .join(" ")}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={titleId}
         >
-          <IsInsideModalContext.Provider value={true}>
-            {children}
-          </IsInsideModalContext.Provider>
+          <div className={styles.modalHead}>
+            <div className={styles.modalHeadTx}>
+              {eyebrow && <div className={styles.modalEyebrow}>{eyebrow}</div>}
+              <h3 id={titleId} className={styles.modalTitle}>
+                {title}
+              </h3>
+              {sub && (
+                <p
+                  className={[styles.modalSub, subClassName]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
+                  {sub}
+                </p>
+              )}
+            </div>
+            <button
+              type="button"
+              className={styles.modalX}
+              onClick={exit.close}
+              aria-label={t("shared:modal.close")}
+            >
+              <FiX />
+            </button>
+          </div>
+          <div
+            className={[styles.modalBody, bodyClassName]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            <IsInsideModalContext.Provider value={true}>
+              {children}
+            </IsInsideModalContext.Provider>
+          </div>
+          {footer && <div className={styles.modalFoot}>{footer}</div>}
         </div>
-        {footer && <div className={styles.modalFoot}>{footer}</div>}
       </div>
-    </div>,
+    </PresenceContext.Provider>,
     document.body,
   );
 }
@@ -240,60 +251,63 @@ export function ModalSheet({
 
   // Portal to <body> for the same reason as <Modal> above: the fixed overlay
   // must anchor to the viewport, not to any transformed/contained ancestor.
+  // Cut the presence context, as in <Modal> above.
   return createPortal(
-    <div
-      ref={overlayRef}
-      className={[styles.overlay, exit.isClosing && styles.scrimClosing]
-        .filter(Boolean)
-        .join(" ")}
-      role="presentation"
-      {...scrimProps}
-    >
+    <PresenceContext.Provider value={null}>
       <div
-        ref={dialogRef}
-        tabIndex={-1}
-        inert={exit.isClosing}
-        onAnimationEnd={exit.handleExitAnimationEnd}
-        className={[
-          styles.sheet,
-          wide && styles.sheetWide,
-          success && styles.sheetSuccess,
-          exit.isClosing && styles.sheetClosing,
-          className,
-        ]
+        ref={overlayRef}
+        className={[styles.overlay, exit.isClosing && styles.scrimClosing]
           .filter(Boolean)
           .join(" ")}
-        role="dialog"
-        aria-modal="true"
-        aria-label={ariaLabel}
+        role="presentation"
+        {...scrimProps}
       >
-        {!success && (
-          <>
-            <div
-              className={styles.grabber}
-              aria-hidden
-              onPointerDown={handleGrabberPointerDown}
-              onPointerMove={handleGrabberPointerMove}
-              onPointerUp={handleGrabberPointerEnd}
-              onPointerCancel={handleGrabberPointerEnd}
-            />
-            <button
-              type="button"
-              className={styles.close}
-              onClick={exit.close}
-              aria-label={t("shared:modal.close")}
-            >
-              <FiX />
-            </button>
-          </>
-        )}
-        {/* Reset for a sheet opened from inside a <Modal>: its success sheet
+        <div
+          ref={dialogRef}
+          tabIndex={-1}
+          inert={exit.isClosing}
+          onAnimationEnd={exit.handleExitAnimationEnd}
+          className={[
+            styles.sheet,
+            wide && styles.sheetWide,
+            success && styles.sheetSuccess,
+            exit.isClosing && styles.sheetClosing,
+            className,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          role="dialog"
+          aria-modal="true"
+          aria-label={ariaLabel}
+        >
+          {!success && (
+            <>
+              <div
+                className={styles.grabber}
+                aria-hidden
+                onPointerDown={handleGrabberPointerDown}
+                onPointerMove={handleGrabberPointerMove}
+                onPointerUp={handleGrabberPointerEnd}
+                onPointerCancel={handleGrabberPointerEnd}
+              />
+              <button
+                type="button"
+                className={styles.close}
+                onClick={exit.close}
+                aria-label={t("shared:modal.close")}
+              >
+                <FiX />
+              </button>
+            </>
+          )}
+          {/* Reset for a sheet opened from inside a <Modal>: its success sheet
             is plum, so the SuccessPanel in it keeps the plum styling. */}
-        <IsInsideModalContext.Provider value={false}>
-          {children}
-        </IsInsideModalContext.Provider>
+          <IsInsideModalContext.Provider value={false}>
+            {children}
+          </IsInsideModalContext.Provider>
+        </div>
       </div>
-    </div>,
+    </PresenceContext.Provider>,
     document.body,
   );
 }
@@ -326,48 +340,51 @@ export function SideSheet({
   useInertWhileCovered(scrimRef, exit.isClosing);
   const scrimProps = useScrimDismiss(exit.close);
   const titleId = useId();
+  // Cut the presence context, as in <Modal> above.
   return createPortal(
-    <div
-      ref={scrimRef}
-      className={[styles.sideScrim, exit.isClosing && styles.scrimClosing]
-        .filter(Boolean)
-        .join(" ")}
-      role="presentation"
-      {...scrimProps}
-    >
+    <PresenceContext.Provider value={null}>
       <div
-        ref={dialogRef}
-        tabIndex={-1}
-        inert={exit.isClosing}
-        onAnimationEnd={exit.handleExitAnimationEnd}
-        className={[
-          styles.sideSheet,
-          exit.isClosing && styles.sheetClosing,
-          className,
-        ]
+        ref={scrimRef}
+        className={[styles.sideScrim, exit.isClosing && styles.scrimClosing]
           .filter(Boolean)
           .join(" ")}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
+        role="presentation"
+        {...scrimProps}
       >
-        <div className={styles.sideSheetHead}>
-          <h2 id={titleId} className={styles.sideSheetTitle}>
-            {title}
-          </h2>
-          <button
-            type="button"
-            className={styles.modalX}
-            onClick={exit.close}
-            aria-label={t("shared:modal.close")}
-          >
-            <FiX />
-          </button>
+        <div
+          ref={dialogRef}
+          tabIndex={-1}
+          inert={exit.isClosing}
+          onAnimationEnd={exit.handleExitAnimationEnd}
+          className={[
+            styles.sideSheet,
+            exit.isClosing && styles.sheetClosing,
+            className,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={titleId}
+        >
+          <div className={styles.sideSheetHead}>
+            <h2 id={titleId} className={styles.sideSheetTitle}>
+              {title}
+            </h2>
+            <button
+              type="button"
+              className={styles.modalX}
+              onClick={exit.close}
+              aria-label={t("shared:modal.close")}
+            >
+              <FiX />
+            </button>
+          </div>
+          <div className={styles.sideSheetBody}>{children}</div>
+          {footer && <div className={styles.modalFoot}>{footer}</div>}
         </div>
-        <div className={styles.sideSheetBody}>{children}</div>
-        {footer && <div className={styles.modalFoot}>{footer}</div>}
       </div>
-    </div>,
+    </PresenceContext.Provider>,
     document.body,
   );
 }

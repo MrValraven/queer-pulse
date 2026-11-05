@@ -1,4 +1,4 @@
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiChevronRight } from "react-icons/fi";
 import { safeHref } from "../../shared/lib/safeHref";
 import { formatItemDate } from "../../shared/lib/date";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -31,6 +31,7 @@ export function SubprofileItemRow({
   kind,
   onOpen,
   hideBody,
+  dateLabel,
 }: {
   item: SubprofileItemView;
   skin: SkinFamily;
@@ -47,6 +48,9 @@ export function SubprofileItemRow({
   /** Drops the inline `<p>` body (poems): a poem row shows its title and, when
    *  it has one, its subtitle. It never shows an excerpt of the poem. */
   hideBody?: boolean;
+  /** Replaces the formatted `date` on the row: the poems contents passes a
+   *  short month ("Feb"), or null to show no date at all. */
+  dateLabel?: string | null;
 }) {
   const { t, language } = useTranslation();
   const isOff = item.gigState === "cancelled";
@@ -60,8 +64,18 @@ export function SubprofileItemRow({
     .filter(Boolean)
     .join(" ");
 
+  const shownDate =
+    dateLabel === undefined
+      ? item.date && formatItemDate(item.date, language)
+      : dateLabel;
+
   const content = (
     <>
+      {/* A poem row's accessible name reads "Read the poem", then the title,
+          subtitle and month exactly as they show. */}
+      {onOpen && (
+        <span className="visuallyHidden">{`${t("subprofiles:poem.row.openPrefix")} `}</span>
+      )}
       <b>{item.title}</b>
       {item.subtitle && <small>{item.subtitle}</small>}
       {item.meta && <small>{item.meta}</small>}
@@ -71,9 +85,7 @@ export function SubprofileItemRow({
           {t("subprofiles:row.doors", { doors: item.doors })}
         </span>
       )}
-      {item.date && (
-        <span className="when">{formatItemDate(item.date, language)}</span>
-      )}
+      {shownDate && <span className="when">{shownDate}</span>}
       {CREDENTIAL_PHOTO_SECTIONS.has(item.section) && (
         <CredentialProofThumb
           item={item}
@@ -125,9 +137,12 @@ export function SubprofileItemRow({
         type="button"
         className={rowClassName}
         onClick={() => onOpen(item)}
-        aria-label={t("subprofiles:poem.row.openAria", { title: item.title })}
       >
         {content}
+        {/* The trailing chevron tells a reader the row opens the poem. */}
+        <span className="pp-open">
+          <FiChevronRight aria-hidden />
+        </span>
       </button>
     );
   }

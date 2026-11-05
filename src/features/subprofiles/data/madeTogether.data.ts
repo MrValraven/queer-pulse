@@ -2,7 +2,7 @@ import type {
   MadeTogetherItemDTO,
   MadeTogetherPersonaDTO,
 } from "../api/subprofiles.api";
-import { isContentSection } from "../subprofile-kinds";
+import { isContentSection, itemsShownForKind } from "../subprofile-kinds";
 import { DEMO_SUBPROFILES, type DemoSubprofile } from "./subprofiles.data";
 import {
   DEMO_CARD_CREDIT_EDGES,
@@ -32,9 +32,10 @@ function toPersonaDTO(persona: DemoSubprofile): MadeTogetherPersonaDTO {
   };
 }
 
-/** The author's first content picture, else its banner, else none. */
+/** The author's first content picture in a section its kind shows, else its
+ *  banner, else none. */
 function demoWorkImage(author: DemoSubprofile): string | null {
-  const pictured = author.items.find(
+  const pictured = itemsShownForKind(author.items, author.kind).find(
     (item) => isContentSection(item.section) && Boolean(item.imageUrl),
   );
   return pictured?.imageUrl ?? author.coverUrl ?? null;

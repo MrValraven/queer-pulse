@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { slugify } from "./poem/poemModel";
 import type {
@@ -13,6 +13,28 @@ export interface PoemDeepLink {
   openPoem: (item: SubprofileItemView) => void;
   /** Close the reader and drop the `?poem=` param. */
   closePoem: () => void;
+  /** Every poem in page order: the featured poem first (its Spotlight sits
+   *  above the section), then the poems section's rows as listed. */
+  poems: SubprofileItemView[];
+  /** Where the open poem sits in `poems`, or -1 when the reader is closed. */
+  poemIndex: number;
+  /** Swap the reader to `poems[index]` and replace `?poem=` in place, so Back
+   *  still closes the reader. An index outside the list is a no-op. */
+  goTo: (index: number) => void;
+}
+
+/** The poems in the order a reader meets them on the page. */
+function orderPoems(
+  sections: SubprofileSectionView[] | undefined,
+): SubprofileItemView[] {
+  const poemsSection = sections?.find((section) => section.section === "poems");
+  if (!poemsSection) return [];
+  const featuredPoem = poemsSection.items.find((item) => item.isFeatured);
+  if (!featuredPoem) return poemsSection.items;
+  return [
+    featuredPoem,
+    ...poemsSection.items.filter((item) => item !== featuredPoem),
+  ];
 }
 
 /**
@@ -92,5 +114,21 @@ export function usePoemDeepLink(
     );
   }, [setSearchParams]);
 
-  return { poemItem, openPoem, closePoem };
+  const poems = useMemo(() => orderPoems(sections), [sections]);
+  // Identity first; the id match covers a refetch that rebuilt the items.
+  const poemIndex = poemItem
+    ? poems.includes(poemItem)
+      ? poems.indexOf(poemItem)
+      : poems.findIndex((item) => item.id === poemItem.id)
+    : -1;
+
+  const goTo = useCallback(
+    (index: number) => {
+      const targetPoem = poems[index];
+      if (targetPoem) openPoem(targetPoem);
+    },
+    [poems, openPoem],
+  );
+
+  return { poemItem, openPoem, closePoem, poems, poemIndex, goTo };
 }

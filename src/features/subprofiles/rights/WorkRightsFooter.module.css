@@ -47,3 +47,28 @@
 .page .icon {
   margin-top: 0;
 }
+
+/* Colophon variant (`PersonaColophon`, page skin): the notice set as the last
+   lines of a book page. The © line in serif small caps, the provenance under
+   it in the same quiet ink, both centred in the colophon's column. */
+.colophon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  text-align: center;
+  color: var(--ink-60);
+  font-family: var(--serif);
+}
+.colophon .copyright {
+  font-weight: 400;
+  font-size: var(--text-14);
+  font-variant-caps: small-caps;
+  letter-spacing: 0.06em;
+}
+.colophon .provenance {
+  margin: 0;
+  font-size: var(--text-12-5);
+  opacity: 1;
+  text-wrap: balance;
+}

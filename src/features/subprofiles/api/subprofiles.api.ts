@@ -1299,6 +1299,11 @@ export const getSubprofile = (id: string, signal?: AbortSignal) =>
 export const updateSubprofile = (id: string, dto: UpdateSubprofileDTO) =>
   apiPatch<SubprofileDTO>(`/subprofiles/${id}`, dto);
 
+/** Change a persona's type (`kind`) within its family. A refusal arrives as a
+ *  422 that `toPersonaKindChangeError` reads. */
+export const changeSubprofileKind = (id: string, kind: SubprofileKind) =>
+  apiPost<SubprofileDTO>(`/subprofiles/${id}/kind`, { kind });
+
 /** Fully replace the items of one section (section comes from the URL). */
 export const replaceSubprofileSection = (
   id: string,

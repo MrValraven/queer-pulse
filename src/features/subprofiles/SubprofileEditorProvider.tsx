@@ -38,6 +38,10 @@ import {
  * (`key={seedGeneration}`), so meta, skin blocks, rows and sections all
  * re-seed from the fresh copy through their own mount-time seeding. The
  * member's edits stay on screen until they press Reload.
+ *
+ * A type change re-seeds the editor the same way Reload does: when the
+ * persona arrives with a different `kind`, the generation goes up, so the
+ * sections and chapters rebuild for the new kind.
  */
 export function SubprofileEditorProvider({
   subprofile,
@@ -58,6 +62,8 @@ export function SubprofileEditorProvider({
     useState<SubprofileView | null>(null);
   const [isReloading, setIsReloading] = useState(false);
   const [hasReloadFailed, setHasReloadFailed] = useState(false);
+  // The kind the editor state below was seeded for.
+  const [seededKind, setSeededKind] = useState(subprofile.kind);
 
   const reloadLatest = useCallback(() => {
     setIsReloading(true);
@@ -69,6 +75,8 @@ export function SubprofileEditorProvider({
         // there is nothing to re-seed.
         if (!latest) return;
         setReloadedSubprofile(latest);
+        // The Reload already re-seeds, so a kind it brings counts as seeded.
+        setSeededKind(latest.kind);
         setSeedGeneration((generation) => generation + 1);
         showToast(t("subprofiles:editConflict.reloadedToast"), "success");
       })
@@ -86,6 +94,14 @@ export function SubprofileEditorProvider({
     reloadedSubprofile.editVersion > subprofile.editVersion
       ? reloadedSubprofile
       : subprofile;
+
+  // A type change re-seeds like a Reload. Stored during render, so the
+  // render that first sees the new kind already mounts the fresh editor
+  // state. A refetch that keeps the kind leaves the editor mounted.
+  if (seedSource.kind !== seededKind) {
+    setSeededKind(seedSource.kind);
+    setSeedGeneration((generation) => generation + 1);
+  }
 
   return (
     <SubprofileEditorState

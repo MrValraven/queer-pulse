@@ -1229,6 +1229,10 @@ export const subprofiles: Catalog = {
   // Destaque do item em foco (SubprofileSpotlight)
   "spotlight.eyebrow": "Começa aqui",
   "spotlight.open": "Abrir",
+  "spotlight.nextEvent": "Próximo evento",
+  "spotlight.fromArchive": "Do arquivo",
+  "spotlight.comingUp": "Em breve",
+  "spotlight.eventDetails": "Ver o evento",
 
   // Créditos de colaboração num item público (ItemCollaborators, em
   // SubprofileSections; também os créditos do item em destaque no
@@ -1645,12 +1649,29 @@ export const subprofiles: Catalog = {
     "Isto parece um poema mais antigo, guardado como uma única linha longa. Podemos sugerir novas quebras de linha a partir da pontuação. Depois poderás sempre editá-las.",
   "poem.editor.resplit.action": "Voltar a dividir em linhas",
   "poem.row.openAria": "Ler o poema “{title}”",
+  "poem.row.openPrefix": "Ler o poema",
+  "event.row.openPrefix": "Abrir evento",
   "poem.reader.withLabel": "Com {names}",
   "poem.reader.sectionBreak": "Separador de secção",
   "poem.reader.copyLink": "Copiar link",
   "poem.reader.copyLinkAria": "Copiar link para o poema “{title}”",
   "poem.reader.copy": "Copiar poema",
   "poem.reader.copied": "Poema copiado",
+  "poem.reader.previous": "Poema anterior",
+  "poem.reader.next": "Próximo poema",
+  "poem.reader.position": "{index} de {total}",
+  // Event detail sheet (collective events/nights)
+  "event.sheet.dialogLabel": "{title}, detalhes do evento",
+  "event.sheet.close": "Fechar",
+  "event.sheet.lineup": "Cartaz",
+  "event.sheet.addToCalendar": "Adicionar ao calendário",
+  "event.sheet.calendarBlocked":
+    "O teu navegador não deixou guardar o ficheiro do calendário. Confirma que as transferências estão autorizadas para este site.",
+  "event.sheet.eventPage": "Página do evento",
+  "event.sheet.tickets": "Bilhetes",
+  "event.sheet.previous": "Evento anterior",
+  "event.sheet.next": "Evento seguinte",
+  "event.sheet.position": "{index} de {total}",
 
   // Traduções/versões do poema — várias versões do mesmo poema (por ex.
   // original + traduções), percorridas por separadores no editor e no leitor.
@@ -1666,6 +1687,11 @@ export const subprofiles: Catalog = {
   // Rodapé público de direitos de autor + proveniência (WorkRightsFooter, protect-your-work Tarefa 3)
   "rights.copyright": "© {year}. Todos os direitos reservados.",
   "rights.firstPublished": "Publicado pela primeira vez na QueerPulse · {date}",
+  // The Poster skin's page foot (PersonaPosterColophon)
+  "colophon.poster.producingSince": "a produzir desde {year}",
+  "colophon.poster.organisingSince": "a organizar desde {year}",
+  "colophon.poster.eventCount_one": "{count} evento",
+  "colophon.poster.eventCount_other": "{count} eventos",
 
   // Skin-blocks editor (personas expansion — page-block editor pane, rail entry & field labels)
   "editorRail.skinBlocks": "Blocos da página",
@@ -2093,6 +2119,26 @@ export const subprofiles: Catalog = {
   // Persona audit remediation (2026-08-11)
   "section.countLabel_one": "{count} item",
   "section.countLabel_other": "{count} itens",
+  "section.poemsCaption_one": "{count} poema · {span}",
+  "section.poemsCaption_other": "{count} poemas · {span}",
+  "section.yearSpan": "{from} a {to}",
+  "section.poemsUndated": "Sem data",
+  "section.poemsEmptyOwner": "Os teus poemas vão aparecer aqui",
+  "section.poemsAdd": "Adicionar um poema",
+  // Eventos, noites, clientes e cartaz do Poster (coletivo)
+  "section.eventsPast": "Eventos passados",
+  "section.nightsPast": "Noites passadas",
+  "section.eventsUpcomingCount_one": "{count} a seguir",
+  "section.eventsUpcomingCount_other": "{count} a seguir",
+  "section.eventsPastCount_one": "{count} passado",
+  "section.eventsPastCount_other": "{count} passados",
+  "section.eventsSince": "desde {year}",
+  "section.clientsCount_one": "{count} cliente",
+  "section.clientsCount_other": "{count} clientes",
+  "section.rosterCount_one": "{count} artista",
+  "section.rosterCount_other": "{count} artistas",
+  "section.eventsEmptyOwner": "O teu primeiro evento aparece aqui",
+  "section.eventsAdd": "Adicionar um evento",
   "page.ogImageAlt": "{name}, {craft} na QueerPulse",
   "peopleModal.followersCountOnlyTitle": "Os seguidores ficam privados",
   "peopleModal.followersCountOnlyBody":
@@ -3459,6 +3505,8 @@ export const subprofiles: Catalog = {
     "por ex. Câmara Municipal de Lisboa",
   "itemField.architect.competitions.meta.label": "Resultado",
   "itemField.architect.competitions.meta.placeholder": "por ex. Menção honrosa",
+  "itemField.lineUp.label": "Cartaz",
+  "itemField.lineUp.placeholder": "com Odete, Nídia",
   "skinControl.listFull": "Máximo de {count}",
   "skinControl.validate.httpsUrl": "Usa um link que comece por https://",
   "skinControl.validate.year": "Usa um ano entre 1900 e este ano",
@@ -3933,4 +3981,45 @@ export const subprofiles: Catalog = {
   "gigEditor.status.needsDate": "Escolhe a data do concerto para guardar",
   "gigEditor.status.badTicketLink":
     "O link de bilhetes tem de começar por https://",
+
+  // Persona type change
+  "kindChange.label": "Tipo",
+  "kindChange.help":
+    "Escolhe outro tipo do grupo {family}. O identificador, os seguidores, os créditos e as publicações ficam com esta persona.",
+  "kindChange.helpGeneric":
+    "Escolhe o tipo que descreve esta persona. Depois disso, podes mudá-lo para outro tipo do mesmo grupo.",
+  "kindChange.onlyType":
+    "{kind} é o único tipo do grupo {family}, por isso esta persona mantém-no.",
+  "kindChange.open": "Mudar tipo",
+  "kindChange.close": "Fechar lista de tipos",
+  "kindChange.saveFirst":
+    "Guarda ou descarta as tuas alterações primeiro e depois muda o tipo.",
+  "kindChange.confirm.title": "Mudar o tipo para {kind}?",
+  "kindChange.confirm.action": "Mudar tipo",
+  "kindChange.confirm.hidden_one": "{sections} deixa de aparecer.",
+  "kindChange.confirm.hidden_other": "{sections} deixam de aparecer.",
+  "kindChange.confirm.appearing_one": "{sections} passa a aparecer.",
+  "kindChange.confirm.appearing_other": "{sections} passam a aparecer.",
+  "kindChange.confirm.staying_one": "{sections} continua.",
+  "kindChange.confirm.staying_other": "{sections} continuam.",
+  "kindChange.confirm.noSectionChange": "Todas as secções ficam como estão.",
+  "kindChange.confirm.keepsContent":
+    "Nada é apagado. Se voltares a {currentKind}, as secções escondidas regressam tal como estavam.",
+  "kindChange.successToast": "Tipo mudado para {kind}.",
+  "kindChange.error.action": "Não foi possível mudar o tipo",
+  "kindChange.error.unchanged": "Esta persona já é do tipo {kind}.",
+  "kindChange.error.otherFamily":
+    "{kind} pertence ao grupo {requestedFamily} e esta persona está no grupo {currentFamily}. Escolhe um tipo do grupo {currentFamily}.",
+  "kindChange.error.studioNoFormat_one":
+    "Esta persona tem 1 lançamento no Studio e o tipo {kind} não publica no Studio. Desagenda-o, despublica-o ou apaga-o primeiro.",
+  "kindChange.error.studioNoFormat_other":
+    "Esta persona tem {count} lançamentos no Studio e o tipo {kind} não publica no Studio. Desagenda-os, despublica-os ou apaga-os primeiro.",
+  "kindChange.error.studioOtherFormat_one":
+    "Esta persona tem 1 lançamento no Studio e o tipo {kind} publica outro formato no Studio. Desagenda-o, despublica-o ou apaga-o primeiro.",
+  "kindChange.error.studioOtherFormat_other":
+    "Esta persona tem {count} lançamentos no Studio e o tipo {kind} publica outro formato no Studio. Desagenda-os, despublica-os ou apaga-os primeiro.",
+  "kindChange.error.studioTakenDown_one":
+    "A nossa equipa retirou um lançamento desta persona do Studio. Fala com a nossa equipa antes de mudares o tipo.",
+  "kindChange.error.studioTakenDown_other":
+    "A nossa equipa retirou {count} lançamentos desta persona do Studio. Fala com a nossa equipa antes de mudares o tipo.",
 };

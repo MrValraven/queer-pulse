@@ -8,6 +8,7 @@ import { useVerificationRequests } from "../../../features/admin/api/useAdminVer
 import { useAdminJoinRequests } from "../../../features/admin/api/useAdminHousingCoops";
 import { useListingClaims } from "../../../features/admin/api/useListingClaims";
 import { useMusicEventAttention } from "../../../features/admin/musicEvents/api/useMusicEvents";
+import { useLeadDueCount } from "../../../features/admin/leads/api/useLeadDueCount";
 import { useMyStaffRoles } from "../../../features/auth/api/useMyStaffRoles";
 import type { AdminNavBadgeCounts } from "./adminNavMatching";
 
@@ -69,6 +70,9 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
   // `music_manager_producer` grant; `useMyStaffRoles` already lists every grant
   // for an admin and in demo mode.
   const hasMusicEventsAccess = staffRoles.includes("music_manager_producer");
+  // `AdminLeadsController` admits the same two: an admin or the
+  // `music_manager_producer` grant.
+  const hasLeadsAccess = staffRoles.includes("music_manager_producer");
   const overview = useAdminOverview({ isEnabled: hasAdminOverviewAccess });
   const modReports = useModReports(
     undefined,
@@ -113,6 +117,10 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
     isEnabled: hasMusicEventsAccess,
   });
 
+  // The leads pill counts open leads whose follow-up is due today or earlier.
+  // Off without leads access, so a moderator sends no request here.
+  const leadDueCount = useLeadDueCount({ isEnabled: hasLeadsAccess });
+
   // Phase 2's review queue is live, so the badge counts the actual review-queue
   // backlog: every request still waiting on a moderator, at any stage of that
   // wait (freshly submitted, actively being reviewed, or back for a second look
@@ -147,5 +155,6 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
     musicEvents: hasMusicEventsAccess
       ? musicEventAttention.pendingInviteRequestCount
       : 0,
+    leads: hasLeadsAccess ? (leadDueCount.data ?? 0) : 0,
   };
 }

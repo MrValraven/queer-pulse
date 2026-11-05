@@ -1,0 +1,24 @@
+/* The full type list an "Other" persona picks from. It scrolls inside its own
+   area so the dialog stays short; the search field sticks to the top of the
+   area and a close button closes out the bottom. */
+.scrollArea {
+  max-height: 60svh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* Room so the focus ring on an edge button is not clipped by the scroller. */
+  padding: 2px;
+}
+/* KindFamilyPicker's search wrapper is the first child of its column. */
+.scrollArea > div > div:first-child {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding-block: var(--gap-xs);
+  background: var(--cream);
+}
+.closeRow {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--gap-sm);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}

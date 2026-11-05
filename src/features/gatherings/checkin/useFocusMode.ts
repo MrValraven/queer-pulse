@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useScreenWakeLock } from "../../../shared/hooks/useScreenWakeLock";
 import { CHECKIN_FOCUS_PARAM } from "../gatheringPaths";
 
 const FOCUS_ON_VALUE = "1";
@@ -55,36 +56,7 @@ export function useFocusMode(): {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isFocusMode, exitFocusMode]);
 
-  useEffect(() => {
-    if (!isFocusMode || !("wakeLock" in navigator)) return;
-    let sentinel: WakeLockSentinel | null = null;
-    let isCancelled = false;
-
-    function requestWakeLock() {
-      navigator.wakeLock
-        .request("screen")
-        .then((acquired) => {
-          if (isCancelled) {
-            acquired.release().catch(() => undefined);
-            return;
-          }
-          sentinel?.release().catch(() => undefined);
-          sentinel = acquired;
-        })
-        .catch(() => undefined);
-    }
-    function handleVisibilityChange() {
-      if (document.visibilityState === "visible") requestWakeLock();
-    }
-
-    requestWakeLock();
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    return () => {
-      isCancelled = true;
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      sentinel?.release().catch(() => undefined);
-    };
-  }, [isFocusMode]);
+  useScreenWakeLock(isFocusMode);
 
   return { isFocusMode, enterFocusMode, exitFocusMode };
 }

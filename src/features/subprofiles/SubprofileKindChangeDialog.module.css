@@ -1,0 +1,18 @@
+/* SubprofileKindChangeDialog: section lines grouped, reassurance set apart.
+   Tokens only; the muted line matches ConfirmDialog's description style. */
+.sectionLines {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sectionLines p {
+  margin: 0;
+}
+
+.keepsContent {
+  margin: 12px 0 0;
+  font-size: var(--text-14-5);
+  line-height: 1.6;
+  color: var(--ink-60);
+}

@@ -1,0 +1,423 @@
+import { describe, expect, it } from "vitest";
+import type { VjTransition } from "../../../shared/contracts/vj";
+import {
+  INITIAL_VJ_LAYERS,
+  VJ_LAYER_NAMES,
+  reduceVjLayers,
+  releasedVjSourceUrls,
+  vjLayerOpacity,
+  vjLayerZ,
+  type VjLayerEvent,
+  type VjLayerMachineState,
+  type VjLayerName,
+  type VjRenderableClip,
+} from "./vjLayerMachine";
+
+const FADE: VjTransition = { mode: "fade", fadeMs: 800 };
+const CUT: VjTransition = { mode: "cut", fadeMs: 800 };
+
+function clipNamed(clipId: string): VjRenderableClip {
+  return {
+    clipId,
+    mediaKind: "video",
+    fitMode: "fill",
+    width: 1920,
+    height: 1080,
+    sourceUrl: `blob:source-${clipId}`,
+  };
+}
+
+function applyAll(
+  events: VjLayerEvent[],
+  state: VjLayerMachineState = INITIAL_VJ_LAYERS,
+): VjLayerMachineState {
+  return events.reduce(reduceVjLayers, state);
+}
+
+function layerHolding(state: VjLayerMachineState, clipId: string): VjLayerName {
+  const layer = VJ_LAYER_NAMES.find(
+    (layerName) => state.slots[layerName].clip?.clipId === clipId,
+  );
+  if (!layer) throw new Error(`no layer holds ${clipId}`);
+  return layer;
+}
+
+/** Clip "one" fully shown on the front, reached from black. */
+function showingClipOne(): VjLayerMachineState {
+  const loading = applyAll([
+    { type: "target", clip: clipNamed("one"), transition: FADE },
+  ]);
+  return applyAll(
+    [
+      {
+        type: "firstFrame",
+        layer: layerHolding(loading, "one"),
+        clipId: "one",
+      },
+    ],
+    loading,
+  );
+}
+
+describe("reduceVjLayers switching clips", () => {
+  it("loads the next clip hidden and fades it in over the current one once it has a frame", () => {
+    const shown = showingClipOne();
+    const frontLayer = shown.front;
+    expect(frontLayer).not.toBeNull();
+    if (!frontLayer) return;
+
+    const loading = reduceVjLayers(shown, {
+      type: "target",
+      clip: clipNamed("two"),
+      transition: FADE,
+    });
+    const incomingLayer = layerHolding(loading, "two");
+    expect(incomingLayer).not.toBe(frontLayer);
+    expect(loading.slots[incomingLayer].phase).toBe("loading");
+    expect(vjLayerOpacity(loading, incomingLayer)).toBe(0);
+    expect(vjLayerZ(loading, incomingLayer)).toBe(0);
+    expect(vjLayerOpacity(loading, frontLayer)).toBe(1);
+    expect(vjLayerZ(loading, frontLayer)).toBe(1);
+    expect(loading.slots[frontLayer].phase).toBe("shown");
+
+    const fading = reduceVjLayers(loading, {
+      type: "firstFrame",
+      layer: incomingLayer,
+      clipId: "two",
+    });
+    expect(fading.slots[incomingLayer].phase).toBe("fadingIn");
+    expect(vjLayerOpacity(fading, incomingLayer)).toBe(1);
+    expect(vjLayerZ(fading, incomingLayer)).toBe(1);
+    expect(vjLayerZ(fading, frontLayer)).toBe(0);
+    expect(fading.incoming).toEqual({
+      layer: incomingLayer,
+      mode: "fade",
+      fadeMs: 800,
+    });
+  });
+
+  it("keeps the outgoing layer at full opacity until the fade ends", () => {
+    const shown = showingClipOne();
+    const outgoingLayer = shown.front;
+    if (!outgoingLayer) throw new Error("expected a front layer");
+    const loading = reduceVjLayers(shown, {
+      type: "target",
+      clip: clipNamed("two"),
+      transition: FADE,
+    });
+    const incomingLayer = layerHolding(loading, "two");
+    const fading = reduceVjLayers(loading, {
+      type: "firstFrame",
+      layer: incomingLayer,
+      clipId: "two",
+    });
+    expect(vjLayerOpacity(fading, outgoingLayer)).toBe(1);
+    expect(fading.slots[outgoingLayer].phase).toBe("shown");
+    expect(fading.front).toBe(outgoingLayer);
+
+    const ended = reduceVjLayers(fading, {
+      type: "fadeEnded",
+      layer: incomingLayer,
+      clipId: "two",
+    });
+    expect(ended.front).toBe(incomingLayer);
+    expect(ended.slots[incomingLayer].phase).toBe("shown");
+    expect(ended.slots[outgoingLayer].phase).toBe("leaving");
+    expect(vjLayerOpacity(ended, outgoingLayer)).toBe(0);
+    expect(ended.incoming).toBeNull();
+  });
+
+  it("cuts only once the next clip has a frame", () => {
+    const shown = showingClipOne();
+    const outgoingLayer = shown.front;
+    const loading = reduceVjLayers(shown, {
+      type: "target",
+      clip: clipNamed("two"),
+      transition: CUT,
+    });
+    const incomingLayer = layerHolding(loading, "two");
+    expect(loading.front).toBe(outgoingLayer);
+    expect(vjLayerOpacity(loading, incomingLayer)).toBe(0);
+
+    const cut = reduceVjLayers(loading, {
+      type: "firstFrame",
+      layer: incomingLayer,
+      clipId: "two",
+    });
+    expect(cut.front).toBe(incomingLayer);
+    expect(cut.slots[incomingLayer].phase).toBe("shown");
+    expect(vjLayerOpacity(cut, incomingLayer)).toBe(1);
+    expect(cut.incoming).toBeNull();
+  });
+
+  it("keeps the current clip on screen when the next one fails to decode", () => {
+    const shown = showingClipOne();
+    const frontLayer = shown.front;
+    if (!frontLayer) throw new Error("expected a front layer");
+    const loading = reduceVjLayers(shown, {
+      type: "target",
+      clip: clipNamed("broken"),
+      transition: FADE,
+    });
+    const incomingLayer = layerHolding(loading, "broken");
+    const failed = reduceVjLayers(loading, {
+      type: "failed",
+      layer: incomingLayer,
+      clipId: "broken",
+    });
+    expect(failed.front).toBe(frontLayer);
+    expect(failed.slots[frontLayer]).toEqual({
+      clip: clipNamed("one"),
+      phase: "shown",
+    });
+    expect(failed.slots[incomingLayer]).toEqual({ clip: null, phase: "empty" });
+    expect(failed.incoming).toBeNull();
+    expect(failed.isBlackRequested).toBe(false);
+  });
+});
+
+describe("reduceVjLayers with targets in flight", () => {
+  it("finishes a running fade at once when a new clip arrives and loads it into the freed layer", () => {
+    const shown = showingClipOne();
+    const firstLayer = shown.front;
+    const loading = reduceVjLayers(shown, {
+      type: "target",
+      clip: clipNamed("two"),
+      transition: FADE,
+    });
+    const secondLayer = layerHolding(loading, "two");
+    const fading = reduceVjLayers(loading, {
+      type: "firstFrame",
+      layer: secondLayer,
+      clipId: "two",
+    });
+
+    const retargeted = reduceVjLayers(fading, {
+      type: "target",
+      clip: clipNamed("three"),
+      transition: FADE,
+    });
+    expect(retargeted.front).toBe(secondLayer);
+    expect(retargeted.slots[secondLayer].phase).toBe("shown");
+    expect(vjLayerOpacity(retargeted, secondLayer)).toBe(1);
+    expect(firstLayer).not.toBeNull();
+    if (!firstLayer) return;
+    expect(retargeted.slots[firstLayer]).toEqual({
+      clip: clipNamed("three"),
+      phase: "loading",
+    });
+    expect(retargeted.incoming?.layer).toBe(firstLayer);
+  });
+
+  it("lets the latest target win while one is still loading", () => {
+    const shown = showingClipOne();
+    const loadingTwo = reduceVjLayers(shown, {
+      type: "target",
+      clip: clipNamed("two"),
+      transition: FADE,
+    });
+    const loadingThree = reduceVjLayers(loadingTwo, {
+      type: "target",
+      clip: clipNamed("three"),
+      transition: CUT,
+    });
+    const incomingLayer = layerHolding(loadingThree, "three");
+    expect(
+      VJ_LAYER_NAMES.some(
+        (layerName) => loadingThree.slots[layerName].clip?.clipId === "two",
+      ),
+    ).toBe(false);
+    expect(loadingThree.incoming?.mode).toBe("cut");
+
+    const staleFrame = reduceVjLayers(loadingThree, {
+      type: "firstFrame",
+      layer: incomingLayer,
+      clipId: "two",
+    });
+    expect(staleFrame).toBe(loadingThree);
+  });
+
+  it("changes nothing when the live clip is targeted again", () => {
+    const shown = showingClipOne();
+    const retapped = reduceVjLayers(shown, {
+      type: "target",
+      clip: clipNamed("one"),
+      transition: CUT,
+    });
+    expect(retapped).toBe(shown);
+  });
+
+  it("raises the black curtain for no clip and keeps the old clip under it until the curtain is up", () => {
+    const shown = showingClipOne();
+    const frontLayer = shown.front;
+    if (!frontLayer) throw new Error("expected a front layer");
+    const black = reduceVjLayers(shown, {
+      type: "target",
+      clip: null,
+      transition: { mode: "fade", fadeMs: 1200 },
+    });
+    expect(black.isBlackRequested).toBe(true);
+    expect(black.curtainFadeMs).toBe(1200);
+    expect(black.front).toBe(frontLayer);
+    expect(black.slots[frontLayer].phase).toBe("shown");
+    expect(vjLayerOpacity(black, frontLayer)).toBe(1);
+
+    const cutToBlack = reduceVjLayers(shown, {
+      type: "target",
+      clip: null,
+      transition: CUT,
+    });
+    expect(cutToBlack.curtainFadeMs).toBe(0);
+  });
+
+  it("fades in from black under a lifting curtain", () => {
+    const black = reduceVjLayers(showingClipOne(), {
+      type: "target",
+      clip: null,
+      transition: FADE,
+    });
+    const loading = reduceVjLayers(black, {
+      type: "target",
+      clip: clipNamed("two"),
+      transition: { mode: "fade", fadeMs: 600 },
+    });
+    const incomingLayer = layerHolding(loading, "two");
+    expect(loading.isBlackRequested).toBe(true);
+
+    const lifted = reduceVjLayers(loading, {
+      type: "firstFrame",
+      layer: incomingLayer,
+      clipId: "two",
+    });
+    expect(lifted.isBlackRequested).toBe(false);
+    expect(lifted.curtainFadeMs).toBe(600);
+    expect(lifted.front).toBe(incomingLayer);
+    expect(vjLayerOpacity(lifted, incomingLayer)).toBe(1);
+    expect(lifted.slots[incomingLayer].phase).toBe("shown");
+
+    const fromColdStart = applyAll([
+      { type: "target", clip: clipNamed("first"), transition: FADE },
+    ]);
+    expect(fromColdStart.isBlackRequested).toBe(true);
+    const coldLifted = reduceVjLayers(fromColdStart, {
+      type: "firstFrame",
+      layer: layerHolding(fromColdStart, "first"),
+      clipId: "first",
+    });
+    expect(coldLifted.isBlackRequested).toBe(false);
+    expect(coldLifted.curtainFadeMs).toBe(800);
+  });
+});
+
+describe("reduceVjLayers invariants", () => {
+  it("keeps an opaque layer under every live clip across 500 random event sequences", () => {
+    let seed = 20261105;
+    const nextRandom = (): number => {
+      seed = (seed * 1664525 + 1013904223) % 4294967296;
+      return seed / 4294967296;
+    };
+    const pick = <Item>(items: readonly Item[]): Item => {
+      const item = items[Math.floor(nextRandom() * items.length)];
+      if (item === undefined) throw new Error("empty pick");
+      return item;
+    };
+    const clipIds = ["one", "two", "three", "four"];
+    const transitions: VjTransition[] = [
+      FADE,
+      CUT,
+      { mode: "fade", fadeMs: 0 },
+      { mode: "fade", fadeMs: 4000 },
+    ];
+
+    const randomEvent = (state: VjLayerMachineState): VjLayerEvent => {
+      const roll = nextRandom();
+      if (roll < 0.35) {
+        const clipId = nextRandom() < 0.15 ? null : pick(clipIds);
+        return {
+          type: "target",
+          clip: clipId === null ? null : clipNamed(clipId),
+          transition: pick(transitions),
+        };
+      }
+      const layer = pick(VJ_LAYER_NAMES);
+      const heldClipId = state.slots[layer].clip?.clipId;
+      const clipId =
+        heldClipId && nextRandom() < 0.85 ? heldClipId : pick(clipIds);
+      if (roll < 0.65) return { type: "firstFrame", layer, clipId };
+      if (roll < 0.8) return { type: "failed", layer, clipId };
+      return { type: "fadeEnded", layer, clipId };
+    };
+
+    for (let sequenceIndex = 0; sequenceIndex < 500; sequenceIndex += 1) {
+      let state = INITIAL_VJ_LAYERS;
+      for (let eventIndex = 0; eventIndex < 40; eventIndex += 1) {
+        state = reduceVjLayers(state, randomEvent(state));
+        if (!state.isBlackRequested) {
+          expect(state.front).not.toBeNull();
+          if (state.front === null) return;
+          expect(state.slots[state.front].phase).toBe("shown");
+          expect(vjLayerOpacity(state, state.front)).toBe(1);
+        }
+        if (state.incoming) {
+          const incomingSlot = state.slots[state.incoming.layer];
+          expect(state.incoming.layer).not.toBe(state.front);
+          expect(incomingSlot.clip).not.toBeNull();
+          expect(["loading", "fadingIn"]).toContain(incomingSlot.phase);
+          if (incomingSlot.phase === "fadingIn") {
+            expect(vjLayerOpacity(state, state.incoming.layer)).toBe(1);
+            expect(vjLayerZ(state, state.incoming.layer)).toBe(1);
+          } else {
+            expect(vjLayerOpacity(state, state.incoming.layer)).toBe(0);
+          }
+        }
+      }
+    }
+  });
+
+  it("hands back every source URL a slot let go", () => {
+    const shown = showingClipOne();
+    const loading = reduceVjLayers(shown, {
+      type: "target",
+      clip: clipNamed("two"),
+      transition: CUT,
+    });
+    expect(releasedVjSourceUrls(shown, loading)).toEqual([]);
+
+    const replaced = reduceVjLayers(loading, {
+      type: "target",
+      clip: clipNamed("three"),
+      transition: CUT,
+    });
+    expect(releasedVjSourceUrls(loading, replaced)).toEqual([
+      "blob:source-two",
+    ]);
+
+    const cut = reduceVjLayers(replaced, {
+      type: "firstFrame",
+      layer: layerHolding(replaced, "three"),
+      clipId: "three",
+    });
+    expect(releasedVjSourceUrls(replaced, cut)).toEqual(["blob:source-one"]);
+
+    const beforeFailure = reduceVjLayers(cut, {
+      type: "target",
+      clip: clipNamed("four"),
+      transition: FADE,
+    });
+    const failedLoad = reduceVjLayers(beforeFailure, {
+      type: "failed",
+      layer: layerHolding(beforeFailure, "four"),
+      clipId: "four",
+    });
+    expect(releasedVjSourceUrls(beforeFailure, failedLoad)).toEqual([
+      "blob:source-four",
+    ]);
+
+    const black = reduceVjLayers(failedLoad, {
+      type: "target",
+      clip: null,
+      transition: CUT,
+    });
+    expect(releasedVjSourceUrls(failedLoad, black)).toEqual([]);
+  });
+});

@@ -19,6 +19,7 @@ import { SubprofileMoreMenu } from "./SubprofileMoreMenu";
 import { SubprofileShare } from "./SubprofileShare";
 import { DEFAULT_ACCENT } from "./subprofilePresence.data";
 import { personaAddressName } from "./subprofile-kinds";
+import { skinFor } from "./subprofile-skins";
 import { isPersonaOpenToEngagement } from "./personaEngagement";
 import { usePersonaStudioPagePath } from "./personaStudio";
 import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
@@ -79,6 +80,9 @@ export function SubprofileHeroActions({
   // Follow and endorse accept an open persona only, so a members-only one
   // shows neither, live or inert (PRD-428).
   const isOpenToEngagement = isPersonaOpenToEngagement(view);
+  // The page skin keeps Message as its one primary, so its toggled Follow and
+  // Endorse stay ghosts (persona-skins.css sizes that row down).
+  const isQuietRow = skinFor(view.kind) === "page";
   // An artist persona links to its Studio page for a viewer with a Studio
   // grant, once the artist read the persona sections share has loaded.
   const studioPagePath = usePersonaStudioPagePath(view);
@@ -221,6 +225,7 @@ export function SubprofileHeroActions({
             followerCount={view.followerCount}
             viewerFollowing={view.viewerFollowing}
             isOwnerViewing={false}
+            isQuiet={isQuietRow}
           />
           {/* Mounting it also reads the endorser list, which a members-only
               persona refuses to a non-owner, so the gate covers both. */}
@@ -235,6 +240,7 @@ export function SubprofileHeroActions({
               ownerName: view.ownerName,
             })}
             personaAvatarUrl={view.avatarUrl}
+            isQuiet={isQuietRow}
           />
         </>
       )}

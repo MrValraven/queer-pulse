@@ -6,6 +6,7 @@ import type {
 } from "./api/subprofiles.api";
 import type { SkinFamily } from "./subprofile-skins";
 import { VISUAL_SECTIONS } from "./subprofile-skins";
+import { isEventUpcoming } from "./eventDates";
 
 /**
  * How the persona-page renderer (`SubprofileHero`/`SubprofileSections`/
@@ -50,6 +51,8 @@ export type PersonaAction =
 
 /** A bare `yyyy-mm-dd`, what the gig day picker stores. */
 const DAY_ONLY_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+/** A bare `yyyy-mm`, what the month picker stores. */
+const MONTH_ONLY_DATE_PATTERN = /^\d{4}-\d{2}$/;
 
 /**
  * Is a freeform item date ("14 Mar 2026", "2026", "Feb 2026") in the future?
@@ -58,6 +61,12 @@ const DAY_ONLY_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
  */
 export function isUpcoming(date: string | null | undefined): boolean {
   if (!date) return false;
+  if (MONTH_ONLY_DATE_PATTERN.test(date)) {
+    // A bare `yyyy-mm` parses to the 1st at UTC midnight, which dropped an
+    // event later this month into the past on the 2nd. A month-only date
+    // stays upcoming until its month ends (`isEventUpcoming`).
+    return isEventUpcoming(date);
+  }
   if (DAY_ONLY_DATE_PATTERN.test(date)) {
     // A bare `yyyy-mm-dd` parses to UTC midnight, which would drop tonight's
     // gig into "Played" at the start of its own day. It stays upcoming until

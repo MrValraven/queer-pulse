@@ -14,6 +14,7 @@ import {
 } from "./editorRail.data";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import { SubprofileIdentityFields } from "./SubprofileIdentityFields";
+import { SubprofileKindField } from "./SubprofileKindField";
 import { SubprofilePresenceFields } from "./SubprofilePresenceFields";
 import { SubprofileLinkFields } from "./SubprofileLinkFields";
 import { SubprofileSkinBlocksEditor } from "./SubprofileSkinBlocksEditor";
@@ -162,6 +163,7 @@ export function EditorPaneRouter({
           bio={meta.bio}
           onBioChange={meta.setBio}
         />
+        <SubprofileKindField subprofile={subprofile} />
       </div>
 
       <div hidden={pane !== "presence"}>

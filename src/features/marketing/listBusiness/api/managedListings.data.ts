@@ -4,7 +4,8 @@ import type { ManagedListingItem } from "./managedListings.api";
  * Demo only: the listings the demo member runs, so the gathering form's
  * "Run by one of your businesses" has something to offer with no backend.
  * The walking tour has a meeting point (it prefills a gathering's address);
- * the hairdresser goes to people and has none. Sorted by name, as the
+ * the hairdresser goes to people and has none; the bookshop has a door, so
+ * picking it links it as the gathering's venue. Sorted by name, as the
  * endpoint sorts.
  */
 export const DEMO_MANAGED_LISTINGS: ManagedListingItem[] = [
@@ -28,5 +29,13 @@ export const DEMO_MANAGED_LISTINGS: ManagedListingItem[] = [
       latitude: 38.7153,
       longitude: -9.1352,
     },
+  },
+  {
+    id: "demo-listing-livraria-bertha",
+    ref: "QPL-DEMO-0103",
+    slug: "livraria-bertha",
+    name: "Livraria Bertha",
+    kind: "place",
+    meetingPoint: null,
   },
 ];

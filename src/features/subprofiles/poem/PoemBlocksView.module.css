@@ -1,22 +1,52 @@
+/* Verse set like an anthology page: the block is as wide as its longest line
+   (capped at a reading measure), centred on the page, with every line
+   left-aligned inside it. Line height 1.5 and a stanza gap of exactly one
+   line (1.5em) keep the vertical rhythm on the line grid. */
 .poem {
   display: flex;
   flex-direction: column;
-  gap: 1.15rem;
+  gap: 1.5em;
+  width: fit-content;
+  max-width: min(34em, 100%);
+  margin-inline: auto;
   color: var(--ink);
-  line-height: 1.7;
+  line-height: 1.5;
 }
 .stanza {
   margin: 0;
 }
+/* One verse line. The hanging indent pushes a wrapped continuation 1.5em in,
+   so a long line that wraps never reads as two verse lines. */
+.line {
+  display: block;
+  padding-inline-start: 1.5em;
+  text-indent: -1.5em;
+}
+/* Epigraph or dedication: italic, with an extra half line after it so it
+   stands apart from the verse it introduces. */
 .note {
-  margin: 0;
+  margin: 0 0 0.75em;
   font-style: italic;
   color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+/* A note is prose: a wrapped line runs back to the margin instead of taking
+   the verse hanging indent, so it never reads as a verse continuation. */
+.note .line {
+  padding-inline-start: 0;
+  text-indent: 0;
+}
+.note:last-child {
+  margin-block-end: 0;
 }
 .break {
   text-align: center;
   letter-spacing: 0.6em;
   color: color-mix(in srgb, var(--ink) 40%, transparent);
+}
+/* Letter-spacing also trails the last asterisk, which would shift the mark
+   left of centre; pulling the end edge in by the same amount recentres it. */
+.breakMark {
+  margin-inline-end: -0.6em;
 }
 .visuallyHidden {
   position: absolute;

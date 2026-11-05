@@ -158,6 +158,21 @@ export const SKIN_OF: Record<SubprofileKind, SkinFamily> = {
 export const skinFor = (kind: SubprofileKind): SkinFamily => SKIN_OF[kind];
 
 /**
+ * The kinds a persona of `kind` may switch to, in `SKIN_OF` declaration order.
+ * A generic persona may become any other kind. Every other kind may switch to
+ * the kinds that share its page family, which includes `generic` for the
+ * Workshop family.
+ */
+export const kindsSwitchableFrom = (kind: SubprofileKind): SubprofileKind[] => {
+  const allKinds = Object.keys(SKIN_OF) as SubprofileKind[];
+  return allKinds.filter(
+    (candidate) =>
+      candidate !== kind &&
+      (kind === "generic" || SKIN_OF[candidate] === SKIN_OF[kind]),
+  );
+};
+
+/**
  * Sections that render as an image grid rather than a list. Excludes the
  * universal `gallery` section on purpose: `sectionShape()` in
  * `personaSkinRender.ts` already resolves `gallery` to its own `"gallery"`

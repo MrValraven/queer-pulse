@@ -63,6 +63,72 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "persona-type-change",
+        category: "feature",
+        date: "5 Nov 2026",
+        ...entryKeys("persona-type-change"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "admin-vj-screen-and-remote",
+        category: "feature",
+        date: "5 Nov 2026",
+        ...entryKeys("admin-vj-screen-and-remote"),
+      },
+      {
+        id: "staff-leads-directory",
+        category: "feature",
+        date: "5 Nov 2026",
+        ...entryKeys("staff-leads-directory"),
+      },
+      {
+        id: "lyric-timing-keeps-page-scrolling",
+        category: "fix",
+        date: "5 Nov 2026",
+        ...entryKeys("lyric-timing-keeps-page-scrolling"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "studio-track-rows-open-smoothly",
+        category: "improvement",
+        date: "5 Nov 2026",
+        ...entryKeys("studio-track-rows-open-smoothly"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "business-event-public-address",
+        category: "improvement",
+        date: "5 Nov 2026",
+        ...entryKeys("business-event-public-address"),
+        tag: {
+          labelKey: "marketing:changelog.tag.createGathering",
+          to: routes.createGathering,
+        },
+      },
+      {
+        id: "event-producer-page-revamp",
+        category: "feature",
+        date: "5 Nov 2026",
+        ...entryKeys("event-producer-page-revamp"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "poet-page-revamp",
+        category: "feature",
+        date: "5 Nov 2026",
+        ...entryKeys("poet-page-revamp"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
         id: "persona-professions-by-work-area",
         category: "improvement",
         date: "5 Nov 2026",

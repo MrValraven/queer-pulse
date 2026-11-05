@@ -1,0 +1,304 @@
+/* One lead's page: the header, then details and persona beside the history
+   once the page body is wide enough, and the Delete lead zone across the
+   foot. Below that width every panel stacks in reading order. */
+
+/* ── Frame ──────────────────────────────────────────────────────────────── */
+.crumbLink {
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--radius-tag);
+}
+
+.crumbLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .crumbLink:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 3px;
+  }
+}
+
+/* ── States ─────────────────────────────────────────────────────────────── */
+/* The not-found and load error states sit in a reading column. */
+.statePage {
+  display: grid;
+  gap: var(--gap-sm);
+  /* A reading column; no spacing token is this wide. */
+  max-width: 720px;
+  margin-inline: auto;
+  padding-block: var(--gap-lg);
+}
+
+.skeletonPage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+}
+
+.skeletonHeader,
+.skeletonColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeletonBody {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+}
+
+.skeletonColumn > * {
+  border-radius: var(--radius-14);
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+/* The type, then the location after its pin, as two pieces a gap apart. */
+.headerSub {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px var(--gap-sm);
+}
+
+.headerLocation {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.headerIcon {
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+
+/* ── Body ───────────────────────────────────────────────────────────────── */
+/* The page body is the container, so the two columns follow the room the
+   admin rail leaves, open or folded. */
+.bodyFrame {
+  container-type: inline-size;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 48px;
+}
+
+.detailsArea,
+.personaArea,
+.historyArea,
+.footerRow {
+  min-width: 0;
+}
+
+/* Two columns once each holds a comfortable form width (about 400px) with
+   the gap between them. Details runs down the left; persona sits above the
+   history on the right, so both columns start above the fold and end near
+   each other. The last row before Delete lead takes any spare height, so a
+   tall details column never pushes the history away from the persona. */
+@container (min-width: 880px) {
+  .body {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      "details persona"
+      "details history"
+      "delete delete";
+    gap: 48px 40px;
+    align-items: start;
+  }
+
+  .detailsArea {
+    grid-area: details;
+  }
+
+  .personaArea {
+    grid-area: persona;
+  }
+
+  .historyArea {
+    grid-area: history;
+  }
+
+  .footerRow {
+    grid-area: delete;
+  }
+
+  /* The stage select keeps its own width beside the wide form; on a
+     narrow page it runs the full width like every other field. */
+  .stageControl {
+    max-width: 320px;
+  }
+
+  .skeletonBody {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  }
+}
+
+/* ── Panels ─────────────────────────────────────────────────────────────── */
+/* Panels group with space and a serif heading, the persona wall's idiom;
+   only the persona card and the notes draw a surface. */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+/* The heading takes focus in code after Save changes or Discard changes
+   folds the bar away; the ring shows for keyboard use only. */
+.sectionHeading:focus-visible {
+  border-radius: var(--radius-4);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.sectionHeading:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.sectionHeading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-24);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+/* ── Stage ──────────────────────────────────────────────────────────────── */
+.stageControl {
+  display: flex;
+  flex-direction: column;
+}
+
+.stageControl > .field {
+  margin-bottom: 0;
+}
+
+/* The top padding sits inside the fold, so the gap opens and closes with
+   it. */
+.stageSaved {
+  display: flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  margin: 0;
+  padding-top: 8px;
+  font-size: var(--text-13);
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--jade-text);
+}
+
+.stageSavedIcon {
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+
+/* ── Quick actions ──────────────────────────────────────────────────────── */
+.quickActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Each folding wrapper is a flex item; an empty fold takes no gap of its
+   own once it has gone. */
+.quickActions:not(:has(> *)) {
+  display: none;
+}
+
+/* The fold is the flex item, so it is what may shrink to the row; the
+   button inside then wraps a long name across lines and never pushes the
+   page sideways. */
+.quickActionSlot {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.quickActionSlot > .quickAction {
+  max-width: 100%;
+  white-space: normal;
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+
+/* ── Follow-up and saving ───────────────────────────────────────────────── */
+.followUpRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* The small buttons keep a 44px target on a phone, whatever the pointer
+   reports. */
+@media (--md) {
+  .quickActionSlot > .quickAction,
+  .followUpRow > .phoneTarget {
+    min-height: 44px;
+  }
+}
+
+.saveBar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.saveActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ── Delete lead ────────────────────────────────────────────────────────── */
+/* A bordered zone in the danger tone, so the one action that can't be
+   undone reads apart from the rest of the page. */
+.dangerZone {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  padding: 20px;
+  border: 1px solid rgba(var(--danger-rgb), 0.35);
+  border-radius: var(--radius-16);
+}
+
+.dangerText {
+  display: flex;
+  flex: 1 1 280px;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.dangerHeading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.dangerBody {
+  max-width: 62ch;
+  margin: 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.55;
+  color: var(--ink-60);
+}

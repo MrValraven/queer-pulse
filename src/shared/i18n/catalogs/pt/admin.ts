@@ -630,6 +630,10 @@ export const admin: Catalog = {
     "removeu um membro da comunidade",
   "platformLog.kind.mod.community_member_removed.target":
     "removeu um membro da comunidade:",
+  "platformLog.kind.mod.lead_persona_linked": "ligou um contacto a uma persona",
+  "platformLog.kind.mod.lead_persona_unlinked":
+    "desligou uma persona de um contacto",
+  "platformLog.kind.mod.lead_deleted": "apagou um contacto",
   "platformLog.kind.governance.section_changed":
     "atualizou a secção {section} da governação",
   "platformLog.kind.governance.finance_changed":
@@ -1391,7 +1395,7 @@ export const admin: Catalog = {
     "Mantém a página inicial, o kit de imprensa e os vídeos de marketing atualizados. As histórias submetidas e as candidaturas a redator continuam com a equipa Editorial.",
   "staffRoles.musicManagerProducer.label": "Gestão e produção musical",
   "staffRoles.musicManagerProducer.desc":
-    "Cria e gere os eventos de música que o QueerPulse organiza, do lineup à entrada, e faz a curadoria da página inicial do Studio: o destaque, as prateleiras, as cenas e as secções Artista do mês e Novas estrelas.",
+    "Cria e gere os eventos de música que o QueerPulse organiza, do lineup à entrada, e faz a curadoria da página inicial do Studio: o destaque, as prateleiras, as cenas e as secções Artista do mês e Novas estrelas. Também mantém o diretório de contactos: adiciona, edita e apaga contactos, os links, as notas e os seguimentos, e liga um contacto a uma persona.",
   "staffRoles.adminSuperset":
     "A administração já tem todas as capacidades de equipa.",
   "staffRoles.systemLocked":
@@ -9867,6 +9871,11 @@ export const admin: Catalog = {
     "Modelo de quiz despublicado",
   "governance.audit.actionType.quizshow_template_deleted":
     "Modelo de quiz apagado",
+  "governance.audit.actionType.lead_persona_linked":
+    "Contacto ligado a uma persona",
+  "governance.audit.actionType.lead_persona_unlinked":
+    "Contacto desligado de uma persona",
+  "governance.audit.actionType.lead_deleted": "Contacto apagado",
   "moderation.quizshowGame.reasonLabel": "Motivo",
   "moderation.quizshowGame.reasonHint":
     "Fica guardado no registo de moderação com esta denúncia",
@@ -10192,5 +10201,225 @@ export const admin: Catalog = {
   "personaWall.failure.restricted":
     "Não podes fazer alterações enquanto houver uma restrição de moderação na tua conta",
   "personaWall.failure.unknown":
+    "Isto não seguiu e o servidor não indicou o motivo. Tenta de novo",
+
+  // ── Leads (Admin and music_manager_producer) ──
+  "leads.title": "Contactos",
+  "leads.intro":
+    "Todas as pessoas que contactamos, com os links, as notas e o próximo seguimento",
+  "leads.addCta": "Adicionar contacto",
+  "leads.list.searchLabel": "Pesquisar contactos",
+  "leads.list.searchPlaceholder": "Nome, email ou link",
+  "leads.list.stageFilterLabel": "Fase",
+  "leads.list.stageAll": "Todos",
+  "leads.list.stageChipAria_one": "{stage}, {count} contacto",
+  "leads.list.stageChipAria": "{stage}, {count} contactos",
+  "leads.list.typeFilterLabel": "Tipo",
+  "leads.list.typeAll": "Todos os tipos",
+  "leads.list.dueOnly": "Seguimento pendente",
+  "leads.list.followUpOn": "Seguimento a {date}",
+  "leads.list.followUpDue": "Seguimento pendente desde {date}",
+  "leads.list.noteCount_one": "{count} nota",
+  "leads.list.noteCount": "{count} notas",
+  "leads.list.linksLabel": "Links: {platforms}",
+  "leads.list.moreLinksAria_one": "Mais {count} link",
+  "leads.list.moreLinksAria": "Mais {count} links",
+  "leads.list.personaLinked": "Ligado a {name}",
+  "leads.list.loadMore": "Mostrar mais contactos",
+  "leads.list.loadError": "Não conseguimos carregar os contactos",
+  "leads.list.retryCta": "Carregar os contactos de novo",
+  "leads.empty.none.title": "Ainda não há contactos",
+  "leads.empty.none.body": "Adiciona a primeira pessoa que estamos a contactar",
+  "leads.empty.filtered.title": "Nenhum contacto corresponde a estes filtros",
+  "leads.empty.filtered.body":
+    "Experimenta outro nome ou fase, ou limpa os filtros",
+  "leads.empty.clearFilters": "Limpar filtros",
+  "leads.action.openLead": "Abrir {name}",
+  "leads.toast.created": "{name} está nos contactos",
+  "leads.toast.deleted": "{name} foi apagado",
+  "leads.stage.to_contact": "Por contactar",
+  "leads.stage.contacted": "Contactado",
+  "leads.stage.in_talks": "Em conversa",
+  "leads.stage.on_board": "A bordo",
+  "leads.stage.not_now": "Agora não",
+  "leads.type.artist": "Artista",
+  "leads.type.dj": "DJ",
+  "leads.type.band": "Banda",
+  "leads.type.venue": "Espaço",
+  "leads.type.promoter": "Promotor",
+  "leads.type.collective": "Coletivo",
+  "leads.type.business": "Negócio",
+  "leads.type.other": "Outro",
+  "leads.platform.instagram": "Instagram",
+  "leads.platform.tiktok": "TikTok",
+  "leads.platform.soundcloud": "SoundCloud",
+  "leads.platform.spotify": "Spotify",
+  "leads.platform.bandcamp": "Bandcamp",
+  "leads.platform.youtube": "YouTube",
+  "leads.platform.facebook": "Facebook",
+  "leads.platform.x": "X",
+  "leads.platform.residentAdvisor": "Resident Advisor",
+  "leads.platform.mixcloud": "Mixcloud",
+  "leads.platform.website": "Site",
+  "leads.field.name": "Nome",
+  "leads.field.type": "Tipo",
+  "leads.field.typePlaceholder": "Escolhe um tipo",
+  "leads.field.stage": "Fase",
+  "leads.field.location": "Localização",
+  "leads.field.locationPlaceholder": "Cidade ou zona",
+  "leads.field.email": "Email",
+  "leads.field.phone": "Telefone",
+  "leads.field.links": "Links",
+  "leads.field.linksHint":
+    "Cola qualquer link e reconhecemos a plataforma pelo endereço",
+  "leads.field.linkLabel": "Link {position}",
+  "leads.field.linkPlaceholder": "instagram.com/nome",
+  "leads.field.openLinkAria": "Abrir o link {position} num novo separador",
+  "leads.field.removeLinkAria": "Remover o link {position}",
+  "leads.field.addLink": "Adicionar link",
+  "leads.field.linksFull": "Um contacto tem no máximo {max} links",
+  "leads.field.followUp": "Data de seguimento",
+  "leads.field.followUpHint": "Neste dia o contacto sobe para o topo da lista",
+  "leads.field.firstNote": "Primeira nota",
+  "leads.field.firstNoteHint":
+    "Opcional. Como se conheceram e sobre o que falaram",
+  "leads.addDialog.title": "Adicionar contacto",
+  "leads.addDialog.submit": "Adicionar contacto",
+  "leads.details.heading": "Detalhes",
+  "leads.details.save": "Guardar alterações",
+  "leads.details.discard": "Descartar alterações",
+  "leads.details.saved": "Alterações guardadas",
+  "leads.details.stageSaved": "Passou para {stage}",
+  "leads.details.clearFollowUp": "Limpar seguimento",
+  "leads.details.emailAction": "Enviar email a {name}",
+  "leads.details.phoneAction": "Ligar a {name}",
+  "leads.persona.heading": "Persona",
+  "leads.persona.none":
+    "Ainda sem persona ligada. Liga uma quando entrarem no QueerPulse",
+  "leads.persona.linkCta": "Ligar persona",
+  "leads.persona.unlinkCta": "Desligar persona",
+  "leads.persona.openAria": "Abrir {name} num novo separador",
+  "leads.persona.moveToOnBoardPrompt":
+    "Persona ligada. A fase continua a ser {stage}",
+  "leads.persona.moveToOnBoard": "Passar para A bordo",
+  "leads.persona.linkedToast": "{name} está ligada a este contacto",
+  "leads.persona.unlinkedToast": "{name} já não está ligada",
+  "leads.persona.state.draft":
+    "Já não é pública: quem a gere voltou a pô-la em rascunho",
+  "leads.persona.state.not_open":
+    "Já não é pública: quem a gere tornou-a só para membros ou privada",
+  "leads.persona.state.removed":
+    "Já não é pública: esta persona foi removida do QueerPulse",
+  "leads.persona.state.taken_down":
+    "Já não é pública: a moderação retirou esta persona",
+  "leads.personaDialog.title": "Ligar persona",
+  "leads.personaDialog.searchLabel": "Pesquisar personas",
+  "leads.personaDialog.searchPlaceholder": "Nome ou @handle",
+  "leads.personaDialog.searchHint":
+    "Só aparecem aqui personas listadas no diretório público",
+  "leads.personaDialog.idle":
+    "Escreve um nome ou @handle para encontrares uma persona",
+  "leads.personaDialog.searching": "A pesquisar",
+  "leads.personaDialog.noResults":
+    "Nenhuma persona listada corresponde a {query}",
+  "leads.personaDialog.resultsLabel": "Personas encontradas",
+  "leads.personaDialog.chooseAria": "Ligar {name} a este contacto",
+  "leads.personaDialog.linkedElsewhere": "Ligada a {name}",
+  "leads.personaDialog.searchErrorTitle": "A pesquisa não terminou",
+  "leads.personaDialog.retryCta": "Pesquisar de novo",
+  "leads.history.heading": "Histórico",
+  "leads.history.composerLabel": "Nova nota",
+  "leads.history.composerPlaceholder": "O que aconteceu e o que vem a seguir",
+  "leads.history.noteCounter": "{used} de {max}",
+  "leads.history.addNote": "Adicionar nota",
+  "leads.history.editNote": "Editar nota",
+  "leads.history.deleteNote": "Apagar nota",
+  "leads.history.saveNote": "Guardar nota",
+  "leads.history.noteEditLabel": "Editar esta nota",
+  "leads.history.edited": "editada",
+  "leads.history.unknownAuthor": "Alguém que já não está na equipa",
+  "leads.history.created": "{author} adicionou este contacto em {stage}",
+  "leads.history.stageChanged": "{author} passou isto de {from} para {to}",
+  "leads.history.personaLinked": "{author} ligou {persona}",
+  "leads.history.personaUnlinked": "{author} desligou {persona}",
+  "leads.history.personaGoneLinked":
+    "{author} ligou uma persona que já não está disponível",
+  "leads.history.personaGoneUnlinked":
+    "{author} desligou uma persona que já não está disponível",
+  "leads.history.deleteConfirm.title": "Apagar esta nota",
+  "leads.history.deleteConfirm.body": "A nota sai do histórico de vez",
+  "leads.delete.heading": "Apagar contacto",
+  "leads.delete.body": "Apagar remove este contacto e todo o histórico de vez",
+  "leads.delete.cta": "Apagar contacto",
+  "leads.delete.confirmTitle": "Apagar {name}",
+  "leads.delete.confirmBody":
+    "{name} e todas as notas, mudanças de fase e ligações a personas do histórico vão ser apagadas de vez. Não dá para desfazer",
+  "leads.delete.confirmCta": "Apagar contacto",
+  "leads.page.backCta": "Voltar aos contactos",
+  "leads.page.notFound.title": "Este contacto já não está aqui",
+  "leads.page.notFound.body":
+    "Alguém o apagou, talvez noutro separador, ou o link tem uma gralha",
+  "leads.page.loadError.title": "Não conseguimos carregar este contacto",
+  "leads.page.loadError.retryCta": "Carregar o contacto de novo",
+  "leads.error.notFound": "Este contacto foi apagado, talvez noutro separador",
+  "leads.error.nameRequired": "Dá um nome a este contacto",
+  "leads.error.nameTooLong": "Os nomes têm no máximo {max} caracteres",
+  "leads.error.typeInvalid": "Escolhe um dos tipos da lista",
+  "leads.error.stageInvalid": "Escolhe uma das fases da lista",
+  "leads.error.locationTooLong":
+    "As localizações têm no máximo {max} caracteres",
+  "leads.error.emailInvalid":
+    "Este endereço de email não é válido. Verifica se tem gralhas",
+  "leads.error.emailTaken": "{name} já tem este email",
+  "leads.error.phoneTooLong":
+    "Os números de telefone têm no máximo {max} caracteres",
+  "leads.error.linkInvalid":
+    "Isto não é um endereço web. Os links começam por http:// ou https://",
+  "leads.error.linkTooLong": "Os links têm no máximo {max} caracteres",
+  "leads.error.tooManyLinks":
+    "Um contacto tem no máximo {max} links. Remove um para adicionares outro",
+  "leads.error.linkTaken": "{name} já tem este link",
+  "leads.error.followUpInvalid":
+    "Escolhe um dia real entre 2000 e 2100 para o seguimento",
+  "leads.error.personaNotFound":
+    "Essa persona já não existe, por isso não pode ser ligada",
+  "leads.error.personaNotListed.draft":
+    "Esta persona está em rascunho, por isso não pode ser ligada",
+  "leads.error.personaNotListed.not_open":
+    "Esta persona é só para membros ou privada, por isso não pode ser ligada",
+  "leads.error.personaNotListed.removed":
+    "Esta persona foi removida do QueerPulse, por isso não pode ser ligada",
+  "leads.error.personaNotListed.taken_down":
+    "A moderação retirou esta persona, por isso não pode ser ligada",
+  "leads.error.personaNotListed.unknownState":
+    "Esta persona saiu do diretório público: está em rascunho, é privada, foi removida ou retirada, por isso não pode ser ligada",
+  "leads.error.personaTaken": "Esta persona já está ligada a {name}",
+  "leads.error.noteEmpty": "Escreve alguma coisa antes de adicionares a nota",
+  "leads.error.noteTooLong": "As notas têm no máximo {max} caracteres",
+  "leads.error.noteNotFound":
+    "Esta nota foi apagada, talvez noutro separador. O histórico mostra agora o que resta",
+  "leads.error.noteNotYours":
+    "Só quem escreveu a nota ou um admin pode mudá-la",
+  "leads.error.entryNotEditable":
+    "Só as notas podem ser editadas ou apagadas. As linhas de fase e de persona ficam como registo",
+  "leads.error.cursorInvalid":
+    "A lista mudou enquanto paginavas. Carrega os contactos de novo",
+  "leads.failure.offline":
+    "Estás offline, por isso isto não chegou ao QueerPulse. Verifica a ligação e tenta de novo",
+  "leads.failure.timeout":
+    "O QueerPulse demorou demasiado a responder. Tenta de novo",
+  "leads.failure.rateLimited":
+    "Fizeste muitas alterações em pouco tempo. Espera um minuto e tenta de novo",
+  "leads.failure.server":
+    "O nosso servidor teve um problema. A falha é nossa, tenta de novo daqui a pouco",
+  "leads.failure.unreachable":
+    "Não conseguimos chegar ao QueerPulse. Verifica a ligação ou tenta de novo daqui a pouco",
+  "leads.failure.forbidden":
+    "Os contactos estão abertos a admins e à função Gestão e produção musical, e esta conta não tem nenhuma das duas",
+  "leads.failure.notFound":
+    "Este servidor ainda não tem contactos. Recarrega a página e avisa a equipa técnica se continuar",
+  "leads.failure.restricted":
+    "Não podes fazer alterações enquanto houver uma restrição de moderação na tua conta",
+  "leads.failure.unknown":
     "Isto não seguiu e o servidor não indicou o motivo. Tenta de novo",
 };

@@ -1,0 +1,279 @@
+/* One event on poster paper: the poster image, then a column of stacked caps
+   in Archivo Black over DM Sans, hung from heavy ink rules. Colours are the
+   collective skin's ink tiers and the persona's accent (`--sk-tint` and the
+   `--sk-date-fill` mixed from it), both resolved on the sheet's panel. */
+.layout {
+  display: grid;
+}
+
+/* The poster, printed like every image on a Poster page: grayscale with the
+   contrast pushed, the riso look of `.pp[data-skin="collective"] .art img`. */
+.poster {
+  margin: 0;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  border-bottom: 3px solid var(--ink);
+}
+.poster img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.4);
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+  padding: clamp(1.25rem, 4vw, 2rem);
+}
+
+/* ── Date stamp ─────────────────────────────────────────────────────── */
+.when {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+.stamp {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0;
+  padding: 0.6rem 0.9rem 0.75rem;
+  /* Poster ink on the accent mixed into the paper, the pairing every Poster
+     date block uses (`--sk-date-fill`, persona-skins.css): 6.7:1 or more for
+     every accent in light and 4.8:1 or more in dark. The plain accent with
+     cream text was 2.6:1 on coral. */
+  background: var(--sk-date-fill);
+  color: var(--ink);
+  line-height: 1;
+  text-transform: uppercase;
+}
+.weekday {
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+.stampLead {
+  font-family: "Archivo Black", var(--sans);
+  font-size: var(--text-64);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  margin-block: 0.15rem 0.2rem;
+}
+.stampFoot {
+  font-family: "Archivo Black", var(--sans);
+  font-size: var(--text-15);
+  letter-spacing: 0.04em;
+}
+/* A month-only date: the month is the large line, over its year. */
+.stamp[data-month-only] .stampLead {
+  font-size: var(--text-40);
+  letter-spacing: -0.02em;
+  margin-top: 0;
+}
+.freeDate {
+  margin: 0;
+  font-family: "Archivo Black", var(--sans);
+  font-size: var(--text-18);
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.doors {
+  margin: 0;
+  font-size: var(--text-13-5);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+/* ── Title, status, place ──────────────────────────────────────────── */
+.head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding-top: 1rem;
+  border-top: 4px solid var(--ink);
+}
+.title {
+  margin: 0;
+  font-family: "Archivo Black", var(--sans);
+  font-weight: 400;
+  font-size: var(--text-title);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-wrap: balance;
+  /* A long word (a caps title on a phone) may break anywhere inside it so
+     it stays on the sheet. `.head` sizes its children to their content, so
+     the title is also allowed to shrink to the column. */
+  overflow-wrap: anywhere;
+  max-width: 100%;
+  min-width: 0;
+}
+.titleStruck {
+  text-decoration: line-through;
+  text-decoration-thickness: 0.08em;
+  color: var(--ink-60);
+}
+.state {
+  align-self: flex-start;
+}
+.place {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: var(--text-15-5);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.placeIcon {
+  flex: none;
+  margin-top: 0.15em;
+  color: var(--ink-60);
+}
+
+/* ── Line-up ────────────────────────────────────────────────────────── */
+.lineup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.sectionLabel {
+  margin: 0;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--ink);
+  font-family: "Archivo Black", var(--sans);
+  font-weight: 400;
+  font-size: var(--text-15);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.3rem 0.85rem 0.3rem 0.35rem;
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  font-size: var(--text-body-sm);
+  font-weight: 700;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition:
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .chip:hover {
+    background: var(--ink);
+    color: var(--skin-collective-ground);
+  }
+}
+.chip:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.chipAvatar {
+  flex: none;
+}
+.chipName {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.lineupText {
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 600;
+  line-height: 1.5;
+  max-width: 60ch;
+  color: var(--ink);
+}
+
+/* ── Description ────────────────────────────────────────────────────── */
+.description {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  max-width: 60ch;
+}
+.description p {
+  margin: 0;
+  font-size: var(--text-15-5);
+  line-height: 1.65;
+  white-space: pre-line;
+  color: var(--ink-60);
+}
+
+/* ── Actions ────────────────────────────────────────────────────────── */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding-top: 0.25rem;
+}
+
+/* Wider screens: the poster on the left, held in view while the details
+   scroll beside it. Sticky keeps the gap under the poster short at the end
+   of a long read (it rides down its column instead of scrolling away). The
+   column rule hangs from the details, which stretch to the row, so it runs
+   the full height into the pager's rule and the space under a short poster
+   reads as part of the poster's column. */
+@media (min-width: 601px) {
+  .layout[data-has-poster] {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  }
+  .layout[data-has-poster] .poster {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    border-bottom: 0;
+  }
+  .layout[data-has-poster] .details {
+    border-inline-start: 3px solid var(--ink);
+  }
+}
+
+@media (max-width: 600px) {
+  /* Full width, cropped to fit: a 4:5 frame capped so the date and title
+     still show above the fold. */
+  .poster {
+    aspect-ratio: auto;
+    height: min(48svh, 125vw);
+  }
+  .title {
+    font-size: var(--text-36);
+  }
+  .details {
+    padding-inline: max(1.25rem, env(safe-area-inset-left))
+      max(1.25rem, env(safe-area-inset-right));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip {
+    transition: none;
+  }
+}

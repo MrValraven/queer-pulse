@@ -3838,10 +3838,42 @@ export const marketing: Catalog = {
   "changelog.entries.studio-always-dark.title": "O Studio fica sempre escuro",
   "changelog.entries.studio-always-dark.body":
     "Todas as páginas do Studio abrem agora em modo escuro, e o resto da QueerPulse mantém o tema que escolheste.",
+  "changelog.entries.event-producer-page-revamp.title":
+    "Vê o que vem a seguir e as noites que ficaram para trás",
+  "changelog.entries.event-producer-page-revamp.body":
+    "As páginas de produção de eventos mostram o que vem a seguir e os eventos passados por ano, com datas de cartaz, e cada evento abre com o cartaz, o local e um botão para adicionar ao calendário.",
+  "changelog.entries.poet-page-revamp.title":
+    "Lê a obra de um poeta como um livro, poema a poema",
+  "changelog.entries.poet-page-revamp.body":
+    "Os poemas agrupam-se por ano, o leitor alinha o verso como num livro e Próximo poema percorre a coleção.",
   "changelog.entries.persona-professions-by-work-area.title":
     "Encontra personas pelas mesmas áreas de trabalho que escolhes ao entrar",
   "changelog.entries.persona-professions-by-work-area.body":
     "O filtro de profissão agrupa as opções em áreas como Música ou Restauração e gastronomia, com títulos mais claros.",
+  "changelog.entries.persona-type-change.title":
+    "Muda o tipo de uma persona e mantém tudo o que lá está",
+  "changelog.entries.persona-type-change.body":
+    "Muda uma persona para outro tipo do mesmo grupo. O identificador, os seguidores, os créditos e as publicações ficam, e as secções que o novo tipo não usa ficam escondidas até voltares atrás.",
+  "changelog.entries.admin-vj-screen-and-remote.title":
+    "Controla os visuais dos sets de DJ a partir do telemóvel",
+  "changelog.entries.admin-vj-screen-and-remote.body":
+    "Clips e GIFs ficam em packs, mudam com fade ou corte num ecrã de projetor e continuam sem wifi",
+  "changelog.entries.staff-leads-directory.title":
+    "A equipa mantém uma lista partilhada das pessoas que contacta",
+  "changelog.entries.staff-leads-directory.body":
+    "Cada contacto guarda os links, notas com data, uma fase e uma data de seguimento, e a persona quando a pessoa entra.",
+  "changelog.entries.lyric-timing-keeps-page-scrolling.title":
+    "Fecha Marcar os tempos da letra e a página volta a deslizar",
+  "changelog.entries.lyric-timing-keeps-page-scrolling.body":
+    "Alternar entre Marcar a ouvir e Colar LRC deixava a página presa até a recarregares.",
+  "changelog.entries.studio-track-rows-open-smoothly.title":
+    "Abre um lançamento em Os teus números e as faixas deslizam",
+  "changelog.entries.studio-track-rows-open-smoothly.body":
+    "Todas as faixas abrem e fecham juntas num só movimento suave, com a seta a rodar ao mesmo ritmo.",
+  "changelog.entries.business-event-public-address.title":
+    "Organiza um evento pelo teu negócio e a morada fica preenchida",
+  "changelog.entries.business-event-public-address.body":
+    "A morada pública do negócio aparece a toda a gente na página do evento, sem precisar de confirmar presença.",
   "changelog.entries.persona-wall-curation.title":
     "Vê no topo do diretório de pessoas as personas escolhidas pela nossa equipa",
   "changelog.entries.persona-wall-curation.body":

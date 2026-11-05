@@ -290,6 +290,7 @@ export const shared: Catalog = {
   "adminNav.items.queues": "Todas as filas",
   "adminNav.items.moderation": "Moderação",
   "adminNav.items.musicEvents": "Eventos de música",
+  "adminNav.items.leads": "Contactos",
   "adminNav.items.forumReview": "Revisão do fórum",
   "adminNav.items.staff": "Equipa e papéis",
   "adminNav.items.concerns": "Preocupações",
@@ -708,6 +709,8 @@ export const shared: Catalog = {
   "mediaRef.message-photo": "Conversa",
   "mediaRef.press-contact": "Contacto de imprensa",
   "mediaRef.sticker": "Sticker",
+  "mediaRef.vj-clip": "Clip de VJ",
+  "mediaRef.vj-thumbnail": "Pré-visualização de clip de VJ",
 
   // calendar.* keys, for the shared APG-compliant Calendar/DatePicker
   // primitive (Calendar.tsx, CalendarCell.tsx, CalendarHeader.tsx,
@@ -789,6 +792,7 @@ export const shared: Catalog = {
   "adminNav.items.volunteerHours": "Horas de voluntariado",
   "adminNav.items.utilities": "Utilitários",
   "adminNav.items.stickerPacks": "Packs de stickers",
+  "adminNav.items.vj": "VJ",
   "adminNav.items.quizTemplates": "Modelos de quiz",
 
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.

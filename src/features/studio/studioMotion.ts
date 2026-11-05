@@ -44,6 +44,24 @@ export const STUDIO_PANEL_OPEN = {
   ease: [0.25, 0.1, 0.25, 1],
 } as const;
 
+/** A release's track rows in the numbers table opening and folding as one
+ *  block. Every row grows on this one curve at the same moment, so the rows
+ *  move together like a single panel. The curve ramps in and lands softly in
+ *  both directions, so the content below glides and never leaps. */
+export const STUDIO_ROW_BLOCK_EASE = [0.4, 0, 0.2, 1] as const;
+
+/** Seconds for a release's track rows to open or fold: a lone track takes
+ *  about a third of a second, and each further track adds a little, up to
+ *  ten tracks. */
+export function studioRowBlockDuration(rowCount: number): number {
+  return 0.3 + 0.015 * Math.min(Math.max(rowCount, 1), 10);
+}
+
+/** Seconds between neighbouring rows fading in inside a growing block. Only
+ *  the fade is staggered, so the text arrives top to bottom while the rows'
+ *  heights stay on the block's single clock. */
+export const STUDIO_ROW_BLOCK_FADE_STAGGER = 0.015;
+
 /** Seconds between neighbouring items in a staggered first reveal. */
 export const STUDIO_STAGGER = 0.03;
 

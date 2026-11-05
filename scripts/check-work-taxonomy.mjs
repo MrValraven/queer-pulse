@@ -30,6 +30,8 @@
  *      frontend mirror in `src/features/studio/api/studio.types.ts`, kind by
  *      kind, format by format and in order; every kind in it is a backend
  *      persona kind; and `STUDIO_GENRES` matches on both sides
+ *  11. persona groups: backend `FAMILY_OF_KIND` (subprofile-kinds.ts) against
+ *      frontend `SKIN_OF` (subprofile-skins.ts), kind by kind and value by value
  *
  * Exit codes: 0 in sync, 1 on any difference, 2 when the backend repo is not
  * checked out beside this one. It stays out of `build-gates.mjs` because the
@@ -78,6 +80,10 @@ const SOURCE_PATHS = {
   frontendCrosswalk: join(
     frontendRoot,
     "src/features/subprofiles/professionKinds.data.ts",
+  ),
+  frontendSkins: join(
+    frontendRoot,
+    "src/features/subprofiles/subprofile-skins.ts",
   ),
   backendStudioConstants: join(backendRoot, "src/studio/studio.constants.ts"),
   frontendStudioTypes: join(
@@ -563,6 +569,50 @@ try {
     readStringArray(SOURCE_PATHS.frontendStudioTypes, "STUDIO_GENRES"),
   );
 
+  // 11. Persona groups: the persona kind → family map, backend against frontend.
+  const backendFamilyPairs = readStringPairs(
+    SOURCE_PATHS.backendKinds,
+    "FAMILY_OF_KIND",
+  );
+  const frontendFamilyPairs = readStringPairs(
+    SOURCE_PATHS.frontendSkins,
+    "SKIN_OF",
+  );
+  if (backendFamilyPairs && frontendFamilyPairs) {
+    // Kind order carries no meaning in either record, so kinds compare as a set.
+    const backendFamilyByKind = Object.fromEntries(backendFamilyPairs);
+    const frontendFamilyByKind = Object.fromEntries(frontendFamilyPairs);
+    for (const [kind, backendFamily] of backendFamilyPairs) {
+      if (!(kind in frontendFamilyByKind)) {
+        differences.push(
+          `persona groups: "${kind}" is missing on the frontend`,
+        );
+      } else if (frontendFamilyByKind[kind] !== backendFamily) {
+        differences.push(
+          `persona group of "${kind}": backend "${backendFamily}", frontend "${frontendFamilyByKind[kind]}"`,
+        );
+      }
+      if (!(kind in backendSectionsByKind)) {
+        differences.push(
+          `persona groups: "${kind}" is not a backend persona kind`,
+        );
+      }
+    }
+    for (const [kind] of frontendFamilyPairs) {
+      if (!(kind in backendFamilyByKind)) {
+        differences.push(`persona groups: "${kind}" is missing on the backend`);
+      }
+    }
+    // The map is total: every backend persona kind has a group.
+    for (const kind of Object.keys(backendSectionsByKind)) {
+      if (!(kind in backendFamilyByKind)) {
+        differences.push(
+          `persona groups: backend persona kind "${kind}" has no group in FAMILY_OF_KIND`,
+        );
+      }
+    }
+  }
+
   if (differences.length > 0) {
     for (const difference of differences) console.error(difference);
     console.error(
@@ -572,7 +622,7 @@ try {
   } else {
     const professionCount = Object.values(frontendByField).flat().length;
     console.log(
-      `work taxonomy in sync (${Object.keys(frontendByField).length} fields, ${professionCount} professions, ${jobFieldIds.length} job fields, ${Object.keys(frontendSectionsByKind).length} persona kinds, ${Object.keys(kindsByProfession).length} professions mapped to persona kinds, ${frontendFormatPairs?.length ?? 0} Studio artist kinds)`,
+      `work taxonomy in sync (${Object.keys(frontendByField).length} fields, ${professionCount} professions, ${jobFieldIds.length} job fields, ${Object.keys(frontendSectionsByKind).length} persona kinds, ${Object.keys(kindsByProfession).length} professions mapped to persona kinds, ${frontendFormatPairs?.length ?? 0} Studio artist kinds, ${frontendFamilyPairs?.length ?? 0} persona groups mapped)`,
     );
   }
 } finally {

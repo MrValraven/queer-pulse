@@ -27,6 +27,7 @@ import {
   FiMap,
   FiMapPin,
   FiMessageSquare,
+  FiMonitor,
   FiPenTool,
   FiPhoneCall,
   FiPlusSquare,
@@ -60,7 +61,8 @@ export type AdminNavBadge =
   | "verifications"
   | "housingCoops"
   | "listingClaims"
-  | "musicEvents";
+  | "musicEvents"
+  | "leads";
 
 /** An unlaunched feature whose console pages only some staff can see yet. */
 export type AdminNavFeature = "quizshow";
@@ -379,6 +381,17 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         icon: FiDisc,
         capabilities: ["music_manager_producer"],
         badge: "musicEvents",
+        tone: "warn",
+      },
+      {
+        // `AdminLeadsController`: Admin or the `music_manager_producer`
+        // grant, mirrored in the authGate elevated pattern list. The pill
+        // counts open leads with a follow-up due today or earlier.
+        labelKey: "shared:adminNav.items.leads",
+        to: routes.adminLeads,
+        icon: FiUsers,
+        capabilities: ["music_manager_producer"],
+        badge: "leads",
         tone: "warn",
       },
     ],
@@ -724,6 +737,15 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         labelKey: "shared:adminNav.items.stickerPacks",
         to: routes.adminStickerPacks,
         icon: FiSmile,
+        isAdminOnly: true,
+      },
+      {
+        // The VJ library and its live screen and remote. `AdminVjController`
+        // and the `/vj` socket are `@Roles(Admin)` with an empty `@StaffRoles()`,
+        // so no grant reaches it: hence `isAdminOnly` and no `capabilities`.
+        labelKey: "shared:adminNav.items.vj",
+        to: routes.adminVj,
+        icon: FiMonitor,
         isAdminOnly: true,
       },
       {

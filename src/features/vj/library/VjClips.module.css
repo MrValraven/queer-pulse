@@ -1,0 +1,292 @@
+/* VJ library clips: the clip grid, its cards, and the Edit clip dialog. */
+
+.gridFrame {
+  display: grid;
+  gap: var(--gap-xs);
+  min-inline-size: 0;
+}
+
+/* Two columns hold even on a 390px phone: the track floor is the smaller of
+   168px and half the row. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(168px, calc(50% - var(--gap-sm) / 2)), 1fr)
+  );
+  gap: var(--gap-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Every card stays positioned, so the dragged one paints above the cards
+   gliding past it. */
+.cardItem {
+  position: relative;
+  min-inline-size: 0;
+}
+
+.cardItem[data-dragging="true"] {
+  z-index: var(--z-raised);
+}
+
+.card {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  block-size: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-badge);
+  background: var(--paper);
+  box-shadow: var(--shadow-card);
+  transition:
+    box-shadow var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.card[data-dragging="true"] {
+  box-shadow: var(--shadow-lift);
+  transform: scale(1.02);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    box-shadow: var(--shadow-card-hover);
+  }
+}
+
+.editButton {
+  display: grid;
+  gap: var(--gap-xs);
+  padding: 0 0 var(--icon-gap-inline);
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.editButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-badge);
+}
+
+.thumbBox {
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--plum-deep);
+}
+
+.thumbImage {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.pixelated {
+  image-rendering: pixelated;
+}
+
+.cardTitle {
+  display: -webkit-box;
+  padding-inline: var(--gap-sm);
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-size: var(--text-body);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.cardMeta,
+.cardPacks {
+  margin: 0;
+  padding-inline: var(--gap-sm);
+  font-size: var(--text-caption);
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+
+.cardPacks {
+  align-self: end;
+  padding-block: var(--icon-gap-inline) var(--gap-sm);
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  align-self: end;
+  justify-content: flex-end;
+  gap: 0;
+  padding: var(--icon-gap-inline);
+}
+
+.grip {
+  display: grid;
+  place-items: center;
+  inline-size: var(--tap-min);
+  block-size: var(--tap-min);
+  margin-inline-end: auto;
+  color: var(--ink-40);
+  font-size: var(--text-20);
+  cursor: grab;
+  touch-action: none;
+}
+
+.cardItem[data-dragging="true"] .grip {
+  cursor: grabbing;
+}
+
+/* ── Edit clip dialog ── */
+
+.dialogBody {
+  display: grid;
+  gap: var(--gap-lg);
+  min-inline-size: 0;
+}
+
+.deleteOpen {
+  margin-inline-end: auto;
+}
+
+.previewStage {
+  position: relative;
+  display: grid;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius-badge);
+  background: var(--plum-deep);
+  /* How far the blurred copy behind a Fit clip is dimmed, as on the screen. */
+  --vj-preview-dim: 0.45;
+}
+
+.previewBackdrop {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  filter: var(--blur-lg) brightness(var(--vj-preview-dim));
+  transform: scale(1.1);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease);
+}
+
+.previewStage[data-fit="fit"] .previewBackdrop {
+  opacity: 1;
+}
+
+.previewLayer {
+  position: relative;
+  grid-area: 1 / 1;
+  display: grid;
+  min-block-size: 0;
+}
+
+.previewMedia {
+  grid-area: 1 / 1;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.previewStage[data-fit="fit"] .previewMedia {
+  object-fit: contain;
+}
+
+.previewPlay {
+  grid-area: 1 / 1;
+  display: grid;
+  place-items: center;
+  background: var(--scrim-soft);
+}
+
+.titleForm,
+.fitField,
+.moveForm,
+.dialogSection {
+  display: grid;
+  gap: var(--gap-xs);
+  min-inline-size: 0;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  padding-block-start: var(--gap-xs);
+}
+
+.fieldLabel {
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.fitHint,
+.sectionNote {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.details {
+  display: grid;
+  gap: var(--icon-gap-inline);
+  font-size: var(--text-caption);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.details p {
+  margin: 0;
+}
+
+.sectionHeading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.packList {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.packRow {
+  padding-block: var(--gap-xs);
+  border-block-end: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.packRowMain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-xs);
+}
+
+.packName {
+  min-inline-size: 0;
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.moveForm {
+  padding-block-start: var(--gap-sm);
+}

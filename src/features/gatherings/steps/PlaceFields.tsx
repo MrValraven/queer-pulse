@@ -75,8 +75,10 @@ function JoinLinkField({ form }: { form: PlaceFieldsForm }) {
 }
 
 /** The street address and arrival directions a gathering with a door asks
- *  for. Both are shared only with confirmed attendees. A venue linked from
- *  the directory supplies the address, so the host only adds directions. */
+ *  for. A typed address goes only to confirmed attendees. A venue linked from
+ *  the directory supplies the address, already public on its directory page,
+ *  so everyone sees it and the host only adds directions, which still go
+ *  only to people going. */
 function AddressFields({ form }: { form: PlaceFieldsForm }) {
   const { t } = useTranslation();
   const fieldId = useId();
@@ -92,7 +94,9 @@ function AddressFields({ form }: { form: PlaceFieldsForm }) {
           <>
             {t("gatherings:create.v2.when.addressLabel")}
             <span className={styles.labelNote}>
-              {t("gatherings:create.v2.when.addressNote")}
+              {linkedVenue
+                ? t("gatherings:create.v2.when.addressNoteLinkedVenue")
+                : t("gatherings:create.v2.when.addressNote")}
             </span>
           </>
         }

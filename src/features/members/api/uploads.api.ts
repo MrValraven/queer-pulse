@@ -33,10 +33,15 @@ export type UploadKind =
   | "message-image"
   | "message-document"
   | "sticker"
-  | "studio_audio";
+  | "studio_audio"
+  | "vj_clip"
+  | "vj_thumbnail";
 
 /** Audio content types, accepted by the `studio_audio` kind only (Studio v1). */
 export type StudioAudioUploadContentType = "audio/mpeg" | "audio/mp4";
+
+/** VJ clip content types, accepted by the `vj_clip` kind only (admin VJ library). */
+export type VjClipUploadContentType = "video/mp4" | "video/webm" | "image/gif";
 
 /**
  * ============================================================================
@@ -104,7 +109,10 @@ export type StudioAudioUploadContentType = "audio/mpeg" | "audio/mp4";
 export interface PresignRequest {
   kind: UploadKind;
   contentType:
-    UploadContentType | DocumentContentType | StudioAudioUploadContentType;
+    | UploadContentType
+    | DocumentContentType
+    | StudioAudioUploadContentType
+    | VjClipUploadContentType;
   /** Byte size of the file being uploaded, so the server can reject over-cap early. */
   byteSize: number;
   /** The persona a persona-scoped kind (`studio_audio`) belongs to, so its key
@@ -134,7 +142,10 @@ export interface PresignedUpload {
 export const requestUpload = (
   kind: UploadKind,
   contentType:
-    UploadContentType | DocumentContentType | StudioAudioUploadContentType,
+    | UploadContentType
+    | DocumentContentType
+    | StudioAudioUploadContentType
+    | VjClipUploadContentType,
   byteSize: number,
   subprofileId?: string,
 ) =>

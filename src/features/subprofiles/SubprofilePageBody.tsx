@@ -7,7 +7,11 @@ import { SubprofileSpotlight } from "./SubprofileSpotlight";
 import { SubprofileSkinExtras } from "./SubprofileSkinExtras";
 import { SubprofileAffiliations } from "./SubprofileAffiliations";
 import { PersonaUpdates } from "./PersonaUpdates";
-import { PersonaRightsFooter } from "./rights/PersonaRightsFooter";
+import {
+  PersonaColophon,
+  PersonaRightsFooter,
+} from "./rights/PersonaRightsFooter";
+import { PersonaPosterColophon } from "./rights/PersonaPosterColophon";
 import { KIND_LABEL_KEYS, personaNameBesideCraft } from "./subprofile-kinds";
 import { usePersonaMotion } from "./usePersonaMotion";
 import { PracticeBody } from "./skins/PracticeBody";
@@ -54,6 +58,29 @@ function shouldMountCoverBand(
   return RULE_COVER_SKINS.has(skin) && data.kind !== "therapist";
 }
 
+/** One copyright + provenance notice for the whole page, after every skin
+ *  branch. Never in the editor's docked preview, mirroring how the per-item
+ *  footer used to gate itself on `interactive`. The page skin folds it into
+ *  its closing colophon, and the Poster skin into its foot line. */
+function PersonaPageEnd({
+  data,
+  skin,
+  mode,
+}: {
+  data: PublicSubprofileView;
+  skin: SkinFamily;
+  mode: PersonaViewMode;
+}) {
+  const isRightsShown = mode !== "preview";
+  if (skin === "page")
+    return <PersonaColophon persona={data} isRightsShown={isRightsShown} />;
+  if (skin === "collective")
+    return (
+      <PersonaPosterColophon persona={data} isRightsShown={isRightsShown} />
+    );
+  return isRightsShown ? <PersonaRightsFooter persona={data} /> : null;
+}
+
 /**
  * The skinned `.pp` tree itself — cover, per-slot `SkinExtras`, hero,
  * spotlight/sections, the foot and the page's single `PersonaRightsFooter`
@@ -72,6 +99,7 @@ export function SubprofilePageBody({
   onOpenWorkItem,
   onOpenGalleryPhoto,
   onOpenPoem,
+  onOpenEvent,
   coverRise = false,
   navBand = false,
   lead,
@@ -85,6 +113,8 @@ export function SubprofilePageBody({
   onOpenWorkItem: (item: SubprofileItemView) => void;
   onOpenGalleryPhoto: (item: SubprofileItemView) => void;
   onOpenPoem: (item: SubprofileItemView) => void;
+  /** Open the event sheet on a Poster page's event row. */
+  onOpenEvent?: (item: SubprofileItemView) => void;
   /** Let the banner run up THROUGH the page's reserved nav band to the very
    *  top of the page, under the floating pill nav. Only the real persona page
    *  passes this — the editor's docked preview and the mobile preview render
@@ -101,6 +131,9 @@ export function SubprofilePageBody({
 }) {
   const { t } = useTranslation();
   const rootRef = usePersonaMotion();
+  // The page skin closes on one colophon (note, ©, provenance) in its own
+  // column, so its end-slot note moves out of `.pp-body` into that block.
+  const isPageSkin = skin === "page";
   const runheadName = personaNameBesideCraft({
     displayName: data.displayName,
     kind: data.kind,
@@ -157,6 +190,7 @@ export function SubprofilePageBody({
             onOpenWorkItem={onOpenWorkItem}
             onOpenGalleryPhoto={onOpenGalleryPhoto}
             onOpenPoem={onOpenPoem}
+            onOpenEvent={onOpenEvent}
           />
         ) : (
           <>
@@ -177,7 +211,21 @@ export function SubprofilePageBody({
               <span>{t(KIND_LABEL_KEYS[data.kind])}</span>
             </div>
 
-            <SubprofileHero view={data} mode={mode} onAction={onAction} />
+            <SubprofileHero
+              view={data}
+              mode={mode}
+              onAction={onAction}
+              afterTagline={
+                <SubprofileSkinExtras
+                  persona={data}
+                  skin={skin}
+                  slot="afterTagline"
+                  mode={mode}
+                  featured={data.featured}
+                  onOpenEvent={onOpenEvent}
+                />
+              }
+            />
             <SubprofileSkinExtras
               persona={data}
               skin={skin}
@@ -219,6 +267,8 @@ export function SubprofilePageBody({
                     skin={skin}
                     mode={mode}
                     accent={data.accent}
+                    onOpenEvent={onOpenEvent}
+                    sections={data.sections}
                   />
                 ))}
 
@@ -230,16 +280,19 @@ export function SubprofilePageBody({
                 onOpenWork={onOpenWorkItem}
                 onOpenGalleryPhoto={onOpenGalleryPhoto}
                 onOpenPoem={onOpenPoem}
+                onOpenEvent={onOpenEvent}
               />
 
-              <SubprofileSkinExtras
-                persona={data}
-                skin={skin}
-                slot="end"
-                mode={mode}
-                featured={data.featured}
-                onOpenWork={onOpenWorkAt}
-              />
+              {!isPageSkin && (
+                <SubprofileSkinExtras
+                  persona={data}
+                  skin={skin}
+                  slot="end"
+                  mode={mode}
+                  featured={data.featured}
+                  onOpenWork={onOpenWorkAt}
+                />
+              )}
             </div>
 
             <SubprofileAffiliations
@@ -251,10 +304,7 @@ export function SubprofilePageBody({
           </>
         )}
 
-        {/* One copyright + provenance notice for the whole page, after every
-            skin branch. Never in the editor's docked preview, mirroring how
-            the per-item footer used to gate itself on `interactive`. */}
-        {mode !== "preview" && <PersonaRightsFooter persona={data} />}
+        <PersonaPageEnd data={data} skin={skin} mode={mode} />
       </div>
     </article>
   );

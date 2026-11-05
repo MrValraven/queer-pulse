@@ -64,6 +64,7 @@ export function PracticeBody({
   onOpenWorkItem,
   onOpenGalleryPhoto,
   onOpenPoem,
+  onOpenEvent,
 }: {
   data: PublicSubprofileView;
   mode: PersonaViewMode;
@@ -71,6 +72,7 @@ export function PracticeBody({
   onOpenWorkItem: (item: SubprofileItemView) => void;
   onOpenGalleryPhoto: (item: SubprofileItemView) => void;
   onOpenPoem: (item: SubprofileItemView) => void;
+  onOpenEvent?: (item: SubprofileItemView) => void;
 }) {
   const { t } = useTranslation();
   // A members-only persona's endorser list answers its owners alone, and not
@@ -118,6 +120,7 @@ export function PracticeBody({
     onOpenWork: onOpenWorkItem,
     onOpenGalleryPhoto,
     onOpenPoem,
+    onOpenEvent,
   };
 
   return (

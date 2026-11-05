@@ -1,0 +1,241 @@
+/* A lead's persona: the linked persona card and the Link persona dialog's
+   results. The dialog's search field and result rows come from the shared
+   pick dialog module; this file holds what is particular to leads. */
+
+/* ── Linked persona card ────────────────────────────────────────────────── */
+.card {
+  padding: 14px 16px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  background: var(--paper);
+}
+
+.cardRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 14px;
+}
+
+.cardText {
+  display: flex;
+  flex: 1 1 160px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cardName {
+  overflow: hidden;
+  max-width: 100%;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 600;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+/* The pseudo element stretches the hit area to 44px tall while the name
+   keeps its own line height. */
+.cardNameLink {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  border-radius: var(--radius-6);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.cardNameLink::after {
+  content: "";
+  position: absolute;
+  inset: -12px -4px;
+}
+
+.cardNameIcon {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  color: var(--ink-60);
+  transition: color var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) {
+  .cardNameLink:hover .cardName {
+    text-decoration: underline;
+    text-decoration-color: rgba(var(--ink-rgb), 0.35);
+    text-underline-offset: 3px;
+  }
+
+  .cardNameLink:hover .cardNameIcon {
+    color: var(--accent-text);
+  }
+}
+
+.cardNameLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.cardActions {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* The status line sits inside the fold, padding and all, so the gap above
+   it opens and closes with it. */
+.cardState {
+  margin: 0;
+  padding-top: 12px;
+}
+
+.cardStateChip {
+  white-space: normal;
+}
+
+/* ── Shared meta line (@handle and kind) ────────────────────────────────── */
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+  min-width: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.handle {
+  overflow: hidden;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kind {
+  white-space: nowrap;
+}
+
+/* ── Link persona dialog ────────────────────────────────────────────────── */
+.searchInput {
+  padding-right: 20px;
+}
+
+.resultsArea {
+  margin-top: 16px;
+}
+
+.resultsHeading {
+  margin: 0 0 10px;
+  font-size: var(--text-11);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+/* The negative margin gives the rows' focus ring room inside the scroll
+   clip while the rows still line up with the search field. */
+.resultsScroll {
+  max-height: min(320px, 44svh);
+  margin: -6px -7px 0;
+  padding: 6px 7px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.resultsScroll .resultsList {
+  padding-bottom: 0;
+}
+
+.resultText {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.resultName {
+  overflow: hidden;
+  font-family: var(--serif);
+  font-size: var(--text-16);
+  font-weight: 600;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+/* A disabled row dims its picture and name only. The shared row fades the
+   whole button to 0.55, which took the "Linked to" tag down to about 2:1;
+   the tag stays at full strength on --ink-60, so it reads at about 4.7:1.
+   The list class lifts this above the shared rule. */
+.resultsList .resultButton[aria-disabled="true"] {
+  opacity: 1;
+}
+
+.resultsList .resultButton[aria-disabled="true"] > :not(.linkedTag) {
+  opacity: 0.55;
+}
+
+/* Names the lead that already holds this persona. It may wrap to two lines
+   on a phone, so the row keeps the persona's name readable. */
+.linkedTag {
+  flex: 0 1 auto;
+  max-width: 45%;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.08);
+  font-size: var(--text-11-5);
+  line-height: 1.35;
+  text-align: right;
+  color: var(--ink-60);
+}
+
+.resultsLine {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 12px 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.resultsIcon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: var(--ink-40);
+}
+
+.resultsError {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 12px 0;
+}
+
+.resultsError .resultsLine {
+  padding: 0;
+}
+
+.resultsErrorTitle {
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}

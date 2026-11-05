@@ -4,6 +4,7 @@ import type {
 } from "../marketing/listBusiness/api/managedListings.api";
 import { HOODS } from "./createGathering.data";
 import { ONLINE_HOOD_VALUE } from "./steps/dateNotes.data";
+import type { VenueSelection } from "./VenuePicker";
 
 /** What a gathering shows of the business that runs it. */
 export interface RunByListingView {
@@ -60,4 +61,64 @@ export function meetingPointPrefill(
       ? { address: meetingPoint.address }
       : {}),
   };
+}
+
+/** The venue a "Run by" pick linked on its own, remembered so a later pick
+ *  can tell it apart from a venue the host chose. */
+export interface RunByLinkedVenue {
+  listingId: string;
+  slug: string;
+}
+
+/** What a "Run by" pick does to the venue: the new venue to set, if any, and
+ *  the auto-linked venue to remember from now on. */
+export interface RunByVenueChange {
+  /** Absent when the venue stays as it is. */
+  selection?: VenueSelection;
+  linkedVenue: RunByLinkedVenue | null;
+}
+
+const EMPTY_VENUE: VenueSelection = {
+  text: "",
+  listingId: null,
+  venueListing: null,
+};
+
+/**
+ * A business with a door runs the gathering at its own address unless the
+ * host says otherwise, so picking a place business links it as the venue,
+ * the way the venue picker links a directory listing. The venue's address
+ * then fills in through `useVenueAddress`.
+ *
+ * Only an empty venue, or the venue an earlier pick linked and the host has
+ * left alone, is touched. A venue the host picked or typed stays. Moving the
+ * pick to another business, or to none, takes the earlier auto-linked venue
+ * away with it. Online and mobile businesses link nothing, and an online
+ * gathering has no venue at all.
+ */
+export function runByVenueChange(
+  current: Pick<VenueSelection, "text" | "venueListing"> & { hood: string },
+  linkedVenue: RunByLinkedVenue | null,
+  picked: ManagedListingItem | null,
+): RunByVenueChange {
+  const isStillAutoLinked =
+    linkedVenue !== null && current.venueListing?.slug === linkedVenue.slug;
+  const isVenueEmpty =
+    current.text.trim() === "" && current.venueListing === null;
+  const isLinkable =
+    picked !== null &&
+    picked.kind === "place" &&
+    current.hood !== ONLINE_HOOD_VALUE;
+  if (isLinkable && (isVenueEmpty || isStillAutoLinked)) {
+    return {
+      selection: {
+        text: picked.name,
+        listingId: picked.id,
+        venueListing: { slug: picked.slug, name: picked.name },
+      },
+      linkedVenue: { listingId: picked.id, slug: picked.slug },
+    };
+  }
+  if (isStillAutoLinked) return { selection: EMPTY_VENUE, linkedVenue: null };
+  return { linkedVenue: null };
 }

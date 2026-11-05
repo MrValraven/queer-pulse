@@ -3,6 +3,7 @@ import {
   SKIN_OF,
   SKIN_META,
   VISUAL_SECTIONS,
+  kindsSwitchableFrom,
   skinFor,
 } from "./subprofile-skins";
 import { KIND_SECTIONS } from "./subprofile-kinds";
@@ -71,5 +72,32 @@ describe("subprofile-skins", () => {
     ] as const)
       expect(VISUAL_SECTIONS).toContain(section);
     expect(VISUAL_SECTIONS).not.toContain("in_progress");
+  });
+});
+
+describe("kindsSwitchableFrom", () => {
+  it("offers the other Stage kinds to a musician", () => {
+    const switchable = kindsSwitchableFrom("musician");
+    expect(switchable).toEqual(
+      expect.arrayContaining(["dj", "drag", "podcaster"]),
+    );
+    expect(switchable).not.toContain("musician");
+    expect(switchable).not.toContain("ceramicist");
+    expect(switchable).not.toContain("generic");
+    for (const kind of switchable) expect(SKIN_OF[kind]).toBe("stage");
+  });
+  it("offers every kind but itself to a generic persona", () => {
+    const switchable = kindsSwitchableFrom("generic");
+    expect(switchable).toHaveLength(Object.keys(SKIN_OF).length - 1);
+    expect(switchable).not.toContain("generic");
+    expect(switchable).toEqual(
+      expect.arrayContaining(["ceramicist", "dj", "therapist"]),
+    );
+  });
+  it("lets a Workshop kind switch into generic", () => {
+    expect(kindsSwitchableFrom("maker")).toContain("generic");
+  });
+  it("offers nothing to the only kind in its group", () => {
+    expect(kindsSwitchableFrom("astrologer")).toEqual([]);
   });
 });

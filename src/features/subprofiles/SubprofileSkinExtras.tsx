@@ -28,7 +28,11 @@ import { NextAction, Principles } from "./skins/CollectiveBlocks";
 import { FeesBlock, Promises } from "./skins/ClassroomBlocks";
 import { AtTheTableBlock } from "./skins/QuestBlocks";
 
-export type SkinExtrasSlot = "top" | "afterBio" | "spotlight" | "end";
+/** `afterTagline` renders inside the hero, under the tagline and above the
+ *  actions (`SubprofileHero`'s `afterTagline` prop); the Poster skin's NEXT
+ *  band sits there. */
+export type SkinExtrasSlot =
+  "top" | "afterTagline" | "afterBio" | "spotlight" | "end";
 
 /**
  * The minimal persona shape every skin block reads — a structural subset of
@@ -53,10 +57,11 @@ export interface SubprofileSkinExtrasProps {
    *  either static or a `null`-returning read of `persona`, so `mode` is
    *  optional and unused by them. */
   mode?: PersonaViewMode;
-  /** The persona's single featured item — only read for `slot="spotlight"`
-   *  (table's `MenuCard` reads its `structured.courses`). Every other skin's
-   *  spotlight is the generic `Spotlight` component, rendered by the host,
-   *  not through this switch. */
+  /** The persona's single featured item. Read for `slot="spotlight"`
+   *  (table's `MenuCard` reads its `structured.courses`) and for the Poster
+   *  NEXT band (`slot="afterTagline"`), which steps aside when the spotlight
+   *  already shows the event it would name. Every other skin's spotlight is
+   *  the generic `Spotlight` component, which the host renders itself. */
   featured?: SubprofileItemView | null;
   /** Opens the studio lightbox at a flattened work index. Passed through to
    *  `StudioChecklist` (slot="end") only when `mode !== "preview"`; the host
@@ -65,6 +70,9 @@ export interface SubprofileSkinExtrasProps {
    *  so indices line up between the checklist row clicked and the image
    *  shown. */
   onOpenWork?: (index: number) => void;
+  /** Opens the Poster event sheet. The NEXT band calls it in place of its
+   *  jump link; dropped in `mode="preview"`. */
+  onOpenEvent?: (item: SubprofileItemView) => void;
 }
 
 /**
@@ -81,6 +89,7 @@ export function SubprofileSkinExtras({
   mode,
   featured,
   onOpenWork,
+  onOpenEvent,
 }: SubprofileSkinExtrasProps) {
   const interactive = mode !== "preview";
   switch (slot) {
@@ -90,7 +99,17 @@ export function SubprofileSkinExtras({
       if (skin === "table") return <TableMenuHeader persona={persona} />;
       if (skin === "chart") return <ChartSkyNow persona={persona} />;
       if (skin === "gallery") return <OnView persona={persona} />;
-      if (skin === "collective") return <NextAction persona={persona} />;
+      return null;
+    case "afterTagline":
+      if (skin === "collective")
+        return (
+          <NextAction
+            persona={persona}
+            featuredId={featured?.id ?? null}
+            isInteractive={interactive}
+            onOpenEvent={interactive ? onOpenEvent : undefined}
+          />
+        );
       return null;
     case "afterBio":
       if (skin === "page") return <PageExcerpt persona={persona} />;

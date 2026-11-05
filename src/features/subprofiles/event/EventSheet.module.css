@@ -1,0 +1,183 @@
+/* The event sheet's frame: scrim, panel, top bar and scroller. The panel's
+   paper (`background`), ink (`color`, `--ink`, `--ink-60`, `--ink-40`) come
+   from the collective token rules in persona-skins.css through the
+   `[data-persona-skin="collective"]` hook, in both themes. */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  background: var(--scrim);
+  animation: scrimIn var(--dur-base) var(--ease-out);
+  transition: opacity var(--dur-base) var(--ease-in);
+}
+.scrim[data-closing] {
+  opacity: 0;
+}
+
+/* Wider screens: a centred poster, framed in a hard ink rule. */
+.panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(720px, 100%);
+  max-height: 88svh;
+  max-height: 88dvh;
+  overflow: hidden;
+  background: var(--skin-collective-ground);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 0;
+  box-shadow: var(--shadow-e4);
+  animation: modalIn var(--dur-base) var(--ease-out);
+  transition:
+    opacity var(--dur-base) var(--ease-in),
+    transform var(--dur-base) var(--ease-in);
+}
+.panel[data-closing] {
+  opacity: 0;
+  transform: scale(0.98);
+}
+.panel[data-dragging] {
+  transition: none;
+}
+.panel:focus {
+  outline: none;
+}
+
+/* Wider screens: Close floats in the top corner over the details column. */
+.bar {
+  position: absolute;
+  inset-block-start: 0.75rem;
+  inset-inline-end: 0.75rem;
+  z-index: 2;
+}
+.grabber {
+  display: none;
+}
+.close {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  background: var(--skin-collective-ground);
+  color: var(--ink);
+  font-size: var(--text-20);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .close:hover {
+    background: var(--ink);
+    color: var(--skin-collective-ground);
+  }
+}
+.close:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* `pan-y` keeps vertical scrolling with the browser and leaves sideways
+   travel to the swipe between events. */
+.scroller {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y pinch-zoom;
+}
+/* Keyed on the event, so each page fades the new event in. */
+.fade {
+  animation: contentIn var(--dur-base) var(--ease-out);
+}
+
+/* Phones: a near-full bottom sheet with a grabber bar, a thick ink rule
+   along its top edge and a sliver of the page left showing above it. */
+@media (max-width: 600px) {
+  .scrim {
+    padding: 0;
+    place-items: end stretch;
+  }
+  .panel {
+    width: 100%;
+    height: calc(100svh - max(0.75rem, env(safe-area-inset-top)));
+    height: calc(100dvh - max(0.75rem, env(safe-area-inset-top)));
+    max-height: none;
+    border: 0;
+    border-top: 4px solid var(--ink);
+    animation: sheetIn var(--dur-slow) var(--ease-out);
+  }
+  .panel[data-closing] {
+    opacity: 1;
+    transform: translateY(100%);
+  }
+  .bar {
+    position: relative;
+    inset: auto;
+    flex: none;
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    align-items: center;
+    padding-block: 0.375rem;
+    padding-inline: max(0.5rem, env(safe-area-inset-left))
+      max(0.5rem, env(safe-area-inset-right));
+    border-bottom: 2px solid color-mix(in srgb, var(--ink) 18%, transparent);
+    /* The bar is the drag handle: the finger drives it, the page never
+       scrolls under it. */
+    touch-action: none;
+    cursor: grab;
+  }
+  .grabber {
+    display: block;
+    grid-column: 2;
+    justify-self: center;
+    width: 2.75rem;
+    height: 4px;
+    background: color-mix(in srgb, var(--ink) 40%, transparent);
+  }
+  .close {
+    grid-column: 3;
+  }
+}
+
+@keyframes scrimIn {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+@keyframes sheetIn {
+  from {
+    transform: translateY(100%);
+  }
+}
+@keyframes contentIn {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scrim,
+  .panel,
+  .fade {
+    animation: none;
+    transition: none;
+  }
+  .close {
+    transition: none;
+  }
+}
