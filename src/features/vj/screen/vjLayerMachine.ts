@@ -24,7 +24,18 @@ export interface VjRenderableClip {
 
 export interface VjLayerSlot {
   clip: VjRenderableClip | null;
-  phase: "empty" | "loading" | "fadingIn" | "shown" | "leaving";
+  /**
+   * "catchingUp": a new target arrived while this layer was fading in, so it
+   * finishes to full opacity with a short ease from where it is while the old
+   * front stays opaque underneath.
+   */
+  phase: "empty" | "loading" | "fadingIn" | "catchingUp" | "shown" | "leaving";
+}
+
+/** The clip tapped during a catch-up, loaded into the freed layer once the catch-up ends. */
+export interface VjPendingTarget {
+  clip: VjRenderableClip;
+  transition: VjTransition;
 }
 
 export interface VjLayerMachineState {
@@ -36,6 +47,8 @@ export interface VjLayerMachineState {
     mode: VjTransitionMode;
     fadeMs: number;
   } | null;
+  /** Waits for the running catch-up to end; null otherwise. */
+  pendingTarget: VjPendingTarget | null;
   /** liveClipId null: the black curtain is up. */
   isBlackRequested: boolean;
   curtainFadeMs: number;
@@ -45,7 +58,8 @@ export type VjLayerEvent =
   | { type: "target"; clip: VjRenderableClip | null; transition: VjTransition }
   | { type: "firstFrame"; layer: VjLayerName; clipId: string }
   | { type: "failed"; layer: VjLayerName; clipId: string }
-  | { type: "fadeEnded"; layer: VjLayerName; clipId: string };
+  | { type: "fadeEnded"; layer: VjLayerName; clipId: string }
+  | { type: "catchUpEnded"; layer: VjLayerName; clipId: string };
 
 export const VJ_LAYER_NAMES: readonly VjLayerName[] = ["a", "b"];
 
@@ -55,6 +69,7 @@ export const INITIAL_VJ_LAYERS: VjLayerMachineState = {
   slots: { a: EMPTY_SLOT, b: EMPTY_SLOT },
   front: null,
   incoming: null,
+  pendingTarget: null,
   isBlackRequested: true,
   curtainFadeMs: 0,
 };
@@ -102,11 +117,68 @@ function promoteIncoming(state: VjLayerMachineState): VjLayerMachineState {
       ? { clip: leavingClip, phase: "leaving" }
       : EMPTY_SLOT;
   }
-  return { ...state, slots, front: incoming.layer, incoming: null };
+  return {
+    ...state,
+    slots,
+    front: incoming.layer,
+    incoming: null,
+    pendingTarget: null,
+  };
 }
 
+/** A fade or catch-up in progress ends at once; a target waiting on it is dropped. */
 function finishRunningFade(state: VjLayerMachineState): VjLayerMachineState {
-  return incomingPhase(state) === "fadingIn" ? promoteIncoming(state) : state;
+  const phase = incomingPhase(state);
+  return phase === "fadingIn" || phase === "catchingUp"
+    ? promoteIncoming(state)
+    : state;
+}
+
+/** The fading layer finishes to full opacity first; the new clip waits for it. */
+function startCatchUp(
+  state: VjLayerMachineState,
+  target: VjPendingTarget,
+): VjLayerMachineState {
+  const incoming = state.incoming;
+  if (!incoming) return state;
+  const slot = state.slots[incoming.layer];
+  return {
+    ...withSlot(state, incoming.layer, {
+      clip: slot.clip,
+      phase: "catchingUp",
+    }),
+    pendingTarget: target,
+  };
+}
+
+function reduceTargetDuringCatchUp(
+  state: VjLayerMachineState,
+  clip: VjRenderableClip,
+  transition: VjTransition,
+): VjLayerMachineState {
+  const incoming = state.incoming;
+  if (!incoming) return state;
+  if (state.slots[incoming.layer].clip?.clipId === clip.clipId) {
+    return state.pendingTarget ? { ...state, pendingTarget: null } : state;
+  }
+  if (visibleFadeMs(transition.mode, transition.fadeMs) === 0) {
+    return reduceClipTarget(finishRunningFade(state), clip, transition);
+  }
+  if (state.pendingTarget?.clip.clipId === clip.clipId) return state;
+  return { ...state, pendingTarget: { clip, transition } };
+}
+
+function reduceCatchUpEnded(
+  state: VjLayerMachineState,
+  layer: VjLayerName,
+  clipId: string,
+): VjLayerMachineState {
+  if (!isIncomingEvent(state, layer, clipId, "catchingUp")) return state;
+  const pending = state.pendingTarget;
+  const promoted = promoteIncoming(state);
+  return pending
+    ? reduceClipTarget(promoted, pending.clip, pending.transition)
+    : promoted;
 }
 
 function dropLoadingIncoming(state: VjLayerMachineState): VjLayerMachineState {
@@ -135,10 +207,21 @@ function reduceClipTarget(
   clip: VjRenderableClip,
   transition: VjTransition,
 ): VjLayerMachineState {
+  const phase = incomingPhase(state);
+  if (phase === "catchingUp") {
+    return reduceTargetDuringCatchUp(state, clip, transition);
+  }
   const incomingClipId = state.incoming
     ? state.slots[state.incoming.layer].clip?.clipId
     : undefined;
   if (incomingClipId === clip.clipId) return state;
+  if (
+    phase === "fadingIn" &&
+    state.front !== null &&
+    visibleFadeMs(transition.mode, transition.fadeMs) > 0
+  ) {
+    return startCatchUp(state, { clip, transition });
+  }
   const settled = finishRunningFade(state);
   const frontClip = settled.front ? settled.slots[settled.front].clip : null;
   if (frontClip?.clipId === clip.clipId) {
@@ -219,11 +302,19 @@ export function reduceVjLayers(
       return isIncomingEvent(state, event.layer, event.clipId, "fadingIn")
         ? promoteIncoming(state)
         : state;
+    case "catchUpEnded":
+      return reduceCatchUpEnded(state, event.layer, event.clipId);
     case "failed":
       return isIncomingEvent(state, event.layer, event.clipId, "loading")
         ? dropLoadingIncoming(state)
         : state;
   }
+}
+
+/** A fading or catching-up layer is on screen and rising toward full opacity. */
+function isRising(state: VjLayerMachineState): boolean {
+  const phase = incomingPhase(state);
+  return phase === "fadingIn" || phase === "catchingUp";
 }
 
 /** The front is always opaque; an incoming layer turns opaque when its fade starts (CSS animates it). */
@@ -232,9 +323,7 @@ export function vjLayerOpacity(
   layer: VjLayerName,
 ): 0 | 1 {
   if (state.front === layer) return 1;
-  const isFadingIn =
-    state.incoming?.layer === layer && incomingPhase(state) === "fadingIn";
-  return isFadingIn ? 1 : 0;
+  return state.incoming?.layer === layer && isRising(state) ? 1 : 0;
 }
 
 /** The incoming layer stacks above the front once it fades in; a loading layer waits below. */
@@ -242,7 +331,7 @@ export function vjLayerZ(
   state: VjLayerMachineState,
   layer: VjLayerName,
 ): 0 | 1 {
-  if (state.incoming && incomingPhase(state) === "fadingIn") {
+  if (state.incoming && isRising(state)) {
     return state.incoming.layer === layer ? 1 : 0;
   }
   return state.front === layer ? 1 : 0;
@@ -254,6 +343,7 @@ function heldSourceUrls(state: VjLayerMachineState): Set<string> {
     const slot = state.slots[layer];
     if (slot.clip && slot.phase !== "leaving") held.add(slot.clip.sourceUrl);
   }
+  if (state.pendingTarget) held.add(state.pendingTarget.clip.sourceUrl);
   return held;
 }
 

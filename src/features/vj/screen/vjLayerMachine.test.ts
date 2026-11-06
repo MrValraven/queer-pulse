@@ -176,39 +176,148 @@ describe("reduceVjLayers switching clips", () => {
   });
 });
 
-describe("reduceVjLayers with targets in flight", () => {
-  it("finishes a running fade at once when a new clip arrives and loads it into the freed layer", () => {
-    const shown = showingClipOne();
-    const firstLayer = shown.front;
-    const loading = reduceVjLayers(shown, {
+/** Clip "one" shown, clip "two" fading in over it. */
+function twoFadingOverOne(): VjLayerMachineState {
+  const loading = reduceVjLayers(showingClipOne(), {
+    type: "target",
+    clip: clipNamed("two"),
+    transition: FADE,
+  });
+  return reduceVjLayers(loading, {
+    type: "firstFrame",
+    layer: layerHolding(loading, "two"),
+    clipId: "two",
+  });
+}
+
+describe("reduceVjLayers catching a fading clip up", () => {
+  it("catches the fading layer up to full opacity, then promotes it and loads the new clip into the freed layer", () => {
+    const fading = twoFadingOverOne();
+    const firstLayer = layerHolding(fading, "one");
+    const secondLayer = layerHolding(fading, "two");
+
+    const catchingUp = reduceVjLayers(fading, {
+      type: "target",
+      clip: clipNamed("three"),
+      transition: FADE,
+    });
+    expect(catchingUp.slots[secondLayer].phase).toBe("catchingUp");
+    expect(catchingUp.front).toBe(firstLayer);
+    expect(catchingUp.slots[firstLayer].phase).toBe("shown");
+    expect(vjLayerOpacity(catchingUp, firstLayer)).toBe(1);
+    expect(vjLayerOpacity(catchingUp, secondLayer)).toBe(1);
+    expect(vjLayerZ(catchingUp, secondLayer)).toBe(1);
+    expect(vjLayerZ(catchingUp, firstLayer)).toBe(0);
+    expect(catchingUp.pendingTarget?.clip.clipId).toBe("three");
+    expect(
+      VJ_LAYER_NAMES.some(
+        (layerName) => catchingUp.slots[layerName].clip?.clipId === "three",
+      ),
+    ).toBe(false);
+
+    const staleFadeEnd = reduceVjLayers(catchingUp, {
+      type: "fadeEnded",
+      layer: secondLayer,
+      clipId: "two",
+    });
+    expect(staleFadeEnd).toBe(catchingUp);
+
+    const ended = reduceVjLayers(catchingUp, {
+      type: "catchUpEnded",
+      layer: secondLayer,
+      clipId: "two",
+    });
+    expect(ended.front).toBe(secondLayer);
+    expect(ended.slots[secondLayer].phase).toBe("shown");
+    expect(ended.pendingTarget).toBeNull();
+    expect(ended.slots[firstLayer]).toEqual({
+      clip: clipNamed("three"),
+      phase: "loading",
+    });
+    expect(ended.incoming).toEqual({
+      layer: firstLayer,
+      mode: "fade",
+      fadeMs: 800,
+    });
+  });
+
+  it("keeps the latest tap while a catch-up runs and ignores a tap on the clip catching up", () => {
+    const fading = twoFadingOverOne();
+    const secondLayer = layerHolding(fading, "two");
+    const catchingUp = reduceVjLayers(fading, {
+      type: "target",
+      clip: clipNamed("three"),
+      transition: FADE,
+    });
+    const retapped = reduceVjLayers(catchingUp, {
+      type: "target",
+      clip: clipNamed("four"),
+      transition: FADE,
+    });
+    expect(retapped.pendingTarget?.clip.clipId).toBe("four");
+    expect(releasedVjSourceUrls(catchingUp, retapped)).toEqual([
+      "blob:source-three",
+    ]);
+
+    const backToTwo = reduceVjLayers(retapped, {
       type: "target",
       clip: clipNamed("two"),
       transition: FADE,
     });
-    const secondLayer = layerHolding(loading, "two");
-    const fading = reduceVjLayers(loading, {
-      type: "firstFrame",
+    expect(backToTwo.pendingTarget).toBeNull();
+    expect(backToTwo.slots[secondLayer].phase).toBe("catchingUp");
+    const ended = reduceVjLayers(backToTwo, {
+      type: "catchUpEnded",
       layer: secondLayer,
       clipId: "two",
     });
+    expect(ended.incoming).toBeNull();
+    expect(ended.front).toBe(secondLayer);
+  });
 
-    const retargeted = reduceVjLayers(fading, {
+  it("keeps the instant swap for a cut, a black target and a cut during a catch-up", () => {
+    const fading = twoFadingOverOne();
+    const secondLayer = layerHolding(fading, "two");
+    const cutAway = reduceVjLayers(fading, {
+      type: "target",
+      clip: clipNamed("three"),
+      transition: CUT,
+    });
+    expect(cutAway.front).toBe(secondLayer);
+    expect(cutAway.slots[secondLayer].phase).toBe("shown");
+    expect(cutAway.pendingTarget).toBeNull();
+    expect(cutAway.incoming?.mode).toBe("cut");
+
+    const toBlack = reduceVjLayers(fading, {
+      type: "target",
+      clip: null,
+      transition: FADE,
+    });
+    expect(toBlack.front).toBe(secondLayer);
+    expect(toBlack.isBlackRequested).toBe(true);
+
+    const catchingUp = reduceVjLayers(fading, {
       type: "target",
       clip: clipNamed("three"),
       transition: FADE,
     });
-    expect(retargeted.front).toBe(secondLayer);
-    expect(retargeted.slots[secondLayer].phase).toBe("shown");
-    expect(vjLayerOpacity(retargeted, secondLayer)).toBe(1);
-    expect(firstLayer).not.toBeNull();
-    if (!firstLayer) return;
-    expect(retargeted.slots[firstLayer]).toEqual({
-      clip: clipNamed("three"),
-      phase: "loading",
+    const cutDuringCatchUp = reduceVjLayers(catchingUp, {
+      type: "target",
+      clip: clipNamed("four"),
+      transition: CUT,
     });
-    expect(retargeted.incoming?.layer).toBe(firstLayer);
+    expect(cutDuringCatchUp.front).toBe(secondLayer);
+    expect(cutDuringCatchUp.pendingTarget).toBeNull();
+    expect(cutDuringCatchUp.incoming?.mode).toBe("cut");
+    expect(
+      VJ_LAYER_NAMES.map(
+        (layerName) => cutDuringCatchUp.slots[layerName].clip?.clipId,
+      ),
+    ).toContain("four");
   });
+});
 
+describe("reduceVjLayers with targets in flight", () => {
   it("lets the latest target win while one is still loading", () => {
     const shown = showingClipOne();
     const loadingTwo = reduceVjLayers(shown, {
@@ -345,6 +454,7 @@ describe("reduceVjLayers invariants", () => {
         heldClipId && nextRandom() < 0.85 ? heldClipId : pick(clipIds);
       if (roll < 0.65) return { type: "firstFrame", layer, clipId };
       if (roll < 0.8) return { type: "failed", layer, clipId };
+      if (roll < 0.9) return { type: "catchUpEnded", layer, clipId };
       return { type: "fadeEnded", layer, clipId };
     };
 
@@ -362,13 +472,20 @@ describe("reduceVjLayers invariants", () => {
           const incomingSlot = state.slots[state.incoming.layer];
           expect(state.incoming.layer).not.toBe(state.front);
           expect(incomingSlot.clip).not.toBeNull();
-          expect(["loading", "fadingIn"]).toContain(incomingSlot.phase);
-          if (incomingSlot.phase === "fadingIn") {
+          expect(["loading", "fadingIn", "catchingUp"]).toContain(
+            incomingSlot.phase,
+          );
+          if (incomingSlot.phase !== "loading") {
             expect(vjLayerOpacity(state, state.incoming.layer)).toBe(1);
             expect(vjLayerZ(state, state.incoming.layer)).toBe(1);
           } else {
             expect(vjLayerOpacity(state, state.incoming.layer)).toBe(0);
           }
+        }
+        if (state.pendingTarget) {
+          expect(state.incoming).not.toBeNull();
+          if (state.incoming === null) return;
+          expect(state.slots[state.incoming.layer].phase).toBe("catchingUp");
         }
       }
     }

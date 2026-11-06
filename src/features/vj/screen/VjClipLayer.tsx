@@ -1,7 +1,9 @@
 import {
   useEffect,
   useEffectEvent,
+  useLayoutEffect,
   useRef,
+  useState,
   type CSSProperties,
   type JSX,
   type RefObject,
@@ -18,7 +20,11 @@ import {
   type VjLayerSlot,
   type VjRenderableClip,
 } from "./vjLayerMachine";
+import { VjFitBackdrop, type VjFitBackdropSource } from "./VjFitBackdrop";
 import styles from "./VjStage.module.css";
+
+/** How long a fading layer takes to finish to full opacity when a new target arrives. */
+export const VJ_CATCH_UP_MS = 180;
 
 /** If transitionend never arrives (a hidden tab, an interrupted transition), the fade still ends. */
 const VJ_FADE_END_GRACE_MS = 250;
@@ -27,10 +33,9 @@ interface VjMediaElementProps {
   sourceUrl: string;
   className: string;
   isPaused: boolean;
-  /** The blurred cover copy behind a "fit" clip. */
-  isBackdrop?: boolean;
   isPixelated?: boolean;
-  /** The main copy reports its first frame and failures; the blurred backdrop reports nothing. */
+  /** Hands the mounted element to the fit backdrop, which paints from it. */
+  onElementChange?: (element: VjFitBackdropSource | null) => void;
   onFirstFrame?: () => void;
   onFailed?: () => void;
 }
@@ -239,12 +244,19 @@ function VjVideoElement({
   sourceUrl,
   className,
   isPaused,
-  isBackdrop = false,
   playbackRate,
+  onElementChange,
   onFirstFrame,
   onFailed,
 }: VjMediaElementProps & { playbackRate: number }): JSX.Element {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const reportElement = useEffectEvent((element: VjFitBackdropSource | null) =>
+    onElementChange?.(element),
+  );
+  useEffect(() => {
+    reportElement(videoRef.current);
+    return () => reportElement(null);
+  }, []);
   const {
     progressRef,
     pendingRef,
@@ -304,7 +316,6 @@ function VjVideoElement({
       preload="auto"
       disablePictureInPicture
       aria-hidden="true"
-      data-vj-fit-backdrop={isBackdrop ? "" : undefined}
       onCanPlayThrough={handleCanPlayThrough}
       onPlaying={handlePlaying}
       onError={handleError}
@@ -316,12 +327,19 @@ function VjVideoElement({
 function VjGifElement({
   sourceUrl,
   className,
-  isBackdrop = false,
   isPixelated = false,
+  onElementChange,
   onFirstFrame,
   onFailed,
 }: VjMediaElementProps): JSX.Element {
   const imageRef = useRef<HTMLImageElement>(null);
+  const reportElement = useEffectEvent((element: VjFitBackdropSource | null) =>
+    onElementChange?.(element),
+  );
+  useEffect(() => {
+    reportElement(imageRef.current);
+    return () => reportElement(null);
+  }, []);
   const reportFirstFrame = useEffectEvent(() => onFirstFrame?.());
   const reportFailed = useEffectEvent(() => onFailed?.());
 
@@ -349,7 +367,6 @@ function VjGifElement({
       src={sourceUrl}
       alt=""
       draggable={false}
-      data-vj-fit-backdrop={isBackdrop ? "" : undefined}
       data-vj-pixelated={isPixelated ? "true" : undefined}
       onLoad={(event) => {
         if (!hasImageDecode(event.currentTarget)) onFirstFrame?.();
@@ -362,21 +379,30 @@ function VjGifElement({
 interface VjClipMediaProps {
   clip: VjRenderableClip;
   isPaused: boolean;
+  /** False while the layer is hidden: the fit backdrop paints nothing. */
+  isVisible: boolean;
   speed: VjSpeed;
   isPixelated: boolean;
   onFirstFrame: () => void;
   onFailed: () => void;
 }
 
-/** The clip, plus a blurred cover copy of itself behind it in "fit" mode. */
+/**
+ * The clip, plus a small painted backdrop behind it in "fit" mode. The clip
+ * decodes once; the backdrop copies its frames to a 64 px canvas.
+ */
 function VjClipMedia({
   clip,
   isPaused,
+  isVisible,
   speed,
   isPixelated,
   onFirstFrame,
   onFailed,
 }: VjClipMediaProps): JSX.Element {
+  const [mediaElement, setMediaElement] = useState<VjFitBackdropSource | null>(
+    null,
+  );
   const isFit = clip.fitMode === "fit";
   const playbackRate = vjPlaybackRateFor(clip.mediaKind, speed);
   const mainClassName = cx(
@@ -384,23 +410,24 @@ function VjClipMedia({
     isFit && styles.mediaContain,
     isPixelated && styles.pixelated,
   );
-  const backdropClassName = cx(styles.media, styles.fitBackdrop);
+  const backdrop = isFit ? (
+    <VjFitBackdrop
+      source={mediaElement}
+      clipWidth={clip.width}
+      clipHeight={clip.height}
+      isPainting={isVisible && !isPaused}
+    />
+  ) : null;
   if (clip.mediaKind === "gif" || playbackRate === null) {
     return (
       <>
-        {isFit ? (
-          <VjGifElement
-            sourceUrl={clip.sourceUrl}
-            className={backdropClassName}
-            isPaused={isPaused}
-            isBackdrop
-          />
-        ) : null}
+        {backdrop}
         <VjGifElement
           sourceUrl={clip.sourceUrl}
           className={mainClassName}
           isPaused={isPaused}
           isPixelated={isPixelated}
+          onElementChange={isFit ? setMediaElement : undefined}
           onFirstFrame={onFirstFrame}
           onFailed={onFailed}
         />
@@ -409,20 +436,13 @@ function VjClipMedia({
   }
   return (
     <>
-      {isFit ? (
-        <VjVideoElement
-          sourceUrl={clip.sourceUrl}
-          className={backdropClassName}
-          isPaused={isPaused}
-          isBackdrop
-          playbackRate={playbackRate}
-        />
-      ) : null}
+      {backdrop}
       <VjVideoElement
         sourceUrl={clip.sourceUrl}
         className={mainClassName}
         isPaused={isPaused}
         playbackRate={playbackRate}
+        onElementChange={isFit ? setMediaElement : undefined}
         onFirstFrame={onFirstFrame}
         onFailed={onFailed}
       />
@@ -442,11 +462,73 @@ export interface VjClipLayerProps {
   onFirstFrame: () => void;
   onFailed: () => void;
   onFadeEnded: () => void;
+  onCatchUpEnded: () => void;
+}
+
+/** The layer's opacity right now, read mid-transition; 1 when it cannot be read. */
+function readVisibleOpacity(layer: HTMLElement): number {
+  const opacity = Number.parseFloat(window.getComputedStyle(layer).opacity);
+  return Number.isFinite(opacity) ? Math.min(1, Math.max(0, opacity)) : 1;
+}
+
+/** Cancels the running CSS opacity transition so the catch-up animation owns the layer. */
+function cancelRunningTransitions(layer: HTMLElement): void {
+  const candidate = layer as Partial<Pick<HTMLElement, "getAnimations">>;
+  if (typeof candidate.getAnimations !== "function") return;
+  for (const animation of layer.getAnimations()) animation.cancel();
+}
+
+/**
+ * While `isCatchingUp`, eases the layer from its current visible opacity to 1
+ * over 180 ms, then reports the end. The layer never loses opacity: the CSS
+ * fade is cancelled and replaced in the same task, and the animation fills
+ * forwards at 1 until the layer is promoted. Web Animations ignore the laptop's
+ * reduced-motion setting, as the rest of the projector does.
+ */
+function useVjLayerCatchUp(
+  layerRef: RefObject<HTMLDivElement | null>,
+  isCatchingUp: boolean,
+  onEnded: () => void,
+): void {
+  const reportEnded = useEffectEvent(() => onEnded());
+  useLayoutEffect(() => {
+    const layer = layerRef.current;
+    if (!isCatchingUp || !layer) return undefined;
+    let isEnded = false;
+    const finish = (): void => {
+      if (isEnded) return;
+      isEnded = true;
+      reportEnded();
+    };
+    const visibleOpacity = readVisibleOpacity(layer);
+    cancelRunningTransitions(layer);
+    const canAnimate =
+      visibleOpacity < 1 && typeof layer.animate === "function";
+    const animation = canAnimate
+      ? layer.animate([{ opacity: visibleOpacity }, { opacity: 1 }], {
+          duration: VJ_CATCH_UP_MS,
+          easing: "ease-out",
+          fill: "forwards",
+        })
+      : null;
+    animation?.addEventListener("finish", finish);
+    // Without the animation (already opaque, or no Web Animations) the catch-up is over at once;
+    // with it, a hidden tab that never fires `finish` still ends after the grace.
+    const timeoutId = window.setTimeout(
+      finish,
+      animation ? VJ_CATCH_UP_MS + VJ_FADE_END_GRACE_MS : 0,
+    );
+    return () => {
+      window.clearTimeout(timeoutId);
+      animation?.removeEventListener("finish", finish);
+      animation?.cancel();
+    };
+  }, [isCatchingUp, layerRef]);
 }
 
 /**
  * One of the two stacked clip layers. Its opacity animates only while it fades
- * in; a leaving layer drops its media (its URL is already released).
+ * in or catches up; a leaving layer drops its media (its URL is already released).
  */
 export function VjClipLayer({
   slot,
@@ -459,9 +541,13 @@ export function VjClipLayer({
   onFirstFrame,
   onFailed,
   onFadeEnded,
+  onCatchUpEnded,
 }: VjClipLayerProps): JSX.Element {
+  const layerRef = useRef<HTMLDivElement>(null);
   const isFadingIn = slot.phase === "fadingIn";
+  const isCatchingUp = slot.phase === "catchingUp";
   const fadeEnded = useEffectEvent(() => onFadeEnded());
+  useVjLayerCatchUp(layerRef, isCatchingUp, onCatchUpEnded);
 
   useEffect(() => {
     if (!isFadingIn) return undefined;
@@ -481,20 +567,26 @@ export function VjClipLayer({
     clip !== null &&
     (slot.phase === "loading" ||
       slot.phase === "fadingIn" ||
+      slot.phase === "catchingUp" ||
       slot.phase === "shown");
-  const layerFadeMs = isFadingIn ? fadeMs : 0;
+  const isRising = isFadingIn || isCatchingUp;
+  let layerFadeMs = 0;
+  if (isFadingIn) layerFadeMs = fadeMs;
+  if (isCatchingUp) layerFadeMs = VJ_CATCH_UP_MS;
   const style = (
-    isFadingIn
-      ? { opacity, zIndex, "--vj-layer-fade": `${layerFadeMs}ms` }
+    isRising
+      ? { opacity, zIndex, "--vj-layer-fade": `${fadeMs}ms` }
       : { opacity, zIndex }
   ) as CSSProperties;
 
   return (
     <div
-      className={cx(styles.clipLayer, isFadingIn && styles.clipLayerFading)}
+      ref={layerRef}
+      className={cx(styles.clipLayer, isRising && styles.clipLayerFading)}
       style={style}
       data-vj-layer-phase={slot.phase}
       data-vj-fading={isFadingIn ? "true" : undefined}
+      data-vj-catching-up={isCatchingUp ? "true" : undefined}
       data-vj-clip-id={clip?.clipId}
       data-vj-fade-ms={layerFadeMs}
       aria-hidden="true"
@@ -505,6 +597,7 @@ export function VjClipLayer({
           key={`${clip.clipId}|${clip.sourceUrl}`}
           clip={clip}
           isPaused={isPaused}
+          isVisible={slot.phase !== "loading"}
           speed={speed}
           isPixelated={shouldPixelateVjClip(clip, viewport)}
           onFirstFrame={onFirstFrame}

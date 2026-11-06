@@ -149,6 +149,7 @@ export function VjStageRenderer({
         onFirstFrame={() => dispatch({ type: "firstFrame", layer, clipId })}
         onFailed={() => handleLayerFailed(layer, clipId)}
         onFadeEnded={() => dispatch({ type: "fadeEnded", layer, clipId })}
+        onCatchUpEnded={() => dispatch({ type: "catchUpEnded", layer, clipId })}
       />
     );
   };
@@ -157,9 +158,11 @@ export function VjStageRenderer({
     opacity: layers.isBlackRequested ? 1 : 0,
     "--vj-curtain-fade": `${layers.curtainFadeMs}ms`,
   } as CSSProperties;
+  // Cut means cut: the blackout snaps on and off. Only a fade transition fades it.
+  const blackoutFadeMs = transition.mode === "cut" ? 0 : transition.fadeMs;
   const blackoutStyle = {
     opacity: effects.isBlackout ? 1 : 0,
-    "--vj-blackout-fade": `${transition.fadeMs}ms`,
+    "--vj-blackout-fade": `${blackoutFadeMs}ms`,
   } as CSSProperties;
 
   return (
@@ -183,7 +186,7 @@ export function VjStageRenderer({
         className={cx(styles.layerFill, styles.blackout)}
         style={blackoutStyle}
         data-vj-blackout=""
-        data-vj-fade-ms={transition.fadeMs}
+        data-vj-fade-ms={blackoutFadeMs}
       />
       <div
         className={cx(styles.layerFill, styles.strobe)}
@@ -192,6 +195,19 @@ export function VjStageRenderer({
         data-vj-flash={isFlashUp ? "true" : undefined}
         data-vj-strobe-enabled={isStrobeEnabled ? "true" : "false"}
       />
+      {/* A target that waits for a catch-up has no layer yet. This inert element
+          carries its source URL so the page does not mistake it for unadopted and
+          revoke it; preload none fetches and decodes nothing. */}
+      {layers.pendingTarget ? (
+        <video
+          hidden
+          muted
+          preload="none"
+          src={layers.pendingTarget.clip.sourceUrl}
+          aria-hidden="true"
+          data-vj-pending-source=""
+        />
+      ) : null}
       <VjOverlayText overlay={overlay} size="screen" />
     </div>
   );

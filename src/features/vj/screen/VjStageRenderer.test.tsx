@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { LazyMotion, domMax } from "motion/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -90,6 +91,25 @@ function elementBySelector(container: HTMLElement, selector: string) {
   return element;
 }
 
+interface FakeCanvasContext {
+  filter: string;
+  clearRect: ReturnType<typeof vi.fn>;
+  drawImage: ReturnType<typeof vi.fn>;
+}
+
+/** jsdom has no canvas: give every canvas the same recording 2d context. */
+function mockCanvasContext(): FakeCanvasContext {
+  const context: FakeCanvasContext = {
+    filter: "none",
+    clearRect: vi.fn(),
+    drawImage: vi.fn(),
+  };
+  vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(
+    context as unknown as CanvasRenderingContext2D,
+  );
+  return context;
+}
+
 /** canplaythrough, play() resolves, then `playing` (jsdom has no requestVideoFrameCallback). */
 async function bringToFirstFrame(video: HTMLVideoElement): Promise<void> {
   await act(async () => {
@@ -104,6 +124,7 @@ async function bringToFirstFrame(video: HTMLVideoElement): Promise<void> {
 
 describe("VjStageRenderer", () => {
   beforeEach(() => {
+    mockCanvasContext();
     vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue(undefined);
     vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(
       () => undefined,
@@ -125,7 +146,7 @@ describe("VjStageRenderer", () => {
       target: videoClip("one", { fitMode: "fit" }),
     });
     const videos = Array.from(container.querySelectorAll("video"));
-    expect(videos).toHaveLength(2);
+    expect(videos).toHaveLength(1);
     for (const video of videos) {
       expect(video.muted).toBe(true);
       expect(video.loop).toBe(true);
@@ -164,29 +185,6 @@ describe("VjStageRenderer", () => {
     const large = renderStage({ target: gifClip("large", 1920, 1080) });
     const largeImage = layerOf(large.container, "large").querySelector("img");
     expect(largeImage?.hasAttribute("data-vj-pixelated")).toBe(false);
-  });
-
-  it("draws a fitted clip over a blurred copy of itself", () => {
-    const { container } = renderStage({
-      target: videoClip("wide", { fitMode: "fit" }),
-    });
-    const layer = layerOf(container, "wide");
-    const backdrop = layer.querySelector<HTMLVideoElement>(
-      "video[data-vj-fit-backdrop]",
-    );
-    const main = mainVideoOf(layer);
-    expect(backdrop).not.toBeNull();
-    expect(backdrop?.getAttribute("src")).toBe(main.getAttribute("src"));
-    expect(backdrop?.getAttribute("aria-hidden")).toBe("true");
-    if (!backdrop) return;
-    expect(
-      backdrop.compareDocumentPosition(main) & Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy();
-
-    const filled = renderStage({ target: videoClip("full") });
-    expect(
-      layerOf(filled.container, "full").querySelector("[data-vj-fit-backdrop]"),
-    ).toBeNull();
   });
 
   it("stacks the overlay above the effects, the blackout and the strobe", () => {
@@ -230,6 +228,28 @@ describe("VjStageRenderer", () => {
     expect(blackout.getAttribute("data-vj-fade-ms")).toBe("1500");
     rerenderStage({ transition: { mode: "fade", fadeMs: 300 } });
     expect(blackout.getAttribute("data-vj-fade-ms")).toBe("300");
+  });
+
+  it("snaps the blackout on and off in Cut mode and fades it in Fade mode", () => {
+    const { container, rerenderStage } = renderStage({
+      target: videoClip("one"),
+      transition: { mode: "cut", fadeMs: 1500 },
+    });
+    const blackout = elementBySelector(container, "[data-vj-blackout]");
+    expect(blackout.getAttribute("data-vj-fade-ms")).toBe("0");
+    expect(blackout.style.getPropertyValue("--vj-blackout-fade")).toBe("0ms");
+    rerenderStage({ effects: effectsWith({ isBlackout: true }) });
+    expect(blackout.style.opacity).toBe("1");
+    expect(blackout.style.getPropertyValue("--vj-blackout-fade")).toBe("0ms");
+    rerenderStage({ effects: effectsWith({ isBlackout: false }) });
+    expect(blackout.style.opacity).toBe("0");
+    expect(blackout.getAttribute("data-vj-fade-ms")).toBe("0");
+
+    rerenderStage({ transition: { mode: "fade", fadeMs: 1500 } });
+    expect(blackout.getAttribute("data-vj-fade-ms")).toBe("1500");
+    expect(blackout.style.getPropertyValue("--vj-blackout-fade")).toBe(
+      "1500ms",
+    );
   });
 
   it("renders the big and the ticker styles", () => {
@@ -281,6 +301,96 @@ describe("VjStageRenderer", () => {
   });
 });
 
+describe("VjStageRenderer fit backdrop", () => {
+  beforeEach(() => {
+    mockCanvasContext();
+    vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue(undefined);
+    vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(
+      () => undefined,
+    );
+    Object.defineProperty(HTMLImageElement.prototype, "decode", {
+      configurable: true,
+      writable: true,
+      value: vi.fn().mockResolvedValue(undefined),
+    });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    Reflect.deleteProperty(HTMLImageElement.prototype, "decode");
+  });
+
+  it("draws a fitted clip over a small painted backdrop and decodes it once", () => {
+    const { container } = renderStage({
+      target: videoClip("wide", { fitMode: "fit" }),
+    });
+    const layer = layerOf(container, "wide");
+    expect(layer.querySelectorAll("video")).toHaveLength(1);
+    const backdrop = layer.querySelector<HTMLCanvasElement>(
+      "canvas[data-vj-fit-backdrop]",
+    );
+    const main = mainVideoOf(layer);
+    expect(backdrop).not.toBeNull();
+    if (!backdrop) return;
+    expect(backdrop.width).toBe(64);
+    expect(backdrop.height).toBe(36);
+    expect(backdrop.getAttribute("aria-hidden")).toBe("true");
+    expect(
+      backdrop.compareDocumentPosition(main) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+
+    const filled = renderStage({ target: videoClip("full") });
+    expect(
+      layerOf(filled.container, "full").querySelector("[data-vj-fit-backdrop]"),
+    ).toBeNull();
+  });
+
+  it("styles the backdrop canvas to cover the whole layer", () => {
+    const { container } = renderStage({
+      target: videoClip("wide", { fitMode: "fit" }),
+    });
+    const backdrop = layerOf(container, "wide").querySelector("canvas");
+    expect(backdrop).not.toBeNull();
+    expect(backdrop).toHaveClass("fitBackdrop");
+    const stageCss = readFileSync(
+      "src/features/vj/screen/VjStage.module.css",
+      "utf8",
+    );
+    const ruleBody = /\.fitBackdrop\s*\{([^}]*)\}/.exec(stageCss)?.[1] ?? "";
+    expect(ruleBody).toMatch(/position:\s*absolute/);
+    expect(ruleBody).toMatch(/inset:\s*0/);
+    expect(ruleBody).toMatch(/width:\s*100%/);
+    expect(ruleBody).toMatch(/height:\s*100%/);
+    expect(ruleBody).toMatch(/object-fit:\s*cover/);
+  });
+
+  it("matches the backdrop canvas to the clip's aspect ratio", () => {
+    const portrait = renderStage({
+      target: videoClip("tall", { fitMode: "fit", width: 1080, height: 1920 }),
+    });
+    const backdrop = layerOf(portrait.container, "tall").querySelector(
+      "canvas",
+    );
+    expect(backdrop?.width).toBe(64);
+    expect(backdrop?.height).toBe(114);
+  });
+
+  it("paints the GIF backdrop from the one image and keeps pixelation on the main image only", () => {
+    const { container } = renderStage({
+      target: { ...gifClip("tiny", 120, 90), fitMode: "fit" },
+    });
+    const layer = layerOf(container, "tiny");
+    expect(layer.querySelectorAll("img")).toHaveLength(1);
+    expect(layer.querySelector("canvas[data-vj-fit-backdrop]")).not.toBeNull();
+    expect(layer.querySelector("img")?.getAttribute("data-vj-pixelated")).toBe(
+      "true",
+    );
+    expect(
+      layer.querySelector("canvas")?.hasAttribute("data-vj-pixelated"),
+    ).toBe(false);
+  });
+});
+
 describe("VjStageRenderer fades cut short", () => {
   beforeEach(() => {
     vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue(undefined);
@@ -319,16 +429,6 @@ describe("VjStageRenderer fades cut short", () => {
     expect(layer.style.opacity).toBe("1");
   }
 
-  it("snaps the fading layer to full opacity when a new clip arrives mid-fade", async () => {
-    const { container, rerenderStage } = await renderMidFade();
-    rerenderStage({ target: videoClip("three") });
-    expectSnappedToFull(layerOf(container, "two"));
-    const loadingLayer = layerOf(container, "three");
-    expect(loadingLayer).toHaveAttribute("data-vj-layer-phase", "loading");
-    expect(loadingLayer).not.toHaveAttribute("data-vj-fading");
-    expect(container.querySelector('[data-vj-clip-id="one"]')).toBeNull();
-  });
-
   it("snaps the fading layer to full opacity when the screen goes black mid-fade", async () => {
     const { container, rerenderStage } = await renderMidFade();
     rerenderStage({ target: null });
@@ -336,6 +436,109 @@ describe("VjStageRenderer fades cut short", () => {
     expect(
       elementBySelector(container, "[data-vj-curtain]").style.opacity,
     ).toBe("1");
+  });
+});
+
+describe("VjStageRenderer catches a fading clip up when a new clip is tapped", () => {
+  let animateSpy: ReturnType<typeof vi.fn>;
+  let finishCatchUp: () => void;
+  let cancelAnimation: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue(undefined);
+    vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(
+      () => undefined,
+    );
+    cancelAnimation = vi.fn();
+    finishCatchUp = () => undefined;
+    animateSpy = vi.fn(() => ({
+      addEventListener: (_type: string, listener: () => void) => {
+        finishCatchUp = listener;
+      },
+      removeEventListener: vi.fn(),
+      cancel: cancelAnimation,
+    }));
+    Object.defineProperty(HTMLElement.prototype, "animate", {
+      configurable: true,
+      writable: true,
+      value: animateSpy,
+    });
+    const realGetComputedStyle = window.getComputedStyle.bind(window);
+    vi.spyOn(window, "getComputedStyle").mockImplementation((element) => {
+      const computed = realGetComputedStyle(element);
+      if (!element.hasAttribute("data-vj-catching-up")) return computed;
+      return { opacity: "0.4" } as CSSStyleDeclaration;
+    });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    Reflect.deleteProperty(HTMLElement.prototype, "animate");
+  });
+
+  async function renderMidFade() {
+    const view = renderStage({
+      target: videoClip("one"),
+      transition: { mode: "fade", fadeMs: 2000 },
+    });
+    await bringToFirstFrame(mainVideoOf(layerOf(view.container, "one")));
+    view.rerenderStage({ target: videoClip("two") });
+    await bringToFirstFrame(mainVideoOf(layerOf(view.container, "two")));
+    expect(layerOf(view.container, "two")).toHaveAttribute(
+      "data-vj-layer-phase",
+      "fadingIn",
+    );
+    return view;
+  }
+
+  it("keeps the old front mounted and opaque and the fading layer opaque while it eases up from where it is", async () => {
+    const { container, rerenderStage } = await renderMidFade();
+    rerenderStage({ target: videoClip("three") });
+
+    const catchingLayer = layerOf(container, "two");
+    expect(catchingLayer).toHaveAttribute("data-vj-layer-phase", "catchingUp");
+    expect(catchingLayer).toHaveAttribute("data-vj-catching-up", "true");
+    expect(catchingLayer.style.opacity).toBe("1");
+    expect(animateSpy).toHaveBeenCalledTimes(1);
+    expect(animateSpy).toHaveBeenCalledWith(
+      [{ opacity: 0.4 }, { opacity: 1 }],
+      { duration: 180, easing: "ease-out", fill: "forwards" },
+    );
+
+    const oldFront = layerOf(container, "one");
+    expect(oldFront).toHaveAttribute("data-vj-layer-phase", "shown");
+    expect(oldFront.style.opacity).toBe("1");
+    expect(oldFront.querySelector("video")).not.toBeNull();
+    expect(Number(catchingLayer.style.zIndex)).toBeGreaterThan(
+      Number(oldFront.style.zIndex),
+    );
+    expect(container.querySelector('[data-vj-clip-id="three"]')).toBeNull();
+    expect(
+      container.querySelector("video[data-vj-pending-source]"),
+    ).toHaveAttribute("src", "blob:source-three");
+    expect(cancelAnimation).not.toHaveBeenCalled();
+  });
+
+  it("promotes the caught-up layer, then loads the new clip into the freed layer with the normal fade", async () => {
+    const { container, rerenderStage } = await renderMidFade();
+    rerenderStage({ target: videoClip("three") });
+    act(() => {
+      finishCatchUp();
+    });
+
+    const promoted = layerOf(container, "two");
+    expect(promoted).toHaveAttribute("data-vj-layer-phase", "shown");
+    expect(promoted.style.opacity).toBe("1");
+    expect(container.querySelector('[data-vj-clip-id="one"]')).toBeNull();
+    const loading = layerOf(container, "three");
+    expect(loading).toHaveAttribute("data-vj-layer-phase", "loading");
+    expect(loading.style.opacity).toBe("0");
+    expect(container.querySelector("[data-vj-pending-source]")).toBeNull();
+
+    await bringToFirstFrame(mainVideoOf(loading));
+    expect(loading).toHaveAttribute("data-vj-layer-phase", "fadingIn");
+    expect(loading).toHaveAttribute("data-vj-fade-ms", "2000");
+    expect(layerOf(container, "two").style.opacity).toBe("1");
   });
 });
 
@@ -514,6 +717,7 @@ describe("VjStageRenderer video first frame without a presented frame", () => {
 
 describe("VjStageRenderer releases video decoders", () => {
   beforeEach(() => {
+    mockCanvasContext();
     vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue(undefined);
     vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(
       () => undefined,
@@ -532,7 +736,7 @@ describe("VjStageRenderer releases video decoders", () => {
       target: videoClip("one", { fitMode: "fit" }),
     });
     const videos = Array.from(container.querySelectorAll("video"));
-    expect(videos).toHaveLength(2);
+    expect(videos).toHaveLength(1);
     for (const video of videos) {
       expect(video.getAttribute("src")).toBe("blob:source-one");
     }
@@ -540,7 +744,58 @@ describe("VjStageRenderer releases video decoders", () => {
     for (const video of videos) {
       expect(video.hasAttribute("src")).toBe(false);
     }
-    expect(loadSpy).toHaveBeenCalledTimes(2);
+    expect(loadSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("paints the fit backdrop on first frame and every 500 ms, and stops painting on unmount", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: false });
+    try {
+      const canvasContext = mockCanvasContext();
+      const clearIntervalSpy = vi.spyOn(window, "clearInterval");
+      const { container, unmount } = renderStage({
+        target: videoClip("one", { fitMode: "fit" }),
+      });
+      expect(canvasContext.drawImage).not.toHaveBeenCalled();
+
+      const video = mainVideoOf(layerOf(container, "one"));
+      await bringToFirstFrame(video);
+      expect(canvasContext.filter).toBe("blur(2px) brightness(0.45)");
+      const paintsAtFirstFrame = canvasContext.drawImage.mock.calls.length;
+      expect(paintsAtFirstFrame).toBeGreaterThanOrEqual(1);
+      expect(canvasContext.drawImage.mock.calls[0]?.[0]).toBe(video);
+
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+      expect(canvasContext.drawImage.mock.calls.length).toBe(
+        paintsAtFirstFrame + 2,
+      );
+
+      unmount();
+      expect(clearIntervalSpy).toHaveBeenCalled();
+      const paintsAtUnmount = canvasContext.drawImage.mock.calls.length;
+      act(() => {
+        vi.advanceTimersByTime(2000);
+      });
+      expect(canvasContext.drawImage.mock.calls.length).toBe(paintsAtUnmount);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("survives a canvas that refuses to draw", async () => {
+    const canvasContext = mockCanvasContext();
+    canvasContext.drawImage.mockImplementation(() => {
+      throw new DOMException("tainted", "SecurityError");
+    });
+    const { container } = renderStage({
+      target: videoClip("one", { fitMode: "fit" }),
+    });
+    await bringToFirstFrame(mainVideoOf(layerOf(container, "one")));
+    expect(layerOf(container, "one")).toHaveAttribute(
+      "data-vj-layer-phase",
+      "shown",
+    );
   });
 
   it("releases the old clip's video once a cut has switched to the new clip", async () => {
