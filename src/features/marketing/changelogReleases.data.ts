@@ -17,11 +17,11 @@ export const CHANGELOG_RELEASE_NOTES: Record<
 > = {
   "7 Nov 2026": {
     highlights: [
+      "vj-operator-role",
       "failed-actions-say-why",
       "unpublish-pieces-from-the-desk",
-      "studio-payment-methods-save",
     ],
-    pushes: 2,
+    pushes: 3,
   },
   "5 Nov 2026": {
     highlights: ["persona-directory-credits", "persona-wall-curation"],

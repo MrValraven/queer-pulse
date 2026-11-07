@@ -740,13 +740,16 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         isAdminOnly: true,
       },
       {
-        // The VJ library and its live screen and remote. `AdminVjController`
-        // and the `/vj` socket are `@Roles(Admin)` with an empty `@StaffRoles()`,
-        // so no grant reaches it: hence `isAdminOnly` and no `capabilities`.
+        // The VJ library and its live screen and remote. `AdminVjController`,
+        // the `/vj` socket and the VJ uploads admit Admin or the `vj_operator`
+        // grant, mirrored in the authGate elevated pattern list. A moderator
+        // sees it only by holding the grant, because the path stays out of
+        // `MODERATOR_ADMITTED_CAPABILITY_PATHS`; a grant-only holder sees
+        // this item and nothing else.
         labelKey: "shared:adminNav.items.vj",
         to: routes.adminVj,
         icon: FiMonitor,
-        isAdminOnly: true,
+        capabilities: ["vj_operator"],
       },
       {
         labelKey: "admin:settings.breadcrumb",
@@ -780,7 +783,8 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
  *   resource guides: `@Roles(Moderator, Admin)` + `resource_curator`.
  *   glossary: `@Roles(Moderator, Admin)` + `resource_curator`.
  * Every other `capabilities` entry sits behind `@Roles(Admin)` plus its grant,
- * so a moderator reaches it only by holding that grant.
+ * so a moderator reaches it only by holding that grant. VJ is one of them:
+ * `@Roles(Admin)` + `vj_operator`.
  */
 const MODERATOR_ADMITTED_CAPABILITY_PATHS: ReadonlySet<string> = new Set([
   routes.adminQueues,

@@ -2,12 +2,8 @@
   margin-top: 4px;
 }
 
-/* Shared <Tabs variant="underline"> owns the tab styling (role="tablist",
-   aria-selected, roving tabindex); this class only adds the bottom spacing. */
-.tabs {
-  margin-bottom: 22px;
-  flex-wrap: wrap;
-}
+/* The sub-tabs take the page's own tab row classes (NotificationsPage.module
+   .css `.tabsFrame .tabs`): one line, scrolling sideways on a phone. */
 
 .markRow {
   display: flex;
@@ -53,109 +49,53 @@
   }
 }
 
+/* The day label, set like the notifications list's own. */
 .day {
-  font-size: var(--text-11-5);
+  font-size: var(--text-11);
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-40);
-  margin: 24px 0 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
+  padding: 20px 0 6px;
 }
 .list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
 }
+/* A mention row wears the page's `.contentRow` (picture, tints, hairlines,
+   run-aware corners); this adds the flex row that `.item` gives a
+   notification row, without its pointer and hover wash, since a mention row
+   has no row-level link. Dependency-free "virtualization" as on the
+   notification rows: the inline reply composer is in-flow and RSVP feedback
+   is a global toast, so the always-on paint containment is safe here. */
 .row {
-  padding: 18px 22px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-14);
-  transition:
-    background 0.4s var(--ease),
-    border-color 0.4s var(--ease);
-  /* Dependency-free "virtualization": skip offscreen mention cards so a long
-     mentions thread stays smooth. `auto` keyword = browser remembers the real
-     height after first paint; the placeholder is only the pre-paint estimate.
-     The row's only overlay-ish content (inline reply composer) is in-flow, and
-     RSVP feedback is a global toast, so the always-on paint containment is
-     safe here. */
+  display: flex;
+  align-items: flex-start;
+  position: relative;
   content-visibility: auto;
-  contain-intrinsic-size: auto 180px;
 }
-.row.unread {
-  background: rgba(var(--accent-rgb), 0.04);
-  border-color: rgba(var(--accent-rgb), 0.18);
-}
-@media (prefers-reduced-motion: reduce) {
-  .row {
-    transition: none;
-  }
-}
-.headRow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-.av {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  font-family: var(--sans);
-  font-weight: 700;
-  font-size: var(--text-11);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-}
-.avCoral {
-  background: rgba(var(--accent-rgb), 0.14);
-  color: var(--accent-ink);
-}
-.avJade {
-  background: rgba(var(--jade-rgb), 0.14);
-  color: var(--jade);
-}
-.avPlum {
-  background: rgba(var(--plum-rgb), 0.1);
-  color: var(--text-strong);
-}
-.who {
-  font-size: var(--text-13-5);
-}
-.who a {
-  color: var(--text-strong);
-  font-weight: 700;
-  text-decoration: none;
-}
-/* Groups the mentioner's name with their staff badge (when they have one) so
-   the two move as a single unit rather than the badge floating loose. */
-.whoName {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.who span {
-  color: var(--ink-60);
-}
+/* "Read", once the member has marked a mention read from here. */
 .when {
   margin-left: auto;
   font-size: var(--text-11-5);
   color: var(--ink-40);
 }
-.when.fresh {
+/* A mention from the last few hours keeps its coral time. */
+.fresh {
   color: var(--accent-ink);
   font-weight: 700;
 }
+/* The quoted text, set off like a decision's written reason on a
+   notification row: a hairline rule at its start marks it as the author's
+   words. */
 .content,
 .contentGone {
-  font-size: var(--text-14-5);
-  line-height: 1.65;
-  padding-left: 42px;
+  margin: 6px 0 4px;
+  padding-inline-start: 10px;
+  border-inline-start: 2px solid var(--line);
+  font-size: var(--text-14);
+  line-height: var(--lh-body);
+  overflow-wrap: anywhere;
 }
 .content {
   color: var(--ink);
@@ -176,22 +116,26 @@
   border-radius: var(--radius-3);
   font-weight: 600;
 }
-.where {
-  padding-left: 42px;
-  margin-top: 6px;
-  font-size: var(--text-12);
-  color: var(--ink-40);
-}
+/* "In <source>", the first item of the meta line. */
 .where a {
-  color: var(--text-strong);
+  color: var(--ink-60);
   font-weight: 600;
   text-decoration: none;
 }
+@media (hover: hover) {
+  .where a:hover {
+    color: var(--text-strong);
+    text-decoration: underline;
+  }
+}
+/* The text actions sit under the meta line; the row pulls them back by their
+   own padding, so the first label lines up with the text column. */
 .actions {
-  padding: 8px 0 0 42px;
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 6px;
-  margin-top: 6px;
+  margin: 8px 0 0 -10px;
 }
 .action {
   background: transparent;
@@ -226,7 +170,7 @@
 
 /* Inline reply composer */
 .composer {
-  margin: 12px 0 0 42px;
+  margin: 12px 0 0;
   display: flex;
   gap: 8px;
   align-items: flex-end;
@@ -269,7 +213,7 @@
 
 /* Sent replies */
 .sentReply {
-  margin: 10px 0 0 42px;
+  margin: 10px 0 0;
   padding: 10px 14px;
   background: rgba(var(--accent-rgb), 0.05);
   border: 1px solid rgba(var(--accent-rgb), 0.14);

@@ -592,6 +592,9 @@ a.featuredStripLink:focus-visible {
   gap: 4px;
   flex-wrap: wrap;
   margin-top: 1px;
+  margin-left: auto;
+  flex: none;
+  justify-content: flex-end;
 }
 
 /* Groups the selected-state dot and the trailing chevron at the row's far
@@ -603,6 +606,11 @@ a.featuredStripLink:focus-visible {
   gap: 6px;
   margin-left: auto;
   flex: none;
+}
+
+/* When badges render they own the auto margin, so the trailing group sits flush beside them instead of splitting the free space. */
+.rowBadges + .rowTrailing {
+  margin-left: 0;
 }
 
 /* Always rendered (not conditional on selection) so it can animate between

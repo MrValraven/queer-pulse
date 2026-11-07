@@ -386,8 +386,8 @@ function VjLibraryBody({
 }
 
 /**
- * The VJ library (`/admin/vj`, Admin only): packs, the clip grid, uploads and
- * clip edits in the Clips section, scenes and set lists in the other
+ * The VJ library (`/admin/vj`, Admin or `vj_operator`): packs, the clip grid,
+ * uploads and clip edits in the Clips section, scenes and set lists in the other
  * (`?view=show`), with Open screen and Open remote in the header. It attaches
  * to no socket; live reads again on mount and focus, demo follows other tabs'
  * writes through `useVjDemoLibrarySync`. Uploads and Make previews live here

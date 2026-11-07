@@ -230,6 +230,7 @@ export const shared: Catalog = {
   "accountMenu.staff.magazineEditor": "Magazine editor",
   "accountMenu.staff.magazineWriter": "Writer workspace",
   "accountMenu.staff.admin": "Admin",
+  "accountMenu.staff.vj": "VJ",
   "accountMenu.mod.modTools": "Mod tools",
   "accountMenu.controls.populatePlatform": "Populate platform",
   "accountMenu.controls.on": "On",

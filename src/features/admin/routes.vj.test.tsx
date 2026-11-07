@@ -56,13 +56,13 @@ vi.mock("../vj/remote/AdminVjRemotePage", () => ({
   AdminVjRemotePage: () => <main data-testid="vj-remote-page" />,
 }));
 
-function userWith(role: AuthUser["role"]): AuthUser {
+function userWith(role: AuthUser["role"], staffRoles: string[] = []): AuthUser {
   return {
     id: "user-1",
     email: "user@queerpulse.test",
     status: "active",
     role,
-    staffRoles: [],
+    staffRoles,
     earlyAccessFeatures: [],
     ageAttestedAt: "2026-01-01T00:00:00.000Z",
     onboardedAt: "2026-01-01T00:00:00.000Z",
@@ -80,7 +80,7 @@ function authValue(user: AuthUser): AuthContextValue {
     user,
     status: user.status,
     role: user.role,
-    staffRoles: [],
+    staffRoles: user.staffRoles,
     authError: null,
     signIn: () => {},
     signOut: () => {},
@@ -126,6 +126,29 @@ describe("AppRoutes: VJ screen and remote", () => {
       renderAt(path, authValue(userWith("admin")));
       expect(await screen.findByRole("main")).toBe(screen.getByTestId(testId));
       expect(screen.getByTestId("location")).toHaveTextContent(path);
+    },
+  );
+
+  it.each([
+    [routes.adminVjScreen, "vj-screen-page"],
+    [routes.adminVjRemote, "vj-remote-page"],
+  ])(
+    "mounts the VJ screen and remote for a member holding vj_operator: %s",
+    async (path, testId) => {
+      renderAt(path, authValue(userWith("member", ["vj_operator"])));
+      expect(await screen.findByRole("main")).toBe(screen.getByTestId(testId));
+      expect(screen.getByTestId("location")).toHaveTextContent(path);
+    },
+  );
+
+  it.each([routes.adminVjScreen, routes.adminVjRemote])(
+    "sends a member holding another grant away from both: %s",
+    async (path) => {
+      renderAt(path, authValue(userWith("member", ["music_manager_producer"])));
+      expect(await screen.findByTestId("feed-page")).toBeInTheDocument();
+      expect(screen.getByTestId("location")).toHaveTextContent(
+        new RegExp(`^${routes.feed}$`),
+      );
     },
   );
 

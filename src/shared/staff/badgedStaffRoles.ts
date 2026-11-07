@@ -10,13 +10,15 @@ import type { StaffBadgeRole, StaffRole } from "../components/ui/StaffBadge";
  * which is where the reasoning lives and where a new grant has to make the call:
  * a grant is badged when its holder exercises power over OTHER members' content
  * or membership, so the member on the receiving end of a declined listing or a
- * spiked piece can see from the name alone that the platform is acting. Four
+ * spiked piece can see from the name alone that the platform is acting. Five
  * grants stay off the list. `magazine_writer` reads only its own holder's work,
  * so it holds power over nobody. `partnerships` decides about organisations and
  * about changemaker nominations rather than about a member's own content or
  * their place here. `product_manager` reads aggregates and keeps the roadmap,
  * and `cultural_producer` keeps the platform's own public-face pages; neither
- * decides anything about another member. `music_manager_producer` does badge,
+ * decides anything about another member. `vj_operator` runs the platform's own
+ * VJ library and projector and touches nobody's content or membership.
+ * `music_manager_producer` does badge,
  * because it holds the full host controls over other members' music events.
  *
  * `Extract` rather than a fresh union: this list can only ever narrow the ids

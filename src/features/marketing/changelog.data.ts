@@ -63,6 +63,30 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "persona-photo-on-every-layout",
+        category: "fix",
+        date: "7 Nov 2026",
+        ...entryKeys("persona-photo-on-every-layout"),
+      },
+      {
+        id: "notifications-page-on-phones",
+        category: "improvement",
+        date: "7 Nov 2026",
+        ...entryKeys("notifications-page-on-phones"),
+      },
+      {
+        id: "vj-operator-role",
+        category: "feature",
+        date: "7 Nov 2026",
+        ...entryKeys("vj-operator-role"),
+      },
+      {
+        id: "official-replies-reach-team-mailbox",
+        category: "fix",
+        date: "7 Nov 2026",
+        ...entryKeys("official-replies-reach-team-mailbox"),
+      },
+      {
         id: "studio-payment-methods-save",
         category: "fix",
         date: "7 Nov 2026",

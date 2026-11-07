@@ -126,6 +126,16 @@ function GateAt({ path }: { path: string }) {
   );
 }
 
+/** The grants the routed tree reads, as authGate does. */
+function RoutedStaffRoles() {
+  const authValue = useContext(AuthContext);
+  return (
+    <p data-testid="routed-staff-roles">
+      {authValue?.staffRoles.join(",") ?? "none"}
+    </p>
+  );
+}
+
 function routedAuthText(): string | null {
   return screen.queryByTestId("routed-content")?.textContent ?? null;
 }
@@ -151,6 +161,32 @@ describe("OfflineGate on the VJ screen", () => {
     render(<GateAt path={VJ_SCREEN_PATH} />);
 
     expect(routedAuthText()).toBe("true:admin:admin-1");
+    expect(screen.queryByTestId("offline-page")).not.toBeInTheDocument();
+  });
+
+  it("boots the VJ screen offline as the saved VJ operator holding the grant alone", () => {
+    saveVjScreenSession(
+      buildUser({
+        id: "operator-1",
+        role: "member",
+        staffRoles: ["vj_operator", "magazine_writer"],
+      }),
+    );
+    testState.isOnline = false;
+
+    render(
+      <MemoryRouter initialEntries={[VJ_SCREEN_PATH]}>
+        <OfflineGate>
+          <RoutedContent />
+          <RoutedStaffRoles />
+        </OfflineGate>
+      </MemoryRouter>,
+    );
+
+    expect(routedAuthText()).toBe("true:member:operator-1");
+    expect(screen.getByTestId("routed-staff-roles")).toHaveTextContent(
+      /^vj_operator$/,
+    );
     expect(screen.queryByTestId("offline-page")).not.toBeInTheDocument();
   });
 

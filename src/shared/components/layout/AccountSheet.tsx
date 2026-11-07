@@ -30,6 +30,7 @@ import {
   INSTALL_APP_ACTION,
 } from "./accountMenu.data";
 import { useAccountIdentity } from "./useAccountIdentity";
+import { useHasRoleLinks } from "./useHasRoleLinks";
 import {
   RoleLinks,
   AccountMenuControls,
@@ -215,6 +216,7 @@ function AccountSheetBody({
   const { isInstalled } = useDisplayMode();
   const isAccountRowVisible = useAccountRowVisibility(); // liveOnly, earlyAccess
   const [installOpen, setInstallOpen] = useState(false);
+  const hasRoleLinks = useHasRoleLinks(role);
   const { theme, toggleTheme } = useTheme();
   const themeLabel = t(
     theme === "dark"
@@ -334,7 +336,7 @@ function AccountSheetBody({
             preferences the member sets in place, and neither closes the sheet. */}
         <AccountLanguageRow />
 
-        {role !== "member" && (
+        {hasRoleLinks && (
           <>
             <div className={menu.divider} />
             <RoleLinks role={role} onNavigate={onNavigate} />

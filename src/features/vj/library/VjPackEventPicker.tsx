@@ -14,16 +14,20 @@ import { useSetVjPackEvent } from "../api/useSetVjPackEvent";
 import { useVjUpcomingEvents } from "../api/useVjUpcomingEvents";
 import { VjReasonLine } from "../VjReasonLine";
 import { vjEventSearchTextOf, vjEventWhenOf } from "./vjEventOptionLabel";
+import { vjPackEventDetailsOf } from "./vjPackEventDetails";
 import styles from "./VjPackEvent.module.css";
 
 /** The linked event as a choice, for a link the upcoming list no longer
- *  carries (the event may have ended). Its summary has no area. */
+ *  carries (the event may have ended). Its summary has no area. Null when
+ *  the server withheld the title and the start, so the list offers only
+ *  events the viewer can pick. */
 function linkedEventOptionOf(pack: VjPackDTO): VjEventOptionDTO | null {
-  if (pack.event === null) return null;
+  const eventDetails = vjPackEventDetailsOf(pack.event);
+  if (eventDetails === null) return null;
   return {
-    id: pack.event.id,
-    title: pack.event.title,
-    startAt: pack.event.startAt,
+    id: eventDetails.id,
+    title: eventDetails.title,
+    startAt: eventDetails.startAt,
     endAt: null,
     area: null,
     isOnline: false,
@@ -83,8 +87,9 @@ export function VjPackEventPicker({
   const labelId = useId();
   const upcomingEvents = useVjUpcomingEvents();
   const setPackEvent = useSetVjPackEvent();
+  // A withheld link is no choice in the list, so nothing starts chosen.
   const [chosenEventId, setChosenEventId] = useState<string | null>(
-    pack.event?.id ?? null,
+    vjPackEventDetailsOf(pack.event)?.id ?? null,
   );
   const [refusal, setRefusal] = useState<unknown>(null);
 
@@ -116,7 +121,7 @@ export function VjPackEventPicker({
         eventId: chosenEventId,
       });
       const chosenTitle =
-        linkedPack.event?.title ??
+        vjPackEventDetailsOf(linkedPack.event)?.title ??
         choices.find((event) => event.id === chosenEventId)?.title ??
         "";
       showToast(

@@ -3,12 +3,19 @@ import { Link } from "react-router-dom";
 import { FiX } from "react-icons/fi";
 import { FadeIn, IconButton } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { Translation } from "../../shared/i18n/Translation";
 import { linkToPath } from "../../app/routeMap";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { studioKeys } from "../studio/api/studioQueryKeys";
 import { NotificationItemActions } from "./NotificationItemActions";
-import { NotificationItemLead } from "./NotificationItemLead";
+import {
+  NotificationItemLead,
+  NotificationItemLeadFrame,
+  type NotificationLeadShape,
+} from "./NotificationItemLead";
+import {
+  NotificationItemMetaLine,
+  NotificationItemSentence,
+} from "./NotificationItemSentence";
 import type { Notification } from "./data";
 import styles from "./NotificationsPage.module.css";
 
@@ -38,6 +45,7 @@ export function NotificationItem({
   onDismiss,
   dismissAction,
   isCompact = false,
+  leadShape = "round",
 }: {
   notification: Notification;
   index: number;
@@ -50,9 +58,14 @@ export function NotificationItem({
   dismissAction: NotificationDismissAction;
   /** Tighter row for the nav bell's popover, where the panel is 400px wide. */
   isCompact?: boolean;
+  /** `round` (default) is the classic row the bell keeps. `rect` takes the
+   *  page's content-first row: a 4:5 portrait picture, the sentence on top
+   *  and one meta line holding the kind and the time. */
+  leadShape?: NotificationLeadShape;
 }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const isContentRow = leadShape === "rect";
 
   // The Studio page the grant opens must read the access again, so a stale
   // "not on the list yet" answer never greets a member who was just let in.
@@ -120,7 +133,7 @@ export function NotificationItem({
       delay={Math.min(index, 8) * 60}
       className={[
         styles.item,
-        styles.notificationRow,
+        isContentRow ? styles.contentRow : styles.notificationRow,
         isCompact && styles.itemCompact,
         isUnread && styles.unread,
       ]
@@ -141,11 +154,24 @@ export function NotificationItem({
           <span className="visuallyHidden">{rowLabel}</span>
         </Link>
       )}
-      {isUnread && <span className={styles.unreadDot} aria-hidden />}
+      {isUnread && !isContentRow && (
+        <span className={styles.unreadDot} aria-hidden />
+      )}
       {isUnread && !rowHref && (
         <span className="visuallyHidden">{unreadLabel}</span>
       )}
-      <NotificationItemLead notification={notification} isCompact={isCompact} />
+      {isContentRow ? (
+        <NotificationItemLeadFrame
+          notification={notification}
+          shape={leadShape}
+          isUnread={isUnread}
+        />
+      ) : (
+        <NotificationItemLead
+          notification={notification}
+          isCompact={isCompact}
+        />
+      )}
       <div className={styles.body}>
         {/* Its own line above the sentence: the actor's name sits inside
             translated copy, so the badge cannot go beside it, and as a row
@@ -154,39 +180,15 @@ export function NotificationItem({
         <div className={styles.staffBadges}>
           <MemberStaffBadge slug={notification.actorSlug} />
         </div>
-        <div className={styles.text}>
-          {notification.actor?.textKey ? (
-            <Translation
-              i18nKey={notification.actor.textKey}
-              // A matched Go together chat's mention actor carries an empty
-              // href (no profile to open): an unmapped `profile` tag renders
-              // its plain inner text, so the name still shows with no link
-              // (see `Translation`'s own doc on that fallback).
-              components={
-                notification.actor.href
-                  ? {
-                      profile: (
-                        <Link
-                          to={linkToPath(notification.actor.href)}
-                          className={styles.actorLink}
-                        />
-                      ),
-                    }
-                  : undefined
-              }
-              values={{
-                ...notification.actor.textValues,
-                name: notification.actor.name,
-              }}
-            />
-          ) : (
-            notification.text
-          )}
-          {othersLabel && (
-            <span className={styles.bundleCount}> {othersLabel}</span>
-          )}
-        </div>
-        <div className={styles.meta}>{notification.meta}</div>
+        <NotificationItemSentence
+          notification={notification}
+          othersLabel={othersLabel}
+        />
+        {isContentRow ? (
+          <NotificationItemMetaLine notification={notification} />
+        ) : (
+          <div className={styles.meta}>{notification.meta}</div>
+        )}
         {/* The whole reason as a plain text node, so the member reads every
             word of the moderators' free text exactly as it was written. */}
         {reason && (
@@ -203,7 +205,7 @@ export function NotificationItem({
           />
         )}
       </div>
-      <div className={styles.time}>{notification.time}</div>
+      {!isContentRow && <div className={styles.time}>{notification.time}</div>}
       {/* PRD-224. Every row has an X, so a member is never stuck looking at
           something they have already dealt with. Sits above the overlay row
           link and stops the click there, so the X never also navigates into

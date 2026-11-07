@@ -725,6 +725,18 @@ const CAPABILITY_ELEVATED_PATTERNS: {
     patterns: [routes.adminStudio, `${routes.adminStudio}/*`],
     capabilities: ["music_manager_producer"],
   },
+  {
+    // VJ. `AdminVjController`, the `/vj` socket and the VJ uploads are guarded
+    // by `RolesOrStaffGuard` with `@Roles(Admin)` and
+    // `@StaffRoles('vj_operator')`: the account tier Admin OR the `vj_operator`
+    // grant. The `/*` sibling carries the chromeless projector screen
+    // (`routes.adminVjScreen`) and phone remote (`routes.adminVjRemote`), so a
+    // grant-only holder opens all three. It stays out of
+    // `MOD_ACCESSIBLE_ADMIN_PATTERNS` because the backend tier is Admin alone,
+    // so a moderator without the grant gets a 403 from every VJ endpoint.
+    patterns: [routes.adminVj, `${routes.adminVj}/*`],
+    capabilities: ["vj_operator"],
+  },
 ];
 
 /**

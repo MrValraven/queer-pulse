@@ -176,6 +176,9 @@ export const vj: Catalog = {
   // ── Pack event link ──
   "packEvent.none": "Sem evento associado",
   "packEvent.linked": "Evento: {title}, {date}",
+  // A VJ operator's pack whose event members can no longer see: the server
+  // withholds the title and the date, and the reason line below names why.
+  "packEvent.withheld": "Evento: já não está visível para membros",
   "packEvent.link": "Associar evento",
   "packEvent.change": "Mudar evento",
   "packEvent.unlink": "Desassociar evento",
@@ -356,7 +359,7 @@ export const vj: Catalog = {
   "error.libraryFull":
     "A biblioteca tem no máximo {max} clips. Apaga alguns para carregares mais",
   "error.uploadNotAdmin":
-    "Só admins podem carregar clips de VJ, e esta conta não é admin",
+    "Carregar clips de VJ está aberto a admins e à função Operação VJ, e esta conta não tem nenhuma das duas",
   "error.uploadTypeUnsupported":
     "Este ficheiro não é MP4, WebM nem GIF. Exporta-o num destes formatos e carrega-o de novo",
   "error.uploadTooLarge":
@@ -412,7 +415,7 @@ export const vj: Catalog = {
 
   // ── Reason codes, socket ──
   "error.socket.notAdmin":
-    "O VJ só está aberto a admins, e esta conta já não é admin",
+    "O VJ está aberto a admins e à função Operação VJ, e esta conta já não tem nenhuma das duas",
   "error.socket.notAttached":
     "A ligação ao palco ainda não estava pronta. Tenta de novo",
   "error.socket.alreadyAttached":
@@ -537,7 +540,8 @@ export const vj: Catalog = {
     "O nosso servidor teve um problema. A falha é nossa, tenta de novo daqui a pouco",
   "failure.unreachable":
     "Não conseguimos chegar ao QueerPulse. Verifica a ligação ou tenta de novo daqui a pouco",
-  "failure.forbidden": "O VJ só está aberto a admins, e esta conta não é admin",
+  "failure.forbidden":
+    "O VJ está aberto a admins e à função Operação VJ, e esta conta não tem nenhuma das duas",
   "failure.notFound":
     "Este servidor ainda não tem VJ. Recarrega a página e avisa a nossa equipa se continuar",
   "failure.restricted":
@@ -547,7 +551,7 @@ export const vj: Catalog = {
 
   // ── Connection refusals ──
   "connection.refused.notAdmin":
-    "O VJ só está aberto a admins, e esta conta já não é admin",
+    "O VJ está aberto a admins e à função Operação VJ, e esta conta já não tem nenhuma das duas",
   "connection.refused.screenReplaced":
     "Este ecrã abriu noutro separador, por isso este parou. Usa o separador mais recente ou recarrega este para ficares com o ecrã",
   "connection.refused.sessionRevoked":

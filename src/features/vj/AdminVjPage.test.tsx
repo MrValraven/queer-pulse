@@ -51,7 +51,7 @@ const SLOW_STEP = { timeout: 4000 };
 const MOV_REASON =
   "This is a MOV file. Export it as MP4 or WebM and upload it again";
 const FORBIDDEN_REASON =
-  "VJ is open to admins only, and this account isn't an admin";
+  "VJ is open to admins and the VJ operator role, and this account has neither";
 
 function asciiBytes(text: string): number[] {
   return Array.from(text, (letter) => letter.charCodeAt(0));

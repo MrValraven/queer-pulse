@@ -144,7 +144,10 @@ export const routes = {
    *  `@Roles(Admin)` alone, so this path is deliberately absent from
    *  MOD_ACCESSIBLE_ADMIN_PATTERNS. */
   adminStickerPacks: "/admin/sticker-packs",
-  /** The VJ library (AdminVjPage): packs and clips for the projector. Admin only through the blanket `/admin/*` gate (`AdminVjController` is `@Roles(Admin)` with an empty `@StaffRoles()`). */
+  /** The VJ library (AdminVjPage): packs and clips for the projector. Admin
+   *  and the `vj_operator` grant (`AdminVjController` is `@Roles(Admin)` with
+   *  `@StaffRoles('vj_operator')`); authGate elevates the grant here and on
+   *  every path below. */
   adminVj: "/admin/vj",
   /** The VJ projector screen (PLAN-3), chromeless, under the same gate. */
   adminVjScreen: "/admin/vj/screen",

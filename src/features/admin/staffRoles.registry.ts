@@ -4,11 +4,13 @@
  * toggle list. Add a role here + on the backend and it appears automatically.
  *
  * Ids must stay identical to `users/staff-roles.registry.ts` on the backend:
- * they travel on `/auth/me` and on the grant/revoke calls. The seven domain
+ * they travel on `/auth/me` and on the grant/revoke calls. The nine domain
  * grants below (directory, resources, editorial, communities, partnerships,
- * product manager, cultural producer) open exactly the admin sections listed
- * against them in `shared/components/layout/adminNav.data.ts`; nothing else in
- * the console moves with them.
+ * product manager, cultural producer, music manager and producer, VJ operator)
+ * open exactly the admin sections listed against them in
+ * `shared/components/layout/adminNav.data.ts`; nothing else in the console
+ * moves with them. `vj_operator` opens VJ alone: the library, the projector
+ * screen and the phone remote.
  */
 export type StaffRoleId =
   | "magazine_editor"
@@ -21,7 +23,8 @@ export type StaffRoleId =
   | "partnerships"
   | "product_manager"
   | "cultural_producer"
-  | "music_manager_producer";
+  | "music_manager_producer"
+  | "vj_operator";
 
 export interface StaffRoleMeta {
   id: StaffRoleId;
@@ -84,6 +87,11 @@ export const STAFF_ROLES: StaffRoleMeta[] = [
     id: "music_manager_producer",
     labelKey: "admin:staffRoles.musicManagerProducer.label",
     descriptionKey: "admin:staffRoles.musicManagerProducer.desc",
+  },
+  {
+    id: "vj_operator",
+    labelKey: "admin:staffRoles.vjOperator.label",
+    descriptionKey: "admin:staffRoles.vjOperator.desc",
   },
 ];
 

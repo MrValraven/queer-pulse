@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiCheck, FiAtSign } from "react-icons/fi";
 import {
+  Avatar,
   EmptyState,
   FadeIn,
   LoadErrorState,
@@ -28,18 +29,13 @@ import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { MentionExcerpt } from "./MentionExcerpt";
 import { isMentionExcerptEmpty } from "./mentionExcerptIsEmpty";
 import styles from "./MentionsPanel.module.css";
+import pageStyles from "./NotificationsPage.module.css";
 import type { TFunction } from "../../shared/i18n/types";
 
 /** The two non-numeric idioms the "oldest unread" label needs. */
 const MENTION_AGO_KEYS = {
   justNow: "notifications:mentions.ago.justNow",
   unknown: "notifications:mentions.ago.unknown",
-};
-
-const avClass: Record<Mention["tint"], string | undefined> = {
-  coral: styles.avCoral,
-  jade: styles.avJade,
-  plum: styles.avPlum,
 };
 
 /** Action-type → display label, resolved via `t` at render (never the stored
@@ -99,10 +95,13 @@ function ReplyComposer({
 
 function MentionRow({
   m,
+  index,
   unread,
   onRead,
 }: {
   m: Mention;
+  /** Position in the whole thread, for the staggered entrance. */
+  index: number;
   unread: boolean;
   onRead: () => void;
 }) {
@@ -159,37 +158,119 @@ function MentionRow({
     (action) => hasSource || action.type !== "reply",
   );
 
+  // The page's content-row look (NotificationsPage.module.css): a portrait
+  // picture with the unread dot on its corner, the sentence first, the
+  // quoted excerpt, then one quiet meta line. The FadeIn is the row itself,
+  // so rows are siblings and a run of unread rows joins into one block.
   return (
-    <div className={`${styles.row} ${unread ? styles.unread : ""}`}>
-      <div className={styles.headRow}>
-        <div className={`${styles.av} ${avClass[m.tint]}`}>{m.initials}</div>
-        <div className={styles.who}>
-          <span className={styles.whoName}>
-            {/* A matched Go together chat's mention actor carries no slug
-                (no profile to open): the name renders as plain text, same
-                as the notifications bell for the same case. */}
-            {m.actorSlug ? (
-              <Link to={`${routes.members}/${m.actorSlug}`}>{m.name}</Link>
+    <FadeIn
+      delay={Math.min(index, 8) * 60}
+      className={[
+        styles.row,
+        pageStyles.contentRow,
+        unread && pageStyles.unread,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      <div className={pageStyles.leadFrame}>
+        <Avatar
+          className={pageStyles.leadRect}
+          initials={m.initials}
+          tint={m.tint}
+          size={80}
+        />
+        <span
+          className={[pageStyles.leadDot, unread && pageStyles.leadDotVisible]
+            .filter(Boolean)
+            .join(" ")}
+          aria-hidden
+        />
+      </div>
+      <div className={pageStyles.body}>
+        <div className={pageStyles.staffBadges}>
+          <MemberStaffBadge slug={m.actorSlug} />
+        </div>
+        <div className={pageStyles.text}>
+          {/* A matched Go together chat's mention actor carries no slug (no
+              profile to open): the name renders as plain text, same as the
+              notifications bell for the same case. */}
+          {m.actorSlug ? (
+            <Link
+              to={`${routes.members}/${m.actorSlug}`}
+              className={pageStyles.actorLink}
+            >
+              {m.name}
+            </Link>
+          ) : (
+            <strong>{m.name}</strong>
+          )}{" "}
+          {m.context}
+        </div>
+        <MentionExcerpt content={m.content} />
+        <div className={pageStyles.metaLine}>
+          <span className={`${pageStyles.metaItem} ${styles.where}`}>
+            {t("notifications:mentions.where.prefix")}{" "}
+            {m.whereTo ? (
+              <Link to={m.whereTo}>{m.whereText}</Link>
             ) : (
-              <span>{m.name}</span>
+              <span>{m.whereText}</span>
             )}
-            <MemberStaffBadge slug={m.actorSlug} />
           </span>
-          <span> · {m.context}</span>
+          <span
+            className={[
+              pageStyles.metaItem,
+              pageStyles.metaTime,
+              m.fresh && styles.fresh,
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            {m.when}
+          </span>
         </div>
-        <div className={`${styles.when} ${m.fresh ? styles.fresh : ""}`}>
-          {m.when}
-        </div>
+        <MentionRowFollowUp
+          replies={replies}
+          actions={visibleActions}
+          isGoing={going}
+          isUnread={unread}
+          wasUnread={Boolean(m.unread)}
+          isComposing={composing}
+          name={m.name}
+          onAction={runAction}
+          onSendReply={addReply}
+        />
       </div>
-      <MentionExcerpt content={m.content} />
-      <div className={styles.where}>
-        {t("notifications:mentions.where.prefix")}{" "}
-        {m.whereTo ? (
-          <Link to={m.whereTo}>{m.whereText}</Link>
-        ) : (
-          <span>{m.whereText}</span>
-        )}
-      </div>
+    </FadeIn>
+  );
+}
+
+/** Under the meta line: the replies sent from here, the row's actions, and
+ *  the inline reply composer. */
+function MentionRowFollowUp({
+  replies,
+  actions,
+  isGoing,
+  isUnread,
+  wasUnread,
+  isComposing,
+  name,
+  onAction,
+  onSendReply,
+}: {
+  replies: string[];
+  actions: Mention["actions"];
+  isGoing: boolean;
+  isUnread: boolean;
+  wasUnread: boolean;
+  isComposing: boolean;
+  name: string;
+  onAction: (type: MentionActionType) => void;
+  onSendReply: (body: string) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <>
       {replies.map((body, replyIndex) => (
         <div key={replyIndex} className={styles.sentReply}>
           <span className={styles.srAuthor}>
@@ -198,10 +279,10 @@ function MentionRow({
           {body}
         </div>
       ))}
-      {visibleActions.length > 0 && (
+      {actions.length > 0 && (
         <div className={styles.actions}>
-          {visibleActions.map((action) => {
-            const isGoing = action.type === "rsvp" && going;
+          {actions.map((action) => {
+            const isActionGoing = action.type === "rsvp" && isGoing;
             return (
               <button
                 type="button"
@@ -209,13 +290,13 @@ function MentionRow({
                 className={[
                   styles.action,
                   action.primary && styles.primary,
-                  isGoing && styles.going,
+                  isActionGoing && styles.going,
                 ]
                   .filter(Boolean)
                   .join(" ")}
-                onClick={() => runAction(action.type)}
+                onClick={() => onAction(action.type)}
               >
-                {isGoing ? (
+                {isActionGoing ? (
                   <>
                     <FiCheck aria-hidden />{" "}
                     {t("notifications:mentions.row.going")}
@@ -226,15 +307,15 @@ function MentionRow({
               </button>
             );
           })}
-          {!unread && m.unread && (
+          {!isUnread && wasUnread && (
             <span className={styles.when}>
               {t("notifications:mentions.row.read")}
             </span>
           )}
         </div>
       )}
-      {composing && <ReplyComposer name={m.name} onSend={addReply} />}
-    </div>
+      {isComposing && <ReplyComposer name={name} onSend={onSendReply} />}
+    </>
   );
 }
 
@@ -289,17 +370,21 @@ export function MentionsPanel() {
   // not a coming-soon.
   return (
     <div className={styles.panel}>
-      <Tabs
-        className={styles.tabs}
-        variant="underline"
-        tabs={MENTION_TAB_DEFS.map((tabDef) => ({
-          id: tabDef.id,
-          label: t(tabDef.labelKey),
-          count: tabCounts[tabDef.id],
-        }))}
-        active={activeTabId}
-        onChange={(id) => setActiveTabId(id as MentionTabId)}
-      />
+      {/* The page's one-line, sideways-scrolling tab row, so these filters
+          never wrap onto a second line on a phone either. */}
+      <div className={pageStyles.tabsFrame}>
+        <Tabs
+          className={pageStyles.tabs}
+          variant="underline"
+          tabs={MENTION_TAB_DEFS.map((tabDef) => ({
+            id: tabDef.id,
+            label: t(tabDef.labelKey),
+            count: tabCounts[tabDef.id],
+          }))}
+          active={activeTabId}
+          onChange={(id) => setActiveTabId(id as MentionTabId)}
+        />
+      </div>
 
       <div className={styles.markRow}>
         <p>
@@ -367,13 +452,13 @@ export function MentionsPanel() {
             <div className={styles.day}>{group.day}</div>
             <div className={styles.list}>
               {group.items.map((m) => (
-                <FadeIn key={m.id} delay={Math.min(rowIndex++, 8) * 60}>
-                  <MentionRow
-                    m={m}
-                    unread={!!m.unread && !readIds.has(m.id)}
-                    onRead={() => markRead(m.id)}
-                  />
-                </FadeIn>
+                <MentionRow
+                  key={m.id}
+                  m={m}
+                  index={rowIndex++}
+                  unread={!!m.unread && !readIds.has(m.id)}
+                  onRead={() => markRead(m.id)}
+                />
               ))}
             </div>
           </div>

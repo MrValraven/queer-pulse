@@ -4,9 +4,10 @@ import type { AuthUser } from "../../auth/api/auth.api";
 import { probeSignedInSession } from "../../../shared/api/queryPersistence/sessionProbe";
 import {
   clearVjScreenSession,
+  isVjScreenOperator,
   readVjScreenSession,
   saveVjScreenSession,
-  toProvisionalVjAdmin,
+  toProvisionalVjUser,
 } from "./vjScreenSession";
 
 interface VjScreenProvisionalSessionInput {
@@ -32,7 +33,8 @@ interface VjScreenProvisionalSessionInput {
 
 interface VjScreenProvisionalSessionResult {
   /**
-   * The admin who last set up a screen on this device, standing in for the
+   * The admin or VJ operator who last set up a screen on this device (a VJ
+   * operator as a member holding `vj_operator` alone), standing in for the
    * session while `/auth/me` cannot confirm anyone. Set only on the VJ screen
    * route, only in live mode and only while no confirmed user exists.
    */
@@ -48,28 +50,31 @@ interface StandInState {
   standInUser: AuthUser | null;
 }
 
-/** While a provisional admin stands in online, an unreachable server is asked again this often. */
+/** While a provisional admin or VJ operator stands in online, an unreachable
+ *  server is asked again this often. */
 export const VJ_SCREEN_SESSION_REPROBE_MS = 30_000;
 
 function readStandInUser(): AuthUser | null {
   const savedRecord = readVjScreenSession();
-  return savedRecord ? toProvisionalVjAdmin(savedRecord) : null;
+  return savedRecord ? toProvisionalVjUser(savedRecord) : null;
 }
 
 /**
  * Lets the VJ projector reload with no internet and keep the show going.
  *
- * - A confirmed active admin on the VJ screen route saves the small session
- *   record; a confirmed user who is no active admin, or another person than
+ * - A confirmed active admin or VJ operator (`isVjScreenOperator`) on the VJ
+ *   screen route saves the small session record; a confirmed user who is
+ *   neither, or another person than
  *   the saved one, clears it on any route; a confirmed user who goes away
  *   while online (a sign out in this tab) clears it too.
  * - A cold offline boot on the VJ screen route with no confirmed user reads
  *   the record synchronously from localStorage and answers the saved admin
- *   as a provisional user. So does a boot whose `/auth/me` failed on the
+ *   or VJ operator as a provisional user. So does a boot whose `/auth/me` failed on the
  *   network with no user (the browser says online, the server is out of
- *   reach). The record must be an active admin saved under 7 days ago, and
+ *   reach). The record must be an active admin or VJ operator saved under 7
+ *   days ago, and
  *   once a confirmed user was seen on this mount it is never read again.
- * - Once online with that provisional admin still standing in, `/auth/me` is
+ * - Once online with that provisional user still standing in, `/auth/me` is
  *   probed on every online transition: `confirmed` adopts the session through
  *   `refreshSession`, `signedOut` clears the record and drops the stand-in so
  *   the admin gate sends the page to sign in, and `unreachable` keeps it and
@@ -115,9 +120,7 @@ export function useVjScreenProvisionalSession({
   const liveUser = demoMode ? null : user;
   useEffect(() => {
     if (!liveUser) return;
-    const isActiveAdmin =
-      liveUser.role === "admin" && liveUser.status === "active";
-    if (!isActiveAdmin) {
+    if (!isVjScreenOperator(liveUser)) {
       clearVjScreenSession();
       return;
     }

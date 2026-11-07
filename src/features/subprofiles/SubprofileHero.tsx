@@ -6,7 +6,6 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ResolvedMentionText } from "../../shared/mentions/ResolvedMentionText";
 import { useAuth } from "../../app/providers/authContext";
 import { KIND_LABEL_KEYS, personaTitleName } from "./subprofile-kinds";
-import { skinFor } from "./subprofile-skins";
 import { DEFAULT_ACCENT } from "./subprofilePresence.data";
 import { canReadPersonaEndorsers } from "./personaEngagement";
 import { PersonaEngagementCounts } from "./PersonaEngagementCounts";
@@ -60,16 +59,13 @@ export function SubprofileHero({
     Boolean(view.ownerName) &&
     Boolean(view.ownerSlug);
   const interactive = mode !== "preview";
-  // The studio skin `display:none`s the avatar entirely (see
-  // `persona-skins.css`) — wrapping a hidden avatar in a real `<button>` would
-  // leave a keyboard tab-stop that focuses nothing, so the enlarge affordance
-  // only exists on skins that actually render the avatar. The page skin shows
-  // it only when it holds a photo, which `canViewPhoto` already requires.
-  const skin = skinFor(view.kind);
-  const avatarRendered = skin !== "studio";
-  // Only a real uploaded photo is worth enlarging — an initials fallback has
-  // nothing more to show. Preview mode stays non-interactive like the meta row.
-  const canViewPhoto = interactive && avatarRendered && Boolean(view.avatarUrl);
+  // Every skin shows an uploaded photo in the hero. The page, studio, runway,
+  // gallery and collective skins hide only an initials avatar (see
+  // `persona-skins.css`), so gating on the photo keeps the enlarge button off
+  // any avatar those skins hide, where it would be a tab-stop with nothing to
+  // focus. An initials fallback has nothing more to show anyway. Preview mode
+  // stays non-interactive like the meta row.
+  const canViewPhoto = interactive && Boolean(view.avatarUrl);
   // A persona still carrying its profession as a name is titled "Owner Name |
   // Poet" here, so the heading names a person. The `.pp-kind` chip below keeps
   // showing the TRANSLATED craft label — it is chrome and follows the reader's

@@ -3438,7 +3438,7 @@ export const marketing: Catalog = {
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-11-07.headline":
-    "Failed actions now say why, editors can unpublish with Undo, and VJ GIFs load again.",
+    "A new VJ operator role, failed actions now say why, and editors can unpublish with Undo.",
   "changelog.releases.2026-11-06.headline":
     "The VJ screen gets a live effects engine, and the remote plays scenes, set lists and MIDI.",
   "changelog.releases.2026-11-05.headline":
@@ -3751,6 +3751,18 @@ export const marketing: Catalog = {
     "Find personas by the same work areas you pick when you join",
   "changelog.entries.persona-professions-by-work-area.body":
     "The Profession filter groups its chips under areas like Music or Food & drink, with clearer headings.",
+  "changelog.entries.official-replies-reach-team-mailbox.title":
+    "Older replies reach the QueerPulse Team mailbox",
+  "changelog.entries.official-replies-reach-team-mailbox.body":
+    "Members who answered our messages before the mailbox opened now show up there for staff.",
+  "changelog.entries.persona-photo-on-every-layout.title":
+    "Persona pages show their profile photo on every layout",
+  "changelog.entries.persona-photo-on-every-layout.body":
+    "Event producers, studios, designers and galleries without a banner had no picture on their page.",
+  "changelog.entries.notifications-page-on-phones.title":
+    "A cleaner notifications page on phones",
+  "changelog.entries.notifications-page-on-phones.body":
+    "Bigger portrait photos, the message first with its type and time below, and the filters on one row.",
   "changelog.entries.studio-payment-methods-save.title":
     "Studio payment methods save again",
   "changelog.entries.studio-payment-methods-save.body":
@@ -3771,6 +3783,10 @@ export const marketing: Catalog = {
     "GIFs load on the VJ projector again",
   "changelog.entries.vj-gifs-load-on-projector.body":
     "The site's security rules stopped the screen reading its cached GIFs, so every GIF clip failed to play.",
+  "changelog.entries.vj-operator-role.title":
+    "Give staff VJ access without the admin console",
+  "changelog.entries.vj-operator-role.body":
+    "A new VJ operator role opens the clip library, the projector screen and the phone remote, and nothing else.",
   "changelog.entries.vj-clip-load-reasons.title":
     "See why a VJ clip won't load on the screen",
   "changelog.entries.vj-clip-load-reasons.body":

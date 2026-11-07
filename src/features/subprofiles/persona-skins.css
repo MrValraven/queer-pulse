@@ -323,8 +323,9 @@
 }
 /* Tap-to-enlarge trigger wrapping the avatar. `display:contents` keeps the
    button out of layout entirely, so `.pp-av` stays the box every skin's CSS
-   targets (incl. the skins that `display:none` it — the hidden avatar means
-   nothing renders to tap). Focus ring + pointer land on the inner `.pp-av`. */
+   targets. The skins that hide an initials-only avatar (page, studio, runway,
+   gallery, collective) never wrap one: the button only exists for a real
+   photo. Focus ring + pointer land on the inner `.pp-av`. */
 .pp-avButton {
   display: contents;
   cursor: pointer;
@@ -1329,8 +1330,25 @@ button.pp-row:focus-visible {
   border-bottom: 1px solid var(--ink);
   padding-bottom: 16px;
 }
+/* The profile photo hangs beside the name like a small plate in the same
+   hairline as the cover frame. Only a real photo shows: an initials circle has
+   nothing to hang. The grid opens the photo column only when a photo is there,
+   so a page without one keeps the full-width name. */
 .pp[data-skin="studio"] .pp-av {
+  margin-top: 0;
+  width: 3.5em; /* 84 / 24 */
+  height: 3.5em;
+  font-size: var(--text-24);
+  border: 1px solid var(--ink);
+  box-shadow: none;
+  align-self: start;
+}
+.pp[data-skin="studio"] .pp-av:not(:has(img)) {
   display: none;
+}
+.pp[data-skin="studio"] .pp-id:has(.pp-av img) {
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--gap-sm) var(--gap-lg);
 }
 .pp[data-skin="studio"] .pp-text {
   gap: 4px;
@@ -1374,7 +1392,8 @@ button.pp-row:focus-visible {
   .pp[data-skin="studio"] .pp-bio {
     column-count: 1;
   }
-  .pp[data-skin="studio"] .pp-id {
+  .pp[data-skin="studio"] .pp-id,
+  .pp[data-skin="studio"] .pp-id:has(.pp-av img) {
     grid-template-columns: 1fr;
   }
 }
@@ -2918,6 +2937,7 @@ button.pp-row:focus-visible {
 }
 [data-theme="dark"] .pp[data-skin="studio"] .pp-cover,
 [data-theme="dark"] .pp[data-skin="studio"] .pp-id,
+[data-theme="dark"] .pp[data-skin="studio"] .pp-av,
 [data-theme="dark"] .pp[data-skin="studio"] .pp-sec > header {
   border-color: rgba(var(--cream-rgb), 0.45);
 }
@@ -4955,8 +4975,40 @@ button.pp-row:focus-visible {
     grid-template-columns: 1fr;
   }
 }
+/* The profile photo takes the spread's right-hand column, opposite the name,
+   like the cover shot of a lookbook. Only a real photo shows; an initials
+   circle would read as a placeholder there. One column on a narrow page puts
+   it above the name. */
 .pp[data-skin="runway"] .pp-av {
+  margin-top: 0;
+  width: 3.294em; /* 112 / 34 */
+  height: 3.294em;
+  font-size: var(--text-34);
+  border: 1px solid var(--rw-ink);
+  box-shadow: none;
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+}
+.pp[data-skin="runway"] .pp-av:not(:has(img)) {
   display: none;
+}
+@container (max-width:760px) {
+  .pp[data-skin="runway"] .pp-id {
+    row-gap: var(--gap-grid);
+  }
+  .pp[data-skin="runway"] .pp-av {
+    grid-column: auto;
+    grid-row: auto;
+    justify-self: start;
+  }
+}
+@container (max-width:640px) {
+  .pp[data-skin="runway"] .pp-av {
+    justify-self: center;
+    width: 2.824em; /* 96 / 34, the shared phone hero size */
+    height: 2.824em;
+  }
 }
 .pp[data-skin="runway"] .pp-text {
   gap: 10px;
@@ -5186,7 +5238,20 @@ button.pp-row:focus-visible {
 .pp[data-skin="gallery"] .pp-cover .ph {
   display: none;
 }
+/* The profile photo sits above the label column, small and unframed but for
+   the gallery's own hairline. This skin never shows a banner, so the photo
+   carries no cover overlap even when one is uploaded. Only a real photo
+   shows; an initials circle has no place on a wall label. */
 .pp[data-skin="gallery"] .pp-av {
+  margin-top: 0;
+  margin-bottom: var(--gap-grid);
+  width: 3.5em; /* 84 / 24 */
+  height: 3.5em;
+  font-size: var(--text-24);
+  border: 1px solid var(--gl-rule);
+  box-shadow: none;
+}
+.pp[data-skin="gallery"] .pp-av:not(:has(img)) {
   display: none;
 }
 .pp[data-skin="gallery"] .pp-text {
@@ -6132,7 +6197,19 @@ button.pp-row:focus-visible {
   align-items: flex-start;
   gap: 0;
 }
+/* The profile photo heads the poster column, above the name, ringed in the
+   same 4px ink as the poster's rules. Only a real photo shows; an initials
+   circle would read as a placeholder on a printed poster. */
 .pp[data-skin="collective"] .pp-av {
+  margin-top: 0;
+  margin-bottom: var(--gap-grid);
+  width: 3.294em; /* 112 / 34 */
+  height: 3.294em;
+  font-size: var(--text-34);
+  border: 4px solid var(--ink);
+  box-shadow: none;
+}
+.pp[data-skin="collective"] .pp-av:not(:has(img)) {
   display: none;
 }
 .pp[data-skin="collective"] .pp-text {
@@ -6200,6 +6277,13 @@ button.pp-row:focus-visible {
 .pp[data-skin="collective"] .pp-sec .count {
   font-family: "Archivo Black", var(--sans);
   font-size: var(--text-14);
+}
+/* The gallery has no row padding of its own, so it opens off the header's
+   4px rule and leaves room above the page foot's rule, which pulls up flush
+   under the last section. */
+.pp[data-skin="collective"] .pp-gallery {
+  padding-top: var(--gap-grid);
+  padding-bottom: var(--gap-lg);
 }
 .pp[data-skin="collective"] .pp-row {
   border-top: none;
@@ -6733,6 +6817,10 @@ button.pp-row:focus-visible {
   .pp[data-skin="collective"] .pp-id {
     align-items: flex-start;
     text-align: left;
+  }
+  .pp[data-skin="collective"] .pp-av {
+    width: 2.824em; /* 96 / 34, the shared phone hero size */
+    height: 2.824em;
   }
   .pp[data-skin="collective"] .pp-text,
   .pp[data-skin="collective"] .pp-taglineRow {

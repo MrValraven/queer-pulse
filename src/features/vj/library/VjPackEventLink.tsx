@@ -9,11 +9,13 @@ import type {
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { Button, Collapse } from "../../../shared/components/ui";
 import { intlLocale } from "../../../shared/i18n/locale";
+import type { TFunction } from "../../../shared/i18n/types";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useSetVjPackEvent } from "../api/useSetVjPackEvent";
 import { useVjPackEvent } from "../api/useVjPackEvent";
 import { VjReasonLine } from "../VjReasonLine";
 import { vjEventWhenOf } from "./vjEventOptionLabel";
+import { vjPackEventDetailsOf } from "./vjPackEventDetails";
 import { VjPackEventPicker } from "./VjPackEventPicker";
 import styles from "./VjPackEvent.module.css";
 
@@ -51,17 +53,28 @@ function UnavailableLine({
   );
 }
 
+/** The linked event's line text: "Event: title, date", "No event linked",
+ *  or, when the server withheld the title and the start, the unavailable
+ *  label (the reason line below names why). */
+function linkedEventTextOf(
+  pack: VjPackDTO,
+  t: TFunction,
+  locale: string,
+): string {
+  if (pack.event === null) return t("vj:packEvent.none");
+  const eventDetails = vjPackEventDetailsOf(pack.event);
+  if (eventDetails === null) return t("vj:packEvent.withheld");
+  return t("vj:packEvent.linked", {
+    title: eventDetails.title,
+    date: vjEventWhenOf(eventDetails.startAt, locale),
+  });
+}
+
 /** "Event: title, date" or "No event linked", fading from one to the next. */
 function LinkedEventText({ pack }: { pack: VjPackDTO }): JSX.Element {
   const { t, language } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
-  const text =
-    pack.event === null
-      ? t("vj:packEvent.none")
-      : t("vj:packEvent.linked", {
-          title: pack.event.title,
-          date: vjEventWhenOf(pack.event.startAt, intlLocale(language)),
-        });
+  const text = linkedEventTextOf(pack, t, intlLocale(language));
   return (
     <span className={styles.event}>
       <FiCalendar

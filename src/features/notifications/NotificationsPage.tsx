@@ -6,13 +6,15 @@ import {
   Button,
   ConfirmDialog,
   LoadMoreFooter,
-  Tabs,
   PullToRefresh,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat } from "../../shared/i18n/format";
-import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { NotificationsListSkeleton } from "./NotificationsSkeleton";
+import {
+  NotificationsFilterTabs,
+  NotificationsPageHeader,
+  type NotificationsFilter,
+} from "./NotificationsPageHeader";
 import { MentionsPanel } from "./MentionsPanel";
 import { NotificationItem } from "./NotificationItem";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -22,7 +24,7 @@ import { useUnreadCount } from "./api/useUnreadCount";
 import { useNotificationsReadState } from "./useNotificationsReadState";
 import { usePendingNotificationDelete } from "./usePendingNotificationDelete";
 import { bucketNotificationsByDay } from "./notificationDayBuckets";
-import { notificationTabs, type NotifType, type Notification } from "./data";
+import type { Notification } from "./data";
 import styles from "./NotificationsPage.module.css";
 
 /** The inbox with nothing loaded: a failed fetch must not read as an empty
@@ -91,7 +93,6 @@ function NotificationDeleteConfirmDialog({
 
 export function NotificationsPage() {
   const { t } = useTranslation();
-  const fmt = useFormat();
   const queryClient = useQueryClient();
   const {
     items: notifications,
@@ -127,7 +128,7 @@ export function NotificationsPage() {
   // "37" the moment a member had more than one page of unread. Both refresh
   // together, because every read/delete mutation invalidates `["notifications"]`.
   const serverUnreadCount = useUnreadCount();
-  const [filter, setFilter] = useState<"all" | NotifType | "mentions">("all");
+  const [filter, setFilter] = useState<NotificationsFilter>("all");
   const onMentions = filter === "mentions";
 
   // "mentions" is a pseudo-filter that swaps the whole list for <MentionsPanel>,
@@ -176,6 +177,7 @@ export function NotificationsPage() {
       onResolve={resolve}
       onDismiss={requestDelete}
       dismissAction="delete"
+      leadShape="rect"
     />
   );
 
@@ -183,58 +185,23 @@ export function NotificationsPage() {
     <AppShell>
       <div className={styles.page}>
         <div className={styles.inner}>
-          <div className={styles.header}>
-            <div ref={titleRef} tabIndex={-1} className={styles.title}>
-              {t("notifications:page.title")}
-              {unreadCount > 0 && (
-                <span className={styles.badge}>
-                  <RollingNumber
-                    value={fmt.number(unreadCount)}
-                    numericValue={unreadCount}
-                  />
-                </span>
-              )}
-            </div>
-            {!onMentions && (
-              <div className={styles.actions}>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={markAllRead}
-                >
-                  {t("notifications:page.markAllRead")}
-                </Button>
-              </div>
-            )}
-          </div>
+          <NotificationsPageHeader
+            titleRef={titleRef}
+            unreadCount={unreadCount}
+            isMarkAllShown={!onMentions}
+            onMarkAllRead={markAllRead}
+          />
 
-          <Tabs
-            className={styles.tabs}
-            variant="underline"
-            tabs={[
-              ...notificationTabs.slice(0, 1).map((tab) => ({
-                id: tab.value,
-                label: t(tab.labelKey),
-              })),
-              {
-                id: "mentions",
-                label: t("notifications:tabs.mentions"),
-                count: unreadMentions || undefined,
-              },
-              ...notificationTabs.slice(1).map((tab) => ({
-                id: tab.value,
-                label: t(tab.labelKey),
-              })),
-            ]}
-            active={filter}
-            onChange={(id) => setFilter(id as "all" | NotifType | "mentions")}
+          <NotificationsFilterTabs
+            filter={filter}
+            unreadMentions={unreadMentions}
+            onChange={setFilter}
           />
 
           {onMentions ? (
             <MentionsPanel />
           ) : isLoading ? (
-            <NotificationsListSkeleton count={7} />
+            <NotificationsListSkeleton count={7} leadShape="rect" />
           ) : hasNothingLoadedError ? (
             <NotificationsLoadError onRetry={refetch} />
           ) : visible.length === 0 ? (
@@ -250,7 +217,7 @@ export function NotificationsPage() {
                 queryClient.invalidateQueries({ queryKey: ["notifications"] })
               }
             >
-              <div className={styles.list}>
+              <div className={`${styles.list} ${styles.listContent}`}>
                 {recent.length > 0 && (
                   <div className={styles.day}>
                     {t("notifications:page.dayRecent")}

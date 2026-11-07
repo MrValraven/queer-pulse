@@ -449,10 +449,12 @@ function personaWallRoutes() {
   );
 }
 
-/** The VJ library, the projector screen and the phone remote. Admin only
- *  through the blanket `/admin/*` gate (`AdminVjController` is `@Roles(Admin)`
- *  with an empty `@StaffRoles()`). The screen and the remote are chromeless:
- *  neither renders `AdminShell`. */
+/** The VJ library, the projector screen and the phone remote.
+ *  `AdminVjController` is `@Roles(Admin)` with `@StaffRoles('vj_operator')`,
+ *  so an Admin or a holder of that grant gets in; authGate admits the grant
+ *  through its `CAPABILITY_ELEVATED_PATTERNS` entry for `routes.adminVj` and
+ *  everything under it. The screen and the remote are chromeless: neither
+ *  renders `AdminShell`. */
 function vjRoutes() {
   return (
     <>
@@ -463,8 +465,9 @@ function vjRoutes() {
   );
 }
 
-/** The Admin-only tools mounted together: the Directory wall curation and
- *  VJ. Grouped so `adminRoutes()` stays under the 200-line cap. */
+/** Two tools mounted together: the Directory wall curation (Admin only)
+ *  and VJ (Admin or `vj_operator`). Grouped so `adminRoutes()` stays under
+ *  the 200-line cap. */
 function adminOnlyToolRoutes() {
   return (
     <>

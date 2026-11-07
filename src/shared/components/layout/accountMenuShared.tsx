@@ -7,6 +7,7 @@ import {
   FiDatabase,
   FiPlayCircle,
   FiGlobe,
+  FiMonitor,
 } from "react-icons/fi";
 import { useTranslation } from "../../i18n/useTranslation";
 import { LANGUAGES } from "../../i18n/types";
@@ -36,6 +37,12 @@ import styles from "./AccountMenu.module.css";
  * to surface a link to it. Admins remain covered because `useHasStaffRole`
  * treats them as a superset, and demo mode grants every staff role so the
  * sandbox stays explorable.
+ *
+ * The VJ link follows the `vj_operator` grant the same way, for every viewer
+ * below admin: VJ is the one console surface that grant opens, so the link
+ * lands its holder straight on the library (`routes.adminVj`). An admin
+ * reaches VJ from the Admin link and its rail, so the admin branch leaves
+ * it out.
  */
 export function RoleLinks({
   role,
@@ -49,6 +56,7 @@ export function RoleLinks({
   const memberships = useMyCommunities();
   const canEditMagazine = useHasStaffRole("magazine_editor");
   const canWriteForMagazine = useHasStaffRole("magazine_writer");
+  const canOperateVj = useHasStaffRole("vj_operator");
   // The community the "Mod tools" link opens. Demo deep-links into the mock
   // flagship; live resolves the moderator's OWN first owned/moderated community
   // from their real memberships (previously hardcoded to the demo slug, which
@@ -83,6 +91,14 @@ export function RoleLinks({
       </span>
     </Link>
   ) : null;
+  const vjLink = canOperateVj ? (
+    <Link to={routes.adminVj} className={styles.item} onClick={onNavigate}>
+      <FiMonitor aria-hidden className={styles.itemIcon} />
+      <span className={styles.itemLabel}>
+        {t("shared:accountMenu.staff.vj")}
+      </span>
+    </Link>
+  ) : null;
   if (role === "admin") {
     return (
       <>
@@ -106,6 +122,7 @@ export function RoleLinks({
         <>
           {magazineEditorLink}
           {magazineWriterLink}
+          {vjLink}
         </>
       );
     }
@@ -113,6 +130,7 @@ export function RoleLinks({
       <>
         {magazineEditorLink}
         {magazineWriterLink}
+        {vjLink}
         <Link
           to={modPanel(modSlug)}
           className={styles.item}
@@ -130,6 +148,7 @@ export function RoleLinks({
     <>
       {magazineEditorLink}
       {magazineWriterLink}
+      {vjLink}
     </>
   );
 }

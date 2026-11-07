@@ -86,7 +86,7 @@ export const VJ_DEMO_REFUSALS: Record<VjRefusalCode, VjRefusalRule> = {
   },
   VJ_UPLOAD_NOT_ADMIN: {
     status: 403,
-    message: "Only an admin may upload VJ clips.",
+    message: "Only an admin or a VJ operator may upload VJ clips.",
   },
   VJ_UPLOAD_TYPE_UNSUPPORTED: {
     status: 400,

@@ -175,6 +175,9 @@ export const vj: Catalog = {
   // ── Pack event link ──
   "packEvent.none": "No event linked",
   "packEvent.linked": "Event: {title}, {date}",
+  // A VJ operator's pack whose event members can no longer see: the server
+  // withholds the title and the date, and the reason line below names why.
+  "packEvent.withheld": "Event: no longer visible to members",
   "packEvent.link": "Link event",
   "packEvent.change": "Change event",
   "packEvent.unlink": "Unlink event",
@@ -352,7 +355,7 @@ export const vj: Catalog = {
   "error.libraryFull":
     "The library holds up to {max} clips. Delete some to upload more",
   "error.uploadNotAdmin":
-    "Only admins can upload VJ clips, and this account isn't an admin",
+    "Uploading VJ clips is open to admins and the VJ operator role, and this account has neither",
   "error.uploadTypeUnsupported":
     "This file isn't an MP4, WebM or GIF. Export it in one of those formats and upload it again",
   "error.uploadTooLarge": "This file is {sizeLabel}. Clips can be up to {max}",
@@ -404,7 +407,7 @@ export const vj: Catalog = {
 
   // ── Reason codes, socket ──
   "error.socket.notAdmin":
-    "VJ is open to admins only, and this account isn't an admin anymore",
+    "VJ is open to admins and the VJ operator role, and this account no longer has either",
   "error.socket.notAttached":
     "The connection to the stage wasn't ready yet. Try again",
   "error.socket.alreadyAttached":
@@ -524,7 +527,7 @@ export const vj: Catalog = {
   "failure.unreachable":
     "We couldn't reach QueerPulse. Check your connection, or try again in a moment",
   "failure.forbidden":
-    "VJ is open to admins only, and this account isn't an admin",
+    "VJ is open to admins and the VJ operator role, and this account has neither",
   "failure.notFound":
     "This server doesn't offer VJ yet. Reload the page, and tell our team if it keeps happening",
   "failure.restricted":
@@ -534,7 +537,7 @@ export const vj: Catalog = {
 
   // ── Connection refusals ──
   "connection.refused.notAdmin":
-    "VJ is open to admins only, and this account isn't an admin anymore",
+    "VJ is open to admins and the VJ operator role, and this account no longer has either",
   "connection.refused.screenReplaced":
     "This screen opened in another tab, so this tab stopped. Use the newer tab, or reload this one to take over",
   "connection.refused.sessionRevoked":

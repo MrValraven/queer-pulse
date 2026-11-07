@@ -3523,7 +3523,7 @@ export const marketing: Catalog = {
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-11-07.headline":
-    "As ações que falham dizem porquê, os editores despublicam com Desfazer, e os GIFs VJ voltam a carregar.",
+    "Nova função Operação VJ, as ações que falham dizem porquê, e os editores despublicam com Desfazer.",
   "changelog.releases.2026-11-06.headline":
     "O ecrã VJ ganha um motor de efeitos ao vivo e o comando toca cenas, alinhamentos e MIDI.",
   "changelog.releases.2026-11-05.headline":
@@ -3837,6 +3837,18 @@ export const marketing: Catalog = {
     "Encontra personas pelas mesmas áreas de trabalho que escolhes ao entrar",
   "changelog.entries.persona-professions-by-work-area.body":
     "O filtro de profissão agrupa as opções em áreas como Música ou Restauração e gastronomia, com títulos mais claros.",
+  "changelog.entries.official-replies-reach-team-mailbox.title":
+    "Respostas antigas chegam à caixa da QueerPulse Team",
+  "changelog.entries.official-replies-reach-team-mailbox.body":
+    "Quem respondeu às nossas mensagens antes de a caixa abrir aparece agora lá para a equipa.",
+  "changelog.entries.persona-photo-on-every-layout.title":
+    "As páginas de persona mostram a foto de perfil em todos os estilos",
+  "changelog.entries.persona-photo-on-every-layout.body":
+    "Produtoras de eventos, estúdios, designers e galerias sem banner ficavam sem imagem na própria página.",
+  "changelog.entries.notifications-page-on-phones.title":
+    "Uma página de notificações mais limpa no telemóvel",
+  "changelog.entries.notifications-page-on-phones.body":
+    "Fotos maiores ao alto, a mensagem primeiro com o tipo e a hora por baixo, e os filtros numa só linha.",
   "changelog.entries.studio-payment-methods-save.title":
     "Os métodos de pagamento do Studio voltam a guardar",
   "changelog.entries.studio-payment-methods-save.body":
@@ -3857,6 +3869,10 @@ export const marketing: Catalog = {
     "Os GIFs voltam a carregar no projetor VJ",
   "changelog.entries.vj-gifs-load-on-projector.body":
     "As regras de segurança do site impediam o ecrã de ler os GIFs guardados, e cada clipe GIF falhava.",
+  "changelog.entries.vj-operator-role.title":
+    "Dá acesso ao VJ à equipa sem a consola de admin",
+  "changelog.entries.vj-operator-role.body":
+    "A nova função Operação VJ abre a biblioteca de clips, o ecrã do projetor e o comando no telemóvel, e mais nada.",
   "changelog.entries.vj-clip-load-reasons.title":
     "Vê porque é que um clipe VJ não carrega no ecrã",
   "changelog.entries.vj-clip-load-reasons.body":

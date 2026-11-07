@@ -1396,6 +1396,9 @@ export const admin: Catalog = {
   "staffRoles.musicManagerProducer.label": "Gestão e produção musical",
   "staffRoles.musicManagerProducer.desc":
     "Cria e gere os eventos de música que o QueerPulse organiza, do lineup à entrada, e faz a curadoria da página inicial do Studio: o destaque, as prateleiras, as cenas e as secções Artista do mês e Novas estrelas. Também mantém o diretório de contactos: adiciona, edita e apaga contactos, os links, as notas e os seguimentos, e liga um contacto a uma persona.",
+  "staffRoles.vjOperator.label": "Operação VJ",
+  "staffRoles.vjOperator.desc":
+    "Gere o VJ: a biblioteca de clips, o ecrã do projetor e o comando no telemóvel. O resto da consola de administração fica fechado a esta função.",
   "staffRoles.adminSuperset":
     "A administração já tem todas as capacidades de equipa.",
   "staffRoles.systemLocked":

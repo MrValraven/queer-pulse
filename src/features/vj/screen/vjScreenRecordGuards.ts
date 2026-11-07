@@ -320,14 +320,22 @@ export function isVjClipV2(value: unknown): value is VjClipDTO {
   );
 }
 
+/** A linked event summary: the full one, or the withheld one a VJ operator
+ *  gets (`VjPackEventWithheldSummaryDTO`: the id and `isAvailable`, with the
+ *  title and the start both absent). */
 function isPackEventSummary(value: unknown): boolean {
+  if (value === null) return true;
+  if (
+    !isVjPlainObject(value) ||
+    typeof value.id !== "string" ||
+    typeof value.isAvailable !== "boolean"
+  ) {
+    return false;
+  }
+  const isWithheld = !("title" in value) && !("startAt" in value);
   return (
-    value === null ||
-    (isVjPlainObject(value) &&
-      typeof value.id === "string" &&
-      typeof value.title === "string" &&
-      typeof value.startAt === "string" &&
-      typeof value.isAvailable === "boolean")
+    isWithheld ||
+    (typeof value.title === "string" && typeof value.startAt === "string")
   );
 }
 

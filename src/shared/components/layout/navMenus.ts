@@ -219,6 +219,7 @@ export const NAV_MENUS: MegaMenu[] = [
               "shared:megaNav.community.col.people.professionalDirectory",
             href: routes.subprofiles,
           },
+          { labelKey: "nav:communities", href: routes.communities },
           { labelKey: "nav:forum", href: routes.forum },
         ],
       },
@@ -229,7 +230,6 @@ export const NAV_MENUS: MegaMenu[] = [
             labelKey: "shared:megaNav.community.col.gather.events",
             href: routes.events,
           },
-          { labelKey: "nav:communities", href: routes.communities },
           {
             // Activism folded into Volunteering: one entry, the Volunteer page
             // is the entry point; the activism guide is reached from there.

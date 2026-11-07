@@ -115,8 +115,8 @@ export function OfflineGate({ children }: { children: ReactNode }) {
       isSessionChecking: auth.checking,
       refreshSession: auth.refresh,
     });
-  // The saved member stands in on the messages route, the saved admin on the
-  // VJ screen route, and nobody stands in anywhere else.
+  // The saved member stands in on the messages route, the saved admin or VJ
+  // operator on the VJ screen route, and nobody stands in anywhere else.
   const standInUser = isMessagesRoute
     ? provisionalUser
     : isVjScreenRoute
@@ -133,16 +133,19 @@ export function OfflineGate({ children }: { children: ReactNode }) {
             user: standInUser,
             status: standInUser.status,
             role: standInUser.role,
-            staffRoles: [],
+            // The VJ stand-in carries `vj_operator` alone when an operator set
+            // the screen up, so authGate admits the screen route; the messages
+            // stand-in keeps no grants.
+            staffRoles: isVjScreenRoute ? standInUser.staffRoles : [],
             authError: null,
           }
         : null,
-    [auth, standInUser],
+    [auth, standInUser, isVjScreenRoute],
   );
   // The provisional member only ever reaches the messages route.
   const savedMessagesAuth = isMessagesRoute ? provisionalAuth : null;
   const isReadingSavedMessages = savedMessagesAuth !== null;
-  // The provisional admin only ever reaches the VJ screen route.
+  // The provisional admin or VJ operator only ever reaches the VJ screen route.
   const vjScreenAuth =
     isVjScreenRoute && vjScreen.provisionalUser ? provisionalAuth : null;
 

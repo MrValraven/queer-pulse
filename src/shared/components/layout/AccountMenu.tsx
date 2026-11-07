@@ -21,6 +21,7 @@ import {
   type AccountLinkItem,
 } from "./accountMenu.data";
 import { useAccountIdentity } from "./useAccountIdentity";
+import { useHasRoleLinks } from "./useHasRoleLinks";
 import {
   RoleLinks,
   AccountMenuControls,
@@ -240,6 +241,7 @@ function AccountMenuPanel({
 }) {
   const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
+  const hasRoleLinks = useHasRoleLinks(role);
   const themeLabel = t(
     theme === "dark"
       ? "shared:accountMenu.items.lightMode"
@@ -317,7 +319,7 @@ function AccountMenuPanel({
 
       <div className={styles.scroll}>
         <AccountMenuLinkGroups onClose={onClose} />
-        {role !== "member" && (
+        {hasRoleLinks && (
           <>
             <div className={styles.divider} />
             <div className={styles.grid}>

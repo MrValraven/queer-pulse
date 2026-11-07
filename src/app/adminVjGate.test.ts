@@ -38,23 +38,35 @@ describe("VJ console gate", () => {
     }
   });
 
-  it("opens VJ to no staff grant", () => {
+  it("opens the library, screen and remote to the vj_operator grant alone", () => {
     for (const vjPath of VJ_PATHS) {
-      expect(elevatingCapabilities(vjPath)).toEqual([]);
+      expect(elevatingCapabilities(vjPath)).toEqual(["vj_operator"]);
     }
   });
 
-  it("marks the nav item Admin only", () => {
+  it("keeps every other admin page closed to vj_operator", () => {
+    for (const otherPath of [
+      routes.admin,
+      routes.adminStudio,
+      routes.adminMembers,
+      routes.adminMusicEvents,
+      routes.adminLeads,
+    ]) {
+      expect(elevatingCapabilities(otherPath)).not.toContain("vj_operator");
+    }
+  });
+
+  it("files the nav item under the vj_operator grant", () => {
     const item = ADMIN_NAV_SECTIONS.flatMap((section) => section.items).find(
       (candidate) => candidate.to === routes.adminVj,
     );
     expect(item?.labelKey).toBe("shared:adminNav.items.vj");
     expect(item?.icon).toBe(FiMonitor);
-    expect(item?.isAdminOnly).toBe(true);
-    expect(item?.capabilities).toBeUndefined();
+    expect(item?.isAdminOnly).toBeUndefined();
+    expect(item?.capabilities).toEqual(["vj_operator"]);
   });
 
-  it("puts it on an admin's rail and off a moderator's", () => {
+  it("puts it on an admin's rail and a grant holder's, and off a moderator's", () => {
     expect(
       navDestinations({ isFullConsole: true, isAdmin: true, staffRoles: [] }),
     ).toContain(routes.adminVj);
@@ -63,11 +75,28 @@ describe("VJ console gate", () => {
     ).not.toContain(routes.adminVj);
     expect(
       navDestinations({
+        isFullConsole: true,
+        isAdmin: false,
+        staffRoles: ["vj_operator"],
+      }),
+    ).toContain(routes.adminVj);
+    expect(
+      navDestinations({
         isFullConsole: false,
         isAdmin: false,
         staffRoles: ["music_manager_producer"],
       }),
     ).not.toContain(routes.adminVj);
+  });
+
+  it("gives a vj_operator-only holder a rail of VJ alone", () => {
+    expect(
+      navDestinations({
+        isFullConsole: false,
+        isAdmin: false,
+        staffRoles: ["vj_operator"],
+      }),
+    ).toEqual([routes.adminVj]);
   });
 
   it("keeps every VJ page out of search engines", () => {

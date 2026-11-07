@@ -1363,6 +1363,9 @@ export const admin: Catalog = {
   "staffRoles.musicManagerProducer.label": "Music manager & producer",
   "staffRoles.musicManagerProducer.desc":
     "Creates and runs the music events QueerPulse hosts, from the lineup to the door, and curates Studio home: the featured release, shelves, scenes, Artist of the month and New stars. Keeps the leads directory too: adds, edits and deletes leads, their links, notes and follow-ups, and links a lead to a persona.",
+  "staffRoles.vjOperator.label": "VJ operator",
+  "staffRoles.vjOperator.desc":
+    "Runs VJ: the clip library, the projector screen and the phone remote. Every other part of the admin console stays closed to this role.",
   "staffRoles.adminSuperset": "Admins already have every staff capability.",
   "staffRoles.systemLocked": "System accounts can't hold staff roles.",
 

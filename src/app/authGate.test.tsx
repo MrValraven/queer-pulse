@@ -516,6 +516,26 @@ describe("the music events console grant", () => {
   });
 });
 
+describe("the VJ operator grant", () => {
+  it("elevates a VJ operator into the library, the screen and the remote", () => {
+    expect(elevatingCapabilities("/admin/vj")).toEqual(["vj_operator"]);
+    expect(elevatingCapabilities("/admin/vj/screen")).toEqual(["vj_operator"]);
+    expect(elevatingCapabilities("/admin/vj/remote")).toEqual(["vj_operator"]);
+  });
+  it("keeps every other admin path closed to the grant", () => {
+    expect(elevatingCapabilities("/admin")).not.toContain("vj_operator");
+    expect(elevatingCapabilities("/admin/members")).not.toContain(
+      "vj_operator",
+    );
+    expect(elevatingCapabilities("/admin/studio")).not.toContain("vj_operator");
+  });
+  it("leaves VJ closed to the music manager and producer grant", () => {
+    expect(elevatingCapabilities("/admin/vj")).not.toContain(
+      "music_manager_producer",
+    );
+  });
+});
+
 describe("the Studio discovery console grant", () => {
   it("elevates a music manager and producer into Studio discovery", () => {
     expect(elevatingCapabilities("/admin/studio")).toEqual([
