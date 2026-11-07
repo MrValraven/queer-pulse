@@ -9,7 +9,9 @@ export type VjUploadStage =
   | "saving"
   | "done"
   | "failed"
-  | "cancelled";
+  | "cancelled"
+  /** The clip is saved; its animated preview is being made (contract 9.4). */
+  | "previewing";
 
 export interface VjUploadRow {
   rowId: string;
@@ -23,13 +25,24 @@ export interface VjUploadRow {
   clipId: string | null;
   /** Presign waits so far in this run (contract 3.3). */
   retryCount: number;
+  /** Why the preview step failed on a saved clip; null when the preview was
+   *  made or skipped. The row still ends done. */
+  previewFailure: unknown;
 }
 
 export type VjUploadAction =
   | { kind: "add"; rows: VjUploadRow[] }
-  | { kind: "stage"; rowId: string; stage: VjUploadStage; percent?: number }
+  | {
+      kind: "stage";
+      rowId: string;
+      stage: VjUploadStage;
+      percent?: number;
+      /** Set with `previewing`, so a skipped preview still ends on its clip. */
+      clipId?: string;
+    }
   | { kind: "done"; rowId: string; clipId: string }
   | { kind: "fail"; rowId: string; failure: unknown }
+  | { kind: "previewFailed"; rowId: string; failure: unknown }
   | { kind: "retry"; rowId: string }
   | { kind: "cancel"; rowId: string }
   | { kind: "dismiss"; rowId: string }
@@ -40,6 +53,8 @@ const ACTIVE_STAGES: ReadonlySet<VjUploadStage> = new Set([
   "uploading",
   "waiting",
   "saving",
+  // A preview holds its slot, so two recordings never run beside two uploads.
+  "previewing",
 ]);
 const SETTLED_STAGES: ReadonlySet<VjUploadStage> = new Set([
   "done",
@@ -47,7 +62,8 @@ const SETTLED_STAGES: ReadonlySet<VjUploadStage> = new Set([
   "cancelled",
 ]);
 
-/** Whether a row is checking, uploading, waiting out a presign limit or saving. */
+/** Whether a row is checking, uploading, waiting out a presign limit, saving
+ *  or making its preview. */
 export function isVjUploadActive(row: VjUploadRow): boolean {
   return ACTIVE_STAGES.has(row.stage);
 }
@@ -85,12 +101,16 @@ export function reduceVjUploadQueue(
 ): VjUploadRow[] {
   switch (action.kind) {
     case "add":
-      return [...rows, ...action.rows];
+      return [
+        ...rows,
+        ...action.rows.map((row) => ({ ...row, previewFailure: null })),
+      ];
     case "stage":
       return updateUnsettledRow(rows, action.rowId, (row) => ({
         ...row,
         stage: action.stage,
         percent: action.percent ?? row.percent,
+        clipId: action.clipId ?? row.clipId,
         retryCount:
           action.stage === "waiting" ? row.retryCount + 1 : row.retryCount,
       }));
@@ -108,6 +128,11 @@ export function reduceVjUploadQueue(
         stage: "failed",
         failure: action.failure,
       }));
+    case "previewFailed":
+      return updateUnsettledRow(rows, action.rowId, (row) => ({
+        ...row,
+        previewFailure: action.failure,
+      }));
     case "retry":
       return updateRow(rows, action.rowId, (row) =>
         row.stage === "failed" || row.stage === "cancelled"
@@ -118,14 +143,17 @@ export function reduceVjUploadQueue(
               failure: null,
               clipId: null,
               retryCount: 0,
+              previewFailure: null,
             }
           : row,
       );
     case "cancel":
-      return updateUnsettledRow(rows, action.rowId, (row) => ({
-        ...row,
-        stage: "cancelled",
-      }));
+      // The clip of a previewing row is saved already: Skip preview ends it done.
+      return updateUnsettledRow(rows, action.rowId, (row) =>
+        row.stage === "previewing"
+          ? { ...row, stage: "done", percent: 100 }
+          : { ...row, stage: "cancelled" },
+      );
     case "dismiss":
       return rows.filter((row) => row.rowId !== action.rowId);
     case "clearFinished":
@@ -137,7 +165,7 @@ export function reduceVjUploadQueue(
 
 /**
  * The queued rows to start now, in order, while fewer than `concurrency` rows
- * are checking, uploading, waiting or saving.
+ * are checking, uploading, waiting, saving or making a preview.
  */
 export function nextVjUploadStarts(
   rows: readonly VjUploadRow[],
@@ -151,8 +179,10 @@ export function nextVjUploadStarts(
     .map((row) => row.rowId);
 }
 
-/** A row that will still add a clip: queued or on its way. */
+/** A row that will still add a clip: queued or on its way. A previewing row's
+ *  clip is saved already, so the cached counts include it once refreshed. */
 function isVjUploadPending(row: VjUploadRow): boolean {
+  if (row.stage === "previewing") return false;
   return row.stage === "queued" || isVjUploadActive(row);
 }
 

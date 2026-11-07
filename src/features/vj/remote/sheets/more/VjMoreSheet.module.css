@@ -1,0 +1,182 @@
+/* The More sheet and the keyboard shortcut sheet, on the dark sheet look of
+   VjSheetFrame (the --qs-* stage tokens). Rows reach var(--tap-min) and
+   more, groups sit further apart than the rows inside them, and every move
+   animates only opacity or transform. */
+
+/* ── More: the setup sheets, then the show actions ── */
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Keyboard shortcuts mean nothing on a touch-only screen: the row hides
+   there and shows once a mouse or trackpad leads. */
+@media (pointer: coarse) {
+  .list > [data-vj-keyboard-only] {
+    display: none;
+  }
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  inline-size: 100%;
+  min-block-size: 52px;
+  padding-block: var(--gap-xs);
+  padding-inline: var(--gap-xs) var(--gap-sm);
+  border: 1px solid var(--qs-line);
+  border-radius: var(--qs-radius-tile);
+  background: var(--qs-glass-bottom);
+  color: var(--qs-text);
+  font: inherit;
+  font-size: var(--text-15);
+  font-weight: 600;
+  text-align: start;
+  touch-action: manipulation;
+  cursor: pointer;
+  transition-property: opacity, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.row:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.row:active:not([aria-disabled="true"]) {
+  transform: scale(0.98);
+}
+
+.row[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Cue mode on: the coral edge and wash the pressed chips use, beside the
+   label that already says "Turn off cue mode". */
+.row[data-is-on="true"] {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.16);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .row:not([aria-disabled="true"]):not([data-is-on="true"]):hover {
+    border-color: var(--qs-glass-border-strong);
+  }
+}
+
+.iconWell {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  border-radius: var(--radius-10);
+  background: var(--qs-glass-top);
+}
+
+.row[data-is-on="true"] .iconWell {
+  background: rgba(var(--accent-rgb), 0.24);
+}
+
+.icon {
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+}
+
+.label {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.chevron {
+  flex: none;
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+  color: var(--qs-text-mute);
+}
+
+/* ── Shortcuts: key chips in the first column, what they do in the second.
+   Each row is a subgrid, so every label starts on the same line. ── */
+.shortcutList {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: var(--gap-sm);
+  row-gap: var(--gap-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shortcutRow {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: center;
+  min-block-size: var(--tap-min);
+  padding-block-end: var(--gap-xs);
+  border-block-end: 1px solid var(--qs-line);
+}
+
+.shortcutRow:last-child {
+  padding-block-end: 0;
+  border-block-end: 0;
+}
+
+.keys {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.keyCap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 2.25rem;
+  block-size: 2rem;
+  padding-inline: 0.5rem;
+  border: 1px solid var(--qs-glass-border-strong);
+  border-block-end-width: 2px;
+  border-radius: var(--radius-7);
+  background: var(--qs-glass-top);
+  color: var(--qs-text);
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.joiner {
+  flex: none;
+  inline-size: 0.875rem;
+  block-size: 0.875rem;
+  color: var(--qs-text-mute);
+}
+
+.shortcutLabel {
+  font-size: var(--text-15);
+  line-height: 1.4;
+  color: var(--qs-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    transition-duration: 0s;
+  }
+}

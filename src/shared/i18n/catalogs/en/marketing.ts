@@ -42,7 +42,7 @@ export const marketing: Catalog = {
   "about.contrast.us.growthPace":
     "Growth keeps pace with how fast people can vouch",
   "about.contrast.us.valueStays":
-    "Membership funds a mutual-aid pot the community controls",
+    "Membership has no fee, and we sell nothing about you",
   "about.beliefs.eyebrow": "What we believe",
   "about.beliefs.title": "The values behind <em>every decision.</em>",
   "about.values.smallByDesign.title": "Small by design",
@@ -53,7 +53,7 @@ export const marketing: Catalog = {
     "We're building the plumbing queer community needs: introductions, safe spaces, mutual aid.",
   "about.values.communityEconomy.title": "A community economy",
   "about.values.communityEconomy.body":
-    "Money that moves through QueerPulse (memberships, tips, grants) stays inside the community it came from.",
+    "Money between members goes straight to the person it is meant for. Music bought on Studio is paid to the artist directly, and QueerPulse never holds the money.",
   "about.values.communityOwns.title": "The community owns its space",
   "about.values.communityOwns.body":
     "Decisions about this platform are made in the open, with the people who use it.",
@@ -118,11 +118,6 @@ export const marketing: Catalog = {
   "about.stand.commitment.money.title": "We take no complicit money.",
   "about.stand.commitment.money.body":
     "No sponsorship, funding, or partnership from companies or institutions materially complicit in the occupation.",
-  "about.stand.commitment.mutualAid.title":
-    "The mutual-aid pot can fund solidarity work.",
-  "about.stand.commitment.mutualAid.body":
-    "Palestinian solidarity and relief work is eligible, decided in the open like every other allocation.",
-  "about.stand.commitment.mutualAid.link": "See how allocations are made",
   // ── About link dialogs ──────────────────────────────────────────────────
   // Each block is the digest shown when one of the page's reference links opens
   // <AboutLinkModal> instead of navigating. Written for the claim that raised
@@ -146,7 +141,7 @@ export const marketing: Catalog = {
     "A changing Catholic context, other traditions, and the members who hold faith and queerness together. Being secular sits there too.",
   "about.linkModal.intersections.point.class.title": "Class and economics.",
   "about.linkModal.intersections.point.class.body":
-    "Queer social life carries an unspoken class character. The section names Lisbon's cost shift and what we do about access: sliding-scale events, a free forum, and membership that stays free for anyone who cannot contribute.",
+    "Queer social life carries an unspoken class character. The section names Lisbon's cost shift and what we do about access: events that hosts can offer free or at pay what you can, a free forum, and a membership with no fee.",
   "about.linkModal.intersections.cta": "Read the full intersectionality guide",
 
   "about.linkModal.guidelinesExclusion.eyebrow": "Community guidelines",
@@ -222,30 +217,6 @@ export const marketing: Catalog = {
     "Moderators ask who the post targets. A state, a government or an army can be criticised. A person cannot be attacked for who they are.",
   "about.linkModal.guidelinesSpeech.cta": "Read the full guidelines",
 
-  "about.linkModal.governanceAllocations.eyebrow": "Governance & transparency",
-  "about.linkModal.governanceAllocations.label": "How allocations are decided",
-  "about.linkModal.governanceAllocations.title":
-    "What comes in, <em>where it goes.</em>",
-  "about.linkModal.governanceAllocations.lead":
-    "Finances are published every quarter, and the decisions that move money are made in the open.",
-  "about.linkModal.governanceAllocations.p1":
-    "QueerPulse is funded by the people who use it. Income and expenditure are published each quarter, line by line, with no investor interests and no growth targets sitting behind them.",
-  "about.linkModal.governanceAllocations.p2":
-    "Quarterly surpluses go into an operational reserve targeted at three months of running costs. Once that target is met, additional surplus goes in full to the community micro-grants fund. Capital gets redistributed.",
-  "about.linkModal.governanceAllocations.point.partners.title":
-    "Partner money is restricted.",
-  "about.linkModal.governanceAllocations.point.partners.body":
-    "It is tied to a named scope, such as the Mental Health Fund or community events, and carries no editorial, governance, or platform influence.",
-  "about.linkModal.governanceAllocations.point.votes.title":
-    "Funding changes go to a vote.",
-  "about.linkModal.governanceAllocations.point.votes.body":
-    "Accepting funding outside our usual sources needs a majority member vote. Every open proposal is listed with its tally, and past ones stay visible with their result.",
-  "about.linkModal.governanceAllocations.point.record.title":
-    "The record stays up.",
-  "about.linkModal.governanceAllocations.point.record.body":
-    "Community health figures, moderation outcomes, and appeals are published alongside the money, every quarter.",
-  "about.linkModal.governanceAllocations.cta": "See the full governance page",
-
   "about.linkModal.migration.eyebrow": "Intersectionality",
   "about.linkModal.migration.label": "Race, migration and queer Lisbon",
   "about.linkModal.migration.title":
@@ -294,23 +265,23 @@ export const marketing: Catalog = {
   "about.linkModal.governanceOverview.title":
     "How we run this, and who <em>decides.</em>",
   "about.linkModal.governanceOverview.lead":
-    "The record of how QueerPulse is governed, how decisions get made, and what happens when things go wrong.",
+    "How QueerPulse is run today: who moderates, how motions work, and what is still being drafted.",
   "about.linkModal.governanceOverview.p1":
-    "Moderation is done by a small team of members who agreed to take on the role. They answer to the advisory council for how the process is run, and any decision can be appealed once, within 14 days. A moderator who was not part of the original decision hears the appeal, and the outcome is final.",
+    "Day-to-day running, moderation included, is done by the volunteer team. Any moderation decision can be appealed once, within 14 days, and a moderator who was not part of the original decision hears the appeal. We aim to decide each appeal within 7 days.",
   "about.linkModal.governanceOverview.p2":
-    "Reports are reviewed within 48 hours, same-day where someone's safety is at risk, and the figures behind that process are published every quarter.",
+    "We aim to respond to each report within a target set by how serious it is: 1 hour, 24 hours, 3 days or 7 days. The Transparency Report publishes moderation figures for each calendar quarter.",
   "about.linkModal.governanceOverview.point.council.title":
     "The advisory council.",
   "about.linkModal.governanceOverview.point.council.body":
-    "It oversees how moderation and appeals are run, proposes platform changes, and serves as the accountability layer. Members serve one-year terms and can be removed by a two-thirds community vote.",
+    "An advisory council is being appointed. Its seats appear on the Governance page once they are filled.",
   "about.linkModal.governanceOverview.point.finances.title":
     "Finances in the open.",
   "about.linkModal.governanceOverview.point.finances.body":
-    "Income and expenditure published quarterly, an operational reserve targeted at three months of running costs, and surplus beyond it redirected to micro-grants.",
+    "Income and spending appear in the Finances section of the Governance page when the volunteer team enters them. Rules on how money is received and spent are being drafted.",
   "about.linkModal.governanceOverview.point.proposals.title":
-    "Proposals and votes.",
+    "Motions and votes.",
   "about.linkModal.governanceOverview.point.proposals.body":
-    "Council removals and funding changes go to a member vote. Every proposal stays visible with its result.",
+    "Members can open a motion on the Governance page. It needs co-signatures from other members and a review by our team before it can reach a vote, and each motion shows its tally and outcome.",
   "about.linkModal.governanceOverview.cta": "See the full governance page",
 
   "about.who.eyebrow": "Who's behind this",
@@ -318,7 +289,7 @@ export const marketing: Catalog = {
   "about.who.p1":
     "QueerPulse is run by the people who use it, a small founding team, and a growing circle of members who help shape what comes next.",
   "about.who.p2":
-    "We're not backed by venture capital chasing a return. We're backed by memberships, donations, and grants that keep the platform independent.",
+    "We're not backed by venture capital chasing a return. QueerPulse is a volunteer collective, and membership has no fee.",
   "about.contactStrip.title": "Questions? <em>We're reachable.</em>",
   "about.contactStrip.body":
     "No support tickets vanishing into a queue. Our team reads what you send.",
@@ -376,11 +347,6 @@ export const marketing: Catalog = {
   "activism.local.title": "Locally, <em>in Lisbon</em>",
   "activism.local.p1":
     "The fights closest to home rarely make headlines, housing, healthcare access, a venue under threat.",
-  "activism.local.p2":
-    "Right now, <b>Mouraria and Intendente</b> are the neighbourhoods where queer tenants need the most support.",
-  "activism.local.banner.title": "Housing pressure in Mouraria",
-  "activism.local.banner.body":
-    "Several queer households are facing non-renewal notices this quarter. The Housing Advocate role below is a direct response.",
   "activism.skills.title": "Bring a <em>skill</em>",
   "activism.skills.p1":
     "Every organisation below needs more than volunteers with picket signs. They need your actual craft.",
@@ -413,7 +379,7 @@ export const marketing: Catalog = {
     "Talk to peer support before you disappear entirely. Stepping back with a plan beats vanishing without one.",
   "activism.orgs.title": "Partner <em>organisations</em>",
   "activism.orgs.p1":
-    "Four Portuguese organisations we work with directly: all of them welcome volunteers.",
+    "The partner organisations listed on QueerPulse, each with its own profile.",
   "activism.volunteer.title": "Open <em>roles</em>",
   "activism.volunteer.p1":
     "Current volunteer opportunities from our partner organisations, updated regularly.",
@@ -429,7 +395,7 @@ export const marketing: Catalog = {
   "coc.meta.description":
     "The binding Code of Conduct QueerPulse enforces: six commitments members make, what counts as harm, how reports are handled, and how to appeal a decision.",
   "coc.hero.backLabel": "Governance",
-  "coc.hero.eyebrow": "Code of Conduct · in effect since {date}",
+  "coc.hero.eyebrow": "Code of Conduct",
   "coc.hero.title": "How we treat <em>each other here.</em>",
   "coc.hero.dek":
     "This is the binding document, <b>enforceable</b> and held to. If a report is upheld, this is what we measure it against.",
@@ -445,7 +411,6 @@ export const marketing: Catalog = {
   "coc.toc.enforce": "Enforcement",
   "coc.toc.appeal": "Appeals",
   "coc.toc.offplatform": "Off-platform conduct",
-  "coc.toc.changes": "Changes",
   "coc.scope.title": "§01 <em>Scope</em>",
   "coc.scope.p1":
     "This Code applies everywhere on QueerPulse (<strong>posts, messages, events, comments, profiles</strong>) and to conduct off-platform when it directly affects another member's safety here.",
@@ -527,7 +492,7 @@ export const marketing: Catalog = {
     "Reserved for serious or repeated violations. <em>Always reviewable on appeal.</em>",
   "coc.report.title": "How to <em>report</em>",
   "coc.report.body":
-    "Every report is read and actioned by a person. We aim to respond within 48 hours.",
+    "Every report is read and actioned by a person. We aim to respond within a target set by how serious it is, from 1 hour for the most urgent reports to 7 days for the lowest.",
   "coc.report.fileCta": "File a report",
   "coc.appeal.title": "§05 <em>Appeals</em>",
   "coc.appeal.p1":
@@ -545,28 +510,9 @@ export const marketing: Catalog = {
     "Public statements or actions that would make a reasonable person <em>unsafe attending an event with you</em>.",
   "coc.offplatform.closing":
     "This is used <em>rarely and carefully</em>. It is never a general license to police members' lives outside the platform.",
-  "coc.changes.title": "§07 <em>Changes</em>",
-  "coc.changes.p1": "This Code was last published on {date}.",
-  "coc.changelog.v21.lead": "v2.1 · {date}",
-  "coc.changelog.v21.rest":
-    "Clarified the off-platform conduct section and added the appeals timeline.",
-  "coc.changelog.v20.lead": "v2.0 · {date}",
-  "coc.changelog.v20.rest":
-    "Rewrote the enforcement ladder from scratch, added the private-first-warning step.",
-  "coc.changelog.v14.lead": "v1.4 · {date}",
-  "coc.changelog.v14.rest":
-    "Added doxxing and bad-faith framing as explicit violations.",
-  "coc.changelog.v10.lead": "v1.0 · {date}",
-  "coc.changelog.v10.rest":
-    "First published version, ratified by the founding circle.",
-  "coc.changes.seeChangelog":
-    "See the full <changelogLink>changelog</changelogLink>.",
-  "coc.version.label": "Version 2.1",
-  "coc.version.ratifiedMeta": "Ratified {date}",
   "coc.version.downloadCta": "download as text",
   "coc.version.readManifesto": "read the Manifesto",
   "coc.download.headerTitle": "QueerPulse Code of Conduct",
-  "coc.download.headerMeta": "In effect since {date}",
   "coc.download.intro":
     "This is the plain-text version of the binding Code of Conduct. See the web page for the full formatted version.",
   "coc.download.section01": "Scope",
@@ -575,7 +521,6 @@ export const marketing: Catalog = {
   "coc.download.section04": "Enforcement",
   "coc.download.section05": "Appeals",
   "coc.download.section06": "Off-platform conduct",
-  "coc.download.section07": "Changes",
   "coc.download.mockNote":
     "(This is a prototype download. The production file will match the web page exactly.)",
 
@@ -667,7 +612,7 @@ export const marketing: Catalog = {
   "dsar.scopes.activity.b": "Activity",
   "dsar.scopes.activity.s": "Posts, comments, RSVPs, messages",
   "dsar.scopes.membership.b": "Membership",
-  "dsar.scopes.membership.s": "Your tier, join date, and who invited you",
+  "dsar.scopes.membership.s": "Your join date and who invited you",
   "dsar.scopes.moderation.b": "Moderation",
   "dsar.scopes.moderation.s": "Reports you filed or were named in",
   "dsar.form.contextLabel": "Anything else we should know?",
@@ -802,7 +747,7 @@ export const marketing: Catalog = {
   // ── Help ───────────────────────────────────────────────────────────────
   "help.meta.title": "QueerPulse help centre: invites, safety, events",
   "help.meta.description":
-    "Answers to common QueerPulse questions, how invites work, managing your account, RSVPs and hosting events, reporting and appeals, and membership tiers.",
+    "Answers to common QueerPulse questions, how invites work, managing your account, RSVPs and hosting events, reporting and appeals, and what membership costs.",
   "help.hero.eyebrow": "Help",
   "help.hero.title": "Questions, <em>answered.</em>",
   "help.hero.sub": "Search below, or browse by topic.",
@@ -878,7 +823,7 @@ export const marketing: Catalog = {
     "From their profile, a post, or a message, use the report option. Every report goes to a moderator on our team.",
   "help.qa.afterReport.q": "What happens after I file a report?",
   "help.qa.afterReport.a":
-    "We aim to respond within 48 hours. <strong>You'll hear back either way</strong>, even if we decide no action is needed.",
+    "We aim to respond within a target set by how serious the report is: 1 hour, 24 hours, 3 days or 7 days. <strong>You'll hear back either way</strong>, even if we decide no action is needed.",
   "help.qa.appeal.q": "Can I appeal a moderation decision?",
   "help.qa.appeal.a":
     "Yes, every decision can be appealed once, reviewed by a different moderator. See <governanceLink>Governance</governanceLink> for the full process.",
@@ -891,9 +836,9 @@ export const marketing: Catalog = {
   "help.qa.vouching.q": "What does vouching actually mean?",
   "help.qa.vouching.a":
     "When you vouch for someone, you're telling the community you trust them to be here. It's a real signal that carries weight.",
-  "help.qa.perks.q": "What do I get as a Sustainer?",
-  "help.qa.perks.a":
-    "Early access to events, a supporter badge, and the knowledge that your membership keeps the platform ad-free.",
+  "help.qa.cost.q": "Does membership cost anything?",
+  "help.qa.cost.a":
+    "Membership has no fee and no tiers, so every member has the same standing. Music you buy from an artist on Studio is paid to that artist directly, and QueerPulse never holds the money.",
   "help.qa.emailNotifications.q": "How do I control notifications?",
   "help.qa.emailNotifications.a":
     "In <settingsLink>Settings</settingsLink>, then Notifications, toggle each category independently. QueerPulse notifies you in the app and, if you allow it, by push. Notifications never go by email.",
@@ -926,11 +871,11 @@ export const marketing: Catalog = {
   // ── Partners ───────────────────────────────────────────────────────────
   "partners.meta.title": "QueerPulse's partner organisations in Portugal",
   "partners.meta.description":
-    "The organisations QueerPulse partners with in Portugal and beyond, each vetted for alignment with our values before being listed. No one pays to appear here.",
+    "The organisations QueerPulse partners with in Portugal and beyond, each reviewed by our team before being listed.",
   "partners.hero.eyebrow": "Partners",
   "partners.hero.title": "Organisations we <em>stand with.</em>",
   "partners.hero.sub":
-    "Vetted partners across Portugal and beyond, working alongside QueerPulse on the ground.",
+    "Partners across Portugal and beyond, working alongside QueerPulse on the ground.",
   "partners.section.title": "Our <em>partners</em>",
   "partners.section.sub": "Filter isn't available yet. Here's the full roster.",
   "partners.card.viewCta": "View profile",
@@ -965,7 +910,7 @@ export const marketing: Catalog = {
   "pressKit.hero.askPersonCta": "Ask our team",
   "pressKit.contact.deskLabel": "<b>Press desk:</b>",
   "pressKit.contact.phoneLabel": "<b>By phone</b>, on request",
-  "pressKit.contact.responseLabel": "We respond within <b>48 hours</b>",
+  "pressKit.contact.responseLabel": "Our team reads <b>every request</b>",
   "pressKit.contact.languagesLabel": "<b>EN / PT</b>",
   "pressKit.contact.email": "hello@queerpulse.com",
   "pressKit.footerNote.licence":
@@ -974,7 +919,7 @@ export const marketing: Catalog = {
     "For commercial use, <a>get in touch</a> first.",
   "pressKit.outro.title": "Still need <em>something specific?</em>",
   "pressKit.outro.sub":
-    "Ask the press desk directly: most requests get a same-day reply.",
+    "Ask the press desk directly and our team will pick up your request.",
   "pressKit.outro.askCta": "Ask the press desk",
   "pressKit.downloadModal.eyebrow": "Full kit · ZIP",
   "pressKit.downloadModal.title": "Download the <em>complete kit.</em>",
@@ -1008,9 +953,9 @@ export const marketing: Catalog = {
   "pressKit.boiler.short.wc": "25 words · 198 char",
   "pressKit.boiler.short.text":
     "QueerPulse is a small, member-vouched queer community platform rooted in Lisbon, connecting professionals, creatives, activists and community members for work, community, culture and mutual support.",
-  "pressKit.boiler.med.wc": "62 words · 426 char",
+  "pressKit.boiler.med.wc": "60 words · 409 char",
   "pressKit.boiler.med.text":
-    "QueerPulse is a small, member-vouched queer community platform rooted in Lisbon, founded in 2024 by professionals, organisers and artists building an alternative to attention-driven networks: no ads, no algorithm deciding what members see. Members are vouched in by someone already there. Not backed by venture capital, the platform runs on memberships, donations and grants, and publishes a member magazine for its community.",
+    "QueerPulse is a small, member-vouched queer community platform rooted in Lisbon, founded in 2024 by professionals, organisers and artists building an alternative to attention-driven networks: no ads, no algorithm deciding what members see. Members are vouched in by someone already there. Not backed by venture capital, the platform charges no membership fee and publishes a member magazine for its community.",
 
   // ── Communities Explainer ──────────────────────────────────────────────
   "communitiesAbout.meta.title": "How communities work on QueerPulse",
@@ -1063,7 +1008,7 @@ export const marketing: Catalog = {
   "privacy.whatWeCollect.account.item2":
     "<strong>Contact information</strong>: your email address, used to sign you in. It comes from your Google account if you use Google, or from you when you ask for a sign-in code. The only email QueerPulse sends is a sign-in code you ask for.",
   "privacy.whatWeCollect.account.item3":
-    "<strong>Membership data</strong>: your tier, join date, who invited you, and who vouched for you.",
+    "<strong>Membership data</strong>: your join date, who invited you, and who vouched for you.",
   "privacy.whatWeCollect.signInHeading": "How you sign in",
   "privacy.whatWeCollect.signInBody":
     "You sign in with <strong>a code we email you</strong> or with <strong>Google</strong>. There's no QueerPulse password to manage. If you use Google, Google shares your name, email, and profile photo with us. We never see or store your Google password.",
@@ -1302,7 +1247,7 @@ export const marketing: Catalog = {
   "terms.events.p1":
     "Events are organised by members and QueerPulse; each carries its own attendance and cancellation terms shown on the event page.",
   "terms.events.p2":
-    "Ticket prices for sliding-scale events are set by hosts within the platform's required tiers. QueerPulse takes no percentage of ticket revenue.",
+    "Hosts can state a price on their event page, as a fixed price, pay what you can or a sliding scale, in their own words. QueerPulse does not process payments and takes no percentage of what hosts charge.",
   "terms.events.p3":
     "You're expected to follow the Code of Conduct and any venue-specific rules at every event.",
   "terms.events.p4":
@@ -1386,9 +1331,9 @@ export const marketing: Catalog = {
   "pressKit.boiler.med.label": "60 words · for press releases, capsule bios",
   "pressKit.boiler.long.label":
     "130 words · for longer features, “about” sections",
-  "pressKit.boiler.long.wc": "134 words",
+  "pressKit.boiler.long.wc": "124 words",
   "pressKit.boiler.long.text":
-    "QueerPulse is a small, member-vouched queer community platform rooted in Lisbon, founded in 2024 by a group of professionals, organisers and artists who wanted an alternative to attention-optimised networks: no ads, no algorithm, no growth for its own sake. It is run by the people who use it: a small founding team and a growing circle of members who help shape what comes next. Every member is vouched in by someone already there, and growth stays paced to how fast people can vouch. QueerPulse isn't backed by venture capital chasing a return; it's sustained instead by memberships, donations and grants that keep the platform independent. Money that moves through QueerPulse stays inside the community it came from, and the platform already publishes a member magazine, with more shared infrastructure planned as the community grows.",
+    "QueerPulse is a small, member-vouched queer community platform rooted in Lisbon, founded in 2024 by a group of professionals, organisers and artists who wanted an alternative to attention-optimised networks: no ads, no algorithm, no growth for its own sake. It is run by the people who use it: a small founding team and a growing circle of members who help shape what comes next. Every member is vouched in by someone already there, and growth stays paced to how fast people can vouch. QueerPulse isn't backed by venture capital chasing a return, and membership has no fee. Music bought on Studio is paid to the artist directly, and the platform already publishes a member magazine, with more shared infrastructure planned as the community grows.",
   "pressKit.mark.section.title": "The <em>mark</em> and how to use it",
   "pressKit.mark.section.lead":
     "Three approved variations. The wordmark always carries the coral pulse dot, except in the inverse “coral” variant, where the dot becomes plum. Don't recolour the dot to anything else.",
@@ -3455,6 +3400,10 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-07.headline":
+    "Editors can pull a published piece off the site and back to draft or review, with Undo.",
+  "changelog.releases.2026-11-06.headline":
+    "The VJ screen gets a live effects engine, and the remote plays scenes, set lists and MIDI.",
   "changelog.releases.2026-11-05.headline":
     "Personas get a redesigned directory and a team-picked wall of faces.",
   "changelog.releases.2026-11-04.headline":
@@ -3765,6 +3714,22 @@ export const marketing: Catalog = {
     "Find personas by the same work areas you pick when you join",
   "changelog.entries.persona-professions-by-work-area.body":
     "The Profession filter groups its chips under areas like Music or Food & drink, with clearer headings.",
+  "changelog.entries.unpublish-pieces-from-the-desk.title":
+    "Take published pieces off the site from the desk",
+  "changelog.entries.unpublish-pieces-from-the-desk.body":
+    "A published row's menu sends it back to draft or review after a confirm, with Undo.",
+  "changelog.entries.vj-effects-engine.title":
+    "VJ screens get a live effects engine",
+  "changelog.entries.vj-effects-engine.body":
+    "34 effects, beat-timed cuts, a crossfader mix layer and a flash limit that keeps every screen safe",
+  "changelog.entries.vj-playable-remote.title":
+    "The VJ remote plays like an instrument",
+  "changelog.entries.vj-playable-remote.body":
+    "Effect pads, tap tempo, keyboard and MIDI control, and the beat read from the screen's microphone",
+  "changelog.entries.vj-scenes-and-set-lists.title":
+    "Save VJ looks as scenes and play them in set lists",
+  "changelog.entries.vj-scenes-and-set-lists.body":
+    "Recall a look in one tap, step through a set list, and show the linked event's card with its QR",
   "changelog.entries.persona-type-change.title":
     "Change a persona's type and keep everything on it",
   "changelog.entries.persona-type-change.body":
@@ -10080,7 +10045,7 @@ export const marketing: Catalog = {
   "volunteer.hero.sub":
     "You don't need to be an activist. You need two free hours and a willingness to show up. Below are organisations in Lisbon genuinely looking for people like you.",
   "volunteer.hero.note":
-    "Every organisation below has been vetted by the QueerPulse community",
+    "Opportunities are posted by the people running them. If one looks wrong, report it",
   "volunteer.hero.postCta": "Post an opportunity",
   "volunteer.guide.eyebrow": "New to organising?",
   "volunteer.guide.title": "Want to do <em>more</em> than a shift?",
@@ -10524,39 +10489,16 @@ export const marketing: Catalog = {
   "forOrgs.process.step3.title": "Two-page proposal",
   "forOrgs.process.step3.body":
     "One of us drafts it; both sides edit. Includes <b>exit conditions</b>, public-disagreement clauses, and money flow.",
-  "forOrgs.process.step4.title": "Assembly sign-off",
+  "forOrgs.process.step4.title": "Team sign-off",
   "forOrgs.process.step4.body":
-    "Operational partnerships go to the monthly Assembly. The Sustainer membership weighs in. <em>~10% of partnerships are vetoed.</em>",
+    "Our team reviews every partnership before it is listed. <em>Either side can still disagree publicly afterwards.</em>",
   "forOrgs.proof.title": "Already working <em>with us</em>",
   "forOrgs.proof.sub":
     "Four representative partners, each at a different tier. Full list lives on Partners.",
   "forOrgs.proof.viewCta": "View partner",
   "forOrgs.tiers.title": "What we <em>do offer</em>",
   "forOrgs.tiers.sub":
-    "Three tiers, each a different kind of relationship. All include the basics: pre-listing review, transparent funding disclosure, and the ability for either side to disagree publicly.",
-  "forOrgs.tiers.employer.list1":
-    "Unlimited job listings · <b>posted within 24h</b>",
-  "forOrgs.tiers.employer.list2":
-    "Verified-employer badge on the company profile",
-  "forOrgs.tiers.employer.list3":
-    "One annual member-conducted culture review (anonymous)",
-  "forOrgs.tiers.employer.list4": "Listing in Employer Reviews",
-  "forOrgs.tiers.employer.list5":
-    "Quarterly hiring office-hours with two team members",
-  "forOrgs.tiers.partner.list1":
-    "<b>Operational seam:</b> case bridge, helpline handoff, joint protocol",
-  "forOrgs.tiers.partner.list2": "Shared moderation channel where appropriate",
-  "forOrgs.tiers.partner.list3":
-    "Co-signed advocacy work · each side can dissent publicly",
-  "forOrgs.tiers.partner.list4":
-    "Listed on Partners with a dedicated case page",
-  "forOrgs.tiers.partner.list5":
-    "<b>Per-case payment</b> for partner-provided services (e.g. €45/legal-consult)",
-  "forOrgs.tiers.funder.list1": "Programme-specific reporting · quarterly",
-  "forOrgs.tiers.funder.list2": "Credit on the programme page in plain text",
-  "forOrgs.tiers.funder.list3": "No platform-wide placement, no co-branding",
-  "forOrgs.tiers.funder.list4": "Annual independent audit included",
-  "forOrgs.tiers.funder.list5": "Public itemisation in the transparency report",
+    "Each tier is a different kind of relationship. Every application is reviewed by our team before anything is listed.",
   "forOrgs.tiers.featuredBadge": "Most chosen",
   // PRD-266: the For Organisations partner ask now hands over to the real
   // /about/partners/apply flow instead of writing a parallel inquiry row.
@@ -10579,11 +10521,11 @@ export const marketing: Catalog = {
   //    bios/reviews elsewhere.
   "directory.meta.title": "Local Business directory | QueerPulse",
   "directory.meta.description":
-    "Queer-owned businesses and queer-friendly professionals in Lisbon, vetted and maintained by the community.",
+    "Queer-owned businesses and queer-friendly professionals in Lisbon, reviewed by our team before they are listed.",
   "directory.hero.eyebrow": "Queer business directory",
   "directory.hero.title": "Find your <em>people's places.</em>",
   "directory.hero.sub":
-    "Queer-owned businesses and queer-friendly professionals in Lisbon. Vetted by the community, maintained by the community. Whether you just arrived or you've been here for years.",
+    "Queer-owned businesses and queer-friendly professionals in Lisbon. Reviewed by our team before they are listed. Whether you just arrived or you've been here for years.",
   // "updated monthly" was a cadence nothing scheduled, measured or could have
   // shown: `DirectoryCardDTO` carries no update date, so the page had no way
   // to stand behind it. Replaced with who maintains the directory, which the
@@ -10656,7 +10598,7 @@ export const marketing: Catalog = {
   "directory.online.eyebrow": "Sold online",
   "directory.online.title": "Businesses that come to <em>you</em>.",
   "directory.online.body":
-    "Queer-owned and queer-friendly shops, studios and practices that live online, vetted by the same community as the places on the map.",
+    "Queer-owned and queer-friendly shops, studios and practices that live online, reviewed by our team like the places on the map.",
   "directory.online.stat.businesses": "online businesses",
   "directory.online.stat.businesses_one": "online business",
   "directory.online.stat.businesses_other": "online businesses",
@@ -11997,146 +11939,98 @@ export const marketing: Catalog = {
   "local.venue.been_one": "{count} person has been here",
   "local.venue.been_other": "{count} people have been here",
 
-  // ── Constitution — governance/constitutional copy (`ConstitutionPage.tsx`,
+  // ── Constitution: governance/constitutional copy (`ConstitutionPage.tsx`,
   //    `constitution.data.tsx`). Platform-authored, ships in the bundle, no
-  //    `api/` fetch. Precise and literal per the i18n brief §6 — numbers,
-  //    percentages, and clause references are kept exact; nothing
-  //    editorialised. "Associação QueerPulse", "NIPC", and "ILGA Portugal"
-  //    are proper nouns, kept identical in both catalogs.
-  //    `hero.dek3` / `hero.meta` are a deliberate content *adaptation*, not a
-  //    literal translation: the English page frames itself as "the English
-  //    translation" of a Portuguese-original document, which is a joke/frame
-  //    that only makes sense when the reader is looking at the English
-  //    version. In the pt-PT rendering that framing is nonsensical (the
-  //    reader is already reading Portuguese), so the pt-PT copy drops the
-  //    "this is the English translation" meta-reference rather than
-  //    faithfully mistranslating it — flagged in the sweep report.
-  "constitution.meta.title": "QueerPulse's constitution: twelve plain articles",
+  //    `api/` fetch. It describes only what QueerPulse does today: every rule
+  //    the system does not implement (paid tiers, an assembly, circles,
+  //    budget percentages, partnership caps, expansion conditions,
+  //    dissolution, amendment votes) was invented and has been removed. An
+  //    article says plainly when a rule is still being drafted. No version
+  //    numbers, adoption dates or authorship claims belong here until a real
+  //    adoption happens.
+  "constitution.meta.title":
+    "QueerPulse's constitution: what is written down so far",
   "constitution.meta.description":
-    "QueerPulse's constitution: twelve plain-language articles on purpose, membership and governance, written by the volunteers who run the platform.",
+    "QueerPulse's constitution in plain language: purpose, membership, vouching, decisions and moderation as they work today, with the rules still being drafted marked as such.",
   "constitution.artNumLabel": "Article",
-  "constitution.hero.eyebrow": "Constitution · v1.4 · adopted 14 Nov 2025",
-  "constitution.hero.title":
-    "The <em>rulebook,</em> in plain Portuguese-flavoured English.",
+  "constitution.hero.eyebrow": "Constitution · working draft",
+  "constitution.hero.title": "The <em>rulebook,</em> as far as it is written.",
   "constitution.hero.dek1":
-    "The working charter of the <b>volunteer collective</b> that runs QueerPulse. Written by the founding eight and adopted at the first assembly. It isn't a legal document, and there's no registered company or association behind QueerPulse yet. <em>Revised several times since.</em>",
+    "The working charter of the <b>volunteer collective</b> that runs QueerPulse. It isn't a legal document, and there's no registered company or association behind QueerPulse yet.",
   "constitution.hero.dek2":
-    "It is intentionally short. Twelve articles, plain language, no nested sub-clauses. Anything more elaborate lives in the Code of Conduct or the resolutions of the Annual Assembly.",
-  "constitution.hero.meta":
-    "<b>Written in:</b> Lisbon · <b>Original:</b> Portuguese · this is the English translation.",
+    "It is intentionally short and describes only how QueerPulse works today. Where a rule is still being drafted, the article says so. Anything more detailed lives in the Code of Conduct.",
 
   "constitution.art1.toc": "I · Purpose",
   "constitution.art1.title": "Purpose",
   "constitution.art1.clause1":
-    "QueerPulse exists to provide <strong>professional, social, cultural and material support</strong> to LGBTQ+ people in the city of Lisbon, and (per Article X) in other cities once specific conditions are met.",
+    "QueerPulse exists to provide <strong>professional, social, cultural and material support</strong> to LGBTQ+ people in the city of Lisbon.",
   "constitution.art1.clause2":
-    "QueerPulse runs <strong>without profit,</strong> as a volunteer collective. It isn't a registered company or association, holds no equity, and distributes no profits. If that ever changes, this document changes with it.",
-  "constitution.art1.clause3":
-    "Where this Constitution conflicts with the Manifesto, this document prevails. The Manifesto sets values; this sets operations.",
+    "QueerPulse runs <strong>without profit,</strong> as a volunteer collective. It isn't a registered company or association yet. If that ever changes, this document changes with it.",
 
   "constitution.art2.toc": "II · Members",
   "constitution.art2.title": "Members",
   "constitution.art2.clause1":
-    "A <strong>member</strong> is any individual who has been vouched for by an existing member, completed a brief check-in with the moderation team, and accepted the Code of Conduct.",
+    "A <strong>member</strong> is a person who joined by invitation or through a request our team reviewed, and who accepted the Code of Conduct.",
   "constitution.art2.clause2":
-    "Members may be on any of three tiers: <em>Solidarity</em> (free), <em>Member</em> (€36/year), or <em>Sustainer</em> (€96/year). All tiers carry equal voting rights.",
+    "Membership has no fee and no tiers today. Every member has the same standing.",
   "constitution.art2.clause3":
     "No member's status (including age, nationality, language, identity, occupation, or visibility) affects their voting rights or treatment in moderation.",
 
   "constitution.art3.toc": "III · Vouching",
   "constitution.art3.title": "Vouching",
   "constitution.art3.clause1":
-    "Each existing member may vouch for up to <strong>two</strong> new members per calendar year. Vouches attach the voucher's name to the new member's record, permanently.",
+    "Existing members can <strong>vouch</strong> for new members and invite people to join.",
   "constitution.art3.clause2":
-    "The invite cap may be temporarily raised by Assembly vote to a maximum of four per member, for one calendar year, in cases of identified network gaps.",
-  "constitution.art3.clause3":
-    "A member whose three most recent vouches have all been removed under Article VIII forfeits the right to vouch for twelve months.",
+    "Each member has a monthly limit on invites and a daily limit on vouches. Our team sets the limits, and they exist to keep a vouch meaningful.",
 
-  "constitution.art4.toc": "IV · Assembly",
-  "constitution.art4.title": "The Annual <em>Assembly</em>",
+  "constitution.art4.toc": "IV · Decisions",
+  "constitution.art4.title": "How decisions are <em>made</em>",
   "constitution.art4.clause1":
-    "The Assembly convenes once per year, in November, for at least one full day. It is the highest decision-making body of the collective.",
+    "QueerPulse has no assembly yet. A body that decides for the whole membership is <strong>being drafted,</strong> and until it exists this document describes none.",
   "constitution.art4.clause2":
-    "Every member is entitled to one vote per resolution, cast in person, online, or asynchronously up to the close of voting.",
-  "constitution.art4.clause3":
-    "Quorum is <strong>10% of active members</strong>, or 100 members, whichever is greater. Resolutions pass by simple majority unless this document or the Code of Conduct specifies otherwise.",
-  "constitution.art4.clause4":
-    "The agenda is published 30 days in advance and is open to written amendment by any 10 members until 7 days before convening.",
-  "constitution.art4.quote":
-    '"This Assembly is the floor on which everything else stands. <em>Lose it, and you have only an app.</em>"',
+    "Members can already open a motion on the Governance page. A motion needs co-signatures from other members before it can reach a vote, our team reviews it first, and each motion shows its own tally and outcome.",
 
-  "constitution.art5.toc": "V · Circles",
-  "constitution.art5.title": "Rotating <em>circles</em>",
+  "constitution.art5.toc": "V · Team and council",
+  "constitution.art5.title": "The team and the <em>council</em>",
   "constitution.art5.clause1":
-    "Operational decisions are made by <strong>rotating circles</strong>: small standing committees of 3–7 members each, with 12-month maximum terms.",
+    "Day-to-day running, moderation included, is done by the volunteer team.",
   "constitution.art5.clause2":
-    "Active circles as of v1.4: <em>moderation, grants, finance, hosting, editorial, technical.</em> The Assembly may add or dissolve circles by simple majority.",
-  "constitution.art5.clause3":
-    "No member may serve on more than two circles simultaneously, and no circle may have more than half its members from any single calendar-year cohort.",
+    "An advisory council is <strong>being appointed.</strong> Its seats appear on the Governance page once they are filled. Standing groups for areas such as grants or editorial work are still being drafted.",
 
   "constitution.art6.toc": "VI · Money",
   "constitution.art6.title": "Money",
   "constitution.art6.clause1":
-    "<strong>At least 90% of every euro received</strong> must be spent on community programmes, staff, and infrastructure, leaving overheads a ceiling of 10%. The target is 96% and has been met every year since 2024.",
+    "Rules on how money is received and spent, including how much must go to community programmes, are <strong>being drafted.</strong> This document sets no percentage yet.",
   "constitution.art6.clause2":
-    "The annual budget is approved by the Assembly. The finance circle may rebalance within categories during the year without re-approval, up to 10% per category.",
-  "constitution.art6.clause3":
-    "Annual accounts are <strong>published in full,</strong> in plain language, as part of the <a>Transparency Report</a>. Figures are self-reported by the volunteer team.",
-  "constitution.art6.clause4":
-    "The collective may not enter into debt arrangements above €10,000 without explicit Assembly approval.",
+    "Any finances the team publishes appear in the Finances section of the Governance page and in the Transparency Report. The figures are entered by the volunteer team.",
 
   "constitution.art7.toc": "VII · Speech",
   "constitution.art7.title": "Speech & <em>moderation</em>",
   "constitution.art7.clause1":
-    "The community is moderated according to the Code of Conduct, ratified separately and amendable by Assembly supermajority (60%).",
+    "The community is moderated according to the Code of Conduct.",
   "constitution.art7.clause2":
-    "<strong>QueerPulse does not moderate criticism of itself.</strong> Posts critical of QueerPulse, its decisions, or its organisers may not be removed under any clause of the Code of Conduct.",
+    "<strong>QueerPulse does not act on criticism of itself.</strong> The Code of Conduct lists criticism of the platform, including criticism of the people who run it, among the things moderators leave alone.",
   "constitution.art7.clause3":
-    "Moderation decisions are appealable <strong>once</strong>, to a moderator who was not part of the original decision. The share of decisions overturned on appeal is counted from the moderation record and published every quarter in the <a>Transparency Report</a>.",
+    "Moderation decisions can be appealed <strong>once,</strong> to a moderator who was not part of the original decision. The share of decisions overturned on appeal is counted from the moderation record and published in the Transparency Report.",
 
   "constitution.art8.toc": "VIII · Removal",
   "constitution.art8.title": "Removal",
   "constitution.art8.clause1":
-    "Members may be removed only through the moderation ladder specified in §04 of the Code of Conduct, and only by decision of the moderation circle, ratified by one additional independent moderator.",
+    "Members can be removed only through the enforcement ladder in §04 of the Code of Conduct.",
   "constitution.art8.clause2":
-    "Removal is appealable <strong>once</strong>, to a moderator who was not part of the original decision, within 14 days of effective date.",
+    "Removal can be appealed <strong>once,</strong> to a moderator who was not part of the original decision. The Code of Conduct sets the deadlines.",
   "constitution.art8.clause3":
-    "A removed member's data is deleted or anonymised per the Privacy Policy within 30 days. Case records are kept for 36 months in case of legal need.",
+    "A removed member's data is handled as the Privacy Policy describes.",
 
-  "constitution.art9.toc": "IX · Partners",
-  "constitution.art9.title": "Partners",
+  "constitution.art9.toc": "IX · Still being drafted",
+  "constitution.art9.title": "Still being <em>drafted</em>",
   "constitution.art9.clause1":
-    "The collective may enter into <strong>operational partnerships</strong> with other organisations under terms approved by the Assembly. New operational partnerships are capped at two per year.",
+    "Partnerships with other organisations, opening QueerPulse in other cities, winding the collective down and amending this document have no rules in this Constitution yet.",
   "constitution.art9.clause2":
-    "No partnership may grant a partner organisation access to member data beyond what is operationally necessary, and only with the affected member's explicit consent.",
-  "constitution.art9.clause3":
-    "Either side of any partnership may publicly dissent from the other's positions. <em>Coalition is not consensus.</em>",
-
-  "constitution.art10.toc": "X · Expansion",
-  "constitution.art10.title": "Expansion",
-  "constitution.art10.clause1":
-    "The collective may open in cities other than Lisbon only when all of these are true: (a) at least one moderator is in-country; (b) an operational local partner is signed; (c) a local legal review is complete; (d) eight to twelve founding members have committed to the soft-launch.",
-  "constitution.art10.clause2":
-    "Each new city ratifies its own local circle and operates under this Constitution, with city-specific bylaws as needed.",
-
-  "constitution.art11.toc": "XI · Dissolution",
-  "constitution.art11.title": "Dissolution",
-  "constitution.art11.clause1":
-    "The collective may be wound down only by Assembly resolution carrying a <strong>75% supermajority</strong> measured against the full active membership.",
-  "constitution.art11.clause2":
-    "On winding down, any remaining funds must be transferred to a registered LGBTQ+ rights organisation chosen by the dissolving Assembly. No funds may be distributed to individuals.",
-
-  "constitution.art12.toc": "XII · Amendments",
-  "constitution.art12.title": "Amendments",
-  "constitution.art12.clause1":
-    "This Constitution may be amended only by Assembly resolution requiring a 60% supermajority of votes cast.",
-  "constitution.art12.clause2":
-    "Amendments must be circulated for written comment to all members at least 30 days before the vote.",
-  "constitution.art12.clause3":
-    "Versioning is sequential (v1.0, v1.1…). The current version's full text is published at all times.",
+    "Everything above describes how QueerPulse works today. When a rule changes, this page changes with it.",
 
   "constitution.footer.version":
-    "<b>Constitution v1.4</b> · adopted 14 Nov 2025 · in force since 1 Jan 2026",
+    "<b>Working draft.</b> It changes as QueerPulse does.",
   "constitution.footer.readCodeOfConduct": "Read the Code of Conduct",
 
   // ── Resource Library — page/filter/card chrome. `RESOURCES` entries
@@ -12693,7 +12587,7 @@ export const marketing: Catalog = {
   "securityPolicy.commitment.body1":
     "Security researchers who report vulnerabilities in good faith will not face legal action from us. We will not contact your employer, ISP, or law enforcement unless you use your access to harm members. We believe security research makes everyone safer, and we're grateful when people take the time to report what they find.",
   "securityPolicy.commitment.body2":
-    "We ask that you give us reasonable time to fix an issue before disclosing it publicly. In return, we commit to acknowledging your report within 48 hours, keeping you updated on progress, and crediting you in our security acknowledgements if you'd like.",
+    "We ask that you give us reasonable time to fix an issue before disclosing it publicly. In return, we aim to reply to your report as soon as we can, keep you updated on progress, and credit you in our security acknowledgements if you'd like.",
 
   "securityPolicy.scope.eyebrow": "Scope",
   "securityPolicy.scope.title": "What's <em>in scope.</em>",
@@ -12712,7 +12606,7 @@ export const marketing: Catalog = {
   "securityPolicy.scope.out.3": "Physical attacks against infrastructure",
   "securityPolicy.scope.out.4": "Spam or rate-limiting bypass",
   "securityPolicy.scope.out.5":
-    "Third-party infrastructure (Hetzner, Postmark, Backblaze)",
+    "Infrastructure and services run by third parties (report those to the provider)",
   "securityPolicy.scope.out.6": "Clickjacking on non-sensitive pages",
   "securityPolicy.scope.out.7": "Missing security headers (report only)",
 
@@ -12721,21 +12615,20 @@ export const marketing: Catalog = {
   "securityPolicy.process.title": "What happens <em>after you report.</em>",
   "securityPolicy.process.step1.title": "Acknowledgement",
   "securityPolicy.process.step1.text":
-    "We'll confirm receipt within 48 hours and let you know we're looking at it. We'll assign a reference number so we can track it together.",
-  "securityPolicy.process.step1.note": "Target: 48 hours",
+    "We'll confirm receipt and let you know we're looking at it.",
+  "securityPolicy.process.step1.note": "We aim to reply as soon as we can",
   "securityPolicy.process.step2.title": "Assessment",
   "securityPolicy.process.step2.text":
     "We'll investigate and assess the severity. We'll keep you updated and may ask follow-up questions. If we can't reproduce it, we'll tell you why.",
-  "securityPolicy.process.step2.note": "Target: 5 working days",
+  "securityPolicy.process.step2.note": "Timing depends on the report",
   "securityPolicy.process.step3.title": "Fix",
   "securityPolicy.process.step3.text":
     "For confirmed vulnerabilities, we'll fix and deploy a patch. The timeline depends on severity. Critical issues are treated as emergencies.",
-  "securityPolicy.process.step3.note":
-    "Critical: <72h · High: <7 days · Medium/Low: next release",
+  "securityPolicy.process.step3.note": "The most severe issues come first",
   "securityPolicy.process.step4.title": "Disclosure",
   "securityPolicy.process.step4.text":
     "We'll coordinate a disclosure timeline with you. We'll credit you in our security acknowledgements unless you prefer anonymity.",
-  "securityPolicy.process.step4.note": "Default: 90-day coordinated disclosure",
+  "securityPolicy.process.step4.note": "Timeline agreed with you",
 
   "securityPolicy.ack.eyebrow": "Acknowledgements",
   "securityPolicy.ack.title": "Security <em>researchers</em> who've helped.",

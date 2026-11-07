@@ -1,22 +1,22 @@
 import type { IconType } from "react-icons";
-import { FiEyeOff, FiLock, FiSlash, FiFeather } from "react-icons/fi";
+import { FiEyeOff, FiLock, FiBellOff, FiFeather } from "react-icons/fi";
 
 export const PRIVACY: { icon: IconType; titleKey: string; bodyKey: string }[] =
   [
     {
       icon: FiEyeOff,
-      titleKey: "community:comingOut.privacy.invisible.title",
-      bodyKey: "community:comingOut.privacy.invisible.body",
+      titleKey: "community:comingOut.privacy.hidden.title",
+      bodyKey: "community:comingOut.privacy.hidden.body",
     },
     {
       icon: FiLock,
-      titleKey: "community:comingOut.privacy.noList.title",
-      bodyKey: "community:comingOut.privacy.noList.body",
+      titleKey: "community:comingOut.privacy.offProfile.title",
+      bodyKey: "community:comingOut.privacy.offProfile.body",
     },
     {
-      icon: FiSlash,
-      titleKey: "community:comingOut.privacy.confidentiality.title",
-      bodyKey: "community:comingOut.privacy.confidentiality.body",
+      icon: FiBellOff,
+      titleKey: "community:comingOut.privacy.silentDecline.title",
+      bodyKey: "community:comingOut.privacy.silentDecline.body",
     },
     {
       icon: FiFeather,

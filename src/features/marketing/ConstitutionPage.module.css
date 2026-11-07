@@ -15,26 +15,6 @@
   color: var(--text-strong);
   font-weight: 600;
 }
-.dek em {
-  font-style: italic;
-  color: var(--accent-ink);
-}
-.dek a {
-  color: var(--text-strong);
-  font-weight: 700;
-  text-decoration: none;
-}
-.meta {
-  font-size: var(--text-13);
-  color: var(--ink-40);
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(var(--line-rgb), 0.1);
-}
-.meta b {
-  color: var(--ink-60);
-  font-weight: 600;
-}
 
 .toc {
   background: var(--paper);
@@ -129,11 +109,6 @@
   color: var(--text-strong);
   font-weight: 600;
 }
-.clause a {
-  color: var(--text-strong);
-  font-weight: 600;
-  text-decoration: none;
-}
 .num {
   display: inline-block;
   font-family: var(--sans);
@@ -146,21 +121,6 @@
   border-radius: var(--radius-5);
   margin-right: 8px;
   vertical-align: 2px;
-}
-.quote {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-style: italic;
-  font-size: var(--text-20);
-  color: var(--text-strong);
-  line-height: 1.55;
-  border-left: 3px solid var(--accent);
-  padding: 6px 0 6px 22px;
-  margin: 24px 0 28px;
-  max-width: 38ch;
-}
-.quote em {
-  color: var(--accent-ink);
 }
 .version {
   padding: 40px 28px var(--section-y-80);

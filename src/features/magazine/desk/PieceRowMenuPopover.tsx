@@ -6,9 +6,15 @@ import {
   type RefObject,
 } from "react";
 import { createPortal } from "react-dom";
+import { usePresence } from "motion/react";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { usePieceRowMenuPlacement } from "./usePieceRowMenuPlacement";
 import styles from "./PieceRowMenu.module.css";
 import type { PieceRowMenuItem } from "./pieceRowMenuItems";
+
+/** Longest the exit may linger when `animationend` never arrives (a hidden
+ *  tab, a cancelled animation). Sits just past `--dur-fast`. */
+const EXIT_FALLBACK_MS = 400;
 
 export interface PieceRowMenuPopoverProps {
   items: PieceRowMenuItem[];
@@ -27,6 +33,10 @@ export interface PieceRowMenuPopoverProps {
 /**
  * The open menu itself, portaled to `<body>`. Mounted only while the menu is
  * open, so every open measures fresh (see `usePieceRowMenuPlacement`).
+ * `PieceRowMenu` renders it inside an `AnimatePresence`, which keeps it
+ * mounted through the close: it turns inert, plays the reverse of the open
+ * and hands removal back once the animation ends (at once under reduced
+ * motion).
  *
  * Implements the APG menu keyboard contract: focus enters the menu on open,
  * Arrow Up/Down rove, Home/End jump to the ends, Escape and Tab close and
@@ -40,15 +50,45 @@ export function PieceRowMenuPopover({
 }: PieceRowMenuPopoverProps) {
   const popoverRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const placement = usePieceRowMenuPlacement(triggerRef, popoverRef, () =>
-    onClose(false),
+  const [isPresent, safeToRemove] = usePresence();
+  const { reducedMotion } = useMotionPrefs();
+  // Read through a ref so a fresh function from motion never restarts the
+  // fallback timer below.
+  const safeToRemoveRef = useRef(safeToRemove);
+  useEffect(() => {
+    safeToRemoveRef.current = safeToRemove;
+  });
+  // The dismissal listeners stand down while the menu is exiting, so an
+  // outside press or scroll cannot close it a second time.
+  const placement = usePieceRowMenuPlacement(
+    triggerRef,
+    popoverRef,
+    () => onClose(false),
+    isPresent,
   );
 
-  // APG menu-button contract: focus moves into the menu when it opens. Waits
-  // for the measurement so focus never lands on an unpositioned element.
+  // Removal waits for the exit animation (`onAnimationEnd` below); this
+  // covers an animation that never reports back, and reduced motion, which
+  // has none to wait for.
   useEffect(() => {
-    if (placement) itemRefs.current[0]?.focus();
-  }, [placement]);
+    if (isPresent) return;
+    if (reducedMotion) {
+      safeToRemoveRef.current?.();
+      return;
+    }
+    const timeoutId = window.setTimeout(
+      () => safeToRemoveRef.current?.(),
+      EXIT_FALLBACK_MS,
+    );
+    return () => window.clearTimeout(timeoutId);
+  }, [isPresent, reducedMotion]);
+
+  // APG menu-button contract: focus moves into the menu when it opens. Waits
+  // for the measurement so focus never lands on an unpositioned element, and
+  // runs again when a re-open reclaims a menu that was still exiting.
+  useEffect(() => {
+    if (placement && isPresent) itemRefs.current[0]?.focus();
+  }, [placement, isPresent]);
 
   function moveTo(index: number): void {
     itemRefs.current[(index + items.length) % items.length]?.focus();
@@ -94,7 +134,8 @@ export function PieceRowMenuPopover({
   return createPortal(
     <div
       ref={popoverRef}
-      className={styles.popover}
+      className={isPresent ? styles.popover : styles.popoverClosing}
+      inert={!isPresent}
       role="menu"
       tabIndex={-1}
       aria-label={label}
@@ -107,6 +148,11 @@ export function PieceRowMenuPopover({
         visibility: placement ? "visible" : "hidden",
       }}
       onKeyDown={handleKeyDown}
+      onAnimationEnd={(event) => {
+        if (!isPresent && event.target === event.currentTarget) {
+          safeToRemoveRef.current?.();
+        }
+      }}
     >
       {items.map((item, index) => {
         const Icon = item.icon;

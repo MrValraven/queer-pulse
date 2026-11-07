@@ -44,7 +44,7 @@ function lastSegment(fullKey: string): string {
  *  {@link applyOverviewEdits}). Imported on demand so the mock never ships
  *  in the live bundle. */
 async function buildDemoAdminOverview(): Promise<AdminOverviewResponseDTO> {
-  const { COUNCIL, DECISIONS, HEALTH, PRINCIPLES, STEPS } =
+  const { COUNCIL, HEALTH, PRINCIPLES, STEPS } =
     await import("../../governance/governance.data");
 
   const emptyMeta = { editor: null, editedAt: null };
@@ -90,9 +90,7 @@ async function buildDemoAdminOverview(): Promise<AdminOverviewResponseDTO> {
       key: keyBeforeSuffix(principle.titleKey),
       icon: iconKeyFor(principle.icon),
     })),
-    decisions: DECISIONS.map((decision) => ({
-      key: keyBeforeSuffix(decision.leadKey),
-    })),
+    decisions: [],
     meta: {
       health: emptyMeta,
       moderationSteps: emptyMeta,

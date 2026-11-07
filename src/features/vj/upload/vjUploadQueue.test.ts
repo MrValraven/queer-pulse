@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  isVjUploadActive,
   nextVjUploadStarts,
   reduceVjUploadQueue,
   vjUploadCapacityCodesOf,
@@ -21,6 +22,7 @@ function uploadRow(
     failure: null,
     clipId: null,
     retryCount: 0,
+    previewFailure: null,
   };
 }
 
@@ -147,6 +149,118 @@ describe("vjUploadQueue", () => {
       rowId: "row-2",
     });
     expect(rows.map((row) => row.rowId)).toEqual(["row-1", "row-3", "row-4"]);
+  });
+});
+
+describe("vjUploadQueue preview step", () => {
+  it("Skip preview ends a previewing row as done", () => {
+    let rows = startRows(fourQueuedRows(), ["row-1"]);
+    rows = reduceVjUploadQueue(rows, {
+      kind: "stage",
+      rowId: "row-1",
+      stage: "previewing",
+      percent: 100,
+      clipId: "clip-1",
+    });
+    rows = reduceVjUploadQueue(rows, { kind: "cancel", rowId: "row-1" });
+    expect(rows[0]).toMatchObject({
+      stage: "done",
+      percent: 100,
+      clipId: "clip-1",
+      previewFailure: null,
+    });
+    // The aborted preview run settling late leaves the row done and clean.
+    rows = reduceVjUploadQueue(rows, {
+      kind: "previewFailed",
+      rowId: "row-1",
+      failure: new Error("VJ_PREVIEW_FAILED"),
+    });
+    expect(rows[0]?.previewFailure).toBeNull();
+  });
+
+  it("a previewing row holds an upload slot", () => {
+    let rows = startRows(fourQueuedRows(), ["row-1", "row-2"]);
+    rows = reduceVjUploadQueue(rows, {
+      kind: "stage",
+      rowId: "row-1",
+      stage: "previewing",
+      clipId: "clip-1",
+    });
+    expect(isVjUploadActive(rows[0] as VjUploadRow)).toBe(true);
+    expect(nextVjUploadStarts(rows)).toEqual([]);
+    rows = reduceVjUploadQueue(rows, {
+      kind: "done",
+      rowId: "row-1",
+      clipId: "clip-1",
+    });
+    expect(nextVjUploadStarts(rows)).toEqual(["row-3"]);
+  });
+
+  it("a preview failure stays on a done row", () => {
+    let rows = startRows(fourQueuedRows(), ["row-1"]);
+    rows = reduceVjUploadQueue(rows, {
+      kind: "stage",
+      rowId: "row-1",
+      stage: "previewing",
+      clipId: "clip-1",
+    });
+    const previewFailure = new Error("VJ_PREVIEW_UNSUPPORTED");
+    rows = reduceVjUploadQueue(rows, {
+      kind: "previewFailed",
+      rowId: "row-1",
+      failure: previewFailure,
+    });
+    rows = reduceVjUploadQueue(rows, {
+      kind: "done",
+      rowId: "row-1",
+      clipId: "clip-1",
+    });
+    expect(rows[0]).toMatchObject({
+      stage: "done",
+      percent: 100,
+      clipId: "clip-1",
+      failure: null,
+    });
+    expect(rows[0]?.previewFailure).toBe(previewFailure);
+  });
+
+  it("retry clears a preview failure", () => {
+    const failedRow: VjUploadRow = {
+      ...uploadRow("row-1", "failed"),
+      failure: new Error("network"),
+      previewFailure: new Error("VJ_PREVIEW_FAILED"),
+    };
+    const rows = reduceVjUploadQueue([failedRow], {
+      kind: "retry",
+      rowId: "row-1",
+    });
+    expect(rows[0]).toMatchObject({
+      stage: "queued",
+      failure: null,
+      previewFailure: null,
+    });
+    const addedRows = reduceVjUploadQueue([], {
+      kind: "add",
+      rows: [{ ...uploadRow("row-2"), previewFailure: new Error("stale") }],
+    });
+    expect(addedRows[0]?.previewFailure).toBeNull();
+  });
+
+  it("does not count a previewing row's saved clip against the caps again", () => {
+    const previewingRow = {
+      ...uploadRow("row-1", "previewing"),
+      packId: "pack-1",
+      clipId: "clip-1",
+    };
+    expect(
+      vjUploadCapacityCodesOf({
+        fileCount: 1,
+        packId: "pack-1",
+        packClipCount: 199,
+        libraryClipCount: 10,
+        rows: [previewingRow],
+      }),
+    ).toEqual([null]);
   });
 });
 

@@ -155,38 +155,38 @@ export const resources: Catalog = {
   "communityPrivacy.meta.title":
     "QueerPulse privacy: what's visible, and to whom",
   "communityPrivacy.meta.description":
-    "How visibility works on QueerPulse by default: what shows on your public profile, inside the community, and to the moderation team, and how to change it.",
-  "communityPrivacy.hero.eyebrow": "Coming Out · Privacy",
-  "communityPrivacy.hero.title": "You control <em>what's visible.</em>",
+    "What a private community hides from people outside it, what its members can see, and what stays off your profile.",
+  "communityPrivacy.hero.eyebrow": "Communities · Privacy",
+  "communityPrivacy.hero.title": "Privacy in <em>communities.</em>",
   "communityPrivacy.hero.lead":
-    "This space runs on reduced visibility by default. Here's exactly what shows where, on your public profile, inside the community, and to the mod team, so you can be here on your own terms.",
+    "A private community stays hidden from people who are not in it. Here is what shows on your profile, inside a community and to people outside it, so you can decide where to join and what to share.",
   "communityPrivacy.hero.anchor.tiers": "What shows where",
   "communityPrivacy.hero.anchor.controls": "Your controls",
 
   "communityPrivacy.tiers.title": "What shows <em>where</em>",
   "communityPrivacy.tiers.lead":
-    "Three layers, from fully public to mod-only. Most of this space lives in the bottom two.",
-  "communityPrivacy.tier.public.title": "On your public profile",
+    "Three places to look: your profile, the inside of a community, and the outside.",
+  "communityPrivacy.tier.public.title": "On your profile",
   "communityPrivacy.tier.public.body":
-    "Almost nothing from a low-visibility space appears here. Your membership of the coming-out space is never shown publicly, and nothing you post inside it is attached to your profile.",
-  "communityPrivacy.tier.community.title": "Inside the community",
+    "Your profile lists only the communities you choose to pin, and a private community cannot be pinned. Joining or posting in a community that is not public adds nothing to your profile activity.",
+  "communityPrivacy.tier.community.title": "Inside a community",
   "communityPrivacy.tier.community.body":
-    "The member list is not shown to other members unless you choose to connect. You can read, react, and post without anyone being able to browse who else is here.",
-  "communityPrivacy.tier.modTeam.title": "Only the mod team",
-  "communityPrivacy.tier.modTeam.body":
-    "Mods see what they need to keep the space safe, meaning reports and join requests, and nothing more. They never see your wider QueerPulse activity, and confidentiality is the first rule they hold to.",
+    "Members can see who else belongs to the community, and posts in a community that is not public can be read by its members only. Nothing stops someone from repeating what they read, so share only what you are comfortable with.",
+  "communityPrivacy.tier.outside.title": "Outside a community",
+  "communityPrivacy.tier.outside.body":
+    "A private community does not appear in browse or search for anyone outside it, and joining is by invitation only. Other communities appear in browse with their access level, and the rest stays closed until you join. If you ask to join a community that reviews requests, its owners and moderators see your request.",
 
   "communityPrivacy.controls.title": "Your <em>controls</em>",
-  "communityPrivacy.howTo.default":
-    "Reduced visibility is the default in this space. You do not have to switch anything on to be protected.",
-  "communityPrivacy.howTo.settings":
-    "You control what is visible from your settings at any time: profile visibility, who can find you, and whether your communities are listed.",
+  "communityPrivacy.howTo.decline":
+    "Declining an invitation to a community notifies nobody. If an invitation is withdrawn, you are not notified either.",
+  "communityPrivacy.howTo.pins":
+    "You choose which communities appear on your profile by pinning them, and you can unpin one at any time.",
   "communityPrivacy.howTo.leaving":
-    "Leaving a space removes you cleanly. Nothing lingers on your profile, and no notification announces it.",
+    "Leaving a community sends no notification, and the community drops off your profile.",
 
-  "communityPrivacy.outro.title": "Nothing here is <em>on your profile.</em>",
+  "communityPrivacy.outro.title": "Share what <em>feels right.</em>",
   "communityPrivacy.outro.sub":
-    "Adjust your visibility any time. It's all in your settings.",
+    "Your account settings hold the rest of your privacy choices.",
   "communityPrivacy.outro.cta": "Open privacy settings",
 
   // ── SafetyPage ──────────────────────────────────────────────────────────
@@ -375,21 +375,13 @@ export const resources: Catalog = {
   "queer101.talk.title": "Want to talk to <em>someone?</em>",
   "queer101.talk.body":
     "Exploring your identity can be joyful, confusing, or both at once. Sometimes it helps to talk with someone who's been through something similar, without advice and without pressure.",
-  "queer101.talk.peerSupport.title": "Peer support group",
-  "queer101.talk.peerSupport.desc":
-    "A moderated, confidential space within QueerPulse. Shared experience, no advice unless asked. Meets weekly.",
-  "queer101.talk.peerSupport.cta": "Join the group",
-  "queer101.talk.oneToOne.title": "One-to-one conversation",
-  "queer101.talk.oneToOne.desc":
-    "Request a conversation with a community member who's offered to talk to people newly exploring their identity.",
-  "queer101.talk.oneToOne.cta": "Find a conversation partner",
   "queer101.talk.therapy.title": "Queer-affirming therapy",
   "queer101.talk.therapy.desc":
-    "A directory of therapists in Lisbon who specialise in LGBTQ+ clients, compiled and reviewed by the community.",
+    "A directory of therapists in Lisbon who have a QueerPulse profile, with their languages and specialisms.",
   "queer101.talk.therapy.cta": "Find a therapist",
   "queer101.talk.askAnon.title": "Ask anonymously",
   "queer101.talk.askAnon.desc":
-    "Submit a question anonymously to the community forum. Answered by members of the community, one at a time.",
+    "Post a question in the community Forum without your name on it. Other members can reply.",
   "queer101.talk.askAnon.cta": "Ask the forum",
 
   "queer101.outro.title": "You're welcome <em>here.</em>",
@@ -553,7 +545,7 @@ export const resources: Catalog = {
   "mentalHealth.therapists.title":
     "Queer-affirming <em>therapists in Lisbon</em>",
   "mentalHealth.therapists.lead":
-    "Reviewed and recommended by community members. Every therapist here has been verified as genuinely queer-affirming, with experience of queer lives, identities, and the specific pressures of being queer and an expat in Lisbon.",
+    "Therapists in Lisbon who have a QueerPulse profile. Each profile lists the languages they work in, their specialisms, and whether they are taking new clients.",
   "mentalHealth.therapists.filterLabel": "Filter",
   "mentalHealth.therapists.allLanguages": "All languages",
   "mentalHealth.therapists.accepting": "Accepting",
@@ -562,9 +554,9 @@ export const resources: Catalog = {
   "mentalHealth.therapists.viewProfileAriaLabel": "View {name}'s profile",
   "mentalHealth.therapists.viewProfileCta": "View profile",
   "mentalHealth.therapists.comingSoon.title":
-    "The directory is <em>almost here.</em>",
+    "No therapist profiles <em>yet.</em>",
   "mentalHealth.therapists.comingSoon.body":
-    "We're verifying queer-affirming therapists in Lisbon before they go live here, so every profile is one you can trust. For now it's resting. Turn on <b>{toggleName}</b> to explore the demo.",
+    "No therapist has a QueerPulse profile here yet. Turn on <b>{toggleName}</b> to explore the demo.",
 
   "mentalHealth.experiences.title": "Things the community <em>has felt</em>",
   "mentalHealth.experiences.lead":
@@ -589,7 +581,7 @@ export const resources: Catalog = {
     "Moving to another country often means physical distance from family, chosen or biological. For queer people whose family relationships are complicated or conditional, this distance can be both a relief and its own kind of grief. Both are real at the same time.",
   "mentalHealth.experience.financial.title": "Financial anxiety",
   "mentalHealth.experience.financial.text":
-    "Lisbon's rising cost of living affects queer expats acutely. Housing insecurity, visa costs, and the pressure to perform a certain kind of queer expat life are all real stressors. The community talks about money honestly, and the forum's economics thread is a good start.",
+    "Lisbon's rising cost of living affects queer expats acutely. Housing insecurity, visa costs, and the pressure to perform a certain kind of queer expat life are all real stressors. You can ask about money in the Forum.",
 
   "mentalHealth.sns.title": "Accessing mental health <em>through the SNS</em>",
   "mentalHealth.sns.lead":
@@ -605,18 +597,17 @@ export const resources: Catalog = {
     "SNS therapists and psychiatrists typically work in Portuguese. If your Portuguese is limited, private therapy in English is more practical for most expats. Online platforms (BetterHelp, Zenklub) offer English-speaking therapists at lower cost than Lisbon private rates.",
   "mentalHealth.sns.step4.title": "Private rates in Lisbon",
   "mentalHealth.sns.step4.text":
-    "Private therapy ranges from €50–120 per session. Some therapists offer sliding scale fees, so it's always worth asking. Several therapists in our directory offer community member rates for QueerPulse members.",
-  "mentalHealth.sns.peer.title": "Peer support within <em>the community</em>",
+    "Private therapy ranges from €50–120 per session. Some therapists offer sliding scale fees, so it's always worth asking.",
+  "mentalHealth.sns.peer.title": "Talking with <em>other members</em>",
   "mentalHealth.sns.peer.body":
-    "Sometimes what helps is someone who's been where you are. There's a quiet peer support space in the Forum for members going through a hard time. No professional facilitation, no fixing, just people who understand, listening. Prefer one to one? Ask to talk with a peer mentor.",
-  "mentalHealth.sns.peer.joinCta": "Open the space",
-  "mentalHealth.sns.peer.mentorCta": "Find a peer mentor",
+    "Sometimes what helps is someone who has been where you are. In the Forum you can post a question or reply to another member, and a thread can be posted anonymously. It is a conversation between members and has no professional facilitation.",
+  "mentalHealth.sns.peer.joinCta": "Open the Forum",
 
   // ── WellbeingPage (+ WellbeingSections.tsx + wellbeing.data.ts) ──────────
   "wellbeing.meta.title":
     "LGBTQ+ wellbeing in Lisbon: therapists, peers, crisis help",
   "wellbeing.meta.description":
-    "Wellbeing resources built by and for the community: a vetted therapist directory, peer support, crisis contacts, and harm reduction, all in one place.",
+    "Wellbeing resources for the community: a therapist directory, the Forum, crisis contacts, and harm reduction, all in one place.",
 
   "wellbeing.hero.eyebrow": "Wellbeing",
   "wellbeing.hero.title": "A space that <em>looks after you.</em>",
@@ -641,18 +632,15 @@ export const resources: Catalog = {
 
   "wellbeing.therapists.title": "Queer-affirming <em>therapists in Lisbon</em>",
   "wellbeing.therapists.lead":
-    "Vetted by community members. Each therapist listed has been recommended by at least two QueerPulse members. We do not charge listing fees. Want to add someone? <a>Get in touch.</a>",
+    "Therapists who have a QueerPulse profile, with the languages they work in and whether they are taking new clients. Want to add someone? <a>Get in touch.</a>",
   "wellbeing.therapists.applyPrompt": "Are you a queer-affirming therapist?",
   "wellbeing.therapists.applyCta": "Apply to be listed",
 
   "wellbeing.peer.title": "You don't have to <em>hold it alone.</em>",
   "wellbeing.peer.body":
-    "A moderated peer support space inside the Forum, for members going through difficult times. No advice unless asked. No fixing. Just people who understand, listening.",
-  "wellbeing.peer.joinCta": "Join the group",
+    "The Forum is where members write to each other, including when things are hard. You can post a question or reply to someone else, and a thread can be posted anonymously.",
+  "wellbeing.peer.joinCta": "Open the Forum",
   "wellbeing.peer.crisisCta": "In crisis right now?",
-  "wellbeing.peer.stat.members.label": "members in the support space",
-  "wellbeing.peer.stat.moderation.label": "guaranteed moderation response",
-  "wellbeing.peer.stat.confidential.label": "confidential within the group",
 
   "wellbeing.crisisSection.title": "Crisis & <em>emergency resources</em>",
   "wellbeing.crisisSection.lead":
@@ -692,12 +680,12 @@ export const resources: Catalog = {
   "transHub.meta.title":
     "Trans & non-binary hub: healthcare, legal, and community",
   "transHub.meta.description":
-    "A dedicated hub for trans and non-binary members: healthcare navigation, legal and admin guides, peer support, and community, built specifically for you.",
+    "A hub for trans and non-binary people: healthcare navigation, legal and admin guides, and a way to find peer support in the Forum.",
 
   "transHub.hero.eyebrow": "Trans & Non-Binary Hub",
   "transHub.hero.title": "A dedicated space, <em>not an afterthought.</em>",
   "transHub.hero.lead":
-    "Healthcare navigation, legal guides, peer support, and community, built specifically for trans and non-binary members. You don't have to figure this out alone.",
+    "Healthcare navigation, legal guides, and peer support, written for trans and non-binary people. You don't have to figure this out alone.",
   "transHub.hero.anchor.healthcare": "Healthcare",
   "transHub.hero.anchor.legal": "Legal & admin",
   "transHub.hero.anchor.resources": "Resources",
@@ -708,19 +696,19 @@ export const resources: Catalog = {
     "Trans healthcare in Portugal has improved significantly since 2018. The SNS now covers hormone therapy and gender-affirming surgeries. Navigating it is still complex, so here's how it works.",
   "transHub.healthcare.step1.title": "Start with your GP (Médico de Família)",
   "transHub.healthcare.step1.body":
-    "Request a referral to an endocrinologist or the nearest gender clinic. Your GP may not be familiar with the process, so bring our GP referral guide to help. SNS referrals typically take 6–18 months.",
+    "Request a referral to an endocrinologist or the nearest gender clinic. Your GP may not be familiar with the process, so it can help to bring a written summary of what you are asking for. SNS referrals typically take 6–18 months.",
   "transHub.healthcare.step2.title": "Gender clinics in Lisbon",
   "transHub.healthcare.step2.body":
-    "Hospital de Santa Maria and Hospital Curry Cabral both have gender medicine units. Private options include the Clínica de Identidade de Género for faster access. We have member reviews of all three.",
+    "Hospital de Santa Maria and Hospital Curry Cabral both have gender medicine units. Private options include the Clínica de Identidade de Género for faster access.",
   "transHub.healthcare.step3.title": "HRT access",
   "transHub.healthcare.step3.body":
     "Hormone therapy is available via the SNS once you have an endocrinology referral. Many members use the informed consent model at private clinics as a faster first step, then transition to SNS for ongoing care.",
   "transHub.healthcare.step4.title": "Surgical procedures",
   "transHub.healthcare.step4.body":
-    "Gender-affirming surgeries covered by the SNS include vaginoplasty, phalloplasty, mastectomy, and others. Waiting lists are long (1–3+ years). <a>Jonas Ferreira</a> has helped many members navigate this.",
+    "Gender-affirming surgeries covered by the SNS include vaginoplasty, phalloplasty, mastectomy, and others. Waiting lists are long (1–3+ years).",
   "transHub.healthcare.step5.title": "If you're facing barriers",
   "transHub.healthcare.step5.body":
-    "If a provider refuses treatment or makes the process hostile, document everything. Contact <a>our legal resources</a> or ILGA Portugal. You have rights, and this community can help you enforce them.",
+    "If a provider refuses treatment or makes the process hostile, document everything. Contact <a>our legal resources</a> or ILGA Portugal. You have rights, and ILGA Portugal can help you enforce them.",
 
   "transHub.legal.title": "Legal & <em>administrative</em>",
   "transHub.legal.lead":
@@ -730,39 +718,28 @@ export const resources: Catalog = {
     "Since 2018, you can change your legal name and gender marker at any civil registry office without medical documentation. You need only a declaration, with no psychiatric evaluation required. The fee is approximately €200.",
   "transHub.legal.step2.title": "Updating your documents",
   "transHub.legal.step2.body":
-    "Once your Cartão de Cidadão is updated, other documents follow. Your employer, bank, and health records can all be updated with the new ID. We have a checklist of everything that needs updating and in which order.",
+    "Once your Cartão de Cidadão is updated, other documents follow. Your employer, bank, and health records can all be updated with the new ID.",
   "transHub.legal.step3.title": "Non-binary legal recognition",
   "transHub.legal.step3.body":
-    "Portugal does not currently have a third gender option on official documents. This is an area of ongoing advocacy: ILGA Portugal and Rede ex aequo are working on it. We have resources if this affects you.",
+    "Portugal does not currently have a third gender option on official documents. This is an area of ongoing advocacy: ILGA Portugal and Rede ex aequo are working on it.",
 
   "transHub.resources.title": "Resources & <em>guides</em>",
   "transHub.resources.lead":
-    "Maintained by trans and non-binary members. Practical, current, and free.",
+    "Guides on QueerPulse for trans and non-binary people in Portugal.",
   "transHub.resources.openCta": "Open",
   "transHub.resources.cat.guide": "Guide",
-  "transHub.resources.cat.checklist": "Checklist",
-  "transHub.resources.cat.directory": "Directory",
   "transHub.resources.cat.peerSupport": "Peer support",
-  "transHub.resource.snsGuide.title": "The SNS trans healthcare guide",
+  "transHub.resource.snsGuide.title": "Trans healthcare, step by step",
   "transHub.resource.snsGuide.desc":
-    "A members-maintained walkthrough of the public system: referrals, clinics, what to bring, and how long each step really takes.",
-  "transHub.resource.docChecklist.title": "Document-change checklist",
-  "transHub.resource.docChecklist.desc":
-    "Every document to update after a legal name change, in the right order: CC, NIF, bank, employer, health records.",
-  "transHub.resource.clinicians.title": "Affirming clinicians",
-  "transHub.resource.clinicians.desc":
-    "Endocrinologists, surgeons, and GPs reviewed by trans members. No listing fees, no algorithm, just lived experience.",
-  "transHub.resource.peerCircle.title": "Trans & NB peer circle",
+    "A walkthrough of the public and private routes to hormones and surgery in Portugal, with the usual waiting times and costs for each step.",
+  "transHub.resource.peerCircle.title": "Peer support in the Forum",
   "transHub.resource.peerCircle.desc":
-    "A moderated space to share what worked, vent what didn't, and find someone a few steps ahead of you on the same path.",
+    "How to ask other members for support, how to carry on in direct messages, and how to answer someone else's question.",
 
   "transHub.community.title": "A community that <em>has your back.</em>",
   "transHub.community.body":
-    "The Trans & Non-Binary Hub is people as much as resources. Members share clinic reviews, celebrate milestones, and turn up for each other when the system doesn't.",
-  "transHub.community.joinCta": "Join the hub",
-  "transHub.community.stat.members.label": "members in the hub",
-  "transHub.community.stat.reviews.label": "clinician reviews",
-  "transHub.community.stat.lawYear.label": "self-ID law in effect",
+    "The Trans & Non-Binary Hub is people as much as resources. Members can ask each other questions in the Forum and join communities that fit them.",
+  "transHub.community.joinCta": "Browse communities",
 
   "transHub.outro.title": "You're seen <em>here.</em>",
   "transHub.outro.sub":
@@ -1709,22 +1686,19 @@ export const resources: Catalog = {
   "peerSupport.what.p1":
     "Peer support is not therapy and it is not advice. It is sitting with someone who has been where you are and does not need it explained. No clinical notes, no diagnosis, no goal you have to reach by the end.",
   "peerSupport.what.p2":
-    "In the Hub, peer support runs two ways: the open circle where the group shows up together, and one-to-one pairing when you want a single person to talk to over time. You choose which, and you can switch whenever.",
+    "On QueerPulse, peer support happens between members: in the Forum, where people share what worked for them, and in direct messages with members you are connected to. You choose how much to share, and you can step back whenever you like.",
   "peerSupport.how.title": "How it <em>works</em>",
   "peerSupport.how.lead":
-    "Four steps, none of them binding. You stay in control of every one.",
-  "peerSupport.step.01.title": "Tell us what you need",
+    "Three steps, none of them binding. You stay in control of every one.",
+  "peerSupport.step.01.title": "Ask in the Forum",
   "peerSupport.step.01.body":
-    "Post in the Hub or message a mod. You can be as specific or as vague as you like: 'I just started HRT and want someone who gets it' is plenty to go on.",
-  "peerSupport.step.02.title": "We pair you, gently",
+    "Write what you are looking for. You can be as specific or as vague as you like: 'I just started HRT and want someone who gets it' is plenty to go on. Forum threads can be read by everyone in the Forum under your name, and the categories Health & Wellbeing, Housing, Trans & Non-Binary, Legal & Migration, Love & Relationships and Funding & Grants let you post without your name.",
+  "peerSupport.step.02.title": "Carry on where it feels right",
   "peerSupport.step.02.body":
-    "A mod suggests one or two peers whose experience overlaps with yours. Nothing is automatic and nobody sees your request but the mod team. You say yes or not-yet.",
-  "peerSupport.step.03.title": "You set the shape",
+    "Other members can reply in the thread. If someone's words land, you can connect with them and keep talking in direct messages. There is no minimum commitment and no awkwardness in stopping.",
+  "peerSupport.step.03.title": "Answer someone else's question too",
   "peerSupport.step.03.body":
-    "Coffee, a walk, a voice note once a week, or the circle on Thursdays, whatever is sustainable for both of you. There is no minimum commitment and no awkwardness in stopping.",
-  "peerSupport.step.04.title": "You can become a peer too",
-  "peerSupport.step.04.body":
-    "Most people who are supported end up supporting someone else later. When you are ready, tell a mod. We run a short, no-pressure orientation on holding space and keeping confidentiality.",
+    "When you are ready, reply to a member who is where you once were. A few honest sentences from your own experience are what peer support is made of.",
   "peerSupport.outro.title": "You don't have to carry it <em>alone.</em>",
   "peerSupport.outro.sub":
     "The Hub is here, and so is the wider community forum.",
@@ -1803,39 +1777,39 @@ export const resources: Catalog = {
   "accessibleLisbon.outro.cta": "Find an event",
 
   // ── ArtCritGuidePage (+ artCritGuide.data.ts) ───────────────────────────
-  "artCritGuide.meta.title": "How Rainbow Arts crit sessions work",
+  "artCritGuide.meta.title": "How group art critiques work",
   "artCritGuide.meta.description":
-    "How Rainbow Arts group critiques work: the honest, kind, specific method, the four-step flow, and examples of useful versus unhelpful feedback.",
-  "artCritGuide.hero.eyebrow": "Rainbow Arts",
-  "artCritGuide.hero.title": "How our crits <em>work.</em>",
+    "A practical method for group critiques: honest, kind and specific feedback, a four-step session flow, and examples of useful and unhelpful comments.",
+  "artCritGuide.hero.eyebrow": "Art Crits",
+  "artCritGuide.hero.title": "How a good crit <em>works.</em>",
   "artCritGuide.hero.lead":
-    "Honest, kind, specific, in that order. Here's the whole method, so your first open crit feels less like a test and more like the room being on your side.",
+    "Honest, kind, specific, in that order. Here is a method you can use whether you are bringing work to a crit or hosting one.",
   "artCritGuide.hero.anchor.principle": "The principle",
   "artCritGuide.hero.anchor.flow": "How a session runs",
   "artCritGuide.hero.anchor.examples": "What to say",
 
   "artCritGuide.principle.title": "The <em>principle</em>",
   "artCritGuide.principle.body":
-    "Honest, kind, specific, in that order. Vague praise helps no one and cruelty dressed as honesty is just cruelty. We critique the work in front of us, never the CV behind it and never the person who made it.",
+    "Honest, kind, specific, in that order. Vague praise helps no one, and cruelty dressed as honesty is still cruelty. Critique the work in front of you: what it does, what it asks, what it leaves open.",
 
   "artCritGuide.flow.title": "How a session <em>runs</em>",
-  "artCritGuide.flow.lead": "Arrival to coffee, in four moves.",
+  "artCritGuide.flow.lead": "From arrival to the last comment, in four moves.",
   "artCritGuide.flow.step1.title": "Arrive and settle",
   "artCritGuide.flow.step1.body":
-    "Coffee first. We start late on purpose so nobody is crit-ing before they have taken their coat off. Bring one work, finished or not.",
+    "Start with a drink and a few minutes to settle, so nobody critiques before they have taken their coat off. Each maker brings one work, finished or not.",
   "artCritGuide.flow.step2.title": "The maker frames it",
   "artCritGuide.flow.step2.body":
-    "You get two minutes to say what it is and, if you want, what you are stuck on. You can also say nothing and let the work speak. Both are allowed.",
-  "artCritGuide.flow.step3.title": "The room responds",
+    "The maker gets two minutes to say what the work is and, if they want, what they are stuck on. They can also say nothing and let the work speak. Both are fine.",
+  "artCritGuide.flow.step3.title": "The group responds",
   "artCritGuide.flow.step3.body":
-    "We go round. Specific observations, then questions, then suggestions if invited. We talk about what is on the wall, on its own terms.",
+    "Go round the group. Specific observations first, then questions, then suggestions if the maker invites them. Talk about what is on the wall, on its own terms.",
   "artCritGuide.flow.step4.title": "The maker keeps what fits",
   "artCritGuide.flow.step4.body":
-    "You are never obliged to agree. Take what is useful, leave the rest, and we move to the next work. Long table and food after.",
+    "The maker is not obliged to agree. Take what is useful, leave the rest, and move on to the next work.",
 
   "artCritGuide.examples.title": "What to <em>say</em>",
   "artCritGuide.examples.lead":
-    "Specific beats nice. Here's the difference, in the room's own words.",
+    "Specific beats nice. Here's the difference in practice.",
   "artCritGuide.examples.tryThis": "Try this",
   "artCritGuide.examples.avoid": "Avoid",
   "artCritGuide.example1.good":
@@ -1853,8 +1827,8 @@ export const resources: Catalog = {
 
   "artCritGuide.outro.title": "Bring <em>one work.</em>",
   "artCritGuide.outro.sub":
-    "Finished or not: half-finished is exactly what a crit is for. Find the next open crit on the board.",
-  "artCritGuide.outro.cta": "Find the next crit",
+    "Finished or not: half-finished is exactly what a crit is for. Look for an event near you in the events calendar.",
+  "artCritGuide.outro.cta": "Browse events",
 
   // ── ComingOutAtWorkPage (+ comingOutAtWork.data.ts) ─────────────────────
   // VOICES stay English: invented demo-only quotes (they never render in live).
@@ -1972,95 +1946,99 @@ export const resources: Catalog = {
   "disabilityHealthcare.outro.askCta": "Ask in the forum",
 
   // ── FirstMeetupGuidePage (+ firstMeetupGuide.data.ts) ───────────────────
-  "firstMeetupGuide.meta.title": "Your first QueerPulse meetup: what to expect",
+  "firstMeetupGuide.meta.title": "Your first community meetup: what to expect",
   "firstMeetupGuide.meta.description":
-    "What actually happens at a first in-person meetup, what 'no agenda' really means, and honest answers to the questions newcomers are too nervous to ask.",
+    "What tends to happen at a first in-person meetup, how to ease the nerves, and honest answers to the questions newcomers are too nervous to ask.",
   "firstMeetupGuide.hero.eyebrow": "Queer Social",
   "firstMeetupGuide.hero.title": "Your first meetup, <em>no pressure.</em>",
   "firstMeetupGuide.hero.lead":
-    "What to expect, what 'no agenda' actually means, and answers to the things you're too nervous to ask. Come alone, come anxious: you'll be looked after.",
+    "What to expect at a first meetup, and answers to the things you're too nervous to ask. Coming alone and coming anxious are both completely normal.",
   "firstMeetupGuide.hero.anchor.expect": "What to expect",
-  "firstMeetupGuide.hero.anchor.values": "Our values",
+  "firstMeetupGuide.hero.anchor.values": "Ground rules",
   "firstMeetupGuide.hero.anchor.faq": "Nervous questions",
 
   "firstMeetupGuide.expect.title": "What to <em>expect</em>",
   "firstMeetupGuide.expect.lead":
-    "The whole format, so none of it is a surprise.",
-  "firstMeetupGuide.expect1.title": "No agenda, no pitch",
+    "Every event has its own format, so here is what helps at most of them.",
+  "firstMeetupGuide.expect1.title": "Check the format first",
   "firstMeetupGuide.expect1.body":
-    "Nobody is going to ask what you do for work or try to recruit you for anything. The whole format is: show up, talk to whoever you end up next to, leave when you like.",
-  "firstMeetupGuide.expect2.title": "The book-swap table",
+    "Read the event page before you go: the time, the place, who is hosting and whether there is a plan for the evening. Knowing the format removes most of the surprises.",
+  "firstMeetupGuide.expect2.title": "Give your hands something to do",
   "firstMeetupGuide.expect2.body":
-    "There's usually a small pile of books on the table. Bring one, take one, or just use it as something to do with your hands for the first ten minutes. It works.",
+    "A drink, a book, or a small job like helping set up can ease the first ten minutes. Having something in your hands makes starting a conversation easier.",
   "firstMeetupGuide.expect3.title": "Come alone or bring someone",
   "firstMeetupGuide.expect3.body":
-    "Most people come alone the first time. You'll be looked after. If it helps to bring a friend, bring a friend. Both are completely normal.",
+    "Many people come alone the first time. If it helps to bring a friend, bring a friend. Both are completely normal.",
 
-  "firstMeetupGuide.values.title": 'What "no agenda" <em>means</em>',
+  "firstMeetupGuide.values.title": "Good <em>ground rules</em>",
   "firstMeetupGuide.values.lead":
-    "Four things we hold to, so the room stays easy for everyone in it.",
+    "Four ground rules that help any event stay easy for everyone at it.",
   "firstMeetupGuide.value1":
-    "You don't need to be out, or out in any particular way, to be here.",
+    "Nobody needs to be out, or out in any particular way, to be there.",
   "firstMeetupGuide.value2": "Ask before taking photos, always, of everyone.",
   "firstMeetupGuide.value3":
-    "We look after first-timers; we were all one once.",
+    "Look out for first-timers; everyone was one once.",
   "firstMeetupGuide.value4": "What's shared in person stays in person.",
 
   "firstMeetupGuide.faq.title": "The nervous <em>questions</em>",
   "firstMeetupGuide.faq1.q": "What if I don't know anyone?",
   "firstMeetupGuide.faq1.a":
-    "Nobody does, the first time. The host is there early specifically to catch people at the door and introduce you. Say you're new: it's the easiest sentence to say here.",
+    "Nobody does, the first time. Say you're new: it's the easiest sentence to say, and it usually starts a conversation.",
   "firstMeetupGuide.faq2.q": "What if I'm really nervous?",
   "firstMeetupGuide.faq2.a":
-    "Almost everyone is, and almost everyone almost turns around at the door. The people setting up tables this month did exactly that at their first one. It gets easy fast.",
+    "Many people are, and many almost turn around at the door. Arriving a little early, when it is quieter, can help. It gets easier fast.",
   "firstMeetupGuide.faq3.q": "How will I find the group?",
   "firstMeetupGuide.faq3.a":
-    "The host posts where they'll be and what they're wearing, usually at a specific entrance or lift at a set time, then everyone moves together. Check the event's pinned post.",
+    "Check the event page and any message from the host. They can say where they will be, such as a specific entrance, and at what time. If you can't find the group, message the host.",
   "firstMeetupGuide.faq4.q": "Do I have to stay the whole time?",
   "firstMeetupGuide.faq4.a":
     "No. Leave whenever you like, no explanation needed. Staying twenty minutes still counts as coming.",
 
   "firstMeetupGuide.outro.title": "Just <em>show up.</em>",
   "firstMeetupGuide.outro.sub":
-    "That's the whole entry requirement. The next meetup is on the board.",
-  "firstMeetupGuide.outro.cta": "Find the next meetup",
+    "That's the whole entry requirement. Browse the events calendar for something near you.",
+  "firstMeetupGuide.outro.cta": "Browse events",
 
   // ── GroupShowArchivePage (+ groupShowArchive.data.ts) ───────────────────
-  // SHOWS (title/when/venue/blurb) are an archival record of real community
-  // shows — kept English per the scope rule, same treatment as QTIPOC
-  // Archive and Organisations. Only the surrounding chrome is translated.
-  "groupShowArchive.meta.title": "Rainbow Arts: an archive of every group show",
+  // SHOWS (title/when/venue/blurb) are demo-only mock data and render in demo
+  // mode alone. Live mode shows the empty state below until real shows exist.
+  "groupShowArchive.meta.title": "Group show archive: a record of art shows",
   "groupShowArchive.meta.description":
-    "An archive of every Rainbow Arts group show, with dates, venues, and what was made, from the first pop-up to the most recent weekend residency.",
-  "groupShowArchive.hero.eyebrow": "Rainbow Arts · Archive",
-  "groupShowArchive.hero.title": "Everything we've <em>hung.</em>",
+    "A place to keep a record of group art shows: the title, when and where it hung, and who made the work.",
+  "groupShowArchive.hero.eyebrow": "Art · Archive",
+  "groupShowArchive.hero.title": "Shows worth <em>keeping.</em>",
   "groupShowArchive.hero.lead":
-    "The collective documents every show before we strike it. Here's the archive: tag yourself, grab anything with your work in it, and see what the room has made together.",
+    "A place to keep a record of group art shows: the title, when and where it hung, and who made the work.",
   "groupShowArchive.hero.anchor.shows": "The shows",
 
   "groupShowArchive.shows.title": "The <em>shows</em>",
-  "groupShowArchive.shows.lead":
-    "Most recent first. Full photo sets live in each album.",
+  "groupShowArchive.shows.lead": "Most recent first.",
+  "groupShowArchive.live.title": "No shows archived yet",
+  "groupShowArchive.live.body":
+    "Group shows will be listed here once they are recorded, with their dates, venues and credits.",
 
-  "groupShowArchive.outro.title":
-    "Documented <em>generously,</em> credited always.",
+  "groupShowArchive.outro.title": "Credit <em>all the work.</em>",
   "groupShowArchive.outro.sub":
-    "Shot the last show? Add your set to the archive so nobody's work disappears when the walls come down.",
-  "groupShowArchive.outro.cta": "See upcoming shows",
+    "A record of a show names everyone who made something for it.",
+  "groupShowArchive.outro.cta": "Browse events",
 
   // ── IngredientsMapPage (+ ingredientsMap.data.ts) ───────────────────────
-  // Spot names are shop names (proper nouns, untranslated); finds/origin/
-  // hours are chrome, translated.
+  // The spots, their finds/origin/hours and the neighbourhood anchors are
+  // demo-only mock data and render in demo mode alone. Live mode shows the
+  // empty state below until real shops exist.
   "ingredientsMap.meta.title": "Where to find ingredients from home in Lisbon",
   "ingredientsMap.meta.description":
-    "A community-mapped guide to Lisbon grocers, markets, and stalls carrying ingredients from home, organised by neighbourhood, from Mouraria to Marvila.",
+    "A neighbourhood-by-neighbourhood guide to finding ingredients from home in Lisbon's grocers, markets and stalls.",
   "ingredientsMap.hero.eyebrow": "Queer POC",
   "ingredientsMap.hero.title": "Ingredients from <em>home.</em>",
   "ingredientsMap.hero.lead":
-    "A living map of where to find the tastes of home in Lisbon, crowd-sourced by the group and organised by neighbourhood. Home is partly a flavour, and this is where to find it.",
+    "A map of where to find the tastes of home in Lisbon, organised by neighbourhood. Home is partly a flavour, and finding it in a new city is its own kind of belonging.",
 
   "ingredientsMap.intro":
-    "Thirty-four spots, fourteen countries, all crowd-sourced by the group. This map exists because home is partly a taste, and finding it in a new city is its own kind of belonging. Spot something missing? It is never too late to add yours.",
+    "This map exists because home is partly a taste, and finding it in a new city is its own kind of belonging. Know a shop, market or stall that belongs on it? Suggestions will be welcome once they open.",
+  "ingredientsMap.live.title": "No shops on the map yet",
+  "ingredientsMap.live.body":
+    "Grocers, markets and stalls will be listed here, neighbourhood by neighbourhood, once they have been added.",
 
   "ingredientsMap.hood.mourariaIntendente": "Mouraria & Intendente",
   "ingredientsMap.hood.anjosArroios": "Anjos & Arroios",
@@ -2091,14 +2069,14 @@ export const resources: Catalog = {
   "ingredientsMap.spot.asiaMarket.origin": "Vietnam · Korea · China",
   "ingredientsMap.spot.asiaMarket.hours": "Daily",
 
-  "ingredientsMap.missing.prompt": "Know a spot we're missing?",
+  "ingredientsMap.missing.prompt": "Know a spot that belongs on the map?",
   "ingredientsMap.missing.cta": "Add your spot",
   "ingredientsMap.missing.toast":
     "Added to the queue. A mod will pop it on the map. Obrigada!",
 
   "ingredientsMap.outro.title": "Joy is as <em>political</em> as solidarity.",
   "ingredientsMap.outro.sub":
-    "The map is one of the best things we've made together. Bring the rest of yourself to the group too.",
+    "Finding the taste of home is part of settling in. Bring your own to the conversation.",
   "ingredientsMap.outro.cta": "Join the conversation",
 
   // ── LgbtqAgingGuidePage (+ lgbtqAgingGuide.data.ts) ─────────────────────
@@ -2116,7 +2094,7 @@ export const resources: Catalog = {
 
   "lgbtqAgingGuide.topics.title": "The <em>essentials</em>",
   "lgbtqAgingGuide.topics.lead":
-    "Plain, practical, and written by the group that uses it. Recently translated into Portuguese.",
+    "Plain, practical guidance for finding your way through healthcare after 50.",
   "lgbtqAgingGuide.topic1.title": "Finding a GP who doesn't make it weird",
   "lgbtqAgingGuide.topic1.body":
     "You are allowed to ask a Centro de Saúde to note your pronouns and partner, and to switch GP if one is dismissive. Bring a written summary of your history so you are not explaining your life from scratch each visit.",
@@ -2128,7 +2106,7 @@ export const resources: Catalog = {
     "Ask any care facility directly about their experience with LGBTQ+ residents and same-sex couples. The good ones answer plainly; the answer itself tells you most of what you need to know.",
   "lgbtqAgingGuide.topic4.title": "Mental health in later life",
   "lgbtqAgingGuide.topic4.body":
-    "Isolation and a lifetime of guardedness take a toll. Affirming therapy exists at every age, and the elders group keeps a short list of practitioners who understand the particular history you carry.",
+    "Isolation and a lifetime of guardedness take a toll. Affirming therapy exists at every age: ask a practitioner directly about their experience with older LGBTQ+ people before you book.",
 
   "lgbtqAgingGuide.links.title": "Useful <em>links</em>",
   "lgbtqAgingGuide.link.ilga.label": "ILGA Portugal: services",
@@ -2148,80 +2126,81 @@ export const resources: Catalog = {
   "oralHistoryProject.meta.title":
     "LGBTQ+ oral history project in Lisbon: share your story",
   "oralHistoryProject.meta.description":
-    "QueerPulse is recording the lives of LGBTQ+ elders in Lisbon, voice-only if you prefer, no faces required, and entirely on your own terms.",
+    "QueerPulse is setting up an oral history project with LGBTQ+ elders in Lisbon: voice-only if you prefer, no faces required, entirely on your own terms. Sign-ups are not open yet.",
 
   "oralHistoryProject.hero.eyebrow": "Queer Elders · Oral History",
   "oralHistoryProject.hero.title": "Your story is <em>worth keeping.</em>",
   "oralHistoryProject.hero.lead":
-    "We're recording the lives of LGBTQ+ elders in Lisbon, voice-only if you like, no faces required, entirely on your terms. Here's what taking part actually looks like.",
+    "We are setting up an oral history project with LGBTQ+ elders in Lisbon: voice-only if you like, no faces required, entirely on your terms. Sign-ups are not open yet. Here is what we plan taking part to look like.",
   "oralHistoryProject.hero.anchor.about": "About the project",
   "oralHistoryProject.hero.anchor.how": "How to take part",
   "oralHistoryProject.hero.anchor.voices": "In their words",
 
   "oralHistoryProject.about.title": "About the <em>project</em>",
   "oralHistoryProject.about.body":
-    "We are recording the lives of LGBTQ+ elders in Lisbon before those stories are lost, the ordinary ones especially. Your story does not have to be dramatic to be worth keeping. History walks into the room and sits down.",
+    "We want to record the lives of LGBTQ+ elders in Lisbon before those stories are lost, the ordinary ones especially. Your story does not have to be dramatic to be worth keeping.",
 
   "oralHistoryProject.how.title": "How to <em>take part</em>",
   "oralHistoryProject.how.lead":
-    "Four steps, and you keep control of every one.",
+    "Four planned steps, and you keep control of every one.",
   "oralHistoryProject.step1.title": "Say you're interested",
   "oralHistoryProject.step1.body":
-    "A quiet word to a mod or a note in the group is all it takes. There is no form and no commitment yet, just a conversation about whether it feels right.",
+    "When sign-ups open, you tell our team you are interested. There is no commitment at this point, just a conversation about whether it feels right.",
   "oralHistoryProject.step2.title": "Choose how you appear",
   "oralHistoryProject.step2.body":
     "Voice-only is completely fine; no faces are ever required. You decide what is recorded, what is kept off the record, and what your name is attached to.",
   "oralHistoryProject.step3.title": "Record at your pace",
   "oralHistoryProject.step3.body":
-    "Sofia does the interviews, gently, in as many sessions as you like. You can pause, revisit, or stop entirely at any point, and nothing is used without your final yes.",
+    "Interviews happen at your pace, in as many sessions as you like. You can pause, revisit, or stop entirely at any point, and nothing is used without your final yes.",
   "oralHistoryProject.step4.title": "Decide how it's used",
   "oralHistoryProject.step4.body":
-    "Archive only, community screening, or part of the documentary: your choice, and it can change later. You keep the right to withdraw your recording.",
+    "Archive only, or shared with the community: your choice, and it can change later. You keep the right to withdraw your recording.",
   "oralHistoryProject.participateCta": "I'd like to take part",
   "oralHistoryProject.participateToast":
-    "Thank you. Sofia will reach out gently to talk it through. No commitment.",
+    "Thank you. Our team will reach out gently to talk it through. No commitment.",
 
   "oralHistoryProject.voices.title": "In their <em>words</em>",
   "oralHistoryProject.voices.live.body":
-    "The first recordings are still being gathered. Once participants have chosen how their words are shared, their voices will appear here, and nothing before they're ready.",
+    "There are no recordings yet. Participants decide whether and how their words are shared, and nothing appears here before they are ready.",
 
   "oralHistoryProject.outro.title": "History, <em>kept honest.</em>",
   "oralHistoryProject.outro.sub":
-    "Not ready to record but want to help? The group always needs listeners and transcribers.",
-  "oralHistoryProject.outro.cta": "Ask how to help",
+    "Sign-ups are not open yet. If you have a question or want to help, write to our team.",
+  "oralHistoryProject.outro.cta": "Contact our team",
 
   // ── QtipocArchivePage (+ qtipocArchive.data.ts) ─────────────────────────
-  // PIECES (title/kind/year/blurb) are an archival record of contributed
-  // community work — kept English per the scope rule. Only the surrounding
-  // chrome is translated.
+  // PIECES (title/kind/year/blurb) are demo-only mock data and render in demo
+  // mode alone. Live mode shows the empty state below until real pieces exist.
   "qtipocArchive.meta.title":
-    "QTIPOC archive: Lisbon's community-held queer history",
+    "QTIPOC archive: a community-held record of life in Lisbon",
   "qtipocArchive.meta.description":
-    "A living, community-held archive of QTIPOC life in Lisbon: photo essays, writing, recordings and documents, contributed and credited by the people who made them.",
+    "The idea behind a community-held archive of QTIPOC life in Lisbon: photo essays, writing, recordings and documents, contributed and credited by the people who made them.",
 
   "qtipocArchive.hero.eyebrow": "Queer POC · Archive",
   "qtipocArchive.hero.title": "Kept by us, <em>for us.</em>",
   "qtipocArchive.hero.lead":
-    "A living archive of QTIPOC life in Lisbon: photo essays, writing, recordings, documents. Contributed, credited, and held with care. Credit all labour, especially the emotional kind.",
+    "The principles of a community-held archive of QTIPOC life in Lisbon: photo essays, writing, recordings, documents, all contributed, credited and held with care. Credit all labour, especially the emotional kind.",
   "qtipocArchive.hero.anchor.about": "About the archive",
   "qtipocArchive.hero.anchor.collection": "The collection",
 
   "qtipocArchive.about.title": "About the <em>archive</em>",
   "qtipocArchive.about.body":
-    "A living, community-held archive of QTIPOC life in Lisbon: photo essays, written pieces, recordings, and documents, kept by us and for us. Nothing here is extracted; everything is contributed, credited, and held with care.",
+    "This is meant to be a community-held archive of QTIPOC life in Lisbon: photo essays, written pieces, recordings and documents. Everything in it is contributed, credited and held with care, on the terms of the person who made it.",
 
   "qtipocArchive.collection.title": "The <em>collection</em>",
-  "qtipocArchive.collection.lead":
-    "Most recent first. Tap any piece for the full set.",
+  "qtipocArchive.collection.lead": "Most recent first.",
+  "qtipocArchive.live.title": "No items archived yet",
+  "qtipocArchive.live.body":
+    "Contributed pieces will be listed here, each credited to the people who made it.",
   "qtipocArchive.contribute.prompt":
     "Have something to add, a photo, a piece, a recording?",
   "qtipocArchive.contribute.cta": "Contribute to the archive",
   "qtipocArchive.contribute.toast":
     "Thank you. A mod will reach out about adding it, with full credit and your terms.",
 
-  "qtipocArchive.outro.title": "Nothing here is <em>extracted.</em>",
+  "qtipocArchive.outro.title": "Nothing will be <em>extracted.</em>",
   "qtipocArchive.outro.sub":
-    "Everything is given, on the contributor's terms. Bring yours when you're ready.",
+    "Everything is given, on the contributor's terms. Bring yours when contributions open.",
   "qtipocArchive.outro.cta": "Talk to the group",
 
   // ── QtipocOrganisationsPage (+ qtipocOrganisations.data.ts) ─────────────
@@ -2317,53 +2296,53 @@ export const resources: Catalog = {
 
   // ── RunningGuidePage (+ runningGuide.data.ts) ───────────────────────────
   "runningGuide.meta.title":
-    "Queer running group in Lisbon: pace groups and what to bring",
+    "Joining a group run: pace groups and what to bring",
   "runningGuide.meta.description":
-    "QueerPulse's Lisbon running group: three pace groups from social to steady, what to bring on your first run, and the rule that matters most: nobody runs alone.",
+    "Practical guidance for joining or organising a group run: how pace groups usually work, what to bring on a first run, and why nobody should run alone.",
 
-  "runningGuide.hero.eyebrow": "Queer Runners",
+  "runningGuide.hero.eyebrow": "Group Runs",
   "runningGuide.hero.title": "Your first run, <em>honestly.</em>",
   "runningGuide.hero.lead":
-    "Which pace group is yours, what to bring, and the one thing that matters most: nobody runs alone and nobody gets left. Here's everything you need before Sunday.",
+    "How pace groups usually work, what to bring, and the one thing that matters most: nobody runs alone and nobody gets left behind.",
   "runningGuide.hero.anchor.pace": "Pace groups",
   "runningGuide.hero.anchor.bring": "What to bring",
 
-  "runningGuide.pace.title": "Which group is <em>yours</em>",
+  "runningGuide.pace.title": "Which pace is <em>yours</em>",
   "runningGuide.pace.lead":
-    "We split into three pace groups at the start. Pick the honest one rather than the ambitious one, and you can always move up next week. Every pace belongs here.",
+    "Many group runs split into pace groups at the start. Pick the pace where you can still hold a conversation, and move up next time if it felt easy. Every pace belongs on a group run.",
   "runningGuide.pace1.name": "Slow & Social",
   "runningGuide.pace1.pace": "7:00–8:00 min/km · run-walk welcome",
   "runningGuide.pace1.who":
-    "First-timers, anyone coming back from a break, and anyone who wants to actually talk the whole way round. The slowest runner sets the pace and nobody is ever left behind.",
+    "First-timers, people coming back from a break, and anyone who wants to talk the whole way round. The slowest runner sets the pace and nobody gets left behind.",
   "runningGuide.pace2.name": "Middle Ground",
   "runningGuide.pace2.pace": "5:30–6:30 min/km · steady",
   "runningGuide.pace2.who":
-    "You can run 5k without stopping and want company at a comfortable, sustainable pace. The biggest group, and the easiest to slot into.",
+    "You can run 5k without stopping and want company at a comfortable, sustainable pace.",
   "runningGuide.pace3.name": "Fast & Focused",
   "runningGuide.pace3.pace": "4:30–5:15 min/km · training",
   "runningGuide.pace3.who":
-    "Building toward a race or chasing a PB. Still social at the coffee after, just quicker on the road. We regroup at every turn so the group never splits for good.",
+    "Building toward a race or chasing a personal best. A good group regroups at every turn so nobody ends up alone on the course.",
 
   "runningGuide.bring.title": "What to <em>bring</em>",
   "runningGuide.bring.lead":
     "Short version: less than you think. Here's the whole list.",
   "runningGuide.bring1.title": "Trainers you can already run in",
   "runningGuide.bring1.note":
-    "Whatever you own is fine for your first time, so don't buy anything special. If the cobbles start hurting your ankles, ask the group; we have strong opinions about Lisbon-proof shoes.",
+    "Whatever you own is fine for your first time, so there is no need to buy anything special. If the cobbles start hurting your ankles, a pair with more cushioning is worth trying.",
   "runningGuide.bring2.title": "Layers you can lose",
   "runningGuide.bring2.note":
-    "Mornings start cool and warm up fast. Something you can tie round your waist beats a single heavy top.",
-  "runningGuide.bring3.title": "Water for after",
+    "Mornings can start cool and warm up fast. Something you can tie round your waist beats a single heavy top.",
+  "runningGuide.bring3.title": "Water",
   "runningGuide.bring3.note":
-    "We finish near coffee, so you don't need to carry much. A small bottle is plenty for the loop.",
+    "A small bottle is plenty for a loop of around 5k. Carry more on longer routes or hot days.",
   "runningGuide.bring4.title": "Nothing to prove",
   "runningGuide.bring4.note":
-    "You don't need a running history, a certain body, or a goal. Showing up is the whole entry requirement. Come for the coffee and walk the loop if that's today's version.",
+    "You don't need a running history, a certain body, or a goal. Showing up is the whole entry requirement. Walk the loop if that's today's version.",
 
   "runningGuide.outro.title": "See you at the <em>start line.</em>",
   "runningGuide.outro.sub":
-    "Coffee after is half the point. Find the next run on the events board.",
-  "runningGuide.outro.cta": "Find the next run",
+    "Looking for company on the road? Browse the events calendar for runs near you.",
+  "runningGuide.outro.cta": "Browse events",
 
   // ── SchoolFormsGuidePage (+ schoolFormsGuide.data.ts) ───────────────────
   // Administrative/legal procedure (Portuguese school intake forms, parental
@@ -2422,23 +2401,20 @@ export const resources: Catalog = {
   "schoolFormsGuide.outro.forumCta": "Ask the parents forum",
 
   // ── SharedEquipmentPage (+ sharedEquipment.data.ts) ─────────────────────
-  "sharedEquipment.meta.title":
-    "Shared studio equipment: the Rainbow Arts kit library",
+  "sharedEquipment.meta.title": "Sharing studio equipment: booking and care",
   "sharedEquipment.meta.description":
-    "The risograph, kiln, projector and bookbinding kit the Rainbow Arts collective shares in Lisbon: what's available, how to book it, and how the community keeps it in good shape.",
+    "Practical guidance for people who share studio equipment such as a risograph, kiln, projector or bookbinding kit: how to book it, clean it, log it and cover the costs.",
 
-  "sharedEquipment.hero.eyebrow": "Rainbow Arts",
+  "sharedEquipment.hero.eyebrow": "Shared Studio",
   "sharedEquipment.hero.title": "Shared kit, <em>shared care.</em>",
   "sharedEquipment.hero.lead":
-    "The riso, the kiln, the projector: everything the collective owns together, what it's for, and how to book it. The deal is simple: book it, clean it, log it.",
+    "Practical guidance for sharing a riso, a kiln, a projector or a bookbinding kit with other people. A simple habit covers most of it: book it, clean it, log it.",
   "sharedEquipment.hero.anchor.kit": "The kit",
-  "sharedEquipment.hero.anchor.care": "How we care for it",
+  "sharedEquipment.hero.anchor.care": "Caring for shared kit",
 
   "sharedEquipment.kit.title": "The <em>kit</em>",
   "sharedEquipment.kit.lead":
     "All of it lives at the atelier. Tap request and a mod confirms your slot.",
-  "sharedEquipment.kit.live.body":
-    "The shared kit and its booking calendar aren't online yet. Once the atelier's inventory is registered you'll see what's free and be able to request a slot here.",
   "sharedEquipment.item1.name": "Two-colour Risograph",
   "sharedEquipment.item1.specs":
     "Reconditioned RZ, A3, currently loaded coral + black. Lives at the atelier for collective use.",
@@ -2460,18 +2436,20 @@ export const resources: Catalog = {
   "sharedEquipment.requestToast":
     "Request sent for the {name}. A mod will confirm your slot.",
 
-  "sharedEquipment.care.title": "How we <em>care for it</em>",
+  "sharedEquipment.care.title": "Caring for <em>shared kit</em>",
   "sharedEquipment.care1":
-    "Book it, clean it, log it: the three rules that keep shared kit shared.",
+    "Book it, clean it, log it: three habits that keep shared kit shared.",
   "sharedEquipment.care2":
-    "Leave it better than you found it. If something breaks, say so in the channel; nobody is in trouble, we just need to know.",
+    "Leave it better than you found it. If something breaks, tell the others straight away so it is fixed before the next person needs it.",
   "sharedEquipment.care3":
-    "Consumables (ink, thread, board) work on a top-up honesty box. Use a lot, chip in a little.",
+    "Agree on consumables (ink, thread, board, glaze) up front: who buys them, and how people chip in when they use a lot.",
+  "sharedEquipment.care4":
+    "Write down who may use each machine and who can show a beginner how it works.",
 
   "sharedEquipment.outro.title": "Make <em>something.</em>",
   "sharedEquipment.outro.sub":
-    "The kit is here so the work can happen. Come to a print day and put it to use.",
-  "sharedEquipment.outro.cta": "Find a print day",
+    "Shared kit exists so the work can happen. Browse the events calendar for workshops and open studios near you.",
+  "sharedEquipment.outro.cta": "Browse events",
 
   // ── SpoonTheoryPage (+ spoonTheory.data.ts) ─────────────────────────────
   // FLAGGED for native review: "spoon theory" is rendered here as "teoria das
@@ -2482,7 +2460,7 @@ export const resources: Catalog = {
   "spoonTheory.meta.title":
     "Spoon theory explained: how this queer community uses it",
   "spoonTheory.meta.description":
-    "What spoon theory means, and how QueerPulse applies it for chronic illness and disability: hybrid events by default, no-penalty drop-outs, and permission to say 'I'm low on spoons.'",
+    "What spoon theory means, and how to use it on QueerPulse when you have chronic illness or a disability: accessibility details on events, online events, and a place to share your access needs when you RSVP.",
 
   "spoonTheory.hero.eyebrow": "Disabled Queers",
   "spoonTheory.hero.title": "What we mean by <em>spoons.</em>",
@@ -2501,28 +2479,28 @@ export const resources: Catalog = {
     "It is not a metaphor for being tired. It is a way for people with chronic illness, disability, and chronic pain to make an invisible limit visible, to themselves and to each other, without writing an essay about it.",
 
   "spoonTheory.uses.title": "How we <em>use it</em>",
-  "spoonTheory.use1.title": "Hybrid by default",
+  "spoonTheory.use1.title": "Accessibility details and online events",
   "spoonTheory.use1.body":
-    "Every event has an online option so a low-spoon day never means missing out. Online is another door into the same room, and it counts the same.",
-  "spoonTheory.use2.title": "Drop-in, no penalty",
+    "Hosts can list accessibility details on an event: a step-free entrance, a wheelchair-accessible interior, an accessible toilet, a gender-neutral toilet, quiet hours, and whether assistance animals are welcome. Some events are online, which can suit a low-spoon day.",
+  "spoonTheory.use2.title": "Changing your mind is allowed",
   "spoonTheory.use2.body":
-    "RSVP yes and not make it? Completely fine. We plan for it. The spoons you protect by staying home are yours to protect.",
+    "You can change your RSVP when your energy changes. The spoons you protect by staying home are yours to protect.",
   "spoonTheory.use3.title": '"I\'m low on spoons today" is a full sentence',
   "spoonTheory.use3.body":
-    "Nobody here will ask you to justify it. You can say it when you RSVP, when you arrive, or when you need to leave early, and it will simply be honoured.",
+    "You do not owe anyone a justification. You can say it when you RSVP, when you arrive, or when you need to leave early.",
 
   "spoonTheory.rsvp.title": "When you <em>RSVP</em>",
   "spoonTheory.rsvpTip1":
     "Tell the host your spoon count if it helps them plan: seating, quiet corners, an easy exit near the door.",
   "spoonTheory.rsvpTip2":
-    "Ask for what you need up front; it will be arranged without fuss and without comment.",
+    "The RSVP form has a field for your access needs. Fill it in so the host can see it.",
   "spoonTheory.rsvpTip3":
-    "Carers and personal assistants are always welcome, no booking required.",
+    "Check the accessibility details on the event page before you go, and ask the host if something you need is missing.",
 
   "spoonTheory.outro.title": "Come in whatever <em>state you're in.</em>",
   "spoonTheory.outro.sub":
-    "We're not measuring. Every event is hybrid, drop-in, and built for real bodies.",
-  "spoonTheory.outro.cta": "Find a low-sensory hangout",
+    "Nobody is counting your spoons. Events list their accessibility details so you can plan around your own energy.",
+  "spoonTheory.outro.cta": "Find events",
 
   // ── IntersectionalityPage (+ IntersectionalityCards.tsx +
   //    IntersectionalityFooter.tsx + intersectionality.data.ts) ───────────
@@ -2590,7 +2568,7 @@ export const resources: Catalog = {
     "Queer community often has an unspoken class character: certain bars, events, aesthetics, and social codes signal belonging in ways that exclude people who can't or don't participate. Naming this is the first step to doing something about it.",
   "intersectionality.class.note.strong": "QueerPulse's position:",
   "intersectionality.class.note.text":
-    "We try to make community participation accessible regardless of income. Events have sliding-scale options; the forum is free; this platform is free for members who can't afford a contribution. If cost is a barrier to anything here, contact us directly and it will be handled discreetly.",
+    "We try to make community participation accessible regardless of income. QueerPulse takes no payment from members, and the forum is free. Hosts can say what an event costs: free, pay what you can, or a fixed price. If cost is a barrier to anything here, contact our team directly.",
   "intersectionality.class.info1.eyebrow": "Lisbon's cost shift",
   "intersectionality.class.info1.title": "What gentrification means here",
   "intersectionality.class.info1.body":
@@ -2641,7 +2619,7 @@ export const resources: Catalog = {
     "Any member can browse the Communities page for a space that fits them, and moderation applies the same standards in every one.",
   "intersectionality.commitment3.title": "Economic accessibility",
   "intersectionality.commitment3.text":
-    "No member is excluded from community events or resources due to cost. Sliding-scale and free options are available for everything we run.",
+    "QueerPulse itself takes no payment from members. Each event host can mark an event as free, pay what you can, or a fixed price.",
   "intersectionality.commitment4.title": "Not a monolith",
   "intersectionality.commitment4.text":
     "QueerPulse doesn't speak with one voice on political questions. The community contains multitudes. The forum is a place to have the arguments, and the community works them through itself.",
@@ -2833,8 +2811,6 @@ export const resources: Catalog = {
     "Sign-ups aren't open yet. The oral-history project is still being set up.",
   "qtipocArchive.contribute.liveToast":
     "Contributions aren't open yet. The archive is still being built.",
-  "sharedEquipment.requestLiveToast":
-    "The lending library isn't live yet. Check back soon.",
 
   // ── GuideRatingWidget (CNT-18) ───────────────────────────────────────────
   "rating.prompt": "Was this helpful?",

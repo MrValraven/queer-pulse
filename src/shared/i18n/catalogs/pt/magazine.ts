@@ -31,7 +31,7 @@ export const magazine: Catalog = {
   // Segunda linha do logótipo ("QueerPulse" fica sempre em inglês, nome
   // próprio, ver glossário pt-PT).
   "masthead.brandMagazine": "Revista",
-  "masthead.tagline": "Publicada no primeiro dia de cada mês",
+  "masthead.tagline": "Ensaios, reportagens e entrevistas",
   "masthead.nav.current": "Edição atual",
   "masthead.nav.issues": "Edições",
   "masthead.nav.stories": "Histórias",
@@ -384,7 +384,7 @@ export const magazine: Catalog = {
   "issues.eyebrow": "Revista · todas as edições",
   "issues.heroTitle": "Nove edições, <em>trimestrais</em>, desde 2024.",
   "issues.heroDek":
-    "Uma revista que não tem pressa. Impressão em risografia, grátis em PDF, paga em papel. Cada edição gira à volta de uma única pergunta: saúde, trabalho, a cidade, o que devemos umas às outras. As pessoas apoiantes recebem-na em casa, pelo correio.",
+    "Uma revista que não tem pressa. Grátis para ler online. Cada edição gira à volta de uma única pergunta: saúde, trabalho, a cidade, o que devemos umas às outras.",
   "issues.stats.issuesPublished_one": "{count} edição publicada",
   "issues.stats.issuesPublished_other": "{count} edições publicadas",
   "issues.stats.articlesArchived_one": "{count} artigo arquivado",
@@ -704,6 +704,8 @@ export const magazine: Catalog = {
   "desk.pieceRow.edit": "Edição",
   "desk.pieceRow.chase": "Insistir",
   "desk.pieceRow.handOff": "Passar",
+  "desk.pieceRow.unpublishToDraft": "Despublicar para rascunho",
+  "desk.pieceRow.unpublishToReview": "Despublicar para análise",
   "desk.pieceRow.selectAria": "Selecionar {title}",
   "desk.pieceRow.moreAria": "Mais ações para {title}",
   "desk.pieceRow.delete": "Apagar peça",
@@ -730,6 +732,14 @@ export const magazine: Catalog = {
     "Esta peça tem trabalho publicado. Despublica-o primeiro e só depois apagas a peça.",
   "desk.deletePiece.failed":
     "Não foi possível apagar esta peça. Tenta outra vez.",
+  // O diálogo de confirmação de despublicar (UnpublishPieceModal). O botão
+  // de confirmar reutiliza `desk.pieceRow.unpublishToDraft|Review` e o de
+  // cancelar `desk.modals.cancel`.
+  "desk.unpublishConfirm.title": "Despublicar “{title}”?",
+  "desk.unpublishConfirm.subDraft": "Volta para rascunho.",
+  "desk.unpublishConfirm.subReview": "Volta para análise.",
+  "desk.unpublishConfirm.body":
+    "A peça sai do site e um link que alguém já partilhou deixa de funcionar até a publicares outra vez. Continua na redação.",
 
   // ── PiecesBoard ──────────────────────────────────────────────────────────
   "desk.board.columnEmpty": "Vazia",
@@ -981,6 +991,19 @@ export const magazine: Catalog = {
   "desk.pieceToast.movedToStage": "Movida para {stage}",
   "desk.pieceToast.handedOff": "Passada a outra pessoa",
   "desk.pieceToast.deleted": "Apagada",
+  "desk.pieceToast.unpublishedToDraft": "De volta ao rascunho: {title}",
+  "desk.pieceToast.unpublishedToReview": "De volta à análise: {title}",
+  "desk.pieceToast.unpublishedDetail": "Já não está publicada no site.",
+  "desk.pieceToast.unpublishFailed": "Não foi possível despublicar {title}",
+  "desk.pieceToast.unpublishNotFound": "Esta peça já não existe no servidor.",
+  "desk.pieceToast.unpublishServerStatus":
+    "O servidor respondeu com o estado {status} e não deu motivo.",
+  "desk.pieceToast.unpublishNoConnection":
+    "O pedido não chegou ao servidor. Verifica a tua ligação.",
+  "desk.pieceToast.undo": "Desfazer",
+  "desk.pieceToast.republished": "De volta ao site: {title}",
+  "desk.pieceToast.republishFailed":
+    "Não foi possível pôr {title} de volta no site",
   "desk.pieceToast.deckStarted": "Deck criado",
   "desk.pitchToast.maybe": "Marcada como talvez",
   "desk.pitchToast.passed": "Proposta recusada",
@@ -1546,12 +1569,12 @@ export const magazine: Catalog = {
   "submitStory.intro.lookingFor.beyond.title": "Lisboa e para além dela",
   "submitStory.intro.lookingFor.beyond.body":
     "Enraizados aqui, mas publicamos também vozes da diáspora e de quem nos visita. O lugar importa; as fronteiras, menos.",
-  "submitStory.intro.lookingFor.pay.title": "Pagamos, sempre",
+  "submitStory.intro.lookingFor.pay.title": "Trabalho pago",
   "submitStory.intro.lookingFor.pay.body":
-    'Todas as peças publicadas são pagas de forma justa: valores partilhados à partida, nunca em troca de "visibilidade".',
+    "As peças publicadas são pagas a um valor que combinas à partida com a tua editora ou o teu editor.",
   "submitStory.intro.stepsHeading": "O que acontece a seguir",
   "submitStory.intro.step.reply":
-    "Uma resposta em duas semanas: sim, não, ou vamos falar.",
+    "Uma resposta de uma pessoa da edição: sim, não, ou vamos falar.",
   "submitStory.intro.step.assigned":
     "Se for sim, é atribuída uma pessoa editora e combinam juntas o valor e o prazo.",
   "submitStory.intro.step.copyright":
@@ -1656,8 +1679,36 @@ export const magazine: Catalog = {
     "O teu texto precisa de um título antes de seguir para a redação.",
   "submitStory.editor.minWordsError":
     "Falta um pouco mais: pelo menos {min} palavras antes de submeteres.",
-  "submitStory.editor.submitError":
-    "Não foi possível submeter o teu texto agora. Tenta de novo.",
+  // Uma linha por recusa que o endpoint de submissão de textos pode devolver;
+  // ver features/magazine/submitStoryError.ts para o estado de cada uma.
+  "submitStory.editor.error.headlineTooLong":
+    "O teu título tem mais de 200 carateres. Encurta-o e submete outra vez.",
+  "submitStory.editor.error.deckTooLong":
+    "O teu resumo tem mais de 1000 carateres. Encurta-o e submete outra vez.",
+  "submitStory.editor.error.bodyTooLong":
+    "O teu texto tem mais de 120 000 carateres. Encurta-o ou divide-o em duas peças.",
+  "submitStory.editor.error.coverInvalid":
+    "A imagem de capa não foi aceite. Remove-a, carrega-a outra vez e submete de novo.",
+  "submitStory.editor.error.coverNotYours":
+    "A imagem de capa foi carregada a partir de outra conta, por isso não pode seguir com o teu texto. Remove-a, carrega uma tua e submete de novo.",
+  "submitStory.editor.error.notActive":
+    "Só contas ativas podem submeter textos, e a tua conta não está ativa neste momento.",
+  "submitStory.editor.error.signedOut":
+    "A tua sessão terminou antes de o texto ser enviado. Entra outra vez e submete de novo.",
+  "submitStory.editor.error.securityCheck":
+    "A verificação de segurança desta página expirou antes de o texto ser enviado. Usa Guardar rascunho, atualiza a página e submete de novo.",
+  "submitStory.editor.error.notOpen":
+    "As submissões de textos ainda não estão abertas.",
+  "submitStory.editor.error.timedOut":
+    "Os nossos servidores demoraram demasiado a responder, por isso não sabemos se o teu texto chegou. Vê as tuas submissões antes de o enviares de novo.",
+  "submitStory.editor.error.bodyTooLarge":
+    "O teu texto é demasiado grande para os nossos servidores o receberem de uma vez. Encurta-o e submete de novo.",
+  "submitStory.editor.error.serverFault":
+    "Os nossos servidores tiveram um erro ao receber o teu texto. O texto continua aqui, por isso submete de novo daqui a pouco.",
+  "submitStory.editor.error.noConnection":
+    "O teu texto não chegou aos nossos servidores. Verifica a tua ligação e submete de novo.",
+  "submitStory.editor.error.refused":
+    "Os nossos servidores recusaram o teu texto com o erro {status}. Submete de novo daqui a pouco.",
   "submitStory.editor.saveDraftCta": "Guardar rascunho",
   "submitStory.editor.submittingCta": "A submeter…",
   "submitStory.editor.submitCta": "Submeter para revisão",
@@ -2078,8 +2129,6 @@ export const magazine: Catalog = {
     "Esta edição ainda não está em produção, ou o número não corresponde a nenhuma na redação.",
   "issue.header.title": "Edição {number} · {theme}",
   "issue.header.laidOut": "{ready} de {total} paginadas",
-  "issue.header.proof": "Prova",
-  "issue.header.proofToast": "Prova em PDF gerada para a gráfica",
 
   // ── ShipChecklistCard + ShipIssueModal ──────────────────────────────────
   "issue.ship.cta": "Lançar a edição",
@@ -2313,8 +2362,25 @@ export const magazine: Catalog = {
   "writer.page.nextDue": "próxima entrega {date}",
   "writer.page.nothingOpen": "Nada em aberto de momento",
   "writer.page.errorTitle": "O teu espaço de trabalho não carregou",
-  "writer.page.errorDescription":
-    "Algo correu mal ao carregar as tuas atribuições. Tenta atualizar a página.",
+  // Uma linha por recusa que as leituras do espaço de escrita podem devolver;
+  // ver features/magazine/writerWorkspaceError.ts para o estado de cada uma.
+  "writer.page.error.signedOut":
+    "A tua sessão terminou antes de as tuas atribuições, propostas e pagamentos carregarem. Entra outra vez para os ver.",
+  "writer.page.error.notActive":
+    "Só contas ativas podem abrir o espaço de escrita, e a tua conta não está ativa neste momento.",
+  "writer.page.error.notWriter":
+    "A tua conta não tem o papel de pessoa escritora, por isso o espaço de trabalho não tem nada para mostrar. Se a tua candidatura para escrever foi aprovada, pede à nossa equipa que confirme se o papel foi atribuído.",
+  "writer.page.error.notOpen": "O espaço de escrita ainda não está aberto.",
+  "writer.page.error.timedOut":
+    "Os nossos servidores demoraram demasiado a enviar as tuas atribuições, propostas e pagamentos. Atualiza a página para tentar de novo.",
+  "writer.page.error.unreadable":
+    "Os nossos servidores enviaram uma resposta para o teu espaço de trabalho que não conseguimos ler. Atualiza a página e avisa a nossa equipa se continuar.",
+  "writer.page.error.serverFault":
+    "Os nossos servidores tiveram um erro ao carregar as tuas atribuições, propostas e pagamentos. Atualiza a página daqui a pouco.",
+  "writer.page.error.noConnection":
+    "Não conseguimos contactar os nossos servidores para carregar as tuas atribuições, propostas e pagamentos. Verifica a tua ligação e atualiza a página.",
+  "writer.page.error.refused":
+    "Os nossos servidores recusaram carregar o teu espaço de trabalho com o erro {status}. Atualiza a página daqui a pouco.",
 
   // ── AssignmentCard ───────────────────────────────────────────────────────
   "writer.work.emptyTitle": "Ainda não tens atribuições",
@@ -2469,7 +2535,34 @@ export const magazine: Catalog = {
     "Inclui uma amostra de escrita: cola texto ou adiciona um link.",
   "applyToWrite.form.submitCta": "Enviar candidatura",
   "applyToWrite.form.submittingCta": "A enviar…",
-  "applyToWrite.form.submitError": "Algo correu mal. Tenta novamente.",
+  // Uma linha por recusa que o endpoint de candidaturas pode devolver; ver
+  // features/magazine/writerApplicationError.ts para o estado de cada uma.
+  "applyToWrite.form.error.linkInvalid":
+    "O link para o teu trabalho publicado não é um endereço web válido. Começa-o por https:// e envia outra vez.",
+  "applyToWrite.form.error.linkTooLong":
+    "O link para o teu trabalho publicado tem mais de 2000 carateres. Usa um link mais curto e envia outra vez.",
+  "applyToWrite.form.error.sampleTooLong":
+    "A amostra colada tem mais de 20 000 carateres. Encurta-a ou indica um link para o teu trabalho publicado.",
+  "applyToWrite.form.error.pitchTooLong":
+    "A tua nota sobre porque queres escrever connosco tem mais de 2000 carateres. Encurta-a e envia outra vez.",
+  "applyToWrite.form.error.alreadyWriter":
+    "Já és uma pessoa escritora da QueerPulse, por isso não há candidatura para enviar. Atualiza a página para ver as tuas ferramentas de escrita.",
+  "applyToWrite.form.error.alreadyPending":
+    "Já tens uma candidatura em análise. Atualiza a página para ver em que ponto está.",
+  "applyToWrite.form.error.notActive":
+    "Só contas ativas se podem candidatar a escrever, e a tua conta não está ativa neste momento.",
+  "applyToWrite.form.error.signedOut":
+    "A tua sessão terminou antes de a candidatura ser enviada. Entra outra vez e envia-a de novo.",
+  "applyToWrite.form.error.notOpen":
+    "As candidaturas para escrever ainda não estão abertas.",
+  "applyToWrite.form.error.timedOut":
+    "Os nossos servidores demoraram demasiado a responder. Atualiza a página para ver se a candidatura chegou antes de a enviares de novo.",
+  "applyToWrite.form.error.serverFault":
+    "Os nossos servidores tiveram um erro ao receber a tua candidatura. Tenta outra vez daqui a pouco.",
+  "applyToWrite.form.error.noConnection":
+    "A candidatura não chegou aos nossos servidores. Verifica a tua ligação e envia outra vez.",
+  "applyToWrite.form.error.refused":
+    "Os nossos servidores recusaram a candidatura com o erro {status}. Tenta outra vez daqui a pouco.",
   "applyToWrite.pending.title": "A tua candidatura está <em>em análise.</em>",
   "applyToWrite.pending.body":
     "Um editor vai ler a tua amostra e responder-te. Isto demora normalmente umas duas semanas.",
@@ -2510,9 +2603,29 @@ export const magazine: Catalog = {
   "comments.report.confirmBody":
     "Obrigade. Um moderador vai rever o comentário de {name}.",
   "comments.report.done": "Concluído",
-  "comments.report.errorTitle": "Algo correu mal",
-  "comments.report.errorBody":
-    "Não foi possível enviar a tua denúncia. Tenta novamente.",
+  "comments.report.error.title": "A tua denúncia não foi enviada",
+  // Uma linha por recusa que a denúncia de um comentário pode receber; ver
+  // features/magazine/comments/reportCommentError.ts para o estado de cada uma.
+  "comments.report.error.floodCap":
+    "Atingiste o limite de denúncias por agora. As que já enviaste estão com a nossa equipa. Se algo for urgente, usa a página de Contacto.",
+  "comments.report.error.tooFast":
+    "Estás a enviar denúncias mais depressa do que as conseguimos receber. Espera um momento e envia esta outra vez.",
+  "comments.report.error.reasonNotOffered":
+    "Esse motivo não é aceite para comentários. Cancela, abre a denúncia outra vez e escolhe outro motivo.",
+  "comments.report.error.signedOut":
+    "A tua sessão terminou antes de a denúncia ser enviada. Entra outra vez e envia-a de novo.",
+  "comments.report.error.notActive":
+    "Só contas ativas podem enviar denúncias, e a tua conta não está ativa neste momento.",
+  "comments.report.error.securityCheck":
+    "A verificação de segurança desta página expirou antes de a denúncia ser enviada. Atualiza a página e envia-a de novo.",
+  "comments.report.error.timedOut":
+    "Os nossos servidores demoraram demasiado a responder, por isso não sabemos se a denúncia chegou. Envia-a de novo, porque uma denúncia que já tenhas aberta sobre este comentário não é registada duas vezes.",
+  "comments.report.error.serverFault":
+    "Os nossos servidores tiveram um erro ao receber a tua denúncia. Tenta outra vez daqui a pouco.",
+  "comments.report.error.noConnection":
+    "A tua denúncia não chegou aos nossos servidores. Verifica a tua ligação e tenta outra vez.",
+  "comments.report.error.refused":
+    "Os nossos servidores recusaram a denúncia com o erro {status}. Tenta outra vez daqui a pouco.",
   "comments.report.retryCta": "Tentar novamente",
 
   // ── Painel partilhado de falha ao carregar (MagazineLoadError, FE-CNT-08) ─

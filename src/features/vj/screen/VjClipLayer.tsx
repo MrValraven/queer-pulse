@@ -4,6 +4,7 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  type AnimationEvent,
   type CSSProperties,
   type JSX,
   type RefObject,
@@ -12,14 +13,22 @@ import {
 import type { VjSpeed } from "../../../shared/contracts/vj";
 import { cx } from "../../../shared/lib/cx";
 import {
+  vjLoopWindowOf,
+  vjVideoLoopAction,
+  type VjLoopWindow,
+} from "../engine/sources/vjVideoLoop";
+import {
   shouldPixelateVjClip,
   vjPlaybackRateFor,
 } from "../live/vjEffectsStyle";
+import { VjDomGenerator } from "./VjDomGenerator";
 import {
   isOwnOpacityTransition,
   type VjLayerSlot,
   type VjRenderableClip,
+  type VjRenderableGenerator,
 } from "./vjLayerMachine";
+import type { VjDomTransition } from "./vjDomTransitionStyle";
 import { VjFitBackdrop, type VjFitBackdropSource } from "./VjFitBackdrop";
 import styles from "./VjStage.module.css";
 
@@ -239,16 +248,73 @@ function useVjVideoFirstFrame(
   };
 }
 
+/**
+ * Keeps a video inside its loop window (contract 6.1 loop points): near loop
+ * out it seeks back to loop in, and a video sitting before loop in seeks
+ * forward to it. The check runs on every presented frame
+ * (requestVideoFrameCallback) and, where that API is missing, on
+ * `timeupdate`. The DOM fallback plays a ping-pong clip as a forward loop
+ * (contract 3.2: reverse playback is the WebGL engine's), so the caller
+ * passes a forward window. The native `loop` attribute stays on as the net
+ * under a missed seek: the wrap to 0 lands before loop in and seeks forward.
+ */
+function useVjVideoLoopWindow(
+  videoRef: RefObject<HTMLVideoElement | null>,
+  loopInSec: number | null,
+  loopOutSec: number | null,
+): void {
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || loopInSec === null || loopOutSec === null) return undefined;
+    const loopWindow: VjLoopWindow = {
+      inSec: loopInSec,
+      outSec: loopOutSec,
+      mode: "loop",
+    };
+    const applyLoop = (mediaTimeSec: number): void => {
+      if (vjVideoLoopAction(loopWindow, mediaTimeSec).kind === "none") return;
+      video.currentTime = loopWindow.inSec;
+    };
+    const handleTimeChange = (): void => applyLoop(video.currentTime);
+    video.addEventListener("loadedmetadata", handleTimeChange);
+    video.addEventListener("timeupdate", handleTimeChange);
+    let frameCallbackId: number | undefined;
+    if (hasVideoFrameCallback(video)) {
+      const handleVideoFrame: VideoFrameRequestCallback = (_now, metadata) => {
+        applyLoop(metadata.mediaTime);
+        frameCallbackId = video.requestVideoFrameCallback(handleVideoFrame);
+      };
+      frameCallbackId = video.requestVideoFrameCallback(handleVideoFrame);
+    }
+    return () => {
+      video.removeEventListener("loadedmetadata", handleTimeChange);
+      video.removeEventListener("timeupdate", handleTimeChange);
+      cancelPendingFrameWork(
+        {
+          timeoutId: undefined,
+          animationFrameId: undefined,
+          frameCallbackId,
+        },
+        video,
+      );
+    };
+  }, [videoRef, loopInSec, loopOutSec]);
+}
+
 /** A muted looping video; it lets go of its decoder when it unmounts. */
 function VjVideoElement({
   sourceUrl,
   className,
   isPaused,
   playbackRate,
+  loopWindow,
   onElementChange,
   onFirstFrame,
   onFailed,
-}: VjMediaElementProps & { playbackRate: number }): JSX.Element {
+}: VjMediaElementProps & {
+  playbackRate: number;
+  loopWindow: VjLoopWindow | null;
+}): JSX.Element {
   const videoRef = useRef<HTMLVideoElement>(null);
   const reportElement = useEffectEvent((element: VjFitBackdropSource | null) =>
     onElementChange?.(element),
@@ -264,6 +330,11 @@ function VjVideoElement({
     handlePlaying,
     handleError,
   } = useVjVideoFirstFrame(videoRef, onFirstFrame, onFailed);
+  useVjVideoLoopWindow(
+    videoRef,
+    loopWindow?.inSec ?? null,
+    loopWindow?.outSec ?? null,
+  );
 
   useEffect(() => {
     const video = videoRef.current;
@@ -292,16 +363,21 @@ function VjVideoElement({
     video.playbackRate = playbackRate;
   }, [playbackRate]);
 
+  // Paused (the curtain is up, or freeze is on): a video that starts playing
+  // afterwards, a clip arriving while frozen, holds its first frame.
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
-    if (isPaused) {
-      video.pause();
-      return;
+    if (!video) return undefined;
+    if (!isPaused) {
+      if (progressRef.current.hasStarted && video.paused) {
+        video.play().catch(() => undefined);
+      }
+      return undefined;
     }
-    if (progressRef.current.hasStarted && video.paused) {
-      video.play().catch(() => undefined);
-    }
+    video.pause();
+    const holdPaused = (): void => video.pause();
+    video.addEventListener("playing", holdPaused);
+    return () => video.removeEventListener("playing", holdPaused);
   }, [isPaused, progressRef]);
 
   return (
@@ -383,15 +459,17 @@ interface VjClipMediaProps {
   isVisible: boolean;
   speed: VjSpeed;
   isPixelated: boolean;
-  onFirstFrame: () => void;
-  onFailed: () => void;
+  onFirstFrame?: () => void;
+  onFailed?: () => void;
 }
 
 /**
  * The clip, plus a small painted backdrop behind it in "fit" mode. The clip
- * decodes once; the backdrop copies its frames to a 64 px canvas.
+ * decodes once; the backdrop copies its frames to a 64 px canvas. A video
+ * plays at its own default speed times the stage speed, inside its loop
+ * window. Shared by the clip layers and the mix layer.
  */
-function VjClipMedia({
+export function VjClipMedia({
   clip,
   isPaused,
   isVisible,
@@ -404,7 +482,18 @@ function VjClipMedia({
     null,
   );
   const isFit = clip.fitMode === "fit";
-  const playbackRate = vjPlaybackRateFor(clip.mediaKind, speed);
+  const playbackRate = vjPlaybackRateFor(
+    clip.mediaKind,
+    speed,
+    clip.defaultSpeed,
+  );
+  // Reverse playback is the WebGL engine's: on the DOM a ping-pong clip loops forward.
+  const loopWindow = vjLoopWindowOf({
+    durationMs: clip.durationMs,
+    loopInMs: clip.loopInMs,
+    loopOutMs: clip.loopOutMs,
+    loopMode: "loop",
+  });
   const mainClassName = cx(
     styles.media,
     isFit && styles.mediaContain,
@@ -442,6 +531,7 @@ function VjClipMedia({
         className={mainClassName}
         isPaused={isPaused}
         playbackRate={playbackRate}
+        loopWindow={loopWindow}
         onElementChange={isFit ? setMediaElement : undefined}
         onFirstFrame={onFirstFrame}
         onFailed={onFailed}
@@ -455,9 +545,14 @@ export interface VjClipLayerProps {
   opacity: 0 | 1;
   zIndex: 0 | 1;
   fadeMs: number;
+  /** How the layer rises while it fades in (vjDomTransitionOf); a catch-up always eases its opacity. */
+  transitionStyle: VjDomTransition;
   speed: VjSpeed;
   viewport: { width: number; height: number };
-  /** Pauses the clip in place: the renderer sets it on the front once the black curtain is fully up. */
+  /**
+   * Pauses the clip in place: the renderer sets it on the front once the
+   * black curtain is fully up, and on every layer while freeze is on.
+   */
   isPaused?: boolean;
   onFirstFrame: () => void;
   onFailed: () => void;
@@ -526,15 +621,80 @@ function useVjLayerCatchUp(
   }, [isCatchingUp, layerRef]);
 }
 
+/** A generator draws at once: it reports its first frame as soon as it mounts. */
+function VjGeneratorMedia({
+  generator,
+  onFirstFrame,
+}: {
+  generator: VjRenderableGenerator;
+  onFirstFrame: () => void;
+}): JSX.Element {
+  const reportFirstFrame = useEffectEvent(() => onFirstFrame());
+  useEffect(() => {
+    reportFirstFrame();
+  }, []);
+  return (
+    <VjDomGenerator
+      generatorId={generator.generatorId}
+      generatorVariant={generator.generatorVariant}
+    />
+  );
+}
+
+/** The layer's class and custom properties while it rises, per transition kind. */
+function risingLayerLook(
+  transitionStyle: VjDomTransition,
+  isFadingIn: boolean,
+  isCatchingUp: boolean,
+): {
+  className: string | false | undefined;
+  properties: Record<string, string>;
+} {
+  if (isCatchingUp || !isFadingIn) {
+    return {
+      className: isCatchingUp && styles.clipLayerFading,
+      properties: {},
+    };
+  }
+  switch (transitionStyle.kind) {
+    case "clip":
+      return {
+        className: styles.clipLayerClip,
+        properties: {
+          "--vj-clip-from": transitionStyle.clipFrom ?? "none",
+          "--vj-clip-to": transitionStyle.clipTo ?? "none",
+        },
+      };
+    case "sweep":
+      return { className: styles.clipLayerSweep, properties: {} };
+    case "dip":
+      return {
+        className: styles.clipLayerDip,
+        properties: {
+          "--vj-dip-colour":
+            transitionStyle.dipColor === "white"
+              ? "var(--vj-white)"
+              : "var(--vj-black)",
+        },
+      };
+    case "fade":
+    case "cut":
+      return { className: styles.clipLayerFading, properties: {} };
+  }
+}
+
 /**
- * One of the two stacked clip layers. Its opacity animates only while it fades
- * in or catches up; a leaving layer drops its media (its URL is already released).
+ * One of the two stacked source layers: a clip or a generator. While it fades
+ * in it animates its opacity, a clip-path, a conic mask or a dip, per the
+ * transition; a catch-up eases its opacity. A leaving layer drops its media
+ * (its URL is already released).
  */
 export function VjClipLayer({
   slot,
   opacity,
   zIndex,
   fadeMs,
+  transitionStyle,
   speed,
   viewport,
   isPaused = false,
@@ -558,8 +718,23 @@ export function VjClipLayer({
     return () => window.clearTimeout(timeoutId);
   }, [isFadingIn, fadeMs]);
 
+  const risingLook = risingLayerLook(transitionStyle, isFadingIn, isCatchingUp);
+  const isOpacityFade =
+    isCatchingUp ||
+    transitionStyle.kind === "fade" ||
+    transitionStyle.kind === "cut";
+
   const handleTransitionEnd = (event: TransitionEvent<HTMLDivElement>) => {
-    if (isFadingIn && isOwnOpacityTransition(event)) onFadeEnded();
+    if (isFadingIn && isOpacityFade && isOwnOpacityTransition(event)) {
+      onFadeEnded();
+    }
+  };
+  // A clip-path, a mask or a dip veil (a pseudo-element, so its event targets
+  // the layer itself) ends on the layer's own animationend.
+  const handleAnimationEnd = (event: AnimationEvent<HTMLDivElement>) => {
+    if (isFadingIn && !isOpacityFade && event.target === event.currentTarget) {
+      onFadeEnded();
+    }
   };
 
   const clip = slot.clip;
@@ -575,24 +750,25 @@ export function VjClipLayer({
   if (isCatchingUp) layerFadeMs = VJ_CATCH_UP_MS;
   const style = (
     isRising
-      ? { opacity, zIndex, "--vj-layer-fade": `${fadeMs}ms` }
+      ? {
+          opacity,
+          zIndex,
+          "--vj-layer-fade": `${fadeMs}ms`,
+          ...risingLook.properties,
+        }
       : { opacity, zIndex }
   ) as CSSProperties;
 
-  return (
-    <div
-      ref={layerRef}
-      className={cx(styles.clipLayer, isRising && styles.clipLayerFading)}
-      style={style}
-      data-vj-layer-phase={slot.phase}
-      data-vj-fading={isFadingIn ? "true" : undefined}
-      data-vj-catching-up={isCatchingUp ? "true" : undefined}
-      data-vj-clip-id={clip?.clipId}
-      data-vj-fade-ms={layerFadeMs}
-      aria-hidden="true"
-      onTransitionEnd={handleTransitionEnd}
-    >
-      {hasMedia ? (
+  let media: JSX.Element | null = null;
+  if (hasMedia) {
+    media =
+      clip.mediaKind === "generator" ? (
+        <VjGeneratorMedia
+          key={clip.clipId}
+          generator={clip}
+          onFirstFrame={onFirstFrame}
+        />
+      ) : (
         <VjClipMedia
           key={`${clip.clipId}|${clip.sourceUrl}`}
           clip={clip}
@@ -603,7 +779,25 @@ export function VjClipLayer({
           onFirstFrame={onFirstFrame}
           onFailed={onFailed}
         />
-      ) : null}
+      );
+  }
+
+  return (
+    <div
+      ref={layerRef}
+      className={cx(styles.clipLayer, risingLook.className)}
+      style={style}
+      data-vj-layer-phase={slot.phase}
+      data-vj-fading={isFadingIn ? "true" : undefined}
+      data-vj-catching-up={isCatchingUp ? "true" : undefined}
+      data-vj-transition={isFadingIn ? transitionStyle.kind : undefined}
+      data-vj-clip-id={clip?.clipId}
+      data-vj-fade-ms={layerFadeMs}
+      aria-hidden="true"
+      onTransitionEnd={handleTransitionEnd}
+      onAnimationEnd={handleAnimationEnd}
+    >
+      {media}
     </div>
   );
 }

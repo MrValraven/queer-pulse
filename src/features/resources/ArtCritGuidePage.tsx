@@ -137,7 +137,7 @@ export function ArtCritGuidePage() {
         }
         sub={t("resources:artCritGuide.outro.sub")}
       >
-        <Button to={routes.gatherings} variant="primary" size="lg">
+        <Button to={routes.calendar} variant="primary" size="lg">
           {t("resources:artCritGuide.outro.cta")}
         </Button>
       </Outro>

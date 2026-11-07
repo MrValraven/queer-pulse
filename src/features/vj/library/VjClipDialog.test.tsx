@@ -2,7 +2,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LazyMotion, domMax } from "motion/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { VjPackDTO } from "../../../shared/contracts/vj";
 import { TestProviders } from "../../../test/TestProviders";
 import { useVjClips } from "../api/useVjClips";
@@ -103,6 +103,35 @@ describe("VjClipDialog", () => {
       channel: createVjDemoChannelHub().open(),
     });
     resetVjDemoLibrary();
+  });
+
+  it("focuses the title field for a mouse or keyboard", async () => {
+    const { dialog } = await openClipDialog(null, "Neon grid");
+    await waitFor(() =>
+      expect(within(dialog).getByLabelText("Title")).toHaveFocus(),
+    );
+  });
+
+  describe("on a touch screen", () => {
+    const realMatchMedia = window.matchMedia;
+    beforeEach(() => {
+      window.matchMedia = vi.fn((query: string): MediaQueryList => ({
+        ...realMatchMedia(query),
+        matches: query === "(pointer: coarse)",
+        media: query,
+        addEventListener: () => {},
+        removeEventListener: () => {},
+      }));
+    });
+    afterEach(() => {
+      window.matchMedia = realMatchMedia;
+    });
+
+    it("focuses the dialog so the keyboard stays down", async () => {
+      const { dialog } = await openClipDialog(null, "Neon grid");
+      await waitFor(() => expect(dialog).toHaveFocus());
+      expect(within(dialog).getByLabelText("Title")).not.toHaveFocus();
+    });
   });
 
   it("renames a clip", async () => {

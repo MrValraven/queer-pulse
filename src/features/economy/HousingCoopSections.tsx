@@ -86,6 +86,7 @@ export function CoopHero() {
 /** The five-phase formation timeline. */
 export function CoopPhases() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   return (
     <section className={styles.phases}>
       <div className="wrap">
@@ -105,7 +106,10 @@ export function CoopPhases() {
               <div className={styles.phaseName}>
                 {t(p.nameKey)} <em>{t(p.nameEmKey)}</em>
               </div>
-              <div className={styles.phaseTime}>{t(p.timeKey)}</div>
+              {/* Month ranges are demo fixtures; no data backs them live. */}
+              {demoMode && (
+                <div className={styles.phaseTime}>{t(p.timeKey)}</div>
+              )}
               <div className={styles.phaseDesc}>{t(p.descKey)}</div>
             </Reveal>
           ))}
@@ -324,13 +328,18 @@ export function CoopStartCta({
   onStory?: () => void;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   // With neither action wired, two dead buttons read worse than one line
   // saying the posting flow has not opened yet.
   const hasAnyAction = Boolean(onPost ?? onStory);
   return (
     <section className={styles.startCta}>
       <div className="wrap">
-        <div className={styles.scInner}>
+        <div
+          className={[styles.scInner, !demoMode && styles.scInnerSingle]
+            .filter(Boolean)
+            .join(" ")}
+        >
           <div className={styles.scText}>
             <div className={styles.scEyebrow}>
               {t("economy:housingCoop.startCta.eyebrow")}
@@ -366,21 +375,25 @@ export function CoopStartCta({
               </p>
             )}
           </div>
-          <div className={styles.scResources}>
-            <div className={styles.srHead}>
-              {t("economy:housingCoop.startCta.resourcesHead")}
-            </div>
-            {COOP_RESOURCES.map((r, i) => (
-              <div className={styles.srRow} key={i}>
-                <span className={styles.srLabel}>
-                  {r.preKey && t(r.preKey)}
-                  {r.em && <em>{r.em}</em>}
-                  {r.postKey && t(r.postKey)}
-                </span>
-                <span className={styles.srMeta}>{t(r.metaKey)}</span>
+          {/* The mentors and partners list is a demo fixture (named co-op,
+              lawyers, bank desk, assembly date); nothing live backs it. */}
+          {demoMode && (
+            <div className={styles.scResources}>
+              <div className={styles.srHead}>
+                {t("economy:housingCoop.startCta.resourcesHead")}
               </div>
-            ))}
-          </div>
+              {COOP_RESOURCES.map((r, i) => (
+                <div className={styles.srRow} key={i}>
+                  <span className={styles.srLabel}>
+                    {r.preKey && t(r.preKey)}
+                    {r.em && <em>{r.em}</em>}
+                    {r.postKey && t(r.postKey)}
+                  </span>
+                  <span className={styles.srMeta}>{t(r.metaKey)}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>

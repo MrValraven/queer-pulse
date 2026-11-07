@@ -46,6 +46,10 @@ export function useWriterWorkspace() {
       paymentsQuery.isLoading,
     isError:
       assignmentsQuery.isError || pitchesQuery.isError || paymentsQuery.isError,
+    /** The failure behind `isError`, so the page can name the cause. All three
+     *  reads share one controller and guard chain, so the first one that
+     *  failed is representative. */
+    error: assignmentsQuery.error ?? pitchesQuery.error ?? paymentsQuery.error,
   };
 }
 

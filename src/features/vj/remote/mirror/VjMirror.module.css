@@ -1,0 +1,430 @@
+/* The remote's mirror band, in the dark Pulse Live stage look (--qs-*): the
+   mini mirror, the Live and Next lines, the countdown ring and Skip. At
+   phone width the band is 60px tall: the mirror takes 30% of the row (106x60
+   at 354px) and never grows past the 60px height on wider panes. Expanded,
+   the mirror takes the whole row and the lines move under it.
+
+   The mirror is a positioned box of definite size (its width from the grid,
+   its height from the 16:9 ratio), because the engine's VjEffectsFrame and
+   VjOverlayLayer fill their positioned parent and size everything with
+   container queries.
+
+   The mirror needs a true black, which the app has no token for, so the band
+   defines a local named-colour token, as the v1 remote and the projector
+   stage do. Transitions move opacity or transform only. */
+
+.band {
+  --vj-mirror-black: black;
+  --vj-mirror-band-height: 60px;
+  --vj-mirror-gap: 8px;
+  --vj-mirror-ring-size: 28px;
+  --vj-mirror-expanded-max: 36rem;
+  display: grid;
+  grid-template-areas: "mirror lines ring skip";
+  grid-template-columns:
+    min(30%, calc(var(--vj-mirror-band-height) * 16 / 9))
+    minmax(0, 1fr) auto auto;
+  align-items: center;
+  column-gap: var(--vj-mirror-gap);
+  row-gap: var(--vj-mirror-gap);
+  min-block-size: var(--vj-mirror-band-height);
+  min-inline-size: 0;
+  color: var(--qs-text);
+}
+
+.band[data-expanded="true"] {
+  grid-template-areas:
+    "mirror mirror mirror"
+    "lines ring skip";
+  grid-template-columns: minmax(0, 1fr) auto auto;
+}
+
+/* ── The mirror ── */
+
+.mirror {
+  grid-area: mirror;
+  position: relative;
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: var(--vj-mirror-expanded-max);
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--radius-10);
+  background: var(--vj-mirror-black);
+}
+
+.source {
+  position: absolute;
+  inset: 0;
+}
+
+.thumbnail,
+.mixThumbnail {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.thumbnail[data-fit="fit"],
+.mixThumbnail[data-fit="fit"] {
+  object-fit: contain;
+}
+
+/* The mix clip over the live source, blended as on the screens. */
+.mixThumbnail[data-blend="screen"] {
+  mix-blend-mode: screen;
+}
+
+.mixThumbnail[data-blend="multiply"] {
+  mix-blend-mode: multiply;
+}
+
+.mixThumbnail[data-blend="difference"] {
+  mix-blend-mode: difference;
+}
+
+.mixThumbnail[data-blend="add"] {
+  mix-blend-mode: plus-lighter;
+}
+
+.mixThumbnail[data-blend="lighten"] {
+  mix-blend-mode: lighten;
+}
+
+/* Blackout: a still black layer over the picture, under the text. */
+.blackout {
+  position: absolute;
+  inset: 0;
+  background: var(--vj-mirror-black);
+}
+
+/* ── Generator swatches: a still picture of each generator, drawn from the
+   projector's palette and flag tokens (tokens/vjStage.css) ── */
+
+.generator {
+  position: absolute;
+  inset: 0;
+  background: rgb(var(--vj-palette-plum));
+}
+
+.generator[data-generator="gradientField"] {
+  background: linear-gradient(
+    135deg,
+    rgb(var(--vj-palette-plum)) 0%,
+    rgb(var(--vj-palette-coral)) 55%,
+    rgb(var(--vj-palette-amber)) 100%
+  );
+}
+
+.generator[data-generator="plasma"] {
+  background:
+    radial-gradient(
+      circle at 25% 30%,
+      rgb(var(--vj-palette-rose)) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 75% 70%,
+      rgb(var(--vj-palette-sky)) 0%,
+      transparent 55%
+    ),
+    rgb(var(--vj-palette-violet));
+}
+
+.generator[data-generator="starfield"] {
+  background:
+    radial-gradient(
+      circle,
+      rgb(var(--vj-palette-cream)) 0 1px,
+      transparent 1.5px
+    )
+    0 0 / 18% 30%,
+    radial-gradient(
+      circle,
+      rgba(var(--vj-palette-cream), 0.6) 0 1px,
+      transparent 1.5px
+    )
+    9% 15% / 13% 22%,
+    var(--vj-mirror-black);
+}
+
+.generator[data-generator="tunnel"] {
+  background: repeating-radial-gradient(
+    circle at 50% 50%,
+    rgb(var(--vj-palette-violet)) 0 8%,
+    rgb(var(--vj-palette-plum)) 8% 16%
+  );
+}
+
+.generator[data-generator="prideFlagWave"] {
+  background: linear-gradient(
+    180deg,
+    rgb(var(--vj-flag-rainbow-1)) 0 16.67%,
+    rgb(var(--vj-flag-rainbow-2)) 16.67% 33.33%,
+    rgb(var(--vj-flag-rainbow-3)) 33.33% 50%,
+    rgb(var(--vj-flag-rainbow-4)) 50% 66.67%,
+    rgb(var(--vj-flag-rainbow-5)) 66.67% 83.33%,
+    rgb(var(--vj-flag-rainbow-6)) 83.33% 100%
+  );
+}
+
+.generator[data-generator="prideFlagWave"][data-generator-variant="trans"] {
+  background: linear-gradient(
+    180deg,
+    rgb(var(--vj-flag-trans-1)) 0 20%,
+    rgb(var(--vj-flag-trans-2)) 20% 40%,
+    rgb(var(--vj-flag-trans-3)) 40% 60%,
+    rgb(var(--vj-flag-trans-4)) 60% 80%,
+    rgb(var(--vj-flag-trans-5)) 80% 100%
+  );
+}
+
+.generator[data-generator="prideFlagWave"][data-generator-variant="bi"] {
+  background: linear-gradient(
+    180deg,
+    rgb(var(--vj-flag-bi-1)) 0 40%,
+    rgb(var(--vj-flag-bi-3)) 40% 60%,
+    rgb(var(--vj-flag-bi-5)) 60% 100%
+  );
+}
+
+.generator[data-generator="prideFlagWave"][data-generator-variant="lesbian"] {
+  background: linear-gradient(
+    180deg,
+    rgb(var(--vj-flag-lesbian-1)) 0 20%,
+    rgb(var(--vj-flag-lesbian-2)) 20% 40%,
+    rgb(var(--vj-flag-lesbian-3)) 40% 60%,
+    rgb(var(--vj-flag-lesbian-4)) 60% 80%,
+    rgb(var(--vj-flag-lesbian-5)) 80% 100%
+  );
+}
+
+.generator[data-generator="prideFlagWave"][data-generator-variant="nonbinary"] {
+  background: linear-gradient(
+    180deg,
+    rgb(var(--vj-flag-nonbinary-1)) 0 25%,
+    rgb(var(--vj-flag-nonbinary-2)) 25% 50%,
+    rgb(var(--vj-flag-nonbinary-3)) 50% 75%,
+    rgb(var(--vj-flag-nonbinary-4)) 75% 100%
+  );
+}
+
+/* Progress: the chevron's five colours from the hoist, over the rainbow. */
+.generator[data-generator="prideFlagWave"][data-generator-variant="progress"] {
+  background:
+    linear-gradient(
+      90deg,
+      rgb(var(--vj-flag-progress-11)) 0 4%,
+      rgb(var(--vj-flag-progress-10)) 4% 8%,
+      rgb(var(--vj-flag-progress-9)) 8% 12%,
+      rgb(var(--vj-flag-progress-8)) 12% 16%,
+      rgb(var(--vj-flag-progress-7)) 16% 20%,
+      transparent 20%
+    ),
+    linear-gradient(
+      180deg,
+      rgb(var(--vj-flag-progress-1)) 0 16.67%,
+      rgb(var(--vj-flag-progress-2)) 16.67% 33.33%,
+      rgb(var(--vj-flag-progress-3)) 33.33% 50%,
+      rgb(var(--vj-flag-progress-4)) 50% 66.67%,
+      rgb(var(--vj-flag-progress-5)) 66.67% 83.33%,
+      rgb(var(--vj-flag-progress-6)) 83.33% 100%
+    );
+}
+
+/* ── Chips over the picture ── */
+
+.strobeChip,
+.undrawnChip {
+  position: absolute;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  max-inline-size: calc(100% - 8px);
+  margin: 0;
+  padding: 2px 6px;
+  box-sizing: border-box;
+  border-radius: var(--qs-radius-pill);
+  background: var(--qs-scrim);
+  font-size: var(--text-10);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--qs-text);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.strobeChip {
+  inset-block-start: 4px;
+  inset-inline-start: 4px;
+}
+
+.undrawnChip {
+  inset-block-end: 4px;
+  inset-inline-end: 4px;
+}
+
+.strobeChip svg,
+.undrawnChip svg {
+  flex: none;
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+}
+
+.strobeChip svg {
+  color: var(--accent);
+}
+
+.undrawnChip > span:not(.chipNumber) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chipNumber {
+  font-variant-numeric: tabular-nums;
+}
+
+.mirror[data-expanded="true"] .strobeChip,
+.mirror[data-expanded="true"] .undrawnChip {
+  font-size: var(--text-12);
+}
+
+/* The toggle covers the whole mirror, above every layer, so a tap anywhere
+   grows or shrinks it. Its face is the picture under it. */
+.mirrorToggle {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  cursor: zoom-in;
+  touch-action: manipulation;
+}
+
+.mirrorToggle[aria-expanded="true"] {
+  cursor: zoom-out;
+}
+
+.mirrorToggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ── Live and Next lines ── */
+
+.lines {
+  grid-area: lines;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-inline-size: 0;
+}
+
+.line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-inline-size: 0;
+  block-size: 20px;
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.2;
+}
+
+.lineLabel {
+  flex: none;
+  font-size: var(--text-10);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--qs-text-mute);
+}
+
+.lineLabel[data-tone="live"] {
+  color: var(--accent);
+}
+
+.lineText {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pendingChip {
+  flex: none;
+  padding: 1px 6px;
+  border: 1px solid var(--accent);
+  border-radius: var(--qs-radius-pill);
+  font-size: var(--text-10);
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--qs-text);
+}
+
+/* ── Ring and Skip ── */
+
+.ringCell {
+  grid-area: ring;
+  display: flex;
+}
+
+.ringSlot {
+  position: relative;
+  inline-size: var(--vj-mirror-ring-size);
+  block-size: var(--vj-mirror-ring-size);
+}
+
+.ring {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.ringTrack {
+  stroke: var(--qs-ring-track);
+  stroke-width: 3;
+}
+
+.ringFill {
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.ring[data-kind="shuffle"] .ringFill {
+  stroke: var(--qs-text-mute);
+}
+
+.ringSeconds {
+  fill: var(--qs-text);
+  font-size: var(--text-10);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.skipCell {
+  grid-area: skip;
+  display: flex;
+}
+
+.skip {
+  inline-size: var(--tap-min);
+  block-size: var(--tap-min);
+  padding: 0;
+}
+
+.skip svg {
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+}

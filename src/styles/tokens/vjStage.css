@@ -1,0 +1,81 @@
+/* VJ screen engine: the palette the projector draws with.
+
+   Every value is a channel triple ("r, g, b", the -rgb token convention), so
+   CSS can write rgb(var(--vj-palette-coral)) and the WebGL engine can read
+   the same token through readVjPalette() (features/vj/engine/vjPalette.ts)
+   and hand it to a shader as 0..1 floats.
+
+   These sit on :root and do NOT follow the app's data-theme: the projector
+   is always dark, so the palette is the same in both themes. Most names reuse
+   an existing brand channel token from colors.css; none of those is redefined
+   in the dark block, so they stay fixed too.
+
+   --vj-palette-<name> covers every VJ_COLOR_TOKENS entry (contract 3.1). The
+   duotone pairs are built from two of these names, shadow first.
+
+   --vj-flag-<flag>-<stripe> holds each VJ_PRIDE_FLAGS stripe, top to bottom,
+   numbered from 1. VJ_FLAG_TOKEN_COUNTS in vjPalette.ts holds how many
+   stripes each flag has. Stripe colours are the flags' own published colours:
+   they are content, so they do not follow the brand palette. */
+
+:root {
+  /* ── Palette (VJ_COLOR_TOKENS) ── */
+  --vj-palette-cream: var(--cream-rgb);
+  --vj-palette-coral: var(--accent-rgb);
+  --vj-palette-jade: var(--jade-rgb);
+  --vj-palette-amber: var(--amber-rgb);
+  --vj-palette-violet: var(--violet-rgb);
+  /* No brand sky blue exists, so the projector gets its own. */
+  --vj-palette-sky: 120, 190, 235;
+  --vj-palette-rose: var(--rose-rgb);
+  --vj-palette-plum: var(--plum-rgb);
+
+  /* ── Rainbow flag (6 stripes) ── */
+  --vj-flag-rainbow-1: 228, 3, 3;
+  --vj-flag-rainbow-2: 255, 140, 0;
+  --vj-flag-rainbow-3: 255, 237, 0;
+  --vj-flag-rainbow-4: 0, 128, 38;
+  --vj-flag-rainbow-5: 0, 77, 255;
+  --vj-flag-rainbow-6: 117, 7, 135;
+
+  /* ── Trans flag (5 stripes) ── */
+  --vj-flag-trans-1: 91, 206, 250;
+  --vj-flag-trans-2: 245, 169, 184;
+  --vj-flag-trans-3: 255, 255, 255;
+  --vj-flag-trans-4: 245, 169, 184;
+  --vj-flag-trans-5: 91, 206, 250;
+
+  /* ── Bi flag (5 equal stripes, the 2:1:2 proportion drawn as 2+1+2) ── */
+  --vj-flag-bi-1: 214, 2, 112;
+  --vj-flag-bi-2: 214, 2, 112;
+  --vj-flag-bi-3: 155, 79, 150;
+  --vj-flag-bi-4: 0, 56, 168;
+  --vj-flag-bi-5: 0, 56, 168;
+
+  /* ── Lesbian flag (5 stripes) ── */
+  --vj-flag-lesbian-1: 213, 45, 0;
+  --vj-flag-lesbian-2: 255, 154, 86;
+  --vj-flag-lesbian-3: 255, 255, 255;
+  --vj-flag-lesbian-4: 211, 98, 164;
+  --vj-flag-lesbian-5: 163, 2, 98;
+
+  /* ── Nonbinary flag (4 stripes) ── */
+  --vj-flag-nonbinary-1: 252, 244, 52;
+  --vj-flag-nonbinary-2: 255, 255, 255;
+  --vj-flag-nonbinary-3: 156, 89, 209;
+  --vj-flag-nonbinary-4: 44, 44, 44;
+
+  /* ── Progress flag (11 stripes: the rainbow six, then the chevron's five
+     from the inside out: black, brown, light blue, pink, white) ── */
+  --vj-flag-progress-1: var(--vj-flag-rainbow-1);
+  --vj-flag-progress-2: var(--vj-flag-rainbow-2);
+  --vj-flag-progress-3: var(--vj-flag-rainbow-3);
+  --vj-flag-progress-4: var(--vj-flag-rainbow-4);
+  --vj-flag-progress-5: var(--vj-flag-rainbow-5);
+  --vj-flag-progress-6: var(--vj-flag-rainbow-6);
+  --vj-flag-progress-7: 0, 0, 0;
+  --vj-flag-progress-8: 120, 79, 23;
+  --vj-flag-progress-9: 91, 206, 250;
+  --vj-flag-progress-10: 245, 169, 184;
+  --vj-flag-progress-11: 255, 255, 255;
+}

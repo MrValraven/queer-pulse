@@ -160,38 +160,38 @@ export const resources: Catalog = {
   "communityPrivacy.meta.title":
     "Privacidade no QueerPulse: o que é visível, e para quem",
   "communityPrivacy.meta.description":
-    "Como funciona a visibilidade por predefinição na QueerPulse: o que aparece no teu perfil público, dentro da comunidade e para a equipa de moderação.",
-  "communityPrivacy.hero.eyebrow": "Saída do Armário · Privacidade",
-  "communityPrivacy.hero.title": "Tu controlas <em>o que é visível.</em>",
+    "O que uma comunidade privada esconde de quem está fora dela, o que as pessoas que lá estão conseguem ver e o que fica fora do teu perfil.",
+  "communityPrivacy.hero.eyebrow": "Comunidades · Privacidade",
+  "communityPrivacy.hero.title": "Privacidade nas <em>comunidades.</em>",
   "communityPrivacy.hero.lead":
-    "Este espaço funciona com visibilidade reduzida por predefinição. Aqui está exatamente o que aparece onde, no teu perfil público, dentro da comunidade e para a equipa de moderação, para estares aqui nos teus próprios termos.",
+    "Uma comunidade privada fica escondida de quem não faz parte dela. Aqui está o que aparece no teu perfil, dentro de uma comunidade e para quem está de fora, para decidires onde entrar e o que partilhar.",
   "communityPrivacy.hero.anchor.tiers": "O que aparece onde",
   "communityPrivacy.hero.anchor.controls": "Os teus controlos",
 
   "communityPrivacy.tiers.title": "O que aparece <em>onde</em>",
   "communityPrivacy.tiers.lead":
-    "Três camadas, do totalmente público ao só-moderação. A maior parte deste espaço vive nas duas últimas.",
-  "communityPrivacy.tier.public.title": "No teu perfil público",
+    "Três sítios onde olhar: o teu perfil, o interior de uma comunidade e o exterior.",
+  "communityPrivacy.tier.public.title": "No teu perfil",
   "communityPrivacy.tier.public.body":
-    "Quase nada de um espaço de visibilidade reduzida aparece aqui. A tua participação no espaço de saída do armário nunca é mostrada publicamente, e nada do que publicas lá fica associado ao teu perfil.",
-  "communityPrivacy.tier.community.title": "Dentro da comunidade",
+    "O teu perfil mostra apenas as comunidades que escolheres fixar, e uma comunidade privada não pode ser fixada. Entrar ou publicar numa comunidade que não seja pública não acrescenta nada à atividade do teu perfil.",
+  "communityPrivacy.tier.community.title": "Dentro de uma comunidade",
   "communityPrivacy.tier.community.body":
-    "A lista de pessoas participantes não é mostrada a outras pessoas, a menos que escolhas ligar-te. Podes ler, reagir e publicar sem que ninguém consiga ver quem mais está aqui.",
-  "communityPrivacy.tier.modTeam.title": "Só a equipa de moderação",
-  "communityPrivacy.tier.modTeam.body":
-    "A moderação vê o que precisa para manter o espaço seguro, como denúncias e pedidos de entrada, e nada mais. Nunca vê a tua atividade mais alargada na QueerPulse, e a confidencialidade é a primeira regra que segue.",
+    "Quem é membro vê quem mais faz parte da comunidade, e as publicações de uma comunidade que não seja pública só podem ser lidas por quem pertence a ela. Nada impede alguém de repetir o que leu, por isso partilha apenas o que te deixa confortável.",
+  "communityPrivacy.tier.outside.title": "Fora de uma comunidade",
+  "communityPrivacy.tier.outside.body":
+    "Uma comunidade privada não aparece na exploração nem na pesquisa para quem está fora dela, e só se entra por convite. As outras comunidades aparecem na exploração com o seu nível de acesso, e o resto fica fechado até entrares. Se pedires para entrar numa comunidade que revê pedidos, quem a gere e a moderação veem o teu pedido.",
 
   "communityPrivacy.controls.title": "Os teus <em>controlos</em>",
-  "communityPrivacy.howTo.default":
-    "A visibilidade reduzida é a predefinição neste espaço. Não precisas de ativar nada para estares protegide.",
-  "communityPrivacy.howTo.settings":
-    "Controlas o que é visível a partir das tuas definições a qualquer momento: visibilidade do perfil, quem te consegue encontrar, e se as tuas comunidades aparecem listadas.",
+  "communityPrivacy.howTo.decline":
+    "Se recusares o convite para uma comunidade, ninguém recebe nenhuma notificação. Se um convite for retirado, também não recebes nenhuma.",
+  "communityPrivacy.howTo.pins":
+    "Escolhes quais as comunidades que aparecem no teu perfil ao fixá-las, e podes deixar de fixar uma a qualquer momento.",
   "communityPrivacy.howTo.leaving":
-    "Sair de um espaço remove-te de forma limpa. Nada fica pendurado no teu perfil, e nenhuma notificação o anuncia.",
+    "Sair de uma comunidade não envia nenhuma notificação, e a comunidade deixa de aparecer no teu perfil.",
 
-  "communityPrivacy.outro.title": "Nada disto está <em>no teu perfil.</em>",
+  "communityPrivacy.outro.title": "Partilha o que <em>te parecer certo.</em>",
   "communityPrivacy.outro.sub":
-    "Ajusta a tua visibilidade quando quiseres. Está tudo nas tuas definições.",
+    "As tuas definições de conta guardam o resto das tuas escolhas de privacidade.",
   "communityPrivacy.outro.cta": "Abrir definições de privacidade",
 
   // ── SafetyPage ──────────────────────────────────────────────────────────
@@ -382,21 +382,13 @@ export const resources: Catalog = {
   "queer101.talk.title": "Queres falar com <em>alguém?</em>",
   "queer101.talk.body":
     "Explorar a tua identidade pode ser alegre, confuso, ou as duas coisas ao mesmo tempo. Por vezes ajuda falar com alguém que já passou por algo semelhante, sem conselhos e sem pressão.",
-  "queer101.talk.peerSupport.title": "Grupo de apoio entre pares",
-  "queer101.talk.peerSupport.desc":
-    "Um espaço moderado e confidencial dentro da QueerPulse. Experiência partilhada, sem conselhos a menos que sejam pedidos. Reúne-se semanalmente.",
-  "queer101.talk.peerSupport.cta": "Junta-te ao grupo",
-  "queer101.talk.oneToOne.title": "Conversa individual",
-  "queer101.talk.oneToOne.desc":
-    "Pede uma conversa com uma pessoa da comunidade que se ofereceu para falar com quem está a explorar a sua identidade pela primeira vez.",
-  "queer101.talk.oneToOne.cta": "Encontrar alguém para conversar",
   "queer101.talk.therapy.title": "Terapia afirmativa queer",
   "queer101.talk.therapy.desc":
-    "Um diretório de terapeutas em Lisboa especializades em clientes LGBTQ+, compilado e avaliado pela comunidade.",
+    "Um diretório de terapeutas em Lisboa com perfil na QueerPulse, com as suas línguas e especialidades.",
   "queer101.talk.therapy.cta": "Encontrar terapeuta",
   "queer101.talk.askAnon.title": "Pergunta de forma anónima",
   "queer101.talk.askAnon.desc":
-    "Submete uma pergunta de forma anónima ao fórum da comunidade. Respondida por pessoas da comunidade, uma a uma.",
+    "Publica uma pergunta no Fórum da comunidade sem o teu nome. Outras pessoas da comunidade podem responder.",
   "queer101.talk.askAnon.cta": "Perguntar no fórum",
 
   "queer101.outro.title": "És bem-vinde <em>aqui.</em>",
@@ -559,7 +551,7 @@ export const resources: Catalog = {
   "mentalHealth.therapists.title":
     "Terapeutas afirmativos queer <em>em Lisboa</em>",
   "mentalHealth.therapists.lead":
-    "Avaliados e recomendados por pessoas da comunidade. Cada terapeuta aqui foi verificado como genuinamente afirmativo queer, com experiência em vidas e identidades queer, e nas pressões específicas de seres queer e expatriade em Lisboa.",
+    "Terapeutas em Lisboa com perfil na QueerPulse. Cada perfil indica as línguas em que trabalham, as suas especialidades e se estão a aceitar novas pessoas.",
   "mentalHealth.therapists.filterLabel": "Filtrar",
   "mentalHealth.therapists.allLanguages": "Todos os idiomas",
   "mentalHealth.therapists.accepting": "A aceitar",
@@ -568,9 +560,9 @@ export const resources: Catalog = {
   "mentalHealth.therapists.viewProfileAriaLabel": "Ver o perfil de {name}",
   "mentalHealth.therapists.viewProfileCta": "Ver perfil",
   "mentalHealth.therapists.comingSoon.title":
-    "O diretório está <em>quase a chegar.</em>",
+    "Ainda não há <em>perfis de terapeutas.</em>",
   "mentalHealth.therapists.comingSoon.body":
-    "Estamos a verificar terapeutas afirmativos queer em Lisboa antes de aparecerem aqui, para que cada perfil seja de confiança. Por agora está em repouso. Ativa <b>{toggleName}</b> para explorares a demonstração.",
+    "Nenhum terapeuta tem ainda perfil na QueerPulse. Ativa <b>{toggleName}</b> para explorares a demonstração.",
 
   "mentalHealth.experiences.title":
     "Coisas que a comunidade <em>já sentiu</em>",
@@ -596,7 +588,7 @@ export const resources: Catalog = {
     "Mudar de país costuma significar distância física da família, escolhida ou biológica. Para pessoas queer cujas relações familiares são complicadas ou condicionais, esta distância pode ser simultaneamente um alívio e o seu próprio tipo de luto. As duas coisas são reais ao mesmo tempo.",
   "mentalHealth.experience.financial.title": "Ansiedade financeira",
   "mentalHealth.experience.financial.text":
-    "O custo de vida crescente em Lisboa afeta intensamente pessoas expatriadas queer. Insegurança habitacional, custos de visto, e a pressão para corresponder a um certo tipo de vida de expatriade queer são todos fatores de stress reais. A comunidade fala de dinheiro com honestidade: o tópico de economia do fórum é um bom começo.",
+    "O custo de vida crescente em Lisboa afeta intensamente pessoas expatriadas queer. Insegurança habitacional, custos de visto, e a pressão para corresponder a um certo tipo de vida de expatriade queer são todos fatores de stress reais. Podes perguntar sobre dinheiro no Fórum.",
 
   "mentalHealth.sns.title": "Aceder à saúde mental <em>através do SNS</em>",
   "mentalHealth.sns.lead":
@@ -613,19 +605,18 @@ export const resources: Catalog = {
     "Os terapeutas e psiquiatras do SNS trabalham tipicamente em português. Se o teu português for limitado, a terapia privada em inglês é mais prática para a maioria das pessoas expatriadas. Plataformas online (BetterHelp, Zenklub) oferecem terapeutas de língua inglesa a preços mais baixos do que as tarifas privadas em Lisboa.",
   "mentalHealth.sns.step4.title": "Tarifas privadas em Lisboa",
   "mentalHealth.sns.step4.text":
-    "A terapia privada varia entre 50–120 € por sessão. Alguns terapeutas oferecem tarifas em escala progressiva, e vale sempre a pena perguntar. Vários terapeutas no nosso diretório oferecem tarifas de pessoa da comunidade para pessoas da QueerPulse.",
+    "A terapia privada varia entre 50–120 € por sessão. Alguns terapeutas oferecem tarifas em escala progressiva, e vale sempre a pena perguntar.",
   "mentalHealth.sns.peer.title":
-    "Apoio entre pares <em>dentro da comunidade</em>",
+    "Falar com <em>outras pessoas da comunidade</em>",
   "mentalHealth.sns.peer.body":
-    "Às vezes o que ajuda é alguém que já passou pelo que estás a passar. Há um espaço tranquilo de apoio entre pares no Fórum, para quem está a atravessar uma fase difícil. Sem facilitação profissional, sem tentar resolver, só pessoas que entendem, a ouvir. Preferes um para um? Pede para falar com um mentor de pares.",
-  "mentalHealth.sns.peer.joinCta": "Abrir o espaço",
-  "mentalHealth.sns.peer.mentorCta": "Encontrar um mentor de pares",
+    "Às vezes o que ajuda é alguém que já passou pelo que estás a passar. No Fórum podes fazer uma pergunta ou responder a outra pessoa, e um tópico pode ser publicado de forma anónima. É uma conversa entre pessoas da comunidade e não tem facilitação profissional.",
+  "mentalHealth.sns.peer.joinCta": "Abrir o Fórum",
 
   // ── WellbeingPage (+ WellbeingSections.tsx + wellbeing.data.ts) ──────────
   "wellbeing.meta.title":
     "Bem-estar LGBTQ+ em Lisboa: terapeutas, pares e apoio em crise",
   "wellbeing.meta.description":
-    "Recursos de bem-estar feitos pela e para a comunidade: diretório de terapeutas verificado, apoio entre pares, contactos de emergência e redução de danos, tudo num só lugar.",
+    "Recursos de bem-estar para a comunidade: diretório de terapeutas, o Fórum, contactos de emergência e redução de danos, tudo num só lugar.",
 
   "wellbeing.hero.eyebrow": "Bem-estar",
   "wellbeing.hero.title": "Um espaço que <em>cuida de ti.</em>",
@@ -651,18 +642,15 @@ export const resources: Catalog = {
   "wellbeing.therapists.title":
     "Terapeutas afirmativos queer <em>em Lisboa</em>",
   "wellbeing.therapists.lead":
-    "Avaliados por pessoas da comunidade. Cada terapeuta listado foi recomendado por pelo menos duas pessoas da QueerPulse. Não cobramos taxas de listagem. Queres adicionar alguém? <a>Contacta-nos.</a>",
+    "Terapeutas com perfil na QueerPulse, com as línguas em que trabalham e se estão a aceitar novas pessoas. Queres adicionar alguém? <a>Contacta-nos.</a>",
   "wellbeing.therapists.applyPrompt": "És um terapeuta afirmativo queer?",
   "wellbeing.therapists.applyCta": "Candidata-te a ser listado",
 
   "wellbeing.peer.title": "Não precisas de <em>carregar isto sozinhe.</em>",
   "wellbeing.peer.body":
-    "Um espaço de apoio entre pares moderado dentro do Fórum, para pessoas a passar por momentos difíceis. Conselhos só quando forem pedidos. Sem consertar. Só pessoas que compreendem, a escutar.",
-  "wellbeing.peer.joinCta": "Junta-te ao grupo",
+    "O Fórum é onde as pessoas da comunidade escrevem umas às outras, também quando as coisas estão difíceis. Podes fazer uma pergunta ou responder a alguém, e um tópico pode ser publicado de forma anónima.",
+  "wellbeing.peer.joinCta": "Abrir o Fórum",
   "wellbeing.peer.crisisCta": "Em crise agora mesmo?",
-  "wellbeing.peer.stat.members.label": "pessoas no espaço de apoio",
-  "wellbeing.peer.stat.moderation.label": "resposta de moderação garantida",
-  "wellbeing.peer.stat.confidential.label": "confidencial dentro do grupo",
 
   "wellbeing.crisisSection.title": "Crise e <em>recursos de emergência</em>",
   "wellbeing.crisisSection.lead":
@@ -697,12 +685,12 @@ export const resources: Catalog = {
   "transHub.meta.title":
     "Hub trans e não-binárie: saúde, questões legais e comunidade",
   "transHub.meta.description":
-    "Um espaço dedicado a pessoas trans e não-binárias: orientação em saúde, guias jurídicos e administrativos, apoio entre pares e comunidade, feito especificamente para ti.",
+    "Um hub para pessoas trans e não-binárias: orientação em saúde, guias jurídicos e administrativos, e uma forma de encontrar apoio entre pares no Fórum.",
 
   "transHub.hero.eyebrow": "Hub Trans e Não-Binárie",
   "transHub.hero.title": "Um espaço dedicado, <em>não um acrescento.</em>",
   "transHub.hero.lead":
-    "Orientação em saúde, guias jurídicos, apoio entre pares e comunidade, construído especificamente para pessoas trans e não-binárias. Não precisas de resolver isto sozinhe.",
+    "Orientação em saúde, guias jurídicos e apoio entre pares, escritos para pessoas trans e não-binárias. Não precisas de resolver isto sozinhe.",
   "transHub.hero.anchor.healthcare": "Saúde",
   "transHub.hero.anchor.legal": "Jurídico e administrativo",
   "transHub.hero.anchor.resources": "Recursos",
@@ -713,19 +701,19 @@ export const resources: Catalog = {
     "A saúde trans em Portugal melhorou significativamente desde 2018. O SNS cobre agora terapia hormonal e cirurgias de afirmação de género. Navegar o processo continua complexo: eis como funciona.",
   "transHub.healthcare.step1.title": "Começa pelo teu médico de família",
   "transHub.healthcare.step1.body":
-    "Pede uma referenciação para um endocrinologista ou para a clínica de género mais próxima. O teu médico de família pode não estar familiarizado com o processo, por isso leva o nosso guia de referenciação para ajudar. As referenciações do SNS demoram tipicamente 6–18 meses.",
+    "Pede uma referenciação para um endocrinologista ou para a clínica de género mais próxima. O teu médico de família pode não estar familiarizado com o processo, por isso pode ajudar levares um resumo escrito do que estás a pedir. As referenciações do SNS demoram tipicamente 6–18 meses.",
   "transHub.healthcare.step2.title": "Clínicas de género em Lisboa",
   "transHub.healthcare.step2.body":
-    "O Hospital de Santa Maria e o Hospital Curry Cabral têm ambos unidades de medicina de género. As opções privadas incluem a Clínica de Identidade de Género para acesso mais rápido. Temos avaliações de pessoas da comunidade sobre as três.",
+    "O Hospital de Santa Maria e o Hospital Curry Cabral têm ambos unidades de medicina de género. As opções privadas incluem a Clínica de Identidade de Género para acesso mais rápido.",
   "transHub.healthcare.step3.title": "Acesso a hormonoterapia",
   "transHub.healthcare.step3.body":
     "A terapia hormonal está disponível através do SNS assim que tiveres uma referenciação de endocrinologia. Muitas pessoas da comunidade usam o modelo de consentimento informado em clínicas privadas como primeiro passo mais rápido, e depois transitam para o SNS para cuidados continuados.",
   "transHub.healthcare.step4.title": "Procedimentos cirúrgicos",
   "transHub.healthcare.step4.body":
-    "As cirurgias de afirmação de género cobertas pelo SNS incluem vaginoplastia, faloplastia, mastectomia, entre outras. As listas de espera são longas (1 a mais de 3 anos). <a>Jonas Ferreira</a> já ajudou muitas pessoas a navegar este processo.",
+    "As cirurgias de afirmação de género cobertas pelo SNS incluem vaginoplastia, faloplastia, mastectomia, entre outras. As listas de espera são longas (1 a mais de 3 anos).",
   "transHub.healthcare.step5.title": "Se estás a enfrentar barreiras",
   "transHub.healthcare.step5.body":
-    "Se um prestador de cuidados recusar tratamento ou tornar o processo hostil, documenta tudo. Contacta <a>os nossos recursos jurídicos</a> ou a ILGA Portugal. Tens direitos, e esta comunidade pode ajudar-te a fazê-los valer.",
+    "Se um prestador de cuidados recusar tratamento ou tornar o processo hostil, documenta tudo. Contacta <a>os nossos recursos jurídicos</a> ou a ILGA Portugal. Tens direitos, e a ILGA Portugal pode ajudar-te a fazê-los valer.",
 
   "transHub.legal.title": "Jurídico e <em>administrativo</em>",
   "transHub.legal.lead":
@@ -735,39 +723,28 @@ export const resources: Catalog = {
     "Desde 2018, podes mudar o teu nome legal e a menção de sexo em qualquer conservatória do registo civil sem documentação médica. Basta uma declaração, sem avaliação psiquiátrica. A taxa é de aproximadamente 200 €.",
   "transHub.legal.step2.title": "Atualizar os teus documentos",
   "transHub.legal.step2.body":
-    "Depois de atualizado o teu Cartão de Cidadão, os outros documentos seguem-se. A tua entidade empregadora, o banco e os registos de saúde podem todos ser atualizados com o novo documento. Temos uma checklist de tudo o que precisa de ser atualizado e em que ordem.",
+    "Depois de atualizado o teu Cartão de Cidadão, os outros documentos seguem-se. A tua entidade empregadora, o banco e os registos de saúde podem todos ser atualizados com o novo documento.",
   "transHub.legal.step3.title": "Reconhecimento legal não-binárie",
   "transHub.legal.step3.body":
-    "Portugal não tem atualmente uma opção de terceiro género nos documentos oficiais. Esta é uma área de ativismo em curso: a ILGA Portugal e a Rede ex aequo estão a trabalhar nisso. Temos recursos se isto te afetar.",
+    "Portugal não tem atualmente uma opção de terceiro género nos documentos oficiais. Esta é uma área de ativismo em curso: a ILGA Portugal e a Rede ex aequo estão a trabalhar nisso.",
 
   "transHub.resources.title": "Recursos e <em>guias</em>",
   "transHub.resources.lead":
-    "Mantido por pessoas trans e não-binárias da comunidade. Prático, atual e gratuito.",
+    "Guias na QueerPulse para pessoas trans e não-binárias em Portugal.",
   "transHub.resources.openCta": "Abrir",
   "transHub.resources.cat.guide": "Guia",
-  "transHub.resources.cat.checklist": "Checklist",
-  "transHub.resources.cat.directory": "Diretório",
   "transHub.resources.cat.peerSupport": "Apoio entre pares",
-  "transHub.resource.snsGuide.title": "O guia de saúde trans do SNS",
+  "transHub.resource.snsGuide.title": "Saúde trans, passo a passo",
   "transHub.resource.snsGuide.desc":
-    "Um percurso pelo sistema público mantido pela comunidade: referenciações, clínicas, o que levar, e quanto tempo cada etapa demora na realidade.",
-  "transHub.resource.docChecklist.title": "Checklist de mudança de documentos",
-  "transHub.resource.docChecklist.desc":
-    "Todos os documentos a atualizar depois de uma mudança de nome legal, pela ordem certa: CC, NIF, banco, entidade empregadora, registos de saúde.",
-  "transHub.resource.clinicians.title": "Clínicos afirmativos",
-  "transHub.resource.clinicians.desc":
-    "Endocrinologistas, cirurgiões e médicos de família avaliados por pessoas trans da comunidade. Só experiência vivida, sem taxas de listagem e sem algoritmo.",
-  "transHub.resource.peerCircle.title": "Círculo de apoio trans e não-binárie",
+    "Um percurso pelas vias pública e privada para hormonas e cirurgia em Portugal, com os tempos de espera e os custos habituais de cada etapa.",
+  "transHub.resource.peerCircle.title": "Apoio entre pares no Fórum",
   "transHub.resource.peerCircle.desc":
-    "Um espaço moderado para partilhar o que resultou, desabafar o que não resultou, e encontrar alguém alguns passos à frente no mesmo caminho.",
+    "Como pedir apoio a outras pessoas da comunidade, como continuar a conversa em mensagens diretas, e como responder à pergunta de alguém.",
 
   "transHub.community.title": "Uma comunidade que <em>te apoia.</em>",
   "transHub.community.body":
-    "O Hub Trans e Não-Binárie são, acima de tudo, pessoas. Partilham avaliações de clínicas, celebram conquistas, e aparecem umas pelas outras quando o sistema falha.",
-  "transHub.community.joinCta": "Junta-te ao hub",
-  "transHub.community.stat.members.label": "pessoas no hub",
-  "transHub.community.stat.reviews.label": "avaliações de clínicos",
-  "transHub.community.stat.lawYear.label": "lei de autodeterminação em vigor",
+    "O Hub Trans e Não-Binárie são, acima de tudo, pessoas. No Fórum podes fazer perguntas a outras pessoas da comunidade e juntar-te a comunidades que te servem.",
+  "transHub.community.joinCta": "Ver comunidades",
 
   "transHub.outro.title": "És viste <em>aqui.</em>",
   "transHub.outro.sub":
@@ -1722,22 +1699,19 @@ export const resources: Catalog = {
   "peerSupport.what.p1":
     "Apoio entre pares não é terapia nem é aconselhamento. É estar com alguém que já passou pelo que estás a passar e que não precisa que lhe expliques tudo. Sem notas clínicas, sem diagnóstico, sem objetivo que tenhas de atingir no fim.",
   "peerSupport.what.p2":
-    "No Hub, o apoio entre pares funciona de duas formas: o círculo aberto onde o grupo aparece em conjunto, e o emparelhamento um-para-um quando queres falar sempre com a mesma pessoa ao longo do tempo. Tu escolhes qual, e podes mudar quando quiseres.",
+    "Na QueerPulse, o apoio entre pares acontece entre membros: no fórum, onde as pessoas partilham o que funcionou para elas, e em mensagens diretas com membros com quem tens conexão. Tu escolhes quanto partilhas, e podes recuar quando quiseres.",
   "peerSupport.how.title": "Como <em>funciona</em>",
   "peerSupport.how.lead":
-    "Quatro passos, nenhum deles vinculativo. Mantés o controlo em todos eles.",
-  "peerSupport.step.01.title": "Diz-nos o que precisas",
+    "Três passos, nenhum deles vinculativo. Manténs o controlo em todos eles.",
+  "peerSupport.step.01.title": "Pergunta no fórum",
   "peerSupport.step.01.body":
-    "Publica no Hub ou envia mensagem a uma pessoa moderadora. Podes ser tão específico ou vago quanto quiseres: 'Comecei HRT agora e quero alguém que perceba' já chega.",
-  "peerSupport.step.02.title": "Emparelhamos-te, com cuidado",
+    "Escreve o que procuras. Podes ser tão específico ou vago quanto quiseres: 'Comecei HRT agora e quero alguém que perceba' já chega. As conversas do fórum podem ser lidas por todas as pessoas no fórum, com o teu nome, e as categorias Saúde e Bem-estar, Habitação, Trans e Não-binárie, Legal e Migração, Amor e Relações e Financiamento e Apoios deixam-te publicar sem o teu nome.",
+  "peerSupport.step.02.title": "Continua onde te souber bem",
   "peerSupport.step.02.body":
-    "Uma pessoa moderadora sugere uma ou duas pessoas cuja experiência se cruza com a tua. Nada é automático e ninguém vê o teu pedido além da equipa de moderação. Dizes que sim ou ainda não.",
-  "peerSupport.step.03.title": "Tu defines o formato",
+    "Outros membros podem responder na conversa. Se as palavras de alguém te tocarem, podes conectar-te com essa pessoa e continuar a falar por mensagem direta. Não há compromisso mínimo nem estranheza em parar.",
+  "peerSupport.step.03.title": "Responde também a outra pessoa",
   "peerSupport.step.03.body":
-    "Um café, uma caminhada, uma nota de voz uma vez por semana, ou o círculo às quintas-feiras: o que for sustentável para os dois. Não há compromisso mínimo nem estranheza em parar.",
-  "peerSupport.step.04.title": "Também podes tornar-te uma pessoa de apoio",
-  "peerSupport.step.04.body":
-    "A maioria das pessoas que recebem apoio acaba por apoiar outra pessoa mais tarde. Quando estiveres pronte, diz a uma pessoa moderadora. Fazemos uma orientação curta e sem pressão sobre como acolher espaço e manter a confidencialidade.",
+    "Quando estiveres pronte, responde a alguém que está onde tu já estiveste. Umas quantas frases honestas, vindas da tua experiência, são o que dá corpo ao apoio entre pares.",
   "peerSupport.outro.title": "Não tens de carregar isto <em>sozinho.</em>",
   "peerSupport.outro.sub":
     "O Hub está aqui, e o fórum mais alargado da comunidade também.",
@@ -1817,40 +1791,40 @@ export const resources: Catalog = {
   "accessibleLisbon.outro.cta": "Encontrar um evento",
 
   // ── ArtCritGuidePage (+ artCritGuide.data.ts) ───────────────────────────
-  "artCritGuide.meta.title":
-    "Como funcionam as críticas de grupo da Artes Arco-Íris",
+  "artCritGuide.meta.title": "Como funcionam as críticas de grupo de arte",
   "artCritGuide.meta.description":
-    "Como funcionam as sessões de crítica de grupo da Artes Arco-Íris: o método honesto, gentil e específico, os quatro passos, e exemplos de feedback útil.",
-  "artCritGuide.hero.eyebrow": "Artes Arco-Íris",
-  "artCritGuide.hero.title": "Como funcionam as <em>nossas críticas.</em>",
+    "Um método prático para críticas de grupo: feedback honesto, gentil e específico, os quatro passos de uma sessão e exemplos de comentários úteis e inúteis.",
+  "artCritGuide.hero.eyebrow": "Críticas de arte",
+  "artCritGuide.hero.title": "Como funciona uma <em>boa crítica.</em>",
   "artCritGuide.hero.lead":
-    "Honesto, gentil, específico, por esta ordem. Aqui está o método completo, para que a tua primeira crítica aberta pareça a sala do teu lado.",
+    "Honesto, gentil, específico, por esta ordem. Aqui está um método que podes usar quer leves trabalho a uma crítica, quer a organizes.",
   "artCritGuide.hero.anchor.principle": "O princípio",
   "artCritGuide.hero.anchor.flow": "Como decorre uma sessão",
   "artCritGuide.hero.anchor.examples": "O que dizer",
 
   "artCritGuide.principle.title": "O <em>princípio</em>",
   "artCritGuide.principle.body":
-    "Honesto, gentil, específico, por esta ordem. Elogio vago não ajuda ninguém e crueldade disfarçada de honestidade é só crueldade. Criticamos o trabalho que está à nossa frente, nunca o currículo por trás dele nem a pessoa que o fez.",
+    "Honesto, gentil, específico, por esta ordem. Elogio vago não ajuda ninguém, e crueldade disfarçada de honestidade continua a ser crueldade. Critica o trabalho que tens à frente: o que faz, o que pergunta, o que deixa em aberto.",
 
   "artCritGuide.flow.title": "Como decorre <em>uma sessão</em>",
-  "artCritGuide.flow.lead": "Da chegada ao café, em quatro momentos.",
+  "artCritGuide.flow.lead":
+    "Da chegada ao último comentário, em quatro momentos.",
   "artCritGuide.flow.step1.title": "Chegar e instalar-te",
   "artCritGuide.flow.step1.body":
-    "Café primeiro. Começamos tarde de propósito para que ninguém esteja a criticar antes de tirar o casaco. Traz um trabalho, acabado ou não.",
+    "Começa com uma bebida e uns minutos para assentar, para que ninguém critique antes de tirar o casaco. Cada pessoa traz um trabalho, acabado ou não.",
   "artCritGuide.flow.step2.title": "Quem fez enquadra o trabalho",
   "artCritGuide.flow.step2.body":
-    "Tens dois minutos para dizer o que é e, se quiseres, em que estás preso. Também podes não dizer nada e deixar o trabalho falar. Ambos são permitidos.",
-  "artCritGuide.flow.step3.title": "A sala responde",
+    "Quem fez tem dois minutos para dizer o que é e, se quiser, em que está preso. Também pode não dizer nada e deixar o trabalho falar. Ambas as opções servem.",
+  "artCritGuide.flow.step3.title": "O grupo responde",
   "artCritGuide.flow.step3.body":
-    "Vamos dando a volta. Observações específicas, depois perguntas, depois sugestões se convidadas. Falamos do que está na parede, nos seus próprios termos.",
+    "Vão dando a volta ao grupo. Primeiro observações específicas, depois perguntas, depois sugestões se quem fez as convidar. Falem do que está na parede, nos seus próprios termos.",
   "artCritGuide.flow.step4.title": "Quem fez fica com o que serve",
   "artCritGuide.flow.step4.body":
-    "Nunca és obrigade a concordar. Fica com o que é útil, deixa o resto, e passamos ao próximo trabalho. Mesa comprida e comida a seguir.",
+    "Quem fez não é obrigade a concordar. Fica com o que é útil, deixa o resto, e passem ao trabalho seguinte.",
 
   "artCritGuide.examples.title": "O que <em>dizer</em>",
   "artCritGuide.examples.lead":
-    "Específico vence simpático. Aqui está a diferença, nas próprias palavras da sala.",
+    "Específico vence simpático. Aqui está a diferença na prática.",
   "artCritGuide.examples.tryThis": "Experimenta isto",
   "artCritGuide.examples.avoid": "Evita",
   "artCritGuide.example1.good":
@@ -1868,8 +1842,8 @@ export const resources: Catalog = {
 
   "artCritGuide.outro.title": "Traz <em>um trabalho.</em>",
   "artCritGuide.outro.sub":
-    "Acabado ou não, meio acabado é exatamente para que serve uma crítica. Encontra a próxima crítica aberta no quadro.",
-  "artCritGuide.outro.cta": "Encontrar a próxima crítica",
+    "Acabado ou não, meio acabado é exatamente para que serve uma crítica. Procura um evento perto de ti no calendário de eventos.",
+  "artCritGuide.outro.cta": "Explorar eventos",
 
   // ── ComingOutAtWorkPage (+ comingOutAtWork.data.ts) ─────────────────────
   "comingOutAtWork.meta.title":
@@ -1987,95 +1961,102 @@ export const resources: Catalog = {
 
   // ── FirstMeetupGuidePage (+ firstMeetupGuide.data.ts) ───────────────────
   "firstMeetupGuide.meta.title":
-    "O teu primeiro evento QueerPulse: o que esperar",
+    "O teu primeiro evento da comunidade: o que esperar",
   "firstMeetupGuide.meta.description":
-    "O que acontece de facto num primeiro evento presencial, o que 'sem agenda' significa na prática, e respostas às perguntas que quem chega tem medo de fazer.",
+    "O que costuma acontecer num primeiro evento presencial, como aliviar o nervosismo, e respostas às perguntas que quem chega tem medo de fazer.",
   "firstMeetupGuide.hero.eyebrow": "Queer Social",
   "firstMeetupGuide.hero.title": "O teu primeiro evento, <em>sem pressão.</em>",
   "firstMeetupGuide.hero.lead":
-    'O que esperar, o que "sem agenda" realmente significa, e respostas às coisas que estás demasiado nervoso/a para perguntar. Vem sozinhe, vem ansiose, vais ser bem cuidade.',
+    "O que esperar de um primeiro evento, e respostas às coisas que estás demasiado nervoso/a para perguntar. Vir sozinhe e vir ansiose são coisas completamente normais.",
   "firstMeetupGuide.hero.anchor.expect": "O que esperar",
-  "firstMeetupGuide.hero.anchor.values": "Os nossos valores",
+  "firstMeetupGuide.hero.anchor.values": "Regras de convivência",
   "firstMeetupGuide.hero.anchor.faq": "Perguntas nervosas",
 
   "firstMeetupGuide.expect.title": "O que <em>esperar</em>",
   "firstMeetupGuide.expect.lead":
-    "O formato todo, para que nada seja surpresa.",
-  "firstMeetupGuide.expect1.title": "Sem agenda, sem proposta",
+    "Cada evento tem o seu formato, por isso aqui fica o que ajuda na maioria deles.",
+  "firstMeetupGuide.expect1.title": "Vê primeiro o formato",
   "firstMeetupGuide.expect1.body":
-    "Ninguém te vai perguntar o que fazes profissionalmente nem tentar recrutar-te para nada. O formato é este: aparece, fala com quem calhar ao teu lado, sai quando quiseres.",
-  "firstMeetupGuide.expect2.title": "A mesa de troca de livros",
+    "Lê a página do evento antes de ires: a hora, o local, quem organiza e se há um plano para a noite. Conhecer o formato tira a maior parte das surpresas.",
+  "firstMeetupGuide.expect2.title": "Dá algo às tuas mãos para fazer",
   "firstMeetupGuide.expect2.body":
-    "Normalmente há uma pequena pilha de livros na mesa. Traz um, leva um, ou usa-a só para teres algo que fazer com as mãos nos primeiros dez minutos. Funciona.",
+    "Uma bebida, um livro ou uma pequena tarefa, como ajudar a montar, pode facilitar os primeiros dez minutos. Ter algo nas mãos torna mais fácil começar uma conversa.",
   "firstMeetupGuide.expect3.title": "Vem sozinho ou traz alguém",
   "firstMeetupGuide.expect3.body":
-    "A maioria das pessoas vem sozinha da primeira vez. Vais ser bem cuidade. Se ajudar trazer une amigue, traz une amigue: ambos são completamente normais.",
+    "Muitas pessoas vêm sozinhas da primeira vez. Se ajudar trazer une amigue, traz une amigue: ambos são completamente normais.",
 
-  "firstMeetupGuide.values.title": 'O que "sem agenda" <em>significa</em>',
+  "firstMeetupGuide.values.title": "Boas <em>regras de convivência</em>",
   "firstMeetupGuide.values.lead":
-    "Quatro coisas a que nos mantemos fiéis, para que a sala continue fácil para todes.",
+    "Quatro regras que ajudam qualquer evento a continuar fácil para todes.",
   "firstMeetupGuide.value1":
-    "Não precisas de estar fora do armário, ou fora de uma forma específica, para estares aqui.",
+    "Ninguém precisa de estar fora do armário, ou fora de uma forma específica, para estar lá.",
   "firstMeetupGuide.value2":
     "Pede sempre autorização antes de tirar fotografias, de todes.",
   "firstMeetupGuide.value3":
-    "Cuidamos de quem vem pela primeira vez; todes já fomos isso um dia.",
+    "Fica atente a quem vem pela primeira vez; todes já fomos isso um dia.",
   "firstMeetupGuide.value4":
     "O que se partilha presencialmente fica presencialmente.",
 
   "firstMeetupGuide.faq.title": "As perguntas <em>nervosas</em>",
   "firstMeetupGuide.faq1.q": "E se eu não conhecer ninguém?",
   "firstMeetupGuide.faq1.a":
-    "Ninguém conhece, da primeira vez. A pessoa anfitriã chega cedo especificamente para receber as pessoas à porta e apresentar-te. Diz que és nove por aqui: é a frase mais fácil de dizer aqui.",
+    "Ninguém conhece, da primeira vez. Diz que és nove por aqui: é a frase mais fácil de dizer e costuma começar uma conversa.",
   "firstMeetupGuide.faq2.q": "E se eu estiver mesmo nervoso/a?",
   "firstMeetupGuide.faq2.a":
-    "Quase todes estão, e quase todes quase dão meia-volta à porta. As pessoas que estão a preparar as mesas este mês fizeram exatamente isso no primeiro evento delas. Fica fácil depressa.",
+    "Muitas pessoas estão, e muitas quase dão meia-volta à porta. Chegar um pouco mais cedo, quando há menos gente, pode ajudar. Fica mais fácil depressa.",
   "firstMeetupGuide.faq3.q": "Como vou encontrar o grupo?",
   "firstMeetupGuide.faq3.a":
-    "A pessoa anfitriã publica onde vai estar e o que vai vestir, normalmente numa entrada ou elevador específico, a uma hora marcada, e depois todes seguem juntes. Vê a publicação fixada do evento.",
+    "Vê a página do evento e qualquer mensagem da pessoa anfitriã. Ela pode dizer onde vai estar, por exemplo numa entrada específica, e a que horas. Se não encontrares o grupo, envia-lhe uma mensagem.",
   "firstMeetupGuide.faq4.q": "Tenho de ficar o tempo todo?",
   "firstMeetupGuide.faq4.a":
     "Não. Sai quando quiseres, sem precisares de explicar. Ficar vinte minutos também conta como teres vindo.",
 
   "firstMeetupGuide.outro.title": "Basta <em>aparecer.</em>",
   "firstMeetupGuide.outro.sub":
-    "É esse o único requisito de entrada. O próximo evento está no quadro.",
-  "firstMeetupGuide.outro.cta": "Encontrar o próximo evento",
+    "É esse o único requisito de entrada. Explora o calendário de eventos e encontra algo perto de ti.",
+  "firstMeetupGuide.outro.cta": "Explorar eventos",
 
   // ── GroupShowArchivePage (+ groupShowArchive.data.ts) ───────────────────
   "groupShowArchive.meta.title":
-    "Artes Arco-Íris: arquivo de todas as exposições",
+    "Arquivo de exposições de grupo: um registo de mostras de arte",
   "groupShowArchive.meta.description":
-    "Um arquivo de todas as exposições de grupo da Artes Arco-Íris: datas, locais e o que foi feito, desde o primeiro pop-up até à residência mais recente.",
-  // SHOWS (title/when/venue/blurb) are an archival record of real community
-  // shows — kept English per the scope rule. Only the chrome is translated.
-  "groupShowArchive.hero.eyebrow": "Artes Arco-Íris · Arquivo",
-  "groupShowArchive.hero.title": "Tudo o que já <em>pendurámos.</em>",
+    "Um lugar para guardar o registo de exposições de arte em grupo: o título, quando e onde foi montada, e quem fez o trabalho.",
+  // SHOWS (title/when/venue/blurb) are demo-only mock data and render in demo
+  // mode alone. Live mode shows the empty state below until real shows exist.
+  "groupShowArchive.hero.eyebrow": "Arte · Arquivo",
+  "groupShowArchive.hero.title": "Exposições que <em>merecem ficar.</em>",
   "groupShowArchive.hero.lead":
-    "O coletivo documenta todas as exposições antes de as desmontarmos. Aqui está o arquivo: encontra-te a ti mesme, leva o que tiver o teu trabalho, e vê o que a sala fez em conjunto.",
+    "Um lugar para guardar o registo de exposições de arte em grupo: o título, quando e onde foi montada, e quem fez o trabalho.",
   "groupShowArchive.hero.anchor.shows": "As exposições",
 
   "groupShowArchive.shows.title": "As <em>exposições</em>",
-  "groupShowArchive.shows.lead":
-    "Mais recentes primeiro. Os conjuntos completos de fotos estão em cada álbum.",
+  "groupShowArchive.shows.lead": "Mais recentes primeiro.",
+  "groupShowArchive.live.title": "Ainda não há exposições arquivadas",
+  "groupShowArchive.live.body":
+    "As exposições de grupo vão ser listadas aqui assim que forem registadas, com datas, locais e créditos.",
 
-  "groupShowArchive.outro.title":
-    "Documentado <em>generosamente,</em> creditado sempre.",
+  "groupShowArchive.outro.title": "Credita <em>todo o trabalho.</em>",
   "groupShowArchive.outro.sub":
-    "Fotografaste a última exposição? Junta o teu conjunto ao arquivo para que o trabalho de ninguém desapareça quando as paredes vierem abaixo.",
-  "groupShowArchive.outro.cta": "Ver próximas exposições",
+    "O registo de uma exposição nomeia todas as pessoas que fizeram algo para ela.",
+  "groupShowArchive.outro.cta": "Explorar eventos",
 
   // ── IngredientsMapPage (+ ingredientsMap.data.ts) ───────────────────────
   "ingredientsMap.meta.title": "Onde encontrar ingredientes de casa em Lisboa",
+  // The spots, their finds/origin/hours and the neighbourhood anchors are
+  // demo-only mock data and render in demo mode alone. Live mode shows the
+  // empty state below until real shops exist.
   "ingredientsMap.meta.description":
-    "Um mapa feito pela comunidade de mercearias, mercados e bancas em Lisboa com ingredientes de casa, organizado por bairro, da Mouraria a Marvila.",
+    "Um guia, bairro a bairro, para encontrar ingredientes de casa nas mercearias, mercados e bancas de Lisboa.",
   "ingredientsMap.hero.eyebrow": "Queer POC",
   "ingredientsMap.hero.title": "Ingredientes de <em>casa.</em>",
   "ingredientsMap.hero.lead":
-    "Um mapa vivo de onde encontrar os sabores de casa em Lisboa, reunido pelo grupo e organizado por bairro. Casa é em parte um sabor, e é aqui que se encontra.",
+    "Um mapa de onde encontrar os sabores de casa em Lisboa, organizado por bairro. Casa é em parte um sabor, e encontrá-lo numa cidade nova é uma forma própria de pertença.",
 
   "ingredientsMap.intro":
-    "Trinta e quatro locais, catorze países, tudo reunido pelo grupo. Este mapa existe porque casa é em parte um sabor, e encontrá-lo numa cidade nova é uma forma própria de pertença. Encontraste um sítio que falta? Nunca é tarde para acrescentares o teu.",
+    "Este mapa existe porque casa é em parte um sabor, e encontrá-lo numa cidade nova é uma forma própria de pertença. Conheces uma loja, mercado ou banca que deva estar aqui? As sugestões serão bem-vindas assim que abrirem.",
+  "ingredientsMap.live.title": "Ainda não há lojas no mapa",
+  "ingredientsMap.live.body":
+    "As mercearias, os mercados e as bancas vão ser listados aqui, bairro a bairro, assim que forem acrescentados.",
 
   "ingredientsMap.hood.mourariaIntendente": "Mouraria e Intendente",
   "ingredientsMap.hood.anjosArroios": "Anjos e Arroios",
@@ -2106,7 +2087,7 @@ export const resources: Catalog = {
   "ingredientsMap.spot.asiaMarket.origin": "Vietname · Coreia · China",
   "ingredientsMap.spot.asiaMarket.hours": "Diariamente",
 
-  "ingredientsMap.missing.prompt": "Conheces um sítio que falta?",
+  "ingredientsMap.missing.prompt": "Conheces um sítio que deva estar no mapa?",
   "ingredientsMap.missing.cta": "Adicionar o teu sítio",
   "ingredientsMap.missing.toast":
     "Adicionado à fila. Uma pessoa moderadora vai colocá-lo no mapa. Obrigade!",
@@ -2114,7 +2095,7 @@ export const resources: Catalog = {
   "ingredientsMap.outro.title":
     "A alegria é tão <em>política</em> quanto a solidariedade.",
   "ingredientsMap.outro.sub":
-    "O mapa é uma das melhores coisas que fizemos juntes. Traz o resto de ti também para o grupo.",
+    "Encontrar o sabor de casa faz parte de assentar numa cidade nova. Traz o teu para a conversa.",
   "ingredientsMap.outro.cta": "Juntar-te à conversa",
 
   // ── LgbtqAgingGuidePage (+ lgbtqAgingGuide.data.ts) ─────────────────────
@@ -2131,7 +2112,7 @@ export const resources: Catalog = {
 
   "lgbtqAgingGuide.topics.title": "O <em>essencial</em>",
   "lgbtqAgingGuide.topics.lead":
-    "Simples, prático, e escrito pelo grupo que o usa. Recentemente traduzido para português.",
+    "Orientações simples e práticas para navegar os cuidados de saúde a partir dos 50 anos.",
   "lgbtqAgingGuide.topic1.title":
     "Encontrar um médico de família que não torne isto estranho",
   "lgbtqAgingGuide.topic1.body":
@@ -2145,7 +2126,7 @@ export const resources: Catalog = {
     "Pergunta diretamente a qualquer instituição de cuidados sobre a experiência que têm com residentes LGBTQ+ e casais do mesmo sexo. As boas respondem sem rodeios; a própria resposta diz-te quase tudo o que precisas de saber.",
   "lgbtqAgingGuide.topic4.title": "Saúde mental em idade avançada",
   "lgbtqAgingGuide.topic4.body":
-    "O isolamento e toda uma vida de cautela cobram o seu preço. Existe terapia afirmativa a qualquer idade, e o grupo de pessoas idosas mantém uma pequena lista de profissionais que compreendem a história particular que carregas.",
+    "O isolamento e toda uma vida de cautela cobram o seu preço. Existe terapia afirmativa a qualquer idade: pergunta diretamente a quem acompanha pela sua experiência com pessoas LGBTQ+ mais velhas antes de marcares.",
 
   "lgbtqAgingGuide.links.title": "Ligações <em>úteis</em>",
   "lgbtqAgingGuide.link.ilga.label": "ILGA Portugal: serviços",
@@ -2165,79 +2146,82 @@ export const resources: Catalog = {
   "oralHistoryProject.meta.title":
     "Projeto de histórias orais LGBTQ+ em Lisboa: participa",
   "oralHistoryProject.meta.description":
-    "Estamos a gravar as vidas de pessoas LGBTQ+ mais velhas em Lisboa: só voz, se preferires, sem necessidade de rosto, e sempre nos teus termos.",
+    "A QueerPulse está a preparar um projeto de história oral com pessoas LGBTQ+ mais velhas em Lisboa: só voz, se preferires, sem necessidade de rosto, inteiramente nos teus termos. As inscrições ainda não estão abertas.",
 
   "oralHistoryProject.hero.eyebrow": "Queer Elders · História Oral",
   "oralHistoryProject.hero.title":
     "A tua história vale a pena <em>guardar.</em>",
   "oralHistoryProject.hero.lead":
-    "Estamos a gravar as vidas de pessoas LGBTQ+ mais velhas em Lisboa: só voz, se preferires, sem necessidade de rosto, inteiramente nos teus termos. Aqui está o que participar realmente significa.",
+    "Estamos a preparar um projeto de história oral com pessoas LGBTQ+ mais velhas em Lisboa: só voz, se preferires, sem necessidade de rosto, inteiramente nos teus termos. As inscrições ainda não estão abertas. Aqui está o que planeamos que participar seja.",
   "oralHistoryProject.hero.anchor.about": "Sobre o projeto",
   "oralHistoryProject.hero.anchor.how": "Como participar",
   "oralHistoryProject.hero.anchor.voices": "Nas palavras delas",
 
   "oralHistoryProject.about.title": "Sobre o <em>projeto</em>",
   "oralHistoryProject.about.body":
-    "Estamos a gravar as vidas de pessoas LGBTQ+ mais velhas em Lisboa antes que essas histórias se percam, as comuns especialmente. A tua história não precisa de ser dramática para valer a pena guardar. A história entra na sala e senta-se.",
+    "Queremos gravar as vidas de pessoas LGBTQ+ mais velhas em Lisboa antes que essas histórias se percam, as comuns especialmente. A tua história não precisa de ser dramática para valer a pena guardar.",
 
   "oralHistoryProject.how.title": "Como <em>participar</em>",
   "oralHistoryProject.how.lead":
-    "Quatro passos, e mantés o controlo em todos eles.",
+    "Quatro passos previstos, e manténs o controlo em todos eles.",
   "oralHistoryProject.step1.title": "Diz que tens interesse",
   "oralHistoryProject.step1.body":
-    "Uma palavra discreta a uma pessoa moderadora ou uma nota no grupo é tudo o que é preciso. Ainda não há formulário nem compromisso, só uma conversa sobre se parece certo.",
+    "Quando as inscrições abrirem, dizes à nossa equipa que tens interesse. Nesta fase não há compromisso, só uma conversa sobre se parece certo.",
   "oralHistoryProject.step2.title": "Escolhe como apareces",
   "oralHistoryProject.step2.body":
     "Só voz está perfeitamente bem; nunca é exigido rosto. Tu decides o que é gravado, o que fica fora de registo, e a que nome fica associado.",
   "oralHistoryProject.step3.title": "Grava ao teu ritmo",
   "oralHistoryProject.step3.body":
-    "A Sofia faz as entrevistas, com calma, em quantas sessões quiseres. Podes pausar, revisitar, ou parar totalmente a qualquer momento, e nada é usado sem o teu sim final.",
+    "As entrevistas acontecem ao teu ritmo, em quantas sessões quiseres. Podes pausar, revisitar, ou parar totalmente a qualquer momento, e nada é usado sem o teu sim final.",
   "oralHistoryProject.step4.title": "Decide como é usado",
   "oralHistoryProject.step4.body":
-    "Só arquivo, exibição comunitária, ou parte do documentário: a tua escolha, e pode mudar mais tarde. Manténs o direito de retirar a tua gravação.",
+    "Só arquivo, ou partilhado com a comunidade: a tua escolha, e pode mudar mais tarde. Manténs o direito de retirar a tua gravação.",
   "oralHistoryProject.participateCta": "Gostava de participar",
   "oralHistoryProject.participateToast":
-    "Obrigade. A Sofia vai contactar-te com calma para conversar sobre isto. Sem compromisso.",
+    "Obrigade. A nossa equipa vai contactar-te com calma para conversar sobre isto. Sem compromisso.",
 
   "oralHistoryProject.voices.title": "Nas <em>palavras delas</em>",
   "oralHistoryProject.voices.live.body":
-    "As primeiras gravações ainda estão a ser reunidas. Assim que as pessoas participantes escolherem como partilhar as suas palavras, as suas vozes vão aparecer aqui, quando estiverem prontas.",
+    "Ainda não há gravações. As pessoas participantes decidem se e como as suas palavras são partilhadas, e nada aparece aqui antes de estarem prontas.",
 
   "oralHistoryProject.outro.title": "História, <em>mantida honesta.</em>",
   "oralHistoryProject.outro.sub":
-    "Ainda não estás pronte para gravar mas queres ajudar? O grupo precisa sempre de ouvintes e transcritores.",
-  "oralHistoryProject.outro.cta": "Perguntar como ajudar",
+    "As inscrições ainda não estão abertas. Se tens uma pergunta ou queres ajudar, escreve à nossa equipa.",
+  "oralHistoryProject.outro.cta": "Contactar a nossa equipa",
 
   // ── QtipocArchivePage (+ qtipocArchive.data.ts) ─────────────────────────
-  // PIECES (title/kind/year/blurb) are an archival record — kept English.
+  // PIECES (title/kind/year/blurb) are demo-only mock data and render in demo
+  // mode alone. Live mode shows the empty state below until real pieces exist.
   "qtipocArchive.meta.title":
-    "Arquivo QTIPOC: memória viva da comunidade queer em Lisboa",
+    "Arquivo QTIPOC: um registo da vida em Lisboa, mantido pela comunidade",
   "qtipocArchive.meta.description":
-    "Um arquivo vivo da vida QTIPOC em Lisboa: ensaios fotográficos, escrita, gravações e documentos, contribuídos e creditados por quem os criou.",
+    "A ideia de um arquivo da vida QTIPOC em Lisboa, mantido pela comunidade: ensaios fotográficos, escrita, gravações e documentos, contribuídos e creditados por quem os criou.",
 
   "qtipocArchive.hero.eyebrow": "Queer POC · Arquivo",
   "qtipocArchive.hero.title": "Guardado por nós, <em>para nós.</em>",
   "qtipocArchive.hero.lead":
-    "Um arquivo vivo da vida QTIPOC em Lisboa: ensaios fotográficos, escrita, gravações, documentos. Contribuído, creditado, e guardado com cuidado. Credita todo o trabalho, especialmente o emocional.",
+    "Os princípios de um arquivo da vida QTIPOC em Lisboa, mantido pela comunidade: ensaios fotográficos, escrita, gravações, documentos, tudo contribuído, creditado e guardado com cuidado. Credita todo o trabalho, especialmente o emocional.",
   "qtipocArchive.hero.anchor.about": "Sobre o arquivo",
   "qtipocArchive.hero.anchor.collection": "A coleção",
 
   "qtipocArchive.about.title": "Sobre o <em>arquivo</em>",
   "qtipocArchive.about.body":
-    "Um arquivo vivo, mantido pela comunidade, da vida QTIPOC em Lisboa: ensaios fotográficos, textos escritos, gravações, e documentos, guardados por nós e para nós. Tudo aqui é contribuído, creditado, e guardado com cuidado.",
+    "A ideia é um arquivo da vida QTIPOC em Lisboa, mantido pela comunidade: ensaios fotográficos, textos escritos, gravações e documentos. Tudo nele é contribuído, creditado e guardado com cuidado, nos termos de quem o fez.",
 
   "qtipocArchive.collection.title": "A <em>coleção</em>",
-  "qtipocArchive.collection.lead":
-    "Mais recentes primeiro. Toca em qualquer peça para o conjunto completo.",
+  "qtipocArchive.collection.lead": "Mais recentes primeiro.",
+  "qtipocArchive.live.title": "Ainda não há itens arquivados",
+  "qtipocArchive.live.body":
+    "As peças contribuídas vão ser listadas aqui, cada uma creditada a quem a fez.",
   "qtipocArchive.contribute.prompt":
     "Tens algo para acrescentar, uma foto, uma peça, uma gravação?",
   "qtipocArchive.contribute.cta": "Contribuir para o arquivo",
   "qtipocArchive.contribute.toast":
     "Obrigade. Uma pessoa moderadora vai contactar-te sobre como o acrescentar, com crédito completo e nos teus termos.",
 
-  "qtipocArchive.outro.title": "Nada aqui é <em>extraído.</em>",
+  "qtipocArchive.outro.title": "Nada será <em>extraído.</em>",
   "qtipocArchive.outro.sub":
-    "Tudo é dado, nos termos de quem contribui. Traz o teu quando estiveres pronte.",
+    "Tudo é dado, nos termos de quem contribui. Traz o teu quando as contribuições abrirem.",
   "qtipocArchive.outro.cta": "Falar com o grupo",
 
   // ── QtipocOrganisationsPage (+ qtipocOrganisations.data.ts) ─────────────
@@ -2332,54 +2316,54 @@ export const resources: Catalog = {
 
   // ── RunningGuidePage (+ runningGuide.data.ts) ───────────────────────────
   "runningGuide.meta.title":
-    "Grupo de corrida queer em Lisboa: ritmos e o que levar",
+    "Juntar-te a uma corrida em grupo: ritmos e o que levar",
   "runningGuide.meta.description":
-    "O grupo de corrida da QueerPulse em Lisboa: três grupos de ritmo, do social ao mais exigente, o que levar à primeira corrida, e a regra mais importante de todas, ninguém corre sozinhe.",
+    "Orientações práticas para quem quer juntar-se a uma corrida em grupo ou organizar uma: como costumam funcionar os grupos de ritmo, o que levar à primeira corrida e porque ninguém deve correr sozinhe.",
 
-  "runningGuide.hero.eyebrow": "Queer Runners",
+  "runningGuide.hero.eyebrow": "Corridas em grupo",
   "runningGuide.hero.title":
     "A tua primeira corrida, <em>com honestidade.</em>",
   "runningGuide.hero.lead":
-    "Qual é o teu grupo de ritmo, o que trazer, e a coisa mais importante de todas: ninguém corre sozinhe e ninguém fica para trás. Aqui está tudo o que precisas antes de domingo.",
+    "Como costumam funcionar os grupos de ritmo, o que trazer, e a coisa mais importante de todas: ninguém corre sozinhe e ninguém fica para trás.",
   "runningGuide.hero.anchor.pace": "Grupos de ritmo",
   "runningGuide.hero.anchor.bring": "O que trazer",
 
-  "runningGuide.pace.title": "Qual grupo é <em>o teu</em>",
+  "runningGuide.pace.title": "Qual ritmo é <em>o teu</em>",
   "runningGuide.pace.lead":
-    "Dividimo-nos em três grupos de ritmo no início. Escolhe o honesto, e podes sempre subir na semana seguinte. Todos os ritmos pertencem aqui.",
+    "Muitas corridas em grupo dividem-se em grupos de ritmo no início. Escolhe o ritmo em que ainda consegues conversar, e sobe na vez seguinte se te parecer fácil. Todos os ritmos pertencem a uma corrida em grupo.",
   "runningGuide.pace1.name": "Lento e Social",
   "runningGuide.pace1.pace": "7:00–8:00 min/km · corrida-caminhada bem-vinda",
   "runningGuide.pace1.who":
-    "Quem vem pela primeira vez, quem está a voltar de uma pausa, e quem quer mesmo conversar o percurso todo. Quem corre mais devagar dita o ritmo e ninguém fica nunca para trás.",
+    "Quem vem pela primeira vez, quem está a voltar de uma pausa, e quem quer conversar o percurso todo. Quem corre mais devagar dita o ritmo e ninguém fica para trás.",
   "runningGuide.pace2.name": "Meio-Termo",
   "runningGuide.pace2.pace": "5:30–6:30 min/km · constante",
   "runningGuide.pace2.who":
-    "Consegues correr 5 km sem parar e queres companhia a um ritmo confortável e sustentável. O maior grupo, e o mais fácil de encaixar.",
+    "Consegues correr 5 km sem parar e queres companhia a um ritmo confortável e sustentável.",
   "runningGuide.pace3.name": "Rápido e Focado",
   "runningGuide.pace3.pace": "4:30–5:15 min/km · treino",
   "runningGuide.pace3.who":
-    "A construir para uma corrida ou à procura de um recorde pessoal. Continua social no café a seguir, só mais rápido na estrada. Reagrupamo-nos em cada curva para que o grupo nunca se separe de vez.",
+    "A construir para uma corrida ou à procura de um recorde pessoal. Um bom grupo reagrupa-se em cada curva para que ninguém fique sozinhe no percurso.",
 
   "runningGuide.bring.title": "O que <em>trazer</em>",
   "runningGuide.bring.lead":
     "Versão curta: menos do que pensas. Aqui está a lista completa.",
   "runningGuide.bring1.title": "Ténis em que já saibas correr",
   "runningGuide.bring1.note":
-    "O que já tens serve para a primeira vez, sem precisares de comprar nada especial. Se as calçadas começarem a magoar-te os tornozelos, pergunta ao grupo; temos opiniões fortes sobre calçado à prova de Lisboa.",
+    "O que já tens serve para a primeira vez, sem precisares de comprar nada especial. Se as calçadas começarem a magoar-te os tornozelos, vale a pena experimentar um par com mais amortecimento.",
   "runningGuide.bring2.title": "Camadas que possas tirar",
   "runningGuide.bring2.note":
-    "As manhãs começam frescas e aquecem depressa. Algo que possas atar à cintura vale mais do que uma peça quente única.",
-  "runningGuide.bring3.title": "Água para depois",
+    "As manhãs podem começar frescas e aquecer depressa. Algo que possas atar à cintura vale mais do que uma peça quente única.",
+  "runningGuide.bring3.title": "Água",
   "runningGuide.bring3.note":
-    "Terminamos perto do café, por isso uma garrafa pequena chega para o percurso.",
+    "Uma garrafa pequena chega para um percurso de cerca de 5 km. Leva mais em percursos longos ou em dias de calor.",
   "runningGuide.bring4.title": "Nada a provar",
   "runningGuide.bring4.note":
-    "Não precisas de um historial de corrida, de um certo corpo, ou de um objetivo. Aparecer é o único requisito de entrada. Vem pelo café e caminha o percurso se for essa a versão de hoje.",
+    "Não precisas de um historial de corrida, de um certo corpo, ou de um objetivo. Aparecer é o único requisito de entrada. Caminha o percurso se for essa a versão de hoje.",
 
   "runningGuide.outro.title": "Vemo-nos na <em>linha de partida.</em>",
   "runningGuide.outro.sub":
-    "O café a seguir é metade do objetivo. Encontra a próxima corrida no quadro de eventos.",
-  "runningGuide.outro.cta": "Encontrar a próxima corrida",
+    "À procura de companhia na estrada? Explora o calendário de eventos e encontra corridas perto de ti.",
+  "runningGuide.outro.cta": "Explorar eventos",
 
   // ── SchoolFormsGuidePage (+ schoolFormsGuide.data.ts) ───────────────────
   // Official form terms ("encarregado de educação", "mãe / pai") kept
@@ -2438,23 +2422,21 @@ export const resources: Catalog = {
 
   // ── SharedEquipmentPage (+ sharedEquipment.data.ts) ─────────────────────
   "sharedEquipment.meta.title":
-    "Equipamento partilhado: o material do coletivo Rainbow Arts",
+    "Partilhar equipamento de atelier: reservas e cuidados",
   "sharedEquipment.meta.description":
-    "A risógrafa, o forno de cerâmica, o projetor e o kit de encadernação que o coletivo Rainbow Arts partilha em Lisboa: o que está disponível, como reservar, e como cuidamos do material.",
+    "Orientações práticas para quem partilha equipamento de atelier, como uma risógrafa, um forno de cerâmica, um projetor ou um kit de encadernação: como reservar, limpar, registar e repartir os custos.",
 
-  "sharedEquipment.hero.eyebrow": "Artes Arco-Íris",
+  "sharedEquipment.hero.eyebrow": "Atelier partilhado",
   "sharedEquipment.hero.title":
     "Material partilhado, <em>cuidado partilhado.</em>",
   "sharedEquipment.hero.lead":
-    "O riso, o forno de cerâmica, o projetor, tudo o que o coletivo possui em conjunto, para que serve, e como reservá-lo. O trato é simples: reserva, limpa, regista.",
+    "Orientações práticas para partilhar um riso, um forno de cerâmica, um projetor ou um kit de encadernação com outras pessoas. Um hábito simples cobre quase tudo: reserva, limpa, regista.",
   "sharedEquipment.hero.anchor.kit": "O material",
-  "sharedEquipment.hero.anchor.care": "Como cuidamos dele",
+  "sharedEquipment.hero.anchor.care": "Cuidar do material partilhado",
 
   "sharedEquipment.kit.title": "O <em>material</em>",
   "sharedEquipment.kit.lead":
     "Está tudo no atelier. Toca em pedir e uma pessoa moderadora confirma o teu horário.",
-  "sharedEquipment.kit.live.body":
-    "O material partilhado e o seu calendário de reservas ainda não estão disponíveis online. Assim que o inventário do atelier estiver registado, vais poder ver o que está livre e pedir um horário aqui.",
   "sharedEquipment.item1.name": "Risógrafo a duas cores",
   "sharedEquipment.item1.specs":
     "RZ recondicionado, A3, atualmente com coral + preto carregados. Fica no atelier para uso coletivo.",
@@ -2476,25 +2458,27 @@ export const resources: Catalog = {
   "sharedEquipment.requestToast":
     "Pedido enviado para {name}. Uma pessoa moderadora vai confirmar o teu horário.",
 
-  "sharedEquipment.care.title": "Como <em>cuidamos dele</em>",
+  "sharedEquipment.care.title": "Cuidar do <em>material partilhado</em>",
   "sharedEquipment.care1":
-    "Reserva, limpa, regista: as três regras que mantêm o material partilhado partilhável.",
+    "Reserva, limpa, regista: três hábitos que mantêm o material partilhado partilhável.",
   "sharedEquipment.care2":
-    "Deixa-o melhor do que o encontraste. Se algo se partir, diz no canal; ninguém está em sarilhos, só precisamos de saber.",
+    "Deixa-o melhor do que o encontraste. Se algo se partir, avisa logo as outras pessoas para que fique arranjado antes de a seguinte precisar.",
   "sharedEquipment.care3":
-    "Os consumíveis (tinta, linha, cartão) funcionam por caixa de honestidade com reposição. Usa bastante, contribui um pouco.",
+    "Combinem os consumíveis (tinta, linha, cartão, vidrado) logo de início: quem os compra e como contribuem as pessoas que usam muito.",
+  "sharedEquipment.care4":
+    "Escrevam quem pode usar cada máquina e quem pode mostrar a uma pessoa principiante como funciona.",
 
   "sharedEquipment.outro.title": "Faz <em>alguma coisa.</em>",
   "sharedEquipment.outro.sub":
-    "O material está aqui para que o trabalho aconteça. Vem a um dia de impressão e usa-o.",
-  "sharedEquipment.outro.cta": "Encontrar um dia de impressão",
+    "O material partilhado existe para que o trabalho aconteça. Explora o calendário de eventos e encontra oficinas e ateliês abertos perto de ti.",
+  "sharedEquipment.outro.cta": "Explorar eventos",
 
   // ── SpoonTheoryPage (+ spoonTheory.data.ts) ─────────────────────────────
   // FLAGGED for native review — see en/resources.ts comment above this block.
   "spoonTheory.meta.title":
     "Teoria das colheres: como a usamos nesta comunidade queer",
   "spoonTheory.meta.description":
-    "O que é a teoria das colheres e como a QueerPulse a usa para doença crónica e deficiência: eventos híbridos por defeito, faltar sem penalização, e 'estou com poucas colheres' como frase válida.",
+    "O que é a teoria das colheres e como a usar na QueerPulse se tens doença crónica ou deficiência: detalhes de acessibilidade nos eventos, eventos online, e um campo para indicares as tuas necessidades de acesso ao confirmares presença.",
 
   "spoonTheory.hero.eyebrow": "Pessoas Queer com Deficiência",
   "spoonTheory.hero.title": "O que queremos dizer com <em>colheres.</em>",
@@ -2513,29 +2497,29 @@ export const resources: Catalog = {
     "É uma forma de pessoas com doença crónica, deficiência e dor crónica tornarem visível um limite invisível, para si próprias e umas para as outras, sem terem de escrever um ensaio sobre isso.",
 
   "spoonTheory.uses.title": "Como a <em>usamos</em>",
-  "spoonTheory.use1.title": "Híbrido por defeito",
+  "spoonTheory.use1.title": "Detalhes de acessibilidade e eventos online",
   "spoonTheory.use1.body":
-    "Todos os eventos têm opção online, para que um dia de poucas colheres nunca signifique ficar de fora. Online é outra porta para a mesma sala, com o mesmo peso.",
-  "spoonTheory.use2.title": "Aparece se puderes, sem penalização",
+    "Quem organiza pode indicar detalhes de acessibilidade num evento: entrada sem degraus, interior acessível a cadeira de rodas, casa de banho acessível, casa de banho neutra, horas de silêncio, e se animais de assistência são bem-vindos. Alguns eventos são online, o que pode ajudar num dia de poucas colheres.",
+  "spoonTheory.use2.title": "Podes mudar de ideias",
   "spoonTheory.use2.body":
-    "Confirmaste presença e não consegues ir? Sem problema. Contamos com isso. As colheres que poupas ao ficar em casa são tuas para guardar.",
+    "Podes alterar a tua confirmação de presença quando a tua energia mudar. As colheres que poupas ao ficar em casa são tuas para guardar.",
   "spoonTheory.use3.title":
     '"Hoje estou com poucas colheres" já é uma frase completa',
   "spoonTheory.use3.body":
-    "Ninguém aqui te vai pedir para justificares. Podes dizê-lo ao confirmares presença, quando chegas, ou quando precisas de sair mais cedo, e será simplesmente respeitado.",
+    "Não deves justificações a ninguém. Podes dizê-lo ao confirmares presença, quando chegas, ou quando precisas de sair mais cedo.",
 
   "spoonTheory.rsvp.title": "Ao <em>confirmar presença</em>",
   "spoonTheory.rsvpTip1":
     "Diz à pessoa anfitriã quantas colheres tens, se ajudar no planeamento: lugares sentados, cantos calmos, uma saída fácil perto da porta.",
   "spoonTheory.rsvpTip2":
-    "Pede o que precisas com antecedência; será tratado sem alarido e sem comentários.",
+    "O formulário de confirmação de presença tem um campo para as tuas necessidades de acesso. Preenche-o para a pessoa anfitriã o ver.",
   "spoonTheory.rsvpTip3":
-    "Cuidadores e assistentes pessoais são sempre bem-vindes, sem necessidade de reserva.",
+    "Consulta os detalhes de acessibilidade na página do evento antes de ires, e pergunta à pessoa anfitriã se faltar algo de que precisas.",
 
   "spoonTheory.outro.title": "Vem como <em>estiveres.</em>",
   "spoonTheory.outro.sub":
-    "Não estamos a medir nada. Todos os eventos são híbridos, sem compromisso de chegada, e feitos para corpos reais.",
-  "spoonTheory.outro.cta": "Encontrar um evento de baixo estímulo",
+    "Ninguém está a contar as tuas colheres. Os eventos indicam os seus detalhes de acessibilidade para planeares de acordo com a tua energia.",
+  "spoonTheory.outro.cta": "Encontrar eventos",
 
   // ── IntersectionalityPage (+ IntersectionalityCards.tsx +
   //    IntersectionalityFooter.tsx + intersectionality.data.ts) ───────────
@@ -2600,7 +2584,7 @@ export const resources: Catalog = {
     "A comunidade queer tem muitas vezes um carácter de classe não dito: certos bares, eventos, estéticas e códigos sociais assinalam pertença de formas que excluem quem não pode ou não participa. Nomear isto é o primeiro passo para fazer algo sobre isso.",
   "intersectionality.class.note.strong": "A posição da QueerPulse:",
   "intersectionality.class.note.text":
-    "Tentamos tornar a participação na comunidade acessível independentemente do rendimento. Os eventos têm opções de preço variável; o fórum é gratuito; esta plataforma é gratuita para quem não pode pagar uma contribuição. Se o custo for uma barreira para o que seja aqui, contacta-nos diretamente. Será tratado com discrição.",
+    "Tentamos tornar a participação na comunidade acessível independentemente do rendimento. A QueerPulse não cobra nada aos membros, e o fórum é gratuito. Quem organiza um evento pode indicar quanto custa: gratuito, paga o que puderes ou um preço fixo. Se o custo for uma barreira para o que seja aqui, fala diretamente com a nossa equipa.",
   "intersectionality.class.info1.eyebrow":
     "A subida do custo de vida em Lisboa",
   "intersectionality.class.info1.title": "O que a gentrificação significa aqui",
@@ -2654,7 +2638,7 @@ export const resources: Catalog = {
     "Qualquer membro pode explorar a página de Comunidades para encontrar um espaço que lhe faça sentido, e a moderação aplica os mesmos padrões em todos.",
   "intersectionality.commitment3.title": "Acessibilidade económica",
   "intersectionality.commitment3.text":
-    "Ninguém é excluído de eventos ou recursos da comunidade por causa do custo. Existem opções de preço variável e gratuitas para tudo o que organizamos.",
+    "A própria QueerPulse não cobra nada aos membros. Quem organiza cada evento pode marcá-lo como gratuito, paga o que puderes ou preço fixo.",
   "intersectionality.commitment4.title": "Não somos um bloco único",
   "intersectionality.commitment4.text":
     "A QueerPulse não fala a uma só voz sobre questões políticas. A comunidade contém multidões. O fórum é um lugar para ter os debates, e é a comunidade que os trabalha.",
@@ -2848,8 +2832,6 @@ export const resources: Catalog = {
     "As inscrições ainda não estão abertas. O projeto de história oral ainda está a ser preparado.",
   "qtipocArchive.contribute.liveToast":
     "As contribuições ainda não estão abertas. O arquivo ainda está a ser construído.",
-  "sharedEquipment.requestLiveToast":
-    "A biblioteca de empréstimos ainda não está ativa. Volta em breve.",
 
   // ── GuideRatingWidget (CNT-18) ───────────────────────────────────────────
   "rating.prompt": "Isto foi útil?",

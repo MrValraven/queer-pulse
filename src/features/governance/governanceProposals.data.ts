@@ -128,7 +128,7 @@ export const DEMO_GOVERNANCE_PROPOSALS: GovernanceProposalDTO[] = [
     type: "funding_change",
     title: "Accept a restricted grant from a municipal LGBTQ+ office",
     description:
-      "A city LGBTQ+ affairs office has offered a €1,500 restricted grant for the mental-health fund, with no editorial or platform influence attached. This would be our first government-linked funding, so per our principles it goes to a community vote before we accept anything.",
+      "A city LGBTQ+ affairs office has offered a restricted grant for the mental-health fund, with no editorial or platform influence attached. This would be our first government-linked funding, so per our principles it goes to a community vote before we accept anything.",
     targetMemberId: null,
     targetMember: null,
     status: "open",
@@ -189,7 +189,7 @@ export const DEMO_GOVERNANCE_PROPOSALS: GovernanceProposalDTO[] = [
     type: "funding_change",
     title: "Accept sponsored placement from a dating-app brand",
     description:
-      "A dating app offered €2,000/quarter for a footer placement on the Governance page. The council flagged a potential conflict with our no-corporate-funding principle and put it to a vote.",
+      "A dating app offered to pay for a footer placement on the Governance page. The council flagged a potential conflict with our no-corporate-funding principle and put it to a vote.",
     targetMemberId: null,
     targetMember: null,
     status: "failed",

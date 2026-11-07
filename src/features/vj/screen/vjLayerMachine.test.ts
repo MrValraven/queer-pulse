@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { VjTransition } from "../../../shared/contracts/vj";
+import type { VjGeneratorId } from "../../../shared/contracts/vj";
+import type { VjResolvedTransition } from "../engine/vjEngineLook";
 import {
   INITIAL_VJ_LAYERS,
   VJ_LAYER_NAMES,
@@ -11,12 +12,19 @@ import {
   type VjLayerMachineState,
   type VjLayerName,
   type VjRenderableClip,
+  type VjRenderableGenerator,
+  type VjRenderableSource,
+  vjGeneratorSourceKey,
 } from "./vjLayerMachine";
 
-const FADE: VjTransition = { mode: "fade", fadeMs: 800 };
-const CUT: VjTransition = { mode: "cut", fadeMs: 800 };
+const FADE: VjResolvedTransition = { mode: "fade", durationMs: 800 };
+const CUT: VjResolvedTransition = { mode: "cut", durationMs: 0 };
 
-function clipNamed(clipId: string): VjRenderableClip {
+/** One v2 clip with every field set; overrides change only what a test needs. */
+function clipFixture(
+  clipId: string,
+  overrides: Partial<VjRenderableClip> = {},
+): VjRenderableClip {
   return {
     clipId,
     mediaKind: "video",
@@ -24,6 +32,29 @@ function clipNamed(clipId: string): VjRenderableClip {
     width: 1920,
     height: 1080,
     sourceUrl: `blob:source-${clipId}`,
+    durationMs: 8000,
+    loopInMs: null,
+    loopOutMs: null,
+    loopMode: "loop",
+    defaultSpeed: 1,
+    ...overrides,
+  };
+}
+
+function clipNamed(clipId: string): VjRenderableClip {
+  return clipFixture(clipId);
+}
+
+function generatorFixture(
+  generatorId: VjGeneratorId,
+  generatorVariant: string | null = null,
+): VjRenderableGenerator {
+  return {
+    clipId: vjGeneratorSourceKey(generatorId, generatorVariant),
+    generatorId,
+    generatorVariant,
+    mediaKind: "generator",
+    sourceUrl: "",
   };
 }
 
@@ -92,7 +123,8 @@ describe("reduceVjLayers switching clips", () => {
     expect(fading.incoming).toEqual({
       layer: incomingLayer,
       mode: "fade",
-      fadeMs: 800,
+      durationMs: 800,
+      isArmed: true,
     });
   });
 
@@ -237,7 +269,8 @@ describe("reduceVjLayers catching a fading clip up", () => {
     expect(ended.incoming).toEqual({
       layer: firstLayer,
       mode: "fade",
-      fadeMs: 800,
+      durationMs: 800,
+      isArmed: true,
     });
   });
 
@@ -363,7 +396,7 @@ describe("reduceVjLayers with targets in flight", () => {
     const black = reduceVjLayers(shown, {
       type: "target",
       clip: null,
-      transition: { mode: "fade", fadeMs: 1200 },
+      transition: { mode: "fade", durationMs: 1200 },
     });
     expect(black.isBlackRequested).toBe(true);
     expect(black.curtainFadeMs).toBe(1200);
@@ -388,7 +421,7 @@ describe("reduceVjLayers with targets in flight", () => {
     const loading = reduceVjLayers(black, {
       type: "target",
       clip: clipNamed("two"),
-      transition: { mode: "fade", fadeMs: 600 },
+      transition: { mode: "fade", durationMs: 600 },
     });
     const incomingLayer = layerHolding(loading, "two");
     expect(loading.isBlackRequested).toBe(true);
@@ -431,11 +464,11 @@ describe("reduceVjLayers invariants", () => {
       return item;
     };
     const clipIds = ["one", "two", "three", "four"];
-    const transitions: VjTransition[] = [
+    const transitions: VjResolvedTransition[] = [
       FADE,
       CUT,
-      { mode: "fade", fadeMs: 0 },
-      { mode: "fade", fadeMs: 4000 },
+      { mode: "fade", durationMs: 0 },
+      { mode: "fade", durationMs: 4000 },
     ];
 
     const randomEvent = (state: VjLayerMachineState): VjLayerEvent => {
@@ -536,5 +569,332 @@ describe("reduceVjLayers invariants", () => {
       transition: CUT,
     });
     expect(releasedVjSourceUrls(failedLoad, black)).toEqual([]);
+  });
+});
+
+/** Clip "one" shown, clip "two" prepared and primed in the free layer. */
+function twoPrimedUnderOne(): VjLayerMachineState {
+  const prepared = reduceVjLayers(showingClipOne(), {
+    type: "prepare",
+    source: clipNamed("two"),
+  });
+  return reduceVjLayers(prepared, {
+    type: "firstFrame",
+    layer: layerHolding(prepared, "two"),
+    clipId: "two",
+  });
+}
+
+describe("reduceVjLayers preparing the next source", () => {
+  it("keeps a primed clip hidden under the front until its target arrives", () => {
+    const shown = showingClipOne();
+    const frontLayer = shown.front;
+    if (!frontLayer) throw new Error("expected a front layer");
+    const prepared = reduceVjLayers(shown, {
+      type: "prepare",
+      source: clipNamed("two"),
+    });
+    const preparedLayer = layerHolding(prepared, "two");
+    expect(preparedLayer).not.toBe(frontLayer);
+    expect(prepared.slots[preparedLayer].phase).toBe("loading");
+    expect(prepared.incoming?.isArmed).toBe(false);
+
+    const primed = reduceVjLayers(prepared, {
+      type: "firstFrame",
+      layer: preparedLayer,
+      clipId: "two",
+    });
+    expect(primed.slots[preparedLayer].phase).toBe("primed");
+    expect(primed.front).toBe(frontLayer);
+    expect(primed.slots[frontLayer].phase).toBe("shown");
+    expect(vjLayerOpacity(primed, preparedLayer)).toBe(0);
+    expect(vjLayerZ(primed, preparedLayer)).toBe(0);
+    expect(vjLayerOpacity(primed, frontLayer)).toBe(1);
+    expect(vjLayerZ(primed, frontLayer)).toBe(1);
+
+    const retargetedFront = reduceVjLayers(primed, {
+      type: "target",
+      clip: clipNamed("one"),
+      transition: CUT,
+    });
+    expect(retargetedFront).toBe(primed);
+    const staleFadeEnd = reduceVjLayers(primed, {
+      type: "fadeEnded",
+      layer: preparedLayer,
+      clipId: "two",
+    });
+    expect(staleFadeEnd).toBe(primed);
+  });
+
+  it("starts the transition at once when the target names a primed clip", () => {
+    const primed = twoPrimedUnderOne();
+    const frontLayer = primed.front;
+    if (!frontLayer) throw new Error("expected a front layer");
+    const primedLayer = layerHolding(primed, "two");
+
+    const fading = reduceVjLayers(primed, {
+      type: "target",
+      clip: clipNamed("two"),
+      transition: FADE,
+    });
+    expect(fading.slots[primedLayer].phase).toBe("fadingIn");
+    expect(fading.incoming).toEqual({
+      layer: primedLayer,
+      mode: "fade",
+      durationMs: 800,
+      isArmed: true,
+    });
+    expect(vjLayerOpacity(fading, primedLayer)).toBe(1);
+    expect(vjLayerZ(fading, primedLayer)).toBe(1);
+    expect(fading.front).toBe(frontLayer);
+
+    const cut = reduceVjLayers(primed, {
+      type: "target",
+      clip: clipNamed("two"),
+      transition: CUT,
+    });
+    expect(cut.front).toBe(primedLayer);
+    expect(cut.slots[primedLayer].phase).toBe("shown");
+    expect(cut.slots[frontLayer].phase).toBe("leaving");
+    expect(cut.incoming).toBeNull();
+
+    const black = reduceVjLayers(showingClipOne(), {
+      type: "target",
+      clip: null,
+      transition: CUT,
+    });
+    const preparedUnderCurtain = reduceVjLayers(black, {
+      type: "prepare",
+      source: clipNamed("two"),
+    });
+    const primedUnderCurtain = reduceVjLayers(preparedUnderCurtain, {
+      type: "firstFrame",
+      layer: layerHolding(preparedUnderCurtain, "two"),
+      clipId: "two",
+    });
+    expect(primedUnderCurtain.isBlackRequested).toBe(true);
+    const lifted = reduceVjLayers(primedUnderCurtain, {
+      type: "target",
+      clip: clipNamed("two"),
+      transition: { mode: "fade", durationMs: 600 },
+    });
+    expect(lifted.isBlackRequested).toBe(false);
+    expect(lifted.curtainFadeMs).toBe(600);
+    expect(lifted.front).toBe(layerHolding(primedUnderCurtain, "two"));
+  });
+
+  it("arms a still-loading prepared clip so it starts at its first frame", () => {
+    const shown = showingClipOne();
+    const prepared = reduceVjLayers(shown, {
+      type: "prepare",
+      source: clipNamed("two"),
+    });
+    const preparedLayer = layerHolding(prepared, "two");
+    const armed = reduceVjLayers(prepared, {
+      type: "target",
+      clip: clipNamed("two"),
+      transition: FADE,
+    });
+    expect(armed.slots[preparedLayer].phase).toBe("loading");
+    expect(armed.incoming).toEqual({
+      layer: preparedLayer,
+      mode: "fade",
+      durationMs: 800,
+      isArmed: true,
+    });
+    expect(vjLayerOpacity(armed, preparedLayer)).toBe(0);
+
+    const ignoredPrepare = reduceVjLayers(armed, {
+      type: "prepare",
+      source: clipNamed("three"),
+    });
+    expect(ignoredPrepare).toBe(armed);
+
+    const fading = reduceVjLayers(armed, {
+      type: "firstFrame",
+      layer: preparedLayer,
+      clipId: "two",
+    });
+    expect(fading.slots[preparedLayer].phase).toBe("fadingIn");
+    expect(vjLayerOpacity(fading, preparedLayer)).toBe(1);
+  });
+
+  it("replaces an unarmed prepared clip with a newer prepare", () => {
+    const primed = twoPrimedUnderOne();
+    const preparedLayer = layerHolding(primed, "two");
+    const replaced = reduceVjLayers(primed, {
+      type: "prepare",
+      source: clipNamed("three"),
+    });
+    expect(replaced.slots[preparedLayer]).toEqual({
+      clip: clipNamed("three"),
+      phase: "loading",
+    });
+    expect(replaced.incoming?.isArmed).toBe(false);
+    expect(releasedVjSourceUrls(primed, replaced)).toEqual(["blob:source-two"]);
+
+    const targetedElsewhere = reduceVjLayers(replaced, {
+      type: "target",
+      clip: clipNamed("four"),
+      transition: FADE,
+    });
+    expect(targetedElsewhere.slots[preparedLayer].clip?.clipId).toBe("four");
+    expect(targetedElsewhere.incoming?.isArmed).toBe(true);
+    expect(releasedVjSourceUrls(replaced, targetedElsewhere)).toEqual([
+      "blob:source-three",
+    ]);
+
+    const cancelled = reduceVjLayers(primed, { type: "prepare", source: null });
+    expect(cancelled.incoming).toBeNull();
+    expect(cancelled.slots[preparedLayer]).toEqual({
+      clip: null,
+      phase: "empty",
+    });
+    expect(releasedVjSourceUrls(primed, cancelled)).toEqual([
+      "blob:source-two",
+    ]);
+  });
+
+  it("treats a generator as ready at its first frame and never reports a source URL for it", () => {
+    expect(vjGeneratorSourceKey("prideFlagWave", "trans")).toBe(
+      "generator:prideFlagWave:trans",
+    );
+    expect(vjGeneratorSourceKey("plasma", null)).toBe("generator:plasma:");
+
+    const plasma = generatorFixture("plasma");
+    const shown = showingClipOne();
+    const loading = reduceVjLayers(shown, {
+      type: "target",
+      clip: plasma,
+      transition: CUT,
+    });
+    const generatorLayer = layerHolding(loading, plasma.clipId);
+    expect(releasedVjSourceUrls(shown, loading)).toEqual([]);
+
+    const cut = reduceVjLayers(loading, {
+      type: "firstFrame",
+      layer: generatorLayer,
+      clipId: plasma.clipId,
+    });
+    expect(cut.front).toBe(generatorLayer);
+    expect(cut.slots[generatorLayer]).toEqual({ clip: plasma, phase: "shown" });
+    expect(releasedVjSourceUrls(loading, cut)).toEqual(["blob:source-one"]);
+
+    const backToClip = reduceVjLayers(cut, {
+      type: "target",
+      clip: clipNamed("two"),
+      transition: CUT,
+    });
+    const clipShown = reduceVjLayers(backToClip, {
+      type: "firstFrame",
+      layer: layerHolding(backToClip, "two"),
+      clipId: "two",
+    });
+    expect(clipShown.slots[generatorLayer].phase).toBe("leaving");
+    expect(releasedVjSourceUrls(backToClip, clipShown)).toEqual([]);
+    expect(releasedVjSourceUrls(cut, INITIAL_VJ_LAYERS)).toEqual([]);
+  });
+});
+
+/** Every rule a reachable state keeps, primed and generator sources included. */
+function expectLayerInvariants(state: VjLayerMachineState): void {
+  if (!state.isBlackRequested) {
+    expect(state.front).not.toBeNull();
+    if (state.front === null) return;
+    expect(state.slots[state.front].phase).toBe("shown");
+    expect(vjLayerOpacity(state, state.front)).toBe(1);
+  }
+  if (state.incoming) {
+    const incomingSlot = state.slots[state.incoming.layer];
+    expect(state.incoming.layer).not.toBe(state.front);
+    expect(incomingSlot.clip).not.toBeNull();
+    expect(["loading", "primed", "fadingIn", "catchingUp"]).toContain(
+      incomingSlot.phase,
+    );
+    if (!state.incoming.isArmed) {
+      expect(["loading", "primed"]).toContain(incomingSlot.phase);
+    }
+    if (incomingSlot.phase === "primed")
+      expect(state.incoming.isArmed).toBe(false);
+    if (incomingSlot.phase === "loading" || incomingSlot.phase === "primed") {
+      expect(vjLayerOpacity(state, state.incoming.layer)).toBe(0);
+      expect(vjLayerZ(state, state.incoming.layer)).toBe(0);
+    } else {
+      expect(vjLayerOpacity(state, state.incoming.layer)).toBe(1);
+      expect(vjLayerZ(state, state.incoming.layer)).toBe(1);
+    }
+  }
+  if (state.pendingTarget) {
+    expect(state.incoming).not.toBeNull();
+    if (state.incoming === null) return;
+    expect(state.slots[state.incoming.layer].phase).toBe("catchingUp");
+  }
+  for (const layer of VJ_LAYER_NAMES) {
+    const phase = state.slots[layer].phase;
+    if (phase === "primed") expect(state.incoming?.layer).toBe(layer);
+  }
+}
+
+describe("reduceVjLayers invariants with prepared sources", () => {
+  it("keeps an opaque layer under every live source across 500 random event sequences that include prepare and generators", () => {
+    let seed = 20261106;
+    const nextRandom = (): number => {
+      seed = (seed * 1664525 + 1013904223) % 4294967296;
+      return seed / 4294967296;
+    };
+    const pick = <Item>(items: readonly Item[]): Item => {
+      const item = items[Math.floor(nextRandom() * items.length)];
+      if (item === undefined) throw new Error("empty pick");
+      return item;
+    };
+    const sources: VjRenderableSource[] = [
+      clipNamed("one"),
+      clipNamed("two"),
+      clipNamed("three"),
+      generatorFixture("plasma"),
+      generatorFixture("prideFlagWave", "trans"),
+    ];
+    const transitions: VjResolvedTransition[] = [
+      FADE,
+      CUT,
+      { mode: "dipBlack", durationMs: 1000 },
+      { mode: "fade", durationMs: 0 },
+      { mode: "wipeLeft", durationMs: 4000 },
+    ];
+
+    const randomEvent = (state: VjLayerMachineState): VjLayerEvent => {
+      const roll = nextRandom();
+      if (roll < 0.25) {
+        return {
+          type: "target",
+          clip: nextRandom() < 0.15 ? null : pick(sources),
+          transition: pick(transitions),
+        };
+      }
+      if (roll < 0.4) {
+        return {
+          type: "prepare",
+          source: nextRandom() < 0.1 ? null : pick(sources),
+        };
+      }
+      const layer = pick(VJ_LAYER_NAMES);
+      const heldClipId = state.slots[layer].clip?.clipId;
+      const clipId =
+        heldClipId && nextRandom() < 0.85 ? heldClipId : pick(sources).clipId;
+      if (roll < 0.68) return { type: "firstFrame", layer, clipId };
+      if (roll < 0.8) return { type: "failed", layer, clipId };
+      if (roll < 0.9) return { type: "catchUpEnded", layer, clipId };
+      return { type: "fadeEnded", layer, clipId };
+    };
+
+    for (let sequenceIndex = 0; sequenceIndex < 500; sequenceIndex += 1) {
+      let state = INITIAL_VJ_LAYERS;
+      for (let eventIndex = 0; eventIndex < 40; eventIndex += 1) {
+        const next = reduceVjLayers(state, randomEvent(state));
+        expect(releasedVjSourceUrls(state, next)).not.toContain("");
+        state = next;
+        expectLayerInvariants(state);
+      }
+    }
   });
 });

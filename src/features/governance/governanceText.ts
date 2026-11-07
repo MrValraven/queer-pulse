@@ -10,7 +10,7 @@ export interface AuthoredGovernanceText {
  * PRD-265. One piece of governance-overview prose, from either of the two
  * places it can come from.
  *
- * The four decisions, six principles and four council roles this page shipped
+ * The six principles and four council roles this page shipped
  * with are i18n KEYS: their words live in the catalogs and the reader calls
  * `t(key)`. An entry an editor added afterwards has no key to translate, so it
  * carries its own EN and PT and the reader picks by active language.

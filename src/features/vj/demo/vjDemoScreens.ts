@@ -1,28 +1,33 @@
-// The demo VJ stage's screen list (contract 6.4, 6.7 and 6.8): attach,
-// detach, numbering, the lead and the frames the stage sends, pure.
+// The demo VJ stage's screen list (contract 7.1, 7.8, 7.9 and v1 6.4, 6.7,
+// 6.8): attach, detach, numbering, the lead and the frames the stage sends,
+// pure.
 
 import {
+  VJ_CONTRACT_VERSION,
+  canonicalVjStageState,
   type VjAttachRole,
   type VjAttachSuccess,
+  type VjScreenHealth,
+  type VjScreenMicReport,
   type VjScreenPreload,
   type VjScreenStatus,
   type VjSocketErrorCode,
-  type VjStageRestore,
   type VjStageState,
 } from "../../../shared/contracts/vj";
-import type { VjDemoLibraryLookup } from "./vjDemoStore";
+import { VJ_SCREEN_OFFLINE_RETENTION_MS } from "../vj.constants";
+import type { VjDemoLibraryLookup } from "./vjDemoCommandKit";
+import { vjDemoAttachApplyAt } from "./vjDemoQuantize";
 import { isVjUuid } from "./vjDemoRules";
-import {
-  readVjRecord,
-  restoreVjStage,
-  vjDemoAckFailure,
-} from "./vjDemoStageCommands";
 import {
   frameTo,
   isVjRecord,
+  readVjRecord,
   stageFrame,
+  vjDemoAckFailure,
+  vjDemoAckSuccess,
   type VjDemoOutgoing,
 } from "./vjDemoStageInput";
+import { restoreVjDemoStage } from "./vjDemoStageRestore";
 
 export interface VjDemoScreenEntry {
   screenId: string;
@@ -36,6 +41,12 @@ export interface VjDemoScreenEntry {
   lastSeenAt: number;
   isFullscreen: boolean;
   preload: VjScreenPreload;
+  /** Null until this connection reports health. */
+  health: VjScreenHealth | null;
+  /** The lead's shuffle pick; a follower's report is stored as null. */
+  nextClipId: string | null;
+  /** Null while the mic is off on this screen. */
+  mic: VjScreenMicReport | null;
 }
 
 export interface VjDemoStage {
@@ -48,6 +59,10 @@ export interface VjDemoStage {
   connectionCounter: number;
   /** The highest number ever given; a pruned screen's number is never reused. */
   highestScreenNumber: number;
+  /** The last stamped applyAt (contract 7.4, memory only). */
+  pendingApplyAt: number | null;
+  /** When the lead's mic last moved the tempo (contract 7.9). */
+  lastMicAdoptionAt: number | null;
 }
 
 export type { VjDemoOutgoing } from "./vjDemoStageInput";
@@ -66,12 +81,14 @@ export interface VjDemoStageResult {
 /** A demo connection never expires inside one evening. */
 export const VJ_DEMO_CONNECTION_LIFETIME_MS = 12 * 60 * 60 * 1000;
 
+/** A refusal ack built at `now`, carrying `state` for the C 7.11 "state" codes. */
 export function refuse(
   stage: VjDemoStage,
   code: VjSocketErrorCode,
+  now: number,
   state?: VjStageState,
 ): VjDemoStageResult {
-  return { stage, ack: vjDemoAckFailure(code, state), outgoing: [] };
+  return { stage, ack: vjDemoAckFailure(code, now, state), outgoing: [] };
 }
 
 export function silent(stage: VjDemoStage): VjDemoStageResult {
@@ -94,29 +111,67 @@ export function leadOf(screens: VjDemoScreenEntry[]): VjDemoScreenEntry | null {
   return lead;
 }
 
-function screenStatusesOf(screens: VjDemoScreenEntry[]): VjScreenStatus[] {
-  const lead = leadOf(screens);
-  return [...screens]
+/** The screens past their offline retention dropped (v1 note 12); the
+ *  retention runs from the disconnect (contract 6.7). Hands back the same
+ *  list when every screen stays. Mirrors pruneOfflineScreens of
+ *  queerpulse-backend/src/vj/vj-stage.service.ts. */
+export function pruneOfflineVjDemoScreens(
+  screens: VjDemoScreenEntry[],
+  now: number,
+): VjDemoScreenEntry[] {
+  const kept = screens.filter(
+    (entry) =>
+      entry.tabId !== null ||
+      entry.disconnectedAt === null ||
+      now - entry.disconnectedAt <= VJ_SCREEN_OFFLINE_RETENTION_MS,
+  );
+  return kept.length === screens.length ? screens : kept;
+}
+
+/** The screens sorted by number with the v2 fields (contract 7.9): the
+ *  lead's next clip only while shuffle is on, the mic relayed as level,
+ *  detected bpm and confidence. An offline screen relays null health and
+ *  mic, so its meters stop with its tab; the stored entry stays as it is. */
+function screenStatusesOf(
+  stage: Pick<VjDemoStage, "screens" | "state">,
+): VjScreenStatus[] {
+  const lead = leadOf(stage.screens);
+  const isShuffleOn = stage.state.shuffle.isOn;
+  return [...stage.screens]
     .sort((left, right) => left.number - right.number)
-    .map((entry) => ({
-      screenId: entry.screenId,
-      number: entry.number,
-      isConnected: entry.tabId !== null,
-      isLead: lead !== null && entry.screenId === lead.screenId,
-      isFullscreen: entry.isFullscreen,
-      connectedAt: entry.connectedAt,
-      lastSeenAt: entry.lastSeenAt,
-      preload: entry.preload,
-    }));
+    .map((entry) => {
+      const isConnected = entry.tabId !== null;
+      const isLead = lead !== null && entry.screenId === lead.screenId;
+      return {
+        screenId: entry.screenId,
+        number: entry.number,
+        isConnected,
+        isLead,
+        isFullscreen: entry.isFullscreen,
+        connectedAt: entry.connectedAt,
+        lastSeenAt: entry.lastSeenAt,
+        preload: entry.preload,
+        health: isConnected ? entry.health : null,
+        nextClipId: isLead && isShuffleOn ? entry.nextClipId : null,
+        mic:
+          !isConnected || entry.mic === null
+            ? null
+            : {
+                level: entry.mic.level,
+                detectedBpm: entry.mic.bpm,
+                confidence: entry.mic.confidence,
+              },
+      };
+    });
 }
 
 export function screensUpdateTo(
-  screens: VjDemoScreenEntry[],
+  stage: Pick<VjDemoStage, "screens" | "state">,
   target: { tabId?: string | null; role?: VjAttachRole | null },
 ): VjDemoOutgoing {
   return frameTo(
     "screens:update",
-    { screens: screenStatusesOf(screens) },
+    { screens: screenStatusesOf(stage) },
     target,
   );
 }
@@ -130,20 +185,39 @@ function withoutTab(
   return next;
 }
 
+/** The attach success ack (contract 7.1), stamped with the server's clock. */
 function attachSuccess(
   stage: VjDemoStage,
   role: VjAttachRole,
   now: number,
-  screen: { isRestored: boolean; isLead: boolean | null },
-): { ok: true } & VjAttachSuccess {
-  return {
-    ok: true,
+  screen: {
+    isRestored: boolean;
+    isLead: boolean | null;
+    screenNumber: number | null;
+  },
+): { ok: true; serverNow: number } & VjAttachSuccess {
+  return vjDemoAckSuccess(now, {
     role,
     connectionExpiresAt: now + VJ_DEMO_CONNECTION_LIFETIME_MS,
     stageEpoch: stage.state.stageEpoch,
     isRestored: screen.isRestored,
     isLead: screen.isLead,
-  };
+    screenNumber: screen.screenNumber,
+  });
+}
+
+/** The attach stage:state to one tab: the pending applyAt while it is ahead. */
+function attachFrameTo(
+  stage: VjDemoStage,
+  tabId: string,
+  now: number,
+): VjDemoOutgoing {
+  const applyAt = vjDemoAttachApplyAt(stage.pendingApplyAt, now);
+  return frameTo(
+    "stage:state",
+    stageFrame(stage.state, "attach", null, applyAt),
+    { tabId },
+  );
 }
 
 function attachRemote(
@@ -160,11 +234,71 @@ function attachRemote(
     ack: attachSuccess(next, "remote", now, {
       isRestored: false,
       isLead: null,
+      screenNumber: null,
     }),
     outgoing: [
-      frameTo("stage:state", stageFrame(next.state, "attach"), { tabId }),
-      screensUpdateTo(next.screens, { tabId }),
+      attachFrameTo(next, tabId, now),
+      screensUpdateTo(next, { tabId }),
     ],
+  };
+}
+
+/** Contract 7.13 adoption at revision 0: the restored state, canonical, and
+ *  no pending applyAt. Null when the stage keeps its state. */
+function restoredStageOf(
+  stage: VjDemoStage,
+  restoreState: unknown,
+  context: VjDemoStageContext,
+): Pick<VjDemoStage, "state" | "pendingApplyAt"> | null {
+  if (stage.state.revision !== 0 || !isVjRecord(restoreState)) return null;
+  const state = canonicalVjStageState(
+    restoreVjDemoStage(stage.state, restoreState, context.library, context.now),
+  );
+  return { state, pendingApplyAt: null };
+}
+
+/** The screen list with `screenId` pointed at the tab: a returning screen
+ *  keeps its number and waits for its next status for health, next clip and
+ *  mic; a new one takes the next number. */
+function connectScreenEntry(
+  stage: VjDemoStage,
+  screenId: string,
+  tabId: string,
+  now: number,
+): Pick<VjDemoStage, "screens" | "connectionCounter" | "highestScreenNumber"> {
+  const existing = stage.screens.find((entry) => entry.screenId === screenId);
+  const connectionCounter = stage.connectionCounter + 1;
+  const connection = {
+    tabId,
+    connectedAt: now,
+    connectionOrder: connectionCounter,
+    disconnectedAt: null,
+    lastSeenAt: now,
+    health: null,
+    nextClipId: null,
+    mic: null,
+  };
+  if (existing !== undefined) {
+    return {
+      screens: stage.screens.map((entry) =>
+        entry === existing ? { ...entry, ...connection } : entry,
+      ),
+      connectionCounter,
+      highestScreenNumber: stage.highestScreenNumber,
+    };
+  }
+  const highestScreenNumber = stage.highestScreenNumber + 1;
+  const entry: VjDemoScreenEntry = {
+    screenId,
+    number: highestScreenNumber,
+    isFullscreen: false,
+    preload: { packId: null, clips: [] },
+    ...connection,
+  };
+  return {
+    screens: [...stage.screens, entry],
+    connectionCounter,
+    highestScreenNumber,
   };
 }
 
@@ -174,8 +308,10 @@ function attachScreen(
   record: Record<string, unknown>,
   context: VjDemoStageContext,
 ): VjDemoStageResult {
-  const { restoreState } = record;
-  if (!isVjUuid(record.screenId)) return refuse(stage, "vj_screen_id_invalid");
+  const { now } = context;
+  if (!isVjUuid(record.screenId)) {
+    return refuse(stage, "vj_screen_id_invalid", now);
+  }
   const screenId = record.screenId.toLowerCase();
   const outgoing: VjDemoOutgoing[] = [];
   let attached = stage.attached;
@@ -194,73 +330,50 @@ function attachScreen(
     outgoing.push(frameTo("exception", replaced, { tabId: existing.tabId }));
     attached = withoutTab(attached, existing.tabId);
   }
-  const connectionCounter = stage.connectionCounter + 1;
-  const connection = {
-    tabId,
-    connectedAt: context.now,
-    connectionOrder: connectionCounter,
-    disconnectedAt: null,
-    lastSeenAt: context.now,
-  };
-  const highestScreenNumber =
-    stage.highestScreenNumber + (existing === undefined ? 1 : 0);
-  const screens: VjDemoScreenEntry[] = existing
-    ? stage.screens.map((entry) =>
-        entry === existing ? { ...entry, ...connection } : entry,
-      )
-    : [
-        ...stage.screens,
-        {
-          screenId,
-          number: highestScreenNumber,
-          isFullscreen: false,
-          preload: { packId: null, clips: [] },
-          ...connection,
-        },
-      ];
-  const isRestored = stage.state.revision === 0 && isVjRecord(restoreState);
-  const state = isRestored
-    ? {
-        ...restoreVjStage(
-          stage.state,
-          restoreState as unknown as VjStageRestore,
-          context.library,
-        ),
-        updatedAt: context.now,
-      }
-    : stage.state;
+  const restored = restoredStageOf(stage, record.restoreState, context);
   const next: VjDemoStage = {
     ...stage,
-    state,
-    screens,
+    ...(restored ?? {}),
+    ...connectScreenEntry(stage, screenId, tabId, now),
     attached: { ...attached, [tabId]: "screen" },
-    connectionCounter,
-    highestScreenNumber,
   };
-  const isLead = leadOf(screens)?.screenId === screenId;
+  const isRestored = restored !== null;
+  const isLead = leadOf(next.screens)?.screenId === screenId;
+  const screenNumber =
+    next.screens.find((entry) => entry.screenId === screenId)?.number ?? 0;
   outgoing.push(
     isRestored
-      ? frameTo("stage:state", stageFrame(state, "restore"))
-      : frameTo("stage:state", stageFrame(state, "attach"), { tabId }),
+      ? frameTo("stage:state", stageFrame(next.state, "restore"))
+      : attachFrameTo(next, tabId, now),
     frameTo("screen:role", { isLead }, { tabId }),
-    screensUpdateTo(screens, { role: "remote" }),
+    screensUpdateTo(next, { role: "remote" }),
   );
   return {
     stage: next,
-    ack: attachSuccess(next, "screen", context.now, { isRestored, isLead }),
+    ack: attachSuccess(next, "screen", now, {
+      isRestored,
+      isLead,
+      screenNumber,
+    }),
     outgoing,
   };
 }
 
+/** Contract 7.1 check order: vj_already_attached, the contract version
+ *  (vj_client_outdated), then the v1 role checks. */
 export function reduceAttach(
   stage: VjDemoStage,
   tabId: string,
   payload: unknown,
   context: VjDemoStageContext,
 ): VjDemoStageResult {
-  if (stage.attached[tabId] !== undefined)
-    return refuse(stage, "vj_already_attached");
+  if (stage.attached[tabId] !== undefined) {
+    return refuse(stage, "vj_already_attached", context.now);
+  }
   const record = readVjRecord(payload);
+  if (record.contractVersion !== VJ_CONTRACT_VERSION) {
+    return refuse(stage, "vj_client_outdated", context.now);
+  }
   if (record.role === "remote") return attachRemote(stage, tabId, context.now);
   if (record.role === "screen")
     return attachScreen(stage, tabId, record, context);
@@ -291,10 +404,11 @@ export function reduceDetach(
       ? { ...entry, tabId: null, connectedAt: null, disconnectedAt: now }
       : entry,
   );
+  const next: VjDemoStage = { ...stage, attached, screens };
   return {
-    stage: { ...stage, attached, screens },
+    stage: next,
     ack: null,
-    outgoing: [screensUpdateTo(screens, { role: "remote" })],
+    outgoing: [screensUpdateTo(next, { role: "remote" })],
   };
 }
 

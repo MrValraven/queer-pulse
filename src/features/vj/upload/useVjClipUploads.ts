@@ -5,6 +5,8 @@ import type { VjClipDTO, VjPackDTO } from "../../../shared/contracts/vj";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useInvalidateVjLibrary } from "../api/useInvalidateVjLibrary";
 import { vjKeys } from "../api/vjKeys";
+import { vjLibraryChangeOf } from "../api/vjLibraryInvalidation";
+import { createVjUuid } from "../live/vjUuid";
 import {
   VJ_PRESIGN_RETRY_MAX,
   VJ_PRESIGN_RETRY_WAIT_MS,
@@ -16,6 +18,8 @@ import {
   uploadVjClip,
   type VjPreparedClip,
 } from "./vjUpload";
+import type { VjPreviewInput } from "./vjPreview";
+import { makeAndAttachVjPreview } from "./vjPreviewUpload";
 import {
   isVjUploadActive,
   nextVjUploadStarts,
@@ -101,7 +105,71 @@ async function uploadWithPresignWaits(
   }
 }
 
-/** One row from checking to done; a throw fails this row only. True when the clip was saved. */
+/** What the preview is made from: the local file, so nothing is downloaded. */
+function previewInputOf(prepared: VjPreparedClip, file: File): VjPreviewInput {
+  return prepared.contentType === "image/gif"
+    ? { kind: "gif", bytes: prepared.body }
+    : { kind: "videoFile", file, durationMs: prepared.durationMs };
+}
+
+/**
+ * The step after the clip is saved (contract 9.4). The clip shows in the grid
+ * at once, then the row makes the preview. Never throws: a failure stays on
+ * the row as `previewFailure` and the row still ends done, so "Make previews"
+ * can try the clip again later. An abort here comes from Skip preview or
+ * unmount, which the reducer already settled.
+ */
+async function runVjPreviewStep(
+  row: VjUploadRow,
+  prepared: VjPreparedClip,
+  file: File,
+  clipId: string,
+  signal: AbortSignal,
+  context: VjUploadRunContext,
+): Promise<void> {
+  const changeIds = {
+    packId: row.packId,
+    clipId,
+    packIds: row.packId ? [row.packId] : [],
+  };
+  context.invalidate(
+    vjLibraryChangeOf({
+      kind: row.packId ? "pack_clips_changed" : "clip_created",
+      ...changeIds,
+    }),
+  );
+  context.dispatch({
+    kind: "stage",
+    rowId: row.rowId,
+    stage: "previewing",
+    percent: 100,
+    clipId,
+  });
+  try {
+    await makeAndAttachVjPreview({
+      clipId,
+      input: previewInputOf(prepared, file),
+      isDemoMode: context.isDemoMode,
+      signal,
+      onStage: () => undefined,
+    });
+    context.invalidate(
+      vjLibraryChangeOf({ kind: "clip_preview_changed", ...changeIds }),
+    );
+  } catch (error) {
+    if (!signal.aborted) {
+      context.dispatch({
+        kind: "previewFailed",
+        rowId: row.rowId,
+        failure: error,
+      });
+    }
+  }
+  context.dispatch({ kind: "done", rowId: row.rowId, clipId });
+}
+
+/** One row from checking to done; a throw before the clip is saved fails this
+ *  row only. True when the clip was saved. */
 async function runVjUploadRow(
   row: VjUploadRow,
   file: File,
@@ -119,13 +187,7 @@ async function runVjUploadRow(
     if (signal.aborted) return false;
     const clipId = await uploadWithPresignWaits(row, prepared, signal, context);
     if (clipId === null || signal.aborted) return false;
-    context.dispatch({ kind: "done", rowId: row.rowId, clipId });
-    context.invalidate({
-      kind: row.packId ? "pack_clips_changed" : "clip_created",
-      packId: row.packId,
-      clipId,
-      packIds: row.packId ? [row.packId] : [],
-    });
+    await runVjPreviewStep(row, prepared, file, clipId, signal, context);
     return true;
   } catch (error) {
     if (!signal.aborted) {
@@ -135,9 +197,17 @@ async function runVjUploadRow(
   }
 }
 
+/** Clips whose upload row is making their preview right now, so "Make
+ *  previews" leaves them to that row. */
+export function vjPreviewingClipIdsOf(rows: readonly VjUploadRow[]): string[] {
+  return rows.flatMap((row) =>
+    row.stage === "previewing" && row.clipId !== null ? [row.clipId] : [],
+  );
+}
+
 function newUploadRow(file: File, packId: string | null): VjUploadRow {
   return {
-    rowId: crypto.randomUUID(),
+    rowId: createVjUuid(),
     fileName: file.name,
     byteSize: file.size,
     packId,
@@ -146,12 +216,15 @@ function newUploadRow(file: File, packId: string | null): VjUploadRow {
     failure: null,
     clipId: null,
     retryCount: 0,
+    previewFailure: null,
   };
 }
 
 /**
  * The library's upload queue: two files at a time, each row with its own
- * stage, progress and named failure. Cancel aborts that row; unmount aborts
+ * stage, progress and named failure. A saved clip then makes its animated
+ * preview from the local file; a preview failure is named on the done row.
+ * Cancel aborts that row (Skip preview while previewing); unmount aborts
  * every run. Logs nothing.
  */
 export function useVjClipUploads(): VjClipUploads {

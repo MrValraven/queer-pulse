@@ -38,8 +38,8 @@ export interface DeskMenuTriggerProps {
   type: "button";
   "aria-haspopup": "menu";
   "aria-expanded": boolean;
-  /** Points at the menu while it is open; unset while closed, when the menu
-   *  is not in the DOM. */
+  /** Points at the menu while it is open; unset once it starts closing, even
+   *  though the menu stays in the DOM through its exit fade. */
   "aria-controls": string | undefined;
   onClick: () => void;
   onKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => void;
@@ -84,6 +84,14 @@ function assignRef(
 
 type OpenFocus = "first" | "last";
 
+/** What the next (or current) open asks of the list. `session` changes when an
+ *  open lands during the previous menu's exit fade, so the list remounts and
+ *  measures and type-aheads fresh. */
+interface OpenRequest {
+  focus: OpenFocus;
+  session: number;
+}
+
 /**
  * The desk's one dropdown menu: scope switcher, New, Filter, Sort and the
  * bulk stage picker are all this, so they share one keyboard model, one look
@@ -93,7 +101,9 @@ type OpenFocus = "first" | "last";
  * and Space through the button's native click), ArrowUp on the last. Inside,
  * `useDeskMenuKeyboard` handles roving, type-ahead, Escape and Tab; an outside
  * press closes it. The open menu is portaled and placed by
- * `useDeskMenuPlacement` (see there for why it cannot sit in flow).
+ * `useDeskMenuPlacement` (see there for why it cannot sit in flow). Closing
+ * fades it out through the same transition as the open, and the list unmounts
+ * once the fade ends (`useDeskMenuExit`); the trigger already reads as closed.
  *
  * The trigger is a render prop so each caller keeps its own button styling
  * (a header title, a toolbar chip, a bulk-bar button) while the menu owns the
@@ -109,10 +119,15 @@ export function DeskMenu({
   triggerRef: callerTriggerRef,
   onTriggerKeyDown,
 }: DeskMenuProps) {
-  const [openFocus, setOpenFocus] = useState<OpenFocus | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  // The list outlives `isOpen` by the length of the exit fade.
+  const [isListMounted, setIsListMounted] = useState(false);
+  const [openRequest, setOpenRequest] = useState<OpenRequest>({
+    focus: "first",
+    session: 0,
+  });
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuId = useId();
-  const isOpen = openFocus !== null;
 
   // Mirrors the trigger node into the caller's ref after commit. A merged
   // callback ref would do it inline, but `react-hooks/refs` rejects handing a
@@ -124,9 +139,21 @@ export function DeskMenu({
   }, [callerTriggerRef]);
 
   const close = useCallback((shouldRestoreFocus: boolean) => {
-    setOpenFocus(null);
+    setIsOpen(false);
     if (shouldRestoreFocus) triggerRef.current?.focus();
   }, []);
+
+  const handleExited = useCallback(() => setIsListMounted(false), []);
+
+  function open(focus: OpenFocus): void {
+    const isReopenedDuringExit = isListMounted && !isOpen;
+    setOpenRequest((previous) => ({
+      focus,
+      session: isReopenedDuringExit ? previous.session + 1 : previous.session,
+    }));
+    setIsOpen(true);
+    setIsListMounted(true);
+  }
 
   const triggerProps: DeskMenuTriggerProps = {
     ref: triggerRef,
@@ -138,7 +165,7 @@ export function DeskMenu({
       // Focus restore on close as well: Safari does not focus a clicked
       // button, and the focused item is about to unmount.
       if (isOpen) close(true);
-      else setOpenFocus("first");
+      else open("first");
     },
     onKeyDown: (event) => {
       onTriggerKeyDown?.(event);
@@ -147,24 +174,27 @@ export function DeskMenu({
       event.preventDefault();
       // Keeps the arrow from also reaching a surrounding list's own roving.
       event.stopPropagation();
-      setOpenFocus(event.key === "ArrowDown" ? "first" : "last");
+      open(event.key === "ArrowDown" ? "first" : "last");
     },
   };
 
   return (
     <>
       {renderTrigger(triggerProps, isOpen)}
-      {openFocus !== null && (
+      {isListMounted && (
         <DeskMenuList
+          key={openRequest.session}
           menuId={menuId}
           items={items}
           label={label}
           align={align}
           minWidth={minWidth}
-          initialFocus={openFocus}
+          initialFocus={openRequest.focus}
+          isOpen={isOpen}
           shouldCloseOnSelect={shouldCloseOnSelect}
           triggerRef={triggerRef}
           onClose={close}
+          onExited={handleExited}
         />
       )}
     </>

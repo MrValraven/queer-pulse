@@ -91,21 +91,21 @@ export const safety: Catalog = {
   "myReports.subject.studio_track": "Sobre uma faixa do Studio",
   "report.guide.meta.title": "Como funciona a denúncia na QueerPulse",
   "report.guide.meta.description":
-    "O que acontece depois de submeteres uma denúncia na QueerPulse: o nosso processo de análise, os princípios por trás de cada decisão, e um registo público de decisões de moderação anteriores.",
+    "O que acontece depois de submeteres uma denúncia na QueerPulse: o nosso processo de análise, os princípios por trás de cada decisão, e onde encontrar o nosso relatório público de transparência.",
   "report.guide.makeReportCta": "Fazer uma denúncia",
 
   "report.how.title": "Como <em>funciona a denúncia</em>",
   "report.how.lead":
-    "Fazes uma denúncia. Um moderador analisa-a no prazo de 24 horas. Isto é exatamente o que acontece entretanto: sem caixa negra, sem garantias vagas.",
+    "Fazes uma denúncia. As denúncias urgentes são vistas primeiro e as restantes são analisadas por ordem de gravidade. Isto é o que acontece depois de a submeteres.",
   "report.flow.step1.title": "Fazes uma denúncia",
   "report.flow.step1.desc":
     "Através do botão em qualquer perfil, mensagem ou publicação do fórum, ou diretamente por esta página. Podes denunciar de forma anónima, se precisares.",
   "report.flow.step2.title": "Confirmação imediata",
   "report.flow.step2.desc":
-    "Uma confirmação chega às tuas notificações do QueerPulse no prazo de 1 hora e alguém da nossa equipa fica responsável pela tua denúncia. Uma denúncia feita sem conta salta este passo: não há aqui uma caixa de entrada para alcançar.",
-  "report.flow.step3.title": "Revisão no prazo de 24 horas",
+    "Uma confirmação chega às tuas notificações do QueerPulse assim que a denúncia é registada. Uma denúncia feita sem conta salta este passo: não há aqui uma caixa de entrada para alcançar.",
+  "report.flow.step3.title": "Revisão por ordem de gravidade",
   "report.flow.step3.desc":
-    "Analisamos as provas, o contexto e o histórico. Em casos graves, o acesso da pessoa denunciada é suspenso temporariamente durante a análise.",
+    "A nossa equipa analisa as provas, o contexto e o histórico, começando pelas denúncias mais urgentes. Procuramos analisar as mais urgentes em 1 hora, as graves em 24 horas e as restantes em 3 a 7 dias.",
   "report.flow.step4.title": "Decisão e ação",
   "report.flow.step4.desc":
     "Resultados possíveis: aviso, suspensão temporária, remoção permanente. O resultado e a justificação por trás dele chegam às tuas notificações do QueerPulse.",
@@ -180,17 +180,8 @@ export const safety: Catalog = {
 
   "report.transparency.title": "Transparência <em>na moderação</em>",
   "report.transparency.lead":
-    "Publicamos um relatório trimestral de moderação para que a comunidade veja como as decisões são tomadas. É assim que se parece a responsabilização.",
-  "report.modLog.title":
-    "Relatório de moderação <em>do 1.º trimestre de 2026</em>",
-  "report.modLog.meta":
-    "Publicado em abril de 2026 · Cobre janeiro – março de 2026 · Todos os dados são agregados e anonimizados.",
-  "report.modLog.stat.received": "denúncias recebidas",
-  "report.modLog.stat.resolved": "resolvidas em 24h",
-  "report.modLog.stat.removed": "pessoas removidas",
-  "report.modLog.stat.appeals": "recursos recebidos",
-  "report.modLog.stat.reversed": "decisões revertidas em recurso",
-  "report.modLog.viewReportCta": "Ver relatório completo",
+    "O nosso relatório público de transparência mostra, para cada período, quantas denúncias foram feitas e resolvidas, quanto tempo demorou a resolução, que ações foram tomadas e como correram os recursos.",
+  "report.transparency.viewCta": "Ler o relatório de transparência",
 
   "report.toast.chooseCategory": "Escolhe primeiro o que estás a denunciar.",
   "report.toast.received":

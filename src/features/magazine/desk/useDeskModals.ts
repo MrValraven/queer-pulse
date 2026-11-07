@@ -10,6 +10,8 @@ import { useState } from "react";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Piece, Pitch } from "../data/desk.data";
+import type { UnpublishLandingStage } from "../api/piecePublish.api";
+import { useDeskUnpublish } from "../api/useDeskUnpublish";
 import type { usePieceMutations } from "../api/usePieceMutations";
 import type { usePitchMutations } from "../api/usePitchMutations";
 import type { DeskModal } from "./DeskModals";
@@ -52,6 +54,7 @@ export function useDeskModals({
   const [sourcePitchFormat, setSourcePitchFormat] = useState<
     "deck" | undefined
   >(undefined);
+  const unpublish = useDeskUnpublish();
   const chase = useChaseQueue((step) => {
     setModal(chaseModalFor(step));
     setContextId(step.piece.id);
@@ -107,6 +110,14 @@ export function useDeskModals({
   }
   function openDeletePiece(piece: Piece): void {
     openFor({ kind: "deletePiece", piece: { title: piece.title } }, piece.id);
+  }
+  /** The row menu and the board card both raise this ONE confirm; nothing is
+   *  sent until `confirmUnpublishPiece`. */
+  function openUnpublishPiece(
+    piece: Piece,
+    stage: UnpublishLandingStage,
+  ): void {
+    openFor({ kind: "unpublishPiece", piece, stage }, piece.id);
   }
   function openShortcuts(): void {
     clearSlot({ kind: "shortcuts" });
@@ -205,6 +216,19 @@ export function useDeskModals({
     });
   }
 
+  /** The mutation toasts its own result (with Undo on success), so the dialog
+   *  only has to close once the request settles, whichever way it went. */
+  async function confirmUnpublishPiece(): Promise<void> {
+    if (modal?.kind !== "unpublishPiece") return;
+    try {
+      await unpublish.mutateAsync({ piece: modal.piece, stage: modal.stage });
+    } catch {
+      // Already explained by the mutation's own error toast.
+    } finally {
+      close();
+    }
+  }
+
   return {
     modal,
     close,
@@ -219,11 +243,14 @@ export function useDeskModals({
     skipChase,
     openHandoff,
     openDeletePiece,
+    openUnpublishPiece,
     openShortcuts,
     submitCommission,
     submitPass,
     confirmHandoff,
     confirmDeletePiece,
+    confirmUnpublishPiece,
+    isUnpublishingPiece: unpublish.isPending,
     isDeletingPiece: pieceMutations.remove.isPending,
   };
 }

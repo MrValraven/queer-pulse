@@ -1,17 +1,18 @@
-/* VJ projector stage. Bottom to top: the two clip layers inside the effects
-   frame, the black curtain, the blackout layer, the strobe, then the overlay
-   text. Every layer is absolutely positioned with no z-index of its own, so
-   they stack in DOM order; the two clip layers trade z-index 0 and 1 inside
-   the effects frame, which isolates them.
+/* VJ projector stage (the DOM renderer). Bottom to top: the two source
+   layers inside the live group, the mix layer, both inside the effects frame
+   (VjDomEffects.module.css), then the black curtain, the blackout layer and
+   the strobe. Every layer is absolutely positioned with no z-index of its
+   own, so they stack in DOM order; the two source layers trade z-index 0 and
+   1 inside the live group, which isolates them.
 
    The app has no true black or white token and a projector needs both, so the
    stage defines two local named-colour tokens.
 
-   The projector's fades, hue cycle and ticker are the show itself, so they
-   keep their timing whatever the laptop's reduced-motion setting: the
-   `.stage ...` rules below restate their durations with !important, at a
-   specificity above the global reduced-motion reset in styles/base.css. The
-   durations come in as custom properties set inline. */
+   The projector's fades, wipes, dips, generator drift and ticker are the
+   show itself, so they keep their timing whatever the laptop's reduced-motion
+   setting: the `.stage ...` rules below restate their durations with
+   !important, at a specificity above the global reduced-motion reset in
+   styles/base.css. The durations come in as custom properties set inline. */
 .stage {
   --vj-black: black;
   --vj-white: white;
@@ -28,38 +29,71 @@
   pointer-events: none;
 }
 
-/* Effects: hue cycle on the outer wrapper, monochrome (filter) and mirror
-   (transform) on the inner one, so a monochrome frame stays grey while the
-   hue loop runs. */
-.effectsFrame {
+/* The live source layers. Isolated, so their z-index trade stays inside and
+   the mix layer above blends with them as one picture. For every blend mode
+   but `normal` its opacity falls over the top half of the crossfader
+   (vjDomMixOpacities), and the mix clip then blends with nothing and shows
+   as itself. */
+.liveGroup {
   position: absolute;
   inset: 0;
-  overflow: hidden;
   isolation: isolate;
 }
 
-.effectsInner {
+/* The mix clip: opacity and mix-blend-mode are set inline. */
+.mixLayer {
   position: absolute;
   inset: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
 
-.hueCycling {
-  animation: vjHueCycle 24s linear infinite;
+/* Generators on the DOM (contract 3.3). gradientField drifts a wide
+   gradient of palette tokens sideways with a transform, which the browser
+   composites on the GPU; prideFlagWave holds its flag's stripes still. */
+.generator {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
 }
 
-.stage .hueCycling {
+.generatorGradient::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 300%;
+  height: 100%;
+  background: linear-gradient(
+    110deg,
+    rgb(var(--vj-palette-plum)),
+    rgb(var(--vj-palette-violet)),
+    rgb(var(--vj-palette-coral)),
+    rgb(var(--vj-palette-amber)),
+    rgb(var(--vj-palette-rose)),
+    rgb(var(--vj-palette-sky)),
+    rgb(var(--vj-palette-plum))
+  );
+  content: "";
+  animation: vjGradientDrift 24s ease-in-out infinite alternate;
+}
+
+.stage .generatorGradient::before {
   animation-duration: 24s !important;
   animation-iteration-count: infinite !important;
 }
 
-@keyframes vjHueCycle {
+@keyframes vjGradientDrift {
   from {
-    filter: hue-rotate(0deg);
+    transform: translateX(0);
   }
 
   to {
-    filter: hue-rotate(360deg);
+    transform: translateX(-66.6667%);
   }
+}
+
+.generatorStripes {
+  background: var(--vj-flag-stripes);
 }
 
 /* Clip layers. Opacity moves only while a layer fades in or catches up; the
@@ -86,6 +120,99 @@
 
 .stage .clipLayerFading {
   transition-duration: var(--vj-layer-fade, 0ms) !important;
+}
+
+/* The other DOM transitions (vjDomTransitionStyle.ts). The rising layer is
+   opaque at once and animates what uncovers it, with fill both so it starts
+   fully covered. `wipeLeft`, `wipeRight` and `iris` animate a clip-path
+   between two inline values; `wipeRadial` turns a conic mask once,
+   clockwise from the top, through a registered angle property. */
+.clipLayerClip {
+  animation: vjClipReveal var(--vj-layer-fade, 0ms) linear both;
+}
+
+@keyframes vjClipReveal {
+  from {
+    clip-path: var(--vj-clip-from);
+  }
+
+  to {
+    clip-path: var(--vj-clip-to);
+  }
+}
+
+@property --vj-sweep-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.clipLayerSweep {
+  mask-image: conic-gradient(
+    var(--vj-black) var(--vj-sweep-angle),
+    transparent var(--vj-sweep-angle)
+  );
+  animation: vjSweepReveal var(--vj-layer-fade, 0ms) linear both;
+}
+
+@keyframes vjSweepReveal {
+  from {
+    --vj-sweep-angle: 0deg;
+  }
+
+  to {
+    --vj-sweep-angle: 360deg;
+  }
+}
+
+/* A dip: the veil (the curtain colour, black or white) rises over the
+   outgoing source in the first half while the incoming media stays hidden,
+   then the media shows and the veil falls in the second half. */
+.clipLayerDip::after {
+  position: absolute;
+  inset: 0;
+  background: var(--vj-dip-colour, var(--vj-black));
+  content: "";
+  animation: vjDipVeil var(--vj-layer-fade, 0ms) linear both;
+}
+
+.clipLayerDip > * {
+  animation: vjDipReveal var(--vj-layer-fade, 0ms) step-end both;
+}
+
+@keyframes vjDipVeil {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes vjDipReveal {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.stage .clipLayerClip,
+.stage .clipLayerSweep,
+.stage .clipLayerDip::after,
+.stage .clipLayerDip > * {
+  animation-duration: var(--vj-layer-fade, 0ms) !important;
 }
 
 .media {
@@ -144,104 +271,4 @@
 /* Strobe: switched on and off with no transition. */
 .strobe {
   background: var(--vj-white);
-}
-
-/* Overlay text */
-.overlay {
-  /* The overlay text sits on any clip, bright ones included: a tight dark edge
-     keeps every letter readable on cream or pink footage, and a soft wide
-     halo lifts the line off busy frames. Scrim based, so it never flips. */
-  --vj-text-legibility-shadow:
-    0 0.02em 0.06em rgba(var(--scrim-rgb), 0.85),
-    0 0.03em 0.18em rgba(var(--scrim-rgb), 0.6),
-    0 0.06em 0.6em rgba(var(--scrim-rgb), 0.55);
-
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.overlayBig {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 6vw;
-}
-
-.bigText {
-  max-width: 18ch;
-  margin: 0;
-  color: rgb(var(--cream-rgb));
-  font-family: var(--serif);
-  font-size: var(--text-screen-code);
-  font-weight: 600;
-  line-height: 1.05;
-  text-align: center;
-  text-wrap: balance;
-  text-shadow: var(--vj-text-legibility-shadow);
-}
-
-.overlayTicker {
-  position: absolute;
-  right: 0;
-  bottom: 6vh;
-  left: 0;
-  overflow: hidden;
-}
-
-.tickerText {
-  margin: 0;
-  color: rgb(var(--cream-rgb));
-  font-family: var(--serif);
-  font-size: var(--text-screen-question);
-  font-weight: 600;
-  line-height: 1.2;
-  white-space: nowrap;
-  text-shadow: var(--vj-text-legibility-shadow);
-}
-
-/* The track starts one frame width to the right and slides its own width
-   left, so the line enters at the right edge and leaves at the left. */
-.tickerTrack {
-  display: inline-block;
-  padding-left: 100%;
-  animation: vjTicker var(--vj-ticker-duration, 12s) linear infinite;
-}
-
-.stage .tickerTrack {
-  animation-duration: var(--vj-ticker-duration, 12s) !important;
-  animation-iteration-count: infinite !important;
-}
-
-@keyframes vjTicker {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(-100%);
-  }
-}
-
-/* The remote's small mirror: the same text, scaled down, ticker static. */
-.overlayMirror .overlayBig {
-  padding: 0 6%;
-}
-
-.overlayMirror .bigText {
-  font-size: var(--text-16);
-}
-
-.overlayMirror .overlayTicker {
-  bottom: 6%;
-  padding: 0 4%;
-}
-
-.overlayMirror .tickerText {
-  overflow: hidden;
-  font-size: var(--text-12);
-  text-overflow: ellipsis;
 }

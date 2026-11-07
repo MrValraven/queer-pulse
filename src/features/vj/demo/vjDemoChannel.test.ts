@@ -83,29 +83,45 @@ describe("openVjDemoChannel", () => {
     vi.unstubAllGlobals();
   });
 
-  it("gives a silent channel when BroadcastChannel is missing", () => {
+  it("falls back to an in-tab hub when BroadcastChannel is missing", async () => {
     vi.stubGlobal("BroadcastChannel", undefined);
-    const channel = openVjDemoChannel();
-    const unsubscribe = channel.subscribe(vi.fn());
-    expect(() => {
-      channel.post(SAMPLE_MESSAGE);
-      unsubscribe();
-      channel.close();
-    }).not.toThrow();
+    const serverChannel = openVjDemoChannel();
+    const clientChannel = openVjDemoChannel();
+    const clientMessages: VjDemoMessage[] = [];
+    const unsubscribe = clientChannel.subscribe((message) =>
+      clientMessages.push(message),
+    );
+
+    serverChannel.post(SAMPLE_MESSAGE);
+    await flushMicrotasks();
+    expect(clientMessages).toEqual([SAMPLE_MESSAGE]);
+
+    unsubscribe();
+    serverChannel.close();
+    clientChannel.close();
+    serverChannel.post(SAMPLE_MESSAGE);
+    await flushMicrotasks();
+    expect(clientMessages).toHaveLength(1);
   });
 
-  it("gives a silent channel when the browser refuses to open one", () => {
+  it("falls back to the in-tab hub when the browser refuses to open one", async () => {
     vi.stubGlobal(
       "BroadcastChannel",
       vi.fn(() => {
         throw new Error("blocked");
       }),
     );
-    const channel = openVjDemoChannel();
-    expect(() => {
-      channel.post(SAMPLE_MESSAGE);
-      channel.close();
-    }).not.toThrow();
+    const senderChannel = openVjDemoChannel();
+    const receiverChannel = openVjDemoChannel();
+    const listener = vi.fn();
+    receiverChannel.subscribe(listener);
+
+    senderChannel.post(SAMPLE_MESSAGE);
+    await flushMicrotasks();
+    expect(listener).toHaveBeenCalledWith(SAMPLE_MESSAGE);
+
+    senderChannel.close();
+    receiverChannel.close();
   });
 
   it("names this tab with a uuid", () => {

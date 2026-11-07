@@ -1,5 +1,13 @@
 import { PageShell } from "../../shared/components/layout";
-import { Button, ImageSlot, Outro, Reveal } from "../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  ImageSlot,
+  Outro,
+  Reveal,
+} from "../../shared/components/ui";
+import { FiImage } from "react-icons/fi";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -10,6 +18,7 @@ import styles from "./resources.module.css";
 
 export function GroupShowArchivePage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const pageTitle = t("resources:groupShowArchive.meta.title");
   const pageDescription = t("resources:groupShowArchive.meta.description");
 
@@ -54,28 +63,36 @@ export function GroupShowArchivePage() {
           <Reveal as="p" className={styles.leadP}>
             {t("resources:groupShowArchive.shows.lead")}
           </Reveal>
-          <div className={styles.archiveGrid}>
-            {SHOWS.map((show, i) => (
-              <Reveal
-                key={show.title}
-                className={`${styles.card} ${styles.archiveCard}`}
-                delay={i * 55}
-              >
-                <ImageSlot
-                  tint={show.tint}
-                  placeholder={show.title}
-                  height={180}
-                />
-                <div className={styles.archiveMeta}>
-                  {show.when} · {show.venue}
-                </div>
-                <div className={styles.cardName} style={{ fontSize: 21 }}>
-                  {show.title}
-                </div>
-                <div className={styles.cardSpec}>{show.blurb}</div>
-              </Reveal>
-            ))}
-          </div>
+          {demoMode ? (
+            <div className={styles.archiveGrid}>
+              {SHOWS.map((show, i) => (
+                <Reveal
+                  key={show.title}
+                  className={`${styles.card} ${styles.archiveCard}`}
+                  delay={i * 55}
+                >
+                  <ImageSlot
+                    tint={show.tint}
+                    placeholder={show.title}
+                    height={180}
+                  />
+                  <div className={styles.archiveMeta}>
+                    {show.when} · {show.venue}
+                  </div>
+                  <div className={styles.cardName} style={{ fontSize: 21 }}>
+                    {show.title}
+                  </div>
+                  <div className={styles.cardSpec}>{show.blurb}</div>
+                </Reveal>
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              icon={<FiImage />}
+              title={t("resources:groupShowArchive.live.title")}
+              description={t("resources:groupShowArchive.live.body")}
+            />
+          )}
         </div>
       </section>
 
@@ -88,7 +105,7 @@ export function GroupShowArchivePage() {
         }
         sub={t("resources:groupShowArchive.outro.sub")}
       >
-        <Button to={routes.gatherings} variant="primary" size="lg">
+        <Button to={routes.calendar} variant="primary" size="lg">
           {t("resources:groupShowArchive.outro.cta")}
         </Button>
       </Outro>

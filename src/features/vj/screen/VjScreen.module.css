@@ -47,6 +47,17 @@
   place-items: center;
   padding: var(--gap-lg);
   overflow-y: auto;
+  /* The stage keeps playing behind the card; the scrim dims it so a bright
+     clip never decides whether the card's words read. */
+  background: var(--scrim);
+}
+
+/* A card taller than the window starts at the top and scrolls, so its
+   header never sits out of reach above the fold. */
+@supports (place-items: safe center) {
+  .setupLayer {
+    place-items: safe center;
+  }
 }
 
 .setupCard {
@@ -57,11 +68,13 @@
   padding: var(--card-pad-lg);
   border: 1px solid var(--qs-glass-border);
   border-radius: var(--radius-card);
-  background: linear-gradient(
-    var(--qs-glass-raised-top),
-    var(--qs-glass-raised-bottom)
-  );
+  /* Glass with a floor: the raised stage colour at 92% under the white
+     sheen, blurred, so the muted lines hold 4.5:1 on the brightest clip. */
+  background:
+    linear-gradient(var(--qs-glass-raised-top), var(--qs-glass-raised-bottom)),
+    color-mix(in srgb, var(--qs-raised) 92%, transparent);
   box-shadow: var(--qs-shadow-glass);
+  backdrop-filter: var(--blur-lg);
 }
 
 .setupHeader {
@@ -102,6 +115,20 @@
 
 .setupLine {
   margin: 0;
+  color: var(--qs-text-mute);
+  font-size: var(--text-14);
+  line-height: var(--lh-body);
+}
+
+.setupEngineFacts {
+  display: flex;
+  flex-direction: column;
+}
+
+/* The padding sits on the line itself, so it folds with the Collapse. */
+.setupFactLine {
+  margin: 0;
+  padding-block: calc(var(--gap-xs) / 2);
   color: var(--qs-text-mute);
   font-size: var(--text-14);
   line-height: var(--lh-body);

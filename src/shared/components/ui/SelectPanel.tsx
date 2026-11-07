@@ -10,6 +10,7 @@ import {
   type RefObject,
 } from "react";
 import { FiCheck } from "react-icons/fi";
+import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { Spinner } from "./Spinner";
 import type { SelectOption, SelectOptionState } from "./Select";
 import styles from "./Select.module.css";
@@ -29,7 +30,7 @@ interface SelectPanelProps {
   renderOption?: (option: SelectOption, state: SelectOptionState) => ReactNode;
   /** Toggle (multi) or pick (single) an option value. */
   onSelect: (value: string) => void;
-  /** Escape / dismiss — closes the panel and returns focus to the trigger. */
+  /** Escape / dismiss: closes the panel and returns focus to the trigger. */
   onClose: () => void;
 }
 
@@ -109,7 +110,8 @@ interface SelectOptionListProps {
   renderOption?: (option: SelectOption, state: SelectOptionState) => ReactNode;
   onSelect: (value: string) => void;
   onActivate: (value: string) => void;
-  onKeyDown: (event: KeyboardEvent) => void;
+  /** Omitted when the search field owns the keys (see SelectPanel). */
+  onKeyDown?: (event: KeyboardEvent) => void;
 }
 
 /** The `role="listbox"` itself: an ungrouped run's rows sit directly under it,
@@ -176,7 +178,7 @@ function SelectOptionList({
       aria-activedescendant={hasOptions ? optionId(activeIndex) : undefined}
       tabIndex={searchable ? -1 : 0}
       className={styles.list}
-      onKeyDown={searchable ? undefined : onKeyDown}
+      onKeyDown={onKeyDown}
     >
       {optionRuns.map((run, runIndex) => {
         // An ungrouped run (option.group is unset) renders its rows directly
@@ -242,7 +244,7 @@ function useIsEndAligned(panelRef: RefObject<HTMLDivElement | null>): boolean {
 
 /**
  * The floating panel: an optional typeahead field plus a `role="listbox"` of
- * options, following the APG combobox pattern — focus stays on the search input
+ * options, following the APG combobox pattern: focus stays on the search input
  * (or the listbox when not searchable) and the active option is tracked with
  * `aria-activedescendant`, so arrow keys move a visual highlight without moving
  * DOM focus. Only mounted while open, so its query/active state resets per open.
@@ -268,6 +270,12 @@ export function SelectPanel({
   const listRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const isEndAligned = useIsEndAligned(panelRef);
+  // A touch screen raises the on-screen keyboard over the panel whenever the
+  // search field takes focus, so it opens on the listbox instead and the
+  // keyboard only appears once the person taps the field. The open-time choice
+  // is captured once, since the panel only lives while open.
+  const isCoarsePointer = useMediaQuery("(pointer: coarse)");
+  const [isListFocusedOnOpen] = useState(isCoarsePointer);
 
   const filtered = useMemo(
     () => filterOptions(options, query),
@@ -287,10 +295,12 @@ export function SelectPanel({
   );
   const optionId = (index: number) => `${baseId}-opt-${index}`;
 
-  // Focus the search input (or the listbox, when not searchable) on open.
+  // Focus the search input on open, or the listbox when not searchable or on a
+  // touch screen (see isListFocusedOnOpen).
   useEffect(() => {
-    (searchable ? inputRef.current : listRef.current)?.focus();
-  }, [searchable]);
+    const shouldFocusSearch = searchable && !isListFocusedOnOpen;
+    (shouldFocusSearch ? inputRef.current : listRef.current)?.focus();
+  }, [searchable, isListFocusedOnOpen]);
 
   // A trigger near the bottom of a short viewport (a phone's tab bar, an
   // embedded webview) can open a panel that renders partly off screen.
@@ -392,7 +402,10 @@ export function SelectPanel({
       renderOption={renderOption}
       onSelect={onSelect}
       onActivate={setActiveValue}
-      onKeyDown={onKeyDown}
+      // The search field owns the keys unless the listbox holds focus: it is
+      // the only target when not searchable, and on a touch screen it takes
+      // focus on open, so an attached hardware keyboard still navigates.
+      onKeyDown={!searchable || isCoarsePointer ? onKeyDown : undefined}
     />
   );
 

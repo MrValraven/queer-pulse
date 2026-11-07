@@ -7,6 +7,7 @@ import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { Job } from "./jobs.data";
 import { professionLabelKey } from "../members/workTaxonomy.data";
 import { postedText } from "./api/jobs.adapters";
@@ -34,9 +35,12 @@ export function JobDetailSidebar({
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const { demoMode } = useDemoMode();
   const [isSharing, setIsSharing] = useState(false);
   const d = job.detail;
-  const companySlug = COMPANY_SLUG_BY_NAME[job.organization];
+  const companySlug = demoMode
+    ? COMPANY_SLUG_BY_NAME[job.organization]
+    : undefined;
   return (
     <aside className={styles.sidebar}>
       <div className={styles.card}>

@@ -2,6 +2,7 @@ import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { Job } from "./jobs.data";
 import { safetyFor } from "./employerSafety.data";
 import { SafetyBadges } from "./SafetyBadges";
@@ -10,8 +11,15 @@ import styles from "./JobDetailPage.module.css";
 
 export function JobDetailBody({ job }: { job: Job }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const d = job.detail;
-  const companySlug = COMPANY_SLUG_BY_NAME[job.organization];
+  // Company slugs and safety signals are demo fixtures keyed by company name.
+  // Live listings carry neither, so a real employer that shares a name with a
+  // fixture must not inherit its link or its rating.
+  const companySlug = demoMode
+    ? COMPANY_SLUG_BY_NAME[job.organization]
+    : undefined;
+  const safetySignals = demoMode ? safetyFor(job.organization) : undefined;
   return (
     <div>
       <div className={styles.section}>
@@ -86,7 +94,7 @@ export function JobDetailBody({ job }: { job: Job }) {
         )}
       </div>
 
-      {safetyFor(job.organization) && (
+      {safetySignals && (
         <div className={styles.section}>
           <h2 className={styles.secTitle}>
             {t("economy:jobDetail.section.safety")}
@@ -97,7 +105,7 @@ export function JobDetailBody({ job }: { job: Job }) {
             })}
           </p>
           <div className={styles.safetyBlock}>
-            <SafetyBadges signals={safetyFor(job.organization)} />
+            <SafetyBadges signals={safetySignals} />
             <Button variant="ghost" to={routes.employerReviews}>
               {t("economy:jobDetail.section.safetyReviews")}{" "}
               <FiArrowRight aria-hidden />

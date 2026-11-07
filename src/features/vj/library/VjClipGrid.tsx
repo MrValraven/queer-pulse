@@ -60,7 +60,12 @@ export function VjClipGrid({
           key={bodyKey}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          // The skeleton leaves at once, so the cards fade in with no blank
+          // frame between.
+          exit={{
+            opacity: 0,
+            transition: bodyKey === "loading" ? { duration: 0 } : fade,
+          }}
           transition={fade}
         >
           {bodyKey === "loading" && (

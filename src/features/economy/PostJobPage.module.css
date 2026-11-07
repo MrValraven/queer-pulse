@@ -1215,22 +1215,6 @@
   line-height: 1.55;
   color: var(--ink-60);
 }
-.cstatRow {
-  display: flex;
-  gap: 22px;
-  margin-top: 14px;
-}
-.cstatN {
-  font-family: var(--serif, "Fraunces", serif);
-  font-size: var(--text-24);
-  color: var(--text-strong);
-}
-.cstatL {
-  font-size: var(--text-11-5);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--ink-40);
-}
 .shareRow {
   display: flex;
   flex-wrap: wrap;

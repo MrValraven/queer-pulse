@@ -1,5 +1,6 @@
 import { PageShell } from "../../shared/components/layout";
-import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { FiMapPin } from "react-icons/fi";
+import { Button, EmptyState, Outro, Reveal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -36,10 +37,14 @@ export function IngredientsMapPage() {
           />
         }
         lead={t("resources:ingredientsMap.hero.lead")}
-        anchors={AREAS.map((a) => ({
-          label: t(a.neighbourhoodKey),
-          href: `#${a.anchorId}`,
-        }))}
+        anchors={
+          demoMode
+            ? AREAS.map((a) => ({
+                label: t(a.neighbourhoodKey),
+                href: `#${a.anchorId}`,
+              }))
+            : []
+        }
       />
 
       <section className={`${styles.section} ${styles.sectionPaper}`}>
@@ -52,31 +57,48 @@ export function IngredientsMapPage() {
             {t("resources:ingredientsMap.intro")}
           </Reveal>
 
-          {AREAS.map((area) => (
-            <div
-              key={area.anchorId}
-              className={styles.mapGroup}
-              id={area.anchorId}
-            >
-              <Reveal as="div" className={styles.mapGroupLabel}>
-                {t(area.neighbourhoodKey)}
-              </Reveal>
-              <div className={styles.grid}>
-                {area.spots.map((s, i) => (
-                  <Reveal key={s.name} className={styles.card} delay={i * 45}>
-                    <div className={styles.cardName} style={{ fontSize: 18 }}>
-                      {s.name}
-                    </div>
-                    <div className={styles.cardSpec}>{t(s.findsKey)}</div>
-                    <div className={styles.tags}>
-                      <span className={styles.tag}>{t(s.originKey)}</span>
-                      <span className={styles.tag}>{t(s.hoursKey)}</span>
-                    </div>
+          {demoMode ? (
+            <>
+              {AREAS.map((area) => (
+                <div
+                  key={area.anchorId}
+                  className={styles.mapGroup}
+                  id={area.anchorId}
+                >
+                  <Reveal as="div" className={styles.mapGroupLabel}>
+                    {t(area.neighbourhoodKey)}
                   </Reveal>
-                ))}
-              </div>
-            </div>
-          ))}
+                  <div className={styles.grid}>
+                    {area.spots.map((s, i) => (
+                      <Reveal
+                        key={s.name}
+                        className={styles.card}
+                        delay={i * 45}
+                      >
+                        <div
+                          className={styles.cardName}
+                          style={{ fontSize: 18 }}
+                        >
+                          {s.name}
+                        </div>
+                        <div className={styles.cardSpec}>{t(s.findsKey)}</div>
+                        <div className={styles.tags}>
+                          <span className={styles.tag}>{t(s.originKey)}</span>
+                          <span className={styles.tag}>{t(s.hoursKey)}</span>
+                        </div>
+                      </Reveal>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </>
+          ) : (
+            <EmptyState
+              icon={<FiMapPin />}
+              title={t("resources:ingredientsMap.live.title")}
+              description={t("resources:ingredientsMap.live.body")}
+            />
+          )}
 
           <div
             className={`${styles.card} ${styles.cardDashed}`}

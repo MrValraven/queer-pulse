@@ -52,7 +52,8 @@ export type MediaReferenceType =
   | "quizshow-game-question" // QuizshowGame question image (entityId is the game id, label is the game title)
   | "quizshow-template-question" // QuizshowTemplate question image (entityId is the template id, label is the EN card title else the PT one, slug is empty)
   | "vj-clip" // VjClip.storageKey (admin VJ library, platform artwork)
-  | "vj-thumbnail"; // VjClip.thumbnailStorageKey
+  | "vj-thumbnail" // VjClip.thumbnailStorageKey
+  | "vj-preview"; // VjClip.previewStorageKey
 
 /** One place an uploaded image is referenced. The backend owns `entityId`/
  *  `label`/`slug`; the frontend owns turning `type` into a localized label
@@ -214,6 +215,7 @@ export function mediaReferenceHref(reference: MediaReference): string | null {
     // own) → no viewer-appropriate route.
     case "vj-clip":
     case "vj-thumbnail":
+    case "vj-preview":
       // Admin-only artwork; the media console is admin too, so the library is
       // the right page to open.
       return routes.adminVj;

@@ -1,3 +1,4 @@
+import { createVjUuid } from "../live/vjUuid";
 import type { VjCommandStamp } from "./vjFrames";
 
 export interface VjCommandStamper {
@@ -7,7 +8,7 @@ export interface VjCommandStamper {
   next(): VjCommandStamp;
 }
 
-const mintClientId = (): string => crypto.randomUUID();
+const mintClientId = (): string => createVjUuid();
 
 /** Stamps every stage command a remote sends with one client id and a rising sequence (contract 6.5). */
 export function createVjCommandStamper(

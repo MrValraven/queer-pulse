@@ -24,7 +24,6 @@ export const TOC = [
   { id: "enforce", labelKey: "coc.toc.enforce" },
   { id: "appeal", labelKey: "coc.toc.appeal" },
   { id: "offplatform", labelKey: "coc.toc.offplatform" },
-  { id: "changes", labelKey: "coc.toc.changes" },
 ];
 
 export const PACT: PactItem[] = [

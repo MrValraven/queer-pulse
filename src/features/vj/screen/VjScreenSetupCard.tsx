@@ -5,6 +5,8 @@ import type {
   VjPackDTO,
   VjPreloadFailure,
   VjScreenClipStatus,
+  VjScreenHealth,
+  VjTempoSource,
 } from "../../../shared/contracts/vj";
 import {
   Button,
@@ -14,6 +16,11 @@ import {
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { VjConnectionRefusal } from "../realtime/vjTransport";
 import { VJ_CONNECTION_REFUSAL_KEY } from "../vjErrors";
+import type { VjMicTempoState } from "./useVjMicTempo";
+import type { VjScreenEventCard } from "./useVjScreenEventCard";
+import type { VjRendererState } from "./vjRendererKind";
+import { VjScreenMicPanel } from "./VjScreenMicPanel";
+import { VjScreenSetupFacts } from "./VjScreenSetupFacts";
 import styles from "./VjScreen.module.css";
 
 export interface VjScreenSetupCardProps {
@@ -23,6 +30,17 @@ export interface VjScreenSetupCardProps {
   refusal: VjConnectionRefusal | null;
   isFullscreenSupported: boolean;
   onGoFullscreen: () => void;
+  renderer: VjRendererState;
+  /** The latest health reading; null until the renderer reports one. */
+  health: VjScreenHealth | null;
+  eventCard: Pick<
+    VjScreenEventCard,
+    "isUnlinked" | "unavailableReason" | "card"
+  >;
+  mic: VjMicTempoState;
+  isLead: boolean;
+  /** The stage tempo's source; null before the first state arrives. */
+  tempoSource: VjTempoSource | null;
 }
 
 /** Each failure reason once, in the order the clips first name it. */
@@ -83,8 +101,9 @@ function VjScreenRefusalLine({
 
 /**
  * What the admin sees on the laptop before the show: the pack, how far the
- * preload got, every reason a clip could not load, why the connection was
- * refused, and the one action, Go fullscreen.
+ * preload got, which renderer draws and why, the frame rate, why the event
+ * card stays hidden, every reason a clip could not load, why the connection
+ * was refused, the one action, Go fullscreen, and the microphone tempo.
  */
 export function VjScreenSetupCard({
   pack,
@@ -93,6 +112,12 @@ export function VjScreenSetupCard({
   refusal,
   isFullscreenSupported,
   onGoFullscreen,
+  renderer,
+  health,
+  eventCard,
+  mic,
+  isLead,
+  tempoSource,
 }: VjScreenSetupCardProps): JSX.Element {
   const { t } = useTranslation();
   const progressLine = useProgressLine(pack, statuses, isOfflineStart);
@@ -118,6 +143,11 @@ export function VjScreenSetupCard({
         {progressLine === null ? null : (
           <p className={styles.setupLine}>{progressLine}</p>
         )}
+        <VjScreenSetupFacts
+          renderer={renderer}
+          health={health}
+          eventCard={eventCard}
+        />
       </div>
       <Collapse isOpen={failedCount > 0}>
         <div className={styles.setupFailures}>
@@ -157,6 +187,7 @@ export function VjScreenSetupCard({
           {t("vj:screen.fullscreenUnsupported")}
         </p>
       )}
+      <VjScreenMicPanel mic={mic} isLead={isLead} tempoSource={tempoSource} />
     </section>
   );
 }

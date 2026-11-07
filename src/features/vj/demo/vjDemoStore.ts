@@ -1,12 +1,15 @@
 /**
- * The demo VJ library (contract 8.6, plan gap 2): contract 5 routes answered
+ * The demo VJ library (contract 6.2, 9.5): the pack and clip routes answered
  * from the library in `vjDemoStorePersistence.ts`, read fresh per call; each
- * write saves it and posts `library:changed` on the demo channel.
+ * write saves it and posts `library:changed` on the demo channel. Clip
+ * writes, events, scenes and set lists live in the colocated
+ * `vjDemoStore*.ts` files re-exported below, so the library plan imports
+ * every demo route from this one module. Also the library lookup the demo
+ * stage reads (contract 7.7).
  */
 import {
   VJ_LIMITS,
   type VjClipDTO,
-  type VjClipDeletedDTO,
   type VjClipListDTO,
   type VjClipMimeType,
   type VjFitMode,
@@ -15,9 +18,20 @@ import {
   type VjPackDeletedDTO,
   type VjPackListDTO,
   type VjPackMediaDTO,
+  type VjSceneLook,
 } from "../../../shared/contracts/vj";
 import { createVjDemoUuid } from "./vjDemoChannel";
+import type { VjDemoLibraryLookup } from "./vjDemoCommandKit";
 import * as rules from "./vjDemoRules";
+import { normalizeStoredVjSceneLook } from "./vjDemoSceneLook";
+import {
+  forgetVjDemoPreviewUrl,
+  toVjDemoClipDto as toClipDto,
+  toVjDemoPackClipsDto as toPackClipsDto,
+  toVjDemoPackDto as toPackDto,
+  toVjDemoPackListDto as packListOf,
+  vjDemoEventFixtureOf,
+} from "./vjDemoStoreDto";
 import {
   buildVjDemoSeedLibrary as buildSeedLibrary,
   clipsOfVjDemoPack as clipsOfPack,
@@ -26,20 +40,21 @@ import {
   findVjDemoPack as findPack,
   isoAt,
   loadVjDemoLibrary as loadLibrary,
-  packIdsOfVjDemoClip as packIdsOfClip,
   refuseTakenVjDemoPackName as refuseTakenName,
-  toVjDemoClipDto as toClipDto,
-  toVjDemoPackClipsDto as toPackClipsDto,
-  toVjDemoPackDto as toPackDto,
-  toVjDemoPackListDto as packListOf,
   vjDemoPackClipsChange as packClipsChanged,
   vjDemoNow as readNow,
   vjDemoWriter as writerCreator,
   type StoredVjDemoClip as StoredClip,
+  type StoredVjDemoLibrary as StoredLibrary,
   type StoredVjDemoPack as StoredPack,
 } from "./vjDemoStorePersistence";
 
 export { configureVjDemoStore } from "./vjDemoStorePersistence";
+export type { VjDemoLibraryLookup } from "./vjDemoCommandKit";
+export * from "./vjDemoStoreClips";
+export * from "./vjDemoStoreEvents";
+export * from "./vjDemoStoreScenes";
+export * from "./vjDemoStoreSetlists";
 
 export interface VjDemoClipUpload {
   title: string;
@@ -52,12 +67,6 @@ export interface VjDemoClipUpload {
   durationMs: number | null;
   fitMode: VjFitMode;
   packId: string | null;
-}
-
-export interface VjDemoLibraryLookup {
-  hasPack(packId: string): boolean;
-  hasClip(clipId: string): boolean;
-  isClipInPack(packId: string, clipId: string): boolean;
 }
 
 export function demoGetVjPacks(): VjPackListDTO {
@@ -75,6 +84,7 @@ export function demoCreateVjPack(body: { name: unknown }): VjPackDTO {
     id: createVjDemoUuid(),
     name,
     clipIds: [],
+    eventId: null,
     createdBy: writerCreator(),
     createdAt,
     updatedAt: createdAt,
@@ -112,10 +122,15 @@ export function demoReorderVjPacks(body: { packIds: unknown }): VjPackListDTO {
   return packListOf(library);
 }
 
+/** Deletes a pack and keeps every clip it held; its scenes stay in the
+ *  library unfiled (`packId` null, contract 2.2), as the foreign key sets. */
 export function demoDeleteVjPack(packId: string): VjPackDeletedDTO {
   const library = loadLibrary();
   const pack = findPack(library, packId);
   library.packs = library.packs.filter((candidate) => candidate !== pack);
+  for (const scene of library.scenes) {
+    if (scene.packId === pack.id) scene.packId = null;
+  }
   commit(library, {
     kind: "pack_deleted",
     packId: pack.id,
@@ -226,6 +241,12 @@ export function demoCreateVjClip(upload: VjDemoClipUpload): VjClipDTO {
     createdBy: writerCreator(),
     createdAt,
     updatedAt: createdAt,
+    // The contract 2.1 column defaults.
+    isFavorite: false,
+    defaultSpeed: 1,
+    loopInMs: null,
+    loopOutMs: null,
+    loopMode: "loop",
   };
   library.clips.push(clip);
   pack?.clipIds.push(clip.id);
@@ -238,60 +259,112 @@ export function demoCreateVjClip(upload: VjDemoClipUpload): VjClipDTO {
   return toClipDto(library, clip);
 }
 
-export function demoUpdateVjClip(
-  clipId: string,
-  body: { title?: unknown; fitMode?: unknown },
-): VjClipDTO {
-  const library = loadLibrary();
-  if (!rules.isVjUuid(clipId)) throw rules.vjRefusal("VJ_CLIP_NOT_FOUND");
-  const title =
-    body.title === undefined
-      ? undefined
-      : rules.normalizeVjClipTitle(body.title);
-  const fitMode =
-    body.fitMode === undefined
-      ? undefined
-      : rules.normalizeVjFitMode(body.fitMode);
-  const clip = findClip(library, clipId);
-  const isChanged =
-    (title !== undefined && title !== clip.title) ||
-    (fitMode !== undefined && fitMode !== clip.fitMode);
-  if (!isChanged) return toClipDto(library, clip);
-  clip.title = title ?? clip.title;
-  clip.fitMode = fitMode ?? clip.fitMode;
-  clip.updatedAt = isoAt(readNow());
-  commit(library, {
-    kind: "clip_updated",
-    clipId: clip.id,
-    packIds: packIdsOfClip(library, clip.id),
-  });
-  return toClipDto(library, clip);
+/** The pack with this id, compared lowercased; null for a malformed id or a
+ *  miss, as the backend's reads answer the empty answer with no query. */
+function readPack(library: StoredLibrary, packId: string): StoredPack | null {
+  if (!rules.isVjUuid(packId)) return null;
+  const wantedId = packId.toLowerCase();
+  return library.packs.find((pack) => pack.id === wantedId) ?? null;
 }
 
-export function demoDeleteVjClip(clipId: string): VjClipDeletedDTO {
-  const library = loadLibrary();
-  const clip = findClip(library, clipId);
-  const packIds = packIdsOfClip(library, clip.id);
-  for (const pack of library.packs) {
-    pack.clipIds = pack.clipIds.filter((candidate) => candidate !== clip.id);
-  }
-  library.clips = library.clips.filter((candidate) => candidate !== clip);
-  commit(library, { kind: "clip_deleted", clipId: clip.id, packIds });
-  return { deletedClipId: clip.id, removedFromPackCount: packIds.length };
+/** The listed valid ids, lowercased, each once. */
+function lowercaseUniqueUuids(ids: readonly string[]): string[] {
+  return [...new Set(ids.filter(rules.isVjUuid).map((id) => id.toLowerCase()))];
 }
 
-/** Reads the library fresh on every question, for the demo stage rules. */
+/** Whether a set list index is one the item read can offset by. */
+function isItemIndex(index: number | null): index is number {
+  return index !== null && Number.isSafeInteger(index) && index >= 0;
+}
+
+/** Set list recall and steps (backend `readSetlistItem`): null when no set
+ *  list has the id; a null index answers the count alone; an index answers
+ *  the item there with its scene's look, both null past the last item. */
+function readSetlistItem(
+  setlistId: string,
+  index: number | null,
+): {
+  itemCount: number;
+  sceneId: string | null;
+  look: VjSceneLook | null;
+} | null {
+  if (!rules.isVjUuid(setlistId)) return null;
+  const library = loadLibrary();
+  const wantedId = setlistId.toLowerCase();
+  const setlist = library.setlists.find(
+    (candidate) => candidate.id === wantedId,
+  );
+  if (setlist === undefined) return null;
+  const itemCount = setlist.items.length;
+  const item = isItemIndex(index) ? setlist.items[index] : undefined;
+  if (item === undefined) return { itemCount, sceneId: null, look: null };
+  const scene = library.scenes.find(
+    (candidate) => candidate.id === item.sceneId,
+  );
+  return {
+    itemCount,
+    sceneId: item.sceneId.toLowerCase(),
+    look: normalizeStoredVjSceneLook(scene?.look),
+  };
+}
+
+/** Reads the library fresh on every question, for the demo stage rules
+ *  (contract 7.7, backend `VjStageReadsService`). Ids compare lowercased and
+ *  a malformed id answers the empty answer. */
 export const vjDemoLibraryLookup: VjDemoLibraryLookup = {
-  hasPack: (packId) => loadLibrary().packs.some((pack) => pack.id === packId),
-  hasClip: (clipId) => loadLibrary().clips.some((clip) => clip.id === clipId),
+  hasPack: (packId) => readPack(loadLibrary(), packId) !== null,
+  hasClip: (clipId) => vjDemoLibraryLookup.existingClipIds([clipId]).size > 0,
   isClipInPack: (packId, clipId) =>
-    loadLibrary().packs.some(
-      (pack) => pack.id === packId && pack.clipIds.includes(clipId),
-    ),
+    vjDemoLibraryLookup.clipIdsInPack(packId, [clipId]).size > 0,
+  readPackForStage: (packId) => {
+    const pack = readPack(loadLibrary(), packId);
+    if (pack === null) return null;
+    // A link no fixture has reads as none, as the pack DTO shows it.
+    const fixture = vjDemoEventFixtureOf(pack.eventId);
+    return { eventId: fixture === null ? null : fixture.id };
+  },
+  existingClipIds: (clipIds) => {
+    const wantedIds = new Set(lowercaseUniqueUuids(clipIds));
+    return new Set(
+      loadLibrary()
+        .clips.map((clip) => clip.id)
+        .filter((clipId) => wantedIds.has(clipId)),
+    );
+  },
+  clipIdsInPack: (packId, clipIds) => {
+    const pack = readPack(loadLibrary(), packId);
+    if (pack === null) return new Set<string>();
+    const wantedIds = new Set(lowercaseUniqueUuids(clipIds));
+    return new Set(pack.clipIds.filter((clipId) => wantedIds.has(clipId)));
+  },
+  readPackClipForAdvance: (packId, clipId) => {
+    const library = loadLibrary();
+    const pack = readPack(library, packId);
+    if (pack === null || !rules.isVjUuid(clipId)) return null;
+    const wantedId = clipId.toLowerCase();
+    if (!pack.clipIds.includes(wantedId)) return null;
+    const clip = library.clips.find((candidate) => candidate.id === wantedId);
+    return clip === undefined ? null : { isFavorite: clip.isFavorite };
+  },
+  readSceneLook: (sceneId) => {
+    if (!rules.isVjUuid(sceneId)) return null;
+    const wantedId = sceneId.toLowerCase();
+    const scene = loadLibrary().scenes.find(
+      (candidate) => candidate.id === wantedId,
+    );
+    return scene === undefined ? null : normalizeStoredVjSceneLook(scene.look);
+  },
+  readSetlistItem,
+  setlistItemCount: (setlistId) =>
+    readSetlistItem(setlistId, null)?.itemCount ?? null,
 };
 
-/** Puts the seed back, saves it, and tells every tab the packs changed. */
+/** Puts the seed back, saves it, and tells every tab the packs changed. The
+ *  page-life previews of the replaced clips are forgotten. */
 export function resetVjDemoLibrary(): void {
+  for (const clip of loadLibrary().clips) {
+    forgetVjDemoPreviewUrl(clip.id);
+  }
   const seed = buildSeedLibrary();
   commit(seed, {
     kind: "packs_reordered",

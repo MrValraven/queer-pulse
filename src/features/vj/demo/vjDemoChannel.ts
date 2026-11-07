@@ -1,11 +1,13 @@
 /**
  * The demo VJ channel: every demo tab of this origin talks over one
  * BroadcastChannel (contract 8.6, plan gap 4). A browser without
- * BroadcastChannel, or one that refuses to open it, gets a silent channel so
- * demo mode still renders in a single tab.
+ * BroadcastChannel, or one that refuses to open it, gets an in-memory hub
+ * shared by every channel this tab opens, so the tab's own server and client
+ * still talk and demo mode works in that single tab.
  */
 import type { VjAttachRole } from "../../../shared/contracts/vj";
 import { VJ_DEMO_CHANNEL_NAME } from "../vj.constants";
+import { createVjUuid } from "../live/vjUuid";
 
 export interface VjDemoMessage {
   direction: "toServer" | "toClients";
@@ -25,26 +27,8 @@ export interface VjDemoChannel {
 
 type VjDemoListener = (message: VjDemoMessage) => void;
 
-const UUID_BYTE_COUNT = 16;
-
-/** A random v4 uuid. Falls back to getRandomValues where randomUUID is
- *  missing (a demo served over plain http on a LAN address). */
-export function createVjDemoUuid(): string {
-  if (typeof crypto.randomUUID === "function") {
-    return crypto.randomUUID();
-  }
-  const bytes = crypto.getRandomValues(new Uint8Array(UUID_BYTE_COUNT));
-  bytes[6] = ((bytes[6] ?? 0) & 0x0f) | 0x40;
-  bytes[8] = ((bytes[8] ?? 0) & 0x3f) | 0x80;
-  const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0"));
-  return [
-    hex.slice(0, 4).join(""),
-    hex.slice(4, 6).join(""),
-    hex.slice(6, 8).join(""),
-    hex.slice(8, 10).join(""),
-    hex.slice(10, 16).join(""),
-  ].join("-");
-}
+/** A random v4 uuid; the shared helper carries the plain http fallback. */
+export const createVjDemoUuid: () => string = createVjUuid;
 
 /** This page load's id on the demo channel. */
 export const VJ_DEMO_TAB_ID: string = createVjDemoUuid();
@@ -71,12 +55,12 @@ function cloneVjDemoMessage(message: VjDemoMessage): VjDemoMessage {
   return JSON.parse(JSON.stringify(message)) as VjDemoMessage;
 }
 
-function createSilentVjDemoChannel(): VjDemoChannel {
-  return {
-    post: () => undefined,
-    subscribe: () => () => undefined,
-    close: () => undefined,
-  };
+let tabVjDemoHub: { open(): VjDemoChannel } | null = null;
+
+/** The one in-memory hub of this page load, for a browser without BroadcastChannel. */
+function openTabLocalVjDemoChannel(): VjDemoChannel {
+  tabVjDemoHub ??= createVjDemoChannelHub();
+  return tabVjDemoHub.open();
 }
 
 function openBroadcastChannel(): BroadcastChannel | null {
@@ -94,7 +78,7 @@ function openBroadcastChannel(): BroadcastChannel | null {
 export function openVjDemoChannel(): VjDemoChannel {
   const broadcastChannel = openBroadcastChannel();
   if (broadcastChannel === null) {
-    return createSilentVjDemoChannel();
+    return openTabLocalVjDemoChannel();
   }
   const listeners = new Set<VjDemoListener>();
   let isClosed = false;

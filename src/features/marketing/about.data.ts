@@ -159,14 +159,6 @@ export const STAND_PANELS: StandPanel[] = [
         titleKey: "marketing:about.stand.commitment.money.title",
         bodyKey: "marketing:about.stand.commitment.money.body",
       },
-      {
-        titleKey: "marketing:about.stand.commitment.mutualAid.title",
-        bodyKey: "marketing:about.stand.commitment.mutualAid.body",
-        link: {
-          labelKey: "marketing:about.stand.commitment.mutualAid.link",
-          topic: "governanceAllocations",
-        },
-      },
     ],
   },
 ];

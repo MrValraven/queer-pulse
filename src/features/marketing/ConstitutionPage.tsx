@@ -44,16 +44,10 @@ export function ConstitutionPage() {
           <p className={styles.dek}>
             <Translation
               i18nKey="marketing:constitution.hero.dek1"
-              components={{ b: <b />, em: <em /> }}
-            />
-          </p>
-          <p className={styles.dek}>{t("marketing:constitution.hero.dek2")}</p>
-          <p className={styles.meta}>
-            <Translation
-              i18nKey="marketing:constitution.hero.meta"
               components={{ b: <b /> }}
             />
           </p>
+          <p className={styles.dek}>{t("marketing:constitution.hero.dek2")}</p>
         </div>
       </PageHero>
 
@@ -88,14 +82,6 @@ export function ConstitutionPage() {
                 />
               </p>
             ))}
-            {article.quoteKey && (
-              <p className={styles.quote}>
-                <Translation
-                  i18nKey={article.quoteKey}
-                  components={{ em: <em /> }}
-                />
-              </p>
-            )}
           </section>
         ))}
       </article>

@@ -29,6 +29,7 @@ function DeskLayoutBody({ desk }: { desk: EditorDesk }) {
         me={desk.activeMe}
         track={tracks.track}
         onNextAction={nextAction.runNextAction}
+        onUnpublish={modals.openUnpublishPiece}
       />
     );
   }
@@ -77,6 +78,7 @@ function DeskLayoutBody({ desk }: { desk: EditorDesk }) {
       onHandoff={modals.openHandoff}
       onAssignIssue={assignment.openForPiece}
       onDelete={modals.openDeletePiece}
+      onUnpublish={modals.openUnpublishPiece}
       me={desk.activeMe}
       groupBy={deskState.groupBy}
       density={deskState.density}

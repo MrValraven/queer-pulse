@@ -64,6 +64,7 @@
    sized per band, so the table still lines up closely. */
 .columns,
 .group,
+.groupBodyRegion,
 .groupBody {
   display: grid;
   grid-column: 1 / -1;
@@ -125,6 +126,42 @@
 
 .group + .group {
   border-top: 1px solid var(--line);
+}
+
+/* ── Group fold (PieceGroupBody) ──
+   The region animates `grid-template-rows` between 0fr and 1fr with a fade,
+   the same pattern as the forum's branch regions. The body inside clips while
+   folded or moving (`clip`, so a focused row's scrollIntoView cannot scroll
+   the hidden box) and opens up once fully open, so a row's focus ring and
+   menus are not cut. `overflow-anchor: none` keeps scroll anchoring off the
+   shrinking rows. Under reduced motion the global rule collapses the
+   durations, so the fold is instant. */
+.groupBodyRegion {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  overflow-anchor: none;
+  transition:
+    grid-template-rows var(--dur-base) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-std);
+}
+
+.groupBodyRegionOpen {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows var(--dur-base) var(--ease-out),
+    opacity var(--dur-base) var(--ease-out);
+}
+
+.groupBody {
+  min-height: 0;
+  overflow: clip;
+}
+
+.groupBodyRegionOpen > .groupBody {
+  overflow: visible;
+  transition: overflow 0s var(--dur-base);
+  transition-behavior: allow-discrete;
 }
 
 /* ── Group header ── */
@@ -261,6 +298,11 @@
   .group,
   .groupBody {
     display: block;
+  }
+
+  /* One stacked column; the region stays a grid for its row animation. */
+  .groupBodyRegion {
+    grid-template-columns: none;
   }
 
   /* The header row would only ever hold select-all, and that control now

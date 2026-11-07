@@ -64,21 +64,6 @@ export function LocalSection() {
       <Reveal as="p" delay={60}>
         {t("marketing:activism.local.p1")}
       </Reveal>
-      <Reveal as="p" delay={100}>
-        <Translation
-          i18nKey="marketing:activism.local.p2"
-          components={{ b: <b /> }}
-        />
-      </Reveal>
-      <Reveal className={s.banner} delay={140}>
-        <span className={s.ibDot} />
-        <div>
-          <div className={s.ibHead}>
-            {t("marketing:activism.local.banner.title")}
-          </div>
-          <p>{t("marketing:activism.local.banner.body")}</p>
-        </div>
-      </Reveal>
     </MarketingSection>
   );
 }

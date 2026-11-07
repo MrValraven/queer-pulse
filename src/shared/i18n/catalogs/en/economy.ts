@@ -29,8 +29,8 @@ export const economy: Catalog = {
   // ── IncubatorTab ────────────────────────────────────────────────────────
   "incubator.hero.title": "A space to build <em>your</em> thing.",
   "incubator.hero.body":
-    "The QueerPulse incubator supports queer founders in Lisbon with six months of structured mentorship, peer accountability, and connections to investors and collaborators who get it.",
-  "incubator.hero.applyCta": "Apply for cohort 3",
+    "The QueerPulse incubator is for queer founders. Tell us what you are building and our team will read your application.",
+  "incubator.hero.applyCta": "Apply to the incubator",
   "incubator.hero.mentorCta": "Become a mentor",
   "incubator.stats.founders": "founders in 2 cohorts",
   "incubator.stats.mentors": "mentors from the community",
@@ -61,7 +61,7 @@ export const economy: Catalog = {
   // ── FreelanceTab (tool grid) ────────────────────────────────────────────
   "freelance.title": "Freelance <em>tools.</em>",
   "freelance.sub":
-    "Real, working tools, built by and for queer freelancers in Portugal. Free, no sign-up, and nothing you enter leaves your device.",
+    "Working tools for freelancers in Portugal. Free, no sign-up, and nothing you enter leaves your device.",
   "freelance.section.documents": "Documents that <em>get you paid.</em>",
   "freelance.section.numbers": "Know your <em>numbers.</em>",
   "freelance.section.together": "Stronger <em>together.</em>",
@@ -80,7 +80,7 @@ export const economy: Catalog = {
   "tool.scope.cta": "Open scope builder",
   "tool.reciboGuide.title": "Recibos verdes guide",
   "tool.reciboGuide.desc":
-    "A plain-language guide to the Portuguese freelance tax system, registering, retention, IVA, Segurança Social, and your first year. Always current.",
+    "A plain-language guide to the Portuguese freelance tax system, registering, retention, IVA, Segurança Social, and your first year.",
   "tool.reciboGuide.cta": "Read the guide",
 
   "tool.takeHome.title": "Take-home calculator",
@@ -106,7 +106,7 @@ export const economy: Catalog = {
 
   "tool.rateBoard.title": "Rate transparency board",
   "tool.rateBoard.desc":
-    "Anonymous day rates shared by the community, by role and experience, so nobody has to guess what to charge. Add yours, see where you stand.",
+    "A private rate board on your device. Add your rates, see the spread by role and experience, and see where you stand.",
   "tool.rateBoard.cta": "Open the board",
   "tool.slidingScale.title": "Sliding-scale price card",
   "tool.slidingScale.desc":
@@ -116,7 +116,7 @@ export const economy: Catalog = {
   // ── SalaryTab ───────────────────────────────────────────────────────────
   "salary.title": "Salary <em>transparency.</em>",
   "salary.sub":
-    "Anonymous submissions from the community. Filter by sector, role, or type. Knowledge is power.",
+    "Anonymous salaries, so nobody walks into a negotiation without knowing the going rate.",
   "salary.submitCta": "+ Submit yours",
   "salary.filter.all": "All sectors",
   "salary.filter.tech": "Tech",
@@ -307,10 +307,8 @@ export const economy: Catalog = {
   "jobs.eyebrow": "Job Board",
   "jobs.title": "Work that <em>doesn't ask you to hide.</em>",
   "jobs.lead":
-    "Queer-run businesses and verified queer-inclusive employers, jobs where you can show up as yourself. No rainbow capitalism. Every listing is vetted by the community.",
+    "Jobs from queer-run businesses and employers in the community, where you can show up as yourself. Members can report any listing that breaks our rules.",
   "jobs.badge.queerRun": "Queer-run",
-  "jobs.badge.verified": "Community verified",
-  "jobs.badge.location": "Lisbon + remote",
   "jobs.postCta": "+ Post a job",
 
   "jobs.filter.all": "All roles",
@@ -354,7 +352,7 @@ export const economy: Catalog = {
   "jobs.empty.verifiedDescription":
     "Nothing in this category is verified-safe yet. Show all roles, or pick a different category.",
   "jobs.empty.description":
-    "No openings in this category at the moment. Browse every role, or check back soon. Listings are added weekly.",
+    "No openings in this category at the moment. Browse every role, or check back soon.",
   "jobs.empty.showAll": "Show all roles",
   "jobs.empty.clearCategory": "Clear category",
 
@@ -362,9 +360,9 @@ export const economy: Catalog = {
   "jobs.loadMoreCta": "Load more roles",
   "jobs.loadMoreError": "We couldn't load more roles.",
 
-  "jobs.employers.title": "Queer-run employers <em>we trust</em>",
+  "jobs.employers.title": "Employers <em>on QueerPulse</em>",
   "jobs.employers.subtitle":
-    "These organisations are run by or for the queer community. Working here means your money stays in the network.",
+    "Organisations with a profile here, with their open roles and reviews from members.",
   "jobs.employers.loadingMore": "Loading…",
   "jobs.employers.loadMoreCta": "Load more employers",
 
@@ -380,7 +378,7 @@ export const economy: Catalog = {
     'Members rate this employer 8+/10 on "safe to be out at work". Being open about who you are is a non-event here.',
   "safetyBadge.affiliation.run.label": "Queer-run",
   "safetyBadge.affiliation.run.blurb":
-    "Led or owned by queer people. Decisions, culture, and money stay inside the community. Verified by us during vetting.",
+    "Led or owned by queer people, as stated by the employer.",
   "safetyBadge.affiliation.friendly.label": "Queer-friendly",
   "safetyBadge.affiliation.friendly.blurb":
     "An affirming employer with inclusive policies and a real LGBTQ+ presence, but not queer-led. Welcoming, just not community-owned.",
@@ -474,7 +472,7 @@ export const economy: Catalog = {
   "housing.hero.lead":
     "A queer-specific housing board for Lisbon. Browse spaces to rent, or find a flatmate you can actually be yourself around, all within the community network.",
   "housing.hero.note":
-    "Every listing and profile is posted by a verified QueerPulse member",
+    "Every listing and profile is posted by a QueerPulse member",
 
   "housing.filter.all": "All listings",
   "housing.filter.sublet": "Sublet",
@@ -588,10 +586,10 @@ export const economy: Catalog = {
   "housing.tipsHeading": "Housing in Lisbon, <em>what to know</em>",
   "housing.tip.budget.title": "Budget for a competitive market",
   "housing.tip.budget.text":
-    "Rooms in central neighbourhoods go for €700–1000/month. Studios €900–1400. Things move quickly. Have documents ready: NIF, proof of income or a guarantor, and a cover message.",
+    "Lisbon's rental market is competitive and things can move quickly. Have documents ready: NIF, proof of income or a guarantor, and a cover message.",
   "housing.tip.board.title": "Use the community board",
   "housing.tip.board.text":
-    'The QueerPulse board consistently surfaces housing before it hits any portal. Post "looking for a room in [neighbourhood]" and the network will reply. It works.',
+    "Browse the QueerPulse board, or post a flatmate profile that says where you are looking, so members can find you.",
   "housing.tip.rights.title": "Know your rights as a tenant",
   "housing.tip.rights.text":
     "Portuguese tenancy law is reasonably protective. You need a written contract. Landlords can't evict without proper notice. ILGA Portugal can advise if you face discrimination.",
@@ -603,7 +601,7 @@ export const economy: Catalog = {
     "Meet the landlord before signing. Ask about other tenants. A bad feeling is worth more than a good price.",
   "housing.tip.emergency.title": "In an emergency, ask the community",
   "housing.tip.emergency.text":
-    "If you're suddenly homeless or in a dangerous living situation, post to the board. The community responds quickly to genuine need.",
+    "If you're suddenly homeless or in a dangerous living situation, you can ask in the forum. If you are in immediate danger, call 112.",
 
   "housing.subpages.eyebrow": "Housing",
   "housing.subpages.title": "More on housing",
@@ -613,7 +611,7 @@ export const economy: Catalog = {
 
   "housing.outro.title": "Finding home <em>together.</em>",
   "housing.outro.sub":
-    "Every listing here comes from someone in the community. List your space, or post what you're looking for. The network moves fast for its own.",
+    "Every listing here comes from someone in the community. List your space, or post what you're looking for.",
   "housing.outro.listCta": "List your space",
   "housing.outro.askForum": "Ask the forum",
 
@@ -698,11 +696,11 @@ export const economy: Catalog = {
   "listSpace.success.title": "Listing",
   "listSpace.success.em": "submitted.",
   "listSpace.success.body":
-    "Thanks for sharing <strong>{title}</strong>. A moderator checks every listing before it goes live, usually within a day, so the board stays trustworthy for everyone looking for a safe place to land.",
+    "Thanks for sharing <strong>{title}</strong>. A moderator checks every listing before it goes live, so the board stays trustworthy for everyone looking for a safe place to land.",
   "listSpace.eyebrow": "Housing board",
   "listSpace.title": "List your <em>space.</em>",
   "listSpace.sub":
-    "Open your place to a verified member of the community. Tell people what it's like to live there, add a few photos, and a moderator reads every listing before it reaches the board.",
+    "Open your place to a member of the community. Tell people what it's like to live there, add a few photos, and a moderator reads every listing before it reaches the board.",
   "listSpace.titleLabel": "Listing title *",
   "listSpace.titlePlaceholder": "e.g. Sunny room in a queer flatshare",
   "listSpace.areaLabel": "Neighbourhood / area *",
@@ -1357,8 +1355,8 @@ export const economy: Catalog = {
   "flatmates.showResultsCta_one": "Show {count} profile",
   "flatmates.showResultsCta_other": "Show {count} profiles",
 
-  "flatmates.count_one": "{count} profile active this week",
-  "flatmates.count_other": "{count} profiles active this week",
+  "flatmates.count_one": "{count} profile on the board",
+  "flatmates.count_other": "{count} profiles on the board",
   "flatmates.loadMore": "Show more people",
   "flatmates.loadError.title": "We couldn't load the flatmate board",
   "flatmates.loadError.description":
@@ -1548,7 +1546,7 @@ export const economy: Catalog = {
     "Thank you, your review of {companyName} is live. {companyName} can't edit or remove what you wrote.",
   "companyReview.title": "What was it <em>actually like?</em>",
   "companyReview.sub":
-    "Your honest account helps the next queer person decide whether to take the interview. Verified by membership.",
+    "Your honest account helps the next queer person decide whether to take the interview. Your name is not shown on it.",
   "companyReview.headlineLabel": "Headline",
   "companyReview.headlinePlaceholder": "Sum it up in a line",
   "companyReview.roleLabel": "Your role / tenure",
@@ -1579,14 +1577,14 @@ export const economy: Catalog = {
   "employerReviews.hero.eyebrow": "Employer Reviews",
   "employerReviews.hero.title": "Is your workplace <em>actually safe?</em>",
   "employerReviews.hero.lead":
-    "Anonymous reviews of Lisbon companies by LGBTQ+ employees. Beyond the Pride logo, what it's actually like to be out there, behind closed office doors.",
+    "Reviews of employers, written by members who worked there. Beyond the Pride logo, what it's actually like to be out there.",
 
   "employerReviews.how.title": "How it <em>works</em>",
   "employerReviews.how.sub":
-    "Anonymous, verified by membership, and employers can never edit them.",
-  "employerReviews.how.write.title": "Write anonymously",
+    "Written by members, shown without names, and employers cannot edit them.",
+  "employerReviews.how.write.title": "Write without your name",
   "employerReviews.how.write.desc":
-    "Your identity is never attached to your review. We verify you're a member. Nothing else is logged.",
+    "Your name is not shown on your review. Only members can write one, and you can edit yours later.",
   "employerReviews.how.rate.title": "Rate what matters",
   "employerReviews.how.rate.desc":
     "Safety to be out, management awareness, trans inclusion, HR responsiveness, and culture vs. stated values.",
@@ -1595,8 +1593,7 @@ export const economy: Catalog = {
     "Your review helps other queer people make better choices about where they take their talent and their whole selves.",
 
   "employerReviews.recent.title": "Recent <em>reviews</em>",
-  "employerReviews.recent.sub":
-    "Member-written · anonymous · updated continuously",
+  "employerReviews.recent.sub": "Member-written · shown without names",
   "employerReviews.recent.browseCta": "Browse queer-inclusive jobs",
   "employerReviews.recent.writeCta": "Write a review",
   "employerReviews.loadError.title": "We couldn't load the employers",
@@ -1619,19 +1616,18 @@ export const economy: Catalog = {
 
   "employerReviews.write.title": "Write a <em>review.</em>",
   "employerReviews.write.body":
-    "You've been there. You know what it was actually like. Your review helps the next queer person decide whether to take that interview. It takes 5 minutes and is completely anonymous.",
+    "You've been there. You know what it was actually like. Your review helps the next queer person decide whether to take that interview. It takes a few minutes, and your name is not shown.",
   "employerReviews.write.note":
-    "Members only · anonymous · your identity is never stored with your review",
+    "Members only · your name is not shown on your review",
   "employerReviews.write.rulesTitle": "Our review principles",
-  "employerReviews.write.rule.anonymous":
-    "Reviews are anonymous, your name is never attached",
+  "employerReviews.write.rule.anonymous": "Your name is not shown on a review",
   "employerReviews.write.rule.verifyMembership":
-    "We verify you're a QueerPulse member, nothing more",
+    "Only QueerPulse members can write reviews",
   "employerReviews.write.rule.noEdit":
-    "Employers cannot edit, remove, or respond to reviews",
-  "employerReviews.write.rule.moderation": "We moderate for factual accuracy",
-  "employerReviews.write.rule.retract":
-    "You can update or retract your review at any time",
+    "Employers cannot edit or remove reviews, and can post one public reply",
+  "employerReviews.write.rule.moderation":
+    "Any review can be reported to our team",
+  "employerReviews.write.rule.retract": "You can edit your review at any time",
   "employerReviews.write.rule.noBuying":
     "No company can buy a higher rating or featured placement",
 
@@ -1731,7 +1727,7 @@ export const economy: Catalog = {
     "{org} will see your QueerPulse profile and everything you attached.",
   "jobApply.success.step2":
     "You'll get a notification the moment they respond.",
-  "jobApply.success.step3": "Most teams here reply within 10 days.",
+  "jobApply.success.step3": "You can follow it on your applications page.",
   "jobApply.success.footerCta": "Back to all jobs",
   "jobApply.success.body":
     "Sent to {org} for the {title} role. Nothing else to do right now, the ball's in their court.",
@@ -1756,9 +1752,9 @@ export const economy: Catalog = {
   "jobApply.tip.profileLink":
     "Linking just your QueerPulse profile is fine. They'll see your work.",
   "jobApply.tip.replyTime":
-    "Most teams here reply to every application within 10 days.",
+    "You can save a draft and come back to it before you send.",
   "jobApply.tip.fixedComp":
-    "Compensation is fixed as posted, but title and start date are often open.",
+    "The compensation shown is as the employer posted it.",
 
   // ── BarterPage (+ Card / PostStrip) ─────────────────────────────────────
   // Scope note: barter listing content (offer/want summaries, detail text,
@@ -1771,9 +1767,8 @@ export const economy: Catalog = {
   "barter.principle.noMoney.title": "No money",
   "barter.principle.noMoney.body":
     "Every exchange is peer-to-peer. The people involved set the value between them.",
-  "barter.principle.reputation.title": "Reputation-backed",
-  "barter.principle.reputation.body":
-    "Offers come from verified members. Your community vouch is your credit history.",
+  "barter.principle.reputation.title": "Member to member",
+  "barter.principle.reputation.body": "Offers come from QueerPulse members.",
   "barter.principle.wants.title": "What you want matters",
   "barter.principle.wants.body":
     "Post what you're looking for, as much as what you can give. Needs are as welcome as offers.",
@@ -2145,11 +2140,11 @@ export const economy: Catalog = {
   "postJob.sidebar.point1":
     "Listings are <strong>visible to members</strong>, never public.",
   "postJob.sidebar.point2":
-    "Listings <strong>expire after 60 days</strong>, reminder at 45.",
+    "Applications <strong>come to you</strong> on QueerPulse, and you review them from your posted roles.",
   "postJob.sidebar.point3":
     "<strong>No placement fees.</strong> A community board, run by members.",
   "postJob.sidebar.point4":
-    "<strong>Edit or close</strong> any time from your company profile.",
+    "<strong>Edit or close</strong> any time from your posted roles.",
 
   "postJob.preview.ariaLabel": "Listing preview",
   "postJob.preview.untitled": "Untitled listing",
@@ -2163,27 +2158,20 @@ export const economy: Catalog = {
 
   "postJob.confirm.title": "“{title}” is <em>live</em>",
   "postJob.confirm.sub":
-    "Members can see it now. We'll notify you the moment someone responds, and nudge you before it expires in 60 days.",
+    "Members can see it now. We'll notify you when someone applies.",
   "postJob.confirm.viewListing": "View listing",
   "postJob.confirm.postAnother": "Post another",
-  "postJob.confirm.performance.title": "Performance",
-  "postJob.confirm.performance.body":
-    "Track views, saves, and responses over the life of your listing.",
-  "postJob.confirm.performance.views": "Views",
-  "postJob.confirm.performance.saves": "Saves",
-  "postJob.confirm.performance.replies": "Replies",
   "postJob.confirm.responses.title": "Responses",
   "postJob.confirm.responses.body":
-    "Replies land in one place, review, message, or mark as filled from your listing manager.",
-  "postJob.confirm.responses.openManager": "Open listing manager",
+    "Applications land in one place. Review them from your posted roles.",
+  "postJob.confirm.responses.openManager": "Open your posted roles",
   "postJob.confirm.share.title": "Share it",
   "postJob.confirm.share.body":
     "Copy the link and put it where your people already are.",
   "postJob.confirm.share.copyLink": "Copy link",
   "postJob.confirm.share.toastLink": "Link copied",
   "postJob.confirm.whatsNext.title": "What's next",
-  "postJob.confirm.whatsNext.body":
-    "Your role now shows on the board and on your company profile. New listings carry a “not yet reviewed” note until the community vets them.",
+  "postJob.confirm.whatsNext.body": "Your role now shows on the board.",
 
   // ── MentorshipPage (+ match modal/steps) ────────────────────────────────
   // Scope note: individual mentor profiles in mentorship.data.ts (bio, quote,
@@ -2588,7 +2576,7 @@ export const economy: Catalog = {
   "solidarity.hero.titleLine1": "Pay what",
   "solidarity.hero.titleEm": "you can.",
   "solidarity.hero.sub":
-    "Professionals from the QueerPulse community who offer sliding-scale fees, because access to good care shouldn't depend on what you earn.",
+    "A directory of professionals who offer sliding-scale fees, because access to good care shouldn't depend on what you earn.",
   "solidarity.hero.note":
     "All practitioners have been verified by at least two community members.",
   "solidarity.how.step1.title": "Find your practitioner",
@@ -2626,9 +2614,9 @@ export const economy: Catalog = {
   "solidarityDirectory.empty.description":
     "No one fits that search just yet. Try a different profession or clear your search to see everyone offering sliding-scale care.",
   "solidarityDirectory.empty.clearFilters": "Clear filters",
-  "solidarityDirectory.emptyLive.title": "Directory coming soon",
+  "solidarityDirectory.emptyLive.title": "No practitioners listed yet",
   "solidarityDirectory.emptyLive.description":
-    "We're verifying practitioners who offer solidarity pricing. Soon you'll be able to find and contact them here.",
+    "Practitioners who offer solidarity pricing will appear here once they are listed.",
   "solidarityDirectory.register.titleLine1": "Do you offer",
   "solidarityDirectory.register.titleEm": "solidarity pricing?",
   "solidarityDirectory.register.body":
@@ -3062,21 +3050,20 @@ export const economy: Catalog = {
     "Housing co-op formation · Portugal-first, expandable",
   "housingCoop.hero.title": "Build a co-op <em>together</em>.",
   "housingCoop.hero.sub":
-    "A toolkit for forming a queer housing co-operative in Portugal, from finding the people, through the legal incorporation, the financing, the property, the daily governance. <em>Five phases, real templates, members already in each one.</em>",
+    "A toolkit for forming a queer housing co-operative in Portugal, from finding the people, through the legal incorporation, the financing, the property, the daily governance. <em>Five phases, with templates for most of them.</em>",
   "housingCoop.hero.statsHead": "Co-ops forming now",
   "housingCoop.phases.title": "Five <em>phases</em> from idea to keys",
-  "housingCoop.phases.sub":
-    "Realistic timeline: 14–28 months. Each phase has templates, real examples from existing co-ops, and a mentor you can reach when stuck.",
+  "housingCoop.phases.sub": "The templates below follow these phases.",
   "housingCoop.grid.title": "Co-ops <em>forming now</em>",
   "housingCoop.grid.seeAll": "All 8",
   "housingCoop.templates.title": "Templates & <em>tools</em>",
   "housingCoop.templates.sub":
-    "Every document we wish someone had given us. Drafted with QueerPulse legal, translated PT & EN, stress-tested by Casa Sambizanga's first two years.",
+    "Documents for the stages of forming a co-op, to read and adapt. Have a lawyer check anything before you sign it.",
   "housingCoop.templates.read": "Read",
   "housingCoop.startCta.eyebrow": "Start a co-op",
   "housingCoop.startCta.title": "Don't have <em>your people yet</em>?",
   "housingCoop.startCta.body":
-    "Post that you're starting and we'll match you with other members in your city looking for the same thing. Most co-ops start with 2–3 people and grow to 6+ over the first 6 months. <em>Casa Sambizanga started with three.</em>",
+    "Forming a co-op starts with a few people who want the same thing. Posting that you're starting is how you will find other members who do.",
   "housingCoop.startCta.postCta": "Post that you're starting",
   "housingCoop.startCta.storyCta": "Read Casa Sambizanga's story",
   "housingCoop.startCta.resourcesHead": "Resources & mentors",
@@ -3166,7 +3153,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.financial-honesty.title": "Financial Honesty",
   "coopTemplate.doc.financial-honesty.titleEm": "Agreement",
   "coopTemplate.doc.financial-honesty.intro":
-    "Housing co-ops fail more often over unspoken money trouble than over any legal problem. This agreement exists so that a member who's struggling says so in week two, while the problem is still small, and so nobody has to guess what anyone else earns, owes, or is worried about. Adapt the specifics to your group; keep the principle that everyone sees the same numbers.",
+    "Unspoken money trouble can sink a housing co-op. This agreement exists so that a member who's struggling says so in week two, while the problem is still small, and so nobody has to guess what anyone else earns, owes, or is worried about. Adapt the specifics to your group; keep the principle that everyone sees the same numbers.",
   "coopTemplate.doc.financial-honesty.s0.h":
     "What full transparency means here",
   "coopTemplate.doc.financial-honesty.s0.b0":
@@ -3226,7 +3213,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.crl-statutes.title": "Model CRL",
   "coopTemplate.doc.crl-statutes.titleEm": "Statutes",
   "coopTemplate.doc.crl-statutes.intro":
-    "A Cooperativa de Responsabilidade Limitada (CRL) is the legal form most QueerPulse housing co-ops register under in Portugal. What follows is a plain-English model of the sections your statutes need. It is not the legal text itself, and it is not legal advice. Bring this outline, and your founding values charter, to a lawyer or notary experienced in cooperative law before you draft or register anything.",
+    "A Cooperativa de Responsabilidade Limitada (CRL) is a legal form that housing co-operatives in Portugal can register under. What follows is a plain-English model of the sections your statutes need. It is not the legal text itself, and it is not legal advice. Bring this outline, and your founding values charter, to a lawyer or notary experienced in cooperative law before you draft or register anything.",
   "coopTemplate.doc.crl-statutes.s0.h": "Name & registered seat (sede)",
   "coopTemplate.doc.crl-statutes.s0.b0":
     "Your statutes open by naming the cooperative and its registered address (sede social), usually the property itself or a member's address until the property closes.",
@@ -3412,7 +3399,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.conflict-resolution.title": "Conflict Resolution",
   "coopTemplate.doc.conflict-resolution.titleEm": "Process",
   "coopTemplate.doc.conflict-resolution.intro":
-    "Every co-op has conflict, the difference between the ones that last and the ones that don't is usually whether they built a process before they needed it. This one is adapted from what Casa Sambizanga uses day to day; treat it as a starting structure to walk through and adjust with your own group, especially the steps that involve someone possibly leaving.",
+    "Every co-op has conflict, and a process built before you need it makes it easier to get through. Treat this as a starting structure to walk through and adjust with your own group, especially the steps that involve someone possibly leaving.",
   "coopTemplate.doc.conflict-resolution.s0.h":
     "Principles: repair over punishment",
   "coopTemplate.doc.conflict-resolution.s0.b0":
@@ -3512,30 +3499,28 @@ export const economy: Catalog = {
   "housingCoop.template.foundingValues.tag": "Phase 1 · template",
   "housingCoop.template.foundingValues.name": "Founding values &",
   "housingCoop.template.foundingValues.nameEm": "vibes test",
-  "housingCoop.template.foundingValues.meta": "PDF · PT + EN · 14 pages",
+  "housingCoop.template.foundingValues.meta": "In-app document · PT + EN",
   "housingCoop.template.financialHonesty.tag": "Phase 1 · template",
   "housingCoop.template.financialHonesty.name": "Financial honesty",
   "housingCoop.template.financialHonesty.nameEm": "worksheet",
-  "housingCoop.template.financialHonesty.meta":
-    "Spreadsheet · 1 sheet per member",
+  "housingCoop.template.financialHonesty.meta": "In-app worksheet",
   "housingCoop.template.crlStatutes.tag": "Phase 2 · legal",
   "housingCoop.template.crlStatutes.name": "CRL co-op",
   "housingCoop.template.crlStatutes.nameEm": "statutes",
-  "housingCoop.template.crlStatutes.meta": "DOCX · Portuguese law · vetted",
+  "housingCoop.template.crlStatutes.meta": "In-app document · Portuguese law",
   "housingCoop.template.shareAgreement.tag": "Phase 2 · legal",
   "housingCoop.template.shareAgreement.name": "Member share",
   "housingCoop.template.shareAgreement.nameEm": "agreement",
-  "housingCoop.template.shareAgreement.meta": "PDF · clauses for chosen family",
+  "housingCoop.template.shareAgreement.meta":
+    "In-app document · clauses for chosen family",
   "housingCoop.template.financeModel.tag": "Phase 3 · finance",
   "housingCoop.template.financeModel.name": "Group finance",
   "housingCoop.template.financeModel.nameEm": "model",
-  "housingCoop.template.financeModel.meta":
-    "Spreadsheet · with Lisbon & Porto data",
+  "housingCoop.template.financeModel.meta": "In-app worksheet",
   "housingCoop.template.conflictResolution.tag": "Phase 5 · governance",
   "housingCoop.template.conflictResolution.name": "Conflict resolution",
   "housingCoop.template.conflictResolution.nameEm": "process",
-  "housingCoop.template.conflictResolution.meta":
-    "PDF · adapted from Casa Sambizanga",
+  "housingCoop.template.conflictResolution.meta": "In-app document",
 
   // ── Mentors/partners list (housingCoop.data → COOP_RESOURCES). `em` fields
   //    (proper nouns: "Casa Sambizanga", "CCAM") stay in the data file, not
@@ -3660,11 +3645,11 @@ export const economy: Catalog = {
   "incubatorApply.success.title": "Application",
   "incubatorApply.success.em": "received.",
   "incubatorApply.success.body":
-    "Thanks, <strong>{name}</strong>. Cohort 3 applications are read by the programme team after the 30 July deadline. You'll hear back within three weeks, whatever we decide.",
-  "incubatorApply.eyebrow": "Incubator · Cohort 3",
+    "Thanks, <strong>{name}</strong>. Our team has your application and will reply by email.",
+  "incubatorApply.eyebrow": "Incubator",
   "incubatorApply.title": "Apply to <em>build your thing.</em>",
   "incubatorApply.sub":
-    "Six months of mentorship, peer accountability, and warm intros. No pitch deck required. Just tell us what you're making and where you're at.",
+    "No pitch deck required. Just tell us what you're making and where you're at.",
   "incubatorApply.nameLabel": "Your name *",
   "incubatorApply.namePlaceholder": "First and last",
   "incubatorApply.emailLabel": "Email *",
@@ -3677,18 +3662,18 @@ export const economy: Catalog = {
   "incubatorApply.charsNeeded_other":
     "{count} more characters in your pitch to submit.",
   "incubatorApply.looksGood":
-    "Looks good. Decisions go out within three weeks of the deadline.",
+    "Looks good. Our team will read your application.",
   "incubatorApply.submitCta": "Submit application",
 
   // ── IncubatorModals: MentorSignupModal ───────────────────────────────────
   "mentorSignup.success.title": "You're on the",
   "mentorSignup.success.em": "list.",
   "mentorSignup.success.body":
-    "Thank you, <strong>{name}</strong>. The mentorship team will reach out to match you with a founder whose sector and stage fit what you offer. Mentors meet their match fortnightly across the cohort.",
+    "Thank you, <strong>{name}</strong>. Our team has your sign-up and will reply by email.",
   "mentorSignup.eyebrow": "Incubator · Mentorship",
   "mentorSignup.title": "Become a <em>mentor.</em>",
   "mentorSignup.sub":
-    "Give a few hours a month to a queer founder finding their feet. We match on sector, stage, and the things you actually know.",
+    "Tell us where you could help a queer founder finding their feet, and the things you actually know.",
   "mentorSignup.nameLabel": "Your name *",
   "mentorSignup.namePlaceholder": "First and last",
   "mentorSignup.emailLabel": "Email *",
@@ -3701,8 +3686,7 @@ export const economy: Catalog = {
     "A sentence or two on what you'd bring and who you'd most like to support.",
   "mentorSignup.charsNeeded_one": "{count} more character to submit.",
   "mentorSignup.charsNeeded_other": "{count} more characters to submit.",
-  "mentorSignup.looksGood":
-    "We review every mentor before matching, expect to hear from us soon.",
+  "mentorSignup.looksGood": "Looks good. Our team will read your sign-up.",
   "mentorSignup.submitCta": "Sign up to mentor",
 
   // ── IncubatorModals: RequestSessionModal ─────────────────────────────────
@@ -3890,7 +3874,7 @@ export const economy: Catalog = {
   "housingGroups.empty.title": "No groups open just",
   "housingGroups.empty.titleEm": "yet",
   "housingGroups.empty.body":
-    "Vetted housing groups are forming city by city. Check back soon, or start one with people you already trust.",
+    "No housing groups are listed yet. Check back soon.",
   "housingGroups.detail.backLabel": "All groups",
   "housingGroups.detail.askToJoin": "Ask to join",
   "housingGroups.detail.join": "Join this group",

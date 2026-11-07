@@ -6,6 +6,7 @@
 @import "./tokens/breakpoints.css";
 @import "./tokens/layers.css";
 @import "./tokens/quizshowStage.css";
+@import "./tokens/vjStage.css";
 @import "./tokens/skin-quest.css";
 @import "./fonts.css";
 @import "./base.css";

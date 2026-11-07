@@ -3,7 +3,6 @@
 
 import {
   VJ_LIBRARY_CHANGE_KINDS,
-  VJ_LIMITS,
   type VjLibraryChange,
 } from "../../../shared/contracts/vj";
 import {
@@ -24,6 +23,7 @@ import {
 } from "./vjDemoStage";
 import { readVjRecord } from "./vjDemoStageCommands";
 import type { VjDemoLibraryLookup } from "./vjDemoStore";
+import { createVjDemoStageTimers } from "./vjDemoTimers";
 
 export interface VjDemoServerOptions {
   channel: VjDemoChannel;
@@ -42,6 +42,17 @@ export interface VjDemoServerOptions {
 /** How often offline screens older than the retention are dropped. */
 const VJ_DEMO_PRUNE_INTERVAL_MS = 60_000;
 
+/** A v2 id field: a string as sent, anything else null. */
+function readIdOrNull(value: unknown): string | null {
+  return typeof value === "string" ? value : null;
+}
+
+/** A v2 id list: the strings of an array, anything else empty. */
+function readIdList(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter((entry): entry is string => typeof entry === "string");
+}
+
 function readLibraryChange(payload: unknown): VjLibraryChange | null {
   const record = readVjRecord(payload);
   const { kind, packId, clipId, packIds } = record;
@@ -55,9 +66,11 @@ function readLibraryChange(payload: unknown): VjLibraryChange | null {
     kind: kind as VjLibraryChange["kind"],
     packId: typeof packId === "string" ? packId : null,
     clipId: typeof clipId === "string" ? clipId : null,
-    packIds: packIds.filter(
-      (value): value is string => typeof value === "string",
-    ),
+    packIds: readIdList(packIds),
+    sceneId: readIdOrNull(record.sceneId),
+    setlistId: readIdOrNull(record.setlistId),
+    setlistIds: readIdList(record.setlistIds),
+    eventId: readIdOrNull(record.eventId),
   };
 }
 
@@ -86,8 +99,12 @@ export function startVjDemoServer(options: VjDemoServerOptions): {
   const lastHeardAt = new Map<string, number>();
   let screensUpdateTimer: ReturnType<typeof setTimeout> | null = null;
   let pendingScreensUpdate: VjDemoOutgoing | null = null;
-  let strobeTimer: ReturnType<typeof setTimeout> | null = null;
   let isStopped = false;
+  let lastHeartbeatAt = Number.NEGATIVE_INFINITY;
+  // Contract 7.14: the strobe cap, overlay auto-hide and countdown hold, each
+  // armed for its server time; a fire reduces its stage event, which syncs
+  // the timers again.
+  const timers = createVjDemoStageTimers(now, (kind) => dispatch({ kind }));
 
   const post = (message: Omit<VjDemoMessage, "direction" | "tabId">) => {
     if (isStopped) return;
@@ -118,17 +135,11 @@ export function startVjDemoServer(options: VjDemoServerOptions): {
     );
   };
 
-  const clearStrobeTimer = () => {
-    if (strobeTimer !== null) clearTimeout(strobeTimer);
-    strobeTimer = null;
-  };
-
   const dispatch = (
     event: VjDemoStageEvent,
     reply?: { requestId: string; tabId: string },
   ) => {
     if (isStopped) return;
-    const strobeStartedBefore = stage.state.effects.strobeStartedAt;
     const result = reduceVjDemoStage(stage, event, { now: now(), library });
     stage = result.stage;
     if (result.ack !== null && reply !== undefined) {
@@ -147,15 +158,7 @@ export function startVjDemoServer(options: VjDemoServerOptions): {
       if (isRemotesUpdate) queueScreensUpdate(frame);
       else postOutgoing(frame);
     }
-    const strobeStartedAfter = stage.state.effects.strobeStartedAt;
-    if (strobeStartedAfter === null) clearStrobeTimer();
-    else if (strobeStartedAfter !== strobeStartedBefore) {
-      clearStrobeTimer();
-      strobeTimer = setTimeout(() => {
-        strobeTimer = null;
-        dispatch({ kind: "strobeTimeout" });
-      }, VJ_LIMITS.strobeMaxDurationMs);
-    }
+    timers.sync(stage.state);
   };
 
   const isLowerServerHeartbeat = (message: VjDemoMessage) => {
@@ -173,6 +176,12 @@ export function startVjDemoServer(options: VjDemoServerOptions): {
       return;
     }
     lastHeardAt.set(message.tabId, now());
+    // A throttled timer lands before the frame that follows it in time.
+    timers.fireOverdue();
+    // A hidden hosting tab's interval may run once a minute; channel messages
+    // are never throttled, so the clients' own traffic keeps the heartbeat
+    // going and no client drops to reconnecting.
+    if (now() - lastHeartbeatAt >= VJ_DEMO_HEARTBEAT_MS) sendHeartbeat();
     const event = eventOf(message);
     if (event === null) return;
     const requestId = message.requestId ?? null;
@@ -193,9 +202,12 @@ export function startVjDemoServer(options: VjDemoServerOptions): {
     }
   };
 
-  const sendHeartbeat = () =>
+  function sendHeartbeat() {
+    lastHeartbeatAt = now();
     post({ name: "demo:heartbeat", payload: { serverId } });
+  }
   const heartbeatTimer = setInterval(() => {
+    timers.fireOverdue();
     sendHeartbeat();
     detachSilentTabs();
   }, VJ_DEMO_HEARTBEAT_MS);
@@ -205,13 +217,25 @@ export function startVjDemoServer(options: VjDemoServerOptions): {
   );
   sendHeartbeat();
 
+  // A hidden hosting tab's timeouts are throttled; back in view, anything
+  // overdue fires at once.
+  const hostDocument = typeof document === "undefined" ? null : document;
+  const handleVisibilityChange = () => {
+    if (hostDocument?.visibilityState === "visible") timers.fireOverdue();
+  };
+  hostDocument?.addEventListener("visibilitychange", handleVisibilityChange);
+
   function stop() {
     if (isStopped) return;
     isStopped = true;
     unsubscribe();
     clearInterval(heartbeatTimer);
     clearInterval(pruneTimer);
-    clearStrobeTimer();
+    timers.clear();
+    hostDocument?.removeEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
+    );
     if (screensUpdateTimer !== null) clearTimeout(screensUpdateTimer);
     screensUpdateTimer = null;
     pendingScreensUpdate = null;

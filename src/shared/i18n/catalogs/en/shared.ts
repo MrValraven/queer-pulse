@@ -755,6 +755,7 @@ export const shared: Catalog = {
   "mediaRef.sticker": "Sticker",
   "mediaRef.vj-clip": "VJ clip",
   "mediaRef.vj-thumbnail": "VJ clip preview",
+  "mediaRef.vj-preview": "VJ clip animated preview",
 
   // calendar.* keys, for the shared APG-compliant Calendar/DatePicker
   // primitive (Calendar.tsx, CalendarCell.tsx, CalendarHeader.tsx,

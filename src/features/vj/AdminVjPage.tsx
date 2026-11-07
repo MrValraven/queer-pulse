@@ -1,5 +1,6 @@
 import {
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -10,7 +11,12 @@ import { FiAlertCircle } from "react-icons/fi";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { routes } from "../../app/routeMap";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { EmptyState, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import {
+  EmptyState,
+  FadeIn,
+  SkeletonLine,
+  tabPanelProps,
+} from "../../shared/components/ui";
 import type { VjClipDTO, VjPackDTO } from "../../shared/contracts/vj";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminPageHeader } from "../admin/ui/AdminPageHeader";
@@ -24,13 +30,28 @@ import { VjPackHeader } from "./library/VjPackHeader";
 import { VjPackList } from "./library/VjPackList";
 import { VjPackManageSheet } from "./library/VjPackManageSheet";
 import { VjPackPicker } from "./library/VjPackPicker";
+import { VjPreviewBackfillPanel } from "./library/VjPreviewBackfillPanel";
 import { VjUploadRows } from "./library/VjUploadRows";
 import { VjUploadZone } from "./library/VjUploadZone";
+import {
+  VJ_LIBRARY_VIEW_TABS_ID,
+  VjLibraryViewTabs,
+} from "./library/VjLibraryViewTabs";
+import { VjShowLibrary } from "./library/show/VjShowLibrary";
 import { useVjLibrarySelection } from "./library/useVjLibrarySelection";
 import {
+  useVjLibraryView,
+  type VjLibraryView,
+} from "./library/useVjLibraryView";
+import {
   useVjClipUploads,
+  vjPreviewingClipIdsOf,
   type VjClipUploads,
 } from "./upload/useVjClipUploads";
+import {
+  useVjPreviewBackfill,
+  type VjPreviewBackfill,
+} from "./upload/useVjPreviewBackfill";
 import { useVjUploadLeaveGuard } from "./upload/useVjUploadLeaveGuard";
 import { vjErrorKeyOf } from "./vjErrors";
 import css from "./AdminVj.module.css";
@@ -66,13 +87,24 @@ function useIsVjFrameWide(frameRef: RefObject<HTMLDivElement | null>): boolean {
   return isWide;
 }
 
-function VjFade({ children }: { children: ReactNode }) {
+/** Fades its content in and out. A skeleton passes `isExitInstant` so it
+ *  leaves at once and the content fades in with no blank frame between. */
+function VjFade({
+  children,
+  isExitInstant = false,
+}: {
+  children: ReactNode;
+  isExitInstant?: boolean;
+}) {
   const { reducedMotion } = useMotionPrefs();
   return (
     <m.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      exit={{
+        opacity: 0,
+        transition: isExitInstant ? { duration: 0 } : undefined,
+      }}
       transition={{ duration: reducedMotion ? 0 : FADE_SECONDS }}
     >
       {children}
@@ -105,7 +137,18 @@ function VjLoadError({
   );
 }
 
-function VjLibrarySkeleton() {
+/** The loading look of the open section: the Clips layout (rail, header,
+ *  grid), or the Scenes and set lists rows. */
+function VjLibrarySkeleton({ view }: { view: VjLibraryView }) {
+  if (view === "show") {
+    return (
+      <div className={css.skeletonShow} aria-hidden>
+        {Array.from({ length: SKELETON_PACK_ROW_COUNT }, (_, rowIndex) => (
+          <SkeletonLine key={rowIndex} height={56} />
+        ))}
+      </div>
+    );
+  }
   return (
     <div className={css.frame} aria-hidden>
       <div className={css.body}>
@@ -128,6 +171,28 @@ function VjLibrarySkeleton() {
       </div>
     </div>
   );
+}
+
+/**
+ * True once the library can show in full: the packs are in and, in the Clips
+ * section, the open view's clips have settled (an error counts, so the grid's
+ * error shows). The page skeleton covers both loads, and the clips query is
+ * in the cache when the grid mounts. Once true it stays true, so a later pack
+ * switch shows the grid's own skeleton.
+ */
+function useIsVjLibraryReady(
+  packs: VjPackDTO[] | undefined,
+  view: VjLibraryView,
+): boolean {
+  const [hasShownLibrary, setHasShownLibrary] = useState(false);
+  const { selectedPackId } = useVjLibrarySelection(packs);
+  const libraryClips = useVjClips();
+  const packClips = useVjPackClips(selectedPackId);
+  const openViewQuery = selectedPackId === null ? libraryClips : packClips;
+  const isOpenViewSettled = view !== "clips" || !openViewQuery.isPending;
+  const isReady = packs !== undefined && (hasShownLibrary || isOpenViewSettled);
+  if (isReady && !hasShownLibrary) setHasShownLibrary(true);
+  return isReady;
 }
 
 /** The clips of the open view: the pack's clips in pack order, or every clip
@@ -155,15 +220,26 @@ function VjLibraryMain({
   packs,
   selectedPack,
   uploads,
+  backfill,
   onPackDeleted,
 }: {
   packs: VjPackDTO[];
   selectedPack: VjPackDTO | null;
   uploads: VjClipUploads;
+  backfill: VjPreviewBackfill;
   onPackDeleted: (packId: string) => void;
 }) {
   const selectedPackId = selectedPack?.id ?? null;
   const view = useVjViewClips(selectedPackId);
+  // Make previews runs library wide, so its rows name clips of every pack.
+  const libraryClips = useVjClips().data;
+  const clipsById = useMemo(
+    () =>
+      new Map<string, VjClipDTO>(
+        (libraryClips ?? []).map((clip) => [clip.id, clip]),
+      ),
+    [libraryClips],
+  );
   const packNameOf = (packId: string | null) =>
     packs.find((pack) => pack.id === packId)?.name ?? null;
 
@@ -174,6 +250,7 @@ function VjLibraryMain({
         libraryClipCount={view.libraryClipCount}
         onPackDeleted={onPackDeleted}
       />
+      <VjPreviewBackfillPanel backfill={backfill} clipsById={clipsById} />
       <VjUploadZone
         uploads={uploads}
         packId={selectedPackId}
@@ -205,12 +282,16 @@ function VjLibraryMain({
   );
 }
 
-function VjLibraryBody({
+/** The Clips section: the packs rail (or the phone pack picker and its
+ *  manage sheet) beside the pack header, Make previews, uploads and the grid. */
+function VjClipsView({
   packs,
   uploads,
+  backfill,
 }: {
   packs: VjPackDTO[];
   uploads: VjClipUploads;
+  backfill: VjPreviewBackfill;
 }) {
   const frameRef = useRef<HTMLDivElement>(null);
   const isFrameWide = useIsVjFrameWide(frameRef);
@@ -247,6 +328,7 @@ function VjLibraryBody({
           packs={packs}
           selectedPack={selectedPack}
           uploads={uploads}
+          backfill={backfill}
           onPackDeleted={handlePackDeleted}
         />
       </div>
@@ -263,20 +345,72 @@ function VjLibraryBody({
 }
 
 /**
+ * The open section's panel, faded over the other on a switch. Uploads and a
+ * Make previews run live on the page, so they carry on behind Scenes and set
+ * lists and their rows are there again on the way back.
+ */
+function VjLibraryBody({
+  view,
+  packs,
+  uploads,
+  backfill,
+}: {
+  view: VjLibraryView;
+  packs: VjPackDTO[];
+  uploads: VjClipUploads;
+  backfill: VjPreviewBackfill;
+}) {
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      {view === "show" ? (
+        <VjFade key="show">
+          <div
+            {...tabPanelProps(VJ_LIBRARY_VIEW_TABS_ID, "show")}
+            className={css.panel}
+          >
+            <VjShowLibrary packs={packs} />
+          </div>
+        </VjFade>
+      ) : (
+        <VjFade key="clips">
+          <div
+            {...tabPanelProps(VJ_LIBRARY_VIEW_TABS_ID, "clips")}
+            className={css.panel}
+          >
+            <VjClipsView packs={packs} uploads={uploads} backfill={backfill} />
+          </div>
+        </VjFade>
+      )}
+    </AnimatePresence>
+  );
+}
+
+/**
  * The VJ library (`/admin/vj`, Admin only): packs, the clip grid, uploads and
- * clip edits, with Open screen and Open remote in the header. It attaches to
- * no socket; live reads again on mount and focus, demo follows other tabs'
- * writes through `useVjDemoLibrarySync`. Uploads live here so their rows
- * survive a pack switch, and leaving while they run asks first.
+ * clip edits in the Clips section, scenes and set lists in the other
+ * (`?view=show`), with Open screen and Open remote in the header. It attaches
+ * to no socket; live reads again on mount and focus, demo follows other tabs'
+ * writes through `useVjDemoLibrarySync`. Uploads and Make previews live here
+ * so their rows survive a pack or section switch, and leaving while either
+ * runs asks first.
  */
 export function AdminVjPage() {
   const { t } = useTranslation();
   const packsQuery = useVjPacks();
   const uploads = useVjClipUploads();
-  // Leaving unmounts the queue and stops its uploads, so leaving asks first.
-  useVjUploadLeaveGuard(uploads.isBusy);
+  const backfill = useVjPreviewBackfill(
+    useVjClips().data,
+    vjPreviewingClipIdsOf(uploads.rows),
+  );
+  const { view, select: selectView } = useVjLibraryView();
+  // Leaving unmounts the queues and stops their work, so leaving asks first.
+  useVjUploadLeaveGuard({
+    hasPendingUploads: uploads.isBusy,
+    isMakingPreviews: backfill.isRunning,
+  });
   useVjDemoLibrarySync();
   const packs = packsQuery.data;
+  const isLibraryReady = useIsVjLibraryReady(packs, view);
 
   return (
     <AdminShell
@@ -294,12 +428,22 @@ export function AdminVjPage() {
         />
       </FadeIn>
       <div className={css.page}>
+        <VjLibraryViewTabs
+          className={css.tabs}
+          view={view}
+          onChange={selectView}
+        />
         <AnimatePresence mode="wait" initial={false}>
-          {packs ? (
+          {packs && isLibraryReady ? (
             <VjFade key="library">
-              <VjLibraryBody packs={packs} uploads={uploads} />
+              <VjLibraryBody
+                view={view}
+                packs={packs}
+                uploads={uploads}
+                backfill={backfill}
+              />
             </VjFade>
-          ) : packsQuery.isError ? (
+          ) : !packs && packsQuery.isError ? (
             <VjFade key="error">
               <VjLoadError
                 error={packsQuery.error}
@@ -308,8 +452,8 @@ export function AdminVjPage() {
               />
             </VjFade>
           ) : (
-            <VjFade key="loading">
-              <VjLibrarySkeleton />
+            <VjFade key="loading" isExitInstant>
+              <VjLibrarySkeleton view={view} />
             </VjFade>
           )}
         </AnimatePresence>

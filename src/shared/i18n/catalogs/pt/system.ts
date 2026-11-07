@@ -12,8 +12,7 @@ import type { Catalog } from "../../types";
  *   (verbo pessoal: "convidou-te", "vais receber um aviso") em vez de recorrer
  *   à forma neutra em -e; só se usa -e quando a reformulação não funciona
  *   (ver `docs/i18n/glossary-pt.md`).
- * - "Sustainer" (nível de subscrição) e "QueerPulse" ficam em inglês (nomes
- *   de produto/marca, nunca traduzidos).
+ * - "QueerPulse" fica em inglês (nome de marca, nunca traduzido).
  * - Nomes próprios, emails, IDs de caso/incidente e o texto que a pessoa que
  *   convida escreve (`view.note`) não passam por aqui; ficam como dados no
  *   componente.
@@ -462,14 +461,13 @@ export const system: Catalog = {
   // ── VerificationNeededPage.tsx / VerificationNeededSections.tsx ──────────
   "verificationNeeded.heading": "Verificação rápida · <em>ainda és tu?</em>",
   // SÓ EM DEMO, com `actionCard` e `foot` abaixo: uma contagem decrescente de
-  // uma verificação simulada e o cancelamento de uma subscrição que não tem
-  // pagamentos por trás. Ver a nota em en/system.ts.
+  // uma verificação simulada e um cartão de ação para um passo que a página
+  // não distingue de nenhum outro. Ver a nota em en/system.ts.
   "verificationNeeded.lead":
-    "Para o próximo passo, precisamos de confirmar que ainda és tu neste dispositivo. <b>Esta é uma de duas ações</b> para as quais pedimos nova autenticação: cancelar a subscrição ou remover a conta.",
+    "Para o próximo passo, precisamos de confirmar que ainda és tu neste dispositivo. <b>Esta é uma de duas ações</b> para as quais pedimos nova autenticação: exportar os teus dados ou apagar a conta.",
   "verificationNeeded.leadLive":
     "Antes de seguirmos, precisamos de saber que ainda és tu neste dispositivo. A QueerPulse pede isto nos passos que não têm volta: <b>apagar a conta, exportar os teus dados e pedidos sobre os teus direitos</b>.",
-  "verificationNeeded.actionCard":
-    "Estás prestes a <b>cancelar a tua subscrição Sustainer</b>",
+  "verificationNeeded.actionCard": "Estás prestes a <b>apagar a tua conta</b>",
   "verificationNeeded.foot": "Esta verificação expira em <b>{time}</b>.",
   "verificationNeeded.footLive":
     "Enviamos um código de 6 dígitos para o email da tua conta. Escreve-o e podes continuar.",
@@ -491,7 +489,7 @@ export const system: Catalog = {
   "verificationNeeded.confirm.verifyingCta": "A confirmar…",
   "verificationNeeded.success.title": "És mesmo tu, <em>confirmado.</em>",
   "verificationNeeded.success.sub":
-    "Verificação confirmada. A encaminhar-te para cancelares a subscrição…",
+    "Verificação confirmada. A encaminhar-te para as definições da conta…",
   "verificationNeeded.success.continueCta": "Continuar agora",
   "verificationNeeded.expired.title": "Esta verificação <em>expirou.</em>",
   "verificationNeeded.expired.sub":

@@ -122,7 +122,7 @@ export const subprofiles: Catalog = {
   "directory.closing.title":
     "O teu trabalho <em>também</em> pertence a esta parede",
   "directory.closing.lead":
-    "Cada persona aqui foi criada por alguém que entrou por outro motivo. Cria uma página para o teu ofício e credita as pessoas com quem fazes coisas.",
+    "Cada persona aqui foi criada por uma pessoa da nossa comunidade. Cria uma página para o teu ofício e credita as pessoas com quem fazes coisas.",
   "directory.closing.cta": "Cria a tua persona",
 
   // Cartão do diretório (linhas de créditos, ligação, erros ao seguir)

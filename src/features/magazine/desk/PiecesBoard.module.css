@@ -385,6 +385,15 @@
   margin-top: 0.15em;
 }
 
+/* A Published card's two unpublish buttons: their own full-width row under
+   the status line, wrapping when the column is narrow. */
+.unpublishActions {
+  display: flex;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
 /* Phones: a column is nearly the full width, the next one peeks in, and the
    board snaps one column at a time. */
 @media (--md) {

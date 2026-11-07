@@ -1,0 +1,204 @@
+/* The Text on screen sheet: three folding sections (Text, Countdown, Logo)
+   on the dark sheet look of VjSheetFrame (the --qs-* stage tokens). Rows sit
+   closer inside a section than sections sit to each other, every control
+   reaches var(--tap-min), held controls stay focusable (aria-disabled), and
+   every move animates only opacity or transform. */
+
+.sheet {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Folding sections: a hairline over each header ── */
+.section {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-block-start: 1px solid var(--qs-line);
+}
+
+.section:first-child {
+  border-block-start: 0;
+}
+
+.sectionHeading {
+  margin: 0;
+}
+
+.sectionToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+  inline-size: 100%;
+  min-block-size: 52px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--qs-text);
+  font: inherit;
+  font-size: var(--text-16);
+  font-weight: 600;
+  text-align: start;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+.sectionToggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.chevron {
+  flex: none;
+  color: var(--qs-text-mute);
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.sectionToggle[aria-expanded="true"] .chevron {
+  transform: rotate(180deg);
+}
+
+.sectionBody {
+  padding-block-end: var(--gap-grid);
+}
+
+/* One section's column of rows. */
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+}
+
+/* One labelled row: the label sits closer to its controls than to the next row. */
+.group {
+  composes: section from "../../VjSheets.module.css";
+}
+
+.groupTitle {
+  composes: sectionTitle from "../../VjSheets.module.css";
+}
+
+.hint {
+  composes: hint from "../../VjSheets.module.css";
+}
+
+.visuallyHidden {
+  composes: visuallyHidden from "../../VjSheets.module.css";
+}
+
+/* ── Chips ── */
+/* Every chip row in the sheet shares one rhythm: three equal columns, so the
+   styles, corners, sizes, colours and hide-after times line up row to row. */
+.wrapChips,
+.gridChips {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap-xs);
+}
+
+.chip {
+  composes: chip from "../../VjSheets.module.css";
+}
+
+/* ── Colour swatches: a dot painted with the projector's palette token, then its name ── */
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap-xs);
+}
+
+.swatch {
+  composes: chip from "../../VjSheets.module.css";
+  justify-content: flex-start;
+  gap: var(--gap-xs);
+  padding-inline: var(--gap-xs);
+  font-size: var(--text-13);
+}
+
+.swatchDot {
+  flex: none;
+  inline-size: 18px;
+  block-size: 18px;
+  border: 1px solid var(--qs-glass-border-strong);
+  border-radius: 50%;
+}
+
+.swatchDot[data-color="cream"] {
+  background: rgb(var(--vj-palette-cream));
+}
+
+.swatchDot[data-color="coral"] {
+  background: rgb(var(--vj-palette-coral));
+}
+
+.swatchDot[data-color="jade"] {
+  background: rgb(var(--vj-palette-jade));
+}
+
+.swatchDot[data-color="amber"] {
+  background: rgb(var(--vj-palette-amber));
+}
+
+.swatchDot[data-color="violet"] {
+  background: rgb(var(--vj-palette-violet));
+}
+
+.swatchDot[data-color="sky"] {
+  background: rgb(var(--vj-palette-sky));
+}
+
+.swatchDot[data-color="rose"] {
+  background: rgb(var(--vj-palette-rose));
+}
+
+.swatchDot[data-color="plum"] {
+  background: rgb(var(--vj-palette-plum));
+}
+
+/* ── Fields ── */
+.input {
+  composes: input from "../../VjSheets.module.css";
+}
+
+.timeInput {
+  composes: input from "../../VjSheets.module.css";
+  inline-size: auto;
+  min-inline-size: 9rem;
+  align-self: flex-start;
+  color-scheme: dark;
+}
+
+.timeInput[data-is-chosen="true"] {
+  border-color: var(--accent);
+}
+
+.counter {
+  composes: counter from "../../VjSheets.module.css";
+}
+
+/* Show on top, Hide folding in under it: one column in thumb reach. */
+.actions {
+  composes: actions from "../../VjSheets.module.css";
+}
+
+.actionButton {
+  composes: actionButton from "../../VjSheets.module.css";
+}
+
+.recentList {
+  composes: recentList from "../../VjSheets.module.css";
+}
+
+.recentButton {
+  composes: recentButton from "../../VjSheets.module.css";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron {
+    transition-duration: 0s;
+  }
+}

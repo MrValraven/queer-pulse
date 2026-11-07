@@ -1,0 +1,328 @@
+import { fireEvent, render, screen, within } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
+import { TestProviders } from "../../../../test/TestProviders";
+import {
+  createVjStageState,
+  vjSceneLookOf,
+  type VjClipDTO,
+  type VjSceneDTO,
+  type VjSetlistDTO,
+} from "../../../../shared/contracts/vj";
+import {
+  VjStrips,
+  type VjHistoryStripProps,
+  type VjScenesStripProps,
+} from "./VjStrips";
+
+const LOOK = vjSceneLookOf(createVjStageState("epoch-1", 1000));
+
+function makeScene(id: string, name: string, position: number): VjSceneDTO {
+  return {
+    id,
+    name,
+    packId: null,
+    position,
+    look: LOOK,
+    setlistItemCount: 0,
+    createdBy: null,
+    createdAt: "2026-11-06T20:00:00.000Z",
+    updatedAt: "2026-11-06T20:00:00.000Z",
+  };
+}
+
+function makeClip(id: string, title: string): VjClipDTO {
+  return {
+    id,
+    title,
+    mediaKind: "video",
+    mimeType: "video/mp4",
+    byteSize: 1000,
+    width: 1920,
+    height: 1080,
+    durationMs: 8000,
+    fitMode: "fill",
+    thumbnailUrl: `/files/${id}.jpg`,
+    mediaUrl: `/files/${id}.mp4`,
+    packIds: ["disco"],
+    packCount: 1,
+    createdBy: null,
+    createdAt: "2026-11-06T20:00:00.000Z",
+    updatedAt: "2026-11-06T20:00:00.000Z",
+    isFavorite: false,
+    defaultSpeed: 1,
+    loopInMs: null,
+    loopOutMs: null,
+    loopMode: "loop",
+    previewUrl: null,
+  };
+}
+
+function makeSetlist(itemCount: number): VjSetlistDTO {
+  return {
+    id: "setlist-1",
+    name: "Friday",
+    position: 0,
+    items: Array.from({ length: itemCount }, (_, itemIndex) => ({
+      id: `item-${itemIndex}`,
+      sceneId: itemIndex % 2 === 0 ? "scene-a" : "scene-b",
+      position: itemIndex,
+    })),
+    createdBy: null,
+    createdAt: "2026-11-06T20:00:00.000Z",
+    updatedAt: "2026-11-06T20:00:00.000Z",
+  };
+}
+
+const SCENES = [
+  makeScene("scene-a", "Warm up", 0),
+  makeScene("scene-b", "Peak", 1),
+];
+const CLIPS = [
+  makeClip("clip-1", "Glitter rain"),
+  makeClip("clip-2", "Neon hearts"),
+  makeClip("clip-3", "Disco ball"),
+];
+const CLIPS_BY_ID = new Map(CLIPS.map((clip) => [clip.id, clip]));
+
+function scenesPropsWith(
+  overrides: Partial<VjScenesStripProps> = {},
+): VjScenesStripProps {
+  return {
+    scenes: SCENES,
+    activeSetlist: null,
+    setlistIndex: null,
+    pendingSceneId: null,
+    isBlocked: false,
+    isSaving: false,
+    onRecall: vi.fn(),
+    onSaveScene: vi.fn(),
+    onSetlistNext: vi.fn(),
+    onSetlistPrevious: vi.fn(),
+    ...overrides,
+  };
+}
+
+function historyPropsWith(
+  overrides: Partial<VjHistoryStripProps> = {},
+): VjHistoryStripProps {
+  return {
+    recentClipIds: ["clip-1", "clip-2"],
+    clipsById: CLIPS_BY_ID,
+    isBlocked: false,
+    onPrevious: vi.fn(),
+    onGoClip: vi.fn(),
+    ...overrides,
+  };
+}
+
+function renderStrips(
+  scenesProps: VjScenesStripProps,
+  historyProps: VjHistoryStripProps,
+  isCompact = false,
+) {
+  return render(
+    <TestProviders>
+      <VjStrips
+        isCompact={isCompact}
+        scenesProps={scenesProps}
+        historyProps={historyProps}
+      />
+    </TestProviders>,
+  );
+}
+
+function scenesStrip() {
+  return within(screen.getByRole("group", { name: "Scenes" }));
+}
+
+function historyStrip() {
+  return within(screen.getByRole("group", { name: "Recent" }));
+}
+
+describe("VjStrips", () => {
+  it("recalls a scene on tap", () => {
+    const scenesProps = scenesPropsWith();
+    renderStrips(scenesProps, historyPropsWith());
+    fireEvent.click(
+      scenesStrip().getByRole("button", { name: "Recall scene Peak" }),
+    );
+    expect(scenesProps.onRecall).toHaveBeenCalledWith("scene-b");
+  });
+
+  it("marks the pending recall and sends nothing while blocked", () => {
+    const scenesProps = scenesPropsWith({
+      pendingSceneId: "scene-a",
+      isBlocked: true,
+    });
+    renderStrips(scenesProps, historyPropsWith());
+    const warmUp = scenesStrip().getByRole("button", {
+      name: "Recall scene Warm up",
+    });
+    expect(warmUp).toHaveAttribute("data-pending", "true");
+    expect(warmUp).toHaveAttribute("aria-disabled", "true");
+    fireEvent.click(warmUp);
+    expect(scenesProps.onRecall).not.toHaveBeenCalled();
+  });
+
+  it("blocked scene, set list and recent chips point at the reason", () => {
+    renderStrips(
+      scenesPropsWith({
+        isBlocked: true,
+        blockedReasonId: "status-line",
+        activeSetlist: makeSetlist(4),
+        setlistIndex: 1,
+      }),
+      historyPropsWith({ isBlocked: true, blockedReasonId: "status-line" }),
+    );
+    for (const name of ["Recall scene Peak", "Previous scene", "Next scene"]) {
+      expect(scenesStrip().getByRole("button", { name })).toHaveAttribute(
+        "aria-describedby",
+        "status-line",
+      );
+    }
+    for (const chip of historyStrip().getAllByRole("button")) {
+      expect(chip).toHaveAttribute("aria-describedby", "status-line");
+    }
+  });
+
+  it("an open strip names no reason", () => {
+    renderStrips(
+      scenesPropsWith({ blockedReasonId: "status-line" }),
+      historyPropsWith({ blockedReasonId: "status-line" }),
+    );
+    expect(
+      scenesStrip().getByRole("button", { name: "Recall scene Peak" }),
+    ).not.toHaveAttribute("aria-describedby");
+  });
+
+  it("Save scene calls onSaveScene", () => {
+    const scenesProps = scenesPropsWith();
+    renderStrips(scenesProps, historyPropsWith());
+    fireEvent.click(scenesStrip().getByRole("button", { name: "Save scene" }));
+    expect(scenesProps.onSaveScene).toHaveBeenCalledTimes(1);
+  });
+
+  it("says no scenes yet beside the Save chip", () => {
+    renderStrips(scenesPropsWith({ scenes: [] }), historyPropsWith());
+    expect(
+      scenesStrip().getByText("No scenes yet. Save the current look"),
+    ).toBeInTheDocument();
+    expect(
+      scenesStrip().getByRole("button", { name: "Save scene" }),
+    ).toBeInTheDocument();
+  });
+
+  it("set list group shows 3 of 12 and steps both ways", () => {
+    const scenesProps = scenesPropsWith({
+      activeSetlist: makeSetlist(12),
+      setlistIndex: 2,
+    });
+    renderStrips(scenesProps, historyPropsWith());
+    expect(scenesStrip().getByText("3 of 12")).toBeInTheDocument();
+    fireEvent.click(scenesStrip().getByRole("button", { name: "Next scene" }));
+    fireEvent.click(
+      scenesStrip().getByRole("button", { name: "Previous scene" }),
+    );
+    expect(scenesProps.onSetlistNext).toHaveBeenCalledTimes(1);
+    expect(scenesProps.onSetlistPrevious).toHaveBeenCalledTimes(1);
+    // Item index 2 names scene-a, so its chip reads as live.
+    expect(
+      scenesStrip().getByRole("button", { name: "Recall scene Warm up" }),
+    ).toHaveAttribute("aria-current", "true");
+  });
+
+  it("Previous sends the second recent clip", () => {
+    const historyProps = historyPropsWith();
+    renderStrips(scenesPropsWith(), historyProps);
+    const previous = historyStrip().getByRole("button", {
+      name: "Go back to Neon hearts",
+    });
+    expect(previous).not.toHaveAttribute("aria-disabled");
+    fireEvent.click(previous);
+    expect(historyProps.onPrevious).toHaveBeenCalledTimes(1);
+  });
+
+  it("Previous is aria-disabled with one entry", () => {
+    const historyProps = historyPropsWith({ recentClipIds: ["clip-1"] });
+    renderStrips(scenesPropsWith(), historyProps);
+    const previous = historyStrip().getByRole("button", { name: "Previous" });
+    expect(previous).toHaveAttribute("aria-disabled", "true");
+    fireEvent.click(previous);
+    expect(historyProps.onPrevious).not.toHaveBeenCalled();
+  });
+
+  it("marks the newest clip live and replays a recent clip on tap", () => {
+    const historyProps = historyPropsWith();
+    renderStrips(scenesPropsWith(), historyProps);
+    expect(
+      historyStrip().getByRole("button", { name: "Show Glitter rain again" }),
+    ).toHaveAttribute("aria-current", "true");
+    fireEvent.click(
+      historyStrip().getByRole("button", { name: "Show Neon hearts again" }),
+    );
+    expect(historyProps.onGoClip).toHaveBeenCalledWith("clip-2");
+  });
+
+  it("says clips you play show here with no history", () => {
+    renderStrips(scenesPropsWith(), historyPropsWith({ recentClipIds: [] }));
+    expect(
+      historyStrip().getByText("Clips you play show here"),
+    ).toBeInTheDocument();
+  });
+
+  it("compact mode shows one strip and switches", async () => {
+    renderStrips(scenesPropsWith(), historyPropsWith(), true);
+    const switchGroup = within(
+      screen.getByRole("group", { name: "Show scenes or recent clips" }),
+    );
+    expect(switchGroup.getByRole("button", { name: "Scenes" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("group", { name: "Scenes" })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("group", { name: "Recent" }),
+    ).not.toBeInTheDocument();
+    fireEvent.click(switchGroup.getByRole("button", { name: "Recent" }));
+    expect(
+      await screen.findByRole("group", { name: "Recent" }),
+    ).toBeInTheDocument();
+    expect(switchGroup.getByRole("button", { name: "Recent" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+  });
+
+  it("a new recent clip animates in at the front", () => {
+    const scenesProps = scenesPropsWith();
+    const { rerender } = renderStrips(
+      scenesProps,
+      historyPropsWith({ recentClipIds: ["clip-1", "clip-2"] }),
+    );
+    const glitterBefore = historyStrip().getByRole("button", {
+      name: "Show Glitter rain again",
+    });
+    rerender(
+      <TestProviders>
+        <VjStrips
+          isCompact={false}
+          scenesProps={scenesProps}
+          historyProps={historyPropsWith({
+            recentClipIds: ["clip-3", "clip-1", "clip-2"],
+          })}
+        />
+      </TestProviders>,
+    );
+    const recentChips = historyStrip()
+      .getAllByRole("button")
+      .filter((button) => button.hasAttribute("data-vj-recent-chip"));
+    expect(recentChips.map((chip) => chip.dataset.vjRecentChip)).toEqual([
+      "clip-3",
+      "clip-1",
+      "clip-2",
+    ]);
+    // The neighbours keep their nodes and slide along; only the new chip mounts.
+    expect(recentChips[1]).toBe(glitterBefore);
+    expect(recentChips[0]).toHaveAttribute("aria-current", "true");
+  });
+});

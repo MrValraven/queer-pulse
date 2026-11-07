@@ -26,7 +26,6 @@ export function DatingAppCard({ app }: { app: App }) {
           </span>
         ))}
       </div>
-      <p className={styles.appCommunity}>{t(app.quoteKey)}</p>
     </div>
   );
 }

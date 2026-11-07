@@ -160,7 +160,7 @@ export function OralHistoryProjectPage() {
         }
         sub={t("resources:oralHistoryProject.outro.sub")}
       >
-        <Button to={routes.forum} variant="primary" size="lg">
+        <Button to={routes.contact} variant="primary" size="lg">
           {t("resources:oralHistoryProject.outro.cta")}
         </Button>
       </Outro>

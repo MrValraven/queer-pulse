@@ -138,9 +138,13 @@ async function createAndSeedSubprofile(args: {
     subprofileId = outcome.subprofileId;
     skippedAffiliationCount = outcome.skippedAffiliationCount;
     hasAffiliationSaveFailed = outcome.hasAffiliationSaveFailed;
-  } else if (method === "template") {
+  } else if (method === "template" && demoMode) {
     // "By craft": seed the kind's starter template, example items per section
-    // and then a suggested tagline. Each piece is applied independently: a
+    // and then a suggested tagline. Demo only: the example rows carry invented
+    // dates, tags and a written tagline, and a live draft saves whatever it is
+    // seeded with, so a persona published without editing them would show
+    // invented facts on its public page. Live "By craft" starts from the
+    // chosen craft alone. Each piece is applied independently: a
     // failure on one section (or the tagline) never strands the fresh draft;
     // the owner lands in the editor either way and can fill in what's missing.
     for (const { section, items } of buildTemplateSections(kind, t)) {

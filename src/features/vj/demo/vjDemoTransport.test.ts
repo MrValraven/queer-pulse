@@ -2,13 +2,18 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type {
   VjAttachPayload,
   VjAttachRole,
+  VjClockSample,
   VjStageFrame,
   VjStageRestore,
 } from "../../../shared/contracts/vj";
-import { createVjStageState } from "../../../shared/contracts/vj";
+import {
+  createVjStageState,
+  VJ_CONTRACT_VERSION,
+  VJ_LIMITS,
+} from "../../../shared/contracts/vj";
 import type { VjServerFrame } from "../realtime/vjFrames";
 import type { VjConnectionState } from "../realtime/vjTransport";
-import { createVjDemoChannelHub } from "./vjDemoChannel";
+import { createVjDemoChannelHub, type VjDemoMessage } from "./vjDemoChannel";
 import type { VjDemoLockSeam } from "./vjDemoHosting";
 import type { VjDemoLibraryLookup } from "./vjDemoStore";
 import { VjDemoTransport } from "./vjDemoTransport";
@@ -18,12 +23,33 @@ const CLIP_GRID = "00000000-0000-4000-8000-0000000000c1";
 const CLIP_HAZE = "00000000-0000-4000-8000-0000000000c2";
 const CLIENT_ID = "11111111-1111-4111-8111-111111111111";
 const SCREEN_ID = "22222222-2222-4222-8222-22222222222a";
+const SCREEN_B_ID = "22222222-2222-4222-8222-22222222222b";
+const UNKNOWN_CLIP = "00000000-0000-4000-8000-0000000000ff";
+/** How far each tab's local clock runs ahead of the fake server clock. */
+const LOCAL_AHEAD_MS = 40;
+
+const PACK_CLIP_IDS = [CLIP_GRID, CLIP_HAZE];
+
+/** The clip ids of PACK_WARM among the listed ones. */
+function clipsInPack(packId: string, clipIds: string[]): Set<string> {
+  if (packId !== PACK_WARM) return new Set<string>();
+  return new Set(clipIds.filter((clipId) => PACK_CLIP_IDS.includes(clipId)));
+}
 
 const library: VjDemoLibraryLookup = {
   hasPack: (packId) => packId === PACK_WARM,
-  hasClip: (clipId) => clipId === CLIP_GRID || clipId === CLIP_HAZE,
-  isClipInPack: (packId, clipId) =>
-    packId === PACK_WARM && (clipId === CLIP_GRID || clipId === CLIP_HAZE),
+  hasClip: (clipId) => PACK_CLIP_IDS.includes(clipId),
+  isClipInPack: (packId, clipId) => clipsInPack(packId, [clipId]).size > 0,
+  readPackForStage: (packId) =>
+    packId === PACK_WARM ? { eventId: null } : null,
+  existingClipIds: (clipIds) =>
+    new Set(clipIds.filter((clipId) => PACK_CLIP_IDS.includes(clipId))),
+  clipIdsInPack: clipsInPack,
+  readPackClipForAdvance: (packId, clipId) =>
+    clipsInPack(packId, [clipId]).size > 0 ? { isFavorite: false } : null,
+  readSceneLook: () => null,
+  readSetlistItem: () => null,
+  setlistItemCount: () => null,
 };
 
 /** A Web Lock stand-in: the first request is granted at once, later ones wait for grantNext. */
@@ -64,11 +90,13 @@ const openTransports: VjDemoTransport[] = [];
 function openTab(options: {
   tabId: string;
   role: VjAttachRole;
+  screenId?: string;
   buildAttachPayload?: () => VjAttachPayload;
   lock?: VjDemoLockSeam;
 }) {
   const frames: VjServerFrame[] = [];
   const connections: VjConnectionState[] = [];
+  const samples: VjClockSample[] = [];
   const transport = new VjDemoTransport({
     role: options.role,
     tabId: options.tabId,
@@ -76,13 +104,20 @@ function openTab(options: {
       options.buildAttachPayload ??
       (() =>
         options.role === "screen"
-          ? { role: "screen", screenId: SCREEN_ID, restoreState: null }
-          : { role: "remote" }),
+          ? {
+              role: "screen",
+              contractVersion: VJ_CONTRACT_VERSION,
+              screenId: options.screenId ?? SCREEN_ID,
+              restoreState: null,
+            }
+          : { role: "remote", contractVersion: VJ_CONTRACT_VERSION }),
     onFrame: (frame) => frames.push(frame),
     onConnection: (connection) => connections.push(connection),
+    onClockSample: (sample) => samples.push(sample),
     channelFactory: () => hub.open(),
     lock: options.lock ?? lockQueue.seam,
     library,
+    localNow: () => Date.now() + LOCAL_AHEAD_MS,
   });
   transport.connect();
   openTransports.push(transport);
@@ -91,7 +126,33 @@ function openTab(options: {
       frame.event === "stage:state" ? [frame.payload] : [],
     );
   const lastConnection = () => connections[connections.length - 1];
-  return { transport, frames, connections, stageFrames, lastConnection };
+  return {
+    transport,
+    frames,
+    connections,
+    samples,
+    stageFrames,
+    lastConnection,
+  };
+}
+
+/** Records every message on the hub, both directions. */
+function spyOnHub() {
+  const messages: VjDemoMessage[] = [];
+  const channel = hub.open();
+  channel.subscribe((message) => messages.push(message));
+  const sentBy = (tabId: string, name: string) =>
+    messages.filter(
+      (message) =>
+        message.direction === "toServer" &&
+        message.tabId === tabId &&
+        message.name === name,
+    );
+  const ackOf = (requestId: string | null | undefined) =>
+    messages.find(
+      (message) => message.name === "ack" && message.requestId === requestId,
+    );
+  return { messages, sentBy, ackOf, close: () => channel.close() };
 }
 
 /** Advances fake time, then lets the hub's queued deliveries run. A tab that
@@ -132,7 +193,13 @@ describe("VjDemoTransport", () => {
       clientId: CLIENT_ID,
       commandSequence: 1,
     });
-    expect(ack).toEqual({ ok: true, revision: 1, isNoop: false });
+    expect(ack).toEqual({
+      ok: true,
+      revision: 1,
+      isNoop: false,
+      applyAt: null,
+      serverNow: Date.now(),
+    });
     await flush();
     const onScreen = screen.stageFrames().at(-1);
     const onRemote = remote.stageFrames().at(-1);
@@ -197,6 +264,7 @@ describe("VjDemoTransport", () => {
       role: "screen",
       buildAttachPayload: () => ({
         role: "screen",
+        contractVersion: VJ_CONTRACT_VERSION,
         screenId: SCREEN_ID,
         restoreState,
       }),
@@ -295,6 +363,186 @@ describe("VjDemoTransport", () => {
     expect(screen.lastConnection()?.attach?.stageEpoch).toBe(
       remote.lastConnection()?.attach?.stageEpoch,
     );
+    spy.close();
+  });
+});
+
+describe("VjDemoTransport v2", () => {
+  it("answers clock:sync before attach and reports a sample", async () => {
+    const spy = spyOnHub();
+    const startedAt = Date.now();
+    const remote = openTab({ tabId: "remote-tab", role: "remote" });
+    await flush();
+    const syncs = spy.sentBy("remote-tab", "clock:sync");
+    const attaches = spy.sentBy("remote-tab", "vj:attach");
+    expect(syncs).toHaveLength(1);
+    expect(attaches).toHaveLength(1);
+    const [sync] = syncs;
+    const [attach] = attaches;
+    if (sync === undefined || attach === undefined) {
+      throw new Error("expected one clock:sync and one vj:attach message");
+    }
+    const syncIndex = spy.messages.indexOf(sync);
+    expect(syncIndex).toBeLessThan(spy.messages.indexOf(attach));
+    expect(spy.ackOf(sync.requestId)?.payload).toEqual({
+      ok: true,
+      serverNow: startedAt,
+    });
+    expect(remote.samples[0]).toEqual({
+      sentAt: startedAt + LOCAL_AHEAD_MS,
+      receivedAt: startedAt + LOCAL_AHEAD_MS,
+      serverNow: startedAt,
+    });
+    // The clock:sync answer and the attach ack: one sample each.
+    expect(remote.samples).toHaveLength(2);
+    spy.close();
+  });
+
+  it("reports a sample for every command ack", async () => {
+    const remote = openTab({ tabId: "remote-tab", role: "remote" });
+    await flush();
+    expect(remote.lastConnection()?.status).toBe("attached");
+    const samplesBefore = remote.samples.length;
+    const accepted = await remote.transport.send("stage:goClip", {
+      clipId: CLIP_GRID,
+      clientId: CLIENT_ID,
+      commandSequence: 1,
+    });
+    expect(accepted.ok).toBe(true);
+    const refused = await remote.transport.send("stage:goClip", {
+      clipId: UNKNOWN_CLIP,
+      clientId: CLIENT_ID,
+      commandSequence: 2,
+    });
+    expect(refused).toMatchObject({ ok: false, serverNow: Date.now() });
+    expect(remote.samples).toHaveLength(samplesBefore + 2);
+    expect(remote.samples.at(-1)).toEqual({
+      sentAt: Date.now() + LOCAL_AHEAD_MS,
+      receivedAt: Date.now() + LOCAL_AHEAD_MS,
+      serverNow: Date.now(),
+    });
+  });
+
+  it("runs the clock sync burst, then one every 30 s", async () => {
+    const spy = spyOnHub();
+    openTab({ tabId: "remote-tab", role: "remote" });
+    await flush();
+    expect(spy.sentBy("remote-tab", "clock:sync")).toHaveLength(1);
+    await flush(1_000);
+    // Five sends 250 ms apart; the same host's later heartbeats restart nothing.
+    expect(spy.sentBy("remote-tab", "clock:sync")).toHaveLength(5);
+    await flush(29_000);
+    expect(spy.sentBy("remote-tab", "clock:sync")).toHaveLength(5);
+    await flush(1_000);
+    expect(spy.sentBy("remote-tab", "clock:sync")).toHaveLength(6);
+    spy.close();
+  });
+
+  it("forwards screen:identify to the named tab only", async () => {
+    const screenA = openTab({ tabId: "screen-a", role: "screen" });
+    const screenB = openTab({
+      tabId: "screen-b",
+      role: "screen",
+      screenId: SCREEN_B_ID,
+    });
+    const remote = openTab({ tabId: "remote-tab", role: "remote" });
+    await flush(1_000);
+    expect(screenB.lastConnection()?.status).toBe("attached");
+    const screenBNumber = screenB.lastConnection()?.attach?.screenNumber;
+    const ack = await remote.transport.send("screen:identify", {
+      screenId: SCREEN_B_ID,
+    });
+    expect(ack).toMatchObject({ ok: true, identifiedCount: 1 });
+    await flush();
+    const identifyFramesOf = (frames: VjServerFrame[]) =>
+      frames.filter((frame) => frame.event === "screen:identify");
+    expect(identifyFramesOf(screenB.frames)).toEqual([
+      {
+        event: "screen:identify",
+        payload: {
+          number: screenBNumber,
+          durationMs: VJ_LIMITS.identifyDurationMs,
+        },
+      },
+    ]);
+    expect(identifyFramesOf(screenA.frames)).toEqual([]);
+    expect(identifyFramesOf(remote.frames)).toEqual([]);
+  });
+
+  it("a frame keeps its applyAt end to end", async () => {
+    const screen = openTab({ tabId: "screen-tab", role: "screen" });
+    const remote = openTab({ tabId: "remote-tab", role: "remote" });
+    await flush(1_000);
+    const tempoAck = await remote.transport.send("stage:setTempo", {
+      quantize: "beat",
+      clientId: CLIENT_ID,
+      commandSequence: 1,
+    });
+    expect(tempoAck.ok).toBe(true);
+    const clipAck = await remote.transport.send("stage:goClip", {
+      clipId: CLIP_GRID,
+      clientId: CLIENT_ID,
+      commandSequence: 2,
+    });
+    await flush();
+    const applyAt = clipAck.ok ? clipAck.applyAt : null;
+    expect(applyAt).toBeGreaterThan(Date.now());
+    expect(screen.stageFrames().at(-1)).toMatchObject({
+      cause: "command",
+      applyAt,
+      state: { liveClipId: CLIP_GRID },
+    });
+    expect(remote.stageFrames().at(-1)?.applyAt).toBe(applyAt);
+  });
+
+  it("attach success carries screenNumber", async () => {
+    const screen = openTab({ tabId: "screen-tab", role: "screen" });
+    const remote = openTab({ tabId: "remote-tab", role: "remote" });
+    await flush(1_000);
+    const attach = screen.lastConnection()?.attach;
+    expect(attach).toMatchObject({
+      role: "screen",
+      isRestored: false,
+      isLead: true,
+      screenNumber: 1,
+    });
+    // The ack's ok and serverNow stay out of the attach the hook reads.
+    expect(Object.keys(attach ?? {}).sort()).toEqual([
+      "connectionExpiresAt",
+      "isLead",
+      "isRestored",
+      "role",
+      "screenNumber",
+      "stageEpoch",
+    ]);
+    expect(remote.lastConnection()?.attach).toMatchObject({
+      role: "remote",
+      isLead: null,
+      screenNumber: null,
+    });
+  });
+
+  it("refuses an outdated client and stops talking to the stage", async () => {
+    const spy = spyOnHub();
+    const remote = openTab({
+      tabId: "remote-tab",
+      role: "remote",
+      buildAttachPayload: () => ({ role: "remote", contractVersion: 1 }),
+    });
+    await flush();
+    expect(remote.lastConnection()).toEqual({
+      status: "refused",
+      refusal: "client_outdated",
+      attach: null,
+    });
+    // The clock:sync answer and the refused attach ack both sample.
+    expect(remote.samples).toHaveLength(2);
+    const syncCount = spy.sentBy("remote-tab", "clock:sync").length;
+    const attachCount = spy.sentBy("remote-tab", "vj:attach").length;
+    await flush(60_000);
+    expect(spy.sentBy("remote-tab", "clock:sync")).toHaveLength(syncCount);
+    expect(spy.sentBy("remote-tab", "vj:attach")).toHaveLength(attachCount);
+    expect(remote.lastConnection()?.status).toBe("refused");
     spy.close();
   });
 });

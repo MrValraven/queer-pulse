@@ -4,7 +4,6 @@ import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
 import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
@@ -146,7 +145,7 @@ export function TransHubPage() {
                 </span>
                 <div className={styles.resTitle}>{t(res.titleKey)}</div>
                 <div className={styles.resDesc}>{t(res.descriptionKey)}</div>
-                <Link to={routes.resources} className={styles.rightLink}>
+                <Link to={res.to} className={styles.rightLink}>
                   {t("resources:transHub.resources.openCta")}{" "}
                   <FiArrowRight aria-hidden />
                 </Link>

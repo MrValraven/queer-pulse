@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { AnimatePresence } from "motion/react";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { PieceRowMenuPopover } from "./PieceRowMenuPopover";
@@ -15,21 +16,25 @@ export interface PieceRowMenuProps extends PieceRowMenuActions {
   hasAnyIssue: boolean;
   /** The issue item's label key ("Add to issue" or "Move issue"). */
   assignLabelKey: string;
+  /** A published row also offers the two unpublish items. */
+  isPublished?: boolean;
 }
 
 /**
  * The piece row's trailing More menu. The row leads with one next action;
  * everything else an editor can do to a piece (edit, chase, hand off, file to
- * an issue, delete) waits here, so the row stays one clear verb wide and
+ * an issue, unpublish, delete) waits here, so the row stays one clear verb wide and
  * deleting stays a deliberate second step below a rule.
  *
  * The open menu is a separate, portaled component (`PieceRowMenuPopover`), so
- * it floats over sticky group headers and the table's clipped corners.
+ * it floats over sticky group headers and the table's clipped corners. An
+ * `AnimatePresence` keeps it mounted through the close so it can animate out.
  */
 export function PieceRowMenu({
   pieceTitle,
   hasAnyIssue,
   assignLabelKey,
+  isPublished = false,
   ...actions
 }: PieceRowMenuProps) {
   const { t } = useTranslation();
@@ -41,6 +46,7 @@ export function PieceRowMenu({
     translate: t,
     hasAnyIssue,
     assignLabelKey,
+    isPublished,
     ...actions,
   });
 
@@ -68,14 +74,17 @@ export function PieceRowMenu({
       >
         <FiMoreHorizontal aria-hidden />
       </button>
-      {isOpen && (
-        <PieceRowMenuPopover
-          items={items}
-          triggerRef={triggerRef}
-          label={label}
-          onClose={close}
-        />
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <PieceRowMenuPopover
+            key="menu"
+            items={items}
+            triggerRef={triggerRef}
+            label={label}
+            onClose={close}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

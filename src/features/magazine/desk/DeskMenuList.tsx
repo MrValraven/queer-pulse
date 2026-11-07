@@ -8,6 +8,7 @@ import {
   type DeskMenuItem,
   type DeskMenuSelectableItem,
 } from "./deskMenuItems";
+import { useDeskMenuExit } from "./useDeskMenuExit";
 import { useDeskMenuKeyboard } from "./useDeskMenuKeyboard";
 import { useDeskMenuPlacement } from "./useDeskMenuPlacement";
 import styles from "./DeskMenu.module.css";
@@ -20,15 +21,22 @@ export interface DeskMenuListProps {
   minWidth: "trigger" | "sm" | "md";
   /** Which end focus lands on when the menu opens (ArrowUp opens on the last). */
   initialFocus: "first" | "last";
+  /** False while the menu fades out: it stays mounted but inert until
+   *  `onExited` fires. */
+  isOpen: boolean;
   shouldCloseOnSelect: boolean | undefined;
   triggerRef: RefObject<HTMLButtonElement | null>;
   /** `true` hands focus back to the trigger (Escape, Tab, a chosen item). */
   onClose: (shouldRestoreFocus: boolean) => void;
+  /** The exit fade is over; the parent unmounts the list. */
+  onExited: () => void;
 }
 
 /**
- * The open half of `DeskMenu`, portaled to `<body>` and mounted only while
- * open, so every open measures fresh and starts with an empty type-ahead.
+ * The open half of `DeskMenu`, portaled to `<body>` and mounted from an open
+ * until the end of its exit fade, so every open measures fresh and starts with
+ * an empty type-ahead. While fading out it is inert and takes no focus, key or
+ * outside-press handling.
  *
  * The first commit renders transparent at the viewport corner; placement lands
  * in a layout effect before paint, and focus waits for it so it never lands on
@@ -41,9 +49,11 @@ export function DeskMenuList({
   align,
   minWidth,
   initialFocus,
+  isOpen,
   shouldCloseOnSelect,
   triggerRef,
   onClose,
+  onExited,
 }: DeskMenuListProps) {
   const menuRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -60,6 +70,7 @@ export function DeskMenuList({
     onClose,
   });
   const isPlaced = placement !== null;
+  const { handleTransitionEnd } = useDeskMenuExit(menuRef, isOpen, onExited);
 
   // Read through a ref so the listener below subscribes once per open, and a
   // parent re-render (a checkbox toggled) never re-attaches it.
@@ -71,7 +82,7 @@ export function DeskMenuList({
   // Focus enters the menu once it is placed. Keyed on `isPlaced`, so a later
   // re-placement on scroll never yanks focus back to the first item.
   useEffect(() => {
-    if (!isPlaced) return;
+    if (!isPlaced || !isOpen) return;
     const didFocusItem =
       initialFocus === "last"
         ? focusFrom(items.length - 1, -1)
@@ -87,6 +98,7 @@ export function DeskMenuList({
   // putting it somewhere else. A press on the trigger is not outside, or it
   // would close here and reopen in the trigger's own click handler.
   useEffect(() => {
+    if (!isOpen) return undefined;
     function handlePointerDown(event: PointerEvent): void {
       const target = event.target as Node;
       if (triggerRef.current?.contains(target)) return;
@@ -95,7 +107,7 @@ export function DeskMenuList({
     }
     document.addEventListener("pointerdown", handlePointerDown);
     return () => document.removeEventListener("pointerdown", handlePointerDown);
-  }, [triggerRef]);
+  }, [triggerRef, isOpen]);
 
   // Focus goes back to the trigger BEFORE `onSelect` runs, so a dialog the
   // item opens records the trigger as the place to return focus to on close.
@@ -128,7 +140,8 @@ export function DeskMenuList({
       tabIndex={-1}
       aria-label={label}
       className={`${styles.menu} ${widthClassName}`}
-      data-placed={isPlaced || undefined}
+      data-placed={(isPlaced && isOpen) || undefined}
+      inert={!isOpen}
       style={{
         top: placement?.top ?? 0,
         left: placement?.left ?? 0,
@@ -136,6 +149,7 @@ export function DeskMenuList({
           minWidth === "trigger" ? (placement?.triggerWidth ?? 0) : undefined,
       }}
       onKeyDown={handleKeyDown}
+      onTransitionEnd={handleTransitionEnd}
       // Portals bubble React events through the React tree, so a click here
       // would also reach whatever wraps the trigger (a clickable row).
       onClick={(event) => event.stopPropagation()}

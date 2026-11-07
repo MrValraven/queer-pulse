@@ -2,7 +2,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { VjPackDTO } from "../../../shared/contracts/vj";
+import type { VjClipDTO, VjPackDTO } from "../../../shared/contracts/vj";
 import { TestProviders } from "../../../test/TestProviders";
 import { vjKeys } from "../api/vjKeys";
 import { createVjDemoChannelHub } from "../demo/vjDemoChannel";
@@ -12,8 +12,14 @@ import {
   demoGetVjPackClips,
   resetVjDemoLibrary,
 } from "../demo/vjDemoStore";
-import { useVjClipUploads } from "./useVjClipUploads";
+import { useVjClipUploads, vjPreviewingClipIdsOf } from "./useVjClipUploads";
+import type { VjUploadRow } from "./vjUploadQueue";
+import { makeAndAttachVjPreview } from "./vjPreviewUpload";
 import { VjUploadFailure } from "./vjUploadFailure";
+
+vi.mock("./vjPreviewUpload", () => ({ makeAndAttachVjPreview: vi.fn() }));
+
+const makePreviewMock = vi.mocked(makeAndAttachVjPreview);
 
 vi.mock("./vjDecode", async (importOriginal) => ({
   ...(await importOriginal<typeof import("./vjDecode")>()),
@@ -98,6 +104,23 @@ function wrapper({ children }: { children: ReactNode }) {
   return <TestProviders>{children}</TestProviders>;
 }
 
+/** A preview run that only ends when its signal aborts (Skip preview, unmount). */
+function previewHeldUntilAbort(options: {
+  signal: AbortSignal;
+}): Promise<VjClipDTO> {
+  return new Promise<VjClipDTO>((_resolve, reject) => {
+    options.signal.addEventListener(
+      "abort",
+      () => reject(new DOMException("Aborted", "AbortError")),
+      { once: true },
+    );
+  });
+}
+
+function gifFileNamed(fileName: string): File {
+  return new File([new Uint8Array(TINY_GIF_BYTES)], fileName);
+}
+
 const originalCreateObjectUrl = Object.getOwnPropertyDescriptor(
   URL,
   "createObjectURL",
@@ -114,6 +137,8 @@ beforeEach(() => {
     channel: createVjDemoChannelHub().open(),
   });
   resetVjDemoLibrary();
+  makePreviewMock.mockReset();
+  makePreviewMock.mockResolvedValue({} as VjClipDTO);
 });
 
 afterEach(() => {
@@ -182,6 +207,7 @@ describe("useVjClipUploads", () => {
       createdBy: null,
       createdAt: "2026-11-05T00:00:00.000Z",
       updatedAt: "2026-11-05T00:00:00.000Z",
+      event: null,
     } satisfies VjPackDTO;
     queryClient.setQueryData(vjKeys.packs(true), [fullPack]);
     queryClient.setQueryData(vjKeys.clips(true), []);
@@ -224,5 +250,185 @@ describe("useVjClipUploads", () => {
     expect(demoGetVjClips().items.some((clip) => clip.title === "Halt")).toBe(
       false,
     );
+  });
+});
+
+describe("useVjClipUploads preview step", () => {
+  it("makes a preview after the clip is saved", async () => {
+    const { result } = renderHook(() => useVjClipUploads(), { wrapper });
+    act(() => {
+      result.current.addFiles([gifFileNamed("Glow.gif")], CLOSING_PACK_ID);
+    });
+    await waitFor(
+      () => expect(result.current.rows[0]?.stage).toBe("done"),
+      UPLOAD_TIMEOUT,
+    );
+    const row = result.current.rows[0];
+    expect(makePreviewMock).toHaveBeenCalledTimes(1);
+    expect(makePreviewMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        clipId: row?.clipId,
+        isDemoMode: true,
+        input: { kind: "gif", bytes: expect.any(Blob) as Blob },
+      }),
+    );
+    expect(row?.previewFailure).toBeNull();
+    expect(result.current.isBusy).toBe(false);
+  });
+
+  it("keeps the clip and names the preview failure on its row", async () => {
+    makePreviewMock.mockRejectedValue(new VjUploadFailure("VJ_PREVIEW_FAILED"));
+    const { result } = renderHook(() => useVjClipUploads(), { wrapper });
+    act(() => {
+      result.current.addFiles([gifFileNamed("Haze.gif")], null);
+    });
+    await waitFor(
+      () => expect(result.current.rows[0]?.stage).toBe("done"),
+      UPLOAD_TIMEOUT,
+    );
+    const row = result.current.rows[0];
+    expect(row?.failure).toBeNull();
+    expect(row?.previewFailure).toBeInstanceOf(VjUploadFailure);
+    expect((row?.previewFailure as VjUploadFailure).code).toBe(
+      "VJ_PREVIEW_FAILED",
+    );
+    const savedClip = demoGetVjClips().items.find(
+      (clip) => clip.title === "Haze",
+    );
+    expect(savedClip?.id).toBe(row?.clipId);
+    expect(result.current.isBusy).toBe(false);
+  });
+
+  it("starts the next file while the first one makes its preview", async () => {
+    let releaseFirstPreview: () => void = () => undefined;
+    makePreviewMock.mockImplementationOnce(
+      () =>
+        new Promise<VjClipDTO>((resolve) => {
+          releaseFirstPreview = () => resolve({} as VjClipDTO);
+        }),
+    );
+    const { result } = renderHook(() => useVjClipUploads(), { wrapper });
+    act(() => {
+      result.current.addFiles(
+        [
+          gifFileNamed("One.gif"),
+          gifFileNamed("Two.gif"),
+          gifFileNamed("Three.gif"),
+        ],
+        null,
+      );
+    });
+    await waitFor(
+      () => {
+        const stages = result.current.rows.map((row) => row.stage).sort();
+        expect(stages).toEqual(["done", "done", "previewing"]);
+      },
+      { timeout: 10000 },
+    );
+    expect(result.current.isBusy).toBe(true);
+    act(() => {
+      releaseFirstPreview();
+    });
+    await waitFor(
+      () =>
+        expect(result.current.rows.every((row) => row.stage === "done")).toBe(
+          true,
+        ),
+      UPLOAD_TIMEOUT,
+    );
+    expect(makePreviewMock).toHaveBeenCalledTimes(3);
+    expect(result.current.isBusy).toBe(false);
+  }, 20000);
+
+  it("shows the clip in the grid before its preview is ready", async () => {
+    makePreviewMock.mockImplementation(previewHeldUntilAbort);
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
+    const { result } = renderHook(() => useVjClipUploads(), {
+      wrapper: ({ children }: { children: ReactNode }) => (
+        <TestProviders queryClient={queryClient}>{children}</TestProviders>
+      ),
+    });
+    act(() => {
+      result.current.addFiles([gifFileNamed("Early.gif")], null);
+    });
+    await waitFor(
+      () => expect(result.current.rows[0]?.stage).toBe("previewing"),
+      UPLOAD_TIMEOUT,
+    );
+    const row = result.current.rows[0];
+    expect(row?.clipId).not.toBeNull();
+    expect(demoGetVjClips().items.some((clip) => clip.id === row?.clipId)).toBe(
+      true,
+    );
+    // A new clip outside a pack reads the whole library again.
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: vjKeys.root });
+    const firstInvalidation = invalidateSpy.mock.invocationCallOrder[0] ?? 0;
+    const firstPreview = makePreviewMock.mock.invocationCallOrder[0] ?? 0;
+    expect(firstInvalidation).toBeGreaterThan(0);
+    expect(firstInvalidation).toBeLessThan(firstPreview);
+  });
+
+  it("skipping the preview ends the row as done", async () => {
+    makePreviewMock.mockImplementation(previewHeldUntilAbort);
+    const { result } = renderHook(() => useVjClipUploads(), { wrapper });
+    act(() => {
+      result.current.addFiles([gifFileNamed("Skip.gif")], CLOSING_PACK_ID);
+    });
+    await waitFor(
+      () => expect(result.current.rows[0]?.stage).toBe("previewing"),
+      UPLOAD_TIMEOUT,
+    );
+    const rowId = result.current.rows[0]?.rowId ?? "";
+    const clipId = result.current.rows[0]?.clipId;
+    act(() => {
+      result.current.cancel(rowId);
+    });
+    const previewSignal = makePreviewMock.mock.calls[0]?.[0].signal;
+    expect(previewSignal?.aborted).toBe(true);
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(result.current.rows[0]).toMatchObject({
+      stage: "done",
+      percent: 100,
+      clipId,
+      failure: null,
+      previewFailure: null,
+    });
+    expect(result.current.isBusy).toBe(false);
+    const packClips = demoGetVjPackClips(CLOSING_PACK_ID).items;
+    expect(packClips.some((clip) => clip.id === clipId)).toBe(true);
+  });
+});
+
+describe("vjPreviewingClipIdsOf", () => {
+  function rowAt(
+    stage: VjUploadRow["stage"],
+    clipId: string | null,
+  ): VjUploadRow {
+    return {
+      rowId: `row-${stage}-${clipId ?? "none"}`,
+      fileName: "Clip.mp4",
+      byteSize: 1024,
+      packId: null,
+      stage,
+      percent: 100,
+      failure: null,
+      clipId,
+      retryCount: 0,
+      previewFailure: null,
+    };
+  }
+
+  it("names only the clips whose row is on its preview step", () => {
+    expect(
+      vjPreviewingClipIdsOf([
+        rowAt("previewing", "clip-previewing"),
+        rowAt("done", "clip-done"),
+        rowAt("uploading", null),
+        rowAt("previewing", null),
+      ]),
+    ).toEqual(["clip-previewing"]);
   });
 });

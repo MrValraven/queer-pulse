@@ -271,6 +271,11 @@ export function DecisionsSection() {
         />
       </h2>
       {error && <SectionError onRetry={retry} />}
+      {!error && decisions.length === 0 && (
+        <p className={styles.acEmpty}>
+          {t("governance:sections.decisions.empty")}
+        </p>
+      )}
       <div className={styles.prose}>
         {decisions.map((decision) => (
           <p key={decision.id}>

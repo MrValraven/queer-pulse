@@ -146,15 +146,6 @@
   padding: 4px 9px;
   font-weight: 500;
 }
-.appCommunity {
-  font-size: var(--text-13-5);
-  color: var(--ink-60);
-  line-height: 1.6;
-  font-style: italic;
-  border-left: 2px solid rgba(var(--accent-rgb), 0.3);
-  padding-left: 12px;
-  margin-top: 4px;
-}
 
 .cultureGrid {
   display: grid;
@@ -281,11 +272,8 @@
   background: var(--plum);
   padding: var(--section-y-80) 0;
 }
-.socialInner {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: center;
+.socialLeft {
+  max-width: 640px;
 }
 .socialLeft h2 {
   font-family: var(--serif);
@@ -312,39 +300,8 @@
   gap: 10px;
   flex-wrap: wrap;
 }
-.socialEvents {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.socialEvent {
-  background: rgba(var(--cream-rgb), 0.07);
-  border: 1px solid rgba(var(--cream-rgb), 0.12);
-  border-radius: var(--radius-14);
-  padding: 16px 18px;
-}
-.seName {
-  font-size: var(--text-15);
-  font-weight: 600;
-  color: rgba(var(--cream-rgb), 1);
-}
-.seDetail {
-  font-size: var(--text-13);
-  color: rgba(var(--cream-rgb), 0.56);
-  margin-top: 3px;
-}
-.seNote {
-  font-size: var(--text-13-5);
-  color: rgba(var(--cream-rgb), 0.72);
-  margin-top: 7px;
-  line-height: 1.5;
-}
 
 @media (--wide) {
-  .socialInner {
-    grid-template-columns: 1fr;
-    gap: 36px;
-  }
   .recStrip {
     grid-template-columns: 1fr;
   }

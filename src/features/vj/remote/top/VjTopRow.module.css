@@ -1,0 +1,287 @@
+/* The remote's top row, one 44px band in the dark Pulse Live stage look:
+   the back link, the pack tabs, the search toggle and the screens dot. Every
+   hit area reaches var(--tap-min); the chips draw a 36px face inside it.
+   Transitions move opacity, transform or filter only. */
+
+.row {
+  --vj-top-gap: 6px;
+  --vj-chip-height: 36px;
+  display: flex;
+  align-items: center;
+  block-size: var(--tap-min);
+  min-inline-size: 0;
+}
+
+.iconButton {
+  flex: none;
+  inline-size: var(--tap-min);
+  block-size: var(--tap-min);
+  padding: 0;
+}
+
+.iconButton svg {
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+}
+
+.searchIcon {
+  display: inline-flex;
+}
+
+/* Width and opacity animate in and out; the gap after the button rides
+   inside the slot, so it folds away with it. */
+.searchSlot {
+  display: flex;
+  flex: none;
+  overflow: hidden;
+}
+
+.searchSlot > * {
+  margin-inline-end: var(--vj-top-gap);
+}
+
+/* ── Pack tabs: scrolls sideways on its own, the page stays put ──
+   An edge that hides chips fades out over --vj-tabs-fade (the hook writes
+   data-vj-fade-start and data-vj-fade-end from the scroll position), so a
+   chip cut by the edge reads as "more this way" and the row eases into the
+   buttons beside it. The fade widths are registered so
+   they glide in and out. */
+@property --vj-tabs-fade-start {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --vj-tabs-fade-end {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+.tabs {
+  --vj-tabs-fade: 24px;
+  --vj-tabs-fade-start: 0px;
+  --vj-tabs-fade-end: 0px;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    currentColor var(--vj-tabs-fade-start),
+    currentColor calc(100% - var(--vj-tabs-fade-end)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    currentColor var(--vj-tabs-fade-start),
+    currentColor calc(100% - var(--vj-tabs-fade-end)),
+    transparent 100%
+  );
+  transition-property: --vj-tabs-fade-start, --vj-tabs-fade-end;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: var(--vj-top-gap);
+  min-inline-size: 0;
+  block-size: var(--tap-min);
+  margin-inline: var(--vj-top-gap);
+  padding-inline: 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 4px;
+  scrollbar-width: none;
+  touch-action: pan-x;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tabs[data-vj-fade-start="true"] {
+  --vj-tabs-fade-start: var(--vj-tabs-fade);
+}
+
+.tabs[data-vj-fade-end="true"] {
+  --vj-tabs-fade-end: var(--vj-tabs-fade);
+}
+
+.tabs:dir(rtl) {
+  -webkit-mask-image: linear-gradient(
+    to left,
+    transparent 0,
+    currentColor var(--vj-tabs-fade-start),
+    currentColor calc(100% - var(--vj-tabs-fade-end)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to left,
+    transparent 0,
+    currentColor var(--vj-tabs-fade-start),
+    currentColor calc(100% - var(--vj-tabs-fade-end)),
+    transparent 100%
+  );
+}
+
+.chip {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: var(--tap-min);
+  block-size: var(--tap-min);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--qs-text);
+  font: inherit;
+  cursor: pointer;
+  scroll-snap-align: start;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The ring draws on the face, inside the scroller, so the scroller's edges
+   never clip it. */
+.chip:focus-visible {
+  outline: none;
+}
+
+.chip:focus-visible .chipFace {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.chipFace {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  block-size: var(--vj-chip-height);
+  min-inline-size: var(--vj-chip-height);
+  padding-inline: 12px;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-pill);
+  background:
+    linear-gradient(180deg, var(--qs-glass-top) 0%, var(--qs-glass-bottom) 100%),
+    var(--qs-glass-tint);
+  transition-property: opacity, transform, filter;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+/* The pressed wash: a coral layer that fades in under the label. */
+.chipFace::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border: 1px solid var(--accent);
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--accent) 34%, transparent);
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.chip[aria-pressed="true"] .chipFace::before {
+  opacity: 1;
+}
+
+/* A switch on its way: pressed, held at a lighter wash until the stage moves. */
+.chip[aria-pressed="true"][data-pending="true"] .chipFace::before {
+  opacity: 0.6;
+}
+
+.chip[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+.chip[aria-disabled="true"] .chipFace {
+  opacity: 0.45;
+}
+
+.chip:active:not([aria-disabled="true"]) .chipFace {
+  transform: scale(0.96);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chip:hover:not([aria-disabled="true"]) .chipFace {
+    filter: brightness(1.15);
+  }
+}
+
+.iconChip .chipFace {
+  padding-inline: 0;
+  inline-size: var(--tap-min);
+}
+
+.chipFace > svg {
+  flex: none;
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+
+/* The Generators chip sets its icon beside the label. */
+.chip:not(.iconChip) .chipFace:has(> svg) {
+  flex-direction: row;
+  gap: 6px;
+}
+
+.chipName {
+  max-inline-size: 9rem;
+  overflow: hidden;
+  font-size: var(--text-13);
+  font-weight: 600;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chipReadiness {
+  font-size: var(--text-11);
+  line-height: 1.2;
+  color: var(--qs-text-mute);
+  white-space: nowrap;
+}
+
+.chip[data-vj-pack-readiness="ready"] .chipReadiness {
+  color: var(--qs-text);
+}
+
+/* ── Screens dot: its colour and the button's name carry the summary ── */
+.screensDot {
+  inline-size: 0.625rem;
+  block-size: 0.625rem;
+  border-radius: 50%;
+  background: var(--qs-text-mute);
+}
+
+.iconButton[data-vj-screens="live"] .screensDot {
+  background: var(--qs-right-border);
+}
+
+.iconButton[data-vj-screens="partial"] .screensDot {
+  background: var(--amber);
+}
+
+.iconButton[data-vj-screens="offline"] .screensDot {
+  background: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabs,
+  .chipFace,
+  .chipFace::before {
+    transition-duration: 0s;
+  }
+}

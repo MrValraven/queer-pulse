@@ -1,0 +1,383 @@
+/* The dock's effect pads row (design 7): the strobe pad, the docked effect
+   pads and the All effects pad. On a phone it is one 52px band scrolling
+   sideways; in the split layout it is a 4-column grid. Pads are 64x52 with
+   the name, the flash and beat marks, and the amount on the bottom edge. The
+   face shows a short label (vj:effects.padLabel.*) at 12px, two lines at
+   most, with whole words on each line; the full effect name stays the
+   accessible name. A lit pad holds a steady accent fill, so the remote itself
+   never flashes. Every move animates only opacity or transform. */
+
+.row {
+  --vj-pad-gap: 6px;
+  --vj-pad-width: 64px;
+  --vj-pad-height: 52px;
+  position: relative;
+  display: flex;
+  gap: var(--vj-pad-gap);
+  block-size: var(--vj-pad-height);
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* Sideways drags scroll the row; the page under it stays still, and the
+     scroll never chains into a back swipe. */
+  overscroll-behavior-x: contain;
+  touch-action: pan-x;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+
+.row::-webkit-scrollbar {
+  display: none;
+}
+
+.row[data-layout="split"] {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: var(--vj-pad-height);
+  block-size: auto;
+  overflow: visible;
+  scroll-snap-type: none;
+  touch-action: manipulation;
+}
+
+/* The motion wrapper of one pad: it carries the enter, exit and reorder
+   glide, so the button inside keeps its own pointer capture. */
+.slot {
+  position: relative;
+  flex: none;
+  inline-size: var(--vj-pad-width);
+  block-size: var(--vj-pad-height);
+  scroll-snap-align: start;
+}
+
+.row[data-layout="split"] .slot {
+  inline-size: auto;
+}
+
+/* ── One pad ── */
+.pad {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  inline-size: 100%;
+  block-size: 100%;
+  padding: 5px 5px 7px;
+  overflow: hidden;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-tile);
+  background:
+    linear-gradient(180deg, var(--qs-glass-top) 0%, var(--qs-glass-bottom) 100%),
+    var(--qs-raised);
+  color: var(--qs-text);
+  font: inherit;
+  text-align: start;
+  /* A hold is a press, so text selection and the iOS callout stay off. */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: pan-x;
+  cursor: pointer;
+  transition-property: transform, opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.row[data-layout="split"] .pad {
+  touch-action: manipulation;
+}
+
+.pad[data-on="true"] {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: var(--qs-glow-coral);
+  color: var(--qs-cta-ink);
+}
+
+.pad[data-pressed="true"]:not([aria-disabled="true"]) {
+  transform: scale(0.95);
+}
+
+/* Waiting for the stage to confirm: a quieter pad until the ack lands. */
+.pad[aria-busy="true"] {
+  opacity: 0.8;
+}
+
+.pad[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.pad:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* MIDI learn: every pickable pad shows a dashed edge. */
+.pad[data-vj-midi-pickable] {
+  border-style: dashed;
+  border-color: var(--qs-glass-border-strong);
+}
+
+.marks {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  min-block-size: 12px;
+  font-size: var(--text-11);
+  line-height: 1;
+  color: var(--qs-text-mute);
+}
+
+.pad[data-on="true"] .marks {
+  color: var(--qs-cta-ink);
+}
+
+.markIcon {
+  flex: none;
+}
+
+.markIcon[data-kind="flash"] {
+  color: var(--accent);
+}
+
+.pad[data-on="true"] .markIcon[data-kind="flash"] {
+  color: var(--qs-cta-ink);
+}
+
+.name {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: var(--text-12);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  /* base.css sets overflow-wrap: anywhere, which split words mid-letter
+     ("Estrobos/cópio"); lines break between words only. */
+  overflow-wrap: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+/* The amount: a thin bar along the bottom edge, scaled from the start. */
+.amount {
+  position: absolute;
+  inset-inline: 6px;
+  inset-block-end: 3px;
+  block-size: 2px;
+  border-radius: var(--qs-radius-pill);
+  background: var(--qs-ring-track);
+  overflow: hidden;
+}
+
+.amountFill {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  background: var(--accent);
+  transform: scaleX(var(--vj-pad-amount, 1));
+  transform-origin: left center;
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.amountFill:dir(rtl) {
+  transform-origin: right center;
+}
+
+.pad[data-on="true"] .amountFill {
+  background: var(--qs-cta-ink);
+}
+
+/* ── Strobe: the seconds left in a small ring at the top corner ── */
+.countdown {
+  position: absolute;
+  inset-block-start: 4px;
+  inset-inline-end: 4px;
+  display: grid;
+  place-items: center;
+  inline-size: 20px;
+  block-size: 20px;
+}
+
+.countdownRing {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  transform: rotate(-90deg);
+}
+
+.countdownTrack {
+  fill: none;
+  stroke: var(--qs-ring-track);
+  stroke-width: 3;
+}
+
+.pad[data-on="true"] .countdownTrack {
+  stroke: rgba(var(--qs-line-rgb), 0.35);
+}
+
+.countdownArc {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.countdownSeconds {
+  position: relative;
+  font-size: var(--text-10);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/* ── All effects: the last pad, an icon over a one-line label ── */
+.allPad {
+  composes: pad;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-style: dashed;
+  background: transparent;
+  text-align: center;
+}
+
+.allName {
+  composes: name;
+  max-inline-size: 100%;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+}
+
+.allIcon {
+  flex: none;
+  font-size: var(--text-16);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pad:not([aria-disabled="true"]):not([data-on="true"]):hover {
+    border-color: var(--qs-glass-border-strong);
+  }
+}
+
+/* ── The tuner and the flash warning, in the dock popover ── */
+.popover {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  inline-size: min(20rem, calc(100vw - 2 * 12px));
+}
+
+.popoverHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-xs);
+}
+
+.popoverTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin: 0;
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--qs-text);
+}
+
+.titleIcon {
+  flex: none;
+  color: var(--accent);
+}
+
+.closeButton {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--tap-min);
+  block-size: var(--tap-min);
+  margin-inline-end: -8px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--qs-radius-tile);
+  background: transparent;
+  color: var(--qs-text);
+  font-size: var(--text-18);
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+.closeButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.section {
+  composes: section from "../VjSheets.module.css";
+}
+
+.fieldLabel {
+  margin: 0;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--qs-text-mute);
+}
+
+.sliderRow {
+  composes: sliderRow from "../VjSheets.module.css";
+}
+
+.slider {
+  composes: slider from "../VjSheets.module.css";
+  /* Inside the popover the slider owns the sideways drag. */
+  touch-action: none;
+}
+
+.sliderValue {
+  composes: sliderValue from "../VjSheets.module.css";
+  min-inline-size: 3.5rem;
+}
+
+.chips {
+  composes: chips from "../VjSheets.module.css";
+}
+
+.chip {
+  composes: chip from "../VjSheets.module.css";
+  font-size: var(--text-13-5);
+}
+
+.hint {
+  composes: hint from "../VjSheets.module.css";
+}
+
+.warning {
+  composes: warningText from "../VjSheets.module.css";
+}
+
+/* The flash warning stacks its two buttons, so a long effect name fits. */
+.consentActions {
+  display: grid;
+  gap: var(--gap-xs);
+}
+
+.slider[aria-disabled="true"],
+.chip[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pad,
+  .amountFill {
+    transition-duration: 0s;
+  }
+}

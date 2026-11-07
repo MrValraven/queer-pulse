@@ -2,16 +2,29 @@ import {
   useEffect,
   useRef,
   useState,
+  type FocusEvent as ReactFocusEvent,
+  type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { MdDragIndicator } from "react-icons/md";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import type { VjClipDTO } from "../../../shared/contracts/vj";
 import { IconButton } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { VJ_PIXELATED_MIN_SCALE } from "../vj.constants";
 import { formatVjBytes, formatVjDuration } from "../vjFormat";
+import { VjClipCardPreview } from "./VjClipCardPreview";
+import { VjClipFavoriteButton } from "./VjClipFavoriteButton";
 import styles from "./VjClips.module.css";
+
+/** How long a mouse rests on a card before its preview starts, so sweeping
+ *  across the grid loads nothing. */
+const PREVIEW_HOVER_DELAY_MS = 150;
+/** How long a finger holds the thumbnail before the preview plays. */
+const PREVIEW_LONG_PRESS_MS = 450;
+/** How far a finger may drift during the hold before it counts as a scroll. */
+const PREVIEW_LONG_PRESS_SLOP_PX = 10;
 
 interface VjScaledImageProps {
   src: string;
@@ -66,6 +79,110 @@ export function VjScaledImage({
   );
 }
 
+function isFocusVisible(element: Element): boolean {
+  try {
+    return element.matches(":focus-visible");
+  } catch {
+    return true;
+  }
+}
+
+/**
+ * When a card plays its animated preview: a resting mouse, keyboard focus on
+ * the card, or a finger held on the thumbnail (released, the preview stops).
+ * A long-press swallows the click that follows it, so holding to look never
+ * opens Edit clip. Nothing arms while `isArmed` is false (no preview yet, or
+ * reduced motion), so a plain tap stays a plain tap.
+ */
+function useVjCardPreviewTrigger(isArmed: boolean) {
+  const [isHovered, setIsHovered] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
+  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pressOriginRef = useRef<{ x: number; y: number } | null>(null);
+  const wasLongPressRef = useRef(false);
+
+  useEffect(
+    () => () => {
+      if (hoverTimerRef.current !== null) clearTimeout(hoverTimerRef.current);
+      if (pressTimerRef.current !== null) clearTimeout(pressTimerRef.current);
+    },
+    [],
+  );
+
+  const endHover = () => {
+    if (hoverTimerRef.current !== null) clearTimeout(hoverTimerRef.current);
+    hoverTimerRef.current = null;
+    setIsHovered(false);
+  };
+  const endPress = () => {
+    if (pressTimerRef.current !== null) clearTimeout(pressTimerRef.current);
+    pressTimerRef.current = null;
+    pressOriginRef.current = null;
+    setIsPressed(false);
+  };
+
+  return {
+    isActive: isArmed && (isHovered || isFocused || isPressed),
+    articleHandlers: {
+      onPointerEnter: (event: ReactPointerEvent) => {
+        if (event.pointerType !== "mouse" || !isArmed) return;
+        endHover();
+        hoverTimerRef.current = setTimeout(() => {
+          hoverTimerRef.current = null;
+          setIsHovered(true);
+        }, PREVIEW_HOVER_DELAY_MS);
+      },
+      onPointerLeave: endHover,
+    },
+    editHandlers: {
+      onFocus: (event: ReactFocusEvent<HTMLButtonElement>) => {
+        if (isFocusVisible(event.currentTarget)) setIsFocused(true);
+      },
+      onBlur: () => {
+        wasLongPressRef.current = false;
+        setIsFocused(false);
+      },
+      onPointerDown: (event: ReactPointerEvent) => {
+        wasLongPressRef.current = false;
+        if (event.pointerType !== "touch" || !isArmed) return;
+        endPress();
+        pressOriginRef.current = { x: event.clientX, y: event.clientY };
+        pressTimerRef.current = setTimeout(() => {
+          pressTimerRef.current = null;
+          wasLongPressRef.current = true;
+          setIsPressed(true);
+        }, PREVIEW_LONG_PRESS_MS);
+      },
+      onPointerMove: (event: ReactPointerEvent) => {
+        const origin = pressOriginRef.current;
+        if (origin === null || pressTimerRef.current === null) return;
+        const drift = Math.hypot(
+          event.clientX - origin.x,
+          event.clientY - origin.y,
+        );
+        if (drift > PREVIEW_LONG_PRESS_SLOP_PX) endPress();
+      },
+      onPointerUp: endPress,
+      onPointerCancel: endPress,
+      // A held finger opens the system menu on Android and iOS; the hold is
+      // the preview here.
+      onContextMenu: (event: ReactMouseEvent) => {
+        if (pressOriginRef.current !== null || wasLongPressRef.current) {
+          event.preventDefault();
+        }
+      },
+    },
+    /** True once for the click that ends a long-press. */
+    consumeLongPress: () => {
+      const wasLongPress = wasLongPressRef.current;
+      wasLongPressRef.current = false;
+      return wasLongPress;
+    },
+  };
+}
+
 export interface VjClipCardProps {
   clip: VjClipDTO;
   /** Zero-based slot in the grid. */
@@ -79,8 +196,9 @@ export interface VjClipCardProps {
 }
 
 /** One clip in the library grid: the thumbnail and title open Edit clip;
- *  inside a pack the card also carries a drag grip and earlier and later
- *  buttons. */
+ *  a star over the thumbnail's corner marks it a favorite, and a resting
+ *  mouse, keyboard focus or a long-press plays its animated preview. Inside a
+ *  pack the card also carries a drag grip and earlier and later buttons. */
 export function VjClipCard({
   clip,
   position,
@@ -92,6 +210,10 @@ export function VjClipCard({
   gripProps,
 }: VjClipCardProps) {
   const { t } = useTranslation();
+  const { reducedMotion } = useMotionPrefs();
+  const preview = useVjCardPreviewTrigger(
+    clip.previewUrl !== null && !reducedMotion,
+  );
   const size = formatVjBytes(clip.byteSize);
   const meta =
     clip.mediaKind === "video" && clip.durationMs !== null
@@ -104,12 +226,19 @@ export function VjClipCard({
   const isLast = position >= total - 1;
 
   return (
-    <article className={styles.card} data-dragging={isDragging || undefined}>
+    <article
+      className={styles.card}
+      data-dragging={isDragging || undefined}
+      {...preview.articleHandlers}
+    >
       <button
         type="button"
         className={styles.editButton}
         aria-label={t("vj:clip.editAria", { title: clip.title })}
-        onClick={onEdit}
+        {...preview.editHandlers}
+        onClick={() => {
+          if (!preview.consumeLongPress()) onEdit();
+        }}
       >
         <span className={styles.thumbBox}>
           <VjScaledImage
@@ -120,9 +249,14 @@ export function VjClipCard({
             className={styles.thumbImage}
             isLazy
           />
+          <VjClipCardPreview
+            clip={clip}
+            isActive={preview.isActive && !isDragging}
+          />
         </span>
         <span className={styles.cardTitle}>{clip.title}</span>
       </button>
+      <VjClipFavoriteButton clip={clip} className={styles.favorite} />
       <p className={styles.cardMeta}>{meta}</p>
       {isReorderable ? (
         <div className={styles.cardActions}>

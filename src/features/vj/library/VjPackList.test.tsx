@@ -283,3 +283,37 @@ describe("VjPackList (demo)", () => {
     );
   });
 });
+
+describe("VjPackHeader layout", () => {
+  beforeEach(() => {
+    configureVjDemoStore({
+      storage: new MemoryStorage(),
+      channel: createVjDemoChannelHub().open(),
+    });
+    resetVjDemoLibrary();
+  });
+
+  it("gives the pack's event its own row after the pack buttons", () => {
+    const closing = seededPackNamed("Closing");
+    render(
+      <TestProviders>
+        <VjPackHeader
+          pack={closing}
+          libraryClipCount={8}
+          onPackDeleted={vi.fn()}
+        />
+      </TestProviders>,
+    );
+    const deleteButton = screen.getByRole("button", { name: "Delete pack" });
+    const eventButton = screen.getByRole("button", {
+      name: closing.event === null ? "Link event" : "Change event",
+    });
+    // The event comes after the pack buttons in reading and tab order, and
+    // sits outside their row.
+    expect(
+      deleteButton.compareDocumentPosition(eventButton) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(deleteButton.parentElement?.contains(eventButton)).toBe(false);
+  });
+});

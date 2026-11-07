@@ -37,7 +37,7 @@ export const STEPS: HowStep[] = [
 export const VOICES: Voice[] = [
   {
     text: "I wasn't prepared for how much this would move me. I'm treating each recording with everything I have.",
-    who: "Sofia, interviewer",
+    who: "An interviewer",
   },
   {
     text: "I didn't think anyone would want my ordinary life on tape. Telling it back was the first time it felt like it had mattered.",

@@ -200,8 +200,9 @@ export function isVjPresignRateLimited(error: unknown): boolean {
     : false;
 }
 
-async function presignVj(
-  kind: "vj_clip" | "vj_thumbnail",
+/** Presigns one VJ object; a 429 answer is marked for `isVjPresignRateLimited`. */
+export async function presignVj(
+  kind: "vj_clip" | "vj_thumbnail" | "vj_preview",
   contentType: VjClipUploadContentType | "image/webp",
   byteSize: number,
 ): Promise<PresignedUpload> {

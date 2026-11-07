@@ -5,12 +5,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { PERSONA_KEYS } from "./caregivers.data";
-import {
-  CommonQuestions,
-  DontDoSay,
-  StartHere,
-  VoiceRooms,
-} from "./CaregiversSections";
+import { CommonQuestions, DontDoSay, StartHere } from "./CaregiversSections";
 import styles from "./CaregiversPage.module.css";
 
 export function CaregiversPage() {
@@ -63,7 +58,6 @@ export function CaregiversPage() {
 
       <StartHere />
       <CommonQuestions />
-      <VoiceRooms />
       <DontDoSay />
 
       <Outro

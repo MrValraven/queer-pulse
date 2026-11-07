@@ -1,183 +1,66 @@
-import {
-  VJ_FIT_MODES,
-  VJ_MEDIA_KINDS,
-  VJ_CLIP_MIME_TYPES,
-  VJ_OVERLAY_STYLES,
-  VJ_SHUFFLE_BEAT_COUNTS,
-  VJ_SHUFFLE_INTERVAL_KINDS,
-  VJ_SPEEDS,
-  VJ_TRANSITION_MODES,
-  type VjClipDTO,
-  type VjCreatorDTO,
-  type VjPackDTO,
-  type VjStageRestore,
-  type VjStageState,
+import type {
+  VjClipDTO,
+  VjEventCardDTO,
+  VjPackDTO,
+  VjStageRestore,
+  VjStageState,
 } from "../../../shared/contracts/vj";
 import {
   VJ_SCREEN_ID_STORAGE_KEY,
   VJ_SCREEN_SNAPSHOT_STORAGE_KEY,
+  VJ_SCREEN_SNAPSHOT_V1_STORAGE_KEY,
 } from "../vj.constants";
+import {
+  isVjClipV2,
+  isVjEventCard,
+  isVjFiniteNumber,
+  isVjPackV2,
+  isVjPlainObject,
+  isVjStageStateV2,
+} from "./vjScreenRecordGuards";
+import { createVjUuid } from "../live/vjUuid";
+import { upgradeVjScreenRecordV1 } from "./vjScreenRecordV1";
 
-/** The last look a screen applied, kept so an offline reload restores it. */
+/** The last look a screen applied, kept so an offline reload restores it (contract 9.1). */
 export interface VjScreenRecord {
+  version: 2;
   savedAt: number;
-  /** Saved with the strobe off (contract 6.4): a reload never restarts it. */
+  /** Saved with the strobe off (v1 rule). */
   state: VjStageState;
   pack: VjPackDTO | null;
   clips: VjClipDTO[];
   /**
    * The live clip, kept even when it sits outside the active pack (a pack
    * switch leaves the last clip playing), so a reload can still show it.
-   * Missing from records saved before this field existed.
    */
-  liveClip?: VjClipDTO | null;
+  liveClip: VjClipDTO | null;
+  /** Clips the state names outside the pack: mix, this screen's override, the active set list's scene sources. */
+  extraClips: VjClipDTO[];
+  /** The active pack's card, so an offline reload can still show it. */
+  eventCard: VjEventCardDTO | null;
+  /** The last synced clock offset, so an offline reload keeps beat phase. */
+  clockOffsetMs: number | null;
 }
 
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-function isPlainObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
+function isVjClipList(value: unknown): value is VjClipDTO[] {
+  return Array.isArray(value) && value.every(isVjClipV2);
 }
 
-function isFiniteNumber(value: unknown): value is number {
-  return typeof value === "number" && Number.isFinite(value);
-}
-
-function isNonNegativeInteger(value: unknown): value is number {
-  return typeof value === "number" && Number.isInteger(value) && value >= 0;
-}
-
-function isNullableString(value: unknown): value is string | null {
-  return value === null || typeof value === "string";
-}
-
-function isOneOf<Member extends string | number>(
-  list: readonly Member[],
-  value: unknown,
-): value is Member {
-  return list.some((member) => member === value);
-}
-
-function isTransition(value: unknown): boolean {
+function isVjScreenRecordV2(value: unknown): value is VjScreenRecord {
   return (
-    isPlainObject(value) &&
-    isOneOf(VJ_TRANSITION_MODES, value.mode) &&
-    isNonNegativeInteger(value.fadeMs)
-  );
-}
-
-function isOverlay(value: unknown): boolean {
-  return (
-    isPlainObject(value) &&
-    typeof value.text === "string" &&
-    isOneOf(VJ_OVERLAY_STYLES, value.style) &&
-    typeof value.isVisible === "boolean"
-  );
-}
-
-function isEffects(value: unknown): boolean {
-  return (
-    isPlainObject(value) &&
-    isOneOf(VJ_SPEEDS, value.speed) &&
-    typeof value.isMonochrome === "boolean" &&
-    typeof value.isMirrored === "boolean" &&
-    typeof value.isHueCycling === "boolean" &&
-    typeof value.isStrobing === "boolean" &&
-    typeof value.isBlackout === "boolean" &&
-    (value.strobeStartedAt === null || isFiniteNumber(value.strobeStartedAt))
-  );
-}
-
-function isShuffle(value: unknown): boolean {
-  if (
-    !isPlainObject(value) ||
-    typeof value.isOn !== "boolean" ||
-    !isOneOf(VJ_SHUFFLE_INTERVAL_KINDS, value.intervalKind) ||
-    !isFiniteNumber(value.intervalValue) ||
-    !isFiniteNumber(value.bpm)
-  ) {
-    return false;
-  }
-  return value.intervalKind === "beats"
-    ? isOneOf(VJ_SHUFFLE_BEAT_COUNTS, value.intervalValue)
-    : Number.isInteger(value.intervalValue);
-}
-
-function isStageState(value: unknown): value is VjStageState {
-  return (
-    isPlainObject(value) &&
-    typeof value.stageEpoch === "string" &&
-    isNonNegativeInteger(value.revision) &&
-    isNonNegativeInteger(value.clipSequence) &&
-    isNullableString(value.activePackId) &&
-    isNullableString(value.liveClipId) &&
-    isTransition(value.transition) &&
-    isOverlay(value.overlay) &&
-    isEffects(value.effects) &&
-    isShuffle(value.shuffle) &&
-    isFiniteNumber(value.updatedAt)
-  );
-}
-
-function isCreator(value: unknown): value is VjCreatorDTO | null {
-  return (
-    value === null ||
-    (isPlainObject(value) &&
-      typeof value.userId === "string" &&
-      typeof value.displayName === "string")
-  );
-}
-
-function isPack(value: unknown): value is VjPackDTO {
-  return (
-    isPlainObject(value) &&
-    typeof value.id === "string" &&
-    typeof value.name === "string" &&
-    isNonNegativeInteger(value.position) &&
-    isNonNegativeInteger(value.clipCount) &&
-    isFiniteNumber(value.totalByteSize) &&
-    isNullableString(value.coverThumbnailUrl) &&
-    isCreator(value.createdBy) &&
-    typeof value.createdAt === "string" &&
-    typeof value.updatedAt === "string"
-  );
-}
-
-function isClip(value: unknown): value is VjClipDTO {
-  return (
-    isPlainObject(value) &&
-    typeof value.id === "string" &&
-    typeof value.title === "string" &&
-    isOneOf(VJ_MEDIA_KINDS, value.mediaKind) &&
-    isOneOf(VJ_CLIP_MIME_TYPES, value.mimeType) &&
-    isFiniteNumber(value.byteSize) &&
-    isFiniteNumber(value.width) &&
-    isFiniteNumber(value.height) &&
-    (value.durationMs === null || isFiniteNumber(value.durationMs)) &&
-    isOneOf(VJ_FIT_MODES, value.fitMode) &&
-    typeof value.thumbnailUrl === "string" &&
-    typeof value.mediaUrl === "string" &&
-    Array.isArray(value.packIds) &&
-    value.packIds.every((packId) => typeof packId === "string") &&
-    isNonNegativeInteger(value.packCount) &&
-    isCreator(value.createdBy) &&
-    typeof value.createdAt === "string" &&
-    typeof value.updatedAt === "string"
-  );
-}
-
-function isScreenRecord(value: unknown): value is VjScreenRecord {
-  return (
-    isPlainObject(value) &&
-    isFiniteNumber(value.savedAt) &&
-    isStageState(value.state) &&
-    (value.pack === null || isPack(value.pack)) &&
-    Array.isArray(value.clips) &&
-    value.clips.every(isClip) &&
-    (value.liveClip === undefined ||
-      value.liveClip === null ||
-      isClip(value.liveClip))
+    isVjPlainObject(value) &&
+    value.version === 2 &&
+    isVjFiniteNumber(value.savedAt) &&
+    isVjStageStateV2(value.state) &&
+    (value.pack === null || isVjPackV2(value.pack)) &&
+    isVjClipList(value.clips) &&
+    (value.liveClip === null || isVjClipV2(value.liveClip)) &&
+    isVjClipList(value.extraClips) &&
+    (value.eventCard === null || isVjEventCard(value.eventCard)) &&
+    (value.clockOffsetMs === null || isVjFiniteNumber(value.clockOffsetMs))
   );
 }
 
@@ -196,57 +79,125 @@ export function withVjStrobeOff(state: VjStageState): VjStageState {
   };
 }
 
-export function clearVjScreenRecord(): void {
+function removeStoredItem(storageKey: string): void {
   try {
-    localStorage.removeItem(VJ_SCREEN_SNAPSHOT_STORAGE_KEY);
+    localStorage.removeItem(storageKey);
   } catch {
-    // Storage blocked: nothing to clear.
+    // Storage blocked: nothing to remove.
   }
 }
 
-export function readVjScreenRecord(): VjScreenRecord | null {
-  let rawRecord: string | null;
+type VjStoredValue = { isPresent: false } | { isPresent: true; value: unknown };
+
+/** The parsed value under a key. Text that does not parse reads as present
+ *  with an undefined value, so the caller's validator removes it. */
+function readStoredValue(storageKey: string): VjStoredValue {
+  let rawValue: string | null;
   try {
-    rawRecord = localStorage.getItem(VJ_SCREEN_SNAPSHOT_STORAGE_KEY);
+    rawValue = localStorage.getItem(storageKey);
   } catch {
-    return null;
+    return { isPresent: false };
   }
-  if (rawRecord === null) return null;
+  if (rawValue === null) return { isPresent: false };
   try {
-    const parsedRecord: unknown = JSON.parse(rawRecord);
-    // A record saved mid-strobe by an older build restores with the strobe off.
-    if (isScreenRecord(parsedRecord)) {
-      return { ...parsedRecord, state: withVjStrobeOff(parsedRecord.state) };
-    }
+    return { isPresent: true, value: JSON.parse(rawValue) as unknown };
   } catch {
-    // Unparseable text falls through to the removal below.
+    return { isPresent: true, value: undefined };
   }
-  clearVjScreenRecord();
-  return null;
 }
 
-export function writeVjScreenRecord(record: VjScreenRecord): void {
+/** Saves the record with the strobe off; answers whether storage took it. */
+function storeVjScreenRecord(record: VjScreenRecord): boolean {
   try {
     localStorage.setItem(
       VJ_SCREEN_SNAPSHOT_STORAGE_KEY,
-      JSON.stringify({ ...record, state: withVjStrobeOff(record.state) }),
+      JSON.stringify({
+        ...record,
+        version: 2,
+        state: withVjStrobeOff(record.state),
+      }),
     );
+    return true;
   } catch {
     // Quota or blocked storage: the show goes on without a saved look.
+    return false;
   }
 }
 
-/** The attach `restoreState` of contract 2.1, field by field. */
+/**
+ * The v1 record upgraded to v2 and saved under the v2 key. The v1 key goes
+ * once the upgrade is saved, or at once when the record is unreadable; a
+ * failed save keeps it so the next load tries again.
+ */
+function readUpgradedVjScreenRecordV1(): VjScreenRecord | null {
+  const storedRecordV1 = readStoredValue(VJ_SCREEN_SNAPSHOT_V1_STORAGE_KEY);
+  if (!storedRecordV1.isPresent) return null;
+  const upgradedRecord = upgradeVjScreenRecordV1(storedRecordV1.value);
+  if (upgradedRecord === null) {
+    removeStoredItem(VJ_SCREEN_SNAPSHOT_V1_STORAGE_KEY);
+    return null;
+  }
+  const record: VjScreenRecord = {
+    ...upgradedRecord,
+    state: withVjStrobeOff(upgradedRecord.state),
+  };
+  if (storeVjScreenRecord(record)) {
+    removeStoredItem(VJ_SCREEN_SNAPSHOT_V1_STORAGE_KEY);
+  }
+  return record;
+}
+
+/** Forgets the saved look under both keys. */
+export function clearVjScreenRecord(): void {
+  removeStoredItem(VJ_SCREEN_SNAPSHOT_STORAGE_KEY);
+  removeStoredItem(VJ_SCREEN_SNAPSHOT_V1_STORAGE_KEY);
+}
+
+/**
+ * Contract 9.1 reader order: the v2 key, validated field by field; when it
+ * is absent or invalid, the v1 key, upgraded. An invalid record under either
+ * key is removed. A readable v2 record also removes a leftover v1 record, so
+ * an old look can never come back later.
+ */
+export function readVjScreenRecord(): VjScreenRecord | null {
+  const storedRecord = readStoredValue(VJ_SCREEN_SNAPSHOT_STORAGE_KEY);
+  if (storedRecord.isPresent) {
+    if (isVjScreenRecordV2(storedRecord.value)) {
+      removeStoredItem(VJ_SCREEN_SNAPSHOT_V1_STORAGE_KEY);
+      return {
+        ...storedRecord.value,
+        state: withVjStrobeOff(storedRecord.value.state),
+      };
+    }
+    removeStoredItem(VJ_SCREEN_SNAPSHOT_STORAGE_KEY);
+  }
+  return readUpgradedVjScreenRecordV1();
+}
+
+export function writeVjScreenRecord(record: VjScreenRecord): void {
+  storeVjScreenRecord(record);
+}
+
+/** The attach `restoreState` of contract 7.13: the 3.4 Pick list, field by field. */
 export function vjStageRestoreOf(state: VjStageState): VjStageRestore {
   return {
     stageEpoch: state.stageEpoch,
     revision: state.revision,
     activePackId: state.activePackId,
     liveClipId: state.liveClipId,
+    liveGeneratorId: state.liveGeneratorId,
+    liveGeneratorVariant: state.liveGeneratorVariant,
     transition: state.transition,
     overlay: state.overlay,
+    countdown: state.countdown,
+    logo: state.logo,
+    eventCard: state.eventCard,
     effects: state.effects,
+    mix: state.mix,
+    tempo: state.tempo,
     shuffle: state.shuffle,
+    activeSetlistId: state.activeSetlistId,
+    setlistIndex: state.setlistIndex,
   };
 }
 
@@ -262,7 +213,7 @@ export function readOrMintVjScreenId(): string {
     // Storage blocked: the module variable keeps one id per page load.
     if (memoryScreenId !== null) return memoryScreenId;
   }
-  const mintedScreenId = crypto.randomUUID();
+  const mintedScreenId = createVjUuid();
   try {
     sessionStorage.setItem(VJ_SCREEN_ID_STORAGE_KEY, mintedScreenId);
   } catch {

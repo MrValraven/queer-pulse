@@ -89,9 +89,15 @@ export const publishPiece = (id: string, body: PublishPieceDto) =>
     body,
   );
 
+/** The two stages the server lets an unpublish land in besides the default
+ *  `ready`: the desk row menu sends one of these in the request body. */
+export type UnpublishLandingStage = "drafting" | "in_review";
+
 /** POST /magazine/admin/pieces/:id/unpublish. Never gated: pulling a live
- *  piece back down has to stay available whatever state its care gate is in. */
-export const unpublishPiece = (id: string) =>
+ *  piece back down has to stay available whatever state its care gate is in.
+ *  With no `stage` the piece lands in `ready`; with one, in that stage. */
+export const unpublishPiece = (id: string, stage?: UnpublishLandingStage) =>
   apiPost<PieceRecordDto & PieceRecordPublishFields>(
     `/magazine/admin/pieces/${id}/unpublish`,
+    stage ? { stage } : undefined,
   );

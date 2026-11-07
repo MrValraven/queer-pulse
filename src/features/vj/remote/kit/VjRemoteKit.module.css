@@ -1,0 +1,210 @@
+/* The remote kit: the dock popover, the crossfader and the sheet frame, all in
+   the dark Pulse Live stage look (the --qs-* tokens). Every control reaches
+   var(--tap-min) through its hit area, and every move animates only opacity
+   or transform. */
+
+/* ── Sheet frame: the kept v1 sheet look on the shared Modal ── */
+.sheet {
+  composes: sheet from "../VjSheets.module.css";
+}
+
+.body {
+  composes: body from "../VjSheets.module.css";
+}
+
+.footer {
+  composes: footer from "../VjSheets.module.css";
+}
+
+.footerStart {
+  composes: footerStart from "../VjSheets.module.css";
+}
+
+/* ── Dock popover: a raised glass card fixed over the dock ── */
+.popover {
+  position: fixed;
+  z-index: var(--z-popover);
+  box-sizing: border-box;
+  inline-size: max-content;
+  max-inline-size: min(22rem, calc(100vw - 2 * var(--gap-sm)));
+  max-block-size: calc(100dvh - 2 * var(--gap-sm));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--gap-sm);
+  border: 1px solid var(--qs-glass-border-strong);
+  border-radius: var(--qs-radius-tile);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-raised-top) 0%,
+      var(--qs-glass-raised-bottom) 100%
+    ),
+    var(--qs-raised);
+  box-shadow: var(--qs-shadow-lift);
+  color: var(--qs-text);
+  color-scheme: dark;
+}
+
+/* On a phone the popover spans the dock's width, inside the dock's own
+   gutters, so the pads and chips under it never peek out at its side.
+   placeVjPopover centres a panel this wide in the viewport. */
+@media (--md) {
+  [data-vj-dock-popover].popover {
+    inline-size: calc(100% - 2 * var(--wrap-px));
+    max-inline-size: none;
+  }
+
+  /* The panel's own content fills the wider panel. */
+  [data-vj-dock-popover].popover > * {
+    inline-size: auto;
+    max-inline-size: none;
+  }
+}
+
+/* The flash warning paints over the remote's sheets: the Effects sheet's
+   switches can ask for it while the sheet is open. */
+.popover[data-over-sheets="true"] {
+  z-index: var(--z-vj-flash-warning);
+}
+
+.popover:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ── Crossfader: Live on the start edge, Mix on the end edge ── */
+.crossfader {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--gap-xs);
+  min-block-size: var(--tap-min);
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+/* No clip on the mix layer: the fader still moves, dimmed, and its
+   description says why. */
+.crossfader[data-has-mix-clip="false"] {
+  opacity: 0.55;
+}
+
+.endLabel {
+  font-size: var(--text-12);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--qs-text-mute);
+  user-select: none;
+}
+
+.range {
+  --vj-fader-rest: var(--qs-ring-track);
+  --vj-fader-fill: var(--accent);
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: var(--tap-min);
+  margin: 0;
+  border-radius: var(--qs-radius-pill);
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  /* The fader owns every touch on it: a drag moves the fader alone, and
+     the page and the sheet under it stay put. */
+  touch-action: none;
+  cursor: pointer;
+}
+
+.range[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.range:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* The filled part runs from the Live edge to the thumb (--fill, set inline). */
+.range::-webkit-slider-runnable-track {
+  block-size: 6px;
+  border-radius: var(--qs-radius-pill);
+  background:
+    linear-gradient(var(--vj-fader-fill), var(--vj-fader-fill)) 0 0 /
+      var(--fill, 0%) 100% no-repeat,
+    var(--vj-fader-rest);
+}
+
+.range::-moz-range-track {
+  block-size: 6px;
+  border-radius: var(--qs-radius-pill);
+  background: var(--vj-fader-rest);
+}
+
+.range::-moz-range-progress {
+  block-size: 6px;
+  border-radius: var(--qs-radius-pill);
+  background: var(--vj-fader-fill);
+}
+
+/* A 44px thumb: a 28px cap with a soft accent halo out to the full hit
+   area, so the grab zone reads as part of the control. The -19px margin
+   centres it on the 6px track in WebKit. */
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  inline-size: var(--tap-min);
+  block-size: var(--tap-min);
+  margin-block-start: -19px;
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle closest-side,
+    var(--qs-text) 0 62%,
+    rgba(var(--accent-rgb), 0.3) 66% 100%
+  );
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.range::-moz-range-thumb {
+  box-sizing: border-box;
+  inline-size: var(--tap-min);
+  block-size: var(--tap-min);
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle closest-side,
+    var(--qs-text) 0 62%,
+    rgba(var(--accent-rgb), 0.3) 66% 100%
+  );
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.range:active:not([aria-disabled="true"])::-webkit-slider-thumb {
+  transform: scale(1.08);
+}
+
+.range:active:not([aria-disabled="true"])::-moz-range-thumb {
+  transform: scale(1.08);
+}
+
+/* Read by assistive tech, drawn nowhere. */
+.visuallyHidden {
+  composes: visuallyHidden from "../VjSheets.module.css";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crossfader,
+  .range::-webkit-slider-thumb,
+  .range::-moz-range-thumb {
+    transition-duration: 0s;
+  }
+}

@@ -1,6 +1,5 @@
-import { ConfirmDialog } from "../../../shared/components/ui";
-import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Piece } from "../data/desk.data";
+import type { UnpublishLandingStage } from "../api/piecePublish.api";
 import { useMagazineWriters } from "../api/useMagazineWriters";
 import { CommissionModal, type CommissionPayload } from "./CommissionModal";
 import type { DeskTrack } from "./deskTrack";
@@ -8,6 +7,8 @@ import { PassModal, type PassPayload } from "./PassModal";
 import { ChaseModal } from "./ChaseModal";
 import { HandoffModal } from "./HandoffModal";
 import { DeskShortcutsSheet } from "./DeskShortcutsSheet";
+import { UnpublishPieceModal } from "./UnpublishPieceModal";
+import { DeletePieceDialog } from "./DeletePieceDialog";
 
 /** Every overlay the desk can raise, keyed by `kind`. `null` renders nothing. */
 export type DeskModal =
@@ -46,6 +47,9 @@ export type DeskModal =
   // row: `useDeskKeyboard` is disabled while `modal !== null`, so j/k/o cannot
   // move the desk underneath an open confirmation.
   | { kind: "deletePiece"; piece: { title: string } }
+  // The full `Piece` travels here because the confirm runs the unpublish
+  // mutation, which snapshots the piece's `publishedAt` for the Undo toast.
+  | { kind: "unpublishPiece"; piece: Piece; stage: UnpublishLandingStage }
   | { kind: "shortcuts" }
   | null;
 
@@ -68,43 +72,14 @@ export interface DeskModalsProps {
   onConfirmDeletePiece: () => void;
   /** True while the delete request is in flight, disabling both buttons. */
   isDeletingPiece: boolean;
+  onConfirmUnpublishPiece: () => void;
+  /** True while the unpublish request is in flight. */
+  isUnpublishingPiece: boolean;
 }
 
 /**
- * Delete confirmation for one desk piece. Spells out what leaves with the
- * piece (the draft, its versions, its reader comments) and that the pitch it
- * was commissioned from returns to the inbox, because the backend does both
- * and an editor should know before confirming rather than after.
- */
-function DeletePieceDialog({
-  title,
-  loading,
-  onClose,
-  onConfirm,
-}: {
-  title: string;
-  loading: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-}) {
-  const { t } = useTranslation();
-  return (
-    <ConfirmDialog
-      open
-      tone="destructive"
-      loading={loading}
-      onClose={onClose}
-      onConfirm={onConfirm}
-      title={t("magazine:desk.deletePiece.title", { title })}
-      description={t("magazine:desk.deletePiece.description")}
-      confirmLabel={t("magazine:desk.deletePiece.confirm")}
-    />
-  );
-}
-
-/**
- * Dispatches the desk's six overlays (commission / pass / chase / handoff /
- * delete / shortcuts) by `modal.kind`. Renders nothing while `modal` is `null`. Every
+ * Dispatches the desk's seven overlays (commission / pass / chase / handoff /
+ * delete / unpublish / shortcuts) by `modal.kind`. Renders nothing while `modal` is `null`. Every
  * modal closes on Escape and scrim click via the shared `Modal` primitive.
  */
 export function DeskModals({
@@ -121,6 +96,8 @@ export function DeskModals({
   onSkipChase,
   onConfirmDeletePiece,
   isDeletingPiece,
+  onConfirmUnpublishPiece,
+  isUnpublishingPiece,
 }: DeskModalsProps) {
   const writerList = useMagazineWriters();
   const { writers } = writerList;
@@ -181,6 +158,16 @@ export function DeskModals({
           loading={isDeletingPiece}
           onClose={onClose}
           onConfirm={onConfirmDeletePiece}
+        />
+      );
+    case "unpublishPiece":
+      return (
+        <UnpublishPieceModal
+          title={modal.piece.title}
+          stage={modal.stage}
+          isPending={isUnpublishingPiece}
+          onClose={onClose}
+          onConfirm={onConfirmUnpublishPiece}
         />
       );
     case "shortcuts":

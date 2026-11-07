@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type SyntheticEvent } from "react";
-import { FiArrowRight, FiBookmark, FiCheck, FiShield } from "react-icons/fi";
+import { FiArrowRight, FiBookmark, FiShield } from "react-icons/fi";
 import { FaRainbow } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
@@ -37,6 +37,7 @@ const NO_FIELD_FILTER: JobFieldFilterValue = { groupId: null, fieldId: null };
 
 function JobCard({ job }: { job: Job }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const fmt = useFormat();
   const { showToast } = useToast();
   const { isSaved, toggleSave } = useSaved();
@@ -95,8 +96,14 @@ function JobCard({ job }: { job: Job }) {
           ))}
         </div>
         <SafetyBadges
-          signals={safetyFor(job.organization)}
-          affiliation={affiliationFromLabel(job.qr)}
+          // The safety signals are demo fixtures keyed by company name; the
+          // backend has no employer safety rating, so live shows none.
+          signals={demoMode ? safetyFor(job.organization) : undefined}
+          // "Queer-friendly" is a demo fixture judgement; live listings only
+          // carry the employer's own queer-run flag.
+          affiliation={
+            demoMode ? affiliationFromLabel(job.qr) : job.qr ? "run" : undefined
+          }
           affiliationLabel={job.qrLabel}
           compact
         />
@@ -228,7 +235,10 @@ export function JobsPage() {
         : allJobs,
     [demoMode, selectedFieldIds, allJobs],
   );
-  const verifiedOnly = safeOnly && !showAll;
+  // Verified-safe filtering needs the demo safety fixtures; live listings carry
+  // no safety rating, so the filter (and its banner) only exist in demo.
+  const isSafetyFilterActive = demoMode && safeOnly;
+  const verifiedOnly = isSafetyFilterActive && !showAll;
   const visible = useMemo(
     () =>
       verifiedOnly
@@ -258,12 +268,6 @@ export function JobsPage() {
             <span className={styles.badge}>
               <FaRainbow /> {t("economy:jobs.badge.queerRun")}
             </span>
-            <span className={styles.badge}>
-              <FiCheck /> {t("economy:jobs.badge.verified")}
-            </span>
-            <span className={styles.badge}>
-              {t("economy:jobs.badge.location")}
-            </span>
           </Reveal>
         </div>
       </header>
@@ -291,7 +295,7 @@ export function JobsPage() {
               </button>
             </div>
           </div>
-          {safeOnly && (
+          {isSafetyFilterActive && (
             <div className={styles.safetyBanner}>
               <span className={styles.sbIcon} aria-hidden>
                 <FiShield />

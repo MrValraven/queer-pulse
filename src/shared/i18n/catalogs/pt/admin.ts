@@ -6056,7 +6056,7 @@ export const admin: Catalog = {
   "governance.overview.principles.key.transparency":
     "A transparência não é negociável",
   "governance.overview.principles.key.accessNotConditional":
-    "O acesso não depende da capacidade de pagar",
+    "O custo dos eventos é sempre indicado à partida",
   "governance.overview.principles.icon.lock": "Cadeado",
   "governance.overview.principles.icon.eye": "Olho",
   "governance.overview.principles.icon.slash": "Círculo cortado",

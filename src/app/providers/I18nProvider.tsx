@@ -181,12 +181,16 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       if (active !== undefined) return active;
 
       // One language at a time: while the active language's chunk is still in
-      // flight, render nothing for this key instead of an English stand-in.
-      // The chunk's arrival re-renders consumers with the real string.
+      // flight, render nothing for this key. That covers the English stand-in a
+      // non-EN language would show and the raw key EN would show. The chunk's arrival
+      // re-renders consumers with the real string. A failed chunk is no longer
+      // pending and falls through below. For EN only a lazy namespace can be
+      // pending; a key with no catalog at all (free text containing a colon)
+      // is a genuine miss and still takes the raw-key path.
       const isActivePending =
-        language !== "en" &&
         activeCatalog === undefined &&
-        failedNamespaces[language][ns] !== true;
+        failedNamespaces[language][ns] !== true &&
+        (language !== "en" || isLazyNamespace("en", ns));
       if (isActivePending) return "";
 
       // EN is the universal fallback. Queue it too; this is the fix that

@@ -2,14 +2,15 @@ import type { Catalog } from "../../types";
 
 /**
  * Cópia da página de Governação e Transparência. Prosa processual/constitucional
- * — traduzida com precisão e literalidade. `FIN_STATS`/`INCOME`/`EXPENSE`/`EVENTS`
- * (as cifras trimestrais em `governance.data.ts`) ficam deliberadamente FORA
- * deste catálogo: em modo live, `GET /governance/finances` serve exatamente essa
- * forma, logo são conteúdo obtido pela API, não cópia da plataforma — ver o
- * comentário de cabeçalho em `api/governance.api.ts`. `HEALTH`, `STEPS`,
- * `COUNCIL`, `PRINCIPLES`, `DECISIONS` e a prosa de excedente/parceiros da
- * secção de finanças não têm backend próprio (fixas e idênticas em ambos os
- * modos), por isso SÃO cópia da plataforma e estão traduzidas abaixo.
+ * — traduzida com precisão e literalidade. As cifras trimestrais (receitas,
+ * despesas, painéis, notas de eventos) ficam deliberadamente FORA deste
+ * catálogo: em modo live, `GET /governance/finances` serve-as, logo são
+ * conteúdo obtido pela API, não cópia da plataforma — ver o comentário de
+ * cabeçalho em `api/governance.api.ts`. O modo demo não traz cifra nenhuma:
+ * finanças e saúde mostram as linhas de "ainda não publicado". `STEPS`,
+ * `COUNCIL`, `PRINCIPLES`, as etiquetas de saúde e a prosa de
+ * excedente/parceiros da secção de finanças são cópia da plataforma e estão
+ * traduzidas abaixo.
  *
  * Registo: tu (nunca você). Formas inclusivas por reformulação neutra —
  * "membros" torna-se "pessoas" em todo o lado (ver docs/i18n/glossary-pt.md).
@@ -39,7 +40,7 @@ export const governance: Catalog = {
   // ── Documentos de governação (índice de rodapé) ────────────────────────
   "governingDocs.constitution.label": "Constituição",
   "governingDocs.constitution.blurb":
-    "O documento organizativo formal, doze artigos em linguagem simples.",
+    "A carta de trabalho: finalidade, adesão, decisões e moderação como funcionam hoje.",
   "governingDocs.codeOfConduct.label": "Código de Conduta",
   "governingDocs.codeOfConduct.blurb":
     "O que esperamos umas das outras, e o que acontece quando é violado.",
@@ -131,9 +132,9 @@ export const governance: Catalog = {
   "principles.transparency.text":
     "Relatórios trimestrais de saúde. Estatísticas de moderação publicadas. Reuniões do conselho resumidas publicamente.",
   "principles.accessNotConditional.title":
-    "O acesso não depende da capacidade de pagar",
+    "O custo dos eventos é sempre indicado à partida",
   "principles.accessNotConditional.text":
-    "Uma escala progressiva para todos os eventos pagos. Ninguém é excluído por motivos financeiros.",
+    "Cada evento indica o custo à partida: gratuito, paga o que puderes ou um preço fixo definido por quem organiza. A QueerPulse não processa pagamentos de eventos.",
 
   // ── Finanças ────────────────────────────────────────────────────────────
   "sections.finances.eyebrow": "Transparência financeira",
@@ -279,21 +280,11 @@ export const governance: Catalog = {
   "sections.decisions.eyebrow": "Decisões recentes",
   "sections.decisions.title": "O que mudou e <em>porquê.</em>",
 
-  "decisions.slidingScale.lead":
-    "Maio de 2026: Introduzida escala progressiva para os eventos.",
-  "decisions.slidingScale.body":
-    "Na sequência de uma discussão no fórum, o conselho concordou em implementar uma escala progressiva para todos os eventos pagos.",
-  "decisions.forumLaunched.lead": "Abril de 2026: Fórum lançado.",
-  "decisions.forumLaunched.body":
-    "Na sequência de pedidos da comunidade por um espaço para discutir temas mais longos. Categorias e diretrizes co-desenhadas com pessoas da comunidade.",
-  "decisions.visibilityDefaults.lead":
-    "Março de 2026: Predefinições de visibilidade tornadas mais conservadoras.",
-  "decisions.visibilityDefaults.body":
-    'Quem chega agora à comunidade começa com "apenas rede" por predefinição, e pode abrir mais quando se sentir confortável.',
-  "decisions.languageToggle.lead":
-    "Fevereiro de 2026: Alternador de idioma adicionado.",
-  "decisions.languageToggle.body":
-    "Alternador PT/EN adicionado a todas as páginas, na sequência de pedidos de pessoas lusófonas.",
+  // Mostrada enquanto o registo de decisões não tem nenhuma entrada. As quatro
+  // decisões que esta página listava eram inventadas, por isso o registo começa
+  // vazio e só recebe entradas escritas pela equipa de governação.
+  "sections.decisions.empty":
+    "Ainda não foi registada nenhuma decisão. Quando a equipa de governação registar uma, aparece aqui com o que mudou e porquê.",
 
   // ── Levantar uma preocupação ────────────────────────────────────────────
   "sections.raise.eyebrow": "Levantar uma preocupação",

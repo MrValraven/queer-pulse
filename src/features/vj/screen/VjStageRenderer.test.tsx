@@ -1,19 +1,36 @@
 import { readFileSync } from "node:fs";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { createRef } from "react";
+import { act, fireEvent, render } from "@testing-library/react";
 import { LazyMotion, domMax } from "motion/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   createVjStageState,
   type VjEffects,
-  type VjOverlay,
-  type VjTransition,
+  type VjGeneratorId,
 } from "../../../shared/contracts/vj";
-import type { VjRenderableClip } from "./vjLayerMachine";
+import type {
+  VjClockReader,
+  VjResolvedTransition,
+} from "../engine/vjEngineLook";
+import {
+  vjGeneratorSourceKey,
+  type VjRenderableClip,
+  type VjRenderableGenerator,
+} from "./vjLayerMachine";
+import type { VjStageHandle } from "./vjStageHandle";
 import { VjStageRenderer, type VjStageRendererProps } from "./VjStageRenderer";
 
 const BASE_STATE = createVjStageState("epoch-test", 0);
-const FADE: VjTransition = { mode: "fade", fadeMs: 800 };
-const HIDDEN_OVERLAY: VjOverlay = BASE_STATE.overlay;
+const FADE: VjResolvedTransition = { mode: "fade", durationMs: 800 };
+const NO_MIX: VjStageRendererProps["mix"] = {
+  clip: null,
+  amount: 0,
+  blendMode: "normal",
+};
+const CLOCK: VjClockReader = {
+  serverNow: () => 0,
+  toLocalTime: (serverMs) => serverMs,
+};
 
 function effectsWith(changes: Partial<VjEffects> = {}): VjEffects {
   return { ...BASE_STATE.effects, ...changes };
@@ -30,7 +47,25 @@ function videoClip(
     width: 1920,
     height: 1080,
     sourceUrl: `blob:source-${clipId}`,
+    durationMs: null,
+    loopInMs: null,
+    loopOutMs: null,
+    loopMode: "loop",
+    defaultSpeed: 1,
     ...changes,
+  };
+}
+
+function generatorSource(
+  generatorId: VjGeneratorId,
+  generatorVariant: string | null = null,
+): VjRenderableGenerator {
+  return {
+    clipId: vjGeneratorSourceKey(generatorId, generatorVariant),
+    generatorId,
+    generatorVariant,
+    mediaKind: "generator",
+    sourceUrl: "",
   };
 }
 
@@ -45,10 +80,11 @@ function gifClip(
 function renderStage(changes: Partial<VjStageRendererProps> = {}) {
   const props: VjStageRendererProps = {
     target: null,
+    mix: NO_MIX,
     transition: FADE,
     effects: effectsWith(),
-    overlay: HIDDEN_OVERLAY,
-    bpm: BASE_STATE.shuffle.bpm,
+    tempo: BASE_STATE.tempo,
+    clock: CLOCK,
     onClipFailed: vi.fn(),
     onSourceReleased: vi.fn(),
     ...changes,
@@ -168,6 +204,14 @@ describe("VjStageRenderer", () => {
     rerenderStage({ effects: effectsWith({ speed: 0.5 }) });
     expect(video.playbackRate).toBe(0.5);
 
+    const fastClipView = renderStage({
+      target: videoClip("fast", { defaultSpeed: 2 }),
+      effects: effectsWith({ speed: 0.5 }),
+    });
+    expect(
+      mainVideoOf(layerOf(fastClipView.container, "fast")).playbackRate,
+    ).toBe(1);
+
     const gifView = renderStage({
       target: gifClip("loop", 640, 360),
       effects: effectsWith({ speed: 2 }),
@@ -187,11 +231,10 @@ describe("VjStageRenderer", () => {
     expect(largeImage?.hasAttribute("data-vj-pixelated")).toBe(false);
   });
 
-  it("stacks the overlay above the effects, the blackout and the strobe", () => {
+  it("stacks the effects, the curtain, the blackout and the strobe and draws no overlay", () => {
     const { container } = renderStage({
       target: videoClip("one"),
       effects: effectsWith({ isBlackout: true, isStrobing: true }),
-      overlay: { text: "Doors close at 4", style: "big", isVisible: true },
     });
     const stage = elementBySelector(container, "[data-vj-stage]");
     const layersBottomToTop = [
@@ -199,7 +242,6 @@ describe("VjStageRenderer", () => {
       "[data-vj-curtain]",
       "[data-vj-blackout]",
       "[data-vj-strobe]",
-      "[data-vj-overlay]",
     ].map((selector) => elementBySelector(container, selector));
     for (const layer of layersBottomToTop) {
       expect(layer.parentElement).toBe(stage);
@@ -212,28 +254,27 @@ describe("VjStageRenderer", () => {
         below.compareDocumentPosition(layer) & Node.DOCUMENT_POSITION_FOLLOWING,
       ).toBeTruthy();
     });
-    const overlay = elementBySelector(container, "[data-vj-overlay]");
-    expect(overlay).toHaveTextContent("Doors close at 4");
+    expect(container.querySelector("[data-vj-overlay]")).toBeNull();
   });
 
-  it("fades the blackout with the fade length", () => {
+  it("fades the blackout with the transition length", () => {
     const { container, rerenderStage } = renderStage({
       target: videoClip("one"),
-      transition: { mode: "fade", fadeMs: 1500 },
+      transition: { mode: "fade", durationMs: 1500 },
     });
     const blackout = elementBySelector(container, "[data-vj-blackout]");
     expect(blackout.style.opacity).toBe("0");
     rerenderStage({ effects: effectsWith({ isBlackout: true }) });
     expect(blackout.style.opacity).toBe("1");
     expect(blackout.getAttribute("data-vj-fade-ms")).toBe("1500");
-    rerenderStage({ transition: { mode: "fade", fadeMs: 300 } });
+    rerenderStage({ transition: { mode: "wipeLeft", durationMs: 300 } });
     expect(blackout.getAttribute("data-vj-fade-ms")).toBe("300");
   });
 
   it("snaps the blackout on and off in Cut mode and fades it in Fade mode", () => {
     const { container, rerenderStage } = renderStage({
       target: videoClip("one"),
-      transition: { mode: "cut", fadeMs: 1500 },
+      transition: { mode: "cut", durationMs: 0 },
     });
     const blackout = elementBySelector(container, "[data-vj-blackout]");
     expect(blackout.getAttribute("data-vj-fade-ms")).toBe("0");
@@ -245,33 +286,11 @@ describe("VjStageRenderer", () => {
     expect(blackout.style.opacity).toBe("0");
     expect(blackout.getAttribute("data-vj-fade-ms")).toBe("0");
 
-    rerenderStage({ transition: { mode: "fade", fadeMs: 1500 } });
+    rerenderStage({ transition: { mode: "fade", durationMs: 1500 } });
     expect(blackout.getAttribute("data-vj-fade-ms")).toBe("1500");
     expect(blackout.style.getPropertyValue("--vj-blackout-fade")).toBe(
       "1500ms",
     );
-  });
-
-  it("renders the big and the ticker styles", () => {
-    const big = renderStage({
-      overlay: { text: "Last song", style: "big", isVisible: true },
-    });
-    const bigLine = big.getByText("Last song");
-    expect(bigLine.closest("[data-vj-overlay-style]")).toHaveAttribute(
-      "data-vj-overlay-style",
-      "big",
-    );
-    big.unmount();
-
-    renderStage({
-      overlay: { text: "Hello", style: "ticker", isVisible: true },
-    });
-    const tickerLine = screen.getByText("Hello");
-    expect(tickerLine.closest("[data-vj-overlay-style]")).toHaveAttribute(
-      "data-vj-overlay-style",
-      "ticker",
-    );
-    expect(tickerLine).toHaveAttribute("data-vj-ticker-seconds", "12.75");
   });
 
   it("reports a clip that fails to decode and keeps the current one", async () => {
@@ -410,7 +429,7 @@ describe("VjStageRenderer fades cut short", () => {
   }> {
     const view = renderStage({
       target: videoClip("one"),
-      transition: { mode: "fade", fadeMs: 2000 },
+      transition: { mode: "fade", durationMs: 2000 },
     });
     await bringToFirstFrame(mainVideoOf(layerOf(view.container, "one")));
     view.rerenderStage({ target: videoClip("two") });
@@ -479,7 +498,7 @@ describe("VjStageRenderer catches a fading clip up when a new clip is tapped", (
   async function renderMidFade() {
     const view = renderStage({
       target: videoClip("one"),
-      transition: { mode: "fade", fadeMs: 2000 },
+      transition: { mode: "fade", durationMs: 2000 },
     });
     await bringToFirstFrame(mainVideoOf(layerOf(view.container, "one")));
     view.rerenderStage({ target: videoClip("two") });
@@ -493,7 +512,8 @@ describe("VjStageRenderer catches a fading clip up when a new clip is tapped", (
 
   it("keeps the old front mounted and opaque and the fading layer opaque while it eases up from where it is", async () => {
     const { container, rerenderStage } = await renderMidFade();
-    rerenderStage({ target: videoClip("three") });
+    const handleRef = createRef<VjStageHandle>();
+    rerenderStage({ target: videoClip("three"), handleRef });
 
     const catchingLayer = layerOf(container, "two");
     expect(catchingLayer).toHaveAttribute("data-vj-layer-phase", "catchingUp");
@@ -513,9 +533,8 @@ describe("VjStageRenderer catches a fading clip up when a new clip is tapped", (
       Number(oldFront.style.zIndex),
     );
     expect(container.querySelector('[data-vj-clip-id="three"]')).toBeNull();
-    expect(
-      container.querySelector("video[data-vj-pending-source]"),
-    ).toHaveAttribute("src", "blob:source-three");
+    // The waiting target has no layer yet; the handle still counts its URL as held.
+    expect(handleRef.current?.holdsSource("blob:source-three")).toBe(true);
     expect(cancelAnimation).not.toHaveBeenCalled();
   });
 
@@ -533,7 +552,6 @@ describe("VjStageRenderer catches a fading clip up when a new clip is tapped", (
     const loading = layerOf(container, "three");
     expect(loading).toHaveAttribute("data-vj-layer-phase", "loading");
     expect(loading.style.opacity).toBe("0");
-    expect(container.querySelector("[data-vj-pending-source]")).toBeNull();
 
     await bringToFirstFrame(mainVideoOf(loading));
     expect(loading).toHaveAttribute("data-vj-layer-phase", "fadingIn");
@@ -804,7 +822,7 @@ describe("VjStageRenderer releases video decoders", () => {
       .mockImplementation(() => undefined);
     const { container, rerenderStage } = renderStage({
       target: videoClip("one"),
-      transition: { mode: "cut", fadeMs: 0 },
+      transition: { mode: "cut", durationMs: 0 },
     });
     const oldVideo = mainVideoOf(layerOf(container, "one"));
     await bringToFirstFrame(oldVideo);
@@ -817,5 +835,349 @@ describe("VjStageRenderer releases video decoders", () => {
     expect(mainVideoOf(layerOf(container, "two")).getAttribute("src")).toBe(
       "blob:source-two",
     );
+  });
+});
+
+describe("VjStageRenderer v2 sources, mix and transitions", () => {
+  beforeEach(() => {
+    mockCanvasContext();
+    vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue(undefined);
+    vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(
+      () => undefined,
+    );
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("renders gradientField for plasma, starfield and tunnel", () => {
+    const domIncapableGenerators: VjGeneratorId[] = [
+      "plasma",
+      "starfield",
+      "tunnel",
+    ];
+    for (const generatorId of domIncapableGenerators) {
+      const view = renderStage({ target: generatorSource(generatorId) });
+      const drawn = elementBySelector(view.container, "[data-vj-generator]");
+      expect(drawn).toHaveAttribute("data-vj-generator", "gradientField");
+      expect(drawn).toHaveAttribute("data-vj-generator-source", generatorId);
+      // A generator is ready at once: its layer shows and the curtain lifts.
+      expect(
+        layerOf(view.container, vjGeneratorSourceKey(generatorId, null)),
+      ).toHaveAttribute("data-vj-layer-phase", "shown");
+      expect(
+        elementBySelector(view.container, "[data-vj-curtain]").style.opacity,
+      ).toBe("0");
+      view.unmount();
+    }
+    const gradientView = renderStage({
+      target: generatorSource("gradientField"),
+    });
+    expect(
+      elementBySelector(gradientView.container, "[data-vj-generator]"),
+    ).toHaveAttribute("data-vj-generator", "gradientField");
+  });
+
+  it("draws prideFlagWave as stripes of its flag", () => {
+    const { container, rerenderStage } = renderStage({
+      target: generatorSource("prideFlagWave", "trans"),
+    });
+    const stripes = elementBySelector(container, "[data-vj-generator]");
+    expect(stripes).toHaveAttribute("data-vj-generator", "prideFlagWave");
+    expect(stripes).toHaveAttribute("data-vj-flag", "trans");
+    const background = stripes.style.getPropertyValue("--vj-flag-stripes");
+    // Stripe tokens are numbered from 1; the trans flag has five.
+    expect(background).toContain("rgb(var(--vj-flag-trans-1)) 0% 20%");
+    expect(background).toContain("rgb(var(--vj-flag-trans-5)) 80% 100%");
+    expect(background).not.toContain("--vj-flag-trans-0");
+    expect(background).not.toContain("--vj-flag-trans-6");
+
+    rerenderStage({ target: generatorSource("prideFlagWave", "unknown") });
+    expect(
+      elementBySelector(
+        container,
+        `[data-vj-clip-id="${vjGeneratorSourceKey("prideFlagWave", "unknown")}"] [data-vj-generator]`,
+      ),
+    ).toHaveAttribute("data-vj-flag", "rainbow");
+  });
+
+  it("draws the mix clip at the crossfader opacity with its blend mode", () => {
+    const { container, rerenderStage } = renderStage({
+      target: videoClip("live"),
+      mix: { clip: videoClip("mixer"), amount: 0.4, blendMode: "normal" },
+    });
+    const mixLayer = elementBySelector(container, "[data-vj-mix-layer]");
+    const liveGroup = elementBySelector(container, "[data-vj-live-group]");
+    expect(mixLayer).toHaveAttribute("data-vj-mix-clip-id", "mixer");
+    expect(mixLayer.querySelector("video")?.getAttribute("src")).toBe(
+      "blob:source-mixer",
+    );
+    expect(mixLayer.style.opacity).toBe("0.4");
+    expect(mixLayer).toHaveAttribute("data-vj-css-blend", "normal");
+    expect(liveGroup.style.opacity).toBe("1");
+    // The mix layer sits above the live layers.
+    expect(
+      liveGroup.compareDocumentPosition(mixLayer) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+
+    rerenderStage({
+      mix: { clip: videoClip("mixer"), amount: 0.25, blendMode: "screen" },
+    });
+    expect(mixLayer.style.opacity).toBe("0.5");
+    expect(mixLayer).toHaveAttribute("data-vj-css-blend", "screen");
+    expect(liveGroup.style.opacity).toBe("1");
+
+    rerenderStage({
+      mix: { clip: videoClip("mixer"), amount: 1, blendMode: "add" },
+    });
+    expect(mixLayer.style.opacity).toBe("1");
+    expect(mixLayer).toHaveAttribute("data-vj-css-blend", "plus-lighter");
+    expect(liveGroup.style.opacity).toBe("0");
+
+    rerenderStage({ mix: { clip: null, amount: 1, blendMode: "add" } });
+    expect(mixLayer.style.opacity).toBe("0");
+    expect(mixLayer.querySelector("video")).toBeNull();
+    expect(liveGroup.style.opacity).toBe("1");
+  });
+
+  it("answers holdsSource for a shown clip, a loading clip and the mix clip", async () => {
+    const handleRef = createRef<VjStageHandle>();
+    const onSourceReleased = vi.fn();
+    const { container, rerenderStage } = renderStage({
+      target: videoClip("one"),
+      handleRef,
+      onSourceReleased,
+    });
+    await bringToFirstFrame(mainVideoOf(layerOf(container, "one")));
+    rerenderStage({
+      target: videoClip("two"),
+      mix: { clip: videoClip("mixer"), amount: 0.5, blendMode: "normal" },
+    });
+    expect(layerOf(container, "two")).toHaveAttribute(
+      "data-vj-layer-phase",
+      "loading",
+    );
+    const handle = handleRef.current;
+    if (!handle) throw new Error("no stage handle");
+    expect(handle.holdsSource("blob:source-one")).toBe(true);
+    expect(handle.holdsSource("blob:source-two")).toBe(true);
+    expect(handle.holdsSource("blob:source-mixer")).toBe(true);
+    expect(handle.holdsSource("blob:source-elsewhere")).toBe(false);
+    expect(handle.holdsSource("")).toBe(false);
+
+    // A replaced mix clip is released once nothing holds it.
+    rerenderStage({
+      mix: { clip: videoClip("other"), amount: 0.5, blendMode: "normal" },
+    });
+    expect(onSourceReleased).toHaveBeenCalledWith("blob:source-mixer");
+    expect(handleRef.current?.holdsSource("blob:source-mixer")).toBe(false);
+    expect(handleRef.current?.holdsSource("blob:source-other")).toBe(true);
+  });
+
+  it("keeps a mix URL the live layer also shows when the mix slot empties", async () => {
+    const onSourceReleased = vi.fn();
+    const { container, rerenderStage } = renderStage({
+      target: videoClip("one"),
+      mix: { clip: videoClip("one"), amount: 0.5, blendMode: "normal" },
+      onSourceReleased,
+    });
+    await bringToFirstFrame(mainVideoOf(layerOf(container, "one")));
+    rerenderStage({ mix: NO_MIX });
+    expect(onSourceReleased).not.toHaveBeenCalledWith("blob:source-one");
+  });
+});
+
+describe("VjStageRenderer v2 transitions and freeze", () => {
+  beforeEach(() => {
+    mockCanvasContext();
+    vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue(undefined);
+    vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(
+      () => undefined,
+    );
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("renders a dipWhite as a fade when the strobe holds the budget", async () => {
+    const dipWhite: VjResolvedTransition = {
+      mode: "dipWhite",
+      durationMs: 1000,
+    };
+
+    const granted = renderStage({
+      target: videoClip("one"),
+      transition: dipWhite,
+    });
+    await bringToFirstFrame(mainVideoOf(layerOf(granted.container, "one")));
+    granted.rerenderStage({ target: videoClip("two") });
+    await bringToFirstFrame(mainVideoOf(layerOf(granted.container, "two")));
+    const dippingLayer = layerOf(granted.container, "two");
+    expect(dippingLayer).toHaveAttribute("data-vj-layer-phase", "fadingIn");
+    expect(dippingLayer).toHaveAttribute("data-vj-transition", "dip");
+    expect(dippingLayer).toHaveClass("clipLayerDip");
+    expect(dippingLayer.style.getPropertyValue("--vj-dip-colour")).toBe(
+      "var(--vj-white)",
+    );
+    granted.unmount();
+
+    const strobing = renderStage({
+      target: videoClip("one"),
+      transition: dipWhite,
+      effects: effectsWith({ isStrobing: true }),
+    });
+    await bringToFirstFrame(mainVideoOf(layerOf(strobing.container, "one")));
+    strobing.rerenderStage({ target: videoClip("two") });
+    await bringToFirstFrame(mainVideoOf(layerOf(strobing.container, "two")));
+    const fadingLayer = layerOf(strobing.container, "two");
+    expect(fadingLayer).toHaveAttribute("data-vj-layer-phase", "fadingIn");
+    expect(fadingLayer).toHaveAttribute("data-vj-transition", "fade");
+    expect(fadingLayer).toHaveClass("clipLayerFading");
+    expect(fadingLayer).not.toHaveClass("clipLayerDip");
+  });
+
+  it("wipes the incoming layer in from the right edge for wipeLeft and ends on its animation", async () => {
+    const { container, rerenderStage } = renderStage({
+      target: videoClip("one"),
+      transition: { mode: "wipeLeft", durationMs: 1000 },
+    });
+    await bringToFirstFrame(mainVideoOf(layerOf(container, "one")));
+    rerenderStage({ target: videoClip("two") });
+    await bringToFirstFrame(mainVideoOf(layerOf(container, "two")));
+    const wipingLayer = layerOf(container, "two");
+    expect(wipingLayer).toHaveAttribute("data-vj-transition", "clip");
+    expect(wipingLayer).toHaveClass("clipLayerClip");
+    expect(wipingLayer.style.getPropertyValue("--vj-clip-from")).toBe(
+      "inset(0 0 0 100%)",
+    );
+    expect(wipingLayer.style.getPropertyValue("--vj-clip-to")).toBe(
+      "inset(0 0 0 0)",
+    );
+    // The wipe uncovers the layer at full opacity from the first frame.
+    expect(wipingLayer.style.opacity).toBe("1");
+
+    act(() => {
+      fireEvent.animationEnd(wipingLayer);
+    });
+    expect(layerOf(container, "two")).toHaveAttribute(
+      "data-vj-layer-phase",
+      "shown",
+    );
+  });
+
+  it("draws a DOM-incapable transition as the fade", async () => {
+    const { container, rerenderStage } = renderStage({
+      target: videoClip("one"),
+      transition: { mode: "zoomBlur", durationMs: 1000 },
+    });
+    await bringToFirstFrame(mainVideoOf(layerOf(container, "one")));
+    rerenderStage({ target: videoClip("two") });
+    await bringToFirstFrame(mainVideoOf(layerOf(container, "two")));
+    expect(layerOf(container, "two")).toHaveAttribute(
+      "data-vj-transition",
+      "fade",
+    );
+  });
+
+  it("pauses the shown clip while freeze is on", async () => {
+    const pauseSpy = vi
+      .spyOn(HTMLMediaElement.prototype, "pause")
+      .mockImplementation(() => undefined);
+    const { container, rerenderStage } = renderStage({
+      target: videoClip("one"),
+    });
+    await bringToFirstFrame(mainVideoOf(layerOf(container, "one")));
+    pauseSpy.mockClear();
+    rerenderStage({
+      effects: effectsWith({
+        settings: { freeze: { isOn: true, amount: 1, variant: null } },
+      }),
+    });
+    expect(pauseSpy).toHaveBeenCalled();
+  });
+});
+
+describe("VjStageRenderer loop window", () => {
+  beforeEach(() => {
+    vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue(undefined);
+    vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(
+      () => undefined,
+    );
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  /** Gives the video a media time the test moves, and records every seek. */
+  function controlMediaTime(video: HTMLVideoElement) {
+    const seeks: number[] = [];
+    let mediaTimeSec = 0;
+    Object.defineProperty(video, "currentTime", {
+      configurable: true,
+      get: () => mediaTimeSec,
+      set: (nextSec: number) => {
+        seeks.push(nextSec);
+        mediaTimeSec = nextSec;
+      },
+    });
+    const playTo = (atSec: number): void => {
+      mediaTimeSec = atSec;
+      act(() => {
+        fireEvent.timeUpdate(video);
+      });
+    };
+    return { seeks, playTo };
+  }
+
+  it("seeks back to loop in at loop out", () => {
+    const { container } = renderStage({
+      target: videoClip("looped", {
+        durationMs: 10_000,
+        loopInMs: 2000,
+        loopOutMs: 6000,
+      }),
+    });
+    const video = mainVideoOf(layerOf(container, "looped"));
+    const { seeks, playTo } = controlMediaTime(video);
+
+    act(() => {
+      fireEvent.loadedMetadata(video);
+    });
+    expect(seeks).toEqual([2]);
+
+    playTo(4);
+    expect(seeks).toEqual([2]);
+    playTo(5.97);
+    expect(seeks).toEqual([2, 2]);
+  });
+
+  it("plays a ping-pong clip as a forward loop on the DOM", () => {
+    const { container } = renderStage({
+      target: videoClip("bounce", {
+        durationMs: 8000,
+        loopInMs: 1000,
+        loopOutMs: 5000,
+        loopMode: "pingPong",
+      }),
+    });
+    const video = mainVideoOf(layerOf(container, "bounce"));
+    const { seeks, playTo } = controlMediaTime(video);
+    playTo(4.99);
+    expect(seeks).toEqual([1]);
+  });
+
+  it("leaves a clip with no loop points to the native loop", () => {
+    const { container } = renderStage({
+      target: videoClip("whole", { durationMs: 10_000 }),
+    });
+    const video = mainVideoOf(layerOf(container, "whole"));
+    const { seeks, playTo } = controlMediaTime(video);
+    playTo(9.99);
+    expect(seeks).toEqual([]);
+    expect(video.loop).toBe(true);
   });
 });

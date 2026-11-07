@@ -32,8 +32,8 @@ export const economy: Catalog = {
   // ── IncubatorTab ────────────────────────────────────────────────────────
   "incubator.hero.title": "Um espaço para construíres <em>a tua</em> ideia.",
   "incubator.hero.body":
-    "A incubadora QueerPulse apoia fundadoras queer em Lisboa com seis meses de mentoria estruturada, responsabilização entre pares e ligações a investidores e colaboradores que percebem do que se trata.",
-  "incubator.hero.applyCta": "Candidatar à 3.ª coorte",
+    "A incubadora QueerPulse é para fundadoras queer. Conta-nos o que estás a construir e a nossa equipa lê a tua candidatura.",
+  "incubator.hero.applyCta": "Candidatar-me à incubadora",
   "incubator.hero.mentorCta": "Tornar-te mentor",
   "incubator.stats.founders": "fundadoras em 2 coortes",
   "incubator.stats.mentors": "pessoas mentoras da comunidade",
@@ -65,7 +65,7 @@ export const economy: Catalog = {
   // ── FreelanceTab (grelha de ferramentas) ────────────────────────────────
   "freelance.title": "Ferramentas para <em>freelancers.</em>",
   "freelance.sub":
-    "Ferramentas reais e funcionais, criadas por e para freelancers queer em Portugal. Gratuitas, sem registo, e nada do que introduzires sai do teu dispositivo.",
+    "Ferramentas funcionais para freelancers em Portugal. Gratuitas, sem registo, e nada do que introduzires sai do teu dispositivo.",
   "freelance.section.documents": "Documentos que <em>te pagam.</em>",
   "freelance.section.numbers": "Conhece os teus <em>números.</em>",
   "freelance.section.together": "Mais fortes <em>juntas.</em>",
@@ -84,7 +84,7 @@ export const economy: Catalog = {
   "tool.scope.cta": "Abrir gerador de âmbito",
   "tool.reciboGuide.title": "Guia de recibos verdes",
   "tool.reciboGuide.desc":
-    "Um guia em linguagem simples sobre o sistema fiscal para freelancers em Portugal, registo, retenção, IVA, Segurança Social e o teu primeiro ano. Sempre atualizado.",
+    "Um guia em linguagem simples sobre o sistema fiscal para freelancers em Portugal, registo, retenção, IVA, Segurança Social e o teu primeiro ano.",
   "tool.reciboGuide.cta": "Ler o guia",
 
   "tool.takeHome.title": "Calculadora de rendimento líquido",
@@ -110,7 +110,7 @@ export const economy: Catalog = {
 
   "tool.rateBoard.title": "Quadro de transparência de valores",
   "tool.rateBoard.desc":
-    "Valores-dia anónimos partilhados pela comunidade, por função e experiência, para que ninguém tenha de adivinhar quanto cobrar. Acrescenta o teu, vê como te posicionas.",
+    "Um quadro de valores privado no teu dispositivo. Acrescenta os teus valores, vê a distribuição por função e experiência, e vê como te posicionas.",
   "tool.rateBoard.cta": "Abrir o quadro",
   "tool.slidingScale.title": "Cartão de preços em escala móvel",
   "tool.slidingScale.desc":
@@ -120,7 +120,7 @@ export const economy: Catalog = {
   // ── SalaryTab ───────────────────────────────────────────────────────────
   "salary.title": "Transparência <em>salarial.</em>",
   "salary.sub":
-    "Submissões anónimas da comunidade. Filtra por setor, função ou tipo de contrato. Conhecimento é poder.",
+    "Salários anónimos, para que ninguém entre numa negociação sem saber o valor corrente.",
   "salary.submitCta": "+ Submeter o teu",
   "salary.filter.all": "Todos os setores",
   "salary.filter.tech": "Tecnologia",
@@ -320,10 +320,8 @@ export const economy: Catalog = {
   "jobs.eyebrow": "Quadro de vagas",
   "jobs.title": "Trabalho que <em>não te pede para te esconderes.</em>",
   "jobs.lead":
-    "Negócios geridos por pessoas queer e empresas verificadas como inclusivas, vagas onde podes aparecer como és. Sem rainbow capitalism. Cada anúncio é validado pela comunidade.",
+    "Vagas de negócios geridos por pessoas queer e de empregadores da comunidade, onde podes aparecer como és. Qualquer membro pode denunciar um anúncio que quebre as nossas regras.",
   "jobs.badge.queerRun": "Gerido por pessoas queer",
-  "jobs.badge.verified": "Verificado pela comunidade",
-  "jobs.badge.location": "Lisboa + remoto",
   "jobs.postCta": "+ Publicar uma vaga",
 
   "jobs.filter.all": "Todas as vagas",
@@ -367,7 +365,7 @@ export const economy: Catalog = {
   "jobs.empty.verifiedDescription":
     "Ainda não há nada verificado como seguro nesta categoria. Mostra todas as vagas ou escolhe outra categoria.",
   "jobs.empty.description":
-    "Sem vagas nesta categoria de momento. Vê todas as vagas ou volta em breve, há anúncios novos todas as semanas.",
+    "Sem vagas nesta categoria de momento. Vê todas as vagas ou volta em breve.",
   "jobs.empty.showAll": "Mostrar todas as vagas",
   "jobs.empty.clearCategory": "Limpar categoria",
 
@@ -375,9 +373,9 @@ export const economy: Catalog = {
   "jobs.loadMoreCta": "Carregar mais vagas",
   "jobs.loadMoreError": "Não conseguimos carregar mais vagas.",
 
-  "jobs.employers.title": "Empresas queer <em>em que confiamos</em>",
+  "jobs.employers.title": "Empresas <em>na QueerPulse</em>",
   "jobs.employers.subtitle":
-    "Estas organizações são geridas por ou para a comunidade queer. Trabalhar aqui significa que o teu dinheiro fica na rede.",
+    "Organizações com perfil aqui, com as suas vagas abertas e avaliações de membros.",
   "jobs.employers.loadingMore": "A carregar…",
   "jobs.employers.loadMoreCta": "Carregar mais empresas",
 
@@ -393,7 +391,7 @@ export const economy: Catalog = {
     'A comunidade avalia esta empresa com 8+/10 em "seguro para te assumires no trabalho", ser aberte sobre quem és aqui é um não-acontecimento.',
   "safetyBadge.affiliation.run.label": "Gerida por pessoas queer",
   "safetyBadge.affiliation.run.blurb":
-    "Liderada ou detida por pessoas queer, decisões, cultura e dinheiro ficam dentro da comunidade. Verificado por nós durante a validação.",
+    "Liderada ou detida por pessoas queer, segundo a própria entidade empregadora.",
   "safetyBadge.affiliation.friendly.label": "Amiga da comunidade queer",
   "safetyBadge.affiliation.friendly.blurb":
     "Uma empresa acolhedora, com políticas inclusivas e uma presença LGBTQ+ real, mas não liderada por pessoas queer. Bem-vinda, apenas não é detida pela comunidade.",
@@ -486,7 +484,7 @@ export const economy: Catalog = {
   "housing.hero.lead":
     "Um quadro de habitação específico para pessoas queer em Lisboa. Vê espaços para arrendar, ou encontra alguém com quem partilhes casa e possas ser tu mesme. Tudo dentro da rede da comunidade.",
   "housing.hero.note":
-    "Cada anúncio e perfil é publicado por uma pessoa membro verificada da QueerPulse",
+    "Cada anúncio e perfil é publicado por uma pessoa membro da QueerPulse",
 
   "housing.filter.all": "Todos os anúncios",
   "housing.filter.sublet": "Sublocação",
@@ -598,10 +596,10 @@ export const economy: Catalog = {
     "Habitação em Lisboa, <em>o que precisas de saber</em>",
   "housing.tip.budget.title": "Orça para um mercado competitivo",
   "housing.tip.budget.text":
-    "Quartos em bairros centrais custam entre 700 e 1000 €/mês. Estúdios entre 900 e 1400 €. As coisas movem-se depressa. Tem os documentos prontos: NIF, comprovativo de rendimentos ou fiador, e uma mensagem de apresentação.",
+    "O mercado de arrendamento em Lisboa é competitivo e as coisas podem mover-se depressa. Tem os documentos prontos: NIF, comprovativo de rendimentos ou fiador, e uma mensagem de apresentação.",
   "housing.tip.board.title": "Usa o quadro da comunidade",
   "housing.tip.board.text":
-    "O quadro da QueerPulse mostra habitação, quase sempre, antes de chegar a qualquer portal. Publica “procuro quarto em [bairro]” e a rede responde. Funciona.",
+    "Vê o quadro da QueerPulse, ou publica um perfil de colega de casa a dizer onde procuras, para que as pessoas membro te possam encontrar.",
   "housing.tip.rights.title": "Conhece os teus direitos no arrendamento",
   "housing.tip.rights.text":
     "A lei do arrendamento em Portugal é razoavelmente protetora. É exigido um contrato escrito. Não é possível um despejo sem aviso prévio adequado. A ILGA Portugal pode aconselhar-te se enfrentares discriminação.",
@@ -614,7 +612,7 @@ export const economy: Catalog = {
   "housing.tip.emergency.title":
     "Em caso de emergência, pede ajuda à comunidade",
   "housing.tip.emergency.text":
-    "Se ficares subitamente sem casa ou numa situação de habitação perigosa, publica no quadro. A comunidade responde depressa a uma necessidade genuína.",
+    "Se ficares subitamente sem casa ou numa situação de habitação perigosa, podes pedir ajuda no fórum. Se estiveres em perigo imediato, liga 112.",
 
   "housing.subpages.eyebrow": "Habitação",
   "housing.subpages.title": "Mais sobre habitação",
@@ -624,7 +622,7 @@ export const economy: Catalog = {
 
   "housing.outro.title": "Encontrar casa <em>em conjunto.</em>",
   "housing.outro.sub":
-    "Cada anúncio aqui vem de alguém da comunidade. Anuncia o teu espaço, ou publica o que procuras. A rede move-se depressa pelos seus.",
+    "Cada anúncio aqui vem de alguém da comunidade. Anuncia o teu espaço, ou publica o que procuras.",
   "housing.outro.listCta": "Anunciar o teu espaço",
   "housing.outro.askForum": "Perguntar no fórum",
 
@@ -699,11 +697,11 @@ export const economy: Catalog = {
   "listSpace.success.title": "Anúncio",
   "listSpace.success.em": "submetido.",
   "listSpace.success.body":
-    "Obrigade por partilhares <strong>{title}</strong>. Uma pessoa moderadora verifica todos os anúncios antes de entrarem no ar, normalmente dentro de um dia, para o quadro se manter de confiança para todas as pessoas à procura de um lugar seguro para viver.",
+    "Obrigade por partilhares <strong>{title}</strong>. Uma pessoa moderadora verifica todos os anúncios antes de entrarem no ar, para o quadro se manter de confiança para todas as pessoas à procura de um lugar seguro para viver.",
   "listSpace.eyebrow": "Quadro de habitação",
   "listSpace.title": "Anuncia o teu <em>espaço.</em>",
   "listSpace.sub":
-    "Abre o teu espaço a uma pessoa verificada da comunidade. Conta como é viver lá, junta algumas fotos, e uma pessoa moderadora lê cada anúncio antes de chegar ao quadro.",
+    "Abre o teu espaço a uma pessoa da comunidade. Conta como é viver lá, junta algumas fotos, e uma pessoa moderadora lê cada anúncio antes de chegar ao quadro.",
   "listSpace.titleLabel": "Título do anúncio *",
   "listSpace.titlePlaceholder":
     "ex.: Quarto soalheiro numa casa partilhada queer",
@@ -1342,8 +1340,8 @@ export const economy: Catalog = {
   "flatmates.showResultsCta_one": "Ver {count} perfil",
   "flatmates.showResultsCta_other": "Ver {count} perfis",
 
-  "flatmates.count_one": "{count} perfil ativo esta semana",
-  "flatmates.count_other": "{count} perfis ativos esta semana",
+  "flatmates.count_one": "{count} perfil no quadro",
+  "flatmates.count_other": "{count} perfis no quadro",
   "flatmates.loadMore": "Ver mais pessoas",
   "flatmates.loadError.title":
     "Não foi possível carregar o quadro de colegas de casa",
@@ -1538,7 +1536,7 @@ export const economy: Catalog = {
     "Obrigade, a tua avaliação de {companyName} já está publicada. A {companyName} não pode editar nem remover o que escreveste.",
   "companyReview.title": "Como é que era <em>na realidade?</em>",
   "companyReview.sub":
-    "O teu relato honesto ajuda a próxima pessoa queer a decidir se aceita a entrevista. Verificado por adesão à comunidade.",
+    "O teu relato honesto ajuda a próxima pessoa queer a decidir se aceita a entrevista. O teu nome não aparece nela.",
   "companyReview.headlineLabel": "Título",
   "companyReview.headlinePlaceholder": "Resume numa frase",
   "companyReview.roleLabel": "A tua função / tempo de casa",
@@ -1569,14 +1567,14 @@ export const economy: Catalog = {
   "employerReviews.hero.title":
     "O teu local de trabalho é <em>realmente seguro?</em>",
   "employerReviews.hero.lead":
-    "Avaliações anónimas de empresas de Lisboa feitas por pessoas LGBTQ+. Para lá do logótipo do Orgulho, como é realmente estar assumida ali, portas adentro do escritório.",
+    "Avaliações de empregadores, escritas por membros que lá trabalharam. Para lá do logótipo do Orgulho, como é realmente estar assumida ali.",
 
   "employerReviews.how.title": "Como <em>funciona</em>",
   "employerReviews.how.sub":
-    "Anónimo, verificado por adesão à comunidade, e as empresas nunca o podem editar.",
-  "employerReviews.how.write.title": "Escreve de forma anónima",
+    "Escritas por membros, mostradas sem nomes, e as empresas não as podem editar.",
+  "employerReviews.how.write.title": "Escreve sem o teu nome",
   "employerReviews.how.write.desc":
-    "A tua identidade nunca é associada à tua avaliação. Verificamos que és uma pessoa membro, mais nada fica registado.",
+    "O teu nome não aparece na tua avaliação. Só membros podem escrever uma, e podes editar a tua mais tarde.",
   "employerReviews.how.rate.title": "Avalia o que importa",
   "employerReviews.how.rate.desc":
     "Segurança para te assumires, sensibilidade da gestão, inclusão trans, capacidade de resposta dos RH, e cultura real vs. valores declarados.",
@@ -1586,7 +1584,7 @@ export const economy: Catalog = {
 
   "employerReviews.recent.title": "Avaliações <em>recentes</em>",
   "employerReviews.recent.sub":
-    "Escritas por pessoas membro · anónimas · atualizadas continuamente",
+    "Escritas por pessoas membro · mostradas sem nomes",
   "employerReviews.recent.browseCta": "Ver vagas inclusivas para pessoas queer",
   "employerReviews.recent.writeCta": "Escrever uma avaliação",
   "employerReviews.loadError.title":
@@ -1611,19 +1609,20 @@ export const economy: Catalog = {
 
   "employerReviews.write.title": "Escreve uma <em>avaliação.</em>",
   "employerReviews.write.body":
-    "Já lá passaste. Sabes como era na realidade. A tua avaliação ajuda a próxima pessoa queer a decidir se aceita aquela entrevista. Demora 5 minutos e é completamente anónima.",
+    "Já lá passaste. Sabes como era na realidade. A tua avaliação ajuda a próxima pessoa queer a decidir se aceita aquela entrevista. Demora alguns minutos, e o teu nome não aparece.",
   "employerReviews.write.note":
-    "Só para pessoas membro · anónimo · a tua identidade nunca é guardada com a tua avaliação",
+    "Só para pessoas membro · o teu nome não aparece na tua avaliação",
   "employerReviews.write.rulesTitle": "Os nossos princípios de avaliação",
   "employerReviews.write.rule.anonymous":
-    "As avaliações são anónimas, o teu nome nunca é associado",
+    "O teu nome não aparece numa avaliação",
   "employerReviews.write.rule.verifyMembership":
-    "Verificamos que és uma pessoa membro da QueerPulse, nada mais",
+    "Só membros da QueerPulse podem escrever avaliações",
   "employerReviews.write.rule.noEdit":
-    "As empresas não podem editar, remover ou responder a avaliações",
-  "employerReviews.write.rule.moderation": "Moderamos por rigor factual",
+    "As empresas não podem editar nem remover avaliações, e podem publicar uma resposta pública",
+  "employerReviews.write.rule.moderation":
+    "Qualquer avaliação pode ser denunciada à nossa equipa",
   "employerReviews.write.rule.retract":
-    "Podes atualizar ou retirar a tua avaliação a qualquer momento",
+    "Podes editar a tua avaliação a qualquer momento",
   "employerReviews.write.rule.noBuying":
     "Nenhuma empresa pode comprar uma pontuação mais alta ou destaque",
 
@@ -1723,7 +1722,7 @@ export const economy: Catalog = {
   "jobApply.success.step2":
     "Vais receber uma notificação assim que responderem.",
   "jobApply.success.step3":
-    "A maioria das equipas aqui responde no prazo de 10 dias.",
+    "Podes acompanhá-la na página das tuas candidaturas.",
   "jobApply.success.footerCta": "Voltar a todas as vagas",
   "jobApply.success.body":
     "Enviada à {org} para a vaga de {title}. Não há mais nada a fazer por agora, a bola está do lado delas.",
@@ -1748,9 +1747,9 @@ export const economy: Catalog = {
   "jobApply.tip.profileLink":
     "Basta ligares o teu perfil QueerPulse. Vão ver o teu trabalho.",
   "jobApply.tip.replyTime":
-    "A maioria das equipas aqui responde a todas as candidaturas no prazo de 10 dias.",
+    "Podes guardar um rascunho e voltar a ele antes de enviar.",
   "jobApply.tip.fixedComp":
-    "A remuneração é fixa conforme publicado, mas o título e a data de início costumam ser negociáveis.",
+    "A remuneração indicada é a que a entidade empregadora publicou.",
 
   // ── BarterPage (+ Card / PostStrip) ─────────────────────────────────────
   "barter.hero.eyebrow": "Troca de competências queer",
@@ -1760,9 +1759,9 @@ export const economy: Catalog = {
   "barter.principle.noMoney.title": "Sem dinheiro",
   "barter.principle.noMoney.body":
     "Cada troca é entre pessoas. O valor é definido entre quem participa.",
-  "barter.principle.reputation.title": "Com reputação",
+  "barter.principle.reputation.title": "Entre membros",
   "barter.principle.reputation.body":
-    "As ofertas vêm de pessoas verificadas. O teu voto de confiança na comunidade é o teu histórico de fiabilidade.",
+    "As ofertas vêm de pessoas membro da QueerPulse.",
   "barter.principle.wants.title": "O que precisas também conta",
   "barter.principle.wants.body":
     "Publica o que procuras, tanto como o que podes dar. Precisar é tão bem-vindo como oferecer.",
@@ -2130,11 +2129,11 @@ export const economy: Catalog = {
   "postJob.sidebar.point1":
     "As vagas são <strong>visíveis apenas para membros</strong>, nunca públicas.",
   "postJob.sidebar.point2":
-    "As vagas <strong>expiram ao fim de 60 dias</strong>, aviso ao dia 45.",
+    "As candidaturas <strong>chegam-te</strong> pela QueerPulse, e revês-las nas vagas que publicaste.",
   "postJob.sidebar.point3":
     "<strong>Sem comissões de colocação.</strong> Uma bolsa da comunidade.",
   "postJob.sidebar.point4":
-    "<strong>Edita ou fecha</strong> a qualquer momento a partir do perfil da tua empresa.",
+    "<strong>Edita ou fecha</strong> a qualquer momento nas vagas que publicaste.",
 
   "postJob.preview.ariaLabel": "Pré-visualização da vaga",
   "postJob.preview.untitled": "Vaga sem título",
@@ -2148,27 +2147,20 @@ export const economy: Catalog = {
 
   "postJob.confirm.title": "“{title}” está <em>publicada</em>",
   "postJob.confirm.sub":
-    "As pessoas já a podem ver. Avisamos-te assim que alguém responder, e lembramos-te antes de expirar, dentro de 60 dias.",
+    "As pessoas já a podem ver. Avisamos-te quando alguém se candidatar.",
   "postJob.confirm.viewListing": "Ver vaga",
   "postJob.confirm.postAnother": "Publicar outra",
-  "postJob.confirm.performance.title": "Desempenho",
-  "postJob.confirm.performance.body":
-    "Acompanha visualizações, gravações e respostas ao longo da vida da tua vaga.",
-  "postJob.confirm.performance.views": "Visualizações",
-  "postJob.confirm.performance.saves": "Gravações",
-  "postJob.confirm.performance.replies": "Respostas",
   "postJob.confirm.responses.title": "Respostas",
   "postJob.confirm.responses.body":
-    "As respostas ficam todas num só lugar. Revê, envia mensagem, ou marca como preenchida a partir do teu gestor de vagas.",
-  "postJob.confirm.responses.openManager": "Abrir gestor de vagas",
+    "As candidaturas ficam todas num só lugar. Revê-as nas vagas que publicaste.",
+  "postJob.confirm.responses.openManager": "Abrir as vagas que publicaste",
   "postJob.confirm.share.title": "Partilha",
   "postJob.confirm.share.body":
     "Copia o link e põe-no onde as tuas pessoas já estão.",
   "postJob.confirm.share.copyLink": "Copiar link",
   "postJob.confirm.share.toastLink": "Link copiado",
   "postJob.confirm.whatsNext.title": "A seguir",
-  "postJob.confirm.whatsNext.body":
-    "A tua função já aparece na bolsa e no perfil da tua empresa. As vagas novas têm a nota “ainda não revista” até serem verificadas pela comunidade.",
+  "postJob.confirm.whatsNext.body": "A tua vaga já aparece na bolsa.",
 
   // ── MentorshipPage (+ match modal/steps) ────────────────────────────────
   "mentorship.hero.eyebrow": "Mentoria",
@@ -2562,7 +2554,7 @@ export const economy: Catalog = {
   "solidarity.hero.titleLine1": "Paga o que",
   "solidarity.hero.titleEm": "puderes.",
   "solidarity.hero.sub":
-    "Profissionais da comunidade QueerPulse que oferecem tarifas em escala variável, porque o acesso a bons cuidados não devia depender do que ganhas.",
+    "Um diretório de profissionais que oferecem tarifas em escala variável, porque o acesso a bons cuidados não devia depender do que ganhas.",
   "solidarity.hero.note":
     "Todes os profissionais foram verificados por pelo menos duas pessoas da comunidade.",
   "solidarity.how.step1.title": "Encontra o teu profissional",
@@ -2600,9 +2592,9 @@ export const economy: Catalog = {
   "solidarityDirectory.empty.description":
     "Ainda ninguém corresponde a essa pesquisa. Tenta outra profissão ou limpa a pesquisa para ver todas as pessoas que oferecem cuidado em escala variável.",
   "solidarityDirectory.empty.clearFilters": "Limpar filtros",
-  "solidarityDirectory.emptyLive.title": "Diretório em breve",
+  "solidarityDirectory.emptyLive.title": "Ainda não há profissionais listados",
   "solidarityDirectory.emptyLive.description":
-    "Estamos a verificar profissionais que oferecem tarifários solidários. Em breve vais poder encontrá-los e contactá-los aqui.",
+    "Os profissionais que oferecem tarifários solidários vão aparecer aqui quando forem listados.",
   "solidarityDirectory.register.titleLine1": "Ofereces",
   "solidarityDirectory.register.titleEm": "tarifários solidários?",
   "solidarityDirectory.register.body":
@@ -3045,21 +3037,20 @@ export const economy: Catalog = {
     "Formação de cooperativas de habitação · começa em Portugal, expansível",
   "housingCoop.hero.title": "Cria uma cooperativa <em>em conjunto</em>.",
   "housingCoop.hero.sub":
-    "Um kit de ferramentas para formar uma cooperativa de habitação queer em Portugal, desde encontrar as pessoas, até à constituição legal, ao financiamento, ao imóvel, à governação do dia a dia. <em>Cinco fases, modelos reais, pessoas já em cada uma delas.</em>",
+    "Um kit de ferramentas para formar uma cooperativa de habitação queer em Portugal, desde encontrar as pessoas, até à constituição legal, ao financiamento, ao imóvel, à governação do dia a dia. <em>Cinco fases, com modelos para a maioria delas.</em>",
   "housingCoop.hero.statsHead": "Cooperativas a formar-se agora",
   "housingCoop.phases.title": "Cinco <em>fases</em> da ideia às chaves",
-  "housingCoop.phases.sub":
-    "Calendário realista: 14–28 meses. Cada fase tem modelos, exemplos reais de cooperativas já existentes, e uma pessoa mentora para recorreres quando precisares.",
+  "housingCoop.phases.sub": "Os modelos abaixo seguem estas fases.",
   "housingCoop.grid.title": "Cooperativas a <em>formar-se agora</em>",
   "housingCoop.grid.seeAll": "Ver as 8",
   "housingCoop.templates.title": "Modelos & <em>ferramentas</em>",
   "housingCoop.templates.sub":
-    "Todos os documentos que gostávamos que nos tivessem dado. Preparados com a equipa jurídica da QueerPulse, traduzidos PT & EN, testados nos primeiros dois anos da Casa Sambizanga.",
+    "Documentos para as etapas de formar uma cooperativa, para leres e adaptares. Pede a um jurista que reveja tudo antes de assinares.",
   "housingCoop.templates.read": "Ler",
   "housingCoop.startCta.eyebrow": "Começa uma cooperativa",
   "housingCoop.startCta.title": "Ainda não tens <em>o teu grupo</em>?",
   "housingCoop.startCta.body":
-    "Publica que estás a começar e ligamos-te a outras pessoas na tua cidade à procura da mesma coisa. A maioria das cooperativas começa com 2–3 pessoas e cresce para 6+ nos primeiros 6 meses. <em>A Casa Sambizanga começou com três.</em>",
+    "Formar uma cooperativa começa com algumas pessoas que querem a mesma coisa. Publicar que estás a começar é como vais encontrar outras pessoas que também querem.",
   "housingCoop.startCta.postCta": "Publica que estás a começar",
   "housingCoop.startCta.storyCta": "Lê a história da Casa Sambizanga",
   "housingCoop.startCta.resourcesHead": "Recursos & pessoas mentoras",
@@ -3151,7 +3142,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.financial-honesty.title": "Acordo de honestidade",
   "coopTemplate.doc.financial-honesty.titleEm": "financeira",
   "coopTemplate.doc.financial-honesty.intro":
-    "As cooperativas de habitação falham mais vezes por problemas de dinheiro não ditos do que por qualquer questão jurídica. Este acordo existe para que quem esteja com dificuldades o diga logo na segunda semana, enquanto o problema ainda é pequeno, e para que ninguém tenha de adivinhar quanto as outras pessoas ganham, devem ou receiam. Adapta os pormenores ao vosso grupo; mantém o princípio de que toda a gente vê os mesmos números.",
+    "Problemas de dinheiro não ditos podem afundar uma cooperativa de habitação. Este acordo existe para que quem esteja com dificuldades o diga logo na segunda semana, enquanto o problema ainda é pequeno, e para que ninguém tenha de adivinhar quanto as outras pessoas ganham, devem ou receiam. Adapta os pormenores ao vosso grupo; mantém o princípio de que toda a gente vê os mesmos números.",
   "coopTemplate.doc.financial-honesty.s0.h":
     "O que significa aqui total transparência",
   "coopTemplate.doc.financial-honesty.s0.b0":
@@ -3213,7 +3204,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.crl-statutes.title": "Estatutos-modelo",
   "coopTemplate.doc.crl-statutes.titleEm": "CRL",
   "coopTemplate.doc.crl-statutes.intro":
-    "A Cooperativa de Responsabilidade Limitada (CRL) é a forma jurídica sob a qual a maioria das cooperativas de habitação da QueerPulse se regista em Portugal. O que se segue é um modelo, em linguagem simples, das secções de que os teus estatutos precisam, não é o texto jurídico em si, nem constitui aconselhamento jurídico. Leva este esboço, e a tua carta de valores fundadores, a um advogado ou notário com experiência em direito cooperativo antes de redigires ou registares seja o que for.",
+    "A Cooperativa de Responsabilidade Limitada (CRL) é uma forma jurídica sob a qual as cooperativas de habitação em Portugal se podem registar. O que se segue é um modelo, em linguagem simples, das secções de que os teus estatutos precisam, não é o texto jurídico em si, nem constitui aconselhamento jurídico. Leva este esboço, e a tua carta de valores fundadores, a um advogado ou notário com experiência em direito cooperativo antes de redigires ou registares seja o que for.",
   "coopTemplate.doc.crl-statutes.s0.h": "Nome e sede (sede social)",
   "coopTemplate.doc.crl-statutes.s0.b0":
     "Os teus estatutos abrem com o nome da cooperativa e a sua morada registada (sede social), habitualmente o próprio imóvel ou a morada de um membro até à escritura do imóvel.",
@@ -3400,7 +3391,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.conflict-resolution.title": "Processo de resolução de",
   "coopTemplate.doc.conflict-resolution.titleEm": "conflitos",
   "coopTemplate.doc.conflict-resolution.intro":
-    "Todas as cooperativas têm conflitos, a diferença entre as que duram e as que não duram está normalmente em terem ou não construído um processo antes de precisarem dele. Este está adaptado do que a Casa Sambizanga usa no dia a dia; trata-o como uma estrutura de partida para percorrer e ajustar com o teu próprio grupo, sobretudo os passos que envolvem a possível saída de alguém.",
+    "Todas as cooperativas têm conflitos, e um processo construído antes de precisares dele ajuda a atravessá-los. Trata isto como uma estrutura de partida para percorrer e ajustar com o teu próprio grupo, sobretudo os passos que envolvem a possível saída de alguém.",
   "coopTemplate.doc.conflict-resolution.s0.h":
     "Princípios: reparar em vez de punir",
   "coopTemplate.doc.conflict-resolution.s0.b0":
@@ -3500,31 +3491,28 @@ export const economy: Catalog = {
   "housingCoop.template.foundingValues.tag": "Fase 1 · modelo",
   "housingCoop.template.foundingValues.name": "Valores fundadores &",
   "housingCoop.template.foundingValues.nameEm": "teste de afinidades",
-  "housingCoop.template.foundingValues.meta": "PDF · PT + EN · 14 páginas",
+  "housingCoop.template.foundingValues.meta": "Documento na app · PT + EN",
   "housingCoop.template.financialHonesty.tag": "Fase 1 · modelo",
   "housingCoop.template.financialHonesty.name": "Honestidade financeira",
   "housingCoop.template.financialHonesty.nameEm": "folha de trabalho",
-  "housingCoop.template.financialHonesty.meta":
-    "Folha de cálculo · uma folha por membro",
+  "housingCoop.template.financialHonesty.meta": "Folha de trabalho na app",
   "housingCoop.template.crlStatutes.tag": "Fase 2 · legal",
   "housingCoop.template.crlStatutes.name": "Cooperativa CRL",
   "housingCoop.template.crlStatutes.nameEm": "estatutos",
-  "housingCoop.template.crlStatutes.meta": "DOCX · lei portuguesa · validado",
+  "housingCoop.template.crlStatutes.meta": "Documento na app · lei portuguesa",
   "housingCoop.template.shareAgreement.tag": "Fase 2 · legal",
   "housingCoop.template.shareAgreement.name": "Quota de membro",
   "housingCoop.template.shareAgreement.nameEm": "acordo",
   "housingCoop.template.shareAgreement.meta":
-    "PDF · cláusulas para família escolhida",
+    "Documento na app · cláusulas para família escolhida",
   "housingCoop.template.financeModel.tag": "Fase 3 · financiamento",
   "housingCoop.template.financeModel.name": "Financiamento do grupo",
   "housingCoop.template.financeModel.nameEm": "modelo",
-  "housingCoop.template.financeModel.meta":
-    "Folha de cálculo · com dados de Lisboa & Porto",
+  "housingCoop.template.financeModel.meta": "Folha de trabalho na app",
   "housingCoop.template.conflictResolution.tag": "Fase 5 · governação",
   "housingCoop.template.conflictResolution.name": "Resolução de conflitos",
   "housingCoop.template.conflictResolution.nameEm": "processo",
-  "housingCoop.template.conflictResolution.meta":
-    "PDF · adaptado da Casa Sambizanga",
+  "housingCoop.template.conflictResolution.meta": "Documento na app",
 
   // ── Lista de mentores/parceiros (housingCoop.data → COOP_RESOURCES).
   //    Os campos `em` (nomes próprios: "Casa Sambizanga", "CCAM") ficam no
@@ -3655,11 +3643,11 @@ export const economy: Catalog = {
   "incubatorApply.success.title": "Candidatura",
   "incubatorApply.success.em": "recebida.",
   "incubatorApply.success.body":
-    "Obrigade, <strong>{name}</strong>. As candidaturas à Coorte 3 são lidas pela equipa do programa depois do prazo de 30 de julho. Terás resposta dentro de três semanas, seja qual for a decisão.",
-  "incubatorApply.eyebrow": "Incubadora · Coorte 3",
+    "Obrigade, <strong>{name}</strong>. A nossa equipa recebeu a tua candidatura e responde-te por email.",
+  "incubatorApply.eyebrow": "Incubadora",
   "incubatorApply.title": "Candidata-te a <em>construir a tua ideia.</em>",
   "incubatorApply.sub":
-    "Seis meses de mentoria, responsabilização entre pares e apresentações calorosas. Não é preciso pitch deck. Diz-nos só o que estás a criar e em que ponto estás.",
+    "Não é preciso pitch deck. Diz-nos só o que estás a criar e em que ponto estás.",
   "incubatorApply.nameLabel": "O teu nome *",
   "incubatorApply.namePlaceholder": "Nome e apelido",
   "incubatorApply.emailLabel": "Email *",
@@ -3672,18 +3660,18 @@ export const economy: Catalog = {
   "incubatorApply.charsNeeded_other":
     "Faltam {count} carateres no teu pitch para enviar.",
   "incubatorApply.looksGood":
-    "Está bem. As decisões saem dentro de três semanas após o prazo.",
+    "Está bem. A nossa equipa vai ler a tua candidatura.",
   "incubatorApply.submitCta": "Enviar candidatura",
 
   // ── IncubatorModals: MentorSignupModal ───────────────────────────────────
   "mentorSignup.success.title": "Já estás na",
   "mentorSignup.success.em": "lista.",
   "mentorSignup.success.body":
-    "Obrigade, <strong>{name}</strong>. A equipa de mentoria vai entrar em contacto para te associar a uma pessoa fundadora cujo setor e fase combinem com o que ofereces. As pessoas mentoras encontram-se com quem apoiam quinzenalmente ao longo da coorte.",
+    "Obrigade, <strong>{name}</strong>. A nossa equipa recebeu a tua inscrição e responde-te por email.",
   "mentorSignup.eyebrow": "Incubadora · Mentoria",
   "mentorSignup.title": "Torna-te <em>pessoa mentora.</em>",
   "mentorSignup.sub":
-    "Dá algumas horas por mês a uma pessoa fundadora queer que está a encontrar o seu caminho. Fazemos o match por setor, fase, e aquilo que realmente sabes.",
+    "Diz-nos onde podias ajudar uma pessoa fundadora queer que está a encontrar o seu caminho, e aquilo que realmente sabes.",
   "mentorSignup.nameLabel": "O teu nome *",
   "mentorSignup.namePlaceholder": "Nome e apelido",
   "mentorSignup.emailLabel": "Email *",
@@ -3696,8 +3684,7 @@ export const economy: Catalog = {
     "Uma ou duas frases sobre o que trazes e a quem gostarias mais de apoiar.",
   "mentorSignup.charsNeeded_one": "Falta {count} caráter para enviar.",
   "mentorSignup.charsNeeded_other": "Faltam {count} carateres para enviar.",
-  "mentorSignup.looksGood":
-    "Analisamos todas as pessoas mentoras antes do match. Deves ter notícias em breve.",
+  "mentorSignup.looksGood": "Está bem. A nossa equipa vai ler a tua inscrição.",
   "mentorSignup.submitCta": "Inscrever-me para fazer mentoria",
 
   // ── IncubatorModals: RequestSessionModal ─────────────────────────────────
@@ -3881,7 +3868,7 @@ export const economy: Catalog = {
   "housingGroups.empty.title": "Ainda não há grupos",
   "housingGroups.empty.titleEm": "abertos",
   "housingGroups.empty.body":
-    "Os grupos de habitação verificados estão a formar-se cidade a cidade. Volta em breve, ou começa um com pessoas em quem já confias.",
+    "Ainda não há grupos de habitação listados. Volta em breve.",
   "housingGroups.detail.backLabel": "Todos os grupos",
   "housingGroups.detail.askToJoin": "Pedir para entrar",
   "housingGroups.detail.join": "Entrar neste grupo",

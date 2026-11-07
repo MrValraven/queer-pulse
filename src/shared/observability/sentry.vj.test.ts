@@ -58,6 +58,23 @@ describe("dropStudioPlayBreadcrumb on the VJ pages", () => {
     ).toBeNull();
   });
 
+  it("drops a breadcrumb that names a VJ preview key", () => {
+    expect(
+      dropStudioPlayBreadcrumb({
+        category: "fetch",
+        data: { url: "https://api.example/files/vj-previews/u/u.webm" },
+      }),
+    ).toBeNull();
+    expect(
+      dropStudioPlayBreadcrumb({
+        category: "xhr",
+        data: {
+          url: "https://bucket.example/vj-previews/u/u.mp4?X-Amz-Signature=x",
+        },
+      }),
+    ).toBeNull();
+  });
+
   it("keeps clicks elsewhere in admin", () => {
     const startPath = window.location.pathname;
     try {

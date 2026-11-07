@@ -1,7 +1,6 @@
 import { PageShell, PageHero } from "../../shared/components/layout";
 import { HubBackLink } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
-import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import { downloadBlob } from "../../shared/lib/downloadBlob";
@@ -14,18 +13,14 @@ import {
   CocHarmSection,
   CocEnforceSection,
   CocReportCta,
-  CocChangesSection,
+  CocAppealSection,
 } from "./CodeOfConductSections";
 
 const REPORT = routes.report;
-const CHANGELOG = routes.changelog;
 
-const COC_VERSION_DATE = new Date(2026, 0, 14);
-
-function buildCocText(t: TFunction, date: string): string {
-  return `${t("marketing:coc.download.headerTitle")} (v2.1)
+function buildCocText(t: TFunction): string {
+  return `${t("marketing:coc.download.headerTitle")}
 ====================================
-${t("marketing:coc.download.headerMeta", { date })}
 
 ${t("marketing:coc.download.intro")}
 
@@ -35,7 +30,6 @@ ${t("marketing:coc.download.intro")}
 §04 ${t("marketing:coc.download.section04")}
 §05 ${t("marketing:coc.download.section05")}
 §06 ${t("marketing:coc.download.section06")}
-§07 ${t("marketing:coc.download.section07")}
 
 ${t("marketing:coc.download.mockNote")}
 `;
@@ -43,12 +37,6 @@ ${t("marketing:coc.download.mockNote")}
 
 export function CodeOfConductPage() {
   const { t } = useTranslation();
-  const fmt = useFormat();
-  const versionDate = fmt.date(COC_VERSION_DATE, {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
   const pageTitle = t("marketing:coc.meta.title");
   const pageDescription = t("marketing:coc.meta.description");
   return (
@@ -69,7 +57,7 @@ export function CodeOfConductPage() {
             label={t("marketing:coc.hero.backLabel")}
           />
         }
-        eyebrow={t("marketing:coc.hero.eyebrow", { date: versionDate })}
+        eyebrow={t("marketing:coc.hero.eyebrow")}
         title={
           <Translation
             i18nKey="marketing:coc.hero.title"
@@ -121,14 +109,9 @@ export function CodeOfConductPage() {
         <CocHarmSection />
         <CocEnforceSection />
         <CocReportCta reportPath={REPORT} />
-        <CocChangesSection
-          changelogPath={CHANGELOG}
+        <CocAppealSection
           onDownload={() =>
-            downloadBlob(
-              "code-of-conduct-v2.1.txt",
-              buildCocText(t, versionDate),
-              "text/plain",
-            )
+            downloadBlob("code-of-conduct.txt", buildCocText(t), "text/plain")
           }
         />
       </article>

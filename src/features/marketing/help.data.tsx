@@ -168,9 +168,9 @@ export const HELP_CATEGORIES: HelpCategory[] = [
         answerKey: "marketing:help.qa.vouching.a",
       },
       {
-        id: "perks",
-        questionKey: "marketing:help.qa.perks.q",
-        answerKey: "marketing:help.qa.perks.a",
+        id: "cost",
+        questionKey: "marketing:help.qa.cost.q",
+        answerKey: "marketing:help.qa.cost.a",
       },
     ],
   },

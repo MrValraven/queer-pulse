@@ -1,0 +1,105 @@
+/* The setup card's microphone section. It sits inside the card's glass, so
+   it reads the fixed --qs-* stage tokens like the rest of the card. A hairline
+   above sets it apart from the preload facts. */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  padding-top: var(--gap-lg);
+  border-top: 1px solid var(--qs-line);
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.title {
+  margin: 0;
+  color: var(--qs-text);
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 600;
+  line-height: var(--lh-title);
+}
+
+.hint {
+  max-width: 60ch;
+  margin: 0;
+  color: var(--qs-text-mute);
+  font-size: var(--text-14);
+  line-height: var(--lh-body);
+}
+
+.toggle {
+  align-self: flex-start;
+}
+
+/* The padding sits on the child, so it folds with the Collapse. */
+.reading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding-block: calc(var(--gap-xs) / 2);
+}
+
+.meter {
+  position: relative;
+  height: 0.5rem;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--qs-ring-track);
+}
+
+/* The level scales the fill from the start edge; --vj-mic-level is 0..1. */
+.meterFill {
+  position: absolute;
+  inset: 0;
+  background: var(--qs-em-gradient);
+  transform: scaleX(var(--vj-mic-level, 0));
+  transform-origin: left center;
+  transition: transform var(--dur-fast) linear;
+}
+
+.meterFill:dir(rtl) {
+  transform-origin: right center;
+}
+
+.line {
+  margin: 0;
+  color: var(--qs-text);
+  font-size: var(--text-14);
+  line-height: var(--lh-body);
+}
+
+.note {
+  margin: 0;
+  padding-block: calc(var(--gap-xs) / 2);
+  color: var(--qs-text-mute);
+  font-size: var(--text-14);
+  line-height: var(--lh-body);
+}
+
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+  margin: 0;
+  padding-top: var(--gap-xs);
+  color: var(--qs-text);
+  font-size: var(--text-14);
+  line-height: var(--lh-body);
+}
+
+.alertIcon {
+  flex: none;
+  margin-top: 0.2em;
+  color: var(--qs-low);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .meterFill {
+    transition: none;
+  }
+}

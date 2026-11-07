@@ -1,5 +1,13 @@
 import { AnimatePresence, m } from "motion/react";
-import { useId, useRef, useState, type FormEvent, type RefObject } from "react";
+import {
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+  type RefObject,
+} from "react";
+import { FiTrash2 } from "react-icons/fi";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import {
   VJ_FIT_MODES,
@@ -16,14 +24,19 @@ import {
   SegmentedControl,
 } from "../../../shared/components/ui";
 import { useToast } from "../../../shared/components/feedback/useToast";
+import { useMediaQuery } from "../../../shared/hooks";
 import { formatDate } from "../../../shared/lib/date";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useUpdateVjClip } from "../api/useVjClipMutations";
 import { VjReasonLine } from "../VjReasonLine";
 import { formatVjBytes } from "../vjFormat";
 import { VjClipDeleteDialog } from "./VjClipDeleteDialog";
+import { VjClipFavoriteButton } from "./VjClipFavoriteButton";
 import { VjClipPacks } from "./VjClipPacks";
+import { VjClipPlaybackFields } from "./VjClipPlaybackFields";
 import { VjClipPreview } from "./VjClipPreview";
+import { useVjClipPlaybackDraft } from "./useVjClipPlaybackDraft";
+import playbackStyles from "./VjClipPlayback.module.css";
 import styles from "./VjClips.module.css";
 
 const EASE = [0.22, 0.68, 0.16, 1] as const;
@@ -39,7 +52,8 @@ interface VjClipDialogProps {
   onClose: () => void;
 }
 
-/** Every edit of one clip: preview, title, fit, packs and delete. */
+/** Every edit of one clip: preview, title and favorite, fit, playback,
+ *  packs and delete. */
 export function VjClipDialog({
   clip,
   packs,
@@ -48,11 +62,24 @@ export function VjClipDialog({
 }: VjClipDialogProps) {
   const { t, language } = useTranslation();
   const titleInputRef = useRef<HTMLInputElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const isCoarsePointer = useMediaQuery("(pointer: coarse)");
+  // On touch, focusing the title would raise the keyboard over the sheet, so
+  // focus lands on the dialog itself and a screen reader reads its heading.
+  const dialogFocusRef = useMemo<RefObject<HTMLElement | null>>(
+    () => ({
+      get current() {
+        return bodyRef.current?.closest<HTMLElement>('[role="dialog"]') ?? null;
+      },
+    }),
+    [],
+  );
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const updateFit = useUpdateVjClip();
   const [chosenFit, setChosenFit] = useState<VjFitMode | null>(null);
   if (chosenFit !== null && chosenFit === clip.fitMode) setChosenFit(null);
   const shownFit = chosenFit ?? clip.fitMode;
+  const playback = useVjClipPlaybackDraft(clip);
 
   const chooseFit = (value: string) => {
     if (!isVjFitMode(value) || value === shownFit) return;
@@ -70,16 +97,17 @@ export function VjClipDialog({
       <Modal
         title={t("vj:clipDialog.title")}
         wide
-        initialFocusRef={titleInputRef}
+        initialFocusRef={isCoarsePointer ? dialogFocusRef : titleInputRef}
         onClose={onClose}
         footer={
           // Bare buttons, so the phone sheet shares the row between them.
           <>
             <Button
-              variant="danger"
+              variant="quiet"
               className={styles.deleteOpen}
               onClick={() => setIsDeleteOpen(true)}
             >
+              <FiTrash2 aria-hidden="true" fill="none" focusable="false" />
               {t("vj:clipDialog.deleteOpen")}
             </Button>
             <Button variant="ghost" onClick={onClose}>
@@ -88,14 +116,25 @@ export function VjClipDialog({
           </>
         }
       >
-        <div className={styles.dialogBody}>
-          <VjClipPreview clip={{ ...clip, fitMode: shownFit }} />
-          <VjClipTitleField clip={clip} inputRef={titleInputRef} />
+        <div ref={bodyRef} className={styles.dialogBody}>
+          <VjClipPreview
+            clip={{ ...clip, fitMode: shownFit }}
+            playback={playback.previewPlayback}
+            scrubMs={playback.scrubMs}
+          />
+          <div className={playbackStyles.titleRow}>
+            <VjClipTitleField clip={clip} inputRef={titleInputRef} />
+            <VjClipFavoriteButton
+              clip={clip}
+              className={playbackStyles.titleStar}
+            />
+          </div>
           <VjClipFitField
             fitMode={shownFit}
             error={updateFit.error}
             onChange={chooseFit}
           />
+          <VjClipPlaybackFields clip={clip} draft={playback} />
           <div className={styles.details}>
             <p>
               {t("vj:clipDialog.details", {
@@ -172,7 +211,10 @@ function VjClipTitleField({
 
   return (
     <form className={styles.titleForm} onSubmit={submit}>
-      <FormField label={t("vj:clipDialog.titleLabel")}>
+      <FormField
+        label={t("vj:clipDialog.titleLabel")}
+        className={styles.titleField}
+      >
         <input
           ref={inputRef}
           type="text"
@@ -220,6 +262,7 @@ function VjClipFitField({
         {t("vj:clipDialog.fitLabel")}
       </span>
       <SegmentedControl
+        className={playbackStyles.tray}
         labelledBy={labelId}
         value={fitMode}
         onChange={onChange}

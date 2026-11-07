@@ -95,10 +95,9 @@ export function ComingOutPage() {
         }
         sub={t("community:comingOut.outro.sub")}
       >
-        {/* The CTA used to point at `routes.comingOut`, i.e. back to the top of
-            this same guide. Peer support is the real surface behind "enter the
-            space": a moderated room where people talk this through with
-            others. */}
+        {/* Peer support is a plain guide to asking in the Forum and messaging
+            connected members. It promises no facilitator or circle, so the
+            copy leading into it must not either. */}
         <Button to={routes.peerSupport} variant="primary" size="lg">
           {t("community:comingOut.outro.enterCta")} <FiArrowRight aria-hidden />
         </Button>

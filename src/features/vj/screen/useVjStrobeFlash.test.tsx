@@ -1,12 +1,18 @@
 import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { useVjStrobeFlash } from "./useVjStrobeFlash";
+import { useVjStrobeFlash, type VjStrobeStart } from "./useVjStrobeFlash";
 
 interface StrobeProps {
   isStrobing: boolean;
   bpm: number;
   isEnabled?: boolean;
+  strobeStart?: VjStrobeStart;
 }
+
+/** Server epoch ms map 1:1 to performance.now() time. */
+const IDENTITY_CLOCK: VjStrobeStart["clock"] = {
+  toLocalTime: (serverMs) => serverMs,
+};
 
 /** Renders the hook and records the clock time of every flash start. */
 function renderStrobe(initialProps: StrobeProps) {
@@ -18,6 +24,7 @@ function renderStrobe(initialProps: StrobeProps) {
         props.isStrobing,
         props.bpm,
         props.isEnabled,
+        props.strobeStart,
       );
       if (isFlashUp && !wasFlashUp) flashStartsMs.push(Date.now());
       wasFlashUp = isFlashUp;
@@ -92,7 +99,12 @@ describe("useVjStrobeFlash", () => {
     vi.spyOn(performance, "now").mockImplementation(
       () => fakePerformanceNow() - performanceLagMs,
     );
-    const { flashStartsMs } = renderStrobe({ isStrobing: true, bpm: 120 });
+    // Mounted off, so the strobe going on flashes at once.
+    const { rerender, flashStartsMs } = renderStrobe({
+      isStrobing: false,
+      bpm: 120,
+    });
+    rerender({ isStrobing: true, bpm: 120 });
     stepMilliseconds(5);
     expect(flashStartsMs).toHaveLength(1);
     // From here the timer reaches its 500 ms 30 ms before performance.now does.
@@ -220,6 +232,79 @@ describe("useVjStrobeFlash", () => {
     );
     stepMilliseconds(3000);
     expect(startsBetween(flashStartsMs, 15_001, 17_000)).toEqual([]);
+    expect(result.current).toBe(false);
+  });
+});
+
+describe("useVjStrobeFlash taking over a running strobe", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(0);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.useRealTimers();
+  });
+
+  it("flashes at once when strobe goes on while mounted", () => {
+    const { rerender, flashStartsMs } = renderStrobe({
+      isStrobing: false,
+      bpm: 120,
+    });
+    rerender({ isStrobing: true, bpm: 120 });
+    stepMilliseconds(5);
+    expect(flashStartsMs).toEqual([0]);
+  });
+
+  it("waits a full period before its first flash when mounted mid-strobe", () => {
+    const { flashStartsMs } = renderStrobe({ isStrobing: true, bpm: 120 });
+    stepMilliseconds(600);
+    expect(flashStartsMs[0]).toBeGreaterThanOrEqual(500);
+    expect(flashStartsMs[0]).toBeLessThanOrEqual(501);
+  });
+
+  it("ends 10 s after the server's strobe start when it takes over 8 s in", () => {
+    // The compositor strobed for 8 s, then the DOM renderer mounts.
+    act(() => {
+      vi.advanceTimersByTime(8000);
+    });
+    const mountMs = Date.now();
+    const strobeStartedAt = performance.now() - 8000;
+    const { result, flashStartsMs } = renderStrobe({
+      isStrobing: true,
+      bpm: 120,
+      strobeStart: { strobeStartedAt, clock: IDENTITY_CLOCK },
+    });
+    stepMilliseconds(5000);
+    // The first flash waits one period after the mount.
+    expect(flashStartsMs[0]).toBeGreaterThanOrEqual(mountMs + 500);
+    expect(flashStartsMs[0]).toBeLessThanOrEqual(mountMs + 501);
+    // Ten seconds in total: nothing after 2 s on this renderer.
+    expect(
+      startsBetween(flashStartsMs, mountMs, mountMs + 2001).length,
+    ).toBeGreaterThan(0);
+    expect(
+      startsBetween(flashStartsMs, mountMs + 2001, mountMs + 5000),
+    ).toEqual([]);
+    expect(result.current).toBe(false);
+  });
+
+  it("keeps its own 10 s when the server's start is later than its own", () => {
+    const strobeStartedAt = performance.now() + 60_000;
+    const { result, flashStartsMs } = renderStrobe({
+      isStrobing: true,
+      bpm: 120,
+      strobeStart: { strobeStartedAt, clock: IDENTITY_CLOCK },
+    });
+    act(() => {
+      vi.advanceTimersByTime(9000);
+    });
+    stepMilliseconds(4000);
+    expect(startsBetween(flashStartsMs, 9000, 10_001).length).toBeGreaterThan(
+      0,
+    );
+    expect(startsBetween(flashStartsMs, 10_001, 13_001)).toEqual([]);
     expect(result.current).toBe(false);
   });
 });

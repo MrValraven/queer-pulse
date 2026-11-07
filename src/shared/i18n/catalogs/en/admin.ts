@@ -5990,7 +5990,7 @@ export const admin: Catalog = {
   "governance.overview.principles.key.transparency":
     "Transparency is non-negotiable",
   "governance.overview.principles.key.accessNotConditional":
-    "Access is not conditional on ability to pay",
+    "Event costs are always stated up front",
   "governance.overview.principles.icon.lock": "Padlock",
   "governance.overview.principles.icon.eye": "Eye",
   "governance.overview.principles.icon.slash": "Crossed circle",

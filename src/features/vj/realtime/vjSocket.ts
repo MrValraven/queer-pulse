@@ -10,6 +10,7 @@ import {
   type VjAck,
   type VjAttachSuccess,
   type VjExceptionFrame,
+  type VjReauthAck,
   type VjServerFrameName,
   type VjSocketErrorCode,
 } from "../../../shared/contracts/vj";
@@ -24,6 +25,12 @@ import {
   VJ_RECONNECT_MAX_DELAY_MS,
   VJ_TICKET_MINT_RETRY_MS,
 } from "../vj.constants";
+import {
+  createVjClockSyncSchedule,
+  vjClockSampleOf,
+  vjLocalNow,
+  type VjClockSyncSchedule,
+} from "./vjClockSync";
 import type {
   VjAckFor,
   VjClientFrameName,
@@ -45,6 +52,8 @@ export interface VjSocketClientOptions extends VjTransportOptions {
   /** Test seam; defaults to `() => import("socket.io-client").then((module) => module.io)`. */
   loadIo?: () => Promise<VjIoFactory>;
   now?: () => number;
+  /** Test seam for clock samples; defaults to `vjLocalNow`. */
+  localNow?: () => number;
 }
 
 /**
@@ -87,10 +96,13 @@ function exceptionRefusalOf(
 }
 
 function attachRefusalOf(code: VjSocketErrorCode): VjConnectionRefusal {
-  return code === "vj_not_admin" ? "not_admin" : "server_error";
+  if (code === "vj_not_admin") return "not_admin";
+  // A cached page that predates the server's contract (C 7.1): only a reload helps.
+  if (code === "vj_client_outdated") return "client_outdated";
+  return "server_error";
 }
 
-function ackFailureCodeOf(ack: VjAck<object>): string | null {
+function ackFailureCodeOf(ack: VjAck<object> | VjReauthAck): string | null {
   return ack.ok ? null : ack.code;
 }
 
@@ -99,11 +111,15 @@ function ackFailureCodeOf(ack: VjAck<object>): string | null {
  * screens and library frames to `onFrame`, attaches again on every
  * (re)connect with a fresh `buildAttachPayload()`, keeps the connection alive
  * past the access token with `session:reauth`, and refreshes the session
- * after a server drop. Logs codes and frame names only.
+ * after a server drop. Times every acked emit and runs the `clock:sync`
+ * schedule from each connect, handing every sample to `onClockSample`
+ * (C 7.2, 7.3). Logs codes and frame names only.
  */
 export class VjSocketClient implements VjTransport {
   private readonly options: VjSocketClientOptions;
   private readonly now: () => number;
+  private readonly localNow: () => number;
+  private readonly clockSync: VjClockSyncSchedule;
   private socket: Socket | null = null;
   private isLoading = false;
   private isDisposed = false;
@@ -116,6 +132,8 @@ export class VjSocketClient implements VjTransport {
   constructor(options: VjSocketClientOptions) {
     this.options = options;
     this.now = options.now ?? (() => Date.now());
+    this.localNow = options.localNow ?? vjLocalNow;
+    this.clockSync = createVjClockSyncSchedule(() => this.sendClockSync());
   }
 
   connect(): void {
@@ -153,9 +171,7 @@ export class VjSocketClient implements VjTransport {
     }
     let ack: VjAckFor<Name>;
     try {
-      ack = (await socket
-        .timeout(VJ_ACK_TIMEOUT_MS)
-        .emitWithAck(name, payload)) as VjAckFor<Name>;
+      ack = await this.emitTimed(socket, name, payload, VJ_ACK_TIMEOUT_MS);
     } catch {
       logWarn("vj: frame ack timed out", { frame: name });
       throw new VjSendError(name, "timeout");
@@ -176,10 +192,47 @@ export class VjSocketClient implements VjTransport {
   dispose(): void {
     this.isDisposed = true;
     this.isAttached = false;
+    this.clockSync.stop();
     this.clearReauthTimer();
     this.clearReconnectTimer();
     this.socket?.disconnect();
     this.socket = null;
+  }
+
+  /**
+   * Every acked emit goes through here: reads the local clock before the emit
+   * and when the ack arrives, and reports the sample when the ack carries
+   * serverNow. Failed acks carry it too (C 7.2), so refusals sample as well.
+   * Rejects when no ack comes within `timeoutMs`.
+   */
+  private async emitTimed<Name extends VjClientFrameName>(
+    socket: Socket,
+    name: Name,
+    payload: VjClientPayload<Name>,
+    timeoutMs: number,
+  ): Promise<VjAckFor<Name>> {
+    const sentAt = this.localNow();
+    const ack = (await socket
+      .timeout(timeoutMs)
+      .emitWithAck(name, payload)) as VjAckFor<Name>;
+    const receivedAt = this.localNow();
+    const sample = vjClockSampleOf(sentAt, receivedAt, ack);
+    if (sample !== null && !this.isDisposed) {
+      this.options.onClockSample?.(sample);
+    }
+    return ack;
+  }
+
+  /**
+   * One `clock:sync` of the C 7.3 schedule, allowed before attach. A timeout
+   * or a failed ack is dropped quietly: the next send retries.
+   */
+  private sendClockSync(): void {
+    const socket = this.socket;
+    if (socket === null || !this.isLiveSocket(socket)) return;
+    this.emitTimed(socket, "clock:sync", {}, VJ_ACK_TIMEOUT_MS).catch(
+      () => undefined,
+    );
   }
 
   private registerHandlers(socket: Socket): void {
@@ -194,6 +247,8 @@ export class VjSocketClient implements VjTransport {
     );
     socket.on("connect", () => {
       if (!this.isCurrentSocket(socket)) return;
+      // C 7.3 allows clock:sync before attach, so the clock is warm by the first stage frame.
+      this.clockSync.start();
       void this.attach(socket);
     });
     // socket.io keeps its own backoff; the status tells the UI a connect failed.
@@ -209,12 +264,12 @@ export class VjSocketClient implements VjTransport {
   private async attach(socket: Socket): Promise<void> {
     let ack: VjAckFor<"vj:attach">;
     try {
-      ack = (await socket
-        .timeout(VJ_ACK_TIMEOUT_MS)
-        .emitWithAck(
-          "vj:attach",
-          this.options.buildAttachPayload(),
-        )) as VjAckFor<"vj:attach">;
+      ack = await this.emitTimed(
+        socket,
+        "vj:attach",
+        this.options.buildAttachPayload(),
+        VJ_ACK_TIMEOUT_MS,
+      );
     } catch {
       if (!this.isLiveSocket(socket)) return;
       logWarn("vj: attach ack timed out", { frame: "vj:attach" });
@@ -229,7 +284,7 @@ export class VjSocketClient implements VjTransport {
     this.isAttached = true;
     this.reconnectAttempt = 0;
     this.scheduleReauthBefore(socket, ack.connectionExpiresAt);
-    const { ok: _ok, ...attach } = ack;
+    const { ok: _ok, serverNow: _serverNow, ...attach } = ack;
     this.setStatus("attached", null, attach);
   }
 
@@ -297,11 +352,12 @@ export class VjSocketClient implements VjTransport {
     if (!this.isLiveSocket(socket)) return;
     let ack: VjAckFor<"session:reauth">;
     try {
-      ack = (await socket
-        .timeout(VJ_REAUTH_ACK_TIMEOUT_MS)
-        .emitWithAck("session:reauth", {
-          ticket,
-        })) as VjAckFor<"session:reauth">;
+      ack = await this.emitTimed(
+        socket,
+        "session:reauth",
+        { ticket },
+        VJ_REAUTH_ACK_TIMEOUT_MS,
+      );
     } catch {
       if (!this.isLiveSocket(socket)) return;
       logWarn("vj: session reauth ack timed out", { frame: "session:reauth" });
@@ -322,14 +378,14 @@ export class VjSocketClient implements VjTransport {
       this.scheduleReauthBefore(socket, ack.exp * 1000);
       return;
     }
-    // The reauth answers with transport codes, outside VjSocketErrorCode.
-    const failureCode: string = ack.code;
+    // VjReauthAck answers with transport codes, outside VjSocketErrorCode (C 7.2).
+    const failureCode = ack.code;
     logWarn("vj: session reauth refused", { code: failureCode });
-    if (failureCode === "RATE_LIMITED" || failureCode === "vj_rate_limited") {
+    if (failureCode === "RATE_LIMITED") {
       this.scheduleReauth(socket, VJ_REAUTH_RATE_LIMITED_RETRY_MS, "scheduled");
       return;
     }
-    if (failureCode === "FORBIDDEN" || failureCode === "vj_not_admin") {
+    if (failureCode === "FORBIDDEN") {
       this.refuse("not_admin");
       socket.disconnect();
     }
@@ -351,6 +407,7 @@ export class VjSocketClient implements VjTransport {
   private handleDisconnect(socket: Socket, reason: string): void {
     if (this.isDisposed || socket !== this.socket) return;
     this.isAttached = false;
+    this.clockSync.stop();
     this.clearReauthTimer();
     if (this.isRefused) return;
     this.setStatus("reconnecting", null);
@@ -405,6 +462,7 @@ export class VjSocketClient implements VjTransport {
   private refuse(refusal: VjConnectionRefusal): void {
     this.isRefused = true;
     this.isAttached = false;
+    this.clockSync.stop();
     this.clearReauthTimer();
     this.clearReconnectTimer();
     this.setStatus("refused", refusal);

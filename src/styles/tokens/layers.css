@@ -59,6 +59,12 @@
   --z-modal: 220;
   /* A dialog opened FROM a modal (a confirm on top of an editor sheet). */
   --z-modal-nested: 240;
+  /* The VJ remote's flash warning (VjFlashConsentPopover). A switch in the
+     Effects sheet can raise it, so it has to clear the sheet's scrim at
+     `--z-modal` or the operator taps a warning they cannot see. Transient and
+     dismissed on outside press, so sitting over a nested dialog is safe; under
+     the portalled pickers, which never open beside it. */
+  --z-vj-flash-warning: 250;
   /* An anchored popover portalled to <body> (the DatePicker calendar). Once
      portalled it escapes the modal's stacking context and competes with the
      scrim itself, so it has to clear both modal tiers or a picker opened from

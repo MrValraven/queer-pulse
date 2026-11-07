@@ -11,7 +11,8 @@ import {
   type VjStageState,
 } from "../../../shared/contracts/vj";
 import type { VjClipCache } from "./vjClipCache";
-import type { VjPreloadInput } from "./vjPreloader";
+import { VJ_EXTRA_CLIPS_PACK_ID } from "./vjExtraClipMedia";
+import type { VjPreloadInput, VjPreloaderDependencies } from "./vjPreloader";
 import type { VjScreenRecord } from "./vjScreenRecord";
 import {
   useVjScreenPreload,
@@ -29,6 +30,7 @@ import {
 
 interface PreloadRunCall {
   input: unknown;
+  dependencies: unknown;
   resolve: (statuses: unknown) => void;
 }
 
@@ -38,6 +40,7 @@ const harness = vi.hoisted(() => ({
   cache: null as VjClipCache | null,
   invalidate: vi.fn(),
   fetchMedia: vi.fn(),
+  getClipsMedia: vi.fn(),
   writeRecord: vi.fn(),
   libraryClips: undefined as VjClipDTO[] | undefined,
   libraryEnabledCalls: [] as boolean[],
@@ -58,6 +61,9 @@ vi.mock("../api/useVjClips", () => ({
 vi.mock("../api/useVjPackMediaFetcher", () => ({
   useVjPackMediaFetcher: () => harness.fetchMedia,
 }));
+vi.mock("../api/useVjClipsMediaFetcher", () => ({
+  useVjClipsMediaFetcher: () => harness.getClipsMedia,
+}));
 vi.mock("../api/useInvalidateVjLibrary", () => ({
   useInvalidateVjLibrary: () => harness.invalidate,
 }));
@@ -65,9 +71,9 @@ vi.mock("./vjClipCache", () => ({
   createVjClipCache: () => harness.cache,
 }));
 vi.mock("./vjPreloader", () => ({
-  preloadVjPack: (input: unknown) =>
+  preloadVjPack: (input: unknown, dependencies: unknown) =>
     new Promise((resolve) => {
-      harness.runs.push({ input, resolve });
+      harness.runs.push({ input, dependencies, resolve });
     }),
 }));
 vi.mock("./vjScreenRecord", async (importOriginal) => ({
@@ -115,6 +121,7 @@ function packOf(
     createdBy: null,
     createdAt: "2026-11-05T10:00:00.000Z",
     updatedAt,
+    event: null,
   };
 }
 
@@ -136,6 +143,40 @@ function clipOf(clipId: string, packId: string): VjClipDTO {
     createdBy: null,
     createdAt: "2026-11-05T10:00:00.000Z",
     updatedAt: "2026-11-05T10:00:00.000Z",
+    isFavorite: false,
+    defaultSpeed: 1,
+    loopInMs: null,
+    loopOutMs: null,
+    loopMode: "loop",
+    previewUrl: null,
+  };
+}
+
+/** A v2 record whose extra clips are empty and whose event card and clock offset are null. */
+function recordOf(
+  changes: Pick<VjScreenRecord, "savedAt" | "state" | "pack" | "clips"> &
+    Partial<VjScreenRecord>,
+): VjScreenRecord {
+  return {
+    version: 2,
+    liveClip: null,
+    extraClips: [],
+    eventCard: null,
+    clockOffsetMs: null,
+    ...changes,
+  };
+}
+
+/** A library change with no scene, set list or event part. */
+function changeOf(
+  changes: Pick<VjLibraryChange, "kind" | "packId" | "clipId" | "packIds">,
+): VjLibraryChange {
+  return {
+    sceneId: null,
+    setlistId: null,
+    setlistIds: [],
+    eventId: null,
+    ...changes,
   };
 }
 
@@ -203,6 +244,7 @@ function createLibraryStage(state: VjStageState | null = null) {
 
 interface TypedRun {
   input: VjPreloadInput;
+  dependencies: VjPreloaderDependencies;
   resolve: (statuses: VjScreenClipStatus[]) => void;
 }
 
@@ -264,6 +306,7 @@ beforeEach(() => {
   harness.runs.length = 0;
   harness.invalidate.mockReset();
   harness.fetchMedia.mockReset();
+  harness.getClipsMedia.mockReset();
   harness.writeRecord.mockReset();
   harness.libraryClips = undefined;
   harness.libraryEnabledCalls.length = 0;
@@ -370,12 +413,12 @@ describe("useVjScreenPreload", () => {
       clipOf(CLIP_GRID, PACK_WARM),
       clipOf(CLIP_HAZE, PACK_WARM),
     ];
-    const record: VjScreenRecord = {
+    const record = recordOf({
       savedAt: 5_000,
       state: stageStateOf(7, { activePackId: PACK_WARM }),
       pack: packOf(PACK_WARM),
       clips: savedClips,
-    };
+    });
     const stage = createLibraryStage();
     const { result } = renderPreload({ packId: PACK_WARM, record, stage });
 
@@ -425,31 +468,31 @@ describe("useVjScreenPreload", () => {
     await settleRun(0);
     expect(result.current.readyClipIds).toEqual([CLIP_GRID, CLIP_HAZE]);
 
-    const otherPackChange: VjLibraryChange = {
+    const otherPackChange = changeOf({
       kind: "pack_clips_changed",
       packId: PACK_COLD,
       clipId: null,
       packIds: [PACK_COLD],
-    };
+    });
     act(() => stage.emit(otherPackChange));
     expect(harness.invalidate).not.toHaveBeenCalled();
 
-    const renameOfActivePack: VjLibraryChange = {
+    const renameOfActivePack = changeOf({
       kind: "pack_renamed",
       packId: PACK_WARM,
       clipId: null,
       packIds: [],
-    };
+    });
     act(() => stage.emit(renameOfActivePack));
     expect(harness.invalidate).toHaveBeenCalledTimes(1);
     expect(harness.invalidate).toHaveBeenLastCalledWith(renameOfActivePack);
 
-    const deletion: VjLibraryChange = {
+    const deletion = changeOf({
       kind: "clip_deleted",
       packId: null,
       clipId: CLIP_HAZE,
       packIds: [PACK_WARM],
-    };
+    });
     act(() => stage.emit(deletion));
     await flushPromises();
 
@@ -614,11 +657,15 @@ describe("useVjScreenRecordSync", () => {
     });
     expect(harness.writeRecord).toHaveBeenCalledTimes(1);
     expect(harness.writeRecord).toHaveBeenLastCalledWith({
+      version: 2,
       savedAt: 20_000,
       state: firstState,
       pack: firstPack,
       clips: firstClips,
       liveClip: null,
+      extraClips: [],
+      eventCard: null,
+      clockOffsetMs: null,
     });
 
     rerender({
@@ -651,11 +698,15 @@ describe("useVjScreenRecordSync", () => {
     });
     expect(harness.writeRecord).toHaveBeenCalledTimes(3);
     expect(harness.writeRecord).toHaveBeenLastCalledWith({
+      version: 2,
       savedAt: 20_000,
       state: secondState,
       pack: refetchedPack,
       clips: refetchedClips,
       liveClip: null,
+      extraClips: [],
+      eventCard: null,
+      clockOffsetMs: null,
     });
   });
 
@@ -748,7 +799,7 @@ describe("useVjScreenRecordSync", () => {
 describe("useVjScreenPreload live clip and reattach", () => {
   it("resolves a live clip outside the active pack from the record after a reload", () => {
     const outsideClip = clipOf(CLIP_LIVE, PACK_WARM);
-    const record: VjScreenRecord = {
+    const record = recordOf({
       savedAt: 5_000,
       state: stageStateOf(7, {
         activePackId: PACK_COLD,
@@ -757,7 +808,7 @@ describe("useVjScreenPreload live clip and reattach", () => {
       pack: packOf(PACK_COLD),
       clips: [clipOf(CLIP_NEON, PACK_COLD)],
       liveClip: outsideClip,
-    };
+    });
     const stage = createLibraryStage();
     const { result } = renderPreload({ packId: PACK_COLD, record, stage });
 
@@ -831,5 +882,138 @@ describe("useVjScreenPreload live clip and reattach", () => {
 
     expect(harness.runs).toHaveLength(1);
     expect(runAt(0).input.signal.aborted).toBe(false);
+  });
+});
+
+describe("useVjScreenPreload cache retention", () => {
+  const SCREEN_ID = "11111111-1111-4111-8111-111111111111";
+
+  function mixStateOf(revision: number, mixClipId: string): VjStageState {
+    const baseState = stageStateOf(revision, { activePackId: PACK_WARM });
+    return { ...baseState, mix: { ...baseState.mix, clipId: mixClipId } };
+  }
+
+  it("keeps a mix clip from another pack in the cache and loads it through the clips media fetcher", async () => {
+    servePack(PACK_WARM, [CLIP_GRID, CLIP_HAZE]);
+    harness.libraryClips = [
+      clipOf(CLIP_DUST, PACK_COLD),
+      clipOf(CLIP_WAVE, PACK_COLD),
+    ];
+    harness.getClipsMedia.mockResolvedValue({ items: [] });
+    harness.cache = createFakeClipCache([CLIP_STRAY]);
+    const stage = createLibraryStage(mixStateOf(2, CLIP_DUST));
+    const { result } = renderPreload({
+      packId: PACK_WARM,
+      record: null,
+      stage,
+      screenId: SCREEN_ID,
+      setlistSceneClipIds: [CLIP_WAVE],
+    });
+
+    expect(harness.runs).toHaveLength(2);
+    expect(runAt(0).input.packId).toBe(PACK_WARM);
+    expect(runAt(1).input.packId).toBe(VJ_EXTRA_CLIPS_PACK_ID);
+    expect(runClipIds(1)).toEqual([CLIP_DUST, CLIP_WAVE]);
+    expect(result.current.extraClips.map((clip) => clip.id)).toEqual([
+      CLIP_DUST,
+      CLIP_WAVE,
+    ]);
+
+    await runAt(1).dependencies.fetchMedia(VJ_EXTRA_CLIPS_PACK_ID, null);
+    expect(harness.getClipsMedia).toHaveBeenCalledWith(
+      [CLIP_DUST, CLIP_WAVE],
+      undefined,
+    );
+    expect(harness.fetchMedia).not.toHaveBeenCalled();
+
+    await settleRun(1);
+    // The pack's statuses never name the extra clips; the targets may play them.
+    expect(result.current.statuses.map((status) => status.clipId)).toEqual([
+      CLIP_GRID,
+      CLIP_HAZE,
+    ]);
+    expect(result.current.readyClipIds).toEqual([]);
+    expect(result.current.playableClipIds).toEqual([CLIP_DUST, CLIP_WAVE]);
+    expect(result.current.clipById(CLIP_DUST)?.id).toBe(CLIP_DUST);
+
+    fakeCache().storedIds.add(CLIP_DUST);
+    fakeCache().storedIds.add(CLIP_WAVE);
+    await settleRun(0);
+    expect(fakeCache().keptSets.at(-1)).toEqual(
+      new Set([CLIP_GRID, CLIP_HAZE, CLIP_DUST, CLIP_WAVE]),
+    );
+    expect(fakeCache().storedIds.has(CLIP_DUST)).toBe(true);
+    expect(fakeCache().storedIds.has(CLIP_STRAY)).toBe(false);
+  });
+
+  it("plays the record's extra clips on an offline start without asking the library", () => {
+    const dustClip = clipOf(CLIP_DUST, PACK_COLD);
+    const record = recordOf({
+      savedAt: 5_000,
+      state: mixStateOf(7, CLIP_DUST),
+      pack: packOf(PACK_WARM),
+      clips: [clipOf(CLIP_GRID, PACK_WARM)],
+      extraClips: [dustClip],
+    });
+    const stage = createLibraryStage();
+    const { result } = renderPreload({
+      packId: PACK_WARM,
+      record,
+      stage,
+      screenId: SCREEN_ID,
+    });
+
+    expect(result.current.extraClips).toEqual([dustClip]);
+    expect(runClipIds(1)).toEqual([CLIP_DUST]);
+    expect(harness.libraryEnabledCalls.every((isEnabled) => !isEnabled)).toBe(
+      true,
+    );
+  });
+});
+
+describe("useVjScreenRecordSync v2 fields", () => {
+  it("writes the extra clips, the event card and the clock offset", () => {
+    const extraClip = clipOf(CLIP_DUST, PACK_COLD);
+    const eventCard = {
+      eventId: "event-1",
+      title: "Friday dance",
+      startAt: "2026-11-07T21:00:00.000Z",
+      endAt: null,
+      timezone: "Europe/Lisbon",
+      area: null,
+      isOnline: false,
+      publicUrl: null,
+    };
+    const baseProps: VjScreenRecordSyncInput = {
+      state: stageStateOf(1, { activePackId: PACK_WARM }),
+      pack: packOf(PACK_WARM),
+      clips: [clipOf(CLIP_GRID, PACK_WARM)],
+      liveClip: null,
+      extraClips: [extraClip],
+      eventCard,
+      clockOffsetMs: 120,
+    };
+    const { rerender } = renderHook(
+      (props: VjScreenRecordSyncInput) => useVjScreenRecordSync(props),
+      { initialProps: baseProps },
+    );
+    expect(harness.writeRecord).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        version: 2,
+        extraClips: [extraClip],
+        eventCard,
+        clockOffsetMs: 120,
+      }),
+    );
+
+    // A clock sample that barely moves the offset writes nothing.
+    rerender({ ...baseProps, clockOffsetMs: 130 });
+    expect(harness.writeRecord).toHaveBeenCalledTimes(1);
+
+    rerender({ ...baseProps, clockOffsetMs: 160 });
+    expect(harness.writeRecord).toHaveBeenCalledTimes(2);
+    expect(harness.writeRecord).toHaveBeenLastCalledWith(
+      expect.objectContaining({ clockOffsetMs: 160 }),
+    );
   });
 });

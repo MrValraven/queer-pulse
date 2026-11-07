@@ -173,10 +173,11 @@ export const UPLOAD_LIMITS: Record<UploadKind, UploadLimit> = {
   studio_audio: { maxBytes: 50 * MB, maxLabel: "50 MB" },
   // VJ library (admin). Never read by this image pipeline: clips go through
   // features/vj/upload and the thumbnail is built there. Present only so the
-  // Record stays total. The caps mirror the backend's `vj_clip` and
-  // `vj_thumbnail` kinds.
+  // Record stays total. The caps mirror the backend's `vj_clip`,
+  // `vj_thumbnail` and `vj_preview` kinds (the preview is recorded there too).
   vj_clip: { maxBytes: 100 * MB, maxLabel: "100 MB" },
   vj_thumbnail: { maxBytes: 256 * 1024, maxLabel: "256 KB" },
+  vj_preview: { maxBytes: 512 * 1024, maxLabel: "512 KB" },
 };
 
 /**
@@ -309,6 +310,7 @@ const MAX_DIMENSION_PX: Record<UploadKind, number> = {
   // the Record stays total.
   vj_clip: 0,
   vj_thumbnail: 0,
+  vj_preview: 0,
 };
 
 /** Re-encode quality used once an image is actually being downscaled — a
@@ -1009,6 +1011,7 @@ export const CROP_CONFIG: Record<UploadKind, AspectConfig> = {
   // Unused: VJ clips have no crop. Present only so the Record stays total.
   vj_clip: { aspect: "free", aspectLabel: "free", allowFreeform: true },
   vj_thumbnail: { aspect: "free", aspectLabel: "free", allowFreeform: true },
+  vj_preview: { aspect: "free", aspectLabel: "free", allowFreeform: true },
 };
 
 /** Minimum output pixel dimensions for the crop, derived from `UPLOAD_LIMITS`. */

@@ -6,6 +6,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { VjUploadRow as VjUploadRowState } from "../upload/vjUploadQueue";
 import { VjReasonLine } from "../VjReasonLine";
 import { formatVjBytes } from "../vjFormat";
+import backfillStyles from "./VjPreviewBackfill.module.css";
 import styles from "./VjUpload.module.css";
 
 /** Mirrors `--ease` and `--dur-base` / `--dur-fast` in tokens/effects.css. */
@@ -16,7 +17,7 @@ const VJ_ACTIONS_FADE_DURATION = 0.15;
 /** A failed row that somehow lost its cause still shows a line. */
 const VJ_UNKNOWN_UPLOAD_FAILURE = new Error("vj_upload_failed");
 
-type VjUploadActionGroup = "running" | "failed" | "settled";
+type VjUploadActionGroup = "running" | "previewing" | "failed" | "settled";
 
 interface VjUploadRowProps {
   row: VjUploadRowState;
@@ -28,6 +29,7 @@ interface VjUploadRowProps {
 
 function actionGroupOf(row: VjUploadRowState): VjUploadActionGroup {
   if (row.stage === "failed") return "failed";
+  if (row.stage === "previewing") return "previewing";
   if (row.stage === "done" || row.stage === "cancelled") return "settled";
   return "running";
 }
@@ -60,6 +62,8 @@ function useVjUploadStatusText(
       return t("vj:upload.status.waiting");
     case "saving":
       return t("vj:upload.status.saving");
+    case "previewing":
+      return t("vj:upload.status.previewing");
     case "done":
       return row.packId !== null && packName !== null
         ? t("vj:upload.status.donePack", { pack: packName })
@@ -141,12 +145,19 @@ function VjUploadRowActions({
             {t("vj:upload.cancel")}
           </Button>
         ) : null}
+        {actionGroup === "previewing" ? (
+          <Button variant="quiet" size="sm" onClick={onCancel}>
+            {t("vj:upload.skipPreview")}
+          </Button>
+        ) : null}
         {actionGroup === "failed" ? (
           <Button variant="soft" size="sm" onClick={onRetry}>
             {t("vj:upload.retry")}
           </Button>
         ) : null}
-        {actionGroup === "running" ? null : removeButton}
+        {actionGroup === "running" || actionGroup === "previewing"
+          ? null
+          : removeButton}
       </m.div>
     </AnimatePresence>
   );
@@ -155,6 +166,9 @@ function VjUploadRowActions({
 /**
  * One file in the upload list: its name and size, its stage in words, a
  * progress bar while it uploads or saves, and the named cause when it fails.
+ * After the clip is saved the row makes its animated preview ("Skip preview"
+ * ends it done); a preview that could not be made names its cause under the
+ * done row with a hint that "Make previews" tries that clip again.
  */
 export function VjUploadRow({
   row,
@@ -163,9 +177,13 @@ export function VjUploadRow({
   onRetry,
   onDismiss,
 }: VjUploadRowProps) {
+  const { t } = useTranslation();
   const statusText = useVjUploadStatusText(row, packName, true);
   const announcedText = useVjUploadStatusText(row, packName, false);
   const isFailed = row.stage === "failed";
+  // The clip is saved, so a preview that could not be made leaves the row done.
+  const previewFailure = row.stage === "done" ? row.previewFailure : null;
+  const hasPreviewFailure = previewFailure != null;
   const isProgressShown = row.stage === "uploading" || row.stage === "saving";
 
   return (
@@ -212,6 +230,12 @@ export function VjUploadRow({
         error={isFailed ? (row.failure ?? VJ_UNKNOWN_UPLOAD_FAILURE) : null}
         fileByteSize={row.byteSize}
       />
+      <VjReasonLine error={previewFailure} />
+      <Collapse isOpen={hasPreviewFailure}>
+        <p className={backfillStyles.uploadHint}>
+          {t("vj:upload.previewRetryHint")}
+        </p>
+      </Collapse>
     </div>
   );
 }

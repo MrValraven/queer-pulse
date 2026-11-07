@@ -30,6 +30,9 @@ export function usePieceRowMenuPlacement(
   triggerRef: RefObject<HTMLElement | null>,
   popoverRef: RefObject<HTMLElement | null>,
   onDismiss: () => void,
+  /** False while the menu plays its exit: the dismissal listeners are
+   *  removed so nothing closes it twice. */
+  isActive = true,
 ): PieceRowMenuPlacement | null {
   const [placement, setPlacement] = useState<PieceRowMenuPlacement | null>(
     null,
@@ -73,6 +76,7 @@ export function usePieceRowMenuPlacement(
   // the menu here before the trigger's own click handler reopened it, so the
   // trigger could never close what it had opened.
   useEffect(() => {
+    if (!isActive) return;
     function handlePointerDown(event: PointerEvent) {
       const target = event.target as Node;
       if (triggerRef.current?.contains(target)) return;
@@ -88,7 +92,7 @@ export function usePieceRowMenuPlacement(
       window.removeEventListener("scroll", dismiss, true);
       window.removeEventListener("resize", dismiss);
     };
-  }, [triggerRef, popoverRef]);
+  }, [triggerRef, popoverRef, isActive]);
 
   return placement;
 }

@@ -206,6 +206,9 @@
     grid-template-columns: 1fr;
   }
 }
+.incColsSingle {
+  grid-template-columns: 1fr;
+}
 .colH {
   font-family: var(--serif);
   font-weight: 400;

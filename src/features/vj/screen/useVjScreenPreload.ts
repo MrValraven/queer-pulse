@@ -2,10 +2,17 @@
  * Keeps the projector's clip cache filled for the active pack (contract 5.4,
  * 6.10, 8.5). A pack change starts a new preload and aborts the old one while
  * the loaded clips keep playing; once the new pack has settled, the cache keeps
- * the active pack, the previous pack and the live clip. Coming back online,
- * and the socket attaching again while no run is going, retry what never
- * arrived; a library change naming the active pack refetches its clips, and a
- * deleted clip leaves the cache. Nothing here logs.
+ * the active pack, the previous pack and every clip `vjRetainedClips` names
+ * (contract 9.1: the live, mix and override clips and the active set list's
+ * scene sources). Coming back online, and the socket attaching again while no
+ * run is going, retry what never arrived; a library change naming the active
+ * pack refetches its clips, and a deleted clip leaves the cache. Nothing here
+ * logs.
+ *
+ * The extra clips (retained clips outside both packs) run through the same
+ * preloader with GET /admin/vj/clips/media (`createVjExtraClipFetcher`). Their
+ * statuses stay apart from the pack's, so the setup card and the `preload`
+ * report name the pack only; `playableClipIds` lists both for the targets.
  */
 import {
   useCallback,
@@ -24,6 +31,7 @@ import type {
 } from "../../../shared/contracts/vj";
 import { useInvalidateVjLibrary } from "../api/useInvalidateVjLibrary";
 import { useVjClips } from "../api/useVjClips";
+import { useVjClipsMediaFetcher } from "../api/useVjClipsMediaFetcher";
 import { useVjPackClips } from "../api/useVjPackClips";
 import {
   useVjPackMediaFetcher,
@@ -32,6 +40,11 @@ import {
 import type { VjStageController } from "../live/useVjStage";
 import { createVjClipCache, type VjClipCache } from "./vjClipCache";
 import { preloadVjPack } from "./vjPreloader";
+import {
+  createVjExtraClipFetcher,
+  VJ_EXTRA_CLIPS_PACK_ID,
+} from "./vjExtraClipMedia";
+import { vjRetainedClips } from "./vjRetainedClips";
 import type { VjScreenRecord } from "./vjScreenRecord";
 
 export interface VjScreenPreloadResult {
@@ -43,10 +56,16 @@ export interface VjScreenPreloadResult {
   /** Pack order. */
   readyClipIds: readonly string[];
   cache: VjClipCache;
-  /** Active pack, previous pack, the record, the record's live clip, then the library. */
+  /** Active pack, previous pack, the record, the record's live and extra clips, then the library. */
   clipById: (clipId: string) => VjClipDTO | null;
   /** Status failed decode_failed, entry removed from the cache. */
   markDecodeFailed: (clipId: string) => void;
+  /** Retained clips outside both packs whose entry is known, most urgent first. */
+  extraClips: readonly VjClipDTO[];
+  /** The extra clips' statuses, in extraClips order; never part of `statuses`. */
+  extraStatuses: readonly VjScreenClipStatus[];
+  /** Ready pack clips, then ready extra clips: what a live or mix target may play. */
+  playableClipIds: readonly string[];
 }
 
 export interface VjScreenPreloadInput {
@@ -60,6 +79,10 @@ export interface VjScreenPreloadInput {
     state?: VjStageState | null;
     isConnected?: boolean;
   };
+  /** This screen's id, so its override clip stays cached; default none. */
+  screenId?: string;
+  /** Source clips of the active set list's scenes, in set list order; default none. */
+  setlistSceneClipIds?: readonly string[];
 }
 
 /** Progress reaches the page in whole tenths, so a playing screen re-renders a few times per clip. */
@@ -67,6 +90,7 @@ export const VJ_PRELOAD_PROGRESS_STEPS = 10;
 
 const NO_CLIPS: readonly VjClipDTO[] = [];
 const NO_CLIP_IDS: ReadonlySet<string> = new Set<string>();
+const NO_CLIP_ID_LIST: readonly string[] = [];
 
 interface VjPackMemory {
   packId: string | null;
@@ -76,15 +100,19 @@ interface VjPackMemory {
 
 /** What the preload effects read without re-running on every render. */
 interface VjPreloadLatest {
+  /** The pack id runs go under (the extra clips' pseudo id for the extra runner); null with nothing to load. */
   packId: string | null;
   clips: readonly VjClipDTO[];
-  previousClips: readonly VjClipDTO[];
-  liveClipId: string | null;
+  /** Every clip the cache keeps once the active pack settles. */
+  keptClipIds: ReadonlySet<string>;
 }
 
 interface VjPreloadRunner {
   cache: VjClipCache;
-  fetchMedia: VjPackMediaFetcher;
+  /** The media source for one run over these clips. */
+  fetchMediaFor: (clipIds: readonly string[]) => VjPackMediaFetcher;
+  /** The pack runner evicts once its pack settles; the extra clips runner never does. */
+  shouldEvict: boolean;
   latestRef: RefObject<VjPreloadLatest>;
   statusByIdRef: RefObject<Map<string, VjScreenClipStatus>>;
   /** The statuses the page last received. */
@@ -184,7 +212,7 @@ function knownClipsOf(
   return null;
 }
 
-/** Evicts every entry outside the active pack, the previous pack and the live clip once the active pack has settled. */
+/** Evicts every entry the retention set leaves out once the active pack has settled. */
 function evictWhenSettled(runner: VjPreloadRunner): void {
   const latest = runner.latestRef.current;
   const isEverySettled = latest.clips.every((clip) => {
@@ -193,11 +221,7 @@ function evictWhenSettled(runner: VjPreloadRunner): void {
     return status !== undefined && isSettled(status);
   });
   if (!isEverySettled) return;
-  const keptClipIds = new Set<string>();
-  latest.clips.forEach((clip) => keptClipIds.add(clip.id));
-  latest.previousClips.forEach((clip) => keptClipIds.add(clip.id));
-  if (latest.liveClipId !== null) keptClipIds.add(latest.liveClipId);
-  void runner.cache.keepOnly(keptClipIds).catch(() => undefined);
+  void runner.cache.keepOnly(latest.keptClipIds).catch(() => undefined);
 }
 
 /** Starts one preload run over the given clips, aborting the one in flight. */
@@ -212,6 +236,7 @@ function startPreloadRun(
   const clipsToLoad = clips.filter(
     (clip) => !runner.decodeFailedIdsRef.current.has(clip.id),
   );
+  const fetchMedia = runner.fetchMediaFor(clipsToLoad.map((clip) => clip.id));
   void preloadVjPack(
     {
       packId,
@@ -225,7 +250,7 @@ function startPreloadRun(
         storeStatuses(runner, updates);
       },
     },
-    { cache: runner.cache, fetchMedia: runner.fetchMedia },
+    { cache: runner.cache, fetchMedia },
   ).then((finalStatuses) => {
     // The run is over: a reattach may start a retry now.
     if (runner.runControllerRef.current === controller) {
@@ -233,7 +258,9 @@ function startPreloadRun(
     }
     if (controller.signal.aborted) return;
     storeStatuses(runner, finalStatuses);
-    if (runner.latestRef.current.packId === packId) evictWhenSettled(runner);
+    if (runner.shouldEvict && runner.latestRef.current.packId === packId) {
+      evictWhenSettled(runner);
+    }
   });
   return controller;
 }
@@ -305,28 +332,28 @@ function useRetryOnReattach(
 }
 
 /**
- * The live clip's entry when the active and previous packs do not hold it:
- * the record's live clip, then (online) the library list, as the remote does.
+ * Entries for retained clips the active and previous packs do not hold: the
+ * record's live and extra clips, then (online, only while some id is still
+ * unknown) the library list, as the remote does.
  */
-function useLiveClipFallbacks(
-  liveClipId: string | null,
+function useClipEntryFallbacks(
+  neededClipIds: readonly string[],
   localLists: readonly (readonly VjClipDTO[])[],
-  recordLiveClip: VjClipDTO | null,
+  recordEntries: readonly VjClipDTO[],
 ): readonly VjClipDTO[] {
-  const isKnownLocally =
-    liveClipId === null ||
-    localLists.some((clipList) =>
-      clipList.some((clip) => clip.id === liveClipId),
-    ) ||
-    recordLiveClip?.id === liveClipId;
+  const isKnownLocally = neededClipIds.every((clipId) =>
+    [...localLists, recordEntries].some((clipList) =>
+      clipList.some((clip) => clip.id === clipId),
+    ),
+  );
   const libraryClipsQuery = useVjClips({ isEnabled: !isKnownLocally });
   const libraryClips = libraryClipsQuery.data ?? NO_CLIPS;
   return useMemo(
     () =>
-      recordLiveClip === null
+      recordEntries.length === 0
         ? libraryClips
-        : [recordLiveClip, ...libraryClips],
-    [recordLiveClip, libraryClips],
+        : [...recordEntries, ...libraryClips],
+    [recordEntries, libraryClips],
   );
 }
 
@@ -388,21 +415,181 @@ function useClipIdSet(): [ReadonlySet<string>, (clipId: string) => void] {
   return [clipIds, addClipId];
 }
 
+function findClipIn(
+  clipLists: readonly (readonly VjClipDTO[])[],
+  clipId: string,
+): VjClipDTO | null {
+  for (const clipList of clipLists) {
+    const match = clipList.find((clip) => clip.id === clipId);
+    if (match !== undefined) return match;
+  }
+  return null;
+}
+
+function isSameClip(first: VjClipDTO, second: VjClipDTO): boolean {
+  return first === second;
+}
+
+/** A clip list's statuses: a decode failure wins, then the runner's status, else queued. */
+function useClipStatuses(
+  clips: readonly VjClipDTO[],
+  statusById: ReadonlyMap<string, VjScreenClipStatus>,
+  decodeFailedClipIds: ReadonlySet<string>,
+): readonly VjScreenClipStatus[] {
+  const nextStatuses = useMemo(
+    () =>
+      clips.map((clip) =>
+        decodeFailedClipIds.has(clip.id)
+          ? decodeFailedStatusOf(clip.id)
+          : (statusById.get(clip.id) ?? queuedStatusOf(clip.id)),
+      ),
+    [clips, statusById, decodeFailedClipIds],
+  );
+  return useStableList(nextStatuses, isSameStatus);
+}
+
+function useReadyClipIds(
+  statuses: readonly VjScreenClipStatus[],
+): readonly string[] {
+  const nextReadyClipIds = useMemo(
+    () =>
+      statuses
+        .filter((status) => status.state === "ready")
+        .map((status) => status.clipId),
+    [statuses],
+  );
+  return useStableList(nextReadyClipIds, isSameClipId);
+}
+
+interface VjPreloadRunnerOptions {
+  cache: VjClipCache;
+  fetchMediaFor: VjPreloadRunner["fetchMediaFor"];
+  shouldEvict: boolean;
+  decodeFailedIdsRef: RefObject<Set<string>>;
+  latest: VjPreloadLatest;
+}
+
+/** One runner (the pack's or the extra clips') with the statuses it published. */
+function usePreloadRunner(options: VjPreloadRunnerOptions): {
+  runner: VjPreloadRunner;
+  statusById: ReadonlyMap<string, VjScreenClipStatus>;
+} {
+  const { cache, fetchMediaFor, shouldEvict, decodeFailedIdsRef } = options;
+  const [statusById, setStatusById] = useState<
+    ReadonlyMap<string, VjScreenClipStatus>
+  >(() => new Map());
+  const latestRef = useRef<VjPreloadLatest>(options.latest);
+  const statusByIdRef = useRef(new Map<string, VjScreenClipStatus>());
+  const publishedByIdRef = useRef(new Map<string, VjScreenClipStatus>());
+  const runControllerRef = useRef<AbortController | null>(null);
+  const runner = useMemo<VjPreloadRunner>(
+    () => ({
+      cache,
+      fetchMediaFor,
+      shouldEvict,
+      latestRef,
+      statusByIdRef,
+      publishedByIdRef,
+      decodeFailedIdsRef,
+      runControllerRef,
+      publishStatuses: () => {
+        publishedByIdRef.current = new Map(statusByIdRef.current);
+        setStatusById(publishedByIdRef.current);
+      },
+    }),
+    [cache, fetchMediaFor, shouldEvict, decodeFailedIdsRef],
+  );
+  // Declared before the run effects, so a run started in the same commit reads this render.
+  useEffect(() => {
+    latestRef.current = options.latest;
+  });
+  useRetryWhenOnline(runner);
+  return { runner, statusById };
+}
+
+/** Runs the extra clips whenever their list changes; the cached ones turn ready at once. */
+function useExtraClipsRun(
+  runner: VjPreloadRunner,
+  extraClips: readonly VjClipDTO[],
+): void {
+  const hasExtraClips = extraClips.length > 0;
+  const extraSignature = clipSignatureOf(extraClips);
+  useEffect(() => {
+    if (!hasExtraClips) return;
+    startPreloadRun(
+      runner,
+      VJ_EXTRA_CLIPS_PACK_ID,
+      runner.latestRef.current.clips,
+    );
+    return () => runner.runControllerRef.current?.abort();
+  }, [runner, hasExtraClips, extraSignature]);
+}
+
+interface VjRetainedClipsHookInput {
+  clips: readonly VjClipDTO[];
+  previousClips: readonly VjClipDTO[];
+  state: VjStageState | null;
+  screenId: string;
+  setlistSceneClipIds: readonly string[];
+  record: VjScreenRecord | null;
+  deletedClipIds: ReadonlySet<string>;
+}
+
+/** The retention set (contract 9.1), the extra clips' known entries and the fallback entries behind them. */
+function useRetainedClips(input: VjRetainedClipsHookInput) {
+  const { clips, previousClips, state, screenId, setlistSceneClipIds } = input;
+  const { record, deletedClipIds } = input;
+  const retained = useMemo(
+    () =>
+      vjRetainedClips({
+        activePackClipIds: clips.map((clip) => clip.id),
+        previousPackClipIds: previousClips.map((clip) => clip.id),
+        state,
+        screenId,
+        setlistSceneClipIds,
+      }),
+    [clips, previousClips, state, screenId, setlistSceneClipIds],
+  );
+  const recordClips = record?.clips ?? NO_CLIPS;
+  const recordEntries = useMemo(() => {
+    if (record === null) return NO_CLIPS;
+    const liveEntries = record.liveClip === null ? [] : [record.liveClip];
+    return [...liveEntries, ...record.extraClips];
+  }, [record]);
+  const fallbackClips = useClipEntryFallbacks(
+    retained.extraClipIds,
+    [clips, previousClips, recordClips],
+    recordEntries,
+  );
+  const nextExtraClips = useMemo(
+    () =>
+      retained.extraClipIds
+        .filter((clipId) => !deletedClipIds.has(clipId))
+        .map((clipId) => findClipIn([recordClips, fallbackClips], clipId))
+        .filter((clip): clip is VjClipDTO => clip !== null),
+    [retained.extraClipIds, deletedClipIds, recordClips, fallbackClips],
+  );
+  const extraClips = useStableList(nextExtraClips, isSameClip);
+  return {
+    keptClipIds: retained.keptClipIds,
+    extraClips,
+    recordClips,
+    fallbackClips,
+  };
+}
+
 export function useVjScreenPreload(
   input: VjScreenPreloadInput,
 ): VjScreenPreloadResult {
   const { packId, record } = input;
   const { subscribeLibrary } = input.stage;
-  const liveClipId =
-    input.stage.state?.liveClipId ?? record?.state.liveClipId ?? null;
   const [cache] = useState(() => createVjClipCache());
   const fetchMedia = useVjPackMediaFetcher();
+  const getClipsMedia = useVjClipsMediaFetcher();
   const packClipsQuery = useVjPackClips(packId);
   const [deletedClipIds, addDeletedClipId] = useClipIdSet();
   const [decodeFailedClipIds, addDecodeFailedClipId] = useClipIdSet();
-  const [statusById, setStatusById] = useState<
-    ReadonlyMap<string, VjScreenClipStatus>
-  >(() => new Map());
+  const decodeFailedIdsRef = useRef(new Set<string>());
 
   const known = knownClipsOf(packId, packClipsQuery.data, record);
   const knownPack = known?.pack ?? null;
@@ -420,50 +607,57 @@ export function useVjScreenPreload(
     () => previousSourceClips.filter((clip) => !deletedClipIds.has(clip.id)),
     [previousSourceClips, deletedClipIds],
   );
-
-  const latestRef = useRef<VjPreloadLatest>({
-    packId,
+  const retained = useRetainedClips({
     clips,
     previousClips,
-    liveClipId,
+    state: input.stage.state ?? record?.state ?? null,
+    screenId: input.screenId ?? "",
+    setlistSceneClipIds: input.setlistSceneClipIds ?? NO_CLIP_ID_LIST,
+    record,
+    deletedClipIds,
   });
-  const statusByIdRef = useRef(new Map<string, VjScreenClipStatus>());
-  const publishedByIdRef = useRef(new Map<string, VjScreenClipStatus>());
-  const decodeFailedIdsRef = useRef(new Set<string>());
-  const runControllerRef = useRef<AbortController | null>(null);
-  const runner = useMemo<VjPreloadRunner>(
-    () => ({
-      cache,
-      fetchMedia,
-      latestRef,
-      statusByIdRef,
-      publishedByIdRef,
-      decodeFailedIdsRef,
-      runControllerRef,
-      publishStatuses: () => {
-        publishedByIdRef.current = new Map(statusByIdRef.current);
-        setStatusById(publishedByIdRef.current);
-      },
-    }),
-    [cache, fetchMedia],
+  const { extraClips, recordClips, fallbackClips } = retained;
+
+  const packFetchMediaFor = useCallback(() => fetchMedia, [fetchMedia]);
+  const extraFetchMediaFor = useCallback(
+    (clipIds: readonly string[]) =>
+      createVjExtraClipFetcher(getClipsMedia, clipIds),
+    [getClipsMedia],
   );
-
-  useEffect(() => {
-    latestRef.current = { packId, clips, previousClips, liveClipId };
+  const pack = usePreloadRunner({
+    cache,
+    fetchMediaFor: packFetchMediaFor,
+    shouldEvict: true,
+    decodeFailedIdsRef,
+    latest: { packId, clips, keptClipIds: retained.keptClipIds },
+  });
+  const extra = usePreloadRunner({
+    cache,
+    fetchMediaFor: extraFetchMediaFor,
+    shouldEvict: false,
+    decodeFailedIdsRef,
+    latest: {
+      packId: extraClips.length > 0 ? VJ_EXTRA_CLIPS_PACK_ID : null,
+      clips: extraClips,
+      keptClipIds: retained.keptClipIds,
+    },
   });
 
+  const packRunner = pack.runner;
   const isClipListKnown = knownClips !== null;
   const clipSignature = clipSignatureOf(clips);
   useEffect(() => {
     if (packId === null || !isClipListKnown) return;
-    startPreloadRun(runner, packId, latestRef.current.clips);
+    startPreloadRun(packRunner, packId, packRunner.latestRef.current.clips);
     // Aborts this run or the online retry that replaced it.
-    return () => runner.runControllerRef.current?.abort();
-  }, [runner, packId, isClipListKnown, clipSignature]);
+    return () => packRunner.runControllerRef.current?.abort();
+  }, [packRunner, packId, isClipListKnown, clipSignature]);
+  useExtraClipsRun(extra.runner, extraClips);
 
-  useRetryWhenOnline(runner);
-  useRetryOnReattach(runner, input.stage.isConnected ?? false);
-  useLibraryChanges(subscribeLibrary, runner, addDeletedClipId);
+  const isConnected = input.stage.isConnected ?? false;
+  useRetryOnReattach(packRunner, isConnected);
+  useRetryOnReattach(extra.runner, isConnected);
+  useLibraryChanges(subscribeLibrary, packRunner, addDeletedClipId);
 
   const markDecodeFailed = useCallback(
     (clipId: string) => {
@@ -474,45 +668,30 @@ export function useVjScreenPreload(
     [cache, addDecodeFailedClipId],
   );
 
-  const nextStatuses = useMemo(
-    () =>
-      clips.map((clip) =>
-        decodeFailedClipIds.has(clip.id)
-          ? decodeFailedStatusOf(clip.id)
-          : (statusById.get(clip.id) ?? queuedStatusOf(clip.id)),
-      ),
-    [clips, statusById, decodeFailedClipIds],
+  const statuses = useClipStatuses(clips, pack.statusById, decodeFailedClipIds);
+  const readyClipIds = useReadyClipIds(statuses);
+  const extraStatuses = useClipStatuses(
+    extraClips,
+    extra.statusById,
+    decodeFailedClipIds,
   );
-  const statuses = useStableList(nextStatuses, isSameStatus);
-  const nextReadyClipIds = useMemo(
+  const extraReadyClipIds = useReadyClipIds(extraStatuses);
+  const playableClipIds = useMemo(
     () =>
-      statuses
-        .filter((status) => status.state === "ready")
-        .map((status) => status.clipId),
-    [statuses],
+      extraReadyClipIds.length === 0
+        ? readyClipIds
+        : [...readyClipIds, ...extraReadyClipIds],
+    [readyClipIds, extraReadyClipIds],
   );
-  const readyClipIds = useStableList(nextReadyClipIds, isSameClipId);
 
-  const recordClips = record?.clips ?? NO_CLIPS;
-  const fallbackClips = useLiveClipFallbacks(
-    liveClipId,
-    [clips, previousClips, recordClips],
-    record?.liveClip ?? null,
-  );
   const clipById = useCallback(
-    (clipId: string): VjClipDTO | null => {
-      if (deletedClipIds.has(clipId)) return null;
-      for (const clipList of [
-        clips,
-        previousClips,
-        recordClips,
-        fallbackClips,
-      ]) {
-        const match = clipList.find((clip) => clip.id === clipId);
-        if (match !== undefined) return match;
-      }
-      return null;
-    },
+    (clipId: string): VjClipDTO | null =>
+      deletedClipIds.has(clipId)
+        ? null
+        : findClipIn(
+            [clips, previousClips, recordClips, fallbackClips],
+            clipId,
+          ),
     [clips, previousClips, recordClips, fallbackClips, deletedClipIds],
   );
 
@@ -525,6 +704,9 @@ export function useVjScreenPreload(
       cache,
       clipById,
       markDecodeFailed,
+      extraClips,
+      extraStatuses,
+      playableClipIds,
     }),
     [
       knownPack,
@@ -534,6 +716,9 @@ export function useVjScreenPreload(
       cache,
       clipById,
       markDecodeFailed,
+      extraClips,
+      extraStatuses,
+      playableClipIds,
     ],
   );
 }

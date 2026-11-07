@@ -1,46 +1,86 @@
 /**
  * Where the demo VJ library lives: one JSON copy in localStorage so every
- * demo tab reads the same packs and clips, read fresh on every call. A
- * blocked storage falls back to an in-memory copy, a damaged one reseeds, and
- * every committed write posts `library:changed` on the demo channel. Also the
- * lookups and DTO projection the store routes share.
+ * demo tab reads the same packs, clips, scenes and set lists, read fresh on
+ * every call. A blocked storage falls back to an in-memory copy, a damaged one
+ * reseeds, a v1 library is upgraded once (C 9.5), and every committed write
+ * posts `library:changed` on the demo channel. Also the lookups the store
+ * routes share; the DTO projection lives in `vjDemoStoreDto.ts`.
  */
 import type {
   VjClipDTO,
   VjCreatorDTO,
   VjLibraryChange,
-  VjPackClipsDTO,
-  VjPackDTO,
-  VjPackListDTO,
+  VjSceneLook,
 } from "../../../shared/contracts/vj";
 import { currentUser } from "../../members/data/demoCurrentUser";
-import { VJ_DEMO_LIBRARY_STORAGE_KEY } from "../vj.constants";
+import {
+  VJ_DEMO_LIBRARY_STORAGE_KEY,
+  VJ_DEMO_LIBRARY_V1_STORAGE_KEY,
+} from "../vj.constants";
 import { VJ_DEMO_CREATORS, VJ_DEMO_SEED } from "./vjDemo.data";
 import {
   VJ_DEMO_TAB_ID,
   openVjDemoChannel,
   type VjDemoChannel,
 } from "./vjDemoChannel";
+import {
+  isVjDemoLibraryV2,
+  seedVjDemoScenesAndSetlists,
+  upgradeVjDemoLibraryV1,
+} from "./vjDemoLibraryUpgrade";
 import { VJ_DEMO_MEDIA } from "./vjDemoMedia.data";
 import { isVjUuid, vjRefusal } from "./vjDemoRules";
 
-export type StoredVjDemoClip = Omit<VjClipDTO, "packIds" | "packCount">;
+/** A clip as stored; `previewUrl` lives in the page-life preview map (C 9.5). */
+export type StoredVjDemoClip = Omit<
+  VjClipDTO,
+  "packIds" | "packCount" | "previewUrl"
+>;
 
 export interface StoredVjDemoPack {
   id: string;
   name: string;
   /** Pack order; the index is the position, so positions stay dense. */
   clipIds: string[];
+  /** The linked demo event fixture; null when the pack links none. */
+  eventId: string | null;
+  createdBy: VjCreatorDTO | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface StoredVjDemoScene {
+  id: string;
+  name: string;
+  packId: string | null;
+  look: VjSceneLook;
+  createdBy: VjCreatorDTO | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface StoredVjDemoSetlistItem {
+  id: string;
+  sceneId: string;
+}
+
+export interface StoredVjDemoSetlist {
+  id: string;
+  name: string;
+  /** Item order; the index is the position. */
+  items: StoredVjDemoSetlistItem[];
   createdBy: VjCreatorDTO | null;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface StoredVjDemoLibrary {
-  version: 1;
-  /** Position order. */
+  version: 2;
+  /** Position order, as are scenes and set lists. */
   packs: StoredVjDemoPack[];
   clips: StoredVjDemoClip[];
+  scenes: StoredVjDemoScene[];
+  setlists: StoredVjDemoSetlist[];
 }
 
 const DAY_MS = 86_400_000;
@@ -91,10 +131,8 @@ function resolveChannel(): VjDemoChannel | null {
   return defaultChannel;
 }
 
-/** The seed library, timestamped from the store's clock. */
-export function buildVjDemoSeedLibrary(): StoredVjDemoLibrary {
-  const now = readNow();
-  const clips = VJ_DEMO_SEED.clips.flatMap((seed): StoredVjDemoClip[] => {
+function buildSeedClips(now: number): StoredVjDemoClip[] {
+  return VJ_DEMO_SEED.clips.flatMap((seed): StoredVjDemoClip[] => {
     const media = VJ_DEMO_MEDIA.find((file) => file.slug === seed.slug);
     if (media === undefined) return [];
     const createdAt = isoAt(now - seed.createdDaysAgo * DAY_MS);
@@ -114,30 +152,43 @@ export function buildVjDemoSeedLibrary(): StoredVjDemoLibrary {
         createdBy: VJ_DEMO_CREATORS[seed.creator],
         createdAt,
         updatedAt: createdAt,
+        isFavorite: seed.isFavorite,
+        defaultSpeed: seed.defaultSpeed,
+        loopInMs: null,
+        loopOutMs: null,
+        loopMode: seed.loopMode,
       },
     ];
   });
+}
+
+/** The seed library, timestamped from the store's clock. */
+export function buildVjDemoSeedLibrary(): StoredVjDemoLibrary {
+  const now = readNow();
+  const clips = buildSeedClips(now);
   const packsCreatedAt = isoAt(now - SEED_PACKS_CREATED_DAYS_AGO * DAY_MS);
-  const packs = VJ_DEMO_SEED.packs.map((seed) => ({
+  const packs = VJ_DEMO_SEED.packs.map((seed): StoredVjDemoPack => ({
     id: seed.id,
     name: seed.name,
     clipIds: [...seed.clipIds],
+    eventId: seed.eventId,
     createdBy: VJ_DEMO_CREATORS[seed.creator],
     createdAt: packsCreatedAt,
     updatedAt: packsCreatedAt,
   }));
-  return { version: 1, packs, clips };
+  return {
+    version: 2,
+    packs,
+    clips,
+    ...seedVjDemoScenesAndSetlists({ packs, clips }, now),
+  };
 }
 
 function parseLibrary(text: string | null): StoredVjDemoLibrary | null {
   if (text === null) return null;
   try {
-    const parsed = JSON.parse(text) as Partial<StoredVjDemoLibrary> | null;
-    const isLibrary =
-      parsed?.version === 1 &&
-      Array.isArray(parsed.packs) &&
-      Array.isArray(parsed.clips);
-    return isLibrary ? (parsed as StoredVjDemoLibrary) : null;
+    const parsed: unknown = JSON.parse(text);
+    return isVjDemoLibraryV2(parsed) ? parsed : null;
   } catch {
     return null;
   }
@@ -155,19 +206,54 @@ function saveLibrary(library: StoredVjDemoLibrary): void {
   }
 }
 
-/** A fresh copy of the library; seeds and saves it when none is readable. */
+/** One storage read; a throwing storage switches the store to memory. */
+function readStorageItem(storage: Storage, key: string): string | null {
+  try {
+    return storage.getItem(key);
+  } catch {
+    isStorageBroken = true;
+    return null;
+  }
+}
+
+/** The v1 library upgraded, saved under the v2 key and its v1 key removed;
+ *  null when no readable v1 library is stored. */
+function upgradeStoredLibraryV1(storage: Storage): StoredVjDemoLibrary | null {
+  const text = readStorageItem(storage, VJ_DEMO_LIBRARY_V1_STORAGE_KEY);
+  if (text === null) return null;
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    return null;
+  }
+  const upgraded = upgradeVjDemoLibraryV1(parsed, readNow());
+  if (upgraded === null) return null;
+  saveLibrary(upgraded);
+  try {
+    storage.removeItem(VJ_DEMO_LIBRARY_V1_STORAGE_KEY);
+  } catch {
+    // The v2 copy is read first on every later load, so a v1 key left behind stays unread.
+  }
+  return upgraded;
+}
+
+/** A fresh copy of the library (C 9.5 order): the v2 key, else an upgraded
+ *  v1 library, else the seed, saved when it is not what was read. */
 export function loadVjDemoLibrary(): StoredVjDemoLibrary {
   const storage = resolveStorage();
   let text = memoryLibraryText;
   if (storage !== null) {
-    try {
-      text = storage.getItem(VJ_DEMO_LIBRARY_STORAGE_KEY);
-    } catch {
-      isStorageBroken = true;
-    }
+    const storedText = readStorageItem(storage, VJ_DEMO_LIBRARY_STORAGE_KEY);
+    if (!isStorageBroken) text = storedText;
   }
   const library = parseLibrary(text);
   if (library !== null) return library;
+  const upgraded =
+    storage === null || isStorageBroken
+      ? null
+      : upgradeStoredLibraryV1(storage);
+  if (upgraded !== null) return upgraded;
   const seed = buildVjDemoSeedLibrary();
   saveLibrary(seed);
   return seed;
@@ -183,6 +269,10 @@ export function commitVjDemoLibrary(
     packId: null,
     clipId: null,
     packIds: [],
+    sceneId: null,
+    setlistId: null,
+    setlistIds: [],
+    eventId: null,
     ...change,
   };
   resolveChannel()?.post({
@@ -225,6 +315,30 @@ export function findVjDemoClip(
   return clip;
 }
 
+/** The scene with this id. Answers VJ_SCENE_NOT_FOUND for a non-uuid or a miss. */
+export function findVjDemoScene(
+  library: StoredVjDemoLibrary,
+  sceneId: unknown,
+): StoredVjDemoScene {
+  const scene = isVjUuid(sceneId)
+    ? library.scenes.find((candidate) => candidate.id === sceneId)
+    : undefined;
+  if (scene === undefined) throw vjRefusal("VJ_SCENE_NOT_FOUND");
+  return scene;
+}
+
+/** The set list with this id. Answers VJ_SETLIST_NOT_FOUND for a non-uuid or a miss. */
+export function findVjDemoSetlist(
+  library: StoredVjDemoLibrary,
+  setlistId: unknown,
+): StoredVjDemoSetlist {
+  const setlist = isVjUuid(setlistId)
+    ? library.setlists.find((candidate) => candidate.id === setlistId)
+    : undefined;
+  if (setlist === undefined) throw vjRefusal("VJ_SETLIST_NOT_FOUND");
+  return setlist;
+}
+
 /** A pack's clips in pack order. */
 export function clipsOfVjDemoPack(
   library: StoredVjDemoLibrary,
@@ -255,52 +369,10 @@ export function vjDemoPackClipsChange(
     packId: pack.id,
     clipId,
     packIds: [pack.id],
-  };
-}
-
-export function toVjDemoPackDto(
-  library: StoredVjDemoLibrary,
-  pack: StoredVjDemoPack,
-): VjPackDTO {
-  const packClips = clipsOfVjDemoPack(library, pack);
-  return {
-    id: pack.id,
-    name: pack.name,
-    position: library.packs.indexOf(pack),
-    clipCount: packClips.length,
-    totalByteSize: packClips.reduce((total, clip) => total + clip.byteSize, 0),
-    coverThumbnailUrl: packClips[0]?.thumbnailUrl ?? null,
-    createdBy: pack.createdBy,
-    createdAt: pack.createdAt,
-    updatedAt: pack.updatedAt,
-  };
-}
-
-export function toVjDemoClipDto(
-  library: StoredVjDemoLibrary,
-  clip: StoredVjDemoClip,
-): VjClipDTO {
-  const packIds = packIdsOfVjDemoClip(library, clip.id);
-  return { ...clip, packIds, packCount: packIds.length };
-}
-
-export function toVjDemoPackClipsDto(
-  library: StoredVjDemoLibrary,
-  pack: StoredVjDemoPack,
-): VjPackClipsDTO {
-  return {
-    pack: toVjDemoPackDto(library, pack),
-    items: clipsOfVjDemoPack(library, pack).map((clip) =>
-      toVjDemoClipDto(library, clip),
-    ),
-  };
-}
-
-export function toVjDemoPackListDto(
-  library: StoredVjDemoLibrary,
-): VjPackListDTO {
-  return {
-    items: library.packs.map((pack) => toVjDemoPackDto(library, pack)),
+    sceneId: null,
+    setlistId: null,
+    setlistIds: [],
+    eventId: null,
   };
 }
 
@@ -318,5 +390,23 @@ export function refuseTakenVjDemoPackName(
   );
   if (other !== undefined) {
     throw vjRefusal("VJ_PACK_NAME_TAKEN", { packId: other.id });
+  }
+}
+
+/** Answers VJ_SETLIST_NAME_TAKEN, naming the other set list, when another set
+ *  list has this name compared with toLocaleLowerCase() after trim. */
+export function refuseTakenVjDemoSetlistName(
+  library: StoredVjDemoLibrary,
+  name: string,
+  ownSetlistId: string | null,
+): void {
+  const lowered = name.toLocaleLowerCase();
+  const other = library.setlists.find(
+    (setlist) =>
+      setlist.id !== ownSetlistId &&
+      setlist.name.toLocaleLowerCase() === lowered,
+  );
+  if (other !== undefined) {
+    throw vjRefusal("VJ_SETLIST_NAME_TAKEN", { setlistId: other.id });
   }
 }

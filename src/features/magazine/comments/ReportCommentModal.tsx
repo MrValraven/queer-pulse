@@ -9,12 +9,15 @@ import {
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useCreateReport } from "../../safety/api/useCreateReport";
-import { useReportSubmissionError } from "../../safety/api/reportSubmissionError";
 import {
   asReasonCode,
   useReportReasons,
 } from "../../safety/api/useReportReasons";
 import { logError } from "../../../shared/observability/logger";
+import {
+  reportCommentErrorCopy,
+  type ReportCommentErrorCopy,
+} from "./reportCommentError";
 import styles from "./ArticleComments.module.css";
 
 interface ReportCommentModalProps {
@@ -46,11 +49,10 @@ export function ReportCommentModal({
     "idle",
   );
   const createReport = useCreateReport();
-  const describeReportError = useReportSubmissionError();
-  // What the failure panel says. A rolling flood cap refusal carries its own
-  // member-facing explanation from the server, so the panel shows that instead
-  // of the generic body copy; every other failure keeps the generic line.
-  const [failureMessage, setFailureMessage] = useState<string | null>(null);
+  // What the failure panel says: the catalog key of the specific cause (see
+  // `reportCommentError.ts`), resolved at render so a lazy namespace that lands
+  // late still shows its text.
+  const [failure, setFailure] = useState<ReportCommentErrorCopy | null>(null);
   // See `ReportReplyModal`: server taxonomy, local instant fallback, and the
   // labels are now translated rather than the English `REASON_LABELS`.
   const REASONS = useReportReasons("magazine_comment");
@@ -61,7 +63,7 @@ export function ReportCommentModal({
   const submit = () => {
     if (!reason) return;
     setStatus("sending");
-    setFailureMessage(null);
+    setFailure(null);
     createReport.mutate(
       {
         subjectType: "magazine_comment",
@@ -72,9 +74,7 @@ export function ReportCommentModal({
         onSuccess: () => setStatus("done"),
         onError: (err) => {
           logError(err, { scope: "magazine.reportComment" });
-          setFailureMessage(
-            describeReportError(err, t("magazine:comments.report.errorBody")),
-          );
+          setFailure(reportCommentErrorCopy(err));
           setStatus("error");
         },
       },
@@ -126,10 +126,10 @@ export function ReportCommentModal({
             <FiAlertTriangle />
           </span>
           <h2 className={styles.errorTitle}>
-            {t("magazine:comments.report.errorTitle")}
+            {t("magazine:comments.report.error.title")}
           </h2>
           <p className={styles.errorBody} role="alert">
-            {failureMessage ?? t("magazine:comments.report.errorBody")}
+            {failure ? t(failure.key, failure.values) : null}
           </p>
           <div className={styles.errorActions}>
             <Button variant="ghost" type="button" onClick={onClose}>

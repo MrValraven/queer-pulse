@@ -26,6 +26,7 @@ function rowOf(changes: Partial<VjUploadRowState> = {}): VjUploadRowState {
     failure: null,
     clipId: null,
     retryCount: 0,
+    previewFailure: null,
     ...changes,
   };
 }
@@ -240,6 +241,69 @@ describe("VjUploadRows", () => {
     expect(
       screen.queryByRole("button", { name: "Clear finished uploads" }),
     ).not.toBeInTheDocument();
+  });
+});
+
+describe("VjUploadRow preview step", () => {
+  it("says it is making the preview and offers Skip preview", async () => {
+    const onCancel = vi.fn();
+    renderWithProviders(
+      <VjUploadRow
+        row={rowOf({ stage: "previewing", percent: 100, clipId: "clip-1" })}
+        packName={null}
+        onCancel={onCancel}
+        onRetry={vi.fn()}
+        onDismiss={vi.fn()}
+      />,
+    );
+
+    expect(
+      await screen.findByText("Making the preview", {
+        selector: "[role='status']",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Cancel upload" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Remove clip.mp4 from the list" }),
+    ).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Skip preview" }));
+    expect(onCancel).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps an uploaded row done and names the preview failure under it", async () => {
+    renderWithProviders(
+      <VjUploadRow
+        row={rowOf({
+          stage: "done",
+          percent: 100,
+          clipId: "clip-1",
+          previewFailure: new VjUploadFailure("VJ_PREVIEW_FAILED"),
+        })}
+        packName={null}
+        onCancel={vi.fn()}
+        onRetry={vi.fn()}
+        onDismiss={vi.fn()}
+      />,
+    );
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "The preview for this clip could not be made",
+    );
+    expect(
+      screen.getByText("Make previews in the library tries this clip again"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Added to the library", { selector: "[role='status']" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Retry upload" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Remove clip.mp4 from the list" }),
+    ).toBeInTheDocument();
   });
 });
 

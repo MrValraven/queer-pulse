@@ -222,6 +222,7 @@ const PRIVATE_BREADCRUMB_PATHS = [
   "/admin/vj",
   "vj-clips/",
   "vj-thumbnails/",
+  "vj-previews/",
 ];
 
 /**

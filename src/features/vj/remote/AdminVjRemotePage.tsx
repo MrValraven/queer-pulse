@@ -2,330 +2,314 @@ import {
   useCallback,
   useEffect,
   useId,
+  useMemo,
+  useRef,
   useState,
-  type CSSProperties,
   type JSX,
+  type RefObject,
 } from "react";
-import { AnimatePresence, m } from "motion/react";
-import { FiArrowLeft } from "react-icons/fi";
-import { useMotionPrefs } from "../../../app/providers/motionPrefs";
-import { routes } from "../../../app/routeMap";
-import type {
-  VjClipDTO,
-  VjPackDTO,
-  VjScreenStatus,
-  VjStageState,
-} from "../../../shared/contracts/vj";
-import { MAIN_CONTENT_ID } from "../../../shared/components/layout/SkipToContentLink";
-import { Button } from "../../../shared/components/ui/Button";
+import { useScreenWakeLock } from "../../../shared/hooks/useScreenWakeLock";
 import { useOnlineStatus } from "../../../shared/hooks/useOnlineStatus";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { PageMeta } from "../../../shared/seo/PageMeta";
 import { useQuizshowFramelessPage } from "../../quizshow/useQuizshowFramelessPage";
-import { QuizshowBackdrop } from "../../quizshow/stage/QuizshowBackdrop";
-import { useInvalidateVjLibrary } from "../api/useInvalidateVjLibrary";
-import { useVjClips } from "../api/useVjClips";
-import { useVjPackClips } from "../api/useVjPackClips";
-import { useVjPacks } from "../api/useVjPacks";
-import { useVjStage, type VjStageController } from "../live/useVjStage";
-import { useVjCommandRunner, type VjCommandName } from "./useVjCommandRunner";
+import { useVjScenes } from "../api/useVjScenes";
+import { useVjSetlists } from "../api/useVjSetlists";
+import { useVjStage } from "../live/useVjStage";
+import type { VjErrorValues } from "../live/vjStageCommands";
+import { VjFlashConsentPopover } from "./dock/VjFlashConsentPopover";
+import { useVjCueMode } from "./hooks/useVjCueMode";
+import { useVjDockPads } from "./hooks/useVjDockPads";
+import { useVjFlashConsent } from "./hooks/useVjFlashConsent";
+import { useVjMirrorFrames } from "./hooks/useVjMirrorFrames";
+import { useVjRemoteClock } from "./hooks/useVjRemoteClock";
+import { useVjRemoteLayout } from "./hooks/useVjRemoteLayout";
+import { useVjRemoteKeyboard } from "./input/useVjRemoteKeyboard";
+import { useVjMidi } from "./midi/useVjMidi";
+import {
+  useVjMidiMappings,
+  type UseVjMidiMappingsResult,
+} from "./midi/useVjMidiMappings";
+import { useVjMidiLearn, VjMidiLearnProvider } from "./midi/VjMidiLearnContext";
+import {
+  useVjRemoteActions,
+  type VjFlashConsentRequest,
+} from "./page/useVjRemoteActions";
+import { useVjRemoteLibrary } from "./page/useVjRemoteLibrary";
+import { useVjRemoteSheets } from "./page/useVjRemoteSheets";
+import { VjRemoteDock } from "./page/VjRemoteDock";
+import { VjRemoteSheetsHost } from "./page/VjRemoteSheetsHost";
+import {
+  VjRemoteShell,
+  type VjRemoteSession,
+  type VjRemoteView,
+} from "./page/VjRemoteShell";
+import type { VjGridSource } from "./top/VjRemoteTopRow";
+import { useVjCommandRunner } from "./useVjCommandRunner";
 import { vjRemoteOfflineReasonOf } from "./vjRemoteOffline";
-import { VjEffectsSheet } from "./VjEffectsSheet";
-import { VjRemoteClipGrid } from "./VjRemoteClipGrid";
-import { VjRemoteControlBar, type VjRemoteSheet } from "./VjRemoteControlBar";
-import { VjRemoteLiveStrip } from "./VjRemoteLiveStrip";
-import { VjRemoteStatusLine } from "./VjRemoteStatusLine";
-import { VjShuffleSheet } from "./VjShuffleSheet";
-import { VjTextSheet } from "./VjTextSheet";
-import styles from "./VjRemote.module.css";
 
-type VjRun = ReturnType<typeof useVjCommandRunner>["run"];
-
-const NO_PACKS: readonly VjPackDTO[] = [];
-const NO_CLIPS: readonly VjClipDTO[] = [];
-const VIEW_FADE_SECONDS = 0.2;
+/** The grid's source, favorites only and search: local to this page load. */
+function useVjRemoteView(): VjRemoteView {
+  const [gridSource, setGridSource] = useState<VjGridSource>("pack");
+  const [isFavoritesOnly, setIsFavoritesOnly] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const toggleFavoritesOnly = useCallback(() => {
+    setGridSource("pack");
+    setIsFavoritesOnly((wasOn) => !wasOn);
+  }, []);
+  const toggleSearch = useCallback(() => {
+    setGridSource("pack");
+    setIsSearchOpen((wasOpen) => !wasOpen);
+  }, []);
+  const closeSearch = useCallback(() => {
+    setIsSearchOpen(false);
+    setSearchQuery("");
+  }, []);
+  return useMemo(
+    () => ({
+      gridSource,
+      setGridSource,
+      isFavoritesOnly,
+      toggleFavoritesOnly,
+      isSearchOpen,
+      toggleSearch,
+      closeSearch,
+      searchQuery,
+      setSearchQuery,
+    }),
+    [
+      gridSource,
+      isFavoritesOnly,
+      toggleFavoritesOnly,
+      isSearchOpen,
+      toggleSearch,
+      closeSearch,
+      searchQuery,
+    ],
+  );
+}
 
 /**
- * The library the remote reads: the packs, the active pack's clips and the
- * live clip (from the active pack, else from every clip). Each
- * `library:changed` the stage passes on marks the library stale.
+ * The status line's refusal: the newest reason the dispatcher named (a
+ * favorite's REST refusal included), held until the stage moves on, else the
+ * command runner's last refusal. The runner's {max} or {min} go with its own
+ * key; a dispatcher key takes them only when the runner refused with the
+ * same key (the same send, seen by both).
  */
-function useVjRemoteLibrary(stage: VjStageController) {
-  const packsQuery = useVjPacks();
-  const activePackId = stage.state?.activePackId ?? null;
-  const liveClipId = stage.state?.liveClipId ?? null;
-  const packClipsQuery = useVjPackClips(activePackId);
-  const packClips = packClipsQuery.data?.items ?? NO_CLIPS;
-  const isLiveInPack =
-    liveClipId !== null && packClips.some((clip) => clip.id === liveClipId);
-  const libraryClipsQuery = useVjClips({
-    isEnabled: liveClipId !== null && !isLiveInPack,
+function useVjStatusErrorKey(
+  runnerError: { key: string | null; values: VjErrorValues | null },
+  stateRevision: number | null,
+): {
+  errorKey: string | null;
+  errorValues: VjErrorValues | null;
+  onRefused: (errorKey: string | null) => void;
+} {
+  const [refusal, setRefusal] = useState<{
+    key: string;
+    revision: number | null;
+  } | null>(null);
+  const revisionRef = useRef(stateRevision);
+  useEffect(() => {
+    revisionRef.current = stateRevision;
   });
-  const invalidateLibrary = useInvalidateVjLibrary();
-  const { subscribeLibrary } = stage;
-
-  useEffect(
-    () => subscribeLibrary(invalidateLibrary),
-    [subscribeLibrary, invalidateLibrary],
-  );
-
-  const liveClip =
-    liveClipId === null
-      ? null
-      : (packClips.find((clip) => clip.id === liveClipId) ??
-        libraryClipsQuery.data?.find((clip) => clip.id === liveClipId) ??
-        null);
-
+  const onRefused = useCallback((errorKey: string | null) => {
+    if (errorKey === null) return;
+    setRefusal({ key: errorKey, revision: revisionRef.current });
+  }, []);
+  const isRefusalCurrent =
+    refusal !== null && refusal.revision === stateRevision;
+  if (!isRefusalCurrent) {
+    return {
+      errorKey: runnerError.key,
+      errorValues: runnerError.values,
+      onRefused,
+    };
+  }
   return {
-    packs: packsQuery.data ?? NO_PACKS,
-    hasLoadedPacks: packsQuery.data !== undefined,
-    activePackId,
-    activePackName: packClipsQuery.data?.pack.name ?? null,
-    packClips,
-    hasLoadedPackClips: packClipsQuery.data !== undefined,
-    liveClip,
+    errorKey: refusal.key,
+    errorValues: refusal.key === runnerError.key ? runnerError.values : null,
+    onRefused,
   };
 }
 
-type VjClipsView = "loading" | "noPacks" | "pickPack" | "packEmpty" | "grid";
-
-function clipsViewOf(
-  library: ReturnType<typeof useVjRemoteLibrary>,
-): VjClipsView {
-  if (!library.hasLoadedPacks) return "loading";
-  if (library.packs.length === 0) return "noPacks";
-  if (library.activePackId === null) return "pickPack";
-  if (!library.hasLoadedPackClips) return "loading";
-  return library.packClips.length === 0 ? "packEmpty" : "grid";
-}
-
-const CLIPS_MESSAGE_KEY: Partial<Record<VjClipsView, string>> = {
-  noPacks: "vj:remote.noPacks",
-  pickPack: "vj:remote.pickPackHint",
-  packEmpty: "vj:remote.packEmpty",
-};
-
-interface VjRemoteClipsProps {
-  library: ReturnType<typeof useVjRemoteLibrary>;
-  state: VjStageState | null;
-  screens: readonly VjScreenStatus[];
-  isBlocked: boolean;
-  onGoClip: (clipId: string) => void;
-}
-
-/** The clip grid, or the line that says why there is none, swapped with a fade. */
-function VjRemoteClips({
-  library,
-  state,
-  screens,
-  isBlocked,
-  onGoClip,
-}: VjRemoteClipsProps): JSX.Element {
-  const { t } = useTranslation();
-  const { reducedMotion } = useMotionPrefs();
-  const view: VjClipsView = clipsViewOf(library);
-  const messageKey = CLIPS_MESSAGE_KEY[view];
-
+/**
+ * The pad's own element, else the dock, for a press that came without one
+ * (keyboard, MIDI). A set list step without one sits on the set list group.
+ */
+function vjConsentAnchorOf(request: VjFlashConsentRequest): HTMLElement | null {
+  if (request.anchor !== null) return request.anchor;
+  if (request.sceneName !== undefined) {
+    const setlistGroup = document.querySelector<HTMLElement>(
+      "[data-vj-setlist-group]",
+    );
+    if (setlistGroup !== null) return setlistGroup;
+  }
+  const padSelector =
+    request.padId === null ? null : `[data-vj-pad="${request.padId}"]`;
   return (
-    <section
-      className={styles.clips}
-      aria-labelledby="vj-remote-clips"
-      aria-busy={view === "loading"}
-    >
-      <h2 id="vj-remote-clips" className={styles.sectionTitle}>
-        {library.activePackName ?? t("vj:remote.packLabel")}
-      </h2>
-      <AnimatePresence mode="wait" initial={false}>
-        <m.div
-          key={view}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: reducedMotion ? 0 : VIEW_FADE_SECONDS }}
-        >
-          {view === "grid" ? (
-            <VjRemoteClipGrid
-              clips={library.packClips}
-              liveClipId={state?.liveClipId ?? null}
-              packId={library.activePackId}
-              screens={screens}
-              isBlocked={isBlocked}
-              onGoClip={onGoClip}
-            />
-          ) : null}
-          {messageKey !== undefined ? (
-            <p className={styles.clipsMessage}>{t(messageKey)}</p>
-          ) : null}
-        </m.div>
-      </AnimatePresence>
-    </section>
+    (padSelector === null
+      ? null
+      : document.querySelector<HTMLElement>(padSelector)) ??
+    document.querySelector<HTMLElement>("[data-vj-remote-dock]")
   );
 }
 
-interface VjRemoteSheetsProps {
-  openSheet: VjRemoteSheet | null;
-  state: VjStageState | null;
-  liveClip: VjClipDTO | null;
-  run: VjRun;
-  isPending: (name: VjCommandName) => boolean;
-  isBlocked: boolean;
-  onClose: () => void;
-}
-
-/** The Effects, Text and Shuffle sheets, one at a time, each animating in and out. */
-function VjRemoteSheets({
-  openSheet,
-  state,
-  liveClip,
-  run,
-  isPending,
-  isBlocked,
-  onClose,
-}: VjRemoteSheetsProps): JSX.Element {
+/** The flash warning for the press that waits on it, anchored on the control that asked. */
+function VjRemoteFlashConsent({
+  session,
+}: {
+  session: VjRemoteSession;
+}): JSX.Element {
+  const { t } = useTranslation();
+  const { flashConsent, confirmFlash, dismissFlash } = session.actions;
+  // Keeps the last request while the popover fades out.
+  const [shownRequest, setShownRequest] = useState(flashConsent);
+  if (flashConsent !== null && flashConsent !== shownRequest) {
+    setShownRequest(flashConsent);
+  }
+  const anchorRef = useMemo<RefObject<HTMLElement | null>>(
+    () => ({
+      current: shownRequest === null ? null : vjConsentAnchorOf(shownRequest),
+    }),
+    [shownRequest],
+  );
+  const padId = shownRequest?.padId ?? null;
+  const transitionMode = shownRequest?.transitionMode ?? null;
+  const sceneName = shownRequest?.sceneName;
+  // A scene reads "Turn on <scene name> now": the scene's name is its label.
+  const effectLabel =
+    sceneName !== undefined
+      ? sceneName
+      : padId === "strobe"
+        ? t("vj:effects.strobe")
+        : padId !== null
+          ? t(`vj:effect.name.${padId}`)
+          : transitionMode !== null
+            ? t(`vj:transition.mode.${transitionMode}`)
+            : t("vj:transition.title");
   return (
-    <AnimatePresence>
-      {state !== null && openSheet === "effects" ? (
-        <VjEffectsSheet
-          key="effects"
-          state={state}
-          liveClipMediaKind={liveClip?.mediaKind ?? null}
-          run={run}
-          isPending={isPending}
-          isBlocked={isBlocked}
-          onClose={onClose}
-        />
-      ) : null}
-      {state !== null && openSheet === "text" ? (
-        <VjTextSheet
-          key="text"
-          overlay={state.overlay}
-          run={run}
-          isBlocked={isBlocked}
-          onClose={onClose}
-        />
-      ) : null}
-      {state !== null && openSheet === "shuffle" ? (
-        <VjShuffleSheet
-          key="shuffle"
-          shuffle={state.shuffle}
-          run={run}
-          isBlocked={isBlocked}
-          onClose={onClose}
-        />
-      ) : null}
-    </AnimatePresence>
+    <VjFlashConsentPopover
+      anchorRef={anchorRef}
+      effectLabel={effectLabel}
+      isOpen={flashConsent !== null}
+      onConsent={confirmFlash}
+      onClose={dismissFlash}
+    />
   );
 }
 
-/**
- * Keeps keyboard focus clear of the fixed control bar: the document scrolls
- * a focused control up past the bar's measured height.
- */
-function useScrollPaddingForBar(barHeight: number): void {
-  useEffect(() => {
-    if (barHeight <= 0) return undefined;
-    const rootStyle = document.documentElement.style;
-    const previous = rootStyle.scrollPaddingBlockEnd;
-    rootStyle.scrollPaddingBlockEnd = `${barHeight}px`;
-    return () => {
-      rootStyle.scrollPaddingBlockEnd = previous;
-    };
-  }, [barHeight]);
-}
-
-/**
- * The VJ remote at /admin/vj/remote: phone first, in the dark Pulse Live
- * remote look. A live mirror of the screen, how many screens are live, the
- * pack picker, the clip grid with each clip's preload state, and the fixed
- * control bar with its sheets.
- */
-export function AdminVjRemotePage(): JSX.Element {
-  const { t } = useTranslation();
-  useQuizshowFramelessPage();
+/** Every hook the remote runs, inside the MIDI learn provider. */
+function VjRemotePage({
+  midiMappings,
+}: {
+  midiMappings: UseVjMidiMappingsResult;
+}): JSX.Element {
   const stage = useVjStage({ role: "remote" });
   const isOnline = useOnlineStatus();
   const offlineReason = vjRemoteOfflineReasonOf(stage, isOnline);
   const isBlocked = offlineReason !== null;
-  const { run, isPending, lastErrorKey } = useVjCommandRunner(stage);
-  const library = useVjRemoteLibrary(stage);
-  const [openSheet, setOpenSheet] = useState<VjRemoteSheet | null>(null);
-  const [barHeight, setBarHeight] = useState(0);
+  const { run, lastErrorKey, lastErrorValues } = useVjCommandRunner(stage);
+  // The phone stays awake while the remote is open.
+  useScreenWakeLock(true);
+  const clock = useVjRemoteClock(stage);
+  const frames = useVjMirrorFrames(stage, clock);
+  const layout = useVjRemoteLayout();
+  const dockPads = useVjDockPads();
+  const cue = useVjCueMode();
+  const latestState = stage.latestState;
+  const stateRevision = latestState?.revision ?? null;
+  const flashConsent = useVjFlashConsent(latestState?.stageEpoch ?? null);
+  const sheets = useVjRemoteSheets();
+  const view = useVjRemoteView();
+  const library = useVjRemoteLibrary(stage, {
+    searchQuery: view.isSearchOpen ? view.searchQuery : "",
+    isFavoritesOnly: view.isFavoritesOnly,
+  });
+  const status = useVjStatusErrorKey(
+    { key: lastErrorKey, values: lastErrorValues },
+    stateRevision,
+  );
   const statusLineId = useId();
-  useScrollPaddingForBar(barHeight);
-  const closeSheet = useCallback(() => setOpenSheet(null), []);
-  // Every tap is sent: commandSequence makes the last one win, and the
-  // server applies one socket's commands in order.
-  const goClip = (clipId: string) => {
-    if (isBlocked) return;
-    void run("goClip", clipId);
+  // One shared cache with the strips: a set list step reads the look it recalls.
+  const scenesQuery = useVjScenes();
+  const setlistsQuery = useVjSetlists();
+  const actions = useVjRemoteActions({
+    stage,
+    clock,
+    run,
+    visibleClips: library.visibleClips,
+    dockPads: dockPads.pads,
+    cue,
+    flashConsent,
+    isBlocked,
+    onRefused: status.onRefused,
+    onOpenSheet: sheets.open,
+    scenes: scenesQuery.data,
+    setlists: setlistsQuery.data,
+  });
+  useVjRemoteKeyboard({ isEnabled: true, dispatch: actions.dispatch });
+  const learn = useVjMidiLearn();
+  const midi = useVjMidi({
+    mappings: midiMappings.mappings,
+    dispatch: actions.dispatch,
+    isLearning: learn.state.kind !== "idle",
+    onLearnEvent: learn.handleMidi,
+  });
+  const [dockHeight, setDockHeight] = useState(0);
+
+  const session: VjRemoteSession = {
+    stage,
+    latestState,
+    stateRevision,
+    run,
+    clock,
+    frames,
+    layout,
+    library,
+    actions,
+    cue,
+    dockPads,
+    flashConsent,
+    sheets,
+    view,
+    midi,
+    midiMappings,
+    onStartLearn: learn.start,
+    isBlocked,
+    blockedReasonId: isBlocked ? statusLineId : undefined,
+    statusLineId,
+    offlineReason,
+    errorKey: status.errorKey,
+    errorValues: status.errorValues,
+    onRefused: status.onRefused,
   };
-  // The measured control bar, so the last section always clears it; 0 keeps the CSS fallback.
-  const pageStyle =
-    barHeight > 0
-      ? ({ "--vj-remote-bar-space": `${barHeight}px` } as CSSProperties)
-      : undefined;
 
   return (
-    <div
-      className={styles.page}
-      style={pageStyle}
-      data-theme="dark"
-      data-vj-remote=""
-    >
-      <div className={styles.backdrop}>
-        <QuizshowBackdrop variant="phone" />
-      </div>
-      <PageMeta title={t("vj:remote.metaTitle")} noIndex />
-      <main id={MAIN_CONTENT_ID} tabIndex={-1} className={styles.main}>
-        <header className={styles.header}>
-          <Button variant="stage-ghost" to={routes.adminVj}>
-            <FiArrowLeft aria-hidden="true" focusable="false" />
-            {t("vj:remote.backToLibrary")}
-          </Button>
-          <h1 className={styles.title}>{t("vj:remote.metaTitle")}</h1>
-        </header>
-        <VjRemoteLiveStrip
-          state={stage.state}
-          liveClip={library.liveClip}
-          screens={stage.screens}
-          packs={library.packs}
-          isBlocked={isBlocked}
-          isScreensKnown={offlineReason === null}
-          blockedReasonId={isBlocked ? statusLineId : undefined}
-          run={run}
-        />
-        <VjRemoteClips
-          library={library}
-          state={stage.state}
-          screens={stage.screens}
-          isBlocked={isBlocked}
-          onGoClip={goClip}
-        />
-      </main>
-      <VjRemoteControlBar
-        state={stage.state}
-        isBlocked={isBlocked}
-        run={run}
-        isPending={isPending}
-        onOpenSheet={setOpenSheet}
-        onHeightChange={setBarHeight}
-        statusLine={
-          <VjRemoteStatusLine
-            id={statusLineId}
-            offlineReason={offlineReason}
-            errorKey={lastErrorKey}
-          />
-        }
+    <>
+      <VjRemoteShell
+        session={session}
+        dockHeight={dockHeight}
+        dock={<VjRemoteDock session={session} onHeightChange={setDockHeight} />}
       />
-      <VjRemoteSheets
-        openSheet={openSheet}
-        state={stage.state}
-        liveClip={library.liveClip}
-        run={run}
-        isPending={isPending}
-        isBlocked={isBlocked}
-        onClose={closeSheet}
-      />
-    </div>
+      <VjRemoteSheetsHost session={session} />
+      <VjRemoteFlashConsent session={session} />
+    </>
+  );
+}
+
+/**
+ * The VJ remote at /admin/vj/remote, an instrument in the dark Pulse Live
+ * look: on a phone the top row, the mirror band, the strips and nine clip
+ * tiles sit above the dock; from 900px wide (or landscape over 700px) the
+ * dock becomes a right column with the crossfader always in reach. Touch,
+ * keys and a MIDI controller all play through one dispatcher.
+ */
+export function AdminVjRemotePage(): JSX.Element {
+  useQuizshowFramelessPage();
+  const midiMappings = useVjMidiMappings();
+  return (
+    <VjMidiLearnProvider onMapped={midiMappings.save}>
+      <VjRemotePage midiMappings={midiMappings} />
+    </VjMidiLearnProvider>
   );
 }

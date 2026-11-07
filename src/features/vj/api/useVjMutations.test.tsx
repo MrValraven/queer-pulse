@@ -281,6 +281,7 @@ describe("useCreateVjPack cache", () => {
       createdBy: null,
       createdAt: "2026-11-05T00:00:00.000Z",
       updatedAt: "2026-11-05T00:00:00.000Z",
+      event: null,
     } satisfies VjPackDTO;
     queryClient.setQueryData(vjKeys.packs(true), [seededPack]);
     const { result } = renderHook(() => useCreateVjPack(), {

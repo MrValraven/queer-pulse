@@ -19,7 +19,6 @@ import { CrisisStrip } from "./CrisisStrip";
 import { SuggestEditTrigger } from "./SuggestEditTrigger";
 
 const FORUM = routes.forum;
-const MENTORSHIP = routes.mentorship;
 
 export function MentalHealthPage() {
   const { t } = useTranslation();
@@ -60,7 +59,7 @@ export function MentalHealthPage() {
 
       <TherapistSection />
       <ExperiencesSection />
-      <SnsSection forum={FORUM} mentorship={MENTORSHIP} />
+      <SnsSection forum={FORUM} />
 
       <SuggestEditTrigger subject={pageTitle} context="mental_health" />
 

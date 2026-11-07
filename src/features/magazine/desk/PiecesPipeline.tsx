@@ -2,6 +2,7 @@ import { useId, useMemo, useRef } from "react";
 import { FiCheckCircle } from "react-icons/fi";
 import { EmptyState } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { PieceGroupBody } from "./PieceGroupBody";
 import { PieceGroupHeader } from "./PieceGroupHeader";
 import { PieceRow } from "./PieceRow";
 import { PiecesPipelineColumns } from "./PiecesPipelineColumns";
@@ -15,6 +16,7 @@ import type { PieceNextAction } from "./pieceNextAction";
 import { useCollapsedGroups, type CollapsedGroups } from "./useCollapsedGroups";
 import { useIsTableStacked } from "./useIsTableStacked";
 import { useMagazineEditors } from "../api/useMagazineEditors";
+import type { UnpublishLandingStage } from "../api/piecePublish.api";
 import type { Viewer } from "../api/useDeskPresence";
 import type { Editor, Piece } from "../data/desk.data";
 import type { DeskTrack } from "./deskTrack";
@@ -38,6 +40,9 @@ export interface PiecesPipelineProps {
   onHandoff: (piece: Piece) => void;
   onAssignIssue: (piece: Piece) => void;
   onDelete: (piece: Piece) => void;
+  /** Takes a published row off the site into the given stage; rows without it
+   *  leave the unpublish items out of their More menu. */
+  onUnpublish?: (piece: Piece, stage: UnpublishLandingStage) => void;
   /** The viewing editor's id, for "Your turn" and each row's "Waiting on". */
   me?: string;
   /** Names a colleague a row waits on; omitted, the cached directory. */
@@ -161,28 +166,26 @@ export function PiecesPipeline({
                   onToggle={toggleCollapsed}
                 />
               )}
-              {/* Kept in the DOM when folded so `aria-controls` always resolves. */}
-              <div id={bodyId} className={styles.groupBody}>
-                {!isGroupCollapsed &&
-                  group.pieces.map((piece) => (
-                    <PieceRow
-                      key={piece.id}
-                      piece={piece}
-                      focused={focusId === piece.id}
-                      isOpen={openPieceId === piece.id}
-                      track={track}
-                      hasAnyIssue={hasAnyIssue}
-                      selected={selectedIdSet.has(piece.id)}
-                      today={today}
-                      onToggleSelect={onToggleSelect}
-                      viewers={viewersByPiece?.[piece.id]}
-                      me={me}
-                      editors={rowEditors}
-                      isStacked={isStacked}
-                      {...rowHandlers}
-                    />
-                  ))}
-              </div>
+              <PieceGroupBody id={bodyId} isOpen={!isGroupCollapsed}>
+                {group.pieces.map((piece) => (
+                  <PieceRow
+                    key={piece.id}
+                    piece={piece}
+                    focused={focusId === piece.id}
+                    isOpen={openPieceId === piece.id}
+                    track={track}
+                    hasAnyIssue={hasAnyIssue}
+                    selected={selectedIdSet.has(piece.id)}
+                    today={today}
+                    onToggleSelect={onToggleSelect}
+                    viewers={viewersByPiece?.[piece.id]}
+                    me={me}
+                    editors={rowEditors}
+                    isStacked={isStacked}
+                    {...rowHandlers}
+                  />
+                ))}
+              </PieceGroupBody>
             </div>
           );
         })}

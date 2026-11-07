@@ -1,0 +1,45 @@
+/* The WebGL stage (VjEngineStage): the compositor's canvas over a black
+   fill, and the media host its hidden video elements decode in.
+
+   The app has no true black token and a projector needs one, so the stage
+   defines a local named-colour token, as the DOM stage does
+   (VjStage.module.css).
+
+   The canvas and the media host are positioned with no z-index of their
+   own, so they stack in DOM order: the media host first, the canvas over it.
+   While the context restores the canvas hides and the DOM renderer, mounted
+   after this stage, draws on top. Only the canvas hides: the media host
+   keeps its videos decoding for the restore. */
+.stage {
+  --vj-engine-black: black;
+
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--vj-engine-black);
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.isHidden .canvas {
+  visibility: hidden;
+}
+
+/* Browsers stop decoding a video that is display: none or fully
+   transparent, so the host stays on screen at 1 px and almost invisible. */
+.mediaHost {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0.01;
+  pointer-events: none;
+}

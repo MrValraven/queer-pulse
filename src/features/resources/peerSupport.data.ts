@@ -27,9 +27,4 @@ export const STEPS: PeerStep[] = [
     titleKey: "resources:peerSupport.step.03.title",
     bodyKey: "resources:peerSupport.step.03.body",
   },
-  {
-    n: "04",
-    titleKey: "resources:peerSupport.step.04.title",
-    bodyKey: "resources:peerSupport.step.04.body",
-  },
 ];

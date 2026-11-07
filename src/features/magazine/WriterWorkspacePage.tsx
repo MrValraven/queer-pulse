@@ -8,6 +8,7 @@ import { useWriterMutations } from "./api/useWriterMutations";
 import type { WriterAssignmentDto } from "./api/writerWorkspace.api";
 import { cx } from "../../shared/lib/cx";
 import { WRITER_TAB_PARAM, parseWriterTab, type WriterTab } from "./writerTabs";
+import { writerWorkspaceErrorCopy } from "./writerWorkspaceError";
 import { WriterWorkspaceHeader } from "./desk/writer/WriterWorkspaceHeader";
 import { WriterWorkspaceTabs } from "./desk/writer/WriterWorkspaceTabs";
 import { WriterWorkTab } from "./desk/writer/WriterWorkTab";
@@ -38,7 +39,7 @@ import styles from "./WriterWorkspacePage.module.css";
  */
 export function WriterWorkspacePage() {
   const { t } = useTranslation();
-  const { assignments, pitches, payments, isLoading, isError } =
+  const { assignments, pitches, payments, isLoading, isError, error } =
     useWriterWorkspace();
   const { submitPitch, updateByline, fileDraft } = useWriterMutations();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -90,12 +91,13 @@ export function WriterWorkspacePage() {
   }
 
   if (isError) {
+    const { key, values } = writerWorkspaceErrorCopy(error);
     return (
       <AppShell>
         <div className={styles.page}>
           <EmptyState
             title={t("magazine:writer.page.errorTitle")}
-            description={t("magazine:writer.page.errorDescription")}
+            description={t(key, values)}
           />
         </div>
       </AppShell>

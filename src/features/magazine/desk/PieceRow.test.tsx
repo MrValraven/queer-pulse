@@ -1,5 +1,12 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import type { Viewer } from "../api/useDeskPresence";
 import type { Piece } from "../data/desk.data";
@@ -26,7 +33,7 @@ function makePiece(overrides: Partial<Piece> = {}): Piece {
   };
 }
 
-function renderRow(overrides: Partial<PieceRowProps> = {}) {
+async function renderRow(overrides: Partial<PieceRowProps> = {}) {
   const props: PieceRowProps = {
     piece: makePiece(),
     focused: false,
@@ -48,6 +55,7 @@ function renderRow(overrides: Partial<PieceRowProps> = {}) {
       <PieceRow {...props} />
     </TestProviders>,
   );
+  await awaitCatalog("magazine");
   return { ...view, props };
 }
 
@@ -59,8 +67,8 @@ function openMoreMenu(title = "Letters from the coast"): HTMLElement {
 }
 
 describe("PieceRow", () => {
-  it("makes the title the row's control and opens the piece from it", () => {
-    const { props } = renderRow();
+  it("makes the title the row's control and opens the piece from it", async () => {
+    const { props } = await renderRow();
 
     fireEvent.click(
       screen.getByRole("button", { name: "Letters from the coast" }),
@@ -70,8 +78,8 @@ describe("PieceRow", () => {
     expect(document.querySelector('[role="button"]')).toBeNull();
   });
 
-  it("opens the piece from a click on empty row space", () => {
-    const { props, container } = renderRow();
+  it("opens the piece from a click on empty row space", async () => {
+    const { props, container } = await renderRow();
     const row = container.querySelector<HTMLElement>("[data-focus]");
     if (!row) throw new Error("No row rendered");
 
@@ -80,8 +88,8 @@ describe("PieceRow", () => {
     expect(props.onOpen).toHaveBeenCalledTimes(1);
   });
 
-  it("selects with a real checkbox without opening the piece", () => {
-    const { props } = renderRow();
+  it("selects with a real checkbox without opening the piece", async () => {
+    const { props } = await renderRow();
 
     const checkbox = screen.getByRole("checkbox", {
       name: "Select Letters from the coast",
@@ -92,28 +100,30 @@ describe("PieceRow", () => {
     expect(props.onOpen).not.toHaveBeenCalled();
   });
 
-  it("joins only the meta parts that have text", () => {
-    renderRow({ piece: makePiece({ section: "", byline: "Rui Sol" }) });
+  it("joins only the meta parts that have text", async () => {
+    await renderRow({ piece: makePiece({ section: "", byline: "Rui Sol" }) });
 
     expect(screen.getByText("Rui Sol")).toBeInTheDocument();
     expect(screen.queryByText("·")).not.toBeInTheDocument();
   });
 
-  it("joins section and byline with a dot when both are set", () => {
-    renderRow();
+  it("joins section and byline with a dot when both are set", async () => {
+    await renderRow();
 
     expect(screen.getByText("Essays")).toBeInTheDocument();
     expect(screen.getByText("·")).toHaveAttribute("aria-hidden", "true");
   });
 
-  it("says so when nobody writes the piece yet", () => {
-    renderRow({ piece: makePiece({ byline: "  " }) });
+  it("says so when nobody writes the piece yet", async () => {
+    await renderRow({ piece: makePiece({ byline: "  " }) });
 
     expect(screen.getByText("No writer yet")).toBeInTheDocument();
   });
 
-  it("names who the piece waits on", () => {
-    renderRow({ piece: makePiece({ wait: "writer", stage: "Drafting" }) });
+  it("names who the piece waits on", async () => {
+    await renderRow({
+      piece: makePiece({ wait: "writer", stage: "Drafting" }),
+    });
 
     // The column's name leads the cell for screen readers.
     expect(screen.getByText("Writer").parentElement).toHaveTextContent(
@@ -121,16 +131,18 @@ describe("PieceRow", () => {
     );
   });
 
-  it("counts the due day from today and marks it late", () => {
-    renderRow({ piece: makePiece({ due: "2 Aug", dueDate: "2026-08-02" }) });
+  it("counts the due day from today and marks it late", async () => {
+    await renderRow({
+      piece: makePiece({ due: "2 Aug", dueDate: "2026-08-02" }),
+    });
 
     const dueCell = screen.getByText("3 days late");
     expect(dueCell).toHaveAttribute("data-late", "true");
     expect(dueCell).toHaveTextContent("Due 3 days late");
   });
 
-  it("offers Set date on an undated piece, falling back to edit", () => {
-    const { props } = renderRow();
+  it("offers Set date on an undated piece, falling back to edit", async () => {
+    const { props } = await renderRow();
 
     fireEvent.click(screen.getByRole("button", { name: "Set date" }));
 
@@ -138,9 +150,9 @@ describe("PieceRow", () => {
     expect(props.onOpen).not.toHaveBeenCalled();
   });
 
-  it("sends Set date to onSetDue when one is given", () => {
+  it("sends Set date to onSetDue when one is given", async () => {
     const onSetDue = vi.fn();
-    const { props } = renderRow({ onSetDue });
+    const { props } = await renderRow({ onSetDue });
 
     fireEvent.click(screen.getByRole("button", { name: "Set date" }));
 
@@ -148,8 +160,8 @@ describe("PieceRow", () => {
     expect(props.onEdit).not.toHaveBeenCalled();
   });
 
-  it("reads out No due date for finished work", () => {
-    renderRow({ piece: makePiece({ stage: "Ready", due: "ready" }) });
+  it("reads out No due date for finished work", async () => {
+    await renderRow({ piece: makePiece({ stage: "Ready", due: "ready" }) });
 
     expect(screen.getByText("No due date")).toBeInTheDocument();
     expect(
@@ -157,8 +169,8 @@ describe("PieceRow", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("says when a scheduled piece goes live in place of a verb", () => {
-    renderRow({
+  it("says when a scheduled piece goes live in place of a verb", async () => {
+    await renderRow({
       piece: makePiece({
         stage: "Ready",
         publishedAt: new Date(Date.now() + 40 * 60 * 60 * 1000).toISOString(),
@@ -169,9 +181,9 @@ describe("PieceRow", () => {
     expect(screen.queryByRole("button", { name: "Publish" })).toBeNull();
   });
 
-  it("hands the next action to onNextAction", () => {
+  it("hands the next action to onNextAction", async () => {
     const onNextAction = vi.fn();
-    const { props } = renderRow({ onNextAction });
+    const { props } = await renderRow({ onNextAction });
 
     fireEvent.click(screen.getByRole("button", { name: "Edit" }));
 
@@ -182,8 +194,8 @@ describe("PieceRow", () => {
     expect(props.onEdit).not.toHaveBeenCalled();
   });
 
-  it("falls back to the row handlers without onNextAction", () => {
-    const { props } = renderRow({
+  it("falls back to the row handlers without onNextAction", async () => {
+    const { props } = await renderRow({
       piece: makePiece({ wait: "writer", stage: "Drafting" }),
     });
 
@@ -193,8 +205,8 @@ describe("PieceRow", () => {
     expect(props.onOpen).not.toHaveBeenCalled();
   });
 
-  it("keeps the other verbs in the More menu, Delete last", () => {
-    renderRow();
+  it("keeps the other verbs in the More menu, Delete last", async () => {
+    await renderRow();
 
     const menu = openMoreMenu();
     const labels = within(menu)
@@ -211,8 +223,8 @@ describe("PieceRow", () => {
     expect(within(menu).getByRole("separator")).toBeInTheDocument();
   });
 
-  it("leaves the issue item out when there is no issue", () => {
-    renderRow({ hasAnyIssue: false });
+  it("leaves the issue item out when there is no issue", async () => {
+    await renderRow({ hasAnyIssue: false });
 
     const menu = openMoreMenu();
 
@@ -221,8 +233,11 @@ describe("PieceRow", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("reads Add to issue for unfiled work in the everything scope", () => {
-    renderRow({ track: "everything", piece: makePiece({ issueId: null }) });
+  it("reads Add to issue for unfiled work in the everything scope", async () => {
+    await renderRow({
+      track: "everything",
+      piece: makePiece({ issueId: null }),
+    });
 
     const menu = openMoreMenu();
 
@@ -231,30 +246,33 @@ describe("PieceRow", () => {
     ).toBeInTheDocument();
   });
 
-  it("runs a menu item without opening the piece", () => {
-    const { props } = renderRow();
+  it("runs a menu item without opening the piece", async () => {
+    const { props } = await renderRow();
 
     const menu = openMoreMenu();
     fireEvent.click(within(menu).getByRole("menuitem", { name: "Hand off" }));
 
     expect(props.onHandoff).toHaveBeenCalledWith(props.piece);
     expect(props.onOpen).not.toHaveBeenCalled();
-    expect(screen.queryByRole("menu")).not.toBeInTheDocument();
+    // The menu animates out first, then leaves the document.
+    await waitFor(() =>
+      expect(screen.queryByRole("menu")).not.toBeInTheDocument(),
+    );
   });
 
-  it("marks the row open in the peek panel", () => {
-    renderRow({ isOpen: true });
+  it("marks the row open in the peek panel", async () => {
+    await renderRow({ isOpen: true });
 
     expect(
       screen.getByRole("button", { name: "Letters from the coast" }),
     ).toHaveAttribute("aria-current", "true");
   });
 
-  it("shows a presence stack for an editor already viewing the piece", () => {
+  it("shows a presence stack for an editor already viewing the piece", async () => {
     const viewers: Viewer[] = [
       { userId: "sara", name: "Sara Pinheiro", initials: "SP" },
     ];
-    renderRow({ viewers });
+    await renderRow({ viewers });
 
     // A single grid area ("presence" in PieceRow.module.css) holds the stack
     // at every width step, so exactly one is ever in the row: getByRole
@@ -264,8 +282,8 @@ describe("PieceRow", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders no presence stack without viewers", () => {
-    renderRow();
+  it("renders no presence stack without viewers", async () => {
+    await renderRow();
 
     expect(
       screen.queryByRole("img", { name: /viewing/ }),
@@ -283,8 +301,8 @@ describe("PieceRow", () => {
       );
     }
 
-    it("keeps the table order when the rows are wide", () => {
-      const { container } = renderRow({ isStacked: false });
+    it("keeps the table order when the rows are wide", async () => {
+      const { container } = await renderRow({ isStacked: false });
 
       expect(controlOrder(container)).toEqual([
         "Select Letters from the coast",
@@ -295,8 +313,8 @@ describe("PieceRow", () => {
       ]);
     });
 
-    it("puts the verb and More before the lower-line cells in a phone card", () => {
-      const { container } = renderRow({ isStacked: true });
+    it("puts the verb and More before the lower-line cells in a phone card", async () => {
+      const { container } = await renderRow({ isStacked: true });
 
       expect(controlOrder(container)).toEqual([
         "Select Letters from the coast",

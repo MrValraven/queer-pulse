@@ -14,7 +14,7 @@ export function TransHubCommunitySection() {
       style={{ borderBottom: "none" }}
     >
       <div className="wrap">
-        <Reveal className={styles.plumStrip}>
+        <Reveal className={`${styles.plumStrip} ${styles.plumStripSingle}`}>
           <div>
             <h3>
               <Translation
@@ -27,26 +27,6 @@ export function TransHubCommunitySection() {
               <Button variant="ghost-dark" to={routes.communities}>
                 {t("resources:transHub.community.joinCta")}
               </Button>
-            </div>
-          </div>
-          <div className={`${styles.stats} ${styles.statsRow}`}>
-            <div className={styles.stat}>
-              <div className={styles.statN}>147</div>
-              <div className={styles.statL}>
-                {t("resources:transHub.community.stat.members.label")}
-              </div>
-            </div>
-            <div className={styles.stat}>
-              <div className={styles.statN}>40+</div>
-              <div className={styles.statL}>
-                {t("resources:transHub.community.stat.reviews.label")}
-              </div>
-            </div>
-            <div className={styles.stat}>
-              <div className={styles.statN}>2018</div>
-              <div className={styles.statL}>
-                {t("resources:transHub.community.stat.lawYear.label")}
-              </div>
             </div>
           </div>
         </Reveal>

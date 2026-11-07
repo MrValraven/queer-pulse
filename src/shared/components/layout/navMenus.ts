@@ -219,22 +219,7 @@ export const NAV_MENUS: MegaMenu[] = [
               "shared:megaNav.community.col.people.professionalDirectory",
             href: routes.subprofiles,
           },
-          {
-            labelKey: "shared:megaNav.community.col.organise.changeMakers",
-            href: routes.changemakers,
-          },
-          {
-            labelKey: "shared:megaNav.community.col.discover.partners",
-            href: routes.partners,
-          },
           { labelKey: "nav:forum", href: routes.forum },
-          {
-            // DISC-4: the topics directory, sitting next to Forum (its main
-            // source of content once a tagged thread links into a topic,
-            // see `TopicPostLinkService` on the backend).
-            labelKey: "shared:megaNav.community.col.people.topics",
-            href: routes.topics,
-          },
         ],
       },
       {
@@ -477,10 +462,6 @@ export const NAV_MENUS: MegaMenu[] = [
             href: routes.solidarity,
           },
           {
-            labelKey: "shared:megaNav.work.col.economy.grants",
-            href: routes.grants,
-          },
-          {
             labelKey: "shared:megaNav.work.col.economy.howItWorks",
             href: routes.economy,
           },
@@ -546,35 +527,6 @@ export const NAV_MENUS: MegaMenu[] = [
           {
             labelKey: "shared:megaNav.about.col.legal.termsOfUse",
             href: routes.terms,
-          },
-          {
-            // Data Subject Access Request — same route/label already used
-            // from PrivacyPage's "Request your data" related link.
-            labelKey: "shared:megaNav.about.col.legal.dataRequest",
-            href: routes.dsar,
-          },
-          {
-            labelKey: "shared:footerData.base.cookies",
-            href: routes.cookies,
-          },
-          {
-            labelKey: "shared:footerData.base.guidelines",
-            href: routes.guidelines,
-          },
-          {
-            labelKey: "shared:footerData.base.imprint",
-            href: routes.imprint,
-          },
-          {
-            // LG-01: the published accessibility statement. Reachable from the
-            // main navigation as well as the footer legal row, because a person
-            // who needs it should not have to hunt for it.
-            labelKey: "shared:megaNav.about.col.legal.accessibility",
-            href: routes.policiesAccessibility,
-          },
-          {
-            labelKey: "shared:megaNav.about.col.legal.pressKit",
-            href: routes.pressKit,
           },
           {
             labelKey: "shared:megaNav.about.col.legal.contact",

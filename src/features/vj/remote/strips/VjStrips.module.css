@@ -1,0 +1,411 @@
+/* The remote's strips under the sticky header: the scenes strip and the
+   history strip, two 36px rows 6px apart (78px, the shell's band gaps bring
+   the block to the plan's 92px at 390x844). The compact rule merges them into
+   one 36px row with a two-segment switch. Each row scrolls sideways on its
+   own, so the page never scrolls with it. Hit areas reach var(--tap-min): the
+   scroller is 44px tall and gives back 4px above and below, so the 36px chip
+   faces keep the row at 36px of layout. Transitions move opacity, transform
+   or filter only. */
+
+.strips {
+  --vj-strip-height: 36px;
+  --vj-strip-gap: 6px;
+  --vj-strip-outset: calc((var(--vj-strip-height) - var(--tap-min)) / 2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--vj-strip-gap);
+  min-inline-size: 0;
+}
+
+/* ── One sideways row ── */
+.scroller {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--vj-strip-gap);
+  min-inline-size: 0;
+  block-size: var(--tap-min);
+  margin-block: var(--vj-strip-outset);
+  padding-inline: 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 4px;
+  scrollbar-width: none;
+  touch-action: pan-x;
+}
+
+.scroller::-webkit-scrollbar {
+  display: none;
+}
+
+/* The compact row: the switch stays put, the strip beside it scrolls. */
+.compactRow {
+  display: flex;
+  align-items: center;
+  gap: var(--vj-strip-gap);
+  min-inline-size: 0;
+  block-size: var(--vj-strip-height);
+}
+
+.compactSlot {
+  display: flex;
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.compactSlot > .scroller {
+  flex: 1 1 auto;
+}
+
+/* ── Chips: 44px hit area, 36px face ── */
+.chip {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: var(--tap-min);
+  block-size: var(--tap-min);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--qs-text);
+  font: inherit;
+  cursor: pointer;
+  scroll-snap-align: start;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The ring draws on the face, inside the scroller, so its edges never clip it. */
+.chip:focus-visible {
+  outline: none;
+}
+
+.chip:focus-visible .chipFace {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.chipFace {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-sizing: border-box;
+  block-size: var(--vj-strip-height);
+  min-inline-size: var(--vj-strip-height);
+  padding-inline: 12px;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-pill);
+  background:
+    linear-gradient(180deg, var(--qs-glass-top) 0%, var(--qs-glass-bottom) 100%),
+    var(--qs-glass-tint);
+  transition-property: opacity, transform, filter;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.chipFace > svg {
+  flex: none;
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+
+/* The live wash: a coral layer that fades in under the label. */
+.chipFace::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border: 1px solid var(--accent);
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--accent) 34%, transparent);
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.chip[data-live="true"] .chipFace::before {
+  opacity: 1;
+}
+
+/* A recall on its way: a coral ring until the state shows it. */
+.chipFace::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border: 2px solid var(--accent);
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.chip[data-pending="true"] .chipFace::after {
+  opacity: 1;
+}
+
+.chip[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+.chip[aria-disabled="true"] .chipFace {
+  opacity: 0.45;
+}
+
+.chip[aria-busy="true"] .chipFace {
+  opacity: 0.7;
+}
+
+.chip:active:not([aria-disabled="true"]) .chipFace {
+  transform: scale(0.96);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chip:hover:not([aria-disabled="true"]) .chipFace {
+    filter: brightness(1.15);
+  }
+}
+
+.chipName {
+  max-inline-size: 9rem;
+  overflow: hidden;
+  font-size: var(--text-13);
+  font-weight: 600;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.iconChip .chipFace {
+  inline-size: var(--vj-strip-height);
+  padding-inline: 0;
+}
+
+/* ── Set list group: position between Previous scene and Next scene ── */
+.setlistGroup {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  overflow: hidden;
+}
+
+.setlistPosition {
+  flex: none;
+  padding-inline: 2px;
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--qs-text-mute);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.divider {
+  flex: none;
+  inline-size: 1px;
+  block-size: 20px;
+  background: var(--qs-glass-border);
+}
+
+/* ── History: thumbnails 36x36 inside a 44px hit area ── */
+.thumbChip {
+  inline-size: var(--tap-min);
+}
+
+.thumbFace {
+  position: relative;
+  display: block;
+  inline-size: var(--vj-strip-height);
+  block-size: var(--vj-strip-height);
+  overflow: hidden;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--radius-7);
+  background: var(--qs-glass-tint);
+  transition-property: opacity, transform, filter;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.thumbFace img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/* Live: a coral ring and a corner dot, so the mark never rests on colour alone. */
+.thumbFace::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--accent);
+  border-radius: inherit;
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.liveDot {
+  position: absolute;
+  inset-block-start: 3px;
+  inset-inline-end: 3px;
+  z-index: 1;
+  inline-size: 8px;
+  block-size: 8px;
+  border: 1px solid var(--qs-text);
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.thumbChip[data-live="true"] .thumbFace::after {
+  opacity: 1;
+}
+
+.thumbChip:focus-visible .thumbFace {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.thumbChip[aria-disabled="true"] .thumbFace {
+  opacity: 0.45;
+}
+
+.thumbChip:active:not([aria-disabled="true"]) .thumbFace {
+  transform: scale(0.94);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .thumbChip:hover:not([aria-disabled="true"]) .thumbFace {
+    filter: brightness(1.15);
+  }
+}
+
+/* ── Empty lines ──
+   The line is a snap point at the row's start. Without it the first snap
+   point is the Save scene chip, and proximity snapping opens the row
+   scrolled to that chip with the line's first words cut off. */
+.empty {
+  flex: none;
+  scroll-snap-align: start;
+  padding-inline: 4px;
+  font-size: var(--text-12);
+  line-height: 1.2;
+  color: var(--qs-text-mute);
+  white-space: nowrap;
+}
+
+/* The scenes line gives way to its row's buttons: it wraps onto two lines
+   (36px holds two 12px lines), so Save scene and the Scenes button stay in
+   view. Squeezed past 6rem it scrolls with the row as before. */
+.emptyScenes {
+  composes: empty;
+  flex: 0 1 auto;
+  min-inline-size: 6rem;
+  overflow: hidden;
+  white-space: normal;
+  overflow-wrap: normal;
+  text-wrap: balance;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+/* ── Compact switch: two segments ── */
+.switch {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  block-size: var(--tap-min);
+  margin-block: var(--vj-strip-outset);
+}
+
+.segment {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  block-size: var(--tap-min);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--qs-text-mute);
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.segment:focus-visible {
+  outline: none;
+}
+
+.segment:focus-visible .segmentFace {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.segmentFace {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  block-size: var(--vj-strip-height);
+  padding-inline: 10px;
+  border: 1px solid var(--qs-glass-border);
+  font-size: var(--text-12);
+  font-weight: 600;
+  white-space: nowrap;
+  transition-property: opacity, filter;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.segment:first-child .segmentFace {
+  border-start-start-radius: var(--qs-radius-pill);
+  border-end-start-radius: var(--qs-radius-pill);
+}
+
+.segment:last-child .segmentFace {
+  border-inline-start: 0;
+  border-start-end-radius: var(--qs-radius-pill);
+  border-end-end-radius: var(--qs-radius-pill);
+}
+
+.segment[aria-pressed="true"] {
+  color: var(--qs-text);
+}
+
+.segment[aria-pressed="true"] .segmentFace {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 34%, transparent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .segment:hover .segmentFace {
+    filter: brightness(1.15);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chipFace,
+  .chipFace::before,
+  .chipFace::after,
+  .thumbFace,
+  .thumbFace::after,
+  .segmentFace {
+    transition-duration: 0s;
+  }
+}

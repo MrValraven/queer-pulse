@@ -77,6 +77,13 @@ describe("VJ upload limits and GIF sanitizing", () => {
     });
   });
 
+  it("caps a VJ preview at 512 KB", () => {
+    expect(UPLOAD_LIMITS.vj_preview).toEqual({
+      maxBytes: 524288,
+      maxLabel: "512 KB",
+    });
+  });
+
   it("keeps a GIF's loop block and drops its comment", () => {
     const sourceBytes = buildGifBytes();
     expect(containsPair(sourceBytes, 0x21, 0xfe)).toBe(true);

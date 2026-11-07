@@ -24,6 +24,7 @@ import {
   vjDemoLibraryLookup,
   type VjDemoClipUpload,
 } from "./vjDemoStore";
+import { loadVjDemoLibrary } from "./vjDemoStorePersistence";
 
 const WARM_UP_ID = "00000000-0000-4000-8000-0000000000a1";
 const PEAK_HOUR_ID = "00000000-0000-4000-8000-0000000000a2";
@@ -31,6 +32,9 @@ const CLOSING_ID = "00000000-0000-4000-8000-0000000000a3";
 const NEON_GRID_ID = "00000000-0000-4000-8000-0000000000c1";
 const DISCO_DOTS_ID = "00000000-0000-4000-8000-0000000000c3";
 const STATIC_BLOOM_ID = "00000000-0000-4000-8000-0000000000c8";
+const WARM_UP_SCENE_ID = "00000000-0000-4000-8000-0000000000d1";
+const PEAK_SCENE_ID = "00000000-0000-4000-8000-0000000000d2";
+const SUPPER_CLUB_EVENT_ID = "00000000-0000-4000-8000-00000000ee01";
 const FIXED_NOW = Date.parse("2026-11-05T20:00:00.000Z");
 
 function createMemoryStorage(): Storage {
@@ -370,12 +374,62 @@ describe("vjDemoStore deletes, uploads and sync", () => {
       packId: created.id,
       clipId: STATIC_BLOOM_ID,
       packIds: [created.id],
+      sceneId: null,
+      setlistId: null,
+      setlistIds: [],
+      eventId: null,
     });
     expect(changes[2]).toEqual({
       kind: "clip_deleted",
       packId: null,
       clipId: NEON_GRID_ID,
       packIds: [WARM_UP_ID, PEAK_HOUR_ID],
+      sceneId: null,
+      setlistId: null,
+      setlistIds: [],
+      eventId: null,
     });
+  });
+});
+
+describe("vjDemoStore v2 fields", () => {
+  it("shows the seed pack's event summary and no event on the others", () => {
+    const packs = demoGetVjPacks().items;
+    expect(packs[0]?.event).toEqual({
+      id: SUPPER_CLUB_EVENT_ID,
+      title: "Queer Supper Club №12",
+      startAt: new Date(FIXED_NOW + 2 * 3_600_000).toISOString(),
+      isAvailable: true,
+    });
+    expect(packs[1]?.event).toBeNull();
+    expect(demoCreateVjPack({ name: "After party" }).event).toBeNull();
+  });
+
+  it("deleting a pack keeps its scenes unfiled", () => {
+    demoDeleteVjPack(WARM_UP_ID);
+    const scenes = loadVjDemoLibrary().scenes;
+    expect(scenes.map((scene) => [scene.id, scene.packId])).toEqual([
+      [WARM_UP_SCENE_ID, null],
+      [PEAK_SCENE_ID, PEAK_HOUR_ID],
+    ]);
+  });
+
+  it("new clips carry the default speed and loop", () => {
+    const created = demoCreateVjClip(gifUpload(null));
+    expect(created).toMatchObject({
+      isFavorite: false,
+      defaultSpeed: 1,
+      loopInMs: null,
+      loopOutMs: null,
+      loopMode: "loop",
+      previewUrl: null,
+    });
+  });
+
+  it("marks the first clip of the first pack as the seed favorite", () => {
+    const favorites = demoGetVjClips()
+      .items.filter((clip) => clip.isFavorite)
+      .map((clip) => clip.id);
+    expect(favorites).toEqual([NEON_GRID_ID]);
   });
 });

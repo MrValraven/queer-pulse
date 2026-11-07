@@ -1,0 +1,148 @@
+/* The pack event link under the pack header's meta line: the linked event,
+   Link or Change event, Unlink event, the warning line and the picker. */
+
+.root {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  padding-block-start: 4px;
+}
+
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+  min-inline-size: 0;
+}
+
+.event {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  gap: 6px;
+  min-inline-size: 0;
+  color: var(--ink-60);
+  font-size: var(--text-13);
+  line-height: 1.4;
+}
+
+.eventIcon {
+  flex-shrink: 0;
+}
+
+.eventText {
+  margin: 0;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+}
+
+/* Phone width: the buttons wrap under the event text and grow to the full
+   44px target (the quiet small button is 36px tall by default). The three
+   classes outrank the button's own `.quiet.sm` height. */
+@container (max-width: 30rem) {
+  .line {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .root .actions .action {
+    min-block-size: 44px;
+  }
+}
+
+@media (pointer: coarse) {
+  .root .actions .action,
+  .root .loadFailure .reload,
+  .root .pickerActions > * {
+    min-block-size: 44px;
+  }
+}
+
+.warning {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+  margin: 0;
+  padding-block-start: var(--gap-xs);
+  max-inline-size: 60ch;
+  color: var(--amber-ink);
+  font-size: var(--text-13);
+  line-height: 1.4;
+}
+
+.warningIcon {
+  flex-shrink: 0;
+  margin-block-start: 0.15em;
+}
+
+/* ── Picker ── */
+
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  max-inline-size: 32rem;
+  padding-block: var(--gap-sm) 4px;
+}
+
+.label {
+  color: var(--ink);
+  font-size: var(--text-13-5);
+  font-weight: 500;
+}
+
+.hint {
+  margin: 0;
+  max-inline-size: 60ch;
+  color: var(--ink-60);
+  font-size: var(--text-13);
+  line-height: 1.5;
+}
+
+.option {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-inline-size: 0;
+}
+
+.optionTitle {
+  overflow-wrap: anywhere;
+  color: var(--ink);
+}
+
+.optionLine {
+  color: var(--ink-60);
+  font-size: var(--text-13);
+}
+
+.loadFailure {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+}
+
+.reload {
+  align-self: flex-start;
+}
+
+.pickerActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+  padding-block-start: 4px;
+}
+
+@container (max-width: 30rem) {
+  .pickerActions > * {
+    flex: 1 1 auto;
+  }
+}

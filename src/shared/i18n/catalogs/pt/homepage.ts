@@ -351,7 +351,7 @@ export const homepage: Catalog = {
     "Uma sessão semanal com que podes contar todos os meses, e filmes que de outra forma nunca chegariam a Lisboa.",
   "painPoints.cinema.modal.c.title": "Como isto sustenta a QueerPulse",
   "painPoints.cinema.modal.c.body":
-    "Quem financia é dono, por isso o que passa responde a quem está a ver.",
+    "Quem é membro ajuda a moldá-lo, por isso o que passa responde a quem está a ver.",
 
   "painPoints.studio.label": "Studio",
   "painPoints.studio.question":
@@ -364,7 +364,7 @@ export const homepage: Catalog = {
     "Música de quem a faz: lançamentos, sessões ao vivo e partituras, com os pagamentos e as regras decididos por quem cria. Ainda está a ser construído.",
   "painPoints.studio.payoff": "O próximo lançamento vai para lá primeiro.",
   "painPoints.studio.payoff2":
-    "Quando abrir, vou finalmente saber para onde vão os meus dez euros por mês.",
+    "Quando abrir, compro o disco e o dinheiro vai direto para quem o fez",
   "painPoints.studio.cta": "Espreita o Studio",
   "painPoints.studio.modal.title":
     "Música de quem a faz, <em>paga como deve ser.</em>",

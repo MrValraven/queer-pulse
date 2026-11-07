@@ -23,10 +23,12 @@
   background: var(--paper);
   box-shadow: var(--shadow-e3);
   outline: none;
-  /* The first commit, before placement lands, is transparent and inert.
-     Opacity keeps the items focusable, where `visibility: hidden` would not. The
-     placement hook reads `offsetWidth` in a layout effect, which flushes this
-     style, so the switch to `data-placed` below runs as a real transition. */
+  /* The first commit, before placement lands, is transparent and inert, and
+     so is a menu fading out: dropping `data-placed` runs the same transition
+     backwards, then DeskMenuList unmounts it. Opacity keeps the items
+     focusable, where `visibility: hidden` would not. The placement hook reads
+     `offsetWidth` in a layout effect, which flushes this style, so the switch
+     to `data-placed` below runs as a real transition. */
   opacity: 0;
   transform: translateY(-4px);
   pointer-events: none;

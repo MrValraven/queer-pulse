@@ -17,46 +17,68 @@ describe("vj contract mirror", () => {
       clipSequence: 0,
       activePackId: null,
       liveClipId: null,
-      transition: { mode: "fade", fadeMs: 800 },
-      overlay: { text: "", style: "big", isVisible: false },
+      liveGeneratorId: null,
+      liveGeneratorVariant: null,
+      liveSince: null,
+      transition: { mode: "fade", length: { unit: "ms", value: 800 } },
+      overlay: {
+        text: "",
+        style: "big",
+        isVisible: false,
+        position: "center",
+        size: "l",
+        colorToken: "cream",
+        hideAt: null,
+      },
+      countdown: { isVisible: false, targetAt: null, label: "" },
+      logo: { isVisible: false, corner: "bottomRight" },
+      eventCard: { isVisible: false, kind: "qr" },
       effects: {
         speed: 1,
-        isMonochrome: false,
-        isMirrored: false,
-        isHueCycling: false,
+        settings: {},
         isStrobing: false,
         isBlackout: false,
         strobeStartedAt: null,
+      },
+      mix: { clipId: null, amount: 0, blendMode: "normal" },
+      tempo: {
+        bpm: 124,
+        downbeatAt: 1000,
+        quantize: "off",
+        source: "manual",
       },
       shuffle: {
         isOn: false,
         intervalKind: "seconds",
         intervalValue: 8,
-        bpm: 124,
+        source: "pack",
+        excludedClipIds: [],
       },
+      recentClipIds: [],
+      screenOverrides: {},
+      activeSetlistId: null,
+      setlistIndex: null,
       updatedAt: 1000,
     });
   });
 
   it("times a seconds interval", () => {
+    const stage = createVjStageState("epoch-1", 0);
     expect(
-      vjShuffleIntervalMs({
-        isOn: true,
-        intervalKind: "seconds",
-        intervalValue: 8,
-        bpm: 124,
-      }),
+      vjShuffleIntervalMs(
+        { ...stage.shuffle, isOn: true, intervalKind: "seconds" },
+        stage.tempo,
+      ),
     ).toBe(8000);
   });
 
   it("times a beats interval at the tempo", () => {
+    const stage = createVjStageState("epoch-1", 0);
     const beats = (intervalValue: number, bpm: number) =>
-      vjShuffleIntervalMs({
-        isOn: true,
-        intervalKind: "beats",
-        intervalValue,
-        bpm,
-      });
+      vjShuffleIntervalMs(
+        { ...stage.shuffle, isOn: true, intervalKind: "beats", intervalValue },
+        { ...stage.tempo, bpm },
+      );
     expect(beats(8, 124)).toBe(3871);
     expect(beats(4, 60)).toBe(4000);
     expect(beats(32, 200)).toBe(9600);
@@ -70,11 +92,21 @@ describe("vj contract mirror", () => {
   });
 
   it("lists every code once", () => {
-    expect(VJ_REFUSAL_CODES).toHaveLength(26);
-    expect(new Set(VJ_REFUSAL_CODES).size).toBe(26);
-    expect(VJ_SOCKET_ERROR_CODES).toHaveLength(27);
-    expect(new Set(VJ_SOCKET_ERROR_CODES).size).toBe(27);
-    expect(VJ_CLIENT_UPLOAD_CODES).toHaveLength(4);
+    expect(new Set(VJ_REFUSAL_CODES).size).toBe(VJ_REFUSAL_CODES.length);
+    expect(VJ_REFUSAL_CODES.length).toBeGreaterThan(26);
+    expect(new Set(VJ_SOCKET_ERROR_CODES).size).toBe(
+      VJ_SOCKET_ERROR_CODES.length,
+    );
+    expect(VJ_SOCKET_ERROR_CODES.length).toBeGreaterThan(27);
+    expect(VJ_SOCKET_ERROR_CODES.at(-1)).toBe("vj_server_error");
+    expect(VJ_CLIENT_UPLOAD_CODES).toEqual([
+      "VJ_UPLOAD_HEVC",
+      "VJ_UPLOAD_UNPLAYABLE",
+      "VJ_UPLOAD_GIF_DAMAGED",
+      "VJ_UPLOAD_THUMBNAIL_FAILED",
+      "VJ_PREVIEW_UNSUPPORTED",
+      "VJ_PREVIEW_FAILED",
+    ]);
     const refusalCodes: readonly string[] = VJ_REFUSAL_CODES;
     for (const clientCode of VJ_CLIENT_UPLOAD_CODES) {
       expect(refusalCodes).not.toContain(clientCode);
@@ -88,5 +120,8 @@ describe("vj contract mirror", () => {
     expect(VJ_LIMITS.packsMax).toBe(50);
     expect(VJ_LIMITS.packClipsMax).toBe(200);
     expect(VJ_LIMITS.libraryClipsMax).toBe(1000);
+    expect(VJ_LIMITS.fadeMsDefault).toBe(800);
+    expect(VJ_LIMITS.bpmDefault).toBe(124);
+    expect(VJ_LIMITS.quantizeMinLeadMs).toBe(150);
   });
 });

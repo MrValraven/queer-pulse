@@ -10,6 +10,7 @@ import { SubmitStoryWriter } from "./SubmitStoryWriter";
 import { SubmitStoryCover } from "./SubmitStoryCover";
 import { INITIAL_DRAFT, type DraftForm } from "./submitStory.data";
 import { useStoryDraft } from "./useStoryDraft";
+import { submitStoryErrorCopy } from "./submitStoryError";
 import { createStorySubmission } from "./api/magazine.api";
 import { MY_SUBMISSIONS_QUERY_KEY } from "./api/useMySubmissions";
 import styles from "./SubmitStoryPage.module.css";
@@ -122,8 +123,9 @@ export function SubmitStoryEditor({
         await queryClient.invalidateQueries({
           queryKey: [MY_SUBMISSIONS_QUERY_KEY],
         });
-      } catch {
-        showToast(t("magazine:submitStory.editor.submitError"), "error");
+      } catch (error) {
+        const { key, values } = submitStoryErrorCopy(error);
+        showToast(t(key, values), "error");
         setSubmitting(false);
         return;
       }

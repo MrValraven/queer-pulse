@@ -1,0 +1,140 @@
+/* Scenes and set lists, inside the remote's dark sheet frame (the --qs-*
+   stage tokens). Rows are glass cards with their name on top and their
+   actions under it, so long names wrap and every button keeps a 44px hit
+   area. Groups sit further apart than the rows inside them. */
+
+.sheetBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+.groupTitle {
+  composes: sectionTitle from "../../VjSheets.module.css";
+}
+
+.empty {
+  composes: hint from "../../VjSheets.module.css";
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The card lives on the child of the CollapseListItem, so its padding and
+   border fold away with the row. */
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  margin-block-end: var(--gap-xs);
+  padding: var(--gap-sm);
+  border: 1px solid var(--qs-line);
+  border-radius: var(--qs-radius-tile);
+  background: var(--qs-glass-bottom);
+  color: var(--qs-text);
+  container: vj-scene-row / inline-size;
+}
+
+/* The set list that plays carries the coral edge, and its position line
+   says the same in words. */
+.row[data-is-active="true"] {
+  border-color: var(--accent);
+}
+
+.rowName {
+  margin: 0;
+  min-width: 0;
+  font-size: var(--text-15);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.rowMeta {
+  margin: 0;
+  font-size: var(--text-13);
+  font-variant-numeric: tabular-nums;
+  color: var(--qs-text-mute);
+}
+
+/* Recall, Rename and Delete stack full width on a phone, so a long label
+   ("Mudar o nome da cena") keeps its padding; a card wide enough for all
+   three whole puts them in one row. */
+.rowActions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap-xs);
+}
+
+@container vj-scene-row (min-width: 40rem) {
+  .rowActions {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.rowActions > *,
+.stepButtons > *,
+.wideButton {
+  inline-size: 100%;
+  touch-action: manipulation;
+}
+
+.renameForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding-block-start: var(--gap-xs);
+}
+
+.fieldLabel {
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--qs-text);
+}
+
+.input {
+  composes: input from "../../VjSheets.module.css";
+}
+
+.setlistHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--gap-xs);
+}
+
+.setlistControls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.setlistPosition {
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--qs-text);
+}
+
+.stepButtons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gap-xs);
+}
+
+.visuallyHidden {
+  composes: visuallyHidden from "../../VjSheets.module.css";
+}

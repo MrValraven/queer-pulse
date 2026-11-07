@@ -87,16 +87,11 @@ export interface GovernanceOverviewResult {
 async function buildDemo(): Promise<
   Omit<GovernanceOverviewResult, "loading" | "error" | "retry">
 > {
-  const { COUNCIL, DECISIONS, HEALTH, PRINCIPLES, STEPS } =
-    await import("../governance.data");
+  const { COUNCIL, PRINCIPLES, STEPS } = await import("../governance.data");
   return {
-    health: HEALTH.map((stat) => ({
-      value: stat.value,
-      up: stat.up,
-      labelKey: stat.labelKey,
-      trendKey: stat.trendKey,
-      trendValues: stat.trendValues,
-    })),
+    // The health tiles start empty, like the decision log: demo mode must
+    // not show invented member, report or event counts.
+    health: [],
     moderationSteps: STEPS.map((step) => ({
       titleKey: step.titleKey,
       textKey: step.textKey,
@@ -118,11 +113,9 @@ async function buildDemo(): Promise<
       title: seededGovernanceText(principle.titleKey),
       text: seededGovernanceText(principle.textKey),
     })),
-    decisions: DECISIONS.map((decision) => ({
-      id: decision.leadKey,
-      lead: seededGovernanceText(decision.leadKey),
-      body: seededGovernanceText(decision.bodyKey),
-    })),
+    // The decision log starts empty: nothing was decided yet that the page
+    // could truthfully list, and demo mode must not show an invented history.
+    decisions: [],
   };
 }
 

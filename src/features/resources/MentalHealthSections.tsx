@@ -222,13 +222,7 @@ export function ExperiencesSection() {
   );
 }
 
-export function SnsSection({
-  forum,
-  mentorship,
-}: {
-  forum: string;
-  mentorship: string;
-}) {
+export function SnsSection({ forum }: { forum: string }) {
   const { t } = useTranslation();
   return (
     <section className={styles.sec}>
@@ -269,10 +263,6 @@ export function SnsSection({
           <div className={styles.peerBtns}>
             <Button to={forum} variant="primary">
               {t("resources:mentalHealth.sns.peer.joinCta")}
-            </Button>
-            <Button to={mentorship} variant="ghost-dark">
-              {t("resources:mentalHealth.sns.peer.mentorCta")}{" "}
-              <FiArrowRight aria-hidden />
             </Button>
           </div>
         </Reveal>

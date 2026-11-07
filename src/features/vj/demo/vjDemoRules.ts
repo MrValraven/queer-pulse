@@ -1,9 +1,9 @@
 /**
- * Field rules and refusals of the demo VJ library, mirroring the backend's
- * `vj.constants.ts` and `vj-input.ts` (contract 4 and 5). Each check answers
- * the contract's reason code, and no message carries the value it refused.
+ * Field rules of the demo VJ library, mirroring the backend's `vj-input.ts`
+ * (v1 contract 4 and 5, v2 contract 5 and 6.2). Each check answers the
+ * contract's reason code through `vjRefusal` (`vjDemoRefusals.ts`, re-exported
+ * here for v1 importers), and no message carries the value it refused.
  */
-import { ApiError } from "../../../shared/api/client";
 import {
   VJ_CLIP_MIME_TYPES,
   VJ_FIT_MODES,
@@ -13,127 +13,9 @@ import {
   type VjMediaKind,
   type VjRefusalCode,
 } from "../../../shared/contracts/vj";
+import { vjRefusal } from "./vjDemoRefusals";
 
-interface VjRefusalRule {
-  status: number;
-  message: string;
-}
-
-/** Status and fixed English message of every refusal (backend VJ_REFUSALS). */
-const VJ_DEMO_REFUSALS: Record<VjRefusalCode, VjRefusalRule> = {
-  VJ_PACK_NOT_FOUND: { status: 404, message: "No VJ pack has this id." },
-  VJ_PACK_NAME_REQUIRED: { status: 400, message: "A pack needs a name." },
-  VJ_PACK_NAME_TOO_LONG: {
-    status: 400,
-    message: `A pack name can be at most ${VJ_LIMITS.packNameMax} characters.`,
-  },
-  VJ_PACK_NAME_TAKEN: {
-    status: 409,
-    message: "Another pack already has this name.",
-  },
-  VJ_PACK_LIMIT_REACHED: {
-    status: 409,
-    message: `The library holds at most ${VJ_LIMITS.packsMax} packs.`,
-  },
-  VJ_PACK_REORDER_MISMATCH: {
-    status: 400,
-    message: "The new order must list every pack exactly once.",
-  },
-  VJ_PACK_FULL: {
-    status: 409,
-    message: `A pack holds at most ${VJ_LIMITS.packClipsMax} clips.`,
-  },
-  VJ_PACK_CLIPS_REORDER_MISMATCH: {
-    status: 400,
-    message: "The new order must list every clip of the pack exactly once.",
-  },
-  VJ_CLIP_NOT_FOUND: { status: 404, message: "No VJ clip has this id." },
-  VJ_CLIP_ALREADY_IN_PACK: {
-    status: 409,
-    message: "This clip is already in the pack.",
-  },
-  VJ_CLIP_NOT_IN_PACK: {
-    status: 404,
-    message: "This clip is not in the pack.",
-  },
-  VJ_CLIP_TITLE_REQUIRED: { status: 400, message: "A clip needs a title." },
-  VJ_CLIP_TITLE_TOO_LONG: {
-    status: 400,
-    message: `A clip title can be at most ${VJ_LIMITS.clipTitleMax} characters.`,
-  },
-  VJ_CLIP_FIT_MODE_INVALID: {
-    status: 400,
-    message: "The fit mode must be fill or fit.",
-  },
-  VJ_CLIP_DIMENSIONS_INVALID: {
-    status: 400,
-    message: "Width and height must be whole numbers from 1 to 16384.",
-  },
-  VJ_CLIP_DURATION_INVALID: {
-    status: 400,
-    message:
-      "A video needs a duration from 1 ms to one hour, and a GIF takes none.",
-  },
-  VJ_CLIP_KEY_INVALID: {
-    status: 400,
-    message: "The storage key is not a VJ upload key.",
-  },
-  VJ_CLIP_KEY_IN_USE: {
-    status: 409,
-    message: "Another clip already stores this upload.",
-  },
-  VJ_CLIP_IDS_INVALID: {
-    status: 400,
-    message: `clipIds must list 1 to ${VJ_LIMITS.mediaClipIdsMax} clip ids separated by commas.`,
-  },
-  VJ_LIBRARY_FULL: {
-    status: 409,
-    message: `The library holds at most ${VJ_LIMITS.libraryClipsMax} clips.`,
-  },
-  VJ_UPLOAD_NOT_ADMIN: {
-    status: 403,
-    message: "Only an admin may upload VJ clips.",
-  },
-  VJ_UPLOAD_TYPE_UNSUPPORTED: {
-    status: 400,
-    message: "This file type is not accepted for this VJ upload.",
-  },
-  VJ_UPLOAD_TOO_LARGE: {
-    status: 413,
-    message: "The file is over the size cap for this VJ upload.",
-  },
-  VJ_UPLOAD_FORMAT_MOV: {
-    status: 400,
-    message: "The upload is a QuickTime MOV file. Export it as MP4 or WebM.",
-  },
-  VJ_UPLOAD_CONTENT_MISMATCH: {
-    status: 400,
-    message: "The uploaded bytes do not match the file type.",
-  },
-  VJ_UPLOAD_MISSING: {
-    status: 409,
-    message: "The upload never reached storage.",
-  },
-};
-
-/** Builds the refusal the live API would throw for this code. */
-export function vjRefusal(
-  code: VjRefusalCode,
-  extra?: {
-    packId?: string;
-    field?: "storageKey" | "thumbnailStorageKey";
-    kind?: "vj_clip" | "vj_thumbnail";
-    maxBytes?: number;
-  },
-): ApiError {
-  const { status, message } = VJ_DEMO_REFUSALS[code];
-  return new ApiError(status, message, {
-    statusCode: status,
-    message,
-    code,
-    ...extra,
-  });
-}
+export { vjRefusal } from "./vjDemoRefusals";
 
 function countCodePoints(value: string): number {
   return Array.from(value).length;
@@ -175,6 +57,26 @@ export function normalizeVjClipTitle(value: unknown): string {
     VJ_LIMITS.clipTitleMax,
     "VJ_CLIP_TITLE_REQUIRED",
     "VJ_CLIP_TITLE_TOO_LONG",
+  );
+}
+
+/** A scene name, trimmed. Answers VJ_SCENE_NAME_REQUIRED or VJ_SCENE_NAME_TOO_LONG. */
+export function normalizeVjSceneName(value: unknown): string {
+  return normalizeBoundedText(
+    value,
+    VJ_LIMITS.sceneNameMax,
+    "VJ_SCENE_NAME_REQUIRED",
+    "VJ_SCENE_NAME_TOO_LONG",
+  );
+}
+
+/** A set list name, trimmed. Answers VJ_SETLIST_NAME_REQUIRED or VJ_SETLIST_NAME_TOO_LONG. */
+export function normalizeVjSetlistName(value: unknown): string {
+  return normalizeBoundedText(
+    value,
+    VJ_LIMITS.setlistNameMax,
+    "VJ_SETLIST_NAME_REQUIRED",
+    "VJ_SETLIST_NAME_TOO_LONG",
   );
 }
 
@@ -248,6 +150,35 @@ const UUID_PATTERN =
 /** Whether a value is text in the shape of a uuid. */
 export function isVjUuid(value: unknown): value is string {
   return typeof value === "string" && UUID_PATTERN.test(value);
+}
+
+/** Whether a value is a list of at most `max` uuid strings. Pass
+ *  `Number.POSITIVE_INFINITY` to check the shape alone when an over-long
+ *  list answers its own code (as set list items do). */
+export function isVjUuidList(value: unknown, max: number): value is string[] {
+  return (
+    Array.isArray(value) &&
+    value.length <= max &&
+    (value as unknown[]).every(isVjUuid)
+  );
+}
+
+/** A set list's `sceneIds` (backend normalizeSetlistSceneIds): uuid strings,
+ *  lowercased, in order, a repeat kept. Anything but such an array answers
+ *  VJ_SETLIST_ITEMS_INVALID; over 100 entries then answers VJ_SETLIST_FULL
+ *  with `setlistId` when the set list exists. A create with no `sceneIds`
+ *  passes `[]` itself. */
+export function normalizeVjSetlistSceneIds(
+  value: unknown,
+  setlistId: string | null,
+): string[] {
+  if (!isVjUuidList(value, Number.POSITIVE_INFINITY)) {
+    throw vjRefusal("VJ_SETLIST_ITEMS_INVALID");
+  }
+  if (value.length > VJ_LIMITS.setlistItemsMax) {
+    throw vjRefusal("VJ_SETLIST_FULL", { setlistId: setlistId ?? undefined });
+  }
+  return value.map((sceneId) => sceneId.toLowerCase());
 }
 
 /** Whether a reorder list names every expected id exactly once. */

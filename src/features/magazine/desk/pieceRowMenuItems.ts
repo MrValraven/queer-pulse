@@ -2,7 +2,9 @@ import type { IconType } from "react-icons";
 import {
   FiBell,
   FiBookOpen,
+  FiClipboard,
   FiEdit2,
+  FiFileText,
   FiTrash2,
   FiUserCheck,
 } from "react-icons/fi";
@@ -25,6 +27,11 @@ export interface PieceRowMenuActions {
   onHandoff: () => void;
   onAssignIssue: () => void;
   onDelete: () => void;
+  /** Takes a live piece off the site and puts it at Draft. Omitted, the
+   *  unpublish items are left out. */
+  onUnpublishToDraft?: () => void;
+  /** The same, landing at In review. */
+  onUnpublishToReview?: () => void;
 }
 
 export interface BuildPieceRowMenuItemsOptions extends PieceRowMenuActions {
@@ -33,22 +40,28 @@ export interface BuildPieceRowMenuItemsOptions extends PieceRowMenuActions {
   hasAnyIssue: boolean;
   /** `magazine:desk.reassign.moveIssue` or `.addToIssue`, decided by the row. */
   assignLabelKey: string;
+  /** Only a published row offers the unpublish items. */
+  isPublished?: boolean;
 }
 
 /**
  * Everything a row can do besides its one next action, in the order an editor
- * reaches for it. Delete comes last, behind a rule, so removing a piece is
- * always a deliberate second step.
+ * reaches for it. A published row gains "Unpublish to draft" and "Unpublish to
+ * review" after Hand off. Delete comes last, behind a rule, so removing a
+ * piece is always a deliberate second step.
  */
 export function buildPieceRowMenuItems({
   translate,
   hasAnyIssue,
   assignLabelKey,
+  isPublished = false,
   onEdit,
   onChase,
   onHandoff,
   onAssignIssue,
   onDelete,
+  onUnpublishToDraft,
+  onUnpublishToReview,
 }: BuildPieceRowMenuItemsOptions): PieceRowMenuItem[] {
   const items: PieceRowMenuItem[] = [
     {
@@ -70,6 +83,22 @@ export function buildPieceRowMenuItems({
       onSelect: onHandoff,
     },
   ];
+  if (isPublished && onUnpublishToDraft) {
+    items.push({
+      key: "unpublish-draft",
+      label: translate("magazine:desk.pieceRow.unpublishToDraft"),
+      icon: FiFileText,
+      onSelect: onUnpublishToDraft,
+    });
+  }
+  if (isPublished && onUnpublishToReview) {
+    items.push({
+      key: "unpublish-review",
+      label: translate("magazine:desk.pieceRow.unpublishToReview"),
+      icon: FiClipboard,
+      onSelect: onUnpublishToReview,
+    });
+  }
   if (hasAnyIssue) {
     items.push({
       key: "assign-issue",

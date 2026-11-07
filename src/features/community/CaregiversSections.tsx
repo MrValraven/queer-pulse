@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiArrowRight, FiChevronDown } from "react-icons/fi";
+import { FiChevronDown } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -9,7 +9,6 @@ import {
   buildDontSay,
   buildFaqs,
   buildLessons,
-  buildRooms,
 } from "./caregivers.data";
 import styles from "./CaregiversPage.module.css";
 
@@ -31,8 +30,7 @@ function SectionHead({
 
 /** Five short reads, each linking to the closest existing guide. */
 export function StartHere() {
-  const { t } = useTranslation();
-  const lessons = useMemo(() => buildLessons(t), [t]);
+  const lessons = useMemo(() => buildLessons(), []);
 
   return (
     <section className={styles.start}>
@@ -58,10 +56,6 @@ export function StartHere() {
               </div>
               <h3>{lesson.title}</h3>
               <p>{lesson.body}</p>
-              <div className={styles.lessonMeta}>
-                <span>{lesson.read}</span>
-                <span>{lesson.languages}</span>
-              </div>
             </Link>
           ))}
         </div>
@@ -109,43 +103,6 @@ export function CommonQuestions() {
               </div>
             );
           })}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/** Members-only support rooms, routed to the Peer Support hub. */
-export function VoiceRooms() {
-  const { t } = useTranslation();
-  const rooms = useMemo(() => buildRooms(t), [t]);
-
-  return (
-    <section className={styles.groups}>
-      <div className="wrap">
-        <SectionHead
-          title={
-            <Translation
-              i18nKey="community:caregivers.voiceRooms.title"
-              components={{ em: <em /> }}
-            />
-          }
-        >
-          {t("community:caregivers.voiceRooms.lead")}
-        </SectionHead>
-        <div className={styles.grGrid}>
-          {rooms.map((room, i) => (
-            <Link key={i} to={room.to} className={styles.gr2}>
-              <div className={styles.grInfo}>
-                <h4>{room.title}</h4>
-                <div className={styles.grSub}>{room.subtitle}</div>
-                <div className={styles.grMeta}>{room.meta}</div>
-              </div>
-              <span className={styles.grArrow} aria-hidden>
-                <FiArrowRight />
-              </span>
-            </Link>
-          ))}
         </div>
       </div>
     </section>

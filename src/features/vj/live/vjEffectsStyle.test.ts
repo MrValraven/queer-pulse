@@ -2,8 +2,7 @@ import { describe, expect, it } from "vitest";
 import { VJ_PIXELATED_MIN_SCALE } from "../vj.constants";
 import {
   shouldPixelateVjClip,
-  vjLayerFilter,
-  vjLayerTransform,
+  vjEffectivePlaybackRate,
   vjPlaybackRateFor,
   vjRenderScale,
 } from "./vjEffectsStyle";
@@ -11,17 +10,31 @@ import {
 const FULL_HD = { width: 1920, height: 1080 };
 
 describe("vjEffectsStyle", () => {
-  it("maps black and white and mirror to a filter and a transform", () => {
-    expect(vjLayerFilter({ isMonochrome: true })).toBe("grayscale(1)");
-    expect(vjLayerFilter({ isMonochrome: false })).toBe("none");
-    expect(vjLayerTransform({ isMirrored: true })).toBe("scaleX(-1)");
-    expect(vjLayerTransform({ isMirrored: false })).toBe("none");
+  it("composes clip default speed with the stage speed", () => {
+    expect(vjEffectivePlaybackRate(1, 1.5)).toBe(1.5);
+    expect(vjEffectivePlaybackRate(2, 0.5)).toBe(1);
+    expect(vjEffectivePlaybackRate(0.5, 2)).toBe(1);
+    expect(vjEffectivePlaybackRate(1.5, 2)).toBe(3);
+    expect(vjPlaybackRateFor("video", 1.5)).toBe(1.5);
+    expect(vjPlaybackRateFor("video", 2, 0.5)).toBe(1);
   });
 
-  it("gives videos the speed and GIFs none", () => {
-    expect(vjPlaybackRateFor("video", 1.5)).toBe(1.5);
-    expect(vjPlaybackRateFor("video", 0.5)).toBe(0.5);
+  it("clamps to 0.25 and 4", () => {
+    expect(vjEffectivePlaybackRate(4, 4)).toBe(4);
+    expect(vjEffectivePlaybackRate(2, 4)).toBe(4);
+    expect(vjEffectivePlaybackRate(0.25, 0.25)).toBe(0.25);
+    expect(vjEffectivePlaybackRate(0.5, 0.25)).toBe(0.25);
+    expect(vjPlaybackRateFor("video", 4, 4)).toBe(4);
+  });
+
+  it("reads a non-finite default speed as 1", () => {
+    expect(vjEffectivePlaybackRate(Number.NaN, 2)).toBe(2);
+    expect(vjEffectivePlaybackRate(Number.POSITIVE_INFINITY, 0.5)).toBe(0.5);
+  });
+
+  it("a GIF still answers null", () => {
     expect(vjPlaybackRateFor("gif", 2)).toBeNull();
+    expect(vjPlaybackRateFor("gif", 1, 1.5)).toBeNull();
   });
 
   it("pixelates a 320 by 240 GIF filling a 1920 by 1080 screen", () => {

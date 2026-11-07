@@ -89,21 +89,21 @@ export const safety: Catalog = {
   "myReports.subject.studio_track": "About a Studio track",
   "report.guide.meta.title": "How reporting works on QueerPulse",
   "report.guide.meta.description":
-    "What happens after you submit a report on QueerPulse: our review process, the principles behind every decision, and a public log of past moderation outcomes.",
+    "What happens after you submit a report on QueerPulse: our review process, the principles behind every decision, and where to find our public transparency report.",
   "report.guide.makeReportCta": "Make a report",
 
   "report.how.title": "How <em>reporting works</em>",
   "report.how.lead":
-    "You submit a report. A moderator reviews it within 24 hours. Here's exactly what happens in between: no black box, no vague reassurances.",
+    "You submit a report. Urgent reports are looked at first and the rest are reviewed in order of severity. Here is what happens after you submit one.",
   "report.flow.step1.title": "You submit a report",
   "report.flow.step1.desc":
     "Via the button on any profile, message, or forum post, or directly through this page. You can report anonymously if needed.",
   "report.flow.step2.title": "Immediate acknowledgement",
   "report.flow.step2.desc":
-    "A confirmation reaches your QueerPulse notifications within 1 hour, and someone from our team is assigned to your report. A report filed without an account skips this step: there is no inbox here to reach.",
-  "report.flow.step3.title": "Review within 24 hours",
+    "A confirmation reaches your QueerPulse notifications as soon as the report is filed. A report filed without an account skips this step: there is no inbox here to reach.",
+  "report.flow.step3.title": "Review by severity",
   "report.flow.step3.desc":
-    "We review the evidence, context, and history. For serious cases, the reported member's access is temporarily suspended during review.",
+    "Our team reviews the evidence, context, and history, starting with the most urgent reports. We aim to review the most urgent within 1 hour, serious ones within 24 hours, and the rest within 3 to 7 days.",
   "report.flow.step4.title": "Decision & action",
   "report.flow.step4.desc":
     "Possible outcomes: warning, temporary suspension, permanent removal. The outcome and the reasoning behind it reach your QueerPulse notifications.",
@@ -181,16 +181,8 @@ export const safety: Catalog = {
 
   "report.transparency.title": "Moderation <em>transparency</em>",
   "report.transparency.lead":
-    "We publish a quarterly moderation report so the community can see how decisions are being made. This is what accountability looks like.",
-  "report.modLog.title": "Q1 2026 <em>moderation report</em>",
-  "report.modLog.meta":
-    "Published April 2026 · Covers January – March 2026 · All data is aggregate and anonymised.",
-  "report.modLog.stat.received": "reports received",
-  "report.modLog.stat.resolved": "resolved within 24h",
-  "report.modLog.stat.removed": "members removed",
-  "report.modLog.stat.appeals": "appeals received",
-  "report.modLog.stat.reversed": "decision reversed on appeal",
-  "report.modLog.viewReportCta": "View full report",
+    "Our public transparency report shows, for each period, how many reports were filed and resolved, how long resolution took, what actions were taken, and how appeals went.",
+  "report.transparency.viewCta": "Read the transparency report",
 
   "report.toast.chooseCategory": "Choose what you're reporting first.",
   "report.toast.received":

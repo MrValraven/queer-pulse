@@ -12,6 +12,7 @@ import { useOutsideDismiss } from "../../../shared/hooks/useOutsideDismiss";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { formatDate } from "../../../shared/lib/date";
 import { mediaMax } from "../../../shared/theme/breakpoints";
+import { useExitingPopover } from "./useExitingPopover";
 import styles from "./PieceRow.module.css";
 
 export interface PieceDueDatePopoverProps {
@@ -28,6 +29,9 @@ export interface PieceDueDatePopoverProps {
 function ignoreMonth(): void {}
 function ignoreTime(): void {}
 function ignorePreset(): void {}
+// The exiting popover is inert, but its Escape listener stays mounted until
+// the fade ends; it must not close (and refocus) a second time.
+function ignoreClose(): void {}
 
 /**
  * The pipeline row's "Set date" for an undated piece: a muted text button
@@ -53,6 +57,11 @@ export function PieceDueDatePopover({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
   const popoverId = `${useId()}-due-date-popover`;
+  const isPopoverRendered = useExitingPopover(
+    isOpen && !isMobile,
+    popoverRef,
+    triggerRef,
+  );
   const dialogLabel = t("magazine:desk.pieceRow.setDateDialogLabel");
   const todayIso = formatIsoDate(todayPlain());
 
@@ -131,7 +140,7 @@ export function PieceDueDatePopover({
           />
         </ModalSheet>
       )}
-      {isOpen && !isMobile && (
+      {isPopoverRendered && !isMobile && (
         <DatePickerPopover
           id={popoverId}
           anchorRef={triggerRef}
@@ -146,7 +155,7 @@ export function PieceDueDatePopover({
           onTimeChange={ignoreTime}
           onPresetSelect={ignorePreset}
           onToday={handleToday}
-          onClose={close}
+          onClose={isOpen ? close : ignoreClose}
         />
       )}
     </>

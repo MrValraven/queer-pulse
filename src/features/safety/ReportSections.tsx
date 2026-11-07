@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
-import {
-  Button,
-  FormField,
-  Select,
-  StatGrid,
-  StatTile,
-} from "../../shared/components/ui";
+import { Button, FormField, Select } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useAuth } from "../../app/providers/authContext";
 import { Translation } from "../../shared/i18n/Translation";
@@ -85,17 +79,6 @@ const IDENTITY_OPTIONS: {
     labelKey: "safety:report.form.identity.anonymous",
     helperKey: "safety:report.form.identity.anonymousHelper",
   },
-];
-
-/** Aggregate moderation stats. The counts are mock report data (content —
- * the live-mode equivalent of a fetched quarterly report); only the label
- * next to each count is platform chrome and gets translated. */
-const LOG = [
-  { number: "14", labelKey: "safety:report.modLog.stat.received" },
-  { number: "12", labelKey: "safety:report.modLog.stat.resolved" },
-  { number: "3", labelKey: "safety:report.modLog.stat.removed" },
-  { number: "2", labelKey: "safety:report.modLog.stat.appeals" },
-  { number: "1", labelKey: "safety:report.modLog.stat.reversed" },
 ];
 
 /**
@@ -362,7 +345,7 @@ export function ReportFormSection() {
   );
 }
 
-export function ModerationLogSection() {
+export function TransparencyLinkSection() {
   const { t } = useTranslation();
   return (
     <section className={s.section}>
@@ -374,29 +357,11 @@ export function ModerationLogSection() {
           />
         </h2>
         <p className={s.lead}>{t("safety:report.transparency.lead")}</p>
-        <div className={s.modLog}>
-          <h3>
-            <Translation
-              i18nKey="safety:report.modLog.title"
-              components={{ em: <em /> }}
-            />
-          </h3>
-          <p>{t("safety:report.modLog.meta")}</p>
-          <StatGrid tone="contrast">
-            {LOG.map((stat) => (
-              <StatTile
-                key={stat.labelKey}
-                value={stat.number}
-                label={t(stat.labelKey)}
-              />
-            ))}
-          </StatGrid>
-          <div className={s.modActions}>
-            <Button variant="ghost-dark" to={routes.governance}>
-              {t("safety:report.modLog.viewReportCta")}{" "}
-              <FiArrowRight aria-hidden />
-            </Button>
-          </div>
+        <div className={s.modActions}>
+          <Button variant="ghost" to={routes.transparencyReport}>
+            {t("safety:report.transparency.viewCta")}{" "}
+            <FiArrowRight aria-hidden />
+          </Button>
         </div>
       </div>
     </section>

@@ -25,14 +25,13 @@ export type AboutLinkTopicId =
   | "guidelinesExclusion"
   | "transHealthcare"
   | "guidelinesSpeech"
-  | "governanceAllocations"
   | "migration"
   | "sexualHealth"
   | "governanceOverview";
 
 /**
  * Every entry follows the same key shape, so the catalog paths are derived from
- * the id rather than written out eight times.
+ * the id rather than written out seven times.
  */
 function topic(
   id: AboutLinkTopicId,
@@ -75,11 +74,6 @@ export const ABOUT_LINK_TOPICS: Record<AboutLinkTopicId, AboutLinkTopic> = {
     "antisemitism",
     "antiPalestinian",
     "test",
-  ]),
-  governanceAllocations: topic("governanceAllocations", routes.governance, [
-    "partners",
-    "votes",
-    "record",
   ]),
   migration: topic("migration", routes.intersectionality, [
     "queerSpaces",

@@ -2,14 +2,14 @@ import type { Catalog } from "../../types";
 
 /**
  * Governance & Transparency page copy. Procedural/constitutional prose — kept
- * precise and literal in translation. `FIN_STATS`/`INCOME`/`EXPENSE`/`EVENTS`
- * (the quarterly figures in `governance.data.ts`) are deliberately NOT in this
- * catalog: `GET /governance/finances` serves that exact shape in live mode, so
- * those strings are fetched content, not platform chrome — see
- * `api/governance.api.ts`'s header comment. `HEALTH`, `STEPS`, `COUNCIL`,
- * `PRINCIPLES`, `DECISIONS` and the finances section's surplus/partner prose
- * have no backend of their own (hardcoded identically in both modes), so they
- * ARE chrome and are translated below.
+ * precise and literal in translation. The quarterly figures (income, expense,
+ * stat tiles, event notes) are deliberately NOT in this catalog:
+ * `GET /governance/finances` serves them in live mode, so those strings are
+ * fetched content, not platform chrome — see `api/governance.api.ts`'s header
+ * comment. Demo mode carries no figures at all: finances and health render
+ * their "not published" lines. `STEPS`, `COUNCIL`, `PRINCIPLES`, the health
+ * labels and the finances section's surplus/partner prose are chrome and are
+ * translated below.
  */
 export const governance: Catalog = {
   // ── Meta (search/AI) ────────────────────────────────────────────────────
@@ -36,7 +36,7 @@ export const governance: Catalog = {
   // ── Governing documents (footer index) ─────────────────────────────────
   "governingDocs.constitution.label": "Constitution",
   "governingDocs.constitution.blurb":
-    "The formal organising document, twelve plain-language articles.",
+    "The working charter: purpose, membership, decisions and moderation as they work today.",
   "governingDocs.codeOfConduct.label": "Code of Conduct",
   "governingDocs.codeOfConduct.blurb":
     "What we expect of each other, and what happens when it's breached.",
@@ -127,9 +127,9 @@ export const governance: Catalog = {
   "principles.transparency.text":
     "Quarterly health reports. Published moderation stats. Council meetings summarised publicly.",
   "principles.accessNotConditional.title":
-    "Access is not conditional on ability to pay",
+    "Event costs are always stated up front",
   "principles.accessNotConditional.text":
-    "A sliding scale for all paid events. No one is excluded for financial circumstances.",
+    "Every event states its cost up front: free, pay what you can, or a fixed price the host sets. QueerPulse does not process payments for events.",
 
   // ── Finances ────────────────────────────────────────────────────────────
   "sections.finances.eyebrow": "Financial transparency",
@@ -272,20 +272,11 @@ export const governance: Catalog = {
   "sections.decisions.eyebrow": "Recent decisions",
   "sections.decisions.title": "What changed and <em>why.</em>",
 
-  "decisions.slidingScale.lead":
-    "May 2026: Sliding scale introduced for events.",
-  "decisions.slidingScale.body":
-    "Following a forum discussion, the council agreed to implement a sliding scale for all paid events.",
-  "decisions.forumLaunched.lead": "April 2026: Forum launched.",
-  "decisions.forumLaunched.body":
-    "Following member requests for a place to discuss longer-form topics. Categories and guidelines were co-designed with members.",
-  "decisions.visibilityDefaults.lead":
-    "March 2026: Visibility defaults made more conservative.",
-  "decisions.visibilityDefaults.body":
-    'New members now start on "network only" and can open up when comfortable.',
-  "decisions.languageToggle.lead": "February 2026: Language toggle added.",
-  "decisions.languageToggle.body":
-    "PT/EN toggle added to all pages following requests from Portuguese-speaking members.",
+  // Shown while the decision log holds no entry. The four decisions this page
+  // used to list were invented, so the log starts empty and fills only with
+  // entries the governance team writes on the Policy tab.
+  "sections.decisions.empty":
+    "No decisions have been logged yet. When the governance team records one, it will appear here with what changed and why.",
 
   // ── Raise a concern ─────────────────────────────────────────────────────
   "sections.raise.eyebrow": "Raise a concern",

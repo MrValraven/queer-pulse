@@ -1,0 +1,496 @@
+/* The dock's tempo bar and transition row, in the dark Pulse Live stage look
+   (the --qs-* tokens). Each row is one 44px band (the plan's fold budget);
+   every control reaches var(--tap-min) through its hit area, and every move
+   animates only opacity or transform. */
+
+.row {
+  --vj-dock-gap: 6px;
+  display: flex;
+  align-items: center;
+  gap: var(--vj-dock-gap);
+  min-inline-size: 0;
+  block-size: var(--tap-min);
+}
+
+/* ── Shared chip: a 44px tall glass control ── */
+.chip {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  box-sizing: border-box;
+  min-inline-size: var(--tap-min);
+  block-size: var(--tap-min);
+  margin: 0;
+  padding-inline: 10px;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--radius-12);
+  background: var(--qs-raised);
+  color: var(--qs-text);
+  font: inherit;
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.1;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  transition-property: opacity, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+.chip:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.chip[aria-pressed="true"] {
+  border-color: transparent;
+  background: var(--accent);
+  color: var(--qs-cta-ink);
+}
+
+.chip[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.chip svg {
+  flex: 0 0 auto;
+  inline-size: 16px;
+  block-size: 16px;
+}
+
+/* ── Tempo bar ── */
+.bpmCluster {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 4px;
+}
+
+.bpmValue {
+  font-variant-numeric: tabular-nums;
+}
+
+.micBadge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  inline-size: 22px;
+  color: var(--qs-text-mute);
+}
+
+.micBadge svg {
+  inline-size: 14px;
+  block-size: 14px;
+}
+
+.micMeter {
+  display: block;
+  inline-size: 100%;
+  block-size: 2px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--qs-ring-track);
+}
+
+.micMeterFill {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  background: var(--accent);
+  transform-origin: left center;
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+.downbeat {
+  color: var(--accent);
+  font-size: var(--text-18);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.quantize {
+  flex-direction: column;
+  gap: 1px;
+  padding-inline: 8px;
+}
+
+.quantizeCaption {
+  color: var(--qs-text-mute);
+  font-size: var(--text-10);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.quantizeMode {
+  font-size: var(--text-13);
+}
+
+.quantize[data-quantize="beat"],
+.quantize[data-quantize="bar"] {
+  border-color: var(--accent);
+}
+
+/* ── Beat dots: data-beat (0..3) lights one dot; written by the ticker
+   through a ref, so a beat costs no React render ── */
+.beatDots {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-inline-size: 0;
+  block-size: var(--tap-min);
+}
+
+.beatDot {
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  inline-size: 10px;
+  block-size: 10px;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background: var(--qs-text);
+  opacity: 0.35;
+  transform: scale(1);
+  transition-property: opacity, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+/* The first dot is the "1" of the bar. */
+.beatDot:first-child {
+  background: var(--accent);
+}
+
+.beatDots[data-beat="0"] > .beatDot:nth-child(1),
+.beatDots[data-beat="1"] > .beatDot:nth-child(2),
+.beatDots[data-beat="2"] > .beatDot:nth-child(3),
+.beatDots[data-beat="3"] > .beatDot:nth-child(4) {
+  opacity: 1;
+  transform: scale(1.4);
+}
+
+/* Hollow until the clock is synced with the screens. */
+.beatDots[data-synced="false"] > .beatDot {
+  border-color: var(--qs-glass-border-strong);
+  background: transparent;
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Reduced motion: no dots move; the beat number shows instead. */
+.beatNumber {
+  min-inline-size: 2ch;
+  color: var(--qs-text);
+  font-size: var(--text-18);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.beatDots[data-beat="0"] > .beatNumber {
+  color: var(--accent);
+}
+
+.beatDots[data-synced="false"] > .beatNumber {
+  color: var(--qs-text-mute);
+}
+
+/* ── Transition row ── */
+.modeChip {
+  flex: 0 1 auto;
+  min-inline-size: 64px;
+  max-inline-size: 104px;
+  font-size: var(--text-13);
+}
+
+.modeLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lengthSlot {
+  display: flex;
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.speedChip {
+  margin-inline-start: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.beatChips {
+  display: flex;
+  flex: 1 1 auto;
+  gap: 0;
+  min-inline-size: 0;
+}
+
+.beatChip {
+  flex: 1 1 0;
+  padding-inline: 0;
+  border-radius: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.beatChip:first-child {
+  border-start-start-radius: var(--radius-12);
+  border-end-start-radius: var(--radius-12);
+}
+
+.beatChip:last-child {
+  border-start-end-radius: var(--radius-12);
+  border-end-end-radius: var(--radius-12);
+}
+
+.beatChip + .beatChip {
+  border-inline-start-width: 0;
+}
+
+.msControl {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 6px;
+  min-inline-size: 0;
+}
+
+.msReadout {
+  flex: 0 0 auto;
+  min-inline-size: 4ch;
+  color: var(--qs-text-mute);
+  font-size: var(--text-13);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+.range {
+  --vj-length-rest: var(--qs-ring-track);
+  --vj-length-fill: var(--accent);
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  min-block-size: var(--tap-min);
+  margin: 0;
+  /* The MIDI learn glow and the focus ring follow the chips' rounded edge. */
+  border-radius: var(--radius-12);
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  touch-action: none;
+  cursor: pointer;
+}
+
+.range[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.range:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.range::-webkit-slider-runnable-track {
+  block-size: 6px;
+  border-radius: var(--qs-radius-pill);
+  background:
+    linear-gradient(var(--vj-length-fill), var(--vj-length-fill)) 0 0 /
+      var(--fill, 0%) 100% no-repeat,
+    var(--vj-length-rest);
+}
+
+.range::-moz-range-track {
+  block-size: 6px;
+  border-radius: var(--qs-radius-pill);
+  background: var(--vj-length-rest);
+}
+
+.range::-moz-range-progress {
+  block-size: 6px;
+  border-radius: var(--qs-radius-pill);
+  background: var(--vj-length-fill);
+}
+
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  inline-size: var(--tap-min);
+  block-size: var(--tap-min);
+  margin-block-start: -19px;
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle closest-side,
+    var(--qs-text) 0 50%,
+    transparent 54% 100%
+  );
+}
+
+.range::-moz-range-thumb {
+  box-sizing: border-box;
+  inline-size: var(--tap-min);
+  block-size: var(--tap-min);
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle closest-side,
+    var(--qs-text) 0 50%,
+    transparent 54% 100%
+  );
+}
+
+/* ── Popovers (BPM entry, transition picker, speed) ── */
+.popoverBody {
+  display: grid;
+  gap: var(--gap-xs);
+  inline-size: min(18rem, calc(100vw - 2 * var(--gap-sm) - 2 * var(--gap-sm)));
+}
+
+.popoverTitle {
+  margin: 0;
+  color: var(--qs-text);
+  font-size: var(--text-15);
+  font-weight: 700;
+}
+
+.popoverGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.popoverGridThree {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.popoverGrid > .chip,
+.popoverGridThree > .chip {
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-size: var(--text-13);
+}
+
+/* A transition name takes two lines inside the 44px chip when it needs them
+   ("Passar por / branco"), breaking between words only. */
+.popoverGrid > .chip {
+  white-space: normal;
+}
+
+.modeName {
+  display: -webkit-box;
+  min-inline-size: 0;
+  overflow: hidden;
+  overflow-wrap: normal;
+  text-align: center;
+  text-wrap: balance;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.stepRow {
+  display: grid;
+  grid-template-columns: var(--tap-min) minmax(0, 1fr) var(--tap-min);
+  align-items: center;
+  gap: 6px;
+}
+
+.stepValue {
+  color: var(--qs-text);
+  font-size: var(--text-20);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.bpmForm {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 6px;
+}
+
+.fieldLabel {
+  display: grid;
+  gap: 4px;
+  color: var(--qs-text-mute);
+  font-size: var(--text-12);
+  font-weight: 600;
+}
+
+/* 16px so iOS leaves the zoom alone on focus. */
+.field {
+  box-sizing: border-box;
+  inline-size: 100%;
+  block-size: var(--tap-min);
+  padding-inline: 10px;
+  border: 1px solid var(--qs-glass-border-strong);
+  border-radius: var(--radius-12);
+  background: var(--qs-raised-2);
+  color: var(--qs-text);
+  font: inherit;
+  font-size: var(--text-16);
+  font-variant-numeric: tabular-nums;
+}
+
+.field:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.field[aria-invalid="true"] {
+  border-color: var(--qs-low);
+}
+
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0;
+  color: var(--qs-text-mute);
+  font-size: var(--text-12);
+  line-height: 1.4;
+}
+
+.note svg {
+  flex: 0 0 auto;
+  inline-size: 14px;
+  block-size: 14px;
+  margin-block-start: 1px;
+}
+
+.fieldError {
+  color: var(--qs-low);
+}
+
+.wideChip {
+  inline-size: 100%;
+  white-space: normal;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip,
+  .beatDot,
+  .micMeterFill {
+    transition-duration: 0s;
+  }
+}

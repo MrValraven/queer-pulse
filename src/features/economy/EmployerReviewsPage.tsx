@@ -146,7 +146,9 @@ export function EmployerReviewsPage() {
             />
           )}
 
-          <EmployerVerifyBox />
+          {/* The verification criteria describe the demo safety badges; live
+              companies carry no such rating. */}
+          {demoMode && <EmployerVerifyBox />}
 
           <EmployerWriteBox onWrite={() => setWriteFor("")} />
         </div>

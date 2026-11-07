@@ -1,0 +1,256 @@
+/* The Shuffle sheet inside the remote's dark sheet frame (the --qs-* stage
+   tokens). The on and off switch and Skip sit first, in thumb reach; the
+   interval, the source and the clips left out follow. Groups sit further
+   apart than the controls inside them, and every control keeps a 44px hit
+   area. */
+
+.sheetBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+  min-width: 0;
+}
+
+.section {
+  composes: section from "../../VjSheets.module.css";
+}
+
+.sectionTitle {
+  composes: sectionTitle from "../../VjSheets.module.css";
+}
+
+.hint {
+  composes: hint from "../../VjSheets.module.css";
+}
+
+.actions {
+  composes: actions from "../../VjSheets.module.css";
+}
+
+.actionButton {
+  composes: actionButton from "../../VjSheets.module.css";
+  gap: var(--gap-xs);
+  touch-action: manipulation;
+}
+
+.pair {
+  composes: pair from "../../VjSheets.module.css";
+}
+
+.chips {
+  composes: chips from "../../VjSheets.module.css";
+}
+
+.chip {
+  composes: chip from "../../VjSheets.module.css";
+}
+
+.sliderRow {
+  composes: sliderRow from "../../VjSheets.module.css";
+}
+
+.slider {
+  composes: slider from "../../VjSheets.module.css";
+}
+
+.sliderValue {
+  composes: sliderValue from "../../VjSheets.module.css";
+}
+
+/* ── Next up: the lead's pick over the Skip button ── */
+.nextUp {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.nextLine {
+  display: flex;
+  align-items: baseline;
+  gap: var(--gap-xs);
+  min-width: 0;
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.45;
+}
+
+.nextLabel {
+  flex: none;
+  font-size: var(--text-12);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--qs-text-mute);
+}
+
+.nextTitle {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--qs-text);
+}
+
+/* ── Leave out: a fold header over the pack's clips ── */
+.exclusions {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.foldHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--gap-sm);
+  inline-size: 100%;
+  min-block-size: var(--tap-min);
+  padding-inline: var(--gap-sm);
+  border: 1px solid var(--qs-line);
+  border-radius: var(--qs-radius-tile);
+  background: var(--qs-glass-bottom);
+  color: var(--qs-text);
+  font: inherit;
+  text-align: start;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+.foldTitle {
+  font-size: var(--text-13-5);
+  font-weight: 600;
+}
+
+.foldMeta {
+  font-size: var(--text-13);
+  font-variant-numeric: tabular-nums;
+  color: var(--qs-text-mute);
+}
+
+.foldChevron {
+  flex: none;
+  color: var(--qs-text-mute);
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.foldHeader[aria-expanded="true"] .foldChevron {
+  transform: rotate(180deg);
+}
+
+.foldPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding-block-start: var(--gap-xs);
+}
+
+.clipList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* One clip: its thumbnail, its title and the left-out mark. A clip left out
+   carries the coral edge, a dimmed thumbnail and the mark, so the state
+   reads in shape as well as colour. */
+.clipRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--gap-sm);
+  inline-size: 100%;
+  min-block-size: 52px;
+  padding: var(--gap-xs) var(--gap-sm) var(--gap-xs) var(--gap-xs);
+  border: 1.5px solid var(--qs-line);
+  border-radius: var(--qs-radius-tile);
+  background: var(--qs-glass-bottom);
+  color: var(--qs-text);
+  font: inherit;
+  text-align: start;
+  touch-action: manipulation;
+  cursor: pointer;
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.clipRow[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.12);
+}
+
+.clipRow:active:not([aria-disabled="true"]) {
+  transform: scale(0.98);
+}
+
+.clipThumb {
+  display: block;
+  inline-size: 64px;
+  aspect-ratio: 16 / 9;
+  block-size: auto;
+  border-radius: var(--radius-7);
+  object-fit: cover;
+  background: var(--qs-glass-bottom);
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.clipRow[aria-pressed="true"] .clipThumb {
+  opacity: 0.45;
+}
+
+.clipTitle {
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--text-15);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clipMark {
+  flex: none;
+  color: var(--accent);
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.clipRow[aria-pressed="true"] .clipMark {
+  opacity: 1;
+}
+
+.clipRow[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.foldHeader:focus-visible,
+.clipRow:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .foldHeader:hover,
+  .clipRow:not([aria-pressed="true"]):not([aria-disabled="true"]):hover {
+    border-color: var(--qs-glass-border-strong);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .foldChevron,
+  .clipRow,
+  .clipThumb,
+  .clipMark {
+    transition-duration: 0s;
+  }
+}

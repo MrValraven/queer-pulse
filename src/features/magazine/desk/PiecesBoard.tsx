@@ -8,6 +8,7 @@ import { stageColorVar } from "./deskTones";
 import { viewStageLabelKey } from "./stageLabels";
 import type { PieceNextAction } from "./pieceNextAction";
 import type { DeskTrack } from "./deskTrack";
+import type { UnpublishLandingStage } from "../api/piecePublish.api";
 import { cx } from "../../../shared/lib/cx";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -28,6 +29,8 @@ export interface PiecesBoardProps {
   /** Work-in-progress limit per column. A column holding more shows "Over
    *  {cap}" in the late tone. Left out, no column is ever flagged. */
   teamCap?: number;
+  /** Gives Published cards their unpublish buttons; left out, none show. */
+  onUnpublish?: (piece: Piece, stage: UnpublishLandingStage) => void;
 }
 
 /**
@@ -39,9 +42,8 @@ export interface PiecesBoardProps {
  * so the page itself never scrolls horizontally.
  *
  * With six or more stages the board rarely shows them all at once even on a
- * wide screen (worse once the rail sits beside it from 1224px up), and
- * nothing said so. An edge fade brightens on whichever side still
- * has a column past the visible ones (`useBoardEdgeScroll`), and the two
+ * wide screen (worse once the rail sits beside it from 1224px up). An edge
+ * fade brightens on whichever side still has a column past the visible ones (`useBoardEdgeScroll`), and the two
  * scroll buttons mount together as soon as either side does, so reaching one
  * end while using the keyboard turns that button `aria-disabled` rather than
  * unmounting it out from under the focus that was on it.
@@ -60,6 +62,7 @@ export function PiecesBoard({
   track = "issue",
   onNextAction,
   teamCap,
+  onUnpublish,
 }: PiecesBoardProps) {
   const { t } = useTranslation();
   const format = useFormat();
@@ -67,12 +70,9 @@ export function PiecesBoard({
     useBoardDrag(pieces, onMove);
   const { scrollerRef, hasMoreStart, hasMoreEnd, scrollToward } =
     useBoardEdgeScroll();
-  // Both buttons always mount and unmount as a pair:
-  // if each vanished exactly when its own direction ran out, a keyboard user
-  // pressing "Next stages" at the last column would have the focused button
-  // unmount under them and focus would drop to the page body. Reaching an
-  // end instead leaves both in the DOM and turns the one at that end
-  // `aria-disabled`, dimmed but still there to land on.
+  // Both buttons mount and unmount as a pair: a button vanishing at its own
+  // end would drop a keyboard user's focus to the page body. Reaching an end
+  // instead turns that button `aria-disabled`, dimmed but still there.
   const showEdgeControls = hasMoreStart || hasMoreEnd;
   const today = new Date();
 
@@ -170,6 +170,7 @@ export function PiecesBoard({
                     onOpen={onOpen}
                     onMove={onMove}
                     onNextAction={onNextAction}
+                    onUnpublish={onUnpublish}
                   />
                 ))}
                 {columnPieces.length === 0 && (

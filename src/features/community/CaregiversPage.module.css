@@ -188,15 +188,6 @@
   font-style: italic;
   color: var(--accent);
 }
-.lessonMeta {
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px dashed rgba(var(--line-rgb), 0.12);
-  font-size: var(--text-11-5);
-  color: var(--ink-40);
-  display: flex;
-  justify-content: space-between;
-}
 
 /* ── Common questions (FAQ) ───────────────────────────────────────── */
 .questions {
@@ -268,78 +259,6 @@
 }
 .qA strong {
   color: var(--text-strong);
-}
-
-/* ── Support rooms ────────────────────────────────────────────────── */
-.groups {
-  padding: var(--section-y-64) 0;
-  border-top: 1px solid rgba(var(--line-rgb), 0.1);
-}
-.grGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 18px;
-}
-@media (--lg) {
-  .grGrid {
-    grid-template-columns: 1fr;
-  }
-}
-.gr2 {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: var(--radius-18);
-  padding: 24px 26px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 18px;
-  text-decoration: none;
-  transition:
-    border-color 0.25s var(--ease),
-    box-shadow 0.25s var(--ease);
-}
-@media (hover: hover) {
-  .gr2:hover {
-    border-color: rgba(var(--line-rgb), 0.24);
-    box-shadow: var(--shadow-lift);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .gr2 {
-    transition: none;
-  }
-}
-.grInfo h4 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: var(--text-18);
-  color: var(--text-strong);
-  letter-spacing: -0.012em;
-}
-.grInfo h4 em {
-  font-style: italic;
-  color: var(--accent);
-}
-.grSub {
-  font-size: var(--text-13);
-  color: var(--ink-60);
-  line-height: 1.55;
-  margin-top: 5px;
-  max-width: 46ch;
-}
-.grMeta {
-  font-size: var(--text-11-5);
-  color: var(--ink-40);
-  margin-top: 8px;
-  font-family: var(--serif);
-  font-style: italic;
-}
-.grArrow {
-  flex-shrink: 0;
-  font-family: var(--serif);
-  font-size: var(--text-24);
-  color: var(--accent);
 }
 
 /* ── Don't say / Do say ───────────────────────────────────────────── */

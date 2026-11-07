@@ -111,7 +111,7 @@ export function RunningGuidePage() {
         }
         sub={t("resources:runningGuide.outro.sub")}
       >
-        <Button to={routes.gatherings} variant="primary" size="lg">
+        <Button to={routes.calendar} variant="primary" size="lg">
           {t("resources:runningGuide.outro.cta")}
         </Button>
       </Outro>

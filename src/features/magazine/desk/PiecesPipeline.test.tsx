@@ -1,5 +1,6 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import type { Piece } from "../data/desk.data";
 import { PiecesPipeline, type PiecesPipelineProps } from "./PiecesPipeline";
@@ -42,7 +43,7 @@ const publishedPiece = makePiece({
   due: "ready",
 });
 
-function renderPipeline(overrides: Partial<PiecesPipelineProps> = {}) {
+async function renderPipeline(overrides: Partial<PiecesPipelineProps> = {}) {
   const props: PiecesPipelineProps = {
     pieces: [yourTurnPiece, writerPiece, publishedPiece],
     focusId: null,
@@ -66,6 +67,7 @@ function renderPipeline(overrides: Partial<PiecesPipelineProps> = {}) {
       <PiecesPipeline {...props} />
     </TestProviders>,
   );
+  await awaitCatalog("magazine");
   return { ...view, props };
 }
 
@@ -78,8 +80,8 @@ afterEach(() => {
 });
 
 describe("PiecesPipeline", () => {
-  it("draws one flat list with no group headers by default", () => {
-    renderPipeline();
+  it("draws one flat list with no group headers by default", async () => {
+    await renderPipeline();
 
     expect(screen.queryByRole("heading", { level: 2 })).not.toBeInTheDocument();
     expect(
@@ -87,14 +89,14 @@ describe("PiecesPipeline", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows the empty state when no piece matches", () => {
-    renderPipeline({ pieces: [] });
+  it("shows the empty state when no piece matches", async () => {
+    await renderPipeline({ pieces: [] });
 
     expect(screen.getByText("The desk is clear")).toBeInTheDocument();
   });
 
-  it("groups by who the piece waits on, under folding headers", () => {
-    renderPipeline({ groupBy: "waiting" });
+  it("groups by who the piece waits on, under folding headers", async () => {
+    await renderPipeline({ groupBy: "waiting" });
 
     const toggle = groupToggle(/^Your turn/);
     expect(toggle).toHaveAttribute("aria-expanded", "true");
@@ -105,8 +107,8 @@ describe("PiecesPipeline", () => {
     ).toBeInTheDocument();
   });
 
-  it("folds Published by default and keeps its header in view", () => {
-    renderPipeline({ groupBy: "waiting" });
+  it("folds Published by default and keeps its header in view", async () => {
+    await renderPipeline({ groupBy: "waiting" });
 
     expect(groupToggle(/^Published/)).toHaveAttribute("aria-expanded", "false");
     expect(
@@ -114,51 +116,54 @@ describe("PiecesPipeline", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("folds a group on click and remembers the choice", () => {
-    const { unmount } = renderPipeline({ groupBy: "waiting" });
+  it("folds a group on click and remembers the choice", async () => {
+    const { unmount } = await renderPipeline({ groupBy: "waiting" });
 
     fireEvent.click(groupToggle(/^With writers/));
 
-    expect(
-      screen.queryByRole("button", { name: "With the writer" }),
-    ).not.toBeInTheDocument();
+    // The rows stay mounted until the fold animation has finished.
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("button", { name: "With the writer" }),
+      ).not.toBeInTheDocument(),
+    );
     const stored = JSON.parse(
       window.localStorage.getItem(COLLAPSED_GROUPS_STORAGE_KEY) ?? "{}",
     ) as Record<string, boolean>;
     expect(stored["with-writers"]).toBe(true);
 
     unmount();
-    renderPipeline({ groupBy: "waiting" });
+    await renderPipeline({ groupBy: "waiting" });
     expect(groupToggle(/^With writers/)).toHaveAttribute(
       "aria-expanded",
       "false",
     );
   });
 
-  it("opens a folded group while the keyboard's current row is inside", () => {
-    renderPipeline({ groupBy: "waiting", focusId: publishedPiece.id });
+  it("opens a folded group while the keyboard's current row is inside", async () => {
+    await renderPipeline({ groupBy: "waiting", focusId: publishedPiece.id });
 
     expect(
       screen.getByRole("button", { name: "Already out" }),
     ).toBeInTheDocument();
   });
 
-  it("says nothing waits on you when there is no turn and nothing late", () => {
-    renderPipeline({ groupBy: "waiting", pieces: [writerPiece] });
+  it("says nothing waits on you when there is no turn and nothing late", async () => {
+    await renderPipeline({ groupBy: "waiting", pieces: [writerPiece] });
 
     expect(screen.getByText("Nothing is waiting on you")).toBeInTheDocument();
   });
 
-  it("keeps the all clear note away while it is your turn", () => {
-    renderPipeline({ groupBy: "waiting" });
+  it("keeps the all clear note away while it is your turn", async () => {
+    await renderPipeline({ groupBy: "waiting" });
 
     expect(
       screen.queryByText("Nothing is waiting on you"),
     ).not.toBeInTheDocument();
   });
 
-  it("hides the all clear note while a filter narrows the list", () => {
-    renderPipeline({
+  it("hides the all clear note while a filter narrows the list", async () => {
+    await renderPipeline({
       groupBy: "waiting",
       pieces: [writerPiece],
       isFiltered: true,
@@ -169,14 +174,14 @@ describe("PiecesPipeline", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("falls back to each group's default fold when storage throws", () => {
+  it("falls back to each group's default fold when storage throws", async () => {
     const getItem = vi
       .spyOn(Storage.prototype, "getItem")
       .mockImplementation(() => {
         throw new Error("blocked");
       });
     try {
-      renderPipeline({ groupBy: "waiting" });
+      await renderPipeline({ groupBy: "waiting" });
 
       expect(groupToggle(/^With writers/)).toHaveAttribute(
         "aria-expanded",
@@ -191,8 +196,8 @@ describe("PiecesPipeline", () => {
     }
   });
 
-  it("gives pieces with no section a header that folds", () => {
-    renderPipeline({
+  it("gives pieces with no section a header that folds", async () => {
+    await renderPipeline({
       groupBy: "section",
       pieces: [writerPiece, makePiece({ id: "loose", section: "" })],
     });
@@ -200,9 +205,9 @@ describe("PiecesPipeline", () => {
     expect(groupToggle(/^No section/)).toHaveAttribute("aria-expanded", "true");
   });
 
-  it("follows fold state handed in by the page", () => {
+  it("follows fold state handed in by the page", async () => {
     const toggleCollapsed = vi.fn();
-    renderPipeline({
+    await renderPipeline({
       groupBy: "waiting",
       collapsedGroups: {
         isCollapsed: (group) => group.id === "your-turn",
@@ -220,8 +225,10 @@ describe("PiecesPipeline", () => {
     );
   });
 
-  it("offers select all as a checkbox, partly checked for a partial pick", () => {
-    const { props } = renderPipeline({ selectedPieceIds: [writerPiece.id] });
+  it("offers select all as a checkbox, partly checked for a partial pick", async () => {
+    const { props } = await renderPipeline({
+      selectedPieceIds: [writerPiece.id],
+    });
 
     const selectAll = screen.getByRole<HTMLInputElement>("checkbox", {
       name: "Select every piece shown",
@@ -232,16 +239,16 @@ describe("PiecesPipeline", () => {
     expect(props.onToggleSelectAll).toHaveBeenCalledTimes(1);
   });
 
-  it("marks the row whose peek panel is open", () => {
-    renderPipeline({ openPieceId: writerPiece.id });
+  it("marks the row whose peek panel is open", async () => {
+    await renderPipeline({ openPieceId: writerPiece.id });
 
     expect(
       screen.getByRole("button", { name: "With the writer" }),
     ).toHaveAttribute("aria-current", "true");
   });
 
-  it("tells a group header about its chip's pieces under an earlier group", () => {
-    renderPipeline({
+  it("tells a group header about its chip's pieces under an earlier group", async () => {
+    await renderPipeline({
       groupBy: "waiting",
       pieces: [
         writerPiece,
@@ -261,8 +268,8 @@ describe("PiecesPipeline", () => {
     expect(screen.getByText("1 more under Late")).toBeInTheDocument();
   });
 
-  it("carries the density for the rows to read", () => {
-    const { container } = renderPipeline({ density: "compact" });
+  it("carries the density for the rows to read", async () => {
+    const { container } = await renderPipeline({ density: "compact" });
 
     expect(container.querySelector('[data-density="compact"]')).not.toBeNull();
   });

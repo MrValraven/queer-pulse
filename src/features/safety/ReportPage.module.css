@@ -210,46 +210,6 @@
   color: var(--text-strong);
 }
 
-.modLog {
-  background: var(--plum);
-  color: rgba(var(--cream-rgb), 1);
-  border-radius: var(--radius-card);
-  padding: 40px 44px;
-}
-.modLog h3 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: var(--text-24);
-  color: rgba(var(--cream-rgb), 1);
-}
-.modLog h3 em {
-  font-style: italic;
-  color: var(--accent);
-}
-.modLog > p {
-  font-size: var(--text-13-5);
-  color: rgba(var(--cream-rgb), 0.6);
-  margin: 6px 0 24px;
-}
-.logStats {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 16px;
-}
-.logStat .n {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: var(--text-38);
-  color: rgba(var(--cream-rgb), 1);
-  letter-spacing: -0.02em;
-  line-height: 1;
-}
-.logStat .l {
-  font-size: var(--text-12);
-  color: rgba(var(--cream-rgb), 0.55);
-  margin-top: 6px;
-  line-height: 1.4;
-}
 .modActions {
   margin-top: 24px;
 }
@@ -261,9 +221,6 @@
   .formBox {
     grid-template-columns: 1fr;
     gap: 28px;
-  }
-  .logStats {
-    grid-template-columns: repeat(2, 1fr);
   }
 }
 

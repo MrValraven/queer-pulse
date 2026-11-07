@@ -335,7 +335,7 @@ export const homepage: Catalog = {
     "A weekly screening you can plan your month around, and films that would otherwise never get a Lisbon date.",
   "painPoints.cinema.modal.c.title": "How it powers QueerPulse",
   "painPoints.cinema.modal.c.body":
-    "The members who fund it own it, so what gets shown answers to the people watching.",
+    "Members shape it, so what gets shown answers to the people watching.",
 
   "painPoints.studio.label": "Studio",
   "painPoints.studio.question":
@@ -347,7 +347,7 @@ export const homepage: Catalog = {
     "Artist-owned music: releases, live sets and sheet music, with the payouts and the rules set by the people making the work. It is still being built.",
   "painPoints.studio.payoff": "The next release goes up there first.",
   "painPoints.studio.payoff2":
-    "When it opens, I will finally know where my ten euros a month goes.",
+    "When it opens I will buy the record and the money goes straight to the artist",
   "painPoints.studio.cta": "Look inside Studio",
   "painPoints.studio.modal.title":
     "Artist-owned music, <em>paid properly.</em>",

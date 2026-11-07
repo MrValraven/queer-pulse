@@ -74,27 +74,35 @@ export function IncubatorTab() {
         )}
       </div>
 
-      <div className={styles.incCols}>
-        <div>
-          <h3 className={styles.colH}>
-            <Translation
-              i18nKey="economy:incubator.programme.title"
-              components={{ em: <em /> }}
-            />
-          </h3>
-          <div className={styles.incTimeline}>
-            {STEPS.map((s) => (
-              <div className={styles.incStep} key={s.n}>
-                <div className={styles.incStepNum}>{s.n}</div>
-                <div className={styles.incStepBody}>
-                  <div className={styles.incStepTitle}>{t(s.titleKey)}</div>
-                  <div className={styles.incStepDesc}>{t(s.descKey)}</div>
-                  <div className={styles.incStepMeta}>{t(s.metaKey)}</div>
+      <div
+        className={[styles.incCols, !demoMode && styles.incColsSingle]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        {/* The programme steps (dates, cohort rhythm, demo night) are a demo
+            fixture; no live programme backs them, so live omits the column. */}
+        {demoMode && (
+          <div>
+            <h3 className={styles.colH}>
+              <Translation
+                i18nKey="economy:incubator.programme.title"
+                components={{ em: <em /> }}
+              />
+            </h3>
+            <div className={styles.incTimeline}>
+              {STEPS.map((s) => (
+                <div className={styles.incStep} key={s.n}>
+                  <div className={styles.incStepNum}>{s.n}</div>
+                  <div className={styles.incStepBody}>
+                    <div className={styles.incStepTitle}>{t(s.titleKey)}</div>
+                    <div className={styles.incStepDesc}>{t(s.descKey)}</div>
+                    <div className={styles.incStepMeta}>{t(s.metaKey)}</div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
         <div>
           <h3 className={styles.colH}>
             <Translation

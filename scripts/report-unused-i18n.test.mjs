@@ -10,9 +10,10 @@ import { VERDICTS, analyse, classifyKey } from "./report-unused-i18n.mjs";
  * that were hardest to get right, and every one of them is a case a later
  * simplification of the constant evaluator would silently break:
  *
- * - `forOrgs.tiers.*.list1-5`. An earlier grep-based sweep flagged three of
- *   the fifteen and let the other twelve through, because an unrelated live key
- *   (`forOrgs.cta.list1`) excused them through a loose prefix match.
+ * - `forOrgs.cta.list1`. A live key that once excused the dead
+ *   `forOrgs.tiers.*.list1-5` bullets through a loose prefix match. Those
+ *   fifteen keys are deleted from the catalogs now, so they are no longer
+ *   pinned here; this live neighbour stays pinned.
  * - `privacy.retention.clears.gathering`. Built by `.map()` over an array of
  *   literals, then composed with a namespace inside a named callback. Reported
  *   dead until the evaluator learned to bind callback parameters.
@@ -37,20 +38,6 @@ import { VERDICTS, analyse, classifyKey } from "./report-unused-i18n.mjs";
 
 /** Verdicts that mean "the product can still reach this key". */
 const LIVE_VERDICTS = [VERDICTS.LIVE_LITERAL, VERDICTS.LIVE_SHAPE];
-
-/** Verdicts that mean "this repo has no way to reach this key". */
-const UNUSED_VERDICTS = [
-  VERDICTS.UNUSED_UNREACHABLE,
-  VERDICTS.UNUSED_CATCH_ALL,
-  VERDICTS.UNUSED_TIGHT_SHAPE,
-];
-
-/** The fifteen tier bullets `orgTiers.data.ts` replaced with plain strings. */
-const ORG_TIER_BULLET_KEYS = ["employer", "partner", "funder"].flatMap((tier) =>
-  [1, 2, 3, 4, 5].map(
-    (index) => `marketing:forOrgs.tiers.${tier}.list${index}`,
-  ),
-);
 
 let result;
 
@@ -79,24 +66,6 @@ function verdictFor(key) {
   }
   return verdict;
 }
-
-describe("report-unused-i18n: keys that must be reported UNUSED", () => {
-  it.each(ORG_TIER_BULLET_KEYS)(
-    "reports %s unused: the tier bullets come from orgTiers.data.ts as plain strings now",
-    (key) => {
-      expect(UNUSED_VERDICTS).toContain(verdictFor(key));
-    },
-  );
-
-  it("reports the whole family of fifteen tier bullets unused", () => {
-    const stillLive = ORG_TIER_BULLET_KEYS.filter((key) =>
-      LIVE_VERDICTS.includes(verdictFor(key)),
-    );
-    // The original failure was partial: three of fifteen caught, twelve missed.
-    // Asserting the whole family at once is what makes a partial catch red.
-    expect(stillLive).toEqual([]);
-  });
-});
 
 describe("report-unused-i18n: keys that must be reported LIVE", () => {
   it("keeps forOrgs.cta.list1 live: the neighbour that once excused the tier bullets", () => {

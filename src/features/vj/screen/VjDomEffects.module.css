@@ -1,0 +1,143 @@
+/* The DOM effects frame (VjEffectsFrame): the catalog's DOM-capable effects
+   around the clip layers, on the projector's DOM renderer and on the remote's
+   miniature mirror.
+
+   Bottom to top inside .canvas: the picture (.look, carrying the filter and
+   the transform, wrapping the mirror and the clips), then the tint, duotone,
+   scanlines and vignette layers. The mask clips .canvas, so the layers follow the shape.
+
+   Nothing here assumes a full-screen box. .frame is a size container, so the
+   dream blur, the scanline pitch and the mask shapes (vjDomEffectsStyle.ts)
+   are measured in cqh and keep their look at any size.
+
+   Moving values arrive as custom properties written every frame by
+   useVjDomBeat (no CSS animation), so the global reduced-motion reset never
+   touches the projector; the hook itself keeps the remote mirror still when
+   reduced motion is on. Effects switch on and off at once, as on the WebGL
+   engine: an effect that eases in would be a different effect. */
+
+.frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: size;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.look {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 50%;
+}
+
+/* Mirror: the wrapper keeps one half of the picture and reflects it onto the
+   other half with -webkit-box-reflect; the content inside stays the size of
+   the whole frame. The wrapper is always there, so switching the mirror
+   never remounts the clips. */
+.mirror {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.mirror[data-vj-mirror="horizontal"] {
+  width: 50%;
+  -webkit-box-reflect: right;
+}
+
+.mirror[data-vj-mirror="horizontal"] .content {
+  width: 200%;
+}
+
+.mirror[data-vj-mirror="vertical"] {
+  height: 50%;
+  -webkit-box-reflect: below;
+}
+
+.mirror[data-vj-mirror="vertical"] .content {
+  height: 200%;
+}
+
+/* A browser that cannot reflect shows the whole picture unmirrored. */
+@supports not (-webkit-box-reflect: right) {
+  .mirror[data-vj-mirror] {
+    width: 100%;
+    height: 100%;
+  }
+
+  .mirror[data-vj-mirror] .content {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* --vj-dom-tint is set inline to the variant's palette token (a channel
+   triple). The shader's tint is luma times the colour: .tint takes the
+   colour's hue at the picture's lightness, and .tintShade multiplies by the
+   colour's own grey (its luma, through grayscale), so the result darkens as
+   the shader's does. */
+.tint {
+  background: rgb(var(--vj-dom-tint));
+  mix-blend-mode: color;
+}
+
+.tintShade {
+  background: rgb(var(--vj-dom-tint));
+  filter: grayscale(1);
+  mix-blend-mode: multiply;
+}
+
+/* Duotone over the grey picture: multiplying by the highlight maps luma to
+   0..highlight, then screening the shadow lifts the dark end to the shadow
+   colour, close to the shader's mix(shadow, highlight, luma). */
+.duotoneHighlight {
+  background: rgb(var(--vj-dom-duotone));
+  mix-blend-mode: multiply;
+}
+
+.duotoneShadow {
+  background: rgb(var(--vj-dom-duotone));
+  mix-blend-mode: screen;
+}
+
+.scanlines {
+  --vj-dom-scanline-pitch: max(3px, 0.4cqh);
+
+  background: repeating-linear-gradient(
+    to bottom,
+    rgb(var(--scrim-rgb)) 0 calc(var(--vj-dom-scanline-pitch) / 2),
+    transparent calc(var(--vj-dom-scanline-pitch) / 2)
+      var(--vj-dom-scanline-pitch)
+  );
+}
+
+.vignette {
+  background: radial-gradient(
+    ellipse farthest-corner at 50% 50%,
+    transparent 40%,
+    rgb(var(--scrim-rgb)) 100%
+  );
+}

@@ -135,7 +135,7 @@ export function FirstMeetupGuidePage() {
         }
         sub={t("resources:firstMeetupGuide.outro.sub")}
       >
-        <Button to={routes.gatherings} variant="primary" size="lg">
+        <Button to={routes.calendar} variant="primary" size="lg">
           {t("resources:firstMeetupGuide.outro.cta")}
         </Button>
       </Outro>

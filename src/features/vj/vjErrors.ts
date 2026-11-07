@@ -54,6 +54,9 @@ export const VJ_REASON_KEY: Record<VjRefusalCode | VjClientUploadCode, string> =
 /** A thumbnail over its own cap reads differently from a clip over its cap. */
 export const VJ_THUMBNAIL_TOO_LARGE_KEY = "vj:error.uploadThumbnailTooLarge";
 
+/** An animated preview over its own cap gets its own line too (C 4.1). */
+export const VJ_PREVIEW_TOO_LARGE_KEY = "vj:error.uploadPreviewTooLarge";
+
 /** Socket ack reasons: `vj:error.socket.<lowerCamel without vj_>`. */
 export const VJ_SOCKET_REASON_KEY: Record<VjSocketErrorCode, string> =
   keyTableOf(VJ_SOCKET_ERROR_CODES, "vj_", "vj:error.socket.");
@@ -77,6 +80,7 @@ export const VJ_CONNECTION_REFUSAL_KEY: Record<VjConnectionRefusal, string> = {
   unauthorized: "vj:connection.refused.unauthorized",
   platform_locked: "vj:connection.refused.platformLocked",
   server_error: "vj:connection.refused.serverError",
+  client_outdated: "vj:connection.refused.clientOutdated",
 };
 
 /** The number each reason names in its line as {max}. */
@@ -89,13 +93,31 @@ export const VJ_ERROR_MAX: Partial<
   VJ_CLIP_TITLE_TOO_LONG: VJ_LIMITS.clipTitleMax,
   VJ_LIBRARY_FULL: VJ_LIMITS.libraryClipsMax,
   vj_overlay_text_too_long: VJ_LIMITS.overlayTextMax,
+  VJ_SCENE_NAME_TOO_LONG: VJ_LIMITS.sceneNameMax,
+  VJ_SCENE_LIMIT_REACHED: VJ_LIMITS.scenesMax,
+  VJ_SETLIST_NAME_TOO_LONG: VJ_LIMITS.setlistNameMax,
+  VJ_SETLIST_LIMIT_REACHED: VJ_LIMITS.setlistsMax,
+  VJ_SETLIST_FULL: VJ_LIMITS.setlistItemsMax,
+  vj_effects_too_many: VJ_LIMITS.effectsOnMax,
+  vj_overrides_too_many: VJ_LIMITS.screenOverridesMax,
+  vj_countdown_label_too_long: VJ_LIMITS.countdownLabelMax,
 };
 
-/** Contract 8.7: the state in these acks is applied and nothing shows. */
+/** The number each reason names in its line as {min}. */
+export const VJ_ERROR_MIN: Partial<
+  Record<VjRefusalCode | VjSocketErrorCode, number>
+> = {
+  VJ_CLIP_LOOP_INVALID: VJ_LIMITS.loopMinLengthMs,
+};
+
+/** Contract 8.7 and C 7.11: the state in these acks is applied and nothing shows. */
 const VJ_SILENT_SOCKET_CODES: readonly VjSocketErrorCode[] = [
   "vj_stale_command",
   "vj_stale_clip_sequence",
   "vj_not_lead",
+  "vj_clip_excluded",
+  "vj_clip_not_favorite",
+  "vj_stale_setlist",
 ];
 
 export function isVjSilentSocketCode(code: VjSocketErrorCode): boolean {
@@ -150,14 +172,19 @@ export function vjReasonOf(cause: unknown): VjReasonCode | null {
   return null;
 }
 
-/** True for a VJ_UPLOAD_TOO_LARGE body that names the thumbnail field. */
-function isThumbnailTooLarge(cause: unknown): boolean {
+/** True for a VJ_UPLOAD_TOO_LARGE body that names this upload kind or its field. */
+function isTooLargeFor(cause: unknown, kind: string, field: string): boolean {
   if (!(cause instanceof ApiError) || !isRecord(cause.data)) return false;
   if (cause.data.code !== "VJ_UPLOAD_TOO_LARGE") return false;
-  return (
-    cause.data.kind === "vj_thumbnail" ||
-    cause.data.field === "thumbnailStorageKey"
-  );
+  return cause.data.kind === kind || cause.data.field === field;
+}
+
+function isThumbnailTooLarge(cause: unknown): boolean {
+  return isTooLargeFor(cause, "vj_thumbnail", "thumbnailStorageKey");
+}
+
+function isPreviewTooLarge(cause: unknown): boolean {
+  return isTooLargeFor(cause, "vj_preview", "previewStorageKey");
 }
 
 function keyOfReasonCode(code: VjReasonCode): string {
@@ -172,6 +199,7 @@ function isDeviceOffline(): boolean {
 /** The catalog key that names why this failed. Never generic while a
  *  specific cause is known. */
 export function vjErrorKeyOf(cause: unknown): string {
+  if (isPreviewTooLarge(cause)) return VJ_PREVIEW_TOO_LARGE_KEY;
   if (isThumbnailTooLarge(cause)) return VJ_THUMBNAIL_TOO_LARGE_KEY;
   // A storage PUT that failed while the device has no network names the
   // missing network: that is the cause the admin can act on.
@@ -196,9 +224,12 @@ export function vjErrorKeyOf(cause: unknown): string {
 export function vjErrorValuesOf(
   cause: unknown,
   context?: { fileByteSize?: number },
-): { max?: number | string; sizeLabel?: string } {
+): { max?: number | string; min?: number; sizeLabel?: string } {
   const code = vjReasonOf(cause);
   if (code === "VJ_UPLOAD_TOO_LARGE") {
+    if (isPreviewTooLarge(cause)) {
+      return { max: formatVjBytes(VJ_LIMITS.previewMaxBytes) };
+    }
     if (isThumbnailTooLarge(cause)) {
       return { max: formatVjBytes(VJ_LIMITS.thumbnailMaxBytes) };
     }
@@ -215,5 +246,9 @@ export function vjErrorValuesOf(
   }
   if (code === null || isClientUploadCode(code)) return {};
   const max = VJ_ERROR_MAX[code];
-  return max === undefined ? {} : { max };
+  const min = VJ_ERROR_MIN[code];
+  return {
+    ...(max === undefined ? {} : { max }),
+    ...(min === undefined ? {} : { min }),
+  };
 }

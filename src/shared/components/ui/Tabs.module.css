@@ -187,6 +187,12 @@
   .tabCount:not(.tabCountAccent) {
   background: rgba(var(--cream-rgb), 0.12);
 }
+/* The active pill is --plum, which does not flip and sits about 1.2:1 on the
+   dark page. A cream hairline on its own transparent border gives the pill an
+   edge without shifting the row. */
+:global([data-theme="dark"]) .tabs:not(.underline) .tabOn {
+  border-color: rgba(var(--cream-rgb), 0.24);
+}
 
 /* ── icon-only tabs (pill variant) ────────────────────────────────────────────
    A square pill carrying only a glyph: its `label` becomes the button's

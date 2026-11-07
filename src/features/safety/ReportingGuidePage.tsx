@@ -5,7 +5,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
-import { ReportFlowSection, ModerationLogSection } from "./ReportSections";
+import { ReportFlowSection, TransparencyLinkSection } from "./ReportSections";
 import { QuickExit } from "./QuickExit";
 import s from "./ReportPage.module.css";
 
@@ -52,7 +52,7 @@ export function ReportingGuidePage() {
       </header>
 
       <ReportFlowSection />
-      <ModerationLogSection />
+      <TransparencyLinkSection />
 
       <QuickExit />
     </PageShell>

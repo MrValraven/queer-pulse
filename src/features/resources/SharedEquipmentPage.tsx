@@ -37,10 +37,15 @@ export function SharedEquipmentPage() {
         }
         lead={t("resources:sharedEquipment.hero.lead")}
         anchors={[
-          {
-            label: t("resources:sharedEquipment.hero.anchor.kit"),
-            href: "#kit",
-          },
+          // The kit inventory is demo-only, so its anchor is too.
+          ...(demoMode
+            ? [
+                {
+                  label: t("resources:sharedEquipment.hero.anchor.kit"),
+                  href: "#kit",
+                },
+              ]
+            : []),
           {
             label: t("resources:sharedEquipment.hero.anchor.care"),
             href: "#care",
@@ -48,25 +53,24 @@ export function SharedEquipmentPage() {
         ]}
       />
 
-      <section className={`${styles.section} ${styles.sectionPaper}`} id="kit">
-        <div className="wrap">
-          <Reveal as="h2">
-            <Translation
-              i18nKey="resources:sharedEquipment.kit.title"
-              components={{ em: <em /> }}
-            />
-          </Reveal>
-          <Reveal as="p" className={styles.leadP}>
-            {t("resources:sharedEquipment.kit.lead")}
-          </Reveal>
-          {/* The lending inventory (availability / "on loan" status + request
-              slots) is prototype fiction. Live mode has no equipment registry
-              yet, so it shows an honest coming-soon note instead of fake stock. */}
-          {!demoMode ? (
-            <Reveal as="p" className={styles.leadP}>
-              {t("resources:sharedEquipment.kit.live.body")}
+      {/* The lending inventory (availability / "on loan" status + request
+          slots) is prototype fiction. Live mode has no equipment registry,
+          so the whole kit section renders in demo mode only. */}
+      {demoMode && (
+        <section
+          className={`${styles.section} ${styles.sectionPaper}`}
+          id="kit"
+        >
+          <div className="wrap">
+            <Reveal as="h2">
+              <Translation
+                i18nKey="resources:sharedEquipment.kit.title"
+                components={{ em: <em /> }}
+              />
             </Reveal>
-          ) : (
+            <Reveal as="p" className={styles.leadP}>
+              {t("resources:sharedEquipment.kit.lead")}
+            </Reveal>
             <div className={styles.grid}>
               {EQUIPMENT.map((item, i) => {
                 const name = t(item.nameKey);
@@ -97,11 +101,9 @@ export function SharedEquipmentPage() {
                         disabled={!item.available}
                         onClick={() =>
                           showToast(
-                            demoMode
-                              ? t("resources:sharedEquipment.requestToast", {
-                                  name,
-                                })
-                              : t("resources:sharedEquipment.requestLiveToast"),
+                            t("resources:sharedEquipment.requestToast", {
+                              name,
+                            }),
                           )
                         }
                       >
@@ -114,11 +116,14 @@ export function SharedEquipmentPage() {
                 );
               })}
             </div>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
-      <section className={`${styles.section} ${styles.sectionCream}`} id="care">
+      <section
+        className={`${styles.section} ${demoMode ? styles.sectionCream : styles.sectionPaper}`}
+        id="care"
+      >
         <div className="wrap">
           <Reveal as="h2">
             <Translation
@@ -151,7 +156,7 @@ export function SharedEquipmentPage() {
         }
         sub={t("resources:sharedEquipment.outro.sub")}
       >
-        <Button to={routes.gatherings} variant="primary" size="lg">
+        <Button to={routes.calendar} variant="primary" size="lg">
           {t("resources:sharedEquipment.outro.cta")}
         </Button>
       </Outro>

@@ -104,7 +104,7 @@ export function TherapistsSection() {
   );
 }
 
-/** Plum peer-support strip with headline stats. */
+/** Plum strip pointing to the Forum and the crisis contacts. */
 export function PeerSupportSection() {
   const { t } = useTranslation();
   return (
@@ -113,7 +113,7 @@ export function PeerSupportSection() {
       id="peer-support"
     >
       <div className="wrap">
-        <Reveal className={styles.plumStrip}>
+        <Reveal className={`${styles.plumStrip} ${styles.plumStripSingle}`}>
           <div>
             <h3>
               <Translation
@@ -129,26 +129,6 @@ export function PeerSupportSection() {
               <Button variant="ghost-dark" href="#crisis">
                 {t("resources:wellbeing.peer.crisisCta")}
               </Button>
-            </div>
-          </div>
-          <div className={styles.stats}>
-            <div className={styles.stat}>
-              <div className={styles.statN}>340</div>
-              <div className={styles.statL}>
-                {t("resources:wellbeing.peer.stat.members.label")}
-              </div>
-            </div>
-            <div className={styles.stat}>
-              <div className={styles.statN}>24h</div>
-              <div className={styles.statL}>
-                {t("resources:wellbeing.peer.stat.moderation.label")}
-              </div>
-            </div>
-            <div className={styles.stat}>
-              <div className={styles.statN}>100%</div>
-              <div className={styles.statL}>
-                {t("resources:wellbeing.peer.stat.confidential.label")}
-              </div>
             </div>
           </div>
         </Reveal>

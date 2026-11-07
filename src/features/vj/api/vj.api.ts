@@ -3,18 +3,31 @@ import {
   apiGet,
   apiPatch,
   apiPost,
+  apiPut,
 } from "../../../shared/api/client";
 import type {
   CreateVjClipBody,
+  CreateVjSceneBody,
+  CreateVjSetlistBody,
+  UpdateVjClipBody,
+  UpdateVjSceneBody,
   VjClipDTO,
   VjClipDeletedDTO,
   VjClipListDTO,
-  VjFitMode,
+  VjClipMediaListDTO,
+  VjEventOptionListDTO,
   VjPackClipsDTO,
   VjPackDTO,
   VjPackDeletedDTO,
+  VjPackEventDTO,
   VjPackListDTO,
   VjPackMediaDTO,
+  VjSceneDTO,
+  VjSceneDeletedDTO,
+  VjSceneListDTO,
+  VjSetlistDTO,
+  VjSetlistDeletedDTO,
+  VjSetlistListDTO,
 } from "../../../shared/contracts/vj";
 
 const VJ_BASE = "/admin/vj";
@@ -25,6 +38,14 @@ function packPath(packId: string): string {
 
 function clipPath(clipId: string): string {
   return `${VJ_BASE}/clips/${encodeURIComponent(clipId)}`;
+}
+
+function scenePath(sceneId: string): string {
+  return `${VJ_BASE}/scenes/${encodeURIComponent(sceneId)}`;
+}
+
+function setlistPath(setlistId: string): string {
+  return `${VJ_BASE}/setlists/${encodeURIComponent(setlistId)}`;
 }
 
 export function getVjPacks(signal?: AbortSignal): Promise<VjPackListDTO> {
@@ -126,11 +147,142 @@ export function createVjClip(body: CreateVjClipBody): Promise<VjClipDTO> {
 
 export function updateVjClip(
   clipId: string,
-  body: { title?: string; fitMode?: VjFitMode },
+  body: UpdateVjClipBody,
 ): Promise<VjClipDTO> {
   return apiPatch<VjClipDTO>(clipPath(clipId), body);
 }
 
 export function deleteVjClip(clipId: string): Promise<VjClipDeletedDTO> {
   return apiDelete<VjClipDeletedDTO>(clipPath(clipId));
+}
+
+// Clips: preview and media outside a pack
+export function setVjClipPreview(
+  clipId: string,
+  body: { previewStorageKey: string },
+): Promise<VjClipDTO> {
+  return apiPut<VjClipDTO>(`${clipPath(clipId)}/preview`, body);
+}
+
+/** Media of the listed clips, in the order asked; unknown ids are left out of
+ *  the answer. Callers send 1 to 200 ids. */
+export function getVjClipsMedia(
+  clipIds: string[],
+  signal?: AbortSignal,
+): Promise<VjClipMediaListDTO> {
+  const query = clipIds.map((clipId) => encodeURIComponent(clipId)).join(",");
+  return apiGet<VjClipMediaListDTO>(
+    `${VJ_BASE}/clips/media?clipIds=${query}`,
+    undefined,
+    undefined,
+    signal,
+  );
+}
+
+// Packs: event link
+export function getVjPackEvent(
+  packId: string,
+  signal?: AbortSignal,
+): Promise<VjPackEventDTO> {
+  return apiGet<VjPackEventDTO>(
+    `${packPath(packId)}/event`,
+    undefined,
+    undefined,
+    signal,
+  );
+}
+
+/** Links the pack to an event; `eventId: null` unlinks it. */
+export function setVjPackEvent(
+  packId: string,
+  body: { eventId: string | null },
+): Promise<VjPackDTO> {
+  return apiPatch<VjPackDTO>(`${packPath(packId)}/event`, body);
+}
+
+// Events
+export function getVjUpcomingEvents(
+  signal?: AbortSignal,
+): Promise<VjEventOptionListDTO> {
+  return apiGet<VjEventOptionListDTO>(
+    `${VJ_BASE}/events/upcoming`,
+    undefined,
+    undefined,
+    signal,
+  );
+}
+
+// Scenes
+export function getVjScenes(signal?: AbortSignal): Promise<VjSceneListDTO> {
+  return apiGet<VjSceneListDTO>(
+    `${VJ_BASE}/scenes`,
+    undefined,
+    undefined,
+    signal,
+  );
+}
+
+export function createVjScene(body: CreateVjSceneBody): Promise<VjSceneDTO> {
+  return apiPost<VjSceneDTO>(`${VJ_BASE}/scenes`, body);
+}
+
+export function updateVjScene(
+  sceneId: string,
+  body: UpdateVjSceneBody,
+): Promise<VjSceneDTO> {
+  return apiPatch<VjSceneDTO>(scenePath(sceneId), body);
+}
+
+export function reorderVjScenes(body: {
+  sceneIds: string[];
+}): Promise<VjSceneListDTO> {
+  return apiPatch<VjSceneListDTO>(`${VJ_BASE}/scenes/reorder`, body);
+}
+
+export function deleteVjScene(sceneId: string): Promise<VjSceneDeletedDTO> {
+  return apiDelete<VjSceneDeletedDTO>(scenePath(sceneId));
+}
+
+// Set lists
+export function getVjSetlists(signal?: AbortSignal): Promise<VjSetlistListDTO> {
+  return apiGet<VjSetlistListDTO>(
+    `${VJ_BASE}/setlists`,
+    undefined,
+    undefined,
+    signal,
+  );
+}
+
+export function createVjSetlist(
+  body: CreateVjSetlistBody,
+): Promise<VjSetlistDTO> {
+  return apiPost<VjSetlistDTO>(`${VJ_BASE}/setlists`, body);
+}
+
+export function renameVjSetlist(
+  setlistId: string,
+  body: { name: string },
+): Promise<VjSetlistDTO> {
+  return apiPatch<VjSetlistDTO>(setlistPath(setlistId), body);
+}
+
+export function reorderVjSetlists(body: {
+  setlistIds: string[];
+}): Promise<VjSetlistListDTO> {
+  return apiPatch<VjSetlistListDTO>(`${VJ_BASE}/setlists/reorder`, body);
+}
+
+/** Replaces the whole item list. The server re-creates every item id, and a
+ *  scene may appear more than once. */
+export function setVjSetlistItems(
+  setlistId: string,
+  body: { sceneIds: string[] },
+): Promise<VjSetlistDTO> {
+  return apiPut<VjSetlistDTO>(`${setlistPath(setlistId)}/items`, body);
+}
+
+export function deleteVjSetlist(
+  setlistId: string,
+): Promise<VjSetlistDeletedDTO> {
+  return apiDelete<VjSetlistDeletedDTO>(setlistPath(setlistId));
 }

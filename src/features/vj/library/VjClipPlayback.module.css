@@ -1,0 +1,219 @@
+/* Edit clip: the playback fields (speed, loop mode, loop points) and the
+   title row with the favorite star. */
+
+.titleRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--gap-xs);
+  min-inline-size: 0;
+}
+
+/* The star centres on the title input, which sits under the shared field's
+   label (one --text-label line and a 7px gap). The form's Save button and
+   reason line grow below, so the star keeps its place while they fold. */
+.titleStar {
+  display: grid;
+  place-items: center;
+  margin-block-start: calc(var(--text-label) * 1.25 + 10px);
+}
+
+.section {
+  display: grid;
+  gap: var(--gap-sm);
+  min-inline-size: 0;
+}
+
+.field {
+  display: grid;
+  gap: var(--gap-xs);
+  min-inline-size: 0;
+}
+
+/* Six speeds may not fit a phone row; the row scrolls sideways inside
+   itself, so the dialog never does. Where they fit, the tray hugs its
+   segments like the fit and loop mode trays. */
+.speedRow {
+  display: grid;
+  min-inline-size: 0;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: none;
+  /* Room for the pressed segment's shadow, which the scroller would clip. */
+  padding-block: var(--icon-gap-inline);
+  margin-block: calc(var(--icon-gap-inline) * -1);
+}
+
+.speedRow::-webkit-scrollbar {
+  display: none;
+}
+
+.speedControl {
+  justify-self: start;
+  min-inline-size: max-content;
+}
+
+/* A segmented tray in a grid field: as wide as its segments, so a two-way
+   choice reads as one small switch. */
+.tray {
+  justify-self: start;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+}
+
+.loopActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--gap-xs);
+  padding-block-start: var(--gap-xs);
+}
+
+/* ── Loop scrubber ── */
+
+.scrubber {
+  /* The thumb's hit box; the native slider keeps its centre this far in
+     from each end, so the track and the span start and stop there too. */
+  --vj-loop-thumb: var(--tap-min);
+  --vj-loop-track: rgba(var(--line-rgb), 0.16);
+  --vj-loop-span: rgba(var(--accent-rgb), 0.55);
+  display: grid;
+  gap: var(--icon-gap-inline);
+  min-inline-size: 0;
+}
+
+.handles {
+  position: relative;
+  display: grid;
+  min-inline-size: 0;
+}
+
+.track {
+  position: absolute;
+  inset-inline: calc(var(--vj-loop-thumb) / 2);
+  inset-block-start: 50%;
+  block-size: 6px;
+  translate: 0 -50%;
+  border-radius: var(--radius-pill);
+  background: var(--vj-loop-track);
+  pointer-events: none;
+}
+
+.trackSpan {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: calc(var(--vj-loop-in) * 100%);
+  inset-inline-end: calc((1 - var(--vj-loop-out)) * 100%);
+  border-radius: var(--radius-pill);
+  background: var(--vj-loop-span);
+}
+
+/* Both inputs share one grid cell. The input itself lets the pointer
+   through; only its thumb catches it, so the handle under the other one
+   stays reachable. */
+.handle {
+  position: relative;
+  z-index: 1;
+  grid-area: 1 / 1;
+  inline-size: 100%;
+  min-inline-size: 0;
+  block-size: var(--tap-min);
+  margin: 0;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  pointer-events: none;
+  touch-action: none;
+}
+
+.handle[data-raised] {
+  z-index: 2;
+}
+
+/* The global ring would wrap the whole track; the thumb rules below draw it
+   on the handle the keyboard moves. */
+.handle:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.handle::-webkit-slider-runnable-track {
+  block-size: var(--tap-min);
+  background: transparent;
+}
+
+.handle::-moz-range-track {
+  block-size: var(--tap-min);
+  background: transparent;
+}
+
+/* A 44px hit box drawn as a 24px cap ringed in coral. */
+.handle::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  inline-size: var(--vj-loop-thumb);
+  block-size: var(--vj-loop-thumb);
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle closest-side,
+    var(--paper) 0 40%,
+    var(--accent) 43% 54%,
+    transparent 57%
+  );
+  pointer-events: auto;
+  cursor: grab;
+}
+
+.handle::-moz-range-thumb {
+  box-sizing: border-box;
+  inline-size: var(--vj-loop-thumb);
+  block-size: var(--vj-loop-thumb);
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle closest-side,
+    var(--paper) 0 40%,
+    var(--accent) 43% 54%,
+    transparent 57%
+  );
+  pointer-events: auto;
+  cursor: grab;
+}
+
+.handle:active::-webkit-slider-thumb {
+  cursor: grabbing;
+}
+
+.handle:active::-moz-range-thumb {
+  cursor: grabbing;
+}
+
+/* The focus ring, on the thumb the keyboard moves. */
+.handle:focus-visible::-webkit-slider-thumb {
+  outline: var(--focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -2);
+  box-shadow: var(--ring-cream);
+}
+
+.handle:focus-visible::-moz-range-thumb {
+  outline: var(--focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -2);
+  box-shadow: var(--ring-cream);
+}
+
+.readouts {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--gap-xs);
+  padding-inline: calc(var(--vj-loop-thumb) / 2 - var(--icon-gap-inline));
+  font-size: var(--text-caption);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+}
+
+.readoutLength {
+  color: var(--ink);
+  font-weight: 600;
+}

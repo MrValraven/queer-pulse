@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import { DEMO_STAGES, type Piece } from "../data/desk.data";
 import { PiecesBoard } from "./PiecesBoard";
@@ -58,7 +59,7 @@ async function lockedStageLine(reason: string): Promise<HTMLElement> {
   return line;
 }
 
-function renderBoard(
+async function renderBoard(
   props: Partial<Parameters<typeof PiecesBoard>[0]> & { pieces: Piece[] },
 ) {
   const onMove = vi.fn();
@@ -73,6 +74,7 @@ function renderBoard(
       />
     </TestProviders>,
   );
+  await awaitCatalog("magazine");
   return { onMove, onOpen };
 }
 
@@ -91,7 +93,7 @@ describe("canDropOnStage", () => {
 
 describe("PiecesBoard", () => {
   it("draws one column per stage with its count", async () => {
-    renderBoard({ pieces: [makePiece({ stage: "Drafting" })] });
+    await renderBoard({ pieces: [makePiece({ stage: "Drafting" })] });
 
     expect(await screen.findAllByRole("heading", { level: 3 })).toHaveLength(
       DEMO_STAGES.length,
@@ -101,7 +103,7 @@ describe("PiecesBoard", () => {
 
   it("moves a piece when its card is dropped on another column", async () => {
     const piece = makePiece({ title: "Moving piece", stage: "Edit" });
-    const { onMove } = renderBoard({ pieces: [piece] });
+    const { onMove } = await renderBoard({ pieces: [piece] });
     const dataTransfer = makeDataTransfer();
 
     fireEvent.dragStart(cardFor("Moving piece"), { dataTransfer });
@@ -114,7 +116,7 @@ describe("PiecesBoard", () => {
   });
 
   it("never moves a piece by dropping it on Published", async () => {
-    const { onMove } = renderBoard({
+    const { onMove } = await renderBoard({
       pieces: [makePiece({ title: "Almost live", stage: "Ready" })],
     });
     const dataTransfer = makeDataTransfer();
@@ -128,7 +130,7 @@ describe("PiecesBoard", () => {
   });
 
   it("keeps a Published card in place: no drag and no drop elsewhere", async () => {
-    const { onMove } = renderBoard({
+    const { onMove } = await renderBoard({
       pieces: [makePiece({ title: "Live piece", stage: "Published" })],
     });
     const dataTransfer = makeDataTransfer();
@@ -148,7 +150,7 @@ describe("PiecesBoard", () => {
   });
 
   it("shows a Published piece's live line in place of its stage picker", async () => {
-    renderBoard({
+    await renderBoard({
       pieces: [makePiece({ title: "Live piece", stage: "Published" })],
     });
 
@@ -186,7 +188,7 @@ describe("PiecesBoard", () => {
   });
 
   it("shows a live Ready piece's live line and says to unpublish", async () => {
-    renderBoard({
+    await renderBoard({
       pieces: [
         makePiece({
           title: "Live Ready piece",
@@ -211,7 +213,7 @@ describe("PiecesBoard", () => {
   });
 
   it("shows a scheduled piece's go-live date and points to the record", async () => {
-    renderBoard({
+    await renderBoard({
       pieces: [
         makePiece({
           title: "Scheduled piece",
@@ -232,7 +234,7 @@ describe("PiecesBoard", () => {
   });
 
   it("starts no drag from a press on the card's controls", async () => {
-    const { onMove } = renderBoard({
+    const { onMove } = await renderBoard({
       pieces: [makePiece({ title: "Held piece", stage: "Edit" })],
     });
     const dataTransfer = makeDataTransfer();
@@ -248,7 +250,7 @@ describe("PiecesBoard", () => {
   });
 
   it("flags a column holding more pieces than the team cap", async () => {
-    renderBoard({
+    await renderBoard({
       teamCap: 1,
       pieces: [
         makePiece({ id: "piece-1", title: "First", stage: "Edit" }),
@@ -267,7 +269,7 @@ describe("PiecesBoard", () => {
     // "In review" leads with Edit. The stage picker is named "Move stage",
     // so the one button named "Edit" is the next action.
     const piece = makePiece({ title: "Needs an edit", stage: "In review" });
-    renderBoard({ pieces: [piece], onNextAction });
+    await renderBoard({ pieces: [piece], onNextAction });
 
     fireEvent.click(await screen.findByRole("button", { name: "Edit" }));
 
@@ -279,7 +281,7 @@ describe("PiecesBoard", () => {
 
   it("opens the piece from its title", async () => {
     const piece = makePiece({ title: "Open me" });
-    const { onOpen } = renderBoard({ pieces: [piece] });
+    const { onOpen } = await renderBoard({ pieces: [piece] });
 
     fireEvent.click(await screen.findByRole("button", { name: "Open me" }));
 

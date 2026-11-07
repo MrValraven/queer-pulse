@@ -31,41 +31,31 @@ export const community: Catalog = {
   "caregivers.outro.title": "Não tens de <em>acertar sempre.</em>",
   "caregivers.outro.sub":
     "Tens de continuar a aparecer. Este espaço também é para ti.",
-  "caregivers.outro.cta": "Encontrar uma sala de apoio",
+  "caregivers.outro.cta": "Encontrar apoio entre pares",
 
   // Caregivers — Start Here (five short reads)
   "caregivers.startHere.title": "Começa <em>aqui</em>",
   "caregivers.startHere.lead":
-    "Cinco leituras curtas. Cada uma responde a uma pergunta concreta, na linguagem que gostaríamos de ouvir. <em>Não é um curso. Não são 50 módulos.</em> Cinco leituras.",
+    "Cinco sítios por onde começar. Cada um parte de uma pergunta concreta, na linguagem que gostaríamos de ouvir. <em>Escolhe o que está mais perto de onde estás.</em>",
   "caregivers.lesson.listen.title": "Como <em>ouvir</em> da primeira vez",
   "caregivers.lesson.listen.body":
-    "A primeira conversa importa menos do que pensas e mais do que pensas. <em>Uma coisa a fazer; três coisas a não fazer.</em> Escrito por Sara Marques + 6 pais e mães.",
-  "caregivers.lesson.listen.readTime": "4 min de leitura",
-  "caregivers.lesson.listen.langs": "PT + EN",
+    "A primeira conversa importa menos do que pensas e mais do que pensas. <em>Uma coisa a fazer; três coisas a não fazer.</em>",
   "caregivers.lesson.wrongThing.title":
     "O que dizer <em>quando dizes asneira</em>",
   "caregivers.lesson.wrongThing.body":
-    "Vais dizer. Toda a gente diz. <em>O que importa é reparar.</em> Um pequeno guião e um pedido de desculpas com calma, escrito por pessoas que já o fizeram mal e bem.",
-  "caregivers.lesson.wrongThing.readTime": "5 min de leitura",
-  "caregivers.lesson.wrongThing.langs": "PT + EN",
+    "Vais dizer. Toda a gente diz. <em>O que importa é reparar.</em> Um pequeno guião e um pedido de desculpas com calma.",
   "caregivers.lesson.pronouns.title":
     "Pronomes & <em>nomes</em>, de forma simples",
   "caregivers.lesson.pronouns.body":
-    "O que fazer, o que não fazer, o que fazer quando te enganas. <em>Um texto prático, sobre o que fazer na verdade.</em> Escrito por Yara R.",
-  "caregivers.lesson.pronouns.readTime": "3 min de leitura",
-  "caregivers.lesson.pronouns.langs": "PT + EN",
+    "O que fazer, o que não fazer, o que fazer quando te enganas. <em>Um texto prático, sobre o que fazer na verdade.</em>",
   "caregivers.lesson.transitioning.title":
     "Se a tua pessoa está a <em>fazer transição médica</em>",
   "caregivers.lesson.transitioning.body":
-    "O que perguntar, o que não perguntar, para que te prepares. Aborda terapia hormonal, cirurgias de afirmação de género e especificidades do sistema de saúde português. <em>Escrito por pessoas trans da comunidade + os pais e mães delas.</em>",
-  "caregivers.lesson.transitioning.readTime": "9 min de leitura",
-  "caregivers.lesson.transitioning.langs": "PT + EN",
+    "O que perguntar, o que não perguntar, para que te prepares. Aborda terapia hormonal, cirurgias de afirmação de género e especificidades do sistema de saúde português.",
   "caregivers.lesson.familyPullsAway.title":
     "Quando a família <em>puxa para o lado contrário</em>",
   "caregivers.lesson.familyPullsAway.body":
-    "Quando avós, sogros e primos tornam tudo mais difícil. <em>Como manter a posição sem incendiar a casa toda.</em> Escrito por 4 pais e mães.",
-  "caregivers.lesson.familyPullsAway.readTime": "7 min de leitura",
-  "caregivers.lesson.familyPullsAway.langs": "PT + EN",
+    "Quando avós, sogros e primos tornam tudo mais difícil. <em>Como manter a posição sem incendiar a casa toda.</em>",
 
   // Caregivers — Common questions (FAQ accordion)
   "caregivers.commonQuestions.title": "Perguntas <em>frequentes</em>",
@@ -76,7 +66,7 @@ export const community: Catalog = {
   "caregivers.faq.partnerTransitioning.q":
     "O meu par está em transição e tenho medo que nos afastemos.",
   "caregivers.faq.partnerTransitioning.a":
-    "Muitas pessoas na tua posição sentem o mesmo medo, e não há vergonha nenhuma nisso. <em>Tens todo o direito de o sentir.</em> O que ajuda: falar com outros pares que já passaram por isto, vê as salas de apoio abaixo. Também ajuda: continuar a fazer as pequenas coisas que sempre foram vossas, juntes. A transição muda muita coisa. Não tem de mudar tudo.",
+    "Muitas pessoas na tua posição sentem o mesmo medo, e não há vergonha nenhuma nisso. <em>Tens todo o direito de o sentir.</em> O que ajuda: falar com outros pares que já passaram por isto. O apoio entre pares é um bom sítio por onde começar. Também ajuda: continuar a fazer as pequenas coisas que sempre foram vossas, juntes. A transição muda muita coisa. Não tem de mudar tudo.",
   "caregivers.faq.wrongPronouns.q":
     "Continuo a usar os pronomes errados. O meu amigue vai perdoar-me?",
   "caregivers.faq.wrongPronouns.a":
@@ -84,29 +74,7 @@ export const community: Catalog = {
   "caregivers.faq.grandchildQueer.q":
     "O meu neto ou neta é queer e os meus filhos não lhe falam. <em>O que faço?</em>",
   "caregivers.faq.grandchildQueer.a":
-    "Mantém-te em contacto com o teu neto ou neta. <em>Cada relação direta conta.</em> Não deixes que carreguem o conflito familiar. Sê a voz constante a quem podem voltar. Se quiseres escrever aos teus filhos sobre isto, o recurso para Pais e Mães tem uma carta-modelo que a comunidade tem vindo a melhorar ao longo dos anos.",
-
-  // Caregivers — Voice rooms
-  "caregivers.voiceRooms.title": "Fala com <em>outras pessoas</em> como tu",
-  "caregivers.voiceRooms.lead":
-    "Salas de apoio só para pessoas da comunidade. A entrada é opcional e discreta.",
-  "caregivers.room.parents.title": "Sala de voz <em>de pais e mães</em>",
-  "caregivers.room.parents.sub":
-    "Todas as terças 21:00 Lisboa · com facilitação · PT + EN",
-  "caregivers.room.parents.meta": "38 pais e mães na sala · na última semana",
-  "caregivers.room.partnersOfTrans.title": "Pares de <em>pessoas trans</em>",
-  "caregivers.room.partnersOfTrans.sub":
-    "Quinzenal às quintas 20:00 · com facilitação · EN",
-  "caregivers.room.partnersOfTrans.meta": "12 pares na sala",
-  "caregivers.room.siblings.title":
-    "Irmãos, irmãs & <em>família escolhida</em>",
-  "caregivers.room.siblings.sub":
-    "Mensal ao domingo 18:00 · informal · PT + EN",
-  "caregivers.room.siblings.meta": "22 pessoas · no mês passado",
-  "caregivers.room.youthWorkers.title": "Quem trabalha com <em>jovens</em>",
-  "caregivers.room.youthWorkers.sub":
-    "Docentes, técnicos/as sociais, equipas de clubes juvenis · Qua 19:00",
-  "caregivers.room.youthWorkers.meta": "14 pessoas na sala",
+    "Mantém-te em contacto com o teu neto ou neta. <em>Cada relação direta conta.</em> Não deixes que carreguem o conflito familiar. Sê a voz constante a quem podem voltar.",
 
   // Caregivers — Don't say / Do say
   "caregivers.dontDoSay.eyebrow": "Uma pequena lista",
@@ -266,45 +234,43 @@ export const community: Catalog = {
   "changemakers.admin.editor.updatedToast": "Perfil atualizado.",
 
   // ── Coming Out page (ComingOutPage.tsx) ───────────────────────────────────
-  "comingOut.hero.eyebrow": "Apoio para Sair do Armário · Espaço privado",
+  "comingOut.hero.eyebrow": "Apoio para Sair do Armário",
   "comingOut.hero.title":
     "Um lugar para o dizeres <em>antes de o dizeres.</em>",
   "comingOut.hero.lead":
-    'Um espaço privado e discreto para quem está a navegar o processo de sair do armário, no trabalho, à família ou a si próprie. Não há pressão para já estares "fora do armário" para entrares, e nada aqui é visível a partir do teu perfil público.',
-  "comingOut.privacy.heading":
-    "Pensado para a <em>privacidade</em>, antes de tudo.",
+    'Um ponto de partida sem pressão para quem está a navegar o processo de sair do armário, no trabalho, à família ou a si próprie. Não precisas de estar "fora do armário" para usar a QueerPulse, e ler esta página não deixa nada no teu perfil.',
+  "comingOut.privacy.heading": "O que fica <em>contigo.</em>",
   "comingOut.privacy.lead":
-    "Este espaço tem controlos adicionais além do resto da QueerPulse. Existem para que possas estar aqui sem que isso te custe nada noutro lado.",
-  "comingOut.privacy.invisible.title": "Invisível a partir do teu perfil",
-  "comingOut.privacy.invisible.body":
-    "Nada do que fazes aqui aparece no teu perfil público ou em qualquer feed. A própria participação fica escondida.",
-  "comingOut.privacy.noList.title": "Sem lista pública de pessoas",
-  "comingOut.privacy.noList.body":
-    "Não podes ser encontrade nem pesquisade aqui. As pessoas só veem o que é partilhado dentro do espaço.",
-  "comingOut.privacy.confidentiality.title":
-    "Confidencialidade em primeiro lugar",
-  "comingOut.privacy.confidentiality.body":
-    "Moderação mais rigorosa, sem capturas de ecrã, sem partilha para fora. A primeira regra e a última.",
+    "Sair do armário acontece ao teu ritmo. Quem é membro de uma comunidade vê quem mais faz parte dela, e nenhuma definição impede alguém de repetir o que leu, por isso partilha apenas o que te deixa confortável.",
+  "comingOut.privacy.hidden.title": "As comunidades privadas ficam escondidas",
+  "comingOut.privacy.hidden.body":
+    "Uma comunidade privada não aparece na exploração nem na pesquisa para quem está fora dela, e só se entra por convite. Para as restantes pessoas, é como se não existisse.",
+  "comingOut.privacy.offProfile.title": "Fora do teu perfil",
+  "comingOut.privacy.offProfile.body":
+    "O teu perfil mostra apenas as comunidades que escolheres fixar, e uma comunidade privada não pode ser fixada. Entrar ou publicar numa comunidade que não seja pública não acrescenta nada à atividade do teu perfil.",
+  "comingOut.privacy.silentDecline.title": "Recusar um convite é silencioso",
+  "comingOut.privacy.silentDecline.body":
+    "Se recusares o convite para uma comunidade, a comunidade não recebe nenhuma notificação. Se um convite for retirado, também não recebes nenhuma.",
   "comingOut.privacy.noPressure.title":
     'Sem pressão para estares "fora do armário"',
   "comingOut.privacy.noPressure.body":
-    "Entra em qualquer fase, incluindo o ainda-não e o não-tenho-a-certeza. Podes sair no momento em que estiveres pronte.",
+    "Nada na QueerPulse te pede para estares fora do armário. Lê, entra ou afasta-te ao teu ritmo.",
   "comingOut.stages.heading": "Da forma como <em>precisares de o usar.</em>",
   "comingOut.stages.lead":
-    "Facilitado com mão leve pela Mariana, psicóloga clínica que trata a confidencialidade como a primeira regra e a última.",
+    "Três formas de usar a QueerPulse enquanto percebes o que queres dizer.",
   "comingOut.stage.readFirst.title": "Primeiro, só para ti",
   "comingOut.stage.readFirst.body":
-    "Há pessoas que só leem. É uma forma completa e válida de estar aqui. Ninguém te vai pedir para publicares.",
-  "comingOut.stage.saySafely.title": "Diz-o num lugar seguro",
+    "Há pessoas que só leem. É uma forma completa e válida de estar aqui, e nada na QueerPulse exige que publiques.",
+  "comingOut.stage.saySafely.title": "Diz-o a quem percebe",
   "comingOut.stage.saySafely.body":
-    "Experimenta dizer as palavras em voz alta aqui antes de as dizeres a sério. O círculo semanal existe exatamente para isso.",
+    "Experimenta as palavras antes de as dizeres a sério. Pergunta no fórum, onde algumas categorias permitem assinatura anónima, ou escreve a uma pessoa com quem tenhas ligação. Qualquer pessoa no fórum pode ler um tópico, por isso partilha apenas o que te deixa confortável.",
   "comingOut.stage.moveOn.title": "Passa por aqui, e segue",
   "comingOut.stage.moveOn.body":
-    "As pessoas deixam este espaço quando já não precisam dele. É esse o objetivo.",
+    "Há quem precise disto uma semana e quem precise durante anos. Afasta-te quando quiseres e volta quando precisares.",
   "comingOut.outro.title": "Não deves <em>um discurso perfeito.</em>",
   "comingOut.outro.sub":
-    "Dizer a verdade de forma imperfeita continua a ser dizer a verdade. O apoio entre pares está aberto quando estiveres pronte, e podes sair no momento em que quiseres.",
-  "comingOut.outro.enterCta": "Encontrar apoio entre pares",
+    "Dizer a verdade de forma imperfeita continua a ser dizer a verdade. O nosso guia de apoio entre pares explica como pedir esse apoio, e podes sair no momento em que quiseres.",
+  "comingOut.outro.enterCta": "Ver como funciona o apoio entre pares",
   "comingOut.outro.communitiesCta": "Ver todas as comunidades",
 
   // ── Dating & Relationships page (DatingPage.tsx + data) ───────────────────
@@ -315,62 +281,50 @@ export const community: Catalog = {
 
   "dating.apps.heading": "Aplicações em <em>Lisboa</em>",
   "dating.apps.lead":
-    "O que a comunidade realmente usa: opiniões honestas de quem cá está.",
+    "Um olhar direto às aplicações usadas em Lisboa e a quem se destina cada uma.",
   "dating.app.grindr.audience": "Homens gays e bi · Trans masculinidades",
   "dating.app.grindr.body":
     "Continua a ser a aplicação com mais utilizadores gays e bi em Lisboa. Funciona. A cultura varia imenso consoante quem está online em cada momento.",
   "dating.app.grindr.tag1": "Orientada a convívios casuais",
   "dating.app.grindr.tag2": "Muito movimento",
   "dating.app.grindr.tag3": "Cultura variável",
-  "dating.app.grindr.quote":
-    '"Funciona bem para o que é. Define as tuas preferências com clareza e encontras a tua gente. A comunidade tende a concentrar-se no Príncipe Real e na Mouraria."',
   "dating.app.scruff.audience":
     "Homens gays e bi · Bears · Perfil mais masculino",
   "dating.app.scruff.body":
-    "Mais conversacional do que o Grindr. Melhor para quem quer conversar primeiro. Tem eventos e funcionalidades de grupo que a comunidade queer usa ativamente em Lisboa.",
+    "Mais conversacional do que o Grindr. Melhor para quem quer conversar primeiro. Tem eventos e funcionalidades de grupo.",
   "dating.app.scruff.tag1": "Funcionalidades de comunidade",
   "dating.app.scruff.tag2": "Foco em conversar primeiro",
   "dating.app.scruff.tag3": "Bears e perfil masculino",
-  "dating.app.scruff.quote":
-    '"O grupo em Lisboa é mais pequeno mas o ambiente é melhor. É mais provável resultar numa conversa a sério."',
   "dating.app.her.audience": "Mulheres queer · Pessoas não-binárias",
   "dating.app.her.body":
     "A principal aplicação para mulheres queer e pessoas não-binárias em Lisboa. Grupo mais pequeno mas genuinamente orientada para a comunidade: tem listas de eventos e grupos para além do namoro.",
   "dating.app.her.tag1": "Comunidade em primeiro lugar",
   "dating.app.her.tag2": "Eventos e grupos",
   "dating.app.her.tag3": "Todo o tipo de relações",
-  "dating.app.her.quote":
-    '"Não é enorme em Lisboa mas a qualidade das ligações é melhor. Vale a pena ter a par do Tinder."',
   "dating.app.feeld.audience":
     "Todos os géneros · Não-monogamia ética · Próxima do kink",
   "dating.app.feeld.body":
-    "A referência para não-monogamia ética, relações abertas e kink em Lisboa. Muito inclusiva quanto à identidade. A crescer rápido na comunidade. Também muito usada em eventos.",
+    "A referência para não-monogamia ética, relações abertas e kink em Lisboa. Muito inclusiva quanto à identidade.",
   "dating.app.feeld.tag1": "Não-monogamia ética",
   "dating.app.feeld.tag2": "Próxima do kink",
   "dating.app.feeld.tag3": "Inclusiva quanto à identidade",
   "dating.app.feeld.tag4": "Casais e solteires",
-  "dating.app.feeld.quote":
-    '"A melhor aplicação para quem não quer caber numa caixa arrumada. A comunidade aqui usa-a mais do que em qualquer sítio onde já vivi."',
   "dating.app.hornet.audience": "Homens gays e bi · Foco na comunidade",
   "dating.app.hornet.body":
-    "Mais orientada para a comunidade do que o Grindr: tem notícias, histórias e funcionalidades de grupo. Melhor para quem quer conhecer a cidade e não só namorar nela. Ativa em Lisboa.",
+    "Mais orientada para a comunidade do que o Grindr: tem notícias, histórias e funcionalidades de grupo. Melhor para quem quer conhecer a cidade e não só namorar nela.",
   "dating.app.hornet.tag1": "Funcionalidades de comunidade",
   "dating.app.hornet.tag2": "Notícias locais",
   "dating.app.hornet.tag3": "Mais do que convívios casuais",
-  "dating.app.hornet.quote":
-    '"Usei isto para encontrar eventos e sítios da comunidade antes de ter uma rede social. Subestimada."',
   "dating.app.okcupid.audience": "Todos os géneros · Relações",
   "dating.app.okcupid.body":
     "As melhores opções de identidade e pronomes de qualquer aplicação mainstream. O sistema de perguntas faz com que chegues às conversas já a saber que tens algo em comum. Ritmo mais lento, melhor para relações do que para convívios casuais.",
   "dating.app.okcupid.tag1": "Melhores opções de identidade",
   "dating.app.okcupid.tag2": "Foco em relações",
   "dating.app.okcupid.tag3": "Ritmo mais lento",
-  "dating.app.okcupid.quote":
-    '"Se te importas com a política e os valores de alguém antes das fotos, o OkCupid é a escolha certa."',
 
   "dating.culture.heading": "Cultura de namoro <em>em Lisboa</em>",
   "dating.culture.lead":
-    "Coisas que a comunidade gostava que lhe tivessem dito antes de começar a namorar aqui.",
+    "Coisas que vale a pena saber antes de começares a namorar aqui.",
   "dating.culture.smallCommunity.title": "É uma comunidade pequena",
   "dating.culture.smallCommunity.text":
     "A comunidade queer de Lisboa é íntima. Vais encontrar as mesmas pessoas em eventos, nas aplicações e através de amigues, semanas depois de chegares. Isto é, na maior parte, maravilhoso. Mas também significa que a forma como tratas as pessoas ecoa. Sê gentil.",
@@ -381,13 +335,13 @@ export const community: Catalog = {
   "dating.culture.languageGap.text":
     "Namorar através de uma barreira linguística é uma experiência específica. Há quem ache libertador; outres acham cansativo. A comunidade queer de expatriades é suficientemente grande para namorares dentro dela. Mas vais perder a comunidade mais alargada se só namorares com outres expatriades.",
   "dating.culture.eventsMatter.title":
-    "Os eventos são como as pessoas realmente se conhecem",
+    "Os eventos são uma forma fácil de conhecer pessoas",
   "dating.culture.eventsMatter.text":
-    "As aplicações importam menos aqui do que em algumas cidades. Uma parte significativa das relações na comunidade QueerPulse começou num evento da comunidade, através de uma apresentação em comum, ou num evento do fórum. Aparece.",
+    "As aplicações são uma das formas de conhecer pessoas aqui. Os eventos, as apresentações em comum e o fórum são outras, e dão à conversa um começo fácil. Vê o calendário e aparece.",
 
   "dating.structures.heading": "<em>Estruturas</em> de relação",
   "dating.structures.lead":
-    "Lisboa tem uma comunidade ativa e visível em todas as estruturas de relação. Aqui não se assume nenhuma como padrão.",
+    "Todas as estruturas de relação são bem-vindas aqui. Nenhuma é assumida como padrão.",
   "dating.structure.monogamy.label": "Monogamia",
   "dating.structure.monogamy.title": "Uma pessoa, por inteiro",
   "dating.structure.monogamy.text":
@@ -395,23 +349,23 @@ export const community: Catalog = {
   "dating.structure.enm.label": "Não-monogamia ética",
   "dating.structure.enm.title": "Relações abertas",
   "dating.structure.enm.text":
-    'A não-monogamia ética cobre um leque amplo, desde "abertos mas juntos" até relações totalmente independentes com várias pessoas. O Feeld e os próprios eventos da comunidade são os melhores pontos de entrada. O fórum tem um tópico ativo sobre não-monogamia ética com eventos locais.',
+    'A não-monogamia ética cobre um leque amplo, desde "abertos mas juntos" até relações totalmente independentes com várias pessoas. O Feeld é um ponto de entrada comum, e o fórum é um bom sítio para pedir dicas locais.',
   "dating.structure.polyamory.label": "Poliamor",
   "dating.structure.polyamory.title": "Várias relações de amor",
   "dating.structure.polyamory.text":
-    "Uma cultura distinta da não-monogamia ética, mais focada em várias relações de compromisso do que em estruturas abertas ou casuais. Há uma comunidade poliamorosa ativa em Lisboa, com eventos regulares e apoio no fórum. Legalmente complexo em Portugal, sobretudo em questões de habitação, saúde e situações familiares.",
+    "Uma cultura distinta da não-monogamia ética, mais focada em várias relações de compromisso do que em estruturas abertas ou casuais. Quem vive em poliamor é bem-vinde aqui, e o fórum está aberto a perguntas e apoio. Legalmente complexo em Portugal, sobretudo em questões de habitação, saúde e situações familiares.",
   "dating.structure.relationshipAnarchy.label": "Anarquia relacional",
   "dating.structure.relationshipAnarchy.title": "Sem hierarquia, sem regras",
   "dating.structure.relationshipAnarchy.text":
-    "Relações definidas inteiramente pelas pessoas envolvidas, sem referência a categorias convencionais. A anarquia relacional é discretamente comum na comunidade queer de Lisboa. A maioria das pessoas não lhe chama assim, mas a prática está muito espalhada.",
+    "Relações definidas inteiramente pelas pessoas envolvidas, sem referência a categorias convencionais. Muita gente vive assim sem nunca lhe chamar anarquia relacional.",
   "dating.structure.queerplatonic.label": "Queerplatónica",
   "dating.structure.queerplatonic.title": "Parceria profunda e não-romântica",
   "dating.structure.queerplatonic.text":
-    "Uma relação próxima e de compromisso sem componente romântica ou sexual. Estas parcerias podem incluir coabitação, finanças partilhadas e o tipo de parceria que o casamento normalmente descreve, só sem o enquadramento romântico. Cada vez mais visível na comunidade.",
+    "Uma relação próxima e de compromisso sem componente romântica ou sexual. Estas parcerias podem incluir coabitação, finanças partilhadas e o tipo de parceria que o casamento normalmente descreve, só sem o enquadramento romântico.",
   "dating.structure.soloPolyamory.label": "Poliamor solo",
   "dating.structure.soloPolyamory.title": "A tua própria âncora",
   "dating.structure.soloPolyamory.text":
-    'Várias ligações sem um par principal nem uma trajetória de "escalada" tradicional. Comum entre pessoas que se mudaram para Lisboa de forma independente e valorizam a sua autonomia. Funciona bem com o ritmo social da cidade: eventos e comunidade sem pressão de coabitação.',
+    'Várias ligações sem um par principal nem uma trajetória de "escalada" tradicional. Serve a quem valoriza a sua autonomia. Os eventos e a comunidade oferecem ligação sem pressão de coabitação.',
 
   "dating.recognition.heading": "Reconhecimento <em>legal em Portugal</em>",
   "dating.recognition.sameSexMarriage.title":
@@ -433,25 +387,13 @@ export const community: Catalog = {
 
   "dating.social.heading": "Conhece pessoas <em>presencialmente.</em>",
   "dating.social.lead":
-    "As aplicações estão bem. Mas a comunidade QueerPulse tende mesmo é a encontrar-se em eventos: convívios, jantares, e encontros pensados especificamente para criar ligação. Menos transacional do que uma aplicação de namoro; mais honesto sobre aquilo que procuras.",
+    "As aplicações estão bem. O calendário lista eventos onde podes conhecer pessoas cara a cara, com algo para fazer em conjunto. Menos transacional do que uma aplicação de namoro e mais honesto sobre aquilo que procuras.",
   "dating.social.upcomingEventsCta": "Ver próximos eventos",
   "dating.social.forumThreadCta": "Tópico social no fórum",
-  "dating.event.singlesDinner.name": "Jantar Queer para Solteires",
-  "dating.event.singlesDinner.detail": "Mensal · Mouraria · 12–16 pessoas",
-  "dating.event.singlesDinner.note":
-    "Jantares organizados para pessoas solteiras da comunidade. Sem agenda, sem pressão: só uma boa refeição e a oportunidade de conhecer pessoas como deve ser.",
-  "dating.event.enmPolySocial.name": "Evento Não-Monogamia & Poliamor",
-  "dating.event.enmPolySocial.detail": "Bimensal · Arroios · Contínuo",
-  "dating.event.enmPolySocial.note":
-    "Evento da comunidade para pessoas não-monógamas. Principalmente social, e também um espaço para falar sobre como viver a não-monogamia ética em Lisboa.",
-  "dating.event.newMembersSocial.name": "Evento para Quem Entrou Recentemente",
-  "dating.event.newMembersSocial.detail": "A cada 6 semanas · Local rotativo",
-  "dating.event.newMembersSocial.note":
-    "Especificamente para quem entrou na comunidade nos últimos 3 meses. A comunidade aparece sempre para este.",
 
   "dating.outro.title": "A ligação verdadeira <em>existe aqui.</em>",
   "dating.outro.sub":
-    "É preciso um pouco de tempo e aparecer algumas vezes. A comunidade torna isso mais fácil.",
+    "É preciso um pouco de tempo e aparecer algumas vezes. O calendário é um bom ponto de partida.",
   "dating.outro.cta": "Ver o que está a acontecer",
 
   // ── Family building hub (FamilyPage.tsx + sub-components) ─────────────────

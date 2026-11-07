@@ -1,0 +1,128 @@
+/* The remote's dock (plan R27). Phone: fixed to the bottom above the consent
+   inset, 218px at 390x844 with every notice folded:
+     6 + 44 (tempo) + 6 + 44 (transition) + 6 + 52 (pads) + 6 + 48 (actions)
+     + max(6px, --bottom-inset)
+   The status line, the reset notice and the MIDI learn banner fold to 0 and
+   carry their own bottom spacing, so a folded notice adds no gap. Split: the
+   sticky right column, full height, scrolling inside. */
+.dock,
+.column {
+  --vj-band-gap: 6px;
+  box-sizing: border-box;
+  color: var(--qs-text);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-raised-top) 0%,
+      var(--qs-glass-raised-bottom) 100%
+    ),
+    color-mix(in srgb, var(--qs-base) 80%, transparent);
+  -webkit-backdrop-filter: var(--qs-glass-blur);
+  backdrop-filter: var(--qs-glass-blur);
+}
+
+.dock {
+  position: fixed;
+  inset-inline: 0;
+  bottom: var(--consent-inset, 0px);
+  z-index: var(--z-nav);
+  padding-block: var(--vj-band-gap) max(var(--vj-band-gap), var(--bottom-inset));
+  padding-inline: max(var(--wrap-px), env(safe-area-inset-left, 0px))
+    max(var(--wrap-px), env(safe-area-inset-right, 0px));
+  border-block-start: 1px solid var(--qs-glass-border-strong);
+  border-start-start-radius: var(--qs-radius-card);
+  border-start-end-radius: var(--qs-radius-card);
+  box-shadow: var(--qs-shadow-glass);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 48rem);
+  min-width: 0;
+  margin-inline: auto;
+}
+
+.column {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  block-size: 100svh;
+  block-size: 100dvh;
+  min-width: 0;
+  padding-block: max(var(--gap-sm), env(safe-area-inset-top, 0px))
+    max(var(--gap-sm), var(--bottom-inset));
+  padding-inline: var(--gap-sm)
+    max(var(--gap-sm), env(safe-area-inset-right, 0px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-inline-start: 1px solid var(--qs-glass-border);
+}
+
+/* ── Notices: each folds to nothing ── */
+.notices {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Contains the status line's own margins, so a folded line takes no room. */
+.statusSlot {
+  display: flow-root;
+}
+
+.noticeSlot {
+  display: block;
+}
+
+.statusRegion {
+  display: block;
+}
+
+.statusLine,
+.infoLine {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+  margin: 0 0 var(--vj-band-gap);
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--radius-12);
+  background: var(--qs-glass-raised-bottom);
+  font-size: var(--text-14);
+  line-height: 1.4;
+  color: var(--qs-text);
+}
+
+.statusLine[data-vj-status="error"] {
+  background: var(--qs-wrong-wash);
+}
+
+.infoLine {
+  border-color: var(--qs-right-border);
+  background: var(--qs-right-fill);
+}
+
+.statusLine svg,
+.infoLine svg {
+  flex: none;
+  margin-top: 0.15em;
+}
+
+/* ── The controls ── */
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vj-band-gap);
+  min-width: 0;
+}
+
+.column .rows {
+  gap: var(--gap-xs);
+}
+
+.crossfaderRow {
+  min-width: 0;
+  padding-block-end: var(--vj-band-gap);
+}

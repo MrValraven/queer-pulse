@@ -4,14 +4,15 @@ import {
   type VjStageFrame,
   type VjStageRestore,
 } from "../../../shared/contracts/vj";
+import { VJ_SCREEN_OFFLINE_RETENTION_MS } from "../vj.constants";
 import {
   createVjDemoStage,
   reduceVjDemoStage,
   type VjDemoStage,
   type VjDemoStageEvent,
 } from "./vjDemoStage";
-import { restoreVjStage } from "./vjDemoStageCommands";
-import type { VjDemoLibraryLookup } from "./vjDemoStore";
+import type { VjDemoLibraryLookup } from "./vjDemoCommandKit";
+import { restoreVjDemoStage } from "./vjDemoStageRestore";
 
 const PACK_WARM = "00000000-0000-4000-8000-0000000000a1";
 const PACK_PEAK = "00000000-0000-4000-8000-0000000000a2";
@@ -30,10 +31,28 @@ const PACK_CLIPS: Record<string, string[]> = {
   [PACK_PEAK]: [CLIP_DOTS],
 };
 
+const ALL_CLIPS = [CLIP_GRID, CLIP_HAZE, CLIP_DOTS];
+
+/** The clip ids of the pack among the listed ones. */
+function clipsInPack(packId: string, clipIds: string[]): Set<string> {
+  const packClipIds = PACK_CLIPS[packId] ?? [];
+  return new Set(clipIds.filter((clipId) => packClipIds.includes(clipId)));
+}
+
 const library: VjDemoLibraryLookup = {
   hasPack: (packId) => packId in PACK_CLIPS,
-  hasClip: (clipId) => [CLIP_GRID, CLIP_HAZE, CLIP_DOTS].includes(clipId),
-  isClipInPack: (packId, clipId) => (PACK_CLIPS[packId] ?? []).includes(clipId),
+  hasClip: (clipId) => ALL_CLIPS.includes(clipId),
+  isClipInPack: (packId, clipId) => clipsInPack(packId, [clipId]).size > 0,
+  readPackForStage: (packId) =>
+    packId in PACK_CLIPS ? { eventId: null } : null,
+  existingClipIds: (clipIds) =>
+    new Set(clipIds.filter((clipId) => ALL_CLIPS.includes(clipId))),
+  clipIdsInPack: clipsInPack,
+  readPackClipForAdvance: (packId, clipId) =>
+    clipsInPack(packId, [clipId]).size > 0 ? { isFavorite: false } : null,
+  readSceneLook: () => null,
+  readSetlistItem: () => null,
+  setlistItemCount: () => null,
 };
 
 function run(stage: VjDemoStage, event: VjDemoStageEvent, now = 1_000) {
@@ -41,8 +60,11 @@ function run(stage: VjDemoStage, event: VjDemoStageEvent, now = 1_000) {
 }
 
 function attachRemote(stage: VjDemoStage, tabId = "remote-tab") {
-  return run(stage, { kind: "attach", tabId, payload: { role: "remote" } })
-    .stage;
+  return run(stage, {
+    kind: "attach",
+    tabId,
+    payload: { role: "remote", contractVersion: 2 },
+  }).stage;
 }
 
 function attachScreen(
@@ -58,6 +80,7 @@ function attachScreen(
       tabId,
       payload: {
         role: "screen",
+        contractVersion: 2,
         screenId,
         restoreState: options.restoreState ?? null,
       },
@@ -112,7 +135,13 @@ describe("reduceVjDemoStage commands", () => {
   it("drops a stale command and hands back the state", () => {
     const stage = attachRemote(freshStage());
     const first = command(stage, "stage:goClip", { clipId: CLIP_GRID }, 2);
-    expect(first.ack).toEqual({ ok: true, revision: 1, isNoop: false });
+    expect(first.ack).toEqual({
+      ok: true,
+      serverNow: 1_000,
+      revision: 1,
+      isNoop: false,
+      applyAt: null,
+    });
     const second = command(
       first.stage,
       "stage:goClip",
@@ -139,7 +168,13 @@ describe("reduceVjDemoStage commands", () => {
     );
     expect(second.stage.state.clipSequence).toBe(2);
     expect(second.stage.state.revision).toBe(2);
-    expect(second.ack).toEqual({ ok: true, revision: 2, isNoop: false });
+    expect(second.ack).toEqual({
+      ok: true,
+      serverNow: 1_000,
+      revision: 2,
+      isNoop: false,
+      applyAt: null,
+    });
     expect(second.outgoing).toEqual([
       {
         name: "stage:state",
@@ -147,6 +182,7 @@ describe("reduceVjDemoStage commands", () => {
           state: second.stage.state,
           cause: "command",
           sourceClientId: CLIENT_ID,
+          applyAt: null,
         },
         targetTabId: null,
         targetRole: null,
@@ -163,7 +199,13 @@ describe("reduceVjDemoStage commands", () => {
       { packId: PACK_WARM },
       2,
     );
-    expect(second.ack).toEqual({ ok: true, revision: 1, isNoop: true });
+    expect(second.ack).toEqual({
+      ok: true,
+      serverNow: 1_000,
+      revision: 1,
+      isNoop: true,
+      applyAt: null,
+    });
     expect(second.outgoing).toEqual([]);
     expect(second.stage.state).toBe(first.stage.state);
   });
@@ -209,7 +251,7 @@ describe("reduceVjDemoStage commands", () => {
     expect(blank.ack).toMatchObject({ code: "vj_overlay_text_blank" });
   });
 
-  it("defaults the interval when the kind changes", () => {
+  it("defaults the interval when the kind changes and rounds the tempo", () => {
     let stage = attachRemote(freshStage());
     stage = command(stage, "stage:setShuffle", { intervalValue: 30 }, 1).stage;
     expect(stage.state.shuffle.intervalValue).toBe(30);
@@ -223,9 +265,9 @@ describe("reduceVjDemoStage commands", () => {
       intervalKind: "beats",
       intervalValue: 8,
     });
-    stage = command(stage, "stage:setShuffle", { bpm: 123.456 }, 3).stage;
-    expect(stage.state.shuffle.bpm).toBe(123.5);
-    const outOfRange = command(stage, "stage:setShuffle", { bpm: 59 }, 4);
+    stage = command(stage, "stage:setTempo", { bpm: 123.456 }, 3).stage;
+    expect(stage.state.tempo.bpm).toBe(123.5);
+    const outOfRange = command(stage, "stage:setTempo", { bpm: 59 }, 4);
     expect(outOfRange.ack).toMatchObject({
       ok: false,
       code: "vj_bpm_out_of_range",
@@ -290,17 +332,19 @@ describe("reduceVjDemoStage screens and library", () => {
 
   it("drops a restored pack or clip that no longer exists", () => {
     const fresh = createVjStageState(STAGE_EPOCH, 0);
-    const restored = restoreVjStage(
+    const restored = restoreVjDemoStage(
       fresh,
       restoreOf({ activePackId: UNKNOWN_ID, liveClipId: UNKNOWN_ID }),
       library,
+      1_000,
     );
     expect(restored.activePackId).toBeNull();
     expect(restored.liveClipId).toBeNull();
-    const kept = restoreVjStage(
+    const kept = restoreVjDemoStage(
       fresh,
       restoreOf({ activePackId: PACK_PEAK, liveClipId: CLIP_DOTS }),
       library,
+      1_000,
     );
     expect(kept).toMatchObject({
       activePackId: PACK_PEAK,
@@ -395,7 +439,9 @@ describe("reduceVjDemoStage screens and library", () => {
     expect(second.stage.attached["tab-one"]).toBeUndefined();
     expect(second.stage.attached["tab-two"]).toBe("screen");
   });
+});
 
+describe("reduceVjDemoStage timers and library", () => {
   it("turns the strobe off on the timeout", () => {
     let stage = attachRemote(freshStage());
     stage = command(
@@ -426,6 +472,10 @@ describe("reduceVjDemoStage screens and library", () => {
       packId: null,
       clipId: CLIP_GRID,
       packIds: [PACK_WARM],
+      sceneId: null,
+      setlistId: null,
+      setlistIds: [],
+      eventId: null,
     };
     const result = run(stage, { kind: "library", change });
     expect(result.outgoing[0]).toEqual({
@@ -449,17 +499,13 @@ describe("reduceVjDemoStage screens and library", () => {
 describe("reduceVjDemoStage live parity", () => {
   it("answers vj_stale_command to a duplicate of a field-refused command", () => {
     const stage = attachRemote(freshStage());
-    const refused = command(stage, "stage:setTransition", { fadeMs: 9_999 }, 1);
+    const tooLong = { length: { unit: "ms", value: 9_999 } };
+    const refused = command(stage, "stage:setTransition", tooLong, 1);
     expect(refused.ack).toMatchObject({
       ok: false,
       code: "vj_fade_out_of_range",
     });
-    const duplicate = command(
-      refused.stage,
-      "stage:setTransition",
-      { fadeMs: 9_999 },
-      1,
-    );
+    const duplicate = command(refused.stage, "stage:setTransition", tooLong, 1);
     expect(duplicate.ack).toMatchObject({
       ok: false,
       code: "vj_stale_command",
@@ -577,9 +623,66 @@ describe("reduceVjDemoStage live parity", () => {
     const result = run(freshStage(), {
       kind: "attach",
       tabId: "tab-a",
-      payload: { role: "screen", screenId: SCREEN_A, restoreState: [] },
+      payload: {
+        role: "screen",
+        contractVersion: 2,
+        screenId: SCREEN_A,
+        restoreState: [],
+      },
     });
     expect(result.ack).toMatchObject({ ok: true, isRestored: false });
     expect(result.stage.state.revision).toBe(0);
+  });
+});
+
+describe("reduceVjDemoStage offline retention on an applied change", () => {
+  const DISCONNECTED_AT = 2_000;
+
+  /** A remote, screen A with a clip override, then screen A offline. */
+  function stageWithOfflineOverride(): VjDemoStage {
+    let stage = attachRemote(freshStage());
+    stage = attachScreen(stage, "tab-a", SCREEN_A, { now: 0 }).stage;
+    const override = {
+      clipId: CLIP_GRID,
+      generatorId: null,
+      generatorVariant: null,
+    };
+    stage = command(
+      stage,
+      "stage:setScreenOverride",
+      { screenId: SCREEN_A, override },
+      1,
+    ).stage;
+    expect(Object.keys(stage.state.screenOverrides)).toEqual([SCREEN_A]);
+    return run(stage, { kind: "detach", tabId: "tab-a" }, DISCONNECTED_AT)
+      .stage;
+  }
+
+  it("drops the override of a screen offline past retention at the next change without a prune tick", () => {
+    const stage = stageWithOfflineOverride();
+    const result = command(
+      stage,
+      "stage:setOverlay",
+      { text: "hello" },
+      2,
+      DISCONNECTED_AT + VJ_SCREEN_OFFLINE_RETENTION_MS + 1,
+    );
+    expect(result.ack).toMatchObject({ ok: true, isNoop: false });
+    expect(result.stage.state.screenOverrides).toEqual({});
+    expect(result.stage.screens).toHaveLength(0);
+  });
+
+  it("keeps the override while the screen is still inside its retention", () => {
+    const stage = stageWithOfflineOverride();
+    const result = command(
+      stage,
+      "stage:setOverlay",
+      { text: "hello" },
+      2,
+      DISCONNECTED_AT + VJ_SCREEN_OFFLINE_RETENTION_MS,
+    );
+    expect(result.ack).toMatchObject({ ok: true, isNoop: false });
+    expect(Object.keys(result.stage.state.screenOverrides)).toEqual([SCREEN_A]);
+    expect(result.stage.screens).toHaveLength(1);
   });
 });

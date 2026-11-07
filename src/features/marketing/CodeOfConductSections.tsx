@@ -1,7 +1,5 @@
-import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
-import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PACT, LADDER } from "./codeOfConductPage.data";
 import styles from "./CodeOfConductPage.module.css";
@@ -203,25 +201,12 @@ export function CocReportCta({ reportPath }: CocReportCtaProps) {
   );
 }
 
-interface CocChangesProps {
-  changelogPath: string;
+interface CocAppealProps {
   onDownload: () => void;
 }
 
-const PUBLISHED_DATE = new Date(2026, 0, 14);
-const CHANGELOG_V21_DATE = new Date(2026, 0, 1);
-const CHANGELOG_V20_DATE = new Date(2025, 7, 1);
-const CHANGELOG_V14_DATE = new Date(2025, 2, 1);
-const CHANGELOG_V10_DATE = new Date(2024, 2, 1);
-const RATIFIED_DATE = new Date(2026, 0, 14);
-
-export function CocChangesSection({
-  changelogPath,
-  onDownload,
-}: CocChangesProps) {
+export function CocAppealSection({ onDownload }: CocAppealProps) {
   const { t } = useTranslation();
-  const fmt = useFormat();
-  const monthYear = { month: "short", year: "numeric" } as const;
   return (
     <>
       <section className={styles.sec} id="appeal">
@@ -280,77 +265,7 @@ export function CocChangesSection({
         </p>
       </section>
 
-      <section className={styles.sec} id="changes">
-        <div className={styles.secNum}>
-          §<em>07</em>
-        </div>
-        <h2>
-          <Translation
-            i18nKey="marketing:coc.changes.title"
-            components={{ em: <em /> }}
-          />
-        </h2>
-        <p>
-          {t("marketing:coc.changes.p1", {
-            date: fmt.date(PUBLISHED_DATE, {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            }),
-          })}
-        </p>
-        <ul className={styles.list}>
-          <li>
-            <b>
-              {t("marketing:coc.changelog.v21.lead", {
-                date: fmt.date(CHANGELOG_V21_DATE, monthYear),
-              })}
-            </b>{" "}
-            {t("marketing:coc.changelog.v21.rest")}
-          </li>
-          <li>
-            <b>
-              {t("marketing:coc.changelog.v20.lead", {
-                date: fmt.date(CHANGELOG_V20_DATE, monthYear),
-              })}
-            </b>{" "}
-            {t("marketing:coc.changelog.v20.rest")}
-          </li>
-          <li>
-            <b>
-              {t("marketing:coc.changelog.v14.lead", {
-                date: fmt.date(CHANGELOG_V14_DATE, monthYear),
-              })}
-            </b>{" "}
-            {t("marketing:coc.changelog.v14.rest")}
-          </li>
-          <li>
-            <b>
-              {t("marketing:coc.changelog.v10.lead", {
-                date: fmt.date(CHANGELOG_V10_DATE, monthYear),
-              })}
-            </b>{" "}
-            {t("marketing:coc.changelog.v10.rest")}
-          </li>
-        </ul>
-        <p>
-          <Translation
-            i18nKey="marketing:coc.changes.seeChangelog"
-            components={{ changelogLink: <Link to={changelogPath} /> }}
-          />
-        </p>
-      </section>
-
       <div className={styles.version}>
-        <b>{t("marketing:coc.version.label")}</b>{" "}
-        {t("marketing:coc.version.ratifiedMeta", {
-          date: fmt.date(RATIFIED_DATE, {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          }),
-        })}{" "}
-        ·{" "}
         <button type="button" onClick={onDownload}>
           {t("marketing:coc.version.downloadCta")}
         </button>{" "}

@@ -63,7 +63,7 @@
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  padding-inline: var(--gap-sm);
+  padding-inline: var(--gap-xs);
   border: 1.5px solid var(--qs-line);
   border-radius: var(--qs-radius-tile);
   background: var(--qs-glass-bottom);
@@ -71,6 +71,11 @@
   font: inherit;
   font-size: var(--text-15);
   font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  /* base.css breaks words anywhere; a chip label wraps between words only,
+     so "Normal" and "Multiply" never split mid-word. */
+  overflow-wrap: break-word;
   touch-action: manipulation;
   cursor: pointer;
   transition-property: opacity, transform;
@@ -388,7 +393,22 @@
 
 .footer {
   display: flex;
+  flex: 1;
+  align-items: center;
   justify-content: flex-end;
+  gap: var(--gap-sm);
+  inline-size: 100%;
+  min-width: 0;
+}
+
+/* A sheet's status line (the Effects count and its error), at the footer's
+   start so it stays in view without a second sticky bar. */
+.footerStart {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  min-width: 0;
 }
 
 /* Read by assistive tech, drawn nowhere. */

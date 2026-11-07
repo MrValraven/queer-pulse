@@ -5,6 +5,7 @@ import {
   type VjShuffle,
   type VjStageState,
 } from "../../../shared/contracts/vj";
+import type { VjClockReader } from "../engine/vjEngineLook";
 import type { VjCommandOutcome } from "../live/useVjStage";
 import { VJ_LEAD_ADVANCE_FALLBACK_MS } from "../vj.constants";
 import {
@@ -17,9 +18,16 @@ const SECONDS_SHUFFLE: VjShuffle = {
   isOn: true,
   intervalKind: "seconds",
   intervalValue: 8,
-  bpm: 120,
+  source: "pack",
+  excludedClipIds: [],
 };
 const INTERVAL_MS = 8000;
+
+/** The synced clock with no offset, on the faked Date and performance clocks. */
+const TEST_CLOCK: VjClockReader = {
+  serverNow: () => Date.now(),
+  toLocalTime: (serverMs) => performance.now() + (serverMs - Date.now()),
+};
 
 /** A small linear congruential generator, so every run picks the same order. */
 function seededRandom(seed: number): () => number {
@@ -42,7 +50,12 @@ function stageState(changes: Partial<VjStageState> = {}): VjStageState {
   };
 }
 
-const OK_OUTCOME: VjCommandOutcome = { ok: true, revision: 2, isNoop: false };
+const OK_OUTCOME: VjCommandOutcome = {
+  ok: true,
+  revision: 2,
+  isNoop: false,
+  applyAt: null,
+};
 
 function renderProgram(changes: Partial<VjScreenProgramInput> = {}) {
   const advance = vi.fn<VjScreenProgramInput["advance"]>(() =>
@@ -53,6 +66,8 @@ function renderProgram(changes: Partial<VjScreenProgramInput> = {}) {
     isConnected: true,
     isLead: true,
     readyClipIds: READY_CLIP_IDS,
+    isFavorite: () => false,
+    clock: TEST_CLOCK,
     advance,
     random: seededRandom(7),
     ...changes,
@@ -86,7 +101,7 @@ afterEach(() => {
 describe("useVjScreenProgram", () => {
   it("the lead asks the server and switches only on the echo", async () => {
     const { result, advance, update } = renderProgram();
-    expect(result.current).toEqual({
+    expect(result.current).toMatchObject({
       displayedClipId: "clip-1",
       isLocal: false,
     });
@@ -107,7 +122,7 @@ describe("useVjScreenProgram", () => {
         liveClipId: pickedClipId ?? null,
       }),
     });
-    expect(result.current).toEqual({
+    expect(result.current).toMatchObject({
       displayedClipId: pickedClipId,
       isLocal: false,
     });
@@ -122,7 +137,7 @@ describe("useVjScreenProgram", () => {
     expect(result.current.displayedClipId).toBe("clip-1");
 
     await advanceTime(1);
-    expect(result.current).toEqual({
+    expect(result.current).toMatchObject({
       displayedClipId: pickedClipId,
       isLocal: true,
     });
@@ -161,10 +176,14 @@ describe("useVjScreenProgram", () => {
     update({
       state: stageState({
         revision: 2,
-        overlay: { text: "Hello", style: "big", isVisible: true },
+        overlay: {
+          ...createVjStageState("epoch-1", 0).overlay,
+          text: "Hello",
+          isVisible: true,
+        },
       }),
     });
-    expect(result.current).toEqual({
+    expect(result.current).toMatchObject({
       displayedClipId: "clip-1",
       isLocal: false,
     });
@@ -174,7 +193,7 @@ describe("useVjScreenProgram", () => {
     const { result, advance } = renderProgram({ isLead: false });
     await advanceTime(INTERVAL_MS * 4);
     expect(advance).not.toHaveBeenCalled();
-    expect(result.current).toEqual({
+    expect(result.current).toMatchObject({
       displayedClipId: "clip-1",
       isLocal: false,
     });
@@ -195,7 +214,7 @@ describe("useVjScreenProgram", () => {
 
     // Reattached with the same stage state: the screen snaps back to it.
     update({ isConnected: true });
-    expect(result.current).toEqual({
+    expect(result.current).toMatchObject({
       displayedClipId: "clip-1",
       isLocal: false,
     });
@@ -236,7 +255,7 @@ describe("useVjScreenProgram", () => {
     });
     expect(result.current.displayedClipId).toBe("clip-4");
     await advanceTime(VJ_LEAD_ADVANCE_FALLBACK_MS);
-    expect(result.current).toEqual({
+    expect(result.current).toMatchObject({
       displayedClipId: "clip-4",
       isLocal: false,
     });
@@ -252,14 +271,14 @@ describe("useVjScreenProgram", () => {
       readyClipIds: [],
     });
     await advanceTime(INTERVAL_MS * 2);
-    expect(result.current).toEqual({
+    expect(result.current).toMatchObject({
       displayedClipId: "clip-1",
       isLocal: false,
     });
 
     update({ readyClipIds: ["clip-3"] });
     await advanceTime(INTERVAL_MS);
-    expect(result.current).toEqual({
+    expect(result.current).toMatchObject({
       displayedClipId: "clip-3",
       isLocal: true,
     });
@@ -278,12 +297,8 @@ describe("useVjScreenProgram", () => {
     const { result } = renderProgram({
       isConnected: false,
       state: stageState({
-        shuffle: {
-          isOn: true,
-          intervalKind: "beats",
-          intervalValue: 8,
-          bpm: 120,
-        },
+        shuffle: { ...SECONDS_SHUFFLE, intervalKind: "beats" },
+        tempo: { ...createVjStageState("epoch-1", 0).tempo, bpm: 120 },
       }),
     });
     await advanceTime(3999);
@@ -316,7 +331,7 @@ describe("useVjScreenProgram lead in local mode", () => {
     const { result, update } = renderProgram({ advance });
     await advanceTime(INTERVAL_MS);
     const localClipId = advance.mock.calls[0]?.[1];
-    expect(result.current).toEqual({
+    expect(result.current).toMatchObject({
       displayedClipId: localClipId,
       isLocal: true,
     });
@@ -336,14 +351,90 @@ describe("useVjScreenProgram lead in local mode", () => {
         liveClipId: reportedClipId ?? null,
       }),
     });
-    expect(result.current).toEqual({
+    expect(result.current).toMatchObject({
       displayedClipId: reportedClipId,
       isLocal: false,
     });
     await advanceTime(VJ_LEAD_ADVANCE_FALLBACK_MS);
-    expect(result.current).toEqual({
+    expect(result.current).toMatchObject({
       displayedClipId: reportedClipId,
       isLocal: false,
     });
+  });
+});
+
+describe("useVjScreenProgram lookahead and timing", () => {
+  it("exposes the next clip on the lead and null on a follower", () => {
+    const lead = renderProgram();
+    const nextClipId = lead.result.current.nextClipId;
+    expect(READY_CLIP_IDS).toContain(nextClipId);
+    expect(nextClipId).not.toBe("clip-1");
+
+    const follower = renderProgram({ isLead: false });
+    expect(follower.result.current.nextClipId).toBeNull();
+
+    lead.update({
+      state: stageState({ shuffle: { ...SECONDS_SHUFFLE, isOn: false } }),
+    });
+    expect(lead.result.current.nextClipId).toBeNull();
+  });
+
+  it("picks the reported next clip at the next clock fire", async () => {
+    const { result, advance, update } = renderProgram();
+    const reportedClipId = result.current.nextClipId;
+    expect(reportedClipId).not.toBeNull();
+
+    await advanceTime(INTERVAL_MS);
+    expect(advance).toHaveBeenCalledTimes(1);
+    expect(advance.mock.calls[0]?.[1]).toBe(reportedClipId);
+    // Until the echo applies, the reported clip is still the next one.
+    expect(result.current.nextClipId).toBe(reportedClipId);
+
+    update({
+      state: stageState({
+        clipSequence: 2,
+        revision: 2,
+        liveClipId: reportedClipId,
+      }),
+    });
+    const followingClipId = result.current.nextClipId;
+    expect(READY_CLIP_IDS).toContain(followingClipId);
+    expect(followingClipId).not.toBe(reportedClipId);
+
+    await advanceTime(INTERVAL_MS);
+    expect(advance.mock.calls[1]?.[1]).toBe(followingClipId);
+  });
+
+  it("arms the advance 300 ms early when quantize is on", async () => {
+    const liveSince = Date.now() - 2000;
+    const { advance } = renderProgram({
+      state: stageState({
+        liveSince,
+        tempo: {
+          ...createVjStageState("epoch-1", 0).tempo,
+          quantize: "beat",
+        },
+      }),
+    });
+    const fireAfterMs = INTERVAL_MS - 2000 - 300;
+    await advanceTime(fireAfterMs - 1);
+    expect(advance).not.toHaveBeenCalled();
+    await advanceTime(1);
+    expect(advance).toHaveBeenCalledTimes(1);
+  });
+
+  it("times a beats interval from tempo.bpm", async () => {
+    // 8 beats at 96 BPM: 5000 ms after liveSince, with quantize off.
+    const { advance } = renderProgram({
+      state: stageState({
+        liveSince: Date.now(),
+        shuffle: { ...SECONDS_SHUFFLE, intervalKind: "beats" },
+        tempo: { ...createVjStageState("epoch-1", 0).tempo, bpm: 96 },
+      }),
+    });
+    await advanceTime(4999);
+    expect(advance).not.toHaveBeenCalled();
+    await advanceTime(1);
+    expect(advance).toHaveBeenCalledTimes(1);
   });
 });

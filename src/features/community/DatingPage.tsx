@@ -4,7 +4,7 @@ import { Button, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { APPS, CULTURE, EVENTS, RECOGNITION, STRUCTURES } from "./dating.data";
+import { APPS, CULTURE, RECOGNITION, STRUCTURES } from "./dating.data";
 import { DatingAppCard } from "./DatingAppCard";
 import styles from "./DatingPage.module.css";
 
@@ -133,33 +133,22 @@ export function DatingPage() {
 
       <section className={styles.social}>
         <div className="wrap">
-          <div className={styles.socialInner}>
-            <div className={styles.socialLeft}>
-              <h2>
-                <Translation
-                  i18nKey="community:dating.social.heading"
-                  components={{ em: <em /> }}
-                />
-              </h2>
-              <p>{t("community:dating.social.lead")}</p>
-              <div className={styles.socialActions}>
-                <Button to={calendar} variant="primary">
-                  {t("community:dating.social.upcomingEventsCta")}
-                </Button>
-                <Button to={forum} variant="ghost-dark">
-                  {t("community:dating.social.forumThreadCta")}{" "}
-                  <FiArrowRight aria-hidden />
-                </Button>
-              </div>
-            </div>
-            <div className={styles.socialEvents}>
-              {EVENTS.map((e) => (
-                <div className={styles.socialEvent} key={e.nameKey}>
-                  <div className={styles.seName}>{t(e.nameKey)}</div>
-                  <div className={styles.seDetail}>{t(e.detailKey)}</div>
-                  <div className={styles.seNote}>{t(e.noteKey)}</div>
-                </div>
-              ))}
+          <div className={styles.socialLeft}>
+            <h2>
+              <Translation
+                i18nKey="community:dating.social.heading"
+                components={{ em: <em /> }}
+              />
+            </h2>
+            <p>{t("community:dating.social.lead")}</p>
+            <div className={styles.socialActions}>
+              <Button to={calendar} variant="primary">
+                {t("community:dating.social.upcomingEventsCta")}
+              </Button>
+              <Button to={forum} variant="ghost-dark">
+                {t("community:dating.social.forumThreadCta")}{" "}
+                <FiArrowRight aria-hidden />
+              </Button>
             </div>
           </div>
         </div>

@@ -3,7 +3,9 @@ import { Select } from "../../../shared/components/ui";
 import { viewStageLabelKey } from "./stageLabels";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import type { UnpublishLandingStage } from "../api/piecePublish.api";
 import type { Piece, Stage } from "../data/desk.data";
+import { PiecesBoardUnpublishActions } from "./PiecesBoardUnpublishActions";
 import { hasPublishDate, isPieceScheduled } from "./pieceSchedule";
 import styles from "./PiecesBoard.module.css";
 
@@ -11,6 +13,9 @@ export interface PiecesBoardStagePickerProps {
   piece: Piece;
   stages: Stage[];
   onMove: (piece: Piece, stage: Stage) => void;
+  /** Offers a Published card its two unpublish buttons under the status
+   *  line. Left out, the line keeps pointing at the piece record. */
+  onUnpublish?: (piece: Piece, stage: UnpublishLandingStage) => void;
   /** The card title's id: `Select`'s trigger takes it as its own description,
    *  the same `aria-describedby` pattern `PieceRowNextAction.tsx` uses, so a
    *  screen reader hears "Move stage" followed by this card's own piece
@@ -47,6 +52,10 @@ const GOES_LIVE_FORMAT: Intl.DateTimeFormatOptions = {
  *   live {date}"); a live one (date passed, stage not yet Published) is
  *   public already, and its writer has not heard (PRD-437): "Live since
  *   {date}. Publish it to tell the writer."
+ * A Published card (not a scheduled or live-early one) also gets "Unpublish to
+ * draft" and "Unpublish to review" buttons when `onUnpublish` is passed, the
+ * same two actions as the row's More menu; the hidden way-out sentence then
+ * gives way to them.
  * The line is plain text, so sighted readers see it and screen readers reach
  * it in reading order. The way out (unschedule or unpublish on the piece
  * record) is part of that same paragraph, visually hidden: a static <p> is
@@ -57,6 +66,7 @@ export function PiecesBoardStagePicker({
   piece,
   stages,
   onMove,
+  onUnpublish,
   titleId,
 }: PiecesBoardStagePickerProps) {
   const { t } = useTranslation();
@@ -77,19 +87,34 @@ export function PiecesBoardStagePicker({
               date: publishedAtDate,
             })
           : t("magazine:desk.board.liveOnSite");
-    return (
+    const unpublishHandler =
+      piece.stage === "Published" ? onUnpublish : undefined;
+    const statusLine = (
       <p className={styles.stageLocked}>
         <StatusIcon aria-hidden="true" className={styles.stageLockedIcon} />
         <span>{statusText}</span>
-        <span className="visuallyHidden">
-          {" "}
-          {t(
-            isScheduled
-              ? "magazine:desk.board.unscheduleToMove"
-              : "magazine:desk.board.unpublishToMove",
-          )}
-        </span>
+        {!unpublishHandler && (
+          <span className="visuallyHidden">
+            {" "}
+            {t(
+              isScheduled
+                ? "magazine:desk.board.unscheduleToMove"
+                : "magazine:desk.board.unpublishToMove",
+            )}
+          </span>
+        )}
       </p>
+    );
+    if (!unpublishHandler) return statusLine;
+    return (
+      <>
+        {statusLine}
+        <PiecesBoardUnpublishActions
+          piece={piece}
+          onUnpublish={unpublishHandler}
+          titleId={titleId}
+        />
+      </>
     );
   }
 

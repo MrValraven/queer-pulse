@@ -6,6 +6,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useQueryClient } from "@tanstack/react-query";
 import { createWriterApplication } from "./api/writerApplications.api";
 import { MY_WRITER_APPLICATION_QUERY_KEY } from "./api/useMyWriterApplication";
+import { writerApplicationErrorCopy } from "./writerApplicationError";
 import styles from "./SubmitStoryPage.module.css";
 
 export function WriterApplicationForm({
@@ -39,8 +40,9 @@ export function WriterApplicationForm({
         await queryClient.invalidateQueries({
           queryKey: [MY_WRITER_APPLICATION_QUERY_KEY],
         });
-      } catch {
-        showToast(t("magazine:applyToWrite.form.submitError"), "error");
+      } catch (error) {
+        const { key, values } = writerApplicationErrorCopy(error);
+        showToast(t(key, values), "error");
         setSubmitting(false);
         return;
       }

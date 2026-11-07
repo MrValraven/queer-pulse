@@ -189,10 +189,8 @@ export const PARTNERS: Partner[] = [
     ],
     funding: (
       <>
-        <b>Funding transparency:</b> this sample partnership is unpaid. In this
-        illustration, QueerPulse pays a small per-case fee for the legal consult
-        programme, sustainer-funded. Everything else is reciprocal
-        infrastructure.
+        <b>Funding transparency:</b> this sample partnership is unpaid.
+        Everything in this illustration is reciprocal infrastructure.
       </>
     ),
     atGlance: [
@@ -825,8 +823,7 @@ export const PARTNERS: Partner[] = [
     funding: (
       <>
         <b>Funding transparency:</b> in this sample, the clinic's partnership is
-        unpaid. The Sustainer fund covers the catch-slot appointments so no
-        turned-away member is billed. Everything else is reciprocal.
+        unpaid. Everything is reciprocal.
       </>
     ),
     atGlance: [
@@ -1004,8 +1001,8 @@ export const PARTNERS: Partner[] = [
       <>
         <b>Funding transparency:</b> in this sample, the foundation grants a
         round annual sum to the micro-grants pool for several years. QueerPulse
-        takes no administration fee from the grant: the committee's work is
-        volunteer, the review is Sustainer-funded.
+        takes no administration fee from the grant, and the committee's work is
+        volunteer.
       </>
     ),
     atGlance: [

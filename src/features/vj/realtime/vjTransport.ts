@@ -2,12 +2,13 @@ import type {
   VjAttachPayload,
   VjAttachRole,
   VjAttachSuccess,
+  VjClockSample,
+  VjScreenStatusPayload,
 } from "../../../shared/contracts/vj";
 import type {
   VjAckFor,
   VjClientFrameName,
   VjClientPayload,
-  VjScreenStatusPayload,
   VjServerFrame,
 } from "./vjFrames";
 
@@ -20,7 +21,8 @@ export type VjConnectionRefusal =
   | "session_revoked"
   | "unauthorized"
   | "platform_locked"
-  | "server_error";
+  | "server_error"
+  | "client_outdated";
 
 export interface VjConnectionState {
   status: VjConnectionStatus;
@@ -40,6 +42,8 @@ export interface VjTransportOptions {
   buildAttachPayload: () => VjAttachPayload;
   onFrame: (frame: VjServerFrame) => void;
   onConnection: (connection: VjConnectionState) => void;
+  /** Every ack that carries serverNow, and every clock:sync answer (C 7.2, 7.3). */
+  onClockSample?: (sample: VjClockSample) => void;
 }
 
 export interface VjTransport {

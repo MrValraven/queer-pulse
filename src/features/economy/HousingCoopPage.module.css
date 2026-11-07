@@ -585,6 +585,9 @@
     grid-template-columns: 1fr;
   }
 }
+.scInnerSingle {
+  grid-template-columns: 1fr;
+}
 .scEyebrow {
   font-size: var(--text-11-5);
   font-weight: 700;

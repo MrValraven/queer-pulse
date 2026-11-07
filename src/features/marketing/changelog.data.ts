@@ -63,6 +63,33 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "unpublish-pieces-from-the-desk",
+        category: "improvement",
+        date: "7 Nov 2026",
+        ...entryKeys("unpublish-pieces-from-the-desk"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineDesk",
+        },
+      },
+      {
+        id: "vj-effects-engine",
+        category: "feature",
+        date: "6 Nov 2026",
+        ...entryKeys("vj-effects-engine"),
+      },
+      {
+        id: "vj-playable-remote",
+        category: "feature",
+        date: "6 Nov 2026",
+        ...entryKeys("vj-playable-remote"),
+      },
+      {
+        id: "vj-scenes-and-set-lists",
+        category: "feature",
+        date: "6 Nov 2026",
+        ...entryKeys("vj-scenes-and-set-lists"),
+      },
+      {
         id: "persona-type-change",
         category: "feature",
         date: "5 Nov 2026",

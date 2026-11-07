@@ -1,0 +1,110 @@
+/* VJ show lists: the parts the scenes and set lists view shares. One ordered
+   row (grip, content, up and down), and the name form with its buttons. */
+
+/* ── Ordered row ── */
+
+/* `position: relative` is load-bearing: the held row lifts above the rows
+   gliding under it through z-index, which needs a positioned box. Padding and
+   borders sit on the inner `.row`, so they fold with the item. Each row is
+   its own size container, so it fits the column it lands in. */
+.rowItem {
+  position: relative;
+  display: flow-root;
+  container: vj-order-row / inline-size;
+}
+
+.rowItem[data-dragging="true"] {
+  z-index: 2;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2px;
+  min-block-size: var(--tap-min);
+  padding-block: 6px;
+  border-block-end: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 0;
+  background: transparent;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease),
+    border-radius var(--dur-fast) var(--ease);
+}
+
+.rowItem[data-dragging="true"] .row {
+  border-color: rgba(var(--accent-rgb), 0.4);
+  border-radius: var(--radius-14);
+  background: var(--paper);
+  box-shadow: var(--shadow-e2);
+}
+
+.grip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--tap-min);
+  block-size: var(--tap-min);
+  color: var(--ink-40);
+  font-size: var(--text-16);
+  cursor: grab;
+  touch-action: none;
+}
+
+.grip:active {
+  cursor: grabbing;
+}
+
+/* The caller's own content and actions: the scene summary, the set list
+   name and its buttons. It may shrink and truncate. */
+.content {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  min-inline-size: 0;
+}
+
+.moves {
+  display: flex;
+  align-items: center;
+}
+
+.move {
+  font-size: var(--text-16);
+}
+
+.move:not([aria-disabled="true"]) {
+  color: var(--ink);
+}
+
+/* Phone width: the up and down buttons stack, so the content keeps its room
+   and both stay full 44px targets. The grip and the buttons sit at the top
+   of the row, beside the name. */
+@container vj-order-row (max-width: 399px) {
+  .row {
+    align-items: start;
+  }
+
+  .moves {
+    flex-direction: column;
+  }
+}
+
+/* ── Name form ── */
+
+.nameForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  max-inline-size: 26rem;
+  padding-block: 2px var(--gap-xs);
+}
+
+.formActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+}

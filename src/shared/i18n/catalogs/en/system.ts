@@ -464,17 +464,17 @@ export const system: Catalog = {
   // ── VerificationNeededPage.tsx / VerificationNeededSections.tsx ──────────
   "verificationNeeded.heading": "Quick check · <em>is this still you?</em>",
   // DEMO ONLY, with `actionCard` and `foot` below: a countdown against a
-  // simulated check, and a membership cancellation there is no billing for.
+  // simulated check, and an action card for a step the page cannot tell apart
+  // from any other.
   // Live mode runs the real step-up (`beginReauth` in
   // features/settings/api/useReauthToken.ts), which opens the code dialog and
   // has no in-page timer to count down. Google is the alternative for members
   // who have it.
   "verificationNeeded.lead":
-    "For your next step we need to confirm it's still you on this device. <b>This is one of two actions</b> we re-auth for: cancelling membership, or removing your account.",
+    "For your next step we need to confirm it's still you on this device. <b>This is one of two actions</b> we re-auth for: exporting your data, or erasing your account.",
   "verificationNeeded.leadLive":
     "Before we go on, we need to know it's still you on this device. QueerPulse asks for this on the steps you can't take back: <b>erasing your account, exporting your data, and data-rights requests</b>.",
-  "verificationNeeded.actionCard":
-    "You're about to <b>cancel your Sustainer membership</b>",
+  "verificationNeeded.actionCard": "You're about to <b>erase your account</b>",
   "verificationNeeded.foot": "This re-auth expires in <b>{time}</b>.",
   "verificationNeeded.footLive":
     "We'll send a 6-digit code to your account email. Enter it and you can carry on.",
@@ -498,7 +498,7 @@ export const system: Catalog = {
   "verificationNeeded.confirm.verifyingCta": "Confirming…",
   "verificationNeeded.success.title": "It's you, <em>verified.</em>",
   "verificationNeeded.success.sub":
-    "Re-authentication confirmed. Taking you on to cancel your membership…",
+    "Re-authentication confirmed. Taking you on to your account settings…",
   "verificationNeeded.success.continueCta": "Continue now",
   "verificationNeeded.expired.title": "This check <em>timed out.</em>",
   "verificationNeeded.expired.sub":

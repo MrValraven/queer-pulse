@@ -14,7 +14,12 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { formatDate } from "../../../shared/lib/date";
 import { mediaMax } from "../../../shared/theme/breakpoints";
 import { useIssueCloseDate } from "../api/useIssueCloseDate";
+import { useExitingPopover } from "./useExitingPopover";
 import styles from "./DeskPulseHeader.module.css";
+
+// The exiting popover is inert, but its Escape listener stays mounted until
+// the fade ends; it must not close (and refocus) a second time.
+function ignoreClose(): void {}
 
 export interface IssueCloseDatePopoverProps {
   issueNumber: string;
@@ -71,6 +76,11 @@ export function IssueCloseDatePopover({
   const popoverRef = useRef<HTMLDivElement>(null);
   const baseId = useId();
   const popoverId = `${baseId}-close-date-popover`;
+  const isPopoverRendered = useExitingPopover(
+    isOpen && !isMobile,
+    popoverRef,
+    triggerRef,
+  );
   const dialogLabel = t("magazine:desk.pulse.setCloseDateDialogLabel");
 
   const close = () => {
@@ -165,7 +175,7 @@ export function IssueCloseDatePopover({
           />
         </ModalSheet>
       )}
-      {isOpen && !isMobile && (
+      {isPopoverRendered && !isMobile && (
         <DatePickerPopover
           id={popoverId}
           anchorRef={triggerRef}
@@ -180,7 +190,7 @@ export function IssueCloseDatePopover({
           onTimeChange={handleTimeChange}
           onPresetSelect={handlePresetSelect}
           onToday={handleToday}
-          onClose={close}
+          onClose={isOpen ? close : ignoreClose}
         />
       )}
     </>

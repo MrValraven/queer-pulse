@@ -67,8 +67,28 @@
   }
 }
 
+/* The exit mirrors the open, from the same transform origin. Inert and
+   click-through while it plays. */
+.popoverClosing {
+  composes: popover;
+  pointer-events: none;
+  animation: pieceRowMenuOut var(--dur-fast) var(--ease) forwards;
+}
+
+@keyframes pieceRowMenuOut {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.96);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .popover,
+  .popoverClosing,
   .trigger {
     animation: none;
     transition: none;

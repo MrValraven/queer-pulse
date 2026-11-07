@@ -3,17 +3,22 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { API_BASE_URL } from "../../../shared/api/config";
 import {
   createVjStageState,
+  VJ_CONTRACT_VERSION,
   type VjAttachPayload,
   type VjAttachRole,
+  type VjClockSample,
   type VjStageRestore,
 } from "../../../shared/contracts/vj";
 import {
   VJ_ACK_TIMEOUT_MS,
+  VJ_CLOCK_SYNC_BURST_COUNT,
+  VJ_CLOCK_SYNC_BURST_SPACING_MS,
+  VJ_CLOCK_SYNC_INTERVAL_MS,
   VJ_REAUTH_ACK_TIMEOUT_MS,
   VJ_RECONNECT_BASE_DELAY_MS,
 } from "../vj.constants";
 import type { VjScreenStatusPayload, VjServerFrame } from "./vjFrames";
-import { VjSocketClient } from "./vjSocket";
+import { VjSocketClient, type VjSocketClientOptions } from "./vjSocket";
 import type { VjConnectionState } from "./vjTransport";
 
 const apiClientMock = vi.hoisted(() => ({
@@ -38,6 +43,18 @@ vi.mock("../../../shared/observability/logger", () => loggerMock);
 const START_TIME = new Date("2026-11-05T21:00:00.000Z");
 const MINUTE_MS = 60_000;
 const SCREEN_ID = "6f1d2c3b-4a5e-4f60-8a71-92b3c4d5e6f7";
+/** The fake server's clock runs this far ahead of the test's wall clock. */
+const SERVER_AHEAD_MS = 1_500;
+const BURST_LENGTH_MS =
+  (VJ_CLOCK_SYNC_BURST_COUNT - 1) * VJ_CLOCK_SYNC_BURST_SPACING_MS;
+const REMOTE_ATTACH: VjAttachPayload = {
+  role: "remote",
+  contractVersion: VJ_CONTRACT_VERSION,
+};
+
+function serverNowOf(): number {
+  return Date.now() + SERVER_AHEAD_MS;
+}
 
 type AckResponder = (name: string, payload: unknown) => Promise<unknown>;
 
@@ -54,11 +71,13 @@ function attachAckFor(payload: unknown): Record<string, unknown> {
     (payload as { role?: unknown }).role === "screen";
   return {
     ok: true,
+    serverNow: serverNowOf(),
     role: isScreen ? "screen" : "remote",
     connectionExpiresAt: Date.now() + 15 * MINUTE_MS,
     stageEpoch: "epoch-1",
     isRestored: false,
     isLead: isScreen ? true : null,
+    screenNumber: isScreen ? 1 : null,
   };
 }
 
@@ -68,9 +87,19 @@ const defaultAckResponder: AckResponder = (name, payload) => {
     return Promise.resolve({
       ok: true,
       exp: Math.floor((Date.now() + 15 * MINUTE_MS) / 1000),
+      serverNow: serverNowOf(),
     });
   }
-  return Promise.resolve({ ok: true, revision: 1, isNoop: false });
+  if (name === "clock:sync") {
+    return Promise.resolve({ ok: true, serverNow: serverNowOf() });
+  }
+  return Promise.resolve({
+    ok: true,
+    revision: 1,
+    isNoop: false,
+    applyAt: null,
+    serverNow: serverNowOf(),
+  });
 };
 
 function createFakeSocket() {
@@ -124,16 +153,26 @@ function restoreAt(revision: number): VjStageRestore {
     revision,
     activePackId: state.activePackId,
     liveClipId: state.liveClipId,
+    liveGeneratorId: state.liveGeneratorId,
+    liveGeneratorVariant: state.liveGeneratorVariant,
     transition: state.transition,
     overlay: state.overlay,
+    countdown: state.countdown,
+    logo: state.logo,
+    eventCard: state.eventCard,
     effects: state.effects,
+    mix: state.mix,
+    tempo: state.tempo,
     shuffle: state.shuffle,
+    activeSetlistId: state.activeSetlistId,
+    setlistIndex: state.setlistIndex,
   };
 }
 
 function setup(
-  buildAttachPayload: () => VjAttachPayload = () => ({ role: "remote" }),
+  buildAttachPayload: () => VjAttachPayload = () => REMOTE_ATTACH,
   role: VjAttachRole = "remote",
+  extraOptions: Partial<VjSocketClientOptions> = {},
 ) {
   const fakeSocket = createFakeSocket();
   const ioFactory = vi.fn(
@@ -148,6 +187,7 @@ function setup(
     onFrame: (frame) => frames.push(frame),
     onConnection: (connection) => connections.push(connection),
     loadIo: () => Promise.resolve(ioFactory),
+    ...extraOptions,
   });
   return {
     fakeSocket,
@@ -166,8 +206,19 @@ async function connectAndAttach(harness: ReturnType<typeof setup>) {
   await flushPromises();
 }
 
+function callsNamed(
+  fakeSocket: ReturnType<typeof createFakeSocket>,
+  frameName: string,
+) {
+  return fakeSocket.ackCalls.filter((call) => call.name === frameName);
+}
+
 function attachCallsOf(fakeSocket: ReturnType<typeof createFakeSocket>) {
-  return fakeSocket.ackCalls.filter((call) => call.name === "vj:attach");
+  return callsNamed(fakeSocket, "vj:attach");
+}
+
+function clockSyncCountOf(fakeSocket: ReturnType<typeof createFakeSocket>) {
+  return callsNamed(fakeSocket, "clock:sync").length;
 }
 
 const GO_CLIP_PAYLOAD = {
@@ -207,7 +258,7 @@ describe("VjSocketClient attach", () => {
     expect(attachCallsOf(harness.fakeSocket)).toEqual([
       {
         name: "vj:attach",
-        payload: { role: "remote" },
+        payload: REMOTE_ATTACH,
         timeoutMs: VJ_ACK_TIMEOUT_MS,
       },
     ]);
@@ -231,6 +282,7 @@ describe("VjSocketClient attach", () => {
       buildCount += 1;
       return {
         role: "screen",
+        contractVersion: VJ_CONTRACT_VERSION,
         screenId: SCREEN_ID,
         restoreState: restoreAt(revision),
       };
@@ -266,6 +318,7 @@ describe("VjSocketClient attach", () => {
         ok: false,
         code: "vj_rate_limited",
         message: "Too many attaches",
+        serverNow: serverNowOf(),
       });
     };
     await connectAndAttach(harness);
@@ -286,6 +339,7 @@ describe("VjSocketClient attach", () => {
         ok: false,
         code: "vj_not_admin",
         message: "Admins only",
+        serverNow: serverNowOf(),
       });
     await connectAndAttach(harness);
 
@@ -332,17 +386,30 @@ describe("VjSocketClient send", () => {
 
     await expect(
       harness.client.send("stage:goClip", GO_CLIP_PAYLOAD),
-    ).resolves.toEqual({ ok: true, revision: 1, isNoop: false });
-    expect(harness.fakeSocket.ackCalls.at(-1)).toEqual({
-      name: "stage:goClip",
-      payload: GO_CLIP_PAYLOAD,
-      timeoutMs: VJ_ACK_TIMEOUT_MS,
+    ).resolves.toEqual({
+      ok: true,
+      revision: 1,
+      isNoop: false,
+      applyAt: null,
+      serverNow: serverNowOf(),
     });
+    expect(callsNamed(harness.fakeSocket, "stage:goClip")).toEqual([
+      {
+        name: "stage:goClip",
+        payload: GO_CLIP_PAYLOAD,
+        timeoutMs: VJ_ACK_TIMEOUT_MS,
+      },
+    ]);
   });
 
   it("sends screen status without an ack only while attached", async () => {
     const harness = setup(
-      () => ({ role: "screen", screenId: SCREEN_ID, restoreState: null }),
+      () => ({
+        role: "screen",
+        contractVersion: VJ_CONTRACT_VERSION,
+        screenId: SCREEN_ID,
+        restoreState: null,
+      }),
       "screen",
     );
     const statusPayload: VjScreenStatusPayload = {
@@ -438,7 +505,12 @@ describe("VjSocketClient frames and exceptions", () => {
 
   it("stops for good when another tab replaces this screen", async () => {
     const harness = setup(
-      () => ({ role: "screen", screenId: SCREEN_ID, restoreState: null }),
+      () => ({
+        role: "screen",
+        contractVersion: VJ_CONTRACT_VERSION,
+        screenId: SCREEN_ID,
+        restoreState: null,
+      }),
       "screen",
     );
     await connectAndAttach(harness);
@@ -550,11 +622,13 @@ describe("VjSocketClient reconnect", () => {
     await flushPromises();
 
     expect(apiClientMock.mintSocketTicket).toHaveBeenCalledTimes(1);
-    expect(harness.fakeSocket.ackCalls.at(-1)).toEqual({
-      name: "session:reauth",
-      payload: { ticket: "ticket-1" },
-      timeoutMs: VJ_REAUTH_ACK_TIMEOUT_MS,
-    });
+    expect(callsNamed(harness.fakeSocket, "session:reauth")).toEqual([
+      {
+        name: "session:reauth",
+        payload: { ticket: "ticket-1" },
+        timeoutMs: VJ_REAUTH_ACK_TIMEOUT_MS,
+      },
+    ]);
   });
 
   it("clears every timer and disconnects on dispose", async () => {
@@ -571,6 +645,174 @@ describe("VjSocketClient reconnect", () => {
   });
 });
 
+describe("VjSocketClient clock sync", () => {
+  it("starts clock sync on connect before attach", async () => {
+    const harness = setup();
+    await connectAndAttach(harness);
+
+    expect(harness.fakeSocket.ackCalls.slice(0, 2)).toEqual([
+      { name: "clock:sync", payload: {}, timeoutMs: VJ_ACK_TIMEOUT_MS },
+      {
+        name: "vj:attach",
+        payload: REMOTE_ATTACH,
+        timeoutMs: VJ_ACK_TIMEOUT_MS,
+      },
+    ]);
+    await vi.advanceTimersByTimeAsync(BURST_LENGTH_MS);
+    expect(clockSyncCountOf(harness.fakeSocket)).toBe(
+      VJ_CLOCK_SYNC_BURST_COUNT,
+    );
+    await vi.advanceTimersByTimeAsync(VJ_CLOCK_SYNC_INTERVAL_MS);
+    expect(clockSyncCountOf(harness.fakeSocket)).toBe(
+      VJ_CLOCK_SYNC_BURST_COUNT + 1,
+    );
+  });
+
+  it("reports a clock sample for every acked frame, refusals included", async () => {
+    let localClockMs = 0;
+    const samples: VjClockSample[] = [];
+    const harness = setup(() => REMOTE_ATTACH, "remote", {
+      localNow: () => {
+        localClockMs += 10;
+        return localClockMs;
+      },
+      onClockSample: (sample) => samples.push(sample),
+    });
+    await connectAndAttach(harness);
+    harness.fakeSocket.ackResponder = () =>
+      Promise.resolve({
+        ok: false,
+        code: "vj_stale_command",
+        message: "Stale",
+        serverNow: 9_000,
+      });
+
+    const ack = await harness.client.send("stage:goClip", GO_CLIP_PAYLOAD);
+
+    expect(ack.ok).toBe(false);
+    expect(samples).toHaveLength(harness.fakeSocket.ackCalls.length);
+    expect(samples.slice(0, 2).map((sample) => sample.serverNow)).toEqual([
+      serverNowOf(),
+      serverNowOf(),
+    ]);
+    expect(samples.at(-1)).toEqual({
+      sentAt: localClockMs - 10,
+      receivedAt: localClockMs,
+      serverNow: 9_000,
+    });
+    for (const sample of samples) {
+      expect(sample.receivedAt).toBeGreaterThan(sample.sentAt);
+    }
+  });
+
+  it("reports no sample for an ack without serverNow", async () => {
+    const samples: VjClockSample[] = [];
+    const harness = setup(() => REMOTE_ATTACH, "remote", {
+      onClockSample: (sample) => samples.push(sample),
+    });
+    await connectAndAttach(harness);
+    const samplesAfterAttach = samples.length;
+    harness.fakeSocket.ackResponder = () =>
+      Promise.resolve({ ok: true, revision: 2, isNoop: false, applyAt: null });
+
+    await harness.client.send("stage:goClip", GO_CLIP_PAYLOAD);
+
+    expect(samples).toHaveLength(samplesAfterAttach);
+  });
+
+  it("drops a clock sync timeout quietly", async () => {
+    const harness = setup();
+    harness.fakeSocket.ackResponder = (name, payload) =>
+      name === "clock:sync"
+        ? Promise.reject(new Error("operation has timed out"))
+        : defaultAckResponder(name, payload);
+    await connectAndAttach(harness);
+    await vi.advanceTimersByTimeAsync(BURST_LENGTH_MS);
+
+    expect(clockSyncCountOf(harness.fakeSocket)).toBe(
+      VJ_CLOCK_SYNC_BURST_COUNT,
+    );
+    expect(loggerMock.logWarn).not.toHaveBeenCalled();
+    expect(harness.connections.at(-1)?.status).toBe("attached");
+  });
+
+  it("stops clock sync on disconnect and dispose", async () => {
+    const harness = setup();
+    await connectAndAttach(harness);
+    harness.fakeSocket.serverDrop("transport close");
+    await vi.advanceTimersByTimeAsync(2 * VJ_CLOCK_SYNC_INTERVAL_MS);
+    expect(clockSyncCountOf(harness.fakeSocket)).toBe(1);
+
+    harness.fakeSocket.serverConnect();
+    await flushPromises();
+    expect(clockSyncCountOf(harness.fakeSocket)).toBe(2);
+
+    harness.client.dispose();
+    await vi.advanceTimersByTimeAsync(2 * VJ_CLOCK_SYNC_INTERVAL_MS);
+    expect(clockSyncCountOf(harness.fakeSocket)).toBe(2);
+  });
+});
+
+describe("VjSocketClient v2 attach", () => {
+  it("attach payloads carry contractVersion 2", async () => {
+    const screenAttach: VjAttachPayload = {
+      role: "screen",
+      contractVersion: VJ_CONTRACT_VERSION,
+      screenId: SCREEN_ID,
+      restoreState: restoreAt(7),
+    };
+    const harness = setup(() => screenAttach, "screen");
+    await connectAndAttach(harness);
+
+    const attachCalls = attachCallsOf(harness.fakeSocket);
+    expect(attachCalls).toHaveLength(1);
+    expect(attachCalls[0]?.payload).toBe(screenAttach);
+    expect(attachCalls[0]?.payload).toMatchObject({ contractVersion: 2 });
+    expect(harness.connections.at(-1)).toMatchObject({
+      status: "attached",
+      attach: { role: "screen", screenNumber: 1 },
+    });
+    expect(harness.connections.at(-1)?.attach).not.toHaveProperty("serverNow");
+  });
+
+  it("refuses with client_outdated and does not reconnect", async () => {
+    const harness = setup();
+    harness.fakeSocket.ackResponder = (name, payload) =>
+      name === "vj:attach"
+        ? Promise.resolve({
+            ok: false,
+            code: "vj_client_outdated",
+            message: "Reload",
+            serverNow: serverNowOf(),
+          })
+        : defaultAckResponder(name, payload);
+    await connectAndAttach(harness);
+
+    expect(harness.connections.at(-1)).toEqual({
+      status: "refused",
+      refusal: "client_outdated",
+      attach: null,
+    });
+    expect(harness.fakeSocket.disconnect).toHaveBeenCalled();
+    const syncsAtRefusal = clockSyncCountOf(harness.fakeSocket);
+    await vi.advanceTimersByTimeAsync(5 * MINUTE_MS);
+    expect(harness.fakeSocket.connect).not.toHaveBeenCalled();
+    expect(attachCallsOf(harness.fakeSocket)).toHaveLength(1);
+    expect(clockSyncCountOf(harness.fakeSocket)).toBe(syncsAtRefusal);
+  });
+
+  it("forwards screen:identify frames", async () => {
+    const harness = setup();
+    await connectAndAttach(harness);
+    const identifyFrame = { number: 2, durationMs: 3_000 };
+    harness.fakeSocket.trigger("screen:identify", identifyFrame);
+
+    expect(harness.frames).toEqual([
+      { event: "screen:identify", payload: identifyFrame },
+    ]);
+  });
+});
+
 describe("VjSocketClient logging", () => {
   it("logs codes and ids only", async () => {
     const harness = setup();
@@ -580,6 +822,7 @@ describe("VjSocketClient logging", () => {
         ok: false,
         code: "vj_overlay_text_too_long",
         message: "Overlay text is too long",
+        serverNow: serverNowOf(),
       });
 
     const ack = await harness.client.send("stage:setOverlay", {

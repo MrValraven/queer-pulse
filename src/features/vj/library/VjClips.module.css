@@ -31,7 +31,9 @@
   z-index: var(--z-raised);
 }
 
+/* Positioned so the favorite star can sit over the thumbnail's corner. */
 .card {
+  position: relative;
   display: grid;
   grid-template-rows: auto auto 1fr;
   block-size: 100%;
@@ -66,6 +68,10 @@
   font: inherit;
   text-align: start;
   cursor: pointer;
+  /* A held finger plays the preview; keep the system's image menu and text
+     selection out of the way. */
+  -webkit-touch-callout: none;
+  user-select: none;
 }
 
 .editButton:focus-visible {
@@ -76,6 +82,7 @@
 }
 
 .thumbBox {
+  position: relative;
   display: block;
   aspect-ratio: 16 / 9;
   overflow: hidden;
@@ -87,6 +94,84 @@
   inline-size: 100%;
   block-size: 100%;
   object-fit: cover;
+}
+
+/* The animated preview, faded over the still thumbnail while it plays. */
+.cardPreview {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* The favorite star over the thumbnail's top right corner. It sits on media
+   of any brightness, so it carries its own soft scrim disc and cream ink in
+   both themes. The 44px button stays the hit area; the disc is drawn smaller
+   inside it, so it sits a few pixels in from the corner. */
+.favorite {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+  z-index: var(--z-raised);
+  /* The disc is the hover surface; the button's own wash stays off. */
+  --button-icon-hover: transparent;
+}
+
+.starButton {
+  position: relative;
+  isolation: isolate;
+  touch-action: manipulation;
+}
+
+.favorite .starButton {
+  color: rgba(var(--cream-rgb), 0.92);
+}
+
+.favorite .starButton::before {
+  content: "";
+  position: absolute;
+  inset: var(--icon-gap-inline);
+  z-index: -1;
+  border-radius: var(--radius-pill);
+  background: var(--scrim-soft);
+  backdrop-filter: var(--blur-sm);
+  transition: background var(--dur-fast) var(--ease);
+}
+
+.starButton[aria-pressed="true"] {
+  color: var(--accent);
+}
+
+/* A deeper disc behind a filled star keeps the coral readable on bright
+   media. */
+.favorite .starButton[aria-pressed="true"]::before {
+  background: var(--scrim);
+}
+
+/* These outrank the shared icon button's hover ink, which would turn the
+   star dark on dark media. */
+@media (hover: hover) {
+  .favorite .starButton:hover:not(:disabled):not([aria-disabled="true"]) {
+    color: rgba(var(--cream-rgb), 1);
+  }
+
+  .favorite .starButton:hover::before {
+    background: var(--scrim);
+  }
+
+  .starButton[aria-pressed="true"]:hover:not(:disabled):not(
+      [aria-disabled="true"]
+    ) {
+    color: var(--accent);
+  }
+}
+
+.starGlyph {
+  display: grid;
+  place-items: center;
 }
 
 .pixelated {
@@ -210,13 +295,31 @@
   background: var(--scrim-soft);
 }
 
-.titleForm,
 .fitField,
 .moveForm,
 .dialogSection {
   display: grid;
   gap: var(--gap-xs);
   min-inline-size: 0;
+}
+
+/* The title form spaces itself: its Save row and reason line fold in with
+   their own top padding, so no grid gap or field margin is left under the
+   input while they are closed. */
+.titleForm {
+  display: grid;
+  min-inline-size: 0;
+}
+
+/* The shared field's label hooks, set to the dialog's sentence-case section
+   labels (.fieldLabel). Two classes outrank the field's own bottom margin. */
+.titleForm .titleField {
+  --studio-field-label-size: var(--text-label);
+  --studio-field-label-weight: 600;
+  --studio-field-label-spacing: 0;
+  --studio-field-label-case: none;
+  --studio-field-label-color: var(--ink);
+  margin-block-end: 0;
 }
 
 .formActions {

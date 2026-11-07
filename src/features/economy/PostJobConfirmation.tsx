@@ -1,4 +1,4 @@
-import { FiCheck, FiCopy, FiEye, FiShare2, FiUsers } from "react-icons/fi";
+import { FiCheck, FiCopy, FiShare2, FiUsers } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -74,40 +74,6 @@ export function PostJobConfirmation({
         <div className={styles.cpanel}>
           <div className={styles.cpanelH}>
             <span className={styles.cpanelIc} aria-hidden>
-              <FiEye size={15} />
-            </span>
-            <span className={styles.cpanelTitle}>
-              {t("economy:postJob.confirm.performance.title")}
-            </span>
-          </div>
-          <div className={styles.cpanelBody}>
-            {t("economy:postJob.confirm.performance.body")}
-          </div>
-          <div className={styles.cstatRow}>
-            <div>
-              <div className={styles.cstatN}>0</div>
-              <div className={styles.cstatL}>
-                {t("economy:postJob.confirm.performance.views")}
-              </div>
-            </div>
-            <div>
-              <div className={styles.cstatN}>0</div>
-              <div className={styles.cstatL}>
-                {t("economy:postJob.confirm.performance.saves")}
-              </div>
-            </div>
-            <div>
-              <div className={styles.cstatN}>0</div>
-              <div className={styles.cstatL}>
-                {t("economy:postJob.confirm.performance.replies")}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.cpanel}>
-          <div className={styles.cpanelH}>
-            <span className={styles.cpanelIc} aria-hidden>
               <FiUsers size={15} />
             </span>
             <span className={styles.cpanelTitle}>
@@ -121,7 +87,7 @@ export function PostJobConfirmation({
             <Button
               variant="ghost"
               size="md"
-              onClick={() => void navigate(routes.applicationStatus)}
+              onClick={() => void navigate(routes.myJobs)}
             >
               {t("economy:postJob.confirm.responses.openManager")}
             </Button>

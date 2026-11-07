@@ -35,13 +35,17 @@ export type UploadKind =
   | "sticker"
   | "studio_audio"
   | "vj_clip"
-  | "vj_thumbnail";
+  | "vj_thumbnail"
+  | "vj_preview";
 
 /** Audio content types, accepted by the `studio_audio` kind only (Studio v1). */
 export type StudioAudioUploadContentType = "audio/mpeg" | "audio/mp4";
 
 /** VJ clip content types, accepted by the `vj_clip` kind only (admin VJ library). */
 export type VjClipUploadContentType = "video/mp4" | "video/webm" | "image/gif";
+
+/** VJ preview content types, accepted by the `vj_preview` kind only (the browser-recorded clip preview). */
+export type VjPreviewUploadContentType = "video/webm" | "video/mp4";
 
 /**
  * ============================================================================

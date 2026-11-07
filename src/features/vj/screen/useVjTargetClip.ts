@@ -8,6 +8,7 @@ import { useEffect, useRef, useState, type RefObject } from "react";
 import type { VjClipDTO } from "../../../shared/contracts/vj";
 import type { VjRenderableClip } from "./vjLayerMachine";
 import type { VjScreenPreloadResult } from "./useVjScreenPreload";
+import type { VjStageHandle } from "./vjStageHandle";
 
 /** The object URLs the screen still holds, revoked when released or on unmount. */
 export interface VjSourceUrlLedger {
@@ -73,6 +74,11 @@ function renderableClipOf(
     width: clip.width,
     height: clip.height,
     sourceUrl,
+    durationMs: clip.durationMs,
+    loopInMs: clip.loopInMs,
+    loopOutMs: clip.loopOutMs,
+    loopMode: clip.loopMode,
+    defaultSpeed: clip.defaultSpeed,
   };
 }
 
@@ -136,21 +142,21 @@ export function useVjTargetClip({
 
 /**
  * The renderer never adopts a new URL for a clip it already shows or is
- * loading, and never reports it. After each target change commits, a target
- * URL that no media element of the stage carries was not adopted, so it is
- * released here.
+ * loading, and never reports it. After each target change commits, the page
+ * asks the renderer's handle whether it holds the target URL and releases it
+ * when not. Child effects run before the page's, so the renderer has adopted
+ * the target by then. With no handle mounted yet, nothing is released.
  */
 export function useReleaseUnadoptedVjSource(
-  stageRootRef: RefObject<HTMLElement | null>,
+  handleRef: RefObject<VjStageHandle | null>,
   target: VjRenderableClip | null,
   ledger: VjSourceUrlLedger,
 ): void {
   useEffect(() => {
-    const stageRoot = stageRootRef.current;
-    if (target === null || stageRoot === null) return;
-    const isAdopted = Array.from(stageRoot.querySelectorAll("video, img")).some(
-      (element) => element.getAttribute("src") === target.sourceUrl,
-    );
-    if (!isAdopted) ledger.release(target.sourceUrl);
-  }, [stageRootRef, target, ledger]);
+    const handle = handleRef.current;
+    if (target === null || handle === null) return;
+    if (!handle.holdsSource(target.sourceUrl)) {
+      ledger.release(target.sourceUrl);
+    }
+  }, [handleRef, target, ledger]);
 }

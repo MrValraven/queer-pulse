@@ -1,49 +1,75 @@
 import { useCallback, useRef, useState } from "react";
 import type {
   VjCommandOutcome,
+  VjIdentifyOutcome,
   VjStageCommands,
   VjStageController,
 } from "../live/useVjStage";
+import type { VjErrorValues } from "../live/vjStageCommands";
 
 export type VjCommandName = keyof VjStageCommands;
 
-type VjCommandArgs<Name extends VjCommandName> = Parameters<
+export type VjCommandArgs<Name extends VjCommandName> = Parameters<
   VjStageCommands[Name]
 >;
 
+/** What a command answers: identifyScreen counts the screens it reached; every other command acks a revision. */
+export type VjCommandResult<Name extends VjCommandName> =
+  Name extends "identifyScreen" ? VjIdentifyOutcome : VjCommandOutcome;
+
+/** Sends one stage command; the answer is typed per command name. */
+export type VjRun = <Name extends VjCommandName>(
+  name: Name,
+  ...args: VjCommandArgs<Name>
+) => Promise<VjCommandResult<Name>>;
+
+/**
+ * The stage commands seen as one function per name. VjStageCommands must
+ * match it key by key, so a command whose answer drifts from
+ * VjCommandResult fails to compile where `run` hands the commands over.
+ */
+type VjCommandFunctions = {
+  [Name in VjCommandName]: (
+    ...args: VjCommandArgs<Name>
+  ) => Promise<VjCommandResult<Name>>;
+};
+
 /** Calls one stage command with its own arguments, typed per name. */
 function callVjCommand<Name extends VjCommandName>(
-  commands: VjStageCommands,
+  commands: VjCommandFunctions,
   name: Name,
   args: VjCommandArgs<Name>,
-): Promise<VjCommandOutcome> {
-  const command = commands[name] as (
-    ...commandArgs: VjCommandArgs<Name>
-  ) => Promise<VjCommandOutcome>;
+): Promise<VjCommandResult<Name>> {
+  const command: VjCommandFunctions[Name] = commands[name];
   return command(...args);
+}
+
+/** The last refusal's copy key and the {max} or {min} it interpolates. */
+interface VjRunnerError {
+  errorKey: string;
+  errorValues: VjErrorValues | null;
 }
 
 /**
  * Sends the remote's stage commands and keeps, per command name, how many
  * are waiting for their ack, so the control that sent one can hold itself
- * aria-disabled until the ack lands. The last failure's copy key stays until
- * the next success; the three stale codes carry no key and change nothing
- * (the state their ack carries is already applied).
+ * aria-disabled until the ack lands. The last failure's copy key and its
+ * values stay until the next success; the silent stale codes carry no key
+ * and change nothing (the state their ack carries is already applied).
  */
 export function useVjCommandRunner(stage: VjStageController): {
-  run: <Name extends VjCommandName>(
-    name: Name,
-    ...args: VjCommandArgs<Name>
-  ) => Promise<VjCommandOutcome>;
+  run: VjRun;
   isPending: (name: VjCommandName) => boolean;
   lastErrorKey: string | null;
+  /** The values `lastErrorKey` interpolates; null when it takes none. */
+  lastErrorValues: VjErrorValues | null;
 } {
   const { commands } = stage;
   const pendingCountsRef = useRef(new Map<VjCommandName, number>());
   const [pendingNames, setPendingNames] = useState<ReadonlySet<VjCommandName>>(
     () => new Set(),
   );
-  const [lastErrorKey, setLastErrorKey] = useState<string | null>(null);
+  const [lastError, setLastError] = useState<VjRunnerError | null>(null);
 
   const publishPending = useCallback(() => {
     const pendingCounts = pendingCountsRef.current;
@@ -67,23 +93,37 @@ export function useVjCommandRunner(stage: VjStageController): {
     [publishPending],
   );
 
-  const run = useCallback(
-    async <Name extends VjCommandName>(
-      name: Name,
-      ...args: VjCommandArgs<Name>
-    ): Promise<VjCommandOutcome> => {
-      adjustPending(name, 1);
-      let outcome: VjCommandOutcome;
-      try {
-        outcome = await callVjCommand(commands, name, args);
-      } finally {
-        adjustPending(name, -1);
+  const noteOutcome = useCallback(
+    (outcome: VjCommandOutcome | VjIdentifyOutcome) => {
+      if (outcome.ok) {
+        setLastError(null);
+        return;
       }
-      if (outcome.ok) setLastErrorKey(null);
-      else if (outcome.errorKey !== null) setLastErrorKey(outcome.errorKey);
-      return outcome;
+      if (outcome.errorKey === null) return;
+      setLastError({
+        errorKey: outcome.errorKey,
+        errorValues: outcome.errorValues ?? null,
+      });
     },
-    [commands, adjustPending],
+    [],
+  );
+
+  const run = useCallback<VjRun>(
+    (name, ...args) => {
+      adjustPending(name, 1);
+      const outcomePromise = callVjCommand(commands, name, args);
+      // Registered before the caller's own `then`, so the pending count and
+      // the error line are current when the caller reads the outcome.
+      void outcomePromise.then(
+        (outcome) => {
+          adjustPending(name, -1);
+          noteOutcome(outcome);
+        },
+        () => adjustPending(name, -1),
+      );
+      return outcomePromise;
+    },
+    [commands, adjustPending, noteOutcome],
   );
 
   const isPending = useCallback(
@@ -91,5 +131,10 @@ export function useVjCommandRunner(stage: VjStageController): {
     [pendingNames],
   );
 
-  return { run, isPending, lastErrorKey };
+  return {
+    run,
+    isPending,
+    lastErrorKey: lastError?.errorKey ?? null,
+    lastErrorValues: lastError?.errorValues ?? null,
+  };
 }

@@ -27,6 +27,9 @@ function screenWith(
     connectedAt: 1,
     lastSeenAt: 1,
     preload: { packId: PACK_ID, clips: clips ?? [] },
+    health: null,
+    nextClipId: null,
+    mic: null,
     ...screenOverrides,
   };
 }

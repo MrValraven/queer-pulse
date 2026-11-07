@@ -1,36 +1,44 @@
 /**
  * The one way to the stage: attaches as a screen or a remote through the
- * VJ transport (live socket or demo channel), keeps the last applied state
- * through the stage version check (contract 6.5.1) and sends the remote's
- * stamped commands and the lead screen's shuffle reports.
+ * VJ transport (live socket or demo channel), feeds every clock sample into
+ * one synced clock, runs received states through the C 7.4 client queue and
+ * sends the remote's stamped commands and the lead screen's shuffle reports.
  */
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import type {
-  VjAttachPayload,
-  VjLibraryChange,
-  VjScreenPreload,
-  VjScreenStatus,
-  VjStageCause,
-  VjStageRestore,
-  VjStageState,
+import {
+  VJ_CONTRACT_VERSION,
+  type VjAttachPayload,
+  type VjLibraryChange,
+  type VjScreenIdentifyFrame,
+  type VjScreenStatus,
+  type VjScreenStatusPayload,
+  type VjStageCause,
+  type VjStageRestore,
+  type VjStageState,
 } from "../../../shared/contracts/vj";
-import { createVjCommandStamper } from "../realtime/vjCommandStamp";
+import {
+  createVjCommandStamper,
+  type VjCommandStamper,
+} from "../realtime/vjCommandStamp";
 import { createVjTransport } from "../realtime/createVjTransport";
 import type {
-  VjAckFor,
-  VjClientFrameName,
-  VjClientPayload,
-  VjScreenStatusPayload,
-  VjServerFrame,
-} from "../realtime/vjFrames";
-import {
-  INITIAL_VJ_CONNECTION,
-  VjSendError,
-  type VjConnectionRefusal,
-  type VjConnectionState,
-  type VjTransport,
+  VjConnectionRefusal,
+  VjConnectionState,
 } from "../realtime/vjTransport";
+import {
+  createVjClock,
+  type VjClock,
+  type VjClockOffsetSnapshot,
+} from "./vjClock";
+import type { VjUpcomingFrame } from "./vjFrameQueue";
 import {
   createVjStageCommands,
   offlineVjCommandOutcome,
@@ -38,13 +46,16 @@ import {
   type VjCommandOutcome,
   type VjStageCommands,
 } from "./vjStageCommands";
-import {
-  shouldApplyVjStageState,
-  vjVersionOf,
-  type VjAppliedVersion,
-} from "./vjStageVersion";
+import { useVjFrameQueue } from "./useVjFrameQueue";
+import { useVjStageInbox } from "./useVjStageInbox";
+import { useVjTransportSlot } from "./useVjTransportSlot";
 
-export type { VjCommandOutcome, VjStageCommands } from "./vjStageCommands";
+export type {
+  VjCommandOutcome,
+  VjIdentifyOutcome,
+  VjStageCommands,
+} from "./vjStageCommands";
+export type { VjUpcomingFrame } from "./vjFrameQueue";
 
 export type VjStageAttach =
   | { role: "remote" }
@@ -60,17 +71,33 @@ export interface VjStageController {
   connection: VjConnectionState;
   /** connection.status === "attached" */
   isConnected: boolean;
-  /** The last applied state. */
+  /** The state applied through the C 7.4 client queue at each frame's applyAt: what the screens show now.
+   *  Screens render it; the remote mirror draws it. */
   state: VjStageState | null;
-  /** The cause of the last applied stage:state; null after a snap to an ack's state. */
+  /** Cause and sender of the frame `state` came from; null after an ack snap. */
   lastCause: VjStageCause | null;
   lastSourceClientId: string | null;
+  /** The newest state received (frames and ack snaps), before its applyAt. Remote controls (pads lit, sliders) read it. */
+  latestState: VjStageState | null;
+  /** The earliest received frame still waiting for its applyAt; null when none waits. */
+  upcoming: VjUpcomingFrame | null;
+  /** Synced clock (C 3.6): one per mount, fed by every ack and clock:sync. */
+  clock: VjClock;
+  serverNow: () => number;
+  toLocalTime: (serverMs: number) => number;
+  isClockSynced: boolean;
+  /** The current offset (server minus local ms); the screen saves it as VjScreenRecord.clockOffsetMs. */
+  clockOffsetMs: number | null;
+  /** Seeds the clock from a saved offset (offline reload) until a live sample arrives. */
+  seedClockOffset: (offsetMs: number | null) => void;
   /** This page load's id, carried by every command. */
   clientId: string;
   /** Remote: from screens:update. */
   screens: readonly VjScreenStatus[];
   /** Screen: from the attach ack and then each screen:role. */
   isLead: boolean;
+  /** Screen: VjAttachSuccess.screenNumber of the current attach; null for a remote or while detached. */
+  screenNumber: number | null;
   refusal: VjConnectionRefusal | null;
   /** Remote. */
   commands: VjStageCommands;
@@ -79,204 +106,105 @@ export interface VjStageController {
     expectedClipSequence: number,
     clipId: string,
   ) => Promise<VjCommandOutcome>;
-  /** Screen; dropped while disconnected. */
-  sendStatus: (status: {
-    isFullscreen: boolean;
-    preload: VjScreenPreload;
-  }) => void;
+  /** Screen; the whole v2 payload, dropped while disconnected. */
+  sendStatus: (status: VjScreenStatusPayload) => void;
   subscribeLibrary: (listener: (change: VjLibraryChange) => void) => () => void;
+  /** Screen: every screen:identify frame this screen receives. */
+  subscribeIdentify: (
+    listener: (frame: VjScreenIdentifyFrame) => void,
+  ) => () => void;
 }
-
-interface VjAppliedStage {
-  state: VjStageState | null;
-  lastCause: VjStageCause | null;
-  lastSourceClientId: string | null;
-}
-
-const EMPTY_APPLIED_STAGE: VjAppliedStage = {
-  state: null,
-  lastCause: null,
-  lastSourceClientId: null,
-};
-
-const NO_SCREENS: readonly VjScreenStatus[] = [];
 
 function attachPayloadOf(attach: VjStageAttach): VjAttachPayload {
   return attach.role === "screen"
     ? {
         role: "screen",
+        contractVersion: VJ_CONTRACT_VERSION,
         screenId: attach.screenId,
         restoreState: attach.getRestoreState(),
       }
-    : { role: "remote" };
+    : { role: "remote", contractVersion: VJ_CONTRACT_VERSION };
 }
 
-/** Applied state, lead flag, screen list and library fan-out, fed by the transport's callbacks. */
-function useVjStageInbox() {
-  const [applied, setApplied] = useState<VjAppliedStage>(EMPTY_APPLIED_STAGE);
-  const [connection, setConnection] = useState<VjConnectionState>(
-    INITIAL_VJ_CONNECTION,
-  );
-  const [screens, setScreens] = useState<readonly VjScreenStatus[]>(NO_SCREENS);
-  const [isLead, setIsLead] = useState(false);
-  const appliedVersionRef = useRef<VjAppliedVersion | null>(null);
-  const connectionRef = useRef<VjConnectionState>(INITIAL_VJ_CONNECTION);
-  const libraryListenersRef = useRef(
-    new Set<(change: VjLibraryChange) => void>(),
-  );
-
-  const applyState = useCallback(
-    (
-      state: VjStageState,
-      cause: VjStageCause | null,
-      sourceClientId: string | null,
-    ) => {
-      if (!shouldApplyVjStageState(appliedVersionRef.current, state)) return;
-      appliedVersionRef.current = vjVersionOf(state);
-      setApplied({
-        state,
-        lastCause: cause,
-        lastSourceClientId: sourceClientId,
+/** The clock's offset as a store whose snapshot moves only when the clock
+ *  notifies, so an offset nudge under VJ_CLOCK_NOTIFY_MIN_DELTA_MS (or any
+ *  re-render between notifications) never rebuilds the controller. */
+function createVjNotifiedOffsetStore(clock: VjClock) {
+  let snapshot: VjClockOffsetSnapshot = {
+    offsetMs: clock.offsetMs(),
+    isSynced: clock.isSynced(),
+  };
+  const refresh = () => {
+    const offsetMs = clock.offsetMs();
+    const isSynced = clock.isSynced();
+    if (snapshot.offsetMs !== offsetMs || snapshot.isSynced !== isSynced) {
+      snapshot = { offsetMs, isSynced };
+    }
+  };
+  return {
+    subscribe: (listener: () => void): (() => void) => {
+      // Catches a notification that came between the first render and now.
+      refresh();
+      return clock.subscribe(() => {
+        refresh();
+        listener();
       });
     },
-    [],
-  );
-
-  const applyAckState = useCallback(
-    (state: VjStageState) => applyState(state, null, null),
-    [applyState],
-  );
-
-  const handleFrame = useCallback(
-    (frame: VjServerFrame) => {
-      switch (frame.event) {
-        case "stage:state":
-          applyState(
-            frame.payload.state,
-            frame.payload.cause,
-            frame.payload.sourceClientId,
-          );
-          return;
-        case "screen:role":
-          setIsLead(frame.payload.isLead);
-          return;
-        case "screens:update":
-          setScreens(frame.payload.screens);
-          return;
-        case "library:changed":
-          for (const listener of [...libraryListenersRef.current]) {
-            listener(frame.payload);
-          }
-          return;
-      }
-    },
-    [applyState],
-  );
-
-  const handleConnection = useCallback((next: VjConnectionState) => {
-    connectionRef.current = next;
-    setConnection(next);
-    const leadFromAttach = next.attach?.isLead ?? null;
-    if (next.status === "attached" && leadFromAttach !== null) {
-      setIsLead(leadFromAttach);
-    }
-    if (next.status === "refused") setIsLead(false);
-    // A detached remote cannot know which screens are live; the next
-    // screens:update after reattach fills the list again.
-    if (next.status !== "attached") setScreens(NO_SCREENS);
-  }, []);
-
-  /** A new transport starts from nothing: no version, connection, lead flag or screens. */
-  const resetForNewTransport = useCallback(() => {
-    appliedVersionRef.current = null;
-    connectionRef.current = INITIAL_VJ_CONNECTION;
-    setConnection(INITIAL_VJ_CONNECTION);
-    setIsLead(false);
-    setScreens(NO_SCREENS);
-  }, []);
-
-  const subscribeLibrary = useCallback(
-    (listener: (change: VjLibraryChange) => void) => {
-      const listeners = libraryListenersRef.current;
-      listeners.add(listener);
-      return () => {
-        listeners.delete(listener);
-      };
-    },
-    [],
-  );
-
-  const isAttached = useCallback(
-    () => connectionRef.current.status === "attached",
-    [],
-  );
-
-  const currentRefusal = useCallback((): VjConnectionRefusal | null => {
-    const current = connectionRef.current;
-    return current.status === "refused" ? current.refusal : null;
-  }, []);
-
-  return {
-    applied,
-    connection,
-    screens,
-    isLead,
-    applyAckState,
-    handleFrame,
-    handleConnection,
-    resetForNewTransport,
-    subscribeLibrary,
-    isAttached,
-    currentRefusal,
+    getSnapshot: (): VjClockOffsetSnapshot => snapshot,
   };
 }
 
-/** Holds the transport of the current mount; sends refuse as disconnected while none is held. */
-function useVjTransportSlot() {
-  const transportRef = useRef<VjTransport | null>(null);
-
-  const holdTransport = useCallback((transport: VjTransport | null) => {
-    transportRef.current = transport;
-  }, []);
-
-  const releaseTransport = useCallback((transport: VjTransport) => {
-    if (transportRef.current === transport) transportRef.current = null;
-  }, []);
-
-  const transportSend = useMemo<Pick<VjTransport, "send">>(
-    () => ({
-      send<Name extends VjClientFrameName>(
-        name: Name,
-        payload: VjClientPayload<Name>,
-      ): Promise<VjAckFor<Name>> {
-        const transport = transportRef.current;
-        if (transport === null) {
-          return Promise.reject(new VjSendError(name, "disconnected"));
-        }
-        return transport.send(name, payload);
-      },
-    }),
-    [],
+function useVjNotifiedClockOffset(clock: VjClock): VjClockOffsetSnapshot {
+  const store = useMemo(() => createVjNotifiedOffsetStore(clock), [clock]);
+  return useSyncExternalStore(
+    store.subscribe,
+    store.getSnapshot,
+    store.getSnapshot,
   );
-
-  const sendScreenStatus = useCallback((payload: VjScreenStatusPayload) => {
-    transportRef.current?.sendScreenStatus(payload);
-  }, []);
-
-  return { holdTransport, releaseTransport, transportSend, sendScreenStatus };
 }
 
-export function useVjStage(attach: VjStageAttach): VjStageController {
-  const { demoMode } = useDemoMode();
-  const inbox = useVjStageInbox();
-  const { handleFrame, handleConnection, resetForNewTransport, isAttached } =
-    inbox;
-  const { currentRefusal } = inbox;
-  const { applyAckState } = inbox;
-  const [stamper] = useState(() => createVjCommandStamper());
+/** Flat clock readers over the per-mount clock, and its offset as React state. */
+function useVjStageClock(clock: VjClock) {
+  const { offsetMs, isSynced } = useVjNotifiedClockOffset(clock);
+  const serverNow = useCallback(() => clock.serverNow(), [clock]);
+  const toLocalTime = useCallback(
+    (serverMs: number) => clock.toLocalTime(serverMs),
+    [clock],
+  );
+  const seedClockOffset = useCallback(
+    (seedMs: number | null) => clock.seedOffset(seedMs),
+    [clock],
+  );
+  return useMemo(
+    () => ({
+      serverNow,
+      toLocalTime,
+      seedClockOffset,
+      isClockSynced: isSynced,
+      clockOffsetMs: offsetMs,
+    }),
+    [serverNow, toLocalTime, seedClockOffset, isSynced, offsetMs],
+  );
+}
+
+type VjStageInbox = ReturnType<typeof useVjStageInbox>;
+type VjStageSlot = ReturnType<typeof useVjTransportSlot>;
+
+interface VjTransportLifetimeInput {
+  attach: VjStageAttach;
+  isDemoMode: boolean;
+  clock: VjClock;
+  inbox: VjStageInbox;
+  slot: VjStageSlot;
+  resetQueue: () => void;
+}
+
+/** One transport per mode, role and screen id; a new one starts from an empty queue and inbox. */
+function useVjTransportLifetime(input: VjTransportLifetimeInput) {
+  const { attach, isDemoMode, clock, resetQueue } = input;
+  const { handleFrame, handleConnection, resetForNewTransport } = input.inbox;
+  const { holdTransport, releaseTransport } = input.slot;
   const attachRef = useRef(attach);
-  const { holdTransport, releaseTransport, transportSend, sendScreenStatus } =
-    useVjTransportSlot();
   const role = attach.role;
   const screenId = attach.role === "screen" ? attach.screenId : null;
 
@@ -286,16 +214,21 @@ export function useVjStage(attach: VjStageAttach): VjStageController {
 
   useEffect(() => {
     let isActive = true;
+    // The clock keeps its samples: the server's clock did not move.
+    resetQueue();
     resetForNewTransport();
     const transport = createVjTransport({
       role,
-      isDemoMode: demoMode,
+      isDemoMode,
       buildAttachPayload: () => attachPayloadOf(attachRef.current),
       onFrame: (frame) => {
         if (isActive) handleFrame(frame);
       },
       onConnection: (connection) => {
         if (isActive) handleConnection(connection);
+      },
+      onClockSample: (sample) => {
+        if (isActive) clock.addSample(sample);
       },
     });
     holdTransport(transport);
@@ -304,29 +237,43 @@ export function useVjStage(attach: VjStageAttach): VjStageController {
       isActive = false;
       transport.dispose();
       releaseTransport(transport);
+      resetQueue();
       resetForNewTransport();
     };
   }, [
-    demoMode,
+    isDemoMode,
     role,
     screenId,
+    clock,
     handleFrame,
     handleConnection,
     resetForNewTransport,
+    resetQueue,
     holdTransport,
     releaseTransport,
   ]);
+}
+
+/** The remote's commands, the lead screen's advance and the screen status report. */
+function useVjStageSends(
+  inbox: VjStageInbox,
+  slot: VjStageSlot,
+  stamper: VjCommandStamper,
+  receiveAckState: (state: VjStageState) => void,
+) {
+  const { isAttached, currentRefusal } = inbox;
+  const { transportSend, sendScreenStatus } = slot;
 
   const commands = useMemo(
     () =>
       createVjStageCommands(
         transportSend,
         stamper,
-        applyAckState,
+        receiveAckState,
         isAttached,
         currentRefusal,
       ),
-    [transportSend, stamper, applyAckState, isAttached, currentRefusal],
+    [transportSend, stamper, receiveAckState, isAttached, currentRefusal],
   );
 
   const advance = useCallback(
@@ -342,52 +289,89 @@ export function useVjStage(attach: VjStageAttach): VjStageController {
             expectedClipSequence,
             clipId,
           }),
-        applyAckState,
+        receiveAckState,
       );
     },
-    [transportSend, applyAckState, isAttached, currentRefusal],
+    [transportSend, receiveAckState, isAttached, currentRefusal],
   );
 
   const sendStatus = useCallback(
-    (status: { isFullscreen: boolean; preload: VjScreenPreload }) => {
+    (status: VjScreenStatusPayload) => {
       if (!isAttached()) return;
-      sendScreenStatus({
-        isFullscreen: status.isFullscreen,
-        preload: status.preload,
-      });
+      sendScreenStatus(status);
     },
     [isAttached, sendScreenStatus],
   );
 
-  const { applied, connection, screens, isLead, subscribeLibrary } = inbox;
+  return { commands, advance, sendStatus };
+}
+
+export function useVjStage(attach: VjStageAttach): VjStageController {
+  const { demoMode } = useDemoMode();
+  const [clock] = useState(() => createVjClock());
+  const [stamper] = useState(() => createVjCommandStamper());
+  const queue = useVjFrameQueue(clock);
+  const inbox = useVjStageInbox(queue.receiveFrame);
+  const slot = useVjTransportSlot();
+  useVjTransportLifetime({
+    attach,
+    isDemoMode: demoMode,
+    clock,
+    inbox,
+    slot,
+    resetQueue: queue.reset,
+  });
+  const { commands, advance, sendStatus } = useVjStageSends(
+    inbox,
+    slot,
+    stamper,
+    queue.receiveAckState,
+  );
+  const clockView = useVjStageClock(clock);
+  const { applied, latest, upcoming } = queue;
+  const { connection, screens, isLead, screenNumber } = inbox;
+  const { subscribeLibrary, subscribeIdentify } = inbox;
+
   return useMemo<VjStageController>(
     () => ({
       isDemo: demoMode,
       connection,
       isConnected: connection.status === "attached",
-      state: applied.state,
-      lastCause: applied.lastCause,
-      lastSourceClientId: applied.lastSourceClientId,
+      state: applied?.state ?? null,
+      lastCause: applied?.cause ?? null,
+      lastSourceClientId: applied?.sourceClientId ?? null,
+      latestState: latest?.state ?? null,
+      upcoming,
+      clock,
+      ...clockView,
       clientId: stamper.clientId,
       screens,
       isLead,
+      screenNumber,
       refusal: connection.refusal,
       commands,
       advance,
       sendStatus,
       subscribeLibrary,
+      subscribeIdentify,
     }),
     [
       demoMode,
       connection,
       applied,
+      latest,
+      upcoming,
+      clock,
+      clockView,
       stamper,
       screens,
       isLead,
+      screenNumber,
       commands,
       advance,
       sendStatus,
       subscribeLibrary,
+      subscribeIdentify,
     ],
   );
 }

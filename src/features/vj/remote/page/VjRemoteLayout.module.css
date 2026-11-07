@@ -1,0 +1,175 @@
+/* The VJ remote's page frame in the dark Pulse Live stage look (plan R27).
+   The fold budget at a 390x844 layout viewport, content 354px wide:
+     sticky header  6 + 44 (top row) + 6 + 60 (mirror band) + 6   = 122
+     gap 6, strips 36 + 6 + 36, then 2 + gap 6                      -> 214
+     grid 3 rows of 114px tiles with 6px gaps                       -> 568
+   and the dock (218, VjRemoteDock.module.css) starts at 626, so 9 tiles sit
+   fully above it. The numbers live in the local custom properties below.
+
+   Installed on a phone the safe areas add 41px over the header and 28px
+   under the dock (insets 47 and 34). The compact strips rule gives 42px back
+   where the browser reports display-mode: standalone; where it does not, the
+   tiles fit instead: the shell measures the grid's top (--vj-grid-top, see
+   useVjGridTop.ts) and .gridBand caps the tile height at a third of the room
+   left above the dock, with a floor of 85% of the minimum tile width. Tiles stay
+   square whenever three rows fit, as they do in a 390x844 browser tab.
+
+   The page and the dock both carry data-theme="dark", so the shared buttons
+   and inputs read their cream-on-dark tokens. The mirror needs a true black,
+   which the app has no token for, so the page defines a local named colour,
+   as the projector stage does. */
+.page {
+  --vj-band-gap: 6px;
+  --vj-row-height: var(--tap-min);
+  --vj-pads-height: 52px;
+  --vj-actions-height: 48px;
+  --vj-strip-height: 36px;
+  --vj-tile-min: 108px;
+  --vj-split-dock-width: 360px;
+  --vj-remote-black: black;
+  /* Fallback until the dock is measured: its four rows, gaps and padding. */
+  --vj-remote-bar-space: calc(
+    var(--vj-row-height) * 2 + var(--vj-pads-height) +
+      var(--vj-actions-height) + var(--vj-band-gap) * 5
+  );
+  --vj-gutter-start: max(var(--wrap-px), env(safe-area-inset-left, 0px));
+  --vj-gutter-end: max(var(--wrap-px), env(safe-area-inset-right, 0px));
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  min-height: 100dvh;
+  /* The header's full-bleed backdrop reaches 50vw each way; clip keeps the
+     scrollbar's width from adding a sideways scroll, and leaves sticky alone. */
+  overflow-x: clip;
+  background: var(--qs-base);
+  color: var(--qs-text);
+}
+
+/* The velvet backdrop fills the viewport behind the scrolling content. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+}
+
+.frame {
+  min-width: 0;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vj-band-gap);
+  box-sizing: border-box;
+  width: min(100%, 48rem);
+  min-width: 0;
+  margin-inline: auto;
+  padding-block-end: calc(
+    var(--vj-remote-bar-space) + var(--consent-inset, 0px) +
+      var(--vj-band-gap)
+  );
+  padding-inline: var(--vj-gutter-start) var(--vj-gutter-end);
+}
+
+.main:focus {
+  outline: none;
+}
+
+/* The sticky header keeps the top row and the mirror in view while the strips
+   and the grid scroll under it. Its controls follow the column; its glass
+   backdrop runs the full width of the window, so on a tablet the band reads
+   as one bar across the top of the window. */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  flex-direction: column;
+  gap: var(--vj-band-gap);
+  min-width: 0;
+  margin-inline: calc(-1 * var(--vj-gutter-start))
+    calc(-1 * var(--vj-gutter-end));
+  padding-block: max(var(--vj-band-gap), env(safe-area-inset-top, 0px))
+    var(--vj-band-gap);
+  padding-inline: var(--vj-gutter-start) var(--vj-gutter-end);
+}
+
+.header::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline: calc(50% - 50vw);
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-raised-top) 0%,
+      var(--qs-glass-raised-bottom) 100%
+    ),
+    color-mix(in srgb, var(--qs-base) 88%, transparent);
+  -webkit-backdrop-filter: var(--qs-glass-blur);
+  backdrop-filter: var(--qs-glass-blur);
+}
+
+/* 2px under the strips makes the strips-to-grid gap the budget's 8px. */
+.stripsBand {
+  min-width: 0;
+  padding-block-end: 2px;
+}
+
+.gridBand {
+  /* A third of the room between the measured grid top and the dock, less
+     the two row gaps and one gap of air above the dock. Until the grid top
+     is measured the property is invalid and the tiles stay square. */
+  --vj-tile-fit-block: max(
+    calc(var(--vj-tile-min) * 0.85),
+    calc(
+      (
+          100svh - var(--vj-grid-top) - var(--vj-remote-bar-space) -
+            var(--consent-inset, 0px) - var(--vj-band-gap) * 3
+        ) / 3
+    )
+  );
+  min-width: 0;
+}
+
+.visuallyHidden {
+  composes: visuallyHidden from "../VjSheets.module.css";
+}
+
+/* Compact strips: one 36px row with a switch (VjStrips does the merge). The
+   JS twin is VJ_COMPACT_STRIPS_QUERY in hooks/useVjRemoteLayout.ts; keep the
+   two queries identical. */
+@media (max-height: 800px), (display-mode: standalone) and (max-height: 900px) {
+  .stripsBand {
+    padding-block-end: 0;
+  }
+}
+
+/* Two panes: grid on the left, the dock as a sticky right column. The JS twin
+   is VJ_SPLIT_QUERY in hooks/useVjRemoteLayout.ts (it decides where the dock
+   renders); keep the two queries identical. */
+@media (min-width: 900px), (orientation: landscape) and (min-width: 700px) {
+  .frame {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--vj-split-dock-width);
+    align-items: start;
+  }
+
+  .main {
+    width: 100%;
+    padding-block-end: var(--gap-sm);
+  }
+
+  /* The dock column sits beside the header, so the backdrop stops at the
+     header's own edges. */
+  .header::before {
+    inset-inline: 0;
+  }
+
+  /* The dock is a column here, so nothing covers the grid: tiles stay square. */
+  .gridBand {
+    --vj-tile-fit-block: none;
+  }
+}

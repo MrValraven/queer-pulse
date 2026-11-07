@@ -1,10 +1,14 @@
-import { type UseMutationResult, useQueryClient } from "@tanstack/react-query";
+import {
+  type QueryClient,
+  type UseMutationResult,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useDemoAwareMutation } from "../../admin/api/demoAwareMutation";
 import type {
+  UpdateVjClipBody,
   VjClipDTO,
   VjClipDeletedDTO,
-  VjFitMode,
   VjPackClipsDTO,
 } from "../../../shared/contracts/vj";
 import {
@@ -57,21 +61,50 @@ export function useMoveVjClip(): UseMutationResult<
   });
 }
 
-/** Only the properties the caller set, so an absent one is left as it is. */
-function clipPatchOf(variables: { title?: string; fitMode?: VjFitMode }): {
-  title?: string;
-  fitMode?: VjFitMode;
-} {
-  const patch: { title?: string; fitMode?: VjFitMode } = {};
+/** Only the properties the caller set, so an absent one is left as it is.
+ *  A null loop point is kept: null means "whole clip". */
+export function vjClipPatchOf(
+  variables: { clipId: string } & UpdateVjClipBody,
+): UpdateVjClipBody {
+  const patch: UpdateVjClipBody = {};
   if (variables.title !== undefined) patch.title = variables.title;
   if (variables.fitMode !== undefined) patch.fitMode = variables.fitMode;
+  if (variables.isFavorite !== undefined) {
+    patch.isFavorite = variables.isFavorite;
+  }
+  if (variables.defaultSpeed !== undefined) {
+    patch.defaultSpeed = variables.defaultSpeed;
+  }
+  if (variables.loopInMs !== undefined) patch.loopInMs = variables.loopInMs;
+  if (variables.loopOutMs !== undefined) patch.loopOutMs = variables.loopOutMs;
+  if (variables.loopMode !== undefined) patch.loopMode = variables.loopMode;
   return patch;
+}
+
+/** Rewrites one clip in the library list and in every cached pack clip list,
+ *  so a card shows the change wherever the clip sits. Shared with the
+ *  favorite write. */
+export function patchVjClipCaches(
+  queryClient: QueryClient,
+  isDemoMode: boolean,
+  clipId: string,
+  patchClip: (clip: VjClipDTO) => VjClipDTO,
+): void {
+  const patchItem = (clip: VjClipDTO): VjClipDTO =>
+    clip.id === clipId ? patchClip(clip) : clip;
+  queryClient.setQueryData<VjClipDTO[]>(vjKeys.clips(isDemoMode), (clips) =>
+    clips?.map(patchItem),
+  );
+  queryClient.setQueriesData<VjPackClipsDTO>(
+    { queryKey: vjKeys.packClipsRoot },
+    (answer) => answer && { ...answer, items: answer.items.map(patchItem) },
+  );
 }
 
 export function useUpdateVjClip(): UseMutationResult<
   VjClipDTO,
   Error,
-  { clipId: string; title?: string; fitMode?: VjFitMode }
+  { clipId: string } & UpdateVjClipBody
 > {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
@@ -79,7 +112,7 @@ export function useUpdateVjClip(): UseMutationResult<
   return useDemoAwareMutation<
     VjClipDTO,
     Error,
-    { clipId: string; title?: string; fitMode?: VjFitMode }
+    { clipId: string } & UpdateVjClipBody
   >({
     demoMode,
     demoLatencyMs: 0,
@@ -87,14 +120,14 @@ export function useUpdateVjClip(): UseMutationResult<
     meta: { silentError: true },
     demoResult: async (variables) => {
       const store = await import("../demo/vjDemoStore");
-      return store.demoUpdateVjClip(variables.clipId, clipPatchOf(variables));
+      return store.demoUpdateVjClip(variables.clipId, vjClipPatchOf(variables));
     },
-    live: (variables) => updateVjClip(variables.clipId, clipPatchOf(variables)),
+    live: (variables) =>
+      updateVjClip(variables.clipId, vjClipPatchOf(variables)),
     onSuccess: (updated) => {
-      queryClient.setQueryData<VjClipDTO[]>(vjKeys.clips(demoMode), (clips) =>
-        clips?.map((clip) => (clip.id === updated.id ? updated : clip)),
-      );
-      // Pack lists carry the same clip, so they read again.
+      patchVjClipCaches(queryClient, demoMode, updated.id, () => updated);
+      // The patch shows the answer at once; the pack lists still read again,
+      // the v1 settle for anything a single clip answer leaves out.
       cache.invalidatePackClipsExcept(null);
     },
     onError: (cause) => {

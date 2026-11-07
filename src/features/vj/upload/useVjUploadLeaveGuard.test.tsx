@@ -22,7 +22,12 @@ beforeEach(() => guard.mockClear());
 
 describe("useVjUploadLeaveGuard", () => {
   it("asks before leaving, Back included, while uploads are pending", () => {
-    renderHook(() => useVjUploadLeaveGuard(true));
+    renderHook(() =>
+      useVjUploadLeaveGuard({
+        hasPendingUploads: true,
+        isMakingPreviews: false,
+      }),
+    );
     expect(lastOptions()).toMatchObject({
       active: true,
       guardBackButton: true,
@@ -32,7 +37,40 @@ describe("useVjUploadLeaveGuard", () => {
   });
 
   it("lets the admin leave once no upload is pending", () => {
-    renderHook(() => useVjUploadLeaveGuard(false));
+    renderHook(() =>
+      useVjUploadLeaveGuard({
+        hasPendingUploads: false,
+        isMakingPreviews: false,
+      }),
+    );
     expect(lastOptions().active).toBe(false);
+  });
+
+  it("asks before leaving while previews are made", () => {
+    renderHook(() =>
+      useVjUploadLeaveGuard({
+        hasPendingUploads: false,
+        isMakingPreviews: true,
+      }),
+    );
+    expect(lastOptions()).toMatchObject({
+      active: true,
+      guardBackButton: true,
+      shouldAllowQueryChanges: true,
+      confirmMessage: "vj:page.leaveWhileMakingPreviews.body",
+    });
+  });
+
+  it("names uploads when both run", () => {
+    renderHook(() =>
+      useVjUploadLeaveGuard({
+        hasPendingUploads: true,
+        isMakingPreviews: true,
+      }),
+    );
+    expect(lastOptions()).toMatchObject({
+      active: true,
+      confirmMessage: "vj:page.leaveWhileUploading.body",
+    });
   });
 });

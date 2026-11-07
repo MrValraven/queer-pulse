@@ -1,7 +1,5 @@
 import { routes } from "../../app/routeMap";
 
-export const COMMUNITIES = routes.communities;
-export const MENTORSHIP = routes.mentorship;
 export const WELLBEING = routes.wellbeing;
 export const FORUM = routes.forum;
 
@@ -157,22 +155,6 @@ export const TALK: {
   descriptionKey: string;
   link: { labelKey: string; href: string };
 }[] = [
-  {
-    titleKey: "resources:queer101.talk.peerSupport.title",
-    descriptionKey: "resources:queer101.talk.peerSupport.desc",
-    link: {
-      labelKey: "resources:queer101.talk.peerSupport.cta",
-      href: COMMUNITIES,
-    },
-  },
-  {
-    titleKey: "resources:queer101.talk.oneToOne.title",
-    descriptionKey: "resources:queer101.talk.oneToOne.desc",
-    link: {
-      labelKey: "resources:queer101.talk.oneToOne.cta",
-      href: MENTORSHIP,
-    },
-  },
   {
     titleKey: "resources:queer101.talk.therapy.title",
     descriptionKey: "resources:queer101.talk.therapy.desc",

@@ -146,9 +146,11 @@ export function MentorshipPage() {
                 components={{ em: <em /> }}
               />
             </h2>
-            <div className={styles.sub}>
-              {t("economy:mentorship.strip.sub")}
-            </div>
+            {demoMode && (
+              <div className={styles.sub}>
+                {t("economy:mentorship.strip.sub")}
+              </div>
+            )}
           </div>
           {demoMode ? (
             <div className={styles.mentorGrid}>

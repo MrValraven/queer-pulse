@@ -49,7 +49,7 @@ export const marketing: Catalog = {
   "about.contrast.us.growthPace":
     "O crescimento acompanha o ritmo dos votos de confiança",
   "about.contrast.us.valueStays":
-    "As contribuições financiam um fundo de apoio mútuo gerido pela comunidade",
+    "A adesão não tem custo, e não vendemos nada sobre ti",
   "about.beliefs.eyebrow": "No que acreditamos",
   "about.beliefs.title": "Os valores por trás de <em>cada decisão.</em>",
   "about.values.smallByDesign.title": "Pequeno por design",
@@ -60,7 +60,7 @@ export const marketing: Catalog = {
     "Estamos a construir a canalização de que a comunidade queer precisa: apresentações, espaços seguros, entreajuda.",
   "about.values.communityEconomy.title": "Uma economia comunitária",
   "about.values.communityEconomy.body":
-    "O dinheiro que passa pela QueerPulse (quotas, gorjetas, apoios) fica dentro da comunidade de onde veio.",
+    "O dinheiro entre membros vai diretamente para quem se destina. A música comprada no Studio é paga diretamente a quem a criou, e a QueerPulse nunca fica com o dinheiro.",
   "about.values.communityOwns.title": "A comunidade é dona do seu espaço",
   "about.values.communityOwns.body":
     "As decisões sobre esta plataforma são tomadas às claras, com quem a usa.",
@@ -130,12 +130,6 @@ export const marketing: Catalog = {
   "about.stand.commitment.money.title": "Não aceitamos dinheiro cúmplice.",
   "about.stand.commitment.money.body":
     "Sem patrocínio, financiamento ou parceria de empresas ou instituições materialmente cúmplices da ocupação.",
-  "about.stand.commitment.mutualAid.title":
-    "O fundo de apoio mútuo pode financiar trabalho de solidariedade.",
-  "about.stand.commitment.mutualAid.body":
-    "O trabalho de solidariedade e de ajuda humanitária à Palestina é elegível, decidido às claras como qualquer outra atribuição.",
-  "about.stand.commitment.mutualAid.link":
-    "Vê como as atribuições são decididas",
   // ── Diálogos dos links da página Sobre ──────────────────────────────────
   // Cada bloco é o resumo mostrado quando um dos links de referência da página
   // abre o <AboutLinkModal> em vez de navegar. Escrito para a afirmação que o
@@ -159,7 +153,7 @@ export const marketing: Catalog = {
     "Um contexto católico em mudança, outras tradições, e as pessoas membras que conciliam fé e experiência queer. Ser laica também cabe aqui.",
   "about.linkModal.intersections.point.class.title": "Classe e economia.",
   "about.linkModal.intersections.point.class.body":
-    "A vida social queer carrega um carácter de classe que ninguém nomeia. A secção nomeia a subida de custos em Lisboa e o que fazemos quanto ao acesso: eventos com preço solidário, um fórum gratuito, e uma adesão que continua gratuita para quem não pode contribuir.",
+    "A vida social queer carrega um carácter de classe que ninguém nomeia. A secção nomeia a subida de custos em Lisboa e o que fazemos quanto ao acesso: eventos que quem organiza pode oferecer gratuitos ou a pagar o que puderes, um fórum gratuito, e uma adesão sem custo.",
   "about.linkModal.intersections.cta":
     "Lê o guia completo de interseccionalidade",
 
@@ -234,32 +228,6 @@ export const marketing: Catalog = {
     "A moderação pergunta a quem a publicação se dirige. Um Estado, um governo ou um exército pode ser criticado. Uma pessoa não pode ser atacada por quem é.",
   "about.linkModal.guidelinesSpeech.cta": "Lê as diretrizes completas",
 
-  "about.linkModal.governanceAllocations.eyebrow": "Governação e transparência",
-  "about.linkModal.governanceAllocations.label":
-    "Como são decididas as atribuições",
-  "about.linkModal.governanceAllocations.title":
-    "O que entra, <em>para onde vai.</em>",
-  "about.linkModal.governanceAllocations.lead":
-    "As contas são publicadas todos os trimestres, e as decisões que mexem com dinheiro são tomadas às claras.",
-  "about.linkModal.governanceAllocations.p1":
-    "A QueerPulse é financiada por quem a usa. As receitas e as despesas são publicadas a cada trimestre, linha a linha, sem interesses de investidores e sem metas de crescimento por trás.",
-  "about.linkModal.governanceAllocations.p2":
-    "Os excedentes trimestrais vão para uma reserva operacional com a meta de três meses de custos de funcionamento. Assim que essa meta é atingida, o excedente adicional vai por inteiro para o fundo comunitário de microfinanciamentos. O capital é redistribuído.",
-  "about.linkModal.governanceAllocations.point.partners.title":
-    "O dinheiro de parceiros é restrito.",
-  "about.linkModal.governanceAllocations.point.partners.body":
-    "Está preso a um âmbito nomeado, como o Fundo de Saúde Mental ou os eventos da comunidade, e não traz qualquer influência editorial, de governação ou sobre a plataforma.",
-  "about.linkModal.governanceAllocations.point.votes.title":
-    "As mudanças de financiamento vão a votação.",
-  "about.linkModal.governanceAllocations.point.votes.body":
-    "Aceitar financiamento fora das nossas fontes habituais exige uma votação por maioria das pessoas membras. Cada proposta aberta está listada com a sua contagem, e as anteriores continuam visíveis com o resultado.",
-  "about.linkModal.governanceAllocations.point.record.title":
-    "O registo fica de pé.",
-  "about.linkModal.governanceAllocations.point.record.body":
-    "Os números de saúde da comunidade, os desfechos de moderação e os recursos são publicados ao lado das contas, todos os trimestres.",
-  "about.linkModal.governanceAllocations.cta":
-    "Vê a página de governação completa",
-
   "about.linkModal.migration.eyebrow": "Interseccionalidade",
   "about.linkModal.migration.label": "Raça, migração e a Lisboa queer",
   "about.linkModal.migration.title":
@@ -308,23 +276,23 @@ export const marketing: Catalog = {
   "about.linkModal.governanceOverview.title":
     "Como gerimos isto, e quem <em>decide.</em>",
   "about.linkModal.governanceOverview.lead":
-    "O registo de como a QueerPulse é governada, como as decisões são tomadas, e o que acontece quando algo corre mal.",
+    "Como a QueerPulse funciona hoje: quem modera, como funcionam as moções e o que ainda está a ser redigido.",
   "about.linkModal.governanceOverview.p1":
-    "A moderação é feita por uma pequena equipa de pessoas membras que aceitaram esse papel. Respondem perante o conselho consultivo pelo funcionamento do processo, e qualquer decisão pode ser contestada uma vez, no prazo de 14 dias. É uma pessoa moderadora que não fez parte da decisão original que analisa o recurso, e o desfecho é final.",
+    "O funcionamento do dia a dia, moderação incluída, está a cargo da equipa de voluntários. Qualquer decisão de moderação pode ser contestada uma vez, no prazo de 14 dias, e o recurso é analisado por uma pessoa moderadora que não fez parte da decisão original. Queremos decidir cada recurso em 7 dias.",
   "about.linkModal.governanceOverview.p2":
-    "As denúncias são analisadas em 48 horas, no próprio dia quando a segurança de alguém está em risco, e os números por trás desse processo são publicados todos os trimestres.",
+    "Queremos responder a cada denúncia dentro de um prazo definido pela sua gravidade: 1 hora, 24 horas, 3 dias ou 7 dias. O Relatório de Transparência publica os números de moderação de cada trimestre civil.",
   "about.linkModal.governanceOverview.point.council.title":
     "O conselho consultivo.",
   "about.linkModal.governanceOverview.point.council.body":
-    "Supervisiona o funcionamento da moderação e dos recursos, propõe mudanças na plataforma e serve de camada de responsabilização. Os seus lugares têm mandatos de um ano e podem ser retirados por votação de dois terços da comunidade.",
+    "Um conselho consultivo está a ser nomeado. Os seus lugares aparecem na página de Governação assim que forem preenchidos.",
   "about.linkModal.governanceOverview.point.finances.title":
     "Contas às claras.",
   "about.linkModal.governanceOverview.point.finances.body":
-    "Receitas e despesas publicadas trimestralmente, uma reserva operacional com a meta de três meses de custos de funcionamento, e o excedente acima disso encaminhado para microfinanciamentos.",
+    "As receitas e despesas aparecem na secção de Finanças da página de Governação quando a equipa de voluntários as introduz. As regras sobre como o dinheiro é recebido e gasto estão a ser redigidas.",
   "about.linkModal.governanceOverview.point.proposals.title":
-    "Propostas e votações.",
+    "Moções e votações.",
   "about.linkModal.governanceOverview.point.proposals.body":
-    "A retirada de lugares no conselho e as mudanças de financiamento vão a votação das pessoas membras. Cada proposta continua visível com o seu resultado.",
+    "As pessoas-membro podem abrir uma moção na página de Governação. Precisa de coassinaturas de outras pessoas-membro e de uma análise da nossa equipa para chegar a votação, e cada moção mostra a sua contagem e o seu resultado.",
   "about.linkModal.governanceOverview.cta":
     "Vê a página de governação completa",
 
@@ -333,7 +301,7 @@ export const marketing: Catalog = {
   "about.who.p1":
     "A QueerPulse é gerida por quem a usa: uma pequena equipa fundadora e um círculo crescente de pessoas que ajudam a definir o que vem a seguir.",
   "about.who.p2":
-    "Não temos capital de risco à procura de retorno. Temos quotas, doações e apoios que mantêm a plataforma independente.",
+    "Não temos capital de risco à procura de retorno. A QueerPulse é um coletivo de voluntários e a adesão não tem custo.",
   "about.contactStrip.title": "Perguntas? <em>Estamos contactáveis.</em>",
   "about.contactStrip.body":
     "Sem pedidos de suporte perdidos numa fila. A nossa equipa lê o que envias.",
@@ -391,11 +359,6 @@ export const marketing: Catalog = {
   "activism.local.title": "Localmente, <em>em Lisboa</em>",
   "activism.local.p1":
     "As lutas mais próximas de casa raramente fazem manchete: habitação, acesso a cuidados de saúde, um espaço ameaçado.",
-  "activism.local.p2":
-    "Neste momento, <b>Mouraria e Intendente</b> são os bairros onde inquilinos queer mais precisam de apoio.",
-  "activism.local.banner.title": "Pressão habitacional na Mouraria",
-  "activism.local.banner.body":
-    "Vários agregados queer enfrentam avisos de não renovação este trimestre. O papel de Defesa da Habitação abaixo é uma resposta direta.",
   "activism.skills.title": "Traz uma <em>competência</em>",
   "activism.skills.p1":
     "Cada organização abaixo precisa de mais do que voluntários com cartazes. Precisa do teu ofício.",
@@ -428,7 +391,7 @@ export const marketing: Catalog = {
     "Fala com o apoio entre pares antes de desapareceres de vez. Recuar com um plano é melhor do que desaparecer sem nenhum.",
   "activism.orgs.title": "Organizações <em>parceiras</em>",
   "activism.orgs.p1":
-    "Quatro organizações portuguesas com quem trabalhamos diretamente: todas recebem voluntários de braços abertos.",
+    "As organizações parceiras listadas na QueerPulse, cada uma com o seu próprio perfil.",
   "activism.volunteer.title": "Vagas <em>abertas</em>",
   "activism.volunteer.p1":
     "Oportunidades de voluntariado atuais das nossas organizações parceiras, atualizadas regularmente.",
@@ -444,7 +407,7 @@ export const marketing: Catalog = {
   "coc.meta.description":
     "O Código de Conduta vinculativo da QueerPulse: seis compromissos que assumes ao aderir, o que conta como dano, como as denúncias são tratadas, e como recorrer.",
   "coc.hero.backLabel": "Governação",
-  "coc.hero.eyebrow": "Código de Conduta · em vigor desde {date}",
+  "coc.hero.eyebrow": "Código de Conduta",
   "coc.hero.title": "Como nos tratamos, <em>aqui dentro.</em>",
   "coc.hero.dek":
     "Este é o documento vinculativo, <b>de cumprimento obrigatório</b> e aplicado. Se uma denúncia for confirmada, é isto que usamos como referência.",
@@ -460,7 +423,6 @@ export const marketing: Catalog = {
   "coc.toc.enforce": "Aplicação",
   "coc.toc.appeal": "Recursos",
   "coc.toc.offplatform": "Conduta fora da plataforma",
-  "coc.toc.changes": "Alterações",
   "coc.scope.title": "§01 <em>Âmbito</em>",
   "coc.scope.p1":
     "Este Código aplica-se a tudo na QueerPulse (<strong>publicações, mensagens, eventos, comentários, perfis</strong>) e a conduta fora da plataforma quando afeta diretamente a segurança de outra pessoa aqui.",
@@ -543,7 +505,7 @@ export const marketing: Catalog = {
     "Reservado para violações graves ou repetidas. <em>Sempre revisível em recurso.</em>",
   "coc.report.title": "Como <em>denunciar</em>",
   "coc.report.body":
-    "Toda a denúncia é lida por uma pessoa, nunca resolvida automaticamente. Procuramos responder em 48 horas.",
+    "Toda a denúncia é lida por uma pessoa, nunca resolvida automaticamente. Procuramos responder dentro de um prazo definido pela gravidade, de 1 hora nas denúncias mais urgentes a 7 dias nas de menor gravidade.",
   "coc.report.fileCta": "Fazer uma denúncia",
   "coc.appeal.title": "§05 <em>Recursos</em>",
   "coc.appeal.p1":
@@ -561,28 +523,9 @@ export const marketing: Catalog = {
     "Declarações ou ações públicas que tornariam <em>insegura a presença de alguém razoável num evento contigo</em>.",
   "coc.offplatform.closing":
     "Isto é usado <em>raramente e com cuidado</em>. Nunca é uma licença geral para policiar a vida de alguém fora da plataforma.",
-  "coc.changes.title": "§07 <em>Alterações</em>",
-  "coc.changes.p1": "Este Código foi publicado pela última vez em {date}.",
-  "coc.changelog.v21.lead": "v2.1 · {date}",
-  "coc.changelog.v21.rest":
-    "Clarificou a secção de conduta fora da plataforma e acrescentou o prazo de recurso.",
-  "coc.changelog.v20.lead": "v2.0 · {date}",
-  "coc.changelog.v20.rest":
-    "Reescreveu a escada de aplicação do zero e acrescentou o passo de aviso privado.",
-  "coc.changelog.v14.lead": "v1.4 · {date}",
-  "coc.changelog.v14.rest":
-    "Acrescentou doxxing e distorção de má-fé como violações explícitas.",
-  "coc.changelog.v10.lead": "v1.0 · {date}",
-  "coc.changelog.v10.rest":
-    "Primeira versão publicada, ratificada pelo círculo fundador.",
-  "coc.changes.seeChangelog":
-    "Consulta o <changelogLink>histórico completo</changelogLink>.",
-  "coc.version.label": "Versão 2.1",
-  "coc.version.ratifiedMeta": "Ratificado em {date}",
   "coc.version.downloadCta": "descarregar como texto",
   "coc.version.readManifesto": "ler o Manifesto",
   "coc.download.headerTitle": "Código de Conduta da QueerPulse",
-  "coc.download.headerMeta": "Em vigor desde {date}",
   "coc.download.intro":
     "Esta é a versão em texto simples do Código de Conduta vinculativo. Consulta a página web para a versão formatada completa.",
   "coc.download.section01": "Âmbito",
@@ -591,7 +534,6 @@ export const marketing: Catalog = {
   "coc.download.section04": "Aplicação",
   "coc.download.section05": "Recursos",
   "coc.download.section06": "Conduta fora da plataforma",
-  "coc.download.section07": "Alterações",
   "coc.download.mockNote":
     "(Este é um descarregável de protótipo. O ficheiro de produção corresponderá exatamente à página web.)",
 
@@ -684,8 +626,7 @@ export const marketing: Catalog = {
   "dsar.scopes.activity.b": "Atividade",
   "dsar.scopes.activity.s": "Publicações, comentários, confirmações, mensagens",
   "dsar.scopes.membership.b": "Adesão",
-  "dsar.scopes.membership.s":
-    "O teu escalão, data de entrada, e quem te convidou",
+  "dsar.scopes.membership.s": "A tua data de entrada e quem te convidou",
   "dsar.scopes.moderation.b": "Moderação",
   "dsar.scopes.moderation.s":
     "Denúncias que fizeste ou em que foste mencionade",
@@ -828,7 +769,7 @@ export const marketing: Catalog = {
   // ── Ajuda ──────────────────────────────────────────────────────────────
   "help.meta.title": "Central de ajuda da QueerPulse: convites, segurança",
   "help.meta.description":
-    "Respostas às perguntas mais comuns sobre a QueerPulse: como funcionam os convites, gerir a tua conta, confirmações e eventos, denúncias e recursos, e escalões de adesão.",
+    "Respostas às perguntas mais comuns sobre a QueerPulse: como funcionam os convites, gerir a tua conta, confirmações e eventos, denúncias e recursos, e quanto custa a adesão.",
   "help.hero.eyebrow": "Ajuda",
   "help.hero.title": "Perguntas, <em>respondidas.</em>",
   "help.hero.sub": "Pesquisa abaixo, ou navega por tema.",
@@ -903,7 +844,7 @@ export const marketing: Catalog = {
     "No perfil da pessoa, numa publicação ou numa mensagem, usa a opção de denúncia. Cada denúncia vai para a moderação da nossa equipa.",
   "help.qa.afterReport.q": "O que acontece depois de eu fazer uma denúncia?",
   "help.qa.afterReport.a":
-    "Procuramos responder em 48 horas. <strong>Tens sempre resposta</strong>, mesmo que decidamos que não é necessária qualquer ação.",
+    "Procuramos responder dentro de um prazo definido pela gravidade da denúncia: 1 hora, 24 horas, 3 dias ou 7 dias. <strong>Tens sempre resposta</strong>, mesmo que decidamos que não é necessária qualquer ação.",
   "help.qa.appeal.q": "Posso recorrer de uma decisão de moderação?",
   "help.qa.appeal.a":
     "Sim, toda a decisão pode ser contestada uma vez, revista por uma pessoa moderadora diferente. Vê <governanceLink>Governação</governanceLink> para o processo completo.",
@@ -917,9 +858,9 @@ export const marketing: Catalog = {
     "O que significa dar um voto de confiança a alguém, na prática?",
   "help.qa.vouching.a":
     "Quando dás um voto de confiança a alguém, estás a dizer à comunidade que confias que essa pessoa deve estar aqui. É um sinal real, com peso.",
-  "help.qa.perks.q": "O que ganho como Apoiante?",
-  "help.qa.perks.a":
-    "Acesso antecipado a eventos, um distintivo de apoiante, e a certeza de que a tua adesão mantém a plataforma sem anúncios.",
+  "help.qa.cost.q": "A adesão custa alguma coisa?",
+  "help.qa.cost.a":
+    "A adesão não tem custo nem escalões, por isso todas as pessoas membras têm o mesmo estatuto. A música que compras a um artista no Studio é paga diretamente a esse artista, e a QueerPulse nunca fica com o dinheiro.",
   "help.qa.emailNotifications.q": "Como controlo as notificações?",
   "help.qa.emailNotifications.a":
     "Em <settingsLink>Definições</settingsLink> e depois Notificações, ativa ou desativa cada categoria em separado. A QueerPulse avisa-te dentro da aplicação e, se autorizares, por push. As notificações nunca vão por email.",
@@ -952,11 +893,11 @@ export const marketing: Catalog = {
   // ── Parceiros ──────────────────────────────────────────────────────────
   "partners.meta.title": "As organizações parceiras da QueerPulse",
   "partners.meta.description":
-    "As organizações com quem a QueerPulse faz parceria em Portugal e mais além, cada uma avaliada quanto ao alinhamento antes de ser listada. Ninguém paga para aparecer aqui.",
+    "As organizações com quem a QueerPulse faz parceria em Portugal e mais além, cada uma analisada pela nossa equipa antes de ser listada.",
   "partners.hero.eyebrow": "Parceiros",
   "partners.hero.title": "Organizações com quem <em>estamos.</em>",
   "partners.hero.sub":
-    "Parceiros avaliados em Portugal e mais além, a trabalhar lado a lado com a QueerPulse no terreno.",
+    "Parceiros em Portugal e mais além, a trabalhar lado a lado com a QueerPulse no terreno.",
   "partners.section.title": "Os nossos <em>parceiros</em>",
   "partners.section.sub":
     "Ainda não há filtro disponível. Aqui está a lista completa.",
@@ -995,7 +936,7 @@ export const marketing: Catalog = {
   "pressKit.hero.askPersonCta": "Falar com a nossa equipa",
   "pressKit.contact.deskLabel": "<b>Contacto de imprensa:</b>",
   "pressKit.contact.phoneLabel": "<b>Por telefone</b>, a pedido",
-  "pressKit.contact.responseLabel": "Respondemos em <b>48 horas</b>",
+  "pressKit.contact.responseLabel": "A nossa equipa lê <b>todos os pedidos</b>",
   "pressKit.contact.languagesLabel": "<b>PT / EN</b>",
   "pressKit.contact.email": "hello@queerpulse.com",
   "pressKit.footerNote.licence":
@@ -1004,7 +945,7 @@ export const marketing: Catalog = {
     "Para uso comercial, <a>contacta-nos</a> primeiro.",
   "pressKit.outro.title": "Precisas de <em>algo específico?</em>",
   "pressKit.outro.sub":
-    "Contacta diretamente o gabinete de imprensa: a maioria dos pedidos tem resposta no mesmo dia.",
+    "Contacta diretamente o gabinete de imprensa e a nossa equipa pega no teu pedido.",
   "pressKit.outro.askCta": "Fala com a redação de imprensa",
   "pressKit.downloadModal.eyebrow": "Kit completo · ZIP",
   "pressKit.downloadModal.title": "Descarrega o <em>kit completo.</em>",
@@ -1039,9 +980,9 @@ export const marketing: Catalog = {
   "pressKit.boiler.short.wc": "32 palavras · 224 carateres",
   "pressKit.boiler.short.text":
     "A QueerPulse é uma pequena plataforma comunitária queer, feita de votos de confiança, com raízes em Lisboa, a ligar profissionais, criativos, ativistas e pessoas da comunidade para trabalho, comunidade, cultura e entreajuda.",
-  "pressKit.boiler.med.wc": "75 palavras · 457 carateres",
+  "pressKit.boiler.med.wc": "72 palavras · 434 carateres",
   "pressKit.boiler.med.text":
-    "A QueerPulse é uma pequena plataforma comunitária queer, feita de votos de confiança, com raízes em Lisboa, fundada em 2024 por profissionais, organizadores e artistas a construir uma alternativa às redes que prendem a atenção: sem publicidade, sem algoritmo. Cada pessoa entra com um voto de confiança de alguém que já está cá. Sem capital de risco por trás, a plataforma vive de mensalidades, doações e apoios, e publica uma revista para a sua comunidade.",
+    "A QueerPulse é uma pequena plataforma comunitária queer, feita de votos de confiança, com raízes em Lisboa, fundada em 2024 por profissionais, organizadores e artistas a construir uma alternativa às redes que prendem a atenção: sem publicidade, sem algoritmo. Cada pessoa entra com um voto de confiança de alguém que já está cá. Sem capital de risco por trás, a plataforma não cobra adesão e publica uma revista para a sua comunidade.",
 
   // ── Explicador de Comunidades ──────────────────────────────────────────
   "communitiesAbout.meta.title": "Como funcionam as comunidades no QueerPulse",
@@ -1095,7 +1036,7 @@ export const marketing: Catalog = {
   "privacy.whatWeCollect.account.item2":
     "<strong>Informação de contacto</strong>: o teu email, que serve para iniciares sessão. Vem da tua conta Google, se usas o Google, ou de ti, quando pedes um código de acesso. O único email que a QueerPulse envia é um código de acesso que pediste.",
   "privacy.whatWeCollect.account.item3":
-    "<strong>Dados de adesão</strong>: o teu escalão, data de entrada, quem te convidou e quem te deu um voto de confiança.",
+    "<strong>Dados de adesão</strong>: a tua data de entrada, quem te convidou e quem te deu um voto de confiança.",
   "privacy.whatWeCollect.signInHeading": "Como inicias sessão",
   "privacy.whatWeCollect.signInBody":
     "Inicias sessão com <strong>um código que te enviamos por email</strong> ou com o <strong>Google</strong>. Não há uma palavra-passe QueerPulse para gerir. Se usares o Google, o Google partilha connosco o teu nome, email e foto de perfil. Nunca vemos nem guardamos a tua palavra-passe do Google.",
@@ -1336,7 +1277,7 @@ export const marketing: Catalog = {
   "terms.events.p1":
     "Os eventos são organizados por pessoas da comunidade e pela QueerPulse; cada um tem os seus próprios termos de presença e cancelamento, indicados na página do evento.",
   "terms.events.p2":
-    "Os preços dos bilhetes em eventos de escala progressiva são definidos por quem organiza, dentro dos escalões exigidos pela plataforma. A QueerPulse não fica com nenhuma percentagem da receita dos bilhetes.",
+    "Quem organiza pode indicar um preço na página do evento, como preço fixo, pague o que puder ou escala progressiva, com as suas próprias palavras. A QueerPulse não processa pagamentos e não fica com nenhuma percentagem do que quem organiza cobra.",
   "terms.events.p3":
     "Espera-se que sigas o Código de Conduta e quaisquer regras específicas do espaço em cada evento.",
   "terms.events.p4":
@@ -1423,9 +1364,9 @@ export const marketing: Catalog = {
     "60 palavras · para comunicados, biografias curtas",
   "pressKit.boiler.long.label":
     "130 palavras · para reportagens longas, secções “sobre”",
-  "pressKit.boiler.long.wc": "132 palavras",
+  "pressKit.boiler.long.wc": "127 palavras",
   "pressKit.boiler.long.text":
-    "A QueerPulse é uma pequena plataforma comunitária queer, feita de votos de confiança, com raízes em Lisboa, fundada em 2024 por um grupo de profissionais, organizadores e artistas que queriam uma alternativa às redes desenhadas para prender a atenção: sem publicidade, sem algoritmo, sem crescimento pelo crescimento. É gerida pelas pessoas que a usam: uma pequena equipa fundadora e um círculo crescente de membros que ajudam a moldar o que vem a seguir. Cada pessoa entra com um voto de confiança de alguém que já está cá. A QueerPulse não tem capital de risco à procura de retorno; vive de mensalidades, doações e apoios que a mantêm independente. O dinheiro que passa pela QueerPulse fica dentro da comunidade de onde veio, e a plataforma já publica uma revista para os seus membros.",
+    "A QueerPulse é uma pequena plataforma comunitária queer, feita de votos de confiança, com raízes em Lisboa, fundada em 2024 por um grupo de profissionais, organizadores e artistas que queriam uma alternativa às redes desenhadas para prender a atenção: sem publicidade, sem algoritmo, sem crescimento pelo crescimento. É gerida pelas pessoas que a usam: uma pequena equipa fundadora e um círculo crescente de membros que ajudam a moldar o que vem a seguir. Cada pessoa entra com um voto de confiança de alguém que já está cá. A QueerPulse não tem capital de risco à procura de retorno, e a adesão não tem custo. A música comprada no Studio é paga diretamente a quem a criou, e a plataforma já publica uma revista para os seus membros.",
   "pressKit.mark.section.title": "A <em>marca</em> e como usá-la",
   "pressKit.mark.section.lead":
     "Três variantes aprovadas. O logótipo leva sempre o ponto de pulso coral, exceto na variante inversa “coral”, onde o ponto passa a ameixa. Não recolores o ponto para mais nada.",
@@ -3539,6 +3480,10 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-07.headline":
+    "Os editores tiram uma peça publicada do site e devolvem-na a rascunho ou análise, com Desfazer.",
+  "changelog.releases.2026-11-06.headline":
+    "O ecrã VJ ganha um motor de efeitos ao vivo e o comando toca cenas, alinhamentos e MIDI.",
   "changelog.releases.2026-11-05.headline":
     "As personas ganham um diretório renovado e um mural de caras escolhido pela equipa.",
   "changelog.releases.2026-11-04.headline":
@@ -3850,6 +3795,22 @@ export const marketing: Catalog = {
     "Encontra personas pelas mesmas áreas de trabalho que escolhes ao entrar",
   "changelog.entries.persona-professions-by-work-area.body":
     "O filtro de profissão agrupa as opções em áreas como Música ou Restauração e gastronomia, com títulos mais claros.",
+  "changelog.entries.unpublish-pieces-from-the-desk.title":
+    "Tira peças publicadas do site a partir da mesa de edição",
+  "changelog.entries.unpublish-pieces-from-the-desk.body":
+    "O menu de uma peça publicada devolve-a a rascunho ou análise depois de confirmares, com Desfazer.",
+  "changelog.entries.vj-effects-engine.title":
+    "Os ecrãs VJ ganham um motor de efeitos ao vivo",
+  "changelog.entries.vj-effects-engine.body":
+    "34 efeitos, cortes no tempo da batida, uma camada de mistura e um limite de flashes que protege cada ecrã",
+  "changelog.entries.vj-playable-remote.title":
+    "O comando VJ toca-se como um instrumento",
+  "changelog.entries.vj-playable-remote.body":
+    "Pads de efeitos, tap tempo, teclado e MIDI, e a batida lida pelo microfone do ecrã",
+  "changelog.entries.vj-scenes-and-set-lists.title":
+    "Guarda looks VJ como cenas e toca-as em alinhamentos",
+  "changelog.entries.vj-scenes-and-set-lists.body":
+    "Chama um look num toque, avança pelo alinhamento e mostra o cartão do evento ligado com o QR",
   "changelog.entries.persona-type-change.title":
     "Muda o tipo de uma persona e mantém tudo o que lá está",
   "changelog.entries.persona-type-change.body":
@@ -10212,7 +10173,7 @@ export const marketing: Catalog = {
   "volunteer.hero.sub":
     "Não precisas de ser ativista. Precisas de duas horas livres e vontade de aparecer. Abaixo estão organizações em Lisboa genuinamente à procura de pessoas como tu.",
   "volunteer.hero.note":
-    "Todas as organizações abaixo foram avaliadas pela comunidade QueerPulse",
+    "As oportunidades são publicadas por quem as organiza. Se alguma te parecer estranha, denuncia-a",
   "volunteer.hero.postCta": "Publicar uma oportunidade",
   "volunteer.guide.eyebrow": "Novo no ativismo?",
   "volunteer.guide.title": "Queres fazer <em>mais</em> do que um turno?",
@@ -10668,43 +10629,16 @@ export const marketing: Catalog = {
   "forOrgs.process.step3.title": "Proposta de duas páginas",
   "forOrgs.process.step3.body":
     "Um de nós faz o rascunho; ambos os lados editam. Inclui <b>condições de saída</b>, cláusulas de discordância pública, e o fluxo de dinheiro.",
-  "forOrgs.process.step4.title": "Aprovação da Assembleia",
+  "forOrgs.process.step4.title": "Aprovação da equipa",
   "forOrgs.process.step4.body":
-    "As parcerias operacionais vão à Assembleia mensal. A adesão de Sustentadores pronuncia-se. <em>~10% das parcerias são vetadas.</em>",
+    "A nossa equipa analisa cada parceria antes de ela ser listada. <em>Qualquer das partes pode, ainda assim, discordar publicamente.</em>",
   "forOrgs.proof.title": "Já a trabalhar <em>connosco</em>",
   "forOrgs.proof.sub":
     "Quatro parceiros representativos, cada um num nível diferente. A lista completa está em Parceiros.",
   "forOrgs.proof.viewCta": "Ver parceiro",
   "forOrgs.tiers.title": "O que <em>oferecemos</em>",
   "forOrgs.tiers.sub":
-    "Três níveis, cada um um tipo diferente de relação. Todos incluem o essencial: revisão prévia à publicação, divulgação transparente do financiamento, e a possibilidade de qualquer um dos lados discordar publicamente.",
-  "forOrgs.tiers.employer.list1": "Vagas ilimitadas · <b>publicadas em 24h</b>",
-  "forOrgs.tiers.employer.list2":
-    "Selo de empregador verificado no perfil da empresa",
-  "forOrgs.tiers.employer.list3":
-    "Uma avaliação anual de cultura conduzida por uma pessoa da comunidade (anónima)",
-  "forOrgs.tiers.employer.list4": "Presença nas Avaliações de Empregadores",
-  "forOrgs.tiers.employer.list5":
-    "Horário de atendimento trimestral sobre contratação com dois elementos da equipa",
-  "forOrgs.tiers.partner.list1":
-    "<b>Ligação operacional:</b> ponte de casos, encaminhamento da linha de apoio, protocolo conjunto",
-  "forOrgs.tiers.partner.list2":
-    "Canal de moderação partilhado quando apropriado",
-  "forOrgs.tiers.partner.list3":
-    "Trabalho de advocacia coassinado · qualquer lado pode discordar publicamente",
-  "forOrgs.tiers.partner.list4":
-    "Listado em Parceiros com uma página de caso dedicada",
-  "forOrgs.tiers.partner.list5":
-    "<b>Pagamento por caso</b> para serviços prestados pelo parceiro (ex.: 45 €/consulta jurídica)",
-  "forOrgs.tiers.funder.list1":
-    "Relatórios específicos do programa · trimestrais",
-  "forOrgs.tiers.funder.list2":
-    "Crédito na página do programa em texto simples",
-  "forOrgs.tiers.funder.list3":
-    "Sem presença em toda a plataforma, sem co-branding",
-  "forOrgs.tiers.funder.list4": "Auditoria independente anual incluída",
-  "forOrgs.tiers.funder.list5":
-    "Discriminação pública no relatório de transparência",
+    "Cada nível é um tipo diferente de relação. Cada candidatura é analisada pela nossa equipa antes de qualquer coisa ser listada.",
   "forOrgs.tiers.featuredBadge": "Mais escolhido",
   // PRD-266: ver a nota no catálogo EN.
   "forOrgs.apply.lead":
@@ -10728,11 +10662,11 @@ export const marketing: Catalog = {
   //    avaliações fictícias de pessoas noutras páginas.
   "directory.meta.title": "Diretório de negócios locais | QueerPulse",
   "directory.meta.description":
-    "Negócios queer e profissionais queer-friendly em Lisboa, avaliados e mantidos pela comunidade.",
+    "Negócios queer e profissionais queer-friendly em Lisboa, analisados pela nossa equipa antes de serem listados.",
   "directory.hero.eyebrow": "Diretório de negócios queer",
   "directory.hero.title": "Encontra <em>os lugares da tua gente.</em>",
   "directory.hero.sub":
-    "Negócios queer e profissionais queer-friendly em Lisboa. Avaliados pela comunidade, mantidos pela comunidade. Quer tenhas acabado de chegar, quer já cá estejas há anos.",
+    "Negócios queer e profissionais queer-friendly em Lisboa. Analisados pela nossa equipa antes de serem listados. Quer tenhas acabado de chegar, quer já cá estejas há anos.",
   // "atualizado mensalmente" era uma cadência que nada agendava, media ou
   // conseguia mostrar: o `DirectoryCardDTO` não traz data de atualização, por
   // isso a página não tinha como a sustentar. Substituída por quem mantém o
@@ -10793,7 +10727,7 @@ export const marketing: Catalog = {
   "directory.online.eyebrow": "Vendem online",
   "directory.online.title": "Negócios que vão até <em>ti</em>.",
   "directory.online.body":
-    "Lojas, estúdios e consultórios queer e queer-friendly que vivem online, avaliados pela mesma comunidade que os lugares do mapa.",
+    "Lojas, estúdios e consultórios queer e queer-friendly que vivem online, analisados pela nossa equipa como os lugares do mapa.",
   "directory.online.stat.businesses": "negócios online",
   "directory.online.stat.businesses_one": "negócio online",
   "directory.online.stat.businesses_other": "negócios online",
@@ -12147,143 +12081,98 @@ export const marketing: Catalog = {
   "local.venue.been_one": "{count} pessoa já esteve aqui",
   "local.venue.been_other": "{count} pessoas já estiveram aqui",
 
-  // ── Constituição — texto de governação constitucional. Literal e preciso;
-  //    números, percentagens e referências a artigos mantidos exatos.
-  //    "Associação QueerPulse", "NIPC" e "ILGA Portugal" são nomes próprios,
-  //    mantidos iguais. "Pessoa-membro"/"pessoas-membro" (nunca "Membro/s")
-  //    por indicação do glossário. `hero.title`/`hero.meta` são uma
-  //    ADAPTAÇÃO de conteúdo deliberada, não uma tradução literal: a versão
-  //    inglesa apresenta-se como "a tradução inglesa" de um original em
-  //    português — uma moldura que só faz sentido para quem está a ler a
-  //    versão inglesa. Na versão pt-PT essa moldura deixa de fazer sentido
-  //    (quem lê já está a ler em português), por isso a referência
-  //    "esta é a tradução inglesa" foi omitida em vez de traduzida à letra —
-  //    assinalado no relatório da sweep.
-  "constitution.meta.title": "A constituição da QueerPulse: doze artigos",
+  // ── Constituição: texto de governação constitucional. Descreve apenas o
+  //    que a QueerPulse faz hoje: todas as regras que o sistema não
+  //    implementa (escalões pagos, assembleia, círculos, percentagens de
+  //    orçamento, limites de parcerias, condições de expansão, dissolução,
+  //    votos de alteração) eram inventadas e foram removidas. Um artigo diz
+  //    com clareza quando uma regra ainda está a ser redigida. Números de
+  //    versão, datas de adoção e alegações de autoria só entram aqui quando
+  //    houver uma adoção real. "Pessoa-membro"/"pessoas-membro" (nunca
+  //    "Membro/s") por indicação do glossário.
+  "constitution.meta.title":
+    "A constituição da QueerPulse: o que já está escrito",
   "constitution.meta.description":
-    "A constituição da QueerPulse: doze artigos em linguagem simples sobre finalidade, adesão e governação, escritos pelos voluntários que gerem a plataforma.",
+    "A constituição da QueerPulse em linguagem simples: finalidade, adesão, votos de confiança, decisões e moderação como funcionam hoje, com as regras ainda em redação assinaladas como tal.",
   "constitution.artNumLabel": "Artigo",
-  "constitution.hero.eyebrow": "Constituição · v1.4 · adotada a 14 nov. 2025",
-  "constitution.hero.title": "As regras, <em>em português claro.</em>",
+  "constitution.hero.eyebrow": "Constituição · rascunho de trabalho",
+  "constitution.hero.title": "As regras, <em>até onde estão escritas.</em>",
   "constitution.hero.dek1":
-    "A carta de trabalho do <b>coletivo de voluntários</b> que gere a QueerPulse. Escrita pelas oito pessoas fundadoras e adotada na primeira assembleia. Não é um documento legal, e ainda não existe nenhuma empresa ou associação registada por trás da QueerPulse. <em>Revista várias vezes desde então.</em>",
+    "A carta de trabalho do <b>coletivo de voluntários</b> que gere a QueerPulse. Não é um documento legal, e ainda não existe nenhuma empresa ou associação registada por trás da QueerPulse.",
   "constitution.hero.dek2":
-    "É intencionalmente curta. Doze artigos, linguagem simples, sem subcláusulas aninhadas. Tudo o que exige mais detalhe está no Código de Conduta ou nas resoluções da Assembleia Anual.",
-  "constitution.hero.meta":
-    "<b>Escrita em:</b> Lisboa · <b>Texto original:</b> português.",
+    "É intencionalmente curta e descreve apenas como a QueerPulse funciona hoje. Quando uma regra ainda está a ser redigida, o artigo diz-o. Tudo o que exige mais detalhe está no Código de Conduta.",
 
   "constitution.art1.toc": "I · Objeto",
   "constitution.art1.title": "Objeto",
   "constitution.art1.clause1":
-    "A QueerPulse existe para prestar <strong>apoio profissional, social, cultural e material</strong> a pessoas LGBTQ+ na cidade de Lisboa, e (nos termos do Artigo X) noutras cidades, uma vez cumpridas condições específicas.",
+    "A QueerPulse existe para prestar <strong>apoio profissional, social, cultural e material</strong> a pessoas LGBTQ+ na cidade de Lisboa.",
   "constitution.art1.clause2":
-    "A QueerPulse funciona <strong>sem fins lucrativos,</strong> como um coletivo de voluntários. Não é uma empresa nem uma associação registada, não detém capital próprio e não distribui lucros. Se isso alguma vez mudar, este documento muda com ela.",
-  "constitution.art1.clause3":
-    "Sempre que esta Constituição entre em conflito com o Manifesto, prevalece este documento. O Manifesto define valores; este define o funcionamento.",
+    "A QueerPulse funciona <strong>sem fins lucrativos,</strong> como um coletivo de voluntários. Ainda não é uma empresa nem uma associação registada. Se isso alguma vez mudar, este documento muda com ela.",
 
   "constitution.art2.toc": "II · Pessoas-membro",
   "constitution.art2.title": "Pessoas-membro",
   "constitution.art2.clause1":
-    "É <strong>pessoa-membro</strong> qualquer indivíduo que tenha recebido um voto de confiança de uma pessoa-membro existente, concluído uma breve conversa de admissão com a equipa de moderação, e aceite o Código de Conduta.",
+    "É <strong>pessoa-membro</strong> quem entrou por convite ou através de um pedido analisado pela nossa equipa, e aceitou o Código de Conduta.",
   "constitution.art2.clause2":
-    "As pessoas-membro podem estar num de três escalões: <em>Solidariedade</em> (gratuito), <em>Membro</em> (36 €/ano), ou <em>Sustentador/a</em> (96 €/ano). Todos os escalões têm direitos de voto iguais.",
+    "Ser pessoa-membro não tem custo nem escalões, por agora. Todas as pessoas-membro têm o mesmo estatuto.",
   "constitution.art2.clause3":
     "Nenhum estatuto de uma pessoa-membro (incluindo idade, nacionalidade, língua, identidade, ocupação ou visibilidade) afeta os seus direitos de voto ou o tratamento em moderação.",
 
   "constitution.art3.toc": "III · Votos de confiança",
   "constitution.art3.title": "Votos de confiança",
   "constitution.art3.clause1":
-    "Cada pessoa-membro existente pode dar votos de confiança a <strong>duas</strong> novas pessoas-membro, no máximo, por ano civil. O voto de confiança associa o nome de quem o dá ao registo da nova pessoa-membro, permanentemente.",
+    "As pessoas-membro existentes podem dar um <strong>voto de confiança</strong> a novas pessoas-membro e convidar pessoas para entrar.",
   "constitution.art3.clause2":
-    "O limite de votos de confiança pode ser temporariamente elevado por voto da Assembleia até um máximo de quatro por pessoa-membro, durante um ano civil, em casos de lacunas identificadas na rede.",
-  "constitution.art3.clause3":
-    "Uma pessoa-membro cujos três votos de confiança mais recentes tenham sido todos removidos ao abrigo do Artigo VIII perde o direito de dar votos de confiança durante doze meses.",
+    "Cada pessoa-membro tem um limite mensal de convites e um limite diário de votos de confiança. A nossa equipa define os limites, e eles existem para que um voto de confiança continue a ter peso.",
 
-  "constitution.art4.toc": "IV · Assembleia",
-  "constitution.art4.title": "A <em>Assembleia</em> Anual",
+  "constitution.art4.toc": "IV · Decisões",
+  "constitution.art4.title": "Como se <em>decide</em>",
   "constitution.art4.clause1":
-    "A Assembleia reúne uma vez por ano, em novembro, durante pelo menos um dia inteiro. É o órgão de decisão máximo do coletivo.",
+    "A QueerPulse ainda não tem assembleia. Um órgão que decida em nome de todas as pessoas-membro está <strong>a ser redigido,</strong> e até existir este documento não descreve nenhum.",
   "constitution.art4.clause2":
-    "Cada pessoa-membro tem direito a um voto por resolução, exercido presencialmente, online, ou de forma assíncrona até ao encerramento da votação.",
-  "constitution.art4.clause3":
-    "O quórum é de <strong>10% das pessoas-membro ativas</strong>, ou 100 pessoas-membro, o que for maior. As resoluções são aprovadas por maioria simples, salvo indicação em contrário deste documento ou do Código de Conduta.",
-  "constitution.art4.clause4":
-    "A agenda é publicada com 30 dias de antecedência e está aberta a emendas escritas de qualquer grupo de 10 pessoas-membro até 7 dias antes da reunião.",
-  "constitution.art4.quote":
-    '"Esta Assembleia é o chão sobre o qual tudo o resto assenta. <em>Perde-la, e ficas só com uma aplicação.</em>"',
+    "As pessoas-membro já podem abrir uma moção na página de Governação. Uma moção precisa de coassinaturas de outras pessoas-membro para chegar a votação, a nossa equipa analisa-a primeiro, e cada moção mostra a sua contagem e o seu resultado.",
 
-  "constitution.art5.toc": "V · Círculos",
-  "constitution.art5.title": "Círculos <em>rotativos</em>",
+  "constitution.art5.toc": "V · Equipa e conselho",
+  "constitution.art5.title": "A equipa e o <em>conselho</em>",
   "constitution.art5.clause1":
-    "As decisões operacionais são tomadas por <strong>círculos rotativos</strong>: pequenas comissões permanentes de 3 a 7 pessoas-membro cada, com mandatos de 12 meses no máximo.",
+    "O funcionamento do dia a dia, moderação incluída, está a cargo da equipa de voluntários.",
   "constitution.art5.clause2":
-    "Círculos ativos na v1.4: <em>moderação, subsídios, finanças, acolhimento, editorial, técnico.</em> A Assembleia pode criar ou dissolver círculos por maioria simples.",
-  "constitution.art5.clause3":
-    "Nenhuma pessoa-membro pode servir em mais de dois círculos em simultâneo, e nenhum círculo pode ter mais de metade das suas pessoas-membro provenientes de uma mesma geração de admissão anual.",
+    "Um conselho consultivo está <strong>a ser nomeado.</strong> Os seus lugares aparecem na página de Governação assim que forem preenchidos. Grupos permanentes para áreas como apoios ou trabalho editorial ainda estão a ser redigidos.",
 
   "constitution.art6.toc": "VI · Dinheiro",
   "constitution.art6.title": "Dinheiro",
   "constitution.art6.clause1":
-    "<strong>Pelo menos 90% de cada euro recebido</strong> tem de ser gasto em programas comunitários, equipa e infraestrutura, deixando um teto de 10% para custos indiretos. A meta é 96% e tem sido cumprida todos os anos desde 2024.",
+    "As regras sobre como o dinheiro é recebido e gasto, incluindo quanto tem de ir para programas da comunidade, estão <strong>a ser redigidas.</strong> Este documento ainda não fixa nenhuma percentagem.",
   "constitution.art6.clause2":
-    "O orçamento anual é aprovado pela Assembleia. O círculo de finanças pode reequilibrar entre categorias ao longo do ano sem nova aprovação, até 10% por categoria.",
-  "constitution.art6.clause3":
-    "As contas anuais são <strong>publicadas na íntegra,</strong> em linguagem simples, como parte do <a>Relatório de Transparência</a>. Os valores são reportados pela própria equipa de voluntários.",
-  "constitution.art6.clause4":
-    "O coletivo não pode contrair dívidas superiores a 10 000 € sem aprovação explícita da Assembleia.",
+    "As finanças que a equipa publicar aparecem na secção de Finanças da página de Governação e no Relatório de Transparência. Os valores são introduzidos pela equipa de voluntários.",
 
   "constitution.art7.toc": "VII · Expressão",
-  "constitution.art7.title": "Expressão & <em>moderação</em>",
+  "constitution.art7.title": "Expressão e <em>moderação</em>",
   "constitution.art7.clause1":
-    "A comunidade é moderada de acordo com o Código de Conduta, ratificado em separado e alterável por maioria qualificada da Assembleia (60%).",
+    "A comunidade é moderada de acordo com o Código de Conduta.",
   "constitution.art7.clause2":
-    "<strong>A QueerPulse não modera críticas a si própria.</strong> Publicações críticas da QueerPulse, das suas decisões, ou de quem a organiza não podem ser removidas ao abrigo de nenhuma cláusula do Código de Conduta.",
+    "<strong>A QueerPulse não age sobre as críticas que lhe são feitas.</strong> O Código de Conduta inclui a crítica à plataforma, incluindo a crítica a quem a gere, entre as coisas que a moderação deixa em paz.",
   "constitution.art7.clause3":
-    "As decisões de moderação são recorríveis <strong>uma vez</strong>, junto de uma pessoa moderadora que não fez parte da decisão original. A percentagem de decisões revertidas em recurso é contada a partir do registo da moderação e publicada a cada trimestre no <a>Relatório de Transparência</a>.",
+    "As decisões de moderação podem ser contestadas <strong>uma vez,</strong> junto de uma pessoa moderadora que não tenha participado na decisão original. A parte das decisões revertidas em recurso é contada a partir do registo de moderação e publicada no Relatório de Transparência.",
 
   "constitution.art8.toc": "VIII · Remoção",
   "constitution.art8.title": "Remoção",
   "constitution.art8.clause1":
-    "As pessoas-membro só podem ser removidas através da escala de moderação especificada no §04 do Código de Conduta, e apenas por decisão do círculo de moderação, ratificada por mais uma pessoa moderadora independente.",
+    "As pessoas-membro só podem ser removidas através da escada de aplicação descrita na secção §04 do Código de Conduta.",
   "constitution.art8.clause2":
-    "A remoção é recorrível <strong>uma vez</strong>, junto de uma pessoa moderadora que não fez parte da decisão original, no prazo de 14 dias a contar da data de efeito.",
+    "A remoção pode ser contestada <strong>uma vez,</strong> junto de uma pessoa moderadora que não tenha participado na decisão original. Os prazos estão no Código de Conduta.",
   "constitution.art8.clause3":
-    "Os dados de uma pessoa-membro removida são eliminados ou anonimizados nos termos da Política de Privacidade no prazo de 30 dias. Os registos do caso são conservados durante 36 meses, para eventual necessidade legal.",
+    "Os dados de uma pessoa-membro removida são tratados como descreve a Política de Privacidade.",
 
-  "constitution.art9.toc": "IX · Parceiros",
-  "constitution.art9.title": "Parceiros",
+  "constitution.art9.toc": "IX · Ainda em redação",
+  "constitution.art9.title": "Ainda <em>em redação</em>",
   "constitution.art9.clause1":
-    "O coletivo pode celebrar <strong>parcerias operacionais</strong> com outras organizações, em termos aprovados pela Assembleia. Novas parcerias operacionais estão limitadas a duas por ano.",
+    "Parcerias com outras organizações, abrir a QueerPulse noutras cidades, dissolver o coletivo e alterar este documento ainda não têm regras nesta Constituição.",
   "constitution.art9.clause2":
-    "Nenhuma parceria pode conceder a uma organização parceira acesso a dados de pessoas-membro para além do operacionalmente necessário, e apenas com o consentimento explícito da pessoa-membro em causa.",
-  "constitution.art9.clause3":
-    "Qualquer uma das partes de uma parceria pode discordar publicamente das posições da outra. <em>Coligação não é consenso.</em>",
-
-  "constitution.art10.toc": "X · Expansão",
-  "constitution.art10.title": "Expansão",
-  "constitution.art10.clause1":
-    "O coletivo só pode abrir em cidades além de Lisboa quando todas estas condições se verificarem: (a) pelo menos uma pessoa moderadora está no país; (b) uma parceira operacional local está firmada; (c) uma revisão jurídica local está concluída; (d) entre oito e doze pessoas-membro fundadoras se comprometeram com o lançamento-piloto.",
-  "constitution.art10.clause2":
-    "Cada nova cidade ratifica o seu próprio círculo local e opera ao abrigo desta Constituição, com estatutos específicos da cidade conforme necessário.",
-
-  "constitution.art11.toc": "XI · Dissolução",
-  "constitution.art11.title": "Dissolução",
-  "constitution.art11.clause1":
-    "O coletivo só pode ser encerrado por resolução da Assembleia que reúna uma <strong>maioria qualificada de 75%</strong> calculada sobre a totalidade das pessoas-membro ativas.",
-  "constitution.art11.clause2":
-    "Em caso de encerramento, quaisquer fundos remanescentes têm de ser transferidos para uma organização de direitos LGBTQ+ registada escolhida pela Assembleia dissolvente. Nenhum fundo pode ser distribuído a indivíduos.",
-
-  "constitution.art12.toc": "XII · Emendas",
-  "constitution.art12.title": "Emendas",
-  "constitution.art12.clause1":
-    "Esta Constituição só pode ser emendada por resolução da Assembleia que exija uma maioria qualificada de 60% dos votos expressos.",
-  "constitution.art12.clause2":
-    "As emendas têm de ser circuladas para comentário escrito junto de todas as pessoas-membro, pelo menos 30 dias antes da votação.",
-  "constitution.art12.clause3":
-    "O versionamento é sequencial (v1.0, v1.1…). O texto integral da versão em vigor é publicado em permanência.",
+    "Tudo o que está acima descreve como a QueerPulse funciona hoje. Quando uma regra mudar, esta página muda com ela.",
 
   "constitution.footer.version":
-    "<b>Constituição v1.4</b> · adotada a 14 nov. 2025 · em vigor desde 1 jan. 2026",
+    "<b>Rascunho de trabalho.</b> Muda à medida que a QueerPulse muda.",
   "constitution.footer.readCodeOfConduct": "Ler o Código de Conduta",
 
   // ── Biblioteca de Recursos — chrome de página/filtros/cartão. Os registos
@@ -12845,7 +12734,7 @@ export const marketing: Catalog = {
   "securityPolicy.commitment.body1":
     "Os investigadores de segurança que comunicam vulnerabilidades de boa fé não sofrerão qualquer ação legal da nossa parte. Não contactaremos a tua entidade patronal, o teu fornecedor de internet nem as autoridades, a menos que uses o teu acesso para prejudicar membros. Acreditamos que a investigação de segurança torna toda a gente mais segura, e ficamos gratos quando alguém dedica tempo a comunicar o que encontra.",
   "securityPolicy.commitment.body2":
-    "Pedimos-te que nos dês um prazo razoável para corrigir um problema antes de o divulgares publicamente. Em troca, comprometemo-nos a confirmar a receção da tua comunicação em 48 horas, a manter-te a par do progresso e a creditar-te nos nossos agradecimentos de segurança, se assim o quiseres.",
+    "Pedimos-te que nos dês um prazo razoável para corrigir um problema antes de o divulgares publicamente. Em troca, procuramos responder à tua comunicação o mais depressa que pudermos, manter-te a par do progresso e creditar-te nos nossos agradecimentos de segurança, se assim o quiseres.",
 
   "securityPolicy.scope.eyebrow": "Âmbito",
   "securityPolicy.scope.title": "O que está <em>no âmbito.</em>",
@@ -12864,7 +12753,7 @@ export const marketing: Catalog = {
   "securityPolicy.scope.out.3": "Ataques físicos à infraestrutura",
   "securityPolicy.scope.out.4": "Spam ou contorno dos limites de tráfego",
   "securityPolicy.scope.out.5":
-    "Infraestrutura de terceiros (Hetzner, Postmark, Backblaze)",
+    "Infraestrutura e serviços geridos por terceiros (comunica ao fornecedor)",
   "securityPolicy.scope.out.6": "Clickjacking em páginas não sensíveis",
   "securityPolicy.scope.out.7":
     "Cabeçalhos de segurança em falta (apenas comunicação)",
@@ -12875,22 +12764,21 @@ export const marketing: Catalog = {
     "O que acontece <em>depois de comunicares.</em>",
   "securityPolicy.process.step1.title": "Confirmação",
   "securityPolicy.process.step1.text":
-    "Confirmamos a receção em 48 horas e avisamos-te de que estamos a analisar. Atribuímos um número de referência para podermos acompanhá-la em conjunto.",
-  "securityPolicy.process.step1.note": "Objetivo: 48 horas",
+    "Confirmamos a receção e avisamos-te de que estamos a analisar.",
+  "securityPolicy.process.step1.note":
+    "Procuramos responder o mais depressa que pudermos",
   "securityPolicy.process.step2.title": "Avaliação",
   "securityPolicy.process.step2.text":
     "Investigamos e avaliamos a gravidade. Mantemos-te a par e poderemos colocar perguntas de seguimento. Se não conseguirmos reproduzir o problema, explicamos-te porquê.",
-  "securityPolicy.process.step2.note": "Objetivo: 5 dias úteis",
+  "securityPolicy.process.step2.note": "O prazo depende da comunicação",
   "securityPolicy.process.step3.title": "Correção",
   "securityPolicy.process.step3.text":
     "Para vulnerabilidades confirmadas, corrigimos e implementamos uma atualização. O prazo depende da gravidade. Os problemas críticos são tratados como emergências.",
-  "securityPolicy.process.step3.note":
-    "Crítico: <72h · Elevado: <7 dias · Médio/Baixo: próxima versão",
+  "securityPolicy.process.step3.note": "Os problemas mais graves vêm primeiro",
   "securityPolicy.process.step4.title": "Divulgação",
   "securityPolicy.process.step4.text":
     "Coordenamos contigo um calendário de divulgação. Creditamos-te nos nossos agradecimentos de segurança, a não ser que prefiras o anonimato.",
-  "securityPolicy.process.step4.note":
-    "Por omissão: divulgação coordenada a 90 dias",
+  "securityPolicy.process.step4.note": "Calendário combinado contigo",
 
   "securityPolicy.ack.eyebrow": "Agradecimentos",
   "securityPolicy.ack.title":

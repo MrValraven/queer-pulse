@@ -1,5 +1,12 @@
 import { PageShell } from "../../shared/components/layout";
-import { Button, ImageSlot, Outro, Reveal } from "../../shared/components/ui";
+import { FiArchive } from "react-icons/fi";
+import {
+  Button,
+  EmptyState,
+  ImageSlot,
+  Outro,
+  Reveal,
+} from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -79,24 +86,32 @@ export function QtipocArchivePage() {
           <Reveal as="p" className={styles.leadP}>
             {t("resources:qtipocArchive.collection.lead")}
           </Reveal>
-          <div className={styles.archiveGrid}>
-            {PIECES.map((p, i) => (
-              <Reveal
-                key={p.title}
-                className={`${styles.card} ${styles.archiveCard}`}
-                delay={i * 55}
-              >
-                <ImageSlot tint={p.tint} placeholder={p.title} height={180} />
-                <div className={styles.archiveMeta}>
-                  {p.kind} · {p.year}
-                </div>
-                <div className={styles.cardName} style={{ fontSize: 20 }}>
-                  {p.title}
-                </div>
-                <div className={styles.cardSpec}>{p.blurb}</div>
-              </Reveal>
-            ))}
-          </div>
+          {demoMode ? (
+            <div className={styles.archiveGrid}>
+              {PIECES.map((p, i) => (
+                <Reveal
+                  key={p.title}
+                  className={`${styles.card} ${styles.archiveCard}`}
+                  delay={i * 55}
+                >
+                  <ImageSlot tint={p.tint} placeholder={p.title} height={180} />
+                  <div className={styles.archiveMeta}>
+                    {p.kind} · {p.year}
+                  </div>
+                  <div className={styles.cardName} style={{ fontSize: 20 }}>
+                    {p.title}
+                  </div>
+                  <div className={styles.cardSpec}>{p.blurb}</div>
+                </Reveal>
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              icon={<FiArchive />}
+              title={t("resources:qtipocArchive.live.title")}
+              description={t("resources:qtipocArchive.live.body")}
+            />
+          )}
           <div
             className={`${styles.card} ${styles.cardDashed}`}
             style={{ marginTop: 24 }}

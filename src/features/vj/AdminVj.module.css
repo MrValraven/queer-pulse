@@ -7,6 +7,22 @@
   margin-top: var(--gap-lg);
 }
 
+/* The section switch (Clips, Scenes and set lists) above the open panel. */
+.tabs {
+  margin-bottom: var(--gap-lg);
+}
+
+/* The open section's tabpanel takes focus from the tab row's Tab key. */
+.panel {
+  border-radius: var(--radius-14);
+}
+
+.panel:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
 .frame {
   container-type: inline-size;
 }
@@ -40,8 +56,15 @@
   gap: var(--gap-sm);
 }
 
+.skeletonShow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
 .skeletonRows > *,
-.skeletonGrid > * {
+.skeletonGrid > *,
+.skeletonShow > * {
   border-radius: var(--radius-14);
 }
 

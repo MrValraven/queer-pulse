@@ -1,10 +1,20 @@
 // The demo VJ transport: VjTransport over the demo channel, with the stage
-// server hosted by whichever demo VJ tab holds the Web Lock.
+// server hosted by whichever demo VJ tab holds the Web Lock. Behaves like the
+// live socket for useVjStage: every ack is a clock sample, the clock:sync
+// schedule runs from each new host (the demo's connect), and frames keep
+// their applyAt as the server sent them.
 
-import type {
-  VjAttachRole,
-  VjAttachSuccess,
+import {
+  VJ_SERVER_FRAME_NAMES,
+  type VjAttachRole,
+  type VjAttachSuccess,
 } from "../../../shared/contracts/vj";
+import {
+  createVjClockSyncSchedule,
+  vjClockSampleOf,
+  vjLocalNow,
+  type VjClockSyncSchedule,
+} from "../realtime/vjClockSync";
 import type {
   VjAckFor,
   VjClientFrameName,
@@ -15,6 +25,7 @@ import type {
 import {
   INITIAL_VJ_CONNECTION,
   VjSendError,
+  type VjConnectionRefusal,
   type VjConnectionState,
   type VjTransport,
   type VjTransportOptions,
@@ -42,6 +53,8 @@ export interface VjDemoTransportOptions extends VjTransportOptions {
   library?: VjDemoLibraryLookup;
   tabId?: string;
   now?: () => number;
+  /** Test seam for clock samples; defaults to `vjLocalNow`. */
+  localNow?: () => number;
 }
 
 interface VjPendingAck {
@@ -52,17 +65,19 @@ interface VjPendingAck {
   timer: ReturnType<typeof setTimeout>;
 }
 
-const FORWARDED_FRAME_NAMES: ReadonlySet<string> = new Set([
-  "stage:state",
-  "screen:role",
-  "screens:update",
-  "library:changed",
-]);
+/** Every server frame but `exception`, as the live socket forwards them
+ *  (stage:state, screen:role, screens:update, library:changed and
+ *  screen:identify). */
+const FORWARDED_FRAME_NAMES: ReadonlySet<string> = new Set<string>(
+  VJ_SERVER_FRAME_NAMES.filter((frameName) => frameName !== "exception"),
+);
 
 export class VjDemoTransport implements VjTransport {
   private readonly options: VjDemoTransportOptions;
   private readonly tabId: string;
   private readonly role: VjAttachRole;
+  private readonly localNow: () => number;
+  private readonly clockSync: VjClockSyncSchedule;
   private readonly pending = new Map<string, VjPendingAck>();
   private channel: VjDemoChannel | null = null;
   private serverChannel: VjDemoChannel | null = null;
@@ -85,6 +100,8 @@ export class VjDemoTransport implements VjTransport {
     this.options = options;
     this.tabId = options.tabId ?? VJ_DEMO_TAB_ID;
     this.role = options.role;
+    this.localNow = options.localNow ?? vjLocalNow;
+    this.clockSync = createVjClockSyncSchedule(() => this.sendClockSync());
   }
 
   connect(): void {
@@ -188,18 +205,49 @@ export class VjDemoTransport implements VjTransport {
     this.options.onConnection(connection);
   }
 
+  /**
+   * Every acked frame goes through here: reads the local clock before the
+   * post and when the ack arrives, and reports the sample before the ack
+   * settles. Refusals carry serverNow too (C 7.2), so they sample as well.
+   */
   private request(
     name: string,
     payload: unknown,
     handlers: Pick<VjPendingAck, "settle" | "fail">,
   ): void {
     const requestId = createVjDemoUuid();
+    const sentAt = this.localNow();
     const timer = setTimeout(() => {
       this.pending.delete(requestId);
       handlers.fail(new VjSendError(name, "timeout"));
     }, VJ_ACK_TIMEOUT_MS);
-    this.pending.set(requestId, { ...handlers, frameName: name, timer });
+    const settle = (ack: unknown) => {
+      const sample = vjClockSampleOf(sentAt, this.localNow(), ack);
+      if (sample !== null && !this.isDisposed) {
+        this.options.onClockSample?.(sample);
+      }
+      handlers.settle(ack);
+    };
+    this.pending.set(requestId, {
+      settle,
+      fail: handlers.fail,
+      frameName: name,
+      timer,
+    });
     this.post({ name, payload, requestId });
+  }
+
+  /**
+   * One `clock:sync` of the C 7.3 schedule, answered before attach too. A
+   * timeout or a failed ack is dropped quietly: the next send retries.
+   */
+  private sendClockSync(): void {
+    if (this.isDisposed || this.isRefused) return;
+    this.request(
+      "clock:sync",
+      {},
+      { settle: () => undefined, fail: () => undefined },
+    );
   }
 
   private attach(): void {
@@ -236,12 +284,16 @@ export class VjDemoTransport implements VjTransport {
         stageEpoch: success.stageEpoch,
         isRestored: success.isRestored,
         isLead: success.isLead,
+        screenNumber: success.screenNumber,
       };
       this.isAttached = true;
       this.report({ status: "attached", refusal: null, attach });
       return;
     }
-    if (record.code === "vj_screen_id_invalid") {
+    if (record.code === "vj_client_outdated") {
+      // A page that predates the stage's contract (C 7.1): only a reload helps.
+      this.refuse("client_outdated");
+    } else if (record.code === "vj_screen_id_invalid") {
       this.refuse("server_error");
     } else if (record.code === "vj_already_attached") {
       // The server kept an attach whose ack was lost: leave, then attach again.
@@ -250,9 +302,7 @@ export class VjDemoTransport implements VjTransport {
     }
   }
 
-  private refuse(
-    refusal: "server_error" | "screen_replaced" | "not_admin",
-  ): void {
+  private refuse(refusal: VjConnectionRefusal): void {
     this.isRefused = true;
     this.isAttached = false;
     this.stopClient();
@@ -261,6 +311,7 @@ export class VjDemoTransport implements VjTransport {
 
   /** Stops talking as a client; a hosted server keeps running for the other tabs. */
   private stopClient(): void {
+    this.clockSync.stop();
     if (this.aliveTimer !== null) clearInterval(this.aliveTimer);
     this.aliveTimer = null;
     if (this.silenceTimer !== null) clearTimeout(this.silenceTimer);
@@ -283,8 +334,10 @@ export class VjDemoTransport implements VjTransport {
     if (this.silenceTimer !== null) clearTimeout(this.silenceTimer);
     this.silenceTimer = setTimeout(() => {
       this.silenceTimer = null;
-      // No heartbeat for VJ_DEMO_SILENCE_MS: the hosting tab is gone.
+      // No heartbeat for VJ_DEMO_SILENCE_MS: the hosting tab is gone, as a
+      // live disconnect; the next host's first heartbeat starts the sync again.
       this.serverId = null;
+      this.clockSync.stop();
       this.markDetached();
       this.armSilence();
     }, VJ_DEMO_SILENCE_MS);
@@ -295,13 +348,16 @@ export class VjDemoTransport implements VjTransport {
     const { serverId } = readVjRecord(payload);
     if (typeof serverId !== "string") return;
     if (serverId !== this.serverId) {
-      const wasKnown = this.serverId !== null || this.isAttached;
+      const hasKnownServer = this.serverId !== null || this.isAttached;
       this.serverId = serverId;
       // A new host holds a new stage, as after a backend restart.
-      if (wasKnown) this.markDetached();
+      if (hasKnownServer) this.markDetached();
       this.isAttached = false;
       this.isAttaching = false;
       this.attachToken = null;
+      // The demo's connect: C 7.3 allows clock:sync before attach, so the
+      // clock is warm by the first stage frame.
+      this.clockSync.start();
     }
     this.attach();
   }

@@ -1,7 +1,8 @@
-import { act, renderHook } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   createVjStageState,
+  VJ_CONTRACT_VERSION,
   type VjAttachSuccess,
   type VjLibraryChange,
   type VjScreenStatus,
@@ -87,8 +88,10 @@ function createFakeTransport(options: CapturedOptions): FakeTransport {
       fake.sent.push({ name, payload });
       const answer = fake.answers.shift() ?? {
         ok: true,
+        serverNow: 0,
         revision: fake.sent.length,
         isNoop: false,
+        applyAt: null,
       };
       return answer instanceof Error
         ? Promise.reject(answer)
@@ -126,6 +129,7 @@ function attachSuccess(overrides: Partial<VjAttachSuccess> = {}) {
     stageEpoch: EPOCH_A,
     isRestored: false,
     isLead: null,
+    screenNumber: null,
     ...overrides,
   };
 }
@@ -154,7 +158,7 @@ function pushState(
   act(() =>
     transport.options.onFrame({
       event: "stage:state",
-      payload: { state, cause, sourceClientId },
+      payload: { state, cause, sourceClientId, applyAt: null },
     }),
   );
 }
@@ -169,6 +173,9 @@ function screenStatus(number: number, isLead: boolean): VjScreenStatus {
     connectedAt: 1_000 + number,
     lastSeenAt: 2_000,
     preload: { packId: null, clips: [] },
+    health: null,
+    nextClipId: null,
+    mic: null,
   };
 }
 
@@ -190,7 +197,10 @@ describe("useVjStage commands over a fake transport", () => {
     expect(transport.options.role).toBe("remote");
     expect(transport.options.isDemoMode).toBe(false);
     expect(transport.connectCount).toBe(1);
-    expect(transport.options.buildAttachPayload()).toEqual({ role: "remote" });
+    expect(transport.options.buildAttachPayload()).toEqual({
+      role: "remote",
+      contractVersion: VJ_CONTRACT_VERSION,
+    });
     expect(result.current.isConnected).toBe(false);
     expect(result.current.state).toBeNull();
 
@@ -241,7 +251,7 @@ describe("useVjStage commands over a fake transport", () => {
     await act(async () => {
       await result.current.commands.setShuffle({
         isOn: true,
-        bpm: undefined,
+        intervalValue: undefined,
       });
     });
 
@@ -251,7 +261,7 @@ describe("useVjStage commands over a fake transport", () => {
       commandSequence: 1,
     });
     expect(Object.keys(transport.sent[0]?.payload as object)).not.toContain(
-      "bpm",
+      "intervalValue",
     );
   });
 
@@ -342,6 +352,7 @@ describe("useVjStage frames over a fake transport", () => {
       code: "vj_stale_command",
       message: "stale",
       state: newer,
+      serverNow: 0,
     });
 
     let outcome = await act(() => result.current.commands.goClip(CLIP_GRID));
@@ -351,7 +362,13 @@ describe("useVjStage frames over a fake transport", () => {
       code: "vj_stale_command",
       errorKey: null,
     });
-    expect(result.current.state).toEqual(newer);
+    // The ack's state is held for the frame of its revision; none comes here,
+    // so it applies once the shortest quantize lead passes.
+    expect(result.current.latestState).toEqual(newer);
+    expect(result.current.state?.revision).toBe(2);
+    await waitFor(() => {
+      expect(result.current.state).toEqual(newer);
+    });
     expect(result.current.lastCause).toBeNull();
 
     transport.answers.push({
@@ -359,6 +376,7 @@ describe("useVjStage frames over a fake transport", () => {
       code: "vj_stale_command",
       message: "stale",
       state: stateAt(EPOCH_A, 4),
+      serverNow: 0,
     });
     outcome = await act(() => result.current.commands.goClip(CLIP_GRID));
     expect(outcome).toMatchObject({ ok: false, errorKey: null });
@@ -374,6 +392,7 @@ describe("useVjStage frames over a fake transport", () => {
       ok: false,
       code: "vj_overlay_text_too_long",
       message: "too long",
+      serverNow: 0,
     };
     transport.answers.push(ack);
 
@@ -412,11 +431,13 @@ describe("useVjStage screens over a fake transport", () => {
 
     expect(transport.options.buildAttachPayload()).toEqual({
       role: "screen",
+      contractVersion: VJ_CONTRACT_VERSION,
       screenId: SCREEN_ID,
       restoreState: firstRestore,
     });
     expect(transport.options.buildAttachPayload()).toEqual({
       role: "screen",
+      contractVersion: VJ_CONTRACT_VERSION,
       screenId: SCREEN_ID,
       restoreState: secondRestore,
     });
@@ -431,6 +452,7 @@ describe("useVjStage screens over a fake transport", () => {
     expect(fakeTransports).toHaveLength(1);
     expect(transport.options.buildAttachPayload()).toEqual({
       role: "screen",
+      contractVersion: VJ_CONTRACT_VERSION,
       screenId: SCREEN_ID,
       restoreState: null,
     });
@@ -510,6 +532,10 @@ describe("useVjStage library, status and lifetime over a fake transport", () => 
       packId: null,
       clipId: CLIP_GRID,
       packIds: [PACK_WARM],
+      sceneId: null,
+      setlistId: null,
+      setlistIds: [],
+      eventId: null,
     };
 
     act(() =>
@@ -565,6 +591,7 @@ describe("useVjStage library, status and lifetime over a fake transport", () => 
       code: "vj_stale_clip_sequence",
       message: "stale",
       state: snapped,
+      serverNow: 0,
     });
 
     const outcome = await act(() => result.current.advance(2, CLIP_HAZE));
@@ -641,6 +668,7 @@ describe("useVjStage library, status and lifetime over a fake transport", () => 
           state: stateAt(EPOCH_A, 2),
           cause: "command",
           sourceClientId: null,
+          applyAt: null,
         },
       }),
     ).not.toThrow();
@@ -711,7 +739,7 @@ describe("useVjStage connection loss and transport swaps", () => {
     expect(result.current.screens.map((screen) => screen.number)).toEqual([2]);
   });
 
-  it("starts a new transport with no connection, lead flag or screens", () => {
+  it("starts a new transport with no connection, lead flag, screens or state", () => {
     const { result, rerender } = renderHook(() =>
       useVjStage({
         role: "screen",
@@ -730,6 +758,8 @@ describe("useVjStage connection loss and transport swaps", () => {
     expect(result.current.isConnected).toBe(true);
     expect(result.current.isLead).toBe(true);
     expect(result.current.screens).toHaveLength(1);
+    pushState(firstTransport, stateAt(EPOCH_A, 2));
+    expect(result.current.state?.revision).toBe(2);
 
     harness.isDemoMode = true;
     rerender();
@@ -740,14 +770,35 @@ describe("useVjStage connection loss and transport swaps", () => {
     expect(result.current.isConnected).toBe(false);
     expect(result.current.isLead).toBe(false);
     expect(result.current.screens).toEqual([]);
+    expect(result.current.state).toBeNull();
+    expect(result.current.latestState).toBeNull();
   });
 });
 
+const DEMO_CLIP_IDS: ReadonlySet<string> = new Set([CLIP_GRID, CLIP_HAZE]);
+
 const demoLibrary: VjDemoLibraryLookup = {
   hasPack: (packId) => packId === PACK_WARM,
-  hasClip: (clipId) => clipId === CLIP_GRID || clipId === CLIP_HAZE,
+  hasClip: (clipId) => DEMO_CLIP_IDS.has(clipId),
   isClipInPack: (packId, clipId) =>
-    packId === PACK_WARM && (clipId === CLIP_GRID || clipId === CLIP_HAZE),
+    packId === PACK_WARM && DEMO_CLIP_IDS.has(clipId),
+  readPackForStage: (packId) =>
+    packId === PACK_WARM ? { eventId: null } : null,
+  existingClipIds: (clipIds) =>
+    new Set(clipIds.filter((clipId) => DEMO_CLIP_IDS.has(clipId))),
+  clipIdsInPack: (packId, clipIds) =>
+    new Set(
+      packId === PACK_WARM
+        ? clipIds.filter((clipId) => DEMO_CLIP_IDS.has(clipId))
+        : [],
+    ),
+  readPackClipForAdvance: (packId, clipId) =>
+    packId === PACK_WARM && DEMO_CLIP_IDS.has(clipId)
+      ? { isFavorite: false }
+      : null,
+  readSceneLook: () => null,
+  readSetlistItem: () => null,
+  setlistItemCount: () => null,
 };
 
 /** A Web Lock stand-in: the first request hosts at once, later ones wait. */

@@ -28,7 +28,7 @@ export const magazine: Catalog = {
   // Brand wordmark's second line ("QueerPulse" itself is a proper noun, kept
   // untranslated per the pt-PT glossary and rendered as a literal, not a key).
   "masthead.brandMagazine": "Magazine",
-  "masthead.tagline": "Published the first of every month",
+  "masthead.tagline": "Essays, features and interviews",
   "masthead.nav.current": "Current issue",
   "masthead.nav.issues": "Issues",
   "masthead.nav.stories": "Stories",
@@ -383,7 +383,7 @@ export const magazine: Catalog = {
   "issues.eyebrow": "Magazine · all editions",
   "issues.heroTitle": "Nine issues, <em>quarterly</em>, since 2024.",
   "issues.heroDek":
-    "A magazine that takes its time. Risograph print, free in PDF, paid in paper. Each issue circles a single question: health, work, the city, what we owe each other. Sustainer members get them in the mail.",
+    "A magazine that takes its time. Free to read online. Each issue circles a single question: health, work, the city, what we owe each other.",
   "issues.stats.issuesPublished_one": "{count} issue published",
   "issues.stats.issuesPublished_other": "{count} issues published",
   "issues.stats.articlesArchived_one": "{count} article archived",
@@ -700,6 +700,8 @@ export const magazine: Catalog = {
   "desk.pieceRow.edit": "Edit",
   "desk.pieceRow.chase": "Chase",
   "desk.pieceRow.handOff": "Hand off",
+  "desk.pieceRow.unpublishToDraft": "Unpublish to draft",
+  "desk.pieceRow.unpublishToReview": "Unpublish to review",
   "desk.pieceRow.selectAria": "Select {title}",
   "desk.pieceRow.moreAria": "More actions for {title}",
   "desk.pieceRow.delete": "Delete piece",
@@ -725,6 +727,14 @@ export const magazine: Catalog = {
   "desk.deletePiece.publishedError":
     "This piece has published work. Unpublish it first, then delete the piece.",
   "desk.deletePiece.failed": "Could not delete this piece. Try again.",
+  // The row menu's and board card's unpublish confirm (UnpublishPieceModal).
+  // The confirm button reuses `desk.pieceRow.unpublishToDraft|Review` and the
+  // cancel button `desk.modals.cancel`.
+  "desk.unpublishConfirm.title": "Unpublish “{title}”?",
+  "desk.unpublishConfirm.subDraft": "It goes back to draft.",
+  "desk.unpublishConfirm.subReview": "It goes back to review.",
+  "desk.unpublishConfirm.body":
+    "The piece leaves the site and a link someone already shared stops working until it is published again. It stays on the desk.",
 
   // ── PiecesBoard ──────────────────────────────────────────────────────────
   "desk.board.columnEmpty": "Empty",
@@ -971,6 +981,19 @@ export const magazine: Catalog = {
   "desk.pieceToast.movedToStage": "Moved to {stage}",
   "desk.pieceToast.handedOff": "Handed off",
   "desk.pieceToast.deleted": "Deleted",
+  "desk.pieceToast.unpublishedToDraft": "Back in draft: {title}",
+  "desk.pieceToast.unpublishedToReview": "Back in review: {title}",
+  "desk.pieceToast.unpublishedDetail": "It is no longer live on the site.",
+  "desk.pieceToast.unpublishFailed": "Could not unpublish {title}",
+  "desk.pieceToast.unpublishNotFound":
+    "This piece no longer exists on the server.",
+  "desk.pieceToast.unpublishServerStatus":
+    "The server answered with status {status} and gave no reason.",
+  "desk.pieceToast.unpublishNoConnection":
+    "The request never reached the server. Check your connection.",
+  "desk.pieceToast.undo": "Undo",
+  "desk.pieceToast.republished": "Back on the site: {title}",
+  "desk.pieceToast.republishFailed": "Could not put {title} back on the site",
   "desk.pieceToast.deckStarted": "Deck started",
   "desk.pitchToast.maybe": "Marked as maybe",
   "desk.pitchToast.passed": "Pitch passed",
@@ -1529,12 +1552,12 @@ export const magazine: Catalog = {
   "submitStory.intro.lookingFor.beyond.title": "Lisbon and beyond",
   "submitStory.intro.lookingFor.beyond.body":
     "Rooted here, but we publish diaspora and visitor voices too. Place matters; borders less so.",
-  "submitStory.intro.lookingFor.pay.title": "We pay, always",
+  "submitStory.intro.lookingFor.pay.title": "Paid work",
   "submitStory.intro.lookingFor.pay.body":
-    'Every published piece is paid fairly: rates shared upfront, no "exposure" ever.',
+    "Published pieces are paid at a rate you agree with your editor upfront.",
   "submitStory.intro.stepsHeading": "What happens next",
   "submitStory.intro.step.reply":
-    "A reply within two weeks: yes, no, or let's talk.",
+    "A reply from an editor: yes, no, or let's talk.",
   "submitStory.intro.step.assigned":
     "If it's a yes, an editor is assigned and you agree a rate and deadline.",
   "submitStory.intro.step.copyright":
@@ -1638,8 +1661,35 @@ export const magazine: Catalog = {
     "Your story needs a headline before it goes to editors.",
   "submitStory.editor.minWordsError":
     "A little more to go: at least {min} words before you submit.",
-  "submitStory.editor.submitError":
-    "Couldn't submit your story right now. Please try again.",
+  // One line per refusal the story-submission endpoint can return; see
+  // features/magazine/submitStoryError.ts for the status behind each.
+  "submitStory.editor.error.headlineTooLong":
+    "Your headline is over 200 characters. Shorten it and submit again.",
+  "submitStory.editor.error.deckTooLong":
+    "Your standfirst is over 1,000 characters. Shorten it and submit again.",
+  "submitStory.editor.error.bodyTooLong":
+    "Your story is over 120,000 characters. Shorten it or split it into two pieces.",
+  "submitStory.editor.error.coverInvalid":
+    "The cover image was not accepted. Remove it, upload it again and submit again.",
+  "submitStory.editor.error.coverNotYours":
+    "The cover image was uploaded from another account, so it cannot go with your story. Remove it, upload your own and submit again.",
+  "submitStory.editor.error.notActive":
+    "Only active members can submit stories, and your account is not active right now.",
+  "submitStory.editor.error.signedOut":
+    "Your session ended before your story was sent. Sign in again and submit it once more.",
+  "submitStory.editor.error.securityCheck":
+    "The security check for this page expired before your story was sent. Use Save draft, reload the page and submit again.",
+  "submitStory.editor.error.notOpen": "Story submissions are not open yet.",
+  "submitStory.editor.error.timedOut":
+    "Our servers took too long to answer, so we cannot tell whether your story arrived. Check your submissions before you send it again.",
+  "submitStory.editor.error.bodyTooLarge":
+    "Your story is too large for our servers to take in one go. Shorten the text and submit again.",
+  "submitStory.editor.error.serverFault":
+    "Our servers hit an error while receiving your story. Your text is still here, so submit again in a moment.",
+  "submitStory.editor.error.noConnection":
+    "Your story did not reach our servers. Check your connection and submit again.",
+  "submitStory.editor.error.refused":
+    "Our servers refused your story with error {status}. Submit again in a moment.",
   "submitStory.editor.saveDraftCta": "Save draft",
   "submitStory.editor.submittingCta": "Submitting…",
   "submitStory.editor.submitCta": "Submit for review",
@@ -2069,8 +2119,6 @@ export const magazine: Catalog = {
     "This issue isn't in production yet, or the number doesn't match one on the desk.",
   "issue.header.title": "Issue {number} · {theme}",
   "issue.header.laidOut": "{ready} of {total} laid out",
-  "issue.header.proof": "Proof",
-  "issue.header.proofToast": "Proof PDF generated for the printer",
 
   // ── ShipChecklistCard + ShipIssueModal ──────────────────────────────────
   "issue.ship.cta": "Ship the issue",
@@ -2295,8 +2343,25 @@ export const magazine: Catalog = {
   "writer.page.nextDue": "next due {date}",
   "writer.page.nothingOpen": "Nothing open right now",
   "writer.page.errorTitle": "Your workspace didn't load",
-  "writer.page.errorDescription":
-    "Something went wrong fetching your assignments. Try refreshing the page.",
+  // One line per refusal the writer-workspace reads can return; see
+  // features/magazine/writerWorkspaceError.ts for the status behind each.
+  "writer.page.error.signedOut":
+    "Your session ended before your assignments, pitches and payments could load. Sign in again to see them.",
+  "writer.page.error.notActive":
+    "Only active members can open the writer workspace, and your account is not active right now.",
+  "writer.page.error.notWriter":
+    "Your account does not have the writer role, so the workspace has nothing to show. If you were approved to write, ask our team to check that the role was added.",
+  "writer.page.error.notOpen": "The writer workspace is not open yet.",
+  "writer.page.error.timedOut":
+    "Our servers took too long to send your assignments, pitches and payments. Reload the page to try again.",
+  "writer.page.error.unreadable":
+    "Our servers sent back a reply for your workspace that we could not read. Reload the page, and tell our team if it keeps happening.",
+  "writer.page.error.serverFault":
+    "Our servers hit an error while loading your assignments, pitches and payments. Reload the page in a moment.",
+  "writer.page.error.noConnection":
+    "We could not reach our servers to load your assignments, pitches and payments. Check your connection and reload the page.",
+  "writer.page.error.refused":
+    "Our servers refused to load your workspace with error {status}. Reload the page in a moment.",
 
   // ── AssignmentCard ───────────────────────────────────────────────────────
   "writer.work.emptyTitle": "No assignments yet",
@@ -2449,7 +2514,33 @@ export const magazine: Catalog = {
     "Include a writing sample: paste some text or add a link.",
   "applyToWrite.form.submitCta": "Send application",
   "applyToWrite.form.submittingCta": "Sending…",
-  "applyToWrite.form.submitError": "Something went wrong. Try again.",
+  // One line per refusal the writer-applications endpoint can return; see
+  // features/magazine/writerApplicationError.ts for the status behind each.
+  "applyToWrite.form.error.linkInvalid":
+    "The link to your published work is not a valid web address. Start it with https:// and send again.",
+  "applyToWrite.form.error.linkTooLong":
+    "The link to your published work is over 2,000 characters. Use a shorter link and send again.",
+  "applyToWrite.form.error.sampleTooLong":
+    "Your pasted sample is over 20,000 characters. Shorten it or link to your published work instead.",
+  "applyToWrite.form.error.pitchTooLong":
+    "Your note about why you want to write is over 2,000 characters. Shorten it and send again.",
+  "applyToWrite.form.error.alreadyWriter":
+    "You are already a QueerPulse writer, so there is no application to send. Reload the page to see your writer tools.",
+  "applyToWrite.form.error.alreadyPending":
+    "You already have an application under review. Reload the page to see where it stands.",
+  "applyToWrite.form.error.notActive":
+    "Only active members can apply to write, and your account is not active right now.",
+  "applyToWrite.form.error.signedOut":
+    "Your session ended before the application was sent. Sign in again and send it once more.",
+  "applyToWrite.form.error.notOpen": "Writer applications are not open yet.",
+  "applyToWrite.form.error.timedOut":
+    "Our servers took too long to answer. Reload the page to check whether your application arrived before you send it again.",
+  "applyToWrite.form.error.serverFault":
+    "Our servers hit an error while receiving your application. Try again in a moment.",
+  "applyToWrite.form.error.noConnection":
+    "Your application did not reach our servers. Check your connection and send it again.",
+  "applyToWrite.form.error.refused":
+    "Our servers refused the application with error {status}. Try again in a moment.",
   "applyToWrite.pending.title": "Your application is <em>under review.</em>",
   "applyToWrite.pending.body":
     "An editor will read your sample and get back to you. This usually takes a couple of weeks.",
@@ -2487,9 +2578,29 @@ export const magazine: Catalog = {
   "comments.report.confirmBody":
     "Thanks. A moderator will review {name}'s comment.",
   "comments.report.done": "Done",
-  "comments.report.errorTitle": "Something went wrong",
-  "comments.report.errorBody":
-    "We couldn't send your report. Please try again.",
+  "comments.report.error.title": "Your report was not sent",
+  // One line per refusal a comment report can get; see
+  // features/magazine/comments/reportCommentError.ts for the status behind each.
+  "comments.report.error.floodCap":
+    "You have reached the limit for reports for now. The ones you already sent are with our team. If something is urgent, use the Contact page.",
+  "comments.report.error.tooFast":
+    "You are sending reports faster than we can take them in. Wait a moment, then send this one again.",
+  "comments.report.error.reasonNotOffered":
+    "That reason is not one we accept for comments. Cancel, open the report again and choose another reason.",
+  "comments.report.error.signedOut":
+    "Your session ended before the report was sent. Sign in again and send it once more.",
+  "comments.report.error.notActive":
+    "Only active members can send reports, and your account is not active right now.",
+  "comments.report.error.securityCheck":
+    "The security check for this page expired before your report was sent. Reload the page and send it again.",
+  "comments.report.error.timedOut":
+    "Our servers took too long to answer, so we cannot tell whether your report arrived. Send it again, because a report you already have open on this comment is not filed twice.",
+  "comments.report.error.serverFault":
+    "Our servers hit an error while receiving your report. Try again in a moment.",
+  "comments.report.error.noConnection":
+    "Your report did not reach our servers. Check your connection and try again.",
+  "comments.report.error.refused":
+    "Our servers refused the report with error {status}. Try again in a moment.",
   "comments.report.retryCta": "Try again",
 
   // ── Shared load-failure panel (MagazineLoadError, FE-CNT-08) ─────────────

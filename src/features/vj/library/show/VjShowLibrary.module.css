@@ -1,0 +1,20 @@
+/* The Scenes and set lists section. The `.frame` is the container: from
+   880px (the width at which the Clips view gains its packs rail) Scenes and
+   Set lists sit side by side, below that Scenes come first. */
+
+.frame {
+  container-type: inline-size;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap-lg);
+}
+
+@container (min-width: 880px) {
+  .columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}

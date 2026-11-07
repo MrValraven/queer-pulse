@@ -28,4 +28,18 @@ describe("VJ media references", () => {
       "shared:mediaRef.vj-thumbnail",
     );
   });
+
+  it("links a VJ preview reference to the VJ library", () => {
+    expect(
+      mediaReferenceHref({
+        type: "vj-preview",
+        entityId: "x",
+        label: "",
+        slug: "",
+      }),
+    ).toBe(routes.adminVj);
+    expect(mediaReferenceLabelKey("vj-preview")).toBe(
+      "shared:mediaRef.vj-preview",
+    );
+  });
 });

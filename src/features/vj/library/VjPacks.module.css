@@ -255,12 +255,14 @@
 
 /* ── Pack header ── */
 
+/* Title block and the pack buttons share the first row; the rename field and
+   the event row each take a full row under them. */
 .header {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: var(--gap-sm) var(--gap-lg);
+  gap: var(--gap-xs) var(--gap-lg);
   min-inline-size: 0;
 }
 
@@ -303,10 +305,17 @@
   gap: var(--gap-xs);
 }
 
-.renameCollapse {
+/* The rename field (folding in under the title) and the event row: one
+   full-width row, so the event line never shares its width with the pack
+   buttons. */
+.headerBelow {
+  display: flex;
   flex-basis: 100%;
+  flex-direction: column;
+  min-inline-size: 0;
 }
 
 .renameForm {
   max-inline-size: 26rem;
+  padding-block-end: var(--gap-xs);
 }

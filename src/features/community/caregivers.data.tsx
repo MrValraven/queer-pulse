@@ -5,9 +5,9 @@ import type { TFunction } from "../../shared/i18n/types";
 
 /**
  * i18n Pattern A/B. Everything here is platform-authored guidance chrome
- * (a "who are you" persona rail, five short reads, an FAQ, support-room
- * links, a don't-say/do-say list) — none of it is fetched in live mode, so
- * all of it is translated. `LESSON_SOURCES`/`FAQ_SOURCES`/`ROOM_SOURCES`
+ * (a "who are you" persona rail, five short reads, an FAQ, a
+ * don't-say/do-say list). None of it is fetched in live mode, so
+ * all of it is translated. `LESSON_SOURCES`/`FAQ_SOURCES`
  * carry catalog keys because their `title`/`body` fields need the coral
  * `<em>` emphasis run, resolved via `<Translation>` in `buildX(t)`
  * (Pattern B); the consumer memoizes with `useMemo(() => buildX(t), [t])`.
@@ -25,8 +25,6 @@ export interface Lesson {
   number: string;
   title: ReactNode;
   body: ReactNode;
-  read: string;
-  languages: string;
   to: string;
 }
 
@@ -34,8 +32,6 @@ interface LessonSource {
   number: string;
   titleKey: string;
   bodyKey: string;
-  readTimeKey: string;
-  languagesKey: string;
   to: string;
 }
 
@@ -44,54 +40,42 @@ const LESSON_SOURCES: LessonSource[] = [
     number: "01",
     titleKey: "community:caregivers.lesson.listen.title",
     bodyKey: "community:caregivers.lesson.listen.body",
-    readTimeKey: "community:caregivers.lesson.listen.readTime",
-    languagesKey: "community:caregivers.lesson.listen.langs",
     to: routes.comingOut,
   },
   {
     number: "02",
     titleKey: "community:caregivers.lesson.wrongThing.title",
     bodyKey: "community:caregivers.lesson.wrongThing.body",
-    readTimeKey: "community:caregivers.lesson.wrongThing.readTime",
-    languagesKey: "community:caregivers.lesson.wrongThing.langs",
     to: routes.family,
   },
   {
     number: "03",
     titleKey: "community:caregivers.lesson.pronouns.title",
     bodyKey: "community:caregivers.lesson.pronouns.body",
-    readTimeKey: "community:caregivers.lesson.pronouns.readTime",
-    languagesKey: "community:caregivers.lesson.pronouns.langs",
     to: routes.pronounsGuide,
   },
   {
     number: "04",
     titleKey: "community:caregivers.lesson.transitioning.title",
     bodyKey: "community:caregivers.lesson.transitioning.body",
-    readTimeKey: "community:caregivers.lesson.transitioning.readTime",
-    languagesKey: "community:caregivers.lesson.transitioning.langs",
     to: routes.transHealthcare,
   },
   {
     number: "05",
     titleKey: "community:caregivers.lesson.familyPullsAway.title",
     bodyKey: "community:caregivers.lesson.familyPullsAway.body",
-    readTimeKey: "community:caregivers.lesson.familyPullsAway.readTime",
-    languagesKey: "community:caregivers.lesson.familyPullsAway.langs",
     to: routes.parents,
   },
 ];
 
 /** "Start here" — five short reads, each linking to the closest existing guide. */
-export function buildLessons(t: TFunction): Lesson[] {
+export function buildLessons(): Lesson[] {
   return LESSON_SOURCES.map((source) => ({
     number: source.number,
     title: (
       <Translation i18nKey={source.titleKey} components={{ em: <em /> }} />
     ),
     body: <Translation i18nKey={source.bodyKey} components={{ em: <em /> }} />,
-    read: t(source.readTimeKey),
-    languages: t(source.languagesKey),
     to: source.to,
   }));
 }
@@ -136,59 +120,6 @@ export function buildFaqs(): Faq[] {
         components={{ em: <em />, strong: <strong /> }}
       />
     ),
-  }));
-}
-
-export interface Room {
-  title: ReactNode;
-  subtitle: string;
-  meta: string;
-  to: string;
-}
-
-interface RoomSource {
-  titleKey: string;
-  subtitleKey: string;
-  metaKey: string;
-  to: string;
-}
-
-/** Members-only support rooms — routed to the existing Peer Support hub. */
-const ROOM_SOURCES: RoomSource[] = [
-  {
-    titleKey: "community:caregivers.room.parents.title",
-    subtitleKey: "community:caregivers.room.parents.sub",
-    metaKey: "community:caregivers.room.parents.meta",
-    to: routes.peerSupport,
-  },
-  {
-    titleKey: "community:caregivers.room.partnersOfTrans.title",
-    subtitleKey: "community:caregivers.room.partnersOfTrans.sub",
-    metaKey: "community:caregivers.room.partnersOfTrans.meta",
-    to: routes.peerSupport,
-  },
-  {
-    titleKey: "community:caregivers.room.siblings.title",
-    subtitleKey: "community:caregivers.room.siblings.sub",
-    metaKey: "community:caregivers.room.siblings.meta",
-    to: routes.peerSupport,
-  },
-  {
-    titleKey: "community:caregivers.room.youthWorkers.title",
-    subtitleKey: "community:caregivers.room.youthWorkers.sub",
-    metaKey: "community:caregivers.room.youthWorkers.meta",
-    to: routes.peerSupport,
-  },
-];
-
-export function buildRooms(t: TFunction): Room[] {
-  return ROOM_SOURCES.map((source) => ({
-    title: (
-      <Translation i18nKey={source.titleKey} components={{ em: <em /> }} />
-    ),
-    subtitle: t(source.subtitleKey),
-    meta: t(source.metaKey),
-    to: source.to,
   }));
 }
 

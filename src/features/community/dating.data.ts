@@ -6,7 +6,6 @@ export interface App {
   audienceKey: string;
   bodyKey: string;
   tagKeys: string[];
-  quoteKey: string;
 }
 
 export const APPS: App[] = [
@@ -22,7 +21,6 @@ export const APPS: App[] = [
       "community:dating.app.grindr.tag2",
       "community:dating.app.grindr.tag3",
     ],
-    quoteKey: "community:dating.app.grindr.quote",
   },
   {
     icon: "Sc",
@@ -36,7 +34,6 @@ export const APPS: App[] = [
       "community:dating.app.scruff.tag2",
       "community:dating.app.scruff.tag3",
     ],
-    quoteKey: "community:dating.app.scruff.quote",
   },
   {
     icon: "HER",
@@ -50,7 +47,6 @@ export const APPS: App[] = [
       "community:dating.app.her.tag2",
       "community:dating.app.her.tag3",
     ],
-    quoteKey: "community:dating.app.her.quote",
   },
   {
     icon: "Fe",
@@ -65,7 +61,6 @@ export const APPS: App[] = [
       "community:dating.app.feeld.tag3",
       "community:dating.app.feeld.tag4",
     ],
-    quoteKey: "community:dating.app.feeld.quote",
   },
   {
     icon: "Ho",
@@ -79,7 +74,6 @@ export const APPS: App[] = [
       "community:dating.app.hornet.tag2",
       "community:dating.app.hornet.tag3",
     ],
-    quoteKey: "community:dating.app.hornet.quote",
   },
   {
     icon: "OK",
@@ -93,7 +87,6 @@ export const APPS: App[] = [
       "community:dating.app.okcupid.tag2",
       "community:dating.app.okcupid.tag3",
     ],
-    quoteKey: "community:dating.app.okcupid.quote",
   },
 ];
 
@@ -181,22 +174,3 @@ export const RECOGNITION: {
     partial: true,
   },
 ];
-
-export const EVENTS: { nameKey: string; detailKey: string; noteKey: string }[] =
-  [
-    {
-      nameKey: "community:dating.event.singlesDinner.name",
-      detailKey: "community:dating.event.singlesDinner.detail",
-      noteKey: "community:dating.event.singlesDinner.note",
-    },
-    {
-      nameKey: "community:dating.event.enmPolySocial.name",
-      detailKey: "community:dating.event.enmPolySocial.detail",
-      noteKey: "community:dating.event.enmPolySocial.note",
-    },
-    {
-      nameKey: "community:dating.event.newMembersSocial.name",
-      detailKey: "community:dating.event.newMembersSocial.detail",
-      noteKey: "community:dating.event.newMembersSocial.note",
-    },
-  ];

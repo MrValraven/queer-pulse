@@ -1,15 +1,20 @@
 /**
- * The projector's two stacked clip layers as a pure state machine. A new clip
- * loads hidden in the free layer while the current one keeps playing at full
- * opacity; the switch starts only once the new clip has a frame, so the screen
- * never shows black or a spinner between clips.
+ * The projector's two stacked source layers as a pure state machine. A new
+ * source loads hidden in the free layer while the current one keeps playing at
+ * full opacity; the switch starts only once the new source has a frame, so the
+ * screen never shows black or a spinner between clips. A prepared source (the
+ * queued frame's next clip, contract 7.4) loads and primes in the free layer
+ * before its target arrives, so the change starts on the frame its target lands.
  */
 import type {
   VjFitMode,
+  VjGeneratorId,
+  VjLoopMode,
   VjMediaKind,
-  VjTransition,
-  VjTransitionMode,
+  VjSpeed,
+  VjTransitionId,
 } from "../../../shared/contracts/vj";
+import type { VjResolvedTransition } from "../engine/vjEngineLook";
 
 export type VjLayerName = "a" | "b";
 
@@ -20,22 +25,57 @@ export interface VjRenderableClip {
   width: number;
   height: number;
   sourceUrl: string;
+  /** Null when the clip's length is unknown. */
+  durationMs: number | null;
+  loopInMs: number | null;
+  loopOutMs: number | null;
+  loopMode: VjLoopMode;
+  defaultSpeed: VjSpeed;
+}
+
+/** A generator the renderer draws itself: ready at once, holding no object URL. */
+export interface VjRenderableGenerator {
+  /** `vjGeneratorSourceKey(generatorId, generatorVariant)`. */
+  clipId: string;
+  generatorId: VjGeneratorId;
+  generatorVariant: string | null;
+  mediaKind: "generator";
+  sourceUrl: "";
+}
+
+export type VjRenderableSource = VjRenderableClip | VjRenderableGenerator;
+
+/** The layer key of a generator: `generator:<id>:<variant>`, with an empty variant for none. */
+export function vjGeneratorSourceKey(
+  generatorId: VjGeneratorId,
+  variant: string | null,
+): string {
+  return `generator:${generatorId}:${variant ?? ""}`;
 }
 
 export interface VjLayerSlot {
-  clip: VjRenderableClip | null;
+  clip: VjRenderableSource | null;
   /**
+   * "primed": a prepared source holds its first frame hidden under the front
+   * until a target names it.
    * "catchingUp": a new target arrived while this layer was fading in, so it
    * finishes to full opacity with a short ease from where it is while the old
    * front stays opaque underneath.
    */
-  phase: "empty" | "loading" | "fadingIn" | "catchingUp" | "shown" | "leaving";
+  phase:
+    | "empty"
+    | "loading"
+    | "primed"
+    | "fadingIn"
+    | "catchingUp"
+    | "shown"
+    | "leaving";
 }
 
-/** The clip tapped during a catch-up, loaded into the freed layer once the catch-up ends. */
+/** The source tapped during a catch-up, loaded into the freed layer once the catch-up ends. */
 export interface VjPendingTarget {
-  clip: VjRenderableClip;
-  transition: VjTransition;
+  clip: VjRenderableSource;
+  transition: VjResolvedTransition;
 }
 
 export interface VjLayerMachineState {
@@ -44,8 +84,13 @@ export interface VjLayerMachineState {
   front: VjLayerName | null;
   incoming: {
     layer: VjLayerName;
-    mode: VjTransitionMode;
-    fadeMs: number;
+    mode: VjTransitionId;
+    durationMs: number;
+    /**
+     * False for a prepared source no target has named yet: it loads and
+     * primes but never shows, and a newer prepare or target replaces it.
+     */
+    isArmed: boolean;
   } | null;
   /** Waits for the running catch-up to end; null otherwise. */
   pendingTarget: VjPendingTarget | null;
@@ -54,8 +99,18 @@ export interface VjLayerMachineState {
   curtainFadeMs: number;
 }
 
+/**
+ * "prepare" with a null source cancels the pre-roll: an unarmed prepared
+ * source is dropped. A generator's "firstFrame" comes from the renderer right
+ * after it binds the generator.
+ */
 export type VjLayerEvent =
-  | { type: "target"; clip: VjRenderableClip | null; transition: VjTransition }
+  | {
+      type: "target";
+      clip: VjRenderableSource | null;
+      transition: VjResolvedTransition;
+    }
+  | { type: "prepare"; source: VjRenderableSource | null }
   | { type: "firstFrame"; layer: VjLayerName; clipId: string }
   | { type: "failed"; layer: VjLayerName; clipId: string }
   | { type: "fadeEnded"; layer: VjLayerName; clipId: string }
@@ -64,6 +119,12 @@ export type VjLayerEvent =
 export const VJ_LAYER_NAMES: readonly VjLayerName[] = ["a", "b"];
 
 const EMPTY_SLOT: VjLayerSlot = { clip: null, phase: "empty" };
+
+/** An unarmed incoming has no transition yet; the target that arms it brings one. */
+const UNARMED_TRANSITION: VjResolvedTransition = {
+  mode: "cut",
+  durationMs: 0,
+};
 
 export const INITIAL_VJ_LAYERS: VjLayerMachineState = {
   slots: { a: EMPTY_SLOT, b: EMPTY_SLOT },
@@ -83,8 +144,11 @@ function nonNegativeMs(milliseconds: number): number {
 }
 
 /** How long a change takes on screen: a cut is instant. */
-function visibleFadeMs(mode: VjTransitionMode, fadeMs: number): number {
-  return mode === "cut" ? 0 : nonNegativeMs(fadeMs);
+function visibleFadeMs(transition: {
+  mode: VjTransitionId;
+  durationMs: number;
+}): number {
+  return transition.mode === "cut" ? 0 : nonNegativeMs(transition.durationMs);
 }
 
 function withSlot(
@@ -134,7 +198,7 @@ function finishRunningFade(state: VjLayerMachineState): VjLayerMachineState {
     : state;
 }
 
-/** The fading layer finishes to full opacity first; the new clip waits for it. */
+/** The fading layer finishes to full opacity first; the new source waits for it. */
 function startCatchUp(
   state: VjLayerMachineState,
   target: VjPendingTarget,
@@ -153,15 +217,15 @@ function startCatchUp(
 
 function reduceTargetDuringCatchUp(
   state: VjLayerMachineState,
-  clip: VjRenderableClip,
-  transition: VjTransition,
+  clip: VjRenderableSource,
+  transition: VjResolvedTransition,
 ): VjLayerMachineState {
   const incoming = state.incoming;
   if (!incoming) return state;
   if (state.slots[incoming.layer].clip?.clipId === clip.clipId) {
     return state.pendingTarget ? { ...state, pendingTarget: null } : state;
   }
-  if (visibleFadeMs(transition.mode, transition.fadeMs) === 0) {
+  if (visibleFadeMs(transition) === 0) {
     return reduceClipTarget(finishRunningFade(state), clip, transition);
   }
   if (state.pendingTarget?.clip.clipId === clip.clipId) return state;
@@ -181,72 +245,160 @@ function reduceCatchUpEnded(
     : promoted;
 }
 
-function dropLoadingIncoming(state: VjLayerMachineState): VjLayerMachineState {
-  if (!state.incoming || incomingPhase(state) !== "loading") return state;
+function dropIncoming(state: VjLayerMachineState): VjLayerMachineState {
+  if (!state.incoming) return state;
   return {
     ...withSlot(state, state.incoming.layer, EMPTY_SLOT),
     incoming: null,
   };
 }
 
+/** A target still loading is dropped; a prepared source keeps priming. */
+function dropArmedLoadingIncoming(
+  state: VjLayerMachineState,
+): VjLayerMachineState {
+  return state.incoming?.isArmed && incomingPhase(state) === "loading"
+    ? dropIncoming(state)
+    : state;
+}
+
+function dropUnarmedIncoming(state: VjLayerMachineState): VjLayerMachineState {
+  return state.incoming && !state.incoming.isArmed
+    ? dropIncoming(state)
+    : state;
+}
+
+/** Loads a source into the free layer, replacing an unarmed incoming there. */
+function loadIncoming(
+  state: VjLayerMachineState,
+  source: VjRenderableSource,
+  transition: VjResolvedTransition,
+  isArmed: boolean,
+): VjLayerMachineState {
+  const layer =
+    state.incoming?.layer ?? (state.front ? otherLayer(state.front) : "a");
+  return {
+    ...withSlot(state, layer, { clip: source, phase: "loading" }),
+    incoming: {
+      layer,
+      mode: transition.mode,
+      durationMs: nonNegativeMs(transition.durationMs),
+      isArmed,
+    },
+  };
+}
+
+/** The armed incoming has a frame: lift the curtain, cut, or start its fade. */
+function startIncomingTransition(
+  state: VjLayerMachineState,
+): VjLayerMachineState {
+  const incoming = state.incoming;
+  if (!incoming) return state;
+  const fadeMs = visibleFadeMs(incoming);
+  if (state.isBlackRequested) {
+    return {
+      ...promoteIncoming(state),
+      isBlackRequested: false,
+      curtainFadeMs: fadeMs,
+    };
+  }
+  if (state.front === null || fadeMs === 0) return promoteIncoming(state);
+  const slot = state.slots[incoming.layer];
+  return withSlot(state, incoming.layer, {
+    clip: slot.clip,
+    phase: "fadingIn",
+  });
+}
+
+/** A target names the prepared source: it arms, and starts at once when primed. */
+function armIncoming(
+  state: VjLayerMachineState,
+  transition: VjResolvedTransition,
+): VjLayerMachineState {
+  const incoming = state.incoming;
+  if (!incoming) return state;
+  const armed: VjLayerMachineState = {
+    ...state,
+    incoming: {
+      layer: incoming.layer,
+      mode: transition.mode,
+      durationMs: nonNegativeMs(transition.durationMs),
+      isArmed: true,
+    },
+  };
+  return incomingPhase(state) === "primed"
+    ? startIncomingTransition(armed)
+    : armed;
+}
+
 function reduceBlackTarget(
   state: VjLayerMachineState,
-  transition: VjTransition,
+  transition: VjResolvedTransition,
 ): VjLayerMachineState {
-  const settled = dropLoadingIncoming(finishRunningFade(state));
+  const settled = dropArmedLoadingIncoming(finishRunningFade(state));
   if (settled.isBlackRequested) return settled;
   return {
     ...settled,
     isBlackRequested: true,
-    curtainFadeMs: visibleFadeMs(transition.mode, transition.fadeMs),
+    curtainFadeMs: visibleFadeMs(transition),
   };
 }
 
 function reduceClipTarget(
   state: VjLayerMachineState,
-  clip: VjRenderableClip,
-  transition: VjTransition,
+  clip: VjRenderableSource,
+  transition: VjResolvedTransition,
 ): VjLayerMachineState {
   const phase = incomingPhase(state);
   if (phase === "catchingUp") {
     return reduceTargetDuringCatchUp(state, clip, transition);
   }
-  const incomingClipId = state.incoming
-    ? state.slots[state.incoming.layer].clip?.clipId
-    : undefined;
-  if (incomingClipId === clip.clipId) return state;
+  const incoming = state.incoming;
+  if (incoming && state.slots[incoming.layer].clip?.clipId === clip.clipId) {
+    return incoming.isArmed ? state : armIncoming(state, transition);
+  }
   if (
     phase === "fadingIn" &&
     state.front !== null &&
-    visibleFadeMs(transition.mode, transition.fadeMs) > 0
+    visibleFadeMs(transition) > 0
   ) {
     return startCatchUp(state, { clip, transition });
   }
   const settled = finishRunningFade(state);
   const frontClip = settled.front ? settled.slots[settled.front].clip : null;
   if (frontClip?.clipId === clip.clipId) {
-    const withoutLoading = dropLoadingIncoming(settled);
+    const withoutLoading = dropArmedLoadingIncoming(settled);
     if (!withoutLoading.isBlackRequested) return withoutLoading;
     return {
       ...withoutLoading,
       isBlackRequested: false,
-      curtainFadeMs: visibleFadeMs(transition.mode, transition.fadeMs),
+      curtainFadeMs: visibleFadeMs(transition),
     };
   }
-  const layer =
-    settled.incoming?.layer ??
-    (settled.front ? otherLayer(settled.front) : "a");
-  return {
-    ...withSlot(settled, layer, { clip, phase: "loading" }),
-    incoming: {
-      layer,
-      mode: transition.mode,
-      fadeMs: nonNegativeMs(transition.fadeMs),
-    },
-  };
+  return loadIncoming(settled, clip, transition, true);
 }
 
-/** True when the event names the incoming layer, holding that clip, in that phase. */
+/**
+ * A prepared source loads hidden in the free layer. A target in flight keeps
+ * the free layer, so a prepare waits behind it; a prepare naming the front
+ * source drops a stale prepared one.
+ */
+function reducePrepare(
+  state: VjLayerMachineState,
+  source: VjRenderableSource | null,
+): VjLayerMachineState {
+  const incoming = state.incoming;
+  if (incoming?.isArmed) return state;
+  if (source === null) return dropUnarmedIncoming(state);
+  if (incoming && state.slots[incoming.layer].clip?.clipId === source.clipId) {
+    return state;
+  }
+  const frontClip = state.front ? state.slots[state.front].clip : null;
+  if (frontClip?.clipId === source.clipId) return dropUnarmedIncoming(state);
+  return loadIncoming(state, source, UNARMED_TRANSITION, false);
+}
+
+/** True when the event names the incoming layer, holding that source, in that phase. */
 function isIncomingEvent(
   state: VjLayerMachineState,
   layer: VjLayerName,
@@ -270,21 +422,20 @@ function reduceFirstFrame(
   if (!incoming || !isIncomingEvent(state, layer, clipId, "loading")) {
     return state;
   }
-  if (state.isBlackRequested) {
-    return {
-      ...promoteIncoming(state),
-      isBlackRequested: false,
-      curtainFadeMs: visibleFadeMs(incoming.mode, incoming.fadeMs),
-    };
-  }
-  if (
-    state.front === null ||
-    visibleFadeMs(incoming.mode, incoming.fadeMs) === 0
-  ) {
-    return promoteIncoming(state);
-  }
+  if (incoming.isArmed) return startIncomingTransition(state);
   const slot = state.slots[layer];
-  return withSlot(state, layer, { clip: slot.clip, phase: "fadingIn" });
+  return withSlot(state, layer, { clip: slot.clip, phase: "primed" });
+}
+
+function reduceFailed(
+  state: VjLayerMachineState,
+  layer: VjLayerName,
+  clipId: string,
+): VjLayerMachineState {
+  return isIncomingEvent(state, layer, clipId, "loading") ||
+    isIncomingEvent(state, layer, clipId, "primed")
+    ? dropIncoming(state)
+    : state;
 }
 
 export function reduceVjLayers(
@@ -296,6 +447,8 @@ export function reduceVjLayers(
       return event.clip === null
         ? reduceBlackTarget(state, event.transition)
         : reduceClipTarget(state, event.clip, event.transition);
+    case "prepare":
+      return reducePrepare(state, event.source);
     case "firstFrame":
       return reduceFirstFrame(state, event.layer, event.clipId);
     case "fadeEnded":
@@ -305,9 +458,7 @@ export function reduceVjLayers(
     case "catchUpEnded":
       return reduceCatchUpEnded(state, event.layer, event.clipId);
     case "failed":
-      return isIncomingEvent(state, event.layer, event.clipId, "loading")
-        ? dropLoadingIncoming(state)
-        : state;
+      return reduceFailed(state, event.layer, event.clipId);
   }
 }
 
@@ -326,7 +477,7 @@ export function vjLayerOpacity(
   return state.incoming?.layer === layer && isRising(state) ? 1 : 0;
 }
 
-/** The incoming layer stacks above the front once it fades in; a loading layer waits below. */
+/** The incoming layer stacks above the front once it fades in; a loading or primed layer waits below. */
 export function vjLayerZ(
   state: VjLayerMachineState,
   layer: VjLayerName,
@@ -337,13 +488,17 @@ export function vjLayerZ(
   return state.front === layer ? 1 : 0;
 }
 
+/** Object URLs the slots and the pending target hold; generators hold none. */
 function heldSourceUrls(state: VjLayerMachineState): Set<string> {
   const held = new Set<string>();
   for (const layer of VJ_LAYER_NAMES) {
     const slot = state.slots[layer];
-    if (slot.clip && slot.phase !== "leaving") held.add(slot.clip.sourceUrl);
+    if (slot.clip?.sourceUrl && slot.phase !== "leaving") {
+      held.add(slot.clip.sourceUrl);
+    }
   }
-  if (state.pendingTarget) held.add(state.pendingTarget.clip.sourceUrl);
+  const pendingSourceUrl = state.pendingTarget?.clip.sourceUrl;
+  if (pendingSourceUrl) held.add(pendingSourceUrl);
   return held;
 }
 

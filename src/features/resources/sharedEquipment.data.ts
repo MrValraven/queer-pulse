@@ -43,4 +43,5 @@ export const CARE_KEYS = [
   "resources:sharedEquipment.care1",
   "resources:sharedEquipment.care2",
   "resources:sharedEquipment.care3",
+  "resources:sharedEquipment.care4",
 ];

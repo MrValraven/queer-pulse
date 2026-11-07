@@ -20,6 +20,7 @@ import { useMagazineEditors } from "../api/useMagazineEditors";
 import { initialsFromName } from "../../../shared/lib/initials";
 import { cx } from "../../../shared/lib/cx";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import type { UnpublishLandingStage } from "../api/piecePublish.api";
 import type { Piece, Stage } from "../data/desk.data";
 import styles from "./PiecesBoard.module.css";
 
@@ -27,7 +28,7 @@ export interface PiecesBoardCardProps {
   piece: Piece;
   stages: Stage[];
   track: DeskTrack;
-  /** The viewer's editor id: a piece waiting on them gets the "your turn" edge. */
+  /** The viewer's editor id; a piece waiting on them gets the "your turn" edge. */
   me?: string;
   /** The day "due" is counted from, read once per board render. */
   today: Date;
@@ -37,6 +38,8 @@ export interface PiecesBoardCardProps {
   onMove: (piece: Piece, stage: Stage) => void;
   /** Runs the card's next-action button; without it the button opens the piece. */
   onNextAction?: (piece: Piece, action: PieceNextAction) => void;
+  /** Gives a Published card its unpublish buttons (see the stage picker). */
+  onUnpublish?: (piece: Piece, stage: UnpublishLandingStage) => void;
 }
 
 function stopControlsClick(event: MouseEvent<HTMLDivElement>) {
@@ -46,9 +49,9 @@ function stopControlsClick(event: MouseEvent<HTMLDivElement>) {
 /**
  * One card on the board. Dragging moves the piece; the stage picker at its
  * foot does the same move from the keyboard or a screen reader. A Published
- * card stays put (see `canDropOnStage`). The title is the card's keyboard
- * target for opening; a mouse click elsewhere on the card opens it too. A
- * press on the controls row (`data-drag-block`) never starts a drag.
+ * card stays put (see `canDropOnStage`). The title is the keyboard target
+ * for opening; a click elsewhere on the card opens it too. A press on the
+ * controls row (`data-drag-block`) never starts a drag.
  */
 export function PiecesBoardCard({
   piece,
@@ -61,23 +64,21 @@ export function PiecesBoardCard({
   onOpen,
   onMove,
   onNextAction,
+  onUnpublish,
 }: PiecesBoardCardProps) {
   const { t } = useTranslation();
   const titleId = useId();
   const due = describeDue(piece, today);
-  // `null` past Published, with no stage-entry timestamp, or on its first
-  // day in a stage, where "0d in stage" said nothing.
   const rawAge = stageAge(piece, today);
   const age = rawAge && !isFreshInStage(rawAge) ? rawAge : null;
   const nextAction = pieceNextAction(piece, track);
   const { editors } = useMagazineEditors();
-  // The table's "Waiting on" rule: "You" only for the viewer's own piece,
-  // a colleague by first name, and nothing when nobody holds it.
+  // The table's "Waiting on" rule: "You" for the viewer's own piece, a
+  // colleague by first name, nothing when nobody holds it.
   const wait =
     pieceHolder(piece) === "nobody"
       ? null
       : describeWaitingOn(piece, me ?? "", editors);
-  // The one "your turn" rule (`deskFocus.ts`'s chip reads the same helper).
   const isYourTurn = isWaitingOnViewer(piece, me ?? "");
   const dueText =
     due.kind === "relative" && due.labelKey
@@ -135,8 +136,7 @@ export function PiecesBoardCard({
       <div className={styles.cardMeta}>
         {piece.byline ? (
           <>
-            {/* Plum for both formats: coral stays the
-                Write action's colour alone (the colour-jobs principle). */}
+            {/* Plum for both formats: coral stays the Write action's. */}
             <Avatar
               initials={initialsFromName(piece.byline)}
               tint="plum"
@@ -191,6 +191,7 @@ export function PiecesBoardCard({
           piece={piece}
           stages={stages}
           onMove={onMove}
+          onUnpublish={onUnpublish}
           titleId={titleId}
         />
       </div>

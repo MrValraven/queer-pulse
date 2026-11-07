@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
@@ -15,6 +15,7 @@ import { useDeleteVjPack, useRenameVjPack } from "../api/useVjPackMutations";
 import { VjReasonLine } from "../VjReasonLine";
 import { formatVjBytes } from "../vjFormat";
 import { VjPackNameForm } from "./VjPackCreateForm";
+import { VjPackEventLink } from "./VjPackEventLink";
 import styles from "./VjPacks.module.css";
 
 /** `--ease` and `--dur-fast`, for the swap between two packs' headers. */
@@ -78,13 +79,17 @@ function DeletePackDialog({
   );
 }
 
-/** Rename pack (a field that folds open) and Delete pack (a dialog). */
+/** Rename pack (a field that folds open) and Delete pack (a dialog). The
+ *  buttons sit beside the title; the rename field folds in under it, above
+ *  the `after` row (the pack's event). */
 function PackActions({
   pack,
   onPackDeleted,
+  after,
 }: {
   pack: VjPackDTO;
   onPackDeleted: (packId: string) => void;
+  after: ReactNode;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -124,7 +129,7 @@ function PackActions({
           {t("vj:packs.rename.open")}
         </Button>
         <Button
-          variant="danger"
+          variant="quiet"
           size="sm"
           onClick={() => setIsConfirmingDelete(true)}
         >
@@ -132,17 +137,20 @@ function PackActions({
           {t("vj:packs.delete.open")}
         </Button>
       </div>
-      <Collapse isOpen={isRenaming} className={styles.renameCollapse}>
-        <div className={styles.renameForm}>
-          <VjPackNameForm
-            initialName={pack.name}
-            submitLabel={t("vj:packs.rename.submit")}
-            isPending={renamePack.isPending}
-            refusal={renameRefusal}
-            onSubmit={(name) => void rename(name)}
-          />
-        </div>
-      </Collapse>
+      <div className={styles.headerBelow}>
+        <Collapse isOpen={isRenaming}>
+          <div className={styles.renameForm}>
+            <VjPackNameForm
+              initialName={pack.name}
+              submitLabel={t("vj:packs.rename.submit")}
+              isPending={renamePack.isPending}
+              refusal={renameRefusal}
+              onSubmit={(name) => void rename(name)}
+            />
+          </div>
+        </Collapse>
+        {after}
+      </div>
       <AnimatePresence>
         {isConfirmingDelete && (
           <DeletePackDialog
@@ -243,7 +251,15 @@ export function VjPackHeader({
           <HeaderMeta meta={meta} />
         </div>
         {pack !== null && (
-          <PackActions pack={pack} onPackDeleted={onPackDeleted} />
+          <PackActions
+            pack={pack}
+            onPackDeleted={onPackDeleted}
+            after={
+              // Its own full-width row, so the event line never shares its
+              // width with the pack buttons.
+              <VjPackEventLink pack={pack} />
+            }
+          />
         )}
       </m.header>
     </AnimatePresence>

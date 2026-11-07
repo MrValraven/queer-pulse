@@ -109,6 +109,8 @@ export function EditorDashboardView({ desk }: EditorDashboardViewProps) {
         onSkipChase={modals.skipChase}
         onConfirmDeletePiece={() => void modals.confirmDeletePiece()}
         isDeletingPiece={modals.isDeletingPiece}
+        onConfirmUnpublishPiece={() => void modals.confirmUnpublishPiece()}
+        isUnpublishingPiece={modals.isUnpublishingPiece}
       />
 
       <DeskIssueModals

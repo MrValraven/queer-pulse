@@ -31,8 +31,8 @@ function formatCountdown(totalSeconds: number) {
  * DEMO vs LIVE, and why they had to split. The whole page used to be the demo
  * path: a five-minute countdown ticking against nothing, a confirm button whose
  * "verification" was `setTimeout(1100)` resolving to success, and an action
- * card announcing the member was about to cancel a Sustainer membership there
- * is no billing to cancel. On the live build that meant a screen that said
+ * card announcing the member was about to cancel a paid membership, which
+ * does not exist. On the live build that meant a screen that said
  * "we've confirmed it's you" having confirmed nothing at all.
  *
  * A real step-up flow exists. Proving "this person confirmed it is them just
@@ -159,7 +159,7 @@ export function VerificationNeededPage() {
 
       {/* The action card names one specific pending action. Live mode has no
           way to know which action sent the member here, and the one it named
-          was a membership cancellation with no billing behind it. */}
+          was a membership cancellation, which does not exist. */}
       {demoMode && (
         <div className={styles.actionCard}>
           <div className={styles.actionIc}>

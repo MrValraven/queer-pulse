@@ -1,345 +1,442 @@
-// Contract 6.4 and 6.6 stage command rules for the demo server, pure.
-// The live VjStageService applies the same checks in the same order.
+// Contract 7.4, 7.5 and 7.6 stage command rules for the demo server, pure:
+// the core commands (pack, clip, generator, transition, overlay, strobe), the
+// isImmediate reader and the dispatcher every stamped command goes through.
+// Mirrors queerpulse-backend/src/vj/stage/vj-source-rules.ts (setPack,
+// goClip, goGenerator), vj-look-rules.ts (setTransition, setOverlay),
+// vj-effects-rules.ts (setStrobe) and readVjImmediateFlag of vj-rule-kit.ts,
+// in the same check order (backend plan note 19): the field rules,
+// isImmediate, then the library reads.
 
 import {
-  VJ_LIMITS,
+  VJ_COLOR_TOKENS,
+  VJ_OVERLAY_POSITIONS,
+  VJ_OVERLAY_SIZES,
   VJ_OVERLAY_STYLES,
-  VJ_SHUFFLE_INTERVAL_KINDS,
-  VJ_SPEEDS,
-  VJ_TRANSITION_MODES,
-  type VjEffects,
+  VJ_TRANSITION_IDS,
+  isSameVjStageContent,
   type VjOverlay,
-  type VjShuffle,
   type VjSocketErrorCode,
-  type VjStageRestore,
   type VjStageState,
   type VjTransition,
 } from "../../../shared/contracts/vj";
 import type { VjCommandFrameName } from "../realtime/vjFrames";
-import type { VjDemoLibraryLookup } from "./vjDemoStore";
+import {
+  NO_VJ_DEMO_STAMPS,
+  vjDemoChange,
+  withVjLiveClip,
+  withVjLiveGenerator,
+  type VjDemoCommandContext,
+  type VjDemoCommandOutcome,
+  type VjDemoStamps,
+} from "./vjDemoCommandKit";
+import { applyResetLook, applySetEffects } from "./vjDemoEffectCommands";
+import {
+  applySetMix,
+  applySetScreenOverride,
+  applySwapMix,
+} from "./vjDemoMixCommands";
 import { isVjUuid } from "./vjDemoRules";
 import {
-  BPM_RANGE,
-  FADE_MS_RANGE,
+  applyRecallScene,
+  applySetlistNext,
+  applySetlistPrevious,
+  applySetlistSelect,
+} from "./vjDemoSceneCommands";
+import {
+  applySetCountdown,
+  applySetEventCard,
+  applySetLogo,
+} from "./vjDemoShowCommands";
+import {
+  OVERLAY_HIDE_AFTER_MS_RANGE,
   isNumberInRange,
   isOneOf,
-  isValidIntervalValue,
   readOverlayText,
+  readVjGeneratorChoice,
   readVjRecord,
-  roundBpm,
-  VJ_EFFECT_FLAG_NAMES,
+  readVjTransitionLength,
 } from "./vjDemoStageInput";
+import { applySetShuffle, applySetTempo } from "./vjDemoTempoCommands";
 
 export {
   isVjCommandFrameName,
   readVjRecord,
   readVjScreenStatusPayload,
-  VJ_COMMAND_FRAME_NAMES,
+  VJ_REMOTE_COMMAND_NAMES,
   vjDemoAckFailure,
 } from "./vjDemoStageInput";
 
 export type VjStageCommandResult =
-  { state: VjStageState; isNoop: boolean } | { error: VjSocketErrorCode };
-
-interface VjStageCommandContext {
-  now: number;
-  library: VjDemoLibraryLookup;
-}
-
-type VjCommandOutcome =
-  | { next: VjStageState; isAlwaysChange: boolean }
+  | {
+      state: VjStageState;
+      isNoop: boolean;
+      stamps: VjDemoStamps;
+      isLookSwitch: boolean;
+      isImmediate: boolean;
+    }
   | { error: VjSocketErrorCode };
 
-function withClipSequence(
-  state: VjStageState,
-  patch: Partial<VjStageState>,
-): VjStageState {
-  return { ...state, ...patch, clipSequence: state.clipSequence + 1 };
+/** Whether any of the fields is present; an undefined value counts as absent. */
+function hasAnyVjField(
+  record: Record<string, unknown>,
+  fields: readonly string[],
+): boolean {
+  return fields.some((field) => record[field] !== undefined);
 }
 
-function applySetPack(
+// isImmediate (contract 7.4, last paragraph).
+
+/** The `stage:setEffects` patch fields other than `isBlackout`. */
+const VJ_SET_EFFECTS_OTHER_FIELDS = ["speed", "settings"] as const;
+
+/** Whether `isImmediate: true` is allowed for this command and payload. */
+function isVjImmediateAllowed(
+  name: VjCommandFrameName,
+  record: Record<string, unknown>,
+): boolean {
+  if (name === "stage:setEffects") {
+    return (
+      record.isBlackout !== undefined &&
+      !hasAnyVjField(record, VJ_SET_EFFECTS_OTHER_FIELDS)
+    );
+  }
+  if (name === "stage:setStrobe") return record.isStrobing === false;
+  return name === "stage:resetLook";
+}
+
+/** C 7.4: isImmediate is allowed on setEffects with isBlackout alone, setStrobe false, resetLook. */
+export function readVjImmediateFlag(
+  name: VjCommandFrameName,
+  record: Record<string, unknown>,
+): { isImmediate: boolean } | { error: VjSocketErrorCode } {
+  const flag = record.isImmediate;
+  if (flag === undefined) return { isImmediate: false };
+  if (typeof flag !== "boolean") return { error: "vj_effect_flag_invalid" };
+  if (flag && !isVjImmediateAllowed(name, record)) {
+    return { error: "vj_immediate_not_allowed" };
+  }
+  return { isImmediate: flag };
+}
+
+/** The isImmediate refusal a rule answers before its library reads, or null. */
+function immediateRefusalOf(
+  name: VjCommandFrameName,
+  record: Record<string, unknown>,
+): { error: VjSocketErrorCode } | null {
+  const immediate = readVjImmediateFlag(name, record);
+  return "error" in immediate ? immediate : null;
+}
+
+// The core commands (contract 7.5 rows).
+
+/** A uuid lowercased, or null as sent; null for anything else. */
+function readNullableVjUuid(value: unknown): { id: string | null } | null {
+  if (value === null) return { id: null };
+  return isVjUuid(value) ? { id: value.toLowerCase() } : null;
+}
+
+/** `stage:setPack`: v1, plus a pack change empties `shuffle.excludedClipIds`
+ *  and hides the event card when the new pack is null or links no event. */
+export function applySetPack(
   state: VjStageState,
   record: Record<string, unknown>,
-  library: VjDemoLibraryLookup,
-): VjCommandOutcome {
-  const packId = record.packId;
-  let nextPackId: string | null = null;
-  if (packId !== null) {
-    if (!isVjUuid(packId) || !library.hasPack(packId.toLowerCase())) {
-      return { error: "vj_pack_not_found" };
-    }
-    nextPackId = packId.toLowerCase();
+  context: VjDemoCommandContext,
+): VjDemoCommandOutcome {
+  const packRead = readNullableVjUuid(record.packId);
+  if (packRead === null) return { error: "vj_pack_not_found" };
+  const immediateRefusal = immediateRefusalOf("stage:setPack", record);
+  if (immediateRefusal !== null) return immediateRefusal;
+  const nextPackId = packRead.id;
+  const pack =
+    nextPackId === null ? null : context.library.readPackForStage(nextPackId);
+  if (nextPackId !== null && pack === null) {
+    return { error: "vj_pack_not_found" };
   }
-  if (nextPackId === state.activePackId) {
-    return { next: state, isAlwaysChange: false };
+  if (nextPackId === state.activePackId) return vjDemoChange(state);
+  const isEventLinked = pack !== null && pack.eventId !== null;
+  return vjDemoChange({
+    ...state,
+    activePackId: nextPackId,
+    clipSequence: state.clipSequence + 1,
+    shuffle: { ...state.shuffle, excludedClipIds: [] },
+    eventCard: isEventLinked
+      ? state.eventCard
+      : { ...state.eventCard, isVisible: false },
+  });
+}
+
+/** `stage:goClip`: v1 through `withVjLiveClip`, so a clip clears the
+ *  generator and leads the history, and null goes to black. A re-tap always
+ *  changes the stage: the sequence grows and liveSince restamps. */
+export function applyGoClip(
+  state: VjStageState,
+  record: Record<string, unknown>,
+  context: VjDemoCommandContext,
+): VjDemoCommandOutcome {
+  const clipRead = readNullableVjUuid(record.clipId);
+  if (clipRead === null) return { error: "vj_clip_not_found" };
+  const immediateRefusal = immediateRefusalOf("stage:goClip", record);
+  if (immediateRefusal !== null) return immediateRefusal;
+  const liveClipId = clipRead.id;
+  if (liveClipId !== null && !context.library.hasClip(liveClipId)) {
+    return { error: "vj_clip_not_found" };
   }
-  return {
-    next: withClipSequence(state, { activePackId: nextPackId }),
+  return vjDemoChange(withVjLiveClip(state, liveClipId), {
     isAlwaysChange: true,
-  };
+    stamps: { isLiveSourceSet: true },
+  });
 }
 
-function applyGoClip(
+/** `stage:goGenerator`: an absent variant takes the catalog default, null goes
+ *  to black, and the same generator again still grows the sequence. */
+export function applyGoGenerator(
   state: VjStageState,
   record: Record<string, unknown>,
-  library: VjDemoLibraryLookup,
-): VjCommandOutcome {
-  const clipId = record.clipId;
-  let nextClipId: string | null = null;
-  if (clipId !== null) {
-    if (!isVjUuid(clipId) || !library.hasClip(clipId.toLowerCase())) {
-      return { error: "vj_clip_not_found" };
+): VjDemoCommandOutcome {
+  const { generatorId, variant } = record;
+  if (generatorId === null) {
+    if (variant !== undefined && variant !== null) {
+      return { error: "vj_generator_variant_invalid" };
     }
-    nextClipId = clipId.toLowerCase();
+    return vjDemoChange(withVjLiveGenerator(state, null, null), {
+      isAlwaysChange: true,
+      stamps: { isLiveSourceSet: true },
+    });
   }
-  // A re-tap of the live clip is never a noop: it restarts the shuffle interval.
-  return {
-    next: withClipSequence(state, { liveClipId: nextClipId }),
-    isAlwaysChange: true,
-  };
+  const choice = readVjGeneratorChoice(
+    generatorId,
+    variant,
+    variant !== undefined,
+  );
+  if ("error" in choice) return choice;
+  return vjDemoChange(
+    withVjLiveGenerator(state, choice.generatorId, choice.generatorVariant),
+    { isAlwaysChange: true, stamps: { isLiveSourceSet: true } },
+  );
 }
 
-function applySetTransition(
+const VJ_TRANSITION_FIELDS = ["mode", "length"] as const;
+
+/** `stage:setTransition`: the mode, then the length. */
+export function applySetTransition(
   state: VjStageState,
   record: Record<string, unknown>,
-): VjCommandOutcome {
-  const { mode, fadeMs } = record;
-  if (mode === undefined && fadeMs === undefined) {
+): VjDemoCommandOutcome {
+  if (!hasAnyVjField(record, VJ_TRANSITION_FIELDS)) {
     return { error: "vj_patch_empty" };
   }
   const transition: VjTransition = { ...state.transition };
-  if (mode !== undefined) {
-    if (!isOneOf(VJ_TRANSITION_MODES, mode)) {
+  if (record.mode !== undefined) {
+    if (!isOneOf(VJ_TRANSITION_IDS, record.mode)) {
       return { error: "vj_transition_mode_invalid" };
     }
-    transition.mode = mode;
+    transition.mode = record.mode;
   }
-  if (fadeMs !== undefined) {
-    if (!isNumberInRange(fadeMs, FADE_MS_RANGE))
-      return { error: "vj_fade_out_of_range" };
-    transition.fadeMs = fadeMs;
+  if (record.length !== undefined) {
+    const length = readVjTransitionLength(record.length);
+    if ("error" in length) return length;
+    transition.length = length;
   }
-  return { next: { ...state, transition }, isAlwaysChange: false };
+  return vjDemoChange({ ...state, transition });
 }
 
-function applySetOverlay(
-  state: VjStageState,
+const VJ_OVERLAY_FIELDS = [
+  "text",
+  "style",
+  "isVisible",
+  "position",
+  "size",
+  "colorToken",
+  "hideAfterMs",
+] as const;
+
+/** The listed overlay fields after the text, in check order. */
+const VJ_OVERLAY_LIST_FIELDS = [
+  { field: "style", list: VJ_OVERLAY_STYLES, code: "vj_overlay_style_invalid" },
+  {
+    field: "position",
+    list: VJ_OVERLAY_POSITIONS,
+    code: "vj_overlay_position_invalid",
+  },
+  { field: "size", list: VJ_OVERLAY_SIZES, code: "vj_overlay_size_invalid" },
+  {
+    field: "colorToken",
+    list: VJ_COLOR_TOKENS,
+    code: "vj_color_token_invalid",
+  },
+] as const satisfies ReadonlyArray<{
+  field: keyof VjOverlay;
+  list: readonly string[];
+  code: VjSocketErrorCode;
+}>;
+
+/** The overlay patch through the field rules (text, the listed fields,
+ *  isVisible), or the code that refuses it. */
+function readVjOverlayPatch(
+  overlay: VjOverlay,
   record: Record<string, unknown>,
-): VjCommandOutcome {
-  const { text, style, isVisible } = record;
-  if (text === undefined && style === undefined && isVisible === undefined) {
-    return { error: "vj_patch_empty" };
+): VjOverlay | { error: VjSocketErrorCode } {
+  const next: VjOverlay = { ...overlay };
+  if (record.text !== undefined) {
+    const text = readOverlayText(record.text);
+    if (typeof text !== "string") return text;
+    next.text = text;
   }
-  const overlay: VjOverlay = { ...state.overlay };
-  if (text !== undefined) {
-    const read = readOverlayText(text);
-    if (typeof read !== "string") return read;
-    overlay.text = read;
+  for (const { field, list, code } of VJ_OVERLAY_LIST_FIELDS) {
+    const value = record[field];
+    if (value === undefined) continue;
+    if (!isOneOf<string>(list, value)) return { error: code };
+    Object.assign(next, { [field]: value });
   }
-  if (style !== undefined) {
-    if (!isOneOf(VJ_OVERLAY_STYLES, style)) {
-      return { error: "vj_overlay_style_invalid" };
-    }
-    overlay.style = style;
-  }
-  if (isVisible !== undefined) {
-    if (typeof isVisible !== "boolean") {
+  if (record.isVisible !== undefined) {
+    if (typeof record.isVisible !== "boolean") {
       return { error: "vj_effect_flag_invalid" };
     }
-    overlay.isVisible = isVisible;
+    next.isVisible = record.isVisible;
   }
+  return next;
+}
+
+/** `stage:setOverlay`: the field rules, `hideAfterMs`, then the blank text
+ *  check. A hidden result clears `hideAt`; a visible one stamps it from a
+ *  `hideAfterMs` number, clears it for null and keeps it when absent. */
+export function applySetOverlay(
+  state: VjStageState,
+  record: Record<string, unknown>,
+): VjDemoCommandOutcome {
+  if (!hasAnyVjField(record, VJ_OVERLAY_FIELDS)) {
+    return { error: "vj_patch_empty" };
+  }
+  const overlay = readVjOverlayPatch(state.overlay, record);
+  if ("error" in overlay) return overlay;
+  const { hideAfterMs } = record;
+  const isHideAfterMsValid =
+    hideAfterMs === undefined ||
+    hideAfterMs === null ||
+    isNumberInRange(hideAfterMs, OVERLAY_HIDE_AFTER_MS_RANGE);
+  if (!isHideAfterMsValid) return { error: "vj_overlay_hide_out_of_range" };
   if (overlay.isVisible && overlay.text.length === 0) {
     return { error: "vj_overlay_text_blank" };
   }
-  return { next: { ...state, overlay }, isAlwaysChange: false };
-}
-
-function applySetEffects(
-  state: VjStageState,
-  record: Record<string, unknown>,
-): VjCommandOutcome {
-  const { speed } = record;
-  const hasFlag = VJ_EFFECT_FLAG_NAMES.some(
-    (flagName) => record[flagName] !== undefined,
+  if (!overlay.isVisible) {
+    return vjDemoChange(
+      { ...state, overlay: { ...overlay, hideAt: null } },
+      { stamps: { overlayHideAfterMs: null } },
+    );
+  }
+  const overlayHideAfterMs = hideAfterMs;
+  return vjDemoChange(
+    {
+      ...state,
+      overlay: {
+        ...overlay,
+        hideAt: overlayHideAfterMs === null ? null : overlay.hideAt,
+      },
+    },
+    {
+      // A number restamps hideAt at applyAt ?? now, so the stage changes.
+      isAlwaysChange: typeof overlayHideAfterMs === "number",
+      stamps: { overlayHideAfterMs },
+    },
   );
-  if (speed === undefined && !hasFlag) return { error: "vj_patch_empty" };
-  const effects: VjEffects = { ...state.effects };
-  if (speed !== undefined) {
-    if (!isOneOf(VJ_SPEEDS, speed)) return { error: "vj_speed_invalid" };
-    effects.speed = speed;
-  }
-  for (const flagName of VJ_EFFECT_FLAG_NAMES) {
-    const flag = record[flagName];
-    if (flag === undefined) continue;
-    if (typeof flag !== "boolean") return { error: "vj_effect_flag_invalid" };
-    effects[flagName] = flag;
-  }
-  return { next: { ...state, effects }, isAlwaysChange: false };
 }
 
-function applySetStrobe(
+/** `stage:setStrobe`: the v1 flag rule (isImmediate follows in the
+ *  dispatcher). On while on is a noop, so the start is never extended. */
+export function applySetStrobe(
   state: VjStageState,
   record: Record<string, unknown>,
-  now: number,
-): VjCommandOutcome {
+): VjDemoCommandOutcome {
   const { isStrobing } = record;
   if (typeof isStrobing !== "boolean") {
     return { error: "vj_effect_flag_invalid" };
   }
-  // On while on keeps the first start, so the 10 s are never extended.
-  if (isStrobing === state.effects.isStrobing) {
-    return { next: state, isAlwaysChange: false };
-  }
-  const effects: VjEffects = {
-    ...state.effects,
-    isStrobing,
-    strobeStartedAt: isStrobing ? now : null,
-  };
-  return { next: { ...state, effects }, isAlwaysChange: true };
+  return vjDemoChange(
+    { ...state, effects: { ...state.effects, isStrobing } },
+    { stamps: { isStrobeStarted: isStrobing && !state.effects.isStrobing } },
+  );
 }
 
-function applySetShuffle(
+// The dispatcher.
+
+type VjDemoCommandRule = (
   state: VjStageState,
   record: Record<string, unknown>,
-): VjCommandOutcome {
-  const { isOn, intervalKind, intervalValue, bpm } = record;
-  const isEmpty = [isOn, intervalKind, intervalValue, bpm].every(
-    (field) => field === undefined,
-  );
-  if (isEmpty) return { error: "vj_patch_empty" };
-  const shuffle: VjShuffle = { ...state.shuffle };
-  if (isOn !== undefined) {
-    if (typeof isOn !== "boolean") return { error: "vj_effect_flag_invalid" };
-    shuffle.isOn = isOn;
-  }
-  if (intervalKind !== undefined) {
-    if (!isOneOf(VJ_SHUFFLE_INTERVAL_KINDS, intervalKind)) {
-      return { error: "vj_shuffle_interval_invalid" };
-    }
-    shuffle.intervalKind = intervalKind;
-  }
-  let nextValue: unknown = intervalValue ?? state.shuffle.intervalValue;
-  if (
-    intervalValue === undefined &&
-    shuffle.intervalKind !== state.shuffle.intervalKind &&
-    !isValidIntervalValue(shuffle.intervalKind, nextValue)
-  ) {
-    nextValue = VJ_LIMITS.shuffleSecondsDefault;
-  }
-  if (!isValidIntervalValue(shuffle.intervalKind, nextValue)) {
-    return { error: "vj_shuffle_interval_invalid" };
-  }
-  shuffle.intervalValue = nextValue;
-  if (bpm !== undefined) {
-    if (!isNumberInRange(bpm, BPM_RANGE))
-      return { error: "vj_bpm_out_of_range" };
-    shuffle.bpm = roundBpm(bpm);
-  }
-  return { next: { ...state, shuffle }, isAlwaysChange: false };
-}
+  context: VjDemoCommandContext,
+) => VjDemoCommandOutcome;
 
-function isSameStageContent(left: VjStageState, right: VjStageState): boolean {
-  return JSON.stringify(left) === JSON.stringify(right);
-}
+/** Every stamped command (contract 9.3) to its rule. */
+export const VJ_DEMO_COMMAND_RULES: Readonly<
+  Record<VjCommandFrameName, VjDemoCommandRule>
+> = {
+  "stage:setPack": applySetPack,
+  "stage:goClip": applyGoClip,
+  "stage:goGenerator": applyGoGenerator,
+  "stage:setTransition": applySetTransition,
+  "stage:setOverlay": applySetOverlay,
+  "stage:setEffects": applySetEffects,
+  "stage:setStrobe": applySetStrobe,
+  "stage:setShuffle": applySetShuffle,
+  "stage:setTempo": applySetTempo,
+  "stage:setMix": applySetMix,
+  "stage:swapMix": applySwapMix,
+  "stage:setScreenOverride": applySetScreenOverride,
+  "stage:resetLook": applyResetLook,
+  "stage:recallScene": applyRecallScene,
+  "stage:setlistSelect": applySetlistSelect,
+  "stage:setlistNext": (state, record, context) =>
+    applySetlistNext(state, context, record),
+  "stage:setlistPrevious": (state, record, context) =>
+    applySetlistPrevious(state, context, record),
+  "stage:setCountdown": applySetCountdown,
+  "stage:setLogo": applySetLogo,
+  "stage:setEventCard": applySetEventCard,
+};
 
-function outcomeOf(
-  state: VjStageState,
+/** C 7.4 step 2: scene recalls and set list steps land on the grid, and a set
+ *  list select only when it recalls an item (a non-null index). */
+export function isVjDemoLookSwitch(
   name: VjCommandFrameName,
   record: Record<string, unknown>,
-  context: VjStageCommandContext,
-): VjCommandOutcome {
-  switch (name) {
-    case "stage:setPack":
-      return applySetPack(state, record, context.library);
-    case "stage:goClip":
-      return applyGoClip(state, record, context.library);
-    case "stage:setTransition":
-      return applySetTransition(state, record);
-    case "stage:setOverlay":
-      return applySetOverlay(state, record);
-    case "stage:setEffects":
-      return applySetEffects(state, record);
-    case "stage:setStrobe":
-      return applySetStrobe(state, record, context.now);
-    case "stage:setShuffle":
-      return applySetShuffle(state, record);
+): boolean {
+  if (name === "stage:setlistSelect") {
+    return record.index !== null && record.index !== undefined;
   }
+  return (
+    name === "stage:recallScene" ||
+    name === "stage:setlistNext" ||
+    name === "stage:setlistPrevious"
+  );
 }
 
-/** Contract 6.6. On a change: revision + 1, updatedAt now. */
+/** C 7.5 and 7.6 rules for one stamped command; the result is unsettled (T16 settles it). */
 export function applyVjStageCommand(
   state: VjStageState,
   name: VjCommandFrameName,
   payload: unknown,
-  context: VjStageCommandContext,
+  context: VjDemoCommandContext,
 ): VjStageCommandResult {
-  const outcome = outcomeOf(state, name, readVjRecord(payload), context);
+  const record = readVjRecord(payload);
+  const outcome = VJ_DEMO_COMMAND_RULES[name](state, record, context);
   if ("error" in outcome) return outcome;
-  if (!outcome.isAlwaysChange && isSameStageContent(outcome.next, state)) {
-    return { state, isNoop: true };
+  // Plan call 4: isImmediate is checked after the command's own rules.
+  const immediate = readVjImmediateFlag(name, record);
+  if ("error" in immediate) return immediate;
+  const isLookSwitch = isVjDemoLookSwitch(name, record);
+  if (!outcome.isAlwaysChange && isSameVjStageContent(outcome.next, state)) {
+    return {
+      state,
+      isNoop: true,
+      stamps: NO_VJ_DEMO_STAMPS,
+      isLookSwitch,
+      isImmediate: immediate.isImmediate,
+    };
   }
   return {
-    state: {
-      ...outcome.next,
-      revision: state.revision + 1,
-      updatedAt: context.now,
-    },
+    state: outcome.next,
     isNoop: false,
-  };
-}
-
-/** One field per patch, so a field that fails keeps the fresh default. */
-function restorePatchesOf(
-  record: Record<string, unknown>,
-): Array<[VjCommandFrameName, Record<string, unknown>]> {
-  const transition = readVjRecord(record.transition);
-  const overlay = readVjRecord(record.overlay);
-  const effects = readVjRecord(record.effects);
-  const shuffle = readVjRecord(record.shuffle);
-  return [
-    ["stage:setPack", { packId: record.activePackId }],
-    ["stage:goClip", { clipId: record.liveClipId }],
-    ["stage:setTransition", { mode: transition.mode }],
-    ["stage:setTransition", { fadeMs: transition.fadeMs }],
-    ["stage:setOverlay", { text: overlay.text }],
-    ["stage:setOverlay", { style: overlay.style }],
-    ["stage:setOverlay", { isVisible: overlay.isVisible }],
-    ["stage:setEffects", { speed: effects.speed }],
-    ...VJ_EFFECT_FLAG_NAMES.map(
-      (flagName): [VjCommandFrameName, Record<string, unknown>] => [
-        "stage:setEffects",
-        { [flagName]: effects[flagName] },
-      ],
-    ),
-    ["stage:setShuffle", { isOn: shuffle.isOn }],
-    ["stage:setShuffle", { intervalKind: shuffle.intervalKind }],
-    ["stage:setShuffle", { intervalValue: shuffle.intervalValue }],
-    ["stage:setShuffle", { bpm: shuffle.bpm }],
-  ];
-}
-
-/**
- * Contract 6.4 restore rule: every field validated by the command rules (a
- * field that fails takes its default), the strobe off, an unknown pack or
- * clip dropped, the fresh stageEpoch kept, revision 1 and clipSequence 1.
- */
-export function restoreVjStage(
-  fresh: VjStageState,
-  restore: VjStageRestore,
-  library: VjDemoLibraryLookup,
-): VjStageState {
-  const context: VjStageCommandContext = { now: fresh.updatedAt, library };
-  let state = fresh;
-  for (const [name, patch] of restorePatchesOf(readVjRecord(restore))) {
-    const outcome = outcomeOf(state, name, patch, context);
-    if (!("error" in outcome)) state = outcome.next;
-  }
-  return {
-    ...state,
-    stageEpoch: fresh.stageEpoch,
-    revision: 1,
-    clipSequence: 1,
-    effects: { ...state.effects, isStrobing: false, strobeStartedAt: null },
-    updatedAt: fresh.updatedAt,
+    stamps: outcome.stamps,
+    isLookSwitch,
+    isImmediate: immediate.isImmediate,
   };
 }

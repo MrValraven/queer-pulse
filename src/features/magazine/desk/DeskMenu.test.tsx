@@ -394,3 +394,37 @@ describe("DeskMenu placement and trigger composition", () => {
     await expectFocused("Newest first");
   });
 });
+
+describe("DeskMenu exit fade", () => {
+  it("stays mounted but inert while fading out, then unmounts", async () => {
+    const realGetComputedStyle = window.getComputedStyle.bind(window);
+    vi.spyOn(window, "getComputedStyle").mockImplementation((element) => {
+      const style = realGetComputedStyle(element);
+      return new Proxy(style, {
+        get: (target, property) =>
+          property === "transitionDuration"
+            ? "0.15s"
+            : (Reflect.get(target, property) as unknown),
+      });
+    });
+    try {
+      const user = userEvent.setup();
+      const trigger = renderMenu(sortItems());
+      await user.click(trigger);
+      const menu = screen.getByRole("menu");
+      await expectFocused("Newest first");
+
+      await user.keyboard("{Escape}");
+      expect(trigger).toHaveAttribute("aria-expanded", "false");
+      expect(trigger).not.toHaveAttribute("aria-controls");
+      expect(menu).toBeInTheDocument();
+      expect(menu).toHaveAttribute("inert");
+      expect(menu).not.toHaveAttribute("data-placed");
+      expect(trigger).toHaveFocus();
+
+      await waitFor(() => expect(menu).not.toBeInTheDocument());
+    } finally {
+      vi.restoreAllMocks();
+    }
+  });
+});

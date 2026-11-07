@@ -1,4 +1,5 @@
 import { PageShell } from "../../shared/components/layout";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -9,6 +10,7 @@ import styles from "./SolidarityPage.module.css";
 
 export function SolidarityPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   return (
     <PageShell>
       <header className={styles.hero} data-plum>
@@ -22,7 +24,13 @@ export function SolidarityPage() {
             <em>{t("economy:solidarity.hero.titleEm")}</em>
           </h1>
           <p className={styles.sub}>{t("economy:solidarity.hero.sub")}</p>
-          <div className={styles.note}>{t("economy:solidarity.hero.note")}</div>
+          {/* The verification line describes the demo practitioners; the live
+              directory has no listings to back it. */}
+          {demoMode && (
+            <div className={styles.note}>
+              {t("economy:solidarity.hero.note")}
+            </div>
+          )}
         </div>
       </header>
 

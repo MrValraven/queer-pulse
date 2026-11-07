@@ -4,9 +4,13 @@ export interface Article {
   tocKey: string;
   titleKey: string;
   clauseKeys: string[];
-  quoteKey?: string;
 }
 
+/**
+ * The constitution lists only what QueerPulse does today; an article whose
+ * rule is not written yet says so in its own copy (see the `constitution.*`
+ * catalog comment). Adding an article means adding its keys in both catalogs.
+ */
 export const ARTICLES: Article[] = [
   {
     id: "art1",
@@ -16,7 +20,6 @@ export const ARTICLES: Article[] = [
     clauseKeys: [
       "marketing:constitution.art1.clause1",
       "marketing:constitution.art1.clause2",
-      "marketing:constitution.art1.clause3",
     ],
   },
   {
@@ -38,7 +41,6 @@ export const ARTICLES: Article[] = [
     clauseKeys: [
       "marketing:constitution.art3.clause1",
       "marketing:constitution.art3.clause2",
-      "marketing:constitution.art3.clause3",
     ],
   },
   {
@@ -49,10 +51,7 @@ export const ARTICLES: Article[] = [
     clauseKeys: [
       "marketing:constitution.art4.clause1",
       "marketing:constitution.art4.clause2",
-      "marketing:constitution.art4.clause3",
-      "marketing:constitution.art4.clause4",
     ],
-    quoteKey: "marketing:constitution.art4.quote",
   },
   {
     id: "art5",
@@ -62,7 +61,6 @@ export const ARTICLES: Article[] = [
     clauseKeys: [
       "marketing:constitution.art5.clause1",
       "marketing:constitution.art5.clause2",
-      "marketing:constitution.art5.clause3",
     ],
   },
   {
@@ -73,8 +71,6 @@ export const ARTICLES: Article[] = [
     clauseKeys: [
       "marketing:constitution.art6.clause1",
       "marketing:constitution.art6.clause2",
-      "marketing:constitution.art6.clause3",
-      "marketing:constitution.art6.clause4",
     ],
   },
   {
@@ -107,38 +103,6 @@ export const ARTICLES: Article[] = [
     clauseKeys: [
       "marketing:constitution.art9.clause1",
       "marketing:constitution.art9.clause2",
-      "marketing:constitution.art9.clause3",
-    ],
-  },
-  {
-    id: "art10",
-    roman: "X",
-    tocKey: "marketing:constitution.art10.toc",
-    titleKey: "marketing:constitution.art10.title",
-    clauseKeys: [
-      "marketing:constitution.art10.clause1",
-      "marketing:constitution.art10.clause2",
-    ],
-  },
-  {
-    id: "art11",
-    roman: "XI",
-    tocKey: "marketing:constitution.art11.toc",
-    titleKey: "marketing:constitution.art11.title",
-    clauseKeys: [
-      "marketing:constitution.art11.clause1",
-      "marketing:constitution.art11.clause2",
-    ],
-  },
-  {
-    id: "art12",
-    roman: "XII",
-    tocKey: "marketing:constitution.art12.toc",
-    titleKey: "marketing:constitution.art12.title",
-    clauseKeys: [
-      "marketing:constitution.art12.clause1",
-      "marketing:constitution.art12.clause2",
-      "marketing:constitution.art12.clause3",
     ],
   },
 ];

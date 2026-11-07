@@ -27,40 +27,30 @@ export const community: Catalog = {
   "caregivers.outro.title": "You don't have to <em>get it all right.</em>",
   "caregivers.outro.sub":
     "You have to keep showing up. This space is here for you too.",
-  "caregivers.outro.cta": "Find a support room",
+  "caregivers.outro.cta": "Find peer support",
 
   // Caregivers — Start Here (five short reads)
   "caregivers.startHere.title": "Start <em>here</em>",
   "caregivers.startHere.lead":
-    "Five short reads. Each is one specific question, answered concretely, in language we'd want to hear ourselves. <em>Not a course. Not 50 modules.</em> Five reads.",
+    "Five places to begin. Each one starts from a specific question, in language we'd want to hear ourselves. <em>Pick the one closest to where you are.</em>",
   "caregivers.lesson.listen.title": "How to <em>listen</em> the first time",
   "caregivers.lesson.listen.body":
-    "The first conversation matters less than you think and more than you think. <em>One thing to do; three things to not do.</em> Written by Sara Marques + 6 parents.",
-  "caregivers.lesson.listen.readTime": "4 min read",
-  "caregivers.lesson.listen.langs": "PT + EN",
+    "The first conversation matters less than you think and more than you think. <em>One thing to do; three things to not do.</em>",
   "caregivers.lesson.wrongThing.title":
     "What to say <em>when you say something wrong</em>",
   "caregivers.lesson.wrongThing.body":
-    "You will. Everyone does. <em>The repair is what matters.</em> A small script and a slow apology, written by people who've done both badly and well.",
-  "caregivers.lesson.wrongThing.readTime": "5 min read",
-  "caregivers.lesson.wrongThing.langs": "PT + EN",
+    "You will. Everyone does. <em>The repair is what matters.</em> A small script and a slow apology.",
   "caregivers.lesson.pronouns.title": "Pronouns & <em>names</em>, simply",
   "caregivers.lesson.pronouns.body":
-    "What to do, what not to do, what to do when you slip. <em>A practical piece, on what to actually do.</em> Written by Yara R.",
-  "caregivers.lesson.pronouns.readTime": "3 min read",
-  "caregivers.lesson.pronouns.langs": "PT + EN",
+    "What to do, what not to do, what to do when you slip. <em>A practical piece, on what to actually do.</em>",
   "caregivers.lesson.transitioning.title":
     "If your person is <em>medically transitioning</em>",
   "caregivers.lesson.transitioning.body":
-    "What to ask, what not to ask, what to be ready for. Covers HRT, gender-affirming surgeries, Portuguese healthcare specifics. <em>Written by trans members + their parents.</em>",
-  "caregivers.lesson.transitioning.readTime": "9 min read",
-  "caregivers.lesson.transitioning.langs": "PT + EN",
+    "What to ask, what not to ask, what to be ready for. Covers HRT, gender-affirming surgeries, Portuguese healthcare specifics.",
   "caregivers.lesson.familyPullsAway.title":
     "When family pulls <em>the other way</em>",
   "caregivers.lesson.familyPullsAway.body":
-    "When grandparents, in-laws, cousins make it harder. <em>How to hold the line without burning the house down.</em> Written by 4 parents.",
-  "caregivers.lesson.familyPullsAway.readTime": "7 min read",
-  "caregivers.lesson.familyPullsAway.langs": "PT + EN",
+    "When grandparents, in-laws, cousins make it harder. <em>How to hold the line without burning the house down.</em>",
 
   // Caregivers — Common questions (FAQ accordion)
   "caregivers.commonQuestions.title": "Common <em>questions</em>",
@@ -71,7 +61,7 @@ export const community: Catalog = {
   "caregivers.faq.partnerTransitioning.q":
     "My partner is transitioning and I'm scared we'll grow apart.",
   "caregivers.faq.partnerTransitioning.a":
-    "This fear is shared by a lot of people in your position, and it's not shameful. <em>You're allowed to feel it.</em> What helps: talk to other partners who've been through this, see the support rooms below. What also helps: keep doing the small things that have always been yours together. Transition changes a lot. It doesn't have to change everything.",
+    "This fear is shared by a lot of people in your position, and it's not shameful. <em>You're allowed to feel it.</em> What helps: talking to other partners who've been through this. Peer support is a good place to start. What also helps: keep doing the small things that have always been yours together. Transition changes a lot. It doesn't have to change everything.",
   "caregivers.faq.wrongPronouns.q":
     "I keep using the wrong pronouns. Will my friend forgive me?",
   "caregivers.faq.wrongPronouns.a":
@@ -79,27 +69,7 @@ export const community: Catalog = {
   "caregivers.faq.grandchildQueer.q":
     "My grandchild is queer and my children won't speak to them. <em>What do I do?</em>",
   "caregivers.faq.grandchildQueer.a":
-    "Stay in contact with your grandchild. <em>Every direct relationship counts.</em> Don't make them carry the family conflict. Be the consistent voice they can return to. If you want to write to your children about it, the Parents resource has a template letter we've collaboratively edited over the years.",
-
-  // Caregivers — Voice rooms
-  "caregivers.voiceRooms.title": "Talk to <em>others</em> like you",
-  "caregivers.voiceRooms.lead":
-    "Members-only support rooms. Joining is opt-in and quiet.",
-  "caregivers.room.parents.title": "Parents <em>voice room</em>",
-  "caregivers.room.parents.sub":
-    "Weekly Tuesday 21:00 Lisbon · facilitated · PT + EN",
-  "caregivers.room.parents.meta": "38 parents in the room · last week",
-  "caregivers.room.partnersOfTrans.title": "Partners of trans <em>people</em>",
-  "caregivers.room.partnersOfTrans.sub":
-    "Bi-weekly Thursday 20:00 · facilitated · EN",
-  "caregivers.room.partnersOfTrans.meta": "12 partners in the room",
-  "caregivers.room.siblings.title": "Siblings & <em>chosen siblings</em>",
-  "caregivers.room.siblings.sub": "Monthly Sunday 18:00 · informal · PT + EN",
-  "caregivers.room.siblings.meta": "22 siblings · last month",
-  "caregivers.room.youthWorkers.title": "Working with <em>young people</em>",
-  "caregivers.room.youthWorkers.sub":
-    "Teachers, social workers, youth-club staff · Wed 19:00",
-  "caregivers.room.youthWorkers.meta": "14 in the room",
+    "Stay in contact with your grandchild. <em>Every direct relationship counts.</em> Don't make them carry the family conflict. Be the consistent voice they can return to.",
 
   // Caregivers — Don't say / Do say
   "caregivers.dontDoSay.eyebrow": "A small list",
@@ -261,41 +231,41 @@ export const community: Catalog = {
   "changemakers.admin.editor.updatedToast": "Profile updated.",
 
   // ── Coming Out page (ComingOutPage.tsx) ───────────────────────────────────
-  "comingOut.hero.eyebrow": "Coming-Out Support · Private space",
+  "comingOut.hero.eyebrow": "Coming-Out Support",
   "comingOut.hero.title": "A place to say it <em>before you say it.</em>",
   "comingOut.hero.lead":
-    'A private, low-visibility space for people navigating coming out, at work, to family, or to themselves. There\'s no pressure to be "out" to join, and nothing here is visible from your public profile.',
-  "comingOut.privacy.heading": "Built for <em>privacy</em>, first.",
+    'A low-pressure starting point for people navigating coming out, at work, to family, or to themselves. You don\'t need to be "out" to use QueerPulse, and reading this page leaves nothing on your profile.',
+  "comingOut.privacy.heading": "What stays <em>yours.</em>",
   "comingOut.privacy.lead":
-    "This space carries additional controls beyond the rest of QueerPulse. They exist so you can be here without it costing you anything elsewhere.",
-  "comingOut.privacy.invisible.title": "Invisible from your profile",
-  "comingOut.privacy.invisible.body":
-    "Nothing you do here shows on your public profile or in any feed. Membership itself is hidden.",
-  "comingOut.privacy.noList.title": "No public member list",
-  "comingOut.privacy.noList.body":
-    "You can't be browsed or searched here. People see only what's shared inside the space.",
-  "comingOut.privacy.confidentiality.title": "Confidentiality first",
-  "comingOut.privacy.confidentiality.body":
-    "Stricter moderation, no screenshots, no outside sharing. The first rule and the last.",
+    "Coming out happens on your timeline. Members of a community can see who else belongs to it, and no setting stops someone from repeating what they read, so share only what you are comfortable with.",
+  "comingOut.privacy.hidden.title": "Private communities stay hidden",
+  "comingOut.privacy.hidden.body":
+    "A private community does not show up in browse or search for anyone outside it, and joining is by invitation only. For everyone else it is as if it does not exist.",
+  "comingOut.privacy.offProfile.title": "Off your profile",
+  "comingOut.privacy.offProfile.body":
+    "Your profile lists only the communities you choose to pin, and a private community can't be pinned. Joining or posting in a community that isn't public adds nothing to your profile activity.",
+  "comingOut.privacy.silentDecline.title": "Saying no is silent",
+  "comingOut.privacy.silentDecline.body":
+    "If you decline an invitation to a community, the community is not notified. If an invitation is withdrawn, you are not notified either.",
   "comingOut.privacy.noPressure.title": 'No pressure to be "out"',
   "comingOut.privacy.noPressure.body":
-    "Join at any stage, including not-yet and not-sure. You can leave the moment you're ready.",
+    "Nothing on QueerPulse asks you to be out. Read, join or step away at your own pace.",
   "comingOut.stages.heading": "However you <em>need to use it.</em>",
   "comingOut.stages.lead":
-    "Facilitated with a light hand by Mariana, a clinical psychologist who holds confidentiality as the first rule and the last.",
+    "Three ways to use QueerPulse while you work out what you want to say.",
   "comingOut.stage.readFirst.title": "Just for you, first",
   "comingOut.stage.readFirst.body":
-    "Some people only read. That's a full and valid way to be here. No one will ask you to post.",
-  "comingOut.stage.saySafely.title": "Say it somewhere safe",
+    "Some people only read. That's a full and valid way to be here, and nothing on QueerPulse requires you to post.",
+  "comingOut.stage.saySafely.title": "Say it to someone who gets it",
   "comingOut.stage.saySafely.body":
-    "Try the words out loud here before you say them for real. The weekly circle holds space for exactly that.",
+    "Try the words out before you say them for real. Ask in the Forum, where some categories offer an anonymous byline, or message a member you are connected to. Anyone in the Forum can read a thread, so share only what you are comfortable with.",
   "comingOut.stage.moveOn.title": "Move through, and out",
   "comingOut.stage.moveOn.body":
-    "People graduate out of this space when they no longer need it. That's the whole point.",
+    "Some people need this for a week, some for years. Step back whenever you like and return whenever you need.",
   "comingOut.outro.title": "You don't owe a <em>perfect speech.</em>",
   "comingOut.outro.sub":
-    "Saying the true thing badly is still saying the true thing. Peer support is open whenever you're ready, and you can step away the moment you want to.",
-  "comingOut.outro.enterCta": "Find peer support",
+    "Saying the true thing badly is still saying the true thing. Our guide to peer support explains how to ask for it, and you can step away the moment you want to.",
+  "comingOut.outro.enterCta": "See how peer support works",
   "comingOut.outro.communitiesCta": "See all communities",
 
   // ── Dating & Relationships page (DatingPage.tsx + data) ───────────────────
@@ -306,60 +276,47 @@ export const community: Catalog = {
 
   "dating.apps.heading": "Apps in <em>Lisbon</em>",
   "dating.apps.lead":
-    "What the community actually uses: honest takes from the community.",
+    "A plain look at the apps in use around Lisbon and who each one is built for.",
   "dating.app.grindr.audience": "Gay & bi men · Trans masc",
   "dating.app.grindr.body":
     "Still the highest user density for gay and bi men in Lisbon. Works. The culture varies enormously by who's on at any given time.",
   "dating.app.grindr.tag1": "Hookup-oriented",
   "dating.app.grindr.tag2": "High volume",
   "dating.app.grindr.tag3": "Variable culture",
-  "dating.app.grindr.quote":
-    '"Works fine for what it is. Set your preferences clearly and you\'ll find your people. The community tends to cluster in Príncipe Real and Mouraria."',
   "dating.app.scruff.audience": "Gay & bi men · Bears · Masc-leaning",
   "dating.app.scruff.body":
-    "More conversational than Grindr. Better for people who want to talk first. Has events and group features that the queer community uses actively in Lisbon.",
+    "More conversational than Grindr. Better for people who want to talk first. Has events and group features.",
   "dating.app.scruff.tag1": "Community features",
   "dating.app.scruff.tag2": "More chat-first",
   "dating.app.scruff.tag3": "Bears & masc",
-  "dating.app.scruff.quote":
-    '"The Lisbon pool is smaller but the vibe is better. More likely to result in an actual conversation."',
   "dating.app.her.audience": "Queer women · Non-binary",
   "dating.app.her.body":
     "The main app for queer women and non-binary people in Lisbon. Smaller pool but genuinely community-oriented: has event listings and groups beyond just dating.",
   "dating.app.her.tag1": "Community-first",
   "dating.app.her.tag2": "Events & groups",
   "dating.app.her.tag3": "All relationships",
-  "dating.app.her.quote":
-    '"Not huge in Lisbon but the quality of connections is better. Worth having alongside Tinder."',
   "dating.app.feeld.audience": "All genders · ENM · Kink-adjacent",
   "dating.app.feeld.body":
-    "The go-to for ethical non-monogamy, open relationships, and kink in Lisbon. Very identity-inclusive. Growing fast in the community. Well-used at events and socials too.",
+    "The go-to for ethical non-monogamy, open relationships, and kink in Lisbon. Very identity-inclusive.",
   "dating.app.feeld.tag1": "ENM",
   "dating.app.feeld.tag2": "Kink-adjacent",
   "dating.app.feeld.tag3": "Identity-inclusive",
   "dating.app.feeld.tag4": "Couples & singles",
-  "dating.app.feeld.quote":
-    "\"Best app for anyone who doesn't want to fit into a neat box. The community here uses it more than anywhere I've lived.\"",
   "dating.app.hornet.audience": "Gay & bi men · Community-focused",
   "dating.app.hornet.body":
-    "More community-oriented than Grindr: has news, stories, and group features. Better for people who want to know the city as well as date in it. Active in Lisbon.",
+    "More community-oriented than Grindr: has news, stories, and group features. Better for people who want to know the city as well as date in it.",
   "dating.app.hornet.tag1": "Community features",
   "dating.app.hornet.tag2": "Local news",
   "dating.app.hornet.tag3": "More than hookups",
-  "dating.app.hornet.quote":
-    '"Used this to find events and community spots before I had a social network. Underrated."',
   "dating.app.okcupid.audience": "All genders · Relationships",
   "dating.app.okcupid.body":
     "Best identity and pronoun options of any mainstream app. Question-matching means you arrive at conversations already knowing you have something in common. Slower pace, better for relationships over hookups.",
   "dating.app.okcupid.tag1": "Best identity options",
   "dating.app.okcupid.tag2": "Relationship-focused",
   "dating.app.okcupid.tag3": "Slower pace",
-  "dating.app.okcupid.quote":
-    '"If you care about someone\'s politics and values before their photos, OkCupid is the one."',
 
   "dating.culture.heading": "Dating culture <em>in Lisbon</em>",
-  "dating.culture.lead":
-    "Things the community wishes someone had told them before they started dating here.",
+  "dating.culture.lead": "Things worth knowing before you start dating here.",
   "dating.culture.smallCommunity.title": "It's a small community",
   "dating.culture.smallCommunity.text":
     "Lisbon's queer community is intimate. You will meet the same people at events, through apps, and through friends within weeks of arriving. This is mostly wonderful. But it also means that how you treat people echoes. Be kind.",
@@ -369,13 +326,13 @@ export const community: Catalog = {
   "dating.culture.languageGap.title": "The language gap is real",
   "dating.culture.languageGap.text":
     "Dating across a language barrier is a specific experience. Some people find it freeing; others find it exhausting. The queer expat community is large enough that you can absolutely date within it. But you'll miss the broader community if you only date other expats.",
-  "dating.culture.eventsMatter.title": "Events are how people actually meet",
+  "dating.culture.eventsMatter.title": "Events are an easy way to meet people",
   "dating.culture.eventsMatter.text":
-    "Apps matter less here than in some cities. A significant portion of relationships in the QueerPulse community started at a community event, through a mutual introduction, or at a forum event. Show up to things.",
+    "Apps are one way to meet people here. Events, mutual introductions and the forum are others, and they give a conversation an easy start. Check the calendar and show up to things.",
 
   "dating.structures.heading": "Relationship <em>structures</em>",
   "dating.structures.lead":
-    "Lisbon has an active, visible community across all relationship structures. No default assumed here.",
+    "Every relationship structure is welcome here. No default assumed.",
   "dating.structure.monogamy.label": "Monogamy",
   "dating.structure.monogamy.title": "One person, fully",
   "dating.structure.monogamy.text":
@@ -383,23 +340,23 @@ export const community: Catalog = {
   "dating.structure.enm.label": "Ethical non-monogamy",
   "dating.structure.enm.title": "Open relationships",
   "dating.structure.enm.text":
-    'ENM covers a broad range from "open but together" to fully independent relationships with multiple people. Feeld and the community\'s own social events are the best entry points. The forum has an active ENM thread with local meetups.',
+    'ENM covers a broad range from "open but together" to fully independent relationships with multiple people. Feeld is a common entry point, and the forum is a good place to ask for local tips.',
   "dating.structure.polyamory.label": "Polyamory",
   "dating.structure.polyamory.title": "Multiple loving relationships",
   "dating.structure.polyamory.text":
-    "A distinct culture from ENM, more focused on multiple committed relationships than open/casual structures. There's an active poly community in Lisbon with regular social events and forum support. Legally complex in Portugal, particularly for housing, healthcare, and family situations.",
+    "A distinct culture from ENM, more focused on multiple committed relationships than open/casual structures. Poly members are welcome here, and the forum is open for questions and support. Legally complex in Portugal, particularly for housing, healthcare, and family situations.",
   "dating.structure.relationshipAnarchy.label": "Relationship anarchy",
   "dating.structure.relationshipAnarchy.title": "No hierarchy, no rules",
   "dating.structure.relationshipAnarchy.text":
-    "Relationships defined entirely by the people in them, without reference to conventional categories. RA is quietly common in the Lisbon queer community. Most people won't call it that, but the practice is widespread.",
+    "Relationships defined entirely by the people in them, without reference to conventional categories. Plenty of people live this way without ever calling it relationship anarchy.",
   "dating.structure.queerplatonic.label": "Queerplatonic",
   "dating.structure.queerplatonic.title": "Deep non-romantic partnership",
   "dating.structure.queerplatonic.text":
-    "A committed, close relationship without romantic or sexual components. QPRs can include cohabitation, shared finances, and the kind of partnership that marriage typically describes, just without the romantic framing. Increasingly visible in the community.",
+    "A committed, close relationship without romantic or sexual components. QPRs can include cohabitation, shared finances, and the kind of partnership that marriage typically describes, just without the romantic framing.",
   "dating.structure.soloPolyamory.label": "Solo polyamory",
   "dating.structure.soloPolyamory.title": "Your own anchor",
   "dating.structure.soloPolyamory.text":
-    'Multiple connections without a primary partner or "escalator" trajectory. Common among people who moved to Lisbon independently and value their autonomy. Works well with the city\'s social rhythm: events and community without cohabitation pressure.',
+    'Multiple connections without a primary partner or "escalator" trajectory. Suits people who value their autonomy. Events and community offer connection without cohabitation pressure.',
 
   "dating.recognition.heading": "Legal <em>recognition in Portugal</em>",
   "dating.recognition.sameSexMarriage.title": "Same-sex marriage",
@@ -420,25 +377,13 @@ export const community: Catalog = {
 
   "dating.social.heading": "Meet people <em>in person.</em>",
   "dating.social.lead":
-    "Apps are fine. But the QueerPulse community tends to actually meet at events: socials, dinners, and meetups made specifically for connection. Less transactional than a dating app; more honest about what you're there for.",
+    "Apps are fine. The calendar lists events where you can meet people face to face, with something to do together. Less transactional than a dating app, and more honest about what you're there for.",
   "dating.social.upcomingEventsCta": "See upcoming events",
   "dating.social.forumThreadCta": "Social forum thread",
-  "dating.event.singlesDinner.name": "Queer Singles Dinner",
-  "dating.event.singlesDinner.detail": "Monthly · Mouraria · 12–16 people",
-  "dating.event.singlesDinner.note":
-    "Hosted dinners for single members. No agenda, no pressure: just a good meal and the chance to meet people properly.",
-  "dating.event.enmPolySocial.name": "ENM & Poly Social",
-  "dating.event.enmPolySocial.detail": "Bi-monthly · Arroios · Ongoing",
-  "dating.event.enmPolySocial.note":
-    "Community event for non-monogamous members. Primarily social, secondarily a space to talk about navigating ENM in Lisbon.",
-  "dating.event.newMembersSocial.name": "New Members Social",
-  "dating.event.newMembersSocial.detail": "Every 6 weeks · Venue rotates",
-  "dating.event.newMembersSocial.note":
-    "Specifically for members who've joined in the last 3 months. The community shows up for this one.",
 
   "dating.outro.title": "Real connection <em>exists here.</em>",
   "dating.outro.sub":
-    "It takes a little time and a little showing up. The community makes it easier.",
+    "It takes a little time and a little showing up. The calendar is a good place to start.",
   "dating.outro.cta": "See what's on",
 
   // ── Family building hub (FamilyPage.tsx + sub-components) ─────────────────

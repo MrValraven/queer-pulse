@@ -135,7 +135,7 @@ export const subprofiles: Catalog = {
   // Directory closing section
   "directory.closing.title": "Your work belongs on this wall <em>too</em>",
   "directory.closing.lead":
-    "Every persona here was made by someone who joined for something else. Set up a page for your craft and credit the people you make things with.",
+    "Every persona here was made by a member of our community. Set up a page for your craft and credit the people you make things with.",
   "directory.closing.cta": "Make your persona",
 
   // Directory card (credit lines, view link, follow errors)

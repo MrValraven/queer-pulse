@@ -113,7 +113,7 @@ export function SuccessPanel({
           components={{ em: <em /> }}
         />
       </h2>
-      {/* The demo sub promises "taking you on to cancel your membership".
+      {/* The demo sub promises "taking you on to your account settings".
           Nothing carries a live member on: the token is cached and they press
           their original confirm button again, which is the deliberate margin
           against a destructive action firing on a page load. */}

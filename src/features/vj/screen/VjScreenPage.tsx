@@ -1,124 +1,36 @@
 /**
  * The VJ projector at /admin/vj/screen. Before the show it shows the setup
- * card; from the first fullscreen on it shows only the stage (the clips, the
- * effects and the overlay text). It never shows the connection state: the
- * show keeps running when the socket drops, and a refusal arriving mid-show
- * changes nothing on screen. Only the lead screen strobes, so two projectors
- * in one room never flash out of step.
+ * card; from the first fullscreen on it shows only the stage (the WebGL
+ * compositor or the DOM renderer), the crisp overlay layer over it and, when
+ * the remote asks, this screen's number. It never shows the connection
+ * state: the show keeps running when the socket drops, and a refusal arriving
+ * mid-show changes nothing on screen. Only the lead screen strobes, so two
+ * projectors in one room never flash out of step.
  */
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type JSX,
-} from "react";
+import { useCallback, useEffect, useState, type JSX } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { FiMaximize } from "react-icons/fi";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
-import {
-  createVjStageState,
-  type VjStageRestore,
-} from "../../../shared/contracts/vj";
+import { createVjStageState } from "../../../shared/contracts/vj";
 import { MAIN_CONTENT_ID } from "../../../shared/components/layout/SkipToContentLink";
 import { Button } from "../../../shared/components/ui";
 import { useScreenWakeLock } from "../../../shared/hooks/useScreenWakeLock";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { PageMeta } from "../../../shared/seo";
 import { useFullscreen } from "../../quizshow/screen/useFullscreen";
-import { useVjStage } from "../live/useVjStage";
+import { VjOverlayLayer } from "./overlay/VjOverlayLayer";
+import { VjScreenIdentify } from "./overlay/VjScreenIdentify";
 import { useIsPointerIdle, VJ_CURSOR_IDLE_MS } from "./useIsPointerIdle";
 import { useVjScreenDocumentFlag } from "./useVjScreenDocumentFlag";
-import { useVjScreenPreload } from "./useVjScreenPreload";
-import { useVjScreenProgram } from "./useVjScreenProgram";
-import { useVjScreenRecordSync } from "./useVjScreenRecordSync";
-import { useVjScreenStatusReport } from "./useVjScreenStatusReport";
-import {
-  useReleaseUnadoptedVjSource,
-  useVjSourceUrlLedger,
-  useVjTargetClip,
-} from "./useVjTargetClip";
+import { useVjScreenShow, type VjScreenShow } from "./useVjScreenShow";
 import { requestPersistentVjClipStorage } from "./vjClipCache";
-import {
-  readOrMintVjScreenId,
-  readVjScreenRecord,
-  vjStageRestoreOf,
-} from "./vjScreenRecord";
 import { VjScreenSetupCard } from "./VjScreenSetupCard";
-import { VjStageRenderer } from "./VjStageRenderer";
+import { VjScreenStage } from "./VjScreenStage";
 import styles from "./VjScreen.module.css";
 
 /** What the stage draws before any state exists: a black frame with the default look. */
 const IDLE_STAGE_STATE = createVjStageState("vj-screen-idle", 0);
 const FADE_SECONDS = 0.25;
-
-/** The attach `restoreState`: the last look this screen saved. */
-function readRestoreState(): VjStageRestore | null {
-  const savedRecord = readVjScreenRecord();
-  return savedRecord === null ? null : vjStageRestoreOf(savedRecord.state);
-}
-
-function readIsOffline(): boolean {
-  return typeof navigator !== "undefined" && navigator.onLine === false;
-}
-
-/** Composes the stage, the preload, the status report, the record and the program. */
-function useVjScreenShow(isFullscreen: boolean) {
-  const [record] = useState(readVjScreenRecord);
-  const [screenId] = useState(readOrMintVjScreenId);
-  const [isStartedOffline] = useState(readIsOffline);
-  const stage = useVjStage({
-    role: "screen",
-    screenId,
-    getRestoreState: readRestoreState,
-  });
-  const displayState = stage.state ?? record?.state ?? null;
-  const packId = displayState?.activePackId ?? null;
-
-  const preload = useVjScreenPreload({ packId, record, stage });
-  useVjScreenStatusReport({
-    stage,
-    isFullscreen,
-    packId,
-    statuses: preload.statuses,
-  });
-  const liveClipId = stage.state?.liveClipId ?? null;
-  const { clipById } = preload;
-  const liveClip = useMemo(
-    () => (liveClipId === null ? null : clipById(liveClipId)),
-    [liveClipId, clipById],
-  );
-  useVjScreenRecordSync({
-    state: stage.state,
-    pack: preload.pack,
-    clips: preload.clips,
-    liveClip,
-  });
-
-  const program = useVjScreenProgram({
-    state: displayState,
-    isConnected: stage.isConnected,
-    isLead: stage.isLead,
-    readyClipIds: preload.readyClipIds,
-    advance: stage.advance,
-  });
-  const ledger = useVjSourceUrlLedger();
-  const target = useVjTargetClip({
-    displayedClipId: program.displayedClipId,
-    preload,
-    ledger,
-  });
-
-  return {
-    stage,
-    displayState,
-    preload,
-    target,
-    ledger,
-    isOfflineStart: isStartedOffline && stage.state === null,
-  };
-}
 
 /** After the first fullscreen: the one way back in, shown only while the pointer moves. */
 function VjScreenReenterButton({
@@ -152,6 +64,42 @@ function VjScreenReenterButton({
   );
 }
 
+/** The visuals, bottom to top: the stage, the overlay layer, the screen number. */
+function VjScreenVisuals({ show }: { show: VjScreenShow }): JSX.Element {
+  const { stage, preload, ledger } = show;
+  const stageState = show.displayState ?? IDLE_STAGE_STATE;
+  return (
+    <>
+      <VjScreenStage
+        state={stageState}
+        upcoming={show.upcoming}
+        live={show.live}
+        upcomingLive={show.upcomingLive}
+        mix={show.mix}
+        upcomingMix={show.upcomingMix}
+        isStrobeEnabled={stage.isLead}
+        clock={show.clock}
+        micLevelRef={show.mic.levelRef}
+        handleRef={show.handleRef}
+        onClipFailed={preload.markDecodeFailed}
+        onSourceReleased={ledger.release}
+        onRendererChange={show.onRendererChange}
+        onHealth={show.onHealth}
+      />
+      <VjOverlayLayer
+        overlay={stageState.overlay}
+        countdown={stageState.countdown}
+        logo={stageState.logo}
+        eventCard={stageState.eventCard}
+        eventCardData={show.eventCard.card}
+        clock={show.clock}
+        size="screen"
+      />
+      <VjScreenIdentify identify={show.identify} />
+    </>
+  );
+}
+
 export function VjScreenPage(): JSX.Element {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
@@ -166,14 +114,11 @@ export function VjScreenPage(): JSX.Element {
   if (isFullscreen && !hasEnteredFullscreen) setHasEnteredFullscreen(true);
 
   const show = useVjScreenShow(isFullscreen);
-  const { stage, preload, target, ledger } = show;
+  const { stage, preload } = show;
   useEffect(() => {
     // Asked once per mount, so Chrome keeps the clip cache between shows.
     void requestPersistentVjClipStorage();
   }, []);
-  const stageState = show.displayState ?? IDLE_STAGE_STATE;
-  const mainRef = useRef<HTMLElement>(null);
-  useReleaseUnadoptedVjSource(mainRef, target, ledger);
 
   const goFullscreen = useCallback(() => {
     if (!isFullscreen) toggleFullscreen();
@@ -185,22 +130,8 @@ export function VjScreenPage(): JSX.Element {
       data-cursor-hidden={isPointerIdle || undefined}
     >
       <PageMeta title={t("vj:screen.metaTitle")} noIndex />
-      <main
-        ref={mainRef}
-        id={MAIN_CONTENT_ID}
-        tabIndex={-1}
-        className={styles.main}
-      >
-        <VjStageRenderer
-          target={target}
-          transition={stageState.transition}
-          effects={stageState.effects}
-          overlay={stageState.overlay}
-          bpm={stageState.shuffle.bpm}
-          isStrobeEnabled={stage.isLead}
-          onClipFailed={preload.markDecodeFailed}
-          onSourceReleased={ledger.release}
-        />
+      <main id={MAIN_CONTENT_ID} tabIndex={-1} className={styles.main}>
+        <VjScreenVisuals show={show} />
         <AnimatePresence>
           {hasEnteredFullscreen ? null : (
             <m.div
@@ -218,6 +149,12 @@ export function VjScreenPage(): JSX.Element {
                 refusal={stage.refusal}
                 isFullscreenSupported={isSupported}
                 onGoFullscreen={goFullscreen}
+                renderer={show.renderer}
+                health={show.health}
+                eventCard={show.eventCard}
+                mic={show.mic}
+                isLead={stage.isLead}
+                tempoSource={show.displayState?.tempo.source ?? null}
               />
             </m.div>
           )}

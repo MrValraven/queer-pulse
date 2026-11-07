@@ -1,0 +1,119 @@
+/* The dock's action row: Blackout, Reset look, Cue or Go, and More in four
+   equal columns, one 48px band (the plan's fold budget). Each column is an
+   icon over a short label in the dark Pulse Live stage look (the --qs-*
+   tokens); every move animates only opacity or transform. A column whose
+   label is wider than its quarter ("Repor visual") grows to fit it and the
+   other three share the rest, so no label is cut. */
+
+.row {
+  --vj-dock-actions-height: 48px;
+  --vj-dock-actions-gap: 6px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(max-content, 1fr));
+  gap: var(--vj-dock-actions-gap);
+  min-inline-size: 0;
+  block-size: var(--vj-dock-actions-height);
+}
+
+.action {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  box-sizing: border-box;
+  min-inline-size: var(--tap-min);
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  padding: 4px 6px;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--radius-12);
+  background: var(--qs-raised);
+  color: var(--qs-text);
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  transition-property: opacity, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+.action:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .action:not([aria-disabled="true"]):hover {
+    border-color: var(--qs-glass-border-strong);
+  }
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  inline-size: 18px;
+  block-size: 18px;
+}
+
+.icon svg {
+  inline-size: 18px;
+  block-size: 18px;
+}
+
+.swap {
+  display: inline-grid;
+  place-items: center;
+}
+
+.label {
+  max-inline-size: 100%;
+  overflow: hidden;
+  font-size: var(--text-12);
+  font-weight: 600;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Blackout on: a steady accent fill, so the state reads from across a dark
+   room. */
+.action[aria-pressed="true"] {
+  border-color: transparent;
+  background: var(--accent);
+  color: var(--qs-cta-ink);
+}
+
+/* Waiting for the stage to confirm: a quieter button until the ack lands. */
+.action[aria-busy="true"] {
+  opacity: 0.8;
+}
+
+/* The reset landed: the check holds in the light jade success colour, which
+   carries on the dark stage surface. */
+.action[data-done="true"] .icon {
+  color: var(--jade-soft);
+}
+
+/* A clip is cued: Go wears the accent edge so the next press is obvious. */
+.action[data-armed="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.action[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* MIDI learn: every pickable control shows a dashed edge. */
+.action[data-vj-midi-pickable] {
+  border-style: dashed;
+  border-color: var(--qs-glass-border-strong);
+}

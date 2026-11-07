@@ -54,7 +54,7 @@ export const GUIDE_INDEX_DEMO: ResourceIndexEntryDTO[] = [
     category: "safety",
     title: "QueerPulse privacy: what's visible, and to whom",
     description:
-      "What shows on your public profile, what stays inside a community, and what only mods see.",
+      "What a private community hides from people outside it, what its members can see, and what stays off your profile.",
     routePath: routes.communityPrivacy,
     lastReviewedOn: null,
     isManaged: true,
@@ -114,7 +114,7 @@ export const GUIDE_INDEX_DEMO: ResourceIndexEntryDTO[] = [
     category: "health",
     title: "Peer support for trans people in Lisbon: how it works",
     description:
-      "Not therapy, not advice: someone who gets it, and how the Hub pairs you.",
+      "Someone who gets it: how to ask in the Forum, and how to become a peer yourself.",
     routePath: routes.peerSupport,
     lastReviewedOn: null,
     isManaged: true,
@@ -144,7 +144,7 @@ export const GUIDE_INDEX_DEMO: ResourceIndexEntryDTO[] = [
     category: "health",
     title: "Spoon theory explained: how this community uses it",
     description:
-      "Hybrid events by default, no-penalty drop-outs, and permission to say you are low on spoons.",
+      "What spoon theory means, and how to use it on QueerPulse: accessibility details on events, online events, and your access needs on the RSVP.",
     routePath: routes.spoonTheory,
     lastReviewedOn: null,
     isManaged: true,
@@ -233,9 +233,9 @@ export const GUIDE_INDEX_DEMO: ResourceIndexEntryDTO[] = [
   {
     slug: "first-meetup-guide",
     category: "community",
-    title: "Your first QueerPulse meetup: what to expect",
+    title: "Your first community meetup: what to expect",
     description:
-      "What actually happens, what 'no agenda' means, and the nervous questions answered.",
+      "What tends to happen at a first meetup, how to ease the nerves, and the nervous questions answered.",
     routePath: routes.firstMeetupGuide,
     lastReviewedOn: null,
     isManaged: true,
@@ -263,9 +263,9 @@ export const GUIDE_INDEX_DEMO: ResourceIndexEntryDTO[] = [
   {
     slug: "running-guide",
     category: "community",
-    title: "Queer running group in Lisbon: pace groups and what to bring",
+    title: "Joining a group run: pace groups and what to bring",
     description:
-      "Three pace groups from social to steady, and honestly less kit than you think.",
+      "How pace groups usually work, what to bring on a first run, and why nobody should run alone.",
     routePath: routes.runningGuide,
     lastReviewedOn: null,
     isManaged: true,
@@ -273,9 +273,9 @@ export const GUIDE_INDEX_DEMO: ResourceIndexEntryDTO[] = [
   {
     slug: "art-crit-guide",
     category: "culture",
-    title: "How Rainbow Arts crit sessions work",
+    title: "How group art critiques work",
     description:
-      "Honest, kind, specific, in that order: the whole method before you walk in.",
+      "Honest, kind, specific, in that order: a method for bringing work to a crit or hosting one.",
     routePath: routes.artCritGuide,
     lastReviewedOn: null,
     isManaged: true,
@@ -283,9 +283,9 @@ export const GUIDE_INDEX_DEMO: ResourceIndexEntryDTO[] = [
   {
     slug: "shared-equipment",
     category: "culture",
-    title: "Shared studio equipment: the Rainbow Arts kit library",
+    title: "Sharing studio equipment: booking and care",
     description:
-      "The riso, the kiln, the projector, the bookbinding kit, and how we care for them.",
+      "Practical guidance for sharing a riso, a kiln, a projector or a bookbinding kit: book it, clean it, log it.",
     routePath: routes.sharedEquipment,
     lastReviewedOn: null,
     isManaged: true,
@@ -293,9 +293,9 @@ export const GUIDE_INDEX_DEMO: ResourceIndexEntryDTO[] = [
   {
     slug: "group-show-archive",
     category: "culture",
-    title: "Rainbow Arts: an archive of every group show",
+    title: "Group show archive: a record of art shows",
     description:
-      "Every show the collective has hung, with dates, venues, and what was made.",
+      "A place to keep a record of group art shows: the title, when and where it hung, and who made the work.",
     routePath: routes.groupShowArchive,
     lastReviewedOn: null,
     isManaged: false,
@@ -305,7 +305,7 @@ export const GUIDE_INDEX_DEMO: ResourceIndexEntryDTO[] = [
     category: "culture",
     title: "The ingredients map",
     description:
-      "Where to find the shops that stock what the recipes of home actually need.",
+      "A neighbourhood-by-neighbourhood guide to finding ingredients from home in Lisbon.",
     routePath: routes.ingredientsMap,
     lastReviewedOn: null,
     isManaged: false,
@@ -325,7 +325,7 @@ export const GUIDE_INDEX_DEMO: ResourceIndexEntryDTO[] = [
     category: "culture",
     title: "The QTIPOC archive",
     description:
-      "Photo sets, letters and recordings from the QTIPOC circle, kept together.",
+      "The idea behind a community-held archive of QTIPOC life in Lisbon, credited to the people who make it.",
     routePath: routes.qtipocArchive,
     lastReviewedOn: null,
     isManaged: false,
