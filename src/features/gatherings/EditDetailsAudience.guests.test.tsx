@@ -13,6 +13,7 @@ import {
   SavedGuestListContext,
   type SavedGuestList,
 } from "./savedGuestListContext";
+import { awaitCatalog } from "../../test/awaitCatalog";
 
 /** The stubs' own labels, hoisted so the mock factories can read them. */
 const STUB_LABELS = vi.hoisted(() => ({
@@ -108,7 +109,7 @@ function draftWithoutGuestList(): GatheringDetailsDraft {
   return editDraftFromState(liveInitialState(gathering, fmt, t));
 }
 
-function renderAudience(savedGuestList?: SavedGuestList) {
+async function renderAudience(savedGuestList?: SavedGuestList) {
   const onChange = vi.fn<(patch: Partial<GatheringDetailsDraft>) => void>();
   const audience = (
     <EditDetailsAudience
@@ -129,19 +130,24 @@ function renderAudience(savedGuestList?: SavedGuestList) {
       )}
     </TestProviders>,
   );
+  await awaitCatalog("gatherings");
   return onChange;
 }
 
 describe("EditDetailsAudience guest list safety", () => {
-  it("reads the saved guests from the opener when the draft holds no guest list", () => {
-    renderAudience({ status: "ready", guests: [joined], onRetry: vi.fn() });
+  it("reads the saved guests from the opener when the draft holds no guest list", async () => {
+    await renderAudience({
+      status: "ready",
+      guests: [joined],
+      onRetry: vi.fn(),
+    });
     expect(screen.getByRole("list", { name: "Guest rows" })).toHaveTextContent(
       "Trans & Non-Binary Hub",
     );
   });
 
-  it("leaves the guests untouched when the lead changes before the saved list answers", () => {
-    const onChange = renderAudience({
+  it("leaves the guests untouched when the lead changes before the saved list answers", async () => {
+    const onChange = await renderAudience({
       status: "loading",
       guests: [],
       onRetry: vi.fn(),
@@ -157,8 +163,8 @@ describe("EditDetailsAudience guest list safety", () => {
     expect(onChange.mock.calls[0]?.[0]).not.toHaveProperty("guestCommunities");
   });
 
-  it("drops the guest that becomes the lead once the saved list has answered", () => {
-    const onChange = renderAudience({
+  it("drops the guest that becomes the lead once the saved list has answered", async () => {
+    const onChange = await renderAudience({
       status: "ready",
       guests: [joined, invited],
       onRetry: vi.fn(),
@@ -169,8 +175,8 @@ describe("EditDetailsAudience guest list safety", () => {
     expect(onChange.mock.calls[0]?.[0]?.guestCommunities).toEqual([invited]);
   });
 
-  it("goes back to no guest list of its own when an edit returns to the saved rows", () => {
-    const onChange = renderAudience({
+  it("goes back to no guest list of its own when an edit returns to the saved rows", async () => {
+    const onChange = await renderAudience({
       status: "ready",
       guests: [joined],
       onRetry: vi.fn(),
@@ -181,17 +187,17 @@ describe("EditDetailsAudience guest list safety", () => {
     expect(onChange).toHaveBeenCalledWith({ guestCommunities: undefined });
   });
 
-  it("locks the field when no opener provides the saved list", () => {
-    renderAudience();
+  it("locks the field when no opener provides the saved list", async () => {
+    await renderAudience();
     expect(screen.queryByRole("list", { name: "Guest rows" })).toBeNull();
     expect(
       screen.getByRole("searchbox", { name: "Guest communities" }),
     ).toBeDisabled();
   });
 
-  it("offers a retry when the saved list failed to load", () => {
+  it("offers a retry when the saved list failed to load", async () => {
     const onRetry = vi.fn();
-    renderAudience({ status: "failed", guests: [], onRetry });
+    await renderAudience({ status: "failed", guests: [], onRetry });
     fireEvent.click(screen.getByRole("button", { name: "Try again" }));
     expect(onRetry).toHaveBeenCalledTimes(1);
   });

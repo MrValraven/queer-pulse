@@ -6,6 +6,10 @@ import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CompanyReviewView } from "./api/companyReviewView";
 import { useCompanyReviewReply } from "./api/useCompanyReviewReply";
+import {
+  COMPANY_REVIEW_REPLY_OVERRIDES,
+  failureToast,
+} from "./economyErrorCopy";
 import styles from "./CompanyPage.module.css";
 
 interface Props {
@@ -57,8 +61,16 @@ export function CompanyReviewReply({ review, companySlug, isOwner }: Props) {
           setIsComposing(false);
           showToast(t("economy:company.reviews.reply.successToast"), "success");
         },
-        onError: () =>
-          showToast(t("economy:company.reviews.reply.errorToast"), "error"),
+        onError: (error) =>
+          showToast(
+            failureToast(
+              error,
+              t,
+              "economy:company.reviews.reply.errorTitle",
+              COMPANY_REVIEW_REPLY_OVERRIDES,
+            ),
+            "error",
+          ),
       },
     );
   };

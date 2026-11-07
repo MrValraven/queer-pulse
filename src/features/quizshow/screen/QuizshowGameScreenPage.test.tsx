@@ -129,7 +129,9 @@ describe("QuizshowGameScreenPage in demo", () => {
 
     expect(await screen.findByText("Queens and legends")).toBeInTheDocument();
     expect(screen.getByText("Names and dates")).toBeInTheDocument();
-    expect(screen.getByText("Drag Name Generator")).toBeInTheDocument();
+    // The Drag Name Generator round is titled after its kind, so its row
+    // shows the name twice: the round title and the kind chip.
+    expect(screen.getAllByText("Drag Name Generator")).toHaveLength(2);
     expect(screen.getAllByText("Adults only (18+)").length).toBeGreaterThan(0);
     expect(
       screen.queryByText(/No lobby is open for this game/),

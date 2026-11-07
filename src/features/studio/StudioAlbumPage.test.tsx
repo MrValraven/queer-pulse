@@ -8,6 +8,7 @@ import {
 import { useLocation } from "react-router-dom";
 import { beforeEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { resetDemoCreditLedger } from "./api/studioDemoCreditLedger";
 import { DEMO_DEFAULT_RELEASE_ID } from "./api/studioDemoMe.data";
 import { resetDemoPurchases } from "./api/studioDemoPurchaseStore";
@@ -24,6 +25,7 @@ describe("StudioAlbumPage (demo fixture)", () => {
         <StudioAlbumPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       await screen.findByRole("heading", {
         level: 1,
@@ -40,6 +42,7 @@ describe("StudioAlbumPage (demo fixture)", () => {
         <StudioAlbumPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(
       await screen.findByRole("button", { name: /^more actions$/i }),
     );
@@ -53,6 +56,7 @@ describe("StudioAlbumPage (demo fixture)", () => {
         <StudioAlbumPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const trigger = await screen.findByRole("button", {
       name: /^more actions$/i,
     });
@@ -75,13 +79,14 @@ describe("StudioAlbumPage (demo fixture)", () => {
         <StudioAlbumPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       await screen.findByRole("heading", { level: 1, name: "Bairro antigo" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Taken down")).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Taken down by QueerPulse staff: A rights holder asked us to check the sample on this track",
+        "Taken down by our team: A rights holder asked us to check the sample on this track",
       ),
     ).toBeInTheDocument();
     const playButtons = screen.getAllByRole("button", {
@@ -122,6 +127,7 @@ describe("StudioAlbumPage: a release our team took down", () => {
         <LocationProbe />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       await screen.findByRole("heading", {
         level: 1,
@@ -145,6 +151,7 @@ describe("StudioAlbumPage: a release our team took down", () => {
         <StudioAlbumPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       await screen.findByRole("heading", {
         name: "We can't find that in Studio",
@@ -156,19 +163,21 @@ describe("StudioAlbumPage: a release our team took down", () => {
   });
 });
 
-function renderAt(path: string) {
-  return render(
+async function renderAt(path: string) {
+  const view = render(
     <TestProviders initialEntries={[path]}>
       <StudioAlbumPage />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
+  return view;
 }
 
 describe("StudioAlbumPage: buying and the supporter wall (demo)", () => {
   beforeEach(() => resetDemoPurchases());
 
   it("puts the Buy panel above the support card and drops the old demo buy card", async () => {
-    renderAt("/studio/album?id=demo-release-home-1");
+    await renderAt("/studio/album?id=demo-release-home-1");
     const side = await screen.findByRole("region", { name: /^Buy / });
     expect(
       within(side).getByRole("button", { name: /^Buy .+ by Rita Ferreira$/ }),
@@ -182,28 +191,28 @@ describe("StudioAlbumPage: buying and the supporter wall (demo)", () => {
   });
 
   it("shows the supporter wall under the tracklist on Mariana's album", async () => {
-    renderAt(`/studio/album?id=${DEMO_DEFAULT_RELEASE_ID}`);
+    await renderAt(`/studio/album?id=${DEMO_DEFAULT_RELEASE_ID}`);
     expect(
       await screen.findByRole("heading", { name: "Supported by" }),
     ).toBeInTheDocument();
   });
 
   it("shows no Buy panel and no wall on a lip-sync mix", async () => {
-    renderAt("/studio/album?id=demo-release-vanda-sunday-mass");
+    await renderAt("/studio/album?id=demo-release-vanda-sunday-mass");
     await screen.findByRole("heading", { level: 1 });
     expect(screen.queryByRole("region", { name: /^Buy / })).toBeNull();
     expect(screen.queryByRole("heading", { name: "Supported by" })).toBeNull();
   });
 
   it("shows no ledger card and no per-play line in demo", async () => {
-    renderAt(`/studio/album?id=${DEMO_DEFAULT_RELEASE_ID}`);
+    await renderAt(`/studio/album?id=${DEMO_DEFAULT_RELEASE_ID}`);
     await screen.findByRole("heading", { level: 1 });
     expect(screen.queryByText(/Public ledger for/)).toBeNull();
     expect(screen.queryByText(/^Every play pays/)).toBeNull();
   });
 
   it("moves focus to the Buy panel heading from the Buy shortcut", async () => {
-    renderAt("/studio/album?id=demo-release-home-1");
+    await renderAt("/studio/album?id=demo-release-home-1");
     const side = await screen.findByRole("region", { name: /^Buy / });
     const shortcut = await screen.findByRole("button", {
       name: /^Buy (album|EP|single|release)$/,
@@ -215,7 +224,7 @@ describe("StudioAlbumPage: buying and the supporter wall (demo)", () => {
   });
 
   it("shows no Buy shortcut where the panel offers no Buy button", async () => {
-    renderAt("/studio/album?id=demo-release-vanda-sunday-mass");
+    await renderAt("/studio/album?id=demo-release-vanda-sunday-mass");
     await screen.findByRole("heading", { level: 1 });
     expect(
       screen.queryByRole("button", {

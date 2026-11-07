@@ -7,7 +7,9 @@ import {
   templateSeedById,
 } from "./quizshowTemplates.data";
 
-const DATA_FILE_URL = new URL("./quizshowTemplates.data.ts", import.meta.url);
+// Relative to the repo root, where Vitest runs. Under jsdom import.meta.url is
+// an http URL, which readFileSync cannot open.
+const DATA_FILE_PATH = "src/features/quizshow/demo/quizshowTemplates.data.ts";
 const PUBLISHED_TEMPLATE_IDS = [
   QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory,
   QUIZSHOW_DEMO_TEMPLATE_IDS.portugueseQueerCulture,
@@ -109,7 +111,7 @@ describe("quizshow demo templates", () => {
       .flatMap((seed) => seed.staffNotes.split("\n"))
       .filter((line) => sourceLinePattern.test(line)).length;
     expect(sourceLineCount).toBe(83);
-    expect(readFileSync(DATA_FILE_URL, "utf8")).not.toContain("// Source:");
+    expect(readFileSync(DATA_FILE_PATH, "utf8")).not.toContain("// Source:");
   });
 
   it("leaves the draft's Portuguese description empty", () => {

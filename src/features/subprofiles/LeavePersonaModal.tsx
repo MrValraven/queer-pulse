@@ -4,9 +4,10 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
 import { routes } from "../../app/routeMap";
-import { isAccountRestricted, reasonFor } from "../../shared/api/errorMessage";
+import { isAccountRestricted } from "../../shared/api/errorMessage";
 import { useSubprofileMembers } from "./api/useSubprofileMembers";
 import type { LinkVisibility } from "./api/subprofiles.api";
+import { reasonOrCauseMessage } from "./personaActionErrors";
 import { handleCarriesCreatorSlug } from "./personaHandle";
 
 /**
@@ -95,7 +96,7 @@ export function LeavePersonaModal({
       showToast(
         isAccountRestricted(error)
           ? t("shared:apiError.accountRestricted")
-          : (reasonFor(error) ?? t("subprofiles:owners.toastLeaveError")),
+          : reasonOrCauseMessage(error, t),
         "error",
       );
     }

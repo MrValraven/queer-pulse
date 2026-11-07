@@ -157,6 +157,10 @@ export const community: Catalog = {
   "changemakers.nominate.successToast": "Thank you. We'll look into {name}.",
   "changemakers.nominate.errorToast":
     "Couldn't send your nomination. Please try again.",
+  "changemakers.nominate.errorSelf":
+    "You can't nominate yourself. Nominate someone else who is changing things for our community.",
+  "changemakers.nominate.errorMemberGone":
+    "We couldn't find that member, so the nomination wasn't sent. Search again or type their name instead.",
 
   // ── Change Maker story page (ChangemakerStoryPage.tsx) ────────────────────
   "changemakerStory.backCta": "Change Makers",
@@ -336,7 +340,7 @@ export const community: Catalog = {
   "dating.structure.monogamy.label": "Monogamy",
   "dating.structure.monogamy.title": "One person, fully",
   "dating.structure.monogamy.text":
-    "Completely valid and common. The community doesn't assume non-monogamy is more progressive. It's simply a preference. The legal protections in Portugal are strongest for married monogamous couples, which is worth knowing if legal recognition matters to you.",
+    "Completely valid and common. In this community, non-monogamy is simply a preference. The legal protections in Portugal are strongest for married monogamous couples, which is worth knowing if legal recognition matters to you.",
   "dating.structure.enm.label": "Ethical non-monogamy",
   "dating.structure.enm.title": "Open relationships",
   "dating.structure.enm.text":
@@ -591,7 +595,7 @@ export const community: Catalog = {
 
   "family.talk.heading": "Talk to someone who's <em>been there.</em>",
   "family.talk.body":
-    "The Queer Parent Network connects people who are building families with members who've already been through it: same routes, similar situations. Not professionals. Just people who've done it and want to help.",
+    "The Queer Parent Network connects people who are building families with members who've already been through it: same routes, similar situations. They are people who've done it and want to help.",
   "family.talk.findMentorCta": "Find a peer mentor",
   "family.talk.networkCta": "Queer Parent Network",
   "family.talk.forumCta.heading": "Questions the page <em>doesn't answer?</em>",

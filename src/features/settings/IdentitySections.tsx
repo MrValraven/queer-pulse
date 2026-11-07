@@ -140,8 +140,15 @@ export function DiscoverableIdentitiesSection() {
   // `savedVersion` re-reads the server's sets after each profile save, so an
   // identity ticked above gets its switch as soon as it is stored — the pane
   // used to keep saying "once you save" until a full page reload.
-  const { available, published, loading, saving, error, setPublished } =
-    useDiscoverableIdentities(draftPublishable, savedVersion);
+  const {
+    available,
+    published,
+    loading,
+    saving,
+    error,
+    writeErrorCause,
+    setPublished,
+  } = useDiscoverableIdentities(draftPublishable, savedVersion);
 
   const rows = draftPublishable.filter((identity) =>
     available.includes(identity),
@@ -171,7 +178,9 @@ export function DiscoverableIdentitiesSection() {
 
       {error && (
         <div className={styles.discoverError} role="alert">
-          {t("settings:discoverable.error")}
+          {writeErrorCause
+            ? t(writeErrorCause.key, writeErrorCause.values)
+            : t("settings:discoverable.error")}
         </div>
       )}
 

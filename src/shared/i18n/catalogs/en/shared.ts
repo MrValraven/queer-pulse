@@ -384,6 +384,23 @@ export const shared: Catalog = {
   "apiError.reasonTooLarge": "That's too large to send.",
   "apiError.reasonRateLimited":
     "Too many attempts. Wait a moment and try again.",
+  // Cause lines from causeErrorKey.ts: each names why an action failed and
+  // what to do next. Features resolve them with t(copy.key, copy.values).
+  "apiError.noConnection":
+    "Your request didn't reach our servers. Check your connection and try again.",
+  "apiError.timedOut":
+    "Our servers took too long to answer, so we can't tell whether that went through. Refresh to check before you try again.",
+  "apiError.signedOut": "Your session ended. Sign in again and try once more.",
+  "apiError.notActive":
+    "Only active members can do this, and your account isn't active right now. Write to us if that seems wrong.",
+  "apiError.securityCheck":
+    "The security check for this page expired before your request was sent. Copy what you wrote, reload the page and try again.",
+  "apiError.notFound":
+    "We couldn't find that. It may have been removed or moved. Refresh the page to see what's there now.",
+  "apiError.serverFault":
+    "Our servers hit an error on our side. Give it a moment and try again.",
+  "apiError.refused":
+    "Our servers refused that with error {status}. Try again in a moment, and write to us if it keeps happening.",
 
   // PullToRefresh live region
 
@@ -715,6 +732,9 @@ export const shared: Catalog = {
   // (grant/suggest-edit/sober-host/panel/incubator) fails to reach the backend.
   "intake.errorToast":
     "We couldn't send that just now. Please try again in a moment.",
+  // The cause-aware form of intake.errorToast: this title on the toast, and
+  // the causeErrorKey(error) line as its detail.
+  "intake.errorTitle": "We couldn't send your form",
 
   // mediaRef.* — category labels for a `MediaReference.type`
   // (shared/media/mediaReferences.ts), read by both the My-uploads pane
@@ -926,7 +946,7 @@ export const shared: Catalog = {
   "apiError.musicEvent.cohostIsYou":
     "You run this event for QueerPulse, so you can't cohost it too",
   "apiError.musicEvent.cohostHoldsGrant":
-    "Staff can't cohost a QueerPulse music event",
+    "Staff can't cohost a QueerPulse music event. This member is a music manager and producer",
   "apiError.musicEvent.cohostIsStaffTier":
     "Staff can't cohost a QueerPulse music event. Moderators and admins stay off the cohost list",
   "apiError.musicEvent.cohostNotActive":

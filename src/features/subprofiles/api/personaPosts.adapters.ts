@@ -1,11 +1,10 @@
-import { ApiError } from "../../../shared/api/client";
 import {
-  ACCOUNT_RESTRICTED_COPY,
-  isAccountRestricted,
-} from "../../../shared/api/errorMessage";
+  causeErrorKey,
+  SHARED_CAUSE_KEY,
+  type CauseErrorOverrides,
+} from "../../../shared/api/causeErrorKey";
 import {
   PERSONA_POST,
-  PERSONA_POST_ERROR_CODES,
   type CreatePersonaPostBody,
   type PersonaPostDTO,
   type PersonaPostErrorCode,
@@ -160,15 +159,19 @@ const ERROR_KEY: Record<PersonaPostErrorCode, string> = {
   persona_post_image_not_allowed: "subprofiles:updates.errors.imageNotAllowed",
   persona_post_daily_limit: "subprofiles:updates.errors.dailyLimit",
 };
-const KNOWN_CODES: ReadonlySet<string> = new Set(PERSONA_POST_ERROR_CODES);
+/** The persona-post routes' own lines, by machine `code` and by status. */
+const POST_ERROR_OVERRIDES: CauseErrorOverrides = {
+  ...ERROR_KEY,
+  404: "subprofiles:updates.errors.gone",
+};
 
-/** A refused write as a catalog key. */
+/** A refused write as a catalog key: the route's own coded refusals, a post
+ *  that is gone, then the shared cause (no connection, signed out, a
+ *  restriction, a rate limit, a server fault). Only a status nothing names
+ *  reads the `generic` line, which says the server refused it. */
 export function personaPostErrorKeyOf(error: unknown): string {
-  if (isAccountRestricted(error)) return ACCOUNT_RESTRICTED_COPY.key;
-  if (!(error instanceof ApiError)) return "subprofiles:updates.errors.generic";
-  const code = (error.data as { code?: unknown } | null | undefined)?.code;
-  if (typeof code === "string" && KNOWN_CODES.has(code))
-    return ERROR_KEY[code as PersonaPostErrorCode];
-  if (error.status === 404) return "subprofiles:updates.errors.gone";
-  return "subprofiles:updates.errors.generic";
+  const cause = causeErrorKey(error, POST_ERROR_OVERRIDES);
+  return cause.key === SHARED_CAUSE_KEY.refused
+    ? "subprofiles:updates.errors.generic"
+    : cause.key;
 }

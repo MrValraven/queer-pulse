@@ -110,9 +110,9 @@ describe("gatheringCatalog", () => {
     });
 
     it("reads an unset format as the generic word", () => {
-      expect(formatLabel(translate, null)).toBe("Gathering");
-      expect(formatLabel(translate, "")).toBe("Gathering");
-      expect(formatLabel(translate, undefined)).toBe("Gathering");
+      expect(formatLabel(translate, null)).toBe("Event");
+      expect(formatLabel(translate, "")).toBe("Event");
+      expect(formatLabel(translate, undefined)).toBe("Event");
     });
   });
 

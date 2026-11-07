@@ -12,12 +12,17 @@ import { loadNamespace } from "./index";
 const STUDIO_DIR = "src/features/studio";
 const LITERAL_KEY = /["'`]studioShowcase:([A-Za-z0-9_.-]+)["'`]/g;
 const TEMPLATE_PREFIX = /`studioShowcase:([A-Za-z0-9_.-]*)\$\{/g;
+/** A demo data file that reads the EN catalog directly through a local
+ *  `showcase("key")` helper (api/studioDemoPurchases.data.ts) uses the bare
+ *  key, with no namespace prefix. */
+const SHOWCASE_HELPER_KEY = /\bshowcase\(\s*["'`]([A-Za-z0-9_.-]+)["'`]\s*\)/g;
 const PLURAL_SUFFIX = /_(?:zero|one|two|few|many|other)$/;
 
+/** Every non-test source file under the Studio feature, subfolders included. */
 function studioSources(): string[] {
-  return readdirSync(STUDIO_DIR)
-    .filter((name) => /\.tsx?$/.test(name) && !/\.test\.tsx?$/.test(name))
-    .map((name) => readFileSync(`${STUDIO_DIR}/${name}`, "utf8"));
+  return readdirSync(STUDIO_DIR, { recursive: true, encoding: "utf8" })
+    .filter((path) => /\.tsx?$/.test(path) && !/\.test\.tsx?$/.test(path))
+    .map((path) => readFileSync(`${STUDIO_DIR}/${path}`, "utf8"));
 }
 
 function usedKeys() {
@@ -25,6 +30,8 @@ function usedKeys() {
   const templatePrefixes = new Set<string>();
   for (const source of studioSources()) {
     for (const match of source.matchAll(LITERAL_KEY))
+      literalKeys.add(match[1]!);
+    for (const match of source.matchAll(SHOWCASE_HELPER_KEY))
       literalKeys.add(match[1]!);
     for (const match of source.matchAll(TEMPLATE_PREFIX))
       templatePrefixes.add(match[1]!);

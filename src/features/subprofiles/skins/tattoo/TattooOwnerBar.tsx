@@ -5,6 +5,7 @@ import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { subprofileEditPath } from "../../../../app/routeMap";
 import { useOwnerSkinPatch } from "../../api/useOwnerSkinPatch";
+import { personaOwnerPatchErrorMessage } from "../../personaActionErrors";
 import type { PublicSubprofileView } from "../../api/subprofiles.adapters";
 import type { PersonaAction } from "../../personaSkinRender";
 import {
@@ -54,7 +55,8 @@ export function TattooOwnerBar({
         onStatusSaved(option.status);
         showToast(t(option.savedKey), "success");
       },
-      () => showToast(t("subprofiles:tattoo.owner.error"), "error"),
+      (error: unknown) =>
+        showToast(personaOwnerPatchErrorMessage(error, t), "error"),
     );
   };
 

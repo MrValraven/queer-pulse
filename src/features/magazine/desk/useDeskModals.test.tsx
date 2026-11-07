@@ -2,6 +2,7 @@ import { act, render, renderHook, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import { DEMO_PIECES, type Piece, type Pitch } from "../data/desk.data";
 import { usePieceMutations } from "../api/usePieceMutations";
@@ -273,7 +274,9 @@ describe("HandoffModal confirm button", () => {
   // `currentWriterId` is typed `string | null | undefined` here (looser than
   // `HandoffModal`'s own `string | null`) so the M6 test below can hand the
   // dialog a runtime `undefined` the type would otherwise rule out.
-  function renderHandoffModal(currentWriterId: string | null | undefined) {
+  async function renderHandoffModal(
+    currentWriterId: string | null | undefined,
+  ) {
     const onHandoff = vi.fn();
     const onClose = vi.fn();
     render(
@@ -290,11 +293,12 @@ describe("HandoffModal confirm button", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("magazine");
     return { onHandoff, onClose };
   }
 
-  it("stays disabled with nothing changed", () => {
-    renderHandoffModal("writer-anika-kovac");
+  it("stays disabled with nothing changed", async () => {
+    await renderHandoffModal("writer-anika-kovac");
 
     expect(screen.getByRole("button", { name: "Hand off" })).toHaveAttribute(
       "aria-disabled",
@@ -302,9 +306,9 @@ describe("HandoffModal confirm button", () => {
     );
   });
 
-  it("treats a missing writer the same as a null one (M6, demo pieces)", () => {
+  it("treats a missing writer the same as a null one (M6, demo pieces)", async () => {
     // Demo pieces carry no `writerId` at all.
-    renderHandoffModal(undefined);
+    await renderHandoffModal(undefined);
 
     expect(screen.getByRole("button", { name: "Hand off" })).toHaveAttribute(
       "aria-disabled",
@@ -314,7 +318,8 @@ describe("HandoffModal confirm button", () => {
 
   it("enables once the writer changes, and a click sends the new writer", async () => {
     const user = userEvent.setup();
-    const { onHandoff, onClose } = renderHandoffModal("writer-anika-kovac");
+    const { onHandoff, onClose } =
+      await renderHandoffModal("writer-anika-kovac");
 
     await user.click(screen.getByRole("button", { name: "Writer" }));
     await user.click(screen.getByRole("option", { name: "Tomás Mendes" }));
@@ -329,7 +334,7 @@ describe("HandoffModal confirm button", () => {
 
   it("a click with nothing changed sends no hand-off and leaves the dialog open", async () => {
     const user = userEvent.setup();
-    const { onHandoff, onClose } = renderHandoffModal(null);
+    const { onHandoff, onClose } = await renderHandoffModal(null);
 
     await user.click(screen.getByRole("button", { name: "Hand off" }));
 
@@ -337,8 +342,8 @@ describe("HandoffModal confirm button", () => {
     expect(onClose).not.toHaveBeenCalled();
   });
 
-  it("leads with Writer over To when the piece has no writer yet (S7)", () => {
-    renderHandoffModal(null);
+  it("leads with Writer over To when the piece has no writer yet (S7)", async () => {
+    await renderHandoffModal(null);
 
     const writerTrigger = screen.getByRole("button", { name: "Writer" });
     const editorTrigger = screen.getByRole("button", { name: "To" });
@@ -348,8 +353,8 @@ describe("HandoffModal confirm button", () => {
     ).toBeTruthy();
   });
 
-  it("keeps To over Writer when the piece already has a writer", () => {
-    renderHandoffModal("writer-anika-kovac");
+  it("keeps To over Writer when the piece already has a writer", async () => {
+    await renderHandoffModal("writer-anika-kovac");
 
     const editorTrigger = screen.getByRole("button", { name: "To" });
     const writerTrigger = screen.getByRole("button", { name: "Writer" });

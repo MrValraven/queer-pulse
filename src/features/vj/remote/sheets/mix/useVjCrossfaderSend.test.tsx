@@ -8,6 +8,7 @@ import {
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { VjMix } from "../../../../../shared/contracts/vj";
 import { TestProviders } from "../../../../../test/TestProviders";
+import { awaitCatalogUnderFakeTimers } from "../../../../../test/awaitCatalogUnderFakeTimers";
 import type { VjCommandOutcome } from "../../../live/vjStageCommands";
 import { VjCrossfader } from "../../kit/VjCrossfader";
 import {
@@ -53,12 +54,13 @@ function CrossfaderHarness(props: {
   );
 }
 
-function renderHarness(setMix: UseVjCrossfaderSendOptions["setMix"]) {
+async function renderHarness(setMix: UseVjCrossfaderSendOptions["setMix"]) {
   render(
     <TestProviders>
       <CrossfaderHarness setMix={setMix} />
     </TestProviders>,
   );
+  await awaitCatalogUnderFakeTimers("vj");
   return screen.getByRole("slider", { name: "Crossfader" });
 }
 
@@ -73,10 +75,10 @@ describe("useVjCrossfaderSend", () => {
     vi.restoreAllMocks();
   });
 
-  it("sends at most one amount per 50 ms while dragging", () => {
+  it("sends at most one amount per 50 ms while dragging", async () => {
     vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
     const setMix = createSetMix();
-    const slider = renderHarness(setMix);
+    const slider = await renderHarness(setMix);
     setNow(1000);
     fireEvent.change(slider, { target: { value: "10" } });
     setNow(1020);
@@ -92,10 +94,10 @@ describe("useVjCrossfaderSend", () => {
     expect(setMix).toHaveBeenLastCalledWith({ amount: 0.3 });
   });
 
-  it("sends the final amount on release", () => {
+  it("sends the final amount on release", async () => {
     vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
     const setMix = createSetMix();
-    const slider = renderHarness(setMix);
+    const slider = await renderHarness(setMix);
     setNow(1000);
     fireEvent.change(slider, { target: { value: "40" } });
     setNow(1010);

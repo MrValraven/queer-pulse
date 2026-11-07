@@ -24,6 +24,7 @@ import { setMessageSoundPref, useMessageSoundPref } from "./messageSoundPref";
 import { previewMessageChime } from "../../shared/lib/messageChime";
 import { useLoginAlerts } from "./api/useLoginAlerts";
 import { useActivityVisibility } from "./api/useActivityVisibility";
+import { settingWriteErrorCopy } from "./settingsActionErrors";
 import { useSuggestionVisibility } from "./api/useSuggestionVisibility";
 import { GroupAddPolicySection } from "./GroupAddPolicySection";
 import { MessagingPrivacySection } from "./MessagingPrivacySection";
@@ -331,8 +332,10 @@ export function VisibilityPane({
     isSaving: isActivitySaving,
     isDemoMode,
   } = useActivityVisibility({
-    onError: () =>
-      showToast(t("settings:visibility.activityStatus.toastError"), "error"),
+    onError: (error) => {
+      const cause = settingWriteErrorCopy(error);
+      showToast(t(cause.key, cause.values), "error");
+    },
   });
   return (
     <Pane

@@ -8,6 +8,7 @@ import { ScamSafetyBanner } from "./ScamSafetyBanner";
 import { useSubmitFlow } from "./modalFlow";
 import { useAffirmingPledgeGate } from "./useAffirmingPledgeGate";
 import { useStepUpVerificationGate } from "./useStepUpVerificationGate";
+import { failureToast } from "./economyErrorCopy";
 import styles from "./ApplicationModals.module.css";
 
 interface ContactRequestModalProps {
@@ -93,7 +94,10 @@ export function ContactRequestModal({
       const retry = () => void sendMessage(body);
       if (handlePledgeError(error, retry)) return;
       if (handleStepUpError(error, retry)) return;
-      showToast(t("economy:contactRequest.sendError"), "error");
+      showToast(
+        failureToast(error, t, "economy:contactRequest.sendErrorTitle"),
+        "error",
+      );
     } finally {
       setCustomSending(false);
     }

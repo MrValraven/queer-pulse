@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
+import { ApiError } from "../../../shared/api/client";
+import { ImageProcessingError } from "../../members/api/uploadProcessing";
+import { DocumentProcessingError } from "../../messages/documentUploadProcessing";
 import {
   MENU_FILE_MAX_BYTES,
   MenuFileUploadError,
+  menuUploadFailure,
   validateMenuFile,
 } from "./useUploadListingMenuFile";
 
@@ -51,5 +55,63 @@ describe("validateMenuFile", () => {
         fakeFile("image/jpeg", MENU_FILE_MAX_BYTES + 1, "board.jpg"),
       ),
     ).not.toThrow();
+  });
+});
+
+describe("menuUploadFailure", () => {
+  it("passes an image or validation error through unchanged", () => {
+    const imageError = new ImageProcessingError(
+      "members:upload.error.tooLarge",
+    );
+    expect(menuUploadFailure(imageError)).toBe(imageError);
+    const typeError = new MenuFileUploadError("type");
+    expect(menuUploadFailure(typeError)).toBe(typeError);
+  });
+
+  it("passes a document error through, keeping its key", () => {
+    const documentError = new DocumentProcessingError(
+      "messages:attachments.documentError.storageFault",
+    );
+    expect(menuUploadFailure(documentError)).toBe(documentError);
+  });
+
+  it("swaps the message-document wording for a refused type", () => {
+    const failure = menuUploadFailure(
+      new DocumentProcessingError(
+        "messages:attachments.documentError.storageRejectedType",
+      ),
+    ) as DocumentProcessingError;
+    expect(failure.i18nKey).toBe(
+      "marketing:listBusiness.menu.fileError.rejected",
+    );
+  });
+
+  it.each([
+    [400, "marketing:listBusiness.menu.fileError.rejected"],
+    [413, "marketing:listBusiness.menu.fileError.size"],
+    [429, "marketing:listBusiness.menu.fileError.tooManyUploads"],
+    [500, "shared:apiError.serverFault"],
+    [404, "shared:apiError.notFound"],
+  ])("names the presign status %i", (status, key) => {
+    const failure = menuUploadFailure(
+      new ApiError(status, "x"),
+    ) as DocumentProcessingError;
+    expect(failure).toBeInstanceOf(DocumentProcessingError);
+    expect(failure.i18nKey).toBe(key);
+    expect(failure.values).toMatchObject({ max: "10 MB" });
+  });
+
+  it("names a restricted account", () => {
+    const failure = menuUploadFailure(
+      new ApiError(403, "x", { code: "ACCOUNT_RESTRICTED" }),
+    ) as DocumentProcessingError;
+    expect(failure.i18nKey).toBe("shared:apiError.accountRestricted");
+  });
+
+  it("names the lost connection for a network failure", () => {
+    const failure = menuUploadFailure(
+      new TypeError("Failed to fetch"),
+    ) as DocumentProcessingError;
+    expect(failure.i18nKey).toBe("shared:apiError.noConnection");
   });
 });

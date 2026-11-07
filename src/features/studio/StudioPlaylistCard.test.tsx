@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { toPlaylistCardView } from "./api/studio.adapters";
 import {
   demoMyPlaylistsPage,
@@ -18,28 +19,30 @@ function cardDto(playlistId: string) {
   return card;
 }
 
-function renderCard(dto: ReturnType<typeof cardDto>) {
-  return render(
+async function renderCard(dto: ReturnType<typeof cardDto>) {
+  const view = render(
     <TestProviders>
       <StudioPlaylistCard playlist={toPlaylistCardView(dto)} />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
+  return view;
 }
 
 describe("StudioPlaylistCard, collaborative playlists", () => {
-  it("marks a playlist the viewer edits and one they share with editors", () => {
-    const edited = renderCard(cardDto("demo-playlist-tour-diary"));
+  it("marks a playlist the viewer edits and one they share with editors", async () => {
+    const edited = await renderCard(cardDto("demo-playlist-tour-diary"));
     expect(screen.getByText("Collaborative")).toBeInTheDocument();
     edited.unmount();
-    renderCard(cardDto("demo-playlist-for-the-group-chat"));
+    await renderCard(cardDto("demo-playlist-for-the-group-chat"));
     expect(screen.getByText("Collaborative")).toBeInTheDocument();
   });
 
-  it("leaves a solo playlist and a listener's card unmarked", () => {
-    const solo = renderCard(cardDto("demo-playlist-kitchen-tapes"));
+  it("leaves a solo playlist and a listener's card unmarked", async () => {
+    const solo = await renderCard(cardDto("demo-playlist-kitchen-tapes"));
     expect(screen.queryByText("Collaborative")).not.toBeInTheDocument();
     solo.unmount();
-    renderCard({
+    await renderCard({
       ...cardDto("demo-playlist-for-the-group-chat"),
       isOwner: false,
       role: null,
@@ -50,8 +53,8 @@ describe("StudioPlaylistCard, collaborative playlists", () => {
 });
 
 describe("StudioPlaylistCard, invitee", () => {
-  it("marks an invitee card Invited and leaves the Collaborative chip off", () => {
-    renderCard({
+  it("marks an invitee card Invited and leaves the Collaborative chip off", async () => {
+    await renderCard({
       ...cardDto("demo-playlist-for-the-group-chat"),
       isOwner: false,
       role: "invitee",
@@ -61,8 +64,8 @@ describe("StudioPlaylistCard, invitee", () => {
     expect(screen.queryByText("Collaborative")).not.toBeInTheDocument();
   });
 
-  it("shows no Invited marker on an owner or editor card", () => {
-    renderCard(cardDto("demo-playlist-tour-diary"));
+  it("shows no Invited marker on an owner or editor card", async () => {
+    await renderCard(cardDto("demo-playlist-tour-diary"));
     expect(screen.queryByText("Invited")).not.toBeInTheDocument();
   });
 });

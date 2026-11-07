@@ -476,10 +476,15 @@ describe("the saved queue", () => {
     expect(hook.result.current.player.currentItem?.trackId).toBe("t2");
     expect(hook.result.current.player.status).toBe("paused");
     expect(hook.result.current.clock.currentTime).toBe(30);
-    expect(fetchStudioStream).not.toHaveBeenCalled();
+    // DES-28: one read fetches the waveform before Play; the engine loads
+    // the stream only once Play reads it again.
+    await waitFor(() => expect(fetchStudioStream).toHaveBeenCalledTimes(1));
+    expect(fetchStudioStream).toHaveBeenCalledWith(false, "t2", undefined);
+    expect(engine.load).not.toHaveBeenCalled();
     await act(async () => hook.result.current.player.togglePlay());
+    expect(fetchStudioStream).toHaveBeenCalledTimes(2);
     expect(engine.load).toHaveBeenLastCalledWith(
-      "https://stream.example/t2?v=1",
+      "https://stream.example/t2?v=2",
       30,
       0,
     );
@@ -586,20 +591,29 @@ describe("sleep timer and shortcuts", () => {
 
   it("toggles play with Space while something is queued", async () => {
     const { engine, hook } = renderPlayer([albumOne]);
-    window.dispatchEvent(
-      new KeyboardEvent("keydown", { key: " ", cancelable: true }),
-    );
+    // DES-21: Space acts while focus sits inside the player surface.
+    const playerSurface = document.createElement("section");
+    playerSurface.setAttribute("data-studio-player", "");
+    document.body.append(playerSurface);
+    const pressSpace = () =>
+      playerSurface.dispatchEvent(
+        new KeyboardEvent("keydown", {
+          key: " ",
+          bubbles: true,
+          cancelable: true,
+        }),
+      );
+    pressSpace();
     expect(engine.pause).not.toHaveBeenCalled();
     await startPlaying(engine, () =>
       hook.result.current.player.playRelease("r1"),
     );
     const pauseCount = engine.pause.mock.calls.length;
     act(() => {
-      window.dispatchEvent(
-        new KeyboardEvent("keydown", { key: " ", cancelable: true }),
-      );
+      pressSpace();
     });
     expect(engine.pause.mock.calls.length).toBe(pauseCount + 1);
+    playerSurface.remove();
   });
 
   it("clamps a seek to the track's length", async () => {

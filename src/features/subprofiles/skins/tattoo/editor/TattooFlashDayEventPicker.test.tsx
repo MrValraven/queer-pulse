@@ -5,6 +5,7 @@ import type { SubprofileItemView } from "../../../api/subprofiles.adapters";
 import type { FlashDayEventRef } from "../../../api/subprofiles.api";
 import { emptyItem } from "../../../subprofileSectionEditorRows";
 import { TattooFlashDayEventPicker } from "./TattooFlashDayEventPicker";
+import { awaitCatalog } from "../../../../../test/awaitCatalog";
 
 const useOptionsMock =
   vi.fn<
@@ -42,7 +43,7 @@ const flashDayDraft = (
   overrides: Partial<SubprofileItemView> = {},
 ): SubprofileItemView => ({ ...emptyItem("flash_days"), ...overrides });
 
-function renderPicker(
+async function renderPicker(
   draft: SubprofileItemView,
   onPatch = vi.fn<(patch: Partial<SubprofileItemView>) => void>(),
 ) {
@@ -51,6 +52,7 @@ function renderPicker(
       <TattooFlashDayEventPicker draft={draft} onPatch={onPatch} />
     </TestProviders>,
   );
+  await awaitCatalog("subprofiles");
   return onPatch;
 }
 
@@ -67,8 +69,8 @@ describe("TattooFlashDayEventPicker", () => {
     });
   });
 
-  it("fills the date and place from a picked event", () => {
-    const onPatch = renderPicker(flashDayDraft());
+  it("fills the date and place from a picked event", async () => {
+    const onPatch = await renderPicker(flashDayDraft());
     fireEvent.click(screen.getByRole("button", { name: /Link to an event/ }));
     fireEvent.click(
       screen.getByRole("option", { name: /Trans Joy Picnic · / }),
@@ -81,9 +83,9 @@ describe("TattooFlashDayEventPicker", () => {
     expect(patch.structured?.flashDay?.eventSlug).toBe("trans-joy-picnic");
   });
 
-  it("hides the picker while the draft unlinks the persona", () => {
+  it("hides the picker while the draft unlinks the persona", async () => {
     editorState.draftLink = "unlinked";
-    renderPicker(flashDayDraft());
+    await renderPicker(flashDayDraft());
 
     expect(screen.queryByText("Link to an event")).toBeNull();
     expect(
@@ -92,10 +94,10 @@ describe("TattooFlashDayEventPicker", () => {
     expect(useOptionsMock).toHaveBeenCalledWith("persona-1", false);
   });
 
-  it("hides the picker on an unlinked persona", () => {
+  it("hides the picker on an unlinked persona", async () => {
     editorState.linkVisibility = "unlinked";
     editorState.draftLink = "unlinked";
-    renderPicker(flashDayDraft());
+    await renderPicker(flashDayDraft());
 
     expect(
       screen.queryByRole("button", { name: /Link to an event/ }),
@@ -103,8 +105,8 @@ describe("TattooFlashDayEventPicker", () => {
     expect(useOptionsMock).toHaveBeenCalledWith("persona-1", false);
   });
 
-  it("names a co-owner's linked event from the item", () => {
-    renderPicker(
+  it("names a co-owner's linked event from the item", async () => {
+    await renderPicker(
       flashDayDraft({
         structured: { flashDay: { eventSlug: "queer-flash-market" } },
         linkedEvent: {

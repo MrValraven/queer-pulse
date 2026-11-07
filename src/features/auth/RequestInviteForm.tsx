@@ -8,12 +8,8 @@ import { GuidelinesLink } from "../marketing/GuidelinesLink";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCreateJoinRequest } from "./api/useCreateJoinRequest";
-import {
-  isDuplicateJoinRequest,
-  isJoinRequestsClosedError,
-  isRateLimitedError,
-  isUnder18Error,
-} from "./api/joinRequest.api";
+import { isDuplicateJoinRequest, isUnder18Error } from "./api/joinRequest.api";
+import { requestInviteErrorCopy } from "./authActionErrors";
 import { parseJoinRequestSource } from "./api/joinRequestSource";
 import { AgeAttestation } from "./AgeAttestation";
 import { RequestInviteFields } from "./RequestInviteFields";
@@ -127,20 +123,12 @@ export function RequestInviteForm({
         setUnder18(true);
         return;
       }
-      // Requests were closed after this form was rendered. The pre-emptive
-      // check in RequestInvitePage cannot catch this — the flag flipped mid-fill.
-      if (isJoinRequestsClosedError(err)) {
-        showToast(t("auth:requestInvite.closedError"), "error");
-        return;
-      }
-      // 429: the per-IP throttle (3/hour). An immediate retry will just fail
-      // again, so say so plainly instead of the generic "try again" — that
-      // would invite the very retry that can't succeed for up to an hour.
-      if (isRateLimitedError(err)) {
-        showToast(t("auth:requestInvite.rateLimitedError"), "error");
-        return;
-      }
-      showToast(t("auth:requestInvite.submitError"), "error");
+      // Everything else names its real cause: requests closed mid-fill, the
+      // 30-day reapplication cooldown, rejected details, the per-IP throttle
+      // (3/hour, so an immediate retry fails again), a server fault, or no
+      // connection. See `requestInviteErrorCopy`.
+      const cause = requestInviteErrorCopy(err);
+      showToast(t(cause.key, cause.values), "error");
     }
   }
 

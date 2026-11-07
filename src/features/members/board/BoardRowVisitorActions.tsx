@@ -4,6 +4,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { ApiError } from "../../../shared/api/client";
 import { useRespondToBoardItem } from "../api/useRespondToBoardItem";
+import { boardRespondErrorCopy } from "../memberActionErrors";
 import type { BoardItem } from "../data/members";
 import styles from "./BoardSection.module.css";
 
@@ -61,7 +62,8 @@ export function BoardRowVisitorActions({
         showToast(t("members:content.board.respondAlready"));
         return;
       }
-      showToast(t("shared:social.genericError"), "error");
+      const cause = boardRespondErrorCopy(error);
+      showToast(t(cause.key, cause.values), "error");
     }
   }
 
@@ -82,7 +84,8 @@ export function BoardRowVisitorActions({
         showToast(t("members:content.board.helloAlready"));
         return;
       }
-      showToast(t("shared:social.genericError"), "error");
+      const cause = boardRespondErrorCopy(error);
+      showToast(t(cause.key, cause.values), "error");
     }
   }
 

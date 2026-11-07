@@ -5,16 +5,31 @@ import {
   waitFor,
   within,
 } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { TestProviders } from "../../test/TestProviders";
+import { DEMO_STUDIO_SCENES } from "../studio/api/studioDemoScenes.data";
 import { StudioAdminScenes } from "./StudioAdminScenes";
 
-function renderTab() {
+// Admin scene edits write through to the demo scene list in place, so a
+// rename in one test would still show in the next. Each test starts from the
+// seeded list.
+const SEEDED_SCENES = structuredClone(DEMO_STUDIO_SCENES);
+afterEach(() => {
+  DEMO_STUDIO_SCENES.splice(
+    0,
+    DEMO_STUDIO_SCENES.length,
+    ...structuredClone(SEEDED_SCENES),
+  );
+});
+
+async function renderTab() {
   render(
     <TestProviders initialEntries={["/admin/studio"]}>
       <StudioAdminScenes />
     </TestProviders>,
   );
+  await awaitCatalog("admin", "studio");
 }
 
 const rowOf = (group: HTMLElement, name: string) => {
@@ -27,7 +42,7 @@ const rowOf = (group: HTMLElement, name: string) => {
 
 describe("Studio discovery console: scenes (demo)", () => {
   it("lists active scenes by position, then archived ones, with their counts", async () => {
-    renderTab();
+    await renderTab();
     const active = await screen.findByRole("region", { name: "Active" });
     const names = within(active)
       .getAllByRole("listitem")
@@ -45,7 +60,7 @@ describe("Studio discovery console: scenes (demo)", () => {
   });
 
   it("creates a scene and checks its fields first", async () => {
-    renderTab();
+    await renderTab();
     fireEvent.click(await screen.findByRole("button", { name: "New scene" }));
     const dialog = await screen.findByRole("dialog", { name: "New scene" });
     fireEvent.click(
@@ -83,7 +98,7 @@ describe("Studio discovery console: scenes (demo)", () => {
   });
 
   it("moves a scene up and archives another", async () => {
-    renderTab();
+    await renderTab();
     const active = await screen.findByRole("region", { name: "Active" });
     fireEvent.click(
       within(active).getByRole("button", {
@@ -107,7 +122,7 @@ describe("Studio discovery console: scenes (demo)", () => {
   });
 
   it("restores an archived scene to the end of the active list", async () => {
-    renderTab();
+    await renderTab();
     const archived = await screen.findByRole("region", { name: "Archived" });
     fireEvent.click(
       within(archived).getByRole("button", {
@@ -122,7 +137,7 @@ describe("Studio discovery console: scenes (demo)", () => {
   });
 
   it("edits a scene and keeps its address when the field is emptied", async () => {
-    renderTab();
+    await renderTab();
     const active = await screen.findByRole("region", { name: "Active" });
     fireEvent.click(
       within(active).getByRole("button", {
@@ -150,7 +165,7 @@ describe("Studio discovery console: scenes (demo)", () => {
   });
 
   it("says so when the address belongs to another scene", async () => {
-    renderTab();
+    await renderTab();
     fireEvent.click(await screen.findByRole("button", { name: "New scene" }));
     const dialog = await screen.findByRole("dialog", { name: "New scene" });
     fireEvent.change(within(dialog).getByRole("textbox", { name: "Name" }), {
@@ -171,7 +186,7 @@ describe("Studio discovery console: scenes (demo)", () => {
   });
 
   it("unpins an event and removes a release in the scene sheet", async () => {
-    renderTab();
+    await renderTab();
     fireEvent.click(
       await screen.findByRole("button", {
         name: "Events and releases: Mouraria fado",
@@ -199,7 +214,7 @@ describe("Studio discovery console: scenes (demo)", () => {
   });
 
   it("pins an upcoming event found by title", async () => {
-    renderTab();
+    await renderTab();
     fireEvent.click(
       await screen.findByRole("button", {
         name: "Events and releases: Warehouse nights",

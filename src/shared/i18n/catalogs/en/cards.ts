@@ -101,6 +101,12 @@ export const cards: Catalog = {
   "renew.error.notDue":
     "This card is still in date. You can renew it in its last 30 days.",
   "renew.error.generic": "The card could not be renewed. Try again.",
+  "error.spaceNoCards":
+    "A space can't run a membership card programme. Only the main community can.",
+  "error.reasonRequired":
+    "Suspending or revoking a card needs a reason. Add one and try again.",
+  "error.cardGone":
+    "That card is no longer in the wallet. Refresh the page to see the cards you have now.",
 
   "role.owner": "Owner",
   "role.coOwner": "Co-owner",

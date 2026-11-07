@@ -165,6 +165,13 @@ describe("demo persona wall writes", () => {
   });
 
   it("names the hidden state on a not-listed refusal", () => {
+    // The authored seed already picks the draft persona, and the server
+    // answers PERSONA_WALL_ALREADY_PICKED before it reads the public state,
+    // so this wall starts with the shown picks only.
+    resetDemoPersonaWall({
+      pickPersonaIds: ["sp-diogo-nightform", "sp-vera-bloco", "sp-bea-cadeira"],
+      fillOrder: "endorsed",
+    });
     expect(() => demoAddPersonaWallPick("sp-tiago-draft")).toThrow(
       expect.objectContaining({
         data: expect.objectContaining({

@@ -4,6 +4,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { intakeFailureToast } from "./intakeSubmitError";
 import { submitResourceSuggestion } from "./api/resources.api";
 import { ResourceModal, PlumSuccess } from "./ResourceModal";
 import styles from "./ResourceModal.module.css";
@@ -58,9 +59,9 @@ export function SuggestResourceModal({
         website: website.trim() || undefined,
       });
       setPhase("done");
-    } catch {
+    } catch (error) {
       setPhase("form");
-      showToast(t("resources:suggest.errorToast"), "error");
+      showToast(intakeFailureToast(error, t), "error");
     }
   };
 

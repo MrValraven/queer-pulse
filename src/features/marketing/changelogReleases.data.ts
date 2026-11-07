@@ -15,6 +15,14 @@ export const CHANGELOG_RELEASE_NOTES: Record<
   string,
   { highlights: string[]; pushes?: number }
 > = {
+  "7 Nov 2026": {
+    highlights: [
+      "failed-actions-say-why",
+      "unpublish-pieces-from-the-desk",
+      "studio-payment-methods-save",
+    ],
+    pushes: 2,
+  },
   "5 Nov 2026": {
     highlights: ["persona-directory-credits", "persona-wall-curation"],
     pushes: 6,

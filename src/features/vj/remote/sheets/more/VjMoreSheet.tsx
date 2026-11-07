@@ -27,10 +27,12 @@ export type VjRemoteSheetId =
   | "eventCard"
   | "midi"
   | "effects"
-  | "shortcuts";
+  | "shortcuts"
+  /** Clips that couldn't load: opened from the grid, mounted by the grid band. */
+  | "failures";
 
 /** A sheet the More list opens. */
-export type VjMoreSheetTarget = Exclude<VjRemoteSheetId, "more">;
+export type VjMoreSheetTarget = Exclude<VjRemoteSheetId, "more" | "failures">;
 
 interface VjMoreSheetRow {
   sheet: VjMoreSheetTarget;

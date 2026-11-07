@@ -184,7 +184,7 @@ describe("usePublishGathering in the house scope", () => {
     expect(result.current.isPublished).toBe(false);
   });
 
-  it("keeps the generic publish line when the failure carries no reason", async () => {
+  it("names the lost connection when the request never got an answer", async () => {
     mocks.createEvent.mockRejectedValue(new TypeError("Failed to fetch"));
     const { result } = renderHook(
       () =>
@@ -200,7 +200,7 @@ describe("usePublishGathering in the house scope", () => {
     });
     await waitFor(() =>
       expect(mocks.showToast).toHaveBeenCalledWith(
-        "gatherings:create.toast.publishError",
+        "shared:apiError.noConnection",
         "error",
       ),
     );

@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { AnimatePresence } from "motion/react";
 import { FiDownload } from "react-icons/fi";
 import {
   Button,
@@ -76,19 +77,26 @@ function StudioPurchasePendingActions({
           {failure.line}
         </p>
       </Collapse>
-      <ConfirmDialog
-        open={isConfirmOpen}
-        onClose={() => {
-          if (!isCancelling) setIsConfirmOpen(false);
-        }}
-        onConfirm={() => void confirmCancel()}
-        title={t("studio:purchase.cancel.title")}
-        description={t("studio:purchase.cancel.body", { artist })}
-        confirmLabel={t("studio:purchase.cancel.confirm")}
-        cancelLabel={t("studio:purchase.cancel.keep")}
-        tone="destructive"
-        loading={isCancelling}
-      />
+      {/* Its own presence: a dialog mounted straight inside the folding
+          panel registered with the panel's exit and, once closed, held that
+          exit open, so the cancelled row kept its pending block. */}
+      <AnimatePresence>
+        {isConfirmOpen && (
+          <ConfirmDialog
+            open
+            onClose={() => {
+              if (!isCancelling) setIsConfirmOpen(false);
+            }}
+            onConfirm={() => void confirmCancel()}
+            title={t("studio:purchase.cancel.title")}
+            description={t("studio:purchase.cancel.body", { artist })}
+            confirmLabel={t("studio:purchase.cancel.confirm")}
+            cancelLabel={t("studio:purchase.cancel.keep")}
+            tone="destructive"
+            loading={isCancelling}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

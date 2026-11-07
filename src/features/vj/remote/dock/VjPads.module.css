@@ -1,20 +1,67 @@
 /* The dock's effect pads row (design 7): the strobe pad, the docked effect
-   pads and the All effects pad. On a phone it is one 52px band scrolling
-   sideways; in the split layout it is a 4-column grid. Pads are 64x52 with
-   the name, the flash and beat marks, and the amount on the bottom edge. The
-   face shows a short label (vj:effects.padLabel.*) at 12px, two lines at
-   most, with whole words on each line; the full effect name stays the
-   accessible name. A lit pad holds a steady accent fill, so the remote itself
-   never flashes. Every move animates only opacity or transform. */
+   pads and the All effects tile. Every pad face reads the same way: the
+   flash and beat marks in the top-right corner, the short label
+   (vj:effects.padLabel.*) at the bottom-left, and the amount as a coral fill
+   on a quiet full-width track along the bottom edge (only pads with an
+   amount draw the track). The full effect name stays the accessible name. A
+   lit pad holds a steady accent fill, so the remote itself never flashes.
+   Every move animates only opacity or transform.
+
+   Phone band (both variants): one row scrolling sideways. Pads start at
+   the variant's width and share any spare width, so the strip reaches the
+   band's end edge; a pad with a longer label is as wide as its one line.
+   When the pads overflow by a few px, the short-label pads give up to 8px
+   each before the row scrolls. The row reaches 4px past the band on every
+   side and cancels that with negative margins: the band keeps its height
+   and a lit pad's tight halo stays whole. While pads hide past the end
+   edge (VjPadsRow sets data-has-more-end), the last 24px fade out, so the
+   cut pad reads as more to scroll; at the scroll end the fade lifts.
+     polish  52px tall; pads 64px wide (56px when squeezed), up to about
+             112px for a long PT label, 12px labels.
+     pads    72px tall; pads 84px wide (76px when squeezed), 13px labels.
+
+   Split column (both variants): a grid in the 332px content box of the
+   360px column. VjPadsRow picks 3 or 2 columns from the grid's box (tiles
+   about 106 or 163px wide), whichever gives pads closer to 0.8 height over
+   width while every row keeps its floor, 56px (72px in the pads variant).
+   The rows share the slot's free height equally, so the pads reach down to
+   the actions. Labels sit at the bottom edge, so all labels end on one line
+   and the bars line up. At 3 columns every EN label fits one line; PT wraps
+   "Cores do orgulho" in polish (12px) and "Cores do orgulho", "Zoom na
+   batida", "Pulso na batida" and "Preto e branco" in the pads variant
+   (13px). At 2 columns every label fits one line.
+
+   The All effects tile: in the split grid a compact dashed bar, at least
+   44px tall, icon beside the label, that spans the rest of the last row
+   (VjPadsRow sets the span). Sharing a row with pads it sits on the row's
+   bottom edge; alone it gets a row of its own sized to the bar. Two or more
+   columns wide it shows the full name. It stays the last item of the phone
+   band. */
 
 .row {
   --vj-pad-gap: 6px;
   --vj-pad-width: 64px;
   --vj-pad-height: 52px;
+  /* How far a short-label phone pad narrows before the row scrolls. */
+  --vj-pad-squeeze: 8px;
+  /* The room the phone row keeps around its pads for the lit halo, and the
+     end fade while more pads hide past the end edge. */
+  --vj-pad-halo: 4px;
+  --vj-row-fade: 24px;
+  --vj-pad-lit-glow: var(--ring-accent-strong);
+  /* The space between the pad edge and its marks, label and amount bar. */
+  --vj-pad-inset: 6px;
+  /* The amount bar's gap above the bottom edge and its thickness. */
+  --vj-pad-bar-bottom: 5px;
+  --vj-pad-bar-height: 3px;
+  --vj-pad-label-size: var(--text-12);
+  --vj-pad-mark-size: var(--text-11);
   position: relative;
   display: flex;
   gap: var(--vj-pad-gap);
-  block-size: var(--vj-pad-height);
+  block-size: calc(var(--vj-pad-height) + 2 * var(--vj-pad-halo));
+  margin: calc(-1 * var(--vj-pad-halo));
+  padding: var(--vj-pad-halo);
   overflow-x: auto;
   overflow-y: hidden;
   /* Sideways drags scroll the row; the page under it stays still, and the
@@ -22,35 +69,95 @@
   overscroll-behavior-x: contain;
   touch-action: pan-x;
   scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--vj-pad-halo);
   scrollbar-width: none;
+}
+
+.row[data-has-more-end="true"] {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    var(--qs-text) calc(100% - var(--vj-row-fade)),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    var(--qs-text) calc(100% - var(--vj-row-fade)),
+    transparent
+  );
+}
+
+.row[data-has-more-end="true"]:dir(rtl) {
+  -webkit-mask-image: linear-gradient(
+    to left,
+    var(--qs-text) calc(100% - var(--vj-row-fade)),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to left,
+    var(--qs-text) calc(100% - var(--vj-row-fade)),
+    transparent
+  );
+}
+
+:global([data-vj-dock-variant="pads"]) .row {
+  --vj-pad-width: 84px;
+  --vj-pad-height: 72px;
+  --vj-pad-inset: 8px;
+  --vj-pad-label-size: var(--text-13);
+  --vj-pad-mark-size: var(--text-12);
 }
 
 .row::-webkit-scrollbar {
   display: none;
 }
 
+/* Split: the grid fills its slot and the rows share the free height.
+   VjPadsRow sets the column count (3 until it has measured) and, when All
+   effects has a row of its own, the rows. */
 .row[data-layout="split"] {
+  --vj-pad-height: 56px;
+  --vj-pad-lit-glow: var(--qs-glow-coral);
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-auto-rows: var(--vj-pad-height);
+  flex: 1 1 auto;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: minmax(var(--vj-pad-height), 1fr);
+  align-content: stretch;
   block-size: auto;
+  margin: 0;
+  padding: 0;
   overflow: visible;
   scroll-snap-type: none;
   touch-action: manipulation;
 }
 
+:global([data-vj-dock-variant="pads"]) .row[data-layout="split"] {
+  --vj-pad-height: 72px;
+}
+
 /* The motion wrapper of one pad: it carries the enter, exit and reorder
-   glide, so the button inside keeps its own pointer capture. */
+   glide, so the button inside keeps its own pointer capture. On the phone
+   band it starts at the variant's width, grows into spare width, and
+   stays at least as wide as the pad's one-line label. */
 .slot {
   position: relative;
-  flex: none;
-  inline-size: var(--vj-pad-width);
+  flex: 1 1 var(--vj-pad-width);
   block-size: var(--vj-pad-height);
   scroll-snap-align: start;
 }
 
 .row[data-layout="split"] .slot {
-  inline-size: auto;
+  min-inline-size: 0;
+  block-size: auto;
+}
+
+/* The All effects bar sits on the bottom edge of its grid cell. */
+.row[data-layout="split"] .allSlot {
+  align-self: end;
+}
+
+.row[data-layout="split"] .allPad {
+  min-block-size: var(--tap-min);
+  padding-block: var(--vj-pad-inset);
 }
 
 /* ── One pad ── */
@@ -58,16 +165,27 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-end;
   box-sizing: border-box;
   inline-size: 100%;
+  /* On the phone band this floor, or the one-line label, is as far as the
+     pad narrows. */
+  min-inline-size: calc(var(--vj-pad-width) - var(--vj-pad-squeeze));
   block-size: 100%;
-  padding: 5px 5px 7px;
+  padding: var(--vj-pad-inset);
+  /* The label sits just above the amount bar. */
+  padding-block-end: calc(
+    var(--vj-pad-bar-bottom) + var(--vj-pad-bar-height) + 3px
+  );
   overflow: hidden;
   border: 1px solid var(--qs-glass-border);
   border-radius: var(--qs-radius-tile);
   background:
-    linear-gradient(180deg, var(--qs-glass-top) 0%, var(--qs-glass-bottom) 100%),
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
     var(--qs-raised);
   color: var(--qs-text);
   font: inherit;
@@ -85,13 +203,15 @@
 }
 
 .row[data-layout="split"] .pad {
+  min-inline-size: 0;
   touch-action: manipulation;
 }
 
 .pad[data-on="true"] {
   border-color: var(--accent);
   background: var(--accent);
-  box-shadow: var(--qs-glow-coral);
+  /* A tight ring on the phone band, the soft coral glow in the grid. */
+  box-shadow: var(--vj-pad-lit-glow);
   color: var(--qs-cta-ink);
 }
 
@@ -121,12 +241,15 @@
   border-color: var(--qs-glass-border-strong);
 }
 
+/* The flash and beat marks: the top-right corner of every pad, one size. */
 .marks {
+  position: absolute;
+  inset-block-start: var(--vj-pad-inset);
+  inset-inline-end: var(--vj-pad-inset);
   display: flex;
   align-items: center;
   gap: 3px;
-  min-block-size: 12px;
-  font-size: var(--text-11);
+  font-size: var(--vj-pad-mark-size);
   line-height: 1;
   color: var(--qs-text-mute);
 }
@@ -147,30 +270,39 @@
   color: var(--qs-cta-ink);
 }
 
+/* The label, bottom-left. The phone band keeps it on one line and widens
+   the pad to fit. */
 .name {
-  display: -webkit-box;
-  overflow: hidden;
-  font-size: var(--text-12);
+  display: block;
+  font-size: var(--vj-pad-label-size);
   font-weight: 600;
   line-height: 1.15;
   letter-spacing: -0.01em;
+  white-space: nowrap;
   /* base.css sets overflow-wrap: anywhere, which split words mid-letter
      ("Estrobos/cópio"); lines break between words only. */
   overflow-wrap: normal;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
 }
 
-/* The amount: a thin bar along the bottom edge, scaled from the start. */
+/* In the grid a long label wraps between words, upward from the bottom
+   edge, so its last line shares the line of every other label. */
+.row[data-layout="split"] .name {
+  white-space: normal;
+}
+
+/* The amount: a quiet full-width track with the fill scaled from the start. */
 .amount {
   position: absolute;
-  inset-inline: 6px;
-  inset-block-end: 3px;
-  block-size: 2px;
+  inset-inline: var(--vj-pad-inset);
+  inset-block-end: var(--vj-pad-bar-bottom);
+  block-size: var(--vj-pad-bar-height);
   border-radius: var(--qs-radius-pill);
-  background: var(--qs-ring-track);
+  background: var(--qs-glass-border-strong);
   overflow: hidden;
+}
+
+.pad[data-on="true"] .amount {
+  background: color-mix(in srgb, var(--qs-cta-ink) 25%, transparent);
 }
 
 .amountFill {
@@ -193,11 +325,12 @@
   background: var(--qs-cta-ink);
 }
 
-/* ── Strobe: the seconds left in a small ring at the top corner ── */
+/* ── Strobe: the seconds left in a small ring at the top-left corner,
+   across from the flash mark ── */
 .countdown {
   position: absolute;
   inset-block-start: 4px;
-  inset-inline-end: 4px;
+  inset-inline-start: 4px;
   display: grid;
   place-items: center;
   inline-size: 20px;
@@ -237,22 +370,31 @@
   line-height: 1;
 }
 
-/* ── All effects: the last pad, an icon over a one-line label ── */
+/* ── All effects: a dashed ghost tile, icon and label centred. The icon
+   sits over the label on the phone band and beside it in the grid. ── */
 .allPad {
   composes: pad;
   align-items: center;
   justify-content: center;
   gap: 4px;
+  padding-block-end: var(--vj-pad-inset);
   border-style: dashed;
   background: transparent;
+  color: var(--qs-text-mute);
   text-align: center;
+}
+
+.row[data-layout="split"] .allPad {
+  flex-direction: row;
+  gap: 6px;
 }
 
 .allName {
   composes: name;
-  max-inline-size: 100%;
-  -webkit-line-clamp: 1;
-  line-clamp: 1;
+}
+
+.row[data-layout="split"] .allName {
+  white-space: nowrap;
 }
 
 .allIcon {

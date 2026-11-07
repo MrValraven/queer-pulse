@@ -1,10 +1,4 @@
-import {
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-  within,
-} from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { QueryClient } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
@@ -15,6 +9,7 @@ import { DirectoryPartnersRow } from "./DirectoryPartnersRow";
 import { resetDemoDirectoryPartners } from "./directoryPartnersDemoStore";
 import { DIRECTORY_PLACES, type DirectoryPlace } from "./directoryPlaces";
 import type { DirectoryView } from "./useDirectoryFilters";
+import { awaitCatalog } from "../../test/awaitCatalog";
 
 const ROW_NAME = "Businesses we partner with";
 
@@ -37,10 +32,11 @@ function rowFor(view: DirectoryView, hasActiveFilters = false) {
 
 /** Renders the row on its own QueryClient and hands the client back, so a
  *  test can wait for the demo partners read to finish. */
-function renderRow(view: DirectoryView, queryClient = newQueryClient()) {
+async function renderRow(view: DirectoryView, queryClient = newQueryClient()) {
   render(
     <TestProviders queryClient={queryClient}>{rowFor(view)}</TestProviders>,
   );
+  await awaitCatalog("marketing");
   return queryClient;
 }
 
@@ -66,7 +62,7 @@ describe("DirectoryPartnersRow", () => {
   beforeEach(() => resetDemoDirectoryPartners());
 
   it("shows every showing partner in order on the list view", async () => {
-    renderRow("list");
+    await renderRow("list");
     const region = await screen.findByRole("region", { name: ROW_NAME });
     expect(cardHrefs(region)).toEqual([
       "/local/directory/livraria-bertha",
@@ -78,7 +74,7 @@ describe("DirectoryPartnersRow", () => {
   });
 
   it("keeps only partners that sell online on the Online view", async () => {
-    renderRow("online");
+    await renderRow("online");
     const region = await screen.findByRole("region", { name: ROW_NAME });
     expect(cardHrefs(region)).toEqual([
       "/local/directory/livraria-bertha",
@@ -90,13 +86,13 @@ describe("DirectoryPartnersRow", () => {
     resetDemoDirectoryPartners([
       { slug: "queer-supper-club", note: null, publicState: "showing" },
     ]);
-    const queryClient = renderRow("online");
+    const queryClient = await renderRow("online");
     await waitForPartnersLoaded(queryClient);
     expect(screen.queryByRole("region", { name: ROW_NAME })).toBeNull();
   });
 
   it("renders no row on the map view", async () => {
-    const queryClient = renderRow("map");
+    const queryClient = await renderRow("map");
     await waitForPartnersLoaded(queryClient);
     expect(screen.queryByRole("region", { name: ROW_NAME })).toBeNull();
   });
@@ -114,14 +110,16 @@ describe("DirectoryPartnersRow", () => {
         {rowFor("list", true)}
       </TestProviders>,
     );
-    await waitForElementToBeRemoved(() =>
-      screen.queryByRole("region", { name: ROW_NAME }),
+    // The row closes as the filter turns on, with its partner cards.
+    await waitFor(() =>
+      expect(screen.queryByRole("region", { name: ROW_NAME })).toBeNull(),
     );
+    expect(screen.queryByText("Members get 10% off")).toBeNull();
   });
 
   it("renders no row when no partner is showing", async () => {
     resetDemoDirectoryPartners([]);
-    const queryClient = renderRow("list");
+    const queryClient = await renderRow("list");
     await waitForPartnersLoaded(queryClient);
     expect(screen.queryByRole("region", { name: ROW_NAME })).toBeNull();
   });
@@ -135,7 +133,7 @@ describe("DirectoryPartnersRow", () => {
       },
       { slug: "fio-solto", note: "   ", publicState: "showing" },
     ]);
-    renderRow("list");
+    await renderRow("list");
     const region = await screen.findByRole("region", { name: ROW_NAME });
     const cardLinks = within(region).getAllByRole("link");
     const fioSoltoLink = cardLinks.find(
@@ -212,13 +210,17 @@ const BERTHA = DIRECTORY_PLACES.find(
 
 /** Renders one partner card for a variant of Livraria Bertha and returns
  *  its link. */
-function renderCard(fields: Partial<DirectoryPlace>, note: string | null) {
+async function renderCard(
+  fields: Partial<DirectoryPlace>,
+  note: string | null,
+) {
   if (!BERTHA) throw new Error("The Livraria Bertha fixture is missing");
   render(
     <TestProviders>
       <DirectoryPartnerCard place={{ ...BERTHA, ...fields }} note={note} />
     </TestProviders>,
   );
+  await awaitCatalog("marketing");
   return screen.getByRole("link");
 }
 
@@ -230,29 +232,29 @@ const WORKS_ACROSS_LISBON = {
 };
 
 describe("DirectoryPartnerCard", () => {
-  it("names the card by the business and leaves the thumb out", () => {
-    const link = renderCard({ photos: undefined }, null);
+  it("names the card by the business and leaves the thumb out", async () => {
+    const link = await renderCard({ photos: undefined }, null);
     expect(link).toHaveAccessibleName(/^Livraria Bertha/);
     expect(link).not.toHaveAttribute("title");
   });
 
-  it("shows a place's neighbourhood", () => {
-    const link = renderCard({ online: false, mobile: false }, null);
+  it("shows a place's neighbourhood", async () => {
+    const link = await renderCard({ online: false, mobile: false }, null);
     expect(within(link).getByText("Príncipe Real")).toBeInTheDocument();
   });
 
-  it("shows Online with the city for an online business that gives one", () => {
-    const link = renderCard({ online: true, city: "Porto" }, null);
+  it("shows Online with the city for an online business that gives one", async () => {
+    const link = await renderCard({ online: true, city: "Porto" }, null);
     expect(within(link).getByText("Online · Porto")).toBeInTheDocument();
   });
 
-  it("shows Online alone for an online business with no city", () => {
-    const link = renderCard({ online: true, city: undefined }, null);
+  it("shows Online alone for an online business with no city", async () => {
+    const link = await renderCard({ online: true, city: undefined }, null);
     expect(within(link).getByText("Online")).toBeInTheDocument();
   });
 
-  it("shows where an out-and-about business works", () => {
-    const link = renderCard(
+  it("shows where an out-and-about business works", async () => {
+    const link = await renderCard(
       {
         online: false,
         mobile: true,
@@ -265,8 +267,8 @@ describe("DirectoryPartnerCard", () => {
     expect(within(link).getByText("Works across Lisbon")).toBeInTheDocument();
   });
 
-  it("shows the meeting point of an out-and-about business that has one", () => {
-    const link = renderCard(
+  it("shows the meeting point of an out-and-about business that has one", async () => {
+    const link = await renderCard(
       {
         online: false,
         mobile: true,
@@ -280,8 +282,8 @@ describe("DirectoryPartnerCard", () => {
     expect(within(link).getByText("Meets in Arroios")).toBeInTheDocument();
   });
 
-  it("shows the note trimmed with its heart", () => {
-    const link = renderCard({}, "  Members get 10% off  ");
+  it("shows the note trimmed with its heart", async () => {
+    const link = await renderCard({}, "  Members get 10% off  ");
     const noteLine = link.querySelector("[data-partner-note]");
     expect(noteLine).toHaveTextContent(/^Members get 10% off$/);
     expect(noteLine?.querySelector("svg")).not.toBeNull();

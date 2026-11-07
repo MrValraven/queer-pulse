@@ -7,17 +7,18 @@ import {
   type ReactNode,
 } from "react";
 import { AnimatePresence, m } from "motion/react";
-import { FiAlertTriangle } from "react-icons/fi";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
 import type { VjClipDTO, VjQuantize } from "../../../../shared/contracts/vj";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { VjClipReadiness } from "../../live/vjScreensSummary";
 import { useVjLongPress } from "../hooks/useVjLongPress";
 import { useVjMidiLearnTarget } from "../midi/useVjMidiLearnTarget";
+import { VjFailureBadge } from "./VjFailureBadge";
 import { VjFavoriteStar } from "./VjFavoriteStar";
 import { VjTilePreview } from "./VjTilePreview";
 import { VJ_GRID_ITEM_ATTRIBUTE } from "./useVjGridFocus";
 import styles from "./VjGrid.module.css";
+import { VJ_TILE_EASE, VJ_TILE_MOTION_SECONDS } from "./vjTileMotion";
 
 export interface VjTileState {
   isLive: boolean;
@@ -29,10 +30,6 @@ export interface VjTileState {
   pendingQuantize: VjQuantize | null;
   readiness: VjClipReadiness;
 }
-
-/** The shared Collapse curve and its fast length, for tags and rings. */
-const VJ_TILE_EASE = [0.22, 0.68, 0.16, 1] as const;
-const VJ_TILE_MOTION_SECONDS = 0.2;
 
 type VjTranslate = ReturnType<typeof useTranslation>["t"];
 
@@ -120,13 +117,16 @@ export interface VjRemoteTileProps {
   tabIndex: 0 | -1;
   onTapClip: (clipId: string, index: number) => void;
   onToggleFavorite: (clipId: string, isFavorite: boolean) => void;
+  /** Opens the sheet of clips that couldn't load, on this clip's row. */
+  onShowFailure: (clipId: string) => void;
 }
 
 /**
  * One clip tile: a square holding the main button (thumbnail, title on a
  * bottom gradient, Live, Cued and next beat or bar tags, a pending ring,
- * readiness as a progress bar and a dim, a failure badge) and the favorite
- * star beside it. A tap plays or cues the clip; a long press peeks at its
+ * readiness as a progress bar and a dim, a slot for the failure badge), and
+ * beside it the failure badge (it opens the sheet that says why) and the
+ * favorite star. A tap plays or cues the clip; a long press peeks at its
  * moving preview and the click that follows sends nothing. While MIDI learn
  * runs, a press picks the tile's slot and sends nothing.
  */
@@ -140,6 +140,7 @@ export function VjRemoteTile({
   tabIndex,
   onTapClip,
   onToggleFavorite,
+  onShowFailure,
 }: VjRemoteTileProps): JSX.Element {
   const { t } = useTranslation();
   const mainRef = useRef<HTMLButtonElement>(null);
@@ -222,12 +223,13 @@ export function VjRemoteTile({
           <span className={styles.tileTitle}>{clip.title}</span>
         </span>
         <span className={styles.tileTags}>
+          {/* Holds the badge's place, so the tags after it clear the badge button. */}
           <VjTileTag
             isShown={isFailed}
-            className={styles.failBadge ?? ""}
-            dataName="failure-badge"
+            className={styles.failBadgeSlot ?? ""}
+            dataName="failure-slot"
           >
-            <FiAlertTriangle aria-hidden="true" fill="none" />
+            {null}
           </VjTileTag>
           <VjTileTag
             isShown={isLive}
@@ -281,6 +283,14 @@ export function VjRemoteTile({
           </span>
         ) : null}
       </button>
+      <VjFailureBadge
+        isShown={isFailed}
+        clipId={clip.id}
+        title={clip.title}
+        tabIndex={tabIndex}
+        isPickable={isPickable}
+        onShowFailure={onShowFailure}
+      />
       <VjFavoriteStar
         clipId={clip.id}
         title={clip.title}

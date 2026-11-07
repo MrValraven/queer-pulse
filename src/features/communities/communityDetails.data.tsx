@@ -251,7 +251,7 @@ export const COMMUNITY_DETAILS: Record<string, CommunityDetail> = {
     ],
     whoFor: [
       "Trans and non-binary people in or arriving to Lisbon",
-      "Anyone navigating healthcare, names, or paperwork who wants peers rather than professionals",
+      "Anyone navigating healthcare, names, or paperwork who wants the company of peers",
       "People who want to give practical help as much as receive it",
     ],
     tags: ["Trans", "Mutual aid", "Peer support", "Healthcare", "Practical"],
@@ -468,8 +468,7 @@ export const COMMUNITY_DETAILS: Record<string, CommunityDetail> = {
     about: [
       <>
         Healthcare navigation, legal guides, peer support, and community: a
-        dedicated space for trans and non-binary people that stands on its own
-        rather than being tucked into a broader network.
+        dedicated space for trans and non-binary people that stands on its own.
       </>,
       <>
         The Hub keeps the maps everyone needs: who prescribes, who'll do your
@@ -523,8 +522,8 @@ export const COMMUNITY_DETAILS: Record<string, CommunityDetail> = {
     about: [
       <>
         For LGBTQ+ members 50 and over: enormous lived wisdom, long memories,
-        and a community that sees and genuinely honours you rather than treating
-        you as history.
+        and a community that sees you and genuinely honours you as part of the
+        present.
       </>,
       <>
         We meet in daylight, somewhere with chairs and decent acoustics. Some of
@@ -534,7 +533,7 @@ export const COMMUNITY_DETAILS: Record<string, CommunityDetail> = {
     ],
     whoFor: [
       "LGBTQ+ people aged 50 and over",
-      "Elders who want peers rather than a panel slot about 'the old days'",
+      "Elders who want peers and good conversation in the present tense",
       "Anyone who values long memory and daytime company",
     ],
     tags: ["Elders", "50+", "Monthly", "Daytime", "Community"],

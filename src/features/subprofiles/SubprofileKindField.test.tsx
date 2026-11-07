@@ -1,7 +1,9 @@
-import { act, render, screen, within } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { MotionProvider } from "../../app/providers/MotionProvider";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { PersonaKindChangeError } from "./api/personaKindChangeError";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import type { SubprofileKind } from "./api/subprofiles.api";
@@ -24,14 +26,25 @@ vi.mock("./api/useSubprofileMutations", async (importOriginal) => ({
   useChangeSubprofileKind: () => changeKindState,
 }));
 
-function renderField(kind: SubprofileKind) {
+/** `shouldLoadMotion` mounts the app's MotionProvider, which TestProviders
+ *  leaves out: without its LazyMotion features a Collapse never runs its
+ *  open animation and its content stays at opacity 0. */
+async function renderField(
+  kind: SubprofileKind,
+  { shouldLoadMotion = false }: { shouldLoadMotion?: boolean } = {},
+) {
   const subprofile = { id: "persona-1", kind } as SubprofileView;
-  const fieldTree = () => (
-    <TestProviders>
-      <SubprofileKindField subprofile={subprofile} />
-    </TestProviders>
-  );
+  // A fresh element on every call, so a rerender reaches the field.
+  const fieldTree = () => {
+    const field = <SubprofileKindField subprofile={subprofile} />;
+    return (
+      <TestProviders>
+        {shouldLoadMotion ? <MotionProvider>{field}</MotionProvider> : field}
+      </TestProviders>
+    );
+  };
   const rendered = render(fieldTree());
+  await awaitCatalog("subprofiles");
   return { ...rendered, rerenderField: () => rendered.rerender(fieldTree()) };
 }
 
@@ -46,7 +59,7 @@ describe("SubprofileKindField", () => {
 
   it("shows the current type and opens the same-group list", async () => {
     const user = userEvent.setup();
-    renderField("musician");
+    await renderField("musician");
     // Waits for the lazily loaded catalog.
     expect(await screen.findByText("Musician")).toBeInTheDocument();
     const toggle = screen.getByRole("button", { name: "Change type" });
@@ -60,7 +73,7 @@ describe("SubprofileKindField", () => {
 
   it("disables Change type while the editor has unsaved changes", async () => {
     editorState.dirty = true;
-    renderField("musician");
+    await renderField("musician");
     expect(
       await screen.findByRole("button", { name: "Change type" }),
     ).toBeDisabled();
@@ -72,7 +85,7 @@ describe("SubprofileKindField", () => {
   });
 
   it("says the type is the only one in its group", async () => {
-    renderField("astrologer");
+    await renderField("astrologer");
     expect(
       await screen.findByText(/is the only type in the .* group/),
     ).toBeInTheDocument();
@@ -81,7 +94,7 @@ describe("SubprofileKindField", () => {
 
   it("confirms with the section summary, then saves the picked type", async () => {
     const user = userEvent.setup();
-    renderField("musician");
+    await renderField("musician");
     await user.click(
       await screen.findByRole("button", { name: "Change type" }),
     );
@@ -104,7 +117,7 @@ describe("SubprofileKindField", () => {
     const saved = { id: "persona-1", kind: "dj" };
     changeKindState.mutateAsync = vi.fn().mockResolvedValue(saved);
     const user = userEvent.setup();
-    const { unmount } = renderField("musician");
+    const { unmount } = await renderField("musician");
     await user.click(
       await screen.findByRole("button", { name: "Change type" }),
     );
@@ -123,10 +136,15 @@ describe("SubprofileKindField", () => {
 
   it("folds the list away when the editor gets unsaved changes", async () => {
     const user = userEvent.setup();
-    const { rerenderField } = renderField("musician");
+    const { rerenderField } = await renderField("musician", {
+      shouldLoadMotion: true,
+    });
     const toggle = await screen.findByRole("button", { name: "Change type" });
     await user.click(toggle);
-    expect(await screen.findByRole("button", { name: "DJ" })).toBeVisible();
+    const djButton = await screen.findByRole("button", { name: "DJ" });
+    // The list fades in from opacity 0, so it reads as visible once the
+    // open animation has run.
+    await waitFor(() => expect(djButton).toBeVisible());
     editorState.dirty = true;
     rerenderField();
     expect(toggle).toHaveAttribute("aria-expanded", "false");
@@ -140,7 +158,7 @@ describe("SubprofileKindField", () => {
 
   it("closes the list from its bottom button and focuses the toggle", async () => {
     const user = userEvent.setup();
-    renderField("generic");
+    await renderField("generic");
     const toggle = await screen.findByRole("button", { name: "Change type" });
     await user.click(toggle);
     const closeButtons = await screen.findAllByRole("button", {
@@ -162,7 +180,7 @@ describe("SubprofileKindField", () => {
       }),
     );
     const user = userEvent.setup();
-    renderField("musician");
+    await renderField("musician");
     await user.click(
       await screen.findByRole("button", { name: "Change type" }),
     );
@@ -171,14 +189,17 @@ describe("SubprofileKindField", () => {
     await user.click(
       within(dialog).getByRole("button", { name: "Change type" }),
     );
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    // The toast deck keeps its own assertive region mounted, so the refusal
+    // is found by its words and checked for the alert role it sits in.
+    const refusal = await screen.findByText(
       "Our team took down a Studio release on this persona. Ask our team before changing its type.",
     );
+    expect(refusal.closest('[role="alert"]')).not.toBeNull();
   });
 
   it("offers every group to an Other persona", async () => {
     const user = userEvent.setup();
-    renderField("generic");
+    await renderField("generic");
     expect(
       await screen.findByText(
         "Pick the type that fits this persona. After that, you can change it to another type in the same group.",

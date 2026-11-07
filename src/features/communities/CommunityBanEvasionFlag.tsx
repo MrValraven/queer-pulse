@@ -10,6 +10,7 @@ import type {
   CommunityBanEvasionRowState,
 } from "./api/useCommunityBanEvasion";
 import { CommunityBanEvasionEscalate } from "./CommunityBanEvasionEscalate";
+import { communityErrorText } from "./communityErrors";
 import styles from "./CommunityBanEvasionFlag.module.css";
 
 const KEY = "communities:detail.modtools.joinRequests.banEvasion";
@@ -58,7 +59,8 @@ export function CommunityBanEvasionFlag({
   const [sentEscalation, setSentEscalation] =
     useState<CommunityBanEvasionEscalationDTO | null>(null);
   const [hasEarlierNoteKept, setHasEarlierNoteKept] = useState(false);
-  const [hasSendFailed, setHasSendFailed] = useState(false);
+  // Why the last escalation did not reach platform staff, or null.
+  const [sendFailure, setSendFailure] = useState<string | null>(null);
 
   const fetched = state.escalation;
   const escalation =
@@ -78,7 +80,7 @@ export function CommunityBanEvasionFlag({
 
   const send = (note: string) => {
     const typed = note.trim();
-    setHasSendFailed(false);
+    setSendFailure(null);
     void onEscalate(typed || undefined)
       .then((result) => {
         setSentEscalation(result);
@@ -89,7 +91,7 @@ export function CommunityBanEvasionFlag({
         // saved.
         setHasEarlierNoteKept(Boolean(typed) && (result.note ?? "") !== typed);
       })
-      .catch(() => setHasSendFailed(true));
+      .catch((error: unknown) => setSendFailure(communityErrorText(t, error)));
   };
 
   const tone = TONE[state.flag];
@@ -136,7 +138,7 @@ export function CommunityBanEvasionFlag({
             applicantName={applicantName}
             state={state}
             hasResolvedEscalation={escalation?.status === "resolved"}
-            hasSendFailed={hasSendFailed}
+            sendFailure={sendFailure}
             onOpen={() => setIsComposing(true)}
           />
         ))}
@@ -237,13 +239,13 @@ function EscalateAction({
   applicantName,
   state,
   hasResolvedEscalation,
-  hasSendFailed,
+  sendFailure,
   onOpen,
 }: {
   applicantName: string;
   state: CommunityBanEvasionRowState;
   hasResolvedEscalation: boolean;
-  hasSendFailed: boolean;
+  sendFailure: string | null;
   onOpen: () => void;
 }) {
   const { t } = useTranslation();
@@ -276,7 +278,11 @@ function EscalateAction({
           hasResolvedEscalation ? `${KEY}.reEscalateCta` : `${KEY}.escalateCta`,
         )}
       </Button>
-      {hasSendFailed && <p className={styles.warn}>{t(`${KEY}.sendFailed`)}</p>}
+      {sendFailure && (
+        <p className={styles.warn} role="alert">
+          {sendFailure}
+        </p>
+      )}
     </div>
   );
 }

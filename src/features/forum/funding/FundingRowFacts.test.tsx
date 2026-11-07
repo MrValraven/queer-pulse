@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import type { Thread } from "../forum.data";
 import type { ForumFundingView } from "./funding.types";
@@ -49,16 +50,24 @@ function thread(overrides: Partial<Thread>): Thread {
   };
 }
 
-const renderRow = (value: Thread) =>
+/** Renders the row facts inside their own host, so an assertion on the host
+ *  reads only what FundingRowFacts drew: the providers also mount toast
+ *  regions and the studio player's audio next to it. */
+async function renderRow(value: Thread): Promise<HTMLElement> {
   render(
     <TestProviders>
-      <FundingRowFacts thread={value} />
+      <div data-testid="funding-row-facts-host">
+        <FundingRowFacts thread={value} />
+      </div>
     </TestProviders>,
   );
+  await awaitCatalog("forum");
+  return screen.getByTestId("funding-row-facts-host");
+}
 
 describe("FundingRowFacts", () => {
-  it("shows funder, amount range, countdown and who can apply", () => {
-    renderRow(thread({ kind: "call", funding: FUNDING }));
+  it("shows funder, amount range, countdown and who can apply", async () => {
+    await renderRow(thread({ kind: "call", funding: FUNDING }));
     expect(screen.getByText("Fundação Maré")).toBeInTheDocument();
     expect(screen.getByText("€500 to €2,000")).toBeInTheDocument();
     expect(screen.getByText("Closes in 3 days")).toBeInTheDocument();
@@ -67,8 +76,8 @@ describe("FundingRowFacts", () => {
     ).toHaveTextContent("Collectives");
   });
 
-  it("mutes a closed call", () => {
-    renderRow(
+  it("mutes a closed call", async () => {
+    await renderRow(
       thread({
         kind: "call",
         funding: {
@@ -84,8 +93,8 @@ describe("FundingRowFacts", () => {
     );
   });
 
-  it("renders nothing on a thread with no funding", () => {
-    const { container } = renderRow(thread({}));
-    expect(container).toBeEmptyDOMElement();
+  it("renders nothing on a thread with no funding", async () => {
+    const host = await renderRow(thread({}));
+    expect(host).toBeEmptyDOMElement();
   });
 });

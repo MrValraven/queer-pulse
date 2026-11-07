@@ -21,6 +21,7 @@ import { routes } from "../../app/routeMap";
 import { getFollowers, type FollowerDTO } from "./api/subprofiles.api";
 import { useEndorsement } from "./api/useEndorsement";
 import { useEndorsers } from "./api/useEndorsers";
+import { endorseErrorMessage } from "./personaActionErrors";
 import { demoFollowersFor } from "./subprofilePeopleModal.data";
 import styles from "./SubprofilePeopleModal.module.css";
 
@@ -191,8 +192,8 @@ export function SubprofilePeopleModal({
       await withdraw.mutateAsync({
         currentEndorsementCount: persona.endorsementCount,
       });
-    } catch {
-      showToast(t("subprofiles:peopleModal.removeError"), "error");
+    } catch (error) {
+      showToast(endorseErrorMessage(error, t), "error");
     } finally {
       setRemovingSlug(null);
     }

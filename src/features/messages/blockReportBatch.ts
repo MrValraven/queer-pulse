@@ -19,6 +19,9 @@ export interface BlockReportBatchResult {
    *  still be reported once the throttle window clears, individually or by
    *  reopening this step. */
   skipped: number;
+  /** The error that failed the first message to be refused outright (not the
+   *  throttle), so the caller can name why. Undefined when none failed. */
+  firstFailure?: unknown;
 }
 
 function isThrottled(error: unknown): boolean {
@@ -50,6 +53,7 @@ export async function fileBlockReportBatch(
   let nextIndex = 0;
   let succeeded = 0;
   let failed = 0;
+  let firstFailure: unknown;
   let stoppedByThrottle = false;
 
   async function worker() {
@@ -70,6 +74,7 @@ export async function fileBlockReportBatch(
           stoppedByThrottle = true;
           return;
         }
+        if (failed === 0) firstFailure = error;
         failed += 1;
       }
     }
@@ -78,5 +83,5 @@ export async function fileBlockReportBatch(
   const workerCount = Math.min(CONCURRENCY, messageIds.length);
   await Promise.all(Array.from({ length: workerCount }, () => worker()));
   const skipped = messageIds.length - succeeded - failed;
-  return { succeeded, failed, skipped };
+  return { succeeded, failed, skipped, firstFailure };
 }

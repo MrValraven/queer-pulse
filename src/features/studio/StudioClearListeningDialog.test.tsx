@@ -7,6 +7,7 @@ import {
 } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { StudioClearListeningDialog } from "./StudioClearListeningDialog";
 
 interface ClearHolder {
@@ -42,6 +43,7 @@ describe("StudioClearListeningDialog", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const dialog = screen.getByRole("dialog", {
       name: "Clear listening history",
     });
@@ -66,6 +68,7 @@ describe("StudioClearListeningDialog", () => {
         <StudioClearListeningDialog isOpen onClose={onClose} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(
       within(screen.getByRole("dialog")).getByRole("button", {
         name: "Clear listening history",
@@ -75,7 +78,7 @@ describe("StudioClearListeningDialog", () => {
     expect(onClose).not.toHaveBeenCalled();
   });
 
-  it("holds both actions while the clear is in flight", () => {
+  it("holds both actions while the clear is in flight", async () => {
     mocks.clear = {
       clearHistory: vi.fn(() => Promise.resolve(true)),
       isClearing: true,
@@ -85,6 +88,7 @@ describe("StudioClearListeningDialog", () => {
         <StudioClearListeningDialog isOpen onClose={vi.fn()} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const dialog = screen.getByRole("dialog", {
       name: "Clear listening history",
     });

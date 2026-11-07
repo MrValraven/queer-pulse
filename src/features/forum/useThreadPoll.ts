@@ -2,6 +2,8 @@ import { useCallback, useMemo, useState } from "react";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { pollView } from "./api/forum.adapters";
 import { useVotePoll } from "./api/useForumMutations";
+import { forumCause } from "./forumErrors";
+import type { CauseErrorCopy } from "../../shared/api/causeErrorKey";
 import type { ThreadPoll } from "./forum.data";
 
 /**
@@ -34,7 +36,7 @@ export function useThreadPoll(
   // and both are dropped the moment a fresh poll arrives underneath them.
   const [votedPoll, setVotedPoll] = useState<ThreadPoll | null>(null);
   const [demoSelection, setDemoSelection] = useState<string[] | null>(null);
-  const [error, setError] = useState<"closed" | "failed" | null>(null);
+  const [error, setError] = useState<CauseErrorCopy | null>(null);
 
   const pollId = poll?.id ?? null;
 
@@ -53,7 +55,7 @@ export function useThreadPoll(
       // A closed poll still reads and still refuses votes. Saying so here
       // spares the member a round-trip that can only come back 403.
       if (resolved?.isClosed) {
-        setError("closed");
+        setError({ key: "forum:poll.voteFailedClosed" });
         return;
       }
       setError(null);
@@ -66,7 +68,9 @@ export function useThreadPoll(
         onSuccess: (next) => {
           setVotedPoll(pollView(next));
         },
-        onError: () => setError("failed"),
+        // The ballot names why it did not land: a poll that closed under the
+        // member, a single-choice poll sent two answers, offline, rate limited.
+        onError: (voteError) => setError(forumCause(voteError)),
       });
     },
     [resolved?.isClosed, demoMode, slug, castVote],
@@ -76,7 +80,8 @@ export function useThreadPoll(
     poll: resolved,
     vote,
     isVoting: isPending,
-    /** Why the last ballot did not land, or null. The card says it in words. */
+    /** Why the last ballot did not land (a catalog key and its values), or
+     *  null. The card says it in words. */
     error,
     dismissError: useCallback(() => setError(null), []),
   };

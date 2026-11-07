@@ -2,6 +2,7 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import { QueryClient } from "@tanstack/react-query";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { createStudioPlayerTestValue } from "../../test/studioPlayerTestValue";
 import { toReleaseView } from "./api/studio.adapters";
 import {
@@ -79,7 +80,9 @@ const release = toReleaseView({
   mood: null,
   scene: null,
   status: "published",
-  publishedAt: null,
+  // The row offers the heart and Add to playlist only once a release has
+  // gone live, which publishedAt marks.
+  publishedAt: "2026-04-12T10:00:00.000Z",
   tracks: [
     {
       id: "t1",
@@ -113,7 +116,7 @@ const release = toReleaseView({
   personaCredits: [],
 });
 
-function renderTracklist(
+async function renderTracklist(
   overrides: Partial<StudioPlayerValue> = {},
   tracklistRelease = release,
 ) {
@@ -144,18 +147,19 @@ function renderTracklist(
       </StudioPlayerContext.Provider>
     </TestProviders>,
   );
+  await awaitCatalog("studio");
   return value;
 }
 
 describe("StudioAlbumTracklist", () => {
   it("plays the row that was pressed, inside its release", async () => {
-    const value = renderTracklist();
+    const value = await renderTracklist();
     fireEvent.click(await screen.findByRole("button", { name: /play pier/i }));
     expect(value.playRelease).toHaveBeenCalledWith("r1", "t2");
   });
 
   it("marks the playing row with aria-current and pauses it in place", async () => {
-    const value = renderTracklist({
+    const value = await renderTracklist({
       status: "playing",
       isCurrentTrack: (trackId) => trackId === "t1",
       isCurrentRelease: () => true,
@@ -171,7 +175,7 @@ describe("StudioAlbumTracklist", () => {
   });
 
   it("links each title to its track page and holds back a track still processing", async () => {
-    renderTracklist();
+    await renderTracklist();
     expect(await screen.findByRole("link", { name: "Tide" })).toHaveAttribute(
       "href",
       "/studio/track?id=t1",
@@ -183,8 +187,8 @@ describe("StudioAlbumTracklist", () => {
 });
 
 describe("StudioAlbumTracklist: add to playlist", () => {
-  it("offers Add to playlist on each row of a published release, disabled when there is no audio", () => {
-    renderTracklist();
+  it("offers Add to playlist on each row of a published release, disabled when there is no audio", async () => {
+    await renderTracklist();
     expect(
       screen.getByRole("button", { name: "Add Tide to a playlist" }),
     ).toBeInTheDocument();
@@ -195,8 +199,8 @@ describe("StudioAlbumTracklist: add to playlist", () => {
 });
 
 describe("StudioAlbumTracklist: like", () => {
-  it("offers a heart on each playable row of a published release", () => {
-    renderTracklist();
+  it("offers a heart on each playable row of a published release", async () => {
+    await renderTracklist();
     const heart = screen.getByRole("button", { name: "Like Tide" });
     expect(heart).toHaveAttribute("aria-pressed", "false");
     expect(
@@ -205,8 +209,8 @@ describe("StudioAlbumTracklist: like", () => {
     expect(screen.queryByRole("button", { name: "Like Pending" })).toBeNull();
   });
 
-  it("leaves the heart off a preview read through its private link", () => {
-    renderTracklist({}, { ...release, isPreview: true });
+  it("leaves the heart off a preview read through its private link", async () => {
+    await renderTracklist({}, { ...release, isPreview: true });
     expect(screen.queryByRole("button", { name: /^like /i })).toBeNull();
   });
 });
@@ -218,7 +222,7 @@ describe("StudioAlbumTracklist: hidden explicit tracks", () => {
 
   it("greys an explicit track with no play button while it is hidden", async () => {
     playback.hideExplicit = true;
-    renderTracklist();
+    await renderTracklist();
     expect(
       await screen.findByText("Hidden by your settings"),
     ).toBeInTheDocument();
@@ -231,7 +235,7 @@ describe("StudioAlbumTracklist: hidden explicit tracks", () => {
   });
 
   it("brings the play button back when the setting is off", async () => {
-    renderTracklist();
+    await renderTracklist();
     expect(
       await screen.findByRole("button", { name: /play pier/i }),
     ).toBeInTheDocument();
@@ -348,7 +352,7 @@ function luaOffer(
 
 /** Renders Lua's EP and returns a rerender that builds fresh elements on
  *  the same query client, so the sheet host reads the offer holder again. */
-function renderLuaTracklist() {
+async function renderLuaTracklist() {
   const value: StudioPlayerValue = createStudioPlayerTestValue();
   const queryClient = new QueryClient();
   const buildTree = () => (
@@ -359,6 +363,7 @@ function renderLuaTracklist() {
     </TestProviders>
   );
   const { rerender } = render(buildTree());
+  await awaitCatalog("studio");
   return () => rerender(buildTree());
 }
 
@@ -383,7 +388,7 @@ describe("StudioAlbumTracklist: buying a track from the row menu", () => {
     offerMocks.releaseOffer = luaOffer("release", [
       luaTrackOffer("demo-track-lua-01", 1, "Paragem", "can_buy"),
     ]);
-    const rerenderTracklist = renderLuaTracklist();
+    const rerenderTracklist = await renderLuaTracklist();
     const menu = await openRowMenu("Paragem");
     fireEvent.click(
       await within(menu).findByRole("menuitem", { name: "Buy track" }),
@@ -406,7 +411,7 @@ describe("StudioAlbumTracklist: buying a track from the row menu", () => {
     offerMocks.releaseOffer = luaOffer("release", [
       luaTrackOffer("demo-track-lua-01", 1, "Paragem", "pending"),
     ]);
-    renderLuaTracklist();
+    await renderLuaTracklist();
     const menu = await openRowMenu("Paragem");
     expect(
       await within(menu).findByRole("menuitem", {
@@ -422,7 +427,7 @@ describe("StudioAlbumTracklist: buying a track from the row menu", () => {
     offerMocks.releaseOffer = luaOffer("release", [
       luaTrackOffer("demo-track-lua-01", 1, "Paragem", "can_buy"),
     ]);
-    renderLuaTracklist();
+    await renderLuaTracklist();
     const menu = await openRowMenu("Bilhete");
     expect(
       await within(menu).findByRole("menuitem", { name: "Play next" }),

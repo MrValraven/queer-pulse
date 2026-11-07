@@ -2,9 +2,10 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../../test/TestProviders";
 import { ListingEditorSaveBar } from "./ListingEditorSaveBar";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 describe("ListingEditorSaveBar", () => {
-  it("shows the note beside the save state", () => {
+  it("shows the note beside the save state", async () => {
     render(
       <TestProviders>
         <ListingEditorSaveBar
@@ -17,6 +18,7 @@ describe("ListingEditorSaveBar", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("marketing");
     expect(
       screen.getByText(/marketing:creatorDraftNote\.body|Our team/),
     ).toBeInTheDocument();
@@ -25,7 +27,7 @@ describe("ListingEditorSaveBar", () => {
     ).toBeInTheDocument();
   });
 
-  it("keeps the unsaved-changes line when the draft is idle", () => {
+  it("keeps the unsaved-changes line when the draft is idle", async () => {
     render(
       <TestProviders>
         <ListingEditorSaveBar
@@ -38,10 +40,11 @@ describe("ListingEditorSaveBar", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("marketing");
     expect(screen.getByText(/unsavedChanges|unsaved/i)).toBeInTheDocument();
   });
 
-  it("says when the draft last saved", () => {
+  it("says when the draft last saved", async () => {
     render(
       <TestProviders>
         <ListingEditorSaveBar
@@ -54,12 +57,13 @@ describe("ListingEditorSaveBar", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("marketing");
     expect(
       screen.getByText(/creatorDraft\.status\.savedJustNow|Saved just now/),
     ).toBeInTheDocument();
   });
 
-  it("keeps the note outside the sticky bar on a narrow screen", () => {
+  it("keeps the note outside the sticky bar on a narrow screen", async () => {
     const originalMatchMedia = window.matchMedia;
     window.matchMedia = (query: string) => ({
       matches: true,
@@ -84,6 +88,7 @@ describe("ListingEditorSaveBar", () => {
           />
         </TestProviders>,
       );
+      await awaitCatalog("marketing");
       const note = screen.getByText(
         /marketing:creatorDraftNote\.body|Our team/,
       );

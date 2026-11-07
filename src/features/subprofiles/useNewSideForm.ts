@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { reasonFor } from "../../shared/api/errorMessage";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Translation as TranslationApi } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
@@ -28,6 +27,7 @@ import {
 } from "./subprofileTemplates.data";
 import { useSubprofileMutations } from "./api/useSubprofileMutations";
 import { useSubprofiles } from "./api/useSubprofiles";
+import { reasonOrCauseMessage } from "./personaActionErrors";
 import type { StartMethod } from "./StartMethodPicker";
 import {
   applyDuplicatePlan,
@@ -370,10 +370,7 @@ export function useNewSideForm(
       // server's reason (the persona cap, a refused name) leads when it sent
       // one; the general line covers a network failure.
       setSubmitting(false);
-      showToast(
-        reasonFor(error) ?? t("subprofiles:newModal.toastError"),
-        "error",
-      );
+      showToast(reasonOrCauseMessage(error, t), "error");
     }
   }
 

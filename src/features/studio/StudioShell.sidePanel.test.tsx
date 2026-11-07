@@ -1,6 +1,7 @@
 import { renderHook, screen } from "@testing-library/react";
 import { useLayoutEffect } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type { StudioLoadState } from "./api/studioLoadState";
 import type { StudioPlayerSurfaceValue } from "./player/studioPlayerSurface";
 import { useIsStudioSidePanelDockHostMounted } from "./player/studioSidePanelDock";
@@ -31,6 +32,7 @@ vi.mock("./api/useStudioAccess", () => ({
     isPending: false,
     uploadablePersonas: [],
   }),
+  useStudioCounterWindowsOpenLive: () => null,
 }));
 
 // The Now playing view's reads stay pending, so these tests reach no server.
@@ -79,19 +81,21 @@ function mockViewport(width: number) {
 
 /** The shell reads only `hasQueue` from the surface; the column's panel
  *  reads the rest. */
-function renderShellAt(width: number, hasQueue = true) {
+async function renderShellAt(width: number, hasQueue = true) {
   mockViewport(width);
   surfaceHolder.current = createSurfaceValue({
     hasQueue,
     sidePanel: "nowPlaying",
     sidePanelPlacement: width > 880 ? "docked" : null,
   });
-  return renderWithPlayer(
+  const rendered = renderWithPlayer(
     <StudioShell>
       <p>Page</p>
     </StudioShell>,
     { initialEntries: ["/studio"] },
   );
+  await awaitCatalog("studio");
+  return rendered;
 }
 
 /** Expects the shell to show no docked column and no third grid track. */
@@ -113,50 +117,50 @@ afterEach(() => {
 });
 
 describe("StudioShell side panel", () => {
-  it("docks the column and opens the third grid track", () => {
-    renderShellAt(1600);
+  it("docks the column and opens the third grid track", async () => {
+    await renderShellAt(1600);
     expect(
       screen.getByRole("complementary", { name: "Now playing" }),
     ).toBeInTheDocument();
     expect(document.querySelector("[data-side-panel-open]")).not.toBeNull();
   });
 
-  it("folds the rail for the panel below 1500px and leaves the saved choice", () => {
-    renderShellAt(1400);
+  it("folds the rail for the panel below 1500px and leaves the saved choice", async () => {
+    await renderShellAt(1400);
     expect(document.querySelector("[data-rail-collapsed]")).not.toBeNull();
     expect(window.localStorage.getItem(RAIL_COLLAPSED_STORAGE_KEY)).toBeNull();
   });
 
-  it("keeps the rail as set from 1500px", () => {
-    renderShellAt(1600);
+  it("keeps the rail as set from 1500px", async () => {
+    await renderShellAt(1600);
     expect(document.querySelector("[data-rail-collapsed]")).toBeNull();
   });
 
-  it("renders no column in the floating placement", () => {
-    renderShellAt(1100);
+  it("renders no column in the floating placement", async () => {
+    await renderShellAt(1100);
     expectNoColumn();
   });
 
-  it("renders no column while the saved preference keeps it closed", () => {
+  it("renders no column while the saved preference keeps it closed", async () => {
     writeStudioSidePanelPreference({ isOpen: false, view: "nowPlaying" });
-    renderShellAt(1600);
+    await renderShellAt(1600);
     expectNoColumn();
     expect(document.querySelector("[data-rail-collapsed]")).toBeNull();
   });
 
-  it("renders no column while nothing is queued", () => {
-    renderShellAt(1600, false);
+  it("renders no column while nothing is queued", async () => {
+    await renderShellAt(1600, false);
     expectNoColumn();
   });
 
-  it("renders no column on phones", () => {
-    renderShellAt(880);
+  it("renders no column on phones", async () => {
+    await renderShellAt(880);
     expectNoColumn();
   });
 
-  it("renders no column for a member without Studio access", () => {
+  it("renders no column for a member without Studio access", async () => {
     accessHolder.hasAccess = false;
-    renderShellAt(1600);
+    await renderShellAt(1600);
     expectNoColumn();
   });
 
@@ -199,8 +203,8 @@ describe("StudioShell side panel", () => {
     });
   });
 
-  it("registers the shell as the dock host", () => {
-    const { unmount } = renderShellAt(1600);
+  it("registers the shell as the dock host", async () => {
+    const { unmount } = await renderShellAt(1600);
     expect(
       renderHook(() => useIsStudioSidePanelDockHostMounted()).result.current,
     ).toBe(true);

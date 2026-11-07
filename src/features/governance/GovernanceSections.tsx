@@ -18,6 +18,7 @@ import { submitConcern, type ConcernCategory } from "./api/governance.api";
 import { ConcernSubmittedPanel } from "./ConcernSubmittedPanel";
 import { CouncilSeatAvatar } from "./CouncilSeatAvatar";
 import { CONCERN_OPTIONS } from "./governance.data";
+import { governanceErrorText } from "./governanceErrors";
 import { resolveGovernanceText } from "./governanceText";
 import styles from "./GovernancePage.module.css";
 
@@ -351,8 +352,8 @@ export function RaiseSection() {
         description: description.trim(),
       });
       setSubmittedCode(ack.statusToken ?? "");
-    } catch {
-      showToast(t("governance:sections.raise.failedToast"), "error");
+    } catch (error) {
+      showToast(governanceErrorText(t, error), "error");
     } finally {
       setSubmitting(false);
     }

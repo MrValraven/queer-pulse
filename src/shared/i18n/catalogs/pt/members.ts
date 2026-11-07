@@ -43,6 +43,17 @@ export const members: Catalog = {
     "Não conseguimos processar essa imagem em segurança, por isso não a carregámos. Tenta um ficheiro diferente.",
   "upload.error.retry":
     "Não conseguimos carregar essa imagem. Tenta novamente.",
+  // Porque o pedido de carregamento ou o PUT ao armazenamento foi recusado (useUploadImage.ts).
+  "upload.error.storageRejectedType":
+    "O nosso armazenamento não aceitou o formato desta imagem. Guarda-a como JPEG ou PNG e carrega-a outra vez.",
+  "upload.error.storageTooLarge":
+    "Esta imagem é maior do que o nosso armazenamento aceita. Escolhe uma mais pequena e tenta outra vez.",
+  "upload.error.tooManyUploads":
+    "Carregaste muitas imagens em pouco tempo. Espera um minuto e tenta outra vez.",
+  "upload.error.linkExpired":
+    "O link de carregamento expirou antes de a tua imagem chegar. Tenta outra vez e criamos um novo.",
+  "upload.error.storageFault":
+    "O nosso armazenamento de imagens teve um erro do nosso lado. Espera um momento e tenta outra vez.",
 
   // ── AvatarEditor ───────────────────────────────────────────────────────────
   "avatar.error.generic":
@@ -407,6 +418,12 @@ export const members: Catalog = {
   "content.board.repostCta": "Publicar de novo",
   "content.board.renewLimitReached":
     "Esta já foi renovada o máximo de vezes. Escreve uma nova.",
+  "content.board.error.postGone":
+    "Esta publicação está fechada ou já não existe. Atualiza para ver o que há no quadro agora.",
+  "content.board.error.notOpen":
+    "Este quadro não está aberto para ti, por isso não podes responder.",
+  "content.board.error.postClosed":
+    "Esta publicação está fechada. Reabre-a no editor do quadro e depois renova-a.",
   "content.board.respondCta": "Oferecer ajuda",
   "content.board.respondedLabel": "Ofereceste ajuda",
   "content.board.helloCta": "Dizer olá",
@@ -1906,6 +1923,10 @@ export const members: Catalog = {
   "places.quickEdit.savedToast": "Anúncio atualizado.",
   "places.quickEdit.errorToast":
     "Não foi possível guardar as alterações. Tenta novamente.",
+  "places.quickEdit.error.invalid":
+    "O site ou o número de telefone não foram aceites. Verifica-os e guarda outra vez.",
+  "places.quickEdit.error.notFound":
+    "Este local já não está na tua conta, por isso não conseguimos guardar. Atualiza os teus locais para ver o que há agora.",
   "places.quickEdit.moreLink":
     "Precisas de alterar categorias, morada ou fotos? <a>Abrir o editor completo.</a>",
   "places.suggestions.title": "Espaços que <em>sugeriste</em>",
@@ -2093,6 +2114,8 @@ export const members: Catalog = {
     "Se o esconderes, os outros membros deixam de o ver no teu perfil. Fica sempre aqui para ti.",
   "badges.drawer.visibilityErrorToast":
     "Não conseguimos mudar a visibilidade desse emblema. Tenta novamente daqui a pouco.",
+  "badges.drawer.visibilityError.notEarned":
+    "Ainda não ganhaste esse emblema, por isso não há visibilidade para mudar. Atualiza para ver os teus emblemas atuais.",
   "badges.drawer.earnedThisWeek": "esta semana",
   "badges.drawer.progressCount": "{units} de {target} feitos",
   "badges.drawer.previous": "Emblema anterior",
@@ -2150,7 +2173,7 @@ export const members: Catalog = {
   "badges.ledger.reason.adjustmentWhy":
     "Esta linha foi escrita pela plataforma. Fala com a equipa da comunidade se quiseres saber o detalhe.",
   "perks.sidebar.explainBody":
-    "As vantagens não são um programa de fidelização. São a forma de quem aparece receber um pouco mais de volta. Cada nível representa algo real: tempo aqui, eventos a que foste, pessoas que ligaste. O que desbloqueias é uma fatia maior do que a plataforma já faz.",
+    "As vantagens são a forma de quem aparece receber um pouco mais de volta. Cada nível representa algo real: tempo aqui, eventos a que foste, pessoas que ligaste. O que desbloqueias é uma fatia maior do que a plataforma já faz.",
   "perks.sidebar.suggestLabel":
     "O que tornaria mais valioso seres membro a longo prazo?",
   "badges.case.categoryToggleLabel": "Mostrar distintivos de {category}",
@@ -2358,6 +2381,8 @@ export const members: Catalog = {
   "perks.claim.claiming": "A resgatar…",
   "perks.claim.errorToast":
     "Não conseguimos resgatar essa vantagem. Tenta novamente daqui a pouco.",
+  "perks.claim.error.levelNotReached":
+    "Ainda não chegaste ao nível em que esta vantagem se desbloqueia. Continua e ela abre-se para ti.",
 
   // ── A tua rede (ProfileNetworkStats + NetworkListModal) — só do dono ─────────
   "network.title": "A tua rede",
@@ -2455,6 +2480,12 @@ export const members: Catalog = {
     "Já não está escondido. Essa pessoa volta a ver o teu perfil.",
   "profile.whoSeesWhat.hiddenFrom.toast.error":
     "Algo correu mal. Tenta novamente.",
+  "profile.whoSeesWhat.hiddenFrom.error.self":
+    "Não podes esconder o teu perfil de ti. Escolhe outra pessoa.",
+  "profile.whoSeesWhat.hiddenFrom.error.notFound":
+    "Não encontrámos essa pessoa, por isso nada mudou. Pode ter saído ou mudado o endereço do perfil.",
+  "profile.whoSeesWhat.hiddenFrom.error.notHidden":
+    "O teu perfil já não está escondido dessa pessoa. Atualiza para ver a tua lista atual.",
 
   "profile.whoSeesWhat.reports.heading": "Denúncias que fizeste",
   "profile.whoSeesWhat.reports.sub":
@@ -2677,6 +2708,22 @@ export const members: Catalog = {
   "savedLists.toast.fileError": "Não foi possível adicionar a essa lista",
   "savedLists.toast.unfiled": "Tirado da lista",
   "savedLists.toast.unfileError": "Não foi possível tirar da lista",
+  "savedLists.error.nameInvalid":
+    "O nome de uma lista precisa de 1 a 60 caracteres. Escolhe um nome que caiba e tenta outra vez.",
+  "savedLists.error.nameTaken":
+    "Já tens uma lista com esse nome. Escolhe outro.",
+  "savedLists.error.listLimit":
+    "Chegaste ao limite de 30 listas. Apaga uma de que já não precises e cria a nova.",
+  "savedLists.error.listGone":
+    "Essa lista já não existe. Atualiza as tuas listas guardadas para ver o que há agora.",
+  "savedLists.error.defaultNotDeletable":
+    "A tua lista principal guarda tudo o que guardaste, por isso não pode ser apagada.",
+  "savedLists.error.unfileDefault":
+    "Para tirar algo da tua lista principal, deixa de o guardar.",
+  "drafts.error.idExists":
+    "Já existe um rascunho com este id, por isso mantivemos o que tens. Atualiza para o ver.",
+  "drafts.error.gone":
+    "Esse rascunho já foi apagado noutro sítio. Atualiza para ver os teus rascunhos atuais.",
 
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
   // PRD-34c — PRD-34c - /search category tabs. The tab strip now asks the backend (GET /search/types) which result types are actually live, so a closed surface no longer gets a tab that can only show the empty state. These two keys cover the case where that lookup itself fails: the strip falls back to the categories that need no feature flag (All, Pages) and this compact panel says why, with a retry. Search itself still works, so the copy must not read as a search failure. Rendered through the shared LoadErrorState in SearchPage.tsx.

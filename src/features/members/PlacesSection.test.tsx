@@ -30,8 +30,15 @@ describe("PlacesSection team invites", () => {
       screen.getByRole("heading", { name: "Team invites" }),
     ).toBeInTheDocument();
     expect(container.querySelector("#places")).not.toBeNull();
-    // The empty state still invites the owner to list a business.
-    expect(screen.getByText("No places yet")).toBeInTheDocument();
+    // The empty state still invites the owner to list a business. The demo
+    // owner has suggested places, so the empty title reads as the lead-in to
+    // "Places you suggested" below it.
+    expect(
+      screen.getByText("You don't run any places yet"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "List my business" }),
+    ).toBeInTheDocument();
   });
 
   it("never shows a visitor the owner's team invites", async () => {

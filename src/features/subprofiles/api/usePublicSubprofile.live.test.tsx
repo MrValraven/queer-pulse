@@ -15,6 +15,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { server } from "../../../test/msw/server";
 import { API, API_V1 } from "../../../test/msw/handlers";
 import type { PublicSubprofileArgs } from "./usePublicSubprofile";
+import {
+  findDemoSubprofileByOwnerSlug,
+  resolvePublicAccessDemo,
+} from "../data/subprofiles.data";
 
 /**
  * LIVE-mode suite for `usePublicSubprofile`'s Phase 1b discriminated union,
@@ -68,6 +72,18 @@ async function loadLive() {
   return { usePublicSubprofile, rehomedNestedPersonaFromError, wrapper };
 }
 
+/** The nested route's 200 body as a signed-in member (not the owner) reads it. */
+function publicDtoForMember(ownerSlug: string, subslug: string) {
+  const access = resolvePublicAccessDemo(
+    findDemoSubprofileByOwnerSlug(ownerSlug, subslug),
+    "signed-in-member",
+  );
+  if (access.kind !== "ok") {
+    throw new Error(`Expected a readable persona, got ${access.kind}`);
+  }
+  return access.dto;
+}
+
 async function resolve(args: PublicSubprofileArgs) {
   const { usePublicSubprofile, wrapper } = await loadLive();
   const { result } = renderHook(() => usePublicSubprofile(args), { wrapper });
@@ -111,11 +127,29 @@ describe("usePublicSubprofile (live mode via MSW, by-handle)", () => {
 
 describe("usePublicSubprofile (live mode via MSW, nested single-item route)", () => {
   it("calls the new GET /profiles/:slug/subprofiles/:subslug route, not the bulk list", async () => {
+    // The shared handler reads as a signed-out visitor, and a linked persona
+    // names its owner, so the server walls it as members_only. This answer
+    // stands in for a signed-in member's read of the same route.
+    server.use(
+      http.get(`${API_V1}/profiles/:slug/subprofiles/:subslug`, ({ params }) =>
+        HttpResponse.json(
+          publicDtoForMember(String(params.slug), String(params.subslug)),
+        ),
+      ),
+    );
     const outcome = await resolve({ ownerSlug: "rui", subslug: "engineering" });
     expect(outcome.state).toBe("ok");
     if (outcome.state === "ok") {
       expect(outcome.data.displayName).toBe("Rui Marçal");
     }
+  });
+
+  it("walls a linked persona as members_only for a signed-out visitor", async () => {
+    const outcome = await resolve({ ownerSlug: "rui", subslug: "engineering" });
+    expect(outcome).toEqual({
+      state: "restricted",
+      restricted: "members_only",
+    });
   });
 
   it("maps a 404 on the nested route to state:not-found", async () => {

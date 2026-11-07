@@ -67,9 +67,12 @@ describe("Studio review queues (demo)", () => {
         reason: "The opening track samples a recording with no permission",
       }),
     );
-    expect(result.current.reports.items.map((item) => item.reportId)).toEqual([
-      "demo-studio-report-2",
-    ]);
+    // The cache patch reaches the hooks after the takedown resolves.
+    await waitFor(() =>
+      expect(result.current.reports.items.map((item) => item.reportId)).toEqual(
+        ["demo-studio-report-2"],
+      ),
+    );
     await waitFor(() =>
       expect(
         result.current.withdrawn.items.map((item) => item.release.id),
@@ -89,7 +92,7 @@ describe("Studio review queues (demo)", () => {
         reply: "You're right, the name is yours to share",
       }),
     );
-    expect(result.current.disputes.items).toHaveLength(0);
+    await waitFor(() => expect(result.current.disputes.items).toHaveLength(0));
     expect(
       result.current.withdrawn.items.map((item) => item.release.id),
     ).not.toContain(releaseId);

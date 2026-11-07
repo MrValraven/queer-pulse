@@ -2,6 +2,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
+import {
+  causeErrorKey,
+  SHARED_CAUSE_KEY,
+  type CauseErrorCopy,
+} from "../../../shared/api/causeErrorKey";
 import type { ListingDraft } from "./listBusiness.data";
 import { saveListingDraft, deleteListingDraft } from "./api/listingDrafts.api";
 import { LISTING_DRAFTS_KEY } from "./api/useListingDrafts";
@@ -54,6 +59,22 @@ export interface UseListingDraftOptions {
   initialDraftId?: string;
 }
 
+/**
+ * How an explicit draft save ended. A failure carries the cause line to show
+ * (offline, signed out, rate limited, a blocked browser store, a draft that was
+ * submitted while it saved), so "Save and finish later" can say why.
+ */
+export type ListingDraftSaveResult =
+  { isSaved: true } | { isSaved: false; cause: CauseErrorCopy };
+
+const DRAFT_STORAGE_BLOCKED: CauseErrorCopy = {
+  key: "marketing:listBusiness.saveLater.cause.storage",
+};
+const DRAFT_ALREADY_CLEARED: CauseErrorCopy = {
+  key: "marketing:listBusiness.saveLater.cause.superseded",
+};
+const DRAFT_SIGNED_OUT: CauseErrorCopy = { key: SHARED_CAUSE_KEY.signedOut };
+
 export interface UseListingDraftResult {
   /** Demo snapshot for the in-wizard resume banner; always `null` in live. */
   saved: StoredDraft | null;
@@ -61,9 +82,10 @@ export interface UseListingDraftResult {
   savedAt: number | null;
   /** Discard the current draft (demo: clear localStorage; live: delete the row). */
   clearDraft: () => void;
-  /** Persist immediately, resolving `true` on success — the "Save & finish
-   *  later" affordance awaits this before leaving. */
-  saveAndExit: () => Promise<boolean>;
+  /** Persist immediately, resolving `{ isSaved: true }` on success. The "Save &
+   *  finish later" affordance awaits this before leaving, and shows the
+   *  failure's cause line otherwise. */
+  saveAndExit: () => Promise<ListingDraftSaveResult>;
 }
 
 /**
@@ -110,10 +132,10 @@ export function useListingDraft(
   const started = draft.path !== "";
 
   /** The persistence primitive shared by the debounced autosave and the
-   *  explicit `saveAndExit`. Returns whether the write succeeded. Best-effort in
-   *  demo (storage may be blocked) and live (network may be down); both swallow
-   *  their own failure so autosave never toasts. */
-  const persist = useCallback(async (): Promise<boolean> => {
+   *  explicit `saveAndExit`. Returns whether the write succeeded, and why not.
+   *  Best-effort in demo (storage may be blocked) and live (network may be
+   *  down); both swallow their own failure so autosave never toasts. */
+  const persist = useCallback(async (): Promise<ListingDraftSaveResult> => {
     const stamp = Date.now();
     if (demoAutosaveOn) {
       try {
@@ -122,9 +144,9 @@ export function useListingDraft(
           JSON.stringify({ draft, step, savedAt: stamp }),
         );
         setSavedAt(stamp);
-        return true;
+        return { isSaved: true };
       } catch {
-        return false;
+        return { isSaved: false, cause: DRAFT_STORAGE_BLOCKED };
       }
     }
     if (liveAutosaveOn) {
@@ -134,16 +156,18 @@ export function useListingDraft(
         if (liveDraftId.current) {
           await saveListingDraft({ draft, step }, liveDraftId.current);
           setSavedAt(stamp);
-          return true;
+          return { isSaved: true };
         }
         // A create is already running → wait for its id, then upsert that row
         // instead of starting a second create.
         if (createInFlight.current) {
           const existingId = await createInFlight.current;
-          if (gen !== generation.current) return false; // cleared meanwhile
+          if (gen !== generation.current) {
+            return { isSaved: false, cause: DRAFT_ALREADY_CLEARED }; // cleared meanwhile
+          }
           await saveListingDraft({ draft, step }, existingId);
           setSavedAt(stamp);
-          return true;
+          return { isSaved: true };
         }
         // First create — single-flight it so concurrent saves reuse this id.
         const createPromise = saveListingDraft({ draft, step }, undefined).then(
@@ -161,19 +185,20 @@ export function useListingDraft(
           // The draft was submitted/discarded while this create was in flight —
           // don't adopt the orphaned row; delete it so it never lingers.
           void deleteListingDraft(newId).catch(() => {});
-          return false;
+          return { isSaved: false, cause: DRAFT_ALREADY_CLEARED };
         }
         liveDraftId.current = newId;
         setSavedAt(stamp);
         // A freshly-minted row should appear in the landing list next time it
         // mounts — mark it stale (no observers here, so this won't refetch now).
         void queryClient.invalidateQueries({ queryKey: LISTING_DRAFTS_KEY });
-        return true;
-      } catch {
-        return false;
+        return { isSaved: true };
+      } catch (error) {
+        return { isSaved: false, cause: causeErrorKey(error) };
       }
     }
-    return false;
+    // Neither store is on: a signed-out visitor has nowhere to keep a draft.
+    return { isSaved: false, cause: DRAFT_SIGNED_OUT };
   }, [demoAutosaveOn, liveAutosaveOn, draft, step, queryClient]);
 
   useEffect(() => {
@@ -204,9 +229,9 @@ export function useListingDraft(
     setSavedAt(null);
   }, [demoMode, queryClient]);
 
-  const saveAndExit = useCallback(async (): Promise<boolean> => {
+  const saveAndExit = useCallback(async (): Promise<ListingDraftSaveResult> => {
     if (timer.current) clearTimeout(timer.current);
-    if (!started) return true; // nothing meaningful to persist yet
+    if (!started) return { isSaved: true }; // nothing meaningful to persist yet
     return persist();
   }, [persist, started]);
 

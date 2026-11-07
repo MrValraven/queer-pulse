@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { logError } from "../../../shared/observability/logger";
+import { causeErrorKey } from "../../../shared/api/causeErrorKey";
+import { exportStartErrorCopy } from "../settingsActionErrors";
 import {
   getExportJob,
   requestExport,
@@ -186,8 +188,16 @@ export function useExportFlow() {
               } catch (err) {
                 logError(err, { where: "useExportFlow.poll" });
                 stopPoll();
+                const pollCause = causeErrorKey(err);
                 setJob((j) =>
-                  j ? { ...j, status: "failed", error: "Lost contact" } : j,
+                  j
+                    ? {
+                        ...j,
+                        status: "failed",
+                        error: "Lost contact",
+                        errorCause: pollCause,
+                      }
+                    : j,
                 );
               }
             })();
@@ -200,6 +210,7 @@ export function useExportFlow() {
           status: "failed",
           requestedAt: new Date().toISOString(),
           error: err instanceof Error ? err.message : "Request failed",
+          errorCause: exportStartErrorCopy(err),
         });
       } finally {
         isStartingRef.current = false;

@@ -17,6 +17,7 @@ import {
   queueItem,
   renderWithPlayer,
 } from "./player/ui/studioPlayerTestHarness";
+import { awaitCatalog } from "../../test/awaitCatalog";
 
 vi.mock("./useStudioShowcase", () => ({ useStudioShowcase: () => false }));
 const surfaceHolder = vi.hoisted(() => ({
@@ -149,6 +150,7 @@ afterEach(() => {
 describe("StudioPlayer bar (desktop)", () => {
   it("steps the seek slider five seconds per arrow key", async () => {
     const { player } = renderWithPlayer(<StudioPlayer />);
+    await awaitCatalog("studio");
     const slider = await screen.findByRole("slider", { name: "Seek" });
     fireEvent.keyDown(slider, { key: "ArrowRight" });
     await waitFor(() => expect(player.seek).toHaveBeenLastCalledWith(25));
@@ -156,6 +158,7 @@ describe("StudioPlayer bar (desktop)", () => {
 
   it("links the title to the track and the artist to their page", async () => {
     renderWithPlayer(<StudioPlayer />);
+    await awaitCatalog("studio");
     expect(await screen.findByRole("link", { name: "Tide" })).toHaveAttribute(
       "href",
       "/studio/track?id=t1",
@@ -168,16 +171,21 @@ describe("StudioPlayer bar (desktop)", () => {
 
   it("offers the Like heart beside Add to playlist", async () => {
     renderWithPlayer(<StudioPlayer />);
+    await awaitCatalog("studio");
     const bar = await screen.findByRole("region", { name: "Studio player" });
     const heart = within(bar).getByRole("button", { name: "Like Tide" });
     expect(heart).toHaveAttribute("aria-pressed");
-    expect(heart.nextElementSibling).toBe(
+    // Each icon button carries its own tooltip, so the order is read
+    // across the bar's buttons.
+    const barButtons = within(bar).getAllByRole("button");
+    expect(barButtons[barButtons.indexOf(heart) + 1]).toBe(
       within(bar).getByRole("button", { name: "Add Tide to a playlist" }),
     );
   });
 
   it("shows a private preview as plain text with no save", async () => {
     renderWithPlayer(<StudioPlayer />, { player: previewPlayer() });
+    await awaitCatalog("studio");
     await screen.findByRole("slider", { name: "Seek" });
     expect(screen.getByText("Tide")).toBeInTheDocument();
     expect(screen.getByText("NIGHTFORM")).toBeInTheDocument();
@@ -191,6 +199,7 @@ describe("StudioPlayer bar (desktop)", () => {
   it("offers Retry when a track cannot play", async () => {
     const player = createStudioPlayerValue({ status: "error" });
     renderWithPlayer(<StudioPlayer />, { player });
+    await awaitCatalog("studio");
     fireEvent.click(await screen.findByRole("button", { name: /retry/i }));
     expect(player.retry).toHaveBeenCalled();
   });
@@ -198,6 +207,7 @@ describe("StudioPlayer bar (desktop)", () => {
   it("keeps the error region in the accessibility tree while idle", async () => {
     const player = createStudioPlayerValue({ status: "idle" });
     renderWithPlayer(<StudioPlayer />, { player });
+    await awaitCatalog("studio");
     const bar = await screen.findByRole("region", { name: "Studio player" });
     // The toast region and the sleep chip are status regions too; the error
     // region is the bar's own child.
@@ -217,7 +227,9 @@ describe("StudioPlayer bar (desktop)", () => {
     const { rerenderWith } = renderWithPlayer(<StudioPlayer />, {
       player: running,
     });
-    await screen.findByRole("button", { name: "Stops after this track" });
+    await awaitCatalog("studio");
+    // The bar and the open Now playing pane each show the chip.
+    await screen.findAllByRole("button", { name: "Stops after this track" });
     rerenderWith({ player: createStudioPlayerValue({ sleepTimer: null }) });
     await waitFor(() =>
       expect(
@@ -229,12 +241,14 @@ describe("StudioPlayer bar (desktop)", () => {
 
   it("shows no money line outside the demo", async () => {
     renderWithPlayer(<StudioPlayer />);
+    await awaitCatalog("studio");
     await screen.findByRole("slider", { name: "Seek" });
     expect(screen.queryByText(/paying/i)).not.toBeInTheDocument();
   });
 
   it("carries the full control set and toggles the queue panel", async () => {
     renderWithPlayer(<StudioPlayer />);
+    await awaitCatalog("studio");
     const bar = await screen.findByRole("region", { name: "Studio player" });
     for (const name of [
       "Shuffle",
@@ -271,6 +285,7 @@ describe("StudioPlayer bar (desktop)", () => {
       player,
       clock: createClock({ currentChapterIndex: 1 }),
     });
+    await awaitCatalog("studio");
     expect(await screen.findByText("Guest · Second part")).toBeInTheDocument();
   });
 
@@ -279,6 +294,7 @@ describe("StudioPlayer bar (desktop)", () => {
       radio: { filter: { kind: "genre", value: "fado" }, pool: [] },
     });
     renderWithPlayer(<StudioPlayer />, { player });
+    await awaitCatalog("studio");
     expect(
       await screen.findByText("Radio · Fado / contemporary"),
     ).toBeInTheDocument();
@@ -286,6 +302,7 @@ describe("StudioPlayer bar (desktop)", () => {
 
   it("opens Now playing from the cover", async () => {
     renderWithPlayer(<StudioPlayer />);
+    await awaitCatalog("studio");
     fireEvent.click(
       await screen.findByRole("button", {
         name: "Open Now playing, Tide by NIGHTFORM",
@@ -297,9 +314,13 @@ describe("StudioPlayer bar (desktop)", () => {
   it("closes the shortcuts sheet on Back before anything under it", async () => {
     surfaceHolder.current = createSurfaceValue({ isShortcutsOpen: true });
     renderWithPlayer(<StudioPlayer />);
+    await awaitCatalog("studio");
     await screen.findByRole("region", { name: "Studio player" });
     const listenerUnderneath = vi.fn();
     window.addEventListener("popstate", listenerUnderneath);
+    // Back lands on the entry under the sheet's own, whose state carries
+    // none of the sheet's stamp.
+    window.history.replaceState(null, "");
     window.dispatchEvent(new PopStateEvent("popstate"));
     window.removeEventListener("popstate", listenerUnderneath);
     expect(surfaceHolder.current?.closeShortcuts).toHaveBeenCalled();
@@ -313,6 +334,7 @@ describe("StudioPlayer shortcuts sheet and Back", () => {
       .spyOn(window.history, "back")
       .mockImplementation(() => undefined);
     renderWithPlayer(<SurfaceHarness />);
+    await awaitCatalog("studio");
     await openShortcutsFromHarness();
     fireEvent.keyDown(document, { key: "Escape" });
     await waitFor(() => expect(back).toHaveBeenCalledTimes(1), {
@@ -333,6 +355,7 @@ describe("StudioPlayer shortcuts sheet and Back", () => {
       .spyOn(window.history, "back")
       .mockImplementation(() => undefined);
     renderWithPlayer(<SurfaceHarness />);
+    await awaitCatalog("studio");
     await openShortcutsFromHarness();
     window.history.replaceState({ idx: 0 }, "");
     fireEvent.keyDown(document, { key: "Escape" });
@@ -348,6 +371,7 @@ describe("StudioPlayer shortcuts sheet and Back", () => {
       .spyOn(window.history, "back")
       .mockImplementation(() => undefined);
     renderWithPlayer(<SurfaceHarness />);
+    await awaitCatalog("studio");
     await openShortcutsFromHarness();
     fireEvent.click(
       screen.getByRole("button", { name: NAVIGATE_LABEL, hidden: true }),
@@ -371,6 +395,7 @@ describe("StudioPlayer shortcuts sheet and Back", () => {
 
   it("closes only the sheet when Back arrives over Now playing", async () => {
     renderWithPlayer(<SurfaceHarness />);
+    await awaitCatalog("studio");
     fireEvent.click(
       await screen.findByRole("button", { name: OPEN_NOW_PLAYING_LABEL }),
     );
@@ -396,6 +421,7 @@ describe("StudioPlayer mini player (phone)", () => {
     const captures = recordPointerCaptures();
     try {
       renderWithPlayer(<StudioPlayer />);
+      await awaitCatalog("studio");
       const play = await screen.findByRole("button", { name: "Pause" });
       fireEvent.pointerDown(play, { clientY: 700, pointerType: "touch" });
       expect(captures.targets.at(-1)).toBe(play);
@@ -408,6 +434,7 @@ describe("StudioPlayer mini player (phone)", () => {
     asPhone();
     vi.stubGlobal("PointerEvent", TestPointerEvent);
     const { player } = renderWithPlayer(<StudioPlayer />);
+    await awaitCatalog("studio");
     const play = await screen.findByRole("button", { name: "Pause" });
     fireEvent.pointerDown(play, { clientY: 700, pointerType: "touch" });
     fireEvent.pointerMove(play, { clientY: 560, pointerType: "touch" });
@@ -426,6 +453,7 @@ describe("StudioPlayer mini player (phone)", () => {
     asPhone();
     const player = createStudioPlayerValue({ status: "error" });
     renderWithPlayer(<StudioPlayer />, { player });
+    await awaitCatalog("studio");
     expect(
       // ENG-02: an error with no known cause reads the play "unknown" line.
       await screen.findByText(/This track couldn't start/),
@@ -437,6 +465,7 @@ describe("StudioPlayer mini player (phone)", () => {
   it("stays minimal and opens Now playing on a tap", async () => {
     asPhone();
     renderWithPlayer(<StudioPlayer />);
+    await awaitCatalog("studio");
     const open = await screen.findByRole("button", {
       name: "Open Now playing, Tide by NIGHTFORM",
     });
@@ -452,10 +481,16 @@ describe("StudioPlayer mini player (phone)", () => {
   it("offers the Like heart with Close player last", async () => {
     asPhone();
     renderWithPlayer(<StudioPlayer />);
+    await awaitCatalog("studio");
     const heart = await screen.findByRole("button", { name: "Like Tide" });
     expect(heart).toHaveAttribute("aria-pressed");
     const close = screen.getByRole("button", { name: "Close player" });
-    expect(close.parentElement?.lastElementChild).toBe(close);
+    // Each icon button carries its own tooltip, so the order is read across
+    // the player's buttons.
+    const playerButtons = within(
+      screen.getByRole("region", { name: "Studio player" }),
+    ).getAllByRole("button");
+    expect(playerButtons.at(-1)).toBe(close);
   });
 
   it("folds the heart away for an episode", async () => {
@@ -464,6 +499,7 @@ describe("StudioPlayer mini player (phone)", () => {
       currentItem: queueItem({ isEpisode: true }),
     });
     renderWithPlayer(<StudioPlayer />, { player });
+    await awaitCatalog("studio");
     await screen.findByRole("button", { name: /Open Now playing/ });
     expect(screen.queryByRole("button", { name: "Like Tide" })).toBeNull();
   });
@@ -471,6 +507,7 @@ describe("StudioPlayer mini player (phone)", () => {
   it("shows a private preview as plain text with no save", async () => {
     asPhone();
     renderWithPlayer(<StudioPlayer />, { player: previewPlayer() });
+    await awaitCatalog("studio");
     await screen.findByRole("button", { name: /Open Now playing/ });
     expect(screen.getByText("Tide")).toBeInTheDocument();
     expect(screen.queryByRole("link")).toBeNull();
@@ -484,6 +521,7 @@ describe("StudioPlayer mini player (phone)", () => {
     asPhone();
     vi.stubGlobal("PointerEvent", TestPointerEvent);
     renderWithPlayer(<StudioPlayer />);
+    await awaitCatalog("studio");
     const card = (
       await screen.findByRole("button", { name: /Open Now playing/ })
     ).parentElement;

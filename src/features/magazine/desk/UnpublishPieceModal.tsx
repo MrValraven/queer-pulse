@@ -1,57 +1,77 @@
-import { Button, Modal } from "../../../shared/components/ui";
+import { useId, useState } from "react";
+import { ConfirmDialog, RadioCardGroup } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { UnpublishLandingStage } from "../api/piecePublish.api";
-import { UNPUBLISH_CONFIRM_COPY } from "./unpublishPieceModal.data";
+import { UNPUBLISH_DESTINATIONS } from "./unpublishPieceModal.data";
 import styles from "./DeskModals.module.css";
 
 export interface UnpublishPieceModalProps {
   title: string;
-  stage: UnpublishLandingStage;
-  /** True while the request is out: the confirm button is disabled and busy. */
+  /** True while the request is out: both buttons are disabled. */
   isPending: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  /** Sends the unpublish to the destination picked in the radio. */
+  onConfirm: (stage: UnpublishLandingStage) => void;
 }
 
 /**
- * The confirm in front of the desk's one-click unpublish (row More menu and
- * Published board card). Same chrome as the other desk overlays: the shared
- * `Modal`, which returns focus to whatever raised it on close, and the footer
- * action row from `DeskModals.module.css`. The sub-line and the confirm label
- * name the landing stage; the body says what readers lose.
+ * The confirm in front of the desk's unpublish (the row's "Unpublish…" item
+ * and the Published board card's "Unpublish" button). Built on the shared
+ * `ConfirmDialog`, like the neighbouring Delete dialog: the description says
+ * what readers lose, a two-option radio picks where the piece goes back to
+ * (Draft by default), and the confirm button names that choice. Focus opens
+ * on Cancel, the safer of the two.
  */
 export function UnpublishPieceModal({
   title,
-  stage,
   isPending,
   onClose,
   onConfirm,
 }: UnpublishPieceModalProps) {
   const { t } = useTranslation();
-  const copy = UNPUBLISH_CONFIRM_COPY[stage];
+  const legendId = useId();
+  const [stage, setStage] = useState<UnpublishLandingStage>("drafting");
+  const picked =
+    UNPUBLISH_DESTINATIONS.find((option) => option.stage === stage) ??
+    UNPUBLISH_DESTINATIONS[0];
 
   return (
-    <Modal
+    <ConfirmDialog
+      open
+      tone="destructive"
+      loading={isPending}
+      initialFocus="cancel"
+      onClose={() => {
+        if (!isPending) onClose();
+      }}
+      onConfirm={() => onConfirm(stage)}
       title={t("magazine:desk.unpublishConfirm.title", { title })}
-      sub={t(copy.subKey)}
-      onClose={onClose}
-      footer={
-        <div className={styles.actions}>
-          <Button variant="ghost" onClick={onClose}>
-            {t("magazine:desk.modals.cancel")}
-          </Button>
-          <Button
-            variant="danger"
-            onClick={onConfirm}
-            disabled={isPending}
-            aria-busy={isPending}
-          >
-            {t(copy.confirmKey)}
-          </Button>
-        </div>
-      }
+      description={t("magazine:desk.unpublishConfirm.body")}
+      cancelLabel={t("magazine:desk.modals.cancel")}
+      confirmLabel={picked ? t(picked.confirmKey) : undefined}
     >
-      <p className={styles.body}>{t("magazine:desk.unpublishConfirm.body")}</p>
-    </Modal>
+      <p id={legendId} className={styles.destinationLegend}>
+        {t("magazine:desk.unpublishConfirm.destinationLegend")}
+      </p>
+      <RadioCardGroup
+        value={stage}
+        onChange={setStage}
+        ariaLabel={t("magazine:desk.unpublishConfirm.destinationLegend")}
+        ariaLabelledBy={legendId}
+        className={styles.destinations}
+        optionClassName={styles.destination}
+        checkedClassName={styles.destinationOn}
+        options={UNPUBLISH_DESTINATIONS.map((option) => ({
+          id: option.stage,
+          isDisabled: isPending,
+          render: (
+            <>
+              <span className={styles.destinationDot} aria-hidden />
+              <span>{t(option.optionKey)}</span>
+            </>
+          ),
+        }))}
+      />
+    </ConfirmDialog>
   );
 }

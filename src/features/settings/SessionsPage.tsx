@@ -30,6 +30,11 @@ import {
   simulateOr,
 } from "./api/account.api";
 import { useSessions } from "./api/useSessions";
+import {
+  sessionRevokeErrorCopy,
+  settingWriteErrorCopy,
+} from "./settingsActionErrors";
+import { SHARED_CAUSE_KEY } from "../../shared/api/causeErrorKey";
 import { routes } from "../../app/routeMap";
 import { type Session } from "./sessions.data";
 import styles from "./SessionsPage.module.css";
@@ -255,7 +260,8 @@ export function SessionsPage() {
         next.delete(id);
         return next;
       });
-      showToast(t("settings:sessions.toast.signedOutError"), "error");
+      const cause = sessionRevokeErrorCopy(err);
+      showToast(t(cause.key, cause.values), "error");
     }
   }
 
@@ -271,7 +277,8 @@ export function SessionsPage() {
     } catch (err) {
       logError(err, { where: "SessionsPage.signOutAll" });
       setSignedOut(new Set());
-      showToast(t("settings:sessions.toast.signedOutAllError"), "error");
+      const cause = settingWriteErrorCopy(err);
+      showToast(t(cause.key, cause.values), "error");
     }
   }
 
@@ -292,8 +299,15 @@ export function SessionsPage() {
     try {
       const isDone = demoMode ? true : await postLogoutAll();
       if (!isDone) {
+        // `postLogoutAll` reports only success or not, so the status is
+        // unknown; the browser can still tell us it is offline.
+        const isOffline = navigator.onLine === false;
         showToast(
-          t("settings:sessions.toast.signedOutEverywhereError"),
+          t(
+            isOffline
+              ? SHARED_CAUSE_KEY.noConnection
+              : "settings:sessions.toast.signedOutEverywhereError",
+          ),
           "error",
         );
         return;
@@ -304,7 +318,8 @@ export function SessionsPage() {
       showToast(t("settings:sessions.toast.signedOutEverywhere"), "success");
     } catch (err) {
       logError(err, { where: "SessionsPage.signOutEverywhere" });
-      showToast(t("settings:sessions.toast.signedOutEverywhereError"), "error");
+      const cause = settingWriteErrorCopy(err);
+      showToast(t(cause.key, cause.values), "error");
     } finally {
       setIsSigningOutEverywhere(false);
     }

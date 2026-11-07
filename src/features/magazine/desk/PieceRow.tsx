@@ -8,7 +8,6 @@ import { matchesAllFocus } from "./deskFocus";
 import { pieceNextAction, type PieceNextAction } from "./pieceNextAction";
 import { issueItemLabelKey, runFallbackNextAction } from "./pieceRowActions";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import type { UnpublishLandingStage } from "../api/piecePublish.api";
 import type { Viewer } from "../api/useDeskPresence";
 import type { Editor, Piece } from "../data/desk.data";
 import type { DeskTrack } from "./deskTrack";
@@ -39,9 +38,9 @@ export interface PieceRowProps {
   onAssignIssue: (piece: Piece) => void;
   /** Opens the delete confirmation for this piece, from the More menu. */
   onDelete: (piece: Piece) => void;
-  /** Takes a published piece off the site into the given stage. Without it a
-   *  published row's More menu leaves the unpublish items out. */
-  onUnpublish?: (piece: Piece, stage: UnpublishLandingStage) => void;
+  /** Raises the unpublish confirm for a published piece. Without it a
+   *  published row's More menu leaves the Unpublish item out. */
+  onUnpublish?: (piece: Piece) => void;
   /** Runs the row's next action. Without it, each kind falls back to the
    *  matching handler above (see `runFallbackNextAction`). */
   onNextAction?: (piece: Piece, action: PieceNextAction) => void;
@@ -154,12 +153,7 @@ export function PieceRow({
         onAssignIssue={() => onAssignIssue(piece)}
         onDelete={() => onDelete(piece)}
         isPublished={piece.stage === "Published"}
-        onUnpublishToDraft={
-          onUnpublish && (() => onUnpublish(piece, "drafting"))
-        }
-        onUnpublishToReview={
-          onUnpublish && (() => onUnpublish(piece, "in_review"))
-        }
+        onUnpublish={onUnpublish && (() => onUnpublish(piece))}
       />
     </div>
   );
@@ -173,6 +167,7 @@ export function PieceRow({
       data-open={isOpen}
       data-selected={selected}
       data-your-turn={isYourTurn}
+      data-piece-surface=""
       onClick={handleRowClick}
     >
       <PieceCheckbox

@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import type { FundingLinkLookup } from "../funding/useFundingLinkLookup";
 import { ComposeCallFields } from "./ComposeCallFields";
@@ -18,7 +19,7 @@ function lookupStub(
   };
 }
 
-function renderFields(
+async function renderFields(
   lookup: FundingLinkLookup,
   linkErrorKey: string | null = null,
 ) {
@@ -37,24 +38,25 @@ function renderFields(
       />
     </TestProviders>,
   );
+  await awaitCatalog("forum");
   return { onChange };
 }
 
 describe("ComposeCallFields", () => {
-  it("checks the link when the member leaves the field", () => {
+  it("checks the link when the member leaves the field", async () => {
     const lookup = lookupStub();
-    renderFields(lookup);
+    await renderFields(lookup);
     fireEvent.blur(screen.getByLabelText(/Link to the call/));
     expect(lookup.check).toHaveBeenCalledWith("https://example.org/calls/a");
   });
 
-  it("offers to go to the existing call or to post anyway", () => {
+  it("offers to go to the existing call or to post anyway", async () => {
     const lookup = lookupStub({
       status: "found",
       isDuplicateUnconfirmed: true,
       match: { slug: "mare-2026", title: "Maré 2026", deadline: null },
     });
-    renderFields(lookup);
+    await renderFields(lookup);
     expect(
       screen.getByText(
         "This call is already posted: Maré 2026. Reply there instead?",
@@ -68,14 +70,14 @@ describe("ComposeCallFields", () => {
     expect(lookup.dismiss).toHaveBeenCalled();
   });
 
-  it("says nothing when the lookup failed", () => {
-    renderFields(lookupStub({ status: "failed" }));
+  it("says nothing when the lookup failed", async () => {
+    await renderFields(lookupStub({ status: "failed" }));
     expect(screen.queryByText(/already posted/)).toBeNull();
     expect(screen.queryByText(/Checking whether/)).toBeNull();
   });
 
-  it("shows the server's refusal under the link", () => {
-    renderFields(lookupStub(), "forum:funding.error.linkInvalid");
+  it("shows the server's refusal under the link", async () => {
+    await renderFields(lookupStub(), "forum:funding.error.linkInvalid");
     expect(
       screen.getByText(
         "That link didn't work. Use the full address, starting with https://.",
@@ -83,8 +85,8 @@ describe("ComposeCallFields", () => {
     ).toBeInTheDocument();
   });
 
-  it("carries the fee warning", () => {
-    renderFields(lookupStub());
+  it("carries the fee warning", async () => {
+    await renderFields(lookupStub());
     expect(
       screen.getByText("Genuine grants never charge a fee to apply."),
     ).toBeInTheDocument();

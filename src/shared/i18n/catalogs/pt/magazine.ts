@@ -701,9 +701,10 @@ export const magazine: Catalog = {
   "desk.pieceRow.writer": "Quem escreve",
   "desk.pieceRow.you": "Tu",
   "desk.pieceRow.nobody": "Ninguém",
-  "desk.pieceRow.edit": "Edição",
+  "desk.pieceRow.edit": "Editar",
   "desk.pieceRow.chase": "Insistir",
   "desk.pieceRow.handOff": "Passar",
+  "desk.pieceRow.unpublish": "Despublicar…",
   "desk.pieceRow.unpublishToDraft": "Despublicar para rascunho",
   "desk.pieceRow.unpublishToReview": "Despublicar para análise",
   "desk.pieceRow.selectAria": "Selecionar {title}",
@@ -732,12 +733,14 @@ export const magazine: Catalog = {
     "Esta peça tem trabalho publicado. Despublica-o primeiro e só depois apagas a peça.",
   "desk.deletePiece.failed":
     "Não foi possível apagar esta peça. Tenta outra vez.",
-  // O diálogo de confirmação de despublicar (UnpublishPieceModal). O botão
-  // de confirmar reutiliza `desk.pieceRow.unpublishToDraft|Review` e o de
-  // cancelar `desk.modals.cancel`.
+  // O diálogo de confirmação de despublicar (UnpublishPieceModal). Quem edita
+  // escolhe para onde vai a peça nos dois cartões de opção, e o botão de
+  // confirmar reutiliza `desk.pieceRow.unpublishToDraft|Review` para nomear
+  // essa escolha. O de cancelar é `desk.modals.cancel`.
   "desk.unpublishConfirm.title": "Despublicar “{title}”?",
-  "desk.unpublishConfirm.subDraft": "Volta para rascunho.",
-  "desk.unpublishConfirm.subReview": "Volta para análise.",
+  "desk.unpublishConfirm.destinationLegend": "Para onde vai",
+  "desk.unpublishConfirm.toDraft": "De volta ao rascunho",
+  "desk.unpublishConfirm.toReview": "De volta à análise",
   "desk.unpublishConfirm.body":
     "A peça sai do site e um link que alguém já partilhou deixa de funcionar até a publicares outra vez. Continua na redação.",
 
@@ -745,6 +748,7 @@ export const magazine: Catalog = {
   "desk.board.columnEmpty": "Vazia",
   "desk.board.moveStageAria": "Mudar de estado",
   "desk.board.overCap": "Acima de {cap}",
+  "desk.board.unpublish": "Despublicar",
   "desk.board.unpublishToMove": "Para a mover, despublica-a no registo da peça",
   "desk.board.unscheduleToMove":
     "Está agendada. Para a mover, cancela o agendamento no registo da peça",
@@ -1402,11 +1406,11 @@ export const magazine: Catalog = {
     "Resolve os {count} itens de cuidado por resolver antes de publicar.",
   "piece.publish.publishedToast": "Publicado. Já está disponível para quem lê.",
   "piece.publish.unpublishedToast":
-    "Retirado. Já não está acessível a quem lê.",
+    "Despublicada. Já não está acessível a quem lê.",
   "piece.publish.failedToast":
     "Não foi possível publicar esta peça. Tenta novamente.",
   "piece.publish.unpublishFailedToast":
-    "Não foi possível retirar esta peça. Tenta novamente.",
+    "Não foi possível despublicar esta peça. Tenta novamente.",
   "piece.publish.refusedCareGateHeading": "Retida pelo controlo de cuidado",
   "piece.publish.refusedCareGateToast":
     "Esta peça continua retida pelo controlo de cuidado.",
@@ -1420,13 +1424,13 @@ export const magazine: Catalog = {
   "piece.publish.confirmSettleSub":
     "Já está no site. Publicar marca-a como publicada e avisa quem escreveu.",
   "piece.publish.confirmPublishBody":
-    "Quem escreveu é avisado de que saiu. Podes retirá-la a qualquer momento, e nada é apagado quando o fizeres.",
+    "Quem escreveu é avisado de que saiu. Podes despublicá-la a qualquer momento, e nada é apagado quando o fizeres.",
   "piece.publish.confirmPublishCta": "Publicar",
-  "piece.publish.confirmUnpublishTitle": "Retirar “{title}”?",
+  "piece.publish.confirmUnpublishTitle": "Despublicar “{title}”?",
   "piece.publish.confirmUnpublishSub": "Quem lê perde o acesso de imediato.",
   "piece.publish.confirmUnpublishBody":
     "Nada é apagado. A peça volta a Pronta e podes voltar a publicá-la quando quiseres.",
-  "piece.publish.confirmUnpublishCta": "Retirar",
+  "piece.publish.confirmUnpublishCta": "Despublicar",
   "piece.publish.confirmCancel": "Ainda não",
 
   // ── Piece record demo toasts (api/useRecordMutations.ts) ─────────────────
@@ -1588,7 +1592,7 @@ export const magazine: Catalog = {
   "submitStory.sidebar.guideline.experience.term":
     "Escreve a partir da experiência.",
   "submitStory.sidebar.guideline.experience.detail":
-    "Em primeira pessoa ou com reportagem próxima. Não é opinião de comentador.",
+    "Em primeira pessoa ou com reportagem próxima.",
   "submitStory.sidebar.guideline.noPromo.term": "Sem conteúdo promocional.",
   "submitStory.sidebar.guideline.noPromo.detail":
     "A revista não publica publicidade nem peças patrocinadas.",
@@ -1681,6 +1685,10 @@ export const magazine: Catalog = {
     "Falta um pouco mais: pelo menos {min} palavras antes de submeteres.",
   // Uma linha por recusa que o endpoint de submissão de textos pode devolver;
   // ver features/magazine/submitStoryError.ts para o estado de cada uma.
+  "submitStory.editor.error.sectionInvalid":
+    "A secção do teu texto não foi aceite. Escolhe-a outra vez na lista e submete de novo.",
+  "submitStory.editor.error.summaryRequired":
+    "O teu texto precisa de um resumo ou de algum corpo antes de seguir para a edição. Acrescenta um e submete de novo.",
   "submitStory.editor.error.headlineTooLong":
     "O teu título tem mais de 200 carateres. Encurta-o e submete outra vez.",
   "submitStory.editor.error.deckTooLong":
@@ -1705,6 +1713,8 @@ export const magazine: Catalog = {
     "O teu texto é demasiado grande para os nossos servidores o receberem de uma vez. Encurta-o e submete de novo.",
   "submitStory.editor.error.serverFault":
     "Os nossos servidores tiveram um erro ao receber o teu texto. O texto continua aqui, por isso submete de novo daqui a pouco.",
+  "submitStory.editor.error.maintenance":
+    "A QueerPulse está em pausa para manutenção, por isso o teu texto não foi enviado. O rascunho está guardado neste dispositivo: quando voltarmos, abre esta página, escolhe Retomar rascunho e submete de novo.",
   "submitStory.editor.error.noConnection":
     "O teu texto não chegou aos nossos servidores. Verifica a tua ligação e submete de novo.",
   "submitStory.editor.error.refused":
@@ -2377,6 +2387,8 @@ export const magazine: Catalog = {
     "Os nossos servidores enviaram uma resposta para o teu espaço de trabalho que não conseguimos ler. Atualiza a página e avisa a nossa equipa se continuar.",
   "writer.page.error.serverFault":
     "Os nossos servidores tiveram um erro ao carregar as tuas atribuições, propostas e pagamentos. Atualiza a página daqui a pouco.",
+  "writer.page.error.maintenance":
+    "A QueerPulse está em pausa para manutenção, por isso o teu espaço de trabalho não carregou. Volta a abrir assim que regressarmos.",
   "writer.page.error.noConnection":
     "Não conseguimos contactar os nossos servidores para carregar as tuas atribuições, propostas e pagamentos. Verifica a tua ligação e atualiza a página.",
   "writer.page.error.refused":
@@ -2543,6 +2555,8 @@ export const magazine: Catalog = {
     "O link para o teu trabalho publicado tem mais de 2000 carateres. Usa um link mais curto e envia outra vez.",
   "applyToWrite.form.error.sampleTooLong":
     "A amostra colada tem mais de 20 000 carateres. Encurta-a ou indica um link para o teu trabalho publicado.",
+  "applyToWrite.form.error.sampleTooLarge":
+    "A amostra colada é demasiado grande para os nossos servidores a receberem de uma vez. Encurta-a ou indica um link para o teu trabalho publicado.",
   "applyToWrite.form.error.pitchTooLong":
     "A tua nota sobre porque queres escrever connosco tem mais de 2000 carateres. Encurta-a e envia outra vez.",
   "applyToWrite.form.error.alreadyWriter":
@@ -2553,12 +2567,16 @@ export const magazine: Catalog = {
     "Só contas ativas se podem candidatar a escrever, e a tua conta não está ativa neste momento.",
   "applyToWrite.form.error.signedOut":
     "A tua sessão terminou antes de a candidatura ser enviada. Entra outra vez e envia-a de novo.",
+  "applyToWrite.form.error.securityCheck":
+    "A verificação de segurança desta página expirou antes de a candidatura ser enviada. Copia o que escreveste, atualiza a página e envia-a de novo.",
   "applyToWrite.form.error.notOpen":
     "As candidaturas para escrever ainda não estão abertas.",
   "applyToWrite.form.error.timedOut":
     "Os nossos servidores demoraram demasiado a responder. Atualiza a página para ver se a candidatura chegou antes de a enviares de novo.",
   "applyToWrite.form.error.serverFault":
     "Os nossos servidores tiveram um erro ao receber a tua candidatura. Tenta outra vez daqui a pouco.",
+  "applyToWrite.form.error.maintenance":
+    "A QueerPulse está em pausa para manutenção, por isso a tua candidatura não foi enviada. Envia-a de novo quando voltarmos.",
   "applyToWrite.form.error.noConnection":
     "A candidatura não chegou aos nossos servidores. Verifica a tua ligação e envia outra vez.",
   "applyToWrite.form.error.refused":
@@ -2622,6 +2640,8 @@ export const magazine: Catalog = {
     "Os nossos servidores demoraram demasiado a responder, por isso não sabemos se a denúncia chegou. Envia-a de novo, porque uma denúncia que já tenhas aberta sobre este comentário não é registada duas vezes.",
   "comments.report.error.serverFault":
     "Os nossos servidores tiveram um erro ao receber a tua denúncia. Tenta outra vez daqui a pouco.",
+  "comments.report.error.maintenance":
+    "A QueerPulse está em pausa para manutenção, por isso a tua denúncia não foi enviada. Envia-a de novo quando voltarmos.",
   "comments.report.error.noConnection":
     "A tua denúncia não chegou aos nossos servidores. Verifica a tua ligação e tenta outra vez.",
   "comments.report.error.refused":

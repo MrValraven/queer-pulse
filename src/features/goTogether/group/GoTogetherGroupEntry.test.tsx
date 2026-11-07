@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import type { GoTogetherGroupDTO } from "../api/goTogether.types";
 import { GoTogetherGroupEntry } from "./GoTogetherGroupEntry";
 
@@ -72,7 +73,7 @@ function buildGroup(
   };
 }
 
-function renderEntry(group: GoTogetherGroupDTO, isFeedbackDue = true) {
+async function renderEntry(group: GoTogetherGroupDTO, isFeedbackDue = true) {
   hookState.group = group;
   render(
     <TestProviders>
@@ -83,6 +84,7 @@ function renderEntry(group: GoTogetherGroupDTO, isFeedbackDue = true) {
       />
     </TestProviders>,
   );
+  await awaitCatalog("goTogether");
 }
 
 afterEach(() => {
@@ -90,15 +92,15 @@ afterEach(() => {
 });
 
 describe("GoTogetherGroupEntry", () => {
-  it("links the feedback CTA through the route key", () => {
-    renderEntry(buildGroup());
+  it("links the feedback CTA through the route key", async () => {
+    await renderEntry(buildGroup());
     expect(
       screen.getByRole("link", { name: "Tell us how it went" }),
     ).toHaveAttribute("href", "/go-together/feedback/group-1");
   });
 
-  it("softens the feedback CTA to an edit action once answered", () => {
-    renderEntry(
+  it("softens the feedback CTA to an edit action once answered", async () => {
+    await renderEntry(
       buildGroup({
         feedback: { isOpen: true, closesAt: null, hasAnswered: true },
       }),
@@ -111,15 +113,15 @@ describe("GoTogetherGroupEntry", () => {
     ).toHaveAttribute("href", "/go-together/feedback/group-1");
   });
 
-  it("links Open group chat while the member is in the chat", () => {
-    renderEntry(buildGroup({ conversationId: "conversation-9" }), false);
+  it("links Open group chat while the member is in the chat", async () => {
+    await renderEntry(buildGroup({ conversationId: "conversation-9" }), false);
     expect(
       screen.getByRole("link", { name: "Open group chat" }),
     ).toHaveAttribute("href", "/messages?c=conversation-9");
   });
 
-  it("drops Open group chat once the member has left the chat", () => {
-    renderEntry(
+  it("drops Open group chat once the member has left the chat", async () => {
+    await renderEntry(
       buildGroup({
         conversationId: "conversation-9",
         isLeaveChatOnly: true,
@@ -135,8 +137,8 @@ describe("GoTogetherGroupEntry", () => {
     ).toBeInTheDocument();
   });
 
-  it("opens the group sheet from See your group", () => {
-    renderEntry(buildGroup(), false);
+  it("opens the group sheet from See your group", async () => {
+    await renderEntry(buildGroup(), false);
     fireEvent.click(screen.getByRole("button", { name: "See your group" }));
     expect(
       screen.getByRole("dialog", { name: "Your Go together group" }),

@@ -20,6 +20,7 @@ import { PostJobSidebar } from "./PostJobSidebar";
 import { PostJobPreviewModal } from "./PostJobPreviewModal";
 import { usePostJobForm } from "./usePostJobForm";
 import type { CompanyProfile } from "./companies.data";
+import { failureToast } from "./economyErrorCopy";
 import type { Job } from "./jobs.data";
 import styles from "./PostJobPage.module.css";
 
@@ -108,8 +109,8 @@ export function PostJobComposer({
       form.clearDraft();
       onPublished(job);
       scrollTop();
-    } catch (err) {
-      if (err instanceof ApiError && err.status === 403) {
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 403) {
         showToast(
           t("economy:postJob.toast.notAuthorised", {
             company: company.nameText,
@@ -117,7 +118,10 @@ export function PostJobComposer({
           "error",
         );
       } else {
-        showToast(t("economy:postJob.toast.publishError"), "error");
+        showToast(
+          failureToast(error, t, "economy:postJob.toast.publishErrorTitle"),
+          "error",
+        );
       }
     }
   }

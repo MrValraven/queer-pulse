@@ -3,7 +3,9 @@
  * so each opens and closes through the shared Modal's motion and More hands
  * over to the sheet it lists. Nothing mounts before the first state lands.
  * Setup sheets read `stage.latestState` and send through `run` themselves;
- * the effects library goes through the dispatcher like the pads.
+ * the effects library goes through the dispatcher like the pads. The sheet
+ * of clips that couldn't load ("failures") mounts with the grid band in
+ * VjRemoteShell, which holds the clip its badge opened it on.
  */
 import { useCallback, type JSX } from "react";
 import { AnimatePresence } from "motion/react";

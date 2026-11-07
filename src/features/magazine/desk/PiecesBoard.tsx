@@ -8,7 +8,6 @@ import { stageColorVar } from "./deskTones";
 import { viewStageLabelKey } from "./stageLabels";
 import type { PieceNextAction } from "./pieceNextAction";
 import type { DeskTrack } from "./deskTrack";
-import type { UnpublishLandingStage } from "../api/piecePublish.api";
 import { cx } from "../../../shared/lib/cx";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -29,8 +28,8 @@ export interface PiecesBoardProps {
   /** Work-in-progress limit per column. A column holding more shows "Over
    *  {cap}" in the late tone. Left out, no column is ever flagged. */
   teamCap?: number;
-  /** Gives Published cards their unpublish buttons; left out, none show. */
-  onUnpublish?: (piece: Piece, stage: UnpublishLandingStage) => void;
+  /** Gives Published cards their Unpublish button; left out, none shows. */
+  onUnpublish?: (piece: Piece) => void;
 }
 
 /**

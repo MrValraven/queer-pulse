@@ -88,6 +88,8 @@ describe("vjDomEffectsStyle", () => {
         "invert(var(--vj-dom-invert, 1))",
         "saturate(2)",
         "contrast(1.75)",
+        // duotone greys the picture so its colour layers map the luma.
+        "grayscale(1)",
         "hue-rotate(calc(180deg + var(--vj-dom-hue, 0deg)))",
         "blur(1cqh)",
         "brightness(var(--vj-dom-brightness, 1))",

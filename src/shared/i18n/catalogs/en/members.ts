@@ -47,6 +47,17 @@ export const members: Catalog = {
   "upload.error.stripFailed":
     "We couldn't safely process that image, so we didn't upload it. Try a different file.",
   "upload.error.retry": "We couldn't upload that image. Please try again.",
+  // Why the upload request or the storage PUT was refused (useUploadImage.ts).
+  "upload.error.storageRejectedType":
+    "Our storage didn't accept this image's format. Save it as a JPEG or PNG and upload it again.",
+  "upload.error.storageTooLarge":
+    "This image is bigger than our storage takes. Pick a smaller one and try again.",
+  "upload.error.tooManyUploads":
+    "You've uploaded a lot of images in a short time. Wait a minute, then try again.",
+  "upload.error.linkExpired":
+    "The upload link ran out before your image arrived. Try again and we'll make a fresh one.",
+  "upload.error.storageFault":
+    "Our image storage hit an error on our side. Give it a moment and try again.",
 
   // ── AvatarEditor ───────────────────────────────────────────────────────────
   "avatar.error.generic": "We couldn't add that photo. Please try again.",
@@ -419,6 +430,12 @@ export const members: Catalog = {
   "content.board.repostCta": "Repost",
   "content.board.renewLimitReached":
     "This one has been renewed as often as it can be. Write a fresh post.",
+  "content.board.error.postGone":
+    "That post is closed or no longer there. Refresh to see what's on the board now.",
+  "content.board.error.notOpen":
+    "This board isn't open to you, so you can't respond to it.",
+  "content.board.error.postClosed":
+    "This post is closed. Reopen it from the board editor, then renew it.",
   "content.board.respondCta": "Offer to help",
   "content.board.respondedLabel": "You offered to help",
   "content.board.helloCta": "Say hello",
@@ -1909,6 +1926,10 @@ export const members: Catalog = {
   "places.quickEdit.saving": "Saving…",
   "places.quickEdit.savedToast": "Listing updated.",
   "places.quickEdit.errorToast": "Couldn't save your changes. Try again.",
+  "places.quickEdit.error.invalid":
+    "The website or phone number wasn't accepted. Check them and save again.",
+  "places.quickEdit.error.notFound":
+    "This place isn't under your account any more, so we couldn't save. Refresh your places to see what's there now.",
   "places.quickEdit.moreLink":
     "Need to change categories, address, or photos? <a>Open the full editor.</a>",
   "places.suggestions.title": "Places you <em>suggested</em>",
@@ -2105,6 +2126,8 @@ export const members: Catalog = {
     "Hide it and other members stop seeing it on your profile. It stays here for you either way.",
   "badges.drawer.visibilityErrorToast":
     "We couldn't change that badge's visibility. Please try again in a moment.",
+  "badges.drawer.visibilityError.notEarned":
+    "You haven't earned that badge yet, so there's no visibility to change. Refresh to see your current badges.",
   "badges.drawer.earnedThisWeek": "this week",
   "badges.drawer.progressCount": "{units} of {target} done",
   "badges.drawer.previous": "Previous badge",
@@ -2167,7 +2190,7 @@ export const members: Catalog = {
   "badges.ledger.reason.adjustmentWhy":
     "This row was written by the platform. Ask the community team if you want the detail behind it.",
   "perks.sidebar.explainBody":
-    "Perks are not a loyalty scheme. They are how the members who keep showing up get a little more back. Each level stands for something real: time here, events attended, people connected. What you unlock is a bigger share of what the platform can already do.",
+    "Perks are how the members who keep showing up get a little more back. Each level stands for something real: time here, events attended, people connected. What you unlock is a bigger share of what the platform can already do.",
   "perks.sidebar.suggestLabel":
     "What would make being a long-term member worth more to you?",
   "badges.case.categoryToggleLabel": "Show {category} badges",
@@ -2387,6 +2410,8 @@ export const members: Catalog = {
   "perks.claim.claiming": "Claiming…",
   "perks.claim.errorToast":
     "We couldn't claim that perk. Please try again in a moment.",
+  "perks.claim.error.levelNotReached":
+    "You haven't reached the level this perk unlocks at yet. Keep going and it will open up for you.",
 
   // ── Your network (ProfileNetworkStats chips + NetworkListModal) — owner-only ─
   "network.title": "Your network",
@@ -2480,6 +2505,12 @@ export const members: Catalog = {
     "Unhidden. They can see your profile again.",
   "profile.whoSeesWhat.hiddenFrom.toast.error":
     "Something went wrong. Please try again.",
+  "profile.whoSeesWhat.hiddenFrom.error.self":
+    "You can't hide your profile from yourself. Pick another member.",
+  "profile.whoSeesWhat.hiddenFrom.error.notFound":
+    "We couldn't find that member, so nothing changed. They may have left or changed their profile address.",
+  "profile.whoSeesWhat.hiddenFrom.error.notHidden":
+    "Your profile isn't hidden from that member any more. Refresh to see your current list.",
 
   "profile.whoSeesWhat.reports.heading": "Reports you've filed",
   "profile.whoSeesWhat.reports.sub":
@@ -2701,6 +2732,22 @@ export const members: Catalog = {
   "savedLists.toast.fileError": "Could not add it to that list",
   "savedLists.toast.unfiled": "Taken out of the list",
   "savedLists.toast.unfileError": "Could not take it out of the list",
+  "savedLists.error.nameInvalid":
+    "A list name needs 1 to 60 characters. Give it a name that fits and try again.",
+  "savedLists.error.nameTaken":
+    "You already have a list with that name. Pick a different one.",
+  "savedLists.error.listLimit":
+    "You've reached the limit of 30 lists. Delete one you no longer need, then create the new one.",
+  "savedLists.error.listGone":
+    "That list no longer exists. Refresh your saved lists to see what's there now.",
+  "savedLists.error.defaultNotDeletable":
+    "Your main list holds everything you've saved, so it can't be deleted.",
+  "savedLists.error.unfileDefault":
+    "To take something out of your main list, unsave it instead.",
+  "drafts.error.idExists":
+    "A draft with this id already exists, so we kept the one you have. Refresh to see it.",
+  "drafts.error.gone":
+    "That draft was already deleted somewhere else. Refresh to see your current drafts.",
 
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
   // PRD-34c — PRD-34c - /search category tabs. The tab strip now asks the backend (GET /search/types) which result types are actually live, so a closed surface no longer gets a tab that can only show the empty state. These two keys cover the case where that lookup itself fails: the strip falls back to the categories that need no feature flag (All, Pages) and this compact panel says why, with a retry. Search itself still works, so the copy must not read as a search failure. Rendered through the shared LoadErrorState in SearchPage.tsx.

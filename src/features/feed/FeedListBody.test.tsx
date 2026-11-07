@@ -212,10 +212,12 @@ describe("FeedListBody (live mode)", () => {
     renderLiveBody(MIXED_TYPE_FEED_ITEMS);
 
     // Membership names the community; a followed topic names the topic; an
-    // item with no explicit tie says exactly that and nothing more.
+    // item with no explicit tie says exactly that and nothing more. The
+    // gathering and the article both carry the "recent" reason, so the line
+    // shows once on each of those two cards.
     await screen.findByText("You're in Trans Wellness Circle");
     await screen.findByText("You follow nightlife");
-    await screen.findByText("New across QueerPulse");
+    expect(await screen.findAllByText("New across QueerPulse")).toHaveLength(2);
   });
 
   it("renders the community_post card's inline reaction and reply controls with the item's counts (SOC-04)", async () => {

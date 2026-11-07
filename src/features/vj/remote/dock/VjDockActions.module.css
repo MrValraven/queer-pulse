@@ -1,13 +1,34 @@
-/* The dock's action row: Blackout, Reset look, Cue or Go, and More in four
-   equal columns, one 48px band (the plan's fold budget). Each column is an
-   icon over a short label in the dark Pulse Live stage look (the --qs-*
-   tokens); every move animates only opacity or transform. A column whose
-   label is wider than its quarter ("Repor visual") grows to fit it and the
-   other three share the rest, so no label is cut. */
+/* The dock's action row: Reset look, Cue or Go, More and Blackout, in the
+   dark Pulse Live stage look (the --qs-* tokens); every move animates only
+   opacity or transform. The buttons share the pads' radius (--qs-radius-tile)
+   so the row reads as part of the same panel.
+
+   Polish (the default): four equal columns, one 48px band (the plan's fold
+   budget), each column an icon over a short label. A column whose label is
+   wider than its quarter grows to fit it and the other three share the rest,
+   so no label is cut. In the 360px split column a quarter is about 78px and
+   "Repor visual" needs about 85px, so Portuguese draws that column wider.
+
+   Pads (`?dock=pads`): a compact 44px flex toolbar. Reset look, Cue or Go and
+   More take their label's width, icon over label, at the start edge; Blackout
+   grows into the rest of the row up to --vj-blackout-max-width, icon beside
+   label, and sits at the end edge. At 390px in Portuguese the three compact
+   buttons need about 230px, which leaves Blackout over 100px, the widest
+   button in the row. On a wider band (tablet portrait) Blackout stops at its
+   cap and the free space opens between More and Blackout, which keeps the
+   show-stopping button a deliberate reach from the others.
+
+   Blackout wears an amber warning edge and wash in both variants, so it
+   stands apart from its neighbours; switched on, it fills solid amber and
+   holds steady. */
 
 .row {
   --vj-dock-actions-height: 48px;
   --vj-dock-actions-gap: 6px;
+  --vj-blackout-edge: rgba(var(--amber-rgb), 0.62);
+  --vj-blackout-edge-strong: rgba(var(--amber-rgb), 0.9);
+  --vj-blackout-wash: rgba(var(--amber-rgb), 0.14);
+  --vj-blackout-max-width: 200px;
   display: grid;
   grid-template-columns: repeat(4, minmax(max-content, 1fr));
   gap: var(--vj-dock-actions-gap);
@@ -29,7 +50,7 @@
   margin: 0;
   padding: 4px 6px;
   border: 1px solid var(--qs-glass-border);
-  border-radius: var(--radius-12);
+  border-radius: var(--qs-radius-tile);
   background: var(--qs-raised);
   color: var(--qs-text);
   font: inherit;
@@ -53,6 +74,10 @@
   .action:not([aria-disabled="true"]):hover {
     border-color: var(--qs-glass-border-strong);
   }
+
+  .action[data-vj-dock-action="blackout"]:not([aria-disabled="true"]):hover {
+    border-color: var(--vj-blackout-edge-strong);
+  }
 }
 
 .icon {
@@ -72,6 +97,24 @@
   place-items: center;
 }
 
+/* The Cue or Go label slot: the shown label and an unseen sizer holding both
+   labels share one grid cell, so the slot is always as wide as the longer
+   label in the current language ("Preparar" in Portuguese). */
+.swapSlot,
+.swapSizer {
+  display: inline-grid;
+  justify-items: center;
+}
+
+.swapSlot > *,
+.swapSizer > * {
+  grid-area: 1 / 1;
+}
+
+.swapSizer {
+  visibility: hidden;
+}
+
 .label {
   max-inline-size: 100%;
   overflow: hidden;
@@ -82,11 +125,28 @@
   white-space: nowrap;
 }
 
-/* Blackout on: a steady accent fill, so the state reads from across a dark
-   room. */
+/* Blackout: an amber warning edge over a quiet amber wash, the moon in
+   amber, so it stands apart from the neutral buttons. */
+.action[data-vj-dock-action="blackout"] {
+  border-color: var(--vj-blackout-edge);
+  background:
+    linear-gradient(var(--vj-blackout-wash), var(--vj-blackout-wash)),
+    var(--qs-raised);
+}
+
+.action[data-vj-dock-action="blackout"] .icon {
+  color: var(--amber);
+}
+
+/* Blackout on: a steady solid amber fill with dark ink, so the state reads
+   from across a dark room. */
 .action[aria-pressed="true"] {
-  border-color: transparent;
-  background: var(--accent);
+  border-color: var(--amber);
+  background: var(--amber);
+  color: var(--qs-cta-ink);
+}
+
+.action[aria-pressed="true"] .icon {
   color: var(--qs-cta-ink);
 }
 
@@ -116,4 +176,34 @@
 .action[data-vj-midi-pickable] {
   border-style: dashed;
   border-color: var(--qs-glass-border-strong);
+}
+
+/* ── Pads variant: the compact toolbar ── */
+:global([data-vj-dock-variant="pads"]) .row {
+  --vj-dock-actions-height: var(--tap-min);
+  display: flex;
+}
+
+/* The compact buttons hold their label's width and never shrink, so no label
+   is cut. */
+:global([data-vj-dock-variant="pads"]) .action {
+  flex: 0 0 auto;
+  inline-size: auto;
+  padding: 3px 10px;
+}
+
+:global([data-vj-dock-variant="pads"]) .icon,
+:global([data-vj-dock-variant="pads"]) .icon svg {
+  inline-size: 16px;
+  block-size: 16px;
+}
+
+/* Blackout grows into the rest of the toolbar up to its cap, its icon beside
+   its label, and the auto start margin holds it at the end edge. */
+:global([data-vj-dock-variant="pads"]) .action[data-vj-dock-action="blackout"] {
+  flex: 1 0 auto;
+  flex-direction: row;
+  gap: 8px;
+  max-inline-size: var(--vj-blackout-max-width);
+  margin-inline-start: auto;
 }

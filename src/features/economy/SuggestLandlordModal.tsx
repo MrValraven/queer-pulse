@@ -7,6 +7,7 @@ import type { CreateLandlordBody } from "./api/landlord.api";
 import { useSuggestLandlord } from "./api/useSuggestLandlord";
 import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
 import { useAffirmingPledgeGate } from "./useAffirmingPledgeGate";
+import { failureToast } from "./economyErrorCopy";
 import styles from "./ApplicationModals.module.css";
 
 function splitLines(value: string): string[] {
@@ -38,7 +39,10 @@ export function SuggestLandlordModal({ onClose }: { onClose: () => void }) {
       onSuccess: () => setDone(true),
       onError: (error) => {
         if (handlePledgeError(error, () => submitSuggestion(body))) return;
-        showToast(t("economy:suggestLandlord.error"), "error");
+        showToast(
+          failureToast(error, t, "economy:suggestLandlord.errorTitle"),
+          "error",
+        );
       },
     });
   };

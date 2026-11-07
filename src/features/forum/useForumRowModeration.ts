@@ -10,6 +10,7 @@ import {
   usePinThread,
   useRestorePost,
 } from "./api/useForumMutations";
+import { forumErrorText } from "./forumErrors";
 
 /**
  * Row-level moderation for the forum thread LIST: withdraw the thread, move it
@@ -55,7 +56,8 @@ export function useForumRowModeration({
   } | null>(null);
   const [historyPostId, setHistoryPostId] = useState<string | null>(null);
 
-  const onError = () => showToast(t("forum:toast.error"), "error");
+  const onError = (error: unknown) =>
+    showToast(forumErrorText(t, error), "error");
   const refreshList = () =>
     void queryClient.invalidateQueries({ queryKey: ["forum-threads"] });
 
@@ -68,7 +70,7 @@ export function useForumRowModeration({
         if (error instanceof ApiError && error.status === 409) {
           showToast(t("forum:toast.pinCapReached"), "error");
         } else {
-          onError();
+          onError(error);
         }
       },
       onSuccess: () =>

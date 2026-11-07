@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
 import type { AddMonthRow, AddMonthRowIssue } from "./addMonthState";
 import { AddMonthRowCard, type AddMonthRowContext } from "./AddMonthRowCard";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 
 vi.mock("../fields/CoverUpload", () => ({
   CoverUpload: () => <div data-testid="cover-upload" />,
@@ -34,7 +35,7 @@ function contextWith(
   };
 }
 
-function renderCard({
+async function renderCard({
   row = {},
   issues = [],
   serverMessage = null,
@@ -45,7 +46,7 @@ function renderCard({
   serverMessage?: string | null;
   context?: Partial<AddMonthRowContext>;
 } = {}) {
-  return render(
+  const view = render(
     <TestProviders>
       <AddMonthRowCard
         row={{ ...ROW, ...row }}
@@ -55,6 +56,20 @@ function renderCard({
       />
     </TestProviders>,
   );
+  await awaitCatalog("gatherings");
+  return view;
+}
+
+/** The one alert this component renders. TestProviders also mounts the toast
+ *  region, whose assertive live region carries the alert role while empty. */
+function componentAlert(): HTMLElement {
+  const alerts = screen
+    .getAllByRole("alert")
+    .filter((element) => element.closest("[data-toast-region]") === null);
+  expect(alerts).toHaveLength(1);
+  const [alert] = alerts;
+  if (!alert) throw new Error("The component rendered no alert of its own");
+  return alert;
 }
 
 describe("AddMonthRowCard", () => {
@@ -62,8 +77,8 @@ describe("AddMonthRowCard", () => {
     dispatch.mockClear();
   });
 
-  it("heads the card with the plain date", () => {
-    renderCard();
+  it("heads the card with the plain date", async () => {
+    await renderCard();
     expect(
       screen.getByRole("heading", { name: "Sat 7 Nov" }),
     ).toBeInTheDocument();
@@ -74,7 +89,7 @@ describe("AddMonthRowCard", () => {
   });
 
   it("edits the title and description of its own date", async () => {
-    renderCard();
+    await renderCard();
     await userEvent.type(screen.getByLabelText(/^Title/), "D");
     expect(dispatch).toHaveBeenCalledWith({
       type: "editRow",
@@ -89,8 +104,8 @@ describe("AddMonthRowCard", () => {
     });
   });
 
-  it("gives the title and description the field ids the page focuses", () => {
-    renderCard();
+  it("gives the title and description the field ids the page focuses", async () => {
+    await renderCard();
     expect(screen.getByLabelText(/^Title/)).toHaveAttribute(
       "id",
       "add-month-row-2026-11-07-title",
@@ -102,7 +117,7 @@ describe("AddMonthRowCard", () => {
   });
 
   it("fills an empty description with the template's", async () => {
-    renderCard();
+    await renderCard();
     await userEvent.click(
       screen.getByRole("button", { name: "Same as the starting event" }),
     );
@@ -113,25 +128,25 @@ describe("AddMonthRowCard", () => {
     });
   });
 
-  it("hides Same as the starting event once the description has text", () => {
-    renderCard({ row: { description: "Our own words for this night" } });
+  it("hides Same as the starting event once the description has text", async () => {
+    await renderCard({ row: { description: "Our own words for this night" } });
     expect(
       screen.queryByRole("button", { name: "Same as the starting event" }),
     ).not.toBeInTheDocument();
   });
 
-  it("marks the missing title only after the host tried to publish", () => {
+  it("marks the missing title only after the host tried to publish", async () => {
     const issues: AddMonthRowIssue[] = [
       { field: "title", problem: "titleMissing" },
     ];
-    const { unmount } = renderCard({ issues });
+    const { unmount } = await renderCard({ issues });
     expect(
       screen.queryByText("Add a title for this date."),
     ).not.toBeInTheDocument();
     expect(screen.getByLabelText(/^Title/)).not.toHaveAttribute("aria-invalid");
     unmount();
 
-    renderCard({ issues, context: { shouldShowIssues: true } });
+    await renderCard({ issues, context: { shouldShowIssues: true } });
     expect(screen.getByText("Add a title for this date.")).toBeInTheDocument();
     expect(screen.getByLabelText(/^Title/)).toHaveAttribute(
       "aria-invalid",
@@ -139,8 +154,8 @@ describe("AddMonthRowCard", () => {
     );
   });
 
-  it("names a start time that has already passed", () => {
-    renderCard({
+  it("names a start time that has already passed", async () => {
+    await renderCard({
       issues: [{ field: "startTime", problem: "startPassed" }],
       context: { shouldShowIssues: true },
     });
@@ -151,14 +166,12 @@ describe("AddMonthRowCard", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows the server's message on the card it named", () => {
-    renderCard({
+  it("shows the server's message on the card it named", async () => {
+    await renderCard({
       serverMessage: "Sat 7 Nov has already passed.",
       issues: [{ field: "startTime", problem: "server" }],
     });
-    expect(screen.getByRole("alert")).toHaveTextContent(
-      "Sat 7 Nov has already passed.",
-    );
+    expect(componentAlert()).toHaveTextContent("Sat 7 Nov has already passed.");
     const timeToggle = screen.getByRole("button", {
       name: "Change time for this date",
     });
@@ -169,8 +182,8 @@ describe("AddMonthRowCard", () => {
     );
   });
 
-  it("lets the page focus the end time the server named", () => {
-    renderCard({
+  it("lets the page focus the end time the server named", async () => {
+    await renderCard({
       serverMessage: "The end time on Sat 7 Nov is not a time.",
       issues: [{ field: "endTime", problem: "server" }],
     });
@@ -179,8 +192,8 @@ describe("AddMonthRowCard", () => {
     ).toHaveAttribute("id", "add-month-row-2026-11-07-endTime");
   });
 
-  it("reads back the shared time and a night that ends the next day", () => {
-    renderCard({
+  it("reads back the shared time and a night that ends the next day", async () => {
+    await renderCard({
       context: { sharedTimes: { startTime: "22:00", endTime: "02:00" } },
     });
     expect(
@@ -189,7 +202,7 @@ describe("AddMonthRowCard", () => {
   });
 
   it("opens its own time pair and goes back to the shared time", async () => {
-    const { unmount } = renderCard();
+    const { unmount } = await renderCard();
     await userEvent.click(
       screen.getByRole("button", { name: "Change time for this date" }),
     );
@@ -201,7 +214,7 @@ describe("AddMonthRowCard", () => {
     unmount();
     dispatch.mockClear();
 
-    renderCard({
+    await renderCard({
       row: { timeOverride: { startTime: "20:00", endTime: null } },
     });
     expect(screen.getByText("From 20:00")).toBeInTheDocument();
@@ -216,7 +229,7 @@ describe("AddMonthRowCard", () => {
   });
 
   it("removes its date", async () => {
-    renderCard();
+    await renderCard();
     await userEvent.click(
       screen.getByRole("button", { name: "Remove this date" }),
     );

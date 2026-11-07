@@ -4,6 +4,7 @@ import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SafeSpaceFlagModal } from "./SafeSpaceFlagModal";
+import { safeSpaceFlagWithdrawCause } from "./api/safeSpaceErrorCopy";
 import { useWithdrawSafeSpaceFlag } from "./api/useSafeSpaceFlag";
 import styles from "./SafeSpaceBadgeStatus.module.css";
 
@@ -44,7 +45,10 @@ export function SafeSpaceFlagControl({
       { slug },
       {
         onSuccess: () => showToast(t("safety:flag.withdrawnToast"), "success"),
-        onError: () => showToast(t("safety:flag.errorToast"), "error"),
+        onError: (error) => {
+          const cause = safeSpaceFlagWithdrawCause(error);
+          showToast(t(cause.key, cause.values), "error");
+        },
       },
     );
   }

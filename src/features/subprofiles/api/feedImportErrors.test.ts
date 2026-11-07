@@ -79,21 +79,28 @@ describe("feedErrorMessageKey", () => {
       "subprofiles:feedImport.error.connectRejected",
     );
     expect(feedErrorMessageKey(refused(400))).toBe(
-      "subprofiles:feedImport.error.generic",
+      "shared:apiError.reasonInvalid",
     );
     expect(feedErrorMessageKey(refused(400), "preview")).not.toBe(
       "subprofiles:feedImport.error.sectionNotAllowed",
     );
   });
 
-  it("falls back to the plain generic message for anything else", () => {
+  it("names the shared cause for a failure the feed routes do not name", () => {
     expect(feedErrorMessageKey(refused(500))).toBe(
-      "subprofiles:feedImport.error.generic",
+      "shared:apiError.serverFault",
     );
     expect(feedErrorMessageKey(new Error("offline"))).toBe(
-      "subprofiles:feedImport.error.generic",
+      "shared:apiError.noConnection",
     );
     expect(feedErrorMessageKey(refused(422, "SOMETHING_NEW"))).toBe(
+      "shared:apiError.reasonInvalid",
+    );
+    expect(feedErrorMessageKey(refused(404))).toBe("shared:apiError.notFound");
+  });
+
+  it("keeps the generic line for a status nothing names", () => {
+    expect(feedErrorMessageKey(refused(418))).toBe(
       "subprofiles:feedImport.error.generic",
     );
   });

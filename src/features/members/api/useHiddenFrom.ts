@@ -36,6 +36,8 @@ export function useHideFrom() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation({
+    // WhoSeesWhatHiddenFrom toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: async (slug: string) => {
       if (demoMode) return;
       await apiPost(`/profiles/me/hidden-from/${slug}`);
@@ -51,6 +53,8 @@ export function useUnhideFrom() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation({
+    // WhoSeesWhatHiddenFrom toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: async (slug: string) => {
       if (demoMode) return;
       await apiDelete(`/profiles/me/hidden-from/${slug}`);

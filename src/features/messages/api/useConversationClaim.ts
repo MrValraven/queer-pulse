@@ -22,6 +22,7 @@ import {
 import type { Conversation } from "../data";
 import { isNotStaffError } from "../mailboxes/mailboxScope";
 import { recordDemoClaim } from "./demoClaims";
+import { conversationClaimCause } from "./messageErrorCopy";
 import {
   claimConversation,
   releaseConversation,
@@ -169,7 +170,8 @@ export function useConversationClaim(conversation: Conversation) {
             queryKey: MAILBOXES_QUERY_KEY_PREFIX,
           });
         }
-        showToast(t("messages:mailbox.claim.error"), "error");
+        const cause = conversationClaimCause(error);
+        showToast(t(cause.key, cause.values), "error");
       } finally {
         setIsPending(false);
         void queryClient.invalidateQueries({
@@ -200,7 +202,7 @@ export function useConversationClaim(conversation: Conversation) {
           if (response.claimedByUserId === null) {
             // The thread came free again between the claim and its re-read,
             // so the row reads unclaimed and the member can try again.
-            showToast(t("messages:mailbox.claim.error"), "error");
+            showToast(t("messages:mailbox.claim.error.releasedAgain"), "error");
           } else if (response.claimedByUserId === myUserId) {
             showToast(t("messages:mailbox.claim.claimedToast"), "success");
           } else {
@@ -240,7 +242,7 @@ export function useConversationClaim(conversation: Conversation) {
     const confirmedClaimant = conversation.claimedBy ?? null;
     const fromUserId = conversation.claimedByUserId ?? null;
     if (!demoMode && !fromUserId) {
-      showToast(t("messages:mailbox.claim.error"), "error");
+      showToast(t("messages:mailbox.claim.error.nothingToTakeOver"), "error");
       return Promise.resolve();
     }
     return runAction(

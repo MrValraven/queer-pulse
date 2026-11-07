@@ -2,6 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useLocation } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import type {
   QuizshowOpenSessionInput,
@@ -283,7 +284,7 @@ describe("QuizshowOpenLobbyDialog on a game", () => {
     ).toBeNull();
   });
 
-  it("links the live panel to the game's screen and remote", () => {
+  it("links the live panel to the game's screen and remote", async () => {
     const liveSession = demoGameLiveSession(OPEN_GAME_ID);
     expect(liveSession).not.toBeNull();
     if (!liveSession) return;
@@ -295,6 +296,7 @@ describe("QuizshowOpenLobbyDialog on a game", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("quizshow");
 
     expect(
       screen

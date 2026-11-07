@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import type { Piece } from "../data/desk.data";
 import { PieceDueDatePopover } from "./PieceDueDatePopover";
@@ -28,7 +29,7 @@ function todayIso(): string {
   return `${today.getFullYear()}-${month}-${day}`;
 }
 
-function renderPopover(
+async function renderPopover(
   onSave: (dueOn: string) => Promise<void> = vi
     .fn()
     .mockResolvedValue(undefined),
@@ -41,12 +42,13 @@ function renderPopover(
       <PieceDueDatePopover titleId={TITLE_ID} onSave={onSave} />
     </TestProviders>,
   );
+  await awaitCatalog("magazine");
   return { onSave, trigger: screen.getByRole("button", { name: "Set date" }) };
 }
 
 describe("PieceDueDatePopover", () => {
-  it("opens a labelled date dialog from Set date", () => {
-    const { trigger } = renderPopover();
+  it("opens a labelled date dialog from Set date", async () => {
+    const { trigger } = await renderPopover();
 
     expect(trigger).toHaveAttribute("aria-haspopup", "dialog");
     expect(trigger).toHaveAttribute("aria-expanded", "false");
@@ -59,8 +61,8 @@ describe("PieceDueDatePopover", () => {
     expect(trigger).toHaveAttribute("aria-controls", dialog.id);
   });
 
-  it("closes on Escape and returns focus to Set date", () => {
-    const { trigger, onSave } = renderPopover();
+  it("closes on Escape and returns focus to Set date", async () => {
+    const { trigger, onSave } = await renderPopover();
     fireEvent.click(trigger);
 
     fireEvent.keyDown(document, { key: "Escape" });
@@ -70,8 +72,8 @@ describe("PieceDueDatePopover", () => {
     expect(onSave).not.toHaveBeenCalled();
   });
 
-  it("closes on a press outside and returns focus to Set date", () => {
-    const { trigger, onSave } = renderPopover();
+  it("closes on a press outside and returns focus to Set date", async () => {
+    const { trigger, onSave } = await renderPopover();
     fireEvent.click(trigger);
 
     fireEvent.pointerDown(document.body);
@@ -83,7 +85,7 @@ describe("PieceDueDatePopover", () => {
 
   it("opens a labelled bottom sheet on phones and saves from it", async () => {
     viewportState.isMobile = true;
-    const { trigger, onSave } = renderPopover();
+    const { trigger, onSave } = await renderPopover();
 
     fireEvent.click(trigger);
 
@@ -104,7 +106,7 @@ describe("PieceDueDatePopover", () => {
   });
 
   it("saves the picked day and hands focus to the row title", async () => {
-    const { trigger, onSave } = renderPopover();
+    const { trigger, onSave } = await renderPopover();
     fireEvent.click(trigger);
 
     fireEvent.click(screen.getByRole("button", { name: "Today" }));
@@ -120,7 +122,7 @@ describe("PieceDueDatePopover", () => {
 
   it("keeps focus on Set date when the save fails", async () => {
     const onSave = vi.fn().mockRejectedValue(new Error("offline"));
-    const { trigger } = renderPopover(onSave);
+    const { trigger } = await renderPopover(onSave);
     fireEvent.click(trigger);
 
     fireEvent.click(screen.getByRole("button", { name: "Today" }));
@@ -173,6 +175,7 @@ describe("PieceRow Set date inside the desk", () => {
         </PieceDueDateContext.Provider>
       </TestProviders>,
     );
+    await awaitCatalog("magazine");
 
     fireEvent.click(screen.getByRole("button", { name: "Set date" }));
     fireEvent.click(screen.getByRole("button", { name: "Today" }));

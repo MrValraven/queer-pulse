@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { toPlaylistView } from "./api/studio.adapters";
 import {
   demoStudioPlaylist,
@@ -10,7 +11,7 @@ import { StudioPlaylistHero } from "./StudioPlaylistHero";
 
 beforeEach(() => resetDemoPlaylists());
 
-function renderHero(playlistId: string) {
+async function renderHero(playlistId: string) {
   const onOwnerAction = vi.fn();
   const onOpenEditors = vi.fn();
   render(
@@ -22,6 +23,7 @@ function renderHero(playlistId: string) {
       />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
   return { onOwnerAction, onOpenEditors };
 }
 
@@ -32,7 +34,7 @@ async function openMenu() {
 
 describe("StudioPlaylistHero, collaborative playlists", () => {
   it("gives the owner the chip, which opens the editors, and Manage editors", async () => {
-    const { onOwnerAction, onOpenEditors } = renderHero(
+    const { onOwnerAction, onOpenEditors } = await renderHero(
       "demo-playlist-for-the-group-chat",
     );
     const chip = screen.getByRole("button", {
@@ -58,7 +60,7 @@ describe("StudioPlaylistHero, collaborative playlists", () => {
   });
 
   it("gives an editor Edit details and Leave playlist, and no heart", async () => {
-    const { onOwnerAction } = renderHero("demo-playlist-tour-diary");
+    const { onOwnerAction } = await renderHero("demo-playlist-tour-diary");
     expect(
       screen.getByRole("button", {
         name: "Collaborative playlist with 1 editor. See who edits it",
@@ -80,7 +82,7 @@ describe("StudioPlaylistHero, collaborative playlists", () => {
     expect(onOwnerAction).toHaveBeenCalledWith("leave");
   });
 
-  it("shows an invitee and a listener no chip and no menu", () => {
+  it("shows an invitee and a listener no chip and no menu", async () => {
     for (const playlistId of [
       "demo-playlist-pride-warm-up",
       "demo-playlist-dyke-bar-standards",
@@ -94,6 +96,7 @@ describe("StudioPlaylistHero, collaborative playlists", () => {
           />
         </TestProviders>,
       );
+      await awaitCatalog("studio");
       expect(
         screen.queryByRole("button", { name: /collaborative playlist/i }),
       ).not.toBeInTheDocument();
@@ -104,8 +107,8 @@ describe("StudioPlaylistHero, collaborative playlists", () => {
     }
   });
 
-  it("shows the owner of a solo playlist no chip", () => {
-    renderHero("demo-playlist-kitchen-tapes");
+  it("shows the owner of a solo playlist no chip", async () => {
+    await renderHero("demo-playlist-kitchen-tapes");
     expect(
       screen.queryByRole("button", { name: /collaborative playlist/i }),
     ).not.toBeInTheDocument();

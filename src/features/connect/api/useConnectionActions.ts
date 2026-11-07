@@ -8,7 +8,7 @@ import {
 import { useSocial } from "../../../app/providers/useSocial";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { reasonFor } from "../../../shared/api/errorMessage";
+import { connectionActionCause } from "./connectErrorCopy";
 import {
   removeConnection,
   replyToConnectionRequest,
@@ -73,7 +73,8 @@ export function useConnectionActions() {
   const rollback = useCallback(
     (prev: ConnectionsState, error: unknown) => {
       restore(prev);
-      showToast(reasonFor(error) ?? t("connect:toast.actionFailed"), "error");
+      const cause = connectionActionCause(error);
+      showToast(t(cause.key, cause.values), "error");
     },
     [restore, showToast, t],
   );

@@ -51,10 +51,11 @@ function renderDialog() {
 }
 
 describe("StudioMilestoneShareDialog", () => {
-  it("shares the milestone link with the sentence as its title", () => {
+  it("shares the milestone link with the sentence as its title", async () => {
     renderDialog();
+    // The dialog's name comes from the studio catalog, which loads on demand.
     expect(
-      screen.getByRole("dialog", { name: "Share milestone" }),
+      await screen.findByRole("dialog", { name: "Share milestone" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("list", { name: "Ways to share this milestone" }),

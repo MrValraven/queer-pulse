@@ -12,6 +12,19 @@ vi.mock("../../app/providers/DemoModeProvider", () => ({
   useDemoMode: () => ({ demoMode: true }),
 }));
 
+// The member picker's identity row mounts the ambassador tag, whose ambassador
+// and staff rosters read the session. This wrapper carries no AuthProvider, and
+// the rosters are beside the point here, so the session reads as signed out and
+// both rosters stay empty.
+vi.mock("../../app/providers/authContext", async (importOriginal) => {
+  const original =
+    await importOriginal<typeof import("../../app/providers/authContext")>();
+  return {
+    ...original,
+    useAuth: () => ({ loggedIn: false, user: null, staffRoles: [] }),
+  };
+});
+
 vi.mock("../../shared/components/layout/AdminShell", () => ({
   AdminShell: ({ children }: { children: ReactNode }) => <>{children}</>,
 }));

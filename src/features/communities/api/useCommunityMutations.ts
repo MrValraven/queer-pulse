@@ -339,7 +339,11 @@ export function useCreateCommunity() {
 /** PATCH /communities/:slug — owner/mod edit of community info. Live PATCHes and
  *  invalidates the detail + lists; demo writes the session override store (the
  *  demo detail memo re-derives from it) and returns null. */
-export function useUpdateCommunity() {
+export function useUpdateCommunity(options?: {
+  /** The caller shows the failure itself (an inline alert), so the global
+   *  error toast would say it twice. Left off for callers that do not. */
+  shouldSilenceGlobalError?: boolean;
+}) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   const { applyOverride } = useCommunityEdits();
@@ -348,6 +352,7 @@ export function useUpdateCommunity() {
     Error,
     { slug: string; dto: UpdateCommunityDto }
   >({
+    meta: { silentError: options?.shouldSilenceGlobalError === true },
     mutationFn: async ({ slug, dto }) => {
       if (demoMode) {
         applyOverride(slug, dto);

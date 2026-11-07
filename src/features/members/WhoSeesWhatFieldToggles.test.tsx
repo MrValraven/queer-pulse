@@ -7,12 +7,9 @@ import type { ProfileDraft } from "../../app/providers/useProfile";
 import { WhoSeesWhatFieldToggles } from "./WhoSeesWhatFieldToggles";
 
 const SAVE_ERROR_COPY = "Couldn't save that. Please try again.";
-// Not merged into the i18n catalog yet (that's the coordinator's job, off
-// SCRATCH/i18n-task-F3.md), so a missing key renders raw and the switch's
-// accessible name is the key itself until then. Mirrors the accepted stopgap
-// documented on `PRESET_META` in whoSeesWhat.data.ts.
-const AMBASSADOR_LABEL_KEY =
-  "members:profile.whoSeesWhat.fields.ambassador.label";
+// The resolved English of `members:profile.whoSeesWhat.fields.ambassador.label`,
+// the switch's accessible name.
+const AMBASSADOR_LABEL = "Ambassador tag";
 
 function renderToggles(initialDraft: Partial<ProfileDraft> = {}) {
   const { handle, ControlledProfileEdit } = createControlledProfileEdit();
@@ -93,7 +90,7 @@ describe("WhoSeesWhatFieldToggles", () => {
     await findPhotoSwitch();
 
     expect(
-      screen.queryByRole("switch", { name: AMBASSADOR_LABEL_KEY }),
+      screen.queryByRole("switch", { name: AMBASSADOR_LABEL }),
     ).not.toBeInTheDocument();
   });
 
@@ -104,7 +101,7 @@ describe("WhoSeesWhatFieldToggles", () => {
     });
 
     const ambassadorSwitch = await screen.findByRole("switch", {
-      name: AMBASSADOR_LABEL_KEY,
+      name: AMBASSADOR_LABEL,
     });
     expect(ambassadorSwitch).toHaveAttribute("aria-checked", "true");
 

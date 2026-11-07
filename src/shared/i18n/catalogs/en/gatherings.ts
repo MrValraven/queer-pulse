@@ -392,7 +392,7 @@ export const gatherings: Catalog = {
   "photos.slideshowCta": "Slideshow",
   "photos.policyTitle": "How we handle <em>event photos</em>",
   "photos.policyBody1":
-    "Every photo here was taken by an attending member with consent from the people in the frame. <b>Faces are blurred by default</b> unless the person specifically opted in by name. This isn't a privacy nicety. It's how we make sure people show up next time.",
+    "Every photo here was taken by an attending member with consent from the people in the frame. <b>Faces are blurred by default</b> unless the person specifically opted in by name. This is how we make sure people show up next time.",
   "photos.policyBody2":
     'If you see yourself in a photo and want it removed (or unblurred), email <mailLink>hello@queerpulse.com</mailLink>. We\'ll handle it within 24 hours, no questions. <em>You can also untick "appear in event photos" globally</em> in <privLink>Privacy settings</privLink>.',
   "photos.photographersTitle": "Photographers <em>this event</em>",
@@ -1218,7 +1218,7 @@ export const gatherings: Catalog = {
   // HostSteps.tsx — step 2
   "host.step2.title": "Find the <em>right space</em>",
   "host.step2.body":
-    "Your home is usually the best option for small events. It's free, flexible, and signals that this is a community event rather than a commercial one. For larger events, the network has access to several partner spaces across the city.",
+    "Your home is usually the best option for small events. It's free, flexible, and signals that this is a community event. For larger events, the network has access to several partner spaces across the city.",
   "host.step2.list.small":
     "<b>Under 12 people:</b> home or studio is ideal. Ask the board if you need a kitchen or a projector you don't have.",
   "host.step2.list.medium":
@@ -2190,6 +2190,56 @@ export const gatherings: Catalog = {
   "rsvpControl.refusedToast": "The host has removed you from this event.",
   "rsvpControl.goneToast": "This event isn't there any more.",
   "rsvpControl.errorToast": "That didn't go through. Try again in a moment.",
+  // The specific cause behind a failed event action (gatheringActionErrors.ts
+  // and rsvpErrors.ts); offline, rate limit and server faults reuse
+  // shared:apiError.*.
+  "rsvpControl.notOpenToast":
+    "This event isn't open for RSVPs. It may have been cancelled or taken offline.",
+  "rsvpControl.endedToast":
+    "This event has already happened, so it takes no more RSVPs or invites.",
+  "rsvpControl.fullToast":
+    "This event filled up while you were deciding. Refresh to see whether a waitlist spot is open.",
+  "rsvpDetails.notEnoughRoomToast":
+    "There aren't enough seats left for that many guests. Lower the number and save again.",
+  "rsvpDetails.noActiveRsvpToast":
+    "You don't have an active RSVP to this event, so there is nothing to update. RSVP first, then add your details.",
+  "rsvpInvites.needRsvpToast":
+    "RSVP going or maybe first, then you can invite your connections.",
+  "rsvpInvites.withdrawNotOpenToast":
+    "That invite was already answered or taken back, so there is nothing to withdraw. Your list will refresh.",
+  "actionError.hostAlwaysGoing":
+    "You host this event, so you are always going. There is nothing to change here.",
+  "actionError.hostOnly":
+    "Only the host or a co-host can do this. If your role changed, refresh the page.",
+  "actionError.notPublished":
+    "Invites can only go out for a published event. This one isn't published, so nothing was sent.",
+  "actionError.announceEmpty":
+    "Write your message first, then send it. An empty announcement can't go out.",
+  "actionError.notOnWaitlist":
+    "That person isn't on the waitlist any more, so they can't be promoted. Refresh the list to see where it stands.",
+  "actionError.atCapacity":
+    "Every seat is taken, so nobody can move up from the waitlist. Raise the capacity or remove a guest first.",
+  "actionError.cannotBanYourself":
+    "You can't ban yourself from your own event.",
+  "actionError.cannotBanHost": "The host can't be banned from their own event.",
+  "actionError.cannotBanCohost":
+    "They are a co-host. Remove them as a co-host first, then ban them.",
+  "actionError.hostSeatHeld":
+    "The host's seat is held for the whole event, so it can't be removed or moved.",
+  "actionError.requestNotOpen":
+    "That request was already answered or withdrawn. The list will update to show where it stands.",
+  "sharePlans.errorNotConnected":
+    "You can only share plans with accepted connections, and you aren't connected with this person yet.",
+  "sharePlans.errorCannotMessage":
+    "You can't send a message to this member right now, so your plans didn't go out.",
+  "photos.removeNotAllowed":
+    "Only the person who uploaded this photo or a host can remove it.",
+  "photos.removeGone":
+    "That photo was already removed. The album will refresh.",
+  "photos.attachHostOnly":
+    "Only the host or a co-host can add photos to this album.",
+  "photos.attachConflict":
+    "That photo is already used on another event or is no longer available. Pick it again to upload a fresh copy.",
   "sharePlans.openCta": "Share my plans",
   "sharePlans.eyebrow": "Just between you two",
   "sharePlans.title": "Tell someone <em>where you'll be</em>",

@@ -325,7 +325,8 @@ describe("syncPushSubscriptionHealth, existing subscriptions", () => {
     );
     subscribePush.mockRejectedValueOnce(new Error("offline"));
     const sync = await loadSync();
-    await expect(sync(MEMBER_ID)).resolves.toBeUndefined();
+    // The pass now reports its outcome; a failed POST alone is inconclusive.
+    await expect(sync(MEMBER_ID)).resolves.toBe("inconclusive");
     expect(writeLastSyncedSubscription).not.toHaveBeenCalled();
     expect(addPushEnabledMemberId).not.toHaveBeenCalled();
   });

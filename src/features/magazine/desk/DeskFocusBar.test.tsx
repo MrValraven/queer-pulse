@@ -7,6 +7,7 @@ import {
   within,
 } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import type { Piece } from "../data/desk.data";
 import type { DeskFocusId } from "./deskFocus";
@@ -59,7 +60,7 @@ const PIECES: Piece[] = [
   }),
 ];
 
-function renderBar(
+async function renderBar(
   overrides: Partial<Parameters<typeof DeskFocusBar>[0]> = {},
 ) {
   const onToggleFocus = vi.fn();
@@ -79,6 +80,7 @@ function renderBar(
       />
     </TestProviders>,
   );
+  await awaitCatalog("magazine");
   return { onToggleFocus, onClearFocus, onOpenPitches };
 }
 
@@ -118,7 +120,7 @@ function StatefulDeskFocusBar({
   );
 }
 
-function renderStatefulBar(
+async function renderStatefulBar(
   overrides: Partial<Parameters<typeof StatefulDeskFocusBar>[0]> = {},
 ) {
   const onOpenPitches = vi.fn();
@@ -133,12 +135,13 @@ function renderStatefulBar(
       />
     </TestProviders>,
   );
+  await awaitCatalog("magazine");
   return { onOpenPitches };
 }
 
 describe("DeskFocusBar ordering", () => {
-  it("shows only chips with a match or an active filter, in registry order, keeping zero chips out of the visible slots", () => {
-    renderBar();
+  it("shows only chips with a match or an active filter, in registry order, keeping zero chips out of the visible slots", async () => {
+    await renderBar();
     const group = screen.getByRole("group", { name: "Focus the desk" });
     const labels = toggleChipLabels(group);
     // Only the 4 non-zero chips show, in registry order, with a space
@@ -160,15 +163,15 @@ describe("DeskFocusBar ordering", () => {
 });
 
 describe("DeskFocusBar zero handling", () => {
-  it("shows a tone dot for a chip with a match", () => {
-    renderBar();
+  it("shows a tone dot for a chip with a match", async () => {
+    await renderBar();
     const lateChip = screen.getByRole("button", { name: /^Late/ });
     expect(lateChip.querySelector("[data-tone='late']")).not.toBeNull();
   });
 
-  it("marks Stalled with a clock in place of the amber dot With writers wears", () => {
+  it("marks Stalled with a clock and keeps the amber dot for With writers", async () => {
     const longAgo = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
-    renderBar({
+    await renderBar({
       pieces: [
         ...PIECES,
         makePiece({
@@ -186,8 +189,8 @@ describe("DeskFocusBar zero handling", () => {
     expect(writersChip.querySelector("[data-tone='writer']")).not.toBeNull();
   });
 
-  it("shows a muted 'none' with no tone dot for a zero-count chip once revealed from behind '+N'", () => {
-    renderBar();
+  it("shows a muted 'none' with no tone dot for a zero-count chip once revealed from behind '+N'", async () => {
+    await renderBar();
     fireEvent.click(
       screen.getByRole("button", { name: "Show 7 more filters" }),
     );
@@ -198,8 +201,8 @@ describe("DeskFocusBar zero handling", () => {
 });
 
 describe("DeskFocusBar active chip visibility", () => {
-  it("shows a zero-count active chip in its own registry position, without needing the overflow", () => {
-    renderBar({ activeFocusIds: ["unpaid"] });
+  it("shows a zero-count active chip in its own registry position, without needing the overflow", async () => {
+    await renderBar({ activeFocusIds: ["unpaid"] });
     const group = screen.getByRole("group", { name: "Focus the desk" });
     // "unpaid" sits between "with-writers" and "mine" in the registry, and
     // that is exactly where it renders: an active chip is not pulled to the
@@ -220,22 +223,22 @@ describe("DeskFocusBar active chip visibility", () => {
     ).toHaveTextContent("+6");
   });
 
-  it("shows Clear only once a focus is active, and calls onClearFocus", () => {
-    const { onClearFocus } = renderBar({ activeFocusIds: ["late"] });
+  it("shows Clear only once a focus is active, and calls onClearFocus", async () => {
+    const { onClearFocus } = await renderBar({ activeFocusIds: ["late"] });
     const clearButton = screen.getByRole("button", { name: "Clear" });
     fireEvent.click(clearButton);
     expect(onClearFocus).toHaveBeenCalledTimes(1);
   });
 
-  it("renders no Clear button when nothing is active", () => {
-    renderBar();
+  it("renders no Clear button when nothing is active", async () => {
+    await renderBar();
     expect(screen.queryByRole("button", { name: "Clear" })).toBeNull();
   });
 });
 
 describe("DeskFocusBar overflow", () => {
-  it("expands the row inline instead of opening a popover", () => {
-    renderBar();
+  it("expands the row inline", async () => {
+    await renderBar();
     expect(
       screen.queryByRole("button", { name: /^Ready to publish/ }),
     ).toBeNull();
@@ -259,8 +262,8 @@ describe("DeskFocusBar overflow", () => {
     expect(screen.queryByRole("button", { name: /^Show \d+ more/ })).toBeNull();
   });
 
-  it("caps the eligible set (matches or active) at 5 in registry order, so even a matching chip can overflow", () => {
-    renderBar({ activeFocusIds: ["sensitivity", "ready"] });
+  it("caps the eligible set (matches or active) at 5 in registry order, so even a matching chip can overflow", async () => {
+    await renderBar({ activeFocusIds: ["sensitivity", "ready"] });
     const group = screen.getByRole("group", { name: "Focus the desk" });
     // Eligible chips are your-turn, late, with-writers, sensitivity, ready
     // and mine (6, since sensitivity/ready are active despite a zero count).
@@ -285,8 +288,8 @@ describe("DeskFocusBar overflow", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows only the '+N' expander and Pitches when every chip is zero", () => {
-    renderBar({ pieces: [] });
+  it("shows only the '+N' expander and Pitches when every chip is zero", async () => {
+    await renderBar({ pieces: [] });
     const group = screen.getByRole("group", { name: "Focus the desk" });
     expect(toggleChipLabels(group)).toEqual([]);
     expect(
@@ -299,8 +302,8 @@ describe("DeskFocusBar overflow", () => {
 });
 
 describe("DeskFocusBar keeps focus off the page", () => {
-  it("keeps '+N' mounted as 'Show fewer' once pressed, so the button that was just activated stays put", () => {
-    renderBar();
+  it("keeps '+N' mounted as 'Show fewer' once pressed, so the button that was just activated stays put", async () => {
+    await renderBar();
     const moreButton = screen.getByRole("button", {
       name: "Show 7 more filters",
     });
@@ -317,7 +320,7 @@ describe("DeskFocusBar keeps focus off the page", () => {
   });
 
   it("focuses a stable neighbour once Clear empties the active set and removes itself", async () => {
-    renderStatefulBar({ initialActiveFocusIds: ["late"] });
+    await renderStatefulBar({ initialActiveFocusIds: ["late"] });
     const clearButton = screen.getByRole("button", { name: "Clear" });
     clearButton.focus();
     fireEvent.click(clearButton);
@@ -328,7 +331,7 @@ describe("DeskFocusBar keeps focus off the page", () => {
   });
 
   it("focuses a stable neighbour once a switched-off zero-count chip leaves the visible set", async () => {
-    renderStatefulBar({ initialActiveFocusIds: ["unpaid"] });
+    await renderStatefulBar({ initialActiveFocusIds: ["unpaid"] });
     const unpaidChip = screen.getByRole("button", {
       name: /^Unpaid after filing/,
     });
@@ -344,9 +347,9 @@ describe("DeskFocusBar keeps focus off the page", () => {
 });
 
 describe("DeskFocusBar at risk", () => {
-  it("counts At risk against the issue's close date", () => {
+  it("counts At risk against the issue's close date", async () => {
     // A close date years away: only the late piece (p2) is at risk.
-    renderBar({ activeFocusIds: ["at-risk"], closesOn: "2999-12-31" });
+    await renderBar({ activeFocusIds: ["at-risk"], closesOn: "2999-12-31" });
     const atRiskChip = screen.getByRole("button", { name: /^At risk/ });
     expect(atRiskChip.textContent).toBe("At risk 1");
     expect(
@@ -355,8 +358,8 @@ describe("DeskFocusBar at risk", () => {
     ).not.toBeNull();
   });
 
-  it("counts nothing At risk without a close date", () => {
-    renderBar({ activeFocusIds: ["at-risk"] });
+  it("counts nothing At risk without a close date", async () => {
+    await renderBar({ activeFocusIds: ["at-risk"] });
     expect(screen.getByRole("button", { name: /^At risk/ }).textContent).toBe(
       "At risk none",
     );
@@ -364,8 +367,8 @@ describe("DeskFocusBar at risk", () => {
 });
 
 describe("DeskFocusBar pitches", () => {
-  it("renders the pitches count as a plain action button with no aria-pressed", () => {
-    const { onOpenPitches } = renderBar({ pitchCount: 4 });
+  it("renders the pitches count as a plain action button with no aria-pressed", async () => {
+    const { onOpenPitches } = await renderBar({ pitchCount: 4 });
     const pitchesChip = screen.getByRole("button", { name: /^Pitches/ });
     expect(pitchesChip).not.toHaveAttribute("aria-pressed");
     // It opens the pitch triage dialog, so assistive tech gets that warning
@@ -378,8 +381,8 @@ describe("DeskFocusBar pitches", () => {
     expect(onOpenPitches).toHaveBeenCalledTimes(1);
   });
 
-  it("mutes the pitches count to 'none' at zero, like any other chip", () => {
-    renderBar({ pitchCount: 0 });
+  it("mutes the pitches count to 'none' at zero, like any other chip", async () => {
+    await renderBar({ pitchCount: 0 });
     expect(screen.getByRole("button", { name: /^Pitches/ }).textContent).toBe(
       "Pitches none",
     );

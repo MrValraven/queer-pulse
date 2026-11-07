@@ -47,6 +47,8 @@ export function useDeleteMyMedia() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation({
+    // MyUploadsPane toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: async (key: string) => {
       if (demoMode) {
         removeDemoMedia(key);
@@ -76,6 +78,8 @@ export function useSaveMyMediaCrop() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation({
+    // PhotoPickerModal toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: async ({ key, crop }: { key: string; crop: CropRect }) => {
       if (demoMode) {
         setDemoMediaCrop(key, isIdentityCrop(crop) ? null : crop);

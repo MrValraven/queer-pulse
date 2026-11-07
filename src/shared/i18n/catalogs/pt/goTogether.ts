@@ -261,6 +261,8 @@ export const goTogether: Catalog = {
   "card.error.alreadyGrouped": "Já estás num grupo para este evento.",
   "card.error.generic":
     "Não foi possível concluir. Tenta outra vez daqui a pouco.",
+  "error.refused":
+    "Os nossos servidores recusaram o pedido. Tenta outra vez daqui a pouco e escreve-nos se continuar a acontecer.",
   "card.error.ineligible":
     "Vamos juntes não está disponível na tua conta neste momento.",
   "card.error.invalidAnswers":

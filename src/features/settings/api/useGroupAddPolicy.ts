@@ -5,6 +5,7 @@ import { useAuth } from "../../../app/providers/authContext";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { logError } from "../../../shared/observability/logger";
+import { causeErrorKey } from "../../../shared/api/causeErrorKey";
 import type { GroupAddPolicy } from "../../../shared/contracts/contracts";
 import {
   DEFAULT_GROUP_ADD_POLICY,
@@ -81,10 +82,8 @@ export function useGroupAddPolicy(): GroupAddPolicyResult {
           void queryClient.invalidateQueries({
             queryKey: GROUP_ADD_POLICY_QUERY_KEY,
           });
-          showToast(
-            t("settings:visibility.groupAddPolicy.toastError"),
-            "error",
-          );
+          const cause = causeErrorKey(error);
+          showToast(t(cause.key, cause.values), "error");
         });
     },
     [demoMode, queryClient, showToast, t],

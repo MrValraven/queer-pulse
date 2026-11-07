@@ -5,6 +5,7 @@ import { TestProviders } from "../../test/TestProviders";
 import type { EventCommunityInviteDetailDTO } from "./api/eventCommunities.api";
 import { CollabInvitePage } from "./CollabInvitePage";
 import { gatheringPath } from "./gatheringPaths";
+import { awaitCatalog } from "../../test/awaitCatalog";
 
 const { mutate, queryState } = vi.hoisted(() => ({
   mutate: vi.fn(),
@@ -64,7 +65,7 @@ afterEach(() => {
   queryState.isError = false;
 });
 
-function renderPage(invite?: Partial<EventCommunityInviteDetailDTO>) {
+async function renderPage(invite?: Partial<EventCommunityInviteDetailDTO>) {
   if (invite) queryState.data = { ...PENDING_INVITE, ...invite };
   render(
     <TestProviders initialEntries={["/collab-invites/invite-1"]}>
@@ -76,19 +77,20 @@ function renderPage(invite?: Partial<EventCommunityInviteDetailDTO>) {
       </Routes>
     </TestProviders>,
   );
+  await awaitCatalog("gatherings");
 }
 
 describe("CollabInvitePage", () => {
   it("says the invite is gone when it fails to load", async () => {
     queryState.isError = true;
-    renderPage();
+    await renderPage();
     expect(
       await screen.findByText("This invite isn't here anymore"),
     ).toBeInTheDocument();
   });
 
-  it("shows the lead, the guest and what accepting does", () => {
-    renderPage({});
+  it("shows the lead, the guest and what accepting does", async () => {
+    await renderPage({});
     expect(
       screen.getByRole("heading", { level: 1, name: /wants to host/ }),
     ).toHaveTextContent(
@@ -102,8 +104,8 @@ describe("CollabInvitePage", () => {
     expect(screen.getByText("Portfolio Night")).toBeInTheDocument();
   });
 
-  it("accepts for the community", () => {
-    renderPage({});
+  it("accepts for the community", async () => {
+    await renderPage({});
     fireEvent.click(screen.getByRole("button", { name: "Accept collab" }));
     expect(mutate).toHaveBeenCalledWith(
       { id: "invite-1", decision: "accept" },
@@ -111,8 +113,8 @@ describe("CollabInvitePage", () => {
     );
   });
 
-  it("declines for the community", () => {
-    renderPage({});
+  it("declines for the community", async () => {
+    await renderPage({});
     fireEvent.click(screen.getByRole("button", { name: "Decline invite" }));
     expect(mutate).toHaveBeenCalledWith(
       { id: "invite-1", decision: "decline" },
@@ -120,8 +122,8 @@ describe("CollabInvitePage", () => {
     );
   });
 
-  it("shows no answer buttons to someone outside the community's team", () => {
-    renderPage({ canRespond: false });
+  it("shows no answer buttons to someone outside the community's team", async () => {
+    await renderPage({ canRespond: false });
     expect(
       screen.queryByRole("button", { name: "Accept collab" }),
     ).not.toBeInTheDocument();
@@ -132,8 +134,8 @@ describe("CollabInvitePage", () => {
     ).toBeInTheDocument();
   });
 
-  it("names who accepted and for which community", () => {
-    renderPage({ status: "accepted", respondedByName: "Rui" });
+  it("names who accepted and for which community", async () => {
+    await renderPage({ status: "accepted", respondedByName: "Rui" });
     expect(
       screen.getByText("Rui accepted for Queer Runners Lisboa"),
     ).toBeInTheDocument();
@@ -142,29 +144,29 @@ describe("CollabInvitePage", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("names the community when the responder has no name", () => {
-    renderPage({ status: "accepted", respondedByName: null });
+  it("names the community when the responder has no name", async () => {
+    await renderPage({ status: "accepted", respondedByName: null });
     expect(
       screen.getByText("Queer Runners Lisboa accepted this invite"),
     ).toBeInTheDocument();
   });
 
-  it("names who declined and for which community", () => {
-    renderPage({ status: "declined", respondedByName: "Rui" });
+  it("names who declined and for which community", async () => {
+    await renderPage({ status: "declined", respondedByName: "Rui" });
     expect(
       screen.getByText("Rui declined for Queer Runners Lisboa"),
     ).toBeInTheDocument();
   });
 
-  it("names the community that declined when the responder has no name", () => {
-    renderPage({ status: "declined", respondedByName: null });
+  it("names the community that declined when the responder has no name", async () => {
+    await renderPage({ status: "declined", respondedByName: null });
     expect(
       screen.getByText("Queer Runners Lisboa declined this invite"),
     ).toBeInTheDocument();
   });
 
-  it("links back to the notifications once from an answered invite", () => {
-    renderPage({ status: "accepted", respondedByName: "Rui" });
+  it("links back to the notifications once from an answered invite", async () => {
+    await renderPage({ status: "accepted", respondedByName: "Rui" });
     const main = within(screen.getByRole("main"));
     expect(main.getByRole("link", { name: "Notifications" })).toHaveAttribute(
       "href",
@@ -181,8 +183,8 @@ describe("CollabInvitePage", () => {
     );
   });
 
-  it("links back to the notifications once from an invite that is gone", () => {
-    renderPage();
+  it("links back to the notifications once from an invite that is gone", async () => {
+    await renderPage();
     const main = within(screen.getByRole("main"));
     expect(
       main
@@ -192,16 +194,16 @@ describe("CollabInvitePage", () => {
     expect(main.getByRole("link", { name: "Notifications" })).toBeVisible();
   });
 
-  it("says the gathering was cancelled", () => {
-    renderPage({ event: { ...PENDING_INVITE.event, isCancelled: true } });
+  it("says the gathering was cancelled", async () => {
+    await renderPage({ event: { ...PENDING_INVITE.event, isCancelled: true } });
     expect(screen.getByText("This event was cancelled")).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "Accept collab" }),
     ).not.toBeInTheDocument();
   });
 
-  it("says the gathering already happened", () => {
-    renderPage({ event: { ...PENDING_INVITE.event, isPast: true } });
+  it("says the gathering already happened", async () => {
+    await renderPage({ event: { ...PENDING_INVITE.event, isPast: true } });
     expect(screen.getByText("This event already happened")).toBeInTheDocument();
   });
 });

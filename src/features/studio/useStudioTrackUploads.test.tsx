@@ -7,6 +7,7 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 import { ApiError } from "../../shared/api/client";
 import type { StudioTrackRowView } from "./api/studio.adapters";
 import { StudioAudioUploadError } from "./api/studioAudioUpload";
@@ -429,7 +430,12 @@ describe("useStudioTrackUploads queueing, order and focus", () => {
         />
       );
     }
-    render(<Harness />);
+    // The file list reads the URL hash for a deep link to track credits.
+    render(
+      <MemoryRouter>
+        <Harness />
+      </MemoryRouter>,
+    );
     const moveUp = screen.getByRole("button", {
       name: "studio:uploadFlow.files.moveUp#2",
     });

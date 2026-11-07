@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { CommunityTagPicker } from "./CommunityTagPicker";
 import { COMMUNITY_TAGS, MAX_COMMUNITY_TAGS } from "./communityTags.data";
 
@@ -13,7 +14,7 @@ const FIRST_UNSELECTED_TAG = COMMUNITY_TAGS[MAX_COMMUNITY_TAGS]!;
 
 type PickerProps = Parameters<typeof CommunityTagPicker>[0];
 
-function renderPicker(props: Partial<PickerProps> = {}) {
+async function renderPicker(props: Partial<PickerProps> = {}) {
   const onChange = vi.fn<(next: string[]) => void>();
   render(
     <TestProviders>
@@ -25,6 +26,9 @@ function renderPicker(props: Partial<PickerProps> = {}) {
       />
     </TestProviders>,
   );
+  // The "Add more tags" toggle is named from the catalog, so `openPicker`
+  // can only find it once the catalog has loaded.
+  await awaitCatalog("communities");
   return { onChange };
 }
 
@@ -39,7 +43,7 @@ async function openPicker() {
 
 describe("CommunityTagPicker", () => {
   it("at the limit every unselected chip is disabled", async () => {
-    renderPicker({ selectedIds: TAGS_AT_LIMIT_IDS });
+    await renderPicker({ selectedIds: TAGS_AT_LIMIT_IDS });
     await openPicker();
 
     const unselectedChip = await screen.findByRole("button", {
@@ -54,7 +58,7 @@ describe("CommunityTagPicker", () => {
   });
 
   it("at the limit a selected chip still toggles off", async () => {
-    const { onChange } = renderPicker({ selectedIds: TAGS_AT_LIMIT_IDS });
+    const { onChange } = await renderPicker({ selectedIds: TAGS_AT_LIMIT_IDS });
     const user = await openPicker();
 
     const selectedTag = TAGS_AT_LIMIT[0]!;
@@ -66,19 +70,23 @@ describe("CommunityTagPicker", () => {
   });
 
   it("at the limit the count explains how to pick another", async () => {
-    renderPicker({ selectedIds: TAGS_AT_LIMIT_IDS });
+    await renderPicker({ selectedIds: TAGS_AT_LIMIT_IDS });
     await openPicker();
 
+    const atLimitLine = `${MAX_COMMUNITY_TAGS} of ${MAX_COMMUNITY_TAGS} chosen. Remove one to pick another.`;
+    // The announced count in the footer, and the same line repeated as plain
+    // text above the open chip list.
     expect(
-      await screen.findByText(
-        `${MAX_COMMUNITY_TAGS} of ${MAX_COMMUNITY_TAGS} chosen. Remove one to pick another.`,
-      ),
+      await screen.findByText(atLimitLine, { selector: "[aria-live]" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(atLimitLine, { selector: "p" }),
     ).toBeInTheDocument();
   });
 
   it("below the limit every chip is enabled", async () => {
     const belowLimitIds = TAGS_AT_LIMIT_IDS.slice(0, 2);
-    renderPicker({ selectedIds: belowLimitIds });
+    await renderPicker({ selectedIds: belowLimitIds });
     await openPicker();
 
     const unselectedChip = await screen.findByRole("button", {

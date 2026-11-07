@@ -388,7 +388,9 @@ describe("useConversationClaim (live mode)", () => {
       queryKey: ["conversations-unread-count", "mailboxes"],
     });
     expect(
-      await screen.findByText("That didn't go through. Try again."),
+      await screen.findByText(
+        "You're no longer part of this mailbox's team, so you can't claim its conversations. Refresh your inbox to see where you still help.",
+      ),
     ).toBeInTheDocument();
   });
 });

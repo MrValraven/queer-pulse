@@ -4,6 +4,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
@@ -23,6 +24,14 @@ function Harness() {
 
 function renderFillOrder() {
   render(<Harness />, { wrapper: TestProviders });
+}
+
+/** The panel's own saved line. The toast region also carries the status
+ *  role, so the query stays inside the "Fill the rest" panel. */
+function savedLine(): HTMLElement {
+  return within(
+    screen.getByRole("region", { name: "Fill the rest" }),
+  ).getByRole("status");
 }
 
 describe("PersonaWallFillOrder", () => {
@@ -49,7 +58,7 @@ describe("PersonaWallFillOrder", () => {
       ).toHaveAttribute("aria-checked", "true"),
     );
     await waitFor(() =>
-      expect(screen.getByRole("status")).toHaveTextContent("Fill order saved"),
+      expect(savedLine()).toHaveTextContent("Fill order saved"),
     );
     expect(demoAdminPersonaWall().fillOrder).toBe("followed");
   });
@@ -61,14 +70,12 @@ describe("PersonaWallFillOrder", () => {
       await screen.findByRole("radio", { name: /Most followed/ }),
     );
     await waitFor(() =>
-      expect(screen.getByRole("status")).toHaveTextContent("Fill order saved"),
+      expect(savedLine()).toHaveTextContent("Fill order saved"),
     );
     act(() => {
       vi.advanceTimersByTime(10_000);
     });
-    await waitFor(() =>
-      expect(screen.getByRole("status")).toBeEmptyDOMElement(),
-    );
+    await waitFor(() => expect(savedLine()).toBeEmptyDOMElement());
   });
 
   it("gives every card a decorative check that only the checked card shows", async () => {

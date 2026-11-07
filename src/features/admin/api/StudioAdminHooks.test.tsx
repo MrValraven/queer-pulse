@@ -1,9 +1,10 @@
 import { QueryClient } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
 import { studioErrorCodeOf } from "../../studio/api/studio.api";
+import { DEMO_STUDIO_SCENES } from "../../studio/api/studioDemoScenes.data";
 import {
   DEMO_ADMIN_EVENT_OPTIONS,
   demoAdminReleaseSearch,
@@ -22,6 +23,18 @@ import {
   useSaveAdminStudioScene,
   useSetAdminStudioSceneArchived,
 } from "./StudioAdminSceneHooks";
+
+// Admin scene edits write through to the demo scene list in place, so a scene
+// one test creates would still hold a position in the next. Each test starts
+// from the seeded list.
+const SEEDED_SCENES = structuredClone(DEMO_STUDIO_SCENES);
+afterEach(() => {
+  DEMO_STUDIO_SCENES.splice(
+    0,
+    DEMO_STUDIO_SCENES.length,
+    ...structuredClone(SEEDED_SCENES),
+  );
+});
 
 function setup() {
   const queryClient = new QueryClient({

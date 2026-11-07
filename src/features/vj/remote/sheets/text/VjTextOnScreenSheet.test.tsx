@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { LazyMotion, domMax } from "motion/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Mock } from "vitest";
@@ -10,6 +10,7 @@ import {
   type VjOverlay,
 } from "../../../../../shared/contracts/vj";
 import { TestProviders } from "../../../../../test/TestProviders";
+import { awaitCatalog } from "../../../../../test/awaitCatalog";
 import type { VjCommandOutcome } from "../../../live/vjStageCommands";
 import { VJ_REMOTE_OVERLAY_LINES_STORAGE_KEY } from "../../../vj.constants";
 import { VjTextOnScreenSheet, type VjRun } from "./VjTextOnScreenSheet";
@@ -33,7 +34,7 @@ function createRun(
     Mock<() => Promise<VjCommandOutcome>>;
 }
 
-function renderSheet(
+async function renderSheet(
   run: VjRun,
   overrides: {
     overlay?: Partial<VjOverlay>;
@@ -56,7 +57,9 @@ function renderSheet(
       </LazyMotion>
     </TestProviders>
   );
-  return render(ui);
+  const renderedView = render(ui);
+  await awaitCatalog("vj");
+  return renderedView;
 }
 
 /** Clicks, then lets the command's promise settle inside act. */
@@ -83,7 +86,7 @@ describe("VjTextOnScreenSheet", () => {
 
   it("Show text sends text, style, position, size and colour", async () => {
     const run = createRun();
-    renderSheet(run);
+    await renderSheet(run);
     typeLine("  Welcome in  ");
     fireEvent.click(screen.getByRole("button", { name: "Neon" }));
     fireEvent.click(screen.getByRole("button", { name: "Top" }));
@@ -107,7 +110,7 @@ describe("VjTextOnScreenSheet", () => {
 
   it("auto hide after 30 s sends hideAfterMs 30000", async () => {
     const run = createRun();
-    renderSheet(run);
+    await renderSheet(run);
     typeLine("Last call");
     fireEvent.click(screen.getByRole("button", { name: "30 s" }));
     await clickAndSettle(screen.getByRole("button", { name: "Show text" }));
@@ -119,7 +122,7 @@ describe("VjTextOnScreenSheet", () => {
 
   it("Keep showing sends hideAfterMs null", async () => {
     const run = createRun();
-    renderSheet(run);
+    await renderSheet(run);
     typeLine("Last call");
     fireEvent.click(screen.getByRole("button", { name: "1 min" }));
     fireEvent.click(screen.getByRole("button", { name: "Keep showing" }));
@@ -132,7 +135,9 @@ describe("VjTextOnScreenSheet", () => {
 
   it("Hide text sends isVisible false", async () => {
     const run = createRun();
-    renderSheet(run, { overlay: { text: "Welcome in", isVisible: true } });
+    await renderSheet(run, {
+      overlay: { text: "Welcome in", isVisible: true },
+    });
     expect(
       screen.getByRole("button", { name: "Update text" }),
     ).toBeInTheDocument();
@@ -140,8 +145,8 @@ describe("VjTextOnScreenSheet", () => {
     expect(run).toHaveBeenCalledWith("setOverlay", { isVisible: false });
   });
 
-  it("counts down while auto-hide runs", () => {
-    renderSheet(createRun(), {
+  it("counts down while auto-hide runs", async () => {
+    await renderSheet(createRun(), {
       overlay: {
         text: "Welcome in",
         isVisible: true,
@@ -153,7 +158,7 @@ describe("VjTextOnScreenSheet", () => {
 
   it("a countdown 10 minutes out sends durationMs 600000", async () => {
     const run = createRun();
-    renderSheet(run);
+    await renderSheet(run);
     fireEvent.click(screen.getByRole("button", { name: "Countdown" }));
     fireEvent.change(screen.getByRole("textbox", { name: "Label" }), {
       target: { value: "Doors close in " },
@@ -171,7 +176,7 @@ describe("VjTextOnScreenSheet", () => {
 
   it("an end time later today sends the time left", async () => {
     const run = createRun();
-    renderSheet(run);
+    await renderSheet(run);
     fireEvent.click(screen.getByRole("button", { name: "Countdown" }));
     fireEvent.change(screen.getByLabelText("End time"), {
       target: { value: "21:45" },
@@ -187,7 +192,7 @@ describe("VjTextOnScreenSheet", () => {
 
   it("an end time already past names it and sends nothing", async () => {
     const run = createRun();
-    renderSheet(run);
+    await renderSheet(run);
     fireEvent.click(screen.getByRole("button", { name: "Countdown" }));
     fireEvent.change(screen.getByLabelText("End time"), {
       target: { value: "20:30" },
@@ -196,14 +201,14 @@ describe("VjTextOnScreenSheet", () => {
       screen.getByRole("button", { name: "Show countdown" }),
     );
     expect(run).not.toHaveBeenCalled();
-    expect(screen.getByRole("alert")).toHaveTextContent(
-      "Pick a time later today",
-    );
+    expect(
+      within(screen.getByRole("dialog")).getByRole("alert"),
+    ).toHaveTextContent("Pick a time later today");
   });
 
   it("Show logo sends the corner", async () => {
     const run = createRun();
-    renderSheet(run);
+    await renderSheet(run);
     fireEvent.click(screen.getByRole("button", { name: "Logo" }));
     fireEvent.click(screen.getByRole("button", { name: "Top left" }));
     await clickAndSettle(screen.getByRole("button", { name: "Show logo" }));
@@ -215,7 +220,9 @@ describe("VjTextOnScreenSheet", () => {
 
   it("a shown logo moves corners at once", async () => {
     const run = createRun();
-    renderSheet(run, { logo: { isVisible: true, corner: "bottomRight" } });
+    await renderSheet(run, {
+      logo: { isVisible: true, corner: "bottomRight" },
+    });
     await clickAndSettle(screen.getByRole("button", { name: "Top right" }));
     expect(run).toHaveBeenCalledWith("setLogo", { corner: "topRight" });
   });
@@ -226,12 +233,12 @@ describe("VjTextOnScreenSheet", () => {
       code: "vj_overlay_hide_out_of_range",
       errorKey: "vj:error.socket.overlayHideOutOfRange",
     });
-    renderSheet(run);
+    await renderSheet(run);
     typeLine("Last call");
     await clickAndSettle(screen.getByRole("button", { name: "Show text" }));
-    expect(await screen.findByRole("alert")).toHaveTextContent(
-      "Auto-hide works from 1 second to 10 minutes",
-    );
+    expect(
+      await within(screen.getByRole("dialog")).findByRole("alert"),
+    ).toHaveTextContent("Auto-hide works from 1 second to 10 minutes");
   });
 
   it("holds every send while blocked", async () => {
@@ -251,6 +258,7 @@ describe("VjTextOnScreenSheet", () => {
         </LazyMotion>
       </TestProviders>,
     );
+    await awaitCatalog("vj");
     const showButton = screen.getByRole("button", { name: "Show text" });
     expect(showButton).toHaveAttribute("aria-disabled", "true");
     await clickAndSettle(showButton);

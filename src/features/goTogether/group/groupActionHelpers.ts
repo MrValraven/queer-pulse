@@ -1,8 +1,10 @@
 import { ApiError } from "../../../shared/api/client";
 import { goTogetherErrorCode } from "../api/goTogether.api";
+import { goTogetherCauseKey } from "../api/goTogetherErrorCopy";
 
 /** Plain copy for a failed group action. The server's code picks the line;
- *  anything else reads as a gentle retry. */
+ *  anything else names its cause (offline, signed out, a restriction, a
+ *  rate limit, a server fault). */
 export function groupErrorKey(error: unknown): string {
   switch (goTogetherErrorCode(error)) {
     case "GO_TOGETHER_CHECKIN_CLOSED":
@@ -10,7 +12,7 @@ export function groupErrorKey(error: unknown): string {
     case "GO_TOGETHER_MERGE_EXPIRED":
       return "goTogether:group.error.mergeExpired";
     default:
-      return "goTogether:group.error.generic";
+      return goTogetherCauseKey(error);
   }
 }
 

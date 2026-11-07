@@ -8,6 +8,10 @@ import { Button } from "../../shared/components/ui";
 import { useDismiss } from "../../shared/components/ui/useDismiss";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  causeErrorKey,
+  type CauseErrorCopy,
+} from "../../shared/api/causeErrorKey";
 import { logError } from "../../shared/observability/logger";
 import {
   postPolicyAcceptance,
@@ -57,7 +61,9 @@ export function PolicyReacceptanceSheet({
   const { signOut } = useAuth();
   const titleId = useId();
   const [isSubmitting, setSubmitting] = useState(false);
-  const [hasFailed, setFailed] = useState(false);
+  // Why the last attempt to record the agreement failed (offline, signed out,
+  // a server fault...), or null while nothing has failed.
+  const [failureCause, setFailureCause] = useState<CauseErrorCopy | null>(null);
 
   // Inert `onClose`: this dialog cannot be dismissed (see the essay above), but
   // it still needs every OTHER thing useDismiss provides — the page behind must
@@ -93,7 +99,7 @@ export function PolicyReacceptanceSheet({
 
   const handleAgree = useCallback(() => {
     setSubmitting(true);
-    setFailed(false);
+    setFailureCause(null);
     void postPolicyAcceptance()
       .then(() => onAccepted())
       .catch((error: unknown) => {
@@ -101,7 +107,7 @@ export function PolicyReacceptanceSheet({
         // a write that never landed would leave a member believing they had
         // agreed and us with no record that they did.
         logError(error, { scope: "policyReacceptance.accept" });
-        setFailed(true);
+        setFailureCause(causeErrorKey(error));
       })
       .finally(() => setSubmitting(false));
   }, [onAccepted]);
@@ -152,9 +158,9 @@ export function PolicyReacceptanceSheet({
           ))}
         </ul>
 
-        {hasFailed && (
+        {failureCause && (
           <p className={s.error} role="alert">
-            {t("auth:policyReacceptance.error")}
+            {t(failureCause.key, failureCause.values)}
           </p>
         )}
 

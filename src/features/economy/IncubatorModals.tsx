@@ -4,6 +4,7 @@ import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
 import { useSubmitFlow } from "./modalFlow";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { intakeFailureToast } from "../resources/intakeSubmitError";
 import { submitIntake, type IntakeKind } from "../../shared/api/intakes";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -34,7 +35,9 @@ function useIncubatorSubmit(
     }
     void run(async () => {
       await submitIntake(kind, buildPayload());
-    }).catch(() => showToast(t("shared:intake.errorToast"), "error"));
+    }).catch((error: unknown) =>
+      showToast(intakeFailureToast(error, t), "error"),
+    );
   };
 
   return { sending, done, onSubmit };

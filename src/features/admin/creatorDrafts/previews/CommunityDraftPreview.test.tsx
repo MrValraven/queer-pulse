@@ -1,5 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 import { TestProviders } from "../../../../test/TestProviders";
 import wizardStyles from "../../../communities/startCommunity/StartCommunityPage.module.css";
 import type { CommunityDraftPreview as CommunityDraftPreviewData } from "../../api/adminCreatorDrafts.api";
@@ -18,12 +19,13 @@ const bookClubPreview: CommunityDraftPreviewData = {
 };
 
 describe("CommunityDraftPreview", () => {
-  it("shows the draft card inside the preview frame", () => {
+  it("shows the draft card inside the preview frame", async () => {
     render(
       <TestProviders>
         <CommunityDraftPreview preview={bookClubPreview} />
       </TestProviders>,
     );
+    await awaitCatalog("admin", "communities");
     const frame = screen.getByRole("region", {
       name: /creatorDrafts\.preview\.label|preview/i,
     });
@@ -33,7 +35,7 @@ describe("CommunityDraftPreview", () => {
     expect(within(frame).getByText("@transbookclubporto")).toBeInTheDocument();
   });
 
-  it("renders the card alone at phone width, with no wizard column, label or note", () => {
+  it("renders the card alone at phone width, with no wizard column, label or note", async () => {
     // The wizard's `.previewCol` hides itself below 980px, and jsdom applies
     // no CSS, so the guard is that the staff root never carries that class.
     const originalWidth = window.innerWidth;
@@ -44,6 +46,7 @@ describe("CommunityDraftPreview", () => {
         <CommunityDraftPreview preview={bookClubPreview} />
       </TestProviders>,
     );
+    await awaitCatalog("admin", "communities");
     const frame = screen.getByRole("region", {
       name: /creatorDrafts\.preview\.label|preview/i,
     });
@@ -57,7 +60,7 @@ describe("CommunityDraftPreview", () => {
     window.innerWidth = originalWidth;
   });
 
-  it("keeps the empty draft's values for a malformed payload", () => {
+  it("keeps the empty draft's values for a malformed payload", async () => {
     const malformed = {
       name: 42,
       purpose: ["x"],
@@ -76,6 +79,7 @@ describe("CommunityDraftPreview", () => {
         <CommunityDraftPreview preview={malformed} />
       </TestProviders>,
     );
+    await awaitCatalog("admin", "communities");
     expect(
       screen.getByRole("region", {
         name: /creatorDrafts\.preview\.label|preview/i,

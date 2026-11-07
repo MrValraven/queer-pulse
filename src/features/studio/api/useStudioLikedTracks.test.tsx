@@ -33,6 +33,10 @@ vi.mock("../../../app/providers/DemoModeProvider", () => ({
 vi.mock("./useStudioAccess", () => ({
   useStudioAccess: () => ({ hasAccess: true }),
 }));
+// A signed-in live member: the heart keys its liked-status lookup by them.
+vi.mock("../../../app/providers/useStorageScope", () => ({
+  useStorageScope: () => "member-1",
+}));
 vi.mock("./studioLiked.api", () => ({
   getStudioLikedTracks: (cursor: string | null) => getStudioLikedTracks(cursor),
 }));

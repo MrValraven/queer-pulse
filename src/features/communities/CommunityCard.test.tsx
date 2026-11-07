@@ -59,7 +59,11 @@ describe("CommunityCard", () => {
     // i18n catalogs load lazily, so the first assertion needs findBy*.
     expect(await screen.findByText("Request")).toBeInTheDocument();
     expect(screen.queryByText("Enter quietly")).not.toBeInTheDocument();
-    // The demo registry's "coming-out" roster owner never renders in live mode.
+    // The demo registry's "coming-out" roster owner never renders in live
+    // mode, as a portrait or as initials.
+    expect(
+      screen.queryByRole("img", { name: "Catarina Vaz" }),
+    ).not.toBeInTheDocument();
     expect(screen.queryByText("CV")).not.toBeInTheDocument();
   });
 
@@ -69,7 +73,10 @@ describe("CommunityCard", () => {
 
     expect(await screen.findByText("Enter quietly")).toBeInTheDocument();
     expect(screen.queryByText("Request")).not.toBeInTheDocument();
-    expect(screen.getByText("CV")).toBeInTheDocument();
+    // The roster owner's avatar shows her portrait, named by its alt text.
+    expect(
+      screen.getByRole("img", { name: "Catarina Vaz" }),
+    ).toBeInTheDocument();
   });
 
   it("live mode shows the DTO's weekly activity", async () => {

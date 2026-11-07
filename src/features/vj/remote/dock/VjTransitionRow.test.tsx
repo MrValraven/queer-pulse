@@ -9,6 +9,7 @@ import { LazyMotion, domMax } from "motion/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { VjTempo, VjTransition } from "../../../../shared/contracts/vj";
 import { TestProviders } from "../../../../test/TestProviders";
+import { awaitCatalogUnderFakeTimers } from "../../../../test/awaitCatalogUnderFakeTimers";
 import type { VjCommandOutcome } from "../../live/vjStageCommands";
 import { VjTransitionRow, type VjTransitionRowProps } from "./VjTransitionRow";
 
@@ -42,7 +43,7 @@ const ACKED: VjCommandOutcome = {
   applyAt: null,
 };
 
-function renderRow(overrides: Partial<VjTransitionRowProps> = {}) {
+async function renderRow(overrides: Partial<VjTransitionRowProps> = {}) {
   const setTransition = vi.fn<VjTransitionRowProps["setTransition"]>(() =>
     Promise.resolve(ACKED),
   );
@@ -74,6 +75,7 @@ function renderRow(overrides: Partial<VjTransitionRowProps> = {}) {
     </TestProviders>
   );
   const view = render(wrap(props));
+  await awaitCatalogUnderFakeTimers("vj");
   const rerenderWith = (patch: Partial<VjTransitionRowProps>) =>
     view.rerender(wrap({ ...props, ...patch }));
   return {
@@ -111,16 +113,16 @@ afterEach(() => {
 });
 
 describe("VjTransitionRow", () => {
-  it("picking iris sends the mode", () => {
-    const { setTransition } = renderRow();
+  it("picking iris sends the mode", async () => {
+    const { setTransition } = await renderRow();
     openPicker();
     fireEvent.click(screen.getByRole("button", { name: "Iris" }));
     expect(setTransition).toHaveBeenCalledWith({ mode: "iris" });
     expect(document.querySelector("[data-vj-transition-row]")).not.toBeNull();
   });
 
-  it("picking dip to white asks for flash consent first", () => {
-    const { setTransition, onNeedFlashConsent } = renderRow();
+  it("picking dip to white asks for flash consent first", async () => {
+    const { setTransition, onNeedFlashConsent } = await renderRow();
     openPicker();
     fireEvent.click(screen.getByRole("button", { name: "Dip to white" }));
     expect(setTransition).not.toHaveBeenCalled();
@@ -135,8 +137,8 @@ describe("VjTransitionRow", () => {
     expect(setTransition).toHaveBeenCalledWith({ mode: "dipWhite" });
   });
 
-  it("with consent given, dip to white sends at once", () => {
-    const { setTransition, onNeedFlashConsent } = renderRow({
+  it("with consent given, dip to white sends at once", async () => {
+    const { setTransition, onNeedFlashConsent } = await renderRow({
       hasFlashConsent: true,
     });
     openPicker();
@@ -146,7 +148,7 @@ describe("VjTransitionRow", () => {
   });
 
   it("a refused mode rolls back and names the reason", async () => {
-    const { setTransition, onRefused } = renderRow();
+    const { setTransition, onRefused } = await renderRow();
     setTransition.mockResolvedValueOnce({
       ok: false,
       code: "vj_transition_mode_invalid",
@@ -162,15 +164,20 @@ describe("VjTransitionRow", () => {
         expect.objectContaining({
           errorKey: "vj:error.socket.transitionModeInvalid",
         }),
+        "mode",
       );
     });
+    // The rollback is a state update from the refused send's continuation,
+    // so its render lands on a later task than the onRefused call.
     expect(
-      screen.getByRole("button", { name: "Transition: Fade. Change it" }),
+      await screen.findByRole("button", {
+        name: "Transition: Fade. Change it",
+      }),
     ).not.toBeNull();
   });
 
-  it("beat chips send a beats length", () => {
-    const { setTransition } = renderRow({ transition: FADE_BEATS });
+  it("beat chips send a beats length", async () => {
+    const { setTransition } = await renderRow({ transition: FADE_BEATS });
     const fourBeats = screen.getByRole("button", { name: "4 beats" });
     expect(fourBeats.getAttribute("aria-pressed")).toBe("true");
     fireEvent.click(screen.getByRole("button", { name: "8 beats" }));
@@ -179,9 +186,9 @@ describe("VjTransitionRow", () => {
     });
   });
 
-  it("the ms slider throttles and sends the final value", () => {
+  it("the ms slider throttles and sends the final value", async () => {
     vi.useFakeTimers();
-    const { setTransition } = renderRow();
+    const { setTransition } = await renderRow();
     const slider = screen.getByRole("slider");
     fireEvent.change(slider, { target: { value: "1000" } });
     fireEvent.change(slider, { target: { value: "1100" } });
@@ -197,8 +204,8 @@ describe("VjTransitionRow", () => {
     });
   });
 
-  it("switching units converts at the stage tempo", () => {
-    const msRow = renderRow();
+  it("switching units converts at the stage tempo", async () => {
+    const msRow = await renderRow();
     openPicker();
     fireEvent.click(screen.getByRole("button", { name: "Beats" }));
     // 800 ms at 120 BPM is 1.6 beats; the nearest count is 2.
@@ -207,7 +214,7 @@ describe("VjTransitionRow", () => {
     });
     msRow.unmount();
 
-    const beatsRow = renderRow({ transition: FADE_BEATS });
+    const beatsRow = await renderRow({ transition: FADE_BEATS });
     openPicker();
     fireEvent.click(screen.getByRole("button", { name: "Seconds" }));
     // 4 beats at 120 BPM is 2000 ms.
@@ -217,7 +224,7 @@ describe("VjTransitionRow", () => {
   });
 
   it("cut hides the length control", async () => {
-    const { rerenderWith } = renderRow({ transition: FADE_BEATS });
+    const { rerenderWith } = await renderRow({ transition: FADE_BEATS });
     expect(document.querySelector("[data-vj-length]")).not.toBeNull();
     rerenderWith({
       transition: { ...FADE_BEATS, mode: "cut" },
@@ -228,8 +235,8 @@ describe("VjTransitionRow", () => {
     });
   });
 
-  it("the speed popover sends 4x", () => {
-    const { setSpeed } = renderRow();
+  it("the speed popover sends 4x", async () => {
+    const { setSpeed } = await renderRow();
     fireEvent.click(
       screen.getByRole("button", { name: "Clip speed, 1x. Change it" }),
     );
@@ -237,8 +244,8 @@ describe("VjTransitionRow", () => {
     expect(setSpeed).toHaveBeenCalledWith(4);
   });
 
-  it("the speed popover notes that a live GIF keeps its own speed", () => {
-    renderRow({ liveMediaKind: "gif" });
+  it("the speed popover notes that a live GIF keeps its own speed", async () => {
+    await renderRow({ liveMediaKind: "gif" });
     fireEvent.click(
       screen.getByRole("button", { name: "Clip speed, 1x. Change it" }),
     );
@@ -247,9 +254,9 @@ describe("VjTransitionRow", () => {
     ).not.toBeNull();
   });
 
-  it("a blocked row points each disabled control at the reason line", () => {
+  it("a blocked row points each disabled control at the reason line", async () => {
     const blocked = { isBlocked: true, blockedReasonId: "status-line" };
-    const beatsRow = renderRow({ ...blocked, transition: FADE_BEATS });
+    const beatsRow = await renderRow({ ...blocked, transition: FADE_BEATS });
     const row = document.querySelector("[data-vj-transition-row]");
     if (row === null) throw new Error("transition row not rendered");
     const beatChips = disabledControlsIn(row);
@@ -267,7 +274,7 @@ describe("VjTransitionRow", () => {
     }
     beatsRow.unmount();
 
-    renderRow(blocked);
+    await renderRow(blocked);
     expect(describedByIdsOf(screen.getByRole("slider"))).toEqual([
       "status-line",
     ]);
@@ -281,8 +288,8 @@ describe("VjTransitionRow", () => {
     }
   });
 
-  it("an open row names no reason on its controls", () => {
-    renderRow({ transition: FADE_BEATS, blockedReasonId: "status-line" });
+  it("an open row names no reason on its controls", async () => {
+    await renderRow({ transition: FADE_BEATS, blockedReasonId: "status-line" });
     const picker = openPicker();
     const controls = [
       ...screen.getAllByRole("button", { name: /beats?$/ }),

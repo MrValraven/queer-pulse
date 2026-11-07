@@ -6,6 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useSubmitReview } from "./api/useSubmitReview";
 import { DirectoryReviewComposer } from "./DirectoryReviewComposer";
+import { directoryReviewSubmitToast } from "./marketingErrorCopy";
 import s from "./DirectorySpacePage.module.css";
 
 /**
@@ -75,11 +76,8 @@ export function DirectoryReviewForm({
             );
             onPosted?.();
           },
-          onError: () =>
-            showToast(
-              t("marketing:directory.detail.review.errorToast"),
-              "error",
-            ),
+          onError: (error) =>
+            showToast(directoryReviewSubmitToast(error, t), "error"),
         })
       }
     />

@@ -81,7 +81,7 @@ describe("EditRunByModal", () => {
     rerender(renderModal(false, [tour]));
     expect(
       await screen.findByLabelText("Run by one of your businesses"),
-    ).toHaveValue(tour.id);
+    ).toHaveTextContent(tour.name);
     expect(screen.getByRole("button", { name: /save/i })).toBeDisabled();
   });
 
@@ -102,12 +102,13 @@ describe("EditRunByModal", () => {
     const picker = await screen.findByLabelText(
       "Run by one of your businesses",
     );
-    expect(picker).toHaveValue(notMine.ref);
+    expect(picker).toHaveTextContent(notMine.name);
     expect(
       screen.queryByText(/Only someone who runs that business/),
     ).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: /save/i })).toBeDisabled();
-    fireEvent.change(picker, { target: { value: "" } });
+    fireEvent.click(picker);
+    fireEvent.click(screen.getByRole("option", { name: "No business" }));
     fireEvent.click(screen.getByRole("button", { name: /save/i }));
     await waitFor(() =>
       expect(onSave).toHaveBeenCalledWith({ listingId: null, listing: null }),
@@ -127,13 +128,12 @@ describe("EditRunByModal", () => {
         />
       </I18nProvider>,
     );
-    // Pick the tour through the Select, however it renders its options (read
-    // shared/components/ui/Select.tsx for the role and drive it with
-    // fireEvent; a native select takes fireEvent.change with the item id).
+    // The picker is the shared Select: a trigger button that opens a listbox.
     const picker = await screen.findByLabelText(
       "Run by one of your businesses",
     );
-    fireEvent.change(picker, { target: { value: tour.id } });
+    fireEvent.click(picker);
+    fireEvent.click(screen.getByRole("option", { name: tour.name }));
     fireEvent.click(screen.getByRole("button", { name: /save/i }));
     await waitFor(() =>
       expect(

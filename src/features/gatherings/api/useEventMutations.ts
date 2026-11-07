@@ -217,6 +217,9 @@ export function useRsvp(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, RsvpIntent, RsvpContext>({
+    // The caller words this failure itself (gatheringActionErrors.ts), so the
+    // app-wide mutation toast would only repeat it.
+    meta: { silentError: true },
     mutationFn: async (intent) => {
       if (demoMode) return;
       await rsvpEvent(slug, intent === "waitlisted" ? "going" : intent);
@@ -261,6 +264,9 @@ export function useUnrsvp(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, void, RsvpContext>({
+    // The caller words this failure itself (gatheringActionErrors.ts), so the
+    // app-wide mutation toast would only repeat it.
+    meta: { silentError: true },
     mutationFn: async () => {
       if (demoMode) return;
       await unrsvpEvent(slug);
@@ -417,6 +423,9 @@ export function useInviteMembers(slug: string) {
   const { apiTarget } = useEventHostScope();
   const queryClient = useQueryClient();
   return useMutation<InviteMembersOutcome, Error, string[]>({
+    // The caller words this failure itself (gatheringActionErrors.ts), so the
+    // app-wide mutation toast would only repeat it.
+    meta: { silentError: true },
     mutationFn: async (slugs) => {
       if (demoMode) {
         return { createdCount: slugs.length, alreadyInvitedCount: 0 };
@@ -442,6 +451,9 @@ export function useRemoveAttendee(slug: string) {
   const { apiTarget } = useEventHostScope();
   const queryClient = useQueryClient();
   return useMutation<void, Error, string>({
+    // The caller words this failure itself (gatheringActionErrors.ts), so the
+    // app-wide mutation toast would only repeat it.
+    meta: { silentError: true },
     mutationFn: async (memberSlug) => {
       if (demoMode) return;
       await removeAttendee(slug, memberSlug, apiTarget);
@@ -463,6 +475,9 @@ export function usePromoteAttendee(slug: string) {
   const { apiTarget } = useEventHostScope();
   const queryClient = useQueryClient();
   return useMutation<void, Error, string>({
+    // The caller words this failure itself (gatheringActionErrors.ts), so the
+    // app-wide mutation toast would only repeat it.
+    meta: { silentError: true },
     mutationFn: async (memberSlug) => {
       if (demoMode) return;
       await promoteAttendee(slug, memberSlug, apiTarget);
@@ -484,6 +499,9 @@ export function useUpdateRsvpDetails(slug: string | undefined) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<RsvpDetailsDTO | void, Error, UpdateRsvpDetailsDto>({
+    // The caller words this failure itself (gatheringActionErrors.ts), so the
+    // app-wide mutation toast would only repeat it.
+    meta: { silentError: true },
     mutationFn: async (dto) => {
       if (demoMode || !slug) return;
       return updateRsvpDetails(slug, dto);

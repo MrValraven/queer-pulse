@@ -80,22 +80,32 @@ describe("groupErrorToastKey", () => {
 
 describe("groupErrorMessage", () => {
   it("translates the mapped key for a recognised code", () => {
-    expect(
-      groupErrorMessage(coded(409, "GROUP_ADD_REFUSED"), identityT, "fallback"),
-    ).toBe("messages:group.error.addRefused");
+    expect(groupErrorMessage(coded(409, "GROUP_ADD_REFUSED"), identityT)).toBe(
+      "messages:group.error.addRefused",
+    );
   });
 
   it("interpolates the member cap into GROUP_FULL's shared toast", () => {
-    expect(
-      groupErrorMessage(coded(409, "GROUP_FULL"), identityT, "fallback"),
-    ).toBe(
+    expect(groupErrorMessage(coded(409, "GROUP_FULL"), identityT)).toBe(
       `messages:group.fullToast:${JSON.stringify({ max: MAX_GROUP_MEMBERS })}`,
     );
   });
 
-  it("falls back for an un-coded error", () => {
-    expect(
-      groupErrorMessage(new ApiError(500, "boom"), identityT, "fallback"),
-    ).toBe("fallback");
+  it("names the shared cause for an un-coded error", () => {
+    expect(groupErrorMessage(new ApiError(500, "boom"), identityT)).toBe(
+      "shared:apiError.serverFault",
+    );
+    expect(groupErrorMessage(new ApiError(429, "slow"), identityT)).toBe(
+      "shared:apiError.reasonRateLimited",
+    );
+    expect(groupErrorMessage(new ApiError(404, "gone"), identityT)).toBe(
+      "shared:apiError.notFound",
+    );
+  });
+
+  it("names a lost connection for an error that is not an ApiError", () => {
+    expect(groupErrorMessage(new TypeError("Failed to fetch"), identityT)).toBe(
+      "shared:apiError.noConnection",
+    );
   });
 });

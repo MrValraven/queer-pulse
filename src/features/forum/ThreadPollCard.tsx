@@ -1,5 +1,6 @@
 import { useId, useState } from "react";
 import { FiClock, FiLock } from "react-icons/fi";
+import type { CauseErrorCopy } from "../../shared/api/causeErrorKey";
 import { Button } from "../../shared/components/ui";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../shared/i18n/format";
@@ -43,8 +44,8 @@ export function ThreadPollCard({
   /** Cast the whole selection. Re-voting replaces the previous answer. */
   onVote: (optionIds: string[]) => void;
   isVoting: boolean;
-  /** Why the last ballot did not land, or null. */
-  error: "closed" | "failed" | null;
+  /** Why the last ballot did not land (a catalog key and its values), or null. */
+  error: CauseErrorCopy | null;
 }) {
   const { t } = useTranslation();
   const format = useFormat();
@@ -122,11 +123,7 @@ export function ThreadPollCard({
 
       {error && (
         <p className={styles.error} role="alert">
-          {t(
-            error === "closed"
-              ? "forum:poll.voteFailedClosed"
-              : "forum:poll.voteFailed",
-          )}
+          {t(error.key, error.values)}
         </p>
       )}
     </section>

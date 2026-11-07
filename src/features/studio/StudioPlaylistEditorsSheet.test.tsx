@@ -1,4 +1,5 @@
 import {
+  act,
   fireEvent,
   render,
   screen,
@@ -8,7 +9,9 @@ import {
 import { AnimatePresence } from "motion/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../shared/api/client";
+import { loadNamespace } from "../../shared/i18n/catalogs";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { toPlaylistEditorView, toPlaylistView } from "./api/studio.adapters";
 import {
   demoStudioPlaylist,
@@ -40,13 +43,6 @@ vi.mock("./api/studioDemoPlaylistEditors", async (importOriginal) => {
       }
       return original.demoInvitePlaylistEditors(...args);
     },
-    demoPlaylistEditors: (
-      ...args: Parameters<typeof original.demoPlaylistEditors>
-    ) => {
-      if (control.isEditorsListFailing)
-        throw new ApiError(500, "failed", { statusCode: 500 });
-      return original.demoPlaylistEditors(...args);
-    },
     demoPlaylistEditorCandidates: (
       ...args: Parameters<typeof original.demoPlaylistEditorCandidates>
     ) => {
@@ -66,6 +62,32 @@ vi.mock("./api/studioDemoPlaylistEditors", async (importOriginal) => {
   };
 });
 
+// The editors list fails at the hook: the hook's first dynamic import of the
+// demo module above receives the unmocked module under Vitest 3.2, so a throw
+// placed in the demo reader never reaches the list.
+vi.mock("./api/useStudioPlaylistEditors", async (importOriginal) => {
+  const original =
+    await importOriginal<typeof import("./api/useStudioPlaylistEditors")>();
+  return {
+    ...original,
+    useStudioPlaylistEditors: (
+      ...args: Parameters<typeof original.useStudioPlaylistEditors>
+    ) => {
+      const result = original.useStudioPlaylistEditors(...args);
+      if (!control.isEditorsListFailing) return result;
+      return {
+        editors: [],
+        loadState: {
+          ...result.loadState,
+          isLoading: false,
+          isError: true,
+          reason: "server" as const,
+        },
+      };
+    },
+  };
+});
+
 beforeEach(() => {
   resetDemoPlaylists();
   control.inviteRefusal = null;
@@ -74,7 +96,10 @@ beforeEach(() => {
   removeSpy.mockClear();
 });
 
-function renderSheet(playlistId: string) {
+async function renderSheet(
+  playlistId: string,
+  { shouldWaitForData = true }: { shouldWaitForData?: boolean } = {},
+) {
   const onClose = vi.fn();
   render(
     <TestProviders>
@@ -86,18 +111,45 @@ function renderSheet(playlistId: string) {
       </AnimatePresence>
     </TestProviders>,
   );
+  if (shouldWaitForData) await awaitCatalog("studio");
+  else await paintCatalogBeforeData();
   return onClose;
+}
+
+/** Paints the studio copy on microtasks only. awaitCatalog yields a task,
+ *  and React Query hands a read's answer over on a task, so the sheet is
+ *  still loading when this returns. */
+async function paintCatalogBeforeData() {
+  await act(async () => {
+    await loadNamespace("en", "studio");
+    for (let tick = 0; tick < 5; tick += 1) await Promise.resolve();
+  });
 }
 
 const GROUP_CHAT = "demo-playlist-for-the-group-chat";
 const CARTAS = "demo-playlist-cartas-que-voltam";
 
+/** Invite editors answers a press only once the editors have loaded. */
+async function pressInviteEditors() {
+  const inviteButton = await screen.findByRole("button", {
+    name: "Invite editors",
+  });
+  await waitFor(() =>
+    expect(inviteButton).not.toHaveAttribute("aria-disabled"),
+  );
+  fireEvent.click(inviteButton);
+}
+
+/** The toast deck keeps an empty alert region mounted, so a refusal is read
+ *  inside the sheet. */
+function withinSheet() {
+  return within(screen.getByRole("dialog"));
+}
+
 /** Opens Invite editors on the group chat, ticks Anika and sends. */
 async function inviteAnikaToGroupChat() {
-  renderSheet(GROUP_CHAT);
-  fireEvent.click(
-    await screen.findByRole("button", { name: "Invite editors" }),
-  );
+  await renderSheet(GROUP_CHAT);
+  await pressInviteEditors();
   fireEvent.change(
     await screen.findByPlaceholderText("Search your connections"),
     { target: { value: "ani" } },
@@ -108,11 +160,11 @@ async function inviteAnikaToGroupChat() {
 
 describe("StudioPlaylistEditorsSheet", () => {
   it("shows the owner active editors and a pending invite with their actions", async () => {
-    renderSheet(GROUP_CHAT);
+    await renderSheet(GROUP_CHAT);
     const list = await screen.findByRole("list", {
       name: "Editors of For the group chat",
     });
-    expect(within(list).getByText("Catarina Vaz")).toBeInTheDocument();
+    expect(await within(list).findByText("Catarina Vaz")).toBeInTheDocument();
     expect(within(list).getByText("Invite sent")).toBeInTheDocument();
     expect(
       within(list).getByRole("button", {
@@ -128,7 +180,7 @@ describe("StudioPlaylistEditorsSheet", () => {
   });
 
   it("cancels an invite at once and removes an editor after a confirm", async () => {
-    renderSheet(GROUP_CHAT);
+    await renderSheet(GROUP_CHAT);
     fireEvent.click(
       await screen.findByRole("button", {
         name: "Cancel the invite to Luísa Gomes",
@@ -160,10 +212,8 @@ describe("StudioPlaylistEditorsSheet", () => {
   });
 
   it("re-ticks a pick that an earlier search pinned", async () => {
-    renderSheet(GROUP_CHAT);
-    fireEvent.click(
-      await screen.findByRole("button", { name: "Invite editors" }),
-    );
+    await renderSheet(GROUP_CHAT);
+    await pressInviteEditors();
     const search = await screen.findByPlaceholderText(
       "Search your connections",
     );
@@ -207,7 +257,7 @@ describe("StudioPlaylistEditorsSheet", () => {
       },
     };
     await inviteAnikaToGroupChat();
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await withinSheet().findByRole("alert")).toHaveTextContent(
       "Anika Kovač doesn't have Studio access yet, so they can't edit playlists. Untick them and try again",
     );
   });
@@ -221,7 +271,7 @@ describe("StudioPlaylistEditorsSheet", () => {
       },
     };
     await inviteAnikaToGroupChat();
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await withinSheet().findByRole("alert")).toHaveTextContent(
       "Anika Kovač can't be invited right now. Untick them and try again",
     );
   });
@@ -232,7 +282,7 @@ describe("StudioPlaylistEditorsSheet", () => {
       body: { code: "studio_playlist_editor_cap" },
     };
     await inviteAnikaToGroupChat();
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await withinSheet().findByRole("alert")).toHaveTextContent(
       "A playlist can have up to 10 editors and invites",
     );
   });
@@ -247,17 +297,17 @@ describe("StudioPlaylistEditorsSheet", () => {
       },
     };
     await inviteAnikaToGroupChat();
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await withinSheet().findByRole("alert")).toHaveTextContent(
       "Anika Kovač isn't one of your connections anymore",
     );
     fireEvent.click(screen.getByRole("option", { name: /Anika Kovač/ }));
     await waitFor(() =>
-      expect(screen.queryByRole("alert")).not.toBeInTheDocument(),
+      expect(withinSheet().queryByRole("alert")).not.toBeInTheDocument(),
     );
   });
 
   it("moves focus to Invite editors once a cancelled invite leaves", async () => {
-    renderSheet(GROUP_CHAT);
+    await renderSheet(GROUP_CHAT);
     fireEvent.click(
       await screen.findByRole("button", {
         name: "Cancel the invite to Luísa Gomes",
@@ -272,7 +322,7 @@ describe("StudioPlaylistEditorsSheet", () => {
   });
 
   it("moves focus to Invite editors once a confirmed remove closes the confirm", async () => {
-    renderSheet(GROUP_CHAT);
+    await renderSheet(GROUP_CHAT);
     fireEvent.click(
       await screen.findByRole("button", {
         name: "Remove Catarina Vaz as an editor",
@@ -302,7 +352,7 @@ describe("StudioPlaylistEditorsSheet", () => {
 
 describe("StudioPlaylistEditorsSheet by credit and role", () => {
   it("lets the owner of a persona playlist tick its co-owners", async () => {
-    renderSheet("demo-playlist-cartas-que-voltam");
+    await renderSheet("demo-playlist-cartas-que-voltam");
     const list = await screen.findByRole("list", {
       name: "Co-owners of Mariana Sol",
     });
@@ -326,7 +376,7 @@ describe("StudioPlaylistEditorsSheet by credit and role", () => {
   });
 
   it("shows a loading skeleton while the co-owners load", async () => {
-    renderSheet(CARTAS);
+    await renderSheet(CARTAS, { shouldWaitForData: false });
     expect(
       screen.getByRole("status", { name: "Loading editors" }),
     ).toBeInTheDocument();
@@ -340,7 +390,7 @@ describe("StudioPlaylistEditorsSheet by credit and role", () => {
 
   it("keeps an editor who lost the co-owner grant ticked so the owner can untick them", async () => {
     control.hiddenCandidateSlug = "rita";
-    renderSheet(CARTAS);
+    await renderSheet(CARTAS);
     const list = await screen.findByRole("list", {
       name: "Co-owners of Mariana Sol",
     });
@@ -368,7 +418,7 @@ describe("StudioPlaylistEditorsSheet by credit and role", () => {
 
   it("says the editors did not load when an untick finds no editor row", async () => {
     control.isEditorsListFailing = true;
-    renderSheet(CARTAS);
+    await renderSheet(CARTAS);
     const list = await screen.findByRole("list", {
       name: "Co-owners of Mariana Sol",
     });
@@ -416,6 +466,7 @@ describe("StudioPlaylistEditorsSheet by credit and role", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(screen.queryByRole("link", { name: "Former member" })).toBeNull();
     fireEvent.click(
       screen.getByRole("button", { name: "Remove Former member as an editor" }),
@@ -435,7 +486,7 @@ describe("StudioPlaylistEditorsSheet by credit and role", () => {
   });
 
   it("shows an editor the active list with no actions", async () => {
-    renderSheet("demo-playlist-tour-diary");
+    await renderSheet("demo-playlist-tour-diary");
     const list = await screen.findByRole("list", {
       name: "Editors of Tour diary",
     });

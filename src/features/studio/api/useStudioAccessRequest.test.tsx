@@ -93,11 +93,14 @@ describe("studio access request hooks", () => {
       result.current.request.mutateAsync({ wantsToRelease: true }),
     );
     expect(mocks.create).toHaveBeenCalledWith({ wantsToRelease: true });
-    expect(result.current.state).toMatchObject({
-      isKnown: true,
-      hasPendingRequest: true,
-      wantsToRelease: true,
-    });
+    // The answer reaches the cached state after the mutation resolves.
+    await waitFor(() =>
+      expect(result.current.state).toMatchObject({
+        isKnown: true,
+        hasPendingRequest: true,
+        wantsToRelease: true,
+      }),
+    );
     expect(mocks.getStudioMe).toHaveBeenCalledTimes(1);
   });
 
@@ -154,11 +157,13 @@ describe("studio access request hooks", () => {
     );
     await act(() => result.current.cancel.mutateAsync());
     expect(mocks.cancel).toHaveBeenCalledTimes(1);
-    expect(result.current.state).toMatchObject({
-      isKnown: true,
-      hasPendingRequest: false,
-      wantsToRelease: false,
-    });
+    await waitFor(() =>
+      expect(result.current.state).toMatchObject({
+        isKnown: true,
+        hasPendingRequest: false,
+        wantsToRelease: false,
+      }),
+    );
   });
 
   it("reads a request flag that is not true as false", async () => {

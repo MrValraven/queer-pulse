@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { FileList } from "./StudioUploadFileList";
 import type { StudioUploadAnalysis } from "./upload/useStudioUploadAnalysis";
 import type { StudioTrackUploads, UploadRow } from "./useStudioTrackUploads";
@@ -69,6 +70,7 @@ describe("FileList removal", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(
       await screen.findByRole("button", { name: /remove track 1, tide/i }),
     );
@@ -79,7 +81,7 @@ describe("FileList removal", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "People who saved it will see it as no longer available",
+        "People who saved it will see it as no longer available, and it comes off every playlist it's on",
       ),
     ).toBeInTheDocument();
     expect(remove).not.toHaveBeenCalled();
@@ -100,6 +102,7 @@ describe("FileList removal", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(
       await screen.findByRole("button", { name: /remove track 2, pier/i }),
     );
@@ -119,6 +122,7 @@ describe("FileList removal", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       await screen.findByRole("button", { name: /move track 2, pier, up/i }),
     ).toBeInTheDocument();
@@ -142,6 +146,7 @@ describe("FileList rejections", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(await screen.findByText(/episode\.mp3/)).toHaveTextContent(/250/);
   });
 });

@@ -5,15 +5,18 @@ import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
 import { GatheringPreviewProvider } from "./GatheringPreviewProvider";
 import { useGatheringPreview } from "./gatheringPreviewContext";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 
-function renderInPreview(children: ReactNode) {
-  return render(
+async function renderInPreview(children: ReactNode) {
+  const view = render(
     <TestProviders>
       <GatheringPreviewProvider viewAs="member">
         {children}
       </GatheringPreviewProvider>
     </TestProviders>,
   );
+  await awaitCatalog("gatherings");
+  return view;
 }
 
 function Probe() {
@@ -23,7 +26,7 @@ function Probe() {
 describe("GatheringPreviewProvider", () => {
   it("turns a guest action into a toast", async () => {
     const onReserve = vi.fn();
-    renderInPreview(<button onClick={onReserve}>Reserve a seat</button>);
+    await renderInPreview(<button onClick={onReserve}>Reserve a seat</button>);
 
     await userEvent.click(
       screen.getByRole("button", { name: "Reserve a seat" }),
@@ -37,7 +40,7 @@ describe("GatheringPreviewProvider", () => {
 
   it("stops a guest action pressed from the keyboard", async () => {
     const onReserve = vi.fn();
-    renderInPreview(<button onClick={onReserve}>Reserve a seat</button>);
+    await renderInPreview(<button onClick={onReserve}>Reserve a seat</button>);
 
     screen.getByRole("button", { name: "Reserve a seat" }).focus();
     await userEvent.keyboard("{Enter}");
@@ -47,7 +50,7 @@ describe("GatheringPreviewProvider", () => {
 
   it("never submits a form, Enter in a text field included", async () => {
     const onSubmit = vi.fn((event: FormEvent) => event.preventDefault());
-    renderInPreview(
+    await renderInPreview(
       <form onSubmit={onSubmit}>
         <input aria-label="Note" />
         <button type="submit">Send</button>
@@ -61,7 +64,7 @@ describe("GatheringPreviewProvider", () => {
 
   it("answers a blocked submission with the toast", async () => {
     const onSubmit = vi.fn((event: FormEvent) => event.preventDefault());
-    renderInPreview(
+    await renderInPreview(
       <form aria-label="Note form" onSubmit={onSubmit}>
         <input aria-label="Note" />
       </form>,
@@ -77,7 +80,7 @@ describe("GatheringPreviewProvider", () => {
 
   it("keeps buttons inside an allowed subtree working", async () => {
     const onSwitch = vi.fn();
-    renderInPreview(
+    await renderInPreview(
       <div data-preview-allow>
         <button onClick={onSwitch}>Going</button>
       </div>,
@@ -88,8 +91,8 @@ describe("GatheringPreviewProvider", () => {
     expect(onSwitch).toHaveBeenCalledTimes(1);
   });
 
-  it("exposes the perspective to the page", () => {
-    renderInPreview(<Probe />);
+  it("exposes the perspective to the page", async () => {
+    await renderInPreview(<Probe />);
     expect(screen.getByText("member")).toBeInTheDocument();
   });
 

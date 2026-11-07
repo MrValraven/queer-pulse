@@ -8,6 +8,7 @@ import {
   queueView,
   renderWithPlayer,
 } from "./studioPlayerTestHarness";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 const YOUR_NEXT = queueItem({
   trackId: "t-yours",
@@ -31,31 +32,35 @@ function renderNextUp(queue: Partial<StudioQueueView>) {
 }
 
 describe("Side panel Next in queue", () => {
-  it("shows your queue's first item ahead of the source", () => {
+  it("shows your queue's first item ahead of the source", async () => {
     renderNextUp({
       userItems: [YOUR_NEXT],
       upcomingSourceItems: [SOURCE_NEXT],
     });
+    await awaitCatalog("studio");
     expect(screen.getByRole("heading", { name: "Next in queue" })).toBeTruthy();
     expect(screen.getByText("B")).toBeTruthy();
     expect(screen.queryByText("Pier")).toBeNull();
   });
 
-  it("shows the source's next item when your queue is empty", () => {
+  it("shows the source's next item when your queue is empty", async () => {
     renderNextUp({ upcomingSourceItems: [SOURCE_NEXT] });
+    await awaitCatalog("studio");
     expect(
       screen.getByRole("button", { name: "Play Pier by NIGHTFORM" }),
     ).toBeTruthy();
   });
 
-  it("plays the next item on click", () => {
+  it("plays the next item on click", async () => {
     const { player } = renderNextUp({ userItems: [YOUR_NEXT] });
+    await awaitCatalog("studio");
     fireEvent.click(screen.getByRole("button", { name: "Play B by X" }));
     expect(player.playEntry).toHaveBeenCalledWith(YOUR_NEXT.queueEntryId);
   });
 
-  it("switches the panel to the queue from Open queue", () => {
+  it("switches the panel to the queue from Open queue", async () => {
     const { onOpenQueue } = renderNextUp({ userItems: [YOUR_NEXT] });
+    await awaitCatalog("studio");
     const heading = screen.getByRole("heading", { name: "Next in queue" });
     // Open queue sits in the section's head row, beside the title.
     fireEvent.click(

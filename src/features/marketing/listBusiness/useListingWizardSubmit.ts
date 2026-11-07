@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { LISTING_SUBMIT_OVERRIDES, failureToast } from "../marketingErrorCopy";
 import {
   TOTAL_STEPS,
   type ListingDraft,
@@ -91,7 +92,15 @@ export function useListingWizardSubmit({
         if (!mountedRef.current) return;
         setPhase("form");
         routeSubmitError(error, () =>
-          showToast(t("marketing:listBusiness.toast.submitError"), "error"),
+          showToast(
+            failureToast(
+              error,
+              t,
+              "marketing:listBusiness.toast.submitErrorTitle",
+              LISTING_SUBMIT_OVERRIDES,
+            ),
+            "error",
+          ),
         );
       }
     },

@@ -11,8 +11,20 @@ afterEach(() => {
 });
 
 function stubScreenWidth(isWide: boolean) {
+  // Every query in the tree reads this stub, and the media-query hook
+  // subscribes to changes, so the list carries no-op listener methods.
   vi.spyOn(window, "matchMedia").mockImplementation(
-    () => ({ matches: isWide }) as MediaQueryList,
+    (query: string) =>
+      ({
+        matches: isWide,
+        media: query,
+        onchange: null,
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        addListener: () => {},
+        removeListener: () => {},
+        dispatchEvent: () => false,
+      }) as MediaQueryList,
   );
 }
 

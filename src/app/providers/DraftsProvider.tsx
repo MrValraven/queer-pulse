@@ -10,6 +10,10 @@ import {
   deleteDraft,
   draftToDto,
 } from "../../features/members/api/drafts.api";
+import {
+  createDraftErrorCopy,
+  removeDraftErrorCopy,
+} from "../../features/members/syncedItemErrors";
 import { setMessageDraftsScope } from "../../features/messages/drafts";
 import { DraftsContext, type DraftsStore } from "./useDrafts";
 
@@ -65,11 +69,12 @@ export function DraftsProvider({ children }: { children: ReactNode }) {
         return existed ? prev : [draft, ...prev];
       });
       if (demoMode || existed) return;
-      createDraft(draftToDto(draft)).catch(() => {
+      createDraft(draftToDto(draft)).catch((error: unknown) => {
         // Roll back the optimistic add on failure, and tell the user — the
         // draft silently disappears otherwise.
         setDrafts((prev) => prev.filter((d) => d.id !== draft.id));
-        showToast(t("common:toast.saveFailed"), "error");
+        const cause = createDraftErrorCopy(error);
+        showToast(t(cause.key, cause.values), "error");
       });
     },
     [setDrafts, demoMode, showToast, t],
@@ -84,13 +89,14 @@ export function DraftsProvider({ children }: { children: ReactNode }) {
       });
       if (demoMode || !removed) return;
       const restore = removed;
-      deleteDraft(id).catch(() => {
+      deleteDraft(id).catch((error: unknown) => {
         // Roll back the optimistic removal on failure (restore newest-first),
         // and tell the user — the draft silently reappears otherwise.
         setDrafts((prev) =>
           prev.some((d) => d.id === id) ? prev : [restore, ...prev],
         );
-        showToast(t("common:toast.removeFailed"), "error");
+        const cause = removeDraftErrorCopy(error);
+        showToast(t(cause.key, cause.values), "error");
       });
     },
     [setDrafts, demoMode, showToast, t],

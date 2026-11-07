@@ -36,6 +36,10 @@ export const connect: Catalog = {
   "toast.withdrawn": "Pedido retirado",
   "toast.unblocked": "Desbloqueaste {name}",
   "toast.actionFailed": "Não foi possível concluir. Tenta novamente.",
+  "toast.requestGone":
+    "Essa conexão já não existe. Atualiza para veres como estão as coisas.",
+  "toast.alreadyAnswered":
+    "Esse pedido já foi respondido ou retirado. Atualiza para veres em que ponto está.",
 
   // Menu "mais" de cada cartão (ConnectionCards)
   "moreMenu.ariaMore": "Mais opções para {name}",
@@ -138,6 +142,8 @@ export const connect: Catalog = {
   "note.saving": "A guardar…",
   "note.cancel": "Cancelar",
   "note.saveFailed": "Não foi possível guardar a nota. Tenta de novo.",
+  "note.error.tooLong":
+    "Essa nota tem mais de 500 caracteres. Encurta-a e guarda outra vez.",
 
   // Idade relativa de um pedido (connections.adapters): as duas expressões que
   // o Intl.RelativeTimeFormat não deriva sozinho.

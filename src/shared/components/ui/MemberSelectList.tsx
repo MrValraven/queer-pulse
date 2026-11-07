@@ -314,8 +314,11 @@ function useHeldPinnedPeople(
       ? [...held.people, ...addedPins]
       : held.people;
   // Adjusting state while rendering: the guard lets this run once per new
-  // query or new pin, and callers without pins never get here.
-  if (pinnedPeople && nextPeople !== held.people) {
+  // query or new pin, and callers without pins never get here. A new query
+  // always records itself, even when the pins are the same array as before:
+  // without that, `held.query` stayed on the old search, every render read as
+  // a query change, and unticking a pin dropped its row on the spot.
+  if (pinnedPeople && (isQueryChanged || nextPeople !== held.people)) {
     setHeld({ query, people: nextPeople });
   }
   return pinnedPeople ? nextPeople : NO_PINNED_PEOPLE;

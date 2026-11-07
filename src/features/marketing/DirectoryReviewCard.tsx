@@ -13,6 +13,7 @@ import { DirectoryReviewMeta } from "./DirectoryReviewMeta";
 import { DirectoryReviewPhoto } from "./DirectoryReviewPhoto";
 import { DirectoryReviewReply } from "./DirectoryReviewReply";
 import { DirectoryReviewText } from "./DirectoryReviewText";
+import { REVIEW_EDIT_OVERRIDES, failureToast } from "./marketingErrorCopy";
 import { DirectoryReportControl } from "./DirectoryReportControl";
 import { Stars } from "./DirectoryStars";
 import s from "./DirectorySpacePage.module.css";
@@ -110,9 +111,14 @@ export function DirectoryReviewCard({
                     "success",
                   );
                 },
-                onError: () =>
+                onError: (error) =>
                   showToast(
-                    t("marketing:directory.detail.review.editErrorToast"),
+                    failureToast(
+                      error,
+                      t,
+                      "marketing:directory.detail.review.editErrorTitle",
+                      REVIEW_EDIT_OVERRIDES,
+                    ),
                     "error",
                   ),
               },

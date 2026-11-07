@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { personaReorderErrorMessage } from "../personaActionErrors";
 import { reorderSubprofiles } from "./subprofiles.api";
 import type { SubprofileView } from "./subprofiles.adapters";
 
@@ -89,14 +90,14 @@ export function useReorderSubprofiles() {
       }
       return { previousSubprofiles };
     },
-    onError: (_error, _variables, context) => {
+    onError: (error, _variables, context) => {
       if (context?.previousSubprofiles) {
         queryClient.setQueryData<SubprofileView[]>(
           queryKey,
           context.previousSubprofiles,
         );
       }
-      showToast(t("subprofiles:mine.order.saveError"), "error");
+      showToast(personaReorderErrorMessage(error, t), "error");
     },
     onSettled: () => {
       // Live only — see the doc comment: a demo invalidate would refetch the

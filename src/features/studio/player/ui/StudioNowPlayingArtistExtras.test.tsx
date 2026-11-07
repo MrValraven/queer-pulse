@@ -6,6 +6,7 @@ import type { StudioSceneEventView } from "../../api/studioDiscovery.adapters";
 import type { StudioNowPlayingArtistState } from "../useStudioNowPlayingArtist";
 import { StudioNowPlayingArtistExtras } from "./StudioNowPlayingArtistExtras";
 import { queueItem } from "./studioPlayerTestHarness";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 const eventsHolder: {
   events: StudioSceneEventView[];
@@ -108,10 +109,11 @@ beforeEach(() => {
 });
 
 describe("StudioNowPlayingArtistExtras", () => {
-  it("shows up to two events with See all to the artist page", () => {
+  it("shows up to two events with See all to the artist page", async () => {
     eventsHolder.events = [1, 2, 3, 4].map(eventView);
     const artist = artistView();
     renderExtras({ status: "ready", artist });
+    await awaitCatalog("studio");
     expect(screen.getByText("River night 1")).toBeInTheDocument();
     expect(screen.getByText("River night 2")).toBeInTheDocument();
     expect(screen.queryByText("River night 3")).not.toBeInTheDocument();
@@ -120,12 +122,13 @@ describe("StudioNowPlayingArtistExtras", () => {
     ).toHaveAttribute("href", artist.artist.href);
   });
 
-  it("heads each section with plain text and its action in the same row", () => {
+  it("heads each section with plain text and its action in the same row", async () => {
     eventsHolder.events = [1].map(eventView);
     renderExtras({
       status: "ready",
       artist: artistView({ supportLinks: SUPPORT_LINKS }, ["r2"]),
     });
+    await awaitCatalog("studio");
     const eventsHeading = screen.getByRole("heading", {
       level: 3,
       name: "Upcoming events",
@@ -154,11 +157,12 @@ describe("StudioNowPlayingArtistExtras", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("lists the support links under Support {name}", () => {
+  it("lists the support links under Support {name}", async () => {
     renderExtras({
       status: "ready",
       artist: artistView({ supportLinks: SUPPORT_LINKS }),
     });
+    await awaitCatalog("studio");
     expect(
       screen.getByRole("heading", { name: "Support NIGHTFORM" }),
     ).toBeInTheDocument();
@@ -178,11 +182,12 @@ describe("StudioNowPlayingArtistExtras", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("shows up to four other releases and leaves out the one playing", () => {
+  it("shows up to four other releases and leaves out the one playing", async () => {
     renderExtras({
       status: "ready",
       artist: artistView({}, ["r-playing", "r2", "r3", "r4", "r5", "r6"]),
     });
+    await awaitCatalog("studio");
     const heading = screen.getByRole("heading", { name: /more from/i });
     expect(heading).toBeInTheDocument();
     const rows = screen.getAllByRole("link", { name: /^Release r/ });

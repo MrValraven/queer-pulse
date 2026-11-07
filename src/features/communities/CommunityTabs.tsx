@@ -28,6 +28,7 @@ import { photoOf, viewerPerson } from "./communityPeople";
 import { AV_CLASS } from "./communityAvatar";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { useCreatePost } from "./api/useCommunityMutations";
+import { communityErrorText } from "./communityErrors";
 import type { PulsePaging } from "./api/useCommunityPosts";
 import styles from "./CommunityDetailPage.module.css";
 
@@ -254,12 +255,12 @@ export function ForumTab({
           setExtraThreads([]);
           showToast(t("communities:detail.forum.postedToast"), "success");
         },
-        onError: () => {
+        onError: (error) => {
           setExtraThreads((prev) =>
             prev.filter((thread) => thread.id !== optimisticId),
           );
           setNewPost(text);
-          showToast(t("communities:common.error"), "error");
+          showToast(communityErrorText(t, error), "error");
         },
       },
     );

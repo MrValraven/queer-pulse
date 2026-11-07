@@ -9,6 +9,7 @@ import {
 } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../../test/TestProviders";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 import type {
   VjPackDTO,
   VjScreenStatus,
@@ -136,13 +137,14 @@ function TopRowHarness({
   );
 }
 
-function renderTopRow(props: Omit<HarnessProps, "setPack"> = {}) {
+async function renderTopRow(props: Omit<HarnessProps, "setPack"> = {}) {
   const setPack = vi.fn(() => Promise.resolve(SENT));
   const utils = render(
     <TestProviders>
       <TopRowHarness {...props} setPack={setPack} />
     </TestProviders>,
   );
+  await awaitCatalog("vj");
   return { setPack, ...utils };
 }
 
@@ -151,8 +153,8 @@ function packTabs() {
 }
 
 describe("VjRemoteTopRow and the pack tabs", () => {
-  it("lists each pack with its ready count", () => {
-    renderTopRow();
+  it("lists each pack with its ready count", async () => {
+    await renderTopRow();
     expect(
       packTabs().getByRole("button", { name: /Disco.*6 of 6 ready/ }),
     ).toHaveAttribute("aria-pressed", "true");
@@ -161,8 +163,8 @@ describe("VjRemoteTopRow and the pack tabs", () => {
     ).toHaveAttribute("aria-pressed", "false");
   });
 
-  it("says Not loaded on the screens for a pack the screens hold nothing of", () => {
-    renderTopRow();
+  it("says Not loaded on the screens for a pack the screens hold nothing of", async () => {
+    await renderTopRow();
     expect(
       packTabs().getByRole("button", {
         name: /Ballroom.*Not loaded on the screens/,
@@ -170,8 +172,8 @@ describe("VjRemoteTopRow and the pack tabs", () => {
     ).toBeInTheDocument();
   });
 
-  it("tapping a ready pack sends setPack at once", () => {
-    const { setPack } = renderTopRow({
+  it("tapping a ready pack sends setPack at once", async () => {
+    const { setPack } = await renderTopRow({
       readinessOf: (packId) =>
         packId === "neon"
           ? { kind: "ready", readyCount: 9, totalCount: 9 }
@@ -187,7 +189,7 @@ describe("VjRemoteTopRow and the pack tabs", () => {
   });
 
   it("tapping a partly loaded pack asks first and Switch pack sends it", async () => {
-    const { setPack } = renderTopRow();
+    const { setPack } = await renderTopRow();
     fireEvent.click(packTabs().getByRole("button", { name: /Neon/ }));
     const dialog = await screen.findByRole("dialog");
     expect(dialog).toHaveTextContent("Switch to Neon?");
@@ -205,7 +207,7 @@ describe("VjRemoteTopRow and the pack tabs", () => {
   });
 
   it("Keep {pack} sends nothing", async () => {
-    const { setPack } = renderTopRow();
+    const { setPack } = await renderTopRow();
     fireEvent.click(packTabs().getByRole("button", { name: /Ballroom/ }));
     const dialog = await screen.findByRole("dialog");
     expect(dialog).toHaveTextContent("haven't loaded this pack yet");
@@ -216,8 +218,8 @@ describe("VjRemoteTopRow and the pack tabs", () => {
     expect(setPack).not.toHaveBeenCalled();
   });
 
-  it("tapping the active pack sends nothing", () => {
-    const { setPack } = renderTopRow();
+  it("tapping the active pack sends nothing", async () => {
+    const { setPack } = await renderTopRow();
     fireEvent.click(packTabs().getByRole("button", { name: /Disco/ }));
     expect(setPack).not.toHaveBeenCalled();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
@@ -243,16 +245,18 @@ describe("VjRemoteTopRow and the pack tabs", () => {
     ).toBeInTheDocument();
   });
 
-  it("the screens button names the screens summary", () => {
-    renderTopRow({ screens: [makeScreen(1, true), makeScreen(2, false)] });
+  it("the screens button names the screens summary", async () => {
+    await renderTopRow({
+      screens: [makeScreen(1, true), makeScreen(2, false)],
+    });
     const screensButton = screen.getByRole("button", {
       name: "Open screens, 1 of 2 screens live",
     });
     expect(screensButton).toHaveAttribute("data-vj-screens", "partial");
   });
 
-  it("Generators switches the grid source with no command", () => {
-    const { setPack } = renderTopRow();
+  it("Generators switches the grid source with no command", async () => {
+    const { setPack } = await renderTopRow();
     const generatorsChip = packTabs().getByRole("button", {
       name: "Generators",
     });

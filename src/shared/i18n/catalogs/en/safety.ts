@@ -32,7 +32,7 @@ export const safety: Catalog = {
   "report.eyebrow": "Safety & Reporting",
   "report.hero.title": "Safety is <em>structural.</em>",
   "report.hero.lead":
-    "Not decorative. Not a page in the footer. Our approach to handling reports, what happens when you make one, and the principles that guide every decision we make.",
+    "Our approach to handling reports, what happens when you make one, and the principles that guide every decision we make.",
 
   // ── Cross-links between the form (ReportPage) and the guide
   //    (ReportingGuidePage) ─────────────────────────────────────────────────
@@ -805,9 +805,9 @@ export const safety: Catalog = {
   // spaces standing in the removed state right now, not removals within a
   // year. Pluralized because it is rendered with a live count.
   "spaces.removed.lead_one":
-    "Verification can be revoked, and it is. A listing isn't a reward a venue keeps forever; it's a standard they keep meeting. When they stop, we say so, and we say why. Right now, {count} space on this list has lost its badge.",
+    "Verification can be revoked, and it is. A listing is a standard a venue keeps meeting. When they stop, we say so, and we say why. Right now, {count} space on this list has lost its badge.",
   "spaces.removed.lead_other":
-    "Verification can be revoked, and it is. A listing isn't a reward a venue keeps forever; it's a standard they keep meeting. When they stop, we say so, and we say why. Right now, {count} spaces on this list have lost theirs.",
+    "Verification can be revoked, and it is. A listing is a standard a venue keeps meeting. When they stop, we say so, and we say why. Right now, {count} spaces on this list have lost theirs.",
   "spaces.removed.step1":
     "<span>3 flags</span> suspend the badge instantly, pending review.",
   "spaces.removed.step2":
@@ -839,6 +839,10 @@ export const safety: Catalog = {
   "spaces.nominate.submitCta": "Submit nomination",
   "spaces.nominate.submitting": "Submitting…",
   "spaces.nominate.error": "That didn't go through. Please try again.",
+  "spaces.nominate.error.rateLimited":
+    "You've sent several nominations in the last minute. Wait a moment, then send the next one.",
+  "spaces.error.gone":
+    "We couldn't find this space. It may have been removed from the directory.",
   "spaces.nominate.thanks.title": "Thank you. We're <em>on it.</em>",
   "spaces.nominate.thanks.textNamed":
     "Your nomination for <strong>{name}</strong> is in. The community is the reason this list means anything. Adding to it is genuinely a gift.",
@@ -935,6 +939,10 @@ export const safety: Catalog = {
   "vouchModal.form.submitting": "Submitting…",
   "vouchModal.form.submitCta": "Add my vouch",
   "vouchModal.form.error": "That didn't go through. Please try again.",
+  "vouchModal.error.notVouchable":
+    "You can't vouch for this space. It may be yours, or it may no longer be a verified safe space or under review.",
+  "vouchModal.error.alreadyVouched":
+    "You've already vouched for this space. Refresh to see your vouch.",
 
   // ── SafeSpaceBadgeStatus.tsx — the honest badge states ────────────────
   "badge.state.none.title": "No safe-space badge",
@@ -970,6 +978,12 @@ export const safety: Catalog = {
   "flag.withdrawCta": "Withdraw",
   "flag.withdrawnToast": "Withdrawn",
   "flag.errorToast": "That didn't go through. Please try again.",
+  "flag.error.notFlaggable":
+    "You can't flag this space. It may be yours, or it may no longer carry the safe-space badge.",
+  "flag.error.rateLimited":
+    "You've sent several flags in the last few minutes. Wait a little before flagging again.",
+  "flag.error.nothingToWithdraw":
+    "There's no open flag of yours to withdraw. It may have been resolved already. Refresh to see where it stands.",
   "flag.modal.title": "Raise something about {name}",
   "flag.modal.sub": "The review team reads every one of these.",
   "flag.modal.privacy":

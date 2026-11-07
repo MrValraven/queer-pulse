@@ -124,3 +124,77 @@
   color: var(--ink-60);
   font-size: var(--text-14);
 }
+
+/* Unpublish confirm: where the piece goes back to. Two quiet cards side by
+   side once the dialog has room, stacked on a narrow sheet. The legend sits
+   closer to its options than to the description above it. */
+.destinationLegend {
+  margin: var(--gap-sm) 0 var(--gap-xs);
+  color: var(--text-strong);
+  font-size: var(--text-14);
+  font-weight: 600;
+}
+
+.destinations {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  gap: var(--gap-xs);
+}
+
+.destination {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: var(--tap-min);
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-12);
+  background: transparent;
+  color: var(--text-strong);
+  font: inherit;
+  font-size: var(--text-14);
+  text-align: start;
+  cursor: pointer;
+  transition-property: background-color, border-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.destination:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) {
+  .destination:hover {
+    background: rgba(var(--ink-rgb), 0.04);
+  }
+}
+
+.destinationOn {
+  border-color: rgba(var(--accent-rgb), 0.55);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+
+.destinationDot {
+  position: relative;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 50%;
+}
+
+.destinationOn .destinationDot {
+  border-color: var(--accent);
+}
+
+.destinationOn .destinationDot::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--accent);
+}

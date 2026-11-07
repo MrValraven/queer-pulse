@@ -5,7 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
 import { useFollow, type FollowResult } from "./api/useFollow";
-import { personaFollowErrorKey } from "./api/personaFollowError";
+import { personaFollowErrorCopy } from "./api/personaFollowError";
 
 /**
  * The persona's follow control: a one-tap Follow/Following toggle. Mirrors
@@ -53,7 +53,8 @@ export function SubprofileFollow({
         : await follow.mutateAsync({ currentFollowerCount: followerCount });
       onFollowResult?.(result);
     } catch (error) {
-      showToast(t(personaFollowErrorKey(error)), "error");
+      const cause = personaFollowErrorCopy(error);
+      showToast(t(cause.key, cause.values), "error");
     }
   }
 

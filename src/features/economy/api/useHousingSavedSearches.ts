@@ -64,6 +64,8 @@ export function useCreateHousingSavedSearch() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation({
+    // HousingSaveSearch words the failure itself (the cause line).
+    meta: { silentError: true },
     mutationFn: async (body: CreateHousingSavedSearchBody) => {
       if (demoMode) {
         const created: HousingSavedSearchDTO = {

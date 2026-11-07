@@ -7,6 +7,7 @@ import {
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { resetDemoCreditLedger } from "./api/studioDemoCreditLedger";
 import { StudioUploadTrackDetails } from "./StudioUploadTrackDetails";
 
@@ -100,13 +101,13 @@ function buildTrackFixture(
   };
 }
 
-function renderDetails(
+async function renderDetails(
   credits: readonly CreditFixture[] = THREE_CREDITS,
   overrides: Partial<TrackFixture> = {},
   releaseType: "ep" | "single" | "mix" | "lip_sync" | "podcast" = "ep",
 ) {
   trackHolder.current = buildTrackFixture(credits, overrides);
-  return render(
+  const rendered = render(
     <TestProviders>
       <StudioUploadTrackDetails
         trackId="track-1"
@@ -117,6 +118,8 @@ function renderDetails(
       />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
+  return rendered;
 }
 
 afterEach(() => {
@@ -128,7 +131,7 @@ beforeEach(() => resetDemoCreditLedger());
 
 describe("StudioUploadTrackDetails remove credit", () => {
   it("moves focus to the next credit's name field", async () => {
-    renderDetails();
+    await renderDetails();
     fireEvent.click(screen.getByRole("button", { name: "Remove credit 2" }));
     await waitFor(() =>
       expect(
@@ -141,7 +144,7 @@ describe("StudioUploadTrackDetails remove credit", () => {
   });
 
   it("moves focus to the previous credit when the last one is removed", async () => {
-    renderDetails();
+    await renderDetails();
     fireEvent.click(screen.getByRole("button", { name: "Remove credit 3" }));
     await waitFor(() =>
       expect(
@@ -154,7 +157,7 @@ describe("StudioUploadTrackDetails remove credit", () => {
   });
 
   it("moves focus to Add a credit when the only credit is removed", async () => {
-    renderDetails([{ name: "Ana", role: "Vocals" }]);
+    await renderDetails([{ name: "Ana", role: "Vocals" }]);
     fireEvent.click(screen.getByRole("button", { name: "Remove credit 1" }));
     await waitFor(() =>
       expect(
@@ -163,8 +166,8 @@ describe("StudioUploadTrackDetails remove credit", () => {
     );
   });
 
-  it("renders all three credits again after a test used a single credit", () => {
-    renderDetails();
+  it("renders all three credits again after a test used a single credit", async () => {
+    await renderDetails();
     expect(screen.getByRole("textbox", { name: "Credit 3 name" })).toHaveValue(
       "Cris",
     );
@@ -173,7 +176,7 @@ describe("StudioUploadTrackDetails remove credit", () => {
 
 describe("StudioUploadTrackDetails timings and chapters", () => {
   it("saves pasted timings and fills empty lyrics from them", async () => {
-    renderDetails(THREE_CREDITS);
+    await renderDetails(THREE_CREDITS);
     fireEvent.click(await screen.findByRole("button", { name: "Add timings" }));
     const dialog = await screen.findByRole("dialog", {
       name: "Time the lyrics",
@@ -199,7 +202,7 @@ describe("StudioUploadTrackDetails timings and chapters", () => {
   });
 
   it("clears timings that no longer match the lyrics", async () => {
-    renderDetails(THREE_CREDITS, {
+    await renderDetails(THREE_CREDITS, {
       lyricStanzas: [["One"]],
       syncedLyrics: [{ ms: 0, text: "One" }],
     });
@@ -217,7 +220,7 @@ describe("StudioUploadTrackDetails timings and chapters", () => {
   });
 
   it("blocks the save on invalid chapters and shows every error", async () => {
-    renderDetails(THREE_CREDITS, {}, "mix");
+    await renderDetails(THREE_CREDITS, {}, "mix");
     fireEvent.click(
       await screen.findByRole("button", { name: "Add a chapter" }),
     );
@@ -232,7 +235,7 @@ describe("StudioUploadTrackDetails timings and chapters", () => {
   });
 
   it("sends chapters only when they changed", async () => {
-    renderDetails(THREE_CREDITS, {
+    await renderDetails(THREE_CREDITS, {
       chapters: [
         { startSeconds: 0, title: "Opening", artist: null, timeLabel: "0:00" },
       ],
@@ -250,7 +253,7 @@ describe("StudioUploadTrackDetails timings and chapters", () => {
   });
 
   it("clears the lyrics and their timings when the artist empties the field", async () => {
-    renderDetails(THREE_CREDITS, {
+    await renderDetails(THREE_CREDITS, {
       lyricStanzas: [["One"]],
       syncedLyrics: [{ ms: 0, text: "One" }],
     });
@@ -265,7 +268,7 @@ describe("StudioUploadTrackDetails timings and chapters", () => {
   });
 
   it("announces the chapter summary again on each failed save and focuses it", async () => {
-    renderDetails(THREE_CREDITS, {}, "mix");
+    await renderDetails(THREE_CREDITS, {}, "mix");
     fireEvent.click(
       await screen.findByRole("button", { name: "Add a chapter" }),
     );
@@ -291,7 +294,7 @@ describe("StudioUploadTrackDetails timings and chapters", () => {
   });
 
   it("clears the chapter summary once a chapter is edited", async () => {
-    renderDetails(THREE_CREDITS, {}, "mix");
+    await renderDetails(THREE_CREDITS, {}, "mix");
     fireEvent.click(
       await screen.findByRole("button", { name: "Add a chapter" }),
     );
@@ -315,7 +318,7 @@ describe("StudioUploadTrackDetails timings and chapters", () => {
 
 describe("StudioUploadTrackDetails for artist kinds", () => {
   it("labels the words Transcript on a podcast track and saves the notes", async () => {
-    renderDetails(
+    await renderDetails(
       THREE_CREDITS,
       {
         release: { format: "podcast", type: "podcast" },
@@ -337,7 +340,7 @@ describe("StudioUploadTrackDetails for artist kinds", () => {
   });
 
   it("saves sources on a lip-sync track and refuses a half-filled row", async () => {
-    renderDetails(
+    await renderDetails(
       THREE_CREDITS,
       {
         release: { format: "performance", type: "lip_sync" },
@@ -364,7 +367,7 @@ describe("StudioUploadTrackDetails for artist kinds", () => {
   });
 
   it("keeps Lyrics on music and sends no sources or notes", async () => {
-    renderDetails(THREE_CREDITS);
+    await renderDetails(THREE_CREDITS);
     expect(
       await screen.findByRole("textbox", { name: "Lyrics" }),
     ).toBeInTheDocument();
@@ -377,7 +380,7 @@ describe("StudioUploadTrackDetails for artist kinds", () => {
   });
 
   it("sends a blank note as null", async () => {
-    renderDetails(
+    await renderDetails(
       THREE_CREDITS,
       {
         release: { format: "podcast", type: "podcast" },
@@ -395,7 +398,7 @@ describe("StudioUploadTrackDetails for artist kinds", () => {
   });
 
   it("sends an empty list once every stored source is removed", async () => {
-    renderDetails(
+    await renderDetails(
       THREE_CREDITS,
       {
         release: { format: "performance", type: "lip_sync" },
@@ -412,7 +415,7 @@ describe("StudioUploadTrackDetails for artist kinds", () => {
   });
 
   it("leaves sources off the save when none were stored and none are filled", async () => {
-    renderDetails(
+    await renderDetails(
       THREE_CREDITS,
       {
         release: { format: "music", type: "mix" },
@@ -428,7 +431,7 @@ describe("StudioUploadTrackDetails for artist kinds", () => {
   });
 
   it("focuses the first incomplete source when it blocks the save", async () => {
-    renderDetails(
+    await renderDetails(
       THREE_CREDITS,
       {
         release: { format: "performance", type: "lip_sync" },
@@ -457,14 +460,14 @@ describe("StudioUploadTrackDetails for artist kinds", () => {
 
 describe("StudioUploadTrackDetails price", () => {
   it("shows the price group on a single's track", async () => {
-    renderDetails(THREE_CREDITS, {}, "single");
+    await renderDetails(THREE_CREDITS, {}, "single");
     expect(
       await screen.findByRole("group", { name: "Price of this track" }),
     ).toBeInTheDocument();
   });
 
-  it("leaves the price group off a mix track", () => {
-    renderDetails(
+  it("leaves the price group off a mix track", async () => {
+    await renderDetails(
       THREE_CREDITS,
       { release: { format: "music", type: "mix" } },
       "mix",
@@ -475,7 +478,7 @@ describe("StudioUploadTrackDetails price", () => {
   });
 
   it("saves a fixed price in cents", async () => {
-    renderDetails(THREE_CREDITS, {}, "single");
+    await renderDetails(THREE_CREDITS, {}, "single");
     fireEvent.click(await screen.findByRole("radio", { name: "Fixed price" }));
     fireEvent.change(
       await screen.findByRole("textbox", { name: "Price in euros" }),
@@ -490,7 +493,7 @@ describe("StudioUploadTrackDetails price", () => {
   });
 
   it("holds the save and focuses the amount when the price is under €1", async () => {
-    renderDetails(THREE_CREDITS, {}, "single");
+    await renderDetails(THREE_CREDITS, {}, "single");
     fireEvent.click(await screen.findByRole("radio", { name: "Fixed price" }));
     fireEvent.change(
       await screen.findByRole("textbox", { name: "Price in euros" }),
@@ -511,7 +514,7 @@ describe("StudioUploadTrackDetails price", () => {
   });
 
   it("sends no price when it was never touched", async () => {
-    renderDetails(THREE_CREDITS, {}, "single");
+    await renderDetails(THREE_CREDITS, {}, "single");
     fireEvent.click(
       await screen.findByRole("button", { name: "Save track details" }),
     );

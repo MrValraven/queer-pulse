@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { QueryClient } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../../shared/api/client";
@@ -38,7 +44,7 @@ vi.mock("../api/piecePublish.api", async (importOriginal) => ({
   publishPiece: apiMocks.publishPiece,
 }));
 
-/** Renders a Published row, unpublishes it to draft and waits for the toast. */
+/** Renders a Published card, unpublishes it to draft and waits for the toast. */
 async function unpublishToDraft(
   piece = makePublishedPiece(),
   queryClient?: QueryClient,
@@ -49,14 +55,11 @@ async function unpublishToDraft(
     </TestProviders>,
   );
   await awaitCatalog("magazine");
-  fireEvent.click(
-    await screen.findByRole("button", { name: "Unpublish to draft" }),
-  );
+  fireEvent.click(await screen.findByRole("button", { name: "Unpublish" }));
   const dialog = await screen.findByRole("dialog");
-  const confirm = Array.from(dialog.querySelectorAll("button")).find(
-    (button) => button.textContent === "Unpublish to draft",
-  ) as HTMLElement;
-  fireEvent.click(confirm);
+  fireEvent.click(
+    within(dialog).getByRole("button", { name: "Unpublish to draft" }),
+  );
   return screen.findByRole("button", { name: "Undo" });
 }
 
@@ -64,6 +67,48 @@ beforeEach(() => {
   vi.spyOn(window, "scrollTo").mockImplementation(() => undefined);
   apiMocks.unpublishPiece.mockReset().mockResolvedValue({});
   apiMocks.publishPiece.mockReset();
+});
+
+/** The card's title button, which the desk finds again by its piece id. */
+function pieceTitle(): HTMLElement {
+  return screen.getByRole("button", { name: UNPUBLISH_FLOW_PIECE_TITLE });
+}
+
+describe("unpublish focus", () => {
+  it("hands focus to the toast's Undo once the dialog has closed", async () => {
+    const undoButton = await unpublishToDraft();
+
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
+    await waitFor(() => expect(undoButton).toHaveFocus());
+  });
+
+  it("returns focus to the piece's title after Undo and marks its card", async () => {
+    apiMocks.publishPiece.mockResolvedValue({});
+    const undoButton = await unpublishToDraft();
+    await waitFor(() => expect(undoButton).toHaveFocus());
+
+    fireEvent.click(undoButton);
+
+    await waitFor(() => expect(pieceTitle()).toHaveFocus());
+    expect(pieceTitle()).toHaveAttribute("data-piece-id", "piece-1");
+    expect(pieceTitle().closest("[data-piece-surface]")).toHaveAttribute(
+      "data-just-moved",
+    );
+  });
+
+  it("returns focus to the piece's title when the toast is closed", async () => {
+    const undoButton = await unpublishToDraft();
+    await waitFor(() => expect(undoButton).toHaveFocus());
+
+    fireEvent.click(screen.getByRole("button", { name: "Dismiss" }));
+
+    // The harness never moves the piece, so the desk settles for the title
+    // where it stands once its wait for the new column runs out.
+    await waitFor(() => expect(pieceTitle()).toHaveFocus(), { timeout: 6000 });
+    expect(apiMocks.publishPiece).not.toHaveBeenCalled();
+  }, 10_000);
 });
 
 describe("unpublish toast Undo", () => {

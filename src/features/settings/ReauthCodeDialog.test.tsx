@@ -66,13 +66,23 @@ vi.mock("../auth/api/useEmailCode", async (importOriginal) => {
 vi.mock("../../app/providers/authContext", async (importOriginal) => {
   const actual =
     await importOriginal<typeof import("../../app/providers/authContext")>();
+  type AuthUser = NonNullable<ReturnType<typeof actual.useAuth>["user"]>;
+  // ProfileProvider re-seeds whenever `user` changes identity, as the real
+  // AuthProvider's state only does on a real change. So the override keeps one
+  // object per real user and flag value: a fresh object on every call
+  // re-rendered the providers forever and ran the worker out of memory.
+  const overrides = new WeakMap<AuthUser, AuthUser>();
   return {
     ...actual,
     useAuth: () => {
       const real = actual.useAuth();
-      return real.user
-        ? { ...real, user: { ...real.user, hasGoogle: harness.hasGoogle } }
-        : real;
+      if (!real.user) return real;
+      let override = overrides.get(real.user);
+      if (override?.hasGoogle !== harness.hasGoogle) {
+        override = { ...real.user, hasGoogle: harness.hasGoogle };
+        overrides.set(real.user, override);
+      }
+      return { ...real, user: override };
     },
   };
 });

@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { I18nProvider } from "../../app/providers/I18nProvider";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { PointerEventStub } from "../../test/pointerEventStub";
 import type { ListingPhotoFraming } from "./api/directory.api";
 import {
@@ -11,7 +12,9 @@ import {
 const ALT = "The bar at A Farinha";
 const CENTRED: ListingPhotoFraming = { focusX: 0.5, focusY: 0.5, zoom: 1 };
 
-function renderFrame(overrides: Partial<DirectoryGalleryFrameProps> = {}) {
+async function renderFrame(
+  overrides: Partial<DirectoryGalleryFrameProps> = {},
+) {
   const onOpen = vi.fn();
   const onFramingChange = vi.fn<(framing: ListingPhotoFraming) => void>();
   const frameWith = (props: Partial<DirectoryGalleryFrameProps>) => (
@@ -31,6 +34,7 @@ function renderFrame(overrides: Partial<DirectoryGalleryFrameProps> = {}) {
     </I18nProvider>
   );
   const { rerender } = render(frameWith(overrides));
+  await awaitCatalog("marketing");
   const rerenderWith = (props: Partial<DirectoryGalleryFrameProps>) =>
     rerender(frameWith({ ...overrides, ...props }));
   return { onOpen, onFramingChange, rerenderWith };
@@ -71,14 +75,14 @@ afterEach(() => {
 });
 
 describe("DirectoryGalleryFrame view mode", () => {
-  it("view mode opens the lightbox from a button named by the alt text", () => {
-    const { onOpen } = renderFrame();
+  it("view mode opens the lightbox from a button named by the alt text", async () => {
+    const { onOpen } = await renderFrame();
     fireEvent.click(screen.getByRole("button", { name: ALT }));
     expect(onOpen).toHaveBeenCalledTimes(1);
   });
 
-  it("names the photo once, on the button, and hides the image from assistive tech", () => {
-    renderFrame();
+  it("names the photo once, on the button, and hides the image from assistive tech", async () => {
+    await renderFrame();
     expect(screen.queryByRole("img")).toBeNull();
     expect(screen.getAllByRole("button")).toHaveLength(1);
     expect(screen.getByAltText(ALT).parentElement).toHaveAttribute(
@@ -87,8 +91,8 @@ describe("DirectoryGalleryFrame view mode", () => {
     );
   });
 
-  it("view mode writes the framing as custom properties on the image", () => {
-    renderFrame({ framing: { focusX: 0.25, focusY: 0.8, zoom: 1.5 } });
+  it("view mode writes the framing as custom properties on the image", async () => {
+    await renderFrame({ framing: { focusX: 0.25, focusY: 0.8, zoom: 1.5 } });
     const image = screen.getByAltText(ALT);
     expect(image.style.getPropertyValue("--frame-x")).toBe("25%");
     expect(image.style.getPropertyValue("--frame-y")).toBe("80%");
@@ -97,8 +101,8 @@ describe("DirectoryGalleryFrame view mode", () => {
 });
 
 describe("DirectoryGalleryFrame edit mode", () => {
-  it("edit mode drops the lightbox button and names the frame and its zoom slider", () => {
-    renderFrame({ isEditing: true });
+  it("edit mode drops the lightbox button and names the frame and its zoom slider", async () => {
+    await renderFrame({ isEditing: true });
     expect(screen.queryByRole("button", { name: ALT })).toBeNull();
     expect(
       screen.getByRole("group", { name: `Photo 1 of 3: ${ALT}` }),
@@ -108,17 +112,19 @@ describe("DirectoryGalleryFrame edit mode", () => {
     expect(slider).toHaveAttribute("max", "3");
   });
 
-  it("keeps the lightbox button mounted and hidden while editing", () => {
-    renderFrame({ isEditing: true });
-    const hiddenButton = screen.getByRole("button", {
-      name: ALT,
-      hidden: true,
-    });
+  it("keeps the lightbox button mounted and hidden while editing", async () => {
+    await renderFrame({ isEditing: true });
+    // A hidden element computes no accessible name, so the button is found
+    // by the label it keeps for when editing ends.
+    const hiddenButton = screen
+      .getAllByRole("button", { hidden: true })
+      .find((button) => button.getAttribute("aria-label") === ALT);
+    if (!hiddenButton) throw new Error("The lightbox button was unmounted");
     expect(hiddenButton).not.toBeVisible();
   });
 
-  it("moves focus to the hero frame when edit mode starts", () => {
-    const { rerenderWith } = renderFrame();
+  it("moves focus to the hero frame when edit mode starts", async () => {
+    const { rerenderWith } = await renderFrame();
     expect(document.body).toHaveFocus();
     rerenderWith({ isEditing: true });
     expect(
@@ -126,13 +132,13 @@ describe("DirectoryGalleryFrame edit mode", () => {
     ).toHaveFocus();
   });
 
-  it("leaves focus alone when a frame mounts already editing", () => {
-    renderFrame({ isEditing: true });
+  it("leaves focus alone when a frame mounts already editing", async () => {
+    await renderFrame({ isEditing: true });
     expect(screen.getByRole("group")).not.toHaveFocus();
   });
 
-  it("names a frame without alt text by its position", () => {
-    renderFrame({
+  it("names a frame without alt text by its position", async () => {
+    await renderFrame({
       isEditing: true,
       index: 1,
       shot: { url: "https://img/door.jpg", alt: "" },
@@ -140,8 +146,8 @@ describe("DirectoryGalleryFrame edit mode", () => {
     expect(screen.getByRole("group", { name: "Photo 2 of 3" })).toBeTruthy();
   });
 
-  it("arrow keys move the picture their way and plus zooms the focused frame", () => {
-    const { onFramingChange } = renderFrame({
+  it("arrow keys move the picture their way and plus zooms the focused frame", async () => {
+    const { onFramingChange } = await renderFrame({
       isEditing: true,
       framing: { focusX: 0.5, focusY: 0.5, zoom: 2 },
     });
@@ -157,10 +163,10 @@ describe("DirectoryGalleryFrame edit mode", () => {
     expect(onFramingChange.mock.calls.at(-1)![0].zoom).toBeCloseTo(2.1);
   });
 
-  it("an arrow on an axis the frame shows in full changes nothing", () => {
+  it("an arrow on an axis the frame shows in full changes nothing", async () => {
     // A 1000 by 1000 photo covers a 400 by 200 frame at 400 by 400, so at
     // zoom 1 the whole width is on screen and only the height can travel.
-    const { onFramingChange } = renderFrame({ isEditing: true });
+    const { onFramingChange } = await renderFrame({ isEditing: true });
     const frame = measureEditFrame(1000);
     fireEvent.keyDown(frame, { key: "ArrowLeft" });
     fireEvent.keyDown(frame, { key: "ArrowRight" });
@@ -171,8 +177,8 @@ describe("DirectoryGalleryFrame edit mode", () => {
     expect(moved.focusY).toBeCloseTo(0.55);
   });
 
-  it("arrows wait for the image to load while plus and minus still zoom", () => {
-    const { onFramingChange } = renderFrame({ isEditing: true });
+  it("arrows wait for the image to load while plus and minus still zoom", async () => {
+    const { onFramingChange } = await renderFrame({ isEditing: true });
     const frame = measureEditFrame(0);
     fireEvent.keyDown(frame, { key: "ArrowDown" });
     expect(onFramingChange).not.toHaveBeenCalled();
@@ -184,8 +190,8 @@ describe("DirectoryGalleryFrame edit mode", () => {
     });
   });
 
-  it("arrow keys on the zoom slider leave the focal point alone", () => {
-    const { onFramingChange } = renderFrame({ isEditing: true });
+  it("arrow keys on the zoom slider leave the focal point alone", async () => {
+    const { onFramingChange } = await renderFrame({ isEditing: true });
     const slider = screen.getByRole("slider", { name: "Zoom photo 1" });
     fireEvent.keyDown(slider, { key: "ArrowRight" });
     for (const [framing] of onFramingChange.mock.calls) {
@@ -193,8 +199,8 @@ describe("DirectoryGalleryFrame edit mode", () => {
     }
   });
 
-  it("a diagonal drag reports focusX and focusY together", () => {
-    const { onFramingChange } = renderFrame({
+  it("a diagonal drag reports focusX and focusY together", async () => {
+    const { onFramingChange } = await renderFrame({
       isEditing: true,
       framing: { focusX: 0.5, focusY: 0.5, zoom: 2 },
     });
@@ -206,8 +212,8 @@ describe("DirectoryGalleryFrame edit mode", () => {
     expect(last.focusY).toBeGreaterThan(0.5);
   });
 
-  it("a drag before the image has loaded leaves the framing unchanged", () => {
-    const { onFramingChange } = renderFrame({
+  it("a drag before the image has loaded leaves the framing unchanged", async () => {
+    const { onFramingChange } = await renderFrame({
       isEditing: true,
       framing: { focusX: 0.5, focusY: 0.5, zoom: 2 },
     });
@@ -217,8 +223,8 @@ describe("DirectoryGalleryFrame edit mode", () => {
     expect(onFramingChange).not.toHaveBeenCalled();
   });
 
-  it("a locked frame ignores drags and keys and disables its slider", () => {
-    const { onFramingChange } = renderFrame({
+  it("a locked frame ignores drags and keys and disables its slider", async () => {
+    const { onFramingChange } = await renderFrame({
       isEditing: true,
       isLocked: true,
       framing: { focusX: 0.5, focusY: 0.5, zoom: 2 },

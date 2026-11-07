@@ -596,11 +596,19 @@ export function demoAcceptPair(
   slug: string,
   body: PairAnswersBody,
 ): GoTogetherCardDTO {
+  // A pinned invite lives only in the override, so accepting it records the
+  // friend who sent it as the real partner. The card then keeps showing the
+  // accepted pair once the pin is consumed.
+  const pinnedOverride = readDemoCardStateOverride();
+  const isPinnedInvite =
+    pinnedOverride === "pairInvite" || pinnedOverride === "pairInviteReceived";
   consumeDemoCardStateOverride();
   const existing = demoState.entriesBySlug.get(slug);
   demoState.entriesBySlug.set(slug, {
     status: "waiting",
-    partnerSlug: existing?.partnerSlug ?? null,
+    partnerSlug:
+      existing?.partnerSlug ??
+      (isPinnedInvite ? DEMO_GROUP_MATE_SLUGS[0] : null),
     pairStatus: "accepted",
     lens: body.lens,
   });

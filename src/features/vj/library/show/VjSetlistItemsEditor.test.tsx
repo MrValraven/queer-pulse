@@ -1,5 +1,6 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import type { ApiError } from "../../../../shared/api/client";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../../test/TestProviders";
 import type {
@@ -17,11 +18,16 @@ import {
   demoSetVjSetlistItems,
   resetVjDemoLibrary,
 } from "../../demo/vjDemoStore";
+import { vjRefusal } from "../../demo/vjDemoRefusals";
 import { VjSetlistItemsEditor } from "./VjSetlistItemsEditor";
 
 /** While `held` is set, item saves from the editor wait for it, so a test can
- *  click again before the first save answers. */
-const saveGate = vi.hoisted(() => ({ held: null as Promise<void> | null }));
+ *  click again before the first save answers. While `refusal` is set, the
+ *  next item save throws it the way the API would. */
+const saveGate = vi.hoisted(() => ({
+  held: null as Promise<void> | null,
+  refusal: null as ApiError | null,
+}));
 
 vi.mock("../../demo/vjDemoStore", async (importOriginal) => {
   const actual =
@@ -31,6 +37,11 @@ vi.mock("../../demo/vjDemoStore", async (importOriginal) => {
     demoSetVjSetlistItems: (
       ...args: Parameters<typeof actual.demoSetVjSetlistItems>
     ) => {
+      const refusal = saveGate.refusal;
+      if (refusal !== null) {
+        saveGate.refusal = null;
+        throw refusal;
+      }
       const held = saveGate.held;
       if (held === null) return actual.demoSetVjSetlistItems(...args);
       return held.then(() => actual.demoSetVjSetlistItems(...args));
@@ -143,6 +154,7 @@ describe("VjSetlistItemsEditor (demo)", () => {
     });
     resetVjDemoLibrary();
     saveGate.held = null;
+    saveGate.refusal = null;
   });
 
   it("shows the scenes in order with their numbers", async () => {
@@ -265,17 +277,13 @@ describe("VjSetlistItemsEditor (demo)", () => {
   });
 
   it("names VJ_SETLIST_FULL from the server", async () => {
-    const warmUp = seededScene("Warm up");
-    const setlistId = fridaySet().id;
-    demoSetVjSetlistItems(setlistId, {
-      sceneIds: Array.from({ length: 99 }, () => warmUp.id),
-    });
     const user = userEvent.setup();
     renderEditor();
-    expect(await findItemRows()).toHaveLength(99);
-    // Another tab fills the set list; this tab still shows 99.
-    demoSetVjSetlistItems(setlistId, {
-      sceneIds: Array.from({ length: 100 }, () => warmUp.id),
+    expect(await findItemRows()).toHaveLength(2);
+    // Each save sends the whole list and the editor never sends past 100, so
+    // the server's own limit is the only way this refusal comes back.
+    saveGate.refusal = vjRefusal("VJ_SETLIST_FULL", {
+      setlistId: fridaySet().id,
     });
     await addScene(user, "Peak");
 
@@ -283,7 +291,8 @@ describe("VjSetlistItemsEditor (demo)", () => {
       "A set list holds up to 100 scenes",
     );
     expect(reasonText.closest('[role="alert"]')).not.toBeNull();
-    expect(fridaySet().items).toHaveLength(100);
+    expect(fridaySet().items).toHaveLength(2);
+    expect(await findItemRows()).toHaveLength(2);
   });
 
   it("keeps rows in place after a save returns new item ids", async () => {

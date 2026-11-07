@@ -6,6 +6,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { RemovedSpace } from "./safeSpaces";
+import { safeSpaceNominationCause } from "./api/safeSpaceErrorCopy";
 import { useSubmitNomination } from "./api/useSubmitNomination";
 import { CRITERIA, HOW, NOMINATE_TYPE_KEYS } from "./safeSpacesPage.data";
 import styles from "./SafeSpacesPage.module.css";
@@ -223,15 +224,17 @@ function NominateForm({
   onChange,
   onSubmit,
   submitting,
-  errored,
+  error,
 }: {
   values: NominateValues;
   onChange: (patch: Partial<NominateValues>) => void;
   onSubmit: () => void;
   submitting: boolean;
-  errored: boolean;
+  /** Why the last submit failed, or null when it has not. */
+  error: Error | null;
 }) {
   const { t } = useTranslation();
+  const nominationCause = safeSpaceNominationCause(error);
   return (
     <>
       <div>
@@ -287,9 +290,9 @@ function NominateForm({
           value={values.reason}
           onChange={(e) => onChange({ reason: e.target.value })}
         />
-        {errored && (
+        {error && (
           <p className={styles.nomError} role="alert">
-            {t("safety:spaces.nominate.error")}
+            {t(nominationCause.key, nominationCause.values)}
           </p>
         )}
         <button
@@ -321,7 +324,7 @@ export function NominateSection({
 }) {
   const [nominated, setNominated] = useState(false);
   const [values, setValues] = useState<NominateValues>(EMPTY_NOMINATION);
-  const { mutate, isPending, isError, reset } = useSubmitNomination();
+  const { mutate, isPending, error, reset } = useSubmitNomination();
 
   const submit = () => {
     const name = values.name.trim();
@@ -356,7 +359,7 @@ export function NominateSection({
               onChange={(patch) => setValues((prev) => ({ ...prev, ...patch }))}
               onSubmit={submit}
               submitting={isPending}
-              errored={isError}
+              error={error}
             />
           )}
         </div>

@@ -127,7 +127,15 @@
   box-shadow: var(--ring-cream);
 }
 
-/* Sets Delete apart from the everyday items above it. */
+/* A finger needs the full tap target; the padding alone draws a 41px row. */
+@media (pointer: coarse) {
+  .item,
+  .itemDanger {
+    min-height: var(--tap-min);
+  }
+}
+
+/* Sets Unpublish and Delete apart from the everyday items above them. */
 .separator {
   height: 1px;
   margin: var(--menu-pad) calc(-1 * var(--menu-pad));

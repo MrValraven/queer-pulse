@@ -8,6 +8,7 @@ import {
 import { Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { createStudioPlayerTestValue } from "../../test/studioPlayerTestValue";
 import { resetDemoPlaylists } from "./api/studioDemoPlaylists";
 import { resetStudioLibrarySeedForTests } from "./api/useStudioLibrarySaves";
@@ -36,7 +37,7 @@ beforeEach(() => {
   window.localStorage.setItem("qp.demo.studioLibrarySeeded.v4", "1");
 });
 
-function renderPage(playlistId: string) {
+async function renderPage(playlistId: string) {
   const playTracks = vi.fn(() => Promise.resolve());
   const player = {
     ...createStudioPlayerTestValue(),
@@ -64,12 +65,13 @@ function renderPage(playlistId: string) {
       </StudioPlayerContext.Provider>
     </TestProviders>,
   );
+  await awaitCatalog("studio");
   return { playTracks };
 }
 
 describe("playlist page (demo)", () => {
   it("shows the owner every entry, a withdrawn one greyed with Remove only", async () => {
-    renderPage("demo-playlist-kitchen-tapes");
+    await renderPage("demo-playlist-kitchen-tapes");
     expect(
       await screen.findByRole("heading", { level: 1, name: "Kitchen tapes" }),
     ).toBeInTheDocument();
@@ -90,7 +92,7 @@ describe("playlist page (demo)", () => {
   });
 
   it("plays only what can be played, in playlist order", async () => {
-    const { playTracks } = renderPage("demo-playlist-kitchen-tapes");
+    const { playTracks } = await renderPage("demo-playlist-kitchen-tapes");
     fireEvent.click(
       await screen.findByRole("button", { name: "Play Kitchen tapes" }),
     );
@@ -106,7 +108,7 @@ describe("playlist page (demo)", () => {
   });
 
   it("moves a row down, keeps focus on the pressed button and says where it went", async () => {
-    renderPage("demo-playlist-kitchen-tapes");
+    await renderPage("demo-playlist-kitchen-tapes");
     const moveDown = await screen.findByRole("button", {
       name: "Move Abertura: a luz down",
     });
@@ -123,7 +125,19 @@ describe("playlist page (demo)", () => {
   });
 
   it("gives an unavailable row no drag handle", async () => {
-    renderPage("demo-playlist-kitchen-tapes");
+    // The drag handle is for a fine pointer; touch rows move by their buttons.
+    vi.spyOn(window, "matchMedia").mockImplementation(
+      (query: string) =>
+        ({
+          matches: query === "(pointer: fine)",
+          media: query,
+          addEventListener: () => undefined,
+          removeEventListener: () => undefined,
+          addListener: () => undefined,
+          removeListener: () => undefined,
+        }) as unknown as MediaQueryList,
+    );
+    await renderPage("demo-playlist-kitchen-tapes");
     const list = await screen.findByRole("list", {
       name: /tracks in kitchen tapes/i,
     });
@@ -135,7 +149,7 @@ describe("playlist page (demo)", () => {
   });
 
   it("moves focus to the previous row's Remove after removing the last row", async () => {
-    renderPage("demo-playlist-kitchen-tapes");
+    await renderPage("demo-playlist-kitchen-tapes");
     const list = await screen.findByRole("list", {
       name: /tracks in kitchen tapes/i,
     });
@@ -153,7 +167,7 @@ describe("playlist page (demo)", () => {
   });
 
   it("gives a viewer the heart and no owner controls or visibility", async () => {
-    renderPage("demo-playlist-dyke-bar-standards");
+    await renderPage("demo-playlist-dyke-bar-standards");
     await screen.findByRole("heading", {
       level: 1,
       name: "Lisbon dyke-bar standards",
@@ -175,14 +189,14 @@ describe("playlist page (demo)", () => {
   });
 
   it("answers a playlist nobody can see with the not-found state", async () => {
-    renderPage("no-such-playlist");
+    await renderPage("no-such-playlist");
     expect(
       await screen.findByText("We can't find that in Studio"),
     ).toBeInTheDocument();
   });
 
   it("reads any other loss as No longer available, with Remove", async () => {
-    renderPage("demo-playlist-for-the-group-chat");
+    await renderPage("demo-playlist-for-the-group-chat");
     const list = await screen.findByRole("list", {
       name: /tracks in for the group chat/i,
     });
@@ -196,7 +210,7 @@ describe("playlist page (demo)", () => {
 
   it("greys a hidden explicit track with no play button", async () => {
     playback.hideExplicit = true;
-    renderPage("demo-playlist-dyke-bar-standards");
+    await renderPage("demo-playlist-dyke-bar-standards");
     const list = await screen.findByRole("list", {
       name: /tracks in lisbon dyke-bar standards/i,
     });
@@ -210,7 +224,7 @@ describe("playlist page (demo)", () => {
 });
 
 describe("collaborative playlists (demo)", () => {
-  function renderRoutedPage(playlistId: string) {
+  async function renderRoutedPage(playlistId: string) {
     render(
       <TestProviders initialEntries={[`/studio/collection?id=${playlistId}`]}>
         <Routes>
@@ -219,10 +233,11 @@ describe("collaborative playlists (demo)", () => {
         </Routes>
       </TestProviders>,
     );
+    await awaitCatalog("studio");
   }
 
   it("shows an invitee the banner, and Accept makes them an editor", async () => {
-    renderRoutedPage("demo-playlist-pride-warm-up");
+    await renderRoutedPage("demo-playlist-pride-warm-up");
     expect(
       await screen.findByRole("heading", {
         name: "Catarina Vaz invited you to edit this playlist",
@@ -248,7 +263,7 @@ describe("collaborative playlists (demo)", () => {
   });
 
   it("moves focus to Playlist actions after Accept", async () => {
-    renderRoutedPage("demo-playlist-pride-warm-up");
+    await renderRoutedPage("demo-playlist-pride-warm-up");
     const accept = await screen.findByRole("button", { name: "Accept invite" });
     accept.focus();
     fireEvent.click(accept);
@@ -265,7 +280,7 @@ describe("collaborative playlists (demo)", () => {
   });
 
   it("leaves for the library after Decline", async () => {
-    renderRoutedPage("demo-playlist-pride-warm-up");
+    await renderRoutedPage("demo-playlist-pride-warm-up");
     fireEvent.click(
       await screen.findByRole("button", { name: "Decline invite" }),
     );
@@ -274,7 +289,7 @@ describe("collaborative playlists (demo)", () => {
   });
 
   it("lets an editor leave through the menu", async () => {
-    renderRoutedPage("demo-playlist-tour-diary");
+    await renderRoutedPage("demo-playlist-tour-diary");
     fireEvent.click(
       await screen.findByRole("button", { name: "Playlist actions" }),
     );
@@ -292,7 +307,7 @@ describe("collaborative playlists (demo)", () => {
   });
 
   it("opens the editors from Manage editors for the owner", async () => {
-    renderRoutedPage("demo-playlist-for-the-group-chat");
+    await renderRoutedPage("demo-playlist-for-the-group-chat");
     fireEvent.click(
       await screen.findByRole("button", { name: "Playlist actions" }),
     );
@@ -305,7 +320,7 @@ describe("collaborative playlists (demo)", () => {
   });
 
   it("opens the editors from the chip for an editor", async () => {
-    renderRoutedPage("demo-playlist-tour-diary");
+    await renderRoutedPage("demo-playlist-tour-diary");
     fireEvent.click(
       await screen.findByRole("button", {
         name: "Collaborative playlist with 1 editor. See who edits it",

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { SpaceLabel } from "./SpaceLabel";
 
@@ -12,13 +12,18 @@ describe("SpaceLabel", () => {
   });
 
   it("renders parent and space, with a hidden chevron between them", () => {
-    render(
+    const { container } = render(
       <SpaceLabel parentName="Queer Runners" name="Queer Runners FLINTA" />,
     );
     // Visible text runs the two names together with the icon in between (the
-    // icon itself carries no accessible text, since it is aria-hidden).
-    expect(screen.getByText("Queer Runners")).toBeInTheDocument();
-    expect(screen.getByText("Queer Runners FLINTA")).toBeInTheDocument();
+    // icon itself carries no accessible text, since it is aria-hidden). Both
+    // names are bare text nodes of one span, so they are read off its own
+    // text nodes in order.
+    const label = container.firstElementChild;
+    const visibleNames = [...(label?.childNodes ?? [])]
+      .filter((node) => node.nodeType === Node.TEXT_NODE)
+      .map((node) => node.textContent);
+    expect(visibleNames).toEqual(["Queer Runners", "Queer Runners FLINTA"]);
     const chevron = document.querySelector("svg");
     expect(chevron).toBeInTheDocument();
     expect(chevron).toHaveAttribute("aria-hidden");

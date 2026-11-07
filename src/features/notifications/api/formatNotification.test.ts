@@ -40,8 +40,13 @@ beforeAll(async () => {
  */
 function makeT(language: Language): TFunction {
   return (key: string, options?: TranslateOptions) => {
-    const { path } = parseKey(key);
-    const catalog = resolvedCatalogs[language];
+    const { namespace, path } = parseKey(key);
+    // A few labels (the ambassador focus areas) live in the eager `shared`
+    // shell namespace, so a `shared:` key resolves against that catalog.
+    const catalog =
+      namespace === "shared"
+        ? catalogs[language].shared
+        : resolvedCatalogs[language];
     const hit = resolveEntry(catalog, path, language, options);
     // Surface a miss loudly instead of silently returning the key.
     if (hit === undefined) throw new Error(`missing key: ${key}`);

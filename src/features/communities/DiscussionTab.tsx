@@ -15,6 +15,7 @@ import type { Thread as ThreadData } from "./communityDetails";
 import type { PulsePaging } from "./api/useCommunityPosts";
 import { viewerPerson } from "./communityPeople";
 import { useCreatePost } from "./api/useCommunityMutations";
+import { communityErrorText } from "./communityErrors";
 import { threadHeadingFromBody } from "./api/communities.adapters";
 import { usePostImageAttach } from "./usePostImageAttach";
 import { CommunityThread } from "./CommunityThread";
@@ -106,11 +107,11 @@ export function DiscussionTab({
           showToast(t("communities:detail.discussion.startedToast"), "success");
         },
         // On error, remove just this optimistic post so no phantom thread lingers.
-        onError: () => {
+        onError: (error) => {
           setExtra((prev) =>
             prev.filter((thread) => thread.id !== optimisticId),
           );
-          showToast(t("communities:common.error"), "error");
+          showToast(communityErrorText(t, error), "error");
         },
       },
     );

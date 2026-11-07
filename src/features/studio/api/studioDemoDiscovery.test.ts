@@ -18,6 +18,7 @@ import {
   demoStudioSceneReleases,
   demoStudioScenes,
 } from "./studioDemoDiscovery";
+import { DEMO_WITHHELD_TRACK_ID } from "./studioDemoSafety.data";
 
 function thrownBy(read: () => unknown): unknown {
   try {
@@ -189,7 +190,12 @@ describe("demo appears on and related artists", () => {
 describe("demo radio", () => {
   it("queues every playable track of a genre with its duration", () => {
     const items = demoStudioRadio({ kind: "genre", value: "fado" }).items;
-    expect(items).toHaveLength(17);
+    // The demo's fado holds 17 tracks; claims hold "Vela acesa" offline, so the
+    // radio leaves it out.
+    expect(items).toHaveLength(16);
+    expect(items.map((item) => item.trackId)).not.toContain(
+      DEMO_WITHHELD_TRACK_ID,
+    );
     expect(items.every((item) => item.durationSeconds > 0)).toBe(true);
   });
 

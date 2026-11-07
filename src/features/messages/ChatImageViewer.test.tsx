@@ -11,6 +11,9 @@ import userEvent from "@testing-library/user-event";
 import { useRef, type ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { I18nProvider } from "../../app/providers/I18nProvider";
+import { loadNamespace } from "../../shared/i18n/catalogs";
+import { awaitCatalog } from "../../test/awaitCatalog";
+import { PointerEventStub } from "../../test/pointerEventStub";
 import { ToastProvider } from "../../shared/components/feedback/ToastProvider";
 import { useInertWhileCovered } from "../../shared/components/ui/modalStack";
 import { ChatImageViewer } from "./ChatImageViewer";
@@ -67,11 +70,14 @@ const wrapper = ({ children }: { children: ReactNode }) => (
 );
 
 describe("ChatImageViewer", () => {
-  it("opens on the photo that was tapped", () => {
+  it("opens on the photo that was tapped", async () => {
     render(
       <ChatImageViewer photos={photos} startIndex={1} onClose={vi.fn()} />,
       { wrapper },
     );
+    // The photo's alt text lives in the lazy `messages` namespace, and an
+    // image with an empty alt carries no `img` role.
+    await awaitCatalog("messages");
     expect(screen.getByRole("img")).toHaveAttribute(
       "src",
       "https://cdn.example/two.jpg",
@@ -79,7 +85,7 @@ describe("ChatImageViewer", () => {
     expect(screen.getByText("You")).toBeInTheDocument();
   });
 
-  it("puts every action in the top bar, reachable by its accessible name", () => {
+  it("puts every action in the top bar, reachable by its accessible name", async () => {
     // The actions used to live in a labelled bottom bar. They are now wordless
     // icons in the top bar, so the accessible name is the ONLY name they have.
     render(
@@ -93,12 +99,13 @@ describe("ChatImageViewer", () => {
       />,
       { wrapper },
     );
+    await awaitCatalog("messages");
     for (const name of [/save/i, /reply/i, /forward/i, /star/i, /close/i]) {
       expect(screen.getByRole("button", { name })).toBeInTheDocument();
     }
   });
 
-  it("offers only Save and Close for a message with no server id", () => {
+  it("offers only Save and Close for a message with no server id", async () => {
     // `canAct` is false without an id, so the three actions that need the
     // server to identify the message are not offered at all.
     render(
@@ -112,13 +119,14 @@ describe("ChatImageViewer", () => {
       />,
       { wrapper },
     );
+    await awaitCatalog("messages");
     expect(screen.getByRole("button", { name: /save/i })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /reply/i })).toBeNull();
     expect(screen.queryByRole("button", { name: /forward/i })).toBeNull();
     expect(screen.queryByRole("button", { name: /star/i })).toBeNull();
   });
 
-  it("shows the sender's photo in the top bar, and initials without one", () => {
+  it("shows the sender's photo in the top bar, and initials without one", async () => {
     // The avatar is decorative (`alt=""`): the sender's name is rendered
     // visibly beside it, so naming the image too would read the person twice.
     // That is also what keeps `getByRole("img")` below the photo itself.
@@ -126,6 +134,9 @@ describe("ChatImageViewer", () => {
       <ChatImageViewer photos={photos} startIndex={0} onClose={vi.fn()} />,
       { wrapper },
     );
+    // Until the lazy `messages` namespace lands, the photo itself has an
+    // empty alt too and would be the first `img[alt=""]`.
+    await awaitCatalog("messages");
     expect(document.querySelector('img[alt=""]')).toHaveAttribute(
       "src",
       "https://cdn.example/nadia.jpg",
@@ -219,6 +230,7 @@ describe("ChatImageViewer", () => {
       />,
       { wrapper },
     );
+    await awaitCatalog("messages");
     await userEvent.click(screen.getByRole("button", { name: /reply/i }));
     // The reply draft opens on the click; only the viewer's own exit waits.
     expect(onReply).toHaveBeenCalledWith(photos[0]!.message);
@@ -329,10 +341,14 @@ describe("ChatImageViewer swipe paging", () => {
     vi.spyOn(HTMLElement.prototype, "offsetWidth", "get").mockReturnValue(
       STAGE_WIDTH,
     );
+    // jsdom has no PointerEvent, and the generic Event it falls back to drops
+    // clientX, so every drag would read a NaN distance and never move.
+    vi.stubGlobal("PointerEvent", PointerEventStub);
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
     vi.useRealTimers();
   });
 
@@ -366,7 +382,11 @@ describe("ChatImageViewer swipe paging", () => {
     });
   }
 
-  function renderViewer(viewerPhotos = photos) {
+  /** Renders the viewer and lets the lazy `messages` namespace land, so the
+   *  current photo carries its alt text and with it the `img` role. Awaits the
+   *  cached load inside `act` only: `awaitCatalog` also waits on a timer,
+   *  which the fake timers here would never fire. */
+  async function renderViewer(viewerPhotos = photos) {
     render(
       <ChatImageViewer
         photos={viewerPhotos}
@@ -375,10 +395,13 @@ describe("ChatImageViewer swipe paging", () => {
       />,
       { wrapper },
     );
+    await act(async () => {
+      await loadNamespace("en", "messages");
+    });
   }
 
-  it("lays the previous, current and next photos on a track, the neighbours hidden from assistive technology", () => {
-    renderViewer();
+  it("lays the previous, current and next photos on a track, the neighbours hidden from assistive technology", async () => {
+    await renderViewer();
     const slides = [...document.querySelectorAll<HTMLElement>("[data-slide]")];
     expect(slides.map((slide) => slide.dataset.slide)).toEqual([
       "prev",
@@ -402,8 +425,8 @@ describe("ChatImageViewer swipe paging", () => {
     expect(screen.getAllByRole("img")).toHaveLength(1);
   });
 
-  it("renders no neighbours for a single photo", () => {
-    renderViewer(photosWithoutAvatar);
+  it("renders no neighbours for a single photo", async () => {
+    await renderViewer(photosWithoutAvatar);
     expect(
       [...document.querySelectorAll<HTMLElement>("[data-slide]")].map(
         (slide) => slide.dataset.slide,
@@ -411,8 +434,8 @@ describe("ChatImageViewer swipe paging", () => {
     ).toEqual(["current"]);
   });
 
-  it("slides to the next photo on a committed swipe, changing photo only after the settle", () => {
-    renderViewer();
+  it("slides to the next photo on a committed swipe, changing photo only after the settle", async () => {
+    await renderViewer();
     const { stage, track } = stageParts();
     pointer("pointerDown", stage, 300, 1000);
     pointer("pointerMove", stage, 150, 1100);
@@ -436,8 +459,8 @@ describe("ChatImageViewer swipe paging", () => {
     expect(track.style.transition).toBe("none");
   });
 
-  it("still commits a flick that stopped below the distance threshold", () => {
-    renderViewer();
+  it("still commits a flick that stopped below the distance threshold", async () => {
+    await renderViewer();
     const { stage, track } = stageParts();
     pointer("pointerDown", stage, 300, 1000);
     pointer("pointerMove", stage, 280, 1000);
@@ -454,8 +477,8 @@ describe("ChatImageViewer swipe paging", () => {
     );
   });
 
-  it("springs back to the centre on a cancel, staying on the same photo", () => {
-    renderViewer();
+  it("springs back to the centre on a cancel, staying on the same photo", async () => {
+    await renderViewer();
     const { stage, track } = stageParts();
     pointer("pointerDown", stage, 300, 1000);
     pointer("pointerMove", stage, 240, 1100);
@@ -471,8 +494,8 @@ describe("ChatImageViewer swipe paging", () => {
     expect(track.dataset.paging).toBeUndefined();
   });
 
-  it("slides on the right arrow too, and lands on the next photo after the settle", () => {
-    renderViewer();
+  it("slides on the right arrow too, and lands on the next photo after the settle", async () => {
+    await renderViewer();
     const { track } = stageParts();
     fireEvent.keyDown(document, { key: "ArrowRight" });
     expect(track.style.transform).toBe(`translateX(-${STAGE_WIDTH}px)`);

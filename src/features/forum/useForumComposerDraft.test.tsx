@@ -195,7 +195,12 @@ describe("useForumComposerDraft conflict recovery", () => {
     expect(mocks.updateForumDraft).toHaveBeenCalledTimes(2);
     expect(result.current.status).toBe("unsaved");
 
-    await advance(AUTOSAVE_RETRY_MS + AUTOSAVE_DELAY_MS);
+    // Two steps, each in its own act: the retry timer's state bump re-runs
+    // the save effect only when React renders, and an act defers that render
+    // to its end, so the debounce it schedules starts after the first step.
+    await advance(AUTOSAVE_RETRY_MS);
+    expect(mocks.updateForumDraft).toHaveBeenCalledTimes(2);
+    await advance(AUTOSAVE_DELAY_MS);
 
     expect(mocks.updateForumDraft).toHaveBeenCalledTimes(3);
     // The second 409's version was kept, so the retry starts from it.

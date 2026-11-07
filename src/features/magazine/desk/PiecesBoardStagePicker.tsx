@@ -3,7 +3,6 @@ import { Select } from "../../../shared/components/ui";
 import { viewStageLabelKey } from "./stageLabels";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import type { UnpublishLandingStage } from "../api/piecePublish.api";
 import type { Piece, Stage } from "../data/desk.data";
 import { PiecesBoardUnpublishActions } from "./PiecesBoardUnpublishActions";
 import { hasPublishDate, isPieceScheduled } from "./pieceSchedule";
@@ -13,9 +12,9 @@ export interface PiecesBoardStagePickerProps {
   piece: Piece;
   stages: Stage[];
   onMove: (piece: Piece, stage: Stage) => void;
-  /** Offers a Published card its two unpublish buttons under the status
+  /** Offers a Published card its Unpublish button under the status
    *  line. Left out, the line keeps pointing at the piece record. */
-  onUnpublish?: (piece: Piece, stage: UnpublishLandingStage) => void;
+  onUnpublish?: (piece: Piece) => void;
   /** The card title's id: `Select`'s trigger takes it as its own description,
    *  the same `aria-describedby` pattern `PieceRowNextAction.tsx` uses, so a
    *  screen reader hears "Move stage" followed by this card's own piece
@@ -52,10 +51,9 @@ const GOES_LIVE_FORMAT: Intl.DateTimeFormatOptions = {
  *   live {date}"); a live one (date passed, stage not yet Published) is
  *   public already, and its writer has not heard (PRD-437): "Live since
  *   {date}. Publish it to tell the writer."
- * A Published card (not a scheduled or live-early one) also gets "Unpublish to
- * draft" and "Unpublish to review" buttons when `onUnpublish` is passed, the
- * same two actions as the row's More menu; the hidden way-out sentence then
- * gives way to them.
+ * A Published card (not a scheduled or live-early one) also gets an "Unpublish"
+ * button when `onUnpublish` is passed, the same action as the row's More
+ * menu; the hidden way-out sentence then gives way to it.
  * The line is plain text, so sighted readers see it and screen readers reach
  * it in reading order. The way out (unschedule or unpublish on the piece
  * record) is part of that same paragraph, visually hidden: a static <p> is

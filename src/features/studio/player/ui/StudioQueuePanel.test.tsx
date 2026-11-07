@@ -15,6 +15,7 @@ import {
   queueView,
   renderWithPlayer,
 } from "./studioPlayerTestHarness";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 const surfaceHolder = vi.hoisted(() => ({
   current: null as StudioPlayerSurfaceValue | null,
@@ -86,6 +87,27 @@ function HostWithOpenerRef() {
   );
 }
 
+/** A plain opener beside the host, as one component: the harness re-renders
+ *  the element it was handed, and through it the host reads the new surface. */
+function OpenerBesideHost({ openerId }: { openerId?: string }) {
+  return (
+    <>
+      <button type="button" id={openerId}>
+        {OPENER_LABEL}
+      </button>
+      <StudioQueuePanelHost />
+    </>
+  );
+}
+
+function StrictOpenerBesideHost() {
+  return (
+    <StrictMode>
+      <OpenerBesideHost />
+    </StrictMode>
+  );
+}
+
 describe("StudioQueuePanelHost", () => {
   it("opens on its heading and closes on Escape", async () => {
     renderWithPlayer(<StudioQueuePanelHost />);
@@ -112,12 +134,8 @@ describe("StudioQueuePanelHost", () => {
 
   it("hands focus back to the button that opened it after Escape", async () => {
     setPanelOpen(false);
-    const { rerenderWith } = renderWithPlayer(
-      <>
-        <button type="button">{OPENER_LABEL}</button>
-        <StudioQueuePanelHost />
-      </>,
-    );
+    const { rerenderWith } = renderWithPlayer(<OpenerBesideHost />);
+    await awaitCatalog("studio");
     const opener = screen.getByRole("button", { name: OPENER_LABEL });
     opener.focus();
     setPanelOpen(true);
@@ -148,13 +166,9 @@ describe("StudioQueuePanelHost", () => {
   it("falls back to the queue button by its id", async () => {
     setPanelOpen(false);
     const { rerenderWith } = renderWithPlayer(
-      <>
-        <button type="button" id={STUDIO_QUEUE_BUTTON_ID}>
-          {OPENER_LABEL}
-        </button>
-        <StudioQueuePanelHost />
-      </>,
+      <OpenerBesideHost openerId={STUDIO_QUEUE_BUTTON_ID} />,
     );
+    await awaitCatalog("studio");
     setPanelOpen(true);
     rerenderWith({});
     await screen.findByRole("complementary", { name: "Queue" });
@@ -167,12 +181,8 @@ describe("StudioQueuePanelHost", () => {
 
   it("hands focus back to the opener under StrictMode", async () => {
     setPanelOpen(false);
-    const { rerenderWith } = renderWithPlayer(
-      <StrictMode>
-        <button type="button">{OPENER_LABEL}</button>
-        <StudioQueuePanelHost />
-      </StrictMode>,
-    );
+    const { rerenderWith } = renderWithPlayer(<StrictOpenerBesideHost />);
+    await awaitCatalog("studio");
     const opener = screen.getByRole("button", { name: OPENER_LABEL });
     opener.focus();
     setPanelOpen(true);
@@ -202,7 +212,7 @@ describe("StudioQueuePanelHost", () => {
     expect(surfaceHolder.current?.closeSidePanel).toHaveBeenCalled();
   });
 
-  it("names the source as Playing from {source} with a link", () => {
+  it("names the source as Playing from {source} with a link", async () => {
     surfaceHolder.current = floatingSurface("nowPlaying");
     renderWithPlayer(<StudioQueuePanelHost />, {
       player: playerFrom({
@@ -211,6 +221,7 @@ describe("StudioQueuePanelHost", () => {
         href: "/studio/playlist?id=1",
       }),
     });
+    await awaitCatalog("studio");
     const sourceLink = screen.getByRole("link", { name: "Late" });
     expect(sourceLink.getAttribute("href")).toBe("/studio/playlist?id=1");
     expect(sourceLink.closest("p")?.textContent).toBe("Playing from Late");

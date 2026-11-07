@@ -71,6 +71,19 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   });
   const isDrainScheduled = useRef(false);
 
+  // True once the provider has unmounted. A catalog chunk can still resolve
+  // after that, and React's setState reads `window.event` to pick an update
+  // lane, so a late resolution after a test file's jsdom window is torn down
+  // threw "window is not defined". Late resolutions skip their state update.
+  // Reset on mount so StrictMode's simulated unmount and remount keeps it false.
+  const isUnmounted = useRef(false);
+  useEffect(() => {
+    isUnmounted.current = false;
+    return () => {
+      isUnmounted.current = true;
+    };
+  }, []);
+
   // Fetch every queued namespace; each resolution records the catalog, which
   // re-renders consumers with the now-available strings. Reads only refs and
   // state setters, so its identity is stable.
@@ -83,7 +96,8 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       queue.clear();
       for (const namespace of toLoad) {
         loadNamespace(namespaceLanguage, namespace)
-          .then((catalog) =>
+          .then((catalog) => {
+            if (isUnmounted.current) return;
             setLoadedNamespaces((previous) =>
               previous[namespaceLanguage][namespace] === catalog
                 ? previous
@@ -94,21 +108,23 @@ export function I18nProvider({ children }: { children: ReactNode }) {
                       [namespace]: catalog,
                     },
                   },
-            ),
-          )
+            );
+          })
           .catch((error) => {
             requestedNamespaces.current[namespaceLanguage].delete(namespace);
-            setFailedNamespaces((previous) =>
-              previous[namespaceLanguage][namespace]
-                ? previous
-                : {
-                    ...previous,
-                    [namespaceLanguage]: {
-                      ...previous[namespaceLanguage],
-                      [namespace]: true,
+            if (!isUnmounted.current) {
+              setFailedNamespaces((previous) =>
+                previous[namespaceLanguage][namespace]
+                  ? previous
+                  : {
+                      ...previous,
+                      [namespaceLanguage]: {
+                        ...previous[namespaceLanguage],
+                        [namespace]: true,
+                      },
                     },
-                  },
-            );
+              );
+            }
             logWarn("i18n: failed to load namespace", {
               namespace,
               language: namespaceLanguage,
@@ -232,12 +248,20 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   // very fast navigation. `requestIdleCallback` isn't in Safari; the
   // `setTimeout` fallback still runs after the current paint.
   useEffect(() => {
-    const scheduleIdle: (callback: () => void) => void =
+    // Returns a function that cancels the scheduled callback, so an unmount
+    // before idle time leaves no warmup behind.
+    const scheduleIdle: (callback: () => void) => () => void =
       typeof window.requestIdleCallback === "function"
-        ? (callback) => window.requestIdleCallback(callback)
-        : (callback) => window.setTimeout(callback, 1);
+        ? (callback) => {
+            const handle = window.requestIdleCallback(callback);
+            return () => window.cancelIdleCallback(handle);
+          }
+        : (callback) => {
+            const handle = window.setTimeout(callback, 1);
+            return () => window.clearTimeout(handle);
+          };
 
-    scheduleIdle(() => {
+    const cancelWarmup = scheduleIdle(() => {
       for (const namespace of Object.keys(enNamespaceLoaders) as Namespace[]) {
         if (
           loadedNamespaces.en[namespace] !== undefined ||
@@ -247,13 +271,14 @@ export function I18nProvider({ children }: { children: ReactNode }) {
         }
         requestedNamespaces.current.en.add(namespace);
         loadNamespace("en", namespace)
-          .then((catalog) =>
+          .then((catalog) => {
+            if (isUnmounted.current) return;
             setLoadedNamespaces((previous) =>
               previous.en[namespace] === catalog
                 ? previous
                 : { ...previous, en: { ...previous.en, [namespace]: catalog } },
-            ),
-          )
+            );
+          })
           .catch((error) => {
             requestedNamespaces.current.en.delete(namespace);
             logWarn("i18n: failed to prefetch EN namespace", {
@@ -263,6 +288,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
           });
       }
     });
+    return cancelWarmup;
     // Runs once per mount as a background warmup. The idle callback reads
     // `loadedNamespaces`/`requestedNamespaces` for their current values, so
     // neither is listed as a dependency.

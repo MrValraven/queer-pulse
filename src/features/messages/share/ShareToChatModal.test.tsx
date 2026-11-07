@@ -3,6 +3,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { ApiError } from "../../../shared/api/client";
 import { ToastProvider } from "../../../shared/components/feedback/ToastProvider";
 import type { Conversation } from "../data";
 import { ShareToChatModal } from "./ShareToChatModal";
@@ -97,6 +98,11 @@ const FAKE_CATALOG: Record<string, string> = {
   "messages:share.partialToast":
     "Sent to {sentCount} of {totalCount}. Didn't reach {failedNames}.",
   "messages:share.errorToast": "That didn't send. Try again in a moment.",
+  "messages:share.partialToastWithCause":
+    "Sent to {sentCount} of {totalCount}. Didn't reach {failedNames}. {cause}",
+  "messages:share.errorToastWithCause": "That didn't send. {cause}",
+  "shared:apiError.reasonRateLimited":
+    "Too many attempts. Wait a moment and try again.",
   "messages:share.openThreadCta": "Open",
   "messages:share.selectedCount_one": "{count} conversation selected",
   "messages:share.selectedCount_other": "{count} conversations selected",
@@ -237,7 +243,7 @@ describe("ShareToChatModal", () => {
     ];
     sendToMany.mockResolvedValue([
       { conversationId: "conv-1", ok: true },
-      { conversationId: "conv-2", ok: false },
+      { conversationId: "conv-2", ok: false, error: new ApiError(429, "x") },
     ]);
 
     renderModal(
@@ -254,7 +260,9 @@ describe("ShareToChatModal", () => {
     await user.click(screen.getByRole("button", { name: "Send" }));
 
     expect(
-      await screen.findByText("Sent to 1 of 2. Didn't reach Kai Rivers."),
+      await screen.findByText(
+        "Sent to 1 of 2. Didn't reach Kai Rivers. Too many attempts. Wait a moment and try again.",
+      ),
     ).toBeInTheDocument();
   });
 

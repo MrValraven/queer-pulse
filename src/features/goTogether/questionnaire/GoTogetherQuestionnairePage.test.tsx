@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { routes } from "../../../app/routeMap";
 import { TestProviders } from "../../../test/TestProviders";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import type { FriendMatchAnswers } from "../goTogetherQuestionnaire.data";
 import { GoTogetherQuestionnairePage } from "./GoTogetherQuestionnairePage";
 import { QUESTIONNAIRE_STEPS } from "./questionnaireSteps.data";
@@ -90,7 +91,7 @@ afterEach(() => {
   profileState.answers = null;
 });
 
-function renderPage(returnPath?: string) {
+async function renderPage(returnPath?: string) {
   const search =
     returnPath == null ? "" : `?return=${encodeURIComponent(returnPath)}`;
   render(
@@ -111,6 +112,7 @@ function renderPage(returnPath?: string) {
       </Routes>
     </TestProviders>,
   );
+  await awaitCatalog("goTogether");
 }
 
 /** The current step's section, named by its focusable h1. */
@@ -145,9 +147,25 @@ async function walkToConsentStep() {
   return screen.findByRole("checkbox");
 }
 
+/** Alerts the component under test raised. The toast deck keeps its own
+ *  empty assertive region mounted from the first paint, so that region is
+ *  left out here. */
+function componentAlerts(): HTMLElement[] {
+  return screen
+    .queryAllByRole("alert")
+    .filter((element) => !element.hasAttribute("aria-live"));
+}
+
+/** The one alert the component under test raised. */
+function componentAlert(): HTMLElement {
+  const alerts = componentAlerts();
+  expect(alerts).toHaveLength(1);
+  return alerts[0]!;
+}
+
 describe("GoTogetherQuestionnairePage", () => {
   it("renders each Likert scale as a radio group with arrow-key navigation", async () => {
-    renderPage();
+    await renderPage();
 
     await screen.findAllByRole("radiogroup");
     const scales = within(stepRegion()).getAllByRole("radiogroup");
@@ -171,7 +189,7 @@ describe("GoTogetherQuestionnairePage", () => {
 
   it("keeps Save unavailable until the consent box is ticked, and says why on a press", async () => {
     profileState.answers = COMPLETE_ANSWERS;
-    renderPage();
+    await renderPage();
 
     const consentBox = await walkToConsentStep();
     const saveButton = screen.getByRole("button", { name: "Save my answers" });
@@ -182,7 +200,7 @@ describe("GoTogetherQuestionnairePage", () => {
     fireEvent.click(saveButton);
 
     expect(saveMutate).not.toHaveBeenCalled();
-    expect(screen.getByRole("alert")).toHaveTextContent(CONSENT_HINT);
+    expect(componentAlert()).toHaveTextContent(CONSENT_HINT);
     expect(saveButton).toHaveAccessibleDescription(CONSENT_HINT);
 
     fireEvent.click(consentBox);
@@ -193,7 +211,7 @@ describe("GoTogetherQuestionnairePage", () => {
   });
 
   it("shows the incomplete hint only after a press on the unavailable Next", async () => {
-    renderPage();
+    await renderPage();
 
     await screen.findAllByRole("radiogroup");
     const nextButton = screen.getByRole("button", { name: "Next" });
@@ -203,12 +221,12 @@ describe("GoTogetherQuestionnairePage", () => {
     fireEvent.click(nextButton);
 
     expect(screen.getByText(/Step 1 of 9/)).toBeInTheDocument();
-    expect(screen.getByRole("alert")).toHaveTextContent(INCOMPLETE_HINT);
+    expect(componentAlert()).toHaveTextContent(INCOMPLETE_HINT);
   });
 
   it("keeps the pick counter in the action bar, outside the scrolling step", async () => {
     profileState.answers = COMPLETE_ANSWERS;
-    renderPage();
+    await renderPage();
 
     await screen.findAllByRole("radiogroup");
     clickNext();
@@ -221,7 +239,7 @@ describe("GoTogetherQuestionnairePage", () => {
 
   it("offers Clear and skip on the area step only once an area is chosen", async () => {
     profileState.answers = { ...COMPLETE_ANSWERS, area: null };
-    renderPage();
+    await renderPage();
 
     await screen.findAllByRole("radiogroup");
     for (let stepIndex = 0; stepIndex < AREA_STEP_INDEX; stepIndex += 1) {
@@ -235,7 +253,7 @@ describe("GoTogetherQuestionnairePage", () => {
 
   it("clears a chosen area and moves on to consent", async () => {
     profileState.answers = COMPLETE_ANSWERS;
-    renderPage();
+    await renderPage();
 
     await screen.findAllByRole("radiogroup");
     for (let stepIndex = 0; stepIndex < AREA_STEP_INDEX; stepIndex += 1) {
@@ -253,7 +271,7 @@ describe("GoTogetherQuestionnairePage", () => {
     saveMutate.mockImplementation((_answers, options) =>
       options?.onSuccess?.(),
     );
-    renderPage("/gatherings/pride-picnic");
+    await renderPage("/gatherings/pride-picnic");
 
     fireEvent.click(await walkToConsentStep());
     fireEvent.click(screen.getByRole("button", { name: "Save my answers" }));
@@ -275,7 +293,7 @@ describe("GoTogetherQuestionnairePage", () => {
       saveMutate.mockImplementation((_answers, options) =>
         options?.onSuccess?.(),
       );
-      renderPage(unsafeReturn);
+      await renderPage(unsafeReturn);
 
       fireEvent.click(await walkToConsentStep());
       fireEvent.click(screen.getByRole("button", { name: "Save my answers" }));
@@ -286,7 +304,7 @@ describe("GoTogetherQuestionnairePage", () => {
   );
 
   it("points the first step's Back link at the gathering list for an unsafe return", async () => {
-    renderPage("/\t/evil.example");
+    await renderPage("/\t/evil.example");
 
     const backLink = await screen.findByRole("link", { name: "Back" });
 
@@ -295,7 +313,7 @@ describe("GoTogetherQuestionnairePage", () => {
 
   it("prefills every step from the saved answers", async () => {
     profileState.answers = COMPLETE_ANSWERS;
-    renderPage();
+    await renderPage();
 
     // Values: six rows, one point checked in each.
     await screen.findAllByRole("radiogroup");

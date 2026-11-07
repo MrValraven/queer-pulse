@@ -49,7 +49,11 @@ const mocks = vi.hoisted(() => ({
 vi.mock("../api/useStudioAccess", () => ({
   useStudioAccess: () => mocks.access,
 }));
-vi.mock("../api/useStudioPlaybackPreferences", () => ({
+vi.mock("../api/useStudioPlaybackPreferences", async (importOriginal) => ({
+  // The app's own player (in TestProviders) reads the rest of this module.
+  ...(await importOriginal<
+    typeof import("../api/useStudioPlaybackPreferences")
+  >()),
   useStudioHideExplicit: () => mocks.hideExplicit,
 }));
 vi.mock("../api/useStudioTrack", () => ({

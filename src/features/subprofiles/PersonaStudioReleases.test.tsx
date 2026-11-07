@@ -170,7 +170,14 @@ describe("Studio releases on a persona page (demo)", () => {
     expect(
       screen.queryByRole("region", { name: /discography/i }),
     ).not.toBeInTheDocument();
-    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    // The toast deck keeps an empty assertive region mounted: it must stay
+    // empty, and no other alert may appear on the page.
+    const alerts = screen.queryAllByRole("alert");
+    const pageAlerts = alerts.filter(
+      (alert) => alert.closest("[data-toast-region]") === null,
+    );
+    expect(pageAlerts).toHaveLength(0);
+    for (const alert of alerts) expect(alert).toBeEmptyDOMElement();
   });
 
   it("lists the persona's public playlists in the Studio block", async () => {

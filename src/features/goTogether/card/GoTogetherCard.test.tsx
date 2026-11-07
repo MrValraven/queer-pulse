@@ -8,6 +8,7 @@ import {
 import { QueryClient } from "@tanstack/react-query";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { routes } from "../../../app/routeMap";
 import { ApiError } from "../../../shared/api/client";
 import { createFormatters } from "../../../shared/i18n/format";
@@ -211,19 +212,26 @@ function makeGathering(
   return { ...base, slug: SLUG, myRsvpStatus };
 }
 
-function renderCard(
+async function renderCard(
   card: GoTogetherCardDTO,
   gathering = makeGathering(),
   initialEntries?: string[],
 ) {
   cardState.data = card;
-  const tree = (
-    <TestProviders initialEntries={initialEntries}>
+  // A fresh element on every call: React skips a rerender handed the very
+  // same element, so the card would keep its first read of the mocks. One
+  // query client serves every render, so a rerender keeps the same cache.
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  const buildTree = () => (
+    <TestProviders initialEntries={initialEntries} queryClient={queryClient}>
       <GoTogetherCard gathering={gathering} />
     </TestProviders>
   );
-  const result = render(tree);
-  return { ...result, rerenderCard: () => result.rerender(tree) };
+  const result = render(buildTree());
+  await awaitCatalog("goTogether");
+  return { ...result, rerenderCard: () => result.rerender(buildTree()) };
 }
 
 function confirmButton(name: RegExp) {
@@ -291,24 +299,40 @@ function futureCutoff(): string {
   return new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
 }
 
+/** Alerts the component under test raised. The toast deck keeps its own
+ *  empty assertive region mounted from the first paint, so that region is
+ *  left out here. */
+function componentAlerts(): HTMLElement[] {
+  return screen
+    .queryAllByRole("alert")
+    .filter((element) => !element.hasAttribute("aria-live"));
+}
+
+/** The one alert the component under test raised. */
+function componentAlert(): HTMLElement {
+  const alerts = componentAlerts();
+  expect(alerts).toHaveLength(1);
+  return alerts[0]!;
+}
+
 describe("GoTogetherCard", () => {
-  it("renders nothing when Go together is unavailable", () => {
-    renderCard(makeCard({ state: "unavailable" }));
+  it("renders nothing when Go together is unavailable", async () => {
+    await renderCard(makeCard({ state: "unavailable" }));
     expect(
       screen.queryByRole("heading", { name: "Go together" }),
     ).not.toBeInTheDocument();
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
 
-  it("renders nothing for a member who is not going", () => {
-    renderCard(makeCard({ state: "notOptedIn" }), makeGathering(null));
+  it("renders nothing for a member who is not going", async () => {
+    await renderCard(makeCard({ state: "notOptedIn" }), makeGathering(null));
     expect(
       screen.queryByRole("heading", { name: "Go together" }),
     ).not.toBeInTheDocument();
   });
 
-  it("links to the questionnaire with a return param back to the card on the gathering", () => {
-    renderCard(makeCard({ state: "questionnaireNeeded" }));
+  it("links to the questionnaire with a return param back to the card on the gathering", async () => {
+    await renderCard(makeCard({ state: "questionnaireNeeded" }));
     const link = screen.getByRole("link", { name: "Answer the questions" });
     expect(link).toHaveAttribute(
       "href",
@@ -316,21 +340,21 @@ describe("GoTogetherCard", () => {
     );
   });
 
-  it("gives the card section the anchor the return path points at", () => {
-    renderCard(makeCard({ state: "notOptedIn" }));
+  it("gives the card section the anchor the return path points at", async () => {
+    await renderCard(makeCard({ state: "notOptedIn" }));
     const heading = screen.getByRole("heading", { name: "Go together" });
     expect(heading.closest("section")).toHaveAttribute("id", "go-together");
   });
 
-  it("focuses the card heading when the page opens on the card's anchor", () => {
-    renderCard(makeCard({ state: "notOptedIn" }), makeGathering(), [
+  it("focuses the card heading when the page opens on the card's anchor", async () => {
+    await renderCard(makeCard({ state: "notOptedIn" }), makeGathering(), [
       `${gatheringPath(SLUG)}#go-together`,
     ]);
     expect(screen.getByRole("heading", { name: "Go together" })).toHaveFocus();
   });
 
-  it("leaves focus alone when the page opens without the card's anchor", () => {
-    renderCard(makeCard({ state: "notOptedIn" }), makeGathering(), [
+  it("leaves focus alone when the page opens without the card's anchor", async () => {
+    await renderCard(makeCard({ state: "notOptedIn" }), makeGathering(), [
       gatheringPath(SLUG),
     ]);
     expect(
@@ -340,8 +364,8 @@ describe("GoTogetherCard", () => {
 });
 
 describe("GoTogetherCard opt-in form", () => {
-  it("shows the partner picker for With a friend and opts in as a pair", () => {
-    renderCard(makeCard({ state: "notOptedIn" }));
+  it("shows the partner picker for With a friend and opts in as a pair", async () => {
+    await renderCard(makeCard({ state: "notOptedIn" }));
     expect(
       screen.getByText("Going solo or with one friend?"),
     ).toBeInTheDocument();
@@ -362,8 +386,8 @@ describe("GoTogetherCard opt-in form", () => {
     });
   });
 
-  it("keeps confirm unavailable while a lens is chosen and consent is unticked", () => {
-    renderCard(makeCard({ state: "notOptedIn" }));
+  it("keeps confirm unavailable while a lens is chosen and consent is unticked", async () => {
+    await renderCard(makeCard({ state: "notOptedIn" }));
     fireEvent.click(screen.getByRole("radio", { name: /Solo/ }));
     fireEvent.click(screen.getByRole("radio", { name: "Picnic" }));
     expect(confirmButton(/Count me in/)).not.toHaveAttribute("aria-disabled");
@@ -391,8 +415,8 @@ describe("GoTogetherCard opt-in form", () => {
     });
   });
 
-  it("sends lens null and lensConsent false when No lens is chosen", () => {
-    renderCard(makeCard({ state: "notOptedIn" }));
+  it("sends lens null and lensConsent false when No lens is chosen", async () => {
+    await renderCard(makeCard({ state: "notOptedIn" }));
     fireEvent.click(screen.getByRole("radio", { name: /Solo/ }));
     fireEvent.click(screen.getByRole("radio", { name: "Pub" }));
     fireEvent.click(screen.getByRole("radio", { name: /Women and femmes/ }));
@@ -409,8 +433,8 @@ describe("GoTogetherCard opt-in form", () => {
     });
   });
 
-  it("says why Count me in is unavailable and links the reason to the button", () => {
-    renderCard(makeCard({ state: "notOptedIn" }));
+  it("says why Count me in is unavailable and links the reason to the button", async () => {
+    await renderCard(makeCard({ state: "notOptedIn" }));
     fireEvent.click(screen.getByRole("radio", { name: /With a friend/ }));
     const confirm = confirmButton(/Count me in/);
     expect(confirm).toBeEnabled();
@@ -431,22 +455,20 @@ describe("GoTogetherCard opt-in form", () => {
     );
   });
 
-  it("announces the reason when the unavailable Count me in is pressed", () => {
-    renderCard(makeCard({ state: "notOptedIn" }));
+  it("announces the reason when the unavailable Count me in is pressed", async () => {
+    await renderCard(makeCard({ state: "notOptedIn" }));
     fireEvent.click(screen.getByRole("radio", { name: /With a friend/ }));
-    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(componentAlerts()).toHaveLength(0);
 
     fireEvent.click(confirmButton(/Count me in/));
     expect(optInMutate).not.toHaveBeenCalled();
-    expect(screen.getByRole("alert")).toHaveTextContent(
-      "Pick a friend to continue.",
-    );
+    expect(componentAlert()).toHaveTextContent("Pick a friend to continue.");
     expect(confirmButton(/Count me in/)).toHaveAccessibleDescription(
       "Pick a friend to continue.",
     );
   });
 
-  it("refetches the card when opting in finds no questionnaire answers", () => {
+  it("refetches the card when opting in finds no questionnaire answers", async () => {
     optInMutate.mockImplementation(
       (_body: unknown, options?: { onError?: (error: Error) => void }) =>
         options?.onError?.(
@@ -465,6 +487,7 @@ describe("GoTogetherCard opt-in form", () => {
         <GoTogetherCard gathering={makeGathering()} />
       </TestProviders>,
     );
+    await awaitCatalog("goTogether");
     fireEvent.click(screen.getByRole("radio", { name: /Solo/ }));
     fireEvent.click(screen.getByRole("radio", { name: "Picnic" }));
     fireEvent.click(confirmButton(/Count me in/));
@@ -474,8 +497,10 @@ describe("GoTogetherCard opt-in form", () => {
     });
   });
 
-  it("shows the partner copy on PARTNER_UNAVAILABLE and keeps the mode and answers", () => {
-    const { rerenderCard } = renderCard(makeCard({ state: "notOptedIn" }));
+  it("shows the partner copy on PARTNER_UNAVAILABLE and keeps the mode and answers", async () => {
+    const { rerenderCard } = await renderCard(
+      makeCard({ state: "notOptedIn" }),
+    );
     fireEvent.click(screen.getByRole("radio", { name: /With a friend/ }));
     fireEvent.click(screen.getByRole("option", { name: /Rui Matos/ }));
     fireEvent.click(screen.getByRole("radio", { name: "Pub" }));
@@ -487,7 +512,7 @@ describe("GoTogetherCard opt-in form", () => {
     });
     rerenderCard();
 
-    expect(screen.getByRole("alert")).toHaveTextContent(
+    expect(componentAlert()).toHaveTextContent(
       "That friend can't go together with you",
     );
     expect(
@@ -505,9 +530,9 @@ describe("GoTogetherCard opt-in form", () => {
 });
 
 describe("GoTogetherCard states after opting in", () => {
-  it("shows the reveal time from cutoffAt and stops looking for a group", () => {
+  it("shows the reveal time from cutoffAt and stops looking for a group", async () => {
     const cutoffAt = futureCutoff();
-    renderCard(makeCard({ state: "waiting", cutoffAt }));
+    await renderCard(makeCard({ state: "waiting", cutoffAt }));
     const format = createFormatters("en");
     const cutoff = new Date(cutoffAt);
     const day = format.date(cutoff, {
@@ -526,16 +551,16 @@ describe("GoTogetherCard states after opting in", () => {
     expect(withdrawMutate).toHaveBeenCalledTimes(1);
   });
 
-  it("says the group lands soon once the cutoff has passed", () => {
-    renderCard(
+  it("says the group lands soon once the cutoff has passed", async () => {
+    await renderCard(
       makeCard({ state: "waiting", cutoffAt: "2020-01-01T10:00:00.000Z" }),
     );
     expect(screen.getByText("Your group lands soon")).toBeInTheDocument();
     expect(screen.queryByText(/2020/)).not.toBeInTheDocument();
   });
 
-  it("shows the pending line to a waiting member who sent a pair invite", () => {
-    renderCard(makeCard({ state: "waiting", pair: makePair("sent") }));
+  it("shows the pending line to a waiting member who sent a pair invite", async () => {
+    await renderCard(makeCard({ state: "waiting", pair: makePair("sent") }));
     expect(screen.getByText(/Sofia/)).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "Accept" }),
@@ -545,12 +570,12 @@ describe("GoTogetherCard states after opting in", () => {
     ).toBeInTheDocument();
   });
 
-  it("lets a waiting member answer a pair invite they received", () => {
+  it("lets a waiting member answer a pair invite they received", async () => {
     const waitingInvitee = makeCard({
       state: "waiting",
       pair: makePair("received"),
     });
-    const { unmount } = renderCard(waitingInvitee);
+    const { unmount } = await renderCard(waitingInvitee);
     expect(screen.getByText("Sofia wants to go together")).toBeInTheDocument();
     expect(screen.queryByText(/Waiting for Sofia/)).not.toBeInTheDocument();
     expect(
@@ -568,13 +593,13 @@ describe("GoTogetherCard states after opting in", () => {
     expect(optInMutate).not.toHaveBeenCalled();
     unmount();
 
-    renderCard(waitingInvitee);
+    await renderCard(waitingInvitee);
     fireEvent.click(screen.getByRole("button", { name: "Decline" }));
     expect(declinePairMutate).toHaveBeenCalledTimes(1);
   });
 
-  it("lets an unmatched member stop looking for a group", () => {
-    renderCard(makeCard({ state: "unmatched" }));
+  it("lets an unmatched member stop looking for a group", async () => {
+    await renderCard(makeCard({ state: "unmatched" }));
     expect(
       screen.getByText("Not enough people for a group yet"),
     ).toBeInTheDocument();
@@ -584,8 +609,8 @@ describe("GoTogetherCard states after opting in", () => {
     expect(withdrawMutate).toHaveBeenCalledTimes(1);
   });
 
-  it("opens Change how I'm going on the current mode under the mode question", () => {
-    renderCard(makeCard({ state: "waiting" }));
+  it("opens Change how I'm going on the current mode under the mode question", async () => {
+    await renderCard(makeCard({ state: "waiting" }));
     fireEvent.click(
       screen.getByRole("button", { name: "Change how I'm going" }),
     );
@@ -598,8 +623,8 @@ describe("GoTogetherCard states after opting in", () => {
     );
   });
 
-  it("opens the phone verification step for a member who is not verified", () => {
-    renderCard(
+  it("opens the phone verification step for a member who is not verified", async () => {
+    await renderCard(
       makeCard({ state: "ineligible", ineligibleReason: "notVerified" }),
     );
     expect(screen.queryByTestId("step-up-modal")).not.toBeInTheDocument();
@@ -607,9 +632,9 @@ describe("GoTogetherCard states after opting in", () => {
     expect(screen.getByTestId("step-up-modal")).toHaveTextContent("phone");
   });
 
-  it("offers Accept, which opens the host questions and lens step, and Decline", () => {
+  it("offers Accept, which opens the host questions and lens step, and Decline", async () => {
     const pairCard = makePairInviteCard();
-    const { unmount } = renderCard(pairCard);
+    const { unmount } = await renderCard(pairCard);
     expect(screen.getByText("Sofia wants to go together")).toBeInTheDocument();
     expect(
       screen.queryByRole("radio", { name: /No lens/ }),
@@ -629,14 +654,14 @@ describe("GoTogetherCard states after opting in", () => {
     });
     unmount();
 
-    renderCard(pairCard);
+    await renderCard(pairCard);
     fireEvent.click(screen.getByRole("button", { name: "Decline" }));
     expect(declinePairMutate).toHaveBeenCalledTimes(1);
   });
 
   it("renders the group entry with a link to the group chat once grouped", async () => {
     groupState.data = makeGroup();
-    renderCard(makeCard({ state: "grouped", groupId: "group-1" }));
+    await renderCard(makeCard({ state: "grouped", groupId: "group-1" }));
 
     await waitFor(() => {
       const chatLinks = screen.getAllByRole("link").filter((link) => {
@@ -654,12 +679,12 @@ describe("GoTogetherCard focus", () => {
   const cardHeading = () =>
     screen.getByRole("heading", { name: "Go together" });
 
-  it("moves focus to the card heading after Count me in succeeds", () => {
+  it("moves focus to the card heading after Count me in succeeds", async () => {
     optInMutate.mockImplementation(
       (_body: unknown, options?: { onSuccess?: () => void }) =>
         options?.onSuccess?.(),
     );
-    renderCard(makeCard({ state: "notOptedIn" }));
+    await renderCard(makeCard({ state: "notOptedIn" }));
     fireEvent.click(screen.getByRole("radio", { name: /Solo/ }));
     fireEvent.click(screen.getByRole("radio", { name: "Picnic" }));
     fireEvent.click(confirmButton(/Count me in/));
@@ -668,8 +693,8 @@ describe("GoTogetherCard focus", () => {
     expect(cardHeading()).toHaveFocus();
   });
 
-  it("keeps focus on the form when Count me in fails", () => {
-    renderCard(makeCard({ state: "notOptedIn" }));
+  it("keeps focus on the form when Count me in fails", async () => {
+    await renderCard(makeCard({ state: "notOptedIn" }));
     fireEvent.click(screen.getByRole("radio", { name: /Solo/ }));
     fireEvent.click(screen.getByRole("radio", { name: "Picnic" }));
     const confirm = confirmButton(/Count me in/);
@@ -680,14 +705,16 @@ describe("GoTogetherCard focus", () => {
     expect(confirm).toHaveFocus();
   });
 
-  it("moves focus to the card heading when a stale refusal refetches the card into a new state", () => {
+  it("moves focus to the card heading when a stale refusal refetches the card into a new state", async () => {
     optInMutate.mockImplementation(
       (_body: unknown, options?: { onError?: (error: Error) => void }) =>
         options?.onError?.(
           new ApiError(409, "Locked", { code: "GO_TOGETHER_LOCKED" }),
         ),
     );
-    const { rerenderCard } = renderCard(makeCard({ state: "notOptedIn" }));
+    const { rerenderCard } = await renderCard(
+      makeCard({ state: "notOptedIn" }),
+    );
     fireEvent.click(screen.getByRole("radio", { name: /Solo/ }));
     fireEvent.click(screen.getByRole("radio", { name: "Picnic" }));
     const confirm = confirmButton(/Count me in/);
@@ -703,12 +730,12 @@ describe("GoTogetherCard focus", () => {
     expect(cardHeading()).toHaveFocus();
   });
 
-  it("moves focus to the card heading after Stop looking for a group succeeds", () => {
+  it("moves focus to the card heading after Stop looking for a group succeeds", async () => {
     withdrawMutate.mockImplementation(
       (_variables: unknown, options?: { onSuccess?: () => void }) =>
         options?.onSuccess?.(),
     );
-    renderCard(makeCard({ state: "waiting" }));
+    await renderCard(makeCard({ state: "waiting" }));
     fireEvent.click(
       screen.getByRole("button", { name: "Stop looking for a group" }),
     );
@@ -717,8 +744,8 @@ describe("GoTogetherCard focus", () => {
     expect(cardHeading()).toHaveFocus();
   });
 
-  it("focuses the form on Change how I'm going and returns focus on Go back", () => {
-    renderCard(makeCard({ state: "waiting" }));
+  it("focuses the form on Change how I'm going and returns focus on Go back", async () => {
+    await renderCard(makeCard({ state: "waiting" }));
     fireEvent.click(
       screen.getByRole("button", { name: "Change how I'm going" }),
     );
@@ -730,8 +757,8 @@ describe("GoTogetherCard focus", () => {
     ).toHaveFocus();
   });
 
-  it("focuses the first host question when a pair invite is accepted", () => {
-    renderCard(makePairInviteCard());
+  it("focuses the first host question when a pair invite is accepted", async () => {
+    await renderCard(makePairInviteCard());
     fireEvent.click(screen.getByRole("button", { name: "Accept" }));
     expect(screen.getByRole("radio", { name: "Picnic" })).toHaveFocus();
 
@@ -739,12 +766,12 @@ describe("GoTogetherCard focus", () => {
     expect(screen.getByRole("button", { name: "Accept" })).toHaveFocus();
   });
 
-  it("moves focus to the card heading after Decline succeeds", () => {
+  it("moves focus to the card heading after Decline succeeds", async () => {
     declinePairMutate.mockImplementation(
       (_variables: unknown, options?: { onSuccess?: () => void }) =>
         options?.onSuccess?.(),
     );
-    renderCard(makePairInviteCard());
+    await renderCard(makePairInviteCard());
     fireEvent.click(screen.getByRole("button", { name: "Decline" }));
     expect(cardHeading()).toHaveFocus();
   });
@@ -753,24 +780,30 @@ describe("GoTogetherCard focus", () => {
 /** A failed card load says so inside the card, except a 404, which means
  *  Go together is switched off and the card stays out of sight. */
 describe("GoTogetherCard load failures", () => {
-  function renderFailedCard(
+  async function renderFailedCard(
     error: Error,
     gathering = makeGathering(),
     card?: GoTogetherCardDTO,
   ) {
     cardState.error = error;
     cardState.data = card;
-    const tree = (
-      <TestProviders>
+    // A fresh element on every call, so a rerender reads the mocks again,
+    // with one query client across renders.
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    const buildTree = () => (
+      <TestProviders queryClient={queryClient}>
         <GoTogetherCard gathering={gathering} />
       </TestProviders>
     );
-    const result = render(tree);
-    return { ...result, rerenderCard: () => result.rerender(tree) };
+    const result = render(buildTree());
+    await awaitCatalog("goTogether");
+    return { ...result, rerenderCard: () => result.rerender(buildTree()) };
   }
 
-  it("shows an inline error with Retry when the card fails to load", () => {
-    renderFailedCard(new ApiError(500, "Server error"));
+  it("shows an inline error with Retry when the card fails to load", async () => {
+    await renderFailedCard(new ApiError(500, "Server error"));
     expect(
       screen.getByRole("heading", { name: "Go together" }),
     ).toBeInTheDocument();
@@ -780,24 +813,24 @@ describe("GoTogetherCard load failures", () => {
     expect(refetchCard).toHaveBeenCalledTimes(1);
   });
 
-  it("shows the inline error for a network drop too", () => {
-    renderFailedCard(new TypeError("Failed to fetch"));
+  it("shows the inline error for a network drop too", async () => {
+    await renderFailedCard(new TypeError("Failed to fetch"));
     expect(
       screen.getByRole("button", { name: "Try again" }),
     ).toBeInTheDocument();
   });
 
-  it("keeps Retry pressable while the retry runs and sends no second request", () => {
+  it("keeps Retry pressable while the retry runs and sends no second request", async () => {
     cardState.isFetching = true;
-    renderFailedCard(new ApiError(503, "Unavailable"));
+    await renderFailedCard(new ApiError(503, "Unavailable"));
     const retry = screen.getByRole("button", { name: "Trying again" });
     expect(retry).toBeEnabled();
     fireEvent.click(retry);
     expect(refetchCard).not.toHaveBeenCalled();
   });
 
-  it("renders nothing on a 404, because Go together is switched off", () => {
-    renderFailedCard(new ApiError(404, "Not found"));
+  it("renders nothing on a 404, because Go together is switched off", async () => {
+    await renderFailedCard(new ApiError(404, "Not found"));
     expect(
       screen.queryByRole("heading", { name: "Go together" }),
     ).not.toBeInTheDocument();
@@ -806,8 +839,8 @@ describe("GoTogetherCard load failures", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("hides a card loaded earlier once a refetch answers 404", () => {
-    renderFailedCard(
+  it("hides a card loaded earlier once a refetch answers 404", async () => {
+    await renderFailedCard(
       new ApiError(404, "Not found"),
       makeGathering(),
       makeCard({ state: "waiting" }),
@@ -817,8 +850,8 @@ describe("GoTogetherCard load failures", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("keeps a loaded card on screen when a background refetch fails", () => {
-    renderFailedCard(
+  it("keeps a loaded card on screen when a background refetch fails", async () => {
+    await renderFailedCard(
       new ApiError(500, "Server error"),
       makeGathering(),
       makeCard({ state: "waiting" }),
@@ -831,22 +864,28 @@ describe("GoTogetherCard load failures", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("renders nothing for a member with no RSVP when the load fails", () => {
-    renderFailedCard(new ApiError(500, "Server error"), makeGathering(null));
+  it("renders nothing for a member with no RSVP when the load fails", async () => {
+    await renderFailedCard(
+      new ApiError(500, "Server error"),
+      makeGathering(null),
+    );
     expect(
       screen.queryByRole("heading", { name: "Go together" }),
     ).not.toBeInTheDocument();
   });
 
-  it("shows the inline error to a member who moved to maybe, who may still be grouped", () => {
-    renderFailedCard(new ApiError(500, "Server error"), makeGathering("maybe"));
+  it("shows the inline error to a member who moved to maybe, who may still be grouped", async () => {
+    await renderFailedCard(
+      new ApiError(500, "Server error"),
+      makeGathering("maybe"),
+    );
     expect(
       screen.getByRole("button", { name: "Try again" }),
     ).toBeInTheDocument();
   });
 
-  it("moves focus to the card heading once a Retry loads the card", () => {
-    const { rerenderCard } = renderFailedCard(new ApiError(500, "Error"));
+  it("moves focus to the card heading once a Retry loads the card", async () => {
+    const { rerenderCard } = await renderFailedCard(new ApiError(500, "Error"));
     const retry = screen.getByRole("button", { name: "Try again" });
     retry.focus();
     fireEvent.click(retry);
@@ -862,8 +901,8 @@ describe("GoTogetherCard load failures", () => {
     expect(screen.getByRole("heading", { name: "Go together" })).toHaveFocus();
   });
 
-  it("announces a Retry that fails again in a status region", () => {
-    const { rerenderCard } = renderFailedCard(new ApiError(500, "Error"));
+  it("announces a Retry that fails again in a status region", async () => {
+    const { rerenderCard } = await renderFailedCard(new ApiError(500, "Error"));
     const cardStatus = () =>
       within(
         screen
@@ -886,8 +925,8 @@ describe("GoTogetherCard load failures", () => {
 
 /** Switch-off and the end of matching, as the card reads them. */
 describe("GoTogetherCard after matching ends", () => {
-  it("says Go together has closed once the search has ended", () => {
-    renderCard(makeCard({ state: "closed" }));
+  it("says Go together has closed once the search has ended", async () => {
+    await renderCard(makeCard({ state: "closed" }));
     expect(
       screen.getByText("Go together has closed for this event."),
     ).toBeInTheDocument();
@@ -898,7 +937,7 @@ describe("GoTogetherCard after matching ends", () => {
 
   it("keeps the group entry for a feedback-due member, who keeps their state after a switch-off", async () => {
     groupState.data = makeGroup();
-    renderCard(makeCard({ state: "feedbackDue", groupId: "group-1" }));
+    await renderCard(makeCard({ state: "feedbackDue", groupId: "group-1" }));
     await waitFor(() => {
       const chatLinks = screen.getAllByRole("link").filter((link) => {
         const href = link.getAttribute("href") ?? "";
@@ -932,8 +971,8 @@ function makeAnswerAgainCard(
 /** The hosts changed a question after this member opted in: the waiting
  *  panel asks only that question again. */
 describe("GoTogetherCard answering a changed host question", () => {
-  it("asks only the changed question and sends only that answer", () => {
-    renderCard(makeAnswerAgainCard());
+  it("asks only the changed question and sends only that answer", async () => {
+    await renderCard(makeAnswerAgainCard());
     expect(
       screen.getByText("The hosts changed a question"),
     ).toBeInTheDocument();
@@ -954,16 +993,16 @@ describe("GoTogetherCard answering a changed host question", () => {
     });
   });
 
-  it("keeps Stop looking for a group beside the save", () => {
-    renderCard(makeAnswerAgainCard());
+  it("keeps Stop looking for a group beside the save", async () => {
+    await renderCard(makeAnswerAgainCard());
     fireEvent.click(
       screen.getByRole("button", { name: "Stop looking for a group" }),
     );
     expect(withdrawMutate).toHaveBeenCalledTimes(1);
   });
 
-  it("says why the save is unavailable until every asked question has an answer", () => {
-    renderCard(
+  it("says why the save is unavailable until every asked question has an answer", async () => {
+    await renderCard(
       makeAnswerAgainCard({ unansweredHostQuestionIds: ["q1", "q2"] }),
     );
     expect(
@@ -973,7 +1012,7 @@ describe("GoTogetherCard answering a changed host question", () => {
     expect(save).toHaveAttribute("aria-disabled", "true");
     fireEvent.click(save);
     expect(answerAgainMutate).not.toHaveBeenCalled();
-    expect(screen.getByRole("alert")).toHaveTextContent(
+    expect(componentAlert()).toHaveTextContent(
       "Answer each question from the host to continue.",
     );
 
@@ -985,8 +1024,8 @@ describe("GoTogetherCard answering a changed host question", () => {
     });
   });
 
-  it("shows the usual waiting panel once nothing is left to answer", () => {
-    renderCard(makeAnswerAgainCard({ unansweredHostQuestionIds: [] }));
+  it("shows the usual waiting panel once nothing is left to answer", async () => {
+    await renderCard(makeAnswerAgainCard({ unansweredHostQuestionIds: [] }));
     expect(
       screen.queryByText("The hosts changed a question"),
     ).not.toBeInTheDocument();
@@ -995,27 +1034,29 @@ describe("GoTogetherCard answering a changed host question", () => {
     ).toBeInTheDocument();
   });
 
-  it("ignores ids the card no longer carries as questions", () => {
-    renderCard(makeAnswerAgainCard({ unansweredHostQuestionIds: ["q9"] }));
+  it("ignores ids the card no longer carries as questions", async () => {
+    await renderCard(
+      makeAnswerAgainCard({ unansweredHostQuestionIds: ["q9"] }),
+    );
     expect(
       screen.queryByText("The hosts changed a question"),
     ).not.toBeInTheDocument();
   });
 
-  it("lets a pending pair invite come first", () => {
-    renderCard(makeAnswerAgainCard({ pair: makePair("received") }));
+  it("lets a pending pair invite come first", async () => {
+    await renderCard(makeAnswerAgainCard({ pair: makePair("received") }));
     expect(screen.getByText("Sofia wants to go together")).toBeInTheDocument();
     expect(
       screen.queryByText("The hosts changed a question"),
     ).not.toBeInTheDocument();
   });
 
-  it("moves focus to the card heading after the save succeeds", () => {
+  it("moves focus to the card heading after the save succeeds", async () => {
     answerAgainMutate.mockImplementation(
       (_body: unknown, options?: { onSuccess?: () => void }) =>
         options?.onSuccess?.(),
     );
-    renderCard(makeAnswerAgainCard());
+    await renderCard(makeAnswerAgainCard());
     fireEvent.click(screen.getByRole("radio", { name: "Early" }));
     fireEvent.click(screen.getByRole("button", { name: "Save my answer" }));
     expect(screen.getByRole("heading", { name: "Go together" })).toHaveFocus();
@@ -1025,40 +1066,44 @@ describe("GoTogetherCard answering a changed host question", () => {
     ["GO_TOGETHER_NOT_WAITING", 409],
     ["GO_TOGETHER_UNAVAILABLE", 409],
     ["GO_TOGETHER_INVALID_ANSWERS", 400],
-  ])("refetches the card when the save is refused with %s", (code, status) => {
-    answerAgainMutate.mockImplementation(
-      (_body: unknown, options?: { onError?: (error: Error) => void }) =>
-        options?.onError?.(new ApiError(status, "Refused", { code })),
-    );
-    const queryClient = new QueryClient({
-      defaultOptions: { queries: { retry: false } },
-    });
-    const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
-    cardState.data = makeAnswerAgainCard();
-    render(
-      <TestProviders queryClient={queryClient}>
-        <GoTogetherCard gathering={makeGathering()} />
-      </TestProviders>,
-    );
-    fireEvent.click(screen.getByRole("radio", { name: "Early" }));
-    fireEvent.click(screen.getByRole("button", { name: "Save my answer" }));
+  ])(
+    "refetches the card when the save is refused with %s",
+    async (code, status) => {
+      answerAgainMutate.mockImplementation(
+        (_body: unknown, options?: { onError?: (error: Error) => void }) =>
+          options?.onError?.(new ApiError(status, "Refused", { code })),
+      );
+      const queryClient = new QueryClient({
+        defaultOptions: { queries: { retry: false } },
+      });
+      const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
+      cardState.data = makeAnswerAgainCard();
+      render(
+        <TestProviders queryClient={queryClient}>
+          <GoTogetherCard gathering={makeGathering()} />
+        </TestProviders>,
+      );
+      await awaitCatalog("goTogether");
+      fireEvent.click(screen.getByRole("radio", { name: "Early" }));
+      fireEvent.click(screen.getByRole("button", { name: "Save my answer" }));
 
-    expect(invalidateSpy).toHaveBeenCalledWith({
-      queryKey: goTogetherKeys.cardRoot,
-    });
-  });
+      expect(invalidateSpy).toHaveBeenCalledWith({
+        queryKey: goTogetherKeys.cardRoot,
+      });
+    },
+  );
 
-  it("shows the changed-questions copy on INVALID_ANSWERS", () => {
+  it("shows the changed-questions copy on INVALID_ANSWERS", async () => {
     mutationState.answerAgainError = new ApiError(400, "Invalid", {
       code: "GO_TOGETHER_INVALID_ANSWERS",
     });
-    renderCard(makeAnswerAgainCard());
-    expect(screen.getByRole("alert")).toHaveTextContent(
+    await renderCard(makeAnswerAgainCard());
+    expect(componentAlert()).toHaveTextContent(
       "The host's questions changed again. Answer them once more, then save.",
     );
   });
 
-  it("refetches the card when the save answers 404, so a switched-off card hides", () => {
+  it("refetches the card when the save answers 404, so a switched-off card hides", async () => {
     answerAgainMutate.mockImplementation(
       (_body: unknown, options?: { onError?: (error: Error) => void }) =>
         options?.onError?.(new ApiError(404, "Not found")),
@@ -1073,6 +1118,7 @@ describe("GoTogetherCard answering a changed host question", () => {
         <GoTogetherCard gathering={makeGathering()} />
       </TestProviders>,
     );
+    await awaitCatalog("goTogether");
     fireEvent.click(screen.getByRole("radio", { name: "Early" }));
     fireEvent.click(screen.getByRole("button", { name: "Save my answer" }));
 
@@ -1081,8 +1127,8 @@ describe("GoTogetherCard answering a changed host question", () => {
     });
   });
 
-  it("clears a choice when the host edits the asked question under the same ids", () => {
-    const { rerenderCard } = renderCard(makeAnswerAgainCard());
+  it("clears a choice when the host edits the asked question under the same ids", async () => {
+    const { rerenderCard } = await renderCard(makeAnswerAgainCard());
     fireEvent.click(screen.getByRole("radio", { name: "Late" }));
     expect(screen.getByRole("radio", { name: "Late" })).toHaveAttribute(
       "aria-checked",
@@ -1112,21 +1158,21 @@ describe("GoTogetherCard answering a changed host question", () => {
     ).toHaveAttribute("aria-disabled", "true");
   });
 
-  it("reads a restricted account's 403 as the ineligible copy", () => {
+  it("reads a restricted account's 403 as the ineligible copy", async () => {
     mutationState.answerAgainError = new ApiError(403, "Restricted", {
       code: "ACCOUNT_RESTRICTED",
     });
-    renderCard(makeAnswerAgainCard());
-    expect(screen.getByRole("alert")).toHaveTextContent(
+    await renderCard(makeAnswerAgainCard());
+    expect(componentAlert()).toHaveTextContent(
       "Go together isn't available on your account right now.",
     );
   });
 
-  it("falls back to the general copy when the save is rate limited", () => {
+  it("names the rate limit when the save is rate limited", async () => {
     mutationState.answerAgainError = new ApiError(429, "Too many requests");
-    renderCard(makeAnswerAgainCard());
-    expect(screen.getByRole("alert")).toHaveTextContent(
-      "That didn't go through. Try again in a moment.",
+    await renderCard(makeAnswerAgainCard());
+    expect(componentAlert()).toHaveTextContent(
+      "Too many attempts. Wait a moment and try again.",
     );
   });
 });

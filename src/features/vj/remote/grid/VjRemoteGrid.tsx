@@ -46,6 +46,8 @@ export interface VjRemoteGridProps {
   search: VjRemoteGridSearch;
   onTapClip: (clipId: string, index: number) => void;
   onToggleFavorite: (clipId: string, isFavorite: boolean) => void;
+  /** Opens the sheet of clips that couldn't load, on the tapped badge's clip. */
+  onShowClipFailure: (clipId: string) => void;
   onGoGenerator: (generatorId: VjGeneratorId, variant: string | null) => void;
   /** Whether a generator's send waits for its ack, for the tile's pending ring. */
   generatorIsPending?: (generatorId: VjGeneratorId) => boolean;
@@ -141,6 +143,7 @@ export function VjRemoteGrid(props: VjRemoteGridProps): JSX.Element {
                     tabIndex={tabIndexOf(clipIndex)}
                     onTapClip={props.onTapClip}
                     onToggleFavorite={props.onToggleFavorite}
+                    onShowFailure={props.onShowClipFailure}
                   />
                 </CollapseListItem>
               ))

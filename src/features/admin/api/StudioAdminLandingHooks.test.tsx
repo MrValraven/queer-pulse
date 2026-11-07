@@ -200,7 +200,7 @@ describe("the demo store refusals", () => {
     expect(ineligibleReasonOfError(error)).toBe("content_warnings");
   });
 
-  it("refuses a photo naming an upload the demo did not issue with the codeless 403", async () => {
+  it("refuses a photo naming an upload the demo did not issue with the UPLOAD_NOT_YOURS 403", async () => {
     const { wrapper } = setup(demoAdminStudioLanding());
     const { result } = renderHook(() => usePutLandingPhoto(), { wrapper });
     const error = await act(() =>
@@ -352,14 +352,22 @@ describe("error helpers", () => {
     expect(ineligibleReasonOfError(new Error("x"))).toBeNull();
   });
 
-  it("reads a codeless 403 as the photo-not-yours line and a coded 403 as its own", () => {
+  it("reads UPLOAD_NOT_YOURS as the photo-not-yours line and any other 403 as its own", () => {
+    expect(
+      landingPhotoErrorKeyOf(
+        new ApiError(403, "Referenced upload does not belong to you", {
+          message: "Referenced upload does not belong to you",
+          code: "UPLOAD_NOT_YOURS",
+        }),
+      ),
+    ).toBe("studio:errors.reason.studio_landing_photo_not_yours");
     expect(
       landingPhotoErrorKeyOf(
         new ApiError(403, "Referenced upload does not belong to you", {
           message: "Referenced upload does not belong to you",
         }),
       ),
-    ).toBe("studio:errors.reason.studio_landing_photo_not_yours");
+    ).not.toBe("studio:errors.reason.studio_landing_photo_not_yours");
     expect(
       landingPhotoErrorKeyOf(
         new ApiError(403, "Forbidden", { code: "studio_access_required" }),

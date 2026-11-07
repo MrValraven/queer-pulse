@@ -108,7 +108,9 @@ describe("CheckinGuestGroups", () => {
       { wrapper: TestProviders },
     );
     const header = await screen.findByRole("button", {
-      name: /Arrived \(1\)/,
+      // The count is a RollingNumber, whose own element spaces it inside the
+      // brackets in the computed name.
+      name: /Arrived \(\s*1\s*\)/,
     });
     expect(header).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByText("Ana Sousa")).not.toBeInTheDocument();

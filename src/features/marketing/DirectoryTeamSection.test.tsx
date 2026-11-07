@@ -1,15 +1,8 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved,
-  within,
-} from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import type { ReactNode } from "react";
-import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
-import { I18nProvider } from "../../app/providers/I18nProvider";
+import { awaitCatalog } from "../../test/awaitCatalog";
+import { TestProviders } from "../../test/TestProviders";
 import { DirectoryTeamSection } from "./DirectoryTeamSection";
 import { DIRECTORY_PLACES } from "./directoryPlaces";
 import type {
@@ -61,19 +54,18 @@ function makeMemberEntry(
   };
 }
 
-function renderSection(team: ListingTeamMemberView[] | undefined) {
-  const queryClient = new QueryClient({
-    defaultOptions: { queries: { retry: false } },
-  });
+async function renderSection(team: ListingTeamMemberView[] | undefined) {
   const place = { ...DIRECTORY_PLACES[0]!, team };
-  const wrap = (node: ReactNode) => (
-    <QueryClientProvider client={queryClient}>
-      <I18nProvider>
-        <MemoryRouter>{node}</MemoryRouter>
-      </I18nProvider>
-    </QueryClientProvider>
+  // The team portraits read the session, so the section mounts in the full
+  // provider set.
+  const view = render(
+    <div data-testid="team-host">
+      <DirectoryTeamSection place={place} />
+    </div>,
+    { wrapper: TestProviders },
   );
-  return render(wrap(<DirectoryTeamSection place={place} />));
+  await awaitCatalog("marketing");
+  return view;
 }
 
 function makeMembers(count: number) {
@@ -81,20 +73,21 @@ function makeMembers(count: number) {
 }
 
 describe("DirectoryTeamSection", () => {
-  it("renders nothing when the team is empty", () => {
-    const empty = renderSection([]);
-    expect(empty.container).toBeEmptyDOMElement();
+  it("renders nothing when the team is empty", async () => {
+    // The host box leaves out what the providers mount beside the section.
+    const empty = await renderSection([]);
+    expect(empty.getByTestId("team-host")).toBeEmptyDOMElement();
     empty.unmount();
 
-    const absent = renderSection(undefined);
-    expect(absent.container).toBeEmptyDOMElement();
+    const absent = await renderSection(undefined);
+    expect(absent.getByTestId("team-host")).toBeEmptyDOMElement();
     expect(
       screen.queryByRole("heading", { name: "Meet the team" }),
     ).not.toBeInTheDocument();
   });
 
   it("links each card to the persona page", async () => {
-    renderSection([
+    await renderSection([
       makeMember(1, {
         persona: {
           ...makeMember(1).persona,
@@ -115,7 +108,7 @@ describe("DirectoryTeamSection", () => {
   });
 
   it("names a craft-named persona after its owner beside the kind", async () => {
-    renderSection([
+    await renderSection([
       makeMember(1, {
         persona: {
           ...makeMember(1).persona,
@@ -133,7 +126,7 @@ describe("DirectoryTeamSection", () => {
 
   it("shows 8 members and folds the rest behind Show all 11", async () => {
     const user = userEvent.setup();
-    renderSection(makeMembers(11));
+    await renderSection(makeMembers(11));
 
     expect(await screen.findAllByRole("link")).toHaveLength(8);
     expect(screen.queryByText("Persona Number 9")).not.toBeInTheDocument();
@@ -148,13 +141,17 @@ describe("DirectoryTeamSection", () => {
     expect(fewer).toHaveAttribute("aria-expanded", "true");
 
     await user.click(fewer);
-    await waitForElementToBeRemoved(() =>
-      screen.queryByText("Persona Number 9"),
+    await waitFor(() =>
+      expect(screen.queryByText("Persona Number 9")).not.toBeInTheDocument(),
+    );
+    expect(screen.getByRole("button", { name: "Show all 11" })).toHaveAttribute(
+      "aria-expanded",
+      "false",
     );
   });
 
   it("shows no toggle for 8 or fewer", async () => {
-    renderSection(makeMembers(8));
+    await renderSection(makeMembers(8));
 
     expect(await screen.findAllByRole("link")).toHaveLength(8);
     expect(
@@ -163,22 +160,22 @@ describe("DirectoryTeamSection", () => {
   });
 
   it("prints a 40 character role label whole", async () => {
-    const roleLabel = "Resident artist and flash day coordinator";
+    const roleLabel = "Resident artist and flash sheet designer";
     expect(roleLabel).toHaveLength(40);
-    renderSection([makeMember(1, { roleLabel })]);
+    await renderSection([makeMember(1, { roleLabel })]);
 
     expect(await screen.findByText(roleLabel)).toBeInTheDocument();
   });
 
   it("hides the shared craft label when every entry is a tattoo artist", async () => {
-    renderSection(makeMembers(3));
+    await renderSection(makeMembers(3));
 
     expect(await screen.findAllByRole("link")).toHaveLength(3);
     expect(screen.queryByText("Tattoo artist")).not.toBeInTheDocument();
   });
 
   it("links a member card to the member profile with a Member chip", async () => {
-    renderSection([
+    await renderSection([
       makeMemberEntry("catarina-vaz", "Catarina Vaz", {
         roleLabel: "Front of house",
       }),
@@ -192,7 +189,7 @@ describe("DirectoryTeamSection", () => {
   });
 
   it("keeps persona and member entries in the order they arrive", async () => {
-    renderSection([
+    await renderSection([
       makeMember(1),
       makeMemberEntry("catarina-vaz", "Catarina Vaz"),
       makeMember(2),
@@ -207,7 +204,7 @@ describe("DirectoryTeamSection", () => {
   });
 
   it("gives each persona its own craft chip once a member is on the team", async () => {
-    renderSection([
+    await renderSection([
       makeMember(1),
       makeMember(2),
       makeMemberEntry("catarina-vaz", "Catarina Vaz"),
@@ -218,7 +215,7 @@ describe("DirectoryTeamSection", () => {
   });
 
   it("keeps a persona and a member with the same text apart", async () => {
-    renderSection([
+    await renderSection([
       makeMember(1, {
         persona: { ...makeMember(1).persona, id: "catarina-vaz" },
       }),

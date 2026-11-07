@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "../../shared/components/ui";
 import { ApiError } from "../../shared/api/client";
+import { causeErrorKey } from "../../shared/api/causeErrorKey";
 import { normalizeHandle } from "../../shared/handles";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useProfileData } from "../../app/providers/useProfile";
@@ -26,7 +27,10 @@ function messageForError(err: unknown, t: TFunction): string {
     if (err.status === 422 || reason === "invalid")
       return t("settings:editProfile.username.error.invalid");
   }
-  return t("settings:editProfile.username.error.generic");
+  // Anything else (no connection, signed out, a throttle, a server fault)
+  // names its own cause rather than a fixed line.
+  const cause = causeErrorKey(err);
+  return t(cause.key, cause.values);
 }
 
 /**

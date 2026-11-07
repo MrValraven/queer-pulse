@@ -1,6 +1,7 @@
 import { Button, Modal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { communityErrorText } from "./communityErrors";
 import { useFreezeCommunity } from "./api/useCommunityMutations";
 
 /**
@@ -32,8 +33,7 @@ export function FreezeCommunityModal({
           );
           onClose();
         },
-        onError: () =>
-          showToast(t("communities:detail.dangerZone.errorToast"), "error"),
+        onError: (error) => showToast(communityErrorText(t, error), "error"),
       },
     );
   };

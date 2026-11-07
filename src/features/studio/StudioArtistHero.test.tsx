@@ -2,6 +2,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { createStudioPlayerTestValue } from "../../test/studioPlayerTestValue";
 import { toArtistView, type StudioArtistView } from "./api/studio.adapters";
 import { studioKeys } from "./api/studioQueryKeys";
@@ -60,7 +61,10 @@ const artist = toArtistView({
   playlists: [],
 });
 
-function renderHero(view: StudioArtistView, queryClient = new QueryClient()) {
+async function renderHero(
+  view: StudioArtistView,
+  queryClient = new QueryClient(),
+) {
   const playReleases = vi.fn(() => Promise.resolve());
   const player = {
     ...createStudioPlayerTestValue(),
@@ -88,12 +92,13 @@ function renderHero(view: StudioArtistView, queryClient = new QueryClient()) {
       </StudioPlayerContext.Provider>
     </TestProviders>,
   );
+  await awaitCatalog("studio");
   return { playReleases };
 }
 
 describe("StudioArtistHero", () => {
-  it("plays every release in the server's order", () => {
-    const { playReleases } = renderHero(artist);
+  it("plays every release in the server's order", async () => {
+    const { playReleases } = await renderHero(artist);
     fireEvent.click(screen.getByRole("button", { name: /play all/i }));
     expect(playReleases).toHaveBeenCalledWith([
       "r-newest-single",
@@ -105,7 +110,7 @@ describe("StudioArtistHero", () => {
     const queryClient = new QueryClient();
     const key = studioKeys.artist(true, artist.artist.id);
     queryClient.setQueryData(key, artist);
-    renderHero(artist, queryClient);
+    await renderHero(artist, queryClient);
     expect(screen.getByText(/4 followers/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /follow/i }));
     await waitFor(() =>
@@ -118,7 +123,7 @@ describe("StudioArtistHero", () => {
   it("invalidates the library's followed artists after a follow", async () => {
     const queryClient = new QueryClient();
     const invalidateQueries = vi.spyOn(queryClient, "invalidateQueries");
-    renderHero(artist, queryClient);
+    await renderHero(artist, queryClient);
     fireEvent.click(screen.getByRole("button", { name: /follow/i }));
     await waitFor(() =>
       expect(invalidateQueries).toHaveBeenCalledWith({
@@ -127,8 +132,8 @@ describe("StudioArtistHero", () => {
     );
   });
 
-  it("offers no Follow to the persona's owner", () => {
-    renderHero({ ...artist, isOwner: true, ownerReleases: [] });
+  it("offers no Follow to the persona's owner", async () => {
+    await renderHero({ ...artist, isOwner: true, ownerReleases: [] });
     expect(
       screen.queryByRole("button", { name: /^follow/i }),
     ).not.toBeInTheDocument();

@@ -12,6 +12,10 @@ import { TransferOwnershipModal } from "../communities/TransferOwnershipModal";
 import { ListingDependencyRow } from "../settings/AccountDependencyGate";
 import type { DeletionRequest } from "../settings/api/account.api";
 import {
+  accountStepUpErrorCopy,
+  cancelDeletionErrorCopy,
+} from "../settings/settingsActionErrors";
+import {
   useCancelDeletion,
   useDeactivate,
   useGetDeletionRequest,
@@ -193,10 +197,8 @@ export function AccountDataStepAway({ ownerSlug }: { ownerSlug: string }) {
       );
     } catch (err) {
       logError(err, { where: "AccountDataStepAway.cancel" });
-      showToast(
-        t("members:profile.accountData.stepAway.pending.cancelErrorToast"),
-        "error",
-      );
+      const cause = cancelDeletionErrorCopy(err);
+      showToast(t(cause.key, cause.values), "error");
     } finally {
       setCancelling(false);
     }
@@ -236,10 +238,8 @@ export function AccountDataStepAway({ ownerSlug }: { ownerSlug: string }) {
         where: "AccountDataStepAway.confirm",
         kind: confirmKind,
       });
-      showToast(
-        t("members:profile.accountData.stepAway.toast.actionError"),
-        "error",
-      );
+      const cause = accountStepUpErrorCopy(err);
+      showToast(t(cause.key, cause.values), "error");
     } finally {
       setSubmitting(false);
     }

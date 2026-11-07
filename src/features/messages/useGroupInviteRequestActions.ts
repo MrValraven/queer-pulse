@@ -44,10 +44,7 @@ export function useGroupInviteRequestActions() {
         void navigate(`${routes.messages}?c=${encodeURIComponent(joined.id)}`);
       }
     } catch (error) {
-      showToast(
-        groupErrorMessage(error, t, t("messages:group.error.generic")),
-        "error",
-      );
+      showToast(groupErrorMessage(error, t), "error");
     } finally {
       setBusyInviteId(null);
     }
@@ -61,10 +58,7 @@ export function useGroupInviteRequestActions() {
         showToast(t("messages:requests.groupInvite.declined"), "info");
       }
     } catch (error) {
-      showToast(
-        groupErrorMessage(error, t, t("messages:group.error.generic")),
-        "error",
-      );
+      showToast(groupErrorMessage(error, t), "error");
     } finally {
       setBusyInviteId(null);
     }

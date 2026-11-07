@@ -736,7 +736,7 @@ export const admin: Catalog = {
   "members.header.titleLine2":
     "cada uma <em>com voto de confiança de alguém</em>.",
   "members.header.sub":
-    "Não são linhas numa tabela. São pessoas em quem alguém confiou o suficiente para as trazer. Pronomes e nomes escolhidos são os únicos nomes mostrados aqui. {count} pessoas estão à espera de serem acolhidas.",
+    "São pessoas em quem alguém confiou o suficiente para as trazer. Pronomes e nomes escolhidos são os únicos nomes mostrados aqui. {count} pessoas estão à espera de serem acolhidas.",
   "members.header.titleLine1NoCount": "As pessoas daqui,",
   "members.header.subNoCount":
     "Cada linha é uma pessoa em quem alguém confiou o suficiente para a trazer. Pronomes e nomes escolhidos são os únicos nomes mostrados aqui.",
@@ -8977,6 +8977,8 @@ export const admin: Catalog = {
   "moderation.personaPost.loadFailed":
     "Não conseguimos carregar a novidade denunciada",
   "moderation.personaPost.retry": "Carrega a novidade outra vez",
+  "moderation.personaPost.removeFailed":
+    "Não foi possível remover esta novidade",
   "moderation.personaPost.photoAlt": "Foto na novidade de {persona}",
   "moderation.personaPost.linkLabel": "Link",
   "moderation.category.copyright": "Direitos de autor",
@@ -9288,7 +9290,7 @@ export const admin: Catalog = {
     "Chega à conversa oficial da QueerPulse, fixada na caixa de entrada. Não faz vibrar o telemóvel.",
   "listingDrafts.message.label": "A tua mensagem",
   "listingDrafts.message.helper":
-    "Já começámos por ti. Torna-a tua e mantém-na uma oferta, não uma pressão.",
+    "Já começámos por ti. Torna-a tua e mantém-na uma oferta.",
   "listingDrafts.message.template":
     "Olá, {firstName}! Vimos que começaste a registar {name} na QueerPulse. Se alguma coisa te travou, ou se quiseres ajuda para acabar, responde aqui e ajudamos. Sem pressa nenhuma.",
   "listingDrafts.message.templateUntitled":

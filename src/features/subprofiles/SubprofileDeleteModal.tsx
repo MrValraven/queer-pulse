@@ -16,6 +16,7 @@ import { routes } from "../../app/routeMap";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { useSubprofileMembers } from "./api/useSubprofileMembers";
 import { useSubprofileMutations } from "./api/useSubprofileMutations";
+import { personaDeleteErrorMessage } from "./personaActionErrors";
 import { isContentSection } from "./subprofile-kinds";
 import styles from "./SubprofileDeleteModal.module.css";
 
@@ -81,8 +82,8 @@ export function SubprofileDeleteModal({
       );
       onClose();
       void navigate(routes.subprofilesDashboard);
-    } catch {
-      showToast(t("subprofiles:mine.toastDeleteError"), "error");
+    } catch (error) {
+      showToast(personaDeleteErrorMessage(error, t), "error");
     }
   }
 

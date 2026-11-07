@@ -575,6 +575,10 @@ export const subprofiles: Catalog = {
   "mine.untitled": "Untitled persona",
   "mine.toastDeleted": "{name} deleted",
   "mine.toastDeleteError": "We couldn't delete that just now. Try again.",
+  "mine.toastDeleteCreatorOnly":
+    "Only the person who created this persona can delete it. As a co-owner you can leave it instead.",
+  "mine.toastDeleteGone":
+    "This persona was already deleted. Reload your personas to see the current list.",
   "mine.deleteModalTitle": "Delete this persona?",
   "mine.deleteModalSub": "“{name}” and everything on it will be gone for good.",
   "mine.deleteModalDefaultName": "This persona",
@@ -611,6 +615,12 @@ export const subprofiles: Catalog = {
   "mine.order.emptyGroup":
     "Nothing is on your profile yet. Publish a persona and tie it to your profile to list it here.",
   "mine.order.saveError": "We couldn't save that order. Try again.",
+  "mine.order.saveErrorStale":
+    "Your personas changed while you were reordering, so the new order didn't save. Reload the page and try again.",
+  "ownerAction.notOwner":
+    "Only this persona's owners can change it. If you were removed as a co-owner, reload to see your current access.",
+  "ownerAction.conflict":
+    "A co-owner saved changes to this persona just before you. Reload the page to pick up their changes, then try again.",
 
   // Cards / List switch on the dashboard (PersonaViewToggle), and the named
   // icon-only actions on a list row (SideCardFooter's row variant).
@@ -1157,6 +1167,10 @@ export const subprofiles: Catalog = {
   "hero.endorse.count_one": "{count} endorsement",
   "hero.endorse.count_other": "{count} endorsements",
   "hero.endorse.error": "We couldn't save that just now. Try again.",
+  "hero.endorse.errorOwnPersona":
+    "You can't endorse a persona you own or co-own.",
+  "hero.endorse.errorGone":
+    "This persona isn't available to endorse any more. Reload the page to see its current state.",
   "hero.endorse.endorsedByNames": "Endorsed by {names}",
 
   // Endorse-with-note modal (EndorseSubprofileModal, EndorseSubprofileModalParts)
@@ -1483,6 +1497,8 @@ export const subprofiles: Catalog = {
     "Reports are reviewed by our moderation team. Your name is never shared with the person you're reporting.",
   "reportModal.reasonLabel": "What's the concern?",
   "reportModal.reasons.impersonating": "Impersonating",
+  "reportModal.reasons.paymentNeverConfirmed":
+    "Took my payment and did not confirm it",
   "reportModal.reasons.hateOrHarassment": "Hate or harassment",
   "reportModal.reasons.discrimination": "Discrimination or misgendering",
   "reportModal.reasons.notReal": "Not a real practice or service",
@@ -1919,6 +1935,10 @@ export const subprofiles: Catalog = {
   "protect.copied": "Copied to clipboard",
   "protect.email": "Email it to me",
   "protect.failed": "Could not generate the record. Please try again.",
+  "protect.failedBuild":
+    "Your browser can't build the record on this page, because it needs a secure (https) connection. Open the site over https and try again.",
+  "protect.failedAction":
+    "Your browser blocked that. Allow clipboard access or downloads for this site, then try again.",
   "protect.emailSubject": "Authorship record: {title}",
   // The downloadable/emailed record's own wording (rights/authorshipRecord.ts).
   // Only the labels translate; the values beside them (title, author,
@@ -1942,6 +1962,8 @@ export const subprofiles: Catalog = {
   "history.empty": "No earlier versions yet. Saved edits will appear here.",
   "history.restored": "Version restored",
   "history.restoreFailed": "Could not restore this version. Please try again.",
+  "history.restoreGone":
+    "That version no longer exists, so it can't be restored. Close this window and open the history again.",
 
   // Rich per-section fields (richFields.data.ts, rendered by
   // SubprofileItemDrawerFields) — gig details, visual-work medium/edition,
@@ -3006,7 +3028,7 @@ export const subprofiles: Catalog = {
   "quest.safetyDescription.check_ins":
     "You pause now and then to ask how everyone's doing.",
   "quest.safetyDescription.content_warnings":
-    "Heavy themes are named before a session, not sprung during it.",
+    "Heavy themes are named before a session starts.",
   "skinChips.suggestionsLabel": "Popular",
   "skinChips.addSuggestion": "Add {text}",
   "skinChips.moreSuggestions_one": "{count} more",
@@ -3258,7 +3280,7 @@ export const subprofiles: Catalog = {
   "feedImport.error.rateLimited":
     "You've looked things up a lot in the last minute. Wait a moment and try again.",
   "feedImport.error.generic":
-    "Something went wrong on our side. Try again in a moment.",
+    "Our servers refused that. Try again in a moment, and write to us if it keeps happening.",
   "feedImport.banner.region": "Episodes waiting for review",
   "feedImport.banner.message_one":
     "A new episode from <em>{show}</em> is ready to review",
@@ -3321,7 +3343,8 @@ export const subprofiles: Catalog = {
   "updates.errors.imageNotAllowed":
     "That photo can't be used here. Pick it again from this persona's uploads",
   "updates.errors.gone": "That update is gone. Reload the page",
-  "updates.errors.generic": "Something went wrong. Try again",
+  "updates.errors.generic":
+    "Our servers refused that update. Try again in a moment, and write to us if it keeps happening",
   "updates.errors.deleteFailed": "We couldn't delete that update. Try again",
 
   // ── Works at (2026-10-19) ──

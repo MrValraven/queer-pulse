@@ -189,6 +189,17 @@ export const messages: Catalog = {
   "attachments.documentError.tooLarge":
     "That file is too large. Keep it under {maxLabel}.",
   "attachments.documentError.retry": "We couldn't send that file. Try again.",
+  // Why the upload request or the storage PUT was refused (useUploadDocument.ts).
+  "attachments.documentError.storageRejectedType":
+    "Our storage didn't accept this file's type. Check it's a PDF, TXT, CSV or XLSX file and send it again.",
+  "attachments.documentError.storageTooLarge":
+    "This file is bigger than our storage takes. Pick a smaller one and send it again.",
+  "attachments.documentError.tooManyUploads":
+    "You've sent a lot of files in a short time. Wait a minute, then try again.",
+  "attachments.documentError.linkExpired":
+    "The upload link ran out before your file arrived. Try again and we'll make a fresh one.",
+  "attachments.documentError.storageFault":
+    "Our file storage hit an error on our side. Give it a moment and try again.",
   // Scan section 9: the confirm step before a received file opens
   // (MessageDocumentAttachment, ConversationMediaDocumentList).
   "attachments.confirmOpenTitle": "Open this file?",
@@ -779,6 +790,18 @@ export const messages: Catalog = {
   "mailbox.claim.lostRaceToast": "Someone on your team got there first",
   "mailbox.claim.tookOverToast": "You took over from {name}",
   "mailbox.claim.error": "That didn't go through. Try again.",
+  "mailbox.claim.error.notStaff":
+    "You're no longer part of this mailbox's team, so you can't claim its conversations. Refresh your inbox to see where you still help.",
+  "mailbox.claim.error.removed":
+    "Moderation removed this persona, so its conversations are read-only now.",
+  "mailbox.claim.error.notMailbox":
+    "Only conversations in a shared mailbox can be claimed, and this one isn't in one.",
+  "mailbox.claim.error.gone":
+    "This conversation isn't there any more, so it can't be claimed. Refresh your inbox to see what's current.",
+  "mailbox.claim.error.releasedAgain":
+    "The conversation was released again before your claim landed. Give it another try.",
+  "mailbox.claim.error.nothingToTakeOver":
+    "Nobody is handling this conversation right now, so there's nothing to take over. Claim it instead.",
   "mailbox.tab.unclaimed": "Unclaimed",
   "mailbox.tab.mine": "Mine",
   "mailbox.tab.unclaimedEmpty": "Every conversation has someone handling it",
@@ -808,6 +831,12 @@ export const messages: Catalog = {
     "Takes effect while “Show who replied” is on.",
   "mailbox.settings.saved": "Saved",
   "mailbox.settings.error": "That didn't save. Try again.",
+  "mailbox.settings.error.notOwner":
+    "Only the mailbox owner can change this setting, so it stayed as it was.",
+  "mailbox.settings.error.notStaff":
+    "You're no longer part of this mailbox's team, so that setting stayed as it was. Refresh your inbox to see where you still help.",
+  "mailbox.settings.error.removed":
+    "Moderation removed this persona, so its settings can't change any more.",
   "mailbox.settings.unlinkedPersonaError":
     "That didn't save. This persona now keeps who runs it private.",
   "mailbox.settings.loadError": "These settings didn't load. Try again.",
@@ -820,6 +849,12 @@ export const messages: Catalog = {
   "mailbox.block.done": "You blocked {name}",
   "mailbox.block.undo": "Undo",
   "mailbox.block.error": "The block didn't go through. Try again.",
+  "mailbox.block.error.own":
+    "You answer for this mailbox, so you can't block it. Leave its team first if you want to cut ties.",
+  "mailbox.block.error.person":
+    "That's a person, and people are blocked from their profile. Open their profile and block them there.",
+  "mailbox.block.error.gone":
+    "We couldn't find that business, persona or company. It may have been removed. Refresh your inbox to see what's current.",
   "mailbox.report.action": "Report {name}",
   "mailbox.blocked.title": "Businesses, personas and companies",
   "mailbox.blocked.description":
@@ -868,6 +903,8 @@ export const messages: Catalog = {
     "You've already written here today. Give them a chance to reply first.",
   "mailbox.contact.error.unavailable":
     "{name} can't receive messages right now.",
+  "mailbox.contact.error.notFound":
+    "We couldn't find {name} any more. This page may have been removed. Go back and look again.",
   "mailbox.contact.successAria": "All set",
   "mailbox.contact.successTitle": "Message",
   "mailbox.contact.successEm": "sent",
@@ -949,6 +986,9 @@ export const messages: Catalog = {
   "share.partialToast":
     "Sent to {sentCount} of {totalCount}. Didn't reach {failedNames}.",
   "share.errorToast": "That didn't send. Try again in a moment.",
+  "share.errorToastWithCause": "That didn't send. {cause}",
+  "share.partialToastWithCause":
+    "Sent to {sentCount} of {totalCount}. Didn't reach {failedNames}. {cause}",
   "share.openThreadCta": "Open",
   "share.selectedCount_one": "{count} conversation selected",
   "share.selectedCount_other": "{count} conversations selected",
@@ -1029,6 +1069,10 @@ export const messages: Catalog = {
     "New message requests are paused on your account for now while our moderators look into something. Your conversations with your connections carry on as usual.",
   "request.error.recipientConnectionsOnly":
     "{name} is only accepting messages from their connections right now.",
+  "request.error.rateLimited":
+    "You're sending message requests quickly. Wait a minute, then try again.",
+  "request.error.notFound":
+    "We couldn't find {name}. They may have changed their handle or left QueerPulse. Search for them again to check.",
   "requests.replyCta": "Reply",
   "requests.inboundHeading": "New requests",
   "requests.outboundHeading": "Your sent requests",
@@ -1108,6 +1152,8 @@ export const messages: Catalog = {
   "forward.sentToast_other": "Forwarded to {count} chats",
   "forward.failedToast":
     "Couldn't forward to {names}. They're still selected, so you can try again.",
+  "forward.failedToastWithCause":
+    "Couldn't forward to {names}. {cause} They're still selected, so you can try again.",
   "gif.gridLabel": "GIF results",
   "conversation.contactSafetyNoticeDismiss": "Dismiss safety notice",
   "conversation.dropFilesHint": "Drop files to send",
@@ -1177,6 +1223,8 @@ export const messages: Catalog = {
   "blockThenReport.continuingCta": "Reporting…",
   "blockThenReport.partialFailureToast":
     "{failed} of {total} reports couldn't be sent. You can still continue.",
+  "blockThenReport.partialFailureToastWithCause":
+    "{failed} of {total} reports couldn't be sent. {cause} You can still continue to the block step.",
   // Shown instead when the shared report throttle stops the batch part way,
   // so the rest are worth trying again rather than lost.
   "blockThenReport.throttledToast":

@@ -2,6 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { beforeEach, describe, expect, it } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import type { QuizshowTemplateCardField } from "../../../shared/contracts/quizshow";
 import { resetQuizshowDemoStore } from "../api/quizshowDemoStore";
@@ -63,7 +64,7 @@ function DetailsHarness({
   );
 }
 
-function renderDetails(
+async function renderDetails(
   templateId: string,
   options: { hasQuizProblems?: boolean; isPending?: boolean } = {},
 ) {
@@ -77,6 +78,7 @@ function renderDetails(
       />
     </TestProviders>,
   );
+  await awaitCatalog("quizshow");
   return { response, unmount };
 }
 
@@ -101,8 +103,10 @@ describe("QuizshowTemplateDetails", () => {
     resetQuizshowDemoStore();
   });
 
-  it("shows the card title and description in both languages and the staff notes", () => {
-    const { response } = renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory);
+  it("shows the card title and description in both languages and the staff notes", async () => {
+    const { response } = await renderDetails(
+      QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory,
+    );
     const { card, staffNotes } = response.template;
 
     expect(
@@ -117,12 +121,14 @@ describe("QuizshowTemplateDetails", () => {
     expect(staffNotes).toContain("Round 1, question 1:");
   });
 
-  it("shows Draft or who published it and when", () => {
-    const draftView = renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.queerCinema);
+  it("shows Draft or who published it and when", async () => {
+    const draftView = await renderDetails(
+      QUIZSHOW_DEMO_TEMPLATE_IDS.queerCinema,
+    );
     expect(panelStatusLine()).toHaveTextContent("Draft. Only our team sees it");
     draftView.unmount();
 
-    renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory);
+    await renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory);
     const statusLine = panelStatusLine();
     expect(statusLine).toHaveTextContent(/^Published .*2026 by Rui Marçal$/);
     expect(statusLine).not.toHaveTextContent("Draft");
@@ -130,7 +136,7 @@ describe("QuizshowTemplateDetails", () => {
 
   it("keeps Publish template blocked while there are unsaved changes and says to save first", async () => {
     const user = userEvent.setup();
-    renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.queerCinema);
+    await renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.queerCinema);
     const englishTitle = screen.getByDisplayValue("Queer cinema classics");
 
     await user.type(englishTitle, " revisited");
@@ -143,8 +149,8 @@ describe("QuizshowTemplateDetails", () => {
     );
   });
 
-  it("says to fix the problems first", () => {
-    renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.queerCinema, {
+  it("says to fix the problems first", async () => {
+    await renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.queerCinema, {
       hasQuizProblems: true,
     });
     const button = publishButton();
@@ -156,7 +162,7 @@ describe("QuizshowTemplateDetails", () => {
 
   it("names the missing card fields after a blocked Publish", async () => {
     const user = userEvent.setup();
-    renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.queerCinema);
+    await renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.queerCinema);
     expect(
       screen.queryByText("Add a description in this language"),
     ).not.toBeInTheDocument();
@@ -184,7 +190,7 @@ describe("QuizshowTemplateDetails", () => {
 
   it("moves focus to the blank Portuguese description after a blocked Publish", async () => {
     const user = userEvent.setup();
-    renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.queerCinema);
+    await renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.queerCinema);
 
     await user.click(publishButton());
 
@@ -198,8 +204,8 @@ describe("QuizshowTemplateDetails", () => {
     expect(portugueseDescription).toHaveFocus();
   });
 
-  it("marks the publish button busy with no blocked state while a write runs", () => {
-    renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory, {
+  it("marks the publish button busy with no blocked state while a write runs", async () => {
+    await renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory, {
       isPending: true,
     });
     const button = screen.getByRole("button", { name: "Unpublish template" });
@@ -208,8 +214,8 @@ describe("QuizshowTemplateDetails", () => {
     expect(button).not.toHaveAttribute("aria-describedby");
   });
 
-  it("offers Unpublish template on a published template", () => {
-    renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory);
+  it("offers Unpublish template on a published template", async () => {
+    await renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory);
     expect(
       screen.getByRole("button", { name: "Unpublish template" }),
     ).toBeInTheDocument();

@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type { StudioCountView } from "./api/studio.adapters";
 import type {
   StudioArtistPlaysDayView,
@@ -95,12 +96,14 @@ function zeroDays(count: number): { dayKey: string; plays: StudioCountView }[] {
   }));
 }
 
-function renderChart() {
-  return render(
+async function renderChart() {
+  const view = render(
     <TestProviders>
       <StudioPlaysTrendChart subprofileId="persona-1" />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
+  return view;
 }
 
 describe("StudioPlaysTrendChart", () => {
@@ -108,13 +111,13 @@ describe("StudioPlaysTrendChart", () => {
     mocks.plays = null;
   });
 
-  it("reads a withheld day as Fewer than 5 and a zero day as 0", () => {
+  it("reads a withheld day as Fewer than 5 and a zero day as 0", async () => {
     mocks.plays = playsWith([
       { dayKey: "2026-10-25", plays: withheld },
       { dayKey: "2026-10-26", plays: exactCount(0) },
       { dayKey: "2026-10-27", plays: exactCount(12) },
     ]);
-    renderChart();
+    await renderChart();
     fireEvent.click(screen.getByRole("button", { name: "Show data table" }));
     const rows = within(
       screen.getByRole("table", { name: "Plays per day" }),
@@ -132,7 +135,7 @@ describe("StudioPlaysTrendChart", () => {
     ]);
   });
 
-  it("sums up under the chart, floored", () => {
+  it("sums up under the chart, floored", async () => {
     mocks.plays = playsWith(
       [
         { dayKey: "2026-10-26", plays: exactCount(0) },
@@ -140,7 +143,7 @@ describe("StudioPlaysTrendChart", () => {
       ],
       { total: exactCount(1284), total28d: withheld },
     );
-    renderChart();
+    await renderChart();
     expect(
       screen.getByText("All time: 1,284 · Last 28 days: Fewer than 5"),
     ).toBeInTheDocument();
@@ -151,9 +154,9 @@ describe("StudioPlaysTrendChart", () => {
     ).toBeInTheDocument();
   });
 
-  it("says when nothing played and shows not found with no Retry", () => {
+  it("says when nothing played and shows not found with no Retry", async () => {
     mocks.plays = playsWith(zeroDays(28));
-    const { unmount } = renderChart();
+    const { unmount } = await renderChart();
     expect(
       screen.getByText("No plays in the last 28 days yet"),
     ).toBeInTheDocument();
@@ -163,7 +166,7 @@ describe("StudioPlaysTrendChart", () => {
     unmount();
 
     mocks.plays = { plays: null, loadState: notFoundLoadState() };
-    renderChart();
+    await renderChart();
     expect(
       screen.getByText(
         "This isn't available anymore. It may have moved or been taken down",

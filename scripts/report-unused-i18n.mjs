@@ -194,15 +194,20 @@ const SCANNED_EXTENSIONS = new Set([
 const CATALOG_PATH_FRAGMENT = join("src", "shared", "i18n", "catalogs");
 
 /**
- * This reporter's own fixture file, excluded from its own scan.
+ * This reporter's own test files, excluded from its own scan.
  *
  * `report-unused-i18n.test.mjs` pins verdicts by naming real keys, so scanning
- * it would make the tool read its own fixtures as evidence: the fifteen
- * `forOrgs.tiers.*.list*` keys the test asserts are unused would come back
- * "referenced by a test", and the test would then be asserting against a world
- * it created. Every other file under `scripts/` is scanned normally.
+ * it would make the tool read its own fixtures as evidence: a key the test
+ * asserts is unused would come back "referenced by a test", and the test would
+ * then be asserting against a world it created.
+ * `report-unused-i18n.loose-prefix.test.mjs` spells synthetic keys and the
+ * source text of a synthetic tree, which has no business in the real report.
+ * Every other file under `scripts/` is scanned normally.
  */
-const SELF_FIXTURE_FILE = "report-unused-i18n.test.mjs";
+const SELF_FIXTURE_FILES = new Set([
+  "report-unused-i18n.test.mjs",
+  "report-unused-i18n.loose-prefix.test.mjs",
+]);
 
 /** CLDR plural suffixes `resolveEntry()` appends. */
 const PLURAL_SUFFIXES = ["zero", "one", "two", "few", "many", "other"];
@@ -283,10 +288,10 @@ function pluralBase(path) {
 
 // ── file discovery ─────────────────────────────────────────────────────────
 
-function collectSourceFiles() {
+function collectSourceFiles(rootDirectory, scanRoots) {
   const files = [];
-  for (const root of SCAN_ROOTS) {
-    const absoluteRoot = join(repositoryRoot, root);
+  for (const root of scanRoots) {
+    const absoluteRoot = join(rootDirectory, root);
     let stats;
     try {
       stats = statSync(absoluteRoot);
@@ -308,7 +313,7 @@ function walkDirectory(directory, files) {
     }
     if (!SCANNED_EXTENSIONS.has(extname(entry.name))) continue;
     if (fullPath.includes(CATALOG_PATH_FRAGMENT)) continue;
-    if (entry.name === SELF_FIXTURE_FILE) continue;
+    if (SELF_FIXTURE_FILES.has(entry.name)) continue;
     files.push(fullPath);
   }
 }
@@ -1002,8 +1007,8 @@ function buildPattern(segments) {
 
 /**
  * How many key segments a hole swallowed. `""` is 0, `"critical"` is 1,
- * `"forOrgs.tiers.employer.list3"` is 4. This is the measure of how much a
- * shape actually constrains: a one-segment hole is a tight enumeration
+ * `"moderationHealth.notification.critical.meta"` is 4. This is the measure of
+ * how much a shape actually constrains: a one-segment hole is a tight enumeration
  * (`safety:governance.audit.*` over an action code), while a four-segment one
  * is a catch-all that says nothing about the key it happens to match.
  */
@@ -1051,9 +1056,25 @@ function formatNumber(value) {
   return value.toLocaleString("en-GB");
 }
 
-export function analyse() {
-  const catalogs = loadCatalogs(catalogDirectoryEn);
-  const files = collectSourceFiles();
+/**
+ * Analyse the repository, or a stand-in tree.
+ *
+ * With no argument this reads the real catalogs and the real source roots,
+ * which is what the CLI and `report-unused-i18n.test.mjs` want. A test that
+ * needs a world it fully controls passes a synthetic tree instead:
+ *
+ * - `rootDirectory`: the directory `scanRoots` and relative paths resolve
+ *   against. A file counts as test code by its path relative to this.
+ * - `catalogDirectory`: the folder holding the EN `<namespace>.ts` catalogs.
+ * - `scanRoots`: the folders under `rootDirectory` walked for use sites.
+ */
+export function analyse({
+  rootDirectory = repositoryRoot,
+  catalogDirectory = catalogDirectoryEn,
+  scanRoots = SCAN_ROOTS,
+} = {}) {
+  const catalogs = loadCatalogs(catalogDirectory);
+  const files = collectSourceFiles(rootDirectory, scanRoots);
 
   const productLiterals = new Set();
   const testLiterals = new Set();
@@ -1068,7 +1089,7 @@ export function analyse() {
   let testFileCount = 0;
 
   for (const filePath of files) {
-    const relativePath = relative(repositoryRoot, filePath);
+    const relativePath = relative(rootDirectory, filePath);
     const extracted = extractFromFile(filePath, relativePath);
     if (extracted.parseDiagnostics.length > 0) {
       unparseableFiles.push(relativePath);

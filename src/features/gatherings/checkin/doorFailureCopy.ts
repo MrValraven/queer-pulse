@@ -1,3 +1,4 @@
+import { causeErrorKey } from "../../../shared/api/causeErrorKey";
 import type { TFunction } from "../../../shared/i18n/types";
 import {
   isCardUnreadable,
@@ -15,11 +16,15 @@ import {
  * screen's own translated copy, keyed off the same `error.data.code` field
  * `isAttendanceWindowClosed` reads (that one predicate stays read directly in
  * the component, since it drives a whole UI state change: the sticky
- * closed-window notice). An uncoded failure falls back to the plain retry
- * toast.
+ * closed-window notice). Any other failure reads the shared cause line
+ * (`causeErrorKey`).
  */
-function genericFailureMessage(t: TFunction): string {
-  return t("gatherings:door.failedToast");
+function genericFailureMessage(t: TFunction, error: unknown): string {
+  // No door-specific refusal matched: name the shared cause (offline, signed
+  // out, a restriction, a rate limit, a server fault) instead of one retry
+  // line.
+  const cause = causeErrorKey(error);
+  return t(cause.key, cause.values);
 }
 
 /**
@@ -41,7 +46,7 @@ export function checkInFailureToast(t: TFunction, error: unknown): string {
   if (isCheckInMaybe(error)) {
     return t("gatherings:door.checkInMaybeToast");
   }
-  return genericFailureMessage(t);
+  return genericFailureMessage(t, error);
 }
 
 /**
@@ -59,7 +64,7 @@ export function undoFailureToast(t: TFunction, error: unknown): string {
   if (isNotOnGuestList(error)) {
     return t("gatherings:door.checkInNotOnListToast");
   }
-  return genericFailureMessage(t);
+  return genericFailureMessage(t, error);
 }
 
 /**
@@ -80,5 +85,5 @@ export function cardScanFailureHint(t: TFunction, error: unknown): string {
   if (isCheckInMaybe(error)) {
     return t("gatherings:door.scan.checkInMaybeHint");
   }
-  return genericFailureMessage(t);
+  return genericFailureMessage(t, error);
 }

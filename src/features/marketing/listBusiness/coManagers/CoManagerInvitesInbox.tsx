@@ -3,6 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { routes } from "../../../../app/routeMap";
+import {
+  CO_MANAGER_ANSWER_OVERRIDES,
+  failureToast,
+} from "../../marketingErrorCopy";
 import type { ListingCoManagerInviteDTO } from "../api/listingCoManagers.api";
 import {
   useAnswerCoManagerInvite,
@@ -60,9 +64,17 @@ export function CoManagerInvitesInbox() {
             routes.listBusinessEdit.replace(":ref", invite.listingRef),
           );
         },
-        onError: () => {
+        onError: (error) => {
           setAnsweringId(null);
-          showToast(t("members:places.coManagerInvites.error"), "error");
+          showToast(
+            failureToast(
+              error,
+              t,
+              "marketing:listBusiness.coManagerInvites.errorTitle",
+              CO_MANAGER_ANSWER_OVERRIDES,
+            ),
+            "error",
+          );
         },
       },
     );

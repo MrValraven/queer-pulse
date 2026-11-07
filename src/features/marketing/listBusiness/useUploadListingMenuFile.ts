@@ -3,7 +3,10 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { requestUpload } from "../../members/api/uploads.api";
 import { ImageProcessingError } from "../../members/api/uploadProcessing";
 import { useUploadImage } from "../../members/api/useUploadImage";
+import { DocumentProcessingError } from "../../messages/documentUploadProcessing";
 import { putWithRetry } from "../../messages/useUploadDocument";
+import { causeErrorKey } from "../../../shared/api/causeErrorKey";
+import { MENU_PDF_UPLOAD_OVERRIDES } from "../marketingErrorCopy";
 import { MENU_FILE_NAME_MAX, type ListingMenuFile } from "./listingMenu.data";
 
 /** Mirrors the backend's `listing-menu` cap (`upload-kinds.ts`). */
@@ -46,6 +49,43 @@ export function validateMenuFile(file: File): void {
   if (isPdf && file.size > MENU_FILE_MAX_BYTES) {
     throw new MenuFileUploadError("size");
   }
+}
+
+/** The messages catalog line for a storage refusal of the file type. It lists
+ *  the document formats a message accepts, which is wrong for a menu, so a
+ *  menu upload swaps it for its own line. */
+const MESSAGES_STORAGE_REJECTED_TYPE_KEY =
+  "messages:attachments.documentError.storageRejectedType";
+
+/**
+ * The error a failed menu upload surfaces, carrying the catalog key of its
+ * real cause. An image or document pipeline error already names its cause and
+ * passes through (the document one with the menu's own wording for a refused
+ * type); anything else is the presign request failing, which reads as the
+ * shared cause (offline, signed out, restricted, rate limited, timeout) or one
+ * of the menu's own lines.
+ */
+export function menuUploadFailure(error: unknown): Error {
+  if (
+    error instanceof ImageProcessingError ||
+    error instanceof MenuFileUploadError
+  ) {
+    return error;
+  }
+  if (error instanceof DocumentProcessingError) {
+    if (error.i18nKey !== MESSAGES_STORAGE_REJECTED_TYPE_KEY) return error;
+    return new DocumentProcessingError(
+      "marketing:listBusiness.menu.fileError.rejected",
+      undefined,
+      { cause: error },
+    );
+  }
+  const cause = causeErrorKey(error, MENU_PDF_UPLOAD_OVERRIDES);
+  return new DocumentProcessingError(
+    cause.key,
+    { ...cause.values, max: MENU_FILE_MAX_LABEL },
+    { cause: error },
+  );
 }
 
 /**
@@ -93,8 +133,7 @@ export function useUploadListingMenuFile() {
         await putWithRetry(presigned.uploadUrl, file, PDF_TYPE);
         return { url: presigned.key, contentType: PDF_TYPE, fileName };
       } catch (error) {
-        if (error instanceof ImageProcessingError) throw error;
-        throw new MenuFileUploadError("upload");
+        throw menuUploadFailure(error);
       }
     },
     [demoMode, uploadImage],

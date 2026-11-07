@@ -17,6 +17,7 @@ import {
   perkDisplayMetaFor,
 } from "./perkCatalog.data";
 import { useClaimPerk } from "./api/useRecognitionMutations";
+import { claimPerkErrorCopy } from "./memberActionErrors";
 import styles from "./PerksPage.module.css";
 
 const barClass = {
@@ -123,8 +124,10 @@ export function ClaimButton({
             setClaimed(true);
             showToast(toast, "success");
           },
-          onError: () =>
-            showToast(t("members:perks.claim.errorToast"), "error"),
+          onError: (error) => {
+            const cause = claimPerkErrorCopy(error);
+            showToast(t(cause.key, cause.values), "error");
+          },
         });
       }}
     >

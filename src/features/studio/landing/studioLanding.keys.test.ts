@@ -16,6 +16,14 @@ function landingSources(): string[] {
     .map((name) => readFileSync(`${LANDING_DIR}/${name}`, "utf8"));
 }
 
+/** The CLDR plural suffixes the resolver tries for a key read with a count. */
+const PLURAL_SUFFIX = /_(?:zero|one|two|few|many|other)$/;
+
+/** A key read with a count resolves through its `_other` form at least. */
+function isDeclared(key: string, catalogKeys: Set<string>): boolean {
+  return catalogKeys.has(key) || catalogKeys.has(`${key}_other`);
+}
+
 function usedLandingKeys(): Set<string> {
   const usedKeys = new Set<string>();
   for (const source of landingSources()) {
@@ -32,7 +40,7 @@ describe("studio landing keys", () => {
         Object.keys(await loadNamespace(language, "studio")),
       );
       const missing = [...usedLandingKeys()].filter(
-        (key) => !catalogKeys.has(key),
+        (key) => !isDeclared(key, catalogKeys),
       );
       expect(missing).toEqual([]);
     },
@@ -41,7 +49,10 @@ describe("studio landing keys", () => {
   it("every en landing key is used", async () => {
     const usedKeys = usedLandingKeys();
     const unused = Object.keys(await loadNamespace("en", "studio")).filter(
-      (key) => key.startsWith("landing.") && !usedKeys.has(key),
+      (key) =>
+        key.startsWith("landing.") &&
+        !usedKeys.has(key) &&
+        !usedKeys.has(key.replace(PLURAL_SUFFIX, "")),
     );
     expect(unused).toEqual([]);
   });

@@ -2,6 +2,7 @@ import { fireEvent, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { renderWithPlayer } from "./studioPlayerTestHarness";
 import { StudioTrackMenu } from "./StudioTrackMenu";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 const accessState = vi.hoisted(() => ({ isPending: false }));
 
@@ -27,13 +28,14 @@ function openMenu() {
 }
 
 describe("StudioTrackMenu, Report track (spec 8)", () => {
-  it("offers Report track on someone else's published track and opens the report modal", () => {
+  it("offers Report track on someone else's published track and opens the report modal", async () => {
     accessState.isPending = false;
     renderWithPlayer(
       <StudioTrackMenu
         track={{ ...track, artistId: "other-persona", isPublished: true }}
       />,
     );
+    await awaitCatalog("studio");
     openMenu();
     const items = screen.getAllByRole("menuitem");
     expect(items[items.length - 1]?.textContent).toMatch(/report track/i);

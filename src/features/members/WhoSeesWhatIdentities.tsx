@@ -22,8 +22,14 @@ export function WhoSeesWhatIdentities() {
   const { draft, savedVersion } = useProfileEdit();
   const { showToast } = useToast();
   const draftPublishable = publishableIdentities(draft.identities);
-  const { available, published, loading, error, setPublished } =
-    useDiscoverableIdentities(draftPublishable, savedVersion);
+  const {
+    available,
+    published,
+    loading,
+    error,
+    writeErrorCause,
+    setPublished,
+  } = useDiscoverableIdentities(draftPublishable, savedVersion);
 
   const rows = draftPublishable.filter((identity) =>
     available.includes(identity),
@@ -67,7 +73,9 @@ export function WhoSeesWhatIdentities() {
 
       {error && (
         <p className={styles.errorLine} role="alert">
-          {t("settings:discoverable.error")}
+          {writeErrorCause
+            ? t(writeErrorCause.key, writeErrorCause.values)
+            : t("settings:discoverable.error")}
         </p>
       )}
 

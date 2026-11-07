@@ -14,7 +14,7 @@ pnpm lint:i18n-unused                 # the full report
 pnpm lint:i18n-unused --summary       # the per-namespace table only
 pnpm lint:i18n-unused --namespace=magazine
 pnpm lint:i18n-unused --patterns      # every dynamic key shape it found
-node scripts/report-unused-i18n.mjs --explain=marketing:forOrgs.tiers.employer.list3
+node scripts/report-unused-i18n.mjs --explain=marketing:forOrgs.cta.list1
 ```
 
 It reads only. It never edits a catalog, and it is not part of `pnpm build` or
@@ -103,10 +103,10 @@ touches all 4,400 marketing keys. A shape like that constrains nothing, so
 
 The assumption this tier carries is that a multi-segment key fragment is never
 invented outside the frontend source. Every 1B line prints the shape that
-reached it, so you can check the assumption per key by opening one file. All
-fifteen `marketing:forOrgs.tiers.{employer,partner,funder}.list1-5` keys live
-here: the tier bullets moved to `orgTiers.data.ts` as plain strings and the
-catalog copy stayed behind.
+reached it, so you can check the assumption per key by opening one file. The
+typical 1B key is copy whose rendering moved into a data file as a plain
+string while the catalog entry stayed behind. Those entries are why this
+tier gets deleted in whole families, after a read.
 
 ### 1C. Reached by a TIGHT shape (8 keys). Read every one. Never bulk-delete.
 

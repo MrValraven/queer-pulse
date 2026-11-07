@@ -173,8 +173,11 @@ describe("QuizshowStudio on a template", () => {
     renderTemplate(PRIDE_ID);
     const cardTitle = await findBilingualField("Card title", "EN");
     fireEvent.change(cardTitle, { target: { value: "Pride history night" } });
-    const actualPut = vi.mocked(demoPutTemplate).getMockImplementation();
-    if (!actualPut) throw new Error("The template save mock has no body");
+    // vi.fn(implementation) reports no mock implementation, so the real save
+    // comes from the actual module, the same store the mock forwards to.
+    const { demoPutTemplate: actualPut } = await vi.importActual<
+      typeof import("../api/quizshowDemoTemplates")
+    >("../api/quizshowDemoTemplates");
     // The host keeps typing after the request body went out.
     vi.mocked(demoPutTemplate).mockImplementationOnce((templateId, body) => {
       fireEvent.change(cardTitle, {

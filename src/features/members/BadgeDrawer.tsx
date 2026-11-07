@@ -12,6 +12,7 @@ import {
 import { BadgeMedallion } from "./BadgeMedallion";
 import { useBadgeStoryNotes } from "./useBadgePreferences";
 import { useSetBadgeVisibility } from "./api/useRecognitionMutations";
+import { badgeVisibilityErrorCopy } from "./memberActionErrors";
 import styles from "./BadgesPage.module.css";
 
 const VERIFY_COPY: Record<
@@ -157,12 +158,13 @@ export function BadgeDrawer({
     setVisibility.mutate(
       { badgeKey, hiddenFromProfile: nextHidden },
       {
-        onError: () => {
+        onError: (error) => {
           setPendingHiddenByKey((previous) => ({
             ...previous,
             [badgeKey]: !nextHidden,
           }));
-          showToast(t("members:badges.drawer.visibilityErrorToast"), "error");
+          const cause = badgeVisibilityErrorCopy(error);
+          showToast(t(cause.key, cause.values), "error");
         },
       },
     );

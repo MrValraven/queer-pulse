@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { TestProviders } from "../../test/TestProviders";
 import { MEMBERS, type AdminMember } from "./adminMembers.data";
 import { AdminMemberInviteAccessLine } from "./AdminMemberInviteAccessLine";
@@ -13,19 +14,21 @@ function DrawerHarness({ member }: { member: AdminMember }) {
   return <AdminMemberInviteAccessLine member={member} detail={detail} />;
 }
 
-function renderLine(memberId: string) {
+async function renderLine(memberId: string) {
   const member = MEMBERS.find((candidate) => candidate.id === memberId);
   if (!member) throw new Error(`No demo member with id ${memberId}`);
-  return render(
+  const view = render(
     <TestProviders>
       <DrawerHarness member={member} />
     </TestProviders>,
   );
+  await awaitCatalog("admin");
+  return view;
 }
 
 describe("AdminMemberInviteAccessLine (demo)", () => {
   it("pauses invites only after the confirm, and turns them back on in one tap", async () => {
-    renderLine("ines");
+    await renderLine("ines");
     const inviteSwitch = screen.getByRole("switch", {
       name: "Invites for Inês Martins",
     });
@@ -55,8 +58,8 @@ describe("AdminMemberInviteAccessLine (demo)", () => {
     expect(inviteSwitch).toHaveAttribute("aria-checked", "true");
   });
 
-  it("says there are no pending invites for a member without any", () => {
-    renderLine("devon");
+  it("says there are no pending invites for a member without any", async () => {
+    await renderLine("devon");
     fireEvent.click(
       screen.getByRole("switch", { name: "Invites for Devon Okoro" }),
     );

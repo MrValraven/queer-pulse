@@ -6,10 +6,12 @@ import { useAuth } from "../../../app/providers/authContext";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { routes, thread as threadPath } from "../../../app/routeMap";
 import { Translation } from "../../../shared/i18n/Translation";
+import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useCreateThreadFlow } from "../useCreateThreadFlow";
 import { useForumCounts } from "../api/useForum";
 import { useFollowThread, useReply } from "../api/useForumMutations";
+import { forumErrorText } from "../forumErrors";
 import { ForumNewPostMain } from "./ForumNewPostMain";
 import { ForumNewPostOverlays } from "./ForumNewPostOverlays";
 import { ForumNewPostRail } from "./ForumNewPostRail";
@@ -35,6 +37,7 @@ import styles from "./ForumNewPostPage.module.css";
 
 export function ForumNewPostPage() {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const { demoMode } = useDemoMode();
   const { user } = useAuth();
@@ -175,13 +178,19 @@ export function ForumNewPostPage() {
                 void clearDraft();
                 void navigate(threadPath(target.slug ?? target.id));
               },
+              // The reply mutation is `silentError`: name why it failed
+              // (a locked thread, a restriction, offline) and keep the draft.
+              onError: (error) => showToast(forumErrorText(t, error), "error"),
             },
           );
         }}
         isFollowingReplies={isFollowingReplies}
         onFollowRepliesChange={(isFollowing) => {
           setIsFollowingReplies(isFollowing);
-          if (publishedSlug) setFollowing(publishedSlug, isFollowing);
+          if (publishedSlug)
+            setFollowing(publishedSlug, isFollowing, {
+              onError: (error) => showToast(forumErrorText(t, error), "error"),
+            });
         }}
       />
     </PageShell>

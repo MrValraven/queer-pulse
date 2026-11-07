@@ -123,6 +123,8 @@ describe("notificationDtoToView", () => {
         name: "Inês Tavares",
         href: "/members/ines",
         textKey: "notifications:type.connection_accepted.textNamed",
+        // The row's interpolation tokens ride along for the named sentence.
+        textValues: { eventId: "e1" },
       });
     });
 

@@ -5,6 +5,10 @@ import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { HousingReviewDTO } from "./api/housingReviews.api";
 import { useReplyToHousingReview } from "./api/useHousingReviews";
+import {
+  HOUSING_REVIEW_REPLY_OVERRIDES,
+  failureToast,
+} from "./economyErrorCopy";
 import styles from "./HousingReviewList.module.css";
 
 /** Matches the backend's `ReplyToHousingReviewDto` bound, so the field stops
@@ -63,8 +67,16 @@ export function HousingReviewReply({
         },
         // The composer stays open and still holds what was typed, so a failed
         // save never costs the lister their words.
-        onError: () =>
-          showToast(t("economy:housingReview.reply.errorToast"), "error"),
+        onError: (error) =>
+          showToast(
+            failureToast(
+              error,
+              t,
+              "economy:housingReview.reply.errorTitle",
+              HOUSING_REVIEW_REPLY_OVERRIDES,
+            ),
+            "error",
+          ),
       },
     );
   };

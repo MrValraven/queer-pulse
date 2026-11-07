@@ -179,7 +179,12 @@ export function useQuizshowStudioController(
     scope,
     data,
     controller,
-    hasQuiz: data.quiz !== null || isBlankStarted || sessionScope === null,
+    // A game created blank holds a quiz with no rounds yet, which still
+    // shows the start panel, so `?start=copy` opens its picker there.
+    hasQuiz:
+      (data.quiz?.rounds.length ?? 0) > 0 ||
+      isBlankStarted ||
+      sessionScope === null,
     selection,
     select,
     viewLanguage,

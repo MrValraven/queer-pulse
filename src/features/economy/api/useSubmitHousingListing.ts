@@ -13,6 +13,8 @@ export function useSubmitHousingListing() {
   const queryClient = useQueryClient();
   return useMutation<HousingListingDTO | null, Error, CreateHousingListingBody>(
     {
+      // ListSpaceModal words every refusal itself (the gates, the cause line).
+      meta: { silentError: true },
       mutationFn: async (body) => {
         if (demoMode) {
           await new Promise((resolve) => setTimeout(resolve, 800));

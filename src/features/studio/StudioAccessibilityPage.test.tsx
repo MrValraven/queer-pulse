@@ -38,7 +38,7 @@ describe("Studio accessibility (live)", () => {
     expect(
       screen.getByRole("heading", { name: /keyboard shortcuts/i }),
     ).toBeInTheDocument();
-    expect(screen.queryByText(/last audited/i)).not.toBeInTheDocument();
+    expect(screen.queryByText("Target: WCAG 2.2 AA")).not.toBeInTheDocument();
   });
 
   it("sends a barrier report to the contact form's accessibility topic", async () => {
@@ -58,13 +58,14 @@ describe("Studio accessibility (demo)", () => {
     expect(
       await screen.findByRole("heading", { name: /keyboard shortcuts/i }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/last audited/i)).toBeInTheDocument();
+    expect(screen.getByText("Target: WCAG 2.2 AA")).toBeInTheDocument();
   });
 });
 
 const CHIP_TEXT_BY_KEY: Record<string, string> = {
   "studio:shortcuts.key.space": "Space",
   "studio:shortcuts.key.shift": "Shift",
+  "studio:shortcuts.key.commandOrControl": "Cmd or Ctrl",
   "\u2190": "\u2190Left arrow",
   "\u2192": "\u2192Right arrow",
   "\u2191": "\u2191Up arrow",

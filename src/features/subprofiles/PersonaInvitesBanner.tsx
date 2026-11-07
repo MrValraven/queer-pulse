@@ -6,12 +6,13 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import {
   isAccountRestricted,
   isInviteBlocked,
-  reasonFor,
 } from "../../shared/api/errorMessage";
+import type { TFunction } from "../../shared/i18n/types";
 import { initialsFromName } from "../../shared/lib/initials";
 import { useMyPersonaInvites } from "./api/useMyPersonaInvites";
 import type { MyInviteDTO } from "./api/subprofiles.api";
 import { AcceptPersonaInviteModal } from "./AcceptPersonaInviteModal";
+import { reasonOrCauseMessage } from "./personaActionErrors";
 import styles from "./PersonaInvitesBanner.module.css";
 
 /** An invite whose row is about to leave the list, and where it sat. */
@@ -73,14 +74,11 @@ function useFocusAfterInviteLeaves(invites: MyInviteDTO[] | undefined) {
 }
 
 /** A restriction (ENG-448) gets the copy naming the appeal; any other failure
- *  its backend reason, else the action's own fallback copy. */
-function inviteFailureMessage(
-  error: unknown,
-  fallback: string,
-  restricted: string,
-): string {
-  if (isAccountRestricted(error)) return restricted;
-  return reasonFor(error) ?? fallback;
+ *  its backend reason, else the shared cause (no connection, a missing invite,
+ *  a server fault). */
+function inviteFailureMessage(error: unknown, t: TFunction): string {
+  if (isAccountRestricted(error)) return t("shared:apiError.accountRestricted");
+  return reasonOrCauseMessage(error, t);
 }
 
 /**
@@ -146,14 +144,7 @@ export function PersonaInvitesBanner() {
         showToast(t("subprofiles:invites.toastAcceptBlocked"), "error");
         setConfirmingInvite(null);
       } else {
-        showToast(
-          inviteFailureMessage(
-            error,
-            t("subprofiles:invites.toastAcceptError"),
-            t("shared:apiError.accountRestricted"),
-          ),
-          "error",
-        );
+        showToast(inviteFailureMessage(error, t), "error");
       }
     } finally {
       setBusy(null);
@@ -167,14 +158,7 @@ export function PersonaInvitesBanner() {
       markInviteLeaving(invite.id);
       showToast(t("subprofiles:invites.toastDeclined"), "info");
     } catch (error) {
-      showToast(
-        inviteFailureMessage(
-          error,
-          t("subprofiles:invites.toastDeclineError"),
-          t("shared:apiError.accountRestricted"),
-        ),
-        "error",
-      );
+      showToast(inviteFailureMessage(error, t), "error");
     } finally {
       setBusy(null);
     }

@@ -17,12 +17,13 @@ import {
   type DemoTeamRow,
 } from "../../marketing/listBusiness/api/listingTeam.demo.data";
 import { WorksAtListingPicker } from "./WorksAtListingPicker";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 
 const KAI_PERSONA_ID = "sp-kai-linha-fina";
 const TIAGO_PERSONA_ID = "sp-tiago-agulha-lenta";
 const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
 
-function renderPicker(subprofileId: string, isPersonaEligible = true) {
+async function renderPicker(subprofileId: string, isPersonaEligible = true) {
   render(
     <TestProviders>
       <WorksAtListingPicker
@@ -31,6 +32,7 @@ function renderPicker(subprofileId: string, isPersonaEligible = true) {
       />
     </TestProviders>,
   );
+  await awaitCatalog("subprofiles");
   return screen.getByRole("searchbox", { name: "Find a business by name" });
 }
 
@@ -53,15 +55,15 @@ function makeRequestRow(
 beforeEach(resetListingTeamDemo);
 
 describe("WorksAtListingPicker", () => {
-  it("asks for two characters before searching", () => {
-    const search = renderPicker(TIAGO_PERSONA_ID);
+  it("asks for two characters before searching", async () => {
+    const search = await renderPicker(TIAGO_PERSONA_ID);
     fireEvent.change(search, { target: { value: "t" } });
 
     expect(screen.getByText("Type at least 2 characters")).toBeInTheDocument();
   });
 
   it("finds a business by name and marks where it stands", async () => {
-    const search = renderPicker(TIAGO_PERSONA_ID);
+    const search = await renderPicker(TIAGO_PERSONA_ID);
 
     fireEvent.change(search, { target: { value: "tinta" } });
     const tintaRow = (await screen.findByText("Tinta Viva")).closest("li");
@@ -78,7 +80,7 @@ describe("WorksAtListingPicker", () => {
   });
 
   it("sends a request", async () => {
-    const search = renderPicker(KAI_PERSONA_ID);
+    const search = await renderPicker(KAI_PERSONA_ID);
     fireEvent.change(search, { target: { value: "navalha" } });
 
     fireEvent.click(
@@ -104,7 +106,7 @@ describe("WorksAtListingPicker", () => {
         }),
       ),
     ]);
-    const search = renderPicker(KAI_PERSONA_ID);
+    const search = await renderPicker(KAI_PERSONA_ID);
     fireEvent.change(search, { target: { value: "navalha" } });
 
     fireEvent.click(
@@ -130,7 +132,7 @@ describe("WorksAtListingPicker", () => {
         answeredAt: yesterday.toISOString(),
       }),
     ]);
-    const search = renderPicker(KAI_PERSONA_ID);
+    const search = await renderPicker(KAI_PERSONA_ID);
     fireEvent.change(search, { target: { value: "navalha" } });
 
     fireEvent.click(
@@ -152,7 +154,7 @@ describe("WorksAtListingPicker", () => {
   });
 
   it("marks a business that invited you", async () => {
-    const search = renderPicker(TIAGO_PERSONA_ID);
+    const search = await renderPicker(TIAGO_PERSONA_ID);
     fireEvent.change(search, { target: { value: "navalha" } });
 
     const navalhaRow = (await screen.findByText("Navalha")).closest("li");
@@ -163,7 +165,7 @@ describe("WorksAtListingPicker", () => {
   });
 
   it("announces when nothing matches", async () => {
-    const search = renderPicker(KAI_PERSONA_ID);
+    const search = await renderPicker(KAI_PERSONA_ID);
     fireEvent.change(search, { target: { value: "zzzz" } });
 
     await waitFor(() =>
@@ -179,7 +181,7 @@ describe("WorksAtListingPicker", () => {
     replaceListingTeamDemoRows(
       DEMO_TEAM_ROWS.filter((row) => row.subprofileId !== KAI_PERSONA_ID),
     );
-    const search = renderPicker(KAI_PERSONA_ID);
+    const search = await renderPicker(KAI_PERSONA_ID);
     fireEvent.change(search, { target: { value: "va" } });
 
     const tintaAskButton = await screen.findByRole("button", {
@@ -194,7 +196,7 @@ describe("WorksAtListingPicker", () => {
   });
 
   it("focuses the chip that replaces the Ask button", async () => {
-    const search = renderPicker(KAI_PERSONA_ID);
+    const search = await renderPicker(KAI_PERSONA_ID);
     fireEvent.change(search, { target: { value: "navalha" } });
 
     fireEvent.click(
@@ -211,7 +213,7 @@ describe("WorksAtListingPicker", () => {
   });
 
   it("blocks requests from an ineligible persona", async () => {
-    const search = renderPicker(KAI_PERSONA_ID, false);
+    const search = await renderPicker(KAI_PERSONA_ID, false);
     fireEvent.change(search, { target: { value: "navalha" } });
 
     const askButton = await screen.findByRole("button", {

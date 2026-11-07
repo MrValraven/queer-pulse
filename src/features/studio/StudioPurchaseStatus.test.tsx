@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type { StudioBuyerPurchaseView } from "./api/studioPurchases.adapters";
 import type {
   StudioPurchaseDeclineReason,
@@ -45,17 +46,19 @@ function purchaseWith({
   };
 }
 
-function renderStatus(purchase: StudioBuyerPurchaseView) {
-  return render(
+async function renderStatus(purchase: StudioBuyerPurchaseView) {
+  const view = render(
     <TestProviders>
       <StudioPurchaseStatus purchase={purchase} />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
+  return view;
 }
 
 describe("StudioPurchaseStatus", () => {
-  it("names who a pending buyer waits for", () => {
-    renderStatus(
+  it("names who a pending buyer waits for", async () => {
+    await renderStatus(
       purchaseWith({ status: "pending", artistName: "Lua Cardoso" }),
     );
     expect(screen.getByText("Waiting for the artist")).toBeInTheDocument();
@@ -64,8 +67,8 @@ describe("StudioPurchaseStatus", () => {
     ).toBeInTheDocument();
   });
 
-  it("names the decline reason, the artist's note and the way forward", () => {
-    renderStatus(
+  it("names the decline reason, the artist's note and the way forward", async () => {
+    await renderStatus(
       purchaseWith({
         status: "declined",
         artistName: "Rita Ferreira",
@@ -88,8 +91,8 @@ describe("StudioPurchaseStatus", () => {
     ).toBeInTheDocument();
   });
 
-  it("gives a decline without a note two lines and no note line", () => {
-    renderStatus(
+  it("gives a decline without a note two lines and no note line", async () => {
+    await renderStatus(
       purchaseWith({
         status: "declined",
         artistName: "Rita Ferreira",
@@ -102,8 +105,8 @@ describe("StudioPurchaseStatus", () => {
     expect(screen.queryByText(/added:/)).toBeNull();
   });
 
-  it("reads the 30-day line for an expired claim", () => {
-    renderStatus(
+  it("reads the 30-day line for an expired claim", async () => {
+    await renderStatus(
       purchaseWith({ status: "expired", artistName: "Lua Cardoso" }),
     );
     expect(screen.getByText("Expired")).toBeInTheDocument();
@@ -114,16 +117,16 @@ describe("StudioPurchaseStatus", () => {
     ).toBeInTheDocument();
   });
 
-  it("reads its own line for a cancelled purchase", () => {
-    renderStatus(
+  it("reads its own line for a cancelled purchase", async () => {
+    await renderStatus(
       purchaseWith({ status: "cancelled", artistName: "Lua Cardoso" }),
     );
     expect(screen.getByText("Cancelled")).toBeInTheDocument();
     expect(screen.getByText("You cancelled this purchase")).toBeInTheDocument();
   });
 
-  it("shows only the chip for a confirmed purchase", () => {
-    const { container } = renderStatus(
+  it("shows only the chip for a confirmed purchase", async () => {
+    const { container } = await renderStatus(
       purchaseWith({ status: "confirmed", artistName: "Lua Cardoso" }),
     );
     expect(screen.getByText("Confirmed")).toBeInTheDocument();

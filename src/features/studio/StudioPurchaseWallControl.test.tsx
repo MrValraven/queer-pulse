@@ -1,7 +1,14 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../shared/api/client";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { tintForId } from "./api/studio.adapters";
 import type { StudioSupporterIdentityView } from "./api/studioListening.adapters";
 import type { StudioLoadState } from "./api/studioLoadState";
@@ -114,12 +121,25 @@ const ON_WALL = {
   needsNewIdentity: false,
 };
 
-function renderControl(purchase: StudioBuyerPurchaseView) {
-  return render(
+/** The providers keep the toast deck's live regions mounted, so the control
+ *  renders inside its own slot and every status, alert and emptiness check
+ *  reads that slot. */
+const CONTROL_SLOT = "wall-control-slot";
+
+async function renderControl(purchase: StudioBuyerPurchaseView) {
+  const view = render(
     <TestProviders>
-      <StudioPurchaseWallControl purchase={purchase} />
+      <div data-testid={CONTROL_SLOT}>
+        <StudioPurchaseWallControl purchase={purchase} />
+      </div>
     </TestProviders>,
   );
+  await awaitCatalog("studio");
+  return view;
+}
+
+function withinControl() {
+  return within(screen.getByTestId(CONTROL_SLOT));
 }
 
 function mutationsSaving(
@@ -152,7 +172,7 @@ beforeEach(() => {
 
 describe("StudioPurchaseWallControl", () => {
   it("shows the switch on with the chosen identity, and saves a new one", async () => {
-    renderControl(purchaseWith({ wall: ON_WALL }));
+    await renderControl(purchaseWith({ wall: ON_WALL }));
     expect(screen.getByRole("switch", SWITCH)).toHaveAttribute(
       "aria-checked",
       "true",
@@ -178,7 +198,7 @@ describe("StudioPurchaseWallControl", () => {
         shownAsSubprofileId: null,
       }),
     );
-    expect(await screen.findByRole("status")).toHaveTextContent(
+    expect(await withinControl().findByRole("status")).toHaveTextContent(
       "You are on the supporter wall as Tiago Costa",
     );
   });
@@ -187,7 +207,7 @@ describe("StudioPurchaseWallControl", () => {
     mocks.mutations = mutationsSaving(
       vi.fn(() => Promise.resolve({ ...WALL_STATE, isOnWall: false })),
     );
-    renderControl(purchaseWith({ wall: ON_WALL }));
+    await renderControl(purchaseWith({ wall: ON_WALL }));
     fireEvent.click(screen.getByRole("switch", SWITCH));
     await waitFor(() =>
       expect(mocks.mutations!.saveWall).toHaveBeenCalledWith("p1", "rel-1", {
@@ -195,7 +215,7 @@ describe("StudioPurchaseWallControl", () => {
         shownAsSubprofileId: "sp-late",
       }),
     );
-    expect(await screen.findByRole("status")).toHaveTextContent(
+    expect(await withinControl().findByRole("status")).toHaveTextContent(
       "You are off the supporter wall",
     );
     expect(screen.getByRole("switch", SWITCH)).toHaveAttribute(
@@ -214,7 +234,7 @@ describe("StudioPurchaseWallControl", () => {
       },
       loadState: loadStateOf(),
     };
-    renderControl(
+    await renderControl(
       purchaseWith({
         wall: { isOnWall: true, shownAs: null, needsNewIdentity: true },
       }),
@@ -238,7 +258,7 @@ describe("StudioPurchaseWallControl", () => {
   });
 
   it("opens the picker from a spot that is off with no identity, then saves it on", async () => {
-    renderControl(
+    await renderControl(
       purchaseWith({
         wall: { isOnWall: false, shownAs: null, needsNewIdentity: false },
       }),
@@ -263,23 +283,23 @@ describe("StudioPurchaseWallControl", () => {
     );
   });
 
-  it("tells a pending buyer when they will appear", () => {
-    renderControl(purchaseWith({ status: "pending", wall: ON_WALL }));
+  it("tells a pending buyer when they will appear", async () => {
+    await renderControl(purchaseWith({ status: "pending", wall: ON_WALL }));
     expect(
       screen.getByText("You appear once Lua Cardoso confirms your payment"),
     ).toBeInTheDocument();
   });
 
-  it("renders nothing for a declined purchase or an artist no longer on Studio", () => {
-    const declined = renderControl(
+  it("renders nothing for a declined purchase or an artist no longer on Studio", async () => {
+    const declined = await renderControl(
       purchaseWith({ status: "declined", wall: ON_WALL }),
     );
-    expect(declined.container).toBeEmptyDOMElement();
+    expect(screen.getByTestId(CONTROL_SLOT)).toBeEmptyDOMElement();
     declined.unmount();
-    const unlinked = renderControl(
+    await renderControl(
       purchaseWith({ artistSubprofileId: null, wall: ON_WALL }),
     );
-    expect(unlinked.container).toBeEmptyDOMElement();
+    expect(screen.getByTestId(CONTROL_SLOT)).toBeEmptyDOMElement();
   });
 
   it("names a refused save", async () => {
@@ -293,9 +313,9 @@ describe("StudioPurchaseWallControl", () => {
         ),
       ),
     );
-    renderControl(purchaseWith({ wall: ON_WALL }));
+    await renderControl(purchaseWith({ wall: ON_WALL }));
     fireEvent.click(screen.getByRole("switch", SWITCH));
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await withinControl().findByRole("alert")).toHaveTextContent(
       "We couldn't change your spot on the supporter wall. The supporter wall is open to pending and confirmed purchases of an artist still on Studio",
     );
     expect(screen.getByRole("switch", SWITCH)).toHaveAttribute(

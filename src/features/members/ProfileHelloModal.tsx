@@ -6,6 +6,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { messageRequestErrorKey } from "../messages/api/firstContactError";
+import { causeErrorKey } from "../../shared/api/causeErrorKey";
 import {
   useComposeIdempotencyKey,
   useSendMessageRequest,
@@ -78,14 +79,13 @@ export function ProfileHelloModal({
           // Leave the modal open and the draft in place; don't claim "sent"
           // for a message that didn't go through. A coded first-contact
           // refusal (PRD-365/366) says specifically why.
-          showToast(
-            t(
-              messageRequestErrorKey(error) ??
-                "members:profile.hello.sendErrorToast",
-              { name: profile.first },
-            ),
-            "error",
-          );
+          const firstContactKey = messageRequestErrorKey(error);
+          if (firstContactKey) {
+            showToast(t(firstContactKey, { name: profile.first }), "error");
+            return;
+          }
+          const cause = causeErrorKey(error);
+          showToast(t(cause.key, cause.values), "error");
         },
       },
     );

@@ -15,6 +15,13 @@ vi.mock("../../app/providers/DemoModeProvider", () => ({
   useDemoMode: () => ({ demoMode: mockDemoMode }),
 }));
 
+// The rating route is member-only, so the hook reads the session: a signed-in
+// member whose session check has settled.
+vi.mock("../../app/providers/authContext", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../../app/providers/authContext")>()),
+  useAuth: () => ({ loggedIn: true, checking: false }),
+}));
+
 const fetchGuideRating =
   vi.fn<(contentKey: string) => Promise<GuideRatingResponseDTO>>();
 const rateGuide =

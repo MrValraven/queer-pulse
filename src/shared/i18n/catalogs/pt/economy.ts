@@ -220,6 +220,8 @@ export const economy: Catalog = {
   "workProfile.savedToast": "Perfil de trabalho guardado",
   "workProfile.saveFailedToast":
     "Não conseguimos guardar, as tuas definições ficaram exatamente como estavam. Tenta outra vez daqui a pouco.",
+  "workProfile.saveFailedTitle":
+    "Não conseguimos guardar e as tuas definições ficaram como estavam",
 
   "workProfile.card.meterLabel": "Perfil {percent}% completo",
   "workProfile.card.note":
@@ -561,6 +563,9 @@ export const economy: Catalog = {
     "Procura guardada, avisamos-te quando aparecer uma casa assim.",
   "housing.saveSearch.error":
     "Não deu para guardar essa procura. Tenta outra vez daqui a pouco.",
+  "housing.saveSearch.errorTitle": "Não conseguimos guardar essa procura",
+  "housing.saveSearch.cause.limit":
+    "Chegaste ao limite de procuras guardadas. Apaga uma de que já não precises e guarda esta a seguir.",
   "housing.savedSearches.title": "As tuas procuras guardadas",
   "housing.savedSearches.alertsOn": "Alertas ativos",
   "housing.savedSearches.remove": "Remover procura guardada {name}",
@@ -688,6 +693,8 @@ export const economy: Catalog = {
   "housingModal.recommend.submit": "Submeter recomendação",
   "housingModal.recommend.error":
     "Não foi possível submeter a tua recomendação, verifica a ligação e tenta novamente.",
+  "housingModal.recommend.errorTitle":
+    "Não conseguimos enviar a tua recomendação",
 
   // ── ListSpaceModal ──────────────────────────────────────────────────────
   "listSpace.type.sublet": "Sublocação",
@@ -806,6 +813,7 @@ export const economy: Catalog = {
   "listSpace.submitCta": "Submeter anúncio",
   "listSpace.error":
     "Não foi possível submeter o teu anúncio, não foi entregue. Verifica a ligação e tenta novamente.",
+  "listSpace.errorTitle": "Não conseguimos publicar a tua casa",
 
   // ── MyHousingListingsPage (HSG-1/HSG-3) ─────────────────────────────────
   "myHousingListings.entryLink": "Os meus anúncios",
@@ -861,6 +869,12 @@ export const economy: Catalog = {
   "myHousingListings.toast.deleted": "Anúncio eliminado",
   "myHousingListings.toast.updated": "Anúncio atualizado",
   "myHousingListings.toast.error": "Isso não foi entregue, tenta novamente.",
+  "myHousingListings.toast.errorTitle":
+    "Não conseguimos atualizar esse anúncio",
+  "myHousingListings.toast.deleteErrorTitle":
+    "Não conseguimos apagar esse anúncio",
+  "myHousingListings.cause.missing":
+    "Este anúncio já não está na tua lista. Pode já ter sido removido. Atualiza a página para veres os teus anúncios atuais.",
   "myHousingListings.edit.eyebrow": "Quadro de habitação",
   "myHousingListings.edit.title": "Edita o teu <em>anúncio.</em>",
   "myHousingListings.edit.sub":
@@ -900,6 +914,7 @@ export const economy: Catalog = {
     "Uma pessoa moderadora vai rever <strong>{name}</strong> antes de a adicionar ao quadro. Avisamos-te se precisarmos de mais alguma coisa.",
   "suggestLandlord.error":
     "Não foi possível enviar, importas-te de tentar outra vez?",
+  "suggestLandlord.errorTitle": "Não conseguimos enviar a tua sugestão",
 
   // ── HousingListingPage (+ secções) ─────────────────────────────────────
   "housingListing.back": "Quadro de habitação",
@@ -952,6 +967,7 @@ export const economy: Catalog = {
   "affirmingPledge.accepting": "A guardar…",
   "affirmingPledge.error":
     "Não foi possível guardar o compromisso agora. Tenta de novo.",
+  "affirmingPledge.errorTitle": "Não conseguimos guardar o teu compromisso",
   "affirmingBaseline.badge": "Afirmativo LGBTQ+",
   "affirmingBaseline.badgeTooltip":
     "Todas as casas e todos os colegas de casa aqui são afirmativos LGBTQ+. É a base de que todos os anúncios partem.",
@@ -978,6 +994,10 @@ export const economy: Catalog = {
   "verification.request.submitting": "A enviar",
   "verification.request.submitError":
     "Não foi possível enviar o teu pedido. Importas-te de tentar de novo?",
+  "verification.request.submitErrorTitle":
+    "Não conseguimos enviar o teu pedido",
+  "verification.request.cause.alreadyOpen":
+    "Já tens um pedido de verificação aberto. Volta a abrir esta janela para veres em que ponto está.",
   "verification.request.cancel": "Agora não",
   "verification.request.sub.pending":
     "Uma pessoa moderadora lê os pedidos à mão, por isso isto pode demorar alguns dias. Avisamos-te assim que houver decisão.",
@@ -999,10 +1019,18 @@ export const economy: Catalog = {
   "verification.request.withdrawnToast": "Pedido retirado.",
   "verification.request.withdrawError":
     "Não foi possível retirar o pedido. Importas-te de tentar de novo?",
+  "verification.request.withdrawErrorTitle":
+    "Não conseguimos retirar o teu pedido",
+  "verification.request.cause.alreadyDecided":
+    "A nossa equipa já fez avançar este pedido, por isso já não pode ser retirado. Volta a abrir esta janela para veres em que ponto está.",
   "verification.request.appealCta": "Recorrer desta decisão",
   "verification.request.appealSending": "A enviar recurso",
   "verification.request.appealError":
     "Não foi possível enviar o teu recurso. Importas-te de tentar de novo?",
+  "verification.request.appealErrorTitle":
+    "Não conseguimos enviar o teu recurso",
+  "verification.request.cause.alreadyAppealed":
+    "Esta decisão já foi alvo de recurso uma vez, e cada decisão só pode ser contestada uma vez. Começa antes um novo pedido.",
   "verification.request.newRequestCta": "Começar um novo pedido",
   "verification.request.later": "Vejo mais tarde",
   "verification.request.approved.title": "O teu pedido foi",
@@ -1049,6 +1077,7 @@ export const economy: Catalog = {
     "Isto é publicado como as tuas palavras, ao lado do que escreveram sobre ti.",
   "landlordReply.send": "Enviar à equipa",
   "landlordReply.error": "Não foi enviado. Tenta outra vez.",
+  "landlordReply.errorTitle": "Não conseguimos enviar a tua resposta",
   "landlordReply.doneTitle": "A equipa recebeu",
   "landlordReply.doneBody":
     "Alguém vai ler isto e confirmar quem és antes de publicar seja o que for. Guarda esta página se quiseres anotar o que enviaste.",
@@ -1087,6 +1116,9 @@ export const economy: Catalog = {
   "housingViewing.request.send": "Enviar pedido de visita",
   "housingViewing.request.error":
     "Não foi possível enviar o pedido. Tenta de novo daqui a pouco.",
+  "housingViewing.request.errorTitle": "Não conseguimos pedir esta visita",
+  "housingViewing.request.cause.alreadyOpen":
+    "Já tens uma visita aberta nesta casa. Vê as tuas visitas para saberes em que ponto está.",
   "housingViewing.request.successTitle": "Visita <em>pedida.</em>",
   "housingViewing.request.successBody":
     "Quem anuncia vai escolher uma hora ou sugerir outra. Vais encontrá-la em As tuas visitas.",
@@ -1141,6 +1173,22 @@ export const economy: Catalog = {
   "housingViewing.list.requestAgain": "Pedir outra hora",
   "housingViewing.list.actionError":
     "Não foi possível concluir. Tenta outra vez.",
+  "housingViewing.list.actionErrorTitle":
+    "Não conseguimos atualizar esta visita",
+  "housingViewing.cause.notYourTurn":
+    "Não é a tua vez nesta visita. Espera que a outra pessoa responda e tenta outra vez.",
+  "housingViewing.cause.missing":
+    "Esta visita já não existe ou a casa saiu do quadro. Atualiza a página para veres o que está em vigor.",
+  "housingViewing.cause.slotTaken":
+    "Um de vocês já tem uma visita marcada a essa hora. Escolhe outra hora.",
+  "housingViewing.cause.moved":
+    "Esta visita mudou desde que a abriste, por isso essa ação já não se aplica. Atualiza a página para veres em que ponto está.",
+  "housingViewing.cause.homeOffBoard":
+    "Esta casa saiu do quadro, por isso a visita já não pode avançar.",
+  "housingViewing.cause.timePassed":
+    "Essa hora já passou. Escolhe uma hora no futuro.",
+  "housingViewing.cause.notYetHappened":
+    "Podes marcar uma visita como feita depois de passar a hora combinada.",
   "housingViewing.list.markCompleted": "Marcar como feita",
   "housingViewing.list.leaveReview": "Deixar avaliação",
   "housingViewing.status.requested": "Pedida",
@@ -1171,6 +1219,13 @@ export const economy: Catalog = {
   "housingViewing.review.submit": "Enviar avaliação",
   "housingViewing.review.error":
     "Não foi possível enviar a avaliação. Tenta de novo daqui a pouco.",
+  "housingViewing.review.errorTitle": "Não conseguimos enviar a tua avaliação",
+  "housingViewing.review.cause.notCompleted":
+    "A avaliação abre depois de a visita estar marcada como feita e precisa de uma classificação e de algumas palavras. Confirma as duas coisas e tenta outra vez.",
+  "housingViewing.review.cause.notParticipant":
+    "Só as duas pessoas desta visita a podem avaliar.",
+  "housingViewing.review.cause.alreadyReviewed":
+    "Já avaliaste esta casa. Ficas com uma avaliação por casa, por muitas visitas que faças.",
   "housingViewing.review.successTitle": "Avaliação <em>guardada.</em>",
   "housingViewing.review.successBody":
     "Obrigade. Fica privada até <strong>{name}</strong> deixar a sua, ou passarem duas semanas.",
@@ -1247,6 +1302,7 @@ export const economy: Catalog = {
   "contactRequest.done": "Concluído",
   "contactRequest.sendError":
     "Não foi possível enviar, importas-te de tentar outra vez?",
+  "contactRequest.sendErrorTitle": "Não conseguimos enviar a tua mensagem",
 
   // ── LandlordPage ─────────────────────────────────────────────────────────
   "landlordPage.eyebrow": "Pessoa proprietária recomendada pela comunidade",
@@ -1369,6 +1425,7 @@ export const economy: Catalog = {
   "flatmates.card.helloSent": "Olá enviado",
   "flatmates.card.sayHelloError":
     "Não foi possível enviar o teu olá. Tenta novamente daqui a pouco.",
+  "flatmates.card.sayHelloErrorTitle": "Não conseguimos enviar o teu olá",
   "flatmates.card.matchScore": "{score}% compatível",
   "flatmates.card.save": "Guardar",
   "flatmates.card.saved": "Guardado",
@@ -1393,6 +1450,7 @@ export const economy: Catalog = {
   "postProfileModal.ariaLabel": "Publicar o teu perfil de colega de casa",
   "postProfileModal.error":
     "Não foi possível guardar o teu perfil, importas-te de tentar de novo?",
+  "postProfileModal.errorTitle": "Não conseguimos guardar o teu perfil",
   "postProfileModal.success.title": "Já estás no <em>quadro.</em>",
   "postProfileModal.success.body":
     "O teu perfil está publicado. As pessoas vão contactar-te diretamente. Fica atente às tuas mensagens QueerPulse.",
@@ -1558,6 +1616,11 @@ export const economy: Catalog = {
   "companyReview.toast.alreadyReviewed": "Já avaliaste esta empresa.",
   "companyReview.toast.error":
     "Não conseguimos publicar a tua avaliação. Tenta novamente.",
+  "companyReview.toast.errorTitle": "Não conseguimos publicar a tua avaliação",
+  "companyReview.cause.empty":
+    "A tua avaliação precisa de uma classificação e de algumas palavras. Confirma as duas coisas e tenta outra vez.",
+  "companyReview.cause.ownOrTeam":
+    "Não podes avaliar uma empresa que é tua nem uma em que fazes parte da equipa.",
 
   // ── EmployerReviewsPage (+ Card) ─────────────────────────────────────────
   // Nota de âmbito: nomes de empresas, pontuações, citações e o texto/meta de
@@ -1734,6 +1797,7 @@ export const economy: Catalog = {
     "Já te candidataste a esta vaga, consulta as tuas candidaturas.",
   "jobApply.error.generic":
     "Não conseguimos enviar a tua candidatura. Tenta novamente.",
+  "jobApply.error.genericTitle": "Não conseguimos enviar a tua candidatura",
 
   "jobApply.availability.now.title": "Imediatamente",
   "jobApply.availability.now.desc": "Disponível já",
@@ -1962,6 +2026,7 @@ export const economy: Catalog = {
     "Não tens autorização para publicar em nome de {company}. Muda para uma empresa de que fazes parte da equipa.",
   "postJob.toast.publishError":
     "Não foi possível publicar a tua vaga. Tenta novamente.",
+  "postJob.toast.publishErrorTitle": "Não conseguimos publicar a tua vaga",
 
   "postJob.field.optional": "opcional",
   "postJob.field.category": "Área",
@@ -3082,7 +3147,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.founding-values.s0.h":
     "Porque estamos a formar esta cooperativa",
   "coopTemplate.doc.founding-values.s0.b0":
-    "Começa com uma ou duas frases que digam, com clareza, para que serve esta cooperativa. Não uma declaração de missão para quem está de fora, uma resposta privada para quem vai assinar os títulos de capital. Do que se estão a proteger uns aos outros, e o que estão a construir?",
+    "Começa com uma ou duas frases que digam, com clareza, para que serve esta cooperativa. Escreve-a como uma resposta privada para quem vai assinar os títulos de capital. Do que se estão a proteger uns aos outros, e o que estão a construir?",
   "coopTemplate.doc.founding-values.s0.b1.0":
     "Estamos a formar esta cooperativa para que ninguém tenha de escolher entre continuar no armário e ter casa.",
   "coopTemplate.doc.founding-values.s0.b1.1":
@@ -3146,7 +3211,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.financial-honesty.s0.h":
     "O que significa aqui total transparência",
   "coopTemplate.doc.financial-honesty.s0.b0":
-    "Transparência financeira não significa que todos revelam a totalidade das suas finanças pessoais. Significa que todos veem os mesmos números sobre a cooperativa, e que o grupo acorda antecipadamente que informação individual é partilhada, e porquê.",
+    "Transparência financeira significa que todos veem os mesmos números sobre a cooperativa, e que o grupo acorda antecipadamente que informação individual é partilhada, e porquê.",
   "coopTemplate.doc.financial-honesty.s0.b1.0":
     "Cada membro pode consultar o livro de contas partilhado da cooperativa a qualquer momento, em qualquer altura do ano.",
   "coopTemplate.doc.financial-honesty.s0.b1.1":
@@ -3291,7 +3356,7 @@ export const economy: Catalog = {
     "O que acontece se falhar uma prestação: remete para o processo de atrasos do teu Acordo de honestidade financeira em vez de o repetir aqui.",
   "coopTemplate.doc.share-agreement.s2.h": "Sair: condições de reembolso",
   "coopTemplate.doc.share-agreement.s2.b0":
-    "Esta é a cláusula que os membros leem com mais atenção, e a que mais precisa de ser justa em vez de punitiva.",
+    "Esta é a cláusula que os membros leem com mais atenção, e a que mais precisa de ser justa.",
   "coopTemplate.doc.share-agreement.s2.b1.0":
     "Em caso de saída voluntária com o pré-aviso acordado, a cooperativa reembolsa o valor nominal da quota, ajustado por [inflação / um índice acordado], no prazo, a título de exemplo ilustrativo, de 12 meses após a saída.",
   "coopTemplate.doc.share-agreement.s2.b1.1":
@@ -3326,10 +3391,10 @@ export const economy: Catalog = {
   "coopTemplate.doc.finance-model.title": "Modelo financeiro",
   "coopTemplate.doc.finance-model.titleEm": "explicado",
   "coopTemplate.doc.finance-model.intro":
-    "Esta explicação percorre como o dinheiro numa cooperativa de habitação se soma na prática, o que estás a pagar, onde é que um crédito e o apoio municipal podem encaixar, e como definir uma contribuição mensal que seja sustentável em vez de otimista. O exemplo resolvido no fim usa apenas números ilustrativos; os teus valores reais dependem inteiramente do teu imóvel, da tua cidade e do teu grupo.",
+    "Esta explicação percorre como o dinheiro numa cooperativa de habitação se soma na prática, o que estás a pagar, onde é que um crédito e o apoio municipal podem encaixar, e como definir uma contribuição mensal que seja sustentável. O exemplo resolvido no fim usa apenas números ilustrativos; os teus valores reais dependem inteiramente do teu imóvel, da tua cidade e do teu grupo.",
   "coopTemplate.doc.finance-model.s0.h": "As camadas de custo",
   "coopTemplate.doc.finance-model.s0.b0":
-    "Os custos de uma cooperativa vêm em três camadas, e ajuda mantê-las visualmente separadas em vez de juntas num único número assustador.",
+    "Os custos de uma cooperativa vêm em três camadas, e ajuda mantê-las visualmente separadas, cada uma com o seu número.",
   "coopTemplate.doc.finance-model.s0.b1.0":
     "Aquisição: o preço de compra do imóvel, mais notário, registo e imposto de transmissão (IMT).",
   "coopTemplate.doc.finance-model.s0.b1.1":
@@ -3339,7 +3404,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.finance-model.s1.h":
     "Quotas dos membros, crédito e apoio municipal",
   "coopTemplate.doc.finance-model.s1.b0":
-    "A maioria das cooperativas da QueerPulse combina três fontes de financiamento em vez de depender de uma só.",
+    "A maioria das cooperativas da QueerPulse combina três fontes de financiamento.",
   "coopTemplate.doc.finance-model.s1.b1.0":
     "As quotas dos membros (ver o teu Acordo de quota do sócio) cobrem uma parte da aquisição, normalmente o suficiente para tornar o rácio entre o crédito e o valor do imóvel viável para um financiador.",
   "coopTemplate.doc.finance-model.s1.b1.1":
@@ -3359,7 +3424,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.finance-model.s3.b0.0":
     "Uma reserva de manutenção, dotada desde o primeiro mês, ainda antes de alguma coisa avariar, criá-la mais tarde, depois de uma infiltração no telhado, é muito mais difícil.",
   "coopTemplate.doc.finance-model.s3.b0.1":
-    "Um valor-alvo para a reserva, muitas vezes falado como vários meses de custos correntes, acordado pelo grupo em vez de presumido.",
+    "Um valor-alvo para a reserva, muitas vezes falado como vários meses de custos correntes, acordado pelo grupo.",
   "coopTemplate.doc.finance-model.s3.b0.2":
     "A reserva é separada do fundo de emergência/solidariedade, uma protege o edifício, o outro protege os membros.",
   "coopTemplate.doc.finance-model.s4.h":
@@ -3415,7 +3480,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.conflict-resolution.s2.b1.0":
     "Etapa 1, direta: as pessoas envolvidas conversam, a sós, idealmente na semana em que a questão surge.",
   "coopTemplate.doc.conflict-resolution.s2.b1.1":
-    "Etapa 2, facilitada: se a etapa 1 não resultar, um terceiro membro, escolhido por acordo e não designado, facilita uma conversa entre as pessoas envolvidas.",
+    "Etapa 2, facilitada: se a etapa 1 não resultar, um terceiro membro, escolhido por acordo, facilita uma conversa entre as pessoas envolvidas.",
   "coopTemplate.doc.conflict-resolution.s2.b1.2":
     "Etapa 3, assembleia: se continuar por resolver, ou afetar toda a casa, é levado a todo o grupo como um ponto de agenda claro e acordado com antecedência.",
   "coopTemplate.doc.conflict-resolution.s2.b1.3":
@@ -3433,10 +3498,10 @@ export const economy: Catalog = {
   "coopTemplate.doc.conflict-resolution.s4.b0.0":
     "Responsabilização, aqui, significa alguém mudar efetivamente o comportamento que causou o dano, com apoio e com seguimento.",
   "coopTemplate.doc.conflict-resolution.s4.b0.1":
-    "Os acordos feitos em qualquer etapa, um comportamento alterado, um limite, uma ação de reparação, são postos por escrito e recebem uma data de revisão, para que sejam verificados em vez de dados como resolvidos.",
+    "Os acordos feitos em qualquer etapa, um comportamento alterado, um limite, uma ação de reparação, são postos por escrito e recebem uma data de revisão, para que sejam verificados e ninguém tenha de presumir que resultaram.",
   "coopTemplate.doc.conflict-resolution.s5.h": "Quando alguém tem de sair",
   "coopTemplate.doc.conflict-resolution.s5.b0":
-    "Este é o passo mais difícil, e aquele que mais vale a pena decidir com calma, com antecedência, em vez de a meio de uma crise.",
+    "Este é o passo mais difícil, e aquele que mais vale a pena decidir com calma, com antecedência, bem antes de qualquer crise.",
   "coopTemplate.doc.conflict-resolution.s5.b1.0":
     "A saída involuntária só é considerada depois da etapa 4, exceto em situações de segurança em que é necessária uma separação imediata e temporária.",
   "coopTemplate.doc.conflict-resolution.s5.b1.1":
@@ -3563,6 +3628,7 @@ export const economy: Catalog = {
   "joinCoop.sending": "A enviar…",
   "joinCoop.sendCta": "Enviar pedido",
   "joinCoop.error": "Não foi possível enviar o teu pedido. Tenta novamente.",
+  "joinCoop.errorTitle": "Não conseguimos enviar o teu pedido",
   "joinCoop.household.justMe": "Só eu",
   "joinCoop.household.mePlusPartners": "Eu + acompanhante(s)",
   "joinCoop.household.small": "Um agregado de 3–4",
@@ -3631,6 +3697,10 @@ export const economy: Catalog = {
   "affiliateCompanyModal.confirmCta": "Confirmar e continuar",
   "affiliateCompanyModal.createErrorToast":
     "Não foi possível criar essa empresa. Tenta novamente.",
+  "affiliateCompanyModal.createErrorTitle":
+    "Não conseguimos criar essa empresa",
+  "affiliateCompanyModal.cause.nameTaken":
+    "Não conseguimos dar a essa empresa um endereço de página próprio. Experimenta um nome ligeiramente diferente.",
 
   // ── Coming soon (live mode: honest stand-in for flows with no backend yet) ─
   "comingSoon.title": "Ainda não está",
@@ -3780,7 +3850,7 @@ export const economy: Catalog = {
   "housingSafety.rights.discrimination.point.2":
     "Guarda o anúncio, as mensagens e qualquer recusa que te tenham dado. É o registo escrito que sustenta uma queixa.",
   "housingSafety.disclaimer.title":
-    "Orientação, não <em>aconselhamento jurídico</em>",
+    "Orientação <em>geral</em> para quem arrenda",
   "housingSafety.disclaimer.body":
     "Mantivemos isto rigoroso e claro, mas cada situação é única. Para algo que conte mesmo, fala com uma associação de inquilinos ou com um advogado.",
   "housingSafety.backToHousing": "Voltar à habitação",
@@ -3845,6 +3915,11 @@ export const economy: Catalog = {
   "flatmates.discovery.sayHello": "Diz olá",
   "flatmates.discovery.keepBrowsing": "Continuar a explorar",
   "flatmates.discovery.error": "Não foi possível guardar. Tenta daqui a pouco.",
+  "flatmates.discovery.errorTitle": "Não conseguimos guardar a tua escolha",
+  "flatmates.discovery.cause.ownProfile":
+    "Este é o teu próprio perfil, por isso não há nada a gostar nem a passar. Avança para o seguinte.",
+  "flatmates.discovery.cause.missing":
+    "Este perfil já não está disponível. Pode ter sido pausado ou removido. Avança para o seguinte.",
   "flatmates.discovery.matchTitle": "Disseram olá os <em>dois</em>",
   "flatmates.discovery.matchBody":
     "Tu e {name} gostaram um do outro. Começa a conversa quando quiseres.",
@@ -4278,6 +4353,8 @@ export const economy: Catalog = {
   "flatmateDangerZone.confirm.retryCta": "Tentar de novo",
   "flatmateDangerZone.confirm.error":
     "Não foi possível retirar o teu perfil. Continua no quadro. Tenta de novo.",
+  "flatmateDangerZone.cause.gone":
+    "O teu perfil de colega de casa já saiu do quadro. Atualiza a página para veres como está.",
   "flatmateDangerZone.toast.deleted":
     "O teu perfil de colega de casa saiu do quadro.",
   "postProfileForm.editTitle": "O teu perfil de colega de casa",
@@ -4504,6 +4581,11 @@ export const economy: Catalog = {
   "company.reviews.reply.successToast": "A tua resposta ja esta na pagina.",
   "company.reviews.reply.errorToast":
     "Nao foi possivel guardar a resposta. Tenta de novo.",
+  "company.reviews.reply.errorTitle": "Não conseguimos guardar a tua resposta",
+  "company.reviews.reply.cause.empty":
+    "A tua resposta está vazia. Escreve algumas palavras e tenta outra vez.",
+  "company.reviews.reply.cause.notOwner":
+    "Só o dono da empresa pode responder a uma avaliação, e um perfil que ninguém reivindicou ainda não tem dono.",
   "company.reviews.editedOn": "Editada a {date}",
   "company.reviews.report.cta": "Denunciar esta avaliacao",
   "company.reviews.report.ariaLabel":
@@ -4533,6 +4615,11 @@ export const economy: Catalog = {
   "housingReview.reply.successToast": "A tua resposta está no anúncio.",
   "housingReview.reply.errorToast":
     "A tua resposta não foi guardada. Continua aqui, podes tentar de novo.",
+  "housingReview.reply.errorTitle": "Não conseguimos guardar a tua resposta",
+  "housingReview.reply.cause.empty":
+    "A tua resposta está vazia. Escreve algumas palavras e tenta outra vez.",
+  "housingReview.reply.cause.notYetYours":
+    "Só podes responder a uma avaliação sobre ti, e uma avaliação fica escondida até as duas pessoas escreverem a sua.",
 
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
   // PRD-35 — PRD-35 - taking down your own flatmate profile, from the profile editor's danger zone. The confirm copy states only what DELETE /flatmate-profiles/mine actually does: the profile row goes, every like and pass pointing at it cascades away (so any mutual match ends), and conversations already opened by a say-hello survive as ordinary DMs. pt-PT reuses the catalogue's existing terms: 'quadro de colegas de casa' for the board, 'perfil' for the profile. Also adds the edit-mode heading, lede and submit label for the same form, which said 'Post your profile' over an existing profile.

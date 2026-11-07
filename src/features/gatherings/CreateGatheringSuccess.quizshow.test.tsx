@@ -4,6 +4,7 @@ import { TestProviders } from "../../test/TestProviders";
 import { CreateGatheringSuccess } from "./CreateGatheringSuccess";
 import { manageGatheringPath } from "./gatheringPaths";
 import type { GatheringForm } from "./useGatheringForm";
+import { awaitCatalog } from "../../test/awaitCatalog";
 
 const mocks = vi.hoisted(() => ({ isVisible: true }));
 
@@ -18,8 +19,8 @@ vi.mock("./preview/GatheringPreviewPanel", () => ({
 }));
 vi.mock("./shareKit/ShareKitRow", () => ({ ShareKitRow: () => null }));
 
-function renderSuccess(format: string) {
-  return render(
+async function renderSuccess(format: string) {
+  const view = render(
     <TestProviders>
       <CreateGatheringSuccess
         form={{ format } as unknown as GatheringForm}
@@ -28,6 +29,8 @@ function renderSuccess(format: string) {
       />
     </TestProviders>,
   );
+  await awaitCatalog("gatherings");
+  return view;
 }
 
 beforeEach(() => {
@@ -35,28 +38,28 @@ beforeEach(() => {
 });
 
 describe("CreateGatheringSuccess quizshow link", () => {
-  it("links a quiz event to its Live game tab", () => {
-    renderSuccess("quiz");
+  it("links a quiz event to its Live game tab", async () => {
+    await renderSuccess("quiz");
     const link = screen.getByRole("link", {
-      name: "gatherings:create.success.quizshowCta",
+      name: "Write your quiz",
     });
     expect(link.getAttribute("href")).toBe(
       manageGatheringPath("thursday-quiz-copy", "quizshow"),
     );
   });
 
-  it("shows no quiz link for other formats or while Pulse Live is hidden", () => {
-    renderSuccess("brunch");
+  it("shows no quiz link for other formats or while Pulse Live is hidden", async () => {
+    await renderSuccess("brunch");
     expect(
       screen.queryByRole("link", {
-        name: "gatherings:create.success.quizshowCta",
+        name: "Write your quiz",
       }),
     ).toBeNull();
     mocks.isVisible = false;
-    renderSuccess("quiz");
+    await renderSuccess("quiz");
     expect(
       screen.queryByRole("link", {
-        name: "gatherings:create.success.quizshowCta",
+        name: "Write your quiz",
       }),
     ).toBeNull();
   });

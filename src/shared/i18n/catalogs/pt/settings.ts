@@ -323,6 +323,8 @@ export const settings: Catalog = {
     "Teste enviado. Confirma no teu dispositivo",
   "notifications.phonePush.test.error":
     "Não foi possível enviar o teste. Tenta daqui a pouco",
+  "notifications.phonePush.error.browser":
+    "O teu navegador não conseguiu registar este dispositivo para notificações push. Confirma que as notificações estão permitidas para a QueerPulse nas definições do navegador e tenta outra vez.",
   "notifications.phonePush.manage.title": "Gere os teus dispositivos",
   "notifications.phonePush.manage.desc":
     "Vê todos os dispositivos que recebem as tuas notificações push e remove os que não reconheças.",
@@ -640,6 +642,11 @@ export const settings: Catalog = {
   "uploads.delete.toast.success": "Imagem apagada.",
   "uploads.delete.toast.error":
     "Não conseguimos apagar essa imagem. Tenta novamente.",
+  "uploads.delete.error.notYours": "Essa imagem não é tua para apagar.",
+  "uploads.delete.error.stillUsed":
+    "Essa imagem ainda está a ser usada nalgum sítio. Tira-a de lá primeiro e depois apaga-a aqui.",
+  "uploads.delete.error.unverified":
+    "Não conseguimos confirmar se essa imagem ainda está em uso, por isso deixámo-la onde está. Tenta outra vez daqui a pouco.",
 
   // ── EditProfileSidebar.tsx / editProfileNav.data.tsx ─────────────────────
   "editProfile.nav.group.profile": "Perfil",
@@ -648,6 +655,7 @@ export const settings: Catalog = {
   "editProfile.nav.links.label": "Ligações e redes sociais",
   "editProfile.nav.skills.label": "Competências e interesses",
   "editProfile.nav.communities.label": "Comunidades",
+  "editProfile.nav.playlists.label": "Playlists",
   "editProfile.nav.more": "Mais",
   "editProfile.nav.pronounsGuideLink": "Guia de pronomes",
 
@@ -740,6 +748,39 @@ export const settings: Catalog = {
   "editProfile.communities.featured": "Em destaque",
   "editProfile.communities.moveUp": "Mover para cima",
   "editProfile.communities.moveDown": "Mover para baixo",
+  "editProfile.playlists.title": "Playlists <em>no teu perfil</em>",
+  "editProfile.playlists.sub":
+    "Escolhe se as tuas playlists do Studio aparecem no teu perfil e quais queres destacar.",
+  "editProfile.playlists.showToggle":
+    "Mostrar as minhas playlists no meu perfil",
+  "editProfile.playlists.loading": "A carregar as tuas playlists",
+  "editProfile.playlists.empty":
+    "Ainda não tens playlists. Cria uma na tua biblioteca do Studio e ela aparece aqui.",
+  "editProfile.playlists.rule":
+    "Sem nenhuma escolhida, aparecem todas as tuas playlists públicas. Com algumas escolhidas, só essas aparecem, pela ordem em que as escolheste.",
+  "editProfile.playlists.counter": "{count} / {max} em destaque",
+  "editProfile.playlists.moveUp": "Mover {name} para cima",
+  "editProfile.playlists.moveDown": "Mover {name} para baixo",
+  "editProfile.playlists.error.playlistNotYours":
+    "Uma das playlists escolhidas pertence a outra pessoa, por isso as tuas playlists não foram guardadas. Remove-a e guarda de novo.",
+  "editProfile.playlists.error.playlistNotFound":
+    "Uma das playlists escolhidas já não existe, por isso as tuas playlists não foram guardadas. Recarrega a página e escolhe de novo.",
+  "editProfile.playlists.error.tooMany":
+    "Escolheste mais de 12 playlists, por isso as tuas playlists não foram guardadas. Retira algumas e guarda de novo.",
+  "editProfile.playlists.error.duplicate":
+    "A mesma playlist foi escolhida duas vezes, por isso as tuas playlists não foram guardadas. Recarrega a página e escolhe de novo.",
+  "editProfile.playlists.error.signedOut":
+    "A tua sessão terminou, por isso as tuas playlists não foram guardadas. Inicia sessão de novo.",
+  "editProfile.playlists.error.noStudioAccess":
+    "A tua conta não tem acesso ao Studio, por isso as tuas playlists não foram guardadas.",
+  "editProfile.playlists.error.rateLimited":
+    "Guardaste demasiadas vezes em pouco tempo, por isso as tuas playlists não foram guardadas. Espera um minuto e tenta novamente.",
+  "editProfile.playlists.error.serverDown":
+    "O nosso servidor falhou ao guardar as tuas playlists. Tenta novamente dentro de momentos.",
+  "editProfile.playlists.error.rejected":
+    "O servidor rejeitou as playlists que escolheste, por isso não foram guardadas. Recarrega a página e escolhe de novo.",
+  "editProfile.playlists.error.offline":
+    "O teu dispositivo não conseguiu ligar-se ao nosso servidor, por isso as tuas playlists não foram guardadas. Verifica a tua ligação e tenta novamente.",
 
   // ── UsernameSection.tsx ────────────────────────────────────────────────────
   "editProfile.username.title": "O teu <em>nome de utilizador</em>",
@@ -812,6 +853,8 @@ export const settings: Catalog = {
     "Sessão terminada. Se não foste tu, revê as tuas sessões ativas e termina qualquer dispositivo que não reconheças.",
   "sessions.toast.signedOutError":
     "Não conseguimos terminar essa sessão. Tenta novamente.",
+  "sessions.error.notFound":
+    "Essa sessão já não existe, por isso não há nada para terminar. Atualiza para ver as tuas sessões atuais.",
   "sessions.toast.signedOutAll":
     "Sessão terminada em todos os outros dispositivos",
   "sessions.toast.signedOutAllError":
@@ -845,6 +888,8 @@ export const settings: Catalog = {
     "Dispositivo removido. Deixa de receber notificações push da QueerPulse.",
   "pushDevices.toast.removedError":
     "Não conseguimos remover esse dispositivo. Tenta novamente.",
+  "pushDevices.error.notFound":
+    "Esse dispositivo já foi removido. Atualiza para ver os teus dispositivos atuais.",
   "pushDevices.footNote":
     "<strong>Perdeste um dispositivo?</strong> Removê-lo aqui pára as notificações push de imediato, mesmo que não consigas terminar sessão nele.",
 
@@ -1252,6 +1297,20 @@ export const settings: Catalog = {
     "Não conseguimos concluir isto agora. Nada foi alterado. Verifica a tua ligação e tenta novamente, ou volta dentro de momentos.",
   "destructiveFlow.error.close": "Fechar",
   "destructiveFlow.error.tryAgain": "Tentar novamente",
+  "accountAction.error.reauthExpired":
+    "A tua confirmação expirou antes de terminarmos, por isso nada mudou. Confirma outra vez que és tu e carrega no botão de novo.",
+  "accountAction.error.onlyAdmin":
+    "És a única pessoa admin que resta. Promove outra pessoa a admin antes de desativares ou apagares a tua conta.",
+  "accountAction.error.deletionAlreadyScheduled":
+    "Já há um pedido de eliminação agendado para a tua conta. Atualiza para o ver, ou cancela-o a partir daí.",
+  "accountAction.error.deletionProcessing":
+    "A eliminação da tua conta já está a ser processada, por isso já não pode ser cancelada.",
+  "accountAction.error.noPendingDeletion":
+    "Não há nenhum pedido de eliminação pendente para cancelar. Pode já estar cancelado, por isso atualiza para confirmar.",
+  "accountAction.error.exportRateLimited":
+    "Já pediste o máximo de exportações que permitimos numa hora. Tenta outra vez daqui a uma hora.",
+  "accountAction.error.dsarRateLimited":
+    "Já enviaste o máximo de pedidos de dados que permitimos numa hora. Tenta outra vez daqui a uma hora.",
   "destructiveFlow.confirm.notNow": "Agora não",
   "destructiveFlow.deactivate.eyebrow": "Desativar conta",
   "destructiveFlow.deactivate.title":

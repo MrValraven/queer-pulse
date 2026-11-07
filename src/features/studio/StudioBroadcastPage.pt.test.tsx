@@ -1,5 +1,6 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { loadNamespace } from "../../shared/i18n/catalogs";
 import { TestProviders } from "../../test/TestProviders";
 import { StudioBroadcastPage } from "./StudioBroadcastPage";
 
@@ -32,13 +33,21 @@ describe("StudioBroadcastPage in Portuguese", () => {
         <StudioBroadcastPage />
       </TestProviders>,
     );
+    // The Portuguese chunks load on demand; wait for them and the re-render.
+    await act(async () => {
+      await Promise.all([
+        loadNamespace("pt", "studio"),
+        loadNamespace("pt", "studioShowcase"),
+      ]);
+      await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    });
 
     expect(
       await screen.findByText("Áudio do sistema (loopback)"),
     ).toBeInTheDocument();
     expect(
       await screen.findByText(
-        "Sem correspondência · pagamento retido até ser validado",
+        "Sem correspondência · crédito retido até ser validado",
       ),
     ).toBeInTheDocument();
     expect(

@@ -8,6 +8,7 @@ import {
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../shared/api/client";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type { StudioPriceDTO } from "./api/studio.types";
 import type { StudioSupporterIdentityDTO } from "./api/studioListening.types";
 import {
@@ -190,12 +191,21 @@ function sheetElement(offer: StudioOfferView) {
     </TestProviders>
   );
 }
-const renderSheet = (offer: StudioOfferView) => render(sheetElement(offer));
+async function renderSheet(offer: StudioOfferView) {
+  const view = render(sheetElement(offer));
+  await awaitCatalog("studio");
+  return view;
+}
 const paidButton = () => screen.getByRole("button", { name: "I've paid" });
+// The sheet's own alert. The toast region keeps an empty alert mounted, so a
+// page-wide query would find that one first.
+const sheetDialog = () =>
+  screen.getByRole("dialog", { name: "Buy Água-forte" });
+const findSheetAlert = () => within(sheetDialog()).findByRole("alert");
 
 async function pressPaidAndReadAlert() {
   fireEvent.click(await screen.findByRole("button", { name: "I've paid" }));
-  return screen.findByRole("alert");
+  return findSheetAlert();
 }
 
 function resetMocks() {
@@ -217,7 +227,7 @@ describe("StudioBuySheet, pay step and wall", () => {
   beforeEach(resetMocks);
 
   it("lists the artist's ways to pay with copy rows, and one I've paid in the footer", async () => {
-    renderSheet(
+    await renderSheet(
       offerWith({
         methods: [
           link("https://ko-fi.com/rita"),
@@ -248,13 +258,15 @@ describe("StudioBuySheet, pay step and wall", () => {
   });
 
   it("shows the payment code in the pay step before I've paid, with its copy row and line", async () => {
-    renderSheet(offerWith({}));
+    await renderSheet(offerWith({}));
     const dialog = await screen.findByRole("dialog", {
       name: "Buy Água-forte",
     });
     expect(within(dialog).getByText("QP4M7R")).toBeInTheDocument();
     expect(
-      within(dialog).getByRole("button", { name: "Copy the reference code" }),
+      within(dialog).getByRole("button", {
+        name: "Copy code for the payment note",
+      }),
     ).toBeInTheDocument();
     expect(
       within(dialog).getByText(
@@ -272,7 +284,7 @@ describe("StudioBuySheet, pay step and wall", () => {
       error: null,
       requestNew,
     };
-    const { rerender } = renderSheet(offerWith({}));
+    const { rerender } = await renderSheet(offerWith({}));
     expect(
       await screen.findByText("Getting your payment code"),
     ).toBeInTheDocument();
@@ -290,7 +302,7 @@ describe("StudioBuySheet, pay step and wall", () => {
       requestNew,
     };
     rerender(sheetElement(offerWith({})));
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await findSheetAlert()).toHaveTextContent(
       /^We couldn't get your payment code\. /,
     );
     expect(paidButton()).toHaveAttribute("aria-disabled", "true");
@@ -307,7 +319,7 @@ describe("StudioBuySheet, pay step and wall", () => {
     mocks.mutations = mutationsRejecting(
       apiError(400, "studio_purchase_reference_invalid"),
     );
-    renderSheet(offerWith({}));
+    await renderSheet(offerWith({}));
     expect(await pressPaidAndReadAlert()).toHaveTextContent(
       "We couldn't record your payment. This payment code is too old. Get a new code below, and if you already paid with the old one, put the old code in the name field so the artist can match it",
     );
@@ -315,14 +327,16 @@ describe("StudioBuySheet, pay step and wall", () => {
       screen.getByRole("button", { name: "Get a new payment code" }),
     );
     expect(requestNew).toHaveBeenCalledTimes(1);
-    await waitFor(() => expect(screen.queryByRole("alert")).toBeNull());
+    await waitFor(() =>
+      expect(within(sheetDialog()).queryByRole("alert")).toBeNull(),
+    );
   });
 
   it("names a code someone else took and offers a new one right there", async () => {
     mocks.mutations = mutationsRejecting(
       apiError(409, "studio_purchase_reference_taken"),
     );
-    renderSheet(offerWith({}));
+    await renderSheet(offerWith({}));
     expect(await pressPaidAndReadAlert()).toHaveTextContent(
       "We couldn't record your payment. This payment code was just taken by another purchase. Get a new code below",
     );
@@ -333,7 +347,7 @@ describe("StudioBuySheet, pay step and wall", () => {
   });
 
   it("keeps the wall off by default and previews identities when turned on", async () => {
-    renderSheet(offerWith({}));
+    await renderSheet(offerWith({}));
     const wallSwitch = await screen.findByRole("switch", {
       name: "Show me on the supporter wall",
     });
@@ -357,7 +371,7 @@ describe("StudioBuySheet, I've paid", () => {
   beforeEach(resetMocks);
 
   it("sends the claim with the trimmed payer name and the chosen identity", async () => {
-    renderSheet(
+    await renderSheet(
       offerWith({ price: { mode: "name_your_price", amountCents: 300 } }),
     );
     fireEvent.change(
@@ -389,7 +403,7 @@ describe("StudioBuySheet, I've paid", () => {
   });
 
   it("sends no identity while the wall stays off", async () => {
-    renderSheet(offerWith({}));
+    await renderSheet(offerWith({}));
     fireEvent.click(await screen.findByRole("button", { name: "I've paid" }));
     await waitFor(() =>
       expect(mocks.mutations!.create).toHaveBeenCalledWith({
@@ -405,7 +419,7 @@ describe("StudioBuySheet, I've paid", () => {
   });
 
   it("refuses an amount below the minimum before sending, with the reason", async () => {
-    renderSheet(
+    await renderSheet(
       offerWith({ price: { mode: "name_your_price", amountCents: 300 } }),
     );
     const input = await screen.findByRole("textbox", {
@@ -426,7 +440,7 @@ describe("StudioBuySheet, I've paid", () => {
         price: { mode: "fixed", amountCents: 400 },
       }),
     );
-    renderSheet(offerWith({}));
+    await renderSheet(offerWith({}));
     expect(await screen.findByText("€3")).toBeInTheDocument();
     expect(await pressPaidAndReadAlert()).toHaveTextContent(
       "We couldn't record your payment. The price changed. Check the new price and try again",
@@ -440,7 +454,7 @@ describe("StudioBuySheet, I've paid", () => {
         price: { mode: "fixed", amountCents: 400 },
       }),
     );
-    renderSheet(offerWith({}));
+    await renderSheet(offerWith({}));
     const alert = await pressPaidAndReadAlert();
     const button = paidButton();
     expect(
@@ -463,7 +477,7 @@ describe("StudioBuySheet, I've paid", () => {
     mocks.mutations = mutationsRejecting(
       apiError(409, "studio_purchase_pending_exists"),
     );
-    renderSheet(offerWith({}));
+    await renderSheet(offerWith({}));
     expect(await pressPaidAndReadAlert()).toHaveTextContent(
       "We couldn't record your payment. You already told this artist you paid for this; it is waiting for them",
     );
@@ -477,7 +491,7 @@ describe("StudioBuySheet, I've paid", () => {
           resolveCreate = resolve;
         }),
     );
-    renderSheet(offerWith({}));
+    await renderSheet(offerWith({}));
     fireEvent.click(await screen.findByRole("button", { name: "I've paid" }));
     expect(paidButton()).toHaveAttribute("aria-busy", "true");
     fireEvent.keyDown(document, { key: "Escape" });
@@ -495,7 +509,7 @@ describe("StudioBuySheet, I've paid", () => {
   });
 
   it("hands the new purchase to the host on success", async () => {
-    renderSheet(offerWith({}));
+    await renderSheet(offerWith({}));
     fireEvent.click(await screen.findByRole("button", { name: "I've paid" }));
     await waitFor(() => expect(onPurchased).toHaveBeenCalledWith(PURCHASE));
     expect(onClose).not.toHaveBeenCalled();

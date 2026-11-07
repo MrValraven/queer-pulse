@@ -4,10 +4,11 @@
  * own timeline, so speed, freeze, reverse, ping-pong and stutter all work; a
  * frame uploads only when the frame index changes.
  *
- * Without ImageDecoder, or when the decoded frames pass the byte budget, the
- * GIF plays as an `<img>` in the media host the browser animates, uploaded
- * every animation frame (playhead effects stay off for that GIF). A broken
- * file reports `decode_failed`.
+ * Without ImageDecoder, when the decoded frames pass the byte budget, or when
+ * ImageDecoder refuses the file, the GIF plays as an `<img>` in the media
+ * host the browser animates, uploaded every animation frame (playhead effects
+ * stay off for that GIF). Only that `<img>` failing to load or decode reports
+ * `decode_failed`, so a GIF the browser plays always reaches the screen.
  *
  * The shared GIF budget is reserved before decoding starts (the most this GIF
  * may decode into), so GIFs loading together never decode past it; once the
@@ -240,8 +241,8 @@ export class VjGifSource implements VjEngineSource {
     }
     if (!result.ok) {
       this.releaseUnusedReservation(0);
-      if (result.reason === "decode_failed") this.fail();
-      else this.startImageFallback();
+      // An abort comes only from dispose, which the check above already caught.
+      if (result.reason !== "aborted") this.startImageFallback();
       return;
     }
     const bytes = decodedVjGifBytes(result.frames);

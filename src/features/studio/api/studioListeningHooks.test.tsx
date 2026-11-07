@@ -105,7 +105,8 @@ describe("Studio listening hooks in demo", () => {
       expect(await clear.result.current.clearHistory()).toBe(true),
     );
     expect(clearStudioRecentlyPlayed).toHaveBeenCalledTimes(1);
-    expect(recent.result.current.items).toEqual([]);
+    // The folded caches reach the hooks after the clear resolves.
+    await waitFor(() => expect(recent.result.current.items).toEqual([]));
     expect(recent.result.current.hasMore).toBe(false);
     expect(summary.result.current.summary?.isEmpty).toBe(true);
     expect(summary.result.current.summary?.totalListens).toBe(0);
@@ -131,8 +132,11 @@ describe("Studio listening hooks in demo", () => {
     await act(async () =>
       expect(await save.result.current.save(null)).toBe(true),
     );
+    // The saved row reaches the cache after the save resolves.
+    await waitFor(() =>
+      expect(state.result.current.state?.since).toBeInstanceOf(Date),
+    );
     expect(state.result.current.state?.isSupporting).toBe(true);
-    expect(state.result.current.state?.since).toBeInstanceOf(Date);
     expect(state.result.current.state?.shownAs?.kind).toBe("account");
     const supporting = renderHook(() => useStudioListeningSupporting(), {
       wrapper,

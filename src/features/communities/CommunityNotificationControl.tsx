@@ -10,6 +10,7 @@ import {
   useSetCommunityNotificationLevel,
 } from "./api/useCommunityPreferences";
 import { CommunityNotificationOptions } from "./CommunityNotificationOptions";
+import { communityErrorText } from "./communityErrors";
 import styles from "./CommunityNotificationControl.module.css";
 
 const LEVEL_ICON: Record<CommunityNotificationLevel, IconType> = {
@@ -71,9 +72,9 @@ export function CommunityNotificationControl({
           }),
           "success",
         ),
-      onError: () => {
+      onError: (error) => {
         setSelectedLevel(previousLevel);
-        showToast(t("communities:detail.notifications.errorToast"), "error");
+        showToast(communityErrorText(t, error), "error");
       },
     });
   };

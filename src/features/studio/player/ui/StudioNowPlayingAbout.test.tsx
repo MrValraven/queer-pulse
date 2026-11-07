@@ -6,6 +6,7 @@ import { DEMO_ARTIST_MARIANA } from "../../api/studioDemoMe.data";
 import type { StudioNowPlayingArtistState } from "../useStudioNowPlayingArtist";
 import { StudioNowPlayingAbout } from "./StudioNowPlayingAbout";
 import { queueItem } from "./studioPlayerTestHarness";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 // The live Follow (SubprofileFollow) is the one under test here.
 vi.mock("../../useStudioShowcase", () => ({ useStudioShowcase: () => false }));
@@ -69,9 +70,10 @@ const LOADING: StudioNowPlayingArtistState = {
 };
 
 describe("StudioNowPlayingAbout", () => {
-  it("shows the cover photo, name, kind, city, followers, bio and Open artist page", () => {
+  it("shows the cover photo, name, kind, city, followers, bio and Open artist page", async () => {
     const artist = artistView();
     const { container } = renderAbout({ status: "ready", artist });
+    await awaitCatalog("studio");
     expect(
       screen.getByRole("heading", { name: "About the artist" }),
     ).toBeInTheDocument();
@@ -127,11 +129,12 @@ describe("StudioNowPlayingAbout", () => {
     expect(screen.getByText("NIGHTFORM")).toBeInTheDocument();
   });
 
-  it("labels an episode's card About the show with Open show page", () => {
+  it("labels an episode's card About the show with Open show page", async () => {
     renderAbout(
       { status: "ready", artist: artistView({ kind: "podcaster" }) },
       true,
     );
+    await awaitCatalog("studio");
     expect(
       screen.getByRole("heading", { name: "About the show" }),
     ).toBeInTheDocument();
@@ -140,15 +143,17 @@ describe("StudioNowPlayingAbout", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows the eyebrow as the card's heading", () => {
+  it("shows the eyebrow as the card's heading", async () => {
     renderAbout({ status: "ready", artist: artistView() });
+    await awaitCatalog("studio");
     const eyebrow = screen.getByRole("heading", { name: "About the artist" });
     expect(eyebrow.tagName).toBe("H3");
     expect(eyebrow.querySelector("em")).toBeNull();
   });
 
-  it("keeps a skeleton of the card's height while the artist loads", () => {
+  it("keeps a skeleton of the card's height while the artist loads", async () => {
     const { container } = renderAbout(LOADING);
+    await awaitCatalog("studio");
     const skeleton = container.querySelector('[aria-busy="true"]');
     expect(skeleton).not.toBeNull();
     // Four text lines, three bio lines, Read more and the two action pills.

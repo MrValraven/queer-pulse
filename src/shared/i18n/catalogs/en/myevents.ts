@@ -413,6 +413,12 @@ export const myevents: Catalog = {
   "acceptModal.fullToast": "This event is full, so we couldn't add you.",
   "acceptModal.errorToast": "We couldn't accept the invite. Try again.",
   "acceptModal.noLongerOpenToast": "This invite is no longer open.",
+  "acceptModal.eventCancelledToast":
+    "This event was cancelled after the invite went out, so it can't be accepted.",
+  "acceptModal.notYoursToast":
+    "This invite was sent to someone else, so your account can't accept it.",
+  "acceptModal.chooseVisibilityToast":
+    "Choose who can see you are going, then accept the invite again.",
 
   // ── RSVP details modal (RsvpDetailsModal) ─────────────────────────────────
   "rsvpModal.eyebrow": "Your RSVP",

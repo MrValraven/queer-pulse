@@ -21,6 +21,13 @@ vi.mock("../../app/providers/DemoModeProvider", () => ({
   useDemoMode: () => ({ demoMode: mockDemoMode }),
 }));
 
+// The live listings read the session to decide whether to offer "suggest a
+// resource"; a signed-in member whose session check has settled.
+vi.mock("../../app/providers/authContext", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../../app/providers/authContext")>()),
+  useAuth: () => ({ loggedIn: true, checking: false }),
+}));
+
 function renderTab(node: ReactNode) {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },

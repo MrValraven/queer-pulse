@@ -43,9 +43,11 @@ export interface VjTempoBarProps {
 }
 
 /**
- * The dock's tempo bar, one 44px row: the BPM readout (opens tempo entry),
- * Tap, four beat dots on the synced clock, the "1" that sets the bar's first
- * beat to now, and the quantize chip. Tap, "1" and quantize go through the
+ * The dock's tempo bar, one row (44px, 40 in the pads strip): the BPM readout
+ * (opens tempo entry), Tap, four beat dots on the synced clock, the Downbeat
+ * chip whose "1" sets the bar's first beat to now, and the quantize chip.
+ * Each chip with a value shows a small caption over it; the accessible names
+ * stay on aria-label. Tap, the downbeat and quantize go through the
  * shared dispatcher (it keeps the tap register and stamps the downbeat with
  * the synced server time); the popover sends `setTempo` itself.
  */
@@ -85,7 +87,8 @@ export function VjTempoBar({
         <button
           ref={bpmButtonRef}
           type="button"
-          className={styles.chip}
+          className={`${styles.chip} ${styles.captionChip}`}
+          data-vj-bpm-chip=""
           aria-label={
             bpmText === null
               ? t("vj:tempo.label")
@@ -95,11 +98,21 @@ export function VjTempoBar({
           aria-expanded={isBpmOpen}
           onClick={() => setIsBpmOpen((isOpen) => !isOpen)}
         >
-          <span className={styles.bpmValue}>
-            {bpmText === null
-              ? t("vj:tempo.label")
-              : t("vj:tempo.bpmValue", { bpm: bpmText })}
-          </span>
+          {bpmText === null ? (
+            <span className={styles.chipValue}>{t("vj:tempo.label")}</span>
+          ) : (
+            <>
+              <span className={styles.chipCaption} aria-hidden="true">
+                {t("vj:shuffle.bpmLabel")}
+              </span>
+              <span
+                className={`${styles.chipNumber} ${styles.bpmNumber}`}
+                aria-hidden="true"
+              >
+                {bpmText}
+              </span>
+            </>
+          )}
         </button>
         <VjMicBadge
           isShown={tempo?.source === "mic"}
@@ -114,7 +127,7 @@ export function VjTempoBar({
       <VjBeatDots tempo={tempo} clock={clock} />
       <m.button
         type="button"
-        className={`${styles.chip} ${styles.downbeat}`}
+        className={`${styles.chip} ${styles.captionChip} ${styles.downbeatChip}`}
         data-vj-downbeat=""
         aria-label={t("vj:tempo.downbeatAria")}
         aria-disabled={isSendBlocked || undefined}
@@ -125,11 +138,19 @@ export function VjTempoBar({
           if (!isSendBlocked) dispatch({ kind: "downbeat" }, "press");
         }}
       >
-        {t("vj:tempo.downbeat")}
+        <span className={styles.chipCaption} aria-hidden="true">
+          {t("vj:tempo.downbeatCaption")}
+        </span>
+        <span
+          className={`${styles.chipNumber} ${styles.downbeatNumber}`}
+          aria-hidden="true"
+        >
+          {t("vj:tempo.downbeat")}
+        </span>
       </m.button>
       <m.button
         type="button"
-        className={`${styles.chip} ${styles.quantize}`}
+        className={`${styles.chip} ${styles.captionChip} ${styles.quantize}`}
         data-quantize={quantize}
         aria-label={t("vj:tempo.quantizeAria", { mode: quantizeLabel })}
         aria-disabled={isSendBlocked || undefined}
@@ -140,10 +161,10 @@ export function VjTempoBar({
           if (!isSendBlocked) dispatch({ kind: "cycleQuantize" }, "press");
         }}
       >
-        <span className={styles.quantizeCaption} aria-hidden="true">
+        <span className={styles.chipCaption} aria-hidden="true">
           {t("vj:tempo.quantize")}
         </span>
-        <span className={styles.quantizeMode} aria-hidden="true">
+        <span className={styles.chipValue} aria-hidden="true">
           {quantizeLabel}
         </span>
       </m.button>

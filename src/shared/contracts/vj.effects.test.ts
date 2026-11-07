@@ -28,12 +28,24 @@ describe("vj effects catalog", () => {
     expect(new Set(VJ_EFFECT_IDS).size).toBe(VJ_EFFECT_IDS.length);
   });
 
-  it("an entry with variants names its first variant as the default and an entry without names null", () => {
+  it("an entry with variants names its pinned or first variant as the default and an entry without names null", () => {
+    // Mirrors the backend contract spec: tint opens on the coral accent and
+    // kaleidoscope on six segments; every other variant effect opens on its
+    // first variant.
+    const pinnedDefaultVariants: Partial<Record<VjEffectId, string>> = {
+      tint: "coral",
+      kaleidoscope: "6",
+    };
     for (const effectId of VJ_EFFECT_IDS) {
       const entry = VJ_EFFECT_CATALOG[effectId];
       const expectedDefault =
-        entry.variants.length > 0 ? entry.variants[0] : null;
+        entry.variants.length > 0
+          ? (pinnedDefaultVariants[effectId] ?? entry.variants[0])
+          : null;
       expect(entry.defaultVariant, effectId).toBe(expectedDefault);
+      if (entry.variants.length > 0) {
+        expect(entry.variants, effectId).toContain(entry.defaultVariant);
+      }
     }
   });
 

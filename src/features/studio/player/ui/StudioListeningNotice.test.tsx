@@ -7,6 +7,7 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 import { TestProviders } from "../../../../test/TestProviders";
 import { DEFAULT_STUDIO_PLAYBACK } from "../../api/studio.types";
 import { studioKeys } from "../../api/studioQueryKeys";
@@ -77,9 +78,11 @@ describe("StudioListeningNotice", () => {
     await waitFor(() => expect(readStudioListeningNotice()).toBe(false));
   });
 
-  it("closes by itself after 12 seconds unless focus is inside", () => {
-    vi.useFakeTimers();
+  it("closes by itself after 12 seconds unless focus is inside", async () => {
     renderNotice();
+    // The studio catalog loads on demand; it lands before the timers stop.
+    await awaitCatalog("studio");
+    vi.useFakeTimers();
     act(() => showForTest());
     const link = screen.getByRole("link", { name: "See your listening" });
     fireEvent.focusIn(link);
@@ -94,9 +97,11 @@ describe("StudioListeningNotice", () => {
     expect(readStudioListeningNotice()).toBe(false);
   });
 
-  it("holds the 12 seconds while the pointer is inside", () => {
-    vi.useFakeTimers();
+  it("holds the 12 seconds while the pointer is inside", async () => {
     renderNotice();
+    // The studio catalog loads on demand; it lands before the timers stop.
+    await awaitCatalog("studio");
+    vi.useFakeTimers();
     act(() => showForTest());
     const link = screen.getByRole("link", { name: "See your listening" });
     fireEvent.pointerEnter(link);
@@ -138,11 +143,14 @@ describe("StudioListeningNotice", () => {
         <button type="button" data-studio-play-toggle="">
           Play
         </button>
-        <button type="button">Earlier control</button>
         <StudioListeningNotice />
       </TestProviders>,
     );
-    const earlier = screen.getByRole("button", { name: "Earlier control" });
+    // Outside React's tree, so the test can take it away under the notice.
+    const earlier = document.createElement("button");
+    earlier.type = "button";
+    earlier.textContent = "Earlier control";
+    document.body.append(earlier);
     earlier.focus();
     act(() => showForTest());
     const link = await screen.findByRole("link", {

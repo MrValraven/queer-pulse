@@ -20,6 +20,7 @@ import {
 } from "../../gatherings/CreateGatheringFields";
 import { eventZoneFormat } from "../../gatherings/eventTimezone";
 import { goTogetherErrorCode, isGoTogetherOff } from "../api/goTogether.api";
+import { goTogetherCauseKey } from "../api/goTogetherErrorCopy";
 import type { HostConfigDTO } from "../api/goTogether.types";
 import { goTogetherKeys } from "../api/goTogetherKeys";
 import {
@@ -68,7 +69,7 @@ function useSaveErrorToast() {
       showToast(t("goTogether:host.toast.badCutoff"), "error");
       return;
     }
-    showToast(t("goTogether:host.toast.saveError"), "error");
+    showToast(t(goTogetherCauseKey(error)), "error");
   };
 }
 

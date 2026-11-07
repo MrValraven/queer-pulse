@@ -9,6 +9,7 @@ import { KIND_LABEL_KEYS } from "../subprofiles/subprofile-kinds";
 import { useEventLineup, useLeaveLineup } from "./api/useEventLineup";
 import { useRespondLineupInvite } from "./api/useLineupInvite";
 import { lineupRoleToKind } from "./eventLineup.data";
+import { causeFallbackMessage } from "./gatheringActionErrors";
 import {
   GatheringLineupViewerLine,
   GatheringLineupViewerPanel,
@@ -75,10 +76,7 @@ function useLineupViewer(slug: string, targets: FocusTargets): LineupViewer {
     error: unknown,
     stateAfterRollback: LineupViewerState,
   ) => {
-    showToast(
-      reasonFor(error) ?? t("gatherings:lineupInvite.errorToast"),
-      "error",
-    );
+    showToast(reasonFor(error) ?? causeFallbackMessage(error, t), "error");
     focusOnceShowing(stateAfterRollback);
   };
 

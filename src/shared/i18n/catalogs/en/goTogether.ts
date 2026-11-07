@@ -259,6 +259,8 @@ export const goTogether: Catalog = {
   "card.closed.note": "Go together has closed for this event.",
   "card.error.alreadyGrouped": "You're already in a group for this event.",
   "card.error.generic": "That didn't go through. Try again in a moment.",
+  "error.refused":
+    "Our servers refused that. Try again in a moment, and write to us if it keeps happening.",
   "card.error.ineligible":
     "Go together isn't available on your account right now.",
   "card.error.invalidAnswers":

@@ -10,6 +10,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Thread } from "./forum.data";
 import { useRemoveCoAuthorCredit } from "./api/useForumMutations";
+import { forumErrorText } from "./forumErrors";
 import type { PostMenuAction } from "./usePostAuthorSafety";
 
 /**
@@ -78,9 +79,9 @@ export function useCoAuthorCreditRemoval({
           closeConfirm();
           showToast(t("forum:threadPage.coAuthor.removedToast"), "success");
         },
-        onError: () => {
+        onError: (error) => {
           closeConfirm();
-          showToast(t("forum:threadPage.coAuthor.removeFailed"), "error");
+          showToast(forumErrorText(t, error), "error");
         },
       },
     );

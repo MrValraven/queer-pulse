@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { LeavePersonaModal } from "./LeavePersonaModal";
 import type { MemberDTO } from "./api/subprofiles.api";
+import { awaitCatalog } from "../../test/awaitCatalog";
 
 // Unrun per repo policy (`do-not-run-tests-unless-asked`): verified statically.
 
@@ -174,7 +175,7 @@ describe("LeavePersonaModal", () => {
     expect(await screen.findByText(GENERIC_BODY)).toBeInTheDocument();
   });
 
-  it("shows the generic leave body when the members list is empty (covers both the loading window and a persona with no other member)", () => {
+  it("shows the generic leave body when the members list is empty (covers both the loading window and a persona with no other member)", async () => {
     membersFixture = [];
 
     render(
@@ -182,6 +183,7 @@ describe("LeavePersonaModal", () => {
         <LeavePersonaModal subprofileId="sp-test" onClose={() => {}} />
       </TestProviders>,
     );
+    await awaitCatalog("subprofiles");
 
     expect(screen.getByText(GENERIC_BODY)).toBeInTheDocument();
   });

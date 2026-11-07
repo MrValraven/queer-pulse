@@ -190,10 +190,13 @@ describe("StudioLyricTimingDialog", () => {
     const dialog = await screen.findByRole("dialog", {
       name: "Time the lyrics",
     });
-    expect(within(dialog).getByText("0 lines read")).not.toHaveAttribute(
-      "role",
-    );
-    expect(within(dialog).queryByRole("status")).not.toBeInTheDocument();
+    const linesReadCount = within(dialog).getByText("0 lines read");
+    expect(linesReadCount).not.toHaveAttribute("role");
+    // The footer keeps its own empty status line for the blocked-save note;
+    // the count sits outside every live region.
+    expect(
+      linesReadCount.closest('[role="status"], [role="alert"], [aria-live]'),
+    ).toBeNull();
   });
 
   it("scrolls the preview into view when it opens", async () => {

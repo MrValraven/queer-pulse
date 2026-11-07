@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../shared/api/client";
 import { TestProviders } from "../../test/TestProviders";
@@ -33,7 +33,14 @@ vi.mock("../../app/providers/authContext", async (importOriginal) => {
     ...original,
     useAuth: () => {
       const value = original.useAuth();
-      return mocks.isLive ? { ...value, user: { id: "member-1" } } : value;
+      // The signed-in member carries a profile slug: `TestProviders` mounts
+      // the session bootstrap, which reads it off the user.
+      return mocks.isLive
+        ? {
+            ...value,
+            user: { ...value.user, id: "member-1", profile: { slug: "sam" } },
+          }
+        : value;
     },
   };
 });
@@ -97,8 +104,14 @@ beforeEach(() => {
 describe("MusicPurchasesPage (demo)", () => {
   it("lists every purchase, so a declined or expired one shows its reason", async () => {
     renderAt("/account/music-purchases");
+    // The first render pays for the lazy `studio` namespace chunk, which
+    // holds the heading and every status line below it.
     expect(
-      await screen.findByRole("heading", { name: "Your music purchases" }),
+      await screen.findByRole(
+        "heading",
+        { name: "Your music purchases" },
+        { timeout: 5000 },
+      ),
     ).toBeInTheDocument();
     expect(await screen.findByText("Cassete perdida")).toBeInTheDocument();
     expect(screen.getByText("Declined")).toBeInTheDocument();
@@ -114,7 +127,12 @@ describe("MusicPurchasesPage (demo)", () => {
     renderAt("/account/music-purchases");
     await screen.findByText("Cassete perdida");
     const pendingRow = screen.getByText("Último elétrico").closest("li")!;
-    expect(pendingRow).toHaveTextContent("Waiting for Lua Cardoso to confirm");
+    // The row's status line is catalog copy, which can land after its title.
+    await waitFor(() =>
+      expect(pendingRow).toHaveTextContent(
+        "Waiting for Lua Cardoso to confirm",
+      ),
+    );
     expect(
       screen.queryByRole("button", { name: "Cancel this purchase" }),
     ).toBeNull();
@@ -139,8 +157,9 @@ describe("MusicPurchasesPage (live)", () => {
     );
     renderAt("/account/music-purchases");
     expect(await screen.findByText("Noites de Vidro")).toBeInTheDocument();
+    // The button's label is catalog copy, which can land after the title.
     expect(
-      screen.getByRole("button", { name: /Download tracks/ }),
+      await screen.findByRole("button", { name: /Download tracks/ }),
     ).toBeInTheDocument();
     expect(client.apiGet).toHaveBeenCalledWith("/me/studio-purchases");
     const row = screen.getByText("Noites de Vidro").closest("li")!;

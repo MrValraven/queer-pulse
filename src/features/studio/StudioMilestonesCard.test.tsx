@@ -7,6 +7,7 @@ import {
 } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { toArtistRefView } from "./api/studio.adapters";
 import type { StudioArtistRefDTO } from "./api/studio.types";
 import type { StudioMilestoneView } from "./api/studioDashboard.adapters";
@@ -59,30 +60,37 @@ beforeEach(() => {
 });
 
 /** Demo mode through TestProviders: the demo seeds are relative to now. */
-function renderCard(persona: StudioArtistRefDTO) {
-  return render(
+async function renderCard(persona: StudioArtistRefDTO) {
+  const view = render(
     <TestProviders>
       <StudioMilestonesCard persona={toArtistRefView(persona)} />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
+  return view;
 }
 
 describe("StudioMilestonesCard", () => {
   it("lists Mariana's milestones newest first with a New marker on the recent one", async () => {
-    renderCard(DEMO_ARTIST_MARIANA);
+    await renderCard(DEMO_ARTIST_MARIANA);
     const items = await screen.findAllByRole("listitem");
     expect(items[0]).toHaveTextContent("Mariana Sol passed 1,000 followers");
     expect(within(items[0]!).getByText("New")).toBeInTheDocument();
     expect(within(items[1]!).queryByText("New")).toBeNull();
+    // The card shows the newest four; the first placement sits further
+    // down, behind Show all milestones.
+    fireEvent.click(
+      screen.getByRole("button", { name: "Show all milestones" }),
+    );
     expect(
-      screen.getByText(
+      await screen.findByText(
         "Mariana Sol landed on a public playlist for the first time",
       ),
     ).toBeInTheDocument();
   });
 
   it("opens the share dialog for one milestone, its card included", async () => {
-    renderCard(DEMO_ARTIST_MARIANA);
+    await renderCard(DEMO_ARTIST_MARIANA);
     const [firstShare] = await screen.findAllByRole("button", {
       name: "Share milestone",
     });
@@ -97,7 +105,7 @@ describe("StudioMilestonesCard", () => {
 
   it("tells a persona with none when the first milestone comes", async () => {
     mocks.milestones = [];
-    renderCard(DEMO_ARTIST_MARIANA);
+    await renderCard(DEMO_ARTIST_MARIANA);
     expect(
       await screen.findByText("Your first milestone comes at 10 followers"),
     ).toBeInTheDocument();
@@ -106,7 +114,7 @@ describe("StudioMilestonesCard", () => {
 
   it("shows the first four milestones and folds the rest behind a toggle", async () => {
     mocks.milestones = followerMilestones(6);
-    renderCard(DEMO_ARTIST_MARIANA);
+    await renderCard(DEMO_ARTIST_MARIANA);
     expect(await screen.findAllByRole("listitem")).toHaveLength(4);
     expect(screen.queryByText("Mariana Sol passed 20 followers")).toBeNull();
 
@@ -136,7 +144,7 @@ describe("StudioMilestonesCard", () => {
 
   it("offers no toggle when four milestones or fewer are reached", async () => {
     mocks.milestones = followerMilestones(4);
-    renderCard(DEMO_ARTIST_MARIANA);
+    await renderCard(DEMO_ARTIST_MARIANA);
     expect(await screen.findAllByRole("listitem")).toHaveLength(4);
     expect(
       screen.queryByRole("button", { name: "Show all milestones" }),

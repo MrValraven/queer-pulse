@@ -10,6 +10,10 @@ import type { ManagedListingDTO } from "../api/listings.api";
 import { useSetDirectoryVisibility } from "../api/useListingOwnerState";
 import { ANCHOR } from "../listBusiness.data";
 import { VISIBILITY_KEPT_KEYS } from "./listingVisibility.data";
+import {
+  LISTING_EDIT_SAVE_OVERRIDES,
+  causeLine,
+} from "../../marketingErrorCopy";
 import styles from "./ListingVisibility.module.css";
 
 /**
@@ -62,7 +66,7 @@ export function ListingDirectoryVisibilitySection({
         onError: (error) => {
           setFailure(
             reasonFor(error) ??
-              t("marketing:listBusiness.visibility.saveError"),
+              causeLine(error, t, LISTING_EDIT_SAVE_OVERRIDES),
           );
         },
       },

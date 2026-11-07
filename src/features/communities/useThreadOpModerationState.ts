@@ -11,6 +11,7 @@ import { deriveOpFlags, type OpOverride } from "./communityThread.helpers";
 import type { Thread as ThreadData } from "./communityDetails";
 import type { DeleteTarget, ReportTarget } from "./communityThread.types";
 import type { CommunityTakedownInput } from "./api/communities.api";
+import { communityErrorText } from "./communityErrors";
 
 /** OP-post moderation: local demo overrides + derived flags, and the
  *  edit / delete / restore / pin / report actions on the thread's own post.
@@ -39,7 +40,8 @@ export function useThreadOpModerationState(
   // Demo-only local overrides (live refetches after each mutation instead).
   const [opOverride, setOpOverride] = useState<OpOverride>({});
 
-  const onError = () => showToast(t("communities:common.error"), "error");
+  const onError = (error: unknown) =>
+    showToast(communityErrorText(t, error), "error");
 
   const {
     opIsMine,
@@ -127,16 +129,9 @@ export function useThreadOpModerationState(
           setConfirmDelete(null);
           successToast();
         },
-        onError: () => {
+        onError: (error) => {
           setConfirmDelete(null);
-          if (takedown) {
-            showToast(
-              t("communities:detail.modtools.takedown.errorToast"),
-              "error",
-            );
-            return;
-          }
-          onError();
+          onError(error);
         },
       },
     );

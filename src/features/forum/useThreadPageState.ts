@@ -16,13 +16,7 @@ import {
   useReply,
   useVotePost,
 } from "./api/useForumMutations";
-import { ApiError } from "../../shared/api/client";
-import type { TFunction } from "../../shared/i18n/types";
-import {
-  FUNDING_ERROR_MESSAGE_KEYS,
-  FUNDING_ERROR_MESSAGE_VALUES,
-  fundingErrorCode,
-} from "./funding/fundingErrors";
+import { replyErrorText } from "./forumErrors";
 import { buildReplyTree, sortDemoReplies } from "./buildReplyTree";
 import { useThreadModeration } from "./useThreadModeration";
 import { useNestedReplyComposer } from "./useNestedReplyComposer";
@@ -31,38 +25,6 @@ import {
   buildQuoteDraft,
   useThreadAnswerAndTags,
 } from "./useThreadAnswerAndTags";
-
-/**
- * Catalog key for a failed reply. The endpoint answers 403 for TWO different
- * situations now: a thread a moderator closed to replies, and a thread scoped
- * to a community the member does not belong to. Only the first is knowable
- * from the loaded thread, so the second gets copy that names both honestly
- * instead of asserting the thread is locked.
- */
-function replyErrorKey(error: unknown, isKnownLocked: boolean): string {
-  // A reply under a fundraiser that carries an IBAN or a phone number is
-  // refused with `funding_payment_details_in_body`, which has its own copy.
-  const fundingCode = fundingErrorCode(error);
-  if (fundingCode) return FUNDING_ERROR_MESSAGE_KEYS[fundingCode];
-  if (error instanceof ApiError && error.status === 403) {
-    return isKnownLocked
-      ? "forum:locked.replyBlockedToast"
-      : "forum:threadPage.replyForbiddenToast";
-  }
-  return "forum:threadPage.replyFailedToast";
-}
-
-/** The toast for a refused reply, with the tokens a funding refusal names. */
-function replyErrorMessage(
-  t: TFunction,
-  error: unknown,
-  thread: { isLocked?: boolean } | undefined,
-): string {
-  return t(
-    replyErrorKey(error, !!thread?.isLocked),
-    FUNDING_ERROR_MESSAGE_VALUES,
-  );
-}
 
 /**
  * All state, derived values, effects, and mutation handlers for the thread
@@ -360,7 +322,7 @@ export function useThreadPageState() {
           setLocalReplies((prev) =>
             prev.filter((replyItem) => replyItem.id !== optimisticId),
           );
-          showToast(replyErrorMessage(t, error, threadData), "error");
+          showToast(replyErrorText(t, error, !!threadData?.isLocked), "error");
         },
       },
     );

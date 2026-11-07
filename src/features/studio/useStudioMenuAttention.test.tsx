@@ -2,6 +2,7 @@ import { render, renderHook, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { routes } from "../../app/routeMap";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { STUDIO_MENU_CREATOR_ITEMS } from "./studioAccountMenu.data";
 import { StudioAccountMenuLink } from "./StudioAccountMenuRows";
 import { useStudioMenuAttention } from "./useStudioMenuAttention";
@@ -91,9 +92,14 @@ describe("Payments to confirm menu row", () => {
         <StudioAccountMenuLink item={paymentsItem!} onNavigate={() => {}} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
+    // jsdom reads a span as a block, so the name computation puts a space
+    // between the label and the badge's comma that a browser leaves out.
     expect(
       await screen.findByRole("link", {
-        name: "Payments to confirm, 3 payments to confirm",
+        name: (name) =>
+          name.replace(/\s+,/g, ",") ===
+          "Payments to confirm, 3 payments to confirm",
       }),
     ).toBeInTheDocument();
   });

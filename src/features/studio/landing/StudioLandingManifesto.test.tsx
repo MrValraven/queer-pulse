@@ -113,7 +113,7 @@ describe("StudioLandingClosing", () => {
     localStorage.setItem(AUTH_STORAGE_KEY, "false");
     renderClosing("artist");
     const inviteLink = await screen.findByRole("link", {
-      name: "Request an invite",
+      name: "Apply as an artist",
     });
     expect(inviteLink).toHaveAttribute(
       "href",

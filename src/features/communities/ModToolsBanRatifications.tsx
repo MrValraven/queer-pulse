@@ -17,6 +17,7 @@ import {
 } from "./ModToolsBanRatificationRow";
 import { ModToolsBanRatificationDialog } from "./ModToolsBanRatificationDialog";
 import detail from "./CommunityDetailPage.module.css";
+import { communityErrorText, isAccountLevelCause } from "./communityErrors";
 import panels from "./ModToolsPanels.module.css";
 import styles from "./ModToolsBanRatifications.module.css";
 
@@ -74,14 +75,16 @@ export function ModToolsBanRatifications({ slug }: { slug: string }) {
           );
         },
         onError: (error) => {
-          const refusal = communityBanRatificationRefusalFor(error);
+          // A restriction or an inactive membership is a 403 too, so it is
+          // named before the status-based refusal lines can misread it.
+          const refusal = isAccountLevelCause(error)
+            ? null
+            : communityBanRatificationRefusalFor(error);
           setDeciding(null);
           showToast(
-            t(
-              refusal
-                ? `communities:detail.modtools.ratifications.refusal.${refusal}`
-                : "communities:detail.modtools.ratifications.errorToast",
-            ),
+            refusal
+              ? t(`communities:detail.modtools.ratifications.refusal.${refusal}`)
+              : communityErrorText(t, error),
             "error",
           );
           // A refusal means this client's copy of the queue is behind the

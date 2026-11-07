@@ -7,6 +7,7 @@ import {
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { TestProviders } from "../../test/TestProviders";
 import { AdminMemberStudioAccessLine } from "./AdminMemberStudioAccessLine";
 
@@ -56,7 +57,7 @@ describe("AdminMemberStudioAccessLine (demo)", () => {
     ).toBeInTheDocument();
     expect(screen.getByText(/Granted by Sofia/)).toBeInTheDocument();
     fireEvent.click(
-      within(dialog).getByRole("button", { name: "Revoke access" }),
+      within(dialog).getByRole("button", { name: "Revoke Studio access" }),
     );
     expect(await screen.findByText("Not granted")).toBeInTheDocument();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
@@ -85,7 +86,7 @@ describe("AdminMemberStudioAccessLine (demo)", () => {
     );
     fireEvent.click(
       within(screen.getByRole("dialog")).getByRole("button", {
-        name: "Revoke access",
+        name: "Revoke Studio access",
       }),
     );
     const grantButton = await screen.findByRole("button", {
@@ -111,6 +112,7 @@ describe("AdminMemberStudioAccessLine (demo)", () => {
       refetch,
     };
     const view = renderLine("ines");
+    await awaitCatalog("admin");
     expect(
       screen.getByText("We couldn't load Studio access"),
     ).toBeInTheDocument();

@@ -4,6 +4,11 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { likeFeedPost, replyToFeedPost, type FeedItem } from "./feed.api";
+import {
+  feedReactionCause,
+  feedReplyCause,
+  feedThreadReactionCause,
+} from "./feedErrorCopy";
 import { votePost } from "../../forum/api/forum.api";
 
 /** The shape react-query holds for every `useFeed` infinite query. Patched in
@@ -114,9 +119,10 @@ export function useFeedPostActions() {
         })),
       };
     },
-    onError: (_error, _variables, context) => {
+    onError: (error, _variables, context) => {
       restore(context?.snapshot);
-      showToast(t("feed:action.reactionFailed"), "error");
+      const cause = feedReactionCause(error);
+      showToast(t(cause.key, cause.values), "error");
     },
     onSuccess: (result, { postId }) => {
       if (demoMode) return;
@@ -130,6 +136,9 @@ export function useFeedPostActions() {
   });
 
   const replyMutation = useMutation({
+    // The mutation's own `onError` names the cause, so the app-wide handler
+    // stays quiet instead of stacking a second toast.
+    meta: { silentError: true },
     mutationFn: async ({ postId, body }: { postId: string; body: string }) => {
       if (demoMode) return { id: "demo-reply" };
       return replyToFeedPost(postId, body);
@@ -143,9 +152,10 @@ export function useFeedPostActions() {
         })),
       };
     },
-    onError: (_error, _variables, context) => {
+    onError: (error, _variables, context) => {
       restore(context?.snapshot);
-      showToast(t("feed:action.replyFailed"), "error");
+      const cause = feedReplyCause(error);
+      showToast(t(cause.key, cause.values), "error");
     },
     onSuccess: () => showToast(t("feed:action.replySent"), "success"),
   });
@@ -182,9 +192,10 @@ export function useFeedPostActions() {
         })),
       };
     },
-    onError: (_error, _variables, context) => {
+    onError: (error, _variables, context) => {
       restore(context?.snapshot);
-      showToast(t("feed:action.reactionFailed"), "error");
+      const cause = feedThreadReactionCause(error);
+      showToast(t(cause.key, cause.values), "error");
     },
     onSuccess: (post, { threadId }) => {
       if (!post) return;

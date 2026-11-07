@@ -1,24 +1,25 @@
+import { FiEyeOff } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import type { UnpublishLandingStage } from "../api/piecePublish.api";
 import type { Piece } from "../data/desk.data";
-import { BOARD_UNPUBLISH_OPTIONS } from "./piecesBoardUnpublish.data";
 import styles from "./PiecesBoard.module.css";
 
 export interface PiecesBoardUnpublishActionsProps {
   piece: Piece;
-  onUnpublish: (piece: Piece, stage: UnpublishLandingStage) => void;
-  /** The card title's id, so each button is described by the piece it acts
+  /** Raises the desk's unpublish confirm, where the destination is picked. */
+  onUnpublish: (piece: Piece) => void;
+  /** The card title's id, so the button is described by the piece it acts
    *  on, the same pattern the card's next-action button uses. */
   titleId: string;
 }
 
 /**
- * The way out of a Published card's locked status line: one button per
- * landing stage, the same two actions (and labels) as the row's More menu.
- * They are plain buttons in the card's controls row, so they take Tab like
- * the stage picker's own trigger and are always mounted: a Published card
- * never gains or loses them in place.
+ * The way out of a Published card's locked status line: one quiet
+ * "Unpublish" button, the same action as the row's More menu item. Both open
+ * the confirm, which asks whether the piece goes back to draft or to review.
+ * It is a plain button in the card's controls row, so it takes Tab like the
+ * stage picker's own trigger and is always mounted: a Published card never
+ * gains or loses it in place.
  */
 export function PiecesBoardUnpublishActions({
   piece,
@@ -28,18 +29,16 @@ export function PiecesBoardUnpublishActions({
   const { t } = useTranslation();
   return (
     <div className={styles.unpublishActions}>
-      {BOARD_UNPUBLISH_OPTIONS.map(({ stage, labelKey, icon: Icon }) => (
-        <Button
-          key={stage}
-          variant="ghost"
-          size="sm"
-          aria-describedby={titleId}
-          onClick={() => onUnpublish(piece, stage)}
-        >
-          <Icon aria-hidden="true" />
-          {t(labelKey)}
-        </Button>
-      ))}
+      <Button
+        variant="quiet"
+        size="sm"
+        className={styles.unpublishButton}
+        aria-describedby={titleId}
+        onClick={() => onUnpublish(piece)}
+      >
+        <FiEyeOff aria-hidden="true" />
+        {t("magazine:desk.board.unpublish")}
+      </Button>
     </div>
   );
 }

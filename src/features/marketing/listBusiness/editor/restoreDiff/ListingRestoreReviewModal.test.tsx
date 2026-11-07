@@ -5,6 +5,7 @@ import type { ListingDraft } from "../../listBusiness.data";
 import type { RestorableEditDraft } from "../useListingEditorAutosave";
 import { ListingRestoreReviewModal } from "./ListingRestoreReviewModal";
 import type { RestoreAreaKey, RestoreDiffArea } from "./restoreDiff.types";
+import { awaitCatalog } from "../../../../../test/awaitCatalog";
 
 /**
  * The review's own logic: one card per area, every area ticked to start, the
@@ -63,7 +64,7 @@ const AREAS: RestoreDiffArea[] = [
   },
 ];
 
-function renderModal({
+async function renderModal({
   areas = AREAS,
   onConfirm = vi.fn(),
   onDiscard = vi.fn(),
@@ -85,6 +86,7 @@ function renderModal({
       />
     </TestProviders>,
   );
+  await awaitCatalog("marketing");
   return { onConfirm, onDiscard, onClose };
 }
 
@@ -98,7 +100,7 @@ function checkboxAt(position: number): HTMLElement {
 
 describe("ListingRestoreReviewModal", () => {
   it("renders one ticked card per area", async () => {
-    renderModal();
+    await renderModal();
     expect(
       await screen.findByRole("button", { name: "Bring them all back" }),
     ).toBeEnabled();
@@ -111,7 +113,7 @@ describe("ListingRestoreReviewModal", () => {
   });
 
   it("counts only the ticked areas on the confirm button", async () => {
-    const { onConfirm } = renderModal();
+    const { onConfirm } = await renderModal();
     await screen.findByRole("button", { name: "Bring them all back" });
     fireEvent.click(checkboxAt(1));
     expect(
@@ -119,7 +121,7 @@ describe("ListingRestoreReviewModal", () => {
     ).toBeEnabled();
     expect(
       screen.getByText(
-        "Left out: this area stays as it is now, and its saved changes are dropped from this device.",
+        "Left out: this area stays as it is now, and its saved changes are dropped from the draft.",
       ),
     ).toBeInTheDocument();
 
@@ -134,7 +136,7 @@ describe("ListingRestoreReviewModal", () => {
   });
 
   it("names both sides of the comparison, even for one area", async () => {
-    renderModal({ areas: AREAS.slice(0, 1) });
+    await renderModal({ areas: AREAS.slice(0, 1) });
     expect(await screen.findByText("On screen now")).toBeInTheDocument();
     expect(screen.getByText("Comes back")).toBeInTheDocument();
     expect(
@@ -143,7 +145,7 @@ describe("ListingRestoreReviewModal", () => {
   });
 
   it("confirms with exactly the ticked area keys", async () => {
-    const { onConfirm } = renderModal();
+    const { onConfirm } = await renderModal();
     await screen.findByRole("button", { name: "Bring them all back" });
     fireEvent.click(checkboxAt(0));
     fireEvent.click(screen.getByRole("button", { name: "Bring back 1 area" }));
@@ -153,7 +155,7 @@ describe("ListingRestoreReviewModal", () => {
   });
 
   it("offers to discard the saved copy when nothing differs", async () => {
-    const { onDiscard } = renderModal({ areas: [] });
+    const { onDiscard } = await renderModal({ areas: [] });
     expect(
       await screen.findByText(
         "Nothing here differs from what's on screen now.",

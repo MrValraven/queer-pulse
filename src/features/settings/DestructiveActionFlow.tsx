@@ -13,6 +13,8 @@ import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { isReauthRequiredError } from "./api/reauthRequiredError";
+import type { CauseErrorCopy } from "../../shared/api/causeErrorKey";
+import { accountStepUpErrorCopy } from "./settingsActionErrors";
 import styles from "./DestructiveActionFlow.module.css";
 
 type Phase = "confirm" | "loading" | "done" | "error";
@@ -66,6 +68,8 @@ export function DestructiveActionFlow({
 }) {
   const { t } = useTranslation();
   const [phase, setPhase] = useState<Phase>("confirm");
+  // Why the last run failed, shown on the error phase.
+  const [failureCause, setFailureCause] = useState<CauseErrorCopy | null>(null);
   const canDismiss = phase === "confirm" || phase === "error";
 
   // Confirming account deletion deserves the same a11y guarantees as every
@@ -124,6 +128,7 @@ export function DestructiveActionFlow({
         where: "DestructiveActionFlow",
         eyebrow: content.eyebrow,
       });
+      setFailureCause(accountStepUpErrorCopy(err));
       setPhase("error");
     }
   }, [action, content.eyebrow]);
@@ -188,7 +193,9 @@ export function DestructiveActionFlow({
                   />
                 </h3>
                 <p className={styles.body}>
-                  {t("settings:destructiveFlow.error.body")}
+                  {failureCause
+                    ? t(failureCause.key, failureCause.values)
+                    : t("settings:destructiveFlow.error.body")}
                 </p>
                 <div className={styles.btns}>
                   <Button variant="ghost" onClick={onClose}>

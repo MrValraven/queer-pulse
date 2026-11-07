@@ -63,10 +63,7 @@ export function JoinGroupPage() {
         );
       }
     } catch (error) {
-      showToast(
-        groupErrorMessage(error, t, t("messages:group.error.generic")),
-        "error",
-      );
+      showToast(groupErrorMessage(error, t), "error");
     } finally {
       setIsJoining(false);
     }

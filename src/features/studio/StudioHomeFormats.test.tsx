@@ -1,6 +1,7 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { StudioBrowsePage } from "./StudioBrowsePage";
 import { StudioRoom } from "./StudioRoom";
 
@@ -11,6 +12,7 @@ describe("Studio home by format (demo)", () => {
         <StudioRoom />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       await screen.findByRole("heading", { name: "New episodes" }),
     ).toBeInTheDocument();
@@ -41,6 +43,7 @@ describe("Studio home by format (demo)", () => {
         <StudioRoom />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     await screen.findByRole("link", { name: "Podcasts" });
     await waitFor(() =>
       expect(
@@ -62,19 +65,26 @@ describe("Studio home by format (demo)", () => {
     ).toBeNull();
   });
 
-  it("browses one format and keeps it in the genre chips", async () => {
+  it("browses one format and names it once, on the format chip", async () => {
     render(
       <TestProviders initialEntries={["/studio/browse?format=spoken_word"]}>
         <StudioBrowsePage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       await screen.findByRole("link", { name: "Último elétrico" }),
     ).toBeInTheDocument();
-    const genreChip = await screen.findByRole("link", {
+    // The format row shows Spoken word, so the genre row leaves out its
+    // own Spoken word chip.
+    const spokenWordLinks = screen.getAllByRole("link", {
       name: "Spoken word",
-      current: false,
     });
-    expect(genreChip.getAttribute("href")).toContain("format=spoken_word");
+    expect(spokenWordLinks).toHaveLength(1);
+    expect(spokenWordLinks[0]).toHaveAttribute("aria-current", "page");
+    expect(spokenWordLinks[0]).toHaveAttribute(
+      "href",
+      "/studio/browse?format=spoken_word",
+    );
   });
 });

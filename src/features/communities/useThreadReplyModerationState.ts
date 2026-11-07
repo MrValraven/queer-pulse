@@ -11,6 +11,7 @@ import { canReportReplyContent, isReplyMine } from "./communityThread.helpers";
 import type { Reply, Thread as ThreadData } from "./communityDetails";
 import type { DeleteTarget, ReportTarget } from "./communityThread.types";
 import type { CommunityTakedownInput } from "./api/communities.api";
+import { communityErrorText } from "./communityErrors";
 
 /** Per-reply moderation: local demo overrides keyed by reply id, and the
  *  edit / delete / restore / report actions on a thread's replies. Parallel
@@ -39,7 +40,8 @@ export function useThreadReplyModerationState(
     Record<string, Partial<Reply>>
   >({});
 
-  const onError = () => showToast(t("communities:common.error"), "error");
+  const onError = (error: unknown) =>
+    showToast(communityErrorText(t, error), "error");
 
   function saveReplyEdit(replyId: string, next: string) {
     if (demoMode) {
@@ -110,16 +112,9 @@ export function useThreadReplyModerationState(
           setConfirmDelete(null);
           successToast();
         },
-        onError: () => {
+        onError: (error) => {
           setConfirmDelete(null);
-          if (takedown) {
-            showToast(
-              t("communities:detail.modtools.takedown.errorToast"),
-              "error",
-            );
-            return;
-          }
-          onError();
+          onError(error);
         },
       },
     );

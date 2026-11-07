@@ -131,6 +131,10 @@ export const auth: Catalog = {
     "Algo correu mal ao gerar o teu link. Tenta outra vez.",
   "invite.link.error.quota":
     "Já usaste todos os convites da tua quota deste mês. Volta a encher quando o mês reiniciar.",
+  "invite.link.error.invalid":
+    "Não conseguimos aceitar esses dados. Verifica o email a que fixaste o convite e o tamanho das notas e tenta outra vez.",
+  "invite.link.error.rateLimited":
+    "Estás a criar convites mais depressa do que permitimos. Espera um minuto e gera o link outra vez.",
   "invite.link.formNote": "Este link funciona uma vez, para uma pessoa.",
   "invite.link.defaultVouch":
     "Alguém da comunidade acha que devias estar aqui. QueerPulse: uma rede queer em Lisboa, construída sobre votos de confiança.",
@@ -182,6 +186,9 @@ export const auth: Catalog = {
   "invite.sentList.revokeConfirm.cancel": "Manter ativo",
   "invite.sentList.revokeError":
     "Não conseguimos revogar esse convite agora. Continua ativo, por isso tenta novamente daqui a pouco.",
+  "invite.sentList.revokeError.title": "Esse convite continua ativo",
+  "invite.sentList.revokeError.notRevocable":
+    "Este convite já foi usado ou expirou, por isso não há nada para revogar.",
   "invite.sentList.resendCta": "Enviar de novo",
   "invite.sentList.resending": "A enviar…",
   "invite.sentList.resentToast":
@@ -220,6 +227,8 @@ export const auth: Catalog = {
     "Não conseguimos guardar a tua nota privada agora. Tenta outra vez daqui a pouco.",
   "invite.sentList.privateNote.deleteErrorToast":
     "Não conseguimos apagar a tua nota privada agora. Tenta outra vez daqui a pouco.",
+  "invite.sentList.privateNote.error.tooLong":
+    "Uma nota privada aceita até 120 caracteres. Encurta-a e guarda outra vez.",
 
   // ── Cartão de pré-visualização do convite (espelha as tags Open Graph) ──
   "sharePreview.heroTitle.line1": "Entra numa sala",
@@ -478,6 +487,10 @@ export const auth: Catalog = {
     "Não estamos a receber novos pedidos de convite neste momento. Volta a passar por aqui em breve.",
   "requestInvite.closedError":
     "Os pedidos de convite ficaram em pausa enquanto preenchias isto. Tenta novamente mais tarde.",
+  "requestInvite.cooldownError":
+    "A nossa equipa analisou há pouco um pedido deste email. Podes enviar um novo quando passarem 30 dias desde então.",
+  "requestInvite.error.invalid":
+    "Não conseguimos aceitar alguns dos teus dados. Verifica o email e os outros campos e envia o pedido outra vez.",
 
   // ── Estado do pedido de entrada (/auth/request-invite/status) ──
   // A vista que a própria pessoa tem do seu pedido. Pública: quem precisa desta
@@ -793,6 +806,8 @@ export const auth: Catalog = {
   "onboarding.stepWork.back": "Voltar",
   "onboarding.stepWork.saveError":
     "Não conseguimos guardar isso agora. Tenta novamente.",
+  "onboarding.saveError.noProfile":
+    "Não encontrámos o teu perfil para guardar isto. Atualiza a página e tenta outra vez, e escreve-nos se continuar a acontecer.",
   "onboarding.intent.community": "Comunidade",
   "onboarding.intent.gatherings": "Eventos",
   "onboarding.intent.professional": "Contactos profissionais",

@@ -3,6 +3,7 @@ import { ApiError } from "../../../shared/api/client";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { communityErrorText } from "../communityErrors";
 import { useWithdrawJoinRequest } from "./useCommunityJoin";
 
 /**
@@ -39,8 +40,8 @@ export function useWithdrawJoinRequestWithFeedback(slug: string) {
 
   // The server answers 409 ONLY when a decision landed first, and it says
   // which. An approved applicant is already a member, and a declined one
-  // needs to know a reapply date now exists, so each gets its own line. The
-  // generic error is kept for a genuine failure.
+  // needs to know a reapply date now exists, so each gets its own line. Any
+  // other failure reads as its own cause (offline, no request found, ...).
   const onError = (error: Error) => {
     if (error instanceof ApiError && error.status === 409) {
       refreshDecidedRequest();
@@ -63,7 +64,7 @@ export function useWithdrawJoinRequestWithFeedback(slug: string) {
       );
       return;
     }
-    showToast(t("communities:common.error"), "error");
+    showToast(communityErrorText(t, error), "error");
   };
 
   const withdraw = (onSettled: () => void) => {

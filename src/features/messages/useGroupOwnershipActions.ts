@@ -88,9 +88,8 @@ export function useGroupOwnershipActions({
   revokeInviteMutation,
 }: GroupOwnershipActionsDeps): GroupOwnershipActions {
   const { showToast } = useToast();
-  const genericErrorFallback = t("messages:group.error.generic");
   const onGroupMutationError = (error: unknown) =>
-    showToast(groupErrorMessage(error, t, genericErrorFallback), "error");
+    showToast(groupErrorMessage(error, t), "error");
   const [busyInviteId, setBusyInviteId] = useState<string | null>(null);
 
   const myDisplayName = myProfile

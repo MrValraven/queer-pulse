@@ -159,6 +159,10 @@ export const community: Catalog = {
   "changemakers.nominate.successToast": "Obrigade. Vamos investigar {name}.",
   "changemakers.nominate.errorToast":
     "Não foi possível enviar a tua nomeação. Tenta novamente.",
+  "changemakers.nominate.errorSelf":
+    "Não te podes nomear a ti. Nomeia outra pessoa que esteja a mudar as coisas na nossa comunidade.",
+  "changemakers.nominate.errorMemberGone":
+    "Não encontrámos esse membro, por isso a nomeação não foi enviada. Pesquisa outra vez ou escreve o nome.",
 
   // ── Change Maker story page (ChangemakerStoryPage.tsx) ────────────────────
   "changemakerStory.backCta": "Agentes de Mudança",
@@ -311,7 +315,7 @@ export const community: Catalog = {
   "dating.app.feeld.tag4": "Casais e solteires",
   "dating.app.hornet.audience": "Homens gays e bi · Foco na comunidade",
   "dating.app.hornet.body":
-    "Mais orientada para a comunidade do que o Grindr: tem notícias, histórias e funcionalidades de grupo. Melhor para quem quer conhecer a cidade e não só namorar nela.",
+    "Mais orientada para a comunidade do que o Grindr: tem notícias, histórias e funcionalidades de grupo. Melhor para quem quer conhecer a cidade além de namorar nela.",
   "dating.app.hornet.tag1": "Funcionalidades de comunidade",
   "dating.app.hornet.tag2": "Notícias locais",
   "dating.app.hornet.tag3": "Mais do que convívios casuais",
@@ -345,7 +349,7 @@ export const community: Catalog = {
   "dating.structure.monogamy.label": "Monogamia",
   "dating.structure.monogamy.title": "Uma pessoa, por inteiro",
   "dating.structure.monogamy.text":
-    "Completamente válida e comum. A comunidade não assume que a não-monogamia seja mais progressista. É apenas uma preferência. As proteções legais em Portugal são mais fortes para casais monógamos casados, o que vale a pena saber se o reconhecimento legal for importante para ti.",
+    "Completamente válida e comum. Nesta comunidade, a não-monogamia é apenas uma preferência. As proteções legais em Portugal são mais fortes para casais monógamos casados, o que vale a pena saber se o reconhecimento legal for importante para ti.",
   "dating.structure.enm.label": "Não-monogamia ética",
   "dating.structure.enm.title": "Relações abertas",
   "dating.structure.enm.text":
@@ -612,7 +616,7 @@ export const community: Catalog = {
 
   "family.talk.heading": "Fala com quem já <em>passou por isto.</em>",
   "family.talk.body":
-    "A Rede de Pais e Mães Queer liga quem está a construir família com pessoas da comunidade que já passaram por isto: os mesmos caminhos, situações semelhantes. Não são profissionais. São só pessoas que já o fizeram e querem ajudar.",
+    "A Rede de Pais e Mães Queer liga quem está a construir família com pessoas da comunidade que já passaram por isto: os mesmos caminhos, situações semelhantes. São pessoas que já o fizeram e querem ajudar.",
   "family.talk.findMentorCta": "Encontrar um mentor ou mentora",
   "family.talk.networkCta": "Rede de Pais e Mães Queer",
   "family.talk.forumCta.heading":

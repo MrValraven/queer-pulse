@@ -57,8 +57,8 @@ export function useListingEditorSave({
       );
       return;
     }
-    // Anything else is a plain save failure.
-    editSave.showSaveError();
+    // Anything else names its own cause (offline, restricted, too large, ...).
+    editSave.showSaveError(error);
   };
 
   const save = async () => {

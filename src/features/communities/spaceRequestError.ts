@@ -8,3 +8,10 @@ export function errorCodeOf(error: unknown): string | undefined {
     ? (error.data as { code?: string } | undefined)?.code
     : undefined;
 }
+
+/** What a failed withdraw of a space request can say beyond the shared causes:
+ *  the server answers 404 "No open space request" (no code) when the request
+ *  was already answered or withdrawn while the page was open. */
+export const SPACE_REQUEST_WITHDRAW_OVERRIDES = {
+  "404": "communities:error.requestResolved",
+} as const;

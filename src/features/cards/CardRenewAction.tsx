@@ -1,33 +1,11 @@
 import { FiRefreshCw } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { ApiError } from "../../shared/api/client";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useRenewMyCard } from "./api/useMyCards";
-import type { MyCardDTO, RenewCardReasonCode } from "./api/cards.api";
-
-/** The i18n leaf for each reason the server can refuse a renewal. Anything it
- *  does not name falls back to the generic line, so a reason added on the
- *  backend degrades to a readable sentence instead of an empty toast. */
-const REASON_KEY: Record<RenewCardReasonCode, string> = {
-  self_renew_not_allowed: "cards:renew.error.notAllowed",
-  card_withdrawn: "cards:renew.error.withdrawn",
-  not_a_member: "cards:renew.error.notAMember",
-  programme_paused: "cards:renew.error.paused",
-  no_expiry: "cards:renew.error.noExpiry",
-  not_due: "cards:renew.error.notDue",
-};
-
-function reasonKeyFor(error: unknown): string {
-  if (!(error instanceof ApiError)) return "cards:renew.error.generic";
-  const reasonCode = (error.data as { reasonCode?: unknown } | null | undefined)
-    ?.reasonCode;
-  if (typeof reasonCode !== "string") return "cards:renew.error.generic";
-  return (
-    REASON_KEY[reasonCode as RenewCardReasonCode] ?? "cards:renew.error.generic"
-  );
-}
+import type { MyCardDTO } from "./api/cards.api";
+import { cardRenewErrorCopy } from "./cardActionErrors";
 
 /**
  * Puts the member's own card back in date, in its last thirty days.
@@ -75,7 +53,10 @@ export function CardRenewAction({
           "success",
         );
       },
-      onError: (error) => showToast(t(reasonKeyFor(error)), "error"),
+      onError: (error) => {
+        const cause = cardRenewErrorCopy(error);
+        showToast(t(cause.key, cause.values), "error");
+      },
     });
   };
 

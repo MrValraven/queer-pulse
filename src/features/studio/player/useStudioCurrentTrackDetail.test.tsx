@@ -68,7 +68,7 @@ describe("useStudioCurrentTrackDetail", () => {
     ]);
   });
 
-  it("shows the waveform the player last read for this track", () => {
+  it("shows the waveform the player last read for this track", async () => {
     const { hook, queryClient } = setup(DEMO_MIX_TRACK_ID);
     expect(hook.result.current.waveform).toBeNull();
     act(() =>
@@ -78,10 +78,11 @@ describe("useStudioCurrentTrackDetail", () => {
         peakDb: -2,
       }),
     );
-    expect(hook.result.current.waveform).toEqual([0, 1]);
+    // React Query hands cache writes to observers on its next timer tick.
+    await waitFor(() => expect(hook.result.current.waveform).toEqual([0, 1]));
   });
 
-  it("reads an emptied analysis as no waveform until a new one arrives", () => {
+  it("reads an emptied analysis as no waveform until a new one arrives", async () => {
     const { hook, queryClient } = setup(DEMO_MIX_TRACK_ID);
     act(() =>
       rememberStreamAnalysis(queryClient, true, DEMO_MIX_TRACK_ID, {
@@ -90,12 +91,13 @@ describe("useStudioCurrentTrackDetail", () => {
         peakDb: -2,
       }),
     );
+    await waitFor(() => expect(hook.result.current.waveform).toEqual([0, 1]));
     act(() =>
       rememberStreamAnalysis(queryClient, true, DEMO_MIX_TRACK_ID, {
         ...EMPTY_STREAM_ANALYSIS,
       }),
     );
-    expect(hook.result.current.waveform).toBeNull();
+    await waitFor(() => expect(hook.result.current.waveform).toBeNull());
     act(() =>
       rememberStreamAnalysis(queryClient, true, DEMO_MIX_TRACK_ID, {
         waveformPeaks: [255],
@@ -103,7 +105,7 @@ describe("useStudioCurrentTrackDetail", () => {
         peakDb: -1,
       }),
     );
-    expect(hook.result.current.waveform).toEqual([1]);
+    await waitFor(() => expect(hook.result.current.waveform).toEqual([1]));
   });
 
   it("skips the detail read for a preview item and still shows its waveform", async () => {
@@ -127,7 +129,7 @@ describe("useStudioCurrentTrackDetail", () => {
         peakDb: -2,
       }),
     );
-    expect(hook.result.current.waveform).toEqual([0, 1]);
+    await waitFor(() => expect(hook.result.current.waveform).toEqual([0, 1]));
     await act(() => new Promise((resolve) => setTimeout(resolve, 20)));
     expect(demoTrackFetches.count).toBe(0);
     expect(hook.result.current.chapters).toBeNull();

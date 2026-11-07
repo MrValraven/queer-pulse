@@ -37,7 +37,7 @@ export const safety: Catalog = {
   "report.eyebrow": "Segurança e Denúncias",
   "report.hero.title": "A segurança é <em>estrutural.</em>",
   "report.hero.lead":
-    "Não é decorativa. Não é uma página no rodapé. A nossa forma de tratar denúncias, o que acontece quando fazes uma, e os princípios que orientam cada decisão que tomamos.",
+    "A nossa forma de tratar denúncias, o que acontece quando fazes uma, e os princípios que orientam cada decisão que tomamos.",
 
   // ── Ligações entre o formulário (ReportPage) e o guia
   //    (ReportingGuidePage) ─────────────────────────────────────────────────
@@ -784,9 +784,9 @@ export const safety: Catalog = {
   // espaços que estão agora no estado removido, e não remoções dentro de um
   // ano. Com plural porque é composto com uma contagem em direto.
   "spaces.removed.lead_one":
-    "A verificação pode ser revogada, e é. Uma ficha não é uma recompensa que o espaço guarda para sempre; é um padrão que tem de continuar a cumprir. Quando deixa de o cumprir, dizemo-lo, e dizemos porquê. Neste momento, {count} espaço desta lista perdeu o emblema.",
+    "A verificação pode ser revogada, e é. Uma ficha é um padrão que o espaço tem de continuar a cumprir. Quando deixa de o cumprir, dizemo-lo, e dizemos porquê. Neste momento, {count} espaço desta lista perdeu o emblema.",
   "spaces.removed.lead_other":
-    "A verificação pode ser revogada, e é. Uma ficha não é uma recompensa que o espaço guarda para sempre; é um padrão que tem de continuar a cumprir. Quando deixa de o cumprir, dizemo-lo, e dizemos porquê. Neste momento, {count} espaços desta lista perderam o emblema.",
+    "A verificação pode ser revogada, e é. Uma ficha é um padrão que o espaço tem de continuar a cumprir. Quando deixa de o cumprir, dizemo-lo, e dizemos porquê. Neste momento, {count} espaços desta lista perderam o emblema.",
   "spaces.removed.step1":
     "<span>3 sinalizações</span> suspendem o emblema de imediato, até revisão.",
   "spaces.removed.step2":
@@ -818,6 +818,10 @@ export const safety: Catalog = {
   "spaces.nominate.submitCta": "Submeter nomeação",
   "spaces.nominate.submitting": "A submeter…",
   "spaces.nominate.error": "Não foi possível submeter. Tenta novamente.",
+  "spaces.nominate.error.rateLimited":
+    "Enviaste várias nomeações no último minuto. Espera um momento e envia a seguinte.",
+  "spaces.error.gone":
+    "Não encontrámos este espaço. Pode ter sido removido do diretório.",
   "spaces.nominate.thanks.title":
     "Obrigade. Já estamos a <em>tratar disso.</em>",
   "spaces.nominate.thanks.textNamed":
@@ -915,6 +919,10 @@ export const safety: Catalog = {
   "vouchModal.form.submitting": "A submeter…",
   "vouchModal.form.submitCta": "Adicionar o meu voto de confiança",
   "vouchModal.form.error": "Não foi possível submeter. Tenta novamente.",
+  "vouchModal.error.notVouchable":
+    "Não podes dar um voto de confiança a este espaço. Pode ser teu, ou pode já não ser um espaço seguro verificado nem estar em análise.",
+  "vouchModal.error.alreadyVouched":
+    "Já deste um voto de confiança a este espaço. Atualiza para o veres.",
 
   // ── SafeSpaceBadgeStatus.tsx — os estados honestos do emblema ─────────
   "badge.state.none.title": "Sem emblema de espaço seguro",
@@ -951,6 +959,12 @@ export const safety: Catalog = {
   "flag.withdrawCta": "Retirar",
   "flag.withdrawnToast": "Retirado",
   "flag.errorToast": "Não foi possível enviar. Tenta novamente.",
+  "flag.error.notFlaggable":
+    "Não podes assinalar este espaço. Pode ser teu, ou pode já não ter o selo de espaço seguro.",
+  "flag.error.rateLimited":
+    "Enviaste vários alertas nos últimos minutos. Espera um pouco antes de assinalares outra vez.",
+  "flag.error.nothingToWithdraw":
+    "Não tens nenhum alerta aberto para retirar. Pode já ter sido resolvido. Atualiza para veres em que ponto está.",
   "flag.modal.title": "Assinalar algo sobre {name}",
   "flag.modal.sub": "A equipa de revisão lê todas estas mensagens.",
   "flag.modal.privacy":

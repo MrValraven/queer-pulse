@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { CURRENT, PANEL, PAST } from "./microGrants.data";
 import { MicroGrantsPage } from "./MicroGrantsPage";
 
@@ -37,9 +38,11 @@ describe("MicroGrantsPage", () => {
     expect(screen.getByText("€14,800")).toBeInTheDocument();
   });
 
-  it("hides every invented figure in live mode and keeps the application form", () => {
+  it("hides every invented figure in live mode and keeps the application form", async () => {
     demoModeState.isDemoMode = false;
     renderPage();
+    // The live copy lives in the lazy `resources` namespace.
+    await awaitCatalog("resources");
     expect(screen.queryByText("€200 – €2,000")).toBeNull();
     expect(screen.queryByText("€14,800")).toBeNull();
     expect(screen.queryByText(PANEL[0]!.title)).toBeNull();

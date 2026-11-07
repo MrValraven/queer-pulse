@@ -10,8 +10,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import type { TFunction } from "../../shared/i18n/types";
 import { logError } from "../../shared/observability/logger";
-import { ApiError } from "../../shared/api/client";
-import { isAccountRestricted, reasonFor } from "../../shared/api/errorMessage";
+import { exportStartErrorCopy } from "../settings/settingsActionErrors";
 import { DATA_TYPES } from "../settings/dataExport.data";
 import {
   getExportJob,
@@ -103,22 +102,6 @@ async function buildDemoJobUpdate(
 }
 
 /**
- * The toast for a failed export start, naming its cause the way the global
- * mutation handler does (this mutation is `silentError`): a moderation
- * restriction gets the appeal copy, a server fault says it was on our end, and
- * a 4xx with a reason shows that reason. The export copy covers the rest.
- */
-function exportStartErrorMessage(error: unknown, t: TFunction): string {
-  if (isAccountRestricted(error)) return t("shared:apiError.accountRestricted");
-  if (error instanceof ApiError && error.status >= 500) {
-    return t("shared:apiError.server");
-  }
-  return (
-    reasonFor(error) ?? t("members:profile.accountData.export.toast.startError")
-  );
-}
-
-/**
  * "Download your data" — Article 20 portability. Click posts the job, then
  * polls `GET /account/export/:jobId` via react-query's `refetchInterval`
  * (rather than a hand-rolled `setInterval` effect) until it lands on
@@ -189,7 +172,8 @@ export function AccountDataExport() {
     onError: (err) => {
       if (isReauthRequiredError(err)) return;
       logError(err, { where: "AccountDataExport.start" });
-      showToast(exportStartErrorMessage(err, t), "error");
+      const cause = exportStartErrorCopy(err);
+      showToast(t(cause.key, cause.values), "error");
     },
   });
 

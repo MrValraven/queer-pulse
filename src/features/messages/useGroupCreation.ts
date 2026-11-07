@@ -101,10 +101,7 @@ export function useGroupCreation({
           // should already stop a GROUP_FULL race from being picked, but this
           // shows every coded refusal (mapped by `groupErrorMessage`) so
           // nothing goes silent now the mutation itself is `silentError`.
-          showToast(
-            groupErrorMessage(error, t, t("messages:group.error.generic")),
-            "error",
-          );
+          showToast(groupErrorMessage(error, t), "error");
           outcome?.onError?.();
         },
       },

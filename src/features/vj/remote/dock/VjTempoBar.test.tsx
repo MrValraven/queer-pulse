@@ -11,6 +11,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { VjScreenStatus, VjTempo } from "../../../../shared/contracts/vj";
 import { ReducedMotionContext } from "../../../../app/providers/motionPrefs";
 import { TestProviders } from "../../../../test/TestProviders";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 import { PointerEventStub } from "../../../../test/pointerEventStub";
 import type { VjCommandOutcome } from "../../live/vjStageCommands";
 import type { VjRemoteClock } from "../hooks/useVjRemoteClock";
@@ -74,7 +75,7 @@ function Providers({
   );
 }
 
-function renderBar(
+async function renderBar(
   overrides: Partial<VjTempoBarProps> = {},
   isReducedMotion = false,
 ) {
@@ -96,6 +97,7 @@ function renderBar(
       <VjTempoBar {...props} />
     </Providers>,
   );
+  await awaitCatalog("vj");
   const rerenderWith = (patch: Partial<VjTempoBarProps>) =>
     view.rerender(
       <Providers isReducedMotion={isReducedMotion}>
@@ -127,17 +129,17 @@ afterEach(() => {
 });
 
 describe("VjTempoBar", () => {
-  it("shows the BPM", () => {
-    renderBar();
+  it("shows the BPM", async () => {
+    await renderBar();
     const readout = screen.getByRole("button", {
       name: "Change the tempo, now 120 BPM",
     });
-    expect(readout.textContent).toBe("120 BPM");
+    expect(readout.textContent).toBe("BPM120");
     expect(document.querySelector("[data-vj-tempo-bar]")).not.toBeNull();
   });
 
-  it("each tap dispatches tapTempo", () => {
-    const { dispatch } = renderBar();
+  it("each tap dispatches tapTempo", async () => {
+    const { dispatch } = await renderBar();
     const tap = screen.getByRole("button", { name: "Tap tempo" });
     for (let tapIndex = 0; tapIndex < 3; tapIndex += 1) {
       fireEvent.pointerDown(tap, { pointerId: 1, button: 0 });
@@ -147,8 +149,8 @@ describe("VjTempoBar", () => {
     expect(dispatch).toHaveBeenCalledWith({ kind: "tapTempo" }, "press");
   });
 
-  it("a keyboard tap dispatches tapTempo once", () => {
-    const { dispatch } = renderBar();
+  it("a keyboard tap dispatches tapTempo once", async () => {
+    const { dispatch } = await renderBar();
     fireEvent.click(screen.getByRole("button", { name: "Tap tempo" }), {
       detail: 0,
     });
@@ -156,8 +158,8 @@ describe("VjTempoBar", () => {
     expect(dispatch).toHaveBeenCalledWith({ kind: "tapTempo" }, "press");
   });
 
-  it("the 1 button dispatches downbeat", () => {
-    const { dispatch } = renderBar();
+  it("the 1 button dispatches downbeat", async () => {
+    const { dispatch } = await renderBar();
     fireEvent.click(
       screen.getByRole("button", {
         name: "Set the first beat of the bar to now",
@@ -166,8 +168,8 @@ describe("VjTempoBar", () => {
     expect(dispatch).toHaveBeenCalledWith({ kind: "downbeat" }, "press");
   });
 
-  it("quantize cycles off, beat, bar", () => {
-    const { dispatch, rerenderWith } = renderBar();
+  it("quantize cycles off, beat, bar", async () => {
+    const { dispatch, rerenderWith } = await renderBar();
     fireEvent.click(
       screen.getByRole("button", { name: "Quantize: Off. Tap to change" }),
     );
@@ -186,8 +188,8 @@ describe("VjTempoBar", () => {
     ).not.toBeNull();
   });
 
-  it("blocked taps, 1 and quantize dispatch nothing", () => {
-    const { dispatch } = renderBar({ isBlocked: true });
+  it("blocked taps, 1 and quantize dispatch nothing", async () => {
+    const { dispatch } = await renderBar({ isBlocked: true });
     fireEvent.pointerDown(screen.getByRole("button", { name: "Tap tempo" }), {
       pointerId: 1,
       button: 0,
@@ -203,15 +205,15 @@ describe("VjTempoBar", () => {
     expect(dispatch).not.toHaveBeenCalled();
   });
 
-  it("plus sends one BPM more", () => {
-    const { setTempo } = renderBar();
+  it("plus sends one BPM more", async () => {
+    const { setTempo } = await renderBar();
     openBpmPopover();
     fireEvent.click(screen.getByRole("button", { name: "Faster by 1 BPM" }));
     expect(setTempo).toHaveBeenCalledWith({ bpm: 121 });
   });
 
-  it("double tempo clamps to 200 BPM", () => {
-    const { setTempo } = renderBar({ tempo: { ...TEMPO, bpm: 150 } });
+  it("double tempo clamps to 200 BPM", async () => {
+    const { setTempo } = await renderBar({ tempo: { ...TEMPO, bpm: 150 } });
     fireEvent.click(
       screen.getByRole("button", { name: "Change the tempo, now 150 BPM" }),
     );
@@ -220,7 +222,7 @@ describe("VjTempoBar", () => {
   });
 
   it("out of range input names the range and sends nothing", async () => {
-    const { setTempo } = renderBar();
+    const { setTempo } = await renderBar();
     openBpmPopover();
     const field = screen.getByLabelText("BPM");
     fireEvent.change(field, { target: { value: "240" } });
@@ -234,8 +236,8 @@ describe("VjTempoBar", () => {
     });
   });
 
-  it("a typed BPM in range sends it", () => {
-    const { setTempo } = renderBar();
+  it("a typed BPM in range sends it", async () => {
+    const { setTempo } = await renderBar();
     openBpmPopover();
     fireEvent.change(screen.getByLabelText("BPM"), {
       target: { value: "128,5" },
@@ -244,8 +246,8 @@ describe("VjTempoBar", () => {
     expect(setTempo).toHaveBeenCalledWith({ bpm: 128.5 });
   });
 
-  it("follow the mic is aria-disabled while the lead's mic is off", () => {
-    const { setTempo } = renderBar({ leadMic: null });
+  it("follow the mic is aria-disabled while the lead's mic is off", async () => {
+    const { setTempo } = await renderBar({ leadMic: null });
     openBpmPopover();
     const follow = screen.getByRole("button", {
       name: "Follow the lead screen's mic",
@@ -259,8 +261,8 @@ describe("VjTempoBar", () => {
     expect(setTempo).not.toHaveBeenCalled();
   });
 
-  it("follow the mic sends a mic tempo source", () => {
-    const { setTempo } = renderBar();
+  it("follow the mic sends a mic tempo source", async () => {
+    const { setTempo } = await renderBar();
     openBpmPopover();
     fireEvent.click(
       screen.getByRole("button", { name: "Follow the lead screen's mic" }),
@@ -268,8 +270,8 @@ describe("VjTempoBar", () => {
     expect(setTempo).toHaveBeenCalledWith({ source: "mic" });
   });
 
-  it("beat dots read hollow until the clock syncs", () => {
-    const { rerenderWith } = renderBar({
+  it("beat dots read hollow until the clock syncs", async () => {
+    const { rerenderWith } = await renderBar({
       clock: clockAt(DOWNBEAT_AT, false),
     });
     const dots = document.querySelector("[data-vj-beat-dots]");
@@ -281,23 +283,23 @@ describe("VjTempoBar", () => {
     expect(dots?.getAttribute("data-synced")).toBe("true");
   });
 
-  it("lights the dot of the current beat on the synced clock", () => {
-    renderBar();
+  it("lights the dot of the current beat on the synced clock", async () => {
+    await renderBar();
     runOneFrame();
     const dots = document.querySelector("[data-vj-beat-dots]");
     expect(dots?.getAttribute("data-beat")).toBe("2");
   });
 
-  it("under reduced motion the dots hold still and the beat number shows", () => {
-    renderBar({}, true);
+  it("under reduced motion the dots hold still and the beat number shows", async () => {
+    await renderBar({}, true);
     runOneFrame();
     const dots = document.querySelector("[data-vj-beat-dots]");
     expect(dots?.querySelectorAll("[data-vj-beat-dot]")).toHaveLength(0);
     expect(dots?.textContent).toBe("3");
   });
 
-  it("shows the mic badge for a mic tempo", () => {
-    const { rerenderWith } = renderBar();
+  it("shows the mic badge for a mic tempo", async () => {
+    const { rerenderWith } = await renderBar();
     expect(document.querySelector("[data-vj-mic-badge]")).toBeNull();
     rerenderWith({ tempo: { ...TEMPO, source: "mic" } });
     expect(

@@ -2,11 +2,28 @@ import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import type { TFunction } from "../../shared/i18n/types";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { TestProviders } from "../../test/TestProviders";
 import { CreatorDraftConflictStrip } from "./CreatorDraftConflictStrip";
 import { CreatorDraftNotice } from "./CreatorDraftNotice";
 import { CreatorDraftSaveLine } from "./CreatorDraftSaveLine";
 import { creatorDraftSaveStatusText } from "./creatorDraftSaveStatusText";
+
+/** The save line's live region. TestProviders also mounts the toast region and
+ *  the Studio player announcer, which carry the status role as well. */
+function getSaveLine(): HTMLElement {
+  const saveLines = screen
+    .getAllByRole("status")
+    .filter(
+      (element) =>
+        element.closest("[data-toast-region]") === null &&
+        !element.hasAttribute("data-studio-player-announcer"),
+    );
+  expect(saveLines).toHaveLength(1);
+  const [saveLine] = saveLines;
+  if (!saveLine) throw new Error("No save line status region rendered");
+  return saveLine;
+}
 
 describe("creator draft UI", () => {
   const keyEcho: TFunction = (key, options) =>
@@ -68,6 +85,7 @@ describe("creator draft UI", () => {
         <CreatorDraftNotice messageKey="gatherings:creatorDraftNote.body" />
       </TestProviders>,
     );
+    await awaitCatalog("gatherings");
     expect(
       screen.getByText(/creatorDraftNote\.body|Our team/),
     ).toBeInTheDocument();
@@ -174,9 +192,7 @@ describe("creator draft UI", () => {
           />
         </TestProviders>,
       );
-      expect(screen.getByRole("status")).toHaveTextContent(
-        /savedJustNow|Saved just now/,
-      );
+      expect(getSaveLine()).toHaveTextContent(/savedJustNow|Saved just now/);
     } finally {
       vi.useRealTimers();
     }
@@ -188,7 +204,7 @@ describe("creator draft UI", () => {
         <CreatorDraftSaveLine status={{ kind: "saving" }} />
       </TestProviders>,
     );
-    expect(screen.getByRole("status")).toHaveTextContent(/saving|Saving/);
+    expect(getSaveLine()).toHaveTextContent(/saving|Saving/);
   });
 });
 
@@ -259,7 +275,7 @@ describe("creator draft conflict strip focus when it folds", () => {
     await userEvent.click(screen.getByRole("button", { name: keepName }));
     rerender(renderEditor(true, true));
     rerender(renderEditor(false, false));
-    expect(screen.getByRole("status")).toHaveFocus();
+    expect(getSaveLine()).toHaveFocus();
   });
 
   it("moves focus to the save line after the newer draft loads", async () => {
@@ -267,7 +283,7 @@ describe("creator draft conflict strip focus when it folds", () => {
     await userEvent.click(screen.getByRole("button", { name: loadName }));
     rerender(renderEditor(true, true));
     rerender(renderEditor(false, false));
-    expect(screen.getByRole("status")).toHaveFocus();
+    expect(getSaveLine()).toHaveFocus();
   });
 
   it("keeps focus on the Load button when the newer draft does not load", async () => {

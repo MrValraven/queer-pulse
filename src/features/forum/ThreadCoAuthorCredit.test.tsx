@@ -1,4 +1,5 @@
 import {
+  act,
   fireEvent,
   render,
   screen,
@@ -77,7 +78,9 @@ function makeThread(overrides: Partial<Thread> = {}): Thread {
 /** Loads the hook in a fresh module graph and wraps it in the smallest page
  *  that uses it: a focusable byline holding the credit, a plain button standing
  *  in for the ⋯ menu item, and the dialog the item opens. `isLive` stubs a real
- *  API origin, which turns demo mode off and the live mutation path on. */
+ *  API origin, which turns demo mode off and the live mutation path on.
+ *  `awaitForumCopy` waits for the forum catalog of this same fresh graph, the
+ *  one its I18nProvider fetches, since that copy renders blank until it lands. */
 async function loadCredit(isLive: boolean) {
   vi.resetModules();
   if (isLive) vi.stubEnv("VITE_API_URL", API);
@@ -89,6 +92,13 @@ async function loadCredit(isLive: boolean) {
   const { I18nProvider } = await import("../../app/providers/I18nProvider");
   const { ToastProvider } =
     await import("../../shared/components/feedback/ToastProvider");
+  const { loadNamespace } = await import("../../shared/i18n/catalogs");
+  async function awaitForumCopy(): Promise<void> {
+    await act(async () => {
+      await loadNamespace("en", "forum");
+      await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    });
+  }
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   });
@@ -120,17 +130,18 @@ async function loadCredit(isLive: boolean) {
       </div>
     );
   }
-  return { CreditHarness, wrapper, queryClient };
+  return { CreditHarness, wrapper, queryClient, awaitForumCopy };
 }
 
 describe("useCoAuthorCreditRemoval", () => {
   it("offers the menu item only to the co-author", async () => {
-    const { CreditHarness, wrapper } = await loadCredit(false);
+    const { CreditHarness, wrapper, awaitForumCopy } = await loadCredit(false);
 
     const { unmount } = render(
       <CreditHarness thread={makeThread({ viewerIsCoAuthor: false })} />,
       { wrapper },
     );
+    await awaitForumCopy();
     expect(screen.queryByRole("button", { name: REMOVE_LABEL })).toBeNull();
     unmount();
 
@@ -138,6 +149,7 @@ describe("useCoAuthorCreditRemoval", () => {
       <CreditHarness thread={makeThread({ viewerIsCoAuthor: true })} />,
       { wrapper },
     );
+    await awaitForumCopy();
     expect(
       screen.getByRole("button", { name: REMOVE_LABEL }),
     ).toBeInTheDocument();
@@ -155,16 +167,18 @@ describe("useCoAuthorCreditRemoval", () => {
       />,
       { wrapper },
     );
+    await awaitForumCopy();
     expect(
       screen.getByRole("button", { name: REMOVE_LABEL }),
     ).toBeInTheDocument();
   });
 
   it("names the author in the confirm on an ordinary byline", async () => {
-    const { CreditHarness, wrapper } = await loadCredit(false);
+    const { CreditHarness, wrapper, awaitForumCopy } = await loadCredit(false);
     render(<CreditHarness thread={makeThread({ viewerIsCoAuthor: true })} />, {
       wrapper,
     });
+    await awaitForumCopy();
     fireEvent.click(screen.getByRole("button", { name: REMOVE_LABEL }));
     const dialog = await screen.findByRole("dialog");
     expect(dialog).toHaveTextContent("Rita Valente");
@@ -203,9 +217,11 @@ describe("useCoAuthorCreditRemoval", () => {
   ])(
     "keeps the confirm nameless on an %s byline",
     async (_bylineKind, overrides) => {
-      const { CreditHarness, wrapper } = await loadCredit(false);
+      const { CreditHarness, wrapper, awaitForumCopy } =
+        await loadCredit(false);
       const thread = makeThread({ viewerIsCoAuthor: true, ...overrides });
       render(<CreditHarness thread={thread} />, { wrapper });
+      await awaitForumCopy();
       fireEvent.click(screen.getByRole("button", { name: REMOVE_LABEL }));
       const dialog = await screen.findByRole("dialog");
       expect(dialog).toHaveTextContent(MASKED_BODY);
@@ -214,10 +230,11 @@ describe("useCoAuthorCreditRemoval", () => {
   );
 
   it("hands focus to the byline when the member keeps their name", async () => {
-    const { CreditHarness, wrapper } = await loadCredit(false);
+    const { CreditHarness, wrapper, awaitForumCopy } = await loadCredit(false);
     render(<CreditHarness thread={makeThread({ viewerIsCoAuthor: true })} />, {
       wrapper,
     });
+    await awaitForumCopy();
     fireEvent.click(screen.getByRole("button", { name: REMOVE_LABEL }));
     const dialog = await screen.findByRole("dialog");
     fireEvent.click(within(dialog).getByRole("button", { name: CANCEL_LABEL }));
@@ -232,12 +249,14 @@ describe("useCoAuthorCreditRemoval", () => {
         return HttpResponse.json({ slug: SLUG, coAuthor: null });
       }),
     );
-    const { CreditHarness, wrapper, queryClient } = await loadCredit(true);
+    const { CreditHarness, wrapper, queryClient, awaitForumCopy } =
+      await loadCredit(true);
     const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
 
     render(<CreditHarness thread={makeThread({ viewerIsCoAuthor: true })} />, {
       wrapper,
     });
+    await awaitForumCopy();
     fireEvent.click(screen.getByRole("button", { name: REMOVE_LABEL }));
     const dialog = await screen.findByRole("dialog");
     fireEvent.click(

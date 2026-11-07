@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { I18nProvider } from "../../app/providers/I18nProvider";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { NowSection } from "./now/NowSection";
 import type { MemberProfile } from "./data/memberProfiles";
 
@@ -73,18 +74,18 @@ describe("NowSection open-to chips", () => {
     );
   });
 
-  it("renders inert chips on your own profile", () => {
+  it("renders inert chips on your own profile", async () => {
     renderNowSection(true);
+    // The `members` namespace loads lazily; until it lands the copy is blank.
+    await awaitCatalog("members");
     // Your own card now carries one button the visitor's does not: Update. The
     // assertion this replaces was `queryByRole("button")` being null, which
     // stood for "no chip is clickable" back when a chip was the only button on
     // the card. Pin the survivor to the Update control and check BOTH openTo
     // entries, so a regression that made the preset chip clickable and dropped
-    // the Update button cannot slip through on the count alone. The text match
-    // is translation-independent: the raw key `members:content.now.update`
-    // that this suite renders also contains "update".
+    // the Update button cannot slip through on the count alone.
     expect(screen.getAllByRole("button")).toHaveLength(1);
-    expect(screen.getByRole("button")).toHaveTextContent(/update/i);
+    expect(screen.getByRole("button")).toHaveTextContent("Update");
     for (const label of [/Archive tips/, /collaborating/i]) {
       expect(screen.queryByRole("button", { name: label })).toBeNull();
     }
@@ -104,49 +105,43 @@ describe("NowSection owner-only elements", () => {
     respondsWithin: "day",
   } as unknown as MemberProfile;
 
-  it("hides every owner-only element from a visitor", () => {
+  it("hides every owner-only element from a visitor", async () => {
     renderNowSection(false, ownerFacingProfile);
-    // This suite renders raw i18n keys rather than resolved copy (see the
-    // "renders inert chips" test above), so every assertion below matches on
-    // the KEY, not the English sentence it stands for. Matching the resolved
-    // English instead would make these checks pass vacuously: that copy never
-    // reaches the screen in this render setup regardless of whether the
-    // element renders, so a regression that wrongly rendered the owner-only
-    // element would still show its untranslated key, not its English text,
-    // and a check written against the English would never catch it.
+    // Every assertion below matches resolved English, so the catalog has to
+    // land first: before it does the copy is blank and each check would pass
+    // whether or not the owner-only element rendered.
+    await awaitCatalog("members");
+    // Proves the catalog resolved, which is what gives the absences below
+    // their meaning.
+    expect(screen.getByText("Usually replies within a day")).toBeVisible();
     //
-    // No Update button. The chip labels ("collaborating", "Archive tips")
+    // No Update button. The chip labels ("Collaborating", "Archive tips")
     // are real buttons for a visitor, so pin this to the update copy rather
     // than asserting on button count.
     expect(
       screen.queryByRole("button", { name: /update/i }),
     ).not.toBeInTheDocument();
     // No funnel line ("N hellos -> N replies . N days").
+    expect(screen.queryByText(/^\d+ days$/)).not.toBeInTheDocument();
     expect(
-      screen.queryByText(/content\.now\.stats\./i),
+      screen.queryByText(/^(hellos?|repl(y|ies))$/),
     ).not.toBeInTheDocument();
     // No "Before this" disclosure.
-    expect(
-      screen.queryByText(/content\.now\.history\.label/i),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Before this")).not.toBeInTheDocument();
     // No visibility badge.
-    expect(
-      screen.queryByText(/content\.now\.visibility\./i),
-    ).not.toBeInTheDocument();
+    for (const badge of ["Everyone", "Your network", "Only you"]) {
+      expect(screen.queryByText(badge)).not.toBeInTheDocument();
+    }
     // No explainer sentence about the chips.
     expect(
-      screen.queryByText(/content\.now\.explainer/i),
+      screen.queryByText(/These are the doors people can tap to reach you/),
     ).not.toBeInTheDocument();
   });
 
-  it("shows the responds-within line to a visitor when the profile carries it", () => {
+  it("shows the responds-within line to a visitor when the profile carries it", async () => {
     renderNowSection(false, ownerFacingProfile);
-    // This suite renders raw i18n keys rather than resolved copy (see the
-    // "renders inert chips" test above), so the text landing on screen is the
-    // key itself: `members:content.now.respondsWithin.day`.
-    expect(
-      screen.getByText("members:content.now.respondsWithin.day"),
-    ).toBeVisible();
+    await awaitCatalog("members");
+    expect(screen.getByText("Usually replies within a day")).toBeVisible();
   });
 });
 

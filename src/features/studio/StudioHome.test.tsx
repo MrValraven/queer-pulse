@@ -7,6 +7,7 @@ import {
 } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { StudioRoom } from "./StudioRoom";
 
 const pageControl = vi.hoisted(() => ({
@@ -72,6 +73,7 @@ describe("Studio home (demo fixture)", () => {
         <StudioRoom />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const hero = await screen.findByRole("region", { name: /featured/i });
     expect(within(hero).getByRole("heading", { level: 1 })).toHaveTextContent(
       "Cidade dos santos",
@@ -90,6 +92,7 @@ describe("Studio home (demo fixture)", () => {
         <StudioRoom />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const grid = await screen.findByRole("region", { name: /new releases/i });
     // The grid holds its skeleton until curation settles; Show more appears
     // with the real cards, just under the grid's region.
@@ -115,7 +118,9 @@ describe("Studio home (demo fixture)", () => {
         <StudioRoom />
       </TestProviders>,
     );
-    const artists = await screen.findByRole("region", { name: /artists/i });
+    await awaitCatalog("studio");
+    // "Artists" alone: the Founding artists shelf is its own region.
+    const artists = await screen.findByRole("region", { name: /^artists$/i });
     expect(
       within(artists).getByRole("link", { name: /NIGHTFORM/ }),
     ).toHaveAttribute("href", "/studio/artist?id=sp-diogo-nightform");
@@ -128,14 +133,19 @@ describe("Studio home (demo fixture)", () => {
         <StudioRoom />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const grid = await screen.findByRole("region", { name: /new releases/i });
     const showMore = await screen.findByRole("button", {
       name: /show more/i,
     });
     const linksBefore = within(grid).getAllByRole("link").length;
     fireEvent.click(showMore);
+    // The footer's button turns into the shared retry, "Try again".
     expect(
-      await screen.findByRole("button", { name: /retry/i }),
+      await screen.findByRole("button", { name: "Try again" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("We couldn't load more releases"),
     ).toBeInTheDocument();
     expect(within(grid).getAllByRole("link")).toHaveLength(linksBefore);
     expect(
@@ -152,6 +162,7 @@ describe("Studio home (demo fixture)", () => {
         <StudioRoom />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(await screen.findByText(/no releases yet/i)).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /upload your first release/i }),
@@ -164,6 +175,7 @@ describe("Studio home (demo fixture)", () => {
         <StudioRoom />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(await screen.findByText(/no releases yet/i)).toBeInTheDocument();
     expect(
       screen.queryByRole("link", { name: /upload your first release/i }),
@@ -177,6 +189,7 @@ describe("Studio home (demo fixture)", () => {
         <StudioRoom />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     // The hero shows only once curation has settled, so the shelves' fold
     // below is read after the curation answer.
     const hero = await screen.findByRole("region", { name: /newest release/i });
@@ -202,6 +215,7 @@ describe("Studio home (demo fixture)", () => {
         <StudioRoom />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const picks = await screen.findByRole("region", { name: "Staff picks" });
     expect(
       within(picks).getByText(
@@ -222,6 +236,7 @@ describe("Studio home (demo fixture)", () => {
         <StudioRoom />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const grid = await screen.findByRole("region", { name: /new releases/i });
     expect(
       await within(grid).findByRole("link", { name: "The kitchen in April" }),
@@ -237,6 +252,7 @@ describe("Studio home (demo fixture)", () => {
         <StudioRoom />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const scenes = await screen.findByRole("region", { name: "Local scenes" });
     expect(
       await within(scenes).findByRole("link", { name: /Mouraria fado/ }),
@@ -253,6 +269,7 @@ describe("Studio home spotlight (demo fixture)", () => {
         <StudioRoom />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const spotlight = await screen.findByRole("region", {
       name: "Artist of the month",
     });
@@ -283,6 +300,7 @@ describe("Studio home spotlight (demo fixture)", () => {
         <StudioRoom />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const stars = await screen.findByRole("region", { name: "New stars" });
     expect(
       within(stars)
@@ -307,6 +325,7 @@ describe("Studio home spotlight (demo fixture)", () => {
         <StudioRoom />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     // The hero shows only once curation has settled.
     await screen.findByRole("region", { name: /newest release/i });
     expect(

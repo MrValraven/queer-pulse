@@ -11,7 +11,10 @@ import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { Button, Collapse, ConfirmDialog } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ReportListingModal } from "../economy/ReportListingModal";
-import type { PersonaPostView } from "./api/personaPosts.adapters";
+import {
+  personaPostErrorKeyOf,
+  type PersonaPostView,
+} from "./api/personaPosts.adapters";
 import type { PersonaPostsResult } from "./api/usePersonaPosts";
 import {
   isPersonaPostGone,
@@ -164,7 +167,7 @@ function usePersonaPostListState({
       if (isPersonaPostGone(error)) {
         setErrorKey(GONE_KEY);
         setFocusRequest({ target: "heading" });
-      } else setErrorKey("subprofiles:updates.errors.deleteFailed");
+      } else setErrorKey(personaPostErrorKeyOf(error));
     } finally {
       isDeletingRef.current = false;
     }

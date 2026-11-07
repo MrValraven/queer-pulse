@@ -3,6 +3,8 @@ import { act, renderHook } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../shared/api/client";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { TestProviders } from "../../test/TestProviders";
 import { quizshowKeys } from "../quizshow/api/quizshowKeys";
 import type { GatheringForm } from "./useGatheringForm";
@@ -46,9 +48,28 @@ vi.mock("./api/events.adapters", async (importOriginal) => ({
   formToCreateEventDto: () => ({ startAt: "2026-11-01T19:00:00.000Z" }),
 }));
 
+/** Paints one gatherings string, as the page around this hook does, so the
+ *  provider loads the catalog before the hook raises a toast. */
+function GatheringsPageCopy({ children }: { children: ReactNode }) {
+  const { t } = useTranslation();
+  return (
+    <>
+      <span hidden>{t("gatherings:manage.details.date")}</span>
+      {children}
+    </>
+  );
+}
+
 const wrapper = ({ children }: { children: ReactNode }) => (
-  <TestProviders>{children}</TestProviders>
+  <TestProviders>
+    <GatheringsPageCopy>{children}</GatheringsPageCopy>
+  </TestProviders>
 );
+
+const QUIZ_COPY_FAILED_TEXT =
+  "Your event is up. Its quiz didn't come with it, so copy it from the Live game tab";
+const QUIZ_COPY_NEEDS_ADULTS_TEXT =
+  "Your event is up. Its quiz has adults rounds, so make the event 18+ and copy the quiz from the Live game tab";
 
 const form = {
   cohostSlugs: [],
@@ -98,12 +119,13 @@ describe("usePublishGathering quizshow copy", () => {
   it("keeps the event and warns when the quiz copy fails", async () => {
     mocks.importQuizshowQuiz.mockRejectedValue(new Error("refused"));
     const { result } = renderPublish("thursday-quiz");
+    await awaitCatalog("gatherings");
     act(() => {
       result.current.publish();
     });
     await vi.waitFor(() =>
       expect(mocks.showToast).toHaveBeenCalledWith(
-        "gatherings:create.toast.quizshowCopyFailed",
+        QUIZ_COPY_FAILED_TEXT,
         "warning",
       ),
     );
@@ -132,17 +154,18 @@ describe("usePublishGathering quizshow copy outcomes", () => {
       }),
     );
     const { result } = renderPublish("thursday-quiz");
+    await awaitCatalog("gatherings");
     act(() => {
       result.current.publish();
     });
     await vi.waitFor(() =>
       expect(mocks.showToast).toHaveBeenCalledWith(
-        "gatherings:create.toast.quizshowCopyNeedsAdultsEvent",
+        QUIZ_COPY_NEEDS_ADULTS_TEXT,
         "warning",
       ),
     );
     expect(mocks.showToast).not.toHaveBeenCalledWith(
-      "gatherings:create.toast.quizshowCopyFailed",
+      QUIZ_COPY_FAILED_TEXT,
       "warning",
     );
     expect(result.current.isPublished).toBe(true);

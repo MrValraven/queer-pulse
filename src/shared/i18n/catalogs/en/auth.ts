@@ -134,6 +134,10 @@ export const auth: Catalog = {
     "Something went wrong generating your link. Try again.",
   "invite.link.error.quota":
     "You've used every invite in this month's allowance. It fills up again when the month resets.",
+  "invite.link.error.invalid":
+    "We couldn't accept those details. Check the email address you pinned the invite to and the length of your notes, then try again.",
+  "invite.link.error.rateLimited":
+    "You're creating invites faster than we allow. Wait a minute, then generate your link again.",
   "invite.link.formNote": "This link works once, for one person.",
   "invite.link.defaultVouch":
     "Someone in the community thinks you should be here. QueerPulse: a vouched-for queer network in Lisbon, built on trust.",
@@ -183,6 +187,9 @@ export const auth: Catalog = {
   "invite.sentList.revokeConfirm.cancel": "Keep it live",
   "invite.sentList.revokeError":
     "We couldn't revoke that invite just now. It's still live, so give it another try in a moment.",
+  "invite.sentList.revokeError.title": "That invite is still live",
+  "invite.sentList.revokeError.notRevocable":
+    "This invite has already been used or has expired, so there's nothing left to revoke.",
   "invite.sentList.resendCta": "Send again",
   "invite.sentList.resending": "Sending…",
   "invite.sentList.resentToast":
@@ -222,6 +229,8 @@ export const auth: Catalog = {
     "We couldn't save your private note just now. Give it another try in a moment.",
   "invite.sentList.privateNote.deleteErrorToast":
     "We couldn't delete your private note just now. Give it another try in a moment.",
+  "invite.sentList.privateNote.error.tooLong":
+    "A private note holds up to 120 characters. Shorten it and save again.",
 
   // ── Invite unfurl preview card (mirrors the static Open Graph tags) ──
   "sharePreview.heroTitle.line1": "Walk into a room",
@@ -479,6 +488,10 @@ export const auth: Catalog = {
     "We’re not taking new invite requests at the moment. Please check back soon.",
   "requestInvite.closedError":
     "Invite requests were paused while you were filling this in. Please try again later.",
+  "requestInvite.cooldownError":
+    "Our team reviewed a request from this email address recently. You can send a new one once 30 days have passed since then.",
+  "requestInvite.error.invalid":
+    "We couldn't accept some of your details. Check your email address and the other fields, then send your request again.",
 
   // ── Join-request status (/auth/request-invite/status) ──
   // The applicant's own view of their request. Public: whoever needs this page
@@ -787,6 +800,8 @@ export const auth: Catalog = {
   "onboarding.stepWork.back": "Back",
   "onboarding.stepWork.saveError":
     "We couldn't save that just now. Please try again.",
+  "onboarding.saveError.noProfile":
+    "We couldn't find your profile to save this to. Refresh the page and try again, and write to us if it keeps happening.",
   "onboarding.intent.community": "Community",
   "onboarding.intent.gatherings": "Events",
   "onboarding.intent.professional": "Professional connections",

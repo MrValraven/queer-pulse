@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { LazyMotion, domMax } from "motion/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
@@ -8,6 +8,7 @@ import {
 } from "../../../../shared/contracts/vj";
 import { PointerEventStub } from "../../../../test/pointerEventStub";
 import { TestProviders } from "../../../../test/TestProviders";
+import { awaitCatalogUnderFakeTimers } from "../../../../test/awaitCatalogUnderFakeTimers";
 import type { VjCommandOutcome } from "../../live/vjStageCommands";
 import { VjEffectPad, type VjPadSendHandler } from "./VjEffectPad";
 
@@ -33,7 +34,7 @@ function settingOf(
   };
 }
 
-function renderPad(
+async function renderPad(
   options: {
     effectId?: VjEffectId;
     isOn?: boolean;
@@ -63,6 +64,7 @@ function renderPad(
       </LazyMotion>
     </TestProviders>,
   );
+  await awaitCatalogUnderFakeTimers("vj");
   const pad = document.querySelector<HTMLButtonElement>(
     `[data-vj-pad="${effectId}"]`,
   );
@@ -87,16 +89,16 @@ afterEach(() => {
 });
 
 describe("VjEffectPad", () => {
-  it("a short press latches", () => {
-    const { pad, onPadSend } = renderPad();
+  it("a short press latches", async () => {
+    const { pad, onPadSend } = await renderPad();
     fireEvent.pointerDown(pad, mouse);
     advance(100);
     fireEvent.pointerUp(pad, mouse);
     expect(onPadSend.mock.calls).toEqual([["invert", "on", pad]]);
   });
 
-  it("a long press is momentary", () => {
-    const { pad, onPadSend } = renderPad();
+  it("a long press is momentary", async () => {
+    const { pad, onPadSend } = await renderPad();
     fireEvent.pointerDown(pad, mouse);
     advance(300);
     fireEvent.pointerUp(pad, mouse);
@@ -106,8 +108,8 @@ describe("VjEffectPad", () => {
     ]);
   });
 
-  it("a latched pad held 500 ms opens the tuner", () => {
-    const { pad, onPadSend } = renderPad({ isOn: true });
+  it("a latched pad held 500 ms opens the tuner", async () => {
+    const { pad, onPadSend } = await renderPad({ isOn: true });
     fireEvent.pointerDown(pad, mouse);
     advance(500);
     fireEvent.pointerUp(pad, mouse);
@@ -117,8 +119,8 @@ describe("VjEffectPad", () => {
     expect(onPadSend).not.toHaveBeenCalled();
   });
 
-  it("the tuner's amount sends at most one value per 50 ms and the final value", () => {
-    const { pad, setEffectSetting } = renderPad({
+  it("the tuner's amount sends at most one value per 50 ms and the final value", async () => {
+    const { pad, setEffectSetting } = await renderPad({
       effectId: "saturate",
       isOn: true,
     });
@@ -139,8 +141,8 @@ describe("VjEffectPad", () => {
     ]);
   });
 
-  it("a variant chip sends the variant", () => {
-    const { pad, setEffectSetting } = renderPad({ isOn: true });
+  it("a variant chip sends the variant", async () => {
+    const { pad, setEffectSetting } = await renderPad({ isOn: true });
     fireEvent.contextMenu(pad);
     const beatChip = screen.getByRole("button", { name: "On the beat" });
     expect(beatChip).toHaveAttribute("aria-pressed", "false");
@@ -151,38 +153,41 @@ describe("VjEffectPad", () => {
     expect(beatChip).toHaveAttribute("aria-pressed", "true");
   });
 
-  it("Turn off sends the pad off", () => {
-    const { pad, onPadSend } = renderPad({ isOn: true });
+  it("Turn off sends the pad off", async () => {
+    const { pad, onPadSend } = await renderPad({ isOn: true });
     fireEvent.contextMenu(pad);
     fireEvent.click(screen.getByRole("button", { name: "Turn off Invert" }));
     expect(onPadSend).toHaveBeenCalledExactlyOnceWith("invert", "off", pad);
   });
 
-  it("mirror shows no amount slider", () => {
-    const { pad } = renderPad({ effectId: "mirror", isOn: true });
+  it("mirror shows no amount slider", async () => {
+    const { pad } = await renderPad({ effectId: "mirror", isOn: true });
     fireEvent.contextMenu(pad);
-    expect(
-      screen.getByRole("dialog", { name: "Mirror settings" }),
-    ).toBeInTheDocument();
+    const tuner = screen.getByRole("dialog", { name: "Mirror settings" });
     expect(screen.queryByRole("slider")).toBeNull();
     expect(pad.querySelector("[data-vj-pad-amount]")).toBeNull();
-    expect(screen.getByRole("button", { name: "Four ways" })).toBeVisible();
+    // A role query skips hidden and display:none nodes, so this finds the chip
+    // only while it is shown. The fade-in opacity runs on motion's frame loop,
+    // which the faked clock does not drive.
+    expect(
+      within(tuner).getByRole("button", { name: "Four ways" }),
+    ).toBeInTheDocument();
   });
 
-  it("flash-capable pads carry the flash marker", () => {
-    const { pad } = renderPad({ effectId: "invert" });
+  it("flash-capable pads carry the flash marker", async () => {
+    const { pad } = await renderPad({ effectId: "invert" });
     expect(pad).toHaveAccessibleDescription(/Flashes/);
     expect(pad.querySelector('[data-kind="flash"]')).not.toBeNull();
   });
 
-  it("a pad that cannot flash has no flash marker", () => {
-    const { pad } = renderPad({ effectId: "monochrome" });
+  it("a pad that cannot flash has no flash marker", async () => {
+    const { pad } = await renderPad({ effectId: "monochrome" });
     expect(pad.querySelector('[data-kind="flash"]')).toBeNull();
     expect(pad).not.toHaveAccessibleDescription(/Flashes/);
   });
 
-  it("the face shows the pad label and the full name stays the accessible name", () => {
-    const { pad } = renderPad({ effectId: "kaleidoscope" });
+  it("the face shows the pad label and the full name stays the accessible name", async () => {
+    const { pad } = await renderPad({ effectId: "kaleidoscope" });
     expect(pad).toHaveAccessibleName(
       "Kaleidoscope. Tap to keep it on, hold to use it while pressed",
     );
@@ -190,13 +195,13 @@ describe("VjEffectPad", () => {
     expect(face?.textContent).toMatch(/^Kaleido/);
   });
 
-  it("the face falls back to the full name when no short label exists", () => {
-    const { pad } = renderPad({ effectId: "invert" });
+  it("the face falls back to the full name when no short label exists", async () => {
+    const { pad } = await renderPad({ effectId: "invert" });
     expect(pad).toHaveTextContent("Invert");
   });
 
-  it("names the pad and shows its latched state", () => {
-    const { pad } = renderPad({ isOn: true });
+  it("names the pad and shows its latched state", async () => {
+    const { pad } = await renderPad({ isOn: true });
     expect(pad).toHaveAttribute("aria-pressed", "true");
     expect(pad).toHaveAccessibleName(
       "Invert. Tap to keep it on, hold to use it while pressed",

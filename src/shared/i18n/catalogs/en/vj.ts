@@ -628,11 +628,13 @@ export const vj: Catalog = {
   "preload.failure.url_expired":
     "The download link ran out twice. Reload the screen to try again",
   "preload.failure.network":
-    "The download was cut off. It tries again when the connection is back",
+    "The download was cut off. The screen tries again when its connection is back",
   "preload.failure.storage_full":
-    "This laptop is out of space for clips. Free some space and reload the screen",
-  "preload.failure.decode_failed": "The screen's browser can't play this clip",
-  "preload.failure.not_found": "This clip is no longer in the pack",
+    "The screen's computer is out of space for clips. Free some space on it and reload the screen",
+  "preload.failure.decode_failed":
+    "The screen's browser can't play this file. Upload it again in the VJ library as MP4 (H.264)",
+  "preload.failure.not_found":
+    "This clip is no longer in the pack. Reload the screen to load the pack as it is now",
   // ── Remote ──
   "remote.metaTitle": "VJ remote",
   "remote.backToLibrary": "Back to the VJ library",
@@ -653,6 +655,16 @@ export const vj: Catalog = {
   "remote.clipLoading": "Loading on the screen, {percent}%",
   "remote.clipQueued": "Waiting to load on the screen",
   "remote.clipFailed": "Couldn't load on the screen",
+  "remote.failures.summary_one": "{count} clip couldn't load on the screen",
+  "remote.failures.summary_other": "{count} clips couldn't load on the screen",
+  "remote.failures.seeWhy": "See why",
+  "remote.failures.title": "Clips that couldn't load",
+  "remote.failures.intro":
+    "Each clip says what stopped it on the screen and how to fix it",
+  "remote.failures.unknownReason":
+    "The screen didn't say why. Reload the screen to try again",
+  "remote.failures.empty": "Every clip in this pack loads on the screen now",
+  "remote.failures.close": "Close the list",
   "remote.fadeSeconds": "{seconds} s",
   "remote.blackout": "Blackout",
   "remote.offline.network": "Can't reach the server. Check your connection",
@@ -761,6 +773,7 @@ export const vj: Catalog = {
   "grid.unfavorite": "Remove {title} from favorites",
   "grid.cueAria": "Cue {title}",
   "grid.cued": "Cued",
+  "grid.failureAria": "See why {title} couldn't load",
   "grid.pendingBeat": "Next beat",
   "grid.pendingBar": "Next bar",
   "grid.searchLabel": "Search this pack",
@@ -787,6 +800,7 @@ export const vj: Catalog = {
   "tempo.tapAria": "Tap tempo",
   "tempo.downbeat": "1",
   "tempo.downbeatAria": "Set the first beat of the bar to now",
+  "tempo.downbeatCaption": "Downbeat",
   "tempo.quantize": "Quantize",
   "tempo.quantizeOff": "Off",
   "tempo.quantizeBeat": "Beat",
@@ -803,6 +817,7 @@ export const vj: Catalog = {
 
   // ── Transitions ──
   "transition.title": "Transition",
+  "transition.modeCaption": "Mode",
   "transition.unitAria": "Count the length in",
   "transition.mode.fade": "Fade",
   "transition.mode.cut": "Cut",
@@ -890,6 +905,8 @@ export const vj: Catalog = {
   "dock.goEmpty": "Tap a clip to cue it",
   "dock.more": "More",
   "dock.moreAria": "More controls",
+  "dock.sectionMix": "Mix",
+  "dock.sectionEffects": "Effects",
 
   // ── Mix sheet ──
   "mix.title": "Mix",

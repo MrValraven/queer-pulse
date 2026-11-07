@@ -2,8 +2,13 @@ import { useState } from "react";
 import { FiAlertTriangle } from "react-icons/fi";
 import { Button, ConfirmDialog } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import {
+  causeErrorKey,
+  type CauseErrorCopy,
+} from "../../shared/api/causeErrorKey";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDeleteFlatmateProfile } from "./api/useDeleteFlatmateProfile";
+import { FLATMATE_PROFILE_DELETE_OVERRIDES } from "./economyErrorCopy";
 import styles from "./FlatmatesPage.module.css";
 
 /**
@@ -39,24 +44,29 @@ export function FlatmateProfileDangerZone({
   const { showToast } = useToast();
   const deleteFlatmateProfile = useDeleteFlatmateProfile();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [hasFailed, setHasFailed] = useState(false);
+  // Why the last take-down failed, or null: the dialog shows this cause line.
+  const [failureCause, setFailureCause] = useState<CauseErrorCopy | null>(null);
+  const hasFailed = failureCause !== null;
 
   const closeConfirm = () => {
     if (deleteFlatmateProfile.isPending) return;
     setIsConfirmOpen(false);
-    setHasFailed(false);
+    setFailureCause(null);
   };
 
   const handleConfirm = () => {
     if (deleteFlatmateProfile.isPending) return;
-    setHasFailed(false);
+    setFailureCause(null);
     deleteFlatmateProfile.mutate(undefined, {
       onSuccess: () => {
         showToast(t("economy:flatmateDangerZone.toast.deleted"), "success");
         setIsConfirmOpen(false);
         onDeleted();
       },
-      onError: () => setHasFailed(true),
+      onError: (error) =>
+        setFailureCause(
+          causeErrorKey(error, FLATMATE_PROFILE_DELETE_OVERRIDES),
+        ),
     });
   };
 
@@ -102,9 +112,9 @@ export function FlatmateProfileDangerZone({
         <p className={styles.dangerKeeps}>
           {t("economy:flatmateDangerZone.confirm.keeps")}
         </p>
-        {hasFailed && (
+        {failureCause && (
           <p className={styles.dangerError} role="alert">
-            {t("economy:flatmateDangerZone.confirm.error")}
+            {t(failureCause.key, failureCause.values)}
           </p>
         )}
       </ConfirmDialog>

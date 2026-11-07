@@ -16,6 +16,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useDeleteMyCard, useMyCards, useUpdateMyCard } from "./api/useMyCards";
 import type { MyCardDTO } from "./api/cards.api";
+import { myCardWriteErrorCopy } from "./cardActionErrors";
 import { isCardSelfRenewable } from "./cardExpiry";
 import { CardPhotoConsent } from "./CardPhotoConsent";
 import { CardPronounConsent } from "./CardPronounConsent";
@@ -80,7 +81,10 @@ export function MyCardsPage() {
         showToast(t("cards:remove.toast"), "success");
         setCardPendingRemoval(null);
       },
-      onError: () => showToast(t("common:toast.saveFailed"), "error"),
+      onError: (error) => {
+        const cause = myCardWriteErrorCopy(error);
+        showToast(t(cause.key, cause.values), "error");
+      },
     });
   };
 
@@ -147,8 +151,10 @@ export function MyCardsPage() {
                       updateCard.mutate(
                         { cardId: card.id, isPhotoHidden },
                         {
-                          onError: () =>
-                            showToast(t("common:toast.saveFailed"), "error"),
+                          onError: (error) => {
+                            const cause = myCardWriteErrorCopy(error);
+                            showToast(t(cause.key, cause.values), "error");
+                          },
                         },
                       )
                     }
@@ -165,8 +171,10 @@ export function MyCardsPage() {
                       updateCard.mutate(
                         { cardId: card.id, isPronounsHidden },
                         {
-                          onError: () =>
-                            showToast(t("common:toast.saveFailed"), "error"),
+                          onError: (error) => {
+                            const cause = myCardWriteErrorCopy(error);
+                            showToast(t(cause.key, cause.values), "error");
+                          },
                         },
                       )
                     }

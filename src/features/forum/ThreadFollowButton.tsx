@@ -5,6 +5,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFollowThread } from "./api/useForumMutations";
+import { forumErrorText } from "./forumErrors";
 import type { Thread } from "./forum.data";
 
 /**
@@ -56,7 +57,7 @@ export function ThreadFollowButton({
           ),
           "success",
         ),
-      onError: () => showToast(t("forum:toast.error"), "error"),
+      onError: (error) => showToast(forumErrorText(t, error), "error"),
     });
   }
 

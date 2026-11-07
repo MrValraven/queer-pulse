@@ -20,6 +20,7 @@ import {
 import { PublishChecklist, SubprofilePolishList } from "./PublishChecklist";
 import type { PublishAttempt } from "./PublishChecklist";
 import { usePersonaCreatorSlug } from "./usePersonaCreatorSlug";
+import { personaFallbackCauseMessage } from "./personaActionErrors";
 import { personaOwnerAddress } from "./personaLinks.data";
 import sharedStyles from "./SubprofileEditor.module.css";
 import styles from "./SubprofilePublishPanel.module.css";
@@ -178,11 +179,9 @@ export function SubprofilePublishPanel({
       } else {
         setStoredAttempt({ unmet: [], unknown: true, screenedText });
         // A typed refusal (a restriction, a taken handle) gets its own copy.
+        const refusalKey = personaRefusalMessageKey(err);
         showToast(
-          t(
-            personaRefusalMessageKey(err) ??
-              "subprofiles:publishPanel.toastPublishError",
-          ),
+          refusalKey ? t(refusalKey) : personaFallbackCauseMessage(err, t),
           "error",
         );
       }
@@ -200,11 +199,9 @@ export function SubprofilePublishPanel({
         editor.markEditConflict();
         return;
       }
+      const refusalKey = personaRefusalMessageKey(err);
       showToast(
-        t(
-          personaRefusalMessageKey(err) ??
-            "subprofiles:publishPanel.toastError",
-        ),
+        refusalKey ? t(refusalKey) : personaFallbackCauseMessage(err, t),
         "error",
       );
     }

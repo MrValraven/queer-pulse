@@ -232,6 +232,12 @@ export const feed: Catalog = {
   "action.reactionFailed": "A reação não ficou guardada. Tentar de novo?",
   "action.replySent": "Resposta publicada.",
   "action.replyFailed": "A resposta não foi enviada. Tentar de novo?",
+  "action.replyForbidden":
+    "Só podes responder em comunidades a que te juntaste, e as respostas ficam fechadas enquanto uma comunidade estiver arquivada ou em pausa.",
+  "action.reactionForbidden":
+    "Só podes reagir a publicações de comunidades a que te juntaste, e as reações ficam fechadas enquanto uma comunidade estiver arquivada ou em pausa.",
+  "action.postGone":
+    "Essa publicação já não existe, por isso nada ficou guardado. Atualiza o feed para ver o que há agora.",
 
   // ── Silenciar fontes no feed (SOC-18) ───────────────────────────────────
   "mute.showLess": "Mostrar menos de {name}",
@@ -239,6 +245,8 @@ export const feed: Catalog = {
   "mute.mutedToast": "Vais ver menos de {name}. Continuas a ser membro.",
   "mute.unmutedToast": "{name} voltou ao teu feed.",
   "mute.failedToast": "Não foi possível guardar. Tentar de novo?",
+  "mute.sourceGone":
+    "Essa fonte já não está disponível. Atualiza o feed para ver o que há agora.",
   "mute.sidebarHeading": "Feed mais calmo",
   "mute.sidebarBlurb":
     "Baixa o volume de uma comunidade ou de um tópico sem sair.",

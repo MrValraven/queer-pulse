@@ -2,6 +2,7 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../../shared/api/client";
 import { TestProviders } from "../../../test/TestProviders";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import type {
   HostConfigBody,
   HostConfigDTO,
@@ -75,7 +76,7 @@ afterEach(() => {
   hookState.configError = null;
 });
 
-function renderSettings(config: HostConfigDTO, summary?: HostSummaryDTO) {
+async function renderSettings(config: HostConfigDTO, summary?: HostSummaryDTO) {
   hookState.config = config;
   hookState.summary = summary;
   render(
@@ -83,11 +84,12 @@ function renderSettings(config: HostConfigDTO, summary?: HostSummaryDTO) {
       <GoTogetherHostSettings slug="pride-picnic" />
     </TestProviders>,
   );
+  await awaitCatalog("goTogether");
 }
 
 describe("GoTogetherHostSettings", () => {
-  it("saves enabled as soon as the host flips the switch", () => {
-    renderSettings(hostConfig({ enabled: false }));
+  it("saves enabled as soon as the host flips the switch", async () => {
+    await renderSettings(hostConfig({ enabled: false }));
 
     expect(screen.queryByLabelText("When matching runs")).toBeNull();
     const toggle = screen.getByRole("switch", { name: "Offer Go together" });
@@ -106,8 +108,8 @@ describe("GoTogetherHostSettings", () => {
     expect(body && "cutoffAt" in body).toBe(false);
   });
 
-  it("keeps the cutoff input between the earliest and latest cutoff", () => {
-    renderSettings(hostConfig());
+  it("keeps the cutoff input between the earliest and latest cutoff", async () => {
+    await renderSettings(hostConfig());
 
     const cutoffInput = screen.getByLabelText("When matching runs");
     expect(cutoffInput).toHaveAttribute("type", "datetime-local");
@@ -134,8 +136,8 @@ describe("GoTogetherHostSettings", () => {
     ).toBeInTheDocument();
   });
 
-  it("hints that changing or adding a question re-asks people already waiting, once a question is saved", () => {
-    renderSettings(
+  it("hints that changing or adding a question re-asks people already waiting, once a question is saved", async () => {
+    await renderSettings(
       hostConfig({
         hostQuestions: [
           {
@@ -155,14 +157,14 @@ describe("GoTogetherHostSettings", () => {
     ).toBeInTheDocument();
   });
 
-  it("keeps the re-ask hint off while the saved config has no questions yet", () => {
-    renderSettings(hostConfig());
+  it("keeps the re-ask hint off while the saved config has no questions yet", async () => {
+    await renderSettings(hostConfig());
 
     expect(screen.queryByText(/If you change or add a question/)).toBeNull();
   });
 
-  it("allows at most 2 questions with 2 to 4 answers each", () => {
-    renderSettings(hostConfig());
+  it("allows at most 2 questions with 2 to 4 answers each", async () => {
+    await renderSettings(hostConfig());
 
     const addQuestion = screen.getByRole("button", { name: "Add a question" });
     fireEvent.click(addQuestion);
@@ -191,8 +193,8 @@ describe("GoTogetherHostSettings", () => {
     ).toHaveLength(4);
   });
 
-  it("renders every control read-only once matching has run", () => {
-    renderSettings(
+  it("renders every control read-only once matching has run", async () => {
+    await renderSettings(
       hostConfig({
         isLocked: true,
         meetingPointNote: "By the kiosk",
@@ -232,8 +234,8 @@ describe("GoTogetherHostSettings", () => {
     expect(screen.queryByRole("button", { name: "Add an answer" })).toBeNull();
   });
 
-  it("shows the waiting and group counts and nothing about who", () => {
-    renderSettings(hostConfig(), {
+  it("shows the waiting and group counts and nothing about who", async () => {
+    await renderSettings(hostConfig(), {
       waiting: 7,
       grouped: 8,
       unmatched: 1,
@@ -251,13 +253,13 @@ describe("GoTogetherHostSettings", () => {
     expect(within(summary).queryAllByRole("listitem")).toHaveLength(0);
   });
 
-  it("shows inline copy under the cutoff when the server refuses it", () => {
+  it("shows inline copy under the cutoff when the server refuses it", async () => {
     mutate.mockImplementation((_body, options) =>
       options?.onError?.(
         new ApiError(400, "Bad cutoff", { code: "GO_TOGETHER_BAD_CUTOFF" }),
       ),
     );
-    renderSettings(hostConfig());
+    await renderSettings(hostConfig());
 
     const cutoffInput = screen.getByLabelText("When matching runs");
     const chosenCutoff = epochToZonedInputValue(
@@ -280,8 +282,8 @@ describe("GoTogetherHostSettings", () => {
 });
 
 describe("GoTogetherHostSettings off switch confirm", () => {
-  it("switches on with no confirm", () => {
-    renderSettings(hostConfig({ enabled: false }));
+  it("switches on with no confirm", async () => {
+    await renderSettings(hostConfig({ enabled: false }));
 
     fireEvent.click(screen.getByRole("switch", { name: "Offer Go together" }));
 
@@ -290,8 +292,8 @@ describe("GoTogetherHostSettings off switch confirm", () => {
     expect(mutate.mock.calls[0]?.[0].enabled).toBe(true);
   });
 
-  it("asks to confirm before switching a config saved as enabled off", () => {
-    renderSettings(hostConfig({ enabled: true }));
+  it("asks to confirm before switching a config saved as enabled off", async () => {
+    await renderSettings(hostConfig({ enabled: true }));
 
     const toggle = screen.getByRole("switch", { name: "Offer Go together" });
     expect(toggle).toHaveAttribute("aria-checked", "true");
@@ -310,8 +312,8 @@ describe("GoTogetherHostSettings off switch confirm", () => {
     expect(toggle).toHaveAttribute("aria-checked", "true");
   });
 
-  it("keeps the switch on when the off confirm is cancelled", () => {
-    renderSettings(hostConfig({ enabled: true }));
+  it("keeps the switch on when the off confirm is cancelled", async () => {
+    await renderSettings(hostConfig({ enabled: true }));
 
     fireEvent.click(screen.getByRole("switch", { name: "Offer Go together" }));
     const dialog = screen.getByRole("dialog", {
@@ -326,8 +328,8 @@ describe("GoTogetherHostSettings off switch confirm", () => {
     ).toHaveAttribute("aria-checked", "true");
   });
 
-  it("saves the switch off once the off confirm is accepted", () => {
-    renderSettings(
+  it("saves the switch off once the off confirm is accepted", async () => {
+    await renderSettings(
       hostConfig({
         enabled: true,
         meetingPointNote: "By the kiosk",
@@ -353,7 +355,7 @@ describe("GoTogetherHostSettings off switch confirm", () => {
 });
 
 describe("GoTogetherHostSettings load failures", () => {
-  function renderFailedSettings(error: Error) {
+  async function renderFailedSettings(error: Error) {
     hookState.configError = error;
     render(
       <TestProviders>
@@ -362,18 +364,19 @@ describe("GoTogetherHostSettings load failures", () => {
         </div>
       </TestProviders>,
     );
+    await awaitCatalog("goTogether");
   }
 
-  it("renders nothing on a 404, because Go together is switched off", () => {
-    renderFailedSettings(new ApiError(404, "Not found"));
+  it("renders nothing on a 404, because Go together is switched off", async () => {
+    await renderFailedSettings(new ApiError(404, "Not found"));
     expect(screen.getByTestId("host-settings-slot")).toBeEmptyDOMElement();
     expect(
       screen.queryByRole("button", { name: /try again/i }),
     ).not.toBeInTheDocument();
   });
 
-  it("keeps the section with a retry for any other failure", () => {
-    renderFailedSettings(new ApiError(500, "Server error"));
+  it("keeps the section with a retry for any other failure", async () => {
+    await renderFailedSettings(new ApiError(500, "Server error"));
     expect(
       screen.getByRole("button", { name: /try again/i }),
     ).toBeInTheDocument();

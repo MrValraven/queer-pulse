@@ -29,7 +29,11 @@ describe("primitivesToSvg", () => {
       const svg = svgFor(flagId);
       expect(svg).not.toContain("<script");
       expect(svg).not.toContain("href");
-      expect(svg).not.toContain("http");
+      // The SVG namespace declaration is an identifier the parser never
+      // fetches, so only a URL beyond it would reach outside the document.
+      expect(
+        svg.replace(`xmlns="http://www.w3.org/2000/svg"`, ""),
+      ).not.toContain("http");
       expect(svg).not.toContain("<image");
       expect(svg).not.toContain("<text");
       expect(svg).not.toContain("<foreignObject");

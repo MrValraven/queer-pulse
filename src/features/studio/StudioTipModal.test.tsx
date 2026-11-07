@@ -1,6 +1,7 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { StudioTipModal } from "./StudioTipModal";
 
 /**
@@ -20,6 +21,7 @@ describe("StudioTipModal", () => {
         <StudioTipModal recipient="Mariana Sol" onClose={() => {}} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     // Default preset (€2) leaves the send button enabled.
     expect(await screen.findByRole("button", { name: /^tip /i })).toBeEnabled();
 
@@ -37,6 +39,7 @@ describe("StudioTipModal", () => {
         <StudioTipModal recipient="Mariana Sol" onClose={() => {}} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     // Resolve the catalog first so the CTA label is real copy, not a key.
     await screen.findByRole("button", { name: /^tip /i });
     fireEvent.change(screen.getByRole("spinbutton"), {
@@ -53,6 +56,7 @@ describe("StudioTipModal", () => {
         <StudioTipModal recipient="Mariana Sol" onClose={() => {}} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(await screen.findByRole("button", { name: /^tip /i }));
     // The send flow runs a ~1.1s "sending" beat before the success panel;
     // allow extra time for that real timer.
@@ -67,6 +71,7 @@ describe("StudioTipModal", () => {
         <StudioTipModal recipient="Mariana Sol" onClose={() => {}} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const fivePreset = await screen.findByRole("button", { name: "€5" });
     expect(fivePreset).toHaveAttribute("aria-pressed", "false");
     fireEvent.click(fivePreset);
@@ -79,13 +84,19 @@ describe("StudioTipModal", () => {
         <StudioTipModal recipient="Mariana Sol" onClose={() => {}} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     await screen.findByRole("button", { name: /^tip /i });
     fireEvent.change(screen.getByRole("spinbutton"), {
       target: { value: "150" },
     });
     fireEvent.click(screen.getByRole("button", { name: /^tip /i }));
+    // The toast deck keeps an empty alert region outside the dialog.
     expect(
-      await screen.findByRole("alert", {}, { timeout: 2500 }),
+      await within(screen.getByRole("dialog")).findByRole(
+        "alert",
+        {},
+        { timeout: 2500 },
+      ),
     ).toHaveTextContent(/declined/i);
   });
 });

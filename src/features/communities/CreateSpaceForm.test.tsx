@@ -159,7 +159,7 @@ describe("CreateSpaceForm", () => {
     expect(screen.getByLabelText(/^Name/)).toHaveValue("  Trail Runners  ");
   });
 
-  it("toasts a generic failure for any other error", async () => {
+  it("names a server fault when the server fails", async () => {
     const user = userEvent.setup();
     renderForm();
     await fillRequiredFields(user);
@@ -170,7 +170,26 @@ describe("CreateSpaceForm", () => {
     await user.click(screen.getByRole("button", { name: "Create space" }));
 
     expect(
-      await screen.findByText("Couldn't create the space. Try again."),
+      await screen.findByText(
+        "Our servers hit an error on our side. Give it a moment and try again.",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("names the status of a refusal with no known cause", async () => {
+    const user = userEvent.setup();
+    renderForm();
+    await fillRequiredFields(user);
+    mutate.mockImplementation((_body, { onError }) => {
+      onError?.(new ApiError(418, "Unexpected"));
+    });
+
+    await user.click(screen.getByRole("button", { name: "Create space" }));
+
+    expect(
+      await screen.findByText(
+        "Our servers refused that with error 418. Try again in a moment, and write to us if it keeps happening.",
+      ),
     ).toBeInTheDocument();
   });
 

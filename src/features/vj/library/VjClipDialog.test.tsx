@@ -274,7 +274,9 @@ describe("VjClipPacks", () => {
     );
     const { rerender } = render(renderPacks([]));
     expect(
-      screen.getByText("No packs yet. Create one in the pack list first"),
+      await screen.findByText(
+        "No packs yet. Create one in the pack list first",
+      ),
     ).toBeInTheDocument();
     rerender(renderPacks([closing]));
     expect(

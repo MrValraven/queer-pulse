@@ -7,6 +7,7 @@ import {
 } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { resetDemoPlaylists } from "./api/studioDemoPlaylists";
 import { resetStudioLibrarySeedForTests } from "./api/useStudioLibrarySaves";
 import { StudioAddToPlaylistPicker } from "./StudioAddToPlaylistPicker";
@@ -52,7 +53,7 @@ const pedroLike: StudioLikeSubject = {
   artistName: "NIGHTFORM",
 };
 
-function renderPicker(
+async function renderPicker(
   trackIds: string[],
   onClose = vi.fn(),
   likeSubject?: StudioLikeSubject,
@@ -67,12 +68,13 @@ function renderPicker(
       />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
   return onClose;
 }
 
 describe("StudioAddToPlaylistPicker", () => {
   it("offers Create playlist first, then the member's own playlists", async () => {
-    renderPicker(["demo-track-home-4-01"]);
+    await renderPicker(["demo-track-home-4-01"]);
     const kitchen = await screen.findByRole("button", {
       name: "Add to Kitchen tapes",
     });
@@ -91,7 +93,7 @@ describe("StudioAddToPlaylistPicker", () => {
   });
 
   it("offers Liked songs right after Create playlist for a single track", async () => {
-    renderPicker(["demo-track-home-4-01"], vi.fn(), pedroLike);
+    await renderPicker(["demo-track-home-4-01"], vi.fn(), pedroLike);
     const kitchen = await screen.findByRole("button", {
       name: "Add to Kitchen tapes",
     });
@@ -110,7 +112,11 @@ describe("StudioAddToPlaylistPicker", () => {
   });
 
   it("likes the track from Liked songs and closes", async () => {
-    const onClose = renderPicker(["demo-track-home-4-01"], vi.fn(), pedroLike);
+    const onClose = await renderPicker(
+      ["demo-track-home-4-01"],
+      vi.fn(),
+      pedroLike,
+    );
     const liked = await screen.findByRole("button", { name: "Liked songs" });
     fireEvent.click(liked);
     expect(onClose).toHaveBeenCalledTimes(1);
@@ -118,7 +124,7 @@ describe("StudioAddToPlaylistPicker", () => {
   });
 
   it("leaves Liked songs out when a whole release is added", async () => {
-    renderPicker([
+    await renderPicker([
       "demo-track-cidade-dos-santos-01",
       "demo-track-cidade-dos-santos-03",
     ]);
@@ -129,7 +135,7 @@ describe("StudioAddToPlaylistPicker", () => {
   });
 
   it("adds the track and says where", async () => {
-    const onClose = renderPicker(["demo-track-home-4-01"]);
+    const onClose = await renderPicker(["demo-track-home-4-01"]);
     fireEvent.click(
       await screen.findByRole("button", { name: "Add to Kitchen tapes" }),
     );
@@ -140,7 +146,7 @@ describe("StudioAddToPlaylistPicker", () => {
   });
 
   it("says when the track was already there", async () => {
-    renderPicker(["demo-track-cidade-dos-santos-01"]);
+    await renderPicker(["demo-track-cidade-dos-santos-01"]);
     fireEvent.click(
       await screen.findByRole("button", { name: "Add to Kitchen tapes" }),
     );
@@ -150,7 +156,7 @@ describe("StudioAddToPlaylistPicker", () => {
   });
 
   it("says a release had nothing to add when every track is already there", async () => {
-    const onClose = renderPicker([
+    const onClose = await renderPicker([
       "demo-track-cidade-dos-santos-01",
       "demo-track-cidade-dos-santos-03",
     ]);
@@ -158,7 +164,7 @@ describe("StudioAddToPlaylistPicker", () => {
       await screen.findByRole("button", { name: "Add to Kitchen tapes" }),
     );
     expect(
-      await screen.findByText("There are no tracks here you can add yet"),
+      await screen.findByText("Every track here is already in Kitchen tapes"),
     ).toBeInTheDocument();
     expect(
       screen.queryByText("Added to Kitchen tapes"),
@@ -167,7 +173,7 @@ describe("StudioAddToPlaylistPicker", () => {
   });
 
   it("creates a playlist from the picker and says once where the track went", async () => {
-    const onClose = renderPicker(["demo-track-home-4-01"]);
+    const onClose = await renderPicker(["demo-track-home-4-01"]);
     await screen.findByRole("button", { name: "Add to Kitchen tapes" });
     fireEvent.click(screen.getByRole("button", { name: "Create playlist" }));
     const dialog = await screen.findByRole("dialog", { name: "New playlist" });
@@ -183,7 +189,7 @@ describe("StudioAddToPlaylistPicker", () => {
   });
 
   it("offers a playlist the member edits, marked, and leaves an open invite out", async () => {
-    const onClose = renderPicker(["demo-track-home-4-01"]);
+    const onClose = await renderPicker(["demo-track-home-4-01"]);
     const tour = await screen.findByRole("button", {
       name: "Add to Tour diary, a collaborative playlist",
     });
@@ -213,7 +219,7 @@ describe("StudioAddToPlaylistPicker", () => {
         editorCount: null,
       }),
     ];
-    renderPicker(["demo-track-home-4-01"]);
+    await renderPicker(["demo-track-home-4-01"]);
     await screen.findByRole("button", { name: "Add to Kitchen tapes" });
     expect(
       screen.queryByRole("button", { name: /Invited mixtape/ }),

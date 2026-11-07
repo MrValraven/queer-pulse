@@ -7,11 +7,12 @@ import {
   AddMonthPublishSection,
 } from "./AddMonthPublishSection";
 import type { AddMonthBlock } from "./addMonthState";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 
 const TOO_LARGE_TEXT =
   "This month has too much text to publish in one go. Shorten a few descriptions, or publish some dates now and the rest after.";
 
-function renderSection(
+async function renderSection(
   overrides: {
     block?: AddMonthBlock | null;
     isPublishing?: boolean;
@@ -34,6 +35,7 @@ function renderSection(
       />
     </TestProviders>,
   );
+  await awaitCatalog("gatherings");
   return { onTogglePledge, onPublish, onBlockedPress };
 }
 
@@ -45,15 +47,15 @@ function pledgeAt(anchorId: string): HTMLElement {
 }
 
 describe("AddMonthPublishSection", () => {
-  it("names the count on the button", () => {
-    renderSection();
+  it("names the count on the button", async () => {
+    await renderSection();
     expect(
       screen.getByRole("button", { name: "Publish 8 events" }),
     ).toBeInTheDocument();
   });
 
   it("publishes on a press when nothing blocks it", async () => {
-    const { onPublish, onBlockedPress } = renderSection();
+    const { onPublish, onBlockedPress } = await renderSection();
     await userEvent.click(
       screen.getByRole("button", { name: "Publish 8 events" }),
     );
@@ -62,7 +64,7 @@ describe("AddMonthPublishSection", () => {
   });
 
   it("keeps the blocked button focusable, says why, and reports the press", async () => {
-    const { onPublish, onBlockedPress } = renderSection({
+    const { onPublish, onBlockedPress } = await renderSection({
       block: { reason: "rowsInvalid", invalidRowCount: 2 },
     });
     const button = screen.getByRole("button", { name: "Publish 8 events" });
@@ -77,7 +79,7 @@ describe("AddMonthPublishSection", () => {
   });
 
   it("toggles each pledge", async () => {
-    const { onTogglePledge } = renderSection({ pledges: [false, true] });
+    const { onTogglePledge } = await renderSection({ pledges: [false, true] });
     const pledgeGroup = screen.getByRole("group", {
       name: "Before you publish",
     });
@@ -93,15 +95,18 @@ describe("AddMonthPublishSection", () => {
     expect(onTogglePledge).toHaveBeenNthCalledWith(2, 1);
   });
 
-  it("names the open pledges when they block publishing", () => {
-    renderSection({ block: { reason: "pledgesOpen" }, pledges: [true, false] });
+  it("names the open pledges when they block publishing", async () => {
+    await renderSection({
+      block: { reason: "pledgesOpen" },
+      pledges: [true, false],
+    });
     expect(
       screen.getByText("Tick both pledges to publish."),
     ).toBeInTheDocument();
   });
 
-  it("words both pledges for every event in the month and keeps the Code of Care link", () => {
-    renderSection();
+  it("words both pledges for every event in the month and keeps the Code of Care link", async () => {
+    await renderSection();
     expect(
       screen.getByText("These events follow the QueerPulse Code of Care."),
     ).toBeInTheDocument();
@@ -115,8 +120,8 @@ describe("AddMonthPublishSection", () => {
     ).toBeInTheDocument();
   });
 
-  it("holds Publish back while the starting event loads and says why", () => {
-    renderSection({ block: { reason: "templateLoading" } });
+  it("holds Publish back while the starting event loads and says why", async () => {
+    await renderSection({ block: { reason: "templateLoading" } });
     expect(
       screen.getByRole("button", { name: "Publish 8 events" }),
     ).toHaveAttribute("aria-disabled", "true");
@@ -128,7 +133,9 @@ describe("AddMonthPublishSection", () => {
   });
 
   it("shows progress while publishing and ignores a second press", async () => {
-    const { onPublish, onBlockedPress } = renderSection({ isPublishing: true });
+    const { onPublish, onBlockedPress } = await renderSection({
+      isPublishing: true,
+    });
     const button = screen.getByRole("button", { name: "Publishing 8 events" });
     expect(button).toHaveAttribute("aria-busy", "true");
     expect(button).toHaveAttribute("aria-disabled", "true");
@@ -137,16 +144,16 @@ describe("AddMonthPublishSection", () => {
     expect(onBlockedPress).not.toHaveBeenCalled();
   });
 
-  it("blocks a month over the size limit and names the cause", () => {
-    renderSection({ block: { reason: "tooLarge" } });
+  it("blocks a month over the size limit and names the cause", async () => {
+    await renderSection({ block: { reason: "tooLarge" } });
     expect(
       screen.getByRole("button", { name: "Publish 8 events" }),
     ).toHaveAttribute("aria-disabled", "true");
     expect(screen.getByText(TOO_LARGE_TEXT)).toBeInTheDocument();
   });
 
-  it("says every date publishes together", () => {
-    renderSection();
+  it("says every date publishes together", async () => {
+    await renderSection();
     expect(
       screen.getByText(
         "Every date publishes together. If one can't, none are published.",

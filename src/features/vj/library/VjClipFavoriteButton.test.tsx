@@ -200,10 +200,28 @@ describe("VjClipFavoriteButton", () => {
   });
 
   it("the card plays the preview on a long-press and keeps the clip closed", async () => {
+    // jsdom counts a finger's focus as :focus-visible, which keeps the
+    // keyboard preview on; browsers show focus-visible for keys only.
+    const nativeMatches = Object.getOwnPropertyDescriptor(
+      Element.prototype,
+      "matches",
+    )?.value as (this: Element, selectors: string) => boolean;
+    const matchesSpy = vi
+      .spyOn(Element.prototype, "matches")
+      .mockImplementation(function matchesWithoutPointerFocus(
+        this: Element,
+        selectors: string,
+      ) {
+        return selectors === ":focus-visible"
+          ? false
+          : nativeMatches.call(this, selectors);
+      });
     const onEdit = vi.fn();
     const user = userEvent.setup();
     const { container } = renderCard(buildClip(), { onEdit });
-    const editButton = screen.getByRole("button", { name: "Edit Neon grid" });
+    const editButton = await screen.findByRole("button", {
+      name: "Edit Neon grid",
+    });
 
     await user.pointer({ keys: "[TouchA>]", target: editButton });
     await waitFor(() =>
@@ -216,6 +234,7 @@ describe("VjClipFavoriteButton", () => {
 
     await waitFor(() => expect(container.querySelector("video")).toBeNull());
     expect(onEdit).not.toHaveBeenCalled();
+    matchesSpy.mockRestore();
   });
 
   it("the card keeps the still thumbnail for a clip with no preview yet", async () => {

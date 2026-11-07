@@ -51,13 +51,16 @@ const LITERAL_CALL = new RegExp(
   "g",
 );
 
-/** Every `.ts`/`.tsx` file under `src`, tests included. */
+/** Every `.ts`/`.tsx` source file under `src`. Test files are left out: a
+ *  unit test names a fixture slug for a mocked API, and that slug is a live
+ *  backend slug in the test's world with no demo entry to resolve to. */
 function sourceFiles(directory: string): string[] {
   const found: string[] = [];
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
     const fullPath = `${directory}/${entry.name}`;
     if (entry.isDirectory()) found.push(...sourceFiles(fullPath));
-    else if (/\.tsx?$/.test(entry.name)) found.push(fullPath);
+    else if (/\.tsx?$/.test(entry.name) && !/\.test\.tsx?$/.test(entry.name))
+      found.push(fullPath);
   }
   return found;
 }

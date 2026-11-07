@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { I18nProvider } from "../../../app/providers/I18nProvider";
 import { ApiError } from "../../../shared/api/client";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { useWithdrawJoinRequestWithFeedback } from "./useWithdrawJoinRequestWithFeedback";
 
 /**
@@ -46,7 +47,7 @@ function settleWith(outcome: { error?: Error }) {
   );
 }
 
-function withdrawOnce() {
+async function withdrawOnce() {
   const onSettled = vi.fn();
   const queryClient = new QueryClient();
   const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
@@ -61,6 +62,9 @@ function withdrawOnce() {
     () => useWithdrawJoinRequestWithFeedback("closed-one"),
     { wrapper },
   );
+  // The toast copy is read when the mutation settles, so the catalog has to
+  // be resident before the withdraw fires.
+  await awaitCatalog("communities");
   act(() => result.current.withdraw(onSettled));
   return { onSettled, invalidateSpy };
 }
@@ -71,10 +75,10 @@ describe("useWithdrawJoinRequestWithFeedback", () => {
     toastSpy.mockClear();
   });
 
-  it("a withdrawal toasts done", () => {
+  it("a withdrawal toasts done", async () => {
     settleWith({});
 
-    const { onSettled } = withdrawOnce();
+    const { onSettled } = await withdrawOnce();
 
     expect(toastSpy).toHaveBeenCalledWith("Request withdrawn.", "success");
     expect(onSettled).toHaveBeenCalledTimes(1);
@@ -82,7 +86,7 @@ describe("useWithdrawJoinRequestWithFeedback", () => {
 
   // The declined line carries the server's reapply date, so the applicant
   // knows when asking again becomes possible.
-  it("an already-answered 409 toasts the reapply date", () => {
+  it("an already-answered 409 toasts the reapply date", async () => {
     settleWith({
       error: new ApiError(409, "Conflict", {
         code: "JOIN_REQUEST_ALREADY_ANSWERED",
@@ -90,7 +94,7 @@ describe("useWithdrawJoinRequestWithFeedback", () => {
       }),
     });
 
-    const { onSettled, invalidateSpy } = withdrawOnce();
+    const { onSettled, invalidateSpy } = await withdrawOnce();
 
     expect(toastSpy).toHaveBeenCalledTimes(1);
     expect(toastSpy).toHaveBeenCalledWith(
@@ -112,7 +116,7 @@ describe("useWithdrawJoinRequestWithFeedback", () => {
 
   // The server's "already a member" 409 carries no code, only Nest's default
   // body, so any uncoded 409 means the approval landed first.
-  it("an already-approved 409 toasts that they are in", () => {
+  it("an already-approved 409 toasts that they are in", async () => {
     settleWith({
       error: new ApiError(409, "Conflict", {
         statusCode: 409,
@@ -121,7 +125,7 @@ describe("useWithdrawJoinRequestWithFeedback", () => {
       }),
     });
 
-    const { invalidateSpy } = withdrawOnce();
+    const { invalidateSpy } = await withdrawOnce();
 
     expect(toastSpy).toHaveBeenCalledWith(
       "Your request was approved first. You are in.",
@@ -135,13 +139,13 @@ describe("useWithdrawJoinRequestWithFeedback", () => {
     });
   });
 
-  it("any other failure toasts the generic error", () => {
+  it("any other failure toasts its own cause", async () => {
     settleWith({ error: new ApiError(500, "Server error", {}) });
 
-    const { onSettled, invalidateSpy } = withdrawOnce();
+    const { onSettled, invalidateSpy } = await withdrawOnce();
 
     expect(toastSpy).toHaveBeenCalledWith(
-      "Something went wrong. Try again in a moment.",
+      "Our servers hit an error on our side. Give it a moment and try again.",
       "error",
     );
     expect(onSettled).toHaveBeenCalledTimes(1);

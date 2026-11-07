@@ -107,6 +107,9 @@ describe("StudioLandingArtists", () => {
 
   it("links a member's card name to the persona page, one link per card", async () => {
     setCards([cardOf("one"), cardOf("two", {}, "")]);
+    // A member is signed in only through the demo session here: live mode
+    // has no backend to confirm GET /auth/me.
+    mocks.isDemo = true;
     renderSection();
     const linkedCard = (
       await screen.findByRole("heading", { level: 3, name: "Artist one" })

@@ -9,6 +9,7 @@ import {
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { mailboxAttributionCause } from "./messageErrorCopy";
 import {
   MAILBOXES_QUERY_KEY_PREFIX,
   type MailboxSummary,
@@ -139,6 +140,9 @@ export function useMailboxAttribution(mailbox: MailboxSummary) {
     unknown,
     { change: AttributionChange; previous: MailboxAttribution }
   >({
+    // The mutation's own `onError` toasts the cause, so the app-wide handler
+    // stays quiet instead of stacking a second toast.
+    meta: { silentError: true },
     mutationFn: ({ change }) =>
       demoMode ? Promise.resolve(null) : requestFor(identityId, change),
     onSuccess: (response) => {
@@ -161,12 +165,8 @@ export function useMailboxAttribution(mailbox: MailboxSummary) {
       ) {
         refreshMailboxes(queryClient);
       }
-      showToast(
-        errorCode === "IDENTITY_STAFF_NAMES_LOCKED"
-          ? t("messages:mailbox.settings.unlinkedPersonaError")
-          : t("messages:mailbox.settings.error"),
-        "error",
-      );
+      const cause = mailboxAttributionCause(error);
+      showToast(t(cause.key, cause.values), "error");
     },
   });
 

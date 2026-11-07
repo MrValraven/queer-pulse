@@ -5,6 +5,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMyHousingListings } from "./api/useMyHousingListings";
+import { MY_HOUSING_LISTING_OVERRIDES, failureToast } from "./economyErrorCopy";
 import {
   useDeleteHousingListing,
   useMyHousingListingAction,
@@ -49,8 +50,16 @@ export function MyHousingListingsPage() {
     setBusyRef(ref);
     action.mutate(input, {
       onSuccess: () => showToast(t(toastKey), "success"),
-      onError: () =>
-        showToast(t("economy:myHousingListings.toast.error"), "error"),
+      onError: (error) =>
+        showToast(
+          failureToast(
+            error,
+            t,
+            "economy:myHousingListings.toast.errorTitle",
+            MY_HOUSING_LISTING_OVERRIDES,
+          ),
+          "error",
+        ),
       onSettled: () => setBusyRef(null),
     });
   };
@@ -63,8 +72,16 @@ export function MyHousingListingsPage() {
         showToast(t("economy:myHousingListings.toast.deleted"), "success");
         setDeletingRef(null);
       },
-      onError: () => {
-        showToast(t("economy:myHousingListings.toast.error"), "error");
+      onError: (error) => {
+        showToast(
+          failureToast(
+            error,
+            t,
+            "economy:myHousingListings.toast.deleteErrorTitle",
+            MY_HOUSING_LISTING_OVERRIDES,
+          ),
+          "error",
+        );
         setDeletingRef(null);
       },
     });

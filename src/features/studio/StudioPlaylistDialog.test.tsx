@@ -7,6 +7,7 @@ import {
 } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { toPlaylistView } from "./api/studio.adapters";
 import {
   demoStudioPlaylist,
@@ -72,18 +73,19 @@ beforeEach(() => {
   resetDemoPlaylists();
 });
 
-function renderCreate(onSaved = vi.fn()) {
+async function renderCreate(onSaved = vi.fn()) {
   render(
     <TestProviders>
       <StudioPlaylistDialog mode="create" onClose={vi.fn()} onSaved={onSaved} />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
   return onSaved;
 }
 
 describe("StudioPlaylistDialog", () => {
   it("creates a private playlist shown as the member by default", async () => {
-    const onSaved = renderCreate();
+    const onSaved = await renderCreate();
     fireEvent.change(screen.getByRole("textbox", { name: /name/i }), {
       target: { value: "  Night bus  " },
     });
@@ -97,7 +99,7 @@ describe("StudioPlaylistDialog", () => {
   });
 
   it("credits a persona and says a connections-only playlist stays off its page", async () => {
-    const onSaved = renderCreate();
+    const onSaved = await renderCreate();
     fireEvent.change(screen.getByRole("textbox", { name: /name/i }), {
       target: { value: "For the group chat" },
     });
@@ -115,9 +117,9 @@ describe("StudioPlaylistDialog", () => {
     });
   });
 
-  it("hides Show as for a member with no persona", () => {
+  it("hides Show as for a member with no persona", async () => {
     control.hasNoPersona = true;
-    renderCreate();
+    await renderCreate();
     expect(
       screen.queryByRole("group", { name: "Show as" }),
     ).not.toBeInTheDocument();
@@ -127,7 +129,7 @@ describe("StudioPlaylistDialog", () => {
   });
 
   it("refuses a blank name", async () => {
-    const onSaved = renderCreate();
+    const onSaved = await renderCreate();
     fireEvent.change(screen.getByRole("textbox", { name: /name/i }), {
       target: { value: "   " },
     });
@@ -140,7 +142,7 @@ describe("StudioPlaylistDialog", () => {
   });
 
   it("moves focus to the name field after a blank submit", async () => {
-    renderCreate();
+    await renderCreate();
     const createButton = screen.getByRole("button", {
       name: "Create playlist",
     });
@@ -153,7 +155,7 @@ describe("StudioPlaylistDialog", () => {
   });
 
   it("sends only the credit when that is all the member changed", async () => {
-    const onSaved = renderEdit("demo-playlist-kitchen-tapes");
+    const onSaved = await renderEdit("demo-playlist-kitchen-tapes");
     fireEvent.click(screen.getByRole("radio", { name: /mariana sol/i }));
     fireEvent.click(screen.getByRole("button", { name: "Save details" }));
     await waitFor(() => expect(onSaved).toHaveBeenCalled());
@@ -164,7 +166,7 @@ describe("StudioPlaylistDialog", () => {
 
   it("shows You for a saved persona missing from the list and keeps its credit", async () => {
     control.shouldSwapPersona = true;
-    const onSaved = renderEdit("demo-playlist-cartas-que-voltam");
+    const onSaved = await renderEdit("demo-playlist-cartas-que-voltam");
     expect(screen.getByRole("radio", { name: "You" })).toBeChecked();
     fireEvent.change(screen.getByRole("textbox", { name: /name/i }), {
       target: { value: "Cartas novas" },
@@ -176,8 +178,8 @@ describe("StudioPlaylistDialog", () => {
     });
   });
 
-  it("names each radio by its title and describes it by its hint", () => {
-    renderCreate();
+  it("names each radio by its title and describes it by its hint", async () => {
+    await renderCreate();
     expect(
       screen.getByRole("radio", { name: "Private" }),
     ).toHaveAccessibleDescription("Only you");
@@ -186,7 +188,7 @@ describe("StudioPlaylistDialog", () => {
 
 describe("StudioPlaylistDialog, collaborative playlists", () => {
   it("lets an editor change the name and description only", async () => {
-    const onSaved = renderEdit("demo-playlist-tour-diary");
+    const onSaved = await renderEdit("demo-playlist-tour-diary");
     expect(
       screen.queryByRole("group", { name: "Show as" }),
     ).not.toBeInTheDocument();
@@ -216,6 +218,7 @@ describe("StudioPlaylistDialog, collaborative playlists", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     rerender(
       <TestProviders>
         <StudioPlaylistDialog
@@ -237,7 +240,7 @@ describe("StudioPlaylistDialog, collaborative playlists", () => {
   });
 
   it("asks before a credit change removes editors, then sends the same edit with the flag", async () => {
-    const onSaved = renderEdit("demo-playlist-cartas-que-voltam");
+    const onSaved = await renderEdit("demo-playlist-cartas-que-voltam");
     fireEvent.click(screen.getByRole("radio", { name: "You" }));
     fireEvent.click(screen.getByRole("button", { name: "Save details" }));
     const confirm = await screen.findByRole("dialog", {
@@ -262,7 +265,7 @@ describe("StudioPlaylistDialog, collaborative playlists", () => {
   });
 
   it("keeps the playlist as it was when the owner cancels", async () => {
-    const onSaved = renderEdit("demo-playlist-cartas-que-voltam");
+    const onSaved = await renderEdit("demo-playlist-cartas-que-voltam");
     fireEvent.click(screen.getByRole("radio", { name: "You" }));
     fireEvent.click(screen.getByRole("button", { name: "Save details" }));
     const confirm = await screen.findByRole("dialog", {
@@ -283,7 +286,7 @@ describe("StudioPlaylistDialog, collaborative playlists", () => {
   });
 
   it("tells the owner a persona playlist for connections stays off its page when changing who can open it", async () => {
-    renderEdit("demo-playlist-cartas-que-voltam", vi.fn(), "visibility");
+    await renderEdit("demo-playlist-cartas-que-voltam", vi.fn(), "visibility");
     fireEvent.click(screen.getByRole("radio", { name: /connections only/i }));
     expect(
       await screen.findByText(
@@ -293,7 +296,7 @@ describe("StudioPlaylistDialog, collaborative playlists", () => {
   });
 });
 
-function renderEdit(
+async function renderEdit(
   playlistId: string,
   onSaved = vi.fn(),
   mode: "edit" | "visibility" = "edit",
@@ -308,5 +311,6 @@ function renderEdit(
       />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
   return onSaved;
 }

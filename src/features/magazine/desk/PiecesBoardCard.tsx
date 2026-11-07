@@ -1,26 +1,14 @@
-import { useId, type MouseEvent } from "react";
-import { FiClock } from "react-icons/fi";
-import { Avatar, Button } from "../../../shared/components/ui";
-import { FormatIcon } from "./FormatBadge";
-import { DeskToneDot } from "./DeskToneDot";
+import { useId } from "react";
 import { describeDue } from "./deskDue";
-import {
-  describeWaitingOn,
-  isWaitingOnViewer,
-  pieceHolder,
-  waitingOnLabel,
-} from "./deskWaitingOn";
-import { isFreshInStage, stageAge } from "./deskStageAge";
-import { pieceNextAction, type PieceNextAction } from "./pieceNextAction";
-import { PiecesBoardStagePicker } from "./PiecesBoardStagePicker";
-import { viewStageLabelKey } from "./stageLabels";
+import { isWaitingOnViewer } from "./deskWaitingOn";
+import type { PieceNextAction } from "./pieceNextAction";
+import { PiecesBoardCardTop } from "./PiecesBoardCardTop";
+import { PiecesBoardCardMeta } from "./PiecesBoardCardMeta";
+import { PiecesBoardCardStageAge } from "./PiecesBoardCardStageAge";
+import { PiecesBoardCardControls } from "./PiecesBoardCardControls";
 import type { BoardCardDragProps } from "./useBoardDrag";
 import type { DeskTrack } from "./deskTrack";
-import { useMagazineEditors } from "../api/useMagazineEditors";
-import { initialsFromName } from "../../../shared/lib/initials";
 import { cx } from "../../../shared/lib/cx";
-import { useTranslation } from "../../../shared/i18n/useTranslation";
-import type { UnpublishLandingStage } from "../api/piecePublish.api";
 import type { Piece, Stage } from "../data/desk.data";
 import styles from "./PiecesBoard.module.css";
 
@@ -38,12 +26,8 @@ export interface PiecesBoardCardProps {
   onMove: (piece: Piece, stage: Stage) => void;
   /** Runs the card's next-action button; without it the button opens the piece. */
   onNextAction?: (piece: Piece, action: PieceNextAction) => void;
-  /** Gives a Published card its unpublish buttons (see the stage picker). */
-  onUnpublish?: (piece: Piece, stage: UnpublishLandingStage) => void;
-}
-
-function stopControlsClick(event: MouseEvent<HTMLDivElement>) {
-  event.stopPropagation();
+  /** Gives a Published card its Unpublish button (see the stage picker). */
+  onUnpublish?: (piece: Piece) => void;
 }
 
 /**
@@ -66,37 +50,9 @@ export function PiecesBoardCard({
   onNextAction,
   onUnpublish,
 }: PiecesBoardCardProps) {
-  const { t } = useTranslation();
   const titleId = useId();
   const due = describeDue(piece, today);
-  const rawAge = stageAge(piece, today);
-  const age = rawAge && !isFreshInStage(rawAge) ? rawAge : null;
-  const nextAction = pieceNextAction(piece, track);
-  const { editors } = useMagazineEditors();
-  // The table's "Waiting on" rule: "You" for the viewer's own piece, a
-  // colleague by first name, nothing when nobody holds it.
-  const wait =
-    pieceHolder(piece) === "nobody"
-      ? null
-      : describeWaitingOn(piece, me ?? "", editors);
   const isYourTurn = isWaitingOnViewer(piece, me ?? "");
-  const dueText =
-    due.kind === "relative" && due.labelKey
-      ? t(due.labelKey, due.values)
-      : due.kind === "raw"
-        ? due.text
-        : null;
-  const stageAgeAccessibleText = age
-    ? t(
-        age.isStalled
-          ? "magazine:desk.stageAge.stalled"
-          : "magazine:desk.stageAge.long",
-        { count: age.days, stage: t(viewStageLabelKey(piece.stage)) },
-      )
-    : null;
-
-  const runNextAction = (action: PieceNextAction) =>
-    onNextAction ? onNextAction(piece, action) : onOpen(piece);
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- the title <button> is the card's keyboard path for opening; this onClick only widens the mouse target to the whole card.
@@ -108,23 +64,20 @@ export function PiecesBoardCard({
         !dragProps.draggable && styles.cardFixed,
       )}
       data-dragging={isDragging}
+      data-piece-surface=""
       {...dragProps}
       onClick={() => onOpen(piece)}
     >
-      <div className={styles.cardTop}>
-        <FormatIcon format={piece.format} />
-        {wait && (
-          <span className={styles.waiting}>
-            <DeskToneDot tone={wait.tone} />
-            {waitingOnLabel(wait, t)}
-          </span>
-        )}
-      </div>
+      <PiecesBoardCardTop piece={piece} viewerId={me ?? ""} />
       <h4 className={styles.cardTitle}>
         <button
           type="button"
           id={titleId}
           className={styles.titleButton}
+          // Lets the desk find this title again after a move (see
+          // `deskPieceFocus.ts`), wherever the piece lands.
+          data-piece-id={piece.id}
+          data-piece-stage={piece.stage}
           onClick={(event) => {
             event.stopPropagation();
             onOpen(piece);
@@ -133,68 +86,18 @@ export function PiecesBoardCard({
           {piece.title}
         </button>
       </h4>
-      <div className={styles.cardMeta}>
-        {piece.byline ? (
-          <>
-            {/* Plum for both formats: coral stays the Write action's. */}
-            <Avatar
-              initials={initialsFromName(piece.byline)}
-              tint="plum"
-              size={20}
-            />
-            <span className={styles.byline}>{piece.byline}</span>
-          </>
-        ) : (
-          <span className={styles.noWriter}>
-            {t("magazine:desk.pieceRow.noWriter")}
-          </span>
-        )}
-        {dueText && (
-          <span className={cx(styles.due, due.isLate && styles.dueLate)}>
-            {dueText}
-          </span>
-        )}
-      </div>
-      {age && (
-        <div
-          className={cx(
-            styles.stageAge,
-            age.isStalled && styles.stageAgeStalled,
-          )}
-        >
-          {age.isStalled && (
-            <FiClock aria-hidden="true" className={styles.stageAgeIcon} />
-          )}
-          <span aria-hidden="true">
-            {t("magazine:desk.stageAge.short", { days: age.days })}
-          </span>
-          <span className="visuallyHidden">{stageAgeAccessibleText}</span>
-        </div>
-      )}
-      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- onClick only stops the controls' clicks from bubbling to the card's open handler; the controls own their own focus and keys. */}
-      <div
-        className={styles.cardControls}
-        data-drag-block
-        onClick={stopControlsClick}
-      >
-        {nextAction && (
-          <Button
-            variant="ghost"
-            size="sm"
-            aria-describedby={titleId}
-            onClick={() => runNextAction(nextAction)}
-          >
-            {t(nextAction.labelKey)}
-          </Button>
-        )}
-        <PiecesBoardStagePicker
-          piece={piece}
-          stages={stages}
-          onMove={onMove}
-          onUnpublish={onUnpublish}
-          titleId={titleId}
-        />
-      </div>
+      <PiecesBoardCardMeta piece={piece} due={due} />
+      <PiecesBoardCardStageAge piece={piece} today={today} />
+      <PiecesBoardCardControls
+        piece={piece}
+        stages={stages}
+        track={track}
+        titleId={titleId}
+        onOpen={onOpen}
+        onMove={onMove}
+        onNextAction={onNextAction}
+        onUnpublish={onUnpublish}
+      />
     </div>
   );
 }

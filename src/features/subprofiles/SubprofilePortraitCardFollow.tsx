@@ -2,7 +2,7 @@ import { FiUserCheck, FiUserPlus } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFollow } from "./api/useFollow";
-import { personaFollowErrorKey } from "./api/personaFollowError";
+import { personaFollowErrorCopy } from "./api/personaFollowError";
 import styles from "./SubprofilePortraitCard.module.css";
 
 export interface SubprofilePortraitCardFollowProps {
@@ -40,7 +40,8 @@ export function SubprofilePortraitCardFollow({
     mutation
       .mutateAsync({ currentFollowerCount: followerCount })
       .catch((error: unknown) => {
-        showToast(t(personaFollowErrorKey(error)), "error");
+        const cause = personaFollowErrorCopy(error);
+        showToast(t(cause.key, cause.values), "error");
       });
   }
 

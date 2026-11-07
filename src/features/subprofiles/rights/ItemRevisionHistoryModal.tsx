@@ -4,10 +4,10 @@ import { Button, Modal } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { formatDate } from "../../../shared/lib/date";
-import { isAccountRestricted } from "../../../shared/api/errorMessage";
 import type { SubprofileSection } from "../api/subprofiles.api";
 import type { SubprofileView } from "../api/subprofiles.adapters";
 import { isPersonaEditConflict } from "../api/personaEditConflict";
+import { itemRevisionRestoreErrorMessage } from "../personaActionErrors";
 import type { EditorEditVersionControls } from "../subprofileEditorContext";
 import { PoemBlocksView } from "../poem/PoemBlocksView";
 import { normalizePoemVersions } from "../poem/poemModel";
@@ -132,14 +132,7 @@ export function ItemRevisionHistoryModal({
       // open so they can retry, same shape as `ProtectWorkSection`'s
       // clipboard/record try/catch. Deliberately does NOT call
       // onRestored/onClose here.
-      showToast(
-        t(
-          isAccountRestricted(error)
-            ? "shared:apiError.accountRestricted"
-            : "subprofiles:history.restoreFailed",
-        ),
-        "error",
-      );
+      showToast(itemRevisionRestoreErrorMessage(error, t), "error");
       return;
     }
     // Before `onRestored` reseeds the section, so the next Save carries the

@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
 import type { AddMonthRow } from "./addMonthState";
 import { AddMonthRowPhoto } from "./AddMonthRowPhoto";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 
 vi.mock("../fields/CoverUpload", () => ({
   CoverUpload: ({
@@ -46,8 +47,8 @@ const LIVE_PHOTO = {
   previewUrl: "blob:row-photo",
 };
 
-function renderPhoto(row: Partial<AddMonthRow> = {}) {
-  return render(
+async function renderPhoto(row: Partial<AddMonthRow> = {}) {
+  const view = render(
     <TestProviders>
       <h3 id="row-heading">Sat 7 Nov</h3>
       <AddMonthRowPhoto
@@ -58,6 +59,8 @@ function renderPhoto(row: Partial<AddMonthRow> = {}) {
       />
     </TestProviders>,
   );
+  await awaitCatalog("gatherings");
+  return view;
 }
 
 describe("AddMonthRowPhoto", () => {
@@ -65,8 +68,8 @@ describe("AddMonthRowPhoto", () => {
     dispatch.mockClear();
   });
 
-  it("shows the shared cover marked Shared cover", () => {
-    const { container } = renderPhoto();
+  it("shows the shared cover marked Shared cover", async () => {
+    const { container } = await renderPhoto();
     expect(screen.getByText("Shared cover")).toBeInTheDocument();
     expect(
       container.querySelector(`img[src="${SHARED_COVER_URL}"]`),
@@ -77,7 +80,7 @@ describe("AddMonthRowPhoto", () => {
   });
 
   it("closing the photo picker without a pick keeps the shared cover", async () => {
-    renderPhoto();
+    await renderPhoto();
     await userEvent.click(
       screen.getByRole("button", { name: "Use a different photo" }),
     );
@@ -89,7 +92,7 @@ describe("AddMonthRowPhoto", () => {
   });
 
   it("stores the picked key and its preview for this date", async () => {
-    renderPhoto();
+    await renderPhoto();
     await userEvent.click(
       screen.getByRole("button", { name: "Use a different photo" }),
     );
@@ -108,7 +111,7 @@ describe("AddMonthRowPhoto", () => {
   });
 
   it("keeps the upload open after a pick, so it keeps showing the photo", async () => {
-    const { rerender } = renderPhoto();
+    const { rerender } = await renderPhoto();
     await userEvent.click(
       screen.getByRole("button", { name: "Use a different photo" }),
     );
@@ -139,8 +142,8 @@ describe("AddMonthRowPhoto", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows Photo added for a preview this card never made", () => {
-    renderPhoto({
+  it("shows Photo added for a preview this card never made", async () => {
+    await renderPhoto({
       photo: {
         key: "uploads/row-photo.jpg",
         previewUrl: "https://cdn.example/x.jpg",
@@ -150,15 +153,19 @@ describe("AddMonthRowPhoto", () => {
     expect(screen.queryByTestId("cover-upload")).not.toBeInTheDocument();
   });
 
-  it("shows Photo added for a restored photo with no preview", () => {
-    renderPhoto({ photo: { key: "uploads/row-photo.jpg", previewUrl: null } });
+  it("shows Photo added for a restored photo with no preview", async () => {
+    await renderPhoto({
+      photo: { key: "uploads/row-photo.jpg", previewUrl: null },
+    });
     expect(screen.getByText("Photo added")).toBeInTheDocument();
     expect(screen.queryByText("Shared cover")).not.toBeInTheDocument();
     expect(screen.queryByTestId("cover-upload")).not.toBeInTheDocument();
   });
 
   it("opens the upload empty for a restored key, which is no image address", async () => {
-    renderPhoto({ photo: { key: "uploads/row-photo.jpg", previewUrl: null } });
+    await renderPhoto({
+      photo: { key: "uploads/row-photo.jpg", previewUrl: null },
+    });
     await userEvent.click(screen.getByRole("button", { name: "Change photo" }));
     expect(screen.getByTestId("cover-upload")).toHaveAttribute(
       "data-value",
@@ -167,7 +174,7 @@ describe("AddMonthRowPhoto", () => {
   });
 
   it("Use the shared cover clears this date's photo", async () => {
-    renderPhoto({ photo: LIVE_PHOTO });
+    await renderPhoto({ photo: LIVE_PHOTO });
     await userEvent.click(
       screen.getByRole("button", { name: "Use the shared cover" }),
     );

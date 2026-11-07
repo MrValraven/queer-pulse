@@ -13,6 +13,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { RosterMember } from "./community.model";
 import { photoOf } from "./communityPeople";
 import { useRosterSearch } from "./api/useRoster";
+import { communityErrorText } from "./communityErrors";
 import { useTransferOwnership } from "./api/useCommunityMutations";
 
 /** How long typing has to settle before the roster search reaches the server.
@@ -172,8 +173,7 @@ export function TransferOwnershipModal({
           );
           onClose();
         },
-        onError: () =>
-          showToast(t("communities:detail.dangerZone.errorToast"), "error"),
+        onError: (error) => showToast(communityErrorText(t, error), "error"),
       },
     );
   };

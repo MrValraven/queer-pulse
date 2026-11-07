@@ -58,6 +58,8 @@ export function useDeleteMyCard() {
   const client = useQueryClient();
   const { demoMode } = useDemoMode();
   return useMutation({
+    // The caller toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: (cardId: string) =>
       demoMode ? Promise.resolve({ ok: true as const }) : deleteMyCard(cardId),
     onSuccess: () => {
@@ -79,6 +81,8 @@ export function useUpdateMyCard() {
   const client = useQueryClient();
   const { demoMode } = useDemoMode();
   return useMutation({
+    // The caller toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: ({
       cardId,
       ...settings
@@ -113,6 +117,8 @@ export function useRenewMyCard() {
   const client = useQueryClient();
   const { demoMode } = useDemoMode();
   return useMutation({
+    // The caller toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: (cardId: string): Promise<RenewedCardDTO> =>
       demoMode
         ? Promise.resolve({

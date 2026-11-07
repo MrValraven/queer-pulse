@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import { ONLINE_HOOD_VALUE } from "./dateNotes.data";
 import { PlaceFields, type PlaceFieldsForm } from "./PlaceFields";
@@ -29,21 +30,23 @@ function buildPlaceForm(
 }
 
 describe("PlaceFields with a narrowed form", () => {
-  it("renders the address fields from a plain object holding only the place members", () => {
+  it("renders the address fields from a plain object holding only the place members", async () => {
     render(
       <TestProviders>
         <PlaceFields form={buildPlaceForm()} />
       </TestProviders>,
     );
+    await awaitCatalog("gatherings");
     expect(screen.getByDisplayValue("Rua 1")).toBeInTheDocument();
   });
 
-  it("asks for the join link when the hood is Online", () => {
+  it("asks for the join link when the hood is Online", async () => {
     render(
       <TestProviders>
         <PlaceFields form={buildPlaceForm({ hood: ONLINE_HOOD_VALUE })} />
       </TestProviders>,
     );
+    await awaitCatalog("gatherings");
     expect(screen.getByRole("textbox", { name: /link/i })).toBeInTheDocument();
   });
 });

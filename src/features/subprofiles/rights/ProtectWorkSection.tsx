@@ -57,8 +57,9 @@ export function ProtectWorkSection({
     action: (record: string) => void | Promise<void>,
   ) {
     setIsBuildingRecord(true);
+    let record: string;
     try {
-      const record = await buildAuthorshipRecord({
+      record = await buildAuthorshipRecord({
         item,
         authorName,
         labels: {
@@ -70,12 +71,19 @@ export function ProtectWorkSection({
           canonicalForm: t("subprofiles:protect.record.canonicalForm"),
         },
       });
+    } catch {
+      // Building the record hashes the work with Web Crypto, which the browser
+      // withholds outside a secure (https) page.
+      showToast(t("subprofiles:protect.failedBuild"), "error");
+      setIsBuildingRecord(false);
+      return;
+    }
+    try {
       await action(record);
     } catch {
-      // Web Crypto unavailable (non-secure context) or the clipboard write
-      // was denied: nothing actionable beyond letting the owner know and
-      // retry, same shape as SubprofileShareCard's clipboard try/catch.
-      showToast(t("subprofiles:protect.failed"), "error");
+      // The record was built; the browser refused what came next (the
+      // clipboard write was denied, or the download was blocked).
+      showToast(t("subprofiles:protect.failedAction"), "error");
     } finally {
       setIsBuildingRecord(false);
     }

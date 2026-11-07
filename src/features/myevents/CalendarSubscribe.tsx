@@ -6,6 +6,7 @@ import { getCalendarFeedUrl } from "./api/calendarFeed.api";
 import { useMyEvents } from "./MyEventsContext";
 import { isInMonth } from "./myEvents.helpers";
 import { downloadICS } from "./myEvents.ics";
+import { myEventsActionErrorMessage } from "./myEvents.rsvpErrors";
 
 /** Subscribe-to-feed and export-this-month buttons under the calendar. */
 export function CalendarSubscribe() {
@@ -24,16 +25,24 @@ export function CalendarSubscribe() {
       toast(t("myevents:calSubscribe.feedToast"), "success");
       return;
     }
+    let url: string;
     try {
-      const url = await getCalendarFeedUrl();
-      if (typeof navigator !== "undefined" && navigator.clipboard) {
-        await navigator.clipboard.writeText(url);
-        toast(t("myevents:calSubscribe.feedToast"), "success");
-      } else {
-        toast(t("myevents:calSubscribe.feedCopyFailToast"), "info");
-      }
+      url = await getCalendarFeedUrl();
+    } catch (error) {
+      // The feed link was never made: name why (offline, signed out, a fault).
+      toast(myEventsActionErrorMessage(error, t), "error");
+      return;
+    }
+    if (typeof navigator === "undefined" || !navigator.clipboard) {
+      toast(t("myevents:calSubscribe.feedCopyFailToast"), "info");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      toast(t("myevents:calSubscribe.feedToast"), "success");
     } catch {
-      toast(t("myevents:calSubscribe.feedErrorToast"), "info");
+      // The browser refused the clipboard write; the link itself was made.
+      toast(t("myevents:calSubscribe.feedCopyFailToast"), "info");
     }
   };
   const exportMonth = () => {

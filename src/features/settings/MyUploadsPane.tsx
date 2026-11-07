@@ -11,6 +11,7 @@ import {
 } from "../../shared/media/mediaReferences";
 import { useMyMedia, useDeleteMyMedia } from "./api/useMyMedia";
 import type { MyMediaItem } from "./api/myMedia.api";
+import { deleteUploadErrorCopy } from "./settingsActionErrors";
 import { MyUploadThumb } from "./MyUploadThumb";
 import styles from "./MyUploadsPane.module.css";
 
@@ -72,8 +73,9 @@ export function MyUploadsPane() {
               setPending(null);
               showToast(t("settings:uploads.delete.toast.success"), "success");
             },
-            onError: () => {
-              showToast(t("settings:uploads.delete.toast.error"), "error");
+            onError: (error) => {
+              const cause = deleteUploadErrorCopy(error);
+              showToast(t(cause.key, cause.values), "error");
             },
           });
         }}

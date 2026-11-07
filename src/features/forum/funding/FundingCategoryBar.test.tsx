@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import { ForumThreadList } from "../ForumThreadList";
 import {
@@ -7,7 +8,7 @@ import {
   type FundingCategoryBarProps,
 } from "./FundingCategoryBar";
 
-function renderBar(overrides: Partial<FundingCategoryBarProps> = {}) {
+async function renderBar(overrides: Partial<FundingCategoryBarProps> = {}) {
   const props: FundingCategoryBarProps = {
     view: "all",
     onViewChange: vi.fn(),
@@ -23,12 +24,13 @@ function renderBar(overrides: Partial<FundingCategoryBarProps> = {}) {
       <FundingCategoryBar {...props} />
     </TestProviders>,
   );
+  await awaitCatalog("forum");
   return props;
 }
 
 describe("FundingCategoryBar", () => {
-  it("switches between the five views", () => {
-    const props = renderBar();
+  it("switches between the five views", async () => {
+    const props = await renderBar();
     fireEvent.click(screen.getByRole("button", { name: "Open calls" }));
     expect(props.onViewChange).toHaveBeenCalledWith("open");
     expect(
@@ -39,13 +41,13 @@ describe("FundingCategoryBar", () => {
     ).toBeInTheDocument();
   });
 
-  it("offers eligibility and scope on the call views only", () => {
-    renderBar({ view: "asks" });
+  it("offers eligibility and scope on the call views only", async () => {
+    await renderBar({ view: "asks" });
     expect(screen.queryByRole("group", { name: "Who can apply" })).toBeNull();
   });
 
-  it("toggles an eligibility value and resets the scope to anywhere", () => {
-    const props = renderBar({ view: "open", scope: "eu" });
+  it("toggles an eligibility value and resets the scope to anywhere", async () => {
+    const props = await renderBar({ view: "open", scope: "eu" });
     fireEvent.click(screen.getByRole("button", { name: /Students/ }));
     expect(props.onToggleEligibility).toHaveBeenCalledWith("students");
     fireEvent.click(screen.getByRole("button", { name: "Anywhere" }));
@@ -56,7 +58,7 @@ describe("FundingCategoryBar", () => {
 });
 
 describe("ForumThreadList in a server-ordered view", () => {
-  it("hides the sort tabs the server ignores", () => {
+  it("hides the sort tabs the server ignores", async () => {
     const noop = vi.fn();
     render(
       <TestProviders>
@@ -81,6 +83,7 @@ describe("ForumThreadList in a server-ordered view", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("forum");
     expect(screen.queryByRole("group", { name: "Sort posts" })).toBeNull();
   });
 });

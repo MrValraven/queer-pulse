@@ -6,7 +6,9 @@ import {
   within,
 } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { MotionProvider } from "../../app/providers/MotionProvider";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { resetDemoPurchases } from "./api/studioDemoPurchaseStore";
 import type { StudioLoadState } from "./api/studioLoadState";
 import type { StudioBuyerPurchaseView } from "./api/studioPurchases.adapters";
@@ -56,22 +58,31 @@ function pagerWith(
   };
 }
 
-function renderList({
+async function renderList({
   status,
   isStudioContext,
+  isAnimated = false,
 }: {
   status: "all" | "confirmed";
   isStudioContext: boolean;
+  /** Under the app's MotionProvider, whose LazyMotion features TestProviders
+   *  leaves out, a folding panel runs its exit and then leaves the row. */
+  isAnimated?: boolean;
 }) {
-  return render(
+  const list = (
+    <StudioPurchaseList
+      status={status}
+      isStudioContext={isStudioContext}
+      headingLevel={3}
+    />
+  );
+  const view = render(
     <TestProviders>
-      <StudioPurchaseList
-        status={status}
-        isStudioContext={isStudioContext}
-        headingLevel={3}
-      />
+      {isAnimated ? <MotionProvider>{list}</MotionProvider> : list}
     </TestProviders>,
   );
+  await awaitCatalog("studio");
+  return view;
 }
 
 beforeEach(() => {
@@ -81,7 +92,7 @@ beforeEach(() => {
 
 describe("StudioPurchaseList (demo)", () => {
   it("lists every purchase with its status, amount and date, newest first", async () => {
-    renderList({ status: "all", isStudioContext: true });
+    await renderList({ status: "all", isStudioContext: true });
     const list = await screen.findByRole("list", { name: "Your purchases" });
     await within(list).findByText("Cassete perdida");
     const rows = Array.from(list.children);
@@ -93,7 +104,7 @@ describe("StudioPurchaseList (demo)", () => {
   });
 
   it("shows the unlinked artist as text and keeps that purchase's downloads", async () => {
-    renderList({ status: "all", isStudioContext: true });
+    await renderList({ status: "all", isStudioContext: true });
     const row = (await screen.findByText("Cassete perdida")).closest("li")!;
     expect(within(row).getByText("by Maré Funda").closest("a")).toBeNull();
     expect(within(row).queryByRole("link")).toBeNull();
@@ -123,7 +134,11 @@ describe("StudioPurchaseList (demo)", () => {
   });
 
   it("cancels a pending claim from its row and folds it into Cancelled", async () => {
-    renderList({ status: "all", isStudioContext: true });
+    await renderList({
+      status: "all",
+      isStudioContext: true,
+      isAnimated: true,
+    });
     const row = (await screen.findByText("Último elétrico")).closest("li")!;
     expect(within(row).getByText("QP7K3F")).toBeInTheDocument();
     fireEvent.click(
@@ -143,7 +158,7 @@ describe("StudioPurchaseList (demo)", () => {
   });
 
   it("leaves Studio-only controls out of the account context", async () => {
-    renderList({ status: "confirmed", isStudioContext: false });
+    await renderList({ status: "confirmed", isStudioContext: false });
     await screen.findByText("Cassete perdida");
     expect(
       screen.queryByRole("switch", { name: "Show me on the supporter wall" }),
@@ -158,22 +173,25 @@ describe("StudioPurchaseList (demo)", () => {
   });
 
   it("reserves no empty live region in an account row, and keeps one in Studio", async () => {
-    const account = renderList({ status: "all", isStudioContext: false });
+    const account = await renderList({ status: "all", isStudioContext: false });
     const accountRow = (await screen.findByText("Último elétrico")).closest(
       "li",
     )!;
     expect(accountRow.querySelector('[role="status"]')).toBeNull();
     account.unmount();
-    renderList({ status: "all", isStudioContext: true });
+    await renderList({ status: "all", isStudioContext: true });
     const studioRow = (await screen.findByText("Último elétrico")).closest(
       "li",
     )!;
     expect(studioRow.querySelector('[role="status"]')).not.toBeNull();
   });
 
-  it("shows the empty line and a load error with its reason", () => {
+  it("shows the empty line and a load error with its reason", async () => {
     mocks.pager = pagerWith(loadStateOf());
-    const { unmount } = renderList({ status: "all", isStudioContext: true });
+    const { unmount } = await renderList({
+      status: "all",
+      isStudioContext: true,
+    });
     expect(
       screen.getByText(
         "Nothing bought yet. A release or track with a price has a Buy button on its page",
@@ -182,7 +200,7 @@ describe("StudioPurchaseList (demo)", () => {
     unmount();
 
     mocks.pager = pagerWith(loadStateOf());
-    const confirmedList = renderList({
+    const confirmedList = await renderList({
       status: "confirmed",
       isStudioContext: false,
     });
@@ -190,7 +208,7 @@ describe("StudioPurchaseList (demo)", () => {
     confirmedList.unmount();
 
     mocks.pager = pagerWith(loadStateOf({ isError: true, reason: "offline" }));
-    renderList({ status: "all", isStudioContext: true });
+    await renderList({ status: "all", isStudioContext: true });
     expect(screen.getByText("your purchases")).toBeInTheDocument();
     expect(
       screen.getByText(

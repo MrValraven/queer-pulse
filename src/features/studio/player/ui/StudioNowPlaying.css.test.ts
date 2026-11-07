@@ -58,8 +58,25 @@ describe("Now playing at phone width", () => {
     // The swipe frame names its property: a duration alone transitions all.
     expect(ruleBody(".frame")).toMatch(/transition-property:\s*transform\s*;/);
     expect(css).not.toMatch(/transition:\s*all/);
-    expect(css).not.toMatch(
-      /transition-property:\s*(?!opacity|transform|background-color|color)/,
+    // Every listed property, each one checked: colours and the stuck
+    // switcher's frosted band only repaint, nothing reflows.
+    const paintOnlyProperties = new Set([
+      "opacity",
+      "transform",
+      "background-color",
+      "color",
+      "backdrop-filter",
+    ]);
+    const transitionedProperties = [
+      ...css.matchAll(/transition-property:\s*([^;]+);/g),
+    ].flatMap(([, propertyList = ""]) =>
+      propertyList.split(",").map((property) => property.trim()),
     );
+    expect(transitionedProperties.length).toBeGreaterThan(0);
+    expect(
+      transitionedProperties.filter(
+        (property) => !paintOnlyProperties.has(property),
+      ),
+    ).toEqual([]);
   });
 });

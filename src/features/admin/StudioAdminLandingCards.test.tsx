@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../shared/api/client";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { TestProviders } from "../../test/TestProviders";
 import type { AdminStudioLandingDTO } from "./api/studioLandingAdmin.api";
 import { useAdminStudioLanding } from "./api/useStudioAdminLanding";
@@ -67,12 +68,13 @@ function Console() {
   ) : null;
 }
 
-function renderConsole() {
+async function renderConsole() {
   render(
     <TestProviders initialEntries={["/admin/studio"]}>
       <Console />
     </TestProviders>,
   );
+  await awaitCatalog("admin", "studio");
 }
 
 // The demo page holds all 6 cards; one is taken off so another can be added.
@@ -98,7 +100,7 @@ beforeEach(() => {
 describe("Studio page console: artist cards", () => {
   it("keeps Save card disabled until an artist is picked and consent is ticked", async () => {
     freeACardSlot();
-    renderConsole();
+    await renderConsole();
     fireEvent.click(
       await screen.findByRole("button", { name: "Add an artist card" }),
     );
@@ -118,7 +120,7 @@ describe("Studio page console: artist cards", () => {
   });
 
   it("counts the characters left in the quote and blocks past 240", async () => {
-    renderConsole();
+    await renderConsole();
     fireEvent.click(
       await screen.findByRole("button", {
         name: "Edit the card of Vanda Diesel",
@@ -139,7 +141,7 @@ describe("Studio page console: artist cards", () => {
 
   it("creates a card with a blank quote as null and consent true", async () => {
     freeACardSlot();
-    renderConsole();
+    await renderConsole();
     fireEvent.click(
       await screen.findByRole("button", { name: "Add an artist card" }),
     );
@@ -167,7 +169,7 @@ describe("Studio page console: artist cards", () => {
   });
 
   it("asks for consent again when editing and sends the quote with it", async () => {
-    renderConsole();
+    await renderConsole();
     fireEvent.click(
       await screen.findByRole("button", {
         name: "Edit the card of Vanda Diesel",
@@ -191,7 +193,7 @@ describe("Studio page console: artist cards", () => {
     );
   });
 
-  it("shows Not shown on a card whose persona fails eligibility", () => {
+  it("shows Not shown on a card whose persona fails eligibility", async () => {
     const landing: AdminStudioLandingDTO = demoAdminStudioLanding();
     const hidden: AdminStudioLandingDTO = {
       ...landing,
@@ -205,11 +207,12 @@ describe("Studio page console: artist cards", () => {
         <StudioAdminLandingCards landing={hidden} />
       </TestProviders>,
     );
+    await awaitCatalog("admin", "studio");
     expect(screen.getAllByText(/^Not shown/)).toHaveLength(1);
   });
 
   it("moves a card up and confirms before removing one", async () => {
-    renderConsole();
+    await renderConsole();
     fireEvent.click(
       await screen.findByRole("button", { name: "Move up: Vanda Diesel" }),
     );
@@ -242,6 +245,7 @@ describe("Studio page console: persona search", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("admin", "studio");
     const search = screen.getByRole("searchbox", { name: "Find an artist" });
     fireEvent.change(search, { target: { value: "Vanda" } });
     const hasCard = await screen.findByRole("button", {
@@ -268,7 +272,7 @@ describe("Studio page console: persona search", () => {
 
 describe("Studio page console: photos", () => {
   it("shows both held photos with Replace photo and Remove photo", async () => {
-    renderConsole();
+    await renderConsole();
     for (const altText of [
       "A performer sings into a microphone under warm stage lights while the audience sings along",
       "A choir rehearses together, singers standing close and reading from the same pages",
@@ -286,7 +290,7 @@ describe("Studio page console: photos", () => {
 
   it("shows an empty slot with No photo and Add photo", async () => {
     demoRemovePhoto("manifesto");
-    renderConsole();
+    await renderConsole();
     const manifestoTile = (
       await screen.findByRole("button", { name: /Add photo/ })
     ).closest("li");
@@ -296,7 +300,7 @@ describe("Studio page console: photos", () => {
 
   it("needs an image, both descriptions and the consent tick", async () => {
     demoRemovePhoto("manifesto");
-    renderConsole();
+    await renderConsole();
     fireEvent.click(
       await screen.findByRole("button", {
         name: "Add photo Manifesto photo",
@@ -324,7 +328,7 @@ describe("Studio page console: photos", () => {
   });
 
   it("needs the consent tick even with an image and both descriptions", async () => {
-    renderConsole();
+    await renderConsole();
     fireEvent.click(
       await screen.findByRole("button", { name: "Replace photo Hero photo" }),
     );
@@ -336,7 +340,7 @@ describe("Studio page console: photos", () => {
   });
 
   it("counts the characters left in the descriptions and the credit", async () => {
-    renderConsole();
+    await renderConsole();
     fireEvent.click(
       await screen.findByRole("button", { name: "Replace photo Hero photo" }),
     );
@@ -376,14 +380,15 @@ describe("Studio page console: photos", () => {
       }),
     ],
     [
-      "a codeless 403 from the storage ownership check",
+      "a 403 from the storage ownership check",
       new ApiError(403, "Referenced upload does not belong to you", {
         message: "Referenced upload does not belong to you",
+        code: "UPLOAD_NOT_YOURS",
       }),
     ],
   ])("names the real reason for %s", async (_label, refusal) => {
     mocks.putError = refusal;
-    renderConsole();
+    await renderConsole();
     fireEvent.click(
       await screen.findByRole("button", { name: "Replace photo Hero photo" }),
     );
@@ -403,7 +408,7 @@ describe("Studio page console: photos", () => {
   });
 
   it("confirms before removing a photo", async () => {
-    renderConsole();
+    await renderConsole();
     fireEvent.click(
       await screen.findByRole("button", { name: "Remove photo Hero photo" }),
     );

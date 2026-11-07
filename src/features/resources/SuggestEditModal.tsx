@@ -4,6 +4,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { intakeFailureToast } from "./intakeSubmitError";
 import { submitIntake } from "../../shared/api/intakes";
 import { GLOSSARY } from "./queer101.data";
 import { ResourceModal, PlumSuccess } from "./ResourceModal";
@@ -85,9 +86,9 @@ export function SuggestEditModal({
     try {
       await submitIntake("suggest_edit", payload);
       setPhase("done");
-    } catch {
+    } catch (error) {
       setPhase("form");
-      showToast(t("shared:intake.errorToast"), "error");
+      showToast(intakeFailureToast(error, t), "error");
     }
   };
 

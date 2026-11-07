@@ -11,9 +11,9 @@ import { useKeyedPhotoHandlers } from "./useKeyedPhotoHandlers";
 import styles from "./ComposePhotoGrid.module.css";
 
 // ── Up to four staged photos, each with its description ─────────────────────
-// The description is not an afterthought tucked behind a menu: it is a field
-// on the tile with a flag that says out loud whether it is still missing, so a
-// photo nobody can see is visibly unfinished rather than quietly published.
+// The description is a field on the tile, always in view, with a flag that
+// says out loud whether it is still missing, so a photo nobody can see is
+// visibly unfinished and never quietly published.
 //
 // Every control drives the `photos` controller from `useComposeThreadPage`.
 // Nothing about the order or the upload lives here.

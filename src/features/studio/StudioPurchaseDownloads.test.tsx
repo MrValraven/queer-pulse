@@ -8,6 +8,7 @@ import {
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../shared/api/client";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type {
   StudioBuyerPurchaseView,
   StudioPurchaseDownloadTrackView,
@@ -76,12 +77,14 @@ function confirmedPurchase(
   };
 }
 
-function renderDownloads(purchase: StudioBuyerPurchaseView) {
-  return render(
+async function renderDownloads(purchase: StudioBuyerPurchaseView) {
+  const view = render(
     <TestProviders>
       <StudioPurchaseDownloads purchase={purchase} />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
+  return view;
 }
 
 function downloadRejecting(error: Error) {
@@ -99,8 +102,8 @@ beforeEach(() => {
 });
 
 describe("StudioPurchaseDownloads", () => {
-  it("lists each track with its format, length and a named Download button", () => {
-    renderDownloads(
+  it("lists each track with its format, length and a named Download button", async () => {
+    await renderDownloads(
       confirmedPurchase([track("t1", "Planície", "mp3", 238, null)]),
     );
     expect(
@@ -117,8 +120,8 @@ describe("StudioPurchaseDownloads", () => {
     expect(mocks.download!.download).toHaveBeenCalledWith("p1", "t1");
   });
 
-  it("names a file still being prepared after an unlink, with no Download button on that row", () => {
-    renderDownloads(
+  it("names a file still being prepared after an unlink, with no Download button on that row", async () => {
+    await renderDownloads(
       confirmedPurchase([
         track("kept-1", "Lado A", "mp3", 200, null),
         track(
@@ -142,7 +145,7 @@ describe("StudioPurchaseDownloads", () => {
     ).toBeInTheDocument();
   });
 
-  it("names each other refusal by its code", () => {
+  it("names each other refusal by its code", async () => {
     const refusals: [StudioErrorCode, string][] = [
       [
         "studio_download_track_withheld",
@@ -158,7 +161,7 @@ describe("StudioPurchaseDownloads", () => {
       ],
       ["studio_download_track_not_ready", "This track has no audio yet"],
     ];
-    renderDownloads(
+    await renderDownloads(
       confirmedPurchase(
         refusals.map(([code], index) =>
           track(`t${index}`, `Faixa ${index}`, "mp3", 100, code),
@@ -183,28 +186,35 @@ describe("StudioPurchaseDownloads", () => {
       busyTrackKey: null,
       busyTrackKeys: new Set(),
     };
-    renderDownloads(
+    await renderDownloads(
       confirmedPurchase([
         track("t1", "Planície", "mp3", 238, null),
         track("t2", "Maré", "mp3", 190, null),
       ]),
     );
     fireEvent.click(screen.getByRole("button", { name: "Download Planície" }));
-    const alert = await screen.findByRole("alert");
+    // The toast deck keeps an empty alert region mounted, so the row's own
+    // alert is found inside the row.
+    const rows = screen.getAllByRole("listitem");
+    const alert = await within(rows[0]!).findByRole("alert");
     expect(alert).toHaveTextContent(
       "We couldn't start this download. This track is no longer on the release",
     );
-    const rows = screen.getAllByRole("listitem");
-    expect(within(rows[0]!).getByRole("alert")).toBe(alert);
     expect(within(rows[1]!).queryByRole("alert")).toBeNull();
     expect(
       within(rows[1]!).getByRole("button", { name: "Download Maré" }),
     ).toBeInTheDocument();
-    await waitFor(() => expect(screen.getAllByRole("alert")).toHaveLength(1));
+    await waitFor(() =>
+      expect(
+        screen
+          .getAllByRole("listitem")
+          .flatMap((row) => within(row).queryAllByRole("alert")),
+      ).toHaveLength(1),
+    );
   });
 
-  it("says there is nothing to download for a confirmed purchase without tracks", () => {
-    renderDownloads(confirmedPurchase([]));
+  it("says there is nothing to download for a confirmed purchase without tracks", async () => {
+    await renderDownloads(confirmedPurchase([]));
     expect(screen.getByText("Nothing to download yet")).toBeInTheDocument();
     expect(screen.queryByRole("list")).toBeNull();
   });

@@ -15,6 +15,7 @@ import { MAIN_CONTENT_ID } from "../../../shared/components/layout/SkipToContent
 import { gatheringPath } from "../../gatherings/gatheringPaths";
 import type { QuizshowClientState } from "../realtime/quizshowClientStore";
 import { QuizshowPlayPage } from "./QuizshowPlayPage";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 
 const fakeSession = vi.hoisted(() => ({
   initialState: null as QuizshowClientState | null,
@@ -168,8 +169,9 @@ function CodeProbe() {
   return <p>{`Joined ${code}`}</p>;
 }
 
-function renderPlay(path: string) {
-  return render(
+/** Renders the play page at `path` and waits for its copy to load. */
+async function renderPlay(path: string): Promise<void> {
+  render(
     <TestProviders initialEntries={[path]}>
       <ReducedMotionContext.Provider value={true}>
         <Routes>
@@ -179,6 +181,7 @@ function renderPlay(path: string) {
       </ReducedMotionContext.Provider>
     </TestProviders>,
   );
+  await awaitCatalog("quizshow");
 }
 
 beforeEach(() => {
@@ -188,6 +191,21 @@ beforeEach(() => {
   joinSpy.shouldFail = false;
   fakeSession.initialState = stateOf(sessionOf());
 });
+
+/** The component's own alert. TestProviders also mounts the toast regions,
+ *  and the assertive one carries the alert role while it is empty. */
+function findComponentAlert(): Promise<HTMLElement> {
+  return waitFor(() => {
+    const [alert, ...otherAlerts] = screen
+      .getAllByRole("alert")
+      .filter((element) => element.closest("[data-toast-region]") === null);
+    expect(otherAlerts).toHaveLength(0);
+    if (alert === undefined) {
+      throw new Error("The component rendered no alert of its own");
+    }
+    return alert;
+  });
+}
 
 describe("QuizshowPlayPage", () => {
   it("normalises a typed code and joins", async () => {
@@ -202,6 +220,7 @@ describe("QuizshowPlayPage", () => {
         </ReducedMotionContext.Provider>
       </TestProviders>,
     );
+    await awaitCatalog("quizshow");
 
     await user.type(screen.getByLabelText("Game code"), "qz7-kp4");
     await user.click(screen.getByRole("button", { name: "Join game" }));
@@ -211,13 +230,13 @@ describe("QuizshowPlayPage", () => {
 
   it("explains a code that finds no game", async () => {
     const user = userEvent.setup();
-    renderPlay("/play");
+    await renderPlay("/play");
 
     // Six characters, but 0 is never in a join code.
     await user.type(screen.getByLabelText("Game code"), "QZ7KP0");
     await user.click(screen.getByRole("button", { name: "Join game" }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await findComponentAlert()).toHaveTextContent(
       "We couldn't find a game with that code",
     );
     expect(screen.getByLabelText("Game code")).toBeInTheDocument();
@@ -225,19 +244,19 @@ describe("QuizshowPlayPage", () => {
 
   it("asks for all six characters before it looks for a game", async () => {
     const user = userEvent.setup();
-    renderPlay("/play");
+    await renderPlay("/play");
 
     await user.type(screen.getByLabelText("Game code"), "ABC");
     await user.click(screen.getByRole("button", { name: "Join game" }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await findComponentAlert()).toHaveTextContent(
       "Type all six letters and numbers",
     );
   });
 
   it("fills every cell from a pasted code", async () => {
     const user = userEvent.setup();
-    renderPlay("/play");
+    await renderPlay("/play");
 
     await user.click(screen.getByLabelText("Game code"));
     await user.paste("qz7-kp4");
@@ -249,7 +268,7 @@ describe("QuizshowPlayPage", () => {
   });
 
   it("goes straight to the name step from /play/:code", async () => {
-    renderPlay("/play/QZ7KP4");
+    await renderPlay("/play/QZ7KP4");
 
     expect(await screen.findByLabelText("Screen name")).toHaveValue("Sam");
     expect(screen.getByRole("button", { name: "I'm in" })).toBeInTheDocument();
@@ -260,7 +279,7 @@ describe("QuizshowPlayPage", () => {
       isRemoved: true,
       status: "ended",
     });
-    renderPlay("/play/QZ7KP4");
+    await renderPlay("/play/QZ7KP4");
 
     expect(
       await screen.findByText("A host removed you from this game"),
@@ -298,7 +317,7 @@ describe("QuizshowPlayPage", () => {
         },
       },
     );
-    renderPlay("/play/QZ7KP4");
+    await renderPlay("/play/QZ7KP4");
 
     expect(await screen.findByText("You finished 2 of 6")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Play again" }));
@@ -323,7 +342,7 @@ describe("QuizshowPlayPage", () => {
         ],
       }),
     );
-    renderPlay("/play/QZ7KP4");
+    await renderPlay("/play/QZ7KP4");
 
     await user.click(
       await screen.findByRole("button", {
@@ -349,7 +368,7 @@ describe("QuizshowPlayPage", () => {
       status: "refused",
       refusalCode: "quizshow_player_removed",
     });
-    renderPlay("/play/QZ7KP4");
+    await renderPlay("/play/QZ7KP4");
 
     expect(
       await screen.findByText("A host removed you from this game"),
@@ -362,9 +381,9 @@ describe("QuizshowPlayPage", () => {
   it("tries the same code again after a failure", async () => {
     const user = userEvent.setup();
     joinSpy.shouldFail = true;
-    renderPlay("/play/QZ7KP4");
+    await renderPlay("/play/QZ7KP4");
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await findComponentAlert()).toHaveTextContent(
       "Something went wrong. Try again",
     );
     expect(joinSpy.calls).toEqual(["QZ7KP4"]);
@@ -381,7 +400,7 @@ describe("QuizshowPlayPage", () => {
     fakeSession.initialState = stateOf(sessionOf({ me: ME }), {
       status: "reconnecting",
     });
-    renderPlay("/play/QZ7KP4");
+    await renderPlay("/play/QZ7KP4");
 
     expect(await screen.findByText("You're in")).toBeInTheDocument();
     expect(
@@ -392,41 +411,11 @@ describe("QuizshowPlayPage", () => {
   });
 
   it("names the page's main landmark for the skip link", async () => {
-    renderPlay("/play");
+    await renderPlay("/play");
 
     const main = await screen.findByRole("main");
     expect(main).toHaveAttribute("id", MAIN_CONTENT_ID);
     expect(main).toHaveAttribute("tabindex", "-1");
-  });
-
-  it("the lobby shows and says the pause during the first title card", async () => {
-    fakeSession.initialState = stateOf(
-      sessionOf({
-        me: ME,
-        cursor: {
-          ...sessionOf().cursor,
-          status: "paused",
-          phase: "round_intro",
-          roundIndex: 0,
-        },
-      }),
-    );
-    renderPlay("/play/QZ7KP4");
-
-    expect(await screen.findByText("You're in")).toBeInTheDocument();
-    await waitFor(() =>
-      expect(
-        screen
-          .getAllByRole("status")
-          .some((region) => region.textContent?.includes("Paused")),
-      ).toBe(true),
-    );
-    // The visible paused note sits outside the live region, so the pause is said once.
-    expect(
-      screen
-        .getAllByText("Paused")
-        .some((element) => element.closest('[role="status"]') === null),
-    ).toBe(true);
   });
 });
 
@@ -450,6 +439,7 @@ describe("QuizshowPlayPage join and lobby pause", () => {
         </TestProviders>
       </StrictMode>,
     );
+    await awaitCatalog("quizshow");
 
     expect(await screen.findByLabelText("Screen name")).toHaveValue("Sam");
     expect(joinSpy.calls).toEqual(["QZ7KP4"]);
@@ -467,7 +457,7 @@ describe("QuizshowPlayPage join and lobby pause", () => {
         },
       }),
     );
-    renderPlay("/play/QZ7KP4");
+    await renderPlay("/play/QZ7KP4");
 
     expect(await screen.findByText("You're in")).toBeInTheDocument();
     // The lead keeps its words while the paused note shows the pause.
@@ -477,5 +467,35 @@ describe("QuizshowPlayPage join and lobby pause", () => {
     const leadRegion = screen.getByText("Get ready").closest('[role="status"]');
     expect(leadRegion).not.toBeNull();
     expect(leadRegion).toHaveTextContent("Get ready. Paused");
+  });
+
+  it("the lobby shows and says the pause during the first title card", async () => {
+    fakeSession.initialState = stateOf(
+      sessionOf({
+        me: ME,
+        cursor: {
+          ...sessionOf().cursor,
+          status: "paused",
+          phase: "round_intro",
+          roundIndex: 0,
+        },
+      }),
+    );
+    await renderPlay("/play/QZ7KP4");
+
+    expect(await screen.findByText("You're in")).toBeInTheDocument();
+    await waitFor(() =>
+      expect(
+        screen
+          .getAllByRole("status")
+          .some((region) => region.textContent?.includes("Paused")),
+      ).toBe(true),
+    );
+    // The visible paused note sits outside the live region, so the pause is said once.
+    expect(
+      screen
+        .getAllByText("Paused")
+        .some((element) => element.closest('[role="status"]') === null),
+    ).toBe(true);
   });
 });

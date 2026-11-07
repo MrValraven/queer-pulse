@@ -1,10 +1,11 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LazyMotion, domMax } from "motion/react";
 import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../../shared/api/client";
 import { TestProviders } from "../../../test/TestProviders";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import type { VjClipUploads } from "../upload/useVjClipUploads";
 import { VjUploadFailure } from "../upload/vjUploadFailure";
 import type { VjUploadRow as VjUploadRowState } from "../upload/vjUploadQueue";
@@ -47,12 +48,24 @@ function packNameOf(packId: string | null): string | null {
   return packId === CLOSING_PACK_ID ? "Closing" : null;
 }
 
-function renderWithProviders(ui: ReactNode) {
-  return render(
+async function renderWithProviders(ui: ReactNode) {
+  const renderedView = render(
     <TestProviders>
       <LazyMotion features={domMax}>{ui}</LazyMotion>
     </TestProviders>,
   );
+  await awaitCatalog("vj");
+  return renderedView;
+}
+
+/** The stage words on screen; the row's live region repeats them for screen readers. */
+const VISIBLE_STAGE = { selector: "[aria-hidden='true']" };
+
+/** The only upload row on screen: the toast region around it is an alert region too. */
+function uploadRow(): HTMLElement {
+  const row = document.querySelector<HTMLElement>("[data-stage]");
+  if (row === null) throw new Error("upload row not rendered");
+  return row;
 }
 
 afterEach(() => {
@@ -78,13 +91,17 @@ describe("VjUploadRows", () => {
         clipId: "clip-3",
       }),
     ]);
-    renderWithProviders(
+    await renderWithProviders(
       <VjUploadRows uploads={uploads} packNameOf={packNameOf} />,
     );
 
-    expect(await screen.findByText("Waiting to upload")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Waiting to upload", VISIBLE_STAGE),
+    ).toBeInTheDocument();
     expect(screen.getByText("Uploading, 42%")).toBeInTheDocument();
-    expect(screen.getByText("Added to Closing")).toBeInTheDocument();
+    expect(
+      screen.getByText("Added to Closing", VISIBLE_STAGE),
+    ).toBeInTheDocument();
     const progressBar = screen.getByRole("progressbar", {
       name: "Upload progress for second.webm",
     });
@@ -96,8 +113,8 @@ describe("VjUploadRows", () => {
     ).toBeInTheDocument();
   });
 
-  it("announces the stage once and keeps the percent out of the live region", () => {
-    const { rerender } = renderWithProviders(
+  it("announces the stage once and keeps the percent out of the live region", async () => {
+    const { rerender } = await renderWithProviders(
       <VjUploadRow
         row={rowOf({ stage: "uploading", percent: 42 })}
         packName={null}
@@ -133,7 +150,7 @@ describe("VjUploadRows", () => {
 
   it("names the cause on a failed row with Retry upload", async () => {
     const onRetry = vi.fn();
-    renderWithProviders(
+    await renderWithProviders(
       <VjUploadRow
         row={rowOf({
           stage: "failed",
@@ -146,7 +163,7 @@ describe("VjUploadRows", () => {
       />,
     );
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await within(uploadRow()).findByRole("alert")).toHaveTextContent(
       "This MP4 uses HEVC, which browsers can't play. Export it as H.264",
     );
     await userEvent.click(screen.getByRole("button", { name: "Retry upload" }));
@@ -165,11 +182,11 @@ describe("VjUploadRows", () => {
         failure: new VjUploadFailure("VJ_UPLOAD_TOO_LARGE"),
       }),
     ]);
-    renderWithProviders(
+    await renderWithProviders(
       <VjUploadRows uploads={uploads} packNameOf={packNameOf} />,
     );
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await within(uploadRow()).findByRole("alert")).toHaveTextContent(
       "This file is 140 MB. Clips can be up to 100 MB",
     );
   });
@@ -185,11 +202,11 @@ describe("VjUploadRows", () => {
         }),
       }),
     ]);
-    renderWithProviders(
+    await renderWithProviders(
       <VjUploadRows uploads={uploads} packNameOf={packNameOf} />,
     );
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await within(uploadRow()).findByRole("alert")).toHaveTextContent(
       "This file is 150 MB. Clips can be up to 100 MB",
     );
   });
@@ -210,7 +227,7 @@ describe("VjUploadRows", () => {
         clipId: "clip-1",
       }),
     ]);
-    renderWithProviders(
+    await renderWithProviders(
       <VjUploadRows uploads={uploads} packNameOf={packNameOf} />,
     );
 
@@ -223,7 +240,9 @@ describe("VjUploadRows", () => {
       screen.getByRole("button", { name: "Remove clip.mp4 from the list" }),
     );
     expect(uploads.dismiss).toHaveBeenCalledWith("row-finished");
-    expect(screen.getByText("Added to the library")).toBeInTheDocument();
+    expect(
+      screen.getByText("Added to the library", VISIBLE_STAGE),
+    ).toBeInTheDocument();
 
     await userEvent.click(
       screen.getByRole("button", { name: "Clear finished uploads" }),
@@ -233,11 +252,13 @@ describe("VjUploadRows", () => {
 
   it("offers no clear button while nothing has finished", async () => {
     const uploads = uploadsWith([rowOf({ stage: "checking" })]);
-    renderWithProviders(
+    await renderWithProviders(
       <VjUploadRows uploads={uploads} packNameOf={packNameOf} />,
     );
 
-    expect(await screen.findByText("Checking the file")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Checking the file", VISIBLE_STAGE),
+    ).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "Clear finished uploads" }),
     ).not.toBeInTheDocument();
@@ -247,7 +268,7 @@ describe("VjUploadRows", () => {
 describe("VjUploadRow preview step", () => {
   it("says it is making the preview and offers Skip preview", async () => {
     const onCancel = vi.fn();
-    renderWithProviders(
+    await renderWithProviders(
       <VjUploadRow
         row={rowOf({ stage: "previewing", percent: 100, clipId: "clip-1" })}
         packName={null}
@@ -274,7 +295,7 @@ describe("VjUploadRow preview step", () => {
   });
 
   it("keeps an uploaded row done and names the preview failure under it", async () => {
-    renderWithProviders(
+    await renderWithProviders(
       <VjUploadRow
         row={rowOf({
           stage: "done",
@@ -289,7 +310,7 @@ describe("VjUploadRow preview step", () => {
       />,
     );
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await within(uploadRow()).findByRole("alert")).toHaveTextContent(
       "The preview for this clip could not be made",
     );
     expect(
@@ -310,7 +331,7 @@ describe("VjUploadRow preview step", () => {
 describe("VjUploadZone", () => {
   it("hands picked files to the queue with the pack", async () => {
     const uploads = uploadsWith([]);
-    renderWithProviders(
+    await renderWithProviders(
       <VjUploadZone
         uploads={uploads}
         packId={CLOSING_PACK_ID}
@@ -344,7 +365,7 @@ describe("VjUploadZone", () => {
 
   it("takes dropped files into the library when no pack is open", async () => {
     const uploads = uploadsWith([]);
-    renderWithProviders(
+    await renderWithProviders(
       <VjUploadZone uploads={uploads} packId={null} packName={null} />,
     );
     const droppedFile = new File(["mov"], "take.mov", {

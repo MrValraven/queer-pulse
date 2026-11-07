@@ -6,6 +6,7 @@ import type { SubprofileItemView } from "../../../api/subprofiles.adapters";
 import type { TattooSession } from "../../../api/subprofiles.api";
 import { emptyItem } from "../../../subprofileSectionEditorRows";
 import { TattooSessionsField } from "./TattooSessionsField";
+import { awaitCatalog } from "../../../../../test/awaitCatalog";
 
 vi.mock("../../../ImageUploadField", () => ({
   ImageUploadField: ({
@@ -56,17 +57,19 @@ const inProgressDraft = (
   ...overrides,
 });
 
-function renderField(initial: SubprofileItemView) {
-  return render(
+async function renderField(initial: SubprofileItemView) {
+  const view = render(
     <TestProviders>
       <Harness initial={initial} />
     </TestProviders>,
   );
+  await awaitCatalog("subprofiles");
+  return view;
 }
 
 describe("TattooSessionsField", () => {
   it("adds a session and folds the add button away at twelve", async () => {
-    renderField(inProgressDraft(sessionsOf(11)));
+    await renderField(inProgressDraft(sessionsOf(11)));
     fireEvent.click(screen.getByRole("button", { name: "Add session" }));
 
     expect(latestDraft.structured?.sessions).toHaveLength(12);
@@ -77,7 +80,7 @@ describe("TattooSessionsField", () => {
   });
 
   it("removes a session", async () => {
-    renderField(inProgressDraft(sessionsOf(3)));
+    await renderField(inProgressDraft(sessionsOf(3)));
     const removeButtons = screen.getAllByRole("button", {
       name: /Remove session \d+/,
     });
@@ -94,7 +97,7 @@ describe("TattooSessionsField", () => {
   });
 
   it("keeps focus in the field after removing the last of twelve sessions", async () => {
-    renderField(inProgressDraft(sessionsOf(12)));
+    await renderField(inProgressDraft(sessionsOf(12)));
     const removeButtons = screen.getAllByRole("button", {
       name: /Remove session \d+/,
     });
@@ -106,8 +109,8 @@ describe("TattooSessionsField", () => {
     await waitFor(() => expect(addButton).toHaveFocus());
   });
 
-  it("clears the consent tick when a session photo changes", () => {
-    renderField(
+  it("clears the consent tick when a session photo changes", async () => {
+    await renderField(
       inProgressDraft(sessionsOf(1), {
         structured: {
           sessions: sessionsOf(1),

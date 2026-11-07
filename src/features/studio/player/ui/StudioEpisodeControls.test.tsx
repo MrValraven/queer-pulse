@@ -18,6 +18,7 @@ import { StudioMiniPlayer } from "./StudioMiniPlayer";
 import { StudioTransport } from "./StudioPlayerControls";
 import { StudioPlayerMorePanel } from "./StudioPlayerMorePanel";
 import { StudioSpeedSetting } from "./StudioSpeedSetting";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 afterEach(() => clearStudioEpisodeMemory());
 
@@ -66,8 +67,9 @@ function renderWithPlayer(ui: ReactElement, isEpisode: boolean) {
 }
 
 describe("episode controls", () => {
-  it("swaps previous and next for skip 15/30 on an episode", () => {
+  it("swaps previous and next for skip 15/30 on an episode", async () => {
     const seek = renderWithPlayer(<StudioTransport size="bar" />, true);
+    await awaitCatalog("studio");
     expect(screen.queryByRole("button", { name: "Previous track" })).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Skip back 15 s" }));
     expect(seek).toHaveBeenLastCalledWith(85);
@@ -75,16 +77,18 @@ describe("episode controls", () => {
     expect(seek).toHaveBeenLastCalledWith(130);
   });
 
-  it("keeps previous and next for music", () => {
+  it("keeps previous and next for music", async () => {
     renderWithPlayer(<StudioTransport size="bar" />, false);
+    await awaitCatalog("studio");
     expect(
       screen.getByRole("button", { name: "Previous track" }),
     ).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Skip back 15 s" })).toBeNull();
   });
 
-  it("puts the skips in the phone mini player for an episode", () => {
+  it("puts the skips in the phone mini player for an episode", async () => {
     renderWithPlayer(<StudioMiniPlayer item={itemOf(true)} />, true);
+    await awaitCatalog("studio");
     expect(
       screen.getByRole("button", { name: "Skip back 15 s" }),
     ).toBeInTheDocument();
@@ -93,8 +97,9 @@ describe("episode controls", () => {
     ).toBeInTheDocument();
   });
 
-  it("chooses a speed and keeps it", () => {
+  it("chooses a speed and keeps it", async () => {
     renderWithPlayer(<StudioSpeedSetting />, true);
+    await awaitCatalog("studio");
     expect(
       screen.getByRole("radiogroup", { name: "Speed" }),
     ).toBeInTheDocument();
@@ -113,8 +118,9 @@ describe("episode controls", () => {
     expect(screen.getByRole("radio", { name: "0.8x" })).toBeInTheDocument();
   });
 
-  it("moves the speed with the arrow keys", () => {
+  it("moves the speed with the arrow keys", async () => {
     renderWithPlayer(<StudioSpeedSetting />, true);
+    await awaitCatalog("studio");
     const normal = screen.getByRole("radio", { name: "1x" });
     expect(normal).toHaveAttribute("tabindex", "0");
     expect(screen.getByRole("radio", { name: "2x" })).toHaveAttribute(
@@ -130,6 +136,7 @@ describe("episode controls", () => {
 
   it("shows Speed in the overflow menu only for an episode", async () => {
     renderWithPlayer(<StudioPlayerMorePanel placement="up" />, true);
+    await awaitCatalog("studio");
     fireEvent.click(
       screen.getByRole("button", { name: "More player options" }),
     );
@@ -138,6 +145,7 @@ describe("episode controls", () => {
     ).toBeInTheDocument();
     cleanup();
     renderWithPlayer(<StudioPlayerMorePanel placement="up" />, false);
+    await awaitCatalog("studio");
     fireEvent.click(
       screen.getByRole("button", { name: "More player options" }),
     );

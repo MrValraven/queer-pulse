@@ -3,6 +3,7 @@ import { Button, FormField, Modal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useGovernanceMotionCompose } from "./api/useGovernanceProposals";
+import { governanceErrorText } from "./governanceErrors";
 
 const TITLE_MAX_LENGTH = 200;
 const DESCRIPTION_MAX_LENGTH = 2000;
@@ -43,11 +44,8 @@ export function MotionComposeModal({ onClose }: { onClose: () => void }) {
             "success",
           );
         },
-        onError: () =>
-          showToast(
-            t("governance:sections.proposals.compose.errorToast"),
-            "error",
-          ),
+        onError: (error) =>
+          showToast(governanceErrorText(t, error), "error"),
       },
     );
   };

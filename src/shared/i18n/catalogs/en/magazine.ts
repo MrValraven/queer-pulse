@@ -700,6 +700,7 @@ export const magazine: Catalog = {
   "desk.pieceRow.edit": "Edit",
   "desk.pieceRow.chase": "Chase",
   "desk.pieceRow.handOff": "Hand off",
+  "desk.pieceRow.unpublish": "Unpublish…",
   "desk.pieceRow.unpublishToDraft": "Unpublish to draft",
   "desk.pieceRow.unpublishToReview": "Unpublish to review",
   "desk.pieceRow.selectAria": "Select {title}",
@@ -728,11 +729,13 @@ export const magazine: Catalog = {
     "This piece has published work. Unpublish it first, then delete the piece.",
   "desk.deletePiece.failed": "Could not delete this piece. Try again.",
   // The row menu's and board card's unpublish confirm (UnpublishPieceModal).
-  // The confirm button reuses `desk.pieceRow.unpublishToDraft|Review` and the
-  // cancel button `desk.modals.cancel`.
+  // The editor picks where the piece goes with the two radio cards, and the
+  // confirm button reuses `desk.pieceRow.unpublishToDraft|Review` to name that
+  // pick. The cancel button is `desk.modals.cancel`.
   "desk.unpublishConfirm.title": "Unpublish “{title}”?",
-  "desk.unpublishConfirm.subDraft": "It goes back to draft.",
-  "desk.unpublishConfirm.subReview": "It goes back to review.",
+  "desk.unpublishConfirm.destinationLegend": "Where it goes",
+  "desk.unpublishConfirm.toDraft": "Back to draft",
+  "desk.unpublishConfirm.toReview": "Back to review",
   "desk.unpublishConfirm.body":
     "The piece leaves the site and a link someone already shared stops working until it is published again. It stays on the desk.",
 
@@ -740,6 +743,7 @@ export const magazine: Catalog = {
   "desk.board.columnEmpty": "Empty",
   "desk.board.moveStageAria": "Move stage",
   "desk.board.overCap": "Over {cap}",
+  "desk.board.unpublish": "Unpublish",
   "desk.board.unpublishToMove": "Unpublish from the piece record to move it",
   "desk.board.unscheduleToMove":
     "Scheduled to publish. Unschedule it from the piece record to move it",
@@ -1388,10 +1392,10 @@ export const magazine: Catalog = {
     "Resolve the {count} open care items before publishing.",
   "piece.publish.publishedToast": "Published. It is live for readers now.",
   "piece.publish.unpublishedToast":
-    "Taken down. Readers can no longer reach it.",
+    "Unpublished. Readers can no longer reach it.",
   "piece.publish.failedToast": "Could not publish this piece. Try again.",
   "piece.publish.unpublishFailedToast":
-    "Could not take this piece down. Try again.",
+    "Could not unpublish this piece. Try again.",
   "piece.publish.refusedCareGateHeading": "Held by the care gate",
   "piece.publish.refusedCareGateToast":
     "This piece is still behind its care gate.",
@@ -1405,13 +1409,13 @@ export const magazine: Catalog = {
   "piece.publish.confirmSettleSub":
     "It is already live. Publishing marks it published and tells the writer.",
   "piece.publish.confirmPublishBody":
-    "The writer is told it went out. You can take it down again at any time, and nothing is deleted when you do.",
+    "The writer is told it went out. You can unpublish it at any time, and nothing is deleted when you do.",
   "piece.publish.confirmPublishCta": "Publish it",
-  "piece.publish.confirmUnpublishTitle": "Take “{title}” down?",
+  "piece.publish.confirmUnpublishTitle": "Unpublish “{title}”?",
   "piece.publish.confirmUnpublishSub": "Readers lose access to it immediately.",
   "piece.publish.confirmUnpublishBody":
     "Nothing is deleted. The piece goes back to Ready and you can publish it again whenever you want.",
-  "piece.publish.confirmUnpublishCta": "Take it down",
+  "piece.publish.confirmUnpublishCta": "Unpublish",
   "piece.publish.confirmCancel": "Not yet",
 
   // ── Piece record demo toasts (api/useRecordMutations.ts) ─────────────────
@@ -1570,7 +1574,7 @@ export const magazine: Catalog = {
     "for most sections. Long reads up to 4,000.",
   "submitStory.sidebar.guideline.experience.term": "Write from experience.",
   "submitStory.sidebar.guideline.experience.detail":
-    "First-person or closely reported. Not punditry.",
+    "First-person or closely reported.",
   "submitStory.sidebar.guideline.noPromo.term": "No promotional content.",
   "submitStory.sidebar.guideline.noPromo.detail":
     "The magazine doesn't carry advertising or sponsored pieces.",
@@ -1663,6 +1667,10 @@ export const magazine: Catalog = {
     "A little more to go: at least {min} words before you submit.",
   // One line per refusal the story-submission endpoint can return; see
   // features/magazine/submitStoryError.ts for the status behind each.
+  "submitStory.editor.error.sectionInvalid":
+    "The section on your story was not accepted. Choose it again from the list and submit again.",
+  "submitStory.editor.error.summaryRequired":
+    "Your story needs a standfirst or some body text before it goes to editors. Add one and submit again.",
   "submitStory.editor.error.headlineTooLong":
     "Your headline is over 200 characters. Shorten it and submit again.",
   "submitStory.editor.error.deckTooLong":
@@ -1686,6 +1694,8 @@ export const magazine: Catalog = {
     "Your story is too large for our servers to take in one go. Shorten the text and submit again.",
   "submitStory.editor.error.serverFault":
     "Our servers hit an error while receiving your story. Your text is still here, so submit again in a moment.",
+  "submitStory.editor.error.maintenance":
+    "QueerPulse is paused for maintenance, so your story was not sent. Your draft is saved on this device: once we are back, open this page, choose Resume draft and submit again.",
   "submitStory.editor.error.noConnection":
     "Your story did not reach our servers. Check your connection and submit again.",
   "submitStory.editor.error.refused":
@@ -2358,6 +2368,8 @@ export const magazine: Catalog = {
     "Our servers sent back a reply for your workspace that we could not read. Reload the page, and tell our team if it keeps happening.",
   "writer.page.error.serverFault":
     "Our servers hit an error while loading your assignments, pitches and payments. Reload the page in a moment.",
+  "writer.page.error.maintenance":
+    "QueerPulse is paused for maintenance, so your workspace could not load. It opens again as soon as we are back.",
   "writer.page.error.noConnection":
     "We could not reach our servers to load your assignments, pitches and payments. Check your connection and reload the page.",
   "writer.page.error.refused":
@@ -2522,6 +2534,8 @@ export const magazine: Catalog = {
     "The link to your published work is over 2,000 characters. Use a shorter link and send again.",
   "applyToWrite.form.error.sampleTooLong":
     "Your pasted sample is over 20,000 characters. Shorten it or link to your published work instead.",
+  "applyToWrite.form.error.sampleTooLarge":
+    "Your pasted sample is too large for our servers to take in one go. Shorten it or link to your published work instead.",
   "applyToWrite.form.error.pitchTooLong":
     "Your note about why you want to write is over 2,000 characters. Shorten it and send again.",
   "applyToWrite.form.error.alreadyWriter":
@@ -2532,11 +2546,15 @@ export const magazine: Catalog = {
     "Only active members can apply to write, and your account is not active right now.",
   "applyToWrite.form.error.signedOut":
     "Your session ended before the application was sent. Sign in again and send it once more.",
+  "applyToWrite.form.error.securityCheck":
+    "The security check for this page expired before your application was sent. Copy what you wrote, reload the page and send it again.",
   "applyToWrite.form.error.notOpen": "Writer applications are not open yet.",
   "applyToWrite.form.error.timedOut":
     "Our servers took too long to answer. Reload the page to check whether your application arrived before you send it again.",
   "applyToWrite.form.error.serverFault":
     "Our servers hit an error while receiving your application. Try again in a moment.",
+  "applyToWrite.form.error.maintenance":
+    "QueerPulse is paused for maintenance, so your application was not sent. Send it again once we are back.",
   "applyToWrite.form.error.noConnection":
     "Your application did not reach our servers. Check your connection and send it again.",
   "applyToWrite.form.error.refused":
@@ -2597,6 +2615,8 @@ export const magazine: Catalog = {
     "Our servers took too long to answer, so we cannot tell whether your report arrived. Send it again, because a report you already have open on this comment is not filed twice.",
   "comments.report.error.serverFault":
     "Our servers hit an error while receiving your report. Try again in a moment.",
+  "comments.report.error.maintenance":
+    "QueerPulse is paused for maintenance, so your report was not sent. Send it again once we are back.",
   "comments.report.error.noConnection":
     "Your report did not reach our servers. Check your connection and try again.",
   "comments.report.error.refused":

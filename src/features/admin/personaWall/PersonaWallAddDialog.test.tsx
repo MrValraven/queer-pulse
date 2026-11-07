@@ -1,6 +1,13 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import { DEMO_PERSONA_WALL_NINE_SHOWN } from "../../subprofiles/data/personaWallDemoSeed.data";
 import { DEMO_SUBPROFILES } from "../../subprofiles/data/subprofiles.data";
@@ -13,14 +20,21 @@ import { PersonaWallAddDialog } from "./PersonaWallAddDialog";
 
 const VANDA_ID = "sp-ines-fonseca-vanda-diesel";
 
-function renderDialog(isFull = false) {
+async function renderDialog(isFull = false) {
   const onClose = vi.fn();
   render(
     <TestProviders>
       <PersonaWallAddDialog isFull={isFull} onClose={onClose} />
     </TestProviders>,
   );
+  await awaitCatalog("admin");
   return { onClose, user: userEvent.setup() };
+}
+
+/** The dialog's own refusal line. The toast region outside the dialog also
+ *  carries the alert role, so the query stays inside the dialog. */
+async function findRefusalLine(): Promise<HTMLElement> {
+  return within(await screen.findByRole("dialog")).findByRole("alert");
 }
 
 describe("PersonaWallAddDialog", () => {
@@ -28,7 +42,7 @@ describe("PersonaWallAddDialog", () => {
   afterEach(() => resetDemoPersonaWall());
 
   it("treats a blank search as idle", async () => {
-    const { user } = renderDialog();
+    const { user } = await renderDialog();
     await user.type(screen.getByLabelText("Search personas"), "   ");
     expect(
       await screen.findByText("Type a name to find a persona"),
@@ -39,7 +53,7 @@ describe("PersonaWallAddDialog", () => {
   });
 
   it("adds a persona and closes", async () => {
-    const { onClose, user } = renderDialog();
+    const { onClose, user } = await renderDialog();
     await user.type(screen.getByLabelText("Search personas"), "Vanda");
     await user.click(
       await screen.findByRole("button", {
@@ -54,7 +68,7 @@ describe("PersonaWallAddDialog", () => {
   });
 
   it("keeps a picked persona from being added twice", async () => {
-    const { onClose, user } = renderDialog();
+    const { onClose, user } = await renderDialog();
     await user.type(screen.getByLabelText("Search personas"), "Bloco");
     const pickedButton = await screen.findByRole("button", {
       name: "Add BLOCO ROSA to the wall",
@@ -69,7 +83,7 @@ describe("PersonaWallAddDialog", () => {
   });
 
   it("keeps results inert and explains why while the wall is full", async () => {
-    const { onClose, user } = renderDialog(true);
+    const { onClose, user } = await renderDialog(true);
     const picksBefore = demoAdminPersonaWall().picks.length;
     const searchInput = screen.getByLabelText("Search personas");
     expect(
@@ -89,7 +103,7 @@ describe("PersonaWallAddDialog", () => {
   });
 
   it("sends a single add for a double press in the same tick", async () => {
-    const { onClose, user } = renderDialog();
+    const { onClose, user } = await renderDialog();
     const picksBefore = demoAdminPersonaWall().picks.length;
     await user.type(screen.getByLabelText("Search personas"), "Vanda");
     const addButton = await screen.findByRole("button", {
@@ -107,21 +121,21 @@ describe("PersonaWallAddDialog", () => {
       pickPersonaIds: DEMO_PERSONA_WALL_NINE_SHOWN.slice(0, 8),
       fillOrder: "endorsed",
     });
-    const { onClose, user } = renderDialog();
+    const { onClose, user } = await renderDialog();
     await user.type(screen.getByLabelText("Search personas"), "Vanda");
     const addButton = await screen.findByRole("button", {
       name: "Add Vanda Diesel to the wall",
     });
     demoAddPersonaWallPick("sp-maria-therapist");
     await user.click(addButton);
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await findRefusalLine()).toHaveTextContent(
       "The wall already has 9 personas. Remove one to add another",
     );
     expect(onClose).not.toHaveBeenCalled();
   });
 
   it("says no persona matched", async () => {
-    const { user } = renderDialog();
+    const { user } = await renderDialog();
     await user.type(screen.getByLabelText("Search personas"), "zzzz");
     expect(
       await screen.findAllByText("No listed persona matches zzzz"),
@@ -135,14 +149,14 @@ describe("PersonaWallAddDialog", () => {
     if (!vandaPersona) throw new Error("The demo registry lost Vanda Diesel");
     const originalStatus = vandaPersona.status;
     try {
-      const { onClose, user } = renderDialog();
+      const { onClose, user } = await renderDialog();
       await user.type(screen.getByLabelText("Search personas"), "Vanda");
       const addButton = await screen.findByRole("button", {
         name: "Add Vanda Diesel to the wall",
       });
       vandaPersona.status = "draft";
       await user.click(addButton);
-      expect(await screen.findByRole("alert")).toHaveTextContent(
+      expect(await findRefusalLine()).toHaveTextContent(
         "This persona is a draft, so it can't go on the wall",
       );
       expect(onClose).not.toHaveBeenCalled();

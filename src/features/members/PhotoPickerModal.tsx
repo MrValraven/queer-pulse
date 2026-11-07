@@ -12,6 +12,8 @@ import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { ImageProcessingError } from "./api/uploadProcessing";
+import { causeErrorKey } from "../../shared/api/causeErrorKey";
+import { deleteUploadErrorCopy } from "../settings/settingsActionErrors";
 import type { FreeformChoiceKey } from "../../shared/components/ui/useImageReframerState";
 import { useUploadImage, type UploadKind } from "./api/useUploadImage";
 import {
@@ -373,8 +375,9 @@ export function PhotoPickerModal({
           onPick(editedItem.key, resolveMyMediaUrl(editedItem.fileUrl), crop);
           onClose();
         },
-        onError: () => {
-          showToast(t("members:avatar.picker.editError"), "error");
+        onError: (error) => {
+          const cause = causeErrorKey(error);
+          showToast(t(cause.key, cause.values), "error");
         },
       },
     );
@@ -391,8 +394,9 @@ export function PhotoPickerModal({
         if (deletedKey === currentValue) onDeletedCurrent?.();
         onDeleted?.(deletedKey);
       },
-      onError: () => {
-        showToast(t("members:avatar.picker.deleteError"), "error");
+      onError: (error) => {
+        const cause = deleteUploadErrorCopy(error);
+        showToast(t(cause.key, cause.values), "error");
       },
     });
     setPendingDelete(null);

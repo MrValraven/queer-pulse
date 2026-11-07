@@ -8,7 +8,9 @@ import {
   vi,
   type Mock,
 } from "vitest";
-import { TestProviders } from "../../../test/TestProviders";
+import type { ReactNode } from "react";
+import { I18nProvider } from "../../../app/providers/I18nProvider";
+import { ToastProvider } from "../../../shared/components/feedback/ToastProvider";
 import { closeReauthDialog, useReauthDialogRequest } from "./reauthDialogStore";
 import { beginReauth, useReauthAvailabilitySync } from "./useReauthToken";
 
@@ -52,6 +54,18 @@ const STATUS_PENDING =
 const UNAVAILABLE =
   "We can't confirm it's you right now: sign-in codes are switched off. Write to us and our team will help.";
 
+/** The two providers the sync reads: copy and the toast host. The full
+ *  `TestProviders` tree also mounts the session bootstrap, which reads a
+ *  whole signed-in user off `useAuth`, and this file's `useAuth` mock carries
+ *  only the two fields the sync looks at. */
+function SyncProviders({ children }: { children: ReactNode }) {
+  return (
+    <I18nProvider>
+      <ToastProvider>{children}</ToastProvider>
+    </I18nProvider>
+  );
+}
+
 /** Mounts the sync as ReauthCompletionProvider does, beside a dialog probe.
  *  Nothing here loads the lazy `settings` namespace. */
 function renderSync() {
@@ -60,7 +74,7 @@ function renderSync() {
       useReauthAvailabilitySync();
       return { request: useReauthDialogRequest() };
     },
-    { wrapper: TestProviders },
+    { wrapper: SyncProviders },
   );
 }
 

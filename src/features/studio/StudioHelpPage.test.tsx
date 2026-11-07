@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { StudioHelpPage } from "./StudioHelpPage";
 
 const showcase = vi.hoisted(() => ({ isOn: false }));
@@ -8,12 +9,13 @@ vi.mock("./useStudioShowcase", () => ({
   useStudioShowcase: () => showcase.isOn,
 }));
 
-function renderHelp() {
+async function renderHelp() {
   render(
     <TestProviders initialEntries={["/studio/help"]}>
       <StudioHelpPage />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
 }
 
 beforeEach(() => {
@@ -22,7 +24,7 @@ beforeEach(() => {
 
 describe("Studio help (live)", () => {
   it("answers what Studio does today and keeps money out", async () => {
-    renderHelp();
+    await renderHelp();
     expect(
       await screen.findByRole("heading", {
         level: 1,
@@ -43,7 +45,7 @@ describe("Studio help (live)", () => {
   });
 
   it("points the contact cards at the contact form, the inbox and QueerPulse help", async () => {
-    renderHelp();
+    await renderHelp();
     expect(
       await screen.findByRole("link", { name: /contact our team/i }),
     ).toHaveAttribute("href", "/about/contact");
@@ -56,7 +58,7 @@ describe("Studio help (live)", () => {
   });
 
   it("filters the answers as you type and counts what is left", async () => {
-    renderHelp();
+    await renderHelp();
     const search = await screen.findByRole("searchbox", {
       name: "Search Studio help",
     });
@@ -75,7 +77,7 @@ describe("Studio help (live)", () => {
   });
 
   it("opens every matching answer while a search is on", async () => {
-    renderHelp();
+    await renderHelp();
     const search = await screen.findByRole("searchbox", {
       name: "Search Studio help",
     });
@@ -87,7 +89,7 @@ describe("Studio help (live)", () => {
   });
 
   it("says so when nothing matches, and Clear search brings everything back", async () => {
-    renderHelp();
+    await renderHelp();
     const search = await screen.findByRole("searchbox", {
       name: "Search Studio help",
     });
@@ -104,24 +106,25 @@ describe("Studio help (live)", () => {
   });
 
   it("hides Clear search until there is a query, and keeps the empty title while it folds", async () => {
-    renderHelp();
+    await renderHelp();
     const search = await screen.findByRole("searchbox", {
       name: "Search Studio help",
     });
-    expect(
-      screen.queryByRole("button", { name: "Clear search" }),
-    ).not.toBeInTheDocument();
+    // The button stays mounted so it can fold in and out; an inert
+    // wrapper keeps it out of reach while there is no query. Testing Library
+    // still lists inert content, so the test reads the wrapper.
+    const clearButton = screen.getByRole("button", { name: "Clear search" });
+    expect(clearButton.closest("[inert]")).not.toBeNull();
     fireEvent.change(search, { target: { value: "zzzz" } });
-    fireEvent.click(
-      await screen.findByRole("button", { name: "Clear search" }),
-    );
+    await waitFor(() => expect(clearButton.closest("[inert]")).toBeNull());
+    fireEvent.click(clearButton);
     expect(
       screen.queryByRole("heading", { name: 'Nothing matches ""' }),
     ).not.toBeInTheDocument();
   });
 
   it("moves focus to the section heading when a category card is used", async () => {
-    renderHelp();
+    await renderHelp();
     Element.prototype.scrollIntoView = vi.fn();
     const cards = await screen.findAllByRole("button", { name: /.+/ });
     const card = cards.find((button) => button.className.includes("cat"));
@@ -131,7 +134,7 @@ describe("Studio help (live)", () => {
   });
 
   it("opens an answer in place and links it on", async () => {
-    renderHelp();
+    await renderHelp();
     const question = await screen.findByRole("button", {
       name: "What do my stats show?",
     });
@@ -147,7 +150,7 @@ describe("Studio help (live)", () => {
 describe("Studio help (demo)", () => {
   it("adds the money answers and the status line", async () => {
     showcase.isOn = true;
-    renderHelp();
+    await renderHelp();
     expect(
       await screen.findByRole("button", {
         name: "Where does my money actually go?",

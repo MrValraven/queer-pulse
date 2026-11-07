@@ -11,6 +11,7 @@ import {
   type VjStageState,
 } from "../../../../../shared/contracts/vj";
 import { TestProviders } from "../../../../../test/TestProviders";
+import { awaitCatalog } from "../../../../../test/awaitCatalog";
 import type { VjCommandOutcome } from "../../../live/vjStageCommands";
 import { VJ_SOCKET_REASON_KEY } from "../../../vjErrors";
 import type { VjRun, VjSceneFlashConsentRequest } from "./VjSceneRow";
@@ -127,12 +128,12 @@ const passFlashConsent: VjSceneFlashConsentRequest = (
   onConsented,
 ) => onConsented();
 
-function renderSheet(
+async function renderSheet(
   run: VjRun,
   state: VjStageState = stageState(),
   requestSceneFlashConsent: VjSceneFlashConsentRequest = passFlashConsent,
 ) {
-  return render(
+  const renderedView = render(
     <TestProviders>
       <LazyMotion features={domMax}>
         <VjScenesSheet
@@ -146,6 +147,8 @@ function renderSheet(
       </LazyMotion>
     </TestProviders>,
   );
+  await awaitCatalog("vj");
+  return renderedView;
 }
 
 function sceneRow(sceneId: string): HTMLElement {
@@ -209,19 +212,21 @@ describe("VjScenesSheet", () => {
 
   it("Save scene posts the current look with the next default name", async () => {
     const state = stageState({ liveClipId: "clip-42" });
-    renderSheet(createRun(), state);
+    await renderSheet(createRun(), state);
     await clickAndSettle(screen.getByRole("button", { name: "Save scene" }));
     expect(libraryMocks.createScene).toHaveBeenCalledWith({
       name: "Scene 3",
       packId: PACK_ID,
       look: vjSceneLookOf(state),
     });
-    expect(screen.getByRole("status")).toHaveTextContent("Scene saved");
+    expect(
+      within(screen.getByRole("dialog")).getByRole("status"),
+    ).toHaveTextContent("Scene saved");
   });
 
   it("Recall sends recallScene", async () => {
     const run = createRun();
-    renderSheet(run);
+    await renderSheet(run);
     await clickAndSettle(
       within(sceneRow("scene-2")).getByRole("button", { name: "Recall scene" }),
     );
@@ -229,7 +234,7 @@ describe("VjScenesSheet", () => {
   });
 
   it("Rename refuses a blank name", async () => {
-    renderSheet(createRun());
+    await renderSheet(createRun());
     const row = sceneRow("scene-1");
     fireEvent.click(within(row).getByRole("button", { name: "Rename scene" }));
     const field = await within(row).findByLabelText("Scene name");
@@ -245,7 +250,7 @@ describe("VjScenesSheet", () => {
 
   it("Delete asks first, names the set list count and deletes on confirm", async () => {
     libraryMocks.scenes = [makeScene("scene-1", "Neon", PACK_ID, 2)];
-    renderSheet(createRun());
+    await renderSheet(createRun());
     fireEvent.click(
       within(sceneRow("scene-1")).getByRole("button", { name: "Delete scene" }),
     );
@@ -267,7 +272,7 @@ describe("VjScenesSheet", () => {
       makeSetlist("setlist-1", "Opening", ["scene-1", "scene-2"]),
     ];
     const run = createRun();
-    renderSheet(run);
+    await renderSheet(run);
     expect(setlistRow("setlist-1")).toHaveTextContent("2 scenes");
     await clickAndSettle(
       within(setlistRow("setlist-1")).getByRole("button", {
@@ -282,7 +287,7 @@ describe("VjScenesSheet", () => {
       makeSetlist("setlist-1", "Opening", ["scene-1", "scene-2", "scene-1"]),
     ];
     const run = createRun();
-    renderSheet(
+    await renderSheet(
       run,
       stageState({ activeSetlistId: "setlist-1", setlistIndex: 0 }),
     );
@@ -299,7 +304,7 @@ describe("VjScenesSheet", () => {
       makeSetlist("setlist-1", "Opening", ["scene-1", "scene-2"]),
     ];
     const run = createRun();
-    renderSheet(
+    await renderSheet(
       run,
       stageState({ activeSetlistId: "setlist-1", setlistIndex: 1 }),
     );
@@ -318,7 +323,7 @@ describe("VjScenesSheet", () => {
       makeScene("scene-3", "Scene 3", null),
       makeScene("scene-4", "Scene 4", PACK_ID),
     ];
-    renderSheet(createRun());
+    await renderSheet(createRun());
     await clickAndSettle(
       screen.getByRole("button", { name: "Make a set list from these scenes" }),
     );
@@ -337,7 +342,7 @@ describe("VjScenesSheet", () => {
       code: "vj_scene_not_found",
       errorKey: VJ_SOCKET_REASON_KEY.vj_scene_not_found,
     });
-    renderSheet(run);
+    await renderSheet(run);
     await clickAndSettle(screen.getByRole("button", { name: "Save scene" }));
     expect(
       await screen.findByText(
@@ -369,7 +374,7 @@ describe("VjScenesSheet flash warning", () => {
   it("Recall asks first, anchored on the tapped button, and sends once confirmed", async () => {
     const run = createRun();
     const consent = createHeldFlashConsent();
-    renderSheet(run, stageState(), consent.request);
+    await renderSheet(run, stageState(), consent.request);
     const recallButton = within(sceneRow("scene-2")).getByRole("button", {
       name: "Recall scene",
     });
@@ -390,7 +395,7 @@ describe("VjScenesSheet flash warning", () => {
   it("a Recall left unconfirmed sends nothing", async () => {
     const run = createRun();
     const consent = createHeldFlashConsent();
-    renderSheet(run, stageState(), consent.request);
+    await renderSheet(run, stageState(), consent.request);
     await clickAndSettle(
       within(sceneRow("scene-1")).getByRole("button", {
         name: "Recall scene",
@@ -406,7 +411,7 @@ describe("VjScenesSheet flash warning", () => {
     ];
     const run = createRun();
     const consent = createHeldFlashConsent();
-    renderSheet(run, stageState(), consent.request);
+    await renderSheet(run, stageState(), consent.request);
     const startButton = within(setlistRow("setlist-1")).getByRole("button", {
       name: "Start set list",
     });
@@ -434,7 +439,7 @@ describe("VjScenesSheet flash warning", () => {
     ];
     const run = createRun();
     const consent = createHeldFlashConsent();
-    renderSheet(
+    await renderSheet(
       run,
       stageState({ activeSetlistId: "setlist-1", setlistIndex: 0 }),
       consent.request,
@@ -463,7 +468,7 @@ describe("VjScenesSheet flash warning", () => {
     ];
     const run = createRun();
     const consent = createHeldFlashConsent();
-    renderSheet(run, stageState(), consent.request);
+    await renderSheet(run, stageState(), consent.request);
     await clickAndSettle(
       within(setlistRow("setlist-1")).getByRole("button", {
         name: "Start set list",

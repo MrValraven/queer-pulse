@@ -91,6 +91,10 @@ export interface MessageForwarding {
     attachment?: GifAttachment | DocumentAttachment,
     mediaKind?: MediaKind,
     stickerId?: string,
+    /** Called with the error that stopped a brand-new conversation from being
+     *  created, right before this resolves `false`, so the caller can name the
+     *  cause. */
+    onFailure?: (error: unknown) => void,
   ) => Promise<boolean>;
 }
 
@@ -138,6 +142,7 @@ export function useMessageForwarding({
     attachment?: GifAttachment | DocumentAttachment,
     mediaKind?: MediaKind,
     stickerId?: string,
+    onFailure?: (error: unknown) => void,
   ): Promise<boolean> {
     const localId = nextLocalId();
     // One label for the bubble and the session row it stamps below.
@@ -290,7 +295,8 @@ export function useMessageForwarding({
       // contact, so its seat is the member's own profile.
       forwardInto(conversation.id, conversation.mailboxSeatIdentityId);
       return true;
-    } catch {
+    } catch (error) {
+      onFailure?.(error);
       // The conversation never materialized: drop the dead placeholder.
       // Nothing was ever sent, so there is no orphaned optimistic bubble to
       // clean up. The caller (`useForwardSend`) keeps exactly this recipient

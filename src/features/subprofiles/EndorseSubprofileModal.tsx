@@ -4,6 +4,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useEndorsement, useMyEndorsement } from "./api/useEndorsement";
 import { EndorseForm, EndorseSuccess } from "./EndorseSubprofileModalParts";
+import { endorseErrorMessage } from "./personaActionErrors";
 
 /**
  * Endorse a persona with an optional note. Renders through the shared
@@ -81,7 +82,7 @@ export function EndorseSubprofileModal({
             setStatus("done");
           }
         },
-        onError: () => showToast(t("subprofiles:hero.endorse.error"), "error"),
+        onError: (error) => showToast(endorseErrorMessage(error, t), "error"),
       },
     );
   };
@@ -98,7 +99,7 @@ export function EndorseSubprofileModal({
           );
           onClose();
         },
-        onError: () => showToast(t("subprofiles:hero.endorse.error"), "error"),
+        onError: (error) => showToast(endorseErrorMessage(error, t), "error"),
       },
     );
   };

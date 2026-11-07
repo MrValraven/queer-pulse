@@ -110,7 +110,7 @@ beforeEach(() => {
 });
 
 describe("Waiting for Studio fixture", () => {
-  it("holds 34 requests, 9 artists first and 6 from an invite, over two pages", () => {
+  it("holds 34 requests, 9 artists first and 5 from an invite, over two pages", () => {
     expect(DEMO_ACCESS_REQUESTS).toHaveLength(34);
     expect(
       DEMO_ACCESS_REQUESTS.slice(0, 9).every((row) => row.wantsToRelease),
@@ -119,7 +119,7 @@ describe("Waiting for Studio fixture", () => {
       DEMO_ACCESS_REQUESTS.filter((row) => row.wantsToRelease),
     ).toHaveLength(9);
     expect(DEMO_ACCESS_REQUESTS.filter((row) => row.isFromInvite)).toHaveLength(
-      6,
+      5,
     );
     const firstPage = demoAccessRequestPage(null);
     expect(firstPage.items).toHaveLength(30);

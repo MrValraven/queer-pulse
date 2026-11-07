@@ -258,6 +258,8 @@ describe("organizer hooks inside the music admin scope", () => {
         ...eventKeys.attendees(HOUSE_SLUG, false, "musicAdmin"),
         "pages",
       ],
+      // The full key carries the status, arrival and search segments too.
+      exact: false,
     });
     expect(doorQuery?.observers[0]?.options.refetchInterval).toBe(10_000);
   });

@@ -29,6 +29,8 @@ export function useSafeSpaceVouch() {
     Error,
     SafeSpaceVouchInput
   >({
+    // `VouchModal` shows the cause inline, so the app-wide toast stays quiet.
+    meta: { silentError: true },
     mutationFn: async ({ slug, relationship, note, anonymous }) => {
       if (demoMode) return undefined;
       return vouchForSafeSpace(slug, { relationship, note, anonymous });

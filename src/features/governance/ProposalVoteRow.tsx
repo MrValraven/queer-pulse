@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { FiThumbsDown, FiThumbsUp } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import { governanceErrorText } from "./governanceErrors";
 import { ProposalTally } from "./ProposalTally";
 import { bumpTally } from "./bumpTally";
 import { useGovernanceProposalVote } from "./api/useGovernanceProposals";
@@ -24,6 +26,7 @@ export function ProposalVoteRow({
   proposal: GovernanceProposalDTO;
 }) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const fmt = useFormat();
   const { demoMode, vote: castVote } = useGovernanceProposalVote();
   const [localChoice, setLocalChoice] = useState<GovernanceVoteChoice | null>(
@@ -42,7 +45,12 @@ export function ProposalVoteRow({
     if (!demoMode) {
       castVote(
         { proposalId: proposal.id, choice },
-        { onError: () => setLocalChoice(null) },
+        {
+          onError: (error) => {
+            setLocalChoice(null);
+            showToast(governanceErrorText(t, error), "error");
+          },
+        },
       );
     }
   }

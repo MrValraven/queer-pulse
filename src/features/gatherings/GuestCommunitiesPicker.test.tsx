@@ -11,6 +11,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import type { GuestCommunityDraftEntry } from "./api/eventCommunities.api";
 import { GuestCommunitiesPicker } from "./GuestCommunitiesPicker";
+import { awaitCatalog } from "../../test/awaitCatalog";
 
 // Demo mode is on in tests: the search reads the static communities
 // registry, and the demo viewer belongs to `queer-runners` and `trans-hub`
@@ -24,7 +25,7 @@ function entry(
   return { slug, name, accessTier: "public", status };
 }
 
-function renderPicker({
+async function renderPicker({
   leadSlug = "queer-runners",
   guests = [] as GuestCommunityDraftEntry[],
   helper = undefined as ReactNode,
@@ -44,6 +45,7 @@ function renderPicker({
       />
     </TestProviders>,
   );
+  await awaitCatalog("gatherings");
   return { onChange };
 }
 
@@ -101,13 +103,13 @@ async function offeredNames(): Promise<string[]> {
 }
 
 describe("GuestCommunitiesPicker", () => {
-  it("locks the search until a lead community is set", () => {
-    renderPicker({ leadSlug: "" });
+  it("locks the search until a lead community is set", async () => {
+    await renderPicker({ leadSlug: "" });
     expect(searchBox()).toBeDisabled();
   });
 
   it("never offers the lead, a listed community or a private one the viewer is outside", async () => {
-    renderPicker({
+    await renderPicker({
       guests: [entry("queer-social", "Queer Social Lisbon", "accepted")],
     });
     fireEvent.focus(searchBox());
@@ -125,7 +127,7 @@ describe("GuestCommunitiesPicker", () => {
   });
 
   it("adds a picked community as a row that sends on save", async () => {
-    const { onChange } = renderPicker();
+    const { onChange } = await renderPicker();
     fireEvent.focus(searchBox());
     fireEvent.change(searchBox(), { target: { value: "Rainbow" } });
     fireEvent.click(
@@ -141,8 +143,8 @@ describe("GuestCommunitiesPicker", () => {
     ]);
   });
 
-  it("labels each row with its status", () => {
-    renderPicker({
+  it("labels each row with its status", async () => {
+    await renderPicker({
       guests: [
         entry("trans-hub", "Trans & Non-Binary Hub", "accepted"),
         entry("rainbow-arts", "Rainbow Arts Collective", "pending"),
@@ -159,20 +161,20 @@ describe("GuestCommunitiesPicker", () => {
     ).toBeInTheDocument();
   });
 
-  it("removes the row whose Remove community is pressed", () => {
+  it("removes the row whose Remove community is pressed", async () => {
     const guests = [
       entry("trans-hub", "Trans & Non-Binary Hub", "accepted"),
       entry("rainbow-arts", "Rainbow Arts Collective", "pending"),
     ];
-    const { onChange } = renderPicker({ guests });
+    const { onChange } = await renderPicker({ guests });
     fireEvent.click(
       screen.getAllByRole("button", { name: "Remove community" })[1]!,
     );
     expect(onChange).toHaveBeenCalledWith([guests[0]]);
   });
 
-  it("offers no remove action on a declined row", () => {
-    renderPicker({
+  it("offers no remove action on a declined row", async () => {
+    await renderPicker({
       guests: [
         entry("queer-elders", "Queer Elders", "declined"),
         entry("rainbow-arts", "Rainbow Arts Collective", "pending"),
@@ -187,8 +189,8 @@ describe("GuestCommunitiesPicker", () => {
     ).toBeInTheDocument();
   });
 
-  it("holds the search at five pending or joined guests", () => {
-    renderPicker({
+  it("holds the search at five pending or joined guests", async () => {
+    await renderPicker({
       guests: ["a", "b", "c", "d", "e"].map((slug) =>
         entry(slug, `Community ${slug}`, "pending"),
       ),
@@ -201,8 +203,8 @@ describe("GuestCommunitiesPicker", () => {
     ).toBeInTheDocument();
   });
 
-  it("counts no declined row toward the five", () => {
-    renderPicker({
+  it("counts no declined row toward the five", async () => {
+    await renderPicker({
       guests: [
         ...["a", "b", "c", "d"].map((slug) =>
           entry(slug, `Community ${slug}`, "pending"),
@@ -213,8 +215,8 @@ describe("GuestCommunitiesPicker", () => {
     expect(searchBox()).toBeEnabled();
   });
 
-  it("closes the open list on Escape and keeps the key from a surrounding dialog", () => {
-    renderPicker();
+  it("closes the open list on Escape and keeps the key from a surrounding dialog", async () => {
+    await renderPicker();
     document.addEventListener("keydown", documentKeyDown);
     fireEvent.focus(searchBox());
     expect(isListOpen()).toBe(true);
@@ -224,7 +226,7 @@ describe("GuestCommunitiesPicker", () => {
   });
 
   it("returns to the search on Escape from an option and keeps the key from a surrounding dialog", async () => {
-    renderPicker();
+    await renderPicker();
     fireEvent.focus(searchBox());
     await offeredNames();
     document.addEventListener("keydown", documentKeyDown);
@@ -240,7 +242,7 @@ describe("GuestCommunitiesPicker", () => {
   });
 
   it("returns focus to the search after a removal and leaves the list closed over the rows", async () => {
-    renderPicker({
+    await renderPicker({
       guests: [entry("rainbow-arts", "Rainbow Arts Collective", "pending")],
     });
     fireEvent.click(screen.getByRole("button", { name: "Remove community" }));
@@ -250,7 +252,7 @@ describe("GuestCommunitiesPicker", () => {
   });
 
   it("reopens the list when the focused search is clicked after a pick", async () => {
-    renderPicker();
+    await renderPicker();
     fireEvent.focus(searchBox());
     fireEvent.change(searchBox(), { target: { value: "Rainbow" } });
     fireEvent.click(
@@ -284,8 +286,8 @@ describe("GuestCommunitiesPicker", () => {
     expect(searchBox()).toBeDisabled();
   });
 
-  it("shows the hint between the search and the rows and reads it with the search", () => {
-    renderPicker({
+  it("shows the hint between the search and the rows and reads it with the search", async () => {
+    await renderPicker({
       guests: [entry("rainbow-arts", "Rainbow Arts Collective", "pending")],
       helper: "Invite other communities to host it with you.",
     });
@@ -306,8 +308,8 @@ describe("GuestCommunitiesPicker", () => {
     ).toBeTruthy();
   });
 
-  it("renders no hint element of its own when none is passed", () => {
-    renderPicker();
+  it("renders no hint element of its own when none is passed", async () => {
+    await renderPicker();
     expect(document.getElementById("guest-hint")).toBeNull();
   });
 });

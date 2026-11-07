@@ -1,15 +1,54 @@
 /* The dock's tempo bar and transition row, in the dark Pulse Live stage look
-   (the --qs-* tokens). Each row is one 44px band (the plan's fold budget);
-   every control reaches var(--tap-min) through its hit area, and every move
-   animates only opacity or transform. */
+   (the --qs-* tokens). Every move animates only opacity or transform.
+
+   Polish (the default): each row is one 44px band. Every chip shares one
+   surface, border and radius, and a chip with a value stacks a small caption
+   over it: BPM, Downbeat, Quantize, Transition (Mode in the split column,
+   under its Transition heading) and Speed. Every value in a
+   row sits on one line, 7px above the chip's bottom edge: a chip without a
+   caption (Tap, the beat segments) bottom-aligns its text on that line, and
+   the beat dots centre on it. Chips size to their content with equal 5px
+   gaps. On a phone or in the split column the beat dots (tempo bar) and the
+   length (transition row) take the rest, so both rows end flush on the right;
+   on a wider band the dots stop at 8rem and Downbeat + Quantize move to the
+   right end. The tightest case is Portuguese with the mic badge in the 360px
+   split column (332 inside its padding):
+     tempo bar       44 BPM + 21 mic + 62 Tap + 65 Downbeat ("1.º tempo")
+                     + 81 Quantize + 4 gaps of 5 = 293,
+                     so the dots get 39 (61 on a 390px phone, 354 wide)
+     transition row  100 mode chip + 80 Speed + 2 gaps of 5 = 190,
+                     so the length gets 142 (164 on the phone)
+   Inside a 44px chip a caption line is 10.5 and a value 14.3 to 16.5, so a
+   caption over a value is 28 tall; a caption over a two-line mode name is 40
+   and starts at the chip's top edge.
+
+   Performance pads (`[data-vj-dock-variant="pads"]`): the two rows sit in the
+   strip panel as 40px bands with 5px chip padding and the value line 5px up,
+   and every chip keeps a 44px hit area through a 2px ::after above and
+   below. The Transition and Speed captions fold away (the mode name and "1x"
+   read on their own beside the length), so the transition row centres its
+   values; BPM, Downbeat and Quantize keep theirs, since "124", "1" and "Off"
+   need the word. Two 40px rows plus the shell's panel padding and gap make
+   the strip; its 320px inside (split) leaves the dots 33 in the tightest
+   case. */
 
 .row {
-  --vj-dock-gap: 6px;
+  --vj-dock-gap: 5px;
+  --vj-chip-pad: 6px;
+  --vj-chip-height: var(--tap-min);
+  --vj-mode-chip-width: 100px;
+  --vj-chip-value-inset: 7px;
   display: flex;
   align-items: center;
   gap: var(--vj-dock-gap);
   min-inline-size: 0;
-  block-size: var(--tap-min);
+  block-size: var(--vj-chip-height);
+}
+
+:global([data-vj-dock-variant="pads"]) .row {
+  --vj-chip-pad: 5px;
+  --vj-chip-height: 40px;
+  --vj-chip-value-inset: 5px;
 }
 
 /* ── Shared chip: a 44px tall glass control ── */
@@ -32,7 +71,10 @@
   font-size: var(--text-14);
   font-weight: 600;
   line-height: 1.1;
+  text-align: center;
   white-space: nowrap;
+  /* base.css lets every text break anywhere; a chip breaks between words. */
+  overflow-wrap: normal;
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
@@ -40,6 +82,41 @@
   transition-property: opacity, transform;
   transition-duration: var(--dur-fast);
   transition-timing-function: var(--ease-out);
+}
+
+/* In the rows every chip takes the row's height and padding, and its value
+   sits on the row's value line. A caption chip falls back to the top edge
+   when its content outgrows the line (a two-line mode name). */
+.row .chip {
+  align-items: flex-end;
+  block-size: var(--vj-chip-height);
+  padding-block: 0 var(--vj-chip-value-inset);
+  padding-inline: var(--vj-chip-pad);
+}
+
+.row .captionChip {
+  align-items: center;
+  justify-content: center;
+  justify-content: safe flex-end;
+}
+
+/* Pads: the transition row shows no captions, so its values centre. */
+:global([data-vj-dock-variant="pads"]) .row[data-vj-transition-row] .chip {
+  align-items: center;
+  justify-content: center;
+  padding-block: 0;
+}
+
+/* Pads: the 40px chip still answers a 44px tap. */
+:global([data-vj-dock-variant="pads"]) .row .chip {
+  position: relative;
+}
+
+:global([data-vj-dock-variant="pads"]) .row .chip::after {
+  content: "";
+  position: absolute;
+  inset-block: -2px;
+  inset-inline: 0;
 }
 
 .chip:focus-visible {
@@ -65,16 +142,51 @@
   block-size: 16px;
 }
 
+/* ── Caption over value: one pattern for every chip that shows a value ── */
+.captionChip {
+  flex-direction: column;
+  gap: 1px;
+}
+
+/* One line; a caption that outgrows its chip still breaks between words. */
+.chipCaption {
+  color: var(--qs-text-mute);
+  font-size: var(--text-10);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: normal;
+}
+
+.chipValue {
+  font-size: var(--text-13);
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.chipNumber {
+  font-size: var(--text-15);
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Pads: the captions the row's context already says. */
+:global([data-vj-dock-variant="pads"]) .foldingCaption {
+  display: none;
+}
+
 /* ── Tempo bar ── */
 .bpmCluster {
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
 }
 
-.bpmValue {
-  font-variant-numeric: tabular-nums;
+.bpmNumber {
+  min-inline-size: 3ch;
 }
 
 .micBadge {
@@ -82,7 +194,7 @@
   flex-direction: column;
   align-items: center;
   gap: 3px;
-  inline-size: 22px;
+  inline-size: 18px;
   color: var(--qs-text-mute);
 }
 
@@ -111,29 +223,16 @@
   transition-timing-function: var(--ease-out);
 }
 
-.downbeat {
+/* Downbeat leads the right-hand group: on a wide band it takes the free
+   space before it, so the row reads BPM, Tap and the dots on the left and
+   Downbeat + Quantize on the right. */
+.downbeatChip {
+  margin-inline-start: auto;
+}
+
+/* The "1" in coral, the same as the first beat dot it sets. */
+.downbeatNumber {
   color: var(--accent);
-  font-size: var(--text-18);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-
-.quantize {
-  flex-direction: column;
-  gap: 1px;
-  padding-inline: 8px;
-}
-
-.quantizeCaption {
-  color: var(--qs-text-mute);
-  font-size: var(--text-10);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.quantizeMode {
-  font-size: var(--text-13);
 }
 
 .quantize[data-quantize="beat"],
@@ -142,22 +241,31 @@
 }
 
 /* ── Beat dots: data-beat (0..3) lights one dot; written by the ticker
-   through a ref, so a beat costs no React render ── */
+   through a ref, so a beat costs no React render. The dots sit on the row's
+   value line (the top padding moves their centre down to its middle: the
+   inset, the 1px border and half the 16px line); the first one, the "1" of the bar, is larger and coral. They
+   grow to 8rem at most. The box is a size container, so a narrow row draws
+   smaller, closer dots. ── */
 .beatDots {
+  container-type: inline-size;
   display: flex;
-  flex: 1 1 0;
+  flex: 0 1 8rem;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  min-inline-size: 0;
-  block-size: var(--tap-min);
+  box-sizing: border-box;
+  min-inline-size: 28px;
+  block-size: var(--vj-chip-height, var(--tap-min));
+  padding-block-start: calc(
+    var(--vj-chip-height, var(--tap-min)) - 2 *
+      var(--vj-chip-value-inset, 7px) - 18px
+  );
 }
 
 .beatDot {
   flex: 0 0 auto;
   box-sizing: border-box;
-  inline-size: 10px;
-  block-size: 10px;
+  inline-size: 8px;
+  block-size: 8px;
   border: 2px solid transparent;
   border-radius: 50%;
   background: var(--qs-text);
@@ -168,9 +276,51 @@
   transition-timing-function: var(--ease-out);
 }
 
-/* The first dot is the "1" of the bar. */
+.beatDot + .beatDot {
+  margin-inline-start: 7px;
+}
+
 .beatDot:first-child {
+  inline-size: 10px;
+  block-size: 10px;
   background: var(--accent);
+}
+
+/* Each size steps down before it would touch the box's edges, so the dots
+   keep 4px of air on each side; with the 5px row gap that is --gap-xs (9px)
+   to the neighbouring chips. 10 + 3 x 8 + 3 x 7 = 55 needs 63; under that,
+   8 + 3 x 6 + 3 x 4 = 38 needs 46; under that, 7 + 3 x 5 + 3 x 2 = 28, the
+   box's floor, where the air gives way so the row still fits. */
+@container (max-inline-size: 62px) {
+  .beatDot {
+    inline-size: 6px;
+    block-size: 6px;
+  }
+
+  .beatDot + .beatDot {
+    margin-inline-start: 4px;
+  }
+
+  .beatDot:first-child {
+    inline-size: 8px;
+    block-size: 8px;
+  }
+}
+
+@container (max-inline-size: 45px) {
+  .beatDot {
+    inline-size: 5px;
+    block-size: 5px;
+  }
+
+  .beatDot + .beatDot {
+    margin-inline-start: 2px;
+  }
+
+  .beatDot:first-child {
+    inline-size: 7px;
+    block-size: 7px;
+  }
 }
 
 .beatDots[data-beat="0"] > .beatDot:nth-child(1),
@@ -208,16 +358,57 @@
 }
 
 /* ── Transition row ── */
+
+/* A fixed width keeps the length still while the mode changes. A long name
+   takes two lines between words ("Passar por / branco"); the flash mark sits
+   in the top-right corner, the same place as on the pads. */
 .modeChip {
-  flex: 0 1 auto;
-  min-inline-size: 64px;
-  max-inline-size: 104px;
-  font-size: var(--text-13);
+  position: relative;
+  inline-size: var(--vj-mode-chip-width);
+  white-space: normal;
+}
+
+.modeChip > svg {
+  position: absolute;
+  inset-block-start: 4px;
+  inset-inline-end: 4px;
+  inline-size: 10px;
+  block-size: 10px;
 }
 
 .modeLabel {
-  overflow: hidden;
-  text-overflow: ellipsis;
+  text-wrap: balance;
+}
+
+/* The polished split column heads the row with "Transition", so there the
+   chip's caption reads "Mode"; the phone band and a short split window
+   (headings hidden) keep "Transition". */
+.modeCaptionSplit {
+  display: none;
+}
+
+:global([data-vj-remote-dock="split"][data-vj-dock-variant="polish"])
+  .modeCaptionTitle {
+  display: none;
+}
+
+:global([data-vj-remote-dock="split"][data-vj-dock-variant="polish"])
+  .modeCaptionSplit {
+  display: block;
+}
+
+/* A short split window hides the section headings, so the chip says
+   "Transition" again. */
+@media (max-height: 500px) {
+  :global([data-vj-remote-dock="split"][data-vj-dock-variant="polish"])
+    .modeCaptionTitle {
+    display: block;
+  }
+
+  :global([data-vj-remote-dock="split"][data-vj-dock-variant="polish"])
+    .modeCaptionSplit {
+    display: none;
+  }
 }
 
 .lengthSlot {
@@ -228,7 +419,11 @@
 
 .speedChip {
   margin-inline-start: auto;
-  font-variant-numeric: tabular-nums;
+}
+
+/* Wide enough for "0.25x", so the chip keeps one width across speeds. */
+.speedNumber {
+  min-inline-size: 4.5ch;
 }
 
 .beatChips {
@@ -238,10 +433,15 @@
   min-inline-size: 0;
 }
 
-.beatChip {
+/* One segmented control: five segments share the length's width, 28 to 34px
+   each in the split column, every one the row's full height. */
+.row .beatChip {
   flex: 1 1 0;
+  min-inline-size: 24px;
   padding-inline: 0;
   border-radius: 0;
+  font-size: var(--text-15);
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
@@ -263,7 +463,7 @@
   display: flex;
   flex: 1 1 auto;
   align-items: center;
-  gap: 6px;
+  gap: var(--vj-dock-gap);
   min-inline-size: 0;
 }
 
@@ -325,6 +525,10 @@
   background: var(--vj-length-fill);
 }
 
+/* The crossfader's thumb (kit/VjRemoteKit.module.css): the full 44px hit
+   area around a small mark at its centre, an 18px stage-text cap, a 3px
+   accent ring and a tight accent glow; the rest of the hit area stays clear.
+   The -19px margin centres it on the 6px track in WebKit. */
 .range::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -336,9 +540,14 @@
   border-radius: 50%;
   background: radial-gradient(
     circle closest-side,
-    var(--qs-text) 0 50%,
-    transparent 54% 100%
+    var(--qs-text) 0 40%,
+    var(--accent) 42% 56%,
+    rgba(var(--accent-rgb), 0.3) 58%,
+    transparent 70%
   );
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
 }
 
 .range::-moz-range-thumb {
@@ -349,9 +558,22 @@
   border-radius: 50%;
   background: radial-gradient(
     circle closest-side,
-    var(--qs-text) 0 50%,
-    transparent 54% 100%
+    var(--qs-text) 0 40%,
+    var(--accent) 42% 56%,
+    rgba(var(--accent-rgb), 0.3) 58%,
+    transparent 70%
   );
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.range:active:not([aria-disabled="true"])::-webkit-slider-thumb {
+  transform: scale(1.12);
+}
+
+.range:active:not([aria-disabled="true"])::-moz-range-thumb {
+  transform: scale(1.12);
 }
 
 /* ── Popovers (BPM entry, transition picker, speed) ── */
@@ -490,7 +712,9 @@
 @media (prefers-reduced-motion: reduce) {
   .chip,
   .beatDot,
-  .micMeterFill {
+  .micMeterFill,
+  .range::-webkit-slider-thumb,
+  .range::-moz-range-thumb {
     transition-duration: 0s;
   }
 }

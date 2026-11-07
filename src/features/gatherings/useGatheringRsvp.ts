@@ -4,6 +4,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { gatheringHasEnded, type GatheringDetail } from "./data";
 import { useRsvp, useUnrsvp } from "./api/useEventMutations";
+import { rsvpCancelErrorMessage } from "./gatheringActionErrors";
 import { rsvpErrorMessage } from "./rsvpErrors";
 import { useHasRsvpCutoffPassed } from "./rsvpCutoff";
 import { useGatheringPreview } from "./guestPreview/gatheringPreviewContext";
@@ -183,7 +184,10 @@ export function useGatheringRsvp(
     unrsvp.mutate(undefined, {
       onSuccess: () =>
         showToast(t("gatherings:rsvpControl.cancelledToast"), "success"),
-      onError: revert,
+      onError: (error) => {
+        revert();
+        showToast(rsvpCancelErrorMessage(error, t), "error");
+      },
     });
   };
 

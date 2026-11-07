@@ -9,6 +9,7 @@ import type {
   VjStageState,
 } from "../../../../../shared/contracts/vj";
 import { TestProviders } from "../../../../../test/TestProviders";
+import { awaitCatalog } from "../../../../../test/awaitCatalog";
 import type {
   VjCommandOutcome,
   VjIdentifyOutcome,
@@ -86,7 +87,7 @@ function createRun(): VjRun &
     Mock<(name: string) => Promise<VjCommandOutcome | VjIdentifyOutcome>>;
 }
 
-function renderSheet(
+async function renderSheet(
   run: VjRun,
   options: {
     screens?: VjScreenStatus[];
@@ -108,11 +109,13 @@ function renderSheet(
       onClose={() => {}}
     />
   );
-  return render(
+  const renderedView = render(
     <TestProviders>
       <LazyMotion features={domMax}>{ui}</LazyMotion>
     </TestProviders>,
   );
+  await awaitCatalog("vj");
+  return renderedView;
 }
 
 /** Clicks, then lets the command's promise settle inside act. */
@@ -134,17 +137,20 @@ describe("VjScreensSheet", () => {
     vi.restoreAllMocks();
   });
 
-  it("lists screens in number order", () => {
-    renderSheet(createRun());
+  it("lists screens in number order", async () => {
+    await renderSheet(createRun());
+    // The sheet's own title is an h3 too: leave out the heading that names the dialog.
+    const titleId = screen.getByRole("dialog").getAttribute("aria-labelledby");
     const titles = screen
       .getAllByRole("heading", { level: 3 })
+      .filter((heading) => heading.id !== titleId)
       .map((heading) => heading.textContent);
     expect(titles).toEqual(["Screen 1", "Screen 2"]);
   });
 
   it("Show number sends identifyScreen with the screen id", async () => {
     const run = createRun();
-    renderSheet(run);
+    await renderSheet(run);
     await clickAndSettle(
       screen.getByRole("button", { name: "Show number on screen 2" }),
     );
@@ -153,7 +159,7 @@ describe("VjScreensSheet", () => {
 
   it("Show every screen's number sends null", async () => {
     const run = createRun();
-    renderSheet(run);
+    await renderSheet(run);
     await clickAndSettle(
       screen.getByRole("button", { name: "Show every screen's number" }),
     );
@@ -162,7 +168,7 @@ describe("VjScreensSheet", () => {
 
   it("picking a clip sends an override with one source", async () => {
     const run = createRun();
-    renderSheet(run);
+    await renderSheet(run);
     fireEvent.click(
       within(rowOf(SCREEN_ONE_ID)).getByRole("button", {
         name: "What this screen shows Screen 1",
@@ -180,7 +186,7 @@ describe("VjScreensSheet", () => {
 
   it("Follow the main look sends null", async () => {
     const run = createRun();
-    renderSheet(run, {
+    await renderSheet(run, {
       overrides: {
         [SCREEN_ONE_ID]: {
           clipId: null,
@@ -202,7 +208,7 @@ describe("VjScreensSheet", () => {
 
   it("says no screen is open", async () => {
     const run = createRun();
-    renderSheet(run, { screens: [] });
+    await renderSheet(run, { screens: [] });
     expect(
       screen.getByText(
         "No screen open. Open the screen on the projector laptop",

@@ -31,6 +31,9 @@ import { vjErrorKeyOf } from "../../vjErrors";
 import { vjClipReadinessOf } from "../../live/vjScreensSummary";
 import type { VjStageController } from "../../live/useVjStage";
 import type { VjErrorValues } from "../../live/vjStageCommands";
+import { VjClipFailureSummary } from "../failures/VjClipFailureSummary";
+import { VjClipFailuresSheet } from "../failures/VjClipFailuresSheet";
+import { useVjClipFailures } from "../failures/useVjClipFailures";
 import { VjRemoteGrid, type VjTileState } from "../grid/VjRemoteGrid";
 import type { VjCueMode } from "../hooks/useVjCueMode";
 import type { VjDockPads } from "../hooks/useVjDockPads";
@@ -372,7 +375,11 @@ function vjGridEmptyKeyOf(
   return isFavoritesOnly ? "vj:grid.favoritesEmpty" : null;
 }
 
-/** The clip grid (or the generators) with each tile's live, pending and readiness state. */
+/**
+ * The clip grid (or the generators) with each tile's live, pending and
+ * readiness state, the line over it naming how many clips couldn't load,
+ * and the sheet that says why for each one.
+ */
 function VjRemoteGridBand({ session }: VjRemoteBandProps): JSX.Element {
   const { library, actions, view, frames, stage, cue, isBlocked } = session;
   const shownState = frames.shownState;
@@ -406,6 +413,14 @@ function VjRemoteGridBand({ session }: VjRemoteBandProps): JSX.Element {
     },
     [actionTileStateOf, pendingState, shownLiveClipId, screens, activePackId],
   );
+  const failures = useVjClipFailures({
+    clips: library.packClips,
+    screens,
+    activePackId,
+    sheets: session.sheets,
+  });
+  const { showFailures } = failures;
+  const showAllFailures = useCallback(() => showFailures(null), [showFailures]);
 
   // Where the grid starts, so the tiles can fit three rows above the dock.
   const gridTopRef = useVjGridTop();
@@ -416,6 +431,11 @@ function VjRemoteGridBand({ session }: VjRemoteBandProps): JSX.Element {
       className={styles.gridBand}
       aria-busy={!library.hasLoadedPackClips}
     >
+      <VjClipFailureSummary
+        failedCount={failures.failedClips.length}
+        isShown={view.gridSource === "pack"}
+        onSeeWhy={showAllFailures}
+      />
       <VjRemoteGrid
         source={view.gridSource}
         clips={gridClips}
@@ -434,11 +454,22 @@ function VjRemoteGridBand({ session }: VjRemoteBandProps): JSX.Element {
         }}
         onTapClip={(clipId) => dispatch({ kind: "goClip", clipId }, "press")}
         onToggleFavorite={actions.toggleFavorite}
+        onShowClipFailure={showFailures}
         generatorIsPending={actions.generatorIsPending}
         onGoGenerator={(generatorId, variant) =>
           dispatch({ kind: "goGenerator", generatorId, variant }, "press")
         }
       />
+      <AnimatePresence>
+        {failures.isSheetOpen ? (
+          <VjClipFailuresSheet
+            key="failures"
+            failedClips={failures.failedClips}
+            focusClipId={failures.focusClipId}
+            onClose={failures.closeFailures}
+          />
+        ) : null}
+      </AnimatePresence>
     </section>
   );
 }

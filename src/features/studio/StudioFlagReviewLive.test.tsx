@@ -8,6 +8,7 @@ import {
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../shared/api/client";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { resetDemoFlagReview } from "./api/studioDemoFlagReview";
 import { StudioFlagReviewPage } from "./StudioFlagReviewPage";
 
@@ -47,12 +48,13 @@ beforeEach(() => {
   resetDemoFlagReview();
 });
 
-function renderReview() {
+async function renderReview() {
   render(
     <TestProviders initialEntries={["/studio/flag-review"]}>
       <StudioFlagReviewPage />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
 }
 
 // Two open reports name "Cidade dos santos"; the first card is the newest.
@@ -90,13 +92,14 @@ describe("flag review: the open tab lives in the URL", () => {
         <StudioFlagReviewPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       await screen.findByRole("tab", { name: /Disputes/, selected: true }),
     ).toBeInTheDocument();
   });
 
   it("asks before a typed note is thrown away", async () => {
-    renderReview();
+    await renderReview();
     const card = await firstReportCard();
     fireEvent.click(
       within(card).getByRole("button", { name: "Take down release" }),
@@ -122,26 +125,26 @@ describe("flag review: the open tab lives in the URL", () => {
 describe("flag review: who sees it", () => {
   it("answers the Studio 404 to a member who is not staff", async () => {
     access.isStaff = false;
-    renderReview();
-    expect(await screen.findByText("Track not found")).toBeInTheDocument();
+    await renderReview();
+    expect(await screen.findByText("Page not found")).toBeInTheDocument();
   });
 
   it("shows the live review and its tabs in the demo", async () => {
     access.isShowcase = true;
-    renderReview();
+    await renderReview();
     expect(
       await screen.findByRole("heading", {
         level: 1,
         name: /studio reports and disputes/i,
       }),
     ).toBeInTheDocument();
-    expect(await screen.findByRole("tab", { name: "Disputes" })).toBeVisible();
+    expect(await screen.findByRole("tab", { name: /^Disputes/ })).toBeVisible();
   });
 });
 
 describe("flag review: Reports", () => {
   it("takes a release down with a required reason, then every card for it leaves and focus moves on", async () => {
-    renderReview();
+    await renderReview();
     const card = await firstReportCard();
     fireEvent.click(
       within(card).getByRole("button", { name: "Take down release" }),
@@ -176,7 +179,7 @@ describe("flag review: Reports", () => {
 
   it("keeps the card and the dialog when the decision fails", async () => {
     access.shouldFail = true;
-    renderReview();
+    await renderReview();
     const card = await firstReportCard();
     fireEvent.click(
       within(card).getByRole("button", { name: "Dismiss report" }),
@@ -199,7 +202,7 @@ describe("flag review: Reports", () => {
 
   it("closes the dialog when the report was already decided elsewhere", async () => {
     access.failWith = new ApiError(404, "Not found");
-    renderReview();
+    await renderReview();
     const card = await firstReportCard();
     fireEvent.click(
       within(card).getByRole("button", { name: "Dismiss report" }),
@@ -219,7 +222,7 @@ describe("flag review: Reports", () => {
   });
 
   it("closes the dialog on Cancel", async () => {
-    renderReview();
+    await renderReview();
     const card = await firstReportCard();
     fireEvent.click(
       within(card).getByRole("button", { name: "Dismiss report" }),
@@ -235,18 +238,18 @@ describe("flag review: Reports", () => {
   });
 
   it("names each queue with a heading between the page and its cards", async () => {
-    renderReview();
+    await renderReview();
     expect(
       await screen.findByRole("heading", { level: 2, name: "Reports" }),
     ).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("tab", { name: "Disputes" }));
+    fireEvent.click(screen.getByRole("tab", { name: /^Disputes/ }));
     expect(
       await screen.findByRole("heading", { level: 2, name: "Disputes" }),
     ).toBeInTheDocument();
   });
 
   it("opens the report in the moderation queue", async () => {
-    renderReview();
+    await renderReview();
     const card = await firstReportCard();
     expect(
       within(card).getByRole("link", { name: "Open in moderation" }),
@@ -259,8 +262,8 @@ describe("flag review: Reports", () => {
 
 describe("flag review: Disputes and Withdrawn", () => {
   it("keeps a disputed release down with a reply under the catalog label", async () => {
-    renderReview();
-    fireEvent.click(await screen.findByRole("tab", { name: "Disputes" }));
+    await renderReview();
+    fireEvent.click(await screen.findByRole("tab", { name: /^Disputes/ }));
     fireEvent.click(
       await screen.findByRole("button", { name: "Keep release down" }),
     );
@@ -283,8 +286,8 @@ describe("flag review: Disputes and Withdrawn", () => {
     access.failWith = new ApiError(409, "Conflict", {
       code: "studio_release_not_taken_down",
     });
-    renderReview();
-    fireEvent.click(await screen.findByRole("tab", { name: "Disputes" }));
+    await renderReview();
+    fireEvent.click(await screen.findByRole("tab", { name: /^Disputes/ }));
     fireEvent.click(
       await screen.findByRole("button", { name: "Keep release down" }),
     );
@@ -305,8 +308,8 @@ describe("flag review: Disputes and Withdrawn", () => {
   });
 
   it("restores a disputed release with a reply and empties the queue", async () => {
-    renderReview();
-    fireEvent.click(await screen.findByRole("tab", { name: "Disputes" }));
+    await renderReview();
+    fireEvent.click(await screen.findByRole("tab", { name: /^Disputes/ }));
     fireEvent.click(
       await screen.findByRole("button", { name: "Restore release" }),
     );
@@ -326,7 +329,7 @@ describe("flag review: Disputes and Withdrawn", () => {
   });
 
   it("restores a withdrawn release with no dispute straight away", async () => {
-    renderReview();
+    await renderReview();
     fireEvent.click(await screen.findByRole("tab", { name: "Withdrawn" }));
     expect(await screen.findByText("Dispute waiting")).toBeInTheDocument();
     expect(
@@ -350,7 +353,7 @@ describe("flag review: Disputes and Withdrawn", () => {
   });
 
   it("restores a withdrawn release with a dispute waiting through that dispute, with a reply", async () => {
-    renderReview();
+    await renderReview();
     fireEvent.click(await screen.findByRole("tab", { name: "Withdrawn" }));
     fireEvent.click(
       within(await withdrawnCardWithDispute()).getByRole("button", {
@@ -372,7 +375,7 @@ describe("flag review: Disputes and Withdrawn", () => {
     await waitFor(() =>
       expect(screen.queryByText("Dispute waiting")).not.toBeInTheDocument(),
     );
-    fireEvent.click(screen.getByRole("tab", { name: "Disputes" }));
+    fireEvent.click(screen.getByRole("tab", { name: /^Disputes/ }));
     expect(
       await screen.findByRole("heading", { name: "No open disputes" }),
     ).toBeInTheDocument();
@@ -382,7 +385,7 @@ describe("flag review: Disputes and Withdrawn", () => {
     access.failWith = new ApiError(409, "Conflict", {
       code: "studio_release_has_open_dispute",
     });
-    renderReview();
+    await renderReview();
     fireEvent.click(await screen.findByRole("tab", { name: "Withdrawn" }));
     fireEvent.click(
       within(await withdrawnCardTitled("Bairro antigo")).getByRole("button", {

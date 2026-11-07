@@ -8,6 +8,7 @@ import {
 } from "../../../../shared/contracts/vj";
 import { PointerEventStub } from "../../../../test/pointerEventStub";
 import { TestProviders } from "../../../../test/TestProviders";
+import { awaitCatalogUnderFakeTimers } from "../../../../test/awaitCatalogUnderFakeTimers";
 import type { VjCommandOutcome } from "../../live/vjStageCommands";
 import type { VjPadSendHandler } from "./VjEffectPad";
 import { VjPadsRow, type VjPadsRowProps } from "./VjPadsRow";
@@ -25,7 +26,7 @@ function createEffects(overrides: Partial<VjEffects> = {}): VjEffects {
   return { ...createVjStageState("show-pads", 0).effects, ...overrides };
 }
 
-function renderRow(overrides: Partial<VjPadsRowProps> = {}) {
+async function renderRow(overrides: Partial<VjPadsRowProps> = {}) {
   const onPadSend = vi.fn<VjPadSendHandler>();
   const onOpenLibrary = vi.fn();
   const props: VjPadsRowProps = {
@@ -49,6 +50,7 @@ function renderRow(overrides: Partial<VjPadsRowProps> = {}) {
       </LazyMotion>
     </TestProviders>,
   );
+  await awaitCatalogUnderFakeTimers("vj");
   const row = document.querySelector<HTMLElement>("[data-vj-pads-row]");
   if (row === null) throw new Error("pads row not rendered");
   return { ...view, row, onPadSend, onOpenLibrary };
@@ -77,8 +79,8 @@ afterEach(() => {
 });
 
 describe("VjPadsRow", () => {
-  it("renders strobe then the dock pads in order", () => {
-    const { row } = renderRow();
+  it("renders strobe then the dock pads in order", async () => {
+    const { row } = await renderRow();
     expect(padIdsOf(row)).toEqual(["strobe", "invert", "tint", "mirror"]);
     expect(row).toHaveAccessibleName("Effect pads");
     const lastButton = row.querySelectorAll("button")[4];
@@ -87,14 +89,14 @@ describe("VjPadsRow", () => {
     expect(lastButton?.textContent?.trim()).not.toBe("");
   });
 
-  it("All effects opens the library", () => {
-    const { onOpenLibrary } = renderRow();
+  it("All effects opens the library", async () => {
+    const { onOpenLibrary } = await renderRow();
     fireEvent.click(screen.getByRole("button", { name: "All effects" }));
     expect(onOpenLibrary).toHaveBeenCalledOnce();
   });
 
-  it("becomes a grid in split layout", () => {
-    const { row, rerender } = renderRow();
+  it("becomes a grid in split layout", async () => {
+    const { row, rerender } = await renderRow();
     expect(row).toHaveAttribute("data-layout", "phone");
     rerender(
       <TestProviders>
@@ -120,9 +122,9 @@ describe("VjPadsRow", () => {
     );
   });
 
-  it("the strobe pad counts down from 10 s", () => {
+  it("the strobe pad counts down from 10 s", async () => {
     const startedAt = Date.now();
-    const { row } = renderRow({
+    const { row } = await renderRow({
       effects: createEffects({ isStrobing: true, strobeStartedAt: startedAt }),
     });
     act(() => {
@@ -137,8 +139,8 @@ describe("VjPadsRow", () => {
     expect(strobe).toHaveAccessibleDescription(/7 s left/);
   });
 
-  it("a strobe tap goes out as the strobe pad's send", () => {
-    const { row, onPadSend } = renderRow();
+  it("a strobe tap goes out as the strobe pad's send", async () => {
+    const { row, onPadSend } = await renderRow();
     const strobe = row.querySelector<HTMLElement>('[data-vj-pad="strobe"]');
     if (strobe === null) throw new Error("strobe pad not rendered");
     fireEvent.pointerDown(strobe, { pointerId: 1, pointerType: "mouse" });
@@ -146,8 +148,8 @@ describe("VjPadsRow", () => {
     expect(onPadSend).toHaveBeenCalledExactlyOnceWith("strobe", "on", strobe);
   });
 
-  it("reads each pad's lit state through isOnOf", () => {
-    const { row } = renderRow({
+  it("reads each pad's lit state through isOnOf", async () => {
+    const { row } = await renderRow({
       effects: createEffects({
         settings: { tint: { isOn: true, amount: 1, variant: "coral" } },
       }),
@@ -159,8 +161,8 @@ describe("VjPadsRow", () => {
     expect(pressedIds).toEqual(["invert", "tint"]);
   });
 
-  it("a blocked row points every pad at the reason line", () => {
-    const { row } = renderRow({
+  it("a blocked row points every pad at the reason line", async () => {
+    const { row } = await renderRow({
       isBlocked: true,
       blockedReasonId: "status-line",
     });
@@ -172,8 +174,8 @@ describe("VjPadsRow", () => {
     }
   });
 
-  it("an open row names no reason on its pads", () => {
-    const { row } = renderRow({ blockedReasonId: "status-line" });
+  it("an open row names no reason on its pads", async () => {
+    const { row } = await renderRow({ blockedReasonId: "status-line" });
     for (const pad of row.querySelectorAll<HTMLElement>("[data-vj-pad]")) {
       expect(describedByIdsOf(pad)).not.toContain("status-line");
     }

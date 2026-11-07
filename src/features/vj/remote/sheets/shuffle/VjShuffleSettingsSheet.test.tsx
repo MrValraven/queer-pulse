@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { LazyMotion, domMax } from "motion/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { Mock } from "vitest";
@@ -10,6 +10,7 @@ import {
   type VjTempo,
 } from "../../../../../shared/contracts/vj";
 import { TestProviders } from "../../../../../test/TestProviders";
+import { awaitCatalog } from "../../../../../test/awaitCatalog";
 import type { VjCommandOutcome } from "../../../live/vjStageCommands";
 import { VjShuffleSettingsSheet, type VjRun } from "./VjShuffleSettingsSheet";
 
@@ -76,7 +77,7 @@ function createRun(
     Mock<() => Promise<VjCommandOutcome>>;
 }
 
-function renderSheet(
+async function renderSheet(
   run: VjRun,
   overrides: {
     shuffle?: Partial<VjShuffle>;
@@ -100,11 +101,13 @@ function renderSheet(
       onClose={() => {}}
     />
   );
-  return render(
+  const renderedView = render(
     <TestProviders>
       <LazyMotion features={domMax}>{ui}</LazyMotion>
     </TestProviders>,
   );
+  await awaitCatalog("vj");
+  return renderedView;
 }
 
 /** Clicks, then lets the command's promise settle inside act. */
@@ -120,7 +123,7 @@ describe("VjShuffleSettingsSheet", () => {
 
   it("Start shuffle sends isOn", async () => {
     const run = createRun();
-    renderSheet(run);
+    await renderSheet(run);
     await clickAndSettle(screen.getByRole("button", { name: "Start shuffle" }));
     expect(run).toHaveBeenCalledWith(
       "setShuffle",
@@ -130,7 +133,7 @@ describe("VjShuffleSettingsSheet", () => {
 
   it("beat chips read seconds at the stage tempo", async () => {
     const run = createRun();
-    renderSheet(run, {
+    await renderSheet(run, {
       shuffle: { intervalKind: "beats", intervalValue: 8 },
       tempo: { bpm: 120 },
     });
@@ -148,7 +151,7 @@ describe("VjShuffleSettingsSheet", () => {
 
   it("favorites source is aria-disabled with no favorites and says why", async () => {
     const run = createRun();
-    renderSheet(run);
+    await renderSheet(run);
     const favoritesChip = screen.getByRole("button", {
       name: "Favorites in this pack",
     });
@@ -162,7 +165,7 @@ describe("VjShuffleSettingsSheet", () => {
 
   it("a pack with favorites sends the favorites source", async () => {
     const run = createRun();
-    renderSheet(run, {
+    await renderSheet(run, {
       packClips: [...PACK_CLIPS, createClip(CLIP_IDS[3], "Starred", true)],
     });
     const favoritesChip = screen.getByRole("button", {
@@ -175,7 +178,7 @@ describe("VjShuffleSettingsSheet", () => {
 
   it("leaving a clip out sends the whole excludedClipIds list", async () => {
     const run = createRun();
-    renderSheet(run, { shuffle: { excludedClipIds: [CLIP_IDS[0]] } });
+    await renderSheet(run, { shuffle: { excludedClipIds: [CLIP_IDS[0]] } });
     fireEvent.click(screen.getByRole("button", { name: /Leave out/ }));
     const neonRain = await screen.findByRole("button", {
       name: "Leave Neon rain out of shuffle",
@@ -190,7 +193,7 @@ describe("VjShuffleSettingsSheet", () => {
 
   it("leaving clips out with no active pack names the reason and sends nothing", async () => {
     const run = createRun();
-    renderSheet(run, { activePackId: null });
+    await renderSheet(run, { activePackId: null });
     fireEvent.click(screen.getByRole("button", { name: /Leave out/ }));
     const discoBall = await screen.findByRole("button", {
       name: "Leave Disco ball out of shuffle",
@@ -205,7 +208,7 @@ describe("VjShuffleSettingsSheet", () => {
 
   it("Skip sends the lead's next clip", async () => {
     const run = createRun();
-    renderSheet(run, {
+    await renderSheet(run, {
       shuffle: { isOn: true },
       leadNextClipId: CLIP_IDS[2],
     });
@@ -216,8 +219,11 @@ describe("VjShuffleSettingsSheet", () => {
     expect(run).toHaveBeenCalledWith("goClip", CLIP_IDS[2]);
   });
 
-  it("Skip is hidden while the lead has no next clip", () => {
-    renderSheet(createRun(), { shuffle: { isOn: true }, leadNextClipId: null });
+  it("Skip is hidden while the lead has no next clip", async () => {
+    await renderSheet(createRun(), {
+      shuffle: { isOn: true },
+      leadNextClipId: null,
+    });
     expect(
       screen.queryByRole("button", { name: "Skip to next clip" }),
     ).not.toBeInTheDocument();
@@ -229,9 +235,11 @@ describe("VjShuffleSettingsSheet", () => {
       code: "vj_no_active_pack",
       errorKey: "vj:error.socket.noActivePack",
     });
-    renderSheet(run);
+    await renderSheet(run);
     await clickAndSettle(screen.getByRole("button", { name: "Start shuffle" }));
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(
+      await within(screen.getByRole("dialog")).findByRole("alert"),
+    ).toHaveTextContent(
       "Pick a pack first. Shuffle plays the clips of the active pack",
     );
   });

@@ -23,6 +23,10 @@ import {
   savedItemToBody,
 } from "../../features/members/api/saved.api";
 import {
+  saveItemErrorCopy,
+  unsaveItemErrorCopy,
+} from "../../features/members/syncedItemErrors";
+import {
   SavedContext,
   type SavedItem,
   type SavedKind,
@@ -240,13 +244,14 @@ export function SavedProvider({ children }: { children: ReactNode }) {
         prev.some((it) => it.id === item.id) ? prev : [item, ...prev],
       );
       if (demoMode || existed) return;
-      putSaved(item.id, savedItemToBody(item)).catch(() => {
+      putSaved(item.id, savedItemToBody(item)).catch((error: unknown) => {
         // Another member signed in meanwhile: their store has nothing to undo.
         if (!undoMark()) return;
         // Roll back the optimistic add on failure, and tell the user: the
         // change silently disappears otherwise.
         setItems((prev) => prev.filter((it) => it.id !== item.id));
-        showToast(t("common:toast.saveFailed"), "error");
+        const cause = saveItemErrorCopy(error);
+        showToast(t(cause.key, cause.values), "error");
       });
     },
     [items, setItems, demoMode, showToast, t, remembered],
@@ -260,14 +265,15 @@ export function SavedProvider({ children }: { children: ReactNode }) {
       setItems((prev) => prev.filter((it) => it.id !== id));
       if (demoMode || !removed) return;
       const restore = removed;
-      deleteSaved(id).catch(() => {
+      deleteSaved(id).catch((error: unknown) => {
         if (!undoMark()) return;
         // Roll back the optimistic removal on failure (restore most-recent-first),
         // and tell the user: the item silently reappears otherwise.
         setItems((prev) =>
           prev.some((it) => it.id === id) ? prev : [restore, ...prev],
         );
-        showToast(t("common:toast.removeFailed"), "error");
+        const cause = unsaveItemErrorCopy(error);
+        showToast(t(cause.key, cause.values), "error");
       });
     },
     [items, setItems, demoMode, showToast, t, remembered],
@@ -292,7 +298,7 @@ export function SavedProvider({ children }: { children: ReactNode }) {
         // change. The rejection handler below never sees an error it throws.
         op.then(
           () => options?.onSynced?.(),
-          () => {
+          (error: unknown) => {
             if (!undoMark()) return;
             // Roll back to the pre-toggle state for this id, and tell the
             // user: the toggle silently snaps back otherwise.
@@ -304,14 +310,10 @@ export function SavedProvider({ children }: { children: ReactNode }) {
               }
               return prev.filter((it) => it.id !== item.id);
             });
-            showToast(
-              t(
-                wasSaved
-                  ? "common:toast.removeFailed"
-                  : "common:toast.saveFailed",
-              ),
-              "error",
-            );
+            const cause = wasSaved
+              ? unsaveItemErrorCopy(error)
+              : saveItemErrorCopy(error);
+            showToast(t(cause.key, cause.values), "error");
           },
         );
       }

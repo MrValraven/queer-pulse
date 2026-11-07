@@ -15,6 +15,7 @@ import {
   type LineupPerson,
 } from "./api/useEventLineup";
 import { MAX_LINEUP_ENTRIES } from "./eventLineup.data";
+import { causeFallbackMessage } from "./gatheringActionErrors";
 import { GatheringLineupRow } from "./GatheringLineupRow";
 import { LineupInviteComposerModal } from "./LineupInviteComposerModal";
 import styles from "./GatheringLineupEditor.module.css";
@@ -75,7 +76,7 @@ export function GatheringLineupEditor({ slug }: { slug: string }) {
     showToast(
       codedReasonFor(error) ??
         reasonFor(error) ??
-        t("gatherings:lineup.errorToast"),
+        causeFallbackMessage(error, t),
       "error",
     );
   const toastSent = (name: string) =>

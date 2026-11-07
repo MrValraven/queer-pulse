@@ -15,6 +15,7 @@ import {
   type VjStageState,
 } from "../../../../shared/contracts/vj";
 import { TestProviders } from "../../../../test/TestProviders";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 import type { VjMirrorFrames } from "../hooks/useVjMirrorFrames";
 import type { VjRemoteClock } from "../hooks/useVjRemoteClock";
 import { VjMirrorBand, type VjMirrorBandProps } from "./VjMirrorBand";
@@ -120,9 +121,10 @@ function wrap(props: VjMirrorBandProps): ReactNode {
   );
 }
 
-function renderBand(overrides: Partial<VjMirrorBandProps> = {}) {
+async function renderBand(overrides: Partial<VjMirrorBandProps> = {}) {
   const props = bandProps(overrides);
   const view = render(wrap(props));
+  await awaitCatalog("vj");
   return {
     props,
     rerenderBand: (next: Partial<VjMirrorBandProps>) =>
@@ -145,7 +147,7 @@ describe("VjMirrorBand", () => {
     overlayLayerSpy.mockClear();
   });
 
-  it("draws the shown effects through VjEffectsFrame with the strobe off", () => {
+  it("draws the shown effects through VjEffectsFrame with the strobe off", async () => {
     const shownState = stateWith({
       effects: {
         ...BASE_STATE.effects,
@@ -154,7 +156,7 @@ describe("VjMirrorBand", () => {
         strobeStartedAt: SERVER_NOW,
       },
     });
-    renderBand({ frames: framesShowing(shownState) });
+    await renderBand({ frames: framesShowing(shownState) });
     const frameProps = lastPropsOf(effectsFrameSpy);
     expect(frameProps.effects).toEqual({
       settings: shownState.effects.settings,
@@ -169,14 +171,14 @@ describe("VjMirrorBand", () => {
     );
   });
 
-  it("draws the overlay text, countdown and logo through VjOverlayLayer at mirror size", () => {
+  it("draws the overlay text, countdown and logo through VjOverlayLayer at mirror size", async () => {
     const shownState = stateWith({
       overlay: { ...BASE_STATE.overlay, text: "Doors at 11", isVisible: true },
       countdown: { isVisible: true, targetAt: SERVER_NOW + 60_000, label: "" },
       logo: { isVisible: true, corner: "topLeft" },
       eventCard: { isVisible: true, kind: "qr" },
     });
-    renderBand({
+    await renderBand({
       frames: framesShowing(shownState),
       eventCardData: EVENT_CARD,
     });
@@ -189,20 +191,21 @@ describe("VjMirrorBand", () => {
     expect(overlayProps.eventCardData).toBe(EVENT_CARD);
   });
 
-  it("shows the live clip and the next shuffle clip", () => {
-    renderBand({
+  it("shows the live clip and the next shuffle clip", async () => {
+    await renderBand({
       nextUp: { kind: "shuffle", clipId: NEON.id },
       nextUpTitle: NEON.title,
     });
     expect(screen.getByText("Sunset loop")).toBeInTheDocument();
-    expect(screen.getByText("Shuffle: Neon rain")).toBeInTheDocument();
+    // The next line fades from the blank pre-catalog copy to its text.
+    expect(await screen.findByText("Shuffle: Neon rain")).toBeInTheDocument();
     expect(shownClipId()).toBe(SUNSET.id);
   });
 
-  it("keeps the shown clip live while a quantized change waits and says On the next bar", () => {
+  it("keeps the shown clip live while a quantized change waits and says On the next bar", async () => {
     const shownState = stateWith({});
     const pendingState = stateWith({ liveClipId: NEON.id });
-    renderBand({
+    await renderBand({
       frames: framesShowing(shownState, pendingState),
       pendingQuantize: "bar",
       ring: { kind: "applyAt", progress: 0.25, msLeft: 1500 },
@@ -216,9 +219,9 @@ describe("VjMirrorBand", () => {
     );
   });
 
-  it("names the waiting clip on the Next line while a quantized change waits", () => {
+  it("names the waiting clip on the Next line while a quantized change waits", async () => {
     const pendingState = stateWith({ liveClipId: NEON.id });
-    renderBand({
+    await renderBand({
       frames: framesShowing(stateWith({}), pendingState),
       pendingClip: NEON,
       pendingQuantize: "bar",
@@ -233,18 +236,18 @@ describe("VjMirrorBand", () => {
     expect(screen.queryByText("Nothing cued")).not.toBeInTheDocument();
   });
 
-  it("keeps the next-up copy for an unquantized change", () => {
-    renderBand({
+  it("keeps the next-up copy for an unquantized change", async () => {
+    await renderBand({
       frames: framesShowing(stateWith({}), stateWith({ liveClipId: NEON.id })),
       pendingClip: NEON,
       pendingQuantize: "off",
     });
-    expect(screen.getByText("Nothing cued")).toBeInTheDocument();
+    expect(await screen.findByText("Nothing cued")).toBeInTheDocument();
   });
 
   it("switches when the pending state lands", async () => {
     const pendingState = stateWith({ liveClipId: NEON.id });
-    const { rerenderBand } = renderBand({
+    const { rerenderBand } = await renderBand({
       frames: framesShowing(stateWith({}), pendingState),
       pendingQuantize: "beat",
     });
@@ -257,8 +260,8 @@ describe("VjMirrorBand", () => {
     expect(await screen.findByText("Neon rain")).toBeInTheDocument();
   });
 
-  it("expands and collapses on tap", () => {
-    const { props, rerenderBand } = renderBand();
+  it("expands and collapses on tap", async () => {
+    const { props, rerenderBand } = await renderBand();
     const growButton = screen.getByRole("button", {
       name: "Make the preview bigger",
     });
@@ -278,8 +281,8 @@ describe("VjMirrorBand", () => {
     expect(props.onToggleExpanded).toHaveBeenCalledTimes(2);
   });
 
-  it("shows Skip only with a lead's next clip", () => {
-    const { props, rerenderBand } = renderBand({ canSkip: false });
+  it("shows Skip only with a lead's next clip", async () => {
+    const { props, rerenderBand } = await renderBand({ canSkip: false });
     expect(
       screen.queryByRole("button", { name: "Skip to next clip" }),
     ).not.toBeInTheDocument();
@@ -298,8 +301,8 @@ describe("VjMirrorBand", () => {
     expect(props.onSkip).toHaveBeenCalledTimes(1);
   });
 
-  it("draws blackout as a still layer", () => {
-    renderBand({
+  it("draws blackout as a still layer", async () => {
+    await renderBand({
       frames: framesShowing(
         stateWith({ effects: { ...BASE_STATE.effects, isBlackout: true } }),
       ),
@@ -313,8 +316,8 @@ describe("VjMirrorBand", () => {
     });
   });
 
-  it("renders no flashing strobe layer", () => {
-    renderBand({
+  it("renders no flashing strobe layer", async () => {
+    await renderBand({
       frames: framesShowing(
         stateWith({
           effects: {

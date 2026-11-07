@@ -61,6 +61,8 @@ export function useUpdateOpportunity(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, UpdateOpportunityDto>({
+    // EditOpportunityFlow words the failure itself (the cause line).
+    meta: { silentError: true },
     mutationFn: async (dto) => {
       if (demoMode) {
         await new Promise((r) => setTimeout(r, 500));

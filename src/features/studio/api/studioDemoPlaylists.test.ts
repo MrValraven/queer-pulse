@@ -3,6 +3,7 @@ import { ApiError } from "../../../shared/api/client";
 import { studioErrorCodeOf } from "./studio.api";
 import { DEMO_ARTISTS, DEMO_RELEASES } from "./studioDemo.data";
 import { DEMO_DRAFT_EPISODE_ID } from "./studioDemoFormats.data";
+import { MEMBERS } from "../../members/data/members";
 import { DEMO_DEFAULT_PLAYLIST_ID } from "../studioCollection.data";
 import {
   demoAddPlaylistTracks,
@@ -241,7 +242,12 @@ describe("demo playlist store, editors", () => {
       expect(
         ((error as ApiError).data as { editors: { slug: string }[] }).editors,
       ).toEqual([
-        { slug: "rita", displayName: "Rita Varela", avatarUrl: null },
+        {
+          slug: "rita",
+          displayName: "Rita Varela",
+          // The demo shows the photo the members demo has for Rita.
+          avatarUrl: MEMBERS.rita?.photo,
+        },
       ]);
     }
     const changed = demoUpdatePlaylist("demo-playlist-cartas-que-voltam", {

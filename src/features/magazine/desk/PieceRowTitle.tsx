@@ -44,6 +44,10 @@ export function PieceRowTitle({
         id={titleId}
         className={styles.title}
         aria-current={isOpen || undefined}
+        // Lets the desk find this title again after a move (see
+        // `deskPieceFocus.ts`), wherever the piece lands.
+        data-piece-id={piece.id}
+        data-piece-stage={piece.stage}
         onClick={() => onOpen(piece)}
       >
         {/* The span carries the ellipsis and the phone clamp, which a

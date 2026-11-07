@@ -1,9 +1,10 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { StudioArtistPage } from "./StudioArtistPage";
 
-function renderMariana() {
+async function renderMariana() {
   render(
     <TestProviders
       initialEntries={["/studio/artist?id=demo-persona-mariana-sol"]}
@@ -11,11 +12,12 @@ function renderMariana() {
       <StudioArtistPage />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
 }
 
 describe("owner panel and tools (Studio v3, demo)", () => {
   it("reads a scheduled release with its date and a preview link", async () => {
-    renderMariana();
+    await renderMariana();
     const panel = await screen.findByRole("region", {
       name: /your releases/i,
     });
@@ -31,7 +33,7 @@ describe("owner panel and tools (Studio v3, demo)", () => {
   });
 
   it("opens the preview link panel for a draft in a dialog", async () => {
-    renderMariana();
+    await renderMariana();
     const panel = await screen.findByRole("region", {
       name: /your releases/i,
     });
@@ -49,12 +51,16 @@ describe("owner panel and tools (Studio v3, demo)", () => {
   });
 
   it("gives the owner the press kit links and the update composer", async () => {
-    renderMariana();
+    await renderMariana();
     const tools = await screen.findByRole("region", {
       name: "Press kit and updates",
     });
+    // The group starts folded; its toggle opens it.
+    fireEvent.click(
+      within(tools).getByRole("button", { name: "Press kit and updates" }),
+    );
     expect(
-      within(tools).getByRole("link", { name: "Press kit" }),
+      await within(tools).findByRole("link", { name: "Press kit" }),
     ).toHaveAttribute("href", "/studio/press?id=demo-persona-mariana-sol");
     expect(
       within(tools).getByRole("link", { name: "Edit press kit" }),

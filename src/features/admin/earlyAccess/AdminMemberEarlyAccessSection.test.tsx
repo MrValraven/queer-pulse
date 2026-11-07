@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import { AdminMemberEarlyAccessSection } from "./AdminMemberEarlyAccessSection";
 
@@ -130,6 +131,7 @@ describe("AdminMemberEarlyAccessSection (demo)", () => {
       refetch,
     };
     const view = renderSection("ines");
+    await awaitCatalog("admin");
     expect(screen.getByText("Couldn't load early access.")).toBeInTheDocument();
     const retry = screen.getByRole("button", { name: "Check again" });
     await user.click(retry);

@@ -208,7 +208,9 @@ describe("AdminVjPage", () => {
       const gifRow = screen.getByText("loop.gif").closest("li");
       expect(gifRow).not.toBeNull();
       expect(
-        within(gifRow as HTMLElement).getByText("Added to Warm-up"),
+        within(gifRow as HTMLElement).getByText("Added to Warm-up", {
+          selector: "[role='status']",
+        }),
       ).toBeInTheDocument();
     }, SLOW_STEP);
     expect(
@@ -283,13 +285,13 @@ describe("AdminVjPage", () => {
   it("links Open screen and Open remote in a new tab", async () => {
     renderPage();
     const screenLink = await screen.findByRole("link", {
-      name: "Open the VJ screen in a new tab",
+      name: "Open screen in a new tab",
     });
     expect(screenLink).toHaveAttribute("href", routes.adminVjScreen);
     expect(screenLink).toHaveAttribute("target", "_blank");
     expect(screenLink).toHaveAttribute("rel", "noopener noreferrer");
     const remoteLink = screen.getByRole("link", {
-      name: "Open the VJ remote in a new tab",
+      name: "Open remote in a new tab",
     });
     expect(remoteLink).toHaveAttribute("href", routes.adminVjRemote);
     expect(remoteLink).toHaveAttribute("target", "_blank");
@@ -319,7 +321,11 @@ describe("AdminVjPage", () => {
             "Your clips are still uploading. If you leave now the uploads stop, and you'll need to add those files again",
       ),
     ).toBe(true);
-    await screen.findByText("Added to Warm-up", undefined, SLOW_STEP);
+    await screen.findByText(
+      "Added to Warm-up",
+      { selector: "[role='status']" },
+      SLOW_STEP,
+    );
     await waitFor(() => expect(guardSpy.mock.lastCall?.[0].active).toBe(false));
   });
 

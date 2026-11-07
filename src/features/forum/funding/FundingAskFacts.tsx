@@ -17,6 +17,7 @@ import {
   PURPOSE_LABEL_KEYS,
 } from "./funding.data";
 import type { ForumFundingView, FundingEndReason } from "./funding.types";
+import { forumErrorText } from "../forumErrors";
 import { formatEuros } from "./fundingFormat";
 import { isFundingAuthor } from "./fundingPermissions";
 import { FactRow } from "./FundingFactRow";
@@ -70,7 +71,7 @@ export function FundingAskFacts({
           ),
           "success",
         ),
-      onError: () => showToast(t("forum:funding.ask.endFailed"), "error"),
+      onError: (error) => showToast(forumErrorText(t, error), "error"),
     });
 
   return (

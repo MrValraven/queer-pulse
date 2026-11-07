@@ -12,6 +12,7 @@ import {
   queueItem,
   renderWithPlayer,
 } from "./studioPlayerTestHarness";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 const surfaceModule = vi.hoisted(() => ({
   value: null as StudioPlayerSurfaceValue | null,
@@ -59,8 +60,9 @@ function renderPanes({
 }
 
 describe("StudioNowPlayingPanes artist tab", () => {
-  it("orders the phone switcher queue, lyrics, artist, credits", () => {
+  it("orders the phone switcher queue, lyrics, artist, credits", async () => {
     renderPanes({ isPhone: true });
+    await awaitCatalog("studio");
     const switcher = screen.getByRole("group", {
       name: "Now playing details",
     });
@@ -70,32 +72,43 @@ describe("StudioNowPlayingPanes artist tab", () => {
     expect(labels).toEqual(["Queue", "Lyrics", "Artist", "Credits"]);
   });
 
-  it("puts Artist last before Chapters on desktop", () => {
+  it("puts Artist last before Chapters on desktop", async () => {
     renderPanes({ isPhone: false, hasChapters: true });
+    await awaitCatalog("studio");
     const tabs = screen.getAllByRole("tab").map((tab) => tab.textContent);
     expect(tabs).toEqual(["Lyrics", "Queue", "Credits", "Artist", "Chapters"]);
   });
 
-  it("names the tab Show for an episode", () => {
+  it("names the tab Show for an episode", async () => {
     renderPanes({ isPhone: false, isEpisode: true });
+    await awaitCatalog("studio");
     expect(screen.getByRole("tab", { name: "Show" })).toBeInTheDocument();
     expect(screen.queryByRole("tab", { name: "Artist" })).toBeNull();
   });
 
   it("shows the artist sections on the Artist tab", async () => {
-    renderPanes({ isPhone: false });
+    const { rerenderWith } = renderPanes({ isPhone: false });
+    await awaitCatalog("studio");
     fireEvent.click(screen.getByRole("tab", { name: "Artist" }));
+    expect(surfaceModule.value?.setNowPlayingTab).toHaveBeenCalledWith(
+      "artist",
+    );
+    // The surface is mocked here, so the test commits the chosen tab.
+    surfaceModule.value = createSurfaceValue({ nowPlayingTab: "artist" });
+    rerenderWith({});
     expect(await screen.findByTestId("artist-pane-marker")).toBeInTheDocument();
   });
 
-  it("keeps Artist active when it is the saved tab", () => {
+  it("keeps Artist active when it is the saved tab", async () => {
     const phone = renderPanes({ isPhone: true, nowPlayingTab: "artist" });
+    await awaitCatalog("studio");
     expect(screen.getByRole("button", { name: "Artist" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
     phone.unmount();
     renderPanes({ isPhone: false, nowPlayingTab: "artist" });
+    await awaitCatalog("studio");
     expect(screen.getByRole("tab", { name: "Artist" })).toHaveAttribute(
       "aria-selected",
       "true",

@@ -4,6 +4,7 @@ import { FiX } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { intakeFailureToast } from "./intakeSubmitError";
 import { submitIntake } from "../../shared/api/intakes";
 import { useDismiss } from "../../shared/components/ui";
 import { TOTAL_STEPS, type BudgetRow } from "./microGrants.data";
@@ -53,8 +54,8 @@ function useGrantAdvance(args: {
     try {
       await submitIntake("grant", buildPayload());
       setStep(6);
-    } catch {
-      showToast(t("shared:intake.errorToast"), "error");
+    } catch (error) {
+      showToast(intakeFailureToast(error, t), "error");
     } finally {
       setIsSending(false);
     }

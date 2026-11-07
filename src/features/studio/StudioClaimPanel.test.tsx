@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type { StudioOwnerClaimView } from "./api/studioSafetyFields";
 import { StudioClaimPanel } from "./StudioClaimPanel";
 
@@ -32,8 +33,8 @@ const held: StudioOwnerClaimView = {
   isHolding: true,
 };
 
-function renderPanel(claim: StudioOwnerClaimView) {
-  return render(
+async function renderPanel(claim: StudioOwnerClaimView) {
+  const view = render(
     <TestProviders>
       <StudioClaimPanel
         claim={claim}
@@ -42,20 +43,22 @@ function renderPanel(claim: StudioOwnerClaimView) {
       />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
+  return view;
 }
 
 beforeEach(() => mutate.mockReset());
 
 describe("StudioClaimPanel", () => {
-  it("shows what was claimed and never who claimed it", () => {
-    const { container } = renderPanel(held);
+  it("shows what was claimed and never who claimed it", async () => {
+    const { container } = await renderPanel(held);
     expect(screen.getByText("Candeia, by Rosa Marinho")).toBeTruthy();
     expect(screen.getByText("The chorus from 0:40")).toBeTruthy();
     expect(container.innerHTML).not.toMatch(/claimant[A-Z_]?id|member/i);
   });
 
   it("sends a counter-notice only with a note and the good-faith box", async () => {
-    renderPanel(held);
+    await renderPanel(held);
     fireEvent.click(
       screen.getByRole("button", { name: /write a counter-notice/i }),
     );
@@ -82,8 +85,8 @@ describe("StudioClaimPanel", () => {
     );
   });
 
-  it("offers no counter-notice once one is sent, and shows the outcome when decided", () => {
-    renderPanel({
+  it("offers no counter-notice once one is sent, and shows the outcome when decided", async () => {
+    await renderPanel({
       ...held,
       status: "rejected",
       canCounter: false,
@@ -100,19 +103,19 @@ describe("StudioClaimPanel", () => {
     expect(screen.getByText(/claim rejected, back online/i)).toBeTruthy();
   });
 
-  it("leaves the offline banner to the one line above the panels", () => {
-    renderPanel(held);
+  it("leaves the offline banner to the one line above the panels", async () => {
+    await renderPanel(held);
     expect(screen.queryByText(/this track is offline/i)).toBeNull();
   });
 
-  it("words the chip for the artist and says Held since only while holding", () => {
-    renderPanel(held);
+  it("words the chip for the artist and says Held since only while holding", async () => {
+    await renderPanel(held);
     expect(screen.getByText(/offline while our team reviews/i)).toBeTruthy();
     expect(screen.getByText(/^held since/i)).toBeTruthy();
   });
 
-  it("dates an accepted claim that no longer holds the track", () => {
-    renderPanel({ ...held, status: "upheld", isHolding: false });
+  it("dates an accepted claim that no longer holds the track", async () => {
+    await renderPanel({ ...held, status: "upheld", isHolding: false });
     expect(screen.getByText(/^claim upheld$/i)).toBeTruthy();
     expect(screen.queryByText(/^held since/i)).toBeNull();
     expect(screen.getByText(/^accepted /i)).toBeTruthy();

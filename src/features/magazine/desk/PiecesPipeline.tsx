@@ -16,7 +16,6 @@ import type { PieceNextAction } from "./pieceNextAction";
 import { useCollapsedGroups, type CollapsedGroups } from "./useCollapsedGroups";
 import { useIsTableStacked } from "./useIsTableStacked";
 import { useMagazineEditors } from "../api/useMagazineEditors";
-import type { UnpublishLandingStage } from "../api/piecePublish.api";
 import type { Viewer } from "../api/useDeskPresence";
 import type { Editor, Piece } from "../data/desk.data";
 import type { DeskTrack } from "./deskTrack";
@@ -40,9 +39,9 @@ export interface PiecesPipelineProps {
   onHandoff: (piece: Piece) => void;
   onAssignIssue: (piece: Piece) => void;
   onDelete: (piece: Piece) => void;
-  /** Takes a published row off the site into the given stage; rows without it
-   *  leave the unpublish items out of their More menu. */
-  onUnpublish?: (piece: Piece, stage: UnpublishLandingStage) => void;
+  /** Raises the unpublish confirm for a published row; rows without it leave
+   *  the Unpublish item out of their More menu. */
+  onUnpublish?: (piece: Piece) => void;
   /** The viewing editor's id, for "Your turn" and each row's "Waiting on". */
   me?: string;
   /** Names a colleague a row waits on; omitted, the cached directory. */

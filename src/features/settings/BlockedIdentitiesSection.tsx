@@ -15,6 +15,7 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { tintForSlug } from "../../shared/api/refs";
 import { orgBadgeInitials } from "../../shared/lib/initials";
+import { settingWriteErrorCopy } from "./settingsActionErrors";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { MAILBOX_KIND_LABEL_KEYS } from "../messages/mailboxes/mailboxLabels";
@@ -130,7 +131,7 @@ export function BlockedIdentitiesSection() {
       onSuccess: () => {
         showToast(t("messages:mailbox.blocked.unblocked", { name }), "success");
       },
-      onError: () => {
+      onError: (error) => {
         // The mutation's own `silentError` meta keeps the global handler's
         // toast quiet (and it already logs); this is the one toast shown.
         setUnblockedIds((previous) => {
@@ -138,7 +139,8 @@ export function BlockedIdentitiesSection() {
           next.delete(entry.id);
           return next;
         });
-        showToast(t("messages:mailbox.block.error"), "error");
+        const cause = settingWriteErrorCopy(error);
+        showToast(t(cause.key, cause.values), "error");
       },
       onSettled: () => setPendingId(null),
     });

@@ -16,6 +16,7 @@ import {
   CoHostInviteFromCard,
 } from "./CoHostInviteCards";
 import { lineupRoleToKind } from "./eventLineup.data";
+import { causeFallbackMessage } from "./gatheringActionErrors";
 import { gatheringPath } from "./gatheringPaths";
 import styles from "./CoHostInvitePage.module.css";
 
@@ -127,7 +128,7 @@ export function LineupInvitePage() {
         },
         onError: (error) =>
           showToast(
-            reasonFor(error) ?? t("gatherings:lineupInvite.errorToast"),
+            reasonFor(error) ?? causeFallbackMessage(error, t),
             "error",
           ),
       },

@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import type { Editor } from "../data/desk.data";
 import { DeskActiveFilters } from "./DeskActiveFilters";
@@ -8,7 +9,7 @@ const EDITORS: Editor[] = [
   { id: "ed-1", name: "Rita Faria", initials: "RF", tint: "coral", cap: 6 },
 ];
 
-function renderActiveFilters(
+async function renderActiveFilters(
   overrides: Partial<Parameters<typeof DeskActiveFilters>[0]> = {},
 ) {
   render(
@@ -27,18 +28,19 @@ function renderActiveFilters(
       />
     </TestProviders>,
   );
+  await awaitCatalog("magazine");
 }
 
 describe("DeskActiveFilters editor token", () => {
-  it("names the editor once the directory has loaded with a match", () => {
-    renderActiveFilters({ editorFilter: "ed-1" });
+  it("names the editor once the directory has loaded with a match", async () => {
+    await renderActiveFilters({ editorFilter: "ed-1" });
     expect(
       screen.getByRole("button", { name: /^Editor: Rita/ }),
     ).toBeInTheDocument();
   });
 
-  it("shows a neutral label while the directory is still loading, keeping the raw id out of view", () => {
-    renderActiveFilters({
+  it("shows a neutral label while the directory is still loading, keeping the raw id out of view", async () => {
+    await renderActiveFilters({
       editors: [],
       editorFilter: "ed-1",
       isEditorDirectoryLoading: true,
@@ -48,8 +50,8 @@ describe("DeskActiveFilters editor token", () => {
     expect(token).not.toHaveTextContent(":");
   });
 
-  it("names a departed editor 'Former editor' once the directory has loaded with no match, keeping the raw id out of view", () => {
-    renderActiveFilters({
+  it("names a departed editor 'Former editor' once the directory has loaded with no match, keeping the raw id out of view", async () => {
+    await renderActiveFilters({
       editors: [],
       editorFilter: "departed-editor-id",
       isEditorDirectoryLoading: false,

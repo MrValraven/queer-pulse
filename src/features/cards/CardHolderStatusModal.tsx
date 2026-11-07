@@ -4,6 +4,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSetCardHolderStatus } from "./api/useCardHolders";
 import type { IssuerCardDTO } from "./api/cards.api";
+import { cardHolderStatusErrorCopy } from "./cardActionErrors";
 import { cardHolderName } from "./cardHolderName";
 
 type NextStatus = "active" | "suspended" | "revoked";
@@ -55,8 +56,9 @@ export function CardHolderStatusModal({
           );
           onClose();
         },
-        onError: () => {
-          showToast(t("common:toast.saveFailed"), "error");
+        onError: (error) => {
+          const cause = cardHolderStatusErrorCopy(error);
+          showToast(t(cause.key, cause.values), "error");
         },
       },
     );

@@ -12,7 +12,11 @@ import {
   useWithdrawSpaceRequest,
 } from "./api/useSpaceRequest";
 import { isCoOwnerRole, isOwnerRole } from "./communityStaffRole";
-import { errorCodeOf } from "./spaceRequestError";
+import {
+  errorCodeOf,
+  SPACE_REQUEST_WITHDRAW_OVERRIDES,
+} from "./spaceRequestError";
+import { communityErrorText } from "./communityErrors";
 import { SpaceRequestNoteForm } from "./SpaceRequestNoteForm";
 import { SpaceRequestStatus } from "./SpaceRequestStatus";
 import type { CommunityRole } from "./membership.types";
@@ -115,7 +119,7 @@ export function SpaceRequestPanel({
           });
           return;
         }
-        showToast(t("communities:spaces.request.error"), "error");
+        showToast(communityErrorText(t, error), "error");
       },
     });
   };
@@ -125,8 +129,11 @@ export function SpaceRequestPanel({
         shouldFocusNoteAfterWithdrawRef.current = true;
         showToast(t("communities:spaces.request.withdrawn"), "success");
       },
-      onError: () =>
-        showToast(t("communities:spaces.request.withdrawError"), "error"),
+      onError: (error) =>
+        showToast(
+          communityErrorText(t, error, SPACE_REQUEST_WITHDRAW_OVERRIDES),
+          "error",
+        ),
     });
   };
 

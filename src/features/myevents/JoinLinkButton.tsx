@@ -8,6 +8,7 @@ import { detailToGathering } from "../gatherings/api/events.adapters";
 import type { EventResult } from "../gatherings/api/useEvent";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
+import { myEventsActionErrorMessage } from "./myEvents.rsvpErrors";
 import type { MyEvent } from "./myEvents.types";
 
 /**
@@ -75,9 +76,9 @@ export function JoinLinkButton({
         tab?.close();
         toast(t("myevents:card.joinLinkMissingToast"));
       })
-      .catch(() => {
+      .catch((error: unknown) => {
         tab?.close();
-        toast(t("myevents:card.joinLinkErrorToast"));
+        toast(myEventsActionErrorMessage(error, t), "error");
       })
       .finally(() => setResolving(false));
   };

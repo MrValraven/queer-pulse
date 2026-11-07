@@ -8,6 +8,7 @@ import {
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../shared/api/client";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { toArtistView, type StudioArtistView } from "./api/studio.adapters";
 import {
   toSupporterStateView,
@@ -161,15 +162,21 @@ function artistView({ isOwner = false }: { isOwner?: boolean } = {}) {
   return artist;
 }
 
-function renderCard(options: { isOwner?: boolean } = {}) {
-  return render(
+async function renderCard(options: { isOwner?: boolean } = {}) {
+  const view = render(
     <TestProviders>
       <StudioArtistSupporterCard artist={artistView(options)} />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
+  return view;
 }
 
 const SWITCH = { name: "Show me among NIGHTFORM's top listeners" };
+// The card's own alert. The toast region keeps an empty alert mounted, so a
+// page-wide query would find that one first.
+const cardRegion = () => screen.getByRole("region", SWITCH);
+const findCardAlert = () => within(cardRegion()).findByRole("alert");
 
 beforeEach(() => {
   mocks.isHistoryOn = true;
@@ -183,9 +190,9 @@ beforeEach(() => {
 });
 
 describe("StudioArtistSupporterCard", () => {
-  it("starts with the switch on and the line naming the artist", () => {
+  it("starts with the switch on and the line naming the artist", async () => {
     mocks.state = stateWith({ isSupporting: true });
-    renderCard();
+    await renderCard();
     expect(screen.getByRole("switch", SWITCH)).toHaveAttribute(
       "aria-checked",
       "true",
@@ -206,7 +213,7 @@ describe("StudioArtistSupporterCard", () => {
       isSupporting: false,
       shownAsSubprofileId: "sp-mariana",
     });
-    renderCard();
+    await renderCard();
     const toggle = screen.getByRole("switch", SWITCH);
     expect(toggle).toHaveAttribute("aria-checked", "false");
     fireEvent.click(toggle);
@@ -219,7 +226,7 @@ describe("StudioArtistSupporterCard", () => {
 
   it("opens the picker from Change how you appear with a preview per identity and saves the account", async () => {
     mocks.state = stateWith({ isSupporting: true });
-    renderCard();
+    await renderCard();
     fireEvent.click(
       screen.getByRole("button", { name: "Change how you appear" }),
     );
@@ -249,7 +256,7 @@ describe("StudioArtistSupporterCard", () => {
 
   it("closes the picker without saving and leaves the switch on", async () => {
     mocks.state = stateWith({ isSupporting: true });
-    renderCard();
+    await renderCard();
     fireEvent.click(
       screen.getByRole("button", { name: "Change how you appear" }),
     );
@@ -264,10 +271,10 @@ describe("StudioArtistSupporterCard", () => {
     expect(mocks.save?.save).not.toHaveBeenCalled();
   });
 
-  it("tells a member with paused history that they will not appear", () => {
+  it("tells a member with paused history that they will not appear", async () => {
     mocks.isHistoryOn = false;
     mocks.state = stateWith({ isSupporting: true });
-    renderCard();
+    await renderCard();
     expect(
       screen.getByText(
         "While your history is paused, you don't appear among their top listeners",
@@ -280,7 +287,7 @@ describe("StudioArtistSupporterCard", () => {
       isSupporting: true,
       shownAsSubprofileId: "sp-mariana",
     });
-    renderCard();
+    await renderCard();
     const lead = screen.getByText("This is how NIGHTFORM sees you");
     expect(
       within(lead.parentElement as HTMLElement).getByText("Mariana Sol"),
@@ -296,7 +303,7 @@ describe("StudioArtistSupporterCard", () => {
 
   it("turns it off and says so", async () => {
     mocks.state = stateWith({ isSupporting: true, shownAsSubprofileId: null });
-    renderCard();
+    await renderCard();
     fireEvent.click(screen.getByRole("switch", SWITCH));
     await waitFor(() => expect(mocks.remove?.remove).toHaveBeenCalledTimes(1));
     expect(
@@ -312,14 +319,14 @@ describe("StudioArtistSupporterCard", () => {
       false,
       apiError(403, "studio_supporter_identity_not_yours"),
     );
-    renderCard();
+    await renderCard();
     fireEvent.click(
       screen.getByRole("button", { name: "Change how you appear" }),
     );
     fireEvent.click(
       await screen.findByRole("button", { name: "Save how you appear" }),
     );
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await findCardAlert()).toHaveTextContent(
       "You can show yourself only as your account or a persona you are a member of",
     );
   });
@@ -330,7 +337,7 @@ describe("StudioArtistSupporterCard", () => {
       false,
       apiError(403, "studio_supporter_identity_not_yours"),
     );
-    renderCard();
+    await renderCard();
     fireEvent.click(screen.getByRole("switch", SWITCH));
     expect(
       await screen.findByText(
@@ -343,15 +350,15 @@ describe("StudioArtistSupporterCard", () => {
     );
   });
 
-  it("says the artist is not available to support with no Retry, and renders nothing for an owner", () => {
+  it("says the artist is not available to support with no Retry, and renders nothing for an owner", async () => {
     mocks.state = { state: null, loadState: notFoundLoadState() };
-    const { unmount } = renderCard();
+    const { unmount } = await renderCard();
     expect(
       screen.getByText("This artist is not available to show your name to"),
     ).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /retry/i })).toBeNull();
     unmount();
-    renderCard({ isOwner: true });
+    await renderCard({ isOwner: true });
     expect(screen.queryByRole("switch")).toBeNull();
   });
 });
@@ -366,7 +373,7 @@ describe("StudioArtistSupporterCard at its edges", () => {
       ...supporting,
       state: supporting.state && { ...supporting.state, shownAs: null },
     };
-    renderCard();
+    await renderCard();
     expect(screen.getByRole("switch", SWITCH)).toHaveAttribute(
       "aria-checked",
       "true",
@@ -380,7 +387,7 @@ describe("StudioArtistSupporterCard at its edges", () => {
     expect(document.activeElement?.getAttribute("role")).not.toBe("radio");
   });
 
-  it("shows the identity the artist sees without a link when it cannot be linked", () => {
+  it("shows the identity the artist sees without a link when it cannot be linked", async () => {
     const unlinkablePersona: StudioSupporterIdentityDTO = {
       kind: "persona",
       persona: {
@@ -414,7 +421,7 @@ describe("StudioArtistSupporterCard at its edges", () => {
         }),
         loadState: loadStateOf(),
       };
-      const { unmount } = renderCard();
+      const { unmount } = await renderCard();
       const name =
         shownAs.kind === "account"
           ? shownAs.member.displayName
@@ -438,7 +445,7 @@ describe("StudioArtistSupporterCard at its edges", () => {
         shownAs: null,
       },
     };
-    renderCard();
+    await renderCard();
     fireEvent.click(screen.getByRole("switch", SWITCH));
     const group = await screen.findByRole("radiogroup", {
       name: "How NIGHTFORM sees you",
@@ -461,7 +468,7 @@ describe("StudioArtistSupporterCard at its edges", () => {
       isSaving: false,
       error: apiError(404, "studio_supporter_artist_not_found"),
     };
-    renderCard();
+    await renderCard();
     fireEvent.click(screen.getByRole("switch", SWITCH));
     await waitFor(() =>
       expect(
@@ -484,19 +491,21 @@ describe("StudioArtistSupporterCard at its edges", () => {
       false,
       apiError(403, "studio_supporter_identity_not_yours"),
     );
-    renderCard();
+    await renderCard();
     fireEvent.click(
       screen.getByRole("button", { name: "Change how you appear" }),
     );
     fireEvent.click(
       await screen.findByRole("button", { name: "Save how you appear" }),
     );
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await findCardAlert()).toHaveTextContent(
       "You can show yourself only as your account",
     );
     fireEvent.click(screen.getByRole("switch", SWITCH));
     await waitFor(() => expect(mocks.remove?.remove).toHaveBeenCalledTimes(1));
-    await waitFor(() => expect(screen.queryByRole("alert")).toBeNull());
+    await waitFor(() =>
+      expect(within(cardRegion()).queryByRole("alert")).toBeNull(),
+    );
     expect(
       await screen.findByText(
         "NIGHTFORM no longer sees you among their top listeners",

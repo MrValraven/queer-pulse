@@ -2,8 +2,9 @@
  * The strobe pad, always first in the row (design 7). It runs the same press
  * machine as the effect pads, sending "on" and "off" for `padId: "strobe"`;
  * the dispatcher sends `setStrobe` and asks for flash consent first. While
- * the strobe runs, a small ring counts down the seconds left of the
- * server's 10 s cap from `effects.strobeStartedAt`. The pad holds a steady
+ * the strobe runs, a small ring in the top-left corner (across from the
+ * flash mark) counts down the seconds left of the server's 10 s cap from
+ * `effects.strobeStartedAt`. The pad holds a steady
  * fill: the screens flash, the remote stays still.
  */
 import { useEffect, useId, useRef, useState } from "react";

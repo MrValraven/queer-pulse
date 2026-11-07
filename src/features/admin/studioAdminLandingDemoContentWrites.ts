@@ -1,4 +1,5 @@
 import { ApiError } from "../../shared/api/client";
+import { UPLOAD_NOT_YOURS_CODE } from "../../shared/api/causeErrorKey";
 import { heroImage } from "../studio/studioArtist.data";
 import type {
   AdminStudioLandingArtistCardDTO,
@@ -113,6 +114,7 @@ export function demoPutPhoto(
   if (!isIssued)
     throw new ApiError(403, "Referenced upload does not belong to you", {
       message: "Referenced upload does not belong to you",
+      code: UPLOAD_NOT_YOURS_CODE,
     });
   const photo: AdminStudioLandingPhotoDTO = {
     slot,

@@ -3,6 +3,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { QueryClient } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { toTrackView, type StudioTrackView } from "./api/studio.adapters";
 import type { StudioReleaseType, StudioTrackDTO } from "./api/studio.types";
 import { resetDemoPurchases } from "./api/studioDemoPurchaseStore";
@@ -118,10 +119,12 @@ function trackOffer(overrides: Partial<StudioOfferView> = {}): StudioOfferView {
   return { ...offer, ...overrides };
 }
 
-function renderWithProviders(children: ReactNode) {
-  return render(
+async function renderWithProviders(children: ReactNode) {
+  const rendered = render(
     <TestProviders queryClient={new QueryClient()}>{children}</TestProviders>,
   );
+  await awaitCatalog("studio");
+  return rendered;
 }
 
 beforeEach(() => {
@@ -134,7 +137,7 @@ beforeEach(() => {
 describe("StudioTrackBuyPanel", () => {
   it("offers Mariana's track 06 with its format, price and Buy track", async () => {
     mocks.offer = trackOffer();
-    renderWithProviders(<StudioTrackBuyPanel track={trackOf("album")} />);
+    await renderWithProviders(<StudioTrackBuyPanel track={trackOf("album")} />);
     expect(await screen.findByText("Digital track")).toBeInTheDocument();
     expect(screen.getByText("€1.50")).toBeInTheDocument();
     const buyButton = screen.getByRole("button", {
@@ -145,9 +148,9 @@ describe("StudioTrackBuyPanel", () => {
     expect(screen.queryByRole("switch")).toBeNull();
   });
 
-  it("renders nothing for a track on a mix and reads no offer", () => {
+  it("renders nothing for a track on a mix and reads no offer", async () => {
     mocks.offer = trackOffer();
-    const { container } = renderWithProviders(
+    const { container } = await renderWithProviders(
       <StudioTrackBuyPanel track={trackOf("mix")} />,
     );
     expect(mocks.enabledReads.length).toBeGreaterThan(0);
@@ -155,7 +158,7 @@ describe("StudioTrackBuyPanel", () => {
     expect(container.querySelector("section")).toBeNull();
   });
 
-  it("renders nothing when the offer has nothing to show", () => {
+  it("renders nothing when the offer has nothing to show", async () => {
     mocks.offer = trackOffer({
       price: null,
       viewer: {
@@ -165,16 +168,16 @@ describe("StudioTrackBuyPanel", () => {
         ownedPurchase: null,
       },
     });
-    const { container } = renderWithProviders(
+    const { container } = await renderWithProviders(
       <StudioTrackBuyPanel track={trackOf("album")} />,
     );
     expect(mocks.enabledReads.every((isEnabled) => isEnabled)).toBe(true);
     expect(container.querySelector("section")).toBeNull();
   });
 
-  it("renders nothing while the offer loads", () => {
+  it("renders nothing while the offer loads", async () => {
     mocks.loadState = LOADING;
-    const { container } = renderWithProviders(
+    const { container } = await renderWithProviders(
       <StudioTrackBuyPanel track={trackOf("single")} />,
     );
     expect(container.querySelector("section")).toBeNull();
@@ -186,7 +189,9 @@ describe("StudioTrackBuySheetHost", () => {
     mocks.loadState = LOADING;
     const onClose = vi.fn();
     const onPurchased = vi.fn();
-    const host = (
+    // A fresh element on each render, so the host reads the mocked offer
+    // again: the mock is a plain object and wakes no render by itself.
+    const host = () => (
       <StudioTrackBuySheetHost
         trackId="track-6"
         onClose={onClose}
@@ -195,14 +200,15 @@ describe("StudioTrackBuySheetHost", () => {
     );
     const queryClient = new QueryClient();
     const { rerender } = render(
-      <TestProviders queryClient={queryClient}>{host}</TestProviders>,
+      <TestProviders queryClient={queryClient}>{host()}</TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       await screen.findByText("Loading the ways to pay"),
     ).toBeInTheDocument();
     mocks.offer = trackOffer();
     mocks.loadState = LOADED;
-    rerender(<TestProviders queryClient={queryClient}>{host}</TestProviders>);
+    rerender(<TestProviders queryClient={queryClient}>{host()}</TestProviders>);
     expect(
       await screen.findByRole("dialog", { name: "Buy Carta para a santa" }),
     ).toBeInTheDocument();
@@ -214,7 +220,7 @@ describe("StudioTrackBuySheetHost", () => {
 
   it("names a track that is no longer offered, with no Retry", async () => {
     mocks.loadState = { ...LOADED, isNotFound: true };
-    renderWithProviders(
+    await renderWithProviders(
       <StudioTrackBuySheetHost
         trackId="track-gone"
         onClose={() => undefined}

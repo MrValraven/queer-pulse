@@ -1,5 +1,6 @@
 import { useId } from "react";
 import { FiHeart, FiTag } from "react-icons/fi";
+import type { CauseErrorCopy } from "../../shared/api/causeErrorKey";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type Thread, type ThreadPoll } from "./forum.data";
 import { MarkdownLite } from "../../shared/markdown";
@@ -78,7 +79,7 @@ export function ThreadOpCard({
   poll: ThreadPoll | null;
   onPollVote: (optionIds: string[]) => void;
   isPollVoting: boolean;
-  pollError: "closed" | "failed" | null;
+  pollError: CauseErrorCopy | null;
 }) {
   const { t } = useTranslation();
   const bodyId = useId();

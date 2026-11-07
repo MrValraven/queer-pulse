@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { TestProviders } from "../../test/TestProviders";
 import type { SubprofileView } from "../subprofiles/api/subprofiles.adapters";
 import { SubprofileEditorShell } from "../subprofiles/SubprofileEditorShell";
@@ -69,9 +70,12 @@ function personaView(
 ): SubprofileView {
   return {
     id: "persona-1",
-    kind: "artist",
+    kind: "musician",
     status,
     visibility,
+    bio: "",
+    sections: [],
+    socialLinks: [],
   } as unknown as SubprofileView;
 }
 
@@ -96,6 +100,7 @@ function uploadDraftStub(release: StudioReleaseView | null): StudioUploadDraft {
     hasUnsavedChanges: false,
     isSaving: false,
     saveErrorKey: null,
+    autosave: { state: "idle", savedAt: null, reasonKey: null },
     form: { coverKey: null, genres: [] },
     setField: vi.fn(),
     saveChanges: vi.fn(),
@@ -114,18 +119,21 @@ function renderMetadataStep(release: StudioReleaseView | null) {
 describe("creator draft notes in the persona and Studio editors", () => {
   it("shows the persona note while the persona is a draft and folds it once published", async () => {
     const { rerender } = render(shell(personaView("draft")));
+    await awaitCatalog("subprofiles");
     expect(screen.getByText(NOTE_PATTERN)).toBeInTheDocument();
     rerender(shell(personaView("published")));
     await waitFor(() => expect(screen.queryByText(NOTE_PATTERN)).toBeNull());
   });
 
-  it("leaves the persona note out for a private draft persona", () => {
+  it("leaves the persona note out for a private draft persona", async () => {
     render(shell(personaView("draft", "private")));
+    await awaitCatalog("subprofiles");
     expect(screen.queryByText(NOTE_PATTERN)).toBeNull();
   });
 
-  it("shows the persona note for a draft persona shared with connections", () => {
+  it("shows the persona note for a draft persona shared with connections", async () => {
     render(shell(personaView("draft", "network")));
+    await awaitCatalog("subprofiles");
     expect(screen.getByText(NOTE_PATTERN)).toBeInTheDocument();
   });
 
@@ -136,6 +144,7 @@ describe("creator draft notes in the persona and Studio editors", () => {
       releaseView("scheduled"),
     ]) {
       const { unmount } = renderMetadataStep(release);
+      await awaitCatalog("studio");
       expect(screen.getByText(NOTE_PATTERN)).toBeInTheDocument();
       unmount();
     }
@@ -145,7 +154,9 @@ describe("creator draft notes in the persona and Studio editors", () => {
 
   it("shows the episode note while the episode is a draft and folds it once published", async () => {
     mockTrackRead.publishedAt = null;
-    const episodeForm = (
+    // A fresh element per render, so the rerender reaches the form and it
+    // reads the published track.
+    const episodeForm = () => (
       <TestProviders>
         <StudioEpisodeForm
           release={releaseView("published")}
@@ -155,10 +166,11 @@ describe("creator draft notes in the persona and Studio editors", () => {
         />
       </TestProviders>
     );
-    const { rerender } = render(episodeForm);
+    const { rerender } = render(episodeForm());
+    await awaitCatalog("studio");
     expect(screen.getByText(NOTE_PATTERN)).toBeInTheDocument();
     mockTrackRead.publishedAt = "2026-10-19T10:00:00.000Z";
-    rerender(episodeForm);
+    rerender(episodeForm());
     await waitFor(() => expect(screen.queryByText(NOTE_PATTERN)).toBeNull());
   });
 });

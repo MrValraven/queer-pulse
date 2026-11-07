@@ -238,6 +238,11 @@ export const forum: Catalog = {
   "poll.closesAt": "Voting closes {date}",
   "poll.voteFailed": "That answer did not go through. Try again in a moment.",
   "poll.voteFailedClosed": "Voting has closed here, so the answers are final.",
+  "poll.errorSingleChoice":
+    "This poll takes exactly one answer. Pick one option and vote again.",
+  "poll.errorNoChoice": "Pick at least one option before you vote.",
+  "poll.errorOptionGone":
+    "That answer or poll is no longer on this thread. Refresh to see the current options.",
 
   // ── Quiet metadata on the opening post ───────────────────────────────────
   "opMeta.neighbourhood": "About {name}",
@@ -452,6 +457,30 @@ export const forum: Catalog = {
     "Only 3 threads can be pinned at once. Unpin one first.",
   "toast.error": "Something went wrong. Try again in a moment.",
 
+  // ── Why a forum write failed (forumErrors.ts) ─────────────────────────────
+  // Offline, signed out, restricted, inactive, rate limited and server faults
+  // read from shared:apiError.*; these are the causes that need the forum.
+  "error.closedByAuthor":
+    "The author closed this thread to new replies, so your reply wasn't posted.",
+  "error.notCommunityMember":
+    "Only members of this community can post and reply in its threads. Join it, then try again.",
+  "error.replyToDeleted":
+    "The post you replied to is gone, so your reply wasn't posted. Reply to the thread instead.",
+  "error.communityGone":
+    "That community isn't available any more, so nothing was posted. It may have been archived or removed.",
+  "error.threadGone":
+    "This thread isn't here any more. It may have been removed. Head back to the forum to find current conversations.",
+  "error.postGone":
+    "That post is gone, so there is nothing to change. Refresh to see what's there now.",
+  "error.slugBusy":
+    "We couldn't find a free address for your post. Change the title a little and post again.",
+  "error.moveWindowClosed":
+    "An author can move a thread to another category in its first 24 hours only. Ask a moderator to move it.",
+  "error.coAuthorUnknown":
+    "We couldn't find a member with that handle to credit as co-author. Check the handle and post again.",
+  "error.coAuthorSelf":
+    "You're already credited on this thread, so you can't also be its co-author.",
+
   // ── Following a thread (SOC-13) ───────────────────────────────────────────
   "follow.followCta": "Follow",
   "follow.unfollowCta": "Following",
@@ -465,6 +494,8 @@ export const forum: Catalog = {
   "replies.quote": "Quote",
   "answer.acceptedToast": "Marked as the answer.",
   "answer.clearedToast": "Answer mark removed.",
+  "answer.errorDeleted":
+    "A deleted post can't be the accepted answer. Pick another reply.",
 
   // ── Tag editing (SOC-13) ──────────────────────────────────────────────────
   "tagsEdit.title": "Edit tags",

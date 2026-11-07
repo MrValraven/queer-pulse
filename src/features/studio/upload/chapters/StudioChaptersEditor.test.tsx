@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  within,
-} from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../../test/TestProviders";
 import { StudioChaptersEditor } from "./StudioChaptersEditor";
@@ -156,8 +150,11 @@ describe("StudioChaptersEditor", () => {
       ["0:00", "Opening", "Linn"],
       ["4:10", "Close", ""],
     ]);
-    const alert = await screen.findByRole("alert");
-    expect(within(alert).getByText("Line 2: bad line")).toBeInTheDocument();
+    // The app's toast region is an assertive alert too; read the editor's own.
+    const problemLine = await screen.findByText("Line 2: bad line");
+    expect(problemLine.closest('[role="alert"]')).toHaveTextContent(
+      "We couldn't read these lines:",
+    );
     await waitFor(() =>
       expect(screen.getByText("2 chapters added")).toBeInTheDocument(),
     );

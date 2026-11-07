@@ -15,6 +15,7 @@ import { primeMessageChime } from "../../../shared/lib/messageChime";
 import type { QuizshowClientState } from "../realtime/quizshowClientStore";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import { QuizshowRemotePage } from "./QuizshowRemotePage";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 
 type SendFunction = (name: string, payload: unknown) => Promise<unknown>;
 
@@ -318,6 +319,7 @@ describe("QuizshowRemotePage stage and review", () => {
 
   it("previews the big screen in demo", async () => {
     renderPage();
+    await awaitCatalog("quizshow");
 
     const preview = await screen.findByRole("region", {
       name: "Big screen preview",
@@ -335,6 +337,7 @@ describe("QuizshowRemotePage stage and review", () => {
   it("mutes the big screen for everyone from the remote", async () => {
     const user = userEvent.setup();
     renderPage();
+    await awaitCatalog("quizshow");
 
     const muteButton = await screen.findByRole("button", {
       name: "Mute the big screen",
@@ -353,11 +356,12 @@ describe("QuizshowRemotePage stage and review", () => {
     ).toBe("true");
   });
 
-  it("shows the correct answer to hosts from the first phase", () => {
+  it("shows the correct answer to hosts from the first phase", async () => {
     stubController(
       hostState({ phase: "read" }, { question: MULTIPLE_CHOICE_QUESTION }),
     );
     renderPage();
+    await awaitCatalog("quizshow");
 
     const answerKey = screen.getByRole("region", { name: "Answer" });
     expect(
@@ -376,6 +380,7 @@ describe("QuizshowRemotePage stage and review", () => {
     const user = userEvent.setup();
     const send = stubController(reviewState(false));
     renderPage();
+    await awaitCatalog("quizshow");
 
     const review = screen.getByRole("region", { name: "Check the answers" });
     const [firstHide] = within(review).getAllByRole("button", { name: "Hide" });
@@ -396,6 +401,7 @@ describe("QuizshowRemotePage stage and review", () => {
     const user = userEvent.setup();
     const reviewSend = stubController(reviewState(true));
     const reviewView = renderPage();
+    await awaitCatalog("quizshow");
 
     await user.click(screen.getByRole("button", { name: "Show" }));
     expect(reviewSend).toHaveBeenCalledWith("host:hideAnswer", {
@@ -435,6 +441,7 @@ describe("QuizshowRemotePage stage and review", () => {
       ),
     );
     renderPage();
+    await awaitCatalog("quizshow");
     expect(screen.queryByRole("button", { name: "Show" })).toBeNull();
     expect(screen.getAllByRole("button", { name: "Hide" })).toHaveLength(1);
   });
@@ -443,6 +450,7 @@ describe("QuizshowRemotePage stage and review", () => {
     const user = userEvent.setup();
     const send = stubController(partyRevealState("caption_this"));
     const captionView = renderPage();
+    await awaitCatalog("quizshow");
 
     const [firstPick] = screen.getAllByRole("button", {
       name: "Pick as favourite",
@@ -458,6 +466,7 @@ describe("QuizshowRemotePage stage and review", () => {
 
     stubController(partyRevealState("lie_detector"));
     renderPage();
+    await awaitCatalog("quizshow");
     expect(
       screen.queryByRole("button", { name: "Pick as favourite" }),
     ).toBeNull();
@@ -470,9 +479,10 @@ describe("QuizshowRemotePage players, teams and errors", () => {
     eventSessionMock.hasLoadFailed = false;
   });
 
-  it("shows a generic error when the event fails to load", () => {
+  it("shows a generic error when the event fails to load", async () => {
     eventSessionMock.hasLoadFailed = true;
     renderPage();
+    await awaitCatalog("quizshow");
 
     expect(
       screen.getByRole("heading", { name: "Something went wrong. Try again" }),
@@ -487,6 +497,7 @@ describe("QuizshowRemotePage players, teams and errors", () => {
     const user = userEvent.setup();
     const send = stubController(hostState());
     renderPage();
+    await awaitCatalog("quizshow");
     await openPlayers(user);
 
     await user.click(screen.getByRole("button", { name: "Remove player" }));
@@ -529,6 +540,7 @@ describe("QuizshowRemotePage players, teams and errors", () => {
       ),
     );
     renderPage();
+    await awaitCatalog("quizshow");
     await openPlayers(user);
 
     await user.click(screen.getByRole("button", { name: "Rename team" }));
@@ -558,13 +570,14 @@ describe("QuizshowRemotePage players, teams and errors", () => {
       ),
     );
     renderPage();
+    await awaitCatalog("quizshow");
     await openPlayers(user);
 
     expect(screen.getByText("co-host")).toBeTruthy();
     expect(screen.getByText("Offline")).toBeTruthy();
   });
 
-  it("counts review submissions as written and speaks each phase", () => {
+  it("counts review submissions as written and speaks each phase", async () => {
     stubController(
       hostState(
         { phase: "review", deadline: null, roundIndex: 1 },
@@ -576,6 +589,7 @@ describe("QuizshowRemotePage players, teams and errors", () => {
       ),
     );
     renderPage();
+    await awaitCatalog("quizshow");
 
     expect(screen.getByText("3 of 5 written")).toBeTruthy();
     expect(screen.queryByText("3 of 5 answered")).toBeNull();
@@ -585,7 +599,7 @@ describe("QuizshowRemotePage players, teams and errors", () => {
     expect(spokenLines).toContain("Checking answers");
   });
 
-  it("shows the paused note and says the pause aloud", () => {
+  it("shows the paused note and says the pause aloud", async () => {
     stubController(
       hostState({
         status: "paused",
@@ -594,6 +608,7 @@ describe("QuizshowRemotePage players, teams and errors", () => {
       }),
     );
     renderPage();
+    await awaitCatalog("quizshow");
 
     expect(screen.getByText("Paused")).toBeTruthy();
     const spokenLines = screen
@@ -602,7 +617,7 @@ describe("QuizshowRemotePage players, teams and errors", () => {
     expect(spokenLines).toContain("Answering, Paused");
   });
 
-  it("holds the countdown at its frozen place when the remote opens during a pause", () => {
+  it("holds the countdown at its frozen place when the remote opens during a pause", async () => {
     stubController(
       hostState(
         {
@@ -614,13 +629,14 @@ describe("QuizshowRemotePage players, teams and errors", () => {
       ),
     );
     const { container } = renderPage();
+    await awaitCatalog("quizshow");
 
     // Ten of the question's twenty seconds are left, so the bar sits half full.
     const fill = container.querySelector<HTMLElement>('[style*="scaleX"]');
     expect(fill?.style.transform).toBe("scaleX(0.5)");
   });
 
-  it("explains the restart pause", () => {
+  it("explains the restart pause", async () => {
     stubController(
       hostState({
         status: "paused",
@@ -630,6 +646,7 @@ describe("QuizshowRemotePage players, teams and errors", () => {
       }),
     );
     renderPage();
+    await awaitCatalog("quizshow");
 
     expect(screen.getByRole("button", { name: "Resume" })).toBeTruthy();
     expect(

@@ -3,16 +3,16 @@ import { isSameRouteQueryChange, scrollKeyForPath } from "./scrollRouting";
 
 describe("scrollKeyForPath", () => {
   it("keys a tab root itself on its own path, shared across visits", () => {
-    // "/members" IS the members tab's root (MEMBER_TABS matchPrefixes), so
-    // every visit to the tab root reads/writes the same shared slot.
-    expect(scrollKeyForPath("/members", "k1")).toBe("/members");
+    // "/communities" IS the communities tab's root (MEMBER_TABS matchPrefixes),
+    // so every visit to the tab root reads/writes the same shared slot.
+    expect(scrollKeyForPath("/communities", "k1")).toBe("/communities");
   });
 
   it("keeps a detail page under a tab root on its own history key", () => {
-    // "/members/42" is one level under the tab root, not the root itself —
-    // it must NOT collapse into "/members", or the detail's scroll offset
-    // would clobber the roster's remembered offset when navigating back.
-    expect(scrollKeyForPath("/members/42", "k1")).toBe("k1");
+    // "/communities/42" sits one level under the tab root. It keeps its own
+    // history key, so the detail's scroll offset leaves the hub's remembered
+    // offset intact when navigating back.
+    expect(scrollKeyForPath("/communities/42", "k1")).toBe("k1");
   });
 
   it("falls back to the per-history-entry key outside any tab", () => {

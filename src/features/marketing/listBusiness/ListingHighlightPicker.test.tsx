@@ -5,6 +5,7 @@ import type { ListingDraft } from "./listBusiness.data";
 import { blankDraft } from "./listingFormDraft";
 import { ListingHighlightPicker } from "./ListingHighlightPicker";
 import { useListingForm } from "./useListingForm";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 
 function Harness({ initial }: { initial: ListingDraft }) {
   const form = useListingForm(initial);
@@ -16,7 +17,7 @@ function draftWith(attributes: string[], highlights: string[]): ListingDraft {
 }
 
 describe("ListingHighlightPicker", () => {
-  it("keeps a chip past the cap focusable, and pressing it changes nothing", () => {
+  it("keeps a chip past the cap focusable, and pressing it changes nothing", async () => {
     render(
       <Harness
         initial={draftWith(
@@ -26,6 +27,7 @@ describe("ListingHighlightPicker", () => {
       />,
       { wrapper: TestProviders },
     );
+    await awaitCatalog("marketing");
     expect(screen.getByText("3 of 3")).toBeInTheDocument();
     const capped = screen.getByRole("button", { name: "Dog-friendly" });
     expect(capped).toHaveAttribute("aria-disabled", "true");
@@ -37,7 +39,7 @@ describe("ListingHighlightPicker", () => {
     expect(screen.getByText("3 of 3")).toBeInTheDocument();
   });
 
-  it("lets a picked chip at the cap be unpicked", () => {
+  it("lets a picked chip at the cap be unpicked", async () => {
     render(
       <Harness
         initial={draftWith(
@@ -47,6 +49,7 @@ describe("ListingHighlightPicker", () => {
       />,
       { wrapper: TestProviders },
     );
+    await awaitCatalog("marketing");
     const wifi = screen.getByRole("button", { name: "Wi-Fi" });
     expect(wifi).not.toHaveAttribute("aria-disabled");
     fireEvent.click(wifi);
@@ -57,7 +60,7 @@ describe("ListingHighlightPicker", () => {
     ).not.toHaveAttribute("aria-disabled");
   });
 
-  it("counts a stored sensitive highlight as nothing and shows no chip for it", () => {
+  it("counts a stored sensitive highlight as nothing and shows no chip for it", async () => {
     render(
       <Harness
         initial={draftWith(
@@ -67,6 +70,7 @@ describe("ListingHighlightPicker", () => {
       />,
       { wrapper: TestProviders },
     );
+    await awaitCatalog("marketing");
     expect(screen.getByText("0 of 3")).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "Sexual health and PrEP" }),
@@ -76,7 +80,7 @@ describe("ListingHighlightPicker", () => {
     ).toHaveAttribute("aria-pressed", "false");
   });
 
-  it("leaves an attribute outside the offer out of a new draft's highlights", () => {
+  it("leaves an attribute outside the offer out of a new draft's highlights", async () => {
     // Vegan options belongs to Food & drink, which this draft no longer picks.
     render(
       <Harness
@@ -84,6 +88,7 @@ describe("ListingHighlightPicker", () => {
       />,
       { wrapper: TestProviders },
     );
+    await awaitCatalog("marketing");
     expect(screen.getByText("0 of 3")).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "Vegan options" }),
@@ -93,7 +98,7 @@ describe("ListingHighlightPicker", () => {
     ).toBeInTheDocument();
   });
 
-  it("keeps a carried attribute a highlight while editing a listing", () => {
+  it("keeps a carried attribute a highlight while editing a listing", async () => {
     render(
       <Harness
         initial={{
@@ -103,6 +108,7 @@ describe("ListingHighlightPicker", () => {
       />,
       { wrapper: TestProviders },
     );
+    await awaitCatalog("marketing");
     expect(screen.getByText("1 of 3")).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Vegan options" }),

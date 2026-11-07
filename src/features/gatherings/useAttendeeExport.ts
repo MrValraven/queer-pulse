@@ -5,6 +5,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { getAttendeesCsv } from "./api/events.api";
 import { downloadBlob } from "../../shared/lib/downloadBlob";
 import { useEventHostScope } from "./eventHostScope";
+import { hostToolErrorMessage } from "./gatheringActionErrors";
 
 /**
  * The Attendees tab's CSV export (PRD-190). Live mode downloads the real
@@ -27,8 +28,8 @@ export function useAttendeeExport(slug: string) {
       const csv = await getAttendeesCsv(slug, apiTarget);
       downloadBlob(`${slug}-attendees.csv`, csv, "text/csv;charset=utf-8;");
       showToast(t("gatherings:manage.attendees.exportedToast"), "success");
-    } catch {
-      showToast(t("gatherings:manage.attendees.exportFailedToast"), "error");
+    } catch (error) {
+      showToast(hostToolErrorMessage(error, t), "error");
     } finally {
       setIsExporting(false);
     }

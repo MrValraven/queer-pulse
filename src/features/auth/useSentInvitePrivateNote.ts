@@ -3,6 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import type { TFunction } from "../../shared/i18n/types";
+import { invitePrivateNoteErrorCopy } from "./authActionErrors";
 import {
   findCachedInvite,
   useUpdateInvitePrivateNote,
@@ -60,15 +61,9 @@ export function useSentInvitePrivateNote(invite: SentInviteView, t: TFunction) {
         code: invite.code,
         privateNote,
       });
-    } catch {
-      showToast(
-        t(
-          isClearing
-            ? "auth:invite.sentList.privateNote.deleteErrorToast"
-            : "auth:invite.sentList.privateNote.errorToast",
-        ),
-        "error",
-      );
+    } catch (error) {
+      const cause = invitePrivateNoteErrorCopy(error);
+      showToast(t(cause.key, cause.values), "error");
       // The pressed button was disabled mid-save, which drops focus; hand it
       // back to the field so the member can try again from there.
       if (isFocusFreeToMove(editorId)) {

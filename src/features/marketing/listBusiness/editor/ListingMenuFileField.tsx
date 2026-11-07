@@ -2,7 +2,9 @@ import { useId, useRef, useState } from "react";
 import { FiFileText, FiImage, FiUpload } from "react-icons/fi";
 import { Button, FormField } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import { causeErrorKey } from "../../../../shared/api/causeErrorKey";
 import { ImageProcessingError } from "../../../members/api/uploadProcessing";
+import { DocumentProcessingError } from "../../../messages/documentUploadProcessing";
 import {
   emptyMenuDraft,
   isMenuLinkValid,
@@ -38,7 +40,10 @@ export function ListingMenuFileField({ form }: { form: ListingForm }) {
     try {
       form.setMenuFile(await uploadMenuFile(file));
     } catch (error) {
-      if (error instanceof ImageProcessingError) {
+      if (
+        error instanceof ImageProcessingError ||
+        error instanceof DocumentProcessingError
+      ) {
         setErrorMessage(t(error.i18nKey, error.values));
       } else if (error instanceof MenuFileUploadError) {
         setErrorMessage(
@@ -47,7 +52,8 @@ export function ListingMenuFileField({ form }: { form: ListingForm }) {
           }),
         );
       } else {
-        setErrorMessage(t("marketing:listBusiness.menu.fileError.upload"));
+        const cause = causeErrorKey(error);
+        setErrorMessage(t(cause.key, cause.values));
       }
     } finally {
       setIsUploading(false);

@@ -6,6 +6,7 @@ import {
   AuthContext,
   type AuthContextValue,
 } from "../../app/providers/authContext";
+import { ShellFrameProvider } from "../../app/providers/ShellFrameProvider";
 import { routes } from "../../app/routeMap";
 import { AppRoutes } from "../../app/routes";
 
@@ -14,7 +15,9 @@ import { AppRoutes } from "../../app/routes";
  * the real `/admin/*` gate in `useAuthGateRedirect`. Only the two pages, the
  * session (a real `AuthContext.Provider`), demo mode, the Studio access read
  * and the session loader are stubbed, so no page or provider stack is needed
- * (precedent: `app/routes.quizshowTemplatesGate.test.tsx`).
+ * (precedent: `app/routes.quizshowTemplatesGate.test.tsx`). The two pages stay
+ * lazy routes, so the route Suspense fallback shows first, and it holds the
+ * shell frame: the real `ShellFrameProvider` wraps the tree as in `App.tsx`.
  */
 let demoMode = false;
 
@@ -96,10 +99,12 @@ function LocationProbe() {
 function renderAt(path: string, auth: AuthContextValue) {
   return render(
     <AuthContext.Provider value={auth}>
-      <MemoryRouter initialEntries={[path]}>
-        <AppRoutes />
-        <LocationProbe />
-      </MemoryRouter>
+      <ShellFrameProvider>
+        <MemoryRouter initialEntries={[path]}>
+          <AppRoutes />
+          <LocationProbe />
+        </MemoryRouter>
+      </ShellFrameProvider>
     </AuthContext.Provider>,
   );
 }

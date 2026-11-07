@@ -6,6 +6,10 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ReviewViewingForm } from "./ReviewViewingForm";
 import { isHousingReviewLongEnough } from "./ReviewViewingRules";
 import { useSubmitHousingReview } from "./api/useHousingReviews";
+import {
+  HOUSING_REVIEW_SUBMIT_OVERRIDES,
+  failureToast,
+} from "./economyErrorCopy";
 import styles from "./housingModals.module.css";
 
 const CheckMark = () => (
@@ -53,8 +57,16 @@ export function ReviewViewingSubmitPanel({
       { viewingId, rating, text: text.trim() },
       {
         onSuccess: onSubmitted,
-        onError: () =>
-          showToast(t("economy:housingViewing.review.error"), "error"),
+        onError: (error) =>
+          showToast(
+            failureToast(
+              error,
+              t,
+              "economy:housingViewing.review.errorTitle",
+              HOUSING_REVIEW_SUBMIT_OVERRIDES,
+            ),
+            "error",
+          ),
       },
     );
   };

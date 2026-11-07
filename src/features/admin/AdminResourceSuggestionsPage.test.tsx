@@ -66,19 +66,9 @@ describe("AdminResourceSuggestionsPage", () => {
     createdListingId: null,
   };
 
-  /**
-   * The approval modal's confirm button, queried by its i18n KEY rather than
-   * its English text.
-   *
-   * The `admin:adminResourceSuggestions.approve.*` keys this modal renders are
-   * not in the catalogs yet (they are listed in the PRD-269 handoff for the
-   * catalog owner), and `I18nProvider`'s `t` returns a missing key verbatim.
-   * Querying the key is therefore what the button is actually labelled right
-   * now. Swap this for the English string in the same change that adds the
-   * keys, so the assertion keeps testing the real label.
-   */
-  const APPROVE_CONFIRM_LABEL =
-    "admin:adminResourceSuggestions.approve.confirmCta";
+  /** The approval modal's confirm button, by its English catalog label
+   *  (`admin:adminResourceSuggestions.approve.confirmCta`). */
+  const APPROVE_CONFIRM_LABEL = "Approve and publish";
 
   it("lists suggestions with the suggesting member's name", async () => {
     vi.spyOn(

@@ -5,6 +5,7 @@ import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { subprofileEditPath } from "../../../../app/routeMap";
 import { useOwnerSkinPatch } from "../../api/useOwnerSkinPatch";
+import { personaOwnerPatchErrorMessage } from "../../personaActionErrors";
 import { estimateDraftReadiness } from "../../subprofileDraftReadiness";
 import type {
   SkinData,
@@ -123,8 +124,8 @@ export function TherapistOwnerBar({
       confirmAvailability: true,
     }).then(() => setSavedAt(new Date().toISOString()));
 
-  const showSaveError = () =>
-    showToast(t("subprofiles:therapist.owner.capacityError"), "error");
+  const showSaveError = (error: unknown) =>
+    showToast(personaOwnerPatchErrorMessage(error, t), "error");
 
   const saveCapacity = (option: (typeof CAPACITY_OPTIONS)[number]) => {
     if (option.status === view.status || isSaving) return;

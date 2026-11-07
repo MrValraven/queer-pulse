@@ -5,6 +5,7 @@ import type { AuthUser } from "../auth/api/auth.api";
 import { useReply } from "./api/useCommunityMutations";
 import { replyDtoToThreadReply } from "./api/communities.adapters";
 import { nextOptimisticReplyId } from "./communityThread.helpers";
+import { communityErrorText } from "./communityErrors";
 import { viewerPerson } from "./communityPeople";
 import type { Reply, Thread as ThreadData } from "./communityDetails";
 
@@ -67,12 +68,12 @@ export function useThreadComposerState(
         },
         // Roll the optimistic reply back and hand the words back to the
         // composer so nothing typed is lost.
-        onError: () => {
+        onError: (error) => {
           setExtraReplies((prev) =>
             prev.filter((item) => item.id !== optimisticId),
           );
           setReplyText(text);
-          showToast(t("communities:common.error"), "error");
+          showToast(communityErrorText(t, error), "error");
         },
       },
     );

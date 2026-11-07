@@ -1,11 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { EventsTab } from "./EventsTab";
 import { getLiving } from "./livingCommunities.data";
 
 describe("EventsTab guest gatherings", () => {
-  it("says which community leads a gathering this one joined", () => {
+  it("says which community leads a gathering this one joined", async () => {
     render(
       <TestProviders>
         <EventsTab
@@ -32,6 +33,7 @@ describe("EventsTab guest gatherings", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("communities");
     expect(screen.getByText("With Queer Runners Lisboa")).toBeInTheDocument();
     expect(screen.queryAllByText(/^With /)).toHaveLength(1);
   });

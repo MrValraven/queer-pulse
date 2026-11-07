@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { useSearchParams } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { routes } from "../../../app/routeMap";
 import {
   DEMO_EDITORS,
@@ -102,6 +103,7 @@ describe("the rail's Write on the desk", () => {
         <DeskWriteHarness startDraft={startDraft} />
       </TestProviders>,
     );
+    await awaitCatalog("magazine");
 
     fireEvent.click(screen.getByRole("link", { name: "Write" }));
 
@@ -112,7 +114,7 @@ describe("the rail's Write on the desk", () => {
     );
   });
 
-  it("links to the desk's current search plus the write flag", () => {
+  it("links to the desk's current search plus the write flag", async () => {
     render(
       <TestProviders
         initialEntries={[
@@ -122,6 +124,7 @@ describe("the rail's Write on the desk", () => {
         <MagazineSidebar pieces={[]} me="marta" />
       </TestProviders>,
     );
+    await awaitCatalog("magazine");
 
     const href = screen
       .getByRole("link", { name: "Write" })
@@ -135,7 +138,7 @@ describe("the rail's Write on the desk", () => {
 });
 
 describe("the rail's waiting-on-you pill", () => {
-  it("links to the Everything scope with Your turn on, named by its count", () => {
+  it("links to the Everything scope with Your turn on, named by its count", async () => {
     const waitingPiece: Piece = {
       ...(DEMO_PIECES[0] as Piece),
       id: "waiting-on-marta",
@@ -148,6 +151,7 @@ describe("the rail's waiting-on-you pill", () => {
         <MagazineSidebar pieces={[waitingPiece]} me="marta" />
       </TestProviders>,
     );
+    await awaitCatalog("magazine");
 
     const pill = screen.getByRole("link", { name: "1 waiting on you" });
     const params = new URLSearchParams(

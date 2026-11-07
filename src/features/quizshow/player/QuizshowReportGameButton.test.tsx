@@ -10,6 +10,7 @@ import type { QuizshowClientState } from "../realtime/quizshowClientStore";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import { QuizshowPlayerStage } from "./QuizshowPlayerStage";
 import { QuizshowReportGameButton } from "./QuizshowReportGameButton";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 
 const reportModalProps = vi.fn();
 
@@ -149,6 +150,7 @@ describe("QuizshowReportGameButton", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("quizshow");
     await userEvent.click(
       screen.getByRole("button", { name: "Report this game" }),
     );
@@ -164,6 +166,7 @@ describe("QuizshowReportGameButton", () => {
 
   it("shows Report this game on a game's question and reveal views", async () => {
     const { rerender } = render(stageOf(playerStateOf("open", "game")));
+    await awaitCatalog("quizshow");
     expect(
       await screen.findByRole("button", { name: "Report this game" }),
     ).toBeInTheDocument();
@@ -175,6 +178,7 @@ describe("QuizshowReportGameButton", () => {
 
   it("keeps it off event games and off the scores views", async () => {
     const { rerender } = render(stageOf(playerStateOf("open", "event")));
+    await awaitCatalog("quizshow");
     await screen.findByRole("heading");
     expect(
       screen.queryByRole("button", { name: "Report this game" }),

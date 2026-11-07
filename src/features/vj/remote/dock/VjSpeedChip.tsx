@@ -29,7 +29,8 @@ export interface VjSpeedChipProps {
 }
 
 /**
- * The clip speed chip at the end of the transition row. It opens the six
+ * The clip speed chip at the end of the transition row, a "Speed" caption
+ * over the speed (the pads strip folds the caption). It opens the six
  * speeds; a pick shows at once and rolls back with its named reason on a
  * refusal. While a GIF plays live the note says GIFs keep their own speed.
  */
@@ -67,7 +68,7 @@ export function VjSpeedChip({
       <button
         ref={chipRef}
         type="button"
-        className={`${styles.chip} ${styles.speedChip}`}
+        className={`${styles.chip} ${styles.captionChip} ${styles.speedChip}`}
         data-vj-speed-chip=""
         aria-label={t("vj:transition.speedAria", {
           speed: format.number(shownSpeed),
@@ -76,7 +77,18 @@ export function VjSpeedChip({
         aria-expanded={isOpen}
         onClick={() => setIsOpen((current) => !current)}
       >
-        {speedText(shownSpeed)}
+        <span
+          className={`${styles.chipCaption} ${styles.foldingCaption}`}
+          aria-hidden="true"
+        >
+          {t("vj:effects.speed")}
+        </span>
+        <span
+          className={`${styles.chipNumber} ${styles.speedNumber}`}
+          aria-hidden="true"
+        >
+          {speedText(shownSpeed)}
+        </span>
       </button>
       <VjDockPopover
         anchorRef={chipRef}

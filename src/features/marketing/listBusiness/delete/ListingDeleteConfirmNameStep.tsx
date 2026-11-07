@@ -1,4 +1,5 @@
 import type { RefObject } from "react";
+import type { CauseErrorCopy } from "../../../../shared/api/causeErrorKey";
 import { FormField } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { ListingDeleteStepHeading } from "./ListingDeleteStepHeading";
@@ -15,14 +16,15 @@ export function ListingDeleteConfirmNameStep({
   listingName,
   typedName,
   onTypedNameChange,
-  hasDeleteFailed,
+  deleteFailureCause,
 }: {
   headingRef: RefObject<HTMLHeadingElement | null>;
   stepCountId: string;
   listingName: string;
   typedName: string;
   onTypedNameChange: (typedName: string) => void;
-  hasDeleteFailed: boolean;
+  /** Why the last delete failed, or null while there is no failure to show. */
+  deleteFailureCause: CauseErrorCopy | null;
 }) {
   const { t } = useTranslation();
   const displayName = listingName.trim();
@@ -44,8 +46,8 @@ export function ListingDeleteConfirmNameStep({
         /* FormField renders the error right under the input in its own
            role="alert" span, so the failure is announced where it happened. */
         error={
-          hasDeleteFailed
-            ? t("marketing:listBusiness.deleteFlow.error")
+          deleteFailureCause
+            ? t(deleteFailureCause.key, deleteFailureCause.values)
             : undefined
         }
       >

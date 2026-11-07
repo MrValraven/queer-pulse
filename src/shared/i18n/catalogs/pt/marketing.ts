@@ -334,8 +334,7 @@ export const marketing: Catalog = {
   "activism.conviction.local.rest":
     "A mudança começa na comunidade em que já estás.",
   "activism.conviction.real.word": "Real.",
-  "activism.conviction.real.rest":
-    "Não é uma partilha. É algo que te custa alguma coisa.",
+  "activism.conviction.real.rest": "Algo que te custa alguma coisa.",
   "activism.conviction.yours.word": "Teu.",
   "activism.conviction.yours.rest":
     "Escolhe a forma que cabe na tua vida agora.",
@@ -652,6 +651,7 @@ export const marketing: Catalog = {
   "dsar.toast.submitted": "Pedido submetido: referência {ref}",
   "dsar.toast.submitError":
     "Não conseguimos registar esse pedido. Nada foi enviado. Importas-te de tentar outra vez?",
+  "dsar.toast.submitErrorTitle": "Não conseguimos registar o teu pedido",
   "dsar.meta.title":
     "Pede os teus dados: direitos sobre os dados na QueerPulse ao abrigo do RGPD",
   "dsar.meta.description":
@@ -714,7 +714,7 @@ export const marketing: Catalog = {
   "guidelines.clause05.p1":
     "Um bom pedido de desculpa nomeia o que aconteceu, reconhece o impacto e muda o comportamento daí em diante.",
   "guidelines.clause05.p2":
-    "“Desculpa se te sentiste assim” não é uma reparação. É uma fuga.",
+    "“Desculpa se te sentiste assim” é uma fuga. Uma reparação diz o que aconteceu.",
   "guidelines.clause06.titlePre": "Descansar faz ",
   "guidelines.clause06.titleEm": "parte disto",
   "guidelines.clause06.p1":
@@ -1471,6 +1471,8 @@ export const marketing: Catalog = {
     "O teu anúncio está com a equipa da comunidade",
   "listBusiness.toast.submitError":
     "Não conseguimos enviar o teu espaço agora. Os teus dados ficaram guardados. Tenta de novo.",
+  "listBusiness.toast.submitErrorTitle":
+    "Não conseguimos enviar o teu anúncio e os teus dados ficaram guardados",
   "listBusiness.toast.withdrawn": "Anúncio retirado",
   // Validação do servidor (item #4)
   "listBusiness.serverError.title":
@@ -1483,6 +1485,11 @@ export const marketing: Catalog = {
     "Guardado. Retoma quando quiseres. Fica à espera nos teus rascunhos.",
   "listBusiness.saveLater.error":
     "Não conseguimos guardar o teu rascunho agora. Verifica a ligação e tenta de novo.",
+  "listBusiness.saveLater.errorTitle": "Não conseguimos guardar o teu rascunho",
+  "listBusiness.saveLater.cause.storage":
+    "O teu navegador não nos deixou guardar o rascunho. Confirma que permite a este site guardar dados e tenta outra vez.",
+  "listBusiness.saveLater.cause.superseded":
+    "Este rascunho já foi enviado ou descartado enquanto guardávamos, por isso não havia nada para manter.",
   "listBusiness.drafts.title": "Retoma onde ficaste",
   "listBusiness.drafts.count": "{count} em curso",
   "listBusiness.drafts.teamNote":
@@ -2566,6 +2573,13 @@ export const marketing: Catalog = {
     "A moderação confirmou este selo para o negócio tal como está hoje. Alterar o nome do negócio, o selo Queer-owned ou LGBTQ+ friendly, ou a ligação deste anúncio ao teu perfil, remove o selo até a moderação confirmar o negócio outra vez. Tudo o resto que editares aqui não lhe toca.",
   "listBusiness.edit.saveError":
     "Não conseguimos guardar as alterações. Tenta de novo.",
+  "listBusiness.edit.saveErrorTitle": "Não conseguimos guardar o teu anúncio",
+  "listBusiness.edit.cause.ownerOnly":
+    "Só o dono pode alterar os dados pessoais do dono, como o nome, a bio e os consentimentos. Repõe esses campos como estavam e guarda outra vez.",
+  "listBusiness.edit.cause.gone":
+    "Este anúncio já não é teu para editar ou foi removido. Atualiza a página para veres como está.",
+  "listBusiness.edit.cause.tooLarge":
+    "Este anúncio é demasiado grande para enviar de uma vez. Remove algumas fotos ou encurta descrições longas e tenta outra vez.",
   "listBusiness.edit.discardConfirm":
     "Descartar as alterações não guardadas a este anúncio?",
   "listBusiness.edit.notAllowed":
@@ -2785,6 +2799,8 @@ export const marketing: Catalog = {
   "listBusiness.deleteFlow.confirmName.helper": "As maiúsculas contam.",
   "listBusiness.deleteFlow.error":
     "Não foi possível eliminar o anúncio. Tenta outra vez daqui a pouco.",
+  "listBusiness.deleteFlow.cause.gone":
+    "Este anúncio já não existe, por isso não há nada para eliminar. Atualiza a página para veres como está.",
   "listBusiness.deleteFlow.hint.acknowledge":
     "Marca as três caixas para continuar.",
   "listBusiness.deleteFlow.hint.reason": "Escreve um motivo para continuar.",
@@ -2825,6 +2841,10 @@ export const marketing: Catalog = {
     "Essa pessoa deixou de editar esta página.",
   "listBusiness.coManagers.removeError":
     "Não conseguimos fazer essa alteração agora. Tenta outra vez.",
+  "listBusiness.coManagers.removeErrorTitle":
+    "Não conseguimos remover essa pessoa",
+  "listBusiness.coManagers.cause.gone":
+    "Esse lugar já não existe. Atualiza a página para veres quem ajuda a gerir este anúncio agora.",
   "listBusiness.coManagers.inviteHeading": "Convidar alguém para ajudar",
   "listBusiness.coManagers.inviteIntro":
     "Escolhe alguém com quem tens conexão e envia o convite. Nada muda para essa pessoa até aceitar.",
@@ -2863,6 +2883,22 @@ export const marketing: Catalog = {
   "listBusiness.coManagers.leftToast": "Já não ajudas com {name}.",
   "listBusiness.coManagers.leaveError":
     "Não conseguimos fazer isso agora. Tenta outra vez.",
+  "listBusiness.coManagers.leaveErrorTitle":
+    "Não conseguimos terminar a tua ajuda",
+  "listBusiness.coManagerInvites.errorTitle":
+    "Não conseguimos enviar a tua resposta",
+  "listBusiness.coManagerInvites.cause.gone":
+    "Este convite ou o anúncio já não existe. Atualiza a página para veres o que está à tua espera.",
+  "listBusiness.coManagerInvites.cause.alreadyAnswered":
+    "Este convite já foi respondido. Atualiza a página para veres em que ponto está.",
+  "listBusiness.ownerOffers.errorTitle":
+    "Não conseguimos enviar a tua resposta",
+  "listBusiness.ownerOffers.cause.gone":
+    "Esta oferta ou o anúncio já não existe. Atualiza a página para veres o que está à tua espera.",
+  "listBusiness.ownerOffers.cause.alreadyAnswered":
+    "Esta oferta já foi respondida. Atualiza a página para veres em que ponto está.",
+  "listBusiness.ownerOffers.cause.claimedSince":
+    "Outra pessoa reivindicou este anúncio depois de a oferta ser feita, por isso já não pode ser aceite. Recusa-a para a tirares da tua lista.",
   "listBusiness.coManagers.banner.title": "Ajudas a gerir esta página",
   "listBusiness.coManagers.banner.titleNamed":
     "Ajudas {name} a gerir {listing}",
@@ -3115,6 +3151,10 @@ export const marketing: Catalog = {
   "listBusiness.menu.fileError.size":
     "Esse ficheiro passa dos {max}. Experimenta um PDF mais pequeno ou uma foto.",
   "listBusiness.menu.fileError.upload": "O envio não passou. Tenta outra vez.",
+  "listBusiness.menu.fileError.rejected":
+    "O nosso armazenamento não aceitou este ficheiro. Usa um PDF, JPG, PNG ou WebP e tenta outra vez.",
+  "listBusiness.menu.fileError.tooManyUploads":
+    "Enviaste muitos ficheiros em pouco tempo. Espera um minuto e tenta outra vez.",
   "listBusiness.menu.linkLabel": "Menu no teu site",
   "listBusiness.menu.linkHint":
     "Opcional. Um link para o menu que já manténs atualizado.",
@@ -3414,6 +3454,8 @@ export const marketing: Catalog = {
     "Obrigade. O teu anúncio fica carimbado como verificado hoje.",
   "listBusiness.confirmDetails.error":
     "Não foi possível registar isso agora. Tenta novamente.",
+  "listBusiness.confirmDetails.errorTitle":
+    "Não conseguimos confirmar os teus dados",
 
   // ── Exceções por data ao horário semanal (só no editor de quem gere).
   "listBusiness.hoursExceptions.heading": "Datas que são diferentes",
@@ -3481,7 +3523,7 @@ export const marketing: Catalog = {
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-11-07.headline":
-    "Os editores tiram uma peça publicada do site e devolvem-na a rascunho ou análise, com Desfazer.",
+    "As ações que falham dizem porquê, os editores despublicam com Desfazer, e os GIFs VJ voltam a carregar.",
   "changelog.releases.2026-11-06.headline":
     "O ecrã VJ ganha um motor de efeitos ao vivo e o comando toca cenas, alinhamentos e MIDI.",
   "changelog.releases.2026-11-05.headline":
@@ -3795,10 +3837,34 @@ export const marketing: Catalog = {
     "Encontra personas pelas mesmas áreas de trabalho que escolhes ao entrar",
   "changelog.entries.persona-professions-by-work-area.body":
     "O filtro de profissão agrupa as opções em áreas como Música ou Restauração e gastronomia, com títulos mais claros.",
+  "changelog.entries.studio-payment-methods-save.title":
+    "Os métodos de pagamento do Studio voltam a guardar",
+  "changelog.entries.studio-payment-methods-save.body":
+    "Adicionar as formas como te podem pagar no Studio falhava sempre, e agora fica guardado.",
+  "changelog.entries.studio-purchase-notices.title":
+    "Avisos de compras do Studio na tua língua",
+  "changelog.entries.studio-purchase-notices.body":
+    "Os avisos de compra chegam em português, e uma denúncia a uma persona pode indicar um pagamento nunca confirmado.",
+  "changelog.entries.invite-pickers-keep-unticked-picks.title":
+    "Os seletores de convite guardam quem desmarcas",
+  "changelog.entries.invite-pickers-keep-unticked-picks.body":
+    "Depois de uma nova pesquisa, desmarcar alguém que escolheste mantém essa pessoa na lista para a voltares a marcar.",
+  "changelog.entries.failed-actions-say-why.title":
+    "As ações que falham dizem porquê",
+  "changelog.entries.failed-actions-say-why.body":
+    "Formulários, carregamentos e respostas indicam a causa real, como uma ligação perdida ou um evento cheio.",
+  "changelog.entries.vj-gifs-load-on-projector.title":
+    "Os GIFs voltam a carregar no projetor VJ",
+  "changelog.entries.vj-gifs-load-on-projector.body":
+    "As regras de segurança do site impediam o ecrã de ler os GIFs guardados, e cada clipe GIF falhava.",
+  "changelog.entries.vj-clip-load-reasons.title":
+    "Vê porque é que um clipe VJ não carrega no ecrã",
+  "changelog.entries.vj-clip-load-reasons.body":
+    "O comando diz-te o que tentar a seguir, e os GIFs que o descodificador recusa passam a tocar pelo navegador.",
   "changelog.entries.unpublish-pieces-from-the-desk.title":
-    "Tira peças publicadas do site a partir da mesa de edição",
+    "Despublica peças a partir da mesa de edição",
   "changelog.entries.unpublish-pieces-from-the-desk.body":
-    "O menu de uma peça publicada devolve-a a rascunho ou análise depois de confirmares, com Desfazer.",
+    "Um só botão Despublicar no quadro ou no menu da linha, escolhes rascunho ou análise ao confirmar, e há Desfazer.",
   "changelog.entries.vj-effects-engine.title":
     "Os ecrãs VJ ganham um motor de efeitos ao vivo",
   "changelog.entries.vj-effects-engine.body":
@@ -10057,6 +10123,9 @@ export const marketing: Catalog = {
     "Obrigade, enviámos à equipa para revisão",
   "roadmap.submitIdea.toast.error":
     "Não foi possível submeter a tua ideia. Tenta de novo",
+  "roadmap.submitIdea.toast.errorTitle": "Não conseguimos enviar a tua ideia",
+  "roadmap.submitIdea.cause.rateLimited":
+    "Enviaste algumas ideias no último minuto. Espera um minuto e envia a seguinte.",
   "roadmap.topIdeas.title": "Ideias mais pedidas",
   "roadmap.topIdeas.voted": "Votado",
   "roadmap.topIdeas.vote": "Votar",
@@ -10256,6 +10325,10 @@ export const marketing: Catalog = {
     "As horas confirmadas contam para o total de horas de voluntariado que a QueerPulse pode reportar e para o reconhecimento desta pessoa.",
   "volunteerManage.completion.error":
     "Não foi possível guardar. Verifica a ligação e tenta outra vez.",
+  "volunteerManage.completion.cause.hours":
+    "Essas horas não foram aceites. Indica um número entre 0 e 24 e tenta outra vez.",
+  "volunteerManage.completion.cause.ownSession":
+    "Outra pessoa tem de confirmar a tua própria sessão de voluntariado. Pede a outra pessoa da organização que a confirme.",
   "volunteerManage.completion.alreadyDone":
     "Esta sessão já tinha sido confirmada.",
   "volunteerManage.completion.confirmedHours": "Confirmado: {hours} h a {when}",
@@ -10269,6 +10342,10 @@ export const marketing: Catalog = {
     "Precisas de pessoas para dar o tempo delas? Descreve a vaga com honestidade (as horas, o compromisso, para quem é indicada) e fica logo visível no quadro de voluntariado.",
   "postOpportunity.toast.error":
     "Não foi possível publicar a tua oportunidade. Tenta outra vez.",
+  "postOpportunity.toast.errorTitle":
+    "Não conseguimos publicar a tua oportunidade",
+  "postOpportunity.cause.invalid":
+    "Alguns detalhes não foram aceites. Uma oportunidade pode ligar a um parceiro ou a uma comunidade. Confirma essa ligação e os outros campos e tenta outra vez.",
   "postOpportunity.success.title": "A tua oportunidade está",
   "postOpportunity.success.em": "publicada.",
   "postOpportunity.success.closeLabel": "Ver o quadro de voluntariado",
@@ -10357,6 +10434,11 @@ export const marketing: Catalog = {
   "postOpportunity.edit.successToast": "As tuas alterações estão guardadas.",
   "postOpportunity.edit.errorToast":
     "Não foi possível guardar as alterações. Tenta novamente.",
+  "postOpportunity.edit.errorTitle": "Não conseguimos guardar as alterações",
+  "postOpportunity.cause.notPoster":
+    "Só quem publicou esta oportunidade a pode alterar.",
+  "postOpportunity.cause.gone":
+    "Esta oportunidade já não existe. Pode ter sido removida. Volta à lista para veres o que está aberto.",
   "postOpportunity.edit.notAllowed":
     "Só podes editar uma oportunidade que tenhas publicado.",
   "postOpportunity.rich.summary": "Acrescentar mais detalhe (opcional)",
@@ -10590,6 +10672,9 @@ export const marketing: Catalog = {
   "contact.form.sendingCta": "A enviar…",
   "contact.form.error":
     "Algo correu mal ao enviar. Tenta novamente ou escreve-nos diretamente.",
+  "contact.form.errorTitle": "Não conseguimos enviar a tua mensagem",
+  "contact.cause.rateLimited":
+    "Enviaste várias mensagens no último minuto. Espera um minuto e envia outra vez.",
   "contact.outro.title": "Construído em Lisboa, <em>com cuidado.</em>",
   "contact.outro.sub":
     "A QueerPulse é uma rede pequena, sustentada pelas pessoas que a usam. O teu feedback ajuda a mantê-la boa.",
@@ -10842,7 +10927,7 @@ export const marketing: Catalog = {
   "directory.verify.eyebrow": "Verificado pela comunidade",
   "directory.verify.title": "Como funciona a <em>verificação.</em>",
   "directory.verify.lead":
-    "O selo de verificação não é auto-declarado. Um membro propõe um espaço, outros visitam-no e avaliam-no segundo um conjunto fixo de critérios, e cada selo volta à fila de revisão um ano depois de ser atribuído, por isso também o pode perder.",
+    "O selo de verificação ganha-se em revisão. Um membro propõe um espaço, outros visitam-no e avaliam-no segundo um conjunto fixo de critérios, e cada selo volta à fila de revisão um ano depois de ser atribuído, por isso também o pode perder.",
   "directory.verify.cta": "Ver a história de confiança completa",
   "directory.verify.pillar.nominate.title": "Proposto por membros",
   "directory.verify.pillar.nominate.body":
@@ -10938,6 +11023,16 @@ export const marketing: Catalog = {
     "Obrigade. A tua avaliação está publicada.",
   "directory.detail.review.errorToast":
     "Não foi possível publicar a tua avaliação. Tenta novamente.",
+  "directory.detail.review.errorTitle":
+    "Não conseguimos publicar a tua avaliação",
+  "directory.detail.review.cause.ownListing":
+    "Não podes avaliar um espaço que giras tu.",
+  "directory.detail.review.cause.incomplete":
+    "A tua avaliação precisa de uma classificação e de algumas palavras. Confirma as duas coisas e tenta outra vez.",
+  "directory.detail.review.cause.alreadyReviewed":
+    "Já avaliaste este espaço. Edita a tua avaliação para mudares o que escreveste.",
+  "directory.detail.review.cause.notYours":
+    "Só podes editar uma avaliação que escreveste tu.",
   "directory.detail.review.signInPrompt":
     "Inicia sessão para avaliar este espaço.",
   "directory.detail.review.signInCta": "Iniciar sessão",
@@ -10950,6 +11045,8 @@ export const marketing: Catalog = {
   "directory.detail.review.editSuccessToast": "A tua avaliação foi atualizada.",
   "directory.detail.review.editErrorToast":
     "Não foi possível guardar as alterações. Tenta novamente.",
+  "directory.detail.review.editErrorTitle":
+    "Não conseguimos guardar as alterações",
   "directory.detail.review.photo.add": "Adicionar uma foto",
   "directory.detail.review.photo.change": "Mudar a foto",
   "directory.detail.review.photo.remove": "Remover",
@@ -10969,6 +11066,10 @@ export const marketing: Catalog = {
   "directory.detail.reply.successToast": "A tua resposta está publicada.",
   "directory.detail.reply.errorToast":
     "Não foi possível publicar a tua resposta. Tenta novamente.",
+  "directory.detail.reply.errorTitle":
+    "Não conseguimos publicar a tua resposta",
+  "directory.detail.reply.cause.empty":
+    "A tua resposta está vazia. Escreve algumas palavras e tenta outra vez.",
   "directory.detail.reviews.sortLabel": "Ordenar",
   "directory.detail.reviews.sortNewest": "Mais recentes",
   "directory.detail.reviews.sortHighest": "Melhor avaliadas",
@@ -10991,6 +11092,10 @@ export const marketing: Catalog = {
     "Inicia sessão para marcar esta avaliação como útil",
   "directory.detail.reviews.helpfulError":
     "Não foi possível registar isso. Tenta novamente.",
+  "directory.detail.reviews.helpfulErrorTitle":
+    "Não conseguimos registar o teu voto",
+  "directory.detail.reviews.cause.ownReview":
+    "Não podes marcar a tua própria avaliação como útil.",
   "directory.detail.reviews.photoAlt": "Foto da avaliação de {name}",
   "directory.detail.reviews.photoOpen": "Abrir a foto da avaliação de {name}",
   "directory.detail.reviews.sortHelpful": "Mais úteis",
@@ -11239,6 +11344,8 @@ export const marketing: Catalog = {
   "directory.detail.dispute.submitting": "A enviar…",
   "directory.detail.dispute.errorToast":
     "Não foi possível registar a tua contestação. Tenta novamente.",
+  "directory.detail.dispute.errorTitle":
+    "Não conseguimos registar a tua contestação",
   "directory.detail.dispute.successAriaLabel": "Contestação recebida",
   "directory.detail.dispute.successTitle": "Obrigade. Estamos",
   "directory.detail.dispute.successEm": "a tratar disto.",
@@ -11270,6 +11377,11 @@ export const marketing: Catalog = {
   "directory.detail.claim.submitting": "A enviar…",
   "directory.detail.claim.errorToast":
     "Não foi possível enviar o teu pedido. Tenta novamente.",
+  "directory.detail.claim.errorTitle": "Não conseguimos enviar o teu pedido",
+  "directory.detail.claim.cause.alreadyYours":
+    "Este espaço já é teu, por isso não há nada a reivindicar.",
+  "directory.detail.claim.cause.hasOwner":
+    "Este espaço já tem dono. Se o anúncio estiver errado ou te representar mal, faz uma contestação e um moderador vai analisar.",
   "directory.detail.claim.successAriaLabel": "Pedido recebido",
   "directory.detail.claim.successTitle": "Recebido. Estamos",
   "directory.detail.claim.successEm": "a tratar disto.",
@@ -11439,6 +11551,8 @@ export const marketing: Catalog = {
     "Obrigado. O teu anúncio passa a constar como confirmado hoje.",
   "directory.detail.ownerBand.confirmError":
     "Não foi possível guardar. Tenta novamente.",
+  "directory.detail.ownerBand.confirmErrorTitle":
+    "Não conseguimos confirmar os teus dados",
 
   // ── Vista de visitante (`DirectoryVisitorViewToggle`,
   //    `DirectoryVisitorViewBar`).
@@ -11545,7 +11659,7 @@ export const marketing: Catalog = {
   "arriving.neighbourhoods.eyebrow": "Os bairros de Lisboa",
   "arriving.neighbourhoods.title": "Onde é que a vida queer <em>acontece.</em>",
   "arriving.neighbourhoods.intro":
-    "Lisboa não tem um bairro queer. Tem vários núcleos, cada um com o seu carácter. Aqui fica um guia honesto de onde está a comunidade.",
+    "A vida queer de Lisboa espalha-se por vários núcleos, cada um com o seu carácter. Aqui fica um guia honesto de onde está a comunidade.",
   "arriving.hoods.principeReal.tag": "Social · Criativo",
   "arriving.hoods.principeReal.body":
     "O coração da vida social queer em Lisboa. Um jardim, bares de vinhos, livrarias independentes, e muita gente criativa queer. O mais visível dos núcleos e o mais fácil de entrar.",
@@ -11609,11 +11723,11 @@ export const marketing: Catalog = {
     "O mercado de habitação em Lisboa é caro e competitivo. Aqui fica um retrato honesto do que esperar, e de onde pedir ajuda.",
   "arriving.housing.cards.market.title": "Como é o mercado, na realidade",
   "arriving.housing.cards.market.body":
-    "As rendas subiram muito nos últimos cinco anos, e um quarto num bairro central é de longe a maior despesa mensal da maioria das pessoas. Define o teu orçamento pelo que está mesmo a ser pedido este mês, no quadro de habitação e nos sites de anúncios, e não por um valor escrito num guia. Arroios e Mouraria ainda têm melhor relação preço-qualidade. Os bons anúncios saem em dias, por isso avança depressa quando vires um.",
+    "As rendas subiram muito nos últimos cinco anos, e um quarto num bairro central é de longe a maior despesa mensal da maioria das pessoas. Define o teu orçamento pelo que está mesmo a ser pedido este mês, no quadro de habitação e nos sites de anúncios. Arroios e Mouraria ainda têm melhor relação preço-qualidade. Os bons anúncios saem em dias, por isso avança depressa quando vires um.",
   "arriving.housing.cards.board.title":
     "Quartos partilhados dentro da comunidade",
   "arriving.housing.cards.board.body":
-    "As pessoas membros publicam quartos, subarrendamentos e partilhas no quadro de habitação da QueerPulse. As melhores pistas chegam quase sempre por pessoas e não por portais.",
+    "As pessoas membros publicam quartos, subarrendamentos e partilhas no quadro de habitação da QueerPulse. As melhores pistas chegam quase sempre por pessoas.",
   "arriving.housing.cards.board.linkLabel": "O quadro de habitação",
   "arriving.housing.cards.rights.title": "Saber o que estás a assinar",
   "arriving.housing.cards.rights.body":
@@ -12831,7 +12945,7 @@ export const marketing: Catalog = {
   "accessibilityStatement.commitment.p3":
     "Publicamos isto por escolha nossa. A nossa leitura da lei portuguesa, exposta na secção seguinte, é a de que nada nos obriga a isso hoje. Preferimos ser mensuráveis a estar isentas.",
   "accessibilityStatement.commitment.p4":
-    "Quase tudo o que se segue é imposto pelo build e não deixado à boa vontade. Onde não é, dizemo-lo.",
+    "Quase tudo o que se segue é imposto pelo build. Onde não é, dizemo-lo.",
 
   "accessibilityStatement.scope.title": "O que esta declaração cobre",
   "accessibilityStatement.scope.p1":
@@ -12910,7 +13024,7 @@ export const marketing: Catalog = {
   "accessibilityStatement.prepared.axe":
     "<strong>axe-core na suite de testes.</strong> Onze páginas representativas são desenhadas através do router real e analisadas com o axe-core, sem nada em quarentena e sem nenhuma regra suprimida, tirando a única que um motor sem desenho não consegue calcular.",
   "accessibilityStatement.prepared.contrast":
-    "<strong>Medição de contraste de cor.</strong> Cada par de cores que a interface desenha na realidade foi calculado com a fórmula do WCAG em vez de julgado a olho, foi escrito, e foi corrigido ou recebeu uma variante que passa. Uma passagem de contraste em navegador sobre seis páginas protege contra regressões.",
+    "<strong>Medição de contraste de cor.</strong> Cada par de cores que a interface desenha na realidade foi calculado com a fórmula do WCAG, foi escrito, e foi corrigido ou recebeu uma variante que passa. Uma passagem de contraste em navegador sobre seis páginas protege contra regressões.",
   "accessibilityStatement.prepared.p2":
     "As ferramentas automáticas apanham uma minoria dos problemas de acessibilidade, normalmente estimada entre um terço e metade. Tudo o que uma máquina não vê, e toda a questão de saber se esta plataforma é mesmo utilizável com um leitor de ecrã, continua por verificar. É por isso que a secção seguinte importa mais do que as duas anteriores.",
 

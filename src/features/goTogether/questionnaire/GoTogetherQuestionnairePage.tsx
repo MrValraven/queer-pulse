@@ -15,6 +15,7 @@ import {
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { safeInternalPath } from "../../../shared/lib/safeInternalPath";
 import { goTogetherErrorCode } from "../api/goTogether.api";
+import { goTogetherCauseKey } from "../api/goTogetherErrorCopy";
 import type { FriendMatchAnswers } from "../api/goTogether.types";
 import {
   MAX_INTEREST_TAGS,
@@ -70,7 +71,7 @@ function saveErrorKey(error: Error | null): string | null {
   if (code === "GO_TOGETHER_CONSENT_REQUIRED") {
     return "goTogether:questionnaire.error.consent";
   }
-  return "goTogether:questionnaire.error.generic";
+  return goTogetherCauseKey(error);
 }
 
 function StepBody({

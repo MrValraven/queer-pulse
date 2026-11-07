@@ -210,6 +210,8 @@ export const economy: Catalog = {
   "workProfile.savedToast": "Work profile saved",
   "workProfile.saveFailedToast":
     "We couldn't save that, your settings are still exactly as they were. Try again in a moment.",
+  "workProfile.saveFailedTitle":
+    "We couldn't save, and your settings stayed as they were",
 
   "workProfile.card.meterLabel": "Profile {percent}% complete",
   "workProfile.card.note":
@@ -554,6 +556,9 @@ export const economy: Catalog = {
     "Search saved. We'll let you know when a home like this comes up.",
   "housing.saveSearch.error":
     "Couldn't save that search. Try again in a moment.",
+  "housing.saveSearch.errorTitle": "We couldn't save that search",
+  "housing.saveSearch.cause.limit":
+    "You've reached the limit of saved searches. Delete one you no longer need, then save this one.",
   "housing.savedSearches.title": "Your saved searches",
   "housing.savedSearches.alertsOn": "Alerts on",
   "housing.savedSearches.remove": "Remove saved search {name}",
@@ -687,6 +692,7 @@ export const economy: Catalog = {
   "housingModal.recommend.submit": "Submit recommendation",
   "housingModal.recommend.error":
     "Couldn't submit your recommendation. Check your connection and try again.",
+  "housingModal.recommend.errorTitle": "We couldn't send your recommendation",
 
   // ── ListSpaceModal ──────────────────────────────────────────────────────
   "listSpace.type.sublet": "Sublet",
@@ -810,6 +816,7 @@ export const economy: Catalog = {
   "listSpace.submitCta": "Submit listing",
   "listSpace.error":
     "Couldn't submit your listing. It didn't go through. Check your connection and try again.",
+  "listSpace.errorTitle": "We couldn't post your home",
 
   // ── MyHousingListingsPage (HSG-1/HSG-3) ─────────────────────────────────
   "myHousingListings.entryLink": "My listings",
@@ -867,6 +874,10 @@ export const economy: Catalog = {
   "myHousingListings.toast.deleted": "Listing deleted",
   "myHousingListings.toast.updated": "Listing updated",
   "myHousingListings.toast.error": "That didn't go through, try again.",
+  "myHousingListings.toast.errorTitle": "We couldn't update that listing",
+  "myHousingListings.toast.deleteErrorTitle": "We couldn't delete that listing",
+  "myHousingListings.cause.missing":
+    "This listing is no longer in your list. It may already have been removed. Refresh the page to see your current listings.",
   "myHousingListings.edit.eyebrow": "Housing board",
   "myHousingListings.edit.title": "Edit your <em>listing.</em>",
   "myHousingListings.edit.sub":
@@ -903,6 +914,7 @@ export const economy: Catalog = {
   "suggestLandlord.success.body":
     "A moderator will look over <strong>{name}</strong> before adding them to the board. We'll let you know if we need anything else.",
   "suggestLandlord.error": "Couldn't send that. Mind trying again?",
+  "suggestLandlord.errorTitle": "We couldn't send your suggestion",
 
   // ── HousingListingPage (+ sections) ────────────────────────────────────
   "housingListing.back": "Housing board",
@@ -954,6 +966,7 @@ export const economy: Catalog = {
   "affirmingPledge.acceptCta": "Take the pledge",
   "affirmingPledge.accepting": "Saving…",
   "affirmingPledge.error": "Couldn't save the pledge just now. Try again.",
+  "affirmingPledge.errorTitle": "We couldn't save your pledge",
   "affirmingBaseline.badge": "LGBTQ+ affirming",
   "affirmingBaseline.badgeTooltip":
     "Every home and housemate here is LGBTQ+ affirming. That is the baseline for the whole board.",
@@ -979,6 +992,9 @@ export const economy: Catalog = {
   "verification.request.submitting": "Sending",
   "verification.request.submitError":
     "Couldn't send your request. Mind trying again?",
+  "verification.request.submitErrorTitle": "We couldn't send your request",
+  "verification.request.cause.alreadyOpen":
+    "You already have a verification request open. Reopen this window to see where it stands.",
   "verification.request.cancel": "Not now",
   "verification.request.sub.pending":
     "A moderator reads requests by hand, so this can take a couple of days. We'll let you know the moment it's decided.",
@@ -1000,10 +1016,17 @@ export const economy: Catalog = {
   "verification.request.withdrawnToast": "Request withdrawn.",
   "verification.request.withdrawError":
     "Couldn't withdraw the request. Mind trying again?",
+  "verification.request.withdrawErrorTitle":
+    "We couldn't withdraw your request",
+  "verification.request.cause.alreadyDecided":
+    "Our team has already moved this request on, so it can't be withdrawn now. Reopen this window to see where it stands.",
   "verification.request.appealCta": "Appeal this decision",
   "verification.request.appealSending": "Sending appeal",
   "verification.request.appealError":
     "Couldn't send your appeal. Mind trying again?",
+  "verification.request.appealErrorTitle": "We couldn't send your appeal",
+  "verification.request.cause.alreadyAppealed":
+    "This decision has already been appealed once, and each decision can be appealed one time. Start a new request instead.",
   "verification.request.newRequestCta": "Start a new request",
   "verification.request.later": "I'll check back later",
   "verification.request.approved.title": "Your request is",
@@ -1056,6 +1079,7 @@ export const economy: Catalog = {
     "This is published as your words, next to what was written about you.",
   "landlordReply.send": "Send this to the team",
   "landlordReply.error": "That did not send. Try again.",
+  "landlordReply.errorTitle": "We couldn't send your reply",
   "landlordReply.doneTitle": "The team has it",
   "landlordReply.doneBody":
     "Somebody will read this and work out who you are before anything is published. Keep this page if you want to write down what you sent.",
@@ -1094,6 +1118,9 @@ export const economy: Catalog = {
   "housingViewing.request.send": "Send viewing request",
   "housingViewing.request.error":
     "Couldn't send the request. Give it another try in a moment.",
+  "housingViewing.request.errorTitle": "We couldn't request this viewing",
+  "housingViewing.request.cause.alreadyOpen":
+    "You already have a viewing open on this home. Check your viewings to see where it stands.",
   "housingViewing.request.successTitle": "Viewing <em>requested.</em>",
   "housingViewing.request.successBody":
     "The lister will pick a time or suggest another. You'll find it under Your viewings.",
@@ -1147,6 +1174,21 @@ export const economy: Catalog = {
   "housingViewing.list.requestAgain": "Request another time",
   "housingViewing.list.actionError":
     "That didn't go through. Please try again.",
+  "housingViewing.list.actionErrorTitle": "We couldn't update this viewing",
+  "housingViewing.cause.notYourTurn":
+    "It isn't your turn on this viewing. Wait for the other person to reply, then try again.",
+  "housingViewing.cause.missing":
+    "This viewing is no longer there, or the home has left the board. Refresh to see what's current.",
+  "housingViewing.cause.slotTaken":
+    "One of you already has a viewing booked at that time. Pick another time.",
+  "housingViewing.cause.moved":
+    "This viewing changed since you opened it, so that action no longer applies. Refresh to see where it stands.",
+  "housingViewing.cause.homeOffBoard":
+    "This home has left the board, so the viewing can't go ahead.",
+  "housingViewing.cause.timePassed":
+    "That time has already passed. Pick a time in the future.",
+  "housingViewing.cause.notYetHappened":
+    "You can mark a viewing as done once the agreed time has passed.",
   "housingViewing.list.markCompleted": "Mark as done",
   "housingViewing.list.leaveReview": "Leave a review",
   "housingViewing.status.requested": "Requested",
@@ -1177,6 +1219,13 @@ export const economy: Catalog = {
   "housingViewing.review.submit": "Submit review",
   "housingViewing.review.error":
     "Couldn't submit your review. Give it another try in a moment.",
+  "housingViewing.review.errorTitle": "We couldn't send your review",
+  "housingViewing.review.cause.notCompleted":
+    "A review opens once the viewing is marked as done, and it needs a rating and a few words. Check both and try again.",
+  "housingViewing.review.cause.notParticipant":
+    "Only the two people on this viewing can review it.",
+  "housingViewing.review.cause.alreadyReviewed":
+    "You've already reviewed this home. It gets one review from you, however many times you view it.",
   "housingViewing.review.successTitle": "Review <em>saved.</em>",
   "housingViewing.review.successBody":
     "Thank you. It stays private until <strong>{name}</strong> leaves theirs, or two weeks pass.",
@@ -1250,6 +1299,7 @@ export const economy: Catalog = {
   "contactRequest.cancel": "Cancel",
   "contactRequest.done": "Done",
   "contactRequest.sendError": "Couldn't send that. Mind giving it another try?",
+  "contactRequest.sendErrorTitle": "We couldn't send your message",
 
   // ── LandlordPage ─────────────────────────────────────────────────────────
   "landlordPage.eyebrow": "Community-endorsed landlord",
@@ -1382,6 +1432,7 @@ export const economy: Catalog = {
   "flatmates.card.helloSent": "Hello sent",
   "flatmates.card.sayHelloError":
     "Couldn't send your hello. Try again in a moment.",
+  "flatmates.card.sayHelloErrorTitle": "We couldn't send your hello",
   "flatmates.card.matchScore": "{score}% match",
   "flatmates.card.save": "Save",
   "flatmates.card.saved": "Saved",
@@ -1406,6 +1457,7 @@ export const economy: Catalog = {
   "postProfileModal.ariaLabel": "Post your flatmate profile",
   "postProfileModal.error":
     "Couldn't save your profile. Mind giving it another try?",
+  "postProfileModal.errorTitle": "We couldn't save your profile",
   "postProfileModal.success.title": "You're on the <em>board.</em>",
   "postProfileModal.success.body":
     "Your profile is live. Members will reach out directly. Keep an eye on your QueerPulse messages.",
@@ -1569,6 +1621,11 @@ export const economy: Catalog = {
     "You've already reviewed this company.",
   "companyReview.toast.error":
     "We couldn't post your review. Please try again.",
+  "companyReview.toast.errorTitle": "We couldn't post your review",
+  "companyReview.cause.empty":
+    "Your review needs a rating and a few words. Check both and try again.",
+  "companyReview.cause.ownOrTeam":
+    "You can't review a company you own or work for on its team.",
 
   // ── EmployerReviewsPage (+ Card) ─────────────────────────────────────────
   // Scope note: company names, scores, quotes, and per-review text/meta in
@@ -1739,6 +1796,7 @@ export const economy: Catalog = {
     "You've already applied to this role. Check your applications.",
   "jobApply.error.generic":
     "We couldn't send your application. Please try again.",
+  "jobApply.error.genericTitle": "We couldn't send your application",
 
   "jobApply.availability.now.title": "Immediately",
   "jobApply.availability.now.desc": "Ready now",
@@ -1974,6 +2032,7 @@ export const economy: Catalog = {
     "You're not authorised to post for {company}. Switch to a company you're on the team of.",
   "postJob.toast.publishError":
     "We couldn't publish your listing. Please try again.",
+  "postJob.toast.publishErrorTitle": "We couldn't publish your job listing",
 
   "postJob.field.optional": "optional",
   "postJob.field.category": "Field",
@@ -3093,7 +3152,7 @@ export const economy: Catalog = {
     "Your founding values charter is the first thing your group writes together, before a mortgage application, before a lease, before anyone signs anything with a bank or a notary. It puts into words what you're building and for whom, so that six months from now, when money is tight or a decision is hard, you have something to return to together. Treat everything below as a first draft: read it out loud as a group, cross out what doesn't fit, and rewrite it in your own words until it sounds like you.",
   "coopTemplate.doc.founding-values.s0.h": "Why we're forming this co-op",
   "coopTemplate.doc.founding-values.s0.b0":
-    "Start with one or two sentences that say, plainly, what this co-op is for. Not a mission statement for outsiders, a private answer for the people signing the shares. What are you protecting each other from, and what are you building toward?",
+    "Start with one or two sentences that say, plainly, what this co-op is for. Write it as a private answer for the people signing the shares. What are you protecting each other from, and what are you building toward?",
   "coopTemplate.doc.founding-values.s0.b1.0":
     "We are forming this co-op so that none of us has to choose between staying closeted and staying housed.",
   "coopTemplate.doc.founding-values.s0.b1.1":
@@ -3157,7 +3216,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.financial-honesty.s0.h":
     "What full transparency means here",
   "coopTemplate.doc.financial-honesty.s0.b0":
-    "Financial transparency doesn't mean everyone reveals their entire personal finances. It means everyone sees the same numbers about the co-op, and the group agrees in advance what individual information is shared, and why.",
+    "Financial transparency means everyone sees the same numbers about the co-op, and the group agrees in advance what individual information is shared, and why.",
   "coopTemplate.doc.financial-honesty.s0.b1.0":
     "Every member can see the co-op's shared ledger at any time, at any point in the year.",
   "coopTemplate.doc.financial-honesty.s0.b1.1":
@@ -3301,7 +3360,7 @@ export const economy: Catalog = {
     "What happens if an instalment is missed: cross-reference your Financial Honesty Agreement's arrears process rather than repeating it here.",
   "coopTemplate.doc.share-agreement.s2.h": "Leaving: buy-back terms",
   "coopTemplate.doc.share-agreement.s2.b0":
-    "This is the clause members read most carefully, and the one that most needs to be fair rather than punitive.",
+    "This is the clause members read most carefully, and the one that most needs to be fair.",
   "coopTemplate.doc.share-agreement.s2.b1.0":
     "On voluntary exit with the agreed notice period, the cooperative repays the share's nominal value, adjusted for [inflation / an agreed index], within an illustrative example of 12 months of departure.",
   "coopTemplate.doc.share-agreement.s2.b1.1":
@@ -3335,10 +3394,10 @@ export const economy: Catalog = {
   "coopTemplate.doc.finance-model.title": "Finance Model",
   "coopTemplate.doc.finance-model.titleEm": "Explainer",
   "coopTemplate.doc.finance-model.intro":
-    "This explainer walks through how the money in a housing co-op actually adds up, what you're paying for, where a mortgage and municipal support might fit, and how to set a monthly contribution that's sustainable rather than optimistic. The worked example at the end uses illustrative numbers only; your real figures depend entirely on your property, your city, and your group.",
+    "This explainer walks through how the money in a housing co-op actually adds up, what you're paying for, where a mortgage and municipal support might fit, and how to set a monthly contribution that's sustainable. The worked example at the end uses illustrative numbers only; your real figures depend entirely on your property, your city, and your group.",
   "coopTemplate.doc.finance-model.s0.h": "The cost stack",
   "coopTemplate.doc.finance-model.s0.b0":
-    "A co-op's costs come in three layers, and it helps to keep them visually separate rather than lumped into one scary number.",
+    "A co-op's costs come in three layers, and it helps to keep them visually separate, each with its own number.",
   "coopTemplate.doc.finance-model.s0.b1.0":
     "Acquisition: the purchase price of the property, plus notary, registration, and transfer taxes (IMT).",
   "coopTemplate.doc.finance-model.s0.b1.1":
@@ -3348,7 +3407,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.finance-model.s1.h":
     "Member shares, mortgage, and municipal support",
   "coopTemplate.doc.finance-model.s1.b0":
-    "Most QueerPulse co-ops blend three funding sources rather than relying on one.",
+    "Most QueerPulse co-ops blend three funding sources.",
   "coopTemplate.doc.finance-model.s1.b1.0":
     "Member shares (see your Member Share Agreement) cover a portion of acquisition, typically enough to make the loan-to-value ratio workable for a lender.",
   "coopTemplate.doc.finance-model.s1.b1.1":
@@ -3368,7 +3427,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.finance-model.s3.b0.0":
     "A maintenance reserve, funded from month one, even before anything's broken, retrofitting this later, after a roof leak, is much harder.",
   "coopTemplate.doc.finance-model.s3.b0.1":
-    "A target reserve size, commonly discussed as several months of running costs, agreed by the group rather than assumed.",
+    "A target reserve size, commonly discussed as several months of running costs, agreed by the group.",
   "coopTemplate.doc.finance-model.s3.b0.2":
     "The reserve is separate from the hardship/solidarity fund, one protects the building, the other protects members.",
   "coopTemplate.doc.finance-model.s4.h": "Where QueerPulse partners fit",
@@ -3423,7 +3482,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.conflict-resolution.s2.b1.0":
     "Step 1, direct: the people involved talk it through, one to one, ideally within a week of the issue coming up.",
   "coopTemplate.doc.conflict-resolution.s2.b1.1":
-    "Step 2, facilitated: if step 1 doesn't land, a third member, chosen by agreement rather than assigned, facilitates a conversation between those involved.",
+    "Step 2, facilitated: if step 1 doesn't land, a third member, chosen by agreement, facilitates a conversation between those involved.",
   "coopTemplate.doc.conflict-resolution.s2.b1.2":
     "Step 3, assembly: if it's still unresolved, or affects the whole household, it's brought to the full group as a clear agenda item everyone has agreed to in advance.",
   "coopTemplate.doc.conflict-resolution.s2.b1.3":
@@ -3441,10 +3500,10 @@ export const economy: Catalog = {
   "coopTemplate.doc.conflict-resolution.s4.b0.0":
     "Accountability here means someone actually changing the behaviour that caused harm, with support, and with follow-up.",
   "coopTemplate.doc.conflict-resolution.s4.b0.1":
-    "Agreements made at any step, a changed behaviour, a boundary, a repair action, are written down and given a review date, so they're checked rather than assumed to have worked.",
+    "Agreements made at any step, a changed behaviour, a boundary, a repair action, are written down and given a review date, so they're checked and nobody has to assume they worked.",
   "coopTemplate.doc.conflict-resolution.s5.h": "When someone must leave",
   "coopTemplate.doc.conflict-resolution.s5.b0":
-    "This is the hardest step, and the one most worth deciding calmly, in advance, rather than in the middle of a crisis.",
+    "This is the hardest step, and the one most worth deciding calmly, in advance, well before any crisis.",
   "coopTemplate.doc.conflict-resolution.s5.b1.0":
     "Involuntary exit is only considered after step 4, except in safety situations where immediate, temporary separation is needed.",
   "coopTemplate.doc.conflict-resolution.s5.b1.1":
@@ -3567,6 +3626,7 @@ export const economy: Catalog = {
   "joinCoop.sending": "Sending…",
   "joinCoop.sendCta": "Send request",
   "joinCoop.error": "Couldn't send your request, please try again.",
+  "joinCoop.errorTitle": "We couldn't send your request",
   "joinCoop.household.justMe": "Just me",
   "joinCoop.household.mePlusPartners": "Me + partner(s)",
   "joinCoop.household.small": "A household of 3–4",
@@ -3633,6 +3693,9 @@ export const economy: Catalog = {
   "affiliateCompanyModal.confirmCta": "Confirm & continue",
   "affiliateCompanyModal.createErrorToast":
     "We couldn't create that company. Please try again.",
+  "affiliateCompanyModal.createErrorTitle": "We couldn't create that company",
+  "affiliateCompanyModal.cause.nameTaken":
+    "We couldn't give that company a page address of its own. Try a slightly different name.",
 
   // ── Coming soon (live mode: honest stand-in for flows with no backend yet) ─
   "comingSoon.title": "Not live",
@@ -3778,7 +3841,7 @@ export const economy: Catalog = {
     "The rental law doesn't list specific LGBTQ+ protections, but discrimination can still be reported to an equality body.",
   "housingSafety.rights.discrimination.point.2":
     "Save the ad, the messages and any refusal you were given. A written record is what carries a complaint.",
-  "housingSafety.disclaimer.title": "Guidance, not <em>legal advice</em>",
+  "housingSafety.disclaimer.title": "General <em>guidance</em> for renters",
   "housingSafety.disclaimer.body":
     "We've kept this accurate and plain, but every situation is its own. For anything that really matters, talk to a tenants' association or a lawyer.",
   "housingSafety.backToHousing": "Back to housing",
@@ -3852,6 +3915,11 @@ export const economy: Catalog = {
   "flatmates.discovery.sayHello": "Say hello",
   "flatmates.discovery.keepBrowsing": "Keep browsing",
   "flatmates.discovery.error": "Couldn't save that. Try again in a moment.",
+  "flatmates.discovery.errorTitle": "We couldn't save your choice",
+  "flatmates.discovery.cause.ownProfile":
+    "This is your own profile, so there's nothing to like or pass on. Move on to the next one.",
+  "flatmates.discovery.cause.missing":
+    "This profile isn't available any more. It may have been paused or removed. Move on to the next one.",
   "flatmates.discovery.matchTitle": "You <em>both</em> said hello",
   "flatmates.discovery.matchBody":
     "You and {name} liked each other. Start the conversation whenever you're ready.",
@@ -4299,6 +4367,8 @@ export const economy: Catalog = {
   "flatmateDangerZone.confirm.retryCta": "Try again",
   "flatmateDangerZone.confirm.error":
     "We could not take your profile down. It is still on the board. Try again.",
+  "flatmateDangerZone.cause.gone":
+    "Your flatmate profile is already off the board. Refresh the page to see where things stand.",
   "flatmateDangerZone.toast.deleted": "Your flatmate profile is off the board.",
   "postProfileForm.editTitle": "Your flatmate profile",
   "postProfileForm.editSub":
@@ -4519,6 +4589,11 @@ export const economy: Catalog = {
   "company.reviews.reply.savingLabel": "Posting...",
   "company.reviews.reply.successToast": "Your reply is live on the page.",
   "company.reviews.reply.errorToast": "That reply did not save. Try again.",
+  "company.reviews.reply.errorTitle": "We couldn't save your reply",
+  "company.reviews.reply.cause.empty":
+    "Your reply is empty. Write a few words and try again.",
+  "company.reviews.reply.cause.notOwner":
+    "Only the company's owner can reply to a review, and a profile nobody has claimed has no owner yet.",
   "company.reviews.editedOn": "Edited {date}",
   "company.reviews.report.cta": "Report this review",
   "company.reviews.report.ariaLabel": "Report the review titled {title}",
@@ -4547,6 +4622,11 @@ export const economy: Catalog = {
   "housingReview.reply.successToast": "Your reply is on the listing.",
   "housingReview.reply.errorToast":
     "Your reply did not save. It is still here, so you can try again.",
+  "housingReview.reply.errorTitle": "We couldn't save your reply",
+  "housingReview.reply.cause.empty":
+    "Your reply is empty. Write a few words and try again.",
+  "housingReview.reply.cause.notYetYours":
+    "You can reply only to a review about you, and a review stays hidden until both of you have written yours.",
 
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
   // PRD-35 — PRD-35 - taking down your own flatmate profile, from the profile editor's danger zone. The confirm copy states only what DELETE /flatmate-profiles/mine actually does: the profile row goes, every like and pass pointing at it cascades away (so any mutual match ends), and conversations already opened by a say-hello survive as ordinary DMs. pt-PT reuses the catalogue's existing terms: 'quadro de colegas de casa' for the board, 'perfil' for the profile. Also adds the edit-mode heading, lede and submit label for the same form, which said 'Post your profile' over an existing profile.

@@ -1,7 +1,9 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { useState } from "react";
 import { describe, expect, it } from "vitest";
+import { MotionProvider } from "../../app/providers/MotionProvider";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type { StudioSource } from "./api/studio.types";
 import { StudioTrackSourcesField } from "./StudioTrackSourcesField";
 
@@ -26,6 +28,7 @@ describe("StudioTrackSourcesField", () => {
         <Harness initial={[]} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(screen.getByRole("button", { name: "Add source" }));
     fireEvent.change(
       await screen.findByRole("textbox", { name: "Song title 1" }),
@@ -43,7 +46,7 @@ describe("StudioTrackSourcesField", () => {
     expect(screen.getByTestId("value").textContent).toBe("[]");
   });
 
-  it("flags a half-filled row when asked", () => {
+  it("flags a half-filled row when asked", async () => {
     render(
       <TestProviders>
         <StudioTrackSourcesField
@@ -53,7 +56,14 @@ describe("StudioTrackSourcesField", () => {
         />
       </TestProviders>,
     );
-    expect(screen.getByRole("alert")).toHaveTextContent(
+    await awaitCatalog("studio");
+    // The toast deck keeps an empty assertive region mounted too, so the
+    // field's own alert is the one holding the message.
+    expect(
+      screen
+        .getAllByRole("alert")
+        .find((alert) => alert.closest("fieldset") !== null),
+    ).toHaveTextContent(
       "Fill in the song title and the artist on every row, or remove the row",
     );
     expect(screen.getByRole("textbox", { name: "Artist 1" })).toHaveAttribute(
@@ -68,6 +78,7 @@ describe("StudioTrackSourcesField", () => {
         <Harness initial={[{ title: "Vogue", artist: "Madonna" }]} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(screen.getByRole("button", { name: "Add source" }));
     await waitFor(() =>
       expect(
@@ -76,18 +87,23 @@ describe("StudioTrackSourcesField", () => {
     );
   });
 
-  it("folds away the removed middle row and keeps the others", () => {
+  it("folds away the removed middle row and keeps the others", async () => {
+    // The app's MotionProvider loads the LazyMotion features TestProviders
+    // leaves out, so the removed row runs its exit and stays while it folds.
     const { container } = render(
       <TestProviders>
-        <Harness
-          initial={[
-            { title: "Alpha", artist: "One" },
-            { title: "Bravo", artist: "Two" },
-            { title: "Charlie", artist: "Three" },
-          ]}
-        />
+        <MotionProvider>
+          <Harness
+            initial={[
+              { title: "Alpha", artist: "One" },
+              { title: "Bravo", artist: "Two" },
+              { title: "Charlie", artist: "Three" },
+            ]}
+          />
+        </MotionProvider>
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(screen.getByRole("button", { name: "Remove source 2" }));
     expect(screen.getByTestId("value").textContent).toBe(
       JSON.stringify([

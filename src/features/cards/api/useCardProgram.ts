@@ -54,6 +54,8 @@ export function useUpsertCardProgram(slug: string | undefined) {
   const client = useQueryClient();
   const { demoMode } = useDemoMode();
   return useMutation({
+    // The caller toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: (body: UpsertCardProgramBody) => {
       if (demoMode) {
         return Promise.resolve({ ...DEMO_CARD_PROGRAM, ...body });
@@ -73,6 +75,8 @@ export function useIssueAllCards(slug: string | undefined) {
   const client = useQueryClient();
   const { demoMode } = useDemoMode();
   return useMutation({
+    // The caller toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: () =>
       demoMode
         ? Promise.resolve({

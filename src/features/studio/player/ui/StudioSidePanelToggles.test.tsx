@@ -10,6 +10,7 @@ import {
   createSurfaceValue,
   renderWithPlayer,
 } from "./studioPlayerTestHarness";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 const surfaceHolder = vi.hoisted(() => ({
   current: null as StudioPlayerSurfaceValue | null,
@@ -24,20 +25,22 @@ beforeEach(() => {
 });
 
 describe("StudioSidePanelToggles", () => {
-  it("places Now playing just before the queue toggle", () => {
+  it("places Now playing just before the queue toggle", async () => {
     renderWithPlayer(<StudioSidePanelToggles />);
+    await awaitCatalog("studio");
     const labels = screen
       .getAllByRole("button")
       .map((button) => button.getAttribute("aria-label"));
     expect(labels).toEqual(["Show Now playing", "Show the queue"]);
   });
 
-  it("flips the Now playing label and pressed state with the view", () => {
+  it("flips the Now playing label and pressed state with the view", async () => {
     surfaceHolder.current = createSurfaceValue({
       sidePanel: "nowPlaying",
       sidePanelPlacement: "docked",
     });
     renderWithPlayer(<StudioSidePanelToggles />);
+    await awaitCatalog("studio");
     expect(
       screen.getByRole("button", { name: "Hide Now playing" }),
     ).toHaveAttribute("aria-expanded", "true");
@@ -46,7 +49,7 @@ describe("StudioSidePanelToggles", () => {
     ).toHaveAttribute("aria-expanded", "false");
   });
 
-  it("toggles each view from its own button", () => {
+  it("toggles each view from its own button", async () => {
     const toggleSidePanel = vi.fn();
     const toggleQueuePanel = vi.fn();
     surfaceHolder.current = createSurfaceValue({
@@ -54,14 +57,16 @@ describe("StudioSidePanelToggles", () => {
       toggleQueuePanel,
     });
     renderWithPlayer(<StudioSidePanelToggles />);
+    await awaitCatalog("studio");
     fireEvent.click(screen.getByRole("button", { name: "Show Now playing" }));
     expect(toggleSidePanel).toHaveBeenCalledWith("nowPlaying");
     fireEvent.click(screen.getByRole("button", { name: "Show the queue" }));
     expect(toggleQueuePanel).toHaveBeenCalledTimes(1);
   });
 
-  it("gives the buttons the ids focus returns to", () => {
+  it("gives the buttons the ids focus returns to", async () => {
     renderWithPlayer(<StudioSidePanelToggles />);
+    await awaitCatalog("studio");
     expect(
       screen.getByRole("button", { name: "Show Now playing" }),
     ).toHaveAttribute("id", STUDIO_NOW_PLAYING_BUTTON_ID);

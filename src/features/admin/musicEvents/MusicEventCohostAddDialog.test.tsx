@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../../shared/api/client";
 import { TestProviders } from "../../../test/TestProviders";
@@ -51,6 +57,16 @@ async function renderAndPickSofia() {
   return onAdded;
 }
 
+/** The dialog's own refusal line. The toast region outside the dialog also
+ *  carries the alert role, so the query stays inside the dialog. */
+async function findRefusalLine() {
+  return within(await screen.findByRole("dialog")).findByRole("alert");
+}
+
+function getRefusalLine() {
+  return within(screen.getByRole("dialog")).getByRole("alert");
+}
+
 describe("MusicEventCohostAddDialog", () => {
   it("adds the picked member directly", async () => {
     mocks.mutateAsync.mockResolvedValue({ ok: true });
@@ -78,7 +94,7 @@ describe("MusicEventCohostAddDialog", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Add cohost" }));
 
-    const alertLine = await screen.findByRole("alert");
+    const alertLine = await findRefusalLine();
     expect(alertLine).toHaveTextContent(
       "Staff can't cohost a QueerPulse music event. Moderators and admins stay off the cohost list",
     );
@@ -96,7 +112,7 @@ describe("MusicEventCohostAddDialog", () => {
     );
     await renderAndPickSofia();
     fireEvent.click(screen.getByRole("button", { name: "Add cohost" }));
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await findRefusalLine()).toHaveTextContent(
       "Staff can't cohost a QueerPulse music event",
     );
 
@@ -110,7 +126,7 @@ describe("MusicEventCohostAddDialog", () => {
     );
     fireEvent.click(await screen.findByRole("button", { name: "Add cohost" }));
     await waitFor(() =>
-      expect(screen.getByRole("alert")).toHaveTextContent(
+      expect(getRefusalLine()).toHaveTextContent(
         "You run this event for QueerPulse, so you can't cohost it too",
       ),
     );
@@ -122,7 +138,7 @@ describe("MusicEventCohostAddDialog", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Add cohost" }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await findRefusalLine()).toHaveTextContent(
       "Couldn't add Sofia Reyes as a cohost",
     );
     expect(onAdded).not.toHaveBeenCalled();
@@ -132,14 +148,14 @@ describe("MusicEventCohostAddDialog", () => {
     mocks.mutateAsync.mockRejectedValueOnce(new ApiError(500, "Server error"));
     await renderAndPickSofia();
     fireEvent.click(screen.getByRole("button", { name: "Add cohost" }));
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await findRefusalLine()).toHaveTextContent(
       "Couldn't add Sofia Reyes as a cohost",
     );
 
     mocks.mutateAsync.mockReturnValueOnce(new Promise(() => {}));
     fireEvent.click(screen.getByRole("button", { name: "Add cohost" }));
     await waitFor(() => expect(mocks.mutateAsync).toHaveBeenCalledTimes(2));
-    expect(screen.getByRole("alert")).toHaveTextContent(
+    expect(getRefusalLine()).toHaveTextContent(
       "Couldn't add Sofia Reyes as a cohost",
     );
   });

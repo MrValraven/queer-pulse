@@ -1,7 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
 import { DEMO_DEFAULT_PLAYLIST_ID } from "../studioCollection.data";
 import type { StudioArtistView } from "./studio.adapters";
@@ -24,6 +24,12 @@ const wrapper = ({ children }: { children: ReactNode }) => (
   <TestProviders>{children}</TestProviders>
 );
 
+// The demo hooks import their demo modules on first read; load them once up
+// front so a test's read does not wait on a cold module transform.
+beforeAll(async () => {
+  await Promise.all([import("./studioDemoApi"), import("./studioDemoStats")]);
+});
+
 beforeEach(() => {
   resetDemoPlaylists();
   resetStudioLibrarySeedForTests();
@@ -37,6 +43,9 @@ describe("Studio v2 read hooks (demo)", () => {
         "fado",
         "electronic",
         "folk",
+        "experimental",
+        "pop",
+        "ambient",
         "spoken-word",
       ]),
     );
@@ -57,12 +66,20 @@ describe("Studio v2 read hooks (demo)", () => {
     await waitFor(() => expect(result.current.loadState.isNotFound).toBe(true));
   });
 
-  it("lists only the member's own playlists", async () => {
+  it("lists the member's own playlists and the ones they edit or are invited to", async () => {
     const { result } = renderHook(() => useStudioMyPlaylists(), { wrapper });
     await waitFor(() =>
       expect(result.current.playlists.length).toBeGreaterThan(0),
     );
-    expect(result.current.playlists.every((card) => card.isOwner)).toBe(true);
+    const roles = new Set(result.current.playlists.map((card) => card.role));
+    expect(roles).toContain("owner");
+    expect(roles).toContain("editor");
+    expect([...roles].every((role) => role !== null)).toBe(true);
+    expect(
+      result.current.playlists.every(
+        (card) => card.isOwner === (card.role === "owner"),
+      ),
+    ).toBe(true);
   });
 
   it("lists public playlists holding a track", async () => {

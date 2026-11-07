@@ -23,6 +23,8 @@ export function useRespondToBoardItem() {
     Error,
     RespondToBoardItemVariables
   >({
+    // The caller toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: async ({ memberSlug, postSlug, kind, note }) => {
       if (demoMode) {
         return { kind, createdAt: new Date().toISOString() };

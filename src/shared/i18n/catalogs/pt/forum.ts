@@ -237,6 +237,11 @@ export const forum: Catalog = {
     "A tua resposta não passou. Tenta outra vez daqui a pouco.",
   "poll.voteFailedClosed":
     "A votação já fechou, por isso as respostas são finais.",
+  "poll.errorSingleChoice":
+    "Esta sondagem aceita exatamente uma resposta. Escolhe uma opção e vota outra vez.",
+  "poll.errorNoChoice": "Escolhe pelo menos uma opção antes de votares.",
+  "poll.errorOptionGone":
+    "Essa resposta ou sondagem já não está neste tópico. Atualiza para veres as opções atuais.",
 
   // ── Metadados discretos na publicação inicial ────────────────────────────
   "opMeta.neighbourhood": "Sobre {name}",
@@ -452,6 +457,31 @@ export const forum: Catalog = {
     "Só podes fixar 3 tópicos ao mesmo tempo. Desafixa um primeiro.",
   "toast.error": "Algo correu mal. Tenta novamente daqui a pouco.",
 
+  // ── Porque falhou uma escrita no fórum (forumErrors.ts) ───────────────────
+  // Sem ligação, sessão terminada, restrição, conta inativa, limite de pedidos
+  // e falhas do servidor vêm de shared:apiError.*; estas são as causas que
+  // precisam do contexto do fórum.
+  "error.closedByAuthor":
+    "Quem escreveu este tópico fechou-o a novas respostas, por isso a tua resposta não foi publicada.",
+  "error.notCommunityMember":
+    "Só os membros desta comunidade podem publicar e responder nos seus tópicos. Junta-te a ela e tenta outra vez.",
+  "error.replyToDeleted":
+    "A publicação a que respondeste já não existe, por isso a tua resposta não foi publicada. Responde ao tópico.",
+  "error.communityGone":
+    "Essa comunidade já não está disponível, por isso nada foi publicado. Pode ter sido arquivada ou removida.",
+  "error.threadGone":
+    "Este tópico já não está aqui. Pode ter sido removido. Volta ao fórum para encontrares as conversas atuais.",
+  "error.postGone":
+    "Essa publicação já não existe, por isso não há nada para alterar. Atualiza para ver o que lá está agora.",
+  "error.slugBusy":
+    "Não conseguimos encontrar um endereço livre para a tua publicação. Muda um pouco o título e publica outra vez.",
+  "error.moveWindowClosed":
+    "Quem escreve só pode mudar um tópico de categoria nas primeiras 24 horas. Pede a um moderador que o mude.",
+  "error.coAuthorUnknown":
+    "Não encontrámos nenhum membro com esse nome de utilizador para creditar como coautor. Confirma o nome e publica outra vez.",
+  "error.coAuthorSelf":
+    "O teu nome já consta neste tópico, por isso não podes ser também coautor.",
+
   // ── Following a thread (SOC-13) ───────────────────────────────────────────
   "follow.followCta": "Seguir",
   "follow.unfollowCta": "A seguir",
@@ -465,6 +495,8 @@ export const forum: Catalog = {
   "replies.quote": "Citar",
   "answer.acceptedToast": "Marcada como a resposta.",
   "answer.clearedToast": "Marca de resposta removida.",
+  "answer.errorDeleted":
+    "Uma publicação apagada não pode ser a resposta aceite. Escolhe outra resposta.",
 
   // ── Tag editing (SOC-13) ──────────────────────────────────────────────────
   "tagsEdit.title": "Editar etiquetas",

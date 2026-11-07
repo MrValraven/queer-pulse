@@ -5,6 +5,7 @@ import type { ChatMessage, Conversation } from "./data";
 import type { MessageForwarding } from "./useMessageForwarding";
 import { mediaKindOf } from "./messageSending.helpers";
 import { isStickerAttachment } from "../../shared/api/stickerAttachment";
+import { firstFailureCause } from "./api/messageErrorCopy";
 
 export interface ForwardSendResult {
   /** Fires one `forwardMessage` call per recipient, in parallel, and calls
@@ -98,6 +99,9 @@ export function useForwardSend(
           ? message.attachment.stickerId
           : undefined;
       void (async () => {
+        // Why each recipient failed, in the order the failures arrive; the
+        // first speaks for the batch in the toast below.
+        const failureErrors: unknown[] = [];
         const outcomes = await Promise.allSettled(
           recipients.map((recipient) =>
             forwardMessage(
@@ -106,9 +110,13 @@ export function useForwardSend(
               message.attachment,
               mediaKind,
               stickerId,
+              (error) => failureErrors.push(error),
             ),
           ),
         );
+        for (const outcome of outcomes) {
+          if (outcome.status === "rejected") failureErrors.push(outcome.reason);
+        }
         isSendingRef.current = false;
         setIsSending(false);
         // The message this send was for is no longer the current one: don't
@@ -132,9 +140,11 @@ export function useForwardSend(
           return;
         }
         setFailedRecipientIds(new Set(failed.map((recipient) => recipient.id)));
+        const cause = firstFailureCause(failureErrors);
         showToast(
-          t("messages:forward.failedToast", {
+          t("messages:forward.failedToastWithCause", {
             names: failed.map((recipient) => recipient.name).join(", "),
+            cause: t(cause.key, cause.values),
           }),
           "error",
         );

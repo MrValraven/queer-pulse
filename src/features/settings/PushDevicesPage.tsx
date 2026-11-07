@@ -22,6 +22,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { simulateOr } from "./api/account.api";
 import { usePushDevices } from "./api/usePushDevices";
+import { pushDeviceRemoveErrorCopy } from "./settingsActionErrors";
 import { revokePushSubscription } from "../push/push.api";
 import { routes } from "../../app/routeMap";
 import { type PushDevice } from "./pushDevices.data";
@@ -121,7 +122,8 @@ export function PushDevicesPage() {
         next.delete(id);
         return next;
       });
-      showToast(t("settings:pushDevices.toast.removedError"), "error");
+      const cause = pushDeviceRemoveErrorCopy(err);
+      showToast(t(cause.key, cause.values), "error");
     }
   }
 

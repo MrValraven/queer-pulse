@@ -11,6 +11,7 @@ import { TattooFlashDays } from "./TattooFlashDays";
 import { TattooGuestSpots } from "./TattooGuestSpots";
 import { TattooShop } from "./TattooShop";
 import { buildTattooView } from "./tattooView";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 // Unrun per repo policy: verified statically.
 
@@ -89,21 +90,23 @@ function makeData(
   } as unknown as PublicSubprofileView;
 }
 
-function renderBlock(
+async function renderBlock(
   Block: typeof TattooGuestSpots,
   data: PublicSubprofileView,
 ) {
   const view = buildTattooView(data, TODAY);
-  return render(
+  const rendered = render(
     <TestProviders>
       <Block data={data} view={view} mode="public" />
     </TestProviders>,
   );
+  await awaitCatalog("subprofiles");
+  return rendered;
 }
 
 describe("Out and about blocks", () => {
-  it("lists upcoming guest spots and folds past ones under Past", () => {
-    renderBlock(
+  it("lists upcoming guest spots and folds past ones under Past", async () => {
+    await renderBlock(
       TattooGuestSpots,
       makeData({
         guest_spots: [
@@ -131,8 +134,8 @@ describe("Out and about blocks", () => {
     expect(openToggle.getAttribute("aria-expanded")).toBe("true");
   });
 
-  it("links a flash day to its event page while the event resolves", () => {
-    renderBlock(
+  it("links a flash day to its event page while the event resolves", async () => {
+    await renderBlock(
       TattooFlashDays,
       makeData({
         flash_days: [
@@ -158,8 +161,8 @@ describe("Out and about blocks", () => {
     expect(link.getAttribute("href")).toBe("/gatherings/trans-joy-picnic");
   });
 
-  it("shows a flash day whose event stopped resolving as a plain dated card", () => {
-    const { container } = renderBlock(
+  it("shows a flash day whose event stopped resolving as a plain dated card", async () => {
+    const { container } = await renderBlock(
       TattooFlashDays,
       makeData({
         flash_days: [
@@ -177,8 +180,8 @@ describe("Out and about blocks", () => {
     expect(screen.getByText("14 Nov 2026")).toBeTruthy();
   });
 
-  it("names the shop's domain on its buy button", () => {
-    renderBlock(
+  it("names the shop's domain on its buy button", async () => {
+    await renderBlock(
       TattooShop,
       makeData({
         shop: [
@@ -194,8 +197,8 @@ describe("Out and about blocks", () => {
     expect(link.getAttribute("rel")).toBe("noopener noreferrer");
   });
 
-  it("shows a shop price as a currency amount", () => {
-    renderBlock(
+  it("shows a shop price as a currency amount", async () => {
+    await renderBlock(
       TattooShop,
       makeData({
         shop: [
@@ -215,8 +218,8 @@ describe("Out and about blocks", () => {
     expect(screen.queryByText("25")).toBeNull();
   });
 
-  it("opens and closes an FAQ answer", () => {
-    const { container } = renderBlock(
+  it("opens and closes an FAQ answer", async () => {
+    const { container } = await renderBlock(
       TattooFaq,
       makeData(
         {},

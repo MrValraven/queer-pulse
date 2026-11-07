@@ -1,15 +1,17 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { StudioSolidarityFundLive } from "./StudioSolidarityFundLive";
 
 describe("solidarity page (live)", () => {
-  it("says QueerPulse never handles money and links to music fundraisers", () => {
+  it("says QueerPulse never handles money and links to music fundraisers", async () => {
     render(
       <TestProviders>
         <StudioSolidarityFundLive />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       screen.getByText(/QueerPulse never handles money/),
     ).toBeInTheDocument();

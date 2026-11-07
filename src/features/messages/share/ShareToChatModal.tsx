@@ -13,6 +13,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { useConversations } from "../api/useConversations";
 import { usePersonalMailboxScope } from "../mailboxes/useActiveMailbox";
+import { firstFailureCause } from "../api/messageErrorCopy";
 import { useSendToConversations } from "./useSendToConversations";
 import {
   buildShareBody,
@@ -152,18 +153,28 @@ export function ShareToChatModal({
         targetIds.includes(conversation.id) &&
         !sentIds.includes(conversation.id),
     );
+    // The first failure speaks for the batch: one fan-out fails for one
+    // reason almost every time (offline, signed out, a rate limit).
+    const cause = firstFailureCause(
+      results.filter((result) => !result.ok).map((result) => result.error),
+    );
+    const causeText = t(cause.key, cause.values);
     if (sentIds.length === 0) {
-      showToast(t("messages:share.errorToast"), "error");
+      showToast(
+        t("messages:share.errorToastWithCause", { cause: causeText }),
+        "error",
+      );
       return;
     }
     if (failed.length > 0) {
       showToast(
-        t("messages:share.partialToast", {
+        t("messages:share.partialToastWithCause", {
           sentCount: sentIds.length,
           totalCount: targetIds.length,
           failedNames: failed
             .map((conversation) => conversation.name)
             .join(", "),
+          cause: causeText,
         }),
         "warning",
       );

@@ -1,4 +1,8 @@
 import { ApiError } from "../../../shared/api/client";
+import {
+  NOT_ACTIVE_MEMBER_CODE,
+  UPLOAD_NOT_YOURS_CODE,
+} from "../../../shared/api/causeErrorKey";
 import type { TFunction } from "../../../shared/i18n/types";
 import { EVENT_BATCH_MAX_ROWS } from "./addMonth.data";
 import type {
@@ -10,8 +14,8 @@ import type {
  * Why a batch read or publish failed, one reason per cause the page names
  * (contract section 7). The coded reasons read `code` and the uncoded shared
  * refusals read the status, so a reworded server sentence never changes the
- * copy. The two 403 sentences from the shared upload interceptor and the
- * membership guard are matched exactly, because neither carries a code.
+ * copy. The 403s from the shared upload interceptor and the membership guard
+ * read their machine codes (`UPLOAD_NOT_YOURS`, `ACTIVE_MEMBERSHIP_REQUIRED`).
  */
 export type EventBatchFailureReason =
   | "noAccess"
@@ -52,10 +56,6 @@ export interface EventBatchFailure {
 }
 
 const ACCOUNT_RESTRICTED_CODE = "ACCOUNT_RESTRICTED";
-/** `StorageKeyOwnershipInterceptor`: a body cover is someone else's upload. */
-const COVER_NOT_YOURS_MESSAGE = "Referenced upload does not belong to you";
-/** `ActiveMemberGuard`: the caller's membership is paused or lapsed. */
-const MEMBERSHIP_INACTIVE_MESSAGE = "Active membership required";
 const REQUEST_TIMEOUT_STATUS = 408;
 /** The client's status for a 2xx answer whose body would not parse. */
 const UNREADABLE_ANSWER_STATUS = 422;
@@ -148,10 +148,10 @@ function reasonOf(
   }
   if (status === 403) {
     if (code === ACCOUNT_RESTRICTED_CODE) return "restricted";
-    if (error.message === COVER_NOT_YOURS_MESSAGE) return "coverNotYours";
-    if (error.message === MEMBERSHIP_INACTIVE_MESSAGE) {
-      return "membershipInactive";
-    }
+    // `StorageKeyOwnershipInterceptor`: a body cover is someone else's upload.
+    if (code === UPLOAD_NOT_YOURS_CODE) return "coverNotYours";
+    // `ActiveMemberGuard`: the caller's membership is paused or lapsed.
+    if (code === NOT_ACTIVE_MEMBER_CODE) return "membershipInactive";
     return "refused";
   }
   if (status === 400) {

@@ -9,6 +9,7 @@ import type { RecommendBody } from "./api/landlord.api";
 import { useRecommendLandlord } from "./api/useRecommendLandlord";
 import { useAffirmingPledgeGate } from "./useAffirmingPledgeGate";
 import { useStepUpVerificationGate } from "./useStepUpVerificationGate";
+import { failureToast } from "./economyErrorCopy";
 import styles from "./housingModals.module.css";
 
 // "Message the lister" lives in `HousingEnquiryModal.tsx`, on the shared
@@ -181,7 +182,10 @@ export function RecommendModal({
         if (handlePledgeError(error, retry)) return;
         if (handleStepUpError(error, retry)) return;
         // The form stays open and filled in so the member can try again.
-        showToast(t("economy:housingModal.recommend.error"), "error");
+        showToast(
+          failureToast(error, t, "economy:housingModal.recommend.errorTitle"),
+          "error",
+        );
       },
     });
   };

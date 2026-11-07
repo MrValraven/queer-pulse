@@ -1,5 +1,11 @@
 import { QueryClient } from "@tanstack/react-query";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LazyMotion, domMax } from "motion/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -83,6 +89,12 @@ function renderFields(clip: VjClipDTO) {
   return userEvent.setup();
 }
 
+/** The Playback section's alert: the toast region around it is an alert region too. */
+async function findPlaybackAlert(): Promise<HTMLElement> {
+  const section = await screen.findByRole("region", { name: "Playback" });
+  return within(section).findByRole("alert");
+}
+
 describe("VjClipPlaybackFields", () => {
   beforeEach(() => {
     vi.mocked(demoUpdateVjClip).mockReset();
@@ -119,7 +131,7 @@ describe("VjClipPlaybackFields", () => {
     const user = renderFields(buildClip());
     await user.click(await screen.findByRole("button", { name: "4x" }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await findPlaybackAlert()).toHaveTextContent(
       "Pick a speed from 0.25x to 4x",
     );
     expect(screen.getByRole("button", { name: "1x" })).toHaveAttribute(
@@ -229,7 +241,7 @@ describe("VjClipPlaybackFields", () => {
     );
     await user.click(await screen.findByRole("button", { name: "Save loop" }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await findPlaybackAlert()).toHaveTextContent(
       "Loop points must sit inside the clip, at least 250 ms apart",
     );
     expect(storedClip.loopInMs).toBeNull();

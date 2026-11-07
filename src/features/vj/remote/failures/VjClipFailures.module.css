@@ -1,0 +1,111 @@
+/* The failed-clips summary over the clip grid and the sheet that lists each
+   failed clip with its reason, in the dark Pulse Live stage look (the --qs-*
+   tokens). The amber matches the failure badge on the tiles. Every move
+   animates only opacity, height or transform. */
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin-block-end: var(--vj-band-gap, var(--gap-xs));
+  /* The 44px button sets the line's height: 46px with the border. */
+  padding-block: 0;
+  padding-inline: var(--gap-sm) var(--gap-xs);
+  border: 1px solid rgba(var(--amber-rgb), 0.5);
+  border-radius: var(--qs-radius-tile);
+  background: rgba(var(--amber-rgb), 0.1);
+  color: var(--qs-text);
+}
+
+.summaryIcon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: rgb(var(--amber-rgb));
+}
+
+.summaryText {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.summaryButton {
+  flex: none;
+}
+
+/* ── The sheet ── */
+.emptyLine {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.45;
+  color: var(--qs-text);
+}
+
+.list {
+  --vj-failure-thumb: 56px;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* One clip: a 56px thumbnail beside its title and reason. The row carries
+   its own spacing, so the gap folds away with the row. */
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-sm);
+  margin-block-end: var(--gap-xs);
+  padding: var(--gap-xs);
+  border: 1px solid var(--qs-line);
+  border-radius: var(--qs-radius-tile);
+  background: var(--qs-glass-bottom);
+}
+
+.row[data-focused="true"] {
+  border-color: rgba(var(--amber-rgb), 0.7);
+}
+
+.row:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.rowThumbnail {
+  flex: none;
+  width: var(--vj-failure-thumb);
+  height: var(--vj-failure-thumb);
+  border-radius: var(--radius-10);
+  object-fit: cover;
+  background: var(--qs-base);
+  pointer-events: none;
+}
+
+.rowText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.rowTitle {
+  margin: 0;
+  font-size: var(--text-15);
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  color: var(--qs-text);
+}
+
+.rowReason {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--qs-text-mute);
+}

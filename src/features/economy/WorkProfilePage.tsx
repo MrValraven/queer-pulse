@@ -12,6 +12,7 @@ import {
   ShowUpAtWorkSection,
   SkillsFocusSection,
 } from "./WorkProfileSections";
+import { failureToast } from "./economyErrorCopy";
 import styles from "./WorkProfilePage.module.css";
 
 /** The Work Profile — identity & safety controls at the heart of the workspace. */
@@ -40,9 +41,13 @@ export function WorkProfilePage() {
   // server still holds (see WorkProfileProvider) and says so plainly, so nobody
   // walks away believing they're set to "private" when nothing was written.
   async function save() {
-    const ok = await persist();
-    if (!ok) {
-      showToast(t("economy:workProfile.saveFailedToast"), "error", 7000);
+    const result = await persist();
+    if (!result.isSaved) {
+      showToast(
+        failureToast(result.error, t, "economy:workProfile.saveFailedTitle"),
+        "error",
+        7000,
+      );
       return;
     }
     setSaved(true);

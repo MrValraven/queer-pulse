@@ -4,6 +4,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { DEMO_MUTED_SOURCES } from "../feedMutes.data";
+import { feedMuteCause } from "./feedErrorCopy";
 import {
   getFeedMutes,
   muteFeedSource,
@@ -71,6 +72,8 @@ export function useFeedMutes() {
   }, [queryClient]);
 
   const muteMutation = useMutation({
+    // `onError` below names the cause; the app-wide toast would duplicate it.
+    meta: { silentError: true },
     mutationFn: (target: FeedMuteTarget) =>
       demoMode
         ? Promise.resolve()
@@ -94,10 +97,14 @@ export function useFeedMutes() {
       refreshFeed();
       showToast(t("feed:mute.mutedToast", { name: target.name }), "success");
     },
-    onError: () => showToast(t("feed:mute.failedToast"), "error"),
+    onError: (error) => {
+      const cause = feedMuteCause(error);
+      showToast(t(cause.key, cause.values), "error");
+    },
   });
 
   const unmuteMutation = useMutation({
+    meta: { silentError: true },
     mutationFn: (target: FeedMuteTarget) =>
       demoMode
         ? Promise.resolve()
@@ -110,7 +117,10 @@ export function useFeedMutes() {
       refreshFeed();
       showToast(t("feed:mute.unmutedToast", { name: target.name }), "info");
     },
-    onError: () => showToast(t("feed:mute.failedToast"), "error"),
+    onError: (error) => {
+      const cause = feedMuteCause(error);
+      showToast(t(cause.key, cause.values), "error");
+    },
   });
 
   return {

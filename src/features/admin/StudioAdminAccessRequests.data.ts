@@ -13,7 +13,7 @@ interface DemoRequestSeed {
   isFromInvite: boolean;
 }
 
-// 34 requests: the first 9 want to release music, 6 came from an invite. The
+// 34 requests: the first 9 want to release music, 5 came from an invite. The
 // names come from the demo member pool; a name with no portrait stands for a
 // member who keeps their photo hidden, so it reads as tinted initials, as in
 // the admin member list. Never the demo member's own name.

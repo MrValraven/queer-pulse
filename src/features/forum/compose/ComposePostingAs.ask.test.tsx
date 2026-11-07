@@ -1,10 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import { ComposePostingAs } from "./ComposePostingAs";
 import type { PostKind } from "./composeThread.types";
 
-function renderPostingAs(kind: PostKind | null) {
+async function renderPostingAs(kind: PostKind | null) {
   render(
     <TestProviders>
       <ComposePostingAs
@@ -22,11 +23,12 @@ function renderPostingAs(kind: PostKind | null) {
       />
     </TestProviders>,
   );
+  await awaitCatalog("forum");
 }
 
 describe("ComposePostingAs and a fundraiser", () => {
-  it("keeps the name on a fundraiser and says why", () => {
-    renderPostingAs("ask");
+  it("keeps the name on a fundraiser and says why", async () => {
+    await renderPostingAs("ask");
     expect(
       screen.getByRole("switch", { name: "Post without my name" }),
     ).toBeDisabled();
@@ -37,8 +39,8 @@ describe("ComposePostingAs and a fundraiser", () => {
     ).toBeInTheDocument();
   });
 
-  it("still offers anonymity on an open call in the same category", () => {
-    renderPostingAs("call");
+  it("still offers anonymity on an open call in the same category", async () => {
+    await renderPostingAs("call");
     expect(
       screen.getByRole("switch", { name: "Post without my name" }),
     ).toBeEnabled();

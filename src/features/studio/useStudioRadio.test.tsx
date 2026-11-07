@@ -64,8 +64,9 @@ describe("useStudioRadio (demo)", () => {
         value: "fado",
       }),
     );
-    expect(result.current.player.radio?.pool).toHaveLength(17);
-    expect(new Set(playOrder(result.current.player)).size).toBe(17);
+    // 17 fado tracks, less "Vela acesa", which claims hold offline.
+    expect(result.current.player.radio?.pool).toHaveLength(16);
+    expect(new Set(playOrder(result.current.player)).size).toBe(16);
     expect(result.current.player.queue.source).toMatchObject({
       kind: "radio",
       radioFilter: { kind: "genre", value: "fado" },
@@ -79,9 +80,10 @@ describe("useStudioRadio (demo)", () => {
     await act(() =>
       result.current.radio.startRadio({ kind: "genre", value: "fado" }),
     );
-    // The demo's fado holds one explicit track ("A Beja").
+    // The demo's fado holds one explicit track ("A Beja") among the 16 the
+    // radio plays.
     await waitFor(() =>
-      expect(result.current.player.radio?.pool).toHaveLength(16),
+      expect(result.current.player.radio?.pool).toHaveLength(15),
     );
   });
 

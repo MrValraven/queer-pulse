@@ -147,9 +147,11 @@ describe("AdminCreatorDraftsPage", () => {
     renderAt("/admin/creator-drafts");
     const countLine = await screen.findByText("7 drafts in progress");
     expect(countLine).toHaveAttribute("role", "status");
+    // Outreach leads now follow it in the section, so the item is found by
+    // its address.
     const navItem = ADMIN_NAV_SECTIONS.find(
       (section) => section.id === "communities",
-    )?.items.at(-1);
+    )?.items.find((item) => item.to === "/admin/creator-drafts");
     expect(navItem).toMatchObject({
       to: "/admin/creator-drafts",
       isAdminOnly: true,

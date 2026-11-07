@@ -1,6 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { createStudioPlayerTestValue } from "../../test/studioPlayerTestValue";
 import { toReleaseView } from "./api/studio.adapters";
 import type { StudioReleaseDTO } from "./api/studio.types";
@@ -66,19 +67,21 @@ function releaseFor(isOwner: boolean) {
   return toReleaseView(dto);
 }
 
-function renderList(isOwner: boolean) {
-  return render(
+async function renderList(isOwner: boolean) {
+  const view = render(
     <TestProviders>
       <StudioPlayerContext.Provider value={createStudioPlayerTestValue()}>
         <StudioAlbumTracklist release={releaseFor(isOwner)} />
       </StudioPlayerContext.Provider>
     </TestProviders>,
   );
+  await awaitCatalog("studio");
+  return view;
 }
 
 describe("StudioAlbumTracklist, Studio safety", () => {
-  it("keeps a listener's withheld row in place as Unavailable, with nothing to press", () => {
-    renderList(false);
+  it("keeps a listener's withheld row in place as Unavailable, with nothing to press", async () => {
+    await renderList(false);
     const rows = screen.getAllByRole("listitem");
     expect(rows).toHaveLength(2);
     const withheld = rows[1] as HTMLElement;
@@ -88,14 +91,14 @@ describe("StudioAlbumTracklist, Studio safety", () => {
     expect(within(withheld).getByText("2")).toBeTruthy();
   });
 
-  it("shows the warning pill on a warned row", () => {
-    renderList(false);
+  it("shows the warning pill on a warned row", async () => {
+    await renderList(false);
     const first = screen.getAllByRole("listitem")[0] as HTMLElement;
     expect(within(first).getByText(/family/i)).toBeTruthy();
   });
 
-  it("keeps the owner's withheld row whole", () => {
-    renderList(true);
+  it("keeps the owner's withheld row whole", async () => {
+    await renderList(true);
     expect(screen.getByText("Vela acesa")).toBeTruthy();
   });
 });

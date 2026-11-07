@@ -1161,9 +1161,14 @@ describe("demo engine double taps", () => {
     });
     expect(doubleTap.frames).toEqual([]);
     expect(doubleTap.state.teams).toHaveLength(1);
+    // A tap in another colour is a new team request. Nuno keeps the Bears
+    // occupied, so their name stays taken (a sole player may reuse it).
+    const sharedBears = joinTeamed(first.state, NUNO, "Nuno", {
+      teamId: bearsId,
+    }).state;
     expect(
       playerStep(
-        first.state,
+        sharedBears,
         RITA,
         "lobby:createTeam",
         { name: "Quizzly Bears", colorKey: "triangle" },

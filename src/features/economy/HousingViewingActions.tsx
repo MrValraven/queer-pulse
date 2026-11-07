@@ -6,6 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
 import { ModalShell } from "./ModalKit";
 import { useViewingAction, type ViewingAction } from "./api/useHousingViewings";
+import { housingViewingActionToast } from "./economyErrorCopy";
 import type { HousingViewingDTO } from "./api/housingViewings.api";
 import v from "./housingViewings.module.css";
 
@@ -60,8 +61,8 @@ function useViewingActionRunner(
         callbacks.onSuccess?.();
       },
       onSettled: () => callbacks.onSettled?.(),
-      onError: () =>
-        showToast(t("economy:housingViewing.list.actionError"), "error"),
+      onError: (error) =>
+        showToast(housingViewingActionToast(error, t), "error"),
     });
   return { run, isPending: action.isPending };
 }

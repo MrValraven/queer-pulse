@@ -14,6 +14,7 @@ import { useUploadImage } from "../members/api/useUploadImage";
 import { ImageProcessingError } from "../members/api/uploadProcessing";
 import { useUpdateProfile } from "../members/api/useUpdateProfile";
 import type { UpdateProfileDTO } from "../members/api/members.api";
+import { onboardingSaveErrorCopy } from "./authActionErrors";
 import { IdentityFields } from "./StepPhotoIdentityFields";
 import { StepPhotoPreview } from "./StepPhotoPreview";
 import { SkipLink, type StepProps } from "./OnboardingStepChrome";
@@ -216,9 +217,10 @@ export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
       await refresh();
       setIsRefreshingSession(false);
       onNext();
-    } catch {
+    } catch (saveFailure) {
       setIsRefreshingSession(false);
-      setError(t("auth:onboarding.stepPhoto.saveError"));
+      const cause = onboardingSaveErrorCopy(saveFailure);
+      setError(t(cause.key, cause.values));
     }
   }
 

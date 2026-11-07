@@ -7,6 +7,7 @@ import { routes } from "../../app/routeMap";
 import { RsvpConfirmationCard, RsvpCodeOfCare } from "./RsvpSections";
 import { RSVP_GATHERING_SLUG } from "./rsvpPage.data";
 import { useUnrsvp } from "./api/useEventMutations";
+import { rsvpCancelErrorMessage } from "./gatheringActionErrors";
 import styles from "./RsvpPage.module.css";
 
 /** Brand chrome + footer shared by every state of this standalone page. */
@@ -61,11 +62,8 @@ export function RsvpPage() {
               unrsvp.mutate(undefined, {
                 onSuccess: () =>
                   showToast(t("gatherings:rsvp.footer.cancelledToast"), "info"),
-                onError: () =>
-                  showToast(
-                    t("gatherings:rsvp.footer.cancelErrorToast"),
-                    "info",
-                  ),
+                onError: (error) =>
+                  showToast(rsvpCancelErrorMessage(error, t), "error"),
               });
             }}
           >

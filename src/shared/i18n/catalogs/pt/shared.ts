@@ -359,6 +359,23 @@ export const shared: Catalog = {
   "apiError.reasonTooLarge": "Isso é demasiado grande para enviar.",
   "apiError.reasonRateLimited":
     "Demasiadas tentativas. Espera um momento e tenta outra vez.",
+  // Linhas de causa de causeErrorKey.ts: cada uma diz porque falhou e o que fazer a seguir.
+  "apiError.noConnection":
+    "O teu pedido não chegou aos nossos servidores. Verifica a tua ligação e tenta outra vez.",
+  "apiError.timedOut":
+    "Os nossos servidores demoraram demasiado a responder, por isso não sabemos se isso foi concluído. Atualiza a página para confirmares antes de tentares outra vez.",
+  "apiError.signedOut":
+    "A tua sessão terminou. Entra outra vez e tenta de novo.",
+  "apiError.notActive":
+    "Só contas ativas podem fazer isto, e a tua conta não está ativa neste momento. Escreve-nos se te parecer um engano.",
+  "apiError.securityCheck":
+    "A verificação de segurança desta página expirou antes de o teu pedido ser enviado. Copia o que escreveste, atualiza a página e tenta outra vez.",
+  "apiError.notFound":
+    "Não encontrámos isso. Pode ter sido removido ou mudado de sítio. Atualiza a página para veres o que lá está agora.",
+  "apiError.serverFault":
+    "Os nossos servidores tiveram um erro do nosso lado. Espera um momento e tenta outra vez.",
+  "apiError.refused":
+    "Os nossos servidores recusaram isso com o erro {status}. Tenta outra vez daqui a pouco e escreve-nos se continuar a acontecer.",
 
   // PullToRefresh live region
 
@@ -671,6 +688,9 @@ export const shared: Catalog = {
   // (grant/suggest-edit/sober-host/panel/incubator) fails to reach the backend.
   "intake.errorToast":
     "Não foi possível enviar agora. Tenta novamente daqui a instantes.",
+  // A forma do intake.errorToast que diz a causa: este título, e a linha de
+  // causeErrorKey(error) por baixo.
+  "intake.errorTitle": "Não conseguimos enviar o teu formulário",
 
   // mediaRef.* — category labels for a `MediaReference.type`
   // (shared/media/mediaReferences.ts), read by both the My-uploads pane
@@ -878,7 +898,7 @@ export const shared: Catalog = {
   "apiError.musicEvent.cohostIsYou":
     "Geres este evento pelo QueerPulse, por isso não podes ser também pessoa coanfitriã",
   "apiError.musicEvent.cohostHoldsGrant":
-    "A equipa não pode coorganizar um evento de música do QueerPulse",
+    "A equipa não pode coorganizar um evento de música do QueerPulse. Esta pessoa tem o papel de gestão e produção de música",
   "apiError.musicEvent.cohostIsStaffTier":
     "A equipa não pode coorganizar um evento de música do QueerPulse. Moderação e administração ficam fora da lista de pessoas coanfitriãs",
   "apiError.musicEvent.cohostNotActive":

@@ -24,6 +24,8 @@ export function useClaimPerk() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<PerkClaimDTO | undefined, Error, string>({
+    // The caller toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: async (perkKey) => {
       if (demoMode) return undefined;
       return claimPerk(perkKey);
@@ -60,6 +62,8 @@ export function useSetBadgeVisibility() {
     Error,
     BadgeVisibilityInput
   >({
+    // The caller toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: async ({ badgeKey, hiddenFromProfile }) => {
       if (demoMode) return undefined;
       return setBadgeVisibility(badgeKey, hiddenFromProfile);

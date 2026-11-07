@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { SubprofileHero } from "../subprofiles/SubprofileHero";
 import type { PublicSubprofileView } from "../subprofiles/api/subprofiles.adapters";
 import {
@@ -70,17 +71,30 @@ function personaViewOf(
     displayName: "Afterhours",
     slug: "afterhours",
     handle: "afterhours",
+    avatarUrl: null,
+    tagline: "",
+    bio: "",
+    coverUrl: null,
+    accent: null,
+    availability: null,
+    ctaLabel: "",
+    ctaUrl: "",
     linkVisibility: "unlinked",
     visibility: "open",
     status: "published",
     socialLinks: [],
+    // The hero's title block counts the sections, so the view carries them.
+    sections: [],
+    featured: null,
+    affiliations: [],
     endorsementCount: 0,
     followerCount: 0,
     viewerEndorsed: false,
     viewerFollowing: false,
     viewerIsMember: false,
+    skinData: null,
     ...overrides,
-  } as PublicSubprofileView;
+  };
 }
 
 beforeEach(() => {
@@ -88,7 +102,7 @@ beforeEach(() => {
 });
 
 describe("founding badge on artist cards", () => {
-  it("shows Founding artist only on a card whose id is in the founding set", () => {
+  it("shows Founding artist only on a card whose id is in the founding set", async () => {
     mocks.founding = {
       isShelfVisible: true,
       artists: [refViewOf("sp-one", "One")],
@@ -99,26 +113,29 @@ describe("founding badge on artist cards", () => {
         <StudioArtistCard artist={refViewOf("sp-two", "Two")} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(screen.getAllByText("Founding artist")).toHaveLength(1);
   });
 });
 
 describe("founding badge on the artist hero", () => {
-  it("shows the badge in the kind line when the artist is a founding artist", () => {
+  it("shows the badge in the kind line when the artist is a founding artist", async () => {
     render(
       <TestProviders>
         <StudioArtistHero artist={artistViewOf(true)} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(screen.getByText("Founding artist")).toBeInTheDocument();
   });
 
-  it("shows no badge when the artist is not a founding artist", () => {
+  it("shows no badge when the artist is not a founding artist", async () => {
     render(
       <TestProviders>
         <StudioArtistHero artist={artistViewOf(false)} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(screen.queryByText("Founding artist")).not.toBeInTheDocument();
   });
 });
@@ -130,13 +147,14 @@ describe("StudioFoundingShelf", () => {
     refViewOf("sp-c", "Artist C"),
   ];
 
-  it("renders its title and every founding artist while the shelf is on", () => {
+  it("renders its title and every founding artist while the shelf is on", async () => {
     mocks.founding = { isShelfVisible: true, artists };
     render(
       <TestProviders>
         <StudioFoundingShelf />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       screen.getByRole("heading", { name: /founding artists/i }),
     ).toBeInTheDocument();
@@ -145,23 +163,25 @@ describe("StudioFoundingShelf", () => {
     expect(screen.getByText("Artist C")).toBeInTheDocument();
   });
 
-  it("renders nothing while the shelf switch is off", () => {
+  it("renders nothing while the shelf switch is off", async () => {
     mocks.founding = { isShelfVisible: false, artists };
     render(
       <TestProviders>
         <StudioFoundingShelf />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(screen.queryByText("Artist A")).not.toBeInTheDocument();
   });
 
-  it("renders nothing when the list is empty", () => {
+  it("renders nothing when the list is empty", async () => {
     mocks.founding = { isShelfVisible: true, artists: [] };
     render(
       <TestProviders>
         <StudioFoundingShelf />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       screen.queryByRole("heading", { name: /founding artists/i }),
     ).not.toBeInTheDocument();
@@ -169,7 +189,7 @@ describe("StudioFoundingShelf", () => {
 });
 
 describe("founding badge on persona pages", () => {
-  it("shows the persona badge in the tagline row of a founding artist", () => {
+  it("shows the persona badge in the tagline row of a founding artist", async () => {
     const { container } = render(
       <TestProviders>
         <SubprofileHero
@@ -179,11 +199,12 @@ describe("founding badge on persona pages", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio", "subprofiles");
     const row = container.querySelector(".pp-taglineRow");
     expect(row?.textContent).toContain("Founding artist");
   });
 
-  it("shows the badge on the owner's own view from the founding id set when the flag is absent", () => {
+  it("shows the badge on the owner's own view from the founding id set when the flag is absent", async () => {
     mocks.founding = {
       isShelfVisible: false,
       artists: [refViewOf("sp-test", "Afterhours")],
@@ -197,10 +218,11 @@ describe("founding badge on persona pages", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio", "subprofiles");
     expect(screen.getByText("Founding artist")).toBeInTheDocument();
   });
 
-  it("shows no badge on a podcaster persona without the flag", () => {
+  it("shows no badge on a podcaster persona without the flag", async () => {
     render(
       <TestProviders>
         <SubprofileHero
@@ -210,6 +232,7 @@ describe("founding badge on persona pages", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio", "subprofiles");
     expect(screen.queryByText("Founding artist")).not.toBeInTheDocument();
   });
 });

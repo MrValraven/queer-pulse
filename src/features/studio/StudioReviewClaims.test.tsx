@@ -7,6 +7,7 @@ import {
 } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type { StudioAdminTrackView } from "./api/studioSafety.adapters";
 import { resetDemoSafety } from "./api/studioDemoSafety";
 import { StudioFlagReviewLive } from "./StudioFlagReviewLive";
@@ -30,6 +31,7 @@ describe("the staff Claims tab (demo)", () => {
         <StudioReviewClaimsBadge />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     await waitFor(() => expect(screen.getByText("2")).toBeTruthy());
   });
 
@@ -39,6 +41,7 @@ describe("the staff Claims tab (demo)", () => {
         <StudioReviewClaimsPanel tabButtonId="tab-claims" />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     await waitFor(() => expect(screen.getByText(/Tiago \(@/)).toBeTruthy());
     fireEvent.click(screen.getByRole("button", { name: /decline claim/i }));
     const dialog = await screen.findByRole("dialog");
@@ -57,8 +60,11 @@ describe("the staff Claims tab (demo)", () => {
         <StudioFlagReviewLive />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
-      await screen.findByRole("tab", { name: "Claims, 2 claims waiting" }),
+      // jsdom's name computation spaces the label apart from the
+      // comma that follows it, where a browser reads "Claims, 2 claims waiting".
+      await screen.findByRole("tab", { name: /^Claims ?, 2 claims waiting$/ }),
     ).toBeInTheDocument();
   });
 
@@ -68,8 +74,22 @@ describe("the staff Claims tab (demo)", () => {
         <StudioReviewClaimsPanel tabButtonId="tab-claims" />
       </TestProviders>,
     );
-    // The countered seed claim keeps its track offline.
-    expect(await screen.findByText("Offline for listeners")).toBeTruthy();
+    await awaitCatalog("studio");
+    // Both seed claims on Vela acesa, the accepted one and the countered one,
+    // keep that track offline; the claim on another artist's track does not.
+    for (const claimantLine of [/Inês R\. \(@/, /Téo M\. \(@/]) {
+      const card = (await screen.findByText(claimantLine)).closest("article");
+      if (!card) throw new Error("the claimant line sits outside its card");
+      expect(
+        within(card).getByText("Offline for listeners"),
+      ).toBeInTheDocument();
+    }
+    const otherCard = screen.getByText(/Tiago \(@/).closest("article");
+    if (!otherCard) throw new Error("the claimant line sits outside its card");
+    expect(
+      within(otherCard).queryByText("Offline for listeners"),
+    ).not.toBeInTheDocument();
+    expect(screen.getAllByText("Offline for listeners")).toHaveLength(2);
   });
 
   it("accepts without a note, then offers Uphold and Reject while the claim waits for the artist", async () => {
@@ -78,6 +98,7 @@ describe("the staff Claims tab (demo)", () => {
         <StudioReviewClaimsPanel tabButtonId="tab-claims" />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const claimant = await screen.findByText(/Tiago \(@/);
     const card = claimant.closest("article");
     if (!card) throw new Error("the claimant line sits outside its card");
@@ -92,17 +113,23 @@ describe("the staff Claims tab (demo)", () => {
     const accepted = await screen.findByRole("region", {
       name: "Accepted, waiting for the artist",
     });
-    await waitFor(() =>
-      expect(within(accepted).getByText(/Tiago \(@/)).toBeTruthy(),
-    );
+    // The seeded accepted claim waits there too, so the checks read the card
+    // just accepted.
+    const acceptedCard = (
+      await within(accepted).findByText(/Tiago \(@/)
+    ).closest("article");
+    if (!acceptedCard)
+      throw new Error("the claimant line sits outside its card");
     expect(
-      within(accepted).getByRole("button", { name: "Uphold claim" }),
+      within(acceptedCard).getByRole("button", { name: "Uphold claim" }),
     ).toBeInTheDocument();
     expect(
-      within(accepted).getByRole("button", { name: "Reject claim" }),
+      within(acceptedCard).getByRole("button", { name: "Reject claim" }),
     ).toBeInTheDocument();
     // Our team's own wording for the status.
-    expect(within(accepted).getByText("Waiting for the artist")).toBeTruthy();
+    expect(
+      within(acceptedCard).getByText("Waiting for the artist"),
+    ).toBeTruthy();
   });
 });
 
@@ -126,6 +153,7 @@ describe("the Add content warning dialog", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const confirm = await screen.findByRole("button", { name: "Add warning" });
     expect(confirm).toBeDisabled();
     fireEvent.click(
@@ -147,6 +175,7 @@ describe("the Add content warning dialog", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const confirm = await screen.findByRole("button", { name: "Adding…" });
     expect(confirm).toBeDisabled();
     expect(confirm).toHaveAttribute("aria-busy", "true");

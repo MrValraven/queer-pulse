@@ -21,7 +21,13 @@ vi.mock("../../app/providers/authContext", async (importOriginal) => {
   return {
     ...original,
     useAuth: () => ({
-      user: { email: "sam@example.com", hasGoogle: harness.hasGoogle },
+      user: {
+        email: "sam@example.com",
+        hasGoogle: harness.hasGoogle,
+        // `TestProviders` mounts the session bootstrap, which keys its
+        // seeded caches on the signed-in member's profile slug.
+        profile: { slug: "sam" },
+      },
     }),
   };
 });

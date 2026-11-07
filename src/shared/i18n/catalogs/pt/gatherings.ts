@@ -393,7 +393,7 @@ export const gatherings: Catalog = {
   "photos.slideshowCta": "Apresentação",
   "photos.policyTitle": "Como tratamos as <em>fotos dos eventos</em>",
   "photos.policyBody1":
-    "Todas as fotos aqui foram tiradas por uma pessoa presente, com consentimento das pessoas fotografadas. <b>Os rostos são desfocados por predefinição</b>, a menos que a pessoa tenha optado por aparecer identificada. Isto não é uma cortesia de privacidade. É como garantimos que as pessoas voltam da próxima vez.",
+    "Todas as fotos aqui foram tiradas por uma pessoa presente, com consentimento das pessoas fotografadas. <b>Os rostos são desfocados por predefinição</b>, a menos que a pessoa tenha optado por aparecer identificada. É assim que garantimos que as pessoas voltam da próxima vez.",
   "photos.policyBody2":
     'Se te vires numa foto e quiseres que seja removida (ou desfocada), envia um email para <mailLink>hello@queerpulse.com</mailLink>. Tratamos disso em 24 horas, sem perguntas. <em>Também podes desativar globalmente "aparecer em fotos de eventos"</em> nas <privLink>Definições de privacidade</privLink>.',
   "photos.photographersTitle": "Quem fotografou <em>este evento</em>",
@@ -1228,7 +1228,7 @@ export const gatherings: Catalog = {
   // HostSteps.tsx — step 2
   "host.step2.title": "Encontra o <em>espaço certo</em>",
   "host.step2.body":
-    "A tua casa costuma ser a melhor opção para eventos pequenos. É gratuita, flexível e mostra que se trata de um evento da comunidade, em vez de um comercial. Para eventos maiores, a rede tem acesso a vários espaços parceiros pela cidade.",
+    "A tua casa costuma ser a melhor opção para eventos pequenos. É gratuita, flexível e mostra que se trata de um evento da comunidade. Para eventos maiores, a rede tem acesso a vários espaços parceiros pela cidade.",
   "host.step2.list.small":
     "<b>Até 12 pessoas:</b> casa ou atelier é ideal. Pergunta no quadro se precisas de uma cozinha ou de um projetor que não tens.",
   "host.step2.list.medium":
@@ -2222,6 +2222,56 @@ export const gatherings: Catalog = {
   "rsvpControl.refusedToast": "Quem organiza retirou-te deste evento.",
   "rsvpControl.goneToast": "Este evento já não existe.",
   "rsvpControl.errorToast": "Não resultou. Tenta outra vez daqui a pouco.",
+  // A causa concreta de uma ação de evento que falhou (gatheringActionErrors.ts
+  // e rsvpErrors.ts); sem ligação, limite de pedidos e falhas do servidor usam
+  // shared:apiError.*.
+  "rsvpControl.notOpenToast":
+    "Este evento não está aberto a confirmações. Pode ter sido cancelado ou retirado do ar.",
+  "rsvpControl.endedToast":
+    "Este evento já aconteceu, por isso já não aceita confirmações nem convites.",
+  "rsvpControl.fullToast":
+    "Este evento ficou cheio enquanto decidias. Atualiza para ver se há um lugar livre na lista de espera.",
+  "rsvpDetails.notEnoughRoomToast":
+    "Já não há lugares para tantas pessoas convidadas. Diminui o número e guarda outra vez.",
+  "rsvpDetails.noActiveRsvpToast":
+    "Não tens uma presença ativa neste evento, por isso não há nada para atualizar. Confirma primeiro a presença e depois acrescenta os detalhes.",
+  "rsvpInvites.needRsvpToast":
+    "Confirma primeiro que vais ou que talvez vás, e só depois podes convidar as tuas conexões.",
+  "rsvpInvites.withdrawNotOpenToast":
+    "Esse convite já foi respondido ou retirado, por isso não há nada para retirar. A tua lista vai atualizar.",
+  "actionError.hostAlwaysGoing":
+    "Organizas este evento, por isso estás sempre presente. Não há nada para mudar aqui.",
+  "actionError.hostOnly":
+    "Só quem organiza ou coorganiza pode fazer isto. Se o teu papel mudou, atualiza a página.",
+  "actionError.notPublished":
+    "Só é possível enviar convites para um evento publicado. Este ainda não está publicado, por isso nada foi enviado.",
+  "actionError.announceEmpty":
+    "Escreve primeiro a mensagem e depois envia. Um aviso vazio não pode ser enviado.",
+  "actionError.notOnWaitlist":
+    "Essa pessoa já não está na lista de espera, por isso não pode subir. Atualiza a lista para veres como está.",
+  "actionError.atCapacity":
+    "Todos os lugares estão ocupados, por isso ninguém pode subir da lista de espera. Aumenta a capacidade ou retira primeiro uma pessoa.",
+  "actionError.cannotBanYourself":
+    "Não é possível impedires a tua própria entrada no teu evento.",
+  "actionError.cannotBanHost":
+    "A pessoa que organiza não pode ser impedida de vir ao próprio evento.",
+  "actionError.cannotBanCohost":
+    "Essa pessoa coorganiza o evento. Retira-lhe primeiro a coorganização e depois impede-a.",
+  "actionError.hostSeatHeld":
+    "O lugar de quem organiza fica reservado durante todo o evento, por isso não pode ser retirado nem mudado.",
+  "actionError.requestNotOpen":
+    "Este pedido já foi respondido ou retirado. A lista vai atualizar para mostrar como está.",
+  "sharePlans.errorNotConnected":
+    "Só podes partilhar planos com conexões aceites, e ainda não tens ligação com esta pessoa.",
+  "sharePlans.errorCannotMessage":
+    "Não podes enviar mensagem a este membro neste momento, por isso os teus planos não seguiram.",
+  "photos.removeNotAllowed":
+    "Só quem carregou esta foto ou quem organiza o evento a pode remover.",
+  "photos.removeGone": "Essa foto já foi removida. O álbum vai atualizar.",
+  "photos.attachHostOnly":
+    "Só quem organiza ou coorganiza pode adicionar fotos a este álbum.",
+  "photos.attachConflict":
+    "Essa foto já está num outro evento ou já não está disponível. Escolhe-a outra vez para carregar uma cópia nova.",
   "sharePlans.openCta": "Partilhar os meus planos",
   "sharePlans.eyebrow": "Só entre vocês",
   "sharePlans.title": "Diz a alguém <em>onde vais estar</em>",

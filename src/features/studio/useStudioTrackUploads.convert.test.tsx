@@ -286,7 +286,8 @@ describe("useStudioTrackUploads WAV retries, removal and order", () => {
     const { result } = renderHook(() => useStudioTrackUploads("r1", "p1", []));
     act(() => result.current.addFiles([wav("A.wav"), mp3("B.mp3")]));
     await waitFor(() => expect(result.current.rows[1]?.stage).toBe("ready"));
-    expect(result.current.rows[0]?.stage).toBe("queued");
+    // The WAV still waits on its header check, so it has no track yet.
+    expect(result.current.rows[0]?.stage).toBe("checking");
     act(() =>
       conversion.resolve({ ok: true, file: mp3("A.mp3"), bitrate: 320 }),
     );

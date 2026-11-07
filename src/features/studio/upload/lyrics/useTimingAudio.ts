@@ -29,15 +29,16 @@ function handlePlayRejected(
 }
 
 interface SilentClock {
-  startedAt: number;
+  /** performance.now() when the clock last started; null while it is
+   *  stopped (0 is a real reading on a fresh page). */
+  startedAt: number | null;
   offset: number;
   duration: number;
 }
 
 function silentClockSeconds(clock: SilentClock): number {
-  const elapsed = clock.startedAt
-    ? (performance.now() - clock.startedAt) / 1000
-    : 0;
+  const elapsed =
+    clock.startedAt !== null ? (performance.now() - clock.startedAt) / 1000 : 0;
   return Math.min(clock.duration, clock.offset + elapsed);
 }
 
@@ -65,7 +66,7 @@ function useSmoothTime({
       const clock = clockRef.current;
       if (!audioRef.current && now >= clock.duration) {
         clock.offset = clock.duration;
-        clock.startedAt = 0;
+        clock.startedAt = null;
         setCurrentTime(clock.duration);
         setIsPlaying(false);
         return;
@@ -129,7 +130,7 @@ function useTimingSource(source: TimingAudioSource) {
   const { demoMode } = useDemoMode();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const clockRef = useRef<SilentClock>({
-    startedAt: 0,
+    startedAt: null,
     offset: 0,
     duration: SILENT_CLOCK_FALLBACK_SECONDS,
   });
@@ -160,7 +161,7 @@ function useTimingSource(source: TimingAudioSource) {
     isPlayingRef.current = false;
     // A new source starts its clock from zero.
     Object.assign(clockRef.current, {
-      startedAt: 0,
+      startedAt: null,
       offset: 0,
       duration: SILENT_CLOCK_FALLBACK_SECONDS,
     });
@@ -366,7 +367,7 @@ export function useTimingAudio(source: TimingAudioSource) {
     if (audioRef.current) audioRef.current.pause();
     else {
       clockRef.current.offset = currentTimeNow();
-      clockRef.current.startedAt = 0;
+      clockRef.current.startedAt = null;
     }
     isPlayingRef.current = false;
     setIsPlaying(false);
@@ -390,7 +391,7 @@ export function useTimingAudio(source: TimingAudioSource) {
       } else if (audioRef.current) audioRef.current.currentTime = target;
       else {
         clockRef.current.offset = target;
-        if (clockRef.current.startedAt)
+        if (clockRef.current.startedAt !== null)
           clockRef.current.startedAt = performance.now();
       }
       setCurrentTime(target);

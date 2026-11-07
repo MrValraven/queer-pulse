@@ -1,5 +1,11 @@
 import { ApiError } from "./client";
+import {
+  causeErrorKey,
+  SHARED_CAUSE_KEY,
+  type CauseErrorCopy,
+} from "./causeErrorKey";
 import { asDetailSentence, reasonFor } from "./errorMessage";
+import { interpolate } from "../i18n/translate";
 import { logError } from "../observability/logger";
 import {
   EMAIL_CODE_REASONS,
@@ -137,7 +143,8 @@ const CODED_COPY: Readonly<Record<string, ErrorCopy>> = {
   },
   music_event_cohost_holds_grant: {
     key: "shared:apiError.musicEvent.cohostHoldsGrant",
-    fallback: "Staff can't cohost a QueerPulse music event",
+    fallback:
+      "Staff can't cohost a QueerPulse music event. This member is a music manager and producer",
   },
   music_event_cohost_is_staff_tier: {
     key: "shared:apiError.musicEvent.cohostIsStaffTier",
@@ -158,12 +165,57 @@ const CODED_COPY: Readonly<Record<string, ErrorCopy>> = {
   },
 };
 
+/** The English for every shared cause line `causeErrorKey` returns, kept
+ *  identical to the EN catalog, so a toast reads in full before the
+ *  translator is wired (early boot, unit tests). */
+const CAUSE_FALLBACK: Readonly<Record<string, string>> = {
+  [SHARED_CAUSE_KEY.noConnection]:
+    "Your request didn't reach our servers. Check your connection and try again.",
+  [SHARED_CAUSE_KEY.timedOut]:
+    "Our servers took too long to answer, so we can't tell whether that went through. Refresh to check before you try again.",
+  [SHARED_CAUSE_KEY.signedOut]:
+    "Your session ended. Sign in again and try once more.",
+  [SHARED_CAUSE_KEY.accountRestricted]:
+    "You can't do that while a moderation restriction is in effect. You can appeal it from Safety, under Appeal a decision.",
+  [SHARED_CAUSE_KEY.notActive]:
+    "Only active members can do this, and your account isn't active right now. Write to us if that seems wrong.",
+  [SHARED_CAUSE_KEY.forbidden]: "You don't have access to that.",
+  [SHARED_CAUSE_KEY.notFound]:
+    "We couldn't find that. It may have been removed or moved. Refresh the page to see what's there now.",
+  [SHARED_CAUSE_KEY.gone]: "This is no longer available.",
+  [SHARED_CAUSE_KEY.conflict]:
+    "This changed or already exists. Refresh and try again.",
+  [SHARED_CAUSE_KEY.invalid]:
+    "Some details weren't accepted. Check them and try again.",
+  [SHARED_CAUSE_KEY.tooLarge]: "That's too large to send.",
+  [SHARED_CAUSE_KEY.rateLimited]:
+    "Too many attempts. Wait a moment and try again.",
+  [SHARED_CAUSE_KEY.serverFault]:
+    "Our servers hit an error on our side. Give it a moment and try again.",
+  [SHARED_CAUSE_KEY.refused]:
+    "Our servers refused that with error {status}. Try again in a moment, and write to us if it keeps happening.",
+};
+
 /** A `reasonFor` string is final as it stands: the backend's own sentence in
  *  English, or the translated status line `reasonFor` picks for every other
  *  language (PRD-467). */
 function resolve(copy: ErrorCopy | string): string {
   if (typeof copy === "string") return copy;
   return translate ? translate(copy.key, copy.fallback) : copy.fallback;
+}
+
+/** A shared cause line in the member's language, with its values filled in. */
+function resolveCause(copy: CauseErrorCopy): string {
+  const fallback = CAUSE_FALLBACK[copy.key] ?? TOAST_COPY.retryDetail.fallback;
+  return interpolate(resolve({ key: copy.key, fallback }), copy.values);
+}
+
+/** A failed write's toast: the "didn't go through" title over the cause. */
+function causeToast(error: unknown): ToastMessage {
+  return {
+    title: resolve(TOAST_COPY.failedTitle),
+    detail: resolveCause(causeErrorKey(error)),
+  };
 }
 
 /** The browser reports no network at all, so the toast can name that cause. */
@@ -202,7 +254,15 @@ function messageFor(error: unknown): ToastMessage | null {
       (error.data as { code?: string } | null)?.code === "PLATFORM_LOCKED"
     )
       return null; // PlatformLockProvider owns this (maintenance screen)
-    if (error.status === 404) return null; // pages own their empty state
+    // A write against a target that vanished (deleted, moved, or out of the
+    // member's reach) names that cause. Only a mutation reaches this line:
+    // `handleQueryError` returns for every ApiError below 500 before it calls
+    // here, so a page still owns the empty state for a 404 read. A mutation
+    // that words its own 404 sets `meta.silentError` and never gets here.
+    if (error.status === 404) return causeToast(error);
+    // The client's own timeout: its "Request timed out" message is developer
+    // wording, so the member reads the translated cause line instead.
+    if (error.status === 408) return causeToast(error);
     if (error.status >= 500) {
       return {
         title: resolve(TOAST_COPY.serverTitle),
@@ -222,6 +282,11 @@ function messageFor(error: unknown): ToastMessage | null {
           detail: resolve(TOAST_COPY.restrictedDetail),
         };
       }
+      // An inactive membership reads as its own translated cause line, in
+      // the member's language.
+      if (causeErrorKey(error).key === SHARED_CAUSE_KEY.notActive) {
+        return causeToast(error);
+      }
       const forbiddenReason = reasonFor(error);
       if (forbiddenReason) {
         return {
@@ -238,7 +303,9 @@ function messageFor(error: unknown): ToastMessage | null {
         detail: asDetailSentence(resolve(reason)),
       };
     }
-    return { title: resolve(TOAST_COPY.genericTitle) };
+    // No sentence worth showing (a bare status word): the status still names
+    // a cause, so the member reads that line under the title.
+    return causeToast(error);
   }
   // A raw network failure while the browser is offline names that cause and
   // the way out of it.
@@ -378,6 +445,9 @@ export function handleQueryError(
  * Only the signed-out 401 is excluded here. A 404 stays reportable on a write,
  * where it usually means a wrong endpoint path or a resource that vanished
  * under an action the member could still see, both of which are defects.
+ * It is toasted too (`shared:apiError.notFound`), so a write against a
+ * vanished target is never silent; a mutation that words its own 404 sets
+ * `meta.silentError` like any other self-handled write.
  *
  * Signature is positional per react-query:
  * (error, variables, onMutateResult, mutation).

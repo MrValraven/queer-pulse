@@ -142,11 +142,13 @@ describe("StudioShareMilestoneCard", () => {
     expect(screen.queryByRole("button", { name: "Retry" })).toBeNull();
   });
 
-  it("shows the teaser without a grant and reads nothing", () => {
+  it("shows the teaser without a grant and reads nothing", async () => {
     mocks.access = { ...mocks.access, hasAccess: false };
     renderCard();
     expect(
-      screen.getByText("From QueerPulse Studio, open to members with access"),
+      await screen.findByText(
+        "From QueerPulse Studio, open to members with access",
+      ),
     ).toBeInTheDocument();
     expect(mocks.useStudioMilestoneCard).not.toHaveBeenCalled();
   });

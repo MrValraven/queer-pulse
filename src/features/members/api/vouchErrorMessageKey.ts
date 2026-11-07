@@ -1,11 +1,12 @@
 import { ApiError } from "../../../shared/api/client";
+import { NOT_ACTIVE_MEMBER_CODE } from "../../../shared/api/causeErrorKey";
 
 /**
  * Maps a failed vouch attempt to a specific, actionable message (PRD-425
  * replaced the single "try again" message every cause used to share).
  * `VouchService.createVouch` throws distinct failures the client can tell
- * apart mostly by HTTP status, plus two machine-readable codes and one
- * message-text check for the guards that carry neither:
+ * apart mostly by HTTP status, plus three machine-readable codes and one
+ * message-text check for the daily cap's older backend:
  *
  * - 409 already vouched.
  * - 404 the member is gone or inactive (the vouchee lookup is an
@@ -19,9 +20,8 @@ import { ApiError } from "../../../shared/api/client";
  * - 403 with `data.code === "VOUCH_DAILY_LIMIT"` once the backend sends it;
  *   until then (and as a fallback after) the daily-cap message is the only
  *   403 whose text mentions "per day".
- * - 403 "Active membership required" (`ActiveMemberGuard`, which throws a
- *   plain string with no code): this is the VOUCHER's own membership going
- *   inactive, so it gets the generic `members:vouch.modal.error` copy. The
+ * - 403 with `data.code === "ACTIVE_MEMBERSHIP_REQUIRED"` (`ActiveMemberGuard`):
+ *   this is the VOUCHER's own membership going inactive, so it gets the generic `members:vouch.modal.error` copy. The
  *   "unavailable" copy names the target member, which would misplace the
  *   blame here.
  * - Any other 403 is a block on the target member.
@@ -47,7 +47,7 @@ export function vouchErrorMessageKey(error: unknown): string {
     if (code === "VOUCH_DAILY_LIMIT" || /per day/i.test(error.message)) {
       return "members:vouch.modal.error.dailyCap";
     }
-    if (/active membership/i.test(error.message)) {
+    if (code === NOT_ACTIVE_MEMBER_CODE) {
       return "members:vouch.modal.error";
     }
     return "members:vouch.modal.error.blocked";

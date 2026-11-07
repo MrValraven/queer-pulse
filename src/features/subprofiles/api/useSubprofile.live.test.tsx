@@ -89,11 +89,18 @@ describe("useSubprofile (live mode via MSW)", () => {
 });
 
 describe("useSubprofile (demo mode)", () => {
+  // The live suites reset the module registry, so the first demo read loads
+  // the large mock registry cold; on a loaded machine that takes longer than
+  // waitFor's default second.
+  const COLD_MOCK_REGISTRY_TIMEOUT_MS = 5000;
+
   it("resolves the mock registry and issues no request", async () => {
     const { result } = renderHook(() => useSubprofile("sp-diogo-nightform"), {
       wrapper: TestProviders,
     });
-    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    await waitFor(() => expect(result.current.isLoading).toBe(false), {
+      timeout: COLD_MOCK_REGISTRY_TIMEOUT_MS,
+    });
     expect(result.current.data?.displayName).toBe("NIGHTFORM");
   });
 
@@ -101,7 +108,9 @@ describe("useSubprofile (demo mode)", () => {
     const { result } = renderHook(() => useSubprofile("sp-does-not-exist"), {
       wrapper: TestProviders,
     });
-    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    await waitFor(() => expect(result.current.isLoading).toBe(false), {
+      timeout: COLD_MOCK_REGISTRY_TIMEOUT_MS,
+    });
     expect(result.current.data).toBeNull();
   });
 });
@@ -112,10 +121,10 @@ describe("useSubprofiles (live mode via MSW)", () => {
     const { result } = renderHook(() => useSubprofilesLive(), { wrapper });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
-    // The demo registry attaches two personas to the current user: their
-    // draft developer persona and their published podcast (the demo home of
-    // the feed-import pane).
-    expect(result.current.data).toHaveLength(2);
+    // The demo registry attaches three personas to the current user: their
+    // draft developer persona, their published podcast (the demo home of
+    // the feed-import pane) and their tattoo persona Agulha Lenta.
+    expect(result.current.data).toHaveLength(3);
     const draft = result.current.data!.find(
       (persona) => persona.displayName === "Tiago Costa",
     );
@@ -125,6 +134,11 @@ describe("useSubprofiles (live mode via MSW)", () => {
         (persona) => persona.displayName === "Late Bloomers",
       )?.kind,
     ).toBe("podcaster");
+    expect(
+      result.current.data!.find(
+        (persona) => persona.displayName === "Agulha Lenta",
+      )?.kind,
+    ).toBe("tattoo_artist");
   });
 
   it("skips the query entirely when disabled (visitor-safe)", async () => {

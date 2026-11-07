@@ -106,6 +106,12 @@ export const cards: Catalog = {
   "renew.error.notDue":
     "Este cartão ainda está válido. Podes renová-lo nos últimos 30 dias.",
   "renew.error.generic": "Não foi possível renovar o cartão. Tenta outra vez.",
+  "error.spaceNoCards":
+    "Um espaço não pode ter um programa de cartões de membro. Só a comunidade principal pode.",
+  "error.reasonRequired":
+    "Suspender ou revogar um cartão exige um motivo. Acrescenta um e tenta outra vez.",
+  "error.cardGone":
+    "Esse cartão já não está na carteira. Atualiza a página para ver os cartões que tens agora.",
 
   "role.owner": "Responsável",
   "role.coOwner": "Cotitular",

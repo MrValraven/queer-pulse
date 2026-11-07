@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { DEMO_PIECES, type Piece } from "../data/desk.data";
@@ -8,6 +9,7 @@ import {
   unpublishFailureDetail,
   UNPUBLISH_LANDING,
 } from "../desk/deskPieceUnpublish";
+import { followUnpublishToast } from "../desk/deskPieceFocus";
 import { useDeskRepublish } from "./useDeskRepublish";
 import {
   unpublishPiece as sendUnpublishPiece,
@@ -31,7 +33,9 @@ export interface DeskUnpublishRequest {
  * the unpublish endpoint. Both report through this hook's own toasts, so the
  * mutation is `silentError`: the app-wide handler would only add a second,
  * less specific one. The success toast carries an Undo button that
- * republishes at the piece's original instant (`useDeskRepublish`).
+ * republishes at the piece's original instant (`useDeskRepublish`), and
+ * takes keyboard focus as it shows: the control that raised the confirm
+ * left with the piece (`followUnpublishToast`).
  */
 export function useDeskUnpublish() {
   const { demoMode } = useDemoMode();
@@ -39,6 +43,7 @@ export function useDeskUnpublish() {
   const { showToast } = useToast();
   const { t } = useTranslation();
   const republish = useDeskRepublish();
+  const { reducedMotion } = useMotionPrefs();
 
   return useMutation<unknown, Error, DeskUnpublishRequest>({
     meta: { silentError: true },
@@ -49,10 +54,13 @@ export function useDeskUnpublish() {
         );
         const demoPiece = DEMO_PIECES[pieceIndex];
         if (demoPiece) {
+          // A new stage starts its own clock, as the live service's
+          // `stage_changed` event does.
           DEMO_PIECES[pieceIndex] = {
             ...demoPiece,
             stage: UNPUBLISH_LANDING[stage].viewStage,
             publishedAt: null,
+            stageEnteredAt: new Date().toISOString(),
           };
         }
         return null;
@@ -70,7 +78,8 @@ export function useDeskUnpublish() {
       void queryClient.invalidateQueries({
         queryKey: ["magazine-desk-summary"],
       });
-      showToast(
+      let wasUndone = false;
+      const toastId = showToast(
         {
           title: t(UNPUBLISH_LANDING[stage].successKey, { title: piece.title }),
           detail: t("magazine:desk.pieceToast.unpublishedDetail"),
@@ -81,13 +90,23 @@ export function useDeskUnpublish() {
           label: t("magazine:desk.pieceToast.undo"),
           // `piece` is the snapshot taken when the request was made, so its
           // `publishedAt` is the instant the unpublish is about to clear.
-          onClick: () =>
+          onClick: () => {
+            wasUndone = true;
             republish.mutate({
               piece,
               originalPublishedAt: piece.publishedAt,
-            }),
+            });
+          },
         },
       );
+      followUnpublishToast({
+        toastId,
+        pieceId: piece.id,
+        originalStage: piece.stage,
+        landingStage: UNPUBLISH_LANDING[stage].viewStage,
+        wasUndone: () => wasUndone,
+        isReducedMotion: reducedMotion,
+      });
     },
     onError: (error, { piece }) => {
       showToast(

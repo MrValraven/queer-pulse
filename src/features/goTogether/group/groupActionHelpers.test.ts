@@ -55,7 +55,10 @@ describe("memberActionErrorKey", () => {
       "goTogether:group.member.gone",
     );
     expect(memberActionErrorKey(new Error("offline"))).toBe(
-      "goTogether:group.error.generic",
+      "shared:apiError.noConnection",
+    );
+    expect(memberActionErrorKey(new ApiError(500, "Server error"))).toBe(
+      "shared:apiError.serverFault",
     );
   });
 });

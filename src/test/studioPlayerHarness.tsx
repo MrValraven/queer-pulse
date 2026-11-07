@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook } from "@testing-library/react";
 import type { ReactNode } from "react";
+import { I18nProvider } from "../app/providers/I18nProvider";
 import { toReleaseView } from "../features/studio/api/studio.adapters";
 import type {
   StudioReleaseDTO,
@@ -117,9 +118,11 @@ export function renderPlayer(releases: StudioReleaseDTO[]) {
   queryClient.setQueryData(ME_KEY, { hasAccess: true, uploadablePersonas: [] });
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={queryClient}>
-      <StudioPlayerProvider engineFactory={engineFactory}>
-        {children}
-      </StudioPlayerProvider>
+      <I18nProvider>
+        <StudioPlayerProvider engineFactory={engineFactory}>
+          {children}
+        </StudioPlayerProvider>
+      </I18nProvider>
     </QueryClientProvider>
   );
   // Every status the player rendered, so a test can prove one never showed.

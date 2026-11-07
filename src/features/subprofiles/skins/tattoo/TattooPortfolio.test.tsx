@@ -12,6 +12,7 @@ import { TattooFlash, TattooWannaDos } from "./TattooFlash";
 import { TattooProjects } from "./TattooProjects";
 import { TattooScarWork } from "./TattooScarWork";
 import { buildTattooView } from "./tattooView";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 // Unrun per repo policy: verified statically.
 
@@ -90,6 +91,9 @@ function makeData(
 
 /** Gives every element the strip's scroll box: jsdom lays nothing out, so
  *  without this every strip reads as fitting. Returns the restore call. */
+/** AccessibilityProvider's stored in-app "Reduce motion" preference. */
+const REDUCE_MOTION_STORAGE_KEY = "qp:a11y:reduce-motion";
+
 function mockStripBox(scrollWidth: number, clientWidth: number) {
   const scrollWidthSpy = vi
     .spyOn(Element.prototype, "scrollWidth", "get")
@@ -132,7 +136,7 @@ describe("tattoo portfolio blocks", () => {
     resetPhotoReveals();
   });
 
-  it("keeps claimed flash on the page with its label", () => {
+  it("keeps claimed flash on the page with its label", async () => {
     const data = makeData({
       flash: [
         makeItem("Moth sheet", "flash", {
@@ -146,11 +150,12 @@ describe("tattoo portfolio blocks", () => {
         <TattooFlash {...blockProps(data)} />
       </TestProviders>,
     );
+    await awaitCatalog("subprofiles");
     expect(screen.getByText("Claimed")).toBeTruthy();
     expect(screen.getByText("Moth sheet")).toBeTruthy();
   });
 
-  it("shows a cover-up as a before and after pair", () => {
+  it("shows a cover-up as a before and after pair", async () => {
     const data = makeData({
       cover_ups: [
         makeItem("Rose rework", "cover_ups", {
@@ -167,12 +172,13 @@ describe("tattoo portfolio blocks", () => {
         <TattooCoverUps {...blockProps(data)} />
       </TestProviders>,
     );
+    await awaitCatalog("subprofiles");
     expect(screen.getByText("Before")).toBeTruthy();
     expect(screen.getByText("After")).toBeTruthy();
     expect(screen.getAllByRole("img")).toHaveLength(2);
   });
 
-  it("shows a cover-up with an empty before photo as the after photo alone", () => {
+  it("shows a cover-up with an empty before photo as the after photo alone", async () => {
     const data = makeData({
       cover_ups: [
         makeItem("Rose rework", "cover_ups", {
@@ -189,11 +195,12 @@ describe("tattoo portfolio blocks", () => {
         <TattooCoverUps {...blockProps(data)} />
       </TestProviders>,
     );
+    await awaitCatalog("subprofiles");
     expect(screen.queryByText("Before")).toBeNull();
     expect(screen.getAllByRole("img")).toHaveLength(1);
   });
 
-  it("steps through a project session by session and skips an empty session photo", () => {
+  it("steps through a project session by session and skips an empty session photo", async () => {
     const data = makeData({
       in_progress: [
         makeItem("Back piece", "in_progress", {
@@ -212,12 +219,13 @@ describe("tattoo portfolio blocks", () => {
         <TattooProjects {...blockProps(data)} />
       </TestProviders>,
     );
+    await awaitCatalog("subprofiles");
     expect(screen.getByText("Session 1")).toBeTruthy();
     expect(screen.getByText("Session 2")).toBeTruthy();
     expect(screen.queryByText("Session 3")).toBeNull();
   });
 
-  it("blurs a scar work photo until Show photo and opens it in the lightbox after", () => {
+  it("blurs a scar work photo until Show photo and opens it in the lightbox after", async () => {
     const item = makeItem("Top surgery", "scar_work", {
       imageUrl: "scar.jpg",
       structured: { scarWork: { type: "top_surgery" } },
@@ -230,6 +238,7 @@ describe("tattoo portfolio blocks", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("subprofiles");
     expect(
       screen.queryByRole("button", { name: "Open Top surgery" }),
     ).toBeNull();
@@ -238,7 +247,7 @@ describe("tattoo portfolio blocks", () => {
     expect(onOpenWorkItem).toHaveBeenCalledWith(item);
   });
 
-  it("shows the scar work intro with no photos", () => {
+  it("shows the scar work intro with no photos", async () => {
     const data = makeData(
       {},
       {
@@ -253,11 +262,12 @@ describe("tattoo portfolio blocks", () => {
         <TattooScarWork {...blockProps(data)} />
       </TestProviders>,
     );
+    await awaitCatalog("subprofiles");
     expect(screen.getByText("Scars are welcome here.")).toBeTruthy();
     expect(screen.getByText("Free consultation")).toBeTruthy();
   });
 
-  it("renders an unblurred tile without a BlurredPhoto wrapper", () => {
+  it("renders an unblurred tile without a BlurredPhoto wrapper", async () => {
     const data = makeData({
       flash: [makeItem("Moth sheet", "flash", { imageUrl: "moth.jpg" })],
     });
@@ -266,12 +276,13 @@ describe("tattoo portfolio blocks", () => {
         <TattooFlash {...blockProps(data)} />
       </TestProviders>,
     );
+    await awaitCatalog("subprofiles");
     expect(screen.getByRole("img")).toBeTruthy();
     expect(screen.queryByRole("button", { name: /Show photo/ })).toBeNull();
     expect(container.querySelector("[data-concealed]")).toBeNull();
   });
 
-  it("gives the before tile and session tiles no open button", () => {
+  it("gives the before tile and session tiles no open button", async () => {
     const onOpenWorkItem = vi.fn();
     const data = makeData({
       cover_ups: [
@@ -295,6 +306,7 @@ describe("tattoo portfolio blocks", () => {
         <TattooProjects {...blockProps(data, onOpenWorkItem)} />
       </TestProviders>,
     );
+    await awaitCatalog("subprofiles");
     expect(
       screen.getAllByRole("button", { name: "Open Rose rework" }),
     ).toHaveLength(1);
@@ -305,7 +317,7 @@ describe("tattoo portfolio blocks", () => {
 });
 
 describe("tattoo grid cards", () => {
-  it("shows a wanna-do with no photo as a text card with no open button", () => {
+  it("shows a wanna-do with no photo as a text card with no open button", async () => {
     const onOpenWorkItem = vi.fn();
     const data = makeData({
       wanna_dos: [
@@ -321,6 +333,7 @@ describe("tattoo grid cards", () => {
         <TattooWannaDos {...blockProps(data, onOpenWorkItem)} />
       </TestProviders>,
     );
+    await awaitCatalog("subprofiles");
     expect(screen.getByText("Snake and dagger")).toBeTruthy();
     expect(screen.getByText("10 cm")).toBeTruthy();
     expect(screen.getByText("forearm, calf")).toBeTruthy();
@@ -330,7 +343,7 @@ describe("tattoo grid cards", () => {
     ).toBeNull();
   });
 
-  it("formats a flash price as a localized amount", () => {
+  it("formats a flash price as a localized amount", async () => {
     const data = makeData({
       flash: [
         makeItem("Moth sheet", "flash", {
@@ -344,6 +357,7 @@ describe("tattoo grid cards", () => {
         <TattooFlash {...blockProps(data)} />
       </TestProviders>,
     );
+    await awaitCatalog("subprofiles");
     expect(screen.getByText("€120.5")).toBeTruthy();
   });
 });
@@ -367,6 +381,7 @@ describe("tattoo project session strip", () => {
         <TattooProjects {...blockProps(twoSessionProject())} />
       </TestProviders>,
     );
+    await awaitCatalog("subprofiles");
     expect(
       screen.getByRole("region", { name: "Back piece sessions" }),
     ).toBeTruthy();
@@ -376,13 +391,14 @@ describe("tattoo project session strip", () => {
     expect(screen.getByRole("button", { name: "Next sessions" })).toBeTruthy();
   });
 
-  it("hides both scroll buttons while the strip fits", () => {
+  it("hides both scroll buttons while the strip fits", async () => {
     restoreStripBox = mockStripBox(300, 300);
     render(
       <TestProviders>
         <TattooProjects {...blockProps(twoSessionProject())} />
       </TestProviders>,
     );
+    await awaitCatalog("subprofiles");
     fireEvent.scroll(
       screen.getByRole("region", { name: "Back piece sessions" }),
     );
@@ -399,6 +415,7 @@ describe("tattoo project session strip", () => {
         <TattooProjects {...blockProps(twoSessionProject())} />
       </TestProviders>,
     );
+    await awaitCatalog("subprofiles");
     const previous = await screen.findByRole("button", {
       name: "Previous sessions",
     });
@@ -422,7 +439,9 @@ describe("tattoo project session strip", () => {
 
   it("scrolls the session strip without smooth motion when reduced motion is on", async () => {
     restoreStripBox = mockStripBox(600, 300);
-    document.documentElement.dataset.reduceMotion = "true";
+    // AccessibilityProvider stamps <html data-reduce-motion> from the stored
+    // in-app preference, so the test sets the preference it reads.
+    localStorage.setItem(REDUCE_MOTION_STORAGE_KEY, "true");
     const scrollBy = vi.fn();
     Element.prototype.scrollBy = scrollBy;
     render(
@@ -430,10 +449,11 @@ describe("tattoo project session strip", () => {
         <TattooProjects {...blockProps(twoSessionProject())} />
       </TestProviders>,
     );
+    await awaitCatalog("subprofiles");
     fireEvent.click(
       await screen.findByRole("button", { name: "Next sessions" }),
     );
-    delete document.documentElement.dataset.reduceMotion;
+    localStorage.removeItem(REDUCE_MOTION_STORAGE_KEY);
     expect(scrollBy).toHaveBeenCalledWith(
       expect.objectContaining({ behavior: "auto" }),
     );

@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AUTH_STORAGE_KEY } from "../../marketing/cookies.data";
 import { TestProviders } from "../../../test/TestProviders";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { seededGovernanceText } from "../../governance/governanceText";
 import type {
   CouncilSeatView,
@@ -100,6 +101,7 @@ describe("StudioLandingFaq", () => {
         <StudioLandingFaq />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const questionButtons = await screen.findAllByRole("button", {
       expanded: false,
     });

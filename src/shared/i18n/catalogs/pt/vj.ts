@@ -641,12 +641,13 @@ export const vj: Catalog = {
   "preload.failure.url_expired":
     "O link de download expirou duas vezes. Recarrega o ecrã para tentar outra vez",
   "preload.failure.network":
-    "O download foi interrompido. Volta a tentar quando a ligação voltar",
+    "O download foi interrompido. O ecrã tenta outra vez quando a ligação voltar",
   "preload.failure.storage_full":
-    "Este portátil ficou sem espaço para clips. Liberta espaço e recarrega o ecrã",
+    "O computador do ecrã ficou sem espaço para clips. Liberta espaço nele e recarrega o ecrã",
   "preload.failure.decode_failed":
-    "O browser do ecrã não consegue reproduzir este clip",
-  "preload.failure.not_found": "Este clip já não está no pack",
+    "O browser do ecrã não consegue reproduzir este ficheiro. Envia-o outra vez para a biblioteca de VJ em MP4 (H.264)",
+  "preload.failure.not_found":
+    "Este clip já não está no pack. Recarrega o ecrã para carregar o pack como está agora",
   // ── Remote ──
   "remote.metaTitle": "Comando de VJ",
   "remote.backToLibrary": "Voltar à biblioteca de VJ",
@@ -668,6 +669,16 @@ export const vj: Catalog = {
   "remote.clipLoading": "A carregar no ecrã, {percent}%",
   "remote.clipQueued": "À espera de carregar no ecrã",
   "remote.clipFailed": "Não carregou no ecrã",
+  "remote.failures.summary_one": "{count} clip não carregou no ecrã",
+  "remote.failures.summary_other": "{count} clips não carregaram no ecrã",
+  "remote.failures.seeWhy": "Ver porquê",
+  "remote.failures.title": "Clips que não carregaram",
+  "remote.failures.intro":
+    "Cada clip diz o que o travou no ecrã e como resolver",
+  "remote.failures.unknownReason":
+    "O ecrã não disse porquê. Recarrega o ecrã para tentar outra vez",
+  "remote.failures.empty": "Todos os clips deste pack já carregam no ecrã",
+  "remote.failures.close": "Fechar a lista",
   "remote.fadeSeconds": "{seconds} s",
   "remote.blackout": "Blackout",
   "remote.offline.network":
@@ -778,6 +789,7 @@ export const vj: Catalog = {
   "grid.unfavorite": "Tirar {title} dos favoritos",
   "grid.cueAria": "Preparar {title}",
   "grid.cued": "Preparado",
+  "grid.failureAria": "Ver porque é que {title} não carregou",
   "grid.pendingBeat": "Próxima batida",
   "grid.pendingBar": "Próximo compasso",
   "grid.searchLabel": "Procurar neste pack",
@@ -804,6 +816,7 @@ export const vj: Catalog = {
   "tempo.tapAria": "Marcar o ritmo",
   "tempo.downbeat": "1",
   "tempo.downbeatAria": "Marcar agora o primeiro tempo do compasso",
+  "tempo.downbeatCaption": "1.º tempo",
   "tempo.quantize": "Quantizar",
   "tempo.quantizeOff": "Desligado",
   "tempo.quantizeBeat": "Batida",
@@ -820,6 +833,7 @@ export const vj: Catalog = {
 
   // ── Transitions ──
   "transition.title": "Transição",
+  "transition.modeCaption": "Modo",
   "transition.unitAria": "Contar a duração em",
   "transition.mode.fade": "Fade",
   "transition.mode.cut": "Corte",
@@ -908,6 +922,8 @@ export const vj: Catalog = {
   "dock.goEmpty": "Toca num clip para o preparar",
   "dock.more": "Mais",
   "dock.moreAria": "Mais controlos",
+  "dock.sectionMix": "Mistura",
+  "dock.sectionEffects": "Efeitos",
 
   // ── Mix sheet ──
   "mix.title": "Mistura",

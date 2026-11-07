@@ -4,7 +4,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { reasonFor } from "../../../shared/api/errorMessage";
+import { causeErrorKey } from "../../../shared/api/causeErrorKey";
 import { logError } from "../../../shared/observability/logger";
 import {
   DEFAULT_NOTIFICATION_DELIVERY,
@@ -75,13 +75,8 @@ export function useNotificationDelivery(): NotificationDeliveryResult {
               previous,
             );
           }
-          const reason = reasonFor(error)?.replace(/\.$/, "");
-          showToast(
-            reason
-              ? t("settings:notifications.toast.saveErrorReason", { reason })
-              : t("settings:notifications.toast.saveError"),
-            "error",
-          );
+          const cause = causeErrorKey(error);
+          showToast(t(cause.key, cause.values), "error");
         });
     },
     // queryKey is a fresh array each render but its contents are stable; depend

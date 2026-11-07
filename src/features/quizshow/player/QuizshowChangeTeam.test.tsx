@@ -11,6 +11,7 @@ import type {
 import type { QuizshowClientState } from "../realtime/quizshowClientStore";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import { QuizshowChangeTeam } from "./QuizshowChangeTeam";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 
 const TEAMS_LOBBY: QuizshowLobby = {
   players: [],
@@ -141,14 +142,30 @@ async function openPicker(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole("button", { name: "Change team" }));
 }
 
+/** The component's own alert. TestProviders also mounts the toast regions,
+ *  and the assertive one carries the alert role while it is empty. */
+function findComponentAlert(): Promise<HTMLElement> {
+  return waitFor(() => {
+    const [alert, ...otherAlerts] = screen
+      .getAllByRole("alert")
+      .filter((element) => element.closest("[data-toast-region]") === null);
+    expect(otherAlerts).toHaveLength(0);
+    if (alert === undefined) {
+      throw new Error("The component rendered no alert of its own");
+    }
+    return alert;
+  });
+}
+
 describe("QuizshowChangeTeam", () => {
-  it("is hidden in a solo game", () => {
+  it("is hidden in a solo game", async () => {
     render(
       changeTeamOf(
         lobbySession({ playMode: "solo", maxTeamSize: null }),
         sendOf() as QuizshowSessionController["send"],
       ),
     );
+    await awaitCatalog("quizshow");
     expect(
       screen.queryByRole("button", { name: "Change team" }),
     ).not.toBeInTheDocument();
@@ -158,6 +175,7 @@ describe("QuizshowChangeTeam", () => {
     const send = sendOf() as QuizshowSessionController["send"];
     const session = lobbySession();
     const { rerender } = render(changeTeamOf(session, send));
+    await awaitCatalog("quizshow");
     expect(
       screen.getByRole("button", { name: "Change team" }),
     ).toBeInTheDocument();
@@ -183,6 +201,7 @@ describe("QuizshowChangeTeam", () => {
     render(
       changeTeamOf(lobbySession(), send as QuizshowSessionController["send"]),
     );
+    await awaitCatalog("quizshow");
 
     await openPicker(user);
     expect(screen.getByText("Your team")).toBeInTheDocument();
@@ -201,6 +220,7 @@ describe("QuizshowChangeTeam", () => {
     render(
       changeTeamOf(lobbySession(), send as QuizshowSessionController["send"]),
     );
+    await awaitCatalog("quizshow");
 
     await openPicker(user);
     await user.click(screen.getByRole("radio", { name: /Start a team/ }));
@@ -219,6 +239,7 @@ describe("QuizshowChangeTeam", () => {
     render(
       changeTeamOf(lobbySession(), send as QuizshowSessionController["send"]),
     );
+    await awaitCatalog("quizshow");
 
     await openPicker(user);
     await user.click(screen.getByRole("button", { name: "Keep my team" }));
@@ -235,6 +256,7 @@ describe("QuizshowChangeTeam", () => {
     render(
       changeTeamOf(lobbySession(), send as QuizshowSessionController["send"]),
     );
+    await awaitCatalog("quizshow");
 
     await openPicker(user);
     await user.click(screen.getByRole("radio", { name: /Start a team/ }));
@@ -260,14 +282,13 @@ describe("QuizshowChangeTeam", () => {
     render(
       changeTeamOf(lobbySession(), send as QuizshowSessionController["send"]),
     );
+    await awaitCatalog("quizshow");
 
     await openPicker(user);
     await user.click(screen.getByRole("radio", { name: /Night owls/ }));
     await user.click(screen.getByRole("button", { name: "Join Night owls" }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
-      "That team is full",
-    );
+    expect(await findComponentAlert()).toHaveTextContent("That team is full");
   });
 
   it("sends once when the confirm is tapped twice", async () => {
@@ -277,6 +298,7 @@ describe("QuizshowChangeTeam", () => {
     render(
       changeTeamOf(lobbySession(), send as QuizshowSessionController["send"]),
     );
+    await awaitCatalog("quizshow");
 
     await openPicker(user);
     await user.click(screen.getByRole("radio", { name: /Night owls/ }));
@@ -293,6 +315,7 @@ describe("QuizshowChangeTeam", () => {
     const user = userEvent.setup();
     const send = sendOf() as QuizshowSessionController["send"];
     const { rerender } = render(changeTeamOf(lobbySession(), send));
+    await awaitCatalog("quizshow");
 
     await openPicker(user);
     await user.click(screen.getByRole("radio", { name: /Night owls/ }));
@@ -308,7 +331,7 @@ describe("QuizshowChangeTeam", () => {
       ),
     );
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await findComponentAlert()).toHaveTextContent(
       "That team is gone. Pick another",
     );
     expect(

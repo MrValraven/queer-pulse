@@ -15,6 +15,7 @@ import { CardIssueAction } from "../cards/CardIssueAction";
 import { CardVerificationSummary } from "../cards/CardVerificationSummary";
 import { previewCard } from "../cards/cardDesigner.data";
 import type { CommunityRole } from "./membership.types";
+import { communityErrorText } from "./communityErrors";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./ModToolsCardSection.module.css";
 
@@ -77,7 +78,7 @@ export function ModToolsCardSection({
                 : "cards:modTools.pausedToast",
             ),
           ),
-        onError: () => showToast(t("common:toast.saveFailed"), "error"),
+        onError: (error) => showToast(communityErrorText(t, error), "error"),
       },
     );
   };

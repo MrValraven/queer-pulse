@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { StudioUploadTrackDetails } from "./StudioUploadTrackDetails";
 
 const mutateAsync = vi.fn(() => Promise.resolve());
@@ -52,6 +53,7 @@ describe("StudioUploadTrackDetails, Studio safety", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const box = screen.getByRole("checkbox", { name: /explicit/i });
     expect((box as HTMLInputElement).disabled).toBe(true);
     expect((box as HTMLInputElement).checked).toBe(true);

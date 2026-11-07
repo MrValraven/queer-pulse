@@ -9,6 +9,7 @@ import { useRef } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../shared/api/client";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import {
   DEMO_ARTIST_MARIANA,
   DEMO_ARTIST_NIGHTFORM,
@@ -110,12 +111,14 @@ function CardHost() {
   );
 }
 
-function renderCard(initialEntries?: string[]) {
-  return render(
+async function renderCard(initialEntries?: string[]) {
+  const view = render(
     <TestProviders initialEntries={initialEntries}>
       <CardHost />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
+  return view;
 }
 
 beforeEach(async () => {
@@ -134,7 +137,7 @@ afterEach(() => {
 describe("StudioLandingPreviewsCard", () => {
   it("shows Approve and Decline only where the server allows them", async () => {
     mocks.items = [PENDING_MAIN, APPROVED_CREDITED];
-    renderCard();
+    await renderCard();
     const [pendingRow, creditedRow] = await screen.findAllByRole("listitem");
     expect(
       within(pendingRow!).getByRole("button", {
@@ -146,7 +149,7 @@ describe("StudioLandingPreviewsCard", () => {
     ).toBeNull();
     expect(
       within(creditedRow!).getByRole("button", {
-        name: /Withdraw the preview/,
+        name: "Withdraw preview of Vela acesa",
       }),
     ).toBeInTheDocument();
     expect(
@@ -157,7 +160,7 @@ describe("StudioLandingPreviewsCard", () => {
   });
 
   it("confirms before approving and announces the result", async () => {
-    renderCard();
+    await renderCard();
     fireEvent.click(
       await screen.findByRole("button", {
         name: "Approve preview of Planície",
@@ -176,7 +179,7 @@ describe("StudioLandingPreviewsCard", () => {
   });
 
   it("folds a declined row away", async () => {
-    renderCard();
+    await renderCard();
     fireEvent.click(
       await screen.findByRole("button", {
         name: "Decline preview of Planície",
@@ -224,7 +227,7 @@ describe("StudioLandingPreviewsCard", () => {
     "names %s",
     async (code, status, line, buttonName, confirmName) => {
       mocks.refusal = { status, code };
-      renderCard();
+      await renderCard();
       fireEvent.click(await screen.findByRole("button", { name: buttonName }));
       if (confirmName) {
         const dialog = await screen.findByRole("dialog");
@@ -232,7 +235,12 @@ describe("StudioLandingPreviewsCard", () => {
           within(dialog).getByRole("button", { name: confirmName }),
         );
       }
-      const alert = await screen.findByRole("alert");
+      // The toast host keeps its own empty alert region mounted, so the
+      // card's failure line is read inside the card.
+      const card = screen.getByRole("region", {
+        name: "Your music on the Studio page",
+      });
+      const alert = await within(card).findByRole("alert");
       expect(alert).toHaveTextContent(line);
       if (status === 404) {
         await waitFor(() => expect(screen.queryByText("Planície")).toBeNull(), {
@@ -250,7 +258,7 @@ describe("StudioLandingPreviewsCard", () => {
 
   it("stays hidden for a persona whose list is empty", async () => {
     mocks.items = [];
-    renderCard();
+    await renderCard();
     await waitFor(() => expect(mocks.listCalls).toBeGreaterThan(0));
     expect(
       screen.queryByRole("heading", { name: "Your music on the Studio page" }),
@@ -259,7 +267,7 @@ describe("StudioLandingPreviewsCard", () => {
 
   it("reads an approved ineligible row as off the page", async () => {
     mocks.items = [{ ...APPROVED_CREDITED, isEligible: false }];
-    renderCard();
+    await renderCard();
     expect(
       await screen.findByText(
         "Approved. Off the page while it can't play there",
@@ -270,7 +278,7 @@ describe("StudioLandingPreviewsCard", () => {
   it("scrolls to the card and focuses its heading once for #landing-previews", async () => {
     const scrollSpy = vi.fn();
     Element.prototype.scrollIntoView = scrollSpy;
-    renderCard(["/studio/dashboard#landing-previews"]);
+    await renderCard(["/studio/dashboard#landing-previews"]);
     const heading = await screen.findByRole("heading", {
       name: "Your music on the Studio page",
     });
@@ -281,7 +289,7 @@ describe("StudioLandingPreviewsCard", () => {
 
 describe("StudioLandingPreviewsCard answers", () => {
   it("moves focus to the approved row's Withdraw button after Approve", async () => {
-    renderCard();
+    await renderCard();
     fireEvent.click(
       await screen.findByRole("button", {
         name: "Approve preview of Planície",
@@ -298,7 +306,7 @@ describe("StudioLandingPreviewsCard answers", () => {
   });
 
   it("moves focus to the next row's first action after Decline", async () => {
-    renderCard();
+    await renderCard();
     fireEvent.click(
       await screen.findByRole("button", {
         name: "Decline preview of Planície",
@@ -311,7 +319,7 @@ describe("StudioLandingPreviewsCard answers", () => {
   });
 
   it("moves focus outside the card when the last row folds away", async () => {
-    renderCard();
+    await renderCard();
     fireEvent.click(
       await screen.findByRole("button", {
         name: "Decline preview of Planície",
@@ -336,7 +344,7 @@ describe("StudioLandingPreviewsCard answers", () => {
 
   it("says an approved track that cannot play on the page is off it", async () => {
     mocks.answerOverride = { isEligible: false };
-    renderCard();
+    await renderCard();
     fireEvent.click(
       await screen.findByRole("button", {
         name: "Approve preview of Planície",
@@ -346,8 +354,14 @@ describe("StudioLandingPreviewsCard answers", () => {
     fireEvent.click(
       within(dialog).getByRole("button", { name: "Approve preview" }),
     );
-    expect(await screen.findByRole("status")).toHaveTextContent(
-      "Approved. Off the page while it can't play there",
-    );
+    // The toast host keeps its own status regions mounted, and the row's
+    // chip reads the same words, so the line is found inside the card's
+    // own status region.
+    expect(
+      await screen.findByText(
+        "Approved. Off the page while it can't play there",
+        { selector: "[role='status']" },
+      ),
+    ).toBeInTheDocument();
   });
 });

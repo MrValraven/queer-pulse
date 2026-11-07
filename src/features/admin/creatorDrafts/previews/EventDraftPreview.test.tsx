@@ -1,6 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 import { TestProviders } from "../../../../test/TestProviders";
 import type {
   CreatorDraftOwner,
@@ -88,6 +89,7 @@ describe("EventDraftPreview", () => {
         <EventDraftPreview preview={picnicPreview} owner={marta} />
       </TestProviders>,
     );
+    await awaitCatalog("admin", "gatherings", "communities");
     const frame = screen.getByRole("region", {
       name: /creatorDrafts\.preview\.label|preview/i,
     });
@@ -107,7 +109,7 @@ describe("EventDraftPreview", () => {
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
-  it("shows the description's mentions as typed and looks up no names", () => {
+  it("shows the description's mentions as typed and looks up no names", async () => {
     mentionLookup.getMentionNames.mockClear();
     mentionLookup.resolvedMentionTextRenders.mockClear();
     const fetchSpy = vi.spyOn(globalThis, "fetch");
@@ -123,6 +125,7 @@ describe("EventDraftPreview", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("admin", "gatherings", "communities");
     const mention = screen.getByText("@ana-lopes");
     expect(mention.closest("a")).toBeNull();
     expect(screen.getByText("b/tasca-da-graca")).toBeInTheDocument();
@@ -135,28 +138,30 @@ describe("EventDraftPreview", () => {
     ).toBe(false);
   });
 
-  it("names the community as plain text", () => {
+  it("names the community as plain text", async () => {
     render(
       <TestProviders>
         <EventDraftPreview preview={picnicPreview} owner={marta} />
       </TestProviders>,
     );
+    await awaitCatalog("admin", "gatherings", "communities");
     const communityLine = screen.getByText(/Rainbow Runners/);
     expect(communityLine).toBeInTheDocument();
     expect(within(communityLine).queryByRole("link")).toBeNull();
     expect(communityLine.closest("a")).toBeNull();
   });
 
-  it("names the owner as the host", () => {
+  it("names the owner as the host", async () => {
     render(
       <TestProviders>
         <EventDraftPreview preview={picnicPreview} owner={marta} />
       </TestProviders>,
     );
+    await awaitCatalog("admin", "gatherings", "communities");
     expect(screen.getByText(/Marta Fonseca/)).toBeInTheDocument();
   });
 
-  it("hides an unset day and clock and survives a malformed payload", () => {
+  it("hides an unset day and clock and survives a malformed payload", async () => {
     const malformed = {
       title: 42,
       description: ["x"],
@@ -171,7 +176,12 @@ describe("EventDraftPreview", () => {
         <EventDraftPreview preview={malformed} owner={null} />
       </TestProviders>,
     );
-    expect(screen.getByRole("heading", { level: 2 })).toBeInTheDocument();
+    await awaitCatalog("admin", "gatherings", "communities");
+    // A title that is no string falls back to the untitled heading; the
+    // "Getting there" panel carries the page's other level-2 heading.
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Untitled" }),
+    ).toBeInTheDocument();
     expect(screen.queryByText(/00:00/)).toBeNull();
     expect(screen.queryByText(/Hosted by/)).toBeNull();
   });

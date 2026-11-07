@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { TestProviders } from "../../test/TestProviders";
 import {
   REASON_LABEL_KEYS,
@@ -8,10 +9,10 @@ import {
 } from "../safety/reportReasons";
 import { ReportReplyModal } from "./ReportReplyModal";
 
-const renderModal = (
+async function renderModal(
   isFundingThread: boolean,
   subjectType: "post" | "reply" = "post",
-) =>
+): Promise<void> {
   render(
     <TestProviders>
       <ReportReplyModal
@@ -23,6 +24,8 @@ const renderModal = (
       />
     </TestProviders>,
   );
+  await awaitCatalog("forum", "safety");
+}
 
 describe("funding_scam", () => {
   it("is a post reason with its own label key", () => {
@@ -30,15 +33,15 @@ describe("funding_scam", () => {
     expect(REASON_LABEL_KEYS.funding_scam).toBe("safety:reason.fundingScam");
   });
 
-  it("is offered on a Funding & Grants post", () => {
-    renderModal(true);
+  it("is offered on a Funding & Grants post", async () => {
+    await renderModal(true);
     expect(
       screen.getByText("Scam, fake fundraiser or fake grant"),
     ).toBeInTheDocument();
   });
 
-  it("is left off a post anywhere else in the forum", () => {
-    renderModal(false);
+  it("is left off a post anywhere else in the forum", async () => {
+    await renderModal(false);
     expect(
       screen.queryByText("Scam, fake fundraiser or fake grant"),
     ).toBeNull();
@@ -52,15 +55,15 @@ describe("funding_scam", () => {
     ]);
   });
 
-  it("is offered on a reply under a Funding & Grants thread", () => {
-    renderModal(true, "reply");
+  it("is offered on a reply under a Funding & Grants thread", async () => {
+    await renderModal(true, "reply");
     expect(
       screen.getByText("Scam, fake fundraiser or fake grant"),
     ).toBeInTheDocument();
   });
 
-  it("is left off a reply anywhere else in the forum", () => {
-    renderModal(false, "reply");
+  it("is left off a reply anywhere else in the forum", async () => {
+    await renderModal(false, "reply");
     expect(
       screen.queryByText("Scam, fake fundraiser or fake grant"),
     ).toBeNull();
@@ -81,15 +84,15 @@ describe("withFundingScamFor", () => {
 });
 
 describe("ReportReplyModal title", () => {
-  it("names the opening post as a post", () => {
-    renderModal(false, "post");
+  it("names the opening post as a post", async () => {
+    await renderModal(false, "post");
     expect(
       screen.getByRole("heading", { name: "Report this post" }),
     ).toBeInTheDocument();
   });
 
-  it("names a reply as a reply", () => {
-    renderModal(false, "reply");
+  it("names a reply as a reply", async () => {
+    await renderModal(false, "reply");
     expect(
       screen.getByRole("heading", { name: "Report this reply" }),
     ).toBeInTheDocument();

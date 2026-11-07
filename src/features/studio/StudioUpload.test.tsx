@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { StudioUploadPage } from "./StudioUploadPage";
 import { SplitsTable } from "./StudioUploadSplitsTable";
 
@@ -13,6 +14,17 @@ beforeEach(() => {
   window.localStorage.clear();
 });
 
+// The leave guard steps over its Back sentinel with a raw window.history
+// walk, which a MemoryRouter never sees land, so a step change would wait
+// forever here. Its own suite (upload/useStudioUploadLeaveGuard.test.tsx)
+// covers it; these tests cover the steps.
+vi.mock("./upload/useStudioUploadLeaveGuard", async (importOriginal) => ({
+  ...(await importOriginal<
+    typeof import("./upload/useStudioUploadLeaveGuard")
+  >()),
+  useStudioUploadLeaveGuard: () => {},
+}));
+
 describe("StudioUploadPage steps", () => {
   it("holds the member on the release step until the release has a title", async () => {
     render(
@@ -20,6 +32,7 @@ describe("StudioUploadPage steps", () => {
         <StudioUploadPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(
       await screen.findByRole("button", { name: /save and continue/i }),
     );
@@ -38,6 +51,7 @@ describe("StudioUploadPage steps", () => {
         <StudioUploadPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.change(await screen.findByLabelText(/release title/i), {
       target: { value: "Cartas ao mar" },
     });
@@ -64,6 +78,7 @@ describe("StudioUploadPage steps", () => {
         <StudioUploadPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(
       await screen.findByRole("button", { name: /save and continue/i }),
     );
@@ -90,6 +105,7 @@ describe("StudioUploadPage steps", () => {
         <StudioUploadPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(
       await screen.findByRole("button", { name: /save and continue/i }),
     );
@@ -113,6 +129,7 @@ describe("StudioUploadPage steps", () => {
         <StudioUploadPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.change(await screen.findByLabelText(/release title/i), {
       target: { value: "Cartas ao mar" },
     });
@@ -142,6 +159,7 @@ describe("StudioUploadPage steps", () => {
         <StudioUploadPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       await screen.findByText("This release was taken down"),
     ).toBeInTheDocument();
@@ -157,6 +175,7 @@ describe("SplitsTable invite form", () => {
         <SplitsTable collaborators={[]} onAdd={() => {}} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
 
     fireEvent.click(
       await screen.findByRole("button", { name: /add collaborator/i }),
@@ -176,6 +195,7 @@ describe("SplitsTable invite form", () => {
         <SplitsTable collaborators={[]} onAdd={onAdd} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
 
     fireEvent.click(
       await screen.findByRole("button", { name: /add collaborator/i }),

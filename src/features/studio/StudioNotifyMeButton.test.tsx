@@ -3,7 +3,18 @@ import { QueryClient } from "@tanstack/react-query";
 import { describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../shared/api/client";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { StudioNotifyMeButton } from "./StudioNotifyMeButton";
+
+/** The toast host keeps its own empty status regions mounted, so this is
+ *  the one status region that has something to say. */
+function announcedStatus(): HTMLElement {
+  const announcing = screen
+    .getAllByRole("status")
+    .filter((region) => region.textContent !== "");
+  expect(announcing).toHaveLength(1);
+  return announcing[0]!;
+}
 
 const mutate = vi.fn();
 const showToast = vi.fn();
@@ -26,6 +37,7 @@ describe("StudioNotifyMeButton", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const toggle = await screen.findByRole("button", {
       name: "Notify me when Maré alta is out",
     });
@@ -45,12 +57,13 @@ describe("StudioNotifyMeButton", () => {
         <StudioNotifyMeButton releaseId="r1" releaseTitle="Maré alta" isSet />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const toggle = await screen.findByRole("button", {
       name: "Notify me when Maré alta is out",
     });
     expect(toggle).toHaveAttribute("aria-pressed", "true");
     expect(toggle).toHaveTextContent("Notify me");
-    expect(screen.getByRole("status")).toHaveTextContent("We'll tell you");
+    expect(announcedStatus()).toHaveTextContent("We'll tell you");
     fireEvent.click(toggle);
     expect(mutate).toHaveBeenCalledWith(
       { releaseId: "r1", isSet: false },
@@ -70,6 +83,7 @@ describe("StudioNotifyMeButton", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const toggle = await screen.findByRole("button", {
       name: "Notify me when Maré alta is out",
     });
@@ -91,6 +105,7 @@ describe("StudioNotifyMeButton", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const toggle = await screen.findByRole("button", {
       name: "Notify me when Maré alta is out",
     });
@@ -99,7 +114,7 @@ describe("StudioNotifyMeButton", () => {
       { onSuccess: (nowSet: boolean) => void; onError: () => void } | undefined;
     if (!options) throw new Error("mutate was not called with options");
     act(() => options.onSuccess(true));
-    expect(screen.getByRole("status")).toHaveTextContent("We'll tell you");
+    expect(announcedStatus()).toHaveTextContent("We'll tell you");
     expect(toggle).toHaveTextContent("Notify me");
     act(() => options.onError());
     expect(showToast).toHaveBeenCalledWith(
@@ -123,6 +138,7 @@ describe("StudioNotifyMeButton", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(
       await screen.findByRole("button", {
         name: "Notify me when Maré alta is out",

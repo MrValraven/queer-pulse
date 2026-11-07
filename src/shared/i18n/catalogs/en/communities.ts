@@ -181,6 +181,84 @@ export const communities: Catalog = {
   "common.pinnedToast": "Pinned to the top.",
   "common.unpinnedToast": "Unpinned.",
 
+  // ── Why a community write failed (communityErrors.ts) ─────────────────────
+  // Offline, signed out, restricted, inactive, rate limited and server faults
+  // read from shared:apiError.*; these are the causes that need the community.
+  "error.membersOnly":
+    "This community keeps its contents for members. Ask to join, then try again.",
+  "error.frozen":
+    "This community is paused while moderators review recent reports, so it isn't taking new posts, replies or members. It reopens when the review ends.",
+  "error.banned":
+    "You're barred from this community, so you can't do that here.",
+  "error.reapplyTooSoon":
+    "This community asked you to wait before applying again. Try once the wait is over.",
+  "error.requestPending":
+    "Your request to join is already with the moderators. They will answer it, so there is nothing more to send.",
+  "error.requestResolved":
+    "A moderator already answered that request. Refresh to see where it stands.",
+  "error.parentRequired":
+    "Join the main community first, then you can join this space.",
+  "error.rulesChanged":
+    "The house rules changed while you were reading. Read the new version, accept it and try again.",
+  "error.spaceTierTooOpen":
+    "A space can't be more open than its main community. Choose the same access level as the main community or a stricter one.",
+  "error.archived":
+    "This community is archived, so it is read-only and can't be changed.",
+  "error.parentPaused":
+    "This space is paused because its main community is paused. It can reopen once the main community does.",
+  "error.frozenByModeration":
+    "Moderation froze this community, so it can only reopen once its open reports are resolved.",
+  "error.notOnRoster":
+    "Only people on this community's roster can do that. Join it first, then try again.",
+  "error.alreadyMember":
+    "You're already a member of this community. Refresh the page to see it.",
+  "error.ownerCannotLeave":
+    "The owner can't leave or be removed. Transfer ownership to another member first.",
+  "error.ownerRoleFixed":
+    "The owner's role can't be changed. Transfer ownership first if you want someone else to lead.",
+  "error.ownRoleFixed":
+    "You can't change your own role here. Ask another owner or moderator.",
+  "error.alreadyOwner":
+    "That member already owns this community. Refresh to see the current owner.",
+  "error.houseAccountOwner":
+    "Ownership can't go to the QueerPulse house account. Pick a member.",
+  "error.cannotBeListed":
+    "A community can only be listed publicly while its access level is public or request, and a space can't be listed at all. Change the access level or leave it unlisted.",
+  "error.needsHigherRole":
+    "Your role here is not high enough for that change. An owner or co-owner can make it for you.",
+  "error.ownerOnly":
+    "Only this community's owner can do that. Ask them, or ask them to hand ownership to you.",
+  "error.needsStaffRole":
+    "Only this community's owner and moderators can do that, and your role here may have changed since you opened this page. Refresh to check.",
+  "error.announcementStaffOnly":
+    "Only the owner, co-owners and moderators can post an announcement. Post it as an ordinary post instead.",
+  "error.communityGone":
+    "This community isn't available any more. It may have been archived or removed.",
+  "error.postGone":
+    "That post or reply is gone, so there is nothing to change. Refresh to see what's there now.",
+  "error.memberGone":
+    "That member isn't on the roster any more. Refresh to see the current list.",
+  "error.inviteGone":
+    "That invitation is gone. It may have been withdrawn. Refresh to see your current invitations.",
+  "error.inviteAnswered":
+    "That invitation was already answered. Refresh to see where it stands.",
+  "error.offerAnswered":
+    "That offer was already answered. Refresh to see where it stands.",
+  "error.needsVouch":
+    "This community needs a vouch from a current member before this applicant can be admitted.",
+  "error.banGone":
+    "There is no ban on that member any more. Refresh to see the current list.",
+  "error.banRuleStale":
+    "That rule is no longer in this community's rules. Pick one from the current list and try again.",
+  "error.shelfFull":
+    "The resource shelf is full. Remove an entry before you add another.",
+  "error.ownerReviewDaily":
+    "You can file one owner review a day, and you have filed one already today. Try again tomorrow.",
+  "error.ownerReviewOpen":
+    "This community already has an open owner review, so there is nothing more to file.",
+  "error.noProfile":
+    "We can't tell which roster entry is yours because your profile hasn't loaded. Refresh the page and try again.",
+
   // ── Community detail page (hero + sidebar) ────────────────────────────────
   "detail.breadcrumb": "Communities & Collectives",
   // PRD-141. The `invite` tier refuses an uninvited join outright now
@@ -2258,8 +2336,7 @@ export const communities: Catalog = {
   "values.lib.kidsWelcome":
     "Children are welcome at anything marked family friendly.",
   "values.lib.chosenFamily": "Chosen family counts as family here.",
-  "values.lib.carersSupported":
-    "Carers get help to take part rather than working it out alone.",
+  "values.lib.carersSupported": "Carers get help to take part.",
   "values.lib.ageStated": "Every event says plainly who it is for by age.",
   "values.lib.adultsOnly":
     "Some of what we do is adults only, and it is always said clearly.",
@@ -2342,7 +2419,6 @@ export const communities: Catalog = {
   "spaces.mod.form.creating": "Creating…",
   "spaces.mod.form.cancel": "Cancel",
   "spaces.mod.created": "Space created",
-  "spaces.mod.createError": "Couldn't create the space. Try again.",
   "spaces.mod.notAllowed": "This community can't open spaces right now.",
   "spaces.mod.list.title": "Spaces in this community",
   "spaces.mod.list.empty": "No spaces yet.",

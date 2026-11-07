@@ -3,10 +3,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type Thread } from "./forum.data";
 import { useEditThreadTitle } from "./api/useForumMutations";
-import {
-  FUNDING_ERROR_MESSAGE_VALUES,
-  fundingAwareErrorKey,
-} from "./funding/fundingErrors";
+import { forumErrorText } from "./forumErrors";
 
 /**
  * Owns the thread title-edit flow — which thread is being edited, the
@@ -62,14 +59,7 @@ export function useForumThreadTitleEdit({
       { title },
       {
         onSuccess: () => showToast(t("forum:toast.editSaved"), "success"),
-        onError: (error) =>
-          showToast(
-            t(
-              fundingAwareErrorKey(error, "forum:toast.error"),
-              FUNDING_ERROR_MESSAGE_VALUES,
-            ),
-            "error",
-          ),
+        onError: (error) => showToast(forumErrorText(t, error), "error"),
       },
     );
   }

@@ -108,6 +108,8 @@ export function useGovernanceProposalVote() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   const mutation = useMutation({
+    // ProposalVoteRow names the cause itself and rolls the choice back.
+    meta: { silentError: true },
     mutationFn: ({
       proposalId,
       choice,
@@ -134,6 +136,8 @@ export function useGovernanceMotionCompose() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation({
+    // MotionComposeModal names the cause itself.
+    meta: { silentError: true },
     mutationFn: async (body: ComposeGovernanceMotionBody) => {
       if (demoMode) {
         await simulateDemoRoundTrip();
@@ -161,6 +165,8 @@ export function useGovernanceCosign() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   const mutation = useMutation({
+    // CosignRow names the cause itself and rolls the signature back.
+    meta: { silentError: true },
     mutationFn: async ({
       proposalId,
       isWithdrawing,

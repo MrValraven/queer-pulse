@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type {
   StudioReleaseView,
   StudioTrackRowView,
@@ -13,7 +14,8 @@ const playTracks = vi.hoisted(() =>
   vi.fn<(queue: StudioQueueTrack[], startId: string) => void>(),
 );
 
-vi.mock("./player/studioPlayerContext", () => ({
+vi.mock("./player/studioPlayerContext", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("./player/studioPlayerContext")>()),
   useStudioPlayer: () => ({
     isCurrentTrack: () => false,
     status: "idle",
@@ -22,7 +24,10 @@ vi.mock("./player/studioPlayerContext", () => ({
   }),
 }));
 
-vi.mock("./api/useStudioPlaybackPreferences", () => ({
+vi.mock("./api/useStudioPlaybackPreferences", async (importOriginal) => ({
+  ...(await importOriginal<
+    typeof import("./api/useStudioPlaybackPreferences")
+  >()),
   useStudioHideExplicit: () => false,
   useStudioPlaybackRow: () => undefined,
 }));
@@ -65,6 +70,7 @@ describe("StudioPreviewTracklist", () => {
         <StudioPreviewTracklist release={showRelease()} previewToken="tok" />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     await userEvent.click(screen.getByRole("button", { name: /Episode 1/ }));
     expect(playTracks).toHaveBeenCalledTimes(1);
     const [queue, startId] = playTracks.mock.calls[0] ?? [[], ""];

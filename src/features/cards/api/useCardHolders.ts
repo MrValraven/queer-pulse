@@ -52,6 +52,8 @@ export function useSetCardHolderStatus(slug: string | undefined) {
   const client = useQueryClient();
   const { demoMode } = useDemoMode();
   return useMutation({
+    // The caller toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: (input: {
       cardId: string;
       status: "active" | "suspended" | "revoked";

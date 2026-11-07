@@ -5,6 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import type { RosterIssueResult } from "./api/cards.api";
 import { useIssueAllCards } from "./api/useCardProgram";
+import { cardProgrammeErrorCopy } from "./cardActionErrors";
 
 /**
  * Bulk-issue cards across the roster, as its own deliberate act.
@@ -26,9 +27,10 @@ export function CardIssueAction({ slug }: { slug: string }) {
       const result = await issueAll.mutateAsync();
       setIsConfirming(false);
       showToast(summarize(result, t), "success");
-    } catch {
+    } catch (error) {
       setIsConfirming(false);
-      showToast(t("common:toast.saveFailed"), "error");
+      const cause = cardProgrammeErrorCopy(error);
+      showToast(t(cause.key, cause.values), "error");
     }
   };
 

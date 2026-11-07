@@ -7,6 +7,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { useUnfreezeCommunity } from "./api/useCommunityMutations";
 import { useCommunityFreezeDetail } from "./api/useCommunityFreezeDetail";
 import { frozenBodyKeyFor, frozenTitleKeyFor } from "./communityFrozenCopy";
+import { communityErrorText } from "./communityErrors";
 import styles from "./CommunityFrozenBanner.module.css";
 
 /**
@@ -95,8 +96,8 @@ export function CommunityFrozenBanner({
               { slug },
               {
                 onSuccess: () => setIsLifted(true),
-                onError: () =>
-                  showToast(t("communities:detail.frozen.errorToast"), "error"),
+                onError: (error) =>
+                  showToast(communityErrorText(t, error), "error"),
               },
             )
           }

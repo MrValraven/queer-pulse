@@ -495,23 +495,18 @@ describe("demo set list items, reorder and delete", () => {
     expect(posted).toEqual([]);
   });
 
-  it("PUT items writes and posts even when the list is unchanged", () => {
+  it("PUT items naming the stored scenes in the same order saves and posts nothing", () => {
+    // Mirrors the backend: VjSetlistService.setSetlistItems is a no-op here.
     const before = demoGetVjSetlists().items[0];
     currentNow = LATER_NOW;
     const after = demoSetVjSetlistItems(FRIDAY_SET_ID, {
       sceneIds: [WARM_UP_SCENE_ID, PEAK_SCENE_ID],
     });
-    expect(after.items.map((item) => item.id)).not.toEqual(
+    expect(after.items.map((item) => item.id)).toEqual(
       before?.items.map((item) => item.id),
     );
-    expect(after.updatedAt).toBe(new Date(LATER_NOW).toISOString());
-    expect(postedChanges()).toEqual([
-      expect.objectContaining({
-        kind: "setlist_items_changed",
-        setlistId: FRIDAY_SET_ID,
-        setlistIds: [FRIDAY_SET_ID],
-      }),
-    ]);
+    expect(after.updatedAt).toBe(before?.updatedAt);
+    expect(postedChanges()).toEqual([]);
   });
 
   it("reorder needs every id once and an unchanged order posts nothing", () => {

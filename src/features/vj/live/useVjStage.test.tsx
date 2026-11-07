@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   createVjStageState,
   VJ_CONTRACT_VERSION,
+  VJ_LIMITS,
   type VjAttachSuccess,
   type VjLibraryChange,
   type VjScreenStatus,
@@ -404,6 +405,8 @@ describe("useVjStage frames over a fake transport", () => {
       ok: false,
       code: "vj_overlay_text_too_long",
       errorKey: vjErrorKeyOf(ack),
+      // The refusal carries the limit its copy names.
+      errorValues: { max: VJ_LIMITS.overlayTextMax },
     });
     expect(outcome.ok === false && outcome.errorKey).toBe(
       "vj:error.socket.overlayTextTooLong",
@@ -607,7 +610,12 @@ describe("useVjStage library, status and lifetime over a fake transport", () => 
       code: "vj_stale_clip_sequence",
       errorKey: null,
     });
-    expect(result.current.state).toEqual(snapped);
+    // The ack's state is held for the frame of its revision; none comes here,
+    // so it applies once the shortest quantize lead passes.
+    expect(result.current.latestState).toEqual(snapped);
+    await waitFor(() => {
+      expect(result.current.state).toEqual(snapped);
+    });
   });
 
   it("reports the transport's refusal", async () => {

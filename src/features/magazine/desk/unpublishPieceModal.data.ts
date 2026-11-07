@@ -1,21 +1,25 @@
 /**
  * Static copy for `UnpublishPieceModal`, as i18n keys the modal resolves
- * through `t()`. The confirm button repeats the literal action the row menu
- * and the board card already name, so it reuses those labels.
+ * through `t()`: one entry per place the piece can go back to, in the order
+ * the radio lists them (Draft first, the default). The confirm button names
+ * the picked destination, so it follows the choice.
  */
 
 import type { UnpublishLandingStage } from "../api/piecePublish.api";
 
-export const UNPUBLISH_CONFIRM_COPY: Record<
-  UnpublishLandingStage,
-  { subKey: string; confirmKey: string }
-> = {
-  drafting: {
-    subKey: "magazine:desk.unpublishConfirm.subDraft",
+export const UNPUBLISH_DESTINATIONS: readonly {
+  stage: UnpublishLandingStage;
+  optionKey: string;
+  confirmKey: string;
+}[] = [
+  {
+    stage: "drafting",
+    optionKey: "magazine:desk.unpublishConfirm.toDraft",
     confirmKey: "magazine:desk.pieceRow.unpublishToDraft",
   },
-  in_review: {
-    subKey: "magazine:desk.unpublishConfirm.subReview",
+  {
+    stage: "in_review",
+    optionKey: "magazine:desk.unpublishConfirm.toReview",
     confirmKey: "magazine:desk.pieceRow.unpublishToReview",
   },
-};
+];

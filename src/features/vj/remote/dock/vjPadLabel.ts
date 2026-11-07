@@ -1,5 +1,5 @@
 /**
- * The short label a dock pad shows on its 64px face. Each pad reads its own
+ * The short label a dock pad shows on its face. Each pad reads its own
  * catalog key (`vj:effects.padLabel.<padId>`, and `vj:pads.allEffectsShort`
  * for the All effects pad); the full effect name stays the pad's accessible
  * name. A short key missing in the site language falls back to the full name

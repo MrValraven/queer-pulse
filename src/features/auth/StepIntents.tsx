@@ -15,6 +15,7 @@ import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useUpdateProfile } from "../members/api/useUpdateProfile";
 import { getProfile } from "../members/api/members.api";
+import { onboardingSaveErrorCopy } from "./authActionErrors";
 import { INTENTS } from "./onboardingPage.data";
 import { SkipLink, type StepProps } from "./OnboardingStepChrome";
 import styles from "./OnboardingPage.module.css";
@@ -134,8 +135,9 @@ function StepIntentsForm({
           : {}),
       });
       onNext();
-    } catch {
-      setSaveError(t("auth:onboarding.stepIntents.saveError"));
+    } catch (saveFailure) {
+      const cause = onboardingSaveErrorCopy(saveFailure);
+      setSaveError(t(cause.key, cause.values));
     }
   }
 

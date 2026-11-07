@@ -24,11 +24,8 @@ import type { ThreadListPage } from "./api/useForum";
 import { useDeleteThread } from "./api/useForumMutations";
 import type { PublishMode } from "./compose/composeThread.types";
 import { isFundingKind } from "./compose/composeFunding";
-import {
-  fundingErrorCode,
-  FUNDING_ERROR_MESSAGE_KEYS,
-  FUNDING_ERROR_MESSAGE_VALUES,
-} from "./funding/fundingErrors";
+import { fundingErrorCode } from "./funding/fundingErrors";
+import { forumErrorText } from "./forumErrors";
 import { previewFundingView } from "./funding/fundingPreview";
 import type { FundingErrorCode } from "./funding/funding.types";
 import {
@@ -107,7 +104,11 @@ export function useCreateThreadFlow({
     ForumThreadResponse,
     Error,
     CreateThreadDto
-  >({ mutationFn: (dto) => createThread(dto) });
+  >({
+    // `onError` below names the cause on the composer's own toast.
+    meta: { silentError: true },
+    mutationFn: (dto) => createThread(dto),
+  });
 
   const buildAuthor = useCallback(
     () => composeAuthor({ demoMode, user, youLabel: t("forum:author.you") }),
@@ -180,13 +181,7 @@ export function useCreateThreadFlow({
           setPublishStatus("error");
           const code = fundingErrorCode(error);
           setFundingError(code);
-          showToast(
-            t(
-              code ? FUNDING_ERROR_MESSAGE_KEYS[code] : "forum:toast.error",
-              FUNDING_ERROR_MESSAGE_VALUES,
-            ),
-            "error",
-          );
+          showToast(forumErrorText(t, error), "error");
         },
       });
     },
@@ -210,9 +205,24 @@ export function useCreateThreadFlow({
   const withdrawPublished = useCallback(() => {
     if (optimisticId !== null) removeThread(queryClient, optimisticId);
     const slug = published?.slug;
-    if (slug) deleteThread({ slug });
+    // The delete mutation is `silentError`: name why the withdraw failed
+    // (offline, already gone) while the composer comes back with the draft.
+    if (slug) {
+      deleteThread(
+        { slug },
+        { onError: (error) => showToast(forumErrorText(t, error), "error") },
+      );
+    }
     resetPublish();
-  }, [optimisticId, published, queryClient, deleteThread, resetPublish]);
+  }, [
+    optimisticId,
+    published,
+    queryClient,
+    deleteThread,
+    resetPublish,
+    showToast,
+    t,
+  ]);
 
   return {
     publishStatus,

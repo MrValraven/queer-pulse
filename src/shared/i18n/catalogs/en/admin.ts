@@ -707,7 +707,7 @@ export const admin: Catalog = {
   "members.header.titleLine1": "{total} people,",
   "members.header.titleLine2": "each one <em>vouched for</em>.",
   "members.header.sub":
-    "These aren't rows in a table. They're members someone trusted enough to bring in. Pronouns and chosen names are the only names shown here. {count} people are waiting to be welcomed in.",
+    "These are members someone trusted enough to bring in. Pronouns and chosen names are the only names shown here. {count} people are waiting to be welcomed in.",
   "members.header.titleLine1NoCount": "The people here,",
   "members.header.subNoCount":
     "Each row is a member someone trusted enough to bring in. Pronouns and chosen names are the only names shown here.",
@@ -8865,6 +8865,7 @@ export const admin: Catalog = {
     "This update is gone, nothing left to remove",
   "moderation.personaPost.loadFailed": "We couldn't load the reported update",
   "moderation.personaPost.retry": "Load the update again",
+  "moderation.personaPost.removeFailed": "Couldn't remove this update",
   "moderation.personaPost.photoAlt": "Photo in the update by {persona}",
   "moderation.personaPost.linkLabel": "Link",
   "moderation.category.copyright": "Copyright",
@@ -9169,7 +9170,7 @@ export const admin: Catalog = {
     "This lands in their official QueerPulse thread, pinned in their inbox. It doesn't buzz their phone.",
   "listingDrafts.message.label": "Your message",
   "listingDrafts.message.helper":
-    "We've started it for you. Make it yours, and keep it an offer, not a nudge.",
+    "We've started it for you. Make it yours, and keep it an offer.",
   "listingDrafts.message.template":
     "Hi {firstName}! We noticed you started listing {name} on QueerPulse. If something got in the way, or you'd like a hand finishing it, just reply here and we'll help. No rush at all.",
   "listingDrafts.message.templateUntitled":

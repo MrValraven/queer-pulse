@@ -11,6 +11,7 @@ import {
   renderWithPlayer,
   trackFixture,
 } from "./studioPlayerTestHarness";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 /** What the track detail hook answers, and every id it was asked for. */
 const trackRead = vi.hoisted(() => ({
@@ -54,29 +55,33 @@ describe("Now playing credits", () => {
     trackRead.calls = [];
   });
 
-  it("keeps the pane's full list with its loading and empty lines", () => {
+  it("keeps the pane's full list with its loading and empty lines", async () => {
     trackRead.track = trackFixture({ credits: FIVE_CREDITS });
     const { unmount } = renderWithPlayer(
       <StudioNowPlayingCredits trackId="t1" />,
     );
+    await awaitCatalog("studio");
     expect(creditRoles()).toHaveLength(5);
     unmount();
 
     trackRead.track = null;
     trackRead.isLoading = true;
     const loading = renderWithPlayer(<StudioNowPlayingCredits trackId="t1" />);
+    await awaitCatalog("studio");
     expect(screen.getByText("Loading the credits")).toBeTruthy();
     loading.unmount();
 
     trackRead.isLoading = false;
     trackRead.track = trackFixture({ credits: [] });
     renderWithPlayer(<StudioNowPlayingCredits trackId="t1" />);
+    await awaitCatalog("studio");
     expect(screen.getByText("No credits for this track yet")).toBeTruthy();
   });
 
-  it("shows the first three credits in the side panel and expands in place", () => {
+  it("shows the first three credits in the side panel and expands in place", async () => {
     trackRead.track = trackFixture({ credits: FIVE_CREDITS });
     renderWithPlayer(<StudioSidePanelCredits item={queueItem()} />);
+    await awaitCatalog("studio");
     const heading = screen.getByRole("heading", { name: "Credits" });
     expect(creditRoles()).toEqual(["Vocals", "Producer", "Mixing"]);
 

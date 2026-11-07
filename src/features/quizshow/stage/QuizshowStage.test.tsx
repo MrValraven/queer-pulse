@@ -24,6 +24,7 @@ import { QuizshowPodium } from "./QuizshowPodium";
 import { QuizshowRoundCard } from "./QuizshowRoundCard";
 import { optionLetter, pickQuizshowText } from "./quizshowText";
 import { useQuizshowCountdown } from "./useQuizshowCountdown";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 
 vi.mock("../../../shared/components/ui/RollingNumber", () => ({
   RollingNumber: (props: { value: string; revealFrom?: { value: string } }) => (
@@ -92,6 +93,23 @@ function renderDistribution(reveal: QuizshowReveal) {
   );
 }
 
+/** The component's own status region. TestProviders also mounts the toast
+ *  regions and the studio player announcer, which carry the status role. */
+function componentStatus(): HTMLElement {
+  const [status, ...otherStatuses] = screen
+    .getAllByRole("status")
+    .filter(
+      (element) =>
+        element.closest("[data-toast-region]") === null &&
+        element.closest("[data-studio-player-announcer]") === null,
+    );
+  expect(otherStatuses).toHaveLength(0);
+  if (status === undefined) {
+    throw new Error("The component rendered no status region of its own");
+  }
+  return status;
+}
+
 describe("quizshow stage text and tiles", () => {
   it("falls back to the other language when a text is blank", () => {
     expect(pickQuizshowText({ en: "Hello", pt: "Ola" }, "pt")).toBe("Ola");
@@ -101,7 +119,7 @@ describe("quizshow stage text and tiles", () => {
     expect(optionLetter(5)).toBe("F");
   });
 
-  it("names an answer tile by letter, shape and text", () => {
+  it("names an answer tile by letter, shape and text", async () => {
     const onSelect = vi.fn();
     renderStage(
       <QuizshowAnswerTile
@@ -114,6 +132,7 @@ describe("quizshow stage text and tiles", () => {
         ariaLabel="Answer A, Triangle: Rainbow"
       />,
     );
+    await awaitCatalog("quizshow");
     const tile = screen.getByRole("button", {
       name: "Answer A, Triangle: Rainbow",
     });
@@ -123,7 +142,7 @@ describe("quizshow stage text and tiles", () => {
     expect(onSelect).toHaveBeenCalledTimes(1);
   });
 
-  it("keeps a disabled tile focusable and silent", () => {
+  it("keeps a disabled tile focusable and silent", async () => {
     const onSelect = vi.fn();
     renderStage(
       <QuizshowAnswerTile
@@ -137,6 +156,7 @@ describe("quizshow stage text and tiles", () => {
         ariaLabel="Answer C, Circle: Pink"
       />,
     );
+    await awaitCatalog("quizshow");
     const tile = screen.getByRole("button", { name: /Answer C/ });
     expect(tile).toHaveAttribute("aria-disabled", "true");
     expect(tile).not.toBeDisabled();
@@ -144,7 +164,7 @@ describe("quizshow stage text and tiles", () => {
     expect(onSelect).not.toHaveBeenCalled();
   });
 
-  it("marks only the correct tile with a check beside its text", () => {
+  it("marks only the correct tile with a check beside its text", async () => {
     renderStage(
       <>
         <QuizshowAnswerTile
@@ -165,6 +185,7 @@ describe("quizshow stage text and tiles", () => {
         />
       </>,
     );
+    await awaitCatalog("quizshow");
     const correctTile = screen.getByRole("group", { name: /Correct answer/ });
     const dimmedTile = screen.getByRole("group", { name: /Harlem/ });
     // The shape draws one icon; the correct tile adds the check after the text.
@@ -179,13 +200,14 @@ describe("quizshow stage text and tiles", () => {
 });
 
 describe("quizshow stage distribution", () => {
-  it("draws the distribution for every kind", () => {
+  it("draws the distribution for every kind", async () => {
     const { unmount } = renderDistribution(
       revealWith(
         { kind: "options", counts: [3, 1] },
         { type: "multiple_choice", correctIndex: 0 },
       ),
     );
+    await awaitCatalog("quizshow");
     expect(screen.getAllByTestId("rolling-number")).toHaveLength(2);
     expect(screen.getByText("Correct answer")).toBeInTheDocument();
     unmount();
@@ -196,6 +218,7 @@ describe("quizshow stage distribution", () => {
         { type: "true_false", isTrue: true },
       ),
     );
+    await awaitCatalog("quizshow");
     expect(screen.getByText("True")).toBeInTheDocument();
     expect(screen.getByText("False")).toBeInTheDocument();
     trueFalse.unmount();
@@ -203,6 +226,7 @@ describe("quizshow stage distribution", () => {
     const typed = renderDistribution(
       revealWith({ kind: "typed", correctCount: 3, incorrectCount: 2 }),
     );
+    await awaitCatalog("quizshow");
     expect(screen.getByText("3 got it right")).toBeInTheDocument();
     expect(screen.getByText("2 missed it")).toBeInTheDocument();
     typed.unmount();
@@ -215,6 +239,7 @@ describe("quizshow stage distribution", () => {
         noneCount: 0,
       }),
     );
+    await awaitCatalog("quizshow");
     expect(screen.getByText("2 in the right order")).toBeInTheDocument();
     expect(screen.getByText("1 partly right")).toBeInTheDocument();
     expect(screen.getByText("0 with nothing in place")).toBeInTheDocument();
@@ -228,7 +253,9 @@ describe("quizshow stage distribution", () => {
         withinBandCount: 2,
       }),
     );
-    expect(screen.getByText("Closest guess: 1,969")).toBeInTheDocument();
+    await awaitCatalog("quizshow");
+    // A number under 10,000 prints bare, the way people write a year.
+    expect(screen.getByText("Closest guess: 1969")).toBeInTheDocument();
     expect(screen.getByText("Closest: Sam, Ro")).toBeInTheDocument();
     expect(screen.getByText("2 within 10%")).toBeInTheDocument();
     closest.unmount();
@@ -259,6 +286,7 @@ describe("quizshow stage distribution", () => {
         ],
       }),
     );
+    await awaitCatalog("quizshow");
     expect(screen.getByText("A very good caption")).toBeInTheDocument();
     expect(screen.getByText("by Sam")).toBeInTheDocument();
     expect(screen.getByText("1 vote")).toBeInTheDocument();
@@ -311,6 +339,7 @@ describe("quizshow stage party entries", () => {
 
   it("a hidden entry leaves the distribution", async () => {
     const { rerender } = render(distributionTree(VOTE_ENTRIES));
+    await awaitCatalog("quizshow");
     expect(screen.getAllByRole("listitem")).toHaveLength(2);
     expect(screen.getByText("Hosts' favourite")).toBeInTheDocument();
     rerender(
@@ -343,7 +372,7 @@ describe("quizshow stage party entries", () => {
       );
   }
 
-  it("lists the truth first and then the entries by votes", () => {
+  it("lists the truth first and then the entries by votes", async () => {
     render(
       distributionTree({
         kind: "votes",
@@ -362,6 +391,7 @@ describe("quizshow stage party entries", () => {
         ],
       }),
     );
+    await awaitCatalog("quizshow");
     expect(entryTextsInOrder()).toEqual([
       "the real answer",
       "the second one lol",
@@ -369,7 +399,7 @@ describe("quizshow stage party entries", () => {
     ]);
   });
 
-  it("caps the entries and counts the rest in a more line", () => {
+  it("caps the entries and counts the rest in a more line", async () => {
     const manyEntries = Array.from({ length: 10 }, (_unused, entryIndex) => ({
       optionId: `vote-${entryIndex}`,
       answerId: `answer-${entryIndex}`,
@@ -395,6 +425,7 @@ describe("quizshow stage party entries", () => {
         true,
       ),
     );
+    await awaitCatalog("quizshow");
     // 8 entries plus the "+2 more" line; the two with the fewest votes stay off the screen.
     expect(screen.getAllByRole("listitem")).toHaveLength(9);
     expect(screen.getByText("+2 more")).toBeInTheDocument();
@@ -403,7 +434,7 @@ describe("quizshow stage party entries", () => {
     expect(screen.queryByText("caption number 0")).toBeNull();
   });
 
-  it("the cap keeps the hosts' favourite", () => {
+  it("the cap keeps the hosts' favourite", async () => {
     const lieEntries = Array.from({ length: 10 }, (_unused, entryIndex) => ({
       optionId: `vote-${entryIndex}`,
       answerId: `answer-${entryIndex}`,
@@ -439,6 +470,7 @@ describe("quizshow stage party entries", () => {
         true,
       ),
     );
+    await awaitCatalog("quizshow");
     // Truth, the six lies with the most votes, then the favourite in the last slot.
     expect(entryTextsInOrder()).toEqual([
       "the real answer",
@@ -493,11 +525,12 @@ describe("quizshow stage pause", () => {
       .transform;
   }
 
-  it("the countdown bar holds its place while paused", () => {
+  it("the countdown bar holds its place while paused", async () => {
     vi.useFakeTimers({ toFake: ["setInterval", "clearInterval", "Date"] });
     vi.setSystemTime(BAR_START_AT);
     try {
       const { rerender } = render(barTree(barCursor({})));
+      await awaitCatalog("quizshow");
       act(() => {
         vi.advanceTimersByTime(5_000);
       });
@@ -521,7 +554,7 @@ describe("quizshow stage pause", () => {
       expect(barFillTransform()).toBe("scaleX(0.75)");
       // The shared paused note says it; the bar itself stays quiet.
       expect(screen.queryByText("Paused")).toBeNull();
-      expect(screen.getByRole("status")).toBeEmptyDOMElement();
+      expect(componentStatus()).toBeEmptyDOMElement();
 
       rerender(
         barTree(
@@ -565,6 +598,7 @@ describe("quizshow stage pause", () => {
           })}
         />,
       );
+      await awaitCatalog("quizshow");
       expect(screen.getByText("Paused")).toBeInTheDocument();
       unmount();
     }
@@ -579,6 +613,7 @@ describe("quizshow stage pause", () => {
     const { rerender } = render(
       stageTree(<PausedNoteFromCursor cursor={restartPausedCursor} />, true),
     );
+    await awaitCatalog("quizshow");
     expect(screen.getByText("Paused")).toBeInTheDocument();
 
     rerender(stageTree(<PausedNoteFromCursor cursor={barCursor({})} />, true));
@@ -587,7 +622,7 @@ describe("quizshow stage pause", () => {
 });
 
 describe("quizshow stage standings", () => {
-  it("rolls each leaderboard score up from its previous score", () => {
+  it("rolls each leaderboard score up from its previous score", async () => {
     const entries: QuizshowLeaderboardEntry[] = [
       {
         rank: 1,
@@ -620,6 +655,7 @@ describe("quizshow stage standings", () => {
         size="phone"
       />,
     );
+    await awaitCatalog("quizshow");
     const rolling = screen.getAllByTestId("rolling-number");
     expect(rolling.map((node) => node.dataset.value)).toEqual(["1,500", "900"]);
     expect(rolling.map((node) => node.dataset.revealFrom)).toEqual([
@@ -673,21 +709,23 @@ describe("quizshow stage standings", () => {
       return delays;
     }
 
-    it("reveals the podium third, second, first", () => {
+    it("reveals the podium third, second, first", async () => {
       renderStage(<QuizshowPodium entries={entries} size="screen" />);
+      await awaitCatalog("quizshow");
       expect(revealDelays()).toEqual({ "3": "0", "2": "0.8", "1": "1.6" });
       expect(
         screen.getAllByRole("listitem").map((item) => item.dataset.place),
       ).toEqual(["1", "2", "3"]);
     });
 
-    it("shows all three at once with reduced motion", () => {
+    it("shows all three at once with reduced motion", async () => {
       renderStage(<QuizshowPodium entries={entries} size="screen" />, true);
+      await awaitCatalog("quizshow");
       expect(revealDelays()).toEqual({ "3": "0", "2": "0", "1": "0" });
     });
   });
 
-  it("shows the round's content label and joker note", () => {
+  it("shows the round's content label and joker note", async () => {
     const round: QuizshowRoundCardData = {
       roundIndex: 1,
       kind: "quiz",
@@ -705,6 +743,7 @@ describe("quizshow stage standings", () => {
         size="screen"
       />,
     );
+    await awaitCatalog("quizshow");
     expect(screen.getByText("Round 2 of 3")).toBeInTheDocument();
     expect(screen.getByText("Spicy round")).toBeInTheDocument();
     expect(screen.getByText("Spicy")).toBeInTheDocument();
@@ -716,22 +755,21 @@ describe("quizshow stage standings", () => {
     const { rerender } = renderStage(
       <QuizshowConnectionBanner status="attached" />,
     );
-    expect(screen.getByRole("status")).toBeEmptyDOMElement();
+    await awaitCatalog("quizshow");
+    expect(componentStatus()).toBeEmptyDOMElement();
     rerender(
       <TestProviders>
         <QuizshowConnectionBanner status="reconnecting" />
       </TestProviders>,
     );
-    expect(await screen.findByRole("status")).toHaveTextContent(
-      "Reconnecting to the game",
+    await waitFor(() =>
+      expect(componentStatus()).toHaveTextContent("Reconnecting to the game"),
     );
     rerender(
       <TestProviders>
         <QuizshowConnectionBanner status="attached" />
       </TestProviders>,
     );
-    await waitFor(() =>
-      expect(screen.getByRole("status")).toBeEmptyDOMElement(),
-    );
+    await waitFor(() => expect(componentStatus()).toBeEmptyDOMElement());
   });
 });

@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { QueryClient } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { DEMO_DEFAULT_RELEASE_ID } from "./api/studioDemoMe.data";
 import { resetDemoPurchases } from "./api/studioDemoPurchaseStore";
 import type { StudioWallEntryView } from "./api/studioPurchases.adapters";
@@ -31,12 +32,14 @@ vi.mock("./api/useStudioPurchaseLists", async (importOriginal) => {
 /** One client per test, so a test never reads another's cache. */
 let testQueryClient = new QueryClient();
 
-function renderWall(releaseId: string, releaseTitle: string) {
-  return render(
+async function renderWall(releaseId: string, releaseTitle: string) {
+  const view = render(
     <TestProviders queryClient={testQueryClient}>
       <StudioReleaseWall releaseId={releaseId} releaseTitle={releaseTitle} />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
+  return view;
 }
 
 function entryOf(index: number): StudioWallEntryView {
@@ -88,7 +91,7 @@ beforeEach(() => {
 
 describe("StudioReleaseWall", () => {
   it("shows the first 24 supporters, newest first, linked where they can be", async () => {
-    renderWall(DEMO_DEFAULT_RELEASE_ID, "Cidade dos santos");
+    await renderWall(DEMO_DEFAULT_RELEASE_ID, "Cidade dos santos");
     expect(
       await screen.findByRole("heading", { name: "Supported by" }),
     ).toBeInTheDocument();
@@ -103,7 +106,7 @@ describe("StudioReleaseWall", () => {
 
   it("expands in place to every supporter on Show all", async () => {
     const user = userEvent.setup();
-    renderWall(DEMO_DEFAULT_RELEASE_ID, "Cidade dos santos");
+    await renderWall(DEMO_DEFAULT_RELEASE_ID, "Cidade dos santos");
     const showAll = await screen.findByRole("button", {
       name: "Show all supporters",
     });
@@ -127,10 +130,10 @@ describe("StudioReleaseWall", () => {
     );
   });
 
-  it("hides the whole section when nobody is on the wall", () => {
+  it("hides the whole section when nobody is on the wall", async () => {
     mocks.isMocked = true;
     mocks.wall = pagerOf({ items: [] });
-    renderWall("release-1", "Quiet release");
+    await renderWall("release-1", "Quiet release");
     expect(screen.queryByRole("heading", { name: "Supported by" })).toBeNull();
     expect(screen.queryByRole("list")).toBeNull();
   });
@@ -146,12 +149,15 @@ describe("StudioReleaseWall", () => {
       fetchNextPageError: new TypeError("Failed to fetch"),
       fetchNextPage,
     });
-    renderWall("release-1", "Long release");
+    await renderWall("release-1", "Long release");
     const list = await screen.findByRole("list", {
       name: "Members who bought Long release",
     });
     expect(within(list).getAllByRole("listitem")).toHaveLength(24);
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    // The wall's own alert, inside its section: the toast deck keeps an empty
+    // alert region mounted outside it.
+    const wall = screen.getByRole("region", { name: "Supported by" });
+    expect(await within(wall).findByRole("alert")).toHaveTextContent(
       "We couldn't load more supporters. We couldn't reach Studio",
     );
     await user.click(

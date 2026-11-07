@@ -683,7 +683,7 @@ export const resources: Catalog = {
     "A hub for trans and non-binary people: healthcare navigation, legal and admin guides, and a way to find peer support in the Forum.",
 
   "transHub.hero.eyebrow": "Trans & Non-Binary Hub",
-  "transHub.hero.title": "A dedicated space, <em>not an afterthought.</em>",
+  "transHub.hero.title": "A dedicated space, <em>built with care.</em>",
   "transHub.hero.lead":
     "Healthcare navigation, legal guides, and peer support, written for trans and non-binary people. You don't have to figure this out alone.",
   "transHub.hero.anchor.healthcare": "Healthcare",
@@ -764,7 +764,7 @@ export const resources: Catalog = {
   "transHealthcare.hero.sub":
     "How to access gender-affirming healthcare in Portugal, through the SNS or privately. Legal name change. What to bring, who to call, what to expect.",
   "transHealthcare.hero.disclaimer":
-    "This guide reflects the system as of June 2026. Always verify current waiting times and procedures with ILGA Portugal or your GP. This is community knowledge, not legal or medical advice.",
+    "This guide reflects the system as of June 2026. Always verify current waiting times and procedures with ILGA Portugal or your GP. This is community knowledge and does not replace legal or medical advice.",
 
   "transHealthcare.path.hrtSns.label": "HRT via SNS",
   "transHealthcare.path.hrtPrivate.label": "HRT privately",
@@ -1218,14 +1218,14 @@ export const resources: Catalog = {
 
   "sober.recovery.title": "If you're navigating <em>recovery.</em>",
   "sober.recovery.body":
-    "This isn't only about lifestyle preference. If you're in recovery, from alcohol, substances, or anything else, there are people here who understand. No advice unless you ask for it.",
+    "This goes beyond lifestyle preference. If you're in recovery, from alcohol, substances, or anything else, there are people here who understand. No advice unless you ask for it.",
   "sober.recovery.peerGroup.title": "Sober & Queer peer group",
   "sober.recovery.peerGroup.desc":
     "A private, moderated space within QueerPulse for people in recovery. Weekly online meeting, text channel, and occasional in-person events. No particular programme, and all approaches welcome.",
   "sober.recovery.peerGroup.linkLabel": "Join the group",
   "sober.recovery.oneToOne.title": "One-to-one: talk to a peer",
   "sober.recovery.oneToOne.desc":
-    "Request a conversation with a community member who has offered to talk to people navigating sobriety. Not counsellors, just someone who's been through something similar.",
+    "Request a conversation with a community member who has offered to talk to people navigating sobriety. On the other end is someone who's been through something similar.",
   "sober.recovery.oneToOne.linkLabel": "Find a peer",
   "sober.recovery.therapists.title": "Queer-affirming therapists",
   "sober.recovery.therapists.desc":
@@ -1497,7 +1497,7 @@ export const resources: Catalog = {
   "microGrants.criteria.update":
     "You are willing to share a brief public update on what happened",
   "microGrants.criteria.impact":
-    "The money will genuinely change what is possible, rather than only make it faster",
+    "The money will genuinely change what is possible, beyond making it faster",
   "microGrants.round.applyCta": "Apply for this round",
   "microGrants.live.applyTitle": "Apply to the <em>community fund</em>",
   "microGrants.live.applyBody":
@@ -1684,7 +1684,7 @@ export const resources: Catalog = {
   "peerSupport.hero.anchor.how": "How it works",
   "peerSupport.what.title": "What peer support <em>is</em>",
   "peerSupport.what.p1":
-    "Peer support is not therapy and it is not advice. It is sitting with someone who has been where you are and does not need it explained. No clinical notes, no diagnosis, no goal you have to reach by the end.",
+    "Peer support is sitting with someone who has been where you are and does not need it explained. No clinical notes, no diagnosis, no goal you have to reach by the end.",
   "peerSupport.what.p2":
     "On QueerPulse, peer support happens between members: in the Forum, where people share what worked for them, and in direct messages with members you are connected to. You choose how much to share, and you can step back whenever you like.",
   "peerSupport.how.title": "How it <em>works</em>",
@@ -2476,7 +2476,7 @@ export const resources: Catalog = {
   "spoonTheory.what.p1":
     "Spoon theory is a simple way to talk about limited energy. You start the day with a set number of spoons, and every task, from showering to commuting to a hard conversation, costs one or more. When they are gone, they are gone, and tomorrow does not always refill them.",
   "spoonTheory.what.p2":
-    "It is not a metaphor for being tired. It is a way for people with chronic illness, disability, and chronic pain to make an invisible limit visible, to themselves and to each other, without writing an essay about it.",
+    "It is a way for people with chronic illness, disability, and chronic pain to make an invisible limit visible, to themselves and to each other, without writing an essay about it.",
 
   "spoonTheory.uses.title": "How we <em>use it</em>",
   "spoonTheory.use1.title": "Accessibility details and online events",
@@ -2620,7 +2620,7 @@ export const resources: Catalog = {
   "intersectionality.commitment3.title": "Economic accessibility",
   "intersectionality.commitment3.text":
     "QueerPulse itself takes no payment from members. Each event host can mark an event as free, pay what you can, or a fixed price.",
-  "intersectionality.commitment4.title": "Not a monolith",
+  "intersectionality.commitment4.title": "Many voices",
   "intersectionality.commitment4.text":
     "QueerPulse doesn't speak with one voice on political questions. The community contains multitudes. The forum is a place to have the arguments, and the community works them through itself.",
 
@@ -2642,7 +2642,7 @@ export const resources: Catalog = {
 
   "intersectionality.outro.title": "All of you <em>belongs here.</em>",
   "intersectionality.outro.sub":
-    "Not the parts that are easiest to hold. All of it.",
+    "Every part of you, including the parts that are hardest to hold.",
   "intersectionality.outro.findCta": "Find your community",
   "intersectionality.outro.forumCta": "Forum",
 

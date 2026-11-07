@@ -146,7 +146,7 @@ export function ConnectModal({
       const view = describeConnectError(err);
       if (view.mode === "incoming") setRefusedAsIncoming(true);
       else if (view.mode === "panel") setNotice(view);
-      else setError(t(view.messageKey));
+      else setError(t(view.messageKey, view.messageValues));
       setPhase("idle");
     }
   }

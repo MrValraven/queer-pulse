@@ -1,22 +1,40 @@
 import { http, HttpResponse } from "msw";
-import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 import { ApiError } from "../../../shared/api/client";
-import { API_V1 } from "../../../test/msw/handlers";
+import { API, API_V1 } from "../../../test/msw/handlers";
 import { server } from "../../../test/msw/server";
 import {
   clampSaveBody,
-  creatorDraftErrorCode,
   creatorDraftPath,
   creatorDraftPayloadBytes,
-  getCreatorDraft,
   isCreatorDraftFeatureOff,
   readCreatorDraftConflict,
-  saveCreatorDraft,
 } from "./creatorDrafts.api";
 
 beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
-afterEach(() => server.resetHandlers());
+afterEach(() => {
+  server.resetHandlers();
+  vi.unstubAllEnvs();
+});
 afterAll(() => server.close());
+
+/** The wire calls under the live API origin. The suite config runs in demo
+ *  mode with an empty `VITE_API_URL`, so the client would send relative paths
+ *  that the `API_V1` handlers never match; a fresh module graph with the origin
+ *  stubbed sends them to `http://api.test`. */
+async function loadLiveApi() {
+  vi.resetModules();
+  vi.stubEnv("VITE_API_URL", API);
+  return import("./creatorDrafts.api");
+}
 
 describe("creator draft wire calls", () => {
   it("builds the three slot paths with the listing ref encoded", () => {
@@ -32,6 +50,7 @@ describe("creator draft wire calls", () => {
   });
 
   it("reads an empty slot as null and a filled slot as its draft", async () => {
+    const { getCreatorDraft } = await loadLiveApi();
     server.use(
       http.get(`${API_V1}/me/creator-drafts/event`, () =>
         HttpResponse.json({ draft: null }),
@@ -57,6 +76,11 @@ describe("creator draft wire calls", () => {
   });
 
   it("reads the revision and saved time out of a 409", async () => {
+    const {
+      creatorDraftErrorCode: liveErrorCode,
+      readCreatorDraftConflict: liveReadConflict,
+      saveCreatorDraft,
+    } = await loadLiveApi();
     server.use(
       http.put(`${API_V1}/me/creator-drafts/community`, () =>
         HttpResponse.json(
@@ -79,13 +103,11 @@ describe("creator draft wire calls", () => {
         missing: null,
       },
     ).catch((caught: unknown) => caught);
-    expect(readCreatorDraftConflict(error)).toEqual({
+    expect(liveReadConflict(error)).toEqual({
       revision: 7,
       savedAt: "2026-10-19T10:05:00.000Z",
     });
-    expect(creatorDraftErrorCode(error)).toBe(
-      "creator_draft_revision_conflict",
-    );
+    expect(liveErrorCode(error)).toBe("creator_draft_revision_conflict");
   });
 
   it("reads a 409 on an emptied slot as a null revision", () => {

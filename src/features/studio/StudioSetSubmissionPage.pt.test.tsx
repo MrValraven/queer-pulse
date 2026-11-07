@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { getDefaultNormalizer, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { StudioSetSubmissionPage } from "./StudioSetSubmissionPage";
@@ -27,7 +27,10 @@ describe("StudioSetSubmissionPage in Portuguese", () => {
       await screen.findByText(/sonoridade −9\.2 LUFS/),
     ).toBeInTheDocument();
     expect(
-      await screen.findByDisplayValue(/12:18 {2}\(edit pirata desconhecido\)/),
+      // Whitespace kept as typed, so the two spaces after the time count.
+      await screen.findByDisplayValue(/12:18 {2}\(edit pirata desconhecido\)/, {
+        normalizer: getDefaultNormalizer({ collapseWhitespace: false }),
+      }),
     ).toBeInTheDocument();
 
     expect(screen.queryByText("unknown bootleg edit")).toBeNull();

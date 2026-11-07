@@ -4,7 +4,7 @@ import { Avatar, Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
-import { isAccountRestricted, reasonFor } from "../../shared/api/errorMessage";
+import { isAccountRestricted } from "../../shared/api/errorMessage";
 import { initialsFromName } from "../../shared/lib/initials";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { useSubprofileMembers } from "./api/useSubprofileMembers";
@@ -12,6 +12,7 @@ import { useSubprofileInvites } from "./api/useSubprofileInvites";
 import { InviteCoOwnerModal } from "./InviteCoOwnerModal";
 import { LeavePersonaModal } from "./LeavePersonaModal";
 import { SubprofileOwnersList } from "./SubprofileOwnersList";
+import { reasonOrCauseMessage } from "./personaActionErrors";
 import styles from "./SubprofileOwnersPanel.module.css";
 
 /**
@@ -75,7 +76,7 @@ export function SubprofileOwnersPanel({
       showToast(
         isAccountRestricted(error)
           ? t("shared:apiError.accountRestricted")
-          : (reasonFor(error) ?? t("subprofiles:owners.toastRevokeError")),
+          : reasonOrCauseMessage(error, t),
         "error",
       );
     } finally {

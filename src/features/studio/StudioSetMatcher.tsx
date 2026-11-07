@@ -64,7 +64,10 @@ export function StudioSetMatcher({
       <div className={s.secLbl}>
         {t("studio:setSubmission.matcher.tracklistLabel")}
       </div>
+      {/* Keyed by its text: the paste is built before the catalog chunk
+          arrives, and a textarea reads its default value only on mount. */}
       <textarea
+        key={paste}
         className={s.paste}
         aria-label={t("studio:setSubmission.matcher.tracklistLabel")}
         defaultValue={paste}

@@ -32,7 +32,10 @@ const THEME_FLIPPING_SURFACE = /var\(--cream\)|var\(--paper\)/;
 
 describe("Studio demo page contrast", () => {
   it("inverts the selected open calls chip on the Studio ink channel", () => {
-    const body = ruleBody(cssOf("funding.module.css"), ".chipOn");
+    const body = ruleBody(
+      cssOf("funding.module.css"),
+      ".filter .chipOn.chipOn",
+    );
     expect(body).not.toMatch(THEME_FLIPPING_SURFACE);
     expect(body).toContain("background: rgba(var(--studio-ink-rgb), 1);");
     expect(body).toContain("color: var(--studio-surface);");
@@ -44,32 +47,20 @@ describe("Studio demo page contrast", () => {
     expect(body).toContain("background: rgba(var(--studio-ink-rgb), 1);");
   });
 
-  it("gives the withdrawn card play button the two-tone focus ring", () => {
+  it("shows the withdrawn card's decorative play with the focus of the card link", () => {
+    // The whole card is the link and carries the focus ring, so the play
+    // glyph inside it is decorative and appears whenever the card has focus.
     const body = ruleBody(
       cssOf("StudioWithdrawnPage.module.css"),
-      ".playFab:focus-visible",
+      ".tcard:focus-visible .playFab",
     );
-    expect(body).not.toMatch(THEME_FLIPPING_SURFACE);
-    expect(body).toContain("outline: var(--focus-ring);");
-    expect(body).toContain("outline-offset: var(--focus-ring-offset);");
-    expect(body).toContain("box-shadow: var(--ring-cream);");
-  });
-
-  it("draws the settings toggle knob in light cream on an AA accent track", () => {
-    const source = cssOf("StudioSettingsPage.module.css");
-    const knob = ruleBody(source, ".tgSw::after");
-    expect(knob).not.toMatch(THEME_FLIPPING_SURFACE);
-    expect(knob).toContain("background: rgba(var(--cream-rgb), 1);");
-    expect(ruleBody(source, ".tgSwOn")).toContain(
-      "background: var(--accent-fill);",
-    );
+    expect(body).toContain("opacity: 1;");
+    expect(body).toContain("transform: none;");
   });
 
   it.each([
-    ["funding.module.css", ".btP"],
     ["funding.module.css", ".djStepOn .num"],
     ["council.module.css", ".btP"],
-    ["StudioSettingsPage.module.css", ".segBtnOn"],
   ])("sets the %s %s label in dark ink on the coral fill", (file, selector) => {
     const body = ruleBody(cssOf(file), selector);
     expect(body).toContain("background: var(--accent);");

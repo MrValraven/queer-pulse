@@ -1,7 +1,9 @@
 import { useRef, useState } from "react";
+import { ApiError } from "../../shared/api/client";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useUploadImage } from "../members/api/useUploadImage";
 import { ImageProcessingError } from "../members/api/uploadProcessing";
+import { communityErrorText } from "./communityErrors";
 
 export interface StagedPostImage {
   /** The value to send as the post/reply's `image` field: a storage key in
@@ -43,10 +45,15 @@ export function usePostImageAttach() {
       const result = await upload(file);
       setImage({ key: result.key, previewUrl: result.previewUrl });
     } catch (err) {
+      // A refusal from the server (a restriction, an inactive membership, a
+      // file too large, a rate limit) names its cause; anything else keeps
+      // the plain could-not-upload line.
       setError(
         err instanceof ImageProcessingError
           ? t(err.i18nKey, err.values)
-          : t("communities:common.imageUploadError"),
+          : err instanceof ApiError
+            ? communityErrorText(t, err)
+            : t("communities:common.imageUploadError"),
       );
     } finally {
       setUploading(false);

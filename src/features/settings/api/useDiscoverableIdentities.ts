@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
+  causeErrorKey,
+  type CauseErrorCopy,
+} from "../../../shared/api/causeErrorKey";
+import {
   getDiscoverableIdentities,
   putDiscoverableIdentities,
 } from "./discoverableIdentities.api";
@@ -15,6 +19,9 @@ export interface DiscoverableIdentitiesState {
   saving: boolean;
   /** Set when a write failed; the published set is unchanged when it is. */
   error: boolean;
+  /** Why the last write failed (no connection, signed out, a server fault...),
+   *  or null when nothing failed or the failure was a read. */
+  writeErrorCause: CauseErrorCopy | null;
   /** Publish or un-publish ONE identity. Resolves true on success. */
   setPublished: (identity: string, next: boolean) => Promise<boolean>;
 }
@@ -53,6 +60,9 @@ export function useDiscoverableIdentities(
   const [loading, setLoading] = useState(!demoMode);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(false);
+  const [writeErrorCause, setWriteErrorCause] = useState<CauseErrorCopy | null>(
+    null,
+  );
   const loadedOnce = useRef(false);
 
   useEffect(() => {
@@ -101,16 +111,18 @@ export function useDiscoverableIdentities(
 
       setSaving(true);
       setError(false);
+      setWriteErrorCause(null);
       try {
         // The server echoes what it actually stored; take that, never `target`.
         const dto = await putDiscoverableIdentities(target);
         setAvailable(dto.available);
         setPublishedState(dto.published);
         return true;
-      } catch {
+      } catch (writeFailure) {
         // Leave `published` untouched — the toggle snaps back and the copy says
         // nothing changed, which is true.
         setError(true);
+        setWriteErrorCause(causeErrorKey(writeFailure));
         return false;
       } finally {
         setSaving(false);
@@ -125,6 +137,7 @@ export function useDiscoverableIdentities(
     loading: demoMode ? false : loading,
     saving,
     error,
+    writeErrorCause,
     setPublished,
   };
 }

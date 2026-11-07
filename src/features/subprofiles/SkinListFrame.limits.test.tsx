@@ -11,6 +11,7 @@ import {
   type SubprofileEditorContextValue,
 } from "./subprofileEditorContext";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
+import { awaitCatalog } from "../../test/awaitCatalog";
 
 const LINES_CONTROL = {
   kind: "lines",
@@ -20,8 +21,8 @@ const LINES_CONTROL = {
   maxItems: 2,
 } as SkinBlockControl;
 
-function renderFrame(itemCount: number) {
-  return render(
+async function renderFrame(itemCount: number) {
+  const view = render(
     <TestProviders>
       <SkinListFrame
         control={LINES_CONTROL}
@@ -35,6 +36,8 @@ function renderFrame(itemCount: number) {
       </SkinListFrame>
     </TestProviders>,
   );
+  await awaitCatalog("subprofiles");
+  return view;
 }
 
 const CHOICE_CONTROL = {
@@ -55,12 +58,12 @@ const CHOICE_EDITOR = {
   setValue: () => undefined,
 } as unknown as SubprofileSkinBlocksEditor;
 
-function renderChips(socialRows: SocialRow[]) {
+async function renderChips(socialRows: SocialRow[]) {
   const context = {
     socialRows,
     subprofile: { status: "draft" },
   } as unknown as SubprofileEditorContextValue;
-  return render(
+  const view = render(
     <TestProviders>
       <SubprofileEditorContext.Provider value={context}>
         <SkinChoiceChipsRefined
@@ -70,25 +73,27 @@ function renderChips(socialRows: SocialRow[]) {
       </SubprofileEditorContext.Provider>
     </TestProviders>,
   );
+  await awaitCatalog("subprofiles", "marketing");
+  return view;
 }
 
 describe("list and option limits", () => {
   it("folds the add button away at the list cap", async () => {
-    const view = renderFrame(1);
+    const view = await renderFrame(1);
     expect(screen.getByRole("button", { name: "Add a line" })).toBeTruthy();
     view.unmount();
 
-    renderFrame(2);
+    await renderFrame(2);
     expect(screen.queryByRole("button", { name: "Add a line" })).toBeNull();
     expect(await screen.findByText("Up to 2")).toBeTruthy();
   });
 
-  it("offers the Instagram route only with an Instagram link", () => {
-    const withoutLink = renderChips([]);
+  it("offers the Instagram route only with an Instagram link", async () => {
+    const withoutLink = await renderChips([]);
     expect(screen.queryByText("Instagram")).toBeNull();
     withoutLink.unmount();
 
-    renderChips([
+    await renderChips([
       { platform: "instagram", urlOrHandle: "@inkwell", _uid: "s1" },
     ]);
     expect(screen.getByText("Instagram")).toBeTruthy();

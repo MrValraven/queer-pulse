@@ -21,6 +21,9 @@ export function useSubmitNomination() {
     Error,
     CreateSafeSpaceNominationBody
   >({
+    // The nomination form shows the cause inline, so the app-wide toast stays
+    // quiet.
+    meta: { silentError: true },
     mutationFn: async (body) => {
       if (demoMode) {
         await new Promise((resolve) => setTimeout(resolve, 700));

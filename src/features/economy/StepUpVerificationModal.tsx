@@ -20,6 +20,12 @@ import type {
   VerificationRequestDTO,
   VerificationRequestStatus,
 } from "./api/verification.api";
+import {
+  VERIFICATION_APPEAL_OVERRIDES,
+  VERIFICATION_SUBMIT_OVERRIDES,
+  VERIFICATION_WITHDRAW_OVERRIDES,
+  failureToast,
+} from "./economyErrorCopy";
 import styles from "./StepUpVerificationModal.module.css";
 
 const STATUS_TONE: Partial<Record<VerificationRequestStatus, BadgeTone>> = {
@@ -267,8 +273,16 @@ export function StepUpVerificationModal({
       { requestedLevel: level, context: context.trim() || undefined },
       {
         onSuccess: () => setForceForm(false),
-        onError: () =>
-          showToast(t("economy:verification.request.submitError"), "error"),
+        onError: (error) =>
+          showToast(
+            failureToast(
+              error,
+              t,
+              "economy:verification.request.submitErrorTitle",
+              VERIFICATION_SUBMIT_OVERRIDES,
+            ),
+            "error",
+          ),
       },
     );
   };
@@ -278,16 +292,32 @@ export function StepUpVerificationModal({
     withdrawRequest.mutate(latestRequest.id, {
       onSuccess: () =>
         showToast(t("economy:verification.request.withdrawnToast"), "success"),
-      onError: () =>
-        showToast(t("economy:verification.request.withdrawError"), "error"),
+      onError: (error) =>
+        showToast(
+          failureToast(
+            error,
+            t,
+            "economy:verification.request.withdrawErrorTitle",
+            VERIFICATION_WITHDRAW_OVERRIDES,
+          ),
+          "error",
+        ),
     });
   };
 
   const appeal = () => {
     if (!latestRequest) return;
     appealRequest.mutate(latestRequest.id, {
-      onError: () =>
-        showToast(t("economy:verification.request.appealError"), "error"),
+      onError: (error) =>
+        showToast(
+          failureToast(
+            error,
+            t,
+            "economy:verification.request.appealErrorTitle",
+            VERIFICATION_APPEAL_OVERRIDES,
+          ),
+          "error",
+        ),
     });
   };
 

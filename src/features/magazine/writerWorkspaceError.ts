@@ -1,23 +1,30 @@
-import { ApiError } from "../../shared/api/client";
+import { SHARED_CAUSE_KEY } from "../../shared/api/causeErrorKey";
+import {
+  magazineCauseErrorCopy,
+  PLATFORM_LOCKED_CODE,
+  type MagazineCauseLines,
+} from "./magazineCauseError";
 
 /**
  * Turns a failed load of the writer workspace (`GET /magazine/writer/assignments`,
  * `/pitches` and `/payments`, which share one controller and one guard chain)
- * into the catalog key of the specific reason, the way
- * `writerApplicationErrorCopy` does for the application form. Every failure
- * those routes can return has a line of its own (queerpulse-backend
+ * into the catalog key of the specific reason. Every failure those routes can
+ * return has a line of its own (queerpulse-backend
  * `magazine/magazine-writer.controller.ts`, `auth/guards/active-member.guard.ts`,
- * `auth/guards/staff-roles.guard.ts` and the feature gates), plus one for a
- * request that got no answer.
+ * `auth/guards/staff-roles.guard.ts`, `common/platform-lockdown.guard.ts` and
+ * the feature gates), plus one for a request that got no answer.
  *
- * None of the three reads can answer 400, 409 or 413: they take no body, no
- * params and no query. They carry no `@Throttle` of their own, so a 429 can
- * only be the global throttler. The "restricted account" refusal is not used on
- * this controller either, so it has no line here.
+ * The reads carry no magazine code of their own: they take no body, params or
+ * query, and the services behind them throw nothing. The one coded refusal
+ * they can get is the platform lock (`PLATFORM_LOCKED`). 400, 409 and 413
+ * cannot happen here and fall through to the shared line for their status,
+ * as does any code a newer backend adds. GETs skip the CSRF check, so a 403
+ * is never a stale security token.
  *
- * Only one status holds more than one cause (403), and it is told apart by the
- * backend's English sentence, quoted below. A reworded one falls through to the
- * writer-role line, which is the other cause of that status.
+ * The two 403 causes: `ActiveMemberGuard` (code `ACTIVE_MEMBERSHIP_REQUIRED`,
+ * named by the shared classifier and worded below as this page's `notActive`
+ * line) and `StaffRolesGuard` returning false for an account without the
+ * `magazine_writer` role, which sends no code and is every other 403.
  */
 
 /** A catalog key, plus the values its text interpolates (if any). */
@@ -26,46 +33,29 @@ export interface WriterWorkspaceErrorCopy {
   values?: Record<string, string | number>;
 }
 
-function messageHas(error: ApiError, fragment: string): boolean {
-  return error.message.toLowerCase().includes(fragment.toLowerCase());
-}
+const WRITER_WORKSPACE_LINES: MagazineCauseLines = {
+  codeKeys: {
+    [PLATFORM_LOCKED_CODE]: "magazine:writer.page.error.maintenance",
+  },
+  statusKeys: {
+    401: "magazine:writer.page.error.signedOut",
+    403: "magazine:writer.page.error.notWriter",
+    // The `magazine` feature gate.
+    404: "magazine:writer.page.error.notOpen",
+    408: "magazine:writer.page.error.timedOut",
+    // Only the API client raises 422 on a read: a 2xx body that was not JSON.
+    422: "magazine:writer.page.error.unreadable",
+  },
+  sharedKeys: {
+    [SHARED_CAUSE_KEY.noConnection]: "magazine:writer.page.error.noConnection",
+    [SHARED_CAUSE_KEY.notActive]: "magazine:writer.page.error.notActive",
+    [SHARED_CAUSE_KEY.serverFault]: "magazine:writer.page.error.serverFault",
+    [SHARED_CAUSE_KEY.refused]: "magazine:writer.page.error.refused",
+  },
+};
 
 export function writerWorkspaceErrorCopy(
   error: unknown,
 ): WriterWorkspaceErrorCopy {
-  // No answer at all: fetch threw (offline, DNS, CORS) before any status.
-  if (!(error instanceof ApiError)) {
-    return { key: "magazine:writer.page.error.noConnection" };
-  }
-  switch (error.status) {
-    case 401:
-      return { key: "magazine:writer.page.error.signedOut" };
-    case 403:
-      // `ActiveMemberGuard` throws 'Active membership required'; the other 403
-      // is `StaffRolesGuard` returning false (Nest's default 'Forbidden
-      // resource') for an account without the `magazine_writer` role.
-      return {
-        key: messageHas(error, "active membership required")
-          ? "magazine:writer.page.error.notActive"
-          : "magazine:writer.page.error.notWriter",
-      };
-    case 404:
-      // The `magazine` feature gate ('This feature is not available yet.').
-      return { key: "magazine:writer.page.error.notOpen" };
-    case 408:
-      return { key: "magazine:writer.page.error.timedOut" };
-    case 422:
-      // Only the API client raises 422 on a read: a 2xx body that was not JSON.
-      return { key: "magazine:writer.page.error.unreadable" };
-    case 429:
-      return { key: "shared:apiError.reasonRateLimited" };
-    default:
-      if (error.status >= 500) {
-        return { key: "magazine:writer.page.error.serverFault" };
-      }
-      return {
-        key: "magazine:writer.page.error.refused",
-        values: { status: error.status },
-      };
-  }
+  return magazineCauseErrorCopy(error, WRITER_WORKSPACE_LINES);
 }

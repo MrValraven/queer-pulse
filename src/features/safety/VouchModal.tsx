@@ -9,6 +9,7 @@ import {
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { safeSpaceVouchCause } from "./api/safeSpaceErrorCopy";
 import { useSafeSpaceVouch } from "./api/useSafeSpaceVouch";
 import { VOUCH_RELATIONSHIP_OPTIONS } from "./vouchModal.data";
 import styles from "./VouchModal.module.css";
@@ -78,6 +79,7 @@ export function VouchModal({
   const vouch = useSafeSpaceVouch();
 
   const isSubmitting = status === "loading" || vouch.isPending;
+  const vouchCause = safeSpaceVouchCause(vouch.error);
 
   // A submit is already in flight: closing here would leave the mutation
   // running with nothing to show its result, so every dismissal route
@@ -200,7 +202,7 @@ export function VouchModal({
 
               {vouch.isError && (
                 <p className={styles.error} role="alert">
-                  {t("safety:vouchModal.form.error")}
+                  {t(vouchCause.key, vouchCause.values)}
                 </p>
               )}
 

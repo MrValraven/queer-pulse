@@ -26,7 +26,9 @@ describe("About Studio (live)", () => {
     expect(
       await screen.findByRole("heading", {
         level: 1,
-        name: "Music by queer artists, for our members.",
+        // jsdom gives the inline <em> no display, so the accessible name
+        // gains a space before the full stop.
+        name: /^Music by queer artists, for our members\s?\.$/,
       }),
     ).toBeInTheDocument();
     expect(
@@ -65,7 +67,9 @@ describe("About Studio (demo)", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "Music by queer artists, for our members.",
+        // jsdom gives the inline <em> no display, so the accessible name
+        // gains a space before the full stop.
+        name: /^Music by queer artists, for our members\s?\.$/,
       }),
     ).toBeInTheDocument();
   });

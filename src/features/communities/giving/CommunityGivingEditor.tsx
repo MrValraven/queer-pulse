@@ -3,7 +3,6 @@ import { flushSync } from "react-dom";
 import { AnimatePresence } from "motion/react";
 import { FiPlus } from "react-icons/fi";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { isAccountRestricted } from "../../../shared/api/errorMessage";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import {
   Button,
@@ -15,6 +14,7 @@ import {
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { CommunityGivingDTO } from "../api/communityGiving.api";
 import { useSaveCommunityGiving } from "../api/useCommunityGiving";
+import { communityErrorText } from "../communityErrors";
 import { GIVING_LIMITS } from "./givingConstants";
 import {
   draftFromGiving,
@@ -121,17 +121,9 @@ export function CommunityGivingEditor({
         showToast(t(`${EDITOR_KEY}.savedToast`), "success");
         onClose(saved);
       },
-      // The mutation is a silentError one, so the editor names a moderation
-      // restriction itself, with the copy the global handler uses.
-      onError: (error) =>
-        showToast(
-          t(
-            isAccountRestricted(error)
-              ? "shared:apiError.accountRestricted"
-              : `${EDITOR_KEY}.errorToast`,
-          ),
-          "error",
-        ),
+      // The mutation is a silentError one, so the editor names the cause
+      // itself: a moderation restriction, a community gone, offline.
+      onError: (error) => showToast(communityErrorText(t, error), "error"),
     });
   };
 

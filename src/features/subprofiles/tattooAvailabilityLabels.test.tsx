@@ -16,6 +16,7 @@ import type {
   SubprofileCardDTO,
   SubprofileKind,
 } from "./api/subprofiles.api";
+import { awaitCatalog } from "../../test/awaitCatalog";
 
 // Unrun per repo policy: verified statically.
 
@@ -77,13 +78,15 @@ function makeCard(
   };
 }
 
-function renderInProviders(element: React.ReactElement) {
-  return render(<TestProviders>{element}</TestProviders>);
+async function renderInProviders(element: React.ReactElement) {
+  const view = render(<TestProviders>{element}</TestProviders>);
+  await awaitCatalog("subprofiles");
+  return view;
 }
 
 describe("availability labels on a tattoo persona", () => {
-  it("labels every availability surface of a tattoo persona in books words", () => {
-    const { unmount: unmountPill } = renderInProviders(
+  it("labels every availability surface of a tattoo persona in books words", async () => {
+    const { unmount: unmountPill } = await renderInProviders(
       <SubprofileAvailability
         kind="tattoo_artist"
         value="booking"
@@ -94,73 +97,73 @@ describe("availability labels on a tattoo persona", () => {
     unmountPill();
 
     const view = makeOwnerView("tattoo_artist", "booking");
-    const { unmount: unmountCard } = renderInProviders(
+    const { unmount: unmountCard } = await renderInProviders(
       <SideCard view={view} footer={null} />,
     );
     expect(screen.getByText("Waitlist")).toBeTruthy();
     unmountCard();
 
-    const { unmount: unmountRow } = renderInProviders(
+    const { unmount: unmountRow } = await renderInProviders(
       <SideRow view={view} footer={null} />,
     );
     expect(screen.getByText("Waitlist")).toBeTruthy();
     unmountRow();
 
-    renderInProviders(
+    await renderInProviders(
       <SubprofileCard card={makeCard("tattoo_artist", "open_to_collabs")} />,
     );
     expect(screen.getByText("Books open")).toBeTruthy();
   });
 
-  it("reads a stored status over a stale availability", () => {
+  it("reads a stored status over a stale availability", async () => {
     const view = makeOwnerView("tattoo_artist", "open_to_collabs", {
       tattoo: { status: "closed" },
     });
-    renderInProviders(<SideCard view={view} footer={null} />);
+    await renderInProviders(<SideCard view={view} footer={null} />);
     expect(screen.getByText("Books closed")).toBeTruthy();
     expect(screen.queryByText("Books open")).toBeNull();
   });
 
-  it("keeps every other kind's words", () => {
-    const { unmount: unmountPill } = renderInProviders(
+  it("keeps every other kind's words", async () => {
+    const { unmount: unmountPill } = await renderInProviders(
       <SubprofileAvailability kind="dj" value="booking" accent="coral" />,
     );
     expect(screen.getByText("Taking bookings")).toBeTruthy();
     unmountPill();
 
     const view = makeOwnerView("dj", "booking");
-    const { unmount: unmountCard } = renderInProviders(
+    const { unmount: unmountCard } = await renderInProviders(
       <SideCard view={view} footer={null} />,
     );
     expect(screen.getByText("Taking bookings")).toBeTruthy();
     unmountCard();
 
-    const { unmount: unmountRow } = renderInProviders(
+    const { unmount: unmountRow } = await renderInProviders(
       <SideRow view={view} footer={null} />,
     );
     expect(screen.getByText("Taking bookings")).toBeTruthy();
     unmountRow();
 
-    renderInProviders(
+    await renderInProviders(
       <SubprofileCard card={makeCard("dj", "open_to_collabs")} />,
     );
     expect(screen.getByText("Open to collabs")).toBeTruthy();
   });
 
-  it("hides the hero actions pill when asked", () => {
+  it("hides the hero actions pill when asked", async () => {
     const view = {
       ...makeOwnerView("tattoo_artist", "booking"),
       viewerEndorsed: false,
       viewerFollowing: false,
       viewerIsMember: false,
     } as unknown as PublicSubprofileView;
-    const { unmount } = renderInProviders(
+    const { unmount } = await renderInProviders(
       <SubprofileHeroActions view={view} mode="preview" onAction={() => {}} />,
     );
     expect(screen.getByText("Waitlist")).toBeTruthy();
     unmount();
 
-    renderInProviders(
+    await renderInProviders(
       <SubprofileHeroActions
         view={view}
         mode="preview"

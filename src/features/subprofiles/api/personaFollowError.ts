@@ -1,5 +1,8 @@
-import { ApiError } from "../../../shared/api/client";
-import { isAccountRestricted } from "../../../shared/api/errorMessage";
+import {
+  causeErrorKey,
+  type CauseErrorCopy,
+  type CauseErrorOverrides,
+} from "../../../shared/api/causeErrorKey";
 
 /** The 400 the follow route answers when the viewer tries to follow a persona
  *  they made or belong to. */
@@ -9,30 +12,22 @@ export const PERSONA_SELF_FOLLOW_CODE = "PERSONA_SELF_FOLLOW";
  *  members-only, removed or hidden from this viewer. */
 export const PERSONA_NOT_FOLLOWABLE_CODE = "PERSONA_NOT_FOLLOWABLE";
 
-/** Shown when the failure carries no reason we can name. */
-export const PERSONA_FOLLOW_FALLBACK_KEY = "subprofiles:hero.follow.error";
-
-/** The typed `code` off a refused follow call, read from the parsed body. */
-function followErrorCode(error: unknown): string | null {
-  if (!(error instanceof ApiError)) return null;
-  const code = (error.data as { code?: unknown } | null | undefined)?.code;
-  return typeof code === "string" ? code : null;
-}
+/** The follow routes' own coded refusals; everything else reads the shared
+ *  cause for its status. */
+const FOLLOW_OVERRIDES: CauseErrorOverrides = {
+  [PERSONA_SELF_FOLLOW_CODE]:
+    "subprofiles:directory.card.followError.ownPersona",
+  [PERSONA_NOT_FOLLOWABLE_CODE]:
+    "subprofiles:directory.card.followError.notFollowable",
+};
 
 /**
- * The catalog key that names why a follow or an unfollow was refused: the
- * viewer's own persona, a persona that takes no follows, or a moderation
- * restriction on the account. Anything else (an outage, a timeout) reads the
- * existing retry line.
+ * The catalog key (and values) that names why a follow or an unfollow was
+ * refused: the viewer's own persona, a persona that takes no follows, a
+ * moderation restriction on the account, or the shared cause for the failure
+ * (no connection, signed out, a rate limit, a server fault). Resolve with
+ * `t(copy.key, copy.values)`.
  */
-export function personaFollowErrorKey(error: unknown): string {
-  if (isAccountRestricted(error)) return "shared:apiError.accountRestricted";
-  switch (followErrorCode(error)) {
-    case PERSONA_SELF_FOLLOW_CODE:
-      return "subprofiles:directory.card.followError.ownPersona";
-    case PERSONA_NOT_FOLLOWABLE_CODE:
-      return "subprofiles:directory.card.followError.notFollowable";
-    default:
-      return PERSONA_FOLLOW_FALLBACK_KEY;
-  }
+export function personaFollowErrorCopy(error: unknown): CauseErrorCopy {
+  return causeErrorKey(error, FOLLOW_OVERRIDES);
 }

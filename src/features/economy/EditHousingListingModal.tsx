@@ -5,6 +5,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { UpdateHousingListingBody } from "./api/housingListing.api";
 import { useMyHousingListingAction } from "./api/useHousingListingOwnerActions";
+import { MY_HOUSING_LISTING_OVERRIDES, failureToast } from "./economyErrorCopy";
 import type { MyHousingListingRow } from "./myHousingListings.data";
 import { ModalShell, Sending } from "./ModalKit";
 import { ListSpaceFields } from "./ListSpaceFields";
@@ -90,8 +91,16 @@ export function EditHousingListingModal({
           );
           onClose();
         },
-        onError: () =>
-          showToast(t("economy:myHousingListings.toast.error"), "error"),
+        onError: (error) =>
+          showToast(
+            failureToast(
+              error,
+              t,
+              "economy:myHousingListings.toast.errorTitle",
+              MY_HOUSING_LISTING_OVERRIDES,
+            ),
+            "error",
+          ),
       },
     );
   };

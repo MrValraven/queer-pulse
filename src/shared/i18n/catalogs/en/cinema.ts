@@ -60,7 +60,7 @@ export const cinema: Catalog = {
   "mast.sectionNav.series": "Series",
   "mast.sectionNav.openCalls": "Open calls",
   "ask.text":
-    "Not sure what to watch? Tell us your mood and we'll pick one film, chosen by curators rather than an algorithm.",
+    "Not sure what to watch? Tell us your mood and we'll pick one film, chosen by curators.",
   "ask.cta": "Ask the room",
   "cover.nowShowing": "Now showing",
   "cover.freeForSustainers": "Free for sustainers",
@@ -140,7 +140,7 @@ export const cinema: Catalog = {
   "browse.hero.eyebrow": "The full catalogue",
   "browse.hero.title": "Browse <em>everything</em>",
   "browse.hero.lead":
-    "{count} films, programmed by queer people and paid to queer people. Filter by access, format, language, and mood, guided by curators rather than an algorithm.",
+    "{count} films, programmed by queer people and paid to queer people. Filter by access, format, language, and mood, guided by curators.",
   "browse.filters.heading": "Filter <em>&</em> sort",
   "browse.filters.clearAll": "Clear all",
   "browse.filters.groupAccess": "Access",
@@ -854,7 +854,7 @@ export const cinema: Catalog = {
   "submit.form.step1.format.ariaLabel": "Format",
   "submit.form.step1.synopsis.label": "Synopsis",
   "submit.form.step1.synopsis.why":
-    "Written by you, in your own voice. 80–200 words. Not a pitch. Describe the film as if you're writing to a friend who hasn't seen it.",
+    "Written by you, in your own voice. 80–200 words. Describe the film as if you're writing to a friend who hasn't seen it.",
   "submit.form.step1.synopsis.placeholder":
     "A patient, generous film about Lisbon's working-class queer elders, made over three years in the kitchens that raised them…",
   "submit.form.step1.statement.label": "Director's statement",

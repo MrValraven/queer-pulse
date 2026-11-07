@@ -963,8 +963,10 @@ describe("QuizshowScreenPage controls", () => {
       act(() => {
         document.dispatchEvent(new Event("fullscreenchange"));
       });
+      // The toolbar mounts after the game loads, so its subscription can land
+      // just after this event; the hook then reads the state on subscribing.
       expect(
-        screen.getByRole("button", { name: "Leave full screen" }),
+        await screen.findByRole("button", { name: "Leave full screen" }),
       ).toBeInTheDocument();
     } finally {
       Reflect.deleteProperty(document.documentElement, "requestFullscreen");

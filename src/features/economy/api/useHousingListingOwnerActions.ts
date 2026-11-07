@@ -165,6 +165,8 @@ export function useDeleteHousingListing() {
   const queryClient = useQueryClient();
   const key = economyKeys.myHousingListings(demoMode);
   return useMutation<void, Error, string>({
+    // MyHousingListingsPage words the failure itself (the cause line).
+    meta: { silentError: true },
     mutationFn: async (ref) => {
       if (demoMode) {
         await new Promise((resolve) => setTimeout(resolve, 400));

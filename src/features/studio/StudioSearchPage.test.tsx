@@ -14,6 +14,7 @@ import {
 } from "./player/studioPlayerContext";
 import { StudioSearchTrackRow } from "./StudioSearchTrackRow";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { createStudioPlayerTestValue } from "../../test/studioPlayerTestValue";
 import { StudioSearchPage } from "./StudioSearchPage";
 import { clearStudioListeningMemory } from "./player/studioListeningMemory";
@@ -28,6 +29,7 @@ describe("StudioSearchPage (demo fixture)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       await screen.findByRole("searchbox", {
         name: /releases, tracks and artists/i,
@@ -49,6 +51,7 @@ describe("StudioSearchPage (demo fixture)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(await screen.findByRole("link", { name: "Tracks" }));
     await waitFor(() =>
       expect(screen.getByRole("link", { name: "Tracks" })).toHaveAttribute(
@@ -69,6 +72,7 @@ describe("StudioSearchPage (demo fixture)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(
       await screen.findByRole("button", { name: /clear search/i }),
     );
@@ -83,6 +87,7 @@ describe("StudioSearchPage (demo fixture)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.change(
       await screen.findByRole("searchbox", {
         name: /releases, tracks and artists/i,
@@ -97,7 +102,9 @@ describe("StudioSearchPage (demo fixture)", () => {
     await waitFor(() =>
       expect(results.parentElement).toHaveAttribute("aria-busy", "false"),
     );
-    expect(screen.getByRole("status")).toHaveTextContent(/\d+ results?/);
+    // The toast deck and the player announcer keep their own status
+    // regions mounted, so the count is found by its text.
+    expect(screen.getByText(/\d+ results?/)).toHaveAttribute("role", "status");
   });
 
   it("walks a filter change back with the Back button", async () => {
@@ -115,6 +122,7 @@ describe("StudioSearchPage (demo fixture)", () => {
         <BackButton />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(await screen.findByRole("link", { name: "Tracks" }));
     await waitFor(() =>
       expect(screen.getByRole("link", { name: "Tracks" })).toHaveAttribute(
@@ -136,7 +144,7 @@ describe("StudioSearchPage (demo fixture)", () => {
 });
 
 describe("StudioSearchTrackRow", () => {
-  it("plays inside its release from a real button outside the link", () => {
+  it("plays inside its release from a real button outside the link", async () => {
     const playRelease = vi.fn(() => Promise.resolve());
     const view = toSearchView({
       releases: [],
@@ -204,6 +212,7 @@ describe("StudioSearchTrackRow", () => {
         </StudioPlayerContext.Provider>
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const playButton = screen.getByRole("button", { name: "Play Vela acesa" });
     expect(playButton.tagName).toBe("BUTTON");
     expect(playButton.closest("a")).toBeNull();
@@ -222,6 +231,7 @@ describe("StudioSearchPage (v2)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(screen.getByRole("link", { name: "Playlists" })).toHaveAttribute(
       "aria-current",
       "page",
@@ -234,12 +244,13 @@ describe("StudioSearchPage (v2)", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows the genre select only when there is a query", () => {
+  it("shows the genre select only when there is a query", async () => {
     const { unmount } = render(
       <TestProviders initialEntries={["/studio/search"]}>
         <StudioSearchPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       screen.queryByRole("button", { name: "Genre" }),
     ).not.toBeInTheDocument();
@@ -249,6 +260,7 @@ describe("StudioSearchPage (v2)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(screen.getByRole("button", { name: "Genre" })).toBeInTheDocument();
   });
 
@@ -260,6 +272,7 @@ describe("StudioSearchPage (v2)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(screen.getByRole("button", { name: "Genre" })).toHaveTextContent(
       "Electronic",
     );
@@ -278,6 +291,7 @@ describe("StudioSearchPage (v2)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(screen.getByRole("button", { name: "Genre" }));
     fireEvent.click(
       await screen.findByRole("option", { name: "Fado / contemporary" }),
@@ -304,6 +318,7 @@ describe("StudioSearchPage (v2)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(screen.getByRole("button", { name: "Mood" })).toHaveTextContent(
       "Euphoric",
     );
@@ -322,6 +337,7 @@ describe("StudioSearchPage (v2)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(screen.getByRole("button", { name: "Mood" }));
     fireEvent.click(await screen.findByRole("option", { name: "Melancholy" }));
     await waitFor(() =>
@@ -338,7 +354,7 @@ describe("StudioSearchPage (v2)", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("shows the title once when the artist is named like the release", () => {
+  it("shows the title once when the artist is named like the release", async () => {
     const view = toSearchView({
       releases: [],
       artists: [],
@@ -384,6 +400,7 @@ describe("StudioSearchPage (v2)", () => {
         </ol>
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(screen.getByText("Late Bloomers")).toBeInTheDocument();
     expect(screen.queryByText("Late Bloomers · Late Bloomers")).toBeNull();
   });
@@ -400,6 +417,7 @@ describe("StudioSearchPage (C2 polish)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const dropChip = await screen.findByRole("link", {
       name: /remove the tracks filter/i,
     });
@@ -415,6 +433,7 @@ describe("StudioSearchPage (C2 polish)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const searchbox = await screen.findByRole("searchbox", {
       name: /releases, tracks and artists/i,
     });
@@ -439,6 +458,7 @@ describe("StudioSearchPage (C2 polish)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const searchbox = await screen.findByRole("searchbox", {
       name: /releases, tracks and artists/i,
     });

@@ -439,10 +439,13 @@ describe("QuizshowSocketClient clock", () => {
     answerLatestPing(750);
     // The first round reports every pong.
     expect(harness.offsets).toEqual([750, 750]);
-    await vi.advanceTimersByTimeAsync(MINUTE_MS - 200);
+    // The resync round's first ping is a zero delay timer set inside a tick,
+    // which the fake clock runs 1ms later, so step 1ms past the minute and
+    // 199ms on to the second ping.
+    await vi.advanceTimersByTimeAsync(MINUTE_MS - 199);
     expect(pingsOf(harness.fakeSocket)).toHaveLength(6);
     answerLatestPing(900);
-    await vi.advanceTimersByTimeAsync(200);
+    await vi.advanceTimersByTimeAsync(199);
     answerLatestPing(900);
     expect(harness.offsets).toEqual([750, 750]);
     await vi.advanceTimersByTimeAsync(200);
@@ -642,17 +645,19 @@ describe("QuizshowSocketClient frames and sends", () => {
     const harness = setup();
     await connectAndAttach(harness);
 
+    // The exception goes first: session:end in the frame list ends the
+    // session, and the client ignores exceptions after that.
+    harness.fakeSocket.trigger("exception", {
+      status: "error",
+      code: "BAD_REQUEST",
+      message: "Secret Screen Name is too long",
+    });
     for (const eventName of QUIZSHOW_SERVER_FRAME_NAMES) {
       harness.fakeSocket.trigger(eventName, {
         marker: `secret-${eventName}`,
         screenName: "Secret Screen Name",
       });
     }
-    harness.fakeSocket.trigger("exception", {
-      status: "error",
-      code: "BAD_REQUEST",
-      message: "Secret Screen Name is too long",
-    });
 
     const frames = harness.actions.filter(
       (action) => action.event !== "local:status",

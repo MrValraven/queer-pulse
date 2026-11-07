@@ -17,6 +17,10 @@ vi.mock("../../app/providers/useConnections", () => ({
   }),
 }));
 vi.mock("react-router-dom", () => ({ useNavigate: () => navigate }));
+// The hook reads the signed-in member to flag their own slug (`isSelf`).
+vi.mock("../../app/providers/authContext", () => ({
+  useAuth: () => ({ user: { profile: { slug: "signed-in-member" } } }),
+}));
 
 describe("useMemberContact", () => {
   beforeEach(() => {

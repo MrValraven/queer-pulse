@@ -8,7 +8,7 @@ import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useVjClips } from "./useVjClips";
 import { useVjPackClips } from "./useVjPackClips";
-import { useVjPacks } from "./useVjPacks";
+import { VJ_LIVE_STALE_MS, useVjPacks } from "./useVjPacks";
 import { getVjClips, getVjPackClips, getVjPacks } from "./vj.api";
 
 const PACK_ID = "00000000-0000-4000-8000-0000000000a1";
@@ -65,10 +65,11 @@ beforeEach(() => {
 
 afterEach(() => {
   focusManager.setFocused(undefined);
+  vi.restoreAllMocks();
 });
 
 describe("VJ library reads on window focus", () => {
-  it("reads the live library again when the admin comes back to the tab", async () => {
+  it("reads the live library again when the admin comes back to the tab once it is stale", async () => {
     demoModeState.demoMode = false;
     const { result } = renderLibraryReads();
     await waitFor(() => expect(result.current.packClips.isSuccess).toBe(true));
@@ -78,6 +79,9 @@ describe("VJ library reads on window focus", () => {
     const clipsReadsBefore = vi.mocked(getVjClips).mock.calls.length;
     const packClipsReadsBefore = vi.mocked(getVjPackClips).mock.calls.length;
 
+    // Live reads stay fresh for VJ_LIVE_STALE_MS; the admin comes back later.
+    const backAt = Date.now() + VJ_LIVE_STALE_MS + 1;
+    vi.spyOn(Date, "now").mockReturnValue(backAt);
     refocusWindow();
 
     await waitFor(() =>

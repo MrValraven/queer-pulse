@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import type { GatheringDetail } from "../../gatherings/data";
 import type { QuizshowResultsResponse } from "../../../shared/contracts/quizshow";
@@ -92,12 +93,14 @@ function gatheringWith(
   } as unknown as GatheringDetail;
 }
 
-function renderSection(gathering: GatheringDetail) {
-  return render(
+async function renderSection(gathering: GatheringDetail) {
+  const view = render(
     <TestProviders>
       <QuizshowEventSection gathering={gathering} />
     </TestProviders>,
   );
+  await awaitCatalog("quizshow");
+  return view;
 }
 
 const resultsSummary = {
@@ -114,8 +117,8 @@ describe("QuizshowEventSection", () => {
     mocks.deleteResults.mockResolvedValue(undefined);
   });
 
-  it("shows Join the live game while a game is open", () => {
-    renderSection(
+  it("shows Join the live game while a game is open", async () => {
+    await renderSection(
       gatheringWith({
         hasQuiz: true,
         liveSessionCode: "QZ7KP4",
@@ -126,8 +129,8 @@ describe("QuizshowEventSection", () => {
     expect(link).toHaveAttribute("href", "/play/QZ7KP4");
   });
 
-  it("shows the results card after the game", () => {
-    renderSection(gatheringWith(resultsSummary));
+  it("shows the results card after the game", async () => {
+    await renderSection(gatheringWith(resultsSummary));
     expect(screen.getByText("1st")).toBeInTheDocument();
     expect(screen.getByText("2nd")).toBeInTheDocument();
     expect(screen.getByText("3rd")).toBeInTheDocument();
@@ -136,15 +139,15 @@ describe("QuizshowEventSection", () => {
     expect(screen.getByText("Your place: 5 of 12")).toBeInTheDocument();
   });
 
-  it("shows nothing while Pulse Live is hidden", () => {
+  it("shows nothing while Pulse Live is hidden", async () => {
     mocks.isVisible = false;
-    renderSection(gatheringWith(resultsSummary));
+    await renderSection(gatheringWith(resultsSummary));
     expect(screen.queryByText("Pulse Live results")).not.toBeInTheDocument();
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });
 
-  it("shows nothing for an event with no game and no results", () => {
-    renderSection(
+  it("shows nothing for an event with no game and no results", async () => {
+    await renderSection(
       gatheringWith({
         hasQuiz: true,
         liveSessionCode: null,
@@ -155,8 +158,8 @@ describe("QuizshowEventSection", () => {
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });
 
-  it("folds the recap open for hosts", () => {
-    renderSection(gatheringWith(resultsSummary, true));
+  it("folds the recap open for hosts", async () => {
+    await renderSection(gatheringWith(resultsSummary, true));
     expect(screen.queryByText("Recap for hosts")).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Show recap" }));
     expect(screen.getByText("Recap for hosts")).toBeInTheDocument();
@@ -168,7 +171,7 @@ describe("QuizshowEventSection", () => {
   });
 
   it("asks before deleting the results", async () => {
-    renderSection(gatheringWith(resultsSummary, true));
+    await renderSection(gatheringWith(resultsSummary, true));
     fireEvent.click(screen.getByRole("button", { name: "Delete results" }));
     const dialog = await screen.findByRole("dialog");
     expect(
@@ -182,7 +185,7 @@ describe("QuizshowEventSection", () => {
     expect(mocks.deleteResults).toHaveBeenCalledTimes(1);
   });
 
-  it("keeps Delete results away from guests", () => {
+  it("keeps Delete results away from guests", async () => {
     render(
       <TestProviders>
         <QuizshowResultsCard
@@ -191,6 +194,7 @@ describe("QuizshowEventSection", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("quizshow");
     expect(screen.getByText("Pulse Live results")).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "Delete results" }),

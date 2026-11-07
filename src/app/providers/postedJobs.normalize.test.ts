@@ -7,7 +7,9 @@ import {
 
 const currentJob = JOBS[0]!;
 
-/** The shape `qp-posted-jobs` held before the work taxonomy. */
+/** The shape `qp-posted-jobs` held before the work taxonomy. Its default
+ *  category is "practical", an old slug that matches no job field ("legal"
+ *  is a job field id today, so it survives normalizing). */
 function legacyJob(overrides: Partial<StoredPostedJob> = {}): StoredPostedJob {
   const {
     category: _category,
@@ -16,7 +18,12 @@ function legacyJob(overrides: Partial<StoredPostedJob> = {}): StoredPostedJob {
     seniority: _seniority,
     ...rest
   } = currentJob;
-  return { ...rest, category: "legal", type: "Freelance / gig", ...overrides };
+  return {
+    ...rest,
+    category: "practical",
+    type: "Freelance / gig",
+    ...overrides,
+  };
 }
 
 describe("normalizePostedJob", () => {

@@ -1,4 +1,8 @@
 import { ApiError } from "../../shared/api/client";
+import {
+  apiErrorCode,
+  UPLOAD_NOT_YOURS_CODE,
+} from "../../shared/api/causeErrorKey";
 import { foldForSearch } from "../../shared/lib/foldForSearch";
 import {
   STUDIO_DISCOVERY_LIMITS,
@@ -294,24 +298,17 @@ export function ineligibleReasonOfError(error: unknown): string | null {
     : null;
 }
 
-/** The message the global upload ownership check answers a foreign storage
- *  key with. */
-const FOREIGN_UPLOAD_MESSAGE = "Referenced upload does not belong to you";
-
-/** The catalog key a refused landing photo save shows. A 403 with no `code`
- *  and the upload ownership check's message names someone else's upload, so
- *  it reads the photo-not-yours line; every other refusal (a codeless 403
- *  with another message included) reads the console's usual line. */
+/** The catalog key a refused landing photo save shows. A 403 carrying the
+ *  upload ownership check's code (`UPLOAD_NOT_YOURS`) names someone else's
+ *  upload, so it reads the photo-not-yours line; every other refusal (a 403
+ *  with no code or another code included) reads the console's usual line. */
 export function landingPhotoErrorKeyOf(error: unknown): string {
-  if (error instanceof ApiError && error.status === 403) {
-    const body = error.data;
-    const hasCode =
-      !!body &&
-      typeof body === "object" &&
-      typeof (body as { code?: unknown }).code === "string";
-    const message = (body as { message?: unknown } | null | undefined)?.message;
-    if (!hasCode && message === FOREIGN_UPLOAD_MESSAGE)
-      return STUDIO_ERROR_MESSAGE_KEY.studio_landing_photo_not_yours;
+  if (
+    error instanceof ApiError &&
+    error.status === 403 &&
+    apiErrorCode(error) === UPLOAD_NOT_YOURS_CODE
+  ) {
+    return STUDIO_ERROR_MESSAGE_KEY.studio_landing_photo_not_yours;
   }
   return studioAdminSaveErrorKeyOf(error);
 }

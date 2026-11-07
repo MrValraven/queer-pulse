@@ -1,7 +1,14 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { QueryClient } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { DEMO_DEFAULT_RELEASE_ID } from "./api/studioDemoMe.data";
 import { resetDemoPurchases } from "./api/studioDemoPurchaseStore";
 import {
@@ -99,14 +106,16 @@ function confirmedPurchase(): StudioBuyerPurchaseView {
   return purchase;
 }
 
-function renderPanel() {
+async function renderPanel() {
   const offer = mocks.offer;
   if (offer === null) throw new Error("set mocks.offer first");
-  return render(
+  const view = render(
     <TestProviders queryClient={new QueryClient()}>
       <StudioReleaseBuyPanel offer={offer} />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
+  return view;
 }
 
 /** Reads the demo offer the way the album page does, then mounts the panel. */
@@ -121,7 +130,16 @@ async function renderPanelFor(releaseId: string) {
       <DemoReleasePanel releaseId={releaseId} />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
   await screen.findByRole("region", { name: /^Buy / });
+}
+
+/** Alerts inside the buy panels. The toast deck keeps an empty alert region
+ *  mounted outside them. */
+function panelAlerts(): HTMLElement[] {
+  return screen
+    .getAllByRole("region", { name: /^Buy / })
+    .flatMap((panel) => within(panel).queryAllByRole("alert"));
 }
 
 beforeEach(() => {
@@ -158,7 +176,7 @@ describe("StudioReleaseBuyPanel", () => {
         ownedPurchase: null,
       },
     });
-    renderPanel();
+    await renderPanel();
     expect(
       await screen.findByText("Name your price, €2 or more"),
     ).toBeInTheDocument();
@@ -234,7 +252,7 @@ describe("StudioReleaseBuyPanel edge states", () => {
         ownedPurchase: confirmedPurchase(),
       },
     });
-    renderPanel();
+    await renderPanel();
     expect(await screen.findByText("In your collection")).toBeInTheDocument();
     expect(screen.queryByText("This is not for sale")).toBeNull();
   });
@@ -260,12 +278,12 @@ describe("StudioReleaseBuyPanel edge states", () => {
         ownedPurchase: null,
       },
     });
-    renderPanel();
+    await renderPanel();
     expect(
       await screen.findByText("You cannot buy music from this artist"),
     ).toBeInTheDocument();
     // The refusal is the page's state, so it reads as plain text.
-    expect(screen.queryByRole("alert")).toBeNull();
+    expect(panelAlerts()).toHaveLength(0);
     expect(screen.queryByRole("button", { name: /^Buy / })).toBeNull();
   });
 
@@ -278,7 +296,7 @@ describe("StudioReleaseBuyPanel edge states", () => {
         ownedPurchase: confirmedPurchase(),
       },
     });
-    renderPanel();
+    await renderPanel();
     expect(
       await screen.findByText(
         "You are a member of this artist, so you cannot buy its music",
@@ -315,14 +333,14 @@ describe("StudioReleaseBuyPanel edge states", () => {
         },
       ],
     });
-    renderPanel();
+    await renderPanel();
     expect(
       await screen.findByText(
         "This release is sold track by track. Pick a track below to buy it",
       ),
     ).toBeInTheDocument();
     expect(screen.queryByText("This is not for sale")).toBeNull();
-    expect(screen.queryByRole("alert")).toBeNull();
+    expect(panelAlerts()).toHaveLength(0);
   });
 
   it("keeps the not for sale line when no track is on offer either", async () => {
@@ -336,7 +354,7 @@ describe("StudioReleaseBuyPanel edge states", () => {
       },
       trackOffers: [],
     });
-    renderPanel();
+    await renderPanel();
     expect(await screen.findByText("This is not for sale")).toBeInTheDocument();
   });
 
@@ -349,7 +367,9 @@ describe("StudioReleaseBuyPanel edge states", () => {
     );
     await screen.findByRole("dialog", { name: /^Buy / });
     // "I've paid" waits for the payment code.
-    await screen.findByRole("button", { name: "Copy the reference code" });
+    await screen.findByRole("button", {
+      name: "Copy code for the payment note",
+    });
     fireEvent.click(screen.getByRole("button", { name: "I've paid" }));
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     expect(

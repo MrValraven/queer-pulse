@@ -9,6 +9,10 @@ import {
   detailsFreshness,
   type DetailsFreshness,
 } from "./listingOperatingState.data";
+import {
+  LISTING_EDIT_SAVE_OVERRIDES,
+  failureToast,
+} from "../../marketingErrorCopy";
 import styles from "./ListingTrading.module.css";
 
 /** Tone per freshness tier. Lives here, not in the data file, because the
@@ -46,8 +50,16 @@ export function ListingDetailsConfirmCard({
     confirmDetails.mutate(undefined, {
       onSuccess: () =>
         showToast(t("marketing:listBusiness.confirmDetails.toast"), "success"),
-      onError: () =>
-        showToast(t("marketing:listBusiness.confirmDetails.error"), "error"),
+      onError: (error) =>
+        showToast(
+          failureToast(
+            error,
+            t,
+            "marketing:listBusiness.confirmDetails.errorTitle",
+            LISTING_EDIT_SAVE_OVERRIDES,
+          ),
+          "error",
+        ),
     });
   };
 

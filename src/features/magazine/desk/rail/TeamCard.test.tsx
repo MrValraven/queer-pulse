@@ -2,6 +2,7 @@ import { useState } from "react";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 import { TestProviders } from "../../../../test/TestProviders";
 import { DEMO_EDITORS, DEMO_PIECES, type Piece } from "../../data/desk.data";
 import { TeamCard, type TeamCardProps } from "./TeamCard";
@@ -33,13 +34,14 @@ function teamCardProps(overrides: Partial<TeamCardProps> = {}): TeamCardProps {
   };
 }
 
-function renderTeamCard(overrides: Partial<TeamCardProps> = {}) {
+async function renderTeamCard(overrides: Partial<TeamCardProps> = {}) {
   const props = teamCardProps(overrides);
   render(
     <TestProviders>
       <TeamCard {...props} />
     </TestProviders>,
   );
+  await awaitCatalog("magazine");
   return props;
 }
 
@@ -59,14 +61,14 @@ function ControlledTeamCard(
 }
 
 describe("TeamCard in-flight counts", () => {
-  it("counts each editor's in-flight pieces from the scope's pieces over editorLoad's desk-wide count", () => {
+  it("counts each editor's in-flight pieces from the scope's pieces over editorLoad's desk-wide count", async () => {
     const pieces = [
       makePiece({ id: "1", editorId: "marta", stage: "Drafting" }),
       makePiece({ id: "2", editorId: "marta", stage: "Layout" }),
       makePiece({ id: "3", editorId: "marta", stage: "Published" }),
       makePiece({ id: "4", editorId: "sara", stage: "Drafting" }),
     ];
-    renderTeamCard({ pieces });
+    await renderTeamCard({ pieces });
     const team = screen.getByRole("region", { name: "Team" });
 
     // editorLoad says 9 and 3; the in-flight pieces in scope say 2 and 1.
@@ -76,7 +78,7 @@ describe("TeamCard in-flight counts", () => {
     expect(within(saraRow).getByText("1")).toBeInTheDocument();
   });
 
-  it("flags over capacity from the computed count over editorLoad's own count", () => {
+  it("flags over capacity from the computed count over editorLoad's own count", async () => {
     const pieces = [
       makePiece({ id: "1", editorId: "marta", stage: "Drafting" }),
       makePiece({ id: "2", editorId: "marta", stage: "Layout" }),
@@ -90,7 +92,7 @@ describe("TeamCard in-flight counts", () => {
     ];
     // editorLoad reports marta well under cap; the scope's pieces put her
     // over it. The over-capacity flag must follow the computed count.
-    renderTeamCard({
+    await renderTeamCard({
       pieces,
       editorLoad: [
         { editorId: "marta", count: 1, cap: 7 },
@@ -110,7 +112,7 @@ describe("TeamCard in-flight counts", () => {
       makePiece({ id: "1", editorId: "sara", stage: "Drafting" }),
       makePiece({ id: "2", editorId: "sara", stage: "Published" }),
     ];
-    const props = renderTeamCard({ pieces });
+    const props = await renderTeamCard({ pieces });
     const team = screen.getByRole("region", { name: "Team" });
     const saraRow = within(team).getByRole("button", { name: /Sara/ });
 
@@ -120,8 +122,8 @@ describe("TeamCard in-flight counts", () => {
     expect(props.onEditorFilter).toHaveBeenCalledWith("sara");
   });
 
-  it("falls back to editorLoad's count when no pieces are given", () => {
-    renderTeamCard();
+  it("falls back to editorLoad's count when no pieces are given", async () => {
+    await renderTeamCard();
     const team = screen.getByRole("region", { name: "Team" });
     const martaRow = within(team).getByRole("button", { name: /Marta/ });
     expect(within(martaRow).getByText("9")).toBeInTheDocument();
@@ -143,6 +145,7 @@ describe("TeamCard show everyone", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("magazine");
     const team = screen.getByRole("region", { name: "Team" });
 
     await user.click(

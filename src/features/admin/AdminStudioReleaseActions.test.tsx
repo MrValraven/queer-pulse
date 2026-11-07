@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { TestProviders } from "../../test/TestProviders";
 import { DEMO_DEFAULT_RELEASE_ID } from "../studio/api/studioDemoMe.data";
 import type { ModReport } from "./adminModeration.data";
@@ -41,6 +42,11 @@ const panelFor = (subject: ModReport) => (
   </TestProviders>
 );
 
+/** The value the panel shows beside a fact's label (Status, Takedown reason). */
+function factValueOf(label: string): string | null {
+  return screen.getByText(label).nextElementSibling?.textContent ?? null;
+}
+
 describe("AdminStudioReleaseActions (demo)", () => {
   it("takes a live release down only with a reason, then restores it to live", async () => {
     render(panelFor(report));
@@ -64,9 +70,9 @@ describe("AdminStudioReleaseActions (demo)", () => {
     expect(
       screen.queryByRole("button", { name: "Take down release" }),
     ).not.toBeInTheDocument();
-    expect(
-      screen.getByText("Takedown reason: Uses a sample without permission"),
-    ).toBeInTheDocument();
+    expect(factValueOf("Takedown reason")).toBe(
+      "Uses a sample without permission",
+    );
     fireEvent.click(screen.getByRole("button", { name: "Restore release" }));
     expect(
       await screen.findByText("Release restored and live again"),
@@ -87,12 +93,10 @@ describe("AdminStudioReleaseActions (demo)", () => {
     expect(
       await screen.findByRole("button", { name: "Restore release" }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        "Takedown reason: A rights holder asked us to check the sample on this track",
-      ),
-    ).toBeInTheDocument();
-    expect(screen.getByText("Status: Taken down")).toBeInTheDocument();
+    expect(factValueOf("Takedown reason")).toBe(
+      "A rights holder asked us to check the sample on this track",
+    );
+    expect(factValueOf("Status")).toBe("Taken down");
     expect(
       screen.queryByRole("button", { name: "Take down release" }),
     ).not.toBeInTheDocument();
@@ -110,6 +114,7 @@ describe("AdminStudioReleaseActions (demo)", () => {
       refetch,
     };
     const view = render(panelFor(report));
+    await awaitCatalog("admin");
     expect(
       screen.getByText("We couldn't load this release"),
     ).toBeInTheDocument();

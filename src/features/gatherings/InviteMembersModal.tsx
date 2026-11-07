@@ -13,6 +13,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useStaffMap } from "../../shared/staff/useStaffRole";
 import { useConnectionsSearch } from "../connect/api/useConnectionsSearch";
 import { GatheringSuccessPanel } from "./GatheringSuccessPanel";
+import { hostToolErrorMessage } from "./gatheringActionErrors";
 import { InviteMembersListFooter } from "./InviteMembersListFooter";
 import { InviteMembersSelectedCount } from "./InviteMembersSelectedCount";
 import { useInviteMembers } from "./api/useEventMutations";
@@ -125,8 +126,7 @@ export function InviteMembersModal({
           );
         }
       },
-      onError: () =>
-        showToast(t("gatherings:rsvpInvites.sendErrorToast"), "error"),
+      onError: (error) => showToast(hostToolErrorMessage(error, t), "error"),
     });
   };
 

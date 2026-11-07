@@ -1,10 +1,11 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import { ForumThreadList } from "../ForumThreadList";
 import { FundingEmptyState } from "./FundingEmptyState";
 
-function renderEmpty(hasFilters: boolean) {
+async function renderEmpty(hasFilters: boolean) {
   const onClearFilters = vi.fn();
   const onSeeAll = vi.fn();
   render(
@@ -17,12 +18,13 @@ function renderEmpty(hasFilters: boolean) {
       />
     </TestProviders>,
   );
+  await awaitCatalog("forum");
   return { onClearFilters, onSeeAll };
 }
 
 describe("FundingEmptyState", () => {
-  it("speaks for the empty view and clears the filters that narrowed it", () => {
-    const { onClearFilters, onSeeAll } = renderEmpty(true);
+  it("speaks for the empty view and clears the filters that narrowed it", async () => {
+    const { onClearFilters, onSeeAll } = await renderEmpty(true);
     expect(screen.getByText("Nothing closing this week")).toBeInTheDocument();
     expect(
       screen.getByText(
@@ -34,16 +36,16 @@ describe("FundingEmptyState", () => {
     expect(onSeeAll).not.toHaveBeenCalled();
   });
 
-  it("leads back to every funding post when no filter is set", () => {
-    const { onSeeAll } = renderEmpty(false);
+  it("leads back to every funding post when no filter is set", async () => {
+    const { onSeeAll } = await renderEmpty(false);
     fireEvent.click(
       screen.getByRole("button", { name: "See all funding posts" }),
     );
     expect(onSeeAll).toHaveBeenCalledTimes(1);
   });
 
-  it("invites a member to share a call through the composer", () => {
-    renderEmpty(false);
+  it("invites a member to share a call through the composer", async () => {
+    await renderEmpty(false);
     expect(
       screen.getByRole("link", { name: "Share an open call" }),
     ).toHaveAttribute("href", "/forum/new");
@@ -51,7 +53,7 @@ describe("FundingEmptyState", () => {
 });
 
 describe("ForumThreadList in a Funding & Grants view", () => {
-  it("shows the view's own empty state and no category count", () => {
+  it("shows the view's own empty state and no category count", async () => {
     const noop = vi.fn();
     render(
       <TestProviders>
@@ -83,6 +85,7 @@ describe("ForumThreadList in a Funding & Grants view", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("forum");
     expect(screen.getByText("No discussions yet")).toBeInTheDocument();
     expect(screen.queryByText(/^0 threads$/)).toBeNull();
     expect(screen.queryByText("Nothing in this category yet")).toBeNull();

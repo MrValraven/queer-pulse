@@ -7,6 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { useGovernanceCosign } from "./api/useGovernanceProposals";
 import type { GovernanceProposalDTO } from "./api/governanceProposals.api";
+import { governanceErrorText } from "./governanceErrors";
 import styles from "./GovernancePage.module.css";
 
 /**
@@ -63,12 +64,9 @@ export function CosignRow({ proposal }: { proposal: GovernanceProposalDTO }) {
     cosign(
       { proposalId: proposal.id, isWithdrawing },
       {
-        onError: () => {
+        onError: (error) => {
           setPendingSignature(null);
-          showToast(
-            t("governance:sections.proposals.cosign.errorToast"),
-            "error",
-          );
+          showToast(governanceErrorText(t, error), "error");
         },
       },
     );

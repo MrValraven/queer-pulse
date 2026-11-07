@@ -126,7 +126,10 @@ describe("useSaveListingPhotoFraming", () => {
     await act(async () => {
       await result.current.mutateAsync(body).catch(() => undefined);
     });
-    expect(result.current.error?.message).toContain("no ref");
+    // React Query hands the error state to the observer on a later tick.
+    await waitFor(() =>
+      expect(result.current.error?.message).toContain("no ref"),
+    );
     expect(memberSave).not.toHaveBeenCalled();
   });
 

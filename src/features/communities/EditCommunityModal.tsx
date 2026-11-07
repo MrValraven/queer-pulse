@@ -22,6 +22,7 @@ import {
   type EditableCommunityFields,
 } from "./api/communities.adapters";
 import { useUpdateCommunity } from "./api/useCommunityMutations";
+import { communityErrorText } from "./communityErrors";
 import { useCommunityForm } from "./startCommunity/useCommunityForm";
 import { EditCommunityRules } from "./EditCommunityRules";
 import { EditCommunityChangeSummary } from "./EditCommunityChangeSummary";
@@ -86,8 +87,12 @@ export function EditCommunityModal({
     avatarPreviewUrl,
     setAvatarPreviewUrl,
   } = useCommunityForm(initialDraft);
-  const updateCommunity = useUpdateCommunity();
-  const [error, setError] = useState(false);
+  // The inline alert names the cause, so the global toast would repeat it.
+  const updateCommunity = useUpdateCommunity({
+    shouldSilenceGlobalError: true,
+  });
+  // The cause line for a refused save, shown under the form. Null until one.
+  const [error, setError] = useState<string | null>(null);
   const [suggestingTag, setSuggestingTag] = useState(false);
   // A pick uploads to storage immediately (presigned PUT), so a cover chosen
   // here and then abandoned would sit in the member's photo library forever.
@@ -130,7 +135,7 @@ export function EditCommunityModal({
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (missingRequired || isUnchanged || updateCommunity.isPending) return;
-    setError(false);
+    setError(null);
     const dto = draftToUpdateDto(draft);
     // Only send the cover when it actually changed. Re-sending an UNCHANGED
     // cover would replay the original uploader's storage key — and the backend's
@@ -163,7 +168,7 @@ export function EditCommunityModal({
           onSaved?.();
           onClose();
         },
-        onError: () => setError(true),
+        onError: (saveError) => setError(communityErrorText(t, saveError)),
       },
     );
   };
@@ -267,7 +272,7 @@ interface EditCommunityFieldsProps {
   toggleFeature: (id: string, locked?: boolean) => void;
   addRule: (text: string) => void;
   toggleRule: (rule: string) => void;
-  error: boolean;
+  error: string | null;
   onSuggestTag: () => void;
   /** False for a community mod: the backend now 403s a non-owner changing
    *  `accessTier`/`rosterVisible`, so those controls render read-only rather
@@ -482,7 +487,7 @@ function EditCommunityFields({
 
       {error && (
         <p className={styles.alert} role="alert">
-          {t("communities:edit.toast.error")}
+          {error}
         </p>
       )}
     </>

@@ -17,10 +17,17 @@ import { VjScreenStage, type VjScreenStageProps } from "./VjScreenStage";
  */
 const engineSources = vi.hoisted(() => {
   const builtClipIds: string[] = [];
-  const createFakeSource = (renderable: VjRenderableSource) => {
+  /** Per clip id: reports that clip's first frame, the way a decoder would. */
+  const firstFrameOf = new Map<string, () => void>();
+  const createFakeSource = (
+    renderable: VjRenderableSource,
+    deps: { events: { onFirstFrame(key: string): void } },
+  ) => {
     builtClipIds.push(renderable.clipId);
+    const key = `${renderable.clipId}|${renderable.sourceUrl}`;
+    firstFrameOf.set(renderable.clipId, () => deps.events.onFirstFrame(key));
     return {
-      key: `${renderable.clipId}|${renderable.sourceUrl}`,
+      key,
       kind: renderable.mediaKind === "generator" ? "generator" : "video",
       isReady: false,
       playheadMs: 0,
@@ -37,7 +44,7 @@ const engineSources = vi.hoisted(() => {
       dispose: () => undefined,
     };
   };
-  return { builtClipIds, createFakeSource };
+  return { builtClipIds, firstFrameOf, createFakeSource };
 });
 
 vi.mock("../engine/sources/vjSourceFactory", () => ({
@@ -50,6 +57,8 @@ const CLOCK: VjClockReader = {
   toLocalTime: (serverMs) => serverMs,
 };
 const SCREEN_PATH = "/admin/vj/screen";
+/** Past any default transition, so the live clip is the shown front. */
+const LIVE_SHOWN_AT_MS = 60_000;
 
 function videoClip(clipId: string): VjRenderableClip {
   return {
@@ -91,7 +100,37 @@ function renderScreenStage(changes: Partial<VjScreenStageProps> = {}) {
       <VjScreenStage {...props} />
     </LazyMotion>,
   );
-  return { ...view, props, handleRef };
+  const rerenderScreenStage = (next: Partial<VjScreenStageProps>): void => {
+    Object.assign(props, next);
+    view.rerender(
+      <LazyMotion features={domMax} strict>
+        <VjScreenStage {...props} />
+      </LazyMotion>,
+    );
+  };
+  return { ...view, props, handleRef, rerenderScreenStage };
+}
+
+/** Queues the compositor's frames, so a test runs them at the times it picks. */
+function captureFrames(): (nowMs: number) => void {
+  const queuedFrames: FrameRequestCallback[] = [];
+  vi.mocked(window.requestAnimationFrame).mockImplementation((callback) => {
+    queuedFrames.push(callback);
+    return queuedFrames.length;
+  });
+  return (nowMs) => {
+    vi.spyOn(performance, "now").mockReturnValue(nowMs);
+    act(() => {
+      for (const frame of queuedFrames.splice(0)) frame(nowMs);
+    });
+  };
+}
+
+/** Brings the live clip on: its first frame, then frames past its fade in. */
+function showLiveClip(clipId: string, runFrames: (nowMs: number) => void) {
+  engineSources.firstFrameOf.get(clipId)?.();
+  runFrames(1_000);
+  runFrames(LIVE_SHOWN_AT_MS);
 }
 
 function engineCanvasOf(container: HTMLElement): HTMLCanvasElement | null {
@@ -100,6 +139,7 @@ function engineCanvasOf(container: HTMLElement): HTMLCanvasElement | null {
 
 beforeEach(() => {
   engineSources.builtClipIds.length = 0;
+  engineSources.firstFrameOf.clear();
   resetVjWebGl2ProbeForTests();
   window.history.replaceState(null, "", SCREEN_PATH);
   // The compositor's loop and the DOM health sampler stay still: no frame runs.
@@ -109,6 +149,7 @@ beforeEach(() => {
 
 afterEach(() => {
   window.history.replaceState(null, "", SCREEN_PATH);
+  vi.restoreAllMocks();
 });
 
 describe("VjScreenStage", () => {
@@ -228,8 +269,13 @@ describe("VjScreenStage", () => {
     const liveClip = videoClip("clip-live");
     const nextClip = videoClip("clip-next");
     const upcomingState = { ...BASE_STATE, revision: 1 };
-    const { handleRef } = renderScreenStage({
+    const runFrames = captureFrames();
+    const { handleRef, rerenderScreenStage } = renderScreenStage({
       live: liveClip,
+    });
+    // Pre-roll loads into the free layer, so the live clip shows first.
+    showLiveClip(liveClip.clipId, runFrames);
+    rerenderScreenStage({
       upcoming: { state: upcomingState, applyAt: 5000 },
       upcomingLive: nextClip,
     });
@@ -290,8 +336,13 @@ describe("VjScreenStage", () => {
     const glFakes = installVjFakeWebGl2();
     const liveClip = videoClip("clip-live");
     const nextClip = videoClip("clip-next");
-    const { container, props } = renderScreenStage({
+    const runFrames = captureFrames();
+    const { container, props, rerenderScreenStage } = renderScreenStage({
       live: liveClip,
+    });
+    // Pre-roll loads into the free layer, so the live clip shows first.
+    showLiveClip(liveClip.clipId, runFrames);
+    rerenderScreenStage({
       upcoming: { state: { ...BASE_STATE, revision: 1 }, applyAt: 5000 },
       upcomingLive: nextClip,
     });

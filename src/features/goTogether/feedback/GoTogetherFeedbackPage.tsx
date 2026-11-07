@@ -22,6 +22,7 @@ import {
 } from "../api/useGoTogetherFeedback";
 import { useGoTogetherGroup } from "../api/useGoTogetherGroup";
 import { goTogetherErrorCode } from "../api/goTogether.api";
+import { goTogetherCauseKey } from "../api/goTogetherErrorCopy";
 import type {
   FeedbackBody,
   GoTogetherFeedbackDTO,
@@ -267,7 +268,7 @@ export function GoTogetherFeedbackPage() {
         if (goTogetherErrorCode(saveError) === "GO_TOGETHER_FEEDBACK_CLOSED") {
           setHasClosedError(true);
         } else {
-          showToast(t("goTogether:feedback.saveError"), "error");
+          showToast(t(goTogetherCauseKey(saveError)), "error");
         }
       },
     });

@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import type { Thread } from "../forum.data";
 import type { ForumFundingView } from "./funding.types";
@@ -63,12 +64,15 @@ const THREAD: Thread = {
   funding: FUNDING,
 };
 
-const renderFacts = (funding: ForumFundingView) =>
-  render(
+async function renderFacts(funding: ForumFundingView) {
+  const rendered = render(
     <TestProviders>
       <FundingAskFacts thread={{ ...THREAD, funding }} funding={funding} />
     </TestProviders>,
   );
+  await awaitCatalog("forum");
+  return rendered;
+}
 
 describe("FundingAskFacts", () => {
   beforeEach(() => {
@@ -76,8 +80,8 @@ describe("FundingAskFacts", () => {
     authorState.isAuthor = true;
   });
 
-  it("says who holds the money and when moderators checked it", () => {
-    renderFacts(FUNDING);
+  it("says who holds the money and when moderators checked it", async () => {
+    await renderFacts(FUNDING);
     expect(
       screen.getByText(
         /QueerPulse never handles money\. Donations go to gofundme\.com\. Checked by moderators on/,
@@ -85,8 +89,8 @@ describe("FundingAskFacts", () => {
     ).toBeInTheDocument();
   });
 
-  it("sends donors to the host in a new tab", () => {
-    renderFacts(FUNDING);
+  it("sends donors to the host in a new tab", async () => {
+    await renderFacts(FUNDING);
     const donate = screen.getByRole("link", {
       name: /Donate on gofundme\.com/,
     });
@@ -95,8 +99,8 @@ describe("FundingAskFacts", () => {
     expect(donate).toHaveAttribute("rel", "noopener noreferrer nofollow");
   });
 
-  it("lets the author mark the goal reached after confirming", () => {
-    renderFacts(FUNDING);
+  it("lets the author mark the goal reached after confirming", async () => {
+    await renderFacts(FUNDING);
     fireEvent.click(screen.getByRole("button", { name: "Mark goal reached" }));
     fireEvent.click(
       screen.getAllByRole("button", { name: "Mark goal reached" }).at(-1)!,
@@ -104,16 +108,16 @@ describe("FundingAskFacts", () => {
     expect(endAskMock.mock.calls[0]?.[0]).toBe("goal_reached");
   });
 
-  it("offers nobody else the end controls", () => {
+  it("offers nobody else the end controls", async () => {
     authorState.isAuthor = false;
-    renderFacts(FUNDING);
+    await renderFacts(FUNDING);
     expect(
       screen.queryByRole("button", { name: "Mark goal reached" }),
     ).toBeNull();
   });
 
-  it("drops the donate button once the fundraiser has ended", () => {
-    renderFacts({
+  it("drops the donate button once the fundraiser has ended", async () => {
+    await renderFacts({
       ...FUNDING,
       askState: "ended",
       endedReason: "goal_reached",
@@ -125,16 +129,16 @@ describe("FundingAskFacts", () => {
     ).toBeInTheDocument();
   });
 
-  it("offers no donate button on a fundraiser still waiting for review", () => {
-    renderFacts({ ...FUNDING, askState: "pending", approvedAt: null });
+  it("offers no donate button on a fundraiser still waiting for review", async () => {
+    await renderFacts({ ...FUNDING, askState: "pending", approvedAt: null });
     expect(screen.queryByRole("link", { name: /Donate/ })).toBeNull();
     expect(
       screen.getByText(/A moderator checks it before it goes live/),
     ).toBeInTheDocument();
   });
 
-  it("lets the author close a fundraiser still waiting for review, with no goal to mark", () => {
-    renderFacts({ ...FUNDING, askState: "pending", approvedAt: null });
+  it("lets the author close a fundraiser still waiting for review, with no goal to mark", async () => {
+    await renderFacts({ ...FUNDING, askState: "pending", approvedAt: null });
     expect(
       screen.queryByRole("button", { name: "Mark goal reached" }),
     ).toBeNull();
@@ -143,7 +147,7 @@ describe("FundingAskFacts", () => {
     expect(endAskMock.mock.calls[0]?.[0]).toBe("closed");
   });
 
-  it("tells only the author that an edit sent the fundraiser back", () => {
+  it("tells only the author that an edit sent the fundraiser back", async () => {
     const sentBackCopy = /Sent back to moderators/;
     const pending: ForumFundingView = {
       ...FUNDING,
@@ -151,7 +155,7 @@ describe("FundingAskFacts", () => {
       approvedAt: null,
     };
     authorState.isAuthor = false;
-    const { rerender } = renderFacts(FUNDING);
+    const { rerender } = await renderFacts(FUNDING);
     rerender(
       <TestProviders>
         <FundingAskFacts
@@ -174,9 +178,9 @@ describe("FundingAskFacts", () => {
     expect(screen.getByText(sentBackCopy)).toBeInTheDocument();
   });
 
-  it("dates the moderators' check on the Lisbon calendar", () => {
+  it("dates the moderators' check on the Lisbon calendar", async () => {
     // 23:30 UTC on 10 July is already 11 July in Lisbon (UTC+1 in summer).
-    renderFacts({ ...FUNDING, approvedAt: "2026-07-10T23:30:00.000Z" });
+    await renderFacts({ ...FUNDING, approvedAt: "2026-07-10T23:30:00.000Z" });
     expect(
       screen.getByText(/Checked by moderators on (11 July 2026|July 11, 2026)/),
     ).toBeInTheDocument();

@@ -13,6 +13,7 @@ import {
   renderWithPlayer,
   trackFixture,
 } from "./studioPlayerTestHarness";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 /** What the artist hook answers for the playing item. */
 const artistHolder = vi.hoisted(() => {
@@ -144,8 +145,9 @@ beforeEach(() => {
 });
 
 describe("StudioNowPlayingView", () => {
-  it("orders track, About, Credits, Next in queue, events, support and more releases", () => {
+  it("orders track, About, Credits, Next in queue, events, support and more releases", async () => {
     renderView();
+    await awaitCatalog("studio");
     const expected = [
       "About the artist",
       "Credits",
@@ -173,17 +175,19 @@ describe("StudioNowPlayingView", () => {
     ).toBeInTheDocument();
   });
 
-  it("leaves Credits out for a private preview", () => {
+  it("leaves Credits out for a private preview", async () => {
     renderView(queueItem({ previewToken: "pv-1" }));
+    await awaitCatalog("studio");
     expect(screen.queryByRole("heading", { name: "Credits" })).toBeNull();
     expect(
       screen.getByRole("heading", { name: "Next in queue" }),
     ).toBeInTheDocument();
   });
 
-  it("keeps every other section when the artist read fails", () => {
+  it("keeps every other section when the artist read fails", async () => {
     artistHolder.state = { status: "failed", artist: null };
     renderView();
+    await awaitCatalog("studio");
     expect(
       screen.queryByRole("heading", { name: "About the artist" }),
     ).toBeNull();
@@ -207,8 +211,9 @@ describe("StudioNowPlayingView", () => {
     );
   });
 
-  it("switches to the queue from Open queue", () => {
+  it("switches to the queue from Open queue", async () => {
     const { onOpenQueue } = renderView();
+    await awaitCatalog("studio");
     fireEvent.click(screen.getByRole("button", { name: "Open queue" }));
     expect(onOpenQueue).toHaveBeenCalledTimes(1);
   });

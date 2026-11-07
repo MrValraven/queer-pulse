@@ -6,6 +6,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Review } from "./directoryPlaces";
 import { useReplyToReview } from "./api/useReplyToReview";
+import { REVIEW_REPLY_OVERRIDES, failureToast } from "./marketingErrorCopy";
 import s from "./DirectorySpacePage.module.css";
 
 interface Props {
@@ -52,8 +53,16 @@ export function DirectoryReviewReply({ review, ownerRef, slug }: Props) {
             "success",
           );
         },
-        onError: () =>
-          showToast(t("marketing:directory.detail.reply.errorToast"), "error"),
+        onError: (error) =>
+          showToast(
+            failureToast(
+              error,
+              t,
+              "marketing:directory.detail.reply.errorTitle",
+              REVIEW_REPLY_OVERRIDES,
+            ),
+            "error",
+          ),
       },
     );
   };

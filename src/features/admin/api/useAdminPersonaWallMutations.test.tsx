@@ -104,8 +104,10 @@ describe("persona wall mutations (demo)", () => {
         subprofileId: "sp-ines-fonseca-vanda-diesel",
       }),
     );
-    expect(result.current.admin.data?.picks.at(-1)?.persona.id).toBe(
-      "sp-ines-fonseca-vanda-diesel",
+    await waitFor(() =>
+      expect(result.current.admin.data?.picks.at(-1)?.persona.id).toBe(
+        "sp-ines-fonseca-vanda-diesel",
+      ),
     );
     await waitFor(() =>
       expect(
@@ -141,7 +143,7 @@ describe("persona wall mutations (demo)", () => {
       reorderGate.release();
       await reorderPromise;
     });
-    expect(result.current.reorder.isSuccess).toBe(true);
+    await waitFor(() => expect(result.current.reorder.isSuccess).toBe(true));
     expect(pickedPersonaIdsOf(result)).toEqual([...SEED_PERSONA_IDS].reverse());
     expect(positionsOf(result)).toEqual([1, 2, 3, 4]);
   });
@@ -177,7 +179,9 @@ describe("persona wall mutations (demo)", () => {
         pickId: "demo-wall-pick-sp-bea-cadeira",
       }),
     );
-    expect(result.current.admin.data?.picks).toHaveLength(3);
+    await waitFor(() =>
+      expect(result.current.admin.data?.picks).toHaveLength(3),
+    );
     expect(positionsOf(result)).toEqual([1, 2, 3]);
     expect(pickedPersonaIdsOf(result)).not.toContain("sp-bea-cadeira");
   });
@@ -188,7 +192,9 @@ describe("persona wall mutations (demo)", () => {
     await act(() =>
       result.current.setFillOrder.mutateAsync({ fillOrder: "followed" }),
     );
-    expect(result.current.admin.data?.fillOrder).toBe("followed");
+    await waitFor(() =>
+      expect(result.current.admin.data?.fillOrder).toBe("followed"),
+    );
   });
 
   it("reports a write in flight", async () => {

@@ -10,6 +10,7 @@ import {
 import { StudioAlbumHeroActions } from "./StudioAlbumHeroActions";
 import { StudioTrackChapters } from "./player/ui/StudioTrackChapters";
 import { StudioEpisodeCard } from "./StudioEpisodeCard";
+import { awaitCatalog } from "../../test/awaitCatalog";
 
 vi.mock("./api/useStudioPlaybackPreferences", async (importOriginal) => ({
   ...(await importOriginal<
@@ -82,14 +83,17 @@ function heroRelease(isSecondTrackExplicit: boolean) {
 }
 
 describe("release level note (spec 7)", () => {
-  it("says why Play is disabled when every playable track is hidden", () => {
+  it("says why Play is disabled when every playable track is hidden", async () => {
     renderWithPlayer(
       <StudioAlbumHeroActions
         release={heroRelease(true)}
         onTip={vi.fn()}
         onReport={vi.fn()}
       />,
+      // Nothing playing, so the hero's button reads Play.
+      { player: createStudioPlayerValue({ currentItem: null }) },
     );
+    await awaitCatalog("studio");
     expect(screen.getByText(/hidden by your settings/i)).toBeTruthy();
     expect(
       screen
@@ -98,14 +102,17 @@ describe("release level note (spec 7)", () => {
     ).toBe("true");
   });
 
-  it("stays silent when one playable track is not explicit", () => {
+  it("stays silent when one playable track is not explicit", async () => {
     renderWithPlayer(
       <StudioAlbumHeroActions
         release={heroRelease(false)}
         onTip={vi.fn()}
         onReport={vi.fn()}
       />,
+      // Nothing playing, so the hero's button reads Play.
+      { player: createStudioPlayerValue({ currentItem: null }) },
     );
+    await awaitCatalog("studio");
     expect(screen.queryByText(/hidden by your settings/i)).toBeNull();
     expect(
       screen
@@ -116,7 +123,7 @@ describe("release level note (spec 7)", () => {
 });
 
 describe("explicit gaps closed", () => {
-  it("keeps a hidden explicit episode card from playing and says why", () => {
+  it("keeps a hidden explicit episode card from playing and says why", async () => {
     const release = toReleaseView(show);
     const player = createStudioPlayerValue({ currentItem: null });
     const track = release.tracks[0];
@@ -124,13 +131,15 @@ describe("explicit gaps closed", () => {
     renderWithPlayer(<StudioEpisodeCard episode={{ track, release }} />, {
       player,
     });
-    fireEvent.click(screen.getByRole("button"));
+    await awaitCatalog("studio");
+    // A card that cannot play offers no Play button at all.
+    expect(screen.queryByRole("button", { name: /^play /i })).toBeNull();
     expect(player.playTracks).not.toHaveBeenCalled();
     expect(player.playRelease).not.toHaveBeenCalled();
     expect(screen.getByText(/hidden by your settings/i)).toBeTruthy();
   });
 
-  it("keeps a hidden explicit track's chapters from playing", () => {
+  it("keeps a hidden explicit track's chapters from playing", async () => {
     const player = createStudioPlayerValue({ currentItem: null });
     renderWithPlayer(
       <StudioTrackChapters
@@ -152,6 +161,7 @@ describe("explicit gaps closed", () => {
       />,
       { player },
     );
+    await awaitCatalog("studio");
     fireEvent.click(screen.getByText("Opening"));
     expect(player.playRelease).not.toHaveBeenCalled();
   });

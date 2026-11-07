@@ -86,4 +86,36 @@ describe("useVjGridTop", () => {
     unmount();
     expect(band.style.getPropertyValue(VJ_GRID_TOP_PROPERTY)).toBe("");
   });
+
+  it("measures the grid inside the band, below the failed clips line, and writes it on the band", () => {
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(
+      function (this: HTMLElement) {
+        const top = this.hasAttribute("data-vj-remote-grid") ? 266 : 214;
+        return {
+          top,
+          bottom: top + 100,
+          left: 0,
+          right: 354,
+          width: 354,
+          height: 100,
+          x: 0,
+          y: top,
+          toJSON: () => ({}),
+        };
+      },
+    );
+    function BandWithSummary() {
+      const gridTopRef = useVjGridTop();
+      return (
+        <section ref={gridTopRef} data-testid="grid-band">
+          <div data-vj-failure-summary="" />
+          <div data-vj-remote-grid="" />
+        </section>
+      );
+    }
+    const { getByTestId } = render(<BandWithSummary />);
+    expect(
+      getByTestId("grid-band").style.getPropertyValue(VJ_GRID_TOP_PROPERTY),
+    ).toBe("266px");
+  });
 });

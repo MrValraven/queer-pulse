@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ApiError } from "../../shared/api/client";
+import { causeErrorKey } from "../../shared/api/causeErrorKey";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { Button, Collapse, ConfirmDialog } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { ModReport } from "./adminModeration.data";
@@ -64,9 +66,11 @@ function ReportedPostSubject({ post }: { post: AdminPersonaPostDTO }) {
 
 /** A reported persona post, read through the staff view
  *  (GET /admin/persona-posts/:id), then "Remove update". An update already gone
- *  (a 404, or removed here) reads as removed, with no action left. */
+ *  (a 404, or removed here) reads as removed, with no action left. Any other
+ *  failed removal toasts its cause and leaves the dialog open. */
 export function AdminPersonaPostActions({ report }: { report: ModReport }) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const staffView = useStaffPersonaPost(report.subjectId);
   const remove = useRemoveReportedPersonaPost();
   const [isConfirming, setIsConfirming] = useState(false);
@@ -170,8 +174,20 @@ export function AdminPersonaPostActions({ report }: { report: ModReport }) {
                 finishRemoval();
               },
               onError: (error) => {
-                if (error instanceof ApiError && error.status === 404)
+                if (error instanceof ApiError && error.status === 404) {
                   finishRemoval();
+                  return;
+                }
+                // The mutation is silent app-wide, so the cause is named here.
+                // The dialog stays open so the moderator can try again.
+                const cause = causeErrorKey(error);
+                showToast(
+                  {
+                    title: t("admin:moderation.personaPost.removeFailed"),
+                    detail: t(cause.key, cause.values),
+                  },
+                  "error",
+                );
               },
             },
           )

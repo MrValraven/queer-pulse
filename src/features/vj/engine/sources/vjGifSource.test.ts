@@ -171,6 +171,49 @@ describe("VjGifSource", () => {
     expect(media.onFailed).not.toHaveBeenCalled();
   });
 
+  it("falls back to the img element when ImageDecoder throws, without reporting a failure", async () => {
+    const decoder = installVjFakeImageDecoder(FOUR_FRAMES, {
+      failingFrameIndex: 1,
+    });
+    const media = createVjFakeSourceDeps();
+    const fakeImage = createVjFakeImage();
+    const source = new VjGifSource(GIF_CLIP, media.deps, {
+      createImage: () => fakeImage.image,
+    });
+
+    await vi.waitFor(() => expect(source.isImageFallback).toBe(true));
+
+    expect(decoder.bitmaps.every((bitmap) => bitmap.isClosed)).toBe(true);
+    expect(decoder.closedDecoderCount()).toBe(1);
+    expect(media.deps.mediaHost.contains(fakeImage.image)).toBe(true);
+    expect(fakeImage.image.getAttribute("src")).toBe(GIF_CLIP.sourceUrl);
+    expect(media.onFailed).not.toHaveBeenCalled();
+
+    fakeImage.setDecoded(4, 4);
+    fakeImage.resolveDecode();
+    await vi.waitFor(() =>
+      expect(media.onFirstFrame).toHaveBeenCalledWith(source.key),
+    );
+    expect(media.onFailed).not.toHaveBeenCalled();
+  });
+
+  it("reports decode_failed when the img element fails after ImageDecoder throws", async () => {
+    installVjFakeImageDecoder(FOUR_FRAMES, { failingFrameIndex: 0 });
+    const media = createVjFakeSourceDeps();
+    const fakeImage = createVjFakeImage();
+    const source = new VjGifSource(GIF_CLIP, media.deps, {
+      createImage: () => fakeImage.image,
+    });
+
+    await vi.waitFor(() => expect(source.isImageFallback).toBe(true));
+    expect(media.onFailed).not.toHaveBeenCalled();
+
+    fakeImage.fireError();
+
+    expect(media.onFailed).toHaveBeenCalledTimes(1);
+    expect(media.onFailed).toHaveBeenCalledWith(source.key, "decode_failed");
+  });
+
   it("reserves the shared budget before decoding and gives back what the frames do not use", async () => {
     installVjFakeImageDecoder(FOUR_FRAMES);
     const gifBudget = new VjRingBudget(VJ_GIF_SHARED_BUDGET_BYTES);

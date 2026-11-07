@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { logError } from "../../shared/observability/logger";
+import {
+  causeErrorKey,
+  causeErrorKeyForStatus,
+  SHARED_CAUSE_KEY,
+  type CauseErrorOverrides,
+} from "../../shared/api/causeErrorKey";
 import { requestUpload } from "../members/api/uploads.api";
 import {
   DocumentProcessingError,
@@ -44,7 +50,38 @@ class DocumentUploadAbortedError extends Error {
   }
 }
 
-const RETRY_KEY = "messages:attachments.documentError.retry";
+/**
+ * Upload lines for the statuses the presign request (`requestUpload`) and the
+ * storage PUT share. Every other status, and an answer that never came, reads
+ * as the shared cause line from `causeErrorKey`.
+ */
+const DOCUMENT_UPLOAD_CAUSE_OVERRIDES: CauseErrorOverrides = {
+  400: "messages:attachments.documentError.storageRejectedType",
+  413: "messages:attachments.documentError.storageTooLarge",
+  429: "messages:attachments.documentError.tooManyUploads",
+};
+
+/** The storage PUT adds its own 403: the presigned link's signature expired
+ *  or no longer matches, which the fresh presign of a new attempt fixes. */
+const STORAGE_PUT_CAUSE_OVERRIDES: CauseErrorOverrides = {
+  ...DOCUMENT_UPLOAD_CAUSE_OVERRIDES,
+  403: "messages:attachments.documentError.linkExpired",
+};
+
+/** The error for a storage PUT that answered with `status`. */
+function storagePutFailure(status: number): DocumentProcessingError {
+  // Status 0 is a response the browser withheld (blocked or cut off).
+  if (status === 0) {
+    return new DocumentProcessingError(SHARED_CAUSE_KEY.noConnection);
+  }
+  if (status >= 500) {
+    return new DocumentProcessingError(
+      "messages:attachments.documentError.storageFault",
+    );
+  }
+  const copy = causeErrorKeyForStatus(status, STORAGE_PUT_CAUSE_OVERRIDES);
+  return new DocumentProcessingError(copy.key, copy.values);
+}
 
 /** `PUT` the file to the presigned URL. No canvas/EXIF pipeline here (see
  *  `DocumentComposerButton`'s own doc for why a document's metadata is
@@ -96,12 +133,12 @@ function putOnce(
         onProgress?.(100);
         resolve();
       } else {
-        reject(new DocumentProcessingError(RETRY_KEY));
+        reject(storagePutFailure(xhr.status));
       }
     };
     xhr.onerror = () => {
       settle();
-      reject(new DocumentProcessingError(RETRY_KEY));
+      reject(new DocumentProcessingError(SHARED_CAUSE_KEY.noConnection));
     };
     signal?.addEventListener("abort", onAbort);
     xhr.send(file);
@@ -196,7 +233,13 @@ export function useUploadDocument() {
         if (err instanceof DocumentUploadAbortedError) throw err;
         logError(err, { scope: "useUploadDocument" });
         if (err instanceof DocumentProcessingError) throw err;
-        throw new DocumentProcessingError(RETRY_KEY);
+        // The presign request failed: name its real cause (offline, a
+        // timeout, a restriction, a rate limit) and keep the original error
+        // on `cause`.
+        const presignCopy = causeErrorKey(err, DOCUMENT_UPLOAD_CAUSE_OVERRIDES);
+        throw new DocumentProcessingError(presignCopy.key, presignCopy.values, {
+          cause: err,
+        });
       }
     },
     [demoMode],

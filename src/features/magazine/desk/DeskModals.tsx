@@ -1,3 +1,4 @@
+import { AnimatePresence } from "motion/react";
 import type { Piece } from "../data/desk.data";
 import type { UnpublishLandingStage } from "../api/piecePublish.api";
 import { useMagazineWriters } from "../api/useMagazineWriters";
@@ -49,7 +50,7 @@ export type DeskModal =
   | { kind: "deletePiece"; piece: { title: string } }
   // The full `Piece` travels here because the confirm runs the unpublish
   // mutation, which snapshots the piece's `publishedAt` for the Undo toast.
-  | { kind: "unpublishPiece"; piece: Piece; stage: UnpublishLandingStage }
+  | { kind: "unpublishPiece"; piece: Piece }
   | { kind: "shortcuts" }
   | null;
 
@@ -72,17 +73,33 @@ export interface DeskModalsProps {
   onConfirmDeletePiece: () => void;
   /** True while the delete request is in flight, disabling both buttons. */
   isDeletingPiece: boolean;
-  onConfirmUnpublishPiece: () => void;
-  /** True while the unpublish request is in flight. */
+  /** Sends the unpublish to the destination picked in the confirm. */
+  onConfirmUnpublishPiece: (stage: UnpublishLandingStage) => void;
+  /** True while the unpublish request is in flight, disabling both buttons. */
   isUnpublishingPiece: boolean;
 }
 
 /**
  * Dispatches the desk's seven overlays (commission / pass / chase / handoff /
- * delete / unpublish / shortcuts) by `modal.kind`. Renders nothing while `modal` is `null`. Every
- * modal closes on Escape and scrim click via the shared `Modal` primitive.
+ * delete / unpublish / shortcuts) by `modal.kind`. Renders nothing while
+ * `modal` is `null`. Every modal closes on Escape and scrim click via the
+ * shared `Modal` primitive.
+ *
+ * The overlay sits in an `AnimatePresence` keyed by its kind, so the shared
+ * `Modal` plays its exit on every close (at once under reduced motion, see
+ * `useModalExit`) and hands focus back as it goes. A chase queue moving to
+ * its next writer keeps the same kind, so the dialog stays up between steps.
  */
-export function DeskModals({
+export function DeskModals(props: DeskModalsProps) {
+  const { modal } = props;
+  return (
+    <AnimatePresence>
+      {modal && <DeskModalOverlay key={modal.kind} {...props} modal={modal} />}
+    </AnimatePresence>
+  );
+}
+
+function DeskModalOverlay({
   modal,
   editors,
   sections,
@@ -98,14 +115,13 @@ export function DeskModals({
   isDeletingPiece,
   onConfirmUnpublishPiece,
   isUnpublishingPiece,
-}: DeskModalsProps) {
+}: DeskModalsProps & { modal: NonNullable<DeskModal> }) {
   const writerList = useMagazineWriters();
   const { writers } = writerList;
   // Mirrors the section picker: an empty roster while loading or after a
   // failure disables the writer pickers, which say why.
   const isWriterListUnavailable =
     writers.length === 0 && (writerList.isLoading || writerList.isError);
-  if (!modal) return null;
 
   switch (modal.kind) {
     case "commission":
@@ -164,7 +180,6 @@ export function DeskModals({
       return (
         <UnpublishPieceModal
           title={modal.piece.title}
-          stage={modal.stage}
           isPending={isUnpublishingPiece}
           onClose={onClose}
           onConfirm={onConfirmUnpublishPiece}

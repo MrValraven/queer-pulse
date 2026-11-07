@@ -8,6 +8,10 @@ import { parseListingDate, type DirectoryPlace } from "./directoryPlaces";
 import { DirectoryVisitorViewToggle } from "./DirectoryVisitorViewToggle";
 import { useConfirmListingDetails } from "./listBusiness/api/useListingOwnerState";
 import { listingFreshnessOf, type ListingFreshness } from "./listingFreshness";
+import {
+  LISTING_EDIT_SAVE_OVERRIDES,
+  failureToast,
+} from "./marketingErrorCopy";
 import styles from "./DirectoryOwnerBand.module.css";
 
 /**
@@ -110,9 +114,14 @@ function OwnedListingBand({
           t("marketing:directory.detail.ownerBand.confirmToast"),
           "success",
         ),
-      onError: () =>
+      onError: (error) =>
         showToast(
-          t("marketing:directory.detail.ownerBand.confirmError"),
+          failureToast(
+            error,
+            t,
+            "marketing:directory.detail.ownerBand.confirmErrorTitle",
+            LISTING_EDIT_SAVE_OVERRIDES,
+          ),
           "error",
         ),
     });

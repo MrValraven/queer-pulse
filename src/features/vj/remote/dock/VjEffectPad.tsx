@@ -1,6 +1,8 @@
 /**
- * One dock pad (design 7): a 64x52 button with the effect's name, its flash
- * and beat marks, and the amount on the bottom edge. Press handling is
+ * One dock pad (design 7): a button with the effect's short name at the
+ * bottom-left, its flash and beat marks in the top-right corner, and the
+ * amount on a track along the bottom edge (sizes per variant and layout live
+ * in VjPads.module.css). Press handling is
  * `useVjPadPress` (tap latches, a hold past 250 ms is momentary, a latched
  * pad held still for 500 ms or its context menu opens the tuner); every send
  * goes to `onPadSend` with the pad element, and the dispatcher (R26) applies
@@ -40,7 +42,7 @@ export interface VjPadButtonProps {
   padId: VjPadId;
   /** The full effect name: the pad's accessible name. */
   label: string;
-  /** What the 64px face shows; the full name when left out. */
+  /** What the pad face shows; the full name when left out. */
   shortLabel?: string;
   isOn: boolean;
   isPending: boolean;

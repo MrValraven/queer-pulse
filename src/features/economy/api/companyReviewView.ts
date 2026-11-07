@@ -14,6 +14,9 @@ export interface CompanyReviewView extends CompanyReview {
   /** The review's uuid. Live only. It is what addresses the reply endpoint and
    *  what a report against this review is filed under. */
   id?: string;
+  /** The viewer wrote this review. Live only; absent reads as `false`. There
+   *  is no author object to read: the server never sends one. */
+  isViewerAuthor?: boolean;
   /** When the author last changed it, ISO-8601, or `null` if never. */
   editedAt?: string | null;
   /**

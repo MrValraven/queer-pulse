@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import type { Editor, Piece } from "../data/desk.data";
 import { PieceRowWait } from "./PieceRowCells";
@@ -27,17 +28,19 @@ function makePiece(overrides: Partial<Piece> = {}): Piece {
   };
 }
 
-function renderWait(piece: Piece, me: string) {
-  return render(
+async function renderWait(piece: Piece, me: string) {
+  const view = render(
     <TestProviders>
       <PieceRowWait piece={piece} me={me} editors={EDITORS} />
     </TestProviders>,
   );
+  await awaitCatalog("magazine");
+  return view;
 }
 
 describe("PieceRowWait", () => {
-  it("reads the viewer's own turn as one sentence", () => {
-    const { container } = renderWait(makePiece(), "marta");
+  it("reads the viewer's own turn as one sentence", async () => {
+    const { container } = await renderWait(makePiece(), "marta");
 
     expect(screen.getByText("Waiting on you")).toHaveClass("visuallyHidden");
     // The visible word stays on screen and out of the spoken text.
@@ -48,15 +51,15 @@ describe("PieceRowWait", () => {
     );
   });
 
-  it("names another editor inside the sentence", () => {
-    renderWait(makePiece(), "sara");
+  it("names another editor inside the sentence", async () => {
+    await renderWait(makePiece(), "sara");
 
     expect(screen.getByText("Waiting on Marta")).toHaveClass("visuallyHidden");
     expect(screen.getByText("Marta")).toHaveAttribute("aria-hidden", "true");
   });
 
-  it("names the writer inside the sentence", () => {
-    renderWait(makePiece({ wait: "writer", stage: "Drafting" }), "marta");
+  it("names the writer inside the sentence", async () => {
+    await renderWait(makePiece({ wait: "writer", stage: "Drafting" }), "marta");
 
     expect(screen.getByText("Waiting on Writer")).toHaveClass("visuallyHidden");
   });

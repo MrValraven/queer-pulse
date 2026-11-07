@@ -19,6 +19,15 @@ import {
 } from "./vjLayerMachine";
 import type { VjStageHandle } from "./vjStageHandle";
 import { VjStageRenderer, type VjStageRendererProps } from "./VjStageRenderer";
+import stageStyles from "./VjStage.module.css";
+
+/** The hashed class the stage stylesheet gives `name`; Vitest scopes CSS module names. */
+function stageClassOf(name: string): string {
+  const scopedName = stageStyles[name];
+  if (scopedName === undefined)
+    throw new Error(`VjStage.module.css has no .${name}`);
+  return scopedName;
+}
 
 const BASE_STATE = createVjStageState("epoch-test", 0);
 const FADE: VjResolvedTransition = { mode: "fade", durationMs: 800 };
@@ -370,7 +379,7 @@ describe("VjStageRenderer fit backdrop", () => {
     });
     const backdrop = layerOf(container, "wide").querySelector("canvas");
     expect(backdrop).not.toBeNull();
-    expect(backdrop).toHaveClass("fitBackdrop");
+    expect(backdrop).toHaveClass(stageClassOf("fitBackdrop"));
     const stageCss = readFileSync(
       "src/features/vj/screen/VjStage.module.css",
       "utf8",
@@ -829,7 +838,10 @@ describe("VjStageRenderer releases video decoders", () => {
     rerenderStage({ target: videoClip("two") });
     await bringToFirstFrame(mainVideoOf(layerOf(container, "two")));
 
-    expect(container.querySelector('[data-vj-clip-id="one"]')).toBeNull();
+    // The old layer stays as an empty leaving slot: its media is gone.
+    const leavingLayer = layerOf(container, "one");
+    expect(leavingLayer).toHaveAttribute("data-vj-layer-phase", "leaving");
+    expect(leavingLayer.querySelector("video")).toBeNull();
     expect(oldVideo.hasAttribute("src")).toBe(false);
     expect(loadSpy).toHaveBeenCalledTimes(1);
     expect(mainVideoOf(layerOf(container, "two")).getAttribute("src")).toBe(
@@ -1018,7 +1030,7 @@ describe("VjStageRenderer v2 transitions and freeze", () => {
     const dippingLayer = layerOf(granted.container, "two");
     expect(dippingLayer).toHaveAttribute("data-vj-layer-phase", "fadingIn");
     expect(dippingLayer).toHaveAttribute("data-vj-transition", "dip");
-    expect(dippingLayer).toHaveClass("clipLayerDip");
+    expect(dippingLayer).toHaveClass(stageClassOf("clipLayerDip"));
     expect(dippingLayer.style.getPropertyValue("--vj-dip-colour")).toBe(
       "var(--vj-white)",
     );
@@ -1035,8 +1047,8 @@ describe("VjStageRenderer v2 transitions and freeze", () => {
     const fadingLayer = layerOf(strobing.container, "two");
     expect(fadingLayer).toHaveAttribute("data-vj-layer-phase", "fadingIn");
     expect(fadingLayer).toHaveAttribute("data-vj-transition", "fade");
-    expect(fadingLayer).toHaveClass("clipLayerFading");
-    expect(fadingLayer).not.toHaveClass("clipLayerDip");
+    expect(fadingLayer).toHaveClass(stageClassOf("clipLayerFading"));
+    expect(fadingLayer).not.toHaveClass(stageClassOf("clipLayerDip"));
   });
 
   it("wipes the incoming layer in from the right edge for wipeLeft and ends on its animation", async () => {
@@ -1049,7 +1061,7 @@ describe("VjStageRenderer v2 transitions and freeze", () => {
     await bringToFirstFrame(mainVideoOf(layerOf(container, "two")));
     const wipingLayer = layerOf(container, "two");
     expect(wipingLayer).toHaveAttribute("data-vj-transition", "clip");
-    expect(wipingLayer).toHaveClass("clipLayerClip");
+    expect(wipingLayer).toHaveClass(stageClassOf("clipLayerClip"));
     expect(wipingLayer.style.getPropertyValue("--vj-clip-from")).toBe(
       "inset(0 0 0 100%)",
     );

@@ -15,6 +15,7 @@ import {
   setDemoTeamMemberHidden,
 } from "../api/listingTeam.demo";
 import { ListingTeamInvitePicker } from "./ListingTeamInvitePicker";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 const NAVALHA_REF = "QPL-DEMO-0202";
 const SEARCH_LABEL = "Find a persona by name or @handle";
@@ -27,8 +28,8 @@ beforeEach(() => {
   resetListingTeamDemo();
 });
 
-function renderPicker(isListingOpen = true) {
-  return render(
+async function renderPicker(isListingOpen = true) {
+  const view = render(
     <div data-testid="picker">
       <ListingTeamInvitePicker
         listingRef={NAVALHA_REF}
@@ -37,6 +38,8 @@ function renderPicker(isListingOpen = true) {
     </div>,
     { wrapper: TestProviders },
   );
+  await awaitCatalog("marketing");
+  return view;
 }
 
 function inPicker() {
@@ -83,15 +86,15 @@ function fortyPendingRows(): DemoTeamRow[] {
 }
 
 describe("ListingTeamInvitePicker", () => {
-  it("asks for two characters before searching", () => {
-    renderPicker();
+  it("asks for two characters before searching", async () => {
+    await renderPicker();
     search("a");
     expect(screen.getByText("Type at least 2 characters")).toBeInTheDocument();
     expect(screen.queryAllByRole("listitem")).toHaveLength(0);
   });
 
   it("finds a persona by handle and marks where it stands", async () => {
-    renderPicker();
+    await renderPicker();
     search("@agu");
     expect(await screen.findByText("Agulha Lenta")).toBeInTheDocument();
     expect(screen.getByText(/@agulha-lenta/)).toBeInTheDocument();
@@ -104,7 +107,7 @@ describe("ListingTeamInvitePicker", () => {
   });
 
   it("invites with the role label typed above", async () => {
-    renderPicker();
+    await renderPicker();
     const roleField = screen.getByLabelText(ROLE_LABEL);
     fireEvent.change(roleField, { target: { value: "Guest artist" } });
     search("rosa");
@@ -120,7 +123,7 @@ describe("ListingTeamInvitePicker", () => {
 
   it("shows a refused invite inline", async () => {
     replaceListingTeamDemoRows(fortyPendingRows());
-    renderPicker();
+    await renderPicker();
     search("rosa");
     fireEvent.click(
       await screen.findByRole("button", { name: "Invite to team: Rosa Brava" }),
@@ -132,7 +135,7 @@ describe("ListingTeamInvitePicker", () => {
   });
 
   it("blocks invites while the listing is not live", async () => {
-    renderPicker(false);
+    await renderPicker(false);
     search("rosa");
     const button = await screen.findByRole("button", {
       name: "Invite to team: Rosa Brava",
@@ -144,8 +147,8 @@ describe("ListingTeamInvitePicker", () => {
     expect(button).toBeInTheDocument();
   });
 
-  it("shows the invite heading above the role field", () => {
-    renderPicker();
+  it("shows the invite heading above the role field", async () => {
+    await renderPicker();
     expect(
       inPicker().getByRole("heading", { name: "Invite to your team" }),
     ).toBeInTheDocument();
@@ -153,7 +156,7 @@ describe("ListingTeamInvitePicker", () => {
 
   it("shows a refusal under the failing row and clears it when the search changes", async () => {
     replaceListingTeamDemoRows(fortyPendingRows());
-    renderPicker();
+    await renderPicker();
     search("rosa");
     fireEvent.click(
       await screen.findByRole("button", { name: "Invite to team: Rosa Brava" }),
@@ -167,7 +170,7 @@ describe("ListingTeamInvitePicker", () => {
   });
 
   it("moves focus to the chip after a successful invite", async () => {
-    renderPicker();
+    await renderPicker();
     search("rosa");
     fireEvent.click(
       await screen.findByRole("button", { name: "Invite to team: Rosa Brava" }),
@@ -177,7 +180,7 @@ describe("ListingTeamInvitePicker", () => {
   });
 
   it("says when nothing matches", async () => {
-    renderPicker();
+    await renderPicker();
     search("zzzz");
     expect(
       await screen.findByText("No published persona matches that"),
@@ -187,7 +190,7 @@ describe("ListingTeamInvitePicker", () => {
 
 describe("ListingTeamInvitePicker Members tab", () => {
   it("opens on Personas and switches to Members and back", async () => {
-    renderPicker();
+    await renderPicker();
     expect(screen.getByRole("tab", { name: "Personas" })).toHaveAttribute(
       "aria-selected",
       "true",
@@ -215,7 +218,7 @@ describe("ListingTeamInvitePicker Members tab", () => {
   });
 
   it("keeps the one role field above both tabs", async () => {
-    renderPicker();
+    await renderPicker();
     fireEvent.change(screen.getByLabelText(ROLE_LABEL), {
       target: { value: "Colourist" },
     });
@@ -225,7 +228,7 @@ describe("ListingTeamInvitePicker Members tab", () => {
   });
 
   it("lists connections and asks for a pick before the button works", async () => {
-    renderPicker();
+    await renderPicker();
     await openMembersTab();
     expect(
       await screen.findByRole("option", { name: /Jonas Ferreira/ }),
@@ -237,7 +240,7 @@ describe("ListingTeamInvitePicker Members tab", () => {
   });
 
   it("invites the picked connection with the role typed above", async () => {
-    renderPicker();
+    await renderPicker();
     fireEvent.change(screen.getByLabelText(ROLE_LABEL), {
       target: { value: "Colourist" },
     });
@@ -263,7 +266,7 @@ describe("ListingTeamInvitePicker Members tab", () => {
   });
 
   it("can tick a pick again after a new search left it out", async () => {
-    renderPicker();
+    await renderPicker();
     await pickMember(/Jonas Ferreira/);
     fireEvent.change(screen.getByLabelText(MEMBER_SEARCH_LABEL), {
       target: { value: "luisa" },
@@ -291,7 +294,7 @@ describe("ListingTeamInvitePicker Members tab", () => {
 
   it("names the cause when the business has too many invites waiting", async () => {
     replaceListingTeamDemoRows(fortyPendingRows());
-    renderPicker();
+    await renderPicker();
     await pickMember(/Jonas Ferreira/);
     fireEvent.click(
       screen.getByRole("button", {
@@ -305,7 +308,7 @@ describe("ListingTeamInvitePicker Members tab", () => {
 
   it("names the cause when the member's profile cannot join a team", async () => {
     setDemoTeamMemberHidden("jonas", true);
-    renderPicker();
+    await renderPicker();
     await pickMember(/Jonas Ferreira/);
     fireEvent.click(
       screen.getByRole("button", {
@@ -319,7 +322,7 @@ describe("ListingTeamInvitePicker Members tab", () => {
   });
 
   it("blocks member invites while the listing is not live", async () => {
-    renderPicker(false);
+    await renderPicker(false);
     await pickMember(/Jonas Ferreira/);
     const button = screen.getByRole("button", {
       name: `${INVITE_MEMBER_BUTTON}: Jonas Ferreira`,

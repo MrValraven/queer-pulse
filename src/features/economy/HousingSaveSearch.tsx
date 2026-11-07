@@ -7,6 +7,10 @@ import {
   filtersToCriteria,
   useCreateHousingSavedSearch,
 } from "./api/useHousingSavedSearches";
+import {
+  HOUSING_SAVE_SEARCH_OVERRIDES,
+  failureToast,
+} from "./economyErrorCopy";
 import type { HousingFilters } from "./housingFilters";
 import s from "./HousingPage.module.css";
 
@@ -50,8 +54,16 @@ export function HousingSaveSearch({
           setNaming(false);
           setName("");
         },
-        onError: () =>
-          showToast(t("economy:housing.saveSearch.error"), "error"),
+        onError: (error) =>
+          showToast(
+            failureToast(
+              error,
+              t,
+              "economy:housing.saveSearch.errorTitle",
+              HOUSING_SAVE_SEARCH_OVERRIDES,
+            ),
+            "error",
+          ),
       },
     );
   };

@@ -334,7 +334,12 @@ export const LISTING_FIELD_PLACEMENTS: Record<AnchorId, ListingPlacementRule> =
       isMobileWithoutMeetingPoint(draft)
         ? meetingPointOff()
         : namedCardPreview("meetingPoint", "meta"),
-    [ANCHOR.byAppointment]: preview("byAppointment", "status", "hours"),
+    // Only an out-and-about listing offers the toggle; an online draft shows
+    // no hours at all, so it reads as the hours do.
+    [ANCHOR.byAppointment]: (draft) =>
+      draft.online
+        ? notShown("hoursOnline")
+        : preview("byAppointment", "status", "hours"),
     [ANCHOR.hours]: hoursPlacement,
     // "Copy Monday to all days" and "Mark all closed" sit above the grid
     // that carries `ANCHOR.hours`, and they fill the same spots.

@@ -10,6 +10,7 @@ import {
   useOwnedListing,
   useUpdateListing,
 } from "../marketing/listBusiness/api/useListings";
+import { quickEditListingErrorCopy } from "./memberActionErrors";
 import styles from "./QuickEditListingModal.module.css";
 
 const BLURB_MAX_LENGTH = 140;
@@ -79,8 +80,10 @@ export function QuickEditListingModal({
           onClose();
           showToast(t("members:places.quickEdit.savedToast"), "success");
         },
-        onError: () =>
-          showToast(t("members:places.quickEdit.errorToast"), "error"),
+        onError: (error) => {
+          const cause = quickEditListingErrorCopy(error);
+          showToast(t(cause.key, cause.values), "error");
+        },
       },
     );
   };

@@ -18,6 +18,9 @@ import type {
   CouncilSeatView,
   GovernanceOverviewResult,
 } from "./api/useGovernanceOverview";
+import { concernStatusLink, type ConcernAckDTO } from "./api/governance.api";
+import { DEMO_SUBMITTED_CONCERN_CODE } from "./concernStatus.data";
+import { AUTH_STORAGE_KEY } from "../marketing/cookies.data";
 
 /**
  * Extends the existing Health/Finances coverage to the five other governance
@@ -40,7 +43,18 @@ vi.mock("./api/useGovernanceOverview", () => ({
   useGovernanceOverview: () => overviewState,
 }));
 
-const submitConcern = vi.fn((_submission: unknown) => Promise.resolve());
+const submitConcern = vi.fn(
+  (_submission: unknown): Promise<ConcernAckDTO | undefined> =>
+    Promise.resolve(undefined),
+);
+
+/** What the intake endpoint answers a recorded concern with (PRD-261). */
+const LIVE_CONCERN_ACK = {
+  id: "intake-1",
+  status: "received",
+  statusToken: "QP-LIVE-CODE-1",
+  submittedAt: "2026-11-07T10:00:00.000Z",
+} satisfies ConcernAckDTO;
 vi.mock("./api/governance.api", async (importOriginal) => ({
   ...(await importOriginal<typeof import("./api/governance.api")>()),
   submitConcern: (submission: unknown) => submitConcern(submission),
@@ -82,6 +96,7 @@ beforeEach(() => {
   showToast.mockReset();
   demoMode = true;
   overviewState = overviewOk();
+  localStorage.removeItem(AUTH_STORAGE_KEY);
 });
 
 /**
@@ -194,6 +209,8 @@ describe("CouncilSection", () => {
 
   it("does NOT link a signed-out visitor to a gated member profile", () => {
     overviewState = { ...overviewOk(), council: [seat()] };
+    // The demo session reads this flag on mount; "false" is a signed-out visitor.
+    localStorage.setItem(AUTH_STORAGE_KEY, "false");
     render(
       <TestProviders>
         <CouncilSection />
@@ -286,7 +303,7 @@ describe("RaiseSection dual-mode submit", () => {
     expect(submitConcern).not.toHaveBeenCalled();
   });
 
-  it("confirms with a success toast in demo mode, without calling the API", async () => {
+  it("hands over the demo reference code in demo mode, without calling the API", async () => {
     render(
       <TestProviders>
         <RaiseSection />
@@ -294,13 +311,21 @@ describe("RaiseSection dual-mode submit", () => {
     );
     await fillConcern();
     await clickSubmit();
-    expect(showToast).toHaveBeenCalledTimes(1);
-    expect(showToast.mock.calls[0]![1]).toBe("success");
+    // The submitted panel replaces the form and carries the code the status
+    // page resolves in the sandbox; a code on screen is the confirmation.
+    expect(
+      await screen.findByText("Your concern is with us"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByDisplayValue(DEMO_SUBMITTED_CONCERN_CODE),
+    ).toBeInTheDocument();
+    expect(showToast).not.toHaveBeenCalled();
     expect(submitConcern).not.toHaveBeenCalled();
   });
 
-  it("POSTs the concern and confirms in live mode", async () => {
+  it("POSTs the concern and hands over the returned reference code in live mode", async () => {
     demoMode = false;
+    submitConcern.mockResolvedValueOnce(LIVE_CONCERN_ACK);
     render(
       <TestProviders>
         <RaiseSection />
@@ -315,7 +340,16 @@ describe("RaiseSection dual-mode submit", () => {
         description: "Someone is following me across threads.",
       }),
     );
-    await waitFor(() => expect(showToast.mock.calls[0]![1]).toBe("success"));
+    expect(
+      await screen.findByText("Your concern is with us"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByDisplayValue(LIVE_CONCERN_ACK.statusToken),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Check on this concern" }),
+    ).toHaveAttribute("href", concernStatusLink(LIVE_CONCERN_ACK.statusToken));
+    expect(showToast).not.toHaveBeenCalled();
   });
 
   it("surfaces a failed live submit as an error, not a false confirmation", async () => {

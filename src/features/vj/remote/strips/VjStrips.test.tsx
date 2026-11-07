@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../../test/TestProviders";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 import {
   createVjStageState,
   vjSceneLookOf,
@@ -115,12 +116,12 @@ function historyPropsWith(
   };
 }
 
-function renderStrips(
+async function renderStrips(
   scenesProps: VjScenesStripProps,
   historyProps: VjHistoryStripProps,
   isCompact = false,
 ) {
-  return render(
+  const renderedView = render(
     <TestProviders>
       <VjStrips
         isCompact={isCompact}
@@ -129,6 +130,8 @@ function renderStrips(
       />
     </TestProviders>,
   );
+  await awaitCatalog("vj");
+  return renderedView;
 }
 
 function scenesStrip() {
@@ -140,21 +143,21 @@ function historyStrip() {
 }
 
 describe("VjStrips", () => {
-  it("recalls a scene on tap", () => {
+  it("recalls a scene on tap", async () => {
     const scenesProps = scenesPropsWith();
-    renderStrips(scenesProps, historyPropsWith());
+    await renderStrips(scenesProps, historyPropsWith());
     fireEvent.click(
       scenesStrip().getByRole("button", { name: "Recall scene Peak" }),
     );
     expect(scenesProps.onRecall).toHaveBeenCalledWith("scene-b");
   });
 
-  it("marks the pending recall and sends nothing while blocked", () => {
+  it("marks the pending recall and sends nothing while blocked", async () => {
     const scenesProps = scenesPropsWith({
       pendingSceneId: "scene-a",
       isBlocked: true,
     });
-    renderStrips(scenesProps, historyPropsWith());
+    await renderStrips(scenesProps, historyPropsWith());
     const warmUp = scenesStrip().getByRole("button", {
       name: "Recall scene Warm up",
     });
@@ -164,8 +167,8 @@ describe("VjStrips", () => {
     expect(scenesProps.onRecall).not.toHaveBeenCalled();
   });
 
-  it("blocked scene, set list and recent chips point at the reason", () => {
-    renderStrips(
+  it("blocked scene, set list and recent chips point at the reason", async () => {
+    await renderStrips(
       scenesPropsWith({
         isBlocked: true,
         blockedReasonId: "status-line",
@@ -185,8 +188,8 @@ describe("VjStrips", () => {
     }
   });
 
-  it("an open strip names no reason", () => {
-    renderStrips(
+  it("an open strip names no reason", async () => {
+    await renderStrips(
       scenesPropsWith({ blockedReasonId: "status-line" }),
       historyPropsWith({ blockedReasonId: "status-line" }),
     );
@@ -195,15 +198,15 @@ describe("VjStrips", () => {
     ).not.toHaveAttribute("aria-describedby");
   });
 
-  it("Save scene calls onSaveScene", () => {
+  it("Save scene calls onSaveScene", async () => {
     const scenesProps = scenesPropsWith();
-    renderStrips(scenesProps, historyPropsWith());
+    await renderStrips(scenesProps, historyPropsWith());
     fireEvent.click(scenesStrip().getByRole("button", { name: "Save scene" }));
     expect(scenesProps.onSaveScene).toHaveBeenCalledTimes(1);
   });
 
-  it("says no scenes yet beside the Save chip", () => {
-    renderStrips(scenesPropsWith({ scenes: [] }), historyPropsWith());
+  it("says no scenes yet beside the Save chip", async () => {
+    await renderStrips(scenesPropsWith({ scenes: [] }), historyPropsWith());
     expect(
       scenesStrip().getByText("No scenes yet. Save the current look"),
     ).toBeInTheDocument();
@@ -212,12 +215,12 @@ describe("VjStrips", () => {
     ).toBeInTheDocument();
   });
 
-  it("set list group shows 3 of 12 and steps both ways", () => {
+  it("set list group shows 3 of 12 and steps both ways", async () => {
     const scenesProps = scenesPropsWith({
       activeSetlist: makeSetlist(12),
       setlistIndex: 2,
     });
-    renderStrips(scenesProps, historyPropsWith());
+    await renderStrips(scenesProps, historyPropsWith());
     expect(scenesStrip().getByText("3 of 12")).toBeInTheDocument();
     fireEvent.click(scenesStrip().getByRole("button", { name: "Next scene" }));
     fireEvent.click(
@@ -231,9 +234,9 @@ describe("VjStrips", () => {
     ).toHaveAttribute("aria-current", "true");
   });
 
-  it("Previous sends the second recent clip", () => {
+  it("Previous sends the second recent clip", async () => {
     const historyProps = historyPropsWith();
-    renderStrips(scenesPropsWith(), historyProps);
+    await renderStrips(scenesPropsWith(), historyProps);
     const previous = historyStrip().getByRole("button", {
       name: "Go back to Neon hearts",
     });
@@ -242,18 +245,18 @@ describe("VjStrips", () => {
     expect(historyProps.onPrevious).toHaveBeenCalledTimes(1);
   });
 
-  it("Previous is aria-disabled with one entry", () => {
+  it("Previous is aria-disabled with one entry", async () => {
     const historyProps = historyPropsWith({ recentClipIds: ["clip-1"] });
-    renderStrips(scenesPropsWith(), historyProps);
+    await renderStrips(scenesPropsWith(), historyProps);
     const previous = historyStrip().getByRole("button", { name: "Previous" });
     expect(previous).toHaveAttribute("aria-disabled", "true");
     fireEvent.click(previous);
     expect(historyProps.onPrevious).not.toHaveBeenCalled();
   });
 
-  it("marks the newest clip live and replays a recent clip on tap", () => {
+  it("marks the newest clip live and replays a recent clip on tap", async () => {
     const historyProps = historyPropsWith();
-    renderStrips(scenesPropsWith(), historyProps);
+    await renderStrips(scenesPropsWith(), historyProps);
     expect(
       historyStrip().getByRole("button", { name: "Show Glitter rain again" }),
     ).toHaveAttribute("aria-current", "true");
@@ -263,15 +266,18 @@ describe("VjStrips", () => {
     expect(historyProps.onGoClip).toHaveBeenCalledWith("clip-2");
   });
 
-  it("says clips you play show here with no history", () => {
-    renderStrips(scenesPropsWith(), historyPropsWith({ recentClipIds: [] }));
+  it("says clips you play show here with no history", async () => {
+    await renderStrips(
+      scenesPropsWith(),
+      historyPropsWith({ recentClipIds: [] }),
+    );
     expect(
       historyStrip().getByText("Clips you play show here"),
     ).toBeInTheDocument();
   });
 
   it("compact mode shows one strip and switches", async () => {
-    renderStrips(scenesPropsWith(), historyPropsWith(), true);
+    await renderStrips(scenesPropsWith(), historyPropsWith(), true);
     const switchGroup = within(
       screen.getByRole("group", { name: "Show scenes or recent clips" }),
     );
@@ -293,9 +299,9 @@ describe("VjStrips", () => {
     );
   });
 
-  it("a new recent clip animates in at the front", () => {
+  it("a new recent clip animates in at the front", async () => {
     const scenesProps = scenesPropsWith();
-    const { rerender } = renderStrips(
+    const { rerender } = await renderStrips(
       scenesProps,
       historyPropsWith({ recentClipIds: ["clip-1", "clip-2"] }),
     );

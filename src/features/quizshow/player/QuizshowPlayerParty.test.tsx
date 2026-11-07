@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
@@ -190,6 +190,21 @@ const VOTE_REVEAL: QuizshowReveal = {
   },
 };
 
+/** The component's own alert. TestProviders also mounts the toast regions,
+ *  and the assertive one carries the alert role while it is empty. */
+function findComponentAlert(): Promise<HTMLElement> {
+  return waitFor(() => {
+    const [alert, ...otherAlerts] = screen
+      .getAllByRole("alert")
+      .filter((element) => element.closest("[data-toast-region]") === null);
+    expect(otherAlerts).toHaveLength(0);
+    if (alert === undefined) {
+      throw new Error("The component rendered no alert of its own");
+    }
+    return alert;
+  });
+}
+
 describe("QuizshowPlayerParty", () => {
   it("counts the characters left and sends the text", async () => {
     const submitAnswer = vi.fn(() => new Promise<never>(() => undefined));
@@ -218,7 +233,7 @@ describe("QuizshowPlayerParty", () => {
     const box = await screen.findByLabelText(/^Your fake answer/);
     await user.type(box, "Gilbert Baker");
     await user.click(screen.getByRole("button", { name: "Send" }));
-    const alert = await screen.findByRole("alert");
+    const alert = await findComponentAlert();
     expect(alert).toHaveTextContent(
       "Too close to the real answer, try another",
     );

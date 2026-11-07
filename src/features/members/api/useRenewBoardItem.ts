@@ -37,6 +37,8 @@ export function useRenewBoardItem() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<RenewedBoardItem, Error, RenewBoardItemVariables>({
+    // The caller toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: async ({ slug, kind, renewCount }) => {
       if (demoMode) {
         // Measured from the pinned demo clock, same as every other lifespan

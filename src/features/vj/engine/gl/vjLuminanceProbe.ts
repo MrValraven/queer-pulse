@@ -12,6 +12,10 @@
  * buffer whose read is still in flight: when both are busy the capture is
  * skipped for that frame.
  *
+ * Each buffer's storage is made at its first capture, never up front: Chrome
+ * treats `bufferData` as a write and shadows a READ-usage buffer written before
+ * a fence, so storage made early gets a shadow it never reads.
+ *
  * Rows arrive bottom row first (the GL convention); the net's sliding windows
  * do not depend on row order. `poll` answers the same byte array every time:
  * hand it to the net before the next poll.
@@ -29,6 +33,7 @@ const VJ_PROBE_BYTES = VJ_PROBE_SIZE * VJ_PROBE_SIZE * 4;
 interface VjProbeSlot {
   buffer: WebGLBuffer;
   fence: WebGLSync | null;
+  isAllocated: boolean;
 }
 
 export class VjLuminanceProbe {
@@ -86,6 +91,13 @@ export class VjLuminanceProbe {
     gl.bindTexture(gl.TEXTURE_2D, null);
     gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.probeFramebuffer);
     gl.bindBuffer(gl.PIXEL_PACK_BUFFER, slot.buffer);
+    if (!slot.isAllocated) {
+      // Lazy on purpose: Chrome counts bufferData as a write and shadows any
+      // READ-usage buffer written before a fence, so storage made up front
+      // gets a shadow it never reads and its first capture logs a warning.
+      gl.bufferData(gl.PIXEL_PACK_BUFFER, VJ_PROBE_BYTES, gl.STREAM_READ);
+      slot.isAllocated = true;
+    }
     gl.readPixels(
       0,
       0,
@@ -149,10 +161,6 @@ export class VjLuminanceProbe {
 
   private createSlot(): VjProbeSlot {
     const { gl } = this;
-    const buffer = gl.createBuffer();
-    gl.bindBuffer(gl.PIXEL_PACK_BUFFER, buffer);
-    gl.bufferData(gl.PIXEL_PACK_BUFFER, VJ_PROBE_BYTES, gl.STREAM_READ);
-    gl.bindBuffer(gl.PIXEL_PACK_BUFFER, null);
-    return { buffer, fence: null };
+    return { buffer: gl.createBuffer(), fence: null, isAllocated: false };
   }
 }

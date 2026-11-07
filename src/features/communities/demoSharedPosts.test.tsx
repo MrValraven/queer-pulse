@@ -6,6 +6,7 @@ import { useShareToCommunity } from "../economy/api/useShareToCommunity";
 import { useCommunityDiscussions } from "./api/useCommunityDiscussions";
 import { useCommunityPosts } from "./api/useCommunityPosts";
 import type { Post } from "./community.model";
+import { getLiving } from "./livingCommunities.data";
 import {
   addDemoSharedPost,
   clearDemoSharedPosts,
@@ -60,8 +61,12 @@ describe("demo shared posts", () => {
     act(() =>
       addDemoSharedPost({ ...sharedPost, communitySlug: "queer-runners" }),
     );
-    expect(result.current.threads[0]?.id).toBe("demo-shared-test");
-    expect(result.current.threads[0]?.post).toBe(sharedPost.body);
+    // Pinned announcements stay above the running board, so the share lands
+    // first among the unpinned threads.
+    const pinnedCount = getLiving("queer-runners")?.pinned.length ?? 0;
+    expect(pinnedCount).toBeGreaterThan(0);
+    expect(result.current.threads[pinnedCount]?.id).toBe("demo-shared-test");
+    expect(result.current.threads[pinnedCount]?.post).toBe(sharedPost.body);
   });
 
   it("puts a demo share from the community modal on that board", async () => {

@@ -1,6 +1,7 @@
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 import { TestProviders } from "../../../../test/TestProviders";
 import type { DeskActivityView } from "../../api/useDeskSummary";
 import {
@@ -103,13 +104,14 @@ function railProps(overrides: Partial<DeskRailProps> = {}): DeskRailProps {
   };
 }
 
-function renderRail(overrides: Partial<DeskRailProps> = {}) {
+async function renderRail(overrides: Partial<DeskRailProps> = {}) {
   const props = railProps(overrides);
   render(
     <TestProviders>
       <DeskRail {...props} />
     </TestProviders>,
   );
+  await awaitCatalog("magazine");
   return props;
 }
 
@@ -156,7 +158,7 @@ describe("pitches heading count", () => {
   it("opens triage from the Pitches heading count", async () => {
     const user = userEvent.setup();
     const pitches = [1, 2, 3, 4].map((index) => makePitch(index));
-    const props = renderRail({ pitches });
+    const props = await renderRail({ pitches });
     // The region and its heading are named by the title alone; the count
     // button names the action.
     const card = screen.getByRole("region", { name: "Pitches" });
@@ -172,9 +174,9 @@ describe("pitches heading count", () => {
     expect(props.onOpenTriage).toHaveBeenCalledTimes(1);
   });
 
-  it("says how long each previewed pitch has waited", () => {
+  it("says how long each previewed pitch has waited", async () => {
     const fiveHoursAgo = new Date(Date.now() - 5 * 60 * 60 * 1000);
-    renderRail({
+    await renderRail({
       pitches: [makePitch(1, { receivedAt: fiveHoursAgo.toISOString() })],
     });
     const card = screen.getByRole("region", { name: "Pitches" });
@@ -186,8 +188,8 @@ describe("pitches heading count", () => {
 });
 
 describe("DeskRail team counts", () => {
-  it("leaves Published pieces out of an editor's count", () => {
-    renderRail({ pieces: MARTA_AT_CAP_PIECES });
+  it("leaves Published pieces out of an editor's count", async () => {
+    await renderRail({ pieces: MARTA_AT_CAP_PIECES });
     const team = screen.getByRole("region", { name: "Team" });
     const martaRow = within(team).getByRole("button", { name: /Marta/ });
 
@@ -197,15 +199,15 @@ describe("DeskRail team counts", () => {
 });
 
 describe("DeskRail", () => {
-  it("shows issue health only on the issue track with a current issue", () => {
-    renderRail({ track: "unassigned" });
+  it("shows issue health only on the issue track with a current issue", async () => {
+    await renderRail({ track: "unassigned" });
     expect(
       screen.queryByRole("region", { name: "Issue health" }),
     ).not.toBeInTheDocument();
   });
 
-  it("lists stages and the new voices line on the issue track", () => {
-    renderRail();
+  it("lists stages and the new voices line on the issue track", async () => {
+    await renderRail();
     const health = screen.getByRole("region", { name: "Issue health" });
     const legend = within(health).getByRole("list", {
       name: "Pieces by stage",
@@ -219,7 +221,7 @@ describe("DeskRail", () => {
   it("previews the three newest pitches and opens one in triage", async () => {
     const user = userEvent.setup();
     const pitches = [1, 2, 3, 4].map((index) => makePitch(index));
-    const props = renderRail({ pitches });
+    const props = await renderRail({ pitches });
     const card = screen.getByRole("region", { name: /Pitches/ });
 
     expect(within(card).getAllByRole("listitem")).toHaveLength(3);
@@ -232,8 +234,8 @@ describe("DeskRail", () => {
     expect(props.onOpenTriage).toHaveBeenCalledTimes(1);
   });
 
-  it("says so when no pitches are waiting", () => {
-    renderRail({ pitches: [] });
+  it("says so when no pitches are waiting", async () => {
+    await renderRail({ pitches: [] });
     expect(screen.getByText("No pitches waiting")).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "Triage all" }),
@@ -244,8 +246,8 @@ describe("DeskRail", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("hides the team card with fewer than two editors", () => {
-    renderRail({
+  it("hides the team card with fewer than two editors", async () => {
+    await renderRail({
       summary: {
         stageLoad: [],
         editorLoad: [{ editorId: "marta", count: 2, cap: 7 }],
@@ -259,7 +261,7 @@ describe("DeskRail", () => {
 
   it("toggles an editor's queue and flags over capacity", async () => {
     const user = userEvent.setup();
-    const props = renderRail({ pieces: MARTA_OVER_CAP_PIECES });
+    const props = await renderRail({ pieces: MARTA_OVER_CAP_PIECES });
     const team = screen.getByRole("region", { name: "Team" });
     const martaRow = within(team).getByRole("button", { name: /Marta/ });
 
@@ -271,7 +273,7 @@ describe("DeskRail", () => {
 
   it("offers a way out of someone else's queue", async () => {
     const user = userEvent.setup();
-    const props = renderRail({ editorFilter: "sara" });
+    const props = await renderRail({ editorFilter: "sara" });
     const team = screen.getByRole("region", { name: "Team" });
 
     expect(within(team).getByRole("button", { name: /Sara/ })).toHaveAttribute(
@@ -287,7 +289,7 @@ describe("DeskRail", () => {
 
   it("shows five activity entries and unfolds the rest", async () => {
     const user = userEvent.setup();
-    renderRail();
+    await renderRail();
     const activity = screen.getByRole("region", { name: "Activity" });
 
     expect(within(activity).getAllByRole("listitem")).toHaveLength(5);
@@ -302,8 +304,8 @@ describe("DeskRail", () => {
     ).toBeInTheDocument();
   });
 
-  it("keeps stage and slot counts as text without filter callbacks", () => {
-    renderRail();
+  it("keeps stage and slot counts as text without filter callbacks", async () => {
+    await renderRail();
     const health = screen.getByRole("region", { name: "Issue health" });
     // The only button left is the full-sections count, which unfolds them.
     expect(
@@ -315,7 +317,7 @@ describe("DeskRail", () => {
 
   it("lists sections with open slots and shows the full ones on request", async () => {
     const user = userEvent.setup();
-    renderRail();
+    await renderRail();
     const health = screen.getByRole("region", { name: "Issue health" });
 
     expect(within(health).getByText("1 section full")).toBeInTheDocument();
@@ -337,7 +339,7 @@ describe("DeskRail", () => {
 
   it("toggles a stage filter from the legend", async () => {
     const user = userEvent.setup();
-    const props = renderRail({
+    const props = await renderRail({
       stageFilter: ["Layout"],
       onStageFilter: vi.fn(),
     });
@@ -354,7 +356,7 @@ describe("DeskRail", () => {
 
   it("toggles a section filter from the slots", async () => {
     const user = userEvent.setup();
-    const props = renderRail({
+    const props = await renderRail({
       sectionFilter: ["Essays"],
       onSectionFilter: vi.fn(),
     });
@@ -370,8 +372,8 @@ describe("DeskRail", () => {
     expect(props.onSectionFilter).toHaveBeenCalledWith("Reported");
   });
 
-  it("puts Pitches first in the DOM when stacked", () => {
-    renderRail({ isStacked: true });
+  it("puts Pitches first in the DOM when stacked", async () => {
+    await renderRail({ isStacked: true });
     const pitches = screen.getByRole("region", { name: /Pitches/ });
     const health = screen.getByRole("region", { name: "Issue health" });
     expect(
@@ -380,11 +382,12 @@ describe("DeskRail", () => {
     ).toBeTruthy();
   });
 
-  it("keeps focus on a legend toggle when the layout stacks", () => {
+  it("keeps focus on a legend toggle when the layout stacks", async () => {
     const props = railProps({ onStageFilter: vi.fn() });
     const { rerender } = render(<DeskRail {...props} />, {
       wrapper: TestProviders,
     });
+    await awaitCatalog("magazine");
     const legend = screen.getByRole("list", { name: "Pieces by stage" });
     const drafting = within(legend).getByRole("button", { name: /Drafting/ });
     act(() => drafting.focus());
@@ -400,11 +403,12 @@ describe("DeskRail", () => {
     expect(stackedDrafting).toHaveFocus();
   });
 
-  it("leaves focus alone when it left the rail before the layout stacks", () => {
+  it("leaves focus alone when it left the rail before the layout stacks", async () => {
     const props = railProps({ onStageFilter: vi.fn() });
     const { rerender } = render(<DeskRail {...props} />, {
       wrapper: TestProviders,
     });
+    await awaitCatalog("magazine");
     const legend = screen.getByRole("list", { name: "Pieces by stage" });
     const drafting = within(legend).getByRole("button", { name: /Drafting/ });
     act(() => drafting.focus());
@@ -427,7 +431,7 @@ describe("new voices line", () => {
   it("makes the new voices line a toggle for the new-voices chip", async () => {
     const user = userEvent.setup();
     const onNewVoicesFilter = vi.fn();
-    renderRail({ onNewVoicesFilter, isNewVoicesFiltered: true });
+    await renderRail({ onNewVoicesFilter, isNewVoicesFiltered: true });
     const health = screen.getByRole("region", { name: "Issue health" });
     const toggle = within(health).getByRole("button", {
       name: "1 of 3 pieces by first-time writers",
@@ -437,8 +441,8 @@ describe("new voices line", () => {
     expect(onNewVoicesFilter).toHaveBeenCalledTimes(1);
   });
 
-  it("keeps a zero new voices line as text while its chip is off", () => {
-    renderRail({
+  it("keeps a zero new voices line as text while its chip is off", async () => {
+    await renderRail({
       pieces: PIECES.map((piece) => ({ ...piece, fresh: false })),
       onNewVoicesFilter: vi.fn(),
     });
@@ -462,8 +466,8 @@ describe("issue forecast", () => {
     }),
   );
 
-  it("renders nothing without a known close date", () => {
-    renderRail({ closesOn: null });
+  it("renders nothing without a known close date", async () => {
+    await renderRail({ closesOn: null });
     const health = screen.getByRole("region", { name: "Issue health" });
     expect(within(health).queryByText(/On track/)).not.toBeInTheDocument();
     expect(
@@ -471,8 +475,8 @@ describe("issue forecast", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("reads on track when nothing is at risk", () => {
-    renderRail({
+  it("reads on track when nothing is at risk", async () => {
+    await renderRail({
       closesOn: "2026-09-01",
       today: FORECAST_TODAY,
       pieces: [
@@ -490,7 +494,7 @@ describe("issue forecast", () => {
 
   it("lists at-risk pieces with their reason and opens one", async () => {
     const user = userEvent.setup();
-    const props = renderRail({
+    const props = await renderRail({
       closesOn: "2026-08-05",
       today: FORECAST_TODAY,
       onOpenPiece: vi.fn(),
@@ -533,7 +537,7 @@ describe("issue forecast", () => {
 
   it("unfolds the at-risk pieces past the first three in place", async () => {
     const user = userEvent.setup();
-    const props = renderRail({
+    const props = await renderRail({
       closesOn: "2026-08-05",
       today: FORECAST_TODAY,
       onOpenPiece: vi.fn(),
@@ -558,7 +562,7 @@ describe("issue forecast", () => {
 
   it("makes the headline count the door to the at-risk pieces in the table", async () => {
     const user = userEvent.setup();
-    const props = renderRail({
+    const props = await renderRail({
       closesOn: "2026-08-05",
       today: FORECAST_TODAY,
       onShowAtRisk: vi.fn(),
@@ -575,7 +579,7 @@ describe("issue forecast", () => {
 
   it("keeps the headline as text without the callback, and still unfolds the list", async () => {
     const user = userEvent.setup();
-    renderRail({
+    await renderRail({
       closesOn: "2026-08-05",
       today: FORECAST_TODAY,
       onOpenPiece: vi.fn(),
@@ -590,8 +594,8 @@ describe("issue forecast", () => {
     expect(within(health).getByText("Late piece 4")).toBeInTheDocument();
   });
 
-  it("lists at-risk pieces as plain text without a way to open them", () => {
-    renderRail({
+  it("lists at-risk pieces as plain text without a way to open them", async () => {
+    await renderRail({
       closesOn: "2026-08-05",
       today: FORECAST_TODAY,
       pieces: [

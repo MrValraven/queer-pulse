@@ -10,6 +10,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDisputeListing } from "./api/useDisputeListing";
+import { failureToast } from "./marketingErrorCopy";
 import styles from "./DirectoryDisputeModal.module.css";
 
 const REASON_MAX_LENGTH = 2000;
@@ -59,9 +60,13 @@ export function DirectoryDisputeModal({
       },
       {
         onSuccess: () => setDone(true),
-        onError: () =>
+        onError: (error) =>
           showToast(
-            t("marketing:directory.detail.dispute.errorToast"),
+            failureToast(
+              error,
+              t,
+              "marketing:directory.detail.dispute.errorTitle",
+            ),
             "error",
           ),
       },

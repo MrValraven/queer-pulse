@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../shared/api/client";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { TestProviders } from "../../test/TestProviders";
 import type { ModReport } from "./adminModeration.data";
 import { AdminQuizshowGameActions } from "./AdminQuizshowGameActions";
@@ -38,12 +39,14 @@ const report = {
   title: "Friday quiz",
 } as unknown as ModReport;
 
-const renderPanel = () =>
+const renderPanel = async () => {
   render(
     <TestProviders>
       <AdminQuizshowGameActions report={report} />
     </TestProviders>,
   );
+  await awaitCatalog("admin");
+};
 
 const STAFF_REASON = "Hate speech in round two";
 
@@ -71,7 +74,7 @@ describe("AdminQuizshowGameActions", () => {
   });
 
   it("ends the reported game after a confirm", async () => {
-    renderPanel();
+    await renderPanel();
     await confirmInDialog("End this game");
     await waitFor(() => expect(endGame).toHaveBeenCalledWith(expectedInput));
     expect(await screen.findByText("Game ended")).toBeInTheDocument();
@@ -79,7 +82,7 @@ describe("AdminQuizshowGameActions", () => {
   });
 
   it("deletes the reported game after a confirm", async () => {
-    renderPanel();
+    await renderPanel();
     await confirmInDialog("Delete this game");
     await waitFor(() => expect(deleteGame).toHaveBeenCalledWith(expectedInput));
     expect(await screen.findByText("Game deleted")).toBeInTheDocument();
@@ -91,7 +94,7 @@ describe("AdminQuizshowGameActions", () => {
   });
 
   it("asks for a reason before ending the game", async () => {
-    renderPanel();
+    await renderPanel();
     await confirmInDialog("End this game", "   ");
     expect(await screen.findByText("Add a reason first")).toBeInTheDocument();
     expect(endGame).not.toHaveBeenCalled();
@@ -110,7 +113,7 @@ describe("AdminQuizshowGameActions", () => {
 
   it("reads a 404 as a game already gone and offers no action", async () => {
     endGame.mockRejectedValueOnce(new ApiError(404, "quizshow_game_not_found"));
-    renderPanel();
+    await renderPanel();
     await confirmInDialog("End this game");
     expect(
       await screen.findByText("This game is already gone"),
@@ -124,11 +127,16 @@ describe("AdminQuizshowGameActions", () => {
 
   it("shows the error line on any other failure", async () => {
     deleteGame.mockRejectedValueOnce(new ApiError(500, "Server error"));
-    renderPanel();
+    await renderPanel();
     await confirmInDialog("Delete this game");
     expect(
       await screen.findByText("That didn't work. Try again"),
     ).toBeInTheDocument();
+    // The confirm closes on the failure and animates out; once it is gone the
+    // panel's own Delete button is the one left to try again with.
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
     expect(
       screen.getByRole("button", { name: "Delete this game" }),
     ).toBeInTheDocument();

@@ -9,6 +9,7 @@ import {
   GatheringCommunityCard,
   GatheringHeroCommunity,
 } from "./GatheringCommunity";
+import { awaitCatalog } from "../../test/awaitCatalog";
 
 // Demo mode is on in tests, and the demo viewer mods `queer-runners` and
 // `trans-hub` (CommunityMembershipProvider's seed) and belongs nowhere else.
@@ -66,7 +67,7 @@ function gatheringWith(
   } as unknown as GatheringDetail;
 }
 
-function heroText(gathering: GatheringDetail): string {
+async function heroText(gathering: GatheringDetail): Promise<string> {
   const { container } = render(
     <TestProviders>
       <div data-testid="hero">
@@ -74,25 +75,28 @@ function heroText(gathering: GatheringDetail): string {
       </div>
     </TestProviders>,
   );
+  await awaitCatalog("gatherings");
   return (
     container.querySelector('[data-testid="hero"]')?.textContent ?? ""
   ).trim();
 }
 
 describe("GatheringHeroCommunity", () => {
-  it("names the lead alone as it always has", () => {
-    expect(heroText(gatheringWith(lead, []))).toBe("With Queer Social Lisbon");
+  it("names the lead alone as it always has", async () => {
+    expect(await heroText(gatheringWith(lead, []))).toBe(
+      "With Queer Social Lisbon",
+    );
   });
 
-  it("names the lead first, then a guest", () => {
+  it("names the lead first, then a guest", async () => {
     expect(
-      heroText(gatheringWith(lead, [guest("drag-club", "Drag Club")])),
+      await heroText(gatheringWith(lead, [guest("drag-club", "Drag Club")])),
     ).toBe("With Queer Social Lisbon and Drag Club");
   });
 
-  it("names two guests and counts the rest", () => {
+  it("names two guests and counts the rest", async () => {
     expect(
-      heroText(
+      await heroText(
         gatheringWith(lead, [
           guest("drag-club", "Drag Club"),
           guest("book-club", "Book Club"),
@@ -103,9 +107,9 @@ describe("GatheringHeroCommunity", () => {
     ).toBe("With Queer Social Lisbon, Drag Club, Book Club and 2 more");
   });
 
-  it("keeps a private guest from a viewer outside it", () => {
+  it("keeps a private guest from a viewer outside it", async () => {
     expect(
-      heroText(
+      await heroText(
         gatheringWith(lead, [
           guest("secret-circle", "Secret Circle", { accessTier: "private" }),
         ]),
@@ -113,9 +117,9 @@ describe("GatheringHeroCommunity", () => {
     ).toBe("With Queer Social Lisbon");
   });
 
-  it("names a private guest to its own members and to the organisers", () => {
+  it("names a private guest to its own members and to the organisers", async () => {
     expect(
-      heroText(
+      await heroText(
         gatheringWith(lead, [
           guest("trans-hub", "Trans & Non-Binary Hub", {
             accessTier: "private",
@@ -124,7 +128,7 @@ describe("GatheringHeroCommunity", () => {
       ),
     ).toBe("With Queer Social Lisbon and Trans & Non-Binary Hub");
     expect(
-      heroText(
+      await heroText(
         gatheringWith(
           lead,
           [guest("secret-circle", "Secret Circle", { accessTier: "private" })],
@@ -134,9 +138,9 @@ describe("GatheringHeroCommunity", () => {
     ).toBe("With Queer Social Lisbon and Secret Circle");
   });
 
-  it("names only the guests when the lead is withheld", () => {
+  it("names only the guests when the lead is withheld", async () => {
     expect(
-      heroText(
+      await heroText(
         gatheringWith(
           { slug: "hidden-lead", name: "Hidden Lead", accessTier: "private" },
           [guest("drag-club", "Drag Club")],
@@ -145,8 +149,8 @@ describe("GatheringHeroCommunity", () => {
     ).toBe("With Drag Club");
   });
 
-  it("reads the demo gathering's accepted guest", () => {
-    expect(heroText(gatheringDetails["queer-runners-run"]!)).toBe(
+  it("reads the demo gathering's accepted guest", async () => {
+    expect(await heroText(gatheringDetails["queer-runners-run"]!)).toBe(
       "With Queer Runners Lisboa and Trans & Non-Binary Hub",
     );
   });
@@ -166,7 +170,10 @@ function succeedOnLeave(): void {
 
 /** Renders the card with one guest the viewer runs, then removes it through
  *  the confirm. */
-function renderCardAndRemove(isReducedMotion: boolean) {
+async function renderCardAndRemove(
+  isReducedMotion: boolean,
+  { shouldFakeTimers = false }: { shouldFakeTimers?: boolean } = {},
+) {
   const rendered = render(
     <TestProviders>
       <ReducedMotionContext.Provider value={isReducedMotion}>
@@ -180,6 +187,12 @@ function renderCardAndRemove(isReducedMotion: boolean) {
       </ReducedMotionContext.Provider>
     </TestProviders>,
   );
+  await awaitCatalog("gatherings");
+  // Faked only once the catalog is in: awaitCatalog waits on one real task,
+  // and the fold timer the removal starts is the one under test.
+  if (shouldFakeTimers) {
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+  }
   fireEvent.click(screen.getByRole("button", { name: "Remove our community" }));
   const removeButtons = screen.getAllByRole("button", {
     name: "Remove our community",
@@ -189,7 +202,7 @@ function renderCardAndRemove(isReducedMotion: boolean) {
 }
 
 describe("GatheringCommunityCard", () => {
-  it("lists every guest and offers Remove our community only where the viewer runs it", () => {
+  it("lists every guest and offers Remove our community only where the viewer runs it", async () => {
     render(
       <TestProviders>
         <GatheringCommunityCard
@@ -202,13 +215,14 @@ describe("GatheringCommunityCard", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("gatherings");
     expect(screen.getAllByText("Guest community")).toHaveLength(2);
     expect(
       screen.getAllByRole("button", { name: "Remove our community" }),
     ).toHaveLength(1);
   });
 
-  it("removes the community only after the confirm", () => {
+  it("removes the community only after the confirm", async () => {
     render(
       <TestProviders>
         <GatheringCommunityCard
@@ -220,6 +234,7 @@ describe("GatheringCommunityCard", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("gatherings");
     fireEvent.click(
       screen.getByRole("button", { name: "Remove our community" }),
     );
@@ -237,10 +252,9 @@ describe("GatheringCommunityCard", () => {
     );
   });
 
-  it("closes the confirm and folds the row before the gathering drops the guest", () => {
-    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+  it("closes the confirm and folds the row before the gathering drops the guest", async () => {
     succeedOnLeave();
-    renderCardAndRemove(false);
+    await renderCardAndRemove(false, { shouldFakeTimers: true });
     expect(
       screen.queryByText("Remove Trans & Non-Binary Hub from this event?"),
     ).not.toBeInTheDocument();
@@ -256,9 +270,9 @@ describe("GatheringCommunityCard", () => {
     });
   });
 
-  it("drops the guest at once under reduced motion", () => {
+  it("drops the guest at once under reduced motion", async () => {
     succeedOnLeave();
-    renderCardAndRemove(true);
+    await renderCardAndRemove(true);
     expect(
       screen.queryByText("Remove Trans & Non-Binary Hub from this event?"),
     ).not.toBeInTheDocument();
@@ -268,10 +282,11 @@ describe("GatheringCommunityCard", () => {
     });
   });
 
-  it("drops the guest when the row unmounts before its fold ends", () => {
-    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+  it("drops the guest when the row unmounts before its fold ends", async () => {
     succeedOnLeave();
-    const { unmount } = renderCardAndRemove(false);
+    const { unmount } = await renderCardAndRemove(false, {
+      shouldFakeTimers: true,
+    });
     expect(syncAfterLeave).not.toHaveBeenCalled();
     unmount();
     expect(syncAfterLeave).toHaveBeenCalledTimes(1);
@@ -281,7 +296,7 @@ describe("GatheringCommunityCard", () => {
     expect(syncAfterLeave).toHaveBeenCalledTimes(1);
   });
 
-  it("renders nothing when no community may be named", () => {
+  it("renders nothing when no community may be named", async () => {
     const { container } = render(
       <TestProviders>
         <div data-testid="card">
@@ -289,6 +304,7 @@ describe("GatheringCommunityCard", () => {
         </div>
       </TestProviders>,
     );
+    await awaitCatalog("gatherings");
     expect(container.querySelector('[data-testid="card"]')?.textContent).toBe(
       "",
     );

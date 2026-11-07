@@ -5,6 +5,7 @@ import { useAuth } from "../../../app/providers/authContext";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { logError } from "../../../shared/observability/logger";
+import { causeErrorKey } from "../../../shared/api/causeErrorKey";
 import {
   DEFAULT_HIDE_FROM_SUGGESTIONS,
   getSuggestionVisibility,
@@ -92,10 +93,8 @@ export function useSuggestionVisibility(): SuggestionVisibilityResult {
             SUGGESTION_VISIBILITY_QUERY_KEY,
             previous,
           );
-          showToast(
-            t("settings:visibility.suggestedConnections.toastError"),
-            "error",
-          );
+          const cause = causeErrorKey(error);
+          showToast(t(cause.key, cause.values), "error");
         });
     },
     [demoMode, queryClient, showToast, t],

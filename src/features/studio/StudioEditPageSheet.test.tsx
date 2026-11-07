@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../shared/api/client";
 import { SubprofileNotFoundError } from "../subprofiles/api/useOwnerSkinPatch";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { toArtistView, type StudioArtistView } from "./api/studio.adapters";
 import { studioKeys } from "./api/studioQueryKeys";
 import { studioHeroSaveFailureOf } from "./api/useStudioHeroChoiceSave";
@@ -33,7 +34,7 @@ function artistWith(coverUrl: string | null): StudioArtistView {
 }
 
 /** Demo mode (forced on in vitest), with the artist view already cached. */
-function renderSheet(view: StudioArtistView) {
+async function renderSheet(view: StudioArtistView) {
   const queryClient = new QueryClient();
   queryClient.setQueryData(studioKeys.artist(true, ARTIST_ID), view);
   const onPreviewChange = vi.fn();
@@ -47,12 +48,13 @@ function renderSheet(view: StudioArtistView) {
       />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
   return { queryClient, onPreviewChange, onClose };
 }
 
 describe("StudioEditPageSheet", () => {
   it("previews the highlighted choice and saves it for the session in demo", async () => {
-    const { queryClient, onPreviewChange, onClose } = renderSheet(
+    const { queryClient, onPreviewChange, onClose } = await renderSheet(
       artistWith("/files/cover.jpg"),
     );
     fireEvent.click(
@@ -71,7 +73,7 @@ describe("StudioEditPageSheet", () => {
   });
 
   it("closes without a save when the choice is the saved one", async () => {
-    const { queryClient, onClose } = renderSheet(
+    const { queryClient, onClose } = await renderSheet(
       artistWith("/files/cover.jpg"),
     );
     const artistKey = studioKeys.artist(true, ARTIST_ID);
@@ -83,7 +85,7 @@ describe("StudioEditPageSheet", () => {
   });
 
   it("hands the hero back to the saved choice on Cancel", async () => {
-    const { onPreviewChange, onClose } = renderSheet(
+    const { onPreviewChange, onClose } = await renderSheet(
       artistWith("/files/cover.jpg"),
     );
     fireEvent.click(screen.getByRole("radio", { name: /^Avatar/ }));
@@ -93,7 +95,7 @@ describe("StudioEditPageSheet", () => {
   });
 
   it("keeps every choice shut without a cover, links to the editor and offers only Close", async () => {
-    const { onPreviewChange, onClose } = renderSheet(artistWith(null));
+    const { onPreviewChange, onClose } = await renderSheet(artistWith(null));
     fireEvent.click(
       screen.getByRole("radio", { name: /^Banner\s?Your cover/ }),
     );

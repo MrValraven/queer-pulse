@@ -184,6 +184,17 @@ export const messages: Catalog = {
     "Esse ficheiro é demasiado grande. Mantém-no abaixo de {maxLabel}.",
   "attachments.documentError.retry":
     "Não conseguimos enviar esse ficheiro. Tenta de novo.",
+  // Porque o pedido de carregamento ou o PUT ao armazenamento foi recusado (useUploadDocument.ts).
+  "attachments.documentError.storageRejectedType":
+    "O nosso armazenamento não aceitou o tipo deste ficheiro. Confirma que é um PDF, TXT, CSV ou XLSX e envia-o outra vez.",
+  "attachments.documentError.storageTooLarge":
+    "Este ficheiro é maior do que o nosso armazenamento aceita. Escolhe um mais pequeno e envia-o outra vez.",
+  "attachments.documentError.tooManyUploads":
+    "Enviaste muitos ficheiros em pouco tempo. Espera um minuto e tenta outra vez.",
+  "attachments.documentError.linkExpired":
+    "O link de carregamento expirou antes de o teu ficheiro chegar. Tenta outra vez e criamos um novo.",
+  "attachments.documentError.storageFault":
+    "O nosso armazenamento de ficheiros teve um erro do nosso lado. Espera um momento e tenta outra vez.",
   // Ver o comentário na versão EN: o passo de confirmação antes de abrir um
   // ficheiro recebido.
   "attachments.confirmOpenTitle": "Abrir este ficheiro?",
@@ -781,6 +792,18 @@ export const messages: Catalog = {
   "mailbox.claim.lostRaceToast": "Alguém da tua equipa chegou primeiro",
   "mailbox.claim.tookOverToast": "Assumiste no lugar de {name}",
   "mailbox.claim.error": "Não resultou. Tenta outra vez.",
+  "mailbox.claim.error.notStaff":
+    "Já não fazes parte da equipa desta caixa de mensagens, por isso não podes assumir as conversas dela. Atualiza a caixa de entrada para ver onde ainda ajudas.",
+  "mailbox.claim.error.removed":
+    "A moderação removeu esta persona, por isso as conversas dela ficam só para leitura.",
+  "mailbox.claim.error.notMailbox":
+    "Só se podem assumir conversas de uma caixa de mensagens partilhada, e esta não é uma.",
+  "mailbox.claim.error.gone":
+    "Esta conversa já não existe, por isso não pode ser assumida. Atualiza a caixa de entrada para ver o que há de novo.",
+  "mailbox.claim.error.releasedAgain":
+    "A conversa foi libertada outra vez antes de o teu pedido chegar. Tenta de novo.",
+  "mailbox.claim.error.nothingToTakeOver":
+    "Neste momento ninguém está a tratar desta conversa, por isso não há nada para assumir. Assume-a diretamente.",
   "mailbox.tab.unclaimed": "Por atribuir",
   "mailbox.tab.mine": "Minhas",
   "mailbox.tab.unclaimedEmpty": "Todas as conversas têm alguém a tratar delas",
@@ -810,6 +833,12 @@ export const messages: Catalog = {
     "Aplica-se enquanto “Mostrar quem respondeu” estiver ligado.",
   "mailbox.settings.saved": "Guardado",
   "mailbox.settings.error": "Não ficou guardado. Tenta outra vez.",
+  "mailbox.settings.error.notOwner":
+    "Só quem é titular da caixa de mensagens pode mudar esta definição, por isso ficou como estava.",
+  "mailbox.settings.error.notStaff":
+    "Já não fazes parte da equipa desta caixa de mensagens, por isso a definição ficou como estava. Atualiza a caixa de entrada para ver onde ainda ajudas.",
+  "mailbox.settings.error.removed":
+    "A moderação removeu esta persona, por isso as definições dela já não podem mudar.",
   "mailbox.settings.unlinkedPersonaError":
     "Não ficou guardado. Esta persona agora mantém em privado quem a gere.",
   "mailbox.settings.loadError":
@@ -823,6 +852,12 @@ export const messages: Catalog = {
   "mailbox.block.done": "Bloqueaste {name}",
   "mailbox.block.undo": "Anular",
   "mailbox.block.error": "O bloqueio não resultou. Tenta outra vez.",
+  "mailbox.block.error.own":
+    "Respondes por esta caixa de mensagens, por isso não a podes bloquear. Sai primeiro da equipa dela se quiseres cortar ligações.",
+  "mailbox.block.error.person":
+    "Isto é uma pessoa, e as pessoas bloqueiam-se a partir do perfil. Abre o perfil e bloqueia por lá.",
+  "mailbox.block.error.gone":
+    "Não encontrámos esse negócio, persona ou empresa. Pode ter sido removido. Atualiza a caixa de entrada para ver o que há de novo.",
   "mailbox.report.action": "Denunciar {name}",
   "mailbox.blocked.title": "Negócios, personas e empresas",
   "mailbox.blocked.description":
@@ -870,6 +905,8 @@ export const messages: Catalog = {
     "Já escreveste aqui hoje. Dá-lhes tempo para responder.",
   "mailbox.contact.error.unavailable":
     "{name} não pode receber mensagens neste momento.",
+  "mailbox.contact.error.notFound":
+    "Já não encontramos {name}. Esta página pode ter sido removida. Volta atrás e procura outra vez.",
   "mailbox.contact.successAria": "Tudo certo",
   "mailbox.contact.successTitle": "Mensagem",
   "mailbox.contact.successEm": "enviada",
@@ -949,6 +986,9 @@ export const messages: Catalog = {
   "share.partialToast":
     "Enviado para {sentCount} de {totalCount}. Não chegou a {failedNames}.",
   "share.errorToast": "Isso não foi enviado. Tenta outra vez daqui a pouco.",
+  "share.errorToastWithCause": "Isso não foi enviado. {cause}",
+  "share.partialToastWithCause":
+    "Enviado para {sentCount} de {totalCount}. Não chegou a {failedNames}. {cause}",
   "share.openThreadCta": "Abrir",
   "share.selectedCount_one": "{count} conversa selecionada",
   "share.selectedCount_other": "{count} conversas selecionadas",
@@ -1026,6 +1066,10 @@ export const messages: Catalog = {
     "Os novos pedidos de mensagem estão em pausa na tua conta enquanto a equipa de moderação analisa uma situação. As conversas com as tuas conexões continuam como sempre.",
   "request.error.recipientConnectionsOnly":
     "{name} só está a aceitar mensagens das suas conexões neste momento.",
+  "request.error.rateLimited":
+    "Estás a enviar pedidos de mensagem depressa demais. Espera um minuto e tenta outra vez.",
+  "request.error.notFound":
+    "Não encontrámos {name}. Pode ter mudado de identificador ou saído da QueerPulse. Procura essa pessoa outra vez para confirmar.",
   "requests.replyCta": "Responder",
   "requests.inboundHeading": "Novos pedidos",
   "requests.outboundHeading": "Os teus pedidos enviados",
@@ -1107,6 +1151,8 @@ export const messages: Catalog = {
   "forward.sentToast_other": "Reencaminhada para {count} conversas",
   "forward.failedToast":
     "Não foi possível reencaminhar para {names}. Continuam selecionadas, por isso podes tentar novamente.",
+  "forward.failedToastWithCause":
+    "Não foi possível reencaminhar para {names}. {cause} Continuam selecionadas, por isso podes tentar novamente.",
   "gif.gridLabel": "Resultados de GIFs",
   "conversation.contactSafetyNoticeDismiss": "Fechar aviso de segurança",
   "conversation.dropFilesHint": "Larga os ficheiros aqui para os enviar",
@@ -1177,6 +1223,8 @@ export const messages: Catalog = {
   "blockThenReport.continuingCta": "A denunciar…",
   "blockThenReport.partialFailureToast":
     "{failed} de {total} denúncias não puderam ser enviadas. Ainda podes continuar.",
+  "blockThenReport.partialFailureToastWithCause":
+    "{failed} de {total} denúncias não puderam ser enviadas. {cause} Ainda podes avançar para o passo do bloqueio.",
   // Ver o comentário na versão EN: o limite de denúncias parou o envio a meio.
   "blockThenReport.throttledToast":
     "{succeeded} de {total} denúncias foram enviadas. Podes voltar a enviar as restantes daqui a um ou dois minutos.",

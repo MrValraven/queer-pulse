@@ -47,7 +47,7 @@ export interface ActivityVisibilityResult {
  */
 export function useActivityVisibility(options?: {
   onSaved?: () => void;
-  onError?: () => void;
+  onError?: (error: unknown) => void;
 }): ActivityVisibilityResult {
   const { demoMode } = useDemoMode();
   const { loggedIn } = useAuth();
@@ -66,7 +66,9 @@ export function useActivityVisibility(options?: {
       queryClient.setQueryData(["activityVisibility", demoMode], next);
       options?.onSaved?.();
     },
-    onError: () => options?.onError?.(),
+    // Both callers toast the cause themselves; the global toast would double it.
+    meta: { silentError: true },
+    onError: (error) => options?.onError?.(error),
   });
 
   return {

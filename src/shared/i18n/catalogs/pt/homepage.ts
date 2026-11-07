@@ -35,7 +35,7 @@ export const homepage: Catalog = {
   "manifesto.lead":
     "Uma plataforma de comunidade construída à volta <em>daquilo de que as pessoas queer realmente precisam.</em>",
   "manifesto.body1":
-    "A QueerPulse existe porque já não aguentávamos plataformas que tratam pessoas queer como um segmento de mercado em vez de uma comunidade. Cada funcionalidade aqui nasce de uma necessidade real, de uma frustração, ou de algo que gostávamos que já existisse.",
+    "A QueerPulse existe porque queríamos uma comunidade, e as plataformas que encontrámos tratavam pessoas queer como um segmento de mercado. Cada funcionalidade aqui nasce de uma necessidade real, de uma frustração, ou de algo que gostávamos que já existisse.",
   "manifesto.body2":
     "Acreditamos que a comunidade funciona de outra forma quando há confiança por trás. Quando sabes com quem estás a ligar-te, quando tens controlo sobre o que partilhas, e quando há pessoas a zelar pelos espaços que usas.",
   "manifesto.body3":

@@ -7,6 +7,7 @@ import {
   within,
 } from "@testing-library/react";
 import type { ReactNode } from "react";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { TestProviders } from "../../test/TestProviders";
 import type { AdminStudioLandingSettingsDTO } from "./api/studioLandingAdmin.api";
 import { resetDemoAdminStudioLanding } from "./StudioAdminLanding.data";
@@ -108,12 +109,13 @@ vi.mock("./api/useStudioAdminAccessRequests", async (importOriginal) => {
   };
 });
 
-function renderPage() {
+async function renderPage() {
   render(
     <TestProviders initialEntries={["/admin/studio"]}>
       <StudioAdminPage />
     </TestProviders>,
   );
+  await awaitCatalog("admin", "studio");
 }
 
 function at<Item>(items: readonly Item[], index: number): Item {
@@ -136,7 +138,7 @@ beforeEach(() => {
 
 describe("Studio console tabs (demo)", () => {
   it("shows six tabs, Artists after Scenes and the last with the number of members waiting", async () => {
-    renderPage();
+    await renderPage();
     const tabs = await screen.findAllByRole("tab");
     expect(tabs.map((tab) => tab.textContent?.replace(/\d+$/, ""))).toEqual([
       "Shelves",
@@ -150,7 +152,7 @@ describe("Studio console tabs (demo)", () => {
   });
 
   it("moves between tabs with the arrow keys", async () => {
-    renderPage();
+    await renderPage();
     const tabs = await screen.findAllByRole("tab");
     const firstTab = at(tabs, 0);
     firstTab.focus();
@@ -164,7 +166,7 @@ describe("Studio console tabs (demo)", () => {
 
 describe("Founding artists tab (demo)", () => {
   it("lists each artist with the day they were added", async () => {
-    renderPage();
+    await renderPage();
     const panel = await openTab("Founding artists");
     const rows = await within(panel).findAllByRole("listitem");
     expect(rows).toHaveLength(3);
@@ -174,7 +176,7 @@ describe("Founding artists tab (demo)", () => {
 
   it("marks an artist who cannot appear right now as Not shown", async () => {
     mocks.unlistedName = "NIGHTFORM";
-    renderPage();
+    await renderPage();
     const panel = await openTab("Founding artists");
     const row = (await within(panel).findByText("NIGHTFORM")).closest("li");
     expect(row).toHaveTextContent("Not shown");
@@ -182,7 +184,7 @@ describe("Founding artists tab (demo)", () => {
   });
 
   it("turns the shelf off, sends the setting and announces it with the help line beneath", async () => {
-    renderPage();
+    await renderPage();
     const panel = await openTab("Founding artists");
     const shelfSwitch = await within(panel).findByRole("switch", {
       name: "Show the Founding artists shelf on Studio home",
@@ -202,7 +204,7 @@ describe("Founding artists tab (demo)", () => {
   });
 
   it("adds through the persona search and leaves founding artists unpickable", async () => {
-    renderPage();
+    await renderPage();
     const panel = await openTab("Founding artists");
     fireEvent.click(
       await within(panel).findByRole("button", {
@@ -233,7 +235,7 @@ describe("Founding artists tab (demo)", () => {
   });
 
   it("asks before removing and takes the artist off the list", async () => {
-    renderPage();
+    await renderPage();
     const panel = await openTab("Founding artists");
     fireEvent.click(
       await within(panel).findByRole("button", {
@@ -257,9 +259,12 @@ describe("Founding artists tab (demo)", () => {
   });
 
   it("moves an artist down and says where they went", async () => {
-    renderPage();
+    await renderPage();
     const panel = await openTab("Founding artists");
-    const firstName = at(within(panel).getAllByRole("listitem"), 0).textContent;
+    const firstName = at(
+      await within(panel).findAllByRole("listitem"),
+      0,
+    ).textContent;
     const moveDown = at(
       await within(panel).findAllByRole("button", { name: /^Move down: / }),
       0,
@@ -276,9 +281,11 @@ describe("Founding artists tab (demo)", () => {
   });
 });
 
+// The demo list leaves out members who already hold Studio access, so the
+// oldest artist request is Lara Pinto's.
 describe("Waiting for Studio tab (demo)", () => {
   it("lists artists first with the Artist chip and the Studio page chip", async () => {
-    renderPage();
+    await renderPage();
     const panel = await openTab("Waiting for Studio");
     expect(
       await within(panel).findByText("34 waiting, artists: 9"),
@@ -293,7 +300,7 @@ describe("Waiting for Studio tab (demo)", () => {
       .forEach((row) =>
         expect(within(row).queryByText("Artist")).not.toBeInTheDocument(),
       );
-    expect(rows[0]).toHaveTextContent("Inês Martins");
+    expect(rows[0]).toHaveTextContent("Lara Pinto");
     expect(rows[0]).toHaveTextContent(/Asked on /);
     const invited = within(panel).getByText("Devon Okoro").closest("li");
     expect(invited).toHaveTextContent("Joined from the Studio page");
@@ -301,30 +308,30 @@ describe("Waiting for Studio tab (demo)", () => {
   });
 
   it("links each name to the member", async () => {
-    renderPage();
+    await renderPage();
     const panel = await openTab("Waiting for Studio");
     expect(
-      await within(panel).findByRole("link", { name: "Inês Martins" }),
+      await within(panel).findByRole("link", { name: "Lara Pinto" }),
     ).toHaveAttribute("href", expect.stringMatching(/^\/members\/.+/));
   });
 
   it("grants at once, announces it, folds the row away and lowers the counts", async () => {
-    renderPage();
+    await renderPage();
     const panel = await openTab("Waiting for Studio");
     fireEvent.click(
       await within(panel).findByRole("button", {
-        name: "Grant Studio access to Inês Martins",
+        name: "Grant Studio access to Lara Pinto",
       }),
     );
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(
       await within(panel).findByText(
-        "Inês Martins can use Studio now and gets a notification",
+        "Lara Pinto can use Studio now and gets a notification",
       ),
     ).toBeInTheDocument();
     await waitFor(() =>
       expect(
-        within(panel).queryByText("Inês Martins", { selector: "a" }),
+        within(panel).queryByText("Lara Pinto", { selector: "a" }),
       ).not.toBeInTheDocument(),
     );
     expect(
@@ -336,11 +343,11 @@ describe("Waiting for Studio tab (demo)", () => {
 
   it("names the reason when a grant is refused", async () => {
     mocks.isGrantRefused = true;
-    renderPage();
+    await renderPage();
     const panel = await openTab("Waiting for Studio");
     fireEvent.click(
       await within(panel).findByRole("button", {
-        name: "Grant Studio access to Inês Martins",
+        name: "Grant Studio access to Lara Pinto",
       }),
     );
     const toast = await screen.findByText(
@@ -348,12 +355,12 @@ describe("Waiting for Studio tab (demo)", () => {
     );
     expect(toast.textContent).not.toContain("That change didn't save");
     expect(
-      within(panel).getByRole("link", { name: "Inês Martins" }),
+      within(panel).getByRole("link", { name: "Lara Pinto" }),
     ).toBeInTheDocument();
   });
 
   it("confirms before dismissing a request", async () => {
-    renderPage();
+    await renderPage();
     const panel = await openTab("Waiting for Studio");
     fireEvent.click(
       await within(panel).findByRole("button", {
@@ -379,7 +386,7 @@ describe("Waiting for Studio tab (demo)", () => {
   });
 
   it("loads the next page on Show more requests and moves focus to its first new row", async () => {
-    renderPage();
+    await renderPage();
     const panel = await openTab("Waiting for Studio");
     const showMore = await within(panel).findByRole("button", {
       name: "Show more requests",

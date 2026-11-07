@@ -1,6 +1,7 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import { ApiError } from "../../../shared/api/client";
 import type { DeskView } from "../api/deskViews.api";
@@ -24,7 +25,7 @@ const VIEWS: DeskView[] = [
   },
 ];
 
-function renderMenu(overrides: Partial<DeskViewsMenuProps> = {}) {
+async function renderMenu(overrides: Partial<DeskViewsMenuProps> = {}) {
   const props: DeskViewsMenuProps = {
     views: VIEWS,
     isLoading: false,
@@ -40,6 +41,7 @@ function renderMenu(overrides: Partial<DeskViewsMenuProps> = {}) {
       <DeskViewsMenu {...props} />
     </TestProviders>,
   );
+  await awaitCatalog("magazine");
   return props;
 }
 
@@ -51,7 +53,7 @@ async function openMenu() {
 
 describe("DeskViewsMenu: the list", () => {
   it("offers the save action when there are no views yet", async () => {
-    renderMenu({ views: [] });
+    await renderMenu({ views: [] });
     await openMenu();
     expect(
       screen.getByRole("menuitem", { name: "No saved views yet" }),
@@ -65,7 +67,7 @@ describe("DeskViewsMenu: the list", () => {
   });
 
   it("ticks and names the view on screen, and applies a pick", async () => {
-    const props = renderMenu({
+    const props = await renderMenu({
       currentQuery: { track: "issue", focus: ["ready", "late"] },
     });
     expect(
@@ -90,7 +92,7 @@ describe("DeskViewsMenu: the list", () => {
       query: {},
       position,
     }));
-    renderMenu({ views: fullList });
+    await renderMenu({ views: fullList });
     await openMenu();
     expect(
       screen.getByRole("menuitem", { name: "Save current view…" }),
@@ -100,7 +102,7 @@ describe("DeskViewsMenu: the list", () => {
 
 describe("DeskViewsMenu: saving", () => {
   it("saves the current query under the typed name", async () => {
-    const props = renderMenu();
+    const props = await renderMenu();
     const user = await openMenu();
     await user.click(
       screen.getByRole("menuitem", { name: "Save current view…" }),
@@ -118,7 +120,7 @@ describe("DeskViewsMenu: saving", () => {
   });
 
   it("refuses a name already in use before sending", async () => {
-    const props = renderMenu();
+    const props = await renderMenu();
     const user = await openMenu();
     await user.click(
       screen.getByRole("menuitem", { name: "Save current view…" }),
@@ -133,7 +135,7 @@ describe("DeskViewsMenu: saving", () => {
   });
 
   it("explains a 409 from the server beside the field", async () => {
-    renderMenu({
+    await renderMenu({
       onCreate: vi
         .fn()
         .mockRejectedValue(
@@ -156,7 +158,7 @@ describe("DeskViewsMenu: saving", () => {
 
 describe("DeskViewsMenu: managing", () => {
   it("renames a view in place", async () => {
-    const props = renderMenu();
+    const props = await renderMenu();
     const user = await openMenu();
     await user.click(screen.getByRole("menuitem", { name: "Manage views…" }));
     const dialog = screen.getByRole("dialog", { name: "Your saved views" });
@@ -176,7 +178,7 @@ describe("DeskViewsMenu: managing", () => {
   });
 
   it("deletes a view after the confirmation", async () => {
-    const props = renderMenu();
+    const props = await renderMenu();
     const user = await openMenu();
     await user.click(screen.getByRole("menuitem", { name: "Manage views…" }));
     await user.click(screen.getByRole("button", { name: "Delete Close week" }));

@@ -76,7 +76,10 @@ describe("DirectoryCardStatus for an out-and-about listing", () => {
     const { container } = renderWithProviders(
       <DirectoryCardStatus place={fixture("lisboa-arco-iris-walks")} />,
     );
-    expect(await screen.findByText(/Open|Closed|Closing/)).toBeInTheDocument();
+    // Open now, Open till, Closes at or Closed, by the time of day.
+    expect(
+      await screen.findByText(/^(Open now|Open till|Closes at|Closed)/),
+    ).toBeInTheDocument();
     expect(container.textContent).not.toContain("By appointment");
   });
 });

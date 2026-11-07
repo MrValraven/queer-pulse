@@ -16,7 +16,7 @@ export interface PieceRowMenuProps extends PieceRowMenuActions {
   hasAnyIssue: boolean;
   /** The issue item's label key ("Add to issue" or "Move issue"). */
   assignLabelKey: string;
-  /** A published row also offers the two unpublish items. */
+  /** A published row also offers the Unpublish item. */
   isPublished?: boolean;
 }
 

@@ -100,16 +100,18 @@ async function pressDeleteInDialog(times = 1) {
 describe("PersonaUpdates focus", () => {
   it("scrolls to the block and focuses its heading once the posts answer on #updates", async () => {
     result = { ...resultWith([]), hasLoaded: false };
-    const tree = (
+    // A fresh element on every call, so a rerender reaches the block with
+    // the next posts result.
+    const tree = () => (
       <TestProviders initialEntries={["/p/nightform#updates"]}>
         <PersonaUpdates persona={persona} mode="public" surface="persona" />
       </TestProviders>
     );
-    const { rerender, container } = render(tree);
+    const { rerender, container } = render(tree());
     expect(container.querySelector("#updates")).toBeNull();
     expect(scrollIntoView).not.toHaveBeenCalled();
     result = resultWith([post(1)]);
-    rerender(tree);
+    rerender(tree());
     const heading = await screen.findByRole("heading", { name: "Updates" });
     await waitFor(() => expect(heading).toHaveFocus());
     expect(scrollIntoView).toHaveBeenCalledTimes(1);
@@ -118,7 +120,7 @@ describe("PersonaUpdates focus", () => {
     );
     heading.blur();
     result = resultWith([post(1), post(2)]);
-    rerender(tree);
+    rerender(tree());
     expect(await screen.findByText("Update number 2")).toBeInTheDocument();
     expect(scrollIntoView).toHaveBeenCalledTimes(1);
     expect(heading).not.toHaveFocus();
@@ -147,16 +149,16 @@ describe("PersonaUpdates focus", () => {
         </div>
       </TestProviders>
     );
-    const block = (
+    const block = () => (
       <PersonaUpdates persona={persona} mode="owner" surface="studio" />
     );
-    const { rerender } = render(tree(block));
+    const { rerender } = render(tree(block()));
     await pressDeleteInDialog();
     await waitFor(() =>
       expect(screen.getByRole("heading", { name: "Updates" })).toHaveFocus(),
     );
     result = resultWith([]);
-    rerender(tree(block));
+    rerender(tree(block()));
     await waitFor(() =>
       expect(screen.getByRole("tabpanel", { name: "About" })).toHaveFocus(),
     );
@@ -171,10 +173,10 @@ describe("PersonaUpdates focus", () => {
         </div>
       </TestProviders>
     );
-    const block = (
+    const block = () => (
       <PersonaUpdates persona={persona} mode="owner" surface="studio" />
     );
-    const { rerender } = render(tree(block));
+    const { rerender } = render(tree(block()));
     const heading = await screen.findByRole("heading", { name: "Updates" });
     await act(async () => {
       heading.focus();
@@ -183,7 +185,7 @@ describe("PersonaUpdates focus", () => {
     });
     expect(document.body).toHaveFocus();
     result = resultWith([]);
-    rerender(tree(block));
+    rerender(tree(block()));
     await waitFor(() =>
       expect(
         screen.queryByRole("heading", { name: "Updates" }),

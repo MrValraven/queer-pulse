@@ -58,7 +58,7 @@ vi.mock("../../../../shared/components/feedback/useToast", () => ({
 }));
 const editSave = vi.hoisted(() => ({
   saveEdit: vi.fn<() => Promise<void>>(),
-  showSaveError: vi.fn<() => void>(),
+  showSaveError: vi.fn<(error: unknown) => void>(),
 }));
 vi.mock("../useEditListingSave", () => ({
   useEditListingSave: () => editSave,
@@ -526,6 +526,10 @@ describe("useListingEditorSave and the server draft", () => {
       await result.current.save();
     });
     expect(editSave.showSaveError).toHaveBeenCalledTimes(1);
+    // The cause travels with the call, so the toast can name it.
+    expect(editSave.showSaveError).toHaveBeenCalledWith(
+      expect.objectContaining({ message: "offline" }),
+    );
     expect(fakeAutosave.discard).not.toHaveBeenCalled();
     expect(lastAutosaveOptions()).toMatchObject({
       payload: { draft: editedDraft },

@@ -16,8 +16,13 @@ import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { ReportSubjectControl } from "../safety/ReportSubjectControl";
 import { useUploadImage } from "../members/api/useUploadImage";
+import { ImageProcessingError } from "../members/api/uploadProcessing";
 import { safeHref } from "../../shared/lib/safeHref";
 import type { EventPhotoDTO } from "./api/events.api";
+import {
+  photoAttachErrorMessage,
+  photoRemoveErrorMessage,
+} from "./gatheringActionErrors";
 import {
   useAttachEventPhoto,
   useEventPhotos,
@@ -200,8 +205,16 @@ export function GatheringPhotosLive({
     try {
       const { key } = await uploadImage(file, { crop });
       await attachPhoto.mutateAsync({ key });
-    } catch {
-      showToast(t("gatherings:photos.uploadError"), "error");
+    } catch (error) {
+      // The upload hook throws an `ImageProcessingError` carrying the specific
+      // cause (type, size, connection, a restriction ...) as a catalog key;
+      // the attach call after it is the host-only, conflict and shared causes.
+      showToast(
+        error instanceof ImageProcessingError
+          ? t(error.i18nKey, error.values)
+          : photoAttachErrorMessage(error, t),
+        "error",
+      );
     } finally {
       setUploading(false);
     }
@@ -238,8 +251,8 @@ export function GatheringPhotosLive({
     try {
       await removePhoto.mutateAsync({ photoId: photo.id });
       showToast(t("gatherings:photos.removedToast"), "success");
-    } catch {
-      showToast(t("gatherings:photos.removeError"), "error");
+    } catch (error) {
+      showToast(photoRemoveErrorMessage(error, t), "error");
     } finally {
       setPhotoPendingRemoval(null);
     }

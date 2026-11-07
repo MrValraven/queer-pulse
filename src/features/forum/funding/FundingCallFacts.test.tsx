@@ -2,6 +2,8 @@ import { act, render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { I18nProvider } from "../../../app/providers/I18nProvider";
+import { loadNamespace } from "../../../shared/i18n/catalogs";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import type { Thread } from "../forum.data";
 import type { ForumFundingView } from "./funding.types";
 import { FundingCallFacts } from "./FundingCallFacts";
@@ -61,6 +63,17 @@ const THREAD: Thread = {
   funding: FUNDING,
 };
 
+/** Waits for the forum catalog with promises alone, for a test that fakes
+ *  setTimeout: `awaitCatalog` yields through a setTimeout, which a faked clock
+ *  holds back. The provider's load resolves through microtasks, so awaiting the
+ *  same cached load inside `act` flushes its state update. */
+async function awaitForumCatalogUnderFakeTimeouts(): Promise<void> {
+  await act(async () => {
+    await loadNamespace("en", "forum");
+    await Promise.resolve();
+  });
+}
+
 function renderFacts(
   funding: ForumFundingView,
   viewerTimeZone = "Europe/Lisbon",
@@ -95,44 +108,50 @@ describe("FundingCallFacts", () => {
   });
   afterEach(() => vi.useRealTimers());
 
-  it("opens the call in a new tab without passing on referrer or rank", () => {
+  it("opens the call in a new tab without passing on referrer or rank", async () => {
     renderFacts(FUNDING);
+    await awaitCatalog("forum");
     const link = screen.getByRole("link", { name: /Open the call/ });
     expect(link).toHaveAttribute("href", FUNDING.linkUrl);
     expect(link).toHaveAttribute("target", "_blank");
     expect(link).toHaveAttribute("rel", "noopener noreferrer nofollow");
   });
 
-  it("states the deadline in Lisbon time and adds the viewer's own time when it differs", () => {
+  it("states the deadline in Lisbon time and adds the viewer's own time when it differs", async () => {
     renderFacts(FUNDING, "America/New_York");
+    await awaitCatalog("forum");
     expect(screen.getByText(/17:00, Lisbon time/)).toBeInTheDocument();
     expect(screen.getByText(/Your time: .*12:00/)).toBeInTheDocument();
   });
 
-  it("keeps a Lisbon viewer to one line", () => {
+  it("keeps a Lisbon viewer to one line", async () => {
     renderFacts(FUNDING);
+    await awaitCatalog("forum");
     expect(screen.queryByText(/Your time/)).toBeNull();
   });
 
-  it("offers the reminder hint on an open call with a deadline only", () => {
+  it("offers the reminder hint on an open call with a deadline only", async () => {
     renderFacts(FUNDING);
+    await awaitCatalog("forum");
     expect(
       screen.getByText("Save it and we'll remind you 7 days and 1 day before."),
     ).toBeInTheDocument();
   });
 
-  it("drops the reminder hint on a rolling call", () => {
+  it("drops the reminder hint on a rolling call", async () => {
     renderFacts({ ...FUNDING, deadline: null });
+    await awaitCatalog("forum");
     expect(screen.queryByText(/remind you/)).toBeNull();
   });
 
-  it("turns into Closed when the deadline passes on screen, and refetches once", () => {
+  it("turns into Closed when the deadline passes on screen, and refetches once", async () => {
     demoModeState.isDemoMode = false;
     const { invalidate } = renderFacts({
       ...FUNDING,
       deadline: new Date(NOW + 30_000).toISOString(),
       callState: "closing",
     });
+    await awaitCatalog("forum");
     expect(screen.getByText(/Closes within the hour/)).toBeInTheDocument();
     act(() => {
       vi.advanceTimersByTime(61_000);
@@ -165,7 +184,7 @@ describe("FundingCallFacts at the deadline", () => {
   });
   afterEach(() => vi.useRealTimers());
 
-  it("reads Closed right after the deadline, before the next minute tick", () => {
+  it("reads Closed right after the deadline, before the next minute tick", async () => {
     // Past the first minute tick and well short of the second one.
     const deadlineOffsetMs = 90_500;
     renderFacts({
@@ -173,6 +192,7 @@ describe("FundingCallFacts at the deadline", () => {
       deadline: new Date(NOW + deadlineOffsetMs).toISOString(),
       callState: "closing",
     });
+    await awaitForumCatalogUnderFakeTimeouts();
     expect(screen.getByText(/Closes within the hour/)).toBeInTheDocument();
     act(() => {
       vi.advanceTimersByTime(deadlineOffsetMs + 1_500);
@@ -190,12 +210,13 @@ describe("FundingCallFacts on a closed call", () => {
   });
   afterEach(() => vi.useRealTimers());
 
-  it("offers the call to read, with a quieter label", () => {
+  it("offers the call to read, with a quieter label", async () => {
     renderFacts({
       ...FUNDING,
       deadline: "2026-07-01T16:00:00.000Z",
       callState: "closed",
     });
+    await awaitCatalog("forum");
     expect(
       screen.getByRole("link", { name: /See the call on example\.org/ }),
     ).toBeInTheDocument();

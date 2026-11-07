@@ -1,6 +1,13 @@
 import { ApiError } from "../../shared/api/client";
+import type { CauseErrorOverrides } from "../../shared/api/causeErrorKey";
 import { reasonFor } from "../../shared/api/errorMessage";
 import type { TFunction } from "../../shared/i18n/types";
+import {
+  actionCauseCopy,
+  causeMessage,
+  sentenceCauseKey,
+  type SentenceCause,
+} from "./gatheringActionErrors";
 import { MAX_RSVP_GUESTS } from "./rsvpGuestCap";
 
 /**
@@ -23,9 +30,10 @@ import { MAX_RSVP_GUESTS } from "./rsvpGuestCap";
  * with no waitlist). The backend writes it in English only, so an English
  * reader gets the server's sentence through `reasonFor`, and every other
  * language gets the generic retry line in the reader's own language.
- * The one the page can predict, the host's RSVP cutoff having passed, is
- * matched and said in the reader's own language.
- * Anything else falls back to the generic retry line.
+ * The refusals the page can predict (the host's RSVP cutoff, an event that is
+ * not open, over, or full) are matched and said in the reader's own language.
+ * Anything else reads the shared cause line for its status (`causeErrorKey`):
+ * offline, signed out, restricted, rate limited, a server fault.
  */
 
 /** The backend's sentence for an RSVP after the cutoff: `RSVPS_CLOSED_MESSAGE`
@@ -62,9 +70,80 @@ export function isGuestCapError(error: unknown): boolean {
   );
 }
 
+/** The refusals `rsvp.service.ts` and `member-event-invites.service.ts` send
+ *  as a plain 400 with no machine `code`, matched by their English sentence
+ *  (see `gatheringActionErrors.ts` for why). */
+const RSVP_SENTENCE_CAUSES: readonly SentenceCause[] = [
+  {
+    status: 400,
+    sentence: "Event is not open for RSVPs",
+    key: "gatherings:rsvpControl.notOpenToast",
+  },
+  {
+    status: 400,
+    sentence: "This event has already happened",
+    key: "gatherings:rsvpControl.endedToast",
+  },
+  {
+    status: 400,
+    sentence: "This event is full",
+    key: "gatherings:rsvpControl.fullToast",
+  },
+  {
+    status: 400,
+    sentence: "The host is always going to their own event",
+    key: "gatherings:actionError.hostAlwaysGoing",
+  },
+];
+
+/** The 403 on an RSVP is a host removal or a block (one sentence for both, on
+ *  purpose); a moderation restriction and an inactive membership are also
+ *  403s, which `causeErrorKey` names ahead of this line. A 404 is an event
+ *  that is gone. */
+const RSVP_OVERRIDES: CauseErrorOverrides = {
+  403: "gatherings:rsvpControl.refusedToast",
+  404: "gatherings:rsvpControl.goneToast",
+};
+
+/** Saving the "Anything we should know?" details of an RSVP: the cutoff, the
+ *  guest cap, a raise past the seats left, or no RSVP to save onto. */
+const RSVP_DETAILS_SENTENCE_CAUSES: readonly SentenceCause[] = [
+  {
+    status: 400,
+    sentence: "There is not enough room left for that many guests",
+    key: "gatherings:rsvpDetails.notEnoughRoomToast",
+  },
+  {
+    status: 404,
+    sentence: "You do not have an active RSVP",
+    key: "gatherings:rsvpDetails.noActiveRsvpToast",
+  },
+  ...RSVP_SENTENCE_CAUSES,
+];
+
+/** Sending invites from an RSVP: the event not published or over, and the
+ *  403 for a member who has no going or maybe RSVP. */
+const RSVP_INVITE_SENTENCE_CAUSES: readonly SentenceCause[] = [
+  {
+    status: 400,
+    sentence: "Only a published event can send invites",
+    key: "gatherings:actionError.notPublished",
+  },
+  {
+    status: 400,
+    sentence: "This event has already happened",
+    key: "gatherings:rsvpControl.endedToast",
+  },
+  {
+    status: 403,
+    sentence: "RSVP going or maybe to invite your connections",
+    key: "gatherings:rsvpInvites.needRsvpToast",
+  },
+];
+
 /** A failed "Anything we should know?" save on the event page: the closed
- *  cutoff and the guest cap in the reader's language, and the form's own
- *  retry line otherwise. */
+ *  cutoff and the guest cap in the reader's language, then the other known
+ *  refusals, then the shared cause (offline, a fault, a rate limit). */
 export function rsvpDetailsSaveErrorMessage(
   error: unknown,
   t: TFunction,
@@ -73,11 +152,11 @@ export function rsvpDetailsSaveErrorMessage(
   if (isGuestCapError(error)) {
     return t("gatherings:rsvpInvites.capToast", { max: MAX_RSVP_GUESTS });
   }
-  return t("gatherings:rsvpDetails.saveErrorToast");
+  return causeMessage(t, actionCauseCopy(error, RSVP_DETAILS_SENTENCE_CAUSES));
 }
 
-/** A refused invite send in the reader's language: the cutoff, the cap, or
- *  the send's own retry line. */
+/** A refused invite send in the reader's language: the cutoff, the cap, the
+ *  other known refusals, then the shared cause. */
 export function rsvpInviteSendErrorMessage(
   error: unknown,
   t: TFunction,
@@ -86,7 +165,7 @@ export function rsvpInviteSendErrorMessage(
   if (isGuestCapError(error)) {
     return t("gatherings:rsvpInvites.capToast", { max: MAX_RSVP_GUESTS });
   }
-  return t("gatherings:rsvpInvites.sendErrorToast");
+  return causeMessage(t, actionCauseCopy(error, RSVP_INVITE_SENTENCE_CAUSES));
 }
 
 /** `language` is the reader's UI language, from `useTranslation()`. */
@@ -96,14 +175,14 @@ export function rsvpErrorMessage(
   language: string,
 ): string {
   if (isRsvpsClosedError(error)) return t("gatherings:rsvpControl.closedToast");
-  if (error instanceof ApiError) {
-    if (error.status === 403) return t("gatherings:rsvpControl.refusedToast");
-    if (error.status === 400) {
-      const isEnglishReader = language.toLowerCase().startsWith("en");
-      const serverReason = isEnglishReader ? reasonFor(error) : null;
-      return serverReason ?? t("gatherings:rsvpControl.errorToast");
-    }
-    if (error.status === 404) return t("gatherings:rsvpControl.goneToast");
+  const sentenceKey = sentenceCauseKey(error, RSVP_SENTENCE_CAUSES);
+  if (sentenceKey) return t(sentenceKey);
+  if (error instanceof ApiError && error.status === 400) {
+    // A 400 the page cannot predict: an English reader gets the server's own
+    // sentence, every other language the shared invalid-details line.
+    const isEnglishReader = language.toLowerCase().startsWith("en");
+    const serverReason = isEnglishReader ? reasonFor(error) : null;
+    if (serverReason) return serverReason;
   }
-  return t("gatherings:rsvpControl.errorToast");
+  return causeMessage(t, actionCauseCopy(error, [], RSVP_OVERRIDES));
 }

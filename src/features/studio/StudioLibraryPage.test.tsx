@@ -8,6 +8,7 @@ import {
 import { Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { resetDemoPlaylists } from "./api/studioDemoPlaylists";
 import { resetDemoPurchases } from "./api/studioDemoPurchaseStore";
 import { StudioLibraryPage } from "./StudioLibraryPage";
@@ -37,7 +38,7 @@ beforeEach(() => {
   resetDemoPurchases();
 });
 
-function renderAt(path: string) {
+async function renderAt(path: string) {
   render(
     <TestProviders initialEntries={[path]}>
       <Routes>
@@ -49,11 +50,12 @@ function renderAt(path: string) {
       </Routes>
     </TestProviders>,
   );
+  await awaitCatalog("studio");
 }
 
 describe("library (demo)", () => {
   it("opens on Playlists with the member's own and a Create playlist button", async () => {
-    renderAt("/studio/library");
+    await renderAt("/studio/library");
     expect(screen.getByRole("tab", { name: "Playlists" })).toHaveAttribute(
       "aria-selected",
       "true",
@@ -72,7 +74,7 @@ describe("library (demo)", () => {
   });
 
   it("starts the Playlists grid with Liked songs, marked Private", async () => {
-    renderAt("/studio/library");
+    await renderAt("/studio/library");
     const panel = screen.getByRole("tabpanel");
     const liked = within(panel).getByRole("link", { name: "Liked songs" });
     expect(liked).toHaveAttribute("href", "/studio/liked");
@@ -89,7 +91,7 @@ describe("library (demo)", () => {
 
   it("keeps Liked songs above the empty Playlists state", async () => {
     showcase.hasNoPlaylists = true;
-    renderAt("/studio/library");
+    await renderAt("/studio/library");
     const panel = screen.getByRole("tabpanel");
     await within(panel).findByRole("link", { name: "Browse the studio" });
     expect(
@@ -97,8 +99,8 @@ describe("library (demo)", () => {
     ).toHaveAttribute("href", "/studio/liked");
   });
 
-  it("offers Playlists, Releases, Artists and Purchases as the library tabs", () => {
-    renderAt("/studio/library");
+  it("offers Playlists, Releases, Artists and Purchases as the library tabs", async () => {
+    await renderAt("/studio/library");
     expect(screen.queryByRole("tab", { name: "Tracks" })).toBeNull();
     expect(screen.getAllByRole("tab").map((tab) => tab.textContent)).toEqual([
       "Playlists",
@@ -108,13 +110,13 @@ describe("library (demo)", () => {
     ]);
   });
 
-  it("opens Liked songs from the old Tracks tab link", () => {
-    renderAt("/studio/library?tab=tracks");
+  it("opens Liked songs from the old Tracks tab link", async () => {
+    await renderAt("/studio/library?tab=tracks");
     expect(screen.getByTestId("liked-page")).toBeInTheDocument();
   });
 
   it("links a withdrawn save to its release and leaves another lost save unlinked", async () => {
-    renderAt("/studio/library");
+    await renderAt("/studio/library");
     fireEvent.click(screen.getByRole("tab", { name: "Releases" }));
     const panel = await screen.findByRole("tabpanel");
     expect(
@@ -132,7 +134,7 @@ describe("library (demo)", () => {
   });
 
   it("lists followed artists who make music", async () => {
-    renderAt("/studio/library?tab=artists");
+    await renderAt("/studio/library?tab=artists");
     expect(
       await within(await screen.findByRole("tabpanel")).findByRole("link", {
         name: /nightform/i,
@@ -140,9 +142,9 @@ describe("library (demo)", () => {
     ).toHaveAttribute("href", "/studio/artist?id=sp-diogo-nightform");
   });
 
-  it("keeps the paid-to-artists line to the demo showcase", () => {
+  it("keeps the paid-to-artists line to the demo showcase", async () => {
     showcase.isOn = false;
-    renderAt("/studio/library");
+    await renderAt("/studio/library");
     expect(
       screen.getByText(
         "Your playlists, Liked songs, saved releases and the artists you follow",
@@ -153,7 +155,7 @@ describe("library (demo)", () => {
 
   it("offers Create playlist in the empty Playlists state and opens the dialog", async () => {
     showcase.hasNoPlaylists = true;
-    renderAt("/studio/library");
+    await renderAt("/studio/library");
     const panel = screen.getByRole("tabpanel");
     await within(panel).findByRole("link", { name: "Browse the studio" });
     const createButtons = within(panel).getAllByRole("button", {
@@ -166,7 +168,7 @@ describe("library (demo)", () => {
   });
 
   it("opens Purchases from ?tab=purchases with its heading and no filter or sort", async () => {
-    renderAt("/studio/library?tab=purchases");
+    await renderAt("/studio/library?tab=purchases");
     expect(screen.getByRole("tab", { name: "Purchases" })).toHaveAttribute(
       "aria-selected",
       "true",
@@ -184,7 +186,7 @@ describe("library (demo)", () => {
   });
 
   it("folds the filter away on the Purchases tab and brings it back on Releases", async () => {
-    renderAt("/studio/library");
+    await renderAt("/studio/library");
     expect(
       screen.getByRole("searchbox", { name: "Filter your library" }),
     ).toBeInTheDocument();

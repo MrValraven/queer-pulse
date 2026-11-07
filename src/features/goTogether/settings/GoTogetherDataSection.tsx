@@ -16,6 +16,7 @@ import {
   useFriendMatchProfile,
 } from "../api/useFriendMatchProfile";
 import { isGoTogetherOff } from "../api/goTogether.api";
+import { goTogetherCauseKey } from "../api/goTogetherErrorCopy";
 import { clearQuestionnaireDrafts } from "../questionnaire/questionnaireDraftStorage";
 
 const GO_TOGETHER_QUESTIONNAIRE_RETURN_PATH = `${routes.settings}?pane=data`;
@@ -68,8 +69,8 @@ export function GoTogetherDataSection() {
         setIsDeleteConfirmOpen(false);
         showToast(t("goTogether:settings.data.deleted"), "success");
       },
-      onError: () => {
-        showToast(t("goTogether:settings.data.deleteError"), "error");
+      onError: (deleteFailure) => {
+        showToast(t(goTogetherCauseKey(deleteFailure)), "error");
       },
     });
   }

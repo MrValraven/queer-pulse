@@ -63,7 +63,10 @@ export function CodeInput({
     boxRefs.current[Math.max(0, Math.min(index, length - 1))]?.focus();
 
   useEffect(() => {
-    if (shouldAutoFocus) focusBox(value.length);
+    // A box that mounts disabled waits: the effect below focuses it once the
+    // check finishes. Browsers already ignore focus() on a disabled input, and
+    // the explicit guard keeps every environment on that same behaviour.
+    if (shouldAutoFocus && !isDisabled) focusBox(value.length);
     // Mount only: autofocus once, then the user steers.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -1,3 +1,7 @@
+import {
+  causeErrorKey,
+  SHARED_CAUSE_KEY,
+} from "../../../shared/api/causeErrorKey";
 import { ApiError } from "../../../shared/api/client";
 import { isAccountRestricted } from "../../../shared/api/errorMessage";
 import type { TFunction } from "../../../shared/i18n/types";
@@ -51,7 +55,8 @@ export type FeedErrorContext = "generic" | "preview" | "connect" | "update";
  * `context` says which call it was, for the statuses that mean different
  * things per call (a 400).
  * Every failure gets plain, recoverable words in their own language, so a raw
- * backend sentence never reaches the screen.
+ * backend sentence never reaches the screen. A failure the feed routes do not
+ * name reads its shared cause line (`shared:apiError.*`).
  */
 export function feedErrorMessageKey(
   error: unknown,
@@ -91,7 +96,13 @@ export function feedErrorMessageKey(
     if (context === "update")
       return "subprofiles:feedImport.error.sectionNotAllowed";
   }
-  return "subprofiles:feedImport.error.generic";
+  // Everything else names its shared cause (no connection, signed out, not
+  // found, a server fault ...). Only a status nothing names reads `generic`,
+  // which says the server refused it.
+  const cause = causeErrorKey(error);
+  return cause.key === SHARED_CAUSE_KEY.refused
+    ? "subprofiles:feedImport.error.generic"
+    : cause.key;
 }
 
 /** The numbers the feed error messages quote. */

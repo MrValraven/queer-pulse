@@ -7,6 +7,7 @@ import {
   queueItem,
   renderWithPlayer,
 } from "./studioPlayerTestHarness";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 /** The track's detail never answers here, so the menu keeps the queue
  *  item's own track. */
@@ -36,8 +37,9 @@ function expectLinksLikeAndMenu(title: string, artistName: string) {
 }
 
 describe("Side panel track header", () => {
-  it("links the title and the artist and offers Like and the track menu", () => {
+  it("links the title and the artist and offers Like and the track menu", async () => {
     renderWithPlayer(<StudioSidePanelTrackHeader item={queueItem()} />);
+    await awaitCatalog("studio");
     expectLinksLikeAndMenu("Tide", "NIGHTFORM");
   });
 
@@ -55,7 +57,7 @@ describe("Side panel track header", () => {
     expect(screen.getByText("NIGHTFORM")).toBeTruthy();
   });
 
-  it("shows a warned track the way the bar does", () => {
+  it("shows a warned track the way the bar does", async () => {
     const warned = queueItem({ contentWarnings: ["self-harm"] });
     renderWithPlayer(<StudioSidePanelTrackHeader item={warned} />, {
       player: createStudioPlayerValue({
@@ -63,6 +65,7 @@ describe("Side panel track header", () => {
         pendingWarning: warned,
       }),
     });
+    await awaitCatalog("studio");
     expectLinksLikeAndMenu("Tide", "NIGHTFORM");
   });
 

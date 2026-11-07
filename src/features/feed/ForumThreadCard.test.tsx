@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { ForumThreadCard } from "./ForumThreadCard";
 import type { FeedItem } from "./api/feed.api";
 
@@ -23,19 +24,21 @@ const baseThreadItem = (overrides: Partial<FeedItem> = {}): FeedItem => ({
   ...overrides,
 });
 
-function renderCard(item: FeedItem) {
-  return render(
+async function renderCard(item: FeedItem) {
+  const view = render(
     <TestProviders>
       <ForumThreadCard item={item} />
     </TestProviders>,
   );
+  await awaitCatalog("feed", "forum");
+  return view;
 }
 
 describe("ForumThreadCard", () => {
-  it("renders the anonymous byline with no profile link", () => {
+  it("renders the anonymous byline with no profile link", async () => {
     // The server sends a null actor for a masked thread. A stale actor is
     // left on the fixture to prove the card trusts the mask over it.
-    renderCard(baseThreadItem({ bylineMask: "anonymous" }));
+    await renderCard(baseThreadItem({ bylineMask: "anonymous" }));
 
     expect(screen.getAllByText("A member").length).toBeGreaterThan(0);
     expect(screen.queryByText(/Noor Haddad/)).not.toBeInTheDocument();
@@ -52,8 +55,8 @@ describe("ForumThreadCard", () => {
     expect(screen.queryByText("AM")).not.toBeInTheDocument();
   });
 
-  it("renders the official byline with the brand mark and the Official badge", () => {
-    renderCard(baseThreadItem({ bylineMask: "official" }));
+  it("renders the official byline with the brand mark and the Official badge", async () => {
+    await renderCard(baseThreadItem({ bylineMask: "official" }));
 
     expect(screen.getByText("QueerPulse")).toBeInTheDocument();
     expect(screen.getByText("Official")).toBeInTheDocument();
@@ -61,15 +64,15 @@ describe("ForumThreadCard", () => {
     expect(screen.queryByText(/Noor Haddad/)).not.toBeInTheDocument();
   });
 
-  it("names an unmasked thread with no actor the way the forum does", () => {
-    renderCard(baseThreadItem({ actor: null }));
+  it("names an unmasked thread with no actor the way the forum does", async () => {
+    await renderCard(baseThreadItem({ actor: null }));
 
     expect(screen.getByText("A member")).toBeInTheDocument();
   });
 
   it("covers a warned excerpt until the reveal is pressed", async () => {
     const user = userEvent.setup();
-    renderCard(
+    await renderCard(
       baseThreadItem({
         id: "thread-warned",
         link: "/thread/a-hard-week",
@@ -97,8 +100,8 @@ describe("ForumThreadCard", () => {
     );
   });
 
-  it("shows the warning pill on a warned thread with no excerpt", () => {
-    renderCard(
+  it("shows the warning pill on a warned thread with no excerpt", async () => {
+    await renderCard(
       baseThreadItem({
         id: "thread-warned-no-excerpt",
         link: "/thread/warned-no-excerpt",
@@ -121,36 +124,36 @@ describe("ForumThreadCard", () => {
       excerpt: "Remembered across surfaces.",
       contentWarnings: ["Grief"],
     });
-    const firstRender = renderCard(warnedItem);
+    const firstRender = await renderCard(warnedItem);
     await user.click(screen.getByRole("button", { name: "Show it anyway" }));
     firstRender.unmount();
 
     // Another item for the same thread (same slug, different feed id) opens
     // already uncovered, because the choice is stored under the slug.
-    renderCard({ ...warnedItem, id: "thread-shared-key-again" });
+    await renderCard({ ...warnedItem, id: "thread-shared-key-again" });
 
     expect(
       screen.getByText("Remembered across surfaces.", { selector: "p" }),
     ).not.toHaveAttribute("aria-hidden");
   });
 
-  it("shows the translated category and a pluralised reply count", () => {
-    renderCard(baseThreadItem({ category: "housing", replyCount: 3 }));
+  it("shows the translated category and a pluralised reply count", async () => {
+    await renderCard(baseThreadItem({ category: "housing", replyCount: 3 }));
 
     expect(screen.getByText("Housing · 3 replies")).toBeInTheDocument();
     expect(screen.queryByText("housing · 3 replies")).not.toBeInTheDocument();
   });
 
-  it("falls back to summary when category is missing", () => {
-    renderCard(
+  it("falls back to summary when category is missing", async () => {
+    await renderCard(
       baseThreadItem({ category: undefined, summary: "Nightlife · 1 reply" }),
     );
 
     expect(screen.getByText("Nightlife · 1 reply")).toBeInTheDocument();
   });
 
-  it("offers no like button when the item carries no opening post id", () => {
-    renderCard(baseThreadItem({ opPostId: null }));
+  it("offers no like button when the item carries no opening post id", async () => {
+    await renderCard(baseThreadItem({ opPostId: null }));
 
     expect(
       screen.queryByRole("button", { name: "Like this thread" }),
@@ -160,8 +163,8 @@ describe("ForumThreadCard", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("shows the opening post's vote count on an unliked thread (FEED-LIKE)", () => {
-    renderCard(
+  it("shows the opening post's vote count on an unliked thread (FEED-LIKE)", async () => {
+    await renderCard(
       baseThreadItem({
         opPostId: "post-1",
         reactionCount: 4,
@@ -174,8 +177,8 @@ describe("ForumThreadCard", () => {
     expect(likeButton).toHaveTextContent("4");
   });
 
-  it("shows an already-liked thread as pressed (FEED-LIKE)", () => {
-    renderCard(
+  it("shows an already-liked thread as pressed (FEED-LIKE)", async () => {
+    await renderCard(
       baseThreadItem({
         opPostId: "post-1",
         reactionCount: 5,

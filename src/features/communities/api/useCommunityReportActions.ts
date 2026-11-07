@@ -25,6 +25,8 @@ export function useActOnCommunityReport(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, { id: string } & CommunityModActionInput>({
+    // The mod tools name the cause on the row's own toast.
+    meta: { silentError: true },
     mutationFn: async ({ id, ...body }) => {
       if (demoMode) return;
       await actOnCommunityReport(id, body);

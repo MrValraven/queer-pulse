@@ -129,7 +129,11 @@ describe("renderStageEmail", () => {
     expect(html).toContain(
       "Your invite is inside. It works until 2 October 2026.",
     );
-    expect(html).toContain("display:none");
+    // The line stays rendered at zero height and fully transparent, so it
+    // survives a paste into a WebKit or Blink compose window.
+    expect(html).toContain("max-height:0;overflow:hidden;mso-hide:all;");
+    expect(html).toContain("opacity:0;");
+    expect(html).not.toContain("display:none");
   });
 
   it("keeps the logo and the pulse band without a leading hero", () => {

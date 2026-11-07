@@ -13,8 +13,14 @@ export class DocumentProcessingError extends Error {
   readonly i18nKey: string;
   readonly values?: Record<string, string | number>;
 
-  constructor(i18nKey: string, values?: Record<string, string | number>) {
-    super(i18nKey);
+  /** `options.cause` keeps the underlying failure (for example the presign
+   *  `ApiError`) reachable, the same as `ImageProcessingError`. */
+  constructor(
+    i18nKey: string,
+    values?: Record<string, string | number>,
+    options?: ErrorOptions,
+  ) {
+    super(i18nKey, options);
     this.name = "DocumentProcessingError";
     this.i18nKey = i18nKey;
     this.values = values;

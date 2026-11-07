@@ -5,9 +5,11 @@ import {
   screen,
   act,
   waitFor,
+  within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import type { Piece, Stage } from "../data/desk.data";
 import { DeskBulkBar, type DeskBulkBarProps } from "./DeskBulkBar";
@@ -63,7 +65,7 @@ function makePiece(overrides: Partial<Piece> = {}): Piece {
   };
 }
 
-function renderBar(overrides: Partial<DeskBulkBarProps> = {}) {
+async function renderBar(overrides: Partial<DeskBulkBarProps> = {}) {
   const props: DeskBulkBarProps = {
     selectedPieces: [makePiece()],
     stages: STAGES,
@@ -81,6 +83,7 @@ function renderBar(overrides: Partial<DeskBulkBarProps> = {}) {
       <DeskBulkBar {...props} />
     </TestProviders>,
   );
+  await awaitCatalog("magazine");
   return props;
 }
 
@@ -89,37 +92,38 @@ describe("DeskBulkBar", () => {
     isCompactMock = false;
   });
 
-  it("renders nothing when no pieces are selected", () => {
-    renderBar({ selectedPieces: [] });
+  it("renders nothing when no pieces are selected", async () => {
+    await renderBar({ selectedPieces: [] });
     expect(screen.queryByRole("region")).toBeNull();
   });
 
   it("shows the selection count and clears it", async () => {
     const user = userEvent.setup();
-    const props = renderBar({
+    const props = await renderBar({
       selectedPieces: [makePiece({ id: "p-1" }), makePiece({ id: "p-2" })],
     });
-    expect(screen.getByRole("status")).toHaveTextContent("2 selected");
+    const bar = screen.getByRole("region", { name: "Bulk piece actions" });
+    expect(within(bar).getByRole("status")).toHaveTextContent("2 selected");
     await user.click(screen.getByRole("button", { name: "Clear selection" }));
     expect(props.onClear).toHaveBeenCalledOnce();
   });
 
-  it("hides the issue action once nothing in the selection is on an issue at all", () => {
-    renderBar({ hasAnyIssue: false });
+  it("hides the issue action once nothing in the selection is on an issue at all", async () => {
+    await renderBar({ hasAnyIssue: false });
     expect(screen.queryByRole("button", { name: "Add to issue" })).toBeNull();
     expect(screen.queryByRole("button", { name: "Move issue" })).toBeNull();
   });
 
-  it('reads "Add to issue" on the unassigned track', () => {
-    renderBar({
+  it('reads "Add to issue" on the unassigned track', async () => {
+    await renderBar({
       track: "unassigned",
       selectedPieces: [makePiece({ issueId: null })],
     });
     expect(screen.getByRole("button", { name: "Add to issue" })).toBeVisible();
   });
 
-  it('reads "Move issue" once every selected piece already has one', () => {
-    renderBar({
+  it('reads "Move issue" once every selected piece already has one', async () => {
+    await renderBar({
       track: "everything",
       selectedPieces: [
         makePiece({ id: "p-1", issueId: "issue-1" }),
@@ -129,7 +133,7 @@ describe("DeskBulkBar", () => {
     expect(screen.getByRole("button", { name: "Move issue" })).toBeVisible();
   });
 
-  it("shows Chase only while at least one selected piece waits on a writer, with its count", () => {
+  it("shows Chase only while at least one selected piece waits on a writer, with its count", async () => {
     const { rerender } = render(
       <TestProviders>
         <DeskBulkBar
@@ -145,6 +149,7 @@ describe("DeskBulkBar", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("magazine");
     expect(screen.queryByRole("button", { name: /^Chase/ })).toBeNull();
 
     rerender(
@@ -172,7 +177,7 @@ describe("DeskBulkBar", () => {
   it("calls onChaseAll with the actual chase queue", async () => {
     const user = userEvent.setup();
     const waitingPiece = makePiece({ wait: "writer" });
-    const props = renderBar({ selectedPieces: [waitingPiece] });
+    const props = await renderBar({ selectedPieces: [waitingPiece] });
     await user.click(screen.getByRole("button", { name: "Chase 1" }));
     expect(props.onChaseAll).toHaveBeenCalledExactlyOnceWith([waitingPiece]);
   });
@@ -182,12 +187,14 @@ describe("DeskBulkBar", () => {
     const first = makePiece({ id: "p-1", wait: "writer" });
     const second = makePiece({ id: "p-2", wait: "writer" });
     const notWaiting = makePiece({ id: "p-3", wait: "you" });
-    const props = renderBar({ selectedPieces: [first, notWaiting, second] });
+    const props = await renderBar({
+      selectedPieces: [first, notWaiting, second],
+    });
     await user.click(screen.getByRole("button", { name: "Chase 2" }));
     expect(props.onChaseAll).toHaveBeenCalledExactlyOnceWith([first, second]);
   });
 
-  it("shows Hand off always, disabled unless exactly one piece is selected", () => {
+  it("shows Hand off always, disabled unless exactly one piece is selected", async () => {
     const { rerender } = render(
       <TestProviders>
         <DeskBulkBar
@@ -203,6 +210,7 @@ describe("DeskBulkBar", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("magazine");
     // Past one piece it stays on screen, disabled (`HandoffModal`
     // only ever carries one piece).
     expect(screen.getByRole("button", { name: "Hand off" })).toHaveAttribute(
@@ -234,7 +242,7 @@ describe("DeskBulkBar", () => {
 describe("DeskBulkBar: Change stage menu", () => {
   it("offers every stage except Published, and calls onChangeStage on a pick", async () => {
     const user = userEvent.setup();
-    const props = renderBar();
+    const props = await renderBar();
     await user.click(screen.getByRole("button", { name: "Change stage" }));
 
     expect(
@@ -249,7 +257,7 @@ describe("DeskBulkBar: Change stage menu", () => {
 
   it("checks a stage only when the WHOLE selection already sits there", async () => {
     const user = userEvent.setup();
-    renderBar({
+    await renderBar({
       selectedPieces: [
         makePiece({ id: "p-1", stage: "Edit" }),
         makePiece({ id: "p-2", stage: "Layout" }),
@@ -271,7 +279,7 @@ describe("DeskBulkBar: compact layout", () => {
   it("folds Change stage and the rest into one Actions menu", async () => {
     const user = userEvent.setup();
     const waitingPiece = makePiece({ wait: "writer" });
-    const props = renderBar({ selectedPieces: [waitingPiece] });
+    const props = await renderBar({ selectedPieces: [waitingPiece] });
 
     expect(screen.queryByRole("button", { name: "Change stage" })).toBeNull();
     expect(screen.queryByRole("button", { name: "Chase 1" })).toBeNull();
@@ -287,7 +295,7 @@ describe("DeskBulkBar: compact layout", () => {
 
   it("still offers the stage list from Actions once nothing else can act, with Hand off disabled", async () => {
     const user = userEvent.setup();
-    const props = renderBar({
+    const props = await renderBar({
       hasAnyIssue: false,
       selectedPieces: [makePiece({ id: "p-1" }), makePiece({ id: "p-2" })],
     });
@@ -305,7 +313,7 @@ describe("DeskBulkBar: compact layout", () => {
   it('offers "Select all {count}" from Actions once the page wires it', async () => {
     const user = userEvent.setup();
     const onSelectAll = vi.fn();
-    renderBar({ selectableCount: 9, onSelectAll });
+    await renderBar({ selectableCount: 9, onSelectAll });
     await user.click(screen.getByRole("button", { name: "Actions" }));
     const selectAllItem = screen.getByRole("menuitem", {
       name: "Select all 9",
@@ -316,7 +324,7 @@ describe("DeskBulkBar: compact layout", () => {
 
   it('hides "Select all" until both selectableCount and onSelectAll arrive', async () => {
     const user = userEvent.setup();
-    renderBar({ selectableCount: 9 }); // onSelectAll left unwired
+    await renderBar({ selectableCount: 9 }); // onSelectAll left unwired
     await user.click(screen.getByRole("button", { name: "Actions" }));
     expect(screen.queryByRole("menuitem", { name: /^Select all/ })).toBeNull();
   });
@@ -395,6 +403,7 @@ describe("useDeskBulkActions", () => {
       () => useDeskBulkActions(makeParams({ moveStage })),
       { wrapper },
     );
+    await awaitCatalog("magazine");
 
     act(() => result.current.changeStageForSelection(pieces, "Layout"));
 

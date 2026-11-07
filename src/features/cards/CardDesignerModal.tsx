@@ -14,6 +14,7 @@ import {
   useUpsertCardProgram,
 } from "./api/useCardProgram";
 import type { CardSkin } from "./api/cards.api";
+import { cardProgrammeErrorCopy } from "./cardActionErrors";
 import { CardDesignerFields } from "./CardDesignerFields";
 import { CardDesignerPreview } from "./CardDesignerPreview";
 import {
@@ -89,12 +90,12 @@ export function CardDesignerModal({
         showToast(t("cards:designer.savedDesign"), "success");
       }
       onClose();
-    } catch {
-      // Both calls carry the global error toast on failure via the query
-      // client's default handling in most flows, but this sequence has no
-      // caller left to show it once the modal unmounts on success — surface
-      // it here explicitly instead.
-      showToast(t("common:toast.saveFailed"), "error");
+    } catch (error) {
+      // Both mutations are `silentError`: this sequence has no caller left to
+      // show a failure once the modal unmounts on success, so it names the
+      // cause here.
+      const cause = cardProgrammeErrorCopy(error);
+      showToast(t(cause.key, cause.values), "error");
     }
   };
 

@@ -353,3 +353,175 @@ describe("useUploadImage (demo mode) — crop echo", () => {
     expect(uploadsApiStatic.saveCrop).not.toHaveBeenCalled();
   });
 });
+
+/**
+ * A failed upload keeps its real cause: the presign `ApiError` or the storage
+ * PUT status picks the line, while the error stays an `ImageProcessingError`
+ * (`i18nKey` + `values`) so every consumer renders it unchanged.
+ */
+type StoragePutOutcome = { status: number } | "network";
+
+/** Stubs `XMLHttpRequest` so every `PUT` ends with `outcome`, and returns a
+ *  reader for how many PUTs were sent. */
+function stubStoragePut(outcome: StoragePutOutcome): () => number {
+  let sendCount = 0;
+  class FailingXMLHttpRequest extends SucceedingXMLHttpRequest {
+    send(): void {
+      sendCount += 1;
+      if (outcome === "network") {
+        queueMicrotask(() => this.onerror?.());
+        return;
+      }
+      this.status = outcome.status;
+      queueMicrotask(() => this.onload?.());
+    }
+  }
+  vi.stubGlobal("XMLHttpRequest", FailingXMLHttpRequest);
+  return () => sendCount;
+}
+
+async function uploadFailure(
+  useUploadImageLive: typeof useUploadImage,
+  wrapper: ({ children }: { children: ReactNode }) => ReactNode,
+): Promise<unknown> {
+  const { result } = renderHook(() => useUploadImageLive("story-cover"), {
+    wrapper,
+  });
+  let caughtError: unknown;
+  await act(async () => {
+    try {
+      await result.current(testFile());
+    } catch (error) {
+      caughtError = error;
+    }
+  });
+  return caughtError;
+}
+
+describe("useUploadImage (live mode): failure causes", () => {
+  it("names the rate limit for a presign 429 and keeps the ApiError on cause", async () => {
+    const {
+      useUploadImage: useUploadImageLive,
+      wrapper,
+      uploadsApi,
+      uploadProcessing,
+    } = await loadLive();
+    const { ApiError } = await import("../../../shared/api/client");
+    const presignRefusal = new ApiError(429, "Too Many Requests");
+    vi.mocked(uploadsApi.requestUpload).mockRejectedValueOnce(presignRefusal);
+
+    const caughtError = await uploadFailure(useUploadImageLive, wrapper);
+
+    expect(caughtError).toBeInstanceOf(uploadProcessing.ImageProcessingError);
+    expect(caughtError).toMatchObject({
+      i18nKey: "members:upload.error.tooManyUploads",
+    });
+    expect((caughtError as Error).cause).toBe(presignRefusal);
+  });
+
+  it("names the lost connection when the presign never got an answer", async () => {
+    const {
+      useUploadImage: useUploadImageLive,
+      wrapper,
+      uploadsApi,
+    } = await loadLive();
+    vi.mocked(uploadsApi.requestUpload).mockRejectedValueOnce(
+      new TypeError("Failed to fetch"),
+    );
+
+    const caughtError = await uploadFailure(useUploadImageLive, wrapper);
+
+    expect(caughtError).toMatchObject({
+      i18nKey: "shared:apiError.noConnection",
+    });
+  });
+
+  it("names the shared cause for a presign status with no upload line", async () => {
+    const {
+      useUploadImage: useUploadImageLive,
+      wrapper,
+      uploadsApi,
+    } = await loadLive();
+    const { ApiError } = await import("../../../shared/api/client");
+    vi.mocked(uploadsApi.requestUpload)
+      .mockRejectedValueOnce(new ApiError(503, "Service Unavailable"))
+      .mockRejectedValueOnce(
+        new ApiError(403, "Restricted", { code: "ACCOUNT_RESTRICTED" }),
+      )
+      .mockRejectedValueOnce(new ApiError(408, "Request timed out"));
+
+    expect(await uploadFailure(useUploadImageLive, wrapper)).toMatchObject({
+      i18nKey: "shared:apiError.serverFault",
+    });
+    expect(await uploadFailure(useUploadImageLive, wrapper)).toMatchObject({
+      i18nKey: "shared:apiError.accountRestricted",
+    });
+    expect(await uploadFailure(useUploadImageLive, wrapper)).toMatchObject({
+      i18nKey: "shared:apiError.timedOut",
+    });
+  });
+
+  it("names an oversized image for a storage 413, with no retry", async () => {
+    const { useUploadImage: useUploadImageLive, wrapper } = await loadLive();
+    const readSendCount = stubStoragePut({ status: 413 });
+
+    const caughtError = await uploadFailure(useUploadImageLive, wrapper);
+
+    expect(caughtError).toMatchObject({
+      i18nKey: "members:upload.error.storageTooLarge",
+    });
+    expect(readSendCount()).toBe(1);
+  });
+
+  it("names a rejected format for a storage 400", async () => {
+    const { useUploadImage: useUploadImageLive, wrapper } = await loadLive();
+    stubStoragePut({ status: 400 });
+
+    expect(await uploadFailure(useUploadImageLive, wrapper)).toMatchObject({
+      i18nKey: "members:upload.error.storageRejectedType",
+    });
+  });
+
+  it("names an expired upload link for a storage 403", async () => {
+    const { useUploadImage: useUploadImageLive, wrapper } = await loadLive();
+    stubStoragePut({ status: 403 });
+
+    expect(await uploadFailure(useUploadImageLive, wrapper)).toMatchObject({
+      i18nKey: "members:upload.error.linkExpired",
+    });
+  });
+
+  it("names a storage fault for a 5xx after its one retry", async () => {
+    const { useUploadImage: useUploadImageLive, wrapper } = await loadLive();
+    const readSendCount = stubStoragePut({ status: 502 });
+
+    const caughtError = await uploadFailure(useUploadImageLive, wrapper);
+
+    expect(caughtError).toMatchObject({
+      i18nKey: "members:upload.error.storageFault",
+    });
+    expect(readSendCount()).toBe(2);
+  });
+
+  it("names the lost connection when the PUT never got an answer", async () => {
+    const { useUploadImage: useUploadImageLive, wrapper } = await loadLive();
+    const readSendCount = stubStoragePut("network");
+
+    const caughtError = await uploadFailure(useUploadImageLive, wrapper);
+
+    expect(caughtError).toMatchObject({
+      i18nKey: "shared:apiError.noConnection",
+    });
+    expect(readSendCount()).toBe(2);
+  });
+
+  it("names the refused status for a storage status with no line", async () => {
+    const { useUploadImage: useUploadImageLive, wrapper } = await loadLive();
+    stubStoragePut({ status: 418 });
+
+    expect(await uploadFailure(useUploadImageLive, wrapper)).toMatchObject({
+      i18nKey: "shared:apiError.refused",
+      values: { status: 418 },
+    });
+  });
+});

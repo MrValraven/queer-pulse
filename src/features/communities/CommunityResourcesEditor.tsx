@@ -17,6 +17,7 @@ import {
 } from "./CommunityResourceFormModal";
 import { CommunityResourceRow } from "./CommunityResourceRow";
 import { useResourceShelfOrder } from "./useResourceShelfOrder";
+import { communityErrorText } from "./communityErrors";
 import styles from "./CommunityResources.module.css";
 
 /** Which form is open: nothing, a new entry, or one existing row. */
@@ -57,8 +58,8 @@ export function CommunityResourcesEditor({
     null,
   );
 
-  const onWriteError = () =>
-    showToast(t("communities:detail.resources.editor.errorToast"), "error");
+  const onWriteError = (error: unknown) =>
+    showToast(communityErrorText(t, error), "error");
 
   // Destructured rather than kept as one object: the ref must not be reached
   // through a property access during render (`react-hooks/refs`).

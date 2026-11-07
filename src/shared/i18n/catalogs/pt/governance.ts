@@ -311,6 +311,26 @@ export const governance: Catalog = {
     "Escolhe uma categoria e acrescenta alguns detalhes primeiro.",
   "sections.raise.failedToast":
     "Não foi possível enviar neste momento. Tenta novamente.",
+
+  // ── Porque falhou uma escrita de governação (governanceErrors.ts) ─────────
+  // Sem ligação, sessão terminada, restrição, conta inativa, limite de pedidos
+  // e falhas do servidor vêm de shared:apiError.*; estas são as causas que
+  // precisam do contexto da proposta.
+  "error.votingClosed":
+    "A votação desta proposta já fechou, por isso o teu voto não foi contado. Atualiza para veres o resultado.",
+  "error.votingNotOpen":
+    "A votação desta proposta ainda não abriu. Volta quando abrir.",
+  "error.voteOnSelf": "Não podes votar numa proposta sobre ti.",
+  "error.proposalGone":
+    "Esta proposta já não está aqui. Atualiza para veres as atuais.",
+  "error.notGathering":
+    "Esta moção já não está a reunir assinaturas. Atualiza para veres como está.",
+  "error.windowClosed":
+    "O prazo de assinaturas desta moção já terminou. Atualiza para veres como está.",
+  "error.founderSignature":
+    "Apresentaste esta moção, por isso a tua assinatura fundadora fica nela.",
+  "error.motionCap":
+    "Já tens 3 moções a reunir assinaturas. Espera que uma seja analisada, rejeitada ou expire antes de apresentares outra.",
   // Mostrado no lugar dos dados de uma secção quando a obtenção falha, para que
   // um erro da API apareça como um pedido de nova tentativa em vez de uma
   // grelha vazia sem explicação.

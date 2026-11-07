@@ -7,24 +7,27 @@ import { normalizeMobileDetails } from "../listingMobile.data";
 import { useListingForm } from "../useListingForm";
 import { EntryFields } from "./EntryFields";
 import { WaysToPayFields } from "./WaysToPayFields";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 function Harness({ initial }: { initial: ListingDraft }) {
   const form = useListingForm(initial);
   return (
-    <>
+    <div data-testid="entry-fields">
       <EntryFields form={form} />
       <output data-testid="by-appointment">
         {String(normalizeMobileDetails(form.draft.mobileDetails).byAppointment)}
       </output>
       <output data-testid="entry-mode">{String(form.draft.entryMode)}</output>
-    </>
+    </div>
   );
 }
 
-function renderWith(fields: Partial<ListingDraft>) {
-  return render(<Harness initial={{ ...blankDraft(), ...fields }} />, {
+async function renderWith(fields: Partial<ListingDraft>) {
+  const view = render(<Harness initial={{ ...blankDraft(), ...fields }} />, {
     wrapper: TestProviders,
   });
+  await awaitCatalog("marketing");
+  return view;
 }
 
 function PayHarness({ initial }: { initial: ListingDraft }) {
@@ -37,15 +40,17 @@ function PayHarness({ initial }: { initial: ListingDraft }) {
   );
 }
 
-function renderPayWith(fields: Partial<ListingDraft>) {
-  return render(<PayHarness initial={{ ...blankDraft(), ...fields }} />, {
+async function renderPayWith(fields: Partial<ListingDraft>) {
+  const view = render(<PayHarness initial={{ ...blankDraft(), ...fields }} />, {
     wrapper: TestProviders,
   });
+  await awaitCatalog("marketing");
+  return view;
 }
 
 describe("EntryFields", () => {
-  it("starts on Not saying and takes one way in", () => {
-    renderWith({ cats: ["food"] });
+  it("starts on Not saying and takes one way in", async () => {
+    await renderWith({ cats: ["food"] });
     expect(screen.getByRole("radio", { name: "Not saying" })).toHaveAttribute(
       "aria-checked",
       "true",
@@ -61,8 +66,8 @@ describe("EntryFields", () => {
     );
   });
 
-  it("puts the way in inside a fieldset named by its legend", () => {
-    renderWith({ cats: ["food"] });
+  it("puts the way in inside a fieldset named by its legend", async () => {
+    await renderWith({ cats: ["food"] });
     const fieldset = screen.getByRole("group", {
       name: "How do people get in?",
     });
@@ -74,29 +79,29 @@ describe("EntryFields", () => {
     ).toBeInTheDocument();
   });
 
-  it("says Just turn up to an out-and-about listing", () => {
-    renderWith({ cats: ["tours"], mobile: true });
+  it("says Just turn up to an out-and-about listing", async () => {
+    await renderWith({ cats: ["tours"], mobile: true });
     expect(
       screen.getByRole("radio", { name: "Just turn up" }),
     ).toBeInTheDocument();
     expect(screen.queryByRole("radio", { name: "Walk in anytime" })).toBeNull();
   });
 
-  it("asks about entry only for nightlife or culture", () => {
-    renderWith({ cats: ["food"] });
+  it("asks about entry only for nightlife or culture", async () => {
+    await renderWith({ cats: ["food"] });
     expect(screen.queryByRole("radiogroup", { name: "Entry" })).toBeNull();
   });
 
-  it("asks about entry for a nightlife listing, starting on Not saying", () => {
-    renderWith({ cats: ["nightlife"] });
+  it("asks about entry for a nightlife listing, starting on Not saying", async () => {
+    await renderWith({ cats: ["nightlife"] });
     const entry = screen.getByRole("radiogroup", { name: "Entry" });
     expect(
       within(entry).getByRole("radio", { name: "Not saying" }),
     ).toHaveAttribute("aria-checked", "true");
   });
 
-  it("asks for the time once Free before is picked", () => {
-    renderWith({ cats: ["nightlife"] });
+  it("asks for the time once Free before is picked", async () => {
+    await renderWith({ cats: ["nightlife"] });
     expect(screen.queryByLabelText(/Free until/)).toBeNull();
     fireEvent.click(
       screen.getByRole("radio", { name: "Free before a set time" }),
@@ -104,23 +109,25 @@ describe("EntryFields", () => {
     expect(screen.getByLabelText(/Free until/)).toBeInTheDocument();
   });
 
-  it("shows an inline error once the time is left empty", () => {
-    renderWith({ cats: ["culture"], coverPolicy: "freeBefore" });
+  it("shows an inline error once the time is left empty", async () => {
+    await renderWith({ cats: ["culture"], coverPolicy: "freeBefore" });
     const time = screen.getByLabelText(/Free until/);
     expect(time).toHaveAttribute("aria-required", "true");
-    expect(screen.queryByRole("alert")).toBeNull();
+    // The toast region keeps its own empty alert outside the fields.
+    const fields = within(screen.getByTestId("entry-fields"));
+    expect(fields.queryByRole("alert")).toBeNull();
     fireEvent.blur(time);
-    expect(screen.getByRole("alert")).toHaveTextContent(
+    expect(fields.getByRole("alert")).toHaveTextContent(
       "Add the time free entry ends.",
     );
     expect(time).toHaveAttribute("aria-invalid", "true");
     fireEvent.change(time, { target: { value: "23:00" } });
-    expect(screen.queryByRole("alert")).toBeNull();
+    expect(fields.queryByRole("alert")).toBeNull();
     expect(time).toHaveValue("23:00");
   });
 
-  it("turns the out-and-about hours toggle on and off with By appointment only", () => {
-    renderWith({ cats: ["grooming"], mobile: true });
+  it("turns the out-and-about hours toggle on and off with By appointment only", async () => {
+    await renderWith({ cats: ["grooming"], mobile: true });
     const toggle = screen.getByTestId("by-appointment");
     expect(toggle).toHaveTextContent("false");
     fireEvent.click(screen.getByRole("radio", { name: "By appointment only" }));
@@ -129,8 +136,8 @@ describe("EntryFields", () => {
     expect(toggle).toHaveTextContent("false");
   });
 
-  it("turns the hours toggle off when the answer goes back to Not saying", () => {
-    renderWith({ cats: ["grooming"], mobile: true });
+  it("turns the hours toggle off when the answer goes back to Not saying", async () => {
+    await renderWith({ cats: ["grooming"], mobile: true });
     const toggle = screen.getByTestId("by-appointment");
     fireEvent.click(screen.getByRole("radio", { name: "By appointment only" }));
     expect(toggle).toHaveTextContent("true");
@@ -139,8 +146,8 @@ describe("EntryFields", () => {
     expect(screen.getByTestId("entry-mode")).toHaveTextContent("null");
   });
 
-  it("says under the choices that an out-and-about way in sets the hours", () => {
-    renderWith({ cats: ["tours"], mobile: true });
+  it("says under the choices that an out-and-about way in sets the hours", async () => {
+    await renderWith({ cats: ["tours"], mobile: true });
     expect(
       screen.getByText(
         "This also marks your opening hours as By appointment only.",
@@ -148,8 +155,8 @@ describe("EntryFields", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows no linked hours line on a place", () => {
-    renderWith({ cats: ["grooming"] });
+  it("shows no linked hours line on a place", async () => {
+    await renderWith({ cats: ["grooming"] });
     expect(
       screen.queryByText(
         "This also marks your opening hours as By appointment only.",
@@ -157,8 +164,8 @@ describe("EntryFields", () => {
     ).toBeNull();
   });
 
-  it("leaves the hours toggle alone on a place", () => {
-    renderWith({ cats: ["grooming"] });
+  it("leaves the hours toggle alone on a place", async () => {
+    await renderWith({ cats: ["grooming"] });
     fireEvent.click(screen.getByRole("radio", { name: "By appointment only" }));
     expect(screen.getByTestId("entry-mode")).toHaveTextContent(
       "appointmentOnly",
@@ -168,11 +175,11 @@ describe("EntryFields", () => {
 });
 
 describe("WaysToPayFields", () => {
-  it("ticks each way to pay on its own", () => {
-    renderPayWith({ cats: ["food"] });
+  it("ticks each way to pay on its own", async () => {
+    await renderPayWith({ cats: ["food"] });
     // The fieldset and the chip row inside it are both named by the legend.
     const [group, chipRow] = screen.getAllByRole("group", {
-      name: "Ways to pay",
+      name: "Ways to pay in person",
     });
     expect(group?.tagName).toBe("FIELDSET");
     expect(chipRow?.tagName).toBe("DIV");
@@ -190,16 +197,18 @@ describe("WaysToPayFields", () => {
     );
   });
 
-  it("asks an online listing about NIF invoices alone", () => {
-    renderPayWith({ cats: ["design"], online: true });
-    expect(screen.queryByRole("group", { name: "Ways to pay" })).toBeNull();
+  it("asks an online listing about NIF invoices alone", async () => {
+    await renderPayWith({ cats: ["design"], online: true });
+    expect(
+      screen.queryByRole("group", { name: "Ways to pay in person" }),
+    ).toBeNull();
     expect(
       screen.getByRole("radiogroup", { name: "Invoices with your NIF" }),
     ).toBeInTheDocument();
   });
 
-  it("starts the NIF question on Not saying and stores yes, no and null", () => {
-    renderPayWith({ cats: ["food"] });
+  it("starts the NIF question on Not saying and stores yes, no and null", async () => {
+    await renderPayWith({ cats: ["food"] });
     const nif = screen.getByTestId("nif");
     expect(screen.getByRole("radio", { name: "Not saying" })).toHaveAttribute(
       "aria-checked",

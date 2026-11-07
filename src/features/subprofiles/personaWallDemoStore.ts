@@ -91,7 +91,10 @@ function localDateKey(today: Date): string {
 }
 
 /** The daily shuffle's rank: a 32-bit FNV-1a hash of the persona id and the
- *  day, so the order holds for a day and changes the next. */
+ *  day, so the order holds for a day and changes the next. Consecutive days
+ *  differ only in the last character, which FNV-1a alone barely spreads (the
+ *  wall kept the same order for days), so a murmur3 finalizer mixes every bit
+ *  the way the server's md5 does. */
 export function dailyShuffleRank(personaId: string, today: Date): number {
   const input = personaId + localDateKey(today);
   let hash = 0x811c9dc5;
@@ -99,6 +102,11 @@ export function dailyShuffleRank(personaId: string, today: Date): number {
     hash ^= input.charCodeAt(index);
     hash = Math.imul(hash, 0x01000193) >>> 0;
   }
+  hash ^= hash >>> 16;
+  hash = Math.imul(hash, 0x85ebca6b);
+  hash ^= hash >>> 13;
+  hash = Math.imul(hash, 0xc2b2ae35);
+  hash ^= hash >>> 16;
   return hash >>> 0;
 }
 

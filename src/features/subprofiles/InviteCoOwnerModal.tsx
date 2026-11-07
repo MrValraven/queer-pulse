@@ -13,12 +13,12 @@ import { useSocial } from "../../app/providers/useSocial";
 import {
   isAccountRestricted,
   isInviteBlocked,
-  reasonFor,
 } from "../../shared/api/errorMessage";
 import { useConnectionsSearch } from "../connect/api/useConnectionsSearch";
 import { InviteMembersListFooter } from "../gatherings/InviteMembersListFooter";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { useSubprofileInvites } from "./api/useSubprofileInvites";
+import { reasonOrCauseMessage } from "./personaActionErrors";
 import styles from "./InviteCoOwnerModal.module.css";
 
 /** The picker (step 1) never shows a row as selected: tapping a row opens
@@ -149,10 +149,7 @@ export function InviteCoOwnerModal({
         setInvitingSlug(null);
         return;
       }
-      showToast(
-        reasonFor(error) ?? t("subprofiles:invite.toastError"),
-        "error",
-      );
+      showToast(reasonOrCauseMessage(error, t), "error");
       setInvitingSlug(null);
     }
   }

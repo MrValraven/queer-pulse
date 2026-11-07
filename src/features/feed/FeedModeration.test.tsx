@@ -3,6 +3,7 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { FeedBlockConfirmHost } from "./FeedBlockConfirmHost";
 import { MoreMenu } from "./FeedModeration";
 
@@ -55,6 +56,7 @@ describe("FeedModeration: block dialog survives its card", () => {
   it("keeps the block dialog open and shows the done panel after the card unmounts", async () => {
     const user = userEvent.setup();
     render(<HostedFeedFixture />);
+    await awaitCatalog("feed");
 
     await openBlockDialog(user);
 
@@ -79,6 +81,7 @@ describe("FeedModeration: block dialog survives its card", () => {
   it("returns focus to the list when the card is gone", async () => {
     const user = userEvent.setup();
     render(<HostedFeedFixture />);
+    await awaitCatalog("feed");
 
     await openBlockDialog(user);
     await user.click(screen.getByRole("button", { name: "Remove card" }));
@@ -95,6 +98,7 @@ describe("FeedModeration: block dialog survives its card", () => {
   it("opens the block dialog with focus on the dialog itself", async () => {
     const user = userEvent.setup();
     render(<HostedFeedFixture />);
+    await awaitCatalog("feed");
 
     const dialog = await openBlockDialog(user);
 
@@ -120,6 +124,7 @@ describe("FeedModeration: block dialog survives its card", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("feed");
 
     await user.click(screen.getByRole("button", { name: "Post options" }));
     const menu = screen.getByRole("menu");

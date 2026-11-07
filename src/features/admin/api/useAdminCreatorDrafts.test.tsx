@@ -13,7 +13,6 @@ import {
   vi,
 } from "vitest";
 import { ApiError } from "../../../shared/api/client";
-import { API_V1 } from "../../../test/msw/handlers";
 import { server } from "../../../test/msw/server";
 import { ADMIN_CREATOR_DRAFTS } from "../adminCreatorDrafts.data";
 import { demoAdminCreatorDraftDetail } from "../adminCreatorDraftPreviews.data";
@@ -26,6 +25,11 @@ import {
   useAdminCreatorDraft,
   useAdminCreatorDrafts,
 } from "./useAdminCreatorDrafts";
+
+// The suite runs with no API origin (vitest.config sets VITE_API_URL to ""),
+// so the client calls the versioned path on the page's own origin, and the
+// live handlers listen there.
+const SAME_ORIGIN_API_V1 = "/v1";
 
 const mockDemoMode = vi.hoisted(() => ({ current: true }));
 vi.mock("../../../app/providers/DemoModeProvider", () => ({
@@ -103,7 +107,7 @@ describe("admin creator draft hooks", () => {
   it("asks live for the page and kind, keyed with demo mode", async () => {
     mockDemoMode.current = false;
     server.use(
-      http.get(`${API_V1}/admin/creator-drafts`, ({ request }) => {
+      http.get(`${SAME_ORIGIN_API_V1}/admin/creator-drafts`, ({ request }) => {
         const url = new URL(request.url);
         return HttpResponse.json({
           items: [],
@@ -129,7 +133,7 @@ describe("admin creator draft hooks", () => {
     mockDemoMode.current = false;
     let readCount = 0;
     server.use(
-      http.get(`${API_V1}/admin/creator-drafts/persona/abc`, () => {
+      http.get(`${SAME_ORIGIN_API_V1}/admin/creator-drafts/persona/abc`, () => {
         readCount += 1;
         return HttpResponse.json({ id: "abc", kind: "persona" });
       }),

@@ -94,7 +94,9 @@ describe("directory partner mutations (demo)", () => {
     await act(() =>
       result.current.add.mutateAsync({ listingId: "navalha", note: null }),
     );
-    expect(result.current.admin.data?.at(-1)?.slug).toBe("navalha");
+    await waitFor(() =>
+      expect(result.current.admin.data?.at(-1)?.slug).toBe("navalha"),
+    );
     await waitFor(() =>
       expect(
         result.current.publicRow.partners.map(({ place }) => place.slug),
@@ -129,7 +131,7 @@ describe("directory partner mutations (demo)", () => {
       reorderGate.release();
       await reorderPromise;
     });
-    expect(result.current.reorder.isSuccess).toBe(true);
+    await waitFor(() => expect(result.current.reorder.isSuccess).toBe(true));
     expect(adminSlugsOf(result)).toEqual([...SEED_SLUGS].reverse());
     expect(
       (result.current.admin.data ?? []).map(({ position }) => position),
@@ -160,7 +162,7 @@ describe("directory partner mutations (demo)", () => {
     await act(() =>
       result.current.remove.mutateAsync({ pickId: "demo-partner-fio-solto" }),
     );
-    expect(result.current.admin.data).toHaveLength(3);
+    await waitFor(() => expect(result.current.admin.data).toHaveLength(3));
     expect(
       (result.current.admin.data ?? []).map(({ position }) => position),
     ).toEqual([1, 2, 3]);
@@ -176,10 +178,12 @@ describe("directory partner mutations (demo)", () => {
         note: "Ships free to members",
       }),
     );
-    const savedRow = result.current.admin.data?.find(
-      ({ slug }) => slug === "fio-solto",
+    await waitFor(() =>
+      expect(
+        result.current.admin.data?.find(({ slug }) => slug === "fio-solto")
+          ?.note,
+      ).toBe("Ships free to members"),
     );
-    expect(savedRow?.note).toBe("Ships free to members");
   });
 
   it("refuses a note longer than 140 characters a person sees", async () => {

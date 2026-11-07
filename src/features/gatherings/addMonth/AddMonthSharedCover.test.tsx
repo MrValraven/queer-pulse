@@ -10,6 +10,7 @@ import {
   type AddMonthPhoto,
   type AddMonthState,
 } from "./addMonthState";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 
 const PICKED_KEY = "uploads/event-cover/picked.jpg";
 const PICKED_PREVIEW = "blob:http://localhost/picked-preview";
@@ -90,27 +91,29 @@ function CoverHarness({
   );
 }
 
-function renderCover(props: Parameters<typeof CoverHarness>[0] = {}) {
+async function renderCover(props: Parameters<typeof CoverHarness>[0] = {}) {
   uploadLifecycle.mounts = 0;
   uploadLifecycle.unmounts = 0;
   uploadLifecycle.values = [];
-  return render(
+  const view = render(
     <TestProviders>
       <CoverHarness {...props} />
     </TestProviders>,
   );
+  await awaitCatalog("gatherings");
+  return view;
 }
 
 describe("AddMonthSharedCover", () => {
-  it("shows the starting event's cover until a photo is picked", () => {
-    renderCover();
+  it("shows the starting event's cover until a photo is picked", async () => {
+    await renderCover();
     expect(
       screen.getByRole("img", { name: "The cover of Drag Night" }),
     ).toHaveAttribute("src", "https://cdn.example/template.jpg");
   });
 
-  it("names a starting event with no cover", () => {
-    renderCover({ templateCoverUrl: null });
+  it("names a starting event with no cover", async () => {
+    await renderCover({ templateCoverUrl: null });
     expect(
       screen.getByText(
         "Drag Night has no cover, so dates without their own photo publish with no cover.",
@@ -120,7 +123,7 @@ describe("AddMonthSharedCover", () => {
 
   it("keeps the upload mounted after a pick and stores the preview with its key", async () => {
     const user = userEvent.setup();
-    renderCover();
+    await renderCover();
     await user.click(
       screen.getByRole("button", { name: "Replace the shared cover" }),
     );
@@ -140,7 +143,7 @@ describe("AddMonthSharedCover", () => {
 
   it("never hands a key-only restored cover to the upload as its image", async () => {
     const user = userEvent.setup();
-    renderCover({ initialCover: { key: PICKED_KEY, previewUrl: null } });
+    await renderCover({ initialCover: { key: PICKED_KEY, previewUrl: null } });
     expect(screen.getByText("Photo added")).toBeInTheDocument();
     await user.click(
       screen.getByRole("button", { name: "Replace the shared cover" }),
@@ -148,8 +151,8 @@ describe("AddMonthSharedCover", () => {
     expect(uploadLifecycle.values).not.toContain(PICKED_KEY);
   });
 
-  it("never hands a restored preview from an earlier page to the upload", () => {
-    renderCover({
+  it("never hands a restored preview from an earlier page to the upload", async () => {
+    await renderCover({
       initialCover: {
         key: PICKED_KEY,
         previewUrl: "https://cdn.example/earlier.jpg",
@@ -161,7 +164,7 @@ describe("AddMonthSharedCover", () => {
 
   it("goes back to the starting event's cover and folds the upload", async () => {
     const user = userEvent.setup();
-    renderCover();
+    await renderCover();
     await user.click(
       screen.getByRole("button", { name: "Replace the shared cover" }),
     );

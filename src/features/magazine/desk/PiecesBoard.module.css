@@ -385,13 +385,63 @@
   margin-top: 0.15em;
 }
 
-/* A Published card's two unpublish buttons: their own full-width row under
-   the status line, wrapping when the column is narrow. */
+/* A Published card's Unpublish button: its own row under the status line,
+   kept small and quiet so the card's next action stays the one that leads.
+   The doubled class outranks the shared `.quiet.sm` sizing. */
 .unpublishActions {
   display: flex;
   flex: 1 1 100%;
-  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.unpublishButton.unpublishButton {
+  min-height: 32px;
+  padding: 6px 12px;
   gap: 6px;
+  font-size: var(--text-12-5);
+  font-weight: 500;
+  color: var(--ink-60);
+}
+
+.unpublishButton svg {
+  flex: none;
+  width: 13px;
+  height: 13px;
+}
+
+/* A board card the desk just moved (unpublish or Undo): one soft wash that
+   fades out, on a layer above the card so only opacity animates. Reduced
+   motion skips it; focus or the toast already names the move. */
+.card {
+  position: relative;
+}
+
+.card[data-just-moved]::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.55);
+  background: rgba(var(--accent-rgb), 0.08);
+  opacity: 0;
+  animation: boardCardJustMoved var(--dur-reveal) var(--ease-out) both;
+}
+
+@keyframes boardCardJustMoved {
+  0%,
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card[data-just-moved]::after {
+    animation: none;
+  }
 }
 
 /* Phones: a column is nearly the full width, the next one peeks in, and the

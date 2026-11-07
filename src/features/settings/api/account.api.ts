@@ -110,6 +110,10 @@ export interface ExportJob {
   /** 7-day expiry on the download link. */
   expiresAt?: string;
   error?: string;
+  /** Client-side only, never sent by the backend: the catalog key (and its
+   *  values) naming why a start or poll request failed, set by
+   *  `useExportFlow`. The failed view shows it in place of the fixed line. */
+  errorCause?: { key: string; values?: Record<string, string | number> };
 }
 
 export interface RequestExportDto {

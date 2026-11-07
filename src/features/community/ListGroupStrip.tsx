@@ -7,6 +7,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useCreateReadingGroupProposal } from "./api/useCreateReadingGroupProposal";
 import type { ReadingGroupProposalFormat } from "./api/community.api";
 import type { Group } from "./readingGroups.data";
+import { readingGroupProposalErrorText } from "./communityFeatureErrors";
 import { buildDemoGroup } from "./listGroup.demo";
 import { ListGroupSuccess } from "./ListGroupSuccess";
 import { ListGroupTextRow } from "./ListGroupTextRow";
@@ -95,7 +96,8 @@ export function ListGroupStrip({
             "success",
           );
         },
-        onError: () => showToast(t(`${KEY_PREFIX}errorToast`), "error"),
+        onError: (error) =>
+          showToast(readingGroupProposalErrorText(t, error), "error"),
       },
     );
   }

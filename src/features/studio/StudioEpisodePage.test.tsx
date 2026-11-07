@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { createStudioPlayerTestValue } from "../../test/studioPlayerTestValue";
 import { clearStudioEpisodeMemory } from "./player/studioEpisodeMemory";
 import { StudioPlayerContext } from "./player/studioPlayerContext";
@@ -14,7 +15,10 @@ import { StudioTrackPage } from "./StudioTrackPage";
 
 afterEach(() => clearStudioEpisodeMemory());
 
-function renderTrack(id: string, playTracks = vi.fn(() => Promise.resolve())) {
+async function renderTrack(
+  id: string,
+  playTracks = vi.fn(() => Promise.resolve()),
+) {
   const player = { ...createStudioPlayerTestValue(null), playTracks };
   render(
     <TestProviders initialEntries={[`/studio/track?id=${id}`]}>
@@ -23,12 +27,13 @@ function renderTrack(id: string, playTracks = vi.fn(() => Promise.resolve())) {
       </StudioPlayerContext.Provider>
     </TestProviders>,
   );
+  await awaitCatalog("studio");
   return playTracks;
 }
 
 describe("the episode page (demo)", () => {
   it("shows the show link, the notes and a played toggle", async () => {
-    renderTrack("demo-episode-late-bloomers-01");
+    await renderTrack("demo-episode-late-bloomers-01");
     expect(
       await screen.findByRole("heading", {
         level: 1,
@@ -54,25 +59,40 @@ describe("the episode page (demo)", () => {
   });
 
   it("plays the episode alone from a timestamp in the notes", async () => {
-    const playTracks = renderTrack("demo-episode-late-bloomers-01");
+    // Episode three's notes name a time in a sentence; episode one's times
+    // are all chapter lines, which the chapter list offers.
+    const playTracks = await renderTrack("demo-episode-late-bloomers-03");
     fireEvent.click(
-      await screen.findByRole("button", { name: "Play from 04:10" }),
+      await screen.findByRole("button", { name: "Play from 22:40" }),
     );
     expect(playTracks).toHaveBeenCalledWith(
       [
         expect.objectContaining({
-          trackId: "demo-episode-late-bloomers-01",
+          trackId: "demo-episode-late-bloomers-03",
           isEpisode: true,
         }),
       ],
-      "demo-episode-late-bloomers-01",
+      "demo-episode-late-bloomers-03",
       expect.objectContaining({ kind: "release", label: "Late Bloomers" }),
-      250,
+      1360,
     );
   });
 
+  it("leaves a chapter's own line out of the notes", async () => {
+    await renderTrack("demo-episode-late-bloomers-01");
+    expect(
+      await screen.findByRole("heading", { name: "Show notes" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("list", { name: "Chapters in Coming out at 40" }),
+    ).toHaveTextContent("4:10Why now");
+    expect(
+      screen.queryByRole("button", { name: "Play from 04:10" }),
+    ).not.toBeInTheDocument();
+  });
+
   it("offers Like and the track menu on a published episode", async () => {
-    renderTrack("demo-episode-late-bloomers-01");
+    await renderTrack("demo-episode-late-bloomers-01");
     expect(
       await screen.findByRole("button", {
         name: "More actions for Coming out at 40",
@@ -85,7 +105,7 @@ describe("the episode page (demo)", () => {
   });
 
   it("leaves the live set, curator note, split and lead sheet off an episode", async () => {
-    renderTrack("demo-episode-late-bloomers-01");
+    await renderTrack("demo-episode-late-bloomers-01");
     expect(
       await screen.findByRole("heading", {
         level: 1,
@@ -102,7 +122,7 @@ describe("the episode page (demo)", () => {
   });
 
   it("lists the chapters right under the show notes", async () => {
-    renderTrack("demo-episode-late-bloomers-01");
+    await renderTrack("demo-episode-late-bloomers-01");
     const notesHeading = await screen.findByRole("heading", {
       name: "Show notes",
     });
@@ -117,7 +137,7 @@ describe("the episode page (demo)", () => {
   });
 
   it("keeps a draft episode inert: no Like, menu or timestamp buttons", async () => {
-    const playTracks = renderTrack("demo-episode-late-bloomers-draft");
+    const playTracks = await renderTrack("demo-episode-late-bloomers-draft");
     expect(
       await screen.findByRole("heading", {
         level: 1,
@@ -166,7 +186,7 @@ describe("the episode page (demo)", () => {
   });
 
   it("names an episode's chapter list Chapters", async () => {
-    renderTrack("demo-episode-late-bloomers-01");
+    await renderTrack("demo-episode-late-bloomers-01");
     expect(
       await screen.findByRole("heading", { name: "Chapters" }),
     ).toBeInTheDocument();
@@ -174,14 +194,14 @@ describe("the episode page (demo)", () => {
   });
 
   it("titles the words Transcript on an episode and on spoken word", async () => {
-    renderTrack("demo-episode-late-bloomers-03");
+    await renderTrack("demo-episode-late-bloomers-03");
     expect(
       await screen.findByRole("heading", { name: "Transcript" }),
     ).toBeInTheDocument();
   });
 
   it("titles them Transcript on a spoken word track too", async () => {
-    renderTrack("demo-track-lua-01");
+    await renderTrack("demo-track-lua-01");
     expect(
       await screen.findByRole("heading", { name: "Transcript" }),
     ).toBeInTheDocument();
@@ -189,7 +209,7 @@ describe("the episode page (demo)", () => {
   });
 
   it("keeps Lyrics on a music track, with no Sources", async () => {
-    renderTrack("demo-track-cidade-dos-santos-06");
+    await renderTrack("demo-track-cidade-dos-santos-06");
     expect(
       await screen.findByRole("heading", { name: "Lyrics" }),
     ).toBeInTheDocument();
@@ -203,7 +223,7 @@ describe("the episode page (demo)", () => {
   });
 
   it("lists the sources of a lip-sync mix", async () => {
-    renderTrack("demo-track-vanda-mass-01");
+    await renderTrack("demo-track-vanda-mass-01");
     expect(
       await screen.findByRole("heading", { name: "Sources" }),
     ).toBeInTheDocument();

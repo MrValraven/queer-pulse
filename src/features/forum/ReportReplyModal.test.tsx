@@ -154,10 +154,13 @@ describe("ReportReplyModal", () => {
       );
       // Announced as well as shown.
       expect(explanation).toHaveAttribute("role", "alert");
-      // The server's English sentence stays out of the panel.
-      expect(screen.getByRole("alert")).not.toHaveTextContent(
-        PER_SUBJECT_CAP_MESSAGE,
-      );
+      // The server's English sentence stays out of the panel's alert and off
+      // the page. The toast provider's empty alert region shares the role, so
+      // the panel's alert is read through `explanation` itself.
+      expect(explanation).not.toHaveTextContent(PER_SUBJECT_CAP_MESSAGE);
+      expect(
+        screen.queryByText(PER_SUBJECT_CAP_MESSAGE),
+      ).not.toBeInTheDocument();
       // The generic body copy is replaced by the cap line.
       expect(
         screen.queryByText(/check your connection/i),

@@ -12,6 +12,7 @@ import { BanRow } from "./ModToolsBanRow";
 import { CommunityRuleBanEditor } from "./CommunityRuleBanEditor";
 import type { CommunityBanDTO } from "./api/communityBans.api";
 import { useCommunityBans, useLiftCommunityBan } from "./api/useCommunityBans";
+import { communityErrorText } from "./communityErrors";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./ModToolsPanels.module.css";
 
@@ -68,8 +69,7 @@ export function ModToolsBans({
             "success",
           );
         },
-        onError: () =>
-          showToast(t("communities:detail.modtools.bans.errorToast"), "error"),
+        onError: (error) => showToast(communityErrorText(t, error), "error"),
       },
     );
   };

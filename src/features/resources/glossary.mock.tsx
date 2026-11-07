@@ -141,15 +141,15 @@ export const BLOCKS: LetterBlock[] = [
         def: (
           <>
             Of gender systems that recognise only two categories (man / woman).
-            The word is often a shorthand for <em>limitations</em>, not a
-            description of any individual.
+            The word is often a shorthand for the <em>limitations</em> of the
+            system itself.
           </>
         ),
         defPt: (
           <>
             De sistemas de género que reconhecem apenas duas categorias (homem /
             mulher). A palavra é muitas vezes uma forma abreviada de{" "}
-            <em>limitações</em>, e não a descrição de uma pessoa.
+            <em>limitações</em> do próprio sistema.
           </>
         ),
         search: "binary gender man woman binário género",
@@ -186,16 +186,16 @@ export const BLOCKS: LetterBlock[] = [
           <>
             Long-standing terms for masc and femme presentations within queer
             (particularly lesbian and trans-masc) communities.{" "}
-            <em>Identity, not costume.</em> Discussions about who can use them
-            are ongoing. We don't adjudicate.
+            <em>An identity in its own right.</em> Discussions about who can use
+            them are ongoing. We don't adjudicate.
           </>
         ),
         defPt: (
           <>
             Termos antigos para apresentações masc e femme dentro das
             comunidades queer (em particular lésbicas e trans-masc).{" "}
-            <em>Identidade, não fantasia.</em> As discussões sobre quem os pode
-            usar continuam. Não as arbitramos.
+            <em>Uma identidade de pleno direito.</em> As discussões sobre quem
+            os pode usar continuam. Não as arbitramos.
           </>
         ),
         search: "butch femme masc presentation lesbian apresentação lésbica",
@@ -213,17 +213,16 @@ export const BLOCKS: LetterBlock[] = [
         def: (
           <>
             Short for cisgender, describing a person whose gender matches the
-            one they were assigned at birth.{" "}
-            <em>Not an insult, not a slur, just a descriptor</em>, symmetric to
-            "trans". Latin: <i>cis-</i> means "on this side of".
+            one they were assigned at birth. <em>A plain descriptor</em>,
+            symmetric to "trans". Latin: <i>cis-</i> means "on this side of".
           </>
         ),
         defPt: (
           <>
             Abreviatura de cisgénero, descreve uma pessoa cujo género
             corresponde ao que lhe foi atribuído à nascença.{" "}
-            <em>Não é insulto nem ofensa, apenas um descritor</em>, simétrico a
-            "trans". Do latim: <i>cis-</i> significa "deste lado de".
+            <em>Um descritor simples</em>, simétrico a "trans". Do latim:{" "}
+            <i>cis-</i> significa "deste lado de".
           </>
         ),
         search: "cis cisgender descriptor cisgénero",

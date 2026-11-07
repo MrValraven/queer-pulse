@@ -1,10 +1,24 @@
-/* The remote's dock (plan R27). Phone: fixed to the bottom above the consent
-   inset, 218px at 390x844 with every notice folded:
-     6 + 44 (tempo) + 6 + 44 (transition) + 6 + 52 (pads) + 6 + 48 (actions)
-     + max(6px, --bottom-inset)
+/* The remote's dock (plan R27), in two designs picked by `?dock=pads` (the
+   root's data-vj-dock-variant, see hooks/useVjDockVariant.ts).
+
+   Phone: fixed to the bottom above the consent inset. Measured at 390x844
+   with every notice folded, the polished dock is 219px: the tempo bar and
+   the transition row are 40px each, then the pads row and the action row,
+   6px between rows and max(6px, --bottom-inset) under the last one. The
+   Performance pads dock was 232px with the strip panel at 3px padding: the
+   same 40px rows inside one panel, and a 72px pads row. The panel now pads
+   5px on each side with a 5px gap between its rows, so it is 6px taller
+   (1 + 5 + 40 + 5 + 40 + 5 + 1 = 97) and the band comes to about 238px.
    The status line, the reset notice and the MIDI learn banner fold to 0 and
-   carry their own bottom spacing, so a folded notice adds no gap. Split: the
-   sticky right column, full height, scrolling inside. */
+   carry their own bottom spacing, so a folded notice adds no gap. The phone
+   band has no section captions in either design.
+
+   Split: the sticky right column, full height, scrolling inside. The pads
+   slot takes the column's free height, so the action row sits on the bottom
+   edge, and it stays stuck there when a short window (a phone in landscape)
+   makes the column scroll. The polished dock heads each section (Mix, Tempo,
+   Transition, Effects) with a small caption, which a window under 500px
+   tall drops to fit more. */
 .dock,
 .column {
   --vj-band-gap: 6px;
@@ -50,11 +64,16 @@
   flex-direction: column;
   block-size: 100svh;
   block-size: 100dvh;
+  /* The gap between the column's rows; the short-window rule tightens it. */
+  --vj-dock-rows-gap: var(--gap-xs);
   min-width: 0;
-  padding-block: max(var(--gap-sm), env(safe-area-inset-top, 0px))
-    max(var(--gap-sm), var(--bottom-inset));
-  padding-inline: var(--gap-sm)
-    max(var(--gap-sm), env(safe-area-inset-right, 0px));
+  /* The action slot carries the bottom padding, so its stuck backing reaches
+     the bottom edge. */
+  padding-block: max(var(--gap-sm), env(safe-area-inset-top, 0px)) 0;
+  /* Named, so the stuck action slot can bleed to the column's edges. */
+  --vj-dock-pad-start: var(--gap-sm);
+  --vj-dock-pad-end: max(var(--gap-sm), env(safe-area-inset-right, 0px));
+  padding-inline: var(--vj-dock-pad-start) var(--vj-dock-pad-end);
   overflow-y: auto;
   overscroll-behavior: contain;
   border-inline-start: 1px solid var(--qs-glass-border);
@@ -119,10 +138,134 @@
 }
 
 .column .rows {
-  gap: var(--gap-xs);
+  flex: 1 0 auto;
+  gap: var(--vj-dock-rows-gap);
 }
 
 .crossfaderRow {
   min-width: 0;
   padding-block-end: var(--vj-band-gap);
+}
+
+/* The tempo bar and the transition row. */
+.strip {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vj-band-gap);
+  min-width: 0;
+}
+
+.column .strip {
+  gap: var(--vj-dock-rows-gap);
+}
+
+/* Performance pads: the two rows read as one quiet panel, its corners
+   concentric with the 12px chips inside. */
+[data-vj-dock-variant="pads"] .strip {
+  --vj-strip-pad: 5px;
+  gap: var(--vj-strip-pad);
+  padding: var(--vj-strip-pad);
+  border: 1px solid var(--qs-glass-border);
+  border-radius: calc(var(--radius-12) + var(--vj-strip-pad));
+  background: var(--qs-glass-raised-bottom);
+}
+
+/* Hands the pads row a flex column: in the split column the slot grows into
+   the free height, and the row inside can grow with it. The slot's minimum is
+   the row's own content, so the pads never drop under their row height. */
+.padsSlot {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.column .padsSlot {
+  flex: 1 1 auto;
+}
+
+.actionsSlot {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Stuck to the column's bottom edge while the column scrolls. The top
+   padding is the rows gap, taken back from the gap above, so at rest the
+   spacing matches the other rows. The slot draws nothing until the column
+   overflows (data-vj-dock-overflow, set from VjRemoteDock.tsx). */
+.column .actionsSlot {
+  position: sticky;
+  inset-block-end: 0;
+  z-index: 1;
+  margin-block-start: calc(-1 * var(--vj-dock-rows-gap));
+  padding-block: var(--vj-dock-rows-gap) max(var(--gap-sm), var(--bottom-inset));
+}
+
+/* Overflowing: an opaque backing runs edge to edge so pads scrolling under it
+   stay hidden, and a scrim above it dissolves them on the way in. The column
+   is a translucent glass gradient that ends on --qs-glass-raised-bottom over
+   the stage base at 80%; that same lower tone over the opaque base is the
+   closest solid match. The slot sticks to the bottom tenth to fifth of the
+   column (a 900px window, a 390px landscape phone), where the gradient is
+   within a few percent of its last stop in both cases. */
+.column[data-vj-dock-overflow] .actionsSlot {
+  --vj-dock-backing:
+    linear-gradient(
+      var(--qs-glass-raised-bottom),
+      var(--qs-glass-raised-bottom)
+    ),
+    var(--qs-base);
+  --vj-dock-scrim-height: 14px;
+  margin-inline: calc(-1 * var(--vj-dock-pad-start))
+    calc(-1 * var(--vj-dock-pad-end));
+  padding-inline: var(--vj-dock-pad-start) var(--vj-dock-pad-end);
+  background: var(--vj-dock-backing);
+}
+
+/* The scrim is the backing itself, masked from clear at the top to solid at
+   the slot's edge, so its colour meets the backing exactly. */
+.column[data-vj-dock-overflow] .actionsSlot::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 100%;
+  block-size: var(--vj-dock-scrim-height);
+  pointer-events: none;
+  background: var(--vj-dock-backing);
+  -webkit-mask-image: linear-gradient(180deg, transparent, black);
+  mask-image: linear-gradient(180deg, transparent, black);
+}
+
+/* ── Section captions: polished dock, split column only ── */
+.sectionHeading {
+  margin-block: var(--gap-xs) calc(4px - var(--gap-xs));
+  margin-inline: 0;
+  color: var(--qs-text-mute);
+  font-size: var(--text-11);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.rows > .sectionHeading:first-child {
+  margin-block-start: 0;
+}
+
+/* The captions space the sections evenly, so the fader keeps no extra air. */
+.column[data-vj-dock-variant="polish"] .crossfaderRow {
+  padding-block-end: 0;
+}
+
+/* A short window (a phone in landscape): the captions go and the rows close
+   up, so more of the column fits above the stuck action row. */
+@media (max-height: 500px) {
+  .column {
+    --vj-dock-rows-gap: var(--vj-band-gap);
+  }
+
+  .column .sectionHeading {
+    display: none;
+  }
 }

@@ -1,5 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { loadNamespace } from "../../shared/i18n/catalogs";
 import { TestProviders } from "../../test/TestProviders";
 import { StudioRightsPage } from "./StudioRightsPage";
 
@@ -18,10 +19,18 @@ describe("StudioRightsPage in Portuguese", () => {
         <StudioRightsPage />
       </TestProviders>,
     );
+    // The Portuguese chunks load on demand; wait for them and the re-render.
+    await act(async () => {
+      await Promise.all([
+        loadNamespace("pt", "studio"),
+        loadNamespace("pt", "studioShowcase"),
+      ]);
+      await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    });
 
     expect(
       await screen.findByText(
-        "Álbum · 11 faixas · 2026 · 142 mil reproduções · 7100 € de quem comprou",
+        "Álbum · 11 faixas · 2026 · 7100 € de quem comprou",
       ),
     ).toBeInTheDocument();
     expect(

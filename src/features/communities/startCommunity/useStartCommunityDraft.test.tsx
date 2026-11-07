@@ -8,6 +8,8 @@ import {
 } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
+import { awaitCatalog } from "../../../test/awaitCatalog";
+import { currentUserSlug } from "../../members/data/demoCurrentUser";
 import type {
   CreatorDraftAutosave,
   CreatorDraftAutosaveOptions,
@@ -367,12 +369,13 @@ describe("start community draft", () => {
     });
   });
 
-  it("shows the note beside the wizard's save line", () => {
+  it("shows the note beside the wizard's save line", async () => {
     render(
       <TestProviders>
         <StartCommunityPage />
       </TestProviders>,
     );
+    await awaitCatalog("communities");
     const note = screen.getByText(
       /communities:creatorDraftNote\.body|Our team can see this draft of your community page/,
     );
@@ -446,9 +449,10 @@ describe("start community draft before the first edit", () => {
     expect(autosaveCalls.every((call) => call.payload === null)).toBe(true);
   });
 
-  it("sends the draft on the founder's first chapter move", () => {
+  it("sends the draft on the founder's first chapter move", async () => {
     fakeRead.draft = serverDraftNamed("Server club");
     render(<StartCommunityPage />, { wrapper: TestProviders });
+    await awaitCatalog("communities");
     expect(lastAutosaveOptions().payload).toBeNull();
     moveBackOneChapter();
     expect(lastAutosaveOptions().payload).toMatchObject({
@@ -513,8 +517,9 @@ describe("start community draft before the first edit", () => {
   });
 
   it("opens the old tab copy with a payload ready to upload", () => {
+    // The page reads the tab copy kept under the signed-in demo member's slug.
     window.sessionStorage.setItem(
-      LEGACY_KEY,
+      `qp.community-draft.${currentUserSlug}`,
       JSON.stringify({
         draft: { ...emptyCommunity, name: "Tab club" },
         step: 2,
@@ -565,13 +570,14 @@ function liveMemberFrom(demoUser: AuthUser): AuthUser {
  * does: the session still holds the demo member, then /auth/me is checking,
  * then the live member lands.
  */
-function renderAcrossDemoSwitch() {
+async function renderAcrossDemoSwitch() {
   demoOverride.demoMode = true;
   fakeRead.draftsByMode = {
     demo: serverDraftNamed("Demo club"),
     live: serverDraftNamed("Live club"),
   };
   const view = render(<StartCommunityPage />, { wrapper: TestProviders });
+  await awaitCatalog("communities");
   const demoUser = mocks.realAuth.user;
   if (demoUser === null) throw new Error("the demo member never signed in");
   expect(lastAutosaveOptions().payload).toBeNull();
@@ -603,11 +609,12 @@ function renderAcrossDemoSwitch() {
 }
 
 describe("start community draft resume", () => {
-  it("opens on a closed wizard's in-flight save once it lands", () => {
+  it("opens on a closed wizard's in-flight save once it lands", async () => {
     // The cache still holds the copy from before the closed wizard's last save.
     fakeRead.draft = serverDraftNamed("Cached words");
     resumeOverride.value = { draft: null, isSettled: false };
     const view = render(<StartCommunityPage />, { wrapper: TestProviders });
+    await awaitCatalog("communities");
     // The skeleton holds the place while that save is on the wire.
     expect(autosaveCalls).toHaveLength(0);
     expect(screen.queryByText("Cached words")).toBeNull();
@@ -630,8 +637,8 @@ describe("start community draft resume", () => {
 });
 
 describe("StartCommunityPage across a demo switch", () => {
-  it("re-seeds the wizard so the old mode's words never save into the new mode", () => {
-    const { callsBeforeSwitch } = renderAcrossDemoSwitch();
+  it("re-seeds the wizard so the old mode's words never save into the new mode", async () => {
+    const { callsBeforeSwitch } = await renderAcrossDemoSwitch();
     const namesAfterSwitch = savedNamesSince(callsBeforeSwitch);
     expect(namesAfterSwitch).toContain("Live club");
     expect(namesAfterSwitch).not.toContain("Demo club");
@@ -639,13 +646,13 @@ describe("StartCommunityPage across a demo switch", () => {
     expect(screen.queryByText("Demo club")).toBeNull();
   });
 
-  it("waits for the live member so the demo member never saves as the owner", () => {
+  it("waits for the live member so the demo member never saves as the owner", async () => {
     const {
       callsBeforeSwitch,
       callsWhileStale,
       callsWhileChecking,
       demoOwnerName,
-    } = renderAcrossDemoSwitch();
+    } = await renderAcrossDemoSwitch();
     expect(demoOwnerName).toBeTruthy();
     // No wizard runs while the session still holds the other mode's member.
     expect(callsWhileStale).toBe(callsBeforeSwitch);

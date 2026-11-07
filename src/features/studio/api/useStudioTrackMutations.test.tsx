@@ -133,14 +133,17 @@ describe("demo track delete keeps one playable track on a live release", () => {
       const { queryClient, wrapper } = setup(true);
       setReleaseState(queryClient, status, false);
       const { result } = renderHook(() => useDeleteStudioTrack(), { wrapper });
-      await expect(
-        act(() =>
+      // The assertion runs inside act, so a refusal of the wrong shape rejects
+      // act and fails this test. The code rides in the error body, where
+      // `studioErrorCodeOf` reads it.
+      await act(() =>
+        expect(
           result.current.mutateAsync({ trackId: "t1", releaseId: "r1" }),
-        ),
-      ).rejects.toMatchObject({
-        status: 409,
-        code: "studio_release_needs_playable_track",
-      });
+        ).rejects.toMatchObject({
+          status: 409,
+          data: { code: "studio_release_needs_playable_track" },
+        }),
+      );
       expect(
         queryClient.getQueryData<StudioReleaseView>(
           studioKeys.release(true, "r1"),

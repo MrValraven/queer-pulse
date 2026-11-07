@@ -1,4 +1,9 @@
 import { ApiError } from "../../../shared/api/client";
+import {
+  causeErrorKey,
+  type CauseErrorCopy,
+  type CauseErrorOverrides,
+} from "../../../shared/api/causeErrorKey";
 
 /**
  * Machine codes the backend puts on a refused first-contact request
@@ -58,4 +63,33 @@ export function messageRequestErrorKey(error: unknown): string | null {
   }
   const reason = firstContactErrorReason(error);
   return reason ? MESSAGE_REQUEST_ERROR_KEY[reason] : null;
+}
+
+/**
+ * The lines a refused message request can say beyond the shared causes: the
+ * coded first-contact refusals, the reply-only mailbox, and the two uncoded
+ * statuses `POST /messages/request` sends (404 the recipient handle does not
+ * exist, 429 the 15-per-minute burst throttle, which the daily and pending
+ * caps above share a status with). A restricted account, an inactive
+ * membership, an offline request and a server fault read as the shared lines.
+ */
+export const MESSAGE_REQUEST_CAUSE_OVERRIDES: CauseErrorOverrides = {
+  [FIRST_CONTACT_ERROR_CODE.dailyLimit]: MESSAGE_REQUEST_ERROR_KEY.dailyLimit,
+  [FIRST_CONTACT_ERROR_CODE.pendingLimit]:
+    MESSAGE_REQUEST_ERROR_KEY.pendingLimit,
+  [FIRST_CONTACT_ERROR_CODE.paused]: MESSAGE_REQUEST_ERROR_KEY.paused,
+  [FIRST_CONTACT_ERROR_CODE.recipientConnectionsOnly]:
+    MESSAGE_REQUEST_ERROR_KEY.recipientConnectionsOnly,
+  [IDENTITY_CANNOT_INITIATE_CODE]: "messages:mailbox.failure.cannotStart",
+  404: "messages:request.error.notFound",
+  429: "messages:request.error.rateLimited",
+};
+
+/**
+ * The catalog line naming why a message request failed. Interpolate it with
+ * `t(copy.key, { name: firstName, ...copy.values })`: the first-contact lines
+ * take the recipient's first name as `{name}`.
+ */
+export function messageRequestCause(error: unknown): CauseErrorCopy {
+  return causeErrorKey(error, MESSAGE_REQUEST_CAUSE_OVERRIDES);
 }

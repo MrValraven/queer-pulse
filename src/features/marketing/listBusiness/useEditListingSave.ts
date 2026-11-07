@@ -3,6 +3,10 @@ import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useUnsavedChangesGuard } from "../../../shared/hooks/useUnsavedChangesGuard";
 import { routes } from "../../../app/routeMap";
+import {
+  LISTING_EDIT_SAVE_OVERRIDES,
+  failureToast,
+} from "../marketingErrorCopy";
 import { useUpdateListing } from "./api/useListings";
 import type { ListingDraft, ListingStatus } from "./listBusiness.data";
 
@@ -61,8 +65,17 @@ export function useEditListingSave({
     }
   };
 
-  const showSaveError = () =>
-    showToast(t("marketing:listBusiness.edit.saveError"), "error");
+  /** Says why the save failed: the specific cause, over a short title. */
+  const showSaveError = (error: unknown) =>
+    showToast(
+      failureToast(
+        error,
+        t,
+        "marketing:listBusiness.edit.saveErrorTitle",
+        LISTING_EDIT_SAVE_OVERRIDES,
+      ),
+      "error",
+    );
 
   return { saveEdit, showSaveError };
 }

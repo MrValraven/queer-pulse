@@ -1,11 +1,19 @@
 import { readFileSync } from "node:fs";
 import type { ComponentProps } from "react";
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { LazyMotion, domMax } from "motion/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { VjClipDTO } from "../../../../shared/contracts/vj";
 import { PointerEventStub } from "../../../../test/pointerEventStub";
 import { TestProviders } from "../../../../test/TestProviders";
+import { awaitCatalogUnderFakeTimers } from "../../../../test/awaitCatalogUnderFakeTimers";
 import { VjRemoteGrid, type VjTileState } from "./VjRemoteGrid";
 
 const css = readFileSync(
@@ -59,7 +67,7 @@ const READY_STATE: VjTileState = {
 
 type GridProps = ComponentProps<typeof VjRemoteGrid>;
 
-function renderGrid(overrides: Partial<GridProps> = {}) {
+async function renderGrid(overrides: Partial<GridProps> = {}) {
   const onTapClip = vi.fn<GridProps["onTapClip"]>();
   const onToggleFavorite = vi.fn<GridProps["onToggleFavorite"]>();
   const onGoGenerator = vi.fn<GridProps["onGoGenerator"]>();
@@ -80,12 +88,14 @@ function renderGrid(overrides: Partial<GridProps> = {}) {
           search={{ isOpen: false, query: "", onQuery, onClose }}
           onTapClip={onTapClip}
           onToggleFavorite={onToggleFavorite}
+          onShowClipFailure={vi.fn()}
           onGoGenerator={onGoGenerator}
           {...overrides}
         />
       </LazyMotion>
     </TestProviders>,
   );
+  await awaitCatalogUnderFakeTimers("vj");
   return {
     ...view,
     onTapClip,
@@ -98,6 +108,13 @@ function renderGrid(overrides: Partial<GridProps> = {}) {
 
 function tileButton(title: string): HTMLElement {
   return screen.getByRole("button", { name: `Show ${title} on the screen` });
+}
+
+/** The grid's own root: the providers around it hold live regions too. */
+function gridRoot(container: HTMLElement): HTMLElement {
+  const root = container.querySelector<HTMLElement>("[data-vj-remote-grid]");
+  if (root === null) throw new Error("grid root not rendered");
+  return root;
 }
 
 function tileTitles(): string[] {
@@ -126,10 +143,14 @@ afterEach(() => {
 });
 
 describe("VjRemoteGrid", () => {
-  it("three columns of square tiles hold the pack's clips in order", () => {
+  it("three columns of square tiles hold the pack's clips in order", async () => {
     // 390px phone: 354px of content, a 108px track minimum and a 6px gap.
+    // The minimum grows as 16cqi up to 176px; at 354px it keeps 108px.
     expect(css).toMatch(
-      /grid-template-columns:\s*repeat\(auto-fill,\s*minmax\(var\(--vj-tile-min\),\s*1fr\)\)/,
+      /--vj-tile-grow-min:\s*clamp\(var\(--vj-tile-min\),\s*16cqi,\s*176px\)/,
+    );
+    expect(css).toMatch(
+      /grid-template-columns:\s*repeat\(\s*auto-fill,\s*minmax\(var\(--vj-tile-grow-min\),\s*1fr\)\s*\)/,
     );
     expect(css).toMatch(/--vj-tile-min:\s*108px/);
     expect(css).toMatch(/--vj-tile-gap:\s*6px/);
@@ -139,7 +160,7 @@ describe("VjRemoteGrid", () => {
     expect(columnCount).toBe(3);
     expect((contentWidth - 2 * 6) / columnCount).toBe(114);
 
-    const { container } = renderGrid();
+    const { container } = await renderGrid();
     expect(container.querySelector("[data-vj-remote-grid]")).toHaveAttribute(
       "data-source",
       "pack",
@@ -153,15 +174,15 @@ describe("VjRemoteGrid", () => {
     ]);
   });
 
-  it("tap calls onTapClip with the clip and its index", () => {
-    const { onTapClip } = renderGrid();
+  it("tap calls onTapClip with the clip and its index", async () => {
+    const { onTapClip } = await renderGrid();
     fireEvent.click(tileButton("Neon hearts"));
     expect(onTapClip).toHaveBeenCalledWith("clip-3", 2);
   });
 
-  it("long press opens the preview and the release sends nothing", () => {
+  it("long press opens the preview and the release sends nothing", async () => {
     vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
-    const { onTapClip } = renderGrid();
+    const { onTapClip } = await renderGrid();
     const button = tileButton("Neon rain");
     fireEvent.pointerDown(button, touch);
     advance(449);
@@ -178,9 +199,9 @@ describe("VjRemoteGrid", () => {
     expect(onTapClip).not.toHaveBeenCalled();
   });
 
-  it("the preview shows the thumbnail and the note when previewUrl is null", () => {
+  it("the preview shows the thumbnail and the note when previewUrl is null", async () => {
     vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
-    renderGrid();
+    await renderGrid();
     fireEvent.pointerDown(tileButton("Disco ball"), touch);
     advance(450);
     const preview = document.querySelector<HTMLElement>(
@@ -199,14 +220,14 @@ describe("VjRemoteGrid", () => {
     ).toBeInTheDocument();
   });
 
-  it("the grid never plays a moving preview before a long press", () => {
-    const { container } = renderGrid();
+  it("the grid never plays a moving preview before a long press", async () => {
+    const { container } = await renderGrid();
     expect(container.querySelector("video")).toBeNull();
     expect(document.querySelector("[data-vj-tile-preview]")).toBeNull();
   });
 
-  it("the star toggles without touching the tile", () => {
-    const { onTapClip, onToggleFavorite } = renderGrid();
+  it("the star toggles without touching the tile", async () => {
+    const { onTapClip, onToggleFavorite } = await renderGrid();
     fireEvent.click(
       screen.getByRole("button", { name: "Add Glitter storm to favorites" }),
     );
@@ -214,10 +235,12 @@ describe("VjRemoteGrid", () => {
     expect(onTapClip).not.toHaveBeenCalled();
   });
 
-  it("search filters and Escape closes it", () => {
+  it("search filters and Escape closes it", async () => {
     const onQuery = vi.fn<(query: string) => void>();
     const onClose = vi.fn<() => void>();
-    renderGrid({ search: { isOpen: true, query: "neon", onQuery, onClose } });
+    await renderGrid({
+      search: { isOpen: true, query: "neon", onQuery, onClose },
+    });
     expect(tileTitles()).toEqual([
       "Show Neon rain on the screen",
       "Show Neon hearts on the screen",
@@ -233,8 +256,8 @@ describe("VjRemoteGrid", () => {
     expect(tileButton("Neon rain")).toHaveFocus();
   });
 
-  it("a closed search shows every clip whatever the query", () => {
-    renderGrid({
+  it("a closed search shows every clip whatever the query", async () => {
+    await renderGrid({
       search: {
         isOpen: false,
         query: "neon",
@@ -245,8 +268,8 @@ describe("VjRemoteGrid", () => {
     expect(tileTitles()).toHaveLength(4);
   });
 
-  it("a search with no match says so where the grid would be", () => {
-    renderGrid({
+  it("a search with no match says so where the grid would be", async () => {
+    const view = await renderGrid({
       search: {
         isOpen: true,
         query: "zebra",
@@ -254,21 +277,32 @@ describe("VjRemoteGrid", () => {
         onClose: vi.fn(),
       },
     });
-    expect(screen.getByRole("status")).toHaveTextContent(
-      'No clip in this pack matches "zebra"',
+    // The empty line fades from the blank pre-catalog copy to its text.
+    await waitFor(() =>
+      expect(
+        within(gridRoot(view.container)).getByRole("status"),
+      ).toHaveTextContent('No clip in this pack matches "zebra"'),
     );
   });
 
-  it("an empty pack shows the caller's empty line", () => {
-    renderGrid({ clips: [], emptyKey: "vj:remote.packEmpty" });
-    expect(screen.getByRole("status")).toHaveTextContent(
-      "This pack has no clips yet. Add some in the VJ library",
+  it("an empty pack shows the caller's empty line", async () => {
+    const view = await renderGrid({
+      clips: [],
+      emptyKey: "vj:remote.packEmpty",
+    });
+    // The empty line fades from the blank pre-catalog copy to its text.
+    await waitFor(() =>
+      expect(
+        within(gridRoot(view.container)).getByRole("status"),
+      ).toHaveTextContent(
+        "This pack has no clips yet. Add some in the VJ library",
+      ),
     );
   });
 
-  it("generators source shows five generators and a long press on the flag wave offers the flags", () => {
+  it("generators source shows five generators and a long press on the flag wave offers the flags", async () => {
     vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
-    const { container, onGoGenerator } = renderGrid({
+    const { container, onGoGenerator } = await renderGrid({
       source: "generators",
       liveGeneratorId: "prideFlagWave",
       liveGeneratorVariant: "rainbow",
@@ -301,8 +335,8 @@ describe("VjRemoteGrid", () => {
     expect(onGoGenerator).toHaveBeenLastCalledWith("prideFlagWave", "trans");
   });
 
-  it("a tap on the flag wave sends its default flag", () => {
-    const { onGoGenerator } = renderGrid({ source: "generators" });
+  it("a tap on the flag wave sends its default flag", async () => {
+    const { onGoGenerator } = await renderGrid({ source: "generators" });
     fireEvent.click(
       screen.getByRole("button", {
         name: "Show the Pride flag wave generator on the screen",
@@ -311,8 +345,8 @@ describe("VjRemoteGrid", () => {
     expect(onGoGenerator).toHaveBeenCalledWith("prideFlagWave", "rainbow");
   });
 
-  it("a generator waiting for its ack shows the pending ring", () => {
-    const { container } = renderGrid({
+  it("a generator waiting for its ack shows the pending ring", async () => {
+    const { container } = await renderGrid({
       source: "generators",
       generatorIsPending: (generatorId) => generatorId === "plasma",
     });

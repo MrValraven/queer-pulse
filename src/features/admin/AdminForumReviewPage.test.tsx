@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import type { ReactNode } from "react";
@@ -81,9 +81,13 @@ describe("AdminForumReviewPage", () => {
     for (const thread of ADMIN_FORUM_REVIEW_THREADS) {
       expect(await screen.findByText(thread.title)).toBeInTheDocument();
     }
-    // The moderator view names the real author of the anonymous thread.
+    // The moderator view names the real author of the anonymous thread. The
+    // same member also posted a later thread, so the check reads this row.
+    const heldRow = screen.getByRole("article", { name: heldThread.title });
     expect(
-      screen.getByText(heldThread.author.displayName, { exact: false }),
+      within(heldRow).getByText(heldThread.author.displayName, {
+        exact: false,
+      }),
     ).toBeInTheDocument();
     expect(
       await screen.findByText("Will post anonymously"),

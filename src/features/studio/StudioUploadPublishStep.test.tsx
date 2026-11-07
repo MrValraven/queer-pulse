@@ -3,6 +3,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../shared/api/client";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { toReleaseView } from "./api/studio.adapters";
 import type { StudioReleaseDTO } from "./api/studio.types";
 import { PublishStep } from "./StudioUploadPublishStep";
@@ -93,6 +94,18 @@ const uploads = {
   hasPendingUploads: false,
 } as unknown as StudioTrackUploads;
 
+/** The fixture is a mix, so its rights box reads the edit wording. */
+const MIX_RIGHTS_LABEL = /permission to share this edit/i;
+
+/** The publish refusal, found by what it reads: the toast deck keeps an
+ *  empty alert region mounted too. The checklist gap reads the same words,
+ *  so a test finds that one by its link to the cover field. */
+const findRefusalLine = (text: RegExp) =>
+  screen.findByText(text, { selector: '[role="alert"]' });
+
+const coverGapLink = () =>
+  screen.getByRole("link", { name: /add a cover image/i });
+
 describe("PublishStep", () => {
   it("holds Publish until the rights are confirmed, then confirms and publishes", async () => {
     updateRelease.mockResolvedValue({
@@ -111,6 +124,7 @@ describe("PublishStep", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const publish = await screen.findByRole("button", {
       name: /publish release/i,
     });
@@ -121,9 +135,7 @@ describe("PublishStep", () => {
     expect(screen.queryByText(/add a cover image/i)).not.toBeInTheDocument();
     fireEvent.click(publish);
     expect(publishRelease).not.toHaveBeenCalled();
-    fireEvent.click(
-      screen.getByRole("checkbox", { name: /own or control the rights/i }),
-    );
+    fireEvent.click(screen.getByRole("checkbox", { name: MIX_RIGHTS_LABEL }));
     fireEvent.click(publish);
     await waitFor(() => expect(onPublished).toHaveBeenCalled());
     expect(updateRelease).toHaveBeenCalledWith({
@@ -152,13 +164,14 @@ describe("PublishStep", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(
       await screen.findByRole("checkbox", {
-        name: /own or control the rights/i,
+        name: MIX_RIGHTS_LABEL,
       }),
     );
     fireEvent.click(screen.getByRole("button", { name: /publish release/i }));
-    expect(await screen.findByRole("alert")).toHaveTextContent(/cover/i);
+    expect(await findRefusalLine(/cover/i)).toBeInTheDocument();
   });
   it("lists the pending gap and keeps Publish disabled while uploads run", async () => {
     const pendingUploads = {
@@ -178,6 +191,7 @@ describe("PublishStep", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       await screen.findByText(/wait for every track to finish uploading/i),
     ).toBeInTheDocument();
@@ -208,15 +222,16 @@ describe("PublishStep", () => {
       </TestProviders>
     );
     const { rerender } = render(view(confirmed));
+    await awaitCatalog("studio");
     fireEvent.click(
       await screen.findByRole("button", { name: /publish release/i }),
     );
-    await screen.findByRole("alert");
+    await findRefusalLine(/add a cover image/i);
     expect(invalidate).toHaveBeenCalledWith({
       queryKey: ["studio", "release", false, "r1"],
     });
     rerender(view({ ...confirmed, coverUrl: null }));
-    expect(screen.getByText(/add a cover image/i)).toBeInTheDocument();
+    expect(coverGapLink()).toHaveAttribute("href", "#studio-release-cover");
     expect(
       screen.getByRole("button", { name: /publish release/i }),
     ).toHaveAttribute("aria-disabled", "true");
@@ -240,9 +255,10 @@ describe("PublishStep", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(
       await screen.findByRole("checkbox", {
-        name: /own or control the rights/i,
+        name: MIX_RIGHTS_LABEL,
       }),
     );
     fireEvent.click(screen.getByRole("radio", { name: /schedule release/i }));
@@ -282,6 +298,7 @@ describe("PublishStep", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       await screen.findByRole("button", { name: "Change date" }),
     ).toBeInTheDocument();
@@ -319,6 +336,7 @@ describe("PublishStep on a scheduled release", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(
       await screen.findByRole("button", { name: "Cancel schedule" }),
     );
@@ -342,6 +360,7 @@ describe("PublishStep on a scheduled release", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(await screen.findByRole("button", { name: "Change date" }));
     const inTwoDays = new Date(Date.now() + 2 * 86_400_000);
     const pad = (value: number) => String(value).padStart(2, "0");
@@ -382,6 +401,7 @@ describe("PublishStep on a scheduled release", () => {
         .getAllByRole("heading", { level: 3, hidden: true })
         .find((heading) => text.test(heading.textContent ?? ""));
     const { rerender } = render(view(confirmed));
+    await awaitCatalog("studio");
     fireEvent.click(
       await screen.findByRole("radio", { name: /schedule release/i }),
     );
@@ -431,6 +451,7 @@ describe("PublishStep sources and rights (artist kinds)", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       await screen.findByText("Credit every source: Side A"),
     ).toBeInTheDocument();
@@ -447,6 +468,7 @@ describe("PublishStep sources and rights (artist kinds)", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       await screen.findByText(/I have permission to share this edit/),
     ).toBeInTheDocument();
@@ -465,6 +487,7 @@ describe("PublishStep sources and rights (artist kinds)", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       await screen.findByText(/rights to this recording and the cover/),
     ).toBeInTheDocument();

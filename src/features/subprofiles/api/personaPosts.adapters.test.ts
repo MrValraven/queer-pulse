@@ -169,6 +169,20 @@ describe("persona post errors", () => {
       "subprofiles:updates.errors.gone",
     );
     expect(personaPostErrorKeyOf(new Error("offline"))).toBe(
+      "shared:apiError.noConnection",
+    );
+    expect(personaPostErrorKeyOf(new ApiError(500, "boom"))).toBe(
+      "shared:apiError.serverFault",
+    );
+    expect(personaPostErrorKeyOf(new ApiError(429, "slow down"))).toBe(
+      "shared:apiError.reasonRateLimited",
+    );
+    expect(
+      personaPostErrorKeyOf(
+        new ApiError(403, "restricted", { code: "ACCOUNT_RESTRICTED" }),
+      ),
+    ).toBe("shared:apiError.accountRestricted");
+    expect(personaPostErrorKeyOf(new ApiError(418, "teapot"))).toBe(
       "subprofiles:updates.errors.generic",
     );
   });

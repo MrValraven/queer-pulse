@@ -3,12 +3,15 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { BlurredPhoto } from "./BlurredPhoto";
 import { resetPhotoReveals } from "./photoReveal";
+import { awaitCatalog } from "../../test/awaitCatalog";
 
 const photoName = "Healed top surgery piece";
 const photoKey = "work-image/u1/a.jpg";
 
-function renderPhotos(ui: React.ReactElement) {
-  return render(<TestProviders>{ui}</TestProviders>);
+async function renderPhotos(ui: React.ReactElement) {
+  const view = render(<TestProviders>{ui}</TestProviders>);
+  await awaitCatalog("subprofiles");
+  return view;
 }
 
 describe("BlurredPhoto", () => {
@@ -16,8 +19,8 @@ describe("BlurredPhoto", () => {
     resetPhotoReveals();
   });
 
-  it("hides a blurred photo from assistive tech until Show photo", () => {
-    renderPhotos(
+  it("hides a blurred photo from assistive tech until Show photo", async () => {
+    await renderPhotos(
       <BlurredPhoto isBlurred revealKey={photoKey}>
         <img alt={photoName} src="/a.jpg" />
       </BlurredPhoto>,
@@ -33,8 +36,8 @@ describe("BlurredPhoto", () => {
     ).toBeInTheDocument();
   });
 
-  it("keeps one reveal across every copy of the same photo", () => {
-    renderPhotos(
+  it("keeps one reveal across every copy of the same photo", async () => {
+    await renderPhotos(
       <>
         <BlurredPhoto isBlurred revealKey={photoKey}>
           <img alt="First copy" src="/a.jpg" />
@@ -58,8 +61,8 @@ describe("BlurredPhoto", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders a sharp photo with no button when it is not blurred", () => {
-    renderPhotos(
+  it("renders a sharp photo with no button when it is not blurred", async () => {
+    await renderPhotos(
       <BlurredPhoto isBlurred={false} revealKey={photoKey}>
         <img alt={photoName} src="/a.jpg" />
       </BlurredPhoto>,
@@ -68,8 +71,8 @@ describe("BlurredPhoto", () => {
     expect(screen.queryByRole("button")).toBeNull();
   });
 
-  it("offers no button on a static blur", () => {
-    renderPhotos(
+  it("offers no button on a static blur", async () => {
+    await renderPhotos(
       <BlurredPhoto isBlurred isRevealable={false} revealKey={photoKey}>
         <img alt={photoName} src="/a.jpg" />
       </BlurredPhoto>,
@@ -78,8 +81,8 @@ describe("BlurredPhoto", () => {
     expect(screen.queryByRole("img", { name: photoName })).toBeNull();
   });
 
-  it("mounts a new photo already concealed when the reveal key changes", () => {
-    const { rerender, container } = renderPhotos(
+  it("mounts a new photo already concealed when the reveal key changes", async () => {
+    const { rerender, container } = await renderPhotos(
       <BlurredPhoto isBlurred revealKey={photoKey}>
         <img alt={photoName} src="/a.jpg" />
       </BlurredPhoto>,
@@ -98,8 +101,8 @@ describe("BlurredPhoto", () => {
     expect(screen.queryByRole("img", { name: photoName })).toBeNull();
   });
 
-  it("moves focus to Hide photo after Show photo and back to Show photo after Hide photo", () => {
-    renderPhotos(
+  it("moves focus to Hide photo after Show photo and back to Show photo after Hide photo", async () => {
+    await renderPhotos(
       <BlurredPhoto isBlurred revealKey={photoKey}>
         <img alt={photoName} src="/a.jpg" />
       </BlurredPhoto>,
@@ -112,8 +115,8 @@ describe("BlurredPhoto", () => {
     expect(screen.getByRole("button", { name: "Show photo" })).toHaveFocus();
   });
 
-  it("keeps focus on the clicked copy when another copy shares the reveal", () => {
-    renderPhotos(
+  it("keeps focus on the clicked copy when another copy shares the reveal", async () => {
+    await renderPhotos(
       <>
         <BlurredPhoto isBlurred revealKey={photoKey}>
           <img alt="First copy" src="/a.jpg" />
@@ -136,8 +139,8 @@ describe("BlurredPhoto", () => {
     expect(secondHideButton).not.toHaveFocus();
   });
 
-  it("conceals the photo again with Hide photo", () => {
-    const { container } = renderPhotos(
+  it("conceals the photo again with Hide photo", async () => {
+    const { container } = await renderPhotos(
       <BlurredPhoto isBlurred revealKey={photoKey}>
         <img alt={photoName} src="/a.jpg" />
       </BlurredPhoto>,

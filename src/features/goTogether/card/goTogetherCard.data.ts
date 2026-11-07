@@ -11,6 +11,7 @@ import {
 import { ApiError } from "../../../shared/api/client";
 import { LENSES } from "../goTogetherQuestionnaire.data";
 import { goTogetherErrorCode, isGoTogetherOff } from "../api/goTogether.api";
+import { goTogetherCauseKey } from "../api/goTogetherErrorCopy";
 import type {
   GoTogetherCardDTO,
   GoTogetherErrorCode,
@@ -91,8 +92,8 @@ export const BLOCKER_PANEL: Record<
   notGoing: null,
 };
 
-/** Copy for a failed opt-in or pair answer. Any code missing here falls
- *  back to `OPT_IN_ERROR_FALLBACK_KEY`. */
+/** Copy for a failed opt-in or pair answer. Any code missing here names its
+ *  cause through `goTogetherCauseKey`. */
 export const OPT_IN_ERROR_KEYS: Partial<Record<GoTogetherErrorCode, string>> = {
   GO_TOGETHER_PARTNER_UNAVAILABLE: "goTogether:card.error.partnerUnavailable",
   GO_TOGETHER_PROFILE_NEEDED: "goTogether:card.error.profileNeeded",
@@ -122,14 +123,12 @@ export function shouldRefreshCardAfter(error: Error): boolean {
   return code !== null && CARD_REFRESH_ERROR_CODES.has(code);
 }
 
-export const OPT_IN_ERROR_FALLBACK_KEY = "goTogether:card.error.generic";
-
 /** The copy key for a failed card write, from the error's code, or null
  *  when there is no error. */
 export function cardErrorKey(error: Error | null): string | null {
   if (!error) return null;
   const code = goTogetherErrorCode(error);
-  return (code && OPT_IN_ERROR_KEYS[code]) || OPT_IN_ERROR_FALLBACK_KEY;
+  return (code && OPT_IN_ERROR_KEYS[code]) || goTogetherCauseKey(error);
 }
 
 /** A refused "answer it again" save: a 403 without a Go together code (a

@@ -567,6 +567,10 @@ export const subprofiles: Catalog = {
   "mine.toastDeleted": "{name} eliminada",
   "mine.toastDeleteError":
     "Não conseguimos eliminar isso agora. Tenta outra vez.",
+  "mine.toastDeleteCreatorOnly":
+    "Só quem criou esta persona a pode eliminar. Se a tens em co-propriedade, podes sair dela.",
+  "mine.toastDeleteGone":
+    "Esta persona já foi eliminada. Recarrega as tuas personas para veres a lista atual.",
   "mine.deleteModalTitle": "Eliminar esta persona?",
   "mine.deleteModalSub":
     "“{name}” e tudo o que lá está vai desaparecer para sempre.",
@@ -604,6 +608,12 @@ export const subprofiles: Catalog = {
     "Ainda não tens nada no teu perfil. Publica uma persona e liga-a ao teu perfil para aparecer aqui.",
   "mine.order.saveError":
     "Não conseguimos guardar essa ordem. Tenta outra vez.",
+  "mine.order.saveErrorStale":
+    "As tuas personas mudaram enquanto as reordenavas, por isso a nova ordem não ficou guardada. Recarrega a página e tenta outra vez.",
+  "ownerAction.notOwner":
+    "Só quem gere esta persona a pode alterar. Se foste removida da co-propriedade, recarrega para veres o teu acesso atual.",
+  "ownerAction.conflict":
+    "Uma pessoa com co-propriedade guardou alterações a esta persona mesmo antes de ti. Recarrega a página para veres as alterações e tenta outra vez.",
 
   // Alternar Cartões / Lista no painel (PersonaViewToggle), e as acções só com
   // ícone de uma linha da lista (variante de linha do SideCardFooter).
@@ -1158,6 +1168,10 @@ export const subprofiles: Catalog = {
   "hero.endorse.count_one": "{count} recomendação",
   "hero.endorse.count_other": "{count} recomendações",
   "hero.endorse.error": "Não conseguimos guardar isso agora. Tenta outra vez.",
+  "hero.endorse.errorOwnPersona":
+    "Não podes recomendar uma persona que é tua ou que tens em co-propriedade.",
+  "hero.endorse.errorGone":
+    "Esta persona já não está disponível para receber recomendações. Recarrega a página para veres o estado atual.",
   "hero.endorse.endorsedByNames": "Com recomendação de {names}",
 
   // Endorse-with-note modal (EndorseSubprofileModal, EndorseSubprofileModalParts)
@@ -1504,6 +1518,8 @@ export const subprofiles: Catalog = {
     "As denúncias são revistas pela nossa equipa de moderação. O teu nome nunca é partilhado com a pessoa que denuncias.",
   "reportModal.reasonLabel": "Qual é o problema?",
   "reportModal.reasons.impersonating": "A fingir ser outra pessoa",
+  "reportModal.reasons.paymentNeverConfirmed":
+    "Recebeu o meu pagamento e não o confirmou",
   "reportModal.reasons.hateOrHarassment": "Discurso de ódio ou assédio",
   "reportModal.reasons.discrimination": "Discriminação ou uso do género errado",
   "reportModal.reasons.notReal": "Não é uma prática ou serviço real",
@@ -1948,6 +1964,10 @@ export const subprofiles: Catalog = {
   "protect.copied": "Copiado para a área de transferência",
   "protect.email": "Enviar para o meu email",
   "protect.failed": "Não foi possível gerar o registo. Tenta novamente.",
+  "protect.failedBuild":
+    "O teu navegador não consegue criar o registo nesta página, porque precisa de uma ligação segura (https). Abre o site por https e tenta outra vez.",
+  "protect.failedAction":
+    "O teu navegador bloqueou isso. Permite o acesso à área de transferência ou às transferências neste site e tenta outra vez.",
   "protect.emailSubject": "Registo de autoria: {title}",
   // O texto do próprio registo (rights/authorshipRecord.ts). Só as etiquetas
   // são traduzidas; os valores ao lado (título, autoria, data, hash) são dados,
@@ -1974,6 +1994,8 @@ export const subprofiles: Catalog = {
   "history.restored": "Versão restaurada",
   "history.restoreFailed":
     "Não foi possível restaurar esta versão. Tenta novamente.",
+  "history.restoreGone":
+    "Essa versão já não existe, por isso não pode ser restaurada. Fecha esta janela e abre o histórico outra vez.",
 
   // Campos ricos por secção (richFields.data.ts, mostrados por
   // SubprofileItemDrawerFields) — detalhes de concertos, suporte/edição de
@@ -3069,7 +3091,7 @@ export const subprofiles: Catalog = {
   "quest.safetyDescription.check_ins":
     "Paras de vez em quando para perguntar como está toda a gente.",
   "quest.safetyDescription.content_warnings":
-    "Os temas pesados são avisados antes da sessão, não a meio dela.",
+    "Os temas pesados são avisados antes de a sessão começar.",
   "skinChips.suggestionsLabel": "Populares",
   "skinChips.addSuggestion": "Adicionar {text}",
   "skinChips.moreSuggestions_one": "Mais {count}",
@@ -3335,7 +3357,7 @@ export const subprofiles: Catalog = {
   "feedImport.error.rateLimited":
     "Fizeste muitas pesquisas no último minuto. Espera um momento e tenta outra vez.",
   "feedImport.error.generic":
-    "Algo correu mal do nosso lado. Tenta outra vez daqui a pouco.",
+    "Os nossos servidores recusaram isso. Tenta outra vez daqui a pouco e escreve-nos se continuar a acontecer.",
   "feedImport.banner.region": "Episódios à espera de revisão",
   "feedImport.banner.message_one":
     "Há um episódio novo de <em>{show}</em> para rever",
@@ -3400,7 +3422,8 @@ export const subprofiles: Catalog = {
   "updates.errors.imageNotAllowed":
     "Essa foto não pode ser usada aqui. Escolhe-a outra vez a partir dos carregamentos desta persona",
   "updates.errors.gone": "Essa novidade já não existe. Recarrega a página",
-  "updates.errors.generic": "Algo correu mal. Tenta outra vez",
+  "updates.errors.generic":
+    "Os nossos servidores recusaram esta novidade. Tenta outra vez daqui a pouco e escreve-nos se continuar a acontecer",
   "updates.errors.deleteFailed":
     "Não conseguimos apagar essa novidade. Tenta outra vez",
 

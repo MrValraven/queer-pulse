@@ -13,6 +13,7 @@ import { useClaimListing } from "./api/useClaimListing";
 import { useListingClaimPolicy } from "./listBusiness/api/useListingClaims";
 import { ClaimAffirmingBaselinePledge } from "./ClaimAffirmingBaselinePledge";
 import { DirectoryClaimSuccessPanel } from "./DirectoryClaimSuccessPanel";
+import { directoryClaimToast } from "./marketingErrorCopy";
 import styles from "./DirectoryClaimModal.module.css";
 
 const NOTE_MAX_LENGTH = 2000;
@@ -58,8 +59,7 @@ export function DirectoryClaimModal({
       { note: trimmedNote || undefined, affirmingBaselineAccepted: true },
       {
         onSuccess: () => setDone(true),
-        onError: () =>
-          showToast(t("marketing:directory.detail.claim.errorToast"), "error"),
+        onError: (error) => showToast(directoryClaimToast(error, t), "error"),
       },
     );
   };

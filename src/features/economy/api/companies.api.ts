@@ -77,9 +77,15 @@ export interface CompanyReviewOwnerReplyDTO {
   at: string;
 }
 
+/**
+ * One review of a company. The server sends NO author for any viewer, which is
+ * what makes "your name is not shown" true; the client never hides anything
+ * itself. `isViewerAuthor` is the only authorship signal: it is true when the
+ * review is the viewer's own and never identifies anyone else.
+ */
 export interface CompanyReviewDTO {
   id: string;
-  author: MemberRefDTO | null;
+  isViewerAuthor: boolean;
   title: string;
   stars: number;
   byline: string;

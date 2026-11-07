@@ -1,9 +1,10 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { LazyMotion, domMax } from "motion/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { Mock } from "vitest";
 import type { VjClipDTO, VjMix } from "../../../../../shared/contracts/vj";
 import { TestProviders } from "../../../../../test/TestProviders";
+import { awaitCatalog } from "../../../../../test/awaitCatalog";
 import type { VjCommandOutcome } from "../../../live/vjStageCommands";
 import type { VjRun } from "../../useVjCommandRunner";
 import { VjMixSheet } from "./VjMixSheet";
@@ -65,8 +66,8 @@ function createRun(
     Mock<() => Promise<VjCommandOutcome>>;
 }
 
-function renderSheet(run: VjRun, mix: Partial<VjMix> = {}) {
-  return render(
+async function renderSheet(run: VjRun, mix: Partial<VjMix> = {}) {
+  const renderedView = render(
     <TestProviders>
       <LazyMotion features={domMax}>
         <VjMixSheet
@@ -81,6 +82,8 @@ function renderSheet(run: VjRun, mix: Partial<VjMix> = {}) {
       </LazyMotion>
     </TestProviders>,
   );
+  await awaitCatalog("vj");
+  return renderedView;
 }
 
 /** Clicks, then lets the command's promise settle inside act. */
@@ -96,7 +99,7 @@ describe("VjMixSheet", () => {
 
   it("picking a clip sends it as the mix clip", async () => {
     const run = createRun();
-    renderSheet(run);
+    await renderSheet(run);
     expect(
       screen.queryByRole("button", { name: "Use Disco ball as the mix clip" }),
     ).not.toBeInTheDocument();
@@ -111,7 +114,7 @@ describe("VjMixSheet", () => {
 
   it("blend chips send the mode", async () => {
     const run = createRun();
-    renderSheet(run, { clipId: CLIP_IDS[1] });
+    await renderSheet(run, { clipId: CLIP_IDS[1] });
     const normal = screen.getByRole("button", { name: "Normal" });
     expect(normal).toHaveAttribute("aria-pressed", "true");
     const screenMode = screen.getByRole("button", { name: "Screen" });
@@ -122,7 +125,7 @@ describe("VjMixSheet", () => {
 
   it("Swap is aria-disabled without a mix clip", async () => {
     const run = createRun();
-    renderSheet(run);
+    await renderSheet(run);
     const swap = screen.getByRole("button", { name: "Swap mix and live" });
     expect(swap).toHaveAttribute("aria-disabled", "true");
     expect(swap).toHaveAccessibleDescription("Pick a clip to mix in");
@@ -132,7 +135,7 @@ describe("VjMixSheet", () => {
 
   it("Swap mix and live sends swapMix with a mix clip", async () => {
     const run = createRun();
-    renderSheet(run, { clipId: CLIP_IDS[1], amount: 0.5 });
+    await renderSheet(run, { clipId: CLIP_IDS[1], amount: 0.5 });
     const swap = screen.getByRole("button", { name: "Swap mix and live" });
     expect(swap).toHaveAttribute("aria-disabled", "false");
     await clickAndSettle(swap);
@@ -141,7 +144,7 @@ describe("VjMixSheet", () => {
 
   it("Clear the mix sends a null clip", async () => {
     const run = createRun();
-    renderSheet(run, { clipId: CLIP_IDS[2], amount: 0.7 });
+    await renderSheet(run, { clipId: CLIP_IDS[2], amount: 0.7 });
     await clickAndSettle(screen.getByRole("button", { name: "Clear the mix" }));
     expect(run).toHaveBeenCalledWith("setMix", { clipId: null });
     expect(
@@ -157,12 +160,14 @@ describe("VjMixSheet", () => {
       code: "vj_clip_not_found",
       errorKey: "vj:error.socket.clipNotFound",
     });
-    renderSheet(run);
+    await renderSheet(run);
     const neonRain = screen.getByRole("button", {
       name: "Use Neon rain as the mix clip",
     });
     await clickAndSettle(neonRain);
-    expect(screen.getByRole("alert")).toBeInTheDocument();
+    expect(
+      within(screen.getByRole("dialog")).getByRole("alert"),
+    ).toBeInTheDocument();
     expect(neonRain).toHaveAttribute("aria-pressed", "false");
   });
 });

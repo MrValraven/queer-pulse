@@ -8,6 +8,7 @@ import {
   queueItem,
   renderWithPlayer,
 } from "./studioPlayerTestHarness";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 /** The pane as Now playing shows it, with a press that moves it on to the
  *  next track inside the same providers. */
@@ -38,7 +39,7 @@ const SYNCED_LINES = [
  *  the player waits on its warning (spec 6.3). Each test uses its own track
  *  id, as reveals hold for the life of the tab. */
 describe("Now playing lyrics of a warned track", () => {
-  it("covers the timed lyrics while the warned track waits", () => {
+  it("covers the timed lyrics while the warned track waits", async () => {
     const warned = queueItem({
       trackId: "np-warned-waiting",
       contentWarnings: ["self-harm"],
@@ -52,13 +53,14 @@ describe("Now playing lyrics of a warned track", () => {
       <StudioNowPlayingPaneContent tab="lyrics" item={warned} />,
       { player },
     );
+    await awaitCatalog("studio");
     expect(screen.queryByText("First warned line")).toBeNull();
     const reveal = screen.getByRole("button", { expanded: false });
     fireEvent.click(reveal);
     expect(screen.getByText("First warned line")).toBeTruthy();
   });
 
-  it("starts the next warned track covered after one was uncovered", () => {
+  it("starts the next warned track covered after one was uncovered", async () => {
     const first = queueItem({
       trackId: "np-warned-first",
       contentWarnings: ["self-harm"],
@@ -74,6 +76,7 @@ describe("Now playing lyrics of a warned track", () => {
     renderWithPlayer(<ItemSwitch first={first} second={second} />, {
       player,
     });
+    await awaitCatalog("studio");
     fireEvent.click(screen.getByRole("button", { expanded: false }));
     expect(screen.getByText("First warned line")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Next track" }));

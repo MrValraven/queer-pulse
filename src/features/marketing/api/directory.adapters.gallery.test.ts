@@ -16,6 +16,7 @@ function placeWithGallery(photoGallery?: ListingGalleryPhotoView[]) {
     slug: "bar-aurora",
     upcoming: [],
     reviews: [],
+    langs: [],
     ...(photoGallery ? { photoGallery } : {}),
   } as unknown as DirectoryDetailDTO;
   return detailDtoToPlace(detail, fmt);

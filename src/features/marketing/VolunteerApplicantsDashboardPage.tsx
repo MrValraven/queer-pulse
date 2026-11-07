@@ -11,6 +11,10 @@ import {
 import { ApiError } from "../../shared/api/client";
 import { VolunteerApplicantsOpportunityList } from "./VolunteerApplicantsOpportunityList";
 import { VolunteerApplicantsList } from "./VolunteerApplicantsList";
+import {
+  VOLUNTEER_COMPLETION_OVERRIDES,
+  causeLine,
+} from "./marketingErrorCopy";
 import styles from "./VolunteerApplicantsDashboardPage.module.css";
 
 /**
@@ -54,7 +58,7 @@ export function VolunteerApplicantsDashboardPage() {
   const completionError = complete.error
     ? complete.error instanceof ApiError && complete.error.status === 409
       ? t("marketing:volunteerManage.completion.alreadyDone")
-      : t("marketing:volunteerManage.completion.error")
+      : causeLine(complete.error, t, VOLUNTEER_COMPLETION_OVERRIDES)
     : null;
 
   const handleComplete = (

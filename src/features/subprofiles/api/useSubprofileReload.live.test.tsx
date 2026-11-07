@@ -133,7 +133,9 @@ describe("useSubprofileReload (live mode via MSW)", () => {
       await result.current.query.refetch();
     });
 
-    expect(result.current.query.isError).toBe(true);
+    // The query client notifies subscribers on a zero-delay timer, so the
+    // failed refetch reaches the hook after the refetch settles.
+    await waitFor(() => expect(result.current.query.isError).toBe(true));
     expect(result.current.query.data?.displayName).toBe("NIGHTFORM");
     expect(result.current.isErrorStateShown).toBe(false);
   });

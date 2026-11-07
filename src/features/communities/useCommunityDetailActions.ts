@@ -12,6 +12,7 @@ import type { JoinCommunityPayload } from "./api/communityJoin.api";
 import { useJoinCommunityWithRules } from "./api/useCommunityJoin";
 import { useWithdrawJoinRequestWithFeedback } from "./api/useWithdrawJoinRequestWithFeedback";
 import { useDeclineCommunityInvite } from "./api/useCommunityInvites";
+import { communityErrorText } from "./communityErrors";
 
 /**
  * Everything the community detail page can DO, and the confirm-dialog state
@@ -115,8 +116,8 @@ export function useCommunityDetailActions({
 
   // Leave: demo drives the session provider (unchanged); live fires the real
   // DELETE with the viewer's own slug, then invalidates so the CTA flips back to
-  // "Join". On failure the mutation's global error handler surfaces the reason —
-  // membership is never optimistically dropped, so there's no false success.
+  // "Join". On failure the cause is toasted below — membership is never
+  // optimistically dropped, so there's no false success.
   // Only ever reached after the member confirms in LeaveCommunityModal — leaving
   // is destructive, so it never fires straight off the "Joined" button. An
   // OWNER never reaches it at all: that dialog offers the transfer instead
@@ -131,13 +132,16 @@ export function useCommunityDetailActions({
     const mySlug = user?.profile.slug;
     if (!mySlug) {
       setConfirmingLeave(false);
-      showToast(t("communities:common.error"), "error");
+      showToast(t("communities:error.noProfile"), "error");
       return;
     }
     // The modal stays mounted until the DELETE settles, so its `pending` state
     // can actually render and a second tap can't fire a second request. It used
     // to close first, which made `pending={leaveMutation.isPending}` dead.
+    // The mutation is `silentError`, so the cause is named here: the owner
+    // who cannot leave, a community archived underneath the member, offline.
     leaveMutation.mutate(mySlug, {
+      onError: (error) => showToast(communityErrorText(t, error), "error"),
       onSettled: () => setConfirmingLeave(false),
     });
   };
@@ -162,7 +166,8 @@ export function useCommunityDetailActions({
       {
         onSuccess: () =>
           showToast(t("communities:detail.invite.declinedToast"), "success"),
-        onError: () => showToast(t("communities:common.error"), "error"),
+        onError: (error) =>
+          showToast(communityErrorText(t, error), "error"),
         onSettled: () => setDecliningInvite(false),
       },
     );

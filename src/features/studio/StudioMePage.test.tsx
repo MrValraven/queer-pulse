@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { StudioMePage } from "./StudioMePage";
 
 vi.mock("../../shared/components/layout/useAccountIdentity", () => ({
@@ -31,17 +32,18 @@ vi.mock("./StudioMeRecent", () => ({
   StudioMeRecent: () => <div data-testid="me-section" data-section="recent" />,
 }));
 
-function renderPage() {
+async function renderPage() {
   render(
     <TestProviders initialEntries={["/studio/me"]}>
       <StudioMePage />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
 }
 
 describe("StudioMePage", () => {
-  it("shows the title, the dek and the member's name", () => {
-    renderPage();
+  it("shows the title, the dek and the member's name", async () => {
+    await renderPage();
     expect(
       screen.getByRole("heading", { level: 1, name: "Your profile" }),
     ).toBeInTheDocument();
@@ -49,8 +51,8 @@ describe("StudioMePage", () => {
     expect(screen.getByText("Robin Vale")).toBeInTheDocument();
   });
 
-  it("renders playlists, top artists, following and recent in that order", () => {
-    renderPage();
+  it("renders playlists, top artists, following and recent in that order", async () => {
+    await renderPage();
     const sectionTexts = screen
       .getAllByTestId("me-section")
       .map((sectionElement) => sectionElement.dataset.section);

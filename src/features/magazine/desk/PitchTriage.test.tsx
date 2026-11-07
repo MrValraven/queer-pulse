@@ -7,6 +7,7 @@ import {
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import type { Pitch } from "../data/desk.data";
 import { PitchTriage, type PitchTriageProps } from "./PitchTriage";
@@ -36,7 +37,7 @@ const THIRD_PITCH: Pitch = {
 };
 const PITCHES: Pitch[] = [FIRST_PITCH, SECOND_PITCH, THIRD_PITCH];
 
-function renderTriage(props: Partial<PitchTriageProps> = {}) {
+async function renderTriage(props: Partial<PitchTriageProps> = {}) {
   const handlers = {
     onClose: vi.fn(),
     onCommission: vi.fn(),
@@ -60,6 +61,7 @@ function renderTriage(props: Partial<PitchTriageProps> = {}) {
     </TestProviders>
   );
   const { rerender } = render(renderWith(props));
+  await awaitCatalog("magazine");
   return {
     handlers,
     rerenderWith: (overrides: Partial<PitchTriageProps>) =>
@@ -78,33 +80,35 @@ function listRowFor(title: string): HTMLElement {
 }
 
 describe("PitchTriage", () => {
-  it("renders nothing while closed", () => {
-    renderTriage({ isOpen: false });
+  it("renders nothing while closed", async () => {
+    await renderTriage({ isOpen: false });
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
   it("opens on the first pitch with focus on its title", async () => {
-    renderTriage();
+    await renderTriage();
     expect(screen.getByText("1 of 3")).toBeInTheDocument();
     await waitFor(() => expect(currentTitle()).toHaveFocus());
     expect(currentTitle()).toHaveTextContent(FIRST_PITCH.title);
     expect(screen.getByText("New voice")).toBeInTheDocument();
   });
 
-  it("opens on the requested pitch", () => {
-    renderTriage({ initialPitchId: "second" });
+  it("opens on the requested pitch", async () => {
+    await renderTriage({ initialPitchId: "second" });
     expect(currentTitle()).toHaveTextContent(SECOND_PITCH.title);
     expect(screen.getByText("Suggested as a deck")).toBeInTheDocument();
     expect(screen.getByText("2 of 3")).toBeInTheDocument();
   });
 
-  it("keeps the requested pitch while the list is still loading", () => {
-    const { rerenderWith } = renderTriage({
+  it("keeps the requested pitch while the list is still loading", async () => {
+    const { rerenderWith } = await renderTriage({
       pitches: [],
       isLoading: true,
       initialPitchId: "second",
     });
-    expect(screen.getByRole("status")).toHaveTextContent("Loading pitches");
+    expect(
+      within(screen.getByRole("dialog")).getByRole("status"),
+    ).toHaveTextContent("Loading pitches");
     expect(screen.queryByText("All pitches answered")).not.toBeInTheDocument();
 
     rerenderWith({ pitches: PITCHES, isLoading: false });
@@ -113,7 +117,7 @@ describe("PitchTriage", () => {
 
   it("moves between pitches with the arrow keys and the buttons", async () => {
     const user = userEvent.setup();
-    renderTriage();
+    await renderTriage();
     await waitFor(() => expect(currentTitle()).toHaveFocus());
 
     await user.keyboard("{ArrowRight}");
@@ -129,7 +133,7 @@ describe("PitchTriage", () => {
 
   it("answers maybe with Y and shows the next pitch", async () => {
     const user = userEvent.setup();
-    const { handlers } = renderTriage();
+    const { handlers } = await renderTriage();
     await waitFor(() => expect(currentTitle()).toHaveFocus());
 
     await user.keyboard("y");
@@ -140,7 +144,7 @@ describe("PitchTriage", () => {
 
   it("opens the pass flow with N for the current pitch", async () => {
     const user = userEvent.setup();
-    const { handlers } = renderTriage();
+    const { handlers } = await renderTriage();
     await waitFor(() => expect(currentTitle()).toHaveFocus());
 
     await user.keyboard("n");
@@ -148,15 +152,15 @@ describe("PitchTriage", () => {
   });
 
   it("ignores a held N key after the first press", async () => {
-    const { handlers } = renderTriage();
+    const { handlers } = await renderTriage();
     await waitFor(() => expect(currentTitle()).toHaveFocus());
 
     fireEvent.keyDown(currentTitle(), { key: "n", repeat: true });
     expect(handlers.onPass).not.toHaveBeenCalled();
   });
 
-  it("ignores Y and N pressed outside the overlay's dialog", () => {
-    const { handlers } = renderTriage();
+  it("ignores Y and N pressed outside the overlay's dialog", async () => {
+    const { handlers } = await renderTriage();
 
     fireEvent.keyDown(document.body, { key: "y" });
     fireEvent.keyDown(document.body, { key: "n" });
@@ -166,7 +170,7 @@ describe("PitchTriage", () => {
 
   it("ignores Y and N in list mode", async () => {
     const user = userEvent.setup();
-    const { handlers } = renderTriage();
+    const { handlers } = await renderTriage();
 
     await user.click(screen.getByRole("button", { name: "List" }));
     await user.keyboard("y");
@@ -175,8 +179,8 @@ describe("PitchTriage", () => {
     expect(handlers.onPass).not.toHaveBeenCalled();
   });
 
-  it("keeps a leaving pitch in view until its exit ends", () => {
-    renderTriage({ leavingPitchIds: ["first"] });
+  it("keeps a leaving pitch in view until its exit ends", async () => {
+    await renderTriage({ leavingPitchIds: ["first"] });
     expect(currentTitle()).toHaveTextContent(FIRST_PITCH.title);
     expect(currentTitle().closest("article")).toHaveAttribute(
       "data-leaving",
@@ -184,20 +188,20 @@ describe("PitchTriage", () => {
     );
   });
 
-  it("shows the writer's wait when an age label is given", () => {
-    renderTriage({ pitchAgeLabel: () => "Waiting 4 days" });
+  it("shows the writer's wait when an age label is given", async () => {
+    await renderTriage({ pitchAgeLabel: () => "Waiting 4 days" });
     expect(screen.getByText("Waiting 4 days")).toBeInTheDocument();
   });
 
-  it("moves past a pitch answered in a stacked dialog", () => {
-    renderTriage({ answeredPitchIds: ["first"] });
+  it("moves past a pitch answered in a stacked dialog", async () => {
+    await renderTriage({ answeredPitchIds: ["first"] });
     expect(currentTitle()).toHaveTextContent(SECOND_PITCH.title);
     expect(screen.getByText("1 of 2")).toBeInTheDocument();
   });
 
   it("says every pitch is answered once the last one is", async () => {
     const user = userEvent.setup();
-    const { handlers } = renderTriage({ pitches: [FIRST_PITCH] });
+    const { handlers } = await renderTriage({ pitches: [FIRST_PITCH] });
     await waitFor(() => expect(currentTitle()).toHaveFocus());
 
     await user.keyboard("y");
@@ -212,8 +216,8 @@ describe("PitchTriage", () => {
     expect(handlers.onClose).toHaveBeenCalled();
   });
 
-  it("says nothing is waiting when it opens on an empty inbox", () => {
-    renderTriage({ pitches: [] });
+  it("says nothing is waiting when it opens on an empty inbox", async () => {
+    await renderTriage({ pitches: [] });
     expect(
       screen.getByRole("heading", { name: "No pitches waiting" }),
     ).toBeInTheDocument();
@@ -222,7 +226,7 @@ describe("PitchTriage", () => {
 
   it("answers ticked pitches together in list mode", async () => {
     const user = userEvent.setup();
-    const { handlers } = renderTriage({ selectedPitchIds: ["second"] });
+    const { handlers } = await renderTriage({ selectedPitchIds: ["second"] });
 
     await user.click(screen.getByRole("button", { name: "List" }));
     await user.click(screen.getByRole("checkbox", { name: FIRST_PITCH.title }));
@@ -238,7 +242,7 @@ describe("PitchTriage", () => {
 
   it("hands focus to the row that slides up after a list answer", async () => {
     const user = userEvent.setup();
-    renderTriage();
+    await renderTriage();
 
     await user.click(screen.getByRole("button", { name: "List" }));
     const firstRow = listRowFor(FIRST_PITCH.title);

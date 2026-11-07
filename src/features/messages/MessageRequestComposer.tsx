@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { FirstContactComposer } from "./FirstContactComposer";
-import { messageRequestErrorKey } from "./api/firstContactError";
+import { messageRequestCause } from "./api/firstContactError";
 import {
   useComposeIdempotencyKey,
   useSendMessageRequest,
@@ -66,10 +66,13 @@ export function MessageRequestComposer({
         onError: (error) => {
           // PRD-365/366: a coded refusal (daily or pending cap, a paused
           // account, a recipient who only hears from connections) gets its
-          // own warm, specific copy; anything else keeps the generic retry.
+          // own warm, specific copy; every other failure names its cause
+          // (offline, a restriction, the burst throttle, a server fault).
+          const cause = messageRequestCause(error);
           showToast(
-            t(messageRequestErrorKey(error) ?? "messages:request.errorToast", {
+            t(cause.key, {
               name: target.name.split(" ")[0] ?? target.name,
+              ...cause.values,
             }),
             "error",
           );

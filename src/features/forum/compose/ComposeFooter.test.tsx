@@ -1,9 +1,10 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import { ComposeFooter } from "./ComposeFooter";
 
-function renderFooter(isReviewOnly: boolean) {
+async function renderFooter(isReviewOnly: boolean) {
   const onPublish = vi.fn();
   render(
     <TestProviders>
@@ -17,12 +18,13 @@ function renderFooter(isReviewOnly: boolean) {
       />
     </TestProviders>,
   );
+  await awaitCatalog("forum");
   return { onPublish };
 }
 
 describe("ComposeFooter", () => {
-  it("offers a fundraiser review as its only way out, with no schedule menu", () => {
-    const { onPublish } = renderFooter(true);
+  it("offers a fundraiser review as its only way out, with no schedule menu", async () => {
+    const { onPublish } = await renderFooter(true);
     fireEvent.click(
       screen.getByRole("button", { name: "Ask a moderator to read it first" }),
     );
@@ -33,8 +35,8 @@ describe("ComposeFooter", () => {
     expect(screen.queryByRole("button", { name: "Publish post" })).toBeNull();
   });
 
-  it("keeps Publish and the menu caret for every other kind", () => {
-    const { onPublish } = renderFooter(false);
+  it("keeps Publish and the menu caret for every other kind", async () => {
+    const { onPublish } = await renderFooter(false);
     expect(
       screen.getByRole("button", { name: "More ways to publish" }),
     ).toBeInTheDocument();

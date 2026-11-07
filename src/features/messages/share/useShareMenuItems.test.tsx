@@ -141,7 +141,8 @@ describe("ShareMenu's community modal", () => {
         <ShareMenu content={studioContent} />
       </TestProviders>,
     );
-    fireEvent.click(screen.getByRole("button", { name: "Share" }));
+    // The trigger's label lives in the lazy `messages` namespace.
+    fireEvent.click(await screen.findByRole("button", { name: "Share" }));
     fireEvent.click(
       await screen.findByRole("menuitem", { name: "Share to a community" }),
     );

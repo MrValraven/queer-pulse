@@ -322,8 +322,7 @@ export const marketing: Catalog = {
   "activism.conviction.local.rest":
     "Change starts in the community you're already in.",
   "activism.conviction.real.word": "Real.",
-  "activism.conviction.real.rest":
-    "Not a repost. Something that costs you something.",
+  "activism.conviction.real.rest": "Something that costs you something.",
   "activism.conviction.yours.word": "Yours.",
   "activism.conviction.yours.rest":
     "Pick the form that fits your life right now.",
@@ -637,6 +636,7 @@ export const marketing: Catalog = {
   "dsar.toast.submitted": "Request submitted: reference {ref}",
   "dsar.toast.submitError":
     "We couldn't record that request. Nothing was sent. Mind trying again?",
+  "dsar.toast.submitErrorTitle": "We couldn't record your request",
   "dsar.meta.title": "Request your data: QueerPulse data rights under GDPR",
   "dsar.meta.description":
     "Ask QueerPulse for a copy of your data, a correction, its deletion, or an objection to how it's used, under GDPR and at no cost.",
@@ -696,7 +696,7 @@ export const marketing: Catalog = {
   "guidelines.clause05.p1":
     "A good apology names what happened, acknowledges the impact, and changes the behaviour going forward.",
   "guidelines.clause05.p2":
-    "“Sorry you feel that way” isn't a repair. It's a deflection.",
+    "“Sorry you feel that way” deflects. A repair names what happened.",
   "guidelines.clause06.titlePre": "Rest is ",
   "guidelines.clause06.titleEm": "part of it",
   "guidelines.clause06.p1":
@@ -1435,6 +1435,8 @@ export const marketing: Catalog = {
   "listBusiness.toast.submitted": "Your listing is with the community team",
   "listBusiness.toast.submitError":
     "We couldn't send your listing just now. Your details are saved. Try again.",
+  "listBusiness.toast.submitErrorTitle":
+    "We couldn't send your listing, and your details are saved",
   "listBusiness.toast.withdrawn": "Listing withdrawn",
   // Server-side validation (item #4)
   "listBusiness.serverError.title": "The community team's system flagged this",
@@ -1446,6 +1448,11 @@ export const marketing: Catalog = {
     "Saved. Pick this back up any time. It's waiting in your drafts.",
   "listBusiness.saveLater.error":
     "We couldn't save your draft just now. Check your connection and try again.",
+  "listBusiness.saveLater.errorTitle": "We couldn't save your draft",
+  "listBusiness.saveLater.cause.storage":
+    "Your browser wouldn't let us keep the draft. Check that it allows this site to store data, then try again.",
+  "listBusiness.saveLater.cause.superseded":
+    "This draft was already sent or discarded while we were saving, so there was nothing left to keep.",
   "listBusiness.drafts.title": "Pick up where you left off",
   "listBusiness.drafts.count": "{count} in progress",
   "listBusiness.drafts.teamNote":
@@ -2505,6 +2512,13 @@ export const marketing: Catalog = {
   "listBusiness.edit.verifiedBadge.body":
     "A moderator confirmed this badge for the business as it stands today. Changing the business name, the Queer-owned or LGBTQ+ friendly badge, or whether this listing links to your profile clears it until a moderator confirms the business again. Everything else you edit here leaves it alone.",
   "listBusiness.edit.saveError": "We couldn't save your changes. Try again.",
+  "listBusiness.edit.saveErrorTitle": "We couldn't save your listing",
+  "listBusiness.edit.cause.ownerOnly":
+    "Only the owner can change the owner's own details, such as their name, bio and consents. Put those fields back as they were and save again.",
+  "listBusiness.edit.cause.gone":
+    "This listing is no longer yours to edit, or it has been removed. Refresh the page to see where it stands.",
+  "listBusiness.edit.cause.tooLarge":
+    "This listing is too large to send in one go. Remove a few photos or shorten long descriptions, then try again.",
   "listBusiness.edit.discardConfirm":
     "Discard your unsaved changes to this listing?",
   "listBusiness.edit.notAllowed": "You can only edit a listing you submitted.",
@@ -2715,6 +2729,8 @@ export const marketing: Catalog = {
   "listBusiness.deleteFlow.confirmName.helper": "Capital letters count.",
   "listBusiness.deleteFlow.error":
     "The listing couldn't be deleted. Try again in a moment.",
+  "listBusiness.deleteFlow.cause.gone":
+    "This listing is already gone, so there is nothing left to delete. Refresh the page to see where it stands.",
   "listBusiness.deleteFlow.hint.acknowledge": "Tick all three to continue.",
   "listBusiness.deleteFlow.hint.reason": "Write a reason to continue.",
   "listBusiness.deleteFlow.hint.confirmName":
@@ -2753,6 +2769,9 @@ export const marketing: Catalog = {
   "listBusiness.coManagers.removedToast": "They no longer edit this listing.",
   "listBusiness.coManagers.removeError":
     "We couldn't make that change just now. Try again.",
+  "listBusiness.coManagers.removeErrorTitle": "We couldn't remove that person",
+  "listBusiness.coManagers.cause.gone":
+    "That seat no longer exists. Refresh to see who helps run this listing now.",
   "listBusiness.coManagers.inviteHeading": "Invite someone to help",
   "listBusiness.coManagers.inviteIntro":
     "Pick someone you are connected to and send the invitation. Nothing changes for them until they accept.",
@@ -2792,6 +2811,19 @@ export const marketing: Catalog = {
   "listBusiness.coManagers.leftToast": "You no longer help with {name}.",
   "listBusiness.coManagers.leaveError":
     "We couldn't do that just now. Try again.",
+  "listBusiness.coManagers.leaveErrorTitle": "We couldn't step you down",
+  "listBusiness.coManagerInvites.errorTitle": "We couldn't send your answer",
+  "listBusiness.coManagerInvites.cause.gone":
+    "This invitation or the listing is no longer there. Refresh the page to see what is waiting for you.",
+  "listBusiness.coManagerInvites.cause.alreadyAnswered":
+    "This invitation has already been answered. Refresh the page to see where it stands.",
+  "listBusiness.ownerOffers.errorTitle": "We couldn't send your answer",
+  "listBusiness.ownerOffers.cause.gone":
+    "This offer or the listing is no longer there. Refresh the page to see what is waiting for you.",
+  "listBusiness.ownerOffers.cause.alreadyAnswered":
+    "This offer has already been answered. Refresh the page to see where it stands.",
+  "listBusiness.ownerOffers.cause.claimedSince":
+    "Somebody else claimed this listing after the offer was made, so it can no longer be accepted. Decline it to clear it from your list.",
   "listBusiness.coManagers.banner.title": "You help run this listing",
   "listBusiness.coManagers.banner.titleNamed": "You help {name} run {listing}",
   "listBusiness.coManagers.banner.body":
@@ -3043,6 +3075,10 @@ export const marketing: Catalog = {
     "That file is over {max}. Try a smaller PDF or a photo.",
   "listBusiness.menu.fileError.upload":
     "The upload did not go through. Try again.",
+  "listBusiness.menu.fileError.rejected":
+    "Our storage didn't accept this file. Use a PDF, JPG, PNG or WebP and try again.",
+  "listBusiness.menu.fileError.tooManyUploads":
+    "You've uploaded a lot of files in a short time. Wait a minute, then try again.",
   "listBusiness.menu.linkLabel": "Menu on your own site",
   "listBusiness.menu.linkHint":
     "Optional. A link to the menu you already keep up to date.",
@@ -3337,6 +3373,7 @@ export const marketing: Catalog = {
     "Thanks. Your listing is stamped as checked today.",
   "listBusiness.confirmDetails.error":
     "Couldn't record that just now. Please try again.",
+  "listBusiness.confirmDetails.errorTitle": "We couldn't confirm your details",
 
   // ── Dated overrides of the weekly hours grid (owner editor only).
   "listBusiness.hoursExceptions.heading": "Dates that are different",
@@ -3401,7 +3438,7 @@ export const marketing: Catalog = {
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-11-07.headline":
-    "Editors can pull a published piece off the site and back to draft or review, with Undo.",
+    "Failed actions now say why, editors can unpublish with Undo, and VJ GIFs load again.",
   "changelog.releases.2026-11-06.headline":
     "The VJ screen gets a live effects engine, and the remote plays scenes, set lists and MIDI.",
   "changelog.releases.2026-11-05.headline":
@@ -3714,10 +3751,34 @@ export const marketing: Catalog = {
     "Find personas by the same work areas you pick when you join",
   "changelog.entries.persona-professions-by-work-area.body":
     "The Profession filter groups its chips under areas like Music or Food & drink, with clearer headings.",
+  "changelog.entries.studio-payment-methods-save.title":
+    "Studio payment methods save again",
+  "changelog.entries.studio-payment-methods-save.body":
+    "Adding the ways buyers can pay you in Studio failed every time, and now it saves.",
+  "changelog.entries.studio-purchase-notices.title":
+    "Studio purchase notices in your language",
+  "changelog.entries.studio-purchase-notices.body":
+    "Purchase pushes arrive in Portuguese, and a persona report can name a payment that was never confirmed.",
+  "changelog.entries.invite-pickers-keep-unticked-picks.title":
+    "Invite pickers keep someone you untick",
+  "changelog.entries.invite-pickers-keep-unticked-picks.body":
+    "After a new search, unticking a person you picked keeps them in the list so you can tick them again.",
+  "changelog.entries.failed-actions-say-why.title":
+    "Failed actions now say why",
+  "changelog.entries.failed-actions-say-why.body":
+    "Forms, uploads and replies name the real cause, such as a lost connection or a full event.",
+  "changelog.entries.vj-gifs-load-on-projector.title":
+    "GIFs load on the VJ projector again",
+  "changelog.entries.vj-gifs-load-on-projector.body":
+    "The site's security rules stopped the screen reading its cached GIFs, so every GIF clip failed to play.",
+  "changelog.entries.vj-clip-load-reasons.title":
+    "See why a VJ clip won't load on the screen",
+  "changelog.entries.vj-clip-load-reasons.body":
+    "The remote says what to try next, and GIFs the decoder refuses now play through the browser.",
   "changelog.entries.unpublish-pieces-from-the-desk.title":
-    "Take published pieces off the site from the desk",
+    "Unpublish pieces from the desk",
   "changelog.entries.unpublish-pieces-from-the-desk.body":
-    "A published row's menu sends it back to draft or review after a confirm, with Undo.",
+    "One Unpublish button on the board or row menu, a pick of draft or review in the confirm, then Undo.",
   "changelog.entries.vj-effects-engine.title":
     "VJ screens get a live effects engine",
   "changelog.entries.vj-effects-engine.body":
@@ -9933,6 +9994,9 @@ export const marketing: Catalog = {
   "roadmap.submitIdea.toast.empty": "Write a few words first",
   "roadmap.submitIdea.toast.submitted": "Thanks, sent to the team for review",
   "roadmap.submitIdea.toast.error": "Couldn't submit your idea. Try again",
+  "roadmap.submitIdea.toast.errorTitle": "We couldn't send your idea",
+  "roadmap.submitIdea.cause.rateLimited":
+    "You've sent a few ideas in the last minute. Wait a minute, then send the next one.",
   "roadmap.topIdeas.title": "Most requested ideas",
   "roadmap.topIdeas.voted": "Voted",
   "roadmap.topIdeas.vote": "Vote",
@@ -10127,6 +10191,10 @@ export const marketing: Catalog = {
     "Confirmed hours count towards the volunteer hours QueerPulse can report, and towards this member's recognition.",
   "volunteerManage.completion.error":
     "That didn't save. Check your connection and try again.",
+  "volunteerManage.completion.cause.hours":
+    "Those hours weren't accepted. Enter a number between 0 and 24 and try again.",
+  "volunteerManage.completion.cause.ownSession":
+    "Someone else has to confirm your own volunteer session. Ask another organiser to confirm it.",
   "volunteerManage.completion.alreadyDone":
     "This session was already confirmed.",
   "volunteerManage.completion.confirmedHours": "Confirmed: {hours} h on {when}",
@@ -10140,6 +10208,9 @@ export const marketing: Catalog = {
     "Looking for people to give their time? Describe the role honestly (the hours, the commitment, who it's good for) and it goes live on the volunteer board straight away.",
   "postOpportunity.toast.error":
     "Couldn't post your opportunity. Please try again.",
+  "postOpportunity.toast.errorTitle": "We couldn't post your opportunity",
+  "postOpportunity.cause.invalid":
+    "Some details weren't accepted. An opportunity can link to one partner or one community. Check that link and the other fields, then try again.",
   "postOpportunity.success.title": "Your opportunity is",
   "postOpportunity.success.em": "posted.",
   "postOpportunity.success.closeLabel": "View the volunteer board",
@@ -10224,6 +10295,11 @@ export const marketing: Catalog = {
   "postOpportunity.edit.successToast": "Your changes are saved.",
   "postOpportunity.edit.errorToast":
     "Couldn't save your changes. Please try again.",
+  "postOpportunity.edit.errorTitle": "We couldn't save your changes",
+  "postOpportunity.cause.notPoster":
+    "Only the person who posted this opportunity can change it.",
+  "postOpportunity.cause.gone":
+    "This opportunity is no longer there. It may have been removed. Go back to the list to see what's open.",
   "postOpportunity.edit.notAllowed":
     "You can only edit an opportunity you posted.",
   "postOpportunity.rich.summary": "Add more detail (optional)",
@@ -10450,6 +10526,9 @@ export const marketing: Catalog = {
   "contact.form.sendingCta": "Sending…",
   "contact.form.error":
     "Something went wrong sending that. Please try again, or email us directly.",
+  "contact.form.errorTitle": "We couldn't send your message",
+  "contact.cause.rateLimited":
+    "You've sent several messages in the last minute. Wait a minute, then send again.",
   "contact.outro.title": "Built in Lisbon, <em>with care.</em>",
   "contact.outro.sub":
     "QueerPulse is a small, member-supported network. Your feedback helps keep it good.",
@@ -10716,7 +10795,7 @@ export const marketing: Catalog = {
   "directory.verify.eyebrow": "Community verified",
   "directory.verify.title": "How verification <em>works.</em>",
   "directory.verify.lead":
-    "The verified badge isn't self-declared. A member puts a space forward, others visit and review it against a fixed set of criteria, and every badge comes back for review a year after it is granted, so a space can lose it, too.",
+    "The verified badge is earned in review. A member puts a space forward, others visit and review it against a fixed set of criteria, and every badge comes back for review a year after it is granted, so a space can lose it, too.",
   "directory.verify.cta": "See the full trust story",
   "directory.verify.pillar.nominate.title": "Member-nominated",
   "directory.verify.pillar.nominate.body":
@@ -10807,6 +10886,15 @@ export const marketing: Catalog = {
   "directory.detail.review.successToast": "Thanks. Your review is up.",
   "directory.detail.review.errorToast":
     "Couldn't post your review. Please try again.",
+  "directory.detail.review.errorTitle": "We couldn't post your review",
+  "directory.detail.review.cause.ownListing":
+    "You can't review a place you run yourself.",
+  "directory.detail.review.cause.incomplete":
+    "Your review needs a rating and a few words. Check both and try again.",
+  "directory.detail.review.cause.alreadyReviewed":
+    "You've already reviewed this place. Edit your existing review to change what you wrote.",
+  "directory.detail.review.cause.notYours":
+    "You can only edit a review you wrote yourself.",
   "directory.detail.review.signInPrompt":
     "Sign in to leave a review of this space.",
   "directory.detail.review.signInCta": "Sign in",
@@ -10819,6 +10907,7 @@ export const marketing: Catalog = {
   "directory.detail.review.editSuccessToast": "Your review is updated.",
   "directory.detail.review.editErrorToast":
     "Couldn't save your changes. Please try again.",
+  "directory.detail.review.editErrorTitle": "We couldn't save your changes",
   "directory.detail.review.photo.add": "Add a photo",
   "directory.detail.review.photo.change": "Change photo",
   "directory.detail.review.photo.remove": "Remove",
@@ -10836,6 +10925,9 @@ export const marketing: Catalog = {
   "directory.detail.reply.successToast": "Your reply is up.",
   "directory.detail.reply.errorToast":
     "Couldn't post your reply. Please try again.",
+  "directory.detail.reply.errorTitle": "We couldn't post your reply",
+  "directory.detail.reply.cause.empty":
+    "Your reply is empty. Write a few words and try again.",
   "directory.detail.reviews.sortLabel": "Sort",
   "directory.detail.reviews.sortNewest": "Newest first",
   "directory.detail.reviews.sortHighest": "Highest rated",
@@ -10857,6 +10949,9 @@ export const marketing: Catalog = {
     "Sign in to mark this review helpful",
   "directory.detail.reviews.helpfulError":
     "Couldn't record that. Please try again.",
+  "directory.detail.reviews.helpfulErrorTitle": "We couldn't record your vote",
+  "directory.detail.reviews.cause.ownReview":
+    "You can't mark your own review as helpful.",
   "directory.detail.reviews.photoAlt": "Photo from {name}'s review",
   "directory.detail.reviews.photoOpen": "Open the photo from {name}'s review",
   "directory.detail.reviews.sortHelpful": "Most helpful",
@@ -11099,6 +11194,7 @@ export const marketing: Catalog = {
   "directory.detail.dispute.submitting": "Sending…",
   "directory.detail.dispute.errorToast":
     "Couldn't file your dispute. Please try again.",
+  "directory.detail.dispute.errorTitle": "We couldn't file your dispute",
   "directory.detail.dispute.successAriaLabel": "Dispute received",
   "directory.detail.dispute.successTitle": "Thanks. We're",
   "directory.detail.dispute.successEm": "on it.",
@@ -11128,6 +11224,11 @@ export const marketing: Catalog = {
   "directory.detail.claim.submitting": "Sending…",
   "directory.detail.claim.errorToast":
     "Couldn't send your claim. Please try again.",
+  "directory.detail.claim.errorTitle": "We couldn't send your claim",
+  "directory.detail.claim.cause.alreadyYours":
+    "You already own this place, so there is nothing to claim.",
+  "directory.detail.claim.cause.hasOwner":
+    "This place already has an owner. If the listing is wrong or misrepresents you, file a dispute and a moderator will look into it.",
   "directory.detail.claim.successAriaLabel": "Claim received",
   "directory.detail.claim.successTitle": "Got it. We're",
   "directory.detail.claim.successEm": "on it.",
@@ -11308,6 +11409,8 @@ export const marketing: Catalog = {
     "Thank you. Your listing now shows as confirmed today.",
   "directory.detail.ownerBand.confirmError":
     "That did not save. Please try again.",
+  "directory.detail.ownerBand.confirmErrorTitle":
+    "We couldn't confirm your details",
 
   // ── Visitor view (`DirectoryVisitorViewToggle`, `DirectoryVisitorViewBar`).
   //    A moderator or owner can preview the listing as any visitor sees it. The
@@ -11411,7 +11514,7 @@ export const marketing: Catalog = {
   "arriving.neighbourhoods.eyebrow": "Lisbon's neighbourhoods",
   "arriving.neighbourhoods.title": "Where queer life <em>happens.</em>",
   "arriving.neighbourhoods.intro":
-    "Lisbon doesn't have one queer neighbourhood. It has several pockets, each with its own character. Here's an honest guide to where the community is.",
+    "Lisbon's queer life spreads across several pockets, each with its own character. Here's an honest guide to where the community is.",
   "arriving.hoods.principeReal.tag": "Social · Creative",
   "arriving.hoods.principeReal.body":
     "The heart of queer social life in Lisbon. A garden square, wine bars, independent bookshops, and a lot of queer creatives. The most visible of the pockets and the easiest to walk into.",
@@ -11475,10 +11578,10 @@ export const marketing: Catalog = {
     "Lisbon's housing market is expensive and competitive. Here's an honest picture of what to expect, and where to get help.",
   "arriving.housing.cards.market.title": "What the market is actually like",
   "arriving.housing.cards.market.body":
-    "Rents have risen steeply over the past five years, and a room in a central neighbourhood is most people's largest monthly cost by a distance. Set your budget from what is actually being asked this month, on the housing board and the listing sites, rather than from a figure printed on a guide. Arroios and Mouraria still offer better value. Good listings go within days, so move quickly when you see one.",
+    "Rents have risen steeply over the past five years, and a room in a central neighbourhood is most people's largest monthly cost by a distance. Set your budget from what is actually being asked this month, on the housing board and the listing sites. Arroios and Mouraria still offer better value. Good listings go within days, so move quickly when you see one.",
   "arriving.housing.cards.board.title": "Rooms shared inside the community",
   "arriving.housing.cards.board.body":
-    "Members post rooms, sublets and shares on the QueerPulse housing board. The best leads usually arrive through people rather than portals.",
+    "Members post rooms, sublets and shares on the QueerPulse housing board. The best leads usually arrive through people.",
   "arriving.housing.cards.board.linkLabel": "The housing board",
   "arriving.housing.cards.rights.title": "Know what you are signing",
   "arriving.housing.cards.rights.body":
@@ -12685,7 +12788,7 @@ export const marketing: Catalog = {
   "accessibilityStatement.commitment.p3":
     "We publish this by choice. Our reading of the Portuguese law, set out in the next section, is that nothing currently obliges us to. We would rather be measurable than be exempt.",
   "accessibilityStatement.commitment.p4":
-    "Most of what follows is enforced by the build rather than left to good intentions. Where it is not, we say so.",
+    "Most of what follows is enforced by the build. Where it is not, we say so.",
 
   "accessibilityStatement.scope.title": "What this statement covers",
   "accessibilityStatement.scope.p1":
@@ -12762,7 +12865,7 @@ export const marketing: Catalog = {
   "accessibilityStatement.prepared.axe":
     "<strong>axe-core in the test suite.</strong> Eleven representative pages are rendered through the real router and scanned with axe-core, with nothing quarantined and no rule suppressed except the one a headless renderer cannot compute.",
   "accessibilityStatement.prepared.contrast":
-    "<strong>Colour-contrast measurement.</strong> Every colour pair the interface actually renders was computed against the WCAG formula rather than judged by eye, written up, and either fixed or given a variant that passes. A browser-based contrast pass over six pages guards against regressions.",
+    "<strong>Colour-contrast measurement.</strong> Every colour pair the interface actually renders was computed against the WCAG formula, written up, and either fixed or given a variant that passes. A browser-based contrast pass over six pages guards against regressions.",
   "accessibilityStatement.prepared.p2":
     "Automated tools catch a minority of accessibility problems, commonly put at somewhere between a third and a half. Everything a machine cannot see, and the whole question of whether this platform is genuinely usable with a screen reader, remains unverified. That is why the next section matters more than the two above it.",
 

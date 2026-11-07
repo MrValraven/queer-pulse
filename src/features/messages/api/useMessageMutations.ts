@@ -53,7 +53,12 @@ import type { Conversation } from "../data";
  *  (The backend also echoes `message:new` back to the sender's own socket;
  *  `patchConversationPreview` is idempotent so that second application is a
  *  harmless no-op, not a second `GET /conversations`.) */
-export function useSendMessage() {
+export function useSendMessage(options?: {
+  /** True when the caller words the failure itself (the share picker names
+   *  who it did not reach and why), so the app-wide error toast stays quiet
+   *  instead of stacking one toast per failed conversation on top. */
+  shouldSilenceErrorToast?: boolean;
+}) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<
@@ -76,6 +81,7 @@ export function useSendMessage() {
       asIdentityId?: string;
     }
   >({
+    meta: options?.shouldSilenceErrorToast ? { silentError: true } : undefined,
     mutationFn: async ({
       conversationId,
       body,

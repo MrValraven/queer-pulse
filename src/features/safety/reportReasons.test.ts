@@ -169,6 +169,8 @@ describe("SUBJECT_REASONS", () => {
       "studio_release",
       "persona_post",
       "studio_track",
+      "quizshow_answer",
+      "quizshow_game",
     ];
     expect(Object.keys(SUBJECT_REASONS).sort()).toEqual(
       [...backendSubjectTypes].sort(),

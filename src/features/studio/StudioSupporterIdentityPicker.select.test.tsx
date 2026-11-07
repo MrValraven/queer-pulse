@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import {
   toSupporterIdentityView,
   type StudioSupporterOptionView,
@@ -39,7 +40,7 @@ const OPTIONS: StudioSupporterOptionView[] = [
   optionOf("sp-late-bloomers", LATE_BLOOMERS_DTO),
 ];
 
-function renderPicker(
+async function renderPicker(
   extraProps: Partial<Parameters<typeof StudioSupporterIdentityPicker>[0]>,
 ) {
   render(
@@ -57,11 +58,12 @@ function renderPicker(
       />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
 }
 
 describe("StudioSupporterIdentityPicker with a legend and no actions", () => {
-  it("names the group by the legend and offers no Save or Close button", () => {
-    renderPicker({
+  it("names the group by the legend and offers no Save or Close button", async () => {
+    await renderPicker({
       legend: "How you appear on the wall",
       shouldShowActions: false,
       onSelect: vi.fn(),
@@ -78,9 +80,9 @@ describe("StudioSupporterIdentityPicker with a legend and no actions", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("reports the persona id for a persona card and null for the account", () => {
+  it("reports the persona id for a persona card and null for the account", async () => {
     const onSelect = vi.fn();
-    renderPicker({
+    await renderPicker({
       legend: "How you appear on the wall",
       shouldShowActions: false,
       onSelect,
@@ -93,8 +95,8 @@ describe("StudioSupporterIdentityPicker with a legend and no actions", () => {
     expect(onSelect).toHaveBeenLastCalledWith(null);
   });
 
-  it("keeps the persona legend and both buttons without the new props", () => {
-    renderPicker({});
+  it("keeps the persona legend and both buttons without the new props", async () => {
+    await renderPicker({});
 
     expect(
       screen.getByRole("radiogroup", { name: "How NIGHTFORM sees you" }),

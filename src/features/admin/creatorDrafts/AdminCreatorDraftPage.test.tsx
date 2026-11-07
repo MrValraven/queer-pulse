@@ -17,7 +17,6 @@ import {
 import { routes } from "../../../app/routeMap";
 import { I18nProvider } from "../../../app/providers/I18nProvider";
 import { ToastProvider } from "../../../shared/components/feedback/ToastProvider";
-import { API_V1 } from "../../../test/msw/handlers";
 import { server } from "../../../test/msw/server";
 import { TestProviders } from "../../../test/TestProviders";
 import {
@@ -26,6 +25,11 @@ import {
   DEMO_DRAFT_PERSONA,
 } from "../adminCreatorDrafts.data";
 import { AdminCreatorDraftPage } from "./AdminCreatorDraftPage";
+
+/** The suite runs with no API origin (vitest.config sets VITE_API_URL to ""),
+ *  so the client calls the versioned path on the page's own origin, and the
+ *  live handlers listen there. */
+const SAME_ORIGIN_API_V1 = "/v1";
 
 /** Flipped by the live test only: every other test runs in demo mode, which
  *  TestProviders forces on. */
@@ -338,13 +342,19 @@ describe("AdminCreatorDraftPage in live mode", () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch");
     let readCount = 0;
     server.use(
-      http.get(`${API_V1}/admin/creator-drafts/persona/not-a-uuid`, () => {
-        readCount += 1;
-        return HttpResponse.json(
-          { statusCode: 400, message: "Validation failed (uuid is expected)" },
-          { status: 400 },
-        );
-      }),
+      http.get(
+        `${SAME_ORIGIN_API_V1}/admin/creator-drafts/persona/not-a-uuid`,
+        () => {
+          readCount += 1;
+          return HttpResponse.json(
+            {
+              statusCode: 400,
+              message: "Validation failed (uuid is expected)",
+            },
+            { status: 400 },
+          );
+        },
+      ),
     );
     renderLiveAt("/admin/creator-drafts/persona/not-a-uuid");
     expect(await screen.findByText(NOT_FOUND_TITLE)).toBeInTheDocument();
@@ -360,13 +370,19 @@ describe("AdminCreatorDraftPage in live mode", () => {
     const draftId = "00000000-0000-0000-0000-000000000000";
     let readCount = 0;
     server.use(
-      http.get(`${API_V1}/admin/creator-drafts/persona/${draftId}`, () => {
-        readCount += 1;
-        return HttpResponse.json(
-          { statusCode: 400, message: "Validation failed (uuid is expected)" },
-          { status: 400 },
-        );
-      }),
+      http.get(
+        `${SAME_ORIGIN_API_V1}/admin/creator-drafts/persona/${draftId}`,
+        () => {
+          readCount += 1;
+          return HttpResponse.json(
+            {
+              statusCode: 400,
+              message: "Validation failed (uuid is expected)",
+            },
+            { status: 400 },
+          );
+        },
+      ),
     );
     renderLiveAt(`/admin/creator-drafts/persona/${draftId}`);
     expect(await screen.findByText(NOT_FOUND_TITLE)).toBeInTheDocument();
@@ -382,16 +398,19 @@ describe("AdminCreatorDraftPage in live mode", () => {
       releaseRetry = resolve;
     });
     server.use(
-      http.get(`${API_V1}/admin/creator-drafts/event/${draftId}`, async () => {
-        readCount += 1;
-        // The retry's answer waits until the test has looked at the page
-        // while the request is in flight.
-        if (readCount > 1) await retryHeld;
-        return HttpResponse.json(
-          { statusCode: 500, message: "Internal server error" },
-          { status: 500 },
-        );
-      }),
+      http.get(
+        `${SAME_ORIGIN_API_V1}/admin/creator-drafts/event/${draftId}`,
+        async () => {
+          readCount += 1;
+          // The retry's answer waits until the test has looked at the page
+          // while the request is in flight.
+          if (readCount > 1) await retryHeld;
+          return HttpResponse.json(
+            { statusCode: 500, message: "Internal server error" },
+            { status: 500 },
+          );
+        },
+      ),
     );
     const { container } = renderLiveAt(
       `/admin/creator-drafts/event/${draftId}`,

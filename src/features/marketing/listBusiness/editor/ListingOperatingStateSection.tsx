@@ -15,6 +15,10 @@ import { listingKindOf } from "../listingMobile.data";
 import { ListingOperatingStateFields } from "./ListingOperatingStateFields";
 import { ListingPermanentClosureDialog } from "./ListingPermanentClosureDialog";
 import { OPERATING_STATE_LABEL_KEYS } from "./listingOperatingState.data";
+import {
+  LISTING_EDIT_SAVE_OVERRIDES,
+  causeLine,
+} from "../../marketingErrorCopy";
 import styles from "./ListingTrading.module.css";
 
 /**
@@ -103,7 +107,8 @@ export function ListingOperatingStateSection({
         onError: (error) => {
           setIsConfirmingClosure(false);
           setFailure(
-            reasonFor(error) ?? t("marketing:listBusiness.trading.saveError"),
+            reasonFor(error) ??
+              causeLine(error, t, LISTING_EDIT_SAVE_OVERRIDES),
           );
         },
       },

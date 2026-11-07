@@ -3,6 +3,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AttendeeRow } from "./api/events.adapters";
 import { useRemoveAttendee, usePromoteAttendee } from "./api/useEventMutations";
+import { hostToolErrorMessage } from "./gatheringActionErrors";
 import styles from "./ManageGatheringPage.module.css";
 
 /**
@@ -40,11 +41,8 @@ export function GoingAttendeeActions({
           removeAttendee.mutate(attendee.slug, {
             onSuccess: () =>
               showToast(t("gatherings:manage.attendees.removedToast"), "info"),
-            onError: () =>
-              showToast(
-                t("gatherings:manage.attendees.actionErrorToast"),
-                "error",
-              ),
+            onError: (error) =>
+              showToast(hostToolErrorMessage(error, t), "error"),
           })
         }
       >
@@ -94,11 +92,8 @@ export function WaitlistAttendeeActions({
               }),
               "success",
             ),
-          onError: () =>
-            showToast(
-              t("gatherings:manage.attendees.actionErrorToast"),
-              "error",
-            ),
+          onError: (error) =>
+            showToast(hostToolErrorMessage(error, t), "error"),
         })
       }
     >

@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { toArtistView } from "./api/studio.adapters";
 import { demoStudioArtist } from "./api/studioDemoApi";
 import { DEMO_ARTIST_MARIANA } from "./api/studioDemoMe.data";
@@ -14,6 +15,7 @@ describe("StudioArtistOwnerTools payments links (demo, Mariana)", () => {
         <StudioArtistOwnerTools artist={ownerView} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       screen.getByRole("button", { name: "Press kit and updates" }),
     ).toHaveAttribute("aria-expanded", "false");
@@ -21,8 +23,10 @@ describe("StudioArtistOwnerTools payments links (demo, Mariana)", () => {
       screen.queryByRole("link", { name: "Edit press kit" }),
     ).not.toBeInTheDocument();
     const personaId = encodeURIComponent(DEMO_ARTIST_MARIANA.id);
+    // jsdom gives the badge's spans no display, so the name gains a space
+    // before the comma.
     const paymentsLink = await screen.findByRole("link", {
-      name: "Payments to confirm, 3 payments to confirm",
+      name: /^Payments to confirm\s?, 3 payments to confirm$/,
     });
     expect(paymentsLink).toHaveAttribute(
       "href",

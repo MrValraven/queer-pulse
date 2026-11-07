@@ -19,6 +19,7 @@ import {
   queueView,
   renderWithPlayer,
 } from "./studioPlayerTestHarness";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 const surfaceModule = vi.hoisted(() => ({
   value: null as StudioPlayerSurfaceValue | null,
@@ -316,13 +317,16 @@ describe("StudioNowPlaying content", () => {
     renderWithPlayer(<Harness />, {
       player: createStudioPlayerValue({ currentItem: item }),
     });
+    await awaitCatalog("studio");
     const { dialog } = await openFromButton();
-    expect(
-      within(dialog).getByRole("tab", { name: "Transcript" }),
-    ).toBeInTheDocument();
+    const transcriptTab = within(dialog).getByRole("tab", {
+      name: "Transcript",
+    });
     expect(within(dialog).queryByRole("tab", { name: "Lyrics" })).toBeNull();
+    // A track with no words opens on the queue; picking the tab shows its line.
+    fireEvent.click(transcriptTab);
     expect(
-      within(dialog).getByText("No transcript for this one"),
+      await within(dialog).findByText("No transcript for this one"),
     ).toBeInTheDocument();
   });
 
@@ -351,11 +355,16 @@ describe("StudioNowPlaying content", () => {
     renderWithPlayer(<Harness />, {
       player: createStudioPlayerValue({ currentItem: item }),
     });
+    await awaitCatalog("studio");
     const { dialog } = await openFromButton();
-    expect(
-      within(dialog).getByRole("heading", { level: 2, name: "Tide" }),
-    ).toBeInTheDocument();
-    expect(within(dialog).getByText("NIGHTFORM")).toBeInTheDocument();
+    const titleHeading = within(dialog).getByRole("heading", {
+      level: 2,
+      name: "Tide",
+    });
+    // A preview has no words, so the queue pane below lists the track too;
+    // the artist line is read from the track's own heading block.
+    const trackMeta = titleHeading.parentElement?.parentElement as HTMLElement;
+    expect(within(trackMeta).getByText("NIGHTFORM")).toBeInTheDocument();
     expect(within(dialog).queryByRole("link", { name: "Tide" })).toBeNull();
     expect(
       within(dialog).queryByRole("link", { name: "NIGHTFORM" }),
@@ -394,6 +403,7 @@ describe("StudioNowPlaying content", () => {
   it("switches panes on a phone, Queue first, and scrolls to Queue when opened on it", async () => {
     asPhone(true);
     renderWithPlayer(<Harness initialTab="queue" />);
+    await awaitCatalog("studio");
     const { dialog } = await openFromButton();
     const switcher = within(dialog).getByRole("group", {
       name: "Now playing details",

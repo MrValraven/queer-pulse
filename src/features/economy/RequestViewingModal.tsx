@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { FiMapPin, FiVideo } from "react-icons/fi";
-import { ApiError } from "../../shared/api/client";
 import { Button, DatePicker } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
@@ -13,6 +12,7 @@ import type {
   HousingViewingMode,
   RequestViewingBody,
 } from "./api/housingViewings.api";
+import { REQUEST_VIEWING_OVERRIDES, failureToast } from "./economyErrorCopy";
 import styles from "./housingModals.module.css";
 import v from "./housingViewings.module.css";
 
@@ -132,11 +132,15 @@ export function RequestViewingModal({
         if (handlePledgeError(error, retry)) return;
         if (handleStepUpError(error, retry)) return;
         // A 404 here means the home is filled, expired or off the board.
-        const messageKey =
-          error instanceof ApiError && error.status === 404
-            ? "economy:housingViewing.request.unavailable"
-            : "economy:housingViewing.request.error";
-        showToast(t(messageKey), "error");
+        showToast(
+          failureToast(
+            error,
+            t,
+            "economy:housingViewing.request.errorTitle",
+            REQUEST_VIEWING_OVERRIDES,
+          ),
+          "error",
+        );
       },
     });
   };

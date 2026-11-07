@@ -17,6 +17,7 @@ import {
 } from "./api/useCommunityInvites";
 import { CommunityInvitationRow } from "./CommunityInvitationRow";
 import { DeclineInviteModal } from "./DeclineInviteModal";
+import { communityErrorText } from "./communityErrors";
 import styles from "./CommunityInvitations.module.css";
 
 /**
@@ -52,7 +53,8 @@ export function CommunityInvitationsPage() {
       {
         onSuccess: () =>
           showToast(t("communities:detail.invite.declinedToast"), "success"),
-        onError: () => showToast(t("communities:common.error"), "error"),
+        onError: (error) =>
+          showToast(communityErrorText(t, error), "error"),
         onSettled: () => setDecliningId(null),
       },
     );

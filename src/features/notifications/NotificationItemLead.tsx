@@ -19,7 +19,9 @@ export function NotificationItemLead({
 }) {
   const avatarSize = isCompact ? 36 : 40;
 
-  if (notification.avatar && notification.actor) {
+  // An actor with an empty href (a matched Go together chat's mention) has no
+  // profile to open, so their avatar falls through to the bare branch below.
+  if (notification.avatar && notification.actor?.href) {
     return (
       <Link
         to={linkToPath(notification.actor.href)}

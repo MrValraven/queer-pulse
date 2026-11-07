@@ -15,6 +15,7 @@ import type { CommunityRemovalOutcomeDTO } from "./api/communities.api";
 import { useActOnCommunityReport } from "./api/useCommunityReportActions";
 import type { ReasonCode } from "../safety/reportReasons";
 import { useTriageJoinRequest } from "./api/useCommunityJoin";
+import { communityErrorText } from "./communityErrors";
 import {
   triagePayloadFor,
   type JoinRequestDecision,
@@ -144,7 +145,8 @@ export function useModToolsActions(living: LivingCommunity) {
   const [removalOutcome, setRemovalOutcome] =
     useState<CommunityRemovalOutcomeDTO | null>(null);
 
-  const failed = () => showToast(t("communities:common.error"), "error");
+  const failed = (error: unknown) =>
+    showToast(communityErrorText(t, error), "error");
   const hideRequest = (id: string) =>
     setResolvedRequests((prev) => new Set(prev).add(id));
   const showRequestAgain = (id: string) =>
@@ -184,9 +186,9 @@ export function useModToolsActions(living: LivingCommunity) {
       { id, ...triagePayloadFor(decision) },
       {
         onSuccess: done,
-        onError: () => {
+        onError: (error) => {
           showRequestAgain(id);
-          failed();
+          failed(error);
         },
       },
     );
@@ -225,10 +227,10 @@ export function useModToolsActions(living: LivingCommunity) {
     }
     removeMember.mutate(memberSlug, {
       onSuccess: done,
-      onError: () => {
+      onError: (error) => {
         setRemoved((p) => p.filter((k) => k !== key));
         setConfirming(null);
-        failed();
+        failed(error);
       },
     });
   };
@@ -265,10 +267,10 @@ export function useModToolsActions(living: LivingCommunity) {
       { id: report.id, action: "remove_content", ...decision },
       {
         onSuccess: done,
-        onError: () => {
+        onError: (error) => {
           showReportAgain(report.id);
           setConfirming(null);
-          failed();
+          failed(error);
         },
       },
     );
@@ -286,9 +288,11 @@ export function useModToolsActions(living: LivingCommunity) {
       { id: report.id, action: "dismiss", reasonCode: "other", note: "" },
       {
         onSuccess: done,
-        // The mutation carries no `silentError`, so the reason already
-        // surfaces globally — just put the report back.
-        onError: () => showReportAgain(report.id),
+        // Put the report back and name why it did not go through.
+        onError: (error) => {
+          showReportAgain(report.id);
+          failed(error);
+        },
       },
     );
   };
@@ -320,7 +324,10 @@ export function useModToolsActions(living: LivingCommunity) {
       { id: report.id, action: "escalate", reasonCode: "other", note: "" },
       {
         onSuccess: done,
-        onError: () => showReportAgain(report.id),
+        onError: (error) => {
+          showReportAgain(report.id);
+          failed(error);
+        },
       },
     );
   };

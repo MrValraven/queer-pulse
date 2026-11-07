@@ -7,6 +7,7 @@ import {
 } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { resetDemoPlaylists } from "./api/studioDemoPlaylists";
 import { StudioRail } from "./StudioRail";
 
@@ -31,17 +32,18 @@ beforeEach(() => {
   resetDemoPlaylists();
 });
 
-function renderRailAt(path: string) {
+async function renderRailAt(path: string) {
   render(
     <TestProviders initialEntries={[path]}>
       <StudioRail />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
 }
 
 describe("StudioRail", () => {
   it("lights up Home in the demo and leads into the member's playlists", async () => {
-    renderRailAt("/studio");
+    await renderRailAt("/studio");
     const home = await screen.findByRole("link", { name: "Home" });
     expect(home).toHaveAttribute("aria-current", "page");
     expect(
@@ -60,7 +62,7 @@ describe("StudioRail", () => {
 
   it("keeps the live main nav to Home, Search and Library", async () => {
     rail.isShowcase = false;
-    renderRailAt("/studio");
+    await renderRailAt("/studio");
     const nav = await screen.findByRole("navigation", { name: "Studio" });
     expect(within(nav).getByRole("link", { name: "Home" })).toHaveAttribute(
       "href",
@@ -89,7 +91,7 @@ describe("StudioRail", () => {
 
   it("opens the create dialog from Create playlist in the Create menu", async () => {
     rail.isShowcase = false;
-    renderRailAt("/studio");
+    await renderRailAt("/studio");
     fireEvent.click(
       await screen.findByRole("button", {
         name: /^create playlist or folder$/i,
@@ -108,7 +110,7 @@ describe("StudioRail", () => {
   it("leaves the pill and the playlists out without Studio access", async () => {
     rail.isShowcase = false;
     rail.hasAccess = false;
-    renderRailAt("/studio");
+    await renderRailAt("/studio");
     expect(
       await screen.findByRole("navigation", { name: "Studio" }),
     ).toBeInTheDocument();
@@ -127,20 +129,21 @@ describe("StudioRail", () => {
   });
 
   it("offers the Back to QueerPulse exit in the demo and without Studio access", async () => {
-    renderRailAt("/studio");
+    await renderRailAt("/studio");
     expect(
       await screen.findByRole("link", { name: "Back to QueerPulse" }),
     ).toHaveAttribute("href", "/feed");
     cleanup();
     rail.isShowcase = false;
     rail.hasAccess = false;
-    renderRailAt("/studio");
+    await renderRailAt("/studio");
     expect(
       await screen.findByRole("link", { name: "Back to QueerPulse" }),
     ).toHaveAttribute("href", "/feed");
-    expect(screen.getByRole("link", { name: "QueerPulse" })).toHaveAttribute(
-      "href",
-      "/studio",
-    );
+    // The lockup sets Pulse in an <em>; jsdom's name computation spaces the
+    // two words apart, where a browser reads them as one.
+    expect(
+      screen.getByRole("link", { name: /^Queer ?Pulse$/ }),
+    ).toHaveAttribute("href", "/studio");
   });
 });

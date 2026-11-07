@@ -63,6 +63,42 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "studio-payment-methods-save",
+        category: "fix",
+        date: "7 Nov 2026",
+        ...entryKeys("studio-payment-methods-save"),
+      },
+      {
+        id: "studio-purchase-notices",
+        category: "fix",
+        date: "7 Nov 2026",
+        ...entryKeys("studio-purchase-notices"),
+      },
+      {
+        id: "invite-pickers-keep-unticked-picks",
+        category: "fix",
+        date: "7 Nov 2026",
+        ...entryKeys("invite-pickers-keep-unticked-picks"),
+      },
+      {
+        id: "failed-actions-say-why",
+        category: "improvement",
+        date: "7 Nov 2026",
+        ...entryKeys("failed-actions-say-why"),
+      },
+      {
+        id: "vj-gifs-load-on-projector",
+        category: "fix",
+        date: "7 Nov 2026",
+        ...entryKeys("vj-gifs-load-on-projector"),
+      },
+      {
+        id: "vj-clip-load-reasons",
+        category: "improvement",
+        date: "7 Nov 2026",
+        ...entryKeys("vj-clip-load-reasons"),
+      },
+      {
         id: "unpublish-pieces-from-the-desk",
         category: "improvement",
         date: "7 Nov 2026",

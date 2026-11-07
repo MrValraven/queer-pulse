@@ -3,9 +3,10 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { LazyMotion, domMax } from "motion/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../../../test/TestProviders";
+import { awaitCatalog } from "../../../../../test/awaitCatalog";
 import { VjMoreSheet, type VjMoreSheetProps } from "./VjMoreSheet";
 
-function renderMoreSheet(overrides: Partial<VjMoreSheetProps> = {}) {
+async function renderMoreSheet(overrides: Partial<VjMoreSheetProps> = {}) {
   const props: VjMoreSheetProps = {
     isCueMode: false,
     isClearBlocked: false,
@@ -22,6 +23,7 @@ function renderMoreSheet(overrides: Partial<VjMoreSheetProps> = {}) {
       </LazyMotion>
     </TestProviders>,
   );
+  await awaitCatalog("vj");
   return { ...view, props };
 }
 
@@ -38,9 +40,9 @@ const SHEET_BUTTONS = [
 ] as const;
 
 describe("VjMoreSheet", () => {
-  it("each row opens its sheet", () => {
+  it("each row opens its sheet", async () => {
     const onOpen = vi.fn();
-    renderMoreSheet({ onOpen });
+    await renderMoreSheet({ onOpen });
     expect(
       screen.getByRole("dialog", { name: "More controls" }),
     ).toBeInTheDocument();
@@ -51,9 +53,9 @@ describe("VjMoreSheet", () => {
     expect(onOpen).toHaveBeenCalledTimes(SHEET_BUTTONS.length);
   });
 
-  it("the cue mode row flips its label", () => {
+  it("the cue mode row flips its label", async () => {
     const onSetCueMode = vi.fn();
-    const { rerender, props } = renderMoreSheet({ onSetCueMode });
+    const { rerender, props } = await renderMoreSheet({ onSetCueMode });
     fireEvent.click(screen.getByRole("button", { name: "Turn on cue mode" }));
     expect(onSetCueMode).toHaveBeenLastCalledWith(true);
 
@@ -71,16 +73,16 @@ describe("VjMoreSheet", () => {
     expect(onSetCueMode).toHaveBeenLastCalledWith(false);
   });
 
-  it("Clear the screen calls onClearScreen", () => {
+  it("Clear the screen calls onClearScreen", async () => {
     const onClearScreen = vi.fn();
-    renderMoreSheet({ onClearScreen });
+    await renderMoreSheet({ onClearScreen });
     fireEvent.click(screen.getByRole("button", { name: "Clear the screen" }));
     expect(onClearScreen).toHaveBeenCalledTimes(1);
   });
 
-  it("a blocked Clear the screen stays focusable and sends nothing", () => {
+  it("a blocked Clear the screen stays focusable and sends nothing", async () => {
     const onClearScreen = vi.fn();
-    renderMoreSheet({ onClearScreen, isClearBlocked: true });
+    await renderMoreSheet({ onClearScreen, isClearBlocked: true });
     const clearButton = screen.getByRole("button", {
       name: "Clear the screen",
     });
@@ -90,17 +92,17 @@ describe("VjMoreSheet", () => {
     expect(onClearScreen).not.toHaveBeenCalled();
   });
 
-  it("the footer button closes the sheet", () => {
+  it("the footer button closes the sheet", async () => {
     const onClose = vi.fn();
-    renderMoreSheet({ onClose });
+    await renderMoreSheet({ onClose });
     fireEvent.click(
       screen.getByRole("button", { name: "Close more controls" }),
     );
     expect(onClose).toHaveBeenCalled();
   });
 
-  it("marks only the keyboard shortcuts row as keyboard-only", () => {
-    renderMoreSheet();
+  it("marks only the keyboard shortcuts row as keyboard-only", async () => {
+    await renderMoreSheet();
     const shortcutsRow = screen
       .getByRole("button", { name: "Keyboard shortcuts" })
       .closest("li");

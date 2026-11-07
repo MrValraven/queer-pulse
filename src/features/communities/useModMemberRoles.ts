@@ -3,6 +3,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AssignableRole } from "./api/communities.api";
+import { communityErrorText } from "./communityErrors";
 import { useSetMemberRole } from "./api/useCommunityMutations";
 
 /** A roster row's identity in the mod-tools optimistic maps: the member slug
@@ -86,7 +87,7 @@ export function useModMemberRoles(
       { memberSlug, role },
       {
         onSuccess: done,
-        onError: () => {
+        onError: (error) => {
           setRoleOverrides((prev) => {
             const next = { ...prev };
             if (previous) next[key] = previous;
@@ -94,7 +95,7 @@ export function useModMemberRoles(
             return next;
           });
           closeConfirm();
-          showToast(t("communities:common.error"), "error");
+          showToast(communityErrorText(t, error), "error");
         },
       },
     );

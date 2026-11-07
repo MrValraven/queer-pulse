@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { toFollowerGrowthViews } from "./api/studioDashboard.adapters";
 import { StudioFollowerGrowthChart } from "./StudioFollowerGrowthChart";
 
@@ -44,12 +45,13 @@ const zeroWeeks = toFollowerGrowthViews(
 );
 
 describe("StudioFollowerGrowthChart", () => {
-  it("draws a focusable bar per week with its exact count, no floor", () => {
+  it("draws a focusable bar per week with its exact count, no floor", async () => {
     render(
       <TestProviders>
         <StudioFollowerGrowthChart weeks={weeks} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       screen.getByText("New followers who still follow"),
     ).toBeInTheDocument();
@@ -60,12 +62,13 @@ describe("StudioFollowerGrowthChart", () => {
     expect(screen.queryByText("Fewer than 5")).toBeNull();
   });
 
-  it("opens the data table with every week, newest first", () => {
+  it("opens the data table with every week, newest first", async () => {
     render(
       <TestProviders>
         <StudioFollowerGrowthChart weeks={weeks} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(screen.getByRole("button", { name: "Show data table" }));
     expect(
       screen.getByRole("button", { name: "Hide data table" }),
@@ -78,12 +81,13 @@ describe("StudioFollowerGrowthChart", () => {
     expect(within(rows[1]!).getByRole("cell")).toHaveTextContent("5");
   });
 
-  it("says nobody new followed when every week is zero", () => {
+  it("says nobody new followed when every week is zero", async () => {
     render(
       <TestProviders>
         <StudioFollowerGrowthChart weeks={zeroWeeks} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       screen.getByText("Nobody new followed in the last 12 weeks"),
     ).toBeInTheDocument();

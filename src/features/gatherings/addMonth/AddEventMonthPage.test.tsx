@@ -20,6 +20,7 @@ import { EMPTY_ADD_MONTH_STATE, type AddMonthState } from "./addMonthState";
 import { AddEventMonthPage } from "./AddEventMonthPage";
 import { resetDemoEventBatch } from "./eventBatchDemo";
 import { ADD_MONTH_TEMPLATE_HEADING_ID } from "./useAddMonthPublish";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 
 const mocks = vi.hoisted(() => ({
   canAddEventMonth: true,
@@ -61,15 +62,17 @@ function nextMonthDate(day: number): string {
   return `${shiftMonth(monthOf(today), 1)}-${String(day).padStart(2, "0")}`;
 }
 
-function renderPage(
+async function renderPage(
   path = "/create-gathering/month",
   queryClient?: QueryClient,
 ) {
-  return render(
+  const view = render(
     <TestProviders initialEntries={[path]} queryClient={queryClient}>
       <AddEventMonthPage />
     </TestProviders>,
   );
+  await awaitCatalog("gatherings");
+  return view;
 }
 
 async function pickTemplateAndDates(user: UserEvent, days: number[]) {
@@ -142,9 +145,9 @@ describe("AddEventMonthPage", () => {
     localStorage.clear();
   });
 
-  it("explains the per-member switch to a member without access and links back to hosting", () => {
+  it("explains the per-member switch to a member without access and links back to hosting", async () => {
     mocks.canAddEventMonth = false;
-    renderPage();
+    await renderPage();
     expect(
       screen.getByText(/switched on per member while we try it out/),
     ).toBeInTheDocument();
@@ -156,7 +159,7 @@ describe("AddEventMonthPage", () => {
 
   it("starts from the event named in the from param", async () => {
     const user = userEvent.setup();
-    renderPage(`/create-gathering/month?from=${TEMPLATE_SLUG}`);
+    await renderPage(`/create-gathering/month?from=${TEMPLATE_SLUG}`);
     // The picker folds to the chosen event; reopening it shows the pick.
     await user.click(
       await screen.findByRole("button", { name: "Use a different event" }),
@@ -171,7 +174,7 @@ describe("AddEventMonthPage", () => {
 
   it("publishes two dates in demo and lists both events", async () => {
     const user = userEvent.setup();
-    renderPage();
+    await renderPage();
     await pickTemplateAndDates(user, [10, 12]);
     await fillCardsAndPledges(user);
     await user.click(screen.getByRole("button", { name: "Publish 2 events" }));
@@ -183,7 +186,7 @@ describe("AddEventMonthPage", () => {
 
   it("scrolls to the first card that needs a change when a blocked publish is pressed", async () => {
     const user = userEvent.setup();
-    renderPage();
+    await renderPage();
     await pickTemplateAndDates(user, [10]);
     await user.click(screen.getByRole("button", { name: "Publish 1 event" }));
     expect(
@@ -200,7 +203,7 @@ describe("AddEventMonthPage", () => {
       throw rowRefusal("EVENT_BATCH_DATE_IN_PAST", dto.rows[1]!.date, 1);
     };
     const user = userEvent.setup();
-    renderPage();
+    await renderPage();
     await pickTemplateAndDates(user, [10, 12]);
     await fillCardsAndPledges(user);
     await user.click(screen.getByRole("button", { name: "Publish 2 events" }));
@@ -218,7 +221,7 @@ describe("AddEventMonthPage", () => {
   it("offers the saved month after a reload and restores every card", async () => {
     writeAddMonthDraft(DEMO_DRAFT_KEY, threeRowState(), Date.now());
     const user = userEvent.setup();
-    renderPage();
+    await renderPage();
     await user.click(await screen.findByRole("button", { name: "Resume" }));
     await waitFor(() => expect(screen.getAllByRole("article")).toHaveLength(3));
     expect(screen.getByDisplayValue("Mixer 17")).toBeInTheDocument();
@@ -227,7 +230,7 @@ describe("AddEventMonthPage", () => {
   it("holds the form inert until the saved-month offer is answered", async () => {
     writeAddMonthDraft(DEMO_DRAFT_KEY, threeRowState(), Date.now());
     const user = userEvent.setup();
-    renderPage();
+    await renderPage();
     const startFresh = await screen.findByRole("button", {
       name: "Start fresh",
     });
@@ -244,7 +247,7 @@ describe("AddEventMonthPage", () => {
 
   it("forgets the draft after a successful publish", async () => {
     const user = userEvent.setup();
-    renderPage();
+    await renderPage();
     await pickTemplateAndDates(user, [10, 12]);
     await fillCardsAndPledges(user);
     await waitFor(() =>
@@ -262,7 +265,7 @@ describe("AddEventMonthPage", () => {
       });
     };
     const user = userEvent.setup();
-    renderPage();
+    await renderPage();
     await pickTemplateAndDates(user, [10]);
     await fillCardsAndPledges(user);
     await user.click(screen.getByRole("button", { name: "Publish 1 event" }));
@@ -278,7 +281,7 @@ describe("AddEventMonthPage", () => {
       defaultOptions: { queries: { retry: false } },
     });
     const user = userEvent.setup();
-    renderPage("/create-gathering/month", queryClient);
+    await renderPage("/create-gathering/month", queryClient);
     await pickTemplateAndDates(user, [10]);
     mocks.isTemplateReadFailing = true;
     await act(() =>

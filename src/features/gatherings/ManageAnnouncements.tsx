@@ -9,6 +9,7 @@ import {
   useSendEventAnnouncement,
 } from "./api/useEventAnnouncements";
 import { MAX_EVENT_ANNOUNCEMENT_LENGTH } from "./api/events.api";
+import { hostToolErrorMessage } from "./gatheringActionErrors";
 import { messageRelativeTime } from "./manageGatheringDates";
 import styles from "./ManageGatheringPage.module.css";
 
@@ -43,8 +44,7 @@ export function ManageAnnouncements({ slug }: { slug: string }) {
         setMessage("");
         showToast(t("gatherings:manage.announcements.sentToast"), "success");
       },
-      onError: () =>
-        showToast(t("gatherings:manage.announcements.errorToast"), "error"),
+      onError: (error) => showToast(hostToolErrorMessage(error, t), "error"),
     });
   };
 

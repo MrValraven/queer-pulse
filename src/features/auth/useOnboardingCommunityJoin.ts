@@ -13,6 +13,7 @@ import {
   useJoinCommunityWithRules,
 } from "../communities/api/useCommunityJoin";
 import { useLeaveCommunity } from "../communities/api/useCommunityMutations";
+import { causeErrorKey } from "../../shared/api/causeErrorKey";
 import { getLiving } from "../communities/livingCommunities.data";
 import type { Community } from "../homepage/data/types";
 
@@ -23,11 +24,9 @@ export type OnboardingJoinStatus = "idle" | "joined" | "requested";
  *  screen readers only: the button's check and label already show it. */
 export interface OnboardingJoinMessage {
   key: string;
-  values?: Record<string, string>;
+  values?: Record<string, string | number>;
   tone: "success" | "info" | "error";
 }
-
-const GENERIC_ERROR_KEY = "communities:join.about.errorFallback";
 
 /** The one-line catalog key for each coded refusal the card can show inline.
  *  `rulesChanged` is absent because it reopens the wizard. */
@@ -119,7 +118,9 @@ export function useOnboardingCommunityJoin(community: Community) {
   const showRefusal = (error: unknown) => {
     const refusal = joinRefusalFor(error);
     if (!refusal) {
-      setMessage({ key: GENERIC_ERROR_KEY, tone: "error" });
+      // Not one of the coded join refusals: name the real cause (offline,
+      // signed out, a server fault...) instead of a fixed line.
+      setMessage({ ...causeErrorKey(error), tone: "error" });
     } else if (refusal.kind === "rulesChanged") {
       // Rules exist after all: re-read them and let the wizard ask.
       rulesState.refetch();
@@ -169,9 +170,9 @@ export function useOnboardingCommunityJoin(community: Community) {
         values: nameValues,
         tone: "success",
       });
-    } catch {
+    } catch (error) {
       setStatus("joined");
-      setMessage({ key: GENERIC_ERROR_KEY, tone: "error" });
+      setMessage({ ...causeErrorKey(error), tone: "error" });
     }
   };
 

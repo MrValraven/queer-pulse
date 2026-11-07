@@ -9,8 +9,9 @@ import {
 } from "./directoryListingFactFilters";
 import { LocalListingFactFilters } from "./LocalListingFactFilters";
 import { LocalMoreFilters } from "./LocalMoreFilters";
+import { awaitCatalog } from "../../test/awaitCatalog";
 
-function renderFilters({
+async function renderFilters({
   isOnlineScope = false,
   count = 1,
   countWith,
@@ -40,12 +41,13 @@ function renderFilters({
     />,
     { wrapper: TestProviders },
   );
+  await awaitCatalog("marketing");
   return onToggle;
 }
 
 describe("LocalListingFactFilters", () => {
-  it("offers the way in, ways to pay, languages and practices on the List tab", () => {
-    renderFilters();
+  it("offers the way in, ways to pay, languages and practices on the List tab", async () => {
+    await renderFilters();
     expect(
       screen.getByRole("radiogroup", { name: "How to get in" }),
     ).toBeInTheDocument();
@@ -54,18 +56,23 @@ describe("LocalListingFactFilters", () => {
     }
   });
 
-  it("offers the ways in as radios with the chosen one checked", () => {
-    renderFilters({
+  it("offers the ways in as radios with the chosen one checked", async () => {
+    await renderFilters({
       listingFacts: { ...NO_LISTING_FACT_FILTERS, entryMode: "membersOnly" },
     });
     const group = screen.getByRole("radiogroup", { name: "How to get in" });
     const radios = within(group).getAllByRole("radio");
-    expect(radios.map((radio) => radio.textContent)).toEqual([
+    const wayInLabels = [
       "Walk in anytime",
       "Booking recommended",
       "By appointment only",
       "Members only",
-    ]);
+    ];
+    // Each chip also prints its count, hidden from its accessible name.
+    expect(radios).toHaveLength(wayInLabels.length);
+    radios.forEach((radio, index) =>
+      expect(radio).toHaveAccessibleName(wayInLabels[index]),
+    );
     const membersOnly = screen.getByRole("radio", { name: "Members only" });
     expect(membersOnly).toHaveAttribute("aria-checked", "true");
     expect(membersOnly).not.toHaveAttribute("aria-pressed");
@@ -75,8 +82,8 @@ describe("LocalListingFactFilters", () => {
     ).toHaveAttribute("tabindex", "-1");
   });
 
-  it("clears the way in when the checked radio is pressed again", () => {
-    const onToggle = renderFilters({
+  it("clears the way in when the checked radio is pressed again", async () => {
+    const onToggle = await renderFilters({
       listingFacts: { ...NO_LISTING_FACT_FILTERS, entryMode: "walkIn" },
     });
     fireEvent.click(screen.getByRole("radio", { name: "Walk in anytime" }));
@@ -86,8 +93,8 @@ describe("LocalListingFactFilters", () => {
     });
   });
 
-  it("moves the way in with the arrow keys, wrapping at the ends", () => {
-    const onToggle = renderFilters({
+  it("moves the way in with the arrow keys, wrapping at the ends", async () => {
+    const onToggle = await renderFilters({
       listingFacts: { ...NO_LISTING_FACT_FILTERS, entryMode: "walkIn" },
     });
     const walkIn = screen.getByRole("radio", { name: "Walk in anytime" });
@@ -106,8 +113,8 @@ describe("LocalListingFactFilters", () => {
     });
   });
 
-  it("leaves Space on the checked radio to the click that clears it", () => {
-    const onToggle = renderFilters({
+  it("leaves Space on the checked radio to the click that clears it", async () => {
+    const onToggle = await renderFilters({
       listingFacts: { ...NO_LISTING_FACT_FILTERS, entryMode: "walkIn" },
     });
     fireEvent.keyDown(screen.getByRole("radio", { name: "Walk in anytime" }), {
@@ -116,8 +123,8 @@ describe("LocalListingFactFilters", () => {
     expect(onToggle).not.toHaveBeenCalled();
   });
 
-  it("skips an unpickable way in with the arrow keys", () => {
-    const onToggle = renderFilters({
+  it("skips an unpickable way in with the arrow keys", async () => {
+    const onToggle = await renderFilters({
       countWith: (filters) =>
         filters.entryMode === "bookingRecommended" ? 0 : 1,
     });
@@ -133,8 +140,8 @@ describe("LocalListingFactFilters", () => {
     });
   });
 
-  it("leaves the way in and the ways to pay out of the Online tab", () => {
-    renderFilters({ isOnlineScope: true });
+  it("leaves the way in and the ways to pay out of the Online tab", async () => {
+    await renderFilters({ isOnlineScope: true });
     expect(screen.queryByRole("group", { name: "How to get in" })).toBeNull();
     expect(screen.queryByRole("group", { name: "Ways to pay" })).toBeNull();
     expect(
@@ -142,8 +149,8 @@ describe("LocalListingFactFilters", () => {
     ).toBeNull();
   });
 
-  it("keeps a chosen practice the Online tab does not offer, so it can be turned off", () => {
-    renderFilters({
+  it("keeps a chosen practice the Online tab does not offer, so it can be turned off", async () => {
+    await renderFilters({
       isOnlineScope: true,
       listingFacts: {
         ...NO_LISTING_FACT_FILTERS,
@@ -155,23 +162,24 @@ describe("LocalListingFactFilters", () => {
     ).toHaveAttribute("aria-pressed", "true");
   });
 
-  it("sends the chip's own change", () => {
-    const onToggle = renderFilters();
+  it("sends the chip's own change", async () => {
+    const onToggle = await renderFilters();
     fireEvent.click(screen.getByRole("button", { name: "MB WAY" }));
     expect(onToggle).toHaveBeenCalledWith({ kind: "payment", method: "mbway" });
   });
 
-  it("disables a narrowing chip at zero once loaded and keeps another language pickable", () => {
-    renderFilters({
-      count: 0,
+  it("disables a narrowing chip at zero once loaded and keeps another language pickable", async () => {
+    // MB WAY leaves no place; English counts the places that speak it.
+    await renderFilters({
+      countWith: (filters) => (filters.payments.includes("mbway") ? 0 : 2),
       listingFacts: { ...NO_LISTING_FACT_FILTERS, languages: ["pt"] },
     });
     expect(screen.getByRole("button", { name: "MB WAY" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "English" })).toBeEnabled();
   });
 
-  it("keeps the uncommon languages hidden after a language is picked", () => {
-    renderFilters({
+  it("keeps the uncommon languages hidden after a language is picked", async () => {
+    await renderFilters({
       listingFacts: { ...NO_LISTING_FACT_FILTERS, languages: ["pt"] },
     });
     expect(screen.queryByRole("button", { name: "Italiano" })).toBeNull();
@@ -180,8 +188,8 @@ describe("LocalListingFactFilters", () => {
     ).toHaveAttribute("aria-expanded", "false");
   });
 
-  it("reveals the other languages from Show more languages", () => {
-    renderFilters();
+  it("reveals the other languages from Show more languages", async () => {
+    await renderFilters();
     fireEvent.click(
       screen.getByRole("button", { name: "Show more languages" }),
     );
@@ -196,8 +204,8 @@ describe("LocalListingFactFilters", () => {
     ).toContainElement(screen.getByRole("button", { name: "Italiano" }));
   });
 
-  it("keeps a picked uncommon language in view while the others are hidden", () => {
-    renderFilters({
+  it("keeps a picked uncommon language in view while the others are hidden", async () => {
+    await renderFilters({
       listingFacts: { ...NO_LISTING_FACT_FILTERS, languages: ["uk"] },
     });
     expect(screen.getByRole("button", { name: "Українська" })).toHaveAttribute(
@@ -207,14 +215,14 @@ describe("LocalListingFactFilters", () => {
     expect(screen.queryByRole("button", { name: "Italiano" })).toBeNull();
   });
 
-  it("keeps every chip pickable while its count is not known yet", () => {
-    renderFilters({ areCountsKnown: false });
+  it("keeps every chip pickable while its count is not known yet", async () => {
+    await renderFilters({ areCountsKnown: false });
     expect(screen.getByRole("button", { name: "MB WAY" })).toBeEnabled();
   });
 });
 
 describe("LocalMoreFilters", () => {
-  it("lists the chosen category's attributes first, then Around the place and Pricing", () => {
+  it("lists the chosen category's attributes first, then Around the place and Pricing", async () => {
     render(
       <LocalMoreFilters
         listingFacts={NO_LISTING_FACT_FILTERS}
@@ -225,6 +233,7 @@ describe("LocalMoreFilters", () => {
       />,
       { wrapper: TestProviders },
     );
+    await awaitCatalog("marketing");
     fireEvent.click(screen.getByRole("button", { name: "Show more filters" }));
     const [care, around, pricing] = ["Care", "Around the place", "Pricing"].map(
       (heading) => screen.getByText(heading),
@@ -240,7 +249,7 @@ describe("LocalMoreFilters", () => {
     ).toBeNull();
   });
 
-  it("opens on its own when an attribute filter arrives later, and stays open after it goes", () => {
+  it("opens on its own when an attribute filter arrives later, and stays open after it goes", async () => {
     const props = {
       onToggleListingFact: vi.fn(),
       counts: countListingFactChips(() => 1, NO_LISTING_FACT_FILTERS, []),
@@ -251,6 +260,7 @@ describe("LocalMoreFilters", () => {
       <LocalMoreFilters listingFacts={NO_LISTING_FACT_FILTERS} {...props} />,
       { wrapper: TestProviders },
     );
+    await awaitCatalog("marketing");
     expect(
       screen.getByRole("button", { name: "Show more filters" }),
     ).toHaveAttribute("aria-expanded", "false");
@@ -271,7 +281,7 @@ describe("LocalMoreFilters", () => {
     ).toHaveAttribute("aria-expanded", "true");
   });
 
-  it("opens on its own when an attribute filter is already on", () => {
+  it("opens on its own when an attribute filter is already on", async () => {
     render(
       <LocalMoreFilters
         listingFacts={{ ...NO_LISTING_FACT_FILTERS, attributes: ["wifi"] }}
@@ -282,6 +292,7 @@ describe("LocalMoreFilters", () => {
       />,
       { wrapper: TestProviders },
     );
+    await awaitCatalog("marketing");
     expect(
       screen.getByRole("button", { name: "Hide more filters" }),
     ).toHaveAttribute("aria-expanded", "true");

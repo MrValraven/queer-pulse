@@ -5,6 +5,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { Post, PostReply } from "./community.model";
 import type { Person } from "./communityDetails";
 import type { CommunityTakedownInput } from "./api/communities.api";
+import { communityErrorText } from "./communityErrors";
 import {
   useDeleteCommunityPost,
   useRestoreCommunityPost,
@@ -95,7 +96,8 @@ export function usePulsePostState(post: Post) {
     editedAt?: string | null;
   }>({});
 
-  const onError = () => showToast(t("communities:common.error"), "error");
+  const onError = (error: unknown) =>
+    showToast(communityErrorText(t, error), "error");
   const isDeleted = demoMode ? !!demoOverride.deleted : !!post.deleted;
   const body = demoMode ? (demoOverride.body ?? post.body) : post.body;
   const editedAt = demoMode
@@ -157,16 +159,9 @@ export function usePulsePostState(post: Post) {
           setIsConfirmingDelete(false);
           successToast();
         },
-        onError: () => {
+        onError: (error) => {
           setIsConfirmingDelete(false);
-          if (takedown) {
-            showToast(
-              t("communities:detail.modtools.takedown.errorToast"),
-              "error",
-            );
-            return;
-          }
-          onError();
+          onError(error);
         },
       },
     );

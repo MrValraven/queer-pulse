@@ -56,6 +56,11 @@ describe("handleQueryError", () => {
     );
   });
 
+  it("stays silent for a first-load 404 read (the page owns its empty state)", () => {
+    handleQueryError(new ApiError(404, "Not Found"), query);
+    expect(emit).not.toHaveBeenCalled();
+  });
+
   it("stays silent for a <500 ApiError (pages own those states)", () => {
     handleQueryError(new ApiError(404, "nope"), query);
     handleQueryError(new ApiError(401, "unauth"), query);
@@ -250,7 +255,7 @@ describe("handleMutationError", () => {
     );
   });
 
-  it("falls back to the generic 4xx string for a bare status word", () => {
+  it("names the status cause for a bare status word", () => {
     handleMutationError(
       new ApiError(400, "Bad Request"),
       undefined,
@@ -258,7 +263,98 @@ describe("handleMutationError", () => {
       { options: {} },
     );
     expect(emit).toHaveBeenCalledWith(
-      { title: "Something went wrong" },
+      {
+        title: "That didn't go through",
+        detail: "Some details weren't accepted. Check them and try again.",
+      },
+      "error",
+      6000,
+    );
+  });
+
+  it("names a vanished target for a 404 write", () => {
+    handleMutationError(new ApiError(404, "Not Found"), undefined, undefined, {
+      options: {},
+    });
+    expect(emit).toHaveBeenCalledWith(
+      {
+        title: "That didn't go through",
+        detail:
+          "We couldn't find that. It may have been removed or moved. Refresh the page to see what's there now.",
+      },
+      "error",
+      6000,
+    );
+  });
+
+  it("keeps a 404 write silent when the mutation owns its errors", () => {
+    handleMutationError(new ApiError(404, "Not Found"), undefined, undefined, {
+      options: { meta: { silentError: true } },
+    });
+    expect(emit).not.toHaveBeenCalled();
+  });
+
+  it("names the timeout for a 408 write instead of the client's wording", () => {
+    handleMutationError(
+      new ApiError(408, "Request timed out"),
+      undefined,
+      undefined,
+      { options: {} },
+    );
+    expect(emit).toHaveBeenCalledWith(
+      {
+        title: "That didn't go through",
+        detail:
+          "Our servers took too long to answer, so we can't tell whether that went through. Refresh to check before you try again.",
+      },
+      "error",
+      6000,
+    );
+  });
+
+  it("names an inactive membership for the guard's 403", () => {
+    handleMutationError(
+      new ApiError(403, "Active membership required", {
+        code: "ACTIVE_MEMBERSHIP_REQUIRED",
+      }),
+      undefined,
+      undefined,
+      { options: {} },
+    );
+    expect(emit).toHaveBeenCalledWith(
+      {
+        title: "That didn't go through",
+        detail:
+          "Only active members can do this, and your account isn't active right now. Write to us if that seems wrong.",
+      },
+      "error",
+      6000,
+    );
+  });
+
+  it("fills the status into the refused line for an unmapped status", () => {
+    handleMutationError(
+      new ApiError(418, "I'm a teapot", undefined),
+      undefined,
+      undefined,
+      { options: {} },
+    );
+    // A meaningful sentence still wins in English.
+    expect(emit).toHaveBeenCalledWith(
+      { title: "That didn't go through", detail: "I'm a teapot." },
+      "error",
+      6000,
+    );
+    emit.mockClear();
+    handleMutationError(new ApiError(418, ""), undefined, undefined, {
+      options: {},
+    });
+    expect(emit).toHaveBeenCalledWith(
+      {
+        title: "That didn't go through",
+        detail:
+          "Our servers refused that with error 418. Try again in a moment, and write to us if it keeps happening.",
+      },
       "error",
       6000,
     );

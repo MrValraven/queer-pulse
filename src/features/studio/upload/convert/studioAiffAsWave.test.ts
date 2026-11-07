@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import "../studioJsdomBlobBytes";
 import { memorySource } from "../analysis/studioMp3TestFrames";
 import {
   createCanonicalWaveReader,

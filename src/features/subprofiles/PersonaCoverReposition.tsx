@@ -4,6 +4,7 @@ import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useOwnerSkinPatch } from "./api/useOwnerSkinPatch";
+import { personaOwnerPatchErrorMessage } from "./personaActionErrors";
 import { useCoverReposition } from "./useCoverReposition";
 import styles from "./PersonaCoverReposition.module.css";
 
@@ -69,10 +70,10 @@ export function PersonaCoverReposition({
       }));
       reposition.finish();
       showToast(t("subprofiles:cover.reposition.saved"), "success");
-    } catch {
+    } catch (error) {
       // The fresh read runs outside the query cache and the mutation is
       // `silentError`, so this is the only word the owner gets.
-      showToast(t("subprofiles:cover.reposition.error"), "error");
+      showToast(personaOwnerPatchErrorMessage(error, t), "error");
     }
   }
 

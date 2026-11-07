@@ -9,6 +9,10 @@ import { volunteerOpportunityPath } from "./volunteerPaths";
 import { usePostOpportunityForm } from "./usePostOpportunityForm";
 import { useCreateOpportunity } from "./api/useOpportunityMutations";
 import { PostVolunteerOpportunityForm } from "./PostVolunteerOpportunityForm";
+import {
+  OPPORTUNITY_CREATE_OVERRIDES,
+  failureToast,
+} from "./marketingErrorCopy";
 import styles from "./PostVolunteerOpportunityPage.module.css";
 
 /** The "Post an opportunity" create flow — the form, or the plum success
@@ -34,8 +38,16 @@ export function CreateOpportunityFlow() {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }
       },
-      onError: () =>
-        showToast(t("marketing:postOpportunity.toast.error"), "error"),
+      onError: (error) =>
+        showToast(
+          failureToast(
+            error,
+            t,
+            "marketing:postOpportunity.toast.errorTitle",
+            OPPORTUNITY_CREATE_OVERRIDES,
+          ),
+          "error",
+        ),
     });
   };
 

@@ -13,8 +13,14 @@ import {
   quizshowScreenPath,
 } from "./quizshowPaths";
 import { quizshowRoutes } from "./routes";
+import { gatheringShortId } from "../gatherings/gatheringPaths";
 
 const mountCounter = vi.hoisted(() => ({ count: 0 }));
+
+/** The `:slug` param an event's quizshow path carries: the slug and its short id. */
+function eventParamOf(slug: string): string {
+  return `${slug}-${gatheringShortId(slug)}`;
+}
 
 /** Each page stands in as a probe that prints its route param and which mount it is. */
 vi.mock("./screen/QuizshowScreenPage", async () => {
@@ -117,26 +123,26 @@ describe("quizshowRoutes", () => {
   it("remounts the presenter screen when the event changes", async () => {
     const goTo = renderRoutes(quizshowScreenPath("pride-brunch"));
     expect(
-      await screen.findByText("screen pride-brunch mount 1"),
+      await screen.findByText(`screen ${eventParamOf("pride-brunch")} mount 1`),
     ).toBeInTheDocument();
 
     goTo(quizshowScreenPath("quiz-night"));
 
     expect(
-      await screen.findByText("screen quiz-night mount 2"),
+      await screen.findByText(`screen ${eventParamOf("quiz-night")} mount 2`),
     ).toBeInTheDocument();
   });
 
   it("remounts the remote when the event changes", async () => {
     const goTo = renderRoutes(quizshowRemotePath("pride-brunch"));
     expect(
-      await screen.findByText("remote pride-brunch mount 1"),
+      await screen.findByText(`remote ${eventParamOf("pride-brunch")} mount 1`),
     ).toBeInTheDocument();
 
     goTo(quizshowRemotePath("quiz-night"));
 
     expect(
-      await screen.findByText("remote quiz-night mount 2"),
+      await screen.findByText(`remote ${eventParamOf("quiz-night")} mount 2`),
     ).toBeInTheDocument();
   });
 

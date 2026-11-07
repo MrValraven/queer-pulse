@@ -325,6 +325,8 @@ export const settings: Catalog = {
   "notifications.phonePush.test.sent": "Test sent. Check your device",
   "notifications.phonePush.test.error":
     "Couldn't send the test. Try again in a moment",
+  "notifications.phonePush.error.browser":
+    "Your browser couldn't register this device for push notifications. Check that notifications are allowed for QueerPulse in your browser settings, then try again.",
   "notifications.phonePush.manage.title": "Manage your devices",
   "notifications.phonePush.manage.desc":
     "See every device receiving your push notifications, and remove any you don't recognise.",
@@ -642,6 +644,11 @@ export const settings: Catalog = {
   "uploads.delete.cancel": "Cancel",
   "uploads.delete.toast.success": "Picture deleted.",
   "uploads.delete.toast.error": "We couldn’t delete that picture. Try again.",
+  "uploads.delete.error.notYours": "That picture isn't yours to delete.",
+  "uploads.delete.error.stillUsed":
+    "That picture is still in use somewhere. Remove it from there first, then delete it here.",
+  "uploads.delete.error.unverified":
+    "We couldn't check whether that picture is still in use, so we left it where it is. Try again in a moment.",
 
   // ── EditProfileSidebar.tsx / editProfileNav.data.tsx ─────────────────────
   "editProfile.nav.group.profile": "Profile",
@@ -842,6 +849,8 @@ export const settings: Catalog = {
     "Session ended. If that wasn't you, review your active sessions and sign out anything you don't recognise.",
   "sessions.toast.signedOutError":
     "We couldn't sign that session out. Try again.",
+  "sessions.error.notFound":
+    "That session is already gone, so there's nothing left to sign out. Refresh to see your current sessions.",
   "sessions.toast.signedOutAll": "All other sessions signed out",
   "sessions.toast.signedOutAllError":
     "We couldn't sign the others out. Try again.",
@@ -871,6 +880,8 @@ export const settings: Catalog = {
     "Device removed. It won't get any more push notifications from QueerPulse.",
   "pushDevices.toast.removedError":
     "We couldn't remove that device. Try again.",
+  "pushDevices.error.notFound":
+    "That device is already removed. Refresh to see your current devices.",
   "pushDevices.footNote":
     "<strong>Lost a device?</strong> Removing it here stops its push notifications immediately, even if you can't sign out of it yourself.",
 
@@ -1293,6 +1304,20 @@ export const settings: Catalog = {
     "We couldn't complete this just now. Nothing was changed. Check your connection and try again, or come back in a moment.",
   "destructiveFlow.error.close": "Close",
   "destructiveFlow.error.tryAgain": "Try again",
+  "accountAction.error.reauthExpired":
+    "Your confirmation expired before we could finish, so nothing changed. Confirm it's you again and press the button once more.",
+  "accountAction.error.onlyAdmin":
+    "You're the only remaining admin. Promote another member to admin before you deactivate or delete your account.",
+  "accountAction.error.deletionAlreadyScheduled":
+    "A deletion request is already scheduled for your account. Refresh to see it, or cancel it from there.",
+  "accountAction.error.deletionProcessing":
+    "Your account deletion is already being processed, so it can't be cancelled any more.",
+  "accountAction.error.noPendingDeletion":
+    "There's no pending deletion request to cancel. It may already be cancelled, so refresh to check.",
+  "accountAction.error.exportRateLimited":
+    "You've requested the most exports we allow in an hour. Try again in an hour.",
+  "accountAction.error.dsarRateLimited":
+    "You've sent the most data requests we allow in an hour. Try again in an hour.",
   "destructiveFlow.confirm.notNow": "Not now",
   "destructiveFlow.deactivate.eyebrow": "Deactivate account",
   "destructiveFlow.deactivate.title": "Hide your profile <em>for now?</em>",

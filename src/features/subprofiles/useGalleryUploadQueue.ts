@@ -3,6 +3,7 @@ import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ImageProcessingError } from "../members/api/uploadProcessing";
 import { useUploadImage } from "../members/api/useUploadImage";
+import { personaFallbackCauseMessage } from "./personaActionErrors";
 import {
   resolveMyMediaUrl,
   type MyMediaItem,
@@ -102,7 +103,7 @@ export function useGalleryUploadQueue(remaining: number): GalleryUploadQueue {
       setUploadError(
         error instanceof ImageProcessingError
           ? t(error.i18nKey, error.values)
-          : t("members:avatar.error.generic"),
+          : personaFallbackCauseMessage(error, t),
       );
     } finally {
       setUploading(false);

@@ -38,6 +38,17 @@ const PEOPLE: MemberSelectPerson[] = [
   { slug: "bruno", name: "Bruno" },
 ];
 
+/** True when `element` carries the CSS-module class `className`. Vitest
+ *  scopes module classes as `_<name>_<hash>`, so the check matches one whole
+ *  class token: `rowSelected` stays apart from `rowSelectedRadio`. */
+function hasModuleClass(element: Element | null, className: string): boolean {
+  if (!element) return false;
+  const scopedPattern = new RegExp(`^_${className}_[0-9a-z]+$`);
+  return [...element.classList].some(
+    (token) => token === className || scopedPattern.test(token),
+  );
+}
+
 describe("MemberSelectList", () => {
   it("gives a chosen row a checked radio indicator when selectedIndicator is radio", () => {
     renderList(
@@ -51,11 +62,11 @@ describe("MemberSelectList", () => {
     );
     const row = screen.getByRole("option", { name: /amara/i });
     expect(row).toHaveAttribute("aria-selected", "true");
-    expect(row.classList.contains("rowSelectedRadio")).toBe(true);
-    expect(row.classList.contains("rowSelected")).toBe(false);
+    expect(hasModuleClass(row, "rowSelectedRadio")).toBe(true);
+    expect(hasModuleClass(row, "rowSelected")).toBe(false);
     const indicator = row.querySelector('span[aria-hidden="true"]');
-    expect(indicator?.classList.contains("checkRadio")).toBe(true);
-    expect(indicator?.classList.contains("checkOn")).toBe(true);
+    expect(hasModuleClass(indicator, "checkRadio")).toBe(true);
+    expect(hasModuleClass(indicator, "checkOn")).toBe(true);
   });
 
   it("gives an unchosen row a plain radio ring when selectedIndicator is radio", () => {
@@ -70,10 +81,10 @@ describe("MemberSelectList", () => {
     );
     const row = screen.getByRole("option", { name: /amara/i });
     expect(row).toHaveAttribute("aria-selected", "false");
-    expect(row.classList.contains("rowSelectedRadio")).toBe(false);
+    expect(hasModuleClass(row, "rowSelectedRadio")).toBe(false);
     const indicator = row.querySelector('span[aria-hidden="true"]');
-    expect(indicator?.classList.contains("checkRadio")).toBe(true);
-    expect(indicator?.classList.contains("checkOn")).toBe(false);
+    expect(hasModuleClass(indicator, "checkRadio")).toBe(true);
+    expect(hasModuleClass(indicator, "checkOn")).toBe(false);
   });
 
   it("keeps the multi-select checkbox indicator with its check glyph, and the plain jade tint", () => {
@@ -85,11 +96,11 @@ describe("MemberSelectList", () => {
       />,
     );
     const row = screen.getByRole("option", { name: /bruno/i });
-    expect(row.classList.contains("rowSelected")).toBe(true);
-    expect(row.classList.contains("rowSelectedRadio")).toBe(false);
+    expect(hasModuleClass(row, "rowSelected")).toBe(true);
+    expect(hasModuleClass(row, "rowSelectedRadio")).toBe(false);
     const indicator = row.querySelector('span[aria-hidden="true"]');
-    expect(indicator?.classList.contains("checkBox")).toBe(true);
-    expect(indicator?.classList.contains("checkOn")).toBe(true);
+    expect(hasModuleClass(indicator, "checkBox")).toBe(true);
+    expect(hasModuleClass(indicator, "checkOn")).toBe(true);
     expect(indicator?.querySelector("svg")).toBeInTheDocument();
   });
 
@@ -106,7 +117,7 @@ describe("MemberSelectList", () => {
     expect(
       row.querySelector('span[aria-hidden="true"]'),
     ).not.toBeInTheDocument();
-    expect(row.classList.contains("rowSelectedRadio")).toBe(false);
+    expect(hasModuleClass(row, "rowSelectedRadio")).toBe(false);
   });
 
   it("calls onToggle with the row's slug on click, in either select mode", () => {

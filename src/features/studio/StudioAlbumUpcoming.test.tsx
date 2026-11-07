@@ -7,19 +7,21 @@ import {
 } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { StudioAlbumPage } from "./StudioAlbumPage";
 
-function renderRelease(id: string) {
+async function renderRelease(id: string) {
   render(
     <TestProviders initialEntries={[`/studio/album?id=${id}`]}>
       <StudioAlbumPage />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
 }
 
 describe("StudioAlbumPage, Studio v3", () => {
   it("shows a visitor an upcoming release with Notify me and no Play or heart", async () => {
-    renderRelease("demo-release-scheduled-night-bus");
+    await renderRelease("demo-release-scheduled-night-bus");
     expect(
       await screen.findByRole("heading", {
         level: 1,
@@ -53,10 +55,11 @@ describe("StudioAlbumPage, Studio v3", () => {
   });
 
   it("keeps Play and the tracklist for the owner of a scheduled release", async () => {
-    renderRelease("demo-release-scheduled-mare-alta");
+    await renderRelease("demo-release-scheduled-mare-alta");
+    // The hero and the sticky bar each carry a Play.
     expect(
-      await screen.findByRole("button", { name: /play maré alta/i }),
-    ).toBeInTheDocument();
+      await screen.findAllByRole("button", { name: /play maré alta/i }),
+    ).not.toHaveLength(0);
     expect(screen.getByRole("tablist")).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: /notify me when/i }),
@@ -65,7 +68,7 @@ describe("StudioAlbumPage, Studio v3", () => {
   });
 
   it("offers Report on an upcoming release to a visitor", async () => {
-    renderRelease("demo-release-scheduled-night-bus");
+    await renderRelease("demo-release-scheduled-night-bus");
     fireEvent.click(
       await screen.findByRole("button", { name: "More actions" }),
     );
@@ -75,8 +78,8 @@ describe("StudioAlbumPage, Studio v3", () => {
   });
 
   it("gives the owner of a scheduled release a More menu with no Report", async () => {
-    renderRelease("demo-release-scheduled-mare-alta");
-    await screen.findByRole("button", { name: /play maré alta/i });
+    await renderRelease("demo-release-scheduled-mare-alta");
+    await screen.findAllByRole("button", { name: /play maré alta/i });
     fireEvent.click(screen.getByRole("button", { name: "More actions" }));
     expect(
       await screen.findByRole("menuitem", { name: /copy link/i }),
@@ -87,7 +90,7 @@ describe("StudioAlbumPage, Studio v3", () => {
   });
 
   it("shows the version note and the buy link on a published release", async () => {
-    renderRelease("demo-release-cidade-dos-santos");
+    await renderRelease("demo-release-cidade-dos-santos");
     expect(await screen.findByText(/^Version 2 ·/)).toBeInTheDocument();
     expect(
       screen.getByText(/whole field recording of my grandmother/),

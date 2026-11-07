@@ -25,6 +25,7 @@ import {
 } from "./api/communityInvites.api";
 import { useCommunityInviteCandidates } from "./api/useCommunityInviteCandidates";
 import { useInviteCommunityMembers } from "./api/useCommunityInvites";
+import { communityErrorText } from "./communityErrors";
 import styles from "./ModToolsPanels.module.css";
 
 /**
@@ -98,8 +99,7 @@ export function ModToolsInvitePicker({
         onSent(response, sentPeople);
         setSelectedPeople(new Map());
       },
-      onError: () =>
-        showToast(t("communities:detail.modtools.invites.errorToast"), "error"),
+      onError: (error) => showToast(communityErrorText(t, error), "error"),
     });
   };
 

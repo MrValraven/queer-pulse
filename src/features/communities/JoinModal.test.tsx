@@ -129,13 +129,15 @@ describe("JoinModal", () => {
     ).toHaveFocus();
   });
 
-  it("an uncoded failure shows the translated fallback and hides the server message", async () => {
+  it("an uncoded failure names its status cause and hides the server message", async () => {
     await joinThroughWizard(() =>
       Promise.reject(new ApiError(400, "note must be shorter", {})),
     );
 
     expect(
-      await screen.findByText("That didn't go through. Try again in a moment."),
+      await screen.findByText(
+        "Some details weren't accepted. Check them and try again.",
+      ),
     ).toBeInTheDocument();
     expect(screen.queryByText(/note must be shorter/i)).not.toBeInTheDocument();
   });

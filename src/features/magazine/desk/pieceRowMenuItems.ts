@@ -2,9 +2,8 @@ import type { IconType } from "react-icons";
 import {
   FiBell,
   FiBookOpen,
-  FiClipboard,
   FiEdit2,
-  FiFileText,
+  FiEyeOff,
   FiTrash2,
   FiUserCheck,
 } from "react-icons/fi";
@@ -27,11 +26,9 @@ export interface PieceRowMenuActions {
   onHandoff: () => void;
   onAssignIssue: () => void;
   onDelete: () => void;
-  /** Takes a live piece off the site and puts it at Draft. Omitted, the
-   *  unpublish items are left out. */
-  onUnpublishToDraft?: () => void;
-  /** The same, landing at In review. */
-  onUnpublishToReview?: () => void;
+  /** Raises the unpublish confirm, where the editor picks Draft or In
+   *  review. Omitted, the Unpublish item is left out. */
+  onUnpublish?: () => void;
 }
 
 export interface BuildPieceRowMenuItemsOptions extends PieceRowMenuActions {
@@ -40,15 +37,15 @@ export interface BuildPieceRowMenuItemsOptions extends PieceRowMenuActions {
   hasAnyIssue: boolean;
   /** `magazine:desk.reassign.moveIssue` or `.addToIssue`, decided by the row. */
   assignLabelKey: string;
-  /** Only a published row offers the unpublish items. */
+  /** Only a published row offers the Unpublish item. */
   isPublished?: boolean;
 }
 
 /**
  * Everything a row can do besides its one next action, in the order an editor
- * reaches for it. A published row gains "Unpublish to draft" and "Unpublish to
- * review" after Hand off. Delete comes last, behind a rule, so removing a
- * piece is always a deliberate second step.
+ * reaches for it: the everyday actions, then on a published row "Unpublish…"
+ * behind its own rule, then Delete behind another, so taking a piece down and
+ * removing it are each a deliberate second step.
  */
 export function buildPieceRowMenuItems({
   translate,
@@ -60,8 +57,7 @@ export function buildPieceRowMenuItems({
   onHandoff,
   onAssignIssue,
   onDelete,
-  onUnpublishToDraft,
-  onUnpublishToReview,
+  onUnpublish,
 }: BuildPieceRowMenuItemsOptions): PieceRowMenuItem[] {
   const items: PieceRowMenuItem[] = [
     {
@@ -83,28 +79,21 @@ export function buildPieceRowMenuItems({
       onSelect: onHandoff,
     },
   ];
-  if (isPublished && onUnpublishToDraft) {
-    items.push({
-      key: "unpublish-draft",
-      label: translate("magazine:desk.pieceRow.unpublishToDraft"),
-      icon: FiFileText,
-      onSelect: onUnpublishToDraft,
-    });
-  }
-  if (isPublished && onUnpublishToReview) {
-    items.push({
-      key: "unpublish-review",
-      label: translate("magazine:desk.pieceRow.unpublishToReview"),
-      icon: FiClipboard,
-      onSelect: onUnpublishToReview,
-    });
-  }
   if (hasAnyIssue) {
     items.push({
       key: "assign-issue",
       label: translate(assignLabelKey),
       icon: FiBookOpen,
       onSelect: onAssignIssue,
+    });
+  }
+  if (isPublished && onUnpublish) {
+    items.push({
+      key: "unpublish",
+      label: translate("magazine:desk.pieceRow.unpublish"),
+      icon: FiEyeOff,
+      hasSeparatorBefore: true,
+      onSelect: onUnpublish,
     });
   }
   items.push({

@@ -6,6 +6,7 @@ import {
   AddMonthTemplatePicker,
   type AddMonthTemplatePickerProps,
 } from "./AddMonthTemplatePicker";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 
 const HEADING_TEXT = "Start from an event";
 
@@ -30,7 +31,9 @@ const options: EventBatchTemplateOption[] = [
   },
 ];
 
-function renderPicker(overrides: Partial<AddMonthTemplatePickerProps> = {}) {
+async function renderPicker(
+  overrides: Partial<AddMonthTemplatePickerProps> = {},
+) {
   const props: AddMonthTemplatePickerProps = {
     options,
     selectedSlug: null,
@@ -57,12 +60,25 @@ function renderPicker(overrides: Partial<AddMonthTemplatePickerProps> = {}) {
         <AddMonthTemplatePicker {...props} {...next} />
       </TestProviders>,
     );
+  await awaitCatalog("gatherings");
   return { props, rerenderWith };
 }
 
+/** The one alert this component renders. TestProviders also mounts the toast
+ *  region, whose assertive live region carries the alert role while empty. */
+function componentAlert(): HTMLElement {
+  const alerts = screen
+    .getAllByRole("alert")
+    .filter((element) => element.closest("[data-toast-region]") === null);
+  expect(alerts).toHaveLength(1);
+  const [alert] = alerts;
+  if (!alert) throw new Error("The component rendered no alert of its own");
+  return alert;
+}
+
 describe("AddMonthTemplatePicker", () => {
-  it("lists each event with its title, date and place", () => {
-    renderPicker();
+  it("lists each event with its title, date and place", async () => {
+    await renderPicker();
     const group = screen.getByRole("radiogroup", {
       name: HEADING_TEXT,
     });
@@ -75,14 +91,14 @@ describe("AddMonthTemplatePicker", () => {
     expect(radios[1]).toHaveTextContent("Thu 12 Nov · Online");
   });
 
-  it("calls onPick with the slug of the chosen event", () => {
-    const { props } = renderPicker();
+  it("calls onPick with the slug of the chosen event", async () => {
+    const { props } = await renderPicker();
     fireEvent.click(screen.getByRole("radio", { name: /Zine Club/ }));
     expect(props.onPick).toHaveBeenCalledWith("zine-club");
   });
 
-  it("folds the list to the chosen event and reopens it with Use a different event", () => {
-    renderPicker({ selectedSlug: "drag-night" });
+  it("folds the list to the chosen event and reopens it with Use a different event", async () => {
+    await renderPicker({ selectedSlug: "drag-night" });
     expect(screen.getByText("Drag Night")).toBeInTheDocument();
     expect(screen.queryByText("Zine Club")).not.toBeInTheDocument();
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
@@ -98,8 +114,8 @@ describe("AddMonthTemplatePicker", () => {
     );
   });
 
-  it("moves the checked option with the arrow keys and leaves the pick alone", () => {
-    const { props } = renderPicker();
+  it("moves the checked option with the arrow keys and leaves the pick alone", async () => {
+    const { props } = await renderPicker();
     const firstRadio = screen.getByRole("radio", { name: /Drag Night/ });
     fireEvent.keyDown(firstRadio, { key: "ArrowDown" });
     const secondRadio = screen.getByRole("radio", { name: /Zine Club/ });
@@ -110,8 +126,8 @@ describe("AddMonthTemplatePicker", () => {
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
   });
 
-  it("picks the arrowed-to event on Enter", () => {
-    const { props } = renderPicker();
+  it("picks the arrowed-to event on Enter", async () => {
+    const { props } = await renderPicker();
     const firstRadio = screen.getByRole("radio", { name: /Drag Night/ });
     fireEvent.keyDown(firstRadio, { key: "ArrowDown" });
     fireEvent.keyDown(screen.getByRole("radio", { name: /Zine Club/ }), {
@@ -121,8 +137,8 @@ describe("AddMonthTemplatePicker", () => {
     expect(props.onPick).toHaveBeenCalledWith("zine-club");
   });
 
-  it("shows the chosen event from the fallback when it is beyond the loaded options", () => {
-    renderPicker({
+  it("shows the chosen event from the fallback when it is beyond the loaded options", async () => {
+    await renderPicker({
       selectedSlug: "poetry-night",
       selectedFallback: {
         slug: "poetry-night",
@@ -141,25 +157,25 @@ describe("AddMonthTemplatePicker", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows the empty state with a link to create an event when there are zero options", () => {
-    renderPicker({ options: [] });
+  it("shows the empty state with a link to create an event when there are zero options", async () => {
+    await renderPicker({ options: [] });
     expect(screen.getByText("No events to start from yet")).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: "Create an event" }),
     ).toHaveAttribute("href", "/create-gathering");
   });
 
-  it("names the load failure and retries", () => {
-    const { props } = renderPicker({ options: [], isError: true });
-    expect(screen.getByRole("alert")).toHaveTextContent(
+  it("names the load failure and retries", async () => {
+    const { props } = await renderPicker({ options: [], isError: true });
+    expect(componentAlert()).toHaveTextContent(
       "We couldn't load your events. Check your connection and try again.",
     );
     fireEvent.click(screen.getByRole("button", { name: "Try again" }));
     expect(props.onRetry).toHaveBeenCalledTimes(1);
   });
 
-  it("loads the next page of events", () => {
-    const { props } = renderPicker({ hasNextPage: true });
+  it("loads the next page of events", async () => {
+    const { props } = await renderPicker({ hasNextPage: true });
     fireEvent.click(screen.getByRole("button", { name: "Show more events" }));
     expect(props.onLoadMore).toHaveBeenCalledTimes(1);
   });

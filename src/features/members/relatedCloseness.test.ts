@@ -140,9 +140,19 @@ describe("closenessBetween (demo mode)", () => {
   });
 
   it("honours the owner's hidden voucher roster", () => {
+    // A different hood isolates the vouch: the shared default hood would
+    // otherwise surface as the next-ranked chip.
+    expect(
+      closenessBetween(
+        { ...owner, vouchersVisible: false },
+        member({ hood: "Arroios" }),
+      ),
+    ).toBeNull();
+    // The same pair with a shared hood falls through to that chip, which
+    // proves the vouch itself was the signal dropped.
     expect(
       closenessBetween({ ...owner, vouchersVisible: false }, member()),
-    ).toBeNull();
+    ).toEqual({ kind: "hood", value: "Marvila" });
   });
 
   it("names a shared group as the community chip", () => {

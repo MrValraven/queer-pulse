@@ -6,6 +6,9 @@ import { nextLocalId } from "../useMessagesController.helpers";
 export interface ShareSendResult {
   conversationId: string;
   ok: boolean;
+  /** Why this send failed, so the picker can name the cause. Absent on a
+   *  success, and on the demo chunk that failed to load. */
+  error?: unknown;
 }
 
 /**
@@ -21,7 +24,8 @@ export interface ShareSendResult {
  * with a share menu mounts this hook (ENG-504).
  */
 export function useSendToConversations() {
-  const sendMessage = useSendMessage();
+  // The picker words every failure itself, with the cause, in one toast.
+  const sendMessage = useSendMessage({ shouldSilenceErrorToast: true });
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
 
@@ -55,10 +59,15 @@ export function useSendToConversations() {
         }),
       ),
     );
-    return conversationIds.map((conversationId, index) => ({
-      conversationId,
-      ok: outcomes[index]?.status === "fulfilled",
-    }));
+    return conversationIds.map((conversationId, index) => {
+      const outcome = outcomes[index];
+      if (outcome?.status === "fulfilled") {
+        return { conversationId, ok: true };
+      }
+      const failure: unknown =
+        outcome?.status === "rejected" ? outcome.reason : undefined;
+      return { conversationId, ok: false, error: failure };
+    });
   }
 
   return { sendToMany };

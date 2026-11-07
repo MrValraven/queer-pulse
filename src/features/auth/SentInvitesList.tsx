@@ -9,7 +9,6 @@ import {
   type Tab,
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { ApiError } from "../../shared/api/client";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
@@ -17,6 +16,10 @@ import {
   isInviteAccessDisabledError,
   type SentInviteCountsDTO,
 } from "./api/invite.api";
+import {
+  resendInviteErrorCopy,
+  revokeInviteErrorCopy,
+} from "./authActionErrors";
 import {
   useResendInvite,
   useRevokeInvite,
@@ -27,29 +30,6 @@ import {
 } from "./api/useSentInvites";
 import { SentInviteRow, SentInviteRowSkeletons } from "./SentInviteRow";
 import styles from "./SentInvitesList.module.css";
-
-/** Turn a resend failure into an honest, no-blame line. The typed paused
- *  refusal (our team paused this member's invites) is read first, because it
- *  is a 403 too. Then the backend 403s an invite that isn't yours, 404s an
- *  unknown code, and 409s one that can't be re-minted (already accepted,
- *  revoked, or still valid). Each gets its own message; anything else falls
- *  through to the generic one. */
-function resendErrorMessage(error: unknown, t: TFunction): string {
-  if (isInviteAccessDisabledError(error)) {
-    return t("auth:invite.sentList.resendError.paused");
-  }
-  const status = error instanceof ApiError ? error.status : 0;
-  switch (status) {
-    case 403:
-      return t("auth:invite.sentList.resendError.notYours");
-    case 404:
-      return t("auth:invite.sentList.resendError.notFound");
-    case 409:
-      return t("auth:invite.sentList.resendError.notResendable");
-    default:
-      return t("auth:invite.sentList.resendError.generic");
-  }
-}
 
 /** The invite lifecycle statuses, in tab display order. */
 const STATUS_ORDER: SentInviteView["status"][] = [
@@ -129,10 +109,19 @@ export function SentInvitesList({
       {
         onSuccess: () =>
           showToast(t("auth:invite.sentList.revokedToast"), "success"),
-        // The cache flip is rolled back in `useRevokeInvite`; this tells the
-        // member the link is still live so they don't assume it's dead.
-        onError: () =>
-          showToast(t("auth:invite.sentList.revokeError"), "error"),
+        // The cache flip is rolled back in `useRevokeInvite`; the title tells
+        // the member the link is still live so they don't assume it's dead,
+        // and the detail names why the revoke failed.
+        onError: (error) => {
+          const cause = revokeInviteErrorCopy(error);
+          showToast(
+            {
+              title: t("auth:invite.sentList.revokeError.title"),
+              detail: t(cause.key, cause.values),
+            },
+            "error",
+          );
+        },
       },
     );
   };
@@ -149,7 +138,8 @@ export function SentInvitesList({
           showToast(t("auth:invite.sentList.resentToast"), "success"),
         onError: (error) => {
           if (isInviteAccessDisabledError(error)) onInviteAccessPaused?.();
-          showToast(resendErrorMessage(error, t), "error");
+          const cause = resendInviteErrorCopy(error);
+          showToast(t(cause.key, cause.values), "error");
         },
       },
     );

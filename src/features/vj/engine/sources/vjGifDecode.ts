@@ -4,9 +4,13 @@
  * every time effect. Each decoded VideoFrame becomes an ImageBitmap and is
  * closed at once; a failure or an abort closes every bitmap made so far.
  *
- * Answers `unsupported` without ImageDecoder (or GIF support) and `tooLarge`
- * when the decoded frames would pass the byte budget; the source falls back
- * to an `<img>` for both. `decode_failed` means the file itself is broken.
+ * Answers `unsupported` without ImageDecoder (or GIF support), `tooLarge`
+ * when the decoded frames would pass the byte budget, and `decoderRefused`
+ * when the cached bytes cannot be read or ImageDecoder throws or finds no
+ * frames. The source falls back to an `<img>` for all three: Chrome's
+ * ImageDecoder chokes on some GIFs the browser's own `<img>` plays, so only
+ * the `<img>` failing tells the source the file truly cannot play.
+ * `aborted` means the source is being disposed and wants nothing more.
  */
 
 export const VJ_GIF_BUDGET_BYTES = 96 * 1024 * 1024;
@@ -16,7 +20,8 @@ export const VJ_GIF_SHARED_BUDGET_BYTES = 192 * 1024 * 1024;
 const BYTES_PER_PIXEL = 4;
 const MICROSECONDS_PER_MS = 1000;
 
-export type VjGifDecodeFailure = "unsupported" | "tooLarge" | "decode_failed";
+export type VjGifDecodeFailure =
+  "unsupported" | "tooLarge" | "decoderRefused" | "aborted";
 
 export type VjGifDecodeResult =
   | { ok: true; frames: ImageBitmap[]; durationsMs: number[] }
@@ -70,10 +75,10 @@ async function decodeVjGifFrames(
   await decoder.tracks.ready;
   await decoder.completed;
   const frameCount = decoder.tracks.selectedTrack?.frameCount ?? 0;
-  if (frameCount < 1) return "decode_failed";
+  if (frameCount < 1) return "decoderRefused";
   let decodedBytes = 0;
   for (let frameIndex = 0; frameIndex < frameCount; frameIndex += 1) {
-    if (signal.aborted) return "decode_failed";
+    if (signal.aborted) return "aborted";
     const { image } = await decoder.decode({ frameIndex });
     try {
       const frameBytes =
@@ -90,7 +95,7 @@ async function decodeVjGifFrames(
       image.close();
     }
   }
-  return signal.aborted ? "decode_failed" : null;
+  return signal.aborted ? "aborted" : null;
 }
 
 export async function decodeVjGif(
@@ -104,9 +109,8 @@ export async function decodeVjGif(
   const budgetBytes = options.budgetBytes ?? VJ_GIF_BUDGET_BYTES;
   if (budgetBytes <= 0) return { ok: false, reason: "tooLarge" };
   const bytes = await fetchVjGifBytes(sourceUrl, signal);
-  if (bytes === null || signal.aborted) {
-    return { ok: false, reason: "decode_failed" };
-  }
+  if (signal.aborted) return { ok: false, reason: "aborted" };
+  if (bytes === null) return { ok: false, reason: "decoderRefused" };
   const frames: ImageBitmap[] = [];
   const durationsMs: number[] = [];
   let failure: VjGifDecodeFailure | null;
@@ -121,7 +125,7 @@ export async function decodeVjGif(
       durationsMs,
     );
   } catch {
-    failure = "decode_failed";
+    failure = signal.aborted ? "aborted" : "decoderRefused";
   } finally {
     decoder?.close();
   }

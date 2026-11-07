@@ -7,11 +7,23 @@ import {
 } from "@testing-library/react";
 import { QueryClient } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { MotionProvider } from "../../app/providers/MotionProvider";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type { StudioSupportingView } from "./api/studioListening.adapters";
 import { resetDemoYourListening } from "./api/studioDemoYourListening";
 import type { StudioLoadState } from "./api/studioLoadState";
 import { StudioListeningSupporting } from "./StudioListeningSupporting";
+
+/** The toast host keeps its own empty status regions mounted, so this is
+ *  the one status region that has something to say. */
+function announcedStatus(): HTMLElement {
+  const announcing = screen
+    .getAllByRole("status")
+    .filter((region) => region.textContent !== "");
+  expect(announcing).toHaveLength(1);
+  return announcing[0]!;
+}
 
 interface SupportingResult {
   items: StudioSupportingView[] | null;
@@ -102,14 +114,19 @@ let testQueryClient = new QueryClient();
 function supportingTree() {
   return (
     <TestProviders queryClient={testQueryClient}>
-      <StudioListeningSupporting />
+      {/* The app's motion features, so a row's entrance runs to the end. */}
+      <MotionProvider>
+        <StudioListeningSupporting />
+      </MotionProvider>
     </TestProviders>
   );
 }
 
-function renderMocked() {
+async function renderMocked() {
   mocks.isMocked = true;
-  return render(supportingTree());
+  const view = render(supportingTree());
+  await awaitCatalog("studio");
+  return view;
 }
 
 beforeEach(() => {
@@ -126,6 +143,7 @@ beforeEach(() => {
 describe("StudioListeningSupporting", () => {
   it("lists every artist the demo listener played lately with how each sees them", async () => {
     render(supportingTree());
+    await awaitCatalog("studio");
     const rows = await findSupportingRows();
     expect(rows).toHaveLength(6);
     expect(rows[0]).toHaveTextContent("NIGHTFORM");
@@ -145,15 +163,16 @@ describe("StudioListeningSupporting", () => {
 
   it("offers Follow with the row's state", async () => {
     render(supportingTree());
+    await awaitCatalog("studio");
     const rows = await findSupportingRows();
     expect(
       within(rows[0]!).getByRole("button", { name: /follow/i }),
     ).toHaveAttribute("aria-pressed");
   });
 
-  it("shows the empty line and the error panel with its reason", () => {
+  it("shows the empty line and the error panel with its reason", async () => {
     mocks.supporting = { items: [], loadState: loadStateOf() };
-    const { unmount } = renderMocked();
+    const { unmount } = await renderMocked();
     expect(
       screen.getByText(
         "Play a track for 30 seconds and its artist shows up here. You appear among their top listeners until you turn it off on their page",
@@ -165,7 +184,7 @@ describe("StudioListeningSupporting", () => {
       items: null,
       loadState: errorLoadState({ reason: "server" }),
     };
-    renderMocked();
+    await renderMocked();
     expect(
       screen.getByText(/the artists who see your name/),
     ).toBeInTheDocument();
@@ -178,6 +197,7 @@ describe("StudioListeningSupporting", () => {
 
   it("takes the row out on Stop showing my name and moves focus to the next row", async () => {
     render(supportingTree());
+    await awaitCatalog("studio");
     const rows = await findSupportingRows();
     fireEvent.click(
       within(rows[1]!).getByRole("button", {
@@ -188,15 +208,15 @@ describe("StudioListeningSupporting", () => {
       expect(screen.queryByRole("link", { name: "Vanda Diesel" })).toBeNull(),
     );
     expect(screen.getByRole("link", { name: "Lua Cardoso" })).toHaveFocus();
-    expect(screen.getByRole("status")).toHaveTextContent(
+    expect(announcedStatus()).toHaveTextContent(
       "Vanda Diesel no longer sees you among their top listeners",
     );
   });
 
-  it("says paused history keeps the listener out of top listeners", () => {
+  it("says paused history keeps the listener out of top listeners", async () => {
     mocks.supporting = { items: [], loadState: loadStateOf() };
     mocks.isHistoryOn = false;
-    renderMocked();
+    await renderMocked();
     expect(
       screen.getByText(
         "While your history is paused, you don't appear among their top listeners",
@@ -207,6 +227,7 @@ describe("StudioListeningSupporting", () => {
   it("keeps the row and names the reason when Stop showing my name fails", async () => {
     mocks.shouldFailRemoval = true;
     render(supportingTree());
+    await awaitCatalog("studio");
     const rows = await findSupportingRows();
     fireEvent.click(
       within(rows[1]!).getByRole("button", {
@@ -216,6 +237,9 @@ describe("StudioListeningSupporting", () => {
     expect(await within(rows[1]!).findByRole("alert")).toHaveTextContent(
       "We couldn't turn off Show me among the top listeners. We couldn't reach Studio, so this wasn't saved. Check your connection, or try again in a moment",
     );
-    expect(screen.getByRole("link", { name: "Vanda Diesel" })).toBeVisible();
+    // The kept row settles back in with a fade.
+    await waitFor(() =>
+      expect(screen.getByRole("link", { name: "Vanda Diesel" })).toBeVisible(),
+    );
   });
 });

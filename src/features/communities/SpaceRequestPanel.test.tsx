@@ -1,8 +1,10 @@
 import { render, screen } from "@testing-library/react";
+import { QueryClient } from "@tanstack/react-query";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../shared/api/client";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type { SpaceRequestDTO } from "./api/communitySpaceRequests.api";
 import { SpaceRequestPanel } from "./SpaceRequestPanel";
 
@@ -44,9 +46,12 @@ function makeRequest(
   };
 }
 
-function renderPanel(viewerRole: "owner" | "co_owner" | "mod") {
+function renderPanel(
+  viewerRole: "owner" | "co_owner" | "mod",
+  queryClient?: QueryClient,
+) {
   return render(
-    <TestProviders>
+    <TestProviders queryClient={queryClient}>
       <SpaceRequestPanel slug="coletivo-gula" viewerRole={viewerRole} />
     </TestProviders>,
   );
@@ -122,18 +127,23 @@ describe("SpaceRequestPanel", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows an approved request with no form until the refresh settles", () => {
+  it("shows an approved request with no form until the refresh settles", async () => {
     latest = {
       data: makeRequest({ status: "approved" }),
       isLoading: false,
       isError: false,
     };
-    renderPanel("owner");
-    // No `await` here on purpose: the one-shot community refetch the panel
-    // fires for an approved request resolves on a microtask, and this
-    // assertion has to land before that microtask gets a chance to run, to
-    // pin down the state an owner actually sees the instant the row goes
-    // "approved".
+    // The one-shot community refetch the panel fires for an approved request
+    // is held in flight, which pins the state an owner sees the instant the
+    // row goes "approved" while the catalog loads.
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    vi.spyOn(queryClient, "invalidateQueries").mockReturnValue(
+      new Promise<void>(() => {}),
+    );
+    renderPanel("owner", queryClient);
+    await awaitCatalog("communities");
     expect(screen.getByText(/spaces are on/i)).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: /request spaces/i }),

@@ -7,6 +7,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useSubmitCoopJoinRequest } from "./api/useSubmitCoopJoinRequest";
 import { useAffirmingPledgeGate } from "./useAffirmingPledgeGate";
 import type { FormingCoop } from "./housingCoop.data";
+import { failureToast } from "./economyErrorCopy";
 import styles from "./ApplicationModals.module.css";
 
 /** i18n Pattern A — labelKey resolved via t() below. */
@@ -50,7 +51,10 @@ export function JoinCoopModal({
       {
         onError: (error) => {
           if (handlePledgeError(error, handleSubmit)) return;
-          showToast(t("economy:joinCoop.error"), "error");
+          showToast(
+            failureToast(error, t, "economy:joinCoop.errorTitle"),
+            "error",
+          );
         },
       },
     );

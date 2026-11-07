@@ -39,7 +39,7 @@ export function SubmitStoryEditor({
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   const [form, setForm] = useState<DraftForm>(INITIAL_DRAFT);
-  // The storage KEY of the uploaded cover, not a display name: `SubmitStoryCover`
+  // The storage KEY of the uploaded cover (a display name would be useless): `SubmitStoryCover`
   // emits `key` from `useUploadImage`, and that key is what the submission
   // persists. It used to be held here and then dropped at submit time, so the
   // member paid for an upload the magazine threw away.
@@ -104,6 +104,12 @@ export function SubmitStoryEditor({
     if (!demoMode) {
       const deck = form.deck.trim();
       const body = form.body.trim();
+      // Write the draft before the request leaves. Autosave is debounced, and
+      // two refusals unmount this editor at once (the 503 platform lock swaps
+      // the app for the maintenance screen; a 401 that cannot refresh signs
+      // the member out), which cancels a pending autosave and would lose the
+      // last edits. Saved here, the text survives any failure and a reload.
+      saveNow();
       setSubmitting(true);
       try {
         await createStorySubmission({
@@ -132,7 +138,7 @@ export function SubmitStoryEditor({
       setSubmitting(false);
     }
 
-    // The story is now with editors (or, in demo, "sent") — the local draft has
+    // The story is now with editors (or, in demo, "sent"): the local draft has
     // served its purpose, so clear the persisted slot to avoid a stale resume.
     clearDraft();
     onSubmit(form.headline.trim());

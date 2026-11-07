@@ -109,7 +109,9 @@ afterEach(() => {
 describe("AdminVjPage v2 (demo)", () => {
   it("opens on the clips view with both tabs", async () => {
     renderPage();
-    const tablist = screen.getByRole("tablist", { name: "Library sections" });
+    const tablist = await screen.findByRole("tablist", {
+      name: "Library sections",
+    });
     const clipsTab = within(tablist).getByRole("tab", { name: "Clips" });
     const showTab = within(tablist).getByRole("tab", {
       name: "Scenes and set lists",
@@ -129,7 +131,9 @@ describe("AdminVjPage v2 (demo)", () => {
     const { unmount } = renderPage();
     await screen.findByRole("heading", { name: "Warm-up" });
 
-    await user.click(screen.getByRole("tab", { name: "Scenes and set lists" }));
+    await user.click(
+      await screen.findByRole("tab", { name: "Scenes and set lists" }),
+    );
 
     await waitFor(() => expect(locationSearch().get("view")).toBe("show"));
     expect(
@@ -146,7 +150,7 @@ describe("AdminVjPage v2 (demo)", () => {
     unmount();
     renderPage("?view=show");
     expect(
-      screen.getByRole("tab", { name: "Scenes and set lists" }),
+      await screen.findByRole("tab", { name: "Scenes and set lists" }),
     ).toHaveAttribute("aria-selected", "true");
     expect(
       await screen.findByRole("heading", { name: "Set lists" }),
@@ -183,7 +187,7 @@ describe("AdminVjPage v2 (demo)", () => {
 
     expect(
       await screen.findByText(
-        `${missingCount} clips have no animated preview yet`,
+        `${missingCount} clips in your library have no animated preview yet`,
       ),
     ).toBeInTheDocument();
     expect(

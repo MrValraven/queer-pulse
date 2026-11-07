@@ -9,6 +9,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { intakeFailureToast } from "../resources/intakeSubmitError";
 import { submitIntake } from "../../shared/api/intakes";
 import { ModalShell, SuccessPanel } from "./CultureModalKit";
 import { useChipSet, useSubmitFlow } from "./cultureModalKit.hooks";
@@ -47,8 +48,8 @@ function useCultureIntakeSubmit(
       await flow.run(async () => {
         await submitIntake(kind, payload);
       });
-    } catch {
-      showToast(t("shared:intake.errorToast"), "error");
+    } catch (error) {
+      showToast(intakeFailureToast(error, t), "error");
     }
   };
 }

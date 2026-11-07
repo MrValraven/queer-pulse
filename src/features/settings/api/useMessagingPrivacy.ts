@@ -5,6 +5,7 @@ import { useAuth } from "../../../app/providers/authContext";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { logError } from "../../../shared/observability/logger";
+import { causeErrorKey } from "../../../shared/api/causeErrorKey";
 import type { WhoCanMessage } from "../../../shared/contracts/contracts";
 import {
   DEFAULT_MESSAGING_PRIVACY,
@@ -91,10 +92,8 @@ export function useMessagingPrivacy(): MessagingPrivacyResult {
             MESSAGING_PRIVACY_QUERY_KEY,
             previous,
           );
-          showToast(
-            t("settings:visibility.messagingPrivacy.toastError"),
-            "error",
-          );
+          const cause = causeErrorKey(error);
+          showToast(t(cause.key, cause.values), "error");
         });
     },
     [demoMode, queryClient, showToast, t],

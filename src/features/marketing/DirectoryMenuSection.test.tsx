@@ -6,16 +6,19 @@ import { I18nProvider } from "../../app/providers/I18nProvider";
 import { DirectoryMenuSection } from "./DirectoryMenuSection";
 import { DIRECTORY_PLACES, type DirectoryPlace } from "./directoryPlaces";
 import type { ListingMenu } from "./listBusiness/listingMenu.data";
+import { awaitCatalog } from "../../test/awaitCatalog";
 
-function renderSection(node: ReactNode) {
+async function renderSection(node: ReactNode) {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
-  return render(
+  const view = render(
     <QueryClientProvider client={queryClient}>
       <I18nProvider>{node}</I18nProvider>
     </QueryClientProvider>,
   );
+  await awaitCatalog("marketing");
+  return view;
 }
 
 function placeWith(menu: ListingMenu): DirectoryPlace {
@@ -31,8 +34,8 @@ const section = (title: string) => ({
 });
 
 describe("DirectoryMenuSection", () => {
-  it("renders nothing for an empty menu", () => {
-    const { container } = renderSection(
+  it("renders nothing for an empty menu", async () => {
+    const { container } = await renderSection(
       <DirectoryMenuSection
         place={placeWith({
           currency: "EUR",
@@ -45,8 +48,8 @@ describe("DirectoryMenuSection", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it("renders only the footer link when the menu is just a link", () => {
-    renderSection(
+  it("renders only the footer link when the menu is just a link", async () => {
+    await renderSection(
       <DirectoryMenuSection
         place={placeWith({
           currency: "EUR",
@@ -62,8 +65,8 @@ describe("DirectoryMenuSection", () => {
     expect(screen.queryByRole("heading", { level: 3 })).toBeNull();
   });
 
-  it("adds https:// to a link saved without a scheme, so it never resolves as an in-app path", () => {
-    renderSection(
+  it("adds https:// to a link saved without a scheme, so it never resolves as an in-app path", async () => {
+    await renderSection(
       <DirectoryMenuSection
         place={placeWith({
           currency: "EUR",
@@ -78,8 +81,8 @@ describe("DirectoryMenuSection", () => {
     ).toHaveAttribute("href", "https://cafe.pt/menu");
   });
 
-  it("labels a PDF file as a PDF", () => {
-    renderSection(
+  it("labels a PDF file as a PDF", async () => {
+    await renderSection(
       <DirectoryMenuSection
         place={placeWith({
           currency: "EUR",
@@ -98,8 +101,8 @@ describe("DirectoryMenuSection", () => {
     ).toBeInTheDocument();
   });
 
-  it("hides the jump chips below three sections and shows them from three", () => {
-    const { unmount } = renderSection(
+  it("hides the jump chips below three sections and shows them from three", async () => {
+    const { unmount } = await renderSection(
       <DirectoryMenuSection
         place={placeWith({
           currency: "EUR",
@@ -111,7 +114,7 @@ describe("DirectoryMenuSection", () => {
     );
     expect(screen.queryByRole("navigation")).toBeNull();
     unmount();
-    renderSection(
+    await renderSection(
       <DirectoryMenuSection
         place={placeWith({
           currency: "EUR",
@@ -124,8 +127,8 @@ describe("DirectoryMenuSection", () => {
     expect(screen.getByRole("navigation")).toBeInTheDocument();
   });
 
-  it("shows dietary labels as readable text", () => {
-    renderSection(
+  it("shows dietary labels as readable text", async () => {
+    await renderSection(
       <DirectoryMenuSection
         place={placeWith({
           currency: "EUR",
@@ -152,8 +155,8 @@ describe("DirectoryMenuSection", () => {
     expect(screen.getAllByText("Gluten-free").length).toBeGreaterThan(0);
   });
 
-  it("renders a numeric price with the menu currency symbol", () => {
-    renderSection(
+  it("renders a numeric price with the menu currency symbol", async () => {
+    await renderSection(
       <DirectoryMenuSection
         place={placeWith({
           currency: "EUR",
@@ -166,8 +169,8 @@ describe("DirectoryMenuSection", () => {
     expect(screen.getByText("€2.50")).toBeInTheDocument();
   });
 
-  it("uses the symbol of the menu currency when it is not euro", () => {
-    renderSection(
+  it("uses the symbol of the menu currency when it is not euro", async () => {
+    await renderSection(
       <DirectoryMenuSection
         place={placeWith({
           currency: "GBP",
@@ -180,8 +183,8 @@ describe("DirectoryMenuSection", () => {
     expect(screen.getByText("£2.50")).toBeInTheDocument();
   });
 
-  it("shows legacy free-text prices as written", () => {
-    renderSection(
+  it("shows legacy free-text prices as written", async () => {
+    await renderSection(
       <DirectoryMenuSection
         place={placeWith({
           currency: "EUR",

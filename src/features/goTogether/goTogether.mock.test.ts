@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { ApiError } from "../../shared/api/client";
+import { gatheringDetails } from "../gatherings/data";
 import {
   demoAcceptPair,
   demoAnswerHostQuestions,
@@ -179,14 +180,16 @@ describe("demoCard hostQuestionChanged walk", () => {
  * Re-review N4: the cutoff/opt-in-close times used to be anchored to a
  * fixed fallback regardless of which gathering the card was shown for, so a
  * demo reveal time could land after that gathering's own, real date had
- * already passed. `supper-club-12` is dated 2026-06-06 in
- * `gatherings/data.ts` (the exact date the design review's example named),
- * so its card now derives its cutoff from that real date.
+ * already passed. `supper-club-12` takes its start from `DEMO_START_TIMES`
+ * in `gatherings/data.ts`, which counts days from today, so the test reads
+ * that same start and checks the card derives its cutoff from it.
  */
 describe("demoCard cutoff, anchored to the real demo gathering's own date (N4)", () => {
   it("derives cutoffAt from the gathering's own date when the slug is a known demo gathering", () => {
-    const gatheringStartMs = new Date(2026, 5, 6).getTime();
-    const expectedCutoffMs = gatheringStartMs - 48 * 60 * 60 * 1000;
+    const gatheringStart = gatheringDetails["supper-club-12"]?.date;
+    expect(gatheringStart).toBeInstanceOf(Date);
+    const expectedCutoffMs =
+      (gatheringStart?.getTime() ?? Number.NaN) - 48 * 60 * 60 * 1000;
 
     const card = demoCard("supper-club-12");
     expect(Date.parse(card.cutoffAt!)).toBe(expectedCutoffMs);

@@ -153,11 +153,27 @@ describe("report-unused-i18n: the backend-only family belongs in tier 1C", () =>
   // `string` on the audit DTO, so these codes are spelled nowhere in the
   // frontend. They are LIVE. The tool cannot know that, and the honest place
   // for a key it cannot know about is the small hand-read tier, never 1A.
+  //
+  // Only the codes the frontend still never spells belong here. Since
+  // e7feb641 `safeSpaceReviewCopy.ts` spells `badge_restored` and
+  // `nomination_declined` (with others) for its notification sentences, so
+  // the tool now has a literal that fills the shape and reports those live.
   const backendOnlyKeys = [
-    "safety:governance.audit.badge_restored",
     "safety:governance.audit.flag_raised",
+    "safety:governance.audit.flag_withdrawn",
+    "safety:governance.audit.nomination_reopened",
+  ];
+  const frontendSpelledKeys = [
+    "safety:governance.audit.badge_restored",
     "safety:governance.audit.nomination_declined",
   ];
+
+  it.each(frontendSpelledKeys)(
+    "keeps %s live once the frontend spells its code",
+    (key) => {
+      expect(LIVE_VERDICTS).toContain(verdictFor(key));
+    },
+  );
 
   it.each(backendOnlyKeys)("puts %s in tier 1C", (key) => {
     expect(verdictFor(key)).toBe(VERDICTS.UNUSED_TIGHT_SHAPE);

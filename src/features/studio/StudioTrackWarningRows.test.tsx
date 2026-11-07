@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type { StudioTrackRowView } from "./api/studio.adapters";
 import type { StudioLikedEntryView } from "./api/studioLiked.adapters";
 import type { StudioEpisodeRowView } from "./api/studioEpisodes";
@@ -26,7 +27,7 @@ const row: StudioTrackRowView = {
 };
 
 describe("warning pills on rows", () => {
-  it("shows the warning on a preview row", () => {
+  it("shows the warning on a preview row", async () => {
     render(
       <TestProviders>
         <ol>
@@ -40,10 +41,11 @@ describe("warning pills on rows", () => {
         </ol>
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(screen.getByText(/family/i)).toBeTruthy();
   });
 
-  it("shows the warning on a liked row", () => {
+  it("shows the warning on a liked row", async () => {
     const entry: StudioLikedEntryView = {
       entryId: "e1",
       position: 1,
@@ -71,10 +73,11 @@ describe("warning pills on rows", () => {
         />
       </ol>,
     );
+    await awaitCatalog("studio");
     expect(screen.getByText(/family/i)).toBeTruthy();
   });
 
-  it("shows the warning on an episode row", () => {
+  it("shows the warning on an episode row", async () => {
     const episode: StudioEpisodeRowView = { ...row, number: 1 };
     renderWithPlayer(
       <ol>
@@ -85,6 +88,7 @@ describe("warning pills on rows", () => {
         />
       </ol>,
     );
+    await awaitCatalog("studio");
     expect(screen.getByText(/family/i)).toBeTruthy();
   });
 });

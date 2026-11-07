@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import type { Conversation } from "../../messages/data";
 import type { GoTogetherGroupDTO } from "../api/goTogether.types";
 import { GoTogetherChatBanner } from "./GoTogetherChatBanner";
@@ -88,12 +89,13 @@ function conversation(overrides: Partial<Conversation>): Conversation {
   };
 }
 
-function renderBanner(overrides: Partial<Conversation>) {
+async function renderBanner(overrides: Partial<Conversation>) {
   render(
     <TestProviders>
       <GoTogetherChatBanner conversation={conversation(overrides)} />
     </TestProviders>,
   );
+  await awaitCatalog("goTogether");
 }
 
 afterEach(() => {
@@ -101,32 +103,32 @@ afterEach(() => {
 });
 
 describe("GoTogetherChatBanner", () => {
-  it("stays hidden in a DM", () => {
-    renderBanner({ isGroup: false });
+  it("stays hidden in a DM", async () => {
+    await renderBanner({ isGroup: false });
     expect(
       screen.queryByRole("region", { name: /Pride picnic/ }),
     ).not.toBeInTheDocument();
     expect(requestedGroupIds.every((groupId) => !groupId)).toBe(true);
   });
 
-  it("stays hidden in a group chat with no matched group", () => {
-    renderBanner({ eventMatchGroupId: null });
+  it("stays hidden in a group chat with no matched group", async () => {
+    await renderBanner({ eventMatchGroupId: null });
     expect(
       screen.queryByRole("button", { name: "See your group" }),
     ).not.toBeInTheDocument();
     expect(requestedGroupIds.every((groupId) => !groupId)).toBe(true);
   });
 
-  it("stays hidden once the member has left the group", () => {
-    renderBanner({ hasLeft: true });
+  it("stays hidden once the member has left the group", async () => {
+    await renderBanner({ hasLeft: true });
     expect(
       screen.queryByRole("button", { name: "See your group" }),
     ).not.toBeInTheDocument();
     expect(requestedGroupIds.every((groupId) => !groupId)).toBe(true);
   });
 
-  it("names the group, carries the gathering in its label and opens the group sheet", () => {
-    renderBanner({});
+  it("names the group, carries the gathering in its label and opens the group sheet", async () => {
+    await renderBanner({});
     const banner = screen.getByRole("region", {
       name: "Your Go together group for Pride picnic",
     });

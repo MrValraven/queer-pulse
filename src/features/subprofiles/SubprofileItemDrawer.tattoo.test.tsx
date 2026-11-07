@@ -18,6 +18,7 @@ import {
 } from "./subprofileEditorContext";
 import { SubprofileItemDrawer } from "./SubprofileItemDrawer";
 import { emptyItem } from "./subprofileSectionEditorRows";
+import { awaitCatalog } from "../../test/awaitCatalog";
 
 vi.mock("./useEditorPersonaKind", () => ({
   useEditorPersonaKind: () => "tattoo_artist",
@@ -59,12 +60,12 @@ function sectionView(section: SubprofileSection): SubprofileSectionView {
   return found;
 }
 
-function renderDrawer(
+async function renderDrawer(
   item: SubprofileItemView,
   onSave: (saved: SubprofileItemView) => void = () => undefined,
   isNew = true,
 ) {
-  return render(
+  const view = render(
     <TestProviders>
       <SubprofileEditorContext.Provider value={EDITOR_CONTEXT}>
         <SubprofileItemDrawer
@@ -80,10 +81,12 @@ function renderDrawer(
       </SubprofileEditorContext.Provider>
     </TestProviders>,
   );
+  await awaitCatalog("subprofiles");
+  return view;
 }
 
-function renderRow(item: SubprofileItemView) {
-  return render(
+async function renderRow(item: SubprofileItemView) {
+  const view = render(
     <TestProviders>
       <EditorItemRow
         item={item}
@@ -103,6 +106,8 @@ function renderRow(item: SubprofileItemView) {
       />
     </TestProviders>,
   );
+  await awaitCatalog("subprofiles");
+  return view;
 }
 
 /** Edit the title of an open stored row, then press Save changes. */
@@ -116,9 +121,9 @@ function renameAndSave(title: string) {
 }
 
 describe("SubprofileItemDrawer for a tattoo artist", () => {
-  it("blocks Save on a new healed photo until the consent box is ticked", () => {
+  it("blocks Save on a new healed photo until the consent box is ticked", async () => {
     const onSave = vi.fn();
-    renderDrawer(
+    await renderDrawer(
       {
         ...emptyItem("healed"),
         title: "Peony sleeve",
@@ -144,9 +149,9 @@ describe("SubprofileItemDrawer for a tattoo artist", () => {
     expect(saved.structured?.photo?.hasClientConsent).toBe(true);
   });
 
-  it("saves a title edit on a stored healed row without a tick", () => {
+  it("saves a title edit on a stored healed row without a tick", async () => {
     const onSave = vi.fn();
-    renderDrawer(STORED_HEALED, onSave, false);
+    await renderDrawer(STORED_HEALED, onSave, false);
 
     expect(
       screen.getByText("Saved before consent ticks existed. Tick to confirm."),
@@ -160,11 +165,11 @@ describe("SubprofileItemDrawer for a tattoo artist", () => {
     expect(saved.structured?.photo?.hasClientConsent).toBeUndefined();
   });
 
-  it("treats a row whose id the server no longer holds as stored", () => {
+  it("treats a row whose id the server no longer holds as stored", async () => {
     // After a Save all the server rows carry new ids while the working rows
     // keep the old ones.
     const onSave = vi.fn();
-    renderDrawer(
+    await renderDrawer(
       { ...STORED_HEALED, id: "item-healed-before-save" },
       onSave,
       false,
@@ -177,8 +182,8 @@ describe("SubprofileItemDrawer for a tattoo artist", () => {
     expect(onSave).toHaveBeenCalledTimes(1);
   });
 
-  it("turns blur on by default for new scar work", () => {
-    renderDrawer({
+  it("turns blur on by default for new scar work", async () => {
+    await renderDrawer({
       ...emptyItem("scar_work"),
       title: "Top surgery florals",
       imageUrl: "work-image/u1/florals.jpg",
@@ -189,20 +194,20 @@ describe("SubprofileItemDrawer for a tattoo artist", () => {
     ).toBeChecked();
   });
 
-  it("hides collaborators on a body photo", () => {
-    const healedView = renderDrawer({
+  it("hides collaborators on a body photo", async () => {
+    const healedView = await renderDrawer({
       ...emptyItem("healed"),
       title: "Peony sleeve",
     });
     expect(screen.queryByText("Collaborators")).toBeNull();
     healedView.unmount();
 
-    renderDrawer({ ...emptyItem("flash"), title: "Moth sheet" });
+    await renderDrawer({ ...emptyItem("flash"), title: "Moth sheet" });
     expect(screen.getByText("Collaborators")).toBeTruthy();
   });
 
-  it("titles the drawer and the add button with direct verbs", () => {
-    const drawerView = renderDrawer(emptyItem("guest_spots"));
+  it("titles the drawer and the add button with direct verbs", async () => {
+    const drawerView = await renderDrawer(emptyItem("guest_spots"));
     expect(
       screen.getByRole("heading", { name: "Add guest spot" }),
     ).toBeTruthy();
@@ -222,23 +227,24 @@ describe("SubprofileItemDrawer for a tattoo artist", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("subprofiles");
     expect(screen.getByRole("button", { name: "Add flash" })).toBeTruthy();
   });
 
-  it("shows Confirm consent on a legacy healed row", () => {
-    const legacyView = renderRow(STORED_HEALED);
+  it("shows Confirm consent on a legacy healed row", async () => {
+    const legacyView = await renderRow(STORED_HEALED);
     expect(screen.getByText("Confirm consent")).toBeTruthy();
     legacyView.unmount();
 
-    renderRow({
+    await renderRow({
       ...STORED_HEALED,
       structured: { photo: { hasClientConsent: true } },
     });
     expect(screen.queryByText("Confirm consent")).toBeNull();
   });
 
-  it("blurs a scar work thumbnail in the editor list", () => {
-    const { container } = renderRow({
+  it("blurs a scar work thumbnail in the editor list", async () => {
+    const { container } = await renderRow({
       ...emptyItem("scar_work"),
       id: "item-scar-1",
       title: "Top surgery florals",
@@ -250,8 +256,8 @@ describe("SubprofileItemDrawer for a tattoo artist", () => {
     expect(screen.queryByRole("button", { name: "Show photo" })).toBeNull();
   });
 
-  it("points client photos in the gallery to Healed work", () => {
-    renderDrawer(emptyItem("gallery"));
+  it("points client photos in the gallery to Healed work", async () => {
+    await renderDrawer(emptyItem("gallery"));
 
     expect(
       screen.getByText(

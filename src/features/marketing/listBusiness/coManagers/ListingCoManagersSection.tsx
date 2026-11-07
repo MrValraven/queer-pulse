@@ -17,6 +17,10 @@ import { CoManagerInvitePanel } from "./CoManagerInvitePanel";
 import { CoManagerRosterRow } from "./CoManagerRosterRow";
 import { CoManagerStepDown } from "./CoManagerStepDown";
 import styles from "./CoManagers.module.css";
+import {
+  CO_MANAGER_SEAT_OVERRIDES,
+  failureToast,
+} from "../../marketingErrorCopy";
 import sectionStyles from "./ListingCoManagersSection.module.css";
 
 /**
@@ -54,8 +58,16 @@ export function ListingCoManagersSection({
     remove.mutate(memberSlug, {
       onSuccess: () =>
         showToast(t("marketing:listBusiness.coManagers.removedToast"), "info"),
-      onError: () =>
-        showToast(t("marketing:listBusiness.coManagers.removeError"), "error"),
+      onError: (error) =>
+        showToast(
+          failureToast(
+            error,
+            t,
+            "marketing:listBusiness.coManagers.removeErrorTitle",
+            CO_MANAGER_SEAT_OVERRIDES,
+          ),
+          "error",
+        ),
     });
   };
 

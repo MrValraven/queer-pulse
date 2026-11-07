@@ -688,7 +688,7 @@ export const resources: Catalog = {
     "Um hub para pessoas trans e não-binárias: orientação em saúde, guias jurídicos e administrativos, e uma forma de encontrar apoio entre pares no Fórum.",
 
   "transHub.hero.eyebrow": "Hub Trans e Não-Binárie",
-  "transHub.hero.title": "Um espaço dedicado, <em>não um acrescento.</em>",
+  "transHub.hero.title": "Um espaço dedicado, <em>feito com cuidado.</em>",
   "transHub.hero.lead":
     "Orientação em saúde, guias jurídicos e apoio entre pares, escritos para pessoas trans e não-binárias. Não precisas de resolver isto sozinhe.",
   "transHub.hero.anchor.healthcare": "Saúde",
@@ -769,7 +769,7 @@ export const resources: Catalog = {
   "transHealthcare.hero.sub":
     "Como aceder a cuidados de saúde de afirmação de género em Portugal, através do SNS ou em privado. Mudança de nome legal. O que levar, a quem ligar, o que esperar.",
   "transHealthcare.hero.disclaimer":
-    "Este guia reflete o sistema em vigor em junho de 2026. Confirma sempre os tempos de espera e procedimentos atuais com a ILGA Portugal ou o teu médico de família. Isto é conhecimento da comunidade, não aconselhamento jurídico ou médico.",
+    "Este guia reflete o sistema em vigor em junho de 2026. Confirma sempre os tempos de espera e procedimentos atuais com a ILGA Portugal ou o teu médico de família. Isto é conhecimento da comunidade e não substitui aconselhamento jurídico ou médico.",
 
   "transHealthcare.path.hrtSns.label": "Hormonoterapia via SNS",
   "transHealthcare.path.hrtPrivate.label": "Hormonoterapia em privado",
@@ -1697,7 +1697,7 @@ export const resources: Catalog = {
   "peerSupport.hero.anchor.how": "Como funciona",
   "peerSupport.what.title": "O que <em>é</em> o apoio entre pares",
   "peerSupport.what.p1":
-    "Apoio entre pares não é terapia nem é aconselhamento. É estar com alguém que já passou pelo que estás a passar e que não precisa que lhe expliques tudo. Sem notas clínicas, sem diagnóstico, sem objetivo que tenhas de atingir no fim.",
+    "Apoio entre pares é estar com alguém que já passou pelo que estás a passar e que não precisa que lhe expliques tudo. Sem notas clínicas, sem diagnóstico, sem objetivo que tenhas de atingir no fim.",
   "peerSupport.what.p2":
     "Na QueerPulse, o apoio entre pares acontece entre membros: no fórum, onde as pessoas partilham o que funcionou para elas, e em mensagens diretas com membros com quem tens conexão. Tu escolhes quanto partilhas, e podes recuar quando quiseres.",
   "peerSupport.how.title": "Como <em>funciona</em>",
@@ -2639,7 +2639,7 @@ export const resources: Catalog = {
   "intersectionality.commitment3.title": "Acessibilidade económica",
   "intersectionality.commitment3.text":
     "A própria QueerPulse não cobra nada aos membros. Quem organiza cada evento pode marcá-lo como gratuito, paga o que puderes ou preço fixo.",
-  "intersectionality.commitment4.title": "Não somos um bloco único",
+  "intersectionality.commitment4.title": "Muitas vozes",
   "intersectionality.commitment4.text":
     "A QueerPulse não fala a uma só voz sobre questões políticas. A comunidade contém multidões. O fórum é um lugar para ter os debates, e é a comunidade que os trabalha.",
 
@@ -2661,7 +2661,7 @@ export const resources: Catalog = {
 
   "intersectionality.outro.title": "Tudo o que és <em>pertence aqui.</em>",
   "intersectionality.outro.sub":
-    "Não só as partes mais fáceis de acolher. Tudo.",
+    "Cada parte de ti, incluindo as mais difíceis de acolher.",
   "intersectionality.outro.findCta": "Encontrar a tua comunidade",
   "intersectionality.outro.forumCta": "Fórum",
 

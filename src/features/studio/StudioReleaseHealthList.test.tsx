@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type { StudioReleaseCardView } from "./api/studio.adapters";
 import type {
   StudioDashboardReleaseView,
@@ -65,6 +66,7 @@ describe("StudioReleaseHealthList", () => {
         <StudioReleaseHealthList releases={rows} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(screen.getByText("4 of 5 done")).toBeInTheDocument();
     fireEvent.click(
       screen.getByRole("button", { name: "Show checklist for Maré alta" }),
@@ -87,6 +89,7 @@ describe("StudioReleaseHealthList", () => {
         <StudioReleaseHealthList releases={rows} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(
       screen.getByRole("button", {
         name: "Show checklist for Cidade dos santos",
@@ -98,12 +101,13 @@ describe("StudioReleaseHealthList", () => {
     expect(lyrics.closest("li")).toHaveTextContent("Optional");
   });
 
-  it("shows three releases, then the rest on request", () => {
+  it("shows three releases, then the rest on request", async () => {
     render(
       <TestProviders>
         <StudioReleaseHealthList releases={rows} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       screen.getAllByRole("button", { name: /^Show checklist for/ }),
     ).toHaveLength(3);

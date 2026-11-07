@@ -24,11 +24,12 @@ function createClient(): QueryClient {
 function renderGameButtons(
   queryClient: QueryClient,
   initialOpenPicker: "template" | "sources" | null = null,
+  targetGameId: string = TARGET_GAME_ID,
 ) {
   return render(
     <TestProviders queryClient={queryClient}>
       <QuizshowImportButtons
-        scope={gameScope(TARGET_GAME_ID)}
+        scope={gameScope(targetGameId)}
         hasQuiz={false}
         eventStartAt={null}
         isAdultsEvent
@@ -70,8 +71,12 @@ describe("QuizshowImportSourcePicker on a game", () => {
   });
 
   it("copies a game with from game", async () => {
+    // The 18+ game takes the flat quiz: the copy replaces its rounds and
+    // template and keeps the game's own title and 18+ switch, as on the server.
+    const adultsGameId = QUIZSHOW_DEMO_GAME_IDS.afterDark;
+    const flatGameId = QUIZSHOW_DEMO_GAME_IDS.flatQuiz;
     const queryClient = createClient();
-    renderGameButtons(queryClient);
+    renderGameButtons(queryClient, null, adultsGameId);
 
     await userEvent.click(
       await screen.findByRole("button", {
@@ -79,22 +84,28 @@ describe("QuizshowImportSourcePicker on a game", () => {
       }),
     );
     const dialog = await screen.findByRole("dialog");
-    const sourceGameQuizTitle = demoGetGame(SOURCE_GAME_ID).quiz?.title ?? "";
-    const gameTitleElement =
-      await within(dialog).findByText(sourceGameQuizTitle);
+    const flatGameQuiz = demoGetGame(flatGameId).quiz;
+    const adultsGameQuizTitle = demoGetGame(adultsGameId).quiz?.title;
+    const gameTitleElement = await within(dialog).findByText(
+      flatGameQuiz?.title ?? "",
+    );
     const gameRow = gameTitleElement.closest("div")?.parentElement;
     if (!gameRow) throw new Error("no game row");
     await userEvent.click(
       within(gameRow).getByRole("button", { name: "Copy this quiz" }),
     );
 
+    const copiedQuiz = () =>
+      queryClient.getQueryData<QuizshowGameResponse>(
+        quizshowKeys.game(adultsGameId, true),
+      )?.quiz;
     await waitFor(() =>
-      expect(
-        queryClient.getQueryData<QuizshowGameResponse>(
-          quizshowKeys.game(TARGET_GAME_ID, true),
-        )?.quiz?.title,
-      ).toBe(sourceGameQuizTitle),
+      expect(copiedQuiz()?.sourceTemplateId).toBe(
+        flatGameQuiz?.sourceTemplateId,
+      ),
     );
+    expect(copiedQuiz()?.title).toBe(adultsGameQuizTitle);
+    expect(copiedQuiz()?.rounds.length).toBe(flatGameQuiz?.rounds.length);
     expect(await screen.findByText("Quiz copied")).toBeTruthy();
   });
 

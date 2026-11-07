@@ -32,6 +32,7 @@ import { CreatorDraftConflictStrip } from "../../creatorDrafts/CreatorDraftConfl
 import { CreatorDraftNotice } from "../../creatorDrafts/CreatorDraftNotice";
 import { CreatorDraftSaveLine } from "../../creatorDrafts/CreatorDraftSaveLine";
 import { ApiError } from "../../../shared/api/client";
+import { communityErrorText } from "../communityErrors";
 import {
   FoundingThread,
   PanelActions,
@@ -336,7 +337,7 @@ function useStartCommunityActions({
             return;
           }
           setHandleError(null);
-          showToast(t("communities:start.toast.createError"), "error");
+          showToast(communityErrorText(t, error), "error");
         },
       });
       return;

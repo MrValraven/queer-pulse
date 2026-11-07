@@ -21,6 +21,7 @@ import {
   type EditedOpportunityState,
 } from "./editedOpportunityHandoff";
 import { volunteerOpportunityPath } from "./volunteerPaths";
+import { OPPORTUNITY_EDIT_OVERRIDES, failureToast } from "./marketingErrorCopy";
 
 /** The organisation the opportunity is already linked to, as picker options,
  *  so the link stays selectable after its poster stops running that
@@ -151,8 +152,16 @@ function EditOpportunityFormPanel({
         setSavedDtoJson(sentDtoJson);
         setLatestEditedState(rememberEditedOpportunity(updated));
       },
-      onError: () =>
-        showToast(t("marketing:postOpportunity.edit.errorToast"), "error"),
+      onError: (error) =>
+        showToast(
+          failureToast(
+            error,
+            t,
+            "marketing:postOpportunity.edit.errorTitle",
+            OPPORTUNITY_EDIT_OVERRIDES,
+          ),
+          "error",
+        ),
     });
   };
 

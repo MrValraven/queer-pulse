@@ -5,6 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCreateChangemakerNomination } from "./api/useCreateChangemakerNomination";
 import { NominateChangemakerMemberPicker } from "./NominateChangemakerMemberPicker";
 import type { StrangerMemberResult } from "../messages/api/useStrangerMemberSearch";
+import { nominationErrorText } from "./communityFeatureErrors";
 import styles from "./ChangemakersPage.module.css";
 
 /** Mirrors the `@MaxLength` set on the server's
@@ -93,8 +94,7 @@ export function NominateChangemakerForm() {
           setContact("");
           nomineeRef.current?.focus();
         },
-        onError: () =>
-          showToast(t("community:changemakers.nominate.errorToast"), "error"),
+        onError: (error) => showToast(nominationErrorText(t, error), "error"),
       },
     );
   }

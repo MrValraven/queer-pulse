@@ -222,7 +222,9 @@ export function DataExportStatus({
         <p className={styles.confirmBody}>
           {job.status === "expired"
             ? t("settings:dataExport.status.expired.body")
-            : t("settings:dataExport.status.failed.body")}
+            : job.errorCause
+              ? t(job.errorCause.key, job.errorCause.values)
+              : t("settings:dataExport.status.failed.body")}
         </p>
         <Button variant="primary" onClick={onRetry}>
           {t("settings:dataExport.status.retry")}

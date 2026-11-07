@@ -9,6 +9,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useReviewHelpful } from "./api/useReviewHelpful";
 import type { Review } from "./directoryPlaces";
+import { REVIEW_HELPFUL_OVERRIDES, failureToast } from "./marketingErrorCopy";
 import s from "./DirectorySpacePage.module.css";
 
 interface Props {
@@ -95,11 +96,16 @@ export function DirectoryReviewHelpful({
           setHasVoted(response.hasVoted);
           setLocalHelpful(response.helpful);
         },
-        onError: () => {
+        onError: (error) => {
           setHasVoted(!isVoting);
           setLocalHelpful(previousCount);
           showToast(
-            t("marketing:directory.detail.reviews.helpfulError"),
+            failureToast(
+              error,
+              t,
+              "marketing:directory.detail.reviews.helpfulErrorTitle",
+              REVIEW_HELPFUL_OVERRIDES,
+            ),
             "error",
           );
         },

@@ -11,6 +11,7 @@ import { useSubmitRoadmapIdea } from "./api/useRoadmapMutations";
 import { useRoadmapVoteToggle } from "./useRoadmapVoteToggle";
 import { MembersExplainerModal } from "../homepage/sections/MembersExplainerModal";
 import { NotBuildingCard, PlannedCard } from "./RoadmapCards";
+import { ROADMAP_IDEA_OVERRIDES, failureToast } from "./marketingErrorCopy";
 import styles from "./RoadmapPage.module.css";
 
 const DECISION_KEYS = [
@@ -47,8 +48,16 @@ export function SubmitIdea() {
         showToast(t("marketing:roadmap.submitIdea.toast.submitted"), "success");
         setValue("");
       },
-      onError: () => {
-        showToast(t("marketing:roadmap.submitIdea.toast.error"), "error");
+      onError: (error) => {
+        showToast(
+          failureToast(
+            error,
+            t,
+            "marketing:roadmap.submitIdea.toast.errorTitle",
+            ROADMAP_IDEA_OVERRIDES,
+          ),
+          "error",
+        );
       },
     });
   }

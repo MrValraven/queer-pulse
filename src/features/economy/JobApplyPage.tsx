@@ -28,6 +28,7 @@ import type {
 import { JobApplyHeader } from "./JobApplyHeader";
 import { JobApplyForm, type JobApplyFields } from "./JobApplyForm";
 import { JobApplySidebar } from "./JobApplySidebar";
+import { failureToast } from "./economyErrorCopy";
 import styles from "./JobApplyPage.module.css";
 
 /** Demo-mode seed: the mock applicant persona, kept exactly as before so the
@@ -186,12 +187,15 @@ export function JobApplyPage() {
         setSubmitting(false);
         setSubmitted(true);
       },
-      onError: (err) => {
+      onError: (error) => {
         setSubmitting(false);
-        if (err instanceof ApiError && err.status === 409) {
+        if (error instanceof ApiError && error.status === 409) {
           showToast(t("economy:jobApply.error.alreadyApplied"), "error");
         } else {
-          showToast(t("economy:jobApply.error.generic"), "error");
+          showToast(
+            failureToast(error, t, "economy:jobApply.error.genericTitle"),
+            "error",
+          );
         }
       },
     });

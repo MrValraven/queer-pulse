@@ -4,6 +4,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { communityPath } from "../../app/routeMap";
 import { useJoinCommunity } from "../communities/api/useCommunityMutations";
+import { readingGroupJoinErrorText } from "./communityFeatureErrors";
 
 /**
  * "Request to join", for a LIVE reading group.
@@ -78,11 +79,10 @@ export function ReadingGroupJoinButton({
                 "success",
               );
             },
-            onError: () =>
-              showToast(
-                t("community:readingGroups.card.joinErrorToast"),
-                "error",
-              ),
+            // `useJoinCommunity` is `silentError`: name the cause here (a ban,
+            // a paused community, a request already pending, offline).
+            onError: (error) =>
+              showToast(readingGroupJoinErrorText(t, error), "error"),
           },
         )
       }

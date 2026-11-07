@@ -4,6 +4,7 @@ import { TestProviders } from "../../../../test/TestProviders";
 import { TattooBlock } from "./TattooBlock";
 import { TattooEditProvider } from "./TattooEditContext";
 import { TattooStatusPill } from "./TattooStatusPill";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 // Unrun per repo policy: verified statically.
 
@@ -22,12 +23,13 @@ function renderFlashBlock(hasContent: boolean) {
 }
 
 describe("TattooBlock", () => {
-  it("hides an empty block from visitors", () => {
+  it("hides an empty block from visitors", async () => {
     render(<TestProviders>{renderFlashBlock(false)}</TestProviders>);
+    await awaitCatalog("subprofiles");
     expect(screen.queryByRole("region", { name: "Flash" })).toBeNull();
   });
 
-  it("shows the owner an empty block with its add link", () => {
+  it("shows the owner an empty block with its add link", async () => {
     render(
       <TestProviders>
         <TattooEditProvider subprofileId="sp-1" isOwner>
@@ -35,6 +37,7 @@ describe("TattooBlock", () => {
         </TattooEditProvider>
       </TestProviders>,
     );
+    await awaitCatalog("subprofiles");
     expect(screen.getByText("Add the designs people can book.")).toBeTruthy();
     const link = screen.getByRole("link", { name: "Add flash" });
     expect(
@@ -46,15 +49,16 @@ describe("TattooBlock", () => {
     ).toBe(true);
   });
 
-  it("shows a filled block to everyone, named by its heading", () => {
+  it("shows a filled block to everyone, named by its heading", async () => {
     render(<TestProviders>{renderFlashBlock(true)}</TestProviders>);
+    await awaitCatalog("subprofiles");
     const region = screen.getByRole("region", { name: "Flash" });
     expect(region.textContent).toContain("Sheet one");
   });
 });
 
 describe("TattooStatusPill", () => {
-  it("shows the next opening for a closed book", () => {
+  it("shows the next opening for a closed book", async () => {
     render(
       <TestProviders>
         <TattooStatusPill
@@ -64,16 +68,18 @@ describe("TattooStatusPill", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("subprofiles");
     expect(screen.getByText("Books closed")).toBeTruthy();
     expect(screen.getByText(/Books open again/)).toBeTruthy();
   });
 
-  it("renders nothing without a status", () => {
+  it("renders nothing without a status", async () => {
     const { container } = render(
       <TestProviders>
         <TattooStatusPill status={null} nextOpening="" waitNote="" />
       </TestProviders>,
     );
+    await awaitCatalog("subprofiles");
     expect(container.textContent).toBe("");
   });
 });

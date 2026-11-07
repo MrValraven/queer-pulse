@@ -143,6 +143,45 @@ describe("AdminPersonaPostActions", () => {
     );
   });
 
+  it.each([
+    [
+      "an inactive membership",
+      new ApiError(403, "Active membership required", {
+        code: "ACTIVE_MEMBERSHIP_REQUIRED",
+      }),
+      "Only active members can do this, and your account isn't active right now. Write to us if that seems wrong.",
+    ],
+    [
+      "a server fault",
+      new ApiError(500, "Server error"),
+      "Our servers hit an error on our side. Give it a moment and try again.",
+    ],
+  ])(
+    "names the cause in a toast and keeps the dialog open when Remove fails with %s",
+    async (_label, failure, expectedDetail) => {
+      removePost.mockRejectedValueOnce(failure);
+      renderPanel();
+      fireEvent.click(
+        await screen.findByRole("button", { name: "Remove update" }),
+      );
+      await screen.findByRole("dialog");
+      fireEvent.change(screen.getByRole("textbox"), {
+        target: { value: "Names a member without consent" },
+      });
+      fireEvent.click(
+        screen.getAllByRole("button", { name: "Remove update" }).at(-1)!,
+      );
+      expect(
+        await screen.findByText("Couldn't remove this update"),
+      ).toBeInTheDocument();
+      expect(await screen.findByText(expectedDetail)).toBeInTheDocument();
+      expect(screen.getByRole("dialog")).toBeInTheDocument();
+      expect(
+        screen.queryByText("This update is gone, nothing left to remove"),
+      ).not.toBeInTheDocument();
+    },
+  );
+
   it("reads an update that is already gone as gone, with no Remove update", async () => {
     getPost.mockRejectedValue(new ApiError(404, "Persona post not found"));
     renderPanel();

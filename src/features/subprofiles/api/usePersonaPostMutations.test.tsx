@@ -254,7 +254,11 @@ describe("persona post writes (demo)", () => {
     const created = await act(() =>
       create.result.current.mutateAsync({ body: "Rehearsal tonight" }),
     );
-    expect(posts.result.current.posts[0]?.id).toBe(created.id);
+    // The query client notifies subscribers on a zero-delay timer, so the
+    // patched cache reaches the hook after the mutation settles.
+    await waitFor(() =>
+      expect(posts.result.current.posts[0]?.id).toBe(created.id),
+    );
     expect(posts.result.current.posts).toHaveLength(before + 1);
     const update = renderHook(() => useUpdatePersonaPost(MARIANA), { wrapper });
     await act(() =>
@@ -263,13 +267,17 @@ describe("persona post writes (demo)", () => {
         body: { body: "Rehearsal moved to Thursday" },
       }),
     );
-    expect(posts.result.current.posts[0]?.body).toBe(
-      "Rehearsal moved to Thursday",
+    await waitFor(() =>
+      expect(posts.result.current.posts[0]?.body).toBe(
+        "Rehearsal moved to Thursday",
+      ),
     );
     expect(posts.result.current.posts[0]?.isEdited).toBe(true);
     const remove = renderHook(() => useDeletePersonaPost(MARIANA), { wrapper });
     await act(() => remove.result.current.mutateAsync({ postId: created.id }));
-    expect(posts.result.current.posts).toHaveLength(before);
+    await waitFor(() =>
+      expect(posts.result.current.posts).toHaveLength(before),
+    );
   });
 
   it("leaves a post unedited when the edit changes nothing", async () => {
@@ -313,7 +321,9 @@ describe("persona post writes (demo)", () => {
     const created = await act(() =>
       create.result.current.mutateAsync({ body: "soundcheck in ten" }),
     );
-    expect(posts.result.current.posts[0]?.id).toBe(created.id);
+    await waitFor(() =>
+      expect(posts.result.current.posts[0]?.id).toBe(created.id),
+    );
     await act(() => posts.result.current.fetchNextPage());
     await waitFor(() => expect(posts.result.current.posts).toHaveLength(7));
     const ids = posts.result.current.posts.map((post) => post.id);
@@ -360,7 +370,9 @@ describe("persona post edits (live)", () => {
     expect(updatePersonaPost).toHaveBeenCalledWith(LIVE_POST.id, {
       body: "Soundcheck at seven",
     });
-    expect(posts.result.current.posts[0]?.body).toBe("Soundcheck at seven");
+    await waitFor(() =>
+      expect(posts.result.current.posts[0]?.body).toBe("Soundcheck at seven"),
+    );
     expect(posts.result.current.posts[0]?.imageUrl).toBe(LIVE_POST.imageUrl);
   });
 

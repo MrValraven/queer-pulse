@@ -28,7 +28,7 @@ export const homepage: Catalog = {
   "manifesto.lead":
     "A community platform built around <em>what queer people actually need.</em>",
   "manifesto.body1":
-    "QueerPulse exists because we were tired of platforms that treat queer people as a market segment instead of a community. Every feature here starts with a real need, a frustration, or something we wished already existed.",
+    "QueerPulse exists because we wanted a community, and the platforms we found treated queer people as a market segment. Every feature here starts with a real need, a frustration, or something we wished already existed.",
   "manifesto.body2":
     "We believe community works differently when there is trust behind it. When you know who you are connecting with, when you have control over what you share, and when there are people looking out for the spaces you use.",
   "manifesto.body3":

@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import type { CommunityGivingMethodDTO } from "../api/communityGiving.api";
 import { GivingCopyRow } from "./GivingCopyRow";
 
@@ -23,12 +24,13 @@ function mockClipboard(writeText: ReturnType<typeof vi.fn>) {
   });
 }
 
-function renderIbanRow() {
+async function renderIbanRow() {
   render(
     <TestProviders>
       <GivingCopyRow method={IBAN_METHOD} />
     </TestProviders>,
   );
+  await awaitCatalog("communities");
 }
 
 describe("GivingCopyRow", () => {
@@ -39,7 +41,7 @@ describe("GivingCopyRow", () => {
   it("copies the compact IBAN and confirms it", async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     mockClipboard(writeText);
-    renderIbanRow();
+    await renderIbanRow();
 
     fireEvent.click(screen.getByRole("button", { name: "Copy IBAN for IBAN" }));
 
@@ -54,7 +56,7 @@ describe("GivingCopyRow", () => {
   it("says so when the clipboard refuses and keeps the value on screen", async () => {
     const writeText = vi.fn().mockRejectedValue(new Error("denied"));
     mockClipboard(writeText);
-    renderIbanRow();
+    await renderIbanRow();
 
     fireEvent.click(screen.getByRole("button", { name: "Copy IBAN for IBAN" }));
 
@@ -66,7 +68,7 @@ describe("GivingCopyRow", () => {
     expect(screen.getByText(GROUPED_IBAN)).toBeInTheDocument();
   });
 
-  it("renders a method that carries only kind, label and value", () => {
+  it("renders a method that carries only kind, label and value", async () => {
     mockClipboard(vi.fn().mockResolvedValue(undefined));
     render(
       <TestProviders>
@@ -75,6 +77,7 @@ describe("GivingCopyRow", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("communities");
 
     expect(screen.getByText(GROUPED_IBAN)).toBeInTheDocument();
     expect(

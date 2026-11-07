@@ -19,6 +19,7 @@ import { logError } from "../../shared/observability/logger";
 import {
   WorkProfileContext,
   type WorkProfileContextValue,
+  type WorkProfileSaveResult,
 } from "./useWorkProfile";
 
 /**
@@ -73,6 +74,8 @@ export function WorkProfileProvider({ children }: { children: ReactNode }) {
 
   const { mutateAsync: writePreferences, isPending: saving } = useMutation({
     mutationKey: ["workPreferences", "save"],
+    // WorkProfilePage names the cause itself, so the global toast would repeat it.
+    meta: { silentError: true },
     mutationFn: putWorkPreferences,
   });
 
@@ -114,23 +117,23 @@ export function WorkProfileProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const save = useCallback(async (): Promise<boolean> => {
+  const save = useCallback(async (): Promise<WorkProfileSaveResult> => {
     if (!live) {
       // Demo: the session copy is the only store there is, so it's already saved.
       persisted.current = draft;
-      return true;
+      return { isSaved: true };
     }
     try {
       const saved = await writePreferences(draft);
       persisted.current = saved;
       setDraft(saved);
       queryClient.setQueryData(["workPreferences", demoMode], saved);
-      return true;
+      return { isSaved: true };
     } catch (err) {
       logError(err, { scope: "workPreferences.save" });
       // Never leave an unwritten disclosure setting on screen.
       setDraft(persisted.current);
-      return false;
+      return { isSaved: false, error: err };
     }
   }, [live, draft, writePreferences, queryClient, demoMode]);
 

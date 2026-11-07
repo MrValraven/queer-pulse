@@ -32,6 +32,7 @@ import {
   useMutedMembers,
 } from "../safety/api/useMutedMembers";
 import { simulateOr } from "./api/account.api";
+import { settingWriteErrorCopy } from "./settingsActionErrors";
 import { blockedUsersQueryKey, useBlockedUsers } from "./api/useBlockedUsers";
 import { BlockedIdentitiesSection } from "./BlockedIdentitiesSection";
 import { Pane, Section } from "./SettingsControls";
@@ -175,7 +176,8 @@ function BlockedSection() {
         next.delete(entry.id);
         return next;
       });
-      showToast(t("settings:blockedUsers.toast.unblockedError"), "error");
+      const cause = settingWriteErrorCopy(err);
+      showToast(t(cause.key, cause.values), "error");
     } finally {
       setPendingId(null);
     }
@@ -299,7 +301,8 @@ function MutedSection() {
         next.delete(entry.id);
         return next;
       });
-      showToast(t("safety:mutedMembers.toast.unmutedError"), "error");
+      const cause = settingWriteErrorCopy(err);
+      showToast(t(cause.key, cause.values), "error");
     } finally {
       setPendingId(null);
     }

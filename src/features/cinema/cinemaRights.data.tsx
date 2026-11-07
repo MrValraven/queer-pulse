@@ -177,7 +177,7 @@ export const sections: RightsSection[] = [
           <>
             Yes. Tips are processed separately from film transactions. Payment
             processing fees on tips are absorbed by the co-op from operating
-            reserves, not deducted from your tip. If someone sends you €7, you
+            reserves, so your tip arrives whole. If someone sends you €7, you
             receive €7.
           </>
         ),
@@ -245,7 +245,7 @@ export const sections: RightsSection[] = [
             and content tags exactly as you submit them. Our curators may{" "}
             <em>suggest</em> a collection blurb or a programming note, but they
             never overwrite your own copy, and anything they add is clearly
-            attributed to the co-op, not to you.
+            attributed to the co-op.
           </>
         ),
       },
@@ -341,7 +341,7 @@ export const sections: RightsSection[] = [
             spellings are right.
             <span className="highlight">
               <strong>Always free to you:</strong> captions, transcoding, and
-              hosting are co-op costs, not filmmaker costs.
+              hosting are co-op costs.
             </span>
           </>
         ),
@@ -363,7 +363,7 @@ export const sections: RightsSection[] = [
             We build to WCAG 2.1 AA: full keyboard navigation, screen-reader
             labelling, and visible focus states throughout Studio. If you hit
             something that doesn't work with your assistive tech, tell the
-            rights team and we treat it as a bug, not a feature request.
+            rights team and we treat it as a bug.
           </>
         ),
       },

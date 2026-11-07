@@ -547,7 +547,7 @@ describe("VjScreenPage setup", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "This laptop is out of space for clips. Free some space and reload the screen",
+        "The screen's computer is out of space for clips. Free some space on it and reload the screen",
       ),
     ).toBeInTheDocument();
   });

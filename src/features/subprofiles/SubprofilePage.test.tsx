@@ -17,11 +17,19 @@ import { AUTH_STORAGE_KEY } from "../marketing/cookies.data";
 
 const LOADING_TEXT = "Loading…";
 
+/** The route chunk loads lazily, and its first cold load can take seconds,
+ *  so the page waits get the same budget as `routes.smoke.test.tsx`. */
+const PAGE_LOAD_TIMEOUT_MS = 10000;
+const PAGE_TEST_TIMEOUT_MS = 15000;
+
 async function waitForPageLoad() {
-  await waitFor(() => {
-    expect(screen.queryByText(LOADING_TEXT)).not.toBeInTheDocument();
-    expect(document.body.textContent?.trim().length ?? 0).toBeGreaterThan(0);
-  });
+  await waitFor(
+    () => {
+      expect(screen.queryByText(LOADING_TEXT)).not.toBeInTheDocument();
+      expect(document.body.textContent?.trim().length ?? 0).toBeGreaterThan(0);
+    },
+    { timeout: PAGE_LOAD_TIMEOUT_MS },
+  );
 }
 
 beforeEach(() => {
@@ -39,108 +47,126 @@ function LocationProbe() {
   );
 }
 
-describe("SubprofilePage restricted states (demo mode)", () => {
-  it("renders the private wall for a visibility:private persona", async () => {
-    render(
-      <TestProviders initialEntries={["/p/anika-journal"]}>
-        <AppRoutes />
-      </TestProviders>,
-    );
-    await waitForPageLoad();
-    expect(
-      await screen.findByText("This persona is private"),
-    ).toBeInTheDocument();
-  });
+describe(
+  "SubprofilePage restricted states (demo mode)",
+  { timeout: PAGE_TEST_TIMEOUT_MS },
+  () => {
+    it("renders the private wall for a visibility:private persona", async () => {
+      render(
+        <TestProviders initialEntries={["/p/anika-journal"]}>
+          <AppRoutes />
+        </TestProviders>,
+      );
+      await waitForPageLoad();
+      expect(
+        await screen.findByText("This persona is private"),
+      ).toBeInTheDocument();
+    });
 
-  it("renders the members-only wall for a signed-out visitor on a visibility:network persona", async () => {
-    window.localStorage.setItem(AUTH_STORAGE_KEY, "false");
-    render(
-      <TestProviders initialEntries={["/p/afterhours-club"]}>
-        <AppRoutes />
-      </TestProviders>,
-    );
-    await waitForPageLoad();
-    expect(await screen.findByText("Members only")).toBeInTheDocument();
-  });
+    it("renders the members-only wall for a signed-out visitor on a visibility:network persona", async () => {
+      window.localStorage.setItem(AUTH_STORAGE_KEY, "false");
+      render(
+        <TestProviders initialEntries={["/p/afterhours-club"]}>
+          <AppRoutes />
+        </TestProviders>,
+      );
+      await waitForPageLoad();
+      expect(await screen.findByText("Members only")).toBeInTheDocument();
+    });
 
-  it("renders the removed wall for a persona with removedAt set", async () => {
-    render(
-      <TestProviders initialEntries={["/p/casa-corvo-antiga"]}>
-        <AppRoutes />
-      </TestProviders>,
-    );
-    await waitForPageLoad();
-    expect(
-      await screen.findByText("This persona was taken down"),
-    ).toBeInTheDocument();
-  });
+    it("renders the removed wall for a persona with removedAt set", async () => {
+      render(
+        <TestProviders initialEntries={["/p/casa-corvo-antiga"]}>
+          <AppRoutes />
+        </TestProviders>,
+      );
+      await waitForPageLoad();
+      expect(
+        await screen.findByText("This persona was taken down"),
+      ).toBeInTheDocument();
+    });
 
-  it("renders the not-found wall for a handle that doesn't exist", async () => {
-    render(
-      <TestProviders initialEntries={["/p/does-not-exist-at-all"]}>
-        <AppRoutes />
-      </TestProviders>,
-    );
-    await waitForPageLoad();
-    expect(
-      await screen.findByText("This persona isn't here"),
-    ).toBeInTheDocument();
-  });
-});
+    it("renders the not-found wall for a handle that doesn't exist", async () => {
+      render(
+        <TestProviders initialEntries={["/p/does-not-exist-at-all"]}>
+          <AppRoutes />
+        </TestProviders>,
+      );
+      await waitForPageLoad();
+      expect(
+        await screen.findByText("This persona isn't here"),
+      ).toBeInTheDocument();
+    });
+  },
+);
 
-describe("SubprofilePage owner-draft preview (demo mode)", () => {
-  it("mounts SubprofileDraftBanner for the signed-in owner previewing their own draft", async () => {
-    // TIAGO_DRAFT is unlinked with no handle yet (assigned on publish); its
-    // owner's own preview link falls back to the internal slug ("code") —
-    // `findDemoSubprofileByHandle` mirrors that fallback.
-    render(
-      <TestProviders initialEntries={["/p/code"]}>
-        <AppRoutes />
-      </TestProviders>,
-    );
-    await waitForPageLoad();
-    expect(
-      await screen.findByText("Draft. Nobody else can open this address yet."),
-    ).toBeInTheDocument();
-  });
+describe(
+  "SubprofilePage owner-draft preview (demo mode)",
+  { timeout: PAGE_TEST_TIMEOUT_MS },
+  () => {
+    it("mounts SubprofileDraftBanner for the signed-in owner previewing their own draft", async () => {
+      // TIAGO_DRAFT is unlinked with no handle yet (assigned on publish); its
+      // owner's own preview link falls back to the internal slug ("code") —
+      // `findDemoSubprofileByHandle` mirrors that fallback.
+      render(
+        <TestProviders initialEntries={["/p/code"]}>
+          <AppRoutes />
+        </TestProviders>,
+      );
+      await waitForPageLoad();
+      expect(
+        await screen.findByText(
+          "Draft. Nobody else can open this address yet.",
+        ),
+      ).toBeInTheDocument();
+    });
 
-  it("shows not-found for the same draft to a signed-out visitor", async () => {
-    window.localStorage.setItem(AUTH_STORAGE_KEY, "false");
-    render(
-      <TestProviders initialEntries={["/p/code"]}>
-        <AppRoutes />
-      </TestProviders>,
-    );
-    await waitForPageLoad();
-    expect(
-      await screen.findByText("This persona isn't here"),
-    ).toBeInTheDocument();
-  });
-});
+    it("shows not-found for the same draft to a signed-out visitor", async () => {
+      window.localStorage.setItem(AUTH_STORAGE_KEY, "false");
+      render(
+        <TestProviders initialEntries={["/p/code"]}>
+          <AppRoutes />
+        </TestProviders>,
+      );
+      await waitForPageLoad();
+      expect(
+        await screen.findByText("This persona isn't here"),
+      ).toBeInTheDocument();
+    });
+  },
+);
 
-describe("SubprofilePage legacy nested-address redirect (demo mode)", () => {
-  it("replaces the legacy /members/:slug/:subslug address with /p/<handle> once the persona loads", async () => {
-    // sp-jordan-iron-orchid is linked, published, open, and already carries
-    // the handle "jordan-iron-orchid" (linkedPersonaHandleCandidate("jordan",
-    // "iron-orchid")), so this exercises F2's redirect end to end through the
-    // real route tree rather than the hook in isolation.
-    render(
-      <TestProviders
-        initialEntries={["/members/jordan/iron-orchid?tab=classes#book"]}
-      >
-        <AppRoutes />
-        <LocationProbe />
-      </TestProviders>,
-    );
-    await waitForPageLoad();
-    await waitFor(() =>
-      expect(screen.getByTestId("location-probe")).toHaveTextContent(
-        "/p/jordan-iron-orchid?tab=classes#book",
-      ),
-    );
-    // findDemoSubprofileByHandle now matches linked handles too, so the
-    // destination address renders the real persona rather than a not-found
-    // wall, confirming the redirect lands somewhere real.
-    expect(await screen.findByText("Iron Orchid")).toBeInTheDocument();
-  });
-});
+describe(
+  "SubprofilePage legacy nested-address redirect (demo mode)",
+  { timeout: PAGE_TEST_TIMEOUT_MS },
+  () => {
+    it("replaces the legacy /members/:slug/:subslug address with /p/<handle> once the persona loads", async () => {
+      // sp-jordan-iron-orchid is linked, published, open, and already carries
+      // the handle "jordan-iron-orchid" (linkedPersonaHandleCandidate("jordan",
+      // "iron-orchid")), so this exercises F2's redirect end to end through the
+      // real route tree rather than the hook in isolation.
+      render(
+        <TestProviders
+          initialEntries={["/members/jordan/iron-orchid?tab=classes#book"]}
+        >
+          <AppRoutes />
+          <LocationProbe />
+        </TestProviders>,
+      );
+      await waitForPageLoad();
+      await waitFor(() =>
+        expect(screen.getByTestId("location-probe")).toHaveTextContent(
+          "/p/jordan-iron-orchid?tab=classes#book",
+        ),
+      );
+      // findDemoSubprofileByHandle now matches linked handles too, so the
+      // destination address renders the real persona rather than a not-found
+      // wall, confirming the redirect lands somewhere real.
+      // The skin's running head repeats the name, so the page title is read
+      // by its heading.
+      expect(
+        await screen.findByRole("heading", { level: 1, name: "Iron Orchid" }),
+      ).toBeInTheDocument();
+    });
+  },
+);

@@ -6,7 +6,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useDisplayMode } from "../../app/providers/displayModeContext";
 import { Button, Toggle } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { reasonFor } from "../../shared/api/errorMessage";
+import { pushEnableErrorCopy, pushTestErrorCopy } from "./pushActionErrors";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "../settings/SettingsPage.module.css";
 import rowStyles from "./PushNotificationRow.module.css";
@@ -81,10 +81,8 @@ export function PushNotificationRow() {
     }
     const result = await enable();
     if (result.status === "failed") {
-      showToast(
-        reasonFor(result.error) ?? t("shared:social.genericError"),
-        "error",
-      );
+      const cause = pushEnableErrorCopy(result.error);
+      showToast(t(cause.key, cause.values), "error");
     }
   };
 
@@ -93,8 +91,9 @@ export function PushNotificationRow() {
     try {
       await testPush();
       showToast(t("settings:notifications.phonePush.test.sent"), "success");
-    } catch {
-      showToast(t("settings:notifications.phonePush.test.error"), "error");
+    } catch (error) {
+      const cause = pushTestErrorCopy(error);
+      showToast(t(cause.key, cause.values), "error");
     } finally {
       setSending(false);
     }

@@ -214,6 +214,7 @@ export function companyDetailToProfile(
 export function reviewDtoToReview(dto: CompanyReviewDTO): CompanyReviewView {
   return {
     id: dto.id,
+    isViewerAuthor: dto.isViewerAuthor,
     title: dto.title,
     stars: dto.stars,
     byline: dto.byline,

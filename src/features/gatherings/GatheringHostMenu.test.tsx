@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { useLocation } from "react-router-dom";
 import { TestProviders } from "../../test/TestProviders";
 import { GatheringHostMenu } from "./GatheringHostMenu";
+import { awaitCatalog } from "../../test/awaitCatalog";
 
 function LocationProbe() {
   const location = useLocation();
@@ -15,8 +16,8 @@ function LocationProbe() {
   );
 }
 
-function renderMenu() {
-  return render(
+async function renderMenu() {
+  const view = render(
     <TestProviders initialEntries={["/gatherings/party"]}>
       <GatheringHostMenu
         slug="party"
@@ -31,11 +32,13 @@ function renderMenu() {
       <LocationProbe />
     </TestProviders>,
   );
+  await awaitCatalog("gatherings");
+  return view;
 }
 
 describe("GatheringHostMenu", () => {
   it("opens the guest preview as a member", async () => {
-    renderMenu();
+    await renderMenu();
 
     await userEvent.click(
       screen.getByRole("button", { name: "Host tools for Party night" }),

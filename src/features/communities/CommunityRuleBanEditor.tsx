@@ -10,6 +10,7 @@ import type {
 import { useUpdateCommunityBan } from "./api/useCommunityBans";
 import { isNoSecondSignatoryError } from "./api/communityBanRatifications.api";
 import { CommunityRulePicker } from "./CommunityRulePicker";
+import { communityErrorText } from "./communityErrors";
 import styles from "./CommunityRuleCitation.module.css";
 
 /** The sentinel a `Select` uses for "this ban does not end by itself". */
@@ -110,7 +111,7 @@ export function CommunityRuleBanEditor({
           showToast(
             isNoSecondSignatoryError(error, isProposingPermanent)
               ? t("communities:detail.modtools.ban.edit.noSecondSignatoryToast")
-              : t("communities:detail.modtools.ban.edit.errorToast"),
+              : communityErrorText(t, error),
             "error",
           ),
       },

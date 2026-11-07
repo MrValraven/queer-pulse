@@ -18,6 +18,7 @@ import {
   type IdentityContactTarget,
   type IdentityEnquirySentDTO,
 } from "./identityContact.api";
+import { identityEnquiryCause } from "../api/messageErrorCopy";
 import { IDENTITY_CONTACT_KEY } from "./useIdentityContact";
 import styles from "./IdentityEnquiryModal.module.css";
 
@@ -137,13 +138,8 @@ export function IdentityEnquiryModal({
       },
       onError: (error) => {
         const refusal = classifyRefusal(error);
-        const key =
-          refusal === "rate_limited"
-            ? "messages:mailbox.contact.error.rateLimited"
-            : refusal === "unavailable"
-              ? "messages:mailbox.contact.error.unavailable"
-              : "messages:mailbox.contact.error.generic";
-        setErrorMessage(t(key, { name }));
+        const cause = identityEnquiryCause(error);
+        setErrorMessage(t(cause.key, { name, ...cause.values }));
         // The read is a cached snapshot: a cap can bite between it and the
         // send, and the mailbox can stop being reachable the same way. Either
         // refusal means the button's own state is now stale.

@@ -4,6 +4,7 @@ import { CommunitiesPickerSection } from "./CommunitiesPickerSection";
 import type { FeaturedCommunityRef } from "../members/profileCommunities.types";
 import { currentUser } from "../members/data/members";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 
 const ELIGIBLE_COMMUNITIES: FeaturedCommunityRef[] = [
   {
@@ -91,17 +92,20 @@ describe("CommunitiesPickerSection", () => {
     expect(screen.getByText("Beta")).toBeInTheDocument();
   });
 
-  it("featuring a community adds its slug to the draft", () => {
+  it("featuring a community adds its slug to the draft", async () => {
     draftFeaturedSlugs = [];
     renderPicker();
+    // The Feature button's label lives in the lazy `settings` namespace.
+    await awaitCatalog("settings");
     fireEvent.click(screen.getAllByRole("button", { name: /feature/i })[0]!);
     expect(updateDraft).toHaveBeenCalledWith({ featuredCommunities: ["a"] });
   });
 
-  it("featuring a community reports the change via onChange, so a communities-only edit dirties the save bar", () => {
+  it("featuring a community reports the change via onChange, so a communities-only edit dirties the save bar", async () => {
     draftFeaturedSlugs = [];
     const onChange = vi.fn();
     renderPicker(onChange);
+    await awaitCatalog("settings");
     fireEvent.click(screen.getAllByRole("button", { name: /feature/i })[0]!);
     expect(onChange).toHaveBeenCalledWith("communities");
   });

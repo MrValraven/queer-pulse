@@ -38,33 +38,47 @@ describe("quizshow template error copy", () => {
   });
 
   it.each([
-    ["Forbidden resource", "quizshow:templates.errors.noStaffRole"],
     [
-      "Active membership required",
+      "ACTIVE_MEMBERSHIP_REQUIRED",
       "quizshow:templates.errors.membershipInactive",
     ],
-    [
-      "Referenced upload does not belong to you",
-      "quizshow:templates.errors.foreignUpload",
-    ],
-    ["Invalid or missing CSRF token", "quizshow:templates.errors.staleSession"],
-    ["Cross-site request rejected", "quizshow:templates.errors.staleSession"],
-    ["Origin not allowed", "quizshow:templates.errors.staleSession"],
-  ])("reads the uncoded 403 %j by its message", (message, expectedKey) => {
-    const refused = new ApiError(403, message, {
+    ["UPLOAD_NOT_YOURS", "quizshow:templates.errors.foreignUpload"],
+    ["CSRF_REJECTED", "quizshow:templates.errors.staleSession"],
+  ])("reads the 403 coded %s by its machine code", (code, expectedKey) => {
+    const refused = new ApiError(403, "A sentence the backend may reword", {
       statusCode: 403,
-      message,
+      message: "A sentence the backend may reword",
       error: "Forbidden",
+      code,
     });
     expect(quizshowTemplateErrorKeyOf(refused)).toBe(expectedKey);
     expect(quizshowTemplatePublishErrorKeyOf(refused)).toBe(expectedKey);
   });
 
-  it("reads the member guard's uncoded 403 as a lapsed membership", () => {
+  it.each([
+    "Forbidden resource",
+    "Active membership required",
+    "Referenced upload does not belong to you",
+    "Invalid or missing CSRF token",
+    "Cross-site request rejected",
+    "Origin not allowed",
+  ])("reads the bare 403 sentence %j as a missing staff role", (message) => {
+    const refused = new ApiError(403, message, {
+      statusCode: 403,
+      message,
+      error: "Forbidden",
+    });
+    expect(quizshowTemplateErrorKeyOf(refused)).toBe(
+      "quizshow:templates.errors.noStaffRole",
+    );
+  });
+
+  it("reads the member guard's coded 403 as a lapsed membership", () => {
     const lapsed = new ApiError(403, "Active membership required", {
       statusCode: 403,
       message: "Active membership required",
       error: "Forbidden",
+      code: "ACTIVE_MEMBERSHIP_REQUIRED",
     });
     expect(quizshowTemplateErrorKeyOf(lapsed)).toBe(
       "quizshow:templates.errors.membershipInactive",

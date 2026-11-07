@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import type { ReactNode } from "react";
+import type { ComponentType, ReactNode } from "react";
 import { Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import { ApiError } from "../../../shared/api/client";
@@ -48,26 +48,31 @@ vi.mock("../../../shared/components/layout/AdminShell", () => ({
 }));
 
 // The dashboard has its own house-scope tests; here it only reports what
-// the page handed it and which API scope it runs in.
+// the page handed it and which API scope it runs in, inside the Frame the
+// page hands it, as the real dashboard wraps itself.
 vi.mock("../../gatherings/ManageGatheringDashboard", async () => {
   const { useEventHostScope } = await import("../../gatherings/eventHostScope");
   return {
     ManageGatheringDashboard: function DashboardProbe({
       gathering,
       slug,
+      Frame,
     }: {
       gathering: { title: string } | null;
       slug: string;
+      Frame: ComponentType<{ children: ReactNode }>;
     }) {
       const scope = useEventHostScope();
       return (
-        <div
-          data-testid="dashboard"
-          data-slug={slug}
-          data-api={scope.apiTarget}
-        >
-          {gathering?.title}
-        </div>
+        <Frame>
+          <div
+            data-testid="dashboard"
+            data-slug={slug}
+            data-api={scope.apiTarget}
+          >
+            {gathering?.title}
+          </div>
+        </Frame>
       );
     },
   };

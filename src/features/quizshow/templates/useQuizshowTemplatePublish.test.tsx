@@ -2,7 +2,9 @@ import { act, renderHook, screen, waitFor } from "@testing-library/react";
 import { QueryClient } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ReactNode } from "react";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { QuizshowTemplateCardText } from "../../../shared/contracts/quizshow";
 import { quizshowKeys } from "../api/quizshowKeys";
 import { resetQuizshowDemoStore } from "../api/quizshowDemoStore";
@@ -33,12 +35,24 @@ interface PublishHookProps {
   isUnsaved: boolean;
 }
 
+/**
+ * Paints one quizshow string, as the template page around the hook does, so
+ * the provider asks for the quizshow catalog before the hook toasts from it.
+ */
+function QuizshowCopyProbe() {
+  const { t } = useTranslation();
+  return <span hidden>{t("quizshow:templates.details.cardTitle")}</span>;
+}
+
 function setup() {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
   const wrapper = ({ children }: { children: ReactNode }) => (
-    <TestProviders queryClient={queryClient}>{children}</TestProviders>
+    <TestProviders queryClient={queryClient}>
+      <QuizshowCopyProbe />
+      {children}
+    </TestProviders>
   );
   return { queryClient, wrapper };
 }
@@ -77,6 +91,7 @@ describe("useQuizshowTemplatePublish in demo mode", () => {
 
   it("publishes a complete saved template and caches who published it", async () => {
     const { result, queryClient } = renderPridePublish();
+    await awaitCatalog("quizshow");
     expect(result.current.blockedReasonKey).toBeNull();
 
     act(() => result.current.publish());

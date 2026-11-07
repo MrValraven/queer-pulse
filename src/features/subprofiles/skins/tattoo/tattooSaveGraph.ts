@@ -77,22 +77,34 @@ function withoutCollaborators(
   return { ...item, collaborators: [] };
 }
 
+/** `items` mapped through `prepareItem`; the same array when every item comes back unchanged. */
+function mapKeepingUnchangedArray(
+  items: SubprofileItemInputDTO[],
+  prepareItem: (item: SubprofileItemInputDTO) => SubprofileItemInputDTO,
+): SubprofileItemInputDTO[] {
+  const preparedItems = items.map(prepareItem);
+  const hasChangedItem = preparedItems.some(
+    (preparedItem, index) => preparedItem !== items[index],
+  );
+  return hasChangedItem ? preparedItems : items;
+}
+
 /** Body-photo sections: collaborators cleared, since the server refuses them there and the drawer hides the picker.
  *  flash_days: every eventSlug dropped while the draft unlinks the persona. in_progress: sessions whose photo reads "" dropped.
- *  An emptied flashDay or structured key is removed. Any other section comes back as the same array. */
+ *  An emptied flashDay or structured key is removed. A section with nothing to change comes back as the same array. */
 export function prepareTattooItemsForSave(
   section: SubprofileSection,
   items: SubprofileItemInputDTO[],
   options: { isUnlinked: boolean },
 ): SubprofileItemInputDTO[] {
   if (section === "flash_days" && options.isUnlinked) {
-    return items.map(withoutEventSlug);
+    return mapKeepingUnchangedArray(items, withoutEventSlug);
   }
   const itemsForSection = isTattooBodyPhotoSection(section)
-    ? items.map(withoutCollaborators)
+    ? mapKeepingUnchangedArray(items, withoutCollaborators)
     : items;
   if (section === "in_progress") {
-    return itemsForSection.map(withoutEmptySessions);
+    return mapKeepingUnchangedArray(itemsForSection, withoutEmptySessions);
   }
   return itemsForSection;
 }

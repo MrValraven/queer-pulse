@@ -2,6 +2,7 @@ import type { useToast } from "../../shared/components/feedback/useToast";
 import type { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SavedItem } from "../../app/providers/useSaved";
 import { savedItemToBody } from "./api/saved.api";
+import { savedListErrorCopy } from "./savedListErrors";
 import type { useSavedListMutations } from "./api/SavedLists.queries";
 
 interface UseSavedListActionsParams {
@@ -37,7 +38,8 @@ export function useSavedListActions({
     try {
       await create.mutateAsync(trimmedName);
     } catch (error) {
-      showToast(t("members:savedLists.toast.createError"), "error");
+      const cause = savedListErrorCopy("create", error);
+      showToast(t(cause.key, cause.values), "error");
       throw error;
     }
     closeModal();
@@ -50,7 +52,8 @@ export function useSavedListActions({
     try {
       await rename.mutateAsync({ listId, name: trimmedName });
     } catch (error) {
-      showToast(t("members:savedLists.toast.renameError"), "error");
+      const cause = savedListErrorCopy("rename", error);
+      showToast(t(cause.key, cause.values), "error");
       throw error;
     }
     showToast(t("members:savedLists.toast.renamed"), "success");
@@ -60,7 +63,8 @@ export function useSavedListActions({
     try {
       await remove.mutateAsync(listId);
     } catch (error) {
-      showToast(t("members:savedLists.toast.deleteError"), "error");
+      const cause = savedListErrorCopy("delete", error);
+      showToast(t(cause.key, cause.values), "error");
       throw error;
     }
     closeModal();
@@ -73,7 +77,8 @@ export function useSavedListActions({
     try {
       await share.mutateAsync(listId);
     } catch (error) {
-      showToast(t("members:savedLists.toast.shareError"), "error");
+      const cause = savedListErrorCopy("share", error);
+      showToast(t(cause.key, cause.values), "error");
       throw error;
     }
     showToast(t("members:savedLists.toast.shared"), "success");
@@ -85,7 +90,8 @@ export function useSavedListActions({
     try {
       await unshare.mutateAsync(listId);
     } catch (error) {
-      showToast(t("members:savedLists.toast.revokeError"), "error");
+      const cause = savedListErrorCopy("revokeShare", error);
+      showToast(t(cause.key, cause.values), "error");
       throw error;
     }
     showToast(t("members:savedLists.toast.revoked"), "success");
@@ -101,7 +107,8 @@ export function useSavedListActions({
         body: savedItemToBody(item),
       });
     } catch (error) {
-      showToast(t("members:savedLists.toast.fileError"), "error");
+      const cause = savedListErrorCopy("file", error);
+      showToast(t(cause.key, cause.values), "error");
       throw error;
     }
   };
@@ -113,7 +120,8 @@ export function useSavedListActions({
     try {
       await removeItem.mutateAsync({ listId, ref });
     } catch (error) {
-      showToast(t("members:savedLists.toast.unfileError"), "error");
+      const cause = savedListErrorCopy("unfile", error);
+      showToast(t(cause.key, cause.values), "error");
       throw error;
     }
     showToast(t("members:savedLists.toast.unfiled"), "success");

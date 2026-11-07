@@ -46,11 +46,13 @@ export interface VjDockActionsProps {
 }
 
 /**
- * The dock's action row, one 48px band of four equal columns: Blackout,
- * Reset look, Cue (Go once cue mode is on) and More. Blackout, Reset look and
- * Go hand their action to the shared dispatcher, which sends Blackout and
- * Reset look immediately and Go as the cued clip. Cue and More stay usable
- * while blocked: one sets a preference on this device, the other opens a sheet.
+ * The dock's action row: Reset look, Cue (Go once cue mode is on), More and
+ * Blackout, in that order on screen and in tab order. Polish draws four equal
+ * columns; the pads variant draws a compact toolbar with Blackout the widest
+ * button at the end. Blackout, Reset look and Go hand their action to the
+ * shared dispatcher, which sends Blackout and Reset look immediately and Go as
+ * the cued clip. Cue and More stay usable while blocked: one sets a preference
+ * on this device, the other opens a sheet.
  */
 export function VjDockActions({
   isBlackout,
@@ -75,17 +77,6 @@ export function VjDockActions({
       role="group"
       aria-label={t("vj:dock.label")}
     >
-      <VjDockActionButton
-        actionId="blackout"
-        icon={<FiMoon aria-hidden fill="none" />}
-        label={t("vj:remote.blackout")}
-        isDisabled={isBlocked}
-        describedBy={blockedDescription}
-        isPressed={isBlackout}
-        isBusy={isBlackoutPending}
-        learnProps={blackoutLearn.learnProps}
-        onPress={() => dispatch({ kind: "blackout" }, "press")}
-      />
       <VjDockActionButton
         actionId="resetLook"
         icon={
@@ -121,6 +112,17 @@ export function VjDockActions({
         ariaLabel={t("vj:dock.moreAria")}
         hasDialogPopup
         onPress={onOpenMore}
+      />
+      <VjDockActionButton
+        actionId="blackout"
+        icon={<FiMoon aria-hidden fill="none" />}
+        label={t("vj:remote.blackout")}
+        isDisabled={isBlocked}
+        describedBy={blockedDescription}
+        isPressed={isBlackout}
+        isBusy={isBlackoutPending}
+        learnProps={blackoutLearn.learnProps}
+        onPress={() => dispatch({ kind: "blackout" }, "press")}
       />
     </div>
   );
@@ -187,7 +189,7 @@ function VjDockActionButton({
 }
 
 /**
- * The third column. Cue mode off, it shows Cue and turns cue mode on; on, it
+ * The second column. Cue mode off, it shows Cue and turns cue mode on; on, it
  * shows Go and sends the cued clip. One button holds both faces, so focus
  * stays put through the swap and only the face fades. With nothing cued, Go
  * stays focusable, aria-disabled, and says "Tap a clip to cue it".
@@ -241,10 +243,18 @@ function VjCueGoButton({
           />
         }
         label={
-          <VjSwapLabel
-            swapKey={face}
-            text={isCueMode ? t("vj:dock.go") : t("vj:dock.cue")}
-          />
+          <span className={styles.swapSlot}>
+            {/* Both labels, unseen, size the slot to the wider one, so the
+                toolbar holds still when Cue turns into Go. */}
+            <span className={styles.swapSizer} aria-hidden="true">
+              <span>{t("vj:dock.cue")}</span>
+              <span>{t("vj:dock.go")}</span>
+            </span>
+            <VjSwapLabel
+              swapKey={face}
+              text={isCueMode ? t("vj:dock.go") : t("vj:dock.cue")}
+            />
+          </span>
         }
         ariaLabel={isCueMode ? goAriaLabel : t("vj:dock.cueAria")}
         isDisabled={isCueMode && (isBlocked || !isArmed)}

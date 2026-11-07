@@ -2,8 +2,11 @@ import { useState } from "react";
 import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useToast } from "../../../shared/components/feedback/useToast";
-import { ApiError } from "../../../shared/api/client";
 import { useCloseBoardItem } from "../api/useCloseBoardItem";
+import {
+  boardCloseErrorCopy,
+  boardRenewErrorCopy,
+} from "../memberActionErrors";
 import { useRenewBoardItem } from "../api/useRenewBoardItem";
 import { BOARD_RENEW_LIMIT } from "./boardLifespan";
 import type { BoardItem } from "../data/members";
@@ -49,8 +52,9 @@ export function BoardRowOwnerActions({
       });
       onClosed({ closedNote: result.closedNote, closedAt: result.closedAt });
       setConfirmingFound(false);
-    } catch {
-      showToast(t("shared:social.genericError"), "error");
+    } catch (error) {
+      const cause = boardCloseErrorCopy(error);
+      showToast(t(cause.key, cause.values), "error");
     }
   }
 
@@ -71,11 +75,8 @@ export function BoardRowOwnerActions({
         }),
       );
     } catch (error) {
-      if (error instanceof ApiError && error.status === 409) {
-        showToast(t("members:content.board.renewLimitReached"), "error");
-        return;
-      }
-      showToast(t("shared:social.genericError"), "error");
+      const cause = boardRenewErrorCopy(error);
+      showToast(t(cause.key, cause.values), "error");
     }
   }
 

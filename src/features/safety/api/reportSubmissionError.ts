@@ -1,5 +1,9 @@
 import { useCallback } from "react";
 import { ApiError } from "../../../shared/api/client";
+import {
+  causeErrorKey,
+  SHARED_CAUSE_KEY,
+} from "../../../shared/api/causeErrorKey";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 
 /**
@@ -60,8 +64,19 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
  * public (PRD-280), so for a signed-out reporter that is a fault rather than
  * the design, and the generic "check your connection and try again" line sends
  * them round a loop that cannot end. It gets its own `auth` kind and its own
- * copy, naming signing in as the way through. Everything else still falls back
- * to the calling surface's own wording, unchanged.
+ * copy, naming signing in as the way through.
+ *
+ * ## Shared causes
+ *
+ * A filing that never reached the server, the client's own timeout, a 5xx, a
+ * moderation restriction, an inactive membership and an uncoded 400, 404, 409,
+ * 410, 413 or 422 each read as the shared cause line
+ * (`shared:apiError.noConnection`, `timedOut`, `serverFault`,
+ * `accountRestricted`, `notActive`, `reasonInvalid`, `notFound`,
+ * `reasonConflict`, `reasonGone`, `reasonTooLarge`), so the reporter learns why
+ * it failed and what to do. Any other refusal reads as the shared `refused`
+ * line naming the status. The calling surface's own wording is only a guard
+ * for the instant a catalog chunk has not loaded yet.
  */
 
 /** The backend's typed discriminator for a rolling flood-cap refusal. Mirrors
@@ -126,8 +141,61 @@ export type ReportSubmissionRefusal =
    * the reporter is told that instead.
    */
   | { kind: "auth" }
-  /** Anything else: a network failure, a 4xx, a 5xx. */
-  | { kind: "failure" };
+  /** The filing never reached the server (offline, DNS, CORS). */
+  | { kind: "noConnection" }
+  /** The API client's own timeout fired (408): the filing may have arrived. */
+  | { kind: "timedOut" }
+  /** The server failed while taking the filing (any 5xx). */
+  | { kind: "serverFault" }
+  /** An uncoded 400 or 422: some detail of the filing was not accepted. */
+  | { kind: "invalid" }
+  /** A moderation restriction (`ACCOUNT_RESTRICTED`) blocks new filings. */
+  | { kind: "restricted" }
+  /** The reporter's membership is not active (`ActiveMemberGuard`). */
+  | { kind: "notActive" }
+  /** A 404: the reported subject is gone or out of the reporter's reach. */
+  | { kind: "notFound" }
+  /** A 409: the filing collides with one already on record. */
+  | { kind: "conflict" }
+  /** A 410: the reported subject is no longer available. */
+  | { kind: "gone" }
+  /** A 413: the filing is too large to take. */
+  | { kind: "tooLarge" }
+  /** Any other status with no line of its own; `status` names it. */
+  | { kind: "failure"; status: number };
+
+/** The refusals that read as a shared cause line from `causeErrorKey.ts`. */
+type SharedCauseKind =
+  | "noConnection"
+  | "timedOut"
+  | "serverFault"
+  | "invalid"
+  | "restricted"
+  | "notActive"
+  | "notFound"
+  | "conflict"
+  | "gone"
+  | "tooLarge";
+
+/** Each shared-cause refusal's line in `shared/api/causeErrorKey.ts`. */
+const SHARED_CAUSE_KEY_BY_KIND: Readonly<Record<SharedCauseKind, string>> = {
+  noConnection: SHARED_CAUSE_KEY.noConnection,
+  timedOut: SHARED_CAUSE_KEY.timedOut,
+  serverFault: SHARED_CAUSE_KEY.serverFault,
+  invalid: SHARED_CAUSE_KEY.invalid,
+  restricted: SHARED_CAUSE_KEY.accountRestricted,
+  notActive: SHARED_CAUSE_KEY.notActive,
+  notFound: SHARED_CAUSE_KEY.notFound,
+  conflict: SHARED_CAUSE_KEY.conflict,
+  gone: SHARED_CAUSE_KEY.gone,
+  tooLarge: SHARED_CAUSE_KEY.tooLarge,
+};
+
+function isSharedCauseKind(
+  kind: ReportSubmissionRefusal["kind"],
+): kind is SharedCauseKind {
+  return Object.hasOwn(SHARED_CAUSE_KEY_BY_KIND, kind);
+}
 
 /**
  * Classify a report-submission error. Pure, so it can be unit tested and reused
@@ -138,7 +206,7 @@ export type ReportSubmissionRefusal =
 export function classifyReportSubmissionError(
   error: unknown,
 ): ReportSubmissionRefusal {
-  if (!(error instanceof ApiError)) return { kind: "failure" };
+  if (!(error instanceof ApiError)) return { kind: "noConnection" };
   // Read BEFORE the generic 401/403 branch below: a non-participant filing a
   // message report is a 403 too, but "sign in and try again" is the wrong
   // thing to tell a signed-in member who simply isn't in that conversation.
@@ -163,13 +231,31 @@ export function classifyReportSubmissionError(
   ) {
     return { kind: "useCopyrightClaim" };
   }
+  // Read BEFORE the generic 401/403 branch: a restricted or inactive reporter
+  // is also a 403, but "sign in and try again" would send them round a loop.
+  // The shared classifier owns both detections, so they cannot drift.
+  const sharedCauseKey = causeErrorKey(error).key;
+  if (sharedCauseKey === SHARED_CAUSE_KEY.accountRestricted) {
+    return { kind: "restricted" };
+  }
+  if (sharedCauseKey === SHARED_CAUSE_KEY.notActive) {
+    return { kind: "notActive" };
+  }
   // Read BEFORE the 429 branch: a refused-outright filing is its own answer and
   // has nothing to do with rate limiting. 403 is included because the API
   // client already spent its one CSRF self-heal (`request()` evicts the cached
   // token, re-bootstraps and retries any non-safe 403 exactly once), so a 403
   // that reaches here is a real refusal rather than the cross-tab CSRF desync.
   if (error.status === 401 || error.status === 403) return { kind: "auth" };
-  if (error.status !== 429) return { kind: "failure" };
+  // Read AFTER the coded 400 and 422 above, which keep their own lines.
+  if (error.status === 408) return { kind: "timedOut" };
+  if (error.status >= 500) return { kind: "serverFault" };
+  if (error.status === 400 || error.status === 422) return { kind: "invalid" };
+  if (error.status === 404) return { kind: "notFound" };
+  if (error.status === 409) return { kind: "conflict" };
+  if (error.status === 410) return { kind: "gone" };
+  if (error.status === 413) return { kind: "tooLarge" };
+  if (error.status !== 429) return { kind: "failure", status: error.status };
   const code = (error.data as { code?: unknown } | null | undefined)?.code;
   if (code !== REPORT_FLOOD_CAP_CODE) {
     return { kind: "burst" };
@@ -188,8 +274,9 @@ export function classifyReportSubmissionError(
  * ```
  *
  * A flood-cap refusal and the burst throttle each return their own human
- * `safety` string; everything else returns the surface's `fallbackMessage`
- * unchanged, so no existing failure copy moves.
+ * `safety` string; the shared causes (no connection, timeout, server fault,
+ * invalid input) return their `shared:apiError.*` line; everything else
+ * returns the surface's `fallbackMessage` unchanged.
  *
  * Whatever this returns must be announced, never only shown: `showToast` is
  * already live-region backed, and the surfaces that render an inline panel
@@ -212,9 +299,41 @@ export function useReportSubmissionError(): (
   const notParticipantMessage = t("safety:report.notParticipant");
   const evidenceExpiredMessage = t("safety:report.evidenceExpired");
   const claimFormMessage = t("studio:errors.useCopyrightClaim");
+  // The shared cause lines (`shared/api/causeErrorKey.ts`), for the failures
+  // that name a cause every surface shares.
+  const noConnectionMessage = t(SHARED_CAUSE_KEY.noConnection);
+  const timedOutMessage = t(SHARED_CAUSE_KEY.timedOut);
+  const serverFaultMessage = t(SHARED_CAUSE_KEY.serverFault);
+  const invalidMessage = t(SHARED_CAUSE_KEY.invalid);
+  const restrictedMessage = t(SHARED_CAUSE_KEY.accountRestricted);
+  const notActiveMessage = t(SHARED_CAUSE_KEY.notActive);
+  const notFoundMessage = t(SHARED_CAUSE_KEY.notFound);
+  const conflictMessage = t(SHARED_CAUSE_KEY.conflict);
+  const goneMessage = t(SHARED_CAUSE_KEY.gone);
+  const tooLargeMessage = t(SHARED_CAUSE_KEY.tooLarge);
   return useCallback(
     (error: unknown, fallbackMessage: string) => {
       const refusal = classifyReportSubmissionError(error);
+      if (isSharedCauseKind(refusal.kind)) {
+        const sharedCauseMessages: Record<SharedCauseKind, string> = {
+          noConnection: noConnectionMessage,
+          timedOut: timedOutMessage,
+          serverFault: serverFaultMessage,
+          invalid: invalidMessage,
+          restricted: restrictedMessage,
+          notActive: notActiveMessage,
+          notFound: notFoundMessage,
+          conflict: conflictMessage,
+          gone: goneMessage,
+          tooLarge: tooLargeMessage,
+        };
+        const sharedCauseMessage = sharedCauseMessages[refusal.kind];
+        // Same guard as below: a key echoed back while its namespace loads
+        // reads worse than the surface's own wording.
+        return sharedCauseMessage === SHARED_CAUSE_KEY_BY_KIND[refusal.kind]
+          ? fallbackMessage
+          : sharedCauseMessage;
+      }
       if (refusal.kind === "cap") {
         return floodCapMessage === "safety:report.floodCap"
           ? fallbackMessage
@@ -249,7 +368,15 @@ export function useReportSubmissionError(): (
           ? fallbackMessage
           : authRefusedMessage;
       }
-      return fallbackMessage;
+      // Any other status: the shared `refused` line names it, so the reporter
+      // can quote the number to us. Same echo guard as every branch above.
+      if (refusal.kind !== "failure") return fallbackMessage;
+      const refusedMessage = t(SHARED_CAUSE_KEY.refused, {
+        status: refusal.status,
+      });
+      return refusedMessage === SHARED_CAUSE_KEY.refused
+        ? fallbackMessage
+        : refusedMessage;
     },
     [
       floodCapMessage,
@@ -258,6 +385,17 @@ export function useReportSubmissionError(): (
       notParticipantMessage,
       evidenceExpiredMessage,
       claimFormMessage,
+      noConnectionMessage,
+      timedOutMessage,
+      serverFaultMessage,
+      invalidMessage,
+      restrictedMessage,
+      notActiveMessage,
+      notFoundMessage,
+      conflictMessage,
+      goneMessage,
+      tooLargeMessage,
+      t,
     ],
   );
 }

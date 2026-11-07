@@ -65,7 +65,7 @@ export const cinema: Catalog = {
   "mast.sectionNav.series": "Séries",
   "mast.sectionNav.openCalls": "Chamadas abertas",
   "ask.text":
-    "Não sabes o que ver? Diz-nos como te sentes e escolhemos um filme por ti, escolhido pela curadoria em vez de um algoritmo.",
+    "Não sabes o que ver? Diz-nos como te sentes e escolhemos um filme por ti, escolhido pela curadoria.",
   "ask.cta": "Pergunta à sala",
   "cover.nowShowing": "Em exibição",
   "cover.freeForSustainers": "Grátis para sustentadores",
@@ -145,7 +145,7 @@ export const cinema: Catalog = {
   "browse.hero.eyebrow": "O catálogo completo",
   "browse.hero.title": "Explora <em>tudo</em>",
   "browse.hero.lead":
-    "{count} filmes, programados por pessoas queer e pagos a pessoas queer. Filtra por acesso, formato, idioma e estado de espírito, guiado pela curadoria em vez de um algoritmo.",
+    "{count} filmes, programados por pessoas queer e pagos a pessoas queer. Filtra por acesso, formato, idioma e estado de espírito, guiado pela curadoria.",
   "browse.filters.heading": "Filtrar <em>e</em> ordenar",
   "browse.filters.clearAll": "Limpar tudo",
   "browse.filters.groupAccess": "Acesso",
@@ -887,7 +887,7 @@ export const cinema: Catalog = {
   "submit.form.step1.format.ariaLabel": "Formato",
   "submit.form.step1.synopsis.label": "Sinopse",
   "submit.form.step1.synopsis.why":
-    "Escrita por ti, com a tua própria voz. 80–200 palavras. Não é um pitch. Descreve o filme como se estivesses a escrever a alguém que ainda não o viu.",
+    "Escrita por ti, com a tua própria voz. 80–200 palavras. Descreve o filme como se estivesses a escrever a alguém que ainda não o viu.",
   "submit.form.step1.synopsis.placeholder":
     "Um filme paciente e generoso sobre pessoas queer idosas da classe trabalhadora de Lisboa, feito ao longo de três anos nas cozinhas que as criaram…",
   "submit.form.step1.statement.label": "Nota de realização",

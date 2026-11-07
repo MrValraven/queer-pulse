@@ -8,6 +8,7 @@ import {
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createFormatters } from "../../shared/i18n/format";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import {
   DEMO_ARTIST_LATE_BLOOMERS,
   DEMO_ARTIST_MARIANA,
@@ -56,12 +57,13 @@ vi.mock("./api/useStudioAccess", async (importOriginal) => {
   };
 });
 
-function renderAt(path: string) {
+async function renderAt(path: string) {
   render(
     <TestProviders initialEntries={[path]}>
       <StudioPaymentsPage />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
 }
 
 const MARIANA_INBOX = "Payments of Mariana Sol to confirm";
@@ -87,7 +89,7 @@ const referenceLineOf = (row: HTMLElement) =>
 
 const confirmButtonOf = (name: string) =>
   screen.getByRole("button", {
-    name: new RegExp(`^Confirm the payment from ${name} for `),
+    name: new RegExp(`^Confirm payment from ${name} for `),
   });
 
 async function inboxRows() {
@@ -114,7 +116,7 @@ beforeEach(() => {
 
 describe("StudioPaymentsPage to confirm", () => {
   it("opens on Mariana's claims, oldest first, with what the artist needs to match them", async () => {
-    renderAt("/studio/payments");
+    await renderAt("/studio/payments");
     expect(
       await screen.findByRole("heading", { name: "Payments to confirm" }),
     ).toBeInTheDocument();
@@ -138,11 +140,11 @@ describe("StudioPaymentsPage to confirm", () => {
   });
 
   it("confirms a payment, folds the row away and announces it", async () => {
-    renderAt("/studio/payments");
+    await renderAt("/studio/payments");
     await inboxRows();
     fireEvent.click(
       screen.getByRole("button", {
-        name: "Confirm the payment from Rui Alves for Cidade dos santos",
+        name: "Confirm payment from Rui Alves for Cidade dos santos",
       }),
     );
     expect(
@@ -159,11 +161,11 @@ describe("StudioPaymentsPage to confirm", () => {
   });
 
   it("declines with a reason and a note", async () => {
-    renderAt("/studio/payments");
+    await renderAt("/studio/payments");
     await inboxRows();
     fireEvent.click(
       screen.getByRole("button", {
-        name: /^Decline the payment from Joana Matos for /,
+        name: /^Decline payment from Joana Matos for /,
       }),
     );
     const dialog = await screen.findByRole("dialog", {
@@ -196,7 +198,7 @@ describe("StudioPaymentsPage to confirm", () => {
   });
 
   it("moves focus to the next row's Confirm, then to the panel heading", async () => {
-    renderAt("/studio/payments");
+    await renderAt("/studio/payments");
     await inboxRows();
     fireEvent.click(confirmButtonOf("Rui Alves"));
     await screen.findByText(/^Payment confirmed\. Rui Alves /);
@@ -230,11 +232,11 @@ describe("StudioPaymentsPage to confirm", () => {
 
   it("keeps the dialog, the row and the picks when a decline fails", async () => {
     mocks.shouldDeclineFail = true;
-    renderAt("/studio/payments");
+    await renderAt("/studio/payments");
     await inboxRows();
     fireEvent.click(
       screen.getByRole("button", {
-        name: /^Decline the payment from Joana Matos for /,
+        name: /^Decline payment from Joana Matos for /,
       }),
     );
     const dialog = await screen.findByRole("dialog", {
@@ -265,14 +267,14 @@ describe("StudioPaymentsPage to confirm", () => {
   });
 
   it("drops a row someone else already answered and says so", async () => {
-    renderAt("/studio/payments");
+    await renderAt("/studio/payments");
     await inboxRows();
     // A co-member confirmed Rui's claim after this page loaded: the demo
     // answers the second decider with 409 studio_purchase_not_pending.
     demoRowOf("demo-claim-rui").status = "confirmed";
     fireEvent.click(
       screen.getByRole("button", {
-        name: "Confirm the payment from Rui Alves for Cidade dos santos",
+        name: "Confirm payment from Rui Alves for Cidade dos santos",
       }),
     );
     expect(
@@ -290,7 +292,7 @@ describe("StudioPaymentsPage to confirm", () => {
 
 describe("StudioPaymentsPage sales and empty states", () => {
   it("shows the sales tab with totals equal to the rows", async () => {
-    renderAt("/studio/payments?tab=sales");
+    await renderAt("/studio/payments?tab=sales");
     expect(await screen.findByRole("tab", { name: "Sales" })).toHaveAttribute(
       "aria-selected",
       "true",
@@ -343,7 +345,7 @@ describe("StudioPaymentsPage sales and empty states", () => {
 
   it("asks for an artist page when the member has none", async () => {
     mocks.hasNoPersonas = true;
-    renderAt("/studio/payments");
+    await renderAt("/studio/payments");
     expect(
       await screen.findByRole("heading", {
         name: "Create a persona that works with Studio",
@@ -353,7 +355,7 @@ describe("StudioPaymentsPage sales and empty states", () => {
   });
 
   it("names the artist page it shows when ?persona= is none of the member's", async () => {
-    renderAt("/studio/payments?persona=someone-elses-artist-page");
+    await renderAt("/studio/payments?persona=someone-elses-artist-page");
     expect(
       await screen.findByText(
         "That artist page is not one of yours, so this shows Mariana Sol",
@@ -365,7 +367,7 @@ describe("StudioPaymentsPage sales and empty states", () => {
   });
 
   it("leaves the unknown artist page line out for one of the member's own", async () => {
-    renderAt(`/studio/payments?persona=${DEMO_ARTIST_MARIANA.id}`);
+    await renderAt(`/studio/payments?persona=${DEMO_ARTIST_MARIANA.id}`);
     await screen.findByRole("list", { name: MARIANA_INBOX });
     expect(
       screen.queryByText(/^That artist page is not one of yours/),
@@ -373,7 +375,7 @@ describe("StudioPaymentsPage sales and empty states", () => {
   });
 
   it("shows the empty line for Late Bloomers", async () => {
-    renderAt(`/studio/payments?persona=${DEMO_ARTIST_LATE_BLOOMERS.id}`);
+    await renderAt(`/studio/payments?persona=${DEMO_ARTIST_LATE_BLOOMERS.id}`);
     expect(
       await screen.findByText(
         "No payments waiting. When a member says they paid you, it shows up here",
@@ -401,11 +403,11 @@ describe("StudioPaymentsPage decline focus", () => {
     };
     document.addEventListener("focusin", recordFocus);
     try {
-      renderAt("/studio/payments");
+      await renderAt("/studio/payments");
       await inboxRows();
       fireEvent.click(
         screen.getByRole("button", {
-          name: /^Decline the payment from Joana Matos for /,
+          name: /^Decline payment from Joana Matos for /,
         }),
       );
       const dialog = await screen.findByRole("dialog", {

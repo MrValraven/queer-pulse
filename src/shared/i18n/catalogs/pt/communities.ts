@@ -172,6 +172,85 @@ export const communities: Catalog = {
   "common.pinnedToast": "Fixado no topo.",
   "common.unpinnedToast": "Deixou de estar fixado.",
 
+  // ── Porque falhou uma escrita na comunidade (communityErrors.ts) ──────────
+  // Sem ligação, sessão terminada, restrição, conta inativa, limite de pedidos
+  // e falhas do servidor vêm de shared:apiError.*; estas são as causas que
+  // precisam do contexto da comunidade.
+  "error.membersOnly":
+    "Esta comunidade guarda o conteúdo para as pessoas que lhe pertencem. Pede para entrar e tenta outra vez.",
+  "error.frozen":
+    "Esta comunidade está em pausa enquanto a moderação analisa denúncias recentes, por isso não aceita novas publicações, respostas nem pessoas. Reabre quando a análise terminar.",
+  "error.banned":
+    "O teu acesso a esta comunidade está bloqueado, por isso não podes fazer isso aqui.",
+  "error.reapplyTooSoon":
+    "Esta comunidade pediu-te que esperasses antes de voltares a candidatar-te. Tenta de novo quando a espera terminar.",
+  "error.requestPending":
+    "O teu pedido para entrar já está com a moderação. A moderação vai responder, por isso não há mais nada para enviar.",
+  "error.requestResolved":
+    "Um moderador já respondeu a esse pedido. Atualiza a página para ver o ponto da situação.",
+  "error.parentRequired":
+    "Junta-te primeiro à comunidade principal e depois podes juntar-te a este espaço.",
+  "error.rulesChanged":
+    "As regras da casa mudaram enquanto lias. Lê a nova versão, aceita-a e tenta outra vez.",
+  "error.spaceTierTooOpen":
+    "Um espaço não pode ser mais aberto do que a comunidade principal. Escolhe o mesmo nível de acesso da comunidade principal ou um mais restrito.",
+  "error.archived":
+    "Esta comunidade está arquivada, por isso só pode ser lida e não pode ser alterada.",
+  "error.parentPaused":
+    "Este espaço está em pausa porque a comunidade principal está em pausa. Pode reabrir quando a principal reabrir.",
+  "error.frozenByModeration":
+    "A moderação congelou esta comunidade, por isso só pode reabrir quando as denúncias em aberto estiverem resolvidas.",
+  "error.notOnRoster":
+    "Só as pessoas da lista desta comunidade podem fazer isso. Junta-te primeiro e tenta outra vez.",
+  "error.alreadyMember":
+    "Já és membro desta comunidade. Atualiza a página para a veres.",
+  "error.ownerCannotLeave":
+    "Quem é dono da comunidade não pode sair nem ser removido. Transfere primeiro a propriedade para outro membro.",
+  "error.ownerRoleFixed":
+    "O papel de dono não pode ser alterado. Transfere primeiro a propriedade se queres que outra pessoa lidere.",
+  "error.ownRoleFixed":
+    "Não podes alterar o teu próprio papel aqui. Pede a outro dono ou moderador.",
+  "error.alreadyOwner":
+    "Esse membro já é dono desta comunidade. Atualiza a página para ver quem é o dono atual.",
+  "error.houseAccountOwner":
+    "A propriedade não pode passar para a conta da casa QueerPulse. Escolhe um membro.",
+  "error.cannotBeListed":
+    "Uma comunidade só pode ser listada publicamente quando o nível de acesso é público ou por pedido, e um espaço não pode ser listado. Muda o nível de acesso ou deixa-a sem listagem.",
+  "error.needsHigherRole":
+    "O teu papel aqui não chega para essa alteração. Um dono ou co-dono pode fazê-la por ti.",
+  "error.ownerOnly":
+    "Só o dono desta comunidade pode fazer isso. Pede ao dono ou pede que te passe a propriedade.",
+  "error.needsStaffRole":
+    "Só o dono e a moderação desta comunidade podem fazer isso, e o teu papel pode ter mudado desde que abriste esta página. Atualiza para confirmar.",
+  "error.announcementStaffOnly":
+    "Só o dono, os co-donos e a moderação podem publicar um anúncio. Publica como uma publicação normal.",
+  "error.communityGone":
+    "Esta comunidade já não está disponível. Pode ter sido arquivada ou removida.",
+  "error.postGone":
+    "Essa publicação ou resposta já não existe, por isso não há nada para alterar. Atualiza para ver o que lá está agora.",
+  "error.memberGone":
+    "Esse membro já não está na lista. Atualiza para ver a lista atual.",
+  "error.inviteGone":
+    "Esse convite já não existe. Pode ter sido retirado. Atualiza para ver os teus convites atuais.",
+  "error.inviteAnswered":
+    "Esse convite já foi respondido. Atualiza a página para ver o ponto da situação.",
+  "error.offerAnswered":
+    "Essa oferta já foi respondida. Atualiza a página para ver o ponto da situação.",
+  "error.needsVouch":
+    "Esta comunidade precisa da garantia de um membro atual antes de poder admitir esta pessoa.",
+  "error.banGone":
+    "Esse membro já não tem nenhum impedimento. Atualiza para ver a lista atual.",
+  "error.banRuleStale":
+    "Essa regra já não faz parte das regras desta comunidade. Escolhe uma da lista atual e tenta outra vez.",
+  "error.shelfFull":
+    "A estante de recursos está cheia. Remove uma entrada antes de adicionares outra.",
+  "error.ownerReviewDaily":
+    "Podes apresentar uma revisão de dono por dia e hoje já apresentaste uma. Tenta outra vez amanhã.",
+  "error.ownerReviewOpen":
+    "Esta comunidade já tem uma revisão de dono em aberto, por isso não há mais nada para apresentar.",
+  "error.noProfile":
+    "Não conseguimos saber qual é a tua entrada na lista porque o teu perfil ainda não carregou. Atualiza a página e tenta outra vez.",
+
   // ── Página de detalhe da comunidade (hero + sidebar) ──────────────────────
   "detail.breadcrumb": "Comunidades e Coletivos",
   // PRD-141. The `invite` tier refuses an uninvited join outright now
@@ -2243,8 +2322,7 @@ export const communities: Catalog = {
   "values.lib.kidsWelcome":
     "As crianças são bem-vindas em tudo o que estiver marcado como para famílias.",
   "values.lib.chosenFamily": "A família escolhida conta como família aqui.",
-  "values.lib.carersSupported":
-    "Quem cuida recebe ajuda para participar em vez de se desenrascar sozinho.",
+  "values.lib.carersSupported": "Quem cuida recebe ajuda para participar.",
   "values.lib.ageStated": "Cada evento diz claramente para que idades é.",
   "values.lib.adultsOnly":
     "Parte do que fazemos é só para adultos, e isso é sempre dito claramente.",
@@ -2331,7 +2409,6 @@ export const communities: Catalog = {
   "spaces.mod.form.creating": "A criar…",
   "spaces.mod.form.cancel": "Cancelar",
   "spaces.mod.created": "Espaço criado",
-  "spaces.mod.createError": "Não foi possível criar o espaço. Tenta de novo.",
   "spaces.mod.notAllowed":
     "Esta comunidade não pode abrir espaços neste momento.",
   "spaces.mod.list.title": "Espaços nesta comunidade",

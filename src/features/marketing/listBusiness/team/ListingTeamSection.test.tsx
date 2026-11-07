@@ -16,6 +16,7 @@ import {
 } from "../api/listingTeam.demo";
 import type { ManagedListingDTO } from "../api/listings.api";
 import { ListingTeamSection } from "./ListingTeamSection";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 const TINTA_VIVA_REF = "QPL-DEMO-0201";
 const NAVALHA_REF = "QPL-DEMO-0202";
@@ -50,11 +51,16 @@ function makeManagedListing(
   } as unknown as ManagedListingDTO;
 }
 
-function renderSection(ref: string, overrides?: Partial<ManagedListingDTO>) {
-  return render(
+async function renderSection(
+  ref: string,
+  overrides?: Partial<ManagedListingDTO>,
+) {
+  const view = render(
     <ListingTeamSection listing={makeManagedListing(ref, overrides)} />,
     { wrapper: TestProviders },
   );
+  await awaitCatalog("marketing");
+  return view;
 }
 
 function tintaVivaRow(
@@ -132,7 +138,7 @@ function acceptedNames(): string[] {
 
 describe("ListingTeamSection answers", () => {
   it("lists the five people with their roles and the count, a member among them", async () => {
-    renderSection(TINTA_VIVA_REF);
+    await renderSection(TINTA_VIVA_REF);
     expect(await screen.findByText("On your page")).toBeInTheDocument();
     expect(screen.getByText("5 of 40")).toBeInTheDocument();
     await waitFor(() =>
@@ -151,7 +157,7 @@ describe("ListingTeamSection answers", () => {
       ...seededTintaVivaAccepted(FUMO),
       tintaVivaRow(FUMO, { status: "pending", initiatedBy: "persona" }),
     ]);
-    renderSection(TINTA_VIVA_REF);
+    await renderSection(TINTA_VIVA_REF);
     expect(await screen.findByText("Asking to join")).toBeInTheDocument();
     const request = rowOf("Fumo Azul");
     fireEvent.change(within(request).getByLabelText(ROLE_FIELD_LABEL), {
@@ -171,7 +177,7 @@ describe("ListingTeamSection answers", () => {
   });
 
   it("cancels a sent invite", async () => {
-    renderSection(NAVALHA_REF);
+    await renderSection(NAVALHA_REF);
     expect(await screen.findByText("Invites sent")).toBeInTheDocument();
     fireEvent.click(
       within(rowOf("Agulha Lenta")).getByRole("button", {
@@ -185,7 +191,7 @@ describe("ListingTeamSection answers", () => {
   });
 
   it("asks before removing a member", async () => {
-    renderSection(TINTA_VIVA_REF);
+    await renderSection(TINTA_VIVA_REF);
     await screen.findByText("Fumo Azul");
     const removeButtonName = "Remove from team: Fumo Azul";
     fireEvent.click(screen.getByRole("button", { name: removeButtonName }));
@@ -216,7 +222,7 @@ describe("ListingTeamSection answers", () => {
 
 describe("ListingTeamSection editing and order", () => {
   it("moves a member down and keeps the new order", async () => {
-    renderSection(TINTA_VIVA_REF);
+    await renderSection(TINTA_VIVA_REF);
     await screen.findByText("Rosa Brava");
     expect(
       screen.getByRole("button", { name: "Move Rosa Brava up" }),
@@ -236,7 +242,7 @@ describe("ListingTeamSection editing and order", () => {
   });
 
   it("saves an edited role", async () => {
-    renderSection(TINTA_VIVA_REF);
+    await renderSection(TINTA_VIVA_REF);
     await screen.findByText("Linha Fina");
     fireEvent.click(
       within(rowOf("Linha Fina")).getByRole("button", {
@@ -263,7 +269,7 @@ describe("ListingTeamSection editing and order", () => {
   });
 
   it("saves the role on Enter in the role field", async () => {
-    renderSection(TINTA_VIVA_REF);
+    await renderSection(TINTA_VIVA_REF);
     await screen.findByText("Linha Fina");
     fireEvent.click(
       within(rowOf("Linha Fina")).getByRole("button", {
@@ -282,7 +288,7 @@ describe("ListingTeamSection editing and order", () => {
   });
 
   it("returns focus to Edit role after Cancel", async () => {
-    renderSection(TINTA_VIVA_REF);
+    await renderSection(TINTA_VIVA_REF);
     await screen.findByText("Linha Fina");
     const editName = "Edit role: Linha Fina";
     fireEvent.click(
@@ -303,7 +309,7 @@ describe("ListingTeamSection editing and order", () => {
   });
 
   it("closes the role editor on Escape and returns focus to Edit role", async () => {
-    renderSection(TINTA_VIVA_REF);
+    await renderSection(TINTA_VIVA_REF);
     await screen.findByText("Linha Fina");
     const editName = "Edit role: Linha Fina";
     fireEvent.click(
@@ -328,7 +334,7 @@ describe("ListingTeamSection editing and order", () => {
 
 describe("ListingTeamSection focus and hidden rows", () => {
   it("keeps focus on the moved arrow and announces the new place", async () => {
-    renderSection(TINTA_VIVA_REF);
+    await renderSection(TINTA_VIVA_REF);
     await screen.findByText("Rosa Brava");
     const moveDown = screen.getByRole("button", {
       name: "Move Rosa Brava down",
@@ -350,7 +356,7 @@ describe("ListingTeamSection focus and hidden rows", () => {
       ...seededTintaVivaAccepted(FUMO),
       tintaVivaRow(FUMO, { status: "pending", initiatedBy: "persona" }),
     ]);
-    renderSection(TINTA_VIVA_REF);
+    await renderSection(TINTA_VIVA_REF);
     await screen.findByText("Asking to join");
     const approve = within(rowOf("Fumo Azul")).getByRole("button", {
       name: "Approve Fumo Azul",
@@ -376,7 +382,7 @@ describe("ListingTeamSection focus and hidden rows", () => {
     for (const personaId of [ROSA, LINHA, FUMO]) {
       setDemoTeamPersonaHidden(personaId, true);
     }
-    renderSection(TINTA_VIVA_REF);
+    await renderSection(TINTA_VIVA_REF);
     await waitFor(() =>
       expect(screen.getAllByText(HIDDEN_NAME)).toHaveLength(3),
     );
@@ -403,7 +409,7 @@ describe("ListingTeamSection focus and hidden rows", () => {
       tintaVivaRow(LINHA, { status: "pending", initiatedBy: "persona" }),
       tintaVivaRow(AGULHA, { status: "pending" }),
     ]);
-    renderSection(TINTA_VIVA_REF, { status: "review" });
+    await renderSection(TINTA_VIVA_REF, { status: "review" });
     expect(
       await screen.findByText(
         "Your listing needs to be live and shown in the directory before you can invite or approve anyone",
@@ -430,19 +436,19 @@ describe("ListingTeamSection focus and hidden rows", () => {
       ...fullTeam,
       tintaVivaRow(FUMO, { status: "pending", initiatedBy: "persona" }),
     ]);
-    renderSection(TINTA_VIVA_REF);
+    await renderSection(TINTA_VIVA_REF);
     await screen.findByText("Asking to join");
     const request = rowOf("Fumo Azul");
     fireEvent.click(within(request).getByRole("button", { name: /^Approve/ }));
     expect(await within(request).findByRole("alert")).toHaveTextContent(
-      "This team is full. A business can show up to 40 personas",
+      "This team is full. A business can show up to 40 people",
     );
   });
 });
 
 describe("ListingTeamSection member rows", () => {
   it("shows a member in the same layout as a persona, with Member and the handle", async () => {
-    renderSection(TINTA_VIVA_REF);
+    await renderSection(TINTA_VIVA_REF);
     await screen.findByText("Catarina Vaz");
     const row = rowOf("Catarina Vaz");
     expect(row).toHaveTextContent("Front of house");
@@ -458,7 +464,7 @@ describe("ListingTeamSection member rows", () => {
   });
 
   it("moves a member up and announces the new place", async () => {
-    renderSection(TINTA_VIVA_REF);
+    await renderSection(TINTA_VIVA_REF);
     await screen.findByText("Catarina Vaz");
     fireEvent.click(
       screen.getByRole("button", { name: "Move Catarina Vaz up" }),
@@ -476,7 +482,7 @@ describe("ListingTeamSection member rows", () => {
   });
 
   it("saves an edited role on a member", async () => {
-    renderSection(TINTA_VIVA_REF);
+    await renderSection(TINTA_VIVA_REF);
     await screen.findByText("Catarina Vaz");
     fireEvent.click(
       within(rowOf("Catarina Vaz")).getByRole("button", {
@@ -497,7 +503,7 @@ describe("ListingTeamSection member rows", () => {
   });
 
   it("asks before removing a member and keeps focus in the section", async () => {
-    renderSection(TINTA_VIVA_REF);
+    await renderSection(TINTA_VIVA_REF);
     await screen.findByText("Catarina Vaz");
     const removeButton = screen.getByRole("button", {
       name: "Remove from team: Catarina Vaz",
@@ -530,7 +536,7 @@ describe("ListingTeamSection member rows", () => {
   });
 
   it("lists a pending member invite with Cancel invite and nothing to approve", async () => {
-    renderSection(STUDIO_CABELO_REF);
+    await renderSection(STUDIO_CABELO_REF);
     expect(await screen.findByText("Invites sent")).toBeInTheDocument();
     const invite = rowOf("Alex Moreno");
     expect(invite).toHaveTextContent("Colourist");
@@ -559,7 +565,7 @@ describe("ListingTeamSection member rows", () => {
     ]);
     setDemoTeamMemberHidden("catarina-vaz", true);
     setDemoTeamMemberHidden("jonas", true);
-    renderSection(TINTA_VIVA_REF);
+    await renderSection(TINTA_VIVA_REF);
     await waitFor(() =>
       expect(screen.getAllByText(HIDDEN_MEMBER_NAME)).toHaveLength(2),
     );
@@ -591,7 +597,7 @@ describe("ListingTeamSection member rows", () => {
   });
 
   it("offers the Members tab beside Personas in the invite picker", async () => {
-    renderSection(TINTA_VIVA_REF);
+    await renderSection(TINTA_VIVA_REF);
     expect(
       await screen.findByRole("tab", { name: "Members" }),
     ).toBeInTheDocument();

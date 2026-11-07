@@ -2,6 +2,7 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import { Route, Routes } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { ApiError } from "../../../shared/api/client";
 import { gatheringPath } from "../../gatherings/data";
 import { GoTogetherFeedbackPage } from "./GoTogetherFeedbackPage";
@@ -138,8 +139,8 @@ function mockGroup(data: GoTogetherGroupDTO | undefined) {
   mockUseGoTogetherGroup.mockReturnValue({ data });
 }
 
-function renderPage() {
-  return render(
+async function renderPage() {
+  render(
     <TestProviders initialEntries={["/go-together/feedback/demo-group-1"]}>
       <Routes>
         <Route
@@ -149,12 +150,13 @@ function renderPage() {
       </Routes>
     </TestProviders>,
   );
+  await awaitCatalog("goTogether");
 }
 
 describe("GoTogetherFeedbackPage", () => {
-  it("offers Yes, Maybe and Not for me as a radio group for every other member", () => {
+  it("offers Yes, Maybe and Not for me as a radio group for every other member", async () => {
     mockFeedback({ data: openFeedback });
-    renderPage();
+    await renderPage();
 
     const radiogroups = screen.getAllByRole("radiogroup", {
       name: /mariana|rui/i,
@@ -173,9 +175,9 @@ describe("GoTogetherFeedbackPage", () => {
     }
   });
 
-  it("shows the liking-gap line", () => {
+  it("shows the liking-gap line", async () => {
     mockFeedback({ data: openFeedback });
-    renderPage();
+    await renderPage();
 
     expect(
       screen.getByText(
@@ -184,9 +186,9 @@ describe("GoTogetherFeedbackPage", () => {
     ).toBeInTheDocument();
   });
 
-  it("reveals the private note only once Not for me is picked for that member", () => {
+  it("reveals the private note only once Not for me is picked for that member", async () => {
     mockFeedback({ data: openFeedback });
-    renderPage();
+    await renderPage();
 
     expect(
       screen.queryByText(
@@ -206,9 +208,9 @@ describe("GoTogetherFeedbackPage", () => {
     ).toBeInTheDocument();
   });
 
-  it("saves verdicts keyed by slug plus the group's clicked and goAgain answers", () => {
+  it("saves verdicts keyed by slug plus the group's clicked and goAgain answers", async () => {
     mockFeedback({ data: openFeedback });
-    renderPage();
+    await renderPage();
 
     fireEvent.click(
       within(screen.getByRole("radiogroup", { name: /mariana/i })).getByRole(
@@ -240,9 +242,9 @@ describe("GoTogetherFeedbackPage", () => {
     });
   });
 
-  it("reads as closed with no form when the feedback window is no longer open", () => {
+  it("reads as closed with no form when the feedback window is no longer open", async () => {
     mockFeedback({ data: { ...openFeedback, isOpen: false } });
-    renderPage();
+    await renderPage();
 
     expect(
       screen.getByText("This round of feedback has closed"),
@@ -259,7 +261,7 @@ describe("GoTogetherFeedbackPage", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("switches to the closed view when saving answers GO_TOGETHER_FEEDBACK_CLOSED", () => {
+  it("switches to the closed view when saving answers GO_TOGETHER_FEEDBACK_CLOSED", async () => {
     mockFeedback({ data: openFeedback });
     saveFeedbackMutate.mockImplementation((_body, opts) =>
       opts?.onError?.(
@@ -268,7 +270,7 @@ describe("GoTogetherFeedbackPage", () => {
         }),
       ),
     );
-    renderPage();
+    await renderPage();
 
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
 
@@ -278,30 +280,30 @@ describe("GoTogetherFeedbackPage", () => {
     expect(screen.queryAllByRole("radiogroup")).toHaveLength(0);
   });
 
-  it("names the gathering in the heading once useGoTogetherGroup resolves it", () => {
+  it("names the gathering in the heading once useGoTogetherGroup resolves it", async () => {
     mockFeedback({ data: openFeedback });
     mockGroup(groupFixture);
-    renderPage();
+    await renderPage();
 
     expect(
       screen.getByRole("heading", { name: "How did Pride Picnic go?" }),
     ).toBeInTheDocument();
   });
 
-  it("keeps a generic heading while the gathering hasn't resolved yet", () => {
+  it("keeps a generic heading while the gathering hasn't resolved yet", async () => {
     mockFeedback({ data: openFeedback });
     mockGroup(undefined);
-    renderPage();
+    await renderPage();
 
     expect(
       screen.getByRole("heading", { name: "How did it go?" }),
     ).toBeInTheDocument();
   });
 
-  it("links the closed view back to the specific gathering once it resolves", () => {
+  it("links the closed view back to the specific gathering once it resolves", async () => {
     mockFeedback({ data: { ...openFeedback, isOpen: false } });
     mockGroup(groupFixture);
-    renderPage();
+    await renderPage();
 
     const backLink = screen.getByRole("link", {
       name: "Back to the event",
@@ -309,13 +311,13 @@ describe("GoTogetherFeedbackPage", () => {
     expect(backLink).toHaveAttribute("href", gatheringPath("pride-picnic"));
   });
 
-  it("falls back to the member's own events list when the group hasn't loaded", () => {
+  it("falls back to the member's own events list when the group hasn't loaded", async () => {
     // Covers both an in-flight useGoTogetherGroup query and the 404 a member
     // who has already left the group gets from it: either way `data` stays
     // undefined, which is exactly what this page's fallback reads.
     mockFeedback({ data: { ...openFeedback, isOpen: false } });
     mockGroup(undefined);
-    renderPage();
+    await renderPage();
 
     const backLink = screen.getByRole("link", { name: "Back to your events" });
     expect(backLink).toHaveAttribute("href", "/account/events");
@@ -323,9 +325,9 @@ describe("GoTogetherFeedbackPage", () => {
 });
 
 describe("GoTogetherFeedbackPage final fix wave", () => {
-  it("tells the member their answers stay private and help form better groups", () => {
+  it("tells the member their answers stay private and help form better groups", async () => {
     mockFeedback({ data: openFeedback });
-    renderPage();
+    await renderPage();
 
     expect(
       screen.getByText(
@@ -334,10 +336,10 @@ describe("GoTogetherFeedbackPage final fix wave", () => {
     ).toBeInTheDocument();
   });
 
-  it("names the product and links back to the gathering above the title", () => {
+  it("names the product and links back to the gathering above the title", async () => {
     mockFeedback({ data: openFeedback });
     mockGroup(groupFixture);
-    renderPage();
+    await renderPage();
 
     expect(screen.getByText("Go together")).toBeInTheDocument();
     expect(
@@ -345,9 +347,9 @@ describe("GoTogetherFeedbackPage final fix wave", () => {
     ).toHaveAttribute("href", gatheringPath("pride-picnic"));
   });
 
-  it("marks the picked option with a check as well as aria-checked", () => {
+  it("marks the picked option with a check as well as aria-checked", async () => {
     mockFeedback({ data: openFeedback });
-    renderPage();
+    await renderPage();
 
     const marianaGroup = screen.getByRole("radiogroup", { name: /mariana/i });
     const yesOption = within(marianaGroup).getByRole("radio", { name: "Yes" });
@@ -363,12 +365,12 @@ describe("GoTogetherFeedbackPage final fix wave", () => {
     expect(maybeOption.querySelector("svg")).toBeNull();
   });
 
-  it("reads as closed with no Retry when the group no longer exists (404)", () => {
+  it("reads as closed with no Retry when the group no longer exists (404)", async () => {
     mockFeedback({
       isError: true,
       error: new ApiError(404, "Not found", { code: "NOT_FOUND" }),
     });
-    renderPage();
+    await renderPage();
 
     expect(
       screen.getByText("This round of feedback has closed"),
@@ -381,12 +383,12 @@ describe("GoTogetherFeedbackPage final fix wave", () => {
     ).toBeInTheDocument();
   });
 
-  it("keeps the Retry state for a server failure", () => {
+  it("keeps the Retry state for a server failure", async () => {
     mockFeedback({
       isError: true,
       error: new ApiError(500, "Server error"),
     });
-    renderPage();
+    await renderPage();
 
     expect(
       screen.queryByText("This round of feedback has closed"),
@@ -396,7 +398,7 @@ describe("GoTogetherFeedbackPage final fix wave", () => {
     ).toBeInTheDocument();
   });
 
-  it("moves focus to the confirmation and scrolls to the top after saving", () => {
+  it("moves focus to the confirmation and scrolls to the top after saving", async () => {
     const scrollToSpy = vi
       .spyOn(window, "scrollTo")
       .mockImplementation(() => undefined);
@@ -404,7 +406,7 @@ describe("GoTogetherFeedbackPage final fix wave", () => {
     saveFeedbackMutate.mockImplementation((_body, opts) =>
       opts?.onSuccess?.(openFeedback),
     );
-    renderPage();
+    await renderPage();
 
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
 
@@ -418,12 +420,12 @@ describe("GoTogetherFeedbackPage final fix wave", () => {
     scrollToSpy.mockRestore();
   });
 
-  it("leaves focus alone when the page first loads already closed", () => {
+  it("leaves focus alone when the page first loads already closed", async () => {
     const scrollToSpy = vi
       .spyOn(window, "scrollTo")
       .mockImplementation(() => undefined);
     mockFeedback({ data: { ...openFeedback, isOpen: false } });
-    renderPage();
+    await renderPage();
 
     expect(
       screen.getByRole("group", {

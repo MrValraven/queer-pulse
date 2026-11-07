@@ -2,10 +2,11 @@ import { useState } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../../test/TestProviders";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 import type { VjActionDispatch } from "../input/vjRemoteAction";
 import { VjDockActions, type VjDockActionsProps } from "./VjDockActions";
 
-function renderActions(overrides: Partial<VjDockActionsProps> = {}) {
+async function renderActions(overrides: Partial<VjDockActionsProps> = {}) {
   const dispatch = vi.fn<VjActionDispatch>();
   const onTurnOnCueMode = vi.fn();
   const onOpenMore = vi.fn();
@@ -25,6 +26,7 @@ function renderActions(overrides: Partial<VjDockActionsProps> = {}) {
       <VjDockActions {...props} />
     </TestProviders>,
   );
+  await awaitCatalog("vj");
   return { ...view, dispatch, onTurnOnCueMode, onOpenMore };
 }
 
@@ -46,8 +48,8 @@ function CueHarness({ armedClipTitle }: { armedClipTitle: string | null }) {
 }
 
 describe("VjDockActions", () => {
-  it("Blackout dispatches blackout and shows pressed", () => {
-    const { dispatch, rerender } = renderActions();
+  it("Blackout dispatches blackout and shows pressed", async () => {
+    const { dispatch, rerender } = await renderActions();
     const blackout = screen.getByRole("button", { name: "Blackout" });
     expect(blackout).toHaveAttribute("aria-pressed", "false");
 
@@ -73,14 +75,14 @@ describe("VjDockActions", () => {
     expect(pressedBlackout).toHaveAttribute("aria-busy", "true");
   });
 
-  it("Reset look dispatches resetLook", () => {
-    const { dispatch } = renderActions();
+  it("Reset look dispatches resetLook", async () => {
+    const { dispatch } = await renderActions();
     fireEvent.click(screen.getByRole("button", { name: "Reset look" }));
     expect(dispatch).toHaveBeenCalledWith({ kind: "resetLook" }, "press");
   });
 
-  it("Reset look marks itself done while the confirmation shows", () => {
-    renderActions({ isResetDone: true });
+  it("Reset look marks itself done while the confirmation shows", async () => {
+    await renderActions({ isResetDone: true });
     expect(screen.getByRole("button", { name: "Reset look" })).toHaveAttribute(
       "data-done",
       "true",
@@ -93,6 +95,7 @@ describe("VjDockActions", () => {
         <CueHarness armedClipTitle={null} />
       </TestProviders>,
     );
+    await awaitCatalog("vj");
     const cue = screen.getByRole("button", { name: "Turn on cue mode" });
     cue.focus();
     fireEvent.click(cue);
@@ -103,8 +106,8 @@ describe("VjDockActions", () => {
     expect(go).toHaveFocus();
   });
 
-  it("Go is aria-disabled and says Tap a clip to cue it with nothing armed", () => {
-    const { dispatch } = renderActions({ isCueMode: true });
+  it("Go is aria-disabled and says Tap a clip to cue it with nothing armed", async () => {
+    const { dispatch } = await renderActions({ isCueMode: true });
     const go = screen.getByRole("button", { name: "Go" });
     expect(go).toHaveAttribute("aria-disabled", "true");
     expect(go).toHaveAccessibleDescription("Tap a clip to cue it");
@@ -113,8 +116,8 @@ describe("VjDockActions", () => {
     expect(dispatch).not.toHaveBeenCalled();
   });
 
-  it("Go dispatches go with a clip armed", () => {
-    const { dispatch } = renderActions({
+  it("Go dispatches go with a clip armed", async () => {
+    const { dispatch } = await renderActions({
       isCueMode: true,
       armedClipTitle: "Glitter rain",
     });
@@ -127,8 +130,8 @@ describe("VjDockActions", () => {
     expect(dispatch).toHaveBeenCalledWith({ kind: "go" }, "press");
   });
 
-  it("More opens the more sheet", () => {
-    const { onOpenMore } = renderActions();
+  it("More opens the more sheet", async () => {
+    const { onOpenMore } = await renderActions();
     const more = screen.getByRole("button", { name: "More controls" });
     expect(more).toHaveAttribute("aria-haspopup", "dialog");
 
@@ -136,8 +139,8 @@ describe("VjDockActions", () => {
     expect(onOpenMore).toHaveBeenCalledTimes(1);
   });
 
-  it("blocked actions send nothing", () => {
-    const { dispatch } = renderActions({
+  it("blocked actions send nothing", async () => {
+    const { dispatch } = await renderActions({
       isBlocked: true,
       isCueMode: true,
       armedClipTitle: "Glitter rain",
@@ -154,7 +157,7 @@ describe("VjDockActions", () => {
     expect(dispatch).not.toHaveBeenCalled();
   });
 
-  it("blocked actions point at the reason the page names", () => {
+  it("blocked actions point at the reason the page names", async () => {
     render(
       <TestProviders>
         <p id="vj-blocked-reason">You are offline</p>
@@ -171,6 +174,7 @@ describe("VjDockActions", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("vj");
     expect(
       screen.getByRole("button", { name: "Blackout" }),
     ).toHaveAccessibleDescription("You are offline");

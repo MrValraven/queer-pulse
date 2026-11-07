@@ -7,6 +7,7 @@ import {
 } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../shared/api/client";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { TestProviders } from "../../test/TestProviders";
 import { useAdminStudioLanding } from "./api/useStudioAdminLanding";
 import type {
@@ -53,20 +54,24 @@ function Host() {
   return data ? <StudioAdminLandingPreviews landing={data} /> : null;
 }
 
-function renderHost() {
+async function renderHost() {
   render(
     <TestProviders initialEntries={["/admin/studio"]}>
       <Host />
     </TestProviders>,
   );
+  await awaitCatalog("admin", "studio");
 }
 
 const section = () => screen.findByRole("region", { name: "Hear it first" });
 
+/** The row whose own track title reads `text`. The match is on a whole
+ *  element: the seeded "Cidade dos santos" track shares its name with the
+ *  release that every Mariana Sol row names in its meta line. */
 function rowOf(container: HTMLElement, text: string) {
   const row = within(container)
     .getAllByRole("listitem")
-    .find((item) => item.textContent?.includes(text));
+    .find((item) => within(item).queryByText(text) !== null);
   if (!row) throw new Error(`no row for ${text}`);
   return row;
 }
@@ -122,7 +127,7 @@ beforeEach(() => {
 
 describe("Studio page console: previews (demo)", () => {
   it("lists open rows with position, status, who asked, the page flag and the reason an approved row is muted", async () => {
-    renderHost();
+    await renderHost();
     const region = await section();
     const open = openOf(seeded());
     const items = within(region).getAllByRole("listitem");
@@ -155,7 +160,7 @@ describe("Studio page console: previews (demo)", () => {
   });
 
   it("keeps answered requests behind a toggle that names its state", async () => {
-    renderHost();
+    await renderHost();
     const region = await section();
     const declined = required(decidedOf(seeded())[0], "answered preview");
     expect(within(region).queryByText(declined.track.title)).toBeNull();
@@ -204,7 +209,7 @@ describe("Studio page console: previews (demo)", () => {
   });
 
   it("moves a row down and names the new position", async () => {
-    renderHost();
+    await renderHost();
     const region = await section();
     const [firstRow, secondRow] = openOf(seeded());
     const first = required(firstRow, "first open preview");
@@ -228,7 +233,7 @@ describe("Studio page console: previews (demo)", () => {
   });
 
   it("asks before removing, then removes and says so", async () => {
-    renderHost();
+    await renderHost();
     const region = await section();
     const target = required(openOf(seeded())[0], "open preview");
     fireEvent.click(
@@ -256,7 +261,7 @@ describe("Studio page console: previews (demo)", () => {
 
 describe("Studio page console: ask to play a track (demo)", () => {
   it("lists results with ineligible and already asked tracks unpickable and their reason shown", async () => {
-    renderHost();
+    await renderHost();
     const blocked = untouchedTrack(false);
     const dialog = await searchFor(blocked.track.title);
     const blockedRow = rowOf(dialog, blocked.track.title);
@@ -277,7 +282,7 @@ describe("Studio page console: ask to play a track (demo)", () => {
   });
 
   it("sends the track id and announces that it went to the artist", async () => {
-    renderHost();
+    await renderHost();
     const region = await section();
     const track = untouchedTrack(true);
     const dialog = await searchFor(track.track.title);
@@ -305,7 +310,7 @@ describe("Studio page console: ask to play a track (demo)", () => {
     mocks.refusal = new ApiError(409, "Conflict", {
       code: "studio_landing_preview_no_reachable_owner",
     });
-    renderHost();
+    await renderHost();
     const track = untouchedTrack(true);
     const dialog = await searchFor(track.track.title);
     fireEvent.click(
@@ -326,7 +331,7 @@ describe("Studio page console: ask to play a track (demo)", () => {
       code: "studio_landing_preview_track_not_eligible",
       ineligibleReason: "content_warnings",
     });
-    renderHost();
+    await renderHost();
     const track = untouchedTrack(true);
     const dialog = await searchFor(track.track.title);
     const row = rowOf(dialog, track.track.title);

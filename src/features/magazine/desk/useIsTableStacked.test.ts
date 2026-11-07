@@ -63,9 +63,10 @@ describe("useIsTableStacked", () => {
   });
 
   it("follows the table across the step as it resizes", () => {
-    const { result } = renderHook(() =>
-      useIsTableStacked({ current: makeTable(900) }),
-    );
+    // One ref for every render, as `useRef` gives a component, so a re-render
+    // keeps the observer this test fires.
+    const tableRef = { current: makeTable(900) };
+    const { result } = renderHook(() => useIsTableStacked(tableRef));
     expect(result.current).toBe(false);
 
     fireResize(DESK_TABLE_STACK_WIDTH - 1);

@@ -4,8 +4,9 @@ import { TestProviders } from "../../../test/TestProviders";
 import type { Piece } from "../data/desk.data";
 import { PieceRow, type PieceRowProps } from "./PieceRow";
 
-/** The unpublish items in a piece row's More menu: only a published row has
- *  them, and each sends its own landing stage. */
+/** The Unpublish item in a piece row's More menu: only a published row has
+ *  it, set apart between the everyday items and Delete, and it raises the
+ *  confirm for its own piece (the confirm picks where the piece goes). */
 
 const TODAY = new Date(2026, 7, 5);
 const PIECE_TITLE = "Letters from the coast";
@@ -65,26 +66,30 @@ async function openMoreMenu(): Promise<HTMLElement> {
   return screen.findByRole("menu");
 }
 
-describe("PieceRow unpublish items", () => {
-  it("lists Unpublish to draft and Unpublish to review after Hand off on a published row", async () => {
+describe("PieceRow unpublish item", () => {
+  it("lists Unpublish… after the issue item, behind its own rule, before Delete", async () => {
     renderRow();
 
-    const labels = within(await openMoreMenu())
-      .getAllByRole("menuitem")
-      .map((item) => item.textContent);
+    const menu = await openMoreMenu();
+    const entries = Array.from(
+      menu.querySelectorAll('[role="menuitem"], [role="separator"]'),
+    ).map((entry) =>
+      entry.getAttribute("role") === "separator" ? "|" : entry.textContent,
+    );
 
-    expect(labels).toEqual([
+    expect(entries).toEqual([
       "Edit",
       "Chase",
       "Hand off",
-      "Unpublish to draft",
-      "Unpublish to review",
       "Move issue…",
+      "|",
+      "Unpublish…",
+      "|",
       "Delete piece",
     ]);
   });
 
-  it("leaves the unpublish items out of a row that is not published", async () => {
+  it("leaves the Unpublish item out of a row that is not published", async () => {
     renderRow({ piece: makePiece({ stage: "Edit" }) });
 
     expect(
@@ -94,7 +99,7 @@ describe("PieceRow unpublish items", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("leaves the unpublish items out when the row has no unpublish handler", async () => {
+  it("leaves the Unpublish item out when the row has no unpublish handler", async () => {
     renderRow({ onUnpublish: undefined });
 
     expect(
@@ -104,28 +109,17 @@ describe("PieceRow unpublish items", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("sends the drafting stage from Unpublish to draft without opening the piece", async () => {
+  it("raises the confirm for its piece from Unpublish… without opening the piece", async () => {
     const props = renderRow();
 
     fireEvent.click(
       within(await openMoreMenu()).getByRole("menuitem", {
-        name: "Unpublish to draft",
+        name: "Unpublish…",
       }),
     );
 
-    expect(props.onUnpublish).toHaveBeenCalledWith(props.piece, "drafting");
+    expect(props.onUnpublish).toHaveBeenCalledTimes(1);
+    expect(props.onUnpublish).toHaveBeenCalledWith(props.piece);
     expect(props.onOpen).not.toHaveBeenCalled();
-  });
-
-  it("sends the in_review stage from Unpublish to review", async () => {
-    const props = renderRow();
-
-    fireEvent.click(
-      within(await openMoreMenu()).getByRole("menuitem", {
-        name: "Unpublish to review",
-      }),
-    );
-
-    expect(props.onUnpublish).toHaveBeenCalledWith(props.piece, "in_review");
   });
 });

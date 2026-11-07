@@ -23,6 +23,7 @@ import {
   COHOST_INVITE_DEFAULT_ROLE,
 } from "./createGathering.data";
 import { useEventHostScope } from "./eventHostScope";
+import { causeFallbackMessage } from "./gatheringActionErrors";
 import type { GatheringForm } from "./useGatheringForm";
 import { isRefusedRunByListingError } from "./runByListingErrors";
 import { isRefusedVenueListingError } from "./venueListingErrors";
@@ -245,7 +246,7 @@ export function usePublishGathering({
         showToast(
           codedReasonFor(error) ??
             reasonFor(error) ??
-            t("gatherings:create.toast.publishError"),
+            causeFallbackMessage(error, t),
           "error",
         );
       },

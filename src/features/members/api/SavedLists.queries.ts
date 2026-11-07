@@ -142,6 +142,8 @@ export function useSavedListMutations() {
     );
 
   const create = useMutation({
+    // SavedListActions toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: (name: string) => {
       if (!demoMode) return createSavedList(name);
       const now = new Date().toISOString();
@@ -170,6 +172,8 @@ export function useSavedListMutations() {
   });
 
   const rename = useMutation({
+    // SavedListActions toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: ({ listId, name }: { listId: string; name: string }) => {
       if (!demoMode) return renameSavedList(listId, name);
       patchDemoList(listId, (list) => ({
@@ -185,6 +189,8 @@ export function useSavedListMutations() {
   });
 
   const remove = useMutation({
+    // SavedListActions toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: (listId: string) => {
       if (!demoMode) return deleteSavedList(listId);
       queryClient.setQueryData<SavedListDTO[]>(listKey, (previous) =>
@@ -198,6 +204,8 @@ export function useSavedListMutations() {
   });
 
   const share = useMutation({
+    // SavedListActions toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: (listId: string) => {
       if (!demoMode) return shareSavedList(listId);
       const now = new Date().toISOString();
@@ -220,6 +228,8 @@ export function useSavedListMutations() {
   });
 
   const unshare = useMutation({
+    // SavedListActions toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: (listId: string) => {
       if (!demoMode) return unshareSavedList(listId);
       patchDemoList(listId, (list) => ({
@@ -245,6 +255,8 @@ export function useSavedListMutations() {
     });
 
   const addItem = useMutation({
+    // SavedListActions toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: ({
       listId,
       ref,
@@ -270,6 +282,8 @@ export function useSavedListMutations() {
   });
 
   const removeItem = useMutation({
+    // SavedListActions toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: ({ listId, ref }: { listId: string; ref: string }) => {
       if (!demoMode) return removeItemFromSavedList(listId, ref);
       patchDemoList(listId, (list) => ({

@@ -7,6 +7,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useWithdrawRsvpInvite } from "./api/useMemberInviteMutations";
+import { inviteWithdrawErrorMessage } from "./gatheringActionErrors";
 import { MAX_RSVP_GUESTS } from "./rsvpGuestCap";
 import { RsvpInvitedList } from "./RsvpInvitedList";
 import { RsvpInvitePicker } from "./RsvpInvitePicker";
@@ -59,8 +60,8 @@ export function RsvpConnectionInvites({
     withdraw.mutate(inviteId, {
       onSuccess: () =>
         showToast(t("gatherings:rsvpInvites.withdrawnToast"), "success"),
-      onError: () =>
-        showToast(t("gatherings:rsvpInvites.withdrawErrorToast"), "error"),
+      onError: (error) =>
+        showToast(inviteWithdrawErrorMessage(error, t), "error"),
     });
 
   return (

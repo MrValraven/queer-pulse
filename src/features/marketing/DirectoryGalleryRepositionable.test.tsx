@@ -4,6 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { I18nProvider } from "../../app/providers/I18nProvider";
 import { ReducedMotionContext } from "../../app/providers/motionPrefs";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { galleryShotsOf } from "./directoryGalleryShots";
 import { DirectoryGalleryRepositionable } from "./DirectoryGalleryRepositionable";
 import { getPlace } from "./directoryPlaces";
@@ -36,7 +37,7 @@ const ACCESS: ListingPhotoRepositionAccess = {
 };
 const HERO_FRAME_NAME = "Photo 1 of 3: The bar at A Farinha";
 
-function renderRepositionable({ isReducedMotion = false } = {}) {
+async function renderRepositionable({ isReducedMotion = false } = {}) {
   const onOpenShot = vi.fn();
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
@@ -57,12 +58,19 @@ function renderRepositionable({ isReducedMotion = false } = {}) {
       </ReducedMotionContext.Provider>
     </QueryClientProvider>,
   );
+  await awaitCatalog("marketing");
   return { onOpenShot };
 }
 
 function startEditing() {
   fireEvent.click(screen.getByRole("button", { name: "Reposition photos" }));
   return screen.getByRole("group", { name: HERO_FRAME_NAME });
+}
+
+/** Zooms the photo in one step. jsdom never loads the image, and the arrows
+ *  wait for it to load, while plus changes the framing at once. */
+function movePhoto(frame: HTMLElement) {
+  fireEvent.keyDown(frame, { key: "+" });
 }
 
 beforeEach(() => {
@@ -72,8 +80,8 @@ beforeEach(() => {
 });
 
 describe("DirectoryGalleryRepositionable", () => {
-  it("switches to edit mode and stops frames from opening the lightbox", () => {
-    const { onOpenShot } = renderRepositionable();
+  it("switches to edit mode and stops frames from opening the lightbox", async () => {
+    const { onOpenShot } = await renderRepositionable();
 
     const heroFrame = startEditing();
     fireEvent.click(heroFrame);
@@ -84,8 +92,8 @@ describe("DirectoryGalleryRepositionable", () => {
     ).toBeInTheDocument();
   });
 
-  it("swaps to the phone preview at once under reduced motion, keeping the frames mounted", () => {
-    renderRepositionable({ isReducedMotion: true });
+  it("swaps to the phone preview at once under reduced motion, keeping the frames mounted", async () => {
+    await renderRepositionable({ isReducedMotion: true });
 
     const heroFrame = startEditing();
     fireEvent.click(screen.getByRole("button", { name: "Phone" }));
@@ -98,8 +106,8 @@ describe("DirectoryGalleryRepositionable", () => {
     );
   });
 
-  it("holds the desktop layout until the fade out ends, then swaps", () => {
-    renderRepositionable();
+  it("holds the desktop layout until the fade out ends, then swaps", async () => {
+    await renderRepositionable();
 
     const heroFrame = startEditing();
     fireEvent.click(screen.getByRole("button", { name: "Phone" }));
@@ -121,7 +129,7 @@ describe("DirectoryGalleryRepositionable", () => {
   });
 
   it("leaves edit mode on Escape when nothing moved", async () => {
-    renderRepositionable();
+    await renderRepositionable();
 
     const heroFrame = startEditing();
     fireEvent.keyDown(heroFrame, { key: "Escape" });
@@ -131,13 +139,13 @@ describe("DirectoryGalleryRepositionable", () => {
     ).toBeInTheDocument();
   });
 
-  it("asks before discarding moved photos on Escape and keeps the dialog open", () => {
-    renderRepositionable();
+  it("asks before discarding moved photos on Escape and keeps the dialog open", async () => {
+    await renderRepositionable();
     const documentKeyDown = vi.fn();
     document.addEventListener("keydown", documentKeyDown);
 
     const heroFrame = startEditing();
-    fireEvent.keyDown(heroFrame, { key: "ArrowRight" });
+    movePhoto(heroFrame);
     documentKeyDown.mockClear();
     fireEvent.keyDown(heroFrame, { key: "Escape" });
     document.removeEventListener("keydown", documentKeyDown);
@@ -152,8 +160,8 @@ describe("DirectoryGalleryRepositionable", () => {
     ).toBeInTheDocument();
   });
 
-  it("ignores Escape pressed outside the gallery", () => {
-    renderRepositionable();
+  it("ignores Escape pressed outside the gallery", async () => {
+    await renderRepositionable();
 
     startEditing();
     fireEvent.keyDown(document.body, { key: "Escape" });
@@ -163,11 +171,11 @@ describe("DirectoryGalleryRepositionable", () => {
     ).toBeInTheDocument();
   });
 
-  it("asks before discarding moved photos on Cancel", () => {
-    renderRepositionable();
+  it("asks before discarding moved photos on Cancel", async () => {
+    await renderRepositionable();
 
     const heroFrame = startEditing();
-    fireEvent.keyDown(heroFrame, { key: "ArrowRight" });
+    movePhoto(heroFrame);
     fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
 
     expect(
@@ -178,10 +186,10 @@ describe("DirectoryGalleryRepositionable", () => {
   });
 
   it("saves in demo and leaves edit mode", async () => {
-    renderRepositionable();
+    await renderRepositionable();
 
     const heroFrame = startEditing();
-    fireEvent.keyDown(heroFrame, { key: "ArrowRight" });
+    movePhoto(heroFrame);
     fireEvent.click(screen.getByRole("button", { name: "Save positions" }));
 
     expect(

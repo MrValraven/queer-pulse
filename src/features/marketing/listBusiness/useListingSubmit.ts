@@ -10,6 +10,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { TOTAL_STEPS, type RejectedPhotoSlot } from "./listBusiness.data";
 import { resolveListing422, flashField } from "./listing422";
+import type { ListingDraftSaveResult } from "./useListingDraft";
 
 const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -32,7 +33,7 @@ export function useListingSubmit({
   isEdit = false,
 }: {
   setStep: Dispatch<SetStateAction<number>>;
-  saveAndExit: () => Promise<boolean>;
+  saveAndExit: () => Promise<ListingDraftSaveResult>;
   /** The page module's field-flash class, forwarded to `flashField`. */
   flashClass?: string;
   /** Receives the photo slots the server refused (empty when none were). */
@@ -67,13 +68,19 @@ export function useListingSubmit({
 
   const saveAndFinishLater = useCallback(async () => {
     setSavingLater(true);
-    const ok = await saveAndExit();
+    const result = await saveAndExit();
     setSavingLater(false);
-    if (ok) {
+    if (result.isSaved) {
       showToast(t("marketing:listBusiness.saveLater.toast"), "success");
       void navigate(routes.directory);
     } else {
-      showToast(t("marketing:listBusiness.saveLater.error"), "error");
+      showToast(
+        {
+          title: t("marketing:listBusiness.saveLater.errorTitle"),
+          detail: t(result.cause.key, result.cause.values),
+        },
+        "error",
+      );
     }
   }, [saveAndExit, showToast, t, navigate]);
 

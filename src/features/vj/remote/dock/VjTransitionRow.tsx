@@ -90,9 +90,11 @@ export interface VjTransitionRowProps {
 }
 
 /**
- * The dock's transition row, one 44px row: the mode chip (opens the picker),
- * the length (beat chips or the ms slider; folded away for Cut), and the
- * clip speed chip. Picks show at once and roll back with their named reason
+ * The dock's transition row, one row (44px, 40 in the pads strip): the mode
+ * chip (opens the picker; a "Transition" caption over the mode name, "Mode"
+ * under the split column's Transition heading, a flash mark in its corner),
+ * the length (beat chips or the ms slider; folded away
+ * for Cut), and the clip speed chip. Picks show at once and roll back with their named reason
  * on a refusal. A flash-capable transition asks for flash consent first.
  */
 export function VjTransitionRow({
@@ -161,7 +163,7 @@ export function VjTransitionRow({
       <button
         ref={modeChipRef}
         type="button"
-        className={`${styles.chip} ${styles.modeChip}`}
+        className={`${styles.chip} ${styles.captionChip} ${styles.modeChip}`}
         data-vj-transition-chip={mode}
         aria-label={t("vj:transition.pickAria", { mode: modeLabel })}
         aria-haspopup="dialog"
@@ -171,7 +173,21 @@ export function VjTransitionRow({
         {VJ_TRANSITION_CATALOG[mode].isFlashCapable && (
           <FiZap aria-hidden fill="none" />
         )}
-        <span className={styles.modeLabel}>{modeLabel}</span>
+        <span
+          className={`${styles.chipCaption} ${styles.foldingCaption} ${styles.modeCaptionTitle}`}
+          aria-hidden="true"
+        >
+          {t("vj:transition.title")}
+        </span>
+        <span
+          className={`${styles.chipCaption} ${styles.foldingCaption} ${styles.modeCaptionSplit}`}
+          aria-hidden="true"
+        >
+          {t("vj:transition.modeCaption")}
+        </span>
+        <span className={`${styles.chipValue} ${styles.modeLabel}`}>
+          {modeLabel}
+        </span>
       </button>
       <AnimatePresence initial={false}>
         {mode !== "cut" && (

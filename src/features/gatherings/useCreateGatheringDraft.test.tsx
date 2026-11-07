@@ -6,7 +6,10 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
+import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { TestProviders } from "../../test/TestProviders";
 import type {
   CreatorDraftConflict,
@@ -97,7 +100,6 @@ function buildEmptySnapshot(): GatheringDraftSnapshot {
 
 let emptySnapshot: GatheringDraftSnapshot;
 
-const DISCARD_FAILED_KEY = "gatherings:create.v2.toast.draftDiscardFailed";
 const DISCARD_FAILED_TEXT =
   "We couldn't delete your old draft. It's still saved";
 
@@ -129,6 +131,26 @@ function lastAutosaveOptions(): CreatorDraftAutosaveOptions {
   return lastCall;
 }
 
+/** Paints one gatherings string, as the page around this hook does, so the
+ *  provider loads the catalog before the hook raises a toast. */
+function GatheringsPageCopy({ children }: { children: ReactNode }) {
+  const { t } = useTranslation();
+  return (
+    <>
+      <span hidden>{t("gatherings:manage.details.date")}</span>
+      {children}
+    </>
+  );
+}
+
+function DraftHookWrapper({ children }: { children: ReactNode }) {
+  return (
+    <TestProviders>
+      <GatheringsPageCopy>{children}</GatheringsPageCopy>
+    </TestProviders>
+  );
+}
+
 function renderDraftHook() {
   return renderHook(
     () => {
@@ -142,7 +164,7 @@ function renderDraftHook() {
       });
       return { form, draft };
     },
-    { wrapper: TestProviders },
+    { wrapper: DraftHookWrapper },
   );
 }
 
@@ -209,12 +231,9 @@ describe("useCreateGatheringDraft on the server", () => {
     fakeAutosave.serverDraft = serverDraftWithTitle("Old");
     fakeAutosave.discard.mockRejectedValue(new CreatorDraftDiscardError());
     const { result } = renderDraftHook();
+    await awaitCatalog("gatherings");
     act(() => result.current.draft.startFresh());
-    expect(
-      await screen.findByText(
-        (text) => text === DISCARD_FAILED_KEY || text === DISCARD_FAILED_TEXT,
-      ),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(DISCARD_FAILED_TEXT)).toBeInTheDocument();
   });
 
   it("offers the server draft over an old local copy and drops the local copy right at resume", () => {

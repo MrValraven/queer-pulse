@@ -15,6 +15,7 @@ import { useProfileData } from "../../app/providers/useProfile";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useMembers } from "./api/useMembers";
 import { MEMBERS as MEMBER_REGISTRY } from "./data/members";
+import { hideFromErrorCopy, unhideFromErrorCopy } from "./memberActionErrors";
 import {
   useHiddenFromList,
   useHideFrom,
@@ -189,11 +190,10 @@ export function WhoSeesWhatHiddenFrom() {
           t("members:profile.whoSeesWhat.hiddenFrom.toast.hidden"),
           "success",
         ),
-      onError: () =>
-        showToast(
-          t("members:profile.whoSeesWhat.hiddenFrom.toast.error"),
-          "error",
-        ),
+      onError: (error) => {
+        const cause = hideFromErrorCopy(error);
+        showToast(t(cause.key, cause.values), "error");
+      },
     });
   };
 
@@ -204,11 +204,10 @@ export function WhoSeesWhatHiddenFrom() {
           t("members:profile.whoSeesWhat.hiddenFrom.toast.unhidden"),
           "info",
         ),
-      onError: () =>
-        showToast(
-          t("members:profile.whoSeesWhat.hiddenFrom.toast.error"),
-          "error",
-        ),
+      onError: (error) => {
+        const cause = unhideFromErrorCopy(error);
+        showToast(t(cause.key, cause.values), "error");
+      },
     });
   };
 

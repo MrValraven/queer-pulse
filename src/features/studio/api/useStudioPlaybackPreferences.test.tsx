@@ -114,9 +114,10 @@ describe("useStudioPlaybackPreferences (live)", () => {
     });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     act(() => result.current.savePreferences({ hideExplicit: true }));
+    // A 500 names the server as the reason.
     await waitFor(() =>
       expect(showToast).toHaveBeenCalledWith(
-        "studio:settingsLive.saveError",
+        "studio:errors.save.server",
         "error",
       ),
     );

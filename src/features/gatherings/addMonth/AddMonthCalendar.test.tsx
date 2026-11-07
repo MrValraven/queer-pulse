@@ -4,6 +4,7 @@ import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
 import { AddMonthCalendar } from "./AddMonthCalendar";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 
 const TODAY = "2026-11-02";
 const LAST_DATE = "2027-11-02";
@@ -43,12 +44,16 @@ function CalendarHarness({
   );
 }
 
-function renderCalendar(props: Parameters<typeof CalendarHarness>[0] = {}) {
-  return render(
+async function renderCalendar(
+  props: Parameters<typeof CalendarHarness>[0] = {},
+) {
+  const view = render(
     <TestProviders>
       <CalendarHarness {...props} />
     </TestProviders>,
   );
+  await awaitCatalog("gatherings");
+  return view;
 }
 
 /** Puts focus on one day button, the way a click or a Tab would. */
@@ -70,7 +75,7 @@ describe("AddMonthCalendar", () => {
   it("marks picked dates as pressed and toggles them", async () => {
     const user = userEvent.setup();
     const onToggle = vi.fn();
-    renderCalendar({ onToggle });
+    await renderCalendar({ onToggle });
     const saturday = screen.getByRole("button", {
       name: "Saturday 7 November 2026",
     });
@@ -82,8 +87,8 @@ describe("AddMonthCalendar", () => {
     expect(saturday).toHaveAttribute("aria-pressed", "false");
   });
 
-  it("disables days before today and after the last allowed date", () => {
-    renderCalendar();
+  it("disables days before today and after the last allowed date", async () => {
+    await renderCalendar();
     expect(
       screen.getByRole("button", { name: "Sunday 1 November 2026" }),
     ).toHaveAttribute("aria-disabled", "true");
@@ -92,8 +97,8 @@ describe("AddMonthCalendar", () => {
     ).not.toHaveAttribute("aria-disabled");
   });
 
-  it("tells a screen reader why a day outside the window is disabled", () => {
-    renderCalendar();
+  it("tells a screen reader why a day outside the window is disabled", async () => {
+    await renderCalendar();
     expect(
       screen.getByRole("button", { name: "Sunday 1 November 2026" }),
     ).toHaveAccessibleDescription(
@@ -104,8 +109,8 @@ describe("AddMonthCalendar", () => {
     ).not.toHaveAttribute("aria-describedby");
   });
 
-  it("disables the days after the last allowed date in its month", () => {
-    renderCalendar({ initialMonth: "2027-11" });
+  it("disables the days after the last allowed date in its month", async () => {
+    await renderCalendar({ initialMonth: "2027-11" });
     expect(
       screen.getByRole("button", { name: "Tuesday 2 November 2027" }),
     ).not.toHaveAttribute("aria-disabled");
@@ -116,7 +121,7 @@ describe("AddMonthCalendar", () => {
 
   it("keeps November picks when moving to December and back", async () => {
     const user = userEvent.setup();
-    renderCalendar();
+    await renderCalendar();
     await user.click(
       screen.getByRole("button", { name: "Saturday 28 November 2026" }),
     );
@@ -134,7 +139,7 @@ describe("AddMonthCalendar", () => {
 
   it("stops Previous month at today's month and Next month at the last date's month", async () => {
     const user = userEvent.setup();
-    renderCalendar();
+    await renderCalendar();
     expect(
       screen.getByRole("button", { name: "Previous month" }),
     ).toBeDisabled();
@@ -149,8 +154,8 @@ describe("AddMonthCalendar", () => {
     ).toBeEnabled();
   });
 
-  it("pads the grid to whole weeks", () => {
-    renderCalendar();
+  it("pads the grid to whole weeks", async () => {
+    await renderCalendar();
     const grid = screen.getByRole("group", {
       name: "Pick the dates November 2026",
     });
@@ -158,8 +163,8 @@ describe("AddMonthCalendar", () => {
     expect(grid.children.length % 7).toBe(0);
   });
 
-  it("at 31 dates disables the unpicked days and names the cap", () => {
-    renderCalendar({ initialDates: consecutiveDates("2026-11-02", 31) });
+  it("at 31 dates disables the unpicked days and names the cap", async () => {
+    await renderCalendar({ initialDates: consecutiveDates("2026-11-02", 31) });
     expect(
       screen.getByText("You can add up to 31 dates at a time."),
     ).toBeInTheDocument();
@@ -174,7 +179,7 @@ describe("AddMonthCalendar", () => {
 
   it("at 31 dates keeps the picked days open so one can be removed", async () => {
     const user = userEvent.setup();
-    renderCalendar({ initialDates: consecutiveDates("2026-11-02", 31) });
+    await renderCalendar({ initialDates: consecutiveDates("2026-11-02", 31) });
     await user.click(screen.getByRole("button", { name: "Next month" }));
     expect(
       screen.getByRole("button", { name: "Thursday 3 December 2026" }),
@@ -192,7 +197,7 @@ describe("AddMonthCalendar", () => {
 
   it("says one date picked in the singular", async () => {
     const user = userEvent.setup();
-    renderCalendar();
+    await renderCalendar();
     await user.click(
       screen.getByRole("button", { name: "Saturday 7 November 2026" }),
     );
@@ -204,7 +209,7 @@ describe("AddMonthCalendar keyboard", () => {
   it("a disabled day stays focusable and a click leaves it unpicked", async () => {
     const user = userEvent.setup();
     const onToggle = vi.fn();
-    renderCalendar({ onToggle });
+    await renderCalendar({ onToggle });
     const sunday = screen.getByRole("button", {
       name: "Sunday 1 November 2026",
     });
@@ -215,7 +220,7 @@ describe("AddMonthCalendar keyboard", () => {
 
   it("gives the grid one Tab stop on today when nothing is picked", async () => {
     const user = userEvent.setup();
-    renderCalendar();
+    await renderCalendar();
     await user.tab();
     await user.tab();
     expect(
@@ -230,8 +235,8 @@ describe("AddMonthCalendar keyboard", () => {
     expect(tabStops).toHaveLength(1);
   });
 
-  it("puts the Tab stop on a picked day in the month on screen", () => {
-    renderCalendar({ initialDates: ["2026-11-20"] });
+  it("puts the Tab stop on a picked day in the month on screen", async () => {
+    await renderCalendar({ initialDates: ["2026-11-20"] });
     expect(
       screen.getByRole("button", { name: "Friday 20 November 2026" }),
     ).toHaveAttribute("tabindex", "0");
@@ -243,7 +248,7 @@ describe("AddMonthCalendar keyboard", () => {
   it("moves by day and week with the arrows and toggles with Space and Enter", async () => {
     const user = userEvent.setup();
     const onToggle = vi.fn();
-    renderCalendar({ onToggle });
+    await renderCalendar({ onToggle });
     focusDay("Monday 2 November 2026");
     await user.keyboard("{ArrowRight}");
     expect(
@@ -267,7 +272,7 @@ describe("AddMonthCalendar keyboard", () => {
 
   it("reaches a disabled day with the arrows and keeps its reason", async () => {
     const user = userEvent.setup();
-    renderCalendar();
+    await renderCalendar();
     focusDay("Monday 2 November 2026");
     await user.keyboard("{ArrowLeft}");
     const sunday = screen.getByRole("button", {
@@ -284,7 +289,7 @@ describe("AddMonthCalendar keyboard", () => {
 
   it("jumps to the week's ends with Home and End", async () => {
     const user = userEvent.setup();
-    renderCalendar();
+    await renderCalendar();
     focusDay("Wednesday 11 November 2026");
     await user.keyboard("{Home}");
     expect(
@@ -298,7 +303,7 @@ describe("AddMonthCalendar keyboard", () => {
 
   it("changes month with PageDown and PageUp and with an arrow past the month's end", async () => {
     const user = userEvent.setup();
-    renderCalendar();
+    await renderCalendar();
     focusDay("Monday 30 November 2026");
     await user.keyboard("{ArrowRight}");
     expect(screen.getByText("December 2026")).toBeInTheDocument();

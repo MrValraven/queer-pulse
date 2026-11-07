@@ -7,6 +7,7 @@ import { logError } from "../../shared/observability/logger";
 import { useListDsar, useSubmitDsar } from "../settings/api/useDsar";
 import type { DsarArticle } from "../settings/api/account.api";
 import { isReauthRequiredError } from "../settings/api/reauthRequiredError";
+import { dsarSubmitErrorCopy } from "../settings/settingsActionErrors";
 import styles from "./AccountData.module.css";
 
 /** Confirmed against the backend `SubmitDsarDto` (`@IsIn([15, 16, 17, 21])`,
@@ -87,10 +88,8 @@ export function AccountDataDsar() {
       // with no toast, so the member submits again after the code.
       if (isReauthRequiredError(err)) return;
       logError(err, { where: "AccountDataDsar.submit" });
-      showToast(
-        t("members:profile.accountData.dsar.toast.submitError"),
-        "error",
-      );
+      const cause = dsarSubmitErrorCopy(err);
+      showToast(t(cause.key, cause.values), "error");
     } finally {
       setSubmitting(false);
     }

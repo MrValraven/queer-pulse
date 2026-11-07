@@ -2,6 +2,8 @@ import { act, renderHook, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../shared/api/client";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { TestProviders } from "../../test/TestProviders";
 import type { GuestCommunityChanges } from "./api/eventCommunities.api";
 import type { GuestCommunityChangesResult } from "./api/useEventGuestCommunities";
@@ -15,8 +17,22 @@ vi.mock("./api/useEventGuestCommunities", () => ({
   useApplyGuestCommunityChanges: () => () => Promise.resolve(mocks.result),
 }));
 
+/** Paints one gatherings string, as the page around this hook does, so the
+ *  provider loads the catalog before the hook raises a toast. */
+function GatheringsPageCopy({ children }: { children: ReactNode }) {
+  const { t } = useTranslation();
+  return (
+    <>
+      <span hidden>{t("gatherings:manage.details.date")}</span>
+      {children}
+    </>
+  );
+}
+
 const wrapper = ({ children }: { children: ReactNode }) => (
-  <TestProviders>{children}</TestProviders>
+  <TestProviders>
+    <GatheringsPageCopy>{children}</GatheringsPageCopy>
+  </TestProviders>
 );
 
 const oneInvite: GuestCommunityChanges = {
@@ -47,6 +63,7 @@ describe("useSaveGuestCommunityChanges", () => {
     const { result } = renderHook(() => useSaveGuestCommunityChanges("night"), {
       wrapper,
     });
+    await awaitCatalog("gatherings");
     act(() => result.current(oneInvite));
     expect(
       await screen.findByText(
@@ -61,6 +78,7 @@ describe("useSaveGuestCommunityChanges", () => {
     const { result } = renderHook(() => useSaveGuestCommunityChanges("night"), {
       wrapper,
     });
+    await awaitCatalog("gatherings");
     act(() => result.current(oneInvite));
     expect(
       await screen.findByText(

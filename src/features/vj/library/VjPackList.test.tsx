@@ -2,6 +2,7 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import type { VjPackDTO } from "../../../shared/contracts/vj";
 import { useVjPacks } from "../api/useVjPacks";
 import { createVjDemoChannelHub } from "../demo/vjDemoChannel";
@@ -185,6 +186,7 @@ describe("VjPackList (demo)", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("vj");
     await user.click(screen.getByRole("button", { name: "Rename pack" }));
     const field = await screen.findByLabelText("Pack name");
     await user.clear(field);
@@ -220,7 +222,7 @@ describe("VjPackList (demo)", () => {
     expect(await screen.findByText("8 clips")).toBeInTheDocument();
   });
 
-  it("labels the phone picker with the catalog's count line", () => {
+  it("labels the phone picker with the catalog's count line", async () => {
     const closing = seededPackNamed("Closing");
     const { rerender } = render(
       <TestProviders>
@@ -233,6 +235,7 @@ describe("VjPackList (demo)", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("vj");
     expect(screen.getByText("All clips (8)")).toBeInTheDocument();
     rerender(
       <TestProviders>
@@ -263,6 +266,7 @@ describe("VjPackList (demo)", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("vj");
     await user.click(screen.getByRole("button", { name: "Delete pack" }));
 
     const dialog = await screen.findByRole("dialog");
@@ -293,7 +297,7 @@ describe("VjPackHeader layout", () => {
     resetVjDemoLibrary();
   });
 
-  it("gives the pack's event its own row after the pack buttons", () => {
+  it("gives the pack's event its own row after the pack buttons", async () => {
     const closing = seededPackNamed("Closing");
     render(
       <TestProviders>
@@ -304,6 +308,7 @@ describe("VjPackHeader layout", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("vj");
     const deleteButton = screen.getByRole("button", { name: "Delete pack" });
     const eventButton = screen.getByRole("button", {
       name: closing.event === null ? "Link event" : "Change event",

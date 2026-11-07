@@ -8,6 +8,7 @@ import { useCommunity } from "./api/useCommunity";
 import { useSuggestCommunityTag } from "./api/useCommunityMutations";
 import { communityTagRequestsPrefix } from "./api/useCommunityTagRequests";
 import { CommunityTagRequestLog } from "./CommunityTagRequestLog";
+import { communityErrorText } from "./communityErrors";
 import styles from "./SuggestCommunityTagModal.module.css";
 
 const LABEL_MAX_LENGTH = 60;
@@ -82,8 +83,8 @@ export function SuggestCommunityTagModal({
           });
           showToast(t("communities:edit.suggestTag.successToast"), "success");
         },
-        onError: () =>
-          showToast(t("communities:edit.suggestTag.errorToast"), "error"),
+        onError: (error) =>
+          showToast(communityErrorText(t, error), "error"),
       },
     );
   };

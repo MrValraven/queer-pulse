@@ -28,6 +28,7 @@ import {
   listingRefFromParam,
 } from "./contactPrefill";
 import { ContactSentPanel } from "./ContactSentPanel";
+import { CONTACT_INQUIRY_OVERRIDES, failureToast } from "./marketingErrorCopy";
 import s from "./ContactPage.module.css";
 
 /** The topic selector's values. Each one has a `contact.form.topic.<value>`
@@ -265,7 +266,16 @@ export function ContactPage() {
       },
       {
         onSuccess: () => setSent(true),
-        onError: () => showToast(t("marketing:contact.form.error"), "error"),
+        onError: (error) =>
+          showToast(
+            failureToast(
+              error,
+              t,
+              "marketing:contact.form.errorTitle",
+              CONTACT_INQUIRY_OVERRIDES,
+            ),
+            "error",
+          ),
       },
     );
   };

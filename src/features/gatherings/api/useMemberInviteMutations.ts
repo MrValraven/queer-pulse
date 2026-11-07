@@ -73,6 +73,9 @@ export function useSendRsvpInvites(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<SendRsvpInvitesOutcome, Error, MemberSelectPerson[]>({
+    // The caller words this failure itself (gatheringActionErrors.ts), so the
+    // app-wide mutation toast would only repeat it.
+    meta: { silentError: true },
     mutationFn: async (people) => {
       if (demoMode) return sendDemoInvites(queryClient, slug, people);
       const result = await sendRsvpInvites(
@@ -106,6 +109,9 @@ export function useWithdrawRsvpInvite(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, string>({
+    // The caller words this failure itself (gatheringActionErrors.ts), so the
+    // app-wide mutation toast would only repeat it.
+    meta: { silentError: true },
     mutationFn: async (inviteId) => {
       if (demoMode) {
         queryClient.setQueryData<RsvpInviteView[]>(
@@ -162,6 +168,9 @@ function useAnswerInviteRequest(
   const { apiTarget, isHouseEvent } = useEventHostScope();
   const queryClient = useQueryClient();
   return useMutation<void, Error, string>({
+    // The caller words this failure itself (gatheringActionErrors.ts), so the
+    // app-wide mutation toast would only repeat it.
+    meta: { silentError: true },
     mutationFn: async (requestId) => {
       if (demoMode) {
         removeDemoRequest(queryClient, slug, requestId, apiTarget);

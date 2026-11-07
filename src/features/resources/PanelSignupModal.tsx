@@ -4,6 +4,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { intakeFailureToast } from "./intakeSubmitError";
 import { submitIntake } from "../../shared/api/intakes";
 import { ResourceModal, PlumSuccess } from "./ResourceModal";
 import styles from "./ResourceModal.module.css";
@@ -37,9 +38,9 @@ export function PanelSignupModal({ onClose }: { onClose: () => void }) {
         why: why.trim(),
       });
       setPhase("done");
-    } catch {
+    } catch (error) {
       setPhase("form");
-      showToast(t("shared:intake.errorToast"), "error");
+      showToast(intakeFailureToast(error, t), "error");
     }
   };
 

@@ -14,6 +14,7 @@ import { StepUpVerificationModal } from "./StepUpVerificationModal";
 import { useAffirmingPledgeGate } from "./useAffirmingPledgeGate";
 import { ModalShell } from "./ModalKit";
 import { PostProfileForm } from "./PostProfileForm";
+import { failureToast } from "./economyErrorCopy";
 import styles from "./FlatmatesPage.module.css";
 
 export function PostProfileModal({ onClose }: { onClose: () => void }) {
@@ -41,7 +42,10 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
           setPendingBody(body);
           setStepUp(required);
         } else {
-          showToast(t("economy:postProfileModal.error"), "error");
+          showToast(
+            failureToast(error, t, "economy:postProfileModal.errorTitle"),
+            "error",
+          );
         }
       },
     });

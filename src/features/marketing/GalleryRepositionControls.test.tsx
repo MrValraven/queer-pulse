@@ -1,5 +1,6 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { TestProviders } from "../../test/TestProviders";
 import type { ListingPhotoFramingError } from "./api/listingPhotoFraming.api";
 import {
@@ -7,8 +8,12 @@ import {
   type GalleryRepositionControlsProps,
 } from "./GalleryRepositionControls";
 
-/** `marketing` is a lazy namespace, so every query waits with `findBy`. */
-function renderControls(overrides: Partial<GalleryRepositionControlsProps>) {
+/** `marketing` is a lazy namespace, so the helper waits for its catalog. The
+ *  controls sit in their own box: the toast region keeps an empty alert of
+ *  its own beside them. */
+async function renderControls(
+  overrides: Partial<GalleryRepositionControlsProps>,
+) {
   const props: GalleryRepositionControlsProps = {
     isEditing: true,
     viewport: "desktop",
@@ -23,13 +28,18 @@ function renderControls(overrides: Partial<GalleryRepositionControlsProps>) {
   };
   const { rerender } = render(
     <TestProviders>
-      <GalleryRepositionControls {...props} />
+      <div data-testid="reposition-controls">
+        <GalleryRepositionControls {...props} />
+      </div>
     </TestProviders>,
   );
+  await awaitCatalog("marketing");
   const rerenderWith = (changes: Partial<GalleryRepositionControlsProps>) =>
     rerender(
       <TestProviders>
-        <GalleryRepositionControls {...props} {...changes} />
+        <div data-testid="reposition-controls">
+          <GalleryRepositionControls {...props} {...changes} />
+        </div>
       </TestProviders>,
     );
   return { ...props, rerenderWith };
@@ -37,7 +47,7 @@ function renderControls(overrides: Partial<GalleryRepositionControlsProps>) {
 
 describe("GalleryRepositionControls", () => {
   it("shows Reposition photos outside edit mode and starts editing on click", async () => {
-    const props = renderControls({ isEditing: false });
+    const props = await renderControls({ isEditing: false });
     fireEvent.click(
       await screen.findByRole("button", { name: "Reposition photos" }),
     );
@@ -45,14 +55,14 @@ describe("GalleryRepositionControls", () => {
   });
 
   it("leaves focus alone on first render", async () => {
-    renderControls({ isEditing: false });
+    await renderControls({ isEditing: false });
     expect(
       await screen.findByRole("button", { name: "Reposition photos" }),
     ).not.toHaveFocus();
   });
 
   it("returns focus to Reposition photos when edit mode ends", async () => {
-    const { rerenderWith } = renderControls({ isEditing: true });
+    const { rerenderWith } = await renderControls({ isEditing: true });
     (await screen.findByRole("button", { name: "Cancel" })).focus();
     rerenderWith({ isEditing: false });
     expect(
@@ -61,7 +71,7 @@ describe("GalleryRepositionControls", () => {
   });
 
   it("shows Save positions, Cancel and a pressed Desktop toggle in edit mode", async () => {
-    renderControls({});
+    await renderControls({});
     expect(
       await screen.findByRole("button", { name: "Desktop" }),
     ).toHaveAttribute("aria-pressed", "true");
@@ -79,14 +89,14 @@ describe("GalleryRepositionControls", () => {
   });
 
   it("keeps Save positions disabled until a photo moved", async () => {
-    renderControls({ isDirty: false });
+    await renderControls({ isDirty: false });
     expect(
       await screen.findByRole("button", { name: "Save positions" }),
     ).toBeDisabled();
   });
 
   it("labels the save button Saving positions while the save runs", async () => {
-    renderControls({ isSaving: true });
+    await renderControls({ isSaving: true });
     expect(
       await screen.findByRole("button", { name: "Saving positions" }),
     ).toBeDisabled();
@@ -98,14 +108,22 @@ describe("GalleryRepositionControls", () => {
       reason: "notManager",
       status: 403,
     };
-    renderControls({ error });
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    await renderControls({ error });
+    expect(
+      await within(screen.getByTestId("reposition-controls")).findByRole(
+        "alert",
+      ),
+    ).toHaveTextContent(
       "You no longer manage this listing, so the photo positions were not saved.",
     );
   });
 
   it("puts the HTTP status into the refused message", async () => {
-    renderControls({ error: { reason: "refused", status: 418 } });
-    expect(await screen.findByRole("alert")).toHaveTextContent("(error 418)");
+    await renderControls({ error: { reason: "refused", status: 418 } });
+    expect(
+      await within(screen.getByTestId("reposition-controls")).findByRole(
+        "alert",
+      ),
+    ).toHaveTextContent("(error 418)");
   });
 });

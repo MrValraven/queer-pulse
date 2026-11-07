@@ -1,4 +1,10 @@
-import { render, screen, waitFor, within } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Link, Route, Routes } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -78,9 +84,15 @@ describe("AdminQuizshowTemplatePage", () => {
     expect(screen.getByRole("button", { name: "Save template" })).toBeTruthy();
   });
 
-  it("keeps the way back while the template loads", () => {
+  it("keeps the way back while the template loads", async () => {
+    // The studio's copy loads lazily with the first template. Once that
+    // template shows, the next one opens on its loading state with every
+    // label already in.
     renderTemplatePage(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory);
+    expect(await findCardTitleEnglishField()).toHaveValue(PRIDE_TITLE);
+    fireEvent.click(screen.getByRole("link", { name: "Go to Eurovision" }));
 
+    expect(screen.queryByRole("heading", { name: "Template card" })).toBeNull();
     expectBackToTheList();
     expect(
       screen.getByRole("heading", { level: 1, name: "Quiz editor" }),

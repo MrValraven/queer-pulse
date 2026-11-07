@@ -2,6 +2,7 @@ import { createRef, useState } from "react";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import type { Editor, Stage } from "../data/desk.data";
 import type { DeskGroupBy } from "./pipelineGroups";
@@ -60,36 +61,37 @@ function StatefulWorkbar(overrides: Partial<DeskWorkbarProps>) {
   );
 }
 
-function renderWorkbar(overrides: Partial<DeskWorkbarProps> = {}) {
+async function renderWorkbar(overrides: Partial<DeskWorkbarProps> = {}) {
   render(
     <TestProviders>
       <StatefulWorkbar {...overrides} />
     </TestProviders>,
   );
+  await awaitCatalog("magazine");
 }
 
 describe("DeskWorkbar", () => {
-  it("forwards the search ref so the desk can focus the field", () => {
+  it("forwards the search ref so the desk can focus the field", async () => {
     const searchInputRef = createRef<HTMLInputElement>();
-    renderWorkbar({ searchInputRef });
+    await renderWorkbar({ searchInputRef });
     expect(searchInputRef.current).toBe(
       screen.getByPlaceholderText("Search pieces, writers, sections"),
     );
   });
 
-  it("offers the calendar layout only while it is available", () => {
-    renderWorkbar();
+  it("offers the calendar layout only while it is available", async () => {
+    await renderWorkbar();
     expect(screen.queryByRole("button", { name: "Calendar" })).toBeNull();
   });
 
-  it("shows the calendar layout when it is available", () => {
-    renderWorkbar({ isCalendarAvailable: true });
+  it("shows the calendar layout when it is available", async () => {
+    await renderWorkbar({ isCalendarAvailable: true });
     expect(screen.getByRole("button", { name: "Calendar" })).toBeVisible();
   });
 
   it("keeps the Filter menu open across checkboxes and counts them", async () => {
     const user = userEvent.setup();
-    renderWorkbar();
+    await renderWorkbar();
     await user.click(screen.getByRole("button", { name: "Filter" }));
     await user.click(screen.getByRole("menuitemcheckbox", { name: "Culture" }));
     await user.click(screen.getByRole("menuitemcheckbox", { name: "Edit" }));
@@ -101,7 +103,7 @@ describe("DeskWorkbar", () => {
 
   it("spells active filters out as tokens that remove one filter each", async () => {
     const user = userEvent.setup();
-    renderWorkbar();
+    await renderWorkbar();
     await user.click(screen.getByRole("button", { name: "Filter" }));
     await user.click(screen.getByRole("menuitemradio", { name: "Joana" }));
 
@@ -117,7 +119,7 @@ describe("DeskWorkbar", () => {
 
   it("clears every filter at once", async () => {
     const user = userEvent.setup();
-    renderWorkbar();
+    await renderWorkbar();
     await user.click(screen.getByRole("button", { name: "Filter" }));
     await user.click(screen.getByRole("menuitemradio", { name: "Decks" }));
     await user.click(screen.getByRole("button", { name: "Clear all" }));
@@ -127,7 +129,7 @@ describe("DeskWorkbar", () => {
 
   it("names the current sort on the Sort trigger and changes it", async () => {
     const user = userEvent.setup();
-    renderWorkbar();
+    await renderWorkbar();
     const sortTrigger = screen.getByRole("button", { name: /Sort/ });
     expect(sortTrigger).toHaveTextContent("Due date");
 
@@ -144,7 +146,7 @@ describe("DeskWorkbar", () => {
   it("opens the shortcuts sheet from the help button", async () => {
     const user = userEvent.setup();
     const onShortcuts = vi.fn();
-    renderWorkbar({ onShortcuts });
+    await renderWorkbar({ onShortcuts });
     await user.click(
       screen.getByRole("button", { name: "Keyboard shortcuts" }),
     );

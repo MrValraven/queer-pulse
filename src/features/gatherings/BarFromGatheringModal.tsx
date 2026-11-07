@@ -3,6 +3,7 @@ import { Button, FormField, Modal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useBanFromEvent } from "./api/useEventBans";
+import { hostToolErrorMessage } from "./gatheringActionErrors";
 import styles from "./GatheringModals.module.css";
 
 /** Server ceiling on the organiser's private note. */
@@ -48,8 +49,7 @@ export function BarFromGatheringModal({
           );
           onClose();
         },
-        onError: () =>
-          showToast(t("gatherings:manage.bans.errorToast"), "error"),
+        onError: (error) => showToast(hostToolErrorMessage(error, t), "error"),
       },
     );
   };

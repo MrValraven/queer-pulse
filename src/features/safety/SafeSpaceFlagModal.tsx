@@ -8,6 +8,7 @@ import {
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SAFE_SPACE_FLAG_REASON_OPTIONS } from "./safeSpaceFlag.data";
+import { safeSpaceFlagCause } from "./api/safeSpaceErrorCopy";
 import { useFlagSafeSpace } from "./api/useSafeSpaceFlag";
 import type { SafeSpaceFlagReason } from "./api/safeSpaceGovernance.api";
 import styles from "./SafeSpaceFlagModal.module.css";
@@ -37,6 +38,7 @@ export function SafeSpaceFlagModal({
 }) {
   const { t } = useTranslation();
   const flag = useFlagSafeSpace();
+  const flagCause = safeSpaceFlagCause(flag.error);
   const [reasonCode, setReasonCode] = useState<SafeSpaceFlagReason | "">("");
   const [detail, setDetail] = useState("");
   const [isDone, setIsDone] = useState(false);
@@ -152,7 +154,7 @@ export function SafeSpaceFlagModal({
 
       {flag.isError && (
         <p className={styles.error} role="alert">
-          {t("safety:flag.errorToast")}
+          {t(flagCause.key, flagCause.values)}
         </p>
       )}
     </Modal>

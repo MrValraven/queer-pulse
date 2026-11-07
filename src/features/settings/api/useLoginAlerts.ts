@@ -5,6 +5,7 @@ import { useAuth } from "../../../app/providers/authContext";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { logError } from "../../../shared/observability/logger";
+import { causeErrorKey } from "../../../shared/api/causeErrorKey";
 import {
   DEFAULT_LOGIN_ALERTS_ENABLED,
   getLoginAlerts,
@@ -80,7 +81,8 @@ export function useLoginAlerts(): LoginAlertsResult {
             LOGIN_ALERTS_QUERY_KEY,
             previous,
           );
-          showToast(t("settings:account.loginAlerts.toastError"), "error");
+          const cause = causeErrorKey(error);
+          showToast(t(cause.key, cause.values), "error");
         });
     },
     [demoMode, queryClient, showToast, t],

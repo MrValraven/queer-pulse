@@ -1,6 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { resetDemoPlaylists } from "./api/studioDemoPlaylists";
 import { resetStudioLibrarySeedForTests } from "./api/useStudioLibrarySaves";
 import { StudioRailPlaylists } from "./StudioRailPlaylists";
@@ -11,7 +12,7 @@ beforeEach(() => {
   resetStudioLibrarySeedForTests();
 });
 
-function renderRail(
+async function renderRail(
   initialEntry = "/studio/collection?id=demo-playlist-kitchen-tapes",
 ) {
   render(
@@ -19,6 +20,7 @@ function renderRail(
       <StudioRailPlaylists />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
 }
 
 /** The rail link whose first line is this playlist name. */
@@ -28,8 +30,8 @@ async function findRowLink(name: string) {
 }
 
 describe("rail playlists (demo)", () => {
-  it("pins Liked songs first as an auto playlist", () => {
-    renderRail();
+  it("pins Liked songs first as an auto playlist", async () => {
+    await renderRail();
     const nav = screen.getByRole("navigation");
     const [firstItem] = within(nav).getAllByRole("listitem");
     const likedLink = within(firstItem!).getByRole("link");
@@ -39,21 +41,21 @@ describe("rail playlists (demo)", () => {
   });
 
   it("marks a collaborative playlist for screen readers", async () => {
-    renderRail();
+    await renderRail();
     expect(await findRowLink("For the group chat")).toHaveTextContent(
       "Collaborative",
     );
   });
 
   it("names the owner of a saved playlist", async () => {
-    renderRail();
+    await renderRail();
     expect(await findRowLink("Lisbon dyke-bar standards")).toHaveTextContent(
       "Sara Marques",
     );
   });
 
   it("lists a liked album under the playlists, marked as an album", async () => {
-    renderRail();
+    await renderRail();
     const albumLink = await findRowLink("Cidade dos santos");
     expect(albumLink).toHaveAttribute(
       "href",
@@ -66,7 +68,7 @@ describe("rail playlists (demo)", () => {
   });
 
   it("marks the open album's row as the current page", async () => {
-    renderRail("/studio/album?id=demo-release-cidade-dos-santos");
+    await renderRail("/studio/album?id=demo-release-cidade-dos-santos");
     expect(await findRowLink("Cidade dos santos")).toHaveAttribute(
       "aria-current",
       "page",
@@ -77,7 +79,7 @@ describe("rail playlists (demo)", () => {
   });
 
   it("marks the open playlist as the current page", async () => {
-    renderRail();
+    await renderRail();
     const kitchenLink = await findRowLink("Kitchen tapes");
     expect(kitchenLink).toHaveAttribute("aria-current", "page");
     expect(

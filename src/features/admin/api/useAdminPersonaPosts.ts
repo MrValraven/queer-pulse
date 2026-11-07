@@ -101,6 +101,9 @@ export function useRemoveReportedPersonaPost() {
     demoMode,
     demoLatencyMs: 0,
     mutationKey: ["admin-persona-posts", "remove"],
+    // A 404 is handled below as "already gone"; silence the app-wide toast so it
+    // does not also name a missing target.
+    meta: { silentError: true },
     demoResult: async ({ postId }) => {
       (
         await import("../../subprofiles/data/personaPostsDemo")

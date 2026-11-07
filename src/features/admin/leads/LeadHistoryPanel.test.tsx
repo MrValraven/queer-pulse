@@ -242,9 +242,13 @@ describe("LeadHistoryPanel (demo)", () => {
     });
     // The line names the limit as soon as the box passes it, and Add note
     // stays unavailable until the note is short enough.
-    expect(await screen.findByRole("alert")).toHaveTextContent(
-      "Notes can be up to 4000 characters",
-    );
+    // The toast region also carries the alert role, so the line is read
+    // inside the History section.
+    expect(
+      await within(screen.getByRole("region", { name: "History" })).findByRole(
+        "alert",
+      ),
+    ).toHaveTextContent("Notes can be up to 4000 characters");
     const addNote = screen.getByRole("button", { name: "Add note" });
     expect(addNote).toHaveAttribute("aria-disabled", "true");
     expect(screen.getByText("4001 of 4000")).toHaveAttribute("data-over");

@@ -62,9 +62,9 @@ describe("StudioPlayer.module.css", () => {
     expect(stackedRule).toMatch(
       /\.seekArea\s*\{\s*grid-column:\s*1 \/ -1;\s*grid-row:\s*2;/,
     );
-    expect(stackedRule).toMatch(
-      /\.tools \[data-studio-range="volume"\]\s*\{\s*display:\s*flex/,
-    );
+    // Below 1240px the volume keeps its mute button only, and the stacked
+    // layout leaves it that way.
+    expect(stackedRule).not.toMatch(/data-studio-range="volume"/);
   });
 
   it("gives the mini play button a full tap area", () => {

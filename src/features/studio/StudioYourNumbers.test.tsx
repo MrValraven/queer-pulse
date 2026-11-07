@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type { StudioArtistStatsDTO } from "./api/studio.types";
 import { toDashboardStatsView } from "./api/studioDashboard.adapters";
 import { StudioDashboardPage } from "./StudioDashboardPage";
@@ -76,17 +77,18 @@ const statsWithPodcastRow: StudioArtistStatsDTO = {
   ],
 };
 
-function renderPage() {
+async function renderPage() {
   render(
     <TestProviders initialEntries={["/studio/dashboard"]}>
       <StudioDashboardPage />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
 }
 
 describe("Your numbers (demo stats, live layout)", () => {
   it("titles the page and shows the follower total as is", async () => {
-    renderPage();
+    await renderPage();
     expect(
       await screen.findByRole("heading", {
         level: 1,
@@ -97,7 +99,7 @@ describe("Your numbers (demo stats, live layout)", () => {
   });
 
   it("never prints a count from 1 to 4, and reads Fewer than 5 there", async () => {
-    renderPage();
+    await renderPage();
     const table = await screen.findByRole("table");
     const cells = within(table)
       .getAllByRole("cell")
@@ -108,7 +110,7 @@ describe("Your numbers (demo stats, live layout)", () => {
   });
 
   it("expands a release to its tracks", async () => {
-    renderPage();
+    await renderPage();
     const toggle = await screen.findByRole("button", {
       name: "Show tracks for Cidade dos santos",
     });
@@ -116,19 +118,26 @@ describe("Your numbers (demo stats, live layout)", () => {
     expect(
       screen.getByRole("button", { name: "Hide tracks for Cidade dos santos" }),
     ).toHaveAttribute("aria-expanded", "true");
+    // A single of the same name has its own release row, so the track is
+    // found in the group the toggle opened.
+    const tracks = document.getElementById(
+      toggle.getAttribute("aria-controls") ?? "",
+    )!;
     expect(
-      await screen.findByRole("rowheader", { name: /carta para a santa/i }),
+      await within(tracks).findByRole("rowheader", {
+        name: /carta para a santa/i,
+      }),
     ).toBeInTheDocument();
   });
 
   it("shows how many members wait for a scheduled release", async () => {
-    renderPage();
+    await renderPage();
     const row = await screen.findByRole("rowheader", { name: /maré alta/i });
     expect(within(row).getByText("Scheduled")).toBeInTheDocument();
     expect(within(row).getByText("Waiting for it: 12")).toBeInTheDocument();
   });
 
-  it("reads Fewer than 5 for a scheduled release with a withheld reminder count", () => {
+  it("reads Fewer than 5 for a scheduled release with a withheld reminder count", async () => {
     const stats = toDashboardStatsView({
       subprofileId: "persona-1",
       followerCount: 0,
@@ -147,6 +156,7 @@ describe("Your numbers (demo stats, live layout)", () => {
         <StudioNumbersTable stats={stats} personaName="Mariana Sol" />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       screen.getByText("Waiting for it: Fewer than 5"),
     ).toBeInTheDocument();
@@ -154,14 +164,14 @@ describe("Your numbers (demo stats, live layout)", () => {
 
   it("tells a member with no musician or DJ persona how to get one", async () => {
     control.hasNoPersona = true;
-    renderPage();
+    await renderPage();
     expect(
-      await screen.findByText("You need a musician or DJ persona"),
+      await screen.findByText("Create a persona that works with Studio"),
     ).toBeInTheDocument();
   });
 
   it("shows follower growth, placements and milestones under the follower total", async () => {
-    renderPage();
+    await renderPage();
     expect(
       await screen.findByText("New followers who still follow"),
     ).toBeInTheDocument();
@@ -174,7 +184,7 @@ describe("Your numbers (demo stats, live layout)", () => {
   });
 
   it("shows the next release countdown and the release checklist in Next steps", async () => {
-    renderPage();
+    await renderPage();
     expect(
       await screen.findByText(/^Maré alta goes live in /),
     ).toBeInTheDocument();
@@ -183,15 +193,21 @@ describe("Your numbers (demo stats, live layout)", () => {
     ).toBeInTheDocument();
   });
   it("shows a Plays column with floored values, release and track", async () => {
-    renderPage();
+    await renderPage();
     expect(
       await screen.findByRole("columnheader", { name: "Plays" }),
     ).toBeInTheDocument();
     expect(screen.getAllByText("Fewer than 5").length).toBeGreaterThan(0);
-    fireEvent.click(
-      screen.getAllByRole("button", { name: /^Show tracks for / })[0]!,
-    );
-    const trackHeader = await screen.findByRole("rowheader", {
+    const firstToggle = screen.getAllByRole("button", {
+      name: /^Show tracks for /,
+    })[0]!;
+    fireEvent.click(firstToggle);
+    // A single of the same name has its own release row, so the track is
+    // found in the group the toggle opened.
+    const tracks = document.getElementById(
+      firstToggle.getAttribute("aria-controls") ?? "",
+    )!;
+    const trackHeader = await within(tracks).findByRole("rowheader", {
       name: /carta para a santa/i,
     });
     const trackRow = trackHeader.closest("tr")!;
@@ -202,7 +218,7 @@ describe("Your numbers (demo stats, live layout)", () => {
     expect(trackCells[0]).toMatch(/^(\d[\d,]*|Fewer than 5)$/);
   });
   it("shows the plays trend and Top listeners for Mariana", async () => {
-    renderPage();
+    await renderPage();
     expect(
       await screen.findByText("Per day, last 28 days"),
     ).toBeInTheDocument();
@@ -210,7 +226,7 @@ describe("Your numbers (demo stats, live layout)", () => {
       await screen.findByRole("heading", { name: "Top listeners" }),
     ).toBeInTheDocument();
   });
-  it("leaves the Plays column out for a server that predates plays", () => {
+  it("leaves the Plays column out for a server that predates plays", async () => {
     render(
       <TestProviders>
         <StudioNumbersTable
@@ -219,9 +235,10 @@ describe("Your numbers (demo stats, live layout)", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(screen.queryByRole("columnheader", { name: "Plays" })).toBeNull();
   });
-  it("reads Not counted for shows on a podcast release", () => {
+  it("reads Not counted for shows on a podcast release", async () => {
     render(
       <TestProviders>
         <StudioNumbersTable
@@ -230,6 +247,7 @@ describe("Your numbers (demo stats, live layout)", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(screen.getByText("Not counted for shows")).toBeInTheDocument();
   });
 });

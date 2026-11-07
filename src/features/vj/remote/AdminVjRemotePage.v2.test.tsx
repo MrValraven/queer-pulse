@@ -20,6 +20,7 @@ import {
 } from "../../../shared/contracts/vj";
 import { useScreenWakeLock } from "../../../shared/hooks/useScreenWakeLock";
 import { TestProviders } from "../../../test/TestProviders";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { useVjPackClips } from "../api/useVjPackClips";
 import { useVjPacks } from "../api/useVjPacks";
 import {
@@ -88,6 +89,8 @@ vi.mock("../screen/overlay/VjOverlayLayer", () => ({
 }));
 
 const EPOCH = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
+/** A second show: flash consent is kept per stage epoch for the whole page load. */
+const SECOND_SHOW_EPOCH = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
 const PACK_WARM = "00000000-0000-4000-8000-0000000000a1";
 const CLIP_GRID = "00000000-0000-4000-8000-0000000000c1";
 const CLIP_HAZE = "00000000-0000-4000-8000-0000000000c2";
@@ -213,13 +216,14 @@ function controllerWith(
   } as VjStageController;
 }
 
-function renderPage() {
+async function renderPage() {
   const tree = () => (
     <TestProviders initialEntries={[routes.adminVjRemote]}>
       <AdminVjRemotePage />
     </TestProviders>
   );
   const view = render(tree());
+  await awaitCatalog("vj");
   return { ...view, rerenderPage: () => view.rerender(tree()) };
 }
 
@@ -275,9 +279,9 @@ afterEach(() => {
 });
 
 describe("AdminVjRemotePage v2", () => {
-  it("renders the top row, mirror band, strips, grid and dock", () => {
+  it("renders the top row, mirror band, strips, grid and dock", async () => {
     harness.controller = controllerWith(createCommands());
-    renderPage();
+    await renderPage();
     expect(vi.mocked(useVjStage)).toHaveBeenCalledWith({ role: "remote" });
     expect(document.querySelector("[data-vj-remote]")).not.toBeNull();
     expect(document.querySelector("[data-vj-top-row]")).not.toBeNull();
@@ -299,9 +303,9 @@ describe("AdminVjRemotePage v2", () => {
     expect(clipTile("Neon grid")).toBeInTheDocument();
   });
 
-  it("keeps the screen awake while open", () => {
+  it("keeps the screen awake while open", async () => {
     harness.controller = controllerWith(createCommands());
-    renderPage();
+    await renderPage();
     expect(vi.mocked(useScreenWakeLock)).toHaveBeenCalledWith(true);
   });
 
@@ -309,7 +313,7 @@ describe("AdminVjRemotePage v2", () => {
     const commands = createCommands();
     commands.goClip.mockImplementation(() => new Promise(() => undefined));
     harness.controller = controllerWith(commands);
-    renderPage();
+    await renderPage();
     const user = userEvent.setup();
     await user.click(clipTile("Warm haze"));
     expect(commands.goClip).toHaveBeenCalledWith(CLIP_HAZE);
@@ -330,7 +334,7 @@ describe("AdminVjRemotePage v2", () => {
       } as VjCommandOutcome),
     );
     harness.controller = controllerWith(commands);
-    renderPage();
+    await renderPage();
     const user = userEvent.setup();
     await user.click(clipTile("Tall ribbon"));
     expect(
@@ -338,15 +342,15 @@ describe("AdminVjRemotePage v2", () => {
     ).toBeInTheDocument();
   });
 
-  it("Digit2 on the keyboard sends the second clip", () => {
+  it("Digit2 on the keyboard sends the second clip", async () => {
     const commands = createCommands();
     harness.controller = controllerWith(commands);
-    renderPage();
+    await renderPage();
     fireEvent.keyDown(window, { code: "Digit2", key: "2" });
     expect(commands.goClip).toHaveBeenCalledWith(CLIP_HAZE);
   });
 
-  it("a quantized change keeps the mirror's live clip until applyAt", () => {
+  it("a quantized change keeps the mirror's live clip until applyAt", async () => {
     const commands = createCommands();
     const shown = stateWith();
     const latest = stateWith({
@@ -359,7 +363,7 @@ describe("AdminVjRemotePage v2", () => {
       latestState: latest,
       upcoming: { state: latest, applyAt: SERVER_NOW + 1_500 },
     });
-    const view = renderPage();
+    const view = await renderPage();
     const band = document.querySelector("[data-vj-mirror-band]") as HTMLElement;
     expect(
       band
@@ -383,7 +387,7 @@ describe("AdminVjRemotePage v2", () => {
 
   it("More opens the sheet list and Mix opens the mix sheet", async () => {
     harness.controller = controllerWith(createCommands());
-    renderPage();
+    await renderPage();
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: "More controls" }));
     const moreSheet = await screen.findByRole("dialog");
@@ -393,10 +397,10 @@ describe("AdminVjRemotePage v2", () => {
     );
   });
 
-  it("the split layout shows the crossfader in the dock column", () => {
+  it("the split layout shows the crossfader in the dock column", async () => {
     stubMatchMedia(true);
     harness.controller = controllerWith(createCommands());
-    renderPage();
+    await renderPage();
     const column = document.querySelector('[data-vj-remote-dock="split"]');
     expect(column).not.toBeNull();
     expect(
@@ -409,7 +413,7 @@ describe("AdminVjRemotePage v2", () => {
     setDeviceOnline(false);
     const commands = createCommands();
     harness.controller = controllerWith(commands);
-    renderPage();
+    await renderPage();
     const reason = await screen.findByText(
       "Can't reach the server. Check your connection",
     );
@@ -427,7 +431,7 @@ describe("AdminVjRemotePage v2", () => {
   it("a flash-capable pad asks for consent once per show", async () => {
     const commands = createCommands();
     harness.controller = controllerWith(commands);
-    renderPage();
+    await renderPage();
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: /^Invert\./ }));
     expect(commands.setEffects).not.toHaveBeenCalled();
@@ -450,8 +454,13 @@ describe("AdminVjRemotePage v2", () => {
 
   it("a flash-capable transition names its mode on the consent", async () => {
     const commands = createCommands();
-    harness.controller = controllerWith(commands);
-    renderPage();
+    // The pad test above already confirmed the warning for EPOCH.
+    const secondShow = stateWith({ stageEpoch: SECOND_SHOW_EPOCH });
+    harness.controller = controllerWith(commands, {
+      state: secondShow,
+      latestState: secondShow,
+    });
+    await renderPage();
     const user = userEvent.setup();
     await user.click(
       screen.getByRole("button", { name: "Transition: Fade. Change it" }),

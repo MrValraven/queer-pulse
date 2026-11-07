@@ -25,6 +25,7 @@ import {
   FUNDING_ERROR_TARGET,
   fundingErrorCode,
 } from "./fundingErrors";
+import { forumErrorText } from "../forumErrors";
 import { isFundingAuthor } from "./fundingPermissions";
 import { previewFundingView } from "./fundingPreview";
 import { useUpdateThreadFunding } from "./useUpdateThreadFunding";
@@ -121,15 +122,7 @@ export function FundingEditModal({
       onError: (error) => {
         const code = fundingErrorCode(error);
         setErrorCode(code);
-        showToast(
-          t(
-            code
-              ? FUNDING_ERROR_MESSAGE_KEYS[code]
-              : "forum:funding.edit.failed",
-            FUNDING_ERROR_MESSAGE_VALUES,
-          ),
-          "error",
-        );
+        showToast(forumErrorText(t, error), "error");
       },
     });
   };

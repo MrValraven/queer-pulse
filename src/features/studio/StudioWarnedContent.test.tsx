@@ -1,10 +1,11 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { StudioWarnedContent } from "./StudioWarnedContent";
 
 describe("StudioWarnedContent (spec 6.2)", () => {
-  it("covers warned lyrics until the reveal is pressed", () => {
+  it("covers warned lyrics until the reveal is pressed", async () => {
     render(
       <TestProviders>
         <StudioWarnedContent trackId="t-warned" warnings={["self-harm"]}>
@@ -12,6 +13,7 @@ describe("StudioWarnedContent (spec 6.2)", () => {
         </StudioWarnedContent>
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(screen.queryByText("The words")).toBeNull();
     const reveal = screen.getByRole("button");
     expect(reveal.getAttribute("aria-expanded")).toBe("false");

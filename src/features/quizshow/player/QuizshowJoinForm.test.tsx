@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { ReducedMotionContext } from "../../../app/providers/motionPrefs";
@@ -10,6 +10,7 @@ import type {
 import type { QuizshowClientState } from "../realtime/quizshowClientStore";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import { QuizshowJoinForm } from "./QuizshowJoinForm";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 
 function lobbySession(
   overrides: Partial<QuizshowPlayerState> = {},
@@ -115,11 +116,27 @@ const TEAMS_LOBBY: QuizshowLobby = {
   playerCount: 5,
 };
 
+/** The component's own alert. TestProviders also mounts the toast regions,
+ *  and the assertive one carries the alert role while it is empty. */
+function findComponentAlert(): Promise<HTMLElement> {
+  return waitFor(() => {
+    const [alert, ...otherAlerts] = screen
+      .getAllByRole("alert")
+      .filter((element) => element.closest("[data-toast-region]") === null);
+    expect(otherAlerts).toHaveLength(0);
+    if (alert === undefined) {
+      throw new Error("The component rendered no alert of its own");
+    }
+    return alert;
+  });
+}
+
 describe("QuizshowJoinForm", () => {
   it("prefills the suggested name and sends the join with the choices", async () => {
     const user = userEvent.setup();
     const send = vi.fn().mockResolvedValue({ ok: true });
     renderForm(lobbySession(), send as QuizshowSessionController["send"]);
+    await awaitCatalog("quizshow");
 
     const nameInput = screen.getByLabelText("Screen name");
     expect(nameInput).toHaveValue("Sam");
@@ -139,8 +156,9 @@ describe("QuizshowJoinForm", () => {
     });
   });
 
-  it("keeps extra time private", () => {
+  it("keeps extra time private", async () => {
     renderForm(lobbySession(), vi.fn() as QuizshowSessionController["send"]);
+    await awaitCatalog("quizshow");
     expect(
       screen.getByText("Only you and the hosts see this"),
     ).toBeInTheDocument();
@@ -157,6 +175,7 @@ describe("QuizshowJoinForm", () => {
       }),
       send as QuizshowSessionController["send"],
     );
+    await awaitCatalog("quizshow");
 
     await user.click(screen.getByRole("button", { name: "I'm in" }));
     expect(send).not.toHaveBeenCalled();
@@ -194,10 +213,11 @@ describe("QuizshowJoinForm", () => {
       message: "blocked",
     });
     renderForm(lobbySession(), send as QuizshowSessionController["send"]);
+    await awaitCatalog("quizshow");
 
     await user.click(screen.getByRole("button", { name: "I'm in" }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await findComponentAlert()).toHaveTextContent(
       "Let's keep it kind. Try different words",
     );
     expect(screen.getByLabelText("Screen name")).toHaveAttribute(

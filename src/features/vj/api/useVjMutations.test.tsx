@@ -114,8 +114,11 @@ describe("VJ library hooks (demo)", () => {
     });
     const cached = queryClient.getQueryData<VjPackDTO[]>(vjKeys.packs(true));
     expect(cached?.map((pack) => pack.id)).toEqual([...originalIds].reverse());
-    expect(result.current.packs.data?.map((pack) => pack.id)).toEqual(
-      [...originalIds].reverse(),
+    // The query batches its observers' update onto a later task.
+    await waitFor(() =>
+      expect(result.current.packs.data?.map((pack) => pack.id)).toEqual(
+        [...originalIds].reverse(),
+      ),
     );
     expect(queryClient.getQueryState(vjKeys.packs(true))?.isInvalidated).toBe(
       false,

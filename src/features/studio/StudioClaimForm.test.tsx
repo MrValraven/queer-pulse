@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { StudioClaimForm } from "./StudioClaimForm";
 
 const mutate = vi.fn();
@@ -33,24 +34,26 @@ function fillValid() {
 }
 
 describe("StudioClaimForm", () => {
-  it("shows every missing field and sends nothing", () => {
+  it("shows every missing field and sends nothing", async () => {
     render(
       <TestProviders>
         <StudioClaimForm trackId="track-1" />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(screen.getByRole("button", { name: /send claim/i }));
     expect(mutate).not.toHaveBeenCalled();
     expect(screen.getAllByText(/name the original work/i).length).toBe(1);
     expect(screen.getAllByText(/tick the statement/i).length).toBe(1);
   });
 
-  it("refuses an unsafe link before sending", () => {
+  it("refuses an unsafe link before sending", async () => {
     render(
       <TestProviders>
         <StudioClaimForm trackId="track-1" />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fillValid();
     fireEvent.change(screen.getByLabelText(/link to the original/i), {
       target: { value: "javascript:alert(1)" },
@@ -59,12 +62,13 @@ describe("StudioClaimForm", () => {
     expect(mutate).not.toHaveBeenCalled();
   });
 
-  it("refuses a plain http link before sending", () => {
+  it("refuses a plain http link before sending", async () => {
     render(
       <TestProviders>
         <StudioClaimForm trackId="track-1" />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fillValid();
     fireEvent.change(screen.getByLabelText(/link to the original/i), {
       target: { value: "http://example.org/song" },
@@ -79,6 +83,7 @@ describe("StudioClaimForm", () => {
         <StudioClaimForm trackId="track-1" />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fillValid();
     fireEvent.click(screen.getByRole("button", { name: /send claim/i }));
     await waitFor(() => expect(mutate).toHaveBeenCalledTimes(1));
@@ -94,12 +99,13 @@ describe("StudioClaimForm", () => {
     });
   });
 
-  it("asks for a track first when none is picked", () => {
+  it("asks for a track first when none is picked", async () => {
     render(
       <TestProviders>
         <StudioClaimForm trackId={null} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fillValid();
     fireEvent.click(screen.getByRole("button", { name: /send claim/i }));
     expect(mutate).not.toHaveBeenCalled();

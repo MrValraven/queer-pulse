@@ -94,6 +94,12 @@ describe("useDeskUnpublish (demo mode)", () => {
     expect(moved?.stage).toBe("Drafting");
     expect(moved?.publishedAt).toBeNull();
     expect(moved).not.toBe(piece);
+    // A new stage starts its own clock, so "days in stage" reads from now.
+    const stageEnteredAtMs = Date.parse(moved?.stageEnteredAt ?? "");
+    expect(Date.now() - stageEnteredAtMs).toBeLessThan(60_000);
+    expect(stageEnteredAtMs).toBeGreaterThan(
+      Date.parse(piece.stageEnteredAt ?? ""),
+    );
     expect(apiMocks.unpublishPiece).not.toHaveBeenCalled();
   });
 

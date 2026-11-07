@@ -1,13 +1,24 @@
 import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
-import { resetDemoPlaylists } from "../studio/api/studioDemoPlaylists";
+import {
+  demoSetProfilePlaylists,
+  resetDemoPlaylists,
+} from "../studio/api/studioDemoPlaylists";
 import { ProfileStudioPlaylists } from "./ProfileStudioPlaylists";
 
 beforeEach(() => resetDemoPlaylists());
 
 describe("ProfileStudioPlaylists (demo)", () => {
-  it("shows the member their own member-credited playlists, private ones included", async () => {
+  it("shows the member the playlists they featured, a private one included", async () => {
+    // The owner's profile reads their own profile-playlists setting: with
+    // nothing featured it shows only public playlists, and every playlist the
+    // demo viewer credits to themselves is private or connections-only. So
+    // the owner features one here, the way the settings screen does.
+    demoSetProfilePlaylists({
+      isShown: true,
+      featuredIds: ["demo-playlist-kitchen-tapes"],
+    });
     render(
       <TestProviders>
         <ProfileStudioPlaylists memberSlug="tiago" isSelf firstName="Tiago" />
@@ -25,7 +36,8 @@ describe("ProfileStudioPlaylists (demo)", () => {
     expect(
       screen.getByRole("heading", { name: "Your playlists" }),
     ).toBeInTheDocument();
-    expect(within(list).getByText("Private")).toBeInTheDocument();
+    // The visibility chip's label lives in the lazy `studio` namespace.
+    expect(await within(list).findByText("Private")).toBeInTheDocument();
   });
 
   it("names another member's block after them", async () => {

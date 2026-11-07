@@ -9,6 +9,7 @@ import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../shared/api/client";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type { SubprofileDTO } from "./api/subprofiles.api";
 import {
   subprofileToView,
@@ -436,6 +437,9 @@ describe("typed refusals on Save show translated copy (ENG-448, PRD-427)", () =>
       }),
     );
     const { result } = renderEditor(subprofileToView(ownerDto()));
+    // The toast copies its words when it is raised, so the subprofiles
+    // catalog has to be loaded before the save fails.
+    await awaitCatalog("subprofiles");
 
     act(() => {
       result.current.meta.setDisplayName("Tiago C.");

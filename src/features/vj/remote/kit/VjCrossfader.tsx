@@ -75,10 +75,11 @@ export interface VjCrossfaderProps {
 
 /**
  * The live and mix crossfader: a native range (a real slider for assistive
- * tech, with the mix share spoken as a percent), a 44px thumb, Live on the
- * start edge and Mix on the end edge. While the finger is down it shows its
- * own position and streams values through the send throttle; on release it
- * sends the final value and hands the display back to `value`.
+ * tech, with the mix share spoken as a percent), a small ringed thumb inside
+ * a 44px hit area, Live on the start edge and Mix on the end edge. While the
+ * finger is down it shows its own position and streams values through the
+ * send throttle; on release it sends the final value and hands the display
+ * back to `value`.
  */
 export function VjCrossfader({
   value,

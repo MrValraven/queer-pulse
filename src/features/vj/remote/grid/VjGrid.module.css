@@ -210,6 +210,57 @@
   font-weight: 600;
 }
 
+/* The badge's place in the tags row: the badge itself sits on the button
+   below, so the tags after it start where they did. */
+.failBadgeSlot {
+  display: inline-block;
+  width: var(--vj-badge-size);
+  height: var(--vj-badge-size);
+}
+
+/* ── Failure badge: a 22px amber disc in a 44px hit area at the top-start
+   corner, drawn where the tags row starts; it opens the failed-clips sheet ── */
+.failButton {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  display: grid;
+  align-content: start;
+  justify-content: start;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  padding: var(--vj-tile-inset);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--qs-cta-ink);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  /* Scales in and out around the disc's centre; the disc sits at the
+     inline start, so the x offset mirrors in right-to-left text. */
+  --vj-badge-centre: calc(var(--vj-tile-inset) + var(--vj-badge-size) / 2);
+  transform-origin: var(--vj-badge-centre) var(--vj-badge-centre);
+}
+.failButton:dir(rtl) {
+  transform-origin: calc(100% - var(--vj-badge-centre)) var(--vj-badge-centre);
+}
+/* MIDI learn runs: a tap on the badge's corner reaches the tile's main
+   button below, which picks the slot. */
+.failButton[data-vj-learn-passthrough] {
+  pointer-events: none;
+}
+/* The ring hugs the 22px disc, so it stays centred on what the eye sees
+   and off the neighbouring tile. */
+.failButton:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+.failButton:focus-visible .failBadge {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
 .failBadge {
   display: inline-grid;
   place-items: center;
@@ -218,6 +269,12 @@
   border-radius: 50%;
   background: rgb(var(--amber-rgb));
   color: var(--qs-cta-ink);
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+.failButton:active .failBadge {
+  transform: scale(0.9);
 }
 .failBadge svg {
   width: 14px;

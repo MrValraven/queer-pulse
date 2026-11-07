@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { ApiError } from "../../shared/api/client";
 import { StudioAudioUploadError } from "./api/studioAudioUpload";
 import { wavBytes } from "./upload/convert/studioPcmTestFiles";
+import "./upload/studioJsdomBlobBytes";
 import {
   audioContentTypeOf,
   audioMaxBytesFor,

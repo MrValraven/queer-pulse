@@ -35,6 +35,10 @@ export const connect: Catalog = {
   "toast.withdrawn": "Request withdrawn",
   "toast.unblocked": "Unblocked {name}",
   "toast.actionFailed": "That didn't go through. Please try again.",
+  "toast.requestGone":
+    "That connection isn't there any more. Refresh to see where things stand.",
+  "toast.alreadyAnswered":
+    "That request was already answered or withdrawn. Refresh to see where it stands.",
 
   // Per-card "more" menu (ConnectionCards)
   "moreMenu.ariaMore": "More options for {name}",
@@ -139,6 +143,8 @@ export const connect: Catalog = {
   "note.saving": "Saving…",
   "note.cancel": "Cancel",
   "note.saveFailed": "That note didn't save. Please try again.",
+  "note.error.tooLong":
+    "That note is longer than 500 characters. Shorten it and save again.",
 
   // Relative age of a request (connections.adapters), for the two idioms the
   // shared localized helper can't derive from Intl.RelativeTimeFormat.

@@ -23,6 +23,7 @@ import { isSellingOnline } from "./listBusiness/listingOnline.data";
 import { LISTING_OWNED_BY } from "./listBusiness/listingOwnedBy.data";
 import { CONSTELLATION_LIMIT } from "./onlineConstellation";
 import { ACCESSIBILITY_QUESTION_SLUGS } from "./listBusiness/listingAccessibility.data";
+import { awaitCatalog } from "../../test/awaitCatalog";
 
 /** The demo Online tab's pool: online-only listings and places that also
  *  sell online. The 18+ fixture sits outside `DIRECTORY_PLACES`. */
@@ -31,22 +32,30 @@ const SELLING_ONLINE = DIRECTORY_PLACES.filter((place) =>
 );
 const ADULT_SHOP_NAME = "Toque Macio";
 
-function renderDirectory(search: string) {
-  return render(<DirectoryPage />, {
+async function renderDirectory(search: string) {
+  const view = render(<DirectoryPage />, {
     wrapper: ({ children }) => (
       <TestProviders initialEntries={[`/local/directory${search}`]}>
         {children}
       </TestProviders>
     ),
   });
+  await awaitCatalog("marketing");
+  return view;
 }
 
-/** Resolves once the results header counts `total` online businesses. */
+/** Resolves once the results header counts `total` online businesses. The
+ *  sentence's line wraps it in a second span with the same text, so only the
+ *  innermost span that holds the whole sentence matches. */
 function findOnlineCount(total: number) {
+  const sentence = `Showing ${total} of ${total} online businesses`;
   return screen.findByText(
     (_, element) =>
       element?.tagName === "SPAN" &&
-      element.textContent === `Showing ${total} of ${total} online businesses`,
+      element.textContent === sentence &&
+      !Array.from(element.children).some(
+        (child) => child.textContent === sentence,
+      ),
     undefined,
     { timeout: 3000 },
   );
@@ -58,7 +67,7 @@ describe("DirectoryPage, Online tab", () => {
   });
 
   it("shows every business that sells online and none of the places that only have a door", async () => {
-    renderDirectory("?view=online");
+    await renderDirectory("?view=online");
 
     const constellation = await screen.findByRole(
       "list",
@@ -80,18 +89,18 @@ describe("DirectoryPage, Online tab", () => {
   });
 
   it("marks the Online view as the one selected", async () => {
-    renderDirectory("?view=online");
+    await renderDirectory("?view=online");
     const online = await screen.findByRole("button", { name: "Online" });
     expect(online).toHaveAttribute("aria-pressed", "true");
   });
 
   it("counts online businesses in the results header", async () => {
-    renderDirectory("?view=online");
+    await renderDirectory("?view=online");
     expect(await findOnlineCount(SELLING_ONLINE.length)).toBeInTheDocument();
   });
 
   it("drops Open now on the way into the Online tab", async () => {
-    renderDirectory("?view=list&open=now");
+    await renderDirectory("?view=list&open=now");
     const openNowChip = /open now.*remove filter/i;
     expect(
       await screen.findAllByRole("button", { name: openNowChip }),
@@ -111,7 +120,7 @@ describe("DirectoryPage, Online tab", () => {
   });
 
   it("ignores Open now in a direct link to the Online tab", async () => {
-    renderDirectory("?view=online&open=now");
+    await renderDirectory("?view=online&open=now");
 
     expect(await findOnlineCount(SELLING_ONLINE.length)).toBeInTheDocument();
     expect(
@@ -120,7 +129,7 @@ describe("DirectoryPage, Online tab", () => {
   });
 
   it("ignores a place type the Online tab does not offer in a direct link", async () => {
-    renderDirectory("?view=online&cat=culture");
+    await renderDirectory("?view=online&cat=culture");
 
     expect(await findOnlineCount(SELLING_ONLINE.length)).toBeInTheDocument();
     expect(
@@ -130,7 +139,7 @@ describe("DirectoryPage, Online tab", () => {
 
   it("shows no 18+ shop to a visitor who is signed out, even with adult=1", async () => {
     window.localStorage.setItem(AUTH_STORAGE_KEY, "false");
-    renderDirectory("?view=online&adult=1");
+    await renderDirectory("?view=online&adult=1");
 
     expect(await findOnlineCount(SELLING_ONLINE.length)).toBeInTheDocument();
     expect(screen.queryByText(ADULT_SHOP_NAME)).not.toBeInTheDocument();
@@ -140,7 +149,7 @@ describe("DirectoryPage, Online tab", () => {
   });
 
   it("merges the 18+ shop for a signed-in member with the chip on", async () => {
-    renderDirectory("?view=online&adult=1");
+    await renderDirectory("?view=online&adult=1");
 
     expect(
       (

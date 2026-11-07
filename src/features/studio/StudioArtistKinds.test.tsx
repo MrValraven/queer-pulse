@@ -2,6 +2,7 @@ import { createRef } from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { toArtistView, toReleaseCardView } from "./api/studio.adapters";
 import { demoStudioArtist, demoStudioRelease } from "./api/studioDemoApi";
 import { DEMO_SHOW_ID } from "./api/studioDemoFormats.data";
@@ -11,7 +12,7 @@ import { StudioArtistMain } from "./StudioArtistMain";
 import { StudioOwnerReleaseRow } from "./StudioOwnerReleaseRow";
 
 describe("artist kinds on the artist page", () => {
-  it("titles a podcaster's releases Shows", () => {
+  it("titles a podcaster's releases Shows", async () => {
     render(
       <TestProviders>
         <StudioArtistMain
@@ -20,10 +21,11 @@ describe("artist kinds on the artist page", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(screen.getByRole("heading", { name: "Shows" })).toBeInTheDocument();
   });
 
-  it("titles a drag artist's releases Performance audio", () => {
+  it("titles a drag artist's releases Performance audio", async () => {
     render(
       <TestProviders>
         <StudioArtistMain
@@ -34,6 +36,7 @@ describe("artist kinds on the artist page", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       screen.getByRole("heading", { name: "Performance audio" }),
     ).toBeInTheDocument();
@@ -53,7 +56,7 @@ describe("artist kinds on the artist page", () => {
     expect(artistTabsOf("podcast")[1]?.id).toBe("about");
   });
 
-  it("counts a podcaster's releases as shows in the hero", () => {
+  it("counts a podcaster's releases as shows in the hero", async () => {
     render(
       <TestProviders>
         <StudioArtistHero
@@ -63,11 +66,12 @@ describe("artist kinds on the artist page", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(screen.getByText(/\d+ shows?/)).toBeInTheDocument();
     expect(screen.queryByText(/\d+ releases?/)).toBeNull();
   });
 
-  it("offers Add episode on a live show's owner row", () => {
+  it("offers Add episode on a live show's owner row", async () => {
     const release = toReleaseCardView(demoStudioRelease(DEMO_SHOW_ID));
     render(
       <TestProviders>
@@ -87,6 +91,7 @@ describe("artist kinds on the artist page", () => {
         </ul>
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       screen.getByRole("link", { name: "Add episode to Late Bloomers" }),
     ).toHaveAttribute(

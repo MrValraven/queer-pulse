@@ -9,6 +9,7 @@ import {
   useRespondToCommunitySupportOffer,
 } from "./api/useCommunitySupportOffers";
 import { SupportOfferRow } from "./ModToolsSupportOffer";
+import { communityErrorText } from "./communityErrors";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./ModToolsPanels.module.css";
 
@@ -50,11 +51,7 @@ export function ModToolsSupport({ slug }: { slug: string }) {
             ),
             "success",
           ),
-        onError: () =>
-          showToast(
-            t("communities:detail.modtools.support.errorToast"),
-            "error",
-          ),
+        onError: (error) => showToast(communityErrorText(t, error), "error"),
       },
     );
   };

@@ -81,9 +81,8 @@ export function useMessageGroupActions({
   updateGroupMutation,
 }: GroupActionsDeps): GroupActions {
   const { showToast } = useToast();
-  const genericErrorFallback = t("messages:group.error.generic");
   const onGroupMutationError = (error: unknown) =>
-    showToast(groupErrorMessage(error, t, genericErrorFallback), "error");
+    showToast(groupErrorMessage(error, t), "error");
 
   /** The signed-in member's display name, for demo-simulated system pills where
    *  the current user is always the actor (owner of the demo group). */

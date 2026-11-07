@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { FiArrowRight, FiCheck } from "react-icons/fi";
-import { ApiError } from "../../shared/api/client";
 import { Button, Reveal, Select, Sending } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -9,6 +8,7 @@ import { type Barter } from "./barter.data";
 import type { BarterCategoryKey } from "./api/barter.api";
 import { useCreateBarterListing } from "./api/useBarter";
 import { POSTABLE_CATEGORIES } from "./barterListingForm";
+import { BARTER_POST_STRIP_OVERRIDES, causeLine } from "./economyErrorCopy";
 import styles from "./BarterPage.module.css";
 
 /** Post-a-swap strip: a short offer/want form that puts a listing on the board,
@@ -75,11 +75,7 @@ export function BarterPostStrip({
       // Confirmation comes from the resolved mutation, never from the click.
       setSubmitted(true);
     } catch (error) {
-      setErrorMessage(
-        error instanceof ApiError && error.status === 400
-          ? t("economy:barter.postStrip.errorInvalid")
-          : t("economy:barter.postStrip.errorFailed"),
-      );
+      setErrorMessage(causeLine(error, t, BARTER_POST_STRIP_OVERRIDES));
     }
   };
 

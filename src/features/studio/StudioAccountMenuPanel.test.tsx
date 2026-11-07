@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { StudioAccountMenuPanel } from "./StudioAccountMenuPanel";
 
 const state = vi.hoisted(() => ({
@@ -28,6 +29,9 @@ vi.mock("./api/useStudioAccess", () => ({
     isPending: false,
     uploadablePersonas: state.personas,
   }),
+  // The menu counts read the live counter windows; null is what the real
+  // hook answers in demo, so the count comes from the demo fixture.
+  useStudioCounterWindowsOpenLive: () => null,
 }));
 vi.mock("./api/useStudioMyClaimsReplyCount", () => ({
   useStudioMyClaimsReplyCount: () => ({ count: state.replyCount }),
@@ -50,7 +54,7 @@ beforeEach(() => {
   state.personas = [];
 });
 
-function renderPanel({ isSheet = false }: { isSheet?: boolean } = {}) {
+async function renderPanel({ isSheet = false }: { isSheet?: boolean } = {}) {
   render(
     <TestProviders initialEntries={["/studio"]}>
       <StudioAccountMenuPanel
@@ -62,11 +66,12 @@ function renderPanel({ isSheet = false }: { isSheet?: boolean } = {}) {
       />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
 }
 
 describe("account menu panel (showcase off)", () => {
   it("lists the everyone rows for a member without an artist page", async () => {
-    renderPanel();
+    await renderPanel();
     expect(
       await screen.findByRole("link", { name: "My claims" }),
     ).toHaveAttribute("href", "/studio/claims");
@@ -83,9 +88,12 @@ describe("account menu panel (showcase off)", () => {
     expect(
       screen.getByRole("link", { name: "Solidarity fund" }),
     ).toBeInTheDocument();
+    // Any member can start a release, so Upload is an everyone row.
+    expect(
+      screen.getByRole("link", { name: "Upload a release" }),
+    ).toHaveAttribute("href", "/studio/upload");
     // Anchored prefixes, so a row whose badge adds a count still matches.
     for (const name of [
-      /^Upload a release/,
       /^Your numbers/,
       /^Press kit/,
       /^Payouts/,
@@ -97,7 +105,7 @@ describe("account menu panel (showcase off)", () => {
 
   it("adds the creator rows and the persona for a member with an artist page", async () => {
     state.personas = [makePersona(1)];
-    renderPanel();
+    await renderPanel();
     expect(
       await screen.findByRole("link", { name: "Upload a release" }),
     ).toHaveAttribute("href", "/studio/upload");
@@ -117,7 +125,7 @@ describe("account menu panel (showcase off)", () => {
 
   it("folds artist pages past the third behind Show all", async () => {
     state.personas = [1, 2, 3, 4, 5].map(makePersona);
-    renderPanel();
+    await renderPanel();
     const toggle = await screen.findByRole("button", { name: "Show all (5)" });
     expect(toggle).toHaveAttribute("aria-expanded", "false");
     for (const index of [1, 2, 3])
@@ -136,7 +144,7 @@ describe("account menu panel (showcase off)", () => {
   });
 
   it("reveals the help pages under Help and info", async () => {
-    renderPanel();
+    await renderPanel();
     const toggle = await screen.findByRole("button", {
       name: "Help and info",
     });
@@ -157,7 +165,7 @@ describe("account menu panel (showcase off)", () => {
 
   it("adds Flag review for staff under a Staff heading", async () => {
     state.isStaff = true;
-    renderPanel();
+    await renderPanel();
     // The row opens the tab with work waiting (`?tab=claims` or
     // `?tab=disputes`) once the counts land, and the bare route before.
     expect(
@@ -172,7 +180,7 @@ describe("account menu panel (showcase off)", () => {
 
   it("counts the claims waiting for the member's reply", async () => {
     state.replyCount = 2;
-    renderPanel();
+    await renderPanel();
     expect(
       await screen.findByRole("link", { name: /My claims/ }),
     ).toHaveAccessibleName(/2 claims waiting for your reply/);
@@ -182,12 +190,9 @@ describe("account menu panel (showcase off)", () => {
 describe("account menu panel (showcase)", () => {
   it("shows the showcase rows and the giving line", async () => {
     state.isShowcase = true;
-    renderPanel();
+    await renderPanel();
     expect(
-      await screen.findByRole("link", { name: "Payouts" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: "Submit a set" }),
+      await screen.findByRole("link", { name: "Submit a set" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: "Programme the week" }),
@@ -197,7 +202,7 @@ describe("account menu panel (showcase)", () => {
 
   it("opens the phone sheet with the listening pages the dropdown leaves to the rail", async () => {
     state.isShowcase = true;
-    renderPanel({ isSheet: true });
+    await renderPanel({ isSheet: true });
     expect(
       await screen.findByRole("link", { name: "The Wednesday set" }),
     ).toHaveAttribute("href", "/studio/set");
@@ -211,7 +216,7 @@ describe("account menu panel (showcase)", () => {
   });
 
   it("keeps Settings as a row in the phone sheet, with no header icon", async () => {
-    renderPanel({ isSheet: true });
+    await renderPanel({ isSheet: true });
     expect(
       await screen.findByRole("link", { name: "Settings" }),
     ).toHaveAttribute("href", "/studio/settings");
@@ -219,14 +224,14 @@ describe("account menu panel (showcase)", () => {
   });
 
   it("moves Settings out of the desktop Studio group into the header", async () => {
-    renderPanel();
+    await renderPanel();
     const settingsLink = await screen.findByRole("link", { name: "Settings" });
     expect(settingsLink).toHaveAttribute("aria-label", "Settings");
     expect(screen.getAllByRole("link", { name: "Settings" })).toHaveLength(1);
   });
 
   it("links the identity header to the Studio profile in the dropdown", async () => {
-    renderPanel();
+    await renderPanel();
     await screen.findByRole("link", { name: "Settings" });
     const profileLinks = screen
       .getAllByRole("link")
@@ -235,7 +240,7 @@ describe("account menu panel (showcase)", () => {
   });
 
   it("links the identity header to the Studio profile in the phone sheet", async () => {
-    renderPanel({ isSheet: true });
+    await renderPanel({ isSheet: true });
     await screen.findByRole("link", { name: "Settings" });
     const profileLinks = screen
       .getAllByRole("link")
@@ -245,9 +250,9 @@ describe("account menu panel (showcase)", () => {
 
   it("keeps the listening pages out of the dropdown", async () => {
     state.isShowcase = true;
-    renderPanel();
+    await renderPanel();
     expect(
-      await screen.findByRole("link", { name: "Payouts" }),
+      await screen.findByRole("link", { name: "Submit a set" }),
     ).toBeInTheDocument();
     for (const name of ["The Wednesday set", "Sheet music", "Live broadcasts"])
       expect(screen.queryByRole("link", { name })).not.toBeInTheDocument();

@@ -1,6 +1,8 @@
 import { readFileSync } from "node:fs";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { MotionProvider } from "../../app/providers/MotionProvider";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type { StudioLoadState } from "./api/studioLoadState";
 import type {
   StudioPlayerSurfaceValue,
@@ -63,6 +65,28 @@ function ColumnFromHolder() {
   return <StudioSidePanelColumn view={viewHolder.current} />;
 }
 
+/** The column after a page button, as one component: a rerender clones the
+ *  root element it was handed, so the column inside renders again with the
+ *  view the holder now has. */
+function ColumnBesidePageAction() {
+  return (
+    <>
+      <button type="button">Page action</button>
+      <ColumnFromHolder />
+    </>
+  );
+}
+
+/** The column under the app's MotionProvider, whose LazyMotion features
+ *  TestProviders leaves out, so the panel runs its exit before it leaves. */
+function ColumnWithMotion() {
+  return (
+    <MotionProvider>
+      <ColumnFromHolder />
+    </MotionProvider>
+  );
+}
+
 beforeEach(() => {
   setView("nowPlaying");
 });
@@ -72,9 +96,10 @@ afterEach(() => {
 });
 
 describe("StudioSidePanelColumn", () => {
-  it("is an aside named for the view showing", () => {
+  it("is an aside named for the view showing", async () => {
     setView("queue");
     const { rerenderWith } = renderWithPlayer(<ColumnFromHolder />);
+    await awaitCatalog("studio");
     expect(
       screen.getByRole("complementary", { name: "Queue" }),
     ).toBeInTheDocument();
@@ -85,14 +110,10 @@ describe("StudioSidePanelColumn", () => {
     ).toBeInTheDocument();
   });
 
-  it("moves no focus when it opens", () => {
+  it("moves no focus when it opens", async () => {
     setView(null);
-    const { rerenderWith } = renderWithPlayer(
-      <>
-        <button type="button">Page action</button>
-        <ColumnFromHolder />
-      </>,
-    );
+    const { rerenderWith } = renderWithPlayer(<ColumnBesidePageAction />);
+    await awaitCatalog("studio");
     const pageButton = screen.getByRole("button", { name: "Page action" });
     pageButton.focus();
     setView("nowPlaying");
@@ -103,13 +124,14 @@ describe("StudioSidePanelColumn", () => {
     expect(pageButton).toHaveFocus();
   });
 
-  it("appears without an entrance animation after a page change", () => {
+  it("appears without an entrance animation after a page change", async () => {
     renderWithPlayer(<ColumnFromHolder />);
+    await awaitCatalog("studio");
     const aside = screen.getByRole("complementary", { name: "Now playing" });
     expect(aside.style.opacity).toBe("1");
   });
 
-  it("returns focus to the bar toggle of the view it closes", () => {
+  it("returns focus to the bar toggle of the view it closes", async () => {
     renderWithPlayer(
       <>
         <button type="button" id={STUDIO_NOW_PLAYING_BUTTON_ID}>
@@ -118,6 +140,7 @@ describe("StudioSidePanelColumn", () => {
         <ColumnFromHolder />
       </>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(screen.getByRole("button", { name: "Close Now playing" }));
     expect(surfaceHolder.current?.closeSidePanel).toHaveBeenCalledTimes(1);
     expect(
@@ -126,7 +149,8 @@ describe("StudioSidePanelColumn", () => {
   });
 
   it("plays its exit when the queue empties", async () => {
-    const { rerenderWith } = renderWithPlayer(<ColumnFromHolder />);
+    const { rerenderWith } = renderWithPlayer(<ColumnWithMotion />);
+    await awaitCatalog("studio");
     setView(null);
     rerenderWith({ player: createStudioPlayerValue({ currentItem: null }) });
     expect(
@@ -141,6 +165,7 @@ describe("StudioSidePanelColumn", () => {
 
   it("moves the toast stack off the column while it is open", async () => {
     const { rerenderWith } = renderWithPlayer(<ColumnFromHolder />);
+    await awaitCatalog("studio");
     const rootStyle = document.documentElement.style;
     expect(rootStyle.getPropertyValue("--toast-shift-end")).not.toBe("");
     setView(null);

@@ -1,6 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type { StudioFormat } from "./api/studio.types";
 import { StudioFormatChips } from "./StudioFormatChips";
 import { studioHomePath } from "./studioPaths";
@@ -20,12 +21,13 @@ vi.mock("./api/useStudioFormats", () => ({
   }),
 }));
 
-function renderChips(activeFormat: StudioFormat | null) {
+async function renderChips(activeFormat: StudioFormat | null) {
   render(
     <TestProviders>
       <StudioFormatChips activeFormat={activeFormat} hrefOf={studioHomePath} />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
 }
 
 describe("StudioFormatChips with fewer than two formats", () => {
@@ -33,9 +35,9 @@ describe("StudioFormatChips with fewer than two formats", () => {
     formatList.formats = [];
   });
 
-  it("keeps All in reach for the chosen format with a single format listed", () => {
+  it("keeps All in reach for the chosen format with a single format listed", async () => {
     formatList.formats = ["podcast"];
-    renderChips("podcast");
+    await renderChips("podcast");
     const nav = screen.getByRole("navigation", { name: "Show one format" });
     const links = within(nav).getAllByRole("link");
     expect(links.map((link) => link.textContent)).toEqual(["All", "Podcasts"]);
@@ -49,8 +51,8 @@ describe("StudioFormatChips with fewer than two formats", () => {
     );
   });
 
-  it("shows the chosen format beside All while the list is empty", () => {
-    renderChips("spoken_word");
+  it("shows the chosen format beside All while the list is empty", async () => {
+    await renderChips("spoken_word");
     const nav = screen.getByRole("navigation", { name: "Show one format" });
     expect(
       within(nav)
@@ -59,9 +61,9 @@ describe("StudioFormatChips with fewer than two formats", () => {
     ).toEqual(["All", "Spoken word"]);
   });
 
-  it("hides the row with a single format and nothing chosen", () => {
+  it("hides the row with a single format and nothing chosen", async () => {
     formatList.formats = ["music"];
-    renderChips(null);
+    await renderChips(null);
     expect(
       screen.queryByRole("navigation", { name: "Show one format" }),
     ).toBeNull();

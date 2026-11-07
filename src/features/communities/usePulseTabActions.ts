@@ -18,6 +18,7 @@ import {
   useUpdatePost,
 } from "./api/useCommunityMutations";
 import { usePostImageAttach } from "./usePostImageAttach";
+import { communityErrorText } from "./communityErrors";
 
 /** The content currently being reported — the shape `ReportReplyModal`
  *  (shared with the forum) already expects. */
@@ -71,7 +72,8 @@ export function usePulseTabActions(
     null,
   );
 
-  const onError = () => showToast(t("communities:common.error"), "error");
+  const onError = (error: unknown) =>
+    showToast(communityErrorText(t, error), "error");
   const isPinnedEffective = (post: Post) =>
     pinOverrides[post.id] ?? !!post.pinned;
 
@@ -85,9 +87,9 @@ export function usePulseTabActions(
     onFailed: () => void,
   ) => {
     const callbacks = {
-      onError: () => {
+      onError: (error: unknown) => {
         onFailed();
-        onError();
+        onError(error);
       },
     };
     if (willReact) react.mutate({ id, key }, callbacks);
@@ -105,9 +107,9 @@ export function usePulseTabActions(
       { id, text },
       {
         onSuccess: onDone,
-        onError: () => {
+        onError: (error) => {
           onFailed?.();
-          onError();
+          onError(error);
         },
       },
     );
@@ -203,12 +205,12 @@ export function usePulseTabActions(
           setMine([]);
           sharedToast();
         },
-        onError: () => {
+        onError: (error) => {
           setMine((prev) => prev.filter((post) => post.id !== optimisticId));
           // Put the switch back where it was, so a retry does not silently
           // downgrade an announcement to an ordinary post.
           setIsAnnouncementDraft(isAnnouncement);
-          onError();
+          onError(error);
         },
       },
     );

@@ -69,7 +69,8 @@ function firstNameOf(fullName: string): string | null {
  * The waiting party for `me`. "You" and the plum tone belong only to the
  * viewer's own pieces (the same test as the "Your turn" chip): a piece
  * waiting on another editor names that editor, or reads "Editor" while the
- * directory has no name for them, in the neutral tone.
+ * directory has no name for them or the viewer is still unknown, in the
+ * neutral tone.
  */
 export function describeWaitingOn(
   piece: Piece,
@@ -97,9 +98,12 @@ export function describeWaitingOn(
           name: null,
         };
       }
-      const editor = editors.find(
-        (candidate) => candidate.id === piece.editorId,
-      );
+      // An unknown viewer (`me` empty) reads "Editor": the piece may be their
+      // own, so their first name would flip to "You" once the session lands.
+      const editor =
+        me === ""
+          ? undefined
+          : editors.find((candidate) => candidate.id === piece.editorId);
       const name = editor ? firstNameOf(editor.name) : null;
       return {
         tone: "neutral",

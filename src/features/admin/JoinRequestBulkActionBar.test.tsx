@@ -116,6 +116,8 @@ describe("JoinRequestBulkActionBar", () => {
         "approved",
         undefined,
         "member_vouched",
+        // No approval note was typed.
+        undefined,
       ),
     );
   });
@@ -222,6 +224,8 @@ describe("JoinRequestBulkActionBar", () => {
         ["req-1", "req-2"],
         "declined",
         "spam_pattern",
+        // A decline carries no approval reason and no approval note.
+        undefined,
         undefined,
       ),
     );

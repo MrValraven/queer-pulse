@@ -63,11 +63,9 @@ describe("eventBatchFailureOf", () => {
       "venueNotFound",
     ],
     [coded(403, "ACCOUNT_RESTRICTED"), "restricted"],
-    [
-      new ApiError(403, "Referenced upload does not belong to you"),
-      "coverNotYours",
-    ],
-    [new ApiError(403, "Active membership required"), "membershipInactive"],
+    [coded(403, "UPLOAD_NOT_YOURS"), "coverNotYours"],
+    [coded(403, "ACTIVE_MEMBERSHIP_REQUIRED"), "membershipInactive"],
+    [coded(403, "CSRF_REJECTED"), "refused"],
     [new ApiError(403, "Forbidden resource"), "refused"],
     [new ApiError(429, "ThrottlerException"), "rateLimited"],
     [new ApiError(400, "title must be shorter"), "invalid"],
@@ -85,18 +83,27 @@ describe("eventBatchFailureOf", () => {
     );
   });
 
-  it("names a 403 cover refusal only on the interceptor's exact sentence", () => {
+  it("names the 403 cover and membership refusals by their machine codes only", () => {
+    expect(
+      eventBatchFailureOf(coded(403, "UPLOAD_NOT_YOURS"), { isOffline: false })
+        .reason,
+    ).toBe("coverNotYours");
+    expect(
+      eventBatchFailureOf(coded(403, "ACTIVE_MEMBERSHIP_REQUIRED"), {
+        isOffline: false,
+      }).reason,
+    ).toBe("membershipInactive");
     expect(
       eventBatchFailureOf(
         new ApiError(403, "Referenced upload does not belong to you"),
         { isOffline: false },
       ).reason,
-    ).toBe("coverNotYours");
+    ).toBe("refused");
     expect(
       eventBatchFailureOf(new ApiError(403, "Active membership required"), {
         isOffline: false,
       }).reason,
-    ).toBe("membershipInactive");
+    ).toBe("refused");
     expect(
       eventBatchFailureOf(new ApiError(403, "Forbidden resource"), {
         isOffline: false,

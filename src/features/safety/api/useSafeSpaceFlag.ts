@@ -29,6 +29,9 @@ export function useFlagSafeSpace() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<MemberSafeSpaceFlagDTO, Error, SafeSpaceFlagInput>({
+    // `SafeSpaceFlagModal` shows the cause inline, so the app-wide toast
+    // stays quiet.
+    meta: { silentError: true },
     mutationFn: async ({ slug, reasonCode, detail }) => {
       if (demoMode) {
         await new Promise((resolve) => setTimeout(resolve, 500));
@@ -58,6 +61,8 @@ export function useWithdrawSafeSpaceFlag() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<{ ok: true }, Error, { slug: string }>({
+    // `SafeSpaceFlagControl` toasts the cause itself.
+    meta: { silentError: true },
     mutationFn: async ({ slug }) => {
       if (demoMode) return { ok: true };
       return withdrawSafeSpaceFlag(slug);

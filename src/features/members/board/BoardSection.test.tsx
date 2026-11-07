@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { I18nProvider } from "../../../app/providers/I18nProvider";
+import { ToastProvider } from "../../../shared/components/feedback/ToastProvider";
 import { BoardSection } from "./BoardSection";
 import { DEMO_BOARD_NOW_MS } from "./boardInsights.demo";
 import type { MemberProfile } from "../data/memberProfiles";
@@ -126,9 +127,15 @@ function renderSection(isSelf: boolean, profile: MemberProfile) {
   return render(
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
-        <MemoryRouter>
-          <BoardSection profile={profile} isSelf={isSelf} />
-        </MemoryRouter>
+        {/* The row actions report their outcome through a toast. */}
+        <ToastProvider>
+          <MemoryRouter>
+            {/* The section's own host, apart from the toast live regions. */}
+            <div data-testid="board-host">
+              <BoardSection profile={profile} isSelf={isSelf} />
+            </div>
+          </MemoryRouter>
+        </ToastProvider>
       </I18nProvider>
     </QueryClientProvider>,
   );
@@ -164,8 +171,8 @@ describe("BoardSection viewer split on the lapsed post", () => {
       ...boardProfile,
       board: [risoDrum],
     };
-    const { container } = renderSection(false, allExpiredProfile);
-    expect(container).toBeEmptyDOMElement();
+    renderSection(false, allExpiredProfile);
+    expect(screen.getByTestId("board-host")).toBeEmptyDOMElement();
   });
 });
 

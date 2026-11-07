@@ -204,10 +204,12 @@ describe("useMailboxAttribution (live)", () => {
   });
 
   it("rolls back and says so when the owner switch is refused", async () => {
-    const { ApiError } = await import("../../../shared/api/client");
     const request = deferred<MailboxAttribution>();
     apiMocks.setMailboxStaffNames.mockReturnValue(request.promise);
     const { result } = await renderAttribution(cafe);
+    // Imported after renderAttribution resets the modules, so the error is an
+    // instance of the same ApiError class the hook classifies against.
+    const { ApiError } = await import("../../../shared/api/client");
     await waitFor(() =>
       expect(apiMocks.getMailboxAttribution).toHaveBeenCalledTimes(1),
     );
@@ -228,17 +230,21 @@ describe("useMailboxAttribution (live)", () => {
       expect(result.current.attribution?.shouldShowStaffNames).toBe(true),
     );
     expect(
-      await screen.findByText("That didn't save. Try again."),
+      await screen.findByText(
+        "Only the mailbox owner can change this setting, so it stayed as it was.",
+      ),
     ).toBeInTheDocument();
   });
 
   it("explains an unlinked persona's refusal, then reads the lock afresh with the chip's reader mounted", async () => {
+    const { result, cached, wasMailboxListRefreshed } =
+      await renderAttribution(cafe);
+    // Imported after renderAttribution resets the modules, so the error is an
+    // instance of the same ApiError class the hook classifies against.
     const { ApiError } = await import("../../../shared/api/client");
     apiMocks.setMailboxStaffNames.mockRejectedValue(
       new ApiError(403, "Forbidden", { code: "IDENTITY_STAFF_NAMES_LOCKED" }),
     );
-    const { result, cached, wasMailboxListRefreshed } =
-      await renderAttribution(cafe);
     await waitFor(() =>
       expect(apiMocks.getMailboxAttribution).toHaveBeenCalledTimes(1),
     );
@@ -268,11 +274,13 @@ describe("useMailboxAttribution (live)", () => {
   });
 
   it("refreshes the mailbox list when the member no longer staffs it", async () => {
+    const { result, wasMailboxListRefreshed } = await renderAttribution(cafe);
+    // Imported after renderAttribution resets the modules, so the error is an
+    // instance of the same ApiError class the hook classifies against.
     const { ApiError } = await import("../../../shared/api/client");
     apiMocks.setMyStaffNaming.mockRejectedValue(
       new ApiError(403, "Forbidden", { code: "IDENTITY_NOT_STAFF" }),
     );
-    const { result, wasMailboxListRefreshed } = await renderAttribution(cafe);
     act(() => result.current.setAllowMyName(false));
     await waitFor(() => expect(wasMailboxListRefreshed()).toBe(true));
   });

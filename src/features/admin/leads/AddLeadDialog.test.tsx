@@ -7,6 +7,7 @@ import {
 } from "@testing-library/react";
 import userEvent, { type UserEvent } from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import { EMPTY_LEAD_FILTERS } from "./api/leads.types";
 import { AddLeadDialog } from "./AddLeadDialog";
@@ -49,8 +50,10 @@ function renderDialog() {
   return { onClose, user: userEvent.setup() };
 }
 
-/** The admin namespace loads lazily, so every test waits for the title. */
+/** The admin namespace loads lazily, so every test waits for its catalog,
+ *  however long the first load of the chunk takes, and then for the title. */
 async function waitForDialog(): Promise<HTMLElement> {
+  await awaitCatalog("admin");
   return screen.findByRole("dialog", { name: "Add lead" });
 }
 
@@ -169,7 +172,7 @@ describe("AddLeadDialog", () => {
     const countBefore = leadCount();
     await chooseType(user, "Band");
     await user.click(submitButton(dialog));
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await within(dialog).findByRole("alert")).toHaveTextContent(
       "Add a name for this lead",
     );
     expect(nameInput()).toHaveAttribute("aria-invalid", "true");
@@ -188,7 +191,7 @@ describe("AddLeadDialog", () => {
       "bookings@cave23.example",
     );
     await user.click(submitButton(dialog));
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await within(dialog).findByRole("alert")).toHaveTextContent(
       "Cave 23 already has this email",
     );
     expect(screen.getByRole("link", { name: "Open Cave 23" })).toHaveAttribute(
@@ -212,7 +215,7 @@ describe("AddLeadDialog", () => {
     await user.type(screen.getByLabelText("Link 2"), "https://ok.example");
     await user.type(screen.getByLabelText("Link 3"), CAVE_23_INSTAGRAM);
     await user.click(submitButton(dialog));
-    await screen.findByRole("alert");
+    await within(dialog).findByRole("alert");
     const linkRows = within(
       screen.getByRole("group", { name: "Links" }),
     ).getAllByRole("listitem");

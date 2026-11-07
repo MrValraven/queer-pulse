@@ -11,7 +11,7 @@ describe("classifyNavDirection", () => {
   });
 
   it("classifies a push that crosses tab roots as a tab-switch", () => {
-    expect(classifyNavDirection("/feed", "/members", "PUSH")).toBe(
+    expect(classifyNavDirection("/feed", "/communities", "PUSH")).toBe(
       "tab-switch",
     );
   });
@@ -25,7 +25,7 @@ describe("classifyNavDirection", () => {
   });
 
   it("always classifies REPLACE as replace, even across tab roots", () => {
-    expect(classifyNavDirection("/feed", "/members", "REPLACE")).toBe(
+    expect(classifyNavDirection("/feed", "/communities", "REPLACE")).toBe(
       "replace",
     );
   });

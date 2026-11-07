@@ -11,7 +11,8 @@ vi.mock("./useStudioShowcase", () => ({
 const access = vi.hoisted(() => ({
   uploadablePersonas: [] as { id: string; name: string; href: string }[],
 }));
-vi.mock("./api/useStudioAccess", () => ({
+vi.mock("./api/useStudioAccess", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("./api/useStudioAccess")>()),
   useStudioAccess: () => ({
     status: "granted",
     hasAccess: true,

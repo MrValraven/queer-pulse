@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type { StudioCountView } from "./api/studio.adapters";
 import { StudioNextReleaseCountdown } from "./StudioNextReleaseCountdown";
 import { studioReleasePath } from "./studioPaths";
@@ -9,14 +10,14 @@ const now = new Date("2026-10-26T12:00:00.000Z");
 const at = (hoursAhead: number) =>
   new Date(now.getTime() + hoursAhead * 3_600_000);
 
-function renderCountdown({
+async function renderCountdown({
   publishAt,
   reminders = { value: 12, isBelowThreshold: false },
 }: {
   publishAt: Date;
   reminders?: StudioCountView;
 }) {
-  return render(
+  const view = render(
     <TestProviders>
       <StudioNextReleaseCountdown
         nextRelease={{
@@ -29,6 +30,8 @@ function renderCountdown({
       />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
+  return view;
 }
 
 describe("StudioNextReleaseCountdown", () => {
@@ -41,8 +44,8 @@ describe("StudioNextReleaseCountdown", () => {
     vi.useRealTimers();
   });
 
-  it("counts down in days and hours and shows the floored reminders", () => {
-    renderCountdown({
+  it("counts down in days and hours and shows the floored reminders", async () => {
+    await renderCountdown({
       publishAt: at(4 * 24 + 17),
       reminders: { value: null, isBelowThreshold: true },
     });
@@ -57,8 +60,8 @@ describe("StudioNextReleaseCountdown", () => {
     ).toHaveAttribute("href", studioReleasePath("r1"));
   });
 
-  it("reads whole days alone", () => {
-    renderCountdown({
+  it("reads whole days alone", async () => {
+    await renderCountdown({
       publishAt: at(48),
       reminders: { value: 12, isBelowThreshold: false },
     });
@@ -68,13 +71,13 @@ describe("StudioNextReleaseCountdown", () => {
     expect(screen.getByText("Waiting for it: 12")).toBeInTheDocument();
   });
 
-  it("says less than an hour, then going live now", () => {
-    const { unmount } = renderCountdown({ publishAt: at(0.5) });
+  it("says less than an hour, then going live now", async () => {
+    const { unmount } = await renderCountdown({ publishAt: at(0.5) });
     expect(
       screen.getByText("Maré alta goes live in less than an hour"),
     ).toBeInTheDocument();
     unmount();
-    renderCountdown({ publishAt: at(-0.1) });
+    await renderCountdown({ publishAt: at(-0.1) });
     expect(screen.getByText("Maré alta is going live now")).toBeInTheDocument();
   });
 });

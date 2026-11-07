@@ -6,6 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { fileBlockReportBatch } from "./blockReportBatch";
 import { useCreateReport } from "../safety/api/useCreateReport";
 import { useReportReasons } from "../safety/api/useReportReasons";
+import { useReportSubmissionError } from "../safety/api/reportSubmissionError";
 import type { ReportableMessageOption } from "./useBlockReportableMessages";
 import styles from "./BlockReportMessagesStep.module.css";
 
@@ -45,6 +46,7 @@ export function BlockReportMessagesStep({
   const { showToast } = useToast();
   const reasons = useReportReasons("message");
   const createReport = useCreateReport();
+  const describeReportError = useReportSubmissionError();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [reasonCode, setReasonCode] = useState<string | null>(null);
   const [isAnonymous, setIsAnonymous] = useState(false);
@@ -91,10 +93,18 @@ export function BlockReportMessagesStep({
         "info",
       );
     } else if (result.failed > 0) {
+      // It is the report step that failed (the block comes next), and the toast
+      // says so along with why (a restriction, a lost connection, a server
+      // fault) so the member knows whether trying the reports again can help.
+      const cause = describeReportError(
+        result.firstFailure,
+        t("safety:reportPerson.error"),
+      );
       showToast(
-        t("messages:blockThenReport.partialFailureToast", {
+        t("messages:blockThenReport.partialFailureToastWithCause", {
           failed: result.failed,
           total: selectedIds.length,
+          cause,
         }),
         "error",
       );

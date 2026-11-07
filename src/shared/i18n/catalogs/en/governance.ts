@@ -305,6 +305,25 @@ export const governance: Catalog = {
     "Please choose a category and add a few details first.",
   "sections.raise.failedToast":
     "We couldn't send that just now. Please try again.",
+
+  // ── Why a governance write failed (governanceErrors.ts) ───────────────────
+  // Offline, signed out, restricted, inactive, rate limited and server faults
+  // read from shared:apiError.*; these are the causes that need the proposal.
+  "error.votingClosed":
+    "Voting on this proposal has closed, so your vote wasn't counted. Refresh to see the result.",
+  "error.votingNotOpen":
+    "Voting on this proposal hasn't opened yet. Come back once it opens.",
+  "error.voteOnSelf": "You can't vote on a proposal about yourself.",
+  "error.proposalGone":
+    "This proposal isn't here any more. Refresh to see the current ones.",
+  "error.notGathering":
+    "This motion is no longer gathering co-signatures. Refresh to see where it stands.",
+  "error.windowClosed":
+    "The co-signature window for this motion has closed. Refresh to see where it stands.",
+  "error.founderSignature":
+    "You filed this motion, so your founding signature stays on it.",
+  "error.motionCap":
+    "You already have 3 motions gathering co-signatures. Wait for one to be screened, rejected or to lapse before filing another.",
   // Shown in place of a section's figures when its live fetch fails, so an API
   // error surfaces as a retry prompt rather than a silently-empty grid.
   "error.body": "We couldn't load this section just now.",

@@ -16,6 +16,7 @@ import {
   useDeclineInviteRequest,
 } from "./api/useMemberInviteMutations";
 import type { InviteRequestView } from "./api/memberInvites.adapters";
+import { inviteRequestErrorMessage } from "./gatheringActionErrors";
 import { MANAGE_TAB_PANEL_ID } from "./gatheringPaths";
 import styles from "./ManageInviteRequests.module.css";
 
@@ -99,8 +100,8 @@ function InviteRequestRow({
   const approve = useApproveInviteRequest(slug);
   const decline = useDeclineInviteRequest(slug);
   const isAnswering = approve.isPending || decline.isPending;
-  const showError = () =>
-    showToast(t("gatherings:manage.requests.errorToast"), "error");
+  const showError = (error: unknown) =>
+    showToast(inviteRequestErrorMessage(error, t), "error");
 
   const onApprove = () =>
     approve.mutate(request.id, {

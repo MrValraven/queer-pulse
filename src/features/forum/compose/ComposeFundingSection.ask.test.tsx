@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import type { AskEligibility } from "../funding/useAskEligibility";
 import type { FundingLinkLookup } from "../funding/useFundingLinkLookup";
@@ -29,7 +30,7 @@ const ASK: ComposeFunding = {
   beneficiary: "self",
 };
 
-function renderAsk(
+async function renderAsk(
   status: AskEligibility["status"],
   options: {
     funding?: ComposeFunding;
@@ -52,11 +53,12 @@ function renderAsk(
       />
     </TestProviders>,
   );
+  await awaitCatalog("forum");
 }
 
 describe("ComposeFundingSection for a fundraiser", () => {
-  it("puts the verification gate in place of the form below phone level", () => {
-    renderAsk("needsPhone");
+  it("shows the verification gate where the form sits below phone level", async () => {
+    await renderAsk("needsPhone");
     expect(
       screen.getByText(
         "Fundraisers need a verified phone so donors know who they're trusting.",
@@ -68,16 +70,16 @@ describe("ComposeFundingSection for a fundraiser", () => {
     expect(screen.queryByLabelText(/Goal/)).toBeNull();
   });
 
-  it("waits quietly while the verification level loads", () => {
-    renderAsk("checking");
+  it("waits quietly while the verification level loads", async () => {
+    await renderAsk("checking");
     expect(screen.getByText("Checking your verification…")).toHaveAttribute(
       "role",
       "status",
     );
   });
 
-  it("shows the review note and the fields once verified", () => {
-    renderAsk("allowed");
+  it("shows the review note and the fields once verified", async () => {
+    await renderAsk("allowed");
     expect(
       screen.getByText(
         "Moderators check every fundraiser before it goes live.",
@@ -86,8 +88,8 @@ describe("ComposeFundingSection for a fundraiser", () => {
     expect(screen.getByLabelText(/Goal/)).toBeInTheDocument();
   });
 
-  it("switches to the gate when the server says verification is missing", () => {
-    renderAsk("allowed", {
+  it("switches to the gate when the server says verification is missing", async () => {
+    await renderAsk("allowed", {
       serverErrorCode: "funding_ask_verification_required",
     });
     expect(
@@ -95,8 +97,8 @@ describe("ComposeFundingSection for a fundraiser", () => {
     ).toBeInTheDocument();
   });
 
-  it("flags a host off the allow-list under the link", () => {
-    renderAsk("allowed", {
+  it("flags a host off the allow-list under the link", async () => {
+    await renderAsk("allowed", {
       funding: { ...ASK, linkUrl: "https://gofundme.com.evil.io/f" },
     });
     expect(
@@ -111,21 +113,23 @@ describe("ComposeAskPaymentNotice", () => {
   const PAYMENT_COPY =
     "Take the IBAN or phone number out. Donations go through the fundraising page.";
 
-  it("says it under the body when the text carries a payment detail", () => {
+  it("says it under the body when the text carries a payment detail", async () => {
     render(
       <TestProviders>
         <ComposeAskPaymentNotice title="Help Rui" body="MB Way 912 345 678" />
       </TestProviders>,
     );
+    await awaitCatalog("forum");
     expect(screen.getByText(PAYMENT_COPY)).toHaveAttribute("role", "alert");
   });
 
-  it("stays away from a clean text", () => {
+  it("stays away from a clean text", async () => {
     render(
       <TestProviders>
         <ComposeAskPaymentNotice title="Help Rui" body="Six weeks off work." />
       </TestProviders>,
     );
+    await awaitCatalog("forum");
     expect(screen.queryByText(PAYMENT_COPY)).toBeNull();
   });
 });

@@ -36,6 +36,8 @@ export function useCloseBoardItem() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<ClosedBoardItem, Error, CloseBoardItemVariables>({
+    // The caller toasts the cause itself; the global toast would double it.
+    meta: { silentError: true },
     mutationFn: async ({ slug, note }) => {
       if (demoMode) {
         return {

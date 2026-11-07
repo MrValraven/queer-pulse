@@ -77,11 +77,14 @@ export function StudioAccountMenuArtistPages({
         aria-current={currentState}
         onClick={onNavigate}
       >
+        {/* The name sits beside it, so the initials stay out of the
+            link's name. */}
         <Avatar
           initials={artist.initials}
           src={artist.avatarUrl ?? undefined}
           size={22}
           alt=""
+          aria-hidden
         />
         <span className={styles.itemLabel}>{artist.name}</span>
       </Link>

@@ -2,6 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import { QueryClient } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type { StudioCountView } from "./api/studio.adapters";
 import type { StudioTopSupportersView } from "./api/studioDashboardPlays.adapters";
 import { DEMO_ARTIST_MARIANA } from "./api/studioDemoMe.data";
@@ -48,13 +49,15 @@ function loadedState(): StudioLoadState {
 /** One client per test, so a test never reads another's cache. */
 let testQueryClient = new QueryClient();
 
-function renderMocked() {
+async function renderMocked() {
   mocks.isMocked = true;
-  return render(
+  const rendered = render(
     <TestProviders queryClient={testQueryClient}>
       <StudioTopSupportersCard subprofileId="persona-1" personaName="Rui" />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
+  return rendered;
 }
 
 beforeEach(() => {
@@ -75,6 +78,7 @@ describe("StudioTopSupportersCard", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const list = await screen.findByRole("list", {
       name: "Top listeners of Mariana Sol",
     });
@@ -97,7 +101,7 @@ describe("StudioTopSupportersCard", () => {
     expect(screen.getByText("Listeners shown: 5")).toBeInTheDocument();
   });
 
-  it("renders two account supporters with the same name and no link without a duplicate key", () => {
+  it("renders two account supporters with the same name and no link without a duplicate key", async () => {
     const sameAccount = {
       kind: "account" as const,
       key: "account",
@@ -117,7 +121,7 @@ describe("StudioTopSupportersCard", () => {
     const consoleError = vi
       .spyOn(console, "error")
       .mockImplementation(() => undefined);
-    renderMocked();
+    await renderMocked();
     const keyWarnings = consoleError.mock.calls.filter((call) =>
       String(call[0]).includes("same key"),
     );
@@ -126,12 +130,12 @@ describe("StudioTopSupportersCard", () => {
     expect(screen.getAllByText("Sam")).toHaveLength(2);
   });
 
-  it("floors the count of listeners shown and shows the empty line", () => {
+  it("floors the count of listeners shown and shows the empty line", async () => {
     mocks.supporters = {
       supporters: { identities: [], optedInCount: withheld },
       loadState: loadedState(),
     };
-    renderMocked();
+    await renderMocked();
     expect(
       screen.getByText(
         "When someone plays your music for 30 seconds, they show up here unless they turned off Show me among the top listeners",
@@ -143,12 +147,12 @@ describe("StudioTopSupportersCard", () => {
     expect(screen.queryByRole("list")).toBeNull();
   });
 
-  it("shows not found with no Retry", () => {
+  it("shows not found with no Retry", async () => {
     mocks.supporters = {
       supporters: null,
       loadState: { ...loadedState(), isNotFound: true, reason: "notFound" },
     };
-    renderMocked();
+    await renderMocked();
     expect(
       screen.getByText(
         "This isn't available anymore. It may have moved or been taken down",

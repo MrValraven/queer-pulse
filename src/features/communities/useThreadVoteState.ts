@@ -3,6 +3,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useReact, useUnreact } from "./api/useCommunityMutations";
 import type { Thread as ThreadData } from "./communityDetails";
+import { communityErrorText } from "./communityErrors";
 
 /** The Heart-reaction upvote toggle on a thread's OP post. Split out of
  *  `useCommunityThreadState` as its own seam: it's the only piece of state
@@ -24,12 +25,12 @@ export function useThreadVoteState(
     setVoted(next);
     if (demoMode || !data.id) return;
     // A refused vote puts the arrow (and the count derived from it) back where
-    // it was; before this the toast said "something went wrong" while the UI
-    // kept showing a vote the server never recorded.
+    // it was, and the toast names the cause, so the UI never keeps showing a
+    // vote the server never recorded.
     const callbacks = {
-      onError: () => {
+      onError: (error: unknown) => {
         setVoted(!next);
-        showToast(t("communities:common.error"), "error");
+        showToast(communityErrorText(t, error), "error");
       },
     };
     if (next) react.mutate({ id: data.id, key: "heart" }, callbacks);

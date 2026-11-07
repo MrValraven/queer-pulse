@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import {
   DEMO_ARTIST_LATE_BLOOMERS,
   DEMO_ARTIST_MARIANA,
@@ -13,7 +14,7 @@ import {
 
 type FieldsProps = Parameters<typeof StudioPriceFields>[0];
 
-function renderFields(overrides: Partial<FieldsProps> = {}) {
+async function renderFields(overrides: Partial<FieldsProps> = {}) {
   const props: FieldsProps = {
     amountInputId: STUDIO_RELEASE_PRICE_FIELD_ID,
     legendKey: "studio:purchase.price.legend",
@@ -31,14 +32,15 @@ function renderFields(overrides: Partial<FieldsProps> = {}) {
       <StudioPriceFields {...props} />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
   return props;
 }
 
 beforeEach(() => resetDemoPurchases());
 
 describe("StudioPriceFields", () => {
-  it("offers three choices and the amount only for a price", () => {
-    renderFields({ priceMode: "not_for_sale" });
+  it("offers three choices and the amount only for a price", async () => {
+    await renderFields({ priceMode: "not_for_sale" });
     expect(screen.getByRole("radio", { name: "Not for sale" })).toHaveAttribute(
       "aria-checked",
       "true",
@@ -53,8 +55,8 @@ describe("StudioPriceFields", () => {
     ).toBeNull();
   });
 
-  it("labels the amount and its range by mode", () => {
-    renderFields({ priceMode: "name_your_price", priceText: "0" });
+  it("labels the amount and its range by mode", async () => {
+    await renderFields({ priceMode: "name_your_price", priceText: "0" });
     expect(
       screen.getByRole("textbox", { name: "Minimum in euros" }),
     ).toHaveValue("0");
@@ -63,15 +65,15 @@ describe("StudioPriceFields", () => {
     ).toBeInTheDocument();
   });
 
-  it("gives the amount the id the error summary links to", () => {
-    renderFields({ priceMode: "fixed", priceText: "5" });
+  it("gives the amount the id the error summary links to", async () => {
+    await renderFields({ priceMode: "fixed", priceText: "5" });
     expect(
       screen.getByRole("textbox", { name: "Price in euros" }),
     ).toHaveAttribute("id", STUDIO_RELEASE_PRICE_FIELD_ID);
   });
 
-  it("names the refused price under the field", () => {
-    renderFields({
+  it("names the refused price under the field", async () => {
+    await renderFields({
       priceMode: "fixed",
       priceText: "0.50",
       errorKey: "studio:errors.reason.studio_price_out_of_range",
@@ -85,8 +87,8 @@ describe("StudioPriceFields", () => {
     expect(amount.getAttribute("aria-describedby")).toContain(errorLine.id);
   });
 
-  it("reports a picked mode and typed amount", () => {
-    const props = renderFields({ priceMode: "fixed", priceText: "" });
+  it("reports a picked mode and typed amount", async () => {
+    const props = await renderFields({ priceMode: "fixed", priceText: "" });
     fireEvent.click(
       screen.getByRole("radio", { name: "Buyers name the price" }),
     );
@@ -98,7 +100,9 @@ describe("StudioPriceFields", () => {
   });
 
   it("asks for a way to get paid first and links to Getting paid for that persona", async () => {
-    const props = renderFields({ subprofileId: DEMO_ARTIST_LATE_BLOOMERS.id });
+    const props = await renderFields({
+      subprofileId: DEMO_ARTIST_LATE_BLOOMERS.id,
+    });
     expect(
       await screen.findByText("Add a way to get paid before you set a price"),
     ).toBeInTheDocument();
@@ -114,15 +118,19 @@ describe("StudioPriceFields", () => {
     expect(props.onPriceModeChange).not.toHaveBeenCalled();
   });
 
-  it("says buying opens once the release is out", () => {
-    renderFields({ priceMode: "fixed", priceText: "3", isReleaseOut: false });
+  it("says buying opens once the release is out", async () => {
+    await renderFields({
+      priceMode: "fixed",
+      priceText: "3",
+      isReleaseOut: false,
+    });
     expect(
       screen.getByText("Buying opens once the release is out"),
     ).toBeInTheDocument();
   });
 
-  it("states that buyers pay the artist directly", () => {
-    renderFields();
+  it("states that buyers pay the artist directly", async () => {
+    await renderFields();
     expect(
       screen.getByText(
         "Buyers pay you directly with your ways to get paid, and you confirm each payment",

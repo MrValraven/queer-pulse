@@ -5,6 +5,7 @@ import { useAuth } from "../../../app/providers/authContext";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { logError, logWarn } from "../../../shared/observability/logger";
+import { causeErrorKey } from "../../../shared/api/causeErrorKey";
 import { mirrorHidePushPreviews } from "../../../pushPrivacy";
 import {
   DEFAULT_HIDE_PUSH_PREVIEWS,
@@ -120,10 +121,8 @@ export function useHidePushPreviews(
           );
           // This one has to be loud. A silent failure leaves the row saying
           // previews are hidden while every push still carries a name.
-          showToast(
-            t("settings:notifications.phonePush.previews.error"),
-            "error",
-          );
+          const cause = causeErrorKey(error);
+          showToast(t(cause.key, cause.values), "error");
         });
     },
     [demoMode, queryClient, showToast, t],

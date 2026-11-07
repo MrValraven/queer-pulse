@@ -1,8 +1,10 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it } from "vitest";
+import { MotionProvider } from "../../app/providers/MotionProvider";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type { StudioGenre } from "./api/studio.types";
 import { StudioGenrePicker } from "./StudioGenrePicker";
 
@@ -10,7 +12,10 @@ function Harness({ initial = [] }: { initial?: StudioGenre[] }) {
   const [genres, setGenres] = useState<StudioGenre[]>(initial);
   return (
     <TestProviders>
-      <StudioGenrePicker value={genres} onChange={setGenres} />
+      {/* The app's motion features, so a chip's entrance runs to the end. */}
+      <MotionProvider>
+        <StudioGenrePicker value={genres} onChange={setGenres} />
+      </MotionProvider>
     </TestProviders>
   );
 }
@@ -23,6 +28,7 @@ async function openPopover(user: ReturnType<typeof userEvent.setup>) {
 describe("StudioGenrePicker", () => {
   it("reads No genre picked and shows no chips while the list is empty", async () => {
     render(<Harness />);
+    await awaitCatalog("studio");
     expect(await screen.findByText("No genre picked")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /^Remove / })).toBeNull();
   });
@@ -30,13 +36,17 @@ describe("StudioGenrePicker", () => {
   it("toggles a genre on each pick and keeps the popover open", async () => {
     const user = userEvent.setup();
     render(<Harness />);
+    await awaitCatalog("studio");
     const listbox = await openPopover(user);
     await user.click(within(listbox).getByRole("option", { name: /Folk/ }));
     await user.click(within(listbox).getByRole("option", { name: /Pop/ }));
     expect(
       await screen.findByRole("button", { name: "Remove Folk" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Remove Pop" })).toBeVisible();
+    // The new chip fades in, so it reads visible once its entrance ends.
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Remove Pop" })).toBeVisible(),
+    );
     expect(screen.getByRole("listbox")).toBeVisible();
     await user.click(within(listbox).getByRole("option", { name: /Pop/ }));
     expect(screen.queryByRole("button", { name: "Remove Pop" })).toBeNull();
@@ -45,6 +55,7 @@ describe("StudioGenrePicker", () => {
   it("marks the first pick as Main", async () => {
     const user = userEvent.setup();
     render(<Harness initial={["folk", "pop"]} />);
+    await awaitCatalog("studio");
     await user.click(await screen.findByRole("button", { name: "Remove Pop" }));
     expect((await screen.findAllByText("Main")).length).toBeGreaterThanOrEqual(
       1,
@@ -58,6 +69,7 @@ describe("StudioGenrePicker", () => {
   it("promotes the next genre when the main one is removed", async () => {
     const user = userEvent.setup();
     render(<Harness initial={["folk", "pop"]} />);
+    await awaitCatalog("studio");
     await user.click(
       await screen.findByRole("button", { name: "Remove Folk" }),
     );
@@ -70,6 +82,7 @@ describe("StudioGenrePicker", () => {
   it("disables the unpicked rows at five genres and says why", async () => {
     const user = userEvent.setup();
     render(<Harness initial={["folk", "pop", "jazz", "rock", "ambient"]} />);
+    await awaitCatalog("studio");
     const listbox = await openPopover(user);
     const classical = within(listbox).getByRole("option", {
       name: /Classical/,

@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import { ApiError } from "../../../shared/api/client";
 import type { Thread } from "../forum.data";
@@ -53,7 +54,7 @@ const THREAD: Thread = {
   funding: FUNDING,
 };
 
-function renderModal(funding: ForumFundingView = FUNDING) {
+async function renderModal(funding: ForumFundingView = FUNDING) {
   const onSaved = vi.fn();
   render(
     <TestProviders>
@@ -65,14 +66,15 @@ function renderModal(funding: ForumFundingView = FUNDING) {
       />
     </TestProviders>,
   );
+  await awaitCatalog("forum");
   return { onSaved };
 }
 
 describe("FundingEditModal", () => {
   beforeEach(() => mutateMock.mockReset());
 
-  it("opens on a closed call's details and saves them although the deadline has passed", () => {
-    renderModal();
+  it("opens on a closed call's details and saves them although the deadline has passed", async () => {
+    await renderModal();
     expect(screen.getByDisplayValue("Fundação Maré")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Save details" }));
     expect(mutateMock.mock.calls[0]?.[0]).toMatchObject({
@@ -84,9 +86,9 @@ describe("FundingEditModal", () => {
     });
   });
 
-  it("sends the stored deadline unchanged when only the funder is edited, in the repeated October hour", () => {
+  it("sends the stored deadline unchanged when only the funder is edited, in the repeated October hour", async () => {
     const repeatedHour = "2026-10-25T00:30:00.000Z";
-    renderModal({ ...FUNDING, deadline: repeatedHour });
+    await renderModal({ ...FUNDING, deadline: repeatedHour });
     fireEvent.change(screen.getByDisplayValue("Fundação Maré"), {
       target: { value: "Fundação Maré Norte" },
     });
@@ -97,22 +99,22 @@ describe("FundingEditModal", () => {
     });
   });
 
-  it("holds the save while a required field is empty", () => {
-    renderModal();
+  it("holds the save while a required field is empty", async () => {
+    await renderModal();
     fireEvent.change(screen.getByDisplayValue("Fundação Maré"), {
       target: { value: "" },
     });
     expect(screen.getByRole("button", { name: "Save details" })).toBeDisabled();
   });
 
-  it("shows the server's refusal under the link", () => {
+  it("shows the server's refusal under the link", async () => {
     mutateMock.mockImplementation(
       (_input, options: { onError: (error: unknown) => void }) =>
         options.onError(
           new ApiError(400, "Bad", { code: "funding_link_invalid" }),
         ),
     );
-    renderModal();
+    await renderModal();
     fireEvent.click(screen.getByRole("button", { name: "Save details" }));
     expect(
       screen.getAllByText(

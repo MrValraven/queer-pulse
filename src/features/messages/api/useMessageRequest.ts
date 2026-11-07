@@ -64,6 +64,10 @@ export function useSendMessageRequest() {
   const queryClient = useQueryClient();
 
   return useMutation<MessageRequestResponse, Error, SendMessageRequestInput>({
+    // Both callers (`MessageRequestComposer`, `ProfileHelloModal`) toast their
+    // own cause line, so the app-wide handler stays quiet rather than
+    // stacking a second toast.
+    meta: { silentError: true },
     mutationFn: async ({ toSlug, body, clientMessageId }) => {
       if (demoMode) {
         sendRequest(toSlug);

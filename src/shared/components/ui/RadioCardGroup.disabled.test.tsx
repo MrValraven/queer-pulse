@@ -91,6 +91,10 @@ describe("RadioCardGroup isDisabled", () => {
     screen.getByRole("radio", { name: "portrait" }).focus();
     await user.keyboard("{ArrowRight}");
     expect(onChange).toHaveBeenLastCalledWith("banner");
+    // ArrowRight moved focus to banner, so ArrowLeft steps back from there.
+    await user.keyboard("{ArrowLeft}");
+    expect(onChange).toHaveBeenLastCalledWith("portrait");
+    // One more step left from the first option wraps to the last.
     await user.keyboard("{ArrowLeft}");
     expect(onChange).toHaveBeenLastCalledWith("bannerAvatar");
   });

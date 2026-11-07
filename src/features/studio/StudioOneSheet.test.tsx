@@ -2,6 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { useLocation } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { STUDIO_NOT_FOUND_STATE } from "./api/studioLoadState";
 import { useStudioPressKit } from "./api/useStudioPressKit";
 import { StudioOneSheetPage } from "./StudioOneSheetPage";
@@ -18,12 +19,13 @@ function LocationProbe() {
   return <span data-testid="location-search">{location.search}</span>;
 }
 
-function renderAt(path: string) {
+async function renderAt(path: string) {
   render(
     <TestProviders initialEntries={[path]}>
       <StudioOneSheetPage />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
 }
 
 afterEach(() => {
@@ -32,7 +34,7 @@ afterEach(() => {
 
 describe("StudioOneSheetPage (demo)", () => {
   it("lays out NIGHTFORM's sheet in light colours with a QR to the persona page", async () => {
-    renderAt("/studio/press/print?id=sp-diogo-nightform");
+    await renderAt("/studio/press/print?id=sp-diogo-nightform");
     const sheet = await screen.findByRole("article", {
       name: "NIGHTFORM one-sheet",
     });
@@ -51,13 +53,13 @@ describe("StudioOneSheetPage (demo)", () => {
   });
 
   it("leaves the QR out for a persona with no handle", async () => {
-    renderAt("/studio/press/print?id=demo-persona-mariana-sol");
+    await renderAt("/studio/press/print?id=demo-persona-mariana-sol");
     await screen.findByRole("article", { name: "Mariana Sol one-sheet" });
     expect(screen.queryByRole("img", { name: /QR code/i })).toBeNull();
   });
 
   it("carries no footer tagline on the sheet", async () => {
-    renderAt("/studio/press/print?id=sp-diogo-nightform");
+    await renderAt("/studio/press/print?id=sp-diogo-nightform");
     const sheet = await screen.findByRole("article", {
       name: "NIGHTFORM one-sheet",
     });
@@ -70,7 +72,7 @@ describe("StudioOneSheetPage (demo)", () => {
     const print = vi.spyOn(window, "print").mockImplementation(() => {
       titleAtPrint = document.title;
     });
-    renderAt("/studio/press/print?id=sp-diogo-nightform&print=1");
+    await renderAt("/studio/press/print?id=sp-diogo-nightform&print=1");
     await waitFor(() => expect(print).toHaveBeenCalledTimes(1));
     expect(titleAtPrint).toBe("NIGHTFORM one-sheet");
   });
@@ -85,6 +87,7 @@ describe("StudioOneSheetPage (demo)", () => {
         <LocationProbe />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     await waitFor(() =>
       expect(screen.getByTestId("location-search").textContent).toBe(
         "?id=sp-diogo-nightform",
@@ -92,7 +95,7 @@ describe("StudioOneSheetPage (demo)", () => {
     );
   });
 
-  it("reads a withdrawn answer as not found", () => {
+  it("reads a withdrawn answer as not found", async () => {
     vi.mocked(useStudioPressKit).mockReturnValue({
       pressKit: null,
       loadState: {
@@ -102,7 +105,7 @@ describe("StudioOneSheetPage (demo)", () => {
       },
     });
     try {
-      renderAt("/studio/press/print?id=sp-diogo-nightform");
+      await renderAt("/studio/press/print?id=sp-diogo-nightform");
       expect(
         screen.getByRole("heading", { name: "We can't find that in Studio" }),
       ).toBeInTheDocument();
@@ -113,7 +116,7 @@ describe("StudioOneSheetPage (demo)", () => {
 
   it("leaves the print dialog closed without ?print=1", async () => {
     const print = vi.spyOn(window, "print").mockImplementation(() => {});
-    renderAt("/studio/press/print?id=sp-diogo-nightform");
+    await renderAt("/studio/press/print?id=sp-diogo-nightform");
     await screen.findByRole("article", { name: "NIGHTFORM one-sheet" });
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(print).not.toHaveBeenCalled();

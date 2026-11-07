@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { useNavigate } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { resetListingTeamDemo } from "../marketing/listBusiness/api/listingTeam.demo";
 import type { MemberProfile } from "./data/memberProfiles";
 import { MobileProfileTabs } from "./MobileProfileTabs";
@@ -75,6 +76,8 @@ afterEach(() => vi.restoreAllMocks());
 describe("MobileProfileTabs #places hash", () => {
   it("opens Community on first load and scrolls the Places section into view", async () => {
     renderTabs({ isSelf: true, initialEntry: "/account/profile#places" });
+    // The tab labels live in the lazy `members` namespace.
+    await awaitCatalog("members");
 
     expect(openTabKey()).toBe("community");
     expect(screen.getByRole("tab", { name: /Community/ })).toHaveAttribute(
@@ -115,14 +118,16 @@ describe("MobileProfileTabs Community count", () => {
 
   it("shows no count to a visitor", async () => {
     renderTabs({ isSelf: false });
+    await awaitCatalog("members");
 
     expect(screen.getByRole("tab", { name: "Community" })).toBeInTheDocument();
     await waitFor(() => expect(openTabKey()).toBe("about"));
     expect(screen.queryByText(TEAM_INVITE_SPOKEN)).toBeNull();
   });
 
-  it("shows no count while the owner previews as a visitor", () => {
+  it("shows no count while the owner previews as a visitor", async () => {
     renderTabs({ isSelf: true, previewing: true });
+    await awaitCatalog("members");
 
     expect(screen.getByRole("tab", { name: "Community" })).toBeInTheDocument();
     expect(screen.queryByText(TEAM_INVITE_SPOKEN)).toBeNull();

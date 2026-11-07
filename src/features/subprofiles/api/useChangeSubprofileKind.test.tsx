@@ -77,9 +77,11 @@ describe("useChangeSubprofileKind (demo mode)", () => {
   it("lets a generic persona leave for any group", async () => {
     const { result } = renderChangeKind();
     // developer to generic stays in the Workshop group
-    await act(() => result.current.mutateAsync("generic"));
-    await expect(
-      act(() => result.current.mutateAsync("dj")),
-    ).resolves.toMatchObject({ kind: "dj" });
+    const genericPersona = await act(() =>
+      result.current.mutateAsync("generic"),
+    );
+    expect(genericPersona.kind).toBe("generic");
+    const djPersona = await act(() => result.current.mutateAsync("dj"));
+    expect(djPersona).toMatchObject({ kind: "dj" });
   });
 });

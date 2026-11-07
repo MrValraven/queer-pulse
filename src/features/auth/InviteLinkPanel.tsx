@@ -8,6 +8,7 @@ import {
   isInviteQuotaError,
 } from "./api/invite.api";
 import { useCreateInvite, type CreatedInvite } from "./api/useCreateInvite";
+import { createInviteErrorCopy } from "./authActionErrors";
 import { SharePreviewCard } from "./SharePreviewCard";
 import { INVITE_URL, defaultVouch } from "./invite.data";
 import { RECIPIENT_EMAIL_PATTERN, sleep } from "./inviteLinkPanel.data";
@@ -72,7 +73,8 @@ export function InviteLinkPanel({
     } else if (isInviteQuotaError(err)) {
       setHasHitQuota(true);
     } else {
-      showToast(t("auth:invite.link.error.generic"), "error");
+      const cause = createInviteErrorCopy(err);
+      showToast(t(cause.key, cause.values), "error");
     }
   }
 

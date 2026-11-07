@@ -315,7 +315,7 @@ describe("draftToDto menu sub-sections", () => {
                 name: "Douro",
                 price: "",
                 priceGlass: "4.50",
-                priceBottle: "18.00",
+                priceBottle: "18",
                 description: "",
                 dietary: [],
               },

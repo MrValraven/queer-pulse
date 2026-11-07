@@ -29,6 +29,33 @@ function createFakeCacheStorage() {
   return { cacheStorage, entries, openedNames };
 }
 
+/** jsdom's Blob has no text(); FileReader reads it. */
+function readBlobText(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () =>
+      reject(new Error("FileReader could not read the blob"));
+    reader.readAsText(blob);
+  });
+}
+
+/** A Response that hands back the very Blob it was built with. */
+class BlobKeepingResponse {
+  readonly headers: Headers;
+  private readonly body: Blob;
+  constructor(body: Blob, init: ResponseInit = {}) {
+    this.body = body;
+    this.headers = new Headers(init.headers);
+  }
+  blob(): Promise<Blob> {
+    return Promise.resolve(this.body);
+  }
+  clone(): BlobKeepingResponse {
+    return this;
+  }
+}
+
 const originalCreateObjectUrlDescriptor = Object.getOwnPropertyDescriptor(
   URL,
   "createObjectURL",
@@ -45,6 +72,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  vi.unstubAllGlobals();
   if (originalCreateObjectUrlDescriptor === undefined) {
     Reflect.deleteProperty(URL, "createObjectURL");
   } else {
@@ -81,6 +109,9 @@ describe("createVjClipCache", () => {
   });
 
   it("reads a cached clip as an object URL", async () => {
+    // Under jsdom, Node's Response turns a Blob body into the text
+    // "[object Blob]". Browsers keep the bytes; this stand-in does too.
+    vi.stubGlobal("Response", BlobKeepingResponse);
     const { cacheStorage } = createFakeCacheStorage();
     const clipCache = createVjClipCache(cacheStorage);
     await clipCache.put("clip-1", new Blob(["abcdef"]), "image/gif");
@@ -90,7 +121,8 @@ describe("createVjClipCache", () => {
     expect(objectUrl).toBe("blob:test/6");
     expect(createObjectUrl).toHaveBeenCalledTimes(1);
     const readBlob = createObjectUrl.mock.calls[0]?.[0];
-    expect(await readBlob?.text()).toBe("abcdef");
+    expect(readBlob).toBeDefined();
+    expect(await readBlobText(readBlob as Blob)).toBe("abcdef");
     expect(await clipCache.readObjectUrl("clip-missing")).toBeNull();
   });
 

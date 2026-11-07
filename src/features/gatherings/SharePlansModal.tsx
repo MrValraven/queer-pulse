@@ -13,6 +13,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useConnectionsList } from "../connect/api/useConnectionsList";
 import { GatheringSuccessPanel } from "./GatheringSuccessPanel";
 import { useSharePlans } from "./api/useSharePlans";
+import { sharePlansErrorMessage } from "./gatheringActionErrors";
 import { buildSharePlansMessage } from "./sharePlans";
 import type { GatheringDetail } from "./data";
 import styles from "./SharePlansModal.module.css";
@@ -69,8 +70,8 @@ export function SharePlansModal({
       { recipientSlug, body: body.trim() },
       {
         onSuccess: () => setSent(true),
-        onError: () =>
-          showToast(t("gatherings:sharePlans.errorToast"), "error"),
+        onError: (error) =>
+          showToast(sharePlansErrorMessage(error, t), "error"),
       },
     );
   };

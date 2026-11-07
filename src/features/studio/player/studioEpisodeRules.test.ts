@@ -19,8 +19,9 @@ describe("resumeTargetSeconds", () => {
   });
 
   it("starts over when fewer than 30 seconds remain", () => {
-    expect(resumeTargetSeconds(2371, 2400, 0)).toBe(2371);
-    expect(resumeTargetSeconds(2372, 2400, 0)).toBeNull();
+    // 30 seconds left still resumes; 29 starts over.
+    expect(resumeTargetSeconds(2370, 2400, 0)).toBe(2370);
+    expect(resumeTargetSeconds(2371, 2400, 0)).toBeNull();
   });
 
   it("has nothing to resume without a saved place", () => {

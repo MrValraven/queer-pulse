@@ -69,7 +69,9 @@ export function UnpublishFlowHarness({
         onSkipChase={vi.fn()}
         onConfirmDeletePiece={vi.fn()}
         isDeletingPiece={false}
-        onConfirmUnpublishPiece={() => void modals.confirmUnpublishPiece()}
+        onConfirmUnpublishPiece={(stage) =>
+          void modals.confirmUnpublishPiece(stage)
+        }
         isUnpublishingPiece={modals.isUnpublishingPiece}
       />
     </>

@@ -6,6 +6,7 @@ import {
   renderWithPlayer,
 } from "./studioPlayerTestHarness";
 import { StudioWarningGate } from "./StudioWarningGate";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 const warned = queueItem({
   trackId: "w1",
@@ -13,13 +14,15 @@ const warned = queueItem({
   contentWarnings: ["family-rejection", "self-harm"],
 });
 
+// The warning labels come from the forum catalog, the rest from studio.
 describe("StudioWarningGate (spec 6.3)", () => {
-  it("names the next track and its warnings, with Play it and Skip", () => {
+  it("names the next track and its warnings, with Play it and Skip", async () => {
     const player = createStudioPlayerValue({
       currentItem: warned,
       pendingWarning: warned,
     });
     renderWithPlayer(<StudioWarningGate />, { player });
+    await awaitCatalog("studio", "forum");
     expect(screen.getAllByText(/Família/).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/self-harm/i).length).toBeGreaterThan(0);
     fireEvent.click(screen.getByRole("button", { name: /play it/i }));
@@ -35,12 +38,13 @@ describe("StudioWarningGate (spec 6.3)", () => {
     expect(screen.queryByRole("button", { name: /play it/i })).toBeNull();
   });
 
-  it("keeps focus off the body after pressing Skip", () => {
+  it("keeps focus off the body after pressing Skip", async () => {
     const player = createStudioPlayerValue({
       currentItem: warned,
       pendingWarning: warned,
     });
     renderWithPlayer(<StudioWarningGate />, { player });
+    await awaitCatalog("studio", "forum");
     const skipButton = screen.getByRole("button", { name: /skip/i });
     skipButton.focus();
     fireEvent.click(skipButton);
@@ -72,7 +76,7 @@ describe("StudioWarningGate (spec 6.3)", () => {
     ["Skip", /skip/i],
   ])(
     "moves focus to the surface's transport play button after %s",
-    (_answerName, answerPattern) => {
+    async (_answerName, answerPattern) => {
       const player = createStudioPlayerValue({
         currentItem: warned,
         pendingWarning: warned,
@@ -93,6 +97,7 @@ describe("StudioWarningGate (spec 6.3)", () => {
         </div>,
         { player },
       );
+      await awaitCatalog("studio", "forum");
       fireEvent.click(screen.getByRole("button", { name: answerPattern }));
       expect(document.activeElement).toBe(
         screen.getByRole("button", { name: "Transport play" }),
@@ -100,7 +105,7 @@ describe("StudioWarningGate (spec 6.3)", () => {
     },
   );
 
-  it("moves focus to a marked play toggle, as on the mini player", () => {
+  it("moves focus to a marked play toggle, as on the mini player", async () => {
     const player = createStudioPlayerValue({
       currentItem: warned,
       pendingWarning: warned,
@@ -114,19 +119,27 @@ describe("StudioWarningGate (spec 6.3)", () => {
       </div>,
       { player },
     );
+    await awaitCatalog("studio", "forum");
     fireEvent.click(screen.getByRole("button", { name: /play it/i }));
     expect(document.activeElement).toBe(
       screen.getByRole("button", { name: "Mini play" }),
     );
   });
 
-  it("falls back to the status line when its surface has no play button", () => {
+  it("falls back to the status line when its surface has no play button", async () => {
     const player = createStudioPlayerValue({
       currentItem: warned,
       pendingWarning: warned,
     });
     renderWithPlayer(<StudioWarningGate />, { player });
+    await awaitCatalog("studio", "forum");
+    // TestProviders also mounts the toast region and the app player's
+    // announcer; the gate's own status line is the one naming the track.
+    const gateStatus = screen
+      .getByText("Waiting: Família", { selector: '[role="status"] > span' })
+      .closest('[role="status"]');
+    expect(gateStatus).not.toBeNull();
     fireEvent.click(screen.getByRole("button", { name: /skip/i }));
-    expect(document.activeElement).toBe(screen.getByRole("status"));
+    expect(document.activeElement).toBe(gateStatus);
   });
 });

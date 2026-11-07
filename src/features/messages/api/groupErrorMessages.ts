@@ -1,4 +1,5 @@
 import { ApiError } from "../../../shared/api/client";
+import { causeErrorKey } from "../../../shared/api/causeErrorKey";
 import type { TFunction, TranslateOptions } from "../../../shared/i18n/types";
 import { MAX_GROUP_MEMBERS } from "../groupLimits";
 
@@ -84,23 +85,18 @@ export function groupErrorToastKey(error: unknown): string | null {
 }
 
 /** Resolves the bilingual toast copy for a group-management failure:
- *  `t(GROUP_ERROR_TOAST_KEYS[code])` for a recognised code, else `fallback`
- *  (the caller's own generic "something went wrong" copy). Callers:
+ *  `t(GROUP_ERROR_TOAST_KEYS[code])` for a recognised group code, else the
+ *  shared cause line for whatever happened (offline, signed out, a restricted
+ *  account, a rate limit, a server fault), so a member always learns why. Callers:
  *
  *  ```ts
  *  onError: (error) =>
- *    showToast(
- *      groupErrorMessage(error, t, t("messages:group.error.generic")),
- *      "error",
- *    ),
+ *    showToast(groupErrorMessage(error, t), "error"),
  *  ```
  */
-export function groupErrorMessage(
-  error: unknown,
-  t: TFunction,
-  fallback: string,
-): string {
+export function groupErrorMessage(error: unknown, t: TFunction): string {
   const code = groupErrorCodeOf(error);
-  if (!code) return fallback;
-  return t(GROUP_ERROR_TOAST_KEYS[code], groupErrorParams(code));
+  if (code) return t(GROUP_ERROR_TOAST_KEYS[code], groupErrorParams(code));
+  const cause = causeErrorKey(error);
+  return t(cause.key, cause.values);
 }

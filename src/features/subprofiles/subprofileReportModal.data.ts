@@ -9,7 +9,7 @@ import type { ReasonCode } from "../safety/reportReasons";
  * Each option maps to a stable, existing `ReasonCode` so the report lands in
  * the same `/reports` taxonomy moderators already triage. Every code here is
  * drawn from `SUBJECT_REASONS.subprofile` (`harassment` / `discrimination` /
- * `impersonation` / `spam` / `other`). `housing_scam` (a housing/listing
+ * `impersonation` / `payment_never_confirmed` / `spam` / `other`). `housing_scam` (a housing/listing
  * concept) does not validate for a `subprofile` subject, so `notReal` falls
  * back to `other`, as do the two options with no dedicated code
  * (`sexualContent` / `somethingElse`). The submitting component always folds
@@ -54,6 +54,14 @@ export const PERSONA_REPORT_REASONS: PersonaReportReason[] = [
     key: "impersonating",
     reasonCode: "impersonation",
     labelKey: "subprofiles:reportModal.reasons.impersonating",
+  },
+  {
+    // Studio purchases: an artist persona that took a buyer's payment and
+    // did not confirm it. Medium severity on the backend, beside
+    // `impersonation`.
+    key: "paymentNeverConfirmed",
+    reasonCode: "payment_never_confirmed",
+    labelKey: "subprofiles:reportModal.reasons.paymentNeverConfirmed",
   },
   {
     key: "notReal",

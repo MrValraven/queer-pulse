@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { QueryClient } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type { StudioPlacementView } from "./api/studioDashboard.adapters";
 import { DEMO_ARTIST_MARIANA } from "./api/studioDemoMe.data";
 import type { StudioCursorPagesResult } from "./api/useStudioCursorPages";
@@ -108,9 +109,11 @@ function mockedCard() {
   );
 }
 
-function renderMocked() {
+async function renderMocked() {
   mocks.isMocked = true;
-  return render(mockedCard());
+  const view = render(mockedCard());
+  await awaitCatalog("studio");
+  return view;
 }
 
 const EMPTY_LINE =
@@ -131,6 +134,7 @@ describe("StudioPlacementsCard", () => {
         <StudioPlacementsCard subprofileId={DEMO_ARTIST_MARIANA.id} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       await screen.findByRole("heading", { name: "Where your music lives" }),
     ).toBeInTheDocument();
@@ -150,6 +154,7 @@ describe("StudioPlacementsCard", () => {
         <StudioPlacementsCard subprofileId={DEMO_ARTIST_MARIANA.id} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const showMore = await screen.findByRole("button", {
       name: "Show more playlists",
     });
@@ -160,23 +165,23 @@ describe("StudioPlacementsCard", () => {
     );
   });
 
-  it("names the hidden tracks after five titles", () => {
+  it("names the hidden tracks after five titles", async () => {
     mocks.pager = pagerWith([
       placementView({ titles: ["A", "B", "C", "D", "E"], hiddenTrackCount: 3 }),
     ]);
-    renderMocked();
+    await renderMocked();
     expect(
       screen.getByText("Your tracks here: A, B, C, D, E, and 3 more tracks"),
     ).toBeInTheDocument();
   });
 
-  it("keeps the loaded rows when the next page fails and names the reason", () => {
+  it("keeps the loaded rows when the next page fails and names the reason", async () => {
     mocks.pager = pagerWith([placementView({ titles: ["A"] })], {
       isFetchNextPageError: true,
       fetchNextPageError: new TypeError("Failed to fetch"),
       loadState: errorLoadState(),
     });
-    renderMocked();
+    await renderMocked();
     expect(screen.getByText("Your tracks here: A")).toBeInTheDocument();
     expect(screen.queryByText(/where your music lives$/)).toBeNull();
     expect(
@@ -186,7 +191,7 @@ describe("StudioPlacementsCard", () => {
     ).toBeInTheDocument();
   });
 
-  it("keeps focus on Try again while a failed page retries", () => {
+  it("keeps focus on Try again while a failed page retries", async () => {
     const fetchNextPage = vi.fn();
     const rows = [placementView({ titles: ["A"] })];
     mocks.pager = pagerWith(rows, {
@@ -194,7 +199,7 @@ describe("StudioPlacementsCard", () => {
       fetchNextPageError: new TypeError("Failed to fetch"),
       fetchNextPage,
     });
-    const { rerender } = renderMocked();
+    const { rerender } = await renderMocked();
     const retry = screen.getByRole("button", { name: "Try again" });
     retry.focus();
     fireEvent.click(retry);
@@ -208,19 +213,19 @@ describe("StudioPlacementsCard", () => {
     expect(screen.getByRole("button", { name: "Try again" })).toHaveFocus();
   });
 
-  it("animates the first page of rows in from collapsed", () => {
+  it("animates the first page of rows in from collapsed", async () => {
     mocks.pager = pagerWith([placementView({ titles: ["A"] })]);
-    renderMocked();
+    await renderMocked();
     // Without LazyMotion in the test providers a row keeps its `initial`
     // inline style, so a collapsed first paint proves the reveal runs.
     expect(screen.getByRole("listitem")).toHaveStyle({ opacity: "0" });
   });
 
-  it("moves focus to the first new row when Show more folds away", () => {
+  it("moves focus to the first new row when Show more folds away", async () => {
     const fetchNextPage = vi.fn();
     const firstPage = [placementView({ titles: ["A"] })];
     mocks.pager = pagerWith(firstPage, { hasMore: true, fetchNextPage });
-    const { rerender } = renderMocked();
+    const { rerender } = await renderMocked();
     const showMore = screen.getByRole("button", {
       name: "Show more playlists",
     });
@@ -239,11 +244,11 @@ describe("StudioPlacementsCard", () => {
     expect(screen.getByRole("link", { name: "Sunday" })).toHaveFocus();
   });
 
-  it("shows a not-found panel with no Retry for a persona that is gone", () => {
+  it("shows a not-found panel with no Retry for a persona that is gone", async () => {
     mocks.pager = pagerWith([], {
       loadState: loadStateOf({ isNotFound: true, reason: "notFound" }),
     });
-    renderMocked();
+    await renderMocked();
     expect(
       screen.getByText(
         "This isn't available anymore. It may have moved or been taken down",
@@ -253,24 +258,24 @@ describe("StudioPlacementsCard", () => {
     expect(screen.queryByRole("button")).toBeNull();
   });
 
-  it("keeps Show more working when a page came back empty with a cursor", () => {
+  it("keeps Show more working when a page came back empty with a cursor", async () => {
     mocks.pager = pagerWith([], { hasMore: true });
-    renderMocked();
+    await renderMocked();
     expect(
       screen.getByRole("button", { name: "Show more playlists" }),
     ).toBeInTheDocument();
     expect(screen.queryByText(EMPTY_LINE)).toBeNull();
   });
 
-  it("shows the empty line and the load error with its reason", () => {
+  it("shows the empty line and the load error with its reason", async () => {
     mocks.pager = pagerWith([]);
-    const { unmount } = renderMocked();
+    const { unmount } = await renderMocked();
     expect(screen.getByText(EMPTY_LINE)).toBeInTheDocument();
     unmount();
     mocks.pager = pagerWith([], {
       loadState: errorLoadState({ reason: "offline" }),
     });
-    renderMocked();
+    await renderMocked();
     expect(screen.getByText(/where your music lives/)).toBeInTheDocument();
   });
 });

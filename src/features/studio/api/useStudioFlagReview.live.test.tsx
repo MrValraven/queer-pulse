@@ -141,6 +141,8 @@ describe("Studio review queues (live)", () => {
       reasonCode: "copyright",
       reasonLabelKey: "safety:reason.copyright",
       createdAt: "2026-10-12T10:00:00.000Z",
+      severity: "medium",
+      slaDueAt: "2026-10-13T10:00:00.000Z",
     });
   });
 
@@ -164,9 +166,12 @@ describe("Studio review queues (live)", () => {
       "Uncleared sample",
       "report-1",
     );
-    expect(result.current.reports.items.map((item) => item.reportId)).toEqual([
-      "report-3",
-    ]);
+    // The re-read lands after the takedown resolves.
+    await waitFor(() =>
+      expect(result.current.reports.items.map((item) => item.reportId)).toEqual(
+        ["report-3"],
+      ),
+    );
   });
 
   it("keeps the cards when a takedown fails, and re-reads the queue", async () => {
@@ -215,15 +220,26 @@ describe("Studio review queues (live)", () => {
       }),
     );
     expect(result.current.reports.items).toHaveLength(3);
+    // The queue read after the decision holds what the server keeps open.
+    getModReports.mockResolvedValue(
+      queueAnswer([
+        reportRow("report-1", "release-1"),
+        reportRow("report-2", "release-1"),
+      ]),
+    );
     await act(async () => {
       resolveDismiss({ id: "report-3", status: "resolved" });
       await pending;
     });
-    expect(
-      result.current.reports.items.map((item) => item.reportId),
-    ).not.toContain("report-3");
+    await waitFor(() =>
+      expect(
+        result.current.reports.items.map((item) => item.reportId),
+      ).not.toContain("report-3"),
+    );
   });
+});
 
+describe("Studio review queues (live), what reads again after a decision", () => {
   it("clears the open dispute on its Withdrawn row once a reject succeeds", async () => {
     getWithdrawnStudioReleases.mockResolvedValue({
       items: [
@@ -258,15 +274,17 @@ describe("Studio review queues (live)", () => {
       "dispute-1",
       "The verse names someone else",
     );
-    expect(
-      result.current.withdrawn.items.map((item) => [
-        item.release.id,
-        item.openDisputeId,
+    await waitFor(() =>
+      expect(
+        result.current.withdrawn.items.map((item) => [
+          item.release.id,
+          item.openDisputeId,
+        ]),
+      ).toEqual([
+        ["release-1", null],
+        ["release-2", "dispute-2"],
       ]),
-    ).toEqual([
-      ["release-1", null],
-      ["release-2", "dispute-2"],
-    ]);
+    );
   });
 
   it("re-reads every reader of the release after a takedown", async () => {

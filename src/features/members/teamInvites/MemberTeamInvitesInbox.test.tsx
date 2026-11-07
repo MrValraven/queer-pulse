@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
@@ -166,8 +172,14 @@ describe("MemberTeamInvitesInbox", () => {
       }),
     );
 
-    const refusal = await screen.findByRole("alert");
-    expect(refusal).not.toHaveTextContent("Something went wrong. Try again");
+    // Scoped to the invites list: the toast host keeps an empty `alert` live
+    // region of its own in the document.
+    const refusal = await within(
+      screen.getByRole("list", { name: "Team invites" }),
+    ).findByRole("alert");
+    expect(refusal).toHaveTextContent(
+      "The business needs to be live and shown in the directory first",
+    );
     // The invite stays so the member can try again or decline it.
     expect(screen.getByText(DEMO_TEAM_HIDDEN_LISTING.name)).toBeInTheDocument();
   });

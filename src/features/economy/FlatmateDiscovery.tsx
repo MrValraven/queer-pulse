@@ -15,6 +15,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { useFlatmateDecision } from "./api/useFlatmateDecision";
+import { FLATMATE_DECISION_OVERRIDES, failureToast } from "./economyErrorCopy";
 import { FlatmateIdentityTags } from "./FlatmateIdentityTags";
 import { FlatmateMatchReasons } from "./FlatmateMatchReasons";
 import { SayHelloModal } from "./SayHelloModal";
@@ -59,8 +60,16 @@ export function FlatmateDiscovery({
           if (result.matched) setMatched(current);
           else advance();
         },
-        onError: () =>
-          showToast(t("economy:flatmates.discovery.error"), "error"),
+        onError: (error) =>
+          showToast(
+            failureToast(
+              error,
+              t,
+              "economy:flatmates.discovery.errorTitle",
+              FLATMATE_DECISION_OVERRIDES,
+            ),
+            "error",
+          ),
       },
     );
   };

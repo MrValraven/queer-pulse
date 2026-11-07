@@ -8,6 +8,10 @@ import { ModalShell, SuccessPanel } from "./ModalKit";
 import { ReviewForm, type ReviewFormValues } from "./ReviewForm";
 import { useCreateReview } from "./api/useCompanyMutations";
 import type { EmployerCard } from "./api/companies.adapters";
+import {
+  COMPANY_REVIEW_SUBMIT_OVERRIDES,
+  failureToast,
+} from "./economyErrorCopy";
 import shell from "./ApplicationModals.module.css";
 
 /**
@@ -73,7 +77,15 @@ export function LiveWriteReviewModal({
       if (error instanceof ApiError && error.status === 409) {
         showToast(t("economy:companyReview.toast.alreadyReviewed"), "error");
       } else {
-        showToast(t("economy:companyReview.toast.error"), "error");
+        showToast(
+          failureToast(
+            error,
+            t,
+            "economy:companyReview.toast.errorTitle",
+            COMPANY_REVIEW_SUBMIT_OVERRIDES,
+          ),
+          "error",
+        );
       }
     }
   }

@@ -1,4 +1,6 @@
 // src/features/messages/AttachmentStagingTypes.ts
+import { ApiError } from "../../shared/api/client";
+import { causeErrorKey } from "../../shared/api/causeErrorKey";
 import { ImageProcessingError } from "../members/api/uploadProcessing";
 import { DocumentProcessingError } from "./documentUploadProcessing";
 import type { GifAttachment } from "../../shared/api/gifs";
@@ -272,11 +274,11 @@ export function revokeIfBlobUrl(url: string): void {
   if (url.startsWith("blob:")) URL.revokeObjectURL(url);
 }
 
-/** Resolves an upload failure to the SAME toast copy the pre-staging
- *  `ImageComposerButton`/`DocumentComposerButton` always showed (DES-199
- *  keeps today's error messages): a typed processing error's own catalog
- *  key, or the kind's generic retry fallback for anything else (a network
- *  failure, an aborted-but-not-abandoned edge case). */
+/** Resolves an upload failure to the toast copy: a typed processing error's
+ *  own catalog key (the document pipeline already names offline, timeout,
+ *  restriction, rate limit and storage causes), the shared cause for a raw
+ *  API refusal, or the kind's generic retry fallback for anything else (an
+ *  aborted-but-not-abandoned edge case). */
 export function resolveUploadErrorMessage(
   kind: UploadableAttachmentKind,
   err: unknown,
@@ -287,6 +289,12 @@ export function resolveUploadErrorMessage(
   }
   if (kind === "document" && err instanceof DocumentProcessingError) {
     return t(err.i18nKey, err.values);
+  }
+  // An API answer that reached the queue untyped (an image presign refusal)
+  // names its cause: a restriction, a rate limit, a server fault.
+  if (err instanceof ApiError) {
+    const cause = causeErrorKey(err);
+    return t(cause.key, cause.values);
   }
   return kind === "image"
     ? t("members:upload.error.retry")

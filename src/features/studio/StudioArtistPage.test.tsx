@@ -8,6 +8,7 @@ import {
 import { QueryClient } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { toArtistView } from "./api/studio.adapters";
 import { demoStudioArtist } from "./api/studioDemoApi";
 import { resetDemoCreditLedger } from "./api/studioDemoCreditLedger";
@@ -25,6 +26,7 @@ describe("StudioArtistPage (demo fixture)", () => {
         <StudioArtistPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       await screen.findByRole("heading", { level: 1, name: "NIGHTFORM" }),
     ).toBeInTheDocument();
@@ -48,6 +50,7 @@ describe("StudioArtistPage (demo fixture)", () => {
         <StudioArtistPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const panel = await screen.findByRole("region", {
       name: /your releases/i,
     });
@@ -69,6 +72,7 @@ describe("StudioArtistPage (demo fixture)", () => {
         <StudioArtistPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const panel = await screen.findByRole("region", {
       name: /your releases/i,
     });
@@ -86,6 +90,7 @@ describe("StudioArtistPage (demo fixture)", () => {
         <StudioArtistPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const panel = await screen.findByRole("region", {
       name: /your releases/i,
     });
@@ -111,6 +116,7 @@ describe("StudioArtistPage (demo fixture)", () => {
         <StudioArtistPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const panel = await screen.findByRole("region", {
       name: /your releases/i,
     });
@@ -128,6 +134,7 @@ describe("StudioArtistPage (demo fixture)", () => {
         <StudioArtistPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       await screen.findByRole("heading", { level: 1, name: "NIGHTFORM" }),
     ).toBeInTheDocument();
@@ -156,6 +163,7 @@ describe("StudioArtistPage (demo fixture)", () => {
         <StudioArtistPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const panel = await screen.findByRole("region", {
       name: /your releases/i,
     });
@@ -178,6 +186,7 @@ describe("StudioArtistPage (demo fixture)", () => {
         <StudioArtistPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(await screen.findByText(/can't find/i)).toBeInTheDocument();
   });
 });
@@ -189,6 +198,7 @@ describe("StudioArtistPage artist tools (demo fixture)", () => {
         <StudioArtistPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const upcoming = await screen.findByRole("region", { name: "Upcoming" });
     expect(
       within(upcoming).getByText("Night bus (extended)"),
@@ -210,6 +220,7 @@ describe("StudioArtistPage artist tools (demo fixture)", () => {
         <StudioArtistPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(
       await screen.findByRole("button", { name: "More about NIGHTFORM" }),
     );
@@ -224,6 +235,7 @@ describe("StudioArtistPage artist tools (demo fixture)", () => {
         <StudioArtistPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     fireEvent.click(await screen.findByRole("tab", { name: "About" }));
     expect(
       await screen.findByRole("heading", { name: "Updates" }),
@@ -243,6 +255,7 @@ describe("StudioArtistPage artist tools (demo fixture)", () => {
         <StudioArtistPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const upcoming = await screen.findByRole("region", { name: "Upcoming" });
     expect(
       within(upcoming).getByRole("link", { name: "Edit Maré alta" }),
@@ -260,7 +273,7 @@ describe("StudioArtistPage artist tools (demo fixture)", () => {
 });
 
 describe("StudioArtistMain playlists", () => {
-  it("lists the persona's public playlists under a Public playlists heading", () => {
+  it("lists the persona's public playlists under a Public playlists heading", async () => {
     const artistView = toArtistView(demoStudioArtist(DEMO_ARTIST_MARIANA.id));
     expect(artistView.playlists.length).toBeGreaterThan(0);
     render(
@@ -268,6 +281,7 @@ describe("StudioArtistMain playlists", () => {
         <StudioArtistMain tab="music" artist={artistView} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       screen.getByRole("heading", { level: 2, name: "Public playlists" }),
     ).toBeInTheDocument();
@@ -277,7 +291,7 @@ describe("StudioArtistMain playlists", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders no Public playlists section when the persona has none", () => {
+  it("renders no Public playlists section when the persona has none", async () => {
     const artistView = {
       ...toArtistView(demoStudioArtist(DEMO_ARTIST_MARIANA.id)),
       playlists: [],
@@ -287,6 +301,7 @@ describe("StudioArtistMain playlists", () => {
         <StudioArtistMain tab="music" artist={artistView} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       screen.queryByRole("heading", { level: 2, name: "Public playlists" }),
     ).not.toBeInTheDocument();
@@ -300,6 +315,7 @@ describe("artist discovery (demo)", () => {
         <StudioArtistPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const appearsOn = await screen.findByRole("region", { name: "Appears on" });
     expect(
       within(appearsOn).getByRole("link", { name: "Cidade dos santos" }),
@@ -329,6 +345,7 @@ describe("artist discovery (demo)", () => {
         <StudioArtistPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     await screen.findByRole("region", { name: "Related artists" });
     // The two reads land on their own clocks: wait for the Appears on answer
     // itself before reading the fold.
@@ -357,6 +374,7 @@ describe("StudioArtistPage: no demo subscribe or tip entry points", () => {
           <StudioArtistPage />
         </TestProviders>,
       );
+      await awaitCatalog("studio");
       expect(
         await screen.findByRole("heading", { level: 1, name }),
       ).toBeInTheDocument();

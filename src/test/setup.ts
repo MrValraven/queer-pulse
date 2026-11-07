@@ -25,23 +25,10 @@ declare module "vitest" {
 // jsdom has no layout engine, so APIs the app touches during render must be
 // stubbed or provider/page mounts throw. Keep these permissive no-ops; suites
 // that assert on their behaviour stub them per-test instead.
-
-// jsdom types these APIs as always-present, so `"x" in window` narrows the
-// false branch to `never`. Assign through a loosely-typed alias instead.
-const win = window as unknown as Record<string, unknown>;
-
-if (!win.matchMedia) {
-  win.matchMedia = (query: string) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: () => {},
-    removeListener: () => {},
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    dispatchEvent: () => false,
-  });
-}
+//
+// Suites that declare `// @vitest-environment node` (the PDF toolkit's io and
+// output tests) load this same file with no DOM at all, so every DOM stub sits
+// behind a presence check and those suites skip it cleanly.
 
 class MockObserver {
   observe(): void {}
@@ -52,9 +39,46 @@ class MockObserver {
   }
 }
 
-if (!win.IntersectionObserver) win.IntersectionObserver = MockObserver;
-if (!win.ResizeObserver) win.ResizeObserver = MockObserver;
-if (!win.scrollTo) win.scrollTo = () => {};
+function installWindowStubs(): void {
+  // jsdom types these APIs as always-present, so `"x" in window` narrows the
+  // false branch to `never`. Assign through a loosely-typed alias instead.
+  const win = window as unknown as Record<string, unknown>;
+
+  if (!win.matchMedia) {
+    win.matchMedia = (query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    });
+  }
+
+  if (!win.IntersectionObserver) win.IntersectionObserver = MockObserver;
+  if (!win.ResizeObserver) win.ResizeObserver = MockObserver;
+
+  // jsdom DOES define `window.scrollTo`, as a no-op that reports "Not
+  // implemented: window.scrollTo" on the console every call, so a presence guard
+  // never replaced it and a full run printed ~800 of those lines. This quiet
+  // no-op does exactly what jsdom's did, minus the report. A suite that asserts
+  // on scrolling still assigns or spies its own `window.scrollTo` over it.
+  win.scrollTo = () => {};
+}
+
+if (typeof window !== "undefined") installWindowStubs();
+
+// Same story for canvas: jsdom's `HTMLCanvasElement.prototype.getContext`
+// reports "Not implemented" and answers null. This answers null quietly, so a
+// component's no-canvas fallback still runs, and `vi.spyOn(
+// HTMLCanvasElement.prototype, "getContext")` in a suite still replaces it.
+if (typeof HTMLCanvasElement !== "undefined") {
+  HTMLCanvasElement.prototype.getContext = function getContext() {
+    return null;
+  } as typeof HTMLCanvasElement.prototype.getContext;
+}
 
 // jsdom implements Element but not its layout-dependent scroll methods, so a
 // component that calls `someRef.scrollTo(...)` on a real DOM node (e.g.
@@ -62,14 +86,14 @@ if (!win.scrollTo) win.scrollTo = () => {};
 // "element.scrollTo is not a function" and trips the route error boundary.
 // Stub it as a no-op on the prototype so every element inherits it. Only
 // assigned when absent, mirroring the guarded window stubs above.
-if (!Element.prototype.scrollTo) {
+if (typeof Element !== "undefined" && !Element.prototype.scrollTo) {
   Element.prototype.scrollTo = () => {};
 }
 
 // Same gap, different method: a keyboard-navigable list that keeps the focused
 // row in view (`rowRef.current?.scrollIntoView({ block: "nearest" })` in
 // VerificationRequestRows) throws without this.
-if (!Element.prototype.scrollIntoView) {
+if (typeof Element !== "undefined" && !Element.prototype.scrollIntoView) {
   Element.prototype.scrollIntoView = () => {};
 }
 
@@ -92,9 +116,11 @@ if (!URL.revokeObjectURL) {
 // exist, so these
 // stubs are unconditional: quiet no-ops, with play() resolving as a browser
 // that allows playback does.
-HTMLMediaElement.prototype.load = () => {};
-HTMLMediaElement.prototype.pause = () => {};
-HTMLMediaElement.prototype.play = () => Promise.resolve();
+if (typeof HTMLMediaElement !== "undefined") {
+  HTMLMediaElement.prototype.load = () => {};
+  HTMLMediaElement.prototype.pause = () => {};
+  HTMLMediaElement.prototype.play = () => Promise.resolve();
+}
 
 // ── MSW × jsdom × Node AbortSignal realm mismatch ────────────────────────────
 // MSW v2's fetch interceptor (under Node + jsdom) validates `RequestInit.signal`
@@ -130,7 +156,13 @@ afterEach(() => {
   resetMswSubprofileEditVersions();
   // The Studio player saves its queue (sessionStorage) and its device
   // preferences (localStorage); one test's saved queue must never reach the
-  // next test's provider.
+  // next test's provider. A node-environment suite has no window storage.
+  if (typeof window !== "undefined") clearStudioPlayerStorage();
+  // Demo PATCH and audio-confirm writes live in a module-level store.
+  resetDemoListeningStore();
+});
+
+function clearStudioPlayerStorage(): void {
   try {
     const sessionKeys: string[] = [];
     for (let index = 0; index < window.sessionStorage.length; index += 1) {
@@ -143,6 +175,4 @@ afterEach(() => {
   } catch {
     // A test that blocked storage left nothing behind.
   }
-  // Demo PATCH and audio-confirm writes live in a module-level store.
-  resetDemoListeningStore();
-});
+}

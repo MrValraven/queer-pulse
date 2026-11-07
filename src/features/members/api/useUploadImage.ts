@@ -2,6 +2,13 @@ import { useCallback, useEffect, useRef } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { logError } from "../../../shared/observability/logger";
 import {
+  causeErrorKey,
+  causeErrorKeyForStatus,
+  SHARED_CAUSE_KEY,
+  type CauseErrorCopy,
+  type CauseErrorOverrides,
+} from "../../../shared/api/causeErrorKey";
+import {
   isIdentityCrop,
   type CropRect,
 } from "../../../shared/components/ui/cropGeometry";
@@ -74,17 +81,42 @@ export interface UploadResult {
   crop?: CropRect;
 }
 
-/** A PUT failure the hook knows how to react to. `transient` → one auto-retry. */
+/** A PUT failure the hook knows how to react to. `transient` → one auto-retry.
+ *  Carries the cause line for what went wrong (see `storagePutFailureCopy`). */
 class UploadError extends ImageProcessingError {
   readonly transient: boolean;
-  constructor(i18nKey: string, transient: boolean) {
-    super(i18nKey);
+  constructor(copy: CauseErrorCopy, transient: boolean) {
+    super(copy.key, copy.values);
     this.name = "UploadError";
     this.transient = transient;
   }
 }
 
-const RETRY_KEY = "members:upload.error.retry";
+/**
+ * Upload lines for the statuses the presign request (`requestUpload`) and the
+ * storage PUT share. Every other status, and an answer that never came, reads
+ * as the shared cause line from `causeErrorKey`.
+ */
+const UPLOAD_CAUSE_OVERRIDES: CauseErrorOverrides = {
+  400: "members:upload.error.storageRejectedType",
+  413: "members:upload.error.storageTooLarge",
+  429: "members:upload.error.tooManyUploads",
+};
+
+/** The storage PUT adds its own 403: the presigned link's signature expired
+ *  or no longer matches, which the fresh presign of a new attempt fixes. */
+const STORAGE_PUT_CAUSE_OVERRIDES: CauseErrorOverrides = {
+  ...UPLOAD_CAUSE_OVERRIDES,
+  403: "members:upload.error.linkExpired",
+};
+
+/** The cause line for a storage PUT that answered with `status`. */
+function storagePutFailureCopy(status: number): CauseErrorCopy {
+  // Status 0 is a response the browser withheld (blocked or cut off).
+  if (status === 0) return { key: SHARED_CAUSE_KEY.noConnection };
+  if (status >= 500) return { key: "members:upload.error.storageFault" };
+  return causeErrorKeyForStatus(status, STORAGE_PUT_CAUSE_OVERRIDES);
+}
 
 /**
  * `PUT` the blob to the presigned URL via `XMLHttpRequest` (needed for upload
@@ -114,11 +146,15 @@ function putOnce(
         resolve();
       } else {
         // 5xx is transient (worth a retry); 4xx is the request's fault.
-        reject(new UploadError(RETRY_KEY, xhr.status >= 500));
+        reject(
+          new UploadError(storagePutFailureCopy(xhr.status), xhr.status >= 500),
+        );
       }
     };
-    xhr.onerror = () => reject(new UploadError(RETRY_KEY, true));
-    xhr.ontimeout = () => reject(new UploadError(RETRY_KEY, true));
+    xhr.onerror = () =>
+      reject(new UploadError({ key: SHARED_CAUSE_KEY.noConnection }, true));
+    xhr.ontimeout = () =>
+      reject(new UploadError({ key: SHARED_CAUSE_KEY.timedOut }, true));
     xhr.send(blob);
   });
 }
@@ -264,7 +300,13 @@ export function useUploadImage(kind: UploadKind) {
       } catch (err) {
         logError(err, { scope: "useUploadImage", kind });
         if (err instanceof ImageProcessingError) throw err;
-        throw new ImageProcessingError(RETRY_KEY, undefined, { cause: err });
+        // The presign request failed: name its real cause (offline, a
+        // timeout, a restriction, a rate limit) and keep the `ApiError` on
+        // `cause` for callers that branch on its status.
+        const presignCopy = causeErrorKey(err, UPLOAD_CAUSE_OVERRIDES);
+        throw new ImageProcessingError(presignCopy.key, presignCopy.values, {
+          cause: err,
+        });
       }
 
       // Persist the crop, best-effort, AFTER the upload itself has already

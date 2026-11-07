@@ -8,6 +8,7 @@ import {
   setDemoConnectionNote,
   subscribeDemoConnectionNotes,
 } from "../demoConnectionNotes";
+import { connectionNoteCause } from "./connectErrorCopy";
 import { setConnectionNote } from "./connections.api";
 
 export interface ConnectionNoteResult {
@@ -62,8 +63,9 @@ export function useConnectionNote(
         await setConnectionNote(connectionId, body);
         await queryClient.invalidateQueries({ queryKey: ["connections"] });
         return true;
-      } catch {
-        showToast(t("connect:note.saveFailed"), "error");
+      } catch (error) {
+        const cause = connectionNoteCause(error);
+        showToast(t(cause.key, cause.values), "error");
         return false;
       }
     },

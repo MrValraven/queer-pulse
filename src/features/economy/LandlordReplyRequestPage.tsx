@@ -7,6 +7,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { submitIntake } from "../../shared/api/intakes";
+import { failureToast } from "./economyErrorCopy";
 import { LANDLORD_REPLY_QUERY } from "./landlordReplyRequest";
 import s from "./LandlordReplyRequestPage.module.css";
 
@@ -71,8 +72,11 @@ export function LandlordReplyRequestPage() {
         });
       }
       setIsDone(true);
-    } catch {
-      showToast(t("economy:landlordReply.error"), "error");
+    } catch (error) {
+      showToast(
+        failureToast(error, t, "economy:landlordReply.errorTitle"),
+        "error",
+      );
     } finally {
       setIsSending(false);
     }

@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import { useTopicFollow } from "../../topics/api/useTopicFollow";
 import { FundingFollowButton } from "./FundingFollowButton";
@@ -21,13 +22,14 @@ function state(isFollowing: boolean, isPending = false) {
 describe("FundingFollowButton", () => {
   beforeEach(() => toggle.mockReset());
 
-  it("follows the open-call topic", () => {
+  it("follows the open-call topic", async () => {
     followMock.mockReturnValue(state(false));
     render(
       <TestProviders>
         <FundingFollowButton />
       </TestProviders>,
     );
+    await awaitCatalog("forum");
     expect(followMock).toHaveBeenCalledWith("open-call", {
       successToastKeys: {
         follow: "forum:funding.follow.followedToast",
@@ -38,25 +40,27 @@ describe("FundingFollowButton", () => {
     expect(toggle).toHaveBeenCalled();
   });
 
-  it("says when the member already follows", () => {
+  it("says when the member already follows", async () => {
     followMock.mockReturnValue(state(true));
     render(
       <TestProviders>
         <FundingFollowButton />
       </TestProviders>,
     );
+    await awaitCatalog("forum");
     expect(
       screen.getByRole("button", { name: "Following new calls" }),
     ).toBeInTheDocument();
   });
 
-  it("keeps focus while the request runs and ignores a second press", () => {
+  it("keeps focus while the request runs and ignores a second press", async () => {
     followMock.mockReturnValue(state(false, true));
     render(
       <TestProviders>
         <FundingFollowButton />
       </TestProviders>,
     );
+    await awaitCatalog("forum");
     const button = screen.getByRole("button", { name: "Follow new calls" });
     expect(button).not.toBeDisabled();
     expect(button).toHaveAttribute("aria-disabled", "true");

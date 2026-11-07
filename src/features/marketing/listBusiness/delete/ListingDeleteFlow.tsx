@@ -132,7 +132,7 @@ export function ListingDeleteFlow({
           listingName={listingName}
           typedName={flow.typedName}
           onTypedNameChange={flow.setTypedName}
-          hasDeleteFailed={flow.hasDeleteFailed}
+          deleteFailureCause={flow.deleteFailureCause}
         />
       )}
     </Modal>

@@ -7,10 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import { useLockThread, useSetThreadOfficial } from "./api/useForumMutations";
-import {
-  FUNDING_ERROR_MESSAGE_VALUES,
-  fundingAwareErrorKey,
-} from "./funding/fundingErrors";
+import { forumErrorText } from "./forumErrors";
 import { LockThreadModal } from "./LockThreadModal";
 import { ThreadFollowButton } from "./ThreadFollowButton";
 import type { Thread } from "./forum.data";
@@ -54,7 +51,7 @@ export function ThreadTopbar({
     }
     unlock(thread.slug, {
       onSuccess: () => showToast(t("forum:toast.threadUnlocked"), "success"),
-      onError: () => showToast(t("forum:toast.error"), "error"),
+      onError: (error) => showToast(forumErrorText(t, error), "error"),
     });
   }
 
@@ -65,7 +62,7 @@ export function ThreadTopbar({
         setLockPromptOpen(false);
         showToast(t("forum:toast.threadLocked"), "success");
       },
-      onError: () => showToast(t("forum:toast.error"), "error"),
+      onError: (error) => showToast(forumErrorText(t, error), "error"),
     });
   }
 
@@ -84,14 +81,7 @@ export function ThreadTopbar({
         ),
       // A fundraiser stays signed: the server refuses with
       // `funding_ask_not_anonymous`, which says why.
-      onError: (error) =>
-        showToast(
-          t(
-            fundingAwareErrorKey(error, "forum:toast.error"),
-            FUNDING_ERROR_MESSAGE_VALUES,
-          ),
-          "error",
-        ),
+      onError: (error) => showToast(forumErrorText(t, error), "error"),
     });
   }
 

@@ -56,10 +56,20 @@ describe("vouchErrorMessageKey", () => {
     ).toBe("shared:apiError.accountRestricted");
   });
 
-  it("maps ActiveMemberGuard's uncoded 403 for the voucher's own inactive membership to the generic key", () => {
+  it("maps ActiveMemberGuard's coded 403 for the voucher's own inactive membership to the generic key", () => {
+    expect(
+      vouchErrorMessageKey(
+        new ApiError(403, "Active membership required", {
+          code: "ACTIVE_MEMBERSHIP_REQUIRED",
+        }),
+      ),
+    ).toBe("members:vouch.modal.error");
+  });
+
+  it("no longer reads the guard's sentence without the code", () => {
     expect(
       vouchErrorMessageKey(new ApiError(403, "Active membership required")),
-    ).toBe("members:vouch.modal.error");
+    ).toBe("members:vouch.modal.error.blocked");
   });
 
   it("maps any other 403 to the blocked key", () => {

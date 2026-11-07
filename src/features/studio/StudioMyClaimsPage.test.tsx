@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import type { StudioMyClaimView } from "./api/studioSafety.adapters";
 import { StudioMyClaimCard } from "./StudioMyClaimCard";
 
@@ -45,12 +46,13 @@ const countered: StudioMyClaimView = {
 };
 
 describe("StudioMyClaimCard", () => {
-  it("shows the counter-notice, Reply and Withdraw claim", () => {
+  it("shows the counter-notice, Reply and Withdraw claim", async () => {
     render(
       <TestProviders>
         <StudioMyClaimCard claim={countered} isFocused={false} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(screen.getByText("I made that loop in 2022")).toBeTruthy();
     expect(
       screen.getByRole("button", { name: /^write a reply$/i }),
@@ -60,7 +62,7 @@ describe("StudioMyClaimCard", () => {
     expect(screen.getByRole("dialog")).toBeTruthy();
   });
 
-  it("offers neither on a closed claim", () => {
+  it("offers neither on a closed claim", async () => {
     render(
       <TestProviders>
         <StudioMyClaimCard
@@ -75,6 +77,7 @@ describe("StudioMyClaimCard", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       screen.queryByRole("button", { name: /^write a reply$/i }),
     ).toBeNull();
@@ -84,12 +87,13 @@ describe("StudioMyClaimCard", () => {
     expect(screen.getByText("The loop matches")).toBeTruthy();
   });
 
-  it("links the title to the release, since a held track answers 410", () => {
+  it("links the title to the release, since a held track answers 410", async () => {
     render(
       <TestProviders>
         <StudioMyClaimCard claim={countered} isFocused={false} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       screen
         .getByRole("link", { name: "The kitchen in April" })

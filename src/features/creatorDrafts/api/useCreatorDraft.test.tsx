@@ -12,7 +12,10 @@ import { isCreatorDraftKindOff, useCreatorDraft } from "./useCreatorDraft";
 
 const mockDemoMode = vi.hoisted(() => ({ current: false }));
 
-vi.mock("../../../app/providers/DemoModeProvider", () => ({
+vi.mock("../../../app/providers/DemoModeProvider", async (importOriginal) => ({
+  ...(await importOriginal<
+    typeof import("../../../app/providers/DemoModeProvider")
+  >()),
   useDemoMode: () => ({ demoMode: mockDemoMode.current }),
 }));
 vi.mock("./creatorDrafts.api", async (importOriginal) => ({

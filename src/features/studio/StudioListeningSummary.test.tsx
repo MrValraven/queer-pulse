@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { demoStudioListeningSummary } from "./api/studioDemoYourListening";
 import {
   toListeningSummaryView,
@@ -68,12 +69,12 @@ function summaryWith(
   };
 }
 
-function renderSummary(
+async function renderSummary(
   range: StudioListeningRange,
   onRangeChange: (next: StudioListeningRange) => void = () => undefined,
   isHistoryPaused = false,
 ) {
-  return render(
+  const view = render(
     <TestProviders>
       <StudioListeningSummary
         range={range}
@@ -82,12 +83,14 @@ function renderSummary(
       />
     </TestProviders>,
   );
+  await awaitCatalog("studio");
+  return view;
 }
 
 describe("StudioListeningSummary", () => {
   it("ranks the demo listener's artists and tracks with exact counts", async () => {
     mocks.isMocked = false;
-    renderSummary("4w");
+    await renderSummary("4w");
     const artists = await screen.findByRole("list", { name: "Top artists" });
     expect(within(artists).getAllByRole("listitem")[0]).toHaveTextContent(
       "NIGHTFORM",
@@ -102,7 +105,7 @@ describe("StudioListeningSummary", () => {
 
   it("puts a top track's listen count under its title, beside the artist line", async () => {
     mocks.isMocked = false;
-    renderSummary("4w");
+    await renderSummary("4w");
     const tracks = await screen.findByRole("list", { name: "Top tracks" });
     const firstTrackTitle = within(
       within(tracks).getAllByRole("listitem")[0] as HTMLElement,
@@ -113,7 +116,7 @@ describe("StudioListeningSummary", () => {
   it("marks the chosen range and asks for another", async () => {
     mocks.isMocked = false;
     const onRangeChange = vi.fn();
-    renderSummary("4w", onRangeChange);
+    await renderSummary("4w", onRangeChange);
     expect(
       await screen.findByRole("button", { name: "4 weeks" }),
     ).toHaveAttribute("aria-pressed", "true");
@@ -124,26 +127,26 @@ describe("StudioListeningSummary", () => {
     expect(onRangeChange).toHaveBeenCalledWith("6m");
   });
 
-  it("says a listener with 3 plays has 3 listens", () => {
+  it("says a listener with 3 plays has 3 listens", async () => {
     mocks.isMocked = true;
     mocks.summary = summaryWith({ totalListens: 3, listeningDays: 1 });
-    renderSummary("4w");
+    await renderSummary("4w");
     expect(screen.getByText("3 listens")).toBeInTheDocument();
     expect(screen.getByText("1 day with music")).toBeInTheDocument();
   });
 
-  it("hides the totals for a range with no listens and no days", () => {
+  it("hides the totals for a range with no listens and no days", async () => {
     mocks.isMocked = true;
     mocks.summary = summaryWith({ isEmpty: true });
-    renderSummary("4w");
+    await renderSummary("4w");
     expect(screen.queryByText("0 listens")).not.toBeInTheDocument();
     expect(screen.queryByText("0 days with music")).not.toBeInTheDocument();
   });
 
-  it("says new plays stay out of an empty range while history is paused", () => {
+  it("says new plays stay out of an empty range while history is paused", async () => {
     mocks.isMocked = true;
     mocks.summary = summaryWith({ isEmpty: true });
-    renderSummary("4w", () => undefined, true);
+    await renderSummary("4w", () => undefined, true);
     expect(
       screen.getByText(
         "Your history is paused, so new plays stay out of this list",
@@ -157,10 +160,10 @@ describe("StudioListeningSummary", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("shows the empty line for a range with nothing, and the load error with its reason", () => {
+  it("shows the empty line for a range with nothing, and the load error with its reason", async () => {
     mocks.isMocked = true;
     mocks.summary = summaryWith({ isEmpty: true });
-    const { unmount } = renderSummary("4w");
+    const { unmount } = await renderSummary("4w");
     // The live region announces the same line, so match the visible one.
     expect(
       screen.getByText(
@@ -174,11 +177,11 @@ describe("StudioListeningSummary", () => {
       loadState: loadStateOf({ isError: true, reason: "offline" }),
       isRefreshing: false,
     };
-    renderSummary("4w");
+    await renderSummary("4w");
     expect(screen.getByText(/your listening/)).toBeInTheDocument();
   });
 
-  it("drops the release from a top track whose release shares its title", () => {
+  it("drops the release from a top track whose release shares its title", async () => {
     const demoTopTrack = toListeningSummaryView(
       demoStudioListeningSummary("12m"),
       "12m",
@@ -200,7 +203,7 @@ describe("StudioListeningSummary", () => {
         },
       ],
     });
-    renderSummary("12m");
+    await renderSummary("12m");
     const tracks = screen.getByRole("list", { name: "Top tracks" });
     const row = within(tracks).getByRole("listitem");
     expect(

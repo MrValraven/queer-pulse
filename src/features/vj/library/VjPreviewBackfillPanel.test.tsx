@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LazyMotion, domMax } from "motion/react";
 import type { ReactNode } from "react";
@@ -96,6 +96,12 @@ function renderPanel(backfill: VjPreviewBackfill) {
   };
 }
 
+/** The panel's own alert: the toast region around it is an alert region too. */
+async function findPanelAlert(): Promise<HTMLElement> {
+  const panel = await screen.findByRole("region", { name: "Previews" });
+  return within(panel).findByRole("alert");
+}
+
 afterEach(() => {
   window.localStorage.clear();
 });
@@ -105,7 +111,9 @@ describe("VjPreviewBackfillPanel", () => {
     renderPanel(backfillWith());
 
     expect(
-      await screen.findByText("3 clips have no animated preview yet"),
+      await screen.findByText(
+        "3 clips in your library have no animated preview yet",
+      ),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("region", { name: "Previews" }),
@@ -166,7 +174,7 @@ describe("VjPreviewBackfillPanel", () => {
       }),
     );
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await findPanelAlert()).toHaveTextContent(
       "The preview for this clip could not be made",
     );
     expect(screen.getByText("Could not be made")).toBeInTheDocument();
@@ -253,7 +261,7 @@ describe("VjPreviewBackfillPanel", () => {
     const backfill = backfillWith({ isSupported: false });
     renderPanel(backfill);
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await findPanelAlert()).toHaveTextContent(
       "This browser can't make previews. Try Chrome or Edge",
     );
     const startButton = screen.getByRole("button", { name: "Make previews" });

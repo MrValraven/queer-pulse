@@ -23,6 +23,9 @@ import {
 export function useSharePlans() {
   const { demoMode } = useDemoMode();
   return useMutation<void, Error, { recipientSlug: string; body: string }>({
+    // The caller words this failure itself (gatheringActionErrors.ts), so the
+    // app-wide mutation toast would only repeat it.
+    meta: { silentError: true },
     mutationFn: async ({ recipientSlug, body }) => {
       if (demoMode) return;
       const conversation = await startConversation(recipientSlug);

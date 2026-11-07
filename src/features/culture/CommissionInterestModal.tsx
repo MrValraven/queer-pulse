@@ -3,6 +3,7 @@ import { Avatar } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { intakeFailureToast } from "../resources/intakeSubmitError";
 import { useCreateCommissionInterest } from "./api/useCreateCommissionInterest";
 import { CultureFormModal } from "./CultureFormModals";
 import { SuccessPanel } from "./CultureModalKit";
@@ -42,8 +43,7 @@ export function CommissionInterestModal({
         message: message.trim() || undefined,
       },
       {
-        onError: () =>
-          showToast(t("culture:commissionInterest.errorToast"), "error"),
+        onError: (error) => showToast(intakeFailureToast(error, t), "error"),
       },
     );
   }

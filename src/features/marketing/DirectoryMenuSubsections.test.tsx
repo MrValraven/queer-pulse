@@ -9,16 +9,19 @@ import type {
   ListingMenu,
   ListingMenuItem,
 } from "./listBusiness/listingMenu.data";
+import { awaitCatalog } from "../../test/awaitCatalog";
 
-function renderSection(node: ReactNode) {
+async function renderSection(node: ReactNode) {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
-  return render(
+  const view = render(
     <QueryClientProvider client={queryClient}>
       <I18nProvider>{node}</I18nProvider>
     </QueryClientProvider>,
   );
+  await awaitCatalog("marketing");
+  return view;
 }
 
 function placeWith(menu: ListingMenu): DirectoryPlace {
@@ -54,8 +57,8 @@ describe("sub-sections and glass / bottle prices", () => {
     ...overrides,
   });
 
-  it("shows both prices on one line divided by a slash", () => {
-    renderSection(
+  it("shows both prices on one line divided by a slash", async () => {
+    await renderSection(
       <DirectoryMenuSection
         place={placeWith(
           wines([wine({ priceGlass: "12.00", priceBottle: "48.00" })]),
@@ -68,8 +71,8 @@ describe("sub-sections and glass / bottle prices", () => {
     expect(priceCell).toHaveTextContent("€12.00 / €48.00");
   });
 
-  it("says which price it is when only one exists", () => {
-    renderSection(
+  it("says which price it is when only one exists", async () => {
+    await renderSection(
       <DirectoryMenuSection
         place={placeWith(
           wines([
@@ -83,8 +86,8 @@ describe("sub-sections and glass / bottle prices", () => {
     expect(screen.getByText("€8.00 per glass")).toBeInTheDocument();
   });
 
-  it("renders sub-section titles as h4 under the section h3", () => {
-    renderSection(
+  it("renders sub-section titles as h4 under the section h3", async () => {
+    await renderSection(
       <DirectoryMenuSection
         place={placeWith(wines([wine({ priceBottle: "30.00" })]))}
       />,
@@ -97,15 +100,15 @@ describe("sub-sections and glass / bottle prices", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows the glass / bottle legend only when an item has both prices", () => {
-    const { unmount } = renderSection(
+  it("shows the glass / bottle legend only when an item has both prices", async () => {
+    const { unmount } = await renderSection(
       <DirectoryMenuSection
         place={placeWith(wines([wine({ priceBottle: "30.00" })]))}
       />,
     );
     expect(screen.queryByText("Glass / bottle")).toBeNull();
     unmount();
-    renderSection(
+    await renderSection(
       <DirectoryMenuSection
         place={placeWith(
           wines([wine({ priceGlass: "6.00", priceBottle: "30.00" })]),
@@ -115,8 +118,8 @@ describe("sub-sections and glass / bottle prices", () => {
     expect(screen.getByText("Glass / bottle")).toBeInTheDocument();
   });
 
-  it("counts dietary labels of sub-section items in the summary", () => {
-    renderSection(
+  it("counts dietary labels of sub-section items in the summary", async () => {
+    await renderSection(
       <DirectoryMenuSection
         place={placeWith(
           wines([wine({ priceBottle: "30.00", dietary: ["vegan"] })]),
@@ -126,8 +129,8 @@ describe("sub-sections and glass / bottle prices", () => {
     expect(screen.getByText(/Labels on this menu: Vegan/)).toBeInTheDocument();
   });
 
-  it("keeps the jump chips to section titles", () => {
-    renderSection(
+  it("keeps the jump chips to section titles", async () => {
+    await renderSection(
       <DirectoryMenuSection
         place={placeWith({
           currency: "EUR",
@@ -152,8 +155,8 @@ describe("sub-sections and glass / bottle prices", () => {
     expect(chips.queryByRole("button", { name: "Red" })).toBeNull();
   });
 
-  it("still shows the single price of an item without glass or bottle", () => {
-    renderSection(
+  it("still shows the single price of an item without glass or bottle", async () => {
+    await renderSection(
       <DirectoryMenuSection
         place={placeWith(wines([wine({ price: "12.00" })]))}
       />,

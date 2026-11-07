@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../../../test/TestProviders";
 import type { SubprofileItemView } from "../../../api/subprofiles.adapters";
 import { TattooItemFields } from "./TattooItemFields";
+import { awaitCatalog } from "../../../../../test/awaitCatalog";
 
 const STUB_PHOTO_LABEL = "Replace stub photo";
 
@@ -80,7 +81,7 @@ function stored(): Record<string, Record<string, unknown>> {
 }
 
 describe("TattooItemFields", () => {
-  it("starts blur on for a new scar work photo", () => {
+  it("starts blur on for a new scar work photo", async () => {
     const { unmount } = render(
       <Harness
         initial={buildDraft({
@@ -89,6 +90,7 @@ describe("TattooItemFields", () => {
         })}
       />,
     );
+    await awaitCatalog("subprofiles");
     expect(
       screen.getByRole("switch", { name: "Blur until tapped" }),
     ).toHaveAttribute("aria-checked", "true");
@@ -101,12 +103,13 @@ describe("TattooItemFields", () => {
         })}
       />,
     );
+    await awaitCatalog("subprofiles");
     expect(
       screen.getByRole("switch", { name: "Blur until tapped" }),
     ).toHaveAttribute("aria-checked", "false");
   });
 
-  it("marks the consent box required for a new photo and clears it on a new photo", () => {
+  it("marks the consent box required for a new photo and clears it on a new photo", async () => {
     render(
       <Harness
         initial={buildDraft({
@@ -121,6 +124,7 @@ describe("TattooItemFields", () => {
         })}
       />,
     );
+    await awaitCatalog("subprofiles");
     const consentBox = screen.getByRole("checkbox", {
       name: "My client agreed to this photo being shared on QueerPulse",
     });
@@ -137,13 +141,14 @@ describe("TattooItemFields", () => {
     ).not.toBeChecked();
   });
 
-  it("keeps the legacy line hidden when the owner unticks a stored ticked row", () => {
+  it("keeps the legacy line hidden when the owner unticks a stored ticked row", async () => {
     const storedRow = buildDraft({
       section: "healed",
       imageUrl: "work-image/u1/healed.jpg",
       structured: { photo: { hasClientConsent: true } },
     });
     render(<Harness initial={storedRow} isNew={false} />);
+    await awaitCatalog("subprofiles");
     fireEvent.click(
       screen.getByRole("checkbox", {
         name: "My client agreed to this photo being shared on QueerPulse",
@@ -156,7 +161,7 @@ describe("TattooItemFields", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("keeps the tick when a patch brings in no new image", () => {
+  it("keeps the tick when a patch brings in no new image", async () => {
     render(
       <Harness
         initial={buildDraft({
@@ -167,6 +172,7 @@ describe("TattooItemFields", () => {
         isNew={false}
       />,
     );
+    await awaitCatalog("subprofiles");
     fireEvent.change(screen.getByPlaceholderText("2 years"), {
       target: { value: "3 years" },
     });
@@ -174,26 +180,29 @@ describe("TattooItemFields", () => {
     expect(stored().healed?.healedFor).toBe("3 years");
   });
 
-  it("offers only size and placements on a wanna-do", () => {
+  it("offers only size and placements on a wanna-do", async () => {
     render(<Harness initial={buildDraft({ section: "wanna_dos" })} />);
+    await awaitCatalog("subprofiles");
     expect(screen.getByText("Size")).toBeInTheDocument();
     expect(screen.getByText("Placements")).toBeInTheDocument();
     expect(screen.queryByText("Price")).not.toBeInTheDocument();
     expect(screen.queryByText("Availability")).not.toBeInTheDocument();
   });
 
-  it("stores cleaned placements", () => {
+  it("stores cleaned placements", async () => {
     render(<Harness initial={buildDraft({ section: "flash" })} />);
+    await awaitCatalog("subprofiles");
     fireEvent.change(screen.getByPlaceholderText("forearm, calf"), {
       target: { value: "forearm, Forearm, calf" },
     });
     expect(stored().flash?.placements).toEqual(["forearm", "calf"]);
   });
 
-  it("renders nothing outside the tattoo sections", () => {
+  it("renders nothing outside the tattoo sections", async () => {
     const { container } = render(
       <Harness initial={buildDraft({ section: "gallery" })} />,
     );
+    await awaitCatalog("subprofiles");
     expect(container.querySelector("input, button, select")).toBeNull();
   });
 });

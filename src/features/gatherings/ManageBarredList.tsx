@@ -5,6 +5,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { initialsFromParts } from "../../shared/lib/initials";
 import { useEventBans, useLiftEventBan } from "./api/useEventBans";
+import { hostToolErrorMessage } from "./gatheringActionErrors";
 import styles from "./ManageGatheringPage.module.css";
 
 /**
@@ -88,11 +89,8 @@ export function ManageBarredList({
                             t("gatherings:manage.bans.liftedToast", { name }),
                             "success",
                           ),
-                        onError: () =>
-                          showToast(
-                            t("gatherings:manage.bans.errorToast"),
-                            "error",
-                          ),
+                        onError: (error) =>
+                          showToast(hostToolErrorMessage(error, t), "error"),
                       })
                     }
                   >

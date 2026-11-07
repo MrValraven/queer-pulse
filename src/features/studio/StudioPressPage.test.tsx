@@ -3,6 +3,7 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../shared/api/client";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { createStudioPlayerTestValue } from "../../test/studioPlayerTestValue";
 import { toStudioPressKitView } from "./api/studio.adapters";
 import {
@@ -37,13 +38,17 @@ vi.mock("./api/studioDemoPress", async (importOriginal) => {
   };
 });
 
-function renderAt(path: string, wrapper?: (page: ReactNode) => ReactNode) {
+async function renderAt(
+  path: string,
+  wrapper?: (page: ReactNode) => ReactNode,
+) {
   const page = <StudioPressPage />;
   render(
     <TestProviders initialEntries={[path]}>
       {wrapper ? wrapper(page) : page}
     </TestProviders>,
   );
+  await awaitCatalog("studio");
 }
 
 /** A player that keeps the current track and its playing state, so a Play
@@ -114,7 +119,7 @@ const EMPTY_KIT = toStudioPressKitView({
 
 describe("StudioPressPage (demo press kits)", () => {
   it("shows Mariana's press kit from the view model", async () => {
-    renderAt("/studio/press?id=demo-persona-mariana-sol");
+    await renderAt("/studio/press?id=demo-persona-mariana-sol");
     expect(
       await screen.findByRole("heading", { level: 1, name: "Mariana Sol" }),
     ).toBeInTheDocument();
@@ -141,7 +146,7 @@ describe("StudioPressPage (demo press kits)", () => {
   });
 
   it("opens the one-sheet from the bar and gives the owner the editor", async () => {
-    renderAt("/studio/press?id=demo-persona-mariana-sol");
+    await renderAt("/studio/press?id=demo-persona-mariana-sol");
     expect(
       await screen.findByRole("link", { name: "Download one-sheet" }),
     ).toHaveAttribute(
@@ -157,7 +162,7 @@ describe("StudioPressPage (demo press kits)", () => {
   });
 
   it("keeps the demo's mock pieces to Mariana's kit", async () => {
-    renderAt("/studio/press?id=sp-diogo-nightform");
+    await renderAt("/studio/press?id=sp-diogo-nightform");
     expect(
       await screen.findByRole("heading", { level: 1, name: "NIGHTFORM" }),
     ).toBeInTheDocument();
@@ -169,13 +174,14 @@ describe("StudioPressPage (demo press kits)", () => {
     expect(screen.getByText("From the newest releases")).toBeInTheDocument();
   });
 
-  it("hides empty sections from a visitor and hints the owner", () => {
+  it("hides empty sections from a visitor and hints the owner", async () => {
     const { container, rerender } = render(
       <TestProviders>
         <PressBestTracks pressKit={EMPTY_KIT} />
         <PressReleases pressKit={EMPTY_KIT} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(container.querySelector("section")).toBeNull();
     rerender(
       <TestProviders>
@@ -188,13 +194,14 @@ describe("StudioPressPage (demo press kits)", () => {
     ).toHaveLength(2);
   });
 
-  it("hides an empty bio and contact from a visitor and hints the owner", () => {
+  it("hides an empty bio and contact from a visitor and hints the owner", async () => {
     const { container, rerender } = render(
       <TestProviders>
         <PressBio pressKit={EMPTY_KIT} />
         <PressContact pressKit={EMPTY_KIT} />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(container.querySelector("section")).toBeNull();
     expect(screen.queryByText("No bio yet")).toBeNull();
     expect(screen.queryByText("No press contact yet")).toBeNull();
@@ -209,7 +216,7 @@ describe("StudioPressPage (demo press kits)", () => {
     expect(screen.getByText("No press contact yet")).toBeInTheDocument();
   });
 
-  it("opens a web contact in a new tab with the new-tab cue", () => {
+  it("opens a web contact in a new tab with the new-tab cue", async () => {
     render(
       <TestProviders>
         <PressContact
@@ -224,6 +231,7 @@ describe("StudioPressPage (demo press kits)", () => {
         />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const contact = screen.getByRole("link", {
       name: /^marianasol\.pt\/press\s*\(opens in a new tab\)$/,
     });
@@ -233,14 +241,14 @@ describe("StudioPressPage (demo press kits)", () => {
   });
 
   it("shows the Studio not-found state for an unknown persona", async () => {
-    renderAt("/studio/press?id=missing");
+    await renderAt("/studio/press?id=missing");
     expect(
       await screen.findByText("We can't find that in Studio"),
     ).toBeInTheDocument();
   });
 
   it("shows the Studio not-found state when the read answers 410", async () => {
-    renderAt(`/studio/press?id=${WITHDRAWN_PERSONA_ID}`);
+    await renderAt(`/studio/press?id=${WITHDRAWN_PERSONA_ID}`);
     expect(
       await screen.findByText("We can't find that in Studio"),
     ).toBeInTheDocument();
@@ -249,7 +257,7 @@ describe("StudioPressPage (demo press kits)", () => {
 
   it("plays a best track through the app player", async () => {
     const onPlayTracks = vi.fn();
-    renderAt("/studio/press?id=demo-persona-mariana-sol", (page) => (
+    await renderAt("/studio/press?id=demo-persona-mariana-sol", (page) => (
       <RecordingPlayer onPlayTracks={onPlayTracks}>{page}</RecordingPlayer>
     ));
     const tracks = await screen.findByRole("list", {

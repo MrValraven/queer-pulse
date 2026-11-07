@@ -1,4 +1,5 @@
 import { ApiError } from "../../shared/api/client";
+import { causeErrorKey } from "../../shared/api/causeErrorKey";
 import {
   firstContactErrorReason,
   type FirstContactErrorReason,
@@ -20,7 +21,13 @@ export type ConnectNoticeIcon = "reached" | "held";
  *   with a notice panel (no Send button), titled/bodied by these keys.
  */
 export type ConnectErrorView =
-  | { mode: "inline"; messageKey: string }
+  | {
+      mode: "inline";
+      messageKey: string;
+      /** Values the message interpolates (the shared `refused` line names its
+       *  status). */
+      messageValues?: Record<string, string | number>;
+    }
   | {
       mode: "panel";
       titleKey: string;
@@ -52,10 +59,16 @@ const MESSAGE = {
   cannotConnect: "You cannot connect with this member",
 } as const;
 
-const GENERIC_INLINE: ConnectErrorView = {
-  mode: "inline",
-  messageKey: "connect:form.sendError",
-};
+/**
+ * The inline line for a failure with no business view of its own: the shared
+ * cause for whatever happened (a lost connection, a restriction, an inactive
+ * membership, a signed-out session, a server fault), so the member learns why
+ * the request did not go and what to do next.
+ */
+function causeInline(error: unknown): ConnectErrorView {
+  const cause = causeErrorKey(error);
+  return { mode: "inline", messageKey: cause.key, messageValues: cause.values };
+}
 
 /**
  * The views for the coded first-contact refusals. The two caps lift on their
@@ -87,8 +100,8 @@ const FIRST_CONTACT_VIEW: Record<FirstContactErrorReason, ConnectErrorView> = {
  * Map a rejected reach-out to the experience the user should see. Anything we
  * don't explicitly recognise — a non-`ApiError` network drop, a 5xx, a 403 that
  * isn't one of the business cases below (e.g. a CSRF/active-member guard, or a
- * lockdown the client already handles) — falls through to the generic inline
- * error, which is never worse than today's behaviour.
+ * lockdown the client already handles) — falls through to an inline line that
+ * names its cause through the shared classifier.
  *
  * Note on privacy: the backend deliberately reports a block *by the other
  * party*, and a decline cooldown or cap (PRD-20), as `alreadyPending`, so all
@@ -99,7 +112,7 @@ const FIRST_CONTACT_VIEW: Record<FirstContactErrorReason, ConnectErrorView> = {
  * is already in their bell and on their connections page.
  */
 export function describeConnectError(error: unknown): ConnectErrorView {
-  if (!(error instanceof ApiError)) return GENERIC_INLINE;
+  if (!(error instanceof ApiError)) return causeInline(error);
 
   // PRD-365/366: coded refusals come first, so a daily or pending cap is not
   // mistaken for the per-minute throttle that shares its 429.
@@ -171,5 +184,5 @@ export function describeConnectError(error: unknown): ConnectErrorView {
     }
   }
 
-  return GENERIC_INLINE;
+  return causeInline(error);
 }

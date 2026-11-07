@@ -73,6 +73,7 @@ describe("cardDtoToPlace and detailDtoToPlace", () => {
         },
       ],
       reviews: [],
+      langs: [],
     } as unknown as DirectoryDetailDTO;
     const roles = detailDtoToPlace(detail, fmt).upcoming?.map(
       (event) => event.role,

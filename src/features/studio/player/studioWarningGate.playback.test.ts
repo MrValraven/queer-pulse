@@ -318,7 +318,7 @@ describe("the commands at the gate", () => {
     ).not.toContain("a");
   });
 
-  it("restores a warned track asking again with no stream read and no track begun", () => {
+  it("restores a warned track asking again, reading only its waveform and beginning no track", () => {
     const harness = createCommandsHarness([track("a")]);
     const saved = studioQueueReducer(EMPTY_QUEUE_STATE, {
       type: "playSource",
@@ -330,7 +330,10 @@ describe("the commands at the gate", () => {
     const loadTokenBefore = harness.refs.loadTokenRef.current;
     harness.commands.restoreCued({ state: saved, positionSeconds: 42 });
     expect(harness.queue().pendingWarning?.trackId).toBe("w");
-    expect(fetchStudioStream).not.toHaveBeenCalled();
+    // DES-28: the one read fills the waveform; the engine loads no audio.
+    expect(fetchStudioStream).toHaveBeenCalledTimes(1);
+    expect(fetchStudioStream).toHaveBeenCalledWith(true, "w", undefined);
+    expect(harness.engine.load).not.toHaveBeenCalled();
     expect(harness.decks.noteTrackStarted).not.toHaveBeenCalled();
     expect(harness.refs.loadTokenRef.current).toBe(loadTokenBefore);
     expect(harness.tick).toHaveBeenLastCalledWith({

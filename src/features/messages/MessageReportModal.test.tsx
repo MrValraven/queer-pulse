@@ -158,16 +158,70 @@ describe("MessageReportModal: a refused report", () => {
     ).toBeInTheDocument();
   });
 
-  it("keeps the generic message for a failure carrying no member-facing copy", async () => {
+  it("names the lost connection when the filing never reached the server", async () => {
     refuseWith(new Error("network down"));
     renderModal();
 
     await fillAndSubmit();
 
-    expect(await screen.findByText(GENERIC_MESSAGE)).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        "Your request didn't reach our servers. Check your connection and try again.",
+      ),
+    ).toBeInTheDocument();
   });
 
-  it("keeps the generic message for a 4xx that is not a 429", async () => {
+  it("names a server fault for a 5xx", async () => {
+    refuseWith(new ApiError(500, "Internal Server Error"));
+    renderModal();
+
+    await fillAndSubmit();
+
+    expect(
+      await screen.findByText(
+        "Our servers hit an error on our side. Give it a moment and try again.",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("names the timeout for the client's 408", async () => {
+    refuseWith(new ApiError(408, "Request timed out"));
+    renderModal();
+
+    await fillAndSubmit();
+
+    expect(
+      await screen.findByText(/took too long to answer/i),
+    ).toBeInTheDocument();
+  });
+
+  it("names the conflict in the shared line for an uncoded 409", async () => {
+    refuseWith(new ApiError(409, "Conflict"));
+    renderModal();
+
+    await fillAndSubmit();
+
+    expect(
+      await screen.findByText(
+        "This changed or already exists. Refresh and try again.",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("names the status for a refusal with no line of its own", async () => {
+    refuseWith(new ApiError(418, "I'm a teapot"));
+    renderModal();
+
+    await fillAndSubmit();
+
+    expect(
+      await screen.findByText(
+        "Our servers refused that with error 418. Try again in a moment, and write to us if it keeps happening.",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("names the rejected details in the shared line for an uncoded 400", async () => {
     refuseWith(
       new ApiError(400, "subjectId must be a string", {
         statusCode: 400,
@@ -179,7 +233,11 @@ describe("MessageReportModal: a refused report", () => {
 
     await fillAndSubmit();
 
-    expect(await screen.findByText(GENERIC_MESSAGE)).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        "Some details weren't accepted. Check them and try again.",
+      ),
+    ).toBeInTheDocument();
     expect(
       screen.queryByText(/subjectId must be a string/),
     ).not.toBeInTheDocument();

@@ -111,13 +111,10 @@ export function useDeskModals({
   function openDeletePiece(piece: Piece): void {
     openFor({ kind: "deletePiece", piece: { title: piece.title } }, piece.id);
   }
-  /** The row menu and the board card both raise this ONE confirm; nothing is
-   *  sent until `confirmUnpublishPiece`. */
-  function openUnpublishPiece(
-    piece: Piece,
-    stage: UnpublishLandingStage,
-  ): void {
-    openFor({ kind: "unpublishPiece", piece, stage }, piece.id);
+  /** The row menu and the board card both raise this ONE confirm, where the
+   *  destination is picked; nothing is sent until `confirmUnpublishPiece`. */
+  function openUnpublishPiece(piece: Piece): void {
+    openFor({ kind: "unpublishPiece", piece }, piece.id);
   }
   function openShortcuts(): void {
     clearSlot({ kind: "shortcuts" });
@@ -216,12 +213,15 @@ export function useDeskModals({
     });
   }
 
-  /** The mutation toasts its own result (with Undo on success), so the dialog
-   *  only has to close once the request settles, whichever way it went. */
-  async function confirmUnpublishPiece(): Promise<void> {
+  /** The mutation toasts its own result (with Undo on success, which takes
+   *  focus as it shows), so the dialog only has to close once the request
+   *  settles, whichever way it went. */
+  async function confirmUnpublishPiece(
+    stage: UnpublishLandingStage,
+  ): Promise<void> {
     if (modal?.kind !== "unpublishPiece") return;
     try {
-      await unpublish.mutateAsync({ piece: modal.piece, stage: modal.stage });
+      await unpublish.mutateAsync({ piece: modal.piece, stage });
     } catch {
       // Already explained by the mutation's own error toast.
     } finally {

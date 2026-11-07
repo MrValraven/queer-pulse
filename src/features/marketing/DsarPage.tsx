@@ -16,6 +16,7 @@ import { useAuth } from "../../app/providers/authContext";
 import { useSubmitDsar, useListDsar } from "../settings/api/useDsar";
 import type { DsarArticle, DsarStatus } from "../settings/api/account.api";
 import { isReauthRequiredError } from "../settings/api/reauthRequiredError";
+import { failureToast } from "./marketingErrorCopy";
 
 const PRIVACY = routes.privacy;
 
@@ -204,7 +205,10 @@ function DsarRequestForm({ right }: { right: Right }) {
       // it and say plainly that nothing was recorded. The step-up stop opened
       // the code dialog and sent nothing, so it re-enables the form quietly.
       if (isReauthRequiredError(error)) return;
-      showToast(t("marketing:dsar.toast.submitError"), "error");
+      showToast(
+        failureToast(error, t, "marketing:dsar.toast.submitErrorTitle"),
+        "error",
+      );
     } finally {
       setSubmitting(false);
     }

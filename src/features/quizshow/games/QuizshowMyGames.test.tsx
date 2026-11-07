@@ -251,8 +251,10 @@ describe("QuizshowMyGames ways to start a game", () => {
     await userEvent.click(
       await screen.findByRole("button", { name: "Começar com um modelo" }),
     );
+    // Each Use button names its template after a hidden comma. jsdom puts a
+    // space before the hidden span, so the space is optional.
     const useButtons = await screen.findAllByRole("button", {
-      name: "Usar este modelo",
+      name: /^Usar este modelo\s?, /,
     });
     const firstUseButton = useButtons[0];
     if (!firstUseButton) throw new Error("no template row");
@@ -286,7 +288,9 @@ describe("QuizshowMyGames ways to start a game", () => {
       await screen.findByRole("button", { name: "Começar com um modelo" }),
     );
     await userEvent.click(
-      await screen.findByRole("button", { name: "Usar este modelo" }),
+      await screen.findByRole("button", {
+        name: new RegExp(`^Usar este modelo\\s?, ${firstCard.title.en}$`),
+      }),
     );
 
     await waitFor(() => {

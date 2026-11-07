@@ -24,6 +24,7 @@ import {
 } from "./DeleteAccountSections";
 import type { DeletionRequest } from "./api/account.api";
 import { ReauthRequiredError } from "./api/reauthRequiredError";
+import { cancelDeletionErrorCopy } from "./settingsActionErrors";
 import {
   useCancelDeletion,
   useDeactivate,
@@ -154,7 +155,8 @@ export function DeleteAccountSection({
       showToast(t("settings:deleteAccount.toast.cancelled"), "success");
     } catch (err) {
       logError(err, { where: "DeleteAccountSection.cancel" });
-      showToast(t("settings:deleteAccount.toast.cancelError"), "error");
+      const cause = cancelDeletionErrorCopy(err);
+      showToast(t(cause.key, cause.values), "error");
     } finally {
       setCancelling(false);
     }

@@ -16,6 +16,7 @@ import { ScamSafetyBanner } from "./ScamSafetyBanner";
 import { ListSpaceFields } from "./ListSpaceFields";
 import { useListSpaceForm } from "./useListSpaceForm";
 import { useState } from "react";
+import { failureToast } from "./economyErrorCopy";
 import styles from "./ApplicationModals.module.css";
 
 export function ListSpaceModal({ onClose }: { onClose: () => void }) {
@@ -38,7 +39,12 @@ export function ListSpaceModal({ onClose }: { onClose: () => void }) {
         if (handlePledgeError(error, handleSubmit)) return;
         const required = verificationRequiredFrom(error);
         if (required) setStepUp(required);
-        else showToast(t("economy:listSpace.error"), "error");
+        else {
+          showToast(
+            failureToast(error, t, "economy:listSpace.errorTitle"),
+            "error",
+          );
+        }
       },
     });
   };

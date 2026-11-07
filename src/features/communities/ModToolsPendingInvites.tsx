@@ -16,6 +16,7 @@ import {
   useCommunityPendingInvites,
   useRevokeCommunityInvite,
 } from "./api/useCommunityInvites";
+import { communityErrorText } from "./communityErrors";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./ModToolsPanels.module.css";
 
@@ -75,11 +76,7 @@ export function ModToolsPendingInvites({
             "success",
           );
         },
-        onError: () =>
-          showToast(
-            t("communities:detail.modtools.invites.pending.errorToast"),
-            "error",
-          ),
+        onError: (error) => showToast(communityErrorText(t, error), "error"),
       },
     );
   };

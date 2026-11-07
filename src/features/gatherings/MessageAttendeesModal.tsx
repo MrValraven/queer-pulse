@@ -4,6 +4,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { GatheringSuccessPanel } from "./GatheringSuccessPanel";
+import { hostToolErrorMessage } from "./gatheringActionErrors";
 import { MAX_EVENT_ANNOUNCEMENT_LENGTH } from "./api/events.api";
 import { useSendEventAnnouncement } from "./api/useEventAnnouncements";
 import styles from "./GatheringModals.module.css";
@@ -49,8 +50,7 @@ export function MessageAttendeesModal({
       // happened to be opened with. Demo has no server, so it falls back.
       onSuccess: (announcement) =>
         setSentCount(announcement?.recipientCount ?? attendeeCount),
-      onError: () =>
-        showToast(t("gatherings:manage.messageModal.errorToast"), "error"),
+      onError: (error) => showToast(hostToolErrorMessage(error, t), "error"),
     });
   };
 

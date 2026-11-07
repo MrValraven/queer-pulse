@@ -66,9 +66,10 @@ test("composes mentions with URL rendering without double-processing", () => {
   expect(
     screen.getByRole("link", { name: "b/queer-books" }),
   ).toBeInTheDocument();
-  // ...the URL linkifies as an external new-tab anchor...
+  // ...the URL linkifies as an external new-tab anchor (labelled with the
+  // scheme dropped, then the visually-hidden external-site hint)...
   const external = screen.getByRole("link", {
-    name: "https://example.org/c/foo",
+    name: /^example\.org\/c\/foo opens an external site$/,
   });
   expect(external).toHaveAttribute("href", "https://example.org/c/foo");
   expect(external).toHaveAttribute("target", "_blank");

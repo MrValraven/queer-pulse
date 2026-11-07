@@ -408,6 +408,12 @@ export const myevents: Catalog = {
   "acceptModal.errorToast":
     "Não conseguimos aceitar o convite. Tenta outra vez.",
   "acceptModal.noLongerOpenToast": "Este convite já não está aberto.",
+  "acceptModal.eventCancelledToast":
+    "Este evento foi cancelado depois de o convite ser enviado, por isso já não pode ser aceite.",
+  "acceptModal.notYoursToast":
+    "Este convite foi enviado a outra pessoa, por isso a tua conta não o pode aceitar.",
+  "acceptModal.chooseVisibilityToast":
+    "Escolhe quem pode ver que vais e depois aceita o convite outra vez.",
 
   // ── RSVP details modal (RsvpDetailsModal) ─────────────────────────────────
   "rsvpModal.eyebrow": "A tua confirmação",

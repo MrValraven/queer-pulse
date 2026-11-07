@@ -5,6 +5,10 @@ import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { routes } from "../../../../app/routeMap";
 import { useLeaveCoManagement } from "../api/useListingCoManagers";
+import {
+  CO_MANAGER_SEAT_OVERRIDES,
+  failureToast,
+} from "../../marketingErrorCopy";
 import styles from "./CoManagers.module.css";
 
 /**
@@ -38,8 +42,16 @@ export function CoManagerStepDown({
         );
         void navigate(routes.accountProfile);
       },
-      onError: () =>
-        showToast(t("marketing:listBusiness.coManagers.leaveError"), "error"),
+      onError: (error) =>
+        showToast(
+          failureToast(
+            error,
+            t,
+            "marketing:listBusiness.coManagers.leaveErrorTitle",
+            CO_MANAGER_SEAT_OVERRIDES,
+          ),
+          "error",
+        ),
     });
   };
 

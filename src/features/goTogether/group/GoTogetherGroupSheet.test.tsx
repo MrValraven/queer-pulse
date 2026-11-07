@@ -8,6 +8,7 @@ import {
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../../shared/api/client";
 import { TestProviders } from "../../../test/TestProviders";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import type {
   GoTogetherGroupDTO,
   GoTogetherGroupMemberDTO,
@@ -121,7 +122,8 @@ function buildGroup(overrides: Partial<GoTogetherGroupDTO> = {}) {
       id: "event-1",
       slug: "pride-picnic",
       title: "Pride picnic",
-      startAt: "2026-10-10T16:00:00.000Z",
+      // A week ahead, so Block reads its before-the-start copy on any run day.
+      startAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
       endAt: null,
     },
     band: "strong",
@@ -136,6 +138,7 @@ function buildGroup(overrides: Partial<GoTogetherGroupDTO> = {}) {
       member({
         memberRef: "member-ref-tiago",
         firstName: "Tiago",
+        pronouns: "he/they",
         isYou: true,
       }),
       member({}),
@@ -151,7 +154,7 @@ function buildGroup(overrides: Partial<GoTogetherGroupDTO> = {}) {
   return group;
 }
 
-function renderSheet(
+async function renderSheet(
   group: GoTogetherGroupDTO,
   openedFromConversationId?: string,
 ) {
@@ -167,6 +170,7 @@ function renderSheet(
       />
     </TestProviders>,
   );
+  await awaitCatalog("goTogether", "safety");
   return onClose;
 }
 
@@ -182,9 +186,25 @@ afterEach(() => {
   focusHeadingAfterStateChange.mockReset();
 });
 
+/** Alerts the component under test raised. The toast deck keeps its own
+ *  empty assertive region mounted from the first paint, so that region is
+ *  left out here. */
+function componentAlerts(): HTMLElement[] {
+  return screen
+    .queryAllByRole("alert")
+    .filter((element) => !element.hasAttribute("aria-live"));
+}
+
+/** The one alert the component under test raised. */
+function componentAlert(): HTMLElement {
+  const alerts = componentAlerts();
+  expect(alerts).toHaveLength(1);
+  return alerts[0]!;
+}
+
 describe("GoTogetherGroupSheet", () => {
-  it("shows each member's first name and pronouns and no last name", () => {
-    renderSheet(buildGroup());
+  it("shows each member's first name and pronouns and no last name", async () => {
+    await renderSheet(buildGroup());
     expect(screen.getByText("Sofia")).toBeInTheDocument();
     expect(screen.getByText("she/her")).toBeInTheDocument();
     expect(screen.getByText("Rui")).toBeInTheDocument();
@@ -192,8 +212,8 @@ describe("GoTogetherGroupSheet", () => {
     expect(screen.queryByText(/Marques/)).not.toBeInTheDocument();
   });
 
-  it("offers I'm here before arrival and sends the here status", () => {
-    renderSheet(buildGroup());
+  it("offers I'm here before arrival and sends the here status", async () => {
+    await renderSheet(buildGroup());
     fireEvent.click(screen.getByRole("button", { name: "I'm here" }));
     expect(checkInMutate).toHaveBeenCalledWith("here");
     expect(
@@ -201,8 +221,8 @@ describe("GoTogetherGroupSheet", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("offers I've left once the member is here and sends the left status", () => {
-    renderSheet(
+  it("offers I've left once the member is here and sends the left status", async () => {
+    await renderSheet(
       buildGroup({
         checkIn: { isOpen: true, isHere: true, hasLeftEvent: false },
       }),
@@ -214,8 +234,8 @@ describe("GoTogetherGroupSheet", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("hides check-in while it is closed", () => {
-    renderSheet(
+  it("hides check-in while it is closed", async () => {
+    await renderSheet(
       buildGroup({
         checkIn: { isOpen: false, isHere: false, hasLeftEvent: false },
       }),
@@ -228,9 +248,9 @@ describe("GoTogetherGroupSheet", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("asks before leaving, then leaves and closes the sheet", () => {
+  it("asks before leaving, then leaves and closes the sheet", async () => {
     leaveMutate.mockImplementation((_body, options) => options?.onSuccess?.());
-    const onClose = renderSheet(buildGroup());
+    const onClose = await renderSheet(buildGroup());
 
     fireEvent.click(screen.getByRole("button", { name: "Leave group" }));
     expect(leaveMutate).not.toHaveBeenCalled();
@@ -244,9 +264,9 @@ describe("GoTogetherGroupSheet", () => {
     expect(onClose).toHaveBeenCalled();
   });
 
-  it("asks the card to move focus to its heading once the leave succeeds", () => {
+  it("asks the card to move focus to its heading once the leave succeeds", async () => {
     leaveMutate.mockImplementation((_body, options) => options?.onSuccess?.());
-    renderSheet(buildGroup());
+    await renderSheet(buildGroup());
 
     fireEvent.click(screen.getByRole("button", { name: "Leave group" }));
     const dialog = screen.getByRole("dialog", { name: "Leave this group?" });
@@ -257,33 +277,33 @@ describe("GoTogetherGroupSheet", () => {
     expect(focusHeadingAfterStateChange).toHaveBeenCalledTimes(1);
   });
 
-  it("offers a merge and accepts it", () => {
-    renderSheet(buildGroup({ mergeOffer: { groupId: "group-2" } }));
+  it("offers a merge and accepts it", async () => {
+    await renderSheet(buildGroup({ mergeOffer: { groupId: "group-2" } }));
     fireEvent.click(screen.getByRole("button", { name: "Join another group" }));
     expect(acceptMergeMutate).toHaveBeenCalledTimes(1);
   });
 
-  it("never shows a percentage", () => {
-    renderSheet(buildGroup({ mergeOffer: { groupId: "group-2" } }));
+  it("never shows a percentage", async () => {
+    await renderSheet(buildGroup({ mergeOffer: { groupId: "group-2" } }));
     expect(document.body.textContent).not.toContain("%");
   });
 
-  it("links Tell someone where you'll be to the gathering's Share plans", () => {
-    renderSheet(buildGroup());
+  it("links Tell someone where you'll be to the gathering's Share plans", async () => {
+    await renderSheet(buildGroup());
     expect(
       screen.getByRole("link", { name: "Tell someone where you'll be" }),
     ).toHaveAttribute("href", `${gatheringPath("pride-picnic")}?share=plans`);
   });
 
-  it("hides Open group chat inside the chat it opens", () => {
-    renderSheet(buildGroup(), "conversation-1");
+  it("hides Open group chat inside the chat it opens", async () => {
+    await renderSheet(buildGroup(), "conversation-1");
     expect(
       screen.queryByRole("link", { name: "Open group chat" }),
     ).not.toBeInTheDocument();
   });
 
-  it("offers the merged group's chat from inside the old one", () => {
-    renderSheet(
+  it("offers the merged group's chat from inside the old one", async () => {
+    await renderSheet(
       buildGroup({ conversationId: "conversation-2" }),
       "conversation-1",
     );
@@ -294,8 +314,8 @@ describe("GoTogetherGroupSheet", () => {
 });
 
 describe("GoTogetherGroupSheet leave wording (PRD-418)", () => {
-  it("reads Leave group before the gathering starts", () => {
-    renderSheet(buildGroup({ isLeaveChatOnly: false }));
+  it("reads Leave group before the gathering starts", async () => {
+    await renderSheet(buildGroup({ isLeaveChatOnly: false }));
     expect(
       screen.getByRole("button", { name: "Leave group" }),
     ).toBeInTheDocument();
@@ -304,9 +324,9 @@ describe("GoTogetherGroupSheet leave wording (PRD-418)", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("reads Leave the chat from the start and says the member stays in the group", () => {
+  it("reads Leave the chat from the start and says the member stays in the group", async () => {
     leaveMutate.mockImplementation((_body, options) => options?.onSuccess?.());
-    const onClose = renderSheet(buildGroup({ isLeaveChatOnly: true }));
+    const onClose = await renderSheet(buildGroup({ isLeaveChatOnly: true }));
 
     const leaveButton = screen.getByRole("button", { name: "Leave the chat" });
     expect(leaveButton).toHaveAccessibleDescription(
@@ -324,8 +344,10 @@ describe("GoTogetherGroupSheet leave wording (PRD-418)", () => {
     expect(onClose).toHaveBeenCalled();
   });
 
-  it("offers no Leave the chat from the start when the group has no chat", () => {
-    renderSheet(buildGroup({ isLeaveChatOnly: true, conversationId: null }));
+  it("offers no Leave the chat from the start when the group has no chat", async () => {
+    await renderSheet(
+      buildGroup({ isLeaveChatOnly: true, conversationId: null }),
+    );
     expect(
       screen.queryByRole("button", { name: "Leave the chat" }),
     ).not.toBeInTheDocument();
@@ -334,15 +356,17 @@ describe("GoTogetherGroupSheet leave wording (PRD-418)", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("keeps Leave group before the start when the group has no chat", () => {
-    renderSheet(buildGroup({ isLeaveChatOnly: false, conversationId: null }));
+  it("keeps Leave group before the start when the group has no chat", async () => {
+    await renderSheet(
+      buildGroup({ isLeaveChatOnly: false, conversationId: null }),
+    );
     expect(
       screen.getByRole("button", { name: "Leave group" }),
     ).toBeInTheDocument();
   });
 
-  it("hides Open group chat and Leave once the member has left the chat", () => {
-    renderSheet(buildGroup({ isLeaveChatOnly: true, hasLeftChat: true }));
+  it("hides Open group chat and Leave once the member has left the chat", async () => {
+    await renderSheet(buildGroup({ isLeaveChatOnly: true, hasLeftChat: true }));
     expect(
       screen.queryByRole("link", { name: "Open group chat" }),
     ).not.toBeInTheDocument();
@@ -360,8 +384,8 @@ function openOptionsFor(name: string) {
 }
 
 describe("GoTogetherGroupSheet member block (PRD-421)", () => {
-  it("offers options on every other member's row and none on your own", () => {
-    renderSheet(buildGroup());
+  it("offers options on every other member's row and none on your own", async () => {
+    await renderSheet(buildGroup());
     expect(
       screen.getByRole("button", { name: "Options for Sofia" }),
     ).toHaveAttribute("aria-expanded", "false");
@@ -373,15 +397,15 @@ describe("GoTogetherGroupSheet member block (PRD-421)", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("offers no member actions in an ended group", () => {
-    renderSheet(buildGroup({ isDissolved: true }));
+  it("offers no member actions in an ended group", async () => {
+    await renderSheet(buildGroup({ isDissolved: true }));
     expect(
       screen.queryByRole("button", { name: "Options for Sofia" }),
     ).not.toBeInTheDocument();
   });
 
-  it("reveals Block and Report under the row and links no profile", () => {
-    renderSheet(buildGroup());
+  it("reveals Block and Report under the row and links no profile", async () => {
+    await renderSheet(buildGroup());
     openOptionsFor("Sofia");
     expect(
       screen.getByRole("button", { name: "Options for Sofia" }),
@@ -395,8 +419,8 @@ describe("GoTogetherGroupSheet member block (PRD-421)", () => {
     expect(screen.queryByRole("link", { name: /Sofia/ })).toBeNull();
   });
 
-  it("tells the blocker they move out of the group before they confirm", () => {
-    renderSheet(buildGroup());
+  it("tells the blocker they move out of the group before they confirm", async () => {
+    await renderSheet(buildGroup());
     openOptionsFor("Sofia");
     fireEvent.click(screen.getByRole("button", { name: "Block Sofia" }));
 
@@ -410,8 +434,8 @@ describe("GoTogetherGroupSheet member block (PRD-421)", () => {
     expect(blockMutate).not.toHaveBeenCalled();
   });
 
-  it("words the block for after the start", () => {
-    renderSheet(
+  it("words the block for after the start", async () => {
+    await renderSheet(
       buildGroup({
         isLeaveChatOnly: true,
         event: {
@@ -437,7 +461,7 @@ describe("GoTogetherGroupSheet member block (PRD-421)", () => {
     refetchGroup.mockResolvedValue({
       error: new ApiError(404, "Not found"),
     });
-    const onClose = renderSheet(buildGroup());
+    const onClose = await renderSheet(buildGroup());
 
     openOptionsFor("Sofia");
     fireEvent.click(screen.getByRole("button", { name: "Block Sofia" }));
@@ -482,7 +506,7 @@ describe("GoTogetherGroupSheet member block (PRD-421)", () => {
         ),
       },
     });
-    const onClose = renderSheet(lateGroup);
+    const onClose = await renderSheet(lateGroup);
 
     openOptionsFor("Rui");
     fireEvent.click(screen.getByRole("button", { name: "Block Rui" }));
@@ -502,13 +526,13 @@ describe("GoTogetherGroupSheet member block (PRD-421)", () => {
     );
   });
 
-  it("asks the card for focus as soon as a moving block succeeds", () => {
+  it("asks the card for focus as soon as a moving block succeeds", async () => {
     blockMutate.mockImplementation((_memberRef, options) =>
       options?.onSuccess?.(),
     );
     // The group read never answers: the focus request must not wait for it.
     refetchGroup.mockReturnValue(new Promise(() => {}));
-    renderSheet(buildGroup());
+    await renderSheet(buildGroup());
 
     openOptionsFor("Sofia");
     fireEvent.click(screen.getByRole("button", { name: "Block Sofia" }));
@@ -526,7 +550,7 @@ describe("GoTogetherGroupSheet member block (PRD-421)", () => {
     refetchGroup
       .mockResolvedValueOnce({ error: null, data: group })
       .mockResolvedValueOnce({ error: new ApiError(404, "Not found") });
-    const onClose = renderSheet(group);
+    const onClose = await renderSheet(group);
 
     openOptionsFor("Sofia");
     fireEvent.click(screen.getByRole("button", { name: "Block Sofia" }));
@@ -539,14 +563,14 @@ describe("GoTogetherGroupSheet member block (PRD-421)", () => {
     expect(refetchGroup).toHaveBeenCalledTimes(2);
   });
 
-  it("tells a member who came with a friend that the friend moves too", () => {
+  it("tells a member who came with a friend that the friend moves too", async () => {
     const group = buildGroup();
     group.members = group.members.map((listedMember) =>
       listedMember.memberRef === "member-ref-sofia"
         ? { ...listedMember, isPairPartner: true }
         : listedMember,
     );
-    renderSheet(group);
+    await renderSheet(group);
 
     openOptionsFor("Rui");
     fireEvent.click(screen.getByRole("button", { name: "Block Rui" }));
@@ -555,14 +579,14 @@ describe("GoTogetherGroupSheet member block (PRD-421)", () => {
     ).toHaveTextContent("Sofia is coming with you, so they move with you.");
   });
 
-  it("tells a member that blocking their friend ends the pair", () => {
+  it("tells a member that blocking their friend ends the pair", async () => {
     const group = buildGroup();
     group.members = group.members.map((listedMember) =>
       listedMember.memberRef === "member-ref-sofia"
         ? { ...listedMember, isPairPartner: true }
         : listedMember,
     );
-    renderSheet(group);
+    await renderSheet(group);
 
     openOptionsFor("Sofia");
     fireEvent.click(screen.getByRole("button", { name: "Block Sofia" }));
@@ -573,8 +597,8 @@ describe("GoTogetherGroupSheet member block (PRD-421)", () => {
 });
 
 describe("GoTogetherGroupSheet member options and report (PRD-421)", () => {
-  it("keeps one member's options open at a time", () => {
-    renderSheet(buildGroup());
+  it("keeps one member's options open at a time", async () => {
+    await renderSheet(buildGroup());
     openOptionsFor("Sofia");
     openOptionsFor("Rui");
     expect(
@@ -588,8 +612,8 @@ describe("GoTogetherGroupSheet member options and report (PRD-421)", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("closes the options on Escape, refocuses their toggle and keeps the sheet open", () => {
-    const onClose = renderSheet(buildGroup());
+  it("closes the options on Escape, refocuses their toggle and keeps the sheet open", async () => {
+    const onClose = await renderSheet(buildGroup());
     openOptionsFor("Sofia");
     const blockButton = screen.getByRole("button", { name: "Block Sofia" });
     blockButton.focus();
@@ -605,8 +629,8 @@ describe("GoTogetherGroupSheet member options and report (PRD-421)", () => {
     expect(onClose).not.toHaveBeenCalled();
   });
 
-  it("closes the options on a press outside the row", () => {
-    renderSheet(buildGroup());
+  it("closes the options on a press outside the row", async () => {
+    await renderSheet(buildGroup());
     openOptionsFor("Sofia");
 
     fireEvent.pointerDown(screen.getByText("Pride picnic"));
@@ -618,17 +642,17 @@ describe("GoTogetherGroupSheet member options and report (PRD-421)", () => {
 
   it("says a member who already left the group is gone", async () => {
     hookState.reportError = new ApiError(404, "Not found");
-    renderSheet(buildGroup());
+    await renderSheet(buildGroup());
     openOptionsFor("Sofia");
     fireEvent.click(screen.getByRole("button", { name: "Report Sofia" }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
+    expect(await waitFor(componentAlert)).toHaveTextContent(
       "They're no longer in this group.",
     );
   });
 
   it("reports by member ref with the chosen reason", async () => {
-    renderSheet(buildGroup());
+    await renderSheet(buildGroup());
     openOptionsFor("Sofia");
     fireEvent.click(screen.getByRole("button", { name: "Report Sofia" }));
 
@@ -655,7 +679,7 @@ describe("GoTogetherGroupSheet member options and report (PRD-421)", () => {
   });
 
   it("caps the report detail at the server's 4000 characters and ticks the chosen reason", async () => {
-    renderSheet(buildGroup());
+    await renderSheet(buildGroup());
     openOptionsFor("Sofia");
     fireEvent.click(screen.getByRole("button", { name: "Report Sofia" }));
 
@@ -680,7 +704,7 @@ describe("GoTogetherGroupSheet member options and report (PRD-421)", () => {
       code: "REPORT_FLOOD_CAP",
       message: capMessage,
     });
-    renderSheet(buildGroup());
+    await renderSheet(buildGroup());
     openOptionsFor("Sofia");
     fireEvent.click(screen.getByRole("button", { name: "Report Sofia" }));
 

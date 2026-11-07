@@ -5,6 +5,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, Sending } from "./ModalKit";
 import { useAcceptAffirmingPledge } from "./api/useAffirmingPledge";
+import { failureToast } from "./economyErrorCopy";
 import styles from "./AffirmingPledgeModal.module.css";
 
 const POINT_KEYS = [
@@ -36,7 +37,11 @@ export function AffirmingPledgeModal({
     if (accept.isPending) return;
     accept.mutate(undefined, {
       onSuccess: () => onAccepted(),
-      onError: () => showToast(t("economy:affirmingPledge.error"), "error"),
+      onError: (error) =>
+        showToast(
+          failureToast(error, t, "economy:affirmingPledge.errorTitle"),
+          "error",
+        ),
     });
   };
 

@@ -23,7 +23,7 @@ const handlers = new Map<
   string,
   (details: MediaSessionActionDetails) => void
 >();
-const setPositionState = vi.fn();
+const setPositionState = vi.fn<(positionState?: MediaPositionState) => void>();
 
 beforeEach(() => {
   handlers.clear();
@@ -98,9 +98,12 @@ describe("media session for episodes", () => {
     writeEpisodeSpeed(DEMO_EPISODE_MEMBER_ID, 1.5);
     const player = createStudioPlayerTestValue(itemOf(true));
     renderHook(() => useStudioMediaSession(player, clockAt(60)), { wrapper });
-    expect(setPositionState).toHaveBeenLastCalledWith(
-      expect.objectContaining({ playbackRate: 1.5 }),
+    // TestProviders mounts the app's own idle player too, which clears the
+    // lock screen with an empty call; read the last state that was reported.
+    const reportedStates = setPositionState.mock.calls.flatMap(
+      ([positionState]) => (positionState ? [positionState] : []),
     );
+    expect(reportedStates.at(-1)).toMatchObject({ playbackRate: 1.5 });
   });
 
   it("updates the lock-screen position when the member seeks", () => {

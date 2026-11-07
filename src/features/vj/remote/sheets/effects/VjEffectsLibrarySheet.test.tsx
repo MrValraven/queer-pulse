@@ -10,6 +10,7 @@ import {
   type VjEffectSettings,
 } from "../../../../../shared/contracts/vj";
 import { TestProviders } from "../../../../../test/TestProviders";
+import { awaitCatalog } from "../../../../../test/awaitCatalog";
 import type { VjCommandOutcome } from "../../../live/vjStageCommands";
 import type { useVjDockPads } from "../../hooks/useVjDockPads";
 import type { VjActionDispatch } from "../../input/vjRemoteAction";
@@ -42,7 +43,7 @@ function createEffects(settings: VjEffectSettings = {}): VjEffects {
   return { ...effects, settings };
 }
 
-function renderSheet(
+async function renderSheet(
   overrides: {
     effects?: VjEffects;
     dockPads?: VjDockPadsControl;
@@ -76,12 +77,13 @@ function renderSheet(
     </TestProviders>
   );
   render(ui);
+  await awaitCatalog("vj");
   return { dispatch, dockPads, setEffectSetting, setSpeed };
 }
 
 describe("VjEffectsLibrarySheet", () => {
-  it("lists the five groups with all 34 effects", () => {
-    renderSheet();
+  it("lists the five groups with all 34 effects", async () => {
+    await renderSheet();
     const dialog = screen.getByRole("dialog", { name: "All effects" });
     for (const groupName of ["Colour", "Texture", "Geometry", "Time", "Beat"]) {
       expect(
@@ -94,8 +96,8 @@ describe("VjEffectsLibrarySheet", () => {
     expect(VJ_EFFECT_IDS).toHaveLength(34);
   });
 
-  it("the switch turns an effect on through dispatch", () => {
-    const { dispatch } = renderSheet();
+  it("the switch turns an effect on through dispatch", async () => {
+    const { dispatch } = await renderSheet();
     const invertSwitch = screen.getByRole("switch", { name: "Invert" });
     expect(invertSwitch).toHaveAttribute("aria-checked", "false");
     fireEvent.click(invertSwitch);
@@ -111,16 +113,16 @@ describe("VjEffectsLibrarySheet", () => {
     );
   });
 
-  it("a blocked switch sends nothing", () => {
-    const { dispatch } = renderSheet({ isBlocked: true });
+  it("a blocked switch sends nothing", async () => {
+    const { dispatch } = await renderSheet({ isBlocked: true });
     const glitchSwitch = screen.getByRole("switch", { name: "Glitch" });
     expect(glitchSwitch).toHaveAttribute("aria-disabled", "true");
     fireEvent.click(glitchSwitch);
     expect(dispatch).not.toHaveBeenCalled();
   });
 
-  it("flash-capable effects carry the flashing light marker", () => {
-    renderSheet();
+  it("flash-capable effects carry the flashing light marker", async () => {
+    await renderSheet();
     for (const effectName of ["Invert", "Glitch", "Beat pulse"]) {
       expect(
         screen.getByRole("switch", { name: effectName }),
@@ -131,8 +133,8 @@ describe("VjEffectsLibrarySheet", () => {
     ).not.toHaveAccessibleDescription(expect.stringContaining("Flashes"));
   });
 
-  it("Add to the dock adds a pad", () => {
-    const { dockPads } = renderSheet();
+  it("Add to the dock adds a pad", async () => {
+    const { dockPads } = await renderSheet();
     fireEvent.click(
       screen.getByRole("button", { name: "Add Hue cycle to the dock" }),
     );
@@ -143,9 +145,11 @@ describe("VjEffectsLibrarySheet", () => {
     expect(dockPads.remove).toHaveBeenCalledWith("invert");
   });
 
-  it("a full dock says it holds 12 pads", () => {
+  it("a full dock says it holds 12 pads", async () => {
     const fullPads = VJ_EFFECT_IDS.slice(0, 12);
-    const { dockPads } = renderSheet({ dockPads: createDockPads(fullPads) });
+    const { dockPads } = await renderSheet({
+      dockPads: createDockPads(fullPads),
+    });
     expect(
       screen.getByText("The dock holds 12 pads. Remove one first"),
     ).toBeInTheDocument();
@@ -157,8 +161,8 @@ describe("VjEffectsLibrarySheet", () => {
     expect(dockPads.add).not.toHaveBeenCalled();
   });
 
-  it("Move left reorders the dock", () => {
-    const { dockPads } = renderSheet();
+  it("Move left reorders the dock", async () => {
+    const { dockPads } = await renderSheet();
     fireEvent.click(screen.getByRole("button", { name: "Move Invert left" }));
     expect(dockPads.move).toHaveBeenCalledWith("invert", -1);
     fireEvent.click(screen.getByRole("button", { name: "Move Invert right" }));
@@ -173,7 +177,7 @@ describe("VjEffectsLibrarySheet", () => {
   });
 
   it("the amount slider sends the final value on release", async () => {
-    const { setEffectSetting } = renderSheet();
+    const { setEffectSetting } = await renderSheet();
     fireEvent.click(screen.getByRole("button", { name: "Saturate settings" }));
     const slider = await screen.findByRole("slider", { name: "Amount" });
     fireEvent.change(slider, { target: { value: "40" } });
@@ -186,7 +190,7 @@ describe("VjEffectsLibrarySheet", () => {
   });
 
   it("a variant chip sends the variant", async () => {
-    const { setEffectSetting } = renderSheet();
+    const { setEffectSetting } = await renderSheet();
     fireEvent.click(screen.getByRole("button", { name: "Mirror settings" }));
     await act(async () => {
       fireEvent.click(await screen.findByRole("button", { name: "Four ways" }));
@@ -196,8 +200,8 @@ describe("VjEffectsLibrarySheet", () => {
     });
   });
 
-  it("says how many of 8 effects are on", () => {
-    renderSheet({
+  it("says how many of 8 effects are on", async () => {
+    await renderSheet({
       effects: createEffects({
         invert: { isOn: true, amount: 1, variant: "steady" },
         vhs: { isOn: true, amount: 0.6, variant: null },
@@ -212,8 +216,8 @@ describe("VjEffectsLibrarySheet", () => {
     );
   });
 
-  it("keeps the on count in the footer row beside Close effects", () => {
-    renderSheet();
+  it("keeps the on count in the footer row beside Close effects", async () => {
+    await renderSheet();
     const footerStart = screen
       .getByText("0 of 8 effects on")
       .closest("[data-vj-sheet-footer-start]");
@@ -223,11 +227,11 @@ describe("VjEffectsLibrarySheet", () => {
     );
   });
 
-  it("the switch shows the optimistic pad state before the server echoes", () => {
+  it("the switch shows the optimistic pad state before the server echoes", async () => {
     const padIsOn = vi.fn<VjPadIsOn>((padId, serverIsOn) =>
       padId === "invert" ? true : serverIsOn,
     );
-    renderSheet({ padIsOn });
+    await renderSheet({ padIsOn });
     expect(padIsOn).toHaveBeenCalledWith("invert", false);
     expect(screen.getByRole("switch", { name: "Invert" })).toHaveAttribute(
       "aria-checked",
@@ -239,8 +243,8 @@ describe("VjEffectsLibrarySheet", () => {
     );
   });
 
-  it("an optimistic off wins over a server on", () => {
-    renderSheet({
+  it("an optimistic off wins over a server on", async () => {
+    await renderSheet({
       effects: createEffects({
         vhs: { isOn: true, amount: 0.6, variant: null },
       }),

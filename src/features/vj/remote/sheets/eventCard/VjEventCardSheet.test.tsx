@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { LazyMotion, domMax } from "motion/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Mock } from "vitest";
@@ -10,6 +10,7 @@ import type {
   VjPackEventDTO,
 } from "../../../../../shared/contracts/vj";
 import { TestProviders } from "../../../../../test/TestProviders";
+import { awaitCatalog } from "../../../../../test/awaitCatalog";
 import type { VjCommandOutcome } from "../../../live/vjStageCommands";
 import { VJ_SOCKET_REASON_KEY } from "../../../vjErrors";
 import type { VjRun } from "../../useVjCommandRunner";
@@ -73,11 +74,11 @@ function createRun(
     Mock<() => Promise<VjCommandOutcome>>;
 }
 
-function renderSheet(
+async function renderSheet(
   run: VjRun,
   options: { eventCard?: VjEventCard; activePackId?: string | null } = {},
 ) {
-  return render(
+  const renderedView = render(
     <TestProviders>
       <LazyMotion features={domMax}>
         <VjEventCardSheet
@@ -92,6 +93,8 @@ function renderSheet(
       </LazyMotion>
     </TestProviders>,
   );
+  await awaitCatalog("vj");
+  return renderedView;
 }
 
 /** Clicks, then lets the command's promise settle inside act. */
@@ -111,9 +114,9 @@ describe("VjEventCardSheet", () => {
     vi.clearAllMocks();
   });
 
-  it("says the pack has no event linked and links the library", () => {
+  it("says the pack has no event linked and links the library", async () => {
     queryMock.data = packEventOf(null);
-    renderSheet(createRun());
+    await renderSheet(createRun());
     expect(
       screen.getByText(
         "This pack has no event linked. Link one in the VJ library",
@@ -127,9 +130,9 @@ describe("VjEventCardSheet", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("names a cancelled event", () => {
+  it("names a cancelled event", async () => {
     queryMock.data = packEventOf(null, "cancelled");
-    renderSheet(createRun());
+    await renderSheet(createRun());
     expect(
       screen.getByText(
         "The linked event was cancelled. Link another one in the VJ library",
@@ -140,8 +143,8 @@ describe("VjEventCardSheet", () => {
     ).toBeInTheDocument();
   });
 
-  it("asks for a pack while none is active and leaves the query off", () => {
-    renderSheet(createRun(), { activePackId: null });
+  it("asks for a pack while none is active and leaves the query off", async () => {
+    await renderSheet(createRun(), { activePackId: null });
     expect(
       screen.getByText("Pick a pack to see its event"),
     ).toBeInTheDocument();
@@ -151,8 +154,8 @@ describe("VjEventCardSheet", () => {
     });
   });
 
-  it("shows the event title and date", () => {
-    renderSheet(createRun());
+  it("shows the event title and date", async () => {
+    await renderSheet(createRun());
     expect(screen.getByText("Linked event")).toBeInTheDocument();
     expect(screen.getByText("Sunday tea dance")).toBeInTheDocument();
     expect(screen.getByText("Intendente")).toBeInTheDocument();
@@ -170,7 +173,7 @@ describe("VjEventCardSheet", () => {
 
   it("Show the event QR code sends kind qr", async () => {
     const run = createRun();
-    renderSheet(run);
+    await renderSheet(run);
     await clickAndSettle(
       screen.getByRole("button", { name: "Show the event QR code" }),
     );
@@ -180,8 +183,8 @@ describe("VjEventCardSheet", () => {
     });
   });
 
-  it("presses the kind the screens show", () => {
-    renderSheet(createRun(), {
+  it("presses the kind the screens show", async () => {
+    await renderSheet(createRun(), {
       eventCard: { isVisible: true, kind: "nextEvent" },
     });
     expect(
@@ -194,7 +197,7 @@ describe("VjEventCardSheet", () => {
 
   it("Hide event card sends isVisible false", async () => {
     const run = createRun();
-    renderSheet(run, { eventCard: { isVisible: true, kind: "qr" } });
+    await renderSheet(run, { eventCard: { isVisible: true, kind: "qr" } });
     await clickAndSettle(
       screen.getByRole("button", { name: "Hide event card" }),
     );
@@ -207,23 +210,23 @@ describe("VjEventCardSheet", () => {
       code: "vj_event_card_no_event",
       errorKey: VJ_SOCKET_REASON_KEY.vj_event_card_no_event,
     });
-    renderSheet(run);
+    await renderSheet(run);
     await clickAndSettle(
       screen.getByRole("button", { name: "Show the next event card" }),
     );
-    expect(await screen.findByRole("alert")).toHaveTextContent(
-      "Link this pack to an event in the library first",
-    );
+    expect(
+      await within(screen.getByRole("dialog")).findByRole("alert"),
+    ).toHaveTextContent("Link this pack to an event in the library first");
   });
 
-  it("a load failure names its reason", () => {
+  it("a load failure names its reason", async () => {
     queryMock.data = undefined;
     queryMock.error = new ApiError(404, "Not Found", {
       code: "VJ_PACK_NOT_FOUND",
     });
-    renderSheet(createRun());
-    expect(screen.getByRole("alert")).toHaveTextContent(
-      "This pack was deleted, maybe in another tab",
-    );
+    await renderSheet(createRun());
+    expect(
+      within(screen.getByRole("dialog")).getByRole("alert"),
+    ).toHaveTextContent("This pack was deleted, maybe in another tab");
   });
 });

@@ -4,6 +4,7 @@ import { TestProviders } from "../../../../test/TestProviders";
 import { useListingForm } from "../useListingForm";
 import { LanguagesField } from "./LanguagesField";
 import { moreLanguageMatches } from "./languagesField.data";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 function Harness() {
   const form = useListingForm();
@@ -11,16 +12,18 @@ function Harness() {
 }
 
 describe("LanguagesField", () => {
-  it("toggles a common language chip", () => {
+  it("toggles a common language chip", async () => {
     render(<Harness />, { wrapper: TestProviders });
+    await awaitCatalog("marketing");
     const portuguese = screen.getByRole("button", { name: "Português" });
     expect(portuguese).toHaveAttribute("aria-pressed", "false");
     fireEvent.click(portuguese);
     expect(portuguese).toHaveAttribute("aria-pressed", "true");
   });
 
-  it("finds a language behind More languages by its English name", () => {
+  it("finds a language behind More languages by its English name", async () => {
     render(<Harness />, { wrapper: TestProviders });
+    await awaitCatalog("marketing");
     fireEvent.change(
       screen.getByRole("searchbox", { name: "Search languages" }),
       {
@@ -37,8 +40,9 @@ describe("LanguagesField", () => {
     ).toHaveValue("");
   });
 
-  it("keeps what the owner writes under Anything else", () => {
+  it("keeps what the owner writes under Anything else", async () => {
     render(<Harness />, { wrapper: TestProviders });
+    await awaitCatalog("marketing");
     const other = screen.getByRole("textbox", { name: "Anything else?" });
     fireEvent.change(other, { target: { value: "Galego" } });
     expect(other).toHaveValue("Galego");

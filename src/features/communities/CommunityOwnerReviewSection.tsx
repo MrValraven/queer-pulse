@@ -16,6 +16,7 @@ import {
   CommunityOwnerReviewFlagNotice,
   CommunityOwnerReviewNotice,
 } from "./CommunityOwnerReviewNotice";
+import { communityErrorText } from "./communityErrors";
 import styles from "./CommunityDangerZone.module.css";
 
 /**
@@ -51,11 +52,8 @@ export function CommunityOwnerReviewSection({
 
   if (!state) return null;
 
-  const failed = () =>
-    showToast(
-      t("communities:detail.dangerZone.ownerReview.errorToast"),
-      "error",
-    );
+  const failed = (error: unknown) =>
+    showToast(communityErrorText(t, error), "error");
 
   const submit = () => {
     if (reason.trim().length < OWNER_REVIEW_REASON_MIN) {

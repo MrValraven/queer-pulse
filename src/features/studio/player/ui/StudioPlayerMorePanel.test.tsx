@@ -1,5 +1,6 @@
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { MotionProvider } from "../../../../app/providers/MotionProvider";
 import type { StudioPlayerSurfaceValue } from "../studioPlayerSurface";
 import { StudioPlayerMorePanel } from "./StudioPlayerMorePanel";
 import {
@@ -7,6 +8,7 @@ import {
   createSurfaceValue,
   renderWithPlayer,
 } from "./studioPlayerTestHarness";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 const surfaceHolder = vi.hoisted(() => ({
   current: null as StudioPlayerSurfaceValue | null,
@@ -15,6 +17,17 @@ vi.mock("../studioPlayerSurface", async (importOriginal) => ({
   ...(await importOriginal<typeof import("../studioPlayerSurface")>()),
   useStudioPlayerSurface: () => surfaceHolder.current,
 }));
+
+/** The panel under the app's motion features, as App.tsx mounts it: without
+ *  them the popover keeps its `initial` opacity 0. One component, so the
+ *  harness's re-render reaches the panel. */
+function MorePanelWithMotion() {
+  return (
+    <MotionProvider>
+      <StudioPlayerMorePanel placement="up" />
+    </MotionProvider>
+  );
+}
 
 beforeEach(() => {
   surfaceHolder.current = createSurfaceValue();
@@ -29,13 +42,13 @@ async function openPanel() {
 
 describe("StudioPlayerMorePanel", () => {
   it("sets crossfade and loudness", async () => {
-    const { player } = renderWithPlayer(
-      <StudioPlayerMorePanel placement="up" />,
-    );
+    const { player } = renderWithPlayer(<MorePanelWithMotion />);
+    await awaitCatalog("studio");
     await openPanel();
     const crossfade = screen.getByRole("slider", { name: "Crossfade length" });
     expect(crossfade).toHaveAttribute("aria-valuetext", "Off");
-    expect(screen.getByText("Off")).toBeVisible();
+    // The popover fades in; the label beside the slider shows once it lands.
+    await waitFor(() => expect(screen.getByText("Off")).toBeVisible());
     // The shared slider saves once it is let go.
     fireEvent.change(crossfade, { target: { value: "6" } });
     fireEvent.blur(crossfade);

@@ -10,6 +10,7 @@ import type {
 } from "../../../shared/contracts/quizshow";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import { QuizshowRemoteControls } from "./QuizshowRemoteControls";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 
 type SendFunction = (name: string, payload: unknown) => Promise<unknown>;
 
@@ -158,6 +159,7 @@ describe("QuizshowRemoteControls", () => {
     const ack = deferred<unknown>();
     const send = vi.fn<SendFunction>(() => ack.promise);
     renderControls(hostState({ phase: "read" }), send);
+    await awaitCatalog("quizshow");
 
     const nextButton = screen.getByRole("button", { name: "Next" });
     await user.click(nextButton);
@@ -191,6 +193,7 @@ describe("QuizshowRemoteControls", () => {
         message: "not allowed",
       });
     renderControls(hostState({ phase: "open" }), send);
+    await awaitCatalog("quizshow");
     const nextButton = screen.getByRole("button", { name: "Next" });
 
     await user.click(nextButton);
@@ -213,6 +216,7 @@ describe("QuizshowRemoteControls", () => {
     const user = userEvent.setup();
     const send = acting();
     renderControls(hostState({ phase: "open", deadline: DEADLINE }), send);
+    await awaitCatalog("quizshow");
 
     await user.click(screen.getByRole("button", { name: "Add 15 seconds" }));
 
@@ -223,7 +227,7 @@ describe("QuizshowRemoteControls", () => {
     });
   });
 
-  it("offers Reveal now only in open and vote, and Skip only where the contract allows it", () => {
+  it("offers Reveal now only in open and vote, and Skip only where the contract allows it", async () => {
     const cases: Array<{
       state: QuizshowHostState;
       hasReveal: boolean;
@@ -286,6 +290,7 @@ describe("QuizshowRemoteControls", () => {
     ];
     for (const testCase of cases) {
       const view = renderControls(testCase.state, acting());
+      await awaitCatalog("quizshow");
       const phase = testCase.state.cursor.phase;
       expect(
         screen.queryByRole("button", { name: "Reveal now" }) !== null,
@@ -303,6 +308,7 @@ describe("QuizshowRemoteControls", () => {
     const user = userEvent.setup();
     const send = acting();
     const runningView = renderControls(hostState({ phase: "open" }), send);
+    await awaitCatalog("quizshow");
 
     await user.click(screen.getByRole("button", { name: "Pause" }));
     expect(send).toHaveBeenLastCalledWith("host:pause", { phaseId: PHASE_ID });
@@ -318,6 +324,7 @@ describe("QuizshowRemoteControls", () => {
       }),
       send,
     );
+    await awaitCatalog("quizshow");
     expect(screen.queryByRole("button", { name: "Pause" })).toBeNull();
     expect(
       screen
@@ -332,6 +339,7 @@ describe("QuizshowRemoteControls", () => {
     const user = userEvent.setup();
     const send = acting();
     const lobbyView = renderControls(lobbyState(), send);
+    await awaitCatalog("quizshow");
 
     await user.click(screen.getByRole("button", { name: "End game" }));
     const lobbyDialog = await screen.findByRole("dialog");
@@ -349,6 +357,7 @@ describe("QuizshowRemoteControls", () => {
 
     // A later question, so an earlier one has scored.
     renderControls(hostState({ phase: "open", questionIndex: 1 }), send);
+    await awaitCatalog("quizshow");
     await user.click(screen.getByRole("button", { name: "End game" }));
     const runningDialog = await screen.findByRole("dialog");
     expect(
@@ -375,6 +384,7 @@ describe("QuizshowRemoteControls end confirm and pause", () => {
       ),
       send,
     );
+    await awaitCatalog("quizshow");
 
     await user.click(screen.getByRole("button", { name: "End game" }));
     const podiumDialog = await screen.findByRole("dialog");
@@ -401,6 +411,7 @@ describe("QuizshowRemoteControls end confirm and pause", () => {
       hostState({ phase: "open", roundIndex: 0, questionIndex: 0 }),
       send,
     );
+    await awaitCatalog("quizshow");
 
     await user.click(screen.getByRole("button", { name: "End game" }));
     const unscoredDialog = await screen.findByRole("dialog");
@@ -420,6 +431,7 @@ describe("QuizshowRemoteControls end confirm and pause", () => {
       }),
       send,
     );
+    await awaitCatalog("quizshow");
     await user.click(screen.getByRole("button", { name: "End game" }));
     const revealDialog = await screen.findByRole("dialog");
     expect(
@@ -440,6 +452,7 @@ describe("QuizshowRemoteControls end confirm and pause", () => {
       pausedRemainingMs: 9_000,
     });
     const view = renderControls(runningState, send);
+    await awaitCatalog("quizshow");
 
     const pauseButton = screen.getByRole("button", { name: "Pause" });
     await user.click(pauseButton);
@@ -462,6 +475,7 @@ describe("QuizshowRemoteControls end confirm and pause", () => {
     const user = userEvent.setup();
     const send = acting();
     renderControls(lobbyState(), send);
+    await awaitCatalog("quizshow");
 
     expect(screen.queryByRole("button", { name: "Next" })).toBeNull();
     expect(screen.queryByRole("button", { name: "Pause" })).toBeNull();

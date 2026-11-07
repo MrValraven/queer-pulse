@@ -100,6 +100,8 @@ export function useEditPost() {
     Error,
     { postId: string; body: string; image?: string }
   >({
+    // Every caller toasts the cause itself.
+    meta: { silentError: true },
     mutationFn: async ({ postId, body, image }) => {
       if (demoMode) return;
       await editPost(postId, body, image);
@@ -116,6 +118,8 @@ export function useDeletePost() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, { postId: string }>({
+    // Every caller toasts the cause itself.
+    meta: { silentError: true },
     mutationFn: async ({ postId }) => {
       if (demoMode) return;
       await deletePost(postId);
@@ -132,6 +136,8 @@ export function useRestorePost() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, { postId: string }>({
+    // Every caller toasts the cause itself.
+    meta: { silentError: true },
     mutationFn: async ({ postId }) => {
       if (demoMode) return;
       await restorePost(postId);
@@ -370,6 +376,8 @@ export function useLockThread() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<void, Error, LockVars>({
+    // Every caller toasts the cause itself.
+    meta: { silentError: true },
     mutationFn: async ({ slug, locked, reason }) => {
       if (demoMode) return;
       if (locked) await lockThread(slug, reason);
@@ -424,6 +432,8 @@ export function usePinThread() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<void, Error, PinVars>({
+    // Every caller toasts the cause itself.
+    meta: { silentError: true },
     mutationFn: async ({ slug, pinned }) => {
       if (demoMode) return;
       if (pinned) await pinThread(slug);
@@ -470,6 +480,8 @@ export function useSetThreadOfficial() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<void, Error, OfficialVars>({
+    // Every caller toasts the cause itself.
+    meta: { silentError: true },
     mutationFn: async ({ slug, isOfficial }) => {
       if (demoMode) return;
       await setThreadOfficial(slug, isOfficial);
@@ -513,6 +525,8 @@ export function useEditThreadTitle(slug: string | undefined) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, { title: string }>({
+    // Every caller toasts the cause itself.
+    meta: { silentError: true },
     mutationFn: async ({ title }) => {
       if (demoMode) return;
       if (!slug) throw new Error("Cannot edit a thread title without its slug");
@@ -542,6 +556,8 @@ export function useFollowThread() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<void, Error, FollowVars>({
+    // Every caller toasts the cause itself.
+    meta: { silentError: true },
     mutationFn: async ({ slug, isFollowing }) => {
       if (demoMode) return;
       if (isFollowing) await followThread(slug);
@@ -646,6 +662,8 @@ export function useAcceptAnswer() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<void, Error, AcceptVars>({
+    // Every caller toasts the cause itself.
+    meta: { silentError: true },
     mutationFn: async ({ slug, postId }) => {
       if (demoMode) return;
       await setAcceptedAnswer(slug, postId);
@@ -686,6 +704,8 @@ export function useEditThreadTags(slug: string | undefined) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, { tags: string[] }>({
+    // Every caller toasts the cause itself.
+    meta: { silentError: true },
     mutationFn: async ({ tags }) => {
       if (demoMode) return;
       if (!slug) throw new Error("Cannot edit thread tags without its slug");
@@ -721,6 +741,8 @@ export function useMoveThreadCategory() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, { slug: string; category: string }>({
+    // Every caller toasts the cause itself.
+    meta: { silentError: true },
     mutationFn: async ({ slug, category }) => {
       if (demoMode) return;
       if (!slug) throw new Error("Cannot move a thread without its slug");
@@ -805,6 +827,8 @@ export function useDeleteThread() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, { slug: string }>({
+    // Every caller toasts the cause itself.
+    meta: { silentError: true },
     mutationFn: async ({ slug }) => {
       if (demoMode) return;
       if (!slug) throw new Error("Cannot delete a thread without its slug");
@@ -838,6 +862,8 @@ export function useRemoveCoAuthorCredit() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, { slug: string }>({
+    // Its caller toasts the cause itself.
+    meta: { silentError: true },
     mutationFn: async ({ slug }) => {
       if (demoMode) return;
       await removeThreadCoAuthor(slug);

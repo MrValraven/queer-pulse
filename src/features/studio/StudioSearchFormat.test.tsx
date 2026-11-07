@@ -1,6 +1,13 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { StudioSearchPage } from "./StudioSearchPage";
 
 describe("search by format (demo)", () => {
@@ -10,9 +17,13 @@ describe("search by format (demo)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const select = await screen.findByRole("button", { name: "Format" });
     expect(select).toHaveTextContent("Performance");
-    expect(await screen.findByText("Motorbike")).toBeInTheDocument();
+    // A track row links its release too, so the release card is found in
+    // the Releases section.
+    const releases = await screen.findByRole("region", { name: /releases/i });
+    expect(within(releases).getByText("Motorbike")).toBeInTheDocument();
     expect(screen.queryByText("Último elétrico")).toBeNull();
   });
 
@@ -22,6 +33,7 @@ describe("search by format (demo)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     const select = await screen.findByRole("button", { name: "Format" });
     fireEvent.click(select);
     fireEvent.click(await screen.findByRole("option", { name: "Any format" }));
@@ -36,6 +48,7 @@ describe("search by format (demo)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     await screen.findByRole("button", { name: "Format" });
     expect(await screen.findByText("Episodes")).toBeInTheDocument();
     expect(screen.queryByText("Tracks", { selector: "h2 *" })).toBeNull();
@@ -47,6 +60,7 @@ describe("search by format (demo)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
+    await awaitCatalog("studio");
     expect(
       await screen.findByRole("button", { name: "Genre" }),
     ).toBeInTheDocument();

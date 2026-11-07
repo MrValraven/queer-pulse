@@ -450,7 +450,7 @@ const HUB_RULES = [
   "Confidentiality is the first rule and the last. What's shared here stays here.",
   "No outing anyone, including yourself accidentally. Reduced visibility by default.",
   "Vetted means vetted: only add a provider you've actually seen.",
-  "Medical info is peer experience, not prescription. Always loop in a clinician.",
+  "Medical info is peer experience. Always loop in a clinician.",
   "We assume good faith and protect each other's safety over comfort.",
 ];
 
@@ -1005,7 +1005,7 @@ const AID_RESOURCES: CommunityResource[] = [
 
 const AID_RULES = [
   "What's shared here stays here: confidentiality is the first rule.",
-  "This is peer experience, not medical advice. Always loop in a clinician for health decisions.",
+  "This is peer experience. Always loop in a clinician for health decisions.",
   "Mutual means reciprocal: give what you can, take what you need, no ledger kept.",
   "No outing anyone, including yourself accidentally. Reduced visibility by default.",
   "Practical help is valued as much as emotional support; both are needed.",
@@ -1173,7 +1173,7 @@ const PARENTS_RESOURCES: CommunityResource[] = [
 const PARENTS_RULES = [
   "Kids are welcome at in-person events unless specifically noted otherwise.",
   "Different family structures are all valid here. None need explaining or defending.",
-  "Medical experiences: share your story, not prescriptions for other families.",
+  "Medical experiences: share your own story and leave advice about other families' care to their clinicians.",
   "What's shared in the network stays in the network.",
   "We look after the grown-ups too, alongside the children.",
 ];

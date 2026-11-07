@@ -2,6 +2,7 @@ import { Toggle } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useActivityVisibility } from "../settings/api/useActivityVisibility";
+import { settingWriteErrorCopy } from "../settings/settingsActionErrors";
 import { ACTIVITY_BAND_LABEL_KEY } from "./activityBand";
 import styles from "./WhoSeesWhatSheet.module.css";
 
@@ -33,8 +34,10 @@ export function WhoSeesWhatActivity() {
   const { band, isHidden, setHidden, isDemoMode } = useActivityVisibility({
     onSaved: () =>
       showToast(t("members:profile.whoSeesWhat.toast.saved"), "success"),
-    onError: () =>
-      showToast(t("members:profile.whoSeesWhat.activity.error"), "error"),
+    onError: (error) => {
+      const cause = settingWriteErrorCopy(error);
+      showToast(t(cause.key, cause.values), "error");
+    },
   });
 
   return (

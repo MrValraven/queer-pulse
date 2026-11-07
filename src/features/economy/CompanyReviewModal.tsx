@@ -8,6 +8,10 @@ import { ModalShell, SuccessPanel } from "./ModalKit";
 import { ReviewForm, type ReviewFormValues } from "./ReviewForm";
 import { useCreateReview } from "./api/useCompanyMutations";
 import type { CompanyReview } from "./companies.data";
+import {
+  COMPANY_REVIEW_SUBMIT_OVERRIDES,
+  failureToast,
+} from "./economyErrorCopy";
 
 /**
  * Write a review for a single company. Demo prepends the review to local state
@@ -71,12 +75,20 @@ export function CompanyReviewModal({
       setSending(false);
       setDone(true);
       // Live: the invalidated reviews query refetches with the new review.
-    } catch (err) {
+    } catch (error) {
       setSending(false);
-      if (err instanceof ApiError && err.status === 409) {
+      if (error instanceof ApiError && error.status === 409) {
         showToast(t("economy:companyReview.toast.alreadyReviewed"), "error");
       } else {
-        showToast(t("economy:companyReview.toast.error"), "error");
+        showToast(
+          failureToast(
+            error,
+            t,
+            "economy:companyReview.toast.errorTitle",
+            COMPANY_REVIEW_SUBMIT_OVERRIDES,
+          ),
+          "error",
+        );
       }
     }
   }

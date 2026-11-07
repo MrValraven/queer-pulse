@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import { PieceThreadComposer } from "./PieceThreadComposer";
 
@@ -19,12 +20,13 @@ vi.mock("../api/usePieceMessages", () => ({
   usePieceMessageMutations: () => ({ send: sendMock }),
 }));
 
-function renderComposer() {
+async function renderComposer() {
   render(
     <TestProviders>
       <PieceThreadComposer pieceId="p1" side="editor" />
     </TestProviders>,
   );
+  await awaitCatalog("magazine");
   return screen.getByRole<HTMLTextAreaElement>("textbox");
 }
 
@@ -35,8 +37,8 @@ describe("PieceThreadComposer", () => {
     sendMock.isError = false;
   });
 
-  it("sends the trimmed draft on Enter and clears it once the send succeeds", () => {
-    const textarea = renderComposer();
+  it("sends the trimmed draft on Enter and clears it once the send succeeds", async () => {
+    const textarea = await renderComposer();
     fireEvent.change(textarea, { target: { value: "  Draft due Friday  " } });
     fireEvent.keyDown(textarea, { key: "Enter" });
 
@@ -52,31 +54,33 @@ describe("PieceThreadComposer", () => {
     expect(textarea.value).toBe("");
   });
 
-  it("starts a new line on Shift+Enter", () => {
-    const textarea = renderComposer();
+  it("starts a new line on Shift+Enter", async () => {
+    const textarea = await renderComposer();
     fireEvent.change(textarea, { target: { value: "First line" } });
     fireEvent.keyDown(textarea, { key: "Enter", shiftKey: true });
     expect(sendMock.mutate).not.toHaveBeenCalled();
   });
 
-  it("ignores Enter while an input method is composing", () => {
-    const textarea = renderComposer();
+  it("ignores Enter while an input method is composing", async () => {
+    const textarea = await renderComposer();
     fireEvent.change(textarea, { target: { value: "にほん" } });
     fireEvent.keyDown(textarea, { key: "Enter", isComposing: true });
     expect(sendMock.mutate).not.toHaveBeenCalled();
     expect(textarea.value).toBe("にほん");
   });
 
-  it("keeps the text and says so when the send fails", () => {
+  it("keeps the text and says so when the send fails", async () => {
     sendMock.isError = true;
-    const textarea = renderComposer();
+    const textarea = await renderComposer();
     fireEvent.change(textarea, { target: { value: "Still here" } });
-    expect(screen.getByRole("alert")).toBeInTheDocument();
+    expect(
+      screen.getByText("Couldn't send. Your message is still here."),
+    ).toHaveAttribute("role", "alert");
     expect(textarea.value).toBe("Still here");
   });
 
-  it("does not send an empty draft", () => {
-    const textarea = renderComposer();
+  it("does not send an empty draft", async () => {
+    const textarea = await renderComposer();
     fireEvent.keyDown(textarea, { key: "Enter" });
     fireEvent.click(screen.getByRole("button", { name: /send/i }));
     expect(sendMock.mutate).not.toHaveBeenCalled();

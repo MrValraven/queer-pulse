@@ -10,6 +10,7 @@ import { useUpdateProfile } from "../members/api/useUpdateProfile";
 import { getProfile } from "../members/api/members.api";
 import { WorkFieldPicker } from "../members/WorkFieldPicker";
 import { type WorkFieldSelection } from "../members/workFieldPicker.data";
+import { onboardingSaveErrorCopy } from "./authActionErrors";
 import { SkipLink, type StepProps } from "./OnboardingStepChrome";
 import styles from "./OnboardingPage.module.css";
 
@@ -78,8 +79,9 @@ function StepWorkForm({
         profession: selection.profession,
       });
       onNext();
-    } catch {
-      setError(t("auth:onboarding.stepWork.saveError"));
+    } catch (saveFailure) {
+      const cause = onboardingSaveErrorCopy(saveFailure);
+      setError(t(cause.key, cause.values));
     }
   }
 

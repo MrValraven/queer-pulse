@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import type { Piece, Section } from "../data/desk.data";
 import type { DeskTrack } from "./deskTrack";
@@ -28,7 +29,7 @@ const SECTIONS: Section[] = [
   { name: "Culture", target: 1, note: "reviews" },
 ];
 
-function renderPlan(pieces: Piece[], track?: DeskTrack) {
+async function renderPlan(pieces: Piece[], track?: DeskTrack) {
   const onOpen = vi.fn();
   const onCommission = vi.fn();
   render(
@@ -42,12 +43,13 @@ function renderPlan(pieces: Piece[], track?: DeskTrack) {
       />
     </TestProviders>,
   );
+  await awaitCatalog("magazine");
   return { onOpen, onCommission };
 }
 
 describe("IssuePlan", () => {
   it("sums up full sections, sections with gaps and open slots", async () => {
-    renderPlan([
+    await renderPlan([
       makePiece({ id: "piece-1", section: "Features" }),
       makePiece({ id: "piece-2", section: "Culture" }),
     ]);
@@ -88,7 +90,7 @@ describe("IssuePlan", () => {
   });
 
   it("offers a commission slot per gap in the issue track", async () => {
-    const { onCommission } = renderPlan([], "issue");
+    const { onCommission } = await renderPlan([], "issue");
 
     const featureSlots = await screen.findAllByRole("button", {
       name: "Commission for Features",
@@ -100,7 +102,7 @@ describe("IssuePlan", () => {
   });
 
   it("shows where unfiled pieces would fit, with no commission slots", async () => {
-    renderPlan(
+    await renderPlan(
       [makePiece({ issueId: null, section: "Culture" })],
       "unassigned",
     );
@@ -119,7 +121,7 @@ describe("IssuePlan", () => {
     // activation for free in a real browser; the old `role="button"` div
     // needed its own hand-rolled keydown handling to get the same result).
     const piece = makePiece({ title: "Slot piece" });
-    const { onOpen } = renderPlan([piece]);
+    const { onOpen } = await renderPlan([piece]);
 
     fireEvent.click(await screen.findByRole("button", { name: "Slot piece" }));
 
@@ -129,10 +131,10 @@ describe("IssuePlan", () => {
 
   it("also opens a slot's piece from a click anywhere on the card", async () => {
     const piece = makePiece({ title: "Slot piece" });
-    const { onOpen } = renderPlan([piece]);
+    const { onOpen } = await renderPlan([piece]);
 
     const title = await screen.findByRole("button", { name: "Slot piece" });
-    const card = title.closest("h4")?.parentElement;
+    const card = title.closest("h3")?.parentElement;
     if (!card) throw new Error("No card found for Slot piece");
     fireEvent.click(card);
 

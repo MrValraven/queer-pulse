@@ -2,6 +2,7 @@ import type { ReactElement } from "react";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 import { TestProviders } from "../../../../test/TestProviders";
 import { createStudioPlayerTestValue } from "../../../../test/studioPlayerTestValue";
 import { DEMO_DRAFT_EPISODE_ID } from "../../../studio/api/studioDemoFormats.data";
@@ -34,7 +35,7 @@ function studioPreviewOf(
 const showWithDraftEpisode = studioPreviewOf("studio_episode");
 const scheduledRelease = studioPreviewOf("studio_release");
 
-function renderWithPlayer(
+async function renderWithPlayer(
   element: ReactElement,
   overrides: Partial<StudioPlayerValue> = {},
 ) {
@@ -49,6 +50,7 @@ function renderWithPlayer(
       </StudioPlayerContext.Provider>
     </TestProviders>,
   );
+  await awaitCatalog("admin", "studio");
   return player;
 }
 
@@ -68,7 +70,7 @@ describe("StudioDraftPreview", () => {
     const playTracks = vi.fn(() => Promise.resolve());
     const playRelease = vi.fn(() => Promise.resolve());
     const togglePlay = vi.fn();
-    renderWithPlayer(
+    await renderWithPlayer(
       <StudioDraftPreview preview={scheduledRelease} episodeTrackId={null} />,
       { playTracks, playRelease, togglePlay },
     );
@@ -82,8 +84,8 @@ describe("StudioDraftPreview", () => {
     expect(togglePlay).not.toHaveBeenCalled();
   });
 
-  it("names the artist without a link", () => {
-    renderWithPlayer(
+  it("names the artist without a link", async () => {
+    await renderWithPlayer(
       <StudioDraftPreview preview={scheduledRelease} episodeTrackId={null} />,
     );
     expect(
@@ -94,8 +96,8 @@ describe("StudioDraftPreview", () => {
     );
   });
 
-  it("shows the draft episode on its own under the show", () => {
-    renderWithPlayer(
+  it("shows the draft episode on its own under the show", async () => {
+    await renderWithPlayer(
       <StudioDraftPreview
         preview={showWithDraftEpisode}
         episodeTrackId={DEMO_DRAFT_EPISODE_ID}
@@ -106,8 +108,8 @@ describe("StudioDraftPreview", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows the draft episode's content warning as the show page does", () => {
-    renderWithPlayer(
+  it("shows the draft episode's content warning as the show page does", async () => {
+    await renderWithPlayer(
       <StudioDraftPreview
         preview={{
           ...showWithDraftEpisode,
@@ -127,8 +129,8 @@ describe("StudioDraftPreview", () => {
     expect(preview.textContent).toMatch(/self-harm/i);
   });
 
-  it("says so when the server leaves the episode out", () => {
-    renderWithPlayer(
+  it("says so when the server leaves the episode out", async () => {
+    await renderWithPlayer(
       <StudioDraftPreview
         preview={{
           ...showWithDraftEpisode,

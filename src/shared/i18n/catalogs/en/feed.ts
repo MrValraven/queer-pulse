@@ -232,6 +232,12 @@ export const feed: Catalog = {
   "action.reactionFailed": "That reaction didn't save. Try again?",
   "action.replySent": "Reply posted.",
   "action.replyFailed": "That reply didn't send. Try again?",
+  "action.replyForbidden":
+    "You can only reply in communities you've joined, and replies are closed while a community is archived or paused.",
+  "action.reactionForbidden":
+    "You can only react to posts in communities you've joined, and reactions are closed while a community is archived or paused.",
+  "action.postGone":
+    "That post is gone, so nothing was saved. Refresh your feed to see what's there now.",
 
   // ── Feed source mutes (SOC-18) ──────────────────────────────────────────
   // Muting turns a source down in your own feed. It never removes you from
@@ -241,6 +247,8 @@ export const feed: Catalog = {
   "mute.mutedToast": "You'll see less of {name}. You're still a member.",
   "mute.unmutedToast": "{name} is back in your feed.",
   "mute.failedToast": "That didn't save. Try again?",
+  "mute.sourceGone":
+    "That source isn't available any more. Refresh your feed to see what's there now.",
   "mute.sidebarHeading": "Quieter feed",
   "mute.sidebarBlurb": "Turn a community or a thread down without leaving it.",
   "mute.manageLink": "Sources you've turned down",

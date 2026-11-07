@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { AppRoutes } from "../../../../app/routes";
 import { TestProviders } from "../../../../test/TestProviders";
@@ -19,30 +19,31 @@ import {
   buildTattooView,
   type TattooBlockKey,
 } from "./tattooView";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 // Unrun per repo policy: verified statically.
 
 const TODAY = "2026-10-19";
 
-/** The EN block headings (Task 24's catalog copy). */
+/** The EN block headings (`subprofiles:tattoo.block.*.heading`). */
 const EN_BLOCK_HEADINGS: Record<TattooBlockKey, string> = {
   flash: "Flash",
   healed: "Healed work",
-  scarWork: "Gender-affirming & scar work",
-  coverUps: "Cover-ups & reworks",
+  scarWork: "Gender-affirming and scar work",
+  coverUps: "Cover-ups and reworks",
   projects: "Projects in progress",
   wannaDos: "Wanna-dos",
-  styles: "Styles & specialisms",
+  styles: "Styles",
   booking: "How to book",
-  prices: "Pricing & policies",
-  comfort: "Comfort & accessibility",
-  hygiene: "Hygiene & credentials",
+  prices: "Prices and policies",
+  comfort: "Comfort and accessibility",
+  hygiene: "Hygiene and credentials",
   aftercare: "Aftercare",
-  guestSpots: "Guest spots & conventions",
-  flashDays: "Flash days & fundraisers",
+  guestSpots: "Guest spots and conventions",
+  flashDays: "Flash days and fundraisers",
   shop: "Shop",
   gallery: "Photo gallery",
-  lineage: "Apprenticeship & teaching",
+  lineage: "Apprenticeship and teaching",
   faq: "FAQ",
 };
 
@@ -92,20 +93,33 @@ function makeItem(
   };
 }
 
-function renderBody(data: PublicSubprofileView, mode: PersonaViewMode) {
-  return render(
+async function renderBody(data: PublicSubprofileView, mode: PersonaViewMode) {
+  const view = render(
     <TestProviders>
       <TattooBody data={data} mode={mode} onAction={() => {}} />
     </TestProviders>,
   );
+  await awaitCatalog("subprofiles");
+  return view;
 }
 
-function renderRoute(path: string) {
-  return render(
+/** The route chunk loads lazily, and its first cold load can take seconds,
+ *  so route renders get the same budget as `routes.smoke.test.tsx`. */
+const ROUTE_LOAD_TIMEOUT_MS = 10000;
+const ROUTE_TEST_TIMEOUT_MS = 15000;
+
+async function renderRoute(path: string) {
+  const view = render(
     <TestProviders initialEntries={[path]}>
       <AppRoutes />
     </TestProviders>,
   );
+  await waitFor(
+    () => expect(screen.queryByText("Loading…")).not.toBeInTheDocument(),
+    { timeout: ROUTE_LOAD_TIMEOUT_MS },
+  );
+  await awaitCatalog("subprofiles");
+  return view;
 }
 
 beforeEach(() => {
@@ -113,28 +127,28 @@ beforeEach(() => {
   resetPhotoReveals();
 });
 
-describe("TattooBody", () => {
-  it("shows Works at for a tattoo artist on a studio team", () => {
+describe("TattooBody", { timeout: ROUTE_TEST_TIMEOUT_MS }, () => {
+  it("shows Works at for a tattoo artist on a studio team", async () => {
     const data = demoView(agulhaLenta());
     expect(data.worksAt?.map((listing) => listing.name)).toContain(
       "Tinta Viva",
     );
-    renderBody(data, "public");
+    await renderBody(data, "public");
     expect(screen.getByText("Works at")).toBeInTheDocument();
     expect(screen.getByText("Tinta Viva", { exact: false })).toBeVisible();
   });
 
   it("renders the tattoo layout for a tattoo persona", async () => {
-    renderRoute("/p/inkwell-mariana");
+    await renderRoute("/p/inkwell-mariana");
     expect(
       await screen.findByRole("heading", { level: 1, name: /Inkwell/ }),
     ).toBeInTheDocument();
     expect(screen.getByRole("region", { name: "Flash" })).toBeInTheDocument();
     const scarWork = screen.getByRole("region", {
-      name: "Gender-affirming & scar work",
+      name: EN_BLOCK_HEADINGS.scarWork,
     });
     const coverUps = screen.getByRole("region", {
-      name: "Cover-ups & reworks",
+      name: EN_BLOCK_HEADINGS.coverUps,
     });
     expect(
       scarWork.compareDocumentPosition(coverUps) &
@@ -142,10 +156,10 @@ describe("TattooBody", () => {
     ).toBeTruthy();
   });
 
-  it("keeps the main column in the spec's order", () => {
+  it("keeps the main column in the spec's order", async () => {
     const data = demoView(TATTOO_ARTIST_DEMO_SUBPROFILE);
     const view = buildTattooView(data, TODAY);
-    renderBody(data, "public");
+    await renderBody(data, "public");
     const regionNames = screen
       .getAllByRole("region")
       .filter((region) => BLOCK_ANCHOR_IDS.includes(region.id))
@@ -160,7 +174,7 @@ describe("TattooBody", () => {
     expect(regionNames).toEqual(expectedNames);
   });
 
-  it("renders the starred scar work photo blurred above the main column", () => {
+  it("renders the starred scar work photo blurred above the main column", async () => {
     const starredScarWork = makeItem("scar-starred", "scar_work", {
       title: "Vines over a surgery scar",
       imageUrl: "https://example.com/vines.jpg",
@@ -174,7 +188,7 @@ describe("TattooBody", () => {
       ...demoView(agulhaLenta()),
       featured: starredScarWork,
     };
-    renderBody(data, "public");
+    await renderBody(data, "public");
     const spotlight = screen.getByRole("region", { name: "Starred piece" });
     expect(
       within(spotlight).getByRole("button", { name: "Show photo" }),
@@ -216,8 +230,8 @@ describe("TattooBody", () => {
       }
     });
 
-    it("scrolls to How to book from the hero", () => {
-      renderBody(demoView(TATTOO_ARTIST_DEMO_SUBPROFILE), "public");
+    it("scrolls to How to book from the hero", async () => {
+      await renderBody(demoView(TATTOO_ARTIST_DEMO_SUBPROFILE), "public");
       const hero = screen
         .getByRole("heading", { level: 1 })
         .closest("header") as HTMLElement;
@@ -229,14 +243,14 @@ describe("TattooBody", () => {
     });
   });
 
-  it("pins the phone booking bar to body", () => {
-    renderBody(demoView(TATTOO_ARTIST_DEMO_SUBPROFILE), "public");
+  it("pins the phone booking bar to body", async () => {
+    await renderBody(demoView(TATTOO_ARTIST_DEMO_SUBPROFILE), "public");
     const bar = screen.getByRole("complementary", { name: "Book Inkwell" });
     expect(bar.parentElement).toBe(document.body);
   });
 
   it("shows the owner the status switch and every empty block as a chapter to fill", async () => {
-    renderRoute("/p/agulha-lenta");
+    await renderRoute("/p/agulha-lenta");
     const openButton = await screen.findByRole("button", {
       name: "Books open",
     });
@@ -255,7 +269,7 @@ describe("TattooBody", () => {
   });
 
   it("gives the owner one View as visitor, in the owner bar", async () => {
-    renderRoute("/p/agulha-lenta");
+    await renderRoute("/p/agulha-lenta");
     expect(
       await screen.findByRole("button", { name: "Books open" }),
     ).toBeInTheDocument();
@@ -264,14 +278,14 @@ describe("TattooBody", () => {
     ).toHaveLength(1);
   });
 
-  it("shows a visitor nothing of an empty persona's blocks", () => {
-    renderBody(demoView(agulhaLenta()), "public");
+  it("shows a visitor nothing of an empty persona's blocks", async () => {
+    await renderBody(demoView(agulhaLenta()), "public");
     expect(screen.queryByRole("region", { name: "Flash" })).toBeNull();
     expect(screen.queryByRole("button", { name: "How to book" })).toBeNull();
   });
 
   it("keeps the therapist and every other kind on their own layouts", async () => {
-    const { container } = renderRoute("/p/nightform");
+    const { container } = await renderRoute("/p/nightform");
     expect(
       await screen.findByRole("heading", { name: "Updates" }),
     ).toBeInTheDocument();
@@ -281,8 +295,8 @@ describe("TattooBody", () => {
 });
 
 describe("TattooBody booking asides", () => {
-  it("keeps the phone bar to the pill and How to book, with no name or wait note", () => {
-    renderBody(demoView(TATTOO_ARTIST_DEMO_SUBPROFILE), "public");
+  it("keeps the phone bar to the pill and How to book, with no name or wait note", async () => {
+    await renderBody(demoView(TATTOO_ARTIST_DEMO_SUBPROFILE), "public");
     const bar = screen.getByRole("complementary", { name: "Book Inkwell" });
     expect(within(bar).getByText("Waitlist")).toBeInTheDocument();
     expect(
@@ -292,8 +306,8 @@ describe("TattooBody booking asides", () => {
     expect(within(bar).queryByText(/books reopen early november/)).toBeNull();
   });
 
-  it("puts the wait note on its own line under the hero and sidebar pills", () => {
-    renderBody(demoView(TATTOO_ARTIST_DEMO_SUBPROFILE), "public");
+  it("puts the wait note on its own line under the hero and sidebar pills", async () => {
+    await renderBody(demoView(TATTOO_ARTIST_DEMO_SUBPROFILE), "public");
     const hero = screen
       .getByRole("heading", { level: 1 })
       .closest("header") as HTMLElement;
@@ -308,8 +322,8 @@ describe("TattooBody booking asides", () => {
     ).toBeInTheDocument();
   });
 
-  it("labels a guest spot that runs today Guest spot now", () => {
-    renderBody(demoView(TATTOO_ARTIST_DEMO_SUBPROFILE), "public");
+  it("labels a guest spot that runs today Guest spot now", async () => {
+    await renderBody(demoView(TATTOO_ARTIST_DEMO_SUBPROFILE), "public");
     const sidebar = screen.getByRole("complementary", {
       name: "Booking with Inkwell",
     });
@@ -322,7 +336,7 @@ describe("TattooBody booking asides", () => {
     ).toBeNull();
   });
 
-  it("keeps Next guest spot for a spot that has not started", () => {
+  it("keeps Next guest spot for a spot that has not started", async () => {
     const base = demoView(TATTOO_ARTIST_DEMO_SUBPROFILE);
     const data: PublicSubprofileView = {
       ...base,
@@ -331,13 +345,13 @@ describe("TattooBody booking asides", () => {
           ? {
               ...section,
               items: section.items.filter(
-                (item) => item.id !== "guest-spot-lisbon",
+                (item) => item.id !== "itm-inkwell-guest-spot-lisbon",
               ),
             }
           : section,
       ),
     };
-    renderBody(data, "public");
+    await renderBody(data, "public");
     const sidebar = screen.getByRole("complementary", {
       name: "Booking with Inkwell",
     });
@@ -349,8 +363,8 @@ describe("TattooBody booking asides", () => {
     ).toBeInTheDocument();
   });
 
-  it("prints the studio city once when an address line already names it", () => {
-    renderBody(demoView(TATTOO_ARTIST_DEMO_SUBPROFILE), "public");
+  it("prints the studio city once when an address line already names it", async () => {
+    await renderBody(demoView(TATTOO_ARTIST_DEMO_SUBPROFILE), "public");
     const studioCard = screen.getByRole("region", { name: "Studio" });
     expect(within(studioCard).getByText("1100-319 Lisbon")).toBeInTheDocument();
     expect(within(studioCard).queryByText("Lisbon")).toBeNull();

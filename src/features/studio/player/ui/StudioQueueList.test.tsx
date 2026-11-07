@@ -6,6 +6,7 @@ import {
   within,
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import type { StudioPlayerValue } from "../studioPlayerContext";
 import { StudioQueueList } from "./StudioQueueList";
 import {
   createStudioPlayerValue,
@@ -13,6 +14,7 @@ import {
   queueView,
   renderWithPlayer,
 } from "./studioPlayerTestHarness";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 type Reorder = (fromIndex: number, toIndex: number) => void;
 
@@ -99,6 +101,8 @@ describe("StudioQueueList", () => {
     renderWithPlayer(<StudioQueueList headingLevel={2} />, {
       player: playerWith(),
     });
+    // The file's first read of the studio catalog can outlast findBy's wait.
+    await awaitCatalog("studio");
     expect(
       await screen.findByRole("heading", { name: "Now playing" }),
     ).toBeInTheDocument();
@@ -151,15 +155,18 @@ describe("StudioQueueList", () => {
         player: playerWith(),
       },
     );
+    await awaitCatalog("studio");
     const moveDown = await screen.findByRole("button", {
       name: "Move Bravo down",
     });
     moveDown.focus();
     fireEvent.click(moveDown);
     expect(player.moveUserItem).toHaveBeenCalledWith(0, 1);
-    expect(screen.getByRole("status")).toHaveTextContent(
-      "Bravo is now number 2",
-    );
+    expect(
+      screen.getByText("Bravo is now number 2", {
+        selector: '[role="status"]',
+      }),
+    ).toBeInTheDocument();
     // The player commits the new order: Bravo is now the last row.
     rerenderWith({ player: playerWith([charlie, bravo]) });
     const movedDown = screen.getByRole("button", { name: "Move Bravo down" });
@@ -193,14 +200,17 @@ describe("StudioQueueList", () => {
       <StudioQueueList headingLevel={3} isInDialog />,
       { player: playerWith() },
     );
+    await awaitCatalog("studio");
     fireEvent.click(
       await screen.findByRole("button", {
         name: "Remove Delta from the queue",
       }),
     );
-    expect(screen.getByRole("status")).toHaveTextContent(
-      "Removed Delta from the queue",
-    );
+    expect(
+      screen.getByText("Removed Delta from the queue", {
+        selector: '[role="status"]',
+      }),
+    ).toBeInTheDocument();
     const undo = await screen.findByRole("button", { name: "Undo" });
     fireEvent.click(undo);
     fireEvent.click(undo);
@@ -356,6 +366,12 @@ describe("StudioQueueList drags and focus", () => {
       <StudioQueueList headingLevel={2} />,
       { player: playerWith() },
     );
+    await awaitCatalog("studio");
+    // Every rerender stands for the same player, so its moves land on one mock.
+    const sameActions = (next: StudioPlayerValue): StudioPlayerValue => ({
+      ...next,
+      moveUserItem: player.moveUserItem,
+    });
     const clear = await screen.findByRole("button", { name: "Clear queue" });
     clear.focus();
     // Pick up Bravo (the first grip belongs to Your queue's first row).
@@ -365,17 +381,19 @@ describe("StudioQueueList drags and focus", () => {
       button: 0,
     });
     dragHolder.draggingIndex = 0;
-    rerenderWith({ player: playerWith() });
+    rerenderWith({ player: sameActions(playerWith()) });
     act(() => {
       dragHolder.reorder?.(0, 1);
     });
     expect(player.moveUserItem).toHaveBeenCalledWith(0, 1);
-    expect(screen.getByRole("status")).toHaveTextContent(
-      "Bravo is now number 2",
-    );
+    expect(
+      screen.getByText("Bravo is now number 2", {
+        selector: '[role="status"]',
+      }),
+    ).toBeInTheDocument();
     expect(clear).toHaveFocus();
     // The order changed under the drag: index 0 is Charlie now.
-    rerenderWith({ player: playerWith([charlie, bravo]) });
+    rerenderWith({ player: sameActions(playerWith([charlie, bravo])) });
     vi.mocked(player.moveUserItem).mockClear();
     act(() => {
       dragHolder.reorder?.(0, 1);
@@ -387,7 +405,7 @@ describe("StudioQueueList drags and focus", () => {
     expect(player.moveUserItem).toHaveBeenCalledWith(1, 0);
     // The drag ends: the picked entry is forgotten.
     dragHolder.draggingIndex = null;
-    rerenderWith({ player: playerWith([bravo, charlie]) });
+    rerenderWith({ player: sameActions(playerWith([bravo, charlie])) });
     vi.mocked(player.moveUserItem).mockClear();
     act(() => {
       dragHolder.reorder?.(0, 1);

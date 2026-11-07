@@ -1,5 +1,6 @@
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { TestProviders } from "../../test/TestProviders";
 import { DIRECTORY_PLACES, type DirectoryPlace } from "./directoryPlaces";
 import { DirectoryCardPills } from "./DirectoryCardPills";
@@ -11,24 +12,29 @@ const LATE_FRIDAY_AND_SUNDAY_HOURS: DirectoryPlace["hours"] = {
   Sun: { open: true, intervals: [{ from: "10:00", to: "14:00" }] },
 };
 
-function renderPills(
+async function renderPills(
   fields: Partial<DirectoryPlace>,
   isHiddenWhenEmpty = false,
 ) {
-  return render(
-    <DirectoryCardPills
-      place={{
-        ...BASE,
-        member: undefined,
-        ownedBy: [],
-        hours: undefined,
-        hostsGatherings: false,
-        ...fields,
-      }}
-      isHiddenWhenEmpty={isHiddenWhenEmpty}
-    />,
+  const view = render(
+    <div data-testid="pills-host">
+      <DirectoryCardPills
+        place={{
+          ...BASE,
+          member: undefined,
+          ownedBy: [],
+          highlights: [],
+          hours: undefined,
+          hostsGatherings: false,
+          ...fields,
+        }}
+        isHiddenWhenEmpty={isHiddenWhenEmpty}
+      />
+    </div>,
     { wrapper: TestProviders },
   );
+  await awaitCatalog("marketing");
+  return view;
 }
 
 /** The pill rows, in order, under the pills region. */
@@ -47,8 +53,8 @@ function printedTextsOf(row: Element | undefined): string[] {
 }
 
 describe("DirectoryCardPills", () => {
-  it("prints row one as member-run, one owned-by tag and its count, the price, then the highlights", () => {
-    const { container } = renderPills({
+  it("prints row one as member-run, one owned-by tag and its count, the price, then the highlights", async () => {
+    const { container } = await renderPills({
       member: "ines",
       ownedBy: ["trans", "women", "nonbinary"],
       price: "€€",
@@ -66,8 +72,8 @@ describe("DirectoryCardPills", () => {
     ]);
   });
 
-  it("names the owned-by tags past the first for screen readers and hides the count from them", () => {
-    const { container } = renderPills({
+  it("names the owned-by tags past the first for screen readers and hides the count from them", async () => {
+    const { container } = await renderPills({
       ownedBy: ["trans", "women", "nonbinary"],
     });
     const [firstRow] = pillRowsOf(container);
@@ -79,15 +85,15 @@ describe("DirectoryCardPills", () => {
     expect(countChip?.getAttribute("aria-hidden")).toBe("true");
   });
 
-  it("prints no count when the listing names one owned-by tag", () => {
-    const { container } = renderPills({ ownedBy: ["trans"], price: "" });
+  it("prints no count when the listing names one owned-by tag", async () => {
+    const { container } = await renderPills({ ownedBy: ["trans"], price: "" });
     const [firstRow] = pillRowsOf(container);
     expect(printedTextsOf(firstRow)).toEqual(["Trans-owned"]);
     expect(firstRow?.querySelector(".visuallyHidden")).toBeNull();
   });
 
-  it("puts the badges in a second row of their own, each with a hidden icon", () => {
-    const { container } = renderPills({
+  it("puts the badges in a second row of their own, each with a hidden icon", async () => {
+    const { container } = await renderPills({
       price: "€€",
       highlights: ["terrace"],
       cat: "food",
@@ -107,8 +113,8 @@ describe("DirectoryCardPills", () => {
     );
   });
 
-  it("drops Open late when a highlight says the kitchen is open late, and the next badge takes its place", () => {
-    const { container } = renderPills({
+  it("drops Open late when a highlight says the kitchen is open late, and the next badge takes its place", async () => {
+    const { container } = await renderPills({
       highlights: ["kitchen-open-late"],
       cat: "food",
       hours: LATE_FRIDAY_AND_SUNDAY_HOURS,
@@ -118,8 +124,8 @@ describe("DirectoryCardPills", () => {
     expect(printedTextsOf(badgeRow)).toEqual(["Open Sundays", "Hosts events"]);
   });
 
-  it("drops Hosts gatherings when a highlight says the place hosts events", () => {
-    const { container } = renderPills({
+  it("drops Hosts gatherings when a highlight says the place hosts events", async () => {
+    const { container } = await renderPills({
       highlights: ["hosts-events"],
       cat: "food",
       hours: {
@@ -131,8 +137,8 @@ describe("DirectoryCardPills", () => {
     expect(printedTextsOf(badgeRow)).toEqual(["Open late"]);
   });
 
-  it("draws no second row when the card earns no badge", () => {
-    const { container } = renderPills({
+  it("draws no second row when the card earns no badge", async () => {
+    const { container } = await renderPills({
       price: "€€",
       highlights: ["terrace"],
       cat: "food",
@@ -149,31 +155,36 @@ describe("DirectoryCardPills", () => {
     expect(container.querySelector("svg")).toBeNull();
   });
 
-  it("draws no second row when every earned badge repeats a highlight", () => {
-    const { container } = renderPills({
+  it("draws no second row when every earned badge repeats a highlight", async () => {
+    const { container } = await renderPills({
       highlights: ["hosts-events"],
       hostsGatherings: true,
     });
-    expect(pillRowsOf(container)).toHaveLength(1);
-    expect(container.textContent).not.toContain("Hosts events");
+    const rows = pillRowsOf(container);
+    expect(rows).toHaveLength(1);
+    // The highlight's own pill says it once; no badge repeats it.
+    expect(printedTextsOf(rows[0])).toEqual(["€€", "Hosts events"]);
   });
 
-  it("translates Free and keeps the empty first row on the list card", () => {
-    const { container } = renderPills({ price: "", highlights: [] });
+  it("translates Free and keeps the empty first row on the list card", async () => {
+    const { container } = await renderPills({ price: "", highlights: [] });
     const rows = pillRowsOf(container);
     expect(rows).toHaveLength(1);
     expect(container.textContent).toBe("");
-    const { container: freeContainer } = renderPills({ price: "Free" });
+    const { container: freeContainer } = await renderPills({ price: "Free" });
     expect(printedTextsOf(pillRowsOf(freeContainer)[0])).toEqual(["Free"]);
   });
 
-  it("renders nothing on the Online tab card when there is nothing to say", () => {
-    const { container } = renderPills({ price: "", highlights: [] }, true);
-    expect(container.firstChild).toBeNull();
+  it("renders nothing on the Online tab card when there is nothing to say", async () => {
+    const { getByTestId } = await renderPills(
+      { price: "", highlights: [] },
+      true,
+    );
+    expect(getByTestId("pills-host")).toBeEmptyDOMElement();
   });
 
-  it("shows only the badge row on the Online tab card when row one is empty", () => {
-    const { container } = renderPills(
+  it("shows only the badge row on the Online tab card when row one is empty", async () => {
+    const { container } = await renderPills(
       { price: "", highlights: [], online: true, hostsGatherings: true },
       true,
     );

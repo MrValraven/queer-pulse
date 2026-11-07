@@ -8,6 +8,7 @@ import {
   type JoinRefusalPanelKind,
 } from "./api/communityJoin.api";
 import type { CommunityRulesState } from "./api/useCommunityJoin";
+import { communityErrorText } from "./communityErrors";
 
 /** What the applicant filled in on the wizard's last step. */
 export interface JoinModalAnswers {
@@ -119,7 +120,7 @@ export function useJoinModalSubmit({
     } catch (error) {
       const refused = joinRefusalFor(error);
       if (!refused) {
-        setErrorMessage(t("communities:join.about.errorFallback"));
+        setErrorMessage(communityErrorText(t, error));
       } else if (refused.kind === "rulesChanged") {
         // The rules moved while this modal was open. Re-read them, drop the
         // stale acknowledgement, and put the applicant back on the step with

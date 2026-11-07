@@ -1,9 +1,10 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../../test/TestProviders";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 import { VjCrossfader, type VjCrossfaderProps } from "./VjCrossfader";
 
-function renderCrossfader(overrides: Partial<VjCrossfaderProps> = {}) {
+async function renderCrossfader(overrides: Partial<VjCrossfaderProps> = {}) {
   const props: VjCrossfaderProps = {
     value: 0.25,
     onChange: vi.fn(),
@@ -17,6 +18,7 @@ function renderCrossfader(overrides: Partial<VjCrossfaderProps> = {}) {
       <VjCrossfader {...props} />
     </TestProviders>,
   );
+  await awaitCatalog("vj");
   return { props, slider: screen.getByRole("slider", { name: "Crossfader" }) };
 }
 
@@ -31,9 +33,9 @@ describe("VjCrossfader", () => {
     vi.restoreAllMocks();
   });
 
-  it("maps the slider to 0..1 in 0.01 steps", () => {
+  it("maps the slider to 0..1 in 0.01 steps", async () => {
     setNow(1000);
-    const { props, slider } = renderCrossfader({ value: 0.25 });
+    const { props, slider } = await renderCrossfader({ value: 0.25 });
     expect(slider).toHaveValue("25");
     expect(slider).toHaveAttribute("min", "0");
     expect(slider).toHaveAttribute("max", "100");
@@ -43,9 +45,9 @@ describe("VjCrossfader", () => {
     expect(slider).toHaveValue("37");
   });
 
-  it("sends at most one value per 50 ms and the final value on release", () => {
+  it("sends at most one value per 50 ms and the final value on release", async () => {
+    const { props, slider } = await renderCrossfader({ value: 0 });
     vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
-    const { props, slider } = renderCrossfader({ value: 0 });
     setNow(1000);
     fireEvent.change(slider, { target: { value: "10" } });
     setNow(1020);
@@ -61,9 +63,9 @@ describe("VjCrossfader", () => {
     expect(props.onChange).toHaveBeenCalledTimes(2);
   });
 
-  it("calls onRelease on pointer up and on blur", () => {
+  it("calls onRelease on pointer up and on blur", async () => {
     setNow(1000);
-    const { props, slider } = renderCrossfader();
+    const { props, slider } = await renderCrossfader();
     fireEvent.change(slider, { target: { value: "40" } });
     fireEvent.pointerUp(slider);
     expect(props.onRelease).toHaveBeenCalledTimes(1);
@@ -76,15 +78,21 @@ describe("VjCrossfader", () => {
     expect(props.onRelease).toHaveBeenCalledTimes(2);
   });
 
-  it("names the mix share in aria-valuetext", () => {
-    const { slider } = renderCrossfader({ value: 0.4, hasMixClip: false });
+  it("names the mix share in aria-valuetext", async () => {
+    const { slider } = await renderCrossfader({
+      value: 0.4,
+      hasMixClip: false,
+    });
     expect(slider).toHaveAttribute("aria-valuetext", "40% mix clip");
     expect(slider).toHaveAccessibleDescription("Pick a clip to mix in");
   });
 
-  it("is aria-disabled and sends nothing while blocked", () => {
+  it("is aria-disabled and sends nothing while blocked", async () => {
     setNow(1000);
-    const { props, slider } = renderCrossfader({ value: 0.5, isBlocked: true });
+    const { props, slider } = await renderCrossfader({
+      value: 0.5,
+      isBlocked: true,
+    });
     expect(slider).toHaveAttribute("aria-disabled", "true");
     expect(slider).not.toBeDisabled();
     fireEvent.change(slider, { target: { value: "80" } });

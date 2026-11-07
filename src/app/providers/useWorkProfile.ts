@@ -3,6 +3,14 @@ import { type WorkPreferencesDTO } from "../../features/economy/api/workPreferen
 import { useWorkPreferences } from "../../features/economy/api/useWorkPreferences";
 
 /**
+ * How a save ended. A failure carries the error it ended with, so the page can
+ * name the cause (offline, signed out, rate limited, server fault) instead of
+ * one fixed line.
+ */
+export type WorkProfileSaveResult =
+  { isSaved: true } | { isSaved: false; error: unknown };
+
+/**
  * The overlay-only slice: the working copy and its mutators. Deliberately does
  * NOT carry `loading`, which belongs to the query the composition hook owns.
  */
@@ -25,13 +33,15 @@ export interface WorkProfileContextValue {
   /** True while a save is in flight. */
   saving: boolean;
   /**
-   * Persist the current values. Resolves `true` only when the server has them.
+   * Persist the current values. Resolves `{ isSaved: true }` only when the
+   * server has them.
    *
    * On failure the working copy is rolled back to what the server still holds,
    * so the editor can never keep showing an outness setting that was never
-   * written — callers must not show a success state on `false`.
+   * written. Callers must not show a success state unless `isSaved` is true;
+   * the failure result carries the error that ended the write.
    */
-  save: () => Promise<boolean>;
+  save: () => Promise<WorkProfileSaveResult>;
   /**
    * Adopt the stored preferences. Idempotent per live session: only the FIRST
    * call lands. Hydration is now driven by whichever consumer's query resolves,

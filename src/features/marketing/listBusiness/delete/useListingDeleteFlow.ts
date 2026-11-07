@@ -1,5 +1,10 @@
 import { useEffect, useId, useRef, useState } from "react";
 import {
+  causeErrorKey,
+  type CauseErrorCopy,
+} from "../../../../shared/api/causeErrorKey";
+import { LISTING_DELETE_OVERRIDES } from "../../marketingErrorCopy";
+import {
   LISTING_DELETE_STEPS,
   type ListingDeleteFlowVariant,
 } from "./listingDeleteFlow.data";
@@ -27,7 +32,9 @@ export function useListingDeleteFlow({
   const [reason, setReason] = useState("");
   const [typedName, setTypedName] = useState("");
   const [isPending, setIsPending] = useState(false);
-  const [hasDeleteFailed, setHasDeleteFailed] = useState(false);
+  // Why the last delete failed, or null: the step shows this cause line.
+  const [deleteFailureCause, setDeleteFailureCause] =
+    useState<CauseErrorCopy | null>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const deleteButtonRef = useRef<HTMLButtonElement>(null);
   // The "Step 2 of 4" line lives in Modal's eyebrow; each step heading points
@@ -81,7 +88,7 @@ export function useListingDeleteFlow({
     if (isPending) return;
     // Leaving the last step retires its failure alert, so coming back to it
     // does not mount and announce the old error again.
-    setHasDeleteFailed(false);
+    setDeleteFailureCause(null);
     setStepIndex((previousIndex) => Math.max(0, previousIndex - 1));
   };
 
@@ -91,18 +98,18 @@ export function useListingDeleteFlow({
     }
     isSubmittingRef.current = true;
     setIsPending(true);
-    setHasDeleteFailed(false);
+    setDeleteFailureCause(null);
     try {
       await onConfirmDelete(
         variant === "moderator" ? reason.trim() : undefined,
       );
       // Success: the caller unmounts the flow. Staying pending until then
       // keeps Delete, Back and Cancel disabled for the last few frames.
-    } catch {
+    } catch (error) {
       isSubmittingRef.current = false;
       if (!isMountedRef.current) return;
       setIsPending(false);
-      setHasDeleteFailed(true);
+      setDeleteFailureCause(causeErrorKey(error, LISTING_DELETE_OVERRIDES));
       // Delete stays focusable while pending (it is only aria-disabled), so
       // this puts focus back on it if anything moved it in the meantime.
       deleteButtonRef.current?.focus();
@@ -125,7 +132,7 @@ export function useListingDeleteFlow({
     typedName,
     setTypedName,
     isPending,
-    hasDeleteFailed,
+    deleteFailureCause,
     goToNextStep,
     goToPreviousStep,
     confirmDelete,

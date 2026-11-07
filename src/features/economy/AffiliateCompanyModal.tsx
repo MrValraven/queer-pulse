@@ -9,6 +9,7 @@ import { COMPANY_PROFILES } from "./companies.data";
 import { useCompanies } from "./api/useCompanies";
 import { useCreateCompany } from "./api/useCompanyMutations";
 import { AFFILIATION_ROLES } from "./postJob.data";
+import { COMPANY_CREATE_OVERRIDES, failureToast } from "./economyErrorCopy";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./PostJobPage.module.css";
@@ -190,8 +191,16 @@ export function AffiliateCompanyModal({
           affiliate(res.slug, role);
           onAffiliated();
         }
-      } catch {
-        showToast(t("economy:affiliateCompanyModal.createErrorToast"), "error");
+      } catch (error) {
+        showToast(
+          failureToast(
+            error,
+            t,
+            "economy:affiliateCompanyModal.createErrorTitle",
+            COMPANY_CREATE_OVERRIDES,
+          ),
+          "error",
+        );
       }
       return;
     }

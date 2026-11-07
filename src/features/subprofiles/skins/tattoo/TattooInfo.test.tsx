@@ -12,6 +12,7 @@ import { TattooBooking } from "./TattooBooking";
 import { TattooPrices } from "./TattooPrices";
 import { TattooStyles } from "./TattooStyles";
 import { buildTattooView } from "./tattooView";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 // Unrun per repo policy: verified statically.
 
@@ -95,21 +96,23 @@ function makeData(
   } as PublicSubprofileView;
 }
 
-function renderBlock(
+async function renderBlock(
   Block: typeof TattooBooking,
   data: PublicSubprofileView,
   mode: "public" | "preview" = "public",
 ) {
   const view = buildTattooView(data, TODAY);
-  return render(
+  const rendered = render(
     <TestProviders>
       <Block data={data} view={view} mode={mode} />
     </TestProviders>,
   );
+  await awaitCatalog("subprofiles");
+  return rendered;
 }
 
 describe("tattoo booking and care blocks", () => {
-  it("offers the Instagram route when the persona links Instagram", () => {
+  it("offers the Instagram route when the persona links Instagram", async () => {
     const data = makeData(
       { tattooBooking: { route: "instagram" } },
       {
@@ -118,12 +121,12 @@ describe("tattoo booking and care blocks", () => {
         ] as never,
       },
     );
-    renderBlock(TattooBooking, data);
+    await renderBlock(TattooBooking, data);
     const link = screen.getByRole("link", { name: "Message on Instagram" });
     expect(link.getAttribute("href")).toBe(socialHref("instagram", "@inkwell"));
   });
 
-  it("falls back to what to send when the route cannot be used", () => {
+  it("falls back to what to send when the route cannot be used", async () => {
     const data = makeData({
       tattooBooking: {
         route: "email",
@@ -131,32 +134,32 @@ describe("tattoo booking and care blocks", () => {
         whatToSend: ["idea", "placement"],
       },
     });
-    renderBlock(TattooBooking, data);
+    await renderBlock(TattooBooking, data);
     expect(screen.queryByText("Email to book")).toBeNull();
     expect(screen.getByText("Your idea")).toBeTruthy();
     expect(screen.getByText("Placement")).toBeTruthy();
   });
 
-  it("shows the minimum and the deposit", () => {
+  it("shows the minimum and the deposit", async () => {
     const data = makeData({
       tattooPrices: {
         minimum: "80",
         deposit: { amount: "50", isRefundable: true },
       },
     });
-    renderBlock(TattooPrices, data);
+    await renderBlock(TattooPrices, data);
     expect(screen.getByText("Minimum €80")).toBeTruthy();
     expect(screen.getByText("Deposit €50")).toBeTruthy();
     expect(screen.getByText("Refundable")).toBeTruthy();
   });
 
-  it("repeats the touch-up policy under aftercare", () => {
+  it("repeats the touch-up policy under aftercare", async () => {
     const data = makeData(
       { tattooPrices: { touchUps: { isFree: true, months: "3" } } },
       {},
       ["Keep it wrapped", "Wash gently", "Moisturise"],
     );
-    renderBlock(TattooAftercare, data);
+    await renderBlock(TattooAftercare, data);
     const region = screen.getByRole("region", { name: "Aftercare" });
     const policy = within(region).getByText("Free touch-ups within 3 months");
     const lastStep = within(region).getByText("Moisturise");
@@ -166,7 +169,7 @@ describe("tattoo booking and care blocks", () => {
     ).toBeTruthy();
   });
 
-  it("keeps the touch-up policy out of prices while aftercare shows it", () => {
+  it("keeps the touch-up policy out of prices while aftercare shows it", async () => {
     const data = makeData(
       {
         tattooPrices: {
@@ -177,27 +180,27 @@ describe("tattoo booking and care blocks", () => {
       {},
       ["Keep it wrapped"],
     );
-    renderBlock(TattooPrices, data);
+    await renderBlock(TattooPrices, data);
     expect(screen.getByText("Minimum €80")).toBeTruthy();
     expect(screen.queryByText("Free touch-ups within 3 months")).toBeNull();
   });
 
-  it("shows the touch-up policy under prices when aftercare has no steps", () => {
+  it("shows the touch-up policy under prices when aftercare has no steps", async () => {
     const data = makeData({
       tattooPrices: {
         minimum: "80",
         touchUps: { isFree: true, months: "3" },
       },
     });
-    renderBlock(TattooPrices, data);
+    await renderBlock(TattooPrices, data);
     expect(screen.getByText("Free touch-ups within 3 months")).toBeTruthy();
   });
 
-  it("labels the colour and the smallest size", () => {
+  it("labels the colour and the smallest size", async () => {
     const data = makeData({
       tattooStyles: { colour: "black_grey", minSize: "5 cm" },
     });
-    renderBlock(TattooStyles, data);
+    await renderBlock(TattooStyles, data);
     const colourLabel = screen.getByText("Colour");
     expect(colourLabel.tagName).toBe("DT");
     expect(colourLabel.nextElementSibling?.textContent).toBe("Black and grey");
@@ -206,20 +209,20 @@ describe("tattoo booking and care blocks", () => {
     expect(sizeLabel.nextElementSibling?.textContent).toBe("5 cm");
   });
 
-  it("numbers aftercare steps in order", () => {
+  it("numbers aftercare steps in order", async () => {
     const titles = ["Keep it wrapped", "Wash gently", "Moisturise"];
-    renderBlock(TattooAftercare, makeData({}, {}, titles));
+    await renderBlock(TattooAftercare, makeData({}, {}, titles));
     const list = screen.getByRole("list");
     expect(list.tagName).toBe("OL");
     const items = within(list).getAllByRole("listitem");
     expect(items.map((item) => item.textContent)).toEqual(titles);
   });
 
-  it("shows the artist's own style words as written", () => {
+  it("shows the artist's own style words as written", async () => {
     const data = makeData({
       tattooStyles: { styles: ["fine_line", "Botanical blackwork"] },
     });
-    renderBlock(TattooStyles, data);
+    await renderBlock(TattooStyles, data);
     expect(screen.getByText("Fine line")).toBeTruthy();
     expect(screen.getByText("Botanical blackwork")).toBeTruthy();
   });

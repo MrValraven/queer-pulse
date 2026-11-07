@@ -1,12 +1,7 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
-import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
-import { I18nProvider } from "../../app/providers/I18nProvider";
-import { DemoModeProvider } from "../../app/providers/DemoModeProvider";
-import { AuthProvider } from "../../app/providers/AuthProvider";
-import { ToastProvider } from "../../shared/components/feedback/ToastProvider";
+import { TestProviders } from "../../test/TestProviders";
 import { DirectoryActionBar } from "./DirectoryActionBar";
 import { DirectorySpaceHeader } from "./DirectorySpaceHeader";
 import { MOBILE_DIRECTORY_PLACES } from "./directoryMobilePlaces.data";
@@ -18,23 +13,10 @@ vi.mock("./LocationMiniMap", () => ({
   ),
 }));
 
+/** The action bar reads the saved list, the session and the router, so the
+ *  detail parts mount inside the full provider set. */
 function renderDetail(node: ReactNode) {
-  const queryClient = new QueryClient({
-    defaultOptions: { queries: { retry: false } },
-  });
-  return render(
-    <QueryClientProvider client={queryClient}>
-      <I18nProvider>
-        <DemoModeProvider>
-          <AuthProvider>
-            <ToastProvider>
-              <MemoryRouter>{node}</MemoryRouter>
-            </ToastProvider>
-          </AuthProvider>
-        </DemoModeProvider>
-      </I18nProvider>
-    </QueryClientProvider>,
-  );
+  return render(node, { wrapper: TestProviders });
 }
 
 const fixture = (slug: string): DirectoryPlace =>

@@ -156,9 +156,9 @@ describe("StudioLandingCta for a member without Studio access", () => {
     await waitFor(() =>
       expect(mocks.request).toHaveBeenCalledWith({ wantsToRelease: true }),
     );
-    expect(await screen.findByRole("status")).toHaveTextContent(
-      "Request sent. You're on the list",
-    );
+    expect(
+      await screen.findByText("Request sent. You're on the list"),
+    ).toHaveAttribute("role", "status");
     expect(
       screen.queryByRole("link", { name: "Request an invite" }),
     ).toBeNull();
@@ -207,8 +207,9 @@ describe("StudioLandingCta for a member without Studio access", () => {
     expect(screen.queryByRole("button", { name: REQUEST_BUTTON })).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Cancel request" }));
     await waitFor(() => expect(mocks.cancel).toHaveBeenCalledTimes(1));
-    expect(await screen.findByRole("status")).toHaveTextContent(
-      "Request cancelled",
+    expect(await screen.findByText("Request cancelled")).toHaveAttribute(
+      "role",
+      "status",
     );
   });
 
@@ -233,9 +234,11 @@ describe("StudioLandingCta for a member without Studio access", () => {
     fireEvent.click(
       await screen.findByRole("button", { name: REQUEST_BUTTON }),
     );
-    expect(await screen.findByRole("alert")).toHaveTextContent(
-      "We couldn't send your request. Our server couldn't save this. This one is on us, so try again in a moment",
-    );
+    expect(
+      await screen.findByText(
+        "We couldn't send your request. Our server couldn't save this. This one is on us, so try again in a moment",
+      ),
+    ).toHaveAttribute("role", "alert");
   });
 
   it("names the reason a cancel failed", async () => {
@@ -246,9 +249,11 @@ describe("StudioLandingCta for a member without Studio access", () => {
     fireEvent.click(
       await screen.findByRole("button", { name: "Cancel request" }),
     );
-    expect(await screen.findByRole("alert")).toHaveTextContent(
-      /^We couldn't cancel your request\. Our server couldn't save this/,
-    );
+    expect(
+      await screen.findByText(
+        /^We couldn't cancel your request\. Our server couldn't save this/,
+      ),
+    ).toHaveAttribute("role", "alert");
   });
 
   it("shows no failure line for a request that already exists", async () => {
@@ -260,7 +265,11 @@ describe("StudioLandingCta for a member without Studio access", () => {
       await screen.findByRole("button", { name: REQUEST_BUTTON }),
     );
     await waitFor(() => expect(mocks.request).toHaveBeenCalledTimes(1));
-    expect(screen.queryByRole("alert")).toBeNull();
+    // The toast stack keeps an empty alert region mounted; no alert says
+    // anything.
+    for (const alert of screen.queryAllByRole("alert")) {
+      expect(alert).toBeEmptyDOMElement();
+    }
   });
 
   it("shows a quiet checking line while the access read is pending, and no invite link", async () => {
@@ -327,9 +336,9 @@ describe("StudioLandingCta compact member variant", () => {
     await waitFor(() =>
       expect(screen.getByText("You're on the list")).toHaveFocus(),
     );
-    expect(screen.getByRole("status")).toHaveTextContent(
-      "Request sent. You're on the list",
-    );
+    expect(
+      screen.getByText("Request sent. You're on the list"),
+    ).toHaveAttribute("role", "status");
   });
 
   it("the closing posts the audience", async () => {

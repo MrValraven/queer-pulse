@@ -2,17 +2,20 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import { LazyMotion, domMax } from "motion/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../../../test/TestProviders";
+import { awaitCatalog } from "../../../../../test/awaitCatalog";
 import { VJ_SHORTCUT_ROWS } from "../../input/vjKeymap";
 import { VjShortcutsSheet } from "./VjShortcutsSheet";
 
-function renderShortcutsSheet(onClose: () => void = vi.fn()) {
-  return render(
+async function renderShortcutsSheet(onClose: () => void = vi.fn()) {
+  const renderedView = render(
     <TestProviders>
       <LazyMotion features={domMax}>
         <VjShortcutsSheet onClose={onClose} />
       </LazyMotion>
     </TestProviders>,
   );
+  await awaitCatalog("vj");
+  return renderedView;
 }
 
 /** The key caps of the row whose label reads `label`, in order. */
@@ -25,8 +28,8 @@ function keyCapsOf(label: string): string[] {
 }
 
 describe("VjShortcutsSheet", () => {
-  it("the shortcuts sheet lists every row with its keys", () => {
-    renderShortcutsSheet();
+  it("the shortcuts sheet lists every row with its keys", async () => {
+    await renderShortcutsSheet();
     const dialog = screen.getByRole("dialog", { name: "Keyboard shortcuts" });
     expect(within(dialog).getAllByRole("listitem")).toHaveLength(
       VJ_SHORTCUT_ROWS.length,
@@ -47,17 +50,17 @@ describe("VjShortcutsSheet", () => {
     expect(keyCapsOf("Show this list")).toEqual(["Shift", "/"]);
   });
 
-  it("prints no raw i18n key on a chip", () => {
-    renderShortcutsSheet();
+  it("prints no raw i18n key on a chip", async () => {
+    await renderShortcutsSheet();
     const dialog = screen.getByRole("dialog", { name: "Keyboard shortcuts" });
     for (const keyCap of Array.from(dialog.querySelectorAll("kbd"))) {
       expect(keyCap.textContent).not.toMatch(/^vj:/);
     }
   });
 
-  it("the footer button closes the sheet", () => {
+  it("the footer button closes the sheet", async () => {
     const onClose = vi.fn();
-    renderShortcutsSheet(onClose);
+    await renderShortcutsSheet(onClose);
     fireEvent.click(screen.getByRole("button", { name: "Close shortcuts" }));
     expect(onClose).toHaveBeenCalled();
   });

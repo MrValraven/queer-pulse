@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { routes } from "../../../../app/routeMap";
+import { ownerOfferAnswerCause, toastForCause } from "../../marketingErrorCopy";
 import type { ListingOwnerOfferDTO } from "../api/ownerOffers.api";
 import { useAnswerOwnerOffer, useOwnerOffers } from "../api/useOwnerOffers";
 import { OwnerOfferRow } from "./OwnerOfferRow";
@@ -58,9 +59,16 @@ export function OwnerOfferInbox() {
             routes.listBusinessEdit.replace(":ref", offer.listingRef),
           );
         },
-        onError: () => {
+        onError: (error) => {
           setAnsweringId(null);
-          showToast(t("members:places.ownerOffers.error"), "error");
+          showToast(
+            toastForCause(
+              ownerOfferAnswerCause(error),
+              t,
+              "marketing:listBusiness.ownerOffers.errorTitle",
+            ),
+            "error",
+          );
         },
       },
     );

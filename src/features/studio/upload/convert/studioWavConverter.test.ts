@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import "../studioJsdomBlobBytes";
 import type { PcmHeader, PcmHeaderResult } from "./studioPcmHeader";
 import { aiffBytes, wavBytes } from "./studioPcmTestFiles";
 import type {

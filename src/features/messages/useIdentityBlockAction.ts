@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { identityBlockCause } from "./api/messageErrorCopy";
 import type { IdentityKind } from "../../shared/contracts/contracts";
 import {
   useBlockIdentity,
@@ -55,8 +56,9 @@ export function useIdentityBlockAction(
           "success",
         );
       },
-      onError: () => {
-        showToast(t("messages:mailbox.block.error"), "error");
+      onError: (error) => {
+        const cause = identityBlockCause(error);
+        showToast(t(cause.key, cause.values), "error");
       },
     });
   };
@@ -86,9 +88,10 @@ export function useIdentityBlockAction(
           // The thread just closed for both sides; nothing is left to show.
           void navigate(routes.messages);
         },
-        onError: () => {
+        onError: (error) => {
           setIsConfirming(false);
-          showToast(t("messages:mailbox.block.error"), "error");
+          const cause = identityBlockCause(error);
+          showToast(t(cause.key, cause.values), "error");
         },
       },
     );

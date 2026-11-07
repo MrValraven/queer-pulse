@@ -13,6 +13,7 @@ import {
 } from "./SpaceBasicsFields";
 import { SpaceTierPicker } from "./SpaceTierPicker";
 import { SpaceRulesField } from "./SpaceRulesField";
+import { communityErrorText } from "./communityErrors";
 import styles from "./CreateSpaceForm.module.css";
 
 const EMPTY_BASICS: SpaceBasicsValues = {
@@ -195,10 +196,12 @@ export function CreateSpaceForm({
         onCreated(detail.slug);
       },
       onError: (error) => {
-        const messageKey = isSpacesNotAllowedError(error)
-          ? "communities:spaces.mod.notAllowed"
-          : "communities:spaces.mod.createError";
-        showToast(t(messageKey), "error");
+        showToast(
+          isSpacesNotAllowedError(error)
+            ? t("communities:spaces.mod.notAllowed")
+            : communityErrorText(t, error),
+          "error",
+        );
       },
     });
   };

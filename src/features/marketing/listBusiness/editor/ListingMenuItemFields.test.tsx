@@ -4,6 +4,7 @@ import { TestProviders } from "../../../../test/TestProviders";
 import type { ListingMenuItemRow } from "../listingMenu.data";
 import type { ListingForm } from "../useListingForm";
 import { ListingMenuItemFields } from "./ListingMenuItemFields";
+import { awaitCatalog } from "../../../../test/awaitCatalog";
 
 const flatWhite: ListingMenuItemRow = {
   id: "item-1",
@@ -13,7 +14,7 @@ const flatWhite: ListingMenuItemRow = {
   dietary: [],
 };
 
-function renderItem(item: ListingMenuItemRow = flatWhite) {
+async function renderItem(item: ListingMenuItemRow = flatWhite) {
   const form = {
     setMenuItemField: vi.fn(),
     toggleMenuItemDietary: vi.fn(),
@@ -31,18 +32,19 @@ function renderItem(item: ListingMenuItemRow = flatWhite) {
     />,
     { wrapper: TestProviders },
   );
+  await awaitCatalog("marketing");
   return form;
 }
 
 describe("ListingMenuItemFields", () => {
-  it("renders a single price field for a direct item", () => {
-    renderItem();
+  it("renders a single price field for a direct item", async () => {
+    await renderItem();
     expect(screen.getAllByPlaceholderText("2.50")).toHaveLength(1);
     expect(screen.queryByText("/")).not.toBeInTheDocument();
   });
 
-  it("writes the typed price to the price field of the item", () => {
-    const form = renderItem();
+  it("writes the typed price to the price field of the item", async () => {
+    const form = await renderItem();
     fireEvent.change(screen.getByPlaceholderText("2.50"), {
       target: { value: "3.20" },
     });
@@ -51,8 +53,8 @@ describe("ListingMenuItemFields", () => {
     });
   });
 
-  it("writes the description through the shared extras", () => {
-    const form = renderItem();
+  it("writes the description through the shared extras", async () => {
+    const form = await renderItem();
     fireEvent.change(
       screen.getByPlaceholderText("Double shot, whole or oat milk"),
       { target: { value: "Oat milk" } },
@@ -62,8 +64,8 @@ describe("ListingMenuItemFields", () => {
     });
   });
 
-  it("routes move and remove buttons to the form with the item id", () => {
-    const form = renderItem();
+  it("routes move and remove buttons to the form with the item id", async () => {
+    const form = await renderItem();
     fireEvent.click(screen.getByRole("button", { name: "Move Flat white up" }));
     fireEvent.click(
       screen.getByRole("button", { name: "Move Flat white down" }),

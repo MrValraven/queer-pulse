@@ -14,6 +14,7 @@ import {
   useAcceptCommunityRules,
   useCommunityPreferences,
 } from "./api/useCommunityPreferences";
+import { communityErrorText } from "./communityErrors";
 import styles from "./CommunityRulesUpdateNotice.module.css";
 
 /**
@@ -71,8 +72,7 @@ export function CommunityRulesUpdateNotice({
           t("communities:detail.rulesUpdate.confirmedToast"),
           "success",
         ),
-      onError: () =>
-        showToast(t("communities:detail.rulesUpdate.errorToast"), "error"),
+      onError: (error) => showToast(communityErrorText(t, error), "error"),
     });
   };
 

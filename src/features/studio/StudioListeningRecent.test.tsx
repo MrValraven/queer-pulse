@@ -8,6 +8,7 @@ import {
 import { QueryClient } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import {
   toListenView,
   type StudioListenView,
@@ -113,9 +114,11 @@ function mockedTree() {
   );
 }
 
-function renderMocked() {
+async function renderMocked() {
   mocks.isMocked = true;
-  return render(mockedTree());
+  const view = render(mockedTree());
+  await awaitCatalog("studio");
+  return view;
 }
 
 /** Show more while it can still be pressed: a footer folding away is inert. */
@@ -136,6 +139,7 @@ beforeEach(() => {
 describe("StudioListeningRecent", () => {
   it("lists the history newest first with when each played", async () => {
     render(mockedTree());
+    await awaitCatalog("studio");
     expect(
       await screen.findByRole("heading", { name: "Played lately" }),
     ).toBeInTheDocument();
@@ -144,6 +148,7 @@ describe("StudioListeningRecent", () => {
 
   it("shows more of the history and moves focus to the first new row on the last page", async () => {
     render(mockedTree());
+    await awaitCatalog("studio");
     await screen.findByRole("button", { name: SHOW_MORE });
     for (let page = 0; page < 10 && liveShowMoreButton(); page += 1) {
       const before = screen.getAllByRole("listitem").length;
@@ -160,22 +165,22 @@ describe("StudioListeningRecent", () => {
     expect(document.activeElement?.closest("li")).not.toBeNull();
   });
 
-  it("says a track is no longer available", () => {
+  it("says a track is no longer available", async () => {
     mocks.pager = pagerWith([listenView({ track: null })]);
-    renderMocked();
+    await renderMocked();
     expect(
       screen.getByText("This track is no longer available"),
     ).toBeInTheDocument();
     expect(screen.getByText(PLAYED_ON)).toBeInTheDocument();
   });
 
-  it("keeps the loaded rows when the next page fails, and shows the empty line", () => {
+  it("keeps the loaded rows when the next page fails, and shows the empty line", async () => {
     mocks.pager = pagerWith([listenView({})], {
       isFetchNextPageError: true,
       fetchNextPageError: new TypeError("Failed to fetch"),
       loadState: errorLoadState(),
     });
-    const { unmount } = renderMocked();
+    const { unmount } = await renderMocked();
     expect(screen.getAllByRole("listitem")).toHaveLength(1);
     expect(screen.queryByText(/your listening history/)).toBeNull();
     expect(
@@ -188,21 +193,21 @@ describe("StudioListeningRecent", () => {
     ).toBeInTheDocument();
     unmount();
     mocks.pager = pagerWith([]);
-    const { unmount: unmountEmpty } = renderMocked();
+    const { unmount: unmountEmpty } = await renderMocked();
     expect(
       screen.getByText("Play a track for 30 seconds and it lands here"),
     ).toBeInTheDocument();
     unmountEmpty();
     mocks.pager = pagerWith([], { loadState: errorLoadState() });
-    renderMocked();
+    await renderMocked();
     expect(screen.getByText(/your listening history/)).toBeInTheDocument();
   });
 
-  it("moves focus into an unavailable listen when it is the first new row", () => {
+  it("moves focus into an unavailable listen when it is the first new row", async () => {
     const fetchNextPage = vi.fn();
     const firstPage = [listenView({ id: "listen-page-1" })];
     mocks.pager = pagerWith(firstPage, { hasMore: true, fetchNextPage });
-    const { rerender } = renderMocked();
+    const { rerender } = await renderMocked();
     const showMore = screen.getByRole("button", { name: SHOW_MORE });
     showMore.focus();
     fireEvent.click(showMore);
@@ -221,10 +226,10 @@ describe("StudioListeningRecent", () => {
     );
   });
 
-  it("says new plays stay out of the list while history is paused", () => {
+  it("says new plays stay out of the list while history is paused", async () => {
     mocks.isHistoryOn = false;
     mocks.pager = pagerWith([]);
-    renderMocked();
+    await renderMocked();
     expect(
       screen.getByText(
         "Your history is paused, so new plays stay out of this list",
@@ -235,7 +240,7 @@ describe("StudioListeningRecent", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("drops the release from a row whose release shares the track's title", () => {
+  it("drops the release from a row whose release shares the track's title", async () => {
     const listen = listenView({});
     if (!listen.track) throw new Error("The test listen has no track");
     const track = listen.track;
@@ -248,7 +253,7 @@ describe("StudioListeningRecent", () => {
         },
       }),
     ]);
-    renderMocked();
+    await renderMocked();
     const row = screen.getByRole("listitem");
     expect(
       within(row).getAllByRole("link", { name: /pedro on the 25/i }),
