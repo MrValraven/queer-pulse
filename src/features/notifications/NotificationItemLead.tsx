@@ -5,9 +5,10 @@ import type { Notification } from "./data";
 import styles from "./NotificationsPage.module.css";
 
 /**
- * The shape of a row's leading picture. `round` is the 40px circle the bell
- * popover uses (36px there); `rect` is the notifications page's 4:5 portrait
- * picture, 64px wide by 80px tall.
+ * The shape of a row's leading picture. `round` is the classic row's 40px
+ * circle (36px in a compact row); `rect` is the content row's 4:5 portrait
+ * picture, 64px wide by 80px tall, which the notifications page and the bell
+ * popover use.
  */
 export type NotificationLeadShape = "round" | "rect";
 
@@ -22,7 +23,7 @@ const AVATAR_SIZE_BY_SHAPE = {
   rect: 80,
 } as const satisfies Record<NotificationLeadShape, number>;
 
-/** The CSS-module class that draws the larger page shape. */
+/** The CSS-module class that draws the larger portrait shape. */
 const SHAPE_CLASS_BY_SHAPE: Record<NotificationLeadShape, string | undefined> =
   {
     round: undefined,
@@ -42,7 +43,7 @@ export function NotificationItemLead({
 }: {
   notification: Notification;
   isCompact: boolean;
-  /** Defaults to the round avatar, which the bell popover keeps. */
+  /** Defaults to the classic row's round avatar. */
   shape?: NotificationLeadShape;
 }) {
   const avatarSize =
@@ -94,7 +95,7 @@ export function NotificationItemLead({
 }
 
 /**
- * The page row's larger picture with its unread dot on the top-right corner.
+ * The content row's larger picture with its unread dot on the top-right corner.
  * The dot stays mounted, so marking the row read fades it out.
  */
 export function NotificationItemLeadFrame({

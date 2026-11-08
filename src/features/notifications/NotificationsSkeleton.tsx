@@ -52,20 +52,30 @@ function NotificationSkeleton({
 export function NotificationsListSkeleton({
   count = 7,
   leadShape = "round",
+  isInBellPopover = false,
 }: {
   count?: number;
-  /** The page passes its rows' shape; the bell keeps the round default. */
+  /** The shape of the rows it stands in for; `round` is the classic row. */
   leadShape?: NotificationLeadShape;
+  /** In the bell's popover the rows run edge to edge and there is no day
+   *  label, as in the list it stands in for. */
+  isInBellPopover?: boolean;
 }) {
   const { t } = useTranslation();
   const isContentRow = leadShape === "rect";
   return (
     <div
-      className={[styles.list, isContentRow && styles.listContent]
+      className={[
+        styles.list,
+        isContentRow && styles.listContent,
+        isInBellPopover && styles.listInPanel,
+      ]
         .filter(Boolean)
         .join(" ")}
     >
-      <div className={styles.day}>{t("notifications:page.dayRecent")}</div>
+      {!isInBellPopover && (
+        <div className={styles.day}>{t("notifications:page.dayRecent")}</div>
+      )}
       {Array.from({ length: count }).map((_, i) => (
         <NotificationSkeleton key={i} leadShape={leadShape} />
       ))}

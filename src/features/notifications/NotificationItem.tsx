@@ -56,11 +56,12 @@ export function NotificationItem({
   onDismiss: (id: NotificationId) => void;
   /** Names what the X does: `hideFromBell` in the bell, `delete` on the page. */
   dismissAction: NotificationDismissAction;
-  /** Tighter row for the nav bell's popover, where the panel is 400px wide. */
+  /** Tighter classic row for a 400px panel. Applies to the `round` row only:
+   *  the content row keeps its own spacing. */
   isCompact?: boolean;
-  /** `round` (default) is the classic row the bell keeps. `rect` takes the
-   *  page's content-first row: a 4:5 portrait picture, the sentence on top
-   *  and one meta line holding the kind and the time. */
+  /** `round` (default) is the classic row. `rect` takes the content-first row
+   *  the page and the bell popover use: a 4:5 portrait picture, the sentence
+   *  on top and one meta line holding the kind and the time. */
   leadShape?: NotificationLeadShape;
 }) {
   const { t } = useTranslation();
@@ -134,7 +135,7 @@ export function NotificationItem({
       className={[
         styles.item,
         isContentRow ? styles.contentRow : styles.notificationRow,
-        isCompact && styles.itemCompact,
+        isCompact && !isContentRow && styles.itemCompact,
         isUnread && styles.unread,
       ]
         .filter(Boolean)

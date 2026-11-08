@@ -63,6 +63,28 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "rsvp-notice-names-event",
+        category: "fix",
+        date: "8 Nov 2026",
+        ...entryKeys("rsvp-notice-names-event"),
+      },
+      {
+        id: "more-sheet-professional-card",
+        category: "improvement",
+        date: "8 Nov 2026",
+        ...entryKeys("more-sheet-professional-card"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "notifications-content-first-on-desktop",
+        category: "improvement",
+        date: "8 Nov 2026",
+        ...entryKeys("notifications-content-first-on-desktop"),
+      },
+      {
         id: "persona-photo-on-every-layout",
         category: "fix",
         date: "7 Nov 2026",

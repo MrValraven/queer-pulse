@@ -9,6 +9,7 @@ import { useNotifications } from "./api/useNotifications";
 import { useNotificationsReadState } from "./useNotificationsReadState";
 import type { Notification } from "./notifications.types";
 import styles from "./NotificationsPopover.module.css";
+import pageStyles from "./NotificationsPage.module.css";
 
 /** How many of the newest notifications the popover lists. The full history,
  * its filters and its pagination stay on the notifications page. */
@@ -17,9 +18,10 @@ const RECENT_NOTIFICATION_LIMIT = 20;
 /**
  * The inside of the bell's popover: a header with "Mark all as read", the
  * newest notifications in a scrolling list, and a footer button to the full
- * page. Rows are the page's own `NotificationItem`, so reading and answering a
- * connection request behave exactly as they do there. The X differs: here it
- * hides the row from the bell and marks it read, and the page keeps the row.
+ * page. Rows are the page's own content-first `NotificationItem`, so reading
+ * and answering a connection request behave exactly as they do there. The X
+ * differs: here it hides the row from the bell and marks it read, and the page
+ * keeps the row.
  */
 export function NotificationsPopoverPanel({ titleId }: { titleId: string }) {
   const { t } = useTranslation();
@@ -57,7 +59,10 @@ export function NotificationsPopoverPanel({ titleId }: { titleId: string }) {
   }
 
   function renderBody() {
-    if (isLoading) return <NotificationsListSkeleton count={4} />;
+    if (isLoading)
+      return (
+        <NotificationsListSkeleton count={4} leadShape="rect" isInBellPopover />
+      );
     // ENG-501: React Query also sets `isError` when a background refetch, or a
     // next page loaded on the full page (same cache), failed. Rows already
     // shown stay; the panel is for an inbox with nothing loaded.
@@ -94,7 +99,7 @@ export function NotificationsPopoverPanel({ titleId }: { titleId: string }) {
       );
     }
     return (
-      <div className={styles.list}>
+      <div className={`${styles.list} ${pageStyles.listInPanel}`}>
         {recent.map((notification, index) => (
           <NotificationItem
             key={notification.id}
@@ -105,7 +110,7 @@ export function NotificationsPopoverPanel({ titleId }: { titleId: string }) {
             onResolve={resolve}
             onDismiss={hideRowFromBell}
             dismissAction="hideFromBell"
-            isCompact
+            leadShape="rect"
           />
         ))}
       </div>

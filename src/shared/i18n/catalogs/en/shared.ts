@@ -599,7 +599,6 @@ export const shared: Catalog = {
   "mobileNav.desc.professionals": "Queer pros and services",
   "mobileNav.desc.forum": "Ask, share and talk",
   "mobileNav.desc.events": "What's on this week",
-  "mobileNav.desc.communities": "Groups you can join",
   "mobileNav.desc.activism": "Causes that need hands",
   "mobileNav.desc.businesses": "Queer-friendly places",
   "mobileNav.desc.housing": "Rooms and flatmates",

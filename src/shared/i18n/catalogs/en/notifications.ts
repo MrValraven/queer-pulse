@@ -291,6 +291,10 @@ export const notifications: Catalog = {
   "type.event_rsvp.textNamed":
     "<profile>{name}</profile> RSVP'd to your event.",
   "type.event_rsvp.meta": "Event RSVP",
+  "type.event_rsvp.titled.text": "Someone RSVP'd to {eventTitle}.",
+  "type.event_rsvp.titled.textNamed":
+    "<profile>{name}</profile> RSVP'd to {eventTitle}.",
+  "type.event_rsvp.titled.meta": "Event RSVP",
 
   "type.community_reply.text": "Someone replied to your post.",
   "type.community_reply.textNamed":

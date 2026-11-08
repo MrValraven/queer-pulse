@@ -35,6 +35,7 @@ import { communityPostPath } from "../../communities/communityPostPath";
 import { barterProposalsPath } from "../../economy/barterProposals.paths";
 import { adminQueueRoute } from "./adminQueueRoutes";
 import { studioReleasePath, studioTrackPath } from "../../studio/studioPaths";
+import { lifecycleKeyFor } from "./notificationKindCopy";
 import {
   lifecycleSourceHref,
   personaImportHref,
@@ -525,17 +526,20 @@ export function notificationDtoToView(
     const { entityKind, source } =
       (dto.payload as { entityKind?: string; source?: string } | null) ?? {};
     const isMemberMention = !entityKind || entityKind === "member";
-    // A collab answer names the responder in one line per decision.
+    // A collab answer names the responder in one line per decision. An RSVP
+    // row that carries the event's title reads the `event_rsvp.titled` pair.
     const namedKey =
       kind === COLLAB_RESPONSE_KIND
         ? collabResponseKey(dto.payload)
-        : kind !== "mention"
-          ? kind
-          : !isMemberMention
-            ? `mention.${entityKind}`
-            : source === "event"
-              ? "mention.gathering"
-              : kind;
+        : kind === "event_rsvp"
+          ? lifecycleKeyFor(kind, dto.payload)
+          : kind !== "mention"
+            ? kind
+            : !isMemberMention
+              ? `mention.${entityKind}`
+              : source === "event"
+                ? "mention.gathering"
+                : kind;
     view.actorSlug = hasProfile ? dto.actor.slug : undefined;
     const isPersonalized = Boolean(kind && PERSONALIZED_KINDS.has(kind));
     view.actor = {

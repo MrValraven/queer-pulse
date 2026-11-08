@@ -9,7 +9,6 @@ import {
   FiHelpCircle,
   FiHome,
   FiInfo,
-  FiLayers,
   FiMail,
   FiMessageSquare,
   FiMusic,
@@ -47,18 +46,19 @@ export interface MobileNavSection {
  * long tail to the footer. Labels reuse the keys `NAV_MENUS` owns, except
  * Studio and Cinema, whose desktop labels repeat their sheet description.
  * Order matters in the first section: `MoreSheetRows` lifts its first two
- * tiles (Communities, then the Local Business directory) into the coral and
- * plum shortcut cards above the list.
+ * tiles (the Professional directory, then the Local Business directory) into
+ * the coral and plum shortcut cards above the list. Communities is left out
+ * because the bottom bar already carries it.
  */
 export const MOBILE_NAV_SECTIONS: MobileNavSection[] = [
   {
     headKey: "shared:megaNav.community.title",
     tiles: [
       {
-        labelKey: "nav:communities",
-        href: routes.communities,
-        icon: FiLayers,
-        descriptionKey: "shared:mobileNav.desc.communities",
+        labelKey: "shared:megaNav.community.col.people.professionalDirectory",
+        href: routes.subprofiles,
+        icon: FiBriefcase,
+        descriptionKey: "shared:mobileNav.desc.professionals",
       },
       {
         labelKey: "shared:megaNav.community.col.discover.businessDirectory",
@@ -71,12 +71,6 @@ export const MOBILE_NAV_SECTIONS: MobileNavSection[] = [
         href: routes.members,
         icon: FiUsers,
         descriptionKey: "shared:mobileNav.desc.members",
-      },
-      {
-        labelKey: "shared:megaNav.community.col.people.professionalDirectory",
-        href: routes.subprofiles,
-        icon: FiBriefcase,
-        descriptionKey: "shared:mobileNav.desc.professionals",
       },
       {
         labelKey: "nav:forum",

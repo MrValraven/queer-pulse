@@ -7,21 +7,26 @@
   margin: 0 auto;
   padding: 0 var(--wrap-px, 28px);
 }
+/* The header is one short row at every width: the title with its count on
+   the left, a quiet "Mark all as read" on the right. */
 .header {
   display: flex;
-  align-items: baseline;
+  flex-wrap: nowrap;
+  align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
   /* Never shorter than the control's tap target, so the tab row below holds
      its place whichever tab is open. */
   min-height: var(--tap-min);
 }
+/* The title and its count hold one line; the control beside it gives way. */
 .title {
+  flex: none;
+  white-space: nowrap;
   font-family: var(--serif);
   font-weight: 300;
-  font-size: var(--text-display);
+  font-size: var(--text-36);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -36,7 +41,7 @@
   margin-left: 10px;
   vertical-align: middle;
   /* A flex box so the rolling count centres inside the pill instead of
-     top-aligning to the display-size title line. */
+     top-aligning to the title line. */
   display: inline-flex;
   align-items: center;
   /* The inline span it replaced painted the font's content box; a flex box
@@ -44,6 +49,9 @@
   line-height: 1.25;
 }
 .actions {
+  flex: 0 1 auto;
+  min-width: 0;
+  margin-inline-end: -8px;
   display: flex;
   gap: 10px;
   align-items: center;
@@ -62,28 +70,52 @@
     transition: none;
   }
 }
-/* "Mark all as read" is the shared <Button variant="ghost" size="sm">; the
-   old bare-button class it used to carry is gone. The double-check icon is
-   sized by the button's own font size. */
+/* "Mark all as read" is the shared <Button variant="ghost" size="sm">. Three
+   classes outrank the shared ghost button in both themes; it keeps its focus
+   ring, hover and touch-height floor, and drops the outline at rest so it
+   reads as a text control beside the title. A longer translation that runs
+   out of room wraps its label onto two even lines beside the icon. */
+.header .actions .markAll {
+  max-width: 100%;
+  border-color: transparent;
+  padding-inline: 8px;
+  gap: 6px;
+  color: var(--ink-60);
+  font-size: var(--text-13);
+  white-space: normal;
+  text-wrap: balance;
+  text-align: start;
+  line-height: 1.2;
+}
+/* The double-check icon is sized by the button's own font size. */
 .markAllIcon {
   flex: none;
   font-size: var(--text-16);
 }
 
 /* Shared <Tabs variant="underline"> owns the tab styling; local classes only
-   add the bottom spacing and keep the row on ONE line that scrolls sideways
-   when the tabs outgrow the column. The shared row wraps by default, which
-   broke the tabs onto two lines on a phone. The frame class lifts these
-   rules above the shared module's own `.tabs` and `.underline .tab`. Tabs.tsx
-   measures the indicator with the row's scroll offset, so the line keeps
-   tracking the active tab while the row is scrolled. */
+   add the spacing and keep the row on ONE line that scrolls sideways when the
+   tabs outgrow the column. The shared row wraps by default, which broke the
+   tabs onto two lines on a phone. The frame class lifts these rules above the
+   shared module's own `.tabs` and `.underline .tab`. Tabs.tsx measures the
+   indicator with the row's scroll offset, so the line keeps tracking the
+   active tab while the row is scrolled.
+
+   The row reaches `--tabs-reach` past the column on each side, as far as the
+   rows' tint below it, and its inline padding is that reach less one tab's
+   padding, so the first label still lines up with the title above it. */
 .tabsFrame {
+  --tabs-reach: 16px;
+  --tab-pad-x: 14px;
   min-width: 0;
 }
 .tabsFrame .tabs {
   display: flex;
   flex-wrap: nowrap;
-  margin-bottom: 28px;
+  margin-inline: calc(-1 * var(--tabs-reach));
+  padding-inline: calc(var(--tabs-reach) - var(--tab-pad-x));
+  scroll-padding-inline: var(--tabs-reach);
+  margin-bottom: 4px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
@@ -94,57 +126,20 @@
 .tabsFrame .tabs [role="tab"] {
   flex: none;
   white-space: nowrap;
+  padding: 10px var(--tab-pad-x);
 }
 
-/* A phone: the header is one short row (title, count, quiet "Mark all as
-   read"), and the tabs bleed to the screen edges with tighter padding. The
-   tab row's inline padding is the gutter less one tab's padding, so the
-   first label still lines up with the title above it. */
+/* A phone: less room above the header, a smaller title, and the tab row
+   bleeds to the screen edges. */
 @media (--md) {
   .page {
     padding-top: 18px;
   }
-  .header {
-    flex-wrap: nowrap;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-  /* The title and its count hold one line; the control beside it gives way. */
   .title {
-    flex: none;
-    white-space: nowrap;
     font-size: var(--text-28);
   }
-  .actions {
-    flex: 0 1 auto;
-    min-width: 0;
-    margin-inline-end: -8px;
-  }
-  /* Three classes outrank the shared ghost button in both themes; it keeps
-     its focus ring and touch-height floor, and drops the outline so it reads
-     as a text control beside the title. A longer translation that runs out
-     of room wraps its label onto two even lines beside the icon. */
-  .header .actions .markAll {
-    max-width: 100%;
-    border-color: transparent;
-    padding-inline: 8px;
-    gap: 6px;
-    color: var(--ink-60);
-    font-size: var(--text-13);
-    white-space: normal;
-    text-wrap: balance;
-    text-align: start;
-    line-height: 1.2;
-  }
-  .tabsFrame .tabs {
-    margin-inline: calc(-1 * var(--wrap-px));
-    padding-inline: calc(var(--wrap-px) - 14px);
-    scroll-padding-inline: var(--wrap-px);
-    margin-bottom: 4px;
-  }
-  .tabsFrame .tabs [role="tab"] {
-    padding: 10px 14px;
+  .tabsFrame {
+    --tabs-reach: var(--wrap-px);
   }
 }
 /* A small phone (360px): one step down again, so "Mark all as read" still
@@ -155,9 +150,8 @@
   }
 }
 
-/* A size container, so a row lays itself out by the width it actually gets:
-   the page column on a phone and the 400px bell popover both take the
-   stacked layout at the end of this file. */
+/* A size container, so a classic row lays itself out by the width it
+   actually gets: in a narrow list it takes the stacked layout below. */
 .list {
   display: flex;
   flex-direction: column;
@@ -378,16 +372,17 @@
   z-index: 1;
 }
 
-/* The same row inside the nav bell's popover (NotificationsPopoverPanel):
-   tighter padding and gap keep a readable text measure in a 400px panel. The
-   left padding still clears the unread dot. Must follow `.item`, which it
-   overrides at equal specificity. */
+/* The classic row's tighter variant (`isCompact`), made for a 400px panel:
+   tighter padding and gap keep a readable text measure there. The left
+   padding still clears the unread dot. The bell now lists content rows, which
+   never take this class. Must follow `.item`, which it overrides at equal
+   specificity. */
 .itemCompact {
   gap: 12px;
   padding: 12px 8px 12px 16px;
 }
 
-/* A narrow list (a phone, the 400px popover): the time and the clear control
+/* A narrow list (a phone, a 400px panel): the time and the clear control
    share a short first line beside the avatar, and the text takes the full
    width under them. In one flex line those two columns left the sentence
    about 150px, and a long reason ran to twenty lines. The dismiss control
@@ -433,15 +428,15 @@
   }
 }
 
-/* ── The page's content-first row ─────────────────────────────────────────
-   NotificationItem takes this row when the page passes the `rect` lead
-   shape; the bell popover keeps the classic row above. A 4:5 portrait
+/* ── The content-first row ────────────────────────────────────────────────
+   NotificationItem takes this row when the page or the bell popover passes
+   the `rect` lead shape. A 4:5 portrait
    picture leads, the sentence opens the text column, and one quiet line
    under it carries the kind and the time. Rows sit edge to edge, divided by
    hairlines. The row reaches 16px past the column on each side on a wide
    screen, and to the screen edge on a phone, so the unread tint and hover
    wash frame the content while the content stays in the column. Must
-   follow `.item`, `.itemCompact` and `.unread`.
+   follow `.item` and `.unread`.
 
    `--lead-w` is the picture's width; the picture, the loading block, the
    hairline and the text column all read it. */
@@ -558,6 +553,19 @@
   .contentRow + .contentRow::after {
     right: 0;
   }
+}
+/* The nav bell's popover (NotificationsPopoverPanel). At 400px it is about a
+   phone's width, so it takes the phone's look: rows run edge to edge across
+   the panel with square corners, the content lines up with the panel
+   header's 18px inset, and the hairline runs to the panel's right edge. Two
+   classes outrank the phone rules above at every width. */
+.listInPanel .contentRow {
+  --row-pad-x: 18px;
+  margin-inline: 0;
+  border-radius: 0;
+}
+.listInPanel .contentRow + .contentRow::after {
+  right: 0;
 }
 /* The whole-row link's keyboard ring, drawn inside the row: the row's paint
    containment clips anything drawn outside it. */

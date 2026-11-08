@@ -270,6 +270,10 @@ export const notifications: Catalog = {
   "type.event_rsvp.textNamed":
     "<profile>{name}</profile> confirmou presença no teu evento.",
   "type.event_rsvp.meta": "Presença em evento",
+  "type.event_rsvp.titled.text": "Alguém confirmou presença em {eventTitle}.",
+  "type.event_rsvp.titled.textNamed":
+    "<profile>{name}</profile> confirmou presença em {eventTitle}.",
+  "type.event_rsvp.titled.meta": "Presença em evento",
 
   "type.community_reply.text": "Alguém respondeu à tua publicação.",
   "type.community_reply.textNamed":

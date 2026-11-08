@@ -209,7 +209,11 @@ export function NotificationsBellMenu({
             <Suspense
               fallback={
                 <div className={styles.scroll}>
-                  <NotificationsListSkeleton count={4} />
+                  <NotificationsListSkeleton
+                    count={4}
+                    leadShape="rect"
+                    isInBellPopover
+                  />
                 </div>
               }
             >

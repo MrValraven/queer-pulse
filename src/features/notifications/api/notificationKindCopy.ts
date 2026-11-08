@@ -341,19 +341,22 @@ const NAMED_VARIANTS: Partial<
 };
 
 /**
- * The catalog subkey one of these kinds (or `event_reminder`) reads its copy
+ * The catalog subkey one of these kinds (or `event_reminder` / `event_rsvp`) reads its copy
  * from. Any other type passes through unchanged.
  *
  * `event_reminder` is here for PRD-404: the backend now writes the
  * gathering's `eventTitle`, and a row that carries it names the gathering
  * (`event_reminder.titled`). Rows written before that change carry no title
  * and keep the original sentence.
+ *
+ * `event_rsvp` follows the same pattern: a host's RSVP row that carries the
+ * `eventTitle` names the event (`event_rsvp.titled`), and a row stored before
+ * the backend forwarded it keeps the flat "your event" sentence. The
+ * personalized `.textNamed` variant exists under both keys.
  */
 export function lifecycleKeyFor(type: string, payload: unknown): string {
-  if (type === "event_reminder") {
-    return payloadString(payload, "eventTitle")
-      ? "event_reminder.titled"
-      : "event_reminder";
+  if (type === "event_reminder" || type === "event_rsvp") {
+    return payloadString(payload, "eventTitle") ? `${type}.titled` : type;
   }
   if (!isLifecycleKind(type)) return type;
   // The incoming owner gets their own sentence; everyone else, and every

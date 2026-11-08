@@ -14,7 +14,7 @@ export type NotificationsFilter = "all" | NotifType | "mentions";
 /**
  * The page title with its unread count, and "Mark all as read" on the same
  * line. The control is the shared ghost <Button>, quietened to a text-style
- * control on a phone so the header stays one short row.
+ * control so the header stays one short row at every width.
  */
 export function NotificationsPageHeader({
   titleRef,

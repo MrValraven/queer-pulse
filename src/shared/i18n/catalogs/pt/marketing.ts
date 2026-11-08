@@ -3522,6 +3522,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-08.headline":
+    "O sino e a página de notificações no computador abrem agora com a foto e a mensagem.",
   "changelog.releases.2026-11-07.headline":
     "Nova função Operação VJ, as ações que falham dizem porquê, e os editores despublicam com Desfazer.",
   "changelog.releases.2026-11-06.headline":
@@ -3845,6 +3847,18 @@ export const marketing: Catalog = {
     "As páginas de persona mostram a foto de perfil em todos os estilos",
   "changelog.entries.persona-photo-on-every-layout.body":
     "Produtoras de eventos, estúdios, designers e galerias sem banner ficavam sem imagem na própria página.",
+  "changelog.entries.rsvp-notice-names-event.title":
+    "O aviso de presença diz qual é o evento",
+  "changelog.entries.rsvp-notice-names-event.body":
+    "Quando alguém confirma presença, o sino mostra agora em qual dos teus eventos.",
+  "changelog.entries.more-sheet-professional-card.title":
+    "O diretório profissional abre o menu Mais no telemóvel",
+  "changelog.entries.more-sheet-professional-card.body":
+    "Fica agora com o cartão coral da Comunidade, e Comunidades saiu do menu porque já está na barra de baixo.",
+  "changelog.entries.notifications-content-first-on-desktop.title":
+    "As notificações também abrem com a foto no computador",
+  "changelog.entries.notifications-content-first-on-desktop.body":
+    "O sino e a página de notificações mostram agora a foto ao alto e a mensagem primeiro, com o tipo e a hora por baixo.",
   "changelog.entries.notifications-page-on-phones.title":
     "Uma página de notificações mais limpa no telemóvel",
   "changelog.entries.notifications-page-on-phones.body":

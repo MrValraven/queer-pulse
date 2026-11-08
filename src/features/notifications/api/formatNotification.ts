@@ -2037,7 +2037,11 @@ export function formatNotification(
     key = communityPostRemovedKeyFor(type, payload);
   } else if (type === "card_expiring") {
     key = cardExpiringKeyFor(type, payload);
-  } else if (isLifecycleKind(type) || type === "event_reminder") {
+  } else if (
+    isLifecycleKind(type) ||
+    type === "event_reminder" ||
+    type === "event_rsvp"
+  ) {
     key = lifecycleKeyFor(type, payload);
   } else {
     // `mentionKeyFor` passes every non-`mention` type through unchanged.

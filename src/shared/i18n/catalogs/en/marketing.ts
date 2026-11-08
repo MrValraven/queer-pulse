@@ -3437,6 +3437,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-08.headline":
+    "The bell and the notifications page on a computer now lead with the photo and the message.",
   "changelog.releases.2026-11-07.headline":
     "A new VJ operator role, failed actions now say why, and editors can unpublish with Undo.",
   "changelog.releases.2026-11-06.headline":
@@ -3759,6 +3761,18 @@ export const marketing: Catalog = {
     "Persona pages show their profile photo on every layout",
   "changelog.entries.persona-photo-on-every-layout.body":
     "Event producers, studios, designers and galleries without a banner had no picture on their page.",
+  "changelog.entries.rsvp-notice-names-event.title":
+    "RSVP notices name the event",
+  "changelog.entries.rsvp-notice-names-event.body":
+    "When someone RSVPs, your bell now shows which of your events they are coming to.",
+  "changelog.entries.more-sheet-professional-card.title":
+    "The Professional directory leads the More menu on phones",
+  "changelog.entries.more-sheet-professional-card.body":
+    "It now takes the coral card in Community, and Communities left the menu since the bottom bar already has it.",
+  "changelog.entries.notifications-content-first-on-desktop.title":
+    "Notifications lead with the photo on a computer too",
+  "changelog.entries.notifications-content-first-on-desktop.body":
+    "The bell and the notifications page now show the portrait photo and the message first, with the type and time below.",
   "changelog.entries.notifications-page-on-phones.title":
     "A cleaner notifications page on phones",
   "changelog.entries.notifications-page-on-phones.body":

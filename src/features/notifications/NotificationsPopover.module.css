@@ -55,13 +55,14 @@
   color: var(--text-strong);
 }
 
-/* The only part that scrolls; the header and the "See all" footer stay put. */
+/* The only part that scrolls; the header and the "See all" footer stay put.
+   No padding: the rows run edge to edge across the panel, from the header's
+   rule to the footer's, and the empty and error states carry their own. */
 .scroll {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 6px;
 }
 
 /* A 24px fade at the foot of the list while more rows sit below it. The
@@ -93,12 +94,14 @@
     animation-timeline: scroll(self block);
   }
 }
-/* A size container, so its rows take the stacked narrow layout from
-   NotificationsPage.module.css at the panel's 400px width. */
+/* The rows are the page's content rows, edge to edge with hairlines between
+   them (`.listInPanel` in NotificationsPage.module.css), so they sit with no
+   gap. A size container, so a classic row would still take the stacked
+   narrow layout from that file at the panel's 400px width. */
 .list {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 0;
   container-type: inline-size;
 }
 
