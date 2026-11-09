@@ -11,7 +11,10 @@
    (1 + 5 + 40 + 5 + 40 + 5 + 1 = 97) and the band comes to about 238px.
    The status line, the reset notice and the MIDI learn banner fold to 0 and
    carry their own bottom spacing, so a folded notice adds no gap. The phone
-   band has no section captions in either design.
+   band has no section captions in either design. While help captions are
+   on (data-vj-dock-help) the band stops at 55% of the screen height and
+   scrolls inside, and the action row sticks to its bottom edge, so
+   Blackout stays in reach; help off leaves the band as it was.
 
    Split: the sticky right column, full height, scrolling inside. The pads
    slot takes the column's free height, so the action row sits on the bottom
@@ -47,6 +50,96 @@
   border-start-start-radius: var(--qs-radius-card);
   border-start-end-radius: var(--qs-radius-card);
   box-shadow: var(--qs-shadow-glass);
+}
+
+/* Help captions on: capped and scrolling inside. The bottom padding moves
+   into the content, so the stuck action row meets the bottom edge. The cap
+   grows from the band's height before help over --dur-base (VjRemoteDock
+   sets the start height inline for one frame). */
+.dock[data-vj-dock-help] {
+  --vj-dock-pad-start: max(var(--wrap-px), env(safe-area-inset-left, 0px));
+  --vj-dock-pad-end: max(var(--wrap-px), env(safe-area-inset-right, 0px));
+  --vj-dock-help-gap: var(--vj-band-gap);
+  --vj-dock-end-pad: max(var(--vj-band-gap), var(--bottom-inset));
+  max-block-size: 55vh;
+  max-block-size: 55dvh;
+  padding-block-end: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transition: max-block-size var(--dur-base) var(--ease);
+}
+
+.dock[data-vj-dock-help] .inner {
+  padding-block-end: var(--vj-dock-end-pad);
+}
+
+/* The split column mirrors it: help captions on, its rows end with the
+   bottom padding and only the action row sticks. */
+.column[data-vj-dock-help] {
+  --vj-dock-help-gap: var(--vj-dock-rows-gap);
+  --vj-dock-end-pad: max(var(--gap-sm), var(--bottom-inset));
+}
+
+.column[data-vj-dock-help] .rows {
+  padding-block-end: var(--vj-dock-end-pad);
+}
+
+/* Only the action row sticks: the slot steps aside, so the row sticks
+   within the whole dock and its help legend scrolls on under it. */
+.dock[data-vj-dock-help] .actionsSlot,
+.column[data-vj-dock-help] .actionsSlot {
+  display: contents;
+}
+
+.dock[data-vj-dock-help] .actionsSlot > :first-child,
+.column[data-vj-dock-help] .actionsSlot > :first-child {
+  position: sticky;
+  inset-block-end: 0;
+  z-index: 1;
+}
+
+/* Overflowing: the stuck row gets the same opaque backing and scrim as the
+   split column's slot, edge to edge, over the bottom inset. Its top margin
+   leaves the scrim's height clear above it, so at the scroll end the scrim
+   covers nothing. */
+.dock[data-vj-dock-help][data-vj-dock-overflow] .actionsSlot > :first-child,
+.column[data-vj-dock-help][data-vj-dock-overflow]
+  .actionsSlot
+  > :first-child {
+  --vj-dock-backing:
+    linear-gradient(
+      var(--qs-glass-raised-bottom),
+      var(--qs-glass-raised-bottom)
+    ),
+    var(--qs-base);
+  --vj-dock-scrim-height: 14px;
+  /* The row sets its own height; the backing's padding goes around it. */
+  box-sizing: content-box;
+  margin-block-start: calc(
+    var(--vj-dock-scrim-height) - var(--vj-dock-help-gap)
+  );
+  margin-inline: calc(-1 * var(--vj-dock-pad-start))
+    calc(-1 * var(--vj-dock-pad-end));
+  padding-block: var(--vj-dock-help-gap) var(--vj-dock-end-pad);
+  padding-inline: var(--vj-dock-pad-start) var(--vj-dock-pad-end);
+  background: var(--vj-dock-backing);
+}
+
+.dock[data-vj-dock-help][data-vj-dock-overflow]
+  .actionsSlot
+  > :first-child::before,
+.column[data-vj-dock-help][data-vj-dock-overflow]
+  .actionsSlot
+  > :first-child::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 100%;
+  block-size: var(--vj-dock-scrim-height);
+  pointer-events: none;
+  background: var(--vj-dock-backing);
+  -webkit-mask-image: linear-gradient(180deg, transparent, black);
+  mask-image: linear-gradient(180deg, transparent, black);
 }
 
 .inner {
@@ -147,6 +240,15 @@
   padding-block-end: var(--vj-band-gap);
 }
 
+/* The crossfader's help legend line; its spacing folds with it. */
+.crossfaderHelp {
+  min-width: 0;
+}
+
+.crossfaderHelp :global([data-vj-help-legend]) {
+  padding-block-start: 4px;
+}
+
 /* The tempo bar and the transition row. */
 .strip {
   display: flex;
@@ -236,6 +338,12 @@
   mask-image: linear-gradient(180deg, transparent, black);
 }
 
+/* Help captions on, the slot steps aside (display: contents) and the
+   stuck row draws the scrim itself. */
+.column[data-vj-dock-help][data-vj-dock-overflow] .actionsSlot::before {
+  content: none;
+}
+
 /* ── Section captions: polished dock, split column only ── */
 .sectionHeading {
   margin-block: var(--gap-xs) calc(4px - var(--gap-xs));
@@ -260,6 +368,12 @@
 
 /* A short window (a phone in landscape): the captions go and the rows close
    up, so more of the column fits above the stuck action row. */
+@media (prefers-reduced-motion: reduce) {
+  .dock[data-vj-dock-help] {
+    transition: none;
+  }
+}
+
 @media (max-height: 500px) {
   .column {
     --vj-dock-rows-gap: var(--vj-band-gap);

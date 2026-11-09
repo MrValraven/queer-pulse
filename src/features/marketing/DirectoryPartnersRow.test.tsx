@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { directoryPartnersKey } from "./api/useDirectoryPartners";
 import { DirectoryPage } from "./DirectoryPage";
-import { DirectoryPartnerCard } from "./DirectoryPartnerCard";
+import { DirectoryPartnerSpotlightCard } from "./DirectoryPartnerSpotlightCard";
 import { DirectoryPartnersRow } from "./DirectoryPartnersRow";
 import { resetDemoDirectoryPartners } from "./directoryPartnersDemoStore";
 import { DIRECTORY_PLACES, type DirectoryPlace } from "./directoryPlaces";
@@ -217,7 +217,10 @@ async function renderCard(
   if (!BERTHA) throw new Error("The Livraria Bertha fixture is missing");
   render(
     <TestProviders>
-      <DirectoryPartnerCard place={{ ...BERTHA, ...fields }} note={note} />
+      <DirectoryPartnerSpotlightCard
+        place={{ ...BERTHA, ...fields }}
+        note={note}
+      />
     </TestProviders>,
   );
   await awaitCatalog("marketing");
@@ -231,9 +234,12 @@ const WORKS_ACROSS_LISBON = {
   byAppointment: false,
 };
 
-describe("DirectoryPartnerCard", () => {
-  it("names the card by the business and leaves the thumb out", async () => {
+describe("DirectoryPartnerSpotlightCard", () => {
+  it("names the card by the business and leaves the monogram out", async () => {
     const link = await renderCard({ photos: undefined }, null);
+    // The "Partner" eyebrow is hidden from screen readers, so the business
+    // name leads; the aria-hidden picture panel and its initials stay out of
+    // the name.
     expect(link).toHaveAccessibleName(/^Livraria Bertha/);
     expect(link).not.toHaveAttribute("title");
   });
@@ -282,10 +288,9 @@ describe("DirectoryPartnerCard", () => {
     expect(within(link).getByText("Meets in Arroios")).toBeInTheDocument();
   });
 
-  it("shows the note trimmed with its heart", async () => {
+  it("shows the note trimmed", async () => {
     const link = await renderCard({}, "  Members get 10% off  ");
     const noteLine = link.querySelector("[data-partner-note]");
     expect(noteLine).toHaveTextContent(/^Members get 10% off$/);
-    expect(noteLine?.querySelector("svg")).not.toBeNull();
   });
 });

@@ -18,6 +18,8 @@ export const vjKeys = {
     ["admin", "vj", "packEvent", packId, { demo: isDemoMode }] as const,
   upcomingEvents: (isDemoMode: boolean) =>
     ["admin", "vj", "upcomingEvents", { demo: isDemoMode }] as const,
+  live: (isDemoMode: boolean) =>
+    ["admin", "vj", "live", { demo: isDemoMode }] as const,
 };
 
 /** The mutation key every library write carries, so `useVjIsWriting` can see

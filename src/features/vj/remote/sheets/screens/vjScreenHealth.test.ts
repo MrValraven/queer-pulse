@@ -50,12 +50,41 @@ describe("vjScreenHealthLines", () => {
     expect(lines.every((line) => line.tone === "plain")).toBe(true);
   });
 
-  it("names the simple renderer", () => {
+  it("names the backup renderer", () => {
     const lines = vjScreenHealthLines(
       createScreen({ health: { ...HEALTHY, renderer: "dom" } }),
       formatBytes,
     );
     expect(lines[0]?.key).toBe("vj:screensSheet.rendererDom");
+  });
+
+  it("names the simple renderer", () => {
+    const lines = vjScreenHealthLines(
+      createScreen({ health: { ...HEALTHY, renderer: "simple" } }),
+      formatBytes,
+    );
+    expect(lines[0]).toEqual({
+      id: "renderer",
+      key: "vj:screensSheet.rendererSimple",
+      values: {},
+      tone: "plain",
+    });
+  });
+
+  it("puts the switch action on the load warning line only", () => {
+    const lines = vjScreenHealthLines(
+      createScreen({ health: { ...HEALTHY, isEffectLoadHigh: true } }),
+      formatBytes,
+    );
+    const actionLines = lines.filter((line) => line.action !== undefined);
+    expect(actionLines).toHaveLength(1);
+    expect(actionLines[0]?.action).toBe("switchToSimple");
+    expect(actionLines[0]?.key).toBe("vj:screensSheet.loadWarning");
+    expect(
+      lines
+        .filter((line) => line.key !== "vj:screensSheet.loadWarning")
+        .every((line) => line.action === undefined),
+    ).toBe(true);
   });
 
   it("warns on a high effect load", () => {
@@ -81,6 +110,39 @@ describe("vjScreenHealthLines", () => {
       "vj:screensSheet.healthUnknown",
       "vj:screensSheet.micOn",
     ]);
+    expect(lines.map((line) => line.id)).toEqual(["unknown", "mic"]);
     expect(lines[1]?.values).toEqual({ percent: 42 });
+  });
+
+  it("gives every line a stable id, unique within the screen", () => {
+    const lines = vjScreenHealthLines(
+      createScreen({
+        health: { ...HEALTHY, isEffectLoadHigh: true },
+        mic: { level: 0.5, detectedBpm: null, confidence: 0 },
+      }),
+      formatBytes,
+    );
+    expect(lines.map((line) => line.id)).toEqual([
+      "renderer",
+      "fps",
+      "dropped",
+      "cache",
+      "load",
+      "mic",
+    ]);
+  });
+
+  it("keeps the renderer line's id while its copy names a new renderer", () => {
+    const onEffects = vjScreenHealthLines(
+      createScreen({ health: { ...HEALTHY, renderer: "dom" } }),
+      formatBytes,
+    );
+    const onSimple = vjScreenHealthLines(
+      createScreen({ health: { ...HEALTHY, renderer: "simple" } }),
+      formatBytes,
+    );
+    expect(onEffects[0]?.id).toBe("renderer");
+    expect(onSimple[0]?.id).toBe("renderer");
+    expect(onEffects[0]?.key).not.toBe(onSimple[0]?.key);
   });
 });

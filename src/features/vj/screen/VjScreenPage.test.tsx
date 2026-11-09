@@ -69,6 +69,7 @@ const mocks = vi.hoisted(() => ({
   mic: null as VjMicTempoState | null,
   eventCard: null as VjScreenEventCard | null,
   identifyListener: null as ((frame: unknown) => void) | null,
+  renderModeListener: null as ((frame: unknown) => void) | null,
   wakeLock: vi.fn<(isActive: boolean) => void>(),
   fakeLayers: {
     lastTargetKey: null as string | null,
@@ -312,6 +313,10 @@ function stageController(
       mocks.identifyListener = listener as (frame: unknown) => void;
       return () => undefined;
     },
+    subscribeRenderMode: (listener) => {
+      mocks.renderModeListener = listener as (frame: unknown) => void;
+      return () => undefined;
+    },
     ...changes,
   };
 }
@@ -364,6 +369,7 @@ function micState(changes: Partial<VjMicTempoState> = {}): VjMicTempoState {
     report: null,
     start: micStart,
     stop: micStop,
+    release: vi.fn(),
     ...changes,
   };
 }
@@ -462,9 +468,16 @@ beforeEach(() => {
   mocks.fakeLayers.front = null;
   mocks.fakeLayers.loading = null;
   mocks.isRealStage = false;
-  mocks.rendererState = { phase: "webgl2", reason: null, lossCount: 0 };
+  mocks.rendererState = {
+    phase: "webgl2",
+    reason: null,
+    lossCount: 0,
+    retiredReason: null,
+    handOffFrom: null,
+  };
   mocks.rendererHealth = null;
   mocks.identifyListener = null;
+  mocks.renderModeListener = null;
   mocks.mic = micState();
   mocks.eventCard = {
     card: null,
@@ -806,6 +819,54 @@ describe("VjScreenPage show", () => {
       await vi.advanceTimersByTimeAsync(1);
     });
     expect(identifyLayer).toHaveAttribute("data-vj-identify", "hidden");
+  });
+
+  it("passes the remote's render mode to the stage", async () => {
+    vi.useFakeTimers();
+    renderPage();
+    await settle();
+    expect(latestStageProps()?.renderMode).toBe("effects");
+
+    act(() => {
+      mocks.renderModeListener?.({ mode: "simple" });
+    });
+    expect(latestStageProps()?.renderMode).toBe("simple");
+
+    act(() => {
+      mocks.renderModeListener?.({ mode: "effects" });
+    });
+    expect(latestStageProps()?.renderMode).toBe("effects");
+  });
+
+  it("keeps the render mode across a reconnect", async () => {
+    vi.useFakeTimers();
+    const { rerenderPage } = renderPage();
+    await settle();
+    act(() => {
+      mocks.renderModeListener?.({ mode: "simple" });
+    });
+    expect(latestStageProps()?.renderMode).toBe("simple");
+
+    mocks.stage = stageController({
+      isConnected: false,
+      connection: { status: "reconnecting", refusal: null, attach: null },
+    });
+    rerenderPage();
+    expect(latestStageProps()?.renderMode).toBe("simple");
+
+    mocks.stage = stageController();
+    rerenderPage();
+    expect(latestStageProps()?.renderMode).toBe("simple");
+  });
+
+  it("ignores a render mode it does not know", async () => {
+    vi.useFakeTimers();
+    renderPage();
+    await settle();
+    act(() => {
+      mocks.renderModeListener?.({ mode: "dom" });
+    });
+    expect(latestStageProps()?.renderMode).toBe("effects");
   });
 
   it("hides the cursor after 2 seconds without movement", async () => {

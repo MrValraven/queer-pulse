@@ -13,6 +13,7 @@
  * Stamps are the source's own timeline in media milliseconds (ascending from
  * oldest to newest), so a playhead moving over `[oldestStampMs, newestStampMs]`
  * at the clip's rate finds its frame with `positionFromNewestAt`.
+ * `copyLayerInto` blits one layer back into a source texture.
  */
 import type { VjGlContext } from "../gl/vjGlContext";
 
@@ -240,6 +241,54 @@ export class VjReverseRing {
     this.mediaTimes[layer] = mediaTimeMs;
     this.nextLayer = (layer + 1) % this.layerCapacity;
     this.recordedLength = Math.min(this.recordedLength + 1, this.layerCapacity);
+  }
+
+  /**
+   * Copies the layer `positionFromNewest` frames back into a TEXTURE_2D of
+   * `targetWidth` x `targetHeight` (the mirror of `record`). A source leaving
+   * the ring calls it so its own texture shows the frame the ring was
+   * showing until the frame it seeks to arrives. Does nothing once disposed
+   * or while the ring holds no frame.
+   */
+  copyLayerInto(
+    positionFromNewest: number,
+    targetTexture: WebGLTexture,
+    targetWidth: number,
+    targetHeight: number,
+  ): void {
+    if (this.isDisposed || this.texture === null) return;
+    if (this.recordedLength === 0) return;
+    const { gl } = this.context;
+    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.readFramebuffer);
+    gl.framebufferTextureLayer(
+      gl.READ_FRAMEBUFFER,
+      gl.COLOR_ATTACHMENT0,
+      this.texture,
+      0,
+      this.layerAt(positionFromNewest),
+    );
+    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.drawFramebuffer);
+    gl.framebufferTexture2D(
+      gl.DRAW_FRAMEBUFFER,
+      gl.COLOR_ATTACHMENT0,
+      gl.TEXTURE_2D,
+      targetTexture,
+      0,
+    );
+    gl.blitFramebuffer(
+      0,
+      0,
+      this.width,
+      this.height,
+      0,
+      0,
+      targetWidth,
+      targetHeight,
+      gl.COLOR_BUFFER_BIT,
+      gl.LINEAR,
+    );
+    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, null);
+    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
   }
 
   /** The array layer `positionFromNewest` frames back from the newest (0 is the newest). */

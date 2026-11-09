@@ -1,6 +1,6 @@
 /**
- * A video layer source. The `<video>` lives in the compositor's media host
- * (1 px, nearly transparent, so the browser keeps presenting frames) and
+ * A video layer source. The `<video>` lives in the compositor's media host,
+ * placed just outside the host's 1 px box (VJ_VIDEO_OFFSCREEN_LEFT), and
  * reaches the GPU only when requestVideoFrameCallback presented a new frame;
  * without callbacks for VJ_FRAME_CALLBACK_GRACE_MS (or without the API) an
  * upload follows `currentTime` moving instead.
@@ -13,8 +13,11 @@
  * - ping-pong plays forward until loop out (a full ring when the clip has no
  *   ping-pong loop window), then plays the ring backward and, at its oldest
  *   frame, seeks once and plays forward again.
- * Leaving the ring seeks once to the frame showing. A refused ring budget
- * plays forward. Freeze pauses and keeps the last texture.
+ * Leaving the ring seeks once to the frame showing. Until the seeked frame
+ * arrives, the clip texture holds a copy of that ring frame, and the video is
+ * never uploaded while it seeks: the element still shows its pre-seek frame
+ * (the turn point of a bounce), which would flash for one frame. A refused
+ * ring budget plays forward. Freeze pauses and keeps the last texture.
  */
 import type { VjRenderableClip } from "../../screen/vjLayerMachine";
 import { VJ_FRAME_CALLBACK_GRACE_MS } from "../../screen/VjClipLayer";
@@ -51,6 +54,16 @@ const VJ_RING_NOMINAL_FRAME_MS = 1000 / 30;
 /** A media step longer than this reads as a jump. */
 const VJ_RING_MAX_STEP_MS = 1000;
 
+/**
+ * Where a video sits inside the 1 px media host: just left of it, so the
+ * host's overflow clips it and it draws nowhere on the page. Chromium lowers
+ * the whole page's frame rate to the video rate (about 30 fps) while two or
+ * more videos draw on screen, which dropped every video-to-video fade and a
+ * video mix to 30 fps. A video drawn nowhere keeps decoding and presenting
+ * frames to requestVideoFrameCallback, and the page keeps its full rate.
+ */
+const VJ_VIDEO_OFFSCREEN_LEFT = "-2px";
+
 type VjVideoReplay = "none" | "replaying" | "pingPongBackward";
 
 export interface VjVideoSourceOptions {
@@ -74,6 +87,8 @@ function prepareVjVideoElement(
   video.loop = hasNativeLoop;
   video.setAttribute("aria-hidden", "true");
   video.style.position = "absolute";
+  video.style.top = "0";
+  video.style.left = VJ_VIDEO_OFFSCREEN_LEFT;
   video.style.width = "1px";
   video.style.height = "1px";
   video.style.opacity = "0.01";
@@ -429,19 +444,43 @@ export class VjVideoSource implements VjEngineSource {
     this.shownPosition = ring.positionFromNewestAt(this.replayStampMs);
   }
 
-  /** Seeks once to the frame showing, forgets the ring and plays forward. */
+  /**
+   * Seeks once to the frame showing, forgets the ring and plays forward.
+   * The clip texture still holds the last frame uploaded before the replay
+   * (the far end of a bounce), so the ring frame showing is copied into it
+   * first and stays on screen until the seeked frame uploads. The frame a
+   * callback flagged before the replay is dropped, and the callback grace
+   * restarts here: the paused video fired no callback during the replay, so
+   * the old timestamp would switch straight to the `currentTime` fallback.
+   */
   private leaveReplay(): void {
     const ring = this.ring;
     this.replay = "none";
     this.isPausedByPlayhead = false;
     if (ring !== null) {
       this.seekTo(ring.mediaTimeMsAt(this.shownPosition) / 1000);
+      if (this.clipTexture.hasFrame) {
+        ring.copyLayerInto(
+          this.shownPosition,
+          this.clipTexture.sourceTexture,
+          this.clipTexture.width,
+          this.clipTexture.height,
+        );
+      }
       ring.clear();
     }
+    this.hasPresentedFrame = false;
+    this.lastFrameCallbackAtMs = null;
     this.resetRingTimeline();
     this.playVideo();
   }
 
+  /**
+   * Uploads the frame a callback presented, or on the `currentTime` fallback
+   * a moved `currentTime`. The fallback waits while the video seeks: the
+   * element still shows the pre-seek frame, and uploading it would show (and
+   * record into the ring) the wrong frame.
+   */
   private uploadPresentedFrame(nowMs: number): void {
     if (!hasVjDecodedFrame(this.video)) return;
     if (this.lastFrameCallbackAtMs === null) this.lastFrameCallbackAtMs = nowMs;
@@ -453,6 +492,7 @@ export class VjVideoSource implements VjEngineSource {
     } else if (!this.clipTexture.hasFrame) {
       mediaTimeSec = this.video.currentTime;
     } else if (this.isOnCurrentTimeFallback(nowMs)) {
+      if (this.video.seeking) return;
       mediaTimeSec = this.video.currentTime;
       if (mediaTimeSec === this.lastUploadedTimeSec) return;
       this.applyLoopAction(mediaTimeSec);

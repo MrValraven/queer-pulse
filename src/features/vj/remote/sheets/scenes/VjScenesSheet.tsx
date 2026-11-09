@@ -221,6 +221,7 @@ export function VjScenesSheet({
   return (
     <VjSheetFrame
       title={t("vj:scenes.title")}
+      intro={t("vj:scenes.intro")}
       closeLabel={t("vj:scenes.close")}
       onClose={onClose}
     >

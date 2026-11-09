@@ -4,6 +4,7 @@ import {
   type VjBlendMode,
 } from "../../../../../shared/contracts/vj";
 import { useTranslation } from "../../../../../shared/i18n/useTranslation";
+import { VjOptionDescription } from "../../kit/VjHelpCaption";
 import styles from "./VjMixSheet.module.css";
 
 export interface VjBlendModeChipsProps {
@@ -15,7 +16,9 @@ export interface VjBlendModeChipsProps {
 
 /**
  * How the mix clip lands over the live source: one chip per blend mode, the
- * shown one pressed. Picking the pressed mode again sends nothing.
+ * shown one pressed, and one line under the chips saying what the pressed
+ * mode does (the chips are too small for a line each). Picking the pressed
+ * mode again sends nothing.
  */
 export function VjBlendModeChips({
   blendMode,
@@ -24,6 +27,7 @@ export function VjBlendModeChips({
 }: VjBlendModeChipsProps) {
   const { t } = useTranslation();
   const titleId = useId();
+  const descriptionId = useId();
   return (
     <section className={styles.section} aria-labelledby={titleId}>
       <h3 id={titleId} className={styles.sectionTitle}>
@@ -42,6 +46,7 @@ export function VjBlendModeChips({
             className={styles.chip}
             aria-pressed={blendMode === mode}
             aria-disabled={isBlocked}
+            aria-describedby={blendMode === mode ? descriptionId : undefined}
             onClick={() => {
               if (!isBlocked && blendMode !== mode) onPick(mode);
             }}
@@ -50,6 +55,10 @@ export function VjBlendModeChips({
           </button>
         ))}
       </div>
+      <VjOptionDescription
+        id={descriptionId}
+        text={t(`vj:mix.blendDesc.${blendMode}`)}
+      />
     </section>
   );
 }

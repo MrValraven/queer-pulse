@@ -6,6 +6,7 @@ import {
   type VjGeneratorId,
 } from "../../../../shared/contracts/vj";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import { useVjHelpDescribedBy } from "../top/useVjHelpDescribedBy";
 import { useVjLongPress } from "../hooks/useVjLongPress";
 import { VjDockPopover } from "../kit/VjDockPopover";
 import { useVjMidiLearn } from "../midi/VjMidiLearnContext";
@@ -103,6 +104,7 @@ export function VjGeneratorTile({
     onLongPressEnd: () => undefined,
   });
   const name = t(`vj:generator.name.${generatorId}`);
+  const helpDescribedBy = useVjHelpDescribedBy();
 
   return (
     <div
@@ -120,7 +122,10 @@ export function VjGeneratorTile({
         {...{ [VJ_GRID_ITEM_ATTRIBUTE]: "" }}
         tabIndex={tabIndex}
         aria-label={t("vj:grid.generatorAria", { name })}
-        aria-describedby={isBlocked ? blockedReasonId : undefined}
+        aria-describedby={helpDescribedBy(
+          "generatorTile",
+          isBlocked ? blockedReasonId : undefined,
+        )}
         aria-current={isLive ? "true" : undefined}
         aria-disabled={isBlocked}
         {...handlers}

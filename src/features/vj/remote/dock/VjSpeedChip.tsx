@@ -26,6 +26,9 @@ export interface VjSpeedChipProps {
   onRefused?: (refusal: VjSendRefusal) => void;
   /** The status line naming why the controls are blocked, for aria-describedby. */
   describedBy?: string;
+  /** The Speed help caption's id while help is on, for the chip's
+   *  aria-describedby. */
+  helpCaptionId?: string;
 }
 
 /**
@@ -42,6 +45,7 @@ export function VjSpeedChip({
   setSpeed,
   onRefused,
   describedBy,
+  helpCaptionId,
 }: VjSpeedChipProps) {
   const { t } = useTranslation();
   const format = useFormat();
@@ -75,6 +79,7 @@ export function VjSpeedChip({
         })}
         aria-haspopup="dialog"
         aria-expanded={isOpen}
+        aria-describedby={helpCaptionId}
         onClick={() => setIsOpen((current) => !current)}
       >
         <span

@@ -10,12 +10,14 @@ import {
 } from "react-icons/fi";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import { useVjHelpCaptions } from "../hooks/useVjHelpCaptions";
 import type { VjActionDispatch } from "../input/vjRemoteAction";
 import {
   useVjMidiLearnTarget,
   type VjMidiLearnTargetProps,
 } from "../midi/useVjMidiLearnTarget";
 import type { VjMidiTarget } from "../midi/vjMidiMappings";
+import { VjDockHelpLegend } from "./VjDockHelpLegend";
 import styles from "./VjDockActions.module.css";
 
 /** The app's ease-out token (--ease-out) at the fast duration (--dur-fast). */
@@ -52,7 +54,9 @@ export interface VjDockActionsProps {
  * button at the end. Blackout, Reset look and Go hand their action to the
  * shared dispatcher, which sends Blackout and Reset look immediately and Go as
  * the cued clip. Cue and More stay usable while blocked: one sets a preference
- * on this device, the other opens a sheet.
+ * on this device, the other opens a sheet. While help captions are on, a
+ * line per button folds in under the row (the buttons keep their size); the
+ * second line follows the Cue or Go face.
  */
 export function VjDockActions({
   isBlackout,
@@ -69,63 +73,102 @@ export function VjDockActions({
   const { t } = useTranslation();
   const blackoutLearn = useVjMidiLearnTarget(VJ_BLACKOUT_TARGET);
   const blockedDescription = isBlocked ? blockedReasonId : undefined;
+  const help = useVjDockActionsHelp(isCueMode);
+  const describedByOf = (helpId: string, statusId?: string) =>
+    [statusId, help.isOn ? helpId : undefined].filter(Boolean).join(" ") ||
+    undefined;
 
   return (
-    <div
-      className={styles.row}
-      data-vj-dock-actions=""
-      role="group"
-      aria-label={t("vj:dock.label")}
-    >
-      <VjDockActionButton
-        actionId="resetLook"
-        icon={
-          <VjSwapIcon
-            swapKey={isResetDone ? "done" : "idle"}
-            icon={
-              isResetDone ? (
-                <FiCheck aria-hidden fill="none" />
-              ) : (
-                <FiRotateCcw aria-hidden fill="none" />
-              )
-            }
-          />
-        }
-        label={t("vj:dock.resetLook")}
-        isDisabled={isBlocked}
-        describedBy={blockedDescription}
-        isDone={isResetDone}
-        onPress={() => dispatch({ kind: "resetLook" }, "press")}
-      />
-      <VjCueGoButton
-        isCueMode={isCueMode}
-        armedClipTitle={armedClipTitle}
-        isBlocked={isBlocked}
-        blockedReasonId={blockedDescription}
-        dispatch={dispatch}
-        onTurnOnCueMode={onTurnOnCueMode}
-      />
-      <VjDockActionButton
-        actionId="more"
-        icon={<FiMoreHorizontal aria-hidden fill="none" />}
-        label={t("vj:dock.more")}
-        ariaLabel={t("vj:dock.moreAria")}
-        hasDialogPopup
-        onPress={onOpenMore}
-      />
-      <VjDockActionButton
-        actionId="blackout"
-        icon={<FiMoon aria-hidden fill="none" />}
-        label={t("vj:remote.blackout")}
-        isDisabled={isBlocked}
-        describedBy={blockedDescription}
-        isPressed={isBlackout}
-        isBusy={isBlackoutPending}
-        learnProps={blackoutLearn.learnProps}
-        onPress={() => dispatch({ kind: "blackout" }, "press")}
-      />
-    </div>
+    <>
+      <div
+        className={styles.row}
+        data-vj-dock-actions=""
+        role="group"
+        aria-label={t("vj:dock.label")}
+      >
+        <VjDockActionButton
+          actionId="resetLook"
+          icon={
+            <VjSwapIcon
+              swapKey={isResetDone ? "done" : "idle"}
+              icon={
+                isResetDone ? (
+                  <FiCheck aria-hidden fill="none" />
+                ) : (
+                  <FiRotateCcw aria-hidden fill="none" />
+                )
+              }
+            />
+          }
+          label={t("vj:dock.resetLook")}
+          isDisabled={isBlocked}
+          describedBy={describedByOf(help.ids.resetLook, blockedDescription)}
+          isDone={isResetDone}
+          onPress={() => dispatch({ kind: "resetLook" }, "press")}
+        />
+        <VjCueGoButton
+          isCueMode={isCueMode}
+          armedClipTitle={armedClipTitle}
+          isBlocked={isBlocked}
+          blockedReasonId={blockedDescription}
+          helpCaptionId={help.isOn ? help.ids.cueGo : undefined}
+          dispatch={dispatch}
+          onTurnOnCueMode={onTurnOnCueMode}
+        />
+        <VjDockActionButton
+          actionId="more"
+          icon={<FiMoreHorizontal aria-hidden fill="none" />}
+          label={t("vj:dock.more")}
+          ariaLabel={t("vj:dock.moreAria")}
+          describedBy={describedByOf(help.ids.more)}
+          hasDialogPopup
+          onPress={onOpenMore}
+        />
+        <VjDockActionButton
+          actionId="blackout"
+          icon={<FiMoon aria-hidden fill="none" />}
+          label={t("vj:remote.blackout")}
+          isDisabled={isBlocked}
+          describedBy={describedByOf(help.ids.blackout, blockedDescription)}
+          isPressed={isBlackout}
+          isBusy={isBlackoutPending}
+          learnProps={blackoutLearn.learnProps}
+          onPress={() => dispatch({ kind: "blackout" }, "press")}
+        />
+      </div>
+      <VjDockHelpLegend entries={help.entries} />
+    </>
   );
+}
+
+/** The action row's help lines, one per button in the row's order, and the
+ *  ids its buttons point aria-describedby at while help is on. */
+function useVjDockActionsHelp(isCueMode: boolean) {
+  const { t } = useTranslation();
+  const { isOn } = useVjHelpCaptions();
+  const ids = {
+    resetLook: useId(),
+    cueGo: useId(),
+    more: useId(),
+    blackout: useId(),
+  };
+  const entries = [
+    {
+      id: ids.resetLook,
+      term: t("vj:dock.resetLook"),
+      text: t("vj:help.resetLook"),
+    },
+    isCueMode
+      ? { id: ids.cueGo, term: t("vj:dock.go"), text: t("vj:help.go") }
+      : { id: ids.cueGo, term: t("vj:dock.cue"), text: t("vj:help.cue") },
+    { id: ids.more, term: t("vj:dock.more"), text: t("vj:help.more") },
+    {
+      id: ids.blackout,
+      term: t("vj:remote.blackout"),
+      text: t("vj:help.blackout"),
+    },
+  ];
+  return { isOn, ids, entries };
 }
 
 interface VjDockActionButtonProps {
@@ -199,6 +242,7 @@ function VjCueGoButton({
   armedClipTitle,
   isBlocked,
   blockedReasonId,
+  helpCaptionId,
   dispatch,
   onTurnOnCueMode,
 }: {
@@ -206,6 +250,8 @@ function VjCueGoButton({
   armedClipTitle: string | null;
   isBlocked: boolean;
   blockedReasonId: string | undefined;
+  /** The Cue or Go help caption's id while help is on. */
+  helpCaptionId: string | undefined;
   dispatch: VjActionDispatch;
   onTurnOnCueMode: () => void;
 }) {
@@ -215,11 +261,14 @@ function VjCueGoButton({
   const isArmed = armedClipTitle !== null;
   const face = isCueMode ? "go" : "cue";
   const isGoEmpty = isCueMode && !isArmed;
-  const describedBy = isCueMode
-    ? [blockedReasonId, isGoEmpty ? goEmptyId : undefined]
-        .filter((id): id is string => id !== undefined)
-        .join(" ") || undefined
-    : undefined;
+  const describedBy =
+    [
+      isCueMode ? blockedReasonId : undefined,
+      isGoEmpty ? goEmptyId : undefined,
+      helpCaptionId,
+    ]
+      .filter((id): id is string => id !== undefined)
+      .join(" ") || undefined;
   const goAriaLabel = isArmed
     ? t("vj:remote.clipAria", { title: armedClipTitle })
     : t("vj:dock.go");

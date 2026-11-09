@@ -576,6 +576,42 @@
   transform: scale(1.12);
 }
 
+/* ── Help captions (VjDockHelpLegend): one line per control under its row,
+   in the row's order, the control's name in stage text leading the muted
+   description. A chip is 44 to 100px wide, too narrow for a sentence, so
+   the lines sit under the whole row and wrap freely; nothing clips. In the
+   pads strip they sit inside the strip panel under each row. ── */
+.helpLegend {
+  display: grid;
+  gap: 2px;
+  min-inline-size: 0;
+  padding-inline: 2px;
+}
+
+.helpEntry {
+  composes: helpCaption from "../kit/VjRemoteKit.module.css";
+}
+
+.helpLegend .helpEntry {
+  display: block;
+  margin: 0;
+  overflow: visible;
+  overflow-wrap: break-word;
+  -webkit-line-clamp: none;
+  line-clamp: none;
+}
+
+/* The control's name in the chips' own caption style (small uppercase), in
+   stage text, so it reads apart from the sentence after it. */
+.helpTerm {
+  margin-inline-end: 2px;
+  color: var(--qs-text);
+  font-size: var(--text-10);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 /* ── Popovers (BPM entry, transition picker, speed) ── */
 .popoverBody {
   display: grid;
@@ -613,6 +649,62 @@
    ("Passar por / branco"), breaking between words only. */
 .popoverGrid > .chip {
   white-space: normal;
+}
+
+/* The transition picker: one mode per line, its name over its description,
+   so every description reads in full. The list scrolls inside the popover
+   (VjDockPopover caps it at the viewport) when a phone runs out of height. */
+.modeList {
+  display: grid;
+  gap: 6px;
+}
+
+.modeList > .chip {
+  justify-content: flex-start;
+  align-items: flex-start;
+  inline-size: 100%;
+  min-inline-size: 0;
+  block-size: auto;
+  min-block-size: var(--tap-min);
+  padding-block: 7px;
+  text-align: start;
+  white-space: normal;
+}
+
+.modeList > .chip > svg {
+  margin-block-start: 1px;
+}
+
+.modeText {
+  display: grid;
+  flex: 1 1 auto;
+  gap: 1px;
+  min-inline-size: 0;
+}
+
+.modeList .modeName {
+  display: block;
+  text-align: start;
+}
+
+.modeDescription {
+  composes: helpCaption from "../kit/VjRemoteKit.module.css";
+}
+
+.modeList .modeDescription {
+  margin: 0;
+}
+
+/* The picked mode fills with the accent; its description takes the chip's
+   dark ink with it. */
+.modeList > .chip[aria-pressed="true"] .modeDescription {
+  color: inherit;
+}
+
+/* The one line under an option in the BPM popover sits close to it. */
+.optionWithDescription {
+  display: grid;
+  gap: 2px;
 }
 
 .modeName {

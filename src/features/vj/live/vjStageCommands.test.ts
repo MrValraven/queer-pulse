@@ -415,6 +415,43 @@ describe("createVjStageCommands outcomes", () => {
     });
   });
 
+  it("setRenderMode sends no stamp and answers reachedCount", async () => {
+    const harness = createHarness();
+    harness.answers.push({ ok: true, serverNow: 5_000, reachedCount: 2 });
+    await expect(harness.commands.setRenderMode("simple")).resolves.toEqual({
+      ok: true,
+      reachedCount: 2,
+    });
+    expect(harness.sent).toEqual([
+      { name: "screens:setRenderMode", payload: { mode: "simple" } },
+    ]);
+    // The next stamped command still starts the sequence at 1.
+    await harness.commands.swapMix();
+    expect(harness.sent[1]?.payload.commandSequence).toBe(1);
+  });
+
+  it("setRenderMode names vj_no_screens_connected", async () => {
+    const harness = createHarness();
+    harness.answers.push(failedAck("vj_no_screens_connected"));
+    await expect(harness.commands.setRenderMode("effects")).resolves.toEqual({
+      ok: false,
+      code: "vj_no_screens_connected",
+      errorKey: VJ_SOCKET_REASON_KEY.vj_no_screens_connected,
+    });
+  });
+
+  it("setRenderMode answers offline while detached", async () => {
+    const harness = createHarness();
+    harness.setAttached(false);
+    await expect(
+      harness.commands.setRenderMode("simple"),
+    ).resolves.toMatchObject({
+      ok: false,
+      code: "offline",
+    });
+    expect(harness.sent).toHaveLength(0);
+  });
+
   it("identifyScreen answers offline while detached", async () => {
     const harness = createHarness();
     harness.setAttached(false);

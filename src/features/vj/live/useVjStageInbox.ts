@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import type {
   VjLibraryChange,
   VjScreenIdentifyFrame,
+  VjScreenRenderModeFrame,
   VjScreenStatus,
   VjStageFrame,
 } from "../../../shared/contracts/vj";
@@ -34,7 +35,7 @@ function useVjListenerSet<Payload>() {
 }
 
 /**
- * Connection, lead flag, screen list, library and identify fan-out, fed by the
+ * Connection, lead flag, screen list, library, identify and render mode fan-out, fed by the
  * transport's callbacks. Stage frames go to onStageFrame (the frame queue owns
  * the applied state).
  */
@@ -47,8 +48,10 @@ export function useVjStageInbox(onStageFrame: (frame: VjStageFrame) => void) {
   const connectionRef = useRef<VjConnectionState>(INITIAL_VJ_CONNECTION);
   const library = useVjListenerSet<VjLibraryChange>();
   const identify = useVjListenerSet<VjScreenIdentifyFrame>();
+  const renderMode = useVjListenerSet<VjScreenRenderModeFrame>();
   const notifyLibrary = library.notify;
   const notifyIdentify = identify.notify;
+  const notifyRenderMode = renderMode.notify;
 
   const handleFrame = useCallback(
     (frame: VjServerFrame) => {
@@ -68,9 +71,12 @@ export function useVjStageInbox(onStageFrame: (frame: VjStageFrame) => void) {
         case "screen:identify":
           notifyIdentify(frame.payload);
           return;
+        case "screen:renderMode":
+          notifyRenderMode(frame.payload);
+          return;
       }
     },
-    [onStageFrame, notifyLibrary, notifyIdentify],
+    [onStageFrame, notifyLibrary, notifyIdentify, notifyRenderMode],
   );
 
   const handleConnection = useCallback((next: VjConnectionState) => {
@@ -120,6 +126,7 @@ export function useVjStageInbox(onStageFrame: (frame: VjStageFrame) => void) {
     resetForNewTransport,
     subscribeLibrary: library.subscribe,
     subscribeIdentify: identify.subscribe,
+    subscribeRenderMode: renderMode.subscribe,
     isAttached,
     currentRefusal,
   };

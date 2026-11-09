@@ -1,0 +1,244 @@
+/* VJ library: the Live connections panel above the section tabs, its
+   connection rows and the stage group headings. */
+
+/* No gap here: the quiet line and the card body swap in and out, and a gap
+   would jump as each one comes and goes. `.body` spaces its own children and
+   the reason line brings its own top padding. */
+.panel {
+  container-type: inline-size;
+  display: grid;
+  margin-block-end: var(--gap-lg);
+  /* Focus can land here after Stop everything; scrolled into view, the panel
+     stops below the sticky admin top bar. */
+  scroll-margin-top: calc(var(--admin-topbar-h) + var(--gap-sm));
+  padding: var(--gap-sm) var(--card-pad);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
+  background: var(--paper);
+  transition:
+    padding var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease),
+    background-color var(--dur-base) var(--ease);
+}
+
+/* Focus lands here after Stop everything, once its button has left. */
+.panel:focus {
+  outline: none;
+}
+
+.panel:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Nothing connected and no show held: the card folds to one quiet line. */
+.panel[data-quiet] {
+  padding: 0;
+  border-color: transparent;
+  background-color: transparent;
+}
+
+.quietLine {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.body {
+  display: grid;
+  gap: var(--gap-sm);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs) var(--gap-sm);
+}
+
+.icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--tap-min);
+  block-size: var(--tap-min);
+  border-radius: var(--radius-avatar);
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-ink);
+  font-size: var(--text-20);
+}
+
+.text {
+  display: grid;
+  flex: 1 1 16rem;
+  gap: var(--triage-gap-hair);
+  min-inline-size: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.summary,
+.hint {
+  max-inline-size: 60ch;
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-sm);
+  margin-inline-start: auto;
+}
+
+/* A quiet pill with danger text; the red confirm waits in the dialog. */
+.actions .stopTrigger {
+  color: var(--danger-ink);
+}
+
+/* Phone width: the panel's buttons fill the row, so each is easy to reach,
+   and the title shrinks to sit beside the icon, in line with the row text. */
+@container (max-width: 30rem) {
+  .text {
+    flex-basis: 0;
+  }
+
+  .actions {
+    flex: 1 1 100%;
+  }
+
+  .actions > * {
+    flex: 1 1 100%;
+  }
+
+  .actions > * > * {
+    inline-size: 100%;
+  }
+}
+
+.groups {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.groupTitle {
+  margin: 0;
+  padding-block-start: var(--gap-xs);
+  font-size: var(--text-caption);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* The padding and border sit on the row's child, so they fold with the row. */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs) var(--gap-sm);
+  padding-block: var(--gap-xs);
+  border-block-end: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* The panel's own border closes the list, so the last row draws none. */
+.list > li:last-child .row {
+  border-block-end: none;
+}
+
+.rowIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--tap-min);
+  block-size: var(--tap-min);
+  border-radius: var(--radius-avatar);
+  background: rgba(var(--line-rgb), 0.09);
+  color: var(--ink-60);
+  font-size: var(--text-15);
+}
+
+.rowText {
+  display: grid;
+  flex: 1 1 12rem;
+  gap: var(--triage-gap-hair);
+  min-inline-size: 0;
+}
+
+.rowTitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  margin: 0;
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Every fact carries a middot in a slot as wide as the column gap, and pulls
+   back over the gap by that width. The dot of whichever fact starts a line
+   sits left of the box and is clipped, so a wrapped line never opens on a
+   dot, at any width. */
+.rowFacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--triage-gap-hair) var(--gap-sm);
+  overflow: hidden;
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+
+.rowFact {
+  margin-inline-start: calc(-1 * var(--gap-sm));
+}
+
+/* The middot is drawn here, so screen readers skip it. */
+.rowFact::before {
+  content: "\00B7";
+  content: "\00B7" / "";
+  display: inline-block;
+  inline-size: var(--gap-sm);
+  text-align: center;
+  color: var(--ink-60);
+}
+
+.rowFactWarning {
+  color: var(--amber-ink);
+}
+
+.rowAction {
+  flex: none;
+  margin-inline-start: auto;
+}
+
+@container (max-width: 30rem) {
+  .rowAction {
+    flex: 1 1 100%;
+  }
+
+  .rowAction > * {
+    inline-size: 100%;
+  }
+}

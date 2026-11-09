@@ -23,6 +23,14 @@
   background: var(--vj-black);
 }
 
+/* The simple renderer while it arrives in a hand-off. Browsers stop decoding
+   fully transparent video, so the arriving stage stays at 1% until its first
+   live frame, then shows in the same commit the leaving renderer unmounts.
+   The swap is the show itself, so it has no transition. */
+.isArriving {
+  opacity: 0.01;
+}
+
 .layerFill {
   position: absolute;
   inset: 0;

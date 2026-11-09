@@ -297,6 +297,7 @@ export function VjEventCardSheet({
   return (
     <VjSheetFrame
       title={t("vj:eventCard.title")}
+      intro={t("vj:eventCard.intro")}
       closeLabel={t("vj:eventCard.close")}
       onClose={onClose}
     >

@@ -5,6 +5,7 @@ import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
 import type { VjPackDTO } from "../../../../shared/contracts/vj";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { VjPackReadiness } from "../rules/vjPackReadiness";
+import { useVjHelpDescribedBy } from "./useVjHelpDescribedBy";
 import { vjCenteredScrollLeft, vjHiddenEdgesOf } from "./vjPackTabsScroll";
 import styles from "./VjTopRow.module.css";
 
@@ -23,6 +24,8 @@ export interface VjPackTabsProps {
   pendingPackId: string | null;
   gridSource: VjGridSource;
   isFavoritesOnly: boolean;
+  /** Whether the help legend holds the favorites line (the phone's shorter legend leaves it out). */
+  hasFavoritesHelp?: boolean;
   isBlocked: boolean;
   blockedReasonId?: string;
   /** Called for every pack chip tap, the active pack's included (it brings the grid back to the pack). */
@@ -128,6 +131,7 @@ function VjPackChip({
 }: VjPackChipProps): JSX.Element {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
+  const helpDescribedBy = useVjHelpDescribedBy();
   const transition = reducedMotion ? VJ_CHIP_INSTANT : VJ_CHIP_TRANSITION;
   const readinessLine = readinessLineOf(readiness);
   // Offline only the switch is blocked: the shown pack's chip still brings the grid back.
@@ -142,7 +146,10 @@ function VjPackChip({
       data-pending={isPending ? "true" : undefined}
       aria-pressed={isPressed}
       aria-disabled={isChipBlocked || undefined}
-      aria-describedby={isChipBlocked ? blockedReasonId : undefined}
+      aria-describedby={helpDescribedBy(
+        "packTab",
+        isChipBlocked ? blockedReasonId : undefined,
+      )}
       initial={{ opacity: 0, scale: 0.92 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.92 }}
@@ -186,6 +193,7 @@ export function VjPackTabs({
   pendingPackId,
   gridSource,
   isFavoritesOnly,
+  hasFavoritesHelp = true,
   isBlocked,
   blockedReasonId,
   onRequestPack,
@@ -193,6 +201,7 @@ export function VjPackTabs({
   onToggleFavoritesOnly,
 }: VjPackTabsProps): JSX.Element {
   const { t } = useTranslation();
+  const helpDescribedBy = useVjHelpDescribedBy();
   const shownPackId = pendingPackId ?? activePackId;
   const shownChipId =
     gridSource === "generators" ? VJ_GENERATORS_CHIP_ID : shownPackId;
@@ -211,6 +220,9 @@ export function VjPackTabs({
         className={`${styles.chip} ${styles.iconChip}`}
         aria-pressed={isFavoritesOnly}
         aria-label={t("vj:top.favoritesOnly")}
+        aria-describedby={
+          hasFavoritesHelp ? helpDescribedBy("favoritesOnly") : undefined
+        }
         onClick={onToggleFavoritesOnly}
       >
         <span className={styles.chipFace}>
@@ -240,6 +252,7 @@ export function VjPackTabs({
         className={styles.chip}
         data-vj-chip={VJ_GENERATORS_CHIP_ID}
         aria-pressed={gridSource === "generators"}
+        aria-describedby={helpDescribedBy("generators")}
         onClick={onShowGenerators}
       >
         <span className={styles.chipFace}>

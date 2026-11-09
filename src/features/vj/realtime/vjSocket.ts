@@ -92,6 +92,8 @@ function exceptionRefusalOf(
   if (frame.code === "PLATFORM_LOCKED") return "platform_locked";
   const isReplaced = frame.domainCode === "vj_screen_replaced";
   if (frame.code === "BAD_REQUEST" && isReplaced) return "screen_replaced";
+  const isStopped = frame.domainCode === "vj_stopped";
+  if (frame.code === "BAD_REQUEST" && isStopped) return "stopped";
   return null;
 }
 

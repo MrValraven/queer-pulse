@@ -288,6 +288,7 @@ export function AdminListingsPage() {
           {hasRowsBody && hasSelection && (
             <BulkActionBar
               selectedRefs={selectedRefs}
+              selectedRows={rows.filter((row) => selectedRefs.has(row.ref))}
               onClear={() => setSelectedRefs(new Set())}
             />
           )}

@@ -1,6 +1,7 @@
 import type { JSX } from "react";
 import { FiStar } from "react-icons/fi";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import { useVjHelpDescribedBy } from "../top/useVjHelpDescribedBy";
 import styles from "./VjGrid.module.css";
 
 interface VjFavoriteStarProps {
@@ -24,6 +25,7 @@ export function VjFavoriteStar({
   onToggleFavorite,
 }: VjFavoriteStarProps): JSX.Element {
   const { t } = useTranslation();
+  const helpDescribedBy = useVjHelpDescribedBy();
   return (
     <button
       type="button"
@@ -32,6 +34,7 @@ export function VjFavoriteStar({
       aria-label={t(isFavorite ? "vj:grid.unfavorite" : "vj:grid.favorite", {
         title,
       })}
+      aria-describedby={helpDescribedBy("favoriteClip")}
       tabIndex={tabIndex}
       data-vj-favorite-star=""
       onClick={() => onToggleFavorite(clipId, !isFavorite)}

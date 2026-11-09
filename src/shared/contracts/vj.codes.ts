@@ -56,6 +56,8 @@ export const VJ_REFUSAL_CODES = [
   "VJ_SETLIST_REORDER_MISMATCH",
   "VJ_SETLIST_ITEMS_INVALID",
   "VJ_SETLIST_FULL",
+  "VJ_CONNECTION_NOT_FOUND",
+  "VJ_CONNECTION_NOT_YOURS",
 ] as const;
 export type VjRefusalCode = (typeof VJ_REFUSAL_CODES)[number];
 
@@ -88,9 +90,11 @@ export type VjWsTransportCode =
 export const VJ_EXCEPTION_DOMAIN_CODES = [
   "vj_not_admin",
   "vj_screen_replaced",
+  "vj_stopped",
 ] as const;
 
-/** v1 codes in v1 order, with the C 7.11 codes inserted before vj_server_error. */
+/** v1 codes in v1 order, with the C 7.11 codes inserted before vj_server_error
+ *  and the codes added since appended after it. */
 export const VJ_SOCKET_ERROR_CODES = [
   "vj_not_admin",
   "vj_not_attached",
@@ -164,5 +168,8 @@ export const VJ_SOCKET_ERROR_CODES = [
   "vj_event_card_kind_invalid",
   "vj_event_card_no_event",
   "vj_server_error",
+  "vj_stopped",
+  "vj_render_mode_invalid",
+  "vj_no_screens_connected",
 ] as const;
 export type VjSocketErrorCode = (typeof VJ_SOCKET_ERROR_CODES)[number];

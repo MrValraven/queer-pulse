@@ -136,6 +136,7 @@ export function VjMidiSheet({
   return (
     <VjSheetFrame
       title={t("vj:midi.title")}
+      intro={t("vj:midi.intro")}
       closeLabel={t("vj:midi.close")}
       onClose={onClose}
     >

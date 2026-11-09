@@ -46,8 +46,18 @@
 }
 
 /* ── The grid ── */
+/* The stage holds the grid in flow. On a pack or source switch the leaving
+   grid is popped out of flow (absolute, at its measured size) over it, so
+   both grids start at the same top while they crossfade. */
+.gridStage {
+  position: relative;
+  min-width: 0;
+}
+
+/* Positioned, so a tile leaving within one grid pops out at its own cell. */
 .grid {
   --vj-tile-grow-min: clamp(var(--vj-tile-min), 16cqi, 176px);
+  position: relative;
   display: grid;
   grid-template-columns: repeat(
     auto-fill,

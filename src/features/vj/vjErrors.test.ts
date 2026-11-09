@@ -47,11 +47,11 @@ describe("vjErrors", () => {
   );
 
   it("gives every code its own line", () => {
-    expect(new Set(Object.values(VJ_REASON_KEY)).size).toBe(53);
+    expect(new Set(Object.values(VJ_REASON_KEY)).size).toBe(55);
     expect(new Set(Object.values(VJ_SOCKET_REASON_KEY)).size).toBe(
       VJ_SOCKET_ERROR_CODES.length,
     );
-    expect(VJ_SOCKET_ERROR_CODES).toHaveLength(72);
+    expect(VJ_SOCKET_ERROR_CODES).toHaveLength(75);
   });
 
   it("spells keys the contract way", () => {
@@ -61,6 +61,12 @@ describe("vjErrors", () => {
     );
     expect(VJ_SOCKET_REASON_KEY.vj_overlay_text_too_long).toBe(
       "vj:error.socket.overlayTextTooLong",
+    );
+    expect(VJ_SOCKET_REASON_KEY.vj_no_screens_connected).toBe(
+      "vj:error.socket.noScreensConnected",
+    );
+    expect(VJ_SOCKET_REASON_KEY.vj_render_mode_invalid).toBe(
+      "vj:error.socket.renderModeInvalid",
     );
   });
 

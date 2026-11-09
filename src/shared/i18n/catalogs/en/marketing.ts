@@ -3437,6 +3437,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-09.headline":
+    "Stop every live VJ screen at once, or move them all to a simple renderer from the remote.",
   "changelog.releases.2026-11-08.headline":
     "The bell and the notifications page on a computer now lead with the photo and the message.",
   "changelog.releases.2026-11-07.headline":
@@ -3793,6 +3795,34 @@ export const marketing: Catalog = {
     "Failed actions now say why",
   "changelog.entries.failed-actions-say-why.body":
     "Forms, uploads and replies name the real cause, such as a lost connection or a full event.",
+  "changelog.entries.vj-remote-descriptions.title":
+    "See what every VJ control does and which effects are on",
+  "changelog.entries.vj-remote-descriptions.body":
+    "A ? button explains each dock control, and a strip above the pads lists the effects on with one-tap off.",
+  "changelog.entries.partner-cards-redesign.title":
+    "Richer partner cards in the directory",
+  "changelog.entries.partner-cards-redesign.body":
+    "Partner businesses get a wide card with their photo, a Partner label and our team's note about them.",
+  "changelog.entries.vj-simple-renderer.title":
+    "Simple renderer for VJ screens",
+  "changelog.entries.vj-simple-renderer.body":
+    "One switch on the remote moves every screen to plain clip fades and back, with no reload.",
+  "changelog.entries.vj-live-connections.title":
+    "See and stop live VJ screens and remotes",
+  "changelog.entries.vj-live-connections.body":
+    "The VJ library lists every connected screen and remote, and Stop everything frees them in one tap.",
+  "changelog.entries.vj-smooth-fades-and-pack-switch.title":
+    "Smooth VJ fades and pack switches",
+  "changelog.entries.vj-smooth-fades-and-pack-switch.body":
+    "Video to video fades keep the screen's full frame rate, and the remote grid crossfades between packs.",
+  "changelog.entries.vj-ping-pong-no-flash.title":
+    "Ping-pong clips turn without a flash",
+  "changelog.entries.vj-ping-pong-no-flash.body":
+    "A bouncing video holds its frame while it jumps back, so the far end no longer blinks on screen.",
+  "changelog.entries.bulk-actions-skip-unchanged-listings.title":
+    "Bulk listing actions only offer real changes",
+  "changelog.entries.bulk-actions-skip-unchanged-listings.body":
+    "Publish live and Back to review switch off when every selected listing is already there, and a mixed selection names how many will move.",
   "changelog.entries.vj-gifs-load-on-projector.title":
     "GIFs load on the VJ projector again",
   "changelog.entries.vj-gifs-load-on-projector.body":
@@ -10730,6 +10760,8 @@ export const marketing: Catalog = {
     "Try another category or a different search, or clear the filters to see every online business.",
   "directory.partners.title": "Businesses we partner with",
   "directory.partners.sub": "Queer businesses we work with and love",
+  "directory.partners.badge": "Partner",
+  "directory.partners.cta": "View place",
   "directory.empty.title": "No places match those filters",
   "directory.empty.body":
     "Try a broader category, fewer filters, or a different search, or clear the filters to see everything.",

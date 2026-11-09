@@ -169,6 +169,7 @@ export function VjMixSheet({
   return (
     <VjSheetFrame
       title={t("vj:mix.title")}
+      intro={t("vj:mix.intro")}
       closeLabel={t("vj:mix.close")}
       onClose={onClose}
     >

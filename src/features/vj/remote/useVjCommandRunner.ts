@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import type {
   VjCommandOutcome,
   VjIdentifyOutcome,
+  VjRenderModeOutcome,
   VjStageCommands,
   VjStageController,
 } from "../live/useVjStage";
@@ -13,9 +14,13 @@ export type VjCommandArgs<Name extends VjCommandName> = Parameters<
   VjStageCommands[Name]
 >;
 
-/** What a command answers: identifyScreen counts the screens it reached; every other command acks a revision. */
+/** What a command answers: identifyScreen and setRenderMode count the screens they reached; every other command acks a revision. */
 export type VjCommandResult<Name extends VjCommandName> =
-  Name extends "identifyScreen" ? VjIdentifyOutcome : VjCommandOutcome;
+  Name extends "identifyScreen"
+    ? VjIdentifyOutcome
+    : Name extends "setRenderMode"
+      ? VjRenderModeOutcome
+      : VjCommandOutcome;
 
 /** Sends one stage command; the answer is typed per command name. */
 export type VjRun = <Name extends VjCommandName>(
@@ -94,7 +99,7 @@ export function useVjCommandRunner(stage: VjStageController): {
   );
 
   const noteOutcome = useCallback(
-    (outcome: VjCommandOutcome | VjIdentifyOutcome) => {
+    (outcome: VjCommandOutcome | VjIdentifyOutcome | VjRenderModeOutcome) => {
       if (outcome.ok) {
         setLastError(null);
         return;

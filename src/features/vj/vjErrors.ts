@@ -81,6 +81,7 @@ export const VJ_CONNECTION_REFUSAL_KEY: Record<VjConnectionRefusal, string> = {
   platform_locked: "vj:connection.refused.platformLocked",
   server_error: "vj:connection.refused.serverError",
   client_outdated: "vj:connection.refused.clientOutdated",
+  stopped: "vj:connection.refused.stopped",
 };
 
 /** The number each reason names in its line as {max}. */

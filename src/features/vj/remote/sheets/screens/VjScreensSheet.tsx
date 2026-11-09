@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { AnimatePresence } from "motion/react";
 import { FiMonitor } from "react-icons/fi";
 import {
@@ -12,15 +12,19 @@ import type {
   VjScreenStatus,
   VjStageState,
 } from "../../../../../shared/contracts/vj";
+import { useMotionPrefs } from "../../../../../app/providers/motionPrefs";
 import type { TranslateOptions } from "../../../../../shared/i18n/types";
 import { useTranslation } from "../../../../../shared/i18n/useTranslation";
 import type {
   VjCommandOutcome,
   VjIdentifyOutcome,
+  VjRenderModeOutcome,
 } from "../../../live/vjStageCommands";
 import { VjSheetFrame } from "../../kit/VjSheetFrame";
 import type { VjRun } from "../../useVjCommandRunner";
 import { VjSheetAlert } from "../../VjSheetAlert";
+import { useVjRenderModeSwitch } from "./useVjRenderModeSwitch";
+import { VjRenderModeSwitch } from "./VjRenderModeSwitch";
 import { VjScreenRow } from "./VjScreenRow";
 import styles from "./VjScreensSheet.module.css";
 
@@ -45,10 +49,12 @@ export interface VjScreensSheetProps {
 }
 
 /**
- * The Screens sheet: Show every screen's number on top, then one row per
- * screen in number order with its health, what it shows and Show number.
- * Every send goes through `run`; a refusal (a screen that left, too many
- * screens with their own look) names its reason over the rows.
+ * The Screens sheet: Simple renderer on every screen and Show every screen's
+ * number on top, then one row per screen in number order with its health
+ * (the load warning offers Switch to simple renderer), what it shows and
+ * Show number. Every send goes through `run`; a refusal (a screen that left,
+ * zero screens connected, too many screens with their own look) names its
+ * reason over the rows.
  */
 export function VjScreensSheet({
   screens,
@@ -59,7 +65,9 @@ export function VjScreensSheet({
   onClose,
 }: VjScreensSheetProps) {
   const { t } = useTranslation();
+  const { reducedMotion } = useMotionPrefs();
   const emptyId = useId();
+  const noConnectedId = useId();
   const [pendingIdentifyKeys, setPendingIdentifyKeys] = useState<
     ReadonlySet<string>
   >(() => new Set());
@@ -72,17 +80,56 @@ export function VjScreensSheet({
     (first, second) => first.number - second.number,
   );
   const hasConnectedScreen = screens.some((screen) => screen.isConnected);
+  // Screens listed, none of them connected: the held show-wide controls say why.
+  const isNoneConnected = screens.length > 0 && !hasConnectedScreen;
+  const showWideHeldReasonId =
+    screens.length === 0
+      ? emptyId
+      : isNoneConnected
+        ? noConnectedId
+        : undefined;
   const isIdentifyAllHeld =
     isBlocked ||
     !hasConnectedScreen ||
     pendingIdentifyKeys.has(IDENTIFY_ALL_KEY);
 
-  const noteOutcome = (outcome: VjCommandOutcome | VjIdentifyOutcome) => {
+  const noteOutcome = (
+    outcome: VjCommandOutcome | VjIdentifyOutcome | VjRenderModeOutcome,
+  ) => {
     setAlertLine(
       outcome.ok
         ? { key: null }
         : { key: outcome.errorKey, values: { ...outcome.errorValues } },
     );
+  };
+
+  const renderModeSwitchRef = useRef<HTMLButtonElement>(null);
+  const {
+    isOn: isSimpleOn,
+    isPending: isRenderModePending,
+    pendingMode: renderModePendingMode,
+    requestMode,
+  } = useVjRenderModeSwitch({
+    screens,
+    run,
+    isBlocked,
+    onOutcome: noteOutcome,
+  });
+
+  // The warning that sent simple folds away once its screen reports simple,
+  // taking its button with it: focus moves to the show-wide switch first
+  // without the instant jump a plain focus() makes, then the sheet glides
+  // just far enough to show the switch, its pending line and any refusal.
+  const switchToSimpleFromRow = () => {
+    const switchElement = renderModeSwitchRef.current;
+    if (switchElement !== null) {
+      switchElement.focus({ preventScroll: true });
+      switchElement.scrollIntoView({
+        block: "nearest",
+        behavior: reducedMotion ? "auto" : "smooth",
+      });
+    }
+    void requestMode("simple");
   };
 
   const setIdentifyPending = (key: string, isPending: boolean) => {
@@ -120,26 +167,47 @@ export function VjScreensSheet({
   return (
     <VjSheetFrame
       title={t("vj:screensSheet.title")}
+      intro={t("vj:screensSheet.intro")}
       closeLabel={t("vj:screensSheet.close")}
       onClose={onClose}
     >
       <div className={styles.sheetBody} data-vj-screens-sheet="">
-        <Button
-          variant="stage-ghost"
-          className={styles.identifyAllButton}
-          aria-disabled={isIdentifyAllHeld}
-          aria-describedby={screens.length === 0 ? emptyId : undefined}
-          onClick={() => {
-            if (!isIdentifyAllHeld) void identify(null);
-          }}
-        >
-          <FiMonitor aria-hidden fill="none" />
-          {t("vj:screensSheet.identifyAll")}
-        </Button>
+        <div className={styles.showControls}>
+          <VjRenderModeSwitch
+            ref={renderModeSwitchRef}
+            isOn={isSimpleOn}
+            isPending={isRenderModePending}
+            pendingMode={renderModePendingMode}
+            isHeld={isBlocked || !hasConnectedScreen}
+            heldReasonId={showWideHeldReasonId}
+            onToggle={() => void requestMode(isSimpleOn ? "effects" : "simple")}
+          />
+          <Button
+            variant="stage-ghost"
+            className={styles.identifyAllButton}
+            aria-disabled={isIdentifyAllHeld}
+            aria-describedby={showWideHeldReasonId}
+            onClick={() => {
+              if (!isIdentifyAllHeld) void identify(null);
+            }}
+          >
+            <FiMonitor aria-hidden fill="none" />
+            {t("vj:screensSheet.identifyAll")}
+          </Button>
+        </div>
         <VjSheetAlert errorKey={alertLine.key} values={alertLine.values} />
         <Collapse isOpen={screens.length === 0}>
           <p id={emptyId} className={styles.hint}>
             {t("vj:screensSheet.empty")}
+          </p>
+        </Collapse>
+        <Collapse isOpen={isNoneConnected}>
+          <p
+            id={noConnectedId}
+            className={styles.hint}
+            data-vj-screens-none-connected=""
+          >
+            {t("vj:error.socket.noScreensConnected")}
           </p>
         </Collapse>
         <ul className={styles.rowList}>
@@ -153,10 +221,14 @@ export function VjScreensSheet({
                     packClips={packClips}
                     isBlocked={isBlocked}
                     isIdentifyPending={pendingIdentifyKeys.has(screen.screenId)}
+                    isRenderModeHeld={
+                      isBlocked || isRenderModePending || !screen.isConnected
+                    }
                     pendingOverrideValue={
                       pendingOverrideValues[screen.screenId] ?? null
                     }
                     onIdentify={(screenId) => void identify(screenId)}
+                    onSwitchToSimple={switchToSimpleFromRow}
                     onPickOverride={(screenId, override, value) =>
                       void pickOverride(screenId, override, value)
                     }

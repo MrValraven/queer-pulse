@@ -5,9 +5,12 @@ import { focusListingQueueHeadingAfterRemove } from "./listingQueueFocus";
 
 /**
  * The bulk counterpart to `PublishListingConfirmModal`: a one-beat check
- * before every selected listing goes live, since publishing puts them in
- * front of members straight away. Uses the default `ConfirmDialog` tone with
- * no reason field, because the move is reversible with Back to review.
+ * before the selected listings go live, since publishing puts them in front
+ * of members straight away. `count` is how many will actually go live: the
+ * bulk bar passes the selected listings that are in review or have a
+ * question, leaving out any already live. Uses the default `ConfirmDialog`
+ * tone with no reason field, because the move is reversible with Back to
+ * review.
  *
  * A successful publish clears the selection, which unmounts the bulk bar and
  * the Publish button that opened this dialog. Focus restore then has no

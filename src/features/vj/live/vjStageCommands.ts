@@ -1,8 +1,8 @@
 /**
  * The remote's stage commands over a VjTransport (C 7.4, 7.5, 7.11).
  * A command takes its stamp only when it is emitted, so a command refused
- * locally while the socket is down numbers nothing. screen:identify is the
- * one unstamped remote frame.
+ * locally while the socket is down numbers nothing. screen:identify and
+ * screens:setRenderMode are the unstamped remote frames.
  */
 import type {
   VjAck,
@@ -10,6 +10,7 @@ import type {
   VjCommandSuccess,
   VjEffectSettingPatch,
   VjGeneratorId,
+  VjRenderMode,
   VjScreenOverride,
   VjSetEffectsPayload,
   VjSocketErrorCode,
@@ -56,6 +57,9 @@ export type VjCommandOutcome =
 
 export type VjIdentifyOutcome =
   { ok: true; identifiedCount: number } | VjCommandFailureOutcome;
+
+export type VjRenderModeOutcome =
+  { ok: true; reachedCount: number } | VjCommandFailureOutcome;
 
 /** Skips the beat grid (C 7.4); only the three commands below may ask. */
 export interface VjImmediateOption {
@@ -111,6 +115,8 @@ export interface VjStageCommands {
   ): Promise<VjCommandOutcome>;
   /** Unstamped (C 7.5). screenId null identifies every connected screen. */
   identifyScreen(screenId: string | null): Promise<VjIdentifyOutcome>;
+  /** Unstamped and outside the command queue; reaches every connected screen. */
+  setRenderMode(mode: VjRenderMode): Promise<VjRenderModeOutcome>;
 }
 
 type VjCommandAck = VjAck<VjCommandSuccess>;
@@ -341,7 +347,7 @@ function scalarCommandsOf(
   run: VjRunCommand,
 ): Omit<
   VjStageCommands,
-  keyof ReturnType<typeof patchCommandsOf> | "identifyScreen"
+  keyof ReturnType<typeof patchCommandsOf> | "identifyScreen" | "setRenderMode"
 > {
   return {
     setPack: (packId) =>
@@ -419,6 +425,21 @@ async function identifyScreenWith(
   }
 }
 
+/** screens:setRenderMode carries no stamp; while detached it answers the offline outcome. */
+async function setRenderModeWith(
+  transport: VjSend,
+  mode: VjRenderMode,
+  onAckState: (state: VjStageState) => void,
+): Promise<VjRenderModeOutcome> {
+  try {
+    const ack = await transport.send("screens:setRenderMode", { mode });
+    if (!ack.ok) return outcomeOfAckFailure(ack, onAckState);
+    return { ok: true, reachedCount: ack.reachedCount };
+  } catch (cause) {
+    return outcomeOfSendFailure(cause);
+  }
+}
+
 /** Takes a stamp from the stamper only when it emits (attached), sends
  *  through the transport and maps the ack: ok gives { ok, revision, isNoop,
  *  applyAt }; a failure with `state` hands it to onAckState; a VjSendError
@@ -451,6 +472,12 @@ export function createVjStageCommands(
         ? identifyScreenWith(transport, screenId, onAckState)
         : Promise.resolve(
             offlineVjCommandOutcome("screen:identify", currentRefusal()),
+          ),
+    setRenderMode: (mode) =>
+      isAttached()
+        ? setRenderModeWith(transport, mode, onAckState)
+        : Promise.resolve(
+            offlineVjCommandOutcome("screens:setRenderMode", currentRefusal()),
           ),
   };
 }

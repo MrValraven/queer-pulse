@@ -112,6 +112,13 @@
   backdrop-filter: var(--qs-glass-blur);
 }
 
+/* Help captions on: the top row's and the mirror's legends make the header
+   too tall to pin on a phone, so it scrolls with the page there. The split
+   layout keeps it pinned (below). */
+.header[data-vj-help="on"] {
+  position: relative;
+}
+
 /* 2px under the strips makes the strips-to-grid gap the budget's 8px. */
 .stripsBand {
   min-width: 0;
@@ -166,6 +173,12 @@
      header's own edges. */
   .header::before {
     inset-inline: 0;
+  }
+
+  /* Help captions on: the wide column fits the legends in two lines each,
+     so the header stays pinned. */
+  .header[data-vj-help="on"] {
+    position: sticky;
   }
 
   /* The dock is a column here, so nothing covers the grid: tiles stay square. */

@@ -36,9 +36,17 @@ function healthWith(patch: Partial<VjScreenHealth>): VjScreenHealth {
   };
 }
 
+const baseRenderer: VjScreenSetupFactsProps["renderer"] = {
+  phase: "webgl2",
+  reason: null,
+  lossCount: 0,
+  retiredReason: null,
+  handOffFrom: null,
+};
+
 function renderFacts(patch: Partial<VjScreenSetupFactsProps> = {}) {
   const props: VjScreenSetupFactsProps = {
-    renderer: { phase: "webgl2", reason: null, lossCount: 0 },
+    renderer: baseRenderer,
     health: null,
     eventCard: { isUnlinked: false, unavailableReason: null, card: null },
     ...patch,
@@ -85,6 +93,13 @@ describe("VjScreenSetupFacts", () => {
     expect(
       screen.queryByText(/vj:screen\.eventCard\.linked/),
     ).not.toBeInTheDocument();
+  });
+
+  it("names the simple renderer chosen from the remote", () => {
+    renderFacts({ renderer: { ...baseRenderer, phase: "simple" } });
+    // The translation mock renders each key as its text.
+    expect(screen.getByText("vj:screen.renderer.simple")).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).toBeNull();
   });
 
   it("shows no event line while the pack's event is unknown", () => {

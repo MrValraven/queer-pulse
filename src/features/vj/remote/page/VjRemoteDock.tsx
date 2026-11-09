@@ -15,11 +15,21 @@
  * draw the tempo bar and the transition row as one compact strip. The root
  * carries `data-vj-dock-variant`, and the rows' CSS modules style each design
  * from it.
+ *
+ * Directly above the pads, in both designs and both layouts, the Effects on
+ * strip lists every effect that is on as a chip (VjEffectsOnStrip); it folds
+ * away while none is. While help captions are on, the crossfader carries a
+ * caption under it, and the phone band caps its height and scrolls inside,
+ * with the action row stuck to its bottom edge as in the split column.
  */
 import {
   useCallback,
   useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
   useState,
+  type RefObject,
   type JSX,
   type ReactNode,
 } from "react";
@@ -38,6 +48,8 @@ import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { VjStageCommands } from "../../live/useVjStage";
 import type { VjTempoPatch } from "../dock/VjBpmPopover";
 import { VjDockActions } from "../dock/VjDockActions";
+import { VjDockHelpLegend } from "../dock/VjDockHelpLegend";
+import { VjEffectsOnStrip } from "../dock/VjEffectsOnStrip";
 import { VjPadsRow } from "../dock/VjPadsRow";
 import { VjTempoBar } from "../dock/VjTempoBar";
 import { VjTransitionRow } from "../dock/VjTransitionRow";
@@ -45,6 +57,7 @@ import {
   useVjDockVariant,
   type VjDockVariant,
 } from "../hooks/useVjDockVariant";
+import { useVjHelpCaptions } from "../hooks/useVjHelpCaptions";
 import { VjCrossfader } from "../kit/VjCrossfader";
 import { useVjMidiLearnTarget } from "../midi/useVjMidiLearnTarget";
 import { VjMidiLearnBanner } from "../sheets/midi/VjMidiLearnBanner";
@@ -63,6 +76,60 @@ const VJ_WAITING_STATE = createVjStageState("waiting", 0);
 /** The app's ease-out token (--ease-out) at its base duration (--dur-base). */
 const VJ_DOCK_ENTER = { duration: 0.25, ease: [0.16, 1, 0.3, 1] as const };
 const VJ_DOCK_INSTANT = { duration: 0 };
+
+/** How long a help caption takes to fold away (Collapse's 0.28 s, rounded up). */
+const VJ_HELP_FOLD_MS = 300;
+
+/**
+ * True while help captions are on, and for the fold after they turn off,
+ * so the phone band keeps its height cap while the captions fold away
+ * inside it. Reduced motion drops the wait.
+ */
+function useVjDockHelpLayout(
+  isHelpOn: boolean,
+  isReducedMotion: boolean,
+): boolean {
+  const [isLingering, setIsLingering] = useState(false);
+  const [wasHelpOn, setWasHelpOn] = useState(isHelpOn);
+  if (wasHelpOn !== isHelpOn) {
+    setWasHelpOn(isHelpOn);
+    setIsLingering(!isHelpOn && !isReducedMotion);
+  }
+  useEffect(() => {
+    if (!isLingering) return undefined;
+    const timerId = setTimeout(() => setIsLingering(false), VJ_HELP_FOLD_MS);
+    return () => clearTimeout(timerId);
+  }, [isLingering]);
+  return isHelpOn || isLingering;
+}
+
+/**
+ * When help captions cap the phone band, the cap starts at the band's height
+ * before help and grows to its CSS value over --dur-base (the transition in
+ * VjRemoteDock.module.css), so the band's top edge glides up. The start
+ * height is set inline before the first paint and released a frame later.
+ */
+function useVjDockCapGrowth(
+  elementRef: RefObject<HTMLElement | null>,
+  startHeightRef: RefObject<number>,
+  isGrowing: boolean,
+): void {
+  useLayoutEffect(() => {
+    const element = elementRef.current;
+    const startHeight = startHeightRef.current;
+    if (!isGrowing || element === null || startHeight <= 0) return undefined;
+    element.style.maxBlockSize = `${startHeight}px`;
+    // Reading the box commits the start height, so the release transitions.
+    element.getBoundingClientRect();
+    const frameId = requestAnimationFrame(() => {
+      element.style.maxBlockSize = "";
+    });
+    return () => {
+      cancelAnimationFrame(frameId);
+      element.style.maxBlockSize = "";
+    };
+  }, [elementRef, startHeightRef, isGrowing]);
+}
 
 /** Reports an element's border-box height whenever it changes, and 0 once it is gone. */
 function useReportedHeight(
@@ -152,6 +219,9 @@ function VjDockInfoLine({ infoKey }: { infoKey: string | null }): JSX.Element {
 
 /** The split dock's crossfader, sending through the same throttle as the Mix sheet. */
 function VjDockCrossfader({ session }: { session: VjRemoteSession }) {
+  const { t } = useTranslation();
+  const { isOn: isHelpOn } = useVjHelpCaptions();
+  const helpId = useId();
   const { latestState, stateRevision, isBlocked, run } = session;
   const { learnProps, isPickable } = useVjMidiLearnTarget({
     kind: "crossfader",
@@ -166,6 +236,10 @@ function VjDockCrossfader({ session }: { session: VjRemoteSession }) {
     isBlocked,
     setMix,
   });
+  const describedByIds =
+    [session.blockedReasonId, isHelpOn ? helpId : null]
+      .filter(Boolean)
+      .join(" ") || undefined;
   return (
     <div className={styles.crossfaderRow} {...learnProps}>
       <VjCrossfader
@@ -173,9 +247,20 @@ function VjDockCrossfader({ session }: { session: VjRemoteSession }) {
         onChange={crossfader.change}
         onRelease={crossfader.release}
         isBlocked={isBlocked || isPickable}
-        describedBy={session.blockedReasonId}
+        describedBy={describedByIds}
         hasMixClip={(latestState?.mix.clipId ?? null) !== null}
       />
+      <div className={styles.crossfaderHelp}>
+        <VjDockHelpLegend
+          entries={[
+            {
+              id: helpId,
+              term: t("vj:dock.sectionMix"),
+              text: t("vj:help.crossfader"),
+            },
+          ]}
+        />
+      </div>
     </div>
   );
 }
@@ -275,6 +360,16 @@ function VjDockRows({
         <VjDockHeading>{t("vj:dock.sectionEffects")}</VjDockHeading>
       ) : null}
       <div className={styles.padsSlot}>
+        <VjEffectsOnStrip
+          effects={state.effects}
+          isOnOf={actions.padIsOn}
+          isPendingOf={actions.padIsPending}
+          isBlocked={isBlocked}
+          blockedReasonId={session.blockedReasonId}
+          layout={session.layout.layout}
+          onPadSend={actions.onPadSend}
+          onAllOff={actions.turnAllEffectsOff}
+        />
         <VjPadsRow
           pads={session.dockPads.pads}
           effects={state.effects}
@@ -323,15 +418,35 @@ export function VjRemoteDock({
   const variant = useVjDockVariant();
   const isPhone = session.layout.layout === "phone";
   const [phoneHeight, setPhoneHeight] = useState(0);
+  // The last measured height, read when help captions open the cap.
+  const phoneHeightRef = useRef(0);
   const reportHeight = useCallback(
     (heightPx: number) => {
+      phoneHeightRef.current = heightPx;
       setPhoneHeight(heightPx);
       onHeightChange(heightPx);
     },
     [onHeightChange],
   );
   const measureRef = useReportedHeight(reportHeight);
-  const [columnRef, isColumnOverflowing] = useIsOverflowing();
+  // The split column, or the phone band while help caps its height.
+  const [overflowRef, isOverflowing] = useIsOverflowing();
+  const phoneElementRef = useRef<HTMLElement | null>(null);
+  const phoneRef = useCallback(
+    (element: HTMLElement | null) => {
+      phoneElementRef.current = element;
+      measureRef(element);
+      overflowRef(element);
+    },
+    [measureRef, overflowRef],
+  );
+  const { isOn: isHelpOn } = useVjHelpCaptions();
+  const isHelpLayout = useVjDockHelpLayout(isHelpOn, reducedMotion);
+  useVjDockCapGrowth(
+    phoneElementRef,
+    phoneHeightRef,
+    isPhone && isHelpLayout && !reducedMotion,
+  );
   useScrollPaddingForDock(isPhone ? phoneHeight : 0);
 
   const content: ReactNode = (
@@ -356,12 +471,13 @@ export function VjRemoteDock({
   if (!isPhone) {
     return (
       <section
-        ref={columnRef}
+        ref={overflowRef}
         className={styles.column}
         aria-label={t("vj:dock.label")}
         data-vj-remote-dock="split"
         data-vj-dock-variant={variant}
-        data-vj-dock-overflow={isColumnOverflowing ? "" : undefined}
+        data-vj-dock-help={isHelpLayout ? "" : undefined}
+        data-vj-dock-overflow={isOverflowing ? "" : undefined}
       >
         {content}
       </section>
@@ -370,13 +486,15 @@ export function VjRemoteDock({
 
   return createPortal(
     <m.section
-      ref={measureRef}
+      ref={phoneRef}
       className={styles.dock}
       aria-label={t("vj:dock.label")}
       data-theme="dark"
       data-vj-remote=""
       data-vj-remote-dock="phone"
       data-vj-dock-variant={variant}
+      data-vj-dock-help={isHelpLayout ? "" : undefined}
+      data-vj-dock-overflow={isHelpLayout && isOverflowing ? "" : undefined}
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={reducedMotion ? VJ_DOCK_INSTANT : VJ_DOCK_ENTER}

@@ -378,6 +378,33 @@ export function handleResetLook(context: VjRemoteActionContext): void {
   });
 }
 
+/**
+ * The Effects on strip's All off: one `setEffects` turns every effect shown
+ * on to off, and a running strobe stops through its own command. Text, mix,
+ * the clip, blackout and speed stay as they are (Reset look clears those).
+ * Every pad shows off at once; the first effect's rollback names the
+ * reason and the others roll back quietly.
+ */
+export function handleAllEffectsOff(context: VjRemoteActionContext): void {
+  if (context.isBlocked) return;
+  const onEffectIds = VJ_EFFECT_IDS.filter((effectId) =>
+    vjPadIsOn(context, effectId),
+  );
+  if (onEffectIds.length > 0) {
+    const settings: Partial<Record<VjEffectId, VjEffectSettingPatch>> = {};
+    for (const effectId of onEffectIds) settings[effectId] = { isOn: false };
+    const outcomePromise = context.run("setEffects", { settings });
+    onEffectIds.forEach((effectId, effectIndex) => {
+      void context.applyPad(vjPadKeyOf(effectId), false, () =>
+        effectIndex === 0
+          ? outcomePromise
+          : outcomePromise.then(silencedVjOutcome),
+      );
+    });
+  }
+  if (vjPadIsOn(context, "strobe")) sendVjPad(context, "strobe", "off");
+}
+
 /** From the fourth tap of a count, each tap sends the tempo with its synced time as the downbeat. */
 export function handleTap(context: VjRemoteActionContext): void {
   if (context.isBlocked) return;

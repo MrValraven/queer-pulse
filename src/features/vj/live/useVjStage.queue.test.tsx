@@ -438,6 +438,35 @@ describe("useVjStage v2 attach, identify and status", () => {
     expect(listener).toHaveBeenCalledTimes(1);
   });
 
+  it("render mode listeners hear screen:renderMode", () => {
+    const { result, transport } = renderScreen();
+    attachTransport(transport, {
+      role: "screen",
+      isLead: true,
+      screenNumber: 2,
+    });
+    const listener = vi.fn();
+    const unsubscribe = result.current.subscribeRenderMode(listener);
+    const frame = { mode: "simple" } as const;
+
+    act(() =>
+      transport.options.onFrame({
+        event: "screen:renderMode",
+        payload: frame,
+      }),
+    );
+    expect(listener).toHaveBeenCalledWith(frame);
+
+    unsubscribe();
+    act(() =>
+      transport.options.onFrame({
+        event: "screen:renderMode",
+        payload: frame,
+      }),
+    );
+    expect(listener).toHaveBeenCalledTimes(1);
+  });
+
   it("sendStatus forwards health, nextClipId and mic", () => {
     const { result, transport } = renderScreen();
     attachTransport(transport, {

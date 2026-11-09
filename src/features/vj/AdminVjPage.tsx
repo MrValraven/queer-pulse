@@ -26,6 +26,7 @@ import { useVjPackClips } from "./api/useVjPackClips";
 import { useVjPacks } from "./api/useVjPacks";
 import { VjClipGrid } from "./library/VjClipGrid";
 import { VjLibraryActions } from "./library/VjLibraryActions";
+import { VjLiveConnectionsPanel } from "./liveConnections/VjLiveConnectionsPanel";
 import { VjPackHeader } from "./library/VjPackHeader";
 import { VjPackList } from "./library/VjPackList";
 import { VjPackManageSheet } from "./library/VjPackManageSheet";
@@ -428,6 +429,7 @@ export function AdminVjPage() {
         />
       </FadeIn>
       <div className={css.page}>
+        <VjLiveConnectionsPanel />
         <VjLibraryViewTabs
           className={css.tabs}
           view={view}

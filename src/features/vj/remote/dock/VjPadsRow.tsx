@@ -9,10 +9,16 @@
  * first, then one pad per dock id in order, then All effects, which spans
  * the rest of the last grid row. Pads enter, leave and reorder with a short
  * fade, scale and glide. Sizes live in VjPads.module.css.
+ *
+ * While help captions are on (`data-help` on the row), every pad shows what
+ * its effect does under its label and grows to fit two lines of it, the
+ * All effects tile says what the sheet holds, and one caption under the row
+ * says how a pad is pressed.
  */
 import { AnimatePresence, m } from "motion/react";
 import {
   useEffect,
+  useId,
   useLayoutEffect,
   useRef,
   useState,
@@ -28,7 +34,9 @@ import {
   type VjEffects,
 } from "../../../../shared/contracts/vj";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import { useVjHelpCaptions } from "../hooks/useVjHelpCaptions";
 import type { VjPadId } from "../rules/vjDockPads";
+import { VjDockHelpLegend } from "./VjDockHelpLegend";
 import { VjEffectPad, type VjPadSendHandler } from "./VjEffectPad";
 import type { VjPadSettingSend } from "./VjPadTuner";
 import { VjStrobePad } from "./VjStrobePad";
@@ -45,6 +53,8 @@ const VJ_PAD_INSTANT = { duration: 0 };
 const VJ_PAD_DEFAULT_COLUMNS = 3;
 /** The column counts the split grid picks from, the default first. */
 const VJ_PAD_COLUMN_CHOICES = [3, 2] as const;
+/** The split grid's columns while help captions are on. */
+const VJ_PAD_HELP_COLUMNS = 2;
 /** The pad shape the split grid aims for: height over width. */
 const VJ_PAD_TARGET_RATIO = 0.8;
 
@@ -71,7 +81,30 @@ function vjIsLibraryAloneOf(padCount: number, columns: number): boolean {
 function vjSplitRowsOf(padCount: number, columns: number): string | undefined {
   if (!vjIsLibraryAloneOf(padCount, columns)) return undefined;
   const padRowCount = Math.ceil(padCount / columns);
-  return `repeat(${padRowCount}, minmax(var(--vj-pad-height), 1fr)) auto`;
+  return `repeat(${padRowCount}, minmax(var(--vj-pad-row-min), 1fr)) auto`;
+}
+
+/** How long a pad description takes to fold away (the pads' --dur-base). */
+const VJ_HELP_FOLD_MS = 250;
+
+/**
+ * True while help captions are on, and for the fold after they turn off, so
+ * the pads keep their help sizes until the descriptions have folded away
+ * and then glide back. Reduced motion drops the wait.
+ */
+function useVjHelpLayout(isHelpOn: boolean, isReducedMotion: boolean): boolean {
+  const [isLingering, setIsLingering] = useState(false);
+  const [wasHelpOn, setWasHelpOn] = useState(isHelpOn);
+  if (wasHelpOn !== isHelpOn) {
+    setWasHelpOn(isHelpOn);
+    setIsLingering(!isHelpOn && !isReducedMotion);
+  }
+  useEffect(() => {
+    if (!isLingering) return undefined;
+    const timerId = setTimeout(() => setIsLingering(false), VJ_HELP_FOLD_MS);
+    return () => clearTimeout(timerId);
+  }, [isLingering]);
+  return isHelpOn || isLingering;
 }
 
 /** The split grid's box and the sizes its rows are built from, in px. */
@@ -146,17 +179,21 @@ function vjPadGridMeasureOf(row: HTMLElement): VjPadGridMeasure | null {
  * measures once as the grid attaches, before the first paint, so the grid
  * never shows a frame at the default count; the observer follows later
  * size changes. State changes only when the count does (React drops an
- * equal update). Without a measure (jsdom) the count stays 3.
+ * equal update). Without a measure (jsdom) the count stays 3. While help
+ * captions are on the grid holds 2 columns: wider pads read their whole
+ * description in fewer lines, and rows sized by their content would
+ * otherwise flip the measured count back and forth.
  */
 function useVjSplitColumns(
   rowRef: RefObject<HTMLDivElement | null>,
   isSplit: boolean,
   padCount: number,
+  isHelpOn: boolean,
 ): number {
   const [columns, setColumns] = useState<number>(VJ_PAD_DEFAULT_COLUMNS);
   useLayoutEffect(() => {
     const row = rowRef.current;
-    if (!isSplit || row === null) return undefined;
+    if (!isSplit || isHelpOn || row === null) return undefined;
     const readColumns = () => {
       const measure = vjPadGridMeasureOf(row);
       if (measure !== null) setColumns(vjSplitColumnsOf(padCount, measure));
@@ -166,8 +203,9 @@ function useVjSplitColumns(
     const observer = new ResizeObserver(readColumns);
     observer.observe(row);
     return () => observer.disconnect();
-  }, [rowRef, isSplit, padCount]);
-  return isSplit ? columns : VJ_PAD_DEFAULT_COLUMNS;
+  }, [rowRef, isSplit, padCount, isHelpOn]);
+  if (!isSplit) return VJ_PAD_DEFAULT_COLUMNS;
+  return isHelpOn ? VJ_PAD_HELP_COLUMNS : columns;
 }
 
 /**
@@ -225,12 +263,16 @@ export interface VjPadsRowProps {
  *  It takes the ref AnimatePresence's pop layout measures a leaving pad by. */
 function VjPadSlot({
   isReducedMotion,
+  layoutKey,
   isLibrarySlot = false,
   librarySpan,
   children,
   ref,
 }: {
   isReducedMotion: boolean;
+  /** The docked pads in order: pads glide when it changes, and hold still
+   *  while a caption or the strip above moves the row. */
+  layoutKey: string;
   /** The All effects slot, which spans the rest of the last grid row. */
   isLibrarySlot?: boolean;
   /** The split grid columns the All effects slot spans (`vjLibrarySpanOf`). */
@@ -243,6 +285,7 @@ function VjPadSlot({
     <m.div
       ref={ref}
       layout="position"
+      layoutDependency={layoutKey}
       className={
         isLibrarySlot ? `${styles.slot} ${styles.allSlot}` : styles.slot
       }
@@ -263,13 +306,18 @@ function VjPadSlot({
 
 function VjAllEffectsPad({
   isLabelFull,
+  isHelpOn,
   onOpenLibrary,
 }: {
   /** A tile two or more grid columns wide shows the full name on its face. */
   isLabelFull: boolean;
+  /** Help captions on: the tile says what the sheet holds under its name. */
+  isHelpOn: boolean;
   onOpenLibrary: () => void;
 }) {
   const { t } = useTranslation();
+  const { reducedMotion } = useMotionPrefs();
+  const descriptionId = useId();
   const label = t("vj:pads.allEffects");
   // A narrow face shows one short word with the icon; the full name stays the button's name.
   const shortLabel = useVjShortLabel(VJ_ALL_EFFECTS_SHORT_KEY, label);
@@ -280,12 +328,33 @@ function VjAllEffectsPad({
       data-vj-pad-all=""
       aria-haspopup="dialog"
       aria-label={label}
+      aria-describedby={isHelpOn ? descriptionId : undefined}
       onClick={onOpenLibrary}
     >
       <FiGrid aria-hidden fill="none" className={styles.allIcon} />
       <span className={styles.allName} aria-hidden>
         {isLabelFull ? label : shortLabel}
       </span>
+      <AnimatePresence initial={false}>
+        {isHelpOn && (
+          <m.span
+            key="description"
+            className={`${styles.descriptionFold} ${styles.allDescriptionFold}`}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={reducedMotion ? VJ_PAD_INSTANT : VJ_PAD_TRANSITION}
+          >
+            <span
+              id={descriptionId}
+              className={styles.description}
+              data-vj-pad-description=""
+            >
+              {t("vj:help.effectsLibrary")}
+            </span>
+          </m.span>
+        )}
+      </AnimatePresence>
     </button>
   );
 }
@@ -306,12 +375,17 @@ export function VjPadsRow({
 }: VjPadsRowProps) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
+  const { isOn: isHelpOn } = useVjHelpCaptions();
+  // The row keeps its help sizes while the descriptions fold away.
+  const isHelpLayout = useVjHelpLayout(isHelpOn, reducedMotion);
+  const helpId = useId();
+  const padsLayoutKey = pads.join(" ");
   const blockedDescription = isBlocked ? blockedReasonId : undefined;
   const rowRef = useRef<HTMLDivElement>(null);
   const isSplit = layout === "split";
   // The strobe pad plus the docked pads come before the All effects tile.
   const padCount = pads.length + 1;
-  const columns = useVjSplitColumns(rowRef, isSplit, padCount);
+  const columns = useVjSplitColumns(rowRef, isSplit, padCount, isHelpLayout);
   const hasMoreAtEnd = useVjHasMoreAtEnd(rowRef, !isSplit, padCount);
   const librarySpan = isSplit ? vjLibrarySpanOf(padCount, columns) : undefined;
   const splitStyle = isSplit
@@ -321,60 +395,91 @@ export function VjPadsRow({
       }
     : undefined;
   return (
-    <m.div
-      ref={rowRef}
-      layoutScroll
-      role="group"
-      aria-label={t("vj:pads.label")}
-      className={styles.row}
-      data-vj-pads-row=""
-      data-layout={layout}
-      data-columns={isSplit ? columns : undefined}
-      data-has-more-end={hasMoreAtEnd}
-      style={splitStyle}
-    >
-      <AnimatePresence initial={false} mode="popLayout">
-        <VjPadSlot key="strobe" isReducedMotion={reducedMotion}>
-          <VjStrobePad
-            effects={effects}
-            isOn={isOnOf("strobe", effects.isStrobing)}
-            isPending={isPendingOf("strobe")}
-            isBlocked={isBlocked}
-            onPadSend={onPadSend}
-            serverNow={serverNow}
-            describedBy={blockedDescription}
-          />
-        </VjPadSlot>
-        {pads.map((effectId) => {
-          const setting = vjEffectSettingOf(effects, effectId);
-          return (
-            <VjPadSlot key={effectId} isReducedMotion={reducedMotion}>
-              <VjEffectPad
-                effectId={effectId}
-                setting={setting}
-                isOn={isOnOf(effectId, setting.isOn)}
-                isPending={isPendingOf(effectId)}
-                isBlocked={isBlocked}
-                stateRevision={stateRevision}
-                onPadSend={onPadSend}
-                setEffectSetting={setEffectSetting}
-                describedBy={blockedDescription}
-              />
-            </VjPadSlot>
-          );
-        })}
-        <VjPadSlot
-          key="allEffects"
-          isReducedMotion={reducedMotion}
-          isLibrarySlot
-          librarySpan={librarySpan}
-        >
-          <VjAllEffectsPad
-            isLabelFull={librarySpan !== undefined && librarySpan >= 2}
-            onOpenLibrary={onOpenLibrary}
-          />
-        </VjPadSlot>
-      </AnimatePresence>
-    </m.div>
+    <>
+      <m.div
+        ref={rowRef}
+        layoutScroll
+        role="group"
+        aria-label={t("vj:pads.label")}
+        aria-describedby={isHelpOn ? helpId : undefined}
+        className={styles.row}
+        data-vj-pads-row=""
+        data-layout={layout}
+        data-columns={isSplit ? columns : undefined}
+        data-has-more-end={hasMoreAtEnd}
+        data-help={isHelpLayout ? "on" : undefined}
+        style={splitStyle}
+      >
+        <AnimatePresence initial={false} mode="popLayout">
+          <VjPadSlot
+            key="strobe"
+            isReducedMotion={reducedMotion}
+            layoutKey={padsLayoutKey}
+          >
+            <VjStrobePad
+              effects={effects}
+              isOn={isOnOf("strobe", effects.isStrobing)}
+              isPending={isPendingOf("strobe")}
+              isBlocked={isBlocked}
+              onPadSend={onPadSend}
+              serverNow={serverNow}
+              describedBy={blockedDescription}
+            />
+          </VjPadSlot>
+          {pads.map((effectId) => {
+            const setting = vjEffectSettingOf(effects, effectId);
+            return (
+              <VjPadSlot
+                key={effectId}
+                isReducedMotion={reducedMotion}
+                layoutKey={padsLayoutKey}
+              >
+                <VjEffectPad
+                  effectId={effectId}
+                  setting={setting}
+                  isOn={isOnOf(effectId, setting.isOn)}
+                  isPending={isPendingOf(effectId)}
+                  isBlocked={isBlocked}
+                  stateRevision={stateRevision}
+                  onPadSend={onPadSend}
+                  setEffectSetting={setEffectSetting}
+                  describedBy={blockedDescription}
+                />
+              </VjPadSlot>
+            );
+          })}
+          <VjPadSlot
+            key="allEffects"
+            isReducedMotion={reducedMotion}
+            layoutKey={padsLayoutKey}
+            isLibrarySlot
+            librarySpan={librarySpan}
+          >
+            <VjAllEffectsPad
+              isLabelFull={librarySpan !== undefined && librarySpan >= 2}
+              isHelpOn={isHelpOn}
+              onOpenLibrary={onOpenLibrary}
+            />
+          </VjPadSlot>
+        </AnimatePresence>
+      </m.div>
+      <div
+        className={
+          isSplit
+            ? `${styles.helpLegendSlot} ${styles.helpLegendSlotSplit}`
+            : styles.helpLegendSlot
+        }
+      >
+        <VjDockHelpLegend
+          entries={[
+            {
+              id: helpId,
+              term: t("vj:pads.label"),
+              text: t("vj:help.effectPad"),
+            },
+          ]}
+        />
+      </div>
+    </>
   );
 }

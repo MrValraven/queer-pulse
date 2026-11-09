@@ -255,6 +255,21 @@ export interface VjLayerDrawState {
   curtain: number;
 }
 
+/**
+ * True once the frame shows what the layers were asked for: with a live
+ * target, its source is drawn ready under a fully lowered curtain; with no
+ * live target, any drawn frame counts.
+ */
+export function isVjLiveFrameShown(
+  draw: VjLayerDrawState,
+  hasLiveTarget: boolean,
+): boolean {
+  return (
+    !hasLiveTarget ||
+    (draw.live !== null && draw.live.source.isReady && draw.curtain <= 0)
+  );
+}
+
 export interface VjCompositorLayersHooks {
   sources: VjSourceHost;
   /** The program a starting transition draws with, after the flash governor and failed programs. */
@@ -306,6 +321,11 @@ export class VjCompositorLayers implements VjSourceListener {
 
   constructor(hooks: VjCompositorLayersHooks) {
     this.hooks = hooks;
+  }
+
+  /** True when the last `target` or `adoptSwap` named a source to show live. */
+  get hasLiveTarget(): boolean {
+    return typeof this.appliedTargetKey === "string";
   }
 
   heldOf(layer: VjLayerName): VjHeldSource | null {

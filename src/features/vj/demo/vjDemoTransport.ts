@@ -365,6 +365,7 @@ export class VjDemoTransport implements VjTransport {
   private handleException(payload: unknown): void {
     const { domainCode } = readVjRecord(payload);
     if (domainCode === "vj_screen_replaced") this.refuse("screen_replaced");
+    else if (domainCode === "vj_stopped") this.refuse("stopped");
     else if (domainCode === "vj_not_admin") this.refuse("not_admin");
   }
 

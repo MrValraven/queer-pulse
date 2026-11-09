@@ -14,7 +14,9 @@ import type {
   VjAckFor,
   VjClientFrameName,
   VjCommandFrameName,
+  VjClientPayload,
   VjCommandPatch,
+  VjSetRenderModePayload,
 } from "./vjFrames";
 
 describe("vjFrames typing", () => {
@@ -54,5 +56,14 @@ describe("vjFrames typing", () => {
     expectTypeOf<VjAckFor<"stage:goClip">>().toEqualTypeOf<
       VjAck<VjCommandSuccess>
     >();
+  });
+
+  it("acks screens:setRenderMode with the count of screens it reached", () => {
+    expectTypeOf<VjAckFor<"screens:setRenderMode">>().toEqualTypeOf<
+      VjAck<{ reachedCount: number }>
+    >();
+    expectTypeOf<
+      VjClientPayload<"screens:setRenderMode">
+    >().toEqualTypeOf<VjSetRenderModePayload>();
   });
 });

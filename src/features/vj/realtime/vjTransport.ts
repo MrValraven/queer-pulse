@@ -22,7 +22,9 @@ export type VjConnectionRefusal =
   | "unauthorized"
   | "platform_locked"
   | "server_error"
-  | "client_outdated";
+  | "client_outdated"
+  /** Stopped from the VJ library's Live connections; only a reload connects again. */
+  | "stopped";
 
 export interface VjConnectionState {
   status: VjConnectionStatus;

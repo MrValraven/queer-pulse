@@ -25,6 +25,7 @@ function micState(patch: Partial<VjMicTempoState> = {}): VjMicTempoState {
     report: null,
     start: vi.fn(),
     stop: vi.fn(),
+    release: vi.fn(),
     ...patch,
   };
 }

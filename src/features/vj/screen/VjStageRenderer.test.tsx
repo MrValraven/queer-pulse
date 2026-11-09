@@ -1193,3 +1193,66 @@ describe("VjStageRenderer loop window", () => {
     expect(video.loop).toBe(true);
   });
 });
+
+describe("VjStageRenderer hand-off props", () => {
+  beforeEach(() => {
+    mockCanvasContext();
+    vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue(undefined);
+    vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(
+      () => undefined,
+    );
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("reports onShown once the first clip shows", async () => {
+    const onShown = vi.fn();
+    const { container, rerenderStage } = renderStage({
+      target: videoClip("one"),
+      onShown,
+    });
+    expect(onShown).not.toHaveBeenCalled();
+    await bringToFirstFrame(mainVideoOf(layerOf(container, "one")));
+    expect(onShown).toHaveBeenCalledTimes(1);
+
+    rerenderStage({ target: videoClip("two") });
+    await bringToFirstFrame(mainVideoOf(layerOf(container, "two")));
+    expect(onShown).toHaveBeenCalledTimes(1);
+  });
+
+  it("cuts the first clip in when shouldCutFirstTarget is set", async () => {
+    const { container, rerenderStage } = renderStage({
+      target: videoClip("one"),
+      transition: { mode: "fade", durationMs: 600 },
+      shouldCutFirstTarget: true,
+    });
+    await bringToFirstFrame(mainVideoOf(layerOf(container, "one")));
+    expect(layerOf(container, "one")).toHaveAttribute(
+      "data-vj-layer-phase",
+      "shown",
+    );
+    expect(elementBySelector(container, "[data-vj-curtain]")).toHaveAttribute(
+      "data-vj-fade-ms",
+      "0",
+    );
+
+    // Later clips keep the stage's own transition.
+    rerenderStage({ target: videoClip("two") });
+    await bringToFirstFrame(mainVideoOf(layerOf(container, "two")));
+    expect(layerOf(container, "two")).toHaveAttribute("data-vj-fade-ms", "600");
+  });
+
+  it("fades the first clip in over the transition without shouldCutFirstTarget", async () => {
+    const { container } = renderStage({
+      target: videoClip("one"),
+      transition: { mode: "fade", durationMs: 600 },
+    });
+    await bringToFirstFrame(mainVideoOf(layerOf(container, "one")));
+    expect(elementBySelector(container, "[data-vj-curtain]")).toHaveAttribute(
+      "data-vj-fade-ms",
+      "600",
+    );
+  });
+});

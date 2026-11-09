@@ -185,13 +185,17 @@ function uniformValue(fake: VjFakeWebGl2, name: string): number | null {
   return typeof value === "number" ? value : null;
 }
 
-function setUp(fakeOptions: VjFakeWebGl2Options = {}) {
+function setUp(
+  fakeOptions: VjFakeWebGl2Options = {},
+  compositorOptions: { shouldCutFirstTarget?: boolean } = {},
+) {
   const fake = createVjFakeWebGl2Canvas(fakeOptions);
   let nowMs = 1000;
   const pendingFrames: FrameRequestCallback[] = [];
   const sources: FakeEngineSource[] = [];
   const events: VjCompositorEvent[] = [];
   const result = VjCompositor.create({
+    ...compositorOptions,
     canvas: fake.canvas,
     mediaHost: document.createElement("div"),
     palette: readVjPalette(),
@@ -636,5 +640,163 @@ describe("VjCompositor safety net, health and context", () => {
       reason: "programFailed",
     });
     expect(parallel.pendingFrameCount()).toBe(0);
+  });
+});
+
+describe("VjCompositor first live frame", () => {
+  const firstLiveFrameCount = (harness: ReturnType<typeof setUp>) =>
+    harness.events.filter((event) => event.type === "firstLiveFrame").length;
+
+  it("reports firstLiveFrame once, after the live clip draws with the curtain down", () => {
+    const harness = setUp();
+    const compositor = compositorOf(harness);
+    compositor.setLook(
+      lookOf({ transition: { mode: "fade", durationMs: 400 } }),
+    );
+    compositor.setLayers({ live: clipOf("clip-a"), mix: null });
+    harness.run(100);
+    expect(firstLiveFrameCount(harness)).toBe(0);
+
+    harness.sourceFor("clip-a").emitFirstFrame();
+    harness.run(200);
+    // The curtain is still lifting.
+    expect(firstLiveFrameCount(harness)).toBe(0);
+
+    harness.run(400);
+    expect(firstLiveFrameCount(harness)).toBe(1);
+    harness.run(1_000);
+    expect(firstLiveFrameCount(harness)).toBe(1);
+  });
+
+  it("reports firstLiveFrame after the first drawn frame when nothing is live", () => {
+    const harness = setUp();
+    const compositor = compositorOf(harness);
+    compositor.setLook(lookOf());
+    compositor.setLayers({ live: null, mix: null });
+    harness.step();
+    expect(firstLiveFrameCount(harness)).toBe(1);
+  });
+
+  it("stays silent while the core programs compile", () => {
+    const harness = setUp({ hasParallelCompile: true });
+    const compositor = compositorOf(harness);
+    compositor.setLayers({ live: null, mix: null });
+    harness.run(500);
+    expect(firstLiveFrameCount(harness)).toBe(0);
+
+    harness.fake.completeCompiles();
+    harness.step();
+    expect(firstLiveFrameCount(harness)).toBe(1);
+  });
+
+  it("cuts the first target in when shouldCutFirstTarget is set", () => {
+    const harness = setUp({}, { shouldCutFirstTarget: true });
+    const compositor = compositorOf(harness);
+    compositor.setLook(
+      lookOf({ transition: { mode: "fade", durationMs: 4000 } }),
+    );
+    compositor.setLayers({ live: clipOf("clip-a"), mix: null });
+    harness.step();
+    expect(firstLiveFrameCount(harness)).toBe(0);
+
+    harness.sourceFor("clip-a").emitFirstFrame();
+    harness.step();
+    expect(uniformValue(harness.fake, "uCurtain")).toBe(0);
+    expect(firstLiveFrameCount(harness)).toBe(1);
+
+    // A second target crossfades over the look's transition.
+    compositor.setLayers({ live: clipOf("clip-b"), mix: null });
+    harness.sourceFor("clip-b").emitFirstFrame();
+    harness.run(1_000);
+    expect(usedProgramKeys(harness.fake)).toContain("transition.fade");
+  });
+
+  it("keeps the arrival cut armed for a target that replaces one still decoding", () => {
+    const harness = setUp({}, { shouldCutFirstTarget: true });
+    const compositor = compositorOf(harness);
+    compositor.setLook(
+      lookOf({ transition: { mode: "fade", durationMs: 4000 } }),
+    );
+    compositor.setLayers({ live: clipOf("clip-a"), mix: null });
+    harness.step();
+    // A new target lands before clip-a decodes its first frame.
+    compositor.setLayers({ live: clipOf("clip-b"), mix: null });
+    harness.sourceFor("clip-b").emitFirstFrame();
+    harness.step();
+    expect(uniformValue(harness.fake, "uCurtain")).toBe(0);
+    expect(firstLiveFrameCount(harness)).toBe(1);
+  });
+
+  it("draws an arrival's blackout at full from its first frame", () => {
+    const harness = setUp({}, { shouldCutFirstTarget: true });
+    const compositor = compositorOf(harness);
+    compositor.setLook({
+      ...lookOf({ transition: { mode: "fade", durationMs: 4000 } }),
+      isBlackout: true,
+      blackoutFadeMs: 4000,
+    });
+    compositor.setLayers({ live: null, mix: null });
+    harness.step();
+    expect(uniformValue(harness.fake, "uBlackout")).toBe(1);
+  });
+
+  it("fades the blackout in on a normal start", () => {
+    const harness = setUp();
+    const compositor = compositorOf(harness);
+    compositor.setLook({
+      ...lookOf({ transition: { mode: "fade", durationMs: 4000 } }),
+      isBlackout: true,
+      blackoutFadeMs: 4000,
+    });
+    compositor.setLayers({ live: null, mix: null });
+    harness.step();
+    harness.step();
+    expect(uniformValue(harness.fake, "uBlackout") ?? 0).toBeLessThan(1);
+
+    harness.run(4_100);
+    expect(uniformValue(harness.fake, "uBlackout")).toBe(1);
+  });
+
+  it("keeps the look's transition for the first target by default", () => {
+    const harness = setUp();
+    const compositor = compositorOf(harness);
+    compositor.setLook(
+      lookOf({ transition: { mode: "fade", durationMs: 4000 } }),
+    );
+    compositor.setLayers({ live: clipOf("clip-a"), mix: null });
+    harness.sourceFor("clip-a").emitFirstFrame();
+    harness.step();
+    expect(uniformValue(harness.fake, "uCurtain")).toBeGreaterThan(0);
+    expect(firstLiveFrameCount(harness)).toBe(0);
+
+    harness.run(4_100);
+    expect(firstLiveFrameCount(harness)).toBe(1);
+
+    // A second target crossfades over the look's transition.
+    compositor.setLayers({ live: clipOf("clip-b"), mix: null });
+    harness.sourceFor("clip-b").emitFirstFrame();
+    harness.run(1_000);
+    expect(usedProgramKeys(harness.fake)).toContain("transition.fade");
+  });
+
+  it("stays silent until the first layers apply", () => {
+    const harness = setUp();
+    harness.run(500);
+    expect(firstLiveFrameCount(harness)).toBe(0);
+
+    compositorOf(harness).setLayers({ live: null, mix: null });
+    harness.step();
+    expect(firstLiveFrameCount(harness)).toBe(1);
+  });
+
+  it("reports firstLiveFrame only once across a context loss and restore", () => {
+    const harness = setUp();
+    showLive(harness, lookOf(), "clip-a");
+    expect(firstLiveFrameCount(harness)).toBe(1);
+
+    harness.fake.loseContext();
+    harness.fake.restoreContext();
+    harness.run(600);
+    expect(firstLiveFrameCount(harness)).toBe(1);
   });
 });

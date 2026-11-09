@@ -61,7 +61,7 @@ describe("quizshow templates in demo mode", () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     const cardIds = result.current.data?.items.map((card) => card.id) ?? [];
-    expect(cardIds).toHaveLength(5);
+    expect(cardIds).toHaveLength(10);
     expect(cardIds).not.toContain(QUIZSHOW_DEMO_TEMPLATE_IDS.queerCinema);
   });
 
@@ -74,7 +74,7 @@ describe("quizshow templates in demo mode", () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     const rows = result.current.data?.items ?? [];
-    expect(rows).toHaveLength(6);
+    expect(rows).toHaveLength(11);
     expect(rows[0]?.id).toBe(QUIZSHOW_DEMO_TEMPLATE_IDS.queerCinema);
     expect(rows[0]?.status).toBe("draft");
     expect(rows.slice(1).every((row) => row.status === "published")).toBe(true);
@@ -158,7 +158,7 @@ describe("quizshow templates in demo mode", () => {
     await result.current.mutateAsync(templateId);
 
     const rowIds = cachedRows(queryClient).map((row) => row.id);
-    expect(rowIds).toHaveLength(5);
+    expect(rowIds).toHaveLength(10);
     expect(rowIds).not.toContain(templateId);
     expect(isCached(queryClient, quizshowKeys.template(templateId, true))).toBe(
       false,

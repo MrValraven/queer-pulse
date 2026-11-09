@@ -51,6 +51,7 @@ import { createVjTrailingSender } from "../rules/vjThrottle";
 import type { VjRun } from "../useVjCommandRunner";
 import {
   dispatchVjRemoteAction,
+  handleAllEffectsOff,
   handleTouchPadSend,
   sendVjMixAmount,
   sendVjPad,
@@ -90,6 +91,8 @@ export interface VjRemoteActions {
   ) => void;
   padIsOn: (padId: VjPadId, serverIsOn: boolean) => boolean;
   padIsPending: (padId: VjPadId) => boolean;
+  /** Turns every effect and a running strobe off in one go (the Effects on strip's All off). */
+  turnAllEffectsOff: () => void;
   tileStateOf: (clipId: string) => Pick<VjTileState, "isPending" | "isArmed">;
   generatorIsPending: (generatorId: VjGeneratorId) => boolean;
   toggleFavorite: (clipId: string, isFavorite: boolean) => void;
@@ -389,6 +392,10 @@ export function useVjRemoteActions(
     },
     [],
   );
+  const turnAllEffectsOff = useCallback(() => {
+    const context = contextRef.current;
+    if (context !== null) handleAllEffectsOff(context);
+  }, []);
 
   const toggleFavorite = useCallback(
     (clipId: string, isFavorite: boolean) => {
@@ -438,6 +445,7 @@ export function useVjRemoteActions(
     onPadSend,
     padIsOn,
     padIsPending,
+    turnAllEffectsOff,
     tileStateOf,
     generatorIsPending,
     toggleFavorite,

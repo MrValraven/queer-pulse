@@ -11,6 +11,9 @@ const VJ_BEAT_DOT_INDEXES = [0, 1, 2, 3] as const;
 export interface VjBeatDotsProps {
   tempo: VjTempo | null;
   clock: VjRemoteClock;
+  /** The help caption's id while help is on; read while the dots show as an
+   *  image (the clock still syncing), since the ticking dots are hidden. */
+  describedBy?: string;
 }
 
 /**
@@ -21,7 +24,7 @@ export interface VjBeatDotsProps {
  * moves and the beat number (1 to 4) shows instead. The dots read hollow
  * until the clock has synced with the screens.
  */
-export function VjBeatDots({ tempo, clock }: VjBeatDotsProps) {
+export function VjBeatDots({ tempo, clock, describedBy }: VjBeatDotsProps) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
   const containerRef = useRef<HTMLSpanElement>(null);
@@ -57,6 +60,7 @@ export function VjBeatDots({ tempo, clock }: VjBeatDotsProps) {
       data-reduced-motion={reducedMotion ? "true" : undefined}
       role={clock.isSynced ? undefined : "img"}
       aria-label={syncingLabel}
+      aria-describedby={clock.isSynced ? undefined : describedBy}
       aria-hidden={clock.isSynced ? true : undefined}
       title={syncingLabel}
     >

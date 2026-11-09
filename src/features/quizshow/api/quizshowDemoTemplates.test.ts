@@ -78,18 +78,23 @@ describe("quizshow demo templates store", () => {
     resetQuizshowDemoStore();
   });
 
-  it("seeds five published templates and one draft", () => {
+  it("seeds ten published templates and one draft", () => {
     const rows = demoListTemplates().items;
-    expect(rows).toHaveLength(6);
-    expect(rows.filter((row) => row.status === "published")).toHaveLength(5);
+    expect(rows).toHaveLength(11);
+    expect(rows.filter((row) => row.status === "published")).toHaveLength(10);
     expect(rows.filter((row) => row.status === "draft")).toHaveLength(1);
-    expect(demoTemplateCards().items).toHaveLength(5);
+    expect(demoTemplateCards().items).toHaveLength(10);
   });
 
   it("lists rows drafts first, then published, newest edit first", () => {
     const rows = demoListTemplates().items;
     expect(rows.map((row) => row.id)).toEqual([
       QUIZSHOW_DEMO_TEMPLATE_IDS.queerCinema,
+      QUIZSHOW_DEMO_TEMPLATE_IDS.sapphicNight,
+      QUIZSHOW_DEMO_TEMPLATE_IDS.screenIcons,
+      QUIZSHOW_DEMO_TEMPLATE_IDS.queerTvNight,
+      QUIZSHOW_DEMO_TEMPLATE_IDS.queerAnthems,
+      QUIZSHOW_DEMO_TEMPLATE_IDS.popDivas,
       QUIZSHOW_DEMO_TEMPLATE_IDS.lisbonQueerIcons,
       QUIZSHOW_DEMO_TEMPLATE_IDS.dragHerstory,
       QUIZSHOW_DEMO_TEMPLATE_IDS.eurovision,
@@ -105,7 +110,7 @@ describe("quizshow demo templates store", () => {
       updatedByName: QUIZSHOW_DEMO_STAFF_NAME,
       publishedAt: null,
     });
-    expect(rows[5]).toMatchObject({
+    expect(rows[10]).toMatchObject({
       status: "published",
       publishedAt: "2026-10-20T10:00:00.000Z",
       updatedByName: QUIZSHOW_DEMO_STAFF_NAME,
@@ -135,6 +140,11 @@ describe("quizshow demo templates store", () => {
       QUIZSHOW_DEMO_TEMPLATE_IDS.eurovision,
       QUIZSHOW_DEMO_TEMPLATE_IDS.dragHerstory,
       QUIZSHOW_DEMO_TEMPLATE_IDS.lisbonQueerIcons,
+      QUIZSHOW_DEMO_TEMPLATE_IDS.popDivas,
+      QUIZSHOW_DEMO_TEMPLATE_IDS.queerAnthems,
+      QUIZSHOW_DEMO_TEMPLATE_IDS.queerTvNight,
+      QUIZSHOW_DEMO_TEMPLATE_IDS.screenIcons,
+      QUIZSHOW_DEMO_TEMPLATE_IDS.sapphicNight,
     ]);
     for (const card of cards) {
       expect(Object.keys(card).sort()).toEqual(CARD_FIELD_NAMES);
@@ -326,7 +336,7 @@ describe("quizshow demo template publishing and host copies", () => {
     const prideId = QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory;
     demoPublishTemplate(prideId);
     const cardIds = demoTemplateCards().items.map((card) => card.id);
-    expect(cardIds).toHaveLength(5);
+    expect(cardIds).toHaveLength(10);
     expect(cardIds[0]).toBe(QUIZSHOW_DEMO_TEMPLATE_IDS.portugueseQueerCulture);
     expect(cardIds[cardIds.length - 1]).toBe(prideId);
   });

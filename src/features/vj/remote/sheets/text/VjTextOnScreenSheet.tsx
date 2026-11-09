@@ -160,6 +160,7 @@ export function VjTextOnScreenSheet({
   return (
     <VjSheetFrame
       title={t("vj:text.title")}
+      intro={t("vj:text.intro")}
       closeLabel={t("vj:text.close")}
       onClose={onClose}
     >

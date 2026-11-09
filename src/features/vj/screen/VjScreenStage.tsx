@@ -1,19 +1,31 @@
 /**
- * The projector's stage (engine plan, decision 13; Task E22): picks the WebGL
- * compositor or the DOM renderer and hands both the same applied state.
+ * The projector's stage (engine plan, decision 13; Task E22; simple renderer
+ * plan, Task T10): mounts the WebGL compositor, the DOM renderer and the
+ * simple renderer as the renderer phase asks and hands them the same applied
+ * state.
  *
  * - `probing`, `webgl2`: the WebGL stage alone.
  * - `webgl2Restoring`: the WebGL stage stays mounted with its canvas hidden,
  *   and the DOM renderer draws over it until the context comes back.
- * - `dom`: the DOM renderer alone, for the page's life.
+ * - `dom`: the backup DOM renderer alone.
+ * - `simple`: the simple renderer the remote picked, alone.
  *
- * Object URLs: while both renderers are mounted, the handle answers true for
- * a URL either one holds, and a URL one renderer releases reaches the page
- * only when the other does not hold it, so the page never revokes a URL a
- * mounted renderer still plays. Neither renderer reports anything on
- * unmount, so the URLs each one holds are read just before an event that
- * changes the phase, and once the leaving renderer's unmount commits, each
- * URL it held that the remaining renderer does not hold is released.
+ * The hand-off (useVjRendererHandOff): a remote switch keeps the leaving
+ * renderer mounted and drawing until the arriving one reports its first live
+ * frame, or VJ_RENDERER_HAND_OFF_MAX_MS passes, and the leaving one unmounts
+ * in that same commit. The renderers stack in DOM order (engine, DOM, simple),
+ * each in its own slot, so a renderer keeps its instance while others come
+ * and go. The simple renderer arrives on top at 1% opacity; the engine and
+ * the DOM renderer arrive under the opaque simple stage, their first target
+ * cut in. The projector never shows a frame no renderer drew.
+ *
+ * The simple renderer also takes the queue head (it pre-rolls the next clip)
+ * and, while a generator is live, the page's fallback clip.
+ *
+ * Object URLs (useVjLeavingRendererSources): the handle answers true for a URL
+ * any mounted renderer holds, and a URL one renderer releases reaches the page
+ * only when no other mounted renderer holds it. What a renderer held when it
+ * left is released once its unmount commits, unless another still holds it.
  */
 import {
   useEffect,
@@ -25,22 +37,32 @@ import {
   type Ref,
   type RefObject,
 } from "react";
-import type { VjRenderer, VjStageState } from "../../../shared/contracts/vj";
+import type {
+  VjRenderer,
+  VjRenderMode,
+  VjStageState,
+} from "../../../shared/contracts/vj";
 import type { VjCompositor, VjScheduledLook } from "../engine/vjCompositor";
 import {
   vjEngineLookOf,
   type VjClockReader,
   type VjEngineLayers,
+  type VjEngineLook,
 } from "../engine/vjEngineLook";
+import { useVjLeavingRendererSources } from "./useVjLeavingRendererSources";
+import { useVjRendererHandOff } from "./useVjRendererHandOff";
 import { useVjRendererKind } from "./useVjRendererKind";
 import { useVjScreenHealth } from "./useVjScreenHealth";
 import { VjEngineStage, type VjEngineStageEvent } from "./VjEngineStage";
 import type { VjRenderableClip, VjRenderableSource } from "./vjLayerMachine";
 import {
-  reduceVjRenderer,
-  type VjRendererPhase,
+  vjDrawingRendererOf,
+  vjRendererMountsOf,
+  type VjDrawingRenderer,
+  type VjRendererMounts,
   type VjRendererState,
 } from "./vjRendererKind";
+import { VjSimpleRenderer } from "./VjSimpleRenderer";
 import type { VjStageHandle } from "./vjStageHandle";
 import { VjStageRenderer } from "./VjStageRenderer";
 
@@ -53,8 +75,15 @@ export interface VjScreenStageProps {
   upcomingLive: VjRenderableSource | null;
   mix: VjRenderableClip | null;
   upcomingMix: VjRenderableClip | null;
+  /**
+   * While a generator is live: the last clip the screen showed, with a URL of
+   * its own, so a simple renderer that mounts now keeps that clip on screen.
+   */
+  fallbackClip?: VjRenderableClip | null;
   /** True on the lead screen only: only the lead strobes. */
   isStrobeEnabled: boolean;
+  /** The show's render mode from the remote; `effects` until the remote asks. */
+  renderMode: VjRenderMode;
   clock: VjClockReader;
   micLevelRef: RefObject<number | null> | null;
   handleRef: Ref<VjStageHandle>;
@@ -97,20 +126,6 @@ function useVjStageLooks({
   return { look, layers, next };
 }
 
-interface VjHeldSnapshot {
-  engine: ReadonlySet<string>;
-  dom: ReadonlySet<string>;
-}
-
-interface VjLeavingRendererInput {
-  phase: VjRendererPhase;
-  /** The object URLs the props hand the renderers (live, mix, and the queue head's). */
-  sourceUrls: readonly string[];
-  engineHandleRef: RefObject<VjStageHandle | null>;
-  domHandleRef: RefObject<VjStageHandle | null>;
-  onSourceReleased: (sourceUrl: string) => void;
-}
-
 /** Generators carry an empty URL: nothing to hold or release. */
 function objectUrlsOf(
   sources: readonly (VjRenderableSource | null)[],
@@ -125,134 +140,142 @@ function objectUrlsOf(
   return sourceUrls;
 }
 
-/**
- * Releases the URLs a renderer took with it when it left the stage (WebGL
- * coming back unmounts the DOM renderer; a second loss unmounts the engine).
- * A renderer can only hold a URL its props named, so the candidates are every
- * URL the props named that a renderer may still hold.
- */
-function useVjLeavingRendererSources({
-  phase,
-  sourceUrls,
-  engineHandleRef,
-  domHandleRef,
-  onSourceReleased,
-}: VjLeavingRendererInput) {
-  const candidatesRef = useRef<Set<string>>(new Set());
-  const snapshotRef = useRef<VjHeldSnapshot | null>(null);
-
-  const isHeldByMounted = (sourceUrl: string): boolean =>
-    engineHandleRef.current?.holdsSource(sourceUrl) === true ||
-    domHandleRef.current?.holdsSource(sourceUrl) === true;
-
-  /** Reports a URL to the page once and forgets it here. */
-  const release = (sourceUrl: string): void => {
-    candidatesRef.current.delete(sourceUrl);
-    const snapshot = snapshotRef.current;
-    if (snapshot !== null) {
-      snapshotRef.current = {
-        engine: withoutUrl(snapshot.engine, sourceUrl),
-        dom: withoutUrl(snapshot.dom, sourceUrl),
-      };
-    }
-    onSourceReleased(sourceUrl);
-  };
-
-  /** Called just before an event that changes the phase, while both handles still answer. */
-  const snapshotHeld = (): void => {
-    const engine = new Set<string>();
-    const dom = new Set<string>();
-    const candidates = new Set([...candidatesRef.current, ...sourceUrls]);
-    for (const sourceUrl of candidates) {
-      if (engineHandleRef.current?.holdsSource(sourceUrl) === true) {
-        engine.add(sourceUrl);
-      }
-      if (domHandleRef.current?.holdsSource(sourceUrl) === true) {
-        dom.add(sourceUrl);
-      }
-    }
-    snapshotRef.current = { engine, dom };
-  };
-
-  /** After the phase commits: releases what the leaving renderer held and the remaining one does not. */
-  const settleLeavingRenderer = useEffectEvent(() => {
-    const snapshot = snapshotRef.current;
-    snapshotRef.current = null;
-    if (snapshot === null) return;
-    const isEngineMounted = phase !== "dom";
-    const isDomMounted = phase === "webgl2Restoring" || phase === "dom";
-    const leftSourceUrls = new Set<string>([
-      ...(isEngineMounted ? [] : snapshot.engine),
-      ...(isDomMounted ? [] : snapshot.dom),
-    ]);
-    for (const sourceUrl of leftSourceUrls) {
-      if (!isHeldByMounted(sourceUrl)) release(sourceUrl);
-    }
-  });
-
-  /** Adds the URLs the props name and forgets what nothing names or holds any more (the page released it). */
-  const trackNamedUrls = useEffectEvent((named: readonly string[]) => {
-    const candidates = candidatesRef.current;
-    for (const sourceUrl of named) candidates.add(sourceUrl);
-    for (const sourceUrl of [...candidates]) {
-      if (!named.includes(sourceUrl) && !isHeldByMounted(sourceUrl)) {
-        candidates.delete(sourceUrl);
-      }
-    }
-  });
-
-  useEffect(() => {
-    settleLeavingRenderer();
-  }, [phase]);
-
-  const sourceUrlsKey = sourceUrls.join("\n");
-  useEffect(() => {
-    trackNamedUrls(sourceUrlsKey === "" ? [] : sourceUrlsKey.split("\n"));
-  }, [sourceUrlsKey]);
-
-  return { release, snapshotHeld };
+interface VjScreenStageHandlers {
+  onEngineEvent: (event: VjEngineStageEvent) => void;
+  onClipFailed: (renderer: VjDrawingRenderer, clipId: string) => void;
+  onSourceReleased: (renderer: VjDrawingRenderer, sourceUrl: string) => void;
+  onRendererShown: (renderer: "dom" | "simple") => void;
 }
 
-function withoutUrl(
-  sourceUrls: ReadonlySet<string>,
-  sourceUrl: string,
-): ReadonlySet<string> {
-  if (!sourceUrls.has(sourceUrl)) return sourceUrls;
-  const remaining = new Set(sourceUrls);
-  remaining.delete(sourceUrl);
-  return remaining;
+interface VjScreenStageRenderersProps {
+  stage: VjScreenStageProps;
+  look: VjEngineLook;
+  layers: VjEngineLayers;
+  next: VjScheduledLook | null;
+  mounts: VjRendererMounts;
+  /** The engine mounts under the leaving simple renderer: its first target cuts in. */
+  isEngineArriving: boolean;
+  handleRefs: Readonly<
+    Record<VjDrawingRenderer, RefObject<VjStageHandle | null>>
+  >;
+  compositorRef: RefObject<VjCompositor | null>;
+  handlers: VjScreenStageHandlers;
+}
+
+/**
+ * The three renderers, each in a slot and with a key of its own, so each
+ * keeps its instance (and the engine its canvas) while the others mount and
+ * unmount. They stack in DOM order: the engine, the DOM renderer, then the
+ * simple renderer on top.
+ */
+function VjScreenStageRenderers({
+  stage,
+  look,
+  layers,
+  next,
+  mounts,
+  isEngineArriving,
+  handleRefs,
+  compositorRef,
+  handlers,
+}: VjScreenStageRenderersProps): JSX.Element {
+  const { state, live, mix, clock, isStrobeEnabled } = stage;
+  return (
+    <>
+      {mounts.isEngineMounted ? (
+        <VjEngineStage
+          key="engine"
+          look={look}
+          layers={layers}
+          next={next}
+          clock={clock}
+          micLevelRef={stage.micLevelRef}
+          isHidden={mounts.isEngineHidden}
+          handleRef={handleRefs.engine}
+          compositorRef={compositorRef}
+          onEvent={handlers.onEngineEvent}
+          shouldCutFirstTarget={isEngineArriving}
+        />
+      ) : null}
+      {mounts.isDomMounted ? (
+        <VjStageRenderer
+          key="dom"
+          target={live}
+          mix={{
+            clip: mix,
+            amount: state.mix.amount,
+            blendMode: state.mix.blendMode,
+          }}
+          transition={look.transition}
+          effects={state.effects}
+          tempo={state.tempo}
+          clock={clock}
+          isStrobeEnabled={isStrobeEnabled}
+          handleRef={handleRefs.dom}
+          onClipFailed={(clipId) => handlers.onClipFailed("dom", clipId)}
+          onSourceReleased={(sourceUrl) =>
+            handlers.onSourceReleased("dom", sourceUrl)
+          }
+          shouldCutFirstTarget={mounts.isDomArriving}
+          onShown={() => handlers.onRendererShown("dom")}
+        />
+      ) : null}
+      {mounts.isSimpleMounted ? (
+        <VjSimpleRenderer
+          key="simple"
+          target={live}
+          upcoming={stage.upcomingLive}
+          fallbackClip={stage.fallbackClip ?? null}
+          transition={look.transition}
+          speed={state.effects.speed}
+          isBlackout={state.effects.isBlackout}
+          blackoutFadeMs={look.blackoutFadeMs}
+          isArriving={mounts.isSimpleArriving}
+          handleRef={handleRefs.simple}
+          onClipFailed={(clipId) => handlers.onClipFailed("simple", clipId)}
+          onSourceReleased={(sourceUrl) =>
+            handlers.onSourceReleased("simple", sourceUrl)
+          }
+          onShown={() => handlers.onRendererShown("simple")}
+        />
+      ) : null}
+    </>
+  );
 }
 
 export function VjScreenStage(props: VjScreenStageProps): JSX.Element {
-  const {
-    state,
-    mix,
-    live,
-    isStrobeEnabled,
-    clock,
-    micLevelRef,
-    handleRef,
-    onClipFailed,
-    onSourceReleased,
-  } = props;
-  const renderer = useVjRendererKind();
+  const { live, mix, handleRef, onClipFailed } = props;
+  const renderer = useVjRendererKind(props.renderMode);
   const rendererState = renderer.state;
-  const { phase } = rendererState;
+  const mounts = vjRendererMountsOf(rendererState);
+  const drawingRenderer = vjDrawingRendererOf(rendererState);
   const compositorRef = useRef<VjCompositor | null>(null);
   const engineHandleRef = useRef<VjStageHandle | null>(null);
   const domHandleRef = useRef<VjStageHandle | null>(null);
+  const simpleHandleRef = useRef<VjStageHandle | null>(null);
+  const handleRefs = {
+    engine: engineHandleRef,
+    dom: domHandleRef,
+    simple: simpleHandleRef,
+  };
   const { look, layers, next } = useVjStageLooks(props);
   const leaving = useVjLeavingRendererSources({
-    phase,
+    mounts,
     sourceUrls: objectUrlsOf([
       live,
       mix,
       props.upcomingLive,
       props.upcomingMix,
+      props.fallbackClip ?? null,
     ]),
-    engineHandleRef,
-    domHandleRef,
-    onSourceReleased,
+    handleRefs,
+    onSourceReleased: props.onSourceReleased,
+  });
+  const dispatchRenderer = useVjRendererHandOff({
+    state: rendererState,
+    dispatch: renderer.dispatch,
+    renderMode: props.renderMode,
+    snapshotHeld: leaving.snapshotHeld,
   });
 
   const reportRendererChange = useEffectEvent((changedState: VjRendererState) =>
@@ -272,71 +295,52 @@ export function VjScreenStage(props: VjScreenStageProps): JSX.Element {
     () => ({
       holdsSource: (sourceUrl: string) =>
         engineHandleRef.current?.holdsSource(sourceUrl) === true ||
-        domHandleRef.current?.holdsSource(sourceUrl) === true,
+        domHandleRef.current?.holdsSource(sourceUrl) === true ||
+        simpleHandleRef.current?.holdsSource(sourceUrl) === true,
     }),
     [],
   );
 
-  const handleEngineEvent = (event: VjEngineStageEvent): void => {
-    switch (event.type) {
-      case "clipFailed":
-        // While WebGL restores the DOM renderer is on screen and reports its own.
-        if (phase !== "webgl2Restoring") onClipFailed(event.clipId);
-        return;
-      case "sourceReleased":
-        if (domHandleRef.current?.holdsSource(event.sourceUrl) !== true) {
-          leaving.release(event.sourceUrl);
-        }
-        return;
-      default:
-        // A renderer about to leave: read what both hold while both answer.
-        if (reduceVjRenderer(rendererState, event).phase !== phase) {
-          leaving.snapshotHeld();
-        }
-        renderer.dispatch(event);
-    }
+  /** A URL one renderer let go reaches the page only when no other mounted renderer still plays it. */
+  const releaseFrom = (from: VjDrawingRenderer, sourceUrl: string): void => {
+    if (!leaving.isHeldByOther(from, sourceUrl)) leaving.release(sourceUrl);
+  };
+  /** Only the renderer the phase draws with reports clip failures; a leaving one is on its way out. */
+  const reportClipFailed = (from: VjDrawingRenderer, clipId: string): void => {
+    if (from === drawingRenderer) onClipFailed(clipId);
+  };
+  const handlers: VjScreenStageHandlers = {
+    onEngineEvent: (event) => {
+      switch (event.type) {
+        case "clipFailed":
+          reportClipFailed("engine", event.clipId);
+          return;
+        case "sourceReleased":
+          releaseFrom("engine", event.sourceUrl);
+          return;
+        default:
+          dispatchRenderer(event);
+      }
+    },
+    onClipFailed: reportClipFailed,
+    onSourceReleased: releaseFrom,
+    onRendererShown: (shownRenderer) =>
+      dispatchRenderer({ type: "rendererShown", renderer: shownRenderer }),
   };
 
-  const handleDomSourceReleased = (sourceUrl: string): void => {
-    if (engineHandleRef.current?.holdsSource(sourceUrl) === true) return;
-    leaving.release(sourceUrl);
-  };
-
-  const isEngineMounted = phase !== "dom";
-  const isDomMounted = phase === "webgl2Restoring" || phase === "dom";
   return (
-    <>
-      {isEngineMounted ? (
-        <VjEngineStage
-          look={look}
-          layers={layers}
-          next={next}
-          clock={clock}
-          micLevelRef={micLevelRef}
-          isHidden={phase === "webgl2Restoring"}
-          handleRef={engineHandleRef}
-          compositorRef={compositorRef}
-          onEvent={handleEngineEvent}
-        />
-      ) : null}
-      {isDomMounted ? (
-        <VjStageRenderer
-          target={live}
-          mix={{
-            clip: mix,
-            amount: state.mix.amount,
-            blendMode: state.mix.blendMode,
-          }}
-          transition={look.transition}
-          effects={state.effects}
-          tempo={state.tempo}
-          clock={clock}
-          isStrobeEnabled={isStrobeEnabled}
-          handleRef={domHandleRef}
-          onClipFailed={onClipFailed}
-          onSourceReleased={handleDomSourceReleased}
-        />
-      ) : null}
-    </>
+    <VjScreenStageRenderers
+      stage={props}
+      look={look}
+      layers={layers}
+      next={next}
+      mounts={mounts}
+      isEngineArriving={
+        drawingRenderer === "engine" && rendererState.handOffFrom === "simple"
+      }
+      handleRefs={handleRefs}
+      compositorRef={compositorRef}
+      handlers={handlers}
+    />
   );
 }

@@ -24,7 +24,8 @@ export interface VjLengthControlProps {
   onPickBeats: (count: number) => void;
   sendMs: (value: number) => Promise<VjCommandOutcome>;
   onRefused?: (refusal: VjSendRefusal) => void;
-  /** The status line naming why the controls are blocked, for aria-describedby. */
+  /** The status line naming why the controls are blocked and, while help is
+   *  on, the length's help caption, for aria-describedby. */
   describedBy?: string;
 }
 

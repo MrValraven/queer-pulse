@@ -47,6 +47,8 @@ export interface VjEngineStageProps {
   handleRef: Ref<VjStageHandle>;
   compositorRef: Ref<VjCompositor | null>;
   onEvent: (event: VjEngineStageEvent) => void;
+  /** A hand-off arrival: the compositor cuts its first target in. Read once, when the compositor is created. */
+  shouldCutFirstTarget?: boolean;
 }
 
 function assignVjRef<T>(ref: Ref<T> | undefined, value: T): void {
@@ -83,12 +85,13 @@ interface VjEngineLatest {
   micLevelRef: RefObject<number | null> | null;
   onEvent: (event: VjEngineStageEvent) => void;
   compositorRef: Ref<VjCompositor | null>;
+  shouldCutFirstTarget: boolean;
 }
 
 /**
  * Creates the compositor once per mount. It reads the clock, the mic level,
  * the event callback and the compositor ref through `latestRef`, so new
- * props never rebuild it.
+ * props never rebuild it. `shouldCutFirstTarget` is read at creation only.
  */
 function useVjCompositorHost(
   stageRef: RefObject<HTMLDivElement | null>,
@@ -119,6 +122,7 @@ function useVjCompositorHost(
       },
       micLevelRef,
       onEvent: (event) => latestRef.current.onEvent(event),
+      shouldCutFirstTarget: latestRef.current.shouldCutFirstTarget,
     });
     const compositor = result.ok ? result.compositor : null;
     const { compositorRef } = latestRef.current;
@@ -150,6 +154,7 @@ export function VjEngineStage({
   handleRef,
   compositorRef,
   onEvent,
+  shouldCutFirstTarget = false,
 }: VjEngineStageProps): JSX.Element {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const mediaHostRef = useRef<HTMLDivElement | null>(null);
@@ -158,11 +163,18 @@ export function VjEngineStage({
     micLevelRef,
     onEvent,
     compositorRef,
+    shouldCutFirstTarget,
   });
   // Declared before the host, so the compositor's first events reach the
   // callback of the render that mounted it.
   useLayoutEffect(() => {
-    latestRef.current = { clock, micLevelRef, onEvent, compositorRef };
+    latestRef.current = {
+      clock,
+      micLevelRef,
+      onEvent,
+      compositorRef,
+      shouldCutFirstTarget,
+    };
   });
   const instanceRef = useVjCompositorHost(stageRef, mediaHostRef, latestRef);
 

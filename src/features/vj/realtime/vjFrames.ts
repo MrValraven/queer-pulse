@@ -15,6 +15,7 @@ import type {
   VjScreenAdvancePayload,
   VjScreenIdentifyFrame,
   VjScreenIdentifyPayload,
+  VjScreenRenderModeFrame,
   VjScreenStatus,
   VjScreenStatusPayload,
   VjSetCountdownPayload,
@@ -24,6 +25,7 @@ import type {
   VjSetMixPayload,
   VjSetOverlayPayload,
   VjSetPackPayload,
+  VjSetRenderModePayload,
   VjSetScreenOverridePayload,
   VjSetShufflePayload,
   VjSetStrobePayload,
@@ -58,6 +60,7 @@ export type {
   VjSetLogoPayload,
   VjSetEventCardPayload,
   VjScreenIdentifyPayload,
+  VjSetRenderModePayload,
   VjScreenAdvancePayload,
   VjScreenStatusPayload,
 };
@@ -134,6 +137,10 @@ export interface VjClientFrameMap {
     payload: VjScreenIdentifyPayload;
     success: { identifiedCount: number };
   };
+  "screens:setRenderMode": {
+    payload: VjSetRenderModePayload;
+    success: { reachedCount: number };
+  };
   "screen:advance": {
     payload: VjScreenAdvancePayload;
     success: VjCommandSuccess;
@@ -161,4 +168,5 @@ export type VjServerFrame =
   | { event: "screen:role"; payload: { isLead: boolean } }
   | { event: "screens:update"; payload: { screens: VjScreenStatus[] } }
   | { event: "library:changed"; payload: VjLibraryChange }
-  | { event: "screen:identify"; payload: VjScreenIdentifyFrame };
+  | { event: "screen:identify"; payload: VjScreenIdentifyFrame }
+  | { event: "screen:renderMode"; payload: VjScreenRenderModeFrame };

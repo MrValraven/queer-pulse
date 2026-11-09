@@ -16,7 +16,8 @@ export interface VjTapButtonProps {
   isBlocked: boolean;
   /** One call per tap; the dispatcher keeps the tap register. */
   onTap: () => void;
-  /** The status line naming why the controls are blocked, for aria-describedby. */
+  /** The status line naming why the controls are blocked and, while help is
+   *  on, the Tap help caption, for aria-describedby. */
   describedBy?: string;
 }
 

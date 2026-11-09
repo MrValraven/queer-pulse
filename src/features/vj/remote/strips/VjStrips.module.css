@@ -40,6 +40,103 @@
   display: none;
 }
 
+/* ── The scenes row: chips scroll, the tools stay pinned ──
+   Save scene and the Scenes button sit after the scrolling chips, outside
+   them, so a narrow phone never pushes them past the edge. The chips fade
+   out over --vj-strip-fade where they run under an edge, like the pack tabs
+   (the component writes data-vj-fade-start and data-vj-fade-end from the
+   scroll position). On a row under 20rem Save scene keeps only its icon. */
+@property --vj-strip-fade-start {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --vj-strip-fade-end {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+.sceneRow {
+  container-type: inline-size;
+  display: flex;
+  align-items: center;
+  gap: var(--vj-strip-gap);
+  min-inline-size: 0;
+  block-size: var(--tap-min);
+  margin-block: var(--vj-strip-outset);
+}
+
+.sceneScroller {
+  --vj-strip-fade: 24px;
+  --vj-strip-fade-start: 0px;
+  --vj-strip-fade-end: 0px;
+  flex: 0 1 auto;
+  margin-block: 0;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    currentColor var(--vj-strip-fade-start),
+    currentColor calc(100% - var(--vj-strip-fade-end)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    currentColor var(--vj-strip-fade-start),
+    currentColor calc(100% - var(--vj-strip-fade-end)),
+    transparent 100%
+  );
+  transition-property: --vj-strip-fade-start, --vj-strip-fade-end;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.sceneScroller[data-vj-fade-start="true"] {
+  --vj-strip-fade-start: var(--vj-strip-fade);
+}
+
+.sceneScroller[data-vj-fade-end="true"] {
+  --vj-strip-fade-end: var(--vj-strip-fade);
+}
+
+.sceneScroller:dir(rtl) {
+  -webkit-mask-image: linear-gradient(
+    to left,
+    transparent 0,
+    currentColor var(--vj-strip-fade-start),
+    currentColor calc(100% - var(--vj-strip-fade-end)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to left,
+    transparent 0,
+    currentColor var(--vj-strip-fade-start),
+    currentColor calc(100% - var(--vj-strip-fade-end)),
+    transparent 100%
+  );
+}
+
+.sceneTools {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--vj-strip-gap);
+  padding-inline-end: 4px;
+}
+
+@container (max-inline-size: 20rem) {
+  .saveChip .chipName {
+    display: none;
+  }
+
+  .saveChip .chipFace {
+    inline-size: var(--vj-strip-height);
+    padding-inline: 0;
+  }
+}
+
 /* The compact row: the switch stays put, the strip beside it scrolls. */
 .compactRow {
   display: flex;
@@ -55,7 +152,8 @@
   min-inline-size: 0;
 }
 
-.compactSlot > .scroller {
+.compactSlot > .scroller,
+.compactSlot > .sceneRow {
   flex: 1 1 auto;
 }
 
@@ -105,7 +203,11 @@
   border: 1px solid var(--qs-glass-border);
   border-radius: var(--qs-radius-pill);
   background:
-    linear-gradient(180deg, var(--qs-glass-top) 0%, var(--qs-glass-bottom) 100%),
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
     var(--qs-glass-tint);
   transition-property: opacity, transform, filter;
   transition-duration: var(--dur-fast);
@@ -400,6 +502,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .sceneScroller,
   .chipFace,
   .chipFace::before,
   .chipFace::after,

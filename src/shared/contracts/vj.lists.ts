@@ -151,9 +151,16 @@ export type VjShuffleSource = (typeof VJ_SHUFFLE_SOURCES)[number];
 export const VJ_LOOP_MODES = ["loop", "pingPong"] as const;
 export type VjLoopMode = (typeof VJ_LOOP_MODES)[number];
 
-/** The renderer a screen draws with (C 3.1). */
-export const VJ_RENDERERS = ["webgl2", "dom"] as const;
+/** The renderer a screen draws with (C 3.1; simple renderer addendum 2026-11-09). */
+export const VJ_RENDERERS = ["webgl2", "dom", "simple"] as const;
 export type VjRenderer = (typeof VJ_RENDERERS)[number];
+
+/** The show-wide render mode the remote sends; never stored. */
+export const VJ_RENDER_MODES = ["effects", "simple"] as const;
+export type VjRenderMode = (typeof VJ_RENDER_MODES)[number];
+export function isVjRenderMode(value: unknown): value is VjRenderMode {
+  return (VJ_RENDER_MODES as readonly unknown[]).includes(value);
+}
 
 /** Beats in one bar of the tempo grid (C 3.1). */
 export const VJ_BEATS_PER_BAR = 4;

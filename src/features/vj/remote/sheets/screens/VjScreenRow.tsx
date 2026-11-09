@@ -69,15 +69,77 @@ function VjScreenHealthText({ line }: { line: VjScreenHealthLine }) {
   );
 }
 
+/**
+ * A screen's health lines, each folding in and out. The load warning offers
+ * Switch to simple renderer after its text; held, it stays focusable and a
+ * tap sends nothing.
+ */
+function VjScreenHealthList({
+  lines,
+  isRenderModeHeld,
+  heldReasonId,
+  onSwitchToSimple,
+}: {
+  lines: readonly VjScreenHealthLine[];
+  isRenderModeHeld: boolean;
+  heldReasonId: string | undefined;
+  onSwitchToSimple: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <ul className={styles.healthList} data-vj-screen-health="">
+      <AnimatePresence initial={false}>
+        {lines.map((line) => (
+          <CollapseListItem key={line.id}>
+            <p
+              className={styles.healthLine}
+              data-tone={line.tone}
+              data-has-action={line.action !== undefined}
+            >
+              {line.tone === "warning" && (
+                <FiAlertTriangle
+                  aria-hidden
+                  fill="none"
+                  className={styles.healthIcon}
+                />
+              )}
+              <span className={styles.healthText}>
+                <VjScreenHealthText line={line} />
+              </span>
+              {line.action === "switchToSimple" && (
+                <Button
+                  variant="stage-ghost"
+                  className={styles.switchToSimpleButton}
+                  aria-disabled={isRenderModeHeld}
+                  aria-describedby={heldReasonId}
+                  onClick={() => {
+                    if (!isRenderModeHeld) onSwitchToSimple();
+                  }}
+                >
+                  {t("vj:screensSheet.switchToSimple")}
+                </Button>
+              )}
+            </p>
+          </CollapseListItem>
+        ))}
+      </AnimatePresence>
+    </ul>
+  );
+}
+
 export interface VjScreenRowProps {
   screen: VjScreenStatus;
   override: VjScreenOverride | null;
   packClips: readonly VjClipDTO[];
   isBlocked: boolean;
   isIdentifyPending: boolean;
+  /** Held while the remote is blocked, a render mode switch is on its way or this screen left. */
+  isRenderModeHeld: boolean;
   /** The override pick on its way for this screen; null when none is. */
   pendingOverrideValue: string | null;
   onIdentify: (screenId: string) => void;
+  /** The load warning's Switch to simple renderer: moves every screen. */
+  onSwitchToSimple: () => void;
   onPickOverride: (
     screenId: string,
     override: VjScreenOverride | null,
@@ -97,8 +159,10 @@ export function VjScreenRow({
   packClips,
   isBlocked,
   isIdentifyPending,
+  isRenderModeHeld,
   pendingOverrideValue,
   onIdentify,
+  onSwitchToSimple,
   onPickOverride,
 }: VjScreenRowProps) {
   const { t } = useTranslation();
@@ -148,26 +212,12 @@ export function VjScreenRow({
           </AnimatePresence>
         </p>
       </div>
-      <ul className={styles.healthList} data-vj-screen-health="">
-        <AnimatePresence initial={false}>
-          {healthLines.map((line) => (
-            <CollapseListItem key={line.key}>
-              <p className={styles.healthLine} data-tone={line.tone}>
-                {line.tone === "warning" && (
-                  <FiAlertTriangle
-                    aria-hidden
-                    fill="none"
-                    className={styles.healthIcon}
-                  />
-                )}
-                <span>
-                  <VjScreenHealthText line={line} />
-                </span>
-              </p>
-            </CollapseListItem>
-          ))}
-        </AnimatePresence>
-      </ul>
+      <VjScreenHealthList
+        lines={healthLines}
+        isRenderModeHeld={isRenderModeHeld}
+        heldReasonId={heldReasonId}
+        onSwitchToSimple={onSwitchToSimple}
+      />
       <VjScreenOverridePicker
         screenTitleId={titleId}
         override={override}

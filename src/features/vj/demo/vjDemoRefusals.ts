@@ -184,6 +184,14 @@ export const VJ_DEMO_REFUSALS: Record<VjRefusalCode, VjRefusalRule> = {
     status: 409,
     message: `A set list holds at most ${VJ_LIMITS.setlistItemsMax} scenes.`,
   },
+  VJ_CONNECTION_NOT_FOUND: {
+    status: 404,
+    message: "No live VJ screen or remote has this connection id.",
+  },
+  VJ_CONNECTION_NOT_YOURS: {
+    status: 403,
+    message: "This VJ connection belongs to another operator's show.",
+  },
 };
 
 /** A body field a refusal may carry beside `statusCode`, `message` and `code`. */
@@ -249,6 +257,8 @@ export const VJ_DEMO_REFUSAL_EXTRAS: Record<
   VJ_SETLIST_REORDER_MISMATCH: [],
   VJ_SETLIST_ITEMS_INVALID: [],
   VJ_SETLIST_FULL: ["setlistId"],
+  VJ_CONNECTION_NOT_FOUND: [],
+  VJ_CONNECTION_NOT_YOURS: [],
 };
 
 /** What a caller may hand `vjRefusal` (backend VjErrorOptions). `sceneId`

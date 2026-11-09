@@ -3,14 +3,15 @@ import { Collapse } from "../../shared/components/ui/Collapse";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { partnersForView } from "./api/directoryPartners.adapters";
 import { useDirectoryPartners } from "./api/useDirectoryPartners";
-import { DirectoryPartnerCard } from "./DirectoryPartnerCard";
+import { DirectoryPartnerSpotlightCard } from "./DirectoryPartnerSpotlightCard";
 import type { DirectoryView } from "./useDirectoryFilters";
 import { useRailFadeEdges } from "./useRailFadeEdges";
 import styles from "./DirectoryPartnersRow.module.css";
 
 /**
  * "Businesses we partner with": the admin-picked businesses at the top of the
- * directory results, as a rail of compact cards with each one's note. The
+ * directory results, as a rail of wide spotlight cards (a picture panel
+ * beside the name, the category and area, and each one's note). The
  * List view shows every partner that is showing, the Online view keeps the
  * ones that sell online, and the Map view leaves the row out. Each mount
  * serves one view (`shownOnView`): the List row sits above the results and
@@ -41,6 +42,8 @@ export function DirectoryPartnersRow({
   const shownPartners = partnersForView(partners, view);
   const { railRef, fadeEdges } = useRailFadeEdges(shownPartners.length);
   const isOpen = !hasActiveFilters && !isLoading && shownPartners.length > 0;
+  // Past two partners the cards narrow so the third one peeks in at the end.
+  const hasMorePartners = shownPartners.length > 2;
 
   if (view !== (shownOnView ?? view)) return null;
 
@@ -60,10 +63,11 @@ export function DirectoryPartnersRow({
           className={styles.rail}
           role="list"
           data-fade={fadeEdges}
+          data-has-more={hasMorePartners ? "" : undefined}
         >
           {shownPartners.map(({ place, note }) => (
             <li key={place.slug} className={styles.item}>
-              <DirectoryPartnerCard place={place} note={note} />
+              <DirectoryPartnerSpotlightCard place={place} note={note} />
             </li>
           ))}
         </ul>

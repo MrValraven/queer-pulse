@@ -36,7 +36,19 @@
    (VjPadsRow sets the span). Sharing a row with pads it sits on the row's
    bottom edge; alone it gets a row of its own sized to the bar. Two or more
    columns wide it shows the full name. It stays the last item of the phone
-   band. */
+   band.
+
+   Help captions on (data-help="on" on the row): each pad shows what its
+   effect does under its label, 12px, wrapped in full, and the pads grow to
+   fit the longest one, so nothing is cut. The label moves to the top edge,
+   so the labels of a row line up whatever their descriptions' length, and
+   keeps clear of the corner marks and the strobe countdown; the amount bar
+   stays on the bottom edge. Phone band: polish pads 128px
+   wide, pads variant 136px; the band is as tall as its tallest pad, at
+   least 84px (96px). Split grid: each row is at least as tall as its
+   tallest pad's content (--vj-pad-row-min), and the column scrolls when
+   that runs long. The All effects tile puts its line under the icon and
+   the name. One legend line under the row says how a pad is pressed. */
 
 .row {
   --vj-pad-gap: 6px;
@@ -120,7 +132,9 @@
   display: grid;
   flex: 1 1 auto;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-auto-rows: minmax(var(--vj-pad-height), 1fr);
+  /* A row's floor; help captions raise it to the content of its pads. */
+  --vj-pad-row-min: var(--vj-pad-height);
+  grid-auto-rows: minmax(var(--vj-pad-row-min), 1fr);
   align-content: stretch;
   block-size: auto;
   margin: 0;
@@ -134,6 +148,58 @@
   --vj-pad-height: 72px;
 }
 
+/* Help captions on: the pads widen and grow to their whole description.
+   The phone band takes the height of its tallest pad; every pad stretches
+   to it. */
+.row[data-help="on"] {
+  --vj-pad-width: 128px;
+  --vj-pad-height: 84px;
+}
+
+:global([data-vj-dock-variant="pads"]) .row[data-help="on"] {
+  --vj-pad-width: 136px;
+  --vj-pad-height: 96px;
+}
+
+.row[data-help="on"]:not([data-layout="split"]) {
+  block-size: auto;
+}
+
+.row[data-help="on"]:not([data-layout="split"]) .slot {
+  block-size: auto;
+  min-block-size: var(--vj-pad-height);
+}
+
+/* Split: the row floor follows the pads' content, and each pad keeps at
+   least the variant's floor. */
+.row[data-layout="split"][data-help="on"] {
+  --vj-pad-height: 56px;
+  --vj-pad-row-min: min-content;
+}
+
+:global([data-vj-dock-variant="pads"])
+  .row[data-layout="split"][data-help="on"] {
+  --vj-pad-height: 72px;
+}
+
+.row[data-layout="split"][data-help="on"] .pad:not(.allPad) {
+  min-block-size: var(--vj-pad-height);
+}
+
+/* Help captions on: the label and its description read from the top edge,
+   clear of the flash and beat marks and of the strobe countdown. */
+.row[data-help="on"] .pad:not(.allPad) {
+  justify-content: flex-start;
+}
+
+.row[data-help="on"] .pad:has(.marks > *) .name {
+  padding-inline-end: calc(2 * var(--vj-pad-mark-size) + 3px);
+}
+
+.row[data-help="on"] .pad:has(.countdown) .name {
+  padding-inline-start: 22px;
+}
+
 /* The motion wrapper of one pad: it carries the enter, exit and reorder
    glide, so the button inside keeps its own pointer capture. On the phone
    band it starts at the variant's width, grows into spare width, and
@@ -143,11 +209,16 @@
   flex: 1 1 var(--vj-pad-width);
   block-size: var(--vj-pad-height);
   scroll-snap-align: start;
+  /* Help captions widen the phone pads; they glide to the new width. */
+  transition-property: flex-basis;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
 }
 
 .row[data-layout="split"] .slot {
   min-inline-size: 0;
   block-size: auto;
+  transition-property: none;
 }
 
 /* The All effects bar sits on the bottom edge of its grid cell. */
@@ -290,6 +361,65 @@
   white-space: normal;
 }
 
+/* What the effect does, under the label while help captions are on: the
+   fold animates its height, the text inside wraps between words and reads
+   in full. */
+.descriptionFold {
+  display: block;
+  flex: none;
+  overflow: hidden;
+}
+
+.description {
+  display: block;
+  margin-block-start: 2px;
+  font-size: var(--text-12);
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--qs-text-mute);
+  white-space: normal;
+  overflow-wrap: normal;
+}
+
+.pad[data-on="true"] .description {
+  color: color-mix(in srgb, var(--qs-cta-ink) 80%, transparent);
+}
+
+/* The All effects tile centres its line under the icon and the name: the
+   full width of the tile, and in the split bar a line of its own. */
+.allDescriptionFold {
+  align-self: stretch;
+}
+
+.row[data-layout="split"] .allDescriptionFold {
+  flex-basis: 100%;
+}
+
+.allDescriptionFold .description {
+  text-align: center;
+}
+
+.row[data-layout="split"][data-help="on"] .allPad {
+  flex-wrap: wrap;
+  row-gap: 0;
+}
+
+/* The pads group's legend line, under the row. Its spacing sits inside
+   the folding legend, so help off adds nothing. In the split column it
+   keeps clear of the stuck action row's 14px scrim. */
+.helpLegendSlot {
+  flex: none;
+  min-inline-size: 0;
+}
+
+.helpLegendSlot :global([data-vj-help-legend]) {
+  padding-block-start: 6px;
+}
+
+.helpLegendSlotSplit :global([data-vj-help-legend]) {
+  padding-block-end: 14px;
+}
+
 /* The amount: a quiet full-width track with the fill scaled from the start. */
 .amount {
   position: absolute;
@@ -423,6 +553,14 @@
   gap: var(--gap-xs);
 }
 
+/* The title and the effect's one-line description under it. */
+.popoverTitleBlock {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
 .popoverTitle {
   display: flex;
   align-items: center;
@@ -519,7 +657,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .pad,
-  .amountFill {
+  .amountFill,
+  .row,
+  .slot {
     transition-duration: 0s;
   }
 }

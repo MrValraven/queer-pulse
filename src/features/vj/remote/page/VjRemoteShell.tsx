@@ -34,11 +34,16 @@ import type { VjErrorValues } from "../../live/vjStageCommands";
 import { VjClipFailureSummary } from "../failures/VjClipFailureSummary";
 import { VjClipFailuresSheet } from "../failures/VjClipFailuresSheet";
 import { useVjClipFailures } from "../failures/useVjClipFailures";
+import { VjGridHelpLegend } from "../grid/VjGridHelpLegend";
 import { VjRemoteGrid, type VjTileState } from "../grid/VjRemoteGrid";
 import type { VjCueMode } from "../hooks/useVjCueMode";
 import type { VjDockPads } from "../hooks/useVjDockPads";
 import type { VjFlashConsent } from "../hooks/useVjFlashConsent";
 import type { VjMirrorFrames } from "../hooks/useVjMirrorFrames";
+import {
+  useVjHelpCaptions,
+  VjHelpCaptionsProvider,
+} from "../hooks/useVjHelpCaptions";
 import { useVjSyncedNow } from "../hooks/useVjSyncedNow";
 import type { VjRemoteClock } from "../hooks/useVjRemoteClock";
 import type { VjRemoteLayout } from "../hooks/useVjRemoteLayout";
@@ -203,9 +208,14 @@ function VjRemoteMirror({ session }: VjRemoteBandProps): JSX.Element {
   );
 }
 
-/** The sticky header: top row and mirror band, plus the not-preloaded pack confirm. */
+/**
+ * The sticky header: top row and mirror band, plus the not-preloaded pack
+ * confirm. With help captions on, its legends make it too tall to pin on a
+ * phone, so there it scrolls with the page (VjRemoteLayout.module.css).
+ */
 function VjRemoteHeader({ session }: VjRemoteBandProps): JSX.Element {
   const { library, view, run, stage, sheets, isBlocked } = session;
+  const { isOn: isHelpOn } = useVjHelpCaptions();
   const setPack = useCallback(
     (packId: string) => run("setPack", packId),
     [run],
@@ -231,7 +241,11 @@ function VjRemoteHeader({ session }: VjRemoteBandProps): JSX.Element {
         null);
 
   return (
-    <header className={styles.header} data-vj-remote-header="">
+    <header
+      className={styles.header}
+      data-vj-remote-header=""
+      data-vj-help={isHelpOn ? "on" : undefined}
+    >
       <VjRemoteTopRow
         packs={library.packs}
         readinessOf={library.readinessOf}
@@ -239,6 +253,7 @@ function VjRemoteHeader({ session }: VjRemoteBandProps): JSX.Element {
         pendingPackId={packSwitch.pendingPackId}
         gridSource={view.gridSource}
         isFavoritesOnly={view.isFavoritesOnly}
+        isShortHelpLegend={session.layout.layout === "phone"}
         isSearchAvailable={library.isSearchAvailable}
         isSearchOpen={view.isSearchOpen}
         screens={stage.screens}
@@ -436,8 +451,14 @@ function VjRemoteGridBand({ session }: VjRemoteBandProps): JSX.Element {
         isShown={view.gridSource === "pack"}
         onSeeWhy={showAllFailures}
       />
+      <VjGridHelpLegend
+        source={view.gridSource}
+        failedCount={failures.failedClips.length}
+        firstClipThumbnailUrl={gridClips[0]?.thumbnailUrl ?? null}
+      />
       <VjRemoteGrid
         source={view.gridSource}
+        packKey={activePackId}
         clips={gridClips}
         tileStateOf={tileStateOf}
         liveGeneratorId={shownState?.liveGeneratorId ?? null}
@@ -480,12 +501,16 @@ export interface VjRemoteShellProps {
   dock: ReactNode;
   /** The phone dock's measured height; 0 keeps the CSS fallback. */
   dockHeight: number;
+  /** Drawn after the page, inside the help captions provider: the sheets
+   *  host and the flash warning read the "?" toggle from here. */
+  children?: ReactNode;
 }
 
 export function VjRemoteShell({
   session,
   dock,
   dockHeight,
+  children,
 }: VjRemoteShellProps): JSX.Element {
   const { t } = useTranslation();
   const isPhone = session.layout.layout === "phone";
@@ -495,27 +520,34 @@ export function VjRemoteShell({
       ? ({ "--vj-remote-bar-space": `${dockHeight}px` } as CSSProperties)
       : undefined;
 
+  // The help captions provider wraps the dock too: on a phone the dock
+  // portals itself, and the "?" toggle still reaches it through context.
   return (
-    <div
-      className={styles.page}
-      style={pageStyle}
-      data-theme="dark"
-      data-vj-remote=""
-      data-layout={session.layout.layout}
-    >
-      <div className={styles.backdrop}>
-        <QuizshowBackdrop variant="phone" />
+    <VjHelpCaptionsProvider>
+      <div
+        className={styles.page}
+        style={pageStyle}
+        data-theme="dark"
+        data-vj-remote=""
+        data-layout={session.layout.layout}
+      >
+        <div className={styles.backdrop}>
+          <QuizshowBackdrop variant="phone" />
+        </div>
+        <PageMeta title={t("vj:remote.metaTitle")} noIndex />
+        <div className={styles.frame}>
+          <main id={MAIN_CONTENT_ID} tabIndex={-1} className={styles.main}>
+            <h1 className={styles.visuallyHidden}>
+              {t("vj:remote.metaTitle")}
+            </h1>
+            <VjRemoteHeader session={session} />
+            <VjRemoteStripsBand session={session} />
+            <VjRemoteGridBand session={session} />
+          </main>
+          {dock}
+        </div>
       </div>
-      <PageMeta title={t("vj:remote.metaTitle")} noIndex />
-      <div className={styles.frame}>
-        <main id={MAIN_CONTENT_ID} tabIndex={-1} className={styles.main}>
-          <h1 className={styles.visuallyHidden}>{t("vj:remote.metaTitle")}</h1>
-          <VjRemoteHeader session={session} />
-          <VjRemoteStripsBand session={session} />
-          <VjRemoteGridBand session={session} />
-        </main>
-        {dock}
-      </div>
-    </div>
+      {children}
+    </VjHelpCaptionsProvider>
   );
 }

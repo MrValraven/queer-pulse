@@ -18,6 +18,7 @@ import {
   type VjAttachPayload,
   type VjLibraryChange,
   type VjScreenIdentifyFrame,
+  type VjScreenRenderModeFrame,
   type VjScreenStatus,
   type VjScreenStatusPayload,
   type VjStageCause,
@@ -53,6 +54,7 @@ import { useVjTransportSlot } from "./useVjTransportSlot";
 export type {
   VjCommandOutcome,
   VjIdentifyOutcome,
+  VjRenderModeOutcome,
   VjStageCommands,
 } from "./vjStageCommands";
 export type { VjUpcomingFrame } from "./vjFrameQueue";
@@ -112,6 +114,10 @@ export interface VjStageController {
   /** Screen: every screen:identify frame this screen receives. */
   subscribeIdentify: (
     listener: (frame: VjScreenIdentifyFrame) => void,
+  ) => () => void;
+  /** Screen: every screen:renderMode frame this screen receives. */
+  subscribeRenderMode: (
+    listener: (frame: VjScreenRenderModeFrame) => void,
   ) => () => void;
 }
 
@@ -330,7 +336,7 @@ export function useVjStage(attach: VjStageAttach): VjStageController {
   const clockView = useVjStageClock(clock);
   const { applied, latest, upcoming } = queue;
   const { connection, screens, isLead, screenNumber } = inbox;
-  const { subscribeLibrary, subscribeIdentify } = inbox;
+  const { subscribeLibrary, subscribeIdentify, subscribeRenderMode } = inbox;
 
   return useMemo<VjStageController>(
     () => ({
@@ -354,6 +360,7 @@ export function useVjStage(attach: VjStageAttach): VjStageController {
       sendStatus,
       subscribeLibrary,
       subscribeIdentify,
+      subscribeRenderMode,
     }),
     [
       demoMode,
@@ -372,6 +379,7 @@ export function useVjStage(attach: VjStageAttach): VjStageController {
       sendStatus,
       subscribeLibrary,
       subscribeIdentify,
+      subscribeRenderMode,
     ],
   );
 }

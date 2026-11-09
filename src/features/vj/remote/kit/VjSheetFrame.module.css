@@ -1,0 +1,14 @@
+/* A sheet's one-line intro under its title: the remote's quiet caption look
+   (.helpCaption), riding in the shared Modal's sub line. */
+.intro {
+  composes: helpCaption from "./VjRemoteKit.module.css";
+}
+
+/* Two classes, so the caption look holds over the Modal's own .modalSub
+   whichever stylesheet loads first. */
+[role="dialog"] .intro {
+  margin: 4px 0 0;
+  font-size: var(--text-12);
+  line-height: 1.35;
+  color: var(--qs-text-mute);
+}

@@ -7,7 +7,8 @@
  * pad held still for 500 ms or its context menu opens the tuner); every send
  * goes to `onPadSend` with the pad element, and the dispatcher (R26) applies
  * optimism, flash consent and haptics. While MIDI learn waits for a target, a
- * press picks this pad and sends nothing.
+ * press picks this pad and sends nothing. While help captions are on, the
+ * pad shows what its effect does under its label, at most two lines.
  */
 import {
   useId,
@@ -17,13 +18,16 @@ import {
   type ReactNode,
   type Ref,
 } from "react";
+import { AnimatePresence, m } from "motion/react";
 import { FiActivity, FiZap } from "react-icons/fi";
+import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
 import {
   VJ_EFFECT_CATALOG,
   type VjEffectId,
   type VjEffectSetting,
 } from "../../../../shared/contracts/vj";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import { useVjHelpCaptions } from "../hooks/useVjHelpCaptions";
 import { useVjPadPress, type VjPadPressHandlers } from "../hooks/useVjPadPress";
 import type { VjMidiLearnTargetProps } from "../midi/useVjMidiLearnTarget";
 import { useVjMidiLearnTarget } from "../midi/useVjMidiLearnTarget";
@@ -31,6 +35,32 @@ import type { VjPadId } from "../rules/vjDockPads";
 import { VjPadTuner, type VjPadSettingSend } from "./VjPadTuner";
 import { useVjShortLabel, vjPadLabelKey } from "./vjPadLabel";
 import styles from "./VjPads.module.css";
+
+/** The app's base duration (--dur-base) and ease (--ease), as the pads use. */
+const VJ_PAD_DESCRIPTION_TRANSITION = {
+  duration: 0.25,
+  ease: [0.22, 0.68, 0.16, 1] as const,
+};
+
+/** What the effect does, under the pad's label while help captions are on. */
+function VjPadDescription({ id, text }: { id: string; text: string }) {
+  const { reducedMotion } = useMotionPrefs();
+  return (
+    <m.span
+      className={styles.descriptionFold}
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: "auto" }}
+      exit={{ opacity: 0, height: 0 }}
+      transition={
+        reducedMotion ? { duration: 0 } : VJ_PAD_DESCRIPTION_TRANSITION
+      }
+    >
+      <span id={id} className={styles.description} data-vj-pad-description="">
+        {text}
+      </span>
+    </m.span>
+  );
+}
 
 export type VjPadSendHandler = (
   padId: VjPadId,
@@ -52,6 +82,8 @@ export interface VjPadButtonProps {
   isBeatSynced: boolean;
   handlers: VjPadPressHandlers;
   learnProps: VjMidiLearnTargetProps;
+  /** What the effect does (vj:effect.desc.*), shown while help captions are on. */
+  description?: string;
   /** Extra drawing inside the pad: the amount bar or the strobe countdown. */
   children?: ReactNode;
   describedBy?: string;
@@ -72,15 +104,23 @@ export function VjPadButton({
   isBeatSynced,
   handlers,
   learnProps,
+  description,
   children,
   describedBy,
   style,
   ref,
 }: VjPadButtonProps) {
   const { t } = useTranslation();
+  const { isOn: isHelpOn } = useVjHelpCaptions();
   const marksId = useId();
+  const descriptionId = useId();
   const hasMarks = isFlashCapable || isBeatSynced;
-  const describedByIds = [hasMarks ? marksId : null, describedBy]
+  const isDescriptionShown = isHelpOn && description !== undefined;
+  const describedByIds = [
+    hasMarks ? marksId : null,
+    isDescriptionShown ? descriptionId : null,
+    describedBy,
+  ]
     .filter(Boolean)
     .join(" ");
   return (
@@ -115,6 +155,15 @@ export function VjPadButton({
       <span className={styles.name} data-vj-pad-face="" aria-hidden>
         {shortLabel ?? label}
       </span>
+      <AnimatePresence initial={false}>
+        {isHelpOn && description !== undefined && (
+          <VjPadDescription
+            key="description"
+            id={descriptionId}
+            text={description}
+          />
+        )}
+      </AnimatePresence>
       {hasMarks && (
         <span id={marksId} className="visuallyHidden">
           {isFlashCapable && <span>{t("vj:pads.flashMarker")}</span>}
@@ -183,6 +232,7 @@ export function VjEffectPad({
         isBeatSynced={entry.isBeatSynced}
         handlers={handlers}
         learnProps={learnProps}
+        description={t(`vj:effect.desc.${effectId}`)}
         describedBy={describedBy}
         style={amountStyle}
       >

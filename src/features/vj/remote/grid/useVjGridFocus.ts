@@ -10,6 +10,10 @@
  * Grid items carry `data-vj-grid-item`; a key pressed on any control inside an
  * item's cell (the favorite star) moves from that item. Items folding away
  * inside an `inert` row are skipped.
+ *
+ * The ref may point at the list itself or at a stable stage around it (the
+ * remote swaps whole lists on a pack switch); the columns and the direction
+ * are read from the list the focused item lays out in.
  */
 import { useCallback, useEffect, useState, type RefObject } from "react";
 
@@ -38,6 +42,14 @@ function focusableItemsOf(gridElement: HTMLElement): HTMLElement[] {
   return Array.from(
     gridElement.querySelectorAll<HTMLElement>(VJ_GRID_ITEM_SELECTOR),
   ).filter((item) => item.closest("[inert]") === null);
+}
+
+/** The list the item lays out in, or the hook's element when there is none. */
+function layoutGridOf(
+  item: HTMLElement | undefined,
+  gridElement: HTMLElement,
+): HTMLElement {
+  return item?.closest<HTMLElement>("ul, ol") ?? gridElement;
 }
 
 /** The item whose cell holds the target: the item itself or a sibling control. */
@@ -101,10 +113,11 @@ export function useVjGridFocus(
       const items = focusableItemsOf(gridElement);
       const currentIndex = itemIndexOf(items, event.target);
       if (currentIndex === -1) return;
+      const layoutGrid = layoutGridOf(items[currentIndex], gridElement);
       const nextIndex = targetIndexFor(event.key, currentIndex, {
         itemCount: items.length,
-        columnCount: vjGridColumnCountOf(gridElement),
-        isRightToLeft: window.getComputedStyle(gridElement).direction === "rtl",
+        columnCount: vjGridColumnCountOf(layoutGrid),
+        isRightToLeft: window.getComputedStyle(layoutGrid).direction === "rtl",
       });
       if (nextIndex === null) return;
       event.preventDefault();

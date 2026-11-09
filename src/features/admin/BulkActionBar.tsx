@@ -9,7 +9,10 @@ import { describeErrorToast } from "../../shared/api/errorMessage";
 import { useBulkListingAction } from "./api/useBulkListingAction";
 import { BulkPublishConfirmModal } from "./BulkPublishConfirmModal";
 import { BulkRemoveConfirmModal } from "./BulkRemoveConfirmModal";
-import { LISTING_BULK_ACTION_CAP } from "./api/adminListings.api";
+import {
+  LISTING_BULK_ACTION_CAP,
+  type ListingQueueRow,
+} from "./api/adminListings.api";
 import styles from "./AdminListingsPage.module.css";
 
 /** The bar's rendered height, published on the root element so the page can
@@ -49,12 +52,24 @@ function usePublishedBarHeight(barRef: RefObject<HTMLDivElement | null>) {
  * cluster. Publish and Remove each confirm first (`BulkPublishConfirmModal`,
  * `BulkRemoveConfirmModal`), since one puts listings in front of members and
  * the other is destructive; Back to review fires immediately.
+ *
+ * `selectedRows` carries each selected listing's status, so Publish and Back
+ * to review act only on the listings they would actually move: Publish sends
+ * every selected listing that is in review or has a question, and Back to
+ * review sends every one that is live or has a question. The success toast
+ * then counts real changes. A button whose action would move nothing is
+ * disabled with a tooltip naming why; when only part of the selection would
+ * move, its label names that count ("Publish 3 live"). Delete always acts on
+ * the whole selection.
  */
 export function BulkActionBar({
   selectedRefs,
+  selectedRows,
   onClear,
 }: {
   selectedRefs: Set<string>;
+  /** The loaded queue rows whose refs are in `selectedRefs`. */
+  selectedRows: ListingQueueRow[];
   onClear: () => void;
 }) {
   const { t } = useTranslation();
@@ -67,10 +82,31 @@ export function BulkActionBar({
   usePublishedBarHeight(barRef);
   const refs = Array.from(selectedRefs);
   const count = refs.length;
+  const statusByRef = new Map(selectedRows.map((row) => [row.ref, row.status]));
+  // A ref with no loaded row keeps its place in both actions, and the
+  // backend decides whether it moves.
+  const publishableRefs = refs.filter((ref) => statusByRef.get(ref) !== "live");
+  const sendBackRefs = refs.filter((ref) => statusByRef.get(ref) !== "review");
+  const publishableCount = publishableRefs.length;
+  const sendBackCount = sendBackRefs.length;
+  const isPublishMovingNothing = publishableCount === 0;
+  const isSendBackMovingNothing = sendBackCount === 0;
+  const publishLabel =
+    publishableCount === count || isPublishMovingNothing
+      ? t("admin:adminListings.bulk.publishCta")
+      : t("admin:adminListings.bulk.publishCountCta", {
+          count: publishableCount,
+        });
+  const sendBackLabel =
+    sendBackCount === count || isSendBackMovingNothing
+      ? t("admin:adminListings.bulk.sendBackCta")
+      : t("admin:adminListings.bulk.sendBackCountCta", {
+          count: sendBackCount,
+        });
 
   async function confirmPublish() {
     try {
-      await bulkSetStatus(refs, "live");
+      await bulkSetStatus(publishableRefs, "live");
       setConfirmingPublish(false);
       onClear();
     } catch (caught) {
@@ -86,7 +122,7 @@ export function BulkActionBar({
 
   async function sendBackToReview() {
     try {
-      await bulkSetStatus(refs, "review");
+      await bulkSetStatus(sendBackRefs, "review");
       onClear();
     } catch (caught) {
       showToast(
@@ -162,16 +198,26 @@ export function BulkActionBar({
           <Button
             variant="jade"
             onClick={() => setConfirmingPublish(true)}
-            disabled={isPending}
+            disabled={isPending || isPublishMovingNothing}
+            title={
+              isPublishMovingNothing
+                ? t("admin:adminListings.bulk.publishDisabledReason")
+                : undefined
+            }
           >
-            {t("admin:adminListings.bulk.publishCta")}
+            {publishLabel}
           </Button>
           <Button
             variant="ghost-dark"
             onClick={() => void sendBackToReview()}
-            disabled={isPending}
+            disabled={isPending || isSendBackMovingNothing}
+            title={
+              isSendBackMovingNothing
+                ? t("admin:adminListings.bulk.sendBackDisabledReason")
+                : undefined
+            }
           >
-            {t("admin:adminListings.bulk.sendBackCta")}
+            {sendBackLabel}
           </Button>
           <Button
             variant="danger"
@@ -184,7 +230,7 @@ export function BulkActionBar({
       </div>
       {confirmingPublish && (
         <BulkPublishConfirmModal
-          count={count}
+          count={publishableCount}
           pending={isPending}
           onConfirm={() => void confirmPublish()}
           onClose={() => setConfirmingPublish(false)}

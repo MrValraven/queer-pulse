@@ -324,6 +324,56 @@ export const vj: Catalog = {
   "setlistItems.added": "{scene} added as number {position}",
   "setlistItems.full": "This set list is full. Remove a scene to add another",
 
+  // ── Live connections (library) and the stopped screen ──
+  "live.title": "Live connections",
+  "live.summary.both": "{screens} and {remotes} connected",
+  "live.summary.one": "{devices} connected",
+  "live.summary.none": "Nothing is connected right now",
+  "live.summary.loading": "Checking what's connected",
+  "live.summary.unread": "The connections couldn't be read",
+  "live.screenCount_one": "{count} screen",
+  "live.screenCount_other": "{count} screens",
+  "live.remoteCount_one": "{count} remote",
+  "live.remoteCount_other": "{count} remotes",
+  "live.idle_one": "A show is still held in memory with nothing connected",
+  "live.idle_other":
+    "{count} shows are still held in memory with nothing connected",
+  "live.showConnections": "Show connections",
+  "live.hideConnections": "Hide connections",
+  "live.stopEverything": "Stop everything",
+  "live.yourShow": "Your show",
+  "live.operatorShow": "{name}'s show",
+  "live.otherOperatorShow": "Another operator's show",
+  "live.screenName": "Screen {number}",
+  "live.remoteName": "Remote",
+  "live.lead": "Lead",
+  "live.connectedSince": "Connected {time}",
+  "live.justNow": "just now",
+  "live.timeUnknown": "at an unknown time",
+  "live.rendererWebgl": "Effects engine",
+  "live.rendererDom": "Backup renderer",
+  "live.rendererSimple": "Simple renderer, fades only",
+  "live.fullscreen": "Full screen",
+  "live.windowed": "In a window",
+  "live.disconnectScreen": "Disconnect screen",
+  "live.disconnectRemote": "Disconnect remote",
+  "live.stopDialog.title": "Stop every screen and remote?",
+  "live.stopDialog.body":
+    "Screens leave the show and go dark. Each screen and remote needs a reload to connect again",
+  "live.stopDialog.bodyAdmin":
+    "This stops every operator's show, yours included. Screens leave the show and go dark, and each screen and remote needs a reload to connect again",
+  "live.stopped.both": "Stopped {screens} and {remotes}",
+  "live.stopped.one": "Stopped {devices}",
+  "live.stopped.none":
+    "Nothing was connected, and the show held in memory is cleared",
+  "screen.stoppedTitle": "This screen stopped",
+  "screen.connectAgain": "Connect again",
+  "live.stopped.nothingRunning":
+    "Nothing was running, so there was nothing to stop",
+  "live.screenNameUnknown": "Screen",
+  "live.quietLine": "No screens or remotes are connected right now",
+  "screen.stoppedHint": "Someone stopped this screen from the VJ library",
+
   // ── Reason codes, REST and upload ──
   "error.packNotFound": "This pack was deleted, maybe in another tab",
   "error.packNameRequired": "Give the pack a name",
@@ -405,6 +455,8 @@ export const vj: Catalog = {
   "error.uploadPreviewTooLarge":
     "This clip's animated preview came out over {max}. Make the preview again",
 
+  "error.connectionNotFound": "That device already disconnected",
+  "error.connectionNotYours": "That device belongs to another operator's show",
   // ── Reason codes, socket ──
   "error.socket.notAdmin":
     "VJ is open to admins and the VJ operator role, and this account no longer has either",
@@ -516,6 +568,10 @@ export const vj: Catalog = {
   "error.socket.serverError":
     "The server ran into a problem with that command. This one is on us, so try again",
 
+  "error.socket.stopped": "This connection was stopped from the VJ library",
+  "error.socket.renderModeInvalid":
+    "This remote asked for a renderer the screens don't have. Reload the remote",
+  "error.socket.noScreensConnected": "No screens are connected right now",
   // ── Failures without a VJ code ──
   "failure.offline":
     "You're offline, so this didn't reach QueerPulse. Check your connection and try again",
@@ -551,6 +607,8 @@ export const vj: Catalog = {
   "connection.refused.clientOutdated":
     "This page is out of date. Reload it to keep playing",
 
+  "connection.refused.stopped":
+    "Someone stopped this connection from the VJ library. Reload the page to connect again",
   // ── Screen (projector) ──
   "screen.metaTitle": "VJ screen",
   "screen.setupTitle": "VJ screen",
@@ -570,11 +628,11 @@ export const vj: Catalog = {
   "screen.fullscreenUnsupported":
     "This browser can't go fullscreen. Open the screen in Chrome or Edge",
   "screen.renderer.webgl2": "Effects engine ready",
-  "screen.renderer.dom": "Simple renderer: {reason}",
+  "screen.renderer.dom": "Backup renderer: {reason}",
   "screen.renderer.reason.webgl2Missing":
-    "this browser has no WebGL2, so only the simple effects run",
+    "this browser has no WebGL2, so only the lighter effects run",
   "screen.renderer.reason.softwareRenderer":
-    "this laptop draws graphics without its graphics card, so only the simple effects run",
+    "this laptop draws graphics without its graphics card, so only the lighter effects run",
   "screen.renderer.reason.contextCreationFailed":
     "the graphics card refused to start the effects engine",
   "screen.renderer.reason.programFailed":
@@ -582,9 +640,10 @@ export const vj: Catalog = {
   "screen.renderer.reason.contextLost":
     "the graphics card reset twice during the show",
   "screen.renderer.reason.forced":
-    "the screen link asks for the simple renderer",
+    "the screen link asks for the backup renderer",
   "screen.renderer.restoring":
-    "The graphics card reset; the simple renderer holds the show while it recovers",
+    "The graphics card reset; the backup renderer holds the show while it recovers",
+  "screen.renderer.simple": "Simple renderer, chosen from the remote",
   "screen.health.line_one": "{fps} fps, {count} dropped frame in the last 5 s",
   "screen.health.line_other":
     "{fps} fps, {count} dropped frames in the last 5 s",
@@ -964,7 +1023,8 @@ export const vj: Catalog = {
   "screensSheet.fullscreen": "Full screen",
   "screensSheet.windowed": "In a window",
   "screensSheet.rendererWebgl": "Effects engine",
-  "screensSheet.rendererDom": "Simple renderer, some effects are off",
+  "screensSheet.rendererDom": "Backup renderer, some effects are off",
+  "screensSheet.rendererSimple": "Simple renderer, fades only",
   "screensSheet.fps": "{fps} frames a second",
   "screensSheet.dropped_one": "{count} dropped frame",
   "screensSheet.dropped_other": "{count} dropped frames",
@@ -975,6 +1035,14 @@ export const vj: Catalog = {
   "screensSheet.micOn": "Mic on, level {percent}%",
   "screensSheet.identifyAll": "Show every screen's number",
   "screensSheet.identify": "Show number on screen {number}",
+  "screensSheet.renderMode.label": "Simple renderer on every screen",
+  "screensSheet.renderMode.hint":
+    "Fades between clips only. Effects, generators and strobe stay off",
+  "screensSheet.renderMode.pendingSimple":
+    "Moving every screen to the simple renderer",
+  "screensSheet.renderMode.pendingEffects":
+    "Moving every screen back to the effects engine",
+  "screensSheet.switchToSimple": "Switch to simple renderer",
   "screensSheet.override": "What this screen shows",
   "screensSheet.followMain": "Follow the main look",
   "screensSheet.overrideClip": "Clip: {title}",
@@ -1183,4 +1251,183 @@ export const vj: Catalog = {
   "effect.variant.lesbian": "Lesbian",
   "effect.variant.nonbinary": "Non-binary",
   "effect.variant.progress": "Progress",
+
+  // ── Descriptions and the effects on strip ──
+  "effect.desc.monochrome": "Turns the picture black and white",
+  "effect.desc.invert":
+    "Flips every colour to its opposite, or flashes it on the beat",
+  "effect.desc.saturate": "Makes the colours stronger and more vivid",
+  "effect.desc.contrast": "Darkens the darks and brightens the lights",
+  "effect.desc.tint": "Washes the picture in one palette colour",
+  "effect.desc.duotone":
+    "Redraws the picture in two colours, one dark and one light",
+  "effect.desc.prideGrade":
+    "Maps the picture's light and dark onto a pride flag's stripes",
+  "effect.desc.thermal":
+    "Colours it like a heat camera, from black through red to white",
+  "effect.desc.hueCycle":
+    "Rolls the colours round the colour wheel in time with the beat",
+  "effect.desc.hueShift":
+    "Moves every colour to a different hue and holds it there",
+  "effect.desc.vhs":
+    "Wobbly lines, colour bleed and a rolling band like old tape",
+  "effect.desc.filmGrain": "Adds flickering grain like old film",
+  "effect.desc.scanlines":
+    "Draws thin dark lines across the picture like an old TV",
+  "effect.desc.crt": "Curves the picture like an old tube TV with a pixel mask",
+  "effect.desc.rgbSplit":
+    "Pulls red and blue apart, or pulses them with the beat",
+  "effect.desc.pixelate": "Breaks the picture into big square blocks",
+  "effect.desc.halftone": "Redraws the picture as printed dots",
+  "effect.desc.glitch":
+    "Jolts rows sideways in bursts on the beat, with brief flashes",
+  "effect.desc.dream": "Softens the picture and makes the bright parts glow",
+  "effect.desc.vignette": "Darkens the edges and corners",
+  "effect.desc.lightLeaks":
+    "Drifts warm amber and rose glows across the picture",
+  "effect.desc.mirror": "Reflects one half onto the other, or all four ways",
+  "effect.desc.kaleidoscope":
+    "Folds the picture into mirrored wedges that turn with the beat",
+  "effect.desc.tile": "Repeats the picture in a 2 by 2 or 3 by 3 grid",
+  "effect.desc.kenBurns":
+    "Slowly zooms in and drifts across, then eases back out",
+  "effect.desc.rotate": "Spins the picture round in time with the tempo",
+  "effect.desc.zoomPulse": "Punches in on every beat, or follows the mic level",
+  "effect.desc.mask":
+    "Shows the picture inside a circle, heart or star on black",
+  "effect.desc.freeze": "Holds the current frame still",
+  "effect.desc.reverse": "Plays the clip backwards",
+  "effect.desc.pingPong":
+    "Plays the clip forward, then backward, over and over",
+  "effect.desc.stutter":
+    "Repeats short slices of the clip in time with the beat",
+  "effect.desc.echo": "Leaves glowing trails behind anything that moves",
+  "effect.desc.beatPulse": "Flashes the picture brighter on every beat",
+  "effect.desc.strobe":
+    "Flashes the screens white on the beat and stops after 10 s",
+  "transition.modeDesc.fade": "Blends smoothly from one clip into the next",
+  "transition.modeDesc.cut": "Switches at once with no blend",
+  "transition.modeDesc.dipBlack":
+    "Fades down to black, then up into the next clip",
+  "transition.modeDesc.dipWhite":
+    "Flashes up to white, then fades into the next clip",
+  "transition.modeDesc.wipeLeft":
+    "A straight edge sweeps right to left and reveals the next clip",
+  "transition.modeDesc.wipeRight":
+    "A straight edge sweeps left to right and reveals the next clip",
+  "transition.modeDesc.wipeRadial":
+    "Sweeps round like a clock hand from 12 o'clock",
+  "transition.modeDesc.iris":
+    "The next clip opens out from a circle growing in the middle",
+  "transition.modeDesc.zoomBlur":
+    "Zooms and blurs out of one clip into the next",
+  "transition.modeDesc.glitch":
+    "Breaks into shifting blocks with a bright flash midway",
+  "transition.modeDesc.lumaFade":
+    "The next clip shows through the darkest parts first",
+  "mix.blendDesc.normal":
+    "Crossfades straight from the live clip to the mix clip",
+  "mix.blendDesc.screen":
+    "Lightens, so the bright parts of both clips show through",
+  "mix.blendDesc.multiply": "Darkens, keeping the shadows of both clips",
+  "mix.blendDesc.difference":
+    "Subtracts one clip from the other for vivid inverted colour",
+  "mix.blendDesc.add":
+    "Adds the light of both clips, and bright parts burn to white",
+  "mix.blendDesc.lighten": "Keeps the brighter of the two clips at every point",
+  "tempo.quantizeDesc.off": "Clip and text changes land the moment you tap",
+  "tempo.quantizeDesc.beat": "Clip and text changes wait for the next beat",
+  "tempo.quantizeDesc.bar":
+    "Clip and text changes wait for the first beat of the next bar",
+  "help.toggleShow": "Show descriptions",
+  "help.toggleHide": "Hide descriptions",
+  "help.crossfader": "Slide to fade the mix clip in over the live clip",
+  "help.bpm": "Tap to change the tempo or follow the screen's mic",
+  "help.tap": "Tap along to the music four times or more to set the tempo",
+  "help.beatDots": "Lights each beat of the bar in time with the screens",
+  "help.downbeat": "Tap on the one to line the bar up with the music",
+  "help.quantize": "Picks when clip changes land: now, next beat or next bar",
+  "help.transitionMode":
+    "How the screens move to the next clip. Tap to pick one",
+  "help.transitionLength":
+    "How long the move to the next clip takes, in beats or seconds",
+  "help.speed": "Sets how fast the clips play, from 0.25x to 4x",
+  "help.effectPad": "Tap to keep it on, or hold to use it only while pressed",
+  "help.effectsLibrary":
+    "Opens every effect to turn on, tune or add to the dock",
+  "help.effectsOn": "Every effect on now. Tap one to turn it off",
+  "help.resetLook":
+    "Turns off effects, text, logo and mix. The clip keeps playing",
+  "help.cue": "Turns on cue mode, so a tapped clip waits for Go",
+  "help.go": "Sends the cued clip to the screens",
+  "help.more": "Opens text, shuffle, mix, scenes, screens and more",
+  "help.blackout": "Fades every screen to black. Tap again to bring it back",
+  "help.back": "Goes back to the VJ library",
+  "help.favoritesOnly": "Shows only the clips you starred in this pack",
+  "help.packTab":
+    "Switches to this pack and counts the clips ready on the screens",
+  "help.generators": "Shows visuals the screens draw with no clip",
+  "help.generatorTile": "Tap to show this generator on the screens",
+  "help.search": "Finds clips in this pack by name",
+  "help.screensStatus": "Shows if the screens are live. Tap to check each one",
+  "help.miniMirror": "What the screens show now. Tap to make it bigger",
+  "help.nowPlaying": "The clip or generator on the screens now",
+  "help.nextUp": "What plays next: the cued clip, next scene or shuffle pick",
+  "help.shuffleTimer":
+    "Counts down to the next shuffle clip or a waiting change",
+  "help.skip": "Plays the shuffle's next clip now",
+  "help.scenesTab": "Shows your saved scenes in this row",
+  "help.recentTab": "Shows the clips you played last in this row",
+  "help.sceneChip": "Brings back this saved look on the screens",
+  "help.setlistStep": "Steps to the previous or next scene of the set list",
+  "help.saveScene": "Saves the current clip, effects, transition, text and mix",
+  "help.sceneList": "Opens every scene and set list to rename, delete or start",
+  "help.previousClip": "Goes back to the clip that played before this one",
+  "help.recentClip": "Plays this recent clip again",
+  "help.clipTile": "Tap to play it, or to cue it in cue mode. Hold to preview",
+  "help.favoriteClip": "Stars the clip for the favorites filter and shuffle",
+  "help.clipFailures": "Lists the clips that couldn't load and how to fix each",
+  "more.desc.text": "Puts text, a countdown or the logo on the screens",
+  "more.desc.shuffle": "Changes the clip by itself every few seconds or beats",
+  "more.desc.mix": "Layers a second clip over the live one and blends them",
+  "more.desc.scenes":
+    "Recalls saved looks and plays them in order as set lists",
+  "more.desc.screens":
+    "Checks each screen, shows its number or gives it its own clip",
+  "more.desc.eventCard":
+    "Shows the event QR code or the next event card on the screens",
+  "more.desc.midi": "Lets a MIDI controller's keys and knobs run the remote",
+  "more.desc.effects":
+    "Lists every effect with its settings and the dock order",
+  "more.desc.shortcuts":
+    "Lists the keys for clips, Go, blackout, tap tempo and more",
+  "more.desc.cueMode": "Tapped clips wait as cued until you press Go",
+  "more.desc.clearScreen":
+    "Takes the live clip off and leaves the screens black",
+  "more.intro": "Setup sheets and show actions beyond the dock",
+  "text.intro": "Put words, a countdown or your logo over the visuals",
+  "shuffle.intro": "Let the screens pick the next clip on a timer",
+  "mix.intro": "Layer a second clip over the live one and fade between them",
+  "scenes.intro": "Bring back saved looks in one tap, or play them in order",
+  "screensSheet.intro": "Every open screen, how it's running and what it shows",
+  "eventCard.intro":
+    "Show the linked event on the screens as a QR code or a card",
+  "midi.intro": "Map the keys and knobs of a controller to the remote",
+  "effect.intro": "Turn effects on, tune them and choose which sit in the dock",
+  "keys.intro": "Run the show from a keyboard with these keys",
+  "effectsOn.title": "On now",
+  "effectsOn.count_one": "{count} effect on",
+  "effectsOn.count_other": "{count} effects on",
+  "effectsOn.allOff": "All off",
+  "effectsOn.turnOffAria": "Turn off {effect}",
+
+  // ── Dock help legend ──
+  "help.term.beatDots": "Beats",
+  "help.term.length": "Length",
+  "tempo.followMicDesc":
+    "The lead screen listens to the music and keeps the tempo",
+
+  // ── Effects on strip, empty and legend ──
+  "effectsOn.none": "No effects on",
+  "effectsOn.term": "Effects on",
 };

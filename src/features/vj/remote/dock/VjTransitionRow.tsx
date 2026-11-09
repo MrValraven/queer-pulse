@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { FiZap } from "react-icons/fi";
 import {
@@ -17,10 +17,12 @@ import {
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { VjCommandOutcome } from "../../live/vjStageCommands";
+import { useVjHelpCaptions } from "../hooks/useVjHelpCaptions";
 import {
   useVjOptimisticValue,
   type VjSendRefusal,
 } from "../hooks/useVjOptimisticValue";
+import { VjDockHelpLegend } from "./VjDockHelpLegend";
 import { VjLengthControl } from "./VjLengthControl";
 import { VjSpeedChip } from "./VjSpeedChip";
 import { VjTransitionPicker } from "./VjTransitionPicker";
@@ -96,6 +98,8 @@ export interface VjTransitionRowProps {
  * the length (beat chips or the ms slider; folded away
  * for Cut), and the clip speed chip. Picks show at once and roll back with their named reason
  * on a refusal. A flash-capable transition asks for flash consent first.
+ * While help captions are on, a line for the mode, the length and the speed
+ * folds in under the row; the length's line folds away with it under Cut.
  */
 export function VjTransitionRow({
   transition,
@@ -132,6 +136,8 @@ export function VjTransitionRow({
   const isSendBlocked = isBlocked || transition === null;
   const blockedDescription = isBlocked ? blockedReasonId : undefined;
   const modeLabel = t(`vj:transition.mode.${mode}`);
+  const help = useVjTransitionHelp(mode !== "cut");
+  const helpIdOf = (helpId: string) => (help.isOn ? helpId : undefined);
 
   const sendLength = (nextLength: VjTransitionLength) => {
     void lengthOptimistic.apply(VJ_LENGTH_KEY, nextLength, () =>
@@ -159,84 +165,116 @@ export function VjTransitionRow({
   };
 
   return (
-    <div className={styles.row} data-vj-transition-row="">
-      <button
-        ref={modeChipRef}
-        type="button"
-        className={`${styles.chip} ${styles.captionChip} ${styles.modeChip}`}
-        data-vj-transition-chip={mode}
-        aria-label={t("vj:transition.pickAria", { mode: modeLabel })}
-        aria-haspopup="dialog"
-        aria-expanded={isPickerOpen}
-        onClick={() => setIsPickerOpen((isOpen) => !isOpen)}
-      >
-        {VJ_TRANSITION_CATALOG[mode].isFlashCapable && (
-          <FiZap aria-hidden fill="none" />
-        )}
-        <span
-          className={`${styles.chipCaption} ${styles.foldingCaption} ${styles.modeCaptionTitle}`}
-          aria-hidden="true"
+    <>
+      <div className={styles.row} data-vj-transition-row="">
+        <button
+          ref={modeChipRef}
+          type="button"
+          className={`${styles.chip} ${styles.captionChip} ${styles.modeChip}`}
+          data-vj-transition-chip={mode}
+          aria-label={t("vj:transition.pickAria", { mode: modeLabel })}
+          aria-haspopup="dialog"
+          aria-expanded={isPickerOpen}
+          aria-describedby={helpIdOf(help.ids.mode)}
+          onClick={() => setIsPickerOpen((isOpen) => !isOpen)}
         >
-          {t("vj:transition.title")}
-        </span>
-        <span
-          className={`${styles.chipCaption} ${styles.foldingCaption} ${styles.modeCaptionSplit}`}
-          aria-hidden="true"
-        >
-          {t("vj:transition.modeCaption")}
-        </span>
-        <span className={`${styles.chipValue} ${styles.modeLabel}`}>
-          {modeLabel}
-        </span>
-      </button>
-      <AnimatePresence initial={false}>
-        {mode !== "cut" && (
-          <m.div
-            key="vj-transition-length"
-            className={styles.lengthSlot}
-            style={{ originX: 0 }}
-            initial={{ opacity: 0, scaleX: 0.92 }}
-            animate={{ opacity: 1, scaleX: 1 }}
-            exit={{ opacity: 0, scaleX: 0.92 }}
-            transition={reducedMotion ? VJ_INSTANT : VJ_SLOT_TRANSITION}
+          {VJ_TRANSITION_CATALOG[mode].isFlashCapable && (
+            <FiZap aria-hidden fill="none" />
+          )}
+          <span
+            className={`${styles.chipCaption} ${styles.foldingCaption} ${styles.modeCaptionTitle}`}
+            aria-hidden="true"
           >
-            <VjLengthControl
-              length={length}
-              isBlocked={isSendBlocked}
-              stateRevision={stateRevision}
-              onPickBeats={(count) =>
-                sendLength({ unit: "beats", value: count })
-              }
-              sendMs={(value) =>
-                setTransition({ length: { unit: "ms", value } })
-              }
-              onRefused={onRefused}
-              describedBy={blockedDescription}
-            />
-          </m.div>
-        )}
-      </AnimatePresence>
-      <VjSpeedChip
-        speed={speed}
-        liveMediaKind={liveMediaKind}
-        isBlocked={isBlocked}
-        stateRevision={stateRevision}
-        setSpeed={setSpeed}
-        onRefused={onRefused}
-        describedBy={blockedDescription}
-      />
-      <VjTransitionPicker
-        anchorRef={modeChipRef}
-        isOpen={isPickerOpen}
-        onClose={() => setIsPickerOpen(false)}
-        mode={mode}
-        unit={length.unit}
-        isBlocked={isSendBlocked}
-        canSwitchUnit={tempo !== null}
-        onPickMode={pickMode}
-        onPickUnit={pickUnit}
-        describedBy={blockedDescription}
-      />
-    </div>
+            {t("vj:transition.title")}
+          </span>
+          <span
+            className={`${styles.chipCaption} ${styles.foldingCaption} ${styles.modeCaptionSplit}`}
+            aria-hidden="true"
+          >
+            {t("vj:transition.modeCaption")}
+          </span>
+          <span className={`${styles.chipValue} ${styles.modeLabel}`}>
+            {modeLabel}
+          </span>
+        </button>
+        <AnimatePresence initial={false}>
+          {mode !== "cut" && (
+            <m.div
+              key="vj-transition-length"
+              className={styles.lengthSlot}
+              style={{ originX: 0 }}
+              initial={{ opacity: 0, scaleX: 0.92 }}
+              animate={{ opacity: 1, scaleX: 1 }}
+              exit={{ opacity: 0, scaleX: 0.92 }}
+              transition={reducedMotion ? VJ_INSTANT : VJ_SLOT_TRANSITION}
+            >
+              <VjLengthControl
+                length={length}
+                isBlocked={isSendBlocked}
+                stateRevision={stateRevision}
+                onPickBeats={(count) =>
+                  sendLength({ unit: "beats", value: count })
+                }
+                sendMs={(value) =>
+                  setTransition({ length: { unit: "ms", value } })
+                }
+                onRefused={onRefused}
+                describedBy={
+                  [blockedDescription, helpIdOf(help.ids.length)]
+                    .filter(Boolean)
+                    .join(" ") || undefined
+                }
+              />
+            </m.div>
+          )}
+        </AnimatePresence>
+        <VjSpeedChip
+          speed={speed}
+          liveMediaKind={liveMediaKind}
+          isBlocked={isBlocked}
+          stateRevision={stateRevision}
+          setSpeed={setSpeed}
+          onRefused={onRefused}
+          describedBy={blockedDescription}
+          helpCaptionId={helpIdOf(help.ids.speed)}
+        />
+        <VjTransitionPicker
+          anchorRef={modeChipRef}
+          isOpen={isPickerOpen}
+          onClose={() => setIsPickerOpen(false)}
+          mode={mode}
+          unit={length.unit}
+          isBlocked={isSendBlocked}
+          canSwitchUnit={tempo !== null}
+          onPickMode={pickMode}
+          onPickUnit={pickUnit}
+          describedBy={blockedDescription}
+        />
+      </div>
+      <VjDockHelpLegend entries={help.entries} />
+    </>
   );
+}
+
+/** The transition row's help lines, one per control in the row's order, and
+ *  the ids its controls point aria-describedby at while help is on. */
+function useVjTransitionHelp(hasLength: boolean) {
+  const { t } = useTranslation();
+  const { isOn } = useVjHelpCaptions();
+  const ids = { mode: useId(), length: useId(), speed: useId() };
+  const entries = [
+    {
+      id: ids.mode,
+      term: t("vj:transition.title"),
+      text: t("vj:help.transitionMode"),
+    },
+    {
+      id: ids.length,
+      term: t("vj:help.term.length"),
+      text: t("vj:help.transitionLength"),
+      isShown: hasLength,
+    },
+    { id: ids.speed, term: t("vj:effects.speed"), text: t("vj:help.speed") },
+  ];
+  return { isOn, ids, entries };
 }

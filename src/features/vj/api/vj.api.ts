@@ -16,6 +16,8 @@ import type {
   VjClipListDTO,
   VjClipMediaListDTO,
   VjEventOptionListDTO,
+  VjLiveDTO,
+  VjLiveStoppedDTO,
   VjPackClipsDTO,
   VjPackDTO,
   VjPackDeletedDTO,
@@ -285,4 +287,27 @@ export function deleteVjSetlist(
   setlistId: string,
 ): Promise<VjSetlistDeletedDTO> {
   return apiDelete<VjSetlistDeletedDTO>(setlistPath(setlistId));
+}
+
+// Live connections (admin/vj/live)
+
+/** Every stage the caller may see: an Admin sees every operator's, a VJ
+ *  operator their own. */
+export function getVjLive(signal?: AbortSignal): Promise<VjLiveDTO> {
+  return apiGet<VjLiveDTO>(`${VJ_BASE}/live`, undefined, undefined, signal);
+}
+
+/** Stops every screen and remote in scope and drops every stage in scope. */
+export function stopVjLive(): Promise<VjLiveStoppedDTO> {
+  return apiPost<VjLiveStoppedDTO>(`${VJ_BASE}/live/stop`, {});
+}
+
+/** Stops one screen or remote by its connection id. */
+export function stopVjLiveConnection(
+  connectionId: string,
+): Promise<VjLiveStoppedDTO> {
+  return apiPost<VjLiveStoppedDTO>(
+    `${VJ_BASE}/live/connections/${encodeURIComponent(connectionId)}/stop`,
+    {},
+  );
 }

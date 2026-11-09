@@ -177,6 +177,7 @@ export function VjEffectsLibrarySheet({
   return (
     <VjSheetFrame
       title={t("vj:effect.libraryTitle")}
+      intro={t("vj:effect.intro")}
       closeLabel={t("vj:effects.close")}
       onClose={onClose}
       footerStart={

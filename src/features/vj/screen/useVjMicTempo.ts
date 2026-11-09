@@ -68,6 +68,9 @@ export interface VjMicTempoState {
   report: VjScreenMicReport | null;
   start: () => void;
   stop: () => void;
+  /** Closes the microphone and keeps the stored opt-in, so the next load
+   *  listens again; used when the screen is stopped from the library. */
+  release: () => void;
 }
 
 /** Audio seconds between tempo estimates. */
@@ -394,7 +397,22 @@ export function useVjMicTempo(input: {
     };
   }, [begin]);
 
+  // Off for this page only: the stored opt-in stays as it was.
+  const releaseKeepingOptIn = useCallback(() => {
+    release();
+    showOff("off", null);
+  }, [release, showOff]);
+
   useEffect(() => release, [release]);
 
-  return { status, failure, level, levelRef, report, start, stop };
+  return {
+    status,
+    failure,
+    level,
+    levelRef,
+    report,
+    start,
+    stop,
+    release: releaseKeepingOptIn,
+  };
 }

@@ -16,6 +16,7 @@ import {
   type VjSendRefusal,
 } from "../hooks/useVjOptimisticValue";
 import { VjDockPopover } from "../kit/VjDockPopover";
+import { VjOptionDescription } from "../kit/VjHelpCaption";
 import styles from "./VjDockRows.module.css";
 
 export type VjTempoPatch = {
@@ -55,7 +56,8 @@ export interface VjBpmPopoverProps {
  * Tempo entry over the BPM readout: one BPM slower or faster, half and
  * double tempo, a typed BPM, and following the lead screen's mic. Every
  * BPM send is `setTempo({ bpm })` (the server marks it manual and re-anchors
- * the bar, contract 7.6). A refusal shows its named reason in place.
+ * the bar, contract 7.6). A refusal shows its named reason in place. Following
+ * the mic carries a one-line description under it.
  */
 export function VjBpmPopover(props: VjBpmPopoverProps) {
   const titleId = useId();
@@ -84,6 +86,7 @@ function VjBpmPopoverBody({
   const fieldId = useId();
   const fieldErrorId = useId();
   const micNoteId = useId();
+  const followMicDescriptionId = useId();
   const [fieldText, setFieldText] = useState(() =>
     tempo === null ? "" : String(tempo.bpm),
   );
@@ -208,17 +211,28 @@ function VjBpmPopoverBody({
           <span>{t("vj:shuffle.bpmOutOfRange")}</span>
         </p>
       </Collapse>
-      <button
-        type="button"
-        className={`${styles.chip} ${styles.wideChip}`}
-        aria-pressed={tempo?.source === "mic"}
-        aria-disabled={isSendBlocked || isMicMissing || undefined}
-        aria-describedby={isMicMissing ? micNoteId : undefined}
-        onClick={followMic}
-      >
-        <FiMic aria-hidden fill="none" />
-        {t("vj:tempo.followMic")}
-      </button>
+      <div className={styles.optionWithDescription}>
+        <button
+          type="button"
+          className={`${styles.chip} ${styles.wideChip}`}
+          aria-pressed={tempo?.source === "mic"}
+          aria-disabled={isSendBlocked || isMicMissing || undefined}
+          aria-describedby={[
+            followMicDescriptionId,
+            isMicMissing ? micNoteId : undefined,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          onClick={followMic}
+        >
+          <FiMic aria-hidden fill="none" />
+          {t("vj:tempo.followMic")}
+        </button>
+        <VjOptionDescription
+          id={followMicDescriptionId}
+          text={t("vj:tempo.followMicDesc")}
+        />
+      </div>
       <Collapse isOpen={isMicMissing}>
         <p id={micNoteId} className={styles.note}>
           {t("vj:error.socket.micUnavailable")}

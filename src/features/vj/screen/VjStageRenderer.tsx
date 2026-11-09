@@ -1,14 +1,10 @@
 import {
-  useEffect,
-  useEffectEvent,
-  useImperativeHandle,
   useReducer,
   useRef,
   useState,
   type CSSProperties,
   type JSX,
   type Ref,
-  type RefObject,
 } from "react";
 import {
   VJ_LIMITS,
@@ -44,7 +40,6 @@ import {
   VJ_LAYER_NAMES,
   isOwnOpacityTransition,
   reduceVjLayers,
-  releasedVjSourceUrls,
   vjLayerOpacity,
   vjLayerZ,
   type VjLayerMachineState,
@@ -53,6 +48,17 @@ import {
   type VjRenderableSource,
 } from "./vjLayerMachine";
 import type { VjStageHandle } from "./vjStageHandle";
+import {
+  useVjCurtain,
+  useVjHeldSources,
+  useVjLayersShown,
+  useWindowViewport,
+} from "./useVjStageLayers";
+import {
+  VJ_FIRST_TARGET_CUT,
+  isVjLayersShowing,
+  vjTargetKeyOf,
+} from "./vjStageLayerRules";
 import styles from "./VjStage.module.css";
 
 export interface VjStageRendererProps {
@@ -87,78 +93,13 @@ export interface VjStageRendererProps {
    *   new URL itself (`holdsSource` answers false for it).
    */
   onSourceReleased: (sourceUrl: string) => void;
-}
-
-function readViewport(): { width: number; height: number } {
-  return { width: window.innerWidth, height: window.innerHeight };
-}
-
-function useWindowViewport(): { width: number; height: number } {
-  const [viewport, setViewport] = useState(readViewport);
-  useEffect(() => {
-    const handleResize = (): void => setViewport(readViewport());
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-  return viewport;
-}
-
-/** A target is identified by its source key and its URL: a re-tap of the live source is the same key. */
-function targetKeyOf(target: VjRenderableSource | null): string | null {
-  return target ? `${target.clipId}|${target.sourceUrl}` : null;
-}
-
-/** Every object URL the layers and the pending target hold (generators hold none). */
-function layerHeldSourceUrls(layers: VjLayerMachineState): string[] {
-  // Nothing is held in the initial state, so the URLs released going back to
-  // it are exactly the URLs held now.
-  return releasedVjSourceUrls(layers, INITIAL_VJ_LAYERS);
-}
-
-function heldSourceUrls(
-  layers: VjLayerMachineState,
-  mixSourceUrl: string | null,
-): string[] {
-  const held = layerHeldSourceUrls(layers);
-  if (mixSourceUrl && !held.includes(mixSourceUrl)) held.push(mixSourceUrl);
-  return held;
-}
-
-/**
- * Reports each URL nothing holds any more and exposes the stage handle. The
- * mix layer reports its URL in a layout effect, so both see it before any
- * passive effect of the page runs.
- */
-function useVjHeldSources(
-  layers: VjLayerMachineState,
-  mixSourceUrl: string | null,
-  handleRef: Ref<VjStageHandle> | undefined,
-  onSourceReleased: (sourceUrl: string) => void,
-): RefObject<string | null> {
-  const mixHeldRef = useRef<string | null>(null);
-  const previousHeldRef = useRef<readonly string[]>([]);
-  const releaseSource = useEffectEvent((sourceUrl: string) =>
-    onSourceReleased(sourceUrl),
-  );
-  useEffect(() => {
-    const held = heldSourceUrls(layers, mixHeldRef.current);
-    const released = previousHeldRef.current.filter(
-      (sourceUrl) => !held.includes(sourceUrl),
-    );
-    previousHeldRef.current = held;
-    for (const sourceUrl of released) releaseSource(sourceUrl);
-  }, [layers, mixSourceUrl]);
-
-  useImperativeHandle(
-    handleRef,
-    () => ({
-      holdsSource: (sourceUrl: string) =>
-        sourceUrl !== "" &&
-        heldSourceUrls(layers, mixHeldRef.current).includes(sourceUrl),
-    }),
-    [layers],
-  );
-  return mixHeldRef;
+  /**
+   * Read on mount only: the first target cuts in, for a renderer that
+   * arrives while another one still draws the picture.
+   */
+  shouldCutFirstTarget?: boolean;
+  /** Called once, the first time the stage draws its target (or black with none). */
+  onShown?: () => void;
 }
 
 interface VjFlashDecision {
@@ -228,22 +169,6 @@ function useVjTransitionFlashGrant(isStrobing: boolean) {
   return { flashBudgetRef, decideOnFirstFrame, domTransitionOf };
 }
 
-/** The black curtain's settle state and whether the front clip is paused under it. */
-function useVjCurtain(layers: VjLayerMachineState) {
-  const [curtain, setCurtain] = useState({
-    isBlack: layers.isBlackRequested,
-    isSettled: false,
-  });
-  if (curtain.isBlack !== layers.isBlackRequested) {
-    setCurtain({ isBlack: layers.isBlackRequested, isSettled: false });
-  }
-  const isFrontPaused =
-    layers.isBlackRequested && (layers.curtainFadeMs <= 0 || curtain.isSettled);
-  const markSettled = (): void =>
-    setCurtain({ isBlack: true, isSettled: true });
-  return { isFrontPaused, markSettled };
-}
-
 /**
  * The projector's DOM renderer (the WebGL compositor's fallback): two source
  * layers that switch with no black frame, the mix clip over them, the effects
@@ -262,16 +187,27 @@ export function VjStageRenderer({
   handleRef,
   onClipFailed,
   onSourceReleased,
+  shouldCutFirstTarget = false,
+  onShown,
 }: VjStageRendererProps): JSX.Element {
   const [layers, dispatch] = useReducer(reduceVjLayers, INITIAL_VJ_LAYERS);
   const [appliedTargetKey, setAppliedTargetKey] = useState<
     string | null | undefined
   >(undefined);
-  const targetKey = targetKeyOf(target);
+  const targetKey = vjTargetKeyOf(target);
   if (appliedTargetKey !== targetKey) {
+    const isFirstTarget = appliedTargetKey === undefined;
     setAppliedTargetKey(targetKey);
-    dispatch({ type: "target", clip: target, transition });
+    dispatch({
+      type: "target",
+      clip: target,
+      transition:
+        isFirstTarget && shouldCutFirstTarget
+          ? VJ_FIRST_TARGET_CUT
+          : transition,
+    });
   }
+  useVjLayersShown(isVjLayersShowing(layers, target !== null), onShown);
 
   const { isFrontPaused, markSettled } = useVjCurtain(layers);
   const viewport = useWindowViewport();

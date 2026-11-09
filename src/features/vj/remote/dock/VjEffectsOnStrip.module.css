@@ -1,0 +1,280 @@
+/* The Effects on strip (VjEffectsOnStrip.tsx), directly above the effect
+   pads in both dock designs. Each chip is an effect that is on: a soft
+   accent pill with its short pad name and an X. The strip carries its own
+   bottom spacing, so a folded strip adds no gap over the pads.
+
+   One 32px row in both layouts: the count as a small accent badge, the
+   chips scrolling sideways inside their own track, All off as a 44px wide
+   glass icon button pinned at the end. The track reaches 6px above and
+   below the row and cancels it with negative margins, so a chip's focus
+   ring and its 44px touch area stay whole. While chips hide past the end
+   edge the last 24px fade out. At 375px wide the track keeps about 250px.
+
+   Phone band: the strip folds away while no effect is on. Split column:
+   the row stays, with "No effects on" muted in the track and All off held,
+   so the pads under it never move. */
+
+.slot {
+  display: block;
+  flex: none;
+  min-inline-size: 0;
+}
+
+.strip {
+  --vj-chip-height: 32px;
+  --vj-chip-gap: 6px;
+  /* The track's room above and below the chips, for focus rings and the
+     taller touch area. */
+  --vj-chip-slop: 6px;
+  --vj-chip-fade: 24px;
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  padding-block-end: var(--vj-dock-rows-gap, var(--vj-band-gap, 6px));
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--vj-chip-gap);
+  min-inline-size: 0;
+}
+
+.countBadge {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-inline-size: 24px;
+  block-size: 24px;
+  padding-inline: 6px;
+  border: 1px solid var(--accent);
+  border-radius: var(--qs-radius-pill);
+  background: rgba(var(--accent-rgb), 0.16);
+  color: var(--qs-text);
+  font-size: var(--text-12);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+.countBadge[data-empty="true"] {
+  border-color: var(--qs-glass-border);
+  background: transparent;
+  color: var(--qs-text-mute);
+}
+
+/* The chips' track, with the empty line laid over it in the split column. */
+.track {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.none {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding-inline: 4px;
+  color: var(--qs-text-mute);
+  font-size: var(--text-12);
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* The chip track. On the phone it scrolls sideways and a sideways drag
+   never moves the page. */
+.chips {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  gap: var(--vj-chip-gap);
+  min-inline-size: 0;
+  min-block-size: var(--vj-chip-height);
+  margin: calc(-1 * var(--vj-chip-slop)) 0;
+  padding: var(--vj-chip-slop) 4px;
+  list-style: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x;
+  scroll-padding-inline: 4px;
+  scrollbar-width: none;
+}
+
+.chips::-webkit-scrollbar {
+  display: none;
+}
+
+.chips[data-has-more-end="true"] {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    var(--qs-text) calc(100% - var(--vj-chip-fade)),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    var(--qs-text) calc(100% - var(--vj-chip-fade)),
+    transparent
+  );
+}
+
+.chips[data-has-more-end="true"]:dir(rtl) {
+  -webkit-mask-image: linear-gradient(
+    to left,
+    var(--qs-text) calc(100% - var(--vj-chip-fade)),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to left,
+    var(--qs-text) calc(100% - var(--vj-chip-fade)),
+    transparent
+  );
+}
+
+.chipSlot {
+  display: flex;
+  flex: none;
+}
+
+/* ── One chip: the effect is on, so it reads in the accent ── */
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  box-sizing: border-box;
+  block-size: var(--vj-chip-height);
+  margin: 0;
+  padding-inline: 10px 8px;
+  border: 1px solid var(--accent);
+  border-radius: var(--qs-radius-pill);
+  background: rgba(var(--accent-rgb), 0.16);
+  color: var(--qs-text);
+  font: inherit;
+  font-size: var(--text-13);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  transition-property: opacity, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+/* A touch area as tall as the track's slop above and below the chip. */
+.chip::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--vj-chip-slop)) 0;
+}
+
+.chipName {
+  display: block;
+}
+
+.x {
+  flex: none;
+  font-size: var(--text-14);
+  color: var(--qs-text-mute);
+}
+
+/* ── All off: a glass icon button at the end of the row, the pads' glass
+   face, 44px wide and, with the track's slop, 44px tall to touch ── */
+.allOff {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  inline-size: var(--tap-min);
+  block-size: var(--vj-chip-height);
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-pill);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-raised);
+  color: var(--qs-text);
+  font-size: var(--text-16);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  transition-property: opacity, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.allOff::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--vj-chip-slop)) 0;
+}
+
+.chip:active:not([aria-disabled="true"]),
+.allOff:active:not([aria-disabled="true"]) {
+  transform: scale(0.96);
+}
+
+/* Waiting for the stage to confirm: a quieter chip until the ack lands. */
+.chip[aria-busy="true"] {
+  opacity: 0.8;
+}
+
+.chip[aria-disabled="true"],
+.allOff[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.chip:focus-visible,
+.allOff:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chip:not([aria-disabled="true"]):hover {
+    background: rgba(var(--accent-rgb), 0.24);
+  }
+
+  .allOff:not([aria-disabled="true"]):hover {
+    border-color: var(--qs-glass-border-strong);
+  }
+}
+
+
+/* The strip's legend line; its spacing folds with it. */
+.help {
+  min-inline-size: 0;
+}
+
+.help :global([data-vj-help-legend]) {
+  padding-block-start: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip,
+  .allOff {
+    transition-duration: 0s;
+  }
+}

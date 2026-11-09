@@ -220,6 +220,8 @@ export interface VjMiniMirrorProps {
   eventCardData: VjEventCardDTO | null;
   isExpanded: boolean;
   onToggleExpanded: () => void;
+  /** The help legend's line for the expand button while help captions are on. */
+  toggleDescribedBy?: string;
 }
 
 /**
@@ -237,6 +239,7 @@ export function VjMiniMirror({
   eventCardData,
   isExpanded,
   onToggleExpanded,
+  toggleDescribedBy,
 }: VjMiniMirrorProps): JSX.Element {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
@@ -282,6 +285,7 @@ export function VjMiniMirror({
         className={styles.mirrorToggle}
         aria-expanded={isExpanded}
         aria-label={t(isExpanded ? "vj:mirror.collapse" : "vj:mirror.expand")}
+        aria-describedby={toggleDescribedBy}
         onClick={onToggleExpanded}
       />
     </m.div>

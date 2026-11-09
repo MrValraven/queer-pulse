@@ -1,10 +1,16 @@
 import { describe, expect, it } from "vitest";
 import {
+  VJ_CLIENT_FRAME_NAMES,
   VJ_CLIENT_UPLOAD_CODES,
   VJ_LIMITS,
   VJ_REFUSAL_CODES,
+  VJ_REMOTE_COMMAND_NAMES,
+  VJ_RENDERERS,
+  VJ_RENDER_MODES,
+  VJ_SERVER_FRAME_NAMES,
   VJ_SOCKET_ERROR_CODES,
   createVjStageState,
+  isVjRenderMode,
   vjShuffleIntervalMs,
   vjStrobeFlashesPerSecond,
 } from "./vj";
@@ -98,7 +104,10 @@ describe("vj contract mirror", () => {
       VJ_SOCKET_ERROR_CODES.length,
     );
     expect(VJ_SOCKET_ERROR_CODES.length).toBeGreaterThan(27);
-    expect(VJ_SOCKET_ERROR_CODES.at(-1)).toBe("vj_server_error");
+    // Codes added after v1 append behind vj_server_error, so its index stays put.
+    expect(VJ_SOCKET_ERROR_CODES.indexOf("vj_stopped")).toBeGreaterThan(
+      VJ_SOCKET_ERROR_CODES.indexOf("vj_server_error"),
+    );
     expect(VJ_CLIENT_UPLOAD_CODES).toEqual([
       "VJ_UPLOAD_HEVC",
       "VJ_UPLOAD_UNPLAYABLE",
@@ -123,5 +132,33 @@ describe("vj contract mirror", () => {
     expect(VJ_LIMITS.fadeMsDefault).toBe(800);
     expect(VJ_LIMITS.bpmDefault).toBe(124);
     expect(VJ_LIMITS.quantizeMinLeadMs).toBe(150);
+  });
+
+  it("lists the simple renderer and the two render modes", () => {
+    expect(VJ_RENDERERS).toEqual(["webgl2", "dom", "simple"]);
+    expect(VJ_RENDER_MODES).toEqual(["effects", "simple"]);
+    expect(isVjRenderMode("simple")).toBe(true);
+    expect(isVjRenderMode("dom")).toBe(false);
+    expect(isVjRenderMode(null)).toBe(false);
+  });
+
+  it("places the render mode frames right after screen:identify, outside the stamped commands", () => {
+    const clientIndex = VJ_CLIENT_FRAME_NAMES.indexOf("screen:identify");
+    expect(VJ_CLIENT_FRAME_NAMES[clientIndex + 1]).toBe(
+      "screens:setRenderMode",
+    );
+    const serverIndex = VJ_SERVER_FRAME_NAMES.indexOf("screen:identify");
+    expect(VJ_SERVER_FRAME_NAMES[serverIndex + 1]).toBe("screen:renderMode");
+    expect(VJ_REMOTE_COMMAND_NAMES).not.toContain("screens:setRenderMode");
+  });
+
+  it("lists the two render mode refusals side by side", () => {
+    const invalidIndex = VJ_SOCKET_ERROR_CODES.indexOf(
+      "vj_render_mode_invalid",
+    );
+    expect(invalidIndex).toBeGreaterThan(-1);
+    expect(VJ_SOCKET_ERROR_CODES[invalidIndex + 1]).toBe(
+      "vj_no_screens_connected",
+    );
   });
 });

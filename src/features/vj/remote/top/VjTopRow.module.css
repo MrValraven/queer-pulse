@@ -1,5 +1,6 @@
 /* The remote's top row, one 44px band in the dark Pulse Live stage look:
-   the back link, the pack tabs, the search toggle and the screens dot. Every
+   the back link, the pack tabs, the search toggle, the help toggle and the
+   screens dot. Every
    hit area reaches var(--tap-min); the chips draw a 36px face inside it.
    Transitions move opacity, transform or filter only. */
 
@@ -26,6 +27,33 @@
 
 .searchIcon {
   display: inline-flex;
+}
+
+/* ── Help toggle: the "?" beside the screens dot ──
+   Pressed, the coral wash the pressed chips use fades in under the icon. */
+.helpToggle {
+  position: relative;
+  isolation: isolate;
+  margin-inline-end: var(--vj-top-gap);
+}
+
+.helpToggle::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border: 1px solid var(--accent);
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--accent) 34%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.helpToggle[aria-pressed="true"]::before {
+  opacity: 1;
 }
 
 /* Width and opacity animate in and out; the gap after the button rides
@@ -281,7 +309,8 @@
 @media (prefers-reduced-motion: reduce) {
   .tabs,
   .chipFace,
-  .chipFace::before {
+  .chipFace::before,
+  .helpToggle::before {
     transition-duration: 0s;
   }
 }

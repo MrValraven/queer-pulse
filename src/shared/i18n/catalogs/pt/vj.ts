@@ -326,6 +326,56 @@ export const vj: Catalog = {
   "setlistItems.full":
     "Este alinhamento está cheio. Tira uma cena para juntar outra",
 
+  // ── Live connections (library) and the stopped screen ──
+  "live.title": "Ligações ativas",
+  "live.summary.both": "{screens} e {remotes} ligados",
+  "live.summary.one": "Ligados: {devices}",
+  "live.summary.none": "Nada está ligado neste momento",
+  "live.summary.loading": "A ver o que está ligado",
+  "live.summary.unread": "Não deu para ler as ligações",
+  "live.screenCount_one": "{count} ecrã",
+  "live.screenCount_other": "{count} ecrãs",
+  "live.remoteCount_one": "{count} comando",
+  "live.remoteCount_other": "{count} comandos",
+  "live.idle_one": "Ainda há um espetáculo guardado em memória sem nada ligado",
+  "live.idle_other":
+    "Ainda há {count} espetáculos guardados em memória sem nada ligado",
+  "live.showConnections": "Mostrar ligações",
+  "live.hideConnections": "Esconder ligações",
+  "live.stopEverything": "Parar tudo",
+  "live.yourShow": "O teu espetáculo",
+  "live.operatorShow": "Espetáculo de {name}",
+  "live.otherOperatorShow": "Espetáculo de outra pessoa operadora",
+  "live.screenName": "Ecrã {number}",
+  "live.remoteName": "Comando",
+  "live.lead": "Principal",
+  "live.connectedSince": "Ligado {time}",
+  "live.justNow": "agora mesmo",
+  "live.timeUnknown": "a uma hora desconhecida",
+  "live.rendererWebgl": "Motor de efeitos",
+  "live.rendererDom": "Renderizador de reserva",
+  "live.rendererSimple": "Renderizador simples, só fades",
+  "live.fullscreen": "Ecrã inteiro",
+  "live.windowed": "Numa janela",
+  "live.disconnectScreen": "Desligar ecrã",
+  "live.disconnectRemote": "Desligar comando",
+  "live.stopDialog.title": "Parar todos os ecrãs e comandos?",
+  "live.stopDialog.body":
+    "Os ecrãs saem do espetáculo e ficam escuros. Cada ecrã e comando precisa de recarregar a página para voltar a ligar",
+  "live.stopDialog.bodyAdmin":
+    "Isto para o espetáculo de todas as pessoas operadoras, incluindo o teu. Os ecrãs saem do espetáculo e ficam escuros, e cada ecrã e comando precisa de recarregar a página para voltar a ligar",
+  "live.stopped.both": "Parados: {screens} e {remotes}",
+  "live.stopped.one": "Parados: {devices}",
+  "live.stopped.none":
+    "Nada estava ligado, e o espetáculo guardado em memória foi limpo",
+  "screen.stoppedTitle": "Este ecrã parou",
+  "screen.connectAgain": "Ligar de novo",
+  "live.stopped.nothingRunning":
+    "Não estava nada a correr, por isso não havia nada para parar",
+  "live.screenNameUnknown": "Ecrã",
+  "live.quietLine": "Nenhum ecrã ou comando está ligado neste momento",
+  "screen.stoppedHint": "Alguém parou este ecrã na biblioteca de VJ",
+
   // ── Reason codes, REST and upload ──
   "error.packNotFound": "Este pack foi apagado, talvez noutro separador",
   "error.packNameRequired": "Dá um nome ao pack",
@@ -413,6 +463,9 @@ export const vj: Catalog = {
   "error.uploadPreviewTooLarge":
     "A pré-visualização animada deste clip ficou acima de {max}. Cria a pré-visualização de novo",
 
+  "error.connectionNotFound": "Esse dispositivo já se desligou",
+  "error.connectionNotYours":
+    "Esse dispositivo pertence ao espetáculo de outra pessoa operadora",
   // ── Reason codes, socket ──
   "error.socket.notAdmin":
     "O VJ está aberto a admins e à função Operação VJ, e esta conta já não tem nenhuma das duas",
@@ -529,6 +582,10 @@ export const vj: Catalog = {
   "error.socket.serverError":
     "O servidor teve um problema com esse comando. A falha é nossa, tenta de novo",
 
+  "error.socket.stopped": "Esta ligação foi parada na biblioteca de VJ",
+  "error.socket.renderModeInvalid":
+    "Este comando pediu um renderizador que os ecrãs não têm. Recarrega o comando",
+  "error.socket.noScreensConnected": "Não há ecrãs ligados neste momento",
   // ── Failures without a VJ code ──
   "failure.offline":
     "Estás offline, por isso isto não chegou ao QueerPulse. Verifica a ligação e tenta de novo",
@@ -565,6 +622,8 @@ export const vj: Catalog = {
   "connection.refused.clientOutdated":
     "Esta página está desatualizada. Recarrega-a para continuares a tocar",
 
+  "connection.refused.stopped":
+    "Alguém parou esta ligação na biblioteca de VJ. Recarrega a página para voltares a ligar",
   // ── Screen (projector) ──
   "screen.metaTitle": "Ecrã de VJ",
   "screen.setupTitle": "Ecrã de VJ",
@@ -584,20 +643,22 @@ export const vj: Catalog = {
   "screen.fullscreenUnsupported":
     "Este browser não consegue pôr em ecrã inteiro. Abre o ecrã no Chrome ou no Edge",
   "screen.renderer.webgl2": "Motor de efeitos pronto",
-  "screen.renderer.dom": "Renderizador simples: {reason}",
+  "screen.renderer.dom": "Renderizador de reserva: {reason}",
   "screen.renderer.reason.webgl2Missing":
-    "este browser não tem WebGL2, por isso só correm os efeitos simples",
+    "este browser não tem WebGL2, por isso só correm os efeitos mais leves",
   "screen.renderer.reason.softwareRenderer":
-    "este portátil desenha os gráficos sem a placa gráfica, por isso só correm os efeitos simples",
+    "este portátil desenha os gráficos sem a placa gráfica, por isso só correm os efeitos mais leves",
   "screen.renderer.reason.contextCreationFailed":
     "a placa gráfica recusou arrancar o motor de efeitos",
   "screen.renderer.reason.programFailed":
     "a placa gráfica não conseguiu montar o motor de efeitos",
   "screen.renderer.reason.contextLost":
     "a placa gráfica reiniciou duas vezes durante o espetáculo",
-  "screen.renderer.reason.forced": "o link do ecrã pede o renderizador simples",
+  "screen.renderer.reason.forced":
+    "o link do ecrã pede o renderizador de reserva",
   "screen.renderer.restoring":
-    "A placa gráfica reiniciou; o renderizador simples segura o espetáculo enquanto recupera",
+    "A placa gráfica reiniciou; o renderizador de reserva segura o espetáculo enquanto recupera",
+  "screen.renderer.simple": "Renderizador simples, escolhido no comando",
   "screen.health.line_one":
     "{fps} fps, {count} fotograma perdido nos últimos 5 s",
   "screen.health.line_other":
@@ -983,7 +1044,8 @@ export const vj: Catalog = {
   "screensSheet.windowed": "Numa janela",
   "screensSheet.rendererWebgl": "Motor de efeitos",
   "screensSheet.rendererDom":
-    "Renderizador simples, alguns efeitos estão desligados",
+    "Renderizador de reserva, alguns efeitos estão desligados",
+  "screensSheet.rendererSimple": "Renderizador simples, só fades",
   "screensSheet.fps": "{fps} fotogramas por segundo",
   "screensSheet.dropped_one": "{count} fotograma perdido",
   "screensSheet.dropped_other": "{count} fotogramas perdidos",
@@ -994,6 +1056,14 @@ export const vj: Catalog = {
   "screensSheet.micOn": "Microfone ligado, nível {percent}%",
   "screensSheet.identifyAll": "Mostrar o número de todos os ecrãs",
   "screensSheet.identify": "Mostrar o número no ecrã {number}",
+  "screensSheet.renderMode.label": "Renderizador simples em todos os ecrãs",
+  "screensSheet.renderMode.hint":
+    "Só faz fades entre clips. Efeitos, geradores e estroboscópio ficam desligados",
+  "screensSheet.renderMode.pendingSimple":
+    "A passar todos os ecrãs para o renderizador simples",
+  "screensSheet.renderMode.pendingEffects":
+    "A passar todos os ecrãs de volta para o motor de efeitos",
+  "screensSheet.switchToSimple": "Mudar para o renderizador simples",
   "screensSheet.override": "O que este ecrã mostra",
   "screensSheet.followMain": "Seguir o visual principal",
   "screensSheet.overrideClip": "Clip: {title}",
@@ -1204,4 +1274,199 @@ export const vj: Catalog = {
   "effect.variant.lesbian": "Lésbica",
   "effect.variant.nonbinary": "Não binário",
   "effect.variant.progress": "Progresso",
+
+  // ── Descriptions and the effects on strip ──
+  "effect.desc.monochrome": "Passa a imagem a preto e branco",
+  "effect.desc.invert": "Troca cada cor pela oposta, ou pisca assim na batida",
+  "effect.desc.saturate": "Deixa as cores mais fortes e vivas",
+  "effect.desc.contrast": "Escurece os escuros e clareia os claros",
+  "effect.desc.tint": "Banha a imagem numa cor da paleta",
+  "effect.desc.duotone":
+    "Redesenha a imagem em duas cores, uma escura e uma clara",
+  "effect.desc.prideGrade":
+    "Pinta as luzes e as sombras com as riscas de uma bandeira do orgulho",
+  "effect.desc.thermal":
+    "Cores de câmara térmica, do preto ao vermelho e ao branco",
+  "effect.desc.hueCycle":
+    "Roda as cores pelo círculo cromático ao ritmo da batida",
+  "effect.desc.hueShift": "Muda todas as cores para outro tom e mantém-nas aí",
+  "effect.desc.vhs":
+    "Linhas tremidas, cor esborratada e uma faixa a rolar, como cassete antiga",
+  "effect.desc.filmGrain": "Junta grão a tremeluzir, como em filme antigo",
+  "effect.desc.scanlines":
+    "Desenha linhas escuras finas na imagem, como numa televisão antiga",
+  "effect.desc.crt":
+    "Curva a imagem como numa televisão de tubo, com máscara de píxeis",
+  "effect.desc.rgbSplit":
+    "Afasta o vermelho do azul, ou fá-los pulsar com a batida",
+  "effect.desc.pixelate": "Parte a imagem em grandes blocos quadrados",
+  "effect.desc.halftone": "Redesenha a imagem com pontos de impressão",
+  "effect.desc.glitch":
+    "Desloca linhas aos solavancos na batida, com flashes breves",
+  "effect.desc.dream": "Suaviza a imagem e faz brilhar as partes claras",
+  "effect.desc.vignette": "Escurece as margens e os cantos",
+  "effect.desc.lightLeaks":
+    "Faz passar brilhos quentes âmbar e rosa pela imagem",
+  "effect.desc.mirror": "Reflete uma metade na outra, ou para os quatro lados",
+  "effect.desc.kaleidoscope":
+    "Dobra a imagem em fatias espelhadas que rodam com a batida",
+  "effect.desc.tile": "Repete a imagem numa grelha de 2 por 2 ou 3 por 3",
+  "effect.desc.kenBurns":
+    "Aproxima e desliza devagar pela imagem, depois volta a afastar",
+  "effect.desc.rotate": "Faz a imagem girar ao ritmo da batida",
+  "effect.desc.zoomPulse":
+    "Dá um zoom em cada batida, ou segue o nível do microfone",
+  "effect.desc.mask":
+    "Mostra a imagem dentro de um círculo, coração ou estrela, sobre preto",
+  "effect.desc.freeze": "Mantém a imagem parada no fotograma atual",
+  "effect.desc.reverse": "Passa o clip ao contrário",
+  "effect.desc.pingPong":
+    "Passa o clip para a frente, depois para trás, e repete",
+  "effect.desc.stutter": "Repete pedaços curtos do clip ao ritmo da batida",
+  "effect.desc.echo": "Deixa rastos luminosos atrás de tudo o que mexe",
+  "effect.desc.beatPulse": "Faz a imagem piscar mais clara em cada batida",
+  "effect.desc.strobe":
+    "Pisca os ecrãs a branco na batida e para ao fim de 10 s",
+  "transition.modeDesc.fade": "Funde suavemente um clip no seguinte",
+  "transition.modeDesc.cut": "Muda logo, sem mistura",
+  "transition.modeDesc.dipBlack":
+    "Escurece até ao preto e depois abre no clip seguinte",
+  "transition.modeDesc.dipWhite":
+    "Pisca até ao branco e depois funde no clip seguinte",
+  "transition.modeDesc.wipeLeft":
+    "Uma linha varre da direita para a esquerda e revela o clip seguinte",
+  "transition.modeDesc.wipeRight":
+    "Uma linha varre da esquerda para a direita e revela o clip seguinte",
+  "transition.modeDesc.wipeRadial":
+    "Varre em círculo como um ponteiro, a partir das 12 horas",
+  "transition.modeDesc.iris":
+    "O clip seguinte abre num círculo que cresce a partir do centro",
+  "transition.modeDesc.zoomBlur":
+    "Passa de um clip para o seguinte com zoom e desfocagem",
+  "transition.modeDesc.glitch":
+    "Parte-se em blocos que se mexem, com um flash a meio",
+  "transition.modeDesc.lumaFade":
+    "O clip seguinte aparece primeiro nas partes mais escuras",
+  "mix.blendDesc.normal":
+    "Passa diretamente do clip no ar para o clip de mistura",
+  "mix.blendDesc.screen": "Clareia, e as partes claras dos dois clips passam",
+  "mix.blendDesc.multiply": "Escurece, e ficam as sombras dos dois clips",
+  "mix.blendDesc.difference":
+    "Subtrai um clip ao outro e dá cores invertidas e vivas",
+  "mix.blendDesc.add":
+    "Soma a luz dos dois clips, e as partes claras ficam brancas",
+  "mix.blendDesc.lighten": "Fica com o mais claro dos dois clips em cada ponto",
+  "tempo.quantizeDesc.off": "Os clips e o texto mudam assim que tocas",
+  "tempo.quantizeDesc.beat": "Os clips e o texto esperam pela próxima batida",
+  "tempo.quantizeDesc.bar":
+    "Os clips e o texto esperam pelo 1.º tempo do próximo compasso",
+  "help.toggleShow": "Mostrar descrições",
+  "help.toggleHide": "Esconder descrições",
+  "help.crossfader":
+    "Desliza para trazer o clip de mistura por cima do clip no ar",
+  "help.bpm": "Toca para mudar o ritmo ou seguir o microfone do ecrã",
+  "help.tap":
+    "Toca ao ritmo da música quatro vezes ou mais para marcar o ritmo",
+  "help.beatDots": "Acende cada batida do compasso em sincronia com os ecrãs",
+  "help.downbeat":
+    "Toca no primeiro tempo para alinhar o compasso com a música",
+  "help.quantize":
+    "Escolhe quando os clips mudam: já, na batida ou no compasso",
+  "help.transitionMode":
+    "Como os ecrãs passam para o clip seguinte. Toca para escolher",
+  "help.transitionLength":
+    "Quanto dura a passagem para o clip seguinte, em batidas ou segundos",
+  "help.speed": "Define a velocidade dos clips, de 0,25x a 4x",
+  "help.effectPad":
+    "Toca para manter ligado, ou mantém premido para o usar só enquanto o seguras",
+  "help.effectsLibrary":
+    "Abre todos os efeitos para ligar, afinar ou juntar ao dock",
+  "help.effectsOn": "Todos os efeitos ligados. Toca num para o desligar",
+  "help.resetLook":
+    "Desliga efeitos, texto, logótipo e mistura. O clip continua a tocar",
+  "help.cue":
+    "Liga o modo de preparação: o clip em que tocas espera pelo Lançar",
+  "help.go": "Manda o clip preparado para os ecrãs",
+  "help.more": "Abre texto, aleatório, mistura, cenas, ecrãs e mais",
+  "help.blackout": "Põe todos os ecrãs a preto. Toca outra vez para voltar",
+  "help.back": "Volta à biblioteca de VJ",
+  "help.favoritesOnly":
+    "Mostra só os clips deste pack que marcaste com estrela",
+  "help.packTab": "Muda para este pack e conta os clips prontos nos ecrãs",
+  "help.generators": "Mostra visuais que os ecrãs desenham sem clip",
+  "help.generatorTile": "Toca para mostrar este gerador nos ecrãs",
+  "help.search": "Procura clips deste pack pelo nome",
+  "help.screensStatus":
+    "Mostra se os ecrãs estão ligados. Toca para ver cada um",
+  "help.miniMirror": "O que os ecrãs mostram agora. Toca para aumentar",
+  "help.nowPlaying": "O clip ou gerador que está nos ecrãs agora",
+  "help.nextUp":
+    "O que vem a seguir: o clip preparado, a próxima cena ou o aleatório",
+  "help.shuffleTimer":
+    "Conta o tempo até ao próximo clip aleatório ou a uma mudança à espera",
+  "help.skip": "Passa já para o próximo clip do aleatório",
+  "help.scenesTab": "Mostra as tuas cenas guardadas nesta linha",
+  "help.recentTab": "Mostra os últimos clips que tocaste nesta linha",
+  "help.sceneChip": "Repõe este visual guardado nos ecrãs",
+  "help.setlistStep": "Passa para a cena anterior ou seguinte do alinhamento",
+  "help.saveScene":
+    "Guarda o clip, os efeitos, a transição, o texto e a mistura atuais",
+  "help.sceneList":
+    "Abre todas as cenas e alinhamentos para mudar o nome, apagar ou começar",
+  "help.previousClip": "Volta ao clip que tocou antes deste",
+  "help.recentClip": "Volta a pôr este clip recente no ar",
+  "help.clipTile":
+    "Toca para pôr no ar ou preparar. Mantém premido para pré-visualizar",
+  "help.favoriteClip":
+    "Marca o clip com estrela para o filtro de favoritos e o aleatório",
+  "help.clipFailures":
+    "Lista os clips que não carregaram e como resolver cada um",
+  "more.desc.text":
+    "Põe texto, uma contagem decrescente ou o logótipo nos ecrãs",
+  "more.desc.shuffle": "Muda de clip sozinho a cada tantos segundos ou batidas",
+  "more.desc.mix":
+    "Põe um segundo clip por cima do clip no ar e mistura os dois",
+  "more.desc.scenes":
+    "Recupera visuais guardados e toca-os por ordem em alinhamentos",
+  "more.desc.screens":
+    "Verifica cada ecrã, mostra o número dele ou dá-lhe um clip só seu",
+  "more.desc.eventCard":
+    "Mostra nos ecrãs o código QR do evento ou o cartão do próximo evento",
+  "more.desc.midi":
+    "Deixa as teclas e os botões de um controlador MIDI controlar o comando",
+  "more.desc.effects":
+    "Lista todos os efeitos com as definições e a ordem do dock",
+  "more.desc.shortcuts":
+    "Lista as teclas para clips, Lançar, blackout, marcar o ritmo e mais",
+  "more.desc.cueMode":
+    "Os clips em que tocas ficam preparados até carregares em Lançar",
+  "more.desc.clearScreen": "Tira o clip do ar e deixa os ecrãs a preto",
+  "more.intro": "Painéis de preparação e ações do espetáculo fora do dock",
+  "text.intro":
+    "Põe palavras, uma contagem decrescente ou o teu logótipo sobre os visuais",
+  "shuffle.intro": "Deixa os ecrãs escolher o próximo clip ao fim de um tempo",
+  "mix.intro":
+    "Põe um segundo clip por cima do clip no ar e passa de um para o outro",
+  "scenes.intro": "Repõe visuais guardados com um toque, ou toca-os por ordem",
+  "screensSheet.intro":
+    "Todos os ecrãs abertos, como estão a correr e o que mostram",
+  "eventCard.intro":
+    "Mostra o evento ligado nos ecrãs como código QR ou como cartão",
+  "midi.intro": "Liga as teclas e os botões de um controlador ao comando",
+  "effect.intro": "Liga efeitos, afina-os e escolhe quais ficam no dock",
+  "keys.intro": "Comanda o espetáculo a partir do teclado com estas teclas",
+  "effectsOn.title": "Ligados agora",
+  "effectsOn.count_one": "{count} efeito ligado",
+  "effectsOn.count_other": "{count} efeitos ligados",
+  "effectsOn.allOff": "Desligar todos",
+  "effectsOn.turnOffAria": "Desligar {effect}",
+
+  // ── Dock help legend ──
+  "help.term.beatDots": "Batidas",
+  "help.term.length": "Duração",
+  "tempo.followMicDesc": "O ecrã principal ouve a música e acompanha o ritmo",
+
+  // ── Effects on strip, empty and legend ──
+  "effectsOn.none": "Nenhum efeito ligado",
+  "effectsOn.term": "Efeitos ligados",
 };

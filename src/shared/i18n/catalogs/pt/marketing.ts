@@ -3522,6 +3522,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-09.headline":
+    "Para todos os ecrãs VJ ativos de uma vez, ou passa-os para um renderizador simples no comando.",
   "changelog.releases.2026-11-08.headline":
     "O sino e a página de notificações no computador abrem agora com a foto e a mensagem.",
   "changelog.releases.2026-11-07.headline":
@@ -3879,6 +3881,34 @@ export const marketing: Catalog = {
     "As ações que falham dizem porquê",
   "changelog.entries.failed-actions-say-why.body":
     "Formulários, carregamentos e respostas indicam a causa real, como uma ligação perdida ou um evento cheio.",
+  "changelog.entries.vj-remote-descriptions.title":
+    "Vê o que faz cada controlo VJ e que efeitos estão ligados",
+  "changelog.entries.vj-remote-descriptions.body":
+    "Um botão ? explica cada controlo do dock, e uma faixa sobre os pads mostra os efeitos ligados para os desligares num toque.",
+  "changelog.entries.partner-cards-redesign.title":
+    "Cartões de parceiros mais ricos no diretório",
+  "changelog.entries.partner-cards-redesign.body":
+    "Os negócios parceiros têm um cartão largo com a foto, uma etiqueta de parceria e a nota da nossa equipa.",
+  "changelog.entries.vj-simple-renderer.title":
+    "Renderizador simples para os ecrãs VJ",
+  "changelog.entries.vj-simple-renderer.body":
+    "Um interruptor no comando passa todos os ecrãs para fades simples entre clips e de volta, sem recarregar.",
+  "changelog.entries.vj-live-connections.title":
+    "Vê e para os ecrãs e comandos VJ ativos",
+  "changelog.entries.vj-live-connections.body":
+    "A biblioteca VJ mostra cada ecrã e comando ligado, e Parar tudo desliga-os de uma vez.",
+  "changelog.entries.vj-smooth-fades-and-pack-switch.title":
+    "Fades VJ e trocas de pack suaves",
+  "changelog.entries.vj-smooth-fades-and-pack-switch.body":
+    "Os fades entre vídeos mantêm a fluidez total do ecrã, e a grelha do comando faz crossfade entre packs.",
+  "changelog.entries.vj-ping-pong-no-flash.title":
+    "Clips em ping-pong viram sem piscar",
+  "changelog.entries.vj-ping-pong-no-flash.body":
+    "Um vídeo em ping-pong segura o frame enquanto salta para trás, e a outra ponta já não pisca no ecrã.",
+  "changelog.entries.bulk-actions-skip-unchanged-listings.title":
+    "As ações em massa nas listagens só oferecem mudanças reais",
+  "changelog.entries.bulk-actions-skip-unchanged-listings.body":
+    "Publicar e Voltar a revisão desligam-se quando todas as listagens selecionadas já lá estão, e uma seleção mista diz quantas vão mudar.",
   "changelog.entries.vj-gifs-load-on-projector.title":
     "Os GIFs voltam a carregar no projetor VJ",
   "changelog.entries.vj-gifs-load-on-projector.body":
@@ -10866,6 +10896,8 @@ export const marketing: Catalog = {
   "directory.partners.title": "Negócios parceiros",
   "directory.partners.sub":
     "Negócios queer com quem trabalhamos e de quem gostamos",
+  "directory.partners.badge": "Parceria",
+  "directory.partners.cta": "Ver lugar",
   "directory.empty.title": "Nenhum lugar corresponde a esses filtros",
   "directory.empty.body":
     "Tenta uma categoria mais ampla, menos filtros ou outra pesquisa, ou limpa os filtros para ver tudo.",

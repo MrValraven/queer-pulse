@@ -10,6 +10,7 @@ import { AnimatePresence, m } from "motion/react";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
 import type { VjClipDTO, VjQuantize } from "../../../../shared/contracts/vj";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import { useVjHelpDescribedBy } from "../top/useVjHelpDescribedBy";
 import type { VjClipReadiness } from "../../live/vjScreensSummary";
 import { useVjLongPress } from "../hooks/useVjLongPress";
 import { useVjMidiLearnTarget } from "../midi/useVjMidiLearnTarget";
@@ -158,6 +159,7 @@ export function VjRemoteTile({
     onLongPressEnd: () => setIsPreviewOpen(false),
   });
 
+  const helpDescribedBy = useVjHelpDescribedBy();
   const { readiness, isLive, isArmed, isPending } = state;
   const readinessNote = vjTileReadinessNoteOf(readiness, t);
   const isFailed = readiness.state === "failed";
@@ -165,12 +167,13 @@ export function VjRemoteTile({
     readiness.state === "queued" || readiness.state === "loading";
   const pendingKey = pendingQuantizeKeyOf(state.pendingQuantize);
   const isCuedShown = isCueMode && isArmed;
-  const describedBy = [
-    readinessNote !== null ? readinessId : null,
-    isCuedShown ? cuedId : null,
-    pendingKey !== null ? pendingChipId : null,
-    isBlocked ? (blockedReasonId ?? null) : null,
-  ].filter((id): id is string => id !== null);
+  const describedBy = helpDescribedBy(
+    "clipTile",
+    readinessNote !== null ? readinessId : undefined,
+    isCuedShown ? cuedId : undefined,
+    pendingKey !== null ? pendingChipId : undefined,
+    isBlocked ? blockedReasonId : undefined,
+  );
   const progressStyle = {
     transform: `scaleX(${readiness.progress})`,
   } satisfies CSSProperties;
@@ -192,9 +195,7 @@ export function VjRemoteTile({
         aria-label={t(isCueMode ? "vj:grid.cueAria" : "vj:remote.clipAria", {
           title: clip.title,
         })}
-        aria-describedby={
-          describedBy.length > 0 ? describedBy.join(" ") : undefined
-        }
+        aria-describedby={describedBy}
         aria-current={isLive ? "true" : undefined}
         aria-disabled={isBlocked}
         data-readiness={readiness.state}

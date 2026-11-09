@@ -1,3 +1,4 @@
+import { useId } from "react";
 import type { IconType } from "react-icons";
 import {
   FiCalendar,
@@ -60,6 +61,32 @@ const VJ_MORE_SHEET_ROWS: readonly VjMoreSheetRow[] = [
   },
 ];
 
+/**
+ * A row's words: its label, and under it the one line saying what the row
+ * does. The button takes its name from the label alone (aria-labelledby)
+ * and its description from the line (aria-describedby).
+ */
+function VjMoreRowText({
+  idPrefix,
+  label,
+  description,
+}: {
+  idPrefix: string;
+  label: string;
+  description: string;
+}) {
+  return (
+    <span className={styles.text}>
+      <span id={`${idPrefix}-label`} className={styles.label}>
+        {label}
+      </span>
+      <span id={`${idPrefix}-description`} className={styles.description}>
+        {description}
+      </span>
+    </span>
+  );
+}
+
 export interface VjMoreSheetProps {
   isCueMode: boolean;
   /** Clear the screen holds (aria-disabled) while commands cannot go out. */
@@ -72,7 +99,8 @@ export interface VjMoreSheetProps {
 
 /**
  * More controls: one full-width row per setup sheet, then the two show
- * actions that sit outside the dock (cue mode and Clear the screen). A row
+ * actions that sit outside the dock (cue mode and Clear the screen), each
+ * with a line under its label saying what it does. A row
  * hands its sheet id to the host, which swaps the sheets inside one
  * AnimatePresence so this one plays its exit as the next one opens.
  */
@@ -86,10 +114,14 @@ export function VjMoreSheet({
 }: VjMoreSheetProps) {
   const { t } = useTranslation();
   const cueLabelKey = isCueMode ? "vj:more.cueOff" : "vj:more.cueOn";
+  const rowIdPrefix = useId();
+  const labelledBy = (rowId: string) => `${rowIdPrefix}-${rowId}-label`;
+  const describedBy = (rowId: string) => `${rowIdPrefix}-${rowId}-description`;
 
   return (
     <VjSheetFrame
       title={t("vj:more.title")}
+      intro={t("vj:more.intro")}
       closeLabel={t("vj:more.close")}
       onClose={onClose}
     >
@@ -105,12 +137,18 @@ export function VjMoreSheet({
                   type="button"
                   className={styles.row}
                   data-vj-more-sheet={sheet}
+                  aria-labelledby={labelledBy(sheet)}
+                  aria-describedby={describedBy(sheet)}
                   onClick={() => onOpen(sheet)}
                 >
                   <span className={styles.iconWell} aria-hidden="true">
                     <Icon fill="none" className={styles.icon} />
                   </span>
-                  <span className={styles.label}>{t(labelKey)}</span>
+                  <VjMoreRowText
+                    idPrefix={`${rowIdPrefix}-${sheet}`}
+                    label={t(labelKey)}
+                    description={t(`vj:more.desc.${sheet}`)}
+                  />
                   <FiChevronRight
                     aria-hidden="true"
                     fill="none"
@@ -127,12 +165,18 @@ export function VjMoreSheet({
               type="button"
               className={styles.row}
               data-is-on={isCueMode}
+              aria-labelledby={labelledBy("cueMode")}
+              aria-describedby={describedBy("cueMode")}
               onClick={() => onSetCueMode(!isCueMode)}
             >
               <span className={styles.iconWell} aria-hidden="true">
                 <FiTarget fill="none" className={styles.icon} />
               </span>
-              <span className={styles.label}>{t(cueLabelKey)}</span>
+              <VjMoreRowText
+                idPrefix={`${rowIdPrefix}-cueMode`}
+                label={t(cueLabelKey)}
+                description={t("vj:more.desc.cueMode")}
+              />
             </button>
           </li>
           <li>
@@ -140,6 +184,8 @@ export function VjMoreSheet({
               type="button"
               className={styles.row}
               aria-disabled={isClearBlocked}
+              aria-labelledby={labelledBy("clearScreen")}
+              aria-describedby={describedBy("clearScreen")}
               onClick={() => {
                 if (!isClearBlocked) onClearScreen();
               }}
@@ -147,7 +193,11 @@ export function VjMoreSheet({
               <span className={styles.iconWell} aria-hidden="true">
                 <FiXSquare fill="none" className={styles.icon} />
               </span>
-              <span className={styles.label}>{t("vj:remote.clearScreen")}</span>
+              <VjMoreRowText
+                idPrefix={`${rowIdPrefix}-clearScreen`}
+                label={t("vj:remote.clearScreen")}
+                description={t("vj:more.desc.clearScreen")}
+              />
             </button>
           </li>
         </ul>

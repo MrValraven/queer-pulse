@@ -4,7 +4,9 @@
  * compositor or the DOM renderer), the crisp overlay layer over it and, when
  * the remote asks, this screen's number. It never shows the connection
  * state: the show keeps running when the socket drops, and a refusal arriving
- * mid-show changes nothing on screen. Only the lead screen strobes, so two
+ * mid-show changes nothing on screen. The one exception is a stop from Live
+ * connections in the VJ library: the stage unmounts and the stopped card
+ * offers a reload. Only the lead screen strobes, so two
  * projectors in one room never flash out of step.
  */
 import { useCallback, useEffect, useState, type JSX } from "react";
@@ -26,6 +28,7 @@ import { useVjScreenShow, type VjScreenShow } from "./useVjScreenShow";
 import { requestPersistentVjClipStorage } from "./vjClipCache";
 import { VjScreenSetupCard } from "./VjScreenSetupCard";
 import { VjScreenStage } from "./VjScreenStage";
+import { VjScreenStoppedCard } from "./VjScreenStoppedCard";
 import styles from "./VjScreen.module.css";
 
 /** What the stage draws before any state exists: a black frame with the default look. */
@@ -77,6 +80,7 @@ function VjScreenVisuals({ show }: { show: VjScreenShow }): JSX.Element {
         upcomingLive={show.upcomingLive}
         mix={show.mix}
         upcomingMix={show.upcomingMix}
+        fallbackClip={show.fallbackClip}
         isStrobeEnabled={stage.isLead}
         clock={show.clock}
         micLevelRef={show.mic.levelRef}
@@ -85,6 +89,7 @@ function VjScreenVisuals({ show }: { show: VjScreenShow }): JSX.Element {
         onSourceReleased={ledger.release}
         onRendererChange={show.onRendererChange}
         onHealth={show.onHealth}
+        renderMode={show.renderMode}
       />
       <VjOverlayLayer
         overlay={stageState.overlay}
@@ -105,7 +110,6 @@ export function VjScreenPage(): JSX.Element {
   const { reducedMotion } = useMotionPrefs();
   const fadeSeconds = reducedMotion ? 0 : FADE_SECONDS;
   useVjScreenDocumentFlag();
-  useScreenWakeLock(true);
   const fullscreen = useFullscreen();
   const { isFullscreen, isSupported, toggleFullscreen } = fullscreen;
   const isPointerIdle = useIsPointerIdle(VJ_CURSOR_IDLE_MS);
@@ -115,6 +119,17 @@ export function VjScreenPage(): JSX.Element {
 
   const show = useVjScreenShow(isFullscreen);
   const { stage, preload } = show;
+  // Stopped from Live connections: out of fullscreen, the stage unmounted,
+  // the display free to sleep and the microphone closed.
+  const isStopped = stage.refusal === "stopped";
+  useScreenWakeLock(!isStopped);
+  useEffect(() => {
+    if (isStopped && isFullscreen) toggleFullscreen();
+  }, [isStopped, isFullscreen, toggleFullscreen]);
+  const releaseMic = show.mic.release;
+  useEffect(() => {
+    if (isStopped) releaseMic();
+  }, [isStopped, releaseMic]);
   useEffect(() => {
     // Asked once per mount, so Chrome keeps the clip cache between shows.
     void requestPersistentVjClipStorage();
@@ -131,9 +146,10 @@ export function VjScreenPage(): JSX.Element {
     >
       <PageMeta title={t("vj:screen.metaTitle")} noIndex />
       <main id={MAIN_CONTENT_ID} tabIndex={-1} className={styles.main}>
-        <VjScreenVisuals show={show} />
+        {isStopped ? null : <VjScreenVisuals show={show} />}
+        <VjScreenStoppedCard isShown={isStopped} fadeSeconds={fadeSeconds} />
         <AnimatePresence>
-          {hasEnteredFullscreen ? null : (
+          {hasEnteredFullscreen || isStopped ? null : (
             <m.div
               key="setup"
               className={styles.setupLayer}
@@ -162,6 +178,7 @@ export function VjScreenPage(): JSX.Element {
         <VjScreenReenterButton
           isShown={
             hasEnteredFullscreen &&
+            !isStopped &&
             !isFullscreen &&
             !isPointerIdle &&
             isSupported

@@ -1,6 +1,7 @@
 /**
  * The pad tuner (design 7): a latched pad held still for 500 ms, or its
- * context menu, opens this popover over the dock. It holds the amount slider
+ * context menu, opens this popover over the dock. Under its title one line
+ * says what the effect does (always shown). It holds the amount slider
  * (throttled while it moves, the final value sent on release), the variant
  * chips from the catalog, the playhead note for Freeze, Reverse and
  * Ping-pong, and the button that turns the effect off or on.
@@ -21,6 +22,7 @@ import { VJ_DRAG_THROTTLE_MS } from "../../vj.constants";
 import { useVjOptimisticValue } from "../hooks/useVjOptimisticValue";
 import { useVjThrottledDraft } from "../hooks/useVjThrottledDraft";
 import { VjDockPopover } from "../kit/VjDockPopover";
+import { VjOptionDescription } from "../kit/VjHelpCaption";
 import styles from "./VjPads.module.css";
 
 export type VjPadSettingSend = (
@@ -187,9 +189,12 @@ export function VjPadTuner({
       className={styles.popover}
     >
       <div className={styles.popoverHead} data-vj-pad-tuner={effectId}>
-        <h2 id={titleId} className={styles.popoverTitle}>
-          {t("vj:pads.tuneTitle", { effect: effectName })}
-        </h2>
+        <div className={styles.popoverTitleBlock}>
+          <h2 id={titleId} className={styles.popoverTitle}>
+            {t("vj:pads.tuneTitle", { effect: effectName })}
+          </h2>
+          <VjOptionDescription text={t(`vj:effect.desc.${effectId}`)} />
+        </div>
         <button
           type="button"
           className={styles.closeButton}

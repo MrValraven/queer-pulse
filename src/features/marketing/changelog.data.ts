@@ -63,6 +63,52 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "vj-simple-renderer",
+        category: "feature",
+        date: "9 Nov 2026",
+        ...entryKeys("vj-simple-renderer"),
+      },
+      {
+        id: "partner-cards-redesign",
+        category: "improvement",
+        date: "9 Nov 2026",
+        ...entryKeys("partner-cards-redesign"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "bulk-actions-skip-unchanged-listings",
+        category: "fix",
+        date: "9 Nov 2026",
+        ...entryKeys("bulk-actions-skip-unchanged-listings"),
+      },
+      {
+        id: "vj-remote-descriptions",
+        category: "feature",
+        date: "9 Nov 2026",
+        ...entryKeys("vj-remote-descriptions"),
+      },
+      {
+        id: "vj-live-connections",
+        category: "feature",
+        date: "9 Nov 2026",
+        ...entryKeys("vj-live-connections"),
+      },
+      {
+        id: "vj-ping-pong-no-flash",
+        category: "fix",
+        date: "9 Nov 2026",
+        ...entryKeys("vj-ping-pong-no-flash"),
+      },
+      {
+        id: "vj-smooth-fades-and-pack-switch",
+        category: "fix",
+        date: "9 Nov 2026",
+        ...entryKeys("vj-smooth-fades-and-pack-switch"),
+      },
+      {
         id: "rsvp-notice-names-event",
         category: "fix",
         date: "8 Nov 2026",

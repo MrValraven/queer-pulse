@@ -2374,6 +2374,14 @@ export const admin: Catalog = {
   "adminListings.bulk.selectedCount_other": "{count} selected",
   "adminListings.bulk.publishCta": "Publish live",
   "adminListings.bulk.sendBackCta": "Back to review",
+  "adminListings.bulk.publishCountCta_one": "Publish {count} live",
+  "adminListings.bulk.publishCountCta_other": "Publish {count} live",
+  "adminListings.bulk.sendBackCountCta_one": "Send {count} back to review",
+  "adminListings.bulk.sendBackCountCta_other": "Send {count} back to review",
+  "adminListings.bulk.publishDisabledReason":
+    "Every selected listing is already live",
+  "adminListings.bulk.sendBackDisabledReason":
+    "Every selected listing is already in review",
   "adminListings.bulk.removeCta": "Delete",
   "adminListings.bulk.clearCta": "Clear",
   "adminListings.bulk.capNote": "Selection capped at {cap} listings",
@@ -2401,7 +2409,7 @@ export const admin: Catalog = {
   "adminListings.bulk.confirmPublish.body_one":
     "The selected listing appears in the directory straight away, where members can find it. You can send it back to review later.",
   "adminListings.bulk.confirmPublish.body_other":
-    "All {count} selected listings appear in the directory straight away, where members can find them. You can send them back to review later.",
+    "These {count} listings appear in the directory straight away, where members can find them. You can send them back to review later.",
   "adminListings.bulk.confirmPublish.confirmCta": "Publish live",
   "adminListings.sendBack.confirm.title": "Send {name} back to review?",
   "adminListings.sendBack.confirm.body":

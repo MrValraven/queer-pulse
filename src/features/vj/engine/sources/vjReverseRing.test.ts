@@ -72,6 +72,55 @@ describe("VjReverseRing", () => {
     );
   });
 
+  it("copies one layer into a 2D texture at the target size", () => {
+    const { fake, context, sourceTexture } = setUp();
+    const { gl } = context;
+    const ring = new VjReverseRing(context, 1920, 1080, new VjRingBudget());
+    const targetTexture = gl.createTexture();
+
+    ring.copyLayerInto(0, targetTexture, 1920, 1080);
+    expect(fake.callsNamed("blitFramebuffer")).toHaveLength(0);
+
+    for (let frameIndex = 0; frameIndex < 3; frameIndex += 1) {
+      ring.record(sourceTexture, frameIndex * FRAME_MS);
+    }
+    ring.copyLayerInto(2, targetTexture, 1920, 1080);
+
+    expect(fake.callsNamed("framebufferTextureLayer").at(-1)?.args).toEqual([
+      gl.READ_FRAMEBUFFER,
+      gl.COLOR_ATTACHMENT0,
+      ring.arrayTexture,
+      0,
+      ring.layerAt(2),
+    ]);
+    expect(ring.layerAt(2)).toBe(0);
+    expect(fake.callsNamed("framebufferTexture2D").at(-1)?.args).toEqual([
+      gl.DRAW_FRAMEBUFFER,
+      gl.COLOR_ATTACHMENT0,
+      gl.TEXTURE_2D,
+      targetTexture,
+      0,
+    ]);
+    const blits = fake.callsNamed("blitFramebuffer");
+    expect(blits).toHaveLength(4);
+    expect(blits.at(-1)?.args).toEqual([
+      0,
+      0,
+      960,
+      540,
+      0,
+      0,
+      1920,
+      1080,
+      gl.COLOR_BUFFER_BIT,
+      gl.LINEAR,
+    ]);
+
+    ring.dispose();
+    ring.copyLayerInto(0, targetTexture, 1920, 1080);
+    expect(fake.callsNamed("blitFramebuffer")).toHaveLength(4);
+  });
+
   it("refuses a ring the shared budget cannot hold", () => {
     const { fake, context } = setUp();
     const budget = new VjRingBudget();

@@ -2415,6 +2415,14 @@ export const admin: Catalog = {
   "adminListings.bulk.selectedCount_other": "{count} selecionadas",
   "adminListings.bulk.publishCta": "Publicar",
   "adminListings.bulk.sendBackCta": "Voltar a revisão",
+  "adminListings.bulk.publishCountCta_one": "Publicar {count}",
+  "adminListings.bulk.publishCountCta_other": "Publicar {count}",
+  "adminListings.bulk.sendBackCountCta_one": "Devolver {count} a revisão",
+  "adminListings.bulk.sendBackCountCta_other": "Devolver {count} a revisão",
+  "adminListings.bulk.publishDisabledReason":
+    "Todas as listagens selecionadas já estão publicadas",
+  "adminListings.bulk.sendBackDisabledReason":
+    "Todas as listagens selecionadas já estão em revisão",
   "adminListings.bulk.removeCta": "Eliminar",
   "adminListings.bulk.clearCta": "Limpar",
   "adminListings.bulk.capNote": "Seleção limitada a {cap} listagens",
@@ -2444,7 +2452,7 @@ export const admin: Catalog = {
   "adminListings.bulk.confirmPublish.body_one":
     "A listagem selecionada aparece de imediato no diretório, à vista dos membros. Podes devolvê-la a revisão mais tarde.",
   "adminListings.bulk.confirmPublish.body_other":
-    "As {count} listagens selecionadas aparecem de imediato no diretório, à vista dos membros. Podes devolvê-las a revisão mais tarde.",
+    "Estas {count} listagens aparecem de imediato no diretório, à vista dos membros. Podes devolvê-las a revisão mais tarde.",
   "adminListings.bulk.confirmPublish.confirmCta": "Publicar",
   "adminListings.sendBack.confirm.title": "Devolver {name} a revisão?",
   "adminListings.sendBack.confirm.body":

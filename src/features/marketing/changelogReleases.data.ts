@@ -15,6 +15,14 @@ export const CHANGELOG_RELEASE_NOTES: Record<
   string,
   { highlights: string[]; pushes?: number }
 > = {
+  "9 Nov 2026": {
+    highlights: [
+      "vj-live-connections",
+      "vj-simple-renderer",
+      "vj-remote-descriptions",
+    ],
+    pushes: 2,
+  },
   "8 Nov 2026": { highlights: [] },
   "7 Nov 2026": {
     highlights: [

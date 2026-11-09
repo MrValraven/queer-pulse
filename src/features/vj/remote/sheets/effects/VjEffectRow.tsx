@@ -314,9 +314,13 @@ export function VjEffectRow({
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const panelId = useId();
   const markersId = useId();
+  const descriptionId = useId();
   const entry = VJ_EFFECT_CATALOG[effectId];
   const effectName = t(`vj:effect.name.${effectId}`);
   const hasMarkers = entry.isFlashCapable || entry.isBeatSynced;
+  const switchDescribedBy = hasMarkers
+    ? `${markersId} ${descriptionId}`
+    : descriptionId;
   const isDocked = dockIndex !== -1;
   const isAddHeld = !isDocked && isDockFull;
   const isOn = padIsOn ? padIsOn(effectId, setting.isOn) : setting.isOn;
@@ -334,7 +338,7 @@ export function VjEffectRow({
           aria-checked={isOn}
           aria-disabled={isBlocked}
           aria-label={effectName}
-          aria-describedby={hasMarkers ? markersId : undefined}
+          aria-describedby={switchDescribedBy}
           onClick={() => {
             if (isBlocked) return;
             dispatch({ kind: "pad", padId: effectId }, "press");
@@ -385,6 +389,15 @@ export function VjEffectRow({
           <FiChevronDown aria-hidden fill="none" className={styles.chevron} />
         </button>
       </div>
+      {/* The full tile width, so a two-line description never squeezes the
+          switch or the dock and settings buttons beside the name. */}
+      <p
+        id={descriptionId}
+        className={styles.description}
+        data-vj-option-description=""
+      >
+        {t(`vj:effect.desc.${effectId}`)}
+      </p>
       <Collapse isOpen={isDocked}>
         <VjEffectDockLine
           effectName={effectName}

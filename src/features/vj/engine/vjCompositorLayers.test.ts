@@ -10,7 +10,13 @@ import {
   type VjSourceEvents,
   type VjSourceFrameInput,
 } from "./sources/vjSourceTypes";
-import { VjCompositorLayers, VjSourceRegistry } from "./vjCompositorLayers";
+import {
+  VjCompositorLayers,
+  VjSourceRegistry,
+  isVjLiveFrameShown,
+  type VjHeldSource,
+  type VjLayerDrawState,
+} from "./vjCompositorLayers";
 import { VjCompositorMixSlot } from "./vjCompositorMixSlot";
 import type { VjLayerDraw } from "./vjPassGraph";
 
@@ -255,5 +261,42 @@ describe("VjCompositorLayers", () => {
     for (let frameIndex = 0; frameIndex < 10; frameIndex += 1) harness.frame();
     expect(leavingSource.disposeCount).toBe(1);
     expect(harness.released).toEqual(["blob:clip-a"]);
+  });
+});
+
+/** A draw state built by hand: only `live` and `curtain` matter to the first-live-frame check. */
+function drawOf(live: VjHeldSource | null, curtain: number): VjLayerDrawState {
+  return { live, outgoing: null, transition: null, curtain };
+}
+
+/** A held source that only answers `isReady`. */
+function heldWith(isReady: boolean): VjHeldSource {
+  return { source: { isReady } } as unknown as VjHeldSource;
+}
+
+describe("isVjLiveFrameShown and hasLiveTarget", () => {
+  it("isVjLiveFrameShown waits for a ready live source under a lowered curtain", () => {
+    expect(isVjLiveFrameShown(drawOf(null, 1), false)).toBe(true);
+    expect(isVjLiveFrameShown(drawOf(null, 1), true)).toBe(false);
+    expect(isVjLiveFrameShown(drawOf(heldWith(false), 0), true)).toBe(false);
+    expect(isVjLiveFrameShown(drawOf(heldWith(true), 0.3), true)).toBe(false);
+    expect(isVjLiveFrameShown(drawOf(heldWith(true), 0), true)).toBe(true);
+  });
+
+  it("hasLiveTarget follows the last target", () => {
+    const harness = setUp();
+    expect(harness.layers.hasLiveTarget).toBe(false);
+    harness.layers.target(clipOf("clip-a"), FADE);
+    expect(harness.layers.hasLiveTarget).toBe(true);
+    harness.layers.target(null, FADE);
+    expect(harness.layers.hasLiveTarget).toBe(false);
+  });
+
+  it("lowers the curtain under the live source once a cut shows it", () => {
+    const harness = setUp();
+    showLive(harness, clipOf("clip-a"));
+    expect(
+      isVjLiveFrameShown(harness.layers.draw, harness.layers.hasLiveTarget),
+    ).toBe(true);
   });
 });

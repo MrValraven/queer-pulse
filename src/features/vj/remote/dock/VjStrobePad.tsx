@@ -157,6 +157,7 @@ export function VjStrobePad({
       isBeatSynced={false}
       handlers={handlers}
       learnProps={learnProps}
+      description={t("vj:effect.desc.strobe")}
       describedBy={describedByIds}
     >
       <AnimatePresence initial={false}>

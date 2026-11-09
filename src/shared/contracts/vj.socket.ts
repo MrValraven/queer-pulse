@@ -19,6 +19,7 @@ import type {
   VjOverlaySize,
   VjOverlayStyle,
   VjQuantize,
+  VjRenderMode,
   VjShuffleIntervalKind,
   VjShuffleSource,
   VjSpeed,
@@ -47,7 +48,8 @@ export interface VjExceptionFrame {
   status: "error";
   code: VjWsTransportCode;
   message: unknown;
-  /** "vj_not_admin" on a role refusal, "vj_screen_replaced" on a replaced screen. */
+  /** "vj_not_admin" on a role refusal, "vj_screen_replaced" on a replaced
+   *  screen, "vj_stopped" on a connection stopped from the VJ library. */
   domainCode?: string;
   statusCode?: number;
 }
@@ -213,6 +215,13 @@ export type VjSetEventCardPayload = {
 export interface VjScreenIdentifyPayload {
   screenId: string | null;
 }
+/**
+ * Unstamped remote frame. Outside the command queue; the backend relays it to
+ * the screens connected at that moment and stores nothing.
+ */
+export interface VjSetRenderModePayload {
+  mode: VjRenderMode;
+}
 export type VjClockSyncPayload = Record<string, never>;
 
 /** Unchanged from v1. */
@@ -235,6 +244,11 @@ export interface VjScreenIdentifyFrame {
   number: number;
   /** How long the screen shows it: VJ_LIMITS.identifyDurationMs. */
   durationMs: number;
+}
+
+/** Unstamped server frame relayed to each connected screen; never stored. */
+export interface VjScreenRenderModeFrame {
+  mode: VjRenderMode;
 }
 
 // Library changes (C 7.10)
@@ -310,6 +324,7 @@ export const VJ_CLIENT_FRAME_NAMES = [
   "stage:setLogo",
   "stage:setEventCard",
   "screen:identify",
+  "screens:setRenderMode",
   "screen:advance",
   "screen:status",
 ] as const;
@@ -321,6 +336,7 @@ export const VJ_SERVER_FRAME_NAMES = [
   "screens:update",
   "library:changed",
   "screen:identify",
+  "screen:renderMode",
   "exception",
 ] as const;
 export type VjServerFrameName = (typeof VJ_SERVER_FRAME_NAMES)[number];

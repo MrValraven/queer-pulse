@@ -98,9 +98,20 @@
   block-size: 1.125rem;
 }
 
-.label {
+/* The label over the line saying what the row does. */
+.text {
+  display: flex;
   flex: 1;
+  flex-direction: column;
   min-inline-size: 0;
+}
+
+.label {
+  min-inline-size: 0;
+}
+
+.description {
+  composes: helpCaption from "../../kit/VjRemoteKit.module.css";
 }
 
 .chevron {

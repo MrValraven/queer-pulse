@@ -21,6 +21,14 @@ import {
   type VjDemoOutgoing,
   type VjDemoStageEvent,
 } from "./vjDemoStage";
+import {
+  answerVjDemoLiveRequest,
+  createVjDemoStoppedTabs,
+  isVjDemoLiveRequest,
+  refuseVjDemoStoppedAttach,
+  syncVjDemoAttachedAt,
+  type VjDemoLiveHost,
+} from "./vjDemoLive";
 import { readVjRecord } from "./vjDemoStageCommands";
 import type { VjDemoLibraryLookup } from "./vjDemoStore";
 import { createVjDemoStageTimers } from "./vjDemoTimers";
@@ -97,6 +105,8 @@ export function startVjDemoServer(options: VjDemoServerOptions): {
   const epoch = (options.newEpoch ?? createVjDemoUuid)();
   let stage = createVjDemoStage(epoch, now());
   const lastHeardAt = new Map<string, number>();
+  // When each attached tab's attach landed, for Live connections.
+  const attachedAt = new Map<string, number>();
   let screensUpdateTimer: ReturnType<typeof setTimeout> | null = null;
   let pendingScreensUpdate: VjDemoOutgoing | null = null;
   let isStopped = false;
@@ -142,6 +152,7 @@ export function startVjDemoServer(options: VjDemoServerOptions): {
     if (isStopped) return;
     const result = reduceVjDemoStage(stage, event, { now: now(), library });
     stage = result.stage;
+    syncVjDemoAttachedAt(attachedAt, stage.attached, now());
     if (result.ack !== null && reply !== undefined) {
       post({
         name: "ack",
@@ -161,6 +172,29 @@ export function startVjDemoServer(options: VjDemoServerOptions): {
     timers.sync(stage.state);
   };
 
+  // Live connections in the VJ library: list and stop (vjDemoLive.ts).
+  const liveHost: VjDemoLiveHost = {
+    stage: () => stage,
+    attachedAt,
+    heardTabIds: () => [...lastHeardAt.keys()],
+    stoppedTabs: createVjDemoStoppedTabs(),
+    now,
+    post,
+    detach: (tabId) => {
+      lastHeardAt.delete(tabId);
+      dispatch({ kind: "detach", tabId });
+    },
+    dropStage: () => {
+      stage = createVjDemoStage(createVjDemoUuid(), now());
+      attachedAt.clear();
+      lastHeardAt.clear();
+      if (screensUpdateTimer !== null) clearTimeout(screensUpdateTimer);
+      screensUpdateTimer = null;
+      pendingScreensUpdate = null;
+      timers.sync(stage.state);
+    },
+  };
+
   const isLowerServerHeartbeat = (message: VjDemoMessage) => {
     if (message.name !== "demo:heartbeat") return false;
     const otherServerId = readVjRecord(message.payload).serverId;
@@ -175,6 +209,11 @@ export function startVjDemoServer(options: VjDemoServerOptions): {
       }
       return;
     }
+    if (isVjDemoLiveRequest(message)) {
+      answerVjDemoLiveRequest(message, liveHost);
+      return;
+    }
+    if (refuseVjDemoStoppedAttach(message, liveHost)) return;
     lastHeardAt.set(message.tabId, now());
     // A throttled timer lands before the frame that follows it in time.
     timers.fireOverdue();

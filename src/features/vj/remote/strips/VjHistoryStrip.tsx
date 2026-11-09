@@ -4,6 +4,7 @@ import { FiCornerUpLeft } from "react-icons/fi";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
 import { VJ_LIMITS, type VjClipDTO } from "../../../../shared/contracts/vj";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import { useVjHelpDescribedBy } from "../top/useVjHelpDescribedBy";
 import styles from "./VjStrips.module.css";
 
 /** The app's ease-out token (--ease-out) at its fast duration (--dur-fast). */
@@ -46,6 +47,7 @@ function VjHistoryChip({
   onGoClip,
 }: VjHistoryChipProps): JSX.Element {
   const { t } = useTranslation();
+  const helpDescribedBy = useVjHelpDescribedBy();
   return (
     <m.button
       type="button"
@@ -55,7 +57,7 @@ function VjHistoryChip({
       data-live={isLive ? "true" : undefined}
       aria-current={isLive ? "true" : undefined}
       aria-disabled={isBlocked || undefined}
-      aria-describedby={describedBy}
+      aria-describedby={helpDescribedBy("recentClip", describedBy)}
       aria-label={t("vj:strip.recentAria", { title: clip.title })}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -99,6 +101,7 @@ export function VjHistoryStrip({
 }: VjHistoryStripProps): JSX.Element {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
+  const helpDescribedBy = useVjHelpDescribedBy();
   const transition = reducedMotion ? VJ_HISTORY_INSTANT : VJ_HISTORY_TRANSITION;
   const shownLiveClipId =
     liveClipId !== undefined ? liveClipId : (recentClipIds[0] ?? null);
@@ -127,7 +130,7 @@ export function VjHistoryStrip({
         className={styles.chip}
         data-vj-previous=""
         aria-disabled={isPreviousBlocked || undefined}
-        aria-describedby={blockedDescription}
+        aria-describedby={helpDescribedBy("previousClip", blockedDescription)}
         aria-label={
           previousClip !== null
             ? t("vj:strip.previousAria", { title: previousClip.title })

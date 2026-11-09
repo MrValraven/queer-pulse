@@ -1,9 +1,11 @@
-import type { JSX } from "react";
+import { useEffect, useRef, type JSX, type RefObject } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { FiChevronLeft, FiChevronRight, FiList, FiPlus } from "react-icons/fi";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
 import type { VjSceneDTO, VjSetlistDTO } from "../../../../shared/contracts/vj";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import { useVjHelpDescribedBy } from "../top/useVjHelpDescribedBy";
+import { vjHiddenEdgesOf } from "../top/vjPackTabsScroll";
 import styles from "./VjStrips.module.css";
 
 /** The app's ease-out token (--ease-out) at its fast duration (--dur-fast). */
@@ -50,6 +52,40 @@ function vjLiveSceneIdOf(
   return activeSetlist.items[setlistIndex]?.sceneId ?? null;
 }
 
+/**
+ * Writes which edges of the scrolling chips hide something onto the scroller,
+ * for the CSS edge fade the pack tabs use. The row's tools sit outside it, so
+ * a fade only ever meets chips.
+ */
+function useVjScenesEdgeFade(
+  scenesCount: number,
+  hasSetlist: boolean,
+): RefObject<HTMLDivElement | null> {
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    if (scroller === null) return undefined;
+    const markHiddenEdges = () => {
+      const { hasHiddenStart, hasHiddenEnd } = vjHiddenEdgesOf(scroller);
+      scroller.dataset.vjFadeStart = String(hasHiddenStart);
+      scroller.dataset.vjFadeEnd = String(hasHiddenEnd);
+    };
+    markHiddenEdges();
+    scroller.addEventListener("scroll", markHiddenEdges, { passive: true });
+    const observer =
+      typeof ResizeObserver === "undefined"
+        ? null
+        : new ResizeObserver(markHiddenEdges);
+    observer?.observe(scroller);
+    // A scene added or removed changes the scroll width without resizing the scroller.
+    return () => {
+      scroller.removeEventListener("scroll", markHiddenEdges);
+      observer?.disconnect();
+    };
+  }, [scenesCount, hasSetlist]);
+  return scrollerRef;
+}
+
 function useChipTransition(): {
   transition: typeof VJ_STRIP_CHIP_TRANSITION | typeof VJ_STRIP_INSTANT;
 } {
@@ -79,6 +115,7 @@ function VjSceneChip({
 }: VjSceneChipProps): JSX.Element {
   const { t } = useTranslation();
   const { transition } = useChipTransition();
+  const helpDescribedBy = useVjHelpDescribedBy();
   return (
     <m.button
       type="button"
@@ -89,7 +126,7 @@ function VjSceneChip({
       data-pending={isPending ? "true" : undefined}
       aria-current={isLive ? "true" : undefined}
       aria-disabled={isBlocked || undefined}
-      aria-describedby={describedBy}
+      aria-describedby={helpDescribedBy("sceneChip", describedBy)}
       aria-label={t("vj:strip.recallAria", { name: scene.name })}
       {...VJ_STRIP_CHIP_PRESENCE}
       transition={transition}
@@ -126,6 +163,8 @@ function VjSetlistGroup({
 }: VjSetlistGroupProps): JSX.Element {
   const { t } = useTranslation();
   const { transition } = useChipTransition();
+  const helpDescribedBy = useVjHelpDescribedBy();
+  const stepDescribedBy = helpDescribedBy("setlistStep", describedBy);
   const total = setlist.items.length;
   const position = setlistIndex === null ? 0 : setlistIndex + 1;
   const isPreviousBlocked = isBlocked || position <= 1;
@@ -143,7 +182,7 @@ function VjSetlistGroup({
         className={`${styles.chip} ${styles.iconChip}`}
         aria-label={t("vj:strip.setlistPrevious")}
         aria-disabled={isPreviousBlocked || undefined}
-        aria-describedby={describedBy}
+        aria-describedby={stepDescribedBy}
         onClick={() => {
           if (isPreviousBlocked) return;
           onSetlistPrevious();
@@ -161,7 +200,7 @@ function VjSetlistGroup({
         className={`${styles.chip} ${styles.iconChip}`}
         aria-label={t("vj:strip.setlistNext")}
         aria-disabled={isNextBlocked || undefined}
-        aria-describedby={describedBy}
+        aria-describedby={stepDescribedBy}
         onClick={() => {
           if (isNextBlocked) return;
           onSetlistNext();
@@ -181,22 +220,29 @@ interface VjSceneToolsProps {
   onOpenScenesSheet?: () => void;
 }
 
-/** The row's tail: Save scene, then the door to the Scenes sheet. */
+/**
+ * The row's tail: Save scene, then the door to the Scenes sheet. It stays
+ * pinned beside the scrolling chips; on a narrow row Save scene shrinks to its
+ * icon (the aria-label keeps its name).
+ */
 function VjSceneTools({
   isSaving,
   onSaveScene,
   onOpenScenesSheet,
 }: VjSceneToolsProps): JSX.Element {
   const { t } = useTranslation();
+  const helpDescribedBy = useVjHelpDescribedBy();
   return (
-    <>
+    <div className={styles.sceneTools}>
       <m.button
         type="button"
         layout="position"
-        className={styles.chip}
+        className={`${styles.chip} ${styles.saveChip}`}
         data-vj-save-scene=""
+        aria-label={t("vj:strip.saveScene")}
         aria-disabled={isSaving || undefined}
         aria-busy={isSaving || undefined}
+        aria-describedby={helpDescribedBy("saveScene")}
         onClick={() => {
           if (isSaving) return;
           onSaveScene();
@@ -213,6 +259,7 @@ function VjSceneTools({
           layout="position"
           className={`${styles.chip} ${styles.iconChip}`}
           aria-label={t("vj:strip.openScenes")}
+          aria-describedby={helpDescribedBy("sceneList")}
           onClick={onOpenScenesSheet}
         >
           <span className={styles.chipFace}>
@@ -220,15 +267,16 @@ function VjSceneTools({
           </span>
         </m.button>
       ) : null}
-    </>
+    </div>
   );
 }
 
 /**
  * The scenes strip: the active set list's position with its two steps, one
  * chip per scene (a tap recalls it; the live one carries the coral wash, a
- * recall on its way a coral ring), then Save scene. Rename, delete and set
- * lists live in the Scenes sheet; this row only recalls and saves.
+ * recall on its way a coral ring); only these scroll sideways. Save scene and
+ * the Scenes button stay pinned after them. Rename, delete and set lists live
+ * in the Scenes sheet; this row only recalls and saves.
  */
 export function VjScenesStrip({
   scenes,
@@ -253,51 +301,60 @@ export function VjScenesStrip({
     liveSceneId,
   );
   const blockedDescription = isBlocked ? blockedReasonId : undefined;
+  const scrollerRef = useVjScenesEdgeFade(
+    scenes.length,
+    activeSetlist !== null,
+  );
   return (
     <div
-      className={styles.scroller}
+      className={styles.sceneRow}
       role="group"
       aria-label={t("vj:strip.scenes")}
       data-vj-scenes-strip=""
     >
-      <AnimatePresence initial={false}>
-        {activeSetlist !== null ? (
-          <VjSetlistGroup
-            key={`setlist-${activeSetlist.id}`}
-            setlist={activeSetlist}
-            setlistIndex={setlistIndex}
-            isBlocked={isBlocked}
-            describedBy={blockedDescription}
-            onSetlistNext={onSetlistNext}
-            onSetlistPrevious={onSetlistPrevious}
-          />
-        ) : null}
-        {scenes.map((scene) => (
-          <VjSceneChip
-            key={scene.id}
-            scene={scene}
-            isLive={scene.id === shownLiveSceneId}
-            isPending={scene.id === pendingSceneId}
-            isBlocked={isBlocked}
-            describedBy={blockedDescription}
-            onRecall={onRecall}
-          />
-        ))}
-        {scenes.length === 0 ? (
-          <m.span
-            key="empty"
-            layout="position"
-            className={styles.emptyScenes}
-            data-vj-scenes-empty=""
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={transition}
-          >
-            {t("vj:strip.noScenes")}
-          </m.span>
-        ) : null}
-      </AnimatePresence>
+      <div
+        ref={scrollerRef}
+        className={`${styles.scroller} ${styles.sceneScroller}`}
+      >
+        <AnimatePresence initial={false}>
+          {activeSetlist !== null ? (
+            <VjSetlistGroup
+              key={`setlist-${activeSetlist.id}`}
+              setlist={activeSetlist}
+              setlistIndex={setlistIndex}
+              isBlocked={isBlocked}
+              describedBy={blockedDescription}
+              onSetlistNext={onSetlistNext}
+              onSetlistPrevious={onSetlistPrevious}
+            />
+          ) : null}
+          {scenes.map((scene) => (
+            <VjSceneChip
+              key={scene.id}
+              scene={scene}
+              isLive={scene.id === shownLiveSceneId}
+              isPending={scene.id === pendingSceneId}
+              isBlocked={isBlocked}
+              describedBy={blockedDescription}
+              onRecall={onRecall}
+            />
+          ))}
+          {scenes.length === 0 ? (
+            <m.span
+              key="empty"
+              layout="position"
+              className={styles.emptyScenes}
+              data-vj-scenes-empty=""
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={transition}
+            >
+              {t("vj:strip.noScenes")}
+            </m.span>
+          ) : null}
+        </AnimatePresence>
+      </div>
       <VjSceneTools
         isSaving={isSaving}
         onSaveScene={onSaveScene}

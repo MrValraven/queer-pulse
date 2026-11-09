@@ -137,6 +137,17 @@
   overflow-wrap: anywhere;
 }
 
+/* What the effect does, under the row head across the whole tile, in the
+   remote's quiet caption look. It tucks up to the name above it. */
+.description {
+  composes: helpCaption from "../../kit/VjRemoteKit.module.css";
+}
+
+.row .description {
+  margin: -4px 0 0;
+  padding: 0 var(--gap-sm) var(--gap-xs);
+}
+
 .markers {
   display: flex;
   flex-wrap: wrap;

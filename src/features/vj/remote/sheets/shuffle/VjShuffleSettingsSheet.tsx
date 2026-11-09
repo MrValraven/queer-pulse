@@ -433,6 +433,7 @@ export function VjShuffleSettingsSheet({
   return (
     <VjSheetFrame
       title={t("vj:shuffle.title")}
+      intro={t("vj:shuffle.intro")}
       closeLabel={t("vj:shuffle.close")}
       onClose={onClose}
     >

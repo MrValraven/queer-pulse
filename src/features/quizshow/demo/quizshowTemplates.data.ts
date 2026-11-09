@@ -1,8 +1,15 @@
 /**
  * The demo mock for Pulse Live quiz templates. Live templates live in the
- * database; the five published seeds here carry the same ids and strings as the
- * backend migration's. The Lisbon seed additionally carries a demo-only wheel
- * row at index 0, because the backend seed migration stays frozen (contract 13).
+ * database; the five original published seeds here carry the same ids and
+ * strings as the backend migration's. The Lisbon seed additionally carries a
+ * demo-only wheel row at index 0, because the backend seed migration stays
+ * frozen (contract 13).
+ *
+ * The five wheel templates (./wheelPacks/) follow, published in demo so hosts
+ * can try them. The backend seeds the same packs as drafts in
+ * AddQuizshowWheelTemplates1840100000000, because publishing is the fact-check
+ * step there.
+ *
  * The draft is demo-only too, so the staff views have a template to edit and a
  * card refusal to show.
  */
@@ -11,14 +18,20 @@ import type {
   QuizshowTemplateCardText,
   QuizshowTemplateStatus,
 } from "../../../shared/contracts/quizshow";
+import { QUIZSHOW_DEMO_WHEEL_PACKS } from "./wheelPacks/quizshowDemoWheelPacks.data";
+import { QUIZSHOW_DEMO_WHEEL_TEMPLATE_IDS } from "./wheelPacks/quizshowDemoWheelTemplateIds";
 
-/** The seeded ids match the backend migration's; the cinema draft is demo-only. */
+/**
+ * The seeded ids match the backend migrations'; the cinema draft is demo-only.
+ * Key order matches the seed order below.
+ */
 export const QUIZSHOW_DEMO_TEMPLATE_IDS = {
   prideHistory: "a7e3b1c0-5eed-4000-8000-000000000001",
   portugueseQueerCulture: "a7e3b1c0-5eed-4000-8000-000000000002",
   eurovision: "a7e3b1c0-5eed-4000-8000-000000000003",
   dragHerstory: "a7e3b1c0-5eed-4000-8000-000000000004",
   lisbonQueerIcons: "a7e3b1c0-5eed-4000-8000-000000000005",
+  ...QUIZSHOW_DEMO_WHEEL_TEMPLATE_IDS,
   queerCinema: "a7e3b1c0-5eed-4000-8000-0000000000d6",
 } as const;
 
@@ -2131,6 +2144,21 @@ export const QUIZSHOW_DEMO_TEMPLATE_SEEDS: readonly QuizshowDemoTemplateSeed[] =
         ],
       },
     },
+    // One hour apart, after the Lisbon seed and safely before any real "now",
+    // so a template republished in a test still lands last for hosts.
+    ...QUIZSHOW_DEMO_WHEEL_PACKS.map(
+      (wheelPack, packIndex): QuizshowDemoTemplateSeed => {
+        const publishedAt = `2026-10-25T${String(10 + packIndex).padStart(2, "0")}:00:00.000Z`;
+        return {
+          ...wheelPack,
+          status: "published",
+          publishedAt,
+          publishedByName: QUIZSHOW_DEMO_STAFF_NAME,
+          updatedAt: publishedAt,
+          updatedByName: QUIZSHOW_DEMO_STAFF_NAME,
+        };
+      },
+    ),
     {
       id: QUIZSHOW_DEMO_TEMPLATE_IDS.queerCinema,
       card: {

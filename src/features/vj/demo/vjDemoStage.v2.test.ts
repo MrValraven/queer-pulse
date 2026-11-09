@@ -582,3 +582,69 @@ describe("demo stage v2 attach", () => {
     expect(stageFrameOf(late.outgoing)?.applyAt).toBeNull();
   });
 });
+
+describe("demo stage render mode", () => {
+  function twoScreensAndRemote(): VjDemoStage {
+    let stage = attachScreen(freshStage(), "tab-a", SCREEN_A, 1).stage;
+    stage = attachScreen(stage, "tab-b", SCREEN_B, 2).stage;
+    return attachRemote(stage).stage;
+  }
+
+  it("setRenderMode reaches every connected screen and counts them", () => {
+    const stage = twoScreensAndRemote();
+    const result = frame(stage, REMOTE_TAB, "screens:setRenderMode", {
+      mode: "simple",
+    });
+    expect(result.ack).toEqual({ ok: true, serverNow: 1_000, reachedCount: 2 });
+    expect(result.outgoing).toEqual([
+      {
+        name: "screen:renderMode",
+        payload: { mode: "simple" },
+        targetTabId: "tab-a",
+        targetRole: null,
+      },
+      {
+        name: "screen:renderMode",
+        payload: { mode: "simple" },
+        targetTabId: "tab-b",
+        targetRole: null,
+      },
+    ]);
+    expect(result.stage.state).toBe(stage.state);
+  });
+
+  it("setRenderMode skips a detached screen and refuses when none is connected", () => {
+    let stage = twoScreensAndRemote();
+    stage = run(stage, { kind: "detach", tabId: "tab-b" }).stage;
+    const one = frame(stage, REMOTE_TAB, "screens:setRenderMode", {
+      mode: "effects",
+    });
+    expect(one.ack).toMatchObject({ ok: true, reachedCount: 1 });
+    expect(one.outgoing.map((entry) => entry.targetTabId)).toEqual(["tab-a"]);
+    stage = run(stage, { kind: "detach", tabId: "tab-a" }).stage;
+    const none = frame(stage, REMOTE_TAB, "screens:setRenderMode", {
+      mode: "effects",
+    });
+    expect(none.ack).toMatchObject({
+      ok: false,
+      code: "vj_no_screens_connected",
+    });
+    expect(none.outgoing).toEqual([]);
+  });
+
+  it("setRenderMode refuses an unknown mode and a screen sender", () => {
+    const stage = twoScreensAndRemote();
+    const unknownMode = frame(stage, REMOTE_TAB, "screens:setRenderMode", {
+      mode: "dom",
+    });
+    expect(unknownMode.ack).toMatchObject({
+      ok: false,
+      code: "vj_render_mode_invalid",
+    });
+    expect(unknownMode.outgoing).toEqual([]);
+    const fromScreen = frame(stage, "tab-a", "screens:setRenderMode", {
+      mode: "simple",
+    });
+    expect(fromScreen.ack).toMatchObject({ code: "vj_wrong_role" });
+  });
+});

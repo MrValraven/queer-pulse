@@ -1,0 +1,162 @@
+/* The help legend (VjHelpLegend.tsx): while help captions are on, a short
+   list under a row of controls, one line per control: a small glass marker
+   that looks like the control, then what it does in the muted caption type
+   the dock's captions use. One column on a phone; side by side wherever the
+   column holds two lines of 17rem. */
+
+.legend {
+  --vj-legend-gap: var(--vj-band-gap, 6px);
+  --vj-legend-marker: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  gap: 4px var(--gap-sm, 12px);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legend[data-placement="afterInGap"],
+.legend[data-placement="after"] {
+  padding-block-start: var(--vj-legend-gap);
+}
+
+.legend[data-placement="before"] {
+  padding-block-end: var(--vj-legend-gap);
+}
+
+/* Opening in a flex column: the fold takes the column's gap over, so the
+   gap grows in smoothly with the legend. */
+.foldInGap {
+  margin-block-start: calc(-1 * var(--vj-band-gap, 6px));
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-inline-size: 0;
+  min-block-size: var(--vj-legend-marker);
+}
+
+/* A legend line reads in full, wrapping as long as it needs (Portuguese
+   runs longer than English); the two-line clamp is for captions in tiles. */
+.item .text {
+  display: block;
+  margin: 0;
+  min-inline-size: 0;
+  overflow: visible;
+  overflow-wrap: break-word;
+  -webkit-line-clamp: none;
+  line-clamp: none;
+}
+
+.text {
+  composes: helpCaption from "../kit/VjRemoteKit.module.css";
+}
+
+/* ── Markers: the control's face in miniature ── */
+.marker {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  box-sizing: border-box;
+  block-size: var(--vj-legend-marker);
+  min-inline-size: var(--vj-legend-marker);
+  max-inline-size: 8rem;
+  padding-inline: 8px;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-pill);
+  background:
+    linear-gradient(180deg, var(--qs-glass-top) 0%, var(--qs-glass-bottom) 100%),
+    var(--qs-glass-tint);
+  color: var(--qs-text);
+}
+
+.marker[data-shape="round"] {
+  inline-size: var(--vj-legend-marker);
+  padding-inline: 0;
+}
+
+.marker[data-shape="thumb"] {
+  inline-size: var(--vj-legend-marker);
+  padding: 0;
+  overflow: hidden;
+  border-radius: var(--radius-6);
+}
+
+.marker > svg {
+  flex: none;
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+}
+
+.markerLabel {
+  min-inline-size: 0;
+  overflow: hidden;
+  font-size: var(--text-11);
+  font-weight: 600;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The mirror band's Live label: small caps in coral, as on the band. */
+.marker[data-tone="live"] .markerLabel,
+.marker[data-tone="mute"] .markerLabel {
+  font-size: var(--text-10);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.marker[data-tone="live"] .markerLabel {
+  color: var(--accent);
+}
+
+.marker[data-tone="mute"] .markerLabel {
+  color: var(--qs-text-mute);
+}
+
+.thumb {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/* ── Drawn shapes for controls with no icon ── */
+.shape {
+  display: block;
+  flex: none;
+  box-sizing: border-box;
+}
+
+/* The screens dot: the live colour the top row's dot wears. */
+.shape[data-shape="dot"] {
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: 50%;
+  background: var(--qs-right-border);
+}
+
+/* The mini mirror: a small black screen in its glass frame. */
+.shape[data-shape="mirror"] {
+  inline-size: 0.875rem;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--radius-2);
+  background: var(--qs-base);
+}
+
+/* The countdown ring: the muted track with a coral quarter filled. */
+.shape[data-shape="ring"] {
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  border: 2px solid var(--qs-ring-track);
+  border-block-start-color: var(--accent);
+  border-inline-end-color: var(--accent);
+  border-radius: 50%;
+}

@@ -285,15 +285,14 @@ function VjRemotePage({
   };
 
   return (
-    <>
-      <VjRemoteShell
-        session={session}
-        dockHeight={dockHeight}
-        dock={<VjRemoteDock session={session} onHeightChange={setDockHeight} />}
-      />
+    <VjRemoteShell
+      session={session}
+      dockHeight={dockHeight}
+      dock={<VjRemoteDock session={session} onHeightChange={setDockHeight} />}
+    >
       <VjRemoteSheetsHost session={session} />
       <VjRemoteFlashConsent session={session} />
-    </>
+    </VjRemoteShell>
   );
 }
 

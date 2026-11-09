@@ -57,7 +57,7 @@ function VjSetupFactLine({
   );
 }
 
-/** The renderer line: the engine is ready, holds the show while it restores, or the DOM renderer runs for a named reason. */
+/** The renderer line: the engine is ready, holds the show while it restores, the DOM renderer runs for a named reason, or the remote picked the simple renderer. */
 function useRendererLine(renderer: VjRendererState): {
   text: string | null;
   isAlert: boolean;
@@ -80,6 +80,8 @@ function useRendererLine(renderer: VjRendererState): {
         }),
         isAlert: true,
       };
+    case "simple":
+      return { text: t("vj:screen.renderer.simple"), isAlert: false };
   }
 }
 

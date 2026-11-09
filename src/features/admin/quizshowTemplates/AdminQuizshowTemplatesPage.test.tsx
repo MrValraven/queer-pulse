@@ -124,7 +124,7 @@ describe("AdminQuizshowTemplatesPage", () => {
     const list = firstRow.closest("ul");
     if (!list) throw new Error("no template list");
     const rows = within(list).getAllByRole("listitem");
-    expect(rows).toHaveLength(6);
+    expect(rows).toHaveLength(11);
     expect(rows[0]).toBe(firstRow);
     expect(within(firstRow).getByText("Draft")).toBeInTheDocument();
     const isPublishedByRow = rows.map(
@@ -142,7 +142,7 @@ describe("AdminQuizshowTemplatesPage", () => {
     expect(
       within(prideRow).getByText(/^Edited by Rui Marçal, /),
     ).toBeInTheDocument();
-    expect(screen.getByText("6 templates")).toHaveAttribute("role", "status");
+    expect(screen.getByText("11 templates")).toHaveAttribute("role", "status");
   });
 
   it("titles a row in the viewer's language", async () => {

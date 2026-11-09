@@ -32,7 +32,10 @@
 }
 
 /* Browsers stop decoding a video that is display: none or fully
-   transparent, so the host stays on screen at 1 px and almost invisible. */
+   transparent, so the host stays on screen at 1 px and almost invisible.
+   Each video sits just outside the host's box, clipped by its overflow
+   (VJ_VIDEO_OFFSCREEN_LEFT in vjVideoSource.ts): Chromium drops the page to
+   the video frame rate while two videos draw on screen. */
 .mediaHost {
   position: fixed;
   top: 0;

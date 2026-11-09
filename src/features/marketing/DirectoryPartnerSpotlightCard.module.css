@@ -1,0 +1,418 @@
+/* A wide partner feature card: a full-height picture panel on the left and
+   the copy on a warm paper side. The rail gives the card a fixed box
+   (DirectoryPartnersRow.module.css: 188px, 164px on the phone layout) and
+   the card fills it whole, every line clamped, so it never grows. The card
+   is also the size container for the narrow-card rules at the foot of this
+   file, which read the card's own width. */
+.card {
+  /* The colour of the soft wash behind the copy, one per place tint. */
+  --spotlight-wash-rgb: var(--accent-rgb);
+  position: relative;
+  display: grid;
+  /* The picture panel is 38% of the card up to a square as tall as the
+     card's inner box (188px less the two 1px borders). A wider card hands
+     every extra pixel to the copy, so the panel keeps one size when the
+     filters panel opens or hides and a square logo is never re-cropped. */
+  grid-template-columns: minmax(120px, min(38%, 186px)) minmax(0, 1fr);
+  container-type: inline-size;
+  box-sizing: border-box;
+  height: 100%;
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-e1);
+  color: inherit;
+  text-decoration: none;
+  /* Keyboard focus that scrolls the page up to the rail stops the card
+     below the floating nav, the way the page's other anchored sections do. */
+  scroll-margin-block-start: 96px;
+  transition:
+    transform 0.45s var(--ease),
+    box-shadow 0.45s var(--ease),
+    border-color 0.3s var(--ease);
+}
+.card[data-tint="jade"] {
+  --spotlight-wash-rgb: var(--jade-rgb);
+}
+.card[data-tint="plum"] {
+  --spotlight-wash-rgb: var(--violet-rgb);
+}
+
+/* The global two-tone ring, with the card's own corners kept. The card's
+   resting shadow out-specifies the global halo, so the halo is restated. */
+.card:focus-visible {
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-card);
+}
+
+/* ── Picture panel ── */
+
+.media {
+  position: relative;
+  display: block;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(
+    120% 95% at 22% 12%,
+    var(--accent) 0%,
+    var(--accent-fill-strong) 58%,
+    var(--accent-deep) 100%
+  );
+}
+.media[data-tint="jade"] {
+  background: radial-gradient(
+    120% 95% at 22% 12%,
+    var(--jade) 0%,
+    var(--jade-button) 58%,
+    /* A deep green in both themes (--jade-text turns mint on dark). */
+    var(--jade-button-hover) 100%
+  );
+}
+.media[data-tint="plum"] {
+  background: radial-gradient(
+    120% 95% at 22% 12%,
+    var(--plum-vivid) 0%,
+    var(--plum) 58%,
+    var(--plum-deep) 100%
+  );
+}
+/* On dark the plum panel sits on a plum card, so its lit corner takes a
+   touch of violet to stand apart from the paper beside it. */
+:global([data-theme="dark"]) .media[data-tint="plum"] {
+  background: radial-gradient(
+    120% 95% at 22% 12%,
+    color-mix(in srgb, var(--violet) 24%, var(--plum-vivid)) 0%,
+    var(--plum) 58%,
+    var(--plum-deep) 100%
+  );
+}
+
+/* Depth over the tint: a soft light from the top-left corner and a gentle
+   shade pooling at the foot, so the flat colour reads as a lit surface. */
+.media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      70% 55% at 18% 8%,
+      rgba(255, 255, 255, 0.16),
+      transparent 70%
+    ),
+    linear-gradient(to top, rgba(0, 0, 0, 0.14), transparent 45%);
+}
+
+/* The layer that zooms on hover: the initials and the photo together. */
+.mediaZoom {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transition: transform 0.6s var(--ease);
+}
+
+/* The initials, large in Fraunces inside a hairline seal. */
+.monogramRing {
+  display: grid;
+  place-items: center;
+  width: 92px;
+  aspect-ratio: 1;
+  border: 1px solid rgba(var(--cream-rgb), 0.38);
+  border-radius: var(--radius-avatar);
+  box-shadow:
+    var(--ring-cream-hairline),
+    0 0 0 10px rgba(var(--cream-rgb), 0.05);
+}
+.monogram {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-38);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: rgba(var(--cream-rgb), 0.96);
+}
+
+/* A photo covers the initials. A logo or poster shows whole over its own
+   blurred copy. The slot's own tint and hairline give way to the panel's. */
+.media .photo {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: transparent;
+}
+
+/* ── Copy side ── */
+
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 18px 18px 16px 20px;
+  /* A hairline seam against the picture panel, so a dark tint (plum on the
+     dark card above all) still ends on a clear edge. */
+  border-inline-start: 1px solid rgba(var(--line-rgb), 0.1);
+  background:
+    radial-gradient(
+      85% 75% at 100% 0%,
+      rgba(var(--spotlight-wash-rgb), 0.1),
+      transparent 72%
+    ),
+    var(--paper);
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+.eyebrowIcon {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  color: var(--accent);
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  margin-top: 10px;
+}
+
+.name,
+.category {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.name {
+  font-family: var(--serif);
+  font-weight: 450;
+  font-size: var(--text-22);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+  transition: color 0.3s var(--ease);
+}
+
+/* The category gives way first, so the area always shows whole. */
+.meta {
+  display: flex;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: var(--text-13);
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+.category {
+  min-width: 0;
+}
+.area {
+  flex: none;
+}
+/* The dot is a separator, so its alt text is empty and screen readers skip
+   it. The first declaration is the fallback for engines without alt text. */
+.area::before {
+  content: "\00b7";
+  content: "\00b7" / "";
+  margin-inline: 6px;
+}
+
+/* The note and the arrow share the foot of the card. */
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  margin-top: auto;
+}
+
+/* The admin's note, in italic Fraunces beside a coral rule, three lines at
+   most at every width. */
+.note {
+  flex: 1;
+  min-width: 0;
+  padding-inline-start: 10px;
+  border-inline-start: 2px solid var(--accent);
+}
+.noteText {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--text-14-5);
+  line-height: 1.4;
+  color: var(--text-strong);
+}
+
+/* With no note the foot names the action beside the arrow. */
+.ctaLabel {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: end;
+  font-size: var(--text-12-5);
+  font-weight: 500;
+  line-height: 36px;
+  color: var(--ink-60);
+  transition: color 0.3s var(--ease);
+}
+
+.cta {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  color: var(--text-strong);
+  transition:
+    background-color 0.3s var(--ease),
+    border-color 0.3s var(--ease),
+    color 0.3s var(--ease);
+}
+.ctaIcon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.45s var(--ease);
+}
+
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+    border-color: rgba(var(--line-rgb), 0.16);
+  }
+  /* A hovered card with keyboard focus keeps the ring's cream halo. */
+  .card:hover:focus-visible {
+    box-shadow: var(--ring-cream), var(--shadow-lift);
+  }
+  .card:hover .mediaZoom {
+    transform: scale(1.05);
+  }
+  .card:hover .name {
+    color: var(--accent-text);
+  }
+  .card:hover .ctaLabel {
+    color: var(--accent-text);
+  }
+  .card:hover .cta {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: rgba(var(--cream-rgb), 0.98);
+  }
+  .card:hover .ctaIcon {
+    transform: translate(2px, -2px) rotate(45deg);
+  }
+}
+
+/* Colour changes only: no lift, no zoom, no turn of the arrow. */
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .mediaZoom,
+  .ctaIcon {
+    transition: none;
+  }
+  .card:hover,
+  .card:hover .mediaZoom,
+  .card:hover .ctaIcon {
+    transform: none;
+  }
+}
+
+/* The phone layout (every window to 860px, tablets included): the card is
+   164px tall, so the type steps down, the seal and arrow shrink and the
+   picture panel tops out at the 162px square of the shorter card. */
+@media (--mobile) {
+  .card {
+    grid-template-columns: minmax(110px, min(38%, 162px)) minmax(0, 1fr);
+  }
+  .monogramRing {
+    width: 76px;
+  }
+  .monogram {
+    font-size: var(--text-30);
+  }
+  .content {
+    padding: 14px 14px 13px 16px;
+  }
+  .heading {
+    margin-top: 8px;
+    gap: 2px;
+  }
+  .name {
+    font-size: var(--text-19);
+  }
+  .meta {
+    font-size: var(--text-12-5);
+  }
+  .noteText {
+    font-size: var(--text-13-5);
+    line-height: 1.35;
+  }
+  .ctaLabel {
+    line-height: 32px;
+  }
+  .cta {
+    width: 32px;
+    height: 32px;
+  }
+  .ctaIcon {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+/* A narrow card (phones, and two-up on a tablet or small laptop) gives its
+   copy column to the name and the note. The "Partner" eyebrow goes, as the
+   row's title already says it, and the name may take two lines. A card with
+   a note drops the arrow circle so the note runs the full width; the whole
+   card is the link. A card with no note keeps the circle beside its
+   "View place" label, so its foot still names the action. Measured against
+   the 164px phone card, two name lines, the meta line and three note lines
+   leave about 17px of air between the heading and the note. */
+@container (max-width: 460px) {
+  .eyebrow {
+    display: none;
+  }
+  .heading {
+    margin-top: 0;
+  }
+  .name {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.15;
+  }
+  .note ~ .cta {
+    display: none;
+  }
+}

@@ -14,6 +14,17 @@
  *   engine runs ahead of React, an older look and its layers are ignored.
  * - Swap (decision 12): a live target naming the mix slot's clip takes the
  *   mix source, playhead and all, into the live layers.
+ * - `firstLiveFrame` fires once per compositor, on the first ready frame
+ *   that draws the live source with the startup curtain fully down (or any
+ *   ready frame when nothing is live), so the screen can hand over to the
+ *   engine with no black frame. A context restore does not fire it again,
+ *   and no frame fires it before the first layers apply.
+ * - `shouldCutFirstTarget` (a hand-off arrival): every target set before
+ *   the first live frame cuts in and lowers the curtain at once, so a target
+ *   that replaces one still decoding cuts in too; once a live frame showed,
+ *   targets use the look's transition. The first look also sets the blackout
+ *   at once, so an arrival during a blackout draws black from its first
+ *   frame. A normal page start leaves it off and keeps both fades.
  * - Context loss stops the loop and reports the loss count; a restore
  *   rebuilds programs, targets and every source's textures and resumes.
  * - `dispose` releases everything and reports no URL: the page revokes every
@@ -29,6 +40,7 @@ import {
   type VjTransitionId,
 } from "../../../shared/contracts/vj";
 import type { VjRenderableSource } from "../screen/vjLayerMachine";
+import { VJ_FIRST_TARGET_CUT } from "../screen/vjStageLayerRules";
 import {
   createVjGlContext,
   type VjEngineUnavailableReason,
@@ -66,7 +78,11 @@ import {
   type VjCompositorRuntime,
 } from "./vjCompositorFrame";
 import { VjCompositorHealth, type VjEngineHealth } from "./vjCompositorHealth";
-import { VjCompositorLayers, VjSourceRegistry } from "./vjCompositorLayers";
+import {
+  VjCompositorLayers,
+  VjSourceRegistry,
+  isVjLiveFrameShown,
+} from "./vjCompositorLayers";
 import { VjCompositorMixSlot } from "./vjCompositorMixSlot";
 import {
   vjEngineLookOf,
@@ -91,6 +107,8 @@ export interface VjCompositorOptions {
   now?: () => number;
   requestFrame?: (callback: FrameRequestCallback) => number;
   cancelFrame?: (handle: number) => void;
+  /** A hand-off arrival: the first layers target cuts in (the leaving renderer still draws). Default false. */
+  shouldCutFirstTarget?: boolean;
   /** Test seam: builds each engine source (defaults to createVjEngineSource). */
   createSource?: (
     source: VjRenderableSource,
@@ -103,7 +121,8 @@ export type VjCompositorEvent =
   | { type: "sourceReleased"; sourceUrl: string }
   | { type: "contextLost"; lossCount: number }
   | { type: "contextRestored" }
-  | { type: "unavailable"; reason: VjEngineUnavailableReason };
+  | { type: "unavailable"; reason: VjEngineUnavailableReason }
+  | { type: "firstLiveFrame" };
 
 export interface VjScheduledLook {
   look: VjEngineLook;
@@ -294,6 +313,10 @@ export class VjCompositor {
   private isDisposed = false;
   private isLost = false;
   private isUnavailable = false;
+  /** Set on the first frame that shows the live source; never re-armed (a context restore included). */
+  private hasReportedFirstLiveFrame = false;
+  /** False until the first look's layers apply: the first live frame waits on it. */
+  private hasAppliedLayers = false;
   private appliedVersionKey: string | null = null;
   /** The scheduled version the engine applied before React did; older looks wait it out. */
   private aheadVersionKey: string | null = null;
@@ -438,14 +461,27 @@ export class VjCompositor {
   }
 
   private applyLook(look: VjEngineLook): void {
+    const isFirstLook = this.appliedVersionKey === null;
     this.appliedVersionKey = look.versionKey;
     this.runtime.look = look;
     this.runtime.blendModeIndex = vjBlendModeIndexOf(look);
+    // A hand-off arrival takes the blackout as it stands: no fade in from 0.
+    if (isFirstLook && this.options.shouldCutFirstTarget === true) {
+      this.runtime.blackoutLevel = look.isBlackout ? 1 : 0;
+    }
   }
 
   private applyLayers(next: VjEngineLayers): void {
     const { layers, mixSlot, registry, look } = this.runtime;
     const live = next.live;
+    // The arrival cut stays armed until something shows: a target that
+    // replaces one still decoding cuts in as well.
+    const isArrivalCut =
+      this.options.shouldCutFirstTarget === true &&
+      !this.hasReportedFirstLiveFrame &&
+      layers.state.front === null;
+    const transition = isArrivalCut ? VJ_FIRST_TARGET_CUT : look.transition;
+    this.hasAppliedLayers = true;
     const isSwap =
       live !== null &&
       live.mediaKind !== "generator" &&
@@ -453,9 +489,9 @@ export class VjCompositor {
       !layers.isCurrentTarget(live);
     const swapped = isSwap ? mixSlot.takeCurrent() : null;
     if (live !== null && swapped !== null) {
-      layers.adoptSwap(live, swapped, look.transition);
+      layers.adoptSwap(live, swapped, transition);
     } else {
-      layers.target(live, look.transition);
+      layers.target(live, transition);
     }
     mixSlot.setClip(next.mix);
     registry.markChanged();
@@ -525,6 +561,16 @@ export class VjCompositor {
       return;
     }
     runVjCompositorFrame(runtime, nowMs);
+    this.reportFirstLiveFrameIfShown();
+  }
+
+  /** The screen's hand-off signal: the first ready frame that shows the live source. */
+  private reportFirstLiveFrameIfShown(): void {
+    if (this.hasReportedFirstLiveFrame || !this.hasAppliedLayers) return;
+    const { layers } = this.runtime;
+    if (!isVjLiveFrameShown(layers.draw, layers.hasLiveTarget)) return;
+    this.hasReportedFirstLiveFrame = true;
+    this.options.onEvent({ type: "firstLiveFrame" });
   }
 
   private becomeUnavailable(): void {

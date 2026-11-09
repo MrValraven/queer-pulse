@@ -11,6 +11,7 @@ import type {
   VjFitMode,
   VjLoopMode,
   VjMediaKind,
+  VjRenderer,
   VjSpeed,
 } from "./vj.lists";
 import type { VjSceneLook } from "./vj.state";
@@ -262,4 +263,45 @@ export interface UpdateVjSceneBody {
 export interface CreateVjSetlistBody {
   name: string;
   sceneIds?: string[];
+}
+
+// Live connections (admin/vj/live)
+
+export type VjLiveRole = "screen" | "remote";
+
+export interface VjLiveConnectionDTO {
+  /** The socket id. */
+  connectionId: string;
+  role: VjLiveRole;
+  /** Screens only. */
+  screenNumber: number | null;
+  /** Screens only; false for a remote. */
+  isLead: boolean;
+  /** ISO. A screen's connect, or the moment a remote's attach landed. */
+  connectedAt: string;
+  /** A screen's last status report; null before its first report and for a remote. */
+  isFullscreen: boolean | null;
+  /** A screen's reported renderer; null when unknown and for a remote. */
+  renderer: VjRenderer | null;
+}
+
+export interface VjLiveStageDTO {
+  /** displayName is "" when the owner's profile is gone. */
+  owner: VjCreatorDTO;
+  isOwnStage: boolean;
+  /** Screens by number ascending, then remotes by connectedAt ascending. */
+  connections: VjLiveConnectionDTO[];
+}
+
+export interface VjLiveDTO {
+  /** Stages with at least one attached connection: the caller's own first,
+   *  then by owner name. */
+  stages: VjLiveStageDTO[];
+  /** Stages in scope held in memory with no connection. */
+  idleStageCount: number;
+}
+
+export interface VjLiveStoppedDTO {
+  stoppedScreenCount: number;
+  stoppedRemoteCount: number;
 }

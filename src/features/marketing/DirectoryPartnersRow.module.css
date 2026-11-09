@@ -1,6 +1,6 @@
-/* "Businesses we partner with": a horizontal rail of compact partner cards
+/* "Businesses we partner with": a horizontal rail of wide spotlight cards
    at the top of the directory results. Every block of the row has a fixed
-   height (one-line title and subtitle, 128px cards, a fixed rail box), so
+   height (one-line title and subtitle, 188px cards, a fixed rail box), so
    the row is the same height at every column width and the results below
    never move when the filters panel opens or hides. */
 .row {
@@ -56,16 +56,18 @@
    overflows at one width and fits at another keeps one height. The inline
    padding gives the first and last cards' focus rings room inside the
    overflow box, and the negative margin cancels it so the cards line up
-   with the heading. */
+   with the heading. Each card is wide, its picture panel beside the copy,
+   and takes half the row (340px at least): two partners fill it exactly and
+   a lone partner keeps to its half. */
 .rail {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: max(260px, calc((100% - 2 * 12px) / 3));
-  grid-template-rows: 128px;
+  grid-auto-columns: max(340px, calc((100% - 12px) / 2));
+  grid-template-rows: 188px;
   align-content: start;
   gap: 12px;
   box-sizing: border-box;
-  height: 156px;
+  height: 216px;
   overflow-x: auto;
   overflow-y: hidden;
   overscroll-behavior-x: contain;
@@ -75,6 +77,15 @@
   margin: 6px -8px -8px;
   scroll-padding-inline: 8px;
   list-style: none;
+}
+
+/* More than two partners: the two cards narrow so about 40px of the third
+   shows past the second gap, and the end fade falls on that sliver. Where
+   340px cards already overflow the row, the floor holds and the second card
+   is the one cut at the edge. `:where()` keeps this at the rail's own weight,
+   so the phone columns below still win. */
+.rail:where([data-has-more]) {
+  grid-auto-columns: max(340px, calc((100% - 2 * 12px - 40px) / 2));
 }
 
 /* A soft fade on each end that hides more cards, so a cut card reads as
@@ -126,13 +137,13 @@
 }
 
 /* The phone layout (every window to 860px, tablets included): the cards drop
-   to 88px (DirectoryPartnerCard.module.css), so the rail keeps its 8px of
-   focus-ring room around one 88px row, plus the 12px for a classic
+   to 164px (DirectoryPartnerSpotlightCard.module.css), so the rail keeps its
+   8px of focus-ring room around one 164px row, plus the 12px for a classic
    scrollbar, and the first place below starts on the first screen. */
 @media (--mobile) {
   .rail {
-    grid-template-rows: 88px;
-    height: 116px;
+    grid-template-rows: 164px;
+    height: 192px;
   }
 }
 
@@ -143,8 +154,8 @@
    (DirectorySpacePage.module.css `.relatedGrid`). */
 @media (--sm) {
   .rail {
-    grid-auto-columns: min(82%, 18rem);
-    height: 104px;
+    grid-auto-columns: min(88%, 22rem);
+    height: 180px;
     margin-inline: calc(-1 * var(--wrap-px));
     padding-inline: var(--wrap-px);
     scroll-padding-inline: var(--wrap-px);

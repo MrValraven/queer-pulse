@@ -14,6 +14,124 @@
   composes: hint from "../../VjSheets.module.css";
 }
 
+/* ── Show-wide controls: the simple renderer switch, then Show every
+   screen's number ── */
+.showControls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  min-width: 0;
+  margin-block-end: var(--gap-xs);
+}
+
+.renderMode {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.renderModeSwitch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+  inline-size: 100%;
+  min-block-size: var(--tap-min);
+  padding-block: var(--gap-xs);
+  padding-inline: var(--gap-sm);
+  border: 1px solid var(--qs-line);
+  border-radius: var(--qs-radius-tile);
+  background: var(--qs-glass-bottom);
+  color: var(--qs-text);
+  font: inherit;
+  text-align: start;
+  touch-action: manipulation;
+  cursor: pointer;
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+/* Held (no screen connected, the remote blocked): the whole switch dims. */
+.renderModeSwitch[aria-disabled="true"]:not([data-pending="true"]) {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Pending: the screens are catching up, so only the track dims and the
+   label and hint keep their full contrast. */
+.renderModeSwitch[data-pending="true"] {
+  cursor: progress;
+}
+
+.renderModeSwitch[data-pending="true"] .renderModeTrack {
+  opacity: 0.6;
+}
+
+.renderModeSwitch:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .renderModeSwitch:not([aria-disabled="true"]):hover {
+    border-color: var(--qs-glass-border-strong);
+  }
+}
+
+.renderModeText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(var(--gap-xs) / 2);
+  min-inline-size: 0;
+}
+
+.renderModeLabel {
+  font-size: var(--text-15);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.renderModeHint {
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--qs-text-mute);
+}
+
+/* The track and knob are the shared sheet switch; the track fills with
+   coral and the knob slides once the switch reads on. */
+.renderModeTrack {
+  composes: switchTrack from "../../VjSheets.module.css";
+  transition-timing-function: var(--ease);
+}
+
+.renderModeKnob {
+  composes: switchKnob from "../../VjSheets.module.css";
+}
+
+.renderModeSwitch[aria-checked="true"] .renderModeTrack::before {
+  opacity: 1;
+}
+
+.renderModeSwitch[aria-checked="true"] .renderModeKnob {
+  transform: translateX(18px);
+}
+
+.renderModeStatusRegion {
+  min-width: 0;
+}
+
+.renderModeStatus {
+  margin: 0;
+  padding-block-start: var(--gap-xs);
+  padding-inline: var(--gap-sm);
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--qs-text-mute);
+}
+
 .identifyAllButton,
 .identifyButton {
   composes: actionButton from "../../VjSheets.module.css";
@@ -129,6 +247,7 @@
 }
 
 .healthLine[data-tone="warning"] {
+  flex-wrap: wrap;
   margin-block: var(--gap-xs) 0;
   padding: 0.45rem var(--gap-xs);
   border: 1px solid rgba(var(--accent-rgb), 0.5);
@@ -137,10 +256,35 @@
   color: var(--qs-text);
 }
 
+/* With its button inside, the warning gets more room top and bottom so the
+   button's focus ring clears the warning's border. */
+.healthLine[data-tone="warning"][data-has-action="true"] {
+  padding-block: var(--gap-xs);
+}
+
 .healthIcon {
   flex: none;
   margin-block-start: 0.2em;
   color: var(--accent);
+}
+
+/* Basis 0, so the text stays beside its icon when the warning line wraps. */
+.healthText {
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+/* The load warning's way out, under its text inside the warning box. */
+.switchToSimpleButton {
+  composes: actionButton from "../../VjSheets.module.css";
+  flex-basis: 100%;
+  min-block-size: var(--tap-min);
+  touch-action: manipulation;
+}
+
+.switchToSimpleButton[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 /* ── What this screen shows ── */
@@ -170,6 +314,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .renderModeSwitch,
+  .renderModeTrack,
   .overrideSelect {
     transition-duration: 0s;
   }

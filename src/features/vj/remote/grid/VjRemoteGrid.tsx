@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useRef, type JSX } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
-import { CollapseListItem } from "../../../../shared/components/ui/CollapseListItem";
 import {
   VJ_GENERATOR_IDS,
   type VjClipDTO,
@@ -11,6 +10,8 @@ import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { filterVjClips } from "../rules/vjClipSearch";
 import type { VjGridSource } from "../top/VjRemoteTopRow";
 import { VjGeneratorTile } from "./VjGeneratorTile";
+import { VjGridItem } from "./VjGridItem";
+import { VjGridList } from "./VjGridList";
 import { VjGridSearch } from "./VjGridSearch";
 import { VjRemoteTile, type VjTileState } from "./VjRemoteTile";
 import { VJ_GRID_ITEM_ATTRIBUTE, useVjGridFocus } from "./useVjGridFocus";
@@ -33,6 +34,8 @@ export interface VjRemoteGridSearch {
 
 export interface VjRemoteGridProps {
   source: VjGridSource;
+  /** The active pack's id: a change crossfades the whole grid to the new pack. */
+  packKey?: string | null;
   clips: readonly VjClipDTO[];
   tileStateOf: (clipId: string) => VjTileState;
   liveGeneratorId: VjGeneratorId | null;
@@ -71,15 +74,20 @@ function useVjGridEmptyLine(
  * The clip grid: three columns of 114px square tiles on a 390px phone and
  * more where the width allows. It shows the active pack's clips (filtered by
  * the open search) or the five generators. The grid is one tab stop and the
- * arrow keys move between tiles. Tiles fold in and out as the list changes,
- * and the empty or search-miss line fades in where the grid would be.
+ * arrow keys move between tiles. A pack or source switch crossfades the
+ * whole grid; inside one pack, tiles fade in and out as the search filters
+ * them and the others glide to their new cells. The empty or search-miss line
+ * fades in where the grid would be.
  */
 export function VjRemoteGrid(props: VjRemoteGridProps): JSX.Element {
   const { source, clips, search, isBlocked, blockedReasonId } = props;
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
-  const gridRef = useRef<HTMLUListElement>(null);
+  // The stage stays mounted while the lists inside it swap, so the arrow
+  // keys keep one listener across a pack switch.
+  const gridStageRef = useRef<HTMLDivElement>(null);
   const isPackSource = source === "pack";
+  const gridKey = isPackSource ? `pack:${props.packKey ?? ""}` : "generators";
   const isSearchOpen = isPackSource && search.isOpen;
   const visibleClips = useMemo(
     () =>
@@ -91,14 +99,18 @@ export function VjRemoteGrid(props: VjRemoteGridProps): JSX.Element {
   const itemCount = isPackSource
     ? visibleClips.length
     : VJ_GENERATOR_IDS.length;
-  const { tabIndexOf } = useVjGridFocus(gridRef, itemCount);
+  const { tabIndexOf } = useVjGridFocus(gridStageRef, itemCount);
   const emptyLine = useVjGridEmptyLine(props, visibleClips);
   const { onClose: closeSearch } = search;
 
   // Escape takes the focus back to the grid's tab stop, so it is never lost.
+  // Tiles on their way out are inert, so the stop is the first one outside.
   const closeSearchToGrid = useCallback(() => {
-    gridRef.current
-      ?.querySelector<HTMLElement>(`[${VJ_GRID_ITEM_ATTRIBUTE}][tabindex="0"]`)
+    const tabStops = gridStageRef.current?.querySelectorAll<HTMLElement>(
+      `[${VJ_GRID_ITEM_ATTRIBUTE}][tabindex="0"]`,
+    );
+    Array.from(tabStops ?? [])
+      .find((tabStop) => tabStop.closest("[inert]") === null)
       ?.focus({ preventScroll: true });
     closeSearch();
   }, [closeSearch]);
@@ -128,41 +140,45 @@ export function VjRemoteGrid(props: VjRemoteGridProps): JSX.Element {
           ) : null}
         </AnimatePresence>
       </div>
-      <ul ref={gridRef} className={styles.grid} aria-label={t("vj:grid.label")}>
-        <AnimatePresence initial={false}>
-          {isPackSource
-            ? visibleClips.map((clip, clipIndex) => (
-                <CollapseListItem key={clip.id}>
-                  <VjRemoteTile
-                    clip={clip}
-                    index={clipIndex}
-                    state={props.tileStateOf(clip.id)}
-                    isCueMode={props.isCueMode}
-                    isBlocked={isBlocked}
-                    blockedReasonId={blockedReasonId}
-                    tabIndex={tabIndexOf(clipIndex)}
-                    onTapClip={props.onTapClip}
-                    onToggleFavorite={props.onToggleFavorite}
-                    onShowFailure={props.onShowClipFailure}
-                  />
-                </CollapseListItem>
-              ))
-            : VJ_GENERATOR_IDS.map((generatorId, generatorIndex) => (
-                <CollapseListItem key={generatorId}>
-                  <VjGeneratorTile
-                    generatorId={generatorId}
-                    isLive={props.liveGeneratorId === generatorId}
-                    isPending={props.generatorIsPending?.(generatorId) ?? false}
-                    liveVariant={props.liveGeneratorVariant}
-                    isBlocked={isBlocked}
-                    blockedReasonId={blockedReasonId}
-                    tabIndex={tabIndexOf(generatorIndex)}
-                    onGoGenerator={props.onGoGenerator}
-                  />
-                </CollapseListItem>
-              ))}
+      <div ref={gridStageRef} className={styles.gridStage}>
+        <AnimatePresence initial={false} mode="popLayout">
+          <VjGridList key={gridKey} label={t("vj:grid.label")}>
+            {isPackSource
+              ? visibleClips.map((clip, clipIndex) => (
+                  <VjGridItem key={clip.id}>
+                    <VjRemoteTile
+                      clip={clip}
+                      index={clipIndex}
+                      state={props.tileStateOf(clip.id)}
+                      isCueMode={props.isCueMode}
+                      isBlocked={isBlocked}
+                      blockedReasonId={blockedReasonId}
+                      tabIndex={tabIndexOf(clipIndex)}
+                      onTapClip={props.onTapClip}
+                      onToggleFavorite={props.onToggleFavorite}
+                      onShowFailure={props.onShowClipFailure}
+                    />
+                  </VjGridItem>
+                ))
+              : VJ_GENERATOR_IDS.map((generatorId, generatorIndex) => (
+                  <VjGridItem key={generatorId}>
+                    <VjGeneratorTile
+                      generatorId={generatorId}
+                      isLive={props.liveGeneratorId === generatorId}
+                      isPending={
+                        props.generatorIsPending?.(generatorId) ?? false
+                      }
+                      liveVariant={props.liveGeneratorVariant}
+                      isBlocked={isBlocked}
+                      blockedReasonId={blockedReasonId}
+                      tabIndex={tabIndexOf(generatorIndex)}
+                      onGoGenerator={props.onGoGenerator}
+                    />
+                  </VjGridItem>
+                ))}
+          </VjGridList>
         </AnimatePresence>
-      </ul>
+      </div>
     </div>
   );
 }

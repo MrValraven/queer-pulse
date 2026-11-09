@@ -61,6 +61,50 @@ function setUp(
   return { ...media, fakeVideo, source, uploadCount };
 }
 
+const PING_PONG_CLIP: VjRenderableClip = {
+  ...CLIP,
+  loopMode: "pingPong",
+  loopInMs: 0,
+  loopOutMs: 1000,
+};
+
+/**
+ * Plays a 1 s ping-pong clip forward to its turn, then replays the ring
+ * backward until the source leaves it. The fake video reports `seeking`
+ * from the first seek until `landSeek` runs.
+ */
+function setUpPingPongLeave() {
+  const setup = setUp(PING_PONG_CLIP);
+  const { fakeVideo, source } = setup;
+  let hasSeekLanded = false;
+  Object.defineProperty(fakeVideo.video, "seeking", {
+    configurable: true,
+    get: () => fakeVideo.seeks.length > 0 && !hasSeekLanded,
+  });
+  fakeVideo.setDecodedFrame(960, 540);
+  const clock = { nowMs: 0 };
+  const playForward = (mediaTimeSec: number) => {
+    fakeVideo.presentFrame(mediaTimeSec);
+    clock.nowMs += FRAME_MS;
+    source.update(frameAt(clock.nowMs, PING_PONG));
+  };
+  for (let frameIndex = 0; frameIndex <= 29; frameIndex += 1) {
+    playForward(frameIndex / 30);
+  }
+  const blitsAtTurn = setup.fake.callsNamed("blitFramebuffer").length;
+  const replayLeave = () => {
+    for (let step = 0; step < 40; step += 1) {
+      if (source.bindDraw(0).programKey !== "source.ring") return;
+      clock.nowMs += FRAME_MS;
+      source.update(frameAt(clock.nowMs, PING_PONG));
+    }
+  };
+  const landSeek = () => {
+    hasSeekLanded = true;
+  };
+  return { ...setup, clock, blitsAtTurn, replayLeave, landSeek };
+}
+
 async function flushPromises(): Promise<void> {
   for (let round = 0; round < 5; round += 1) await Promise.resolve();
 }
@@ -301,5 +345,62 @@ describe("VjVideoSource", () => {
     expect(onFailed).toHaveBeenCalledWith(source.key, "decode_failed");
     expect(onFirstFrame).not.toHaveBeenCalled();
     expect(source.isReady).toBe(false);
+  });
+});
+
+describe("VjVideoSource leaving the ping-pong replay", () => {
+  it("never uploads the video while it seeks after leaving the ping-pong replay", () => {
+    const { fakeVideo, source, uploadCount, clock, replayLeave, landSeek } =
+      setUpPingPongLeave();
+
+    replayLeave();
+    expect(source.bindDraw(0).programKey).toBe("source.clip");
+    expect(fakeVideo.seeks).toHaveLength(1);
+    expect(fakeVideo.video.seeking).toBe(true);
+    const uploadsAtLeave = uploadCount();
+
+    clock.nowMs += FRAME_MS;
+    source.update(frameAt(clock.nowMs, PING_PONG));
+    expect(uploadCount()).toBe(uploadsAtLeave);
+
+    // Past the frame callback grace, so the currentTime fallback is on.
+    clock.nowMs += 400;
+    source.update(frameAt(clock.nowMs, PING_PONG));
+    expect(uploadCount()).toBe(uploadsAtLeave);
+
+    landSeek();
+    fakeVideo.presentFrame(fakeVideo.seeks[0] ?? 0);
+    clock.nowMs += FRAME_MS;
+    source.update(frameAt(clock.nowMs, PING_PONG));
+    expect(uploadCount()).toBe(uploadsAtLeave + 1);
+  });
+
+  it("copies the ring frame showing into the clip texture when leaving the ping-pong replay", () => {
+    const { source, fake, deps, blitsAtTurn, replayLeave } =
+      setUpPingPongLeave();
+    const { gl } = deps.context;
+
+    replayLeave();
+
+    const blits = fake.callsNamed("blitFramebuffer");
+    expect(blits).toHaveLength(blitsAtTurn + 1);
+    expect(blits.at(-1)?.args.slice(0, 8)).toEqual([
+      0, 0, 960, 540, 0, 0, 960, 540,
+    ]);
+    expect(blits.at(-1)?.args[9]).toBe(gl.LINEAR);
+    const readLayer = fake.callsNamed("framebufferTextureLayer").at(-1);
+    expect(readLayer?.args[0]).toBe(gl.READ_FRAMEBUFFER);
+    // 28 frames sit in layers 0 to 27; the replay leaves at the oldest.
+    expect(readLayer?.args[4]).toBe(0);
+    const drawTarget = fake.callsNamed("framebufferTexture2D").at(-1);
+    expect(drawTarget?.args[0]).toBe(gl.DRAW_FRAMEBUFFER);
+
+    const callsBeforeDraw = fake.calls.length;
+    expect(source.bindDraw(0).programKey).toBe("source.clip");
+    const clipBinding = fake.calls
+      .slice(callsBeforeDraw)
+      .find((call) => call.name === "bindTexture");
+    expect(clipBinding?.args[0]).toBe(gl.TEXTURE_2D);
+    expect(drawTarget?.args[3]).toBe(clipBinding?.args[1]);
   });
 });

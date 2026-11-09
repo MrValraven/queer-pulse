@@ -1,6 +1,6 @@
 // The demo VJ stage's client frames (contract 7.3 to 7.9): clock:sync, the
-// stamped remote commands, screen:identify, screen:advance and
-// screen:status, plus the one change landing of contract 7.4 every applied
+// stamped remote commands, screen:identify, screens:setRenderMode,
+// screen:advance and screen:status, plus the one change landing of contract 7.4 every applied
 // change goes through. Pure. Mirrors landVjChange and the frame handlers of
 // queerpulse-backend/src/vj/vj-stage.service.ts in the same order.
 
@@ -8,6 +8,7 @@ import {
   VJ_LIMITS,
   canonicalVjStageState,
   isSameVjStageContent,
+  isVjRenderMode,
   type VjCommandSuccess,
   type VjStageCause,
   type VjStageState,
@@ -280,6 +281,35 @@ export function reduceIdentify(
   };
 }
 
+/** `screens:setRenderMode` from a remote: a mode outside VJ_RENDER_MODES
+ *  refuses vj_render_mode_invalid, then no connected screen refuses
+ *  vj_no_screens_connected. One `screen:renderMode` frame per connected tab
+ *  in number order, counted in the ack; nothing is stored, so the stage comes
+ *  back unchanged. Mirrors the backend order; the demo has no rate limiter, as for identify. */
+export function reduceSetRenderMode(
+  stage: VjDemoStage,
+  payload: unknown,
+  now: number,
+): VjDemoStageResult {
+  const { mode } = readVjRecord(payload);
+  if (!isVjRenderMode(mode)) {
+    return refuse(stage, "vj_render_mode_invalid", now);
+  }
+  const targets = stage.screens
+    .filter((entry) => entry.tabId !== null)
+    .sort((left, right) => left.number - right.number);
+  if (targets.length === 0) {
+    return refuse(stage, "vj_no_screens_connected", now);
+  }
+  return {
+    stage,
+    ack: vjDemoAckSuccess(now, { reachedCount: targets.length }),
+    outgoing: targets.map((entry) =>
+      frameTo("screen:renderMode", { mode }, { tabId: entry.tabId }),
+    ),
+  };
+}
+
 /** `clock:sync` (contract 7.3): the server's clock, attached or not. */
 export function reduceClockSync(
   stage: VjDemoStage,
@@ -359,8 +389,8 @@ function isScreenFrameName(name: string): boolean {
 }
 
 /** One client frame: clock:sync before every attach check, then attach and
- *  reauth, then the role checks (v1, plus `screen:identify` from a remote
- *  only), then the frame's own reducer. */
+ *  reauth, then the role checks (v1, plus `screen:identify` and
+ *  `screens:setRenderMode` from a remote only), then the frame's own reducer. */
 export function reduceFrame(
   stage: VjDemoStage,
   event: { tabId: string; name: string; payload: unknown },
@@ -376,7 +406,13 @@ export function reduceFrame(
   }
   const isCommand = isVjCommandFrameName(name);
   const isIdentify = name === "screen:identify";
-  if (!isCommand && !isIdentify && !isScreenFrameName(name)) {
+  const isSetRenderMode = name === "screens:setRenderMode";
+  if (
+    !isCommand &&
+    !isIdentify &&
+    !isSetRenderMode &&
+    !isScreenFrameName(name)
+  ) {
     return silent(stage);
   }
   const role = stage.attached[tabId];
@@ -384,11 +420,12 @@ export function reduceFrame(
   if (role === undefined) {
     return hasAck ? refuse(stage, "vj_not_attached", now) : silent(stage);
   }
-  if (isCommand || isIdentify) {
+  if (isCommand || isIdentify || isSetRenderMode) {
     if (role !== "remote") return refuse(stage, "vj_wrong_role", now);
-    return isCommand
-      ? reduceCommand(stage, name, payload, context)
-      : reduceIdentify(stage, payload, now);
+    if (isCommand) return reduceCommand(stage, name, payload, context);
+    return isIdentify
+      ? reduceIdentify(stage, payload, now)
+      : reduceSetRenderMode(stage, payload, now);
   }
   if (role !== "screen") {
     return hasAck ? refuse(stage, "vj_wrong_role", now) : silent(stage);

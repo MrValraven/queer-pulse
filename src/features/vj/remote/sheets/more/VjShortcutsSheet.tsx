@@ -63,6 +63,7 @@ export function VjShortcutsSheet({ onClose }: VjShortcutsSheetProps) {
   return (
     <VjSheetFrame
       title={t("vj:keys.title")}
+      intro={t("vj:keys.intro")}
       closeLabel={t("vj:keys.close")}
       onClose={onClose}
     >
