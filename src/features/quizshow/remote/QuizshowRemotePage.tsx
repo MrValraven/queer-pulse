@@ -45,6 +45,7 @@ import {
   QuizshowRemoteControls,
   QuizshowRemoteErrorLine,
 } from "./QuizshowRemoteControls";
+import { QuizshowRemoteRoundLine } from "./QuizshowRemoteMetaLine";
 import { QuizshowRemotePlayers } from "./QuizshowRemotePlayers";
 import { QuizshowRemotePreview } from "./QuizshowRemotePreview";
 import { QuizshowRemoteReview } from "./QuizshowRemoteReview";
@@ -124,8 +125,7 @@ function RemoteHeader({
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
   const { run, isPending, lastErrorKey } = useQuizshowHostCommand(controller);
-  const { cursor, round, question, answerCount, isScreenMuted, lobby } =
-    session;
+  const { cursor, question, answerCount, isScreenMuted, lobby } = session;
   const isMuteBusy = isPending("host:setScreenMuted");
   const fade = { duration: reducedMotion ? 0 : 0.2 };
   const isPaused = cursor.status === "paused";
@@ -174,23 +174,7 @@ function RemoteHeader({
             >
               {/* Two lines are always reserved, so the header keeps one height in every phase. */}
               <span className={styles.metaLine}>
-                {isLobby && <span>{session.quizTitle}</span>}
-                {!isLobby && round !== null && (
-                  <span>
-                    {t("quizshow:stage.roundOf", {
-                      number: round.roundIndex + 1,
-                      total: cursor.roundCount,
-                    })}
-                  </span>
-                )}
-                {!isLobby && round !== null && question !== null && (
-                  <span>
-                    {t("quizshow:stage.questionOf", {
-                      number: question.questionIndex + 1,
-                      total: round.questionCount,
-                    })}
-                  </span>
-                )}
+                <QuizshowRemoteRoundLine session={session} />
               </span>
               <span className={styles.metaLine}>
                 {isLobby && (

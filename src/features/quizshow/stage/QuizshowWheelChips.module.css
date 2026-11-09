@@ -1,0 +1,65 @@
+/* Wheel chips and swatch. Every size is in em, so the TV and the phone set
+   them by font size. No filter blur and no shadow: the wheel surfaces stay
+   flat. */
+.swatch {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 0.9em;
+  height: 0.9em;
+  border-radius: 0.25em;
+}
+
+.plum {
+  background: var(--qs-wheel-plum-swatch);
+}
+
+.rose {
+  background: var(--qs-wheel-rose-swatch);
+}
+
+.bonus {
+  background: var(--qs-wheel-bonus-swatch);
+}
+
+.bonusAlt {
+  background: var(--qs-wheel-bonus-alt-swatch);
+}
+
+.bonusChip {
+  display: inline-block;
+  padding: 0.22em 0.7em;
+  border-radius: var(--qs-radius-pill);
+  background: var(--qs-wheel-bonus-gradient);
+  color: var(--qs-wheel-bonus-ink);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.contentChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.22em 0.7em;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-pill);
+  color: var(--qs-text);
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.contentChip svg {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+}
+
+.kindLabel {
+  color: var(--qs-text-mute);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}

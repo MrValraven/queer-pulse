@@ -1,8 +1,8 @@
 import { createContext, useContext } from "react";
 import type {
   QuizshowLanguage,
+  QuizshowPlayableRoundKind,
   QuizshowQuizResponse,
-  QuizshowRoundKind,
 } from "../../../shared/contracts/quizshow";
 import type { QuizshowImportPicker } from "../builder/QuizshowImportButtons";
 import type { QuizshowLocalProblem } from "../builder/quizshowValidation";
@@ -49,8 +49,10 @@ export interface QuizshowStudioSave {
 export interface QuizshowStudioActions {
   /** Room under the quiz-wide question limit (`questionsPerQuizMax`). */
   isAddQuestionAllowed: boolean;
-  /** Room for one more round, and for the question it arrives with. */
+  /** Room for one more round (wheel rows do not count), and for the question it arrives with. */
   isAddRoundAllowed: boolean;
+  /** Additive. Room for one more wheel row (`wheelStepsMax`); a wheel brings no question. */
+  isAddWheelAllowed: boolean;
   /** Room in round `roundIndex` and under the quiz-wide limit (add or duplicate there). */
   isAddQuestionToRoundAllowed: (roundIndex: number) => boolean;
   selectPrevious: () => void;
@@ -63,7 +65,9 @@ export interface QuizshowStudioActions {
   duplicateSelectedQuestion: () => void;
   duplicateQuestion: (roundIndex: number, questionIndex: number) => void;
   /** A new round at the end, its header selected. */
-  addRound: (kind: QuizshowRoundKind) => void;
+  addRound: (kind: QuizshowPlayableRoundKind) => void;
+  /** Additive. A new wheel at the end, selected. */
+  addWheel: () => void;
   /** Removes a question; the selection moves to the previous one, or the round's header. Confirm first. */
   removeQuestion: (roundIndex: number, questionIndex: number) => void;
   /** Removes a round; the selection moves to the previous round's header, or the quiz. Confirm first. */

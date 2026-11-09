@@ -7,6 +7,7 @@ import { Select } from "../../../shared/components/ui/Select";
 import {
   QUIZSHOW_LIMITS,
   type QuizshowPlayMode,
+  type QuizshowRoundKind,
 } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
@@ -26,6 +27,7 @@ const PLAY_MODE_ICONS = { solo: FiUser, teams: FiUsers } as const;
 
 interface QuizshowOpenLobbyDialogProps {
   scope: QuizshowSessionScope;
+  rounds: ReadonlyArray<{ kind: QuizshowRoundKind }>;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -63,6 +65,7 @@ function teamSizeOptions(noneLabel: string) {
 
 function OpenLobbyForm({
   scope,
+  rounds,
   onClose,
 }: Omit<QuizshowOpenLobbyDialogProps, "isOpen">) {
   const { t } = useTranslation();
@@ -187,7 +190,7 @@ function OpenLobbyForm({
             <p className={styles.feedbackTitle}>
               {t("quizshow:lobby.incomplete")}
             </p>
-            <QuizshowProblemList problems={lobby.problems} />
+            <QuizshowProblemList problems={lobby.problems} rounds={rounds} />
           </div>
         </Collapse>
         <Collapse isOpen={lobby.alreadyOpen !== null}>
@@ -222,6 +225,7 @@ function OpenLobbyForm({
 
 export function QuizshowOpenLobbyDialog({
   scope,
+  rounds,
   isOpen,
   onClose,
 }: QuizshowOpenLobbyDialogProps) {
@@ -231,6 +235,7 @@ export function QuizshowOpenLobbyDialog({
         <OpenLobbyForm
           key="quizshow-open-lobby"
           scope={scope}
+          rounds={rounds}
           onClose={onClose}
         />
       )}

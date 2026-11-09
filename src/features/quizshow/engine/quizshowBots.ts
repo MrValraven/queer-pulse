@@ -188,7 +188,10 @@ function planJokers(
   if (roundIndex === null || !round || !round.settings.isJokerAllowed) {
     return [];
   }
-  const roundsLeft = Math.max(engine.cursor.roundCount - roundIndex, 1);
+  const roundsLeft = Math.max(
+    engine.cursor.roundCount - engine.cursor.roundNumber,
+    1,
+  );
   const phaseStartedAt = engine.cursor.phaseStartedAt ?? now;
   const plans: BotPlan[] = [];
   for (const bot of activeBots(engine)) {

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence, m } from "motion/react";
+import { FiDisc } from "react-icons/fi";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import {
   Avatar,
@@ -19,6 +20,7 @@ import { useMediaQuery } from "../../../shared/hooks";
 import { appHost } from "../../../shared/lib/inviteUrl";
 import { QuizshowShape } from "../QuizshowShape";
 import { quizshowPlayUrl } from "../quizshowPaths";
+import { displayRoundNumber, isWheelRoundKind } from "../quizshowWheel";
 import { pickQuizshowText } from "../stage/quizshowText";
 import { EmphasisText } from "./QuizshowScreenChrome";
 import type { QuizshowScreenStageSize } from "./QuizshowScreenStage";
@@ -103,20 +105,38 @@ function TeamRow({ team }: { team: QuizshowLobbyTeam }) {
   );
 }
 
+/** A wheel step in the list: a slim row with the disc icon and no number or chips. */
+function WheelRow() {
+  const { t } = useTranslation();
+  return (
+    <li className={`${styles.roundRow} ${styles.wheelRow}`}>
+      <FiDisc className={styles.wheelRowIcon} aria-hidden="true" fill="none" />
+      <span className={styles.roundTitle}>{t("quizshow:kind.wheel.name")}</span>
+    </li>
+  );
+}
+
 function RoundRow({
   round,
+  roundNumber,
   language,
 }: {
   round: QuizshowRoundCard;
+  /** The played-count number; wheel rows never take one. */
+  roundNumber: number;
   language: QuizshowLanguage;
 }) {
   const { t } = useTranslation();
+  // A fresh round has a blank title; it reads "Round N" until the host names it.
+  const pickedTitle = pickQuizshowText(round.title, language);
+  const roundTitle =
+    pickedTitle.trim() !== ""
+      ? pickedTitle
+      : t("quizshow:rounds.untitled", { number: roundNumber });
   return (
     <li className={styles.roundRow}>
-      <span className={styles.roundNumber}>{round.roundIndex + 1}</span>
-      <span className={styles.roundTitle}>
-        {pickQuizshowText(round.title, language)}
-      </span>
+      <span className={styles.roundNumber}>{roundNumber}</span>
+      <span className={styles.roundTitle}>{roundTitle}</span>
       <span className={styles.chip}>
         {t(`quizshow:kind.${round.kind}.name`)}
       </span>
@@ -272,13 +292,18 @@ export function QuizshowScreenLobby({
             {t("quizshow:screen.roundsTitle")}
           </h2>
           <ol className={styles.roundList}>
-            {rounds.map((round) => (
-              <RoundRow
-                key={round.roundIndex}
-                round={round}
-                language={screenLanguage}
-              />
-            ))}
+            {rounds.map((round) =>
+              isWheelRoundKind(round.kind) ? (
+                <WheelRow key={round.roundIndex} />
+              ) : (
+                <RoundRow
+                  key={round.roundIndex}
+                  round={round}
+                  roundNumber={displayRoundNumber(rounds, round.roundIndex)}
+                  language={screenLanguage}
+                />
+              ),
+            )}
           </ol>
         </div>
       </section>

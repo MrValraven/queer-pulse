@@ -1,8 +1,10 @@
 import {
   QUIZSHOW_LIMITS,
+  QUIZSHOW_WHEEL_SETTINGS_DEFAULTS,
   type QuizshowLanguage,
   type QuizshowLanguageMode,
   type QuizshowOption,
+  type QuizshowPlayableRoundKind,
   type QuizshowQuestion,
   type QuizshowQuestionInput,
   type QuizshowQuestionType,
@@ -12,6 +14,12 @@ import {
   type QuizshowRoundKind,
   type QuizshowRoundSettings,
 } from "../../../shared/contracts/quizshow";
+import {
+  isQuizRoundKind,
+  isWheelRoundKind,
+  normaliseWheelRounds,
+  withWheelSettingsDefaults,
+} from "../quizshowWheel";
 
 export interface QuizshowDraftQuestion {
   /** Stable React key, local to the builder. */
@@ -61,6 +69,7 @@ export function defaultRoundSettings(): QuizshowRoundSettings {
     isJokerAllowed: true,
     writeSeconds: QUIZSHOW_LIMITS.writeSecondsDefault,
     voteSeconds: QUIZSHOW_LIMITS.voteSecondsDefault,
+    ...QUIZSHOW_WHEEL_SETTINGS_DEFAULTS,
   };
 }
 
@@ -119,11 +128,13 @@ function draftQuestionOf(
   return { draftKey: mintDraftKey(), question, mediaUrl };
 }
 
-function defaultTypeFor(roundKind: QuizshowRoundKind): QuizshowQuestionType {
-  return roundKind === "quiz" ? "multiple_choice" : "prompt";
+function defaultTypeFor(
+  roundKind: QuizshowPlayableRoundKind,
+): QuizshowQuestionType {
+  return isQuizRoundKind(roundKind) ? "multiple_choice" : "prompt";
 }
 
-export function newRound(kind: QuizshowRoundKind): QuizshowDraftRound {
+export function newRound(kind: QuizshowPlayableRoundKind): QuizshowDraftRound {
   return {
     draftKey: mintDraftKey(),
     kind,
@@ -131,6 +142,36 @@ export function newRound(kind: QuizshowRoundKind): QuizshowDraftRound {
     contentLabel: "none",
     settings: defaultRoundSettings(),
     questions: [draftQuestionOf(newQuestion(defaultTypeFor(kind), kind), null)],
+  };
+}
+
+/** A wheel row: no questions, its slices come from the rounds that follow it. */
+export function newWheel(): QuizshowDraftRound {
+  return {
+    draftKey: mintDraftKey(),
+    kind: "wheel",
+    title: blankText(),
+    contentLabel: "none",
+    settings: defaultRoundSettings(),
+    questions: [],
+  };
+}
+
+/** The round with one more default question; a wheel row has no questions and comes back as it was. */
+export function withNewQuestion(round: QuizshowDraftRound): QuizshowDraftRound {
+  if (isWheelRoundKind(round.kind)) {
+    return round;
+  }
+  return {
+    ...round,
+    questions: [
+      ...round.questions,
+      {
+        draftKey: `${round.draftKey}-question-${crypto.randomUUID()}`,
+        question: newQuestion(defaultTypeFor(round.kind), round.kind),
+        mediaUrl: null,
+      },
+    ],
   };
 }
 
@@ -172,7 +213,7 @@ export function draftFromQuiz(quiz: QuizshowQuiz): QuizshowDraft {
       kind: round.kind,
       title: round.title,
       contentLabel: round.contentLabel,
-      settings: round.settings,
+      settings: withWheelSettingsDefaults(round.settings),
       questions: round.questions.map((stored) =>
         draftQuestionOf(inputOfStoredQuestion(stored), stored.mediaUrl),
       ),
@@ -200,7 +241,7 @@ function quizBody(
     title: draft.title,
     languages: draft.languages,
     screenLanguage: draft.screenLanguage,
-    rounds: draft.rounds.map((round) => ({
+    rounds: normaliseWheelRounds(draft.rounds).map((round) => ({
       kind: round.kind,
       title: round.title,
       contentLabel: round.contentLabel,
@@ -254,9 +295,12 @@ function withoutPicture(
 
 export function changeRoundKind(
   round: QuizshowDraftRound,
-  nextKind: QuizshowRoundKind,
+  nextKind: QuizshowPlayableRoundKind,
 ): QuizshowDraftRound {
-  const isNextQuiz = nextKind === "quiz";
+  if (isWheelRoundKind(round.kind)) {
+    return round;
+  }
+  const isNextQuiz = isQuizRoundKind(nextKind);
   const keptQuestions = round.questions
     .filter(({ question }) => (question.type === "prompt") !== isNextQuiz)
     .map((draftQuestion) => {

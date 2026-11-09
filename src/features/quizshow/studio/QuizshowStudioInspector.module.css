@@ -138,6 +138,12 @@
   --studio-option-last-column: 1 / -1;
 }
 
+/* The two "What the wheel picks" cards stack in one column: their hints run
+   seven lines when squeezed side by side. */
+.wheelPickCards {
+  --studio-option-columns: minmax(0, 1fr);
+}
+
 /* Text areas grow with what is written, to a cap, then scroll. */
 @supports (field-sizing: content) {
   .sectionBody textarea {
@@ -328,4 +334,70 @@
   display: flex;
   padding: 18px var(--inspector-gutter) 24px;
   border-block-start: 1px solid var(--qs-line);
+}
+
+/* The rounds on a wheel: quiet rows, each a button to that round's state.
+   The padding sits on the button so a row folds away with it. */
+.sliceList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sliceButton {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  inline-size: 100%;
+  min-block-size: var(--tap-min);
+  padding: 10px 12px;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--radius-14);
+  background: color-mix(in srgb, var(--qs-text) 4%, transparent);
+  color: var(--qs-text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition-property: background-color, border-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.sliceButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sliceButton:hover {
+    border-color: var(--qs-glass-border-strong);
+    background: color-mix(in srgb, var(--qs-text) 8%, transparent);
+  }
+}
+
+.sliceTitle {
+  max-inline-size: 100%;
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.sliceMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+  font-size: var(--text-13);
+  color: var(--qs-text-mute);
+}
+
+.sliceBonus {
+  font-weight: 600;
+  color: var(--accent);
 }

@@ -17,6 +17,7 @@ import type {
   QuizshowScoresScope,
   QuizshowTeamColorKey,
 } from "../../../shared/contracts/quizshow";
+import type { QuizshowWheelProgress } from "../quizshowWheel";
 import type {
   QuizshowClientFrameName,
   QuizshowServerFrame,
@@ -119,6 +120,8 @@ export interface QuizshowEngineState {
   players: QuizshowEnginePlayer[];
   teams: QuizshowEngineTeam[];
   current: QuizshowEngineQuestionPlay | null;
+  /** Wheel progress, plain JSON, mirrored from the server's `cursor.wheelProgress`. */
+  wheelProgress: QuizshowWheelProgress;
   /** Coordinator 2026-10-19, starts false. */
   isScreenMuted: boolean;
   hasScoredQuestion: boolean;

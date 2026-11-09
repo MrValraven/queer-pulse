@@ -8,10 +8,12 @@ import {
   isTypedAnswerCorrect,
   lieDetectorPlayerPoints,
   normaliseAnswerText,
+  pointsSinceBaseline,
   scoreQuizAnswer,
   speedPoints,
   streakBonusFor,
   teamQuestionPoints,
+  wheelBonusWinnerIds,
   type QuizAnswerScoringInput,
 } from "./quizshowScoring";
 
@@ -340,6 +342,64 @@ describe("quizshow answer matching, party points and ranks", () => {
       ["entrant-1", 1],
       ["entrant-2", 1],
       ["entrant-3", 1],
+    ]);
+  });
+});
+
+describe("wheel bonus scoring", () => {
+  it("gives no winner for no entries", () => {
+    expect(wheelBonusWinnerIds([])).toEqual([]);
+  });
+
+  it("gives no winner when the best is 0", () => {
+    expect(
+      wheelBonusWinnerIds([
+        { entrantId: "a", points: 0 },
+        { entrantId: "b", points: 0 },
+      ]),
+    ).toEqual([]);
+  });
+
+  it("gives no winner when every entrant is negative", () => {
+    expect(
+      wheelBonusWinnerIds([
+        { entrantId: "a", points: -200 },
+        { entrantId: "b", points: -100 },
+      ]),
+    ).toEqual([]);
+  });
+
+  it("picks the single best entrant", () => {
+    expect(
+      wheelBonusWinnerIds([
+        { entrantId: "a", points: 300 },
+        { entrantId: "b", points: 900 },
+        { entrantId: "c", points: 500 },
+      ]),
+    ).toEqual(["b"]);
+  });
+
+  it("keeps every tied winner in input order", () => {
+    expect(
+      wheelBonusWinnerIds([
+        { entrantId: "c", points: 900 },
+        { entrantId: "a", points: 300 },
+        { entrantId: "b", points: 900 },
+      ]),
+    ).toEqual(["c", "b"]);
+  });
+
+  it("counts points since the baseline and starts a missing entrant at 0", () => {
+    expect(
+      pointsSinceBaseline({ a: 1000, b: 500 }, [
+        { entrantId: "a", score: 1800 },
+        { entrantId: "b", score: 500 },
+        { entrantId: "c", score: 700 },
+      ]),
+    ).toEqual([
+      { entrantId: "a", points: 800 },
+      { entrantId: "b", points: 0 },
+      { entrantId: "c", points: 700 },
     ]);
   });
 });

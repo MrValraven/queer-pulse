@@ -12,6 +12,7 @@ vi.mock("../../../shared/lib/messageChime", () => ({
 }));
 
 import {
+  QUIZSHOW_CUE_MIN_GAP_MS,
   QUIZSHOW_CUE_NOTES,
   playQuizshowCue,
   type QuizshowCue,
@@ -70,5 +71,57 @@ describe("quizshow cues", () => {
     expect(playQuizshowCue("playerJoined")).toBe(false);
     vi.advanceTimersByTime(300);
     expect(playQuizshowCue("playerJoined")).toBe(true);
+  });
+
+  it("gives wheelTick a 60 ms gap", () => {
+    chimeMock.runningChimeOutput.mockReturnValue({
+      context: { currentTime: 1 },
+      input: {},
+    });
+    expect(QUIZSHOW_CUE_MIN_GAP_MS).toEqual({ wheelTick: 60 });
+    vi.advanceTimersByTime(1000);
+    expect(playQuizshowCue("wheelTick")).toBe(true);
+    vi.advanceTimersByTime(59);
+    expect(playQuizshowCue("wheelTick")).toBe(false);
+    vi.advanceTimersByTime(1);
+    expect(playQuizshowCue("wheelTick")).toBe(true);
+  });
+
+  it("keeps the 300 ms gap for reveal", () => {
+    chimeMock.runningChimeOutput.mockReturnValue({
+      context: { currentTime: 1 },
+      input: {},
+    });
+    vi.advanceTimersByTime(1000);
+    expect(playQuizshowCue("reveal")).toBe(true);
+    vi.advanceTimersByTime(299);
+    expect(playQuizshowCue("reveal")).toBe(false);
+    vi.advanceTimersByTime(1);
+    expect(playQuizshowCue("reveal")).toBe(true);
+  });
+
+  it("holds the wheel cue notes from the contract", () => {
+    expect(QUIZSHOW_CUE_NOTES.wheelTick).toEqual([
+      {
+        semitonesFromA4: -14,
+        delaySeconds: 0,
+        peakGain: 0.05,
+        decaySeconds: 0.03,
+      },
+    ]);
+    expect(QUIZSHOW_CUE_NOTES.wheelLand).toEqual([
+      {
+        semitonesFromA4: -14,
+        delaySeconds: 0,
+        peakGain: 0.16,
+        decaySeconds: 0.18,
+      },
+      {
+        semitonesFromA4: -9,
+        delaySeconds: 0.09,
+        peakGain: 0.16,
+        decaySeconds: 0.22,
+      },
+    ]);
   });
 });

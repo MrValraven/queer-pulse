@@ -24,6 +24,9 @@ const CURSOR: QuizshowCursor = {
   pausedRemainingMs: null,
   pausedExtraTimeRemainingMs: null,
   isRestartRecovery: false,
+  roundNumber: 1,
+  upNext: null,
+  canSpinForNextRound: false,
 };
 
 function questionOf(
@@ -77,6 +80,8 @@ function playerStateOf(
     scores: null,
     podium: null,
     nextEvent: null,
+    wheel: null,
+    wheelBonus: null,
     role: "player",
     lobby: { players: [], teams: [], playerCount: 3 },
     question,

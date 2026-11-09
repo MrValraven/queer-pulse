@@ -186,6 +186,8 @@ function applyNewPhase(
       ? session.scores
       : null,
     podium: PODIUM_PHASES.includes(phase) ? session.podium : null,
+    wheel: frame.wheel ?? null,
+    wheelBonus: frame.wheelBonus ?? null,
   };
   const keptVoteOptions = VOTE_OPTION_PHASES.includes(phase);
   if (session.role === "host") {
@@ -357,13 +359,24 @@ function applySessionState(
   session: QuizshowSessionState,
 ): QuizshowClientState {
   if (session.role !== state.role) return state;
+  // A server deployed before the wheel fields leaves them undefined; surfaces check `=== null`.
+  // A state that already carries both keeps its identity.
+  const hasWheelFields =
+    session.wheel !== undefined && session.wheelBonus !== undefined;
+  const normalisedSession: QuizshowSessionState = hasWheelFields
+    ? session
+    : {
+        ...session,
+        wheel: session.wheel ?? null,
+        wheelBonus: session.wheelBonus ?? null,
+      };
   return {
     ...state,
-    session,
+    session: normalisedSession,
     status: "attached",
     sessionEnd: null,
-    pendingAnswer: isPlayerState(session)
-      ? clearedPending(state.pendingAnswer, session)
+    pendingAnswer: isPlayerState(normalisedSession)
+      ? clearedPending(state.pendingAnswer, normalisedSession)
       : state.pendingAnswer,
   };
 }

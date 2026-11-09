@@ -2,13 +2,20 @@ import { useId, useState } from "react";
 import { AnimatePresence } from "motion/react";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
+import { Collapse } from "../../../shared/components/ui/Collapse";
 import { ConfirmDialog } from "../../../shared/components/ui/ConfirmDialog";
 import { QUIZSHOW_LIMITS } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { QuizshowRoundEditor } from "../builder/QuizshowRoundEditor";
 import { useQuizshowDarkDialog } from "../builder/useQuizshowDarkDialog";
+import {
+  displayRoundNumber,
+  isInWheelRange,
+  isWheelRoundKind,
+} from "../quizshowWheel";
 import { QuizshowInspectorProblems } from "./QuizshowInspectorProblems";
 import { QuizshowInspectorSection } from "./QuizshowInspectorSection";
+import { QuizshowInspectorWheelBonus } from "./QuizshowInspectorWheelBonus";
 import { useQuizshowStudio } from "./QuizshowStudioContext";
 import {
   selectionAfterRemovingRound,
@@ -89,17 +96,27 @@ function QuizshowInspectorRoundQuestions({
   );
 }
 
-/** Delete round, behind the existing confirm. */
-function QuizshowInspectorRoundDelete({ roundIndex }: { roundIndex: number }) {
+/** Delete round or Delete wheel, behind the existing confirm. */
+export function QuizshowInspectorRoundDelete({
+  roundIndex,
+}: {
+  roundIndex: number;
+}) {
   const { t } = useTranslation();
   const { controller, actions, viewLanguage, selection } = useQuizshowStudio();
   const darkDialogRef = useQuizshowDarkDialog();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const round = controller.draft.rounds[roundIndex];
   if (!round) return null;
+  const isWheel = isWheelRoundKind(round.kind);
   const roundTitle =
     round.title[viewLanguage].trim() ||
-    t("quizshow:rounds.untitled", { number: roundIndex + 1 });
+    t("quizshow:rounds.untitled", {
+      number: displayRoundNumber(controller.draft.rounds, roundIndex),
+    });
+  const removeLabel = t(
+    isWheel ? "quizshow:rounds.removeWheel" : "quizshow:rounds.remove",
+  );
   return (
     <div className={styles.footer}>
       <Button
@@ -108,20 +125,28 @@ function QuizshowInspectorRoundDelete({ roundIndex }: { roundIndex: number }) {
         type="button"
         onClick={() => setIsConfirmOpen(true)}
       >
-        <FiTrash2 aria-hidden /> {t("quizshow:rounds.remove")}
+        <FiTrash2 aria-hidden /> {removeLabel}
       </Button>
       <AnimatePresence>
         {isConfirmOpen && (
           <ConfirmDialog
             open
             tone="destructive"
-            title={t("quizshow:rounds.removeConfirmTitle", {
-              title: roundTitle,
-            })}
-            description={t("quizshow:rounds.removeConfirmBody", {
-              count: round.questions.length,
-            })}
-            confirmLabel={t("quizshow:rounds.remove")}
+            title={
+              isWheel
+                ? t("quizshow:rounds.removeWheelConfirmTitle")
+                : t("quizshow:rounds.removeConfirmTitle", {
+                    title: roundTitle,
+                  })
+            }
+            description={
+              isWheel
+                ? t("quizshow:rounds.removeWheelConfirmBody")
+                : t("quizshow:rounds.removeConfirmBody", {
+                    count: round.questions.length,
+                  })
+            }
+            confirmLabel={removeLabel}
             cancelLabel={t("quizshow:common.cancel")}
             onClose={() => setIsConfirmOpen(false)}
             onConfirm={() => {
@@ -159,6 +184,9 @@ export function QuizshowInspectorRound({ roundIndex }: { roundIndex: number }) {
           onChange={(patch) => controller.updateRound(roundIndex, patch)}
           onChangeKind={(kind) => controller.changeRoundKind(roundIndex, kind)}
         />
+        <Collapse isOpen={isInWheelRange(controller.draft.rounds, roundIndex)}>
+          <QuizshowInspectorWheelBonus roundIndex={roundIndex} />
+        </Collapse>
       </QuizshowInspectorSection>
       <QuizshowInspectorRoundQuestions roundIndex={roundIndex} />
       <QuizshowInspectorProblems

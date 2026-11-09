@@ -2,16 +2,23 @@ import {
   FiArrowDown,
   FiArrowUp,
   FiCopy,
+  FiDisc,
   FiPlus,
   FiTrash2,
 } from "react-icons/fi";
 import {
   QUIZSHOW_LIMITS,
-  QUIZSHOW_ROUND_KINDS,
+  QUIZSHOW_PLAYABLE_ROUND_KINDS,
   type QuizshowLanguage,
-  type QuizshowRoundKind,
+  type QuizshowPlayableRoundKind,
 } from "../../../shared/contracts/quizshow";
 import type { QuizshowDraftRound } from "../builder/quizshowDraft";
+import {
+  displayRoundNumber,
+  displayWheelNumber,
+  isWheelRoundKind,
+  playableRoundCount,
+} from "../quizshowWheel";
 import type { QuizshowStudioActions } from "./QuizshowStudioContext";
 import { shownTextOf } from "./quizshowStudioRailView";
 import type { QuizshowStudioMenuEntry } from "./QuizshowStudioMenu";
@@ -148,17 +155,113 @@ export function roundMenuEntries(input: {
   ];
 }
 
-/** The round kinds, each with its one-line hint, for "Add round". */
-export function roundKindEntries(input: {
-  onPick: (kind: QuizshowRoundKind) => void;
+/** Move up, Move down and Delete wheel; a wheel holds no questions to add. */
+export function wheelMenuEntries(input: {
+  roundIndex: number;
+  roundCount: number;
+  title: string;
+  actions: QuizshowStudioActions;
+  onRemove: () => void;
   t: Translate;
 }): QuizshowStudioMenuEntry[] {
-  return QUIZSHOW_ROUND_KINDS.map((kind) => ({
+  const { roundIndex, roundCount, title, actions, t } = input;
+  return [
+    {
+      key: "moveUp",
+      label: t("quizshow:rounds.moveUp", { title }),
+      icon: FiArrowUp,
+      isDisabled: roundIndex === 0,
+      onSelect: () => actions.moveRound(roundIndex, roundIndex - 1),
+    },
+    {
+      key: "moveDown",
+      label: t("quizshow:rounds.moveDown", { title }),
+      icon: FiArrowDown,
+      isDisabled: roundIndex === roundCount - 1,
+      onSelect: () => actions.moveRound(roundIndex, roundIndex + 1),
+    },
+    { key: "separator", kind: "separator" },
+    {
+      key: "remove",
+      label: t("quizshow:rounds.removeWheel"),
+      icon: FiTrash2,
+      isDestructive: true,
+      onSelect: input.onRemove,
+    },
+  ];
+}
+
+/** The playable round kinds, each with its one-line hint, for "Add round". */
+export function roundKindEntries(input: {
+  onPick: (kind: QuizshowPlayableRoundKind) => void;
+  isAddRoundAllowed: boolean;
+  /** Why a round cannot be added: the round limit, or the quiz-wide question limit. */
+  disabledReason: string;
+  t: Translate;
+}): QuizshowStudioMenuEntry[] {
+  return QUIZSHOW_PLAYABLE_ROUND_KINDS.map((kind) => ({
     key: kind,
     label: input.t(`quizshow:kind.${kind}.name`),
     description: input.t(`quizshow:kind.${kind}.hint`),
+    isDisabled: !input.isAddRoundAllowed,
+    disabledReason: input.disabledReason,
     onSelect: () => input.onPick(kind),
   }));
+}
+
+/**
+ * The rail's round count line ("3 of 10 rounds", wheels left out), which is
+ * also why "Add round" is blocked: the count when the rounds are full, else
+ * the quiz-wide question limit (a new round arrives with a question).
+ */
+export function roundCountLineOf(
+  rounds: readonly QuizshowDraftRound[],
+  quizQuestionCount: number,
+  t: Translate,
+): string {
+  const roundCount = playableRoundCount(rounds);
+  const isQuizFull = quizQuestionCount >= QUIZSHOW_LIMITS.questionsPerQuizMax;
+  if (roundCount >= QUIZSHOW_LIMITS.roundsMax || !isQuizFull) {
+    return t("quizshow:rounds.count", {
+      count: roundCount,
+      max: QUIZSHOW_LIMITS.roundsMax,
+    });
+  }
+  return addLimitNoteOf(0, quizQuestionCount, t);
+}
+
+/** "Add round": the playable kinds, then the wheel with its own limit. */
+function addRoundMenuEntries(input: {
+  rounds: readonly QuizshowDraftRound[];
+  quizQuestionCount: number;
+  actions: QuizshowStudioActions;
+  t: Translate;
+}): QuizshowStudioMenuEntry[] {
+  const { actions, t } = input;
+  return [
+    ...roundKindEntries({
+      onPick: actions.addRound,
+      isAddRoundAllowed: actions.isAddRoundAllowed,
+      disabledReason: roundCountLineOf(
+        input.rounds,
+        input.quizQuestionCount,
+        t,
+      ),
+      t,
+    }),
+    { key: "separator", kind: "separator" },
+    {
+      key: "wheel",
+      label: t("quizshow:kind.wheel.name"),
+      description: t("quizshow:kind.wheel.hint"),
+      icon: FiDisc,
+      isDisabled: !actions.isAddWheelAllowed,
+      disabledReason: t("quizshow:rounds.wheelsFull", {
+        max: QUIZSHOW_LIMITS.wheelStepsMax,
+      }),
+      onSelect: actions.addWheel,
+    },
+  ];
 }
 
 /** The entries for whatever the rail's shared menu is open for; none when it is closed. */
@@ -175,7 +278,12 @@ export function railMenuEntriesOf(input: {
   const { target, actions, t } = input;
   if (target === null) return [];
   if (target.kind === "addRound") {
-    return roundKindEntries({ onPick: actions.addRound, t });
+    return addRoundMenuEntries({
+      rounds: input.rounds,
+      quizQuestionCount: input.quizQuestionCount,
+      actions,
+      t,
+    });
   }
   const round = input.rounds[target.roundIndex];
   if (!round) return [];
@@ -192,9 +300,23 @@ export function railMenuEntriesOf(input: {
       t,
     });
   }
+  if (isWheelRoundKind(round.kind)) {
+    return wheelMenuEntries({
+      roundIndex,
+      roundCount: input.rounds.length,
+      title: t("quizshow:studio.inspector.wheel.eyebrow", {
+        number: displayWheelNumber(input.rounds, roundIndex),
+      }),
+      actions,
+      onRemove: () => input.onRequestRemoveRound(roundIndex),
+      t,
+    });
+  }
   const title =
     shownTextOf(round.title, input.viewLanguage) ||
-    t("quizshow:rounds.untitled", { number: roundIndex + 1 });
+    t("quizshow:rounds.untitled", {
+      number: displayRoundNumber(input.rounds, roundIndex),
+    });
   return roundMenuEntries({
     roundIndex,
     roundCount: input.rounds.length,

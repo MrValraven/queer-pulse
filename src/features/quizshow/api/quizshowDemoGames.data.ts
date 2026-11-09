@@ -4,6 +4,7 @@ import { QUIZSHOW_DEMO_TEMPLATE_IDS } from "../demo/quizshowTemplates.data";
 export const QUIZSHOW_DEMO_GAME_IDS = {
   flatQuiz: "demo-game-flat-quiz",
   afterDark: "demo-game-after-dark",
+  wheelNight: "demo-game-wheel-night",
 } as const;
 
 /** The demo member who owns every demo game, shown to players on a game join.
@@ -48,5 +49,15 @@ export const QUIZSHOW_DEMO_GAME_SEEDS: readonly QuizshowDemoGameSeed[] = [
     hasResults: false,
     isLobbyOpen: true,
     updatedAt: "2026-10-19T20:00:00.000Z",
+  },
+  {
+    gameId: QUIZSHOW_DEMO_GAME_IDS.wheelNight,
+    title: "Spin the wheel night",
+    templateId: QUIZSHOW_DEMO_TEMPLATE_IDS.lisbonQueerIcons,
+    adultsRoundIndex: null,
+    isAdultsOnly: false,
+    hasResults: false,
+    isLobbyOpen: false,
+    updatedAt: "2026-11-09T19:00:00.000Z",
   },
 ];

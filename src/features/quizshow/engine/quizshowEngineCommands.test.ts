@@ -10,6 +10,11 @@ import {
   type QuizshowRoundKind,
   type QuizshowText,
 } from "../../../shared/contracts/quizshow";
+import {
+  drawnWheelSliceRoundIndexes,
+  isWheelSpinLanded,
+  wheelSpinLandsAt,
+} from "../quizshowWheel";
 import type { QuizshowServerFrame } from "../realtime/quizshowFrames";
 import { createQuizshowEngine, reduceQuizshowEngine } from "./quizshowEngine";
 import type {
@@ -25,14 +30,12 @@ import {
   framesForViewer,
   playerIdOf,
 } from "./quizshowEngineViews";
-
-const ROUND_SETTINGS = {
-  timeLimitSeconds: 20,
-  isSpeedBonusOn: true,
-  isJokerAllowed: true,
-  writeSeconds: 60,
-  voteSeconds: 30,
-};
+import {
+  PICK_ROUND_NIGHT,
+  UNPLANNED_NIGHT,
+  WHEEL_FIRST_NIGHT,
+  WHEEL_TEST_SETTINGS,
+} from "./quizshowWheelTestFixtures";
 
 function bilingual(english: string): QuizshowText {
   return { en: english, pt: english };
@@ -90,7 +93,7 @@ function roundOf(
     kind,
     title: bilingual(`Round ${id}`),
     contentLabel: "none",
-    settings: ROUND_SETTINGS,
+    settings: WHEEL_TEST_SETTINGS,
     questions,
   };
 }
@@ -1789,5 +1792,388 @@ describe("demo engine coordinator rulings on time and favourites", () => {
     expect(
       voteStep(state, RITA, truthOptionId(state), 6_000).ack,
     ).toMatchObject({ ok: true, isDuplicate: false });
+  });
+});
+
+/** Started, the first round's one question skipped: its leaderboard, with the next step named by `cursor.upNext`. */
+function toFirstLeaderboard(quiz: QuizshowQuiz): QuizshowEngineState {
+  const started = hostStep(
+    joinedEngine({ quiz }),
+    "host:start",
+    { phaseId: "0" },
+    0,
+  ).state;
+  return skipStep(nextStep(nextStep(started, 0).state, 0).state, 0).state;
+}
+
+/** The leaderboard of the first round played for real: opened, answered by nobody, closed, revealed and scored. */
+function toScoredLeaderboard(quiz: QuizshowQuiz): QuizshowEngineState {
+  const started = hostStep(
+    joinedEngine({ quiz }),
+    "host:start",
+    { phaseId: "0" },
+    0,
+  ).state;
+  let walked = nextStep(started, 0).state;
+  walked = tickStep(walked, 4_000).state;
+  walked = nextStep(walked, 4_100).state;
+  walked = nextStep(walked, 4_200).state;
+  return nextStep(walked, 4_300).state;
+}
+
+/** The next round of the running order played with one skip, back on a leaderboard. */
+function playNextRoundSkipped(state: QuizshowEngineState): QuizshowEngineState {
+  const intro = nextStep(state, 0).state;
+  return skipStep(nextStep(intro, 0).state, 0).state;
+}
+
+const WHEEL_SPIN_START = 1_000;
+
+/** The first leaderboard of a night whose next step is a wheel, then the wheel itself, not yet spun. */
+function toWheelPhase(quiz: QuizshowQuiz): QuizshowEngineState {
+  return nextStep(toFirstLeaderboard(quiz), 0).state;
+}
+
+function spinStep(state: QuizshowEngineState, now: number): QuizshowEngineStep {
+  return hostStep(state, "host:spin", { phaseId: state.cursor.phaseId }, now);
+}
+
+function finishWheelStep(
+  state: QuizshowEngineState,
+  now: number,
+): QuizshowEngineStep {
+  return hostStep(
+    state,
+    "host:finishWheel",
+    { phaseId: state.cursor.phaseId },
+    now,
+  );
+}
+
+function spinOf(state: QuizshowEngineState) {
+  const spin = state.wheelProgress.wheel?.spin ?? null;
+  if (spin === null) throw new Error("The wheel has not been spun.");
+  return spin;
+}
+
+function spunWheel(quiz: QuizshowQuiz): QuizshowEngineState {
+  return spinStep(toWheelPhase(quiz), WHEEL_SPIN_START).state;
+}
+
+/** The row of the slice the spin landed on. */
+function landedRowOf(state: QuizshowEngineState): number {
+  const wheel = state.wheelProgress.wheel;
+  if (wheel === null) throw new Error("No wheel is open.");
+  const landedRow = drawnWheelSliceRoundIndexes(
+    state.quiz.rounds,
+    wheel,
+    state.wheelProgress,
+  )[spinOf(state).landedSliceIndex];
+  if (landedRow === undefined)
+    throw new Error("The spin landed off the wheel.");
+  return landedRow;
+}
+
+function hostWheelView(state: QuizshowEngineState) {
+  return engineSessionStateFor(state, { role: "host" }).wheel;
+}
+
+describe("wheel host commands", () => {
+  it("spins once on a double tap", () => {
+    const leaderboard = toFirstLeaderboard(PICK_ROUND_NIGHT);
+    const wheeling = nextStep(leaderboard, 0).state;
+    const wheelPhaseId = wheeling.cursor.phaseId;
+    const first = hostStep(
+      wheeling,
+      "host:spin",
+      { phaseId: wheelPhaseId },
+      WHEEL_SPIN_START,
+    );
+    expect(first.ack).toEqual({ ok: true, isNoop: false });
+    expect(first.state.cursor.phase).toBe("wheel");
+    expect(first.state.cursor.phaseId).not.toBe(wheelPhaseId);
+    expect(spinOf(first.state).startedAt).toBe(WHEEL_SPIN_START);
+    expect(hostWheelView(first.state)?.spinNumber).toBe(1);
+    const second = hostStep(
+      first.state,
+      "host:spin",
+      { phaseId: wheelPhaseId },
+      WHEEL_SPIN_START + 10,
+    );
+    expect(second.ack).toEqual({ ok: true, isNoop: true });
+    expect(second.state.cursor.phaseId).toBe(first.state.cursor.phaseId);
+    expect(spinOf(second.state)).toEqual(spinOf(first.state));
+    const third = hostStep(
+      first.state,
+      "host:spin",
+      { phaseId: leaderboard.cursor.phaseId },
+      WHEEL_SPIN_START + 20,
+    );
+    expect(third.ack).toMatchObject({
+      ok: false,
+      code: "quizshow_stale_phase",
+      cursor: { phase: "wheel", phaseId: first.state.cursor.phaseId },
+    });
+  });
+
+  it("refuses a spin and a next while the wheel turns", () => {
+    const spun = spunWheel(PICK_ROUND_NIGHT);
+    const landsAt = wheelSpinLandsAt(spinOf(spun));
+    const stillTurning = landsAt - 251;
+    const spinRefused = spinStep(spun, stillTurning);
+    expect(spinRefused.ack).toEqual({
+      ok: false,
+      code: "quizshow_wheel_spinning",
+      message: "quizshow_wheel_spinning",
+    });
+    expect(spinRefused.state.cursor.phaseId).toBe(spun.cursor.phaseId);
+    const nextRefused = nextStep(spun, stillTurning);
+    expect(nextRefused.ack).toEqual({
+      ok: false,
+      code: "quizshow_wheel_spinning",
+      message: "quizshow_wheel_spinning",
+    });
+    const nextAccepted = nextStep(spun, landsAt - 250);
+    expect(nextAccepted.ack).toEqual({ ok: true, isNoop: false });
+    expect(nextAccepted.state.cursor.phase).toBe("round_intro");
+    expect(nextAccepted.state.cursor.roundIndex).toBe(landedRowOf(spun));
+  });
+
+  it("refuses next before any spin", () => {
+    const result = nextStep(toWheelPhase(PICK_ROUND_NIGHT), WHEEL_SPIN_START);
+    expect(result.ack).toEqual({
+      ok: false,
+      code: "quizshow_wheel_not_spun",
+      message: "quizshow_wheel_not_spun",
+    });
+    expect(result.state.cursor.phase).toBe("wheel");
+  });
+
+  it("spins again among the same slices and keeps the spin number", () => {
+    const spun = spunWheel(PICK_ROUND_NIGHT);
+    const restAngle = spun.wheelProgress.wheel?.restAngle;
+    const landsAt = wheelSpinLandsAt(spinOf(spun));
+    const again = spinStep(spun, landsAt);
+    expect(again.ack).toEqual({ ok: true, isNoop: false });
+    expect(again.state.cursor.phase).toBe("wheel");
+    expect(again.state.cursor.phaseId).not.toBe(spun.cursor.phaseId);
+    expect(spinOf(again.state).startedAt).toBe(landsAt);
+    expect(spinOf(again.state).startAngle).toBe(restAngle);
+    expect(hostWheelView(again.state)?.spinNumber).toBe(1);
+    const drawnSlices =
+      hostWheelView(again.state)?.slices.filter((slice) => !slice.isPlayed) ??
+      [];
+    expect(drawnSlices.map((slice) => slice.roundIndex)).toEqual([2, 3, 4]);
+    expect(drawnSlices[spinOf(again.state).landedSliceIndex]).toBeDefined();
+  });
+
+  it("refuses wheel commands while paused", () => {
+    const spun = spunWheel(PICK_ROUND_NIGHT);
+    const paused = hostStep(
+      spun,
+      "host:pause",
+      { phaseId: spun.cursor.phaseId },
+      WHEEL_SPIN_START + 500,
+    );
+    expect(paused.ack).toEqual({ ok: true, isNoop: false });
+    expect(paused.state.cursor.status).toBe("paused");
+    const landsAt = wheelSpinLandsAt(spinOf(spun));
+    for (const refused of [
+      spinStep(paused.state, landsAt),
+      nextStep(paused.state, landsAt),
+      finishWheelStep(paused.state, landsAt),
+    ]) {
+      expect(refused.ack).toMatchObject({
+        ok: false,
+        code: "quizshow_command_not_allowed",
+        cursor: { phase: "wheel", status: "paused" },
+      });
+    }
+    const resumeAt = landsAt + 4_000;
+    const resumed = hostStep(
+      paused.state,
+      "host:resume",
+      { phaseId: paused.state.cursor.phaseId },
+      resumeAt,
+    );
+    expect(resumed.ack).toEqual({ ok: true, isNoop: false });
+    expect(spinOf(resumed.state).startedAt).toBe(WHEEL_SPIN_START);
+    expect(isWheelSpinLanded(spinOf(resumed.state), resumeAt)).toBe(true);
+    expect(nextStep(resumed.state, resumeAt).ack).toEqual({
+      ok: true,
+      isNoop: false,
+    });
+  });
+
+  it("refuses skip in the wheel", () => {
+    const result = skipStep(toWheelPhase(PICK_ROUND_NIGHT), WHEEL_SPIN_START);
+    expect(result.ack).toMatchObject({
+      ok: false,
+      code: "quizshow_command_not_allowed",
+      cursor: { phase: "wheel" },
+    });
+  });
+});
+
+describe("wheel host commands for the next round and for finishing", () => {
+  it("spins for the next round from an eligible leaderboard", () => {
+    const leaderboard = toFirstLeaderboard(UNPLANNED_NIGHT);
+    expect(leaderboard.cursor).toMatchObject({
+      phase: "leaderboard",
+      canSpinForNextRound: true,
+    });
+    const spun = spinStep(leaderboard, WHEEL_SPIN_START);
+    expect(spun.ack).toEqual({ ok: true, isNoop: false });
+    expect(spun.state.cursor.phase).toBe("wheel");
+    const wheelView = hostWheelView(spun.state);
+    expect(wheelView?.wheelRoundIndex).toBeNull();
+    expect(wheelView?.slices.map((slice) => slice.roundIndex)).toEqual([
+      1, 2, 3,
+    ]);
+    expect(wheelView?.slices.every((slice) => slice.wheelBonus === 0)).toBe(
+      true,
+    );
+    expect(spinOf(spun.state).startedAt).toBe(WHEEL_SPIN_START);
+    const landedRow = landedRowOf(spun.state);
+    const played = nextStep(spun.state, wheelSpinLandsAt(spinOf(spun.state)));
+    expect(played.state.cursor).toMatchObject({
+      phase: "round_intro",
+      roundIndex: landedRow,
+    });
+    const afterRound = playNextRoundSkipped(played.state);
+    expect(afterRound.cursor.phase).toBe("leaderboard");
+    const expectedNextRow = [1, 2, 3].find((row) => row !== landedRow);
+    expect(afterRound.cursor.upNext).toEqual({
+      kind: "round",
+      roundIndex: expectedNextRow,
+    });
+  });
+
+  it("refuses the unplanned spin when a wheel comes next", () => {
+    const result = spinStep(
+      toFirstLeaderboard(PICK_ROUND_NIGHT),
+      WHEEL_SPIN_START,
+    );
+    expect(result.ack).toEqual({
+      ok: false,
+      code: "quizshow_wheel_already_next",
+      message: "quizshow_wheel_already_next",
+    });
+    expect(result.state.cursor.phase).toBe("leaderboard");
+  });
+
+  it("refuses the unplanned spin with one round left", () => {
+    let leaderboard = toFirstLeaderboard(UNPLANNED_NIGHT);
+    leaderboard = playNextRoundSkipped(leaderboard);
+    leaderboard = playNextRoundSkipped(leaderboard);
+    expect(leaderboard.cursor).toMatchObject({
+      phase: "leaderboard",
+      roundIndex: 2,
+    });
+    const result = spinStep(leaderboard, WHEEL_SPIN_START);
+    expect(result.ack).toEqual({
+      ok: false,
+      code: "quizshow_wheel_spin_too_few_rounds",
+      message: "quizshow_wheel_spin_too_few_rounds",
+    });
+    expect(result.state.cursor.phase).toBe("leaderboard");
+  });
+
+  it("finishes the wheel while it turns", () => {
+    const spun = spunWheel(PICK_ROUND_NIGHT);
+    const inTheAir = wheelSpinLandsAt(spinOf(spun)) - 1_000;
+    const result = finishWheelStep(spun, inTheAir);
+    expect(result.ack).toEqual({ ok: true, isNoop: false });
+    expect(result.state.wheelProgress.closedWheelRoundIndexes).toEqual([1]);
+    expect(result.state.wheelProgress.wheel).toBeNull();
+    expect(result.state.cursor).toMatchObject({
+      phase: "round_intro",
+      roundIndex: 5,
+    });
+  });
+
+  it("refuses finishing a wheel outside the wheel phase", () => {
+    const result = finishWheelStep(
+      toFirstLeaderboard(PICK_ROUND_NIGHT),
+      WHEEL_SPIN_START,
+    );
+    expect(result.ack).toMatchObject({
+      ok: false,
+      code: "quizshow_command_not_allowed",
+      cursor: { phase: "leaderboard" },
+    });
+  });
+
+  it("ends the night from the wheel with the podium once a question scored", () => {
+    const wheeling = nextStep(toScoredLeaderboard(PICK_ROUND_NIGHT), 4_400);
+    expect(wheeling.state.cursor.phase).toBe("wheel");
+    const ended = hostStep(
+      wheeling.state,
+      "host:end",
+      { phaseId: wheeling.state.cursor.phaseId },
+      4_500,
+    );
+    expect(ended.ack).toEqual({ ok: true, isNoop: false });
+    expect(ended.state.cursor.phase).toBe("podium");
+  });
+});
+
+describe("wheel joker rule", () => {
+  function jokerAck(state: QuizshowEngineState, roundIndex: number) {
+    return playerStep(state, RITA, "joker:play", { roundIndex }, 0).ack;
+  }
+
+  it("refuses a joker on a wheel row", () => {
+    expect(jokerAck(joinedEngine({ quiz: PICK_ROUND_NIGHT }), 1)).toMatchObject(
+      {
+        ok: false,
+        code: "quizshow_joker_not_allowed",
+      },
+    );
+  });
+
+  it("refuses a joker in the lobby before a wheel", () => {
+    expect(
+      jokerAck(joinedEngine({ quiz: WHEEL_FIRST_NIGHT }), 1),
+    ).toMatchObject({ ok: false, code: "quizshow_joker_wheel_next" });
+  });
+
+  it("refuses a joker on a leaderboard before a wheel", () => {
+    expect(jokerAck(toFirstLeaderboard(PICK_ROUND_NIGHT), 2)).toMatchObject({
+      ok: false,
+      code: "quizshow_joker_wheel_next",
+    });
+  });
+
+  it("accepts a joker on the landed round's card", () => {
+    const spun = spunWheel(PICK_ROUND_NIGHT);
+    const landedRow = landedRowOf(spun);
+    const card = nextStep(spun, wheelSpinLandsAt(spinOf(spun))).state;
+    expect(card.cursor).toMatchObject({
+      phase: "round_intro",
+      roundIndex: landedRow,
+    });
+    expect(jokerAck(card, landedRow)).toMatchObject({ ok: true });
+  });
+
+  it("accepts a joker on the leaderboard for the round that comes next", () => {
+    const leaderboard = toFirstLeaderboard(UNPLANNED_NIGHT);
+    expect(leaderboard.cursor.upNext).toEqual({ kind: "round", roundIndex: 1 });
+    expect(jokerAck(leaderboard, 1)).toMatchObject({ ok: true });
+    expect(jokerAck(leaderboard, 2)).toMatchObject({
+      ok: false,
+      code: "quizshow_joker_not_allowed",
+    });
+  });
+
+  it("refuses a joker in the wheel phase", () => {
+    expect(jokerAck(toWheelPhase(PICK_ROUND_NIGHT), 2)).toMatchObject({
+      ok: false,
+      code: "quizshow_joker_not_allowed",
+    });
+    expect(jokerAck(spunWheel(PICK_ROUND_NIGHT), 3)).toMatchObject({
+      ok: false,
+      code: "quizshow_joker_not_allowed",
+    });
   });
 });

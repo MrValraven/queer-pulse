@@ -5,6 +5,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useQuizshowStudio } from "./QuizshowStudioContext";
 import { QuizshowStudioDarkStamp } from "./QuizshowStudioDarkStamp";
 import { focusSelectedRailItem } from "./quizshowStudioDom";
+import { displayRoundNumber, isWheelRoundKind } from "../quizshowWheel";
 import { shownTextOf } from "./quizshowStudioRailView";
 
 /** What the host asked to delete, from a rail menu or the Delete key. */
@@ -25,10 +26,22 @@ function removalCopyOf(
 } | null {
   const round = studio.controller.draft.rounds[removal.roundIndex];
   if (round === undefined) return null;
+  if (removal.kind === "round" && isWheelRoundKind(round.kind)) {
+    return {
+      title: t("quizshow:rounds.removeWheelConfirmTitle"),
+      description: t("quizshow:rounds.removeWheelConfirmBody"),
+      confirmLabel: t("quizshow:rounds.removeWheel"),
+    };
+  }
   if (removal.kind === "round") {
     const title =
       shownTextOf(round.title, studio.viewLanguage) ||
-      t("quizshow:rounds.untitled", { number: removal.roundIndex + 1 });
+      t("quizshow:rounds.untitled", {
+        number: displayRoundNumber(
+          studio.controller.draft.rounds,
+          removal.roundIndex,
+        ),
+      });
     return {
       title: t("quizshow:rounds.removeConfirmTitle", { title }),
       description: t("quizshow:rounds.removeConfirmBody", {

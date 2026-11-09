@@ -81,7 +81,12 @@ function templateQuiz(
 function renderDialog(scope: QuizshowSessionScope) {
   return render(
     <TestProviders>
-      <QuizshowOpenLobbyDialog scope={scope} isOpen onClose={() => {}} />
+      <QuizshowOpenLobbyDialog
+        scope={scope}
+        rounds={[]}
+        isOpen
+        onClose={() => {}}
+      />
       <LocationProbe />
     </TestProviders>,
   );
@@ -215,6 +220,7 @@ describe("QuizshowOpenLobbyDialog", () => {
       <TestProviders>
         <QuizshowOpenLobbyButton
           scope={eventScope(QUIZSHOW_DEMO_LIVE_SLUG)}
+          rounds={[]}
           isBlocked
           blockedReason={reason}
         />

@@ -3,6 +3,7 @@ import type { QuizshowPhase } from "../../../shared/contracts/quizshow";
 import type { QuizshowClientState } from "../realtime/quizshowClientStore";
 import { remainingMs } from "../realtime/quizshowClock";
 import { playQuizshowCue, type QuizshowCue } from "./quizshowCues";
+import { useQuizshowWheelCues } from "./useQuizshowWheelCues";
 
 const TIME_ALMOST_UP_MS = 5000;
 const TICK_INTERVAL_MS = 250;
@@ -107,4 +108,6 @@ export function useQuizshowCues(
     const intervalId = window.setInterval(check, TICK_INTERVAL_MS);
     return () => window.clearInterval(intervalId);
   }, [isCountingDown, phaseId]);
+
+  useQuizshowWheelCues(state, options);
 }

@@ -17,6 +17,7 @@ import {
 import { quizshowPrimaryControlOf } from "../remote/quizshowPrimaryControl";
 import { QuizshowScreenStage } from "../screen/QuizshowScreenStage";
 import { QuizshowBackdrop } from "../stage/QuizshowBackdrop";
+import { useQuizshowWheelClock } from "../stage/useQuizshowWheelClock";
 import { type QuizshowDraft } from "./quizshowDraft";
 import { QuizshowBlockedTip } from "./QuizshowBlockedTip";
 import { useQuizshowBlockedTip } from "./useQuizshowBlockedTip";
@@ -91,16 +92,27 @@ export function QuizshowDryRun({
     return demoEngine.subscribe(dispatch);
   }, [demoEngine]);
 
-  const cursor = isScreenState(state.session) ? state.session.cursor : null;
+  const screenState = isScreenState(state.session) ? state.session : null;
+  const cursor = screenState?.cursor ?? null;
   const phase = cursor?.phase ?? null;
   const isEnded = phase === "ended";
+  // The try-out clock is the local one, so the offset is 0. The shared wheel
+  // clock re-renders this frame at the landing, which flips "Spinning" to the
+  // landed control.
+  const { serverNowMs } = useQuizshowWheelClock(
+    screenState?.wheel?.spin ?? null,
+    0,
+  );
   const nextControl =
-    phase === null || isEnded ? null : quizshowPrimaryControlOf(phase);
+    screenState === null || isEnded
+      ? null
+      : quizshowPrimaryControlOf(screenState, serverNowMs, t);
   const hasNoPlayers =
     phase === "lobby" &&
-    isScreenState(state.session) &&
-    state.session.lobby.playerCount === 0;
-  const isNextBlocked = nextControl === null || hasNoPlayers;
+    screenState !== null &&
+    screenState.lobby.playerCount === 0;
+  const isNextBlocked =
+    nextControl === null || nextControl.isBlocked || hasNoPlayers;
 
   function handleNext() {
     if (demoEngine === null) return;
@@ -109,7 +121,9 @@ export function QuizshowDryRun({
       demoEngine.restart();
       return;
     }
-    if (cursor === null || nextControl === null) return;
+    if (cursor === null || nextControl === null || nextControl.isBlocked) {
+      return;
+    }
     if (hasNoPlayers) {
       noPlayersTip.pin();
       return;
@@ -149,7 +163,10 @@ export function QuizshowDryRun({
               >
                 {isEnded
                   ? t("quizshow:dryRun.playAgain")
-                  : t(nextControl?.labelKey ?? "quizshow:remote.next")}
+                  : t(
+                      nextControl?.labelKey ?? "quizshow:remote.next",
+                      nextControl?.labelValues,
+                    )}
               </Button>
               {hasNoPlayers && (
                 <QuizshowBlockedTip

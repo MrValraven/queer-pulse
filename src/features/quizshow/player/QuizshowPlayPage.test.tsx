@@ -9,6 +9,7 @@ import { TestProviders } from "../../../test/TestProviders";
 import type {
   QuizshowMe,
   QuizshowPlayerState,
+  QuizshowRoundCard,
 } from "../../../shared/contracts/quizshow";
 import { QUIZSHOW_DEMO_LIVE_SLUG } from "../api/quizshowDemoStore.data";
 import { MAIN_CONTENT_ID } from "../../../shared/components/layout/SkipToContentLink";
@@ -126,6 +127,9 @@ function sessionOf(
       pausedRemainingMs: null,
       pausedExtraTimeRemainingMs: null,
       isRestartRecovery: false,
+      roundNumber: 0,
+      upNext: null,
+      canSpinForNextRound: false,
     },
     rounds: [],
     round: null,
@@ -133,6 +137,8 @@ function sessionOf(
     scores: null,
     podium: null,
     nextEvent: null,
+    wheel: null,
+    wheelBonus: null,
     role: "player",
     lobby: { players: [], teams: [], playerCount: 6 },
     question: null,
@@ -340,6 +346,10 @@ describe("QuizshowPlayPage", () => {
             isSpeedBonusOn: false,
           },
         ],
+        cursor: {
+          ...sessionOf().cursor,
+          upNext: { kind: "round", roundIndex: 0 },
+        },
       }),
     );
     await renderPlay("/play/QZ7KP4");
@@ -454,6 +464,7 @@ describe("QuizshowPlayPage join and lobby pause", () => {
           status: "paused",
           phase: "round_intro",
           roundIndex: 0,
+          roundNumber: 1,
         },
       }),
     );
@@ -478,6 +489,7 @@ describe("QuizshowPlayPage join and lobby pause", () => {
           status: "paused",
           phase: "round_intro",
           roundIndex: 0,
+          roundNumber: 1,
         },
       }),
     );
@@ -497,5 +509,121 @@ describe("QuizshowPlayPage join and lobby pause", () => {
         .getAllByText("Paused")
         .some((element) => element.closest('[role="status"]') === null),
     ).toBe(true);
+  });
+});
+
+function roundCardOf(
+  roundIndex: number,
+  kind: QuizshowRoundCard["kind"],
+): QuizshowRoundCard {
+  return {
+    roundIndex,
+    kind,
+    title: { en: "Warm up", pt: "Aquecimento" },
+    contentLabel: "none",
+    questionCount: kind === "wheel" ? 0 : 3,
+    isJokerAllowed: kind !== "wheel",
+    isSpeedBonusOn: false,
+  };
+}
+
+describe("QuizshowPlayPage lobby screen and the wheel", () => {
+  it("stays on the lobby for the first title card, wherever its row sits", async () => {
+    fakeSession.initialState = stateOf(
+      sessionOf({
+        me: ME,
+        cursor: {
+          ...sessionOf().cursor,
+          phase: "round_intro",
+          roundIndex: 2,
+          roundNumber: 1,
+        },
+      }),
+    );
+    await renderPlay("/play/QZ7KP4");
+
+    expect(await screen.findByText("You're in")).toBeInTheDocument();
+    expect(screen.queryByTestId("player-stage")).not.toBeInTheDocument();
+  });
+
+  it("shows the stage on the first round card after an opening wheel", async () => {
+    fakeSession.initialState = stateOf(
+      sessionOf({
+        me: ME,
+        rounds: [roundCardOf(0, "wheel"), roundCardOf(1, "quiz")],
+        cursor: {
+          ...sessionOf().cursor,
+          phase: "round_intro",
+          roundIndex: 1,
+          roundNumber: 1,
+        },
+      }),
+    );
+    await renderPlay("/play/QZ7KP4");
+
+    expect(await screen.findByTestId("player-stage")).toBeInTheDocument();
+    expect(screen.queryByText("You're in")).not.toBeInTheDocument();
+  });
+
+  it("goes to the stage from the second title card", async () => {
+    fakeSession.initialState = stateOf(
+      sessionOf({
+        me: ME,
+        cursor: {
+          ...sessionOf().cursor,
+          phase: "round_intro",
+          roundIndex: 2,
+          roundNumber: 2,
+        },
+      }),
+    );
+    await renderPlay("/play/QZ7KP4");
+
+    expect(await screen.findByTestId("player-stage")).toBeInTheDocument();
+    expect(screen.queryByText("You're in")).not.toBeInTheDocument();
+  });
+
+  it("points the joker at the round card when the wheel is up next", async () => {
+    fakeSession.initialState = stateOf(
+      sessionOf({
+        me: ME,
+        rounds: [roundCardOf(0, "wheel"), roundCardOf(1, "quiz")],
+        cursor: {
+          ...sessionOf().cursor,
+          upNext: { kind: "wheel", wheelRoundIndex: 0 },
+        },
+      }),
+    );
+    await renderPlay("/play/QZ7KP4");
+
+    expect(
+      await screen.findByText("Play your joker on the round card"),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Play my joker on this round" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("offers the joker button when round 0 is up next", async () => {
+    fakeSession.initialState = stateOf(
+      sessionOf({
+        me: ME,
+        rounds: [roundCardOf(0, "quiz")],
+        cursor: {
+          ...sessionOf().cursor,
+          upNext: { kind: "round", roundIndex: 0 },
+        },
+      }),
+    );
+    await renderPlay("/play/QZ7KP4");
+
+    expect(
+      await screen.findByRole("button", {
+        name: "Play my joker on this round",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("Play your joker on the round card"),
+    ).not.toBeInTheDocument();
   });
 });

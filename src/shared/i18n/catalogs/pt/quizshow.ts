@@ -616,6 +616,118 @@ export const quizshow: Catalog = {
   "problems.title_missing_game": "Dá um título ao jogo",
   "home.back": "Voltar ao QueerPulse",
 
+  // ── Pulse Live wheel ──
+  "kind.wheel.name": "Roda",
+  "kind.wheel.hint":
+    "Gira para escolher o que se joga a seguir, entre as rondas logo depois dela",
+  "stage.wheel.pill": "Roda · giro {number} de {total}",
+  "stage.wheel.pillUnplanned": "Roda · próxima ronda",
+  "stage.wheel.questionPill": "{category} · giro {number} de {total}",
+  "stage.wheel.eyebrow": "Ainda na roda",
+  "stage.wheel.titleEm": "O que vem <em>a seguir</em>?",
+  "stage.wheel.playedLabel": "Já saíram:",
+  "stage.wheel.kind.quiz": "Quiz",
+  "stage.wheel.kind.party": "Festa",
+  "stage.wheel.sliceBonus": "+{points} de bónus",
+  "stage.wheel.bonusPoints": "+{points}",
+  "stage.wheel.hubLeft": "restam",
+  "stage.wheel.upNext": "A seguir",
+  "stage.wheel.metaQuizRound_one": "Ronda de quiz · {count} pergunta",
+  "stage.wheel.metaQuizRound_other": "Ronda de quiz · {count} perguntas",
+  "stage.wheel.metaPartyRound_one": "Ronda de festa · {count} mote",
+  "stage.wheel.metaPartyRound_other": "Ronda de festa · {count} motes",
+  "stage.wheel.metaQuizQuestion": "Uma pergunta de quiz desta categoria",
+  "stage.wheel.metaPartyQuestion": "Um mote de festa desta categoria",
+  "stage.wheel.bonusToRoundWinner": "para quem ganhar esta ronda",
+  "stage.wheel.bonusToQuestionWinner": "para quem ganhar esta pergunta",
+  "stage.wheel.startsWhenReady": "Começa quando quem organiza estiver pronto",
+  "stage.wheel.landedOn": "A roda parou em {title}",
+  "stage.wheel.ariaLabel_one": "Roda com {count} fatia",
+  "stage.wheel.ariaLabel_other": "Roda com {count} fatias",
+  "stage.wheel.bonusAwardEyebrow": "Bónus da roda",
+  "stage.wheel.bonusAward": "+{points} para {names} por {title}",
+  "stage.wheel.bonusAwardTied": "+{points} para cada um de {names} por {title}",
+  "stage.wheel.bonusAwardPlayers":
+    "+{points} para cada um de {count} jogadores por {title}",
+  "stage.wheel.bonusAwardTeams":
+    "+{points} para cada uma de {count} equipas por {title}",
+  "player.announce.wheel": "Hora da roda",
+  "player.wheel.waiting": "A roda gira quando quem organiza estiver pronto",
+  "player.wheel.spinning": "A roda está a girar",
+  "player.wheel.upNext": "A seguir: {title}",
+  "player.wheel.bonusChip": "+{points} de bónus",
+  "player.wheel.bonusMine": "Ganhaste o bónus da roda",
+  "player.wheel.bonusMineTeam": "A tua equipa ganhou o bónus da roda",
+  "player.wheel.bonusMineDetail": "+{points} por {title}",
+  "player.jokerOnRoundCard": "Joga o teu joker no cartão da ronda",
+  "remote.phase.wheel": "Roda",
+  "remote.wheel.spin": "Girar a roda",
+  "remote.wheel.spinning": "A roda está a girar",
+  "remote.wheel.spinAgain": "Girar outra vez",
+  "remote.wheel.finish": "Terminar a roda",
+  "remote.wheel.finishConfirmTitle": "Terminar a roda agora?",
+  "remote.wheel.finishConfirmBodyRound":
+    "As rondas que ainda estão na roda ficam de fora, e o jogo continua",
+  "remote.wheel.finishConfirmBodyQuestion":
+    "As perguntas que ainda estão na roda ficam de fora, e o jogo continua",
+  "remote.wheel.startRound": "Começar {title}",
+  "remote.wheel.playQuestion": "Jogar a pergunta",
+  "remote.wheel.spinForNextRound": "Girar para a próxima ronda",
+  "problems.too_many_wheels": "Um quiz leva no máximo {max} rodas",
+  "problems.wheel_too_few_slices":
+    "A roda {wheel} precisa de pelo menos 2 rondas logo a seguir",
+  "rounds.addWheel": "Adicionar roda",
+  "rounds.wheelCount": "{count} de {max} rodas",
+  "rounds.wheelsFull": "Um quiz leva no máximo {max} rodas",
+  "rounds.removeWheel": "Apagar roda",
+  "rounds.removeWheelConfirmTitle": "Apagar esta roda?",
+  "rounds.removeWheelConfirmBody":
+    "As rondas depois dela ficam e jogam-se por ordem",
+  "studio.rail.wheelCardRound_one":
+    "Roda · escolhe a próxima ronda · {count} fatia",
+  "studio.rail.wheelCardRound_other":
+    "Roda · escolhe a próxima ronda · {count} fatias",
+  "studio.rail.wheelCardQuestion_one":
+    "Roda · escolhe uma pergunta · {count} fatia",
+  "studio.rail.wheelCardQuestion_other":
+    "Roda · escolhe uma pergunta · {count} fatias",
+  "studio.rail.wheelMenu": "Opções da roda {number}",
+  "studio.rail.inWheel": "Na roda {number}",
+  "studio.canvas.wheelSlide": "Diapositivo da roda",
+  "studio.inspector.wheel.eyebrow": "Roda {number}",
+  "studio.inspector.wheel.settings": "Definições da roda",
+  "studio.inspector.wheel.pickLabel": "O que a roda escolhe",
+  "studio.inspector.wheel.pickRound": "Escolher uma ronda",
+  "studio.inspector.wheel.pickRoundHint":
+    "A ronda onde a roda parar joga-se inteira, depois a roda gira outra vez para as restantes",
+  "studio.inspector.wheel.pickQuestion":
+    "Escolher uma pergunta de uma categoria",
+  "studio.inspector.wheel.pickQuestionHint":
+    "Cada ronda depois da roda é uma categoria. Joga-se uma pergunta da categoria onde para, depois a roda gira outra vez",
+  "studio.inspector.wheel.sliceCountLabel": "Fatias",
+  "studio.inspector.wheel.sliceCountAuto": "Automático",
+  "studio.inspector.wheel.sliceCountAutoHint":
+    "Todas as rondas depois da roda até à próxima roda, no máximo 8",
+  "studio.inspector.wheel.sliceCountOption": "{count} rondas",
+  "studio.inspector.wheel.slicesTitle": "Na roda",
+  "studio.inspector.wheel.tooFew":
+    "Adiciona pelo menos 2 rondas logo a seguir à roda para a preencher",
+  "studio.inspector.round.wheelBonusLabel": "Bónus da roda",
+  "studio.inspector.round.wheelBonusNone": "Nenhum",
+  "studio.inspector.round.wheelBonusValue": "+{points}",
+  "studio.inspector.round.wheelBonusHintRound":
+    "Quem pontuar mais nesta ronda ganha estes pontos quando a roda a escolher",
+  "studio.inspector.round.wheelBonusHintQuestion":
+    "Quem pontuar mais numa pergunta desta categoria ganha estes pontos",
+  "errors.wheel_not_spun": "Gira a roda primeiro",
+  "errors.wheel_spinning": "A roda ainda está a girar. Espera que pare",
+  "errors.wheel_spin_too_few_rounds":
+    "Para girar para a próxima ronda são precisas 2 ou mais rondas por jogar fora de uma roda",
+  "errors.wheel_already_next":
+    "A seguir já vem uma roda, por isso ainda não há nada para girar",
+  "errors.joker_wheel_next":
+    "A roda escolhe a próxima ronda. Joga o teu joker no cartão dessa ronda",
+
   // ── Quiz templates ──
   "builder.empty.fromTemplate": "Começar com um modelo",
   "templates.title": "Modelos",
@@ -767,6 +879,7 @@ export const quizshow: Catalog = {
     "Ronda {number}: {title}. {kind}, {count} perguntas",
   "studio.rail.roundMenu": "Opções de {title}",
   "studio.rail.addQuestionTo": "Adicionar pergunta a {title}",
+  "studio.rail.addRoundOrWheel": "Adicionar ronda ou roda",
   "studio.rail.needsFixing": "Precisa de uma correção antes de jogar",
   "studio.rail.menuLabel": "Opções de perguntas e rondas",
   "studio.problems.none": "Pronto a jogar",
@@ -817,10 +930,9 @@ export const quizshow: Catalog = {
   "builder.summary.lobbyBlocked": "Resolve-os no editor e depois abre a sala",
   "studio.publish.fixFirst":
     "Corrige primeiro os problemas do quiz e depois publica",
-  "studio.titlePlaceholder": "Dá um nome ao quiz  (fixer C)",
-  "dryRun.playAgain": "Jogar outra vez  (fixer B)",
-  "stage.afterRoundEm":
-    "Depois da ronda <em>{number}</em> de {total}  (fixer A)",
-  "stage.roundsToGo_one": "Falta {count} ronda  (fixer A)",
-  "stage.roundsToGo_other": "Faltam {count} rondas  (fixer A)",
+  "studio.titlePlaceholder": "Dá um nome ao quiz",
+  "dryRun.playAgain": "Jogar outra vez",
+  "stage.afterRoundEm": "Depois da ronda <em>{number}</em> de {total}",
+  "stage.roundsToGo_one": "Falta {count} ronda",
+  "stage.roundsToGo_other": "Faltam {count} rondas",
 };

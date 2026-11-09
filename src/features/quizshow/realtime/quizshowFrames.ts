@@ -77,6 +77,8 @@ export interface QuizshowClientFrameMap {
   };
   "host:start": HostPhaseCommand;
   "host:next": HostPhaseCommand;
+  "host:spin": HostPhaseCommand;
+  "host:finishWheel": HostPhaseCommand;
   "host:pause": HostPhaseCommand;
   "host:resume": HostPhaseCommand;
   "host:reveal": HostPhaseCommand;

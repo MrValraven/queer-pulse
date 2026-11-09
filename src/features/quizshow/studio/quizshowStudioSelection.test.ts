@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   newQuestion,
   newRound,
+  newWheel,
   removeAt,
   type QuizshowDraft,
   type QuizshowDraftRound,
@@ -156,6 +157,21 @@ describe("nextQuestionSelection", () => {
     expect(
       nextQuestionSelection({ kind: "round", roundIndex: 2 }, draft, -1),
     ).toEqual(question(0, 1));
+  });
+
+  it("skips a wheel row, which holds no questions", () => {
+    const wheelRow = newWheel();
+    const draftBehindWheel: QuizshowDraft = {
+      ...draftWith(),
+      rounds: [wheelRow, roundWith(1)],
+    };
+    expect(
+      nextQuestionSelection(
+        { kind: "round", roundIndex: 0 },
+        draftBehindWheel,
+        1,
+      ),
+    ).toEqual(question(1, 0));
   });
 
   it("stays put on a draft with no questions", () => {

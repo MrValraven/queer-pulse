@@ -7,12 +7,19 @@ import {
   type ReactNode,
 } from "react";
 import { m } from "motion/react";
-import { FiSmartphone } from "react-icons/fi";
+import { FiDisc, FiSmartphone } from "react-icons/fi";
+import { QUIZSHOW_LIMITS } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { QuizshowPlayerParty } from "../player/QuizshowPlayerParty";
 import { QuizshowPlayerQuestion } from "../player/QuizshowPlayerQuestion";
+import { QuizshowPlayerWheel } from "../player/QuizshowPlayerWheel";
 import playerStyles from "../player/QuizshowPlayer.module.css";
 import { QuizshowScreenStage } from "../screen/QuizshowScreenStage";
+import {
+  isQuizRoundKind,
+  isWheelRoundKind,
+  wheelSliceRoundIndexes,
+} from "../quizshowWheel";
 import { QuizshowBackdrop } from "../stage/QuizshowBackdrop";
 import { StudioCanvasScaleContext } from "./quizshowStudioCanvasScale";
 import { useQuizshowStudio } from "./QuizshowStudioContext";
@@ -22,6 +29,7 @@ import {
   studioScreenStateFor,
 } from "./quizshowStudioPreview";
 import { QuizshowStudioTitleSlidePreview } from "./QuizshowStudioSlide";
+import { QuizshowStudioSlideWheel } from "./QuizshowStudioSlideWheel";
 import styles from "./QuizshowStudioCanvas.module.css";
 
 /** The two canvases the studio draws on: the TV at 720p, and a phone held upright. */
@@ -177,6 +185,14 @@ export function QuizshowStudioScreenPreview({
       ),
     [draft, selection, viewLanguage, moment, pickedPreviewUrls],
   );
+  const selectedRound =
+    selection.kind === "quiz" ? undefined : draft.rounds[selection.roundIndex];
+  const wheelRoundIndex =
+    selection.kind !== "quiz" &&
+    selectedRound !== undefined &&
+    isWheelRoundKind(selectedRound.kind)
+      ? selection.roundIndex
+      : null;
   return (
     <QuizshowStudioPreviewFrame
       variant="screen"
@@ -185,6 +201,8 @@ export function QuizshowStudioScreenPreview({
     >
       {selection.kind === "quiz" ? (
         <QuizshowStudioTitleSlidePreview />
+      ) : wheelRoundIndex !== null ? (
+        <QuizshowStudioSlideWheel roundIndex={wheelRoundIndex} />
       ) : (
         <QuizshowScreenStage
           state={clientState}
@@ -195,6 +213,52 @@ export function QuizshowStudioScreenPreview({
         />
       )}
     </QuizshowStudioPreviewFrame>
+  );
+}
+
+/** The phone preview's id for the wheel's heading focus (the frame is inert, so nothing takes focus). */
+const PREVIEW_WHEEL_PHASE_ID = "studio-preview-wheel";
+
+/**
+ * The player's phone for a wheel row: the compact disc at rest under its
+ * "waiting" heading, drawn by the real player wheel from the draft. With fewer
+ * than two rounds after it, a line says what is missing instead.
+ */
+function StudioPhoneWheel({ roundIndex }: { roundIndex: number }) {
+  const { t } = useTranslation();
+  const { controller, viewLanguage } = useQuizshowStudio();
+  const { draft, pickedPreviewUrls } = controller;
+  const wheel = useMemo(
+    () =>
+      studioScreenStateFor(
+        draft,
+        { kind: "round", roundIndex },
+        { language: viewLanguage, phase: "open", pickedPreviewUrls },
+      ).wheel,
+    [draft, roundIndex, viewLanguage, pickedPreviewUrls],
+  );
+  const sliceCount = wheelSliceRoundIndexes(draft.rounds, roundIndex).length;
+  if (wheel === null || sliceCount < QUIZSHOW_LIMITS.wheelSlicesMin) {
+    return (
+      <p className={styles.phoneEmpty}>
+        <FiDisc aria-hidden="true" focusable="false" />
+        {t("quizshow:studio.inspector.wheel.tooFew")}
+      </p>
+    );
+  }
+  return (
+    <div className={playerStyles.stage}>
+      <QuizshowPlayerWheel
+        wheel={wheel}
+        wheelBonus={null}
+        rounds={draft.rounds}
+        me={null}
+        playMode="solo"
+        language={viewLanguage}
+        clockOffsetMs={0}
+        phaseId={PREVIEW_WHEEL_PHASE_ID}
+      />
+    </div>
   );
 }
 
@@ -221,7 +285,15 @@ export function QuizshowStudioPhonePreview({
     [draft, selection, viewLanguage, pickedPreviewUrls],
   );
   const isParty =
-    playerProps !== null && playerProps.question.roundKind !== "quiz";
+    playerProps !== null && !isQuizRoundKind(playerProps.question.roundKind);
+  const selectedRound =
+    selection.kind === "quiz" ? undefined : draft.rounds[selection.roundIndex];
+  const wheelRoundIndex =
+    selection.kind !== "quiz" &&
+    selectedRound !== undefined &&
+    isWheelRoundKind(selectedRound.kind)
+      ? selection.roundIndex
+      : null;
   return (
     <QuizshowStudioPreviewFrame
       variant="phone"
@@ -230,7 +302,10 @@ export function QuizshowStudioPhonePreview({
       onScaleChange={onScaleChange}
     >
       <div className={styles.phoneBody}>
-        {playerProps === null && (
+        {wheelRoundIndex !== null && (
+          <StudioPhoneWheel roundIndex={wheelRoundIndex} />
+        )}
+        {playerProps === null && wheelRoundIndex === null && (
           <p className={styles.phoneEmpty}>
             <FiSmartphone aria-hidden="true" focusable="false" />
             {t("quizshow:studio.canvas.phoneEmpty")}

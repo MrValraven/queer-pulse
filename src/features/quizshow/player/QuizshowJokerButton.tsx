@@ -8,6 +8,7 @@ import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import styles from "./QuizshowPlay.module.css";
 import lobbyStyles from "./QuizshowPlayerLobby.module.css";
 import { QuizshowErrorLine } from "./QuizshowJoinForm";
+import { jokerRoundNumberOf } from "./quizshowJokerTarget";
 import { sendFailureKeyOf } from "./usePlayJoin";
 
 interface QuizshowJokerButtonProps {
@@ -88,7 +89,7 @@ export function QuizshowJokerButton({
       </Collapse>
       <Collapse isOpen={me.hasUsedJoker}>
         <PlayedLine
-          roundNumber={playedRoundIndex + 1}
+          roundNumber={jokerRoundNumberOf(session.rounds, playedRoundIndex)}
           shouldFocus={hasPlayedHere}
         />
       </Collapse>

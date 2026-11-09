@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { QuizshowPhase } from "../../../shared/contracts/quizshow";
+import type {
+  QuizshowPhase,
+  QuizshowWheelSpin,
+} from "../../../shared/contracts/quizshow";
+import { createWheelState, emptyWheelProgress } from "../quizshowWheel";
 import {
   planAutoHostAction,
   QUIZSHOW_AUTO_HOST_DELAYS_MS,
@@ -61,6 +65,27 @@ function withPlayers(
 
 const expected = { expectedPlayerCount: 3 };
 
+function wheelEngine(
+  phaseStartedAt: number,
+  spin: QuizshowWheelSpin | null,
+  isWheelOpen = true,
+): QuizshowEngineState {
+  const wheelProgress = emptyWheelProgress();
+  if (isWheelOpen) {
+    wheelProgress.wheel = { ...createWheelState([], null, []), spin };
+  }
+  return { ...engineIn("wheel", phaseStartedAt), wheelProgress };
+}
+
+const WHEEL_TEST_SPIN: QuizshowWheelSpin = {
+  landedSliceIndex: 0,
+  startedAt: 10_000,
+  durationMs: 5_500,
+  turns: 5,
+  jitterSeed: 500,
+  startAngle: 0,
+};
+
 describe("auto host", () => {
   it("starts the game once everyone expected has joined and the lobby has settled for three seconds", () => {
     const lobby = withPlayers(engineIn("lobby", 0), [1_000, 2_000, 5_000]);
@@ -121,6 +146,54 @@ describe("auto host", () => {
     for (const action of actions) {
       expect(action).toMatchObject({ payload: { phaseId: "42" } });
     }
+  });
+});
+
+describe("auto host on the wheel", () => {
+  it("spins 2.5 seconds after the wheel opens", () => {
+    const engine = wheelEngine(0, null);
+    expect(planAutoHostAction(engine, 2_499, expected)).toBeNull();
+    expect(planAutoHostAction(engine, 2_500, expected)).toMatchObject({
+      type: "host",
+      name: "host:spin",
+      payload: { phaseId: "42" },
+    });
+  });
+
+  it("presses next 3 seconds after the spin lands", () => {
+    const engine = wheelEngine(0, WHEEL_TEST_SPIN);
+    expect(planAutoHostAction(engine, 18_499, expected)).toBeNull();
+    expect(planAutoHostAction(engine, 18_500, expected)).toMatchObject({
+      type: "host",
+      name: "host:next",
+      payload: { phaseId: "42" },
+    });
+  });
+
+  it("waits while no wheel is open", () => {
+    const engine = wheelEngine(0, null, false);
+    expect(planAutoHostAction(engine, 600_000, expected)).toBeNull();
+  });
+
+  it("only ever presses spin and next, never finish the wheel", () => {
+    const engines = [wheelEngine(0, null), wheelEngine(0, WHEEL_TEST_SPIN)];
+    const pressedNames = new Set<string>();
+    for (const engine of engines) {
+      for (let now = 0; now <= 60_000; now += 500) {
+        const action = planAutoHostAction(engine, now, expected);
+        if (action && action !== "restart" && action.type === "host") {
+          pressedNames.add(action.name);
+        }
+      }
+    }
+    expect([...pressedNames].sort()).toEqual(["host:next", "host:spin"]);
+  });
+
+  it("presses nothing while paused", () => {
+    const paused = { ...wheelEngine(0, null), pausedAt: 1_000 };
+    expect(planAutoHostAction(paused, 60_000, expected)).toBeNull();
+    const pausedAfterSpin = { ...wheelEngine(0, WHEEL_TEST_SPIN), pausedAt: 1 };
+    expect(planAutoHostAction(pausedAfterSpin, 60_000, expected)).toBeNull();
   });
 });
 

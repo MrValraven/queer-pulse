@@ -31,8 +31,12 @@ function QuizshowStudioProblemItem({
   onPick: (problem: QuizshowLocalProblem) => void;
 }) {
   const { t } = useTranslation();
-  const { scope } = useQuizshowStudio();
-  const copy = studioProblemCopyOf(problem, scope.kind);
+  const { scope, controller } = useQuizshowStudio();
+  const copy = studioProblemCopyOf(
+    problem,
+    scope.kind,
+    controller.draft.rounds,
+  );
   const language = copy.languageTagKey ? t(copy.languageTagKey) : "";
   return (
     <li>

@@ -17,8 +17,10 @@ import { QuizshowPausedNote } from "../stage/QuizshowPausedNote";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import { QuizshowChangeTeam } from "./QuizshowChangeTeam";
 import { QuizshowJokerButton } from "./QuizshowJokerButton";
+import { QuizshowJokerWheelHint } from "./QuizshowJokerWheelHint";
 import { QuizshowErrorLine, QuizshowToggleRow } from "./QuizshowJoinForm";
 import { QuizshowLobbyChip, QuizshowLobbyCount } from "./QuizshowLobbyChip";
+import { lobbyJokerTargetOf } from "./quizshowJokerTarget";
 import { sendFailureKeyOf } from "./usePlayJoin";
 import styles from "./QuizshowPlay.module.css";
 import lobbyStyles from "./QuizshowPlayerLobby.module.css";
@@ -181,7 +183,7 @@ function LobbyBody({
   const team = session.lobby.teams.find(
     (candidate) => candidate.teamId === me.teamId,
   );
-  const firstRound = session.rounds.find((round) => round.roundIndex === 0);
+  const jokerTarget = lobbyJokerTargetOf(session);
   // The first round's title card shows on the big screen while the phone stays here.
   const isRoundIntro = session.cursor.phase === "round_intro";
   // A pause on that title card shows here too: the paused note shows it and the
@@ -246,9 +248,17 @@ function LobbyBody({
       </section>
       <QuizshowChangeTeam controller={controller} session={session} me={me} />
       <LobbySettings controller={controller} me={me} />
-      {firstRound?.isJokerAllowed === true && (
-        <QuizshowJokerButton controller={controller} roundIndex={0} />
-      )}
+      <Collapse isOpen={jokerTarget.kind === "round"}>
+        {jokerTarget.kind === "round" && (
+          <QuizshowJokerButton
+            controller={controller}
+            roundIndex={jokerTarget.round.roundIndex}
+          />
+        )}
+      </Collapse>
+      <QuizshowJokerWheelHint
+        isOpen={jokerTarget.kind === "wheel" && !me.hasUsedJoker}
+      />
     </div>
   );
 }

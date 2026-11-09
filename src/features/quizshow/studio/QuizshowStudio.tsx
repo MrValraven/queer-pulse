@@ -4,6 +4,7 @@ import { AnimatePresence } from "motion/react";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { QuizshowScopeContext, type QuizshowScope } from "../quizshowScope";
 import { QuizshowBackdrop } from "../stage/QuizshowBackdrop";
+import { isWheelRoundKind } from "../quizshowWheel";
 import { useQuizshowFramelessPage } from "../useQuizshowFramelessPage";
 import { QuizshowStudioCanvas } from "./QuizshowStudioCanvas";
 import {
@@ -38,6 +39,9 @@ import {
 } from "./useStudioShortcuts";
 import styles from "./QuizshowStudio.module.css";
 
+/** The hint strip's question shortcuts, left out while a wheel is selected. */
+const WHEEL_HIDDEN_HINT_IDS = ["new", "duplicate"] as const;
+
 export type { QuizshowStudioMoreAction } from "./QuizshowStudioMoreMenu";
 
 /** The question a focused thumbnail stands for, read from its data attributes. */
@@ -64,7 +68,15 @@ function QuizshowStudioWorkspace({
   moreActions,
 }: QuizshowStudioWorkspaceProps) {
   const { t } = useTranslation();
-  const { hasQuiz, actions, save, select } = useQuizshowStudio();
+  const { hasQuiz, actions, save, select, selection, controller } =
+    useQuizshowStudio();
+  // A wheel brings no question, so the question shortcuts have nothing to act on.
+  const selectedRound =
+    selection.kind === "quiz"
+      ? undefined
+      : controller.draft.rounds[selection.roundIndex];
+  const isWheelSelected =
+    selectedRound !== undefined && isWheelRoundKind(selectedRound.kind);
   const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
   const [removal, setRemoval] = useState<QuizshowStudioRemoval | null>(null);
   // The start panel has no rounds to act on, so only Save and ? stay live there.
@@ -111,7 +123,11 @@ function QuizshowStudioWorkspace({
         <div className={styles.canvasSlot}>
           <QuizshowStudioCanvas />
         </div>
-        {hasQuiz && <QuizshowStudioHintStrip />}
+        {hasQuiz && (
+          <QuizshowStudioHintStrip
+            hiddenIds={isWheelSelected ? WHEEL_HIDDEN_HINT_IDS : undefined}
+          />
+        )}
       </div>
       {hasQuiz && (
         <div className={styles.inspectorCell}>

@@ -1,6 +1,13 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { defaultRoundSettings } from "../builder/quizshowDraft";
 import { quizshowProblemsFor } from "../builder/quizshowValidation";
+import {
+  isQuizRoundKind,
+  isWheelRoundKind,
+  playableRoundCount,
+  wheelSliceRoundIndexes,
+} from "../quizshowWheel";
 import {
   QUIZSHOW_DEMO_TEMPLATE_IDS,
   QUIZSHOW_DEMO_TEMPLATE_SEEDS,
@@ -86,14 +93,45 @@ describe("quizshow demo templates", () => {
       if (expectedShape === undefined) {
         throw new Error(`No expected shape for template id ${templateId}`);
       }
-      expect(rounds).toHaveLength(expectedShape.roundCount);
+      expect(playableRoundCount(rounds)).toBe(expectedShape.roundCount);
       expect(
         rounds.reduce((total, round) => total + round.questions.length, 0),
       ).toBe(expectedShape.questionCount);
       expect(itemAt(rounds, rounds.length - 1).kind).toBe(
         PARTY_ROUND_KIND_BY_TEMPLATE_ID[templateId],
       );
-      expect(rounds.filter((round) => round.kind !== "quiz")).toHaveLength(1);
+      expect(
+        rounds.filter(
+          (round) =>
+            !isQuizRoundKind(round.kind) && !isWheelRoundKind(round.kind),
+        ),
+      ).toHaveLength(1);
+    }
+  });
+
+  it("gives the Lisbon template a pick-a-round wheel over its four rounds", () => {
+    const { rounds } = templateSeedById(
+      QUIZSHOW_DEMO_TEMPLATE_IDS.lisbonQueerIcons,
+    ).quiz;
+    expect(rounds[0]).toMatchObject({
+      kind: "wheel",
+      contentLabel: "none",
+      questions: [],
+      settings: { wheelPick: "round", sliceCount: null, wheelBonus: 0 },
+    });
+    expect(wheelSliceRoundIndexes(rounds, 0)).toEqual([1, 2, 3, 4]);
+    expect(rounds.slice(1).map((round) => round.settings.wheelBonus)).toEqual([
+      0, 500, 0, 500,
+    ]);
+  });
+
+  it("gives every settings literal all eight fields", () => {
+    const expectedKeys = Object.keys(defaultRoundSettings()).sort();
+    expect(expectedKeys).toHaveLength(8);
+    for (const seed of QUIZSHOW_DEMO_TEMPLATE_SEEDS) {
+      for (const round of seed.quiz.rounds) {
+        expect(Object.keys(round.settings).sort()).toEqual(expectedKeys);
+      }
     }
   });
 

@@ -4,9 +4,16 @@ import type {
   QuizshowDraftQuestion,
   QuizshowDraftRound,
 } from "../builder/quizshowDraft";
+import {
+  displayRoundNumber,
+  isQuizRoundKind,
+  isWheelRoundKind,
+  playableRoundCount,
+} from "../quizshowWheel";
 import { pickQuizshowText } from "../stage/quizshowText";
 import { useQuizshowStudio } from "./QuizshowStudioContext";
 import { clampStudioSelection } from "./quizshowStudioSelection";
+import { isPartyRoundKind } from "./quizshowStudioRailView";
 import { QuizshowStudioSlideAnswers } from "./QuizshowStudioSlideAnswers";
 import { QuizshowStudioSlideParty } from "./QuizshowStudioSlideParty";
 import {
@@ -20,6 +27,7 @@ import {
   withLanguageText,
 } from "./quizshowStudioSlideText";
 import { QuizshowStudioSlideRound } from "./QuizshowStudioSlideRound";
+import { QuizshowStudioSlideWheel } from "./QuizshowStudioSlideWheel";
 import styles from "./QuizshowStudioSlide.module.css";
 
 /** The prompt steps down to 40px from this many characters, and to 32px from the next. */
@@ -38,7 +46,7 @@ function TitleSlideMeta() {
   );
   return (
     <p className={styles.titleMeta}>
-      {t("quizshow:packs.rounds", { count: draft.rounds.length })}
+      {t("quizshow:packs.rounds", { count: playableRoundCount(draft.rounds) })}
       <span aria-hidden="true">{" · "}</span>
       <span className={styles.visuallyHidden}>, </span>
       {t("quizshow:packs.questions", { count: questionCount })}
@@ -132,8 +140,8 @@ function QuestionSlide({
         >
           <strong>
             {t("quizshow:stage.roundOf", {
-              number: roundIndex + 1,
-              total: controller.draft.rounds.length,
+              number: displayRoundNumber(controller.draft.rounds, roundIndex),
+              total: playableRoundCount(controller.draft.rounds),
             })}
           </strong>
           {roundTitle !== "" && <span>{roundTitle}</span>}
@@ -193,6 +201,9 @@ export function QuizshowStudioSlide() {
   if (fitted.kind === "quiz") return <TitleSlide />;
   const round = controller.draft.rounds[fitted.roundIndex];
   if (round === undefined) return <TitleSlide />;
+  if (isWheelRoundKind(round.kind)) {
+    return <QuizshowStudioSlideWheel roundIndex={fitted.roundIndex} />;
+  }
   const draftQuestion =
     fitted.kind === "question"
       ? round.questions[fitted.questionIndex]
@@ -203,7 +214,7 @@ export function QuizshowStudioSlide() {
   // Keyed by position: ids and draft keys are minted again after a save,
   // and a remount would take the caret out of the field being typed in.
   const slideKey = `${fitted.roundIndex}-${fitted.questionIndex}`;
-  if (round.kind !== "quiz") {
+  if (isPartyRoundKind(round.kind)) {
     return (
       <QuizshowStudioSlideParty
         key={slideKey}
@@ -214,13 +225,16 @@ export function QuizshowStudioSlide() {
       />
     );
   }
-  return (
-    <QuestionSlide
-      key={slideKey}
-      round={round}
-      roundIndex={fitted.roundIndex}
-      questionIndex={fitted.questionIndex}
-      draftQuestion={draftQuestion}
-    />
-  );
+  if (isQuizRoundKind(round.kind)) {
+    return (
+      <QuestionSlide
+        key={slideKey}
+        round={round}
+        roundIndex={fitted.roundIndex}
+        questionIndex={fitted.questionIndex}
+        draftQuestion={draftQuestion}
+      />
+    );
+  }
+  return <QuizshowStudioSlideRound roundIndex={fitted.roundIndex} />;
 }

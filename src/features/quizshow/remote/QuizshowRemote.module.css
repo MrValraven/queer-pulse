@@ -495,6 +495,9 @@
 .primary {
   width: 100%;
   min-height: 60px;
+  /* "Start <round title>" can run long, so the label wraps inside the button. */
+  white-space: normal;
+  text-wrap: balance;
   font-size: var(--text-18);
   font-weight: 700;
   touch-action: manipulation;
@@ -534,6 +537,14 @@
     background: var(--qs-glass-raised-top);
     color: var(--qs-text);
   }
+}
+
+/* Four or more controls share the row, so the labels take the smaller size and
+   a long one (Finish the wheel) breaks only at a word. */
+.secondaryRow[data-is-crowded="true"] .secondaryLabel {
+  font-size: var(--text-11);
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
 }
 
 /* The fading face inside a secondary button: icon over label, as the button lays them out. */

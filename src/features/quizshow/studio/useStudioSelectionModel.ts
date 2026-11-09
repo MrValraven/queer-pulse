@@ -1,10 +1,11 @@
 import { useState } from "react";
-import {
-  QUIZSHOW_LIMITS,
-  type QuizshowRoundKind,
-} from "../../../shared/contracts/quizshow";
+import type { QuizshowPlayableRoundKind } from "../../../shared/contracts/quizshow";
 import type { QuizshowDraftController } from "../builder/useQuizshowDraft";
 import type { QuizshowStudioActions } from "./QuizshowStudioContext";
+import {
+  lastPlayableRoundIndex,
+  studioAddLimitsOf,
+} from "./quizshowStudioLimits";
 import {
   clampStudioSelection,
   indexAfterMove,
@@ -17,36 +18,6 @@ import {
 
 function isInRange(index: number, length: number): boolean {
   return index >= 0 && index < length;
-}
-
-/** Every question of the draft, across its rounds. */
-function questionCountOf(draft: QuizshowDraftController["draft"]): number {
-  return draft.rounds.reduce(
-    (runningTotal, round) => runningTotal + round.questions.length,
-    0,
-  );
-}
-
-/**
- * The limits, as booleans the UI disables its add buttons with. A new round
- * arrives with one question, so it needs room under the quiz-wide limit too.
- */
-function addLimitsOf(draft: QuizshowDraftController["draft"]) {
-  const hasQuizRoom =
-    questionCountOf(draft) < QUIZSHOW_LIMITS.questionsPerQuizMax;
-  return {
-    isAddQuestionAllowed: hasQuizRoom,
-    isAddRoundAllowed:
-      hasQuizRoom && draft.rounds.length < QUIZSHOW_LIMITS.roundsMax,
-    isAddQuestionToRoundAllowed: (roundIndex: number) => {
-      const round = draft.rounds[roundIndex];
-      return (
-        hasQuizRoom &&
-        round !== undefined &&
-        round.questions.length < QUIZSHOW_LIMITS.questionsPerRoundMax
-      );
-    },
-  };
 }
 
 /**
@@ -65,7 +36,7 @@ export function useStudioSelectionModel(controller: QuizshowDraftController): {
   const selection = clampStudioSelection(storedSelection, draft);
   // A selection the draft no longer holds is stored fitted, so it never springs back.
   if (selection !== storedSelection) setStoredSelection(selection);
-  const limits = addLimitsOf(draft);
+  const limits = studioAddLimitsOf(draft);
 
   /** Adds a question to round `roundIndex` at `insertAt` and selects it. */
   function insertQuestion(roundIndex: number, insertAt: number | null): void {
@@ -85,11 +56,18 @@ export function useStudioSelectionModel(controller: QuizshowDraftController): {
     });
   }
 
-  function addRound(kind: QuizshowRoundKind): void {
+  function addRound(kind: QuizshowPlayableRoundKind): void {
     const roundCount = draft.rounds.length;
     if (!limits.isAddRoundAllowed) return;
     controller.addRound(kind);
     setStoredSelection({ kind: "round", roundIndex: roundCount });
+  }
+
+  function addWheel(): void {
+    const rowCountBefore = draft.rounds.length;
+    if (!limits.isAddWheelAllowed) return;
+    controller.addWheel();
+    setStoredSelection({ kind: "round", roundIndex: rowCountBefore });
   }
 
   function duplicateQuestion(roundIndex: number, questionIndex: number): void {
@@ -127,7 +105,8 @@ export function useStudioSelectionModel(controller: QuizshowDraftController): {
         return;
       }
       if (selection.kind === "quiz") {
-        insertQuestion(draft.rounds.length - 1, null);
+        const lastRoundIndex = lastPlayableRoundIndex(draft);
+        if (lastRoundIndex !== null) insertQuestion(lastRoundIndex, null);
       } else if (selection.kind === "round") {
         insertQuestion(selection.roundIndex, null);
       } else {
@@ -141,6 +120,7 @@ export function useStudioSelectionModel(controller: QuizshowDraftController): {
     },
     duplicateQuestion,
     addRound,
+    addWheel,
     removeQuestion: (roundIndex, questionIndex) => {
       controller.removeQuestion(roundIndex, questionIndex);
       setStoredSelection(

@@ -6,23 +6,18 @@ import { RadioCardGroup } from "../../../shared/components/ui/RadioCardGroup";
 import { useRovingRadioGroup } from "../../../shared/hooks/useRovingRadioGroup";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useQuizshowScopeKind } from "../quizshowScope";
+import { isWheelRoundKind } from "../quizshowWheel";
 import {
   QUIZSHOW_LIMITS,
+  QUIZSHOW_PLAYABLE_ROUND_KINDS,
   type QuizshowContentLabel,
   type QuizshowLanguageMode,
-  type QuizshowRoundKind,
+  type QuizshowPlayableRoundKind,
 } from "../../../shared/contracts/quizshow";
 import { changeRoundKind, type QuizshowDraftRound } from "./quizshowDraft";
 import { QuizshowBilingualInput } from "./QuizshowBilingualInput";
 import { QuizshowRoundSettingsFields } from "./QuizshowRoundSettingsFields";
 import styles from "./QuizshowRounds.module.css";
-
-const ROUND_KINDS: readonly QuizshowRoundKind[] = [
-  "quiz",
-  "lie_detector",
-  "caption_this",
-  "drag_name",
-];
 
 const CONTENT_LABELS: readonly QuizshowContentLabel[] = [
   "none",
@@ -112,12 +107,12 @@ interface QuizshowRoundEditorProps {
       Pick<QuizshowDraftRound, "title" | "contentLabel" | "settings">
     >,
   ) => void;
-  onChangeKind: (kind: QuizshowRoundKind) => void;
+  onChangeKind: (kind: QuizshowPlayableRoundKind) => void;
 }
 
 function wouldDropQuestions(
   round: QuizshowDraftRound,
-  kind: QuizshowRoundKind,
+  kind: QuizshowPlayableRoundKind,
 ): boolean {
   const keptKeys = new Set(
     changeRoundKind(round, kind).questions.map(({ draftKey }) => draftKey),
@@ -135,10 +130,9 @@ export function QuizshowRoundEditor({
 }: QuizshowRoundEditorProps) {
   const { t } = useTranslation();
   const kindLabelId = useId();
-  const [pendingKind, setPendingKind] = useState<QuizshowRoundKind | null>(
-    null,
-  );
-  const handlePickKind = (kind: QuizshowRoundKind) => {
+  const [pendingKind, setPendingKind] =
+    useState<QuizshowPlayableRoundKind | null>(null);
+  const handlePickKind = (kind: QuizshowPlayableRoundKind) => {
     if (kind === round.kind) return;
     if (wouldDropQuestions(round, kind)) {
       setPendingKind(kind);
@@ -160,14 +154,14 @@ export function QuizshowRoundEditor({
           {t("quizshow:rounds.kind.label")}
         </span>
         <RadioCardGroup
-          value={round.kind}
+          value={isWheelRoundKind(round.kind) ? "" : round.kind}
           ariaLabel={t("quizshow:rounds.kind.label")}
           ariaLabelledBy={kindLabelId}
           className={styles.optionGrid}
           optionClassName={styles.kindOption}
           checkedClassName={styles.kindChecked}
           onChange={handlePickKind}
-          options={ROUND_KINDS.map((kind) => ({
+          options={QUIZSHOW_PLAYABLE_ROUND_KINDS.map((kind) => ({
             id: kind,
             render: (
               <>

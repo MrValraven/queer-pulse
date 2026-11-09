@@ -129,6 +129,7 @@ export function QuizshowStudioTopBar({
           <QuizshowOpenLobbyButton
             appearance="studio"
             scope={sessionScope}
+            rounds={controller.draft.rounds}
             isBlocked={lobby.isBlocked}
             blockedReason={
               lobby.blockedReasonKey ? t(lobby.blockedReasonKey) : null

@@ -10,6 +10,7 @@ import {
   type QuizshowPodiumEntry,
   type QuizshowScoresScope,
 } from "../../../shared/contracts/quizshow";
+import { isQuizRoundKind, isWheelRoundKind } from "../quizshowWheel";
 import { competitionRanks } from "./quizshowScoring";
 import {
   activePlayers,
@@ -18,10 +19,7 @@ import {
   entrantTotals,
   extraTimeMs,
   findPlayer,
-  isLastQuestionOfRound,
-  isLastRound,
   isOpenStatus,
-  isPartyRoundKind,
   mintId,
   openLimitMs,
   ownDeadline,
@@ -66,7 +64,7 @@ export function isQuizRoundInPlay(state: QuizshowEngineState): boolean {
   const roundIndex = state.cursor.roundIndex ?? state.current?.roundIndex;
   if (roundIndex === undefined) return false;
   const round = roundAt(state, roundIndex);
-  return round !== null && !isPartyRoundKind(round.kind);
+  return round !== null && isQuizRoundKind(round.kind);
 }
 
 /** Eligible, still active, and without an answer (`open`, `write`) or a vote (`vote`) for the current question. */
@@ -102,6 +100,11 @@ export function openQuestion(
   now: number,
 ): QuizshowEngineEffect[] {
   const round = roundAt(state, roundIndex);
+  if (round !== null && isWheelRoundKind(round.kind)) {
+    throw new Error(
+      `Pulse Live demo ${state.sessionId} opened a question on wheel row ${roundIndex}.`,
+    );
+  }
   const question = questionAt(state, roundIndex, questionIndex);
   if (round === null || question === null) {
     throw new Error(
@@ -128,15 +131,15 @@ export function openQuestion(
     tooCloseFakeCounts: {},
     myReveals: {},
   };
-  const isParty = isPartyRoundKind(round.kind);
-  const limitMs = isParty ? writeLimitMs(round) : QUIZSHOW_LIMITS.readPhaseMs;
+  const isQuiz = isQuizRoundKind(round.kind);
+  const limitMs = isQuiz ? QUIZSHOW_LIMITS.readPhaseMs : writeLimitMs(round);
   advanceCursor(state, {
-    phase: isParty ? "write" : "read",
+    phase: isQuiz ? "read" : "write",
     roundIndex,
     questionIndex,
     now,
     durationMs: limitMs,
-    extraTimeMs: isParty ? extraTimeMs(limitMs) : null,
+    extraTimeMs: isQuiz ? null : extraTimeMs(limitMs),
   });
   return [{ kind: "phase_changed" }, { kind: "answer_count_changed" }];
 }
@@ -175,7 +178,10 @@ export function openRoundIntro(
   return [{ kind: "phase_changed" }];
 }
 
-function totalsByEntrant(state: QuizshowEngineState): Record<string, number> {
+/** Each entrant's current total, keyed by entrant id: the shape of `scoresAtLastFrame`. */
+export function totalsByEntrant(
+  state: QuizshowEngineState,
+): Record<string, number> {
   return Object.fromEntries(
     entrantTotals(state).map((entrant) => [entrant.entrantId, entrant.score]),
   );
@@ -213,14 +219,18 @@ export function refreshScoresIfShown(
   return [{ kind: "scores_shown" }];
 }
 
-/** `scores` keeps the question's indices; `leaderboard` keeps the round that ended. */
+/**
+ * `scores` keeps the question's indices; `leaderboard` names the round that
+ * ended, which a closing wheel passes in as its own row.
+ */
 export function showScores(
   state: QuizshowEngineState,
   phase: "scores" | "leaderboard",
   scope: QuizshowScoresScope,
   now: number,
+  roundIndex: number | null = state.cursor.roundIndex,
 ): QuizshowEngineEffect[] {
-  const { roundIndex, questionIndex } = state.cursor;
+  const { questionIndex } = state.cursor;
   advanceCursor(state, {
     phase,
     roundIndex,
@@ -287,28 +297,6 @@ export function refreshPodiumIfShown(
   if (state.cursor.phase !== "podium") return [];
   state.podium = buildPodium(state);
   return [{ kind: "podium_shown" }];
-}
-
-/** After a question's last phase: next question, the round's leaderboard, or the podium. */
-export function afterQuestion(
-  state: QuizshowEngineState,
-  now: number,
-): QuizshowEngineEffect[] {
-  const roundIndex = state.cursor.roundIndex ?? state.current?.roundIndex;
-  const questionIndex =
-    state.cursor.questionIndex ?? state.current?.questionIndex;
-  if (roundIndex === undefined || questionIndex === undefined) {
-    throw new Error(
-      `Pulse Live demo ${state.sessionId} moved on with no question in play.`,
-    );
-  }
-  if (!isLastQuestionOfRound(state, roundIndex, questionIndex)) {
-    return openQuestion(state, roundIndex, questionIndex + 1, now);
-  }
-  if (!isLastRound(state, roundIndex)) {
-    return showScores(state, "leaderboard", "round", now);
-  }
-  return showPodium(state, now);
 }
 
 export function finishSession(

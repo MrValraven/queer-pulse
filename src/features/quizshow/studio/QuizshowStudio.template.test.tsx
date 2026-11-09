@@ -38,6 +38,7 @@ vi.mock("../api/quizshowDemoTemplates", async (importOriginal) => {
 
 const PRIDE_ID = QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory;
 const CINEMA_ID = QUIZSHOW_DEMO_TEMPLATE_IDS.queerCinema;
+const LISBON_ID = QUIZSHOW_DEMO_TEMPLATE_IDS.lisbonQueerIcons;
 const UNKNOWN_ID = "a7e3b1c0-5eed-4000-8000-0000000000ff";
 const STORED_PICTURE = "/files/k.jpg";
 const BACK_LINK = {
@@ -384,5 +385,38 @@ describe("QuizshowStudio publishing a template", () => {
     expect(
       screen.queryByRole("heading", { name: "Template card" }),
     ).not.toBeInTheDocument();
+  });
+});
+
+describe("QuizshowStudio on the Lisbon template with a wheel", () => {
+  beforeEach(resetDemoTemplates);
+
+  it("opens with the wheel card first and shows the Wheel bonus on Icons", async () => {
+    renderTemplate(LISBON_ID);
+    const wheelCard = await waitFor(() => {
+      const header = document.querySelector<HTMLElement>(
+        `[${STUDIO_ROUND_HEADER_ATTRIBUTE}][data-round-index="0"]`,
+      );
+      if (!header) throw new Error("The rail shows no first row");
+      return header;
+    });
+    expect(
+      await within(wheelCard).findByText(
+        "Wheel · picks the next round · 4 slices",
+      ),
+    ).toBeInTheDocument();
+
+    // Row 2 is the Icons round, the first with a +500 bonus.
+    const iconsHeader = document.querySelector<HTMLElement>(
+      `[${STUDIO_ROUND_HEADER_ATTRIBUTE}][data-round-index="2"]`,
+    );
+    if (!iconsHeader) throw new Error("The rail shows no Icons round");
+    fireEvent.click(iconsHeader);
+    const bonusGroup = await screen.findByRole("radiogroup", {
+      name: "Wheel bonus",
+    });
+    expect(
+      within(bonusGroup).getByRole("radio", { name: "+500" }),
+    ).toHaveAttribute("aria-checked", "true");
   });
 });

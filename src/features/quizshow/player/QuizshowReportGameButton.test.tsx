@@ -61,6 +61,9 @@ function playerStateOf(
       pausedRemainingMs: null,
       pausedExtraTimeRemainingMs: null,
       isRestartRecovery: false,
+      roundNumber: 1,
+      upNext: null,
+      canSpinForNextRound: false,
     },
     rounds: [],
     round: null,
@@ -68,6 +71,8 @@ function playerStateOf(
     scores: null,
     podium: null,
     nextEvent: null,
+    wheel: null,
+    wheelBonus: null,
     role: "player",
     lobby: { players: [], teams: [], playerCount: 5 },
     question: {

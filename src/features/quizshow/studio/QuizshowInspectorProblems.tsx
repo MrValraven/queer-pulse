@@ -23,7 +23,7 @@ export function QuizshowInspectorProblems({
   problems: readonly QuizshowLocalProblem[];
 }) {
   const { t } = useTranslation();
-  const { scope, selection, select } = useQuizshowStudio();
+  const { scope, controller, selection, select } = useQuizshowStudio();
   const isReady = problems.length === 0;
   const idPrefix = useId();
   return (
@@ -40,7 +40,11 @@ export function QuizshowInspectorProblems({
       ) : (
         <ul className={styles.problemList}>
           {problems.map((problem) => {
-            const copy = studioProblemCopyOf(problem, scope.kind);
+            const copy = studioProblemCopyOf(
+              problem,
+              scope.kind,
+              controller.draft.rounds,
+            );
             const target = selectionOfProblem(problem);
             const itemKey = [
               problem.code,

@@ -525,6 +525,18 @@
   text-align: center;
 }
 
+/* A wheel step: the disc icon where the number sits, the kind's name, no chips. */
+.wheelRowIcon {
+  flex-shrink: 0;
+  width: 1.4em;
+  height: 1.4em;
+  color: var(--qs-text-mute);
+}
+
+.wheelRow .roundTitle {
+  color: var(--qs-text-mute);
+}
+
 /* Two lines at most, ending in an ellipsis; the whole title stays in the
    text for a screen reader. */
 .roundTitle {
@@ -1360,6 +1372,13 @@
   padding-block: min(var(--gap-sm), calc(1.2 * var(--screen-vh)));
   font-size: min(var(--screen-answer), calc(3.4 * var(--screen-vh)));
   line-height: 1.2;
+}
+
+/* A wheel bonus line under the title takes room from the rows, so a board
+   that carries one sets them a little tighter to keep all ten in view. */
+.screen .scoresBoard:has([data-quizshow-wheel-bonus]) li {
+  padding-block: min(var(--gap-sm), calc(0.7 * var(--screen-vh)));
+  font-size: min(var(--screen-answer), calc(2.9 * var(--screen-vh)));
 }
 
 .thanks {

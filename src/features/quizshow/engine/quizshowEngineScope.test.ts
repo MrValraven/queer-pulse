@@ -1,12 +1,14 @@
 import { describe, expect, it } from "vitest";
-import type {
-  QuizshowContentLabel,
-  QuizshowLobbyJoinInput,
-  QuizshowQuestion,
-  QuizshowQuiz,
-  QuizshowRound,
-  QuizshowText,
+import {
+  QUIZSHOW_WHEEL_SETTINGS_DEFAULTS,
+  type QuizshowContentLabel,
+  type QuizshowLobbyJoinInput,
+  type QuizshowQuestion,
+  type QuizshowQuiz,
+  type QuizshowRound,
+  type QuizshowText,
 } from "../../../shared/contracts/quizshow";
+import { emptyWheelProgress, normaliseWheelRounds } from "../quizshowWheel";
 import { createBotState, planBotActions } from "./quizshowBots";
 import { createQuizshowEngine, reduceQuizshowEngine } from "./quizshowEngine";
 import type {
@@ -16,6 +18,14 @@ import type {
 } from "./quizshowEngineTypes";
 import { engineSessionStateFor } from "./quizshowEngineViews";
 import { QUIZSHOW_SIMULATED_PLAYERS } from "./quizshowSimulatedPlayers.data";
+import {
+  PICK_ROUND_NIGHT,
+  UNPLANNED_NIGHT,
+  wheelTestEngineOptions,
+  wheelTestQuiz,
+  wheelTestRound,
+  wheelTestWheel,
+} from "./quizshowWheelTestFixtures";
 
 const GAME_ID = "demo-game-after-dark";
 const RITA = "member-rita";
@@ -55,6 +65,7 @@ function roundOf(
       isJokerAllowed: true,
       writeSeconds: 60,
       voteSeconds: 30,
+      ...QUIZSHOW_WHEEL_SETTINGS_DEFAULTS,
     },
     questions: [{ ...CHOICE_QUESTION, id: `${id}-question` }],
   };
@@ -241,5 +252,84 @@ describe("Pulse Live 18+ join rule", () => {
       state = joined.state;
     }
     expect(state.players).toHaveLength(3);
+  });
+});
+
+describe("engine wheel state", () => {
+  it("opens the lobby with empty wheel progress and the four cursor fields", () => {
+    const state = createQuizshowEngine(
+      wheelTestEngineOptions(PICK_ROUND_NIGHT),
+    );
+    expect(state.wheelProgress).toEqual(emptyWheelProgress());
+    expect(state.cursor).toMatchObject({
+      roundNumber: 0,
+      roundCount: 5,
+      upNext: { kind: "round", roundIndex: 0 },
+      canSpinForNextRound: false,
+    });
+  });
+
+  it("normalises the frozen quiz", () => {
+    const outsideRound = wheelTestRound("r0", "Warm up", 1, 500);
+    const wheelRow = {
+      ...wheelTestWheel("w1", "round", 2),
+      contentLabel: "spicy" as const,
+    };
+    const quiz = wheelTestQuiz([
+      outsideRound,
+      wheelRow,
+      wheelTestRound("r2", "Music", 1),
+      wheelTestRound("r3", "Film", 1),
+    ]);
+    const options = wheelTestEngineOptions(quiz);
+    const state = createQuizshowEngine(options);
+    expect(state.quiz.rounds[0]?.settings.wheelBonus).toBe(0);
+    expect(state.quiz.rounds[1]?.contentLabel).toBe("none");
+    expect(state.quiz.rounds).toEqual(normaliseWheelRounds(quiz.rounds));
+    expect(options.quiz.rounds[0]?.settings.wheelBonus).toBe(500);
+    expect(options.quiz.rounds[1]?.contentLabel).toBe("spicy");
+  });
+
+  it("recounts the cursor fields on every phase move", () => {
+    const lobby = createQuizshowEngine(wheelTestEngineOptions(UNPLANNED_NIGHT));
+    const joined = reduceQuizshowEngine(lobby, {
+      type: "player",
+      memberKey: RITA,
+      name: "lobby:join",
+      payload: {
+        screenName: "Rita",
+        isAvatarShown: false,
+        hasExtraTime: false,
+        team: null,
+      },
+      now: 100,
+    }).state;
+    const hostAction = (
+      current: QuizshowEngineState,
+      name: "host:start" | "host:next" | "host:skip",
+      now: number,
+    ): QuizshowEngineState =>
+      reduceQuizshowEngine(current, {
+        type: "host",
+        name,
+        payload: { phaseId: current.cursor.phaseId },
+        now,
+      }).state;
+    const started = hostAction(joined, "host:start", 200);
+    expect(started.cursor).toMatchObject({ roundNumber: 1, upNext: null });
+    const reading = hostAction(started, "host:next", 300);
+    const onLeaderboard = hostAction(reading, "host:skip", 400);
+    expect(onLeaderboard.cursor).toMatchObject({
+      phase: "leaderboard",
+      upNext: { kind: "round", roundIndex: 1 },
+      canSpinForNextRound: true,
+    });
+  });
+
+  it("copies wheel progress with the state", () => {
+    const state = createQuizshowEngine(
+      wheelTestEngineOptions(PICK_ROUND_NIGHT),
+    );
+    expect(structuredClone(state).wheelProgress).toEqual(state.wheelProgress);
   });
 });

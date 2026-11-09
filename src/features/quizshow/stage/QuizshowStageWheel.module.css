@@ -1,0 +1,277 @@
+/* The Pulse Live wheel disc, after the approved TV mockup (wheel-tv-disc-v2).
+   SVG paints are set here from the --qs-wheel-* tokens; no filter blur
+   anywhere (contract 7.4): every glow is a gradient or a translucent stroke. */
+
+/* The box keeps 7% of its width free on the left for the pointer, which
+   reaches past the viewBox at 9 o'clock. */
+.wheel {
+  position: relative;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  aspect-ratio: 1;
+  padding-inline-start: 7%;
+}
+
+/* 100 / 93: the disc is 93% of the width (after the pointer's 7%), so this
+   makes the disc exactly as tall as the box. */
+.screen,
+.preview {
+  width: 100%;
+  aspect-ratio: 100 / 93;
+}
+
+.phone {
+  width: min(86vw, 22rem);
+}
+
+.disc {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* The frame loop writes `transform: rotate()` on this element. */
+.spinner {
+  transform-origin: 50% 50%;
+}
+
+.spinner[data-spinning="true"] {
+  will-change: transform;
+}
+
+/* ── Rim ── */
+/* The halo's radial gradient: clear, the token at its peak, clear again. */
+.rimHaloClear {
+  stop-color: var(--qs-wheel-rim-halo);
+  stop-opacity: 0;
+}
+
+.rimHaloPeak {
+  stop-color: var(--qs-wheel-rim-halo);
+}
+
+.rimStrokeStart {
+  stop-color: var(--qs-wheel-rim-stroke-start);
+}
+
+.rimStrokeMid {
+  stop-color: var(--qs-wheel-rim-stroke-mid);
+}
+
+.rimStrokeEnd {
+  stop-color: var(--qs-wheel-rim-stroke-end);
+}
+
+.rimFillInner {
+  stop-color: var(--qs-wheel-rim-fill-inner);
+}
+
+.rimFillOuter {
+  stop-color: var(--qs-wheel-rim-fill-outer);
+}
+
+.rimLine {
+  fill: none;
+  stroke: var(--qs-wheel-rim-line);
+}
+
+/* ── Slices ── */
+.plumInner {
+  stop-color: var(--qs-wheel-plum-inner);
+}
+
+.plumOuter {
+  stop-color: var(--qs-wheel-plum-outer);
+}
+
+.roseInner {
+  stop-color: var(--qs-wheel-rose-inner);
+}
+
+.roseOuter {
+  stop-color: var(--qs-wheel-rose-outer);
+}
+
+.bonusInner {
+  stop-color: var(--qs-wheel-bonus-inner);
+}
+
+.bonusOuter {
+  stop-color: var(--qs-wheel-bonus-outer);
+}
+
+.bonusAltInner {
+  stop-color: var(--qs-wheel-bonus-alt-inner);
+}
+
+.bonusAltOuter {
+  stop-color: var(--qs-wheel-bonus-alt-outer);
+}
+
+.sliceEdge {
+  fill: none;
+  stroke: var(--qs-wheel-slice-edge);
+}
+
+.label {
+  font-family: var(--serif);
+  font-weight: 500;
+  fill: var(--qs-wheel-label);
+}
+
+/* Ruling R13: the bonus line reads in the label cream, bold, for contrast on
+   the bonus slice. */
+.bonusLabel {
+  font-family: var(--sans);
+  font-weight: 700;
+  text-transform: uppercase;
+  fill: var(--qs-wheel-label);
+}
+
+.peg {
+  fill: var(--qs-wheel-peg);
+  stroke: var(--qs-wheel-peg-edge);
+}
+
+/* ── Landing: the other slices dim, the winner gains its outline ── */
+.slice {
+  transition: opacity 500ms var(--ease);
+}
+
+.winnerOutline {
+  opacity: 0;
+  transition: opacity 500ms var(--ease);
+}
+
+.winnerGlowWide,
+.winnerGlowNear {
+  fill: none;
+  stroke-linejoin: round;
+}
+
+.winnerGlowWide {
+  stroke: var(--qs-wheel-winner-glow-wide);
+}
+
+.winnerGlowNear {
+  stroke: var(--qs-wheel-winner-glow-near);
+}
+
+.winnerLine {
+  fill: var(--qs-wheel-winner-fill);
+  stroke: var(--qs-wheel-winner-stroke);
+  stroke-linejoin: round;
+}
+
+.wheel[data-landed="true"] .slice:not([data-winner="true"]) {
+  opacity: var(--qs-wheel-dim-opacity);
+}
+
+.wheel[data-landed="true"] .slice[data-winner="true"] .winnerOutline {
+  opacity: 1;
+}
+
+/* Reduced motion, and a landing that was over before this wheel saw the spin
+   (a mount, attach or reconnect): the landed state shows at once. */
+.wheel[data-reduced-motion="true"] .slice,
+.wheel[data-reduced-motion="true"] .winnerOutline,
+.wheel[data-landed-on-arrival="true"] .slice,
+.wheel[data-landed-on-arrival="true"] .winnerOutline {
+  transition-duration: 0ms;
+}
+
+/* ── Glass, hub and pointer ── */
+.depthClear {
+  stop-color: var(--qs-wheel-depth);
+  stop-opacity: 0;
+}
+
+.depthShade {
+  stop-color: var(--qs-wheel-depth);
+}
+
+.sheenLight {
+  stop-color: var(--qs-wheel-sheen);
+}
+
+.sheenClear {
+  stop-color: var(--qs-wheel-sheen);
+  stop-opacity: 0;
+}
+
+.hubInner {
+  stop-color: var(--qs-wheel-hub-inner);
+}
+
+.hubOuter {
+  stop-color: var(--qs-wheel-hub-outer);
+}
+
+.hubRingStart {
+  stop-color: var(--qs-wheel-hub-ring-start);
+}
+
+.hubRingMid {
+  stop-color: var(--qs-wheel-hub-ring-mid);
+}
+
+.hubRingEnd {
+  stop-color: var(--qs-wheel-hub-ring-end);
+}
+
+.hubCount {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  fill: var(--qs-wheel-label);
+}
+
+.hubLabel {
+  font-family: var(--sans);
+  font-weight: 500;
+  text-transform: uppercase;
+  fill: var(--qs-wheel-hub-label);
+}
+
+.pointerStart {
+  stop-color: var(--qs-wheel-pointer-start);
+}
+
+.pointerEnd {
+  stop-color: var(--qs-wheel-pointer-end);
+}
+
+.pointerHaloCore {
+  stop-color: var(--qs-wheel-pointer-halo);
+}
+
+.pointerHaloClear {
+  stop-color: var(--qs-wheel-pointer-halo);
+  stop-opacity: 0;
+}
+
+/* The pivot sits near the blade's outer end, copied from the mockup, so a
+   kick swings the tip against the pegs. */
+.pointer {
+  transform-box: view-box;
+  transform-origin: -124px 0;
+}
+
+.pointerHighlight {
+  fill: none;
+  stroke: var(--qs-wheel-pointer-highlight);
+  stroke-linecap: round;
+}
+
+.pointerPivot {
+  fill: var(--qs-wheel-pointer-pivot);
+}

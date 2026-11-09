@@ -492,6 +492,8 @@ describe("quizshow stage pause", () => {
   const BAR_START_AT = 2_000_000;
 
   function barCursor(overrides: Partial<QuizshowCursor>): QuizshowCursor {
+    const roundIndex =
+      overrides.roundIndex === undefined ? 0 : overrides.roundIndex;
     return {
       phaseId: "12",
       status: "running",
@@ -505,6 +507,9 @@ describe("quizshow stage pause", () => {
       pausedRemainingMs: null,
       pausedExtraTimeRemainingMs: null,
       isRestartRecovery: false,
+      roundNumber: roundIndex === null ? 0 : roundIndex + 1,
+      upNext: null,
+      canSpinForNextRound: false,
       ...overrides,
     };
   }
@@ -727,7 +732,7 @@ describe("quizshow stage standings", () => {
 
   it("shows the round's content label and joker note", async () => {
     const round: QuizshowRoundCardData = {
-      roundIndex: 1,
+      roundIndex: 5,
       kind: "quiz",
       title: { en: "Spicy round", pt: "" },
       contentLabel: "spicy",
@@ -738,17 +743,45 @@ describe("quizshow stage standings", () => {
     renderStage(
       <QuizshowRoundCard
         round={round}
-        roundCount={3}
+        roundNumber={3}
+        roundCount={6}
         language="pt"
         size="screen"
       />,
     );
     await awaitCatalog("quizshow");
-    expect(screen.getByText("Round 2 of 3")).toBeInTheDocument();
+    // The number counts played rounds; a wheel row before it never counts.
+    expect(screen.getByText("Round 3 of 6")).toBeInTheDocument();
+    expect(screen.getByText("3")).toBeInTheDocument();
     expect(screen.getByText("Spicy round")).toBeInTheDocument();
     expect(screen.getByText("Spicy")).toBeInTheDocument();
     expect(screen.getByText("Jokers allowed this round")).toBeInTheDocument();
     expect(screen.queryByText("Faster answers score more")).toBeNull();
+  });
+
+  it("reads Round N on the round card while the title is blank", async () => {
+    const round: QuizshowRoundCardData = {
+      roundIndex: 5,
+      kind: "quiz",
+      title: { en: "  ", pt: "" },
+      contentLabel: "none",
+      questionCount: 5,
+      isJokerAllowed: false,
+      isSpeedBonusOn: false,
+    };
+    renderStage(
+      <QuizshowRoundCard
+        round={round}
+        roundNumber={3}
+        roundCount={6}
+        language="en"
+        size="screen"
+      />,
+    );
+    await awaitCatalog("quizshow");
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Round 3" }),
+    ).toBeInTheDocument();
   });
 
   it("shows the reconnecting line only while reconnecting", async () => {

@@ -4,22 +4,30 @@
  * favourite. The arithmetic is quizshowScoring.ts; this module only applies it
  * to the engine state, as the backend's phases module does.
  */
-import type { QuizshowAnswerPayload } from "../../../shared/contracts/quizshow";
+import type {
+  QuizshowAnswerPayload,
+  QuizshowWheelBonusView,
+} from "../../../shared/contracts/quizshow";
+import { isQuizRoundKind, withWheelSettingsDefaults } from "../quizshowWheel";
 import {
   captionAuthorPoints,
   closestNumberOutcomes,
   lieDetectorPlayerPoints,
+  pointsSinceBaseline,
   scoreQuizAnswer,
   teamQuestionPoints,
+  wheelBonusWinnerIds,
 } from "./quizshowScoring";
 import {
   eligiblePlayersNow,
+  entrantTotals,
   extraTimeMs,
   findPlayer,
   findTeam,
   isJokerActiveFor,
   isPartyRoundKind,
   openLimitMs,
+  roundAt,
   type QuizshowPlayContext,
 } from "./quizshowEngineSetup";
 import type {
@@ -262,8 +270,13 @@ export function scoreQuestionOnce(
 ): void {
   const { play, round } = context;
   if (play.isScored) return;
-  if (isPartyRoundKind(round.kind)) scorePartyQuestion(state, context);
-  else scoreQuizQuestion(state, context);
+  if (isQuizRoundKind(round.kind)) scoreQuizQuestion(state, context);
+  else if (isPartyRoundKind(round.kind)) scorePartyQuestion(state, context);
+  else {
+    throw new Error(
+      `Pulse Live demo ${state.sessionId} tried to score a question on a ${round.kind} row.`,
+    );
+  }
   applyTeamPoints(state, play);
   play.isScored = true;
 }
@@ -298,4 +311,59 @@ export function awardFavourite(
   if (author !== undefined) author.score += bonus;
   addQuestionPoints(play, answer.playerId, bonus);
   applyTeamPoints(state, play);
+}
+
+/**
+ * Gives the slice's bonus to every entrant tied for the most points on it and
+ * returns the view; null when no wheel is open, the slice carries no bonus or
+ * nobody scored above 0. Pick a round counts the points that reached totals
+ * since the round opened; pick a question counts the points the current
+ * question earned. Teams play credits the team score only. The caller emits
+ * the refreshed host lobby scores and each awarded solo player's own score.
+ */
+export function applyWheelBonus(
+  state: QuizshowEngineState,
+  sliceRoundIndex: number,
+): QuizshowWheelBonusView | null {
+  const wheel = state.wheelProgress.wheel;
+  if (wheel === null) return null;
+  const sliceRow = roundAt(state, sliceRoundIndex);
+  if (sliceRow === null) return null;
+  const bonus = withWheelSettingsDefaults(sliceRow.settings).wheelBonus;
+  if (bonus === 0) return null;
+
+  const totals = entrantTotals(state);
+  const isSolo = state.playMode === "solo";
+  const pointsByEntrant =
+    wheel.pick === "round"
+      ? pointsSinceBaseline(wheel.baselineByEntrant ?? {}, totals)
+      : totals.map((total) => ({
+          entrantId: total.entrantId,
+          points:
+            (isSolo
+              ? state.current?.pointsByPlayer[total.entrantId]
+              : state.current?.teamPoints[total.entrantId]) ?? 0,
+        }));
+
+  const winnerIds = new Set(wheelBonusWinnerIds(pointsByEntrant));
+  if (winnerIds.size === 0) return null;
+  const winners = totals.filter((total) => winnerIds.has(total.entrantId));
+  for (const winner of winners) {
+    const entrant = isSolo
+      ? findPlayer(state, winner.entrantId)
+      : findTeam(state, winner.entrantId);
+    if (entrant !== undefined) entrant.score += bonus;
+  }
+  return {
+    points: bonus,
+    pick: wheel.pick,
+    sliceRoundIndex,
+    sliceTitle: sliceRow.title,
+    winners: winners.map((winner) => ({
+      entrantId: winner.entrantId,
+      kind: winner.kind,
+      name: winner.name,
+      colorKey: winner.colorKey,
+    })),
+  };
 }

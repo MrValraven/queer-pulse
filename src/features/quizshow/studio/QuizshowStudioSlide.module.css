@@ -249,6 +249,22 @@
   text-align: center;
 }
 
+/* A wheel with too few rounds behind it: an icon over one line, in canvas pixels. */
+.wheelTooFewIcon {
+  width: 3em;
+  height: 3em;
+  color: var(--qs-text-mute);
+  font-size: var(--text-24);
+}
+
+.wheelTooFewText {
+  max-width: 28ch;
+  margin: 0;
+  color: var(--qs-text-mute);
+  font-size: var(--text-24);
+  line-height: 1.3;
+}
+
 .eyebrow {
   margin: 0;
   color: var(--qs-text-mute);

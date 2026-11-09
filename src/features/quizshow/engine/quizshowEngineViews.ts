@@ -39,6 +39,12 @@ import {
   type QuizshowVoteOptions,
 } from "../../../shared/contracts/quizshow";
 import type { QuizshowServerFrame } from "../realtime/quizshowFrames";
+import {
+  isQuizRoundKind,
+  isWheelRoundKind,
+  wheelBonusViewForCursor,
+  wheelViewForCursor,
+} from "../quizshowWheel";
 import { closestNumberOutcomes, competitionRanks } from "./quizshowScoring";
 import {
   activePlayerOf,
@@ -49,7 +55,6 @@ import {
   findPlayer,
   isEligible,
   isJokerActiveFor,
-  isPartyRoundKind,
   roundAt,
   shownOptionsOf,
   toMe,
@@ -88,7 +93,12 @@ const COUNTED_PHASES: readonly QuizshowPhase[] = [
 
 const REVEAL_PHASES: readonly QuizshowPhase[] = ["reveal", "scores"];
 
-const ROUNDLESS_PHASES: readonly QuizshowPhase[] = ["lobby", "podium", "ended"];
+const ROUNDLESS_PHASES: readonly QuizshowPhase[] = [
+  "lobby",
+  "wheel",
+  "podium",
+  "ended",
+];
 
 interface QuizshowShownQuestion {
   round: QuizshowRound;
@@ -122,6 +132,18 @@ export function toRoundCard(
   round: QuizshowRound,
   roundIndex: number,
 ): QuizshowRoundCard {
+  if (isWheelRoundKind(round.kind)) {
+    // A wheel is a plain card: no questions, no joker, nothing to label.
+    return {
+      roundIndex,
+      kind: "wheel",
+      title: round.title,
+      contentLabel: "none",
+      questionCount: 0,
+      isJokerAllowed: false,
+      isSpeedBonusOn: round.settings.isSpeedBonusOn,
+    };
+  }
   return {
     roundIndex,
     kind: round.kind,
@@ -148,9 +170,9 @@ function toQuestionView(
     prompt: { ...question.prompt },
     mediaUrl: question.mediaUrl,
     points: question.points,
-    timeLimitSeconds: isPartyRoundKind(round.kind)
-      ? round.settings.writeSeconds
-      : (question.timeLimitSeconds ?? round.settings.timeLimitSeconds),
+    timeLimitSeconds: isQuizRoundKind(round.kind)
+      ? (question.timeLimitSeconds ?? round.settings.timeLimitSeconds)
+      : round.settings.writeSeconds,
     options: shownOptionsOf(state, question),
   };
 }
@@ -280,6 +302,12 @@ export function buildPhaseChange(
     round: currentRoundCard(state),
     question:
       audience === "host" ? hostQuestionView(state) : publicQuestionView(state),
+    wheel: wheelViewForCursor(
+      state.quiz.rounds,
+      state.wheelProgress,
+      state.cursor,
+    ),
+    wheelBonus: wheelBonusViewForCursor(state.wheelProgress, state.cursor),
   };
 }
 
@@ -788,6 +816,12 @@ function stateBase(state: QuizshowEngineState): QuizshowStateBase {
     scores: buildScores(state),
     podium: isPodiumShown ? podiumEntries(state) : null,
     nextEvent: null,
+    wheel: wheelViewForCursor(
+      state.quiz.rounds,
+      state.wheelProgress,
+      state.cursor,
+    ),
+    wheelBonus: wheelBonusViewForCursor(state.wheelProgress, state.cursor),
   };
 }
 

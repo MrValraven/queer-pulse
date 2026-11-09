@@ -10,6 +10,7 @@ import {
   type QuizshowScreenState,
 } from "../../../shared/contracts/quizshow";
 import { QuizshowDistribution } from "../stage/QuizshowDistribution";
+import { stageRoundLineCopy } from "../stage/quizshowWheelCopy";
 import {
   pickQuizshowText,
   quizshowAnswerNumberFormatter,
@@ -24,6 +25,9 @@ import { TileList } from "./QuizshowScreenTiles";
 import { gotItOf, tilesFor } from "./quizshowScreenTileModel";
 import { SCREEN_EASE, SCREEN_EASE_OUT } from "./quizshowScreenMotion";
 import styles from "./QuizshowScreen.module.css";
+
+/** The catalog key of the plain "Round N of M" line; any other key is the wheel's category pill. */
+const ROUND_LINE_KEY = "quizshow:stage.roundOf";
 
 function typedAnswerOf(
   reveal: QuizshowReveal | null,
@@ -176,19 +180,23 @@ export function QuizshowScreenQuestion({
   const isOrder = question.type === "order";
   const hasSideReveal =
     question.type !== "multiple_choice" && question.type !== "true_false";
+  // The first segment is "Round N of M", or the category pill on a pick-a-question wheel question.
+  const roundLine = stageRoundLineCopy(
+    cursor,
+    session.wheel,
+    session.rounds,
+    language,
+    t,
+  );
+  const isWheelPill = roundLine.key !== ROUND_LINE_KEY;
   const meta: ScreenMetaSegment[] = [
-    {
-      id: "round",
-      text: t("quizshow:stage.roundOf", {
-        number: question.roundIndex + 1,
-        total: cursor.roundCount,
-      }),
-    },
+    { id: "round", text: t(roundLine.key, roundLine.values) },
   ];
   const roundTitle =
     roundCard !== null ? pickQuizshowText(roundCard.title, language) : "";
-  if (roundTitle !== "") meta.push({ id: "title", text: roundTitle });
-  if (questionCount !== undefined) {
+  if (!isWheelPill && roundTitle !== "")
+    meta.push({ id: "title", text: roundTitle });
+  if (!isWheelPill && questionCount !== undefined) {
     meta.push({
       id: "question",
       text: t("quizshow:stage.questionOf", {

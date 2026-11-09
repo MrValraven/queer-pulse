@@ -25,6 +25,7 @@ import {
   QUIZSHOW_DEMO_GAME_SESSION_PREFIX,
   QUIZSHOW_DEMO_JOIN_CODE,
 } from "../quizshow.constants";
+import { playableRoundCount } from "../quizshowWheel";
 import {
   QUIZSHOW_DEMO_GAME_HOST,
   QUIZSHOW_DEMO_GAME_IDS,
@@ -229,7 +230,7 @@ function summaryOf(game: DemoGame): QuizshowGameSummary {
   return {
     id: game.gameId,
     title: game.quiz.title,
-    roundCount: game.quiz.rounds.length,
+    roundCount: playableRoundCount(game.quiz.rounds),
     questionCount: questionCountOf(game.quiz),
     isAdultsOnly: game.isAdultsOnly,
     liveSession: game.liveSession ? { ...game.liveSession } : null,
@@ -246,7 +247,7 @@ function gameSourceOf(game: DemoGame): QuizshowImportSource {
     startAt: null,
     gameId: game.gameId,
     quizTitle: game.quiz.title,
-    roundCount: game.quiz.rounds.length,
+    roundCount: playableRoundCount(game.quiz.rounds),
     questionCount: questionCountOf(game.quiz),
     hasAdultsRounds: hasAdultsRound(game.quiz),
     isSameSeries: false,

@@ -8,8 +8,10 @@ import {
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { MotionProvider } from "../../../app/providers/MotionProvider";
 import type {
   QuizshowImportSource,
+  QuizshowPlayableRoundKind,
   QuizshowQuiz,
   QuizshowQuizResponse,
 } from "../../../shared/contracts/quizshow";
@@ -27,6 +29,7 @@ import {
   draftToInput,
   newQuestion,
   newRound,
+  newWheel,
   type QuizshowDraftRound,
 } from "../builder/quizshowDraft";
 import { eventScope } from "../quizshowScope";
@@ -75,15 +78,20 @@ function renderEventStudio(
     slug?: string;
     queryClient?: QueryClient;
     eventStartAt?: string | null;
+    /** Mounts the app's motion foundation, so a removed row and a closed dialog really leave the DOM. */
+    hasMotion?: boolean;
   } = {},
 ) {
+  const studio = (
+    <QuizshowStudio
+      scope={eventScope(options.slug ?? SLUG)}
+      backLink={BACK_LINK}
+      eventStartAt={options.eventStartAt ?? null}
+    />
+  );
   return render(
     <TestProviders queryClient={options.queryClient}>
-      <QuizshowStudio
-        scope={eventScope(options.slug ?? SLUG)}
-        backLink={BACK_LINK}
-        eventStartAt={options.eventStartAt ?? null}
-      />
+      {options.hasMotion ? <MotionProvider>{studio}</MotionProvider> : studio}
     </TestProviders>,
   );
 }
@@ -99,7 +107,7 @@ function seedRounds(rounds: QuizshowDraftRound[]): void {
 
 /** A round of `kind` holding exactly one question of `type`. */
 function roundWith(
-  kind: QuizshowDraftRound["kind"],
+  kind: QuizshowPlayableRoundKind,
   type: Parameters<typeof newQuestion>[0],
 ): QuizshowDraftRound {
   const round = newRound(kind);
@@ -455,5 +463,227 @@ describe("QuizshowStudio question fields in the inspector", () => {
     );
     expect(screen.queryByText("Points")).toBeNull();
     expect(screen.queryByText("Time to answer")).toBeNull();
+  });
+});
+
+/** The rail's header for row `roundIndex`: a round header or a wheel card. */
+async function findRailHeader(roundIndex: number): Promise<HTMLElement> {
+  return waitFor(() => {
+    const header = document.querySelector<HTMLElement>(
+      `[${STUDIO_ROUND_HEADER_ATTRIBUTE}][data-round-index="${roundIndex}"]`,
+    );
+    if (!header) throw new Error("The rail shows no such row");
+    return header;
+  });
+}
+
+function thumbnailCount(): number {
+  return document.querySelectorAll(`[${STUDIO_THUMBNAIL_ATTRIBUTE}]`).length;
+}
+
+/** Opens the rail's Add round or wheel menu and picks the entry named `entryName`. */
+async function addFromRail(
+  user: ReturnType<typeof userEvent.setup>,
+  entryName: RegExp,
+): Promise<void> {
+  const rail = await screen.findByRole("region", {
+    name: "Rounds and questions",
+  });
+  await user.click(
+    within(rail).getByRole("button", { name: "Add round or wheel" }),
+  );
+  await user.click(await screen.findByRole("menuitem", { name: entryName }));
+}
+
+describe("QuizshowStudio wheel rows", () => {
+  beforeEach(() => {
+    resetQuizshowDemoStore();
+  });
+
+  it("adds a wheel from the rail and fills it", async () => {
+    const user = userEvent.setup();
+    seedRounds([roundWith("quiz", "multiple_choice")]);
+    renderEventStudio();
+    await findThumbnail(0, 0);
+    await addFromRail(user, /^Wheel/);
+    expect(
+      await screen.findByText("Wheel · picks the next round · 0 slices"),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByRole("heading", { name: "Pick a round" }),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByRole("radio", { name: /^Pick a round/ }),
+    ).toHaveAttribute("aria-checked", "true");
+    expect(
+      (
+        await screen.findAllByText(
+          "Add at least 2 rounds right after the wheel to fill it",
+        )
+      ).length,
+    ).toBeGreaterThan(0);
+
+    await addFromRail(user, /^Quiz/);
+    await addFromRail(user, /^Quiz/);
+    expect(
+      await screen.findByText("Wheel · picks the next round · 2 slices"),
+    ).toBeInTheDocument();
+  });
+
+  it("shows the Wheel bonus only inside a range", async () => {
+    seedRounds([
+      roundWith("quiz", "multiple_choice"),
+      newWheel(),
+      roundWith("quiz", "multiple_choice"),
+      roundWith("quiz", "multiple_choice"),
+    ]);
+    renderEventStudio({ hasMotion: true });
+    fireEvent.click(await findRailHeader(2));
+    expect(
+      await screen.findByRole("radiogroup", { name: "Wheel bonus" }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(await findRailHeader(0));
+    await waitFor(() =>
+      expect(screen.queryByRole("radiogroup", { name: "Wheel bonus" })).toBe(
+        null,
+      ),
+    );
+  });
+
+  it("switches the wheel to pick a question", async () => {
+    const user = userEvent.setup();
+    seedRounds([
+      newWheel(),
+      roundWith("quiz", "multiple_choice"),
+      roundWith("quiz", "multiple_choice"),
+    ]);
+    renderEventStudio();
+    expect(
+      await screen.findByText("Wheel · picks the next round · 2 slices"),
+    ).toBeInTheDocument();
+    fireEvent.click(await findRailHeader(0));
+    await user.click(
+      await screen.findByRole("radio", {
+        name: /^Pick a question from a category/,
+      }),
+    );
+    expect(
+      await screen.findByText("Wheel · picks a question · 2 slices"),
+    ).toBeInTheDocument();
+  });
+
+  it("Delete wheel in the card menu opens Delete this wheel?", async () => {
+    const user = userEvent.setup();
+    seedRounds([
+      newWheel(),
+      roundWith("quiz", "multiple_choice"),
+      roundWith("quiz", "multiple_choice"),
+    ]);
+    renderEventStudio({ hasMotion: true });
+    fireEvent.click(await findRailHeader(0));
+    expect(
+      document.querySelectorAll(`[${STUDIO_ROUND_HEADER_ATTRIBUTE}]`),
+    ).toHaveLength(3);
+    await user.click(
+      await screen.findByRole("button", { name: "Options for wheel 1" }),
+    );
+    await user.click(
+      await screen.findByRole("menuitem", { name: "Delete wheel" }),
+    );
+    const dialog = await screen.findByRole("dialog", {
+      name: "Delete this wheel?",
+    });
+    expect(
+      within(dialog).getByText("The rounds after it stay and play in order"),
+    ).toBeInTheDocument();
+    await user.click(
+      within(dialog).getByRole("button", { name: "Delete wheel" }),
+    );
+    await waitFor(
+      () =>
+        expect(
+          document.querySelectorAll(`[${STUDIO_ROUND_HEADER_ATTRIBUTE}]`),
+        ).toHaveLength(2),
+      { timeout: 3000 },
+    );
+    expect(screen.queryByText(/^Wheel · picks/)).toBeNull();
+    expect(
+      screen.getByRole("button", { name: /^Round 1: .*\. Quiz, 1 question$/ }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /^Round 2: .*\. Quiz, 1 question$/ }),
+    ).toBeInTheDocument();
+  });
+
+  it("hides the question shortcuts in the hint strip while a wheel is selected", async () => {
+    seedRounds([
+      newWheel(),
+      roundWith("quiz", "multiple_choice"),
+      roundWith("quiz", "multiple_choice"),
+    ]);
+    renderEventStudio();
+    const wheelCard = await findRailHeader(0);
+    fireEvent.click(wheelCard);
+    await waitFor(() =>
+      expect(document.querySelector('[data-hint="new"]')).toBeNull(),
+    );
+    expect(document.querySelector('[data-hint="duplicate"]')).toBeNull();
+    expect(document.querySelector('[data-hint="move"]')).not.toBeNull();
+
+    fireEvent.click(await findRailHeader(1));
+    await waitFor(() =>
+      expect(document.querySelector('[data-hint="new"]')).not.toBeNull(),
+    );
+    expect(document.querySelector('[data-hint="duplicate"]')).not.toBeNull();
+  });
+
+  it("shows the wheel at rest in the Phone view of a wheel", async () => {
+    const user = userEvent.setup();
+    seedRounds([
+      newWheel(),
+      roundWith("quiz", "multiple_choice"),
+      roundWith("quiz", "multiple_choice"),
+    ]);
+    renderEventStudio();
+    fireEvent.click(await findRailHeader(0));
+    await user.click(await screen.findByRole("radio", { name: "Phone" }));
+    expect(
+      await screen.findByText("The wheel spins when the host is ready"),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("Pick a question to see it on a phone"),
+    ).toBeNull();
+  });
+
+  it("N on a wheel adds no question", async () => {
+    seedRounds([
+      newWheel(),
+      roundWith("quiz", "multiple_choice"),
+      roundWith("quiz", "multiple_choice"),
+    ]);
+    renderEventStudio();
+    const wheelCard = await findRailHeader(0);
+    await findThumbnail(1, 0);
+    const thumbnailsBefore = thumbnailCount();
+    fireEvent.click(wheelCard);
+    fireEvent.keyDown(wheelCard, { key: "n" });
+    expect(
+      document.querySelector(
+        `[${STUDIO_THUMBNAIL_ATTRIBUTE}][data-round-index="0"]`,
+      ),
+    ).toBeNull();
+    expect(thumbnailCount()).toBe(thumbnailsBefore);
+
+    // The same key on a quiz round still adds one, so the wheel's refusal is its own.
+    const quizHeader = await findRailHeader(1);
+    fireEvent.click(quizHeader);
+    fireEvent.keyDown(quizHeader, { key: "n" });
+    await waitFor(() => expect(thumbnailCount()).toBe(thumbnailsBefore + 1));
+    expect(
+      document.querySelector(
+        `[${STUDIO_THUMBNAIL_ATTRIBUTE}][data-round-index="0"]`,
+      ),
+    ).toBeNull();
   });
 });

@@ -7,6 +7,8 @@ const START_AT = 1_000_000;
 const CLOCK_OFFSET_MS = 500;
 
 function cursorWith(overrides: Partial<QuizshowCursor>): QuizshowCursor {
+  const roundIndex =
+    overrides.roundIndex === undefined ? 0 : overrides.roundIndex;
   return {
     phaseId: "7",
     status: "running",
@@ -20,6 +22,9 @@ function cursorWith(overrides: Partial<QuizshowCursor>): QuizshowCursor {
     pausedRemainingMs: null,
     pausedExtraTimeRemainingMs: null,
     isRestartRecovery: false,
+    roundNumber: roundIndex === null ? 0 : roundIndex + 1,
+    upNext: null,
+    canSpinForNextRound: false,
     ...overrides,
   };
 }

@@ -48,14 +48,19 @@ export function useSlideProblemLine(
   code: QuizshowLocalProblemCode,
 ): string | undefined {
   const { t } = useTranslation();
-  const { problemsFor, selection, scope, viewLanguage } = useQuizshowStudio();
+  const { problemsFor, selection, scope, viewLanguage, controller } =
+    useQuizshowStudio();
   const problem = problemsFor(selection).find(
     (candidate) =>
       candidate.code === code &&
       (candidate.language === null || candidate.language === viewLanguage),
   );
   if (problem === undefined) return undefined;
-  const copy = studioProblemCopyOf(problem, scope.kind);
+  const copy = studioProblemCopyOf(
+    problem,
+    scope.kind,
+    controller.draft.rounds,
+  );
   return t(copy.key, {
     ...copy.values,
     language: copy.languageTagKey === null ? "" : t(copy.languageTagKey),

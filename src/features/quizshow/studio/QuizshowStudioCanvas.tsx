@@ -10,6 +10,11 @@ import {
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { Collapse } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import {
+  displayRoundNumber,
+  displayWheelNumber,
+  isWheelRoundKind,
+} from "../quizshowWheel";
 import { useQuizshowStudio } from "./QuizshowStudioContext";
 import {
   QuizshowStudioPhonePreview,
@@ -98,10 +103,19 @@ function CanvasCrumbs() {
   let roundCrumb: string | null = null;
   let current = t("quizshow:studio.canvas.titleSlide");
   if (selection.kind !== "quiz") {
-    roundCrumb = t("quizshow:rounds.untitled", {
-      number: selection.roundIndex + 1,
-    });
-    current = t("quizshow:studio.canvas.roundIntro");
+    const { rounds } = controller.draft;
+    const selectedRound = rounds[selection.roundIndex];
+    if (selectedRound !== undefined && isWheelRoundKind(selectedRound.kind)) {
+      roundCrumb = t("quizshow:studio.inspector.wheel.eyebrow", {
+        number: displayWheelNumber(rounds, selection.roundIndex),
+      });
+      current = t("quizshow:studio.canvas.wheelSlide");
+    } else {
+      roundCrumb = t("quizshow:rounds.untitled", {
+        number: displayRoundNumber(rounds, selection.roundIndex),
+      });
+      current = t("quizshow:studio.canvas.roundIntro");
+    }
   }
   if (selection.kind === "question") {
     current = t("quizshow:stage.questionOf", {

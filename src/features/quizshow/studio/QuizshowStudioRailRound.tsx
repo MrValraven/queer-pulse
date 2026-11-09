@@ -37,6 +37,10 @@ import styles from "./QuizshowStudioRail.module.css";
 export interface QuizshowStudioRailRoundProps {
   round: QuizshowDraftRound;
   roundIndex: number;
+  /** "Round 3": the round's place among the rows that are not wheels. */
+  roundNumber: number;
+  /** The wheel whose range holds this round; null outside every range. */
+  wheelNumber: number | null;
   viewLanguage: QuizshowLanguage;
   /** The selected question's index in this round; null when none of its questions is selected. */
   selectedQuestionIndex: number | null;
@@ -74,9 +78,11 @@ export interface QuizshowStudioRailRoundProps {
  */
 function QuizshowStudioRailRoundBase(props: QuizshowStudioRailRoundProps) {
   const { round, roundIndex, viewLanguage, isWide, onMoveQuestion } = props;
+  const { roundNumber, wheelNumber } = props;
   const { t } = useTranslation();
   const limitId = useId();
   const problemId = useId();
+  const inWheelId = useId();
   const { containerRef, gripHandlers } = useRowDragReorder((from, to) =>
     onMoveQuestion(roundIndex, from, to),
   );
@@ -84,17 +90,26 @@ function QuizshowStudioRailRoundBase(props: QuizshowStudioRailRoundProps) {
     (questionIndex: number, event: ReactPointerEvent) =>
       gripHandlers(questionIndex).onPointerDown(event),
   );
-  const number = roundIndex + 1;
   const title =
     shownTextOf(round.title, viewLanguage) ||
-    t("quizshow:rounds.untitled", { number });
+    t("quizshow:rounds.untitled", { number: roundNumber });
+  // Wheel rows render as QuizshowStudioRailWheel, so only playable kinds land here.
   const isParty = isPartyRoundKind(round.kind);
   const questionCount = round.questions.length;
   const hasRoundProblem = props.problemSpots.has(
     problemSpotKey(roundIndex, null),
   );
+  const isInWheel = wheelNumber !== null;
+  const describedByIds = [
+    hasRoundProblem ? problemId : null,
+    isInWheel ? inWheelId : null,
+  ].filter((id) => id !== null);
   return (
-    <div className={styles.round} data-party={isParty || undefined}>
+    <div
+      className={styles.round}
+      data-party={isParty || undefined}
+      data-in-wheel={isInWheel || undefined}
+    >
       <div
         className={styles.roundHead}
         data-selected={props.isRoundSelected || undefined}
@@ -110,12 +125,14 @@ function QuizshowStudioRailRoundBase(props: QuizshowStudioRailRoundProps) {
           tabIndex={props.isRoundSelected ? 0 : -1}
           aria-current={props.isRoundSelected ? "true" : undefined}
           aria-label={t("quizshow:studio.rail.roundLabel", {
-            number,
+            number: roundNumber,
             title,
             kind: t(`quizshow:kind.${round.kind}.name`),
             count: questionCount,
           })}
-          aria-describedby={hasRoundProblem ? problemId : undefined}
+          aria-describedby={
+            describedByIds.length > 0 ? describedByIds.join(" ") : undefined
+          }
           onPointerDown={(event) => {
             if (isWide && event.pointerType !== "touch") {
               props.onRoundDragPress(roundIndex, event);
@@ -142,7 +159,7 @@ function QuizshowStudioRailRoundBase(props: QuizshowStudioRailRoundProps) {
             {t(`quizshow:kind.${round.kind}.name`)}
           </span>
           <span className={styles.roundTitleRow} aria-hidden>
-            <span className={styles.roundNumber}>{number}</span>
+            <span className={styles.roundNumber}>{roundNumber}</span>
             <span className={styles.roundTitle}>{title}</span>
             {hasRoundProblem && <span className={styles.roundDot} />}
             <span className={styles.roundCount}>{questionCount}</span>
@@ -151,6 +168,11 @@ function QuizshowStudioRailRoundBase(props: QuizshowStudioRailRoundProps) {
         {hasRoundProblem && (
           <span id={problemId} className={styles.visuallyHidden}>
             {t("quizshow:studio.rail.needsFixing")}
+          </span>
+        )}
+        {isInWheel && (
+          <span id={inWheelId} className={styles.visuallyHidden}>
+            {t("quizshow:studio.rail.inWheel", { number: wheelNumber })}
           </span>
         )}
         <IconButton

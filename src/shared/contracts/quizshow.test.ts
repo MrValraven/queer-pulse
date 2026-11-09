@@ -4,7 +4,14 @@ import {
   QUIZSHOW_JOIN_CODE_PATTERN,
   QUIZSHOW_LIMITS,
   QUIZSHOW_OPEN_SESSION_STATUSES,
+  QUIZSHOW_PARTY_ROUND_KINDS,
   QUIZSHOW_PHASES,
+  QUIZSHOW_PLAYABLE_ROUND_KINDS,
+  QUIZSHOW_QUIZ_PROBLEM_CODES,
+  QUIZSHOW_ROUND_KINDS,
+  QUIZSHOW_WHEEL_BONUS_VALUES,
+  QUIZSHOW_WHEEL_PICKS,
+  QUIZSHOW_WHEEL_SETTINGS_DEFAULTS,
   QUIZSHOW_TEAM_COLOR_KEYS,
   QUIZSHOW_TIMED_PHASES,
   QUIZSHOW_ERROR_CODES,
@@ -13,7 +20,9 @@ import {
   QUIZSHOW_TEMPLATE_CARD_FIELDS,
   QUIZSHOW_TEMPLATE_STATUSES,
   type QuizshowImportInput,
+  type QuizshowCursor,
   type QuizshowMyReveal,
+  type QuizshowPhaseChangeFrame,
   type QuizshowStateBase,
 } from "./quizshow";
 
@@ -35,7 +44,7 @@ describe("quizshow contract mirror", () => {
     expect(QUIZSHOW_LIMITS.lieDetectorFooledPoints).toBe(500);
     expect(QUIZSHOW_LIMITS.partyVotePoints).toBe(250);
   });
-  it("lists phases, timed phases and open statuses in contract order", () => {
+  it("lists the wheel phase after the leaderboard and keeps it untimed, with the open statuses in contract order", () => {
     expect(QUIZSHOW_PHASES).toEqual([
       "lobby",
       "round_intro",
@@ -47,6 +56,7 @@ describe("quizshow contract mirror", () => {
       "reveal",
       "scores",
       "leaderboard",
+      "wheel",
       "podium",
       "ended",
     ]);
@@ -150,5 +160,86 @@ describe("quizshow contract mirror", () => {
     expect(new Set(QUIZSHOW_ERROR_CODES).size).toBe(
       QUIZSHOW_ERROR_CODES.length,
     );
+  });
+});
+
+describe("quizshow contract mirror, wheel vocabulary", () => {
+  it("adds the wheel kind and keeps it out of the playable and party kinds", () => {
+    expect(QUIZSHOW_ROUND_KINDS).toEqual([
+      "quiz",
+      "lie_detector",
+      "caption_this",
+      "drag_name",
+      "wheel",
+    ]);
+    expect(QUIZSHOW_PLAYABLE_ROUND_KINDS).toEqual([
+      "quiz",
+      "lie_detector",
+      "caption_this",
+      "drag_name",
+    ]);
+    expect(QUIZSHOW_PARTY_ROUND_KINDS).not.toContain("wheel");
+  });
+  it("carries the wheel picks, bonus values and settings defaults", () => {
+    expect(QUIZSHOW_WHEEL_PICKS).toEqual(["round", "question"]);
+    expect(QUIZSHOW_WHEEL_BONUS_VALUES).toEqual([0, 250, 500, 1000]);
+    expect(QUIZSHOW_WHEEL_SETTINGS_DEFAULTS).toEqual({
+      wheelBonus: 0,
+      wheelPick: "round",
+      sliceCount: null,
+    });
+  });
+  it("carries the wheel limits the server uses", () => {
+    expect(QUIZSHOW_LIMITS.roundsMax).toBe(10);
+    expect(QUIZSHOW_LIMITS.roundRowsMax).toBe(13);
+    expect(QUIZSHOW_LIMITS.wheelStepsMax).toBe(3);
+    expect(QUIZSHOW_LIMITS.wheelSlicesMin).toBe(2);
+    expect(QUIZSHOW_LIMITS.wheelSlicesMax).toBe(8);
+    expect(QUIZSHOW_LIMITS.wheelSpinMs).toBe(5500);
+    expect(QUIZSHOW_LIMITS.wheelSpinReducedMotionMs).toBe(1200);
+    expect(QUIZSHOW_LIMITS.wheelTurnsMin).toBe(5);
+    expect(QUIZSHOW_LIMITS.wheelTurnsMax).toBe(6);
+    expect(QUIZSHOW_LIMITS.wheelJitterSeedMax).toBe(1000);
+    expect(QUIZSHOW_LIMITS.wheelJitterSpread).toBe(0.7);
+    expect(QUIZSHOW_LIMITS.wheelPointerAngle).toBe(270);
+    expect(QUIZSHOW_LIMITS.wheelLandingToleranceMs).toBe(250);
+  });
+  it("appends the wheel problem codes and the wheel socket codes", () => {
+    expect(QUIZSHOW_QUIZ_PROBLEM_CODES.slice(-2)).toEqual([
+      "too_many_wheels",
+      "wheel_too_few_slices",
+    ]);
+    const accountIndex = QUIZSHOW_ERROR_CODES.indexOf("ACCOUNT_RESTRICTED");
+    expect(QUIZSHOW_ERROR_CODES.slice(accountIndex - 5, accountIndex)).toEqual([
+      "quizshow_wheel_not_spun",
+      "quizshow_wheel_spinning",
+      "quizshow_wheel_spin_too_few_rounds",
+      "quizshow_wheel_already_next",
+      "quizshow_joker_wheel_next",
+    ]);
+  });
+  it("carries the wheel on the state base and the phase change", () => {
+    const stateWheel: Pick<QuizshowStateBase, "wheel" | "wheelBonus"> = {
+      wheel: null,
+      wheelBonus: null,
+    };
+    const frameWheel: Pick<QuizshowPhaseChangeFrame, "wheel" | "wheelBonus"> = {
+      wheel: null,
+      wheelBonus: null,
+    };
+    const cursorProgress: Pick<
+      QuizshowCursor,
+      "roundNumber" | "upNext" | "canSpinForNextRound"
+    > = {
+      roundNumber: 2,
+      upNext: { kind: "wheel", wheelRoundIndex: 3 },
+      canSpinForNextRound: false,
+    };
+    expect(stateWheel.wheel).toBeNull();
+    expect(frameWheel.wheelBonus).toBeNull();
+    expect(cursorProgress.upNext).toEqual({
+      kind: "wheel",
+      wheelRoundIndex: 3,
+    });
   });
 });

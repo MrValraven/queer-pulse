@@ -612,6 +612,115 @@ export const quizshow: Catalog = {
   "problems.title_missing_game": "Give the game a title",
   "home.back": "Back to QueerPulse",
 
+  // ── Pulse Live wheel ──
+  "kind.wheel.name": "Wheel",
+  "kind.wheel.hint":
+    "Spins to pick what the room plays next, from the rounds right after it",
+  "stage.wheel.pill": "Wheel · spin {number} of {total}",
+  "stage.wheel.pillUnplanned": "Wheel · next round",
+  "stage.wheel.questionPill": "{category} · spin {number} of {total}",
+  "stage.wheel.eyebrow": "Still on the wheel",
+  "stage.wheel.titleEm": "What's <em>next</em>?",
+  "stage.wheel.playedLabel": "Played:",
+  "stage.wheel.kind.quiz": "Quiz",
+  "stage.wheel.kind.party": "Party",
+  "stage.wheel.sliceBonus": "+{points} bonus",
+  "stage.wheel.bonusPoints": "+{points}",
+  "stage.wheel.hubLeft": "left",
+  "stage.wheel.upNext": "Up next",
+  "stage.wheel.metaQuizRound_one": "Quiz round · {count} question",
+  "stage.wheel.metaQuizRound_other": "Quiz round · {count} questions",
+  "stage.wheel.metaPartyRound_one": "Party round · {count} prompt",
+  "stage.wheel.metaPartyRound_other": "Party round · {count} prompts",
+  "stage.wheel.metaQuizQuestion": "One quiz question from this category",
+  "stage.wheel.metaPartyQuestion": "One party prompt from this category",
+  "stage.wheel.bonusToRoundWinner": "to whoever wins this round",
+  "stage.wheel.bonusToQuestionWinner": "to whoever wins this question",
+  "stage.wheel.startsWhenReady": "Starts when the host is ready",
+  "stage.wheel.landedOn": "The wheel landed on {title}",
+  "stage.wheel.ariaLabel_one": "Wheel with {count} slice",
+  "stage.wheel.ariaLabel_other": "Wheel with {count} slices",
+  "stage.wheel.bonusAwardEyebrow": "Wheel bonus",
+  "stage.wheel.bonusAward": "+{points} to {names} for {title}",
+  "stage.wheel.bonusAwardTied": "+{points} each to {names} for {title}",
+  "stage.wheel.bonusAwardPlayers":
+    "+{points} each to {count} players for {title}",
+  "stage.wheel.bonusAwardTeams": "+{points} each to {count} teams for {title}",
+  "player.announce.wheel": "Wheel time",
+  "player.wheel.waiting": "The wheel spins when the host is ready",
+  "player.wheel.spinning": "The wheel is spinning",
+  "player.wheel.upNext": "Up next: {title}",
+  "player.wheel.bonusChip": "+{points} bonus",
+  "player.wheel.bonusMine": "You won the wheel bonus",
+  "player.wheel.bonusMineTeam": "Your team won the wheel bonus",
+  "player.wheel.bonusMineDetail": "+{points} for {title}",
+  "player.jokerOnRoundCard": "Play your joker on the round card",
+  "remote.phase.wheel": "Wheel",
+  "remote.wheel.spin": "Spin the wheel",
+  "remote.wheel.spinning": "The wheel is spinning",
+  "remote.wheel.spinAgain": "Spin again",
+  "remote.wheel.finish": "Finish the wheel",
+  "remote.wheel.finishConfirmTitle": "Finish the wheel now?",
+  "remote.wheel.finishConfirmBodyRound":
+    "The rounds still on the wheel are skipped, and the game moves on",
+  "remote.wheel.finishConfirmBodyQuestion":
+    "The questions still on the wheel are skipped, and the game moves on",
+  "remote.wheel.startRound": "Start {title}",
+  "remote.wheel.playQuestion": "Play the question",
+  "remote.wheel.spinForNextRound": "Spin for the next round",
+  "problems.too_many_wheels": "A quiz holds up to {max} wheels",
+  "problems.wheel_too_few_slices":
+    "Wheel {wheel} needs at least 2 rounds right after it",
+  "rounds.addWheel": "Add wheel",
+  "rounds.wheelCount": "{count} of {max} wheels",
+  "rounds.wheelsFull": "A quiz holds up to {max} wheels",
+  "rounds.removeWheel": "Delete wheel",
+  "rounds.removeWheelConfirmTitle": "Delete this wheel?",
+  "rounds.removeWheelConfirmBody": "The rounds after it stay and play in order",
+  "studio.rail.wheelCardRound_one":
+    "Wheel · picks the next round · {count} slice",
+  "studio.rail.wheelCardRound_other":
+    "Wheel · picks the next round · {count} slices",
+  "studio.rail.wheelCardQuestion_one":
+    "Wheel · picks a question · {count} slice",
+  "studio.rail.wheelCardQuestion_other":
+    "Wheel · picks a question · {count} slices",
+  "studio.rail.wheelMenu": "Options for wheel {number}",
+  "studio.rail.inWheel": "On wheel {number}",
+  "studio.canvas.wheelSlide": "Wheel slide",
+  "studio.inspector.wheel.eyebrow": "Wheel {number}",
+  "studio.inspector.wheel.settings": "Wheel settings",
+  "studio.inspector.wheel.pickLabel": "What the wheel picks",
+  "studio.inspector.wheel.pickRound": "Pick a round",
+  "studio.inspector.wheel.pickRoundHint":
+    "The round it lands on plays in full, then the wheel spins again for the rest",
+  "studio.inspector.wheel.pickQuestion": "Pick a question from a category",
+  "studio.inspector.wheel.pickQuestionHint":
+    "Each round after the wheel is a category. One question from the category it lands on plays, then the wheel spins again",
+  "studio.inspector.wheel.sliceCountLabel": "Slices",
+  "studio.inspector.wheel.sliceCountAuto": "Auto",
+  "studio.inspector.wheel.sliceCountAutoHint":
+    "Every round after the wheel up to the next wheel, 8 at most",
+  "studio.inspector.wheel.sliceCountOption": "{count} rounds",
+  "studio.inspector.wheel.slicesTitle": "On the wheel",
+  "studio.inspector.wheel.tooFew":
+    "Add at least 2 rounds right after the wheel to fill it",
+  "studio.inspector.round.wheelBonusLabel": "Wheel bonus",
+  "studio.inspector.round.wheelBonusNone": "None",
+  "studio.inspector.round.wheelBonusValue": "+{points}",
+  "studio.inspector.round.wheelBonusHintRound":
+    "Whoever scores best in this round gets these points when the wheel picks it",
+  "studio.inspector.round.wheelBonusHintQuestion":
+    "Whoever scores best on a question from this category gets these points",
+  "errors.wheel_not_spun": "Spin the wheel first",
+  "errors.wheel_spinning": "The wheel is still spinning. Wait for it to stop",
+  "errors.wheel_spin_too_few_rounds":
+    "Spinning for the next round needs 2 or more rounds still to play outside a wheel",
+  "errors.wheel_already_next":
+    "A wheel comes up next on its own, so there's nothing to spin for yet",
+  "errors.joker_wheel_next":
+    "The wheel picks the next round. Play your joker on its round card",
+
   // ── Quiz templates ──
   "builder.empty.fromTemplate": "Start from a template",
   "templates.title": "Templates",
@@ -758,6 +867,7 @@ export const quizshow: Catalog = {
     "Round {number}: {title}. {kind}, {count} questions",
   "studio.rail.roundMenu": "Options for {title}",
   "studio.rail.addQuestionTo": "Add question to {title}",
+  "studio.rail.addRoundOrWheel": "Add round or wheel",
   "studio.rail.needsFixing": "Needs a fix before you play",
   "studio.rail.menuLabel": "Question and round options",
   "studio.problems.none": "Ready to play",

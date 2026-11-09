@@ -1,8 +1,12 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { ApiError } from "../../../shared/api/client";
 import type {
+  QuizshowContentLabel,
   QuizshowOpenSessionInput,
   QuizshowQuizInput,
+  QuizshowRoundInput,
+  QuizshowRoundKind,
+  QuizshowRoundSettings,
 } from "../../../shared/contracts/quizshow";
 import {
   QUIZSHOW_DEMO_TEMPLATE_IDS,
@@ -36,6 +40,56 @@ const OPEN_INPUT: QuizshowOpenSessionInput = {
 function prideSeedInput(): QuizshowQuizInput {
   const seed = templateSeedById(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory);
   return { ...structuredClone(seed.quiz), expectedUpdatedAt: null };
+}
+
+const WHEEL_TEST_SETTINGS: QuizshowRoundSettings = {
+  timeLimitSeconds: 20,
+  isSpeedBonusOn: true,
+  isJokerAllowed: true,
+  writeSeconds: 60,
+  voteSeconds: 30,
+  wheelBonus: 0,
+  wheelPick: "round",
+  sliceCount: null,
+};
+
+function wheelTestRound(
+  title: string,
+  kind: QuizshowRoundKind,
+  overrides: Partial<QuizshowRoundSettings> = {},
+  contentLabel: QuizshowContentLabel = "none",
+): QuizshowRoundInput {
+  const isWheelRow = kind === "wheel";
+  return {
+    kind,
+    title: { en: title, pt: title },
+    contentLabel,
+    settings: { ...WHEEL_TEST_SETTINGS, ...overrides },
+    questions: isWheelRow
+      ? []
+      : [
+          {
+            type: "true_false",
+            prompt: { en: `${title} question`, pt: `${title} pergunta` },
+            options: [],
+            answer: { isTrue: true },
+            acceptedAnswers: [],
+            mediaRef: null,
+            timeLimitSeconds: null,
+            points: 1000,
+          },
+        ],
+  };
+}
+
+function wheelNightInput(rounds: QuizshowRoundInput[]): QuizshowQuizInput {
+  return {
+    expectedUpdatedAt: null,
+    title: "Wheel night",
+    languages: "both",
+    screenLanguage: "en",
+    rounds,
+  };
 }
 
 function refusalOf(action: () => unknown): ApiError {
@@ -170,6 +224,7 @@ describe("quizshow demo store", () => {
       "open-clinic-night",
     ]);
     expect(gameSources.map((source) => source.gameId)).toEqual([
+      QUIZSHOW_DEMO_GAME_IDS.wheelNight,
       QUIZSHOW_DEMO_GAME_IDS.afterDark,
       QUIZSHOW_DEMO_GAME_IDS.flatQuiz,
     ]);
@@ -177,7 +232,7 @@ describe("quizshow demo store", () => {
     expect(sourceKinds.indexOf("game")).toBeGreaterThan(
       sourceKinds.lastIndexOf("event"),
     );
-    const flatQuizSource = gameSources[1];
+    const flatQuizSource = gameSources[2];
     expect(flatQuizSource).toMatchObject({
       eventSlug: null,
       eventTitle: null,
@@ -227,5 +282,55 @@ describe("quizshow demo store", () => {
     );
     expect(unknownError.status).toBe(404);
     expect(dataOf(unknownError).code).toBe("quizshow_import_source_not_found");
+  });
+});
+
+describe("quizshow demo store wheel saves", () => {
+  beforeEach(() => {
+    resetQuizshowDemoStore();
+  });
+
+  it("normalises wheel rows on save", () => {
+    const response = demoPutQuiz(
+      QUIZSHOW_DEMO_LIVE_SLUG,
+      wheelNightInput([
+        wheelTestRound("Opener", "quiz", { wheelBonus: 500 }),
+        wheelTestRound("Spin", "wheel", {}, "spicy"),
+        wheelTestRound("Slice one", "quiz", { wheelBonus: 500 }),
+        wheelTestRound("Slice two", "quiz"),
+      ]),
+    );
+    const stored = demoGetQuiz(QUIZSHOW_DEMO_LIVE_SLUG).quiz;
+    expect(response.quiz?.rounds).toEqual(stored?.rounds);
+    expect(stored?.rounds.map((round) => round.settings.wheelBonus)).toEqual([
+      0, 0, 500, 0,
+    ]);
+    expect(stored?.rounds[1]?.contentLabel).toBe("none");
+    expect(stored?.rounds[1]?.settings).toMatchObject({
+      wheelPick: "round",
+      sliceCount: null,
+    });
+  });
+
+  it("defaults settings saved without the wheel fields", () => {
+    const plainRound = wheelTestRound("Plain", "quiz");
+    const legacySettings = {
+      timeLimitSeconds: 20,
+      isSpeedBonusOn: true,
+      isJokerAllowed: true,
+      writeSeconds: 60,
+      voteSeconds: 30,
+    } as unknown as QuizshowRoundSettings;
+    demoPutQuiz(
+      QUIZSHOW_DEMO_LIVE_SLUG,
+      wheelNightInput([{ ...plainRound, settings: legacySettings }]),
+    );
+    const settings = demoGetQuiz(QUIZSHOW_DEMO_LIVE_SLUG).quiz?.rounds[0]
+      ?.settings;
+    expect(settings).toMatchObject({
+      wheelBonus: 0,
+      wheelPick: "round",
+      sliceCount: null,
+    });
   });
 });

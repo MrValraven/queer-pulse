@@ -1,14 +1,16 @@
 import { FiCheckCircle, FiSmartphone } from "react-icons/fi";
 import {
   QUIZSHOW_LIMITS,
-  type QuizshowRoundKind,
+  type QuizshowPartyRoundKind,
 } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type {
   QuizshowDraftQuestion,
   QuizshowDraftRound,
 } from "../builder/quizshowDraft";
+import { displayRoundNumber, playableRoundCount } from "../quizshowWheel";
 import { useQuizshowStudio } from "./QuizshowStudioContext";
+import { isPartyRoundKind } from "./quizshowStudioRailView";
 import {
   QuizshowStudioSlideField,
   QuizshowStudioSlidePicture,
@@ -21,15 +23,13 @@ import {
 } from "./quizshowStudioSlideText";
 import styles from "./QuizshowStudioSlide.module.css";
 
-type PartyRoundKind = Exclude<QuizshowRoundKind, "quiz">;
-
-const PROMPT_LABEL_KEYS: Record<PartyRoundKind, string> = {
+const PROMPT_LABEL_KEYS: Record<QuizshowPartyRoundKind, string> = {
   lie_detector: "quizshow:questions.prompt.lieDetectorLabel",
   caption_this: "quizshow:questions.prompt.captionLabel",
   drag_name: "quizshow:questions.prompt.dragNameLabel",
 };
 
-const PLACEHOLDER_KEYS: Record<PartyRoundKind, string> = {
+const PLACEHOLDER_KEYS: Record<QuizshowPartyRoundKind, string> = {
   lie_detector: "quizshow:studio.slide.lieDetectorPlaceholder",
   caption_this: "quizshow:studio.slide.captionPlaceholder",
   drag_name: "quizshow:studio.slide.dragNamePlaceholder",
@@ -59,7 +59,9 @@ export function QuizshowStudioSlideParty({
   const mediaProblem = useSlideProblemLine("media_missing");
   const promptProblem = useSlideProblemLine("prompt_missing");
   const { question } = draftQuestion;
-  const kind: PartyRoundKind = round.kind === "quiz" ? "drag_name" : round.kind;
+  const kind: QuizshowPartyRoundKind = isPartyRoundKind(round.kind)
+    ? round.kind
+    : "drag_name";
   const isCaption = kind === "caption_this";
   const prompt = question.prompt[viewLanguage];
   const truth =
@@ -75,8 +77,8 @@ export function QuizshowStudioSlideParty({
           <strong>{t(`quizshow:kind.${kind}.name`)}</strong>
           <span>
             {t("quizshow:stage.roundOf", {
-              number: roundIndex + 1,
-              total: controller.draft.rounds.length,
+              number: displayRoundNumber(controller.draft.rounds, roundIndex),
+              total: playableRoundCount(controller.draft.rounds),
             })}
           </span>
         </span>

@@ -1,0 +1,143 @@
+/* The player's phone while the wheel is on, on the velvet stage. Every colour
+   is a --qs-* token; the chips size themselves by this font size. */
+.screen {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-sm);
+  width: 100%;
+  min-width: 0;
+  color: var(--qs-text);
+  text-align: center;
+}
+
+.headingLive {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Two lines of room, so the disc below does not jump between the three messages. */
+.heading {
+  display: grid;
+  place-items: center;
+  min-block-size: 2.4em;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-heading);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--qs-text);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.heading:focus {
+  outline: none;
+}
+
+.heading:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.headingText {
+  display: block;
+}
+
+.wheelSlot {
+  display: grid;
+  place-items: center;
+  width: 100%;
+}
+
+.chipsFold {
+  width: 100%;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-xs);
+  padding-block: var(--gap-xs);
+  font-size: var(--text-body);
+}
+
+/* ── The wheel bonus moment ── */
+.bonusRegion {
+  width: 100%;
+  min-width: 0;
+}
+
+.bonusPanel {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  box-sizing: border-box;
+  margin-block-end: var(--gap-xs);
+  padding: var(--gap-xs) var(--gap-sm);
+  border-radius: var(--qs-radius-tile);
+  text-align: start;
+}
+
+.bonusMine {
+  background: var(--qs-wheel-bonus-gradient);
+  color: var(--qs-wheel-bonus-ink);
+}
+
+.bonusOther {
+  composes: glass from "../stage/quizshowSurfaces.module.css";
+  --qs-glass-radius: var(--qs-radius-tile);
+}
+
+.bonusIcon {
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.bonusText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+.bonusText p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.bonusHeadline {
+  font-family: var(--serif);
+  font-size: var(--text-body);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.bonusDetail {
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.bonusEyebrow {
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--qs-text-mute);
+}
+
+.bonusSentence {
+  font-size: var(--text-body);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--qs-text);
+}

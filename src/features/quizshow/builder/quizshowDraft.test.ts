@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type {
+  QuizshowContentLabel,
   QuizshowOption,
   QuizshowQuestion,
   QuizshowQuestionInput,
   QuizshowQuiz,
+  QuizshowRoundSettings,
 } from "../../../shared/contracts/quizshow";
 import {
   blankDraft,
@@ -18,7 +20,10 @@ import {
   moveItem,
   newQuestion,
   newRound,
+  newWheel,
   removeAt,
+  withNewQuestion,
+  type QuizshowDraft,
 } from "./quizshowDraft";
 
 const blankText = { en: "", pt: "" };
@@ -135,6 +140,9 @@ describe("quizshowDraft", () => {
       isJokerAllowed: true,
       writeSeconds: 60,
       voteSeconds: 30,
+      wheelBonus: 0,
+      wheelPick: "round",
+      sliceCount: null,
     });
   });
 
@@ -325,5 +333,136 @@ describe("quizshowDraft final fixes", () => {
     expect(portugueseDraft.languages).toBe("pt");
     expect(portugueseDraft.screenLanguage).toBe("pt");
     expect(blankDraft().languages).toBe("en");
+  });
+
+  it("returns all eight settings with the wheel defaults", () => {
+    expect(Object.keys(defaultRoundSettings())).toHaveLength(8);
+    expect(defaultRoundSettings()).toMatchObject({
+      wheelBonus: 0,
+      wheelPick: "round",
+      sliceCount: null,
+    });
+  });
+
+  it("builds a wheel row with no questions", () => {
+    const wheel = newWheel();
+    expect(wheel).toMatchObject({
+      kind: "wheel",
+      contentLabel: "none",
+      questions: [],
+    });
+    expect(wheel.title).toEqual(blankText);
+  });
+
+  it("never changes a wheel row's kind", () => {
+    const wheel = newWheel();
+    expect(changeRoundKind(wheel, "quiz")).toBe(wheel);
+  });
+
+  it("adds no question to a wheel row", () => {
+    const wheel = newWheel();
+    expect(withNewQuestion(wheel)).toBe(wheel);
+    expect(withNewQuestion(newRound("quiz")).questions).toHaveLength(2);
+    const caption = withNewQuestion(newRound("caption_this"));
+    expect(at(caption.questions, 1).question.type).toBe("prompt");
+  });
+
+  it("fills the wheel defaults on load and stays clean", () => {
+    const legacySettings = {
+      timeLimitSeconds: 20,
+      isSpeedBonusOn: true,
+      isJokerAllowed: true,
+      writeSeconds: 60,
+      voteSeconds: 30,
+    } as unknown as QuizshowRoundSettings;
+    const legacyQuiz: QuizshowQuiz = {
+      ...storedQuiz(),
+      rounds: [{ ...at(storedQuiz().rounds, 0), settings: legacySettings }],
+    };
+    const draft = draftFromQuiz(legacyQuiz);
+    expect(at(draft.rounds, 0).settings).toMatchObject({
+      wheelBonus: 0,
+      wheelPick: "round",
+      sliceCount: null,
+    });
+    // The baseline spells the three defaults out by hand, so a load that
+    // filled them differently would read as an edit.
+    const baselineQuiz: QuizshowQuiz = {
+      ...legacyQuiz,
+      rounds: [
+        {
+          ...at(legacyQuiz.rounds, 0),
+          settings: {
+            ...legacySettings,
+            wheelBonus: 0,
+            wheelPick: "round",
+            sliceCount: null,
+          },
+        },
+      ],
+    };
+    expect(isDraftDirty(draft, draftFromQuiz(baselineQuiz))).toBe(false);
+  });
+
+  it("normalises wheel rows in the save body", () => {
+    const withSettings = (
+      round: QuizshowDraft["rounds"][number],
+      patch: Partial<QuizshowRoundSettings>,
+      contentLabel: QuizshowContentLabel = "none",
+    ) => ({
+      ...round,
+      contentLabel,
+      settings: { ...round.settings, ...patch },
+    });
+    const draft: QuizshowDraft = {
+      ...blankDraft(),
+      rounds: [
+        withSettings(newRound("quiz"), { wheelBonus: 500 }),
+        withSettings(newWheel(), { wheelBonus: 250 }, "spicy"),
+        withSettings(newRound("quiz"), {
+          wheelBonus: 250,
+          sliceCount: 3,
+          wheelPick: "question",
+        }),
+        newRound("quiz"),
+      ],
+    };
+    const input = draftToInput(draft, null);
+    expect(at(input.rounds, 0).settings.wheelBonus).toBe(0);
+    expect(at(input.rounds, 1)).toMatchObject({
+      contentLabel: "none",
+      settings: { wheelBonus: 0 },
+    });
+    expect(at(input.rounds, 2).settings).toMatchObject({
+      wheelBonus: 250,
+      sliceCount: null,
+      wheelPick: "round",
+    });
+    expect(at(draft.rounds, 1).contentLabel).toBe("spicy");
+  });
+
+  it("drops a bonus outside every range from the save body without dirtying the draft", () => {
+    const baseline: QuizshowDraft = {
+      ...blankDraft(),
+      rounds: [
+        newRound("quiz"),
+        newWheel(),
+        newRound("quiz"),
+        newRound("quiz"),
+      ],
+    };
+    const firstRound = at(baseline.rounds, 0);
+    const draftWithBonusOutside: QuizshowDraft = {
+      ...baseline,
+      rounds: [
+        {
+          ...firstRound,
+          settings: { ...firstRound.settings, wheelBonus: 500 },
+        },
+        ...baseline.rounds.slice(1),
+      ],
+    };
+    expect(isDraftDirty(draftWithBonusOutside, baseline)).toBe(false);
+    expect(at(draftWithBonusOutside.rounds, 0).settings.wheelBonus).toBe(500);
   });
 });

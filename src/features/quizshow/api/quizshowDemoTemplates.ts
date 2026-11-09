@@ -19,6 +19,7 @@ import {
   QUIZSHOW_DEMO_STAFF_NAME,
   QUIZSHOW_DEMO_TEMPLATE_SEEDS,
 } from "../demo/quizshowTemplates.data";
+import { playableRoundCount } from "../quizshowWheel";
 import {
   demoAssertShape,
   demoBadRequest,
@@ -144,7 +145,7 @@ function rowOf(template: DemoTemplate): QuizshowTemplateRow {
     id: template.id,
     title: { ...template.card.title },
     status: template.status,
-    roundCount: template.quiz.rounds.length,
+    roundCount: playableRoundCount(template.quiz.rounds),
     questionCount: questionCountOf(template.quiz),
     hasAdultsRounds: hasAdultsRound(template.quiz),
     updatedAt: template.quiz.updatedAt,
@@ -159,7 +160,7 @@ function cardOf(template: DemoTemplate): QuizshowTemplateCard {
     title: { ...template.card.title },
     description: { ...template.card.description },
     languages: template.quiz.languages,
-    roundCount: template.quiz.rounds.length,
+    roundCount: playableRoundCount(template.quiz.rounds),
     questionCount: questionCountOf(template.quiz),
     hasAdultsRounds: hasAdultsRound(template.quiz),
   };

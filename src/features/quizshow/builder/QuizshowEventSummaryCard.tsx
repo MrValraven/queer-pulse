@@ -15,6 +15,7 @@ import { QuizshowResultsCard } from "../event/QuizshowResultsCard";
 import { QuizshowGameCover } from "../games/QuizshowGameCover";
 import { quizshowEditPath } from "../quizshowPaths";
 import { eventScope, type QuizshowEventScope } from "../quizshowScope";
+import { playableRoundCount } from "../quizshowWheel";
 import {
   questionCountOf,
   summaryStatusOf,
@@ -60,7 +61,7 @@ function QuizshowEventSummaryLoaded({
           <div className={styles.cover}>
             <QuizshowGameCover
               title={coverTitle}
-              roundCount={quiz.rounds.length}
+              roundCount={playableRoundCount(quiz.rounds)}
               questionCount={questionCountOf(quiz)}
               isAdultsOnly={isAdultsEvent}
             />
@@ -105,6 +106,7 @@ function QuizshowEventSummaryLoaded({
             {quiz !== null && data.liveSession === null && (
               <QuizshowOpenLobbyButton
                 scope={scope}
+                rounds={quiz.rounds}
                 appearance="secondary"
                 isBlocked={lobbyProblemCount > 0}
                 blockedReason={t("quizshow:builder.summary.lobbyBlocked")}

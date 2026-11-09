@@ -4,13 +4,14 @@ import {
   type QuizshowLanguage,
   type QuizshowLanguageMode,
   type QuizshowQuestionInput,
-  type QuizshowRoundKind,
+  type QuizshowPlayableRoundKind,
 } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { QuizshowBilingualInput } from "../builder/QuizshowBilingualInput";
 import type { QuizshowDraftRound } from "../builder/quizshowDraft";
 import { QuizshowQuestionMedia } from "../builder/QuizshowQuestionMedia";
 import type { QuizshowLocalProblem } from "../builder/quizshowValidation";
+import { displayRoundNumber } from "../quizshowWheel";
 import { QuizshowInspectorAnswerFields } from "./QuizshowInspectorAnswerFields";
 import { QuizshowInspectorProblems } from "./QuizshowInspectorProblems";
 import {
@@ -19,9 +20,10 @@ import {
 } from "./QuizshowInspectorQuestionFields";
 import { QuizshowInspectorSection } from "./QuizshowInspectorSection";
 import { useQuizshowStudio } from "./QuizshowStudioContext";
+import { isPlayableRoundKind } from "./quizshowStudioRailView";
 import styles from "./QuizshowStudioInspector.module.css";
 
-const PROMPT_LABEL_KEYS: Record<QuizshowRoundKind, string> = {
+const PROMPT_LABEL_KEYS: Record<QuizshowPlayableRoundKind, string> = {
   quiz: "quizshow:questions.prompt.label",
   lie_detector: "quizshow:questions.prompt.lieDetectorLabel",
   caption_this: "quizshow:questions.prompt.captionLabel",
@@ -33,6 +35,10 @@ const EXTRA_TYPES = ["type_answer", "prompt"] as const;
 
 interface QuestionPartProps {
   roundIndex: number;
+  /** The 1-based number the host sees, skipping wheel rows. */
+  roundNumber: number;
+  /** The round's kind, narrowed to the kinds that hold questions. */
+  roundKind: QuizshowPlayableRoundKind;
   questionIndex: number;
   round: QuizshowDraftRound;
   question: QuizshowQuestionInput;
@@ -42,10 +48,10 @@ interface QuestionPartProps {
 
 /** The question text in these languages, with its missing-text lines. */
 function PromptField({
-  round,
+  roundKind,
   question,
   languages,
-  roundIndex,
+  roundNumber,
   questionIndex,
   problems,
   onChange,
@@ -56,7 +62,7 @@ function PromptField({
     .flatMap((problem) => (problem.language ? [problem.language] : []));
   return (
     <QuizshowBilingualInput
-      label={t(PROMPT_LABEL_KEYS[round.kind])}
+      label={t(PROMPT_LABEL_KEYS[roundKind])}
       value={question.prompt}
       languages={languages}
       maxLength={QUIZSHOW_LIMITS.promptMax}
@@ -64,7 +70,7 @@ function PromptField({
       missingLanguages={missingLanguages}
       errorText={(language: QuizshowLanguage) =>
         t("quizshow:problems.prompt_missing", {
-          round: roundIndex + 1,
+          round: roundNumber,
           question: questionIndex + 1,
           language: t(`quizshow:language.tag.${language}`),
         })
@@ -78,7 +84,7 @@ function PromptField({
 function NarrowEditing(props: QuestionPartProps) {
   const { t } = useTranslation();
   const { controller, data } = useQuizshowStudio();
-  const { round, roundIndex, question, questionIndex, problems, onChange } =
+  const { round, roundNumber, question, questionIndex, problems, onChange } =
     props;
   const { languages } = controller.draft;
   const hasPicture = round.kind === "quiz" || round.kind === "caption_this";
@@ -120,7 +126,7 @@ function NarrowEditing(props: QuestionPartProps) {
             errorText={
               mediaProblem
                 ? t("quizshow:problems.media_missing", {
-                    round: roundIndex + 1,
+                    round: roundNumber,
                     question: questionIndex + 1,
                   })
                 : undefined
@@ -200,13 +206,14 @@ function WideExtras(props: QuestionPartProps) {
 /** Which round the question is in, its content label, and the way to the round's settings. */
 function InThisRound({
   roundIndex,
+  roundNumber,
   round,
-}: Pick<QuestionPartProps, "roundIndex" | "round">) {
+}: Pick<QuestionPartProps, "roundIndex" | "roundNumber" | "round">) {
   const { t } = useTranslation();
   const { select, viewLanguage } = useQuizshowStudio();
   const roundName =
     round.title[viewLanguage].trim() ||
-    t("quizshow:rounds.untitled", { number: roundIndex + 1 });
+    t("quizshow:rounds.untitled", { number: roundNumber });
   const kindName = t(`quizshow:kind.${round.kind}.name`);
   // A round titled with its own kind name would read the same twice.
   const metaParts = kindName === roundName ? [] : [kindName];
@@ -256,10 +263,13 @@ export function QuizshowInspectorQuestion({
   const isWide = slideEditing.isEditable;
   const round = controller.draft.rounds[roundIndex];
   const question = round?.questions[questionIndex]?.question;
-  if (!round || !question) return null;
+  if (!round || !question || !isPlayableRoundKind(round.kind)) return null;
+  const roundNumber = displayRoundNumber(controller.draft.rounds, roundIndex);
   const problems = problemsFor({ kind: "question", roundIndex, questionIndex });
   const partProps: QuestionPartProps = {
     roundIndex,
+    roundNumber,
+    roundKind: round.kind,
     questionIndex,
     round,
     question,
@@ -305,7 +315,11 @@ export function QuizshowInspectorQuestion({
         </QuizshowInspectorSection>
       )}
       {isWide && <WideExtras {...partProps} />}
-      <InThisRound roundIndex={roundIndex} round={round} />
+      <InThisRound
+        roundIndex={roundIndex}
+        roundNumber={roundNumber}
+        round={round}
+      />
       <QuizshowInspectorProblems problems={problems} />
     </>
   );

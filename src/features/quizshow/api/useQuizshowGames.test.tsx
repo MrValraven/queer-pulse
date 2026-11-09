@@ -65,7 +65,7 @@ describe("quizshow games in demo mode", () => {
     resetQuizshowDemoStore();
   });
 
-  it("lists the two demo games newest first", async () => {
+  it("lists the three demo games newest first", async () => {
     const { wrapper } = setup();
     const { result } = renderHook(() => useQuizshowGames({ isEnabled: true }), {
       wrapper,
@@ -76,6 +76,7 @@ describe("quizshow games in demo mode", () => {
     const games = result.current.data?.games ?? [];
     expect(games.map((game) => game.id).sort()).toEqual(
       [
+        QUIZSHOW_DEMO_GAME_IDS.wheelNight,
         QUIZSHOW_DEMO_GAME_IDS.flatQuiz,
         QUIZSHOW_DEMO_GAME_IDS.afterDark,
       ].sort(),

@@ -1,8 +1,10 @@
 /**
  * The demo mock for Pulse Live quiz templates. Live templates live in the
- * database; the five published seeds here carry the same ids and content as the
- * backend migration's, and every string stays identical. The draft is demo-only,
- * so the staff views have a template to edit and a card refusal to show.
+ * database; the five published seeds here carry the same ids and strings as the
+ * backend migration's. The Lisbon seed additionally carries a demo-only wheel
+ * row at index 0, because the backend seed migration stays frozen (contract 13).
+ * The draft is demo-only too, so the staff views have a template to edit and a
+ * card refusal to show.
  */
 import type {
   QuizshowQuizShape,
@@ -71,6 +73,9 @@ export const QUIZSHOW_DEMO_TEMPLATE_SEEDS: readonly QuizshowDemoTemplateSeed[] =
               isJokerAllowed: true,
               writeSeconds: 60,
               voteSeconds: 30,
+              wheelBonus: 0,
+              wheelPick: "round",
+              sliceCount: null,
             },
             questions: [
               {
@@ -201,6 +206,9 @@ export const QUIZSHOW_DEMO_TEMPLATE_SEEDS: readonly QuizshowDemoTemplateSeed[] =
               isJokerAllowed: true,
               writeSeconds: 60,
               voteSeconds: 30,
+              wheelBonus: 0,
+              wheelPick: "round",
+              sliceCount: null,
             },
             questions: [
               {
@@ -330,6 +338,9 @@ export const QUIZSHOW_DEMO_TEMPLATE_SEEDS: readonly QuizshowDemoTemplateSeed[] =
               isJokerAllowed: true,
               writeSeconds: 60,
               voteSeconds: 30,
+              wheelBonus: 0,
+              wheelPick: "round",
+              sliceCount: null,
             },
             questions: [
               {
@@ -420,6 +431,9 @@ export const QUIZSHOW_DEMO_TEMPLATE_SEEDS: readonly QuizshowDemoTemplateSeed[] =
               isJokerAllowed: true,
               writeSeconds: 60,
               voteSeconds: 30,
+              wheelBonus: 0,
+              wheelPick: "round",
+              sliceCount: null,
             },
             questions: [
               {
@@ -565,6 +579,9 @@ export const QUIZSHOW_DEMO_TEMPLATE_SEEDS: readonly QuizshowDemoTemplateSeed[] =
               isJokerAllowed: true,
               writeSeconds: 60,
               voteSeconds: 30,
+              wheelBonus: 0,
+              wheelPick: "round",
+              sliceCount: null,
             },
             questions: [
               {
@@ -724,6 +741,9 @@ export const QUIZSHOW_DEMO_TEMPLATE_SEEDS: readonly QuizshowDemoTemplateSeed[] =
               isJokerAllowed: true,
               writeSeconds: 60,
               voteSeconds: 30,
+              wheelBonus: 0,
+              wheelPick: "round",
+              sliceCount: null,
             },
             questions: [
               {
@@ -816,6 +836,9 @@ export const QUIZSHOW_DEMO_TEMPLATE_SEEDS: readonly QuizshowDemoTemplateSeed[] =
               isJokerAllowed: true,
               writeSeconds: 60,
               voteSeconds: 30,
+              wheelBonus: 0,
+              wheelPick: "round",
+              sliceCount: null,
             },
             questions: [
               {
@@ -937,6 +960,9 @@ export const QUIZSHOW_DEMO_TEMPLATE_SEEDS: readonly QuizshowDemoTemplateSeed[] =
               isJokerAllowed: true,
               writeSeconds: 60,
               voteSeconds: 30,
+              wheelBonus: 0,
+              wheelPick: "round",
+              sliceCount: null,
             },
             questions: [
               {
@@ -1060,6 +1086,9 @@ export const QUIZSHOW_DEMO_TEMPLATE_SEEDS: readonly QuizshowDemoTemplateSeed[] =
               isJokerAllowed: true,
               writeSeconds: 60,
               voteSeconds: 30,
+              wheelBonus: 0,
+              wheelPick: "round",
+              sliceCount: null,
             },
             questions: [
               {
@@ -1144,6 +1173,9 @@ export const QUIZSHOW_DEMO_TEMPLATE_SEEDS: readonly QuizshowDemoTemplateSeed[] =
               isJokerAllowed: true,
               writeSeconds: 60,
               voteSeconds: 30,
+              wheelBonus: 0,
+              wheelPick: "round",
+              sliceCount: null,
             },
             questions: [
               {
@@ -1292,6 +1324,9 @@ export const QUIZSHOW_DEMO_TEMPLATE_SEEDS: readonly QuizshowDemoTemplateSeed[] =
               isJokerAllowed: true,
               writeSeconds: 60,
               voteSeconds: 30,
+              wheelBonus: 0,
+              wheelPick: "round",
+              sliceCount: null,
             },
             questions: [
               {
@@ -1438,6 +1473,9 @@ export const QUIZSHOW_DEMO_TEMPLATE_SEEDS: readonly QuizshowDemoTemplateSeed[] =
               isJokerAllowed: true,
               writeSeconds: 60,
               voteSeconds: 30,
+              wheelBonus: 0,
+              wheelPick: "round",
+              sliceCount: null,
             },
             questions: [
               {
@@ -1509,6 +1547,22 @@ export const QUIZSHOW_DEMO_TEMPLATE_SEEDS: readonly QuizshowDemoTemplateSeed[] =
         screenLanguage: "pt",
         rounds: [
           {
+            kind: "wheel",
+            title: { en: "", pt: "" },
+            contentLabel: "none",
+            settings: {
+              timeLimitSeconds: 20,
+              isSpeedBonusOn: true,
+              isJokerAllowed: true,
+              writeSeconds: 60,
+              voteSeconds: 30,
+              wheelBonus: 0,
+              wheelPick: "round",
+              sliceCount: null,
+            },
+            questions: [],
+          },
+          {
             kind: "quiz",
             title: { en: "Hidden Lisbon", pt: "Lisboa escondida" },
             contentLabel: "none",
@@ -1518,6 +1572,9 @@ export const QUIZSHOW_DEMO_TEMPLATE_SEEDS: readonly QuizshowDemoTemplateSeed[] =
               isJokerAllowed: true,
               writeSeconds: 60,
               voteSeconds: 30,
+              wheelBonus: 0,
+              wheelPick: "round",
+              sliceCount: null,
             },
             questions: [
               {
@@ -1672,6 +1729,9 @@ export const QUIZSHOW_DEMO_TEMPLATE_SEEDS: readonly QuizshowDemoTemplateSeed[] =
               isJokerAllowed: true,
               writeSeconds: 60,
               voteSeconds: 30,
+              wheelBonus: 500,
+              wheelPick: "round",
+              sliceCount: null,
             },
             questions: [
               {
@@ -1812,6 +1872,9 @@ export const QUIZSHOW_DEMO_TEMPLATE_SEEDS: readonly QuizshowDemoTemplateSeed[] =
               isJokerAllowed: true,
               writeSeconds: 60,
               voteSeconds: 30,
+              wheelBonus: 0,
+              wheelPick: "round",
+              sliceCount: null,
             },
             questions: [
               {
@@ -1991,6 +2054,9 @@ export const QUIZSHOW_DEMO_TEMPLATE_SEEDS: readonly QuizshowDemoTemplateSeed[] =
               isJokerAllowed: true,
               writeSeconds: 60,
               voteSeconds: 30,
+              wheelBonus: 500,
+              wheelPick: "round",
+              sliceCount: null,
             },
             questions: [
               {
@@ -2096,6 +2162,9 @@ export const QUIZSHOW_DEMO_TEMPLATE_SEEDS: readonly QuizshowDemoTemplateSeed[] =
               isJokerAllowed: true,
               writeSeconds: 60,
               voteSeconds: 30,
+              wheelBonus: 0,
+              wheelPick: "round",
+              sliceCount: null,
             },
             questions: [
               {

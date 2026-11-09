@@ -60,7 +60,10 @@ export function QuizshowTryItButton({
             <p className={styles.tipTitle}>
               {t("quizshow:dryRun.blockedTitle")}
             </p>
-            <QuizshowProblemList problems={shownProblems} />
+            <QuizshowProblemList
+              problems={shownProblems}
+              rounds={draft.rounds}
+            />
             {hiddenCount > 0 && (
               <p className={styles.tipMore}>
                 {t("quizshow:dryRun.blockedMore", { count: hiddenCount })}
@@ -71,7 +74,7 @@ export function QuizshowTryItButton({
       ) : (
         /* Read out as the button's description; the problems panel shows the same list on screen. */
         <div id={problemsId} hidden>
-          <QuizshowProblemList problems={problems} />
+          <QuizshowProblemList problems={problems} rounds={draft.rounds} />
         </div>
       )}
       <AnimatePresence>

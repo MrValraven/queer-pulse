@@ -1,13 +1,20 @@
 import { describe, expect, it } from "vitest";
-import type {
-  QuizshowAnswerPayload,
-  QuizshowLobbyJoinInput,
-  QuizshowQuestion,
-  QuizshowQuiz,
-  QuizshowRound,
-  QuizshowRoundKind,
-  QuizshowText,
+import {
+  QUIZSHOW_LIMITS,
+  type QuizshowAnswerPayload,
+  type QuizshowLobbyJoinInput,
+  type QuizshowQuestion,
+  type QuizshowQuiz,
+  type QuizshowRound,
+  type QuizshowRoundKind,
+  type QuizshowText,
 } from "../../../shared/contracts/quizshow";
+import {
+  drawnWheelSliceRoundIndexes,
+  nextQuizshowStep,
+  toWheelView,
+  type QuizshowWheelState,
+} from "../quizshowWheel";
 import type { QuizshowServerFrame } from "../realtime/quizshowFrames";
 import { createQuizshowEngine, reduceQuizshowEngine } from "./quizshowEngine";
 import { quizshowRandomFrom } from "./quizshowRandom";
@@ -24,14 +31,24 @@ import {
   framesForViewer,
   playerIdOf,
 } from "./quizshowEngineViews";
-
-const ROUND_SETTINGS = {
-  timeLimitSeconds: 20,
-  isSpeedBonusOn: true,
-  isJokerAllowed: true,
-  writeSeconds: 60,
-  voteSeconds: 30,
-};
+import {
+  finishWheel,
+  openStep,
+  spinWheel,
+  startWheelPick,
+} from "./quizshowEngineWheel";
+import {
+  EMPTY_WHEEL_NIGHT,
+  PICK_QUESTION_NIGHT,
+  PICK_ROUND_NIGHT,
+  UNPLANNED_NIGHT,
+  WHEEL_FIRST_NIGHT,
+  WHEEL_TEST_SETTINGS,
+  wheelTestEngineOptions,
+  wheelTestQuiz,
+  wheelTestRound,
+  wheelTestWheel,
+} from "./quizshowWheelTestFixtures";
 
 function bilingual(english: string): QuizshowText {
   return { en: english, pt: english };
@@ -89,7 +106,7 @@ function roundOf(
     kind,
     title: bilingual(`Round ${id}`),
     contentLabel: "none",
-    settings: ROUND_SETTINGS,
+    settings: WHEEL_TEST_SETTINGS,
     questions,
   };
 }
@@ -992,5 +1009,425 @@ describe("demo engine rounds, podium and scores", () => {
       0,
     ).entries.find((entry) => entry.entrantId === ritaId);
     expect(secondEntry).toMatchObject({ score: 2_300, previousScore: 1_100 });
+  });
+});
+
+const WHEEL_NOW = 10_000;
+
+/** Rita alone in the lobby of a wheel night. */
+function wheelLobby(quiz: QuizshowQuiz): QuizshowEngineState {
+  const lobby = createQuizshowEngine(wheelTestEngineOptions(quiz));
+  return playerStep(lobby, RITA, "lobby:join", joinPayload("Rita"), 0).state;
+}
+
+function wheelStarted(quiz: QuizshowQuiz): QuizshowEngineState {
+  const lobby = wheelLobby(quiz);
+  return hostStep(
+    lobby,
+    "host:start",
+    { phaseId: lobby.cursor.phaseId },
+    WHEEL_NOW,
+  ).state;
+}
+
+function ritaIdOf(state: QuizshowEngineState): string {
+  const ritaId = playerIdOf(state, RITA);
+  if (ritaId === null) throw new Error("Rita is not in the session.");
+  return ritaId;
+}
+
+function ritaScoreOf(state: QuizshowEngineState): number {
+  const ritaId = ritaIdOf(state);
+  const rita = state.players.find((player) => player.playerId === ritaId);
+  if (rita === undefined) throw new Error("Rita is not in the session.");
+  return rita.score;
+}
+
+/** From a round card: opens its first question, then skips every question of the round. */
+function skipRound(
+  state: QuizshowEngineState,
+  questionCount: number,
+): QuizshowEngineState {
+  let walked = nextStep(state, WHEEL_NOW).state;
+  for (let skipped = 0; skipped < questionCount; skipped += 1) {
+    walked = skipStep(walked, WHEEL_NOW).state;
+  }
+  return walked;
+}
+
+/** From a quiz question's `read`: Rita answers right, then the reveal and the scores show. */
+function answeredToScores(state: QuizshowEngineState): QuizshowEngineState {
+  let walked = nextStep(state, WHEEL_NOW).state;
+  expect(walked.cursor.phase).toBe("open");
+  walked = answerStep(
+    walked,
+    RITA,
+    { type: "multiple_choice", optionIndex: 1 },
+    WHEEL_NOW,
+  ).state;
+  expect(walked.cursor.phase).toBe("reveal");
+  walked = nextStep(walked, WHEEL_NOW).state;
+  expect(walked.cursor.phase).toBe("scores");
+  return walked;
+}
+
+function openedWheelIn(state: QuizshowEngineState): QuizshowWheelState {
+  const wheel = state.wheelProgress.wheel;
+  if (wheel === null) throw new Error("No wheel is open.");
+  return wheel;
+}
+
+/**
+ * One spin through the exported transition on a clone (host:spin is Task 11's
+ * handler), with a seeded draw, then steered onto the named slice so each
+ * scenario picks the slice it needs.
+ */
+function spunOnto(
+  state: QuizshowEngineState,
+  sliceRoundIndex: number,
+): QuizshowEngineState {
+  const spun = structuredClone(state);
+  spinWheel({ state: spun, random: quizshowRandomFrom(7) }, WHEEL_NOW);
+  const wheel = openedWheelIn(spun);
+  const landedSliceIndex = drawnWheelSliceRoundIndexes(
+    spun.quiz.rounds,
+    wheel,
+    spun.wheelProgress,
+  ).indexOf(sliceRoundIndex);
+  if (wheel.spin === null || landedSliceIndex === -1) {
+    throw new Error(`Slice ${sliceRoundIndex} is not drawn on the wheel.`);
+  }
+  wheel.spin.landedSliceIndex = landedSliceIndex;
+  return spun;
+}
+
+/** A landed spin on the slice, then its pick started. */
+function pickedOnto(
+  state: QuizshowEngineState,
+  sliceRoundIndex: number,
+): QuizshowEngineState {
+  const picked = spunOnto(state, sliceRoundIndex);
+  startWheelPick(picked, WHEEL_NOW + QUIZSHOW_LIMITS.wheelSpinMs);
+  return picked;
+}
+
+/** R0 (one question) skipped through, then the wheel opened from its leaderboard. */
+function atFirstWheel(quiz: QuizshowQuiz): QuizshowEngineState {
+  const leaderboard = skipRound(wheelStarted(quiz), 1);
+  expect(leaderboard.cursor).toMatchObject({
+    phase: "leaderboard",
+    upNext: { kind: "wheel", wheelRoundIndex: 1 },
+  });
+  return nextStep(leaderboard, WHEEL_NOW).state;
+}
+
+/** R0 W1(round, Auto) R2(+500, last row): the only slice pays a bonus. */
+const BONUS_LAST_NIGHT = wheelTestQuiz([
+  wheelTestRound("r0", "Warm up", 1),
+  wheelTestWheel("w1", "round", null),
+  wheelTestRound("r2", "Finale", 1, 500),
+]);
+
+describe("demo engine running order with wheels", () => {
+  it("still plays a quiz without wheels in order", () => {
+    let state = wheelStarted(UNPLANNED_NIGHT);
+    for (let roundIndex = 0; roundIndex < 4; roundIndex += 1) {
+      expect(state.cursor).toMatchObject({
+        phase: "round_intro",
+        roundIndex,
+        roundNumber: roundIndex + 1,
+        roundCount: 4,
+      });
+      state = skipRound(state, 1);
+      if (roundIndex === 3) break;
+      expect(state.cursor).toMatchObject({ phase: "leaderboard", roundIndex });
+      state = nextStep(state, WHEEL_NOW).state;
+    }
+    expect(state.cursor).toMatchObject({ phase: "podium", roundCount: 4 });
+  });
+
+  it("opens a wheel step from the leaderboard before it", () => {
+    const leaderboard = skipRound(wheelStarted(PICK_ROUND_NIGHT), 1);
+    const upNext = leaderboard.cursor.upNext;
+    expect(upNext).toEqual({ kind: "wheel", wheelRoundIndex: 1 });
+    if (upNext === null) throw new Error("Nothing comes next.");
+    const opened = structuredClone(leaderboard);
+    expect(openStep(opened, upNext, WHEEL_NOW)).toEqual([
+      { kind: "phase_changed" },
+    ]);
+    expect(opened.cursor).toMatchObject({
+      phase: "wheel",
+      roundIndex: 1,
+      questionIndex: null,
+      deadline: null,
+    });
+    expect(opened.wheelProgress.openedWheelRoundIndexes).toEqual([1]);
+    expect(openedWheelIn(opened)).toMatchObject({
+      sliceRoundIndexes: [2, 3, 4],
+      spin: null,
+      restAngle: 0,
+    });
+  });
+
+  it("plays the landed round in full and returns to the wheel", () => {
+    const atWheel = atFirstWheel(PICK_ROUND_NIGHT);
+    const picked = pickedOnto(atWheel, 2);
+    expect(picked.cursor).toMatchObject({
+      phase: "round_intro",
+      roundIndex: 2,
+    });
+    expect(picked.wheelProgress.playedRoundIndexes).toEqual([0, 2]);
+    expect(openedWheelIn(picked)).toMatchObject({
+      pickedCount: 1,
+      playingRoundIndex: 2,
+      baselineByEntrant: { [ritaIdOf(picked)]: 0 },
+      spin: null,
+      restAngle: 0,
+    });
+    const leaderboard = skipRound(picked, 2);
+    expect(leaderboard.cursor).toMatchObject({
+      phase: "leaderboard",
+      roundIndex: 2,
+      upNext: { kind: "wheel", wheelRoundIndex: 1 },
+    });
+    const backAtWheel = nextStep(leaderboard, WHEEL_NOW).state;
+    expect(backAtWheel.cursor).toMatchObject({ phase: "wheel", roundIndex: 1 });
+    const wheel = openedWheelIn(backAtWheel);
+    expect(wheel).toMatchObject({
+      spin: null,
+      restAngle: 0,
+      playingRoundIndex: null,
+      baselineByEntrant: null,
+    });
+    const view = toWheelView(
+      backAtWheel.quiz.rounds,
+      wheel,
+      backAtWheel.wheelProgress,
+      "wheel",
+    );
+    expect(view.slices.find((slice) => slice.roundIndex === 2)?.isPlayed).toBe(
+      true,
+    );
+    expect(
+      drawnWheelSliceRoundIndexes(
+        backAtWheel.quiz.rounds,
+        wheel,
+        backAtWheel.wheelProgress,
+      ),
+    ).toEqual([3, 4]);
+  });
+
+  it("closes an exhausted pick-a-round wheel and moves past its range", () => {
+    let state = atFirstWheel(PICK_ROUND_NIGHT);
+    state = skipRound(pickedOnto(state, 2), 2);
+    state = nextStep(state, WHEEL_NOW).state;
+    state = skipRound(pickedOnto(state, 3), 1);
+    state = nextStep(state, WHEEL_NOW).state;
+    state = skipRound(pickedOnto(state, 4), 1);
+    expect(state.wheelProgress.closedWheelRoundIndexes).toEqual([1]);
+    expect(state.wheelProgress.wheel).toBeNull();
+    expect(state.cursor).toMatchObject({
+      phase: "leaderboard",
+      roundIndex: 4,
+      upNext: { kind: "round", roundIndex: 5 },
+    });
+    expect(nextQuizshowStep(state.quiz.rounds, state.wheelProgress)).toEqual({
+      kind: "round",
+      roundIndex: 5,
+    });
+    const finale = nextStep(state, WHEEL_NOW).state;
+    expect(finale.cursor).toMatchObject({
+      phase: "round_intro",
+      roundIndex: 5,
+    });
+  });
+
+  it("plays one question per pick and returns to the wheel with the award", () => {
+    const atWheel = atFirstWheel(PICK_QUESTION_NIGHT);
+    const asked = pickedOnto(atWheel, 2);
+    expect(asked.cursor).toMatchObject({
+      phase: "read",
+      roundIndex: 2,
+      questionIndex: 0,
+    });
+    expect(openedWheelIn(asked).askedCounts).toEqual([1, 0]);
+    const scores = answeredToScores(asked);
+    const scoreBeforeBonus = ritaScoreOf(scores);
+    const result = nextStep(scores, WHEEL_NOW);
+    expect(result.state.cursor).toMatchObject({
+      phase: "wheel",
+      roundIndex: 1,
+    });
+    const ritaId = ritaIdOf(result.state);
+    expect(result.state.wheelProgress.wheelBonusAward).toMatchObject({
+      phaseId: result.state.cursor.phaseId,
+      points: 500,
+      pick: "question",
+      sliceRoundIndex: 2,
+      winners: [{ entrantId: ritaId, kind: "player" }],
+    });
+    expect(ritaScoreOf(result.state)).toBe(scoreBeforeBonus + 500);
+    // Contract A14: the hosts get their lobby scores and Rita her own score.
+    expect(
+      result.frames.some(
+        ({ audience, frame }) =>
+          audience === "hosts" && frame.event === "lobby:update",
+      ),
+    ).toBe(true);
+    expect(
+      result.frames.some(
+        ({ audience, frame }) =>
+          typeof audience === "object" &&
+          audience.playerId === ritaId &&
+          frame.event === "me:update",
+      ),
+    ).toBe(true);
+  });
+
+  it("ends a pick-a-question wheel with a leaderboard on the wheel row", () => {
+    let state = atFirstWheel(PICK_QUESTION_NIGHT);
+    state = skipStep(pickedOnto(state, 2), WHEEL_NOW).state;
+    expect(state.cursor.phase).toBe("wheel");
+    state = pickedOnto(state, 2);
+    expect(state.cursor).toMatchObject({ roundIndex: 2, questionIndex: 1 });
+    expect(openedWheelIn(state).askedCounts).toEqual([2, 0]);
+    state = skipStep(state, WHEEL_NOW).state;
+    expect(state.cursor.phase).toBe("wheel");
+    state = skipStep(pickedOnto(state, 3), WHEEL_NOW).state;
+    expect(state.wheelProgress.closedWheelRoundIndexes).toEqual([1]);
+    expect(state.wheelProgress.wheel).toBeNull();
+    expect(state.cursor).toMatchObject({
+      phase: "leaderboard",
+      roundIndex: 1,
+      upNext: { kind: "round", roundIndex: 4 },
+    });
+  });
+});
+
+describe("demo engine running order with wheels: endings and edges", () => {
+  it("shows only the next wheel question's points on its scores after a bonus", () => {
+    const atWheel = atFirstWheel(PICK_QUESTION_NIGHT);
+    const firstScores = answeredToScores(pickedOnto(atWheel, 2));
+    const backAtWheel = nextStep(firstScores, WHEEL_NOW).state;
+    expect(backAtWheel.cursor.phase).toBe("wheel");
+    expect(backAtWheel.wheelProgress.wheelBonusAward?.points).toBe(500);
+    const scoreWithBonus = ritaScoreOf(backAtWheel);
+    expect(scoreWithBonus).toBe(ritaScoreOf(firstScores) + 500);
+
+    let walked = nextStep(pickedOnto(backAtWheel, 2), WHEEL_NOW).state;
+    expect(walked.cursor).toMatchObject({
+      phase: "open",
+      roundIndex: 2,
+      questionIndex: 1,
+    });
+    walked = answerStep(
+      walked,
+      RITA,
+      { type: "multiple_choice", optionIndex: 1 },
+      WHEEL_NOW,
+    ).state;
+    expect(walked.cursor.phase).toBe("reveal");
+    const secondScores = nextStep(walked, WHEEL_NOW);
+    expect(secondScores.state.cursor.phase).toBe("scores");
+    const ritaEntry = at(
+      payloadsOf(screenFrames(secondScores), "scores"),
+      0,
+    ).entries.find((entry) => entry.entrantId === ritaIdOf(walked));
+    // The bonus is already in the previous score, so the gain is the question's points alone.
+    expect(ritaEntry).toMatchObject({
+      previousScore: scoreWithBonus,
+      score: ritaScoreOf(secondScores.state),
+    });
+  });
+
+  it("shows a leaderboard before the podium when the last thing played earned a bonus", () => {
+    const atWheel = atFirstWheel(BONUS_LAST_NIGHT);
+    const read = nextStep(pickedOnto(atWheel, 2), WHEEL_NOW).state;
+    expect(read.cursor).toMatchObject({ phase: "read", roundIndex: 2 });
+    const result = nextStep(answeredToScores(read), WHEEL_NOW);
+    expect(result.state.cursor).toMatchObject({
+      phase: "leaderboard",
+      roundIndex: 2,
+      upNext: { kind: "podium" },
+    });
+    expect(result.state.wheelProgress.closedWheelRoundIndexes).toEqual([1]);
+    expect(result.state.wheelProgress.wheelBonusAward).toMatchObject({
+      phaseId: result.state.cursor.phaseId,
+      points: 500,
+      pick: "round",
+      sliceRoundIndex: 2,
+    });
+    expect(nextStep(result.state, WHEEL_NOW).state.cursor.phase).toBe("podium");
+  });
+
+  it("finishes a pick-a-round wheel straight to the next step", () => {
+    const finished = structuredClone(atFirstWheel(PICK_ROUND_NIGHT));
+    finishWheel(finished, WHEEL_NOW);
+    expect(finished.wheelProgress.closedWheelRoundIndexes).toEqual([1]);
+    expect(finished.wheelProgress.wheel).toBeNull();
+    expect(finished.cursor).toMatchObject({
+      phase: "round_intro",
+      roundIndex: 5,
+    });
+    expect(finished.wheelProgress.playedRoundIndexes).toEqual([0, 5]);
+  });
+
+  it("finishes a pick-a-question wheel that played a question with a leaderboard", () => {
+    const atWheel = atFirstWheel(PICK_QUESTION_NIGHT);
+    const unplayed = structuredClone(atWheel);
+    finishWheel(unplayed, WHEEL_NOW);
+    expect(unplayed.cursor).toMatchObject({
+      phase: "round_intro",
+      roundIndex: 4,
+    });
+    const backAtWheel = skipStep(pickedOnto(atWheel, 2), WHEEL_NOW).state;
+    expect(backAtWheel.cursor.phase).toBe("wheel");
+    const finished = structuredClone(backAtWheel);
+    finishWheel(finished, WHEEL_NOW);
+    expect(finished.wheelProgress.closedWheelRoundIndexes).toEqual([1]);
+    expect(finished.wheelProgress.wheel).toBeNull();
+    expect(finished.cursor).toMatchObject({
+      phase: "leaderboard",
+      roundIndex: 1,
+      upNext: { kind: "round", roundIndex: 4 },
+    });
+  });
+
+  it("closes a wheel with no slice and carries on", () => {
+    const leaderboard = skipRound(wheelStarted(EMPTY_WHEEL_NIGHT), 1);
+    expect(leaderboard.cursor).toMatchObject({
+      phase: "leaderboard",
+      roundIndex: 0,
+      upNext: { kind: "wheel", wheelRoundIndex: 1 },
+    });
+    const result = nextStep(leaderboard, WHEEL_NOW);
+    expect(result.ack).toMatchObject({ ok: true });
+    expect(result.state.cursor.phase).toBe("podium");
+    // One phase move only: no `wheel` phase in between.
+    expect(result.state.lastTransition).toEqual({
+      fromPhaseId: leaderboard.cursor.phaseId,
+      toPhaseId: result.state.cursor.phaseId,
+    });
+    expect(result.state.phaseCounter).toBe(leaderboard.phaseCounter + 1);
+    expect(result.state.wheelProgress.closedWheelRoundIndexes).toEqual([1]);
+    expect(result.state.wheelProgress.wheel).toBeNull();
+  });
+
+  it("opens on a wheel when the quiz starts with one", () => {
+    const lobby = wheelLobby(WHEEL_FIRST_NIGHT);
+    const opened = structuredClone(lobby);
+    openStep(
+      opened,
+      nextQuizshowStep(opened.quiz.rounds, opened.wheelProgress),
+      WHEEL_NOW,
+    );
+    expect(opened.cursor).toMatchObject({
+      phase: "wheel",
+      roundIndex: 0,
+      questionIndex: null,
+      deadline: null,
+    });
+    expect(opened.wheelProgress.openedWheelRoundIndexes).toEqual([0]);
+    expect(openedWheelIn(opened).sliceRoundIndexes).toEqual([1, 2]);
   });
 });

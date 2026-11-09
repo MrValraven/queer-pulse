@@ -106,6 +106,9 @@ function endedGameState(): QuizshowHostState {
     pausedRemainingMs: null,
     pausedExtraTimeRemainingMs: null,
     isRestartRecovery: false,
+    roundNumber: 1,
+    upNext: null,
+    canSpinForNextRound: false,
   };
   return {
     role: "host",
@@ -134,6 +137,8 @@ function endedGameState(): QuizshowHostState {
     question: null,
     answerCount: null,
     voteOptions: null,
+    wheel: null,
+    wheelBonus: null,
     reviewList: null,
   };
 }

@@ -1,14 +1,29 @@
 import { act, render, screen, waitFor, within } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
+import { MotionProvider } from "../../../app/providers/MotionProvider";
 import { ReducedMotionContext } from "../../../app/providers/motionPrefs";
 import { TestProviders } from "../../../test/TestProviders";
-import type {
-  QuizshowCursor,
-  QuizshowLeaderboardEntry,
-  QuizshowMyReveal,
-  QuizshowPhase,
-  QuizshowPlayerState,
-  QuizshowQuestionView,
+import { awaitCatalog } from "../../../test/awaitCatalog";
+import {
+  QUIZSHOW_LIMITS,
+  type QuizshowCursor,
+  type QuizshowLeaderboardEntry,
+  type QuizshowMyReveal,
+  type QuizshowPhase,
+  type QuizshowPlayerState,
+  type QuizshowQuestionView,
+  type QuizshowRoundCard,
+  type QuizshowWheelBonusView,
+  type QuizshowWheelSlice,
+  type QuizshowWheelView,
 } from "../../../shared/contracts/quizshow";
 import type { QuizshowClientState } from "../realtime/quizshowClientStore";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
@@ -48,6 +63,9 @@ function cursorIn(phase: QuizshowPhase, phaseId: string): QuizshowCursor {
     pausedRemainingMs: null,
     pausedExtraTimeRemainingMs: null,
     isRestartRecovery: false,
+    roundNumber: 1,
+    upNext: null,
+    canSpinForNextRound: false,
   };
 }
 
@@ -94,6 +112,8 @@ function stateIn(
     scores: null,
     podium: null,
     nextEvent: null,
+    wheel: null,
+    wheelBonus: null,
     role: "player",
     lobby: { players: [], teams: [], playerCount: 5 },
     question: QUESTION,
@@ -411,5 +431,228 @@ describe("QuizshowPlayerStage outcomes and scores", () => {
     expect(await screen.findByText("Not this time")).toBeInTheDocument();
     expect(screen.getByText("+0 points")).toBeInTheDocument();
     expect(screen.queryByText("Doubled by your joker")).toBeNull();
+  });
+});
+
+function wheelSliceOf(roundIndex: number, title: string): QuizshowWheelSlice {
+  return {
+    roundIndex,
+    title: { en: title, pt: title },
+    kind: "quiz",
+    contentLabel: "none",
+    wheelBonus: 0,
+    questionCount: 8,
+    isPlayed: false,
+  };
+}
+
+function wheelViewOf(
+  hasSpin: boolean,
+  spinNumber: number,
+  wheelRoundIndex: number | null = 0,
+): QuizshowWheelView {
+  return {
+    wheelRoundIndex,
+    pick: "round",
+    slices: [wheelSliceOf(1, "Music"), wheelSliceOf(2, "Queer history")],
+    spinNumber,
+    spinTotal: 2,
+    spin: hasSpin
+      ? {
+          landedSliceIndex: 0,
+          startedAt: Date.now(),
+          durationMs: QUIZSHOW_LIMITS.wheelSpinMs,
+          turns: 5,
+          jitterSeed: 500,
+          startAngle: 0,
+        }
+      : null,
+    playingRoundIndex: null,
+  };
+}
+
+const WHEEL_BONUS_FOR_ME: QuizshowWheelBonusView = {
+  points: 500,
+  pick: "round",
+  sliceRoundIndex: 1,
+  sliceTitle: { en: "Music", pt: "Musica" },
+  winners: [
+    { entrantId: "player-1", kind: "player", name: "Sam", colorKey: null },
+  ],
+};
+
+function roundCardOf(
+  roundIndex: number,
+  kind: QuizshowRoundCard["kind"],
+): QuizshowRoundCard {
+  return {
+    roundIndex,
+    kind,
+    title: { en: "Warm up", pt: "Aquecimento" },
+    contentLabel: "none",
+    questionCount: kind === "wheel" ? 0 : 3,
+    isJokerAllowed: kind !== "wheel",
+    isSpeedBonusOn: false,
+  };
+}
+
+function wheelStageOf(session: QuizshowPlayerState) {
+  return (
+    <TestProviders>
+      <MotionProvider>
+        <QuizshowPlayerStage controller={controllerOf(session)} />
+      </MotionProvider>
+    </TestProviders>
+  );
+}
+
+describe("QuizshowPlayerStage wheel", () => {
+  beforeAll(() => {
+    // jsdom has no Element.animate; the disc's pointer kicks call it.
+    if (typeof Element.prototype.animate !== "function") {
+      Element.prototype.animate = vi.fn();
+    }
+  });
+
+  it("announces wheel time", async () => {
+    render(
+      wheelStageOf(stateIn("wheel", "90", { wheel: wheelViewOf(false, 1) })),
+    );
+    await awaitCatalog("quizshow");
+
+    await waitFor(() =>
+      expect(
+        screen
+          .getAllByRole("status")
+          .some((region) => region.textContent?.includes("Wheel time")),
+      ).toBe(true),
+    );
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: "The wheel spins when the host is ready",
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps the wheel mounted between spins", async () => {
+    const { rerender } = render(
+      wheelStageOf(stateIn("wheel", "91", { wheel: wheelViewOf(false, 1) })),
+    );
+    await awaitCatalog("quizshow");
+    const headingBefore = screen.getByRole("heading", { level: 1 });
+
+    rerender(
+      wheelStageOf(stateIn("wheel", "92", { wheel: wheelViewOf(true, 2) })),
+    );
+
+    expect(
+      await screen.findByText("The wheel is spinning"),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1 })).toBe(headingBefore);
+  });
+
+  it("gives the winner their moment on the leaderboard", async () => {
+    render(
+      wheelStageOf(
+        stateIn("leaderboard", "93", { wheelBonus: WHEEL_BONUS_FOR_ME }),
+      ),
+    );
+    await awaitCatalog("quizshow");
+
+    expect(
+      await screen.findByText("You won the wheel bonus"),
+    ).toBeInTheDocument();
+  });
+
+  it("offers the joker for the round up next on a leaderboard", async () => {
+    render(
+      wheelStageOf(
+        stateIn("leaderboard", "94", {
+          rounds: [roundCardOf(1, "quiz")],
+          cursor: {
+            ...cursorIn("leaderboard", "94"),
+            upNext: { kind: "round", roundIndex: 1 },
+          },
+        }),
+      ),
+    );
+    await awaitCatalog("quizshow");
+
+    expect(await screen.findByRole("button", { name: "Joker" })).toBeVisible();
+    expect(
+      screen.queryByText("Play your joker on the round card"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("points the joker at the round card when the wheel is up next on a leaderboard", async () => {
+    render(
+      wheelStageOf(
+        stateIn("leaderboard", "95", {
+          rounds: [roundCardOf(0, "wheel")],
+          cursor: {
+            ...cursorIn("leaderboard", "95"),
+            upNext: { kind: "wheel", wheelRoundIndex: 0 },
+          },
+        }),
+      ),
+    );
+    await awaitCatalog("quizshow");
+
+    expect(
+      await screen.findByText("Play your joker on the round card"),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Joker" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("says the winner's bonus in the stage's own announcement", async () => {
+    render(
+      wheelStageOf(
+        stateIn("leaderboard", "96", { wheelBonus: WHEEL_BONUS_FOR_ME }),
+      ),
+    );
+    await awaitCatalog("quizshow");
+
+    await waitFor(() =>
+      expect(
+        screen
+          .getAllByRole("status")
+          .some((region) =>
+            region.textContent?.startsWith(
+              "Leaderboard is up. You won the wheel bonus. +500 for Music",
+            ),
+          ),
+      ).toBe(true),
+    );
+  });
+
+  it("says who won the bonus to everyone else", async () => {
+    render(
+      wheelStageOf(
+        stateIn("leaderboard", "97", {
+          wheelBonus: {
+            ...WHEEL_BONUS_FOR_ME,
+            winners: [
+              { entrantId: "ana", kind: "player", name: "Ana", colorKey: null },
+            ],
+          },
+        }),
+      ),
+    );
+    await awaitCatalog("quizshow");
+
+    await waitFor(() =>
+      expect(
+        screen
+          .getAllByRole("status")
+          .some((region) =>
+            region.textContent?.startsWith(
+              "Leaderboard is up. +500 to Ana for Music",
+            ),
+          ),
+      ).toBe(true),
+    );
   });
 });

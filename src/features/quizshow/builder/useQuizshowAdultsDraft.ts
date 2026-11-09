@@ -1,12 +1,15 @@
 import { useState } from "react";
 import type { QuizshowQuizResponse } from "../../../shared/contracts/quizshow";
 import type { QuizshowScope } from "../quizshowScope";
+import { displayRoundNumber } from "../quizshowWheel";
 import type { QuizshowDraft } from "./quizshowDraft";
 
 /** The 1-based numbers of the rounds that carry the adults label. */
 export function adultsRoundNumbersOf(draft: QuizshowDraft): number[] {
   return draft.rounds.flatMap((round, roundIndex) =>
-    round.contentLabel === "adults" ? [roundIndex + 1] : [],
+    round.contentLabel === "adults"
+      ? [displayRoundNumber(draft.rounds, roundIndex)]
+      : [],
   );
 }
 

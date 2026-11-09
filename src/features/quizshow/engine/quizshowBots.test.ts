@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
-import type {
-  QuizshowCursor,
-  QuizshowPhase,
-  QuizshowQuestion,
-  QuizshowQuiz,
-  QuizshowRound,
+import {
+  QUIZSHOW_WHEEL_SETTINGS_DEFAULTS,
+  type QuizshowCursor,
+  type QuizshowPhase,
+  type QuizshowQuestion,
+  type QuizshowQuiz,
+  type QuizshowRound,
 } from "../../../shared/contracts/quizshow";
 import { createBotState, planBotActions } from "./quizshowBots";
 import { createQuizshowEngine, reduceQuizshowEngine } from "./quizshowEngine";
@@ -66,6 +67,7 @@ function roundOf(
       isJokerAllowed,
       writeSeconds: 60,
       voteSeconds: 30,
+      ...QUIZSHOW_WHEEL_SETTINGS_DEFAULTS,
     },
     questions,
   };
@@ -133,6 +135,9 @@ function cursorFor(
     pausedRemainingMs: null,
     pausedExtraTimeRemainingMs: null,
     isRestartRecovery: false,
+    roundNumber: 1,
+    upNext: null,
+    canSpinForNextRound: false,
   };
 }
 
@@ -382,5 +387,42 @@ describe("simulated players", () => {
     const engine = engineInPhase("open", quiz, multipleChoice);
     expect(planAfter(engine, 11)).toEqual(planAfter(engine, 11));
     expect(planAfter(engine, 11)).not.toEqual(planAfter(engine, 12));
+  });
+});
+
+describe("simulated players around the wheel", () => {
+  it("reads joker odds from the rounds left after the current round number", () => {
+    const quiz = quizOf([roundOf("quiz", [multipleChoice])]);
+    const engine = engineInPhase("round_intro", quiz, multipleChoice);
+    const lastRoundEngine = {
+      ...engine,
+      cursor: { ...engine.cursor, roundCount: 5, roundNumber: 5 },
+    };
+    const { botState } = planBotActions(
+      createBotState(2, 0),
+      lastRoundEngine,
+      10_000,
+    );
+    const jokerKeys = botState.plans.flatMap((plan) =>
+      plan.action.type === "player" && plan.action.name === "joker:play"
+        ? [plan.action.memberKey]
+        : [],
+    );
+    const wantingKeys = QUIZSHOW_SIMULATED_PLAYERS.filter(
+      (simulated) => simulated.willPlayJoker,
+    ).map((simulated) => simulated.memberKey);
+    expect([...jokerKeys].sort()).toEqual([...wantingKeys].sort());
+  });
+
+  it("plans nothing in the wheel phase", () => {
+    const quiz = quizOf([roundOf("quiz", [multipleChoice])]);
+    const engine = engineInPhase("wheel", quiz, multipleChoice);
+    const { botState, actions } = planBotActions(
+      createBotState(2, 0),
+      engine,
+      10_000,
+    );
+    expect(botState.plans).toEqual([]);
+    expect(actions).toEqual([]);
   });
 });

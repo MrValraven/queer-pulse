@@ -18,6 +18,10 @@ import {
   QUIZSHOW_DEMO_TEMPLATE_IDS,
   templateSeedById,
 } from "../demo/quizshowTemplates.data";
+import {
+  normaliseWheelRounds,
+  withWheelSettingsDefaults,
+} from "../quizshowWheel";
 import { QUIZSHOW_DEMO_IMPORT_SOURCES } from "./quizshowDemoStore.data";
 
 /**
@@ -73,17 +77,24 @@ export function quizFromInput(
     sourceTemplateId: string | null;
   },
 ): QuizshowQuiz {
-  const rounds: QuizshowRound[] = input.rounds.map((round, roundIndex) => {
-    const roundId = `${options.idPrefix}-r${roundIndex}`;
-    const questions: QuizshowQuestion[] = round.questions.map(
-      (question, questionIndex) => ({
-        ...question,
-        id: `${roundId}-q${questionIndex}`,
-        mediaUrl: question.mediaRef,
-      }),
-    );
-    return { ...round, id: roundId, questions };
-  });
+  const rounds: QuizshowRound[] = normaliseWheelRounds(input.rounds).map(
+    (round, roundIndex) => {
+      const roundId = `${options.idPrefix}-r${roundIndex}`;
+      const questions: QuizshowQuestion[] = round.questions.map(
+        (question, questionIndex) => ({
+          ...question,
+          id: `${roundId}-q${questionIndex}`,
+          mediaUrl: question.mediaRef,
+        }),
+      );
+      return {
+        ...round,
+        settings: withWheelSettingsDefaults(round.settings),
+        id: roundId,
+        questions,
+      };
+    },
+  );
   return {
     title: input.title,
     languages: input.languages,

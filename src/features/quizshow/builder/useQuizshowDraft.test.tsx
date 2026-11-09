@@ -93,6 +93,37 @@ describe("useQuizshowDraft", () => {
   });
 });
 
+describe("useQuizshowDraft wheel rows", () => {
+  function renderWithWheel() {
+    const rendered = renderHook(() =>
+      useQuizshowDraft(storedQuiz("Night", "2026-10-19T10:00:00.000Z")),
+    );
+    act(() => rendered.result.current.addWheel());
+    const wheelRowIndex = rendered.result.current.draft.rounds.length - 1;
+    return { result: rendered.result, wheelRowIndex };
+  }
+
+  it("adds a wheel row with addWheel", () => {
+    const { result, wheelRowIndex } = renderWithWheel();
+    expect(result.current.draft.rounds[wheelRowIndex]?.kind).toBe("wheel");
+    expect(result.current.isDirty).toBe(true);
+  });
+
+  it("leaves a wheel row with no questions when a question is added", () => {
+    const { result, wheelRowIndex } = renderWithWheel();
+    act(() => result.current.addQuestion(wheelRowIndex));
+    expect(result.current.draft.rounds[wheelRowIndex]?.questions).toHaveLength(
+      0,
+    );
+  });
+
+  it("keeps a wheel row's kind when asked to change it", () => {
+    const { result, wheelRowIndex } = renderWithWheel();
+    act(() => result.current.changeRoundKind(wheelRowIndex, "quiz"));
+    expect(result.current.draft.rounds[wheelRowIndex]?.kind).toBe("wheel");
+  });
+});
+
 describe("useQuizshowDraft picked previews", () => {
   const stamp = "2026-10-19T10:00:00.000Z";
   const laterStamp = "2026-10-19T11:00:00.000Z";

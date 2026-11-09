@@ -3,13 +3,9 @@ import {
   useRef,
   useState,
   type PointerEvent as ReactPointerEvent,
-  type Ref,
 } from "react";
-import { AnimatePresence } from "motion/react";
 import { FiPlus, FiSliders } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
-import { CollapseListItem } from "../../../shared/components/ui/CollapseListItem";
-import { QUIZSHOW_LIMITS } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useRowDragReorder } from "../../subprofiles/useRowDragReorder";
 import { useQuizshowStudio } from "./QuizshowStudioContext";
@@ -17,13 +13,13 @@ import { QuizshowStudioMenu } from "./QuizshowStudioMenu";
 import { useStudioMenuAnchor } from "./useStudioMenuAnchor";
 import { problemSpotsOf, STUDIO_PRESS_FOCUS } from "./quizshowStudioRailView";
 import {
-  addLimitNoteOf,
   railMenuEntriesOf,
   railMenuKeyOf,
+  roundCountLineOf,
   type StudioRailMenuOpenMode,
   type StudioRailMenuTarget,
 } from "./quizshowStudioRailMenus";
-import { QuizshowStudioRailRound } from "./QuizshowStudioRailRound";
+import { QuizshowStudioRailRows } from "./QuizshowStudioRailRows";
 import {
   STUDIO_QUIZ_ROW_ATTRIBUTE as QUIZ_ROW_ATTRIBUTE,
   STUDIO_RAIL_ITEM_ATTRIBUTE,
@@ -180,44 +176,21 @@ export function QuizshowStudioRail({
         onFocusSelect={() => selectQuietly(QUIZ_SELECTION)}
         onSelect={() => select(QUIZ_SELECTION)}
       />
-      <ul
-        className={styles.rounds}
-        ref={roundsRef as unknown as Ref<HTMLUListElement>}
-      >
-        <AnimatePresence initial={false}>
-          {rounds.map((round, roundIndex) => (
-            <CollapseListItem key={round.draftKey}>
-              <QuizshowStudioRailRound
-                round={round}
-                roundIndex={roundIndex}
-                viewLanguage={viewLanguage}
-                selectedQuestionIndex={
-                  selection.kind === "question" &&
-                  selection.roundIndex === roundIndex
-                    ? selection.questionIndex
-                    : null
-                }
-                isRoundSelected={
-                  selection.kind === "round" &&
-                  selection.roundIndex === roundIndex
-                }
-                problemSpots={problemSpots}
-                isWide={isWide}
-                isAddQuestionAllowed={actions.isAddQuestionToRoundAllowed(
-                  roundIndex,
-                )}
-                quizQuestionCount={quizQuestionCount}
-                openMenuKey={openMenuKey}
-                {...handlers}
-              />
-            </CollapseListItem>
-          ))}
-        </AnimatePresence>
-      </ul>
-      <QuizshowStudioRailFooter
-        roundCount={rounds.length}
+      <QuizshowStudioRailRows
+        rounds={rounds}
+        selection={selection}
+        problemSpots={problemSpots}
+        viewLanguage={viewLanguage}
+        isWide={isWide}
         quizQuestionCount={quizQuestionCount}
-        isAddRoundAllowed={actions.isAddRoundAllowed}
+        openMenuKey={openMenuKey}
+        roundsRef={roundsRef}
+        handlers={handlers}
+        isAddQuestionToRoundAllowed={actions.isAddQuestionToRoundAllowed}
+      />
+      <QuizshowStudioRailFooter
+        countLine={roundCountLineOf(rounds, quizQuestionCount, t)}
+        isAddAllowed={actions.isAddRoundAllowed || actions.isAddWheelAllowed}
         isMenuOpen={openMenuKey === "addRound"}
         onOpenKinds={(element) =>
           openMenu({ kind: "addRound" }, element, null, "toggle")
@@ -271,29 +244,23 @@ function QuizshowStudioQuizRow({
   );
 }
 
-/** "Add round" (a kind picker) and "3 of 10 rounds", or the quiz-wide question limit when that is what blocks it. */
+/**
+ * "Add round" (the kind picker, with the wheel last) and "3 of 10 rounds",
+ * or the quiz-wide question limit when that is what blocks a round. The
+ * picker opens while either a round or a wheel still fits.
+ */
 function QuizshowStudioRailFooter({
-  roundCount,
-  quizQuestionCount,
-  isAddRoundAllowed,
+  countLine,
+  isAddAllowed,
   isMenuOpen,
   onOpenKinds,
 }: {
-  roundCount: number;
-  quizQuestionCount: number;
-  isAddRoundAllowed: boolean;
+  countLine: string;
+  isAddAllowed: boolean;
   isMenuOpen: boolean;
   onOpenKinds: (element: HTMLElement) => void;
 }) {
   const { t } = useTranslation();
-  const isRoundsFull = roundCount >= QUIZSHOW_LIMITS.roundsMax;
-  const countLine =
-    isAddRoundAllowed || isRoundsFull
-      ? t("quizshow:rounds.count", {
-          count: roundCount,
-          max: QUIZSHOW_LIMITS.roundsMax,
-        })
-      : addLimitNoteOf(0, quizQuestionCount, t);
   return (
     <div className={styles.footer}>
       <Button
@@ -302,13 +269,13 @@ function QuizshowStudioRailFooter({
         className={styles.addRound}
         aria-haspopup="menu"
         aria-expanded={isMenuOpen}
-        aria-disabled={!isAddRoundAllowed || undefined}
+        aria-disabled={!isAddAllowed || undefined}
         onClick={(event) => {
-          if (isAddRoundAllowed) onOpenKinds(event.currentTarget);
+          if (isAddAllowed) onOpenKinds(event.currentTarget);
         }}
       >
         <FiPlus aria-hidden />
-        {t("quizshow:rounds.add")}
+        {t("quizshow:studio.rail.addRoundOrWheel")}
       </Button>
       <p className={styles.countLine} role="status">
         {countLine}

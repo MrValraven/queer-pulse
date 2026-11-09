@@ -47,6 +47,28 @@ function roundOf(
   };
 }
 
+function wheelRow(
+  sliceCount: number | null = null,
+  questions: QuizshowQuestionInput[] = [],
+): QuizshowRoundInput {
+  return roundOf(questions, {
+    kind: "wheel",
+    settings: { ...defaultRoundSettings(), sliceCount },
+  });
+}
+
+function completeRounds(roundCount: number): QuizshowRoundInput[] {
+  return Array.from({ length: roundCount }, () =>
+    roundOf([validMultipleChoice()]),
+  );
+}
+
+function tooFewProblemsOf(body: Body) {
+  return quizshowProblemsFor(body, { isAdultsEvent: true }).filter(
+    (found) => found.code === "wheel_too_few_slices",
+  );
+}
+
 function bodyOf(
   rounds: QuizshowRoundInput[],
   overrides: Partial<Body> = {},
@@ -85,6 +107,21 @@ const cases: Array<[QuizshowQuizProblemCode, () => Body]> = [
         })),
       ),
   ],
+  [
+    "too_many_wheels",
+    () =>
+      bodyOf([
+        wheelRow(),
+        ...completeRounds(2),
+        wheelRow(),
+        ...completeRounds(2),
+        wheelRow(),
+        ...completeRounds(2),
+        wheelRow(),
+        ...completeRounds(2),
+      ]),
+  ],
+  ["wheel_too_few_slices", () => bodyOf([...completeRounds(1), wheelRow()])],
   [
     "too_many_questions",
     () =>
@@ -289,5 +326,138 @@ describe("quizshowProblemsFor", () => {
       },
     ];
     expect(quizshowProblemsFromServer(problems)).toEqual(problems);
+  });
+});
+
+describe("quizshowProblemsFor with wheel rows", () => {
+  it("counts only non-wheel rows toward the round limit", () => {
+    const body = bodyOf([
+      wheelRow(),
+      ...completeRounds(3),
+      wheelRow(),
+      ...completeRounds(3),
+      wheelRow(),
+      ...completeRounds(4),
+    ]);
+    expect(body.rounds).toHaveLength(13);
+    const codes = codesOf(body);
+    expect(codes).not.toContain("too_many_rounds");
+    expect(codes).not.toContain("too_many_wheels");
+    expect(codes).toEqual([]);
+  });
+
+  it("flags an eleventh round and a fourth wheel as structural", () => {
+    expect(codesOf(bodyOf(completeRounds(11)))).toContain("too_many_rounds");
+    const fourWheels = quizshowProblemsFor(
+      bodyOf([
+        wheelRow(),
+        ...completeRounds(2),
+        wheelRow(),
+        ...completeRounds(2),
+        wheelRow(),
+        ...completeRounds(2),
+        wheelRow(),
+        ...completeRounds(2),
+      ]),
+      { isAdultsEvent: true },
+    );
+    expect(fourWheels).toContainEqual({
+      code: "too_many_wheels",
+      roundIndex: null,
+      questionIndex: null,
+      language: null,
+    });
+    expect(isStructuralProblem("too_many_wheels")).toBe(true);
+  });
+
+  it("flags a wheel with fewer than 2 slices on its own row", () => {
+    const wheelAtEnd = bodyOf([...completeRounds(1), wheelRow()]);
+    expect(
+      quizshowProblemsFor(wheelAtEnd, { isAdultsEvent: true }),
+    ).toContainEqual({
+      code: "wheel_too_few_slices",
+      roundIndex: 1,
+      questionIndex: null,
+      language: null,
+    });
+    const backToBack = bodyOf([wheelRow(), wheelRow(), ...completeRounds(2)]);
+    expect(
+      tooFewProblemsOf(backToBack).map((found) => found.roundIndex),
+    ).toEqual([0]);
+    const cutShort = bodyOf([
+      wheelRow(3),
+      ...completeRounds(1),
+      wheelRow(),
+      ...completeRounds(2),
+    ]);
+    expect(tooFewProblemsOf(cutShort).map((found) => found.roundIndex)).toEqual(
+      [0],
+    );
+  });
+
+  it("accepts the contract 3.2 example", () => {
+    const body = bodyOf([
+      ...completeRounds(1),
+      wheelRow(null),
+      ...completeRounds(3),
+      wheelRow(2),
+      ...completeRounds(3),
+    ]);
+    expect(quizshowProblemsFor(body, { isAdultsEvent: true })).toEqual([]);
+  });
+
+  it("skips wheel rows for round_empty and counts no_rounds on playable rows", () => {
+    expect(codesOf(bodyOf([wheelRow()]))).toContain("no_rounds");
+    const emptyRoundsAroundWheel = bodyOf([
+      roundOf([]),
+      wheelRow(),
+      roundOf([]),
+    ]);
+    const problems = quizshowProblemsFor(emptyRoundsAroundWheel, {
+      isAdultsEvent: true,
+    });
+    expect(
+      problems
+        .filter((found) => found.code === "round_empty")
+        .map((found) => found.roundIndex),
+    ).toEqual([0, 2]);
+    expect(problems.map((found) => [found.code, found.roundIndex])).toEqual([
+      ["round_empty", 0],
+      ["wheel_too_few_slices", 1],
+      ["round_empty", 2],
+    ]);
+  });
+
+  it("ignores an adults label on a wheel row", () => {
+    const body = bodyOf([
+      ...completeRounds(1),
+      {
+        ...wheelRow(),
+        contentLabel: "adults",
+      },
+      ...completeRounds(2),
+    ]);
+    expect(codesOf(body, false)).toEqual([]);
+  });
+
+  it("refuses a question on a wheel row and raises nothing else for it", () => {
+    const brokenQuestion = {
+      ...validMultipleChoice(),
+      options: [],
+      prompt: filled(""),
+    } as QuizshowQuestionInput;
+    const body = bodyOf([
+      ...completeRounds(1),
+      wheelRow(null, [brokenQuestion]),
+      ...completeRounds(2),
+    ]);
+    expect(quizshowProblemsFor(body, { isAdultsEvent: true })).toEqual([
+      {
+        code: "question_type_not_allowed",
+        roundIndex: 1,
+        questionIndex: 0,
+        language: null,
+      },
+    ]);
   });
 });

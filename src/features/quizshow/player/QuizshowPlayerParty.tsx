@@ -7,8 +7,8 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   QUIZSHOW_LIMITS,
   type QuizshowLanguage,
+  type QuizshowPlayableRoundKind,
   type QuizshowQuestionView,
-  type QuizshowRoundKind,
 } from "../../../shared/contracts/quizshow";
 import { quizshowErrorKeyOf } from "../api/quizshowErrors";
 import { isPlayerState } from "../realtime/quizshowClientStore";
@@ -26,7 +26,7 @@ import { useAnswerSender } from "./useQuizshowAnswerSender";
 import { useIsAnswerHeld } from "./useIsAnswerHeld";
 import { useQuizshowHeadingFocus } from "./useQuizshowHeadingFocus";
 
-const WRITE_LABEL_KEYS: Record<QuizshowRoundKind, string> = {
+const WRITE_LABEL_KEYS: Record<QuizshowPlayableRoundKind, string> = {
   quiz: "quizshow:player.writeCaptionLabel",
   lie_detector: "quizshow:player.writeLieDetectorLabel",
   caption_this: "quizshow:player.writeCaptionLabel",
@@ -77,7 +77,12 @@ function WriteForm({ controller, question, isHeld }: PartyInputProps) {
       }}
     >
       <FormField
-        label={t(WRITE_LABEL_KEYS[question.roundKind])}
+        // The wheel branch is unreachable: wheel rows hold no questions.
+        label={t(
+          question.roundKind === "wheel"
+            ? "quizshow:player.writeCaptionLabel"
+            : WRITE_LABEL_KEYS[question.roundKind],
+        )}
         labelAside={
           <span className={styles.counter}>
             {t("quizshow:player.charactersLeft", { count: charactersLeft })}

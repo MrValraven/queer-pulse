@@ -41,6 +41,9 @@ const SCREEN_CUES: readonly QuizshowCue[] = [
   "timeAlmostUp",
   "reveal",
   "podium",
+  // The TV only: the phones and the remote leave the wheel's sound out.
+  "wheelTick",
+  "wheelLand",
 ];
 const KNOWN_ERROR_CODES: ReadonlySet<string> = new Set(QUIZSHOW_ERROR_CODES);
 

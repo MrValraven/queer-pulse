@@ -22,6 +22,7 @@ import {
 import { PageMeta } from "../../../shared/seo/PageMeta";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { demoGameIdForSession } from "../api/quizshowDemoGames";
+import { isWheelRoundKind } from "../quizshowWheel";
 import { demoJoinPlayMode } from "../api/quizshowDemoStore";
 import { quizshowErrorKeyOf } from "../api/quizshowErrors";
 import {
@@ -63,9 +64,15 @@ function screenOf(
   if (session?.cursor.phase === "ended") return "end";
   if (session === null || !isPlayerState(session)) return "connecting";
   if (session.me === null) return needsConsent ? "consent" : "join";
-  const { phase, roundIndex } = session.cursor;
+  const { phase, roundNumber, roundIndex } = session.cursor;
+  // The first title card shows on the big screen while the phone stays on the
+  // lobby, unless a wheel opened the game: then the card after it is a stage.
+  const hasWheelBefore = session.rounds
+    .slice(0, roundIndex ?? 0)
+    .some((row) => isWheelRoundKind(row.kind));
   const isLobbyScreen =
-    phase === "lobby" || (phase === "round_intro" && roundIndex === 0);
+    phase === "lobby" ||
+    (phase === "round_intro" && roundNumber === 1 && !hasWheelBefore);
   return isLobbyScreen ? "lobby" : "stage";
 }
 

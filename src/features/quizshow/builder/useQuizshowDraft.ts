@@ -3,7 +3,7 @@ import type {
   QuizshowLanguage,
   QuizshowQuestionInput,
   QuizshowQuiz,
-  QuizshowRoundKind,
+  QuizshowPlayableRoundKind,
 } from "../../../shared/contracts/quizshow";
 import {
   blankDraft,
@@ -12,9 +12,10 @@ import {
   duplicateQuestionAt,
   isDraftDirty,
   moveItem,
-  newQuestion,
   newRound,
+  newWheel,
   removeAt,
+  withNewQuestion,
   type QuizshowDraft,
   type QuizshowDraftRound,
 } from "./quizshowDraft";
@@ -26,14 +27,18 @@ export interface QuizshowDraftController {
     key: Key,
     value: QuizshowDraft[Key],
   ) => void;
-  addRound: (kind: QuizshowRoundKind) => void;
+  addRound: (kind: QuizshowPlayableRoundKind) => void;
+  addWheel: () => void;
   updateRound: (
     roundIndex: number,
     patch: Partial<
       Pick<QuizshowDraftRound, "title" | "contentLabel" | "settings">
     >,
   ) => void;
-  changeRoundKind: (roundIndex: number, kind: QuizshowRoundKind) => void;
+  changeRoundKind: (
+    roundIndex: number,
+    kind: QuizshowPlayableRoundKind,
+  ) => void;
   moveRound: (fromIndex: number, toIndex: number) => void;
   removeRound: (roundIndex: number) => void;
   addQuestion: (roundIndex: number) => void;
@@ -319,10 +324,18 @@ export function useQuizshowDraft(
     [editDraft],
   );
   const addRound = useCallback(
-    (kind: QuizshowRoundKind) =>
+    (kind: QuizshowPlayableRoundKind) =>
       editDraft((draft) => ({
         ...draft,
         rounds: [...draft.rounds, newRound(kind)],
+      })),
+    [editDraft],
+  );
+  const addWheel = useCallback(
+    () =>
+      editDraft((draft) => ({
+        ...draft,
+        rounds: [...draft.rounds, newWheel()],
       })),
     [editDraft],
   );
@@ -334,7 +347,7 @@ export function useQuizshowDraft(
     [editDraft],
   );
   const changeRoundKind = useCallback(
-    (roundIndex: number, kind: QuizshowRoundKind) =>
+    (roundIndex: number, kind: QuizshowPlayableRoundKind) =>
       editDraft((draft) =>
         withRound(draft, roundIndex, (round) =>
           changeDraftRoundKind(round, kind),
@@ -360,22 +373,7 @@ export function useQuizshowDraft(
   );
   const addQuestion = useCallback(
     (roundIndex: number) =>
-      editDraft((draft) =>
-        withRound(draft, roundIndex, (round) => ({
-          ...round,
-          questions: [
-            ...round.questions,
-            {
-              draftKey: `${round.draftKey}-question-${crypto.randomUUID()}`,
-              question: newQuestion(
-                round.kind === "quiz" ? "multiple_choice" : "prompt",
-                round.kind,
-              ),
-              mediaUrl: null,
-            },
-          ],
-        })),
-      ),
+      editDraft((draft) => withRound(draft, roundIndex, withNewQuestion)),
     [editDraft],
   );
   const updateQuestion = useCallback<QuizshowDraftController["updateQuestion"]>(
@@ -469,6 +467,7 @@ export function useQuizshowDraft(
     isDirty,
     setQuizField,
     addRound,
+    addWheel,
     updateRound,
     changeRoundKind,
     moveRound,

@@ -26,6 +26,7 @@ import {
   demoDuplicateGame,
   demoListGames,
 } from "./quizshowDemoGames";
+import { playableRoundCount } from "../quizshowWheel";
 import { shouldRetryQuizshowRead } from "./useQuizshowQuiz";
 
 // Every write below owns its error copy in the component that calls it.
@@ -39,7 +40,7 @@ export function gameSummaryOf(
   return {
     id: response.gameId,
     title: response.quiz?.title ?? "",
-    roundCount: rounds.length,
+    roundCount: playableRoundCount(rounds),
     questionCount: rounds.reduce(
       (total, round) => total + round.questions.length,
       0,

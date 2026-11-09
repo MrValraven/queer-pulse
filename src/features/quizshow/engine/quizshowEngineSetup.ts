@@ -20,6 +20,11 @@ import {
   type QuizshowTeamColorKey,
 } from "../../../shared/contracts/quizshow";
 import { hasAdultsRound } from "../api/quizshowDemoQuizzes";
+import {
+  emptyWheelProgress,
+  normaliseWheelRounds,
+  progressCursorFields,
+} from "../quizshowWheel";
 import { quizshowRandomFrom, type QuizshowRandom } from "./quizshowRandom";
 import type {
   QuizshowEngineOptions,
@@ -103,7 +108,13 @@ export function createQuizshowEngineState(
   options: QuizshowEngineOptions,
 ): QuizshowEngineState {
   const random = quizshowRandomFrom(options.seed);
-  const quiz = structuredClone(options.quiz);
+  const clonedQuiz = structuredClone(options.quiz);
+  // Mirrors the server snapshot of a saved quiz: settings defaulted, wheel fields normalised.
+  const quiz = {
+    ...clonedQuiz,
+    rounds: normaliseWheelRounds(clonedQuiz.rounds),
+  };
+  const wheelProgress = emptyWheelProgress();
   const shuffledOrderOptions: Record<string, QuizshowOption[]> = {};
   for (const round of quiz.rounds) {
     for (const question of round.questions) {
@@ -134,13 +145,13 @@ export function createQuizshowEngineState(
       phase: "lobby",
       roundIndex: null,
       questionIndex: null,
-      roundCount: quiz.rounds.length,
       phaseStartedAt: null,
       deadline: null,
       extraTimeDeadline: null,
       pausedRemainingMs: null,
       pausedExtraTimeRemainingMs: null,
       isRestartRecovery: false,
+      ...progressCursorFields(quiz.rounds, wheelProgress, "lobby"),
     },
     lastTransition: null,
     pausedAt: null,
@@ -148,6 +159,7 @@ export function createQuizshowEngineState(
     players: [],
     teams: [],
     current: null,
+    wheelProgress,
     isScreenMuted: false,
     hasScoredQuestion: false,
     scoresAtLastFrame: {},
@@ -167,7 +179,7 @@ export interface QuizshowCursorAdvance {
   extraTimeMs: number | null;
 }
 
-/** Moves to the next phase: a new phase id, the transition it came from, fresh deadlines and a cleared paused remainder; the status stays as set. */
+/** Moves to the next phase: a new phase id, the transition it came from, fresh deadlines, a cleared paused remainder and the four progress fields recounted; the status stays as set. Callers change `wheelProgress` first and call this last. */
 export function advanceCursor(
   state: QuizshowEngineState,
   next: QuizshowCursorAdvance,
@@ -189,6 +201,7 @@ export function advanceCursor(
     pausedRemainingMs: null,
     pausedExtraTimeRemainingMs: null,
     isRestartRecovery: false,
+    ...progressCursorFields(state.quiz.rounds, state.wheelProgress, next.phase),
   };
 }
 
@@ -343,13 +356,6 @@ export function isLastQuestionOfRound(
 ): boolean {
   const round = roundAt(state, roundIndex);
   return round !== null && questionIndex === round.questions.length - 1;
-}
-
-export function isLastRound(
-  state: QuizshowEngineState,
-  roundIndex: number,
-): boolean {
-  return roundIndex === state.quiz.rounds.length - 1;
 }
 
 /** The joker that counts for the player: their own in solo play, their team's in teams play. */

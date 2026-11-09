@@ -4,16 +4,28 @@ import type {
   QuizshowLanguage,
   QuizshowPhase,
   QuizshowPlayerState,
+  QuizshowQuiz,
   QuizshowQuestion,
   QuizshowQuestionView,
   QuizshowReveal,
   QuizshowRound,
   QuizshowScreenState,
   QuizshowStateBase,
+  QuizshowWheelView,
 } from "../../../shared/contracts/quizshow";
 import type { QuizshowDraft } from "../builder/quizshowDraft";
 import { dryRunQuizOf } from "../builder/quizshowDryRunQuiz";
 import { toAnswerKeyView, toRoundCard } from "../engine/quizshowEngineViews";
+import {
+  createWheelState,
+  displayRoundNumber,
+  emptyWheelProgress,
+  isQuizRoundKind,
+  isWheelRoundKind,
+  quizshowRoundTotal,
+  toWheelView,
+  wheelSliceRoundIndexes,
+} from "../quizshowWheel";
 import {
   createQuizshowClientState,
   type QuizshowClientState,
@@ -76,10 +88,9 @@ function questionViewOf(
     prompt: { ...question.prompt },
     mediaUrl: question.mediaUrl,
     points: question.points,
-    timeLimitSeconds:
-      round.kind === "quiz"
-        ? (question.timeLimitSeconds ?? round.settings.timeLimitSeconds)
-        : round.settings.writeSeconds,
+    timeLimitSeconds: isQuizRoundKind(round.kind)
+      ? (question.timeLimitSeconds ?? round.settings.timeLimitSeconds)
+      : round.settings.writeSeconds,
     options: shownOptionsOf(question),
   };
 }
@@ -151,14 +162,14 @@ function questionPhaseOf(
   phase: QuizshowStudioPreviewPhase,
 ): QuizshowPhase {
   if (phase === "reveal") return "reveal";
-  return round.kind === "quiz" ? "open" : "write";
+  return isQuizRoundKind(round.kind) ? "open" : "write";
 }
 
 function cursorOf(
   phase: QuizshowPhase,
   roundIndex: number | null,
   questionIndex: number | null,
-  roundCount: number,
+  progress: Pick<QuizshowCursor, "roundNumber" | "roundCount">,
 ): QuizshowCursor {
   return {
     phaseId: PREVIEW_ID,
@@ -166,7 +177,10 @@ function cursorOf(
     phase,
     roundIndex,
     questionIndex,
-    roundCount,
+    roundNumber: progress.roundNumber,
+    roundCount: progress.roundCount,
+    upNext: null,
+    canSpinForNextRound: false,
     phaseStartedAt: null,
     deadline: null,
     extraTimeDeadline: null,
@@ -179,6 +193,35 @@ function cursorOf(
 interface PreviewFrame {
   base: QuizshowStateBase;
   question: QuizshowQuestionView | null;
+}
+
+/** "Round N" of the selection: playable rows up to it, 0 on the quiz; a wheel shows the rounds before it. */
+function previewRoundNumberOf(
+  rounds: QuizshowQuiz["rounds"],
+  roundIndex: number | null,
+): number {
+  if (roundIndex === null) return 0;
+  const row = rounds[roundIndex];
+  if (row === undefined) return 0;
+  const number = displayRoundNumber(rounds, roundIndex);
+  return isWheelRoundKind(row.kind) ? number - 1 : number;
+}
+
+/** The wheel at rest, built from the draft's own rows (contract 8.5). */
+function previewWheelOf(
+  rounds: QuizshowQuiz["rounds"],
+  wheelRoundIndex: number,
+): QuizshowWheelView {
+  return toWheelView(
+    rounds,
+    createWheelState(
+      rounds,
+      wheelRoundIndex,
+      wheelSliceRoundIndexes(rounds, wheelRoundIndex),
+    ),
+    emptyWheelProgress(),
+    "wheel",
+  );
 }
 
 /** The shared part of both states for the selection; null round and question on the quiz. */
@@ -194,9 +237,11 @@ function previewFrameOf(
   const roundIndex = fitted.kind === "quiz" ? null : fitted.roundIndex;
   const round = roundIndex === null ? undefined : quiz.rounds[roundIndex];
   const shown = shownQuestionOf(round, fitted);
+  const isWheelRow = round !== undefined && isWheelRoundKind(round.kind);
   let phase: QuizshowPhase = "lobby";
   if (round !== undefined) {
-    phase = shown === null ? "round_intro" : phaseFor(round);
+    if (isWheelRow) phase = "wheel";
+    else phase = shown === null ? "round_intro" : phaseFor(round);
   }
   const base: QuizshowStateBase = {
     sessionId: PREVIEW_ID,
@@ -213,17 +258,15 @@ function previewFrameOf(
     maxTeamSize: null,
     isReviewOn: false,
     isScreenMuted: true,
-    cursor: cursorOf(
-      phase,
-      roundIndex,
-      shown?.questionIndex ?? null,
-      quiz.rounds.length,
-    ),
+    cursor: cursorOf(phase, roundIndex, shown?.questionIndex ?? null, {
+      roundNumber: previewRoundNumberOf(quiz.rounds, roundIndex),
+      roundCount: quizshowRoundTotal(quiz.rounds, emptyWheelProgress()),
+    }),
     rounds: quiz.rounds.map((eachRound, eachIndex) =>
       toRoundCard(eachRound, eachIndex),
     ),
     round:
-      round === undefined || roundIndex === null
+      round === undefined || roundIndex === null || isWheelRow
         ? null
         : toRoundCard(round, roundIndex),
     reveal:
@@ -232,6 +275,11 @@ function previewFrameOf(
         : null,
     scores: null,
     podium: null,
+    wheel:
+      isWheelRow && roundIndex !== null
+        ? previewWheelOf(quiz.rounds, roundIndex)
+        : null,
+    wheelBonus: null,
     nextEvent: null,
   };
   return {

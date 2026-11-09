@@ -2,13 +2,20 @@ import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { Link, Route, Routes } from "react-router-dom";
 import QRCode from "qrcode";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { MotionProvider } from "../../../app/providers/MotionProvider";
 import { TestProviders } from "../../../test/TestProviders";
-import type {
-  QuizshowCursor,
-  QuizshowLiveSessionRef,
-  QuizshowQuestionView,
-  QuizshowRoundCard,
-  QuizshowScreenState,
+import {
+  QUIZSHOW_LIMITS,
+  type QuizshowCursor,
+  type QuizshowLiveSessionRef,
+  type QuizshowQuestionView,
+  type QuizshowRoundCard,
+  type QuizshowScores,
+  type QuizshowScreenState,
+  type QuizshowWheelBonusView,
+  type QuizshowWheelSlice,
+  type QuizshowWheelSpin,
+  type QuizshowWheelView,
 } from "../../../shared/contracts/quizshow";
 import type { QuizshowScope } from "../quizshowScope";
 import { defaultGatheringSlug } from "../../gatherings/data";
@@ -160,6 +167,8 @@ vi.mock("../realtime/useQuizshowSession", async (importOriginal) => {
 });
 
 function cursorWith(overrides: Partial<QuizshowCursor> = {}): QuizshowCursor {
+  const roundIndex =
+    overrides.roundIndex === undefined ? null : overrides.roundIndex;
   return {
     phaseId: "1",
     status: "running",
@@ -173,6 +182,9 @@ function cursorWith(overrides: Partial<QuizshowCursor> = {}): QuizshowCursor {
     pausedRemainingMs: null,
     pausedExtraTimeRemainingMs: null,
     isRestartRecovery: false,
+    roundNumber: roundIndex === null ? 0 : roundIndex + 1,
+    upNext: null,
+    canSpinForNextRound: false,
     ...overrides,
   };
 }
@@ -256,6 +268,8 @@ function screenSession(
     question: null,
     answerCount: null,
     voteOptions: null,
+    wheel: null,
+    wheelBonus: null,
     ...overrides,
   };
 }
@@ -1200,5 +1214,242 @@ describe("QuizshowScreenPage live", () => {
     expect(
       screen.getByRole("link", { name: "Back to the event" }),
     ).toBeInTheDocument();
+  });
+});
+
+function wheelSliceOf(
+  roundIndex: number,
+  title: string,
+  overrides: Partial<QuizshowWheelSlice> = {},
+): QuizshowWheelSlice {
+  return {
+    roundIndex,
+    title: { en: title, pt: title },
+    kind: "quiz",
+    contentLabel: "none",
+    wheelBonus: 0,
+    questionCount: 8,
+    isPlayed: false,
+    ...overrides,
+  };
+}
+
+/** Four drawn slices and one played: the wheel of spin 1 of 4. */
+const WHEEL_SLICES: QuizshowWheelSlice[] = [
+  wheelSliceOf(1, "Music", { wheelBonus: 500 }),
+  wheelSliceOf(2, "Queer history"),
+  wheelSliceOf(3, "Eurovision"),
+  wheelSliceOf(4, "Ballroom"),
+  wheelSliceOf(5, "Drag kings", { isPlayed: true }),
+];
+
+function wheelViewWith(
+  overrides: Partial<QuizshowWheelView> = {},
+): QuizshowWheelView {
+  return {
+    wheelRoundIndex: 0,
+    pick: "round",
+    slices: WHEEL_SLICES,
+    spinNumber: 1,
+    spinTotal: 4,
+    spin: null,
+    playingRoundIndex: null,
+    ...overrides,
+  };
+}
+
+function wheelSession(
+  phaseId: string,
+  wheel: QuizshowWheelView = wheelViewWith(),
+): QuizshowScreenState {
+  return screenSession({
+    cursor: cursorWith({ phaseId, phase: "wheel", roundIndex: 0 }),
+    wheel,
+  });
+}
+
+/** A spin that landed long ago, so the disc draws its stop with no animation. */
+function landedSpin(): QuizshowWheelSpin {
+  return {
+    landedSliceIndex: 1,
+    startedAt: Date.now() - 60_000,
+    durationMs: QUIZSHOW_LIMITS.wheelSpinMs,
+    turns: 5,
+    jitterSeed: 500,
+    startAngle: 0,
+  };
+}
+
+const ROUND_SCORES: QuizshowScores = {
+  phaseId: "30",
+  scope: "round",
+  entries: [
+    {
+      rank: 1,
+      kind: "player",
+      entrantId: "player-ana",
+      name: "Ana",
+      colorKey: null,
+      score: 2400,
+      previousScore: 1400,
+    },
+    {
+      rank: 2,
+      kind: "player",
+      entrantId: "player-bo",
+      name: "Bo",
+      colorKey: null,
+      score: 1800,
+      previousScore: 1200,
+    },
+  ],
+  entrantCount: 2,
+};
+
+const MUSIC_BONUS: QuizshowWheelBonusView = {
+  points: 500,
+  pick: "round",
+  sliceRoundIndex: 1,
+  sliceTitle: { en: "Music", pt: "Música" },
+  winners: [
+    { entrantId: "player-ana", kind: "player", name: "Ana", colorKey: null },
+  ],
+};
+
+function leaderboardSession(
+  cursorOverrides: Partial<QuizshowCursor>,
+  wheelBonus: QuizshowWheelBonusView | null = null,
+): QuizshowScreenState {
+  return screenSession({
+    cursor: cursorWith({
+      phaseId: "30",
+      phase: "leaderboard",
+      ...cursorOverrides,
+    }),
+    scores: ROUND_SCORES,
+    wheelBonus,
+  });
+}
+
+function renderMotionStage(
+  session: QuizshowScreenState,
+  options: { isJoinHidden?: boolean; isFixedCanvas?: boolean } = {},
+) {
+  return render(
+    <TestProviders>
+      <MotionProvider>
+        <QuizshowScreenStage
+          state={clientState(session)}
+          clockOffsetMs={0}
+          size="screen"
+          isJoinHidden={options.isJoinHidden}
+          isFixedCanvas={options.isFixedCanvas}
+        />
+      </MotionProvider>
+    </TestProviders>,
+  );
+}
+
+function wheelRootOf(container: HTMLElement): HTMLElement {
+  const wheel = container.querySelector<HTMLElement>("[data-quizshow-wheel]");
+  if (wheel === null) throw new Error("The wheel is missing.");
+  return wheel;
+}
+
+describe("QuizshowScreenStage wheel", () => {
+  beforeEach(() => {
+    // jsdom has no Web Animations; the disc kicks its pointer through this.
+    Object.defineProperty(Element.prototype, "animate", {
+      configurable: true,
+      writable: true,
+      value: vi.fn(() => ({ cancel: vi.fn() })),
+    });
+  });
+
+  afterEach(() => {
+    Reflect.deleteProperty(Element.prototype, "animate");
+  });
+
+  it("shows the wheel in the wheel phase", async () => {
+    const { container } = renderMotionStage(wheelSession("12"));
+    expect(await screen.findByText("Wheel · spin 1 of 4")).toBeInTheDocument();
+    expect(wheelRootOf(container)).toBeInTheDocument();
+    expect(screen.getByText(/Join at/)).toBeInTheDocument();
+    expect(screen.getByText("QZ7KP4")).toBeInTheDocument();
+  });
+
+  it("draws the studio's wheel slide at rest", async () => {
+    const { container } = renderMotionStage(wheelSession("12"), {
+      isJoinHidden: true,
+      isFixedCanvas: true,
+    });
+    expect(await screen.findByText("Wheel · spin 1 of 4")).toBeInTheDocument();
+    expect(
+      container.querySelector('[data-fixed-canvas="true"]'),
+    ).not.toBeNull();
+    const spinner = container.querySelector<SVGSVGElement>(
+      "[data-quizshow-wheel-spinner]",
+    );
+    expect(spinner?.style.transform).toBe("rotate(0deg)");
+    expect(screen.queryByText(/Join at/)).not.toBeInTheDocument();
+    expect(screen.queryByText("QZ7KP4")).not.toBeInTheDocument();
+    const choosePanel = container.querySelector<HTMLElement>(
+      '[data-panel="choose"]',
+    );
+    if (choosePanel === null) throw new Error("The choose panel is missing.");
+    expect(choosePanel.querySelectorAll("li")).toHaveLength(4);
+    ["Music", "Queer history", "Eurovision", "Ballroom"].forEach((title) => {
+      expect(within(choosePanel).getByText(title)).toBeInTheDocument();
+    });
+  });
+
+  it("keeps the wheel mounted between spins", async () => {
+    const { container, rerender } = renderMotionStage(wheelSession("12"));
+    expect(await screen.findByText("Wheel · spin 1 of 4")).toBeInTheDocument();
+    const wheelBefore = wheelRootOf(container);
+
+    rerender(
+      <TestProviders>
+        <MotionProvider>
+          <QuizshowScreenStage
+            state={clientState(
+              wheelSession(
+                "13",
+                wheelViewWith({ spinNumber: 2, spin: landedSpin() }),
+              ),
+            )}
+            clockOffsetMs={0}
+            size="screen"
+          />
+        </MotionProvider>
+      </TestProviders>,
+    );
+    expect(await screen.findByText("Wheel · spin 2 of 4")).toBeInTheDocument();
+    expect(wheelRootOf(container)).toBe(wheelBefore);
+  });
+
+  it("announces the wheel bonus on the leaderboard", async () => {
+    renderMotionStage(
+      leaderboardSession(
+        { roundIndex: 1, roundNumber: 2, roundCount: 5 },
+        MUSIC_BONUS,
+      ),
+    );
+    expect(await screen.findByText("Wheel bonus")).toBeInTheDocument();
+    expect(screen.getByText("+500 to Ana for Music")).toBeInTheDocument();
+  });
+
+  it("numbers the round board by rounds played", async () => {
+    renderMotionStage(
+      leaderboardSession({ roundIndex: 6, roundNumber: 2, roundCount: 5 }),
+    );
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "After round 2 of 5",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("3 rounds to go")).toBeInTheDocument();
+    expect(screen.queryByText("Wheel bonus")).not.toBeInTheDocument();
   });
 });

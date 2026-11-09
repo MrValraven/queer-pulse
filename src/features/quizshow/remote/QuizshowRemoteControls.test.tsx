@@ -1,16 +1,20 @@
-import { act, render, screen, within } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi, type Mock } from "vitest";
+import { afterEach, describe, expect, it, vi, type Mock } from "vitest";
 import { ReducedMotionContext } from "../../../app/providers/motionPrefs";
 import { TestProviders } from "../../../test/TestProviders";
 import type {
   QuizshowCursor,
   QuizshowHostState,
   QuizshowRoundCard,
+  QuizshowWheelPick,
+  QuizshowWheelSpin,
+  QuizshowWheelView,
 } from "../../../shared/contracts/quizshow";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import { QuizshowRemoteControls } from "./QuizshowRemoteControls";
 import { awaitCatalog } from "../../../test/awaitCatalog";
+import { awaitCatalogUnderFakeTimers } from "../../../test/awaitCatalogUnderFakeTimers";
 
 type SendFunction = (name: string, payload: unknown) => Promise<unknown>;
 
@@ -33,6 +37,8 @@ const LIE_DETECTOR_ROUND: QuizshowRoundCard = {
 };
 
 function cursorWith(overrides: Partial<QuizshowCursor> = {}): QuizshowCursor {
+  const roundIndex =
+    overrides.roundIndex === undefined ? 0 : overrides.roundIndex;
   return {
     phaseId: PHASE_ID,
     status: "running",
@@ -46,6 +52,9 @@ function cursorWith(overrides: Partial<QuizshowCursor> = {}): QuizshowCursor {
     pausedRemainingMs: null,
     pausedExtraTimeRemainingMs: null,
     isRestartRecovery: false,
+    roundNumber: roundIndex === null ? 0 : roundIndex + 1,
+    upNext: null,
+    canSpinForNextRound: false,
     ...overrides,
   };
 }
@@ -81,6 +90,8 @@ function hostState(
     question: null,
     answerCount: null,
     voteOptions: null,
+    wheel: null,
+    wheelBonus: null,
     reviewList: null,
   };
 }
@@ -481,5 +492,293 @@ describe("QuizshowRemoteControls end confirm and pause", () => {
     expect(screen.queryByRole("button", { name: "Pause" })).toBeNull();
     await user.click(screen.getByRole("button", { name: "Start game" }));
     expect(send).toHaveBeenCalledWith("host:start", { phaseId: PHASE_ID });
+  });
+});
+
+const SPIN_MS = 5_500;
+
+function wheelSpinStartedAt(startedAt: number): QuizshowWheelSpin {
+  return {
+    landedSliceIndex: 0,
+    startedAt,
+    durationMs: SPIN_MS,
+    turns: 5,
+    jitterSeed: 500,
+    startAngle: 0,
+  };
+}
+
+function wheelViewWith(
+  spin: QuizshowWheelSpin | null,
+  pick: QuizshowWheelPick = "round",
+): QuizshowWheelView {
+  const slice = {
+    contentLabel: "none" as const,
+    wheelBonus: 0 as const,
+    questionCount: 5,
+    isPlayed: false,
+    kind: "quiz" as const,
+  };
+  return {
+    wheelRoundIndex: 1,
+    pick,
+    slices: [
+      { ...slice, roundIndex: 2, title: { en: "Music", pt: "Musica" } },
+      { ...slice, roundIndex: 3, title: { en: "Movies", pt: "Filmes" } },
+    ],
+    spinNumber: 1,
+    spinTotal: 2,
+    spin,
+    playingRoundIndex: null,
+  };
+}
+
+function wheelState(
+  wheel: QuizshowWheelView,
+  cursorOverrides: Partial<QuizshowCursor> = {},
+): QuizshowHostState {
+  return {
+    ...hostState(
+      {
+        phase: "wheel",
+        roundIndex: 1,
+        questionIndex: null,
+        roundNumber: 1,
+        deadline: null,
+        ...cursorOverrides,
+      },
+      null,
+    ),
+    wheel,
+  };
+}
+
+function landedSpin(): QuizshowWheelSpin {
+  return wheelSpinStartedAt(Date.now() - SPIN_MS - 10_000);
+}
+
+describe("QuizshowRemoteControls wheel", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("offers Spin the wheel before a spin", async () => {
+    const user = userEvent.setup();
+    const send = acting();
+    renderControls(wheelState(wheelViewWith(null)), send);
+    await awaitCatalog("quizshow");
+
+    expect(
+      screen.getByRole("button", { name: "Finish the wheel" }),
+    ).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Pause" })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Skip question" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Spin again" })).toBeNull();
+    await user.click(screen.getByRole("button", { name: "Spin the wheel" }));
+    expect(send).toHaveBeenCalledWith("host:spin", { phaseId: PHASE_ID });
+  });
+
+  it("blocks the primary while the wheel spins", async () => {
+    const send = acting();
+    renderControls(
+      wheelState(wheelViewWith(wheelSpinStartedAt(Date.now() + 60_000))),
+      send,
+    );
+    await awaitCatalog("quizshow");
+
+    const spinningButton = screen.getByRole("button", {
+      name: "The wheel is spinning",
+    });
+    expect(spinningButton.getAttribute("aria-disabled")).toBe("true");
+    expect(screen.queryByRole("button", { name: "Spin again" })).toBeNull();
+  });
+
+  it("turns into Start Music at the stop", async () => {
+    vi.useFakeTimers({
+      toFake: [
+        "setTimeout",
+        "clearTimeout",
+        "requestAnimationFrame",
+        "cancelAnimationFrame",
+        "Date",
+      ],
+    });
+    vi.setSystemTime(1_000_000);
+    const send = acting();
+    renderControls(
+      wheelState(wheelViewWith(wheelSpinStartedAt(1_000_000 - SPIN_MS + 500))),
+      send,
+    );
+    await awaitCatalogUnderFakeTimers("quizshow");
+
+    expect(
+      screen.getByRole("button", { name: "The wheel is spinning" }),
+    ).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Spin again" })).toBeNull();
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(600);
+    });
+
+    expect(screen.getByRole("button", { name: "Start Music" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Spin again" })).toBeTruthy();
+  });
+
+  it("spins again after a landing", async () => {
+    const user = userEvent.setup();
+    const send = acting();
+    renderControls(wheelState(wheelViewWith(landedSpin())), send);
+    await awaitCatalog("quizshow");
+
+    await user.click(screen.getByRole("button", { name: "Spin again" }));
+    expect(send).toHaveBeenCalledWith("host:spin", { phaseId: PHASE_ID });
+    await user.click(screen.getByRole("button", { name: "Start Music" }));
+    expect(send).toHaveBeenLastCalledWith("host:next", { phaseId: PHASE_ID });
+  });
+
+  it("plays the question after a question pick", async () => {
+    const user = userEvent.setup();
+    const send = acting();
+    renderControls(wheelState(wheelViewWith(landedSpin(), "question")), send);
+    await awaitCatalog("quizshow");
+
+    await user.click(screen.getByRole("button", { name: "Play the question" }));
+    expect(send).toHaveBeenCalledWith("host:next", { phaseId: PHASE_ID });
+    expect(screen.getByRole("button", { name: "Spin again" })).toBeTruthy();
+  });
+
+  it("confirms before finishing the wheel", async () => {
+    const user = userEvent.setup();
+    const send = acting();
+    const roundView = renderControls(wheelState(wheelViewWith(null)), send);
+    await awaitCatalog("quizshow");
+
+    await user.click(screen.getByRole("button", { name: "Finish the wheel" }));
+    const roundDialog = await screen.findByRole("dialog");
+    expect(within(roundDialog).getByText("Finish the wheel now?")).toBeTruthy();
+    expect(
+      within(roundDialog).getByText(
+        "The rounds still on the wheel are skipped, and the game moves on",
+      ),
+    ).toBeTruthy();
+    expect(send).not.toHaveBeenCalled();
+    await user.click(
+      within(roundDialog).getByRole("button", { name: "Finish the wheel" }),
+    );
+    expect(send).toHaveBeenCalledWith("host:finishWheel", {
+      phaseId: PHASE_ID,
+    });
+    roundView.unmount();
+
+    renderControls(wheelState(wheelViewWith(null, "question")), send);
+    await awaitCatalog("quizshow");
+    await user.click(screen.getByRole("button", { name: "Finish the wheel" }));
+    const questionDialog = await screen.findByRole("dialog");
+    expect(
+      within(questionDialog).getByText(
+        "The questions still on the wheel are skipped, and the game moves on",
+      ),
+    ).toBeTruthy();
+  });
+
+  it("closes the finish confirm when the phase leaves the wheel", async () => {
+    const user = userEvent.setup();
+    const send = acting();
+    const view = renderControls(wheelState(wheelViewWith(null)), send);
+    await awaitCatalog("quizshow");
+
+    await user.click(screen.getByRole("button", { name: "Finish the wheel" }));
+    expect(await screen.findByRole("dialog")).toBeTruthy();
+
+    const movedOnState = hostState({ phase: "round_intro" });
+    view.rerender(controlsTree(movedOnState, send));
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("gives a crowded secondary row the smaller label size", async () => {
+    const crowdedView = renderControls(
+      wheelState(wheelViewWith(landedSpin())),
+      acting(),
+    );
+    await awaitCatalog("quizshow");
+    const crowdedRow = screen
+      .getByRole("button", { name: "Finish the wheel" })
+      .closest("[data-is-crowded]");
+    expect(crowdedRow?.getAttribute("data-is-crowded")).toBe("true");
+    crowdedView.unmount();
+
+    renderControls(lobbyState(), acting());
+    await awaitCatalog("quizshow");
+    const sparseRow = screen
+      .getByRole("button", { name: "End game" })
+      .closest("[data-is-crowded]");
+    expect(sparseRow?.getAttribute("data-is-crowded")).toBe("false");
+  });
+
+  it("offers Spin for the next round on an eligible leaderboard", async () => {
+    const user = userEvent.setup();
+    const send = acting();
+    const eligibleView = renderControls(
+      hostState({
+        phase: "leaderboard",
+        deadline: null,
+        canSpinForNextRound: true,
+      }),
+      send,
+    );
+    await awaitCatalog("quizshow");
+
+    await user.click(
+      screen.getByRole("button", { name: "Spin for the next round" }),
+    );
+    expect(send).toHaveBeenCalledWith("host:spin", { phaseId: PHASE_ID });
+    eligibleView.unmount();
+
+    renderControls(
+      hostState({
+        phase: "leaderboard",
+        deadline: null,
+        canSpinForNextRound: false,
+      }),
+      send,
+    );
+    await awaitCatalog("quizshow");
+    expect(
+      screen.queryByRole("button", { name: "Spin for the next round" }),
+    ).toBeNull();
+  });
+
+  it("blocks wheel controls while paused", async () => {
+    const send = acting();
+    renderControls(
+      wheelState(wheelViewWith(landedSpin()), { status: "paused" }),
+      send,
+    );
+    await awaitCatalog("quizshow");
+
+    for (const name of ["Spin again", "Finish the wheel", "Start Music"]) {
+      expect(
+        screen.getByRole("button", { name }).getAttribute("aria-disabled"),
+        name,
+      ).toBe("true");
+    }
+  });
+
+  it("warns that ending at the first spin keeps no score", async () => {
+    const user = userEvent.setup();
+    const send = acting();
+    renderControls(
+      wheelState(wheelViewWith(null), { roundIndex: null, roundNumber: 0 }),
+      send,
+    );
+    await awaitCatalog("quizshow");
+
+    await user.click(screen.getByRole("button", { name: "End game" }));
+    const dialog = await screen.findByRole("dialog");
+    expect(
+      within(dialog).getByText(
+        "No question has scored yet, so the game closes with no results",
+      ),
+    ).toBeTruthy();
   });
 });

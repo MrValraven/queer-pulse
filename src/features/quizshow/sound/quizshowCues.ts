@@ -10,7 +10,13 @@ import {
  * C5 and under a second long.
  */
 export type QuizshowCue =
-  "playerJoined" | "questionOpens" | "timeAlmostUp" | "reveal" | "podium";
+  | "playerJoined"
+  | "questionOpens"
+  | "timeAlmostUp"
+  | "reveal"
+  | "podium"
+  | "wheelTick"
+  | "wheelLand";
 
 interface QuizshowCueNote {
   semitonesFromA4: number;
@@ -88,9 +94,36 @@ export const QUIZSHOW_CUE_NOTES: Record<
       decaySeconds: 0.3,
     },
   ],
+  wheelTick: [
+    {
+      semitonesFromA4: -14,
+      delaySeconds: 0,
+      peakGain: 0.05,
+      decaySeconds: 0.03,
+    },
+  ],
+  wheelLand: [
+    {
+      semitonesFromA4: -14,
+      delaySeconds: 0,
+      peakGain: 0.16,
+      decaySeconds: 0.18,
+    },
+    {
+      semitonesFromA4: -9,
+      delaySeconds: 0.09,
+      peakGain: 0.16,
+      decaySeconds: 0.22,
+    },
+  ],
 };
 
 const MIN_GAP_BETWEEN_SAME_CUE_MS = 300;
+
+/** Per-cue same-cue gaps; a cue absent here keeps the 300 ms default. */
+export const QUIZSHOW_CUE_MIN_GAP_MS: Partial<Record<QuizshowCue, number>> = {
+  wheelTick: 60,
+};
 const START_OFFSET_SECONDS = 0.01;
 const MALLET_PARTIAL_MULTIPLE = 4;
 const MALLET_PEAK_RATIO = 0.27;
@@ -105,7 +138,9 @@ export function playQuizshowCue(cue: QuizshowCue): boolean {
   try {
     const nowMs = Date.now();
     const lastMs = lastPlayedAtMs[cue];
-    if (lastMs !== undefined && nowMs - lastMs < MIN_GAP_BETWEEN_SAME_CUE_MS) {
+    const minGapMs =
+      QUIZSHOW_CUE_MIN_GAP_MS[cue] ?? MIN_GAP_BETWEEN_SAME_CUE_MS;
+    if (lastMs !== undefined && nowMs - lastMs < minGapMs) {
       return false;
     }
     const output = runningChimeOutput();

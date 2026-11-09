@@ -116,6 +116,17 @@ describe("quizshow demo templates store", () => {
     }
   });
 
+  it("counts the Lisbon template without its wheel", () => {
+    const lisbonRow = demoListTemplates().items.find(
+      (row) => row.id === QUIZSHOW_DEMO_TEMPLATE_IDS.lisbonQueerIcons,
+    );
+    const lisbonCard = demoTemplateCards().items.find(
+      (card) => card.id === QUIZSHOW_DEMO_TEMPLATE_IDS.lisbonQueerIcons,
+    );
+    expect(lisbonRow).toMatchObject({ roundCount: 4, questionCount: 23 });
+    expect(lisbonCard).toMatchObject({ roundCount: 4, questionCount: 23 });
+  });
+
   it("gives hosts the published cards in publish order, with answers left out", () => {
     const cards = demoTemplateCards().items;
     expect(cards.map((card) => card.id)).toEqual([

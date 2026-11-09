@@ -10,6 +10,11 @@ import {
   type QuizshowQuizProblemCode,
   type QuizshowRoundKind,
 } from "../../../shared/contracts/quizshow";
+import {
+  isWheelRoundKind,
+  playableRoundCount,
+  wheelSliceRoundIndexes,
+} from "../quizshowWheel";
 
 export type QuizshowLocalProblemCode =
   QuizshowQuizProblemCode | "adults_round_needs_adults_event";
@@ -23,6 +28,7 @@ export interface QuizshowLocalProblem {
 
 const STRUCTURAL_CODES: readonly QuizshowLocalProblemCode[] = [
   "too_many_rounds",
+  "too_many_wheels",
   "too_many_questions",
   "too_many_questions_in_round",
   "question_type_not_allowed",
@@ -173,8 +179,14 @@ function questionStructuralProblems(
 
 function structuralProblems(input: ProblemInput): QuizshowLocalProblem[] {
   const problems: QuizshowLocalProblem[] = [];
-  if (input.rounds.length > QUIZSHOW_LIMITS.roundsMax) {
+  if (playableRoundCount(input.rounds) > QUIZSHOW_LIMITS.roundsMax) {
     problems.push(problem("too_many_rounds", null, null));
+  }
+  const wheelCount = input.rounds.filter((round) =>
+    isWheelRoundKind(round.kind),
+  ).length;
+  if (wheelCount > QUIZSHOW_LIMITS.wheelStepsMax) {
+    problems.push(problem("too_many_wheels", null, null));
   }
   const totalQuestions = input.rounds.reduce(
     (runningTotal, round) => runningTotal + round.questions.length,
@@ -188,6 +200,13 @@ function structuralProblems(input: ProblemInput): QuizshowLocalProblem[] {
       problems.push(problem("too_many_questions_in_round", roundIndex, null));
     }
     round.questions.forEach((question, questionIndex) => {
+      if (isWheelRoundKind(round.kind)) {
+        // A wheel row holds no questions, so each one gets this single problem.
+        problems.push(
+          problem("question_type_not_allowed", roundIndex, questionIndex),
+        );
+        return;
+      }
       problems.push(
         ...questionStructuralProblems(
           question,
@@ -270,7 +289,7 @@ function questionCompletenessProblems(
 
 function completenessProblems(input: ProblemInput): QuizshowLocalProblem[] {
   const problems: QuizshowLocalProblem[] = [];
-  if (input.rounds.length === 0) {
+  if (playableRoundCount(input.rounds) === 0) {
     problems.push(problem("no_rounds", null, null));
   }
   if (isBlank(input.title)) {
@@ -278,6 +297,16 @@ function completenessProblems(input: ProblemInput): QuizshowLocalProblem[] {
   }
   const languages = usedLanguagesOf(input.languages);
   input.rounds.forEach((round, roundIndex) => {
+    if (isWheelRoundKind(round.kind)) {
+      // A wheel row holds no questions, so only its slice count can be short.
+      if (
+        wheelSliceRoundIndexes(input.rounds, roundIndex).length <
+        QUIZSHOW_LIMITS.wheelSlicesMin
+      ) {
+        problems.push(problem("wheel_too_few_slices", roundIndex, null));
+      }
+      return;
+    }
     if (round.questions.length === 0) {
       problems.push(problem("round_empty", roundIndex, null));
     }
@@ -303,7 +332,7 @@ export function quizshowProblemsFor(
   const adultsProblems = options.isAdultsEvent
     ? []
     : input.rounds.flatMap((round, roundIndex) =>
-        round.contentLabel === "adults"
+        !isWheelRoundKind(round.kind) && round.contentLabel === "adults"
           ? [problem("adults_round_needs_adults_event", roundIndex, null)]
           : [],
       );

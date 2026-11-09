@@ -1,4 +1,5 @@
 import { createElement, useRef, type ReactNode } from "react";
+import type { QuizshowRoundKind } from "../../../shared/contracts/quizshow";
 import { useUnsavedChangesGuard } from "../../../shared/hooks";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { QuizshowSaveConflictDialog } from "../builder/QuizshowSaveConflictDialog";
@@ -34,10 +35,11 @@ function shownStatusOf(input: {
   saving: ReturnType<typeof useQuizshowSave>;
   structuralProblem: QuizshowLocalProblem | null;
   scope: QuizshowScope;
+  rounds: ReadonlyArray<{ kind: QuizshowRoundKind }>;
   isExplicit: boolean;
   isUnsaved: boolean;
 }): Pick<QuizshowStudioSave, "status" | "reasonKey" | "reasonValues"> {
-  const { autosave, saving, structuralProblem, scope } = input;
+  const { autosave, saving, structuralProblem, scope, rounds } = input;
   if (saving.isSaving) {
     return { status: "saving", reasonKey: null, reasonValues: null };
   }
@@ -56,7 +58,7 @@ function shownStatusOf(input: {
     autosave.reasonKey !== STUDIO_SAVE_REFUSED_KEY &&
     structuralProblem !== null
   ) {
-    const copy = studioProblemCopyOf(structuralProblem, scope.kind);
+    const copy = studioProblemCopyOf(structuralProblem, scope.kind, rounds);
     return { status: "held", reasonKey: copy.key, reasonValues: copy.values };
   }
   // An explicit save that failed keeps its reason until a save goes through.
@@ -107,9 +109,10 @@ function refusalCopyOf(
 function problemSentenceOf(
   problem: QuizshowLocalProblem,
   scope: QuizshowScope,
+  rounds: ReadonlyArray<{ kind: QuizshowRoundKind }>,
   t: Translate,
 ): string {
-  const copy = studioProblemCopyOf(problem, scope.kind);
+  const copy = studioProblemCopyOf(problem, scope.kind, rounds);
   return t(copy.key, {
     ...copy.values,
     language: copy.languageTagKey ? t(copy.languageTagKey) : "",
@@ -123,6 +126,8 @@ function problemSentenceOf(
  */
 export function useStudioSave(input: {
   scope: QuizshowScope;
+  /** The draft's rows, so a problem sentence numbers rounds and wheels the way the rail does. */
+  rounds: ReadonlyArray<{ kind: QuizshowRoundKind }>;
   saving: ReturnType<typeof useQuizshowSave>;
   problems: readonly QuizshowLocalProblem[];
   isUnsaved: boolean;
@@ -133,7 +138,8 @@ export function useStudioSave(input: {
   save: Omit<QuizshowStudioSave, "discard">;
   conflictDialog: ReactNode;
 } {
-  const { scope, saving, problems, isUnsaved, isTitleBlank, editKey } = input;
+  const { scope, rounds, saving, problems, isUnsaved, isTitleBlank, editKey } =
+    input;
   const { t } = useTranslation();
   const isExplicit = scope.kind === "template";
   const structuralProblem =
@@ -149,7 +155,12 @@ export function useStudioSave(input: {
     structuralProblem,
     saveNow: async (): Promise<QuizshowSaveOutcome> => {
       if (structuralProblem !== null) {
-        lastRefusalRef.current = problemSentenceOf(structuralProblem, scope, t);
+        lastRefusalRef.current = problemSentenceOf(
+          structuralProblem,
+          scope,
+          rounds,
+          t,
+        );
         return "refused";
       }
       const outcome = await saving.saveWithOutcome({
@@ -205,7 +216,7 @@ export function useStudioSave(input: {
     // A held draft would only record a refusal and restart the autosave's
     // gap, so the problem that holds it is the answer, with no save.
     if (structuralProblem !== null) {
-      return problemSentenceOf(structuralProblem, scope, t);
+      return problemSentenceOf(structuralProblem, scope, rounds, t);
     }
     lastRefusalRef.current = null;
     if (await autosave.saveAndWait()) return null;
@@ -233,6 +244,7 @@ export function useStudioSave(input: {
         saving,
         structuralProblem,
         scope,
+        rounds,
         isExplicit,
         isUnsaved,
       }),

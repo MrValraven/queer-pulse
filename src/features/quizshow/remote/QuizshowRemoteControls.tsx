@@ -1,139 +1,25 @@
 import { AnimatePresence, m } from "motion/react";
 import { useEffect, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import {
-  FiEye,
-  FiPause,
-  FiPlay,
-  FiPlusCircle,
-  FiSkipForward,
-  FiStopCircle,
-} from "react-icons/fi";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { Button } from "../../../shared/components/ui/Button";
 import { Collapse } from "../../../shared/components/ui/Collapse";
 import { ConfirmDialog } from "../../../shared/components/ui/ConfirmDialog";
 import { IconButton } from "../../../shared/components/ui/IconButton";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import {
-  QUIZSHOW_TIMED_PHASES,
-  type QuizshowHostState,
-  type QuizshowPhase,
-} from "../../../shared/contracts/quizshow";
-import { QUIZSHOW_REMOTE_ADD_TIME_SECONDS } from "../quizshow.constants";
+import type { QuizshowHostState } from "../../../shared/contracts/quizshow";
 import { QuizshowStudioDarkStamp } from "../studio/QuizshowStudioDarkStamp";
-import type { QuizshowHostFrameName } from "../engine/quizshowEngineTypes";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
+import { useQuizshowWheelClock } from "../stage/useQuizshowWheelClock";
+import { endConfirmBodyKeyOf } from "./quizshowRemoteEndCopy";
+import { QuizshowRemoteFinishWheel } from "./QuizshowRemoteFinishWheel";
 import { quizshowPrimaryControlOf } from "./quizshowPrimaryControl";
+import {
+  secondaryControlsOf,
+  type SecondaryControl,
+} from "./quizshowRemoteSecondaryControls";
 import { useQuizshowHostCommand } from "./useQuizshowHostCommand";
 import styles from "./QuizshowRemote.module.css";
-
-const TIMED_PHASES: readonly QuizshowPhase[] = QUIZSHOW_TIMED_PHASES;
-const REVEAL_PHASES: readonly QuizshowPhase[] = ["open", "vote"];
-const SKIP_PHASES: readonly QuizshowPhase[] = [
-  "read",
-  "open",
-  "write",
-  "review",
-  "vote",
-];
-const UNPAUSABLE_PHASES: readonly QuizshowPhase[] = ["lobby", "ended"];
-/** The phases of a question before its reveal, when that question has scored nothing yet. */
-const BEFORE_REVEAL_PHASES: readonly QuizshowPhase[] = [
-  "round_intro",
-  "read",
-  "open",
-  "write",
-  "review",
-  "vote",
-];
-/** Pause and Resume share one slot, so the button keeps focus when it flips. */
-const PAUSE_RESUME_KEY = "pauseResume";
-
-interface SecondaryControl {
-  key: string;
-  name: QuizshowHostFrameName;
-  labelKey: string;
-  icon: ReactNode;
-  isBlocked: boolean;
-  onActivate: () => void;
-}
-
-/** Which secondary controls the contract allows in this phase and status. */
-function secondaryControlsOf(
-  state: QuizshowHostState,
-  run: ReturnType<typeof useQuizshowHostCommand>["run"],
-  onEnd: () => void,
-): SecondaryControl[] {
-  const { cursor } = state;
-  const { phase, status, phaseId, deadline } = cursor;
-  const isRunning = status === "running";
-  const controls: SecondaryControl[] = [];
-  if (status === "paused") {
-    controls.push({
-      key: PAUSE_RESUME_KEY,
-      name: "host:resume",
-      labelKey: "quizshow:remote.resume",
-      icon: <FiPlay aria-hidden="true" fill="none" />,
-      isBlocked: false,
-      onActivate: () => void run("host:resume", { phaseId }),
-    });
-  } else if (isRunning && !UNPAUSABLE_PHASES.includes(phase)) {
-    controls.push({
-      key: PAUSE_RESUME_KEY,
-      name: "host:pause",
-      labelKey: "quizshow:remote.pause",
-      icon: <FiPause aria-hidden="true" fill="none" />,
-      isBlocked: false,
-      onActivate: () => void run("host:pause", { phaseId }),
-    });
-  }
-  if (isRunning && TIMED_PHASES.includes(phase) && deadline !== null) {
-    controls.push({
-      key: "addTime",
-      name: "host:addTime",
-      labelKey: "quizshow:remote.addTime",
-      icon: <FiPlusCircle aria-hidden="true" fill="none" />,
-      isBlocked: false,
-      onActivate: () =>
-        void run("host:addTime", {
-          phaseId,
-          seconds: QUIZSHOW_REMOTE_ADD_TIME_SECONDS,
-          expectedDeadline: deadline,
-        }),
-    });
-  }
-  if (REVEAL_PHASES.includes(phase)) {
-    controls.push({
-      key: "reveal",
-      name: "host:reveal",
-      labelKey: "quizshow:remote.reveal",
-      icon: <FiEye aria-hidden="true" fill="none" />,
-      isBlocked: !isRunning,
-      onActivate: () => void run("host:reveal", { phaseId }),
-    });
-  }
-  const isQuizReveal = phase === "reveal" && state.round?.kind === "quiz";
-  if (SKIP_PHASES.includes(phase) || isQuizReveal) {
-    controls.push({
-      key: "skip",
-      name: "host:skip",
-      labelKey: "quizshow:remote.skip",
-      icon: <FiSkipForward aria-hidden="true" fill="none" />,
-      isBlocked: !isRunning,
-      onActivate: () => void run("host:skip", { phaseId }),
-    });
-  }
-  controls.push({
-    key: "end",
-    name: "host:end",
-    labelKey: "quizshow:remote.end",
-    icon: <FiStopCircle aria-hidden="true" fill="none" />,
-    isBlocked: false,
-    onActivate: onEnd,
-  });
-  return controls;
-}
 
 /** A failed command's copy, folding in and out under a live region that stays mounted. */
 export function QuizshowRemoteErrorLine({
@@ -178,31 +64,6 @@ export function QuizshowRemoteFade({
   );
 }
 
-/**
- * True while the cursor sits on the first question before its reveal, where
- * ending abandons the game with no results (the contract sends a running game
- * to the podium only once a question has scored). A first question that was
- * skipped also scores nothing; the state carries no flag for that case, so the
- * podium copy shows there.
- */
-function isBeforeFirstScore(state: QuizshowHostState): boolean {
-  const { phase, roundIndex, questionIndex } = state.cursor;
-  return (
-    roundIndex === 0 &&
-    (questionIndex ?? 0) === 0 &&
-    BEFORE_REVEAL_PHASES.includes(phase)
-  );
-}
-
-/** What ending does from here: close the lobby, keep the podium, close with no score, or go to the podium. */
-function endConfirmBodyKeyOf(state: QuizshowHostState): string {
-  const { phase } = state.cursor;
-  if (phase === "lobby") return "quizshow:remote.endLobbyBody";
-  if (phase === "podium") return "quizshow:remote.endPodiumBody";
-  if (isBeforeFirstScore(state)) return "quizshow:remote.endUnscoredBody";
-  return "quizshow:remote.endConfirmBody";
-}
-
 function isOpenSession(state: QuizshowHostState): boolean {
   const { status, phase } = state.cursor;
   const isOpenStatus =
@@ -235,6 +96,70 @@ function useReportedHeight(
   return setElement;
 }
 
+/** From this many controls the labels shrink so a long one such as Finish the wheel stays on one line. */
+const CROWDED_ROW_FROM = 4;
+
+/** The secondary row: one icon button per control, folding in and out as the phase changes. */
+function QuizshowRemoteSecondaryRow({
+  controls,
+  isPending,
+}: {
+  controls: SecondaryControl[];
+  isPending: (name: SecondaryControl["name"]) => boolean;
+}) {
+  const { t } = useTranslation();
+  const { reducedMotion } = useMotionPrefs();
+  const fade = { duration: reducedMotion ? 0 : 0.2 };
+  return (
+    <div
+      className={styles.secondaryRow}
+      data-is-crowded={controls.length >= CROWDED_ROW_FROM}
+    >
+      <AnimatePresence initial={false}>
+        {controls.map((control) => {
+          const isBlocked = control.isBlocked || isPending(control.name);
+          const label = t(control.labelKey);
+          return (
+            <m.div
+              key={control.key}
+              layout="position"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={fade}
+            >
+              <IconButton
+                className={styles.secondaryButton}
+                tone="dark"
+                aria-label={label}
+                aria-disabled={isBlocked}
+                onClick={() => {
+                  if (!isBlocked) control.onActivate();
+                }}
+              >
+                {/* Pause and Resume keep one button, so only its face fades. */}
+                <AnimatePresence mode="wait" initial={false}>
+                  <m.span
+                    key={control.labelKey}
+                    className={styles.secondaryFace}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={fade}
+                  >
+                    {control.icon}
+                    <span className={styles.secondaryLabel}>{label}</span>
+                  </m.span>
+                </AnimatePresence>
+              </IconButton>
+            </m.div>
+          );
+        })}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export function QuizshowRemoteControls({
   controller,
   state,
@@ -250,19 +175,36 @@ export function QuizshowRemoteControls({
   const { reducedMotion } = useMotionPrefs();
   const { run, isPending, lastErrorKey } = useQuizshowHostCommand(controller);
   const [isEndConfirmOpen, setIsEndConfirmOpen] = useState(false);
+  const [isFinishWheelOpen, setIsFinishWheelOpen] = useState(false);
+  // Re-renders the bar at the stop, so the buttons enable the moment the wheel lands.
+  const { serverNowMs } = useQuizshowWheelClock(
+    state.wheel?.spin ?? null,
+    controller.clockOffsetMs,
+  );
   const { cursor } = state;
-  const { phase, status, phaseId } = cursor;
+  const { status, phaseId } = cursor;
   const fade = { duration: reducedMotion ? 0 : 0.2 };
-  const primary = quizshowPrimaryControlOf(phase);
+  const primary = quizshowPrimaryControlOf(state, serverNowMs, t);
   const isPrimaryBlocked =
+    primary.isBlocked ||
     isPending(primary.name) ||
     (primary.name === "host:start" ? status !== "lobby" : status !== "running");
-  const secondaryControls = secondaryControlsOf(state, run, () =>
-    setIsEndConfirmOpen(true),
-  );
+  const secondaryControls = secondaryControlsOf(state, serverNowMs, run, {
+    onEnd: () => setIsEndConfirmOpen(true),
+    onFinishWheel: () => setIsFinishWheelOpen(true),
+  });
+
+  // The wheel can end under the host (the timer, another host tab); the confirm closes with it.
+  const isOnWheel = cursor.phase === "wheel";
+  if (!isOnWheel && isFinishWheelOpen) setIsFinishWheelOpen(false);
 
   const confirmEnd = () => {
     void run("host:end", { phaseId }).then(() => setIsEndConfirmOpen(false));
+  };
+  const confirmFinishWheel = () => {
+    void run("host:finishWheel", { phaseId }).then(() =>
+      setIsFinishWheelOpen(false),
+    );
   };
 
   const bar = (
@@ -297,62 +239,20 @@ export function QuizshowRemoteControls({
             >
               <AnimatePresence mode="wait" initial={false}>
                 <m.span
-                  key={primary.labelKey}
+                  key={`${primary.labelKey}:${primary.labelValues?.title ?? ""}`}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={fade}
                 >
-                  {t(primary.labelKey)}
+                  {t(primary.labelKey, primary.labelValues)}
                 </m.span>
               </AnimatePresence>
             </Button>
-            <div className={styles.secondaryRow}>
-              <AnimatePresence initial={false}>
-                {secondaryControls.map((control) => {
-                  const isBlocked =
-                    control.isBlocked || isPending(control.name);
-                  const label = t(control.labelKey);
-                  return (
-                    <m.div
-                      key={control.key}
-                      layout="position"
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      transition={fade}
-                    >
-                      <IconButton
-                        className={styles.secondaryButton}
-                        tone="dark"
-                        aria-label={label}
-                        aria-disabled={isBlocked}
-                        onClick={() => {
-                          if (!isBlocked) control.onActivate();
-                        }}
-                      >
-                        {/* Pause and Resume keep one button, so only its face fades. */}
-                        <AnimatePresence mode="wait" initial={false}>
-                          <m.span
-                            key={control.labelKey}
-                            className={styles.secondaryFace}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={fade}
-                          >
-                            {control.icon}
-                            <span className={styles.secondaryLabel}>
-                              {label}
-                            </span>
-                          </m.span>
-                        </AnimatePresence>
-                      </IconButton>
-                    </m.div>
-                  );
-                })}
-              </AnimatePresence>
-            </div>
+            <QuizshowRemoteSecondaryRow
+              controls={secondaryControls}
+              isPending={isPending}
+            />
           </div>
         </m.div>
       )}
@@ -382,6 +282,13 @@ export function QuizshowRemoteControls({
           </ConfirmDialog>
         )}
       </AnimatePresence>
+      <QuizshowRemoteFinishWheel
+        isOpen={isFinishWheelOpen && isOnWheel}
+        pick={state.wheel?.pick ?? "round"}
+        isPending={isPending("host:finishWheel")}
+        onConfirm={confirmFinishWheel}
+        onClose={() => setIsFinishWheelOpen(false)}
+      />
     </>
   );
 }

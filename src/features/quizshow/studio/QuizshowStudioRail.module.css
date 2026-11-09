@@ -126,6 +126,35 @@
   row-gap: 0.4rem;
 }
 
+/* A round inside a wheel's range hangs off a coral hairline, so the rounds a
+   wheel spins between read as one group under its card. The hairline grows
+   in and fades through transform and opacity; only grouped rounds take the
+   inset, so no other round moves. */
+.round::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: 1px;
+  background: color-mix(in srgb, var(--accent) 45%, transparent);
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: top;
+  pointer-events: none;
+  transition:
+    opacity var(--dur-base) var(--ease),
+    transform var(--dur-base) var(--ease);
+}
+
+.round[data-in-wheel] {
+  padding-inline-start: var(--gap-xs);
+}
+
+.round[data-in-wheel]::before {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
 .roundHead {
   grid-area: head;
   position: relative;
@@ -224,6 +253,77 @@
     position: static;
     margin-inline-start: auto;
   }
+}
+
+/* ── Wheel card ── */
+/* A slim divider card above the rounds a wheel spins between. In the
+   filmstrip it is a narrow tile level with the round headers; in the wide
+   column a single row like a round header. */
+.wheel {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  inline-size: 8.5rem;
+  min-inline-size: 0;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  border-radius: var(--radius-10);
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.wheel[data-selected] {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+@media (hover: hover) {
+  .wheel:not([data-selected]):hover {
+    background: color-mix(in srgb, var(--qs-text) 5%, transparent);
+  }
+}
+
+.wheelButton {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+  min-inline-size: 0;
+  min-block-size: var(--tap-min);
+  /* Room for the "..." button at the top end. */
+  padding-block: 0.5rem;
+  padding-inline: 0.6rem 2.25rem;
+  border: 0;
+  border-radius: var(--radius-10);
+  background: none;
+  color: var(--qs-text);
+  font-family: var(--sans);
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: start;
+  cursor: pointer;
+  user-select: none;
+}
+
+.wheelButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.wheelIcon {
+  flex: none;
+  color: var(--accent);
+  font-size: var(--text-15);
+}
+
+.wheelLine {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.wheel .roundMore.roundMore {
+  inset-block: 0.3rem auto;
+  margin-block: 0;
 }
 
 /* ── Thumbnails ── */
@@ -497,6 +597,9 @@
 .roundHead:hover .roundMore,
 .roundHead:focus-within .roundMore,
 .roundHead[data-selected] .roundMore,
+.wheel:hover .roundMore,
+.wheel:focus-within .roundMore,
+.wheel[data-selected] .roundMore,
 .roundMore[aria-expanded="true"] {
   opacity: 1;
 }
@@ -518,7 +621,8 @@
     inset: calc((var(--tap-min) - 1.75rem) / -2);
   }
 
-  .roundButton {
+  .roundButton,
+  .wheelButton {
     padding-inline-end: calc(var(--tap-min) + 0.25rem);
   }
 }
@@ -633,8 +737,17 @@
   }
 
   .rounds {
+    --rail-round-gap: 1.25rem;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: var(--rail-round-gap);
+  }
+
+  /* The hairline reaches up across the gap to the row above, so the rounds of
+     a wheel's range (and the wheel card over the first) read as one bracket.
+     The extra length is static; the grow-in still moves only transform and
+     opacity. */
+  .round[data-in-wheel]::before {
+    inset-block-start: calc(-1 * var(--rail-round-gap));
   }
 
   .round {
@@ -642,6 +755,20 @@
     flex-direction: column;
     align-items: stretch;
     gap: 0.45rem;
+  }
+
+  .wheel {
+    inline-size: auto;
+  }
+
+  .wheelButton {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .wheel .roundMore.roundMore {
+    inset-block: 0;
+    margin-block: auto;
   }
 
   .thumbs {
@@ -692,7 +819,9 @@
 @media (prefers-reduced-motion: reduce) {
   .mini,
   .more.more,
-  .roundMore.roundMore {
+  .roundMore.roundMore,
+  .round::before,
+  .wheel {
     transition: none;
   }
 }

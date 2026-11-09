@@ -3,6 +3,7 @@ import { QUIZSHOW_LIMITS } from "../../../shared/contracts/quizshow";
 import { Collapse } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import stageStyles from "../stage/QuizshowStage.module.css";
+import { displayRoundNumber, playableRoundCount } from "../quizshowWheel";
 import { useQuizshowStudio } from "./QuizshowStudioContext";
 import { QuizshowStudioSlideField } from "./QuizshowStudioSlideParts";
 import { withLanguageText } from "./quizshowStudioSlideText";
@@ -22,7 +23,7 @@ export function QuizshowStudioSlideRound({
   const { controller, viewLanguage } = useQuizshowStudio();
   const round = controller.draft.rounds[roundIndex];
   if (round === undefined) return null;
-  const roundNumber = roundIndex + 1;
+  const roundNumber = displayRoundNumber(controller.draft.rounds, roundIndex);
   const { isJokerAllowed, isSpeedBonusOn } = round.settings;
   const hasSpeedNote = round.kind === "quiz" && isSpeedBonusOn;
   const hasNotes =
@@ -43,7 +44,7 @@ export function QuizshowStudioSlideRound({
             <p className={stageStyles.roundEyebrow}>
               {t("quizshow:stage.roundOf", {
                 number: roundNumber,
-                total: controller.draft.rounds.length,
+                total: playableRoundCount(controller.draft.rounds),
               })}
             </p>
             <QuizshowStudioSlideField

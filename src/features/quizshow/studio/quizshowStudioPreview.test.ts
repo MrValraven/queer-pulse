@@ -3,6 +3,7 @@ import type { QuizshowQuestionInput } from "../../../shared/contracts/quizshow";
 import {
   newQuestion,
   newRound,
+  newWheel,
   type QuizshowDraft,
 } from "../builder/quizshowDraft";
 import {
@@ -161,5 +162,89 @@ describe("studioPlayerQuestionPropsFor", () => {
         { language: "en", phase: "open", pickedPreviewUrls: NO_PREVIEWS },
       ),
     ).toBeNull();
+  });
+});
+
+const WHEEL_OPTIONS = {
+  language: "en",
+  phase: "open",
+  pickedPreviewUrls: NO_PREVIEWS,
+} as const;
+
+/** Rows: quiz, wheel (Auto), quiz, quiz. */
+function wheelDraftOf(): QuizshowDraft {
+  const base = draftOf();
+  const quizRow = base.rounds[0];
+  if (quizRow === undefined) throw new Error("The base draft has no round.");
+  return {
+    ...base,
+    rounds: [quizRow, newWheel(), newRound("quiz"), newRound("quiz")],
+  };
+}
+
+describe("studioScreenStateFor with a wheel row", () => {
+  it("shows a wheel row as the wheel phase at rest", () => {
+    const state = studioScreenStateFor(
+      wheelDraftOf(),
+      { kind: "round", roundIndex: 1 },
+      WHEEL_OPTIONS,
+    );
+    expect(state.cursor).toMatchObject({
+      phase: "wheel",
+      roundIndex: 1,
+      questionIndex: null,
+    });
+    expect(state.round).toBeNull();
+    expect(state.question).toBeNull();
+    expect(state.wheel?.slices.map((slice) => slice.roundIndex)).toEqual([
+      2, 3,
+    ]);
+    expect(state.wheel).toMatchObject({
+      wheelRoundIndex: 1,
+      pick: "round",
+      spin: null,
+      spinNumber: 1,
+      spinTotal: 2,
+    });
+    expect(state.wheelBonus).toBeNull();
+  });
+
+  it("numbers a round behind a wheel by playable rows", () => {
+    const state = studioScreenStateFor(
+      wheelDraftOf(),
+      { kind: "round", roundIndex: 2 },
+      { ...WHEEL_OPTIONS, phase: "round_intro" },
+    );
+    expect(state.cursor).toMatchObject({
+      roundNumber: 2,
+      roundCount: 3,
+      upNext: null,
+      canSpinForNextRound: false,
+    });
+    expect(state.wheel).toBeNull();
+  });
+
+  it("counts a pick-a-question wheel once and its slices zero, as a live night does", () => {
+    const draft = wheelDraftOf();
+    const wheelRow = draft.rounds[1];
+    if (wheelRow === undefined) throw new Error("The draft has no wheel row.");
+    const questionWheelDraft: QuizshowDraft = {
+      ...draft,
+      rounds: [
+        draft.rounds[0] ?? wheelRow,
+        {
+          ...wheelRow,
+          settings: { ...wheelRow.settings, wheelPick: "question" },
+        },
+        ...draft.rounds.slice(2),
+      ],
+    };
+    const state = studioScreenStateFor(
+      questionWheelDraft,
+      { kind: "round", roundIndex: 2 },
+      { ...WHEEL_OPTIONS, phase: "round_intro" },
+    );
+    // The first quiz row, plus the wheel once.
+    expect(state.cursor.roundCount).toBe(2);
   });
 });

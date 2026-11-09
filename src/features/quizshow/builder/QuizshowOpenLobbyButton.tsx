@@ -1,4 +1,5 @@
 import { useId, useState } from "react";
+import type { QuizshowRoundKind } from "../../../shared/contracts/quizshow";
 import { Button, Collapse } from "../../../shared/components/ui";
 import type { QuizshowSessionScope } from "../quizshowScope";
 import { QuizshowBlockedTip } from "./QuizshowBlockedTip";
@@ -9,6 +10,8 @@ import styles from "./QuizshowLobby.module.css";
 
 interface QuizshowOpenLobbyButtonProps {
   scope: QuizshowSessionScope;
+  /** The draft's rows, so the dialog's problem sentences number rounds and wheels. */
+  rounds: ReadonlyArray<{ kind: QuizshowRoundKind }>;
   isBlocked: boolean;
   blockedReason: string | null;
   /** Describes a block that shows no reason here, such as a status line elsewhere on the page. */
@@ -29,6 +32,7 @@ const VARIANT_BY_APPEARANCE = {
 
 export function QuizshowOpenLobbyButton({
   scope,
+  rounds,
   isBlocked,
   blockedReason,
   blockedDescriptionId,
@@ -78,6 +82,7 @@ export function QuizshowOpenLobbyButton({
       )}
       <QuizshowOpenLobbyDialog
         scope={scope}
+        rounds={rounds}
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
       />

@@ -86,6 +86,9 @@ function cursorWith(overrides: Partial<QuizshowCursor> = {}): QuizshowCursor {
     pausedRemainingMs: null,
     pausedExtraTimeRemainingMs: null,
     isRestartRecovery: false,
+    roundNumber: 1,
+    upNext: null,
+    canSpinForNextRound: false,
     ...overrides,
   };
 }
@@ -123,6 +126,8 @@ function playerState(
     scores: null,
     podium: null,
     nextEvent: null,
+    wheel: null,
+    wheelBonus: null,
     role: "player",
     cursor: cursorWith(),
     lobby: { players: [], teams: [], playerCount: 0 },
@@ -388,6 +393,8 @@ describe("useQuizshowSession newer pending answers", () => {
       payload: {
         cursor: cursorWith({ phaseId: "6" }),
         round: null,
+        wheel: null,
+        wheelBonus: null,
         question: { ...secondQuestion, questionId: "q2", questionIndex: 1 },
       },
     });
@@ -443,6 +450,8 @@ describe("useQuizshowSession newer pending answers", () => {
       payload: {
         cursor: cursorWith({ phaseId: "6" }),
         round: null,
+        wheel: null,
+        wheelBonus: null,
         question: { ...secondQuestion, questionId: "q2", questionIndex: 1 },
       },
     });

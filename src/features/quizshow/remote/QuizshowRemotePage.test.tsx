@@ -10,6 +10,8 @@ import type {
   QuizshowHostQuestionView,
   QuizshowHostState,
   QuizshowRoundCard,
+  QuizshowWheelSlice,
+  QuizshowWheelView,
 } from "../../../shared/contracts/quizshow";
 import { primeMessageChime } from "../../../shared/lib/messageChime";
 import type { QuizshowClientState } from "../realtime/quizshowClientStore";
@@ -145,6 +147,8 @@ function hostState(
   cursorOverrides: Partial<QuizshowCursor> = {},
   overrides: Partial<QuizshowHostState> = {},
 ): QuizshowHostState {
+  const roundIndex =
+    cursorOverrides.roundIndex === undefined ? 0 : cursorOverrides.roundIndex;
   const cursor: QuizshowCursor = {
     phaseId: PHASE_ID,
     status: "running",
@@ -158,6 +162,9 @@ function hostState(
     pausedRemainingMs: null,
     pausedExtraTimeRemainingMs: null,
     isRestartRecovery: false,
+    roundNumber: roundIndex === null ? 0 : roundIndex + 1,
+    upNext: null,
+    canSpinForNextRound: false,
     ...cursorOverrides,
   };
   return {
@@ -187,6 +194,8 @@ function hostState(
     question: null,
     answerCount: null,
     voteOptions: null,
+    wheel: null,
+    wheelBonus: null,
     reviewList: null,
     ...overrides,
   };
@@ -654,5 +663,126 @@ describe("QuizshowRemotePage players, teams and errors", () => {
         "The game paused while our servers restarted. Resume to replay this question from its start",
       ),
     ).toBeTruthy();
+  });
+});
+
+function wheelSlice(
+  overrides: Partial<QuizshowWheelSlice> = {},
+): QuizshowWheelSlice {
+  return {
+    roundIndex: 2,
+    title: { en: "Music", pt: "Musica" },
+    kind: "quiz",
+    contentLabel: "none",
+    wheelBonus: 0,
+    questionCount: 4,
+    isPlayed: false,
+    ...overrides,
+  };
+}
+
+function wheelView(
+  overrides: Partial<QuizshowWheelView> = {},
+): QuizshowWheelView {
+  return {
+    wheelRoundIndex: 1,
+    pick: "round",
+    slices: [wheelSlice(), wheelSlice({ roundIndex: 3 })],
+    spinNumber: 2,
+    spinTotal: 5,
+    spin: null,
+    playingRoundIndex: null,
+    ...overrides,
+  };
+}
+
+describe("QuizshowRemotePage round line", () => {
+  afterEach(() => {
+    sessionMock.controller = null;
+  });
+
+  it("reads the wheel pill while the wheel is up", async () => {
+    stubController(
+      hostState(
+        { phase: "wheel", deadline: null, roundIndex: 1 },
+        { round: null, wheel: wheelView() },
+      ),
+    );
+    renderPage();
+    await awaitCatalog("quizshow");
+
+    expect(screen.getByText("Wheel · spin 2 of 5")).toBeTruthy();
+  });
+
+  it("reads next round on a wheel that is not planned", async () => {
+    stubController(
+      hostState(
+        { phase: "wheel", deadline: null, roundIndex: null },
+        { round: null, wheel: wheelView({ wheelRoundIndex: null }) },
+      ),
+    );
+    renderPage();
+    await awaitCatalog("quizshow");
+
+    expect(screen.getByText("Wheel · next round")).toBeTruthy();
+  });
+
+  it("counts played rounds in the round line", async () => {
+    stubController(
+      hostState(
+        { roundIndex: 4, roundNumber: 2, roundCount: 5 },
+        { question: MULTIPLE_CHOICE_QUESTION },
+      ),
+    );
+    renderPage();
+    await awaitCatalog("quizshow");
+
+    expect(screen.getByText("Round 2 of 5")).toBeTruthy();
+    expect(screen.getByText("Question 1 of 5")).toBeTruthy();
+  });
+
+  it("reads the category pill and no question count on a wheel question", async () => {
+    stubController(
+      hostState(
+        { roundIndex: 2, roundNumber: 2, roundCount: 5 },
+        {
+          question: MULTIPLE_CHOICE_QUESTION,
+          wheel: wheelView({
+            pick: "question",
+            spinNumber: 2,
+            spinTotal: 9,
+            playingRoundIndex: 2,
+          }),
+        },
+      ),
+    );
+    renderPage();
+    await awaitCatalog("quizshow");
+
+    expect(screen.getByText("Music · spin 2 of 9")).toBeTruthy();
+    expect(screen.queryByText(/Question \d/)).toBeNull();
+  });
+
+  it("reads the category pill in the session's screen language", async () => {
+    stubController(
+      hostState(
+        { roundIndex: 2, roundNumber: 2, roundCount: 5 },
+        {
+          screenLanguage: "pt",
+          question: MULTIPLE_CHOICE_QUESTION,
+          wheel: wheelView({
+            pick: "question",
+            spinNumber: 2,
+            spinTotal: 9,
+            playingRoundIndex: 2,
+          }),
+        },
+      ),
+    );
+    renderPage();
+    await awaitCatalog("quizshow");
+
+    expect(screen.getByText("Musica · spin 2 of 9")).toBeTruthy();
+    expect(screen.queryByText("Music · spin 2 of 9")).toBeNull();
   });
 });

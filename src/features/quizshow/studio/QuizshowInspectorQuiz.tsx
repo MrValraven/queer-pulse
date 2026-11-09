@@ -1,23 +1,29 @@
 import { useId } from "react";
-import { FiPlus } from "react-icons/fi";
+import { FiDisc, FiPlus } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { QUIZSHOW_LIMITS } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { QuizshowAdultsSwitch } from "../builder/QuizshowAdultsSwitch";
 import { QuizshowQuizSettings } from "../builder/QuizshowQuizSettings";
 import { QuizshowTemplateDetails } from "../templates/QuizshowTemplateDetails";
+import { isWheelRoundKind, playableRoundCount } from "../quizshowWheel";
 import { QuizshowInspectorProblems } from "./QuizshowInspectorProblems";
 import { QuizshowInspectorSection } from "./QuizshowInspectorSection";
 import { useQuizshowStudio } from "./QuizshowStudioContext";
 import styles from "./QuizshowStudioInspector.module.css";
 
-/** Add round, with the count and, when blocked, the limit that blocks it. */
+/** Add round and Add wheel, each with its count and, when blocked, the limit that blocks it. */
 function QuizshowInspectorRounds() {
   const { t } = useTranslation();
   const { controller, actions } = useQuizshowStudio();
   const countId = useId();
-  const roundCount = controller.draft.rounds.length;
+  const wheelCountId = useId();
+  const roundCount = playableRoundCount(controller.draft.rounds);
+  const wheelCount = controller.draft.rounds.filter((round) =>
+    isWheelRoundKind(round.kind),
+  ).length;
   const isAllowed = actions.isAddRoundAllowed;
+  const isWheelAllowed = actions.isAddWheelAllowed;
   // Ten rounds is the round limit; short of it, the quiz-wide question limit is what blocks.
   const isRoundLimit = roundCount >= QUIZSHOW_LIMITS.roundsMax;
   return (
@@ -43,6 +49,30 @@ function QuizshowInspectorRounds() {
               })
             : t("quizshow:problems.too_many_questions", {
                 max: QUIZSHOW_LIMITS.questionsPerQuizMax,
+              })}
+        </p>
+      </div>
+      <div className={styles.addRow}>
+        <Button
+          variant="stage-ghost"
+          size="sm"
+          type="button"
+          aria-disabled={!isWheelAllowed}
+          aria-describedby={wheelCountId}
+          onClick={() => {
+            if (isWheelAllowed) actions.addWheel();
+          }}
+        >
+          <FiDisc aria-hidden /> {t("quizshow:rounds.addWheel")}
+        </Button>
+        <p id={wheelCountId} className={styles.countLine} role="status">
+          {isWheelAllowed
+            ? t("quizshow:rounds.wheelCount", {
+                count: wheelCount,
+                max: QUIZSHOW_LIMITS.wheelStepsMax,
+              })
+            : t("quizshow:rounds.wheelsFull", {
+                max: QUIZSHOW_LIMITS.wheelStepsMax,
               })}
         </p>
       </div>

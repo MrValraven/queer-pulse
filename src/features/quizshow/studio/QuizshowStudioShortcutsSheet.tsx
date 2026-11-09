@@ -112,10 +112,17 @@ export function QuizshowStudioShortcutsSheet({
 }
 
 /** The one-line strip under the canvas with the main shortcuts (wide screens, where there is a keyboard). */
-export function QuizshowStudioHintStrip() {
+export function QuizshowStudioHintStrip({
+  hiddenIds = [],
+}: {
+  /** Hints to leave out, such as the question shortcuts while a wheel is selected. */
+  hiddenIds?: readonly StudioShortcut["id"][];
+}) {
   const { t } = useTranslation();
-  const hints = STUDIO_SHORTCUTS.filter((shortcut) =>
-    STUDIO_HINT_SHORTCUT_IDS.includes(shortcut.id),
+  const hints = STUDIO_SHORTCUTS.filter(
+    (shortcut) =>
+      STUDIO_HINT_SHORTCUT_IDS.includes(shortcut.id) &&
+      !hiddenIds.includes(shortcut.id),
   );
   return (
     <ul

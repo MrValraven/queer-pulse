@@ -54,6 +54,7 @@ describe("QuizshowRoundEditor game copy", () => {
     render(
       <QuizshowScopeContext.Provider value={gameScope("game-1")}>
         <QuizshowProblemList
+          rounds={[{ kind: "quiz" }, { kind: "quiz" }]}
           problems={[
             {
               code: "adults_round_needs_adults_event",

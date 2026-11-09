@@ -16,6 +16,7 @@ import {
   type QuizshowTeamColorKey,
 } from "../../../shared/contracts/quizshow";
 import type { QuizshowClientPayload } from "../realtime/quizshowFrames";
+import { isWheelRoundKind, nextQuizshowStep } from "../quizshowWheel";
 import { isFakeTooClose } from "./quizshowScoring";
 import {
   ackFailure,
@@ -44,7 +45,6 @@ import {
 import {
   QUIZSHOW_ENGINE_QUESTION_PHASES,
   abandonSession,
-  afterQuestion,
   checkMovingCommand,
   closeIfEveryoneDone,
   closeTimedPhase,
@@ -52,13 +52,22 @@ import {
   isQuizRoundInPlay,
   openAnswers,
   openQuestion,
-  openRoundIntro,
   refreshPodiumIfShown,
   refreshScoresIfShown,
   showPodium,
   showScores,
   startVote,
 } from "./quizshowEngineTransitions";
+import {
+  afterQuestion,
+  finishWheel,
+  openStep,
+  openUnplannedWheel,
+  spinWheel,
+  startWheelPick,
+  wheelNextRefusal,
+  wheelSpinRefusal,
+} from "./quizshowEngineWheel";
 import type {
   QuizshowCommandResult,
   QuizshowEngineAnswer,
@@ -414,17 +423,20 @@ function setAvatarShown(
   return playerChanged(state, player.playerId);
 }
 
-/** The lobby for round 0, the intro of the round, or the leaderboard just before it. */
+/** The lobby or a leaderboard for the round that comes next, or the intro of the round; a wheel is no moment. */
 function isJokerMoment(
   state: QuizshowEngineState,
   roundIndex: number,
 ): boolean {
-  const { phase, roundIndex: cursorRoundIndex } = state.cursor;
-  if (phase === "lobby") return roundIndex === 0;
-  if (phase === "round_intro") return cursorRoundIndex === roundIndex;
-  if (phase === "leaderboard") {
-    return cursorRoundIndex !== null && roundIndex === cursorRoundIndex + 1;
+  const { phase, roundIndex: cursorRoundIndex, upNext } = state.cursor;
+  if (phase === "lobby" || phase === "leaderboard") {
+    return (
+      upNext !== null &&
+      upNext.kind === "round" &&
+      upNext.roundIndex === roundIndex
+    );
   }
+  if (phase === "round_intro") return cursorRoundIndex === roundIndex;
   return false;
 }
 
@@ -457,11 +469,19 @@ function playJoker(
     return unchanged(state, player.playerId);
   }
   const round = roundAt(state, roundIndex);
+  if (round === null || isWheelRoundKind(round.kind)) {
+    return refuse("quizshow_joker_not_allowed", state);
+  }
+  // A wheel picks the next round, so the joker waits for that round's card.
+  const { phase, upNext } = state.cursor;
   if (
-    round === null ||
-    !round.settings.isJokerAllowed ||
-    !isJokerMoment(state, roundIndex)
+    (phase === "lobby" || phase === "leaderboard") &&
+    upNext !== null &&
+    upNext.kind === "wheel"
   ) {
+    return refuse("quizshow_joker_wheel_next", state);
+  }
+  if (!round.settings.isJokerAllowed || !isJokerMoment(state, roundIndex)) {
     return refuse("quizshow_joker_not_allowed", state);
   }
   if (state.playMode === "solo") {
@@ -843,7 +863,13 @@ function hostStart(
     effects.push({ kind: "lobby_changed" });
   }
   setSessionStatus(state, "running");
-  effects.push(...openRoundIntro(state, 0, now));
+  effects.push(
+    ...openStep(
+      state,
+      nextQuizshowStep(state.quiz.rounds, state.wheelProgress),
+      now,
+    ),
+  );
   return hostActed(state, now, effects, false);
 }
 
@@ -874,9 +900,13 @@ function nextEffects(
     case "scores":
       return afterQuestion(state, now);
     case "leaderboard":
-      return roundIndex === null
-        ? null
-        : openRoundIntro(state, roundIndex + 1, now);
+      return openStep(
+        state,
+        nextQuizshowStep(state.quiz.rounds, state.wheelProgress),
+        now,
+      );
+    case "wheel":
+      return startWheelPick(state, now);
     case "podium":
       return finishSession(state, now);
     default:
@@ -895,9 +925,48 @@ function hostNext(
   if (state.cursor.status !== "running") {
     return refuse("quizshow_command_not_allowed", state);
   }
+  if (state.cursor.phase === "wheel") {
+    const wheelRefusal = wheelNextRefusal(state, now);
+    if (wheelRefusal !== null) return refuse(wheelRefusal, state);
+  }
   const effects = nextEffects(context, now);
   if (effects === null) return refuse("quizshow_command_not_allowed", state);
   return hostActed(state, now, effects, false);
+}
+
+/** `host:spin`: spins the open wheel, spins again after a landing, or opens and spins an unplanned wheel from an eligible leaderboard. */
+function hostSpin(
+  context: QuizshowEngineContext,
+  payload: unknown,
+  now: number,
+): QuizshowCommandResult {
+  const { state } = context;
+  const earlyAnswer = movingRefusal(state, payload, now);
+  if (earlyAnswer !== null) return earlyAnswer;
+  if (state.cursor.status !== "running") {
+    return refuse("quizshow_command_not_allowed", state);
+  }
+  const spinRefusal = wheelSpinRefusal(state, now);
+  if (spinRefusal !== null) return refuse(spinRefusal, state);
+  const effects =
+    state.cursor.phase === "wheel"
+      ? spinWheel(context, now)
+      : openUnplannedWheel(context, now);
+  return hostActed(state, now, effects, false);
+}
+
+/** `host:finishWheel`: ends the open wheel early, even while a spin is in the air. */
+function hostFinishWheel(
+  { state }: QuizshowEngineContext,
+  payload: unknown,
+  now: number,
+): QuizshowCommandResult {
+  const earlyAnswer = movingRefusal(state, payload, now);
+  if (earlyAnswer !== null) return earlyAnswer;
+  if (state.cursor.status !== "running" || state.cursor.phase !== "wheel") {
+    return refuse("quizshow_command_not_allowed", state);
+  }
+  return hostActed(state, now, finishWheel(state, now), false);
 }
 
 function hostPause(
@@ -1300,6 +1369,8 @@ type HostHandler = (
 const HOST_HANDLERS: Record<QuizshowHostFrameName, HostHandler> = {
   "host:start": hostStart,
   "host:next": hostNext,
+  "host:spin": hostSpin,
+  "host:finishWheel": hostFinishWheel,
   "host:pause": hostPause,
   "host:resume": hostResume,
   "host:addTime": hostAddTime,

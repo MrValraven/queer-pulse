@@ -17,6 +17,18 @@
    - --qs-cta-ink on both ends of the CTA gradient is 6.4:1 or better.
    Light variant, against its darkest point (all fields stacked on the blush):
    text 8.1:1, mute 5.7:1, emphasis stops 3.6, 4.0 and 4.4:1.
+   Wheel: --qs-wheel-label (#fbf3f6, large type, 3:1 floor, the same in both
+   themes because the slices stay dark) on --qs-wheel-plum-outer is 7.7:1, on
+   --qs-wheel-rose-outer 6.5:1, on --qs-wheel-bonus-outer 3.8:1 and on
+   --qs-wheel-bonus-alt-outer 7.4:1, which are the lightest points of each
+   slice. Two neighbouring bonus slices part by lightness: bonus-outer against
+   bonus-alt-outer is 1.94:1, and the legend swatches are 2.0:1 apart on the
+   dark stage (#ff8d5c against #c4502f) and 2.4:1 on the light stage (#ff8d5c
+   against #b8432f, which is 4.6:1 on the light base). On the light stage the bonus callout number's darker stop (#9c2c14)
+   is 6.3:1 on the light base and 5.0:1 on the callout's own tint; its lighter
+   stop (#b3470a) is 4.6:1 and 3.6:1. Panel text
+   on the stage uses --qs-text and --qs-text-mute; no faint token exists
+   because the mockup's 0.5-alpha text sits below the AA measured above.
 
    features/subprofiles/persona-skins.css also uses --qs-* names, for the
    quest skin; none of them collides with these today. */
@@ -119,6 +131,79 @@
   /* The channels of --qs-line, for a module that needs the same edge colour
      as an rgb triple (it re-points a shared component's --line-rgb with it). */
   --qs-line-rgb: 255, 255, 255;
+
+  /* ── Pulse Live wheel ──
+     The disc is a dark object on both stages, so only the halo, the dim
+     opacity, the top bar dot, the second bonus swatch and the bonus callout
+     change in the light variant. No token here is a filter blur: glows are
+     gradients or translucent strokes. */
+  /* Slice tones: inner stop, outer stop, and the swatch used by legends. */
+  --qs-wheel-plum-inner: #2a1340;
+  --qs-wheel-plum-outer: #6a3393;
+  --qs-wheel-plum-swatch: #8a4fc0;
+  --qs-wheel-rose-inner: #33122a;
+  --qs-wheel-rose-outer: #94365f;
+  --qs-wheel-rose-swatch: #c2456e;
+  --qs-wheel-bonus-inner: #3d1414;
+  --qs-wheel-bonus-outer: #d1553a;
+  --qs-wheel-bonus-swatch: #ff8d5c;
+  /* The second bonus tone, for a bonus slice that follows a bonus slice, so
+     two neighbouring bonus slices never merge into one coral wedge. A deeper
+     burnt coral: its outer stop is 1.9:1 darker than bonus-outer. */
+  --qs-wheel-bonus-alt-inner: #2a0c0c;
+  --qs-wheel-bonus-alt-outer: #922d1c;
+  --qs-wheel-bonus-alt-swatch: #c4502f;
+  --qs-wheel-bonus-gradient: linear-gradient(135deg, #ffc27a, #ff8d5c);
+  --qs-wheel-bonus-ink: #1c0a12;
+  /* 2.9:1 on bonus-outer, never for text on the slice; use --qs-wheel-label. */
+  --qs-wheel-bonus-label: #ffd1a3;
+  /* Rim, pegs, hub, pointer, winner. */
+  --qs-wheel-rim-fill-inner: #1d1027;
+  --qs-wheel-rim-fill-outer: #2b1838;
+  --qs-wheel-rim-stroke-start: #ffb199;
+  --qs-wheel-rim-stroke-mid: #f07aa8;
+  --qs-wheel-rim-stroke-end: #8a4fc0;
+  --qs-wheel-peg: #fbf3f6;
+  --qs-wheel-hub-inner: #3a2049;
+  --qs-wheel-hub-outer: #150a1d;
+  --qs-wheel-pointer-start: #f56a58;
+  --qs-wheel-pointer-end: #ffb199;
+  --qs-wheel-winner-stroke: #ffd1c2;
+  --qs-wheel-dim-opacity: 0.42;
+  /* Slice labels stay light in both themes: the slices stay dark. */
+  --qs-wheel-label: #fbf3f6;
+  /* Bright enough to part two slices of close tones. */
+  --qs-wheel-slice-edge: rgba(255, 255, 255, 0.28);
+  /* The soft ring outside the rim: the peak colour of a radial gradient that
+     fades to clear on both sides. */
+  --qs-wheel-rim-halo: rgba(240, 122, 168, 0.18);
+  /* The inner rim line and the hub's inner line. */
+  --qs-wheel-rim-line: rgba(255, 255, 255, 0.08);
+  /* Depth gradient outer stop and sheen gradient first stop. */
+  --qs-wheel-depth: rgba(0, 0, 0, 0.32);
+  --qs-wheel-sheen: rgba(255, 255, 255, 0.13);
+  --qs-wheel-hub-ring-start: #ff9270;
+  --qs-wheel-hub-ring-mid: #f07aa8;
+  --qs-wheel-hub-ring-end: #c7a2ff;
+  --qs-wheel-hub-label: rgba(251, 243, 246, 0.6);
+  --qs-wheel-peg-edge: rgba(0, 0, 0, 0.35);
+  --qs-wheel-pointer-highlight: rgba(255, 255, 255, 0.55);
+  --qs-wheel-pointer-pivot: rgba(28, 10, 18, 0.55);
+  /* A still radial halo under the pointer. */
+  --qs-wheel-pointer-halo: rgba(245, 106, 88, 0.45);
+  --qs-wheel-winner-fill: rgba(255, 255, 255, 0.08);
+  /* Two stacked translucent strokes under the winner outline, wide and faint
+     then narrow and brighter, so the glow fades out from the line. */
+  --qs-wheel-winner-glow-wide: rgba(255, 177, 153, 0.15);
+  --qs-wheel-winner-glow-near: rgba(255, 177, 153, 0.35);
+  /* The top bar pill dot and its glow (a box-shadow value). */
+  --qs-wheel-pill-dot: #ff9270;
+  --qs-wheel-pill-dot-glow: 0 0 10px #ff9270;
+  /* The bonus callout panel and its big number (gradient text). */
+  --qs-wheel-callout-top: rgba(255, 194, 122, 0.16);
+  --qs-wheel-callout-bottom: rgba(255, 141, 92, 0.08);
+  --qs-wheel-callout-border: rgba(255, 194, 122, 0.4);
+  --qs-wheel-callout-number: linear-gradient(135deg, #ffc27a, #ff8d5c);
 }
 
 /* ── Light stage: a daylight variant of the same structure ── */
@@ -176,6 +261,18 @@
 
   --qs-focus-halo: 0 0 0 3px rgba(43, 18, 56, 0.9);
   --qs-grain-opacity: 0.1;
+
+  /* Wheel: the disc keeps its dark values; these are the surroundings. */
+  --qs-wheel-rim-halo: rgba(176, 42, 99, 0.22);
+  /* Deeper on the light base so it still parts from --qs-wheel-bonus-swatch. */
+  --qs-wheel-bonus-alt-swatch: #b8432f;
+  --qs-wheel-dim-opacity: 0.5;
+  --qs-wheel-pill-dot: #c2381f;
+  --qs-wheel-pill-dot-glow: 0 0 8px rgba(194, 56, 31, 0.5);
+  --qs-wheel-callout-top: rgba(179, 71, 10, 0.12);
+  --qs-wheel-callout-bottom: rgba(156, 44, 20, 0.06);
+  --qs-wheel-callout-border: rgba(179, 71, 10, 0.35);
+  --qs-wheel-callout-number: linear-gradient(135deg, #b3470a, #9c2c14);
 }
 
 /* The timer ring's sweep, registered as an angle so the ring can ease between

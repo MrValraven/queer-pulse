@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
 import { newRound, newQuestion } from "./quizshowDraft";
@@ -99,6 +99,17 @@ describe("QuizshowRoundEditor", () => {
     expect(onChangeKind).toHaveBeenCalledWith("lie_detector");
     expect(
       screen.queryByText("Change the round type?"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("offers exactly four round types and none named Wheel", async () => {
+    renderEditor();
+    await screen.findByRole("radio", { name: /Lie Detector/ });
+    const kindGroup = screen.getByRole("radiogroup", { name: "Round type" });
+    const kindOptions = within(kindGroup).getAllByRole("radio");
+    expect(kindOptions).toHaveLength(4);
+    expect(
+      within(kindGroup).queryByRole("radio", { name: /Wheel/ }),
     ).not.toBeInTheDocument();
   });
 

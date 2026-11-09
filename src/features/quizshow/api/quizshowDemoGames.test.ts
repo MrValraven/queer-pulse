@@ -3,9 +3,13 @@ import { ApiError } from "../../../shared/api/client";
 import {
   QUIZSHOW_GAMES_PER_MEMBER_MAX,
   QUIZSHOW_JOIN_CODE_PATTERN,
+  type QuizshowContentLabel,
   type QuizshowGameInput,
   type QuizshowGameResponse,
   type QuizshowOpenSessionInput,
+  type QuizshowRoundInput,
+  type QuizshowRoundKind,
+  type QuizshowRoundSettings,
 } from "../../../shared/contracts/quizshow";
 import {
   QUIZSHOW_DEMO_GAME_JOIN_CODE,
@@ -47,6 +51,46 @@ const OPEN_INPUT: QuizshowOpenSessionInput = {
   shouldReplaceResults: false,
 };
 
+const WHEEL_TEST_SETTINGS: QuizshowRoundSettings = {
+  timeLimitSeconds: 20,
+  isSpeedBonusOn: true,
+  isJokerAllowed: true,
+  writeSeconds: 60,
+  voteSeconds: 30,
+  wheelBonus: 0,
+  wheelPick: "round",
+  sliceCount: null,
+};
+
+function wheelTestRound(
+  title: string,
+  kind: QuizshowRoundKind,
+  overrides: Partial<QuizshowRoundSettings> = {},
+  contentLabel: QuizshowContentLabel = "none",
+): QuizshowRoundInput {
+  const isWheelRow = kind === "wheel";
+  return {
+    kind,
+    title: { en: title, pt: title },
+    contentLabel,
+    settings: { ...WHEEL_TEST_SETTINGS, ...overrides },
+    questions: isWheelRow
+      ? []
+      : [
+          {
+            type: "true_false",
+            prompt: { en: `${title} question`, pt: `${title} pergunta` },
+            options: [],
+            answer: { isTrue: true },
+            acceptedAnswers: [],
+            mediaRef: null,
+            timeLimitSeconds: null,
+            points: 1000,
+          },
+        ],
+  };
+}
+
 function refusalOf(action: () => unknown): ApiError {
   try {
     action();
@@ -82,10 +126,11 @@ describe("quizshow demo games store", () => {
     resetQuizshowDemoStore();
   });
 
-  it("seeds two demo games, one 18+ with an open lobby and one with kept results", () => {
+  it("seeds three demo games, a wheel night, one 18+ with an open lobby and one with kept results", () => {
     const list = demoListGames();
     expect(list.limit).toBe(QUIZSHOW_GAMES_PER_MEMBER_MAX);
     expect(list.games.map((game) => game.id)).toEqual([
+      QUIZSHOW_DEMO_GAME_IDS.wheelNight,
       QUIZSHOW_DEMO_GAME_IDS.afterDark,
       QUIZSHOW_DEMO_GAME_IDS.flatQuiz,
     ]);
@@ -225,7 +270,7 @@ describe("quizshow demo games store", () => {
     const fromResults = demoDuplicateGame(QUIZSHOW_DEMO_GAME_IDS.flatQuiz);
     expect(fromResults.hasResults).toBe(false);
     expect(fromResults.isAdultsOnly).toBe(false);
-    expect(demoListGames().games).toHaveLength(4);
+    expect(demoListGames().games).toHaveLength(5);
   });
 
   it("refuses a 51st game with game_limit_reached", () => {
@@ -284,8 +329,15 @@ describe("quizshow demo game lobbies, sources and joins", () => {
       "event",
       "event",
       "game",
+      "game",
     ]);
     expect(items[2]).toMatchObject({
+      gameId: QUIZSHOW_DEMO_GAME_IDS.wheelNight,
+      quizTitle: "Spin the wheel night",
+      eventSlug: null,
+      isSameSeries: false,
+    });
+    expect(items[3]).toMatchObject({
       gameId: QUIZSHOW_DEMO_GAME_IDS.afterDark,
       quizTitle: "After dark trivia",
       hasAdultsRounds: true,
@@ -319,6 +371,7 @@ describe("quizshow demo game lobbies, sources and joins", () => {
     demoDeleteGame(QUIZSHOW_DEMO_GAME_IDS.afterDark);
     expect(demoJoinGame(QUIZSHOW_DEMO_GAME_JOIN_CODE)).toBeNull();
     expect(demoListGames().games.map((game) => game.id)).toEqual([
+      QUIZSHOW_DEMO_GAME_IDS.wheelNight,
       QUIZSHOW_DEMO_GAME_IDS.flatQuiz,
     ]);
     expect(demoJoin({ code: QUIZSHOW_DEMO_GAME_JOIN_CODE }).kind).toBe("event");
@@ -362,6 +415,34 @@ describe("quizshow demo game lobbies, sources and joins", () => {
   it("clears added games on reset", () => {
     demoCreateGame({ title: "Gone after reset", source: null });
     resetQuizshowDemoGames();
-    expect(demoListGames().games).toHaveLength(2);
+    expect(demoListGames().games).toHaveLength(3);
+  });
+
+  it("counts rounds without wheel rows", () => {
+    const created = demoCreateGame({ title: "Wheel count", source: null });
+    const wheelRounds: QuizshowRoundInput[] = [
+      wheelTestRound("Spin", "wheel"),
+      wheelTestRound("Slice one", "quiz"),
+      wheelTestRound("Slice two", "quiz"),
+      wheelTestRound("Slice three", "quiz"),
+    ];
+    const saved = demoPutGame(created.gameId, {
+      expectedUpdatedAt: created.quiz?.updatedAt ?? null,
+      title: "Wheel count",
+      languages: "both",
+      screenLanguage: "en",
+      rounds: wheelRounds,
+      isAdultsOnly: false,
+    });
+    expect(saved.quiz?.rounds).toHaveLength(4);
+    const listed = demoListGames().games.find(
+      (game) => game.id === created.gameId,
+    );
+    expect(listed?.roundCount).toBe(3);
+    expect(listed?.questionCount).toBe(3);
+    const gameSource = demoGameImportSources(
+      QUIZSHOW_DEMO_GAME_IDS.flatQuiz,
+    ).items.find((source) => source.gameId === created.gameId);
+    expect(gameSource?.roundCount).toBe(3);
   });
 });

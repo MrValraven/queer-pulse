@@ -1,3 +1,4 @@
+import { wheelSpinLandsAt } from "../quizshowWheel";
 import type {
   QuizshowEngineAction,
   QuizshowEngineState,
@@ -12,11 +13,13 @@ export const QUIZSHOW_AUTO_HOST_DELAYS_MS = {
   review: 2_500,
   podium: 9_000,
   ended: 12_000,
+  wheelBeforeSpin: 2_500, // in `wheel` with no spin: host:spin this long after phaseStartedAt
+  wheelAfterLanding: 3_000, // in `wheel` with a landed spin: host:next this long after wheelSpinLandsAt
 } as const;
 
 function hostCommand(
   engine: QuizshowEngineState,
-  name: "host:start" | "host:next" | "host:showAnswers",
+  name: "host:start" | "host:next" | "host:showAnswers" | "host:spin",
   now: number,
 ): QuizshowEngineAction {
   return {
@@ -60,6 +63,20 @@ export function planAutoHostAction(
       return elapsed >= QUIZSHOW_AUTO_HOST_DELAYS_MS.review
         ? hostCommand(engine, "host:showAnswers", now)
         : null;
+    case "wheel": {
+      const { wheel } = engine.wheelProgress;
+      if (wheel === null) return null;
+      if (wheel.spin === null) {
+        return elapsed >= QUIZSHOW_AUTO_HOST_DELAYS_MS.wheelBeforeSpin
+          ? hostCommand(engine, "host:spin", now)
+          : null;
+      }
+      return now >=
+        wheelSpinLandsAt(wheel.spin) +
+          QUIZSHOW_AUTO_HOST_DELAYS_MS.wheelAfterLanding
+        ? hostCommand(engine, "host:next", now)
+        : null;
+    }
     case "ended":
       return elapsed >= QUIZSHOW_AUTO_HOST_DELAYS_MS.ended ? "restart" : null;
     default:

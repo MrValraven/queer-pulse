@@ -11,6 +11,8 @@ import type {
   QuizshowScreenState,
   QuizshowSessionEnd,
   QuizshowStateBase,
+  QuizshowWheelBonusView,
+  QuizshowWheelView,
 } from "../../../shared/contracts/quizshow";
 import {
   applyQuizshowFrame,
@@ -18,6 +20,7 @@ import {
   isHostState,
   isPlayerState,
   isScreenState,
+  type QuizshowClientAction,
   type QuizshowClientState,
 } from "./quizshowClientStore";
 
@@ -35,6 +38,9 @@ function cursorWith(overrides: Partial<QuizshowCursor> = {}): QuizshowCursor {
     pausedRemainingMs: null,
     pausedExtraTimeRemainingMs: null,
     isRestartRecovery: false,
+    roundNumber: 1,
+    upNext: null,
+    canSpinForNextRound: false,
     ...overrides,
   };
 }
@@ -91,6 +97,8 @@ const baseState: Omit<QuizshowStateBase, "cursor"> = {
   scores: null,
   podium: null,
   nextEvent: null,
+  wheel: null,
+  wheelBonus: null,
 };
 
 function playerState(
@@ -155,6 +163,8 @@ function phaseChange(
       cursor: cursorWith(cursorOverrides),
       round: null,
       question: questionWith("q1"),
+      wheel: null,
+      wheelBonus: null,
       ...frameOverrides,
     },
   };
@@ -797,5 +807,150 @@ describe("quizshow client store, hiding and ending", () => {
       },
     );
     expect(next.session?.isScreenMuted).toBe(true);
+  });
+});
+
+function wheelViewWith(
+  overrides: Partial<QuizshowWheelView> = {},
+): QuizshowWheelView {
+  return {
+    wheelRoundIndex: 1,
+    pick: "round",
+    slices: [
+      {
+        roundIndex: 0,
+        title: { en: "Music", pt: "Musica" },
+        kind: "quiz",
+        contentLabel: "none",
+        wheelBonus: 500,
+        questionCount: 3,
+        isPlayed: false,
+      },
+    ],
+    spinNumber: 1,
+    spinTotal: 1,
+    spin: null,
+    playingRoundIndex: null,
+    ...overrides,
+  };
+}
+
+function wheelBonusWith(): QuizshowWheelBonusView {
+  return {
+    points: 500,
+    pick: "round",
+    sliceRoundIndex: 0,
+    sliceTitle: { en: "Music", pt: "Musica" },
+    winners: [{ entrantId: "p1", kind: "player", name: "Ana", colorKey: null }],
+  };
+}
+
+describe("wheel frames", () => {
+  it("copies the wheel view and the bonus off a new phase for screen, player and host", () => {
+    const wheel = wheelViewWith();
+    const wheelBonus = wheelBonusWith();
+    const sessions = [screenState(), playerState(), hostState()];
+    for (const session of sessions) {
+      const next = applyQuizshowFrame(
+        attached(session),
+        phaseChange(
+          { phaseId: "6", phase: "wheel", roundIndex: 1 },
+          { wheel, wheelBonus },
+        ),
+      );
+      expect(next.session?.wheel).toEqual(wheel);
+      expect(next.session?.wheelBonus).toEqual(wheelBonus);
+    }
+  });
+
+  it("keeps the wheel on a same-phase re-send", () => {
+    const wheel = wheelViewWith();
+    const wheelBonus = wheelBonusWith();
+    const state = attached(
+      screenState({
+        cursor: cursorWith({ phaseId: "6", phase: "wheel" }),
+        wheel,
+        wheelBonus,
+      }),
+    );
+    const next = applyQuizshowFrame(
+      state,
+      phaseChange(
+        { phaseId: "6", phase: "wheel", status: "paused" },
+        { wheel: null, wheelBonus: null },
+      ),
+    );
+    expect(next.session?.wheel).toEqual(wheel);
+    expect(next.session?.wheelBonus).toEqual(wheelBonus);
+    expect(next.session?.cursor.status).toBe("paused");
+  });
+
+  it("clears the wheel when the next phase carries none", () => {
+    const wheelBonus = wheelBonusWith();
+    const state = attached(
+      screenState({
+        cursor: cursorWith({ phaseId: "6", phase: "wheel" }),
+        wheel: wheelViewWith(),
+      }),
+    );
+    const next = applyQuizshowFrame(
+      state,
+      phaseChange(
+        { phaseId: "7", phase: "leaderboard" },
+        { wheel: null, wheelBonus },
+      ),
+    );
+    expect(next.session?.wheel).toBeNull();
+    expect(next.session?.wheelBonus).toEqual(wheelBonus);
+  });
+
+  it("clears a held bonus when a new phase carries none", () => {
+    const state = attached(
+      screenState({
+        cursor: cursorWith({ phaseId: "7", phase: "leaderboard" }),
+        wheelBonus: wheelBonusWith(),
+      }),
+    );
+    const next = applyQuizshowFrame(
+      state,
+      phaseChange(
+        { phaseId: "8", phase: "round_intro" },
+        { wheel: null, wheelBonus: null },
+      ),
+    );
+    expect(next.session?.wheelBonus).toBeNull();
+  });
+
+  it("reads a frame without wheel fields as null", () => {
+    const payload: Record<string, unknown> = {
+      ...phaseChange({ phaseId: "7", phase: "leaderboard" }).payload,
+    };
+    delete payload.wheel;
+    delete payload.wheelBonus;
+    const state = attached(
+      screenState({
+        cursor: cursorWith({ phaseId: "6", phase: "wheel" }),
+        wheel: wheelViewWith(),
+        wheelBonus: wheelBonusWith(),
+      }),
+    );
+    const next = applyQuizshowFrame(state, {
+      event: "phase:change",
+      payload,
+    } as unknown as QuizshowClientAction);
+    expect(next.session?.wheel).toBeNull();
+    expect(next.session?.wheelBonus).toBeNull();
+  });
+
+  it("reads a session state without wheel fields as null", () => {
+    const legacyState: Record<string, unknown> = { ...screenState() };
+    delete legacyState.wheel;
+    delete legacyState.wheelBonus;
+    const next = applyQuizshowFrame(createQuizshowClientState("screen"), {
+      event: "session:state",
+      payload: legacyState,
+    } as unknown as QuizshowClientAction);
+    expect(next.session?.wheel).toBeNull();
+    expect(next.session?.wheelBonus).toBeNull();
   });
 });

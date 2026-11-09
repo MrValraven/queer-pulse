@@ -330,6 +330,31 @@ export function teamQuestionPoints(
   return Math.round(sum / memberPointsAwarded.length);
 }
 
+/** Entrant ids with the highest points when that best is above 0; every tie wins. Input order is kept. */
+export function wheelBonusWinnerIds(
+  entries: ReadonlyArray<{ entrantId: string; points: number }>,
+): string[] {
+  let bestPoints = 0;
+  for (const entry of entries) {
+    if (entry.points > bestPoints) bestPoints = entry.points;
+  }
+  if (bestPoints <= 0) return [];
+  return entries
+    .filter((entry) => entry.points === bestPoints)
+    .map((entry) => entry.entrantId);
+}
+
+/** Points each entrant scored since the baseline; an entrant missing from the baseline started at 0. */
+export function pointsSinceBaseline(
+  baselineByEntrant: Readonly<Record<string, number>>,
+  totals: ReadonlyArray<{ entrantId: string; score: number }>,
+): Array<{ entrantId: string; points: number }> {
+  return totals.map((total) => ({
+    entrantId: total.entrantId,
+    points: total.score - (baselineByEntrant[total.entrantId] ?? 0),
+  }));
+}
+
 /**
  * Standard competition ranking: score descending, then name (English locale,
  * base sensitivity), then entrant id by plain character comparison, exactly

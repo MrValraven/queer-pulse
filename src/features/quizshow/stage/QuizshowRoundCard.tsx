@@ -11,6 +11,8 @@ import { pickQuizshowText, type QuizshowStageSize } from "./quizshowText";
 
 interface QuizshowRoundCardProps {
   round: QuizshowRoundCardData;
+  /** The played-count number of this round (`cursor.roundNumber`). */
+  roundNumber: number;
   roundCount: number;
   language: QuizshowLanguage;
   size: QuizshowStageSize;
@@ -54,13 +56,19 @@ const STILL_VARIANTS = { hidden: {}, shown: {} };
  */
 export function QuizshowRoundCard({
   round,
+  roundNumber,
   roundCount,
   language,
   size,
 }: QuizshowRoundCardProps) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
-  const roundNumber = round.roundIndex + 1;
+  // A fresh round has a blank title; it reads "Round N" until the host names it.
+  const pickedTitle = pickQuizshowText(round.title, language);
+  const roundTitle =
+    pickedTitle.trim() !== ""
+      ? pickedTitle
+      : t("quizshow:rounds.untitled", { number: roundNumber });
   const hasNotes =
     round.contentLabel !== "none" ||
     round.isJokerAllowed ||
@@ -95,9 +103,7 @@ export function QuizshowRoundCard({
             total: roundCount,
           })}
         </p>
-        <h2 className={styles.roundTitle}>
-          {pickQuizshowText(round.title, language)}
-        </h2>
+        <h2 className={styles.roundTitle}>{roundTitle}</h2>
       </m.div>
       {hasNotes && (
         <m.ul

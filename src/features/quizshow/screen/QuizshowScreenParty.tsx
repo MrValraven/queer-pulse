@@ -11,6 +11,7 @@ import {
 } from "../../../shared/contracts/quizshow";
 import { QuizshowDistribution } from "../stage/QuizshowDistribution";
 import { pickQuizshowText } from "../stage/quizshowText";
+import { stageRoundLineCopy } from "../stage/quizshowWheelCopy";
 import {
   QuizshowScreenAnswered,
   QuizshowScreenHeader,
@@ -143,6 +144,14 @@ export function QuizshowScreenParty({
   const { cursor, screenLanguage: language } = session;
   const phase = cursor.phase;
   const prompt = pickQuizshowText(question.prompt, language);
+  // "Round N of M", or the category pill on a pick-a-question wheel question; the kind follows either.
+  const roundLine = stageRoundLineCopy(
+    cursor,
+    session.wheel,
+    session.rounds,
+    language,
+    t,
+  );
   // The picture and prompt step back once the captions or the reveal sit below them.
   const isCompact = phase === "vote" || phase === "reveal";
   // Kept through the reveal, so the cards fold away with their text in place.
@@ -168,10 +177,7 @@ export function QuizshowScreenParty({
         meta={[
           {
             id: "round",
-            text: t("quizshow:stage.roundOf", {
-              number: question.roundIndex + 1,
-              total: cursor.roundCount,
-            }),
+            text: t(roundLine.key, roundLine.values),
           },
           {
             id: "kind",

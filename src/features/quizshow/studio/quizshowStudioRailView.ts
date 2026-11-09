@@ -1,6 +1,9 @@
 import {
   QUIZSHOW_PARTY_ROUND_KINDS,
+  QUIZSHOW_PLAYABLE_ROUND_KINDS,
   type QuizshowLanguage,
+  type QuizshowPartyRoundKind,
+  type QuizshowPlayableRoundKind,
   type QuizshowQuestionInput,
   type QuizshowRoundKind,
   type QuizshowText,
@@ -11,8 +14,17 @@ import type { QuizshowLocalProblem } from "../builder/quizshowValidation";
 export type StudioThumbnailLayout =
   "choice" | "truth" | "typed" | "order" | "number" | "prompt" | "picture";
 
-export function isPartyRoundKind(kind: QuizshowRoundKind): boolean {
+export function isPartyRoundKind(
+  kind: QuizshowRoundKind,
+): kind is QuizshowPartyRoundKind {
   return (QUIZSHOW_PARTY_ROUND_KINDS as readonly string[]).includes(kind);
+}
+
+/** Every kind that holds questions; false for a wheel row. */
+export function isPlayableRoundKind(
+  kind: QuizshowRoundKind,
+): kind is QuizshowPlayableRoundKind {
+  return (QUIZSHOW_PLAYABLE_ROUND_KINDS as readonly string[]).includes(kind);
 }
 
 /** What the miniature draws under the prompt, by question type and round kind. */

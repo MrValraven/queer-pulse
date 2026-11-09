@@ -141,6 +141,7 @@ export function useQuizshowStudioController(
   );
   const { save, conflictDialog } = useStudioSave({
     scope,
+    rounds: draft.rounds,
     saving,
     problems,
     isUnsaved,

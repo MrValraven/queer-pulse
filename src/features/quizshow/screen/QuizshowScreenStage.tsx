@@ -14,6 +14,7 @@ import type {
   QuizshowScreenState,
   QuizshowSessionEnd,
 } from "../../../shared/contracts/quizshow";
+import { isQuizRoundKind } from "../quizshowWheel";
 import {
   isScreenState,
   type QuizshowClientState,
@@ -26,6 +27,8 @@ import { EmphasisText } from "./QuizshowScreenChrome";
 import { QuizshowScreenLobby } from "./QuizshowScreenLobby";
 import { QuizshowScreenParty } from "./QuizshowScreenParty";
 import { QuizshowScreenQuestion } from "./QuizshowScreenQuestion";
+import { QuizshowScreenWheel } from "./QuizshowScreenWheel";
+import { QuizshowScreenWheelBonus } from "./QuizshowScreenWheelBonus";
 import { SCREEN_EASE } from "./quizshowScreenMotion";
 import styles from "./QuizshowScreen.module.css";
 
@@ -114,8 +117,9 @@ function QuizshowScreenThanks({
 
 /**
  * The scores board's heading. After a question it reads "Leaderboard"; at the
- * end of a round it names the round just played and how many are left, so
- * the room sees the step from one to the other when the host moves on.
+ * end of a round it names the round just played by the rounds played so far
+ * and how many are left, so the room sees the step from one to the other when
+ * the host moves on. A wheel bonus just awarded folds in under the title.
  */
 function ScoresBoardTitle({
   session,
@@ -125,11 +129,24 @@ function ScoresBoardTitle({
   leaderboardTitle: string;
 }) {
   const { t } = useTranslation();
-  const { phase, roundIndex, roundCount } = session.cursor;
+  const { phase, roundIndex, roundNumber, roundCount } = session.cursor;
+  const wheelBonus = (
+    <QuizshowScreenWheelBonus
+      bonus={session.wheelBonus}
+      rounds={session.rounds}
+      language={session.screenLanguage}
+      variant="board"
+    />
+  );
   if (phase !== "leaderboard" || roundIndex === null) {
-    return <h1 className={styles.boardTitle}>{leaderboardTitle}</h1>;
+    return (
+      <>
+        <h1 className={styles.boardTitle}>{leaderboardTitle}</h1>
+        {wheelBonus}
+      </>
+    );
   }
-  const roundsLeft = Math.max(0, roundCount - roundIndex - 1);
+  const roundsLeft = Math.max(0, roundCount - roundNumber);
   return (
     <div className={styles.boardHeading}>
       {roundsLeft > 0 && (
@@ -140,14 +157,19 @@ function ScoresBoardTitle({
       <h1 className={styles.boardTitle}>
         <EmphasisText
           i18nKey="quizshow:stage.afterRoundEm"
-          values={{ number: roundIndex + 1, total: roundCount }}
+          values={{ number: roundNumber, total: roundCount }}
         />
       </h1>
+      {wheelBonus}
     </div>
   );
 }
 
-/** The body for this phase, and the key that swaps it: phases of one question share a body. */
+/**
+ * The body for this phase, and the key that swaps it: phases of one question
+ * share a body, and so do the spins of one wheel, so a new spin never fades
+ * the wheel out.
+ */
 function viewFor(
   session: QuizshowScreenState,
   clockOffsetMs: number,
@@ -178,6 +200,7 @@ function viewFor(
         <div className={styles.centred}>
           <QuizshowRoundCard
             round={round}
+            roundNumber={cursor.roundNumber}
             roundCount={cursor.roundCount}
             language={screenLanguage}
             size={size}
@@ -186,8 +209,28 @@ function viewFor(
       ),
     };
   }
+  if (phase === "wheel" && session.wheel !== null) {
+    // A spin of null draws the wheel at rest: the studio's wheel slide. The
+    // view sizes itself in cqw of the stage, so a fixed canvas needs no prop.
+    return {
+      viewKey: `wheel-${session.wheel.wheelRoundIndex ?? "unplanned"}`,
+      body: (
+        <QuizshowScreenWheel
+          wheel={session.wheel}
+          wheelBonus={session.wheelBonus}
+          rounds={session.rounds}
+          joinCode={isJoinHidden ? null : session.joinCode}
+          language={screenLanguage}
+          playMode={session.playMode}
+          clockOffsetMs={clockOffsetMs}
+          size={size}
+        />
+      ),
+    };
+  }
   if (question !== null) {
-    const isPartyQuestion = question.roundKind !== "quiz";
+    const isPartyQuestion =
+      question.roundKind !== "wheel" && !isQuizRoundKind(question.roundKind);
     const isQuizPhase =
       phase === "read" || phase === "open" || phase === "reveal";
     const isPartyPhase =

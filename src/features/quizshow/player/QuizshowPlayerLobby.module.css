@@ -180,3 +180,21 @@
 .jokerHint {
   text-align: center;
 }
+
+/* The wheel is up next: the joker is played on the round card that follows. */
+.jokerWheelHint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-xs);
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.45;
+  color: var(--qs-text-mute);
+  text-align: center;
+}
+
+.jokerWheelHint svg {
+  flex: none;
+  color: var(--qs-low);
+}

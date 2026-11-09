@@ -9,7 +9,14 @@ import {
 import { QuizshowInspectorQuestion } from "./QuizshowInspectorQuestion";
 import { QuizshowInspectorQuiz } from "./QuizshowInspectorQuiz";
 import { QuizshowInspectorRound } from "./QuizshowInspectorRound";
+import { QuizshowInspectorWheel } from "./QuizshowInspectorWheel";
 import { useQuizshowStudio } from "./QuizshowStudioContext";
+import {
+  displayRoundNumber,
+  displayWheelNumber,
+  isWheelRoundKind,
+  withWheelSettingsDefaults,
+} from "../quizshowWheel";
 import styles from "./QuizshowStudioInspector.module.css";
 
 /** The selected item's place and name, above its settings. */
@@ -25,12 +32,26 @@ function InspectorContext({
     selection.kind === "quiz" ? undefined : draft.rounds[selection.roundIndex];
   const roundName = (roundIndex: number) =>
     draft.rounds[roundIndex]?.title[viewLanguage].trim() ||
-    t("quizshow:rounds.untitled", { number: roundIndex + 1 });
+    t("quizshow:rounds.untitled", {
+      number: displayRoundNumber(draft.rounds, roundIndex),
+    });
   let eyebrow: string;
   let title: string;
   if (selection.kind === "quiz") {
     eyebrow = t("quizshow:studio.inspector.quiz.eyebrow");
     title = draft.title.trim() || t("quizshow:studio.inspector.quiz.untitled");
+  } else if (
+    selection.kind === "round" &&
+    round &&
+    isWheelRoundKind(round.kind)
+  ) {
+    eyebrow = t("quizshow:studio.inspector.wheel.eyebrow", {
+      number: displayWheelNumber(draft.rounds, selection.roundIndex),
+    });
+    title =
+      withWheelSettingsDefaults(round.settings).wheelPick === "question"
+        ? t("quizshow:studio.inspector.wheel.pickQuestion")
+        : t("quizshow:studio.inspector.wheel.pickRound");
   } else if (selection.kind === "round") {
     eyebrow = round ? t(`quizshow:kind.${round.kind}.name`) : "";
     title = roundName(selection.roundIndex);
@@ -50,7 +71,12 @@ function InspectorContext({
 
 /** The state for the selection. */
 function InspectorState({ selection }: { selection: QuizshowStudioSelection }) {
+  const { controller } = useQuizshowStudio();
   if (selection.kind === "round") {
+    const round = controller.draft.rounds[selection.roundIndex];
+    if (round && isWheelRoundKind(round.kind)) {
+      return <QuizshowInspectorWheel roundIndex={selection.roundIndex} />;
+    }
     return <QuizshowInspectorRound roundIndex={selection.roundIndex} />;
   }
   if (selection.kind === "question") {

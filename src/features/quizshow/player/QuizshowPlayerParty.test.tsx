@@ -58,6 +58,9 @@ function cursorIn(phase: QuizshowPhase): QuizshowCursor {
     pausedRemainingMs: null,
     pausedExtraTimeRemainingMs: null,
     isRestartRecovery: false,
+    roundNumber: 2,
+    upNext: null,
+    canSpinForNextRound: false,
   };
 }
 
@@ -87,6 +90,8 @@ function stateIn(
     scores: null,
     podium: null,
     nextEvent: null,
+    wheel: null,
+    wheelBonus: null,
     role: "player",
     lobby: { players: [], teams: [], playerCount: 4 },
     question: QUESTION,

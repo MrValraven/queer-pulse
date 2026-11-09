@@ -6,15 +6,18 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type {
   QuizshowLanguage,
   QuizshowPhase,
+  QuizshowPlayerState,
   QuizshowQuestionView,
 } from "../../../shared/contracts/quizshow";
 import { isPlayerState } from "../realtime/quizshowClientStore";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
-import { QuizshowLeaderboard } from "../stage/QuizshowLeaderboard";
 import { QuizshowPausedNote } from "../stage/QuizshowPausedNote";
 import { QuizshowPodium } from "../stage/QuizshowPodium";
 import { QuizshowRoundCard } from "../stage/QuizshowRoundCard";
 import { pickQuizshowText } from "../stage/quizshowText";
+import { wheelBonusAwardCopy, wheelTitleOf } from "../stage/quizshowWheelCopy";
+import { isMyWheelBonus } from "../stage/quizshowWheelView";
+import { isQuizRoundKind, isWheelRoundKind } from "../quizshowWheel";
 import styles from "./QuizshowPlayer.module.css";
 import { QuizshowJokerButton } from "./QuizshowJokerButton";
 import { QuizshowWaitDots } from "./QuizshowLockedPanel";
@@ -22,14 +25,17 @@ import { QuizshowPartyReveal } from "./QuizshowPartyReveal";
 import { QuizshowPlayerParty } from "./QuizshowPlayerParty";
 import { QuizshowPlayerQuestion } from "./QuizshowPlayerQuestion";
 import { QuizshowPlayerReveal } from "./QuizshowPlayerReveal";
+import { QuizshowPlayerScores } from "./QuizshowPlayerScores";
+import { QuizshowPlayerWheel } from "./QuizshowPlayerWheel";
 import { QuizshowReportGameButton } from "./QuizshowReportGameButton";
-import { phoneScoresOf } from "./quizshowPhoneScores";
-import { entrantTotalOf, outcomeKeyOf } from "./quizshowRevealOutcome";
+import { outcomeKeyOf } from "./quizshowRevealOutcome";
 import { vibrateForReveal } from "./quizshowVibrate";
+import { lobbyJokerTargetOf } from "./quizshowJokerTarget";
 import { useQuizshowHeadingFocus } from "./useQuizshowHeadingFocus";
 
 const ANNOUNCED_PHASES: readonly QuizshowPhase[] = [
   "round_intro",
+  "wheel",
   "read",
   "open",
   "write",
@@ -91,6 +97,52 @@ function ReadBody({
   );
 }
 
+/** What the award sounds like: the winner's own line and detail, or the award sentence. */
+function wheelBonusLineOf(
+  player: QuizshowPlayerState,
+  language: QuizshowLanguage,
+  t: ReturnType<typeof useTranslation>["t"],
+): string {
+  const { wheelBonus } = player;
+  if (wheelBonus === null) return "";
+  if (!isMyWheelBonus(wheelBonus, player.me, player.playMode)) {
+    const award = wheelBonusAwardCopy(wheelBonus, player.rounds, language, t);
+    return t(award.key, award.values);
+  }
+  const mineKey =
+    player.playMode === "teams"
+      ? "quizshow:player.wheel.bonusMineTeam"
+      : "quizshow:player.wheel.bonusMine";
+  const detail = t("quizshow:player.wheel.bonusMineDetail", {
+    points: wheelBonus.points,
+    title: wheelTitleOf(
+      wheelBonus.sliceTitle,
+      wheelBonus.sliceRoundIndex,
+      player.rounds,
+      language,
+      t,
+    ),
+  });
+  return `${t(mineKey)}. ${detail}`;
+}
+
+/**
+ * What swaps the phone's body. The wheel keeps one key per wheel step, so a
+ * spin again does not remount it; the podium has its own key while it is still
+ * on its way, so it fades in over the wait.
+ */
+function bodyKeyOf(
+  phase: QuizshowPhase,
+  phaseId: string,
+  player: QuizshowPlayerState,
+): string {
+  if (phase === "wheel") {
+    return `wheel:${player.wheel?.wheelRoundIndex ?? "unplanned"}`;
+  }
+  if (phase === "podium" && player.podium === null) return `${phaseId}:waiting`;
+  return phaseId;
+}
+
 /** The player's phone, swapped by phase. */
 export function QuizshowPlayerStage({
   controller,
@@ -115,7 +167,11 @@ export function QuizshowPlayerStage({
   if (player === null || phase === null) return null;
 
   const { question, round } = player;
-  const isParty = question !== null && question.roundKind !== "quiz";
+  // A wheel step holds no questions; every other non-quiz kind is a party round.
+  const isParty =
+    question !== null &&
+    !isQuizRoundKind(question.roundKind) &&
+    !isWheelRoundKind(question.roundKind);
   const isPaused = player.cursor.status === "paused";
   const outcomeKey =
     isRevealResultIn && myReveal ? outcomeKeyOf(myReveal) : null;
@@ -124,24 +180,36 @@ export function QuizshowPlayerStage({
     : "";
   // While paused the region says so; on resume the phase line comes back and is read again.
   if (isPaused) phaseLine = t("quizshow:stage.paused");
-  const announcement = [phaseLine, outcomeKey === null ? "" : t(outcomeKey)]
+  // The bonus panel on the scores body mounts already filled, so its own status
+  // region would stay silent: the stage's region says the award instead.
+  const bonusLine =
+    phase === "scores" || phase === "leaderboard"
+      ? wheelBonusLineOf(player, language, t)
+      : "";
+  const announcement = [
+    phaseLine,
+    outcomeKey === null ? "" : t(outcomeKey),
+    bonusLine,
+  ]
     .filter(Boolean)
     .join(". ");
 
   let body: ReactNode = null;
   if (phase === "round_intro" && round !== null) {
+    const jokerTarget = lobbyJokerTargetOf(player);
     body = (
       <>
         <QuizshowRoundCard
           round={round}
+          roundNumber={player.cursor.roundNumber}
           roundCount={player.cursor.roundCount}
           language={language}
           size="phone"
         />
-        {round.isJokerAllowed && (
+        {jokerTarget.kind === "round" && (
           <QuizshowJokerButton
             controller={controller}
-            roundIndex={round.roundIndex}
+            roundIndex={jokerTarget.round.roundIndex}
           />
         )}
       </>
@@ -176,40 +244,19 @@ export function QuizshowPlayerStage({
       <QuizshowPlayerReveal state={player} />
     );
   } else if (phase === "scores" || phase === "leaderboard") {
-    const { myScores } = player;
-    // The top ten, plus the viewer's own row when they rank below it.
-    const scores = phoneScoresOf(player);
+    body = <QuizshowPlayerScores player={player} controller={controller} />;
+  } else if (phase === "wheel" && player.wheel !== null) {
     body = (
-      <>
-        <Collapse isOpen={myScores !== null}>
-          {myScores !== null && (
-            <h1 className={styles.subheading}>
-              {t(
-                player.playMode === "teams"
-                  ? "quizshow:player.teamPlace"
-                  : "quizshow:player.place",
-                {
-                  place: myScores.rank,
-                  total: scores?.entrantCount ?? entrantTotalOf(player),
-                },
-              )}
-            </h1>
-          )}
-        </Collapse>
-        <Collapse isOpen={scores !== null}>
-          {scores !== null && (
-            <QuizshowLeaderboard
-              scores={scores}
-              highlightEntrantId={
-                player.playMode === "teams"
-                  ? (player.me?.teamId ?? null)
-                  : (player.me?.playerId ?? null)
-              }
-              size="phone"
-            />
-          )}
-        </Collapse>
-      </>
+      <QuizshowPlayerWheel
+        wheel={player.wheel}
+        wheelBonus={player.wheelBonus}
+        rounds={player.rounds}
+        me={player.me}
+        playMode={player.playMode}
+        language={language}
+        clockOffsetMs={controller.clockOffsetMs}
+        phaseId={phaseId}
+      />
     );
   } else if (phase === "podium") {
     // The podium frame can land a moment after the phase change.
@@ -226,11 +273,7 @@ export function QuizshowPlayerStage({
       );
   }
 
-  // Its own key while the podium is still on its way, so the podium fades in over the wait.
-  const bodyKey =
-    phase === "podium" && player.podium === null
-      ? `${phaseId}:waiting`
-      : phaseId;
+  const bodyKey = bodyKeyOf(phase, phaseId, player);
   const isReportShown =
     player.kind === "game" &&
     player.me !== null &&
